@@ -1,0 +1,98 @@
+#!/usr/bin/perl -w
+#
+# Regina - A Normal Surface Theory Calculator
+# KDE DocBook Reformatting Utility
+#
+# Copyright (c) 2006, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Usage: index2gloss < input.docbook > output.docbook
+#
+# Reads a docbook file containing an index using <index>...</index> tags,
+# and reformats it using <glossary>...</glossary> tags.
+#
+# This is necessary because recent KDE versions render the usual index
+# tags in a way that is virtually unreadable (e.g., lines joined together,
+# secondary entries appearing as primary entries, etc.).  Using glossary
+# tags may be incorrect from docbook's point of view, but it at least
+# makes the document usable.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#
+
+use strict;
+
+my $data;
+
+sub switchTag {
+    my $tagOld = shift;
+    my $tagNew = shift;
+
+    my $found = 0;
+    if ($data =~ /^<$tagOld[ >]/) {
+        $data =~ s/^<$tagOld/<$tagNew/;
+        $found = 1;
+    }
+    if ($data =~ /<\/$tagOld>$/) {
+        $data =~ s/<\/$tagOld>$/<\/$tagNew>/;
+        $found = 1;
+    }
+    return $found;
+}
+
+sub transform {
+    switchTag('index', 'glossary');
+    switchTag('indexentry', 'glossentry');
+    switchTag('primaryie', 'glossterm');
+    if (switchTag('secondaryie', 'glossdef')) {
+        $data =~ s/^(<glossdef>)/$1<para>/;
+        $data =~ s/(<\/glossdef>)$/<\/para>$1/;
+    }
+    if (switchTag('seeie', 'glosssee')) {
+        $data =~ s/^(<glosssee>)\(see /$1/;
+        $data =~ s/\)(<\/glosssee>)$/$1/;
+    }
+}
+
+my $sHead;
+my $sTail;
+
+my $emptyEntry = 0;
+while (<>) {
+    chomp;
+    if (/^(\s*)(\S(.*\S)?)(\s*)$/) {
+        $sHead = $1;
+        $data = $2;
+        $sTail = $4;
+
+        transform();
+
+        $data =~ /^<glossentry[ >]/ and $emptyEntry = 1;
+        $data =~ /^<glossdef[ >]/ and $emptyEntry = 0;
+        $data =~ /^<glosssee[ >]/ and $emptyEntry = 0;
+
+        if ($data =~ /<\/glossentry>$/ and $emptyEntry) {
+            print "$sHead <glossdef><para>&nbsp;</para></glossdef>\n";
+        }
+
+        print $sHead . $data . $sTail . "\n";
+    } else {
+        # Blank line or whitespace only.
+        print "$_\n";
+    }
+}
+
+exit 0;
