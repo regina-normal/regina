@@ -1,1029 +1,1098 @@
-<index id="taskindex">
+<glossary id="taskindex">
  <title>Index</title>
 
- <indexentry id="idx-0-efficiency">
-  <primaryie>0-efficiency</primaryie>
-  <secondaryie><link linkend="tri-make0eff">making a triangulaton
-   0-efficient</link></secondaryie>
-  <secondaryie><link linkend="tri-prop0eff">testing for
-   0-efficiency</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>2-0 edge move</primaryie>
-  <seeie>(see elementary moves)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>2-0 vertex move</primaryie>
-  <seeie>(see elementary moves)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>2-1 move</primaryie>
-  <seeie>(see elementary moves)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>2-3 move</primaryie>
-  <seeie>(see elementary moves)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>3-2 move</primaryie>
-  <seeie>(see elementary moves)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-prop3sphere">3-sphere
-   recognition</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>4-4 move</primaryie>
-  <seeie>(see elementary moves)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>almost normal surfaces</primaryie>
-  <seeie>(see normal surfaces)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>angle structures</primaryie>
-  <secondaryie><link linkend="angles">definition</link></secondaryie>
-  <secondaryie><link linkend="angles-creation">enumerating vertex
-   angle structures</link></secondaryie>
-  <secondaryie><link linkend="angles-viewstructurecoords">individual
-   angles</link></secondaryie>
-  <secondaryie><link linkend="angles-propstrict">strict,
-   testing</link></secondaryie>
-  <secondaryie><link linkend="angles-proptaut">taut,
-   testing</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>&api; documentation</primaryie>
-  <seeie>(see documentation)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-new-aug">augmented triangular solid
-   torus, creation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="options-python">auto-indent</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-subdivision">barycentric
-   subdivision</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>book opening move</primaryie>
-  <seeie>(see elementary moves)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>boundary</primaryie>
-  <secondaryie><link linkend="tri-extension">extension from real to
-   ideal</link></secondaryie>
-  <secondaryie><link linkend="surfaces-boundary">of a normal
-   surface</link></secondaryie>
-  <secondaryie><link linkend="tri-propbdry">of a
-   triangulation</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-compbdrycomp">boundary components, viewing
-   in a triangulation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>boundary shelling move</primaryie>
-  <seeie>(see elementary moves)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="services">bug reporting</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>&cpp; source</primaryie>
-  <seeie>(see source code)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>calculation engine</primaryie>
-  <secondaryie><link linkend="python">accessing</link></secondaryie>
-  <secondaryie><link linkend="python-docs">documentation</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>census</primaryie>
-  <secondaryie><link linkend="man-sigcensus">creating a census of splitting
-   surface signatures</link></secondaryie>
-  <secondaryie><link linkend="man-tricensus">creating a census of
-   triangulations (command-line)</link></secondaryie>
-  <secondaryie><link linkend="tri-census-creation">creating a census of
-   triangulations (&gui;)</link></secondaryie>
-  <secondaryie><link linkend="man-tricensus-mpi">distributing census
-   creation across several machines (&mpi;)</link></secondaryie>
-  <secondaryie><link linkend="man-tricensus-manager">distributing census
-   creation across several machines (plain)</link></secondaryie>
-  <secondaryie><link linkend="tri-censuslookup">searching for a
-   triangulation in the available censuses</link></secondaryie>
-  <secondaryie><link linkend="options-census">searching for a
-   triangulation, configuration</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-propcentral">central surfaces,
-   recognising</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="packet-clone">cloning packets</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="options-snappea">closed triangulations
-   in &snappea;</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>code</primaryie>
-  <seeie>(see libraries)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-composition-composition">combinatorial
-   composition</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="man-regconcat">combining data
-   files</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-filtercomb">combining surface
-   filters</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>command-line tools</primaryie>
-  <secondaryie><link linkend="man-regina-python">scripting
-   interface</link></secondaryie>
-  <secondaryie><link linkend="utils">specialised utilities</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>compiling</primaryie>
-  <secondaryie><link linkend="compiling">compiling &regina; into other
-   code</link></secondaryie>
-  <secondaryie><link linkend="trouble-compile">fixing compile errors
-   when building &regina;</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-decomposition-component">component
-   decomposition</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-compbdrycomp">components, viewing
-   in a triangulation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>composition, combinatorial</primaryie>
-  <seeie>(see combinatorial composition)</seeie>
- </indexentry>
-
- <indexentry id="idx-configuration">
-  <primaryie>configuration</primaryie>
-  <secondaryie><link linkend="options-census">census
-   lookup</link></secondaryie>
-  <secondaryie><link linkend="options-triangulation">GAP (Groups,
-   Algorithms and Programming)</link></secondaryie>
-  <secondaryie><link linkend="options-general">general</link></secondaryie>
-  <secondaryie><link linkend="options-surfaces">normal surface
-   enumeration</link></secondaryie>
-  <secondaryie><link linkend="options-python">&python;
-   scripting</link></secondaryie>
-  <secondaryie><link linkend="options-snappea">&snappea;
-   interaction</link></secondaryie>
-  <secondaryie><link linkend="options-triangulation">triangulation
-   viewing and editing</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-decomposition-connsum">connected
-   sum decomposition</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-propconn">connectedness,
-   testing for</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="packet-container">container
-   packets</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="man-regconvert">conversion between file
-   formats</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>coordinate systems, normal surface</primaryie>
-  <secondaryie><link linkend="options-surfaces">configuring default
-   coordinate system</link></secondaryie>
-  <secondaryie><link linkend="surfaces-selectcoords">enumerating in a
-   particular coordinate system</link></secondaryie>
-  <secondaryie><link linkend="surfaces-viewsurfacecoords">explanation of
-   different coordinate systems</link></secondaryie>
-  <secondaryie><link linkend="surfaces-viewsurfacecoords">viewing in a
-   different coordinate system</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-crush">crushing a normal
-   surface</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-vertextype">cusps, identifying
-   in a triangulation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-cut">cutting along a normal
-   surface</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>data files</primaryie>
-  <seeie>(see files)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>decomposition</primaryie>
-  <secondaryie><link linkend="tri-decomposition-component">by
-   components</link></secondaryie>
-  <secondaryie><link linkend="tri-decomposition-connsum">by
-   connected sum</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>dehydrated triangulations</primaryie>
-  <secondaryie><link linkend="import-dehydrationlist">importing
-   a list of dehydration strings</link></secondaryie>
-  <secondaryie><link linkend="tri-new-dehydration">rehydrating from
-   a dehydration string</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="packet-delete">deleting packets</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>documentation</primaryie>
-  <secondaryie><link linkend="python-docs">&regina; objects, classes
-   and methods</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>double cover</primaryie>
-  <seeie>(see orientable double cover)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="man-regfiledump">dumping contents of a
-   file</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-proplink">edge linking surfaces,
-   recognising</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>edge weight normal coordinates</primaryie>
-  <seeie>(see coordinate systems)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-vertexedgeface">edges, viewing
-   in a triangulation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="packet-view">editing packets</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-elementarymove">elementary moves
-   on triangulations</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-embeddedonly">embedded normal surfaces,
-   enumerating</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="angles-creation">enumerating vertex angle
-   structures</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-creation">enumerating vertex normal
-   surfaces</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="troubleshooting">errors, fixing</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>Euler characteristic</primaryie>
-  <secondaryie><link linkend="surfaces-propeuler">of a normal
-   surface</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>examples</primaryie>
-  <secondaryie><link linkend="sessions">&python; scripting</link></secondaryie>
-  <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
-  <secondaryie><link linkend="tri-new-example">triangulations</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="foreign-export">exporting
-   data</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>extension</primaryie>
-  <secondaryie><link linkend="tri-extension">of a triangulation
-   boundary</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>face arc normal coordinates</primaryie>
-  <seeie>(see coordinate systems)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>face gluings</primaryie>
-  <seeie>(see tetrahedron face gluings)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-vertexedgeface">faces, viewing
-   in a triangulation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="featureset">feature set</link></primaryie>
- </indexentry>
-
- <indexentry id="idx-files">
-  <primaryie>files</primaryie>
-  <secondaryie><link linkend="options-general">automatic file
-   extension</link></secondaryie>
-  <secondaryie><link linkend="man-regconcat">combining data
-   files</link></secondaryie>
-  <secondaryie><link linkend="man-trisetcmp">comparing triangulations
-   between data files</link></secondaryie>
-  <secondaryie><link linkend="man-regconvert">conversion between file
-   formats</link></secondaryie>
-  <secondaryie><link linkend="man-regfiledump">dumping contents of a
-   file</link></secondaryie>
-  <secondaryie><link linkend="foreign-export">exporting
-   data</link></secondaryie>
-  <secondaryie><link linkend="man-regfiletype">identifying file
-   types</link></secondaryie>
-  <secondaryie><link linkend="foreign-import">importing
-   data</link></secondaryie>
-  <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
-  <secondaryie><link linkend="dataformat">specification of file
-   format</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>filtering normal surface lists</primaryie>
-  <seeie>(see surface filters)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>finite boundary</primaryie>
-  <seeie>(see boundary)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="troubleshooting">frequently asked
-   questions</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-algebra-fundgroup">fundamental
-   group</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>GAP (Groups, Algorithms and Programming)</primaryie>
-  <secondaryie><link linkend="options-triangulation">configuration</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-fundgroup">using to
-   simplify group presentations</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>gluings</primaryie>
-  <seeie>(see tetrahedron face gluings)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-algebra-homology">homology
-   groups</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>hyperbolic</primaryie>
-  <secondaryie><link linkend="tri-snappea-info">solution
-   type</link></secondaryie>
-  <secondaryie><link linkend="tri-snappea-info">volume</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>ideal vertices</primaryie>
-  <secondaryie><link linkend="tri-extension">creating from real boundary
-   components</link></secondaryie>
-  <secondaryie><link linkend="tri-propideal">testing for</link></secondaryie>
-  <secondaryie><link linkend="tri-subdivision">truncating / converting
-   to real boundary</link></secondaryie>
-  <secondaryie><link linkend="tri-vertextype">viewing</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>identifications</primaryie>
-  <seeie>(see tetrahedron face gluings)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="man-regfiletype">identifying file
-   types</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-embeddedonly">immersed / singular
-   normal surfaces, enumerating</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="foreign-import">importing
-   data</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>interface</primaryie>
-  <seeie>(see user interface)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>invalid</primaryie>
-  <seeie>(see valid)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>isomorphism testing</primaryie>
-  <secondaryie><link linkend="tri-composition-isomorphism">between
-   individual triangulations</link></secondaryie>
-  <secondaryie><link linkend="man-trisetcmp">between
-   sets of triangulations</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-new-lens">layered lens space,
-   creation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-new-loop">layered loop,
-   creation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-new-layered">layered solid torus,
-   creation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-new-lens">lens space,
-   creation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>libraries</primaryie>
-  <secondaryie><link linkend="python-libraries">&python;</link></secondaryie>
-  <secondaryie><link linkend="compiling">&regina;, compiling into
-   other code</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="licenses">licence details</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>look up</primaryie>
-  <seeie>(see search)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="services">mailing lists</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-viewmatching">matching
-   equations for normal surfaces</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>naming</primaryie>
-  <secondaryie><link linkend="packet-rename">packets</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propname">surfaces in a
-   surface list</link></secondaryie>
-  <secondaryie><link linkend="tri-editgluings">tetrahedra in a
-   triangulation</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>normal surfaces</primaryie>
-  <secondaryie><link linkend="surfaces-viewsurfaceprops">basic
-   properties</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propcentral">central
-   surfaces, recognising</link></secondaryie>
-  <secondaryie><link linkend="options-surfaces">coordinate
-   systems, configuring default</link></secondaryie>
-  <secondaryie><link linkend="surfaces-viewsurfacecoords">coordinate
-   systems, different systems explained</link></secondaryie>
-  <secondaryie><link linkend="surfaces-viewsurfacecoords">coordinate
-   systems, viewing in different systems</link></secondaryie>
-  <secondaryie><link linkend="surfaces-crush">crushing a
-   surface</link></secondaryie>
-  <secondaryie><link linkend="surfaces-cut">cutting along a
-   surface</link></secondaryie>
-  <secondaryie><link linkend="surfaces">definition</link></secondaryie>
-  <secondaryie><link linkend="surfaces-proplink">edge links,
-   recognising</link></secondaryie>
-  <secondaryie><link linkend="surfaces-creation">enumerating vertex
-   normal surfaces</link></secondaryie>
-  <secondaryie><link linkend="surfaces-filtering">filtering surface
-   lists</link></secondaryie>
-  <secondaryie><link linkend="surfaces-viewmatching">matching
-   equations</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propname">naming
-   surfaces in a list</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propsplitting">splitting surfaces,
-   recognising</link></secondaryie>
-  <secondaryie><link linkend="surfaces-proplink">vertex links,
-   recognising</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>one-sidedness</primaryie>
-  <seeie>(see sidedness)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>open book</primaryie>
-  <seeie>(see elementary moves)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>options</primaryie>
-  <seeie>(see configuration)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>orientability</primaryie>
-  <secondaryie><link linkend="surfaces-proporient">of a normal
-   surface</link></secondaryie>
-  <secondaryie><link linkend="tri-proporient">of a
-   triangulation</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-cover">orientable double
-   cover</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>packet tree</primaryie>
-  <secondaryie><link linkend="options-general">display large
-   icon</link></secondaryie>
-  <secondaryie><link linkend="options-general">jump size</link></secondaryie>
-  <secondaryie><link linkend="packet-tree">overview</link></secondaryie>
-  <secondaryie><link linkend="packet-refresh">refreshing a
-   subtree</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>packets</primaryie>
-  <secondaryie><link linkend="options-general">automatic
-   docking</link></secondaryie>
-  <secondaryie><link linkend="packet-types">available packet
-   types</link></secondaryie>
-  <secondaryie><link linkend="packet-uneditable">cannot be
-   edited</link></secondaryie>
-  <secondaryie><link linkend="packet-clone">cloning</link></secondaryie>
-  <secondaryie><link linkend="packet-new">creating new
-   packets</link></secondaryie>
-  <secondaryie><link linkend="packet-delete">deleting</link></secondaryie>
-  <secondaryie><link linkend="packet-view">viewing and
-   editing</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>padlock</primaryie>
-  <secondaryie><link linkend="packet-uneditable">in the packet
-   tree</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>&python; scripting</primaryie>
-  <seeie>(see scripting)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>quad normal coordinates</primaryie>
-  <seeie>(see coordinate systems)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="troubleshooting">questions, frequently
-   asked</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>real boundary</primaryie>
-  <seeie>(see boundary)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>rehydrating triangulations</primaryie>
-  <seeie>(see dehydrated triangulations)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>removing</primaryie>
-  <seeie>(see deleting)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>renaming</primaryie>
-  <seeie>(see naming)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="services">reporting bugs</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>samples</primaryie>
-  <seeie>(see examples)</seeie>
- </indexentry>
-
- <indexentry id="idx-scripting">
-  <primaryie>scripting</primaryie>
-  <secondaryie><link linkend="python-python">accessing &regina; objects,
-   classes and methods</link></secondaryie>
-  <secondaryie><link linkend="trouble-python-sigerror"><exceptionname>Boost.Python.ArgumentError</exceptionname>,
-   resolving</link></secondaryie>
-  <secondaryie><link linkend="python-caveats">caveats and
-   traps</link></secondaryie>
-  <secondaryie><link linkend="man-regina-python">command-line scripting
-   interface</link></secondaryie>
-  <secondaryie><link linkend="options-python">configuration</link></secondaryie>
-  <secondaryie><link linkend="python-docs">documentation of &regina;
-   objects, classes and methods</link></secondaryie>
-  <secondaryie><link linkend="trouble-python-disabled">enabling</link></secondaryie>
-  <secondaryie><link linkend="sessions">examples</link></secondaryie>
-  <secondaryie><link linkend="export-pyscript">exporting
-   &python; scripts</link></secondaryie>
-  <secondaryie><link linkend="import-pyscript">importing
-   &python; scripts</link></secondaryie>
-  <secondaryie><link linkend="python-invoking">invoking in the
-   &gui;</link></secondaryie>
-  <secondaryie><link linkend="python-ownership">ownership of
-   objects</link></secondaryie>
-  <secondaryie><link linkend="python-libraries">&python;
-   libraries</link></secondaryie>
-  <secondaryie><link linkend="packet-script">script
-   packets</link></secondaryie>
-  <secondaryie><link linkend="trouble-python-typeerror"><exceptionname>TypeError</exceptionname>,
-   resolving</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>search</primaryie>
-  <secondaryie><link linkend="tri-censuslookup">for a triangulation in
-   the available censuses</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-sfs3">&sfslong;, creation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>settings</primaryie>
-  <seeie>(see configuration)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>shell boundary</primaryie>
-  <seeie>(see elementary moves)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-propsides">sidedness of a
-   normal surface</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>signatures, splitting surface</primaryie>
-  <seeie>(see splitting surfaces)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-simplification">simplification of
-   triangulations</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-embeddedonly">singular / immersed
-   normal surfaces, enumerating</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>&snappea;</primaryie>
-  <secondaryie><link linkend="tri-snappea">calculations</link></secondaryie>
-  <secondaryie><link linkend="options-snappea">closed triangulations,
-   allowing</link></secondaryie>
-  <secondaryie><link linkend="export-snappea">exporting to</link></secondaryie>
-  <secondaryie><link linkend="import-snappea">importing
-   from</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>solution type</primaryie>
-  <seeie>(see hyperbolic solution type)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>source code</primaryie>
-  <secondaryie><link linkend="compiling">combining with the &regina;
-   calculation engine</link></secondaryie>
-  <secondaryie><link linkend="export-cpp">exporting triangulations to
-   &cpp;</link></secondaryie>
-  <secondaryie><link linkend="python">&python;
-   scripting</link></secondaryie>
- </indexentry>
-
- <indexentry id="idx-splitting-surfaces">
-  <primaryie>splitting surfaces</primaryie>
-  <secondaryie><link linkend="man-sigcensus">census of splitting
-   surface signatures</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propsplitting">recognising in a
-   surface list</link></secondaryie>
-  <secondaryie><link linkend="tri-new-splitting">reconstructing a
-   triangulation from</link></secondaryie>
-  <secondaryie><link linkend="tri-propsplitting">testing for existence
-   in a triangulation</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>standard normal coordinates</primaryie>
-  <seeie>(see coordinate systems)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>standard subcomplexes</primaryie>
-  <secondaryie><link linkend="tri-creation">creating</link></secondaryie>
-  <secondaryie><link linkend="tri-composition-composition">testing
-   for</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="angles-propstrict">strict angle
-   structures</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>subcomplex</primaryie>
-  <secondaryie><link linkend="tri-composition-composition">searching
-   for standard subcomplexes</link></secondaryie>
-  <secondaryie><link linkend="tri-composition-isomorphism">testing
-   between two triangulations</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-subdivision">subdivision of
-   triangulations</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>surface filters</primaryie>
-  <secondaryie><link linkend="surfaces-filtercomb">combining
-   filters</link></secondaryie>
-  <secondaryie><link linkend="surfaces-filterprop">filtering by surface
-   properties</link></secondaryie>
-  <secondaryie><link linkend="surfaces-filtering">overview</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>surfaces, normal</primaryie>
-  <seeie>(see normal surfaces)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="options-python">tab size</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="angles-proptaut">taut angle
-   structures</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="trouble-testsuite">test suite</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-editgluings">tetrahedron face
-   gluings, editing</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="packet-text">text packets</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>tree</primaryie>
-  <seeie>(see packet tree)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>triangulation</primaryie>
-  <secondaryie><link linkend="tri-prop0eff">0-efficiency,
-   testing for</link></secondaryie>
-  <secondaryie><link linkend="tri-make0eff">0-efficient triangulation,
-   conversion to</link></secondaryie>
-  <secondaryie><link linkend="tri-prop3sphere">3-sphere
-   recognition</link></secondaryie>
-  <secondaryie><link linkend="tri-subdivision">barycentric
-   subdivision</link></secondaryie>
-  <secondaryie><link linkend="tri-compbdrycomp">boundary components,
-   viewing</link></secondaryie>
-  <secondaryie><link linkend="tri-extension">boundary,
-   converting real to ideal</link></secondaryie>
-  <secondaryie><link linkend="tri-propbdry">boundary,
-   testing for</link></secondaryie>
-  <secondaryie><link linkend="options-snappea">closed,
-   allowing in &snappea;</link></secondaryie>
-  <secondaryie><link linkend="tri-composition-composition">combinatorial
-   composition</link></secondaryie>
-  <secondaryie><link linkend="tri-decomposition-component">component
-   decomposition</link></secondaryie>
-  <secondaryie><link linkend="tri-compbdrycomp">components,
-   viewing</link></secondaryie>
-  <secondaryie><link linkend="tri-decomposition-connsum">connected
-   sum decomposition</link></secondaryie>
-  <secondaryie><link linkend="tri-propconn">connectedness</link></secondaryie>
-  <secondaryie><link linkend="tri-creation">creation</link></secondaryie>
-  <secondaryie><link linkend="tri-vertextype">cusps</link></secondaryie>
-  <secondaryie><link linkend="tri-new-dehydration">dehydration
-   string, rehydrating</link></secondaryie>
-  <secondaryie><link linkend="tri-elementarymove">elementary
-   moves (3-2, 4-4, open book, etc.)</link></secondaryie>
-  <secondaryie><link linkend="tri-new-example">examples,
-   creating</link></secondaryie>
-  <secondaryie><link linkend="foreign-export">exporting to
-   external files</link></secondaryie>
-  <secondaryie><link linkend="tri-facetype">faces,
-   viewing shapes</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-fundgroup">fundamental
-   group</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-homology">homology
-   groups</link></secondaryie>
-  <secondaryie><link linkend="tri-snappea-info">hyperbolic solution
-   type</link></secondaryie>
-  <secondaryie><link linkend="tri-extension">ideal vertices,
-   creation</link></secondaryie>
-  <secondaryie><link linkend="tri-propideal">ideal vertices,
-   testing for</link></secondaryie>
-  <secondaryie><link linkend="tri-subdivision">ideal vertices,
-   truncation</link></secondaryie>
-  <secondaryie><link linkend="foreign-import">importing from
-   external files</link></secondaryie>
-  <secondaryie><link linkend="tri-composition-isomorphism">isomorphism
-   and subcomplex testing</link></secondaryie>
-  <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
-  <secondaryie><link linkend="tri-cover">orientable double
-   cover</link></secondaryie>
-  <secondaryie><link linkend="tri-censuslookup">searching for a
-   triangulation in the available censuses</link></secondaryie>
-  <secondaryie><link linkend="tri-simplification">simplification</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton">skeleton,
-   viewing details</link></secondaryie>
-  <secondaryie><link linkend="tri-new-splitting">splitting surface,
-   reconstructing triangulation from</link></secondaryie>
-  <secondaryie><link linkend="tri-propsplitting">splitting surface,
-   testing for</link></secondaryie>
-  <secondaryie><link linkend="tri-editgluings">tetrahedron face
-   gluings, editing</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
-   invariants</link></secondaryie>
-  <secondaryie><link linkend="tri-propvalid">validity</link></secondaryie>
-  <secondaryie><link linkend="tri-snappea-info">volume</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="troubleshooting">troubleshooting</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-subdivision">truncation of ideal
-   vertices</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
-   invariants</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>two-sidedness</primaryie>
-  <seeie>(see sidedness)</seeie>
- </indexentry>
-
- <indexentry id="idx-user-interface">
-  <primaryie>user interface</primaryie>
-  <secondaryie><link linkend="man-regina-python">command-line scripting
-   interface</link></secondaryie>
-  <secondaryie><link linkend="man-regina-kde">graphical user
-   interface</link></secondaryie>
-  <secondaryie><link linkend="utils">specialised command-line
-   utilities</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-edgetype">valid edges,
-   testing for</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-propvalid">valid triangulation,
-   testing for</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>vertex angle structures</primaryie>
-  <seeie>(see angle structures)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-proplink">vertex linking surfaces,
-   recognising</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>vertex normal surfaces</primaryie>
-  <seeie>(see normal surfaces)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-vertexedgeface">vertices, viewing
-   in a triangulation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="packet-view">viewing packets</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>volume</primaryie>
-  <seeie>(see hyperbolic volume)</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>zero-efficiency</primaryie>
-  <seeie>(see 0-effiency)</seeie>
- </indexentry>
-</index>
+ <glossentry id="idx-0-efficiency">
+  <glossterm>0-efficiency</glossterm>
+  <glossdef><para><link linkend="tri-make0eff">making a triangulaton
+   0-efficient</link></para></glossdef>
+  <glossdef><para><link linkend="tri-prop0eff">testing for
+   0-efficiency</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>2-0 edge move</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>2-0 vertex move</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>2-1 move</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>2-3 move</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>3-2 move</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-prop3sphere">3-sphere
+   recognition</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>4-4 move</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>almost normal surfaces</glossterm>
+  <glosssee>normal surfaces</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>angle structures</glossterm>
+  <glossdef><para><link linkend="angles">definition</link></para></glossdef>
+  <glossdef><para><link linkend="angles-creation">enumerating vertex
+   angle structures</link></para></glossdef>
+  <glossdef><para><link linkend="angles-viewstructurecoords">individual
+   angles</link></para></glossdef>
+  <glossdef><para><link linkend="angles-propstrict">strict,
+   testing</link></para></glossdef>
+  <glossdef><para><link linkend="angles-proptaut">taut,
+   testing</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>&api; documentation</glossterm>
+  <glosssee>documentation</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-new-aug">augmented triangular solid
+   torus, creation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="options-python">auto-indent</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-subdivision">barycentric
+   subdivision</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>book opening move</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>boundary</glossterm>
+  <glossdef><para><link linkend="tri-extension">extension from real to
+   ideal</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-boundary">of a normal
+   surface</link></para></glossdef>
+  <glossdef><para><link linkend="tri-propbdry">of a
+   triangulation</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-compbdrycomp">boundary components, viewing
+   in a triangulation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>boundary shelling move</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="services">bug reporting</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>&cpp; source</glossterm>
+  <glosssee>source code</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>calculation engine</glossterm>
+  <glossdef><para><link linkend="python">accessing</link></para></glossdef>
+  <glossdef><para><link linkend="python-docs">documentation</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>census</glossterm>
+  <glossdef><para><link linkend="man-sigcensus">creating a census of splitting
+   surface signatures</link></para></glossdef>
+  <glossdef><para><link linkend="man-tricensus">creating a census of
+   triangulations (command-line)</link></para></glossdef>
+  <glossdef><para><link linkend="tri-census-creation">creating a census of
+   triangulations (&gui;)</link></para></glossdef>
+  <glossdef><para><link linkend="man-tricensus-mpi">distributing census
+   creation across several machines (&mpi;)</link></para></glossdef>
+  <glossdef><para><link linkend="man-tricensus-manager">distributing census
+   creation across several machines (plain)</link></para></glossdef>
+  <glossdef><para><link linkend="tri-censuslookup">searching for a
+   triangulation in the available censuses</link></para></glossdef>
+  <glossdef><para><link linkend="options-census">searching for a
+   triangulation, configuration</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-propcentral">central surfaces,
+   recognising</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="packet-clone">cloning packets</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="options-snappea">closed triangulations
+   in &snappea;</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>code</glossterm>
+  <glosssee>libraries</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-composition-composition">combinatorial
+   composition</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="man-regconcat">combining data
+   files</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-filtercomb">combining surface
+   filters</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>command-line tools</glossterm>
+  <glossdef><para><link linkend="man-regina-python">scripting
+   interface</link></para></glossdef>
+  <glossdef><para><link linkend="utils">specialised utilities</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>compiling</glossterm>
+  <glossdef><para><link linkend="compiling">compiling &regina; into other
+   code</link></para></glossdef>
+  <glossdef><para><link linkend="trouble-compile">fixing compile errors
+   when building &regina;</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-decomposition-component">component
+   decomposition</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-compbdrycomp">components, viewing
+   in a triangulation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>composition, combinatorial</glossterm>
+  <glosssee>combinatorial composition</glosssee>
+ </glossentry>
+
+ <glossentry id="idx-configuration">
+  <glossterm>configuration</glossterm>
+  <glossdef><para><link linkend="options-census">census
+   lookup</link></para></glossdef>
+  <glossdef><para><link linkend="options-triangulation">GAP (Groups,
+   Algorithms and Programming)</link></para></glossdef>
+  <glossdef><para><link linkend="options-general">general</link></para></glossdef>
+  <glossdef><para><link linkend="options-surfaces">normal surface
+   enumeration</link></para></glossdef>
+  <glossdef><para><link linkend="options-python">&python;
+   scripting</link></para></glossdef>
+  <glossdef><para><link linkend="options-snappea">&snappea;
+   interaction</link></para></glossdef>
+  <glossdef><para><link linkend="options-triangulation">triangulation
+   viewing and editing</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-decomposition-connsum">connected
+   sum decomposition</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-propconn">connectedness,
+   testing for</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="packet-container">container
+   packets</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="man-regconvert">conversion between file
+   formats</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>coordinate systems, normal surface</glossterm>
+  <glossdef><para><link linkend="options-surfaces">configuring default
+   coordinate system</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-selectcoords">enumerating in a
+   particular coordinate system</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-viewsurfacecoords">explanation of
+   different coordinate systems</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-viewsurfacecoords">viewing in a
+   different coordinate system</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-crush">crushing a normal
+   surface</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-vertextype">cusps, identifying
+   in a triangulation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-cut">cutting along a normal
+   surface</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>data files</glossterm>
+  <glosssee>files</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>decomposition</glossterm>
+  <glossdef><para><link linkend="tri-decomposition-component">by
+   components</link></para></glossdef>
+  <glossdef><para><link linkend="tri-decomposition-connsum">by
+   connected sum</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>dehydrated triangulations</glossterm>
+  <glossdef><para><link linkend="import-dehydrationlist">importing
+   a list of dehydration strings</link></para></glossdef>
+  <glossdef><para><link linkend="tri-new-dehydration">rehydrating from
+   a dehydration string</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="packet-delete">deleting packets</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>documentation</glossterm>
+  <glossdef><para><link linkend="python-docs">&regina; objects, classes
+   and methods</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>double cover</glossterm>
+  <glosssee>orientable double cover</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="man-regfiledump">dumping contents of a
+   file</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-proplink">edge linking surfaces,
+   recognising</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>edge weight normal coordinates</glossterm>
+  <glosssee>coordinate systems</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-vertexedgeface">edges, viewing
+   in a triangulation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="packet-view">editing packets</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-elementarymove">elementary moves
+   on triangulations</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-embeddedonly">embedded normal surfaces,
+   enumerating</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="angles-creation">enumerating vertex angle
+   structures</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-creation">enumerating vertex normal
+   surfaces</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="troubleshooting">errors, fixing</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>Euler characteristic</glossterm>
+  <glossdef><para><link linkend="surfaces-propeuler">of a normal
+   surface</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>examples</glossterm>
+  <glossdef><para><link linkend="sessions">&python; scripting</link></para></glossdef>
+  <glossdef><para><link linkend="tutorial">sample data files</link></para></glossdef>
+  <glossdef><para><link linkend="tri-new-example">triangulations</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="foreign-export">exporting
+   data</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>extension</glossterm>
+  <glossdef><para><link linkend="tri-extension">of a triangulation
+   boundary</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>face arc normal coordinates</glossterm>
+  <glosssee>coordinate systems</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>face gluings</glossterm>
+  <glosssee>tetrahedron face gluings</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-vertexedgeface">faces, viewing
+   in a triangulation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="featureset">feature set</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry id="idx-files">
+  <glossterm>files</glossterm>
+  <glossdef><para><link linkend="options-general">automatic file
+   extension</link></para></glossdef>
+  <glossdef><para><link linkend="man-regconcat">combining data
+   files</link></para></glossdef>
+  <glossdef><para><link linkend="man-trisetcmp">comparing triangulations
+   between data files</link></para></glossdef>
+  <glossdef><para><link linkend="man-regconvert">conversion between file
+   formats</link></para></glossdef>
+  <glossdef><para><link linkend="man-regfiledump">dumping contents of a
+   file</link></para></glossdef>
+  <glossdef><para><link linkend="foreign-export">exporting
+   data</link></para></glossdef>
+  <glossdef><para><link linkend="man-regfiletype">identifying file
+   types</link></para></glossdef>
+  <glossdef><para><link linkend="foreign-import">importing
+   data</link></para></glossdef>
+  <glossdef><para><link linkend="tutorial">sample data files</link></para></glossdef>
+  <glossdef><para><link linkend="dataformat">specification of file
+   format</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>filtering normal surface lists</glossterm>
+  <glosssee>surface filters</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>finite boundary</glossterm>
+  <glosssee>boundary</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="troubleshooting">frequently asked
+   questions</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-algebra-fundgroup">fundamental
+   group</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>GAP (Groups, Algorithms and Programming)</glossterm>
+  <glossdef><para><link linkend="options-triangulation">configuration</link></para></glossdef>
+  <glossdef><para><link linkend="tri-algebra-fundgroup">using to
+   simplify group presentations</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>gluings</glossterm>
+  <glosssee>tetrahedron face gluings</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-algebra-homology">homology
+   groups</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>hyperbolic</glossterm>
+  <glossdef><para><link linkend="tri-snappea-info">solution
+   type</link></para></glossdef>
+  <glossdef><para><link linkend="tri-snappea-info">volume</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>ideal vertices</glossterm>
+  <glossdef><para><link linkend="tri-extension">creating from real boundary
+   components</link></para></glossdef>
+  <glossdef><para><link linkend="tri-propideal">testing for</link></para></glossdef>
+  <glossdef><para><link linkend="tri-subdivision">truncating / converting
+   to real boundary</link></para></glossdef>
+  <glossdef><para><link linkend="tri-vertextype">viewing</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>identifications</glossterm>
+  <glosssee>tetrahedron face gluings</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="man-regfiletype">identifying file
+   types</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-embeddedonly">immersed / singular
+   normal surfaces, enumerating</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="foreign-import">importing
+   data</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>interface</glossterm>
+  <glosssee>user interface</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>invalid</glossterm>
+  <glosssee>valid</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>isomorphism testing</glossterm>
+  <glossdef><para><link linkend="tri-composition-isomorphism">between
+   individual triangulations</link></para></glossdef>
+  <glossdef><para><link linkend="man-trisetcmp">between
+   sets of triangulations</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-new-lens">layered lens space,
+   creation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-new-loop">layered loop,
+   creation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-new-layered">layered solid torus,
+   creation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-new-lens">lens space,
+   creation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>libraries</glossterm>
+  <glossdef><para><link linkend="python-libraries">&python;</link></para></glossdef>
+  <glossdef><para><link linkend="compiling">&regina;, compiling into
+   other code</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="licenses">licence details</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>look up</glossterm>
+  <glosssee>search</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="services">mailing lists</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-viewmatching">matching
+   equations for normal surfaces</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>naming</glossterm>
+  <glossdef><para><link linkend="packet-rename">packets</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-propname">surfaces in a
+   surface list</link></para></glossdef>
+  <glossdef><para><link linkend="tri-editgluings">tetrahedra in a
+   triangulation</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>normal surfaces</glossterm>
+  <glossdef><para><link linkend="surfaces-viewsurfaceprops">basic
+   properties</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-propcentral">central
+   surfaces, recognising</link></para></glossdef>
+  <glossdef><para><link linkend="options-surfaces">coordinate
+   systems, configuring default</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-viewsurfacecoords">coordinate
+   systems, different systems explained</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-viewsurfacecoords">coordinate
+   systems, viewing in different systems</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-crush">crushing a
+   surface</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-cut">cutting along a
+   surface</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces">definition</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-proplink">edge links,
+   recognising</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-creation">enumerating vertex
+   normal surfaces</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-filtering">filtering surface
+   lists</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-viewmatching">matching
+   equations</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-propname">naming
+   surfaces in a list</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-propsplitting">splitting surfaces,
+   recognising</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-proplink">vertex links,
+   recognising</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>one-sidedness</glossterm>
+  <glosssee>sidedness</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>open book</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>options</glossterm>
+  <glosssee>configuration</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>orientability</glossterm>
+  <glossdef><para><link linkend="surfaces-proporient">of a normal
+   surface</link></para></glossdef>
+  <glossdef><para><link linkend="tri-proporient">of a
+   triangulation</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-cover">orientable double
+   cover</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>packet tree</glossterm>
+  <glossdef><para><link linkend="options-general">display large
+   icon</link></para></glossdef>
+  <glossdef><para><link linkend="options-general">jump size</link></para></glossdef>
+  <glossdef><para><link linkend="packet-tree">overview</link></para></glossdef>
+  <glossdef><para><link linkend="packet-refresh">refreshing a
+   subtree</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>packets</glossterm>
+  <glossdef><para><link linkend="options-general">automatic
+   docking</link></para></glossdef>
+  <glossdef><para><link linkend="packet-types">available packet
+   types</link></para></glossdef>
+  <glossdef><para><link linkend="packet-uneditable">cannot be
+   edited</link></para></glossdef>
+  <glossdef><para><link linkend="packet-clone">cloning</link></para></glossdef>
+  <glossdef><para><link linkend="packet-new">creating new
+   packets</link></para></glossdef>
+  <glossdef><para><link linkend="packet-delete">deleting</link></para></glossdef>
+  <glossdef><para><link linkend="packet-view">viewing and
+   editing</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>padlock</glossterm>
+  <glossdef><para><link linkend="packet-uneditable">in the packet
+   tree</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>&python; scripting</glossterm>
+  <glosssee>scripting</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>quad normal coordinates</glossterm>
+  <glosssee>coordinate systems</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="troubleshooting">questions, frequently
+   asked</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>real boundary</glossterm>
+  <glosssee>boundary</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>rehydrating triangulations</glossterm>
+  <glosssee>dehydrated triangulations</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>removing</glossterm>
+  <glosssee>deleting</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>renaming</glossterm>
+  <glosssee>naming</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="services">reporting bugs</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>samples</glossterm>
+  <glosssee>examples</glosssee>
+ </glossentry>
+
+ <glossentry id="idx-scripting">
+  <glossterm>scripting</glossterm>
+  <glossdef><para><link linkend="python-python">accessing &regina; objects,
+   classes and methods</link></para></glossdef>
+  <glossdef><para><link linkend="trouble-python-sigerror"><exceptionname>Boost.Python.ArgumentError</exceptionname>,
+   resolving</link></para></glossdef>
+  <glossdef><para><link linkend="python-caveats">caveats and
+   traps</link></para></glossdef>
+  <glossdef><para><link linkend="man-regina-python">command-line scripting
+   interface</link></para></glossdef>
+  <glossdef><para><link linkend="options-python">configuration</link></para></glossdef>
+  <glossdef><para><link linkend="python-docs">documentation of &regina;
+   objects, classes and methods</link></para></glossdef>
+  <glossdef><para><link linkend="trouble-python-disabled">enabling</link></para></glossdef>
+  <glossdef><para><link linkend="sessions">examples</link></para></glossdef>
+  <glossdef><para><link linkend="export-pyscript">exporting
+   &python; scripts</link></para></glossdef>
+  <glossdef><para><link linkend="import-pyscript">importing
+   &python; scripts</link></para></glossdef>
+  <glossdef><para><link linkend="python-invoking">invoking in the
+   &gui;</link></para></glossdef>
+  <glossdef><para><link linkend="python-ownership">ownership of
+   objects</link></para></glossdef>
+  <glossdef><para><link linkend="python-libraries">&python;
+   libraries</link></para></glossdef>
+  <glossdef><para><link linkend="packet-script">script
+   packets</link></para></glossdef>
+  <glossdef><para><link linkend="trouble-python-typeerror"><exceptionname>TypeError</exceptionname>,
+   resolving</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>search</glossterm>
+  <glossdef><para><link linkend="tri-censuslookup">for a triangulation in
+   the available censuses</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-sfs3">&sfslong;, creation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>settings</glossterm>
+  <glosssee>configuration</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>shell boundary</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-propsides">sidedness of a
+   normal surface</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>signatures, splitting surface</glossterm>
+  <glosssee>splitting surfaces</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-simplification">simplification of
+   triangulations</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-embeddedonly">singular / immersed
+   normal surfaces, enumerating</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>&snappea;</glossterm>
+  <glossdef><para><link linkend="tri-snappea">calculations</link></para></glossdef>
+  <glossdef><para><link linkend="options-snappea">closed triangulations,
+   allowing</link></para></glossdef>
+  <glossdef><para><link linkend="export-snappea">exporting to</link></para></glossdef>
+  <glossdef><para><link linkend="import-snappea">importing
+   from</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>solution type</glossterm>
+  <glosssee>hyperbolic solution type</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>source code</glossterm>
+  <glossdef><para><link linkend="compiling">combining with the &regina;
+   calculation engine</link></para></glossdef>
+  <glossdef><para><link linkend="export-cpp">exporting triangulations to
+   &cpp;</link></para></glossdef>
+  <glossdef><para><link linkend="python">&python;
+   scripting</link></para></glossdef>
+ </glossentry>
+
+ <glossentry id="idx-splitting-surfaces">
+  <glossterm>splitting surfaces</glossterm>
+  <glossdef><para><link linkend="man-sigcensus">census of splitting
+   surface signatures</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-propsplitting">recognising in a
+   surface list</link></para></glossdef>
+  <glossdef><para><link linkend="tri-new-splitting">reconstructing a
+   triangulation from</link></para></glossdef>
+  <glossdef><para><link linkend="tri-propsplitting">testing for existence
+   in a triangulation</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>standard normal coordinates</glossterm>
+  <glosssee>coordinate systems</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>standard subcomplexes</glossterm>
+  <glossdef><para><link linkend="tri-creation">creating</link></para></glossdef>
+  <glossdef><para><link linkend="tri-composition-composition">testing
+   for</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="angles-propstrict">strict angle
+   structures</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>subcomplex</glossterm>
+  <glossdef><para><link linkend="tri-composition-composition">searching
+   for standard subcomplexes</link></para></glossdef>
+  <glossdef><para><link linkend="tri-composition-isomorphism">testing
+   between two triangulations</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-subdivision">subdivision of
+   triangulations</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>surface filters</glossterm>
+  <glossdef><para><link linkend="surfaces-filtercomb">combining
+   filters</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-filterprop">filtering by surface
+   properties</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-filtering">overview</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>surfaces, normal</glossterm>
+  <glosssee>normal surfaces</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="options-python">tab size</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="angles-proptaut">taut angle
+   structures</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="trouble-testsuite">test suite</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-editgluings">tetrahedron face
+   gluings, editing</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="packet-text">text packets</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>tree</glossterm>
+  <glosssee>packet tree</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>triangulation</glossterm>
+  <glossdef><para><link linkend="tri-prop0eff">0-efficiency,
+   testing for</link></para></glossdef>
+  <glossdef><para><link linkend="tri-make0eff">0-efficient triangulation,
+   conversion to</link></para></glossdef>
+  <glossdef><para><link linkend="tri-prop3sphere">3-sphere
+   recognition</link></para></glossdef>
+  <glossdef><para><link linkend="tri-subdivision">barycentric
+   subdivision</link></para></glossdef>
+  <glossdef><para><link linkend="tri-compbdrycomp">boundary components,
+   viewing</link></para></glossdef>
+  <glossdef><para><link linkend="tri-extension">boundary,
+   converting real to ideal</link></para></glossdef>
+  <glossdef><para><link linkend="tri-propbdry">boundary,
+   testing for</link></para></glossdef>
+  <glossdef><para><link linkend="options-snappea">closed,
+   allowing in &snappea;</link></para></glossdef>
+  <glossdef><para><link linkend="tri-composition-composition">combinatorial
+   composition</link></para></glossdef>
+  <glossdef><para><link linkend="tri-decomposition-component">component
+   decomposition</link></para></glossdef>
+  <glossdef><para><link linkend="tri-compbdrycomp">components,
+   viewing</link></para></glossdef>
+  <glossdef><para><link linkend="tri-decomposition-connsum">connected
+   sum decomposition</link></para></glossdef>
+  <glossdef><para><link linkend="tri-propconn">connectedness</link></para></glossdef>
+  <glossdef><para><link linkend="tri-creation">creation</link></para></glossdef>
+  <glossdef><para><link linkend="tri-vertextype">cusps</link></para></glossdef>
+  <glossdef><para><link linkend="tri-new-dehydration">dehydration
+   string, rehydrating</link></para></glossdef>
+  <glossdef><para><link linkend="tri-elementarymove">elementary
+   moves (3-2, 4-4, open book, etc.)</link></para></glossdef>
+  <glossdef><para><link linkend="tri-new-example">examples,
+   creating</link></para></glossdef>
+  <glossdef><para><link linkend="foreign-export">exporting to
+   external files</link></para></glossdef>
+  <glossdef><para><link linkend="tri-facetype">faces,
+   viewing shapes</link></para></glossdef>
+  <glossdef><para><link linkend="tri-algebra-fundgroup">fundamental
+   group</link></para></glossdef>
+  <glossdef><para><link linkend="tri-algebra-homology">homology
+   groups</link></para></glossdef>
+  <glossdef><para><link linkend="tri-snappea-info">hyperbolic solution
+   type</link></para></glossdef>
+  <glossdef><para><link linkend="tri-extension">ideal vertices,
+   creation</link></para></glossdef>
+  <glossdef><para><link linkend="tri-propideal">ideal vertices,
+   testing for</link></para></glossdef>
+  <glossdef><para><link linkend="tri-subdivision">ideal vertices,
+   truncation</link></para></glossdef>
+  <glossdef><para><link linkend="foreign-import">importing from
+   external files</link></para></glossdef>
+  <glossdef><para><link linkend="tri-composition-isomorphism">isomorphism
+   and subcomplex testing</link></para></glossdef>
+  <glossdef><para><link linkend="tri-proporient">orientability</link></para></glossdef>
+  <glossdef><para><link linkend="tri-cover">orientable double
+   cover</link></para></glossdef>
+  <glossdef><para><link linkend="tri-censuslookup">searching for a
+   triangulation in the available censuses</link></para></glossdef>
+  <glossdef><para><link linkend="tri-simplification">simplification</link></para></glossdef>
+  <glossdef><para><link linkend="tri-skeleton">skeleton,
+   viewing details</link></para></glossdef>
+  <glossdef><para><link linkend="tri-new-splitting">splitting surface,
+   reconstructing triangulation from</link></para></glossdef>
+  <glossdef><para><link linkend="tri-propsplitting">splitting surface,
+   testing for</link></para></glossdef>
+  <glossdef><para><link linkend="tri-editgluings">tetrahedron face
+   gluings, editing</link></para></glossdef>
+  <glossdef><para><link linkend="tri-algebra-turaevviro">Turaev-Viro
+   invariants</link></para></glossdef>
+  <glossdef><para><link linkend="tri-propvalid">validity</link></para></glossdef>
+  <glossdef><para><link linkend="tri-snappea-info">volume</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="troubleshooting">troubleshooting</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-subdivision">truncation of ideal
+   vertices</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-algebra-turaevviro">Turaev-Viro
+   invariants</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>two-sidedness</glossterm>
+  <glosssee>sidedness</glosssee>
+ </glossentry>
+
+ <glossentry id="idx-user-interface">
+  <glossterm>user interface</glossterm>
+  <glossdef><para><link linkend="man-regina-python">command-line scripting
+   interface</link></para></glossdef>
+  <glossdef><para><link linkend="man-regina-kde">graphical user
+   interface</link></para></glossdef>
+  <glossdef><para><link linkend="utils">specialised command-line
+   utilities</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-edgetype">valid edges,
+   testing for</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-propvalid">valid triangulation,
+   testing for</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>vertex angle structures</glossterm>
+  <glosssee>angle structures</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-proplink">vertex linking surfaces,
+   recognising</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>vertex normal surfaces</glossterm>
+  <glosssee>normal surfaces</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-vertexedgeface">vertices, viewing
+   in a triangulation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="packet-view">viewing packets</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>volume</glossterm>
+  <glosssee>hyperbolic volume</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>zero-efficiency</glossterm>
+  <glosssee>0-effiency</glosssee>
+ </glossentry>
+</glossary>
