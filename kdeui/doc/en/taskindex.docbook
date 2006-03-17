@@ -149,6 +149,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="options-snappea">closed triangulations
+   in &snappea;</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>code</primaryie>
   <seeie>(see libraries)</seeie>
  </indexentry>
@@ -209,6 +214,8 @@
    enumeration</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
    scripting</link></secondaryie>
+  <secondaryie><link linkend="options-snappea">&snappea;
+   interaction</link></secondaryie>
   <secondaryie><link linkend="options-triangulation">triangulation
    viewing and editing</link></secondaryie>
  </indexentry>
@@ -767,6 +774,8 @@
  <indexentry>
   <primaryie>&snappea;</primaryie>
   <secondaryie><link linkend="tri-snappea">calculations</link></secondaryie>
+  <secondaryie><link linkend="options-snappea">closed triangulations,
+   allowing</link></secondaryie>
   <secondaryie><link linkend="export-snappea">exporting to</link></secondaryie>
   <secondaryie><link linkend="import-snappea">importing
    from</link></secondaryie>
@@ -886,6 +895,8 @@
    converting real to ideal</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">boundary,
    testing for</link></secondaryie>
+  <secondaryie><link linkend="options-snappea">closed,
+   allowing in &snappea;</link></secondaryie>
   <secondaryie><link linkend="tri-composition-composition">combinatorial
    composition</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-component">component

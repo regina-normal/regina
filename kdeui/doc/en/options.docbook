@@ -250,4 +250,56 @@
    </para></tip>
   </sect2>
  </sect1>
+
+ <sect1 id="options-snappea">
+  <title>&snappea; Options</title>
+
+  <para>
+   Since version &snappeaintro;, part of the &snappea; kernel has
+   been included in &regina; for performing certain geometric
+   computations.  The results of these computations can be found in
+   the <link linkend="tri-snappea"><guilabel>&snappea;</guilabel> tab</link>
+   in the triangulation viewer.
+  </para>
+  <para>
+   The following options affect how the &snappea; kernel is used by &regina;.
+  </para>
+
+  <glosslist>
+   <glossentry>
+    <glossterm>Allow closed triangulations</glossterm>
+    <glossdef>
+     <para>
+      This specifies whether &regina; is allowed to pass closed
+      triangulations to the &snappea; kernel.
+     </para>
+     <para>
+      This is disabled by default, since &snappea; is primarily designed
+      for working with ideal triangulations only.  However, if you need
+      the results and you know what you are doing, you can enable this option.
+     </para>
+     <para>
+      Note that enabling this option does not mean that
+      <emphasis>all</emphasis> closed triangulations will be passed to
+      the &snappea; kernel.  There are still other constraints
+      that must be satisfied &mdash; in particular, the triangulation must
+      have only one vertex.
+     </para>
+     <para><warning>
+      <para>
+       Enabling this option may occasionally cause the &snappea; kernel
+       to raise a fatal error!  As a result &regina; may crash and
+       you may lose any unsaved work.
+      </para>
+      <para>
+       Again this is because &snappea; is primarily designed for working
+       with ideal triangulations only.  Please be sure that you know
+       what you are doing (and you are willing to save regularly) before
+       enabling this option.
+      </para>
+     </warning></para>
+    </glossdef>
+   </glossentry>
+  </glosslist>
+ </sect1>
 </chapter>

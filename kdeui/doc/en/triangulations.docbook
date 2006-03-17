@@ -945,6 +945,13 @@
      <guilabel>&snappea;</guilabel> tab will include a note giving at
      least one reason why.
     </para>
+    <para>
+     Note that you can bypass some of these restrictions &mdash;
+     by configuring &regina; appropriately you can allow some closed
+     triangulations to be passed.  See the
+     <link linkend="options-snappea">&snappea; options</link>
+     reference for details and relevant warnings.
+    </para>
    </sect3>
    <sect3 id="tri-snappea-info">
     <title>Available Information</title>
