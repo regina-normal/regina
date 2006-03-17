@@ -1,3 +1,11 @@
+<!-- This is actually an index, not a glossary.
+     However, KDE's rendering of <index>..</index> has become extremely
+       bad in recent versions, with primary entries concatenated together
+       on single lines and secondary entries appearing indistinguishable
+       from primary entries.  The index is unusable in such a state.
+     Our workaround here is to fool KDE into thinking it's a glossary.  It's
+       not correct docbook, but at least the output will be readable. -->
+
 <glossary id="taskindex">
  <title>Index</title>
 
