@@ -39,6 +39,7 @@
 #include <ktexteditor/editinterface.h>
 #include <ktexteditor/undointerface.h>
 #include <ktexteditor/view.h>
+#include <ktexteditor/viewcursorinterface.h>
 #include <ktexteditor/wordwrapinterface.h>
 
 using regina::NPacket;
@@ -113,6 +114,7 @@ void NTextUI::refresh() {
             data.truncate(data.length() - 1);
 
         editInterface->setText(data);
+        KTextEditor::viewCursorInterface(view)->setCursorPosition(0, 0);
     }
 
     if (! wasReadWrite)

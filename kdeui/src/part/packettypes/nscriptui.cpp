@@ -45,6 +45,7 @@
 #include <ktexteditor/highlightinginterface.h>
 #include <ktexteditor/undointerface.h>
 #include <ktexteditor/view.h>
+#include <ktexteditor/viewcursorinterface.h>
 #include <ktexteditor/wordwrapinterface.h>
 #include <ktoolbar.h>
 #include <qhbox.h>
@@ -303,6 +304,7 @@ void NScriptUI::refresh() {
                 allLines += '\n';
         }
         editInterface->setText(allLines);
+        KTextEditor::viewCursorInterface(view)->setCursorPosition(0, 0);
     }
 
     if (! wasReadWrite)

@@ -96,6 +96,8 @@ Version 4.3  [ under development ]
           target of an isomorphism/subcomplex test.
         - Fixed extremely slow updates in the Composition tab for very
           large data files.
+        - Text and script packets now open with the cursor at the
+          beginning instead of the end.
     PYTHON:
         Class NSnapPeaTriangulation:
             - Offers the additional zero-argument routine volumeWithPrecision()
