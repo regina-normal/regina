@@ -14,6 +14,7 @@ Version 4.3  [ under development ]
         - Expanded the closed orientable census to 10 tetrahedra, and
           split it into two data files (large and small).
         - Updated postal address for the Free Software Foundation.
+        - Bibliographic updates for the reference manual.
         - Fixed some harmless compiler warnings.
     ENGINE:
         Class LessDeref:
