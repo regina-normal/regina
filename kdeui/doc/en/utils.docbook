@@ -1349,6 +1349,7 @@
      <arg><option>-m</option></arg>
      <arg><option>-n</option></arg>
     </group>
+    <arg><option>-s</option></arg>
     <arg choice="req"><replaceable>file1</replaceable></arg>
     <arg choice="req"><replaceable>file2</replaceable></arg>
    </cmdsynopsis>
@@ -1367,6 +1368,11 @@
     The two given files must be &regina; data files.
     A full list of matches (or a full list of non-matches if
     <option>-n</option> is passed) is written to standard output.
+   </para>
+   <para>
+    This utility can also do subcomplex testing instead of full
+    isomorphism testing.  See the option <option>-s</option> for
+    details.
    </para>
   </refsect1>
 
@@ -1391,6 +1397,33 @@
        Output non-matches only.  All triangulations from
        <replaceable>file1</replaceable> with no isomorphic match in
        <replaceable>file2</replaceable> will be listed, and vice versa.
+      </para>
+      <para>
+       The behaviour of this option is slightly different when
+       <option>-s</option> is passed; in particular, non-matches are
+       only tested in one direction only (there is no vice versa as indicated
+       above).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-s</option></term>
+     <listitem>
+      <para>
+       Instead of testing triangulations for isomorphism, test whether
+       one triangulation is isomorphic to a subcomplex of the other.
+      </para>
+      <para>
+       In the default case of <option>-m</option> (output matches only),
+       this program outputs all instances where a triangulation from
+       <replaceable>file1</replaceable> is isomorphic to a subcomplex
+       of a triangulation from <replaceable>file2</replaceable>.
+      </para>
+      <para>
+       In the case of <option>-n</option> (output non-matches only),
+       this program outputs all triangulations from
+       <replaceable>file1</replaceable> that are not isomorphic to a
+       subcomplex of any triangulation from <replaceable>file2</replaceable>.
       </para>
      </listitem>
     </varlistentry>
