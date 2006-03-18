@@ -49,6 +49,7 @@
 #include "subcomplex/nsnappedtwosphere.h"
 #include "subcomplex/nspiralsolidtorus.h"
 #include "subcomplex/nstandardtri.h"
+#include "subcomplex/ntxicore.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/npermit.h"
 #include "triangulation/ntriangulation.h"
@@ -410,7 +411,7 @@ void NTriCompositionUI::describeSatRegion(const NSatRegion& region,
 
         nAnnuli = spec.block->nAnnuli();
 
-        annuli = new KListViewItem(details, i18n("Adjacencies..."));
+        annuli = new KListViewItem(details, i18n("Adjacencies:"));
 
         for (a = nAnnuli - 1; a >= 0; a--) {
             thisAnnulus = i18n("Annulus %1/%2").arg(b).arg(a);
@@ -487,7 +488,100 @@ void NTriCompositionUI::findBlockedTriangulations() {
         delete sfs;
     }
 
-    // TODO: loop, pair, triple, bundle, plugged bundle
+    regina::NBlockedSFSLoop* loop =
+        regina::NBlockedSFSLoop::isBlockedSFSLoop(tri);
+    if (loop) {
+        id = addComponentSection(i18n("Blocked SFS Loop"));
+
+        details = new KListViewItem(id, i18n("Internal region:"));
+        describeSatRegion(loop->region(), details);
+
+        new KListViewItem(id, i18n("Matching relation: %1").
+            arg(matrixString(loop->matchingReln())));
+
+        delete loop;
+    }
+
+    regina::NBlockedSFSPair* pair =
+        regina::NBlockedSFSPair::isBlockedSFSPair(tri);
+    if (pair) {
+        id = addComponentSection(i18n("Blocked SFS Pair"));
+
+        details = new KListViewItem(id, i18n("Second region:"));
+        describeSatRegion(pair->region(1), details);
+
+        details = new KListViewItem(id, i18n("First region:"));
+        describeSatRegion(pair->region(0), details);
+
+        new KListViewItem(id, i18n("Matching relation (first --> second): %1").
+            arg(matrixString(pair->matchingReln())));
+
+        delete pair;
+    }
+
+    regina::NBlockedSFSTriple* triple =
+        regina::NBlockedSFSTriple::isBlockedSFSTriple(tri);
+    if (triple) {
+        id = addComponentSection(i18n("Blocked SFS Triple"));
+
+        details = new KListViewItem(id, i18n("Second end region:"));
+        describeSatRegion(triple->end(1), details);
+
+        details = new KListViewItem(id, i18n("First end region:"));
+        describeSatRegion(triple->end(0), details);
+
+        details = new KListViewItem(id, i18n("Central region:"));
+        describeSatRegion(triple->centre(), details);
+
+        new KListViewItem(id,
+            i18n("Matching relation (centre --> second end): %1").
+            arg(matrixString(triple->matchingReln(1))));
+
+        new KListViewItem(id,
+            i18n("Matching relation (centre --> first end): %1").
+            arg(matrixString(triple->matchingReln(0))));
+
+        delete triple;
+    }
+
+    regina::NLayeredTorusBundle* bundle =
+        regina::NLayeredTorusBundle::isLayeredTorusBundle(tri);
+    if (bundle) {
+        id = addComponentSection(i18n("Layered Torus Bundle"));
+
+        new KListViewItem(id,
+            i18n("Layering relation (lower a/b --> upper a/b): %1").
+            arg(matrixString(bundle->layeringReln())));
+
+        new KListViewItem(id,
+            i18n("Core relation (upper a/b --> lower a/b): %1").
+            arg(matrixString(bundle->core().parallelReln())));
+
+        new KListViewItem(id,
+            i18n("Core T x I triangulation: %1").
+            arg(bundle->core().getName()));
+
+        delete bundle;
+    }
+
+    regina::NPluggedTorusBundle* pBundle =
+        regina::NPluggedTorusBundle::isPluggedTorusBundle(tri);
+    if (pBundle) {
+        id = addComponentSection(i18n("Plugged Torus Bundle"));
+
+        details = new KListViewItem(id, i18n("Saturated region:"));
+        describeSatRegion(pBundle->region(), details);
+
+        new KListViewItem(id,
+            i18n("Matching relation (joining region boundaries): %1").
+            arg(matrixString(pBundle->matchingReln())));
+
+        new KListViewItem(id,
+            i18n("Thin I-bundle (T x I): %1").
+            arg(pBundle->bundle().getName()));
+
+        delete pBundle;
+    }
 }
 
 void NTriCompositionUI::findL31Pillows() {
@@ -895,6 +989,11 @@ QString NTriCompositionUI::edgeString(unsigned long tetIndex,
         const regina::NPerm& roles, int startPreimage, int endPreimage) {
     return QString("%1 (%2%3)").arg(tetIndex).arg(roles[startPreimage]).
         arg(roles[endPreimage]);
+}
+
+QString NTriCompositionUI::matrixString(const regina::NMatrix2& matrix) {
+    return QString("[ %1 %2 | %3 %4 ]").
+        arg(matrix[0][0]).arg(matrix[0][1]).arg(matrix[1][0]).arg(matrix[1][1]);
 }
 
 #include "ntricomposition.moc"

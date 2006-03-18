@@ -46,6 +46,7 @@ class QListViewItem;
 
 namespace regina {
     class NIsomorphism;
+    class NMatrix2;
     class NPacket;
     class NSatRegion;
     class NStandardTriangulation;
@@ -143,12 +144,13 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
             QListViewItem* parent);
 
         /**
-         * Return string representations of tetrahedron edges.
+         * Return string representations of various items.
          */
         static QString edgeString(unsigned long tetIndex, int edge1,
             int edge2);
         static QString edgeString(unsigned long tetIndex,
             const regina::NPerm& roles, int startPreimage, int endPreimage);
+        static QString matrixString(const regina::NMatrix2& matrix);
 };
 
 #endif
