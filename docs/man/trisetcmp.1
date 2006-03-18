@@ -3,13 +3,13 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRISETCMP" "1" "16 September 2005" "" "Specialised Utilities"
+.TH "TRISETCMP" "1" "18 March 2006" "" "Specialised Utilities"
 
 .SH NAME
 trisetcmp \- Compare triangulations between two Regina data files
 .SH SYNOPSIS
 
-\fBtrisetcmp\fR [ \fB-m\fR | \fB-n\fR ] \fB\fIfile1\fB\fR \fB\fIfile2\fB\fR
+\fBtrisetcmp\fR [ \fB-m\fR | \fB-n\fR ] [ \fB-s\fR ] \fB\fIfile1\fB\fR \fB\fIfile2\fB\fR
 
 .SH "DESCRIPTION"
 .PP
@@ -22,6 +22,10 @@ isomorphic to which triangulations from
 The two given files must be \fBRegina\fR data files.
 A full list of matches (or a full list of non-matches if
 \fB-n\fR is passed) is written to standard output.
+.PP
+This utility can also do subcomplex testing instead of full
+isomorphism testing.  See the option \fB-s\fR for
+details.
 .SH "OPTIONS"
 .TP
 \fB-m (default)\fR
@@ -34,6 +38,25 @@ will be listed.
 Output non-matches only.  All triangulations from
 \fIfile1\fR with no isomorphic match in
 \fIfile2\fR will be listed, and vice versa.
+
+The behaviour of this option is slightly different when
+\fB-s\fR is passed; in particular, non-matches are
+only tested in one direction only (there is no vice versa as indicated
+above).
+.TP
+\fB-s\fR
+Instead of testing triangulations for isomorphism, test whether
+one triangulation is isomorphic to a subcomplex of the other.
+
+In the default case of \fB-m\fR (output matches only),
+this program outputs all instances where a triangulation from
+\fIfile1\fR is isomorphic to a subcomplex
+of a triangulation from \fIfile2\fR\&.
+
+In the case of \fB-n\fR (output non-matches only),
+this program outputs all triangulations from
+\fIfile1\fR that are not isomorphic to a
+subcomplex of any triangulation from \fIfile2\fR\&.
 .SH "SEE ALSO"
 .PP
 regina-kde\&.
