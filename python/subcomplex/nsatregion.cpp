@@ -78,6 +78,7 @@ void addNSatRegion() {
             std::auto_ptr<NSatRegion> >("NSatRegion", init<NSatBlock*>())
         .def("numberOfBlocks", &NSatRegion::numberOfBlocks)
         .def("block", &NSatRegion::block, return_internal_reference<>())
+        .def("blockIndex", &NSatRegion::block)
         .def("numberOfBoundaryAnnuli", &NSatRegion::numberOfBoundaryAnnuli)
         .def("boundaryAnnulus", boundaryAnnulus_tuple)
         .def("createSFS", &NSatRegion::createSFS,

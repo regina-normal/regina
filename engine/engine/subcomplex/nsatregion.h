@@ -250,6 +250,20 @@ class NSatRegion : public ShareableObject {
          * @return details of the requested saturated block.
          */
         const NSatBlockSpec& block(unsigned long which) const;
+        /**
+         * Returns the index of the given block within this region.
+         * This index corresponds to the integer parameter that is passed
+         * to the routine block().
+         *
+         * \warning This routine is slow, since it simply scans through
+         * the blocks in this region one by one until the given block is
+         * found (or until all blocks are exhausted).
+         *
+         * @return the index of the given block (as an integer between
+         * 0 and numberOfBlocks()-1 inclusive), or -1 if the block is
+         * not part of this region.
+         */
+        long blockIndex(const NSatBlock* block) const;
 
         /**
          * Returns the number of saturated annuli that together form the
@@ -540,15 +554,6 @@ class NSatRegion : public ShareableObject {
         void writeTextLong(std::ostream& out) const;
 
     private:
-        /**
-         * Returns the index of the given block within the internal
-         * block list.
-         *
-         * @return the index of the given block, or -1 if the block is
-         * not part of this region.
-         */
-        long blockIndex(const NSatBlock* block) const;
-
         /**
          * Runs through the region structure and recalculates the
          * \a baseEuler_ data member.
