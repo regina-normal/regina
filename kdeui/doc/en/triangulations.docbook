@@ -838,11 +838,12 @@
      are reported along with precise details of where they occur.
     </para>
     <para>
-     Most of the subcomplexes that are identified are
+     Many of the subcomplexes that are identified are
      described in detail in Burton's PhD thesis
-     <xref linkend="bib-burton-phd"/> which is available from the
-     &regwebsite;.  These descriptions can be quite laborious and will
-     not be repeated here.
+     <xref linkend="bib-burton-phd"/> (available from the &regwebsite;),
+     and the papers <xref linkend="bib-burton-nor7"/> and
+     <xref linkend="bib-burton-satblocks"/>.
+     These descriptions can be quite laborious and will not be repeated here.
     </para>
     <screenshot>
      <screeninfo>Viewing the triangulation composition</screeninfo>

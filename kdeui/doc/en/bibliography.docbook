@@ -43,7 +43,7 @@
   <date>2004</date>
  </biblioentry>
 
- <biblioentry>
+ <biblioentry id="bib-burton-satblocks">
   <abbrev>Bu4</abbrev>
   <author>
    <firstname>Benjamin</firstname>
