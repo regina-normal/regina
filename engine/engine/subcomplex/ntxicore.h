@@ -232,6 +232,22 @@ class NTxICore : public ShareableObject {
         const NMatrix2& parallelReln() const;
 
         /**
+         * Returns the name of this specific triangulation of
+         * <tt>T x I</tt> as a human-readable string.
+         *
+         * @return the name of this triangulation.
+         */
+        std::string getName() const;
+        /**
+         * Returns the name of this specific triangulation of
+         * <tt>T x I</tt> in TeX format.  No leading or trailing dollar
+         * signs will be included.
+         *
+         * @return the name of this triangulation in TeX format.
+         */
+        std::string getTeXName() const;
+
+        /**
          * Writes the name of this specific triangulation of
          * <tt>T x I</tt> to the given output stream.  The name will be
          * written as a human-readable string.

@@ -27,8 +27,21 @@
 /* end stub */
 
 #include "subcomplex/ntxicore.h"
+#include <sstream>
 
 namespace regina {
+
+std::string NTxICore::getName() const {
+    std::ostringstream out;
+    writeName(out);
+    return out.str();
+}
+
+std::string NTxICore::getTeXName() const {
+    std::ostringstream out;
+    writeTeXName(out);
+    return out.str();
+}
 
 NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
         size_(newSize), k_(newK) {

@@ -54,6 +54,8 @@ void addNTxICore() {
             return_internal_reference<>())
         .def("parallelReln", &NTxICore::parallelReln,
             return_internal_reference<>())
+        .def("getName", &NTxICore::getName)
+        .def("getTeXName", &NTxICore::getTeXName)
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)
     ;
