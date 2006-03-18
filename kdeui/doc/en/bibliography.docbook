@@ -23,7 +23,8 @@
   </author>
   <title>Structures of small closed non-orientable 3-manifold
    triangulations</title>
-  <edition>Preprint (math.GT/0311113)</edition>
+  <edition>To appear in J. Knot Theory Ramifications</edition>
+  <issuenum>math.GT/0311113</issuenum>
   <date>November 2003</date>
  </biblioentry>
 
@@ -40,6 +41,19 @@
   <issuenum>no. 8</issuenum>
   <artpagenums>pp. 1057&ndash;1101</artpagenums>
   <date>2004</date>
+ </biblioentry>
+
+ <biblioentry>
+  <abbrev>Bu4</abbrev>
+  <author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author>
+  <title>Building minimal triangulations of graph manifolds using
+   saturated blocks</title>
+  <edition>In preparation</edition>
+  <date>2006</date>
  </biblioentry>
 
  <biblioentry id="bib-cuspedcensus">
@@ -150,9 +164,9 @@
     <surname>Rubinstein</surname>
    </author>
   </authorgroup>
-  <title>Layered triangulations of lens spaces</title>
-  <edition>In preparation</edition>
-  <date>2003</date>
+  <title>Layered-triangulations of 3-manifolds</title>
+  <edition>Preprint</edition>
+  <date>February 2006</date>
  </biblioentry>
 
  <biblioentry id="bib-lackenby-taut">
@@ -238,8 +252,11 @@
    <surname>Rivin</surname>
   </author>
   <title>Combinatorial optimization in geometry</title>
-  <edition>Preprint (math.GT/9907032)</edition>
-  <date>July 1999</date>
+  <edition>Adv. in Appl. Math.</edition>
+  <volumenum>vol. 31</volumenum>
+  <issuenum>no. 1</issuenum>
+  <artpagenums>pp. 242&ndash;271</artpagenums>
+  <date>2003</date>
  </biblioentry>
 
  <biblioentry id="bib-rubin-3sphere1">
