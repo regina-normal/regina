@@ -107,7 +107,8 @@
     layered solid tori (mentioned above) that frequently appear within
     larger triangulations.  Furthermore, they can detect complete triangulations
     belonging to a number of infinite families described by
-    Burton <xref linkend="bib-burton-phd"/>,
+    Burton <xref linkend="bib-burton-phd"/>, <xref linkend="bib-burton-nor7"/>,
+    <xref linkend="bib-burton-satblocks"/>,
     Martelli and Petronio <xref linkend="bib-italian9"/> and
     Matveev <xref linkend="bib-matveev6"/>.  As a
     result &regina; can frequently recognise the underlying 3-manifolds for
@@ -172,6 +173,7 @@
   <para>
    The census algorithm
    is described in <xref linkend="bib-burton-nor7"/> and
+   <xref linkend="bib-burton-nor10"/>, and
    contains significant optimisations for censuses of closed minimal
    &ppirr; triangulations.  In particular the face pairing graph results
    of <xref linkend="bib-burton-facegraphs"/> are incorporated into the
@@ -183,13 +185,14 @@
    Census creation can require significant amounts of computing time
    (months or years in some cases).  As a result, support is provided for
    splitting this process into pieces that can be distributed across several
-   machines.
+   machines.  An &mpi; version is also provided for use on
+   high-performance clusters.
   </para>
   <para>
    In addition to forming new censuses, &regina; ships with a number of
    prepackaged censuses including closed 3-manifolds
-   <xref linkend="bib-burton-phd"/>, <xref linkend="bib-burton-nor7"/>,
-   hyperbolic 3-manifolds
+   <xref linkend="bib-burton-phd"/>, <xref linkend="bib-burton-nor8"/>,
+   <xref linkend="bib-burton-nor10"/>, hyperbolic 3-manifolds
    <xref linkend="bib-cuspedcensus"/>, <xref linkend="bib-closedhypcensus"/>
    and knot and link complements (tabulated by Joe Christy).
    A census lookup facility for arbitrary triangulations is provided.

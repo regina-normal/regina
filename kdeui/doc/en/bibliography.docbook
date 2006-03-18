@@ -43,8 +43,34 @@
   <date>2004</date>
  </biblioentry>
 
- <biblioentry id="bib-burton-satblocks">
+ <biblioentry id="bib-burton-nor8">
   <abbrev>Bu4</abbrev>
+  <author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author>
+  <title>Observations from the 8-tetrahedron non-orientable census</title>
+  <edition>To appear in Experiment. Math.</edition>
+  <issuenum>math.GT/0509345</issuenum>
+  <date>September 2005</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-nor10">
+  <abbrev>Bu5</abbrev>
+  <author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author>
+  <title>Improved enumeration of non-orientable 3-manifold
+   triangulations</title>
+  <edition>In preparation</edition>
+  <date>2006</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-satblocks">
+  <abbrev>Bu6</abbrev>
   <author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
