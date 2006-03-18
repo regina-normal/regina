@@ -29,14 +29,22 @@
 // Regina core includes:
 #include "manifold/nmanifold.h"
 #include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/nblockedsfs.h"
+#include "subcomplex/nblockedsfsloop.h"
+#include "subcomplex/nblockedsfspair.h"
+#include "subcomplex/nblockedsfstriple.h"
 #include "subcomplex/nl31pillow.h"
 #include "subcomplex/nlayeredchain.h"
 #include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
 #include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/npillowtwosphere.h"
+#include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nplugtrisolidtorus.h"
+#include "subcomplex/nsatblock.h"
+#include "subcomplex/nsatregion.h"
 #include "subcomplex/nsnappedball.h"
 #include "subcomplex/nsnappedtwosphere.h"
 #include "subcomplex/nspiralsolidtorus.h"
@@ -63,6 +71,7 @@
 #include <qwhatsthis.h>
 
 using regina::NPacket;
+using regina::NSatRegion;
 using regina::NTriangulation;
 
 NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
@@ -187,6 +196,7 @@ void NTriCompositionUI::refresh() {
     findLayeredLensSpaces();
     findLayeredLoops();
     findPlugTriSolidTori();
+    findBlockedTriangulations();
 
     // Look for bounded subcomplexes.
     findLayeredSolidTori();
@@ -380,6 +390,104 @@ void NTriCompositionUI::findAugTriSolidTori() {
             delete aug;
         }
     }
+}
+
+void NTriCompositionUI::describeSatRegion(const NSatRegion& region,
+        QListViewItem* parent) {
+    QListViewItem* details;
+    QListViewItem* annuli;
+
+    regina::NSatBlockSpec spec;
+    regina::NSatAnnulus ann;
+    unsigned long nAnnuli;
+    long a, b;
+    bool ref, back;
+    QString thisAnnulus, adjAnnulus;
+    for (b = region.numberOfBlocks() - 1; b >= 0; b--) {
+        spec = region.block(b);
+        details = new KListViewItem(parent, i18n("Block %1: %2").
+            arg(b).arg(spec.block->getAbbr().c_str()));
+
+        nAnnuli = spec.block->nAnnuli();
+
+        annuli = new KListViewItem(details, i18n("Adjacencies..."));
+
+        for (a = nAnnuli - 1; a >= 0; a--) {
+            thisAnnulus = i18n("Annulus %1/%2").arg(b).arg(a);
+            if (! spec.block->hasAdjacentBlock(a))
+                new KListViewItem(annuli, i18n("%1 --> boundary").
+                    arg(thisAnnulus));
+            else {
+                adjAnnulus = i18n("Annulus %1/%2").
+                    arg(region.blockIndex(spec.block->adjacentBlock(a))).
+                    arg(spec.block->adjacentAnnulus(a));
+                ref = spec.block->adjacentReflected(a);
+                back = spec.block->adjacentBackwards(a);
+
+                if (ref && back)
+                    new KListViewItem(annuli,
+                        i18n("%1 --> %2 (reflected, backwards)").
+                        arg(thisAnnulus).arg(adjAnnulus));
+                else if (ref)
+                    new KListViewItem(annuli, i18n("%1 --> %2 (reflected)").
+                        arg(thisAnnulus).arg(adjAnnulus));
+                else if (back)
+                    new KListViewItem(annuli, i18n("%1 --> %2 (backwards)").
+                        arg(thisAnnulus).arg(adjAnnulus));
+                else
+                    new KListViewItem(annuli, i18n("%1 --> %2").
+                        arg(thisAnnulus).arg(adjAnnulus));
+            }
+        }
+
+        if (nAnnuli == 1)
+            annuli = new KListViewItem(details, i18n("1 annulus"));
+        else
+            annuli = new KListViewItem(details, i18n("%1 annuli").arg(nAnnuli));
+
+        for (a = nAnnuli - 1; a >= 0; a--) {
+            thisAnnulus = i18n("Annulus %1/%2").arg(b).arg(a);
+            ann = spec.block->annulus(a);
+
+            new KListViewItem(annuli,
+                i18n("%1 : Tet %2 (%3%4%5), Tet %6 (%7%8%9)").
+                arg(thisAnnulus).
+                arg(tri->getTetrahedronIndex(ann.tet[0])).
+                arg(ann.roles[0][0]).
+                arg(ann.roles[0][1]).
+                arg(ann.roles[0][2]).
+                arg(tri->getTetrahedronIndex(ann.tet[1])).
+                arg(ann.roles[1][0]).
+                arg(ann.roles[1][1]).
+                arg(ann.roles[1][2]));
+        }
+
+        if (spec.refVert && spec.refHoriz)
+            new KListViewItem(details,
+                i18n("Reflected vertically and horizontally"));
+        else if (spec.refVert)
+            new KListViewItem(details, i18n("Reflected vertically"));
+        else if (spec.refHoriz)
+            new KListViewItem(details, i18n("Reflected horizontally"));
+        else
+            new KListViewItem(details, i18n("No reflections"));
+
+        new KListViewItem(details, spec.block->toString().c_str());
+    }
+}
+
+void NTriCompositionUI::findBlockedTriangulations() {
+    QListViewItem* id;
+    QListViewItem* details;
+
+    regina::NBlockedSFS* sfs = regina::NBlockedSFS::isBlockedSFS(tri);
+    if (sfs) {
+        id = addComponentSection(i18n("Blocked Seifert Fibred Space"));
+        describeSatRegion(sfs->region(), id);
+        delete sfs;
+    }
+
+    // TODO: loop, pair, triple, bundle, plugged bundle
 }
 
 void NTriCompositionUI::findL31Pillows() {

@@ -47,6 +47,7 @@ class QListViewItem;
 namespace regina {
     class NIsomorphism;
     class NPacket;
+    class NSatRegion;
     class NStandardTriangulation;
     class NTriangulation;
 };
@@ -127,6 +128,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
          * Fill the list view with information.
          */
         void findAugTriSolidTori();
+        void findBlockedTriangulations();
         void findL31Pillows();
         void findLayeredChainPairs();
         void findLayeredLensSpaces();
@@ -137,6 +139,8 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         void findSnappedBalls();
         void findSnappedSpheres();
         void findSpiralSolidTori();
+        void describeSatRegion(const regina::NSatRegion& region,
+            QListViewItem* parent);
 
         /**
          * Return string representations of tetrahedron edges.
