@@ -116,8 +116,7 @@ Version 4.3  [ 31 March, 2006 ]
               one triangulation was found.
             - New option --dryrun for a quick overview of the search space.
         tricensus-mpi-status:
-            - New tool for parsing tricensus-mpi logs.  Currently only
-              logs generated with a --depth option are supported.
+            - New tool for parsing tricensus-mpi logs.
         trisetcmp:
             - Allow subcomplex testing as well as isomorphism testing.
     TEST SUITE:
