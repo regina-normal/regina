@@ -302,8 +302,8 @@ class NTxICore : public ShareableObject {
  * A triangulation of this family is most easily defined in terms of its
  * central torus.  Central surfaces are described in detail in
  * "Structures of small closed non-orientable 3-manifold triangulations"
- * (Burton 2003, math.GT/0311113); in particular, see the section on
- * thin I-bundles.
+ * (Burton 2003, to appear in J. Knot Theory Ramifications, math.GT/0311113);
+ * in particular, see the section on thin I-bundles.
  *
  * The central torus begins with two triangles \a u0 and \a u1 (which
  * eventually provide the upper torus boundary), with a chain of
