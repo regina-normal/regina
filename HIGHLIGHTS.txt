@@ -10,6 +10,31 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.3  [ 31 March, 2006 ]
 
+    Features and Improvements:
+        - Expanded both the closed orientable and closed non-orientable
+          censuses to ten tetrahedra.  The closed orientable census is
+          now split into two files (large and small).
+        - Recognises a much greater variety of Seifert fibred spaces and
+          graph manifolds by examining their combinatorial structures (to
+          the point where 1359 / 1390 of the closed non-orientable census
+          triangulations are recognised immediately).
+        - The MPI census utility tricensus-mpi supports more fine-grained
+          slave tasks (see --depth), amongst other improvements.  A new tool
+          tricensus-mpi-status is also available for summarising the logs.
+        - The utility trisetcmp supports subcomplex testing as well as
+          isomorphism testing.
+        - The embedded SnapPea engine can be configured to examine closed
+          triangulations as well as ideal triangulations (see the Regina
+          configuration panel).
+    Optimisations:
+        - Census generation in the closed minimal P2-irreducible case
+          is *much* faster (as in orders of magnitude faster).
+        - The triangulation composition tab is no longer extremly slow to
+          update when working with very large data files.
+    Bug Fixes:
+        - Fixed occasional crashes that occurred when deleting a
+          triangulation that was currently in use.
+
 Version 4.2.1  [ 18 September, 2005 ]
 
     Features:
