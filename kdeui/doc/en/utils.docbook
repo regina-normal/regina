@@ -1490,7 +1490,41 @@
   <refsect1>
    <title>Description</title>
    <para>
-    TODO.
+    This utility reads a log file produced by a
+    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
+    job, and writes a human-readable summary to standard output.
+    It can be used for both jobs that have finished and jobs that are
+    still running.
+   </para>
+   <para>
+    The logs produced by <command>tricensus-mpi</command> are quite
+    detailed, including timestamps, details of which slaves have taken
+    which tasks, and how many triangulations each task has produced.
+    This utility distills this information into an easy-to-read
+    summary, with one line for each face pairing.
+   </para>
+   <para>
+    Output will only be given for face pairings that have been
+    examined so far (including face pairings whose processing is still
+    underway), and will include:
+   </para>
+   <itemizedlist>
+    <listitem><para>whether processing for each face pairing has
+     finished;</para></listitem>
+    <listitem><para>the number of triangulations found so far for each
+     face pairing;</para></listitem>
+    <listitem><para>the number of subsearches generated and/or finished
+     for each face pairing (only relevant when running in subsearch
+     mode).</para></listitem>
+   </itemizedlist>
+   <para>
+    The final line of output will state whether the census has finished,
+    and if not, when the last log entry was written.
+   </para>
+   <para>
+    For further explanation of the terminology used above, see the
+    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
+    reference.
    </para>
   </refsect1>
 
@@ -1499,7 +1533,7 @@
    <para>
     See the
     <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
-    reference for an example in which
+    reference for a sample session in which
     <command>tricensus-mpi-status</command> is used.
    </para>
   </refsect1>
