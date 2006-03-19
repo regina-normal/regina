@@ -1331,7 +1331,19 @@
      <term><option>-D, --depth=</option><replaceable>levels</replaceable></term>
      <listitem>
       <para>
-       TODO.
+       Indicates that subsearch mode should be used (instead of default
+       mode).  The argument <replaceable>levels</replaceable> specifies
+       at what depth in the search tree processing should pass from the
+       controller to a new slave task.
+      </para>
+      <para>
+       The given depth must be strictly positive (running at depth zero
+       is equivalent to running in default mode).
+      </para>
+      <para>
+       See the <link linkend="man-tricensus-mpi-modes">modes of
+       operation</link> section above for further information, as well
+       for hints on choosing a good value for <replaceable>levels</replaceable>.
       </para>
      </listitem>
     </varlistentry>
@@ -1339,7 +1351,33 @@
      <term><option>-x, --dryrun</option></term>
      <listitem>
       <para>
-       TODO.
+       Specifies that a fast dry run should be performed, instead of a
+       full census.
+      </para>
+      <para>
+       In a dry run, each time a slave accepts a task it
+       will immediately mark it as finished with no triangulations found.
+       The behaviour of the controller remains unchanged.
+      </para>
+      <para>
+       The result will be an empty census.  The value of a dry run is
+       in the log file, which will show precisely how face pairings
+       would be divided into subsearches in a real census run.
+       In particular, the log file will show how
+       many subsearches each face pairing produces (the utility
+       <link linkend="man-tricensus-mpi-status"><command>tricensus-mpi-status</command></link>
+       can help extract this information from the log).
+      </para>
+      <para>
+       At small subsearch depths, a dry run should be extremely fast.
+       As the given depth increases however, the dry run will become
+       slower due to the extra work given to the controller.
+      </para>
+      <para>
+       This option is only useful in subsearch mode (it can be used in
+       default mode, but the results are uninteresting).
+       See the <link linkend="man-tricensus-mpi-modes">modes of
+       operation</link> section above for further details.
       </para>
      </listitem>
     </varlistentry>
