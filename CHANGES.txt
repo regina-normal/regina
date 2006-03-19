@@ -24,13 +24,14 @@ Version 4.3  [ 31 March, 2006 ]
             - Significant overhaul.
             - Moved gluing permutation search routines into new classes
               NGluingPermSearcher and NClosedPrimeMinSearcher.
-            - Supports partial depth-based searches (by passing a
+            - Supports partial depth-based searching (by passing a
               non-negative depth parameter to the new runSearch() routine).
             - Tracks both vertex and edge links using a modified union
               find structure to prune more braches of the search tree
-              where possible.  This includes pruning on non-orientable
+              where possible.  This makes an incredible difference to the
+              census running time.  Pruning takes place on non-orientable
               vertex links, too many or too few vertices or edges, low
-              degree or invalid edges, conical faces and L(3,1) spines.
+              degree or invalid edges, conical faces, and L(3,1) spines.
         Class NGraphLoop, NGraphPair, NGraphTriple:
             - New families of graph manifolds.
         Class NKnot:
@@ -61,8 +62,8 @@ Version 4.3  [ 31 March, 2006 ]
         Class NSatAnnulus, NSatBlock, NSatRegion, NBlockedSFS, NBlockedSFSLoop,
                   NBlockedSFSPair, NBlockedSFSTriple, NPluggedTorusBundle,
                   plus subclasses and other support structures:
-            - New classes for describing Seifert fibred spaces and other
-              graph manifolds built from saturated blocks.
+            - New classes for recognising and describing Seifert fibred spaces
+              and other graph manifolds that are built using saturated blocks.
         Class NSFS, NExceptionalFibre:
             - Removed; see below.
         Class NSFSpace, NSFSFibre:
@@ -70,26 +71,28 @@ Version 4.3  [ 31 March, 2006 ]
             - Now more general, supporting both orientable and
               non-orientable 3-manifolds as well as base orbifolds with
               reflector boundary components.
-            - Classes have been renamed from the old NSFS, NExceptionalFibre
+            - Classes have been renamed from the old NSFS / NExceptionalFibre
               to make it clear that large-scale changes have taken place.
         Class NSFSAltSet:
-            - New class for finding different simple representations of
+            - New class for finding alternative simple representations of
               the same bounded Seifert fibred space.
         Class NSnapPeaTriangulation:
-            - Added a boolean argument to the constructor that allows the
-              SnapPea kernel to work with closed triangulations.
+            - Added a boolean argument to the constructor that permits the
+              SnapPea kernel to work with closed triangulations if the user
+              really wants to allow it.
         Class NStandardTri:
             - Routine writeTeXName() no longer provides wrapping dollar signs.
         Class NTorusBundle:
-            - New class of 3-manifolds.
+            - New class of 3-manifolds describing torus bundles over the
+              circle.
         Class NTriangulation:
             - Combined isomorphism and subcomplex testing routines into
               a single all-in-one routine to avoid excessive code reuse.
-            - New routine findAllSubcomplexesIn() for subcomplex testing
-              in which all matches (not just the first) should be returned.
+            - Added new subcomplex testing routine findAllSubcomplexesIn(),
+              in which all matches (not just the first) are returned.
             - Routines getTetrahedronIndex(), getComponentIndex(),
               getBoundaryComponentIndex(), getFaceIndex(), getEdgeIndex()
-              and getVertexIndex() all returned signed instead of unsigned
+              and getVertexIndex() now returned signed instead of unsigned
               longs, so that -1 can be returned if the object could not
               be found.
     USER INTERFACE:
@@ -97,12 +100,12 @@ Version 4.3  [ 31 March, 2006 ]
           work with closed triangulations.
         - Fixed the crash when deleting a triangulation that is currently the
           target of an isomorphism/subcomplex test.
-        - Fixed a crash that sometimes occurs when deleting a triangulation
-          currently being viewed in a large file.
-        - Fixed extremely slow updates in the Composition tab for very
-          large data files.
-        - Text and script packets now open with the cursor at the
-          beginning instead of the end.
+        - Fixed a crash that sometimes occurs in large files when deleting
+          a triangulation that is currently being viewed.
+        - Fixed extremely slow updates in the triangulation composition tab
+          for very large data files.
+        - Text and script packets now open with the cursor at the top
+          instead of the bottom.
     PYTHON:
         Class NSnapPeaTriangulation:
             - Offers the additional zero-argument routine volumeWithPrecision()
@@ -118,7 +121,7 @@ Version 4.3  [ 31 March, 2006 ]
         tricensus-mpi-status:
             - New tool for parsing tricensus-mpi logs.
         trisetcmp:
-            - Allow subcomplex testing as well as isomorphism testing.
+            - Support subcomplex testing as well as isomorphism testing.
     TEST SUITE:
         - Don't enforce precision limits for degenerate snappea volume
           testing, to allow for flexibility in floating point behaviours
