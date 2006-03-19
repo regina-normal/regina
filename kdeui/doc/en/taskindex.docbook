@@ -616,6 +616,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>&mpi;</glossterm>
+  <glosssee>parallel processing</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm>naming</glossterm>
   <glossdef><para><link linkend="packet-rename">packets</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-propname">surfaces in a
@@ -716,6 +721,12 @@
   <glossterm>padlock</glossterm>
   <glossdef><para><link linkend="packet-uneditable">in the packet
    tree</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>parallel processing</glossterm>
+  <glossdef><para><link linkend="man-tricensus-mpi">census
+   creation</link></para></glossdef>
  </glossentry>
 
  <glossentry>
