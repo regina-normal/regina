@@ -124,6 +124,14 @@ class NPacketListener {
          * will notify their listeners of the impending destruction
          * before parent packets will.
          *
+         * Note that the packet will forcibly unregister this listener
+         * immediately \e before packetToBeDestroyed() is called, to avoid
+         * any unpleasant consequences if this listener should also try to
+         * unregister itself.  This means that, by the time this routine is
+         * called, this listener will no longer be registered with the
+         * packet in question (and any attempt to unregister it again
+         * will be harmless).
+         *
          * The default implementation of this routine is to do nothing.
          *
          * @param packet the packet being listened to.

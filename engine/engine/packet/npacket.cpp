@@ -53,11 +53,15 @@ NPacket::~NPacket() {
         delete firstTreeChild;
 
     // Fire a packet event and unregister all listeners.
+    // Unregister *before* we fire the event for each listener -- otherwise,
+    // if we have a listener that deletes itself then things could get nasty.
+    // Don't worry about the listener deleting some *other* listener though,
+    // since std::set can cope with erasures in the midst of a set traversal.
     if (listeners.get()) {
         for (std::set<NPacketListener*>::const_iterator it =
                 listeners->begin(); it != listeners->end(); it++) {
-            (*it)->packetToBeDestroyed(this);
             (*it)->packets.erase(this);
+            (*it)->packetToBeDestroyed(this);
         }
     }
 }
