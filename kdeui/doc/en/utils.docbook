@@ -1117,6 +1117,8 @@
   <refsynopsisdiv>
    <cmdsynopsis>
     <command>tricensus-mpi</command>
+    <arg><option>-D, --depth=</option><replaceable>levels</replaceable></arg>
+    <arg><option>-x, --dryrun</option></arg>
     <group>
      <arg><option>-o, --orientable</option></arg>
      <arg><option>-n, --nonorientable</option></arg>
@@ -1153,21 +1155,12 @@
    </para></note>
    <para>
     In preparing a census to be distributed amongst several processes or
-    machines, it should be possible to split the census into smaller pieces.
+    machines, the census must be split into smaller pieces.
     Running <link linkend="man-tricensus"><command>tricensus</command></link>
-    with option <option>--genpairs</option> (which is quite fast) will create
+    with option <option>--genpairs</option> (which is very fast) will create
     a list of face pairings, each of which must be analysed in order to
-    complete the census.  The census is split into pieces by passing one
-    face pairing to each process at a time.
+    complete the census.
    </para>
-   <note><para>
-    Whereas <command>tricensus-mpi</command> uses a single large face
-    pairings file (with &mpi; handling the distribution of pairings to
-    individual processes),
-    the alternative <command>tricensus-manager</command>
-    uses many small face pairings files (with individual processes
-    claiming individual files to work on).
-   </para></note>
    <para>
     The full list of face pairings should be stored in a single file,
     which is passed on the command-line as
@@ -1179,50 +1172,42 @@
     <link linkend="man-tricensus"><userinput>tricensus
     --genpairs</userinput></link> are guaranteed to satisfy these conditions.
    </para>
+   <note><para>
+    Whereas <command>tricensus-mpi</command> uses a single large face
+    pairings file (with &mpi; handling the distribution of pairings to
+    individual processes),
+    the alternative <command>tricensus-manager</command>
+    uses many small face pairings files (with individual processes
+    claiming individual files to work on).
+   </para></note>
    <para>
-    This <command>tricensus-mpi</command> utility works as follows.
-    One &mpi; process acts as the controller, and the remaining processes
-    each act as slaves.  The controller reads the list of face pairings
-    from <replaceable>pairs-file</replaceable> and farms these face
-    pairings out to the slaves for processing.  Each slave processes one
-    face pairing at a time, asking the controller for a new face pairing
-    when it is finished with a previous one.
+    This <command>tricensus-mpi</command> utility has two modes of
+    operation: default mode, and subsearch mode.  These are explained
+    separately under <link linkend="man-tricensus-mpi-modes">modes
+    of operation</link> below.
    </para>
    <para>
-    The individual face pairings are numbered 1,2,... according to their
-    position in <replaceable>pairs-file</replaceable>.  A slave
-    processing face pairing number <replaceable>k</replaceable> will perform
-    the following tasks.
+    In both modes, one &mpi; process acts as the controller and the remaining
+    processes each act as slaves.  The controller reads the list of face
+    pairings from <replaceable>pairs-file</replaceable>, constructs a
+    series of tasks based on these, and farms these tasks
+    out to the slaves for processing.  Each slave processes one task
+    at a time, asking the controller for a new task when it is finished
+    with the previous one.
    </para>
-   <itemizedlist>
-    <listitem>
-     <para>
-      A time file is created with the name
-      <filename><replaceable>output-file-prefix</replaceable>_<replaceable>k</replaceable>.time</filename>,
-      listing the specific face pairing being processed as well as
-      which &mpi; slave has taken the job and when.
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      The subcensus for this specific face pairing is run, and the
-      resulting triangulations are written to the topology data file
-      <filename><replaceable>output-file-prefix</replaceable>_<replaceable>k</replaceable>.rga</filename>.
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      The time file is updated to include the time at which the subcensus
-      finished and how much CPU time it consumed.
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      The slave notifies the controller of the results and requests
-      another face pairing for processing.
-     </para>
-    </listitem>
-   </itemizedlist>
+   <para>
+    At the end of each task, if any triangulations were found then
+    the slave responsible will save these triangulations to an output file.
+    The output file will have a name of the form
+    <filename><replaceable>output-file-prefix</replaceable>_<replaceable>p</replaceable>.rga</filename>
+    in default mode or
+    <filename><replaceable>output-file-prefix</replaceable>_<replaceable>p</replaceable>-<replaceable>s</replaceable>.rga</filename>
+    in subsearch mode, where <replaceable>p</replaceable> is the number
+    of the face pairing being processed, and <replaceable>s</replaceable>
+    is the number of the subsearch within that face pairing
+    (both face pairings and subsearches are numbered from 1 upwards).
+    If no triangulations were found then the slave will write no output file.
+   </para>
    <para>
     The controller and slave
     processes all take the same <command>tricensus-mpi</command>
@@ -1235,17 +1220,91 @@
     running a single command, as illustrated in the examples below.
    </para>
    <para>
-    As the census progresses,
-    the controller keeps a log of which slaves are processing
-    which face pairings.  This log is written to the file
+    As the census progresses, the controller keeps a detailed log of each
+    slave's activities, including how long each slave task has taken and how
+    many triangulations have been found.  This log is written to the file
     <filename><replaceable>output-file-prefix</replaceable>.log</filename>.
+    The utility
+    <link linkend="man-tricensus-mpi-status"><command>tricensus-mpi-status</command></link>
+    is able to parse this log and produce a shorter human-readable summary.
    </para>
    <tip><para>
     Once the census is complete, the
     <link linkend="man-regconcat"><command>regconcat</command></link>
-    command may be used to combine the many small topology data files
-    into one larger file for easier handling.
+    command may be used to combine the many small output files
+    into one large topology data file for easier handling.
    </para></tip>
+  </refsect1>
+
+  <refsect1 id="man-tricensus-mpi-modes">
+   <title>Modes of Operation</title>
+   <para>
+    As discussed above, there are two basic modes of operation.
+    These are default mode (used when <option>--depth</option> is not
+    passed), and subsearch mode (used when <option>--depth</option> is
+    passed).
+   </para>
+   <itemizedlist>
+    <listitem><para>
+     In <emphasis>default mode</emphasis>, the controller simply
+     reads the list of face pairings and gives each
+     to a slave for processing, one after another.  In other words,
+     each slave task is the entire subcensus for a single face pairing.
+    </para></listitem>
+    <listitem><para>
+     In <emphasis>subsearch mode</emphasis>, more work is pushed to
+     the controller and the slave tasks are shorter.  Here the
+     controller reads one face pairing at a time and begins processing
+     that face pairing.  A fixed depth is supplied in the argument
+     <option>--depth</option>; each time that depth is reached in the
+     search tree, the
+     subsearch from that point on is given as a task to the next idle slave.
+     Meanwhile the controller backtracks (as though the subsearch had
+     finished) and continues, farming the next subsearch out when
+     the given depth is reached again, and so on.
+    </para></listitem>
+   </itemizedlist>
+   <para>
+    The modes can be visualised as follows.
+    For each face pairing, consider the corresponding recursive search
+    as a large search tree.  In default mode, the entire tree is
+    processed at once as a single slave task.  In subsearch mode, each
+    subtree rooted at the given depth is processed as a separate slave
+    task (and all processing between the root and the given depth is
+    done by the controller).
+   </para>
+   <para>
+    The main difference between the different modes of operation is
+    the lengths of the slave tasks, which can have a variety of effects.
+   </para>
+   <itemizedlist>
+    <listitem><para>
+     In default mode the slave tasks are
+     quite long.  If all slaves finish together this is quite efficient,
+     but if the finish times are staggered then the census may become
+     very inefficient towards the end (with some slaves sitting idle for
+     a long time as they wait for the remaining slaves to finish).
+    </para></listitem>
+    <listitem><para>
+     As we move to subsearch mode with increasing depth, the slave
+     tasks become shorter and the slaves finish times will be closer
+     together (thus avoiding the inefficiency of several slaves sitting
+     idle as described above).  Moreover, with a more refined subsearch,
+     the progress information stored in the log will be more detailed,
+     giving a better idea of how long the census has to go.  On the
+     other hand, more work is pushed to the single-process controller
+     (risking a bottleneck if the depth is too great, with slaves
+     sitting idle as they wait for new tasks).  In addition the &mpi; overhead
+     is greater, and the number of output files can become extremely large.
+    </para></listitem>
+   </itemizedlist>
+   <para>
+    In the end, experimentation is the best way to decide whether to run
+    in subsearch mode and at what depth.  Be aware of the option
+    <option>--dryrun</option>, which can give a quick overview of the
+    search space (and in particular, show how many subsearches are
+    required for each face pairing at any given depth).
+   </para>
   </refsect1>
 
   <refsect1>
@@ -1263,12 +1322,34 @@
     be supplied earlier on when generating the initial list of face pairings
     through <userinput>tricensus --genpairs</userinput>.
    </para>
+   <para>
+    The remaining options specific to <command>tricensus-mpi</command>
+    are as follows.
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term><option>-D, --depth=</option><replaceable>levels</replaceable></term>
+     <listitem>
+      <para>
+       TODO.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-x, --dryrun</option></term>
+     <listitem>
+      <para>
+       TODO.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
   </refsect1>
 
   <refsect1>
    <title>Examples</title>
    <para>
-    Suppose we wish to form a census of all 5-tetrahedron closed
+    Suppose we wish to form a census of all 6-tetrahedron closed
     non-orientable triangulations, where the census is optimised for
     prime minimal P2-irreducible triangulations (and in particular, some
     triangulations that are not prime, minimal and P2-irreducible may be
@@ -1280,8 +1361,8 @@
    </para>
 
 <screen>
-    <prompt>example$</prompt> <userinput>tricensus --genpairs -t 5 -i &gt; 5.pairs</userinput>
-    Total face pairings: 28
+    <prompt>example$</prompt> <userinput>tricensus --genpairs -t 6 -i &gt; 6.pairs</userinput>
+    Total face pairings: 97
     <prompt>example$</prompt>
 </screen>
 
@@ -1296,16 +1377,33 @@
    </para>
 
 <screen>
-    <prompt>example$</prompt> <userinput>mpirun -np 10 /usr/bin/tricensus-mpi -Nnf 5.pairs 5-nor</userinput>
+    <prompt>example$</prompt> <userinput>mpirun -np 10 /usr/bin/tricensus-mpi -Nnf 6.pairs 6-nor</userinput>
     <prompt>example$</prompt>
 </screen>
 
     <para>
      The current state of processing can be watched in the controller log
-     <filename>5-nor.log</filename> and in the individual time files
-     <filename>5-nor_1.time</filename>, ..., <filename>5-nor_28.time</filename>.
-     The resulting triangulations are saved in the files
-     <filename>5-nor_1.rga</filename>, ..., <filename>5-nor_28.rga</filename>.
+     <filename>6-nor.log</filename> with the help of
+     <link linkend="man-tricensus-mpi-status"><command>tricensus-mpi-status</command></link>.
+    </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus-mpi-status 6-nor.log</userinput>
+    Pairing 1: done, 0 found
+    ...
+    Pairing 85: done, 0 found
+    Pairing 86: done, 7 found
+    Pairing 87: running
+    Pairing 88: running
+    Census still running, last activity: Sun Mar 19 17:14:41 2006
+    <prompt>example$</prompt>
+</screen>
+
+    <para>
+     Once the census is finished, the resulting triangulations will be
+     saved in files such as
+     <filename>6-nor_8.rga</filename>,
+     <filename>6-nor_86.rga</filename> and so on.
     </para>
   </refsect1>
 
@@ -1316,6 +1414,62 @@
     <link linkend="man-sigcensus">sigcensus</link>,
     <link linkend="man-tricensus">tricensus</link>,
     <link linkend="man-tricensus-manager">tricensus-manager</link>,
+    <link linkend="man-tricensus-mpi-status">tricensus-mpi-status</link>,
+    <link linkend="man-regina-kde">regina-kde</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; &regemail; with help from others;
+    see the documentation for full details.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- MPI Census Log Viewer -->
+
+ <refentry id="man-tricensus-mpi-status">
+  <refmeta>
+   <refentrytitle>tricensus-mpi-status</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>tricensus-mpi-status</refname>
+   <refpurpose>Summarise the log file of an &mpi; census of
+    triangulations</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>tricensus-mpi-status</command>
+    <arg choice="req"><replaceable>log-file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    TODO.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Examples</title>
+   <para>
+    See the
+    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
+    reference for an example in which
+    <command>tricensus-mpi-status</command> is used.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
     <link linkend="man-regina-kde">regina-kde</link>.
    </para>
   </refsect1>
