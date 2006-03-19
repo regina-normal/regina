@@ -114,6 +114,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
         I18N_NOOP("Generous support"));
     addCredit("The University of Melbourne, Australia",
         I18N_NOOP("Generous support"));
+    addCredit("The Victorian Partnership for Advanced Computing",
+        I18N_NOOP("Financial support and much-needed CPU cycles"));
     addCredit("Debian GNU/Linux",
         I18N_NOOP("An exceptional working environment"),
         "http://www.debian.org/");
