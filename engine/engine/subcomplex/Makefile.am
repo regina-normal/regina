@@ -18,7 +18,7 @@ libsubcomplex_la_SOURCES = naugtrisolidtorus.cpp nblockedsfs.cpp nblockedsfsloop
 
 subcomplexinclude_HEADERS = naugtrisolidtorus.h nblockedsfs.h nblockedsfsloop.h nblockedsfspair.h nblockedsfstriple.h nl31pillow.h nlayeredchain.h nlayeredchainpair.h nlayeredlensspace.h nlayeredloop.h nlayeredsolidtorus.h nlayeredsurfacebundle.h nlayering.h npillowtwosphere.h npluggedtorusbundle.h nplugtrisolidtorus.h nsatannulus.h nsatblock.h nsatblockstarter.h nsatblocktypes.h nsatregion.h nsnappeacensustri.h nsnappedball.h nsnappedtwosphere.h nspiralsolidtorus.h nstandardtri.h ntrisolidtorus.h ntrivialtri.h ntxicore.h
 
-EXTRA_FILES = \
+EXTRA_DIST = \
 	cube.eps cube.fig cube.png \
 	diag92.eps diag92.fig diag92.png \
 	diagbdry.eps diagbdry.fig diagbdry.png \

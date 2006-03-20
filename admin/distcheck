@@ -153,7 +153,8 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^testsuite/regtestsuite$' | \
     grep -v '^utils/reg[a-z]\+$' | \
     grep -v '^utils/[a-z]\+census[a-z]*$' | \
-    grep -v '^utils/mpi/[a-z\-]\+$' | \
+    grep -v '^utils/local\(/\|$\)' | \
+    grep -v '^utils/mpi/[a-z\-]\+-mpi$' | \
     grep -v '^utils/snappea\(/\|$\)' | \
     grep -v '^www' | \
     sort > "$cvslist" ; then

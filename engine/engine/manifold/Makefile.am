@@ -16,5 +16,6 @@ noinst_LTLIBRARIES = libmanifold.la
 
 libmanifold_la_SOURCES = ngraphloop.cpp ngraphpair.cpp ngraphtriple.cpp nhandlebody.cpp nlensspace.cpp nmanifold.cpp nsfs.cpp nsfsaltset.cpp nsimplesurfacebundle.cpp nsnappeacensusmfd.cpp ntorusbundle.cpp order.cpp
 
-manifoldinclude_HEADERS = ngraphloop.h ngraphpair.h ngraphtriple.h nhandlebody.h nlensspace.h nmanifold.h nsfs.h nsfsaltset.h nsimplesurfacebundle.h nsnappeacensusmfd.h ntorusbundle.h
+manifoldinclude_HEADERS = ngraphloop.h ngraphpair.h ngraphtriple.h nhandlebody.h nlensspace.h nmanifold.h notation.h nsfs.h nsfsaltset.h nsimplesurfacebundle.h nsnappeacensusmfd.h ntorusbundle.h
 
+EXTRA_DIST = sfsnotation.eps sfsnotation.fig sfsnotation.png
