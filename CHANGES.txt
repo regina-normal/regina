@@ -15,7 +15,8 @@ Version 4.3  [ 31 March, 2006 ]
           split it into two data files (large and small).
         - Updated postal address for the Free Software Foundation.
         - Bibliographic updates for the reference manual.
-        - Fixed some harmless compiler warnings.
+        - Fixed some harmless compiler warnings, and tightened syntax
+          to adhere to the requirements of gcc 4.1.
     ENGINE:
         Class LessDeref:
             - New utility class for working with pointers in the Standard

@@ -327,8 +327,8 @@ class NSnapPeaTriangulation : public ShareableObject {
          * @return a corresponding SnapPea structure, or 0 if the
          * conversion was unsuccessful.
          */
-        static ::Triangulation* NSnapPeaTriangulation::reginaToSnapPea(
-            const NTriangulation& tri, bool allowClosed);
+        static ::Triangulation* reginaToSnapPea(const NTriangulation& tri,
+            bool allowClosed);
 };
 
 /*@}*/
