@@ -125,6 +125,8 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^config.log$' | \
     grep -v '^config.status$' | \
     grep -v '^debian' | \
+    grep -v '^docs/engine/.*\.css$' | \
+    grep -v '^docs/engine/.*\.gif$' | \
     grep -v '^docs/engine/.*\.html$' | \
     grep -v '^docs/engine/.*\.png$' | \
     grep -v '^docs/engine/doxygen' | \
@@ -153,6 +155,7 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^testsuite/regtestsuite$' | \
     grep -v '^utils/reg[a-z]\+$' | \
     grep -v '^utils/[a-z]\+census[a-z]*$' | \
+    grep -v '^utils/trisetcmp$' | \
     grep -v '^utils/local\(/\|$\)' | \
     grep -v '^utils/mpi/[a-z\-]\+-mpi$' | \
     grep -v '^utils/snappea\(/\|$\)' | \
