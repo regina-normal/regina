@@ -6,8 +6,11 @@ RPM-based packages for Regina without forgetting anything.
 
 Preparing, building and installing:
 
-  - Check ~/.rpmmacros
-  - Clean out ~/rpm
+  - Check ~/.rpmmacros (rpm --showrc):
+      %_topdir /home/bab/rpm
+      %_vendor fc4 (or whatever)
+  - Clean out ~/rpm:
+      - Subdirs SOURCES, SPECS, BUILD, SRPMS, RPMS
   - Uninstall (rpm -e regina-normal)
   - Build (rpmbuild -ba <spec-file>)
   - Install (rpm -Uvh <rpm-file>)
