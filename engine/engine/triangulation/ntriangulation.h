@@ -2287,8 +2287,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * returned.
          * @return the total number of isomorphisms found.
          */
-        unsigned long NTriangulation::findIsomorphisms(
-                const NTriangulation& other, std::list<NIsomorphism*>& results,
+        unsigned long findIsomorphisms(const NTriangulation& other,
+                std::list<NIsomorphism*>& results,
                 bool completeIsomorphism, bool firstOnly) const;
 
         /**
