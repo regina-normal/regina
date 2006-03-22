@@ -23,8 +23,10 @@ Manual checks:
       - snappea calculations
       - GUI scripting
       - reference manual and engine docs (including graphs)
+  - konqueror embedding
   - regina-python
   - documentation files including README.MPI
+  - dependencies (rpm -qR regina-normal)
   - manually make check on fedora
 
 If you are interested in helping package Regina for one or more
