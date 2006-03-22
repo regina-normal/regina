@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "regina-config.h"
 #include "manifold/ngraphpair.h"
 #include "manifold/nsfs.h"
 #include <boost/python.hpp>
