@@ -19,7 +19,7 @@ Manual checks:
       - open sample file
       - snappea calculations
       - GUI scripting
-      - reference manual and engine docs
+      - reference manual and engine docs (including graphs)
   - regina-python
   - documentation files including README.MPI
   - manually make check on fedora
