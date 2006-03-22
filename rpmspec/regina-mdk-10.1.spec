@@ -64,9 +64,14 @@ make check
 rm -rf $RPM_BUILD_ROOT
 make install-strip DESTDIR=$RPM_BUILD_ROOT
 
-# Delete some huge and unnecessary static libraries.
+# Delete unnecessary static libraries.
+rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/regina/python/regina.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/libreginapart.a
+
+# Delete library files that can cause unnecessary dependencies.
+rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.so
 
 # Create the Mandrake menu file.
 install -m755 -d $RPM_BUILD_ROOT%{_menudir}

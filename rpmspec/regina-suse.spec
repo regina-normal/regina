@@ -77,9 +77,14 @@ make install-strip DESTDIR=$RPM_BUILD_ROOT
 # people might actually be able to find it.
 ln -s /opt/kde3/share/regina $RPM_BUILD_ROOT/usr/share/regina
 
-# Delete some huge and unnecessary static libraries.
+# Delete unnecessary static libraries.
+rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/regina/python/regina.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/libreginapart.a
+
+# Delete library files that can cause unnecessary dependencies.
+rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.so
 
 %post -p /sbin/ldconfig
 
