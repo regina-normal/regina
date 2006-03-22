@@ -35,6 +35,51 @@ dnl
 dnl    -----------------------------------------------------------------
 
 dnl
+dnl    REGINA_CHECK_BOOST_MAKE_CONSTRUCTOR
+dnl
+dnl    Checks whether the boost.python make_constructor hack is required.
+dnl
+dnl    Some earlier versions of boost.python do not include the
+dnl    make_constructor definitions as expected from python.hpp, and so the
+dnl    additional file boost/python/make_constructor.hpp must be explicitly
+dnl    included (this is the "hack" that is referred to).
+dnl
+dnl    AC_DEFINE()s the following variables:
+dnl
+dnl        BOOST_MAKE_CONSTRUCTOR_HACK: Defined as 1 if the hack is required
+dnl                                     (i.e., make_costructor.hpp must be
+dnl                                     explicitly included), or remains
+dnl                                     undefined otherwise.
+dnl
+dnl    Example: REGINA_CHECK_BOOST_MAKE_CONSTRUCTOR
+dnl
+AC_DEFUN([REGINA_CHECK_BOOST_MAKE_CONSTRUCTOR], [
+  AC_MSG_CHECKING([whether the boost make_constructor hack is required])
+
+  AC_LANG_PUSH(C++)
+  __regina_mkconst_save_cxxflags="$CXXFLAGS"
+
+  CXXFLAGS="$__regina_py_save_cxxflags $BOOST_PYTHON_INCLUDES"
+
+  AC_TRY_COMPILE([
+    #include <boost/python.hpp>
+    class C { };
+    C* create_C() { return new C; }
+  ], [
+    boost::python::make_constructor(create_C);
+  ], [
+    AC_MSG_RESULT([no])
+  ], [
+    AC_MSG_RESULT([yes])
+    AC_DEFINE(BOOST_MAKE_CONSTRUCTOR_HACK, 1,
+      [Define to 1 if the boost make_constructor hack is required.])
+  ])
+
+  CXXFLAGS="$__regina_mkconst_save_cxxflags"
+  AC_LANG_POP(C++)
+])
+
+dnl
 dnl    REGINA_CHECK_COMPILER_FLAG(FLAG, [ACTION-IF-OK], [ACTION-IF-NOT-OK])
 dnl
 dnl    Modified from KDE_CHECK_COMPILER_FLAG which is

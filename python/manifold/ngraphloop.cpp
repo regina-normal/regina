@@ -30,6 +30,10 @@
 #include "manifold/nsfs.h"
 #include <boost/python.hpp>
 
+#ifdef BOOST_MAKE_CONSTRUCTOR_HACK
+#include <boost/python/make_constructor.hpp>
+#endif
+
 using namespace boost::python;
 using regina::NGraphLoop;
 using regina::NMatrix2;
