@@ -65,17 +65,24 @@ census data shipped with SnapPea) has been converted into Regina data files.
     <td>1502</td>
 </tr>
 <tr>
-    <td class="first">Closed orientable prime minimal triangulations (&lt;= 6
+    <td class="first">Closed orientable prime minimal triangulations (&lt;= 9
         tetrahedra)</td>
-    <td rowspan=2>Tabulated by Burton using Regina</td>
+    <td rowspan=3>Tabulated by Burton using Regina (see the
+        <a href="#census-notes">notes below</a>)</td>
     <td><a href="census/closed-or-census.rga">closed-or-census.rga</a></td>
-    <td>9</td>
+    <td>137</td>
+</tr>
+<tr>
+    <td class="first">Closed orientable prime minimal triangulations (&lt;= 10
+        tetrahedra)</td>
+    <td><a href="census/closed-or-census-large.rga">closed-or-census-large.rga</a></td>
+    <td>446</td>
 </tr>
 <tr>
     <td class="first">Closed non-orientable minimal P<sup>2</sup>-irreducible
-        triangulations (&lt;= 8 tetrahedra)</td>
+        triangulations (&lt;= 10 tetrahedra)</td>
     <td><a href="census/closed-nor-census.rga">closed-nor-census.rga</a></td>
-    <td>7</td>
+    <td>48</td>
 </tr>
 <tr>
     <td class="first">Cusped hyperbolic 3-manifolds (&lt;= 7 tetrahedra)</td>
@@ -145,7 +152,25 @@ census data shipped with SnapPea) has been converted into Regina data files.
     <td>2572</td>
 </tr>
 </tbody></table>
-
+<p>
+<a name="census-notes"><b>Notes:</b></a>
+<ul>
+  <li><i>Closed orientable census:</i> Other authors (Matveev, Ovchinnikov,
+  Martelli and Petronio) were the first to construct censuses of closed
+  orientable manifolds, and indeed these censuses extend beyond Regina's
+  (Matveev has reached 11 tetrahedra in 2005).</li>
+  <li><i>Closed non-orientable census:</i> Amendola and Martelli
+  have independently formed a census of closed non-orientable manifolds of
+  up to 7 tetrahedra, around the same time as Regina's 7-tetrahedron census
+  was released in 2003.
+</ul>
+<p>
+In each case, the data offered here for download was generated
+independently using Regina.  This data also contains full lists of all
+minimal triangulations (not just the manifolds themselves).
+<p>
+Where Regina's censuses overlap those of the authors listed above,
+the results agree completely.
 <p>
 <i><a href="#contents">(Back to top...)</a></i>
 
