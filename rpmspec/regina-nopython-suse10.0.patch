@@ -1,0 +1,21 @@
+--- README.Python
++++ README.Python
+@@ -0,0 +1,18 @@
++Python Scripting in Regina
++--------------------------
++
++Regina's python scripting facility has been disabled for SuSE 10.0.
++
++This is because SuSE 10.0 ships with broken boost packages.  In
++particular, the SuSE packages break any code using Boost.Python.
++SuSE will not be issuing an update for 10.0, but they claim that
++this will be fixed for SuSE 10.1.  For details, see:
++
++  https://bugzilla.novell.com/show_bug.cgi?id=137558
++
++If you require Python scripting, please consider switching to a
++different version of SuSE (or perhaps try installing a different
++GNU/Linux distribution).  Otherwise, you can wait until SuSE 10.1,
++when Regina scripting for SuSE will be re-enabled.
++
++ -- Ben Burton <bab@debian.org>, Sat, 25 Mar 2006 11:27:40 +1100
