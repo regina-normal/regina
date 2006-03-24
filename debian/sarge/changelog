@@ -1,3 +1,9 @@
+regina-normal (4.3-0.sarge.1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Ben Burton <bab@debian.org>  Fri, 31 Mar 2006 18:48:41 +1100
+
 regina-normal (4.2.1-0.sarge.1) unstable; urgency=low
 
   * New upstream release.
