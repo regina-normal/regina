@@ -148,7 +148,7 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
                     return false;
 
                 adjAnn = ref->adjacentAnnulus(0);
-                if (tri->major())
+                if (tri->isMajor())
                     return findPluggedTori(false, 4, name,
                         tri->adjacentBlock((adjAnn + 2) % 3), true,
                         tri->adjacentBlock((adjAnn + 1) % 3), false);
@@ -180,9 +180,9 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
 
                     // Do we have major to major and minor to minor?
                     consistent = true;
-                    if (tri->major())
+                    if (tri->isMajor())
                         consistent = ! consistent;
-                    if (triAdj->major())
+                    if (triAdj->isMajor())
                         consistent = ! consistent;
                     if (tri->adjacentReflected((j + 2) % 3))
                         consistent = ! consistent;
@@ -191,7 +191,7 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
 
                     adjAnn = tri->adjacentAnnulus((j + 2) % 3);
                     if (consistent) {
-                        if (triAdj->major())
+                        if (triAdj->isMajor())
                             return findPluggedTori(false, 2, name,
                                 triAdj->adjacentBlock((adjAnn + 1) % 3), false,
                                 triAdj->adjacentBlock((adjAnn + 2) % 3), true);
@@ -200,7 +200,7 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
                                 triAdj->adjacentBlock((adjAnn + 2) % 3), true,
                                 triAdj->adjacentBlock((adjAnn + 1) % 3), false);
                     } else {
-                        if (triAdj->major())
+                        if (triAdj->isMajor())
                             return findPluggedTori(false, 3, name,
                                 triAdj->adjacentBlock((adjAnn + 2) % 3), true,
                                 triAdj->adjacentBlock((adjAnn + 1) % 3), true);
@@ -218,9 +218,9 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
 
                 // Do we have major to major and minor to minor?
                 consistent = true;
-                if (tri->major())
+                if (tri->isMajor())
                     consistent = ! consistent;
-                if (triAdj->major())
+                if (triAdj->isMajor())
                     consistent = ! consistent;
                 if (tri->adjacentReflected(j))
                     consistent = ! consistent;
@@ -253,9 +253,9 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
                         // major edges in all cases here.
                         return findPluggedTori(true, consistent ? 2 : 1, name,
                             tri->adjacentBlock((j + 2 * delta) % 3),
-                                tri->major(),
+                                tri->isMajor(),
                             triAdj->adjacentBlock((adjAnn + 2 * deltaAdj) % 3),
-                                triAdj->major());
+                                triAdj->isMajor());
                     }
             }
         }

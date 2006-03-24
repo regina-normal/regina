@@ -42,11 +42,6 @@ using regina::NSatReflectorStrip;
 using regina::NSatTriPrism;
 
 namespace {
-    bool NSatTriPrism_major(const NSatTriPrism& p) {
-        // Beats me why this needs to be spelled out here.
-        return p.major();
-    }
-
     NSatMobius* isBlockMobius_nolist(const NSatAnnulus& a) {
         NSatBlock::TetList avoidTets;
         return NSatMobius::isBlockMobius(a, avoidTets);
@@ -112,7 +107,7 @@ void addNSatBlockTypes() {
     class_<NSatTriPrism, bases<regina::NSatBlock>,
             std::auto_ptr<NSatTriPrism>, boost::noncopyable>
             ("NSatTriPrism", init<const NSatTriPrism&>())
-        .def("major", NSatTriPrism_major)
+        .def("isMajor", &NSatTriPrism::isMajor)
         .def("isBlockTriPrism", isBlockTriPrism_nolist,
             return_value_policy<manage_new_object>())
         .def("insertBlock", &NSatTriPrism::insertBlock,

@@ -49,7 +49,7 @@ bool NSatBlock::operator < (const NSatBlock& compare) const {
         return false;
     if (tri1 && tri2) {
         // Major first, then minor.
-        return (tri1->major() && ! tri2->major());
+        return (tri1->isMajor() && ! tri2->isMajor());
     }
 
     const NSatCube* cube1 = dynamic_cast<const NSatCube*>(this);

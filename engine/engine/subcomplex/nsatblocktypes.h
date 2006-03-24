@@ -267,10 +267,14 @@ class NSatTriPrism : public NSatBlock {
          * Is this prism of major type or minor type?  See the class
          * notes for further details.
          *
+         * Note that this routine cannot be called major(), since on
+         * some compilers that name clashes with a macro for isolating
+         * major/minor bytes.
+         *
          * @return \c true if this prism is of major type, or \c false
          * if it is of minor type.
          */
-        bool major() const;
+        bool isMajor() const;
 
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
@@ -619,7 +623,7 @@ inline NSatTriPrism::NSatTriPrism(const NSatTriPrism& cloneMe) :
 inline NSatTriPrism::NSatTriPrism(bool major) : NSatBlock(3), major_(major) {
 }
 
-inline bool NSatTriPrism::major() const {
+inline bool NSatTriPrism::isMajor() const {
     return major_;
 }
 
