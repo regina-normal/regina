@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 4.3  [ 31 March, 2006 ]
+Version 4.3  [ 27 March, 2006 ]
 
     OVERALL:
         - Expanded the closed non-orientable census to 10 tetrahedra.

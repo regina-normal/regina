@@ -130,7 +130,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/regina
 
 %changelog
-* Fri Mar 31 2006 Ben Burton <bab@debian.org> 4.3
+* Mon Mar 27 2006 Ben Burton <bab@debian.org> 4.3
 - New upstream release.
 - Python scripting is again disabled because SuSE 10.0's boost packages
   are broken (https://bugzilla.novell.com/show_bug.cgi?id=137558).
