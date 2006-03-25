@@ -69,7 +69,7 @@ void addNTxICore() {
 
     class_<NTxIParallelCore, bases<regina::NTxICore>,
             std::auto_ptr<NTxIParallelCore>, boost::noncopyable>
-            ("NTxIParallelCore")
+            ("NTxIParallelCore", init<>())
     ;
 
     implicitly_convertible<std::auto_ptr<NTxIDiagonalCore>,
