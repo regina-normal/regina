@@ -78,7 +78,7 @@ install -m755 -d $RPM_BUILD_ROOT%{_menudir}
 cat << EOF > $RPM_BUILD_ROOT%{_menudir}/%{name}
 ?package(%{name}):command="/usr/bin/regina-kde" \
 icon="%{name}.png" needs="X11" \
-section="More applications/Sciences/Mathematics" \
+section="More Applications/Education/Sciences" \
 title="Regina" longtitle="3-manifold topology software" \
 startup_notify="true" mimetypes="application/x-regina,application/x-python" \
 accept_url="true" multiple_files="true"
