@@ -1,23 +1,24 @@
 ##
 ##  Regina - A Normal Surface Theory Calculator
-##  Makefile for CVS Checkouts
+##  Makefile for CVS / Subversion Checkouts
 ##
-##  This makefile should only be needed when doing a fresh CVS checkout.
+##  This makefile should only be needed when doing a fresh checkout from
+##  the repository.
 ##
 ##  Running "make -f Makefile.cvs" will rebuild the files required to use
 ##  the standard "./configure", "make" build process.
 ##
 
 all :
-	@if ! test -d CVS; then \
+	@if ! test -d CVS -o -d .svn; then \
 		echo "This Makefile is only for use with source trees that have"; \
-		echo "been checked out from CVS."; \
+		echo "been checked out from the CVS / subversion repository."; \
 		echo "Try running \"./configure\" followed by \"make\" to build Regina."; \
 		false; \
 	fi
 	@if ! test -d admin; then \
 		echo "Directory ./admin is missing."; \
-		echo "Try checking out the source tree from CVS again."; \
+		echo "Try checking out the source tree from CVS / subversion again."; \
 		false; \
 	fi
 	admin/ac_gen
