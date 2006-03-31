@@ -7,6 +7,12 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Version 4.3.1  [ 28 April, 2006 ]
+
+    USER INTERFACE:
+        - Added a workaround for the icon problems that arose when using
+          GNU/Linux distributions with buggy icon themes
+
 Version 4.3  [ 27 March, 2006 ]
 
     OVERALL:

@@ -175,11 +175,33 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
 }
 
 void PacketManager::initLock() {
-    KIconTheme* theme = KGlobal::iconLoader()->theme();
+    KIconLoader* loader = ReginaPart::factoryInstance()->iconLoader();
+
+    KIconTheme* theme = loader->theme();
     QString lockName = (theme ? theme->lockOverlay() : "lockoverlay");
 
-    lockSmall = SmallIcon(lockName, ReginaPart::factoryInstance());
-    lockBar = BarIcon(lockName, ReginaPart::factoryInstance());
+    // Try the theme icon, then lock_overlay (KDE >= 3.5), then
+    // lockoverlay (KDE <= 3.4).  This should sort out distributions
+    // with buggy default themes (cough, Fedora, SuSE, cough).
+    lockSmall = loader->loadIcon(lockName, KIcon::Small, 0,
+        KIcon::DefaultState, 0L, true /* null if not found */);
+    if (lockSmall.isNull()) {
+        lockSmall = loader->loadIcon("lock_overlay", KIcon::Small, 0,
+            KIcon::DefaultState, 0L, true /* null if not found */);
+        if (lockSmall.isNull())
+            lockSmall = loader->loadIcon("lockoverlay", KIcon::Small, 0,
+                KIcon::DefaultState, 0L, true /* null if not found */);
+    }
+
+    lockBar = loader->loadIcon(lockName, KIcon::Toolbar, 0,
+        KIcon::DefaultState, 0L, true /* null if not found */);
+    if (lockBar.isNull()) {
+        lockBar = loader->loadIcon("lock_overlay", KIcon::Toolbar, 0,
+            KIcon::DefaultState, 0L, true /* null if not found */);
+        if (lockBar.isNull())
+            lockBar = loader->loadIcon("lockoverlay", KIcon::Toolbar, 0,
+                KIcon::DefaultState, 0L, true /* null if not found */);
+    }
 
     lockInitialised = true;
 }
