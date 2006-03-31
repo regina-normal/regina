@@ -10,14 +10,14 @@
 #
 # Verifies that a tarball formed using "make dist" contains all the
 # files it should.  This script outputs a list of files contained in
-# the CVS source tree that are missing from the tarball.
+# the subversion source tree that are missing from the tarball.
 #
 # Files that are not necessary for inclusion in the tarball (such as
 # auto-generated files or the Regina website) are not included in this
 # output.
 #
-# This script must be run from either the admin/ directory within the
-# CVS tree or the top-level source directory within the CVS tree.
+# This script must be run from either the top-level source directory within
+# the subversion source tree, or from the admin/ directory beneath it.
 #
 # Requires: diff, find, grep, mktemp, sed, sort, tar
 #
@@ -44,26 +44,27 @@ if [ "$#" != 1 ]; then
   exit 1
 fi
 
-# Locate the top of the CVS source tree.
-if [ ! -d CVS ]; then
-  echo "This script must be run from within the CVS source tree."
+# Locate the top of the subversion source tree.
+if [ ! -d .svn ]; then
+  echo "This script must be run from within the subversion source tree."
   exit 1
 fi
 
 if [ -d admin -a -f HIGHLIGHTS.txt ]; then
-  cvstree=.
+  svntree=.
 elif [ -d ../admin -a -f ../HIGHLIGHTS.txt ]; then
-  cvstree=..
+  svntree=..
 else
-  echo "This script must be run from either the admin/ directory or"
-  echo "the top-level source directory within the CVS tree."
+  echo "This script must be run from either the top-level source directory"
+  echo "within the subversion source tree, or from the admin/ directory"
+  echo "beneath it."
   exit 1
 fi
 
 # Prepare the two temporary file lists.
-cvslist="`mktemp -t cvslist.XXXXXXXXXX`" || cvslist=
+svnlist="`mktemp -t svnlist.XXXXXXXXXX`" || svnlist=
 distlist="`mktemp -t distlist.XXXXXXXXXX`" || distlist=
-if [ -z "$cvslist" -o -z "$distlist" ]; then
+if [ -z "$svnlist" -o -z "$distlist" ]; then
   echo "Error creating temporary files."
   exit 1
 fi
@@ -101,17 +102,16 @@ if ! tar "$taropts" "$1" | sed -e 's%^[^/]*/%%' -e 's%/$%%' | \
   exit 1
 fi
 
-# Make a list of files in the CVS tree.
-echo "Analysing CVS tree..."
+# Make a list of files in the subversion source tree.
+echo "Analysing subversion source tree..."
 
-if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
+if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^\.$' | \
     grep -v '^\.\.$' | \
-    grep -v 'CVS$' | \
-    grep -v 'CVS/' | \
+    grep -v '\(^\|/\)\.svn$' | \
+    grep -v '\.svn/' | \
     grep -v 'Makefile$' | \
     grep -v '\.a$' | \
-    grep -v '\.cvsignore$' | \
     grep -v '\.deps$' | \
     grep -v '\.deps/' | \
     grep -v '\.kidl$' | \
@@ -160,13 +160,13 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^utils/mpi/[a-z\-]\+-mpi$' | \
     grep -v '^utils/snappea\(/\|$\)' | \
     grep -v '^www' | \
-    sort > "$cvslist" ; then
-  echo "The contents of the CVS tree could not be listed."
+    sort > "$svnlist" ; then
+  echo "The contents of the subversion source tree could not be listed."
   exit 1
 fi
 
 # Output the differences.
-diff -B "$cvslist" "$distlist" | grep -v '^[0-9]'
+diff -B "$svnlist" "$distlist" | grep -v '^[0-9]'
 
 # Clean up.
-rm "$cvslist" "$distlist"
+rm "$svnlist" "$distlist"

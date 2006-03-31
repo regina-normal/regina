@@ -45,6 +45,6 @@ Don't forget:
     rebuild manpages
     website
     debian packages (include cvs.diff)
-    fedora/mandrake/suse packages
-    tag CVS
+    fedora/mandriva/suse packages
+    tag the subversion repository
     mail regina-announce

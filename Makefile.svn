@@ -5,7 +5,7 @@
 ##  This makefile should only be needed when doing a fresh checkout from
 ##  the repository.
 ##
-##  Running "make -f Makefile.cvs" will rebuild the files required to use
+##  Running "make -f Makefile.svn" will rebuild the files required to use
 ##  the standard "./configure", "make" build process.
 ##
 
