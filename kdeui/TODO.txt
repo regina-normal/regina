@@ -12,9 +12,8 @@ engine documentation.
 General:
     - Make "configure shortcuts" work with the part as well as with the shell
     - Enhance the DCOP interface
-    * Upgrade admin/ (specifically libtool) for darwin/fink support
     - Don't build static libs for the kpart and python module
-    - Allow exports to python source
+    + Allow exports to python source
 
 Census:
     - Implement GUI census creation
@@ -30,7 +29,6 @@ Docs:
 
 Icons:
     - Softer tree for filter_comb.png
-    - Icons for separate New actions
     - Separate mimetype icon set
 
 Import/Export:
@@ -60,4 +58,3 @@ Toolbars:
 
 Triangulations:
     - Make the skeleton viewer windows appear in a pleasant size
-    + Only fill the isomorphism combo box when absolutely necessary
