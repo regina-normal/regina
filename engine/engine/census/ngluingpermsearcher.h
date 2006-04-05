@@ -38,56 +38,6 @@
 
 #include "census/ngluingperms.h"
 
-#ifndef __DOXYGEN
-/**
- * Algorithm Constraints
- * ---------------------
- *
- * The census algorithm for NClosedPrimeMinSearcher can be deliberately
- * slowed down by defining one or more of the following symbols:
- *
- *   NO_VERTEX_LINK_PRUNING
- *
- *     Do not track vertex links as triangulations are constructed.
- *     This means that triangulations are not pruned when non-orientable
- *     vertex links are created.
- *
- *     Implies NO_VERTEX_COUNT_PRUNING.
- *
- *   NO_VERTEX_COUNT_PRUNING
- *
- *     Do not prune when it becomes clear that we will not end up with a
- *     one-vertex triangulation.
- *
- *   NO_EDGE_CLASS_PRUNING
- *
- *     Do not track classes of identified edges as triangulations are
- *     constructed.  Triangulations will still be pruned on low degree
- *     and invalid edges, but this pruning may be slower.
- *
- *     Implies NO_EDGE_COUNT_PRUNING, NO_CONE_PRUNING and NO_L31_PRUNING.
- *
- *   NO_EDGE_COUNT_PRUNING
- *
- *     Do not prune when it becomes clear that we will end up with too
- *     few or too many edges.
- *
- *   NO_CONE_PRUNING
- *
- *     Do not prune when it becomes clear that we will end up with a
- *     face with two edges identified to form a cone.
- *
- *   NO_L31_PRUNING
- *
- *     Do not prune when it becomes clear that we will end up with a
- *     face with all three edges identified to form an L(3,1) spine.
- *
- * The relevant symbol(s) should be defined here at the top of this
- * header (or in the global CXXFLAGS options if you are happy to rebuild
- * all of regina).
- */
-#endif
-
 namespace regina {
 
 /**
@@ -613,16 +563,13 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
             /**< Represents a miscellaneous edge in a face pairing graph. */
 
     private:
-#ifndef NO_VERTEX_LINK_PRUNING
         static const char VLINK_CLOSED;
             /**< Signifies that a vertex link has been closed off (i.e.,
                  the link has no remaining boundary edges). */
         static const char VLINK_NON_ORBL;
             /**< Signifies that a vertex link has been made
                  non-orientable. */
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
         static const char ECLASS_TWISTED;
             /**< Signifies that an edge has been identified with itself
                  in reverse. */
@@ -638,10 +585,8 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         static const char ECLASS_L31;
             /**< Signifies that all three edges of a face have been
                  identified to form an L(3,1) spine. */
-#endif
 
     private:
-#ifndef NO_VERTEX_LINK_PRUNING
         /**
          * A structure used to track equivalence classes of tetrahedron
          * vertices as the gluing permutation is constructed.  Two
@@ -736,9 +681,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
              */
             bool readData(std::istream& in, unsigned long nStates);
         };
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
         /**
          * A structure used to track equivalence classes of tetrahedron
          * edges as the gluing permutation is constructed.  Two edges
@@ -837,7 +780,6 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
              */
             bool readData(std::istream& in, unsigned long nStates);
         };
-#endif
 
     public:
         static const char dataTag_;
@@ -882,7 +824,6 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  permutations for this face that correspond to the two
                  possible permutations for the previous face.  */
 
-#ifndef NO_VERTEX_LINK_PRUNING
         unsigned nVertexClasses;
             /**< The number of equivalence classes of identified
                  tetrahedron vertices. */
@@ -903,9 +844,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  with root vertexState[p] being grafted beneath the tree
                  with root vertexState[q], this array will store the value p.
                  Otherwise it will store the value -1. */
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
         unsigned nEdgeClasses;
             /**< The number of equivalence classes of identified
                  tetrahedron edges. */
@@ -927,7 +866,6 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  with root edgeState[p] being grafted beneath the tree
                  with root edgeState[q], this array will store the value p.
                  Otherwise it will store the value -1. */
-#endif
 
         int orderElt;
             /**< Marks which element of order[] we are currently examining
@@ -1016,7 +954,6 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          */
         void initOrder();
 
-#ifndef NO_VERTEX_LINK_PRUNING
         /**
          * Merge the classes of tetrahedron vertices as required by the
          * new gluing made at stage \a orderElt of the search.
@@ -1034,9 +971,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * described by these flags were observed.
          */
         int mergeVertexClasses();
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
         /**
          * Merge the classes of tetrahedron edges as required by the
          * new gluing made at stage \a orderElt of the search.
@@ -1055,9 +990,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * described by these flags were observed.
          */
         int mergeEdgeClasses();
-#endif
 
-#ifndef NO_VERTEX_LINK_PRUNING
         /**
          * Split the classes of tetrahedron vertices to mirror the
          * undoing of the gluing at stage \a orderElt of the search.
@@ -1065,9 +998,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * See the TetVertexState class for details.
          */
         void splitVertexClasses();
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
         /**
          * Split the classes of tetrahedron edges to mirror the undoing
          * of the gluing at stage \a orderElt of the search.
@@ -1075,7 +1006,6 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * See the TetEdgeState class for details.
          */
         void splitEdgeClasses();
-#endif
 };
 
 /*@}*/
@@ -1092,18 +1022,14 @@ inline char NGluingPermSearcher::dataTag() const {
 
 // Inline functions for NClosedPrimeMinSearcher
 
-#ifndef NO_VERTEX_LINK_PRUNING
 inline NClosedPrimeMinSearcher::TetVertexState::TetVertexState() :
         parent(-1), rank(0), bdry(3), twistUp(0), hadEqualRank(false) {
 }
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
 inline NClosedPrimeMinSearcher::TetEdgeState::TetEdgeState() :
         parent(-1), rank(0), size(1), bounded(true), twistUp(0),
         hadEqualRank(false) {
 }
-#endif
 
 inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
     delete[] order;

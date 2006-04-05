@@ -35,30 +35,12 @@
 #include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 
-// Sanity checking for the fast-vs-slow algorithm macros.
-#ifdef NO_VERTEX_LINK_PRUNING
-#define NO_VERTEX_COUNT_PRUNING
-#endif
-
-#ifdef NO_EDGE_CLASS_PRUNING
-#define NO_EDGE_COUNT_PRUNING
-#define NO_CONE_PRUNING
-#define NO_L31_PRUNING
-#endif
-
 // Simplify the many splitVertexClasses() and splitEdgeClasses() calls.
-#ifdef NO_VERTEX_LINK_PRUNING
-#define SPLIT_VERTEX_CLASSES
-#else
+// These macros are left over from the days when class tracking was
+// optional; they should really be removed some day and real function calls
+// used instead.
 #define SPLIT_VERTEX_CLASSES splitVertexClasses();
-#endif
-
-#ifdef NO_EDGE_CLASS_PRUNING
-#define SPLIT_EDGE_CLASSES
-#else
 #define SPLIT_EDGE_CLASSES splitEdgeClasses();
-#endif
-
 #define SPLIT_VERTEX_EDGE_CLASSES SPLIT_VERTEX_CLASSES SPLIT_EDGE_CLASSES
 
 namespace regina {
@@ -70,21 +52,16 @@ const unsigned NClosedPrimeMinSearcher::EDGE_DOUBLE_FIRST = 4;
 const unsigned NClosedPrimeMinSearcher::EDGE_DOUBLE_SECOND = 5;
 const unsigned NClosedPrimeMinSearcher::EDGE_MISC = 6;
 
-#ifndef NO_VERTEX_LINK_PRUNING
 const char NClosedPrimeMinSearcher::VLINK_CLOSED = 1;
 const char NClosedPrimeMinSearcher::VLINK_NON_ORBL = 2;
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
 const char NClosedPrimeMinSearcher::ECLASS_TWISTED = 1;
 const char NClosedPrimeMinSearcher::ECLASS_LOWDEG = 2;
 const char NClosedPrimeMinSearcher::ECLASS_CONE = 4;
 const char NClosedPrimeMinSearcher::ECLASS_L31 = 8;
-#endif
 
 const char NClosedPrimeMinSearcher::dataTag_ = 'c';
 
-#ifndef NO_VERTEX_LINK_PRUNING
 void NClosedPrimeMinSearcher::TetVertexState::dumpData(std::ostream& out)
         const {
     // Be careful with twistUp, which is a char but which should be
@@ -120,9 +97,7 @@ bool NClosedPrimeMinSearcher::TetVertexState::readData(std::istream& in,
 
     return true;
 }
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
 void NClosedPrimeMinSearcher::TetEdgeState::dumpData(std::ostream& out) const {
     // Be careful with twistUp, which is a char but which should be
     // written as an int.
@@ -165,7 +140,6 @@ bool NClosedPrimeMinSearcher::TetEdgeState::readData(std::istream& in,
 
     return true;
 }
-#endif
 
 NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
         const NFacePairingIsoList* autos, bool orientableOnly,
@@ -404,19 +378,15 @@ void NClosedPrimeMinSearcher::initOrder() {
 
     // ---------- Tracking of vertex / edge equivalence classes ----------
 
-#ifndef NO_VERTEX_LINK_PRUNING
     nVertexClasses = nTets * 4;
     vertexState = new TetVertexState[nTets * 4];
     vertexStateChanged = new int[nTets * 8];
     std::fill(vertexStateChanged, vertexStateChanged + nTets * 8, -1);
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
     nEdgeClasses = nTets * 6;
     edgeState = new TetEdgeState[nTets * 6];
     edgeStateChanged = new int[nTets * 8];
     std::fill(edgeStateChanged, edgeStateChanged + nTets * 8, -1);
-#endif
 }
 
 // TODO (net): See what was removed when we brought in vertex link checking.
@@ -539,54 +509,6 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         // We are sitting on a new permutation to try.
         permIndex(adj) = allPermsS3Inv[permIndex(face)];
 
-#ifdef NO_EDGE_CLASS_PRUNING
-        // Simple tests that help if we're not already tracking
-        // equivalence classes of tetrahedron edges.
-        if (lowDegreeEdge(face, true, true))
-            continue;
-        if (! orientableOnly_)
-            if (badEdgeLink(face))
-                continue;
-#endif
-
-#if (defined(NO_EDGE_CLASS_PRUNING) || defined(NO_CONE_PRUNING))
-        // Exploit our results regarding double edges in a face pairing graph.
-        //
-        // If we're already tracking equivalence classes of tetrahedron
-        // edges and purging on (i) low degree edges, (ii) invalid edges
-        // and (iii) conical faces, then these results add nothing new
-        // (in which case there is no need for these additional tests).
-        if (orderType[orderElt] == EDGE_DOUBLE_SECOND) {
-            // We can use our double edge results to limit the possible
-            // choices for the second permutation of a double edge.
-
-            // These results boil down to the following:
-            //
-            // 1) You cannot create an edge of degree two;
-            //
-            // 2) Each vertex of the equator edge of the first
-            // tetrahedron must be mapped to two distinct vertices of
-            // the second tetrahedron by the two gluing permutations.
-            //
-            // Note that condition (1) is already verified by the
-            // low degree edge and invalid edge tests already performed
-            // elsewhere.
-
-            // The two vertices of the equator:
-            faces = NFacePair(order[orderElt - 1].face,
-                order[orderElt].face).complement();
-
-            // The two gluing permutations:
-            trial1 = gluingPerm(order[orderElt - 1]);
-            trial2 = gluingPerm(order[orderElt]);
-
-            if (trial1[faces.lower()] == trial2[faces.lower()] ||
-                    trial1[faces.upper()] == trial2[faces.upper()])
-                continue;
-        }
-#endif
-
-#ifndef NO_EDGE_CLASS_PRUNING
         // Merge edge links and run corresponding tests.
         mergeResult = mergeEdgeClasses();
         if (mergeResult &
@@ -596,7 +518,6 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             SPLIT_EDGE_CLASSES
             continue;
         }
-#ifndef NO_EDGE_COUNT_PRUNING
         // The final triangulation should have precisely (nTets + 1) edges
         // (since it must have precisely one vertex).
         if (nEdgeClasses < nTets + 1) {
@@ -620,8 +541,6 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             SPLIT_EDGE_CLASSES
             continue;
         }
-#endif
-#endif
 
         // In the following code we use several results from
         // "Face pairing graphs and 3-manifold enumeration", B. A. Burton,
@@ -637,10 +556,8 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         // - We cannot have a face with all three edges identified to
         //   form an L(3,1) spine (lemma 2.5).
 
-#ifndef NO_VERTEX_LINK_PRUNING
         // Merge vertex links and run corresponding tests.
         mergeResult = mergeVertexClasses();
-#ifndef NO_VERTEX_COUNT_PRUNING
         if (mergeResult & VLINK_CLOSED) {
             // We closed off a vertex link, which means we will end up
             // with more than one vertex (unless this was our very last
@@ -650,13 +567,11 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 continue;
             }
         }
-#endif
         if (mergeResult & VLINK_NON_ORBL) {
             // We made the vertex link non-orientable.  Stop now.
             SPLIT_VERTEX_EDGE_CLASSES
             continue;
         }
-#ifndef NO_VERTEX_COUNT_PRUNING
         if (nVertexClasses > 1 + 3 * (nTets * 2 - orderElt - 1)) {
             // We have (2n - orderElt - 1) more gluings to choose.
             // Since each merge can reduce the number of vertex classes
@@ -665,8 +580,6 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             SPLIT_VERTEX_EDGE_CLASSES
             continue;
         }
-#endif
-#endif
 
         // Fix the orientation if appropriate.
         if (generic && adj.face == 0 && orientableOnly_) {
@@ -738,7 +651,6 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 
     // Some extra sanity checking.
     if (minOrder == 0) {
-#ifndef NO_VERTEX_LINK_PRUNING
         // Our vertex classes had better be 4n standalone vertices.
         if (nVertexClasses != 4 * nTets)
             std::cerr << "ERROR: nVertexClasses == "
@@ -763,9 +675,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 std::cerr << "ERROR: vertexStateChanged[" << i << "] == "
                     << vertexStateChanged[i] << " at end of search!"
                     << std::endl;
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
         // And our edge classes had better be 6n standalone edges.
         if (nEdgeClasses != 6 * nTets)
             std::cerr << "ERROR: nEdgeClasses == "
@@ -794,7 +704,6 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 std::cerr << "ERROR: edgeStateChanged[" << i << "] == "
                     << edgeStateChanged[i] << " at end of search!"
                     << std::endl;
-#endif
     }
 
     use_(0, useArgs_);
@@ -825,7 +734,6 @@ void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
 
     out << orderElt << std::endl;
 
-#ifndef NO_VERTEX_LINK_PRUNING
     out << nVertexClasses << std::endl;
     for (i = 0; i < 4 * nTets; i++) {
         vertexState[i].dumpData(out);
@@ -837,9 +745,7 @@ void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
         out << vertexStateChanged[i];
     }
     out << std::endl;
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
     out << nEdgeClasses << std::endl;
     for (i = 0; i < 6 * nTets; i++) {
         edgeState[i].dumpData(out);
@@ -851,19 +757,14 @@ void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
         out << edgeStateChanged[i];
     }
     out << std::endl;
-#endif
 }
 
 NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
         UseGluingPerms use, void* useArgs) :
         NGluingPermSearcher(in, use, useArgs),
         order(0), orderType(0), nChainEdges(0), chainPermIndices(0),
-#ifndef NO_VERTEX_LINK_PRUNING
         nVertexClasses(0), vertexState(0), vertexStateChanged(0),
-#endif
-#ifndef NO_EDGE_CLASS_PRUNING
         nEdgeClasses(0), edgeState(0), edgeStateChanged(0),
-#endif
         orderElt(0) {
     if (inputError_)
         return;
@@ -898,7 +799,6 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
 
     in >> orderElt;
 
-#ifndef NO_VERTEX_LINK_PRUNING
     in >> nVertexClasses;
     if (nVertexClasses > 4 * nTets) {
         inputError_ = true; return;
@@ -918,9 +818,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
             inputError_ = true; return;
         }
     }
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
     in >> nEdgeClasses;
     if (nEdgeClasses > 6 * nTets) {
         inputError_ = true; return;
@@ -940,14 +838,12 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
             inputError_ = true; return;
         }
     }
-#endif
 
     // Did we hit an unexpected EOF?
     if (in.eof())
         inputError_ = true;
 }
 
-#ifndef NO_VERTEX_LINK_PRUNING
 int NClosedPrimeMinSearcher::mergeVertexClasses() {
     // Merge all three vertex pairs for the current face.
     NTetFace face = order[orderElt];
@@ -1068,9 +964,7 @@ void NClosedPrimeMinSearcher::splitVertexClasses() {
         }
     }
 }
-#endif
 
-#ifndef NO_EDGE_CLASS_PRUNING
 int NClosedPrimeMinSearcher::mergeEdgeClasses() {
     NTetFace face = order[orderElt];
     NTetFace adj = (*pairing)[face];
@@ -1157,7 +1051,6 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
         }
     }
 
-#if (! (defined(NO_CONE_PRUNING) && defined(NO_L31_PRUNING)))
     // Find representatives of the equivalence classes for all six edges
     // of the current tetrahedron (instead of calculating them each time
     // we want them).
@@ -1169,9 +1062,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 tRep[e] = edgeState[tRep[e]].parent)
             tTwist[e] ^= edgeState[tRep[e]].twistUp;
     }
-#endif
 
-#ifndef NO_CONE_PRUNING
     // Test for cones on edges v1->w1->v2.
     for (w1 = 0; w1 < 4; w1++)
         for (v1 = 0; v1 < 3; v1++) {
@@ -1194,9 +1085,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
             }
         }
     coneDone:
-#endif
 
-#ifndef NO_L31_PRUNING
     // Test for L(3,1) spines.
     // L(3,1) on face 012:
     if (tRep[0] == tRep[1] && tRep[1] == tRep[3])
@@ -1214,7 +1103,6 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
     if (tRep[3] == tRep[4] && tRep[4] == tRep[5])
         if ((tTwist[3] ^ tTwist[4]) && (tTwist[4] ^ tTwist[5]))
             retVal |= ECLASS_L31;
-#endif
 
     return retVal;
 }
@@ -1261,7 +1149,6 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
         }
     }
 }
-#endif
 
 } // namespace regina
 
