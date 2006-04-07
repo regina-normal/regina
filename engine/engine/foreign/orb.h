@@ -39,6 +39,8 @@
 
 namespace regina {
 
+class NTriangulation;
+
 /**
  * Reads a triangulation from the given Orb file.  A newly allocated
  * triangulation will be returned; it is the user's responsibility to

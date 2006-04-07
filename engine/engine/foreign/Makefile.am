@@ -8,7 +8,7 @@
 
 KDE_OPTIONS=noautodist
 
-INCLUDES = @ENGINE_INCLUDES@ $(all_includes)
+INCLUDES = @ENGINE_INCLUDES@
 
 foreignincludedir = $(pkgincludedir)/foreign
 

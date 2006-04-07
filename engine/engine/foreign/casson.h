@@ -1,8 +1,6 @@
 #ifndef CASSON_H
 #define CASSON_H
 
-//#include <qstring.h>
-
 #define LN(ch)   (ch=='u') ? 0 : ((ch=='v') ? 1 : ((ch=='w') ? 2 : 3))
 
 const int vertex_at_faces[4][4] =

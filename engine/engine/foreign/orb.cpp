@@ -27,20 +27,17 @@
 /* end stub */
 
 #include <cctype>
+#include <cstdio>
 #include <cstring>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 
-#include <qtextstream.h> // maybe this is overkill! 
-#include <qstring.h>     // should think about ways
-#include <qfile.h>       // of removing these...
-
-#include "file/nresources.h"
-#include "foreign/snappea.h"
+#include "foreign/casson.h"
 #include "foreign/orb.h"
 #include "triangulation/ntriangulation.h"
-#include "foreign/casson.h"
+#include "utilities/stringutils.h"
 
 namespace regina {
 /* This file contains the engine routines to read Casson/Orb format triangulations
@@ -76,19 +73,17 @@ namespace regina {
  * 			   the Regina-compatible cassonToNTriangulation
 */
 
-CassonFormat	*readCassonFormat( QTextStream &ts );
+CassonFormat	*readCassonFormat( std::istream &ts );
 bool		verifyCassonFormat( CassonFormat *cf );
 void		freeCassonFormat( CassonFormat *cf );
 NTriangulation	*cassonToNTriangulation( CassonFormat *cf );
 
 
 
-CassonFormat *readCassonFormat( QTextStream &ts )
+CassonFormat *readCassonFormat( std::istream &ts )
 {
-        int             i;
-        bool            ok;
         CassonFormat    *cf;
-        QString         line,
+        std::string     line,
                         section;
         EdgeInfo        *nei,
                         *ei;
@@ -98,13 +93,22 @@ CassonFormat *readCassonFormat( QTextStream &ts )
 	cf = new CassonFormat;
 	cf->head = NULL;
 	cf->num_tet = 0;
-	ts.skipWhiteSpace();
 
-	line = ts.readLine();
+	// Find a non-empty line.
+	// The code from Orb used QString::skipWhiteSpace(); we do it
+	// manually.
+	do {
+		getline(ts, line);
+		stripWhitespace(line);
+	} while ((! ts.eof()) && line.empty());
 
-	while (!line.isEmpty() && line != "% diagram")
+	// Process lines one at a time until we hit an empty line or EOF.
+	while ((! ts.eof()) && (! line.empty()) && (line != "% diagram"))
 	{
-		line = line.simplifyWhiteSpace();
+		// The code from Orb used QString's record separation
+		// routines.  We don't have that in std::string, so
+		// we'll do it all with istringstreams instead.
+		std::istringstream tokens(line);
 
 		nei = new EdgeInfo;
 
@@ -117,14 +121,15 @@ CassonFormat *readCassonFormat( QTextStream &ts )
 
 		ei = nei;
 
-		ei->index = line.section(' ',0,0).toInt(&ok,10) - 1;
-		ei->singular_index = line.section(' ',1,1).toInt(&ok,10) - 1;
-		ei->singular_order = line.section(' ',2,2).toDouble(&ok);	
+		tokens >> ei->index;
+		ei->index--;
 
-		i = 3;
-		section = line.section(' ',i,i);
+		// We never use these two values; just suck them in and
+		// forget them.
+		tokens >> ei->singular_index >> ei->singular_order;
 
-		while (!section.isEmpty())	
+		tokens >> section;
+		while (!section.empty())	
 		{
 			ntei = new TetEdgeInfo;
 
@@ -136,19 +141,19 @@ CassonFormat *readCassonFormat( QTextStream &ts )
 			ntei->next = NULL;
 			tei = ntei;
 
-			tei->f1 = LN(section.at(section.length()-2).latin1());
-			tei->f2 = LN(section.at(section.length()-1).latin1());
-			section.truncate(section.length()-2);
-			tei->tet_index = section.toInt(&ok,10) - 1;
+			tei->f1 = LN(section[section.length()-2]);
+			tei->f2 = LN(section[section.length()-1]);
+			section.resize(section.length()-2);
+			tei->tet_index = atoi(section.c_str()) - 1;
 
 			if (tei->tet_index + 1 > cf->num_tet)
 				cf->num_tet = tei->tet_index + 1;
 
-			i++;
-			section = line.section(' ',i,i);
+			section.clear();
+			tokens >> section;
 		}
 
-		line = ts.readLine();
+		getline(ts, line);
 	}
 
 	return cf;
@@ -166,27 +171,27 @@ bool verifyCassonFormat( CassonFormat *cf )
 		for(j=0;j<4;j++)
 			for(k=0;k<4;k++)
 			if (j==k)
-				check[j][k] = TRUE;
-			else	check[j][k] = FALSE;
+				check[j][k] = true;
+			else	check[j][k] = false;
 
 		ei = cf->head;
 
 		if (ei == NULL)
-			return FALSE;
+			return false;
 
 		while(ei!=NULL)
 		{
 			tei = ei->head;
 			if (tei == NULL)
-				return FALSE;
+				return false;
 			while(tei!=NULL)
 			{
 				if (tei->tet_index == i )
 				{
 					if (check[tei->f1][tei->f2])
-						return TRUE;
-					check[tei->f1][tei->f2] = TRUE;
-					check[tei->f2][tei->f1] = TRUE;
+						return true;
+					check[tei->f1][tei->f2] = true;
+					check[tei->f2][tei->f1] = true;
 				}
 				tei = tei->next;
 			}
@@ -195,10 +200,10 @@ bool verifyCassonFormat( CassonFormat *cf )
 
 		for(j=0;j<4;j++)
 			for(k=0;k<4;k++)
-			if (check[j][k]==FALSE)
-				return FALSE;
+			if (check[j][k]==false)
+				return false;
 	}
-	return TRUE;
+	return true;
 }
 
 void freeCassonFormat( CassonFormat *cf )
@@ -223,16 +228,17 @@ void freeCassonFormat( CassonFormat *cf )
 	delete cf;
 }
 
-NTriangulation *readTriangulation( QTextStream &ts,  QString &file_id)
+NTriangulation *readTriangulation( std::istream &ts,  std::string &file_id)
 {
 
 	NTriangulation *manifold;
-	QString line = ts.readLine();
+	std::string line;
+	getline(ts, line);
 	CassonFormat *cf;
 
 	if (line == "% orb")
 	 {
-         file_id = ts.readLine();
+		 getline(ts, file_id);
 	 cf=readCassonFormat( ts );
 
 	 if (verifyCassonFormat( cf ))
@@ -314,19 +320,16 @@ NTriangulation *cassonToNTriangulation( CassonFormat *cf )
 
 NTriangulation *readOrb(const char *filename) 
  {
-   QString file_id;
+   std::string file_id;
 
-   QString filename_qt(filename);
-   QFile file_qt(filename_qt);
-   if (!file_qt.open(IO_ReadOnly))
+   std::ifstream file(filename);
+   if (! file)
     {
      std::cout<<"Error (1) opening Orb/Casson file.\n";std::cout.flush();
     }
-   QTextStream filestream_qt(&file_qt);
-   NTriangulation *triang = readTriangulation(filestream_qt,file_id);
+   NTriangulation *triang = readTriangulation(file, file_id);
 
-   const char *ascii_file_id=file_id.ascii();
-   triang->setPacketLabel(ascii_file_id);
+   triang->setPacketLabel(file_id);
    return triang;
  }
 
