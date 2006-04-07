@@ -64,6 +64,12 @@
     "*|SnapPea Files\n*|All Files"
 
 /**
+ * Filename filter for Orb files.
+ */
+#define FILTER_ORB \
+    "*.orb|Orb and Casson Files\n*|All Files"
+
+/**
  * Filename filter for C++ source files.
  */
 #define FILTER_CPP_SOURCE \
