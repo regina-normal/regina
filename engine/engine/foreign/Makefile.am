@@ -8,13 +8,13 @@
 
 KDE_OPTIONS=noautodist
 
-INCLUDES = @ENGINE_INCLUDES@
+INCLUDES = @ENGINE_INCLUDES@ $(all_includes)
 
 foreignincludedir = $(pkgincludedir)/foreign
 
 noinst_LTLIBRARIES = libforeign.la
 
-libforeign_la_SOURCES = dehydration.cpp snappea.cpp
+libforeign_la_SOURCES = dehydration.cpp orb.cpp snappea.cpp
 
-foreigninclude_HEADERS = dehydration.h snappea.h
+foreigninclude_HEADERS = casson.h dehydration.h orb.h snappea.h
 

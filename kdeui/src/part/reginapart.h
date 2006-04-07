@@ -269,6 +269,7 @@ class ReginaPart : public KParts::ReadWritePart {
         void importPython();
         void importRegina();
         void importSnapPea();
+        void importOrb();
 
         /**
          * Packet export routines.

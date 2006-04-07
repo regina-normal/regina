@@ -26,64 +26,55 @@
 
 /* end stub */
 
-#include "packet/npacket.h"
+#include "foreign/snappea.h"
+#include "foreign/orb.h"
+#include "triangulation/ntriangulation.h"
 
-#include "packettreeview.h"
-#include "reginapart.h"
-#include "foreign/dehydrationhandler.h"
-#include "foreign/importdialog.h"
-#include "foreign/orbhandler.h"
-#include "foreign/pythonhandler.h"
-#include "foreign/reginahandler.h"
-#include "foreign/snappeahandler.h"
-#include "reginafilter.h"
+#include "orbhandler.h"
+#include "../packetfilter.h"
 
-#include <kfiledialog.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 
-void ReginaPart::importDehydration() {
-    importFile(DehydrationHandler::instance, 0, i18n(FILTER_ALL),
-        i18n("Import Dehydrated Triangulation List"));
+const OrbHandler OrbHandler::instance;
+
+regina::NPacket* OrbHandler::import(const QString& fileName,
+        QWidget* parentWidget) const {
+    regina::NPacket* ans = regina::readOrb(fileName.ascii());
+    if (! ans)
+        KMessageBox::error(parentWidget, i18n(
+            "The Orb/Casson file %1 could not be imported.  Perhaps the data "
+            "is not in Orb format?").arg(fileName));
+    return ans;
 }
 
-void ReginaPart::importPython() {
-    importFile(PythonHandler::instance, 0, i18n(FILTER_PYTHON_SCRIPTS),
-        i18n("Import Python Script"));
+/*
+PacketFilter* OrbHandler::canExport() const {
+    return new SingleTypeFilter<regina::NTriangulation>();
 }
 
-void ReginaPart::importRegina() {
-    importFile(ReginaHandler(), 0, i18n(FILTER_REGINA),
-        i18n("Import Regina Data File"));
-}
-
-void ReginaPart::importSnapPea() {
-    importFile(SnapPeaHandler::instance, 0, i18n(FILTER_SNAPPEA),
-        i18n("Import SnapPea Triangulation"));
-}
-
-void ReginaPart::importOrb() {
-    importFile(OrbHandler::instance, 0, i18n(FILTER_ORB),
-        i18n("Import Orb or Casson Triangulation"));
-}
-
-void ReginaPart::importFile(const PacketImporter& importer,
-        PacketFilter* parentFilter, const QString& fileFilter,
-        const QString& dialogTitle) {
-    if (! checkReadWrite())
-        return;
-
-    QString file = KFileDialog::getOpenFileName(QString::null,
-        fileFilter, widget(), dialogTitle);
-    if (! file.isEmpty()) {
-        regina::NPacket* newTree = importer.import(file, widget());
-        if (newTree) {
-            ImportDialog dlg(widget(), newTree, packetTree,
-                treeView->selectedPacket(), parentFilter, dialogTitle);
-            if (dlg.validate() && dlg.exec() == QDialog::Accepted)
-                packetView(newTree, true);
-            else
-                delete newTree;
-        }
+bool OrbHandler::exportData(regina::NPacket* data,
+        const QString& fileName, QWidget* parentWidget) const {
+    regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
+    if (! tri->isValid()) {
+        KMessageBox::error(parentWidget, i18n(
+            "This triangulation cannot be exported to SnapPea format "
+            "because it is not a valid triangulation."));
+        return false;
     }
+    if (tri->hasBoundaryFaces()) {
+        KMessageBox::error(parentWidget, i18n(
+            "This triangulation cannot be exported to SnapPea format "
+            "because it has one or more boundary faces."));
+        return false;
+    }
+    if (! regina::writeSnapPea(fileName.ascii(), *tri)) {
+        KMessageBox::error(parentWidget, i18n(
+            "This triangulation could not be exported.  An unknown error, "
+            "probably related to file I/O, occurred during the export."));
+        return false;
+    }
+    return true;
 }
 
+*/

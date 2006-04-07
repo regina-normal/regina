@@ -7,6 +7,7 @@
     <Menu name="file_import" group="print_merge"><text>&amp;Import</text>
       <Action name="import_regina"/>
       <Action name="import_snappea"/>
+      <Action name="import_orb"/>
       <Action name="import_dehydrated"/>
       <Action name="import_python"/>
     </Menu>
