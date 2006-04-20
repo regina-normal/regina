@@ -9,6 +9,13 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.3.1  [ 28 April, 2006 ]
 
+    ENGINE:
+        Routine readOrb():
+            - New routine for importing Orb / Casson triangulations;
+              thanks to Ryan Budney.
+        Routine readSnapPea():
+            - Verifies that the first line of the file is "% Triangulation",
+              instead of simply testing for the '%' and ignoring the rest.
     USER INTERFACE:
         - Added a workaround for the icon problems that arise when using
           GNU/Linux distributions with buggy icon themes
