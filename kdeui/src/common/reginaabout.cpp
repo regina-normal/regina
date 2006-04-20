@@ -90,6 +90,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
     addAuthor("Ben Burton", 0, "bab@debian.org");
 
     // Credits:
+    addCredit("Ryan Budney",
+        I18N_NOOP("Code contributions"));
     addCredit("Marc Culler",
         I18N_NOOP("Helpful discussions"));
     addCredit("Dominique Devriese",
