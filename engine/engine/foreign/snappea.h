@@ -52,16 +52,15 @@ class NTriangulation;
  * triangulation will be returned; it is the user's responsibility to
  * deallocate this when it is finished with.
  *
- * The new triangulation will have a packet label corresponding to the
- * manifold name stored in the SnapPea file.
+ * The packet label of the new triangulation will be the manifold name
+ * read from the second line of the SnapPea file.  The first line of the
+ * SnapPea file must simply be ``<tt>% Triangulation</tt>.
  *
  * If the file could not be read or if the data was not in the correct
  * format, 0 will be returned.
  *
  * \pre The first two lines of the SnapPea file each contain at most
- * 1000 characters.  The first line is the type of file which should
- * simply be ``<tt>% Triangulation</tt>''.  The second line is the name of
- * the manifold.
+ * 1000 characters.
  *
  * @param filename the name of the SnapPea file from which to read.
  * @return a new triangulation containing the data read from the SnapPea
