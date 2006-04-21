@@ -73,6 +73,14 @@
  *  given permission for it to be distributed under the terms of the
  *  GNU General Public License as described above.
  *
+ *  <h3>Orb Kernel</h3>
+ *
+ *  Since version 4.3.1 (May 2006), Regina includes snippets of code from
+ *  Orb for use in importing and exporting files in Orb / Casson format.
+ *  Orb is based on SnapPea (see above) with additional code written by
+ *  Damian Heard, who has also given permission for his code to be
+ *  distributed under the terms of the GNU General Public License.
+ *
  *  <h3>Acknowledgements</h3>
  *
  *  Many people have been of assistance with this project, be it through

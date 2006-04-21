@@ -22,7 +22,7 @@ License details:
     kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
     www/index.html
 
-SnapPea copyright:
+SnapPea / Orb copyright:
     LICENSE.txt
     engine/engine/docs.h
     engine/engine/snappea/kernel/README.txt

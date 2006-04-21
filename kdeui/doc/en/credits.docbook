@@ -35,6 +35,17 @@
     terms of the &gnu; General Public License as described above.
    </para>
   </sect2>
+
+  <sect2 id="licenses-orb">
+   <title>Orb Kernel</title>
+   <para>
+    Since version &orbintro;, &regina; includes snippets of code from
+    &orb; for use in importing and exporting files in Orb / Casson format.
+    &orb; is based on &snappea; (see above) with additional code written by
+    Damian Heard, who has also given permission for his code to be
+    distributed under the terms of the &gnu; General Public License.
+   </para>
+  </sect2>
  </sect1>
 
  <sect1 id="acknowledgements">

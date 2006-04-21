@@ -78,7 +78,13 @@ const char* ReginaAbout::regLicense =
     "SnapPea kernel which it uses for certain geometric calculations.\n"
     "SnapPea is copyright (c) 1991-2005 by Jeff Weeks, who has graciously\n"
     "given permission for it to be distributed under the terms of the GNU\n"
-    "General Public License as described above.\n";
+    "General Public License as described above.\n\n"
+    "ORB KERNEL:\n\n"
+    "Since version 4.3.1 (May 2006), Regina includes snippets of code from\n"
+    "Orb for use in importing and exporting files in Orb / Casson format.\n"
+    "Orb is based on SnapPea (see above) with additional code written by\n"
+    "Damian Heard, who has also given permission for his code to be\n"
+    "distributed under the terms of the GNU General Public License.\n";
 
 ReginaAbout::ReginaAbout(const char* internalName) :
         KAboutData(internalName, regName, regVersion,
