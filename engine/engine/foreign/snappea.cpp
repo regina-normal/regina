@@ -44,13 +44,13 @@ NTriangulation* readSnapPea(const char* filename) {
         return 0;
 
     // Check that this is a SnapPea triangulation.
-    if (in.peek() != '%')
-        return 0;
-
     char name[1001];
+    unsigned len;
     in.getline(name, 1000);
     if (in.fail() || in.eof())
         return 0;
+    if ((len = strlen(name)) > 0 && name[len - 1] == '\r')
+        name[len - 1] = 0;
     if (strcmp(name, "% Triangulation") && strcmp(name, "% triangulation"))
         return 0;
 
@@ -58,6 +58,8 @@ NTriangulation* readSnapPea(const char* filename) {
     in.getline(name, 1000);
     if (in.fail() || in.eof())
         return 0;
+    if ((len = strlen(name)) > 0 && name[len - 1] == '\r')
+        name[len - 1] = 0;
 
     // Read in junk.
     std::string tempStr;
