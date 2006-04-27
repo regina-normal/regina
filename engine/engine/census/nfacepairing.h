@@ -45,6 +45,7 @@ namespace regina {
 
 class NFacePair;
 class NFacePairing;
+class NTriangulation;
 
 /**
  * \weakgroup census
@@ -116,6 +117,19 @@ class NFacePairing : public NThread {
          * @param cloneMe the face pairing to clone.
          */
         NFacePairing(const NFacePairing& cloneMe);
+
+        /**
+         * Creates the face pairing of given triangulation.  This is the
+         * face pairing that describes how the tetrahedron faces of the
+         * given triangulation are joined together, as described in the
+         * class notes.
+         *
+         * \pre The given triangulation is not empty.
+         *
+         * @param tri the triangulation whose face pairing should be
+         * constructed.
+         */
+        NFacePairing(const NTriangulation& tri);
 
         /**
          * Deallocates any memory used by this structure.
@@ -302,6 +316,12 @@ class NFacePairing : public NThread {
          * A triple edge is where two different tetrahedra are joined
          * along three of their faces.
          *
+         * A face pairing containing a triple edge cannot model a closed
+         * minimal irreducible P^2-irreducible 3-manifold triangulation on
+         * more than two tetrahedra.  See "Face pairing graphs and 3-manifold
+         * enumeration", Benjamin A. Burton, J. Knot Theory Ramifications
+         * 13 (2004), 1057--1101.
+         *
          * @return \c true if and only if this face pairing contains a
          * triple edge.
          */
@@ -379,6 +399,12 @@ class NFacePairing : public NThread {
          * double-ended chain, i.e., the final two unaccounted faces are
          * not joined together.
          *
+         * A face pairing containing a broken double-ended chain cannot
+         * model a closed minimal irreducible P^2-irreducible 3-manifold
+         * triangulation on more than two tetrahedra.  See "Face pairing
+         * graphs and 3-manifold enumeration", Benjamin A. Burton,
+         * J. Knot Theory Ramifications 13 (2004), 1057--1101.
+         *
          * @return \c true if and only if this face pairing contains a
          * broken double-ended chain that is not part of a complete
          * double-ended chain.
@@ -404,6 +430,13 @@ class NFacePairing : public NThread {
          * joined to each other along two faces.  The remaining two
          * faces of these two tetrahedra remain unaccounted for by this
          * structure.
+         *
+         * A face pairing containing a one-ended chain with a double handle
+         * cannot model a closed minimal irreducible P^2-irreducible
+         * 3-manifold triangulation on more than two tetrahedra.  See
+         * "Face pairing graphs and 3-manifold enumeration",
+         * Benjamin A. Burton, J. Knot Theory Ramifications 13 (2004),
+         * 1057--1101.
          *
          * @return \c true if and only if this face pairing contains a
          * one-ended chain with a double handle.
@@ -451,10 +484,88 @@ class NFacePairing : public NThread {
          * length).  See hasTripleEdge() and
          * hasOneEndedChainWithDoubleHandle() for further details.
          *
+         * A face pairing containing a wedged double-ended chain
+         * cannot model a closed minimal irreducible P^2-irreducible
+         * 3-manifold triangulation on more than two tetrahedra.  See
+         * "Enumeration of non-orientable 3-manifolds using face pairing
+         * graphs and union find", Benjamin A. Burton, math.GT/0604584.
+         *
          * @return \c true if and only if this face pairing contains a
          * wedged double-ended chain.
          */
         bool hasWedgedDoubleEndedChain() const;
+
+        /**
+         * Determines whether this face pairing contains a one-ended
+         * chain with a stray bigon.
+         *
+         * A chain involves a sequence of tetrahedra, each joined to the
+         * next along two faces, and is described in detail in the
+         * documentation for followChain().
+         *
+         * A one-ended chain is a chain in which the first tetrahedron
+         * is also joined to itself along one face (i.e., the underlying
+         * face pairing for a layered solid torus).
+         *
+         * A one-ended chain with a stray bigon describes the following
+         * structure.  We begin with a one-ended chain.  Two new
+         * tetrahedra are added; these are joined to each other along
+         * two pairs of faces, and one of the new tetrahedra is joined
+         * to the end of the one-ended chain.  We then ensure that:
+         * - This configuration is not part of a longer one-ended chain
+         *   that encompasses all of the aforementioned tetrahedra;
+         * - There is no extra tetrahedron that is joined to both the
+         *   two new tetrahedra and the end of the chain;
+         * - There is no extra tetrahedron that is joined to the end of
+         *   the chain along one face and the far new tetrahedron along
+         *   two additional faces (where by "the far new tetrahedron"
+         *   we mean the new tetrahedron that was not originally joined to
+         *   the chain).
+         *
+         * Aside from these constraints, the remaining four tetrahedron faces
+         * (two faces of the far new tetrahedron, one face of the other new
+         * tetrahedron, and one face at the end of the chain) remain
+         * unaccounted for by this structure.
+         *
+         * A face pairing containing a structure of this type
+         * cannot model a closed minimal irreducible P^2-irreducible
+         * 3-manifold triangulation on more than two tetrahedra.  See
+         * "Enumeration of non-orientable 3-manifolds using face pairing
+         * graphs and union find", Benjamin A. Burton, math.GT/0604584.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * one-ended chain with a stray bigon.
+         */
+        bool hasOneEndedChainWithStrayBigon() const;
+
+        /**
+         * Determines whether this face pairing contains a triple
+         * one-ended chain.
+         *
+         * A chain involves a sequence of tetrahedra, each joined to the
+         * next along two faces, and is described in detail in the
+         * documentation for followChain().
+         *
+         * A one-ended chain is a chain in which the first tetrahedron
+         * is also joined to itself along one face (i.e., the underlying
+         * face pairing for a layered solid torus).
+         *
+         * A triple one-ended chain is created from three one-ended
+         * chains as follows.  Two new tetrahedra are added, and each
+         * one-ended chain is joined to each of the new tetrahedra along
+         * a single face.  The remaining two faces (one from each of the
+         * new tetrahedra) remain unaccounted for by this structure.
+         *
+         * A face pairing containing a triple one-ended chain
+         * cannot model a closed minimal irreducible P^2-irreducible
+         * 3-manifold triangulation on more than two tetrahedra.  See
+         * "Enumeration of non-orientable 3-manifolds using face pairing
+         * graphs and union find", Benjamin A. Burton, math.GT/0604584.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * triple one-ended chain.
+         */
+        bool hasTripleOneEndedChain() const;
 
         /**
          * Internal to findAllPairings().  This routine should never be
@@ -718,6 +829,46 @@ class NFacePairing : public NThread {
          * wedged double-ended chain as described above.
          */
         bool hasWedgedDoubleEndedChain(unsigned tet, unsigned face) const;
+
+        /**
+         * Internal to hasOneEndedChainWithStrayBigon().  This routine assumes
+         * that the give face of the given tetrahedron is glued to this
+         * same tetrahedron, and attempts to find a one-ended chain with
+         * stray bigon for which this tetrahedron is at the end of the
+         * one-ended chain.
+         *
+         * \pre The given face of the given tetrahedron is paired with
+         * another face of the same tetrahedron under this face pairing.
+         *
+         * @param tet the index in the triangulation of the given
+         * tetrahedron.
+         * @param face the number of the given face in the tetrahedron;
+         * this must be between 0 and 3 inclusive.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * one-ended chain with stray bigon as described above.
+         */
+        bool hasOneEndedChainWithStrayBigon(unsigned tet, unsigned face) const;
+
+        /**
+         * Internal to hasTripleOneEndedChain().  This routine assumes
+         * that the give face of the given tetrahedron is glued to this
+         * same tetrahedron, and attempts to find a triple one-ended
+         * chain for which this tetrahedron is at the end of one of the
+         * individual one-ended chains.
+         *
+         * \pre The given face of the given tetrahedron is paired with
+         * another face of the same tetrahedron under this face pairing.
+         *
+         * @param tet the index in the triangulation of the given
+         * tetrahedron.
+         * @param face the number of the given face in the tetrahedron;
+         * this must be between 0 and 3 inclusive.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * triple one-ended chain as described above.
+         */
+        bool hasTripleOneEndedChain(unsigned tet, unsigned face) const;
 };
 
 /*@}*/

@@ -28,11 +28,13 @@
 
 #include "census/nfacepairing.h"
 #include "triangulation/nfacepair.h"
+#include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NFacePairing;
 using regina::NTetFace;
+using regina::NTriangulation;
 
 namespace {
     const NTetFace& (NFacePairing::*dest_face)(const NTetFace&) const =
@@ -50,6 +52,10 @@ namespace {
         &NFacePairing::hasOneEndedChainWithDoubleHandle;
     bool (NFacePairing::*query_wdec)() const =
         &NFacePairing::hasWedgedDoubleEndedChain;
+    bool (NFacePairing::*query_oecwsb)() const =
+        &NFacePairing::hasOneEndedChainWithStrayBigon;
+    bool (NFacePairing::*query_toec)() const =
+        &NFacePairing::hasTripleOneEndedChain;
 
     const NTetFace& getItem(const NFacePairing& p, const NTetFace& index) {
         return p[index];
@@ -59,6 +65,7 @@ namespace {
 void addNFacePairing() {
     class_<NFacePairing, std::auto_ptr<NFacePairing>, boost::noncopyable>
             ("NFacePairing", init<const NFacePairing&>())
+        .def(init<const NTriangulation&>())
         .def("getNumberOfTetrahedra", &NFacePairing::getNumberOfTetrahedra)
         .def("dest", dest_face,
             return_value_policy<reference_existing_object>())
@@ -83,6 +90,8 @@ void addNFacePairing() {
         .def("hasBrokenDoubleEndedChain", query_bdec)
         .def("hasOneEndedChainWithDoubleHandle", query_oecwdh)
         .def("hasWedgedDoubleEndedChain", query_wdec)
+        .def("hasOneEndedChainWithStrayBigon", query_oecwsb)
+        .def("hasTripleOneEndedChain", query_toec)
 
         .def("__str__", &NFacePairing::toString)
         .staticmethod("fromTextRep")

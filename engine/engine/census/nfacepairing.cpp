@@ -32,6 +32,8 @@
 #include "census/nfacepairing.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/npermit.h"
+#include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 #include "utilities/stringutils.h"
 
@@ -51,8 +53,28 @@ namespace {
 
 NFacePairing::NFacePairing(const NFacePairing& cloneMe) : NThread(),
         nTetrahedra(cloneMe.nTetrahedra),
-        pairs(new NTetFace[cloneMe.nTetrahedra]) {
+        pairs(new NTetFace[cloneMe.nTetrahedra * 4]) {
     std::copy(cloneMe.pairs, cloneMe.pairs + (nTetrahedra * 4), pairs);
+}
+
+NFacePairing::NFacePairing(const NTriangulation& tri) :
+        nTetrahedra(tri.getNumberOfTetrahedra()),
+        pairs(new NTetFace[tri.getNumberOfTetrahedra() * 4]) {
+    unsigned t, f, index;
+    const NTetrahedron *tet, *adj;
+    for (index = 0, t = 0; t < nTetrahedra; t++) {
+        tet = tri.getTetrahedron(t);
+        for (f = 0; f < 4; f++) {
+            adj = tet->getAdjacentTetrahedron(f);
+            if (adj) {
+                pairs[index].tet = tri.getTetrahedronIndex(adj);
+                pairs[index].face = tet->getAdjacentFace(f);
+            } else
+                pairs[index].setBoundary(nTetrahedra);
+
+            index++;
+        }
+    }
 }
 
 std::string NFacePairing::toString() const {
@@ -195,6 +217,7 @@ bool NFacePairing::hasBrokenDoubleEndedChain() const {
     // Search for the end edge of the first chain.
     unsigned baseTet;
     unsigned baseFace;
+    // Skip the last tetrahedron -- any of the two ends will do.
     for (baseTet = 0; baseTet < nTetrahedra - 1; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
@@ -318,6 +341,7 @@ bool NFacePairing::hasWedgedDoubleEndedChain() const {
     // Search for the end edge of the first chain.
     unsigned baseTet;
     unsigned baseFace;
+    // Skip the last tetrahedron -- any of the two ends will do.
     for (baseTet = 0; baseTet < nTetrahedra - 1; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
@@ -405,6 +429,202 @@ bool NFacePairing::hasWedgedDoubleEndedChain(unsigned baseTet,
             }
 
     // Nothing found.
+    return false;
+}
+
+bool NFacePairing::hasOneEndedChainWithStrayBigon() const {
+    // Search for the end edge of the chain.
+    unsigned baseTet;
+    unsigned baseFace;
+    for (baseTet = 0; baseTet < nTetrahedra; baseTet++)
+        for (baseFace = 0; baseFace < 3; baseFace++)
+            if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
+                // Here's a face that matches to the same tetrahedron.
+                if (hasOneEndedChainWithStrayBigon(baseTet, baseFace))
+                    return true;
+
+                // There's no sense in looking for more
+                // self-identifications in this tetrahedron, since if
+                // there's another (different) one it must be a
+                // one-tetrahedron component (and so not applicable).
+                break;
+            }
+
+    // Nothing found.  Boring.
+    return false;
+}
+
+bool NFacePairing::hasOneEndedChainWithStrayBigon(unsigned baseTet,
+        unsigned baseFace) const {
+    // Follow the chain along and see how far we get.
+    NFacePair bdryFaces =
+        NFacePair(baseFace, dest(baseTet, baseFace).face).complement();
+    unsigned bdryTet = baseTet;
+    followChain(bdryTet, bdryFaces);
+
+    // Here's where we must diverge and create the stray bigon.
+
+    // We cannot glue the working pair of faces to each other.
+    if (dest(bdryTet, bdryFaces.lower()).tet == static_cast<int>(bdryTet))
+        return false;
+
+    // Try each possible direction away from the working faces into the bigon.
+    NFacePair bigonFaces;
+    int bigonTet, farTet, extraTet;
+    NTetFace destFace;
+    unsigned ignoreFace;
+    int i;
+    for (i = 0; i < 2; i++) {
+        destFace = dest(bdryTet,
+            i == 0 ? bdryFaces.lower() : bdryFaces.upper());
+        if (destFace.isBoundary(nTetrahedra))
+            continue;
+        bigonTet = destFace.tet;
+
+        for (ignoreFace = 0; ignoreFace < 4; ignoreFace++) {
+            if (destFace.face == static_cast<int>(ignoreFace))
+                continue;
+            // Look for a bigon running away from tetrahedron
+            // destFace.tet, using the two faces that are *not*
+            // destFace.face or ignoreFace.
+            bigonFaces = NFacePair(destFace.face, ignoreFace).complement();
+
+            farTet = dest(bigonTet, bigonFaces.upper()).tet;
+            if (farTet != bigonTet &&
+                    farTet < static_cast<int>(nTetrahedra) /* non-bdry */ &&
+                    farTet == dest(bigonTet, bigonFaces.lower()).tet) {
+                // We have the bigon!
+                // We know that bdryTet != bigonTet != farTet, and we
+                // can prove that bdryTet != farTet using 4-valency.
+
+                // Ensure that we don't have one of our special exceptions.
+                extraTet = dest(bdryTet,
+                    i == 0 ? bdryFaces.upper() : bdryFaces.lower()).tet;
+                // We know extraTet != bigonTet, since otherwise our
+                // one-ended chain would not have stopped when it did.
+                // We also know extraTet != bdryTet by 4-valency.
+                if (extraTet == farTet ||
+                        extraTet >= static_cast<int>(nTetrahedra) /* bdry */)
+                    return true;
+                if (extraTet == dest(bigonTet, ignoreFace).tet) {
+                    // Could be the special case where extraTet joins to
+                    // all of bdryTet, bigonTet and farTet.
+                    // We already have it joined to bdryTet and bigonTet.
+                    // Check farTet.
+                    if (extraTet != dest(farTet, 0).tet &&
+                            extraTet != dest(farTet, 1).tet &&
+                            extraTet != dest(farTet, 2).tet &&
+                            extraTet != dest(farTet, 3).tet)
+                        return true;
+                } else {
+                    // Could be the special case where extraTet joins
+                    // twice to farTet.  If not, we have the type of
+                    // graph we're looking for.
+                    bigonFaces = NFacePair(
+                        dest(bigonTet, bigonFaces.upper()).face,
+                        dest(bigonTet, bigonFaces.lower()).face).complement();
+                    if (extraTet != dest(farTet, bigonFaces.upper()).tet ||
+                            extraTet != dest(farTet, bigonFaces.lower()).tet)
+                        return true;
+                }
+            }
+        }
+    }
+
+    // Nup.  Nothing found.
+    return false;
+}
+
+bool NFacePairing::hasTripleOneEndedChain() const {
+    // Search for the end edge of the first chain.
+    unsigned baseTet;
+    unsigned baseFace;
+    // Skip the last two tetrahedra -- any of the three chains will do.
+    for (baseTet = 0; baseTet < nTetrahedra - 2; baseTet++)
+        for (baseFace = 0; baseFace < 3; baseFace++)
+            if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
+                // Here's a face that matches to the same tetrahedron.
+                if (hasTripleOneEndedChain(baseTet, baseFace))
+                    return true;
+
+                // There's no sense in looking for more
+                // self-identifications in this tetrahedron, since if
+                // there's another (different) one it must be a
+                // one-tetrahedron component (and so not applicable).
+                break;
+            }
+
+    // Nothing found.  Boring.
+    return false;
+}
+
+bool NFacePairing::hasTripleOneEndedChain(unsigned baseTet,
+        unsigned baseFace) const {
+    // Follow the chain along and see how far we get.
+    NFacePair bdryFaces =
+        NFacePair(baseFace, dest(baseTet, baseFace).face).complement();
+    unsigned bdryTet = baseTet;
+    followChain(bdryTet, bdryFaces);
+
+    // Here's where we must diverge and hunt for the other two chains.
+
+    // We cannot glue the working pair of faces to each other.
+    if (dest(bdryTet, bdryFaces.lower()).tet == static_cast<int>(bdryTet))
+        return false;
+
+    NTetFace axis1 = dest(bdryTet, bdryFaces.lower());
+    NTetFace axis2 = dest(bdryTet, bdryFaces.upper());
+    if (axis1.isBoundary(nTetrahedra) || axis2.isBoundary(nTetrahedra))
+        return false;
+
+    // We know axis1.tet != axis2.tet because the chain stopped, but
+    // just in case..
+    if (axis1.tet == axis2.tet)
+        return false;
+
+    // Count the number of other chains coming from axis1 and axis2.
+    int exit1, exit2;
+    NTetFace arrive1, arrive2;
+    int nChains = 1;
+    unsigned newChainTet;
+    NFacePair newChainFaces;
+    for (exit1 = 0; exit1 < 4; exit1++) {
+        if (exit1 == axis1.face)
+            continue;
+        arrive1 = dest(axis1.tet, exit1);
+        if (arrive1.tet == static_cast<int>(bdryTet) ||
+                arrive1.tet == axis1.tet || arrive1.tet == axis2.tet ||
+                arrive1.isBoundary(nTetrahedra))
+            continue;
+
+        for (exit2 = 0; exit2 < 4; exit2++) {
+            if (exit2 == axis2.face)
+                continue;
+            arrive2 = dest(axis2.tet, exit2);
+            if (arrive2.tet != arrive1.tet)
+                continue;
+
+            // We have graph edges from axis1 and axis2 to a common vertex,
+            // which is not part of our original chain (in fact, there is no
+            // real concern about counting chains more than once; 4-valency
+            // saves us from this).
+
+            // See if there's a (possibly zero-length) chain we can
+            // follow to a loop.
+            newChainTet = arrive1.tet;
+            newChainFaces = NFacePair(arrive1.face, arrive2.face).complement();
+            followChain(newChainTet, newChainFaces);
+
+            if (dest(newChainTet, newChainFaces.lower()).tet ==
+                    static_cast<int>(newChainTet)) {
+                // Got one!
+                if (++nChains == 3)
+                    return true;
+            }
+        }
+    }
+
+    // Nope.  Not enough chains were found.
     return false;
 }
 
