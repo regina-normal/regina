@@ -35,8 +35,6 @@
 #include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 
-#define splitVertexClasses(); splitEdgeClasses(); splitVertexClasses(); splitEdgeClasses();
-
 namespace regina {
 
 const unsigned NClosedPrimeMinSearcher::EDGE_CHAIN_END = 1;
