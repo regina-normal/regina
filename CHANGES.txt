@@ -10,6 +10,9 @@ Regina - A Normal Surface Theory Calculator
 Version 4.3.1  [ 28 April, 2006 ]
 
     ENGINE:
+        Class NClosedPrimeMinSearcher:
+            - Fixed memory leak (the destructor was not deallocating some
+              internal arrays).
         Class NFacePairing:
             - New constructor for building the face pairing of an
               existing triangulation.
