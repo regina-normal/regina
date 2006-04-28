@@ -111,6 +111,9 @@ class NFacePairingTest : public CppUnit::TestFixture {
         }
 
         void rawCounts() {
+            // Figures taken from "Face pairing graphs and 3-manifold
+            // enumeration", Benjamin A. Burton, J. Knot Theory
+            // Ramifications 13 (2004), pp. 1057--1101.
             unsigned nPairs[] = { 1, 1, 2, 4, 10, 28, 97, 359, 1635 };
 
             unsigned nTets;
@@ -135,6 +138,18 @@ class NFacePairingTest : public CppUnit::TestFixture {
             unsigned nTriple[] = { 0, 0, 1, 1, 3, 8, 29, 109, 497 };
             unsigned nBroken[] = { 0, 0, 0, 1, 3, 10, 36, 137, 608 };
             unsigned nHandle[] = { 0, 0, 0, 1, 2, 4, 12, 40, 155 };
+
+            // Figures taken from "Enumeration of non-orientable
+            // 3-manifolds using face pairing graphs and union-find",
+            // Benjamin A. Burton, preprint, math.GT/0604584.
+            unsigned nWedged[] = { 0, 0, 0, 0, 1, 2, 5, 13, 46 };
+            unsigned nStray[] = { 0, 0, 0, 1, 4, 13, 56, 227, 1083 };
+            unsigned nTripleChain[] = { 0, 0, 0, 0, 0, 1, 2, 5, 14 };
+
+            // Figures taken from an initial test run with some manual
+            // verification.
+            unsigned nSingleStar[] = { 0, 0, 0, 0, 0, 0, 0, 0, 130 };
+            unsigned nDoubleStar[] = { 0, 0, 0, 0, 0, 0, 16, 88, 615 };
 
             unsigned nTets;
             for (nTets = 1; nTets <= 8; nTets++) {
@@ -161,6 +176,41 @@ class NFacePairingTest : public CppUnit::TestFixture {
                     msg << "One-ended chain with double handle count for "
                         << nTets << " tetrahedra should be " << nHandle[nTets]
                         << ", not " << bad.oneEndedChainWithDoubleHandle << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (bad.wedgedDoubleEndedChain != nWedged[nTets]) {
+                    std::ostringstream msg;
+                    msg << "Wedged double-ended chain count for "
+                        << nTets << " tetrahedra should be " << nWedged[nTets]
+                        << ", not " << bad.wedgedDoubleEndedChain << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (bad.oneEndedChainWithStrayBigon != nStray[nTets]) {
+                    std::ostringstream msg;
+                    msg << "One-ended chain with stray bigon count for "
+                        << nTets << " tetrahedra should be " << nStray[nTets]
+                        << ", not " << bad.oneEndedChainWithStrayBigon << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (bad.tripleOneEndedChain != nTripleChain[nTets]) {
+                    std::ostringstream msg;
+                    msg << "Triple one-ended chain count for " << nTets
+                        << " tetrahedra should be " << nTripleChain[nTets]
+                        << ", not " << bad.tripleOneEndedChain << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (bad.singleStar != nSingleStar[nTets]) {
+                    std::ostringstream msg;
+                    msg << "Single star count for " << nTets
+                        << " tetrahedra should be " << nSingleStar[nTets]
+                        << ", not " << bad.singleStar << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (bad.doubleStar != nDoubleStar[nTets]) {
+                    std::ostringstream msg;
+                    msg << "Double star count for " << nTets
+                        << " tetrahedra should be " << nDoubleStar[nTets]
+                        << ", not " << bad.doubleStar << '.';
                     CPPUNIT_FAIL(msg.str());
                 }
             }
