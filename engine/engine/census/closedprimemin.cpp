@@ -35,13 +35,7 @@
 #include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 
-// Simplify the many splitVertexClasses() and splitEdgeClasses() calls.
-// These macros are left over from the days when class tracking was
-// optional; they should really be removed some day and real function calls
-// used instead.
-#define SPLIT_VERTEX_CLASSES splitVertexClasses();
-#define SPLIT_EDGE_CLASSES splitEdgeClasses();
-#define SPLIT_VERTEX_EDGE_CLASSES SPLIT_VERTEX_CLASSES SPLIT_EDGE_CLASSES
+#define splitVertexClasses(); splitEdgeClasses(); splitVertexClasses(); splitEdgeClasses();
 
 namespace regina {
 
@@ -504,7 +498,8 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 
             // Pull apart vertex and edge links at the previous level.
             if (orderElt >= minOrder) {
-                SPLIT_VERTEX_EDGE_CLASSES
+                splitVertexClasses();
+                splitEdgeClasses();
             }
 
             continue;
@@ -518,7 +513,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             // We created a structure that should not appear in a final
             // census triangulation (e.g., a low-degree or invalid edge,
             // or a face whose edges are identified in certain ways).
-            SPLIT_EDGE_CLASSES
+            splitEdgeClasses();
             continue;
         }
         // The final triangulation should have precisely (nTets + 1) edges
@@ -528,7 +523,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             // only get smaller.
             // Note that the triangulations we are pruning include ideal
             // triangulations (with vertex links of Euler characteristic < 2).
-            SPLIT_EDGE_CLASSES
+            splitEdgeClasses();
             continue;
         }
         // In general, one can prove that (assuming no invalid edges or
@@ -541,7 +536,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             // Since each merge can reduce the number of edge classes
             // by at most 3, there is no way we can end up with just
             // (nTets + 1) edges at the end.
-            SPLIT_EDGE_CLASSES
+            splitEdgeClasses();
             continue;
         }
 
@@ -566,13 +561,15 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             // with more than one vertex (unless this was our very last
             // gluing).
             if (orderElt + 1 < static_cast<int>(nTets) * 2) {
-                SPLIT_VERTEX_EDGE_CLASSES
+                splitVertexClasses();
+                splitEdgeClasses();
                 continue;
             }
         }
         if (mergeResult & VLINK_NON_ORBL) {
             // We made the vertex link non-orientable.  Stop now.
-            SPLIT_VERTEX_EDGE_CLASSES
+            splitVertexClasses();
+            splitEdgeClasses();
             continue;
         }
         if (nVertexClasses > 1 + 3 * (nTets * 2 - orderElt - 1)) {
@@ -580,7 +577,8 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             // Since each merge can reduce the number of vertex classes
             // by at most 3, there is no way we can end up with just one
             // vertex at the end.
-            SPLIT_VERTEX_EDGE_CLASSES
+            splitVertexClasses();
+            splitEdgeClasses();
             continue;
         }
 
@@ -610,7 +608,8 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 
             // Pull apart vertex and edge links at the previous level.
             if (orderElt >= minOrder) {
-                SPLIT_VERTEX_EDGE_CLASSES
+                splitVertexClasses();
+                splitEdgeClasses();
             }
         } else {
             // Not a full triangulation; just one level deeper.
@@ -644,7 +643,8 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 
                 // Pull apart vertex links at the previous level.
                 if (orderElt >= minOrder) {
-                    SPLIT_VERTEX_EDGE_CLASSES
+                    splitVertexClasses();
+                    splitEdgeClasses();
                 }
             }
         }
