@@ -44,10 +44,58 @@ void countFacePairings(const NFacePairing* pair, const NFacePairingIsoList*,
         (*(unsigned*)count)++;
 }
 
+/**
+ * Increment counts for face pairing graphs with interesting properties.
+ */
+namespace {
+    struct BadGraphs {
+        unsigned tripleEdge;
+        unsigned brokenDoubleEndedChain;
+        unsigned oneEndedChainWithDoubleHandle;
+        unsigned wedgedDoubleEndedChain;
+        unsigned oneEndedChainWithStrayBigon;
+        unsigned tripleOneEndedChain;
+        unsigned singleStar;
+        unsigned doubleStar;
+
+        BadGraphs() : tripleEdge(0), brokenDoubleEndedChain(0),
+                      oneEndedChainWithDoubleHandle(0),
+                      wedgedDoubleEndedChain(0),
+                      oneEndedChainWithStrayBigon(0), tripleOneEndedChain(0),
+                      singleStar(0), doubleStar(0) {
+        }
+    };
+}
+
+void countBadGraphs(const NFacePairing* pair, const NFacePairingIsoList*,
+        void* badGraphsRaw) {
+    if (pair) {
+        BadGraphs* badGraphs = static_cast<BadGraphs*>(badGraphsRaw);
+
+        if (pair->hasTripleEdge())
+            badGraphs->tripleEdge++;
+        if (pair->hasBrokenDoubleEndedChain())
+            badGraphs->brokenDoubleEndedChain++;
+        if (pair->hasOneEndedChainWithDoubleHandle())
+            badGraphs->oneEndedChainWithDoubleHandle++;
+        if (pair->hasWedgedDoubleEndedChain())
+            badGraphs->wedgedDoubleEndedChain++;
+        if (pair->hasOneEndedChainWithStrayBigon())
+            badGraphs->oneEndedChainWithStrayBigon++;
+        if (pair->hasTripleOneEndedChain())
+            badGraphs->tripleOneEndedChain++;
+        if (pair->hasSingleStar())
+            badGraphs->singleStar++;
+        if (pair->hasDoubleStar())
+            badGraphs->doubleStar++;
+    }
+}
+
 class NFacePairingTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NFacePairingTest);
 
     CPPUNIT_TEST(rawCounts);
+    CPPUNIT_TEST(badSubgraphs);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -63,20 +111,58 @@ class NFacePairingTest : public CppUnit::TestFixture {
         }
 
         void rawCounts() {
-            unsigned nPairs[] = { 1, 1, 2, 4, 10, 28, 97, 359 };
+            unsigned nPairs[] = { 1, 1, 2, 4, 10, 28, 97, 359, 1635 };
 
             unsigned nTets;
-            for (nTets = 1; nTets <= 7; nTets++) {
+            for (nTets = 1; nTets <= 8; nTets++) {
                 count = 0;
                 NFacePairing::findAllPairings(nTets, NBoolSet::sFalse,
                     0, countFacePairings, &count, false);
-                
+
                 std::ostringstream msg;
                 msg << "Face pairing count for " << nTets
                     << " tetrahedra should be " << nPairs[nTets]
                     << ", not " << count << '.';
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(), count == nPairs[nTets]);
+            }
+        }
+
+        void badSubgraphs() {
+            // Figures taken from "Face pairing graphs and 3-manifold
+            // enumeration", Benjamin A. Burton, J. Knot Theory
+            // Ramifications 13 (2004), pp. 1057--1101.
+            unsigned nTriple[] = { 0, 0, 1, 1, 3, 8, 29, 109, 497 };
+            unsigned nBroken[] = { 0, 0, 0, 1, 3, 10, 36, 137, 608 };
+            unsigned nHandle[] = { 0, 0, 0, 1, 2, 4, 12, 40, 155 };
+
+            unsigned nTets;
+            for (nTets = 1; nTets <= 8; nTets++) {
+                BadGraphs bad;
+                NFacePairing::findAllPairings(nTets, NBoolSet::sFalse,
+                    0, countBadGraphs, &bad, false);
+
+                if (bad.tripleEdge != nTriple[nTets]) {
+                    std::ostringstream msg;
+                    msg << "Triple edge count for " << nTets
+                        << " tetrahedra should be " << nTriple[nTets]
+                        << ", not " << bad.tripleEdge << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (bad.brokenDoubleEndedChain != nBroken[nTets]) {
+                    std::ostringstream msg;
+                    msg << "Broken double-ended chain count for " << nTets
+                        << " tetrahedra should be " << nBroken[nTets]
+                        << ", not " << bad.brokenDoubleEndedChain << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (bad.oneEndedChainWithDoubleHandle != nHandle[nTets]) {
+                    std::ostringstream msg;
+                    msg << "One-ended chain with double handle count for "
+                        << nTets << " tetrahedra should be " << nHandle[nTets]
+                        << ", not " << bad.oneEndedChainWithDoubleHandle << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
         }
 };
