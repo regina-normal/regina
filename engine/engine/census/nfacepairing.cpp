@@ -218,7 +218,7 @@ bool NFacePairing::hasBrokenDoubleEndedChain() const {
     unsigned baseTet;
     unsigned baseFace;
     // Skip the last tetrahedron -- any of the two ends will do.
-    for (baseTet = 0; baseTet < nTetrahedra - 1; baseTet++)
+    for (baseTet = 0; baseTet + 1 < nTetrahedra; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
@@ -342,7 +342,7 @@ bool NFacePairing::hasWedgedDoubleEndedChain() const {
     unsigned baseTet;
     unsigned baseFace;
     // Skip the last tetrahedron -- any of the two ends will do.
-    for (baseTet = 0; baseTet < nTetrahedra - 1; baseTet++)
+    for (baseTet = 0; baseTet + 1 < nTetrahedra; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
@@ -540,7 +540,7 @@ bool NFacePairing::hasTripleOneEndedChain() const {
     unsigned baseTet;
     unsigned baseFace;
     // Skip the last two tetrahedra -- any of the three chains will do.
-    for (baseTet = 0; baseTet < nTetrahedra - 2; baseTet++)
+    for (baseTet = 0; baseTet + 2 < nTetrahedra; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
@@ -636,7 +636,7 @@ bool NFacePairing::hasSingleStar() const {
 
     // Skip the last tetrahedron, since we're already testing every
     // possibility from both sides.
-    for (first = 0; first < nTetrahedra - 1; first++) {
+    for (first = 0; first + 1 < nTetrahedra; first++) {
         // All four neighbours must be non-boundary and distinct.
         for (f1 = 0; f1 < 4; f1++) {
             half[f1] = dest(first, f1).tet;
@@ -688,7 +688,7 @@ bool NFacePairing::hasDoubleStar() const {
 
     // Skip the last tetrahedron, since we're already testing every
     // possibility from both sides.
-    for (first = 0; first < nTetrahedra - 1; first++) {
+    for (first = 0; first + 1 < nTetrahedra; first++) {
         // All four neighbours must be non-boundary, and three must be
         // distinct.
         for (f = 0; f < 4; f++) {
