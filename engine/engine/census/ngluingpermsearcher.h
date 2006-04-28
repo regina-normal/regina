@@ -985,6 +985,13 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * identifications form a structure that cannot possibly appear
          * in a closed prime minimal P2-irreducible triangulation.
          *
+         * Note that, if multiple ECLASS_... flags are appropriate, only
+         * a subset of these flags might be returned.  This is because
+         * this routine might exit early after one bad structure has been
+         * detected, without spending time testing for others.  It is
+         * guaranteed that if at least one such flag is appropriate then
+         * at least one such flag will be returned.
+         *
          * @return a combination of ECLASS_... flags describing how
          * the edge links were changed, or 0 if none of the changes
          * described by these flags were observed.

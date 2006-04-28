@@ -409,6 +409,12 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         // triangulation.
         if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain() ||
                 pairing->hasOneEndedChainWithDoubleHandle()) {
+        // if (pairing->hasTripleEdge() ||
+        //         pairing->hasBrokenDoubleEndedChain() ||
+        //         pairing->hasOneEndedChainWithDoubleHandle() ||
+        //         pairing->hasOneEndedChainWithStrayBigon() ||
+        //         pairing->hasWedgedDoubleEndedChain() ||
+        //         pairing->hasTripleOneEndedChain()) {
             use_(0, useArgs_);
             return;
         }
@@ -510,11 +516,10 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         permIndex(adj) = allPermsS3Inv[permIndex(face)];
 
         // Merge edge links and run corresponding tests.
-        mergeResult = mergeEdgeClasses();
-        if (mergeResult &
-                (ECLASS_TWISTED | ECLASS_LOWDEG | ECLASS_CONE | ECLASS_L31)) {
-            // We closed off an edge link, resulting in a low-degree or
-            // invalid edge.
+        if (mergeEdgeClasses()) {
+            // We created a structure that should not appear in a final
+            // census triangulation (e.g., a low-degree or invalid edge,
+            // or a face whose edges are identified in certain ways).
             SPLIT_EDGE_CLASSES
             continue;
         }
@@ -1051,6 +1056,12 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
         }
     }
 
+    // If we've already found something bad, exit now.  No sense in
+    // looking for even more bad structures, since we're only going to
+    // discard the triangulation anyway.
+    if (retVal)
+        return retVal;
+
     // Find representatives of the equivalence classes for all six edges
     // of the current tetrahedron (instead of calculating them each time
     // we want them).
@@ -1078,33 +1089,31 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 if (tRep[edgeNumber[v1][w1]] == tRep[edgeNumber[v2][w1]]) {
                     hasTwist = (v1 < w1 && w1 < v2 ? 0 : 1);
                     if (hasTwist ^ parentTwists) {
-                        retVal |= ECLASS_CONE;
-                        goto coneDone;
+                        return ECLASS_CONE;
                     }
                 }
             }
         }
-    coneDone:
 
     // Test for L(3,1) spines.
+    // Don't bother checking the directions of the edges -- if it's not an
+    // L(3,1) spine then it includes a cone, which we've already tested for.
+
     // L(3,1) on face 012:
     if (tRep[0] == tRep[1] && tRep[1] == tRep[3])
-        if ((tTwist[0] ^ tTwist[1]) && (tTwist[1] ^ tTwist[3]))
-            retVal |= ECLASS_L31;
+        return ECLASS_L31;
     // L(3,1) on face 013:
     if (tRep[0] == tRep[2] && tRep[2] == tRep[4])
-        if ((tTwist[0] ^ tTwist[2]) && (tTwist[2] ^ tTwist[4]))
-            retVal |= ECLASS_L31;
+        return ECLASS_L31;
     // L(3,1) on face 023:
     if (tRep[1] == tRep[2] && tRep[2] == tRep[5])
-        if ((tTwist[1] ^ tTwist[2]) && (tTwist[2] ^ tTwist[5]))
-            retVal |= ECLASS_L31;
+        return ECLASS_L31;
     // L(3,1) on face 123:
     if (tRep[3] == tRep[4] && tRep[4] == tRep[5])
-        if ((tTwist[3] ^ tTwist[4]) && (tTwist[4] ^ tTwist[5]))
-            retVal |= ECLASS_L31;
+        return ECLASS_L31;
 
-    return retVal;
+    // Nothing bad was found.
+    return 0;
 }
 
 void NClosedPrimeMinSearcher::splitEdgeClasses() {
