@@ -407,14 +407,12 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 
         // Begin by testing for face pairings that can never lead to such a
         // triangulation.
-        if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain() ||
-                pairing->hasOneEndedChainWithDoubleHandle()) {
-        // if (pairing->hasTripleEdge() ||
-        //         pairing->hasBrokenDoubleEndedChain() ||
-        //         pairing->hasOneEndedChainWithDoubleHandle() ||
-        //         pairing->hasOneEndedChainWithStrayBigon() ||
-        //         pairing->hasWedgedDoubleEndedChain() ||
-        //         pairing->hasTripleOneEndedChain()) {
+        if (pairing->hasTripleEdge() ||
+                pairing->hasBrokenDoubleEndedChain() ||
+                pairing->hasOneEndedChainWithDoubleHandle() ||
+                pairing->hasOneEndedChainWithStrayBigon() ||
+                pairing->hasWedgedDoubleEndedChain() ||
+                pairing->hasTripleOneEndedChain()) {
             use_(0, useArgs_);
             return;
         }
