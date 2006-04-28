@@ -605,9 +605,8 @@ bool NFacePairing::hasTripleOneEndedChain(unsigned baseTet,
                 continue;
 
             // We have graph edges from axis1 and axis2 to a common vertex,
-            // which is not part of our original chain (in fact, there is no
-            // real concern about counting chains more than once; 4-valency
-            // saves us from this).
+            // which is not part of our original chain and is neither axis1
+            // nor axis2.
 
             // See if there's a (possibly zero-length) chain we can
             // follow to a loop.
