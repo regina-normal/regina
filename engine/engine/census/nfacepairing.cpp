@@ -628,6 +628,119 @@ bool NFacePairing::hasTripleOneEndedChain(unsigned baseTet,
     return false;
 }
 
+bool NFacePairing::hasSingleStar() const {
+    int half[4], all[8];
+
+    unsigned first, second;
+    unsigned f1, f2;
+    int i;
+
+    // Skip the last tetrahedron, since we're already testing every
+    // possibility from both sides.
+    for (first = 0; first < nTetrahedra - 1; first++) {
+        // All four neighbours must be non-boundary and distinct.
+        for (f1 = 0; f1 < 4; f1++) {
+            half[f1] = dest(first, f1).tet;
+            if (half[f1] >= static_cast<int>(nTetrahedra) /* bdry */)
+                break;
+        }
+        if (f1 < 4)
+            continue;
+
+        std::sort(half, half + 4);
+        if (half[0] == half[1] || half[1] == half[2] || half[2] == half[3])
+            continue;
+
+        // Look for the adjacent neighbour.
+        for (f1 = 0; f1 < 4; f1++) {
+            second = dest(first, f1).tet;
+
+            // Now ensure that all eight faces are non-boundary and distinct.
+            for (f2 = 0; f2 < 4; f2++) {
+                all[f2 + 4] = dest(second, f2).tet;
+                if (all[f2 + 4] >= static_cast<int>(nTetrahedra) /* bdry */)
+                    break;
+            }
+            if (f2 < 4)
+                continue;
+
+            // We have to refresh the first half of the all[] array each
+            // time, since every time we sort all[] we mix the first
+            // tetrahedron's neighbours in with the second tetrahedron's
+            // neighbours.
+            std::copy(half, half + 4, all);
+            std::sort(all, all + 8);
+            for (i = 0; i < 7; i++)
+                if (all[i] == all[i + 1])
+                    break;
+            if (i >= 7)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool NFacePairing::hasDoubleStar() const {
+    int all[7];
+
+    unsigned first, second;
+    int f, i;
+
+    // Skip the last tetrahedron, since we're already testing every
+    // possibility from both sides.
+    for (first = 0; first < nTetrahedra - 1; first++) {
+        // All four neighbours must be non-boundary, and three must be
+        // distinct.
+        for (f = 0; f < 4; f++) {
+            all[f] = dest(first, f).tet;
+            if (all[f] >= static_cast<int>(nTetrahedra) /* bdry */)
+                break;
+        }
+        if (f < 4)
+            continue;
+
+        std::sort(all, all + 4);
+
+        // Find the double edge, and move the three distinct tetrahedra
+        // to the beginning of the array.
+        if (all[0] == all[1] && all[1] != all[2] && all[2] != all[3]) {
+            second = all[0];
+            all[0] = all[3];
+        } else if (all[0] != all[1] && all[1] == all[2] && all[2] != all[3]) {
+            second = all[1];
+            all[1] = all[3];
+        } else if (all[0] != all[1] && all[1] != all[2] && all[2] == all[3]) {
+            second = all[2];
+        } else
+            continue;
+
+        // Now look at the edges coming out from the second tetrahedron.
+        for (f = 0; f < 4; f++) {
+            all[f + 3] = dest(second, f).tet;
+            if (all[f + 3] >= static_cast<int>(nTetrahedra) /* bdry */)
+                break;
+        }
+        if (f < 4)
+            continue;
+
+        // Look for duplicates.  We should only have a single duplicate
+        // pair, this being two copies of first.
+        std::sort(all, all + 7);
+        for (i = 0; i < 6; i++)
+            if (all[i] == all[i + 1]) {
+                if (all[i] != static_cast<int>(first))
+                    break;
+                if (i < 5 && all[i] == all[i + 2])
+                    break;
+            }
+        if (i >= 6)
+            return true;
+    }
+
+    return false;
+}
+
 bool NFacePairing::findAllPairings(unsigned nTetrahedra,
         NBoolSet boundary, int nBdryFaces, UseFacePairing use,
         void* useArgs, bool newThread) {

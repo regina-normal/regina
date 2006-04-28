@@ -93,6 +93,8 @@ void addNFacePairing() {
         .def("hasOneEndedChainWithStrayBigon", query_oecwsb)
         .def("hasTripleOneEndedChain", query_toec)
 
+        .def("hasSingleStar", &NFacePairing::hasSingleStar)
+        .def("hasDoubleStar", &NFacePairing::hasDoubleStar)
         .def("__str__", &NFacePairing::toString)
         .staticmethod("fromTextRep")
     ;

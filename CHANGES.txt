@@ -23,6 +23,8 @@ Version 4.3.1  [ 28 April, 2006 ]
             - New routines hasOneEndedChainWithStrayBigon() and
               hasTripleOneEndedChain() for testing for more types of
               graphs that cannot appear in a closed census.
+            - New routines hasSingleStar() and hasDoubleStar() for
+              investigating larger face pairing graphs.
         Routine readOrb():
             - New routine for importing Orb / Casson triangulations;
               thanks to Ryan Budney.

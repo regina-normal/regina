@@ -568,6 +568,36 @@ class NFacePairing : public NThread {
         bool hasTripleOneEndedChain() const;
 
         /**
+         * Determines whether this face pairing contains a single-edged
+         * star.
+         *
+         * A single-edged star involves two tetrahedra that are adjacent
+         * along a single face, where the six remaining faces of these
+         * tetrahedra are joined to six entirely new tetrahedra (so that
+         * none of the eight tetrahedra described in this structure are
+         * the same).
+         *
+         * @return \c true if and only if this face pairing contains a
+         * single-edged star.
+         */
+        bool hasSingleStar() const;
+
+        /**
+         * Determines whether this face pairing contains a double-edged
+         * star.
+         *
+         * A double-edged star involves two tetrahedra that are adjacent
+         * along two separate pairs of faces, where the four remaining
+         * faces of these tetrahedra are joined to four entirely new
+         * tetrahedra (so that none of the six tetrahedra described in
+         * this structure are the same).
+         *
+         * @return \c true if and only if this face pairing contains a
+         * double-edged star.
+         */
+        bool hasDoubleStar() const;
+
+        /**
          * Internal to findAllPairings().  This routine should never be
          * called directly.
          *
