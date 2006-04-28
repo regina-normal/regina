@@ -1036,6 +1036,11 @@ inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
     delete[] orderType;
     if (chainPermIndices)
         delete[] chainPermIndices;
+
+    delete[] vertexState;
+    delete[] vertexStateChanged;
+    delete[] edgeState;
+    delete[] edgeStateChanged;
 }
 
 inline bool NClosedPrimeMinSearcher::completePermSet() const {
