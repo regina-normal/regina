@@ -111,6 +111,11 @@ class NFacePairing : public NThread {
 
     public:
         /**
+         * \name Constructors and Destructors
+         */
+        /*@{*/
+
+        /**
          * Creates a new face pairing that is a clone of the given face
          * pairing.
          *
@@ -135,6 +140,16 @@ class NFacePairing : public NThread {
          * Deallocates any memory used by this structure.
          */
         virtual ~NFacePairing();
+
+        /*@}*/
+        /**
+         * (end: Constructors and Destructors)
+         */
+
+        /**
+         * \name Basic Queries
+         */
+        /*@{*/
 
         /**
          * Returns the number of tetrahedra whose faces are (potentially)
@@ -217,6 +232,22 @@ class NFacePairing : public NThread {
         bool isUnmatched(unsigned tet, unsigned face) const;
 
         /**
+         * Determines whether this face pairing is closed.
+         * A closed face pairing has no unmatched faces.
+         */
+        bool isClosed() const;
+
+        /*@}*/
+        /**
+         * (end: Basic Queries)
+         */
+
+        /**
+         * \name Isomorphic Representations
+         */
+        /*@{*/
+
+        /**
          * Determines whether this face pairing is in canonical form,
          * i.e., is a minimal representative of its isomorphism class.
          *
@@ -263,6 +294,16 @@ class NFacePairing : public NThread {
          */
         void findAutomorphisms(NFacePairingIsoList& list) const;
 
+        /*@}*/
+        /**
+         * (end: Isomorphic Representations)
+         */
+
+        /**
+         * \name Input and Output
+         */
+        /*@{*/
+
         /**
          * Returns a human-readable representation of this face pairing.
          *
@@ -287,6 +328,11 @@ class NFacePairing : public NThread {
          */
         std::string toTextRep() const;
 
+        /*@}*/
+        /**
+         * (end: Input and Output)
+         */
+
         /**
          * Reconstructs a face pairing from a text-based representation.
          * This text-based representation must be in the format produced
@@ -306,26 +352,9 @@ class NFacePairing : public NThread {
         static NFacePairing* fromTextRep(const std::string& rep);
 
         /**
-         * Determines whether this face pairing is closed.
-         * A closed face pairing has no unmatched faces.
+         * \name Subgraph Queries
          */
-        bool isClosed() const;
-
-        /**
-         * Determines whether this face pairing contains a triple edge.
-         * A triple edge is where two different tetrahedra are joined
-         * along three of their faces.
-         *
-         * A face pairing containing a triple edge cannot model a closed
-         * minimal irreducible P^2-irreducible 3-manifold triangulation on
-         * more than two tetrahedra.  See "Face pairing graphs and 3-manifold
-         * enumeration", Benjamin A. Burton, J. Knot Theory Ramifications
-         * 13 (2004), 1057--1101.
-         *
-         * @return \c true if and only if this face pairing contains a
-         * triple edge.
-         */
-        bool hasTripleEdge() const;
+        /*@{*/
 
         /**
          * Follows a chain as far as possible from the given point.
@@ -371,6 +400,22 @@ class NFacePairing : public NThread {
          * modified directly by this routine as a way of returning results.
          */
         void followChain(unsigned& tet, NFacePair& faces) const;
+
+        /**
+         * Determines whether this face pairing contains a triple edge.
+         * A triple edge is where two different tetrahedra are joined
+         * along three of their faces.
+         *
+         * A face pairing containing a triple edge cannot model a closed
+         * minimal irreducible P^2-irreducible 3-manifold triangulation on
+         * more than two tetrahedra.  See "Face pairing graphs and 3-manifold
+         * enumeration", Benjamin A. Burton, J. Knot Theory Ramifications
+         * 13 (2004), 1057--1101.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * triple edge.
+         */
+        bool hasTripleEdge() const;
 
         /**
          * Determines whether this face pairing contains a broken
@@ -614,6 +659,16 @@ class NFacePairing : public NThread {
          */
         bool hasDoubleSquare() const;
 
+        /*@}*/
+        /**
+         * (end: Subgraph Queries)
+         */
+
+        /**
+         * \name Graph Enumeration
+         */
+        /*@{*/
+
         /**
          * Internal to findAllPairings().  This routine should never be
          * called directly.
@@ -629,6 +684,11 @@ class NFacePairing : public NThread {
          * @return the value 0.
          */
         void* run(void* param);
+
+        /*@}*/
+        /**
+         * (end: Graph Enumeration)
+         */
 
         /**
          * Generates all possible face pairings satisfying the given
