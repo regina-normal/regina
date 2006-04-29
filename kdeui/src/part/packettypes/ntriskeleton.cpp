@@ -27,15 +27,19 @@
 /* end stub */
 
 // Regina core includes:
+#include "census/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "ntriskeleton.h"
 #include "skeletonwindow.h"
 
+#include <fstream>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kprocess.h>
 #include <kstandarddirs.h>
+#include <ktempfile.h>
 #include <qfileinfo.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -291,13 +295,73 @@ void NTriFaceGraphUI::refresh() {
         return;
     }
 
+    // TODO: Tell them we're processing.
+
     QString useExec = verifyGraphvizExec();
     if (useExec.isNull()) {
         stack->raiseWidget(layerError);
         return;
     }
 
-    // TODO
+    KTempFile tmpDot(locateLocal("tmp", "fpg-"), ".dot");
+    tmpDot.close();
+
+    std::ofstream outDot(tmpDot.name().ascii());
+    if (! outDot) {
+        msgError->setText(i18n("<qt>The temporary DOT file <i>%1</i> "
+            "could not be opened for writing.</qt>").arg(tmpDot.name()));
+        stack->raiseWidget(layerError);
+
+        tmpDot.unlink();
+        return;
+    }
+
+    regina::NFacePairing* pairing = new regina::NFacePairing(*tri);
+    pairing->writeDot(outDot);
+    outDot.close();
+    delete pairing;
+
+    KTempFile tmpPng(locateLocal("tmp", "fpg-"), ".png");
+    tmpPng.close();
+
+    KProcess graphviz;
+    graphviz << useExec << "-Tpng" << "-o" << tmpPng.name() << tmpDot.name();
+    if (! graphviz.start(KProcess::Block)) {
+        msgError->setText(i18n("<qt>The Graphviz executable <i>%1</i> "
+            "could not be started.</qt>").arg(useExec));
+        stack->raiseWidget(layerError);
+
+        tmpDot.unlink();
+        tmpPng.unlink();
+        return;
+    }
+    if (graphviz.signalled()) {
+        msgError->setText(i18n("<qt>The Graphviz executable <i>%1</i> "
+            "did not exit normally.  It was killed with signal %2.</qt>").
+            arg(useExec).arg(graphviz.exitSignal()));
+        stack->raiseWidget(layerError);
+
+        tmpDot.unlink();
+        tmpPng.unlink();
+        return;
+    }
+    if ((! graphviz.normalExit()) || graphviz.exitStatus()) {
+        msgError->setText(i18n("<qt>The Graphviz executable <i>%1</i> "
+            "appears to have encountered an internal error.  "
+            "It finished with exit status %2.</qt>").
+            arg(useExec).arg(graphviz.exitStatus()));
+        stack->raiseWidget(layerError);
+
+        tmpDot.unlink();
+        tmpPng.unlink();
+        return;
+    }
+
+    // TODO: Load the PNG into a pixmap
+
+    tmpDot.unlink();
+    tmpPng.unlink();
+
     stack->raiseWidget(layerGraph);
 }
 
