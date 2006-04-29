@@ -45,7 +45,23 @@ using regina::NPacket;
 using regina::NTriangulation;
 
 NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
+        PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs) :
+        PacketTabbedViewerTab(useParentUI) {
+    faceGraph = new NTriFaceGraphUI(packet, this, prefs.triGraphvizExec);
+
+    addTab(new NTriSkelCompUI(packet, this), i18n("&Skeletal Components"));
+    addTab(faceGraph, i18n("&Face Pairing Graph"));
+
+    switch (prefs.triInitialSkeletonTab) {
+        case ReginaPrefSet::SkelComp:
+            /* already visible */ break;
+        case ReginaPrefSet::FacePairingGraph:
+            setCurrentTab(1); break;
+    }
+}
+
+NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
+        PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -168,15 +184,15 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
     viewers.setAutoDelete(true);
 }
 
-regina::NPacket* NTriSkeletonUI::getPacket() {
+regina::NPacket* NTriSkelCompUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriSkeletonUI::getInterface() {
+QWidget* NTriSkelCompUI::getInterface() {
     return ui;
 }
 
-void NTriSkeletonUI::refresh() {
+void NTriSkelCompUI::refresh() {
     nVertices->setText(QString::number(tri->getNumberOfVertices()));
     nEdges->setText(QString::number(tri->getNumberOfEdges()));
     nFaces->setText(QString::number(tri->getNumberOfFaces()));
@@ -188,7 +204,7 @@ void NTriSkeletonUI::refresh() {
         win->refresh();
 }
 
-void NTriSkeletonUI::editingElsewhere() {
+void NTriSkelCompUI::editingElsewhere() {
     nVertices->setText(i18n("Editing..."));
     nEdges->setText(i18n("Editing..."));
     nFaces->setText(i18n("Editing..."));
@@ -200,35 +216,60 @@ void NTriSkeletonUI::editingElsewhere() {
         win->editingElsewhere();
 }
 
-void NTriSkeletonUI::viewVertices() {
+void NTriSkelCompUI::viewVertices() {
     SkeletonWindow* win = new SkeletonWindow(this, SkeletonWindow::Vertices);
     win->show();
     viewers.append(win);
 }
 
-void NTriSkeletonUI::viewEdges() {
+void NTriSkelCompUI::viewEdges() {
     SkeletonWindow* win = new SkeletonWindow(this, SkeletonWindow::Edges);
     win->show();
     viewers.append(win);
 }
 
-void NTriSkeletonUI::viewFaces() {
+void NTriSkelCompUI::viewFaces() {
     SkeletonWindow* win = new SkeletonWindow(this, SkeletonWindow::Faces);
     win->show();
     viewers.append(win);
 }
 
-void NTriSkeletonUI::viewComponents() {
+void NTriSkelCompUI::viewComponents() {
     SkeletonWindow* win = new SkeletonWindow(this, SkeletonWindow::Components);
     win->show();
     viewers.append(win);
 }
 
-void NTriSkeletonUI::viewBoundaryComponents() {
+void NTriSkelCompUI::viewBoundaryComponents() {
     SkeletonWindow* win = new SkeletonWindow(this,
         SkeletonWindow::BoundaryComponents);
     win->show();
     viewers.append(win);
+}
+
+NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
+        PacketTabbedViewerTab* useParentUI,
+        const QString& useGraphvizExec) :
+        PacketViewerTab(useParentUI), tri(packet),
+        graphvizExec(useGraphvizExec) {
+    ui = new QWidget();
+    // TODO
+}
+
+regina::NPacket* NTriFaceGraphUI::getPacket() {
+    return tri;
+}
+
+QWidget* NTriFaceGraphUI::getInterface() {
+    return ui;
+}
+
+void NTriFaceGraphUI::refresh() {
+    // TODO
+}
+
+void NTriFaceGraphUI::editingElsewhere() {
+    // TODO
 }
 
 #include "ntriskeleton.moc"

@@ -33,10 +33,12 @@
 #ifndef __NTRISKELETON_H
 #define __NTRISKELETON_H
 
+#include "reginaprefset.h"
 #include "../packettabui.h"
 
 #include <qptrlist.h>
 
+class NTriFaceGraphUI;
 class SkeletonWindow;
 
 namespace regina {
@@ -47,7 +49,30 @@ namespace regina {
 /**
  * A triangulation page for viewing skeletal properties.
  */
-class NTriSkeletonUI : public QObject, public PacketViewerTab {
+class NTriSkeletonUI : public PacketTabbedViewerTab {
+    private:
+        /**
+         * Internal components
+         */
+        NTriFaceGraphUI* faceGraph;
+
+    public:
+        /**
+         * Constructor.
+         */
+        NTriSkeletonUI(regina::NTriangulation* packet,
+                PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs);
+
+        /**
+         * Propagate any preference changes to our children.
+         */
+        void updatePreferences(const ReginaPrefSet& newPrefs);
+};
+
+/**
+ * A triangulation page for accessing individual skeletal components.
+ */
+class NTriSkelCompUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -76,8 +101,8 @@ class NTriSkeletonUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        NTriSkeletonUI(regina::NTriangulation* packet,
-                PacketTabbedUI* useParentUI);
+        NTriSkelCompUI(regina::NTriangulation* packet,
+                PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -97,5 +122,64 @@ class NTriSkeletonUI : public QObject, public PacketViewerTab {
         void viewComponents();
         void viewBoundaryComponents();
 };
+
+/**
+ * A triangulation page for viewing the face pairing graph.
+ */
+class NTriFaceGraphUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
+    private:
+        /**
+         * Packet details
+         */
+        regina::NTriangulation* tri;
+
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+
+        /**
+         * The Graphviz executable.
+         */
+        QString graphvizExec;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        NTriFaceGraphUI(regina::NTriangulation* packet,
+                PacketTabbedViewerTab* useParentUI,
+                const QString& useGraphvizExec);
+
+        /**
+         * Update preferences.
+         */
+        void setGraphvizExec(const QString& newGraphvizExec);
+
+        /**
+         * PacketViewerTab overrides.
+         */
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+        void editingElsewhere();
+
+    private:
+        /**
+         * Returns the full path to the Graphviz executable, or QString::null
+         * if the Graphviz executable does not appear to be valid.
+         */
+        QString verifyGraphvizExec();
+};
+
+inline void NTriSkeletonUI::updatePreferences(const ReginaPrefSet& newPrefs) {
+    faceGraph->setGraphvizExec(newPrefs.triGraphvizExec);
+}
+
+inline void NTriFaceGraphUI::setGraphvizExec(const QString& newGraphvizExec) {
+    graphvizExec = newGraphvizExec;
+}
 
 #endif

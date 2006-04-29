@@ -38,6 +38,7 @@
 class KToolBar;
 class NTriAlgebraUI;
 class NTriGluingsUI;
+class NTriSkeletonUI;
 class NTriSurfacesUI;
 class NTriSnapPeaUI;
 class QLabel;
@@ -58,6 +59,7 @@ class NTriangulationUI : public PacketTabbedUI {
          * Internal components
          */
         NTriGluingsUI* gluings;
+        NTriSkeletonUI* skeleton;
         NTriAlgebraUI* algebra;
         NTriSurfacesUI* surfaces;
         NTriSnapPeaUI* snapPea;
