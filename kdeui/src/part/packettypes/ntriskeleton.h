@@ -35,11 +35,14 @@
 
 #include "reginaprefset.h"
 #include "../packettabui.h"
+#include "../reginapart.h"
 
 #include <qptrlist.h>
 
 class NTriFaceGraphUI;
 class SkeletonWindow;
+
+class QWidgetStack;
 
 namespace regina {
     class NPacket;
@@ -139,6 +142,12 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QWidgetStack* stack;
+        QWidget* layerGraph;
+        QWidget* layerInfo;
+        QWidget* layerError;
+        QLabel* msgInfo;
+        QLabel* msgError;
 
         /**
          * The Graphviz executable.
@@ -167,6 +176,11 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         void editingElsewhere();
 
     private:
+        /**
+         * Set up internal components.
+         */
+        QWidget* messageLayer(QLabel*& text, const char* icon);
+
         /**
          * Returns the full path to the Graphviz executable, or QString::null
          * if the Graphviz executable does not appear to be valid.

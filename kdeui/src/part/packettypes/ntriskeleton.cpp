@@ -35,11 +35,15 @@
 
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kstandarddirs.h>
+#include <qfileinfo.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qmessagebox.h>
 #include <qpushbutton.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
+#include <qwidgetstack.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -253,7 +257,23 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
         PacketViewerTab(useParentUI), tri(packet),
         graphvizExec(useGraphvizExec) {
     ui = new QWidget();
+    QBoxLayout* baseLayout = new QVBoxLayout(ui);
+    stack = new QWidgetStack(ui);
+
+    // Information layer.
+    layerInfo = messageLayer(msgInfo, "messagebox_info");
+    msgInfo->setText(i18n("<qt>Initialising...</qt>"));
+
+    // Error layer.
+    layerError = messageLayer(msgError, "messagebox_critical");
+    msgError->setText(i18n("<qt>Initialising...</qt>"));
+
+    // Graph layer.
+    layerGraph = new QWidget(stack);
     // TODO
+
+    // Finish off.
+    baseLayout->addWidget(stack);
 }
 
 regina::NPacket* NTriFaceGraphUI::getPacket() {
@@ -265,11 +285,96 @@ QWidget* NTriFaceGraphUI::getInterface() {
 }
 
 void NTriFaceGraphUI::refresh() {
+    if (tri->getNumberOfTetrahedra() == 0) {
+        msgInfo->setText(i18n("<qt>This triangulation is empty.</qt>"));
+        stack->raiseWidget(layerInfo);
+        return;
+    }
+
+    QString useExec = verifyGraphvizExec();
+    if (useExec.isNull()) {
+        stack->raiseWidget(layerError);
+        return;
+    }
+
     // TODO
+    stack->raiseWidget(layerGraph);
 }
 
 void NTriFaceGraphUI::editingElsewhere() {
-    // TODO
+    msgInfo->setText(i18n("<qt>Editing...</qt>"));
+    stack->raiseWidget(layerInfo);
+}
+
+QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
+        const char* iconName) {
+    QWidget* layer = new QWidget(stack);
+    QBoxLayout* layout = new QHBoxLayout(layer, 5 /* margin */,
+        5 /* spacing */);
+
+    layout->addStretch(1);
+
+    QPixmap iconPic = enclosingPane->getPart()->instance()->iconLoader()->
+        loadIcon(iconName, KIcon::NoGroup, KIcon::SizeMedium,
+        KIcon::DefaultState, 0, true /* may be null */);
+    if (iconPic.isNull())
+        iconPic = QMessageBox::standardIcon(QMessageBox::Critical);
+
+    QLabel* icon = new QLabel(layer);
+    icon->setPixmap(iconPic);
+    layout->addWidget(icon);
+    layout->setStretchFactor(icon, 0);
+
+    layout->addSpacing(10);
+
+    text = new QLabel(i18n("<qt>Initialising...</qt>"), layer);
+    layout->addWidget(text);
+    layout->setStretchFactor(text, 4);
+
+    layout->addStretch(1);
+
+    return layer;
+}
+
+QString NTriFaceGraphUI::verifyGraphvizExec() {
+    QString useExec = graphvizExec;
+
+    if (useExec.find('/') < 0) {
+        // Hunt on the search path.
+        useExec = KStandardDirs::findExe(useExec);
+        if (useExec.isNull()) {
+            msgError->setText(i18n("<qt>The Graphviz executable \"%1\" could "
+                "not be found on the default search path.<p>"
+                "If you have Graphviz installed on your system, please go "
+                "into the Regina configuration (Triangulation section) and "
+                "tell Regina where it can find the Graphviz executable.</qt>").
+                arg(graphvizExec));
+            return QString::null;
+        }
+    }
+
+    // We have a full path to the Graphviz executable.
+    QFileInfo info(useExec);
+    if (! info.exists()) {
+        msgError->setText(i18n("<qt>The Graphviz executable \"%1\" does "
+            "not exist.<p>"
+            "If you have Graphviz installed on your system, please go "
+            "into the Regina configuration (Triangulation section) and "
+            "tell Regina where it can find the Graphviz executable.</qt>").
+            arg(useExec));
+        return QString::null;
+    } else if (! (info.isFile() && info.isExecutable())) {
+        msgError->setText(i18n("The Graphviz executable \"%1\" does "
+            "not actually appear to be an executable file.<p>"
+            "If you have Graphviz installed on your system, please go "
+            "into the Regina configuration (Triangulation section) and "
+            "tell Regina where it can find the Graphviz executable.</qt>").
+            arg(useExec));
+        return QString::null;
+    }
+
+    // All good.
+    return useExec;
 }
 
 #include "ntriskeleton.moc"
