@@ -60,6 +60,19 @@ namespace {
     const NTetFace& getItem(const NFacePairing& p, const NTetFace& index) {
         return p[index];
     }
+
+    void writeDot_stdout(const NFacePairing& p, const char* prefix = 0,
+            bool subgraph = false) {
+        p.writeDot(std::cout, prefix, subgraph);
+    }
+
+    void writeDotHeader_stdout(const char* graphName = 0) {
+        NFacePairing::writeDotHeader(std::cout, graphName);
+    }
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDot, writeDot_stdout, 1, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
+        0, 1);
 }
 
 void addNFacePairing() {
@@ -80,6 +93,8 @@ void addNFacePairing() {
         .def("toTextRep", &NFacePairing::toTextRep)
         .def("fromTextRep", &NFacePairing::fromTextRep,
             return_value_policy<manage_new_object>())
+        .def("writeDot", writeDot_stdout, OL_writeDot())
+        .def("writeDotHeader", writeDotHeader_stdout, OL_writeDotHeader())
         .def("isClosed", &NFacePairing::isClosed)
         .def("hasTripleEdge", &NFacePairing::hasTripleEdge)
         .def("followChain", &NFacePairing::followChain)
@@ -98,6 +113,7 @@ void addNFacePairing() {
         .def("hasDoubleSquare", &NFacePairing::hasDoubleSquare)
         .def("__str__", &NFacePairing::toString)
         .staticmethod("fromTextRep")
+        .staticmethod("writeDotHeader")
     ;
 }
 

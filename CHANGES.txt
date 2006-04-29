@@ -25,6 +25,8 @@ Version 4.3.1  [ 28 April, 2006 ]
               graphs that cannot appear in a closed census.
             - New routines hasSingleStar(), hasDoubleStar() and
               hasDoubleSquare() for investigating larger face pairing graphs.
+            - New routines writeDot() and writeDotHeader() to assist
+              with graph visualisation.
         Routine readOrb():
             - New routine for importing Orb / Casson triangulations;
               thanks to Ryan Budney.

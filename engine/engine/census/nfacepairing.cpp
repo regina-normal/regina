@@ -90,6 +90,48 @@ std::string NFacePairing::toString() const {
     return ans.str();
 }
 
+void NFacePairing::writeDotHeader(std::ostream& out, const char* graphName) {
+    static const char defaultGraphName[] = "G";
+
+    if ((! graphName) || (! *graphName))
+        graphName = defaultGraphName;
+
+    out << "graph " << graphName << " {" << std::endl;
+    out << "graph [bgcolor=white];" << std::endl;
+    out << "edge [color=black];" << std::endl;
+    out << "node [shape=circle,style=filled,height=0.15,fixedsize=true,label=\"\"];" << std::endl;
+}
+
+void NFacePairing::writeDot(std::ostream& out, const char* prefix,
+        bool subgraph) const {
+    static const char defaultPrefix[] = "g";
+
+    if ((! prefix) || (! *prefix))
+        prefix = defaultPrefix;
+
+    // We are guaranteed that prefix is a non-empty string.
+
+    if (subgraph)
+        out << "subgraph cluster_" << prefix << " {" << std::endl;
+    else
+        writeDotHeader(out, (prefix + std::string("_graph")).c_str());
+
+    unsigned t;
+    int f;
+    NTetFace adj;
+    for (t = 0; t < nTetrahedra; t++)
+        for (f = 0; f < 4; f++) {
+            adj = dest(t, f);
+            if (adj.isBoundary(nTetrahedra) || adj.tet < static_cast<int>(t) ||
+                    (adj.tet == static_cast<int>(t) && adj.face < f))
+                continue;
+            out << prefix << '_' << t << " -- " << prefix << '_'
+                << adj.tet << ';' << std::endl;
+        }
+
+    out << '}' << std::endl;
+}
+
 std::string NFacePairing::toTextRep() const {
     std::ostringstream ans;
 
