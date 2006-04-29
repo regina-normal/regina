@@ -57,12 +57,13 @@ namespace {
         unsigned tripleOneEndedChain;
         unsigned singleStar;
         unsigned doubleStar;
+        unsigned doubleSquare;
 
         BadGraphs() : tripleEdge(0), brokenDoubleEndedChain(0),
                       oneEndedChainWithDoubleHandle(0),
                       wedgedDoubleEndedChain(0),
                       oneEndedChainWithStrayBigon(0), tripleOneEndedChain(0),
-                      singleStar(0), doubleStar(0) {
+                      singleStar(0), doubleStar(0), doubleSquare(0) {
         }
     };
 }
@@ -88,6 +89,8 @@ void countBadGraphs(const NFacePairing* pair, const NFacePairingIsoList*,
             badGraphs->singleStar++;
         if (pair->hasDoubleStar())
             badGraphs->doubleStar++;
+        if (pair->hasDoubleSquare())
+            badGraphs->doubleSquare++;
     }
 }
 
@@ -150,6 +153,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
             // verification.
             unsigned nSingleStar[] = { 0, 0, 0, 0, 0, 0, 0, 0, 130 };
             unsigned nDoubleStar[] = { 0, 0, 0, 0, 0, 0, 16, 88, 615 };
+            unsigned nDoubleSquare[] = { 0, 0, 0, 0, 3, 4, 16, 50, 217 };
 
             unsigned nTets;
             for (nTets = 1; nTets <= 8; nTets++) {
@@ -211,6 +215,13 @@ class NFacePairingTest : public CppUnit::TestFixture {
                     msg << "Double star count for " << nTets
                         << " tetrahedra should be " << nDoubleStar[nTets]
                         << ", not " << bad.doubleStar << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (bad.doubleSquare != nDoubleSquare[nTets]) {
+                    std::ostringstream msg;
+                    msg << "Double-edged square count for " << nTets
+                        << " tetrahedra should be " << nDoubleSquare[nTets]
+                        << ", not " << bad.doubleSquare << '.';
                     CPPUNIT_FAIL(msg.str());
                 }
             }

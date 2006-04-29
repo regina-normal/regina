@@ -95,6 +95,7 @@ void addNFacePairing() {
 
         .def("hasSingleStar", &NFacePairing::hasSingleStar)
         .def("hasDoubleStar", &NFacePairing::hasDoubleStar)
+        .def("hasDoubleSquare", &NFacePairing::hasDoubleSquare)
         .def("__str__", &NFacePairing::toString)
         .staticmethod("fromTextRep")
     ;

@@ -598,6 +598,23 @@ class NFacePairing : public NThread {
         bool hasDoubleStar() const;
 
         /**
+         * Determines whether this face pairing contains a double-edged
+         * square.
+         *
+         * A double-edged square involves four distinct tetrahedra that
+         * meet each other as follows.  Two pairs of tetrahedra are
+         * joined along two pairs of faces each.  Then each tetrahedron
+         * is joined along a single face to one tetrahedron of the other
+         * pair.  The four tetrahedron faces not yet joined to anything
+         * (one from each tetrahedron) remain unaccounted for by this
+         * structure.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * double-edged square.
+         */
+        bool hasDoubleSquare() const;
+
+        /**
          * Internal to findAllPairings().  This routine should never be
          * called directly.
          *

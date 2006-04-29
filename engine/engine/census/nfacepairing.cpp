@@ -740,6 +740,77 @@ bool NFacePairing::hasDoubleStar() const {
     return false;
 }
 
+bool NFacePairing::hasDoubleSquare() const {
+    unsigned t1;
+    NTetFace t2;
+    int join, fa, fb;
+    int adj1 = 0, adj2 = 0;
+    bool found;
+
+    // Skip the last three tetrahedra -- any of the four starting points
+    // will do.
+    for (t1 = 0; t1 + 3 < nTetrahedra; t1++)
+        for (join = 0; join < 4; join++) {
+            t2 = dest(t1, join);
+            if (t2.tet == static_cast<int>(t1) || t2.isBoundary(nTetrahedra))
+                continue;
+
+            // We have distinct t1, t2 adjacent.
+            // Search for double edges leaving t1 and t2 for two new
+            // tetrahedra.
+            found = false;
+            for (fa = 0; fa < 3 && ! found; fa++) {
+                if (fa == join)
+                    continue;
+                adj1 = dest(t1, fa).tet;
+                if (adj1 >= static_cast<int>(nTetrahedra) /* bdry */)
+                    continue;
+                if (adj1 == static_cast<int>(t1) || adj1 == t2.tet)
+                    continue;
+                for (fb = fa + 1; fb < 4; fb++) {
+                    if (fb == join)
+                        continue;
+                    if (adj1 == dest(t1, fb).tet) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (! found)
+                continue;
+
+            found = false;
+            for (fa = 0; fa < 3 && ! found; fa++) {
+                if (fa == t2.face)
+                    continue;
+                adj2 = dest(t2.tet, fa).tet;
+                if (adj2 >= static_cast<int>(nTetrahedra) /* bdry */)
+                    continue;
+                if (adj2 == static_cast<int>(t1) || adj2 == t2.tet ||
+                        adj2 == adj1)
+                    continue;
+                for (fb = fa + 1; fb < 4; fb++) {
+                    if (fb == t2.face)
+                        continue;
+                    if (adj2 == dest(t2.tet, fb).tet) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (! found)
+                continue;
+
+            // All we need now is a link between adj1 and adj2.
+            for (fa = 0; fa < 4; fa++)
+                if (dest(adj1, fa).tet == adj2)
+                    return true;
+        }
+
+    // Nothing found.
+    return false;
+}
+
 bool NFacePairing::findAllPairings(unsigned nTetrahedra,
         NBoolSet boundary, int nBdryFaces, UseFacePairing use,
         void* useArgs, bool newThread) {
