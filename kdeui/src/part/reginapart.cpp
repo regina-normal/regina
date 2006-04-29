@@ -355,6 +355,12 @@ void ReginaPart::clonePacket() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
+    if (! packet->getTreeParent()) {
+        KMessageBox::sorry(widget(), i18n("The root of the packet tree "
+            "cannot be cloned.  You may clone any other packet except for "
+            "this one."));
+        return;
+    }
 
     regina::NPacket* ans = packet->clone(false, false);
 

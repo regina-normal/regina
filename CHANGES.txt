@@ -34,6 +34,8 @@ Version 4.3.1  [ 28 April, 2006 ]
             - Verifies that the first line of the file is "% Triangulation",
               instead of simply testing for the '%' and ignoring the rest.
     USER INTERFACE:
+        - No longer crashes when attempting to clone the root packet
+          (it simply displays an error message instead).
         - Now displays face pairing graphs (via the Skeleton tab in the
           triangulation viewer), with the help of Graphviz.
         - Added a workaround for the icon problems that arise when using
