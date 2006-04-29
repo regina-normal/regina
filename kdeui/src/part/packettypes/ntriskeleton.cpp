@@ -274,7 +274,13 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
 
     // Graph layer.
     layerGraph = new QWidget(stack);
-    // TODO
+    QBoxLayout* layoutGraph = new QHBoxLayout(layerGraph,
+        5 /* margin */, 5 /* spacing */);
+    graph = new QLabel(layerGraph);
+    graph->setAlignment(AlignCenter);
+    layoutGraph->addWidget(graph);
+    // TODO: Put the graph widget on a white background, and offer
+    // scrollbars where necessary.
 
     // Finish off.
     baseLayout->addWidget(stack);
@@ -298,20 +304,16 @@ void NTriFaceGraphUI::refresh() {
     // TODO: Tell them we're processing.
 
     QString useExec = verifyGraphvizExec();
-    if (useExec.isNull()) {
-        stack->raiseWidget(layerError);
+    if (useExec.isNull())
         return;
-    }
 
     KTempFile tmpDot(locateLocal("tmp", "fpg-"), ".dot");
     tmpDot.close();
 
     std::ofstream outDot(tmpDot.name().ascii());
     if (! outDot) {
-        msgError->setText(i18n("<qt>The temporary DOT file <i>%1</i> "
+        showError(i18n("<qt>The temporary DOT file <i>%1</i> "
             "could not be opened for writing.</qt>").arg(tmpDot.name()));
-        stack->raiseWidget(layerError);
-
         tmpDot.unlink();
         return;
     }
@@ -327,37 +329,43 @@ void NTriFaceGraphUI::refresh() {
     KProcess graphviz;
     graphviz << useExec << "-Tpng" << "-o" << tmpPng.name() << tmpDot.name();
     if (! graphviz.start(KProcess::Block)) {
-        msgError->setText(i18n("<qt>The Graphviz executable <i>%1</i> "
+        showError(i18n("<qt>The Graphviz executable <i>%1</i> "
             "could not be started.</qt>").arg(useExec));
-        stack->raiseWidget(layerError);
-
         tmpDot.unlink();
         tmpPng.unlink();
         return;
     }
     if (graphviz.signalled()) {
-        msgError->setText(i18n("<qt>The Graphviz executable <i>%1</i> "
+        showError(i18n("<qt>The Graphviz executable <i>%1</i> "
             "did not exit normally.  It was killed with signal %2.</qt>").
             arg(useExec).arg(graphviz.exitSignal()));
-        stack->raiseWidget(layerError);
-
         tmpDot.unlink();
         tmpPng.unlink();
         return;
     }
     if ((! graphviz.normalExit()) || graphviz.exitStatus()) {
-        msgError->setText(i18n("<qt>The Graphviz executable <i>%1</i> "
+        showError(i18n("<qt>The Graphviz executable <i>%1</i> "
             "appears to have encountered an internal error.  "
             "It finished with exit status %2.</qt>").
             arg(useExec).arg(graphviz.exitStatus()));
-        stack->raiseWidget(layerError);
-
         tmpDot.unlink();
         tmpPng.unlink();
         return;
     }
 
-    // TODO: Load the PNG into a pixmap
+    QPixmap png(tmpPng.name());
+    if (png.isNull()) {
+        showError(i18n("<qt>The PNG graphic created by Graphviz "
+            "could not be loaded.<p>The Graphviz executable used "
+            "was <i>%1</i>.  If this is not correct, please change it "
+            "in the Regina configuration (Triangulation section).</qt>").
+            arg(useExec));
+        tmpDot.unlink();
+        tmpPng.unlink();
+        return;
+    }
+
+    graph->setPixmap(png);
 
     tmpDot.unlink();
     tmpPng.unlink();
@@ -400,6 +408,11 @@ QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
     return layer;
 }
 
+void NTriFaceGraphUI::showError(const QString& msg) {
+    msgError->setText(msg);
+    stack->raiseWidget(layerError);
+}
+
 QString NTriFaceGraphUI::verifyGraphvizExec() {
     QString useExec = graphvizExec;
 
@@ -407,7 +420,7 @@ QString NTriFaceGraphUI::verifyGraphvizExec() {
         // Hunt on the search path.
         useExec = KStandardDirs::findExe(useExec);
         if (useExec.isNull()) {
-            msgError->setText(i18n("<qt>The Graphviz executable \"%1\" could "
+            showError(i18n("<qt>The Graphviz executable \"%1\" could "
                 "not be found on the default search path.<p>"
                 "If you have Graphviz installed on your system, please go "
                 "into the Regina configuration (Triangulation section) and "
@@ -420,7 +433,7 @@ QString NTriFaceGraphUI::verifyGraphvizExec() {
     // We have a full path to the Graphviz executable.
     QFileInfo info(useExec);
     if (! info.exists()) {
-        msgError->setText(i18n("<qt>The Graphviz executable \"%1\" does "
+        showError(i18n("<qt>The Graphviz executable \"%1\" does "
             "not exist.<p>"
             "If you have Graphviz installed on your system, please go "
             "into the Regina configuration (Triangulation section) and "
@@ -428,7 +441,7 @@ QString NTriFaceGraphUI::verifyGraphvizExec() {
             arg(useExec));
         return QString::null;
     } else if (! (info.isFile() && info.isExecutable())) {
-        msgError->setText(i18n("The Graphviz executable \"%1\" does "
+        showError(i18n("The Graphviz executable \"%1\" does "
             "not actually appear to be an executable file.<p>"
             "If you have Graphviz installed on your system, please go "
             "into the Regina configuration (Triangulation section) and "

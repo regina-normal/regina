@@ -148,6 +148,7 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         QWidget* layerError;
         QLabel* msgInfo;
         QLabel* msgError;
+        QLabel* graph;
 
         /**
          * The Graphviz executable.
@@ -180,6 +181,7 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
          * Set up internal components.
          */
         QWidget* messageLayer(QLabel*& text, const char* icon);
+        void showError(const QString& msg);
 
         /**
          * Returns the full path to the Graphviz executable, or QString::null
