@@ -42,6 +42,7 @@
 class NTriFaceGraphUI;
 class SkeletonWindow;
 
+class QScrollView;
 class QWidgetStack;
 
 namespace regina {
@@ -143,7 +144,7 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
          */
         QWidget* ui;
         QWidgetStack* stack;
-        QWidget* layerGraph;
+        QScrollView* layerGraph;
         QWidget* layerInfo;
         QWidget* layerError;
         QLabel* msgInfo;

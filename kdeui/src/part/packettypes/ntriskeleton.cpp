@@ -38,6 +38,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kprocess.h>
+#include <kscrollview.h>
 #include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <qfileinfo.h>
@@ -273,14 +274,10 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
     msgError->setText(i18n("<qt>Initialising...</qt>"));
 
     // Graph layer.
-    layerGraph = new QWidget(stack);
-    QBoxLayout* layoutGraph = new QHBoxLayout(layerGraph,
-        5 /* margin */, 5 /* spacing */);
+    layerGraph = new KScrollView(stack);
     graph = new QLabel(layerGraph);
     graph->setAlignment(AlignCenter);
-    layoutGraph->addWidget(graph);
-    // TODO: Put the graph widget on a white background, and offer
-    // scrollbars where necessary.
+    layerGraph->addChild(graph);
 
     // Finish off.
     baseLayout->addWidget(stack);
@@ -327,7 +324,8 @@ void NTriFaceGraphUI::refresh() {
     tmpPng.close();
 
     KProcess graphviz;
-    graphviz << useExec << "-Tpng" << "-o" << tmpPng.name() << tmpDot.name();
+    graphviz << useExec << "-Tpng" << "-Gsize=2.5,4"
+        << "-o" << tmpPng.name() << tmpDot.name();
     if (! graphviz.start(KProcess::Block)) {
         showError(i18n("<qt>The Graphviz executable <i>%1</i> "
             "could not be started.</qt>").arg(useExec));
