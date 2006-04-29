@@ -279,6 +279,12 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
     graph->setAlignment(AlignCenter);
     layerGraph->addChild(graph);
 
+    QWhatsThis::add(layerGraph, i18n("<qt>The <i>face pairing graph</i> "
+        "of a triangulation describes which tetrahedron faces are "
+        "identified with which.<p>Each vertex of the graph represents "
+        "a tetrahedron, and each edge represents a pair of tetrahedron "
+        "faces that are joined together.</qt>"));
+
     // Finish off.
     baseLayout->addWidget(stack);
 }
@@ -298,7 +304,8 @@ void NTriFaceGraphUI::refresh() {
         return;
     }
 
-    // TODO: Tell them we're processing.
+    // TODO: Tell them that we're processing, in case the graphviz call
+    // should lock up for some reason.
 
     QString useExec = verifyGraphvizExec();
     if (useExec.isNull())
