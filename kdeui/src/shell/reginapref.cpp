@@ -186,6 +186,13 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
             triPrefs->comboInitialTab->setCurrentItem(0); break;
     }
 
+    switch (prefSet.triInitialSkeletonTab) {
+        case ReginaPrefSet::FacePairingGraph:
+            triPrefs->comboInitialSkeletonTab->setCurrentItem(1); break;
+        default:
+            triPrefs->comboInitialSkeletonTab->setCurrentItem(0); break;
+    }
+
     switch (prefSet.triInitialAlgebraTab) {
         case ReginaPrefSet::FundGroup:
             triPrefs->comboInitialAlgebraTab->setCurrentItem(1); break;
@@ -198,6 +205,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     triPrefs->editSurfacePropsThreshold->setText(
         QString::number(prefSet.triSurfacePropsThreshold));
     triPrefs->editGAPExec->setText(prefSet.triGAPExec);
+    triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
 
     surfacePrefs->chooserCreationCoords->setCurrentSystem(
         prefSet.surfacesCreationCoords);
@@ -273,6 +281,14 @@ void ReginaPreferences::slotApply() {
             prefSet.triInitialTab = ReginaPrefSet::Gluings; break;
     }
 
+    switch (triPrefs->comboInitialSkeletonTab->currentItem()) {
+        case 1:
+            prefSet.triInitialSkeletonTab =
+                ReginaPrefSet::FacePairingGraph; break;
+        default:
+            prefSet.triInitialSkeletonTab = ReginaPrefSet::SkelComp; break;
+    }
+
     switch (triPrefs->comboInitialAlgebraTab->currentItem()) {
         case 1:
             prefSet.triInitialAlgebraTab = ReginaPrefSet::FundGroup; break;
@@ -334,6 +350,58 @@ void ReginaPreferences::slotApply() {
                 "search path:").arg(strVal), KStandardDirs::systemPaths(),
                 i18n("GAP Executable Not Found"));
         prefSet.triGAPExec = strVal;
+    }
+
+    strVal = triPrefs->editGraphvizExec->text().stripWhiteSpace();
+    if (strVal.isEmpty()) {
+        // No no no.
+        triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
+    } else if (strVal == "neato") {
+        // Don't run any checks, since this is the default.
+        // Graphviz might not be installed.
+        prefSet.triGraphvizExec = strVal;
+    } else if (strVal == "graphviz" || strVal.endsWith("/graphviz")) {
+        // The user is trying to use "graphviz" as the executable name.
+        KMessageBox::error(this, i18n("<qt>Graphviz is the name of a "
+            "software suite, not the actual executable.  Graphviz supplies "
+            "several different executables for drawing graphs in several "
+            "different ways.  The recommended executable for use with "
+            "Regina is <i>neato</i>.<p>"
+            "See <i>http://www.graphviz.org/</i> for further details.</qt>"));
+        triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
+    } else if (strVal.find('/') >= 0) {
+        // We've specified our own executable with a full path.
+        // Let's be anal about it.
+        QFileInfo info(strVal);
+        if (! info.exists()) {
+            KMessageBox::error(this, i18n("The Graphviz executable \"%1\" "
+                "does not exist.").arg(strVal));
+            triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
+        } else if (! (info.isFile() && info.isExecutable())) {
+            KMessageBox::error(this, i18n("The Graphviz executable \"%1\" "
+                "is not actually an executable file.").arg(strVal));
+            triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
+        } else {
+            // Looking fine.  Make it absolute.
+            prefSet.triGraphvizExec = info.absFilePath();
+            triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
+        }
+    } else {
+        // Search on the system path.
+        // Leave their setting alone, whatever it is, since they're
+        // being vague about it.  Maybe they don't have Graphviz installed.
+        if (KStandardDirs::findExe(strVal).isNull())
+            KMessageBox::informationList(this, i18n(
+                "The Graphviz executable \"%1\" could not be found on the "
+                "default search path.  This means that you will not be able "
+                "to use Graphviz from within Regina.\n"
+                "This is not really a problem; it just means that Regina "
+                "will not be able to display the face pairing graphs "
+                "of triangulations.\n"
+                "The following directories are included in the default "
+                "search path:").arg(strVal), KStandardDirs::systemPaths(),
+                i18n("Graphviz Executable Not Found"));
+        prefSet.triGraphvizExec = strVal;
     }
 
     prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
@@ -449,6 +517,19 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
     QWhatsThis::add(label, msg);
     QWhatsThis::add(comboInitialTab, msg);
 
+    // Set up the initial skeleton tab.
+    box = new QHBox(this);
+    box->setSpacing(5);
+
+    label = new QLabel(i18n("Default skeleton tab:"), box);
+    comboInitialSkeletonTab = new KComboBox(box);
+    comboInitialSkeletonTab->insertItem(i18n("Skeletal Components"));
+    comboInitialSkeletonTab->insertItem(i18n("Face Pairing Graph"));
+    msg = i18n("Specifies which tab should be initially visible "
+        "when a new triangulation skeleton viewer is opened.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(comboInitialSkeletonTab, msg);
+
     // Set up the initial algebra tab.
     box = new QHBox(this);
     box->setSpacing(5);
@@ -496,6 +577,28 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
         "simplifications.</qt>");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(editGAPExec, msg);
+
+    // Set up the Graphviz executable.
+    box = new QHBox(this);
+    box->setSpacing(5);
+
+    label = new QLabel(i18n("Graphviz executable:"), box);
+    editGraphvizExec = new KLineEdit(box);
+    msg = i18n("<qt>The command used to run Graphviz for drawing "
+        "undirected graphs.  The recommended Graphviz command for this "
+        "job is <i>neato</i>, though you are of course welcome to use "
+        "others.<p>"
+        "This should be a single executable name (e.g., <i>neato</i>).  You "
+        "may specify the full path to the executable if you wish "
+        "(e.g., <i>/usr/bin/neato</i>); otherwise the default search path "
+        "will be used.<p>"
+        "There is no trouble if Graphviz is not installed; this just means "
+        "that Regina will not be able to display the face pairing graphs "
+        "of triangulations.<p>"
+        "For more information on Graphviz, see "
+        "<i>http://www.graphviz.org/</i>.</qt>");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(editGraphvizExec, msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);

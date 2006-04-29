@@ -52,7 +52,9 @@ ReginaPrefSet::ReginaPrefSet() :
         treeJumpSize(10),
         triEditMode(DirectEdit),
         triGAPExec("gap"),
+        triGraphvizExec("neato"),
         triInitialTab(Gluings),
+        triInitialSkeletonTab(SkelComp),
         triInitialAlgebraTab(Homology),
         triSurfacePropsThreshold(6) {
 }

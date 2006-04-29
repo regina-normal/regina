@@ -520,6 +520,12 @@ void ReginaMain::readOptions(KConfig* config) {
     else
         globalPrefs.triInitialTab = ReginaPrefSet::Gluings; /* default */
 
+    str = config->readEntry("InitialSkeletonTab");
+    if (str == "FacePairingGraph")
+        globalPrefs.triInitialSkeletonTab = ReginaPrefSet::FacePairingGraph;
+    else
+        globalPrefs.triInitialSkeletonTab = ReginaPrefSet::SkelComp; /* def. */
+
     str = config->readEntry("InitialAlgebraTab");
     if (str == "FundGroup")
         globalPrefs.triInitialAlgebraTab = ReginaPrefSet::FundGroup;
@@ -533,6 +539,8 @@ void ReginaMain::readOptions(KConfig* config) {
 
     config->setGroup("Extensions");
     globalPrefs.triGAPExec = config->readEntry("GAPExec", "gap").
+        stripWhiteSpace();
+    globalPrefs.triGraphvizExec = config->readEntry("GraphvizExec", "neato").
         stripWhiteSpace();
 
     globalPrefs.readPythonLibraries();
@@ -602,6 +610,13 @@ void ReginaMain::saveOptions() {
             config->writeEntry("InitialTab", "Gluings"); break;
     }
 
+    switch (globalPrefs.triInitialSkeletonTab) {
+        case ReginaPrefSet::FacePairingGraph:
+            config->writeEntry("InitialSkeletonTab", "FacePairingGraph"); break;
+        default:
+            config->writeEntry("InitialSkeletonTab", "SkelComp"); break;
+    }
+
     switch (globalPrefs.triInitialAlgebraTab) {
         case ReginaPrefSet::FundGroup:
             config->writeEntry("InitialAlgebraTab", "FundGroup"); break;
@@ -616,6 +631,7 @@ void ReginaMain::saveOptions() {
 
     config->setGroup("Extensions");
     config->writeEntry("GAPExec", globalPrefs.triGAPExec);
+    config->writeEntry("GraphvizExec", globalPrefs.triGraphvizExec);
 
     globalPrefs.writePythonLibraries();
 

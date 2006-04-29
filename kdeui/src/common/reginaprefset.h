@@ -66,6 +66,8 @@ struct ReginaPrefSet {
         /**< Possible edit modes for triangulation gluings. */
     enum TriTab { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
         /**< Available top-level tabs in a triangulation viewer/editor. */
+    enum TriSkeletonTab { SkelComp, FacePairingGraph };
+        /**< Available tabs in a triangulation skeleton viewer. */
     enum TriAlgebraTab { Homology, FundGroup, TuraevViro };
         /**< Available tabs in a triangulation algebra viewer. */
 
@@ -102,9 +104,17 @@ struct ReginaPrefSet {
     QString triGAPExec;
         /**< The executable for starting GAP.  This need not include a
              directory (in which case the search path will be used). */
+    QString triGraphvizExec;
+        /**< The executable for starting Graphviz.  This should be a tool
+             for drawing undirected graphs; the recommended Graphviz tool
+             is neato.  This need not include a directory (in which case
+             the search path will be used). */
     TriTab triInitialTab;
         /**< The initially visible top-level tab for a new triangulation
              viewer/editor. */
+    TriSkeletonTab triInitialSkeletonTab;
+        /**< The initially visible tab for a new triangulation skeleton
+             viewer. */
     TriAlgebraTab triInitialAlgebraTab;
         /**< The initially visible tab for a new triangulation algebra
              viewer. */

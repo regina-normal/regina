@@ -37,6 +37,8 @@ Version 4.3.1  [ 28 April, 2006 ]
         - Added a workaround for the icon problems that arise when using
           GNU/Linux distributions with buggy icon themes
         - Added 48x48 and 64x64 icons for Regina and its data files
+        - New configuration options for the Graphviz executable and the
+          default Skeleton child tab in the triangulation viewer.
     TEST SUITE:
         - New tests for recognising bad subgraphs within face pairing graphs.
 
