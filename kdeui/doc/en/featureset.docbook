@@ -171,13 +171,15 @@
    is particularly well suited for this task.
   </para>
   <para>
-   The census algorithm
-   is described in <xref linkend="bib-burton-nor7"/> and
-   <xref linkend="bib-burton-nor10"/>, and
+   Elements of the census algorithm
+   are described in <xref linkend="bib-burton-nor7"/> and
+   <xref linkend="bib-burton-nor10"/>.  The algorithm
    contains significant optimisations for censuses of closed minimal
-   &ppirr; triangulations.  In particular the face pairing graph results
-   of <xref linkend="bib-burton-facegraphs"/> are incorporated into the
-   algorithm, as are the more standard results relating to low degree edges
+   &ppirr; triangulations &mdash; in particular, the face pairing graph results
+   of <xref linkend="bib-burton-facegraphs"/> and
+   <xref linkend="bib-burton-nor10"/> are incorporated into the
+   algorithm, as are several more local structural results relating to
+   vertices, edges and faces
    <xref linkend="bib-burton-facegraphs"/>,
    <xref linkend="bib-cuspedcensus"/>, <xref linkend="bib-matveev6"/>.
   </para>
@@ -190,10 +192,10 @@
   </para>
   <para>
    In addition to forming new censuses, &regina; ships with a number of
-   prepackaged censuses including closed 3-manifolds
-   <xref linkend="bib-burton-phd"/>, <xref linkend="bib-burton-nor8"/>,
-   <xref linkend="bib-burton-nor10"/>, hyperbolic 3-manifolds
-   <xref linkend="bib-cuspedcensus"/>, <xref linkend="bib-closedhypcensus"/>
+   prepackaged censuses including closed 3-manifold triangulations
+   <xref linkend="bib-burton-nor8"/>, <xref linkend="bib-burton-nor10"/>,
+   hyperbolic 3-manifolds
+   <xref linkend="bib-cuspedcensus"/>, <xref linkend="bib-closedhypcensus"/>,
    and knot and link complements (tabulated by Joe Christy).
    A census lookup facility for arbitrary triangulations is provided.
   </para>
