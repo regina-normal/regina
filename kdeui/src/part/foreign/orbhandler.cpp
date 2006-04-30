@@ -26,7 +26,6 @@
 
 /* end stub */
 
-#include "foreign/snappea.h"
 #include "foreign/orb.h"
 #include "triangulation/ntriangulation.h"
 
@@ -43,38 +42,8 @@ regina::NPacket* OrbHandler::import(const QString& fileName,
     regina::NPacket* ans = regina::readOrb(fileName.ascii());
     if (! ans)
         KMessageBox::error(parentWidget, i18n(
-            "The Orb/Casson file %1 could not be imported.  Perhaps the data "
-            "is not in Orb format?").arg(fileName));
+            "The Orb / Casson file %1 could not be imported.  Perhaps the "
+            "data is not in Orb format?").arg(fileName));
     return ans;
 }
 
-/*
-PacketFilter* OrbHandler::canExport() const {
-    return new SingleTypeFilter<regina::NTriangulation>();
-}
-
-bool OrbHandler::exportData(regina::NPacket* data,
-        const QString& fileName, QWidget* parentWidget) const {
-    regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
-    if (! tri->isValid()) {
-        KMessageBox::error(parentWidget, i18n(
-            "This triangulation cannot be exported to SnapPea format "
-            "because it is not a valid triangulation."));
-        return false;
-    }
-    if (tri->hasBoundaryFaces()) {
-        KMessageBox::error(parentWidget, i18n(
-            "This triangulation cannot be exported to SnapPea format "
-            "because it has one or more boundary faces."));
-        return false;
-    }
-    if (! regina::writeSnapPea(fileName.ascii(), *tri)) {
-        KMessageBox::error(parentWidget, i18n(
-            "This triangulation could not be exported.  An unknown error, "
-            "probably related to file I/O, occurred during the export."));
-        return false;
-    }
-    return true;
-}
-
-*/

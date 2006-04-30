@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file orbhandler.h
- *  \brief Allows interaction with Orb data files. 
+ *  \brief Allows interaction with Orb / Casson data files.
  */
 
 #ifndef __ORBHANDLER_H
@@ -37,12 +37,13 @@
 #include "packetimporter.h"
 
 /**
- * An object responsible for importing and export data to and from
- * Orb/Casson files.
+ * An object responsible for importing triangulations from Orb / Casson
+ * files.
  *
  * Rather than creating new objects of this class, the globally
  * available object OrbHandler::instance should always be used.
- * At present, only importation will be implemented.
+ *
+ * Thanks to Ryan Budney for providing these Orb / Casson filters.
  */
 class OrbHandler : public PacketImporter {
     public:

@@ -37,8 +37,8 @@
 #include "packetimporter.h"
 
 /**
- * An object responsible for importing and export data to and from
- * SnapPea files.
+ * An object responsible for importing and exporting triangulations
+ * to and from SnapPea files.
  *
  * Rather than creating new objects of this class, the globally
  * available object SnapPeaHandler::instance should always be used.
