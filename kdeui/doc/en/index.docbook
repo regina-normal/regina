@@ -43,6 +43,7 @@
   <!ENTITY b3 "<replaceable>b<subscript>3</subscript></replaceable>">
   <!ENTITY bibtex "<application>BibTeX</application>">
   <!ENTITY boost-python "<application>boost.python</application>">
+  <!ENTITY casson "<application>Casson</application>">
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY debian "<productname>Debian</productname>">
   <!ENTITY fedora "<productname>Fedora Core</productname>">
@@ -59,6 +60,8 @@
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">
   <!ENTITY orb "<application>Orb</application>">
+  <!ENTITY orbcasson "&orb; / &casson;">
+  <!ENTITY orburl "<ulink url='http://www.ms.unimelb.edu.au/~snap/orb.html'>&orb;</ulink>">
   <!ENTITY pi "<literal>Pi</literal>">
   <!ENTITY ppirr
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">

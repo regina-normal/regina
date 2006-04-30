@@ -54,7 +54,9 @@
      </para></listitem>
      <listitem><para>
       Importing triangulations saved from &snappeaurl;
-      (the hyperbolic 3-manifold software written by Jeffrey Weeks);
+      (the hyperbolic 3-manifold software written by Jeffrey Weeks) and
+      &orburl; (the variant for 3-orbifolds and 3-manifolds written by
+      Damien Heard);
      </para></listitem>
      <listitem><para>
       Automatic construction of several ready-made example triangulations.

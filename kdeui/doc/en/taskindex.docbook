@@ -136,6 +136,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>&casson;</glossterm>
+  <glosssee>&orb;</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm>census</glossterm>
   <glossdef><para><link linkend="man-sigcensus">creating a census of splitting
    surface signatures</link></para></glossdef>
@@ -675,6 +680,12 @@
  <glossentry>
   <glossterm>options</glossterm>
   <glosssee>configuration</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>&orb;</glossterm>
+  <glossdef><para><link linkend="import-orb">importing
+   from</link></para></glossdef>
  </glossentry>
 
  <glossentry>

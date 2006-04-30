@@ -137,6 +137,29 @@
    </programlisting>
   </sect2>
 
+  <sect2 id="import-orb">
+   <title>&orbcasson; Triangulation</title>
+
+   <para>
+    A triangulation in &orbcasson; format can be imported.
+    &orburl; is a variant of &snappea; for calculating hyperbolic
+    structures on 3-orbifolds and 3-manifolds, written by Damien Heard.
+   </para>
+   <para>
+    The file should be a plain text file in &orbcasson; format, which
+    describes a triangulation in terms of its 1-skeleton.  The beginning
+    of such a file is illustrated below.
+   </para>
+   <programlisting>
+    % orb
+    8knot
+    1  0  1.000  1vu  2uw  1ux  2xv  1xw  2vu
+    2  0  1.000  1wu  2wx  1xv  2xu  1vw  2vw
+
+    ...
+   </programlisting>
+  </sect2>
+
   <sect2 id="import-dehydrationlist">
    <title>Dehydrated Triangulation List</title>
 
