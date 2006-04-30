@@ -289,6 +289,12 @@ void freeCassonFormat( CassonFormat *cf )
 	delete cf;
 }
 
+/**
+ * Modified from Orb's readTriangulation() routine.
+ *
+ * The routine was changed to be compatible with Regina's NTriangulation
+ * data structure.
+ */
 NTriangulation *readTriangulation( std::istream &ts,  std::string &file_id)
 {
 
