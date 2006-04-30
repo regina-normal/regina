@@ -75,6 +75,12 @@ NTriangulation *cassonToNTriangulation( CassonFormat *cf )
  //  triang is given a name in the readOrb() function.
  //  I try to mimic NTriangulation::readSnapPea and
  //  Orb::cassonToTriangulation as much as possible.
+
+ // If the triangulation is empty, leave now before we start allocating
+ // empty arrays.
+ if (cf->num_tet == 0)
+     return triang;
+
  NTetrahedron **tet = new NTetrahedron*[cf->num_tet]; // tet corresponds to tet_array in Orb
  for (i=0; i<cf->num_tet; i++)
         tet[i]=new NTetrahedron();
@@ -133,7 +139,14 @@ NTriangulation *cassonToNTriangulation( CassonFormat *cf )
 
 
 /**
- * A direct copy of Orb's readCassonFormat() routine.
+ * Modified from Orb's readCassonFormat() routine.
+ *
+ * This routine was modified to remove the dependence on Qt strings and
+ * I/O streams, and work only with standard C++ strings and I/O streams
+ * instead.
+ *
+ * On entering this routine we assume the lines containing "% orb" and
+ * the manifold name have already been read.
  */
 CassonFormat *readCassonFormat( std::istream &ts )
 {
@@ -293,7 +306,8 @@ void freeCassonFormat( CassonFormat *cf )
  * Modified from Orb's readTriangulation() routine.
  *
  * The routine was changed to be compatible with Regina's NTriangulation
- * data structure.
+ * data structure, and to use standard C++ string and I/O streams
+ * instead of Qt strings and I/O streams.
  */
 NTriangulation *readTriangulation( std::istream &ts,  std::string &file_id)
 {
