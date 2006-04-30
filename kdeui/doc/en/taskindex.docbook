@@ -234,9 +234,9 @@
   <glossterm>configuration</glossterm>
   <glossdef><para><link linkend="options-census">census
    lookup</link></para></glossdef>
-  <glossdef><para><link linkend="options-triangulation">GAP (Groups,
-   Algorithms and Programming)</link></para></glossdef>
+  <glossdef><para><link linkend="options-triangulation">&gaplong;</link></para></glossdef>
   <glossdef><para><link linkend="options-general">general</link></para></glossdef>
+  <glossdef><para><link linkend="options-triangulation">&graphviz;</link></para></glossdef>
   <glossdef><para><link linkend="options-surfaces">normal surface
    enumeration</link></para></glossdef>
   <glossdef><para><link linkend="options-python">&python;
@@ -339,6 +339,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>dual 1-skeleton</glossterm>
+  <glosssee>face pairing graphs</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="man-regfiledump">dumping contents of a
    file</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
@@ -431,6 +436,12 @@
  </glossentry>
 
  <glossentry>
+  <glossterm><link linkend="tri-skeleton-facegraph">face pairing
+   graphs</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="tri-vertexedgeface">faces, viewing
    in a triangulation</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
@@ -487,7 +498,7 @@
  </glossentry>
 
  <glossentry>
-  <glossterm>GAP (Groups, Algorithms and Programming)</glossterm>
+  <glossterm>&gaplong;</glossterm>
   <glossdef><para><link linkend="options-triangulation">configuration</link></para></glossdef>
   <glossdef><para><link linkend="tri-algebra-fundgroup">using to
    simplify group presentations</link></para></glossdef>
@@ -496,6 +507,18 @@
  <glossentry>
   <glossterm>gluings</glossterm>
   <glosssee>tetrahedron face gluings</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>graphs, face pairing</glossterm>
+  <glosssee>face pairing graphs</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>&graphviz;</glossterm>
+  <glossdef><para><link linkend="options-triangulation">configuration</link></para></glossdef>
+  <glossdef><para><link linkend="tri-skeleton-facegraph">using to
+   display face pairing graphs</link></para></glossdef>
  </glossentry>
 
  <glossentry>
@@ -862,6 +885,13 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>skeleton</glossterm>
+  <glossdef><para><link linkend="tri-skeleton">of a triangulation</link></para></glossdef>
+  <glossdef><para><link linkend="tri-skeleton-facegraph">dual
+   1-skeleton</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm>&snappea;</glossterm>
   <glossdef><para><link linkend="tri-snappea">calculations</link></para></glossdef>
   <glossdef><para><link linkend="options-snappea">closed triangulations,
@@ -1015,6 +1045,8 @@
    creating</link></para></glossdef>
   <glossdef><para><link linkend="foreign-export">exporting to
    external files</link></para></glossdef>
+  <glossdef><para><link linkend="tri-skeleton-facegraph">face pairing
+   graphs</link></para></glossdef>
   <glossdef><para><link linkend="tri-facetype">faces,
    viewing shapes</link></para></glossdef>
   <glossdef><para><link linkend="tri-algebra-fundgroup">fundamental

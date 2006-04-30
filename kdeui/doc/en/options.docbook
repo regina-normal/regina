@@ -131,6 +131,33 @@
      </para>
     </glossdef>
    </glossentry>
+   <glossentry>
+    <glossterm>&graphviz; executable</glossterm>
+    <glossdef>
+     <para>
+      This tells &regina; where to find &graphvizurl;.  As with &gap;,
+      &graphviz; is not required by &regina;, but if it is not installed
+      then &regina; cannot display face pairing graphs.
+      See the <link linkend="tri-skeleton-facegraph">face pairing graph</link>
+      documentation for details.
+     </para>
+     <para>
+      This option should be the name of the particular &graphviz;
+      command that is used for drawing undirected graphs.  Note that
+      this is generally <emphasis>not</emphasis> called graphviz &mdash;
+      &graphviz; is a suite of applications, providing several different
+      executables for drawing graphs in several different ways.  The
+      recommended executable (and also the default for this
+      configuration option) is <command>neato</command>.
+     </para>
+     <para>
+      If the &graphviz; executable is on your default search path, you may
+      simply provide the command (such as <filename>neato</filename>);
+      otherwise you will need to provide a full path to the executable
+      (such as <filename>/usr/local/bin/neato</filename>).
+     </para>
+    </glossdef>
+   </glossentry>
   </glosslist>
  </sect1>
 
