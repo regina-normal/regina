@@ -248,10 +248,10 @@ void ReginaPart::setupActions() {
         "triangulation in this packet tree."));
     treeGeneralEditActions.append(act);
 
-    act = new KAction(i18n("&Orb/Casson Triangulation"), "orb", 0,
+    act = new KAction(i18n("&Orb / Casson Triangulation"), "orb", 0,
         this, SLOT(importOrb()), actionCollection(), "import_orb");
-    act->setToolTip(i18n("Import an Orb/Casson triangulation"));
-    act->setWhatsThis(i18n("Import an external Orb/Casson file as a new "
+    act->setToolTip(i18n("Import an Orb / Casson triangulation"));
+    act->setWhatsThis(i18n("Import an external Orb / Casson file as a new "
         "triangulation in this packet tree."));
     treeGeneralEditActions.append(act);
 
