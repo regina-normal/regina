@@ -26,6 +26,15 @@
 
 /* end stub */
 
+/**
+ * Thanks to Ryan Budney and Damien Heard for providing the bulk of the
+ * code in this file.
+ *
+ * Ryan Budney wrote the Orb / Casson import filters for Regina.
+ * Part of this code is adapted from the input routines included in Orb,
+ * written by Damien Heard (http://www.ms.unimelb.edu.au/~snap/orb.html).
+ */
+
 #include <cctype>
 #include <cstdio>
 #include <cstring>
