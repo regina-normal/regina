@@ -10,6 +10,22 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.3.1  [ 5 May, 2006 ]
 
+    Features and Improvements:
+        - Now imports Orb / Casson triangulations; thanks to Ryan Budney
+          for contributing this import filter.
+        - Displays the face pairing graph of a triangulation with the help
+          of Graphviz (see the Skeleton tab of the triangulation viewer).
+    Optimisations:
+        - Census generation made faster again, this time using the new
+          face pairing graph results of math.GT/0604584.
+    Bug Fixes:
+        - No longer crashes when the user tries to clone the root of
+          the packet tree.
+        - Added a workaround for the buggy icon themes supplied by some
+          GNU/Linux distributions; there should no longer be unknown
+          icons appearing in the packet tree.
+        - Fixed memory leak in census generation.
+
 Version 4.3  [ 27 March, 2006 ]
 
     Features and Improvements:
