@@ -304,6 +304,13 @@ void NTriFaceGraphUI::refresh() {
         return;
     }
 
+    if (tri->getNumberOfTetrahedra() > 500) {
+        showError(i18n("<qt>This triangulation contains over 500 "
+            "tetrahedra.<p>Regina does not display face pairing graphs "
+            "for such large triangulations.</qt>"));
+        return;
+    }
+
     // TODO: Tell them that we're processing, in case the graphviz call
     // should lock up for some reason.
 
