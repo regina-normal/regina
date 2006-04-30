@@ -82,6 +82,9 @@ namespace regina {
  * 			   the Regina-compatible cassonToNTriangulation
 */
 
+// Anonymous namespace for the private routines used only by this file.
+namespace {
+
 CassonFormat	*readCassonFormat( std::istream &ts );
 bool		verifyCassonFormat( CassonFormat *cf );
 void		freeCassonFormat( CassonFormat *cf );
@@ -240,7 +243,7 @@ void freeCassonFormat( CassonFormat *cf )
 NTriangulation *readTriangulation( std::istream &ts,  std::string &file_id)
 {
 
-	NTriangulation *manifold;
+	NTriangulation *manifold = 0;
 	std::string line;
 	getline(ts, line);
 	CassonFormat *cf;
@@ -327,6 +330,8 @@ NTriangulation *cassonToNTriangulation( CassonFormat *cf )
  return triang; 
 }
 
+} // End anonymous namespace
+
 NTriangulation *readOrb(const char *filename) 
  {
    std::string file_id;
@@ -338,7 +343,9 @@ NTriangulation *readOrb(const char *filename)
     }
    NTriangulation *triang = readTriangulation(file, file_id);
 
-   triang->setPacketLabel(file_id);
+   if (triang)
+     triang->setPacketLabel(file_id);
+
    return triang;
  }
 
