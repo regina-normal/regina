@@ -31,7 +31,7 @@
  * code in this file.
  *
  * Ryan Budney contributed the Orb / Casson import filters for Regina.
- * From his comments of April 3rd, 2006:
+ * From his initial comments:
  *
  *   This file contains the engine routines to read Casson/Orb format
  *   triangulations and import them into Regina.  The main routines are
