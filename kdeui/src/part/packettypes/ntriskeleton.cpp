@@ -38,7 +38,6 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kprocess.h>
-#include <kscrollview.h>
 #include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <qfileinfo.h>
@@ -46,6 +45,7 @@
 #include <qlayout.h>
 #include <qmessagebox.h>
 #include <qpushbutton.h>
+#include <qscrollview.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 #include <qwidgetstack.h>
@@ -274,7 +274,7 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
     msgError->setText(i18n("<qt>Initialising...</qt>"));
 
     // Graph layer.
-    layerGraph = new KScrollView(stack);
+    layerGraph = new QScrollView(stack);
     graph = new QLabel(layerGraph);
     graph->setAlignment(AlignCenter);
     layerGraph->addChild(graph);
