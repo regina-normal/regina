@@ -84,9 +84,18 @@
     </para></glossdef>
    </glossentry>
    <glossentry>
+    <glossterm>Default skeleton tab</glossterm>
+    <glossdef><para>
+     Within the triangulation viewer, the <guilabel>Skeleton</guilabel>
+     tab contains several smaller tabs of its own.  This option specifies which
+     of these smaller tabs will be made visible when the
+     <guilabel>Skeleton</guilabel> tab is first selected.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
     <glossterm>Default algebra tab</glossterm>
     <glossdef><para>
-     Within the triangulation viewer, the <guilabel>Algebra</guilabel>
+     Likewise, within the triangulation viewer, the <guilabel>Algebra</guilabel>
      tab contains many smaller tabs of its own.  This option specifies which
      of these smaller tabs will be made visible when the
      <guilabel>Algebra</guilabel> tab is first selected.
