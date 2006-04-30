@@ -63,10 +63,11 @@
    <othername>A.</othername>
    <surname>Burton</surname>
   </author>
-  <title>Improved enumeration of non-orientable 3-manifold
-   triangulations</title>
-  <edition>In preparation</edition>
-  <date>2006</date>
+  <title>Enumeration of non-orientable 3-manifolds using face pairing
+   graphs and union-find</title>
+  <edition>Preprint</edition>
+  <issuenum>math.GT/0604584</issuenum>
+  <date>April 2006</date>
  </biblioentry>
 
  <biblioentry id="bib-burton-satblocks">
