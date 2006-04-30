@@ -1,3 +1,16 @@
+/**
+ * This is the file casson.h.  It was initially written by Damien Heard
+ * as part of the program Orb (http://www.ms.unimelb.edu.au/~snap/orb.html).
+ *
+ * This header was introduced into Regina for the Orb / Casson import
+ * and export routines, which were contributed by Ryan Budney.  It is
+ * for internal use by these routines only; any other code should call
+ * the public routines from orb.h.
+ *
+ * Many thanks to Damien Heard for giving permission for his code to
+ * be distributed under the terms of the GNU General Public License.
+ */
+
 #ifndef CASSON_H
 #define CASSON_H
 
