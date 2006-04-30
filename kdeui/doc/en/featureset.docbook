@@ -95,7 +95,12 @@
       (described <link linkend="features-splitting">below</link>);
      </para></listitem>
      <listitem><para>
-      Geometric properties, courtesy of the &snappea; kernel.
+      Geometric properties, courtesy of the &snappea; kernel;
+     </para></listitem>
+     <listitem><para>
+      A visual representation of the face pairing graph
+      <xref linkend="bib-burton-facegraphs"/>, with the help
+      of &graphviz;.
      </para></listitem>
     </itemizedlist>
    </para>
