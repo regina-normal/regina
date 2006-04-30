@@ -309,49 +309,43 @@ void freeCassonFormat( CassonFormat *cf )
  * data structure, and to use standard C++ string and I/O streams
  * instead of Qt strings and I/O streams.
  */
-NTriangulation *readTriangulation( std::istream &ts,  std::string &file_id)
-{
+NTriangulation *readTriangulation( std::istream &ts) {
+    std::string line, file_id;
 
-        NTriangulation *manifold = 0;
-        std::string line;
-        getline(ts, line);
-        CassonFormat *cf;
+    getline(ts, line);
+    if (line != "% orb") {
+        std::cerr << "Orb / Casson file is not in the correct format."
+            << std::endl;
+        return 0;
+    }
 
-        if (line == "% orb")
-         {
-                 getline(ts, file_id);
-         cf=readCassonFormat( ts );
+    getline(ts, file_id);
 
-         if (verifyCassonFormat( cf ))
-                 manifold = cassonToNTriangulation( cf );
-         else
-             {
-                 std::cout<<"Error (3) reading Orb/Casson file.\n";std::cout.flush();
-             }
-         }
-        else std::cout<<"Error (2) reading Orb/Casson file.\n";std::cout.flush();
-
+    CassonFormat* cf = readCassonFormat( ts );
+    if (! verifyCassonFormat( cf )) {
+        std::cerr << "Error verifying Orb / Casson file." << std::endl;
         freeCassonFormat( cf );
-        return manifold;
+        return 0;
+    }
+
+    NTriangulation* manifold = cassonToNTriangulation( cf );
+    freeCassonFormat( cf );
+
+    manifold->setPacketLabel(file_id);
+    return manifold;
 }
 
 } // End anonymous namespace
 
-NTriangulation *readOrb(const char *filename)
- {
-   std::string file_id;
+NTriangulation *readOrb(const char *filename) {
+    std::ifstream file(filename);
 
-   std::ifstream file(filename);
-   if (! file)
-    {
-     std::cout<<"Error (1) opening Orb/Casson file.\n";std::cout.flush();
+    if (! file) {
+        std::cerr << "Error opening Orb / Casson file." << std::endl;
+        return 0;
     }
-   NTriangulation *triang = readTriangulation(file, file_id);
 
-   if (triang)
-     triang->setPacketLabel(file_id);
-
-   return triang;
- }
+    return readTriangulation(file);
+}
 
 } // namespace regina
