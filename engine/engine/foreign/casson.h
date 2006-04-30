@@ -28,26 +28,26 @@ typedef struct TetEdgeInfo TetEdgeInfo;
 
 struct CassonFormat
 {
-	int		num_tet;
-	EdgeInfo	*head;
+        int             num_tet;
+        EdgeInfo        *head;
 };
 
 struct EdgeInfo
 {
-	int		index,
-			singular_index;
-	double 		singular_order;
+        int             index,
+                        singular_index;
+        double          singular_order;
 
-	TetEdgeInfo	*head;
-	EdgeInfo	*prev,
-			*next;
+        TetEdgeInfo     *head;
+        EdgeInfo        *prev,
+                        *next;
 };
 
 struct TetEdgeInfo
 {
-	int		tet_index,f1,f2;
-	TetEdgeInfo	*prev,
-			*next;
+        int             tet_index,f1,f2;
+        TetEdgeInfo     *prev,
+                        *next;
 };
 
 
