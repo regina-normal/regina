@@ -16,5 +16,6 @@ noinst_LTLIBRARIES = libforeign.la
 
 libforeign_la_SOURCES = dehydration.cpp orb.cpp snappea.cpp
 
-foreigninclude_HEADERS = casson.h dehydration.h orb.h snappea.h
+foreigninclude_HEADERS = dehydration.h orb.h snappea.h
+noinst_HEADERS = casson.h
 
