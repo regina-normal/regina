@@ -85,11 +85,69 @@ namespace regina {
 // Anonymous namespace for the private routines used only by this file.
 namespace {
 
-CassonFormat	*readCassonFormat( std::istream &ts );
-bool		verifyCassonFormat( CassonFormat *cf );
-void		freeCassonFormat( CassonFormat *cf );
-NTriangulation	*cassonToNTriangulation( CassonFormat *cf );
+NTriangulation *cassonToNTriangulation( CassonFormat *cf )
+ {
+ int i;
+ NTriangulation *triang = new NTriangulation();
+ // since CassonFormat does not allow naming of triangulations,
+ //  triang is given a name in the readOrb() function.
+ //  I try to mimic NTriangulation::readSnapPea and
+ //  Orb::cassonToTriangulation as much as possible.
+ NTetrahedron **tet = new NTetrahedron*[cf->num_tet]; // tet corresponds to tet_array in Orb
+ for (i=0; i<cf->num_tet; i++)
+	tet[i]=new NTetrahedron();
+ // now tet is a pointer to an array of NTetrahedrons,
+ //  so for each tet[i] we need to run
+ //   for (j=0; j<4; j++)
+ //     tet[i]->joinTo(j,tet[g[j]],NPerm(p[j][0],p[j][1],p[j][2],p[j][3],p[j][4]))
+ //     where g[j] is the tetrahedron adjacent to face j of tet[i]
+ //           p[j][k] is the permutation specifying how the faces are glued together.
+ EdgeInfo *ei;
+ TetEdgeInfo *tei1, *tei2;
+ int t1, t2, a1, a2, a3, a4, b1, b2, b3, b4;
+ ei = cf->head;
 
+ // this routine goes through the edges of cf, picking off the adjacent
+ // tetrahedra and assembled the information into tet. this code is
+ // adapted from Orb::cassonToTriangulation in Orb's organizer.cpp
+ while (ei!=NULL) // if we have a non-trivial edge, proceed
+	{
+	tei1 = ei->head;
+	while (tei1!=NULL) // now we spin about the tetrahedra adj to ei.
+		{
+		if (tei1->next==NULL)
+			tei2 = ei->head;
+		else	tei2 = tei1->next;
+
+		t1 = tei1->tet_index;
+		a1 = tei1->f1;
+		a2 = tei1->f2;
+		a3 = vertex_at_faces[a1][a2];
+		a4 = vertex_at_faces[a2][a1];
+
+		t2 = tei2->tet_index;
+		b1 = tei2->f1;
+		b2 = tei2->f2;
+		b3 = vertex_at_faces[b1][b2];
+		b4 = vertex_at_faces[b2][b1];
+
+		tet[t1]->joinTo( tei1->f1 , tet[t2], // 1st entry is the face of tet[t1]
+				NPerm(a1,b2,a2,b1,a3,b3,a4,b4) ); // being attached to tet[t2]
+
+		tet[t2]->joinTo( tei2->f2 , tet[t1],
+				NPerm(b1,a2,b2,a1,b3,a3,b4,a4) );
+
+		tei1 = tei1->next;
+		}
+	ei = ei->next;
+	}
+ 
+ for (i=0; i<cf->num_tet; i++)
+	triang->addTetrahedron(tet[i]);
+ delete[] tet;
+
+ return triang; 
+}
 
 
 CassonFormat *readCassonFormat( std::istream &ts )
@@ -264,70 +322,6 @@ NTriangulation *readTriangulation( std::istream &ts,  std::string &file_id)
 
 	freeCassonFormat( cf );
 	return manifold;
-}
-
-NTriangulation *cassonToNTriangulation( CassonFormat *cf )
- {
- int i;
- NTriangulation *triang = new NTriangulation();
- // since CassonFormat does not allow naming of triangulations,
- //  triang is given a name in the readOrb() function.
- //  I try to mimic NTriangulation::readSnapPea and
- //  Orb::cassonToTriangulation as much as possible.
- NTetrahedron **tet = new NTetrahedron*[cf->num_tet]; // tet corresponds to tet_array in Orb
- for (i=0; i<cf->num_tet; i++)
-	tet[i]=new NTetrahedron();
- // now tet is a pointer to an array of NTetrahedrons,
- //  so for each tet[i] we need to run
- //   for (j=0; j<4; j++)
- //     tet[i]->joinTo(j,tet[g[j]],NPerm(p[j][0],p[j][1],p[j][2],p[j][3],p[j][4]))
- //     where g[j] is the tetrahedron adjacent to face j of tet[i]
- //           p[j][k] is the permutation specifying how the faces are glued together.
- EdgeInfo *ei;
- TetEdgeInfo *tei1, *tei2;
- int t1, t2, a1, a2, a3, a4, b1, b2, b3, b4;
- ei = cf->head;
-
- // this routine goes through the edges of cf, picking off the adjacent
- // tetrahedra and assembled the information into tet. this code is
- // adapted from Orb::cassonToTriangulation in Orb's organizer.cpp
- while (ei!=NULL) // if we have a non-trivial edge, proceed
-	{
-	tei1 = ei->head;
-	while (tei1!=NULL) // now we spin about the tetrahedra adj to ei.
-		{
-		if (tei1->next==NULL)
-			tei2 = ei->head;
-		else	tei2 = tei1->next;
-
-		t1 = tei1->tet_index;
-		a1 = tei1->f1;
-		a2 = tei1->f2;
-		a3 = vertex_at_faces[a1][a2];
-		a4 = vertex_at_faces[a2][a1];
-
-		t2 = tei2->tet_index;
-		b1 = tei2->f1;
-		b2 = tei2->f2;
-		b3 = vertex_at_faces[b1][b2];
-		b4 = vertex_at_faces[b2][b1];
-
-		tet[t1]->joinTo( tei1->f1 , tet[t2], // 1st entry is the face of tet[t1]
-				NPerm(a1,b2,a2,b1,a3,b3,a4,b4) ); // being attached to tet[t2]
-
-		tet[t2]->joinTo( tei2->f2 , tet[t1],
-				NPerm(b1,a2,b2,a1,b3,a3,b4,a4) );
-
-		tei1 = tei1->next;
-		}
-	ei = ei->next;
-	}
- 
- for (i=0; i<cf->num_tet; i++)
-	triang->addTetrahedron(tet[i]);
- delete[] tet;
-
- return triang; 
 }
 
 } // End anonymous namespace
