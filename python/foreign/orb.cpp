@@ -26,13 +26,13 @@
 
 /* end stub */
 
-void addForeignDehydration();
-void addForeignOrb();
-void addForeignSnapPea();
+#include "foreign/orb.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addForeign() {
-    addForeignDehydration();
-    addForeignOrb();
-    addForeignSnapPea();
+using namespace boost::python;
+
+void addForeignOrb() {
+    def("readOrb", regina::readOrb, return_value_policy<manage_new_object>());
 }
 
