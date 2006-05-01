@@ -1075,6 +1075,17 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
             tTwist[e] ^= edgeState[tRep[e]].twistUp;
     }
 
+    /* This test seems to be hurting us more than it helps us (in terms
+     * of running time).  Commented out.
+    // Test for pairs of edges that together have too high a degree.
+    for (e = 0; e < 5; e++)
+        for (f = e + 1; f < 6; f++)
+            if (tRep[e] != tRep[f])
+                if (edgeState[tRep[e]].size + edgeState[tRep[f]].size >
+                        3 * getNumberOfTetrahedra() + 3)
+                    return ECLASS_HIGHDEG;
+    */
+
     // Test for cones on edges v1->w1->v2.
     for (w1 = 0; w1 < 4; w1++)
         for (v1 = 0; v1 < 3; v1++) {
