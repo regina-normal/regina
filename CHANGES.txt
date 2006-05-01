@@ -36,8 +36,8 @@ Version 4.3.1  [ 5 May, 2006 ]
             - Verifies that the first line of the file is "% Triangulation",
               instead of simply testing for the '%' and ignoring the rest.
     USER INTERFACE:
-        - Now displays face pairing graphs in the triangulation viewer,
-          with the help of Graphviz (see the Skeleton tab).  This required
+        - Now displays face pairing graphs in the triangulation viewer, using
+          Graphviz for the rendering (see the Skeleton tab).  This required
           splitting the main Skeleton tab into two smaller child tabs.
         - New configuration options for the Graphviz executable and the
           default Skeleton child tab.
