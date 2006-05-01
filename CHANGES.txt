@@ -13,7 +13,7 @@ Version 4.3.1  [ 5 May, 2006 ]
         Class NClosedPrimeMinSearcher:
             - Improved speed by adding additional face pairing graph
               tests; see math.GT/0604584 for details.
-            - Made very slight improvement in speed by testing for
+            - Made a very slight improvement in speed by testing for
               extremely high degree edges.
             - Fixed memory leak (the destructor was not deallocating some
               internal arrays).
@@ -31,20 +31,21 @@ Version 4.3.1  [ 5 May, 2006 ]
               with graph visualisation.
         Routine readOrb():
             - New routine for importing Orb / Casson triangulations;
-              thanks to Ryan Budney.
+              thanks to Ryan Budney for contributing this import filter.
         Routine readSnapPea():
             - Verifies that the first line of the file is "% Triangulation",
               instead of simply testing for the '%' and ignoring the rest.
     USER INTERFACE:
+        - Now displays face pairing graphs in the triangulation viewer,
+          with the help of Graphviz (see the Skeleton tab).  This required
+          splitting the main Skeleton tab into two smaller child tabs.
+        - New configuration options for the Graphviz executable and the
+          default Skeleton child tab.
         - No longer crashes when attempting to clone the root packet
           (it simply displays an error message instead).
-        - Now displays face pairing graphs (via the Skeleton tab in the
-          triangulation viewer), with the help of Graphviz.
         - Added a workaround for the icon problems that arise when using
-          GNU/Linux distributions with buggy icon themes
-        - Added 48x48 and 64x64 icons for Regina and its data files
-        - New configuration options for the Graphviz executable and the
-          default Skeleton child tab in the triangulation viewer.
+          GNU/Linux distributions with buggy icon themes.
+        - Added 48x48 and 64x64 icons for Regina and its data files.
     TEST SUITE:
         - New tests for recognising bad and otherwise interesting subgraphs
           within face pairing graphs.
