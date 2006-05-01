@@ -9,5 +9,6 @@
 KDE_OPTIONS=noautodist
 
 EXTRA_DIST = README.txt \
-  regina.pov reginasmall.pov reginatiny.pov reginawhite.pov
+  regina.pov reginasmall.pov reginatiny.pov reginawhite.pov \
+  orb.pov
 
