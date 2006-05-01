@@ -1,3 +1,10 @@
+regina-normal (4.3.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Now suggests graphviz, which is used for drawing face pairing graphs.
+
+ -- Ben Burton <bab@debian.org>  Fri,  5 May 2006 08:19:09 +1000
+
 regina-normal (4.3-1) unstable; urgency=low
 
   * New upstream release.
