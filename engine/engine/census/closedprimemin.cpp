@@ -49,8 +49,9 @@ const char NClosedPrimeMinSearcher::VLINK_NON_ORBL = 2;
 
 const char NClosedPrimeMinSearcher::ECLASS_TWISTED = 1;
 const char NClosedPrimeMinSearcher::ECLASS_LOWDEG = 2;
-const char NClosedPrimeMinSearcher::ECLASS_CONE = 4;
-const char NClosedPrimeMinSearcher::ECLASS_L31 = 8;
+const char NClosedPrimeMinSearcher::ECLASS_HIGHDEG = 4;
+const char NClosedPrimeMinSearcher::ECLASS_CONE = 8;
+const char NClosedPrimeMinSearcher::ECLASS_L31 = 16;
 
 const char NClosedPrimeMinSearcher::dataTag_ = 'c';
 
@@ -1032,6 +1033,8 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 edgeState[eRep].twistUp = hasTwist ^ parentTwists;
 
                 edgeState[fRep].size += edgeState[eRep].size;
+                if (edgeState[fRep].size > 3 * getNumberOfTetrahedra())
+                    retVal |= ECLASS_HIGHDEG;
 
                 edgeStateChanged[orderIdx] = eRep;
             } else {
@@ -1044,6 +1047,8 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 }
 
                 edgeState[eRep].size += edgeState[fRep].size;
+                if (edgeState[eRep].size > 3 * getNumberOfTetrahedra())
+                    retVal |= ECLASS_HIGHDEG;
 
                 edgeStateChanged[orderIdx] = fRep;
             }

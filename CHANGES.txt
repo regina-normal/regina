@@ -13,6 +13,8 @@ Version 4.3.1  [ 5 May, 2006 ]
         Class NClosedPrimeMinSearcher:
             - Improved speed by adding additional face pairing graph
               tests; see math.GT/0604584 for details.
+            - Made very slight improvement in speed by testing for
+              extremely high degree edges.
             - Fixed memory leak (the destructor was not deallocating some
               internal arrays).
             - Minor changes to the behaviour of mergeEdgeClasses()

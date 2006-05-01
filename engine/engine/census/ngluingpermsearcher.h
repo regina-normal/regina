@@ -578,6 +578,11 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  identified to form an internal edge of low degree
                  (degree 1 or 2 of any type, or degree 3 with three
                  distinct tetrahedra). */
+        static const char ECLASS_HIGHDEG;
+            /**< Signifies that a set of tetrahedron edges have been
+                 identified to form an edge of such a high degree that
+                 either a degree 1 or 2 edge must be formed elsewhere,
+                 or else the final number of edges must be too low. */
         static const char ECLASS_CONE;
             /**< Signifies that two edges of a face have been identified
                  to form a cone (with no constraints on any additional
