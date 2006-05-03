@@ -182,6 +182,7 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
          * Set up internal components.
          */
         QWidget* messageLayer(QLabel*& text, const char* icon);
+        void showInfo(const QString& msg);
         void showError(const QString& msg);
 
         /**

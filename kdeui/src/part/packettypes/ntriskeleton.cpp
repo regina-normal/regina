@@ -270,7 +270,7 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
     msgInfo->setText(i18n("<qt>Initialising...</qt>"));
 
     // Error layer.
-    layerError = messageLayer(msgError, "messagebox_critical");
+    layerError = messageLayer(msgError, "messagebox_warning");
     msgError->setText(i18n("<qt>Initialising...</qt>"));
 
     // Graph layer.
@@ -299,13 +299,12 @@ QWidget* NTriFaceGraphUI::getInterface() {
 
 void NTriFaceGraphUI::refresh() {
     if (tri->getNumberOfTetrahedra() == 0) {
-        msgInfo->setText(i18n("<qt>This triangulation is empty.</qt>"));
-        stack->raiseWidget(layerInfo);
+        showInfo(i18n("<qt>This triangulation is empty.</qt>"));
         return;
     }
 
     if (tri->getNumberOfTetrahedra() > 500) {
-        showError(i18n("<qt>This triangulation contains over 500 "
+        showInfo(i18n("<qt>This triangulation contains over 500 "
             "tetrahedra.<p>Regina does not display face pairing graphs "
             "for such large triangulations.</qt>"));
         return;
@@ -386,8 +385,7 @@ void NTriFaceGraphUI::refresh() {
 }
 
 void NTriFaceGraphUI::editingElsewhere() {
-    msgInfo->setText(i18n("<qt>Editing...</qt>"));
-    stack->raiseWidget(layerInfo);
+    showInfo(i18n("<qt>Editing...</qt>"));
 }
 
 QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
@@ -418,6 +416,11 @@ QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
     layout->addStretch(1);
 
     return layer;
+}
+
+void NTriFaceGraphUI::showInfo(const QString& msg) {
+    msgInfo->setText(msg);
+    stack->raiseWidget(layerInfo);
 }
 
 void NTriFaceGraphUI::showError(const QString& msg) {
