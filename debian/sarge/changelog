@@ -1,7 +1,11 @@
 regina-normal (4.3.1-0.sarge.1) unstable; urgency=low
 
   * New upstream release.
+  * Moved khelpcenter from suggests to recommends, since it's really not
+    good if the help menu isn't working.
   * Now suggests graphviz, which is used for drawing face pairing graphs.
+  * Added a regina.xpm icon in /usr/share/pixmaps for GNOME users who can't
+    see the KDE icons.
 
  -- Ben Burton <bab@debian.org>  Fri,  5 May 2006 08:19:09 +1000
 
