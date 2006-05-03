@@ -435,11 +435,11 @@ QString NTriFaceGraphUI::verifyGraphvizExec() {
         // Hunt on the search path.
         useExec = KStandardDirs::findExe(useExec);
         if (useExec.isNull()) {
-            showError(i18n("<qt>The Graphviz executable \"%1\" could "
-                "not be found on the default search path.<p>"
-                "If you have Graphviz installed on your system, please go "
-                "into the Regina configuration (Triangulation section) and "
-                "tell Regina where it can find the Graphviz executable.</qt>").
+            showError(i18n("<qt>Regina uses <i>Graphviz</i> for displaying "
+                "face pairing graphs.  However, the Graphviz executable "
+                "\"%1\" could not be found on the default search path.<p>"
+                "If you have Graphviz installed, please update the relevant "
+                "setting in Regina's triangulation options.</qt>").
                 arg(graphvizExec));
             return QString::null;
         }
@@ -448,19 +448,19 @@ QString NTriFaceGraphUI::verifyGraphvizExec() {
     // We have a full path to the Graphviz executable.
     QFileInfo info(useExec);
     if (! info.exists()) {
-        showError(i18n("<qt>The Graphviz executable \"%1\" does "
-            "not exist.<p>"
-            "If you have Graphviz installed on your system, please go "
-            "into the Regina configuration (Triangulation section) and "
-            "tell Regina where it can find the Graphviz executable.</qt>").
+        showError(i18n("<qt>Regina uses <i>Graphviz</i> for displaying "
+            "face pairing graphs.  However, the Graphviz executable "
+            "\"%1\" does not exist.<p>"
+            "If you have Graphviz installed, please update the relevant "
+            "setting in Regina's triangulation options.</qt>").
             arg(useExec));
         return QString::null;
     } else if (! (info.isFile() && info.isExecutable())) {
-        showError(i18n("The Graphviz executable \"%1\" does "
-            "not actually appear to be an executable file.<p>"
-            "If you have Graphviz installed on your system, please go "
-            "into the Regina configuration (Triangulation section) and "
-            "tell Regina where it can find the Graphviz executable.</qt>").
+        showError(i18n("<qt>Regina uses <i>Graphviz</i> for displaying "
+            "face pairing graphs.  However, the Graphviz executable "
+            "\"%1\" does not appear to be an executable file.<p>"
+            "If you have Graphviz installed, please update the relevant "
+            "setting in Regina's triangulation options.</qt>").
             arg(useExec));
         return QString::null;
     }
