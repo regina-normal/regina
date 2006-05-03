@@ -289,7 +289,7 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
     baseLayout->addWidget(stack);
 }
 
-inline void NTriFaceGraphUI::setGraphvizExec(const QString& newGraphvizExec) {
+void NTriFaceGraphUI::setGraphvizExec(const QString& newGraphvizExec) {
     graphvizExec = newGraphvizExec;
 
     // If we're currently showing an error, see if the update helps matters.
