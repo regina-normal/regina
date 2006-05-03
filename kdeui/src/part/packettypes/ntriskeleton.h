@@ -196,8 +196,4 @@ inline void NTriSkeletonUI::updatePreferences(const ReginaPrefSet& newPrefs) {
     faceGraph->setGraphvizExec(newPrefs.triGraphvizExec);
 }
 
-inline void NTriFaceGraphUI::setGraphvizExec(const QString& newGraphvizExec) {
-    graphvizExec = newGraphvizExec;
-}
-
 #endif
