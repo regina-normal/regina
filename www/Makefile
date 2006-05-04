@@ -13,6 +13,7 @@ www:
 	cp -pr ../kdeui/doc/en staging/docs
 	cp -pr /usr/share/doc/kde/HTML/en/common staging/common
 	rm -rf `find staging -type d -name CVS`
+	rm -rf `find staging -type d -name .svn`
 	rm -f `find staging -type f -name .cvsignore`
 	rm -f `find staging -type f -name Makefile`
 	rm -f `find staging -type f -name Makefile.in`
