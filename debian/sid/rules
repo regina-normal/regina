@@ -8,10 +8,6 @@ export DH_COMPAT=4
 
 tmp = debian/tmp
 
-python_script = /usr/bin/regina-python
-python_script_src = python/regina-python
-python_lib = /usr/lib/regina-normal/python/regina.so
-
 INSTALL_DIR = install -p -d -o root -g root -m 755
 INSTALL_FILE = install -p -o root -g root -m 644
 
@@ -82,27 +78,7 @@ install: build
 
 	# Make sure python versions are consistent between the binaries and
 	# the startup script.
-	pyver_script=`grep 'python[0-9]\.[0-9]' $(tmp)$(python_script) | sed -e 's/^.*python\([0-9]\.[0-9]\).*$/\1/'`
-	pyver_lib=`ldd $(tmp)$(python_lib) | grep 'libpython[0-9]\.[0-9]\.so' | sed -e 's/^.*libpython\([0-9]\.[0-9]\).so.*$/\1/'`
-	if ! test -n "$$pyver_script"; then \
-	  echo "ERROR: Could not determine python version used in $(python_script)."; \
-	  /bin/false; \
-	fi
-	if ! test -n "$$pyver_lib"; then \
-	  echo "ERROR: Could not determine python version used in $(python_lib)."; \
-	  /bin/false; \
-	fi
-	if ! test "$$pyver_script" = "$$pyver_lib"; then \
-	  echo "ERROR: Mismatched python versions between binaries and startup script."; \
-	  echo \
-	  echo "       $(python_script) uses python$$pyver_script." \
-	  echo "       $(python_lib) uses python$$pyver_lib." \
-	  echo \
-	  echo "       This should be fixed by changing the python version " \
-	  echo "           number in $(python_script_src) and $(python_script_src).in" \
-	  echo "           (see the section where \$$which_python is initialised)." \
-	  /bin/false; \
-	fi
+	sh debian/pycheck
 
 ifneq ($(NO_MPI),1)
 	# Make sure MPI support was enabled.
