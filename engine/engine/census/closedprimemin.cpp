@@ -976,7 +976,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
     NPerm p = gluingPerm(face);
     int v1, w1, v2, w2;
     int e, f;
-    int eIdx, fIdx, orderIdx;
+    int orderIdx;
     int eRep, fRep;
     int middleTet;
 
@@ -994,8 +994,6 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
         e = 5 - edgeNumber[v1][v2];
         f = 5 - edgeNumber[w1][w2];
 
-        eIdx = e + 6 * face.tet;
-        fIdx = f + 6 * adj.tet;
         orderIdx = v2 + 4 * orderElt;
 
         // We declare the natural orientation of an edge to be smaller
@@ -1003,12 +1001,8 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
         hasTwist = (p[edgeStart[e]] > p[edgeEnd[e]] ? 1 : 0);
 
         parentTwists = 0;
-        for (eRep = eIdx; edgeState[eRep].parent >= 0;
-                eRep = edgeState[eRep].parent)
-            parentTwists ^= edgeState[eRep].twistUp;
-        for (fRep = fIdx; edgeState[fRep].parent >= 0;
-                fRep = edgeState[fRep].parent)
-            parentTwists ^= edgeState[fRep].twistUp;
+        eRep = findEdgeClass(e + 6 * face.tet, parentTwists);
+        fRep = findEdgeClass(f + 6 * adj.tet, parentTwists);
 
         if (eRep == fRep) {
             edgeState[eRep].bounded = false;
@@ -1068,12 +1062,8 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
     // we want them).
     int tRep[6];
     char tTwist[6];
-    for (e = 0; e < 6; e++) {
-        tTwist[e] = 0;
-        for (tRep[e] = e + 6 * face.tet; edgeState[tRep[e]].parent >= 0;
-                tRep[e] = edgeState[tRep[e]].parent)
-            tTwist[e] ^= edgeState[tRep[e]].twistUp;
-    }
+    for (e = 0; e < 6; e++)
+        tRep[e] = findEdgeClass(e + 6 * face.tet, tTwist[e] = 0);
 
     /* This test seems to be hurting us more than it helps us (in terms
      * of running time).  Commented out.
@@ -1148,12 +1138,9 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
         eIdx = e + 6 * face.tet;
         orderIdx = v2 + 4 * orderElt;
 
-        if (edgeStateChanged[orderIdx] < 0) {
-            for (rep = eIdx; edgeState[rep].parent >= 0;
-                    rep = edgeState[rep].parent)
-                ;
-            edgeState[rep].bounded = true;
-        } else {
+        if (edgeStateChanged[orderIdx] < 0)
+            edgeState[findEdgeClass(eIdx)].bounded = true;
+        else {
             subRep = edgeStateChanged[orderIdx];
             rep = edgeState[subRep].parent;
 

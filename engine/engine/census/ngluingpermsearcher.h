@@ -603,7 +603,8 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * tetrahedron t (0..nTets-1) has index 4t+v.
          *
          * Each equivalence class of vertices corresponds to a tree of
-         * TetVertexState objects.
+         * TetVertexState objects, arranged to form a modified union-find
+         * structure.
          */
         struct TetVertexState {
             int parent;
@@ -698,7 +699,8 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * tetrahedron t (0..nTets-1) has index 6t+e.
          *
          * Each equivalence class of edges corresponds to a tree of
-         * TetEdgeState objects.
+         * TetEdgeState objects, arranged to form a modified union-find
+         * structure.
          */
         struct TetEdgeState {
             int parent;
@@ -960,6 +962,56 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         void initOrder();
 
         /**
+         * Returns the representative of the equivalence class containing
+         * the given tetrahedron edge.  The class representative is
+         * defined to be the root of the corresponding union-find tree.
+         *
+         * See the TetEdgeState class for further details.  See also the
+         * other variant of findEdgeClass(), which is slightly slower
+         * but which also tracks edge orientation.
+         *
+         * @param edgeID the index of a single tetrahedron edge; this
+         * must be between 0 and 6t-1 inclusive, where \a t is the
+         * number of tetrahedra.  See the TetEdgeState class notes for
+         * details on edge indexing.
+         * @return the index of the tetrahedron edge at the root of the
+         * union-find tree, i.e., the representative of the equivalence
+         * class.
+         */
+        int findEdgeClass(int edgeID);
+
+        /**
+         * Returns the representative of the equivalence class containing
+         * the given tetrahedron edge.  The class representative is
+         * defined to be the root of the corresponding union-find tree.
+         *
+         * The argument \a twisted is also modified to indicate whether
+         * or not the identification of the given edge with the class
+         * representative preserves orientation.  Note that this arugment
+         * is \e not initialised.  Instead, if the identification
+         * is orientation-preserving then \a twisted will be left
+         * unmodified, and if it is orientation-reversing then \a twisted
+         * will be changed from 0 to 1 or vice-versa.
+         *
+         * See the TetEdgeState class for further details.  See also the
+         * other variant of findEdgeClass(), which is slightly faster
+         * but which does not track edge orientation.
+         *
+         * @param edgeID the index of a single tetrahedron edge; this
+         * must be between 0 and 6t-1 inclusive, where \a t is the
+         * number of tetrahedra.  See the TetEdgeState class notes for
+         * details on edge indexing.
+         * @param twisted used to track edge orientation, as described
+         * above.  This must be either 0 or 1 as it is passed into the
+         * function, and it will also be either 0 or 1 upon returning
+         * from the function.
+         * @return the index of the tetrahedron edge at the root of the
+         * union-find tree, i.e., the representative of the equivalence
+         * class.
+         */
+        int findEdgeClass(int edgeID, char& twisted);
+
+        /**
          * Merge the classes of tetrahedron vertices as required by the
          * new gluing made at stage \a orderElt of the search.
          *
@@ -1061,6 +1113,20 @@ inline bool NClosedPrimeMinSearcher::completePermSet() const {
 
 inline char NClosedPrimeMinSearcher::dataTag() const {
     return NClosedPrimeMinSearcher::dataTag_;
+}
+
+inline int NClosedPrimeMinSearcher::findEdgeClass(int edgeID) {
+    while (edgeState[edgeID].parent >= 0)
+        edgeID = edgeState[edgeID].parent;
+
+    return edgeID;
+}
+
+inline int NClosedPrimeMinSearcher::findEdgeClass(int edgeID, char& twisted) {
+    for ( ; edgeState[edgeID].parent >= 0; edgeID = edgeState[edgeID].parent)
+        twisted ^= edgeState[edgeID].twistUp;
+
+    return edgeID;
 }
 
 } // namespace regina
