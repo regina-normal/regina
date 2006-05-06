@@ -566,9 +566,9 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         static const char VLINK_CLOSED;
             /**< Signifies that a vertex link has been closed off (i.e.,
                  the link has no remaining boundary edges). */
-        static const char VLINK_NON_ORBL;
-            /**< Signifies that a vertex link has been made
-                 non-orientable. */
+        static const char VLINK_NON_SPHERE;
+            /**< Signifies that a vertex link has been made into something
+                 other than a 2-sphere with zero or more punctures. */
 
         static const char ECLASS_TWISTED;
             /**< Signifies that an edge has been identified with itself

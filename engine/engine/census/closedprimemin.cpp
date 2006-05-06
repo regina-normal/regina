@@ -45,7 +45,7 @@ const unsigned NClosedPrimeMinSearcher::EDGE_DOUBLE_SECOND = 5;
 const unsigned NClosedPrimeMinSearcher::EDGE_MISC = 6;
 
 const char NClosedPrimeMinSearcher::VLINK_CLOSED = 1;
-const char NClosedPrimeMinSearcher::VLINK_NON_ORBL = 2;
+const char NClosedPrimeMinSearcher::VLINK_NON_SPHERE = 2;
 
 const char NClosedPrimeMinSearcher::ECLASS_TWISTED = 1;
 const char NClosedPrimeMinSearcher::ECLASS_LOWDEG = 2;
@@ -565,8 +565,8 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 continue;
             }
         }
-        if (mergeResult & VLINK_NON_ORBL) {
-            // We made the vertex link non-orientable.  Stop now.
+        if (mergeResult & VLINK_NON_SPHERE) {
+            // Our vertex link will never be a 2-sphere.  Stop now.
             splitVertexClasses();
             splitEdgeClasses();
             continue;
@@ -888,8 +888,10 @@ int NClosedPrimeMinSearcher::mergeVertexClasses() {
             vertexState[vRep].bdry -= 2;
             if (vertexState[vRep].bdry == 0)
                 retVal |= VLINK_CLOSED;
+
+            // Have we made the vertex link non-orientable?
             if (hasTwist ^ parentTwists)
-                retVal |= VLINK_NON_ORBL;
+                retVal |= VLINK_NON_SPHERE;
 
             vertexStateChanged[orderIdx] = -1;
         } else {
