@@ -617,6 +617,11 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * Each equivalence class of vertices corresponds to a tree of
          * TetVertexState objects, arranged to form a modified union-find
          * structure.
+         *
+         * Note that a single tetrahedron vertex (as described by this
+         * structure) provides a single triangular piece of the overall
+         * vertex link.  This triangle piece is referred to in several
+         * of the data members below.
          */
         struct TetVertexState {
             int parent;
@@ -655,10 +660,74 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
             unsigned char bdryEdges;
+                /**< The number of edges of the triangular piece of vertex
+                     link that are in fact boundary edges of the vertex link.
+                     Equivalently, this measures the number of faces of this
+                     tetrahedron meeting this vertex that are not yet joined
+                     to their partner faces.  This always takes the value
+                     0, 1, 2 or 3. */
             int bdryNext[2];
+                /**< If the corresponding triangular piece of vertex link has
+                     any boundary edges, \a bdryNext stores the indices of the
+                     tetrahedron vertices that provide the boundary edges
+                     following on from either end of this boundary segment.
+
+                     Note that in most cases (see below) this is not the
+                     present vertex.  For instance, if this vertex provides two
+                     boundary edges, then this array describes the boundary
+                     before the first edge and after the second.
+
+                     The boundary segment described by \a bdryNext[1] follows
+                     on from this segment in the direction described by the
+                     \a vertexLinkNextFace array.  The boundary segment in
+                     the other direction is described by \a bdryNext[0].
+
+                     If the vertex link is just this one triangle (i.e.,
+                     all three faces of this tetrahedron surrounding this
+                     vertex are boundary faces), then both elements of
+                     \a bdryNext refer to this vertex itself.  This is the
+                     only situation in which \a bdryNext refers back to this
+                     vertex.
+
+                     If the triangle is internal to the vertex link
+                     (i.e., \a bdryEdges is zero), then this array
+                     maintains the last values it had when there was at
+                     least one boundary edge earlier in the search.
+
+                     Each element of this array lies between 0 and
+                     4t-1 inclusive, where \a t is the total number of
+                     tetrahedra. */
             char bdryTwist[2];
-            int bdryNextOld[2]; // From bdryEdges == 2.
-            char bdryTwistOld[2]; // From bdryEdges == 2.
+                /**< Describes whether the orientation of this boundary
+                     segment of the vertex link is consistent with the
+                     orientation of the adjacent segments on either side.
+
+                     See \a bdryNext for further discussion of boundary
+                     segments.  The \a bdryNext array defines an orientation
+                     for this section of vertex link, pointing from the end
+                     described by \a bdryNext[0] to the end described by
+                     \a bdryNext[1].
+
+                     For each \a i, the value \a bdryTwist[i] is 0 if the
+                     orientation of the adjacent segment described by
+                     \a bdryNext[i] is the same as this segment (as defined
+                     by the \a bdryNext values stored with the adjacent
+                     vertex), or 1 if the orientations differ.
+
+                     If the triangle supplied by this vertex is internal to
+                     the vertex link, this array maintains the last values
+                     it had when there was at least one boundary edge earlier
+                     in the search (just like the \a bdryNext array). */
+            int bdryNextOld[2];
+                /**< Stores a snapshot of the values in the \a bdryNext
+                     array from the last point in the search when
+                     \a bdryEdges was precisely two.  If \a bdryEdges is
+                     still two or three, then this array is undefined. */
+            char bdryTwistOld[2];
+                /**< Stores a snapshot of the values in the \a bdryTwist
+                     array from the last point in the search when
+                     \a bdryEdges was precisely two.  If \a bdryEdges is
+                     still two or three, then this array is undefined. */
 
             /**
              * Constructor for a standalone tetrahedron vertex in an
