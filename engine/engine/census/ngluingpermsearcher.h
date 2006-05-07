@@ -1164,9 +1164,65 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         void vtxBdryRestore(int vertexID);
         void vtxBdryNext(int vertexID, int tet, int vertex, int bdryFace,
             int next[2], char twist[2]);
+
+        /**
+         * Determines whether one of the edges of the vertex linking
+         * triangle for the given tetrahedron vertex in fact forms an
+         * entire one-edge boundary component of the overall vertex link.
+         *
+         * See the TetVertexState class for further information.
+         *
+         * @param vertexID the tetrahedron vertex to examine; this must
+         * be between 0 and 4n-1 inclusive, where \a n is the number of
+         * tetrahedra.
+         * @return \c true if a one-edge boundary component is formed as
+         * described above, or \c false otherwise.
+         */
         bool vtxBdryLength1(int vertexID);
+
+        /**
+         * Determines whether edges of the vertex linking triangles for each
+         * of the given tetrahedron vertices combine to form an entire
+         * two-edge boundary component of the overall vertex link, with one
+         * edge from each triangle.
+         *
+         * See the TetVertexState class for further information.
+         *
+         * @param vertexID1 the first tetrahedron vertex to examine; this
+         * must be between 0 and 4n-1 inclusive, where \a n is the number of
+         * tetrahedra.
+         * @param vertexID2 the second tetrahedron vertex to examine; this
+         * must be between 0 and 4n-1 inclusive, where \a n is the number of
+         * tetrahedra.
+         * @return \c true if a one-edge boundary component is formed as
+         * described above, or \c false otherwise.
+         */
         bool vtxBdryLength2(int vertexID1, int vertexID2);
+
+        /**
+         * Runs a number of tests on all tetrahedron vertices to locate
+         * consistency errors in the \a bdryEdges, \a bdryNext and
+         * \a bdryTwist members of the TetVertexState class.
+         *
+         * Any errors that are identified will be written to standard error.
+         * Note that some errors might be harmless (for instance, when
+         * a call to mergeVertexClasses() leaves processing incomplete
+         * because it has located a bad vertex link and expects the
+         * merge to be immediately undone).
+         */
         void vtxBdryConsistencyCheck();
+
+        /**
+         * Dumps a summary of the contents of the \a bdryNext and
+         * \a bdryTwist arrays for every vertex of every tetrahedron to
+         * the given output stream.  The output format is relatively
+         * compact, and is subject to change in future versions of Regina.
+         * The output uses one line only, and a final newline is written.
+         *
+         * See the TetVertexState class for further information.
+         *
+         * @param out the output stream to which to write.
+         */
         void vtxBdryDump(std::ostream& out);
 };
 
