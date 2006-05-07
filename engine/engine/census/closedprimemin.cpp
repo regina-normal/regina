@@ -35,16 +35,6 @@
 #include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 
-#ifdef VERTEX_BDRY_COMPRESS
-#else
-    #define vNextVertex vertexState[vIdx].bdryNextVertex[face.face]
-    #define wNextVertex vertexState[wIdx].bdryNextVertex[adj.face]
-    #define vNextFace vertexState[vIdx].bdryNextFace[face.face]
-    #define wNextFace vertexState[wIdx].bdryNextFace[adj.face]
-    #define vTwist vertexState[vIdx].bdryTwist[face.face]
-    #define wTwist vertexState[wIdx].bdryTwist[adj.face]
-#endif
-
 namespace regina {
 
 const unsigned NClosedPrimeMinSearcher::EDGE_CHAIN_END = 1;
@@ -396,31 +386,11 @@ void NClosedPrimeMinSearcher::initOrder() {
     vertexState = new TetVertexState[nTets * 4];
     vertexStateChanged = new int[nTets * 8];
     std::fill(vertexStateChanged, vertexStateChanged + nTets * 8, -1);
-#ifdef VERTEX_BDRY_COMPRESS
     for (i = 0; i < nTets * 4; i++) {
         vertexState[i].bdryEdges = 3;
         vertexState[i].bdryNext[0] = vertexState[i].bdryNext[1] = i;
         vertexState[i].bdryTwist[0] = vertexState[i].bdryTwist[1] = 0;
     }
-#else
-    int j, k;
-    for (i = 0; i < nTets; i++)
-        for (j = 0; j < 4; j++)
-            for (k = 0; k < 4; k++) {
-                if (k == j)
-                    continue;
-                vertexState[i * 4 + j].bdryNextVertex[k][0] = i * 4 + j;
-                vertexState[i * 4 + j].bdryNextVertex[k][1] = i * 4 + j;
-
-                vertexState[i * 4 + j].bdryNextFace[
-                    vertexLinkNextFace[j][k]][0] = k;
-                vertexState[i * 4 + j].bdryNextFace[k][1] =
-                    vertexLinkNextFace[j][k];
-
-                vertexState[i * 4 + j].bdryTwist[k][0] = 0;
-                vertexState[i * 4 + j].bdryTwist[k][1] = 0;
-            }
-#endif
 
     nEdgeClasses = nTets * 6;
     edgeState = new TetEdgeState[nTets * 6];
@@ -717,7 +687,6 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             if (vertexState[i].hadEqualRank)
                 std::cerr << "ERROR: vertexState[" << i << "].hadEqualRank == "
                     "true at end of search!" << std::endl;
-#ifdef VERTEX_BDRY_COMPRESS
             if (vertexState[i].bdryEdges != 3)
                 std::cerr << "ERROR: vertexState[" << i << "].bdryEdges == "
                     << static_cast<int>(vertexState[i].bdryEdges)
@@ -738,47 +707,6 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 std::cerr << "ERROR: vertexState[" << i << "].bdryTwist == "
                     << static_cast<int>(vertexState[i].bdryTwist[1])
                     << " at end of search!" << std::endl;
-#else
-            for (int k = 0; k < 4; k++) {
-                if (k == i % 4)
-                    continue;
-                if (vertexState[i].bdryNextVertex[k][0] != i)
-                    std::cerr << "ERROR: vertexState[" << i
-                        << "].bdryNextVertex[" << k << "][0] == "
-                        << vertexState[i].bdryNextVertex[k][0]
-                        << " at end of search!" << std::endl;
-                if (vertexState[i].bdryNextVertex[k][1] != i)
-                    std::cerr << "ERROR: vertexState[" << i
-                        << "].bdryNextVertex[" << k << "][1] == "
-                        << vertexState[i].bdryNextVertex[k][1]
-                        << " at end of search!" << std::endl;
-
-                if (vertexState[i].bdryNextFace[
-                        vertexLinkNextFace[i % 4][k]][0] != k)
-                    std::cerr << "ERROR: vertexState[" << i
-                        << "].bdryNextFace[" << vertexLinkNextFace[i % 4][k]
-                        << "][0] == " << vertexState[i].bdryNextVertex[
-                            vertexLinkNextFace[i % 4][k]][0]
-                        << " at end of search!" << std::endl;
-                if (vertexState[i].bdryNextFace[k][1] !=
-                        vertexLinkNextFace[i % 4][k])
-                    std::cerr << "ERROR: vertexState[" << i
-                        << "].bdryNextFace[" << k << "][1] == "
-                        << vertexState[i].bdryNextVertex[k][1]
-                        << " at end of search!" << std::endl;
-
-                if (vertexState[i].bdryTwist[k][0])
-                    std::cerr << "ERROR: vertexState[" << i
-                        << "].bdryTwist[" << k << "][0] == "
-                        << static_cast<int>(vertexState[i].bdryTwist[k][0])
-                        << " at end of search!" << std::endl;
-                if (vertexState[i].bdryTwist[k][1])
-                    std::cerr << "ERROR: vertexState[" << i
-                        << "].bdryTwist[" << k << "][1] == "
-                        << static_cast<int>(vertexState[i].bdryTwist[k][1])
-                        << " at end of search!" << std::endl;
-            }
-#endif
         }
         for (unsigned i = 0; i < nTets * 8; i++)
             if (vertexStateChanged[i] != -1)
@@ -965,12 +893,8 @@ int NClosedPrimeMinSearcher::mergeVertexClasses() {
     int vIdx, wIdx, tmpIdx, nextIdx;
     unsigned orderIdx;
     int vRep, wRep;
-#ifdef VERTEX_BDRY_COMPRESS
     int vNext[2], wNext[2];
     char vTwist[2], wTwist[2];
-#else
-    int tmpFace, nextFace;
-#endif
     NPerm p = gluingPerm(face);
     char parentTwists, hasTwist, tmpTwist;
     for (v = 0; v < 4; v++) {
@@ -1019,7 +943,6 @@ int NClosedPrimeMinSearcher::mergeVertexClasses() {
             } else {
                 // We are joining two distinct tetrahedron vertices that
                 // already contribute to the same vertex link.
-#ifdef VERTEX_BDRY_COMPRESS
                 if (vertexState[vIdx].bdryEdges == 2)
                     vtxBdryBackup(vIdx);
                 if (vertexState[wIdx].bdryEdges == 2)
@@ -1083,75 +1006,6 @@ int NClosedPrimeMinSearcher::mergeVertexClasses() {
 
                 vertexState[vIdx].bdryEdges--;
                 vertexState[wIdx].bdryEdges--;
-#else
-                if (vtxBdryLength1(vIdx, face.face) &&
-                        vtxBdryLength1(wIdx, adj.face)) {
-                    // We are joining together two boundaries of length one.
-                    // Do nothing and mark the non-trivial genus.
-                    // std::cerr << "NON-SPHERE: 1 >-< 1" << std::endl;
-                    retVal |= VLINK_NON_SPHERE;
-                } else if (vtxBdryLength2(vIdx, face.face, wIdx, adj.face)) {
-                    // We are closing off a single boundary of length two.
-                    // All good.
-                } else {
-                    if (vNextVertex[0] == wIdx &&
-                            vNextFace[0] == adj.face &&
-                            wNextVertex[1 ^ vTwist[0]] == vIdx &&
-                            wNextFace[1 ^ vTwist[0]] == face.face) {
-                        // We are joining two adjacent edges of the vertex link.
-                        // Simply eliminate them.
-                        vtxBdryJoin(vNextVertex[1], vNextFace[1], 0 ^ vTwist[1],
-                            wNextVertex[0 ^ vTwist[0]],
-                            wNextFace[0 ^ vTwist[0]],
-                            (vTwist[0] ^ wTwist[0 ^ vTwist[0]]) ^ vTwist[1]);
-                    } else if (vNextVertex[1] == wIdx &&
-                            vNextFace[1] == adj.face &&
-                            wNextVertex[0 ^ vTwist[1]] == vIdx &&
-                            wNextFace[0 ^ vTwist[1]] == face.face) {
-                        // Again, joining two adjacent edges of the vertex link.
-                        vtxBdryJoin(vNextVertex[0], vNextFace[0], 1 ^ vTwist[0],
-                            wNextVertex[1 ^ vTwist[1]],
-                            wNextFace[1 ^ vTwist[1]],
-                            (vTwist[1] ^ wTwist[1 ^ vTwist[1]]) ^ vTwist[0]);
-                    } else {
-                        // See if we are joining two different boundary cycles
-                        // together; if so, we have created non-trivial genus in
-                        // the vertex link.
-                        tmpIdx = vNextVertex[0];
-                        tmpFace = vNextFace[0];
-                        tmpTwist = vTwist[0];
-                        while (! ((tmpIdx == vIdx && tmpFace == face.face) ||
-                                (tmpIdx == wIdx && tmpFace == adj.face))) {
-                            nextIdx = vertexState[tmpIdx].
-                                bdryNextVertex[tmpFace][0 ^ tmpTwist];
-                            nextFace = vertexState[tmpIdx].
-                                bdryNextFace[tmpFace][0 ^ tmpTwist];
-                            tmpTwist ^= vertexState[tmpIdx].
-                                bdryTwist[tmpFace][0 ^ tmpTwist];
-                            tmpIdx = nextIdx;
-                            tmpFace = nextFace;
-                        }
-
-                        if (tmpIdx == vIdx && tmpFace == face.face) {
-                            // Different boundary cycles.
-                            // Don't touch anything; just flag a
-                            // high genus error.
-                            // std::cerr << "NON-SPHERE: (X)" << std::endl;
-                            retVal |= VLINK_NON_SPHERE;
-                        } else {
-                            // Same boundary cycle.
-                            vtxBdryJoin(vNextVertex[0], vNextFace[0],
-                                1 ^ vTwist[0], wNextVertex[1 ^ hasTwist],
-                                wNextFace[1 ^ hasTwist],
-                                vTwist[0] ^ (hasTwist ^ wTwist[1 ^ hasTwist]));
-                            vtxBdryJoin(vNextVertex[1], vNextFace[1],
-                                0 ^ vTwist[1], wNextVertex[0 ^ hasTwist],
-                                wNextFace[0 ^ hasTwist],
-                                vTwist[1] ^ (hasTwist ^ wTwist[0 ^ hasTwist]));
-                        }
-                    }
-                }
-#endif
             }
         } else {
             // We are joining two distinct vertices together and merging
@@ -1187,7 +1041,6 @@ int NClosedPrimeMinSearcher::mergeVertexClasses() {
             nVertexClasses--;
 
             // Adjust the cycles of boundary components.
-#ifdef VERTEX_BDRY_COMPRESS
             if (vertexState[vIdx].bdryEdges == 2)
                 vtxBdryBackup(vIdx);
             if (vertexState[wIdx].bdryEdges == 2)
@@ -1241,35 +1094,6 @@ int NClosedPrimeMinSearcher::mergeVertexClasses() {
 
             vertexState[vIdx].bdryEdges--;
             vertexState[wIdx].bdryEdges--;
-#else
-            if (vtxBdryLength1(vIdx, face.face)) {
-                if (vtxBdryLength1(wIdx, adj.face)) {
-                    // Both vIdx and wIdx form entire boundary components of
-                    // length one; these are joined together and the vertex
-                    // link is closed off.
-                    // No changes to make for the boundary cycles.
-                } else {
-                    // Here vIdx forms a boundary component of length one,
-                    // and wIdx does not.  Ignore vIdx, and simply excise the
-                    // relevant edge from wIdx.
-                    vtxBdryJoin(wNextVertex[0], wNextFace[0], 1 ^ wTwist[0],
-                        wNextVertex[1], wNextFace[1], wTwist[0] ^ wTwist[1]);
-                }
-            } else if (vtxBdryLength1(wIdx, adj.face)) {
-                // As above, but with the two vertices the other way around.
-                vtxBdryJoin(vNextVertex[0], vNextFace[0], 1 ^ vTwist[0],
-                    vNextVertex[1], vNextFace[1], vTwist[0] ^ vTwist[1]);
-            } else {
-                // Each vertex belongs to a boundary component of length
-                // at least two.  Merge the components together.
-                vtxBdryJoin(vNextVertex[0], vNextFace[0], 1 ^ vTwist[0],
-                    wNextVertex[1 ^ hasTwist], wNextFace[1 ^ hasTwist],
-                    vTwist[0] ^ (hasTwist ^ wTwist[1 ^ hasTwist]));
-                vtxBdryJoin(vNextVertex[1], vNextFace[1], 0 ^ vTwist[1],
-                    wNextVertex[0 ^ hasTwist], wNextFace[0 ^ hasTwist],
-                    vTwist[1] ^ (hasTwist ^ wTwist[0 ^ hasTwist]));
-            }
-#endif
         }
     }
 
@@ -1322,7 +1146,6 @@ void NClosedPrimeMinSearcher::splitVertexClasses() {
         if (vIdx == wIdx) {
             // We did nothing during the merge; do nothing during the split.
         } else {
-#ifdef VERTEX_BDRY_COMPRESS
             vertexState[wIdx].bdryEdges++;
             vertexState[vIdx].bdryEdges++;
 
@@ -1361,10 +1184,6 @@ void NClosedPrimeMinSearcher::splitVertexClasses() {
                         // Adjust neighbours to point back to vIdx.
                         vtxBdryFixAdj(vIdx);
             }
-#else
-            vtxBdryFixAdj(wIdx, adj.face);
-            vtxBdryFixAdj(vIdx, face.face);
-#endif
         }
     }
 }
@@ -1560,7 +1379,6 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
     }
 }
 
-#ifdef VERTEX_BDRY_COMPRESS
 void NClosedPrimeMinSearcher::vtxBdryConsistencyCheck() {
     int adj, id, end;
     for (id = 0; id < static_cast<int>(getNumberOfTetrahedra()) * 4; id++)
@@ -1597,7 +1415,6 @@ void NClosedPrimeMinSearcher::vtxBdryDump(std::ostream& out) {
     }
     out << std::endl;
 }
-#endif
 
 } // namespace regina
 

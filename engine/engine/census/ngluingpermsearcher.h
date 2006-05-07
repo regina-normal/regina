@@ -38,8 +38,6 @@
 
 #include "census/ngluingperms.h"
 
-#define VERTEX_BDRY_COMPRESS
-
 namespace regina {
 
 /**
@@ -656,17 +654,11 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                      This information is used to maintain the ranks correctly
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
-#ifdef VERTEX_BDRY_COMPRESS
             unsigned char bdryEdges;
             int bdryNext[2];
             char bdryTwist[2];
             int bdryNextOld[2]; // From bdryEdges == 2.
             char bdryTwistOld[2]; // From bdryEdges == 2.
-#else
-            int bdryNextVertex[4][2];
-            int bdryNextFace[4][2];
-            char bdryTwist[4][2];
-#endif
 
             /**
              * Constructor for a standalone tetrahedron vertex in an
@@ -1097,7 +1089,6 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          */
         void splitEdgeClasses();
 
-#ifdef VERTEX_BDRY_COMPRESS
         void vtxBdryJoin(int vertexID, char end, int adjVertexID, char twist);
         void vtxBdryFixAdj(int vertexID); // PRE: This vtx correct.
         void vtxBdryBackup(int vertexID);
@@ -1108,13 +1099,6 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         bool vtxBdryLength2(int vertexID1, int vertexID2);
         void vtxBdryConsistencyCheck();
         void vtxBdryDump(std::ostream& out);
-#else
-        void vtxBdryJoin(int vertexID, int face, char end,
-            int adjVertexID, int adjFace, char twist);
-        void vtxBdryFixAdj(int vertexID, int face); // PRE: This vtx correct.
-        bool vtxBdryLength1(int vertexID, int face);
-        bool vtxBdryLength2(int vertexID1, int face1, int vertexID2, int face2);
-#endif
 };
 
 /*@}*/
@@ -1174,7 +1158,6 @@ inline int NClosedPrimeMinSearcher::findEdgeClass(int edgeID, char& twisted) {
     return edgeID;
 }
 
-#ifdef VERTEX_BDRY_COMPRESS
 inline void NClosedPrimeMinSearcher::vtxBdryJoin(int vertexID, char end,
         int adjVertexID, char twist) {
     vertexState[vertexID].bdryNext[static_cast<int>(end)] = adjVertexID;
@@ -1250,59 +1233,6 @@ inline bool NClosedPrimeMinSearcher::vtxBdryLength2(
             vertexState[vertexID1].bdryEdges == 1 &&
             vertexState[vertexID2].bdryEdges == 1);
 }
-#else
-inline void NClosedPrimeMinSearcher::vtxBdryJoin(int vertexID, int face,
-        char end, int adjVertexID, int adjFace, char twist) {
-    vertexState[vertexID].bdryNextVertex[face][static_cast<int>(end)] =
-        adjVertexID;
-    vertexState[vertexID].bdryNextFace[face][static_cast<int>(end)] = adjFace;
-    vertexState[vertexID].bdryTwist[face][static_cast<int>(end)] = twist;
-    vertexState[adjVertexID].bdryNextVertex[adjFace][(end ^ 1) ^ twist] =
-        vertexID;
-    vertexState[adjVertexID].bdryNextFace[adjFace][(end ^ 1) ^ twist] = face;
-    vertexState[adjVertexID].bdryTwist[adjFace][(end ^ 1) ^ twist] = twist;
-}
-
-inline void NClosedPrimeMinSearcher::vtxBdryFixAdj(int vertexID, int face) {
-    if (! (vertexState[vertexID].bdryNextVertex[face][0] == vertexID &&
-            vertexState[vertexID].bdryNextFace[face][0] == face)) {
-        vertexState[vertexState[vertexID].bdryNextVertex[face][0]].
-            bdryNextVertex[vertexState[vertexID].bdryNextFace[face][0]]
-            [1 ^ vertexState[vertexID].bdryTwist[face][0]] = vertexID;
-        vertexState[vertexState[vertexID].bdryNextVertex[face][0]].
-            bdryNextFace[vertexState[vertexID].bdryNextFace[face][0]]
-            [1 ^ vertexState[vertexID].bdryTwist[face][0]] = face;
-        vertexState[vertexState[vertexID].bdryNextVertex[face][0]].
-            bdryTwist[vertexState[vertexID].bdryNextFace[face][0]]
-            [1 ^ vertexState[vertexID].bdryTwist[face][0]] =
-            vertexState[vertexID].bdryTwist[face][0];
-
-        vertexState[vertexState[vertexID].bdryNextVertex[face][1]].
-            bdryNextVertex[vertexState[vertexID].bdryNextFace[face][1]]
-            [0 ^ vertexState[vertexID].bdryTwist[face][1]] = vertexID;
-        vertexState[vertexState[vertexID].bdryNextVertex[face][1]].
-            bdryNextFace[vertexState[vertexID].bdryNextFace[face][1]]
-            [0 ^ vertexState[vertexID].bdryTwist[face][1]] = face;
-        vertexState[vertexState[vertexID].bdryNextVertex[face][1]].
-            bdryTwist[vertexState[vertexID].bdryNextFace[face][1]]
-            [0 ^ vertexState[vertexID].bdryTwist[face][1]] =
-            vertexState[vertexID].bdryTwist[face][1];
-    }
-}
-
-inline bool NClosedPrimeMinSearcher::vtxBdryLength1(int vertexID, int face) {
-    return (vertexState[vertexID].bdryNextVertex[face][0] == vertexID &&
-            vertexState[vertexID].bdryNextFace[face][0] == face);
-}
-
-inline bool NClosedPrimeMinSearcher::vtxBdryLength2(int vertexID1, int face1,
-        int vertexID2, int face2) {
-    return (vertexState[vertexID1].bdryNextVertex[face1][0] == vertexID2 &&
-            vertexState[vertexID1].bdryNextFace[face1][0] == face2 &&
-            vertexState[vertexID1].bdryNextVertex[face1][1] == vertexID2 &&
-            vertexState[vertexID1].bdryNextFace[face1][1] == face2);
-}
-#endif
 
 } // namespace regina
 
