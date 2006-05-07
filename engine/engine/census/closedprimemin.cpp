@@ -67,9 +67,14 @@ void NClosedPrimeMinSearcher::TetVertexState::dumpData(std::ostream& out)
     // Be careful with twistUp, which is a char but which should be
     // written as an int.
     out << parent << ' ' << rank << ' ' << bdry << ' '
-        << (twistUp ? 1 : 0) << ' ' << (hadEqualRank ? 1 : 0);
-
-    // TODO: Write more data.
+        << (twistUp ? 1 : 0) << ' ' << (hadEqualRank ? 1 : 0) << ' '
+        << static_cast<int>(bdryEdges) << ' '
+        << bdryNext[0] << ' ' << bdryNext[1] << ' '
+        << static_cast<int>(bdryTwist[0]) << ' '
+        << static_cast<int>(bdryTwist[1]) << ' '
+        << bdryNextOld[0] << ' ' << bdryNextOld[1] << ' '
+        << static_cast<int>(bdryTwistOld[0]) << ' '
+        << static_cast<int>(bdryTwistOld[1]);
 }
 
 bool NClosedPrimeMinSearcher::TetVertexState::readData(std::istream& in,
@@ -86,7 +91,16 @@ bool NClosedPrimeMinSearcher::TetVertexState::readData(std::istream& in,
     in >> bRank;
     hadEqualRank = bRank;
 
-    // TODO: Read more data.
+    // More chars to ints coming.
+    int bVal;
+
+    in >> bVal; bdryEdges = bVal;
+    in >> bdryNext[0] >> bdryNext[1];
+    in >> bVal; bdryTwist[0] = bVal;
+    in >> bVal; bdryTwist[1] = bVal;
+    in >> bdryNextOld[0] >> bdryNextOld[1];
+    in >> bVal; bdryTwistOld[0] = bVal;
+    in >> bVal; bdryTwistOld[1] = bVal;
 
     if (parent < -1 || parent >= static_cast<long>(nStates))
         return false;
@@ -97,6 +111,24 @@ bool NClosedPrimeMinSearcher::TetVertexState::readData(std::istream& in,
     if (twist != 1 && twist != 0)
         return false;
     if (bRank != 1 && bRank != 0)
+        return false;
+    if (bdryEdges > 3) /* Never < 0 since this is unsigned. */
+        return false;
+    if (bdryNext[0] < 0 || bdryNext[0] >= static_cast<long>(nStates))
+        return false;
+    if (bdryNext[1] < 0 || bdryNext[1] >= static_cast<long>(nStates))
+        return false;
+    if (bdryNextOld[0] < -1 || bdryNext[0] >= static_cast<long>(nStates))
+        return false;
+    if (bdryNextOld[1] < -1 || bdryNextOld[1] >= static_cast<long>(nStates))
+        return false;
+    if (bdryTwist[0] < 0 || bdryTwist[0] > 1)
+        return false;
+    if (bdryTwist[1] < 0 || bdryTwist[1] > 1)
+        return false;
+    if (bdryTwistOld[0] < 0 || bdryTwistOld[0] > 1)
+        return false;
+    if (bdryTwistOld[1] < 0 || bdryTwistOld[1] > 1)
         return false;
 
     return true;
@@ -390,6 +422,10 @@ void NClosedPrimeMinSearcher::initOrder() {
         vertexState[i].bdryEdges = 3;
         vertexState[i].bdryNext[0] = vertexState[i].bdryNext[1] = i;
         vertexState[i].bdryTwist[0] = vertexState[i].bdryTwist[1] = 0;
+        // Initialise the backup members also so we're not writing
+        // uninitialised data via dumpData().
+        vertexState[i].bdryNextOld[0] = vertexState[i].bdryNextOld[1] = -1;
+        vertexState[i].bdryTwistOld[0] = vertexState[i].bdryTwistOld[1] = 0;
     }
 
     nEdgeClasses = nTets * 6;
