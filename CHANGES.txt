@@ -7,6 +7,13 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Version 4.3.2  [ under development ]
+
+    ENGINE:
+        Class NClosedPrimeMinSearcher:
+            - Census generation is much faster again for larger numbers of
+              tetrahedra, due to new tests for high-genus vertex links.
+
 Version 4.3.1  [ 5 May, 2006 ]
 
     ENGINE:
