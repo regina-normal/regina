@@ -1164,8 +1164,36 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         void vtxBdryJoin(int vertexID, char end, int adjVertexID, char twist);
 
         /**
-         * TODO
-         * PRE: This vertex is correct and not internal.
+         * Adjusts the \a bdryNext and \a bdryTwist arrays for
+         * nearby tetrahedron vertices, to ensure that these arrays
+         * are consistent with the \a bdryNext and \a bdryTwist arrays
+         * stored with the given vertex.
+         *
+         * It is assumed that the vertex linking triangle for the given
+         * tetrahedron vertex contributes at least one boundary edge to
+         * the vertex link.  Recall from the TetVertexState class notes
+         * that the \a bdryNext and \a bdryTwist arrays for the given
+         * vertex describe the boundary edges that follow on in either
+         * direction from the boundary edges supplied by this triangle.
+         *
+         * This routine locates the tetrahedron vertices that provide
+         * the neighbouring boundary edges, and adjusts the \a bdryNext
+         * and \a bdryTwist arrays for these neighbouring vertices to
+         * point back to the given vertex.
+         *
+         * This routine is intended to assist with backtracking.  This
+         * routine is safe to use if the given tetrahedron vertex points
+         * to itself (i.e., it provides a complete boundary cycle of
+         * three edges in the vertex link).
+         *
+         * See the TetVertexState class for further information.
+         *
+         * \pre The vertex linking triangle for the given tetrahedron
+         * vertex contributes at least one boundary edge to the vertex link.
+         *
+         * @param vertexID the tetrahedron vertex to examine; this must
+         * be between 0 and 4n-1 inclusive, where \a n is the number of
+         * tetrahedra.
          */
         void vtxBdryFixAdj(int vertexID);
 
