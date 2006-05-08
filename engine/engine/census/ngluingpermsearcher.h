@@ -1158,10 +1158,88 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          */
         void splitEdgeClasses();
 
+        /**
+         * TODO
+         */
         void vtxBdryJoin(int vertexID, char end, int adjVertexID, char twist);
-        void vtxBdryFixAdj(int vertexID); // PRE: This vtx correct.
+
+        /**
+         * TODO
+         * PRE: This vertex is correct and not internal.
+         */
+        void vtxBdryFixAdj(int vertexID);
+
+        /**
+         * Copies the \a bdryNext and \a bdryTwist arrays to the
+         * \a bdryNextOld and \a bdryTwistOld arrays for the given
+         * tetrahedron vertex.
+         *
+         * See the TetVertexState class for further information.
+         *
+         * @param vertexID the tetrahedron vertex on which to operate; this
+         * must be between 0 and 4n-1 inclusive, where \a n is the number of
+         * tetrahedra.
+         */
         void vtxBdryBackup(int vertexID);
+
+        /**
+         * Copies the \a bdryNextOld and \a bdryTwistOld arrays to the
+         * \a bdryNext and \a bdryTwist arrays for the given tetrahedron
+         * vertex.
+         *
+         * See the TetVertexState class for further information.
+         *
+         * @param vertexID the tetrahedron vertex on which to operate; this
+         * must be between 0 and 4n-1 inclusive, where \a n is the number of
+         * tetrahedra.
+         */
         void vtxBdryRestore(int vertexID);
+
+        /**
+         * Assuming the given edge of the vertex linking triangle for the
+         * given tetrahedron vertex lies on the boundary of the vertex link,
+         * this routine identifies the adjacent boundary edges of the vertex
+         * link in each direction.
+         *
+         * The tetrahedron vertex to examine is passed in \a vertexID,
+         * \a tet and \a vertex, and the particular edge of the vertex
+         * linking triangle to examine is specified by \a bdryFace.
+         * Details of the adjacent boundary edges are returned in the
+         * arrays \a next and \a twist.
+         *
+         * Note that the values returned might or might not correspond
+         * to the \a bdryNext and \a bdryTwist arrays of the
+         * TetVertexState class, since the TetVertexState arrays skip
+         * over adjacent edges belonging to the same vertex linking triangle.
+         *
+         * If the given edge of the vertex linking triangle is not a
+         * boundary edge of the vertex link, the behaviour of this
+         * routine is undefined.
+         *
+         * See the TetVertexState class for further information.
+         *
+         * @param vertexID the tetrahedron vertex to examine; this must
+         * be between 0 and 4n-1 inclusive, where \a n is the number of
+         * tetrahedra.
+         * @param tet the tetrahedron described by \a vertexID; this
+         * must be (vertexID / 4).  It is passed separately to avoid a
+         * slow division operation.
+         * @param vertex the tetrahedron vertex number described by \a vertexID;
+         * this must be (vertexID % 4).  It is passed separately to
+         * avoid a slow modulus operation.
+         * @param bdryFace the face number of the given tetrahedron
+         * containing the edge of the vertex linking triangle that is
+         * under consideration.  This must be between 0 and 3 inclusive,
+         * and it may not be equal to \a vertex.
+         * @param next returns the tetrahedron vertex supplying each
+         * adjacent boundary edge; see the TetVertexState::bdryNext
+         * notes for details on which directions correspond to array
+         * indices 0 and 1.
+         * @param twist returns whether the orientations of the adjacent
+         * boundary edges are consistent with the orientation of this
+         * boundary edge; see the TetVertexState::bdryTwist notes for
+         * further information on orientations in the vertex link.
+         */
         void vtxBdryNext(int vertexID, int tet, int vertex, int bdryFace,
             int next[2], char twist[2]);
 
