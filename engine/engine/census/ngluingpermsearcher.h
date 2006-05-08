@@ -1159,7 +1159,28 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         void splitEdgeClasses();
 
         /**
-         * TODO
+         * Signifies that the boundary edges supplied by the vertex
+         * linking triangles for the two given tetrahedron vertices
+         * should be marked as adjacent.  The \a bdryNext and \a bdryTwist
+         * arrays for each vertex will be adjusted to point to the other.
+         *
+         * See the TetVertexState class for details.
+         *
+         * @param vertexID the first tetrahedron vertex on which to operate;
+         * this must be between 0 and 4n-1 inclusive, where \a n is the number
+         * of tetrahedra.
+         * @param end specifies in which direction the adjacent boundary
+         * edges lie.  This must be either 0 or 1, and its value should
+         * correspond to the relevant index in the \a bdryNext and \a bdryTwist
+         * arrays for vertex \a vertexID.
+         * @param adjVertexID the tetrahedron vertex whose boundary edges are
+         * adjacent to the boundary edges supplied by \a vertexID; this must
+         * be between 0 and 4n-1 inclusive, where \a n is the number of
+         * tetrahedra.
+         * @param twist 0 if the orientations of the two boundary segments of
+         * vertex link are oriented in the same direction, or 1 if they are
+         * oriented in opposite directions; see the \a bdryTwist
+         * documentation for details.
          */
         void vtxBdryJoin(int vertexID, char end, int adjVertexID, char twist);
 
