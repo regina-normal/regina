@@ -432,6 +432,11 @@ void NClosedPrimeMinSearcher::initOrder() {
     edgeState = new TetEdgeState[nTets * 6];
     edgeStateChanged = new int[nTets * 8];
     std::fill(edgeStateChanged, edgeStateChanged + nTets * 8, -1);
+
+#if PRUNE_HIGH_DEG_EDGE_SET
+    highDegSum = 0;
+    highDegBound = 3 * nTets - 3;
+#endif
 }
 
 // TODO (net): See what was removed when we brought in vertex link checking.
@@ -778,6 +783,12 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 std::cerr << "ERROR: edgeStateChanged[" << i << "] == "
                     << edgeStateChanged[i] << " at end of search!"
                     << std::endl;
+
+#if PRUNE_HIGH_DEG_EDGE_SET
+        if (highDegSum != 0)
+            std::cerr << "ERROR: highDegSum == " << highDegSum
+                << " at end of search!" << std::endl;
+#endif
     }
 
     use_(0, useArgs_);
@@ -831,6 +842,10 @@ void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
         out << edgeStateChanged[i];
     }
     out << std::endl;
+
+#if PRUNE_HIGH_DEG_EDGE_SET
+    out << highDegSum << ' ' << highDegBound << std::endl;
+#endif
 }
 
 NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
@@ -912,6 +927,14 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
             inputError_ = true; return;
         }
     }
+
+#if PRUNE_HIGH_DEG_EDGE_SET
+    in >> highDegSum >> highDegBound;
+    if (highDegSum < 0 || highDegSum > 6 * static_cast<int>(nTets) ||
+            highDegBound != 3 * static_cast<int>(nTets) - 3) {
+        inputError_ = true; return;
+    }
+#endif
 
     // Did we hit an unexpected EOF?
     if (in.eof())
@@ -1278,14 +1301,26 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
 
             edgeStateChanged[orderIdx] = -1;
         } else {
+#if PRUNE_HIGH_DEG_EDGE_SET
+            if (edgeState[eRep].size > 3)
+                highDegSum -= (edgeState[eRep].size - 3);
+            if (edgeState[fRep].size > 3)
+                highDegSum -= (edgeState[fRep].size - 3);
+#endif
+
             if (edgeState[eRep].rank < edgeState[fRep].rank) {
                 // Join eRep beneath fRep.
                 edgeState[eRep].parent = fRep;
                 edgeState[eRep].twistUp = hasTwist ^ parentTwists;
 
+#if PRUNE_HIGH_DEG_EDGE_SET
+                if ((edgeState[fRep].size += edgeState[eRep].size) > 3)
+                    highDegSum += (edgeState[fRep].size - 3);
+#else
                 edgeState[fRep].size += edgeState[eRep].size;
                 if (edgeState[fRep].size > 3 * getNumberOfTetrahedra())
                     retVal |= ECLASS_HIGHDEG;
+#endif
 
                 edgeStateChanged[orderIdx] = eRep;
             } else {
@@ -1297,12 +1332,22 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                     edgeState[fRep].hadEqualRank = true;
                 }
 
+#if PRUNE_HIGH_DEG_EDGE_SET
+                if ((edgeState[eRep].size += edgeState[fRep].size) > 3)
+                    highDegSum += (edgeState[eRep].size - 3);
+#else
                 edgeState[eRep].size += edgeState[fRep].size;
                 if (edgeState[eRep].size > 3 * getNumberOfTetrahedra())
                     retVal |= ECLASS_HIGHDEG;
+#endif
 
                 edgeStateChanged[orderIdx] = fRep;
             }
+
+#if PRUNE_HIGH_DEG_EDGE_SET
+            if (highDegSum > highDegBound)
+                retVal |= ECLASS_HIGHDEG;
+#endif
 
             nEdgeClasses--;
         }
@@ -1407,7 +1452,16 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
                 edgeState[rep].rank--;
             }
 
+#if PRUNE_HIGH_DEG_EDGE_SET
+            if (edgeState[rep].size > 3)
+                highDegSum -= (edgeState[rep].size - 3);
+            if ((edgeState[rep].size -= edgeState[subRep].size) > 3)
+                highDegSum += (edgeState[rep].size - 3);
+            if (edgeState[subRep].size > 3)
+                highDegSum += (edgeState[subRep].size - 3);
+#else
             edgeState[rep].size -= edgeState[subRep].size;
+#endif
 
             edgeStateChanged[orderIdx] = -1;
             nEdgeClasses++;

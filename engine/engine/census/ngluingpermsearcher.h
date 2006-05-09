@@ -38,6 +38,36 @@
 
 #include "census/ngluingperms.h"
 
+/**
+ * Specifies whether the NClosedPrimeMinSearcher census generation code
+ * should prune on high-degree edges.
+ *
+ * It is well known that a closed prime minimal P^2-irreducible triangulation
+ * formed from at least three tetrahedra can never have an edge of degree
+ * one or two.  Combining this with the fact that such a triangulation
+ * must always have one vertex, a simple Euler characteristic
+ * calculation shows that there must be precisely n+1 edges, where \a n
+ * is the number of tetrahedra.
+ *
+ * A little arithmetic then shows that, for any \a k edges, the sum of
+ * their edge degrees can be no more than 3(n+k-1); otherwise one of the
+ * remaining edges will be forced to have degree one or two.  This
+ * observation is the basis behind the high-degree edge pruning that
+ * this option controls.
+ *
+ * Pruning on high-degree edges is disabled in the main distribution,
+ * since preliminary testing suggests that the overhead is more costly
+ * than the time saved.  Even though the test itself is very fast (a
+ * small constant-time addition to each forward and backward step in the
+ * search), the author suspects that most of the affected triangulations
+ * are already being eliminated by other tests (e.g., they produce vertex
+ * links with non-trivial genus).
+ *
+ * To enable pruning on high-degree edges, set this macro to 1; to
+ * disable it, set it to 0.
+ */
+#define PRUNE_HIGH_DEG_EDGE_SET 0
+
 namespace regina {
 
 /**
@@ -959,6 +989,21 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  with root edgeState[p] being grafted beneath the tree
                  with root edgeState[q], this array will store the value p.
                  Otherwise it will store the value -1. */
+
+#if PRUNE_HIGH_DEG_EDGE_SET
+        int highDegSum;
+            /**< The sum of (\a degree - 3) over all edges whose degree
+                 is three or higher.  This sum is updated throughout the
+                 search as part of the high-degree edge pruning code.
+                 See the PRUNE_HIGH_DEG_EDGE_SET macro for further details. */
+        int highDegBound;
+            /**< The maximum allowable value of \a highDegSum.  If the
+                 sum \a highDegSum exceeds this bound then it can be proven
+                 that some edge of the final triangulation must have degree
+                 one or two.  This is part of the high-degree edge pruning
+                 code; see the PRUNE_HIGH_DEG_EDGE_SET macro for further
+                 details. */
+#endif
 
         int orderElt;
             /**< Marks which element of order[] we are currently examining
