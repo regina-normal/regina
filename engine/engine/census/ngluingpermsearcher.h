@@ -55,18 +55,10 @@
  * observation is the basis behind the high-degree edge pruning that
  * this option controls.
  *
- * Pruning on high-degree edges is disabled in the main distribution,
- * since preliminary testing suggests that the overhead is more costly
- * than the time saved.  Even though the test itself is very fast (a
- * small constant-time addition to each forward and backward step in the
- * search), the author suspects that most of the affected triangulations
- * are already being eliminated by other tests (e.g., they produce vertex
- * links with non-trivial genus).
- *
- * To enable pruning on high-degree edges, set this macro to 1; to
- * disable it, set it to 0.
+ * To enable pruning on high-degree edges, set this macro to 1 (the default
+ * for Regina's main source distribution); to disable it, set it to 0.
  */
-#define PRUNE_HIGH_DEG_EDGE_SET 0
+#define PRUNE_HIGH_DEG_EDGE_SET 1
 
 namespace regina {
 
