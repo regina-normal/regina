@@ -500,8 +500,6 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
     int maxOrder = orderElt + maxDepth;
 
     NTetFace face, adj;
-    NFacePair faces;
-    NPerm trial1, trial2;
     bool generic;
     int mergeResult;
     while (orderElt >= minOrder) {
@@ -1302,10 +1300,15 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
             edgeStateChanged[orderIdx] = -1;
         } else {
 #if PRUNE_HIGH_DEG_EDGE_SET
-            if (edgeState[eRep].size > 3)
-                highDegSum -= (edgeState[eRep].size - 3);
-            if (edgeState[fRep].size > 3)
-                highDegSum -= (edgeState[fRep].size - 3);
+            if (edgeState[eRep].size >= 3) {
+                if (edgeState[fRep].size >= 3)
+                    highDegSum += 3;
+                else
+                    highDegSum += edgeState[fRep].size;
+            } else if (edgeState[fRep].size >= 3)
+                highDegSum += edgeState[eRep].size;
+            else if (edgeState[eRep].size == 2 && edgeState[fRep].size == 2)
+                ++highDegSum;
 #endif
 
             if (edgeState[eRep].rank < edgeState[fRep].rank) {
@@ -1313,11 +1316,9 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 edgeState[eRep].parent = fRep;
                 edgeState[eRep].twistUp = hasTwist ^ parentTwists;
 
-#if PRUNE_HIGH_DEG_EDGE_SET
-                if ((edgeState[fRep].size += edgeState[eRep].size) > 3)
-                    highDegSum += (edgeState[fRep].size - 3);
-#else
                 edgeState[fRep].size += edgeState[eRep].size;
+#if PRUNE_HIGH_DEG_EDGE_SET
+#else
                 if (edgeState[fRep].size > 3 * getNumberOfTetrahedra())
                     retVal |= ECLASS_HIGHDEG;
 #endif
@@ -1332,11 +1333,9 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                     edgeState[fRep].hadEqualRank = true;
                 }
 
-#if PRUNE_HIGH_DEG_EDGE_SET
-                if ((edgeState[eRep].size += edgeState[fRep].size) > 3)
-                    highDegSum += (edgeState[eRep].size - 3);
-#else
                 edgeState[eRep].size += edgeState[fRep].size;
+#if PRUNE_HIGH_DEG_EDGE_SET
+#else
                 if (edgeState[eRep].size > 3 * getNumberOfTetrahedra())
                     retVal |= ECLASS_HIGHDEG;
 #endif
@@ -1452,15 +1451,17 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
                 edgeState[rep].rank--;
             }
 
-#if PRUNE_HIGH_DEG_EDGE_SET
-            if (edgeState[rep].size > 3)
-                highDegSum -= (edgeState[rep].size - 3);
-            if ((edgeState[rep].size -= edgeState[subRep].size) > 3)
-                highDegSum += (edgeState[rep].size - 3);
-            if (edgeState[subRep].size > 3)
-                highDegSum += (edgeState[subRep].size - 3);
-#else
             edgeState[rep].size -= edgeState[subRep].size;
+#if PRUNE_HIGH_DEG_EDGE_SET
+            if (edgeState[rep].size >= 3) {
+                if (edgeState[subRep].size >= 3)
+                    highDegSum -= 3;
+                else
+                    highDegSum -= edgeState[subRep].size;
+            } else if (edgeState[subRep].size >= 3)
+                highDegSum -= edgeState[rep].size;
+            else if (edgeState[rep].size == 2 && edgeState[subRep].size == 2)
+                --highDegSum;
 #endif
 
             edgeStateChanged[orderIdx] = -1;
