@@ -93,13 +93,29 @@ bool NPerm::isPermCode(unsigned char code) {
 }
 
 int NPerm::sign() const {
-    int sign = 1;
-    int i,j;
-    for (i=0; i<4; i++)
-        for (j=i+1; j<4; j++)
-            if (imageOf(i) > imageOf(j))
-                sign = -sign;
-    return sign;
+    // The code is a little non-obvious, but this routine needs to be
+    // streamlined since it gets called a _lot_ during census generation.
+    unsigned char matches = 0;
+    if ((code & 0x03) == 0x00)
+        ++matches;
+    if ((code & 0x0c) == 0x04)
+        ++matches;
+    if ((code & 0x30) == 0x20)
+        ++matches;
+    if ((code & 0xc0) == 0xc0)
+        ++matches;
+
+    if (matches == 4)
+        return 1;
+    if (matches == 2)
+        return -1;
+    if (matches == 1)
+        return 1;
+    if (    code == 0xb1 /* 2301 */ ||
+            code == 0x1b /* 0123 */ ||
+            code == 0x4e /* 1032 */)
+        return 1;
+    return -1;
 }
 
 int NPerm::compareWith(const NPerm& other) const {
