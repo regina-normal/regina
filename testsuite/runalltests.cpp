@@ -117,6 +117,7 @@ bool runAllTests() {
     addNumberTheory(runner);
 
     // Triangulation:
+    addNPerm(runner);
     addNTriangulation(runner);
     addConnectedSumDecomp(runner);
     addElementaryMoves(runner);

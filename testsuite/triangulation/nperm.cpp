@@ -26,21 +26,58 @@
 
 /* end stub */
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include <sstream>
+#include <cppunit/extensions/HelperMacros.h>
+#include "triangulation/nperm.h"
+#include "testsuite/triangulation/testtriangulation.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+using regina::NPerm;
 
-void addNPerm(CppUnit::TextUi::TestRunner& runner);
-void addNTriangulation(CppUnit::TextUi::TestRunner& runner);
-void addElementaryMoves(CppUnit::TextUi::TestRunner& runner);
-void addConnectedSumDecomp(CppUnit::TextUi::TestRunner& runner);
-void addNIsomorphism(CppUnit::TextUi::TestRunner& runner);
+class NPermTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(NPermTest);
+
+    CPPUNIT_TEST(inverse);
+    CPPUNIT_TEST(sign);
+
+    CPPUNIT_TEST_SUITE_END();
+
+    public:
+        void setUp() {
+        }
+
+        void tearDown() {
+        }
+
+        void inverse() {
+            for (int i = 0; i < 24; i++) {
+                if (regina::allPermsS4[i].inverse() !=
+                        regina::allPermsS4[regina::allPermsS4Inv[i]]) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " was found to have "
+                        "inverse " << regina::allPermsS4[i].inverse()
+                        << " instead of " <<
+                        regina::allPermsS4[regina::allPermsS4Inv[i]] << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void sign() {
+            int expected;
+            for (int i = 0; i < 24; i++) {
+                expected = (i % 2 == 0 ? 1 : -1);
+                if (regina::allPermsS4[i].sign() != expected) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " was found to have "
+                        "sign " << regina::allPermsS4[i].sign()
+                        << " instead of " << expected << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+};
+
+void addNPerm(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(NPermTest::suite());
+}
 
