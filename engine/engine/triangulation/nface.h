@@ -59,7 +59,7 @@ class NFaceEmbedding {
             /**< The tetrahedron in which this face is contained. */
         int face;
             /**< The face number of the tetrahedron that is this face. */
-    
+
     public:
         /**
          * Creates an embedding descriptor containing the given data.
@@ -166,7 +166,7 @@ class NFace : public ShareableObject {
          * face belongs.
          */
         NFace(NComponent* myComponent);
-        
+
         /**
          * Default destructor.
          * All embedding descriptors stored in this face will be
@@ -190,7 +190,7 @@ class NFace : public ShareableObject {
          * @return one of the predefined face type constants in NFace.
          */
         int getType();
-        
+
         /**
          * Return the face vertex or face edge that plays a special role
          * for the face type of this face.  Note that this routine is
@@ -232,7 +232,7 @@ class NFace : public ShareableObject {
          * @return the number of embedding descriptors.
          */
         unsigned getNumberOfEmbeddings() const;
-        
+
         /**
          * Returns the requested descriptor of how this face forms a
          * part of a particular tetrahedron in the triangulation.
@@ -253,7 +253,7 @@ class NFace : public ShareableObject {
          * @return the component containing this face.
          */
         NComponent* getComponent() const;
-        
+
         /**
          * Returns the boundary component of the triangulation to which
          * this face belongs.
