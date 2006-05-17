@@ -60,6 +60,15 @@ const int NClosedPrimeMinSearcher::vertexLinkNextFace[4][4] = {
     { 1, 2, 0, -1}
 };
 
+const unsigned NClosedPrimeMinSearcher::coneEdge[12][2] = {
+    { 0, 1 }, { 0, 2 }, { 1, 2 }, { 0, 3 }, { 0, 4 }, { 3, 4 },
+    { 1, 3 }, { 1, 5 }, { 3, 5 }, { 2, 4 }, { 2, 5 }, { 4, 5 },
+};
+
+const char NClosedPrimeMinSearcher::coneNoTwist[12] = {
+    1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1
+};
+
 const char NClosedPrimeMinSearcher::dataTag_ = 'c';
 
 void NClosedPrimeMinSearcher::TetVertexState::dumpData(std::ostream& out)
@@ -562,6 +571,20 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         // We are sitting on a new permutation to try.
         permIndex(adj) = allPermsS3Inv[permIndex(face)];
 
+        // In the following code we use several results from
+        // "Face pairing graphs and 3-manifold enumeration", B. A. Burton,
+        // J. Knot Theory Ramifications 13 (2004).
+        //
+        // These include:
+        //
+        // - We cannot have an edge of degree <= 2, or an edge of degree 3
+        //   meeting three distinct tetrahedra (section 2.1);
+        // - We must have exactly one vertex (lemma 2.6);
+        // - We cannot have a face with two edges identified to form a
+        //   cone (lemma 2.8);
+        // - We cannot have a face with all three edges identified to
+        //   form an L(3,1) spine (lemma 2.5).
+
         // Merge edge links and run corresponding tests.
         if (mergeEdgeClasses()) {
             // We created a structure that should not appear in a final
@@ -593,20 +616,6 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             splitEdgeClasses();
             continue;
         }
-
-        // In the following code we use several results from
-        // "Face pairing graphs and 3-manifold enumeration", B. A. Burton,
-        // J. Knot Theory Ramifications 13 (2004).
-        //
-        // These include:
-        //
-        // - We cannot have an edge of degree <= 2, or an edge of degree 3
-        //   meeting three distinct tetrahedra (section 2.1);
-        // - We must have exactly one vertex (lemma 2.6);
-        // - We cannot have a face with two edges identified to form a
-        //   cone (lemma 2.8);
-        // - We cannot have a face with all three edges identified to
-        //   form an L(3,1) spine (lemma 2.5).
 
         // Merge vertex links and run corresponding tests.
         mergeResult = mergeVertexClasses();
@@ -1366,17 +1375,16 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
     for (e = 0; e < 6; e++)
         tRep[e] = findEdgeClass(e + 6 * face.tet, tTwist[e] = 0);
 
-    /* This test seems to be hurting us more than it helps us (in terms
-     * of running time).  Commented out.
-    // Test for pairs of edges that together have too high a degree.
-    for (e = 0; e < 5; e++)
-        for (f = e + 1; f < 6; f++)
-            if (tRep[e] != tRep[f])
-                if (edgeState[tRep[e]].size + edgeState[tRep[f]].size >
-                        3 * getNumberOfTetrahedra() + 3)
-                    return ECLASS_HIGHDEG;
-    */
+    // Test for cones in all possible positions on all possible faces.
+    // Apologies for the tightness of the code; this part is being
+    // micro-optimised since it is run so very frequently.  The old,
+    // more readable version of this code is in the commented block below.
+    for (e = 0; e < 12; e++)
+        if (tRep[coneEdge[e][0]] == tRep[coneEdge[e][1]] && (coneNoTwist[e] ^
+            (tTwist[coneEdge[e][0]] ^ tTwist[coneEdge[e][1]])))
+                return ECLASS_CONE;
 
+    /*
     // Test for cones on edges v1->w1->v2.
     for (w1 = 0; w1 < 4; w1++)
         for (v1 = 0; v1 < 3; v1++) {
@@ -1397,6 +1405,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 }
             }
         }
+    */
 
     // Test for L(3,1) spines.
     // Don't bother checking the directions of the edges -- if it's not an

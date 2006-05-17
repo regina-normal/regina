@@ -625,6 +625,27 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  The remaining array elements \a vertexLinkNextFace[v][v]
                  are all -1. */
 
+        static const unsigned coneEdge[12][2];
+            /**< Lists all twelve possible ways in which two edges of a
+                 tetrahedron could be identified to create a conical face.
+                 For the ith such method, tetrahedron edges coneEdge[i][0]
+                 and coneEdge[i][1] are identified.  Every element of this
+                 array is between 0 and 5 inclusive. */
+        static const char coneNoTwist[12];
+            /**< Combines with the \a coneEdge array to list all twelve
+                 possible ways in which two edges of a tetrahedron could
+                 be identified to create a conical face.
+
+                 For the ith such method, coneNoTwist[i] is 1 if tetrahedron
+                 edges coneEdge[i][0,1] should be identified according to
+                 their natural orientations, and coneNoTwist[i] is 0 if
+                 one of these two edges must be reversed.
+
+                 The natural orientation of a tetrahedron edge is defined
+                 to point from the lower-numbered tetrahedron vertex to the
+                 higher.  This is consistent with the orientation used in
+                 the TetEdgeState class. */
+
     private:
         /**
          * A structure used to track equivalence classes of tetrahedron
