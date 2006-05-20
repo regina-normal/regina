@@ -36,6 +36,7 @@
 #include "split/nsignature.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
+#include "triangulation/nvertex.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NAbelianGroup;
@@ -45,6 +46,7 @@ using regina::NPerm;
 using regina::NSignature;
 using regina::NTetrahedron;
 using regina::NTriangulation;
+using regina::NVertex;
 
 class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NTriangulationTest);
@@ -53,6 +55,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(standardness);
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(boundaryComponents);
+    CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(homologyH1Bdry);
     CPPUNIT_TEST(fundGroup);
@@ -127,6 +130,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                  triangulation has a 3-sphere orientable double cover. */
         NTriangulation cuspedGenusTwoTorus;
             /**< A solid genus two torus with a cusped boundary. */
+        NTriangulation pinchedSolidTorus;
+            /**< A solid torus with one longitude pinched to a point. */
+        NTriangulation pinchedSolidKB;
+            /**< A solid Klein bottle with one longitude pinched to a point. */
 
     public:
         void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
@@ -204,6 +211,24 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             twoProjPlaneCusps.insertTriangulation(invalidEdges);
             twoProjPlaneCusps.barycentricSubdivision();
+
+            // To construct a solid torus with a pinched longitude, we
+            // identify two opposite faces of a square pyramid.
+            r = new NTetrahedron();
+            s = new NTetrahedron();
+            r->joinTo(3, s, NPerm(0, 1, 2, 3));
+            r->joinTo(2, s, NPerm(0, 3, 1, 2));
+            pinchedSolidTorus.addTetrahedron(r);
+            pinchedSolidTorus.addTetrahedron(s);
+
+            // The pinched solid Klein bottle is much the same, except
+            // for a twist before the opposite faces are identified.
+            r = new NTetrahedron();
+            s = new NTetrahedron();
+            r->joinTo(3, s, NPerm(0, 1, 2, 3));
+            r->joinTo(2, s, NPerm(0, 2, 1, 3));
+            pinchedSolidKB.addTetrahedron(r);
+            pinchedSolidKB.addTetrahedron(s);
         }
 
         void tearDown() {
@@ -256,6 +281,12 @@ class NTriangulationTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
                 "is not valid.",
                 cuspedGenusTwoTorus.isValid());
+            CPPUNIT_ASSERT_MESSAGE("The pinched solid torus "
+                "is reported as valid.",
+                ! pinchedSolidTorus.isValid());
+            CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
+                "is reported as valid.",
+                ! pinchedSolidKB.isValid());
         }
 
         void standardness() {
@@ -305,6 +336,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
                 "is standard.",
                 ! cuspedGenusTwoTorus.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The pinched solid torus is standard.",
+                ! pinchedSolidTorus.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
+                "is standard.",
+                ! pinchedSolidKB.isStandard());
         }
 
         void orientability() {
@@ -354,6 +390,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
                 "is not orientable.",
                 cuspedGenusTwoTorus.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("The pinched solid torus is not orientable.",
+                pinchedSolidTorus.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
+                "is orientable.",
+                ! pinchedSolidKB.isOrientable());
         }
 
         void boundaryComponents() {
@@ -406,9 +447,600 @@ class NTriangulationTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
                 "has no boundary components.",
                 cuspedGenusTwoTorus.getNumberOfBoundaryComponents() > 0);
+            CPPUNIT_ASSERT_MESSAGE("The pinched solid torus "
+                "has no boundary components.",
+                pinchedSolidTorus.getNumberOfBoundaryComponents() > 0);
+            CPPUNIT_ASSERT_MESSAGE("The pinched solid torus "
+                "has too many boundary components.",
+                pinchedSolidTorus.getNumberOfBoundaryComponents() < 2);
+            CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
+                "has no boundary components.",
+                pinchedSolidKB.getNumberOfBoundaryComponents() > 0);
+            CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
+                "has too many boundary components.",
+                pinchedSolidKB.getNumberOfBoundaryComponents() < 2);
 
             // TODO: Test the individual boundary components.
             // TODO: Check that nobody has too many boundary components.
+        }
+
+        void verifyVertexCount(NTriangulation& tri, unsigned nVertices,
+                const char* triName) {
+            if (tri.getNumberOfVertices() != nVertices) {
+                std::ostringstream msg;
+                msg << triName << " has " << tri.getNumberOfVertices()
+                    << " vertices, not " << nVertices << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyVertexDisc(NTriangulation& tri, unsigned vertex,
+                const char* triName) {
+            if (vertex >= tri.getNumberOfVertices()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " vertices are available.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NVertex* v = tri.getVertex(vertex);
+
+            if (v->getLink() != NVertex::DISC) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not listed as DISC.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isLinkClosed()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is closed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isIdeal()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is ideal.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isBoundary()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " is not a boundary vertex.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isStandard()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is non-standard.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isLinkOrientable()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is non-orientable.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->getLinkEulerCharacteristic() != 1) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link has Euler characteristic "
+                    << v->getLinkEulerCharacteristic() << ", not 1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyVertexSphere(NTriangulation& tri, unsigned vertex,
+                const char* triName) {
+            if (vertex >= tri.getNumberOfVertices()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " vertices are available.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NVertex* v = tri.getVertex(vertex);
+
+            if (v->getLink() != NVertex::SPHERE) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not listed as SPHERE.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isLinkClosed()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not closed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isIdeal()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is ideal.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isBoundary()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " is a boundary vertex.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isStandard()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is non-standard.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isLinkOrientable()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is non-orientable.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->getLinkEulerCharacteristic() != 2) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link has Euler characteristic "
+                    << v->getLinkEulerCharacteristic() << ", not 2.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyVertexTorus(NTriangulation& tri, unsigned vertex,
+                const char* triName) {
+            if (vertex >= tri.getNumberOfVertices()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " vertices are available.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NVertex* v = tri.getVertex(vertex);
+
+            if (v->getLink() != NVertex::TORUS) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not listed as TORUS.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isLinkClosed()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not closed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isIdeal()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not ideal.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isBoundary()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " is not a boundary vertex.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isStandard()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is non-standard.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isLinkOrientable()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is non-orientable.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->getLinkEulerCharacteristic() != 0) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link has Euler characteristic "
+                    << v->getLinkEulerCharacteristic() << ", not 0.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyVertexKB(NTriangulation& tri, unsigned vertex,
+                const char* triName) {
+            if (vertex >= tri.getNumberOfVertices()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " vertices are available.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NVertex* v = tri.getVertex(vertex);
+
+            if (v->getLink() != NVertex::KLEIN_BOTTLE) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not listed as KLEIN_BOTTLE.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isLinkClosed()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not closed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isIdeal()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not ideal.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isBoundary()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " is not a boundary vertex.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isStandard()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is non-standard.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isLinkOrientable()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is orientable.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->getLinkEulerCharacteristic() != 0) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link has Euler characteristic "
+                    << v->getLinkEulerCharacteristic() << ", not 0.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyVertexTorusG2(NTriangulation& tri, unsigned vertex,
+                const char* triName) {
+            if (vertex >= tri.getNumberOfVertices()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " vertices are available.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NVertex* v = tri.getVertex(vertex);
+
+            if (v->getLink() != NVertex::NON_STANDARD_CUSP) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not listed as NON_STANDARD_CUSP.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isLinkClosed()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not closed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isIdeal()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not ideal.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isBoundary()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " is not a boundary vertex.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isStandard()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is standard.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isLinkOrientable()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is non-orientable.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->getLinkEulerCharacteristic() != -2) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link has Euler characteristic "
+                    << v->getLinkEulerCharacteristic() << ", not -2.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyVertexProjPlane(NTriangulation& tri, unsigned vertex,
+                const char* triName) {
+            if (vertex >= tri.getNumberOfVertices()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " vertices are available.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NVertex* v = tri.getVertex(vertex);
+
+            if (v->getLink() != NVertex::NON_STANDARD_CUSP) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not listed as NON_STANDARD_CUSP.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isLinkClosed()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not closed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isIdeal()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not ideal.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isBoundary()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " is not a boundary vertex.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isStandard()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is standard.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isLinkOrientable()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is orientable.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->getLinkEulerCharacteristic() != 1) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link has Euler characteristic "
+                    << v->getLinkEulerCharacteristic() << ", not 1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyVertexAnnulus(NTriangulation& tri, unsigned vertex,
+                const char* triName) {
+            if (vertex >= tri.getNumberOfVertices()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " vertices are available.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NVertex* v = tri.getVertex(vertex);
+
+            if (v->getLink() != NVertex::NON_STANDARD_BDRY) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not listed as NON_STANDARD_BDRY.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isLinkClosed()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is closed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isIdeal()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is ideal.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isBoundary()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " is not a boundary vertex.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isStandard()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is standard.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isLinkOrientable()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is non-orientable.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->getLinkEulerCharacteristic() != 0) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link has Euler characteristic "
+                    << v->getLinkEulerCharacteristic() << ", not 0.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyVertexMobius(NTriangulation& tri, unsigned vertex,
+                const char* triName) {
+            if (vertex >= tri.getNumberOfVertices()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " vertices are available.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NVertex* v = tri.getVertex(vertex);
+
+            if (v->getLink() != NVertex::NON_STANDARD_BDRY) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is not listed as NON_STANDARD_BDRY.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isLinkClosed()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is closed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isIdeal()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is ideal.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! v->isBoundary()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " is not a boundary vertex.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isStandard()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is standard.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->isLinkOrientable()) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link is orientable.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v->getLinkEulerCharacteristic() != 0) {
+                std::ostringstream msg;
+                msg << triName << ", vertex " << vertex
+                    << " link has Euler characteristic "
+                    << v->getLinkEulerCharacteristic() << ", not 0.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void vertexLinks() {
+            verifyVertexCount(singleTet, 4, "Single tetrahedron");
+            verifyVertexDisc(singleTet, 0, "Single tetrahedron");
+            verifyVertexDisc(singleTet, 1, "Single tetrahedron");
+            verifyVertexDisc(singleTet, 2, "Single tetrahedron");
+            verifyVertexDisc(singleTet, 3, "Single tetrahedron");
+
+            verifyVertexCount(s3, 1, "S^3");
+            verifyVertexSphere(s3, 0, "S^3");
+
+            verifyVertexCount(s2xs1, 1, "S^2 x S^1");
+            verifyVertexSphere(s2xs1, 0, "S^2 x S^1");
+
+            verifyVertexCount(rp3, 2, "RP^3");
+            verifyVertexSphere(rp3, 0, "RP^3");
+            verifyVertexSphere(rp3, 1, "RP^3");
+
+            verifyVertexCount(lens3_1, 2, "L(3,1)");
+            verifyVertexSphere(lens3_1, 0, "L(3,1)");
+            verifyVertexSphere(lens3_1, 1, "L(3,1)");
+
+            verifyVertexCount(lens8_3, 1, "L(8,3)");
+            verifyVertexSphere(lens8_3, 0, "L(8,3)");
+
+            verifyVertexCount(lens8_3_large, 1, "Large L(8,3)");
+            verifyVertexSphere(lens8_3_large, 0, "Large L(8,3)");
+
+            verifyVertexCount(lens7_1_loop, 2, "Layered loop L(7,1)");
+            verifyVertexSphere(lens7_1_loop, 0, "Layered loop L(7,1)");
+            verifyVertexSphere(lens7_1_loop, 1, "Layered loop L(7,1)");
+
+            verifyVertexCount(rp3rp3, 1, "RP^3 # RP^3");
+            verifyVertexSphere(rp3rp3, 0, "RP^3 # RP^3");
+
+            verifyVertexCount(q32xz3, 1, "S^3 / Q_32 x Z_3");
+            verifyVertexSphere(q32xz3, 0, "S^3 / Q_32 x Z_3");
+
+            verifyVertexCount(q28, 1, "S^3 / Q_28");
+            verifyVertexSphere(q28, 0, "S^3 / Q_28");
+
+            verifyVertexCount(lens100_1, 1, "L(100,1)");
+            verifyVertexSphere(lens100_1, 0, "L(100,1)");
+
+            verifyVertexCount(lst3_4_7, 1, "LST(3,4,7)");
+            verifyVertexDisc(lst3_4_7, 0, "LST(3,4,7)");
+
+            verifyVertexCount(figure8, 1, "Figure eight knot complement");
+            verifyVertexTorus(figure8, 0, "Figure eight knot complement");
+
+            verifyVertexCount(rp2xs1, 1, "RP^2 x S^1");
+            verifyVertexSphere(rp2xs1, 0, "RP^2 x S^1");
+
+            verifyVertexCount(solidKB, 2, "Solid Klein bottle");
+            verifyVertexDisc(solidKB, 0, "Solid Klein bottle");
+            verifyVertexDisc(solidKB, 1, "Solid Klein bottle");
+
+            verifyVertexCount(gieseking, 1, "Gieseking manifold");
+            verifyVertexKB(gieseking, 0, "Gieseking manifold");
+
+            verifyVertexCount(invalidEdges, 2,
+                "Triangulation with invalid edges");
+            verifyVertexSphere(invalidEdges, 0,
+                "Triangulation with invalid edges");
+            verifyVertexSphere(invalidEdges, 1,
+                "Triangulation with invalid edges");
+
+            verifyVertexCount(twoProjPlaneCusps, 9,
+                "Triangulation with RP^2 cusps");
+            verifyVertexSphere(twoProjPlaneCusps, 0,
+                "Triangulation with RP^2 cusps");
+            verifyVertexSphere(twoProjPlaneCusps, 1,
+                "Triangulation with RP^2 cusps");
+            verifyVertexSphere(twoProjPlaneCusps, 2,
+                "Triangulation with RP^2 cusps");
+            verifyVertexProjPlane(twoProjPlaneCusps, 3,
+                "Triangulation with RP^2 cusps");
+            verifyVertexSphere(twoProjPlaneCusps, 4,
+                "Triangulation with RP^2 cusps");
+            verifyVertexSphere(twoProjPlaneCusps, 5,
+                "Triangulation with RP^2 cusps");
+            verifyVertexSphere(twoProjPlaneCusps, 6,
+                "Triangulation with RP^2 cusps");
+            verifyVertexSphere(twoProjPlaneCusps, 7,
+                "Triangulation with RP^2 cusps");
+            verifyVertexProjPlane(twoProjPlaneCusps, 8,
+                "Triangulation with RP^2 cusps");
+
+            verifyVertexCount(cuspedGenusTwoTorus, 2,
+                "Cusped solid genus two torus");
+            verifyVertexSphere(cuspedGenusTwoTorus, 0,
+                "Cusped solid genus two torus");
+            verifyVertexTorusG2(cuspedGenusTwoTorus, 1,
+                "Cusped solid genus two torus");
+
+            verifyVertexCount(pinchedSolidTorus, 3,
+                "Pinched solid torus");
+            verifyVertexAnnulus(pinchedSolidTorus, 0,
+                "Pinched solid torus");
+            verifyVertexDisc(pinchedSolidTorus, 1,
+                "Pinched solid torus");
+            verifyVertexDisc(pinchedSolidTorus, 2,
+                "Pinched solid torus");
+
+            verifyVertexCount(pinchedSolidKB, 3,
+                "Pinched solid Klein bottle");
+            verifyVertexMobius(pinchedSolidKB, 0,
+                "Pinched solid Klein bottle");
+            verifyVertexDisc(pinchedSolidKB, 1,
+                "Pinched solid Klein bottle");
+            verifyVertexDisc(pinchedSolidKB, 2,
+                "Pinched solid Klein bottle");
         }
 
         void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
@@ -520,6 +1152,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "H1(tri with projective plane cusps)", 0, 2);
             verifyGroup(cuspedGenusTwoTorus.getHomologyH1(),
                 "H1(cusped solid genus two torus)", 2);
+            verifyGroup(pinchedSolidTorus.getHomologyH1(),
+                "H1(pinched solid torus)", 1);
+            verifyGroup(pinchedSolidKB.getHomologyH1(),
+                "H1(pinched solid Klein bottle)", 1);
         }
 
         void homologyH1Bdry() {
@@ -623,6 +1259,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Fund(tri with projective plane cusps)", "Z_2");
             verifyFundGroup(cuspedGenusTwoTorus.getFundamentalGroup(),
                 "Fund(cusped solid genus two torus)", "Free (2 generators)");
+            verifyFundGroup(pinchedSolidTorus.getFundamentalGroup(),
+                "Fund(pinched solid torus)", "Z");
+            verifyFundGroup(pinchedSolidKB.getFundamentalGroup(),
+                "Fund(pinched solid Klein bottle)", "Z");
         }
 
         void zeroEfficiency() {
