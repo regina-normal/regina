@@ -304,7 +304,7 @@ class NVertex : public ShareableObject {
 // Inline functions for NVertex
 
 inline NVertex::NVertex(NComponent* myComponent) : component(myComponent),
-        boundaryComponent(0), linkOrientable(true) {
+        boundaryComponent(0), linkOrientable(true), linkEulerCharacteristic(0) {
 }
 
 inline NVertex::~NVertex() {

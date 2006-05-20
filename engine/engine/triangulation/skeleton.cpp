@@ -44,7 +44,7 @@ void NTriangulation::calculateSkeleton() const {
     calculateFaces();
         // Sets faces, NFace.component
     calculateVertices();
-        // Sets vertices, NVertex.component
+        // Sets vertices, NVertex.component, NVertex.linkOrientable.
     calculateEdges();
         // Sets edges, NEdge.component, valid, NEdge.valid
     calculateBoundary();
@@ -52,7 +52,7 @@ void NTriangulation::calculateSkeleton() const {
         //     NEdge.boundaryComponent, NVertex.boundaryComponent,
         //     NComponent.boundaryComponents
     calculateVertexLinks();
-        // Sets valid, ideal, NVertex.link, NVertex.linkOrientable,
+        // Sets valid, ideal, NVertex.link,
         //     NVertex.linkEulerCharacteristic, NComponent.ideal,
         //     boundaryComponents, NVertex.boundaryComponent
 
@@ -478,48 +478,40 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
 }
 
 void NTriangulation::calculateVertexLinks() const {
-    // Runs through each vertex and sets link accordingly.
-    VertexIterator it;
-    NVertex* vertex;
-    std::vector<NVertexEmbedding>::const_iterator embit;
-    NEdge* edge;
-    NTetrahedron* tet;
-    int tetVertex, secondVertex;
+    // Begin by calculating Euler characteristics.
+    // Here we use the formula:  chi = (2 v_int + v_bdry - f) / 2, which
+    // is easily proven with a little arithmetic.
 
-    NRational v;
-    long f, twiceE;
-    for (it = vertices.begin(); it != vertices.end(); it++) {
+    // Note that NVertex::linkEulerCharacteristic is initialised to 0 in
+    // the NVertex constructor.
+
+    // Begin by calculating (2 v_int + v_bdry) for each vertex link.
+    NEdge* e;
+    for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++) {
+        e = *eit;
+        if (e->isBoundary()) {
+            // Contribute to v_bdry.
+            e->getVertex(0)->linkEulerCharacteristic++;
+            if (e->valid)
+                e->getVertex(1)->linkEulerCharacteristic++;
+        } else {
+            // Contribute to 2 v_int.
+            e->getVertex(0)->linkEulerCharacteristic += 2;
+            if (e->valid)
+                e->getVertex(1)->linkEulerCharacteristic += 2;
+        }
+    }
+
+    // Run through each vertex and finalise Euler characteristic, link
+    // and more.
+
+    NVertex* vertex;
+    for (VertexIterator it = vertices.begin(); it != vertices.end(); it++) {
         vertex = *it;
 
-        // Calculate number of faces, edges and vertices in the link.
-        f = vertex->getEmbeddings().size();
-        twiceE = 3 * f;
-        v = 0;
-
-        embit = vertex->getEmbeddings().begin();
-        while (embit != vertex->getEmbeddings().end()) {
-            const NVertexEmbedding& emb = (*embit);
-            tet = emb.getTetrahedron();
-            tetVertex = emb.getVertex();
-
-            for (secondVertex = 0; secondVertex < 4; secondVertex++) {
-                if (secondVertex == tetVertex)
-                    continue;
-                edge = tet->getEdge(edgeNumber[tetVertex][secondVertex]);
-                if (edge->valid)
-                    v += NRational(1, edge->getEmbeddings().size());
-                else
-                    v += NRational(1, 2 * edge->getEmbeddings().size());
-                if (tet->getFace(secondVertex)->isBoundary())
-                    twiceE++;
-            }
-
-            embit++;
-        }
-
-        // Find Euler characteristic.
-        vertex->linkEulerCharacteristic = f - (twiceE / 2) +
-            v.getNumerator().longValue();
+        // Fix the Euler characteristic (subtract f, divide by two).
+        vertex->linkEulerCharacteristic = (vertex->linkEulerCharacteristic
+            - static_cast<long>(vertex->getEmbeddings().size())) / 2;
 
         if (vertex->isBoundary()) {
             // We haven't added ideal vertices to the boundary list yet,

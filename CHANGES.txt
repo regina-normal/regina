@@ -18,6 +18,9 @@ Version 4.3.2  [ under development ]
         Class NPerm:
             - Micro-optimised routines that are called extremely frequently,
               such as sign().
+        Class NTriangulation:
+            - Optimised the skeletal calculations, which now run *much*
+              faster.
     TEST SUITE:
         - Added tests for the NPerm class.
         - Added tests for vertex link calculations.
