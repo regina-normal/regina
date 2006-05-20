@@ -234,94 +234,70 @@ void NTriangulation::calculateEdges() const {
     }
 }
 
-namespace {
-    struct EdgeState {
-        NTetrahedron* tet;
-        int edge;
-        int whichEndOfList;
-
-        EdgeState(NTetrahedron* newTet, int newEdge, int newEnd) :
-                tet(newTet), edge(newEdge), whichEndOfList(newEnd) {}
-    };
-}
-
 void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
         NEdge* label, const NPerm& firstTetVertices) const {
-    std::queue<EdgeState*> edgeQueue;
+    // Since tetrahedron edges are joined together in a loop, the depth-first
+    // search is really just a straight line in either direction.
+    // We therefore do away with the usual stack/queue and just keep track
+    // of the next edge to process in the current direction.
 
     firstTet->edges[firstEdge] = label;
     firstTet->edgeMapping[firstEdge] = firstTetVertices;
     label->embeddings.push_back(NEdgeEmbedding(firstTet, firstEdge));
-    edgeQueue.push(new EdgeState(firstTet, firstEdge, 0));
 
-    EdgeState* current;
+    // The last tetrahedron edge that was successfully processed.
     NTetrahedron* tet;
-    NTetrahedron* altTet;
-    NPerm perm;
     int edge;
-    int yourEdge;
     NPerm tetVertices;
-    int whichEndOfList;
-    int face;
-    while (! edgeQueue.empty()) {
-        current = edgeQueue.front();
-        edgeQueue.pop();
-        tet = current->tet;
-        edge = current->edge;
-        whichEndOfList = current->whichEndOfList;
-        tetVertices = tet->edgeMapping[edge];
-        delete current;
 
-        for (face=0; face<4; face++) {
-            if (face != edgeStart[edge] && face != edgeEnd[edge]) {
-                altTet = tet->getAdjacentTetrahedron(face);
-                if (altTet) {
-                    perm = tet->getAdjacentTetrahedronGluing(face);
-                    yourEdge =
-                        edgeNumber[perm[edgeStart[edge]]][perm[edgeEnd[edge]]];
-                    if (altTet->getEdge(yourEdge)) {
-                        // We need to check we're not labelling the edge in
-                        // reverse.
-                        if (((altTet->getEdgeMapping(yourEdge).inverse())
-                            * perm * tetVertices)[0] != 0) {
-                                // The edge is being labelled in reverse!
-                                label->valid = false;
-                                valid = false;
-                            }
-                    } else {
-                        // We need to label this new tetrahedron's edge.
-                        if (whichEndOfList == 0) {
-                            if (tetVertices[2] == face)
-                                whichEndOfList = 1;
-                            else
-                                whichEndOfList = -1;
-                        }
-                        altTet->edges[yourEdge] = label;
-                        altTet->edgeMapping[yourEdge] =
-                            perm * tetVertices * NPerm(2,3);
-                        if (whichEndOfList >= 0)
-                            label->embeddings.push_back(
-                                NEdgeEmbedding(altTet, yourEdge));
-                        else
-                            label->embeddings.push_front(
-                                NEdgeEmbedding(altTet, yourEdge));
-                        edgeQueue.push(new EdgeState(altTet, yourEdge,
-                            whichEndOfList));
-                        // If more than one adjacent tetrahedron shares this edge,
-                        // we will put the other tetrahedron at the other end of
-                        // the list in the corresponding NEdge embedding list.
-                        // This will ensure that all tetrahedra about a boundary
-                        // edge appear in the order in the NEdge embedding list in
-                        // which they are glued.
-                        //
-                        // The NEdge embedding list will be filled as in the
-                        // following example:  7-6-5-0-1-2-3-4, where the numbers
-                        // indicate in which order the tetrahedra are visited by
-                        // labelEdge().
-                        whichEndOfList = -whichEndOfList;
-                    }
+    int exitFace;
+    NPerm exitPerm;
+
+    // The next tetrahedron edge around from this.
+    NTetrahedron* nextTet;
+    int nextEdge;
+    NPerm nextVertices;
+
+    for (int dir = 0; dir < 2; dir++) {
+        // Start at the start and walk in one particular direction.
+        tet = firstTet;
+        edge = firstEdge;
+        tetVertices = tet->edgeMapping[edge];
+
+        while (true) {
+            // Move through to the next tetrahedron.
+            exitFace = tetVertices[dir == 0 ? 2 : 3];
+            nextTet = tet->getAdjacentTetrahedron(exitFace);
+            if (! nextTet)
+                break;
+
+            exitPerm = tet->getAdjacentTetrahedronGluing(exitFace);
+            nextVertices = exitPerm * tetVertices * NPerm(2, 3);
+            nextEdge = edgeNumber[nextVertices[0]][nextVertices[1]];
+
+            if (nextTet->edges[nextEdge]) {
+                // We looped right around.
+                // Check that we're not labelling the edge in reverse.
+                if (nextTet->edgeMapping[nextEdge][0] != nextVertices[0]) {
+                    // The edge is being labelled in reverse!
+                    label->valid = false;
+                    valid = false;
                 }
+                break;
             }
+
+            // We have a new tetrahedron edge; this needs to be labelled.
+            nextTet->edges[nextEdge] = label;
+            nextTet->edgeMapping[nextEdge] = nextVertices;
+
+            if (dir == 0)
+                label->embeddings.push_back(NEdgeEmbedding(nextTet, nextEdge));
+            else
+                label->embeddings.push_front(NEdgeEmbedding(nextTet, nextEdge));
+
+            tet = nextTet;
+            edge = nextEdge;
+            tetVertices = nextVertices;
         }
     }
 }
