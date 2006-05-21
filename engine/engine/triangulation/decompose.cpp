@@ -38,6 +38,10 @@ namespace regina {
 
 unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
         bool setLabels) {
+    // Knock off the empty triangulation first.
+    if (tetrahedra.empty())
+        return 0;
+
     if (! componentParent)
         componentParent = this;
 
@@ -48,7 +52,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     unsigned long nTets = tetrahedra.size();
 
     // Begin by cloning the triangulation.
-    NTetrahedron** newTets = new NTetrahedron*[tetrahedra.size()];
+    NTetrahedron** newTets = new NTetrahedron*[nTets];
     NTetrahedron *tet, *adjTet;
     unsigned long tetPos, adjPos;
     NPerm adjPerm;
@@ -73,7 +77,10 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     }
 
     // Now create the new component triangulations.
-    NTriangulation** newTris = new NTriangulation*[components.size()];
+
+    // We will need a skeleton at this point -- use getNumberOfComponents()
+    // to force a skeletal recalculation if it has not already been done.
+    NTriangulation** newTris = new NTriangulation*[getNumberOfComponents()];
     unsigned long whichComp = 0;
 
     for (ComponentIterator it = components.begin(); it != components.end();

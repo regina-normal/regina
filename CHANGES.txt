@@ -21,6 +21,8 @@ Version 4.3.2  [ under development ]
         Class NTriangulation:
             - Optimised the skeletal calculations, which now run *much*
               faster.
+            - Fixed a crash in splitIntoComponents() that occurred when
+              the triangulation skeleton had not yet been calculated.
     TEST SUITE:
         - Added tests for the NPerm class.
         - Added tests for vertex link calculations.
