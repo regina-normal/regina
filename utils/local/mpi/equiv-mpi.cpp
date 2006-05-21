@@ -868,7 +868,7 @@ void slaveTryMovesUp(NTriangulation* t, int levelsRemaining) {
  * Process a single triangulation.
  */
 void slaveProcessTri(NTriangulation* tri) {
-    nonMin = false;
+    nonMin = hasNew = false;
     orig = tri;
     equivs.clear();
     equivs.insert(orig);
