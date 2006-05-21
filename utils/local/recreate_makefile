@@ -8,7 +8,8 @@
 #
 # Usage: recreate_makefile
 #
-# Creates (or recreates) the Makefile.in and Makefile within this subdirectory.
+# Creates (or recreates) Makefile.in and Makefile within this directory
+# and its mpi/ subdirectory.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -46,14 +47,17 @@ if ! test -d admin; then
 fi
 
 # Do it.
-echo "Creating Makefile.in ..."
+echo "Creating each Makefile.in ..."
 automake "$reldir"/Makefile
+automake "$reldir"/mpi/Makefile
 
-echo "Postprocessing Makefile.in ..."
+echo "Postprocessing each Makefile.in ..."
 perl admin/am_edit "$reldir"/Makefile.in
+perl admin/am_edit "$reldir"/mpi/Makefile.in
 
-echo "Creating Makefile ..."
+echo "Creating each Makefile ..."
 CONFIG_FILES="$reldir"/Makefile CONFIG_HEADERS= ./config.status
+CONFIG_FILES="$reldir"/mpi/Makefile CONFIG_HEADERS= ./config.status
 
 echo "Done."
 exit 0
