@@ -81,20 +81,26 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
     // Now non-recursive; uses a queue instead.
     // The queue contains tetrahedra from which we need to propagate
     //     component labelling.
-    std::queue<NTetrahedron*> tetQueue;
+
+    // Use plain C arrays for the queue.  Since each tetrahedron is pushed
+    // on at most once, the array size does not need to be very large.
+
+    // Note that we have >= 1 tetrahedron, since firstTet != 0.
+    NTetrahedron** queue = new NTetrahedron*[tetrahedra.size()];
 
     firstTet->component = component;
     component->tetrahedra.push_back(firstTet);
     firstTet->orientation = firstOrientation;
-    tetQueue.push(firstTet);
+
+    unsigned queueStart = 0, queueEnd = 1;
+    queue[0] = firstTet;
 
     NTetrahedron* tet;
     NTetrahedron* adjTet;
     int face;
     int yourOrientation;
-    while (! tetQueue.empty()) {
-        tet = tetQueue.front();
-        tetQueue.pop();
+    while (queueStart < queueEnd) {
+        tet = queue[queueStart++];
 
         for (face=0; face<4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
@@ -110,11 +116,14 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
                     adjTet->component = component;
                     component->tetrahedra.push_back(adjTet);
                     adjTet->orientation = yourOrientation;
-                    tetQueue.push(adjTet);
+
+                    queue[queueEnd++] = adjTet;
                 }
             }
         }
     }
+
+    delete[] queue;
 }
 
 void NTriangulation::calculateVertices() const {
