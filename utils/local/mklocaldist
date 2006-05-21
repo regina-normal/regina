@@ -1,0 +1,56 @@
+#!/bin/sh
+#
+# Regina - A Normal Surface Theory Calculator
+# Local utility distribution tool
+#
+# Copyright (c) 2006, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Usage: mklocaldist
+#
+# Creates a tarball of source files within regina/utils/local/, so that
+# these files can be dropped into a standard Regina source tree on another
+# machine (without requiring a subversion checkout).  Note that, once
+# unpacked, recreate_makefile will need to be used before the local
+# utilities can be built.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#
+
+set -e
+
+if ! test -e identify.cpp -a -e ../regfiledump.cpp; then
+  echo "This script must be run from within the regina/utils/local/ directory." 1>&2
+  exit 1
+fi
+
+# Build from within the parent directory.
+cd ..
+
+today=`date +'%Y%m%d'`
+
+echo "Collecting sources ..."
+srclist=`find local -name .svn -prune -o '(' \
+  -name Makefile.am -o -name "*.cpp" -o -name "*.h" -o -name "*.txt" \
+  ')' -print`
+extralist='local/mklocaldist local/recreate_makefile'
+
+tarball="regina-local-$today.tar.gz"
+echo "Creating tarball $tarball ..."
+tar -zcf "local/$tarball" $srclist $extralist
+
+echo "Done."
+exit 0
