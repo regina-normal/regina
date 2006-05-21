@@ -288,6 +288,19 @@ std::ostream& ctrlLogStamp() {
 /**
  * Controller helper routine.
  *
+ * Stop the given slave.  It is assumed that the given slave is not
+ * currently working on any task.
+ */
+void ctrlStopSlave(int slave) {
+    ctrlLogStamp() << "Stopping slave " << slave << "." << std::endl;
+
+    char null = 0;
+    MPI_Send(&null, 1, MPI_CHAR, slave, TAG_REQUEST_TASK, MPI_COMM_WORLD);
+}
+
+/**
+ * Controller helper routine.
+ *
  * Wait for the next running slave to finish a task.  Note that if no
  * slaves are currently processing tasks, this routine will block forever!
  */
@@ -388,8 +401,11 @@ int ctrlWaitForSlave() {
 
         nNonMin++;
     } else if (result == RESULT_ERR) {
-        // TODO: Send error message.
-        ctrlLogStamp() << "ERROR: Slave signalled an error." << std::endl;
+        char errMsg[MAX_ERR_MSG_LEN + 1];
+        MPI_Recv(errMsg, MAX_ERR_MSG_LEN + 1, MPI_CHAR, slave,
+            TAG_RESULT_DATA, MPI_COMM_WORLD, &status);
+
+        ctrlLogStamp() << "ERROR: " << errMsg << std::endl;
         hasError = true;
     } else {
         ctrlLogStamp() << "ERROR: Unknown result code " << result
@@ -434,12 +450,8 @@ void ctrlFarmTri(NTriangulation* tri) {
             tri->getPacketLabel().length() + 1, MPI_CHAR, slave,
             TAG_REQUEST_TASK, MPI_COMM_WORLD);
         nRunningSlaves++;
-    } else {
-        ctrlLogStamp() << "Stopping slave " << slave << "." << std::endl;
-
-        char null = 0;
-        MPI_Send(&null, 1, MPI_CHAR, slave, TAG_REQUEST_TASK, MPI_COMM_WORLD);
-    }
+    } else
+        ctrlStopSlave(slave);
 }
 
 /**
@@ -462,11 +474,11 @@ int mainController() {
             ctrlFarmTri(static_cast<NTriangulation*>(p));
         }
 
-    // Kill off any slaves that aren't working, since there are no tasks
-    // to give them.
-    if (nRunningSlaves < nSlaves) {
-        // TODO
-    }
+    // Kill off any slaves that never started working, since there are no
+    // tasks left to give them.
+    if (nRunningSlaves < nSlaves)
+        for (int i = nRunningSlaves; i < nSlaves; i++)
+            ctrlStopSlave(i + 1);
 
     // Wait for remaining slaves to finish.
     while (nRunningSlaves > 0)
