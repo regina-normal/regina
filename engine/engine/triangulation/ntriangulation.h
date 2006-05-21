@@ -2200,7 +2200,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * calculateSkeleton().
          */
         void calculateVertices() const;
-        static void labelVertex(NTetrahedron*, int, NVertex*, int);
+        void labelVertex(NTetrahedron*, int, NVertex*, int) const;
             /**< Internal to calculateVertices(). */
         /**
          * Calculates the triangulation edges and associated

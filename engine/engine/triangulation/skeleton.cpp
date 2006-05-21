@@ -140,26 +140,24 @@ void NTriangulation::calculateVertices() const {
     }
 }
 
-namespace {
-    struct VertexState {
-        NTetrahedron* tet;
-        int vertex;
-
-        VertexState(NTetrahedron* newTet, int newVertex) :
-                tet(newTet), vertex(newVertex) {}
-    };
-}
-
 void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
-        NVertex* label, int firstOrientation) {
-    std::queue<VertexState*> vtxQueue;
+        NVertex* label, int firstOrientation) const {
+    // Create a queue using simple arrays.
+    // Since each tetrahedron vertex is pushed on at most once, the
+    // array size does not need to be very large.
+
+    // Note that we have >= 1 tetrahedron, since firstTet != 0.
+    NTetrahedron** queueTet = new NTetrahedron*[tetrahedra.size() * 4];
+    int* queueVtx = new int[tetrahedra.size() * 4];
 
     firstTet->vertices[firstVertex] = label;
     firstTet->tmpOrientation[firstVertex] = firstOrientation;
     label->embeddings.push_back(NVertexEmbedding(firstTet, firstVertex));
-    vtxQueue.push(new VertexState(firstTet, firstVertex));
 
-    VertexState* current;
+    unsigned queueStart = 0, queueEnd = 1;
+    queueTet[0] = firstTet;
+    queueVtx[0] = firstVertex;
+
     NTetrahedron* tet;
     NTetrahedron* altTet;
     int vertex;
@@ -171,12 +169,10 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
     NPerm yourFaceOrientation;
     NPerm faceCycle(1,2,0,3);
 
-    while (! vtxQueue.empty()) {
-        current = vtxQueue.front();
-        vtxQueue.pop();
-        tet = current->tet;
-        vertex = current->vertex;
-        delete current;
+    while (queueStart < queueEnd) {
+        tet = queueTet[queueStart];
+        vertex = queueVtx[queueStart];
+        queueStart++;
 
         for (face=0; face<4; face++) {
             if (face == vertex) continue;
@@ -204,11 +200,17 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
                     altTet->tmpOrientation[yourVertex] = yourOrientation;
                     label->embeddings.push_back(NVertexEmbedding(altTet,
                         yourVertex));
-                    vtxQueue.push(new VertexState(altTet, yourVertex));
+
+                    queueTet[queueEnd] = altTet;
+                    queueVtx[queueEnd] = yourVertex;
+                    queueEnd++;
                 }
             }
         }
     }
+
+    delete[] queueTet;
+    delete[] queueVtx;
 }
 
 void NTriangulation::calculateEdges() const {
