@@ -14,9 +14,9 @@ Program version:
 
 License details:
     LICENSE.txt
-    engine/engine/docs.h
-    engine/engine/regina-engine-config.1
-    engine/engine/snappea/kernel/README.txt
+    engine/docs.h
+    engine/regina-engine-config.1
+    engine/snappea/kernel/README.txt
     kdeui/doc/en/compiling.docbook (intro)
     kdeui/doc/en/credits.docbook
     kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
@@ -24,9 +24,9 @@ License details:
 
 SnapPea / Orb copyright:
     LICENSE.txt
-    engine/engine/docs.h
-    engine/engine/snappea/kernel/README.txt
-    engine/engine/snappea/nsnappeatriangulation.h
+    engine/docs.h
+    engine/snappea/kernel/README.txt
+    engine/snappea/nsnappeatriangulation.h
     kdeui/doc/en/credits.docbook
     kdeui/src/common/reginaabout.cpp
     www/index.html

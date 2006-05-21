@@ -132,10 +132,10 @@ if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^docs/engine/doxygen' | \
     grep -v '^docs/engine/graph_legend' | \
     grep -v '^docs/man/manpage\.' | \
-    grep -v '^engine/engine/regina-config\.h$' | \
-    grep -v '^engine/engine/regina-engine-config$' | \
-    grep -v '^engine/engine/snappea/kernel/unused\(/\|$\)' | \
-    grep -v '^engine/engine/stamp-h' | \
+    grep -v '^engine/regina-config\.h$' | \
+    grep -v '^engine/regina-engine-config$' | \
+    grep -v '^engine/snappea/kernel/unused\(/\|$\)' | \
+    grep -v '^engine/stamp-h' | \
     grep -v '^icons/src\(/\|$\)' | \
     grep -v '^kdeui/.*/index.cache.bz2$' | \
     grep -v '^kdeui/src/shell/regina-kde$' | \

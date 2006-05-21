@@ -1,7 +1,7 @@
 
 # Other files:
 AC_CONFIG_FILES([python/regina-python], [chmod +x python/regina-python])
-AC_CONFIG_FILES([engine/engine/regina-engine-config], [chmod +x engine/engine/regina-engine-config])
+AC_CONFIG_FILES([engine/regina-engine-config], [chmod +x engine/regina-engine-config])
 
 AC_OUTPUT
 

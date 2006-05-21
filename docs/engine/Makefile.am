@@ -20,7 +20,7 @@ pkgdocdir = $(pkgdatadir)/engine-docs
 
 all-local : $(engine_index)
 $(engine_index) :
-	cd ../../engine && @DOXYGEN@ doc-files/docs.conf
+	cd ../../engine && @DOXYGEN@ doxygen/docs.conf
 	cp `find ../../engine -name "*.png"` .
 
 mostlyclean-local :

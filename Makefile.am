@@ -36,7 +36,7 @@ mostlyclean-local :
 	rm -f hs_err_pid*.log
 
 engine :
-	cd engine/engine && $(MAKE)
+	cd engine && $(MAKE)
 kdeui : engine
 	cd kdeui && $(MAKE)
 python : engine

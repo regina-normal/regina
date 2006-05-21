@@ -33,7 +33,7 @@ dnl
 AC_INIT(Regina, [4.3.2], [regina-user@lists.sourceforge.net], regina)
 AC_PREREQ(2.50)
 AC_CONFIG_AUX_DIR(admin)
-AC_CONFIG_SRCDIR(engine/engine/triangulation/ntriangulation.cpp)
+AC_CONFIG_SRCDIR(engine/triangulation/ntriangulation.cpp)
 
 # Having a correct --prefix is critical.  Make a reasonable guess.
 AC_PREFIX_PROGRAM(meinproc)
@@ -52,7 +52,7 @@ AC_ARG_PROGRAM
 # until this point.
 AM_INIT_AUTOMAKE(regina, [4.3.2])
 AM_MAINTAINER_MODE
-AM_CONFIG_HEADER(engine/engine/regina-config.h)
+AM_CONFIG_HEADER(engine/regina-config.h)
 
 # Do we need to install using a non-standard package name?
 AC_ARG_VAR(PKGNAME, [the package name to install as (default: regina)])
@@ -282,7 +282,7 @@ fi
 # AM_PATH_XML2 seems to have switched recently from using XML_CFLAGS to
 # XML_CPPFLAGS; we'd better allow for either here.
 ENGINE_EXTERNAL_INCLUDES="$XML_CFLAGS $XML_CPPFLAGS"
-ENGINE_INCLUDES="-I\$(top_srcdir)/engine/engine $ENGINE_EXTERNAL_INCLUDES"
+ENGINE_INCLUDES="-I\$(top_srcdir)/engine $ENGINE_EXTERNAL_INCLUDES"
 AC_SUBST(ENGINE_EXTERNAL_INCLUDES)
 AC_SUBST(ENGINE_INCLUDES)
 
@@ -296,12 +296,12 @@ AC_SUBST(TESTSUITE_LIBS)
 
 # Do we wish to statically link the calculation engine into final targets?
 __static_final=no
-LIB_ENGINE="\$(top_srcdir)/engine/engine/libregina-engine.la"
+LIB_ENGINE="\$(top_srcdir)/engine/libregina-engine.la"
 AC_ARG_ENABLE(static-final, AC_HELP_STRING([--enable-static-final],
     [statically link the calculation engine into final executables and modules [[default=no]]]), [
   if test "$enableval" != "no"; then
     __static_final=yes
-    LIB_ENGINE="\$(top_srcdir)/engine/engine/libregina-engine-noinst.la"
+    LIB_ENGINE="\$(top_srcdir)/engine/libregina-engine-noinst.la"
   fi
 ])
 AM_CONDITIONAL(STATIC_FINAL, test "$__static_final" = "yes")
