@@ -9,6 +9,10 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.3.2  [ under development ]
 
+    OVERALL:
+        - Tidied up the directory hierarchy a little.  The old engine/engine/
+          is now just engine/, and the old engine/doc-files/ is now
+          engine/doxygen/.
     ENGINE:
         Class NClosedPrimeMinSearcher:
             - Census generation is much faster again for larger numbers of
