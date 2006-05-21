@@ -174,9 +174,6 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
     int yourOrientation;
     int yourFace;
     int face;
-    NPerm myFaceOrientation;
-    NPerm yourFaceOrientation;
-    NPerm faceCycle(1,2,0,3);
 
     while (queueStart < queueEnd) {
         tet = queueTet[queueStart];
@@ -189,17 +186,14 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
             if (altTet) {
                 yourVertex = tet->getAdjacentTetrahedronGluing(face)[vertex];
                 yourFace = tet->getAdjacentFace(face);
-                myFaceOrientation = faceOrdering(vertex);
-                while (myFaceOrientation[2] != face)
-                    myFaceOrientation = myFaceOrientation * faceCycle;
-                yourFaceOrientation = faceOrdering(yourVertex);
-                while (yourFaceOrientation[2] != yourFace)
-                    yourFaceOrientation = yourFaceOrientation * faceCycle;
-                if (tet->getAdjacentTetrahedronGluing(face)[
-                        myFaceOrientation[0]] == yourFaceOrientation[0])
+
+                if (faceOrdering(yourVertex).sign() ==
+                        (tet->getAdjacentTetrahedronGluing(face) *
+                         faceOrdering(vertex)).sign())
                     yourOrientation = -(tet->tmpOrientation[vertex]);
                 else
                     yourOrientation = tet->tmpOrientation[vertex];
+
                 if (altTet->getVertex(yourVertex)) {
                     if (altTet->tmpOrientation[yourVertex] !=
                             yourOrientation)
@@ -446,7 +440,7 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
                 yourOrientation =
                     (nextTet->getFaceMapping(nextFaceNumber).inverse() *
                     nextFacePerm * switchPerm * tet->getFaceMapping(tetFace))
-                    .sign() == 1 ?  -tet->tmpOrientation[tetFace] :
+                    .sign() == 1 ? -tet->tmpOrientation[tetFace] :
                     tet->tmpOrientation[tetFace];
                 if (nextFace->boundaryComponent) {
                     // Check the orientation.
