@@ -28,7 +28,8 @@
 
 /**
  * This utility is a parallelised version of equiv.cpp, found in the
- * parent directory.
+ * parent directory.  See the notes at the beginning of equiv.cpp for
+ * general information on what this utility does.
  *
  * Processes communicate through MPI; the process with rank 0 is the
  * controller and the remainder are slaves.  Each triangulation is
@@ -36,7 +37,28 @@
  * manipulate it as described in equiv.cpp, producing either a smaller
  * triangulation or equivalent triangulations of the same size.
  *
- * TODO: Talk about output and logging.
+ * Some things are handled a little differently from equiv.cpp:
+ *
+ * - Progress reporting and errors are not written to standard error;
+ *   instead they are written to the log file equiv.log in the current
+ *   directory.  As an exception, any errors that occur during initialisation
+ *   (before the log file is opened) are written to standard error.
+ *
+ * - Known non-minimal triangulations are not listed by name in the
+ *   final output.  Instead they are simply removed from the usual
+ *   output, and a note for each non-minimal triangulation is written to
+ *   the log file.
+ *
+ * - If a new potentially minimal triangulation is discovered (i.e., one
+ *   of the same size as an input triangulation that is not in the input
+ *   file), this new triangulation is *not* written to any output files.
+ *   This is because slaves do not transmit full triangulation constructions
+ *   back to the controller.  Instead a warning is written to the log file,
+ *   and a note is made in the final statistics on standard output.
+ *
+ * As in the non-parallel equiv.cpp, equivalence classes and final statistics
+ * are written to standard output, and the results can be optionally saved
+ * in a Regina data file by passing -o.
  */
 
 #include <cstdio>
@@ -72,8 +94,9 @@
 #define DAY_SEC (24 * HOUR_SEC)
 
 // MPI constraints:
-// TODO: Verify label uniqueness and lengths
+// TODO: Verify label uniqueness, non-emptiness and lengths
 #define MAX_TRI_LABEL_LEN 250
+#define MAX_ERR_MSG_LEN (MAX_TRI_LABEL_LEN + 100)
 
 using namespace regina;
 
@@ -114,6 +137,7 @@ int nSlaves;
 int nRunningSlaves = 0;
 std::ofstream logger;
 const char* logFile = "equiv.log";
+bool hasError = false;
 
 // The output packet tree.
 NPacket* newTree = 0;
@@ -279,8 +303,18 @@ int ctrlWaitForSlave() {
 
     char triLabel[MAX_TRI_LABEL_LEN + 1];
 
-    // TODO: Mark whether an error occurred.
-    if (result == RESULT_OK) {
+    if (result == RESULT_OK || result == RESULT_HAS_NEW) {
+        if (result == RESULT_HAS_NEW) {
+            // The original packet label comes through first so we can
+            // write it to the log.  It will come through again shortly
+            // as part of the set of equivalent triangulations.
+            MPI_Recv(triLabel, MAX_TRI_LABEL_LEN + 1, MPI_CHAR, slave,
+                TAG_RESULT_DATA, MPI_COMM_WORLD, &status);
+            ctrlLogStamp() << "WARNING: Has unseen equivalent: " << triLabel
+                << std::endl;
+            nHasNew++;
+        }
+
         equivs.clear();
 
         NPacket* p;
@@ -292,15 +326,17 @@ int ctrlWaitForSlave() {
                 break;
 
             p = tree->findPacketLabel(triLabel);
-            if (! p)
-                ctrlLogStamp() << "ERROR: Equivalent [" << triLabel
-                    << "] not found" << std::endl;
-            else {
+            if (! p) {
+                ctrlLogStamp() << "ERROR: Returned equivalent [" << triLabel
+                    << "] not found." << std::endl;
+                hasError = true;
+            } else {
                 tri = dynamic_cast<NTriangulation*>(p);
-                if (! tri)
-                    ctrlLogStamp() << "ERROR: Equivalent [" << triLabel
+                if (! tri) {
+                    ctrlLogStamp() << "ERROR: Returned equivalent [" << triLabel
                         << "] is not a triangulation!" << std::endl;
-                else
+                    hasError = true;
+                } else
                     equivs.insert(tri);
             }
         }
@@ -351,31 +387,44 @@ int ctrlWaitForSlave() {
             << std::endl;
 
         nNonMin++;
-    } else if (result == RESULT_HAS_NEW) {
-        MPI_Recv(triLabel, MAX_TRI_LABEL_LEN + 1, MPI_CHAR, slave,
-            TAG_RESULT_DATA, MPI_COMM_WORLD, &status);
-        ctrlLogStamp() << "WARNING: Has unseen equivalent: " << triLabel
-            << std::endl;
-
-        nHasNew++;
     } else if (result == RESULT_ERR) {
         // TODO: Send error message.
         ctrlLogStamp() << "ERROR: Slave signalled an error." << std::endl;
+        hasError = true;
     } else {
         ctrlLogStamp() << "ERROR: Unknown result code " << result
             << " received from slave." << std::endl;
+        hasError = true;
     }
 
     return slave;
 }
 
+/**
+ * Controller helper routine.
+ *
+ * Farm the given triangulation out to the next available slave.
+ * If all slaves are working then this routine will wait until some
+ * slave finishes its current task.
+ *
+ * The given triangulation may be 0, in which case this routine will wait
+ * for the next slave to finish its current task, and will then close that
+ * slave down.  Note that if the given triangulation is 0 but no slaves
+ * are actively working on tasks then this routine will wait forever.
+ */
 void ctrlFarmTri(NTriangulation* tri) {
     int slave;
     if (tri == 0 || nRunningSlaves == nSlaves) {
         // We need to wait for somebody to stop first.
         slave = ctrlWaitForSlave();
-    } else
+    } else {
+        // It looks like we're in startup mode, since we have a real
+        // triangulation and not all of the slaves are up and working yet.
+        //
+        // We assume that slaves 1..nRunningSlaves are on their first tasks.
+        // Farm this new task out to slave number (nRunningSlaves + 1).
         slave = nRunningSlaves + 1;
+    }
 
     if (tri) {
         ctrlLogStamp() << "Farmed [" << tri->getPacketLabel()
@@ -424,7 +473,7 @@ int mainController() {
         ctrlFarmTri(0);
 
     // Done!
-    logger << "All slaves finished." << std::endl;
+    ctrlLogStamp() << "All slaves finished." << std::endl;
 
     // Write the summary of results.
     if (nClasses) {
@@ -486,14 +535,23 @@ int mainController() {
 
     // Are we saving results?
     if (outFile && newTree) {
-        fprintf(stderr, "\nSaving results to %s...\n", outFile);
+        ctrlLogStamp() << "Saving results to " << outFile << "." << std::endl;
         writeXMLFile(outFile, newTree);
     } else
-        fprintf(stderr, "\nNot saving results.\n");
+        ctrlLogStamp() << "Not saving results." << std::endl;
 
-    // Clean up.
+    // Clean up and exit.
     if (newTree)
         delete newTree;
+
+    if (hasError) {
+        ctrlLogStamp() << "ERROR: One or more errors occurred; "
+            "read back through the log for details." << std::endl;
+        printf("\nERROR: One or more errors occurred.\n");
+        printf(  "       Please read through the log file %s for details.\n",
+            logFile);
+    } else
+        ctrlLogStamp() << "All done." << std::endl;
 
     return 0;
 }
@@ -503,9 +561,16 @@ int mainController() {
  *
  * Signal that a fatal error occurred whilst working on the current task.
  */
-void slaveBail(const std::string& /* TODO error */) {
+void slaveBail(const std::string& error) {
     long result = RESULT_ERR;
     MPI_Send(&result, 1, MPI_LONG, 0, TAG_RESULT, MPI_COMM_WORLD);
+
+    if (error.length() <= MAX_ERR_MSG_LEN)
+        MPI_Send(const_cast<char*>(error.c_str()), error.length() + 1,
+            MPI_CHAR, 0, TAG_RESULT_DATA, MPI_COMM_WORLD);
+    else
+        MPI_Send(const_cast<char*>(error.substr(0, MAX_ERR_MSG_LEN).c_str()),
+            MAX_ERR_MSG_LEN + 1, MPI_CHAR, 0, TAG_RESULT_DATA, MPI_COMM_WORLD);
 }
 
 /**
@@ -528,21 +593,34 @@ void slaveSendNonMin() {
  *
  * Signal that the triangulation currently being processed has a
  * homeomorphic triangulation of the same size that we haven't seen.
+ *
+ * The original packet label is returned for logging purposes,
+ * followed by a full set of homeomorphic triangulations.
  */
 void slaveSendNew() {
     long result = RESULT_HAS_NEW;
     MPI_Send(&result, 1, MPI_LONG, 0, TAG_RESULT, MPI_COMM_WORLD);
 
+    // Send the original packet label for logging purposes, then send
+    // the entire set of equivalent triangulations as per normal.
     MPI_Send(const_cast<char*>(orig->getPacketLabel().c_str()),
         orig->getPacketLabel().length() + 1, MPI_CHAR, 0,
         TAG_RESULT_DATA, MPI_COMM_WORLD);
+
+    for (TriSet::iterator tit = equivs.begin(); tit != equivs.end(); tit++)
+        MPI_Send(const_cast<char*>((*tit)->getPacketLabel().c_str()),
+            (*tit)->getPacketLabel().length() + 1, MPI_CHAR, 0,
+            TAG_RESULT_DATA, MPI_COMM_WORLD);
+
+    char null = 0;
+    MPI_Send(&null, 1, MPI_CHAR, 0, TAG_RESULT, MPI_COMM_WORLD);
 }
 
 /**
  * Slave helper routine.
  *
  * Signal that processing for this task is complete.  A set of
- * homeomorphic triangulations is be returned.
+ * homeomorphic triangulations is returned.
  */
 void slaveSendEquivs() {
     long result = RESULT_OK;
