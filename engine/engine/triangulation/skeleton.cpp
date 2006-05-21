@@ -187,9 +187,12 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
                 yourVertex = tet->getAdjacentTetrahedronGluing(face)[vertex];
                 yourFace = tet->getAdjacentFace(face);
 
-                if (faceOrdering(yourVertex).sign() ==
-                        (tet->getAdjacentTetrahedronGluing(face) *
-                         faceOrdering(vertex)).sign())
+                // We should actually be inverting faceOrdering(yourVertex).
+                // However, all we care about is the sign of the permutation,
+                // so let's save ourselves those extra few CPU cycles.
+                if ((faceOrdering(yourVertex) *
+                        tet->getAdjacentTetrahedronGluing(face) *
+                        faceOrdering(vertex)).sign() > 0)
                     yourOrientation = -(tet->tmpOrientation[vertex]);
                 else
                     yourOrientation = tet->tmpOrientation[vertex];
