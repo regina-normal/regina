@@ -86,7 +86,7 @@ class NTetrahedron : public ShareableObject {
         std::string description;
             /**< A text description of this tetrahedron.
                  Descriptions are not mandatory and need not be unique. */
-        
+
         NVertex* vertices[4];
             /**< Vertices in the triangulation skeleton that are
                  vertices of this tetrahedron. */
@@ -117,7 +117,7 @@ class NTetrahedron : public ShareableObject {
         NComponent* component;
             /**< The component to which this tetrahedron belongs in the
                  triangulation. */
-        
+
     public:
         /**
          * Creates a new tetrahedron with empty description and no
@@ -374,7 +374,7 @@ class NTetrahedron : public ShareableObject {
         NPerm getFaceMapping(int face) const;
 
         void writeTextShort(std::ostream& out) const;
-    
+
     friend class NTriangulation;
         /**< Allow access to private members. */
 };
