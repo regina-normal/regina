@@ -47,6 +47,7 @@
  */
 
 #include <file/nxmlfile.h>
+#include <maths/numbertheory.h>
 #include <packet/ncontainer.h>
 #include <triangulation/ntriangulation.h>
 
@@ -54,7 +55,14 @@
 #include <iostream>
 #include <vector>
 
+#define MAX_TV_MAX_R 20
+#define MAX_TV_PARAM_COUNT (MAX_TV_MAX_R * (MAX_TV_MAX_R - 1) / 2)
+
 using namespace regina;
+
+const unsigned tvMaxR = 8;
+unsigned tvParams[MAX_TV_PARAM_COUNT][2];
+unsigned tvParamCount;
 
 unsigned totMfds = 0;
 unsigned totMfdsInconsistent = 0;
@@ -72,54 +80,27 @@ struct InvData {
 
     std::string h1;
     unsigned long h2z2;
-    double tv3_1;
-    double tv4_1;
-    double tv4_3;
-    double tv5_2;
-    double tv5_3;
-    double tv5_4;
-    double tv7_2;
-    double tv7_3;
-    double tv7_4;
-    double tv7_5;
-    double tv8_3;
-    double tv9_4;
-    double tv10_3;
+    double* turaevViro;
 
     InvData(NTriangulation* tri) : manifold(0) {
         h1 = tri->getHomologyH1().toString();
         h2z2 = tri->getHomologyH2Z2();
-        tv3_1 = tri->turaevViro(3, 1);
-        tv4_1 = tri->turaevViro(4, 1);
-        tv4_3 = tri->turaevViro(4, 3);
-        tv5_2 = tri->turaevViro(5, 2);
-        tv5_3 = tri->turaevViro(5, 3);
-        tv5_4 = tri->turaevViro(5, 4);
-        tv7_2 = tri->turaevViro(7, 2);
-        tv7_3 = tri->turaevViro(7, 3);
-        tv7_4 = tri->turaevViro(7, 4);
-        tv7_5 = tri->turaevViro(7, 5);
-        tv8_3 = tri->turaevViro(8, 3);
-        tv9_4 = tri->turaevViro(9, 4);
-        tv10_3 = tri->turaevViro(10, 3);
+
+        turaevViro = new double[tvParamCount];
+        for (unsigned i = 0; i < tvParamCount; i++)
+            turaevViro[i] = tri->turaevViro(tvParams[i][0], tvParams[i][1]);
+    }
+
+    ~InvData() {
+        delete[] turaevViro;
     }
 
     bool mayBeEqual(const InvData& other) const {
         if (h1 != other.h1) return false;
         if (h2z2 != other.h2z2) return false;
-        if (! close(tv3_1, other.tv3_1)) return false;
-        if (! close(tv4_1, other.tv4_1)) return false;
-        if (! close(tv4_3, other.tv4_3)) return false;
-        if (! close(tv5_2, other.tv5_2)) return false;
-        if (! close(tv5_3, other.tv5_3)) return false;
-        if (! close(tv5_4, other.tv5_4)) return false;
-        if (! close(tv7_2, other.tv7_2)) return false;
-        if (! close(tv7_3, other.tv7_3)) return false;
-        if (! close(tv7_4, other.tv7_4)) return false;
-        if (! close(tv7_5, other.tv7_5)) return false;
-        if (! close(tv8_3, other.tv8_3)) return false;
-        if (! close(tv9_4, other.tv9_4)) return false;
-        if (! close(tv10_3, other.tv10_3)) return false;
+
+        for (unsigned i = 0; i < tvParamCount; i++)
+            if (! close(turaevViro[i], other.turaevViro[i])) return false;
 
         return true;
     }
@@ -129,32 +110,11 @@ struct InvData {
         if (h1 > other.h1) return true;
         if (h2z2 < other.h2z2) return false;
         if (h2z2 > other.h2z2) return true;
-        if (tv3_1 < other.tv3_1) return false;
-        if (tv3_1 > other.tv3_1) return true;
-        if (tv4_1 < other.tv4_1) return false;
-        if (tv4_1 > other.tv4_1) return true;
-        if (tv4_3 < other.tv4_3) return false;
-        if (tv4_3 > other.tv4_3) return true;
-        if (tv5_2 < other.tv5_2) return false;
-        if (tv5_2 > other.tv5_2) return true;
-        if (tv5_3 < other.tv5_3) return false;
-        if (tv5_3 > other.tv5_3) return true;
-        if (tv5_4 < other.tv5_4) return false;
-        if (tv5_4 > other.tv5_4) return true;
-        if (tv7_2 < other.tv7_2) return false;
-        if (tv7_2 > other.tv7_2) return true;
-        if (tv7_3 < other.tv7_3) return false;
-        if (tv7_3 > other.tv7_3) return true;
-        if (tv7_4 < other.tv7_4) return false;
-        if (tv7_4 > other.tv7_4) return true;
-        if (tv7_5 < other.tv7_5) return false;
-        if (tv7_5 > other.tv7_5) return true;
-        if (tv8_3 < other.tv8_3) return false;
-        if (tv8_3 > other.tv8_3) return true;
-        if (tv9_4 < other.tv9_4) return false;
-        if (tv9_4 > other.tv9_4) return true;
-        if (tv10_3 < other.tv10_3) return false;
-        if (tv10_3 > other.tv10_3) return true;
+
+        for (unsigned i = 0; i < tvParamCount; i++) {
+            if (turaevViro[i] < other.turaevViro[i]) return false;
+            if (turaevViro[i] > other.turaevViro[i]) return true;
+        }
 
         return false;
     }
@@ -180,6 +140,19 @@ void usage(const char* progName, const std::string& error = std::string()) {
     std::cerr << "Results are written to standard output.\n";
     std::cerr << "Statistics and diagnostic messages are written to standard error.\n";
     exit(1);
+}
+
+void initTVParams() {
+    tvParamCount = 0;
+
+    unsigned r, root;
+    for (r = 3; r <= tvMaxR; r++)
+        for (root = 1; root < r; root++)
+            if (gcd(r, root) == 1) {
+                tvParams[tvParamCount][0] = r;
+                tvParams[tvParamCount][1] = root;
+                tvParamCount++;
+            }
 }
 
 void process(NContainer* c) {
@@ -271,6 +244,9 @@ int main(int argc, char* argv[]) {
     // argv[i] is the first filename.
     if (i != argc - 1)
         usage(argv[0], "Precisely one data file must be given.");
+
+    // Set up the list of Turaev-Viro parameters to try.
+    initTVParams();
 
     // Read the data file.
     if (! (tree = readXMLFile(argv[i]))) {
