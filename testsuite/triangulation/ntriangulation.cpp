@@ -33,6 +33,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "maths/approx.h"
 #include "maths/numbertheory.h"
+#include "packet/ncontainer.h"
 #include "split/nsignature.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
@@ -61,6 +62,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(zeroEfficiency);
     CPPUNIT_TEST(turaevViro);
+    CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(propertyUpdates);
 
     CPPUNIT_TEST_SUITE_END();
@@ -1466,6 +1468,138 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             verifyTVS2xS1(4); verifyTVS2xS1(5); verifyTVS2xS1(6);
             verifyTVS2xS1(7); verifyTVS2xS1(8);
+        }
+
+        void verifyDoubleCover(const NTriangulation& tri, const char* triName) {
+            // PRE: tri is either empty or connected.
+
+            NTriangulation cover(tri);
+            cover.makeDoubleCover();
+
+            if (tri.getNumberOfTetrahedra() == 0) {
+                if (cover.getNumberOfTetrahedra() != 0)
+                    CPPUNIT_FAIL("Empty triangulation: "
+                        "Double cover is non-empty.");
+                return;
+            }
+
+            // We have a non-empty connected triangulation.
+            if (tri.isOrientable()) {
+                // We should simply come away with two identical copies
+                // of tri.
+                regina::NContainer parent;
+                if (cover.splitIntoComponents(&parent) != 2) {
+                    std::ostringstream msg;
+                    msg << triName << ": Orientable double cover does not "
+                        "contain precisely two components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                NTriangulation* child = static_cast<NTriangulation*>(
+                    parent.getFirstTreeChild());
+                while (child) {
+                    if (! tri.isIsomorphicTo(*child).get()) {
+                        std::ostringstream msg;
+                        msg << triName << ": Orientable double cover "
+                            "contains a component not isomorphic to the "
+                            "original.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    child = static_cast<NTriangulation*>(
+                        child->getNextTreeSibling());
+                }
+            } else {
+                // We should come away with a proper connected double cover.
+                if (cover.getNumberOfComponents() != 1) {
+                    std::ostringstream msg;
+                    msg << triName << ": Orientable double cover does not "
+                        "contain precisely one component.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! cover.isOrientable()) {
+                    std::ostringstream msg;
+                    msg << triName << ": Orientable double cover is not "
+                        "orientable.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (cover.getNumberOfTetrahedra() !=
+                        2 * tri.getNumberOfTetrahedra()) {
+                    std::ostringstream msg;
+                    msg << triName << ": Orientable double cover does not "
+                        "contain precisely twice as many tetrahedra.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (cover.getNumberOfFaces() != 2 * tri.getNumberOfFaces()) {
+                    std::ostringstream msg;
+                    msg << triName << ": Orientable double cover does not "
+                        "contain precisely twice as many faces.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri.isValid() && cover.getNumberOfEdges() !=
+                        2 * tri.getNumberOfEdges()) {
+                    std::ostringstream msg;
+                    msg << triName << ": Orientable double cover does not "
+                        "contain precisely twice as many edges.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri.isValid() && (! tri.isIdeal()) &&
+                        cover.getNumberOfVertices() !=
+                        2 * tri.getNumberOfVertices()) {
+                    std::ostringstream msg;
+                    msg << triName << ": Orientable double cover does not "
+                        "contain precisely twice as many vertices.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // We expect the first homology group to be identical,
+                // or to be missing a copy of Z_2.
+                if (! (tri.getHomologyH1() == cover.getHomologyH1())) {
+                    NAbelianGroup hCover(cover.getHomologyH1());
+                    hCover.addTorsionElement(2);
+                    if (! (tri.getHomologyH1() == hCover)) {
+                        std::ostringstream msg;
+                        msg << triName << ": Orientable double cover has H1 = "
+                            << cover.getHomologyH1().toString()
+                            << ", which does not match the original H1 = "
+                            << tri.getHomologyH1().toString() << '.';
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void doubleCover() {
+            verifyDoubleCover(empty, "Empty triangulation");
+            verifyDoubleCover(singleTet, "Single tetrahedron");
+            verifyDoubleCover(s3, "S^3");
+            verifyDoubleCover(s2xs1, "S^2 x S^1");
+            verifyDoubleCover(rp3, "RP^3");
+            verifyDoubleCover(lens3_1, "L(3,1)");
+            verifyDoubleCover(lens8_3, "L(8,3)");
+            verifyDoubleCover(lens8_3_large, "Large L(8,3)");
+            verifyDoubleCover(lens7_1_loop, "Layered loop L(7,1)");
+            verifyDoubleCover(rp3rp3, "RP^3 # RP^3");
+            verifyDoubleCover(q32xz3, "S^3 / Q_32 x Z_3");
+            verifyDoubleCover(q28, "S^3 / Q_28");
+            verifyDoubleCover(lens100_1, "L(100,1)");
+            verifyDoubleCover(lst3_4_7, "LST(3,4,7)");
+            verifyDoubleCover(figure8, "Figure eight knot complement");
+            verifyDoubleCover(rp2xs1, "RP^2 x S^1");
+            verifyDoubleCover(solidKB, "Solid Klein bottle");
+            verifyDoubleCover(gieseking, "Gieseking manifold");
+            verifyDoubleCover(invalidEdges, "Triangulation with invalid edges");
+            verifyDoubleCover(twoProjPlaneCusps,
+                "Triangulation with RP^2 cusps");
+            verifyDoubleCover(cuspedGenusTwoTorus,
+                "Cusped solid genus 2 torus");
+            verifyDoubleCover(pinchedSolidTorus, "Pinched solid torus");
+            verifyDoubleCover(pinchedSolidKB, "Pinched solid Klein bottle");
         }
 
         void propertyUpdates() {
