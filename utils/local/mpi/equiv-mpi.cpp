@@ -94,7 +94,6 @@
 #define DAY_SEC (24 * HOUR_SEC)
 
 // MPI constraints:
-// TODO: Verify label uniqueness, non-emptiness and lengths
 #define MAX_TRI_LABEL_LEN 250
 #define MAX_ERR_MSG_LEN (MAX_TRI_LABEL_LEN + 100)
 
@@ -243,6 +242,36 @@ int parseCmdLine(int argc, const char* argv[]) {
     // Done parsing the command line.
     poptFreeContext(optCon);
     return 0;
+}
+
+/**
+ * Generic helper routine.
+ *
+ * Verify that the input packet tree is suitable for processing.
+ */
+bool checkInputTree() {
+    std::set<std::string> allLabels;
+    unsigned labelLen;
+
+    for (NPacket* p = tree; p; p = p->nextTreePacket()) {
+        labelLen = p->getPacketLabel().length();
+        if (labelLen == 0) {
+            fprintf(stderr, "ERROR: Empty packet label found in input file.\n");
+            return false;
+        } else if (labelLen > MAX_TRI_LABEL_LEN) {
+            fprintf(stderr, "ERROR: Overlong packet label [%s] found in "
+                "input file.\n",
+                p->getPacketLabel().c_str());
+            return false;
+        } else if (! allLabels.insert(p->getPacketLabel()).second) {
+            fprintf(stderr, "ERROR: Duplicate packet label [%s] found in "
+                "input file.\n",
+                p->getPacketLabel().c_str());
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -911,6 +940,10 @@ int main(int argc, char* argv[]) {
     if (! (tree = readXMLFile(inFile.c_str()))) {
         fprintf(stderr, "ERROR: Could not read data from %s.\n",
             inFile.c_str());
+        MPI_Finalize();
+        return 1;
+    }
+    if (! checkInputTree()) {
         MPI_Finalize();
         return 1;
     }
