@@ -44,7 +44,8 @@ today=`date +'%Y%m%d'`
 
 echo "Collecting sources ..."
 srclist=`find local -name .svn -prune -o '(' \
-  -name Makefile.am -o -name "*.cpp" -o -name "*.h" -o -name "*.txt" \
+  -name Makefile.am -o -name Makefile.in -o \
+  -name "*.cpp" -o -name "*.h" -o -name "*.txt" \
   ')' -print`
 extralist='local/mklocaldist local/recreate_makefile'
 
