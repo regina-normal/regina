@@ -42,6 +42,9 @@
  * to share the same sets of invariants (meaning that the two different
  * containers might in fact represent the same 3-manifold).
  *
+ * Since Turaev-Viro invariants may be slow to calculate, the option -t
+ * can be used to alter the number of Turaev-Viro invariants that are used.
+ *
  * If the option -v is passed, the program will write the label of each
  * container as it is processed.
  */
@@ -54,13 +57,17 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+#include "popt.h"
 
 #define MAX_TV_MAX_R 20
 #define MAX_TV_PARAM_COUNT (MAX_TV_MAX_R * (MAX_TV_MAX_R - 1) / 2)
 
+#define DEFAULT_TV_MAX_R 7
+#define DEFAULT_TV_MAX_R_STR "7"
+
 using namespace regina;
 
-const unsigned tvMaxR = 8;
+int tvMaxR = DEFAULT_TV_MAX_R;
 unsigned tvParams[MAX_TV_PARAM_COUNT][2];
 unsigned tvParamCount;
 
@@ -68,7 +75,8 @@ unsigned totMfds = 0;
 unsigned totMfdsInconsistent = 0;
 unsigned totMfdsDuplicate = 0;
 
-bool verbose = false;
+int verbose = 0;
+std::string filename;
 NPacket* tree;
 
 struct InvData;
@@ -128,24 +136,10 @@ inline bool cmpInvData(const InvData* x, const InvData* y) {
     return (*x < *y);
 }
 
-void usage(const char* progName, const std::string& error = std::string()) {
-    if (! error.empty())
-        std::cerr << error << "\n\n";
-
-    std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " [ -v ] <file.rga>\n";
-    std::cerr << std::endl;
-    std::cerr << "    -v : Verbose output (show progress)\n";
-    std::cerr << std::endl;
-    std::cerr << "Results are written to standard output.\n";
-    std::cerr << "Statistics and diagnostic messages are written to standard error.\n";
-    exit(1);
-}
-
 void initTVParams() {
     tvParamCount = 0;
 
-    unsigned r, root;
+    int r, root;
     for (r = 3; r <= tvMaxR; r++)
         for (root = 1; root < r; root++)
             if (gcd(r, root) == 1) {
@@ -219,39 +213,82 @@ void findDuplicates() {
     }
 }
 
-int main(int argc, char* argv[]) {
-    // Command-line parsing.
-    char optChar;
-    int i;
-    for (i = 1; i < argc && *argv[i] == '-'; i++) {
-        if (! argv[i][1])
-            usage(argv[0], std::string("Invalid option: ") + argv[i]);
-        if (argv[i][2])
-            usage(argv[0], std::string("Invalid option: ") + argv[i]);
+bool parseCmdLineOptions(int argc, const char* argv[]) {
+    // Set up the command-line arguments.
+    poptOption opts[] = {
+        { "tvmax", 't', POPT_ARG_INT, &tvMaxR, 0,
+            "Maximum r for Turaev-Viro invariants (default is "
+            DEFAULT_TV_MAX_R_STR ").", "<max_r>" },
+        { "verbose", 'v', POPT_ARG_NONE, &verbose, 0,
+            "Show progress.", 0 },
+        POPT_AUTOHELP
+        { 0, 0, 0, 0, 0, 0, 0 }
+    };
 
-        // The argument has length precisely 2.
-        optChar = argv[i][1];
+    poptContext optCon = poptGetContext(0, argc, argv, opts, 0);
+    poptSetOtherOptionHelp(optCon, "<file.rga>");
 
-        if (optChar == '-') {
-            i++;
-            break;
-        } else if (optChar == 'v')
-            verbose = true;
-        else
-            usage(argv[0], std::string("Invalid option: ") + argv[i]);
+    // Parse the command-line arguments.
+    int rc = poptGetNextOpt(optCon);
+    if (rc != -1) {
+        fprintf(stderr, "%s: %s\n\n",
+            poptBadOption(optCon, POPT_BADOPTION_NOALIAS), poptStrerror(rc));
+        poptPrintHelp(optCon, stderr, 0);
+        poptFreeContext(optCon);
+        return false;
     }
 
-    // argv[i] is the first filename.
-    if (i != argc - 1)
-        usage(argv[0], "Precisely one data file must be given.");
+    const char** otherOpts = poptGetArgs(optCon);
+    if (otherOpts && otherOpts[0]) {
+        filename = otherOpts[0];
+        if (otherOpts[1]) {
+            fprintf(stderr, "Only one filename may be supplied.\n\n");
+            poptPrintHelp(optCon, stderr, 0);
+            poptFreeContext(optCon);
+            return false;
+        }
+    } else {
+        fprintf(stderr, "No filename was supplied.\n\n");
+        poptPrintHelp(optCon, stderr, 0);
+        poptFreeContext(optCon);
+        return false;
+    }
+
+    // Sanity checking.
+    bool broken = false;
+    if (tvMaxR < 3) {
+        fprintf(stderr,
+            "The maximum r for Turaev-Viro invariants must be at least 3.\n");
+        broken = true;
+    } else if (tvMaxR > MAX_TV_MAX_R) {
+        fprintf(stderr,
+            "The maximum r for Turaev-Viro invariants may be at most %d.\n",
+            MAX_TV_MAX_R);
+        broken = true;
+    }
+
+    if (broken) {
+        fprintf(stderr, "\n");
+        poptPrintHelp(optCon, stderr, 0);
+    }
+
+    // All done!
+    poptFreeContext(optCon);
+    return (! broken);
+}
+
+int main(int argc, const char* argv[]) {
+    // Parse the command-line options.
+    if (! parseCmdLineOptions(argc, argv))
+        return 1;
 
     // Set up the list of Turaev-Viro parameters to try.
     initTVParams();
 
     // Read the data file.
-    if (! (tree = readXMLFile(argv[i]))) {
-        std::cerr << "ERROR: Could not read data from " << argv[i] << '.'
-            << std::endl;
+    if (! (tree = readXMLFile(filename.c_str()))) {
+        fprintf(stderr, "ERROR: Could not read data from %s.\n",
+            filename.c_str());
         return 1;
     }
 
@@ -268,12 +305,12 @@ int main(int argc, char* argv[]) {
     // Write statistics and clean up.
     delete tree;
 
-    std::cerr << std::endl;
-    std::cerr << "Final statistics:" << std::endl;
-    std::cerr << "    3-manifolds examined: " << totMfds << std::endl;
-    std::cerr << "    Inconsistencies:      " << totMfdsInconsistent
+    std::cout << std::endl;
+    std::cout << "Final statistics:" << std::endl;
+    std::cout << "    3-manifolds examined: " << totMfds << std::endl;
+    std::cout << "    Inconsistencies:      " << totMfdsInconsistent
         << std::endl;
-    std::cerr << "    Possible duplicates:  " << totMfdsDuplicate << std::endl;
+    std::cout << "    Possible duplicates:  " << totMfdsDuplicate << std::endl;
 
     return 0;
 }
