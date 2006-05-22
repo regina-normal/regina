@@ -22,6 +22,10 @@ Version 4.3.2  [ under development ]
         Class NPerm:
             - Micro-optimised routines that are called extremely frequently,
               such as sign().
+        Class NTorusBundle:
+            - Fixed a bug in the matrix reduction for non-symmetric
+              matrices in non-orientable manifolds (sometimes the
+              transverse matrix was obtained instead of the correct matrix).
         Class NTriangulation:
             - Optimised the skeletal calculations, which now run *much* faster.
             - Fixed a crash in splitIntoComponents() that occurred when

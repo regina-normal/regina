@@ -162,7 +162,9 @@ void NTorusBundle::reduce() {
                     swapOff = negOff = true;
             }
         } else {
+            // Whether we swap the off diagonal is already mandated.
             // Our only choice is whether to negate.
+            swapOff = (swapMain && ! negMain) || (negMain && ! swapMain);
             negOff = (monodromy[0][1] < 0 ||
                 (monodromy[0][1] == 0 && monodromy[1][0] < 0));
         }
