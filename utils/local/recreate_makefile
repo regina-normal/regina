@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Regina - A Normal Surface Theory Calculator
 # Makefile recreation utility
@@ -47,17 +47,30 @@ if ! test -d admin; then
 fi
 
 # Do it.
-echo "Creating each Makefile.in ..."
-automake "$reldir"/Makefile
-automake "$reldir"/mpi/Makefile
 
-echo "Postprocessing each Makefile.in ..."
-perl admin/am_edit "$reldir"/Makefile.in
-perl admin/am_edit "$reldir"/mpi/Makefile.in
+am2in() {
+  path=$1
+  if test "$path.am" -nt "$path.in"; then
+    echo "Creating $path.in ..."
+    automake "$path"
+    echo "Postprocessing $path.in ..."
+    perl admin/am_edit "$path.in"
+  fi
+}
 
-echo "Creating each Makefile ..."
-CONFIG_FILES="$reldir"/Makefile CONFIG_HEADERS= ./config.status
-CONFIG_FILES="$reldir"/mpi/Makefile CONFIG_HEADERS= ./config.status
+in2mk() {
+  path=$1
+  if test "$path.in" -nt "$path"; then
+    echo "Creating $path ..."
+    CONFIG_FILES="$path" CONFIG_HEADERS= ./config.status
+  fi
+}
+
+am2in "$reldir/Makefile"
+am2in "$reldir/mpi/Makefile"
+
+in2mk "$reldir/Makefile"
+in2mk "$reldir/mpi/Makefile"
 
 echo "Done."
 exit 0
