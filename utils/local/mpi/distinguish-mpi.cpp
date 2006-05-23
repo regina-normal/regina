@@ -645,6 +645,9 @@ int mainController() {
     printf("    Possible duplicates:  %d\n", totMfdsDuplicate);
 
     // Clean up and exit.
+    for (std::vector<InvData*>::iterator it = manifolds.begin();
+            it != manifolds.end(); it++)
+        delete *it;
 
     if (hasError) {
         ctrlLogStamp() << "ERROR: One or more errors occurred; "
