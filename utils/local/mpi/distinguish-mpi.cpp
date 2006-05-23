@@ -524,8 +524,8 @@ void ctrlProcess(NContainer* c) {
             continue;
         tri = static_cast<NTriangulation*>(child);
 
-        ctrlLogStamp() << "Processing triangulation "
-            << tri->getPacketLabel() << " ..." << std::endl;
+        ctrlLogStamp() << "Processing triangulation: "
+            << tri->getPacketLabel() << std::endl;
 
         if (! mfdData) {
             mfdData = new InvData(c);
@@ -620,8 +620,8 @@ int mainController() {
     // Process the packets.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
         if (p->getPacketType() == NContainer::packetType) {
-            ctrlLogStamp() << "Processing manifold " << p->getPacketLabel()
-                << " ..." << std::endl;
+            ctrlLogStamp() << "Processing container: " << p->getPacketLabel()
+                << std::endl;
             ctrlProcess(static_cast<NContainer*>(p));
         }
 
