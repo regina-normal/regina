@@ -113,6 +113,7 @@ using namespace regina;
 // Command-line options.
 int tvMaxR = DEFAULT_TV_MAX_R;
 int tvMaxRSelf = DEFAULT_TV_MAX_R_SELF;
+int firstOnly = 0;
 std::string filename;
 
 // The input packet tree.
@@ -166,6 +167,8 @@ bool parseCmdLineOptions(int argc, const char* argv[]) {
             "Maximum r for Turaev-Viro invariants that are calculated "
             "directly by the controller (default is "
             DEFAULT_TV_MAX_R_SELF_STR ").", "<max_r_self>" },
+        { "first", 'f', POPT_ARG_NONE, &firstOnly, 0,
+            "Only examine the first triangulation for each manifold.", 0 },
         POPT_AUTOHELP
         { 0, 0, 0, 0, 0, 0, 0 }
     };
@@ -513,7 +516,7 @@ void ctrlFarmTask(NTriangulation* tri, InvData* data, int whichTV) {
  * Process a single manifold container (and specifically, all of its
  * triangulation children).
  */
-void process(NContainer* c) {
+void ctrlProcess(NContainer* c) {
     InvData* mfdData = 0;
     NTriangulation* tri;
     int i;
@@ -553,6 +556,9 @@ void process(NContainer* c) {
             if (mfdData->h2z2 != tri->getHomologyH2Z2())
                 ctrlInconsistent(mfdData, tri, "H2(M ; Z_2)");
         }
+
+        if (firstOnly)
+            break;
     }
 
     if (mfdData)
@@ -616,7 +622,7 @@ int mainController() {
         if (p->getPacketType() == NContainer::packetType) {
             ctrlLogStamp() << "Processing " << p->getPacketLabel()
                 << " ..." << std::endl;
-            process(static_cast<NContainer*>(p));
+            ctrlProcess(static_cast<NContainer*>(p));
         }
 
     // Kill off any slaves that never started working.
