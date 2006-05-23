@@ -80,7 +80,7 @@
 // MPI constants:
 #define TAG_REQUEST_TASK 10
 #define TAG_RESULT 20
-#define TAG_RESULT_DATA 20
+#define TAG_RESULT_DATA 21
 
 // Task result codes:
 #define RESULT_OK 1
