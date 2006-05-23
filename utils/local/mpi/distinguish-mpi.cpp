@@ -75,6 +75,8 @@
 #define DEFAULT_TV_MAX_R_SELF 7
 #define DEFAULT_TV_MAX_R_SELF_STR "7"
 
+#define TV_UNKNOWN -10.0
+
 // MPI constants:
 #define TAG_REQUEST_TASK 10
 #define TAG_CHANGE_TRI 11
@@ -82,6 +84,9 @@
 
 #define TV_SIGNAL_STOP -1
 #define TV_SIGNAL_CHANGE_TRI -2
+
+const long signalStop[2] = { TV_SIGNAL_STOP, 0 };
+const long signalChangeTri[2] = { TV_SIGNAL_CHANGE_TRI, 0 };
 
 #define RESULT_ERR_BAD_R -1.0
 #define RESULT_ERR_BAD_ROOT -2.0
@@ -127,7 +132,7 @@ const char* logFile = "duplicates.log";
 bool hasError = false;
 
 // The set of Turaev-Viro invariants to calculate for each triangulation.
-unsigned tvParams[MAX_TV_PARAM_COUNT][2];
+long tvParams[MAX_TV_PARAM_COUNT][2];
 unsigned tvParamCount;
 
 // Final statistics.
@@ -135,15 +140,14 @@ unsigned totMfds = 0;
 unsigned totMfdsInconsistent = 0;
 unsigned totMfdsDuplicate = 0;
 
-// The current working triangulation for each slave.
-NTriangulation* slaveWorkingTri[MAX_SLAVES + 1];
-
-// The current working Turaev-Viro parameters for each slave.
-unsigned slaveTVParams[MAX_SLAVES + 1][2];
-
 // Calculated invariants for each manifold.
 struct InvData;
 std::vector<InvData*> manifolds;
+
+// The current working data for each slave.
+NTriangulation* slaveWorkingTri[MAX_SLAVES + 1];
+InvData* slaveWorkingData[MAX_SLAVES + 1];
+int slaveWorkingTV[MAX_SLAVES + 1];
 
 
 
@@ -316,8 +320,11 @@ std::ostream& ctrlLogStamp() {
     return logger << time << "  ";
 }
 
-// TODO: Bad from here down.
-
+/**
+ * Controller helper structure.
+ *
+ * Contains a set of invariants for a 3-manifold triangulation.
+ */
 struct InvData {
     NContainer* manifold;
 
@@ -325,13 +332,10 @@ struct InvData {
     unsigned long h2z2;
     double* turaevViro;
 
-    InvData(NTriangulation* tri) : manifold(0) {
-        h1 = tri->getHomologyH1().toString();
-        h2z2 = tri->getHomologyH2Z2();
+    bool inconsistent;
 
-        turaevViro = new double[tvParamCount];
-        for (unsigned i = 0; i < tvParamCount; i++)
-            turaevViro[i] = tri->turaevViro(tvParams[i][0], tvParams[i][1]);
+    InvData(NContainer* useManifold) : manifold(useManifold),
+            turaevViro(new double[tvParamCount]), inconsistent(false) {
     }
 
     ~InvData() {
@@ -367,49 +371,193 @@ struct InvData {
     }
 };
 
+/**
+ * Controller helper routine.
+ *
+ * Compare two sets of invariants according to their natural ordering.
+ */
 inline bool cmpInvData(const InvData* x, const InvData* y) {
     return (*x < *y);
 }
 
+/**
+ * Controller helper routine.
+ *
+ * Called when different triangulations of the same manifold are
+ * discovered to have different invariants.
+ */
+void ctrlInconsistent(InvData* data, NTriangulation* tri, const char* inv) {
+    printf("INCONSISTENCY: %s\n", data->manifold->getPacketLabel().c_str());
+    printf("    Invariant: %s\n", inv);
+    printf("    Triangulation: %s\n", tri->getPacketLabel().c_str());
+
+    if (! data->inconsistent) {
+        totMfdsInconsistent++;
+        data->inconsistent = true;
+    }
+}
+
+/**
+ * Controller helper routine.
+ *
+ * Called when different triangulations of the same manifold are
+ * discovered to have different Turaev-Viro invariants.
+ */
+void ctrlInconsistentTV(InvData* data, NTriangulation* tri, int whichTV) {
+    printf("INCONSISTENCY: %s\n", data->manifold->getPacketLabel().c_str());
+    printf("    Invariant: Turaev-Viro(%ld, %ld)\n",
+        tvParams[whichTV][0], tvParams[whichTV][1]);
+    printf("    Triangulation: %s\n", tri->getPacketLabel().c_str());
+
+    if (! data->inconsistent) {
+        totMfdsInconsistent++;
+        data->inconsistent = true;
+    }
+}
+
+/**
+ * Controller helper routine.
+ *
+ * Close down the given slave.
+ */
+void ctrlStopSlave(int slave) {
+    MPI_Send(const_cast<long*>(signalStop), 2, MPI_LONG, slave,
+        TAG_REQUEST_TASK, MPI_COMM_WORLD);
+}
+
+/**
+ * Controller helper routine.
+ *
+ * Wait for the next running slave to finish a task.  Note that if no
+ * slaves are currently processing tasks, this routine will block forever!
+ */
+int ctrlWaitForSlave() {
+    double result;
+    MPI_Status status;
+    MPI_Recv(&result, 1, MPI_DOUBLE, MPI_ANY_SOURCE, TAG_RESULT,
+        MPI_COMM_WORLD, &status);
+    nRunningSlaves--;
+
+    int slave = status.MPI_SOURCE;
+    ctrlLogStamp() << "Task completed by slave " << slave << "." << std::endl;
+
+    if (InvData::close(result, RESULT_ERR_BAD_R)) {
+        ctrlLogStamp() << "ERROR: Turaev-Viro parameter r = "
+            << tvParams[slaveWorkingTV[slave]] << " out of range." << std::endl;
+        hasError = true;
+    } else if (InvData::close(result, RESULT_ERR_BAD_ROOT)) {
+        ctrlLogStamp() << "ERROR: Turaev-Viro parameter root = "
+            << tvParams[slaveWorkingTV[slave]] << " out of range." << std::endl;
+        hasError = true;
+    } else if (InvData::close(result, RESULT_ERR_NO_TRI)) {
+        ctrlLogStamp() << "ERROR: Slave could not locate the requested "
+            "triangulation." << std::endl;
+        hasError = true;
+    } else {
+        double& ans = slaveWorkingData[slave]->
+            turaevViro[slaveWorkingTV[slave]];
+        if (InvData::close(ans, TV_UNKNOWN))
+            ans = result;
+        else if (! InvData::close(ans, result))
+            ctrlInconsistentTV(slaveWorkingData[slave],
+                slaveWorkingTri[slave], slaveWorkingTV[slave]);
+    }
+
+    return slave;
+}
+
+/**
+ * Controller helper routine.
+ *
+ * Farm the given Turaev-Viro calculation out to the next available slave.
+ * If all slaves are working then this routine will wait until some
+ * slave finishes its current task.
+ */
+void ctrlFarmTask(NTriangulation* tri, InvData* data, int whichTV) {
+    int slave;
+    if (nRunningSlaves == nSlaves) {
+        // We need to wait for somebody to stop first.
+        slave = ctrlWaitForSlave();
+    } else {
+        // It looks like we're in startup mode.
+        slave = nRunningSlaves + 1;
+    }
+
+    if (slaveWorkingTri[slave] != tri) {
+        ctrlLogStamp() << "Assigned slave " << slave << " to "
+            << tri->getPacketLabel() << "." << std::endl;
+
+        MPI_Send(const_cast<long*>(signalChangeTri), 2, MPI_LONG, slave,
+            TAG_REQUEST_TASK, MPI_COMM_WORLD);
+        MPI_Send(const_cast<char*>(tri->getPacketLabel().c_str()),
+            tri->getPacketLabel().length() + 1, MPI_CHAR, slave,
+            TAG_CHANGE_TRI, MPI_COMM_WORLD);
+
+        slaveWorkingTri[slave] = tri;
+        slaveWorkingData[slave] = data;
+    }
+
+    ctrlLogStamp() << "Farmed TV(" << tvParams[whichTV][0] << ", "
+        << tvParams[whichTV][1] << ") to slave " << slave << "." << std::endl;
+
+    MPI_Send(tvParams[whichTV], 2, MPI_LONG, slave, TAG_REQUEST_TASK,
+        MPI_COMM_WORLD);
+
+    slaveWorkingTV[slave] = whichTV;
+    nRunningSlaves++;
+}
+
+/**
+ * Controller helper routine.
+ *
+ * Process a single manifold container (and specifically, all of its
+ * triangulation children).
+ */
 void process(NContainer* c) {
     InvData* mfdData = 0;
-    std::string mfdDataName;
-    bool mfdInconsistent = false;
-
-    InvData* triData;
+    NTriangulation* tri;
+    int i;
 
     for (NPacket* child = c->getFirstTreeChild(); child;
             child = child->getNextTreeSibling()) {
         if (child->getPacketType() != NTriangulation::packetType)
             continue;
-
-        triData = new InvData(static_cast<NTriangulation*>(child));
+        tri = static_cast<NTriangulation*>(child);
 
         if (! mfdData) {
-            mfdData = triData;
-            mfdDataName = child->getPacketLabel();
-            mfdData->manifold = c;
+            mfdData = new InvData(c);
             manifolds.push_back(mfdData);
-        } else {
-            if (! triData->mayBeEqual(*mfdData)) {
-                std::cout << "INCONSISTENCY: " << c->getPacketLabel() << '\n';
-                std::cout << "    a) " << mfdDataName << '\n';
-                std::cout << "    b) " << child->getPacketLabel() << '\n';
 
-                if (! mfdInconsistent) {
-                    totMfdsInconsistent++;
-                    mfdInconsistent = true;
+            for (i = tvParamCount - 1; i >= 0; i--)
+                if (tvParams[i][0] <= tvMaxRSelf)
+                    mfdData->turaevViro[i] = tri->turaevViro(
+                        tvParams[i][0], tvParams[i][1]);
+                else {
+                    mfdData->turaevViro[i] = TV_UNKNOWN;
+                    ctrlFarmTask(tri, mfdData, i);
                 }
-            }
-            delete triData;
+
+            mfdData->h1 = tri->getHomologyH1().toString();
+            mfdData->h2z2 = tri->getHomologyH2Z2();
+        } else {
+            for (i = tvParamCount - 1; i >= 0; i--)
+                if (tvParams[i][0] <= tvMaxRSelf) {
+                    if (! InvData::close(mfdData->turaevViro[i],
+                            tri->turaevViro(tvParams[i][0], tvParams[i][1])))
+                        ctrlInconsistentTV(mfdData, tri, i);
+                } else
+                    ctrlFarmTask(tri, mfdData, i);
+
+            if (mfdData->h1 != tri->getHomologyH1().toString())
+                ctrlInconsistent(mfdData, tri, "H1(M)");
+            if (mfdData->h2z2 != tri->getHomologyH2Z2())
+                ctrlInconsistent(mfdData, tri, "H2(M ; Z_2)");
         }
     }
 
     if (mfdData)
         totMfds++;
 }
-
-// TODO: Bad from here up.
 
 /**
  * Controller helper routine.
@@ -445,7 +593,7 @@ void ctrlFindDuplicates() {
 /**
  * Main routine for the controller.
  */
-int controllerMain() {
+int mainController() {
     // Set up the list of Turaev-Viro parameters to try.
     ctrlInitTVParams();
 
@@ -459,7 +607,8 @@ int controllerMain() {
     // Initialise slave tasks.
     for (int i = 1; i <= nSlaves; i++) {
         slaveWorkingTri[i] = 0;
-        slaveTVParams[i][0] = slaveTVParams[i][1] = 0;
+        slaveWorkingData[i] = 0;
+        slaveWorkingTV[i] = 0;
     }
 
     // Process the packets.
@@ -477,7 +626,7 @@ int controllerMain() {
 
     // Wait for remaining slaves to finish.
     while (nRunningSlaves > 0)
-        ctrlFarmTask(0, 0, 0);
+        ctrlStopSlave(ctrlWaitForSlave());
 
     // Post-processing.
     ctrlLogStamp() << "Identifying duplicates ..." << std::endl;
@@ -570,7 +719,7 @@ int main(int argc, char* argv[]) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     // Extract command-line options.
-    if (! parseCmdLine(argc, (const char**)argv)) {
+    if (! parseCmdLineOptions(argc, (const char**)argv)) {
         MPI_Finalize();
         return 1;
     }
