@@ -487,9 +487,6 @@ void ctrlFarmTask(NTriangulation* tri, InvData* data, int whichTV) {
     }
 
     if (slaveWorkingTri[slave] != tri) {
-        ctrlLogStamp() << "Assigned slave " << slave << " to "
-            << tri->getPacketLabel() << "." << std::endl;
-
         MPI_Send(const_cast<long*>(signalChangeTri), 2, MPI_LONG, slave,
             TAG_REQUEST_TASK, MPI_COMM_WORLD);
         MPI_Send(const_cast<char*>(tri->getPacketLabel().c_str()),
@@ -526,6 +523,9 @@ void ctrlProcess(NContainer* c) {
         if (child->getPacketType() != NTriangulation::packetType)
             continue;
         tri = static_cast<NTriangulation*>(child);
+
+        ctrlLogStamp() << "Processing triangulation "
+            << tri->getPacketLabel() << " ..." << std::endl;
 
         if (! mfdData) {
             mfdData = new InvData(c);
@@ -620,7 +620,7 @@ int mainController() {
     // Process the packets.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
         if (p->getPacketType() == NContainer::packetType) {
-            ctrlLogStamp() << "Processing " << p->getPacketLabel()
+            ctrlLogStamp() << "Processing manifold " << p->getPacketLabel()
                 << " ..." << std::endl;
             ctrlProcess(static_cast<NContainer*>(p));
         }
