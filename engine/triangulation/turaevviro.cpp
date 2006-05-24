@@ -43,8 +43,10 @@ namespace {
      */
     class BracketFactorial {
         private:
-            double* values;
+            double* fact;
                 /**< The cached values [0]!, [1]!, ..., [r-1]! . */
+            double* inv;
+                /**< The cached inverses of the values stored in fact[]. */
             double angle;
                 /**< The angle arg(q0). */
             unsigned long r;
@@ -58,17 +60,21 @@ namespace {
              * Requires r >= 3.
              */
             BracketFactorial(double newAngle, unsigned long newR) :
-                    values(new double[newR]), angle(newAngle), r(newR) {
-                values[0] = values[1] = 1.0;
-                for (unsigned long i = 2; i < r; i++)
-                    values[i] = values[i - 1] * sin(angle * i) / sin(angle);
+                    fact(new double[newR]), inv(new double[newR]),
+                    angle(newAngle), r(newR) {
+                fact[0] = fact[1] = inv[0] = inv[1] = 1.0;
+                for (unsigned long i = 2; i < r; i++) {
+                    fact[i] = fact[i - 1] * sin(angle * i) / sin(angle);
+                    inv[i] = inv[i - 1] * sin(angle) / sin(angle * i);
+                }
             }
 
             /**
              * Clean up memory.
              */
             ~BracketFactorial() {
-                delete[] values;
+                delete[] fact;
+                delete[] inv;
             }
 
             /**
@@ -87,7 +93,16 @@ namespace {
              * Returns the value [index]!.
              */
             double operator [] (unsigned long index) const {
-                return (index < r ? values[index] : 0.0);
+                return (index < r ? fact[index] : 0.0);
+            }
+
+            /**
+             * Returns the value [index]! ^ -1.
+             *
+             * Requires index < r.
+             */
+            double inverse(unsigned long index) const {
+                return inv[index];
             }
     };
 
@@ -102,13 +117,13 @@ namespace {
             /**< The angle arg(q0). */
         BracketFactorial fact;
             /**< The cached values [n]!. */
-        double baseWSquared;
-            /**< The square of the distinguished value w. */
+        double vertexContrib;
+            /**< The vertex-based contribution to the Turaev-Viro invariant;
+                 this is the inverse square of the distinguished value w. */
 
         InitialData(unsigned long newR, double newAngle) :
                 r(newR), angle(newAngle), fact(angle, r) {
-            baseWSquared = static_cast<double>(r) /
-                (2 * sin(angle) * sin(angle));
+            vertexContrib = 2.0 * sin(angle) * sin(angle) / r;
         }
 
         /**
@@ -131,8 +146,8 @@ namespace {
             std::complex<double> ans =
                 fact[(i + j - k) / 2] *
                 fact[(j + k - i) / 2] *
-                fact[(k + i - j) / 2] /
-                fact[(i + j + k + 2) / 2];
+                fact[(k + i - j) / 2] *
+                fact.inverse((i + j + k + 2) / 2);
 
             return ((i + j + k) % 4 == 0 ? ans : -ans);
         }
@@ -178,19 +193,19 @@ namespace {
                     continue;
 
                 // We are guaranteed that z / 2 is an integer.
-                term =
-                    fact[(z - i - j - k) / 2] *
-                    fact[(z - i - m - n) / 2] *
-                    fact[(z - j - l - n) / 2] *
-                    fact[(z - k - l - m) / 2] *
-                    fact[(i + j + l + m - z) / 2] *
-                    fact[(i + k + l + n - z) / 2] *
-                    fact[(j + k + m + n - z) / 2];
-                term = fact[(z + 2) / 2] / term;
-                if (z % 4 != 0)
-                    term = - term;
+                term = fact[(z + 2) / 2] *
+                    fact.inverse((z - i - j - k) / 2) *
+                    fact.inverse((z - i - m - n) / 2) *
+                    fact.inverse((z - j - l - n) / 2) *
+                    fact.inverse((z - k - l - m) / 2) *
+                    fact.inverse((i + j + l + m - z) / 2) *
+                    fact.inverse((i + k + l + n - z) / 2) *
+                    fact.inverse((j + k + m + n - z) / 2);
 
-                ans += term;
+                if (z % 4 == 0)
+                    ans += term;
+                else
+                    ans -= term;
             }
             return ans;
         }
@@ -237,7 +252,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
             // Increment ans appropriately.
             valColour = 1.0;
             for (i = 0; i < vertices.size(); i++)
-                valColour /= init.baseWSquared;
+                valColour *= init.vertexContrib;
             for (i = 0; i < nEdges; i++)
                 valColour *= init.edgeContrib(colour[i]);
             for (i = 0; i < nFaces; i++)
