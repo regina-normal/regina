@@ -94,36 +94,13 @@ namespace {
             /**< The angle arg(q0). */
         BracketFactorial fact;
             /**< The cached values [n]!. */
-        double baseW;
-            /**< The distinguished value w. */
+        double baseWSquared;
+            /**< The square of the distinguished value w. */
 
         InitialData(unsigned long newR, double newAngle) :
                 r(newR), angle(newAngle), fact(angle, 3 * r / 2) {
-            // Note that we may use negative this value instead for baseW.
-            baseW = sqrt(static_cast<double>(2 * r)) / (2 * sin(angle));
-        }
-
-        /**
-         * Returns (val)^(1/2).
-         */
-        static std::complex<double> complexRoot(double val) {
-            return (val >= 0.0 ? sqrt(val) :
-                std::complex<double>(0.0, sqrt(- val)));
-        }
-
-        /**
-         * Returns i^q.
-         */
-        static std::complex<double> quarters(unsigned long q) {
-            q %= 4;
-            if (q == 0)
-                return 1.0;
-            else if (q == 1)
-                return std::complex<double>(0.0, 1.0);
-            else if (q == 2)
-                return -1.0;
-            else
-                return std::complex<double>(0.0, -1.0);
+            baseWSquared = static_cast<double>(r) /
+                (2 * sin(angle) * sin(angle));
         }
 
         /**
@@ -137,41 +114,41 @@ namespace {
         }
 
         /**
-         * Determines Delta(i/2, j/2, k/2).
+         * Determines the face-based contribution to the Turaev-Viro
+         * invariant.  This corresponds to +/- Delta(i/2, j/2, k/2)^2.
          */
-        std::complex<double> delta(unsigned long i, unsigned long j,
+        std::complex<double> faceContrib(unsigned long i, unsigned long j,
                 unsigned long k) const {
-            /*
-            return complexRoot(
-                fact[(i + j - k) / 2] *
-                fact[(j + k - i) / 2] *
-                fact[(k + i - j) / 2]) /
-                complexRoot(fact[(i + j + k + 2) / 2]);
-            */
-            return complexRoot(
+            // By admissibility, (i + j + k) is guaranteed to be even.
+            std::complex<double> ans =
                 fact[(i + j - k) / 2] *
                 fact[(j + k - i) / 2] *
                 fact[(k + i - j) / 2] /
-                fact[(i + j + k + 2) / 2]);
+                fact[(i + j + k + 2) / 2];
+
+            return ((i + j + k) % 4 == 0 ? ans : -ans);
         }
 
         /**
-         * Determines w(i/2).
+         * Determines the edge-based contribution to the Turaev-Viro
+         * invariant.  This corresponds to w(i/2)^2.
          */
-        std::complex<double> w(unsigned long i) const {
-            return quarters(i) * complexRoot(fact.bracket(i + 1));
+        std::complex<double> edgeContrib(unsigned long i) const {
+            return (i % 2 == 0 ? fact.bracket(i + 1) : - fact.bracket(i + 1));
         }
 
         /**
-         * Calculates the symbol
+         * Determines the tetrahedron-based contribution to the Turaev-Viro
+         * invariant.  This combines with the square roots of the face-based
+         * contributions for the four tetrahedron faces to give the symbol
          *
          *     | i/2 j/2 k/2 |
          *     | l/2 m/2 n/2 | .
          */
-        std::complex<double> mod(unsigned long i, unsigned long j,
+        std::complex<double> tetContrib(unsigned long i, unsigned long j,
                 unsigned long k, unsigned long l, unsigned long m,
                 unsigned long n) {
-            std::complex<double> rakahWigner = 0.0;
+            std::complex<double> ans = 0.0;
 
             unsigned long minZ = i + j + k;
             if (minZ < i + m + n)
@@ -205,17 +182,9 @@ namespace {
                 if (z % 4 != 0)
                     term = - term;
 
-                rakahWigner += term;
+                ans += term;
             }
-
-            rakahWigner = rakahWigner *
-                delta(i, j, k) *
-                delta(i, m, n) *
-                delta(j, l, n) *
-                delta(k, l, m);
-
-            return quarters((4 - ((i + j + k + l + m + n) % 4)) % 4) *
-                rakahWigner;
+            return ans;
         }
     };
 }
@@ -244,6 +213,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
     std::complex<double> ans = 0.0;
 
     unsigned long nEdges = getNumberOfEdges();
+    unsigned long nFaces = getNumberOfFaces();
     unsigned long* colour = new unsigned long[nEdges];
 
     std::fill(colour, colour + nEdges, 0);
@@ -259,12 +229,16 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
             // Increment ans appropriately.
             valColour = 1.0;
             for (i = 0; i < vertices.size(); i++)
-                valColour /= init.baseW;
+                valColour /= init.baseWSquared;
             for (i = 0; i < nEdges; i++)
-                valColour *= init.w(colour[i]);
-            valColour *= valColour;
+                valColour *= init.edgeContrib(colour[i]);
+            for (i = 0; i < nFaces; i++)
+                valColour *= init.faceContrib(
+                    colour[getEdgeIndex(faces[i]->getEdge(0))],
+                    colour[getEdgeIndex(faces[i]->getEdge(1))],
+                    colour[getEdgeIndex(faces[i]->getEdge(2))]);
             for (i = 0; i < tetrahedra.size(); i++)
-                valColour *= init.mod(
+                valColour *= init.tetContrib(
                     colour[getEdgeIndex(tetrahedra[i]->getEdge(0))],
                     colour[getEdgeIndex(tetrahedra[i]->getEdge(1))],
                     colour[getEdgeIndex(tetrahedra[i]->getEdge(3))],
