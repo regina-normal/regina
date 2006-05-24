@@ -29,7 +29,6 @@
 #include <algorithm>
 #include <cmath>
 #include <complex>
-#include <vector>
 #include "regina-config.h"
 #include "maths/approx.h"
 #include "maths/numbertheory.h"
@@ -44,20 +43,32 @@ namespace {
      */
     class BracketFactorial {
         private:
-            mutable std::vector<double> values;
-                /**< The cached values [0]!, [1]!, ... . */
+            double* values;
+                /**< The cached values [0]!, [1]!, ..., [r-1]! . */
             double angle;
                 /**< The angle arg(q0). */
+            unsigned long r;
+                /**< The integer r, for which 2r * angle is some integer
+                     multiple of 2 * Pi. */
 
         public:
             /**
-             * Precalculate all values [0]!, ..., [preCalculate]!.
-             * Note that [0]! will always be calculated.
+             * Precalculate all values [0]!, ..., [r-1]!.
+             *
+             * Requires r >= 3.
              */
-            BracketFactorial(double newAngle, unsigned long preCalculate = 0) :
-                    angle(newAngle) {
-                values.push_back(1);
-                (*this)[preCalculate];
+            BracketFactorial(double newAngle, unsigned long newR) :
+                    values(new double[newR]), angle(newAngle), r(newR) {
+                values[0] = values[1] = 1.0;
+                for (unsigned long i = 2; i < r; i++)
+                    values[i] = values[i - 1] * sin(angle * i) / sin(angle);
+            }
+
+            /**
+             * Clean up memory.
+             */
+            ~BracketFactorial() {
+                delete[] values;
             }
 
             /**
@@ -76,10 +87,7 @@ namespace {
              * Returns the value [index]!.
              */
             double operator [] (unsigned long index) const {
-                for (unsigned long calc = values.size();
-                        calc <= index; calc++)
-                    values.push_back(values.back() * bracket(calc));
-                return values[index];
+                return (index < r ? values[index] : 0.0);
             }
     };
 
@@ -98,7 +106,7 @@ namespace {
             /**< The square of the distinguished value w. */
 
         InitialData(unsigned long newR, double newAngle) :
-                r(newR), angle(newAngle), fact(angle, 3 * r / 2) {
+                r(newR), angle(newAngle), fact(angle, r) {
             baseWSquared = static_cast<double>(r) /
                 (2 * sin(angle) * sin(angle));
         }
