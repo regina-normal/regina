@@ -120,6 +120,7 @@ struct InvData {
         if (h2z2 > other.h2z2) return true;
 
         for (unsigned i = 0; i < tvParamCount; i++) {
+            if (close(turaevViro[i], other.turaevViro[i])) continue;
             if (turaevViro[i] < other.turaevViro[i]) return false;
             if (turaevViro[i] > other.turaevViro[i]) return true;
         }
@@ -127,7 +128,7 @@ struct InvData {
         return false;
     }
 
-    static bool close(double x, double y) {
+    static inline bool close(double x, double y) {
         return (x < y + 0.001 && x > y - 0.001);
     }
 };
