@@ -10,6 +10,7 @@ Regina - A Normal Surface Theory Calculator
 Version 4.3.2  [ under development ]
 
     OVERALL:
+        - Expanded the closed non-orientable census to 11 tetrahedra.
         - Tidied up the directory hierarchy a little.  The old engine/engine/
           is now just engine/, and the old engine/doc-files/ is now
           engine/doxygen/.
