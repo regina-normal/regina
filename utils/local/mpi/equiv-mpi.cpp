@@ -654,7 +654,7 @@ void slaveSendNew() {
             TAG_RESULT_DATA, MPI_COMM_WORLD);
 
     char null = 0;
-    MPI_Send(&null, 1, MPI_CHAR, 0, TAG_RESULT, MPI_COMM_WORLD);
+    MPI_Send(&null, 1, MPI_CHAR, 0, TAG_RESULT_DATA, MPI_COMM_WORLD);
 }
 
 /**
@@ -673,7 +673,7 @@ void slaveSendEquivs() {
             TAG_RESULT_DATA, MPI_COMM_WORLD);
 
     char null = 0;
-    MPI_Send(&null, 1, MPI_CHAR, 0, TAG_RESULT, MPI_COMM_WORLD);
+    MPI_Send(&null, 1, MPI_CHAR, 0, TAG_RESULT_DATA, MPI_COMM_WORLD);
 }
 
 /**
