@@ -359,6 +359,11 @@ void NSFSpace::reduce(bool mayReflect) {
             // Was there anything left over?  If so, pair it with the
             // final fibre (which will get larger, not smaller).
             if (it2 != fibres_.end()) {
+                // It can be shown that, if we are already looking at
+                // the final fibre, this code will do the right thing
+                // (specifically, switch this with another fibre if this
+                // will improve things, and switch this with itself if
+                // it won't).
                 negateFibreDown(it2);
 
                 // No need to resort the final fibre, since it gets
@@ -392,9 +397,53 @@ void NSFSpace::reduce(bool mayReflect) {
             // So.  Was it worth it?
             if (nLarge > nSmall)
                 complementAllFibres();
-            else if (nLarge == nSmall && it2 != fibres_.end() &&
-                    it2->beta * 2 > it2->alpha)
-                complementAllFibres();
+            else if (nLarge == nSmall && it2 != fibres_.end()) {
+                // We need to look in a little more detail.
+                FibreIterator next;
+                bool shouldReflect = false;
+
+                // Restore our starting position, and let it2 become a
+                // temporary variable again.
+                it = it2;
+                while (it != fibres_.end()) {
+                    // INV: it points to the next block with the same
+                    // value of alpha.
+                    it2 = it;
+                    for (it2++; it2 != fibres_.end() &&
+                            it2->alpha == it->alpha; it2++)
+                        ;
+
+                    // Now it2 points to the first element of the
+                    // following block.
+                    next = it2;
+                    it2--;
+
+                    // Now it2 points to the last element of this block.
+                    // If the block were negated, it would also be
+                    // reversed; see what would happen.
+                    while (it != next) {
+                        if (it2->alpha - it2->beta < it->beta) {
+                            shouldReflect = true;
+                            next = fibres_.end();
+                            break;
+                        } else if (it2->alpha - it2->beta > it->beta) {
+                            shouldReflect = false;
+                            next = fibres_.end();
+                            break;
+                        }
+
+                        // Still tied.
+                        it++;
+                        it2--;
+                    }
+
+                    // Move on to the next block.
+                    it = next;
+                }
+
+                if (shouldReflect)
+                    complementAllFibres();
+            }
         }
     } else {
         // Individual fibres cannot be negated, no reflector boundaries.
@@ -408,14 +457,45 @@ void NSFSpace::reduce(bool mayReflect) {
             } else if (b_ == (-b_ - static_cast<long>(nFibres_))) {
                 // Reflecting won't change b, but it will complement all
                 // fibres.  See whether this is worthwhile.
+                FibreIterator next;
                 bool shouldReflect = false;
-                for (it = fibres_.begin(); it != fibres_.end(); it++)
-                    if (it->beta * 2 > it->alpha) {
-                        shouldReflect = true;
-                        break;
-                    } else if (it->beta * 2 < it->alpha) {
-                        break;
+
+                it = fibres_.begin();
+                while (it != fibres_.end()) {
+                    // INV: it points to the next block with the same
+                    // value of alpha.
+                    it2 = it;
+                    for (it2++; it2 != fibres_.end() &&
+                            it2->alpha == it->alpha; it2++)
+                        ;
+
+                    // Now it2 points to the first element of the
+                    // following block.
+                    next = it2;
+                    it2--;
+
+                    // Now it2 points to the last element of this block.
+                    // If the block were negated, it would also be
+                    // reversed; see what would happen.
+                    while (it != next) {
+                        if (it2->alpha - it2->beta < it->beta) {
+                            shouldReflect = true;
+                            next = fibres_.end();
+                            break;
+                        } else if (it2->alpha - it2->beta > it->beta) {
+                            shouldReflect = false;
+                            next = fibres_.end();
+                            break;
+                        }
+
+                        // Still tied.
+                        it++;
+                        it2--;
                     }
+
+                    // Move on to the next block.
+                    it = next;
+                }
 
                 if (shouldReflect)
                     complementAllFibres();
