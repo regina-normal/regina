@@ -67,135 +67,244 @@ std::ostream& NTorusBundle::writeTeXName(std::ostream& out) const {
 
 void NTorusBundle::reduce() {
     // Make the monodromy prettier.
-    // Options we will consider include:
+    // In general we are allowed to:
     //
-    // - Switching the generators (swap both diagonals)
-    // - Negating one of the generators (negate off-diagonal)
-    // - Inverting the matrix
-    //       (det == +1 -> swap main diagonal, negate off-diagonal)
-    //       (det == -1 -> swap & negate main diagonal)
+    // - Replace M with A M A^-1
+    // - Replace M with M^-1
     //
-    // What this means is that:
+    // Some specific tricks we can pull include:
     //
-    // - If det == +1, we can independently swap the main diagonal,
-    //   swap the off-diagonal, and/or negate the off-diagonal.
+    // - Rotate the matrix 180 degrees (A = [ 0 1 | 1 0 ])
+    // - Negate the off-diagonal (A = [ 1 0 | 0 -1 ])
     //
-    // - If det == -1, we can independently swap the main diagonal,
-    //   negate the main diagonal, and/or negate the off-diagonal.
-    //   After this, we must swap the off-diagonal iff we did one but
-    //   not both of (swap main diagonal, negate main diagonal).
+    // If det == +1, we can also:
     //
+    // - Swap either diagonal individually (invert, then negate the
+    //   off-diagonal, then optionally rotate by 180 degrees)
+    //
+    // If det == -1, we can also:
+    //
+    // - Simultaneously swap and negate the main diagonal (invert)
+
     // The determinant should be +/-1 according to our preconditions,
     // but we'd better check that anyway.
-    bool swapMain = false, swapOff = false, negMain = false, negOff = false;
-
     long det = monodromy.determinant();
-    if (det == 1) {
-        // First work out how we'd like the main diagonal.
-        // Our only option here is to swap.
-        swapMain = (monodromy[0][0] < monodromy[1][1]);
-
-        // Now work out how we'd like the off diagonal.
-        // We may swap or negate as we please.
-        if (monodromy[0][1] >= 0 && monodromy[1][0] >= 0) {
-            // >= 0 | >= 0
-            swapOff = (monodromy[0][1] < monodromy[1][0]);
-        } else if (monodromy[0][1] <= 0 && monodromy[1][0] <= 0) {
-            // <= 0 | <= 0
-            negOff = true;
-            swapOff = (monodromy[0][1] > monodromy[1][0]);
-        } else if (monodromy[0][1] < 0) {
-            // < 0 | > 0
-            if (- monodromy[0][1] < monodromy[1][0])
-                swapOff = true;
-            else
-                negOff = true;
-        } else {
-            // > 0 | < 0
-            if (monodromy[0][1] < - monodromy[1][0])
-                swapOff = negOff = true;
-        }
-    } else if (det == -1) {
-        // If the main diagonal elements are equal, swapping is a no-op.
-        // This means our forced off-diagonal swap becomes optional.
-        bool optionalSwapOff = (monodromy[0][0] == monodromy[1][1]);
-
-        // First work out how we'd like the main diagonal.
-        if (monodromy[0][0] >= 0 && monodromy[1][1] >= 0) {
-            // >= 0 | >= 0
-            swapMain = (monodromy[0][0] < monodromy[1][1]);
-        } else if (monodromy[0][0] <= 0 && monodromy[1][1] <= 0) {
-            // <= 0 | <= 0
-            negMain = true;
-            swapMain = (monodromy[0][0] > monodromy[1][1]);
-        } else if (monodromy[0][0] < 0) {
-            // < 0 | > 0
-            if (- monodromy[0][0] < monodromy[1][1])
-                swapMain = true;
-            else
-                negMain = true;
-        } else {
-            // > 0 | < 0
-            if (monodromy[0][0] < - monodromy[1][1])
-                swapMain = negMain = true;
-        }
-
-        // Now work out how we'd like the off diagonal.
-        if (optionalSwapOff) {
-            // We may swap or negate as we please.
-            if (monodromy[0][1] >= 0 && monodromy[1][0] >= 0) {
-                // >= 0 | >= 0
-                swapOff = (monodromy[0][1] < monodromy[1][0]);
-            } else if (monodromy[0][1] <= 0 && monodromy[1][0] <= 0) {
-                // <= 0 | <= 0
-                negOff = true;
-                swapOff = (monodromy[0][1] > monodromy[1][0]);
-            } else if (monodromy[0][1] < 0) {
-                // < 0 | > 0
-                if (- monodromy[0][1] < monodromy[1][0])
-                    swapOff = true;
-                else
-                    negOff = true;
-            } else {
-                // > 0 | < 0
-                if (monodromy[0][1] < - monodromy[1][0])
-                    swapOff = negOff = true;
-            }
-        } else {
-            // Whether we swap the off diagonal is already mandated.
-            // Our only choice is whether to negate.
-            swapOff = (swapMain && ! negMain) || (negMain && ! swapMain);
-            negOff = (monodromy[0][1] < 0 ||
-                (monodromy[0][1] == 0 && monodromy[1][0] < 0));
-        }
-    } else {
+    if (det != 1 && det != -1) {
         // Something is very wrong.  Don't touch it.
         std::cerr << "ERROR: NTorusBundle monodromy does not have "
             "determinant +/-1.\n";
         return;
     }
 
-    // Actually do whatever it is we have planned.
-    long tmp;
+    // Deal with the case where the main diagonal has strictly opposite
+    // signs.
+    long x;
+    if (monodromy[0][0] < 0 && monodromy[1][1] > 0) {
+        // Rotate 180 degrees to put the positive element up top.
+        rotate();
+    }
+    while (monodromy[0][0] > 0 && monodromy[1][1] < 0) {
+        // Set x to the greatest absolute value of any main diagonal element.
+        if (monodromy[0][0] >= - monodromy[1][1])
+            x = monodromy[0][0];
+        else
+            x = - monodromy[1][1];
 
-    if (negMain) {
-        monodromy[0][0] = -monodromy[0][0];
-        monodromy[1][1] = -monodromy[1][1];
+        // If we catch any of the following four cases, the main diagonal
+        // will either no longer have opposite signs, or it will have a
+        // strictly smaller maximum absolute value.
+        if (0 < monodromy[0][1] && monodromy[0][1] <= x) {
+            addRCDown();
+            continue;
+        } else if (0 < - monodromy[0][1] && - monodromy[0][1] <= x) {
+            subtractRCDown();
+            continue;
+        } else if (0 < monodromy[1][0] && monodromy[1][0] <= x) {
+            subtractRCUp();
+            continue;
+        } else if (0 < - monodromy[1][0] && - monodromy[1][0] <= x) {
+            addRCUp();
+            continue;
+        }
+
+        // Since the determinant is +/-1 and neither element of the
+        // main diagonal is zero, we cannot have both elements of the
+        // off-diagonal with absolute value strictly greater than x.
+
+        // The only remaining possibility is that some element of the
+        // off-diagonal is zero (and therefore the main diagonal
+        // contains +1 and -1).
+
+        // The non-zero off-diagonal element (if any) can be reduced
+        // modulo 2.  This leaves us with the following possibilities:
+        //   [ 1 0 | 0 -1 ] ,   [ 1 1 | 0 -1 ],   [ 1 0 | 1 -1 ].
+        // The final two possibilities are both equivalent to [ 0 1 | 1 0 ].
+        if ((monodromy[0][1] % 2) || (monodromy[1][0] % 2)) {
+            monodromy[0][0] = monodromy[1][1] = 0;
+            monodromy[0][1] = monodromy[1][0] = 1;
+        } else {
+            monodromy[0][1] = monodromy[1][0] = 0;
+            // The main diagonal elements stay as they are (1, -1).
+        }
+
+        // In these cases we are completely finished.
+        return;
     }
-    if (negOff) {
-        monodromy[0][1] = -monodromy[0][1];
-        monodromy[1][0] = -monodromy[1][0];
+
+    // We are now guaranteed that the main diagonal does not have
+    // strictly opposite signs.
+
+    // Time to arrange the same for the off-diagonal.
+
+    // If the off-diagonal has strictly opposite signs, the elements
+    // must be +1 and -1, and the main diagonal must contain a zero.
+    // Otherwise there is no way we can get determinant +/-1.
+    if (monodromy[0][1] < 0 && monodromy[1][0] > 0) {
+        // We have [ a -1 | 1 d ].
+        // Move the -1 to the bottom left corner by negating the off-diagonal.
+        monodromy[0][1] = 1;
+        monodromy[1][0] = -1;
     }
-    if (swapMain) {
-        tmp = monodromy[0][0];
-        monodromy[0][0] = monodromy[1][1];
-        monodromy[1][1] = tmp;
+    if (monodromy[0][1] > 0 && monodromy[1][0] < 0) {
+        // We have [ a 1 | -1 d ], where one of a or d is zero.
+        // Rotate by 180 degrees to move the 0 to the bottom right
+        // corner, negating the off-diagonal if necessary to preserve
+        // the 1/-1 positions.
+        if (monodromy[1][1]) {
+            monodromy[0][0] = monodromy[1][1];
+            monodromy[1][1] = 0;
+        }
+
+        // Now we have [ a 1 | -1 0 ].
+        if (monodromy[0][0] > 1) {
+            addRCDown();
+            // Everything becomes non-negative.
+        } else if (monodromy[0][0] < -1) {
+            subtractRCUp();
+            // Everything becomes non-positive.
+        } else {
+            // We have [ 1 1 | -1 0 ], [ 0 1 | -1 0 ] or [ -1 1 | -1 0 ].
+            // All of these are canonical.
+            return;
+        }
     }
-    if (swapOff) {
-        tmp = monodromy[0][1];
-        monodromy[0][1] = monodromy[1][0];
-        monodromy[1][0] = tmp;
+
+    // Neither diagonal has strictly opposite signs.
+    // Time to give all elements of the matrix the same sign (or zero).
+    bool allNegative = false;
+    if (det == 1) {
+        // Either all non-negative or all non-positive, as determined by
+        // the main diagonal.
+        // If it's going to end up negative, just switch the signs for
+        // now and remember this fact for later on.
+        if (monodromy[0][0] < 0 || monodromy[1][1] < 0) {
+            allNegative = true;
+            monodromy[0][0] = - monodromy[0][0];
+            monodromy[1][1] = - monodromy[1][1];
+        }
+        if (monodromy[0][1] < 0 || monodromy[1][0] < 0) {
+            // We're always allowed to do this.
+            monodromy[0][1] = - monodromy[0][1];
+            monodromy[1][0] = - monodromy[1][0];
+        }
+    } else {
+        // The determinant is -1.
+        // The entire matrix can be made non-negative.
+        if (monodromy[0][0] < 0 || monodromy[1][1] < 0) {
+            // Invert (swap and negate the main diagonal).
+            x = monodromy[0][0];
+            monodromy[0][0] = - monodromy[1][1];
+            monodromy[1][1] = -x;
+        }
+        if (monodromy[0][1] < 0 || monodromy[1][0] < 0) {
+            // Negate the off-diagonal as usual.
+            monodromy[0][1] = - monodromy[0][1];
+            monodromy[1][0] = - monodromy[1][0];
+        }
     }
+
+    // We now have a matrix whose entries are all non-negative.
+    // Run through a cycle of equivalent matrices, and choose the nicest.
+    // I'm pretty sure I can prove that this is a cycle, but the proof
+    // really should be written down.
+    NMatrix2 start = monodromy;
+    NMatrix2 best = monodromy;
+    while (1) {
+        // INV: monodromy has all non-negative entries.
+        // INV: best contains the best seen matrix, including the current one.
+
+        // It can be proven (via det = +/-1) that one row must dominate
+        // another, unless we have [ 1 0 | 0 1 ] or [ 0 1 | 1 0 ].
+        if (monodromy.isIdentity()) {
+            if (allNegative)
+                monodromy.negate();
+            return;
+        }
+        if (monodromy[0][0] == 0 && monodromy[0][1] == 1 &&
+                monodromy[1][0] == 1 && monodromy[1][1] == 0) {
+            if (allNegative)
+                monodromy.negate();
+            return;
+        }
+
+        // We know at this point that one row dominates the other.
+        if (monodromy[0][0] >= monodromy[1][0] &&
+                monodromy[0][1] >= monodromy[1][1])
+            subtractRCUp();
+        else
+            subtractRCDown();
+
+        // Looking at a new matrix.
+        if (monodromy == start)
+            break;
+
+        if (simpler(monodromy, best))
+            best = monodromy;
+    }
+
+    // In the orientable case, run this all again for the rotated matrix.
+    // This is not necessary in the non-orientable case since the
+    // rotated matrix belongs to the same cycle as the original.
+    if (det > 0) {
+        rotate();
+        if (simpler(monodromy, best))
+            best = monodromy;
+
+        start = monodromy;
+        while (1) {
+            if (monodromy.isIdentity()) {
+                if (allNegative)
+                    monodromy.negate();
+                return;
+            }
+            if (monodromy[0][0] == 0 && monodromy[0][1] == 1 &&
+                    monodromy[1][0] == 1 && monodromy[1][1] == 0) {
+                if (allNegative)
+                    monodromy.negate();
+                return;
+            }
+
+            // We know at this point that one row dominates the other.
+            if (monodromy[0][0] >= monodromy[1][0] &&
+                    monodromy[0][1] >= monodromy[1][1])
+                subtractRCUp();
+            else
+                subtractRCDown();
+
+            // Looking at a new matrix.
+            if (monodromy == start)
+                break;
+
+            if (simpler(monodromy, best))
+                best = monodromy;
+        }
+    }
+
+    monodromy = best;
+
+    // Don't forget that negative case.
+    if (allNegative)
+        monodromy.negate();
 }
 
 } // namespace regina

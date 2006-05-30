@@ -29,6 +29,8 @@ Version 4.3.2  [ under development ]
               possible (previously it made faster decisions but
               occasionally missed some more subtle reductions).
         Class NTorusBundle:
+            - Greatly improved monodromy matrix reduction, to the point
+              where equivalent torus bundles should give equal matrices.
             - Fixed a bug in the matrix reduction for non-symmetric
               matrices in non-orientable manifolds (sometimes the
               transverse matrix was obtained instead of the correct matrix).

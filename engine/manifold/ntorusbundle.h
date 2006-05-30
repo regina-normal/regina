@@ -68,8 +68,6 @@ namespace regina {
  *
  * \todo \feature Implement the == operator for finding conjugate and
  * inverse matrices.
- * \todo \feature Change reduce() so that it uses a proper canonical
- * matrix representation.
  */
 class NTorusBundle : public NManifold {
     private:
@@ -140,6 +138,51 @@ class NTorusBundle : public NManifold {
          * representation to something more aesthetically pleasing.
          */
         void reduce();
+
+        /**
+         * Rotate the monodromy matrix by 180 degrees (i.e., swap the
+         * main diagonal and also swap the off-diagonal).
+         *
+         * This gives an alternate monodromy matrix for the same 3-manifold;
+         * the transformation merely represents a change of basis.
+         */
+        void rotate();
+
+        /**
+         * Add the first row of the monodromy matrix to the second,
+         * and then subtract the second column from the first.
+         *
+         * This gives an alternate monodromy matrix for the same 3-manifold;
+         * the transformation merely represents a change of basis.
+         */
+        void addRCDown();
+
+        /**
+         * Subtract the first row of the monodromy matrix from the second,
+         * and then add the second column to the first.
+         *
+         * This gives an alternate monodromy matrix for the same 3-manifold;
+         * the transformation merely represents a change of basis.
+         */
+        void subtractRCDown();
+
+        /**
+         * Add the second row of the monodromy matrix to the first,
+         * and then subtract the first column from the second.
+         *
+         * This gives an alternate monodromy matrix for the same 3-manifold;
+         * the transformation merely represents a change of basis.
+         */
+        void addRCUp();
+
+        /**
+         * Subtract the second row of the monodromy matrix from the first,
+         * and then add the first column to the second.
+         *
+         * This gives an alternate monodromy matrix for the same 3-manifold;
+         * the transformation merely represents a change of basis.
+         */
+        void subtractRCUp();
 };
 
 /*@}*/
@@ -166,6 +209,44 @@ inline NTorusBundle::NTorusBundle(const NTorusBundle& cloneMe) :
 
 inline const NMatrix2& NTorusBundle::getMonodromy() const {
     return monodromy;
+}
+
+inline void NTorusBundle::rotate() {
+    long x = monodromy[0][0];
+    monodromy[0][0] = monodromy[1][1];
+    monodromy[1][1] = x;
+
+    x = monodromy[0][1];
+    monodromy[0][1] = monodromy[1][0];
+    monodromy[1][0] = x;
+}
+
+inline void NTorusBundle::addRCDown() {
+    monodromy[1][0] += monodromy[0][0];
+    monodromy[1][1] += monodromy[0][1];
+    monodromy[0][0] -= monodromy[0][1];
+    monodromy[1][0] -= monodromy[1][1];
+}
+
+inline void NTorusBundle::subtractRCDown() {
+    monodromy[1][0] -= monodromy[0][0];
+    monodromy[1][1] -= monodromy[0][1];
+    monodromy[0][0] += monodromy[0][1];
+    monodromy[1][0] += monodromy[1][1];
+}
+
+inline void NTorusBundle::addRCUp() {
+    monodromy[0][0] += monodromy[1][0];
+    monodromy[0][1] += monodromy[1][1];
+    monodromy[0][1] -= monodromy[0][0];
+    monodromy[1][1] -= monodromy[1][0];
+}
+
+inline void NTorusBundle::subtractRCUp() {
+    monodromy[0][0] -= monodromy[1][0];
+    monodromy[0][1] -= monodromy[1][1];
+    monodromy[0][1] += monodromy[0][0];
+    monodromy[1][1] += monodromy[1][0];
 }
 
 } // namespace regina
