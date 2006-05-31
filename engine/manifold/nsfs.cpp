@@ -1205,7 +1205,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 if (tex)
                     return out << "T^2 \\times I / \\homtwo{0}{-1}{1}{0}";
                 else
-                    return out << "T x I / [ 0,-1 | 1,0 ]";
+                    return out << "T x I / [ 0,1 | -1,0 ]";
             }
         } else if (nFibres_ == 3 && fibre[0] == three && fibre[1] == three
                 && fibre[2] == three && b_ == -1) {
@@ -1214,7 +1214,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
             if (tex)
                 return out << "T^2 \\times I / \\homtwo{0}{-1}{1}{-1}";
             else
-                return out << "T x I / [ 0,-1 | 1,-1 ]";
+                return out << "T x I / [ -1,1 | -1,0 ]";
         }
     }
 
