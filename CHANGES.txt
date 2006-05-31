@@ -11,6 +11,14 @@ Version 4.3.2  [ under development ]
 
     OVERALL:
         - Expanded the closed non-orientable census to 11 tetrahedra.
+        - Expanded the closed orientable census to 11 tetrahedra, and
+          split it into three data files.  The 9-tetrahedron and
+          10-tetrahedron files are shipped with Regina as before (as
+          closed-or-census.rga and closed-or-census-large.rga); the
+          11-tetrahedron file is extremely large and must be downloaded
+          separately from the Regina website.
+        - Modified the closed orientable census files to use more
+          consistent choices of monodromy matrices for torus bundles.
         - Tidied up the directory hierarchy a little.  The old engine/engine/
           is now just engine/, and the old engine/doc-files/ is now
           engine/doxygen/.
