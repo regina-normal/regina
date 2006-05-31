@@ -258,7 +258,7 @@ void NTorusBundle::reduce() {
         if (monodromy == start)
             break;
 
-        if (simpler(monodromy, best))
+        if (NTorusBundle::simplerNonNeg(monodromy, best))
             best = monodromy;
     }
 
@@ -267,7 +267,7 @@ void NTorusBundle::reduce() {
     // rotated matrix belongs to the same cycle as the original.
     if (det > 0) {
         rotate();
-        if (simpler(monodromy, best))
+        if (NTorusBundle::simplerNonNeg(monodromy, best))
             best = monodromy;
 
         start = monodromy;
@@ -295,7 +295,7 @@ void NTorusBundle::reduce() {
             if (monodromy == start)
                 break;
 
-            if (simpler(monodromy, best))
+            if (NTorusBundle::simplerNonNeg(monodromy, best))
                 best = monodromy;
         }
     }
@@ -305,6 +305,35 @@ void NTorusBundle::reduce() {
     // Don't forget that negative case.
     if (allNegative)
         monodromy.negate();
+}
+
+bool NTorusBundle::simplerNonNeg(const NMatrix2& m1, const NMatrix2& m2) {
+    // Value symmetric matrices above all else.
+    if (m1[0][1] == m1[1][0] && m2[0][1] != m2[1][0])
+        return true;
+    if (m1[0][1] != m1[1][0] && m2[0][1] == m2[1][0])
+        return false;
+
+    // Go for the smallest possible bottom-right element, then so on
+    // working our way up.
+    if (m1[1][1] < m2[1][1])
+        return true;
+    if (m1[1][1] > m2[1][1])
+        return false;
+
+    if (m1[1][0] < m2[1][0])
+        return true;
+    if (m1[1][0] > m2[1][0])
+        return false;
+
+    if (m1[0][1] < m2[0][1])
+        return true;
+    if (m1[0][1] > m2[0][1])
+        return false;
+
+    if (m1[0][0] < m2[0][0])
+        return true;
+    return false;
 }
 
 } // namespace regina

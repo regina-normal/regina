@@ -183,6 +183,26 @@ class NTorusBundle : public NManifold {
          * the transformation merely represents a change of basis.
          */
         void subtractRCUp();
+
+        /**
+         * Determines whether the first given monodromy matrix is more
+         * aesthetically pleasing than the second.  The way in which
+         * this judgement is made is purely aesthetic on the part of the
+         * author, and is subject to change in future versions of Regina.
+         *
+         * Note that this routine is not equivalent to the global
+         * simpler(const NMatrix2&, const NMatrix2&).  This routine is
+         * tweaked specifically for use with torus bundle monodromies.
+         *
+         * \pre Both matrices consist entirely of non-negative elements.
+         *
+         * @param m1 the first monodromy matrix to examine.
+         * @param m2 the second monodromy matrix to examine.
+         * @return \c true if \a m1 is deemed to be more pleasing than \a m2,
+         * or \c false if either the matrices are equal or \a m2 is more
+         * pleasing than \a m1.
+         */
+        static bool simplerNonNeg(const NMatrix2& m1, const NMatrix2& m2);
 };
 
 /*@}*/
