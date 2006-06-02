@@ -564,10 +564,12 @@ class NPacket : public ShareableObject {
          * This routine takes small constant time.
          *
          * \pre The given child has no parent packet.
+         * \pre This packet is not a descendant of the given child.
          *
          * \ifacespython Since this packet takes ownership of the given
          * child packet, the python object containing the given child
          * packet becomes a null object and should no longer be used.
+         * See reparent() for a way of avoiding these problems in some cases.
          *
          * @param child the child to insert.
          */
@@ -579,10 +581,12 @@ class NPacket : public ShareableObject {
          * This routine takes small constant time.
          *
          * \pre The given child has no parent packet.
+         * \pre This packet is not a descendant of the given child.
          *
          * \ifacespython Since this packet takes ownership of the given
          * child packet, the python object containing the given child
          * packet becomes a null object and should no longer be used.
+         * See reparent() for a way of avoiding these problems in some cases.
          *
          * @param child the child to insert.
          */
@@ -595,12 +599,13 @@ class NPacket : public ShareableObject {
          * This routine takes small constant time.
          *
          * \pre Parameter \a newChild has no parent packet.
-         * \pre Parameter \a prevChild is already a child of this
-         * packet.
+         * \pre Parameter \a prevChild is already a child of this packet.
+         * \pre This packet is not a descendant of \a newChild.
          *
          * \ifacespython Since this packet takes ownership of the given
          * child packet, the python object containing the given child
          * packet becomes a null object and should no longer be used.
+         * See reparent() for a way of avoiding these problems in some cases.
          *
          * @param newChild the child to insert.
          * @param prevChild the preexisting child of this packet after
@@ -618,8 +623,39 @@ class NPacket : public ShareableObject {
          * This routine takes small constant time.
          *
          * \pre This packet has a parent.
+         * \pre This packet does not depend on its parent; see
+         * dependsOnParent() for details.
          */
         void makeOrphan();
+
+        /**
+         * Cuts this packet away from its parent in the tree structure,
+         * and inserts it as a child of the given packet instead.
+         *
+         * This routine is essentially a combination of makeOrphan()
+         * followed by either insertChildFirst() or insertChildLast().
+         *
+         * This routine takes small constant time.  It is safe to use
+         * regardless of whether this packet has a parent or not.
+         *
+         * \pre This packet does not depend on its parent; see
+         * dependsOnParent() for details.
+         * \pre The given parent is not a descendant of this packet.
+         *
+         * \ifacespython This routine is much simpler than combinations of
+         * makeOrphan() and insertChildFirst() / insertChildLast(), since
+         * there are no unpleasant ownership issues to deal with.
+         * However, if this packet currently has no parent then the ownership
+         * issues are unavoidable; in this case reparent() will do nothing,
+         * and one of the insertChild...() routines must be used instead.
+         *
+         * @param newParent the new parent of this packet, i.e., the
+         * packet beneath which this packet will be inserted.
+         * @param first \c true if this packet should be inserted as the
+         * first child of the given parent, or \c false (the default) if
+         * it should be inserted as the last child.
+         */
+        void reparent(NPacket* newParent, bool first = false);
 
         /**
          * Swaps this packet with its next sibling in the sequence of

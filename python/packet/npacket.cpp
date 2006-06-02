@@ -49,6 +49,19 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_clone,
         NPacket::clone, 0, 2);
 
+    void reparent_check(NPacket& child, NPacket* newParent,
+            bool first = false) {
+        if (child.getTreeParent())
+            child.reparent(newParent, first);
+        else {
+            PyErr_SetString(PyExc_AssertionError,
+                "reparent() cannot be used on packets with no parent");
+            ::boost::python::throw_error_already_set();
+        }
+    }
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_reparent, reparent_check, 2, 3);
+
     void insertChildFirst_own(NPacket& parent, std::auto_ptr<NPacket> child) {
         parent.insertChildFirst(child.get());
         child.release();
@@ -114,6 +127,7 @@ void addNPacket() {
         .def("insertChildLast", insertChildLast_own)
         .def("insertChildAfter", insertChildAfter_own)
         .def("makeOrphan", &NPacket::makeOrphan)
+        .def("reparent", reparent_check, OL_reparent())
         .def("swapWithNextSibling", &NPacket::swapWithNextSibling)
         .def("moveUp", &NPacket::moveUp, OL_moveUp())
         .def("moveDown", &NPacket::moveDown, OL_moveDown())

@@ -28,6 +28,9 @@ Version 4.3.2  [ under development ]
               tetrahedra, due to new tests for high-genus vertex links.
             - Also made census generation more efficient by pruning on
               high-degree edges (as well as the usual low-degree edges).
+        Class NPacket:
+            - New routine reparent() to simplify ownership issues when
+              using Python scripting.
         Class NPerm:
             - Micro-optimised routines that are called extremely frequently,
               such as sign().
@@ -46,6 +49,11 @@ Version 4.3.2  [ under development ]
             - Optimised the skeletal calculations, which now run *much* faster.
             - Fixed a crash in splitIntoComponents() that occurred when
               the triangulation skeleton had not yet been calculated.
+    UTILITIES:
+        trisetcmp:
+            - Fixed messages so that appropriate messages are used when
+              subcomplex testing (previously the same messages were used
+              for both subcomplex testing and isomorphism testing).
     TEST SUITE:
         - Added tests for the NPerm class.
         - Added tests for vertex link calculations.

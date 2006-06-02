@@ -190,6 +190,16 @@ void NPacket::makeOrphan() {
     }
 }
 
+void NPacket::reparent(NPacket* newParent, bool first) {
+    if (treeParent)
+        makeOrphan();
+
+    if (first)
+        newParent->insertChildFirst(this);
+    else
+        newParent->insertChildLast(this);
+}
+
 void NPacket::moveUp(unsigned steps) {
     if (steps == 0 || ! prevTreeSibling)
         return;
