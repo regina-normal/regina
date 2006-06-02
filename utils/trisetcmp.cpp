@@ -59,7 +59,12 @@ void usage(const char* progName, const std::string& error = std::string()) {
 void runMatches(NPacket* tree1, NPacket* tree2) {
     NPacket *p1, *p2;
 
-    std::cout << "Matching (isomorphic) triangulations:\n" << std::endl;
+    if (subcomplexTesting)
+        std::cout << "Matching (isomorphic subcomplex) triangulations:\n"
+            << std::endl;
+    else
+        std::cout << "Matching (isomorphic) triangulations:\n" << std::endl;
+
     long nMatches = 0;
 
     for (p1 = tree1; p1; p1 = p1->nextTreePacket())
@@ -69,7 +74,8 @@ void runMatches(NPacket* tree1, NPacket* tree2) {
                     if (compare(static_cast<NTriangulation*>(p1),
                             static_cast<NTriangulation*>(p2))) {
                         std::cout << "    " << p1->getPacketLabel()
-                            << "  ==  " << p2->getPacketLabel() << std::endl;
+                            << (subcomplexTesting ? "  <=  " : "  ==  ")
+                            << p2->getPacketLabel() << std::endl;
                         nMatches++;
                     }
 
