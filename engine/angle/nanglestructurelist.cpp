@@ -118,7 +118,7 @@ void* NAngleStructureList::Enumerator::run(void*) {
         progress->incCompleted();
 
     // Find the angle structures.
-    NDoubleDescriptor().enumerateVertices(StructureInserter(*list, triang),
+    NDoubleDescriptor::enumerateVertices(StructureInserter(*list, triang),
         originalCone.begin(), originalCone.end(), faces.begin(), faces.end(),
         eqns, 0, progress);
 

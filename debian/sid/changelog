@@ -1,3 +1,10 @@
+regina-normal (4.3.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * No longer uses virtual template member functions (closes: #370183).
+
+ -- Ben Burton <bab@debian.org>  Mon,  5 Jun 2006 08:45:44 +1000
+
 regina-normal (4.3.1-1) unstable; urgency=low
 
   * New upstream release.

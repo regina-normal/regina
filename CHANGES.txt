@@ -28,6 +28,11 @@ Version 4.3.2  [ under development ]
               tetrahedra, due to new tests for high-genus vertex links.
             - Also made census generation more efficient by pruning on
               high-degree edges (as well as the usual low-degree edges).
+        Class NDoubleDescriptor:
+            - Now a standalone class, since the base NVertexEnumerator
+              has been removed.
+            - Made all member functions static.  Objects of this class
+              can no longer be created.
         Class NPacket:
             - New routine reparent() to simplify ownership issues when
               using Python scripting.
@@ -49,6 +54,12 @@ Version 4.3.2  [ under development ]
             - Optimised the skeletal calculations, which now run *much* faster.
             - Fixed a crash in splitIntoComponents() that occurred when
               the triangulation skeleton had not yet been calculated.
+        Class NVertexEnumerator:
+            - Removed.  This abstract class existed to support multiple
+              vertex enumeration algorithms, but in reality we're only
+              using double descriptor anyway.  The virtual template
+              member functions caused problems with g++-4.2, which was
+              the final push.  NDoubleDescriptor is now a standalone class.
     UTILITIES:
         trisetcmp:
             - Fixed messages so that appropriate messages are used when

@@ -112,7 +112,7 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
         progress->incCompleted();
 
     // Find the normal surfaces.
-    NDoubleDescriptor().enumerateVertices(SurfaceInserter(*list, triang),
+    NDoubleDescriptor::enumerateVertices(SurfaceInserter(*list, triang),
         originalCone.begin(), originalCone.end(), faces.begin(), faces.end(),
         *eqns, constraints, progress);
 

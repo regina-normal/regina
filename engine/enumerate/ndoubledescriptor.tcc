@@ -45,7 +45,7 @@ void NDoubleDescriptor::enumerateVertices(OutputIterator results,
         RayIterator oldRaysFirst, RayIterator oldRaysLast,
         FaceIterator facesFirst, FaceIterator facesLast,
         const NMatrixInt& subspace, const NCompConstraintSet* constraints,
-        NProgressNumber* progress) const {
+        NProgressNumber* progress) {
     typedef typename std::iterator_traits<RayIterator>::value_type RayClassPtr;
     typedef typename regina::boost::remove_pointer<RayClassPtr>::type RayClass;
 
@@ -118,7 +118,7 @@ void NDoubleDescriptor::enumerateVertices(OutputIterator results,
         RayIterator oldRaysFirst, RayIterator oldRaysLast,
         FaceIterator facesFirst, FaceIterator facesLast,
         const NVector<NLargeInteger>& hyperplane,
-        const NCompConstraintSet* constraints) const {
+        const NCompConstraintSet* constraints) {
     if (oldRaysFirst == oldRaysLast)
         return;
 

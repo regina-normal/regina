@@ -12,5 +12,5 @@ INCLUDES = @ENGINE_INCLUDES@
 
 enumerateincludedir = $(pkgincludedir)/enumerate
 
-enumerateinclude_HEADERS = ncompconstraint.h ncompconstraint.tcc ndoubledescriptor.h ndoubledescriptor.tcc nenumerator.h
+enumerateinclude_HEADERS = ncompconstraint.h ncompconstraint.tcc ndoubledescriptor.h ndoubledescriptor.tcc
 
