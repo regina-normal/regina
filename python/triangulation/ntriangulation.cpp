@@ -244,6 +244,8 @@ void addNTriangulation() {
             OL_idealToFinite())
         .def("finiteToIdeal", &NTriangulation::finiteToIdeal)
         .def("barycentricSubdivision", &NTriangulation::barycentricSubdivision)
+        .def("layerOn", &NTriangulation::layerOn,
+            return_value_policy<reference_existing_object>())
         .def("insertLayeredSolidTorus",
             &NTriangulation::insertLayeredSolidTorus,
             return_value_policy<reference_existing_object>())

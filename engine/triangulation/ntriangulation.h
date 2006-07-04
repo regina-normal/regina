@@ -1863,6 +1863,19 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         /*@{*/
 
         /**
+         * Performs a layering upon the given boundary edge of the
+         * triangulation.  See the NLayering class notes for further
+         * details on what a layering entails.
+         *
+         * \pre The given edge is a boundary edge of this triangulation,
+         * and the two boundary faces on either side of it are distinct.
+         *
+         * @param edge the boundary edge upon which to layer.
+         * @return the new tetrahedron provided by the layering.
+         */
+        NTetrahedron* layerOn(NEdge* edge);
+
+        /**
          * Inserts a new layered solid torus into the triangulation.
          * The meridinal disc of the layered solid torus will intersect
          * the three edges of the boundary torus in \a cuts0, \a cuts1

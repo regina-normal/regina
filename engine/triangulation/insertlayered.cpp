@@ -32,6 +32,39 @@
 
 namespace regina {
 
+NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
+    // Locate the two boundary faces.
+    // Note that our preconditions ensure they exist and are distinct;
+    // we won't test this again here.
+    const std::deque<NEdgeEmbedding>& embs(edge->getEmbeddings());
+
+    NTetrahedron* tet1 = embs.front().getTetrahedron();
+    NTetrahedron* tet2 = embs.back().getTetrahedron();
+
+    NPerm roles1 = embs.front().getVertices();
+    NPerm roles2 = embs.back().getVertices();
+
+    // At this stage, roles1 maps (0,1,2) to the tet1 tetrahedron vertices
+    // for the first boundary face, and roles2 maps (0,1,3) to the tet2
+    // tetrahedron vertices for the second boundary face.  In each case,
+    // (0,1) maps to the endpoints of the given edge.
+    //
+    // The simplest thing to do is let (0,1,2,3) in the preimages for
+    // roles1 and roles2 match up with vertices (0,1,2,3) of the new
+    // tetrahedron.
+
+    ChangeEventBlock block(this);
+
+    NTetrahedron* newTet = new NTetrahedron();
+    addTetrahedron(newTet);
+
+    newTet->joinTo(3, tet1, roles1);
+    newTet->joinTo(2, tet2, roles2);
+
+    gluingsHaveChanged();
+    return newTet;
+}
+
 NTetrahedron* NTriangulation::insertLayeredSolidTorus(
         unsigned long cuts0, unsigned long cuts1) {
     ChangeEventBlock block(this);
