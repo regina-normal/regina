@@ -106,6 +106,48 @@ class NTriHomologyUI : public PacketViewerTab {
         void editingElsewhere();
 };
 
+/** RBMOD
+ * A page for viewing detailed cellular information about the manifold.
+ */
+class NTriDetailedCellularInfoUI: public PacketViewerTab {
+    private:
+        /**
+         * Packet details
+         */
+        regina::NTriangulation* tri;
+
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QLabel* Cells;
+        QLabel* DualCells;
+        QLabel* EulerChar;
+        QLabel* H0H1H2H3;
+	QLabel* HBdry;
+        QLabel* BdryMap;
+        QLabel* TorForOrders; // torsion subgroup prime power decomp
+	QLabel* TorForSigma;  // the Kawauchi-Kojima 2-torsion sigma vector
+        QLabel* TorForLegendre; // the odd p-torsion Legendre symbol vector
+	QLabel* EmbeddingComments; // comments on what the manifold may or may not embed in.
+
+    public:
+        /**
+         * Constructor.
+         */
+        NTriDetailedCellularInfoUI(regina::NTriangulation* packet,
+                PacketTabbedViewerTab* useParentUI);
+
+        /**
+         * PacketViewerTab overrides.
+         */
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+        void editingElsewhere();
+};
+
+
 /**
  * A triangulation page for viewing the fundamental group.
  */
@@ -213,5 +255,8 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
 inline void NTriFundGroupUI::setGAPExec(const QString& newGAPExec) {
     GAPExec = newGAPExec;
 }
+
+
+
 
 #endif
