@@ -74,6 +74,12 @@ class NMatrixInt : public NMatrixRing<NLargeInteger>, public ShareableObject {
          */
         NMatrixInt(const NMatrixInt& cloneMe);
 
+	/** 
+	 * Computes the determinant. Returns 0 if matrix is not square.
+	 * What should it return for a 0 by 0 matrix? probably 0 makes the most sense.
+	 */
+	NLargeInteger det() const;
+
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
 };
