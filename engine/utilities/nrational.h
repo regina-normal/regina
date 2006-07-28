@@ -228,6 +228,11 @@ class NRational {
          * @return the inverse 1 / \a this.
          */
         NRational inverse() const;
+	/**
+	 * Calculates the absolute value of this
+	 * rational.
+	 */
+	NRational abs() const;
 
         /**
          * Adds the given rational to this.
@@ -321,6 +326,13 @@ class NRational {
          */
         bool operator >= (const NRational& compare) const;
 
+	/**
+	 * If it can be approximated by a long double, this returns
+	 * such an approximation. It sets inrange==true in this case.
+	 * otherwise it sets inrange==false and returns 0.
+	 */
+	double getDoubleApprox(bool &inrange) const;
+
     friend std::ostream& operator << (std::ostream& out, const NRational& rat);
 };
 
@@ -392,6 +404,10 @@ inline bool NRational::operator >= (const NRational& compare) const {
 inline bool NRational::operator != (const NRational& compare) const {
     return ! (*this == compare);
 }
+
+inline NRational NRational::abs() const
+{ return ( (*this >= zero) ? *this : -(*this) ); }
+
 
 } // namespace regina
 

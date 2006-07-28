@@ -267,5 +267,57 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
     return out;
 }
 
+double NRational::getDoubleApprox(bool &inrange) const
+ {// first we should decide if the NRational has the right order
+  // of magnitude.  a long double stretches from 3.4E-308 to
+  // 3.4E+308
+  static NLargeInteger pb("100000000000000000000000000000");
+  static NRational bigone(NRational(pb*pb*pb*pb*pb*pb*pb*pb*pb*pb));
+  static NRational smallone(bigone.inverse() );
+  static NLargeInteger nten("10");
+  static double dten(10.0);
+  static double iten(0.1);
+
+  double magt=1.0; // order of magnitude device through alg...
+  double retval=0.0;
+  bool negative=false;
+
+  NLargeInteger q, tN,tD,tR;
+
+  if ( (this->abs() > bigone) || (this->abs() < smallone) ) 
+	{ inrange=false; retval=0.0; }
+  if (*this == zero) { inrange=true; retval=0.0; }
+  else
+   { // we'll do the first 15 sig digits? something like that.
+    inrange=true;
+    tN = this->getNumerator();
+    tD = this->getDenominator();
+    // the strategy should be to multiply or divide by 10 until we
+    // get a number between 0 and 1, then expand using the euclidean
+    // algorithm.
+    if (tN < NLargeInteger::zero) { negative=true; tN.negate(); }
+    // now tN and tD are positive.
+    // we should proceed to scale tN until tN/tD is between 0 and 1, all
+    // the while building the appropriate double.
+    // so first we scale down, then scale up...
+    while (tN >= tD*nten) { magt *= dten; tD *= nten; }
+    // now we have tN/tD < 10.
+    while (tN < tD) { magt *= iten; tN *= nten; }
+    // now we have 1 <= tN/tD < 10. and magt is the order of magnitude
+    // of *this.
+    for (int i=0; i<15; i++)
+	{
+        q = tN.euclideanAlg(tD,tR);
+	// q must be one of 1,2,...,9.
+	retval += ( double(q.longValue()) )*magt;
+	tN = tR * nten;
+	magt*=iten;	
+	}
+     if (negative) retval *= (-1.0);
+   }
+ return retval;
+ }
+
+
 } // namespace regina
 
