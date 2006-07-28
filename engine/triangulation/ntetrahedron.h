@@ -376,6 +376,8 @@ class NTetrahedron : public ShareableObject {
         void writeTextShort(std::ostream& out) const;
 
     friend class NTriangulation;
+    friend class homologicalData;
+
         /**< Allow access to private members. */
 };
 
