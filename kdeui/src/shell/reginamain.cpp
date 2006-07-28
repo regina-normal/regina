@@ -531,6 +531,8 @@ void ReginaMain::readOptions(KConfig* config) {
         globalPrefs.triInitialAlgebraTab = ReginaPrefSet::FundGroup;
     else if (str == "TuraevViro")
         globalPrefs.triInitialAlgebraTab = ReginaPrefSet::TuraevViro;
+    else if (str == "DetailedCellularInfo")
+	globalPrefs.triInitialAlgebraTab = ReginaPrefSet::DetailedCellularInfo;
     else
         globalPrefs.triInitialAlgebraTab = ReginaPrefSet::Homology; /* def. */
 
@@ -622,6 +624,8 @@ void ReginaMain::saveOptions() {
             config->writeEntry("InitialAlgebraTab", "FundGroup"); break;
         case ReginaPrefSet::TuraevViro:
             config->writeEntry("InitialAlgebraTab", "TuraevViro"); break;
+	case ReginaPrefSet::DetailedCellularInfo:
+	    config->writeEntry("InitialAlgebraTab", "DetailedCellularInfo");break;
         default:
             config->writeEntry("InitialAlgebraTab", "Homology"); break;
     }
