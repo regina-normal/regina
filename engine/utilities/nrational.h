@@ -330,6 +330,8 @@ class NRational {
 	 * If it can be approximated by a long double, this returns
 	 * such an approximation. It sets inrange==true in this case.
 	 * otherwise it sets inrange==false and returns 0.
+	 *
+	 * @author Ryan Budney
 	 */
 	double getDoubleApprox(bool &inrange) const;
 
