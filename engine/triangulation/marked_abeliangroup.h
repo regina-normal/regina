@@ -68,6 +68,8 @@ class NMatrixInt;
  * 
  * \testpart
  *
+ * @author Ryan Budney
+ * 
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
  */
@@ -338,6 +340,8 @@ NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom, std::vector<NLargeInteger>& 
  *
  * \testpart
  *
+ * @author Ryan Budney
+ * 
  */
 
 class HomMarkedAbelianGroup {
