@@ -77,6 +77,8 @@ class NMatrixInt : public NMatrixRing<NLargeInteger>, public ShareableObject {
 	/** 
 	 * Computes the determinant. Returns 0 if matrix is not square.
 	 * What should it return for a 0 by 0 matrix? probably 0 makes the most sense.
+	 *
+	 * @author Ryan Budney
 	 */
 	NLargeInteger det() const;
 
