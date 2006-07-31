@@ -69,6 +69,8 @@ class NMatrixInt; // what are these for?
  *      homology.
  *   f) the H1 torsion form...
  * 
+ * @author Ryan Budney 
+ * 
  * \testpart
  *
  */
