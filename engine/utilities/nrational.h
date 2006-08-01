@@ -181,7 +181,7 @@ class NRational {
          * @return the denominator.
          */
         NLargeInteger getDenominator() const;
-        
+
         /**
          * Calculates the product of two rationals.
          * This rational is not changed.
@@ -228,11 +228,13 @@ class NRational {
          * @return the inverse 1 / \a this.
          */
         NRational inverse() const;
-	/**
-	 * Calculates the absolute value of this
-	 * rational.
-	 */
-	NRational abs() const;
+
+        /**
+         * Calculates the absolute value of this rational.
+         *
+         * @return the absolute value.
+         */
+        NRational abs() const;
 
         /**
          * Adds the given rational to this.
@@ -326,14 +328,14 @@ class NRational {
          */
         bool operator >= (const NRational& compare) const;
 
-	/**
-	 * If it can be approximated by a long double, this returns
-	 * such an approximation. It sets inrange==true in this case.
-	 * otherwise it sets inrange==false and returns 0.
-	 *
-	 * @author Ryan Budney
-	 */
-	double getDoubleApprox(bool &inrange) const;
+        /**
+         * If it can be approximated by a long double, this returns
+         * such an approximation. It sets inrange==true in this case.
+         * otherwise it sets inrange==false and returns 0.
+         *
+         * @author Ryan Budney
+         */
+        double getDoubleApprox(bool &inrange) const;
 
     friend std::ostream& operator << (std::ostream& out, const NRational& rat);
 };
@@ -392,6 +394,11 @@ inline NRational& NRational::operator = (long value) {
     return *this;
 }
 
+inline NRational NRational::abs() const {
+    return ((flavour == f_normal && mpq_cmp(data, zero.data) < 0) ?
+        -(*this) : *this);
+}
+
 inline void NRational::negate() {
     if (flavour == f_normal)
         mpq_neg(data, data);
@@ -406,10 +413,6 @@ inline bool NRational::operator >= (const NRational& compare) const {
 inline bool NRational::operator != (const NRational& compare) const {
     return ! (*this == compare);
 }
-
-inline NRational NRational::abs() const
-{ return ( (*this >= zero) ? *this : -(*this) ); }
-
 
 } // namespace regina
 

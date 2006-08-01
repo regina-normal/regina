@@ -48,6 +48,7 @@ void addNRational() {
         .def(self - self)
         .def(- self)
         .def("inverse", &NRational::inverse)
+        .def("abs", &NRational::abs)
         .def(self += self)
         .def(self -= self)
         .def(self *= self)
