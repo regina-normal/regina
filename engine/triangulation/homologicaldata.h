@@ -323,14 +323,14 @@ class homologicalData : public ShareableObject{
 	 */
 	std::vector< std::pair< NLargeInteger, 
                      std::vector< unsigned long > > > getTorsionRankVector() const;
-        std::string homologicalData::getTorsionRankVectorString() const;
+        std::string getTorsionRankVectorString() const;
 	/**
 	 * Returns the 2-torsion sigma vector. This is one of
 	 * 3 of the Kawauchi-Kojima complete invariants of the torsion
 	 * linking form.
 	 */
         std::vector< NLargeInteger > getTorsionSigmaVector() const;
-        std::string homologicalData::getTorsionSigmaVectorString() const;
+        std::string getTorsionSigmaVectorString() const;
 
 	/**
 	 * Returns the odd p-torsion Legendre symbol vector. This is one of
@@ -339,7 +339,7 @@ class homologicalData : public ShareableObject{
 	 */
         std::vector< std::pair< NLargeInteger, std::vector< int > > > 
 	   getLegendreSymbolVector() const;
-        std::string homologicalData::getTorsionLegendreSymbolVectorString() const;
+        std::string getTorsionLegendreSymbolVectorString() const;
 
 	/**
 	 * Returns true iff torsion linking form is hyperbolic.
@@ -360,7 +360,7 @@ class homologicalData : public ShareableObject{
 	 * a homology 3-sphere or 4-sphere.
 	 *
 	 */
-        std::string homologicalData::getEmbeddabilityComment() const;
+        std::string getEmbeddabilityComment() const;
 };
 
 /*@}*/
