@@ -124,12 +124,12 @@ class NTriDetailedCellularInfoUI: public PacketViewerTab {
         QLabel* DualCells;
         QLabel* EulerChar;
         QLabel* H0H1H2H3;
-	QLabel* HBdry;
+        QLabel* HBdry;
         QLabel* BdryMap;
         QLabel* TorForOrders; // torsion subgroup prime power decomp
-	QLabel* TorForSigma;  // the Kawauchi-Kojima 2-torsion sigma vector
+        QLabel* TorForSigma;  // the Kawauchi-Kojima 2-torsion sigma vector
         QLabel* TorForLegendre; // the odd p-torsion Legendre symbol vector
-	QLabel* EmbeddingComments; // comments on what the manifold may or may not embed in.
+        QLabel* EmbeddingComments; // comments on what the manifold may or may not embed in.
 
     public:
         /**

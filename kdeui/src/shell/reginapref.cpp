@@ -198,8 +198,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
             triPrefs->comboInitialAlgebraTab->setCurrentItem(1); break;
         case ReginaPrefSet::TuraevViro:
             triPrefs->comboInitialAlgebraTab->setCurrentItem(2); break;
-	case ReginaPrefSet::DetailedCellularInfo:
-	    triPrefs->comboInitialAlgebraTab->setCurrentItem(3); break;
+        case ReginaPrefSet::DetailedCellularInfo:
+            triPrefs->comboInitialAlgebraTab->setCurrentItem(3); break;
         default:
             triPrefs->comboInitialAlgebraTab->setCurrentItem(0); break;
     }
@@ -296,8 +296,8 @@ void ReginaPreferences::slotApply() {
             prefSet.triInitialAlgebraTab = ReginaPrefSet::FundGroup; break;
         case 2:
             prefSet.triInitialAlgebraTab = ReginaPrefSet::TuraevViro; break;
-	case 3:
-	    prefSet.triInitialAlgebraTab = ReginaPrefSet::DetailedCellularInfo; break;
+        case 3:
+            prefSet.triInitialAlgebraTab = ReginaPrefSet::DetailedCellularInfo; break;
         default:
             prefSet.triInitialAlgebraTab = ReginaPrefSet::Homology; break;
     }

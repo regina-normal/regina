@@ -285,7 +285,7 @@ double NRational::getDoubleApprox(bool &inrange) const
   NLargeInteger q, tN,tD,tR;
 
   if ( (this->abs() > bigone) || (this->abs() < smallone) ) 
-	{ inrange=false; retval=0.0; }
+        { inrange=false; retval=0.0; }
   if (*this == zero) { inrange=true; retval=0.0; }
   else
    { // we'll do the first 15 sig digits? something like that.
@@ -306,13 +306,13 @@ double NRational::getDoubleApprox(bool &inrange) const
     // now we have 1 <= tN/tD < 10. and magt is the order of magnitude
     // of *this.
     for (int i=0; i<15; i++)
-	{
+        {
         q = tN.euclideanAlg(tD,tR);
-	// q must be one of 1,2,...,9.
-	retval += ( double(q.longValue()) )*magt;
-	tN = tR * nten;
-	magt*=iten;	
-	}
+        // q must be one of 1,2,...,9.
+        retval += ( double(q.longValue()) )*magt;
+        tN = tR * nten;
+        magt*=iten;        
+        }
      if (negative) retval *= (-1.0);
    }
  return retval;

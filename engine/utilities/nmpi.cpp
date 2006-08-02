@@ -148,22 +148,22 @@ std::ostream& operator << (std::ostream& out, const NLargeInteger& large) {
 }
 
 NLargeInteger NLargeInteger::euclideanAlg(const NLargeInteger& d, 
-		NLargeInteger& r) const
+                NLargeInteger& r) const
 {
-	NLargeInteger q;
-	if (infinite) 
-		{
-		q = infinite;
-		r = zero;
-		} else
-	if (d.infinite)
-		{
-		q = zero;
-		r = (*this);
-		} else
-	{
-	mpz_fdiv_qr( q.data, r.data, data, d.data ); 
-	} // q r n d is the format.
+        NLargeInteger q;
+        if (infinite) 
+                {
+                q = infinite;
+                r = zero;
+                } else
+        if (d.infinite)
+                {
+                q = zero;
+                r = (*this);
+                } else
+        {
+        mpz_fdiv_qr( q.data, r.data, data, d.data ); 
+        } // q r n d is the format.
 return q;
 }
 
@@ -216,29 +216,29 @@ if (temp < zero) { temp=temp.abs(); retval.push_back(NLargeInteger(-1)); }
 
 unsigned long cpi=0; // current prime index.
 unsigned long iterSinceDivision=0; // keeps track of how many iterations since the 
-	// last successful division
+        // last successful division
 
 if (temp > zero) while ( temp != one )
-	{
-	// test to see if cpi < primeList.size(), if not, lengthen list, return to loop.
-	if (cpi >= primeList.size()) { growPrimeList(); continue; }
-	// now cpi<primeList.size(), check to see if temp % primeList[cpi] == 0
-	q = temp.euclideanAlg(primeList[cpi],r); // means temp = q*primeList[cpi] + r
-	if (r == zero) { temp=q; retval.push_back(primeList[cpi]); iterSinceDivision=0; } else 
-		{ cpi++; iterSinceDivision++; }
-	if (iterSinceDivision == 500) // after 500 unsuccessful divisions, check to see if it
-				      // is probably prime.
-	   if (mpz_probab_prime_p (temp.data, 10) != 0)
-	    { // temp is likely prime.	
-	      // end the search.
-	     retval.push_back(temp);
-	     temp=one;
-	    }
-	}
+        {
+        // test to see if cpi < primeList.size(), if not, lengthen list, return to loop.
+        if (cpi >= primeList.size()) { growPrimeList(); continue; }
+        // now cpi<primeList.size(), check to see if temp % primeList[cpi] == 0
+        q = temp.euclideanAlg(primeList[cpi],r); // means temp = q*primeList[cpi] + r
+        if (r == zero) { temp=q; retval.push_back(primeList[cpi]); iterSinceDivision=0; } else 
+                { cpi++; iterSinceDivision++; }
+        if (iterSinceDivision == 500) // after 500 unsuccessful divisions, check to see if it
+                                      // is probably prime.
+           if (mpz_probab_prime_p (temp.data, 10) != 0)
+            { // temp is likely prime.        
+              // end the search.
+             retval.push_back(temp);
+             temp=one;
+            }
+        }
 return retval; // now it's reasonably fast for small numbers.
-	       // it tends to bog down on numbers with two or more large prime factors.
-	       // the GAP algorithm is better, whatever that is... should consider
-	       // importing it. 
+               // it tends to bog down on numbers with two or more large prime factors.
+               // the GAP algorithm is better, whatever that is... should consider
+               // importing it. 
 }
 
 std::vector< std::pair<NLargeInteger, unsigned long> > NLargeInteger::primePowerDecomp()
@@ -251,14 +251,14 @@ if (list1.size()>0)
  NLargeInteger cp(list1[0]); // current prime
  unsigned long cc(1); // current count
  for (unsigned long i=1; i<list1.size(); i++)
-	{
-	if (list1[i]==cp) cc++; else
-	 { // a new prime is coming up.
-	  retlist.push_back(std::make_pair( cp, cc ) );
-	  cp=list1[i];
-	  cc=1;
-	 }
-	}
+        {
+        if (list1[i]==cp) cc++; else
+         { // a new prime is coming up.
+          retlist.push_back(std::make_pair( cp, cc ) );
+          cp=list1[i];
+          cc=1;
+         }
+        }
   retlist.push_back(std::make_pair( cp, cc ) );
  }
 else

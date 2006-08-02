@@ -59,7 +59,7 @@ NLargeInteger NMatrixInt::det() const
 //std::cout<<"Step 2.\n";std::cout.flush();
 
    while ( currStage < matrix.rows() ) 
-	{ 
+        { 
 
 //std::cout<<"currStage == "<<currStage<<"\n";std::cout.flush();
 //std::cout<<"retval == "<<retval<<"\n";std::cout.flush();
@@ -87,11 +87,11 @@ NLargeInteger NMatrixInt::det() const
           a.divByExact(d);
           b.divByExact(d);
           // Do a modification to columns currStage and i.
-	  // right multiplication by `elementary' matrix
-	  // [ u  -b ]
-	  // [ v   a ] whose determinant is 1. 
+          // right multiplication by `elementary' matrix
+          // [ u  -b ]
+          // [ v   a ] whose determinant is 1. 
           for (j=currStage; j<matrix.rows(); j++) 
-	    {
+            {
             tmp = u * matrix.entry(j, currStage) +
                   v * matrix.entry(j, i);
             matrix.entry(j, i) = a * matrix.entry(j, i) -
@@ -103,7 +103,7 @@ NLargeInteger NMatrixInt::det() const
         // Get zeros in the current column.
         flag = false;
         for (i=currStage+1; i<matrix.rows(); i++) 
-	 {
+         {
          if (matrix.entry(i, currStage) == 0) continue;
          flag = true;
          a = matrix.entry(currStage, currStage);
@@ -113,7 +113,7 @@ NLargeInteger NMatrixInt::det() const
          b.divByExact(d);
          // Do a modification to rows currStage and i.
          for (j=currStage; j<matrix.rows(); j++) 
-	  {
+          {
            tmp = u * matrix.entry(currStage, j) +
                  v * matrix.entry(i, j);
            matrix.entry(i, j) = a * matrix.entry(i, j) -
@@ -125,12 +125,12 @@ NLargeInteger NMatrixInt::det() const
         if (flag) { continue; }
 
         // Factor out entry (currStage, currStage).
-	retval *= matrix.entry(currStage,currStage);
+        retval *= matrix.entry(currStage,currStage);
 
         currStage++;
        }
       } else retval = zero; // for non-square matrices.
-return retval;	
+return retval;        
 }
 
 

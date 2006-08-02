@@ -148,8 +148,8 @@ NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
             setCurrentTab(1); break;
         case ReginaPrefSet::TuraevViro:
             setCurrentTab(2); break;
-	case ReginaPrefSet::DetailedCellularInfo:
-	    setCurrentTab(3); break; // EDIT
+        case ReginaPrefSet::DetailedCellularInfo:
+            setCurrentTab(3); break; // EDIT
     }
 }
 
@@ -263,7 +263,7 @@ void NTriHomologyUI::editingElsewhere() {
 //////////////////////////////////////////////////////////////////////////////
 /* RBADD */
 /** These routines puts up the interface for the detailed cellular information
-	and it is a submenu of the Algebra menu. **/
+        and it is a submenu of the Algebra menu. **/
 
 
 void NTriDetailedCellularInfoUI::refresh() {
@@ -275,65 +275,65 @@ void NTriDetailedCellularInfoUI::refresh() {
 
     if (tri->isValid()) {
 
-	regina::homologicalData minfo(*tri);
+        regina::homologicalData minfo(*tri);
 
-	tempString<<minfo.getNumStandardCells()[0]<<", "<<
-	minfo.getNumStandardCells()[1]<<", "<<minfo.getNumStandardCells()[2]<<
-	", "<<minfo.getNumStandardCells()[3];
-	Cells->setText(tempString.str());
+        tempString<<minfo.getNumStandardCells()[0]<<", "<<
+        minfo.getNumStandardCells()[1]<<", "<<minfo.getNumStandardCells()[2]<<
+        ", "<<minfo.getNumStandardCells()[3];
+        Cells->setText(tempString.str());
         tempString.str("");
 
-	tempString<<minfo.getNumDualCells()[0]<<", "<<
-	minfo.getNumDualCells()[1]<<", "<<minfo.getNumDualCells()[2]<<
-	", "<<minfo.getNumDualCells()[3];
-	DualCells->setText(tempString.str());
-	tempString.str("");
+        tempString<<minfo.getNumDualCells()[0]<<", "<<
+        minfo.getNumDualCells()[1]<<", "<<minfo.getNumDualCells()[2]<<
+        ", "<<minfo.getNumDualCells()[3];
+        DualCells->setText(tempString.str());
+        tempString.str("");
 
-	tempString<<minfo.getEulerChar();
-	EulerChar->setText(tempString.str());
-	tempString.str("");
+        tempString<<minfo.getEulerChar();
+        EulerChar->setText(tempString.str());
+        tempString.str("");
 
-	minfo.getMH(0).writeTextShort(ssh0);		minfo.getMH(1).writeTextShort(ssh1);
-	minfo.getMH(2).writeTextShort(ssh2);		minfo.getMH(3).writeTextShort(ssh3);
-	tempString.str("");
-	tempString<<"H0 = "<<ssh0.str()<<",  H1 = "<<ssh1.str()<<
-		    ",  H2 = "<<ssh2.str()<<",  H3 = "<<ssh3.str();
-	H0H1H2H3->setText(tempString.str());
-	
-	tempString.str(""); ssh0.str(""); ssh1.str(""); ssh2.str("");
+        minfo.getMH(0).writeTextShort(ssh0);                minfo.getMH(1).writeTextShort(ssh1);
+        minfo.getMH(2).writeTextShort(ssh2);                minfo.getMH(3).writeTextShort(ssh3);
+        tempString.str("");
+        tempString<<"H0 = "<<ssh0.str()<<",  H1 = "<<ssh1.str()<<
+                    ",  H2 = "<<ssh2.str()<<",  H3 = "<<ssh3.str();
+        H0H1H2H3->setText(tempString.str());
+        
+        tempString.str(""); ssh0.str(""); ssh1.str(""); ssh2.str("");
 
-	minfo.getBMH(0).writeTextShort(ssh0);		minfo.getBMH(1).writeTextShort(ssh1);
-	minfo.getBMH(2).writeTextShort(ssh2);
+        minfo.getBMH(0).writeTextShort(ssh0);                minfo.getBMH(1).writeTextShort(ssh1);
+        minfo.getBMH(2).writeTextShort(ssh2);
 
-	tempString<<"H0 = "<<ssh0.str()<<",  H1 = "<<ssh1.str()<<
-		    ",  H2 = "<<ssh2.str();
-	HBdry->setText(tempString.str());
+        tempString<<"H0 = "<<ssh0.str()<<",  H1 = "<<ssh1.str()<<
+                    ",  H2 = "<<ssh2.str();
+        HBdry->setText(tempString.str());
 
-	tempString.str(""); ssh1.str("");
-	minfo.getBMmapH(1).writeTextShort(ssh1);
-	tempString<<ssh1.str();
-	BdryMap->setText(tempString.str());
+        tempString.str(""); ssh1.str("");
+        minfo.getBMmapH(1).writeTextShort(ssh1);
+        tempString<<ssh1.str();
+        BdryMap->setText(tempString.str());
 
         minfo.computeTorsionLinkingForm();
         
-	// 8 principle cases orientable y/n, boundary y/n, torsion exists y/n
+        // 8 principle cases orientable y/n, boundary y/n, torsion exists y/n
         TorForOrders->setText(minfo.getTorsionRankVectorString());
-	TorForSigma->setText(minfo.getTorsionSigmaVectorString());
-	TorForLegendre->setText(minfo.getTorsionLegendreSymbolVectorString());
-	EmbeddingComments->setText(minfo.getEmbeddabilityComment());
+        TorForSigma->setText(minfo.getTorsionSigmaVectorString());
+        TorForLegendre->setText(minfo.getTorsionLegendreSymbolVectorString());
+        EmbeddingComments->setText(minfo.getEmbeddabilityComment());
 
     } else {
         QString msg(i18n("Invalid Triangulation."));
         Cells->setText(msg);
         DualCells->setText(msg);
         EulerChar->setText(msg);
-    	H0H1H2H3->setText(msg);
+            H0H1H2H3->setText(msg);
         BdryMap->setText(msg);
-	TorForOrders->setText(msg);
-	TorForSigma->setText(msg);
- 	TorForLegendre->setText(msg);
-	EmbeddingComments->setText(msg);
-	}
+        TorForOrders->setText(msg);
+        TorForSigma->setText(msg);
+         TorForLegendre->setText(msg);
+        EmbeddingComments->setText(msg);
+        }
 }
 
 NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* packet,
@@ -355,9 +355,9 @@ NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* p
     Cells = new QLabel(ui);
     homologyGrid->addWidget(Cells, 1, 2);
     msg = i18n("The listing of the number of 0-cells, number of 1-cells, "
-		"number of 2-cells and number of 3-cells for a proper "
-		"CW-decomposition of the manifold specified by this "
-		"triangulation. ");
+                "number of 2-cells and number of 3-cells for a proper "
+                "CW-decomposition of the manifold specified by this "
+                "triangulation. ");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(Cells, msg);
 
@@ -366,8 +366,8 @@ NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* p
     DualCells = new QLabel(ui);
     homologyGrid->addWidget(DualCells, 2, 2);
     msg = i18n("The number of cells in the dual CW-decomposition "
-		"corresponding to the triangulation.  Listed in order "
-		"of ascending dimension. ");
+                "corresponding to the triangulation.  Listed in order "
+                "of ascending dimension. ");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(DualCells, msg);
 
@@ -384,7 +384,7 @@ NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* p
     H0H1H2H3 = new QLabel(ui);
     homologyGrid->addWidget(H0H1H2H3, 4, 2);
     msg = i18n("The homology groups of this manifold, in order of "
-		"ascending dimension. Coefficients in the integers. ");
+                "ascending dimension. Coefficients in the integers. ");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(H0H1H2H3, msg);
 
@@ -393,7 +393,7 @@ NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* p
     HBdry = new QLabel(ui);
     homologyGrid->addWidget(HBdry, 5, 2);
     msg = i18n("The homology groups of this manifolds boundary, in order of "
-		"ascending dimension. Coefficients in the integers. ");
+                "ascending dimension. Coefficients in the integers. ");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(HBdry, msg);
 
@@ -402,8 +402,8 @@ NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* p
     BdryMap = new QLabel(ui);
     homologyGrid->addWidget(BdryMap, 6, 2);
     msg = i18n("The boundary is a submanifold of the original "
-		"manifold. This describes the induced map on H1. "
-		);
+                "manifold. This describes the induced map on H1. "
+                );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(BdryMap, msg);
 
@@ -412,11 +412,11 @@ NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* p
     TorForOrders = new QLabel(ui);
     homologyGrid->addWidget(TorForOrders, 7, 2);
     msg = i18n("This is the first of 3 of the Kawauchi-Kojima "
-		"invariants of the torsion linking form on the "
-		"torsion subgroup of H1 of an oriented 3-manifold. "
-		"They are a complete set of invariants. This one is "
-		"the vector which lists the rank of all the subgroups "
-		"of various prime power orders." );
+                "invariants of the torsion linking form on the "
+                "torsion subgroup of H1 of an oriented 3-manifold. "
+                "They are a complete set of invariants. This one is "
+                "the vector which lists the rank of all the subgroups "
+                "of various prime power orders." );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForOrders, msg);
 
@@ -425,10 +425,10 @@ NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* p
     TorForSigma = new QLabel(ui);
     homologyGrid->addWidget(TorForSigma, 8, 2);
     msg = i18n("If H1 has 2-torsion, this is the Kawauchi-Kojima "
-	       "2-torsion sigma-vector. See Kawauchi and Kojima's "
-	       "paper `Algebraic classification of linking pairings "
-	       "on 3-manifolds' in Math. Ann. 253 (1980), no. 1 29--42."
-		);
+               "2-torsion sigma-vector. See Kawauchi and Kojima's "
+               "paper `Algebraic classification of linking pairings "
+               "on 3-manifolds' in Math. Ann. 253 (1980), no. 1 29--42."
+                );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForSigma, msg);
 
@@ -437,10 +437,10 @@ NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* p
     TorForLegendre = new QLabel(ui);
     homologyGrid->addWidget(TorForLegendre, 9, 2);
     msg = i18n("If H1 has odd torsion, this is the "
-	       "Legendre symbol vector, the last of the "
-	       "Kawauchi-Kojima invariants, this one originally "
-	       "constructed by Seifert. "
-		);
+               "Legendre symbol vector, the last of the "
+               "Kawauchi-Kojima invariants, this one originally "
+               "constructed by Seifert. "
+                );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForLegendre, msg);
 
@@ -449,12 +449,12 @@ NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* p
     EmbeddingComments = new QLabel(ui);
     homologyGrid->addWidget(EmbeddingComments, 10, 2);
     msg = i18n("If the homology allows one to make any deductions "
-		"about the embeddability of this manifold in R^3, S^3, "
-	        "S^4 or a homology sphere, we mention it here. "
-	        "Aside from the Kawauchi-Kojima paper, these comments "
-	        "use C.T.C. Wall's theorem that 3-manifold embed in S^5 "
-	        "and some elementary homological observations. "
-		);
+                "about the embeddability of this manifold in R^3, S^3, "
+                "S^4 or a homology sphere, we mention it here. "
+                "Aside from the Kawauchi-Kojima paper, these comments "
+                "use C.T.C. Wall's theorem that 3-manifold embed in S^5 "
+                "and some elementary homological observations. "
+                );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(EmbeddingComments, msg);
 }

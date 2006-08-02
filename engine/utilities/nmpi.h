@@ -97,8 +97,8 @@ class NLargeInteger {
         bool infinite;
             /**< Does this NLargeInteger represent infinity? */
 
-	static std::vector<NLargeInteger> primeList; // the current list of primes
-	void setInitialPrimes();	             // transfers data from primeSeedList to primeList
+        static std::vector<NLargeInteger> primeList; // the current list of primes
+        void setInitialPrimes();                     // transfers data from primeSeedList to primeList
 
     public:
         /**
@@ -643,57 +643,57 @@ class NLargeInteger {
         NLargeInteger gcdWithCoeffs(const NLargeInteger& other,
             NLargeInteger& u, NLargeInteger& v) const;
 
-	/**
-	 * Runs the Euclidean algorithm. If we write this as n, then
-	 *  it returns the result of division by d, with remainder r.
-	 * IE: q = euclideanAlg(d,r) means n = qd + r
-	 * with 0 <= r < |d|. RBADD  Thus if one applies this to 
-	 * -1, with d=3, this returns q=-1, with r=2. This is the proper
-	 * Euclidean algorithm and is required in the RB homology
-	 * and Poincare duality routines.
-	 * 
-	 * @author Ryan Budney
-	 */
-	NLargeInteger euclideanAlg(const NLargeInteger& d, 
-		NLargeInteger& r) const;
+        /**
+         * Runs the Euclidean algorithm. If we write this as n, then
+         *  it returns the result of division by d, with remainder r.
+         * IE: q = euclideanAlg(d,r) means n = qd + r
+         * with 0 <= r < |d|. RBADD  Thus if one applies this to 
+         * -1, with d=3, this returns q=-1, with r=2. This is the proper
+         * Euclidean algorithm and is required in the RB homology
+         * and Poincare duality routines.
+         * 
+         * @author Ryan Budney
+         */
+        NLargeInteger euclideanAlg(const NLargeInteger& d, 
+                NLargeInteger& r) const;
 
-	/** 
-	 * Returns a list of the currently known primes. 
-	 * @author Ryan Budney
-	 */
-	std::vector<NLargeInteger> getPrimeList();
-	/**
-	 * Increases this list of known primes by one.
-	 * @author Ryan Budney
-	 */
-	void growPrimeList();			     // lengthens the list of primes by one.
+        /** 
+         * Returns a list of the currently known primes. 
+         * @author Ryan Budney
+         */
+        std::vector<NLargeInteger> getPrimeList();
+        /**
+         * Increases this list of known primes by one.
+         * @author Ryan Budney
+         */
+        void growPrimeList();                             // lengthens the list of primes by one.
 
-	/**
-	 * Lists the prime factors of the current integer. The 
-	 * answer is given in increasing order, so for 54 the
-	 * list of prime factors would be (2, 3, 3, 3).
-	 * @author Ryan Budney
-	 */
-	std::vector<NLargeInteger> primeFactors(); // returns the prime factors of the integer.
-						     // if the integer is negative, -1, will be the
-						     // first prime factor.
-	/**
-	 * Gives the list of prime factors as prime powers. This
-	 * algorithm calls primeFactors(). Thus, for 54 it would
-	 * give ( (2,1), (3,3) ).  
-	 * @author Ryan Budney
-	 */
-	std::vector< std::pair<NLargeInteger, unsigned long> > primePowerDecomp();
+        /**
+         * Lists the prime factors of the current integer. The 
+         * answer is given in increasing order, so for 54 the
+         * list of prime factors would be (2, 3, 3, 3).
+         * @author Ryan Budney
+         */
+        std::vector<NLargeInteger> primeFactors(); // returns the prime factors of the integer.
+                                                     // if the integer is negative, -1, will be the
+                                                     // first prime factor.
+        /**
+         * Gives the list of prime factors as prime powers. This
+         * algorithm calls primeFactors(). Thus, for 54 it would
+         * give ( (2,1), (3,3) ).  
+         * @author Ryan Budney
+         */
+        std::vector< std::pair<NLargeInteger, unsigned long> > primePowerDecomp();
 
-	/**
-	 * Returns the legendre symbol of *this/p
- 	 * We assume p is an odd prime. Thus it returns
-	 * 1 if *this is congruent to a square mod p,
-	 * -1 if it isn't, and 0 if *this is divisible by
-	 * p. 
-	 * @author Ryan Budney
-	 */
-	int legendreSymbol(const NLargeInteger& p) const;
+        /**
+         * Returns the legendre symbol of *this/p
+          * We assume p is an odd prime. Thus it returns
+         * 1 if *this is congruent to a square mod p,
+         * -1 if it isn't, and 0 if *this is divisible by
+         * p. 
+         * @author Ryan Budney
+         */
+        int legendreSymbol(const NLargeInteger& p) const;
     private:
         /**
          * Initialises this integer to infinity.
@@ -983,9 +983,9 @@ inline NLargeInteger NLargeInteger::lcm(const NLargeInteger& other) const {
     It returns 1 is *this is a square mod p, -1 if *this is not
     a square mod p, and 0 if p divides *this.  */
 inline int NLargeInteger::legendreSymbol(const NLargeInteger& p) const
-	{
-	return mpz_legendre(data, p.data);
-	}
+        {
+        return mpz_legendre(data, p.data);
+        }
 
 
 }  // namespace regina
