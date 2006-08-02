@@ -62,13 +62,14 @@
 
 namespace regina {
 
-
-
 /**
  * \addtogroup utilities General Utility Classes
  * General utility classes.
  * @{
  */
+
+extern const long numPrimeSeeds;
+extern const long primeSeedList[];
 
 /**
  * Represents an arbitrary precision integer.

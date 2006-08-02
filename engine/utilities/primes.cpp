@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "utilities/nmpi.h"
+
 namespace regina {
 
 // Keep the seed primes in a separate file so they're nicely out of the
