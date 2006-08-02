@@ -228,11 +228,11 @@ class NRational {
          * @return the inverse 1 / \a this.
          */
         NRational inverse() const;
-
         /**
-         * Calculates the absolute value of this rational.
+         * Determines the absolute value of this rational.
+         * This rational is not changed.
          *
-         * @return the absolute value.
+         * @return the absolute value of this rational.
          */
         NRational abs() const;
 
@@ -392,11 +392,6 @@ inline NRational& NRational::operator = (long value) {
     flavour = f_normal;
     mpq_set_si(data, value, 1);
     return *this;
-}
-
-inline NRational NRational::abs() const {
-    return ((flavour == f_normal && mpq_cmp(data, zero.data) < 0) ?
-        -(*this) : *this);
 }
 
 inline void NRational::negate() {

@@ -161,6 +161,14 @@ NRational NRational::inverse() const {
     return ans;
 }
 
+NRational NRational::abs() const {
+    if (flavour != f_normal || mpq_cmp(data, zero.data) >= 0)
+        return *this;
+    NRational ans;
+    mpq_neg(ans.data, data);
+    return ans;
+}
+
 NRational& NRational::operator += (const NRational& other) {
     if (flavour == f_undefined || other.flavour == f_undefined)
         flavour = f_undefined;
