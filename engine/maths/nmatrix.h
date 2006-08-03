@@ -230,8 +230,8 @@ class NMatrix {
  * (<tt>=</tt>) operator.
  * \pre An element <i>t</i> of type T can be written to an output stream
  * <i>out</i> using the standard expression <tt>out << t</tt>.
- * \pre Type T provides binary operators <tt>+</tt> and <tt>*</tt> and
- * unary operators <tt>+=</tt> and <tt>*=</tt>.
+ * \pre Type T provides binary operators <tt>+</tt>, <tt>-</tt> and
+ * <tt>*</tt> and unary operators <tt>+=</tt>, <tt>-=</tt> and <tt>*=</tt>.
  * \pre Type T has a long integer constructor.  That is, if \c a is of type T,
  * then \c a can be initialised to a long integer \c l using <tt>a(l)</tt>.
  * Here the value 1 refers to the multiplicative identity in the ring T.
@@ -409,6 +409,75 @@ class NMatrixRing : public NMatrix<T> {
                             (this->data[row][k] * other.data[k][col]);
                 }
             return ans;
+        }
+
+        /**
+         * Evaluates the determinant of the matrix.
+         *
+         * This algorithm has quartic complexity, and uses the dynamic
+         * programming approach of Mahajan and Vinay.  For further
+         * details, see Meena Mahajan and V. Vinay, "Determinant:
+         * Combinatorics, algorithms, and complexity", Chicago J. Theor.
+         * Comput. Sci., Vol. 1997, Article 5.
+         *
+         * \pre This is a square matrix.
+         *
+         * @return the determinant of this matrix.
+         */
+        T det() const {
+            unsigned long n = this->nRows;
+
+            // Just in case...
+            if (n != this->nCols || n == 0)
+                return zero;
+
+            T* partial[2];
+            partial[0] = new T[n * n];
+            partial[1] = new T[n * n];
+
+            unsigned long len, head, curr, prevHead, prevCurr;
+
+            // Treat the smallest cases of len = 1 separately.
+            int layer = 0;
+            for (head = 0; head < n; head++) {
+                partial[0][head + head * n] = one;
+                for (curr = head + 1; curr < n; curr++)
+                    partial[0][head + curr * n] = zero;
+            }
+
+            // Work up through incrementing values of len.
+            for (len = 2; len <= n; len++) {
+                layer ^= 1;
+                for (head = 0; head < n; head++) {
+                    // If curr == head, we need to open a new clow.
+                    partial[layer][head + head * n] = zero;
+                    for (prevHead = 0; prevHead < head; prevHead++)
+                        for (prevCurr = prevHead; prevCurr < n; prevCurr++)
+                            partial[layer][head + head * n] -=
+                                (partial[layer ^ 1][prevHead + prevCurr * n] *
+                                this->data[prevCurr][prevHead]);
+
+                    // If curr > head, we need to continue an existing clow.
+                    for (curr = head + 1; curr < n; curr++) {
+                        partial[layer][head + curr * n] = zero;
+                        for (prevCurr = head; prevCurr < n; prevCurr++)
+                            partial[layer][head + curr * n] +=
+                                (partial[layer ^ 1][head + prevCurr * n] *
+                                this->data[prevCurr][curr]);
+                    }
+                }
+            }
+
+            // All done.  Sum up the determinant.
+            T ans = zero;
+            for (head = 0; head < n; head++)
+                for (curr = head; curr < n; curr++)
+                    ans += (partial[layer][head + curr * n] *
+                        this->data[curr][head]);
+
+            delete[] partial[0];
+            delete[] partial[1];
+            return (n % 2 == 0 ? -ans : ans);
         }
 };
 

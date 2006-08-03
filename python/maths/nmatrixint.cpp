@@ -62,6 +62,7 @@ void addNMatrixInt() {
         .def("addCol", addCol_triple, OL_addCol())
         .def("multRow", &NMatrixInt::multRow)
         .def("multCol", &NMatrixInt::multCol)
+        .def("det", &NMatrixInt::det)
     ;
 
     s.attr("zero") = NMatrixInt::zero;
