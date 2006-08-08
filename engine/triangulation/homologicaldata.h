@@ -419,25 +419,34 @@ inline homologicalData::homologicalData(const NTriangulation& input):
 inline homologicalData::homologicalData(const homologicalData& g) :
         ShareableObject()
 {
+	tri = new NTriangulation(*g.tri);
+
         // regular cellular homology
         mHomology0Computed = g.mHomology0Computed;
         mHomology1Computed = g.mHomology1Computed;
         mHomology2Computed = g.mHomology2Computed;
         mHomology3Computed = g.mHomology3Computed;
 
-        if (mHomology0Computed) mHomology0 = new MarkedAbelianGroup(*g.mHomology0); else mHomology0=0;
-         if (mHomology1Computed) mHomology1 = new MarkedAbelianGroup(*g.mHomology1); else mHomology1=0;
-        if (mHomology2Computed) mHomology2 = new MarkedAbelianGroup(*g.mHomology2); else mHomology2=0;
-        if (mHomology3Computed) mHomology3 = new MarkedAbelianGroup(*g.mHomology3); else mHomology3=0;
+        if (mHomology0Computed) mHomology0 = new MarkedAbelianGroup(*g.mHomology0); 
+	   else mHomology0=0;
+        if (mHomology1Computed) mHomology1 = new MarkedAbelianGroup(*g.mHomology1); 
+	   else mHomology1=0;
+        if (mHomology2Computed) mHomology2 = new MarkedAbelianGroup(*g.mHomology2); 
+	   else mHomology2=0;
+        if (mHomology3Computed) mHomology3 = new MarkedAbelianGroup(*g.mHomology3); 
+	   else mHomology3=0;
 
         // regular boundary cellular homology
         bHomology0Computed = g.bHomology0Computed;
         bHomology1Computed = g.bHomology1Computed;
         bHomology2Computed = g.bHomology2Computed;
 
-        if (bHomology0Computed) bHomology0 = new MarkedAbelianGroup(*g.bHomology0); else bHomology0=0;
-         if (bHomology1Computed) bHomology1 = new MarkedAbelianGroup(*g.bHomology1); else bHomology1=0;
-        if (bHomology2Computed) bHomology2 = new MarkedAbelianGroup(*g.bHomology2); else bHomology2=0;
+        if (bHomology0Computed) bHomology0 = new MarkedAbelianGroup(*g.bHomology0); 
+	  else bHomology0=0;
+        if (bHomology1Computed) bHomology1 = new MarkedAbelianGroup(*g.bHomology1); 
+	  else bHomology1=0;
+        if (bHomology2Computed) bHomology2 = new MarkedAbelianGroup(*g.bHomology2); 
+	  else bHomology2=0;
 
         // boundary map
         bmMap0Computed = g.bmMap0Computed;
@@ -445,7 +454,7 @@ inline homologicalData::homologicalData(const homologicalData& g) :
         bmMap2Computed = g.bmMap2Computed;
 
         if (bmMap0Computed) bmMap0 = new HomMarkedAbelianGroup(*g.bmMap0); else bmMap0=0;
-         if (bmMap1Computed) bmMap1 = new HomMarkedAbelianGroup(*g.bmMap1); else bmMap1=0;
+        if (bmMap1Computed) bmMap1 = new HomMarkedAbelianGroup(*g.bmMap1); else bmMap1=0;
         if (bmMap2Computed) bmMap2 = new HomMarkedAbelianGroup(*g.bmMap2); else bmMap2=0;
 
         // dual cellular homology
@@ -454,18 +463,22 @@ inline homologicalData::homologicalData(const homologicalData& g) :
         dmHomology2Computed = g.dmHomology2Computed;
         dmHomology3Computed = g.dmHomology3Computed;
 
-        if (dmHomology0Computed) dmHomology0 = new MarkedAbelianGroup(*g.dmHomology0); else dmHomology0=0;
-         if (dmHomology1Computed) dmHomology1 = new MarkedAbelianGroup(*g.dmHomology1); else dmHomology1=0;
-        if (dmHomology2Computed) dmHomology2 = new MarkedAbelianGroup(*g.dmHomology2); else dmHomology2=0;
-        if (dmHomology3Computed) dmHomology3 = new MarkedAbelianGroup(*g.dmHomology3); else dmHomology3=0;
+        if (dmHomology0Computed) dmHomology0 = new MarkedAbelianGroup(*g.dmHomology0); 
+	  else dmHomology0=0;
+        if (dmHomology1Computed) dmHomology1 = new MarkedAbelianGroup(*g.dmHomology1); 
+	  else dmHomology1=0;
+        if (dmHomology2Computed) dmHomology2 = new MarkedAbelianGroup(*g.dmHomology2); 
+	  else dmHomology2=0;
+        if (dmHomology3Computed) dmHomology3 = new MarkedAbelianGroup(*g.dmHomology3); 
+	  else dmHomology3=0;
 
         // isomorphism between dual H1 and regular H1.
         dmTomMap1Computed = g.dmTomMap1Computed;
 
-        if (dmTomMap1Computed) dmTomMap1 = new HomMarkedAbelianGroup(*g.dmTomMap1); else dmTomMap1=0;
+        if (dmTomMap1Computed) dmTomMap1 = new HomMarkedAbelianGroup(*g.dmTomMap1); 
+	  else dmTomMap1=0;
 
         // the chain complexes...
-
         ccIndexingComputed = g.ccIndexingComputed;
 
         if (ccIndexingComputed)
@@ -517,7 +530,18 @@ inline homologicalData::homologicalData(const homologicalData& g) :
          linkingFormPD.resize( g.linkingFormPD.size(), 0 );
          for (unsigned long i=0; i<linkingFormPD.size(); i++)
            linkingFormPD[i] = new NMatrixRing<NRational> (*g.linkingFormPD[i]);
-         }
+         torsionLinkingFormIsHyperbolic = g.torsionLinkingFormIsHyperbolic;
+	 torsionLinkingFormIsSplit = g.torsionLinkingFormIsSplit;
+	 torsionLinkingFormSatisfiesKKtwoTorCondition =
+		 g.torsionLinkingFormSatisfiesKKtwoTorCondition;
+	 torRankV = g.torRankV;
+	 twoTorSigmaV = g.twoTorSigmaV;
+	 oddTorLegSymV = g.oddTorLegSymV;
+	 torsionRankString = g.torsionRankString;
+ 	 torsionSigmaString = g.torsionSigmaString;
+	 torsionLegendreString = g.torsionLegendreString;
+	 embedabilityString = g.embedabilityString;
+	 }
 }
 
 // destructor

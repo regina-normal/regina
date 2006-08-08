@@ -554,6 +554,8 @@ MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N)
  for (i=0;i<ORN.rows();i++) for (j=0;j<ORN.columns();j++) ORN.entry(i,j) =
          prod->entry(i+rankOM,j);
 
+ delete(prod);
+
  NMatrixInt tX(ORN);
  RBMOD_smithNormalForm(tX, ornR, ornRi, ornC, ornCi);
  for (i=0;i<tX.rows();i++) for (j=0;j<tX.columns();j++)
@@ -715,12 +717,12 @@ return retval;
  */
 std::vector<NLargeInteger> MarkedAbelianGroup::getTorRep(unsigned long index) const
 {
-std::vector<NLargeInteger> retval(OM.columns(),"0");
+std::vector<NLargeInteger> retval(OM.columns(),NLargeInteger::zero);
 // index corresponds to the (InvFacIndex[index])-th column of ornCi
 // we then pad this vector (at the front) with rankOM 0's
 // and apply OMR to it.
 
-std::vector<NLargeInteger> temp(ornCi.rows()+rankOM,"0");
+std::vector<NLargeInteger> temp(ornCi.rows()+rankOM,NLargeInteger::zero);
 
 for (unsigned long i=0;i<ornCi.rows();i++) temp[i+rankOM]=ornCi.entry(i,InvFacIndex[index]);
 // the above line takes the index+snffreeindex-th column of ornCi and pads it.
@@ -749,11 +751,11 @@ return retval;
  */
 std::vector<NLargeInteger> MarkedAbelianGroup::getSNFisoRep(std::vector<NLargeInteger>& element)  const
 {
-std::vector<NLargeInteger> retval(snfrank+InvFacList.size(),"0");
+std::vector<NLargeInteger> retval(snfrank+InvFacList.size(),NLargeInteger::zero);
 // apply OMRi, crop, then apply ornC, tidy up and return.
 std::vector<NLargeInteger> nullvec(0); // this is returned if element not in ker(M)
 
-std::vector<NLargeInteger> temp(ON.rows(),"0"); // this holds OMRi * element
+std::vector<NLargeInteger> temp(ON.rows(),NLargeInteger::zero); // this holds OMRi * element
         // if first rankOM entries are 0, then element is in the kernel
 
 bool eltinker=true;

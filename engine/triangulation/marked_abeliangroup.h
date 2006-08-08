@@ -291,7 +291,7 @@ inline MarkedAbelianGroup::~MarkedAbelianGroup() {}
 
 inline        NMatrixInt MarkedAbelianGroup::getMRB() const { return OMR; }
 inline        NMatrixInt MarkedAbelianGroup::getMRBi() const { return OMRi; }
-inline  NMatrixInt MarkedAbelianGroup::getMCB() const { return OMC; }
+inline        NMatrixInt MarkedAbelianGroup::getMCB() const { return OMC; }
 inline        NMatrixInt MarkedAbelianGroup::getMCBi() const { return OMCi; }
 inline        NMatrixInt MarkedAbelianGroup::getNRB() const { return ornR; }
 inline        NMatrixInt MarkedAbelianGroup::getNRBi() const { return ornRi; }
@@ -411,7 +411,7 @@ inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup()
  {
  if (reducedMatrixComputed) { delete reducedMatrix; }
  if (kernelComputed) { delete kernel; }
- if (coKernelComputed) {        delete coKernel; }
+ if (coKernelComputed) { delete coKernel; }
  if (imageComputed) { delete image; }
  if (reducedKernelLatticeComputed) { delete reducedKernelLattice; }
  }

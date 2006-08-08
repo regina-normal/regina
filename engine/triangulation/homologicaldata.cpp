@@ -1393,7 +1393,8 @@ for (unsigned long i=starti; i<torRankV.size(); i++) // for each prime
         // compute determinant.
 
         // delete the temp matrix.
-        if (tempM != 0) delete tempM;
+        // if (tempM != 0) 
+	delete tempM;
 
         // increment curri
         curri = curri + torRankV[i].second[j]; // crashes here.
