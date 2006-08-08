@@ -53,7 +53,7 @@ class NMatrixInt;
  */
 
 /**
- * Represents a finitely generated abelian group given by a chain complex. (RBADD)
+ * Represents a finitely generated abelian group given by a chain complex. 
  *
  * This class is initialized with a chain complex.  The chain complex is given
  * in terms of two NMatrixInt classes, M and N such that M*N=0. The abelian group
@@ -328,7 +328,7 @@ NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom, std::vector<NLargeInteger>& 
 
 
 /**
- * Represents a homomorphism of finitely generated abelian groups. (RBADD)
+ * Represents a homomorphism of finitely generated abelian groups. 
  * One initializes a homomorphism of f.g. abelian groups by passing the constructor
  * two f.g. abelian groups and a matrix which describes the linear map between the
  * free abelian groups in the centre of the respective chain complexes that you

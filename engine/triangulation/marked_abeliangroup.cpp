@@ -33,7 +33,7 @@
 
 namespace regina {
 
-/** RBADD - this is a version of Burton's smithNormalForm() algorithm.
+/** this is a version of Burton's smithNormalForm() algorithm.
         Given matrix, it returns four matrices RowSpaceBasis, ColSpaceBasis,
         RowSpaceBasisInv, ColSpaceBasisInv such that
         ColSpaceBasis * matrix * RowSpaceBasis is in smith normal form.
@@ -223,7 +223,7 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
 }
 
 
-/** RBADD - Given a matrix M and a list of rows from M, rowList, this altorithm puts 
+/** Given a matrix M and a list of rows from M, rowList, this altorithm puts 
         M in reduced column echelon form with respect to the rowList.
         It returns the corresponding change of coordinate matrices R and Ri.
         M*R=columnechelon(M), columnechelon(M)Ri = M. M is replaced by its column
@@ -370,7 +370,7 @@ while ( (CR<rowList.size()) && (CC<M.columns())) // the algorithm will think of 
 }
 
 
-/** RBADD - Given a homomorphism from Z^n to Z_p1 + ... + Z_pk, the kernel
+/** Given a homomorphism from Z^n to Z_p1 + ... + Z_pk, the kernel
         of this homomorphism is some rank-n lattice in Z^n.  This algorithm
         finds a basis for the lattice.  hom is a k by n matrix representing
         the homomorphism and L is a k-vector whose entries are p1 through pk.
