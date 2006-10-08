@@ -275,7 +275,7 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
     return out;
 }
 
-double NRational::getDoubleApprox(bool &inrange) const {
+double NRational::doubleApprox(bool* inrange) const {
     // The largest and smallest possible (positive) doubles should be:
     //     FLT_RADIX ^ DBL_MAX_EXP (minus a small amount)
     //     FLT_RADIX ^ (DBL_MIN_EXP - 1)
@@ -306,12 +306,16 @@ double NRational::getDoubleApprox(bool &inrange) const {
 
   NLargeInteger q, tN,tD,tR;
 
-  if ( (this->abs() > bigone) || (this->abs() < smallone) ) 
-        { inrange=false; retval=0.0; }
-  if (*this == zero) { inrange=true; retval=0.0; }
-  else
-   { // we'll do the first 15 sig digits? something like that.
-    inrange=true;
+  if ( (this->abs() > bigone) || (this->abs() < smallone) ) {
+    if (inrange) *inrange = false;
+    return 0.0;
+  }
+  if (inrange) *inrange = true;
+
+  if (*this == zero)
+    return 0.0;
+  else {
+    // we'll do the first 15 sig digits? something like that.
     tN = this->getNumerator();
     tD = this->getDenominator();
     // the strategy should be to multiply or divide by 10 until we

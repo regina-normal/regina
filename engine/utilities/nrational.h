@@ -330,12 +330,13 @@ class NRational {
 
         /**
          * If it can be approximated by a long double, this returns
-         * such an approximation. It sets inrange==true in this case.
-         * otherwise it sets inrange==false and returns 0.
+         * such an approximation. It sets *inrange==true in this case.
+         * Otherwise it sets *inrange==false and returns 0.  Note that
+         * inrange is optional (null may be passed instead).
          *
          * @author Ryan Budney
          */
-        double getDoubleApprox(bool &inrange) const;
+        double doubleApprox(bool* inrange = 0) const;
 
     friend std::ostream& operator << (std::ostream& out, const NRational& rat);
 };

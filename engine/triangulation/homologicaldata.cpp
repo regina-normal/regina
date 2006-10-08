@@ -1227,7 +1227,6 @@ static NRational pi( NRational(
     NLargeInteger("314159265358979323846264338327950288419716939937510582097494459230781640628"),
     NLargeInteger("100000000000000000000000000000000000000000000000000000000000000000000000000") ));
 std::vector< NLargeInteger > groupV;
-bool inrange;
 bool notatend;
 NRational tSum;
 
@@ -1279,7 +1278,7 @@ if (h1PrimePowerDecomp.size() > 0) if (h1PrimePowerDecomp[0].first == NLargeInte
         notatend=true;
         while (notatend)
          {
-         // compute twoPow * pi * form(x,x), reduce mod 1 then call getDoubleApprox()
+         // compute twoPow * pi * form(x,x), reduce mod 1 then call doubleApprox()
          // first we evaluate the form(x,x) for x==groupV. the form is linkingformPD[0]
          tSum=NRational::zero;
          for (unsigned long j=0; j<linkingFormPD[0]->rows(); j++)
@@ -1291,7 +1290,7 @@ if (h1PrimePowerDecomp.size() > 0) if (h1PrimePowerDecomp[0].first == NLargeInte
          tD = tSum.getDenominator();
          tN.euclideanAlg(tD,tR);
          tSum = NRational(twoPow) * pi * NRational( tR, tD );
-         tLD = tSum.getDoubleApprox(inrange);
+         tLD = tSum.doubleApprox();
           // we ignore `inrange' parameter as the number is reduced mod 1, so either way it is
           // returning essentially the correct number.
           xlD = xlD + cos(tLD);
