@@ -275,8 +275,22 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
     return out;
 }
 
-double NRational::getDoubleApprox(bool &inrange) const
- {// first we should decide if the NRational has the right order
+double NRational::getDoubleApprox(bool &inrange) const {
+    // The largest and smallest possible (positive) doubles should be:
+    //     FLT_RADIX ^ DBL_MAX_EXP (minus a small amount)
+    //     FLT_RADIX ^ (DBL_MIN_EXP - 1)
+    //
+    // However, I have also seen the following crop up in some places:
+    //     FLT_RADIX ^ (DBL_MAX_EXP + 1) (minus a small amount)
+    //     FLT_RADIX ^ DBL_MIN_EXP
+    //
+    // Best to be conservative here and choose the weaker in each case:
+    //     FLT_RADIX ^ DBL_MAX_EXP (minus a small amount)
+    //     FLT_RADIX ^ DBL_MIN_EXP
+
+
+
+  // first we should decide if the NRational has the right order
   // of magnitude.  a long double stretches from 3.4E-308 to
   // 3.4E+308
   static NLargeInteger pb("100000000000000000000000000000");
