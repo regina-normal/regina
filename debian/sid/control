@@ -26,6 +26,7 @@ Description: 3-manifold topology software with normal surface support
  Python interface, as well as the users' reference manual.  For the
  Python reference (i.e., the API documentation for the Regina
  calculation engine), see the package regina-normal-doc.
+XB-Python-Version: ${python:Versions}
 
 Package: regina-normal-dev
 Architecture: any

@@ -129,6 +129,7 @@ binary-indep: build install
 	dh_compress -i -X.bz2 -X.css -X.docbook -X.rga
 	dh_fixperms -i
 	# dh_makeshlibs -i
+	# dh_python -i
 	dh_installdeb -i
 	dh_perl -i
 	dh_shlibdeps -i
@@ -153,6 +154,7 @@ binary-arch: build install
 	  gunzip $$i; done
 	dh_fixperms -a
 	dh_makeshlibs -a
+	dh_python -pregina-normal /usr/lib/regina-normal/python
 	dh_installdeb -a
 	dh_perl -a
 	dh_shlibdeps -a -ldebian/regina-normal/usr/lib
