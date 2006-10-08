@@ -10,7 +10,7 @@ XS-Python-Version: 2.4
 Package: regina-normal
 Architecture: any
 Section: math
-Depends: ${shlibs:Depends}, ${perl:Depends}
+Depends: ${shlibs:Depends}, ${perl:Depends}, ${python:Depends}
 Recommends: khelpcenter
 Suggests: gap, graphviz, konqueror, mpich-bin, regina-normal-doc, regina-normal-dev, snappea
 Description: 3-manifold topology software with normal surface support
