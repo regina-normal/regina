@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
 Build-Depends: automake1.9, debhelper (>> 4.0.0), doxygen, kdelibs4-dev (>= 4:3.2.0), libboost-python-dev (>= 1.32.0), libcppunit-dev, libgmp3-dev, libmpich1.0-dev, libpopt-dev, libxml2-dev, zlib1g-dev
 Build-Conflicts: regina-normal-dev (<< 4.3.1-0), regina-normal-dev (>= 4.3.2-0)
-Standards-Version: 3.7.2.1
+Standards-Version: 3.6.2.1
 
 Package: regina-normal
 Architecture: any
