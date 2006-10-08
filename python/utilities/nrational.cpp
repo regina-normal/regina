@@ -33,6 +33,11 @@ using namespace boost::python;
 using regina::NLargeInteger;
 using regina::NRational;
 
+namespace {
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_doubleApprox,
+        NRational::doubleApprox, 0, 1);
+}
+
 void addNRational() {
     scope s = class_<NRational>("NRational")
         .def(init<const NRational&>())
@@ -61,6 +66,7 @@ void addNRational() {
         .def(self > self)
         .def(self <= self)
         .def(self >= self)
+        .def("doubleApprox", &NRational::doubleApprox, OL_doubleApprox())
         .def(self_ns::str(self))
     ;
 
