@@ -626,10 +626,10 @@ class NLargeInteger {
          * into \a u and \a v will be those for which
          * <tt>u*this + v*other = d</tt>,
          * <tt>-abs(this)/d < v*sign(other) <= 0</tt> and
-         * <tt>1, <= u*sign(this) <= abs(other)/d</tt>.
-         * This equations are not satisfied when either of \a this or
+         * <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         * These equations are not satisfied when either of \a this or
          * \a other are zero, but in this case \a u and \a v are both
-         * 0, 1, or -1, using as many zeros as possible.
+         * 0, 1 or -1, using as many zeros as possible.
          *
          * \pre Neither this integer nor \a other is infinite.
          *
