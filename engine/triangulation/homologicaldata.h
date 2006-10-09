@@ -61,14 +61,60 @@ class NMatrixInt; // what are these for?
 /**
  * Data type that deals with all the detailed homological information in a
  * manifold, including:
- *   a) the manifold's homology
- *   b) the boundary's homology
- *   c) the map from boundary -> manifold
- *   d) the dual cellular homology
+ *
+ *   a) the manifold's homology.
+ *
+ *   b) the boundary's homology.
+ *
+ *   c) the map from boundary -> manifold.
+ *
+ *   d) the dual cellular homology.
+ *
  *   e) the isomorphism on H1 from the dual cellular homology to the regular cellular
  *      homology.
- *   f) the H1 torsion form...
+ *
+ *   f) the H1 torsion form.
+ *
+ *   g) the Kawauchi-Kojima invariants of torsion linking forms.
  * 
+ * These algorithms take a "least effort" approach to all computations. It only computes
+ * what is neccessary for your requests.  It also keeps a record of all previous computations
+ * you've made, so that in case a future computation could be sped-up by not recomputing
+ * some data, it takes that short-cut. 
+ *
+ * All these algorithms use two transverse CW decompositions of the manifold.
+ * They correspond to the (ideal) triangulation, given a proper boundary, and
+ * the CW-dual as in the proof of Poincare Duality.
+ *
+ *  We describe the canonical ordering of both the cells and
+ *  dual cells of tri.
+ *
+ *  The standard CW decomposition -- this is the one that most
+ *  closely resembles the ideal triangulation. 
+ *
+ *   0-cells: The non-ideal vertices given in the order vertices.begin() to vertices.end()
+ *            followed by the ideal endpoints of the edges in lexicographical order
+ *            edges.begin() to edges.end() followed by the endpts 0, 1.
+ *
+ *   1-cells: edges.begin() to edges.end() followed by the ideal edges of
+ *            faces.begin() to faces.end() in order 0,1,2.
+ *
+ *   2-cells: faces.begin() to faces.end() followed by ideal faces of
+ *            tetrahedra.begin() through tetrahedra.end() in order 0,1,2,3.
+ *
+ *   3-cells: tetrahedra.begin() through tetrahedra.end().
+ *
+ *   The Dual CW decomposition -- if the above CW-decomposition came from a morse
+ *   function f, this would be the one for -f. 
+ *
+ *   0-cells: tetrahedra.begin() through tetrahedra.end().
+ *
+ *   1-cells: the non-boundary faces.begin() through faces.end().
+ *
+ *   2-cells: the non-boundary edges.begin() through edges.end().
+ *
+ *   3-cells: the non-boundary, non-ideal vertices.begin() through vertices.end().
+ *
  * @author Ryan Budney 
  * 
  * \testpart
@@ -135,35 +181,6 @@ class homologicalData : public ShareableObject{
         NIndexedArray<unsigned long> sBNIE;  // boundary non-ideal edges
         NIndexedArray<unsigned long> sBNIF;  // boundary non-ideal faces
 
-
-/**              chain complexes for the corresponding transverse CW
-             decompositions of an ideal triangulation.
-             These routines are called with B1, B2, B3 
-             pre-initialized to the correct dimensions. 
-        
-             We describe the canonical ordering of both the cells and
-             dual cells of tri.
-
-             The standard CW decomposition -- this is the one that most
-             closely resembles the ideal triangulation. 
-
-             0-cells: The non-ideal vertices given in the order vertices.begin() to vertices.end()
-                        followed by the ideal endpoints of the edges in lexicographical order
-                        edges.begin() to edges.end() followed by the endpts 0, 1.
-             1-cells: edges.begin() to edges.end() followed by the ideal edges of
-                        faces.begin() to faces.end() in order 0,1,2.
-             2-cells: faces.begin() to faces.end() followed by ideal faces of
-                        tetrahedra.begin() through tetrahedra.end() in order 0,1,2,3
-             3-cells: tetrahedra.begin() through tetrahedra.end()
-
-             The Dual CW decomposition -- if the above CW-decomposition came from a morse
-                function f, this would be the one for -f. 
-
-             0-cells: tetrahedra.begin() through tetrahedra.end()
-             1-cells: the non-boundary faces.begin() through faces.end()
-             2-cells: the non-boundary edges.begin() through edges.end()
-             3-cells: the non-boundary, non-ideal vertices.begin() through vertices.end()
-**/
         bool chainComplexesComputed;
 
         NMatrixInt* A0; // cellular homology chain complex using regular cells
@@ -238,10 +255,12 @@ class homologicalData : public ShareableObject{
 
         /**
          * Takes as input a triangulation.
+         * @param input the triangulation to use
          */
         homologicalData(const NTriangulation& input);
         /**
          * Copy constructor.
+         * @param g 
          */
         homologicalData(const homologicalData& g);
         /**
@@ -250,12 +269,14 @@ class homologicalData : public ShareableObject{
         virtual ~homologicalData();
         /**
          * Needed as a member of SharableObject
+         * @param out the stream to write to.
          */
         virtual void writeTextShort(std::ostream& out) const;
 
         /**
          * This routine gives access to the manifold's homology computed
          * with the regular CW-decomposition.
+	 * @param q the dimension of the homology group, can be 0, 1, 2 or 3.
          */
         MarkedAbelianGroup getMH(unsigned q);
            //the manifold's homology groups, computed with the standard CW
@@ -266,18 +287,26 @@ class homologicalData : public ShareableObject{
          * This routine gives access to the homology of the boundary
          * of the manifold, computed
          * with the regular CW-decomposition.
+         * @param q the dimension of the homology group: can be 0, 1 or 2.
+         * @return the q-th homology group, in standard cellular homology 
+	 * coordinates
          */
         MarkedAbelianGroup getBMH(unsigned q);//boundary homology groups
 
         /**
          * This routine gives access to the homomorphism from the 
          * homology of the boundary to the homology of the manifold.
+         * @param q the dimension of the map, can be 0, 1 or 2.
+         * @return the map from H_q of the boundary to H_q of the manifold,
+	 * computed in standard coordinates.
          */
         HomMarkedAbelianGroup getBMmapH(unsigned q);//map from boundary to the manifold
 
         /**
          * This routine gives access to the manifold's homology computed
          * with the dual CW-decomposition.
+         * @param q the dimension of the homology group, can be 0, 1, 2 or 3.
+         * @return H_q of the manifold, computed in the dual CW-decomposition.
          */
         MarkedAbelianGroup getDMH(unsigned q);//manifold's homology computed with the dual CW-decomposition
         
@@ -285,80 +314,135 @@ class homologicalData : public ShareableObject{
          * This routine gives access to the isomorphism from getDMH(1) to
          * getMH(1) given by a cellular approximation to the identity map
          * on the manifold.
+         * @return The isomorphism from getDMH(1) to getMH(1) computed via 
+	 * a cellular approximation of the identity map from the first 1-skeleton
+	 * to the 2nd.
          */
         HomMarkedAbelianGroup getH1cellap();//isomorphism from getDMH1 to getMH1 computed via a 
                                         // cellular approximation of the identity map.
 
         /**
-         * A list of the number of cells in the standard CW-decomposition
-         * of the manifold.
+         * A list of the number of cells in the standard genuine CW-decomposition
+         * of the manifold. In the case that the triangulation is a proper triangulation
+	 * of a manifold (or delta-complex decomposition) it simply returns the same information
+	 * in the nTriangulation::vertices, edges, faces, tetrahedra lists.  In the case
+	 * that this is an ideal triangulation, this algorithm is returning the details of
+	 * the corresponding compact manifold with boundary a union of closed surfaces.
+         * @return a vector that contains the number of cells in the standard CW-decomposition of
+	 * the closed manifold. 
          */
         std::vector<unsigned long> getNumStandardCells(); // number of cells of dimension 0, 1, 2, 3.
         /**
          * A list of the number of cells in the dual CW-decomposition
          * of the manifold. This is typically much smaller than
          * getNumStandardCells.
+         * @return A vector that contains the number of cells in the dual CW-decomposition to
+	 * the triangulation.
          */
         std::vector<unsigned long> getNumDualCells(); // dual cells
         /**
          * A list of the number of cells in the standard CW-decomposition
          * of the boundary of the manifold. This is the subcomplex of
          * the complex used in getNumStandardCells.
+         * @return A vector which lists the number of cells in the standard CW-decomposition
+	 * of the boundary.
          */
         std::vector<unsigned long> getNumBdryCells(); // standard boundary cells
         /**
-         * The proper euler characteristic of the manifold, computed from
-         * getNumDualCells. 
+         * The proper Euler characteristic of the manifold, computed from
+         * getNumDualCells. This is the genuine Euler characteristic as defined
+	 * in any algebraic topology textbooks. It differs from  
+	 * regina::NTriangulation::getEulerCharacteristic(), which handles
+	 * ideal triangulations in a non-standard way.
+         * @return The Euler characteristic of the corresponding compact triangulated
+	 * 3-manifold ie: ideal vertices are considered surface boundary components.
          */
         long int getEulerChar(); // euler characteristic
 
         /**
-         * temp torsion linking form routine
+         * This routine computes the H1 torsion linking form. It is only
+	 * well-defined for orientable 3-manifolds, so don't bother calling
+	 * this routine unless you know the manifold is orientable. 
          */
         void computeTorsionLinkingForm();
         /**
-         * Returns the torsion subgroup rank vector. This is one of
-         * 3 of the Kawauchi-Kojima complete invariants of the torsion
-         * linking form.
+         * Returns the torsion subgroup rank vector. This is the first of
+	 * the 3 Kawauchi-Kojima complete invariants of the torsion
+         * linking form.  The algorithm assumes the 3-manifold is both
+	 * orientable and connected.
+         * @return A vector that describes the rank of the torsion subgroup of H1,
+	 *	given in prime power form.  Ie it is a vector of pairs (p,x) where
+	 *	p is a prime, and x is its exponent.
+         * \pre The triangulation is of a connected orientable 3-manifold.
          */
         std::vector< std::pair< NLargeInteger, 
                      std::vector< unsigned long > > > getTorsionRankVector() const;
+	/**
+	 * Same as getTorsionRankVector() but returns as a human-readable string.
+	 * @return human-readable prime power factorization of the order of the torsion subgroup
+	 * of H1.
+	 **/
         std::string getTorsionRankVectorString() const;
         /**
-         * Returns the 2-torsion sigma vector. This is one of
-         * 3 of the Kawauchi-Kojima complete invariants of the torsion
-         * linking form.
+         * Returns the 2-torsion sigma vector. This is the 2nd of the three
+         * Kawauchi-Kojima invariants. Assumes manifold is orientable and
+	 * connected.
+	 * @return The Kawauchi-Kojima sigma-vector.
+         * \pre The triangulation is of a connected orientable 3-manifold.
          */
         std::vector< NLargeInteger > getTorsionSigmaVector() const;
+	/**
+	 * @return The Kawauchi-Kojima sigma-vector in human readable form.
+         * \pre The triangulation is of a connected orientable 3-manifold.
+	 */
         std::string getTorsionSigmaVectorString() const;
 
         /**
-         * Returns the odd p-torsion Legendre symbol vector. This is one of
-         * 3 of the Kawauchi-Kojima complete invariants of the torsion
-         * linking form.
+         * Returns the odd p-torsion Legendre symbol vector. This is the
+ 	 * last of the three Kawauchi-Kojima invariants.  Assumes the
+	 * manifold is orientable and connected.
+	 * @return The Legendre symbol vector associated to the torsion linking form.
+         * \pre The triangulation is of a connected orientable 3-manifold.
          */
         std::vector< std::pair< NLargeInteger, std::vector< int > > > 
            getLegendreSymbolVector() const;
+	/**
+	 * @return the Legendre symbol vector in human-readable form.
+         * \pre The triangulation is of a connected orientable 3-manifold.
+	 */
         std::string getTorsionLegendreSymbolVectorString() const;
 
         /**
-         * Returns true iff torsion linking form is hyperbolic.
+         * Returns true iff torsion linking form is `hyperbolic' in
+	 * the linking-form sense of the word. 
+	 * @return bool value, true iff torsion linking form is hyperbolic.
+         * \pre The triangulation is of a connected orientable 3-manifold.
          */
         bool formIsHyperbolic() const;
         /**
          * Returns true iff torsion linking form is split.
+	 * @return bool value, true if the linking form is split.
          */
         bool formIsSplit() const;
         /**
          * Returns true iff torsion linking form satisfies the
          * Kawauchi-Kojima 2-torsion condition that on all elements
-         * x of order 2^k, 2^{k-1}form(x,x) == 0
+         * x of order 2^k, 2^{k-1}form(x,x) == 0.  This is a 
+	 * neccessary condition for an orientable 3-manifold
+	 * perhaps with boundary to embed in a homology 4-sphere.
+	 * @return bool value, true iff form satisfies the 2-torsion 
+	 * condition of Kawauchi-Kojima.
+         * \pre The triangulation is of a connected orientable 3-manifold.
          */
         bool formSatKK() const;
         /**
          * Returns a comment on if the manifold might embed in
-         * a homology 3-sphere or 4-sphere.
-         *
+         * a homology 3-sphere or 4-sphere. Basically, it runs
+	 * through all the Kawauchi-Kojima conditions, plus a 
+	 * few other `elementary' conditions. 
+	 * @return string which gives a one-line description of what
+	 * is known about where this manifold embeds, based solely
+	 * on the manifold's homological data. 
          */
         std::string getEmbeddabilityComment() const;
 };
