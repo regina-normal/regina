@@ -11,18 +11,6 @@ tmp = debian/tmp
 INSTALL_DIR = install -p -d -o root -g root -m 755
 INSTALL_FILE = install -p -o root -g root -m 644
 
-# Extract the python version that we plan to build against.
-# We pass this to dh_python since we always run scripts under pythonX.Y.
-#
-# The python version is pulled automatically from XS-Python-Version in
-# debian/control.  This version must be a single numeric X.Y, matching
-# the version of python currently used by boost.python (in particular,
-# it may not be "current" or "all").
-#
-# This version will be sanity checked during configuration.
-#
-PYVER=$(subst XS-Python-Version: ,,$(shell grep ^XS-Python-Version debian/control))
-
 ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -g
 endif
@@ -47,14 +35,6 @@ debian/debiandirs: admin/debianrules
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
-
-	# Sanity check the XS-Python-Version in debian/control.
-	# If you're receiving this error, please read the comments above
-	# where PYVER is initialised.
-	case "$(PYVER)" in \
-		[0-9].[0-9]) ;; \
-		*) echo "ERROR: Invalid XS-Python-Version: $(PYVER)"; false;; \
-	esac
 
 	# Update to debian's patched libtool.
 	cp debian/libtool/* admin
@@ -149,7 +129,6 @@ binary-indep: build install
 	dh_compress -i -X.bz2 -X.css -X.docbook -X.rga
 	dh_fixperms -i
 	# dh_makeshlibs -i
-	# dh_python -i
 	dh_installdeb -i
 	dh_perl -i
 	dh_shlibdeps -i
@@ -174,7 +153,6 @@ binary-arch: build install
 	  gunzip $$i; done
 	dh_fixperms -a
 	dh_makeshlibs -a
-	dh_python -V$(PYVER) -pregina-normal /usr/lib/regina-normal/python
 	dh_installdeb -a
 	dh_perl -a
 	dh_shlibdeps -a -ldebian/regina-normal/usr/lib

@@ -7,11 +7,11 @@ regina-normal (4.3.2-1) unstable; urgency=low
 
 regina-normal (4.3.1-2) unstable; urgency=low
 
-  * Updated to new python policy (closes: #380931).  Added build-depends
-    on python and upgraded required debhelper version accordingly.
-  * Patched trisetcmp to give appropriate messages when subcomplex testing
+  * Patched trisetcmp to give appropriate messages for subcomplex testing
     (instead of using the same messages as for isomorphism testing).
-  * Switched to debhelper compatibility level 5 (no changes required).
+  * Added XS-Python-Version and XB-Python-Version fields to debian/control
+    as requested by new python policy (closes: #380931).
+  * Switched to debhelper compatibility level 5.
   * Bumped standards-version to 3.7.2.1 (no changes required).
 
  -- Ben Burton <bab@debian.org>  Sun,  8 Oct 2006 11:35:15 +1000

@@ -24,8 +24,11 @@ pyver_script=`grep 'python[0-9]\.[0-9]' $tmp$python_script | \
 pyver_lib=`ldd $tmp$python_lib | grep 'libpython[0-9]\.[0-9]\.so' | \
   sed -e 's/^.*libpython\([0-9]\.[0-9]\).so.*$/\1/'`
 
-pyver_control=`grep ^XS-Python-Version $control | \
+pyver_control_src=`grep ^XS-Python-Version $control | \
   sed -e 's/^XS-Python-Version: //'`
+
+pyver_control_bin=`grep ^XB-Python-Version $control | \
+  sed -e 's/^XB-Python-Version: //'`
 
 case "$pyver_script" in
   ?.? )
@@ -47,12 +50,22 @@ case "$pyver_lib" in
     ;;
 esac
 
-case "$pyver_control" in
+case "$pyver_control_src" in
   ?.? )
     # Okay; we expect something of the form X.Y.
     ;;
   * )
-    echo "ERROR: Could not determine the python version specified in $control."
+    echo "ERROR: Could not determine the XS-Python-Version specified in $control."
+    exit 1
+    ;;
+esac
+
+case "$pyver_control_bin" in
+  ?.? )
+    # Okay; we expect something of the form X.Y.
+    ;;
+  * )
+    echo "ERROR: Could not determine the XB-Python-Version specified in $control."
     exit 1
     ;;
 esac
@@ -70,15 +83,27 @@ if ! test "$pyver_script" = "$pyver_lib"; then
   exit 1
 fi
 
-if ! test "$pyver_lib" = "$pyver_control"; then
+if ! test "$pyver_lib" = "$pyver_control_src"; then
   echo
   echo "ERROR: Mismatched python versions between binaries and $control."
   echo
   echo "       $python_lib uses python$pyver_lib."
-  echo "       $control specifies python$pyver_control."
+  echo "       $control (source) specifies python$pyver_control."
   echo
   echo "       This can be fixed in the sources by changing the"
   echo "           XS-Python-Version field in $control."
+  exit 1
+fi
+
+if ! test "$pyver_lib" = "$pyver_control_bin"; then
+  echo
+  echo "ERROR: Mismatched python versions between binaries and $control."
+  echo
+  echo "       $python_lib uses python$pyver_lib."
+  echo "       $control (binary) specifies python$pyver_control."
+  echo
+  echo "       This can be fixed in the sources by changing the"
+  echo "           XB-Python-Version field in $control."
   exit 1
 fi
 
