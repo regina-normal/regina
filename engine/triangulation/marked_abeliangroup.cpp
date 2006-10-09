@@ -37,7 +37,7 @@ namespace regina {
         Given matrix, it returns four matrices RowSpaceBasis, ColSpaceBasis,
         RowSpaceBasisInv, ColSpaceBasisInv such that
         ColSpaceBasis * matrix * RowSpaceBasis is in smith normal form.
-**/  // currently it finds the matrices but not the inverses correctly.
+**/  
 void RBMOD_smithNormalForm(NMatrixInt& matrix, 
         NMatrixInt& RowSpaceBasis, NMatrixInt& RowSpaceBasisInv,
         NMatrixInt& ColSpaceBasis, NMatrixInt& ColSpaceBasisInv) {
@@ -539,7 +539,6 @@ MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N)
         InvFacList(0), InvFacIndex(0),
         snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0)
  {
-
  // find SNF(M). 
  NMatrixInt tM(M);
 
@@ -563,10 +562,9 @@ MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N)
  // now build the list of invariant factors and their row indexes
  // now compute the rank and column indexes ...
  i=0;
- unsigned long totO=0;
- unsigned long totIF=0;
- unsigned long totFR=0;
-
+ unsigned long totO=0; // number diag entries == 1
+ unsigned long totIF=0;// number diag entries > 1
+ unsigned long totFR=0;// number diag entries == 0
 
  while ((i<SNF_ORN.rows()) && (i<SNF_ORN.columns()))
         {
@@ -576,7 +574,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N)
                 totIF++;
                 InvFacIndex.push_back(i);
                 }
-        else totFR++;        
+        else totFR++;
         i++;
         }
 
@@ -589,7 +587,6 @@ MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N)
  
  snfrank=SNF_ORN.rows()-totO-totIF;
  snffreeindex=totO+totIF;
-
 }
 
 
