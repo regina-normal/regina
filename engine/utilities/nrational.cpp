@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "utilities/nrational.h"
+#include <cfloat>
 
 namespace regina {
 
@@ -34,6 +35,11 @@ const NRational NRational::zero;
 const NRational NRational::one(1);
 const NRational NRational::infinity(1, 0);
 const NRational NRational::undefined(0, 0);
+
+// These two constants are initialised to their intended values in
+// initDoubleBounds().
+const NRational NRational::maxDouble(0, 0);
+const NRational NRational::minDouble(0, 0);
 
 NRational::NRational(const NLargeInteger& newNum,
         const NLargeInteger& newDen) {
@@ -275,7 +281,44 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
     return out;
 }
 
-double NRational::doubleApprox(bool* inrange) const {
+double NRational::doubleApprox(bool* inRange) const {
+    // Initialise maxDouble and minDouble if this has not already been done.
+    // Do this even if the current doubleApprox() call is trivial, since we
+    // promise this initialisation on the very first call to doubleApprox().
+    if (maxDouble.flavour == f_undefined)
+        initDoubleBounds();
+
+    // Trivial cases.
+    if (flavour == NRational::f_infinity || flavour == NRational::f_undefined) {
+        if (inRange)
+            *inRange = false;
+        return 0.0;
+    }
+
+    // Treat zero separately so that "abs < minDouble" is meaningful later on.
+    if (*this == zero) {
+        if (inRange)
+            *inRange = true;
+        return 0.0;
+    }
+
+    // In bounds or out of bounds?
+    NRational magnitude = this->abs();
+    if (magnitude < minDouble || magnitude > maxDouble) {
+        if (inRange)
+            *inRange = false;
+        return 0.0;
+    }
+
+    // The rational is in range.  Use GMP's native conversion routines,
+    // since GMP knows best.
+    if (inRange)
+        *inRange = true;
+
+    return mpq_get_d(data);
+}
+
+void NRational::initDoubleBounds() {
     // The largest and smallest possible (positive) doubles should be:
     //     FLT_RADIX ^ DBL_MAX_EXP (minus a small amount)
     //     FLT_RADIX ^ (DBL_MIN_EXP - 1)
@@ -287,63 +330,20 @@ double NRational::doubleApprox(bool* inrange) const {
     // Best to be conservative here and choose the weaker in each case:
     //     FLT_RADIX ^ DBL_MAX_EXP (minus a small amount)
     //     FLT_RADIX ^ DBL_MIN_EXP
+    //
+    // In fact, we'll be even more conservative and divide by an extra
+    // factor of FLT_RADIX to account for "minus a small amount".
 
+    NLargeInteger maxNum = FLT_RADIX;
+    maxNum.raiseToPower(DBL_MAX_EXP - 1);
 
+    NLargeInteger minNum = FLT_RADIX;
+    minNum.raiseToPower(- DBL_MIN_EXP);
 
-  // first we should decide if the NRational has the right order
-  // of magnitude.  a long double stretches from 3.4E-308 to
-  // 3.4E+308
-  static NLargeInteger pb("100000000000000000000000000000");
-  static NRational bigone(NRational(pb*pb*pb*pb*pb*pb*pb*pb*pb*pb));
-  static NRational smallone(bigone.inverse() );
-  static NLargeInteger nten("10");
-  static double dten(10.0);
-  static double iten(0.1);
-
-  double magt=1.0; // order of magnitude device through alg...
-  double retval=0.0;
-  bool negative=false;
-
-  NLargeInteger q, tN,tD,tR;
-
-  if ( (this->abs() > bigone) || (this->abs() < smallone) ) {
-    if (inrange) *inrange = false;
-    return 0.0;
-  }
-  if (inrange) *inrange = true;
-
-  if (*this == zero)
-    return 0.0;
-  else {
-    // we'll do the first 15 sig digits? something like that.
-    tN = this->getNumerator();
-    tD = this->getDenominator();
-    // the strategy should be to multiply or divide by 10 until we
-    // get a number between 0 and 1, then expand using the euclidean
-    // algorithm.
-    if (tN < NLargeInteger::zero) { negative=true; tN.negate(); }
-    // now tN and tD are positive.
-    // we should proceed to scale tN until tN/tD is between 0 and 1, all
-    // the while building the appropriate double.
-    // so first we scale down, then scale up...
-    while (tN >= tD*nten) { magt *= dten; tD *= nten; }
-    // now we have tN/tD < 10.
-    while (tN < tD) { magt *= iten; tN *= nten; }
-    // now we have 1 <= tN/tD < 10. and magt is the order of magnitude
-    // of *this.
-    for (int i=0; i<15; i++)
-        {
-        q = tN.euclideanAlg(tD,tR);
-        // q must be one of 1,2,...,9.
-        retval += ( double(q.longValue()) )*magt;
-        tN = tR * nten;
-        magt*=iten;        
-        }
-     if (negative) retval *= (-1.0);
-   }
- return retval;
- }
-
+    // Cast away constness so we can actually change these variables.
+    const_cast<NRational&>(maxDouble) = NRational(maxNum, 1);
+    const_cast<NRational&>(minDouble) = NRational(1, minNum);
+}
 
 } // namespace regina
 

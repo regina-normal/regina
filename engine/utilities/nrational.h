@@ -95,6 +95,15 @@ class NRational {
             /**< Contains the arbitrary precision rational data for normal
              *   (non-zero denominator) rationals. */
 
+        static const NRational maxDouble;
+            /**< The largest positive rational number that can be converted
+             *   to a finite double.  This begins as undefined, and is set
+             *   to its correct value on the first call to doubleApprox(). */
+        static const NRational minDouble;
+            /**< The smallest positive rational number that can be converted
+             *   to a non-zero double.  This begins as undefined, and is set
+             *   to its correct value on the first call to doubleApprox(). */
+
     public:
         /**
          * Initialises to 0/1.
@@ -329,14 +338,47 @@ class NRational {
         bool operator >= (const NRational& compare) const;
 
         /**
-         * If it can be approximated by a long double, this returns
-         * such an approximation. It sets *inrange==true in this case.
-         * Otherwise it sets *inrange==false and returns 0.  Note that
-         * inrange is optional (null may be passed instead).
+         * Attempts to convert this rational to a real number.
          *
-         * @author Ryan Budney
+         * If this rational can be approximated by a double
+         * (specifically, if it lies within double's allowable range)
+         * then a such an approximation is returned.  Otherwise zero is
+         * returned instead.
+         *
+         * The optional \a inRange argument allows the result of range
+         * checking to be returned explicitly as a boolean
+         * (<tt>*inRange</tt> will be set to \c true if a double
+         * approximation is possible and \c false otherwise).
+         *
+         * It is safe to pass \a inRange as \c null, in which case this
+         * boolean is not returned.  Range checking is still performed
+         * internally however, i.e., zero is still returned if the rational
+         * is out of range.
+         *
+         * Note that "lies with double's allowable range" is
+         * machine-dependent, and may vary between different installations.
+         * Infinity and undefined are always considered out of range.
+         * Otherwise a rational is out of range if its absolute value is
+         * finite but too large (e.g., 10^10000) or non-zero but too small
+         * (e.g., 10^-10000).
+         *
+         * @param inRange returns the result of range checking as
+         * described above; this pointer may be passed as \c null if
+         * the caller does not care about this result.
+         * @return the double approximation to this rational, or zero if
+         * this rational lies outside double's allowable range.
+         *
+         * @author Ryan Budney, B.B.
          */
-        double doubleApprox(bool* inrange = 0) const;
+        double doubleApprox(bool* inRange = 0) const;
+
+    private:
+        /**
+         * Initialises the class constants \a maxDouble and \a minDouble.
+         * These constants are used by doubleApprox(), and so this routine
+         * is called the first time that doubleApprox() is run.
+         */
+        static void initDoubleBounds();
 
     friend std::ostream& operator << (std::ostream& out, const NRational& rat);
 };

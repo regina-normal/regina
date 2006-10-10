@@ -43,6 +43,7 @@ Version 4.3.2  [ under development ]
               such as sign().
         Class NRational:
             - New routine abs() for calculating absolute value.
+            - New routine doubleApprox() for converting to a real number.
         Class NSFSpace:
             - Updated reduce() to make the best possible decisions on
               whether to reflect all fibres in cases where this is
