@@ -368,6 +368,13 @@ class NRational {
          * @return the double approximation to this rational, or zero if
          * this rational lies outside double's allowable range.
          *
+         * \ifacespython The \a inRange argument is not present.
+         * Instead there are two versions of this routine.
+         * The first is \a doubleApprox(), which returns a single real
+         * number.  The second is \a doubleApproxCheck(), which returns
+         * a (real, bool) pair containing the converted real number
+         * followed by the result of range checking.
+         *
          * @author Ryan Budney, B.B.
          */
         double doubleApprox(bool* inRange = 0) const;

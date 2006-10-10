@@ -34,8 +34,15 @@ using regina::NLargeInteger;
 using regina::NRational;
 
 namespace {
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_doubleApprox,
-        NRational::doubleApprox, 0, 1);
+    double doubleApprox_void(const NRational& r) {
+        return r.doubleApprox();
+    }
+
+    boost::python::tuple doubleApprox_bool(const NRational& r) {
+        bool inRange;
+        double ans = r.doubleApprox(&inRange);
+        return make_tuple(ans, inRange);
+    }
 }
 
 void addNRational() {
@@ -66,7 +73,8 @@ void addNRational() {
         .def(self > self)
         .def(self <= self)
         .def(self >= self)
-        .def("doubleApprox", &NRational::doubleApprox, OL_doubleApprox())
+        .def("doubleApprox", doubleApprox_void)
+        .def("doubleApproxCheck", doubleApprox_bool)
         .def(self_ns::str(self))
     ;
 
