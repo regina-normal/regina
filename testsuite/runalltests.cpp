@@ -112,6 +112,7 @@ bool runAllTests() {
     // Utilities:
     addNIndexedArray(runner);
     addNLargeInteger(runner);
+    addNRational(runner);
 
     // Maths:
     addNumberTheory(runner);
