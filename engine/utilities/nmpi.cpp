@@ -177,11 +177,6 @@ if (primeList.size() == 0)
  }
 }
 
-std::vector<NLargeInteger> NLargeInteger::getPrimeList()
-{
-return primeList;
-}
-
 void NLargeInteger::growPrimeList()
 { // uses: void mpz_nextprime (mpz_t rop, mpz_t op)
   // rop input will be primeList last element

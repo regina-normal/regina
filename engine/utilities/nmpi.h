@@ -412,6 +412,8 @@ class NLargeInteger {
          * finite divided by infinity will return zero; anything finite
          * divided by zero will return infinity.
          *
+         * For a division routine that always rounds down, see euclideanAlg().
+         *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
@@ -438,6 +440,9 @@ class NLargeInteger {
          * as this integer.
          * This integer is not changed.
          *
+         * For a division routine that always returns a non-negative
+         * remainder, see euclideanAlg().
+         *
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
@@ -445,6 +450,19 @@ class NLargeInteger {
          * @return the remainder \a this modulo \a other.
          */
         NLargeInteger operator %(const NLargeInteger& other) const;
+        /**
+         * Runs the Euclidean algorithm. If we write this as n, then
+         *  it returns the result of division by d, with remainder r.
+         * IE: q = euclideanAlg(d,r) means n = qd + r
+         * with 0 <= r < |d|. RBADD  Thus if one applies this to
+         * -1, with d=3, this returns q=-1, with r=2. This is the proper
+         * Euclidean algorithm and is required in the RB homology
+         * and Poincare duality routines.
+         *
+         * @author Ryan Budney
+         */
+        NLargeInteger euclideanAlg(const NLargeInteger& d,
+                NLargeInteger& r) const;
         /**
          * Determines the negative of this integer.
          * This integer is not changed.
@@ -511,7 +529,7 @@ class NLargeInteger {
          */
         NLargeInteger& operator *=(const NLargeInteger& other);
         /**
-         * Divides the given integer by this.
+         * Divides this by the given integer.
          * The result will be truncated to an integer, i.e. rounded
          * towards zero.
          * This integer is changed to reflect the result.
@@ -522,6 +540,8 @@ class NLargeInteger {
          * Infinity divided by anything will return infinity; anything
          * finite divided by infinity will return zero; anything finite
          * divided by zero will return infinity.
+         *
+         * For a division routine that always rounds down, see euclideanAlg().
          *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
@@ -548,6 +568,9 @@ class NLargeInteger {
          * If non-zero, the result will have the same sign as the original
          * value of this integer.
          * This integer is changed to reflect the result.
+         *
+         * For a mod routine that always returns a non-negative
+         * remainder, see euclideanAlg().
          *
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
@@ -644,25 +667,6 @@ class NLargeInteger {
         NLargeInteger gcdWithCoeffs(const NLargeInteger& other,
             NLargeInteger& u, NLargeInteger& v) const;
 
-        /**
-         * Runs the Euclidean algorithm. If we write this as n, then
-         *  it returns the result of division by d, with remainder r.
-         * IE: q = euclideanAlg(d,r) means n = qd + r
-         * with 0 <= r < |d|. RBADD  Thus if one applies this to
-         * -1, with d=3, this returns q=-1, with r=2. This is the proper
-         * Euclidean algorithm and is required in the RB homology
-         * and Poincare duality routines.
-         *
-         * @author Ryan Budney
-         */
-        NLargeInteger euclideanAlg(const NLargeInteger& d,
-                NLargeInteger& r) const;
-
-        /**
-         * Returns a list of the currently known primes.
-         * @author Ryan Budney
-         */
-        std::vector<NLargeInteger> getPrimeList();
         /**
          * Increases this list of known primes by one.
          * @author Ryan Budney
