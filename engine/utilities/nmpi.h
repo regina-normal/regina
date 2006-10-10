@@ -648,18 +648,18 @@ class NLargeInteger {
          * Runs the Euclidean algorithm. If we write this as n, then
          *  it returns the result of division by d, with remainder r.
          * IE: q = euclideanAlg(d,r) means n = qd + r
-         * with 0 <= r < |d|. RBADD  Thus if one applies this to 
+         * with 0 <= r < |d|. RBADD  Thus if one applies this to
          * -1, with d=3, this returns q=-1, with r=2. This is the proper
          * Euclidean algorithm and is required in the RB homology
          * and Poincare duality routines.
-         * 
+         *
          * @author Ryan Budney
          */
-        NLargeInteger euclideanAlg(const NLargeInteger& d, 
+        NLargeInteger euclideanAlg(const NLargeInteger& d,
                 NLargeInteger& r) const;
 
-        /** 
-         * Returns a list of the currently known primes. 
+        /**
+         * Returns a list of the currently known primes.
          * @author Ryan Budney
          */
         std::vector<NLargeInteger> getPrimeList();
@@ -670,7 +670,7 @@ class NLargeInteger {
         void growPrimeList();                             // lengthens the list of primes by one.
 
         /**
-         * Lists the prime factors of the current integer. The 
+         * Lists the prime factors of the current integer. The
          * answer is given in increasing order, so for 54 the
          * list of prime factors would be (2, 3, 3, 3).
          * @author Ryan Budney
@@ -681,7 +681,7 @@ class NLargeInteger {
         /**
          * Gives the list of prime factors as prime powers. This
          * algorithm calls primeFactors(). Thus, for 54 it would
-         * give ( (2,1), (3,3) ).  
+         * give ( (2,1), (3,3) ).
          * @author Ryan Budney
          */
         std::vector< std::pair<NLargeInteger, unsigned long> > primePowerDecomp();
@@ -691,7 +691,7 @@ class NLargeInteger {
           * We assume p is an odd prime. Thus it returns
          * 1 if *this is congruent to a square mod p,
          * -1 if it isn't, and 0 if *this is divisible by
-         * p. 
+         * p.
          * @author Ryan Budney
          */
         int legendreSymbol(const NLargeInteger& p) const;

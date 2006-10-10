@@ -77,7 +77,7 @@ NLargeInteger NLargeInteger::gcdWithCoeffs(const NLargeInteger& other,
         }
         return ans;
     }
-    
+
     // Neither argument is zero.
     // Run the gcd algorithm.
     mpz_gcdext(ans.data, u.data, v.data, data, other.data);
@@ -147,11 +147,11 @@ std::ostream& operator << (std::ostream& out, const NLargeInteger& large) {
     return out;
 }
 
-NLargeInteger NLargeInteger::euclideanAlg(const NLargeInteger& d, 
+NLargeInteger NLargeInteger::euclideanAlg(const NLargeInteger& d,
                 NLargeInteger& r) const
 {
         NLargeInteger q;
-        if (infinite) 
+        if (infinite)
                 {
                 q = infinite;
                 r = zero;
@@ -162,7 +162,7 @@ NLargeInteger NLargeInteger::euclideanAlg(const NLargeInteger& d,
                 r = (*this);
                 } else
         {
-        mpz_fdiv_qr( q.data, r.data, data, d.data ); 
+        mpz_fdiv_qr( q.data, r.data, data, d.data );
         } // q r n d is the format.
 return q;
 }
@@ -206,16 +206,16 @@ if (primeList.size()==0) setInitialPrimes();
 if (temp < zero) { temp=temp.abs(); retval.push_back(NLargeInteger(-1)); }
 
 // repeatedly divide the number by the smallest primes until no
-// longer divisible. 
+// longer divisible.
 // at present the algorithm is only guaranteed to factorize the integer
 // into its prime factors if none of them are larger than the 500th largest
 // prime.  it always produces a factorization, but after the 500th it uses
 // a probabilistic test to speed things up. This algorithm is at present ad-hoc
 // since the current usage in Regina rarely demands the factorization of even
-// a 4-digit number. 
+// a 4-digit number.
 
 unsigned long cpi=0; // current prime index.
-unsigned long iterSinceDivision=0; // keeps track of how many iterations since the 
+unsigned long iterSinceDivision=0; // keeps track of how many iterations since the
         // last successful division
 
 if (temp > zero) while ( temp != one )
@@ -224,12 +224,12 @@ if (temp > zero) while ( temp != one )
         if (cpi >= primeList.size()) { growPrimeList(); continue; }
         // now cpi<primeList.size(), check to see if temp % primeList[cpi] == 0
         q = temp.euclideanAlg(primeList[cpi],r); // means temp = q*primeList[cpi] + r
-        if (r == zero) { temp=q; retval.push_back(primeList[cpi]); iterSinceDivision=0; } else 
+        if (r == zero) { temp=q; retval.push_back(primeList[cpi]); iterSinceDivision=0; } else
                 { cpi++; iterSinceDivision++; }
         if (iterSinceDivision == 500) // after 500 unsuccessful divisions, check to see if it
                                       // is probably prime.
            if (mpz_probab_prime_p (temp.data, 10) != 0)
-            { // temp is likely prime.        
+            { // temp is likely prime.
               // end the search.
              retval.push_back(temp);
              temp=one;
@@ -238,7 +238,7 @@ if (temp > zero) while ( temp != one )
 return retval; // now it's reasonably fast for small numbers.
                // it tends to bog down on numbers with two or more large prime factors.
                // the GAP algorithm is better, whatever that is... should consider
-               // importing it. 
+               // importing it.
 }
 
 std::vector< std::pair<NLargeInteger, unsigned long> > NLargeInteger::primePowerDecomp()
