@@ -668,6 +668,22 @@ class NLargeInteger {
             NLargeInteger& u, NLargeInteger& v) const;
 
         /**
+         * Returns the Legendre symbol (\a a/\a p), where
+         * \a a is this integer and \a p is an odd prime.
+         *
+         * The Legendre symbol is equal to 0 if this integer
+         * is divisible by \a p, 1 if this integer is congruent
+         * to a square mod \a p (but not divisible by \a p),
+         * and -1 otherwise.
+         *
+         * \pre The given integer \a p is an odd positive prime.
+         *
+         * @param p the given odd prime.
+         * @author Ryan Budney
+         */
+        int legendre(const NLargeInteger& p) const;
+
+        /**
          * Increases this list of known primes by one.
          * @author Ryan Budney
          */
@@ -690,15 +706,6 @@ class NLargeInteger {
          */
         std::vector< std::pair<NLargeInteger, unsigned long> > primePowerDecomp();
 
-        /**
-         * Returns the legendre symbol of *this/p
-          * We assume p is an odd prime. Thus it returns
-         * 1 if *this is congruent to a square mod p,
-         * -1 if it isn't, and 0 if *this is divisible by
-         * p.
-         * @author Ryan Budney
-         */
-        int legendreSymbol(const NLargeInteger& p) const;
     private:
         /**
          * Initialises this integer to infinity.
@@ -984,16 +991,12 @@ inline NLargeInteger NLargeInteger::lcm(const NLargeInteger& other) const {
     ans.divByExact(gcd(other));
     return ans;
 }
-/** If p is an odd prime, this is the legendre symbol of *this/p.
-    It returns 1 is *this is a square mod p, -1 if *this is not
-    a square mod p, and 0 if p divides *this.  */
-inline int NLargeInteger::legendreSymbol(const NLargeInteger& p) const
-        {
-        return mpz_legendre(data, p.data);
-        }
 
+inline int NLargeInteger::legendre(const NLargeInteger& p) const {
+    return mpz_legendre(data, p.data);
+}
 
-}  // namespace regina
+} // namespace regina
 
 #endif
 

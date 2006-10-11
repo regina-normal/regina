@@ -1387,7 +1387,7 @@ for (unsigned long i=starti; i<torRankV.size(); i++) // for each prime
          for (unsigned long l=0; l<torRankV[i].second[j]; l++)
           tempM->entry(k,l) = (NRational(tI)*linkingFormPD[i]->entry(k+curri,l+curri)).getNumerator();
 
-        tempa.push_back( tempM->det().legendreSymbol(torRankV[i].first) );
+        tempa.push_back( tempM->det().legendre(torRankV[i].first) );
         // legendre symbol, compute and append to tempa
         // compute determinant.
 

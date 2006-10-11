@@ -33,6 +33,8 @@ Version 4.3.2  [ under development ]
               has been removed.
             - Made all member functions static.  Objects of this class
               can no longer be created.
+        Class NLargeInteger:
+            - New routine legendre() for calculating Legendre symbols.
         Class NMatrixRing:
             - New routine det() for fast calculation of matrix determinants.
         Class NPacket:

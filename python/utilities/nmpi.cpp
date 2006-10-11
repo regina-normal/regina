@@ -88,6 +88,7 @@ void addNLargeInteger() {
         .def("gcd", &NLargeInteger::gcd)
         .def("lcm", &NLargeInteger::lcm)
         .def("gcdWithCoeffs", &NLargeInteger::gcdWithCoeffs)
+        .def("legendre", &NLargeInteger::legendre)
         .def(self_ns::str(self))
     ;
 
