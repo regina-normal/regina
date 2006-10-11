@@ -1142,7 +1142,7 @@ for (unsigned long i=0; i<pvList.size(); i++)
    }
    tN=torsionLinkingFormPresentationMat.entry(i,j).getNumerator();
    tD=torsionLinkingFormPresentationMat.entry(i,j).getDenominator();
-   tN.euclideanAlg(tD,tR);
+   tN.divisionAlg(tD,tR);
    tN = tR.gcd(tD);
    tR.divByExact(tN);
    tD.divByExact(tN);
@@ -1288,7 +1288,7 @@ if (h1PrimePowerDecomp.size() > 0) if (h1PrimePowerDecomp[0].first == NLargeInte
          // reduce mod 1, then turn into a long double and evaluate cos, sin
          tN = tSum.getNumerator();
          tD = tSum.getDenominator();
-         tN.euclideanAlg(tD,tR);
+         tN.divisionAlg(tD,tR);
          tSum = NRational(twoPow) * pi * NRational( tR, tD );
          tLD = tSum.doubleApprox();
           // we ignore `inrange' parameter as the number is reduced mod 1, so either way it is
@@ -1469,7 +1469,7 @@ if (starti==1)
         tRat = NRational(tI) * linkingFormPD[0]->entry(i,i);
         tN = tRat.getNumerator();
         tD = tRat.getDenominator();
-        tN.euclideanAlg(tD,tR);
+        tN.divisionAlg(tD,tR);
         if (tR != NLargeInteger::zero) torsionLinkingFormSatisfiesKKtwoTorCondition=false;
         }
 

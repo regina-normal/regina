@@ -290,7 +290,7 @@ while ( (CR<rowList.size()) && (CC<M.columns())) // the algorithm will think of 
                         // step 2: reduce entries(CR,i) for i<CC
                         for (i=0;i<CC;i++)
                                 { // write entry(CR,i) as d*entry(CR,CC) + r.
-                                  d = M.entry(rowList[CR],i).euclideanAlg( M.entry(rowList[CR],CC), r );
+                                  d = M.entry(rowList[CR],i).divisionAlg( M.entry(rowList[CR],CC), r );
                                   // perform reduction on column i. this is subtracting
                                   // d times column CC from column i. 
                                   for (j=0;j<M.rows();j++) M.entry(j,i) = 

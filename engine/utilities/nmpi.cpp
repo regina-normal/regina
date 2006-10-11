@@ -147,7 +147,7 @@ std::ostream& operator << (std::ostream& out, const NLargeInteger& large) {
     return out;
 }
 
-NLargeInteger NLargeInteger::euclideanAlg(const NLargeInteger& d,
+NLargeInteger NLargeInteger::divisionAlg(const NLargeInteger& d,
         NLargeInteger& r) const {
     NLargeInteger q;
     if (infinite) {
@@ -209,7 +209,7 @@ std::vector<NLargeInteger> NLargeInteger::primeFactors() {
         // test to see if cpi < primeList.size(), if not, lengthen list, return to loop.
         if (cpi >= primeList.size()) { growPrimeList(); continue; }
         // now cpi<primeList.size(), check to see if temp % primeList[cpi] == 0
-        q = temp.euclideanAlg(primeList[cpi],r); // means temp = q*primeList[cpi] + r
+        q = temp.divisionAlg(primeList[cpi],r); // means temp = q*primeList[cpi] + r
         if (r == zero) { temp=q; retval.push_back(primeList[cpi]); iterSinceDivision=0; } else
             { cpi++; iterSinceDivision++; }
         if (iterSinceDivision == 500) // after 500 unsuccessful divisions, check to see if it

@@ -90,6 +90,7 @@ class NLargeInteger {
             /**< Globally available one. */
         static const NLargeInteger infinity;
             /**< Globally available infinity. */
+
     private:
         mpz_t data;
             /**< Contains the arbitrarily large integer.  If this
@@ -412,7 +413,7 @@ class NLargeInteger {
          * finite divided by infinity will return zero; anything finite
          * divided by zero will return infinity.
          *
-         * For a division routine that always rounds down, see euclideanAlg().
+         * For a division routine that always rounds down, see divisionAlg().
          *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
@@ -441,7 +442,7 @@ class NLargeInteger {
          * This integer is not changed.
          *
          * For a division routine that always returns a non-negative
-         * remainder, see euclideanAlg().
+         * remainder, see divisionAlg().
          *
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
@@ -451,17 +452,17 @@ class NLargeInteger {
          */
         NLargeInteger operator %(const NLargeInteger& other) const;
         /**
-         * Runs the Euclidean algorithm. If we write this as n, then
+         * Runs the division algorithm. If we write this as n, then
          *  it returns the result of division by d, with remainder r.
-         * IE: q = euclideanAlg(d,r) means n = qd + r
+         * IE: q = divisionAlg(d,r) means n = qd + r
          * with 0 <= r < |d|. RBADD  Thus if one applies this to
          * -1, with d=3, this returns q=-1, with r=2. This is the proper
-         * Euclidean algorithm and is required in the RB homology
+         * division algorithm and is required in the RB homology
          * and Poincare duality routines.
          *
          * @author Ryan Budney
          */
-        NLargeInteger euclideanAlg(const NLargeInteger& d,
+        NLargeInteger divisionAlg(const NLargeInteger& d,
                 NLargeInteger& r) const;
         /**
          * Determines the negative of this integer.
@@ -541,7 +542,7 @@ class NLargeInteger {
          * finite divided by infinity will return zero; anything finite
          * divided by zero will return infinity.
          *
-         * For a division routine that always rounds down, see euclideanAlg().
+         * For a division routine that always rounds down, see divisionAlg().
          *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
@@ -570,7 +571,7 @@ class NLargeInteger {
          * This integer is changed to reflect the result.
          *
          * For a mod routine that always returns a non-negative
-         * remainder, see euclideanAlg().
+         * remainder, see divisionAlg().
          *
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
