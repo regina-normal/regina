@@ -35,6 +35,13 @@ using regina::NLargeInteger;
 namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
         NLargeInteger::stringValue, 0, 1);
+
+    boost::python::tuple divisionAlg(const NLargeInteger& n,
+            const NLargeInteger& divisor) {
+        NLargeInteger remainder;
+        NLargeInteger quotient = n.divisionAlg(divisor, remainder);
+        return make_tuple(quotient, remainder);
+    }
 }
 
 void addNLargeInteger() {
@@ -69,6 +76,7 @@ void addNLargeInteger() {
         .def("divExact", &NLargeInteger::divExact)
         .def(self % self)
         .def(self % long())
+        .def("divisionAlg", divisionAlg)
         .def(- self)
         .def(self += self)
         .def(self += long())

@@ -37,6 +37,7 @@ class NLargeIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NLargeIntegerTest);
 
     CPPUNIT_TEST(comparisons);
+    CPPUNIT_TEST(divisionAlg);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -371,6 +372,51 @@ class NLargeIntegerTest : public CppUnit::TestFixture {
                                 }
                             }
                         }
+        }
+
+        void checkDivisionAlg(int n, int divisor, int quotient,
+                int remainder) {
+            NLargeInteger q, r;
+            q = NLargeInteger(n).divisionAlg(NLargeInteger(divisor), r);
+
+            if (q != quotient) {
+                std::ostringstream msg;
+                msg << "Division algorithm (n = " << n
+                    << ", d = " << divisor << ") gives quotient "
+                    << q << ", not " << quotient << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (r != remainder) {
+                std::ostringstream msg;
+                msg << "Division algorithm (n = " << n
+                    << ", d = " << divisor << ") gives remainder "
+                    << r << ", not " << remainder << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void divisionAlg() {
+            // Check all possible zero/positive/negative combinations.
+            checkDivisionAlg(0, 0, 0, 0);
+            checkDivisionAlg(0, 3, 0, 0);
+            checkDivisionAlg(0, -3, 0, 0);
+            checkDivisionAlg(10, 0, 0, 10);
+            checkDivisionAlg(-10, 0, 0, -10);
+
+            checkDivisionAlg(10, 3, 3, 1);
+            checkDivisionAlg(-10, 3, -4, 2);
+            checkDivisionAlg(10, -3, -3, 1);
+            checkDivisionAlg(-10, -3, 4, 2);
+
+            checkDivisionAlg(12, 3, 4, 0);
+            checkDivisionAlg(-12, 3, -4, 0);
+            checkDivisionAlg(12, -3, -4, 0);
+            checkDivisionAlg(-12, -3, 4, 0);
+
+            checkDivisionAlg(1, 3, 0, 1);
+            checkDivisionAlg(1, -3, 0, 1);
+            checkDivisionAlg(-1, 3, -1, 2);
+            checkDivisionAlg(-1, -3, 1, 2);
         }
 };
 

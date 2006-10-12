@@ -34,6 +34,7 @@ Version 4.3.2  [ under development ]
             - Made all member functions static.  Objects of this class
               can no longer be created.
         Class NLargeInteger:
+            - New routine divisionAlg() for using the division algorithm.
             - New routine legendre() for calculating Legendre symbols.
         Class NMatrixRing:
             - New routine det() for fast calculation of matrix determinants.

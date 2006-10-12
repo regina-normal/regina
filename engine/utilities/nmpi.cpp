@@ -147,19 +147,27 @@ std::ostream& operator << (std::ostream& out, const NLargeInteger& large) {
     return out;
 }
 
-NLargeInteger NLargeInteger::divisionAlg(const NLargeInteger& d,
-        NLargeInteger& r) const {
-    NLargeInteger q;
-    if (infinite) {
-        q = infinite;
-        r = zero;
-    } else if (d.infinite) {
-        q = zero;
-        r = (*this);
-    } else {
-        mpz_fdiv_qr( q.data, r.data, data, d.data );
-    } // q r n d is the format.
-    return q;
+NLargeInteger NLargeInteger::divisionAlg(const NLargeInteger& divisor,
+        NLargeInteger& remainder) const {
+    if (divisor == zero) {
+        remainder = *this;
+        return zero;
+    }
+
+    // Preconditions state that nothing is infinite, and we've dealt with d=0.
+    // Pass it to GMP.
+    NLargeInteger quotient;
+    mpz_fdiv_qr(quotient.data, remainder.data, data, divisor.data );
+
+    // The remainder can still be negative (though this will only happen
+    // if the divisor is also negative).  In this case we still have
+    // more to do.
+    if (remainder < zero) {
+        remainder -= divisor;
+        quotient += 1;
+    }
+
+    return quotient;
 }
 
 void NLargeInteger::setInitialPrimes() {

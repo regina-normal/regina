@@ -452,18 +452,50 @@ class NLargeInteger {
          */
         NLargeInteger operator %(const NLargeInteger& other) const;
         /**
-         * Runs the division algorithm. If we write this as n, then
-         *  it returns the result of division by d, with remainder r.
-         * IE: q = divisionAlg(d,r) means n = qd + r
-         * with 0 <= r < |d|. RBADD  Thus if one applies this to
-         * -1, with d=3, this returns q=-1, with r=2. This is the proper
-         * division algorithm and is required in the RB homology
-         * and Poincare duality routines.
+         * Uses the division algorithm to obtain a quotient and
+         * remainder when dividing by the given integer.
          *
-         * @author Ryan Budney
+         * Suppose this integer is \a n and we pass the divisor \a d.
+         * The <em>division algorithm</em> describes the result of
+         * dividing \a n by \a d; in particular, it expresses
+         * <tt>n = qd + r</tt>, where \a q is the quotient and
+         * \a r is the remainder.
+         *
+         * The division algorithm is precise about which values of \a q
+         * and \a r are chosen; in particular it chooses the unique \a r
+         * in the range <tt>0 <= r < |d|</tt>.
+         *
+         * Note that this differs from other division routines in this
+         * class, in that it always rounds to give a non-negative remainder.
+         * Thus NLargeInteger(-7).divisionAlg(3) gives quotient -3 and
+         * remainder 2, whereas (-7)/3 gives quotient -2 and (-7)\%3 gives
+         * remainder -1.
+         *
+         * The two results are passed back to the caller as follows:
+         * The quotient \a q is passed back as the return value of the
+         * function, and the remainder \a r is stored in the reference
+         * argument \a r.
+         *
+         * In the special case where the given divisor is 0 (not
+         * allowed by the usual division algorithm), this routine selects
+         * quotient 0 and remainder \a n.
+         *
+         * \pre Neither this nor the divisor are infinite.
+         *
+         * \ifacespython The argument \a r is missing; instead both
+         * the quotient and remainder are passed back through the return
+         * value of the function.  Specifically, this function returns a
+         * (\a q, \a r) pair.
+         *
+         * @param divisor the divisor \a d.
+         * @param remainder used to store the remainder \a r when the
+         * functon returns.  The initial value of this argument is ignored.
+         * @return the quotient \a q.
+         *
+         * @author Ryan Budney, B.B.
          */
-        NLargeInteger divisionAlg(const NLargeInteger& d,
-                NLargeInteger& r) const;
+        NLargeInteger divisionAlg(const NLargeInteger& divisor,
+                NLargeInteger& remainder) const;
         /**
          * Determines the negative of this integer.
          * This integer is not changed.
@@ -680,6 +712,8 @@ class NLargeInteger {
          * \pre The given integer \a p is an odd positive prime.
          *
          * @param p the given odd prime.
+         * @return The Legendre symbol (0, 1 or -1) as described above.
+         *
          * @author Ryan Budney
          */
         int legendre(const NLargeInteger& p) const;
