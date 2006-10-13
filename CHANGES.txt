@@ -47,11 +47,16 @@ Version 4.3.2  [ under development ]
         Class NRational:
             - New routine abs() for calculating absolute value.
             - New routine doubleApprox() for converting to a real number.
+        Struct NSatAnnulus:
+            - New routine attachLST() to help with Seifert fibred spaces.
         Class NSFSpace:
             - Updated reduce() to make the best possible decisions on
               whether to reflect all fibres in cases where this is
               possible (previously it made faster decisions but
               occasionally missed some more subtle reductions).
+            - Enhanced construct() to support the triangulation of all
+              Seifert fibred spaces over the 2-sphere without punctures
+              or reflector boundaries.
         Class NTorusBundle:
             - Greatly improved monodromy matrix reduction, to the point
               where equivalent torus bundles should give equal matrices.

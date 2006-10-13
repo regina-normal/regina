@@ -34,6 +34,7 @@
 #include "manifold/nsfs.h"
 #include "maths/nmatrixint.h"
 #include "maths/numbertheory.h"
+#include "subcomplex/nsatannulus.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/boostutils.h"
 
@@ -743,31 +744,64 @@ NTriangulation* NSFSpace::construct() const {
     if (genus_ != 0 || class_ != o1)
         return 0;
 
-    // Pull off the number of fibres we're capable of dealing with.
-    // At this moment this is three.
-    if (nFibres_ > 3)
-        return 0;
+    // Since we've already dealt with lens spaces, we must have at least
+    // three exceptional fibres.  Build a blocked structure.
+    NTriangulation* ans = new NTriangulation();
+    NTetrahedron *a, *b, *c;
 
-    NSFSFibre fibre[3];
-    std::copy(fibres_.begin(), fibres_.end(), fibre);
+    // Begin with the first triangular solid torus.
+    a = new NTetrahedron();
+    b = new NTetrahedron();
+    c = new NTetrahedron();
+    a->joinTo(1, b, NPerm());
+    b->joinTo(2, c, NPerm());
+    c->joinTo(3, a, NPerm(1, 2, 3, 0));
+    ans->addTetrahedron(a);
+    ans->addTetrahedron(b);
+    ans->addTetrahedron(c);
 
-    // Since we're working over the 2-sphere and we've already dealt
-    // with lens spaces, we must in fact have precisely three
-    // exceptional fibres.
+    std::list<NSFSFibre>::const_iterator fit = fibres_.begin();
+    NSatAnnulus(a, NPerm(1, 0, 2, 3), b, NPerm(1, 2, 0, 3)).
+        attachLST(ans, fit->alpha, fit->beta);
+    fit++;
+    NSatAnnulus(b, NPerm(2, 1, 3, 0), c, NPerm(2, 3, 1, 0)).
+        attachLST(ans, fit->alpha, fit->beta);
+    fit++;
 
-    // Some parameters allow particularly nice triangulations.
-    if (b_ == -1 && fibre[0] == two && fibre[1] == two && fibre[2].beta == 1) {
-        // (2, 1) (2, 1) (a, -a+1)
-        NTriangulation* ans = new NTriangulation();
-        ans->insertLayeredLoop(fibre[2].alpha, true);
-        return ans;
+    // Run through the rest of the fibres, one at a time.  Each extra
+    // fibre (aside from the third) will require another triangular
+    // solid torus.
+    NTetrahedron* prevA = a;
+    NTetrahedron* prevC = c;
+
+    NSFSFibre nextFibre = *fit++;
+    while (fit != fibres_.end()) {
+        a = new NTetrahedron();
+        b = new NTetrahedron();
+        c = new NTetrahedron();
+        a->joinTo(3, prevA, NPerm(2, 3));
+        b->joinTo(3, prevC, NPerm(0, 2, 3, 1));
+        a->joinTo(1, b, NPerm());
+        b->joinTo(2, c, NPerm());
+        c->joinTo(3, a, NPerm(1, 2, 3, 0));
+        ans->addTetrahedron(a);
+        ans->addTetrahedron(b);
+        ans->addTetrahedron(c);
+
+        NSatAnnulus(b, NPerm(2, 1, 3, 0), c, NPerm(2, 3, 1, 0)).
+            attachLST(ans, nextFibre.alpha, nextFibre.beta);
+
+        prevA = a;
+        prevC = c;
+        nextFibre = *fit++;
     }
 
-    // Fall through to the default case.
-    NTriangulation* ans = new NTriangulation();
-    ans->insertAugTriSolidTorus(fibre[0].alpha, fibre[0].beta,
-        fibre[1].alpha, fibre[1].beta, fibre[2].alpha,
-        fibre[2].beta + (b_ - 1) * fibre[2].alpha);
+    // We have one remaining fibre.  Fill in the final annulus of the
+    // last triangular solid torus.
+    NSatAnnulus(a, NPerm(1, 0, 3, 2), c, NPerm(2, 3, 0, 1)).attachLST(ans,
+        nextFibre.alpha, -(nextFibre.beta + b_ * nextFibre.alpha));
+
+    ans->gluingsHaveChanged();
     return ans;
 }
 

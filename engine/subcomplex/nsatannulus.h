@@ -409,6 +409,37 @@ struct NSatAnnulus {
      */
     NSatAnnulus image(const NTriangulation* originalTri,
             const NIsomorphism* iso, NTriangulation* newTri) const;
+
+    /**
+     * Attaches a layered solid torus to the this saturated annulus.
+     *
+     * The layered solid torus will be attached so that the
+     * given values \a alpha and \a beta describe how the
+     * meridinal disc cuts the vertical and horizontal edges of the
+     * annulus respectively.
+     *
+     * The result will effectively insert an (\a alpha, \a beta)
+     * exceptional fibre into the Seifert fibred space space, where
+     * the vertical edges run parallel to the fibres and the horizontal
+     * edges represent the base orbifold.  The sign of the fibre is
+     * consistent with the fibre inserted by NSatLST::adjustSFS()
+     * (in particular, negating \a beta will negate the fibre).
+     *
+     * In the case of a (2,1) fibre, the layered solid torus will be
+     * degenerate (i.e., the two faces of the annulus will simply be
+     * joined together).
+     *
+     * \pre The given value \a alpha is not zero.
+     * \pre The given values \a alpha and \a beta are coprime.
+     *
+     * @param tri the triangulation into which the new tetrahedra should
+     * be inserted.
+     * @param alpha describes how the meridinal disc of the torus should
+     * cut the vertical edges.  This may be positive or negative.
+     * @param beta describes how the meridinal disc of the torus should
+     * cut the horizontal edges.  Again this may be positive or negative.
+     */
+    void attachLST(NTriangulation* tri, long alpha, long beta) const;
 };
 
 /*@}*/

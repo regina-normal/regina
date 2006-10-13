@@ -88,6 +88,7 @@ void addNSatAnnulus() {
         .def("isTwoSidedTorus", &NSatAnnulus::isTwoSidedTorus)
         .def("transform", &NSatAnnulus::transform)
         .def("image", &NSatAnnulus::image)
+        .def("attachLST", &NSatAnnulus::attachLST)
     ;
 }
 

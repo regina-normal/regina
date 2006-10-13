@@ -216,5 +216,107 @@ void NSatAnnulus::transform(const NTriangulation* originalTri,
     }
 }
 
+void NSatAnnulus::attachLST(NTriangulation* tri, long alpha, long beta) const {
+    // Save ourselves headaches later.  Though this should never happen;
+    // see the preconditions.
+    if (alpha == 0)
+        return;
+
+    // Normalise to alpha positive.
+    if (alpha < 0) {
+        alpha = -alpha;
+        beta = -beta;
+    }
+
+    // Pull out the degenerate case.
+    if (alpha == 2 && beta == 1) {
+        tet[0]->joinTo(roles[0][3], tet[1],
+            roles[1] * NPerm(0, 1) * roles[0].inverse());
+        tri->gluingsHaveChanged();
+        return;
+    }
+
+    // Insert a real layered solid torus.  How we do this depends on
+    // relative signs and orderings.
+    long diag = alpha - beta;
+
+    // Our six possibilities are:
+    //
+    // 0 <= -diag  <   alpha <= beta:
+    // 0 <   alpha <= -diag  <  beta:
+    // 0 <   diag  <=  beta  <  alpha:
+    // 0 <=  beta  <   diag  <= alpha:
+    // 0 <  -beta  <=  alpha <  diag
+    // 0 <   alpha <  -beta  <  diag
+
+    // We can give the vertices of the tetrahedra "cut labels" as
+    // follows (where the LST has parameters 0 <= cuts0 <= cuts1 <= cuts2):
+    //
+    //         cuts0
+    //       *-------*
+    //       |2  1 / |
+    //       |    / 0|
+    // cuts1 |   /   | cuts1
+    //       |0 /    |
+    //       | / 1  2|
+    //       *-------*
+    //         cuts0
+
+    long cuts0, cuts1;
+    NPerm cutsToRoles; // Maps cut labels to annulus vertex roles.
+    if (alpha <= beta) {
+        if (-diag < alpha) {
+            // 0 <= -diag  <   alpha <= beta:
+            cuts0 = -diag;
+            cuts1 = alpha;
+            cutsToRoles = NPerm(0, 2, 1, 3);
+        } else {
+            // 0 <   alpha <= -diag  <  beta:
+            cuts0 = alpha;
+            cuts1 = -diag;
+            cutsToRoles = NPerm(2, 0, 1, 3);
+        }
+    } else if (0 <= beta) {
+        if (diag <= beta) {
+            // 0 <   diag  <=  beta  <  alpha:
+            cuts0 = diag;
+            cuts1 = beta;
+            cutsToRoles = NPerm(0, 1, 2, 3);
+        } else {
+            // 0 <=  beta  <   diag  <= alpha:
+            cuts0 = beta;
+            cuts1 = diag;
+            cutsToRoles = NPerm(1, 0, 2, 3);
+        }
+    } else {
+        if (-beta <= alpha) {
+            // 0 <  -beta  <=  alpha <  diag
+            cuts0 = -beta;
+            cuts1 = alpha;
+            cutsToRoles = NPerm(1, 2, 0, 3);
+        } else {
+            // 0 <   alpha <  -beta  <  diag
+            cuts0 = alpha;
+            cuts1 = -beta;
+            cutsToRoles = NPerm(2, 1, 0, 3);
+        }
+    }
+
+    NTetrahedron* lst = tri->insertLayeredSolidTorus(cuts0, cuts1);
+
+    // The boundary of the new LST sits differently for the special
+    // cases (0,1,1) and (1,1,2); see the insertLayeredSolidTorus()
+    // documentation for details.
+    if (cuts1 == 1) {
+        lst->joinTo(3, tet[0], roles[0] * cutsToRoles * NPerm(1, 2, 0, 3));
+        lst->joinTo(2, tet[1], roles[1] * cutsToRoles * NPerm(2, 1, 3, 0));
+    } else {
+        lst->joinTo(3, tet[0], roles[0] * cutsToRoles * NPerm(0, 1, 2, 3));
+        lst->joinTo(2, tet[1], roles[1] * cutsToRoles * NPerm(1, 0, 3, 2));
+    }
+
+    tri->gluingsHaveChanged();
+}
+
 } // namespace regina
 
