@@ -35,7 +35,7 @@
  *  \brief Support for finding primes and factorising integers.
  */
 
-#include "maths/nmpi.h"
+#include "utilities/nmpi.h"
 #include <vector>
 
 namespace regina {
@@ -80,7 +80,7 @@ class NPrimes {
          *
          * @author Ryan Budney
          */
-        std::vector<NLargeInteger> primeFactors(const NLargeInteger& n) const;
+        std::vector<NLargeInteger> primeFactors(const NLargeInteger& n);
 
         /**
          * Returns the prime factorisation of the given integer as a
@@ -105,7 +105,7 @@ class NPrimes {
          * @author Ryan Budney
          */
         std::vector<std::pair<NLargeInteger, unsigned long> >
-            primePowerDecomp(const NLargeInteger& n) const;
+            primePowerDecomp(const NLargeInteger& n);
 
     private:
         /**
@@ -119,7 +119,7 @@ class NPrimes {
          *
          * @author Ryan Budney
          */
-        void growPrimeList(long extras = 1);
+        void growPrimeList(unsigned long extras = 1);
 };
 
 /*@}*/
@@ -131,16 +131,6 @@ inline NPrimes::NPrimes() {
 
 inline unsigned long NPrimes::size() const {
     return numPrimeSeeds + largePrimes.size();
-}
-
-inline NLargeInteger NPrimes::prime(unsigned long which, bool autoGrow) {
-    if (which < numPrimeSeeds)
-        return primeSeedList[which];
-
-    if (numPrimeSeeds + largePrimes.size() <= which)
-        growPrimeList(which - numPrimeSeeds - largePrimes.size() + 1);
-
-    return largePrimes[which - numPrimeSeeds];
 }
 
 inline NLargeInteger NPrimes::operator [] (unsigned long which) {

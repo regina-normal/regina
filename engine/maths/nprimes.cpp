@@ -26,33 +26,54 @@
 
 /* end stub */
 
-#include "utilities/nprimes.h"
+#include "maths/nprimes.h"
 
 namespace regina {
 
 NPrimes NPrimes::list;
 
-void NLargeInteger::growPrimeList() {
-    // uses: void mpz_nextprime (mpz_t rop, mpz_t op)
-    // rop input will be primeList last element
-    if (primeList.size()==0)
-        setInitialPrimes();
-    else {
-        NLargeInteger nextP;
-        mpz_nextprime( nextP.data,  primeList[primeList.size()-1].data );
-        primeList.push_back(nextP);
+NLargeInteger NPrimes::prime(unsigned long which, bool autoGrow) {
+    // Can we grab it straight out of the hard-coded seed list?
+    if (which < numPrimeSeeds)
+        return primeSeedList[which];
+
+    // Do we even have the requested prime stored?
+    if (which >= numPrimeSeeds + largePrimes.size()) {
+        if (autoGrow)
+            growPrimeList(which - numPrimeSeeds - largePrimes.size() + 1);
+        else
+            return NLargeInteger::zero;
+    }
+
+    // Got it.
+    return largePrimes[which - numPrimeSeeds];
+}
+
+void NPrimes::growPrimeList(unsigned long extras) {
+    NLargeInteger lastPrime = (largePrimes.empty() ?
+        primeSeedList[numPrimeSeeds - 1] :
+        largePrimes[largePrimes.size() - 1]);
+    NLargeInteger newPrime;
+
+    while (extras) {
+        mpz_nextprime(newPrime.data, lastPrime.data);
+        largePrimes.push_back(newPrime);
+
+        lastPrime = newPrime;
+        extras--;
     }
 }
 
-std::vector<NLargeInteger> NLargeInteger::primeFactors() {
+std::vector<NLargeInteger> NPrimes::primeFactors(const NLargeInteger& n) {
     std::vector<NLargeInteger> retval;
-    NLargeInteger temp=(*this);
+    NLargeInteger temp(n);
     NLargeInteger r,q;
 
-    if (primeList.size()==0) setInitialPrimes();
-
     // if the number is negative, put -1 as first prime factor.
-    if (temp < zero) { temp=temp.abs(); retval.push_back(NLargeInteger(-1)); }
+    if (temp < NLargeInteger::zero) {
+        temp=temp.abs();
+        retval.push_back(NLargeInteger(-1));
+    }
 
     // repeatedly divide the number by the smallest primes until no
     // longer divisible.
@@ -64,34 +85,43 @@ std::vector<NLargeInteger> NLargeInteger::primeFactors() {
     // factorization of even a 4-digit number.
 
     unsigned long cpi=0; // current prime index.
-    unsigned long iterSinceDivision=0; // keeps track of how many iterations since the
-        // last successful division
+    unsigned long iterSinceDivision=0; // keeps track of how many iterations
+                                       // since the last successful division
 
-    if (temp > zero) while ( temp != one ) {
-        // test to see if cpi < primeList.size(), if not, lengthen list, return to loop.
-        if (cpi >= primeList.size()) { growPrimeList(); continue; }
-        // now cpi<primeList.size(), check to see if temp % primeList[cpi] == 0
-        q = temp.divisionAlg(primeList[cpi],r); // means temp = q*primeList[cpi] + r
-        if (r == zero) { temp=q; retval.push_back(primeList[cpi]); iterSinceDivision=0; } else
-            { cpi++; iterSinceDivision++; }
-        if (iterSinceDivision == 500) // after 500 unsuccessful divisions, check to see if it
-                                      // is probably prime.
+    if (temp > NLargeInteger::zero) while ( temp != NLargeInteger::one ) {
+        // test to see if cpi < size(), if not, lengthen list, return to loop.
+        if (cpi >= size()) {
+            growPrimeList();
+            continue;
+        }
+        // now cpi<size(), check to see if temp % prime(cpi) == 0
+        q = temp.divisionAlg(prime(cpi),r); // means temp = q*prime(cpi) + r
+        if (r == NLargeInteger::zero) {
+            temp=q;
+            retval.push_back(prime(cpi));
+            iterSinceDivision=0;
+        } else {
+            cpi++;
+            iterSinceDivision++;
+        }
+        if (iterSinceDivision == 500) // after 500 unsuccessful divisions,
+                                      // check to see if it is probably prime.
             if (mpz_probab_prime_p (temp.data, 10) != 0) {
                 // temp is likely prime.
                 // end the search.
                 retval.push_back(temp);
-                temp=one;
+                temp=NLargeInteger::one;
             }
     }
     return retval; // now it's reasonably fast for small numbers.
-               // it tends to bog down on numbers with two or more large prime factors.
-               // the GAP algorithm is better, whatever that is... should consider
-               // importing it.
+               // it tends to bog down on numbers with two or more large
+               // prime factors.  the GAP algorithm is better, whatever
+               // that is... should consider importing it.
 }
 
-std::vector< std::pair<NLargeInteger, unsigned long> >
-        NLargeInteger::primePowerDecomp() {
-    std::vector<NLargeInteger> list1(primeFactors());
+std::vector<std::pair<NLargeInteger, unsigned long> >
+        NPrimes::primePowerDecomp(const NLargeInteger& n) {
+    std::vector<NLargeInteger> list1(primeFactors(n));
     std::vector< std::pair<NLargeInteger, unsigned long> > retlist;
     // go through list1, record number of each prime, put in retlist.
     if (list1.size()>0) {
@@ -107,7 +137,7 @@ std::vector< std::pair<NLargeInteger, unsigned long> >
         }
         retlist.push_back(std::make_pair( cp, cc ) );
     } else
-        retlist.push_back(std::make_pair( *this, 1 ) );
+        retlist.push_back(std::make_pair( n, 1 ) );
 
     return retlist;
 }
