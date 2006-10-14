@@ -718,6 +718,8 @@ class NLargeInteger {
          */
         NLargeInteger(bool, bool);
 
+    friend class NPrimes;
+        /**< Allow access to private members. */
     friend class NRational;
         /**< Allow access to private members. */
     friend std::ostream& operator << (std::ostream& out,
