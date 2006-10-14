@@ -50,8 +50,8 @@ class NPrimes {
         static NPrimes list;
 
     private:
-        static const long primeSeedList[];
-        static const long numPrimeSeeds;
+        static const unsigned long numPrimeSeeds;
+        static const unsigned long primeSeedList[];
 
         std::vector<NLargeInteger> largePrimes;
 
