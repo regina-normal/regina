@@ -138,6 +138,9 @@ unsigned long modularInverse(unsigned long n, unsigned long k);
  *
  * \pre The given integer is at least 1.
  *
+ * \deprecated This routine is old and slow; please consider using the
+ * much faster routines from the NPrimes class instead.
+ *
  * \ifacespython Argument \a factors is not present; instead this
  * routine returns a python list containing the prime factors.
  *
@@ -154,6 +157,9 @@ void factorise(unsigned long n, std::list<unsigned long>& factors);
  * The algorithm currently used is <b>fairly neanderthal</b>.
  *
  * \pre The given list is empty.
+ *
+ * \deprecated This routine is old and slow; please consider using the
+ * much faster routines from the NPrimes class instead.
  *
  * \ifacespython Argument \a primes is not present; instead this routine
  * returns a python list containing the primes up to and including \a roof.

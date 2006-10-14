@@ -74,6 +74,8 @@ Version 4.3.2  [ under development ]
               using double descriptor anyway.  The virtual template
               member functions caused problems with g++-4.2, which was
               the final push.  NDoubleDescriptor is now a standalone class.
+        Routines factorise(), primesUpTo():
+            - Deprecated in favour of routines from the new NPrimes class.
     UTILITIES:
         trisetcmp:
             - Fixed messages so that appropriate messages are used when

@@ -38,7 +38,6 @@
 #include <gmp.h>
 #include <iostream>
 #include <string>
-#include <vector>
 
 /**
  * \hideinitializer
@@ -68,9 +67,6 @@ namespace regina {
  * @{
  */
 
-extern const long numPrimeSeeds;
-extern const long primeSeedList[];
-
 /**
  * Represents an arbitrary precision integer.
  * Calculations will be exact no matter how large the integers become.
@@ -98,9 +94,6 @@ class NLargeInteger {
              *   is ignored. */
         bool infinite;
             /**< Does this NLargeInteger represent infinity? */
-
-        static std::vector<NLargeInteger> primeList; // the current list of primes
-        void setInitialPrimes();                     // transfers data from primeSeedList to primeList
 
     public:
         /**
@@ -717,29 +710,6 @@ class NLargeInteger {
          * @author Ryan Budney
          */
         int legendre(const NLargeInteger& p) const;
-
-        /**
-         * Increases this list of known primes by one.
-         * @author Ryan Budney
-         */
-        void growPrimeList();                             // lengthens the list of primes by one.
-
-        /**
-         * Lists the prime factors of the current integer. The
-         * answer is given in increasing order, so for 54 the
-         * list of prime factors would be (2, 3, 3, 3).
-         * @author Ryan Budney
-         */
-        std::vector<NLargeInteger> primeFactors(); // returns the prime factors of the integer.
-                                                     // if the integer is negative, -1, will be the
-                                                     // first prime factor.
-        /**
-         * Gives the list of prime factors as prime powers. This
-         * algorithm calls primeFactors(). Thus, for 54 it would
-         * give ( (2,1), (3,3) ).
-         * @author Ryan Budney
-         */
-        std::vector< std::pair<NLargeInteger, unsigned long> > primePowerDecomp();
 
     private:
         /**
