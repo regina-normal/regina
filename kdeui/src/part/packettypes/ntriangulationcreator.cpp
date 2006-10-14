@@ -27,6 +27,7 @@
 /* end stub */
 
 // Regina core includes:
+#include "manifold/nsfs.h"
 #include "maths/numbertheory.h"
 #include "split/nsignature.h"
 #include "triangulation/nexampletriangulation.h"
@@ -59,7 +60,7 @@ namespace {
     enum {
         TRI_EMPTY,
         TRI_LAYERED_LENS_SPACE,
-        TRI_SFS_3,
+        TRI_SFS_SPHERE,
         TRI_LAYERED_SOLID_TORUS,
         TRI_LAYERED_LOOP,
         TRI_AUG_TRI_SOLID_TORUS,
@@ -95,6 +96,11 @@ namespace {
         "^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)"
         "[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+)"
         "[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+)[^0-9\\-]*$");
+    QRegExp reSFSAllParams(
+        "^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)"
+        "(?:[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+))*"
+        "[^0-9\\-]*$");
+    QRegExp reSFSParamPair("(-?\\d+)[^0-9\\-]+(-?\\d+)");
     QRegExp reDehydration("^([A-Za-z]+)$");
     QRegExp reSignature("^([\\(\\)\\.,;:\\|\\-A-Za-z]+)$");
 }
@@ -140,17 +146,17 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea->setStretchFactor(lensParams, 1);
     details->addWidget(hArea, TRI_LAYERED_LENS_SPACE);
 
-    type->insertItem(i18n("Small Seifert-fibred manifold -- fibred over 2-sphere with 3 singular fibres."));
+    type->insertItem(i18n("Seifert fibred space over 2-sphere"));
     hArea = new QHBox();
     hArea->setSpacing(5);
     expln = i18n("<qt>The parameters "
         "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
-        "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
-        "(<i>a<sub>3</sub></i>,<i>b<sub>3</sub></i>) "
+        "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) ... "
+        "(<i>a<sub>n</sub></i>,<i>b<sub>n</sub></i>) "
         "describe the exceptional fibres of the new Seifert fibred space.  "
         "The two integers in each pair must be relatively prime, and none of "
-        "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> "
-        "or <i>a<sub>3</sub></i> can be zero.<p>"
+        "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i>, ..., "
+        "<i>a<sub>n</sub></i> may be zero.<p>"
         "Each pair of parameters (<i>a</i>,<i>b</i>) does not need to be "
         "normalised, i.e., the parameters may be positive or negative and "
         "<i>b</i> may lie outside the range [0,<i>a</i>).  There is no "
@@ -158,16 +164,16 @@ NTriangulationCreator::NTriangulationCreator() {
         "incorporated into the existing parameters by replacing some pair "
         "(<i>a</i>,<i>b</i>) with the pair (<i>a</i>,<i>a</i>+<i>b</i>).  "
         "Including pairs of the form (1,<i>k</i>) and even (1,0) is "
-        "acceptable (in which case a lens space will result).<p>"
+        "acceptable.<p>"
         "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
         "representing the Poincare homology sphere.</qt>");
-    QWhatsThis::add(new QLabel(i18n("Parameters (a1,b1) (a2,b2) (a3,b3):"),
+    QWhatsThis::add(new QLabel(i18n("Parameters (a1,b1) ... (an,bn):"),
         hArea), expln);
     sfsParams = new KLineEdit(hArea);
-    sfsParams->setValidator(new QRegExpValidator(reSFS3Params, hArea));
+    sfsParams->setValidator(new QRegExpValidator(reSFSAllParams, hArea));
     QWhatsThis::add(sfsParams, expln);
     hArea->setStretchFactor(sfsParams, 1);
-    details->addWidget(hArea, TRI_SFS_3);
+    details->addWidget(hArea, TRI_SFS_SPHERE);
 
     type->insertItem(i18n("Layered solid torus"));
     hArea = new QHBox();
@@ -389,21 +395,19 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 "whereas the parameters <i>3,4,5</i> are not.</qt>"));
             return 0;
         }
-    } else if (typeId == TRI_SFS_3) {
-        if (! reSFS3Params.exactMatch(sfsParams->text())) {
-            KMessageBox::error(parentWidget, i18n("<qt>All six Seifert "
+    } else if (typeId == TRI_SFS_SPHERE) {
+        if (! reSFSAllParams.exactMatch(sfsParams->text())) {
+            KMessageBox::error(parentWidget, i18n("<qt>All 2<i>n</i> Seifert "
                 "fibred space parameters "
                 "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
-                "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
-                "(<i>a<sub>3</sub></i>,<i>b<sub>3</sub></i>) "
-                "must be supplied.  Note that Seifert fibred "
-                "spaces with four or more exceptional "
-                "fibres cannot be constructed at the present time.<p>"
-                "These three pairs of integers describe the three exceptional "
-                "fibres of the new Seifert fibred space.  "
+                "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) ... "
+                "(<i>a<sub>n</sub></i>,<i>b<sub>n</sub></i>) "
+                "must be supplied.<p>"
+                "These <i>n</i> pairs of integers describe the <i>n</i> "
+                "exceptional fibres of the new Seifert fibred space.  "
                 "The two integers in each pair must be relatively prime, and "
-                "none of <i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> "
-                "or <i>a<sub>3</sub></i> can be zero.<p>"
+                "none of <i>a<sub>1</sub></i>, <i>a<sub>2</sub></i>, ..., "
+                "<i>a<sub>n</sub></i> may be zero.<p>"
                 "Each pair of parameters (<i>a</i>,<i>b</i>) does not need "
                 "to be normalised, i.e., the parameters may be positive or "
                 "negative and <i>b</i> may lie outside the range "
@@ -413,54 +417,53 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 "pair (<i>a</i>,<i>b</i>) with the pair "
                 "(<i>a</i>,<i>a</i>+<i>b</i>).  "
                 "Including pairs of the form (1,<i>k</i>) and even (1,0) is "
-                "acceptable (in which case a lens space will result).<p>"
+                "acceptable.<p>"
                 "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
                 "representing the Poincare homology sphere.</qt>"));
             return 0;
         }
 
-        long a1 = reSFS3Params.cap(1).toLong();
-        long b1 = reSFS3Params.cap(2).toLong();
-        long a2 = reSFS3Params.cap(3).toLong();
-        long b2 = reSFS3Params.cap(4).toLong();
-        long a3 = reSFS3Params.cap(5).toLong();
-        long b3 = reSFS3Params.cap(6).toLong();
-
-        if (a1 == 0 || a2 == 0 || a3 == 0) {
-            KMessageBox::error(parentWidget, i18n("<qt>None of the parameters "
-                "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> or "
-                "<i>a<sub>3</sub></i> may be zero.</qt>"));
-            return 0;
-        }
-
-        // For gcd calculations, use gcdWithCoeffs() which can cope with
-        // negatives.
+        // Build the Seifert fibred space.
+        regina::NSFSpace sfs;
+        long a, b;
         long d, u, v;
-        d = regina::gcdWithCoeffs(a1, b1, u, v);
-        if (d != 1 && d != -1) {
-            KMessageBox::error(parentWidget, i18n("<qt>The two parameters "
-                "<i>a<sub>1</sub></i> and <i>b<sub>1</sub></i> must be "
-                "relatively prime.</qt>"));
-            return 0;
-        }
-        d = regina::gcdWithCoeffs(a2, b2, u, v);
-        if (d != 1 && d != -1) {
-            KMessageBox::error(parentWidget, i18n("<qt>The two parameters "
-                "<i>a<sub>2</sub></i> and <i>b<sub>2</sub></i> must be "
-                "relatively prime.</qt>"));
-            return 0;
-        }
-        d = regina::gcdWithCoeffs(a3, b3, u, v);
-        if (d != 1 && d != -1) {
-            KMessageBox::error(parentWidget, i18n("<qt>The two parameters "
-                "<i>a<sub>3</sub></i> and <i>b<sub>3</sub></i> must be "
-                "relatively prime.</qt>"));
-            return 0;
+        long pos = 0;
+        long whichPair = 1;
+
+        while ((pos = reSFSParamPair.search(sfsParams->text(), pos)) >= 0) {
+            a = reSFSParamPair.cap(1).toLong();
+            b = reSFSParamPair.cap(2).toLong();
+
+            if (a == 0) {
+                KMessageBox::error(parentWidget,
+                    i18n("<qt>None of the parameters "
+                    "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i>, ..., "
+                    "<i>a<sub>n</sub></i> may be zero.</qt>"));
+                return 0;
+            }
+
+            // For gcd calculations, use gcdWithCoeffs() which can cope with
+            // negatives.
+            d = regina::gcdWithCoeffs(a, b, u, v);
+            if (d != 1 && d != -1) {
+                KMessageBox::error(parentWidget, i18n("<qt>The two parameters "
+                    "<i>a<sub>%1</sub> = %2</i> and "
+                    "<i>b<sub>%3</sub> = %4</i> must be "
+                    "relatively prime.</qt>").
+                    arg(whichPair).arg(a).arg(whichPair).arg(b));
+                return 0;
+            }
+
+            if (a < 0)
+                sfs.insertFibre(-a, -b);
+            else
+                sfs.insertFibre(a, b);
+
+            pos += reSFSParamPair.matchedLength();
+            whichPair++;
         }
 
-        // All okay.
-        NTriangulation* ans = new NTriangulation();
-        ans->insertSFSOverSphere(a1, b1, a2, b2, a3, b3);
+        NTriangulation* ans = sfs.construct();
         return ans;
     } else if (typeId == TRI_AUG_TRI_SOLID_TORUS) {
         if (! reSFS3Params.exactMatch(augParams->text())) {
