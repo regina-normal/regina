@@ -103,20 +103,21 @@ class MarkedAbelianGroup : public ShareableObject{
         /** Internal change of basis */
         NMatrixInt ornCi;
         /** Internal SNF of reduced N matrix */
-        NMatrixInt SNF_ORN; // SNF(ORN)
+        NMatrixInt SNF_ORN; 
 
 	/** Internal list of invariant factors. */
-        std::vector<NLargeInteger> InvFacList;  // list of invariant factors > 1
+        std::vector<NLargeInteger> InvFacList;  
 	/** Internal list of indices of invariant factors. */
-        NIndexedArray<unsigned long> InvFacIndex; // row indices of invariant factors
-                                                  // this corresponds to InvFacList
-
-        unsigned long snfrank;      // the number of free generators from SNF_ORN
-        unsigned long snffreeindex; // the row index of the first free generator 
-                                    //  in SNF_ORN
-        unsigned long ifNum; // number of invariant factors
-        unsigned long ifLoc; // row index of first invariant factor. not relevant
-                                // if ifnum==0. 
+        NIndexedArray<unsigned long> InvFacIndex; 
+ 	/** The number of free generators, from SNF_ORN */
+        unsigned long snfrank;     
+	/** The row index of the first free generator in SNF_ORN. */
+        unsigned long snffreeindex; 
+	/** Number of invariant factors. */
+        unsigned long ifNum; 
+	/** Row index of invariant factors in SNF_ORN */ 
+        unsigned long ifLoc; 
+                                
 
     public:
 
@@ -425,8 +426,6 @@ class MarkedAbelianGroup : public ShareableObject{
 	 * @return a copy of the defining matrix N.
          */
         NMatrixInt getON() const;
-
-
 };
 
 /*@}*/
@@ -531,26 +530,44 @@ NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom, std::vector<NLargeInteger>& 
 
 class HomMarkedAbelianGroup {
     protected:
-        
+        /** domain */
         MarkedAbelianGroup domain;
+	/** range */
         MarkedAbelianGroup range;
+	/** matrix describing map from domain to range, in the coordinates of the chain complexes
+	 ** used to construct domain and range */
         NMatrixInt matrix;
 
+	/** true if reducedMatrix allocated */
         bool reducedMatrixComputed;
+	/** short description of matrix in SNF coordinates */
         NMatrixInt* reducedMatrix;
+	/** true if kernel computed */
         bool kernelComputed;
+	/** pointer to kernel of map */
         MarkedAbelianGroup* kernel; 
+	/** true if coKernel computed */
         bool coKernelComputed;
+	/** pointer to coKernel of map */
         MarkedAbelianGroup* coKernel; 
+	/** true if image computed */
         bool imageComputed;
+	/** pointer to image */
         MarkedAbelianGroup* image;
+	/** true if reducedKernelLattice computed */
         bool reducedKernelLatticeComputed;
+	/** pointer to a lattice which describes the kernel of the homomorphism. */
         NMatrixInt* reducedKernelLattice;
 
+	/** compute the ReducedKernelLattice */
         void computeReducedKernelLattice();
+	/** compute the ReducedMatrix */
         void computeReducedMatrix();
+	/** compute the Kernel */
         void computeKernel();
+	/** compute the CoKernel */
         void computeCoKernel(); 
+	/** compute the Image */
         void computeImage(); 
 
     public:
