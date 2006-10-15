@@ -129,20 +129,22 @@ std::vector<std::pair<NLargeInteger, unsigned long> >
     std::vector< std::pair<NLargeInteger, unsigned long> > retlist;
 
     // go through list1, record number of each prime, put in retlist.
-    if (list1.size()>0) {
-        NLargeInteger cp(list1[0]); // current prime
+    if (! list1.empty()) {
+        NLargeInteger cp(list1.front()); // current prime
         unsigned long cc(1); // current count
-        for (unsigned long i=1; i<list1.size(); i++) {
-            if (list1[i]==cp) cc++; else {
+        std::vector<NLargeInteger>::const_iterator it = list1.begin();
+        for (++it; it != list1.end(); ++it) {
+            if (*it == cp)
+                cc++;
+            else {
                 // a new prime is coming up.
                 retlist.push_back(std::make_pair( cp, cc ) );
-                cp=list1[i];
-                cc=1;
+                cp = *it;
+                cc = 1;
             }
         }
         retlist.push_back(std::make_pair( cp, cc ) );
-    } else
-        retlist.push_back(std::make_pair( n, 1 ) );
+    }
 
     return retlist;
 }
