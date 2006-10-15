@@ -28,6 +28,7 @@
 
 #include "triangulation/marked_abeliangroup.h"
 #include "maths/matrixops.h"
+#include "maths/nprimes.h"
 #include "file/nfile.h"
 #include "triangulation/homologicaldata.h"
 #include <iostream>
@@ -965,7 +966,7 @@ std::vector< std::vector<NLargeInteger> > pvList; // list of vectors
 for (unsigned long i=0; i<niv; i++)
         {
         tI = dmHomology1->getInvariantFactor(i);
-        tFac = tI.primePowerDecomp();
+        tFac = NPrimes::list.primePowerDecomp(tI);
 
         for (unsigned long j=0; j<tFac.size(); j++)
          {
