@@ -136,22 +136,33 @@ class NPrimes {
 
         /**
          * Returns the prime factorisation of the given integer as a list
-         * of individual primes.
+         * of individual primes (or suspected primes).
          *
          * Prime factors are returned in increasing order.  Where
          * a prime power appears in the factorisation, the relevant
          * prime will appear several times in the list.
          *
+         * For very large integers, the factorisation becomes
+         * probabilistic: (i) this routine examines suspected primes
+         * instead of primes (see the class notes), and (ii) if the
+         * routine is having trouble finding factors then it will run a
+         * probabilistic prime test on whatever portion of \a n still
+         * remains (and will assume that portion to be prime if the test
+         * passes).
+         *
          * The given integer may be negative, in which case -1 will be
          * listed as the first factor (even though -1 is not prime).
          * If 0 is passed then a single factor of 0 will be returned;
          * if 1 is passed then an empty list will be returned.
+         * In all cases, the given integer \a n will be the product of
+         * all elements of the final list (where an empty product is
+         * assumed to be 1).
          *
-         * For example, the prime factors of 54 will be listed as
+         * As an example, the prime factors of 54 will be listed as
          * (2, 3, 3, 3), and the prime factors of -90 will be listed as
          * (-1, 2, 3, 3, 5).
          *
-         * \ifacespython In addition to this routine, the additional routine
+         * \ifacespython In addition to this routine, the routine
          * primeDecompInt() is also available.  The routine
          * primeDecompInt() behaves identically to this routine except
          * that the (i) return values are of ordinary integer type, not
@@ -165,25 +176,40 @@ class NPrimes {
 
         /**
          * Returns the prime factorisation of the given integer as a
-         * list of prime powers.
+         * list of prime powers (or suspected prime powers).
          *
          * Factors are returned as (prime, exponent) pairs.  Different
          * pairs describe different primes, and the pairs are sorted
          * in order from smallest prime to largest.  All exponents are
          * strictly positive.
          *
+         * For very large integers, the factorisation becomes
+         * probabilistic: (i) this routine examines suspected primes
+         * instead of primes (see the class notes), and (ii) if the
+         * routine is having trouble finding factors then it will run a
+         * probabilistic prime test on whatever portion of \a n still
+         * remains (and will assume that portion to be prime if the test
+         * passes).
+         *
          * The given integer may be negative, in which case (-1,1) will
          * be listed as the first prime power (even though -1 is not prime).
          * If 0 is passed then a single pair (0,1) will be returned;
          * if 1 is passed then an empty list will be returned.
+         * In all cases, the given integer \a n will be the product of
+         * all powers described by the final list (where an empty product
+         * is assumed to be 1).
          *
-         * For example, the factorisation of 54 will be reported as
+         * As an example, the factorisation of 54 will be reported as
          * [(2,1) (3,3)], and the factorisation of -90 will be reported
          * as [(-1,1) (2,1) (3,2) (5,1)].
          *
-         * Note that this routine calls primeDecomp().
+         * Note that the current implementation of this routine merely calls
+         * primeDecomp() and rewrites the list of factors by grouping primes.
          *
-         * \ifacespython In addition to this routine, the additional routine
+         * \todo Implement this routine natively to avoid the overhead
+         * of the temporary primeDecomp() vector.
+         *
+         * \ifacespython In addition to this routine, the routine
          * primePowerDecompInt() is also available.  The routine
          * primePowerDecompInt() behaves identically to this routine except
          * that the (i) return values are of ordinary integer type, not
