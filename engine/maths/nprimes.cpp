@@ -30,6 +30,8 @@
 
 namespace regina {
 
+std::vector<NLargeInteger> NPrimes::largePrimes;
+
 NLargeInteger NPrimes::prime(unsigned long which, bool autoGrow) {
     // Can we grab it straight out of the hard-coded seed list?
     if (which < numPrimeSeeds)
