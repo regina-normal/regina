@@ -39,4 +39,5 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
+void addNPrimes(CppUnit::TextUi::TestRunner& runner);
 
