@@ -26,15 +26,50 @@
 
 /* end stub */
 
-void addMatrixOps();
-void addNMatrixInt();
-void addNPrimes();
-void addNumberTheory();
+#include "maths/nprimes.h"
+#include <boost/python.hpp>
 
-void addMaths() {
-    addMatrixOps();
-    addNMatrixInt();
-    addNPrimes();
-    addNumberTheory();
+using namespace boost::python;
+using regina::NLargeInteger;
+using regina::NPrimes;
+
+namespace {
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_prime, NPrimes::prime, 1, 2);
+
+    boost::python::list primeFactors_list(NPrimes& p,
+            const NLargeInteger& n) {
+        std::vector<NLargeInteger> factors = p.primeFactors(n);
+
+        boost::python::list ans;
+        for (std::vector<NLargeInteger>::const_iterator it = factors.begin();
+                it != factors.end(); ++it)
+            ans.append(*it);
+        return ans;
+    }
+
+    boost::python::list primePowerDecomp_list(NPrimes& p,
+            const NLargeInteger& n) {
+        std::vector<std::pair<NLargeInteger, unsigned long> >
+            factors = p.primePowerDecomp(n);
+
+        boost::python::list ans;
+        for (std::vector<std::pair<NLargeInteger, unsigned long> >::
+                const_iterator it = factors.begin(); it != factors.end(); ++it)
+            ans.append(make_tuple(it->first, it->second));
+        return ans;
+    }
+}
+
+void addNPrimes() {
+    scope s = class_<NPrimes>("NPrimes", no_init)
+        .def("size", &NPrimes::size)
+        .def("prime", &NPrimes::prime, OL_prime())
+        .def("primeFactors", primeFactors_list)
+        .def("primePowerDecomp", primePowerDecomp_list)
+    ;
+
+    // Apparently there is no way in python to make a module attribute
+    // read-only.
+    s.attr("list") = NPrimes::list;
 }
 
