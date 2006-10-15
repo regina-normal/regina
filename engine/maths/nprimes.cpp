@@ -62,7 +62,7 @@ void NPrimes::growPrimeList(unsigned long extras) {
     }
 }
 
-std::vector<NLargeInteger> NPrimes::primeFactors(const NLargeInteger& n) {
+std::vector<NLargeInteger> NPrimes::primeDecomp(const NLargeInteger& n) {
     std::vector<NLargeInteger> retval;
     NLargeInteger temp(n);
     NLargeInteger r,q;
@@ -119,7 +119,7 @@ std::vector<NLargeInteger> NPrimes::primeFactors(const NLargeInteger& n) {
 
 std::vector<std::pair<NLargeInteger, unsigned long> >
         NPrimes::primePowerDecomp(const NLargeInteger& n) {
-    std::vector<NLargeInteger> list1(primeFactors(n));
+    std::vector<NLargeInteger> list1(primeDecomp(n));
     std::vector< std::pair<NLargeInteger, unsigned long> > retlist;
     // go through list1, record number of each prime, put in retlist.
     if (list1.size()>0) {

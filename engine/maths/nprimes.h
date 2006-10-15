@@ -76,7 +76,7 @@ class NPrimes {
          *
          * @author Ryan Budney
          */
-        static std::vector<NLargeInteger> primeFactors(const NLargeInteger& n);
+        static std::vector<NLargeInteger> primeDecomp(const NLargeInteger& n);
 
         /**
          * Returns the prime factorisation of the given integer as a
@@ -96,7 +96,7 @@ class NPrimes {
          * [(2,1) (3,3)], and the factorisation of -90 will be reported
          * as [(-1,1) (2,1) (3,2) (5,1)].
          *
-         * Note that this routine calls primeFactors().
+         * Note that this routine calls primeDecomp().
          *
          * @author Ryan Budney
          */

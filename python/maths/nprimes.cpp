@@ -34,11 +34,10 @@ using regina::NLargeInteger;
 using regina::NPrimes;
 
 namespace {
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_prime, NPrimes::prime, 1, 2);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_prime, NPrimes::prime, 1, 2);
 
-    boost::python::list primeFactors_list(NPrimes& p,
-            const NLargeInteger& n) {
-        std::vector<NLargeInteger> factors = p.primeFactors(n);
+    boost::python::list primeDecomp_list(const NLargeInteger& n) {
+        std::vector<NLargeInteger> factors = NPrimes::primeDecomp(n);
 
         boost::python::list ans;
         for (std::vector<NLargeInteger>::const_iterator it = factors.begin();
@@ -47,10 +46,9 @@ namespace {
         return ans;
     }
 
-    boost::python::list primePowerDecomp_list(NPrimes& p,
-            const NLargeInteger& n) {
+    boost::python::list primePowerDecomp_list(const NLargeInteger& n) {
         std::vector<std::pair<NLargeInteger, unsigned long> >
-            factors = p.primePowerDecomp(n);
+            factors = NPrimes::primePowerDecomp(n);
 
         boost::python::list ans;
         for (std::vector<std::pair<NLargeInteger, unsigned long> >::
@@ -61,15 +59,15 @@ namespace {
 }
 
 void addNPrimes() {
-    scope s = class_<NPrimes>("NPrimes", no_init)
+    class_<NPrimes>("NPrimes", no_init)
         .def("size", &NPrimes::size)
         .def("prime", &NPrimes::prime, OL_prime())
-        .def("primeFactors", primeFactors_list)
+        .def("primeDecomp", primeDecomp_list)
         .def("primePowerDecomp", primePowerDecomp_list)
+        .staticmethod("size")
+        .staticmethod("prime")
+        .staticmethod("primeDecomp")
+        .staticmethod("primePowerDecomp")
     ;
-
-    // Apparently there is no way in python to make a module attribute
-    // read-only.
-    s.attr("list") = NPrimes::list;
 }
 
