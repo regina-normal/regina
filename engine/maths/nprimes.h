@@ -74,6 +74,13 @@ class NPrimes {
          * (2, 3, 3, 3), and the prime factors of -90 will be listed as
          * (-1, 2, 3, 3, 5).
          *
+         * \ifacespython In addition to this routine, the additional routine
+         * primeDecompInt() is also available.  The routine
+         * primeDecompInt() behaves identically to this routine except
+         * that the (i) return values are of ordinary integer type, not
+         * NLargeInteger; (ii) the input value \a n must lie within
+         * the C++ long integer range (otherwise the behaviour is undefined).
+         *
          * @author Ryan Budney
          */
         static std::vector<NLargeInteger> primeDecomp(const NLargeInteger& n);
@@ -97,6 +104,13 @@ class NPrimes {
          * as [(-1,1) (2,1) (3,2) (5,1)].
          *
          * Note that this routine calls primeDecomp().
+         *
+         * \ifacespython In addition to this routine, the additional routine
+         * primePowerDecompInt() is also available.  The routine
+         * primePowerDecompInt() behaves identically to this routine except
+         * that the (i) return values are of ordinary integer type, not
+         * NLargeInteger; (ii) the input value \a n must lie within
+         * the C++ long integer range (otherwise the behaviour is undefined).
          *
          * @author Ryan Budney
          */

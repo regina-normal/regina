@@ -46,6 +46,16 @@ namespace {
         return ans;
     }
 
+    boost::python::list primeDecomp_list_int(const NLargeInteger& n) {
+        std::vector<NLargeInteger> factors = NPrimes::primeDecomp(n);
+
+        boost::python::list ans;
+        for (std::vector<NLargeInteger>::const_iterator it = factors.begin();
+                it != factors.end(); ++it)
+            ans.append(it->longValue());
+        return ans;
+    }
+
     boost::python::list primePowerDecomp_list(const NLargeInteger& n) {
         std::vector<std::pair<NLargeInteger, unsigned long> >
             factors = NPrimes::primePowerDecomp(n);
@@ -56,6 +66,17 @@ namespace {
             ans.append(make_tuple(it->first, it->second));
         return ans;
     }
+
+    boost::python::list primePowerDecomp_list_int(const NLargeInteger& n) {
+        std::vector<std::pair<NLargeInteger, unsigned long> >
+            factors = NPrimes::primePowerDecomp(n);
+
+        boost::python::list ans;
+        for (std::vector<std::pair<NLargeInteger, unsigned long> >::
+                const_iterator it = factors.begin(); it != factors.end(); ++it)
+            ans.append(make_tuple(it->first.longValue(), it->second));
+        return ans;
+    }
 }
 
 void addNPrimes() {
@@ -63,11 +84,15 @@ void addNPrimes() {
         .def("size", &NPrimes::size)
         .def("prime", &NPrimes::prime, OL_prime())
         .def("primeDecomp", primeDecomp_list)
+        .def("primeDecompInt", primeDecomp_list_int)
         .def("primePowerDecomp", primePowerDecomp_list)
+        .def("primePowerDecompInt", primePowerDecomp_list_int)
         .staticmethod("size")
         .staticmethod("prime")
         .staticmethod("primeDecomp")
+        .staticmethod("primeDecompInt")
         .staticmethod("primePowerDecomp")
+        .staticmethod("primePowerDecompInt")
     ;
 }
 
