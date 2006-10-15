@@ -162,6 +162,10 @@ class NPrimes {
          * (2, 3, 3, 3), and the prime factors of -90 will be listed as
          * (-1, 2, 3, 3, 5).
          *
+         * Note that the internal list of known primes and suspected
+         * primes will be expanded as necessary; there is no need for
+         * the caller to manage this list manually.
+         *
          * \ifacespython In addition to this routine, the routine
          * primeDecompInt() is also available.  The routine
          * primeDecompInt() behaves identically to this routine except
@@ -203,7 +207,11 @@ class NPrimes {
          * [(2,1) (3,3)], and the factorisation of -90 will be reported
          * as [(-1,1) (2,1) (3,2) (5,1)].
          *
-         * Note that the current implementation of this routine merely calls
+         * Note that the internal list of known primes and suspected
+         * primes will be expanded as necessary; there is no need for
+         * the caller to manage this list manually.
+         *
+         * The current implementation of this routine merely calls
          * primeDecomp() and rewrites the list of factors by grouping primes.
          *
          * \todo Implement this routine natively to avoid the overhead
