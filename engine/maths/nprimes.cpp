@@ -66,19 +66,26 @@ void NPrimes::growPrimeList(unsigned long extras) {
 
 std::vector<NLargeInteger> NPrimes::primeDecomp(const NLargeInteger& n) {
     std::vector<NLargeInteger> retval;
+
+    // Deal with n=0 first.
+    if (n == NLargeInteger::zero) {
+        retval.push_back(NLargeInteger::zero);
+        return retval;
+    }
+
     NLargeInteger temp(n);
     NLargeInteger r,q;
 
-    // if the number is negative, put -1 as first prime factor.
+    // if the number is negative, put -1 as first factor.
     if (temp < NLargeInteger::zero) {
-        temp=temp.abs();
+        temp.negate();
         retval.push_back(NLargeInteger(-1));
     }
 
     // repeatedly divide the number by the smallest primes until no
     // longer divisible.
     // at present the algorithm is only guaranteed to factorize the integer
-    // into its prime factors if none of them are larger than the 500th largest
+    // into its prime factors if none of them are larger than the 500th smallest
     // prime.  it always produces a factorization, but after the 500th it uses
     // a probabilistic test to speed things up. This algorithm is at present
     // ad-hoc since the current usage in Regina rarely demands the
@@ -88,31 +95,28 @@ std::vector<NLargeInteger> NPrimes::primeDecomp(const NLargeInteger& n) {
     unsigned long iterSinceDivision=0; // keeps track of how many iterations
                                        // since the last successful division
 
-    if (temp > NLargeInteger::zero) while ( temp != NLargeInteger::one ) {
-        // test to see if cpi < size(), if not, lengthen list, return to loop.
-        if (cpi >= size()) {
-            growPrimeList();
-            continue;
-        }
+    while ( temp != NLargeInteger::one ) {
         // now cpi<size(), check to see if temp % prime(cpi) == 0
-        q = temp.divisionAlg(prime(cpi),r); // means temp = q*prime(cpi) + r
+        q = temp.divisionAlg(prime(cpi), r); // means temp = q*prime(cpi) + r
         if (r == NLargeInteger::zero) {
             temp=q;
             retval.push_back(prime(cpi));
             iterSinceDivision=0;
-        } else {
-            cpi++;
-            iterSinceDivision++;
+            continue;
         }
+
+        cpi++;
+        iterSinceDivision++;
         if (iterSinceDivision == 500) // after 500 unsuccessful divisions,
                                       // check to see if it is probably prime.
             if (mpz_probab_prime_p (temp.data, 10) != 0) {
                 // temp is likely prime.
                 // end the search.
                 retval.push_back(temp);
-                temp=NLargeInteger::one;
+                break;
             }
     }
+
     return retval; // now it's reasonably fast for small numbers.
                // it tends to bog down on numbers with two or more large
                // prime factors.  the GAP algorithm is better, whatever
@@ -123,6 +127,7 @@ std::vector<std::pair<NLargeInteger, unsigned long> >
         NPrimes::primePowerDecomp(const NLargeInteger& n) {
     std::vector<NLargeInteger> list1(primeDecomp(n));
     std::vector< std::pair<NLargeInteger, unsigned long> > retlist;
+
     // go through list1, record number of each prime, put in retlist.
     if (list1.size()>0) {
         NLargeInteger cp(list1[0]); // current prime
