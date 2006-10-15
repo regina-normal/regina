@@ -966,7 +966,7 @@ std::vector< std::vector<NLargeInteger> > pvList; // list of vectors
 for (unsigned long i=0; i<niv; i++)
         {
         tI = dmHomology1->getInvariantFactor(i);
-        tFac = NPrimes::list.primePowerDecomp(tI);
+        tFac = NPrimes::primePowerDecomp(tI);
 
         for (unsigned long j=0; j<tFac.size(); j++)
          {

@@ -30,8 +30,6 @@
 
 namespace regina {
 
-NPrimes NPrimes::list;
-
 NLargeInteger NPrimes::prime(unsigned long which, bool autoGrow) {
     // Can we grab it straight out of the hard-coded seed list?
     if (which < numPrimeSeeds)

@@ -46,20 +46,16 @@ namespace regina {
  */
 
 class NPrimes {
-    public:
-        static NPrimes list;
-
     private:
         static const unsigned long numPrimeSeeds;
         static const unsigned long primeSeedList[];
 
-        std::vector<NLargeInteger> largePrimes;
+        static std::vector<NLargeInteger> largePrimes;
 
     public:
-        unsigned long size() const;
+        static unsigned long size();
 
-        NLargeInteger prime(unsigned long which, bool autoGrow = true);
-        NLargeInteger operator [] (unsigned long which);
+        static NLargeInteger prime(unsigned long which, bool autoGrow = true);
 
         /**
          * Returns the prime factorisation of the given integer as a list
@@ -80,7 +76,7 @@ class NPrimes {
          *
          * @author Ryan Budney
          */
-        std::vector<NLargeInteger> primeFactors(const NLargeInteger& n);
+        static std::vector<NLargeInteger> primeFactors(const NLargeInteger& n);
 
         /**
          * Returns the prime factorisation of the given integer as a
@@ -104,7 +100,7 @@ class NPrimes {
          *
          * @author Ryan Budney
          */
-        std::vector<std::pair<NLargeInteger, unsigned long> >
+        static std::vector<std::pair<NLargeInteger, unsigned long> >
             primePowerDecomp(const NLargeInteger& n);
 
     private:
@@ -119,7 +115,7 @@ class NPrimes {
          *
          * @author Ryan Budney
          */
-        void growPrimeList(unsigned long extras = 1);
+        static void growPrimeList(unsigned long extras = 1);
 };
 
 /*@}*/
@@ -129,12 +125,8 @@ class NPrimes {
 inline NPrimes::NPrimes() {
 }
 
-inline unsigned long NPrimes::size() const {
+inline unsigned long NPrimes::size() {
     return numPrimeSeeds + largePrimes.size();
-}
-
-inline NLargeInteger NPrimes::operator [] (unsigned long which) {
-    return prime(which, true);
 }
 
 } // namespace regina
