@@ -45,16 +45,93 @@ namespace regina {
  * @{
  */
 
+/**
+ * A helper class for finding primes and factorising integers.
+ *
+ * This class has two functions: (i) to maintain a list of known primes,
+ * and (ii) to use this list to factorise integers into prime factors.
+ *
+ * The primes stored by this class will always be the smallest \a k
+ * suspected primes, where \a k may grow dynamically as the program runs.
+ * Specifically:
+ *
+ * - An initial hard-coded list of seed primes is loaded into the class on
+ *   startup.  This list contains precisely the smallest 10,000 primes (the
+ *   size of this list is subject to change in future versions of Regina).
+ *
+ * - Whenever a prime beyond the known list is requested (e.g., when a
+ *   number greater than the largest stored prime is to be factorised), the
+ *   list is extended on the fly.  The extension uses the probabilistic
+ *   algorithm shipped with GMP (hence the phrase "suspected primes" above);
+ *   regarding this algorithm, the GMP documentation states that "for
+ *   practical purposes it's adequate, the chance of a composite passing
+ *   will be extremely small."
+ *
+ * This list is used by the high-level factorisation routines in this
+ * class, such as primeDecomp() and primePowerDecomp().  For users only
+ * interested in these high-level routines, there is no need to worry
+ * about the size of the list; the high-level routines will extend it if
+ * necessary.
+ *
+ * @author Ryan Budney, B.B.
+ */
 class NPrimes {
     private:
         static const unsigned long numPrimeSeeds;
+            /**< The size of the hard-coded list of seed primes. */
         static const unsigned long primeSeedList[];
+            /**< The full hard-coded list of seed primes. */
 
         static std::vector<NLargeInteger> largePrimes;
+            /**< Primes (or suspected primes) that have been found thus
+                 far, not including the initial seed primes.  This list
+                 begins empty, and is expanded as required throughout the
+                 life of the program. */
 
     public:
+        /**
+         * Returns the number of primes (or suspected primes) currently
+         * stored.
+         *
+         * Primes that are already stored can be accessed instantly;
+         * primes larger than those currently stored must be generated
+         * on the fly (which takes time).
+         *
+         * This number may increase as the program runs (according to
+         * whether larger primes are requested), but it will never
+         * decrease.
+         *
+         * @return the number of primes or suspected primes currently stored.
+         */
         static unsigned long size();
 
+        /**
+         * Returns the requested prime (or suspected prime).  More
+         * specifically, this routine returns the (\a which + 1)th
+         * smallest prime.  Thus prime(0) returns 2, prime(1) returns 3,
+         * prime(2) returns 5, and so on.
+         *
+         * If \a which is smaller than the number of initial seed primes,
+         * the result is guaranteed to be the (\a which + 1)th smallest
+         * prime (see the NPrimes class notes for the size of the initial
+         * seed list).  If \a which is larger, a probabilistic algorithm
+         * is used and so there is a possibility that non-primes are
+         * included in the list.
+         *
+         * If \a which < size() then this routine is essentially
+         * instantaneous, since the (\a which + 1)th smallest (suspected)
+         * prime is already stored.  Otherwise the behaviour depends on
+         * the argument \a autoGrow.  If \a autoGrow is \c true (the
+         * default) then this routine calculates the requested prime,
+         * which might take some time.  If \a autoGrow is \c false then
+         * this routine returns zero.
+         *
+         * @param which indicates which prime is requested.
+         * @param autoGrow specifies what to do if the requested
+         * prime lies beyond the list currently stored (see above).
+         * @return the requested prime (or suspected prime), or zero if
+         * \a which was too large and \a autoGrow was \c false.
+         */
         static NLargeInteger prime(unsigned long which, bool autoGrow = true);
 
         /**
@@ -81,7 +158,8 @@ class NPrimes {
          * NLargeInteger; (ii) the input value \a n must lie within
          * the C++ long integer range (otherwise the behaviour is undefined).
          *
-         * @author Ryan Budney
+         * @param n the integer to factorise.
+         * @return the list of prime factors as described above.
          */
         static std::vector<NLargeInteger> primeDecomp(const NLargeInteger& n);
 
@@ -112,22 +190,25 @@ class NPrimes {
          * NLargeInteger; (ii) the input value \a n must lie within
          * the C++ long integer range (otherwise the behaviour is undefined).
          *
-         * @author Ryan Budney
+         * @param n the integer to factorise.
+         * @return the list of prime power factors as described above.
          */
         static std::vector<std::pair<NLargeInteger, unsigned long> >
             primePowerDecomp(const NLargeInteger& n);
 
     private:
         /**
-         * Private constructor.  Only a single instance of this class
-         * is allowed (namely the static instance NPrimes::list).
+         * Private constructor.  No instance of this class is allowed,
+         * since everything of interest is static.
          */
         NPrimes();
 
         /**
-         * Increases the list of known primes by the given amount.
+         * Adds the given number of primes (or suspected primes) to the
+         * list already stored.
          *
-         * @author Ryan Budney
+         * @param extras the number of additional suspected primes to
+         * calculate.
          */
         static void growPrimeList(unsigned long extras = 1);
 };
