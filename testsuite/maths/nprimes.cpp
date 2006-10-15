@@ -118,7 +118,7 @@ class NPrimesTest : public CppUnit::TestFixture {
 
             if (factors.size() != expectedLen) {
                 std::ostringstream msg;
-                msg << n << " should have " << expectedLen
+                msg << "Integer " << n << " should have " << expectedLen
                     << " factor(s), not " << factors.size() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
@@ -189,7 +189,7 @@ class NPrimesTest : public CppUnit::TestFixture {
 
             if (powers.size() != expectedLen) {
                 std::ostringstream msg;
-                msg << n << " should have " << expectedLen
+                msg << "Integer " << n << " should have " << expectedLen
                     << " prime power(s), not " << powers.size() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
