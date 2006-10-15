@@ -115,6 +115,7 @@ bool runAllTests() {
     addNRational(runner);
 
     // Maths:
+    addNPrimes(runner);
     addNumberTheory(runner);
 
     // Triangulation:
