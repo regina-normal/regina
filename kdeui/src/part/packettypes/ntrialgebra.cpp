@@ -164,7 +164,7 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
 
     QGridLayout* homologyGrid = new QGridLayout(ui, 7, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
-    homologyGrid->setRowStretch(7, 1);
+    homologyGrid->setRowStretch(6, 1);
     homologyGrid->setColStretch(0, 1);
     homologyGrid->setColStretch(3, 1);
 
@@ -213,7 +213,6 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
         "with coefficients in Z<sub>2</sub>.</qt>");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(H2Z2, msg);
- 
 }
 
 regina::NPacket* NTriHomologyUI::getPacket() {
@@ -246,7 +245,6 @@ void NTriHomologyUI::refresh() {
         H2->setText(msg);
         H2Z2->setText(msg);
     }
-
 }
 
 void NTriHomologyUI::editingElsewhere() {
