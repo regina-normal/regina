@@ -152,9 +152,9 @@ if (!chainComplexesComputed)
         // This fills out matrix A1
         for (i=0;i<tri->getNumberOfEdges();i++)
         { // these are the standard edges
-        temp=sNIV.index(tri->getVertexIndex(tri->edges[i]->getVertex(0)));
+        temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(0)));
         (A1->entry( ((temp==(-1)) ? (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
-        temp=sNIV.index(tri->getVertexIndex(tri->edges[i]->getVertex(1)));
+        temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(1)));
         (A1->entry( ((temp==(-1)) ? (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
         } // ok
         for (i=0;i<sIEEOF.size();i++)
@@ -254,8 +254,8 @@ if (!chainComplexesComputed)
         //             find dual edges it bounds == link of tetrahedra that contain it
         for (i=0;i<dNBE.size();i++)
         {
-        edgeque=tri->edges[dNBE[i]]->getEmbeddings();
-        for (j=0;j<tri->edges[dNBE[i]]->getNumberOfEmbeddings();j++)
+        edgeque=tri->getEdge(dNBE[i])->getEmbeddings();
+        for (j=0;j<tri->getEdge(dNBE[i])->getNumberOfEmbeddings();j++)
                 {
                 p1=edgeque[j].getVertices();
                 // the face of the tetrahedron corresponding to vertex 2 is
@@ -618,9 +618,9 @@ if (!chainComplexesComputed)
         for (i=0;i<sBNIE.size();i++)
         { // these are the standard boundary edges
           // temp == -1 when the boundary edge end is ideal.
-        temp=sBNIV.index(tri->getVertexIndex(tri->edges[sBNIE[i]]->getVertex(0)));
+        temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->getVertex(0)));
         (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
-        temp=sBNIV.index(tri->getVertexIndex(tri->edges[sBNIE[i]]->getVertex(1)));
+        temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->getVertex(1)));
         (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
         } // ok
 
