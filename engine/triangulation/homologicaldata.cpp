@@ -209,9 +209,9 @@ if (!chainComplexesComputed)
         //  applied to sIEFOT[i] % 4 is the vertex of this face.
         for (j=1;j<4;j++)
                 {
-                p1=tri->tetrahedra[ sIEFOT[i]/4 ]->getFaceMapping((sIEFOT[i] + j) % 4);
-                A2->entry( tri->getNumberOfEdges() + sIEEOF.index(3*tri->getFaceIndex(tri->tetrahedra[
-                sIEFOT[i]/4 ]->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
+                p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping((sIEFOT[i] + j) % 4);
+                A2->entry( tri->getNumberOfEdges() + sIEEOF.index(3*tri->getFaceIndex(tri->getTetrahedron(
+                sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
                 tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
                 }
         }
@@ -223,11 +223,11 @@ if (!chainComplexesComputed)
         for (j=0;j<4;j++)
                 {
                 // first go through standard faces 0 through 3
-                p1=tri->tetrahedra[i]->getFaceMapping(j);
-                A3->entry( tri->getFaceIndex( tri->tetrahedra[i]->getFace(j) ), i) +=
+                p1=tri->getTetrahedron(i)->getFaceMapping(j);
+                A3->entry( tri->getFaceIndex( tri->getTetrahedron(i)->getFace(j) ), i) +=
                         ( (p1.sign()==1) ? 1 : -1 );
                 // then ideal faces 0 through 3, if they exist
-                if (tri->tetrahedra[i]->getVertex(j)->isIdeal()==1)
+                if (tri->getTetrahedron(i)->getVertex(j)->isIdeal()==1)
                         { // this part is in error.
                         A3->entry( tri->getNumberOfFaces() + sIEFOT.index((4*i) + j), i) += 1;
                         }
@@ -295,7 +295,7 @@ if (!chainComplexesComputed)
 
         for (i=0;i<dNINBV.size();i++)
         { // dNINBV[i] is the vertices().index() of this vertex.
-        vtetlist=tri->vertices[dNINBV[i]]->getEmbeddings();
+        vtetlist=tri->getVertex(dNINBV[i])->getEmbeddings();
         tetor.resize(vtetlist.size(),0);
         unorientedlist.resize(0);
 
@@ -398,7 +398,7 @@ if (!chainComplexesComputed)
         {
         // cycle through the vertices, take the first non-ideal one if it exists.
         j=0;
-        while ( (j<4) && (tri->tetrahedra[i] -> getVertex(j) -> isIdeal() ) ) j++;
+        while ( (j<4) && (tri->getTetrahedron(i) -> getVertex(j) -> isIdeal() ) ) j++;
         if (j<4) zeroCellMap[i]=4*j+j; else zeroCellMap[i]=1;
         }
 
@@ -677,9 +677,9 @@ if (!chainComplexesComputed)
         //  applied to sIEFOT[i] % 4 is the vertex of this face.
         for (j=1;j<4;j++)
                 {
-                p1=tri->tetrahedra[ sIEFOT[i]/4 ]->getFaceMapping((sIEFOT[i] + j) % 4);
-                Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->getFaceIndex(tri->tetrahedra[
-                sIEFOT[i]/4 ]->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
+                p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping((sIEFOT[i] + j) % 4);
+                Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->getFaceIndex(tri->getTetrahedron(
+                sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
                 sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
                 }
         }
