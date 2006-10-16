@@ -1121,7 +1121,7 @@ for (unsigned long i=0; i<pvList.size(); i++)
    //
    // Computing the orientation of the intersection, ingredients:
    //
-   // tetrahedra[?]->orientation is +1 or -1 depending on if the
+   // tetrahedra[?]->orientation() is +1 or -1 depending on if the
    //   natural orientation agrees with the manifolds one or not.
    //
    // dual orientation of face points into some tetrahedron given
@@ -1138,7 +1138,7 @@ for (unsigned long i=0; i<pvList.size(); i++)
         NRational( 
          boundingMat.entry(dNBF[k],i)*pvList[j][k]*
          NLargeInteger(
-          tri->faces[dNBF[k]]->getEmbedding(0).getTetrahedron()->orientation*
+          tri->faces[dNBF[k]]->getEmbedding(0).getTetrahedron()->orientation()*
           tri->faces[dNBF[k]]->getEmbedding(0).getVertices().sign() ), ppList[i] );
    }
    tN=torsionLinkingFormPresentationMat.entry(i,j).getNumerator();

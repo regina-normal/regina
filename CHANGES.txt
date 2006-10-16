@@ -61,6 +61,8 @@ Version 4.3.2  [ under development ]
             - Enhanced construct() to support the triangulation of all
               Seifert fibred spaces over the 2-sphere without punctures
               or reflector boundaries.
+        Class NTetrahedron:
+            - New routine orientation() for tracking orientation.
         Class NTorusBundle:
             - Greatly improved monodromy matrix reduction, to the point
               where equivalent torus bundles should give equal matrices.

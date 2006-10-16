@@ -111,7 +111,7 @@ class NTetrahedron : public ShareableObject {
         NPerm faceMapping[4];
             /**< Maps (0,1,2) to the tetrahedron vertices that form
                  each face, as described in getFaceMapping(). */
-        int orientation;
+        int tetOrientation;
             /**< The orientation of this tetrahedron in the triangulation.
                  This will either be 1 or -1. */
         NComponent* component;
@@ -347,6 +347,9 @@ class NTetrahedron : public ShareableObject {
          * embeddings stored in the corresponding NEdge object.
          * See NEdge::getEmbeddings() for further details.
          *
+         * \pre This tetrahedron belongs to a
+         * triangulation whose skeletal information has been calculated.
+         *
          * @param edge the edge of this tetrahedron to examine.
          * This should be between 0 and 5 inclusive.
          * @return a mapping from vertices (0,1) of the requested edge
@@ -366,18 +369,37 @@ class NTetrahedron : public ShareableObject {
          * that are all identified to each other along the skeleton face
          * concerned.
          *
+         * \pre This tetrahedron belongs to a
+         * triangulation whose skeletal information has been calculated.
+         *
          * @param face the face of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive.
          * @return a mapping from vertices (0,1,2) of the requested face
          * to the vertices of this tetrahedron.
          */
         NPerm getFaceMapping(int face) const;
+        /**
+         * Returns the orientation of this tetrahedron in the
+         * triangulation.
+         *
+         * The orientation of each tetrahedron is always +1 or -1.
+         * In an orientable component of a triangulation,
+         * adjacent tetrahedra have the same orientations if one could be
+         * transposed onto the other without reflection, and they have
+         * opposite orientations if a reflection would be required.
+         * In a non-orientable component, orientations are still +1 and
+         * -1 but no further guarantees can be made.
+         *
+         * \pre This tetrahedron belongs to a
+         * triangulation whose skeletal information has been calculated.
+         *
+         * @return +1 or -1 according to the orientation of this tetrahedron.
+         */
+        int orientation() const;
 
         void writeTextShort(std::ostream& out) const;
 
     friend class NTriangulation;
-    friend class homologicalData;
-
         /**< Allow access to private members. */
 };
 
@@ -430,6 +452,10 @@ inline NPerm NTetrahedron::getEdgeMapping(int edge) const {
 
 inline NPerm NTetrahedron::getFaceMapping(int face) const {
     return faceMapping[face];
+}
+
+inline int NTetrahedron::orientation() const {
+    return tetOrientation;
 }
 
 inline void NTetrahedron::writeTextShort(std::ostream& out) const {

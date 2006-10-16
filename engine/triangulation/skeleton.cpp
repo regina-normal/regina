@@ -90,7 +90,7 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
 
     firstTet->component = component;
     component->tetrahedra.push_back(firstTet);
-    firstTet->orientation = firstOrientation;
+    firstTet->tetOrientation = firstOrientation;
 
     unsigned queueStart = 0, queueEnd = 1;
     queue[0] = firstTet;
@@ -106,16 +106,16 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
                 yourOrientation = (tet->getAdjacentTetrahedronGluing(face).
-                    sign() == 1 ? -tet->orientation : tet->orientation);
+                    sign() == 1 ? -tet->tetOrientation : tet->tetOrientation);
                 if (adjTet->component) {
-                    if (yourOrientation != adjTet->orientation) {
+                    if (yourOrientation != adjTet->tetOrientation) {
                         orientable = false;
                         component->orientable = false;
                     }
                 } else {
                     adjTet->component = component;
                     component->tetrahedra.push_back(adjTet);
-                    adjTet->orientation = yourOrientation;
+                    adjTet->tetOrientation = yourOrientation;
 
                     queue[queueEnd++] = adjTet;
                 }

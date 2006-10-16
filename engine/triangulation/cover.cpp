@@ -50,8 +50,8 @@ void NTriangulation::makeDoubleCover() {
     // Reset each tetrahedron orientation.
     tit = tetrahedra.begin();
     for (i = 0; i < sheetSize; i++) {
-        (*tit)->orientation = 0;
-        upper[i]->orientation = 0;
+        (*tit)->tetOrientation = 0;
+        upper[i]->tetOrientation = 0;
         tit++;
     }
 
@@ -67,11 +67,11 @@ void NTriangulation::makeDoubleCover() {
     int lowerAdjOrientation;
     NPerm gluing;
     for (i = 0; i < sheetSize; i++)
-        if (upper[i]->orientation == 0) {
+        if (upper[i]->tetOrientation == 0) {
             // We've found a new component.
             // Completely recreate the gluings for this component.
-            upper[i]->orientation = 1;
-            tetrahedra[i]->orientation = -1;
+            upper[i]->tetOrientation = 1;
+            tetrahedra[i]->tetOrientation = -1;
             tetQueue.push(i);
 
             while (! tetQueue.empty()) {
@@ -96,16 +96,17 @@ void NTriangulation::makeDoubleCover() {
                     // adjacent tetrahedron in the lower sheet.
                     gluing = lowerTet->getAdjacentTetrahedronGluing(face);
                     lowerAdjOrientation = (gluing.sign() == 1 ?
-                        -lowerTet->orientation : lowerTet->orientation);
+                        -lowerTet->tetOrientation : lowerTet->tetOrientation);
 
                     upperAdj = getTetrahedronIndex(lowerAdj);
-                    if (lowerAdj->orientation == 0) {
+                    if (lowerAdj->tetOrientation == 0) {
                         // We haven't seen the adjacent tetrahedron yet.
-                        lowerAdj->orientation = lowerAdjOrientation;
-                        upper[upperAdj]->orientation = -lowerAdjOrientation;
+                        lowerAdj->tetOrientation = lowerAdjOrientation;
+                        upper[upperAdj]->tetOrientation = -lowerAdjOrientation;
                         upper[upperTet]->joinTo(face, upper[upperAdj], gluing);
                         tetQueue.push(upperAdj);
-                    } else if (lowerAdj->orientation == lowerAdjOrientation) {
+                    } else if (lowerAdj->tetOrientation ==
+                            lowerAdjOrientation) {
                         // The adjacent tetrahedron already has the
                         // correct orientation.
                         upper[upperTet]->joinTo(face, upper[upperAdj], gluing);
