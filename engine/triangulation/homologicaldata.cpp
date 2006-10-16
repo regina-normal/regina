@@ -68,13 +68,13 @@ void homologicalData::computeccIndexing()
         unsigned long j=0;
         tri->calculateSkeleton();
 
-        for (NTriangulation::VertexIterator vit = tri->vertices.begin(); vit != tri->vertices.end(); vit++)
+        for (NTriangulation::VertexIterator vit = tri->vertices().begin(); vit != tri->vertices().end(); vit++)
                 {if (!((*vit)->isIdeal())) sNIV.push_back(i); i++;} // sNIV
 
-        for (NTriangulation::EdgeIterator eit = tri->edges.begin(); eit != tri->edges.end(); eit++) {for (i=0;i<2;i++)
+        for (NTriangulation::EdgeIterator eit = tri->edges().begin(); eit != tri->edges().end(); eit++) {for (i=0;i<2;i++)
           {if ((*eit)->getVertex(i)->isIdeal()) sIEOE.push_back(2*j+i);} j++; }        j=0; // sIEOE
 
-        for (NTriangulation::FaceIterator fit = tri->faces.begin(); fit != tri->faces.end(); fit++) {for (i=0;i<3;i++)
+        for (NTriangulation::FaceIterator fit = tri->faces().begin(); fit != tri->faces().end(); fit++) {for (i=0;i<3;i++)
                 {if ((*fit)->getVertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);}        j++; } j=0; // sIEEOF
 
         for (NTriangulation::TetrahedronIterator tit = tri->tetrahedra.begin(); tit != tri->tetrahedra.end(); tit++)
@@ -82,24 +82,24 @@ void homologicalData::computeccIndexing()
 
         for (NTriangulation::VertexIterator vit = tri->vertices.begin(); vit != tri->vertices.end(); vit++) // dNINBV
                 {if ((!((*vit)->isIdeal())) && (!((*vit)->isBoundary()))) dNINBV.push_back(j); j++; } j=0;
-        for (NTriangulation::EdgeIterator eit = tri->edges.begin(); eit != tri->edges.end(); eit++) {if (!((*eit)->isBoundary()))
+        for (NTriangulation::EdgeIterator eit = tri->edges().begin(); eit != tri->edges().end(); eit++) {if (!((*eit)->isBoundary()))
                 dNBE.push_back(j); j++;        } j=0; // dNBE
-        for (NTriangulation::FaceIterator fit = tri->faces.begin(); fit != tri->faces.end(); fit++)
+        for (NTriangulation::FaceIterator fit = tri->faces().begin(); fit != tri->faces().end(); fit++)
                 {if (!((*fit)->isBoundary()))        dNBF.push_back(j); j++;        } i=0; // dNBF
 
-        for (NTriangulation::VertexIterator vit = tri->vertices.begin(); vit != tri->vertices.end(); vit++) // sBNIV
+        for (NTriangulation::VertexIterator vit = tri->vertices().begin(); vit != tri->vertices().end(); vit++) // sBNIV
                 {if ( (!((*vit)->isIdeal())) && ((*vit)->isBoundary())) sBNIV.push_back(i); i++;} i=0;
         for (NTriangulation::EdgeIterator eit = tri->edges.begin(); eit != tri->edges.end(); eit++) // sBNIE
                 {if ((*eit)->isBoundary()) sBNIE.push_back(i); i++; } i=0;
-        for (NTriangulation::FaceIterator fit = tri->faces.begin(); fit != tri->faces.end(); fit++) // sBNIF
+        for (NTriangulation::FaceIterator fit = tri->faces().begin(); fit != tri->faces().end(); fit++) // sBNIF
                 {if ((*fit)->isBoundary()) sBNIF.push_back(i); i++; }
 
         ccIndexingComputed = true;
 
         numStandardCells.push_back(sNIV.size() + sIEOE.size()); // standard 0-cells
-        numStandardCells.push_back(tri->edges.size() + sIEEOF.size()); // standard 1-cells
-        numStandardCells.push_back(tri->faces.size() + sIEFOT.size()); // standard 2-cells
-        numStandardCells.push_back(tri->tetrahedra.size()); // standard 3-cells
+        numStandardCells.push_back(tri->getNumberOfEdges() + sIEEOF.size()); // standard 1-cells
+        numStandardCells.push_back(tri->getNumberOfFaces() + sIEFOT.size()); // standard 2-cells
+        numStandardCells.push_back(tri->getNumberOfTetrahedra()); // standard 3-cells
 
         numDualCells.push_back(tri->getNumberOfTetrahedra()); // dual 0-cells
         numDualCells.push_back(dNBF.size()); // dual 1-cells
@@ -150,7 +150,7 @@ if (!chainComplexesComputed)
         NPerm p1,p2;
 
         // This fills out matrix A1
-        for (i=0;i<tri->edges.size();i++)
+        for (i=0;i<tri->getNumberOfEdges();i++)
         { // these are the standard edges
         temp=sNIV.index(tri->vertices.index(tri->edges[i]->getVertex(0)));
         (A1->entry( ((temp==(-1)) ? (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
@@ -163,22 +163,22 @@ if (!chainComplexesComputed)
         p1=tri->faces[sIEEOF[i]/3]->getEdgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1)
                 {A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1), tri->edges.size()+i)-=1;}
+                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1), tri->getNumberOfEdges()+i)-=1;}
            else
                 {A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->edges.size()+i)-=1;}
+                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)-=1;}
         p1=tri->faces[sIEEOF[i]/3]->getEdgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1)
                 {A1->entry(sNIV.size() + sIEOE.index(2*(
-                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->edges.size()+i)+=1;}
+                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)+=1;}
            else
                 {A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1) , tri->edges.size()+i)+=1;}
+                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1) , tri->getNumberOfEdges()+i)+=1;}
         }
         // that handles matrix A1.
 
         // start filling out A2...
-        for (i=0;i<tri->faces.size();i++)
+        for (i=0;i<tri->getNumberOfFaces();i++)
         { // put boundary edges into A2..
         for (j=0;j<6;j++)
                 { // run through the 6 possible boundary edges of the face
@@ -194,7 +194,7 @@ if (!chainComplexesComputed)
                  {
                  // check face i vertex j % 3 is ideal
                  if (tri->faces[i]->getVertex(j % 3)->isIdeal())
-                         A2->entry( tri->edges.size() + sIEEOF.index((3*i) + (j % 3)), i) += 1;
+                         A2->entry( tri->getNumberOfEdges() + sIEEOF.index((3*i) + (j % 3)), i) += 1;
                  }
                 }
         }
@@ -210,9 +210,9 @@ if (!chainComplexesComputed)
         for (j=1;j<4;j++)
                 {
                 p1=tri->tetrahedra[ sIEFOT[i]/4 ]->getFaceMapping((sIEFOT[i] + j) % 4);
-                A2->entry( tri->edges.size() + sIEEOF.index(3*tri->faces.index(tri->tetrahedra[
+                A2->entry( tri->getNumberOfEdges() + sIEEOF.index(3*tri->faces.index(tri->tetrahedra[
                 sIEFOT[i]/4 ]->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
-                tri->faces.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
+                tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
                 }
         }
         // end A2
@@ -229,7 +229,7 @@ if (!chainComplexesComputed)
                 // then ideal faces 0 through 3, if they exist
                 if (tri->tetrahedra[i]->getVertex(j)->isIdeal()==1)
                         { // this part is in error.
-                        A3->entry( tri->faces.size() + sIEFOT.index((4*i) + j), i) += 1;
+                        A3->entry( tri->getNumberOfFaces() + sIEFOT.index((4*i) + j), i) += 1;
                         }
                 }
         }
@@ -409,8 +409,8 @@ if (!chainComplexesComputed)
         //           and only crosses the face corresponding to the dual 1-cell once. (and no
         //           other faces).
 
-        for (j=0; j<H1map->columns(); j++) // H1map.columns() is supposed to be faces.size()
-                                  // while H1map.rows() is edges.size()+sIEEOF.size()
+        for (j=0; j<H1map->columns(); j++) // H1map.columns() is supposed to be faces().size()
+                                  // while H1map.rows() is edges().size()+sIEEOF.size()
         {// now we have to decide where dual edge j == ideal triangulation face j is sent.
         unsigned tet0FaceIndex = tri->faces[j]->getEmbedding(0).getFace(); // face numbers of the common
         unsigned tet1FaceIndex = tri->faces[j]->getEmbedding(1).getFace(); // face in the two tetrahedra.
@@ -497,7 +497,7 @@ if (!chainComplexesComputed)
           stage1FaceToUse = tri->faces[j] -> getEmbedding(0).getTetrahedron()->getEdgeMapping(
                 edgeNumber[stage1v][tet0FaceIndex] )[2];
           P3 = tri->faces[j] -> getEmbedding(0).getTetrahedron()->getFaceMapping(stage1FaceToUse);
-          stage1edgeNum = tri->edges.size() + sIEEOF.index(
+          stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
                 3*(tri->faces.index(tri->faces[j] -> getEmbedding(0).getTetrahedron() ->
                 getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
           stage1posOr = ( ( P3[(P3.preImageOf(stage1v)+1) % 3] != stage1vi ) ? true : false );
@@ -522,7 +522,7 @@ if (!chainComplexesComputed)
           stage3FaceToUse = tri->faces[j] -> getEmbedding(1).getTetrahedron()->getEdgeMapping(
                 edgeNumber[stage3v][tet1FaceIndex] )[2];
           P3 = tri->faces[j] -> getEmbedding(1).getTetrahedron()->getFaceMapping(stage3FaceToUse);
-          stage3edgeNum = tri->edges.size() + sIEEOF.index(
+          stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
                 3*(tri->faces.index(tri->faces[j] -> getEmbedding(1).getTetrahedron() ->
                 getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
           stage3posOr = ( ( P3[(P3.preImageOf(stage3v)+1) % 3] == stage3vi ) ? true : false );
@@ -595,7 +595,7 @@ if (!chainComplexesComputed)
           // main alg here.
           if (( currV/3  == prevV/3 ) && (tri->faces[j]->getVertex(currV/3)->isIdeal()) )  // ideal edge
                 {
-                H1map->entry( tri->edges.size() + sIEEOF.index(3*j + (currV/3)) , j ) += 1;
+                H1map->entry( tri->getNumberOfEdges() + sIEEOF.index(3*j + (currV/3)) , j ) += 1;
                 }
           if ( currV/3  != prevV/3 ) // regular edge
                 {
@@ -694,11 +694,11 @@ if (!chainComplexesComputed)
         for (i=0;i<B1Incl->columns();i++) // each boundary edge corresponds to a triangulation
                                 // edge
         B1Incl->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] :
-                tri->edges.size() + i - sBNIE.size() ) ,i)+=1;
+                tri->getNumberOfEdges() + i - sBNIE.size() ) ,i)+=1;
         // fill out b2Incl
         for (i=0;i<B2Incl->columns();i++)
         B2Incl->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
-                tri->faces.size() + i - sBNIF.size() ) ,i)+=1;
+                tri->getNumberOfFaces() + i - sBNIF.size() ) ,i)+=1;
         }
 }
 
