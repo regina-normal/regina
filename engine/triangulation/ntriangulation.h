@@ -63,7 +63,6 @@ class NGroupPresentation;
 class NIsomorphism;
 class NXMLPacketReader;
 class NXMLTriangulationReader;
-class homologicalData;
 
 /**
  * \addtogroup triangulation Triangulations
@@ -2354,8 +2353,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
             /**< Internal to maximalForestInDualSkeleton(). */
 
     friend class regina::NXMLTriangulationReader;
-    friend class regina::homologicalData;
-
 };
 
 /*@}*/
