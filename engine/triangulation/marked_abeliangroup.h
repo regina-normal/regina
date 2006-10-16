@@ -520,10 +520,7 @@ NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom, std::vector<NLargeInteger>& 
  * you only get something that's well-defined if mat extends to a chain map, which
  * this function assumes. 
  *
- * \testpart
- *
  * @author Ryan Budney
- * 
  */
 
 class HomMarkedAbelianGroup {

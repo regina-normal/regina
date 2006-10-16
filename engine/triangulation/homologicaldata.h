@@ -116,9 +116,6 @@ class NMatrixInt; // what are these for?
  *   3-cells: the non-boundary, non-ideal vertices.begin() through vertices.end().
  *
  * @author Ryan Budney 
- * 
- * \testpart
- *
  */
 class homologicalData : public ShareableObject{
     protected:
