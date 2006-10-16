@@ -66,7 +66,6 @@ void homologicalData::computeccIndexing()
  {
         unsigned long i=0;
         unsigned long j=0;
-        tri->calculateSkeleton();
 
         for (NTriangulation::VertexIterator vit = tri->getVertices().begin(); vit != tri->getVertices().end(); vit++)
                 {if (!((*vit)->isIdeal())) sNIV.push_back(i); i++;} // sNIV
