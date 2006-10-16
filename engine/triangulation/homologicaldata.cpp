@@ -77,10 +77,10 @@ void homologicalData::computeccIndexing()
         for (NTriangulation::FaceIterator fit = tri->faces().begin(); fit != tri->faces().end(); fit++) {for (i=0;i<3;i++)
                 {if ((*fit)->getVertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);}        j++; } j=0; // sIEEOF
 
-        for (NTriangulation::TetrahedronIterator tit = tri->tetrahedra.begin(); tit != tri->tetrahedra.end(); tit++)
+        for (NTriangulation::TetrahedronIterator tit = tri->tetrahedra().begin(); tit != tri->tetrahedra().end(); tit++)
         {for (i=0;i<4;i++)  {if ((*tit)->getVertex(i)->isIdeal()) { sIEFOT.push_back(4*j+i); } }j++;} j=0;// sIEFOT
 
-        for (NTriangulation::VertexIterator vit = tri->vertices.begin(); vit != tri->vertices.end(); vit++) // dNINBV
+        for (NTriangulation::VertexIterator vit = tri->vertices().begin(); vit != tri->vertices().end(); vit++) // dNINBV
                 {if ((!((*vit)->isIdeal())) && (!((*vit)->isBoundary()))) dNINBV.push_back(j); j++; } j=0;
         for (NTriangulation::EdgeIterator eit = tri->edges().begin(); eit != tri->edges().end(); eit++) {if (!((*eit)->isBoundary()))
                 dNBE.push_back(j); j++;        } j=0; // dNBE
@@ -218,7 +218,7 @@ if (!chainComplexesComputed)
         // end A2
 
         // start A3
-        for (i=0;i<tri->tetrahedra.size();i++)
+        for (i=0;i<tri->getNumberOfTetrahedra();i++)
         {
         for (j=0;j<4;j++)
                 {
@@ -241,9 +241,9 @@ if (!chainComplexesComputed)
         //              find the tetrahedra that bound it
         for (i=0;i<dNBF.size();i++)
         {
-        B1->entry( tri->tetrahedra.index(
+        B1->entry( tri->getTetrahedronIndex(
                 tri->faces[dNBF[i]]->getEmbedding(1).getTetrahedron() ),i)+=1;
-        B1->entry( tri->tetrahedra.index(
+        B1->entry( tri->getTetrahedronIndex(
                 tri->faces[dNBF[i]]->getEmbedding(0).getTetrahedron() ),i)-=1;
         }
         // end B1
@@ -302,7 +302,7 @@ if (!chainComplexesComputed)
         for (j=0;j<vtetlist.size();j++)
                 { // here is the first problem.
                 unorientedlist.push_back(
-                 4*tri->tetrahedra.index( vtetlist[j].getTetrahedron() ) +
+                 4*tri->getTetrahedronIndex( vtetlist[j].getTetrahedron() ) +
                                      vtetlist[j].getVertex() );
                 }
         orig_uol=unorientedlist;
@@ -316,7 +316,7 @@ if (!chainComplexesComputed)
         // ie: tetor[0]==1 always.
 
         tetor[0]=1;
-        unorientedlist.erase( 4*tri->tetrahedra.index(vtetlist[0].getTetrahedron()) +
+        unorientedlist.erase( 4*tri->getTetrahedronIndex(vtetlist[0].getTetrahedron()) +
                         vtetlist[0].getVertex() );
 
         while (!unorientedlist.empty())        for (j=0;j<vtetlist.size();j++)
@@ -331,7 +331,7 @@ if (!chainComplexesComputed)
                 {
                 if (k== (ind1 % 4)) k++;
                 p1=vtetlist[j].getTetrahedron() -> getAdjacentTetrahedronGluing(k);
-                ind2=4*tri->tetrahedra.index( vtetlist[j].getTetrahedron() ->
+                ind2=4*tri->getTetrahedronIndex( vtetlist[j].getTetrahedron() ->
                  getAdjacentTetrahedron(k) ) + p1[ind1 % 4];
 
                 if (unorientedlist.index( ind2 )  != (-1) )
@@ -389,7 +389,7 @@ if (!chainComplexesComputed)
         //            the only condition this map needs to satisfy is that the regular 0-cell
         //           associated to a dual 0-cell must be contained in the same ideal simplex.
 
-        std::vector<unsigned long> zeroCellMap(tri->tetrahedra.size());
+        std::vector<unsigned long> zeroCellMap(tri->getNumberOfTetrahedra());
         // zeroCellMap[i] describes the vertex of tetrahedra[i] that the dual 0-cell is
         //   sent to. It will be stored as 4*(vertex number 0,1,2,3) + 0,1,2,3 (equal to prev.
         //         number if non-ideal
@@ -415,14 +415,14 @@ if (!chainComplexesComputed)
         unsigned tet0FaceIndex = tri->faces[j]->getEmbedding(0).getFace(); // face numbers of the common
         unsigned tet1FaceIndex = tri->faces[j]->getEmbedding(1).getFace(); // face in the two tetrahedra.
 
-        unsigned vert0Num = zeroCellMap[tri->tetrahedra.index( tri->faces[j] ->
+        unsigned vert0Num = zeroCellMap[tri->getTetrahedronIndex( tri->faces[j] ->
                  getEmbedding(0).getTetrahedron() )]/4; // vertex number of start vertex in tet0
-        unsigned vert1Num = zeroCellMap[tri->tetrahedra.index( tri->faces[j] ->
+        unsigned vert1Num = zeroCellMap[tri->getTetrahedronIndex( tri->faces[j] ->
                  getEmbedding(1).getTetrahedron() )]/4;  // vertex number of end vertex in tet1.
-        unsigned vert0id = zeroCellMap[tri->tetrahedra.index( tri->faces[j] ->
+        unsigned vert0id = zeroCellMap[tri->getTetrahedronIndex( tri->faces[j] ->
                  getEmbedding(0).getTetrahedron() )] % 4; // not equal to vert0Num if and only if
                                                           // vert0 is ideal.
-        unsigned vert1id = zeroCellMap[tri->tetrahedra.index( tri->faces[j] ->
+        unsigned vert1id = zeroCellMap[tri->getTetrahedronIndex( tri->faces[j] ->
                  getEmbedding(1).getTetrahedron() )] % 4; // not equal to vert1Num if and only if
                                                           // vert1 is ideal.
 
