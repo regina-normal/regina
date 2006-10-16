@@ -89,7 +89,7 @@ void homologicalData::computeccIndexing()
 
         for (NTriangulation::VertexIterator vit = tri->vertices().begin(); vit != tri->vertices().end(); vit++) // sBNIV
                 {if ( (!((*vit)->isIdeal())) && ((*vit)->isBoundary())) sBNIV.push_back(i); i++;} i=0;
-        for (NTriangulation::EdgeIterator eit = tri->edges.begin(); eit != tri->edges.end(); eit++) // sBNIE
+        for (NTriangulation::EdgeIterator eit = tri->edges().begin(); eit != tri->edges().end(); eit++) // sBNIE
                 {if ((*eit)->isBoundary()) sBNIE.push_back(i); i++; } i=0;
         for (NTriangulation::FaceIterator fit = tri->faces().begin(); fit != tri->faces().end(); fit++) // sBNIF
                 {if ((*fit)->isBoundary()) sBNIF.push_back(i); i++; }
@@ -152,9 +152,9 @@ if (!chainComplexesComputed)
         // This fills out matrix A1
         for (i=0;i<tri->getNumberOfEdges();i++)
         { // these are the standard edges
-        temp=sNIV.index(tri->vertices.index(tri->edges[i]->getVertex(0)));
+        temp=sNIV.index(tri->getVertexIndex(tri->edges[i]->getVertex(0)));
         (A1->entry( ((temp==(-1)) ? (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
-        temp=sNIV.index(tri->vertices.index(tri->edges[i]->getVertex(1)));
+        temp=sNIV.index(tri->getVertexIndex(tri->edges[i]->getVertex(1)));
         (A1->entry( ((temp==(-1)) ? (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
         } // ok
         for (i=0;i<sIEEOF.size();i++)
@@ -163,17 +163,17 @@ if (!chainComplexesComputed)
         p1=tri->faces[sIEEOF[i]/3]->getEdgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1)
                 {A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1), tri->getNumberOfEdges()+i)-=1;}
+                tri->getEdgeIndex((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1), tri->getNumberOfEdges()+i)-=1;}
            else
                 {A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)-=1;}
+                tri->getEdgeIndex((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)-=1;}
         p1=tri->faces[sIEEOF[i]/3]->getEdgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1)
                 {A1->entry(sNIV.size() + sIEOE.index(2*(
-                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)+=1;}
+                 tri->getEdgeIndex((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)+=1;}
            else
                 {A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1) , tri->getNumberOfEdges()+i)+=1;}
+                tri->getEdgeIndex((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1) , tri->getNumberOfEdges()+i)+=1;}
         }
         // that handles matrix A1.
 
@@ -187,7 +187,7 @@ if (!chainComplexesComputed)
                 if ( (j/3) == 0)
                  {
                  p1=tri->faces[i]->getEdgeMapping(j % 3);
-                 A2->entry( tri->edges.index(tri->faces[i]->getEdge(j % 3)) ,i) +=
+                 A2->entry( tri->getEdgeIndex(tri->faces[i]->getEdge(j % 3)) ,i) +=
                         ( (p1.sign()==1) ? +1 : -1 );
                  }
                 else
@@ -204,13 +204,13 @@ if (!chainComplexesComputed)
         // sIEFOT[i] % 4 is the vertex number for this tetrahedron
         // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4) are the respective faces
          // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4) gives the perm
-        // faces.index( tetrahedra[sIEFOT[i]/4].getFace(sIEFOT[i] + 1,2,3 % 4) is therefore the
+        // faces().index( tetrahedra[sIEFOT[i]/4].getFace(sIEFOT[i] + 1,2,3 % 4) is therefore the
         //  face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)^{-1}
         //  applied to sIEFOT[i] % 4 is the vertex of this face.
         for (j=1;j<4;j++)
                 {
                 p1=tri->tetrahedra[ sIEFOT[i]/4 ]->getFaceMapping((sIEFOT[i] + j) % 4);
-                A2->entry( tri->getNumberOfEdges() + sIEEOF.index(3*tri->faces.index(tri->tetrahedra[
+                A2->entry( tri->getNumberOfEdges() + sIEEOF.index(3*tri->getFaceIndex(tri->tetrahedra[
                 sIEFOT[i]/4 ]->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
                 tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
                 }
@@ -224,7 +224,7 @@ if (!chainComplexesComputed)
                 {
                 // first go through standard faces 0 through 3
                 p1=tri->tetrahedra[i]->getFaceMapping(j);
-                A3->entry( tri->faces.index( tri->tetrahedra[i]->getFace(j) ), i) +=
+                A3->entry( tri->getFaceIndex( tri->tetrahedra[i]->getFace(j) ), i) +=
                         ( (p1.sign()==1) ? 1 : -1 );
                 // then ideal faces 0 through 3, if they exist
                 if (tri->tetrahedra[i]->getVertex(j)->isIdeal()==1)
@@ -264,7 +264,7 @@ if (!chainComplexesComputed)
                 // getEmbedding(0).getTetrahedron() is the current tet, and
                 // getEmbedding(0).getFace() is this current face p1[2]...
 
-                B2->entry( dNBF.index( tri->faces.index(
+                B2->entry( dNBF.index( tri->getFaceIndex(
                  edgeque[j].getTetrahedron()->getFace(p1[2]) ) ) ,i)+=
                 ( ( edgeque[j].getTetrahedron() ==
                         edgeque[j].getTetrahedron()->getFace(
@@ -294,7 +294,7 @@ if (!chainComplexesComputed)
         //           find the corresp edges==non-boundary boundary faces
 
         for (i=0;i<dNINBV.size();i++)
-        { // dNINBV[i] is the vertices.index() of this vertex.
+        { // dNINBV[i] is the vertices().index() of this vertex.
         vtetlist=tri->vertices[dNINBV[i]]->getEmbeddings();
         tetor.resize(vtetlist.size(),0);
         unorientedlist.resize(0);
@@ -367,7 +367,7 @@ if (!chainComplexesComputed)
                 // now p1 sends 0 to point corresp to v, 1 to point corresp to end of edge.
                 // if p1.sign() == tetor[j] then sign = +1 otherwise -1.
 
-                ind1=4*tri->edges.index( vtetlist[j].getTetrahedron()->getEdge(k) ) + 2*ind2 +
+                ind1=4*tri->getEdgeIndex( vtetlist[j].getTetrahedron()->getEdge(k) ) + 2*ind2 +
                 (p1.sign() == tetor[j] ? 1 : 0);
 
                 if (edge_adjacency.index(ind1) == (-1) ) edge_adjacency.push_back(ind1);
@@ -447,7 +447,7 @@ if (!chainComplexesComputed)
                 else
                  { stage0choice = vert0id; } // ideal
 
-                stage0edgeNum = tri->edges.index(tri->faces[j] -> getEmbedding(0).getTetrahedron() ->
+                stage0edgeNum = tri->getEdgeIndex(tri->faces[j] -> getEmbedding(0).getTetrahedron() ->
                         getEdge( edgeNumber[vert0Num][stage0choice] ));
                 stage0posOr = ( tri->faces[j] -> getEmbedding(0).getTetrahedron()->getEdgeMapping(
                  edgeNumber[vert0Num][stage0choice])[1] == stage0choice ) ? true : false ;
@@ -470,7 +470,7 @@ if (!chainComplexesComputed)
                 else
                  { stage4choice = vert1id; }
 
-                stage4edgeNum = tri->edges.index(tri->faces[j] -> getEmbedding(1).getTetrahedron() ->
+                stage4edgeNum = tri->getEdgeIndex(tri->faces[j] -> getEmbedding(1).getTetrahedron() ->
                         getEdge( edgeNumber[vert1Num][stage4choice] ));
                 stage4posOr = ( tri->faces[j] -> getEmbedding(1).getTetrahedron()->getEdgeMapping(
                  edgeNumber[vert1Num][stage4choice])[1] == vert1Num ) ?        true : false ;
@@ -498,7 +498,7 @@ if (!chainComplexesComputed)
                 edgeNumber[stage1v][tet0FaceIndex] )[2];
           P3 = tri->faces[j] -> getEmbedding(0).getTetrahedron()->getFaceMapping(stage1FaceToUse);
           stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                3*(tri->faces.index(tri->faces[j] -> getEmbedding(0).getTetrahedron() ->
+                3*(tri->getFaceIndex(tri->faces[j] -> getEmbedding(0).getTetrahedron() ->
                 getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
           stage1posOr = ( ( P3[(P3.preImageOf(stage1v)+1) % 3] != stage1vi ) ? true : false );
          }
@@ -523,7 +523,7 @@ if (!chainComplexesComputed)
                 edgeNumber[stage3v][tet1FaceIndex] )[2];
           P3 = tri->faces[j] -> getEmbedding(1).getTetrahedron()->getFaceMapping(stage3FaceToUse);
           stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                3*(tri->faces.index(tri->faces[j] -> getEmbedding(1).getTetrahedron() ->
+                3*(tri->getFaceIndex(tri->faces[j] -> getEmbedding(1).getTetrahedron() ->
                 getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
           stage3posOr = ( ( P3[(P3.preImageOf(stage3v)+1) % 3] == stage3vi ) ? true : false );
          }
@@ -599,7 +599,7 @@ if (!chainComplexesComputed)
                 }
           if ( currV/3  != prevV/3 ) // regular edge
                 {
-                H1map->entry( tri->edges.index(tri->faces[j]->getEdge( ((currV/3) + 1) % 3 )), j ) +=
+                H1map->entry( tri->getEdgeIndex(tri->faces[j]->getEdge( ((currV/3) + 1) % 3 )), j ) +=
                 ( (tri->faces[j] -> getEdgeMapping(((currV/3) + 1) % 3)[1] == currV/3) ? +1 : -1);
                 }
           // move prevV to be equal to currV.
@@ -618,9 +618,9 @@ if (!chainComplexesComputed)
         for (i=0;i<sBNIE.size();i++)
         { // these are the standard boundary edges
           // temp == -1 when the boundary edge end is ideal.
-        temp=sBNIV.index(tri->vertices.index(tri->edges[sBNIE[i]]->getVertex(0)));
+        temp=sBNIV.index(tri->getVertexIndex(tri->edges[sBNIE[i]]->getVertex(0)));
         (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
-        temp=sBNIV.index(tri->vertices.index(tri->edges[sBNIE[i]]->getVertex(1)));
+        temp=sBNIV.index(tri->getVertexIndex(tri->edges[sBNIE[i]]->getVertex(1)));
         (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
         } // ok
 
@@ -630,17 +630,17 @@ if (!chainComplexesComputed)
         p1=tri->faces[sIEEOF[i]/3]->getEdgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1)
                 {Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1), sBNIE.size()+i)-=1;}
+                tri->getEdgeIndex((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1), sBNIE.size()+i)-=1;}
            else
                 {Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , sBNIE.size()+i)-=1;}
+                tri->getEdgeIndex((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , sBNIE.size()+i)-=1;}
         p1=tri->faces[sIEEOF[i]/3]->getEdgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1)
                 {Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , sBNIE.size()+i)+=1;}
+                 tri->getEdgeIndex((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , sBNIE.size()+i)+=1;}
            else
                 {Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1) , sBNIE.size()+i)+=1;}
+                tri->getEdgeIndex((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1) , sBNIE.size()+i)+=1;}
         }
         // that handles matrix Bd1.
 
@@ -654,7 +654,7 @@ if (!chainComplexesComputed)
                 if ( (j/3) == 0)
                  {
                  p1=tri->faces[sBNIF[i]]->getEdgeMapping(j % 3);
-                 Bd2->entry( sBNIE.index( tri->edges.index(tri->faces[sBNIF[i]]->getEdge(j % 3)) ) ,i) +=
+                 Bd2->entry( sBNIE.index( tri->getEdgeIndex(tri->faces[sBNIF[i]]->getEdge(j % 3)) ) ,i) +=
                         ( (p1.sign()==1) ? +1 : -1 );
                  }
                 else
@@ -672,13 +672,13 @@ if (!chainComplexesComputed)
         // sIEFOT[i] % 4 is the vertex number for this tetrahedron
         // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4) are the respective faces
          // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4) gives the perm
-        // faces.index( tetrahedra[sIEFOT[i]/4].getFace(sIEFOT[i] + 1,2,3 % 4) is therefore the
+        // faces().index( tetrahedra[sIEFOT[i]/4].getFace(sIEFOT[i] + 1,2,3 % 4) is therefore the
         //  face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)^{-1}
         //  applied to sIEFOT[i] % 4 is the vertex of this face.
         for (j=1;j<4;j++)
                 {
                 p1=tri->tetrahedra[ sIEFOT[i]/4 ]->getFaceMapping((sIEFOT[i] + j) % 4);
-                Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->faces.index(tri->tetrahedra[
+                Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->getFaceIndex(tri->tetrahedra[
                 sIEFOT[i]/4 ]->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
                 sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
                 }
