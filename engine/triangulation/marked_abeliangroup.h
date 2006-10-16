@@ -65,11 +65,9 @@ class NMatrixInt;
  * represent homology groups, but it gives the foundation for studying maps between
  * homology groups.  This is used in the computation of the torsion H_1 form
  * coming from Poincare Duality.
- * 
- * \testpart
  *
  * @author Ryan Budney
- * 
+ *
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
  */
