@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "triangulation/marked_abeliangroup.h"
+#include "algebra/marked_abeliangroup.h"
 #include "maths/matrixops.h"
 #include "file/nfile.h"
 #include <iostream>

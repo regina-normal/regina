@@ -26,10 +26,8 @@
 
 /* end stub */
 
-#include "triangulation/marked_abeliangroup.h"
 #include "maths/matrixops.h"
 #include "maths/nprimes.h"
-#include "file/nfile.h"
 #include "triangulation/homologicaldata.h"
 #include <iostream>
 #include <sstream>

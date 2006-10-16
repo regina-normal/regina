@@ -36,13 +36,13 @@
 #endif
 
 #include <vector>
+#include "algebra/marked_abeliangroup.h"
 #include "utilities/nmpi.h"
 #include "utilities/nrational.h"
 #include "utilities/nindexedarray.h"
 #include "shareableobject.h"
 #include "maths/nmatrixint.h"
 #include "maths/nmatrix.h"
-#include "triangulation/marked_abeliangroup.h"
 #include "triangulation/ntriangulation.h"
 #include <sstream>
 
