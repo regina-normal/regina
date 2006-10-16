@@ -27,11 +27,11 @@
 /* end stub */
 
 // Regina core includes:
+#include "algebra/marked_abeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "maths/numbertheory.h"
 #include "maths/nmatrixint.h"
 #include "triangulation/ntriangulation.h"
-#include "triangulation/marked_abeliangroup.h"
 #include "triangulation/homologicaldata.h"
 
 // UI includes:
