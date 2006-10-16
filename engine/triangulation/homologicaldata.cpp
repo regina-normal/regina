@@ -68,30 +68,30 @@ void homologicalData::computeccIndexing()
         unsigned long j=0;
         tri->calculateSkeleton();
 
-        for (NTriangulation::VertexIterator vit = tri->vertices().begin(); vit != tri->vertices().end(); vit++)
+        for (NTriangulation::VertexIterator vit = tri->getVertices().begin(); vit != tri->getVertices().end(); vit++)
                 {if (!((*vit)->isIdeal())) sNIV.push_back(i); i++;} // sNIV
 
-        for (NTriangulation::EdgeIterator eit = tri->edges().begin(); eit != tri->edges().end(); eit++) {for (i=0;i<2;i++)
+        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin(); eit != tri->getEdges().end(); eit++) {for (i=0;i<2;i++)
           {if ((*eit)->getVertex(i)->isIdeal()) sIEOE.push_back(2*j+i);} j++; }        j=0; // sIEOE
 
-        for (NTriangulation::FaceIterator fit = tri->faces().begin(); fit != tri->faces().end(); fit++) {for (i=0;i<3;i++)
+        for (NTriangulation::FaceIterator fit = tri->getFaces().begin(); fit != tri->getFaces().end(); fit++) {for (i=0;i<3;i++)
                 {if ((*fit)->getVertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);}        j++; } j=0; // sIEEOF
 
-        for (NTriangulation::TetrahedronIterator tit = tri->tetrahedra().begin(); tit != tri->tetrahedra().end(); tit++)
+        for (NTriangulation::TetrahedronIterator tit = tri->getTetrahedra().begin(); tit != tri->getTetrahedra().end(); tit++)
         {for (i=0;i<4;i++)  {if ((*tit)->getVertex(i)->isIdeal()) { sIEFOT.push_back(4*j+i); } }j++;} j=0;// sIEFOT
 
-        for (NTriangulation::VertexIterator vit = tri->vertices().begin(); vit != tri->vertices().end(); vit++) // dNINBV
+        for (NTriangulation::VertexIterator vit = tri->getVertices().begin(); vit != tri->getVertices().end(); vit++) // dNINBV
                 {if ((!((*vit)->isIdeal())) && (!((*vit)->isBoundary()))) dNINBV.push_back(j); j++; } j=0;
-        for (NTriangulation::EdgeIterator eit = tri->edges().begin(); eit != tri->edges().end(); eit++) {if (!((*eit)->isBoundary()))
+        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin(); eit != tri->getEdges().end(); eit++) {if (!((*eit)->isBoundary()))
                 dNBE.push_back(j); j++;        } j=0; // dNBE
-        for (NTriangulation::FaceIterator fit = tri->faces().begin(); fit != tri->faces().end(); fit++)
+        for (NTriangulation::FaceIterator fit = tri->getFaces().begin(); fit != tri->getFaces().end(); fit++)
                 {if (!((*fit)->isBoundary()))        dNBF.push_back(j); j++;        } i=0; // dNBF
 
-        for (NTriangulation::VertexIterator vit = tri->vertices().begin(); vit != tri->vertices().end(); vit++) // sBNIV
+        for (NTriangulation::VertexIterator vit = tri->getVertices().begin(); vit != tri->getVertices().end(); vit++) // sBNIV
                 {if ( (!((*vit)->isIdeal())) && ((*vit)->isBoundary())) sBNIV.push_back(i); i++;} i=0;
-        for (NTriangulation::EdgeIterator eit = tri->edges().begin(); eit != tri->edges().end(); eit++) // sBNIE
+        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin(); eit != tri->getEdges().end(); eit++) // sBNIE
                 {if ((*eit)->isBoundary()) sBNIE.push_back(i); i++; } i=0;
-        for (NTriangulation::FaceIterator fit = tri->faces().begin(); fit != tri->faces().end(); fit++) // sBNIF
+        for (NTriangulation::FaceIterator fit = tri->getFaces().begin(); fit != tri->getFaces().end(); fit++) // sBNIF
                 {if ((*fit)->isBoundary()) sBNIF.push_back(i); i++; }
 
         ccIndexingComputed = true;
@@ -294,7 +294,7 @@ if (!chainComplexesComputed)
         //           find the corresp edges==non-boundary boundary faces
 
         for (i=0;i<dNINBV.size();i++)
-        { // dNINBV[i] is the vertices().index() of this vertex.
+        { // dNINBV[i] is the vertices.index() of this vertex.
         vtetlist=tri->getVertex(dNINBV[i])->getEmbeddings();
         tetor.resize(vtetlist.size(),0);
         unorientedlist.resize(0);
@@ -410,7 +410,7 @@ if (!chainComplexesComputed)
         //           other faces).
 
         for (j=0; j<H1map->columns(); j++) // H1map.columns() is supposed to be faces().size()
-                                  // while H1map.rows() is edges().size()+sIEEOF.size()
+                                  // while H1map.rows() is edges.size()+sIEEOF.size()
         {// now we have to decide where dual edge j == ideal triangulation face j is sent.
         unsigned tet0FaceIndex = tri->faces[j]->getEmbedding(0).getFace(); // face numbers of the common
         unsigned tet1FaceIndex = tri->faces[j]->getEmbedding(1).getFace(); // face in the two tetrahedra.
