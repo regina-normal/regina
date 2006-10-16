@@ -41,6 +41,7 @@ Don't forget:
     documentation in reference manual, feature set & index
     journal references (www, KDE docs, example files, headers)
     check for doxygen warnings
+    update \test... notes in API docs
     python bindings for new routines
     rebuild manpages
     website
