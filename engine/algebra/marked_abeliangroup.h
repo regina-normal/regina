@@ -53,7 +53,7 @@ class NMatrixInt;
  */
 
 /**
- * Represents a finitely generated abelian group given by a chain complex. 
+ * Represents a finitely generated abelian group given by a chain complex.
  *
  * This class is initialized with a chain complex.  The chain complex is given
  * in terms of two NMatrixInt classes, M and N such that M*N=0. The abelian group
@@ -73,9 +73,9 @@ class NMatrixInt;
  */
 class MarkedAbelianGroup : public ShareableObject{
     protected:
-	/** Internal original M */
+        /** Internal original M */
         NMatrixInt OM; // copy of initializing M
-	/** Internal original N */
+        /** Internal original N */
         NMatrixInt ON; // copy of initializing N assumes M*N == 0
         /** Internal change of basis */
         NMatrixInt OMR;  // OMC*OM*OMR is the SNF of OM
@@ -93,7 +93,7 @@ class MarkedAbelianGroup : public ShareableObject{
                         // where the brackets indicate removal of the first
                         // rankOM rows.
         /** Internal change of basis */
-        NMatrixInt ornR;  
+        NMatrixInt ornR;
         /** Internal change of basis */
         NMatrixInt ornRi; // ornC * ORN * ornR is the SNF(ORN).
         /** Internal change of basis */
@@ -101,21 +101,21 @@ class MarkedAbelianGroup : public ShareableObject{
         /** Internal change of basis */
         NMatrixInt ornCi;
         /** Internal SNF of reduced N matrix */
-        NMatrixInt SNF_ORN; 
+        NMatrixInt SNF_ORN;
 
-	/** Internal list of invariant factors. */
-        std::vector<NLargeInteger> InvFacList;  
-	/** Internal list of indices of invariant factors. */
-        NIndexedArray<unsigned long> InvFacIndex; 
- 	/** The number of free generators, from SNF_ORN */
-        unsigned long snfrank;     
-	/** The row index of the first free generator in SNF_ORN. */
-        unsigned long snffreeindex; 
-	/** Number of invariant factors. */
-        unsigned long ifNum; 
-	/** Row index of invariant factors in SNF_ORN */ 
-        unsigned long ifLoc; 
-                                
+        /** Internal list of invariant factors. */
+        std::vector<NLargeInteger> InvFacList;
+        /** Internal list of indices of invariant factors. */
+        NIndexedArray<unsigned long> InvFacIndex;
+        /** The number of free generators, from SNF_ORN */
+        unsigned long snfrank;
+        /** The row index of the first free generator in SNF_ORN. */
+        unsigned long snffreeindex;
+        /** Number of invariant factors. */
+        unsigned long ifNum;
+        /** Row index of invariant factors in SNF_ORN */
+        unsigned long ifLoc;
+
 
     public:
 
@@ -123,9 +123,9 @@ class MarkedAbelianGroup : public ShareableObject{
          * MarkedAbelianGroups can only be created via a chain complex.
          * this assumes the product M*N=0, so among other things, it needs
          * to be well-defined, ie: M.rows()==N.columns().
-	 *
+         *
          * @param M `right' matrix in chain complex
-	 * @param N `left' matrix in chain complex
+         * @param N `left' matrix in chain complex
          */
         MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
 
@@ -232,8 +232,8 @@ class MarkedAbelianGroup : public ShareableObject{
          * The torsion elements will be written in terms of the
          * invariant factors of the group, as described in the
          * MarkedAbelianGroup notes.
-	 *
-	 * @param out is the stream to write to.
+         *
+         * @param out is the stream to write to.
          */
         virtual void writeTextShort(std::ostream& out) const;
 
@@ -241,11 +241,11 @@ class MarkedAbelianGroup : public ShareableObject{
          * The marked abelian group was defined by matrices M and N
          * with M*N==0.  Think of M as m by l and N as l by n.  Then
          * this routine returns the index-th free generator of the
-         * ker(M)/img(N) in Z^l. 
-	 *
-	 * @param index specifies which free generator we're looking up.
-	 * @return vector<NLargeInteger> gives the coordinates of the
-	 * free generator in the nullspace of M
+         * ker(M)/img(N) in Z^l.
+         *
+         * @param index specifies which free generator we're looking up.
+         * @return vector<NLargeInteger> gives the coordinates of the
+         * free generator in the nullspace of M
          */
         std::vector<NLargeInteger> getFreeRep(unsigned long index) const;
 
@@ -253,175 +253,175 @@ class MarkedAbelianGroup : public ShareableObject{
          * The marked abelian group was defined by matrices M and N
          * with M*N==0.  Think of M as m by l and N as l by n.  Then
          * this routine returns the index-th torsion generator of the
-         * ker(M)/img(N) in Z^l. 
-	 *
-	 * @param index specifies which generator in the torsion subgroup
-	 * @return vector<NLargeInteger>  gives the coordinates of
-	 * the generator in the nullspace of M
+         * ker(M)/img(N) in Z^l.
+         *
+         * @param index specifies which generator in the torsion subgroup
+         * @return vector<NLargeInteger>  gives the coordinates of
+         * the generator in the nullspace of M
          */
         std::vector<NLargeInteger> getTorRep(unsigned long index) const;
 
         /**
          * The marked abelian group was defined by matrices M and N
-         * with M*N==0.  Think of M as m by l and N as l by n.  
+         * with M*N==0.  Think of M as m by l and N as l by n.
          * When the group was initialized, it was computed to be isomorphic
          * to some Z^d + Z_{d1} + ... + Z_{dk} where d1 | d2 | ... | dk
          * this routine assumes element is in Z^l, and it returns a vector
          * of length d+k where the first d elements represent which class the
          * vector projects to in Z^d, and the last k elements represent the
          * projections to Z_{d1} + ... + Z_{dk}. Of these last elements, they
-         * will be returned mod di respectively. 
-	 *
-	 * @param element is a vector in the nullspace of M
-	 * @return a vector that describes element in the standard
-	 *  Z^d + Z_{d1} + ... + Z_{dk} form.
+         * will be returned mod di respectively.
+         *
+         * @param element is a vector in the nullspace of M
+         * @return a vector that describes element in the standard
+         *  Z^d + Z_{d1} + ... + Z_{dk} form.
          */
-        std::vector<NLargeInteger> getSNFisoRep(std::vector<NLargeInteger>& element) 
+        std::vector<NLargeInteger> getSNFisoRep(std::vector<NLargeInteger>& element)
                 const;
 
         /**
          * These routines return information on how we determined the isomorphism-class of
-	 * the group.  Originally, the group was defined by two matrices M and N with
-	 * M*N==0.  
-	 *
-	 * getMCB() * M * getMRB() is the Smith Normal Form of M. 
-	 * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB() 
-	 * respectively. 
-	 *
-	 * @return the matrix getMRB() described above.
+         * the group.  Originally, the group was defined by two matrices M and N with
+         * M*N==0.
+         *
+         * getMCB() * M * getMRB() is the Smith Normal Form of M.
+         * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         * respectively.
+         *
+         * @return the matrix getMRB() described above.
          */
         NMatrixInt getMRB() const; // these matrices are for putting OM in SNF
         /**
          * These routines return information on how we determined the isomorphism-class of
-	 * the group.  Originally, the group was defined by two matrices M and N with
-	 * M*N==0.  
-	 *
-	 * getMCB() * M * getMRB() is the Smith Normal Form of M. 
-	 * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB() 
-	 * respectively. 
-	 *
-	 * @return the matrix getMRBi() described above.
+         * the group.  Originally, the group was defined by two matrices M and N with
+         * M*N==0.
+         *
+         * getMCB() * M * getMRB() is the Smith Normal Form of M.
+         * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         * respectively.
+         *
+         * @return the matrix getMRBi() described above.
          */
         NMatrixInt getMRBi() const;// getMCB() * OM * getMRB() = SNF(OM)
         /**
          * These routines return information on how we determined the isomorphism-class of
-	 * the group.  Originally, the group was defined by two matrices M and N with
-	 * M*N==0.  
-	 *
-	 * getMCB() * M * getMRB() is the Smith Normal Form of M. 
-	 * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB() 
-	 * respectively. 
-	 *
-	 * @return the matrix getMCB() described above.
+         * the group.  Originally, the group was defined by two matrices M and N with
+         * M*N==0.
+         *
+         * getMCB() * M * getMRB() is the Smith Normal Form of M.
+         * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         * respectively.
+         *
+         * @return the matrix getMCB() described above.
          */
-        NMatrixInt getMCB() const; 
+        NMatrixInt getMCB() const;
         /**
          * These routines return information on how we determined the isomorphism-class of
-	 * the group.  Originally, the group was defined by two matrices M and N with
-	 * M*N==0.  
-	 *
-	 * getMCB() * M * getMRB() is the Smith Normal Form of M. 
-	 * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB() 
-	 * respectively. 
-	 *
-	 * @return the matrix getMCBi() described above.
+         * the group.  Originally, the group was defined by two matrices M and N with
+         * M*N==0.
+         *
+         * getMCB() * M * getMRB() is the Smith Normal Form of M.
+         * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         * respectively.
+         *
+         * @return the matrix getMCBi() described above.
          */
-        NMatrixInt getMCBi() const; 
- 
-	/**
-	 * The 2nd step in determining the isomorphism class of the group is to 
-	 * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
-	 * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
-	 * matrix into Smith Normal Form, and keep track of the matrices that do it.
-	 *
-	 * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N]. 
-	 * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
-	 * respectively.
-	 *
-	 * @return the matrix getNRB() described above.
-	 */
-        NMatrixInt getNRB() const; 
+        NMatrixInt getMCBi() const;
 
-	/**
-	 * The 2nd step in determining the isomorphism class of the group is to 
-	 * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
-	 * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
-	 * matrix into Smith Normal Form, and keep track of the matrices that do it.
-	 *
-	 * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N]. 
-	 * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
-	 * respectively.
-	 *
-	 * @return the matrix getNRBi() described above.
-	 */
+        /**
+         * The 2nd step in determining the isomorphism class of the group is to
+         * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
+         * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
+         * matrix into Smith Normal Form, and keep track of the matrices that do it.
+         *
+         * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
+         * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * respectively.
+         *
+         * @return the matrix getNRB() described above.
+         */
+        NMatrixInt getNRB() const;
+
+        /**
+         * The 2nd step in determining the isomorphism class of the group is to
+         * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
+         * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
+         * matrix into Smith Normal Form, and keep track of the matrices that do it.
+         *
+         * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
+         * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * respectively.
+         *
+         * @return the matrix getNRBi() described above.
+         */
         NMatrixInt getNRBi() const;
 
-	/**
-	 * The 2nd step in determining the isomorphism class of the group is to 
-	 * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
-	 * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
-	 * matrix into Smith Normal Form, and keep track of the matrices that do it.
-	 *
-	 * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N]. 
-	 * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
-	 * respectively.
-	 *
-	 * @return the matrix getNCB() described above.
-	 */
-        NMatrixInt getNCB() const; 
+        /**
+         * The 2nd step in determining the isomorphism class of the group is to
+         * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
+         * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
+         * matrix into Smith Normal Form, and keep track of the matrices that do it.
+         *
+         * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
+         * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * respectively.
+         *
+         * @return the matrix getNCB() described above.
+         */
+        NMatrixInt getNCB() const;
 
- 	/**
-	 * The 2nd step in determining the isomorphism class of the group is to 
-	 * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
-	 * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
-	 * matrix into Smith Normal Form, and keep track of the matrices that do it.
-	 *
-	 * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N]. 
-	 * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
-	 * respectively.
-	 *
-	 * @return the matrix getNCBi() described above.
-	 */
+        /**
+         * The 2nd step in determining the isomorphism class of the group is to
+         * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
+         * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
+         * matrix into Smith Normal Form, and keep track of the matrices that do it.
+         *
+         * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
+         * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * respectively.
+         *
+         * @return the matrix getNCBi() described above.
+         */
        NMatrixInt getNCBi() const;
 
         /**
          * Gives the rank of the defining matrix M.
-	 *
-	 * @return the rank of the defining matrix M.
+         *
+         * @return the rank of the defining matrix M.
          */
-        unsigned long getRankOM() const; 
+        unsigned long getRankOM() const;
 
-	/**
-	 * Index of first free generator in the reduced N matrix.
-	 *
-	 * @return index of the first free generator in reduced N matrix.
-	 */
+        /**
+         * Index of first free generator in the reduced N matrix.
+         *
+         * @return index of the first free generator in reduced N matrix.
+         */
         unsigned long getFreeLoc() const;// internal: snffreeindex
 
-	/**
-	 * Index of the first torsion generator in the reduced N matrix.
-	 *
-	 * @return Index of the first torsion generator in the reduced N matrix.
-	 */
+        /**
+         * Index of the first torsion generator in the reduced N matrix.
+         *
+         * @return Index of the first torsion generator in the reduced N matrix.
+         */
         unsigned long getTorLoc() const; // internal: ifLoc
 
-	/**
-	 * Number of invariant factors ie: minimal number of torsion generators.
-	 *
-	 * @return number of invariant factors in torsion subgroup.
-	 */
+        /**
+         * Number of invariant factors ie: minimal number of torsion generators.
+         *
+         * @return number of invariant factors in torsion subgroup.
+         */
         unsigned long getTorNum() const; // internal: InvFacList.size()
 
         /**
          * Copies of the original chain complex matrices.
-	 *
-	 * @return a copy of the defining matrix M.
+         *
+         * @return a copy of the defining matrix M.
          */
         NMatrixInt getOM() const;
         /**
          * Copies of the original chain complex matrices.
-	 *
-	 * @return a copy of the defining matrix N.
+         *
+         * @return a copy of the defining matrix N.
          */
         NMatrixInt getON() const;
 };
@@ -432,7 +432,7 @@ class MarkedAbelianGroup : public ShareableObject{
 
 // copy constructor
 inline MarkedAbelianGroup::MarkedAbelianGroup(const MarkedAbelianGroup& g) :
-        ShareableObject(), 
+        ShareableObject(),
         OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
         rankOM(g.rankOM),
         ORN(g.ORN), ornR(g.ornR), ornRi(g.ornRi), ornC(g.ornC), ornCi(g.ornCi),
@@ -473,7 +473,7 @@ inline        NMatrixInt MarkedAbelianGroup::getON() const { return ON; }
   *  is used in the RBADD_preImageOfLattice algorithm, which computes the kernel
   *  of a homomorphism Z^n --> Z_p1 + Z_p2 + ... + Z_pk specified by a matrix.
   * @param matrix is the original m x n matrix to put into Smith Normal Form. When the
-  *	algorithm terminates, it *is* in its Smith Normal Form.
+  *        algorithm terminates, it *is* in its Smith Normal Form.
   * @param RowSpaceBasis change of basis matrix
   * @param RowSpaceBasisInv inverse of RowSpaceBasis
   * @param ColSpaceBasis change of basis matrix
@@ -483,7 +483,7 @@ inline        NMatrixInt MarkedAbelianGroup::getON() const { return ON; }
   * thus, one obtains matrix from the old matrix by multiplying on the
   * left by ColSpaceBasis and on the right by RowSpaceBasis.
   */
-void RBMOD_smithNormalForm(NMatrixInt& matrix, 
+void RBMOD_smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& RowSpaceBasis, NMatrixInt& RowSpaceBasisInv,
         NMatrixInt& ColSpaceBasis, NMatrixInt& ColSpaceBasisInv);
 
@@ -495,10 +495,10 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
   * @param Ri the inverse of R
   * @param rowList the rows to pay attention to.
   */
-void RBADD_columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri, 
+void RBADD_columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
                                 std::vector<unsigned> &rowList);
 
-/** 
+/**
   * Given a homomorphism (hom) from Z^n to Z^m and a sublattice of Z^m represented
   * by L, this procedure computes the preimage of L under hom.
   *
@@ -510,7 +510,7 @@ NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom, std::vector<NLargeInteger>& 
 
 
 /**
- * Represents a homomorphism of finitely generated abelian groups. 
+ * Represents a homomorphism of finitely generated abelian groups.
  * One initializes a homomorphism of f.g. abelian groups by passing the constructor
  * two f.g. abelian groups and a matrix which describes the linear map between the
  * free abelian groups in the centre of the respective chain complexes that you
@@ -518,7 +518,7 @@ NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom, std::vector<NLargeInteger>& 
  * by the chain complex  Z^a -- A --> Z^b -- B --> Z^c and ran was initialized by
  * Z^d -- D --> Z^e -- E --> Z^f, then mat needs to be an e-by-b matrix, and of course,
  * you only get something that's well-defined if mat extends to a chain map, which
- * this function assumes. 
+ * this function assumes.
  *
  * @author Ryan Budney
  */
@@ -527,117 +527,117 @@ class HomMarkedAbelianGroup {
     protected:
         /** domain */
         MarkedAbelianGroup domain;
-	/** range */
+        /** range */
         MarkedAbelianGroup range;
-	/** matrix describing map from domain to range, in the coordinates of the chain complexes
-	 ** used to construct domain and range */
+        /** matrix describing map from domain to range, in the coordinates of the chain complexes
+         ** used to construct domain and range */
         NMatrixInt matrix;
 
-	/** true if reducedMatrix allocated */
+        /** true if reducedMatrix allocated */
         bool reducedMatrixComputed;
-	/** short description of matrix in SNF coordinates */
+        /** short description of matrix in SNF coordinates */
         NMatrixInt* reducedMatrix;
-	/** true if kernel computed */
+        /** true if kernel computed */
         bool kernelComputed;
-	/** pointer to kernel of map */
-        MarkedAbelianGroup* kernel; 
-	/** true if coKernel computed */
+        /** pointer to kernel of map */
+        MarkedAbelianGroup* kernel;
+        /** true if coKernel computed */
         bool coKernelComputed;
-	/** pointer to coKernel of map */
-        MarkedAbelianGroup* coKernel; 
-	/** true if image computed */
+        /** pointer to coKernel of map */
+        MarkedAbelianGroup* coKernel;
+        /** true if image computed */
         bool imageComputed;
-	/** pointer to image */
+        /** pointer to image */
         MarkedAbelianGroup* image;
-	/** true if reducedKernelLattice computed */
+        /** true if reducedKernelLattice computed */
         bool reducedKernelLatticeComputed;
-	/** pointer to a lattice which describes the kernel of the homomorphism. */
+        /** pointer to a lattice which describes the kernel of the homomorphism. */
         NMatrixInt* reducedKernelLattice;
 
-	/** compute the ReducedKernelLattice */
+        /** compute the ReducedKernelLattice */
         void computeReducedKernelLattice();
-	/** compute the ReducedMatrix */
+        /** compute the ReducedMatrix */
         void computeReducedMatrix();
-	/** compute the Kernel */
+        /** compute the Kernel */
         void computeKernel();
-	/** compute the CoKernel */
-        void computeCoKernel(); 
-	/** compute the Image */
-        void computeImage(); 
+        /** compute the CoKernel */
+        void computeCoKernel();
+        /** compute the Image */
+        void computeImage();
 
     public:
 
 //       * Homomorphisms of marked abelian groups are generally created from
 //         * two marked abelian groups and a matrix that indicates where the generators
 //         * are sent.
-	/**
-	 * This is the sole HomMarkedAbelianGroup constructor, other than the copy
-	 * constructor.
-	 *
-	 * @param dom domain group
-	 * @param ran range group
-	 * @param mat the matrix that describes the homomorphism from dom to ran, given in
-	 * the chain-complex coordinates.
-	 */
-        HomMarkedAbelianGroup(const MarkedAbelianGroup& dom, 
+        /**
+         * This is the sole HomMarkedAbelianGroup constructor, other than the copy
+         * constructor.
+         *
+         * @param dom domain group
+         * @param ran range group
+         * @param mat the matrix that describes the homomorphism from dom to ran, given in
+         * the chain-complex coordinates.
+         */
+        HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
                                const MarkedAbelianGroup& ran,
                               const NMatrixInt &mat);
 //         * Creates a clone of the given group.
 //         *
 //         * @param cloneMe the group to clone.
-	/**
-	 * Copy constructor.
-	 * @param g object to copy
-	 */
+        /**
+         * Copy constructor.
+         * @param g object to copy
+         */
         HomMarkedAbelianGroup(const HomMarkedAbelianGroup& g);
 //         * Destroys the group.
-	/**
-	 * Destructor.
-	 */
+        /**
+         * Destructor.
+         */
         virtual ~HomMarkedAbelianGroup();
 
-	/**
-	 * Is it epic? query.
-	 *
-	 * @return true if homomorphism is epic
-	 */
+        /**
+         * Is it epic? query.
+         *
+         * @return true if homomorphism is epic
+         */
         bool isEpic();
-	/**
-	 * Is it monic? query
-	 *
-	 * @return true if homomorphism is monic
-	 */
+        /**
+         * Is it monic? query
+         *
+         * @return true if homomorphism is monic
+         */
         bool isMonic();
- 	/**
-	 * Is it an isomorphism? query
-	 *
-	 * @return true if homomorphism is an isomorphism
-	 */
+        /**
+         * Is it an isomorphism? query
+         *
+         * @return true if homomorphism is an isomorphism
+         */
         bool isIso();
-	/**
-	 * Is it the zero map? query.
-	 *
-	 * @return true if homomorphism is the zero map
-	 */
+        /**
+         * Is it the zero map? query.
+         *
+         * @return true if homomorphism is the zero map
+         */
         bool isZero();
 
-	/**
-	 * Computes the kernel.
-	 *
-	 * @return the kernel of the homomorphism, as a marked abelian group
-	 */
+        /**
+         * Computes the kernel.
+         *
+         * @return the kernel of the homomorphism, as a marked abelian group
+         */
         MarkedAbelianGroup getKernel();
-	/**
-	 * Computes the cokernel.
-	 *
-	 * @return cokernel of the homomorphism, as a marked abelian group
-	 */
+        /**
+         * Computes the cokernel.
+         *
+         * @return cokernel of the homomorphism, as a marked abelian group
+         */
         MarkedAbelianGroup getCoKernel();
- 	/**
-	 * Computes the image.
-	 *
-	 * @return image of the homomorphism, as a marked abelian group
-	 */
+        /**
+         * Computes the image.
+         *
+         * @return image of the homomorphism, as a marked abelian group
+         */
        MarkedAbelianGroup getImage();
 
         /**
@@ -648,32 +648,32 @@ class HomMarkedAbelianGroup {
          */
         virtual void writeTextShort(std::ostream& out);
 
-	/**
-	 * Writes a text-readable version of the reduced matrix, this is
-	 * a description of the homomorphism in some specific coordinates
-	 * at present only meant to be internal to HomMarkedAbelianGroup.
-	 *
-	 * @param out is the output stream
-	 */
+        /**
+         * Writes a text-readable version of the reduced matrix, this is
+         * a description of the homomorphism in some specific coordinates
+         * at present only meant to be internal to HomMarkedAbelianGroup.
+         *
+         * @param out is the output stream
+         */
         void writeRedMatrix(std::ostream& out);
 
-	/**
-	 * Returns the defining matrix for the homomorphism.
-	 *
-	 * @return the matrix which was used to define the homomorphism.
-	 */
+        /**
+         * Returns the defining matrix for the homomorphism.
+         *
+         * @return the matrix which was used to define the homomorphism.
+         */
         NMatrixInt getDefiningMatrix();
-	/**
-	 * Gets the internal reduced matrix representing the
-	 * homomorphism.
-	 *
-	 * @return a copy of the internal representation of the homomorphism.
-	 */
+        /**
+         * Gets the internal reduced matrix representing the
+         * homomorphism.
+         *
+         * @return a copy of the internal representation of the homomorphism.
+         */
         NMatrixInt getRedMatrix();
 };
 
 
-inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() 
+inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup()
  {
  if (reducedMatrixComputed) { delete reducedMatrix; }
  if (kernelComputed) { delete kernel; }

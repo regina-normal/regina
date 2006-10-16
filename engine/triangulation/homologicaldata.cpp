@@ -36,7 +36,7 @@
 namespace regina {
 
 
-void homologicalData::writeTextShort(std::ostream& out) const 
+void homologicalData::writeTextShort(std::ostream& out) const
 {
 if (mHomology0Computed) { out<<"H_0(M) = "; mHomology0->writeTextShort(out); out<<" "; }
 if (mHomology1Computed) { out<<"H_1(M) = "; mHomology1->writeTextShort(out); out<<" "; }
@@ -52,7 +52,7 @@ if (bmMap1Computed) { out<<"H_1(BM) --> H_1(M) = "; bmMap1->writeTextShort(out);
 if (bmMap2Computed) { out<<"H_2(BM) --> H_2(M) = "; bmMap2->writeTextShort(out); out<<" ";  }
 
 if (dmTomMap1Computed) { out<<"PD map = "; dmTomMap1->writeTextShort(out); out<<" "; }
-if (torsionFormComputed) { out<<"Torsion subgroup rank vector: "<<torsionRankString<<" "; 
+if (torsionFormComputed) { out<<"Torsion subgroup rank vector: "<<torsionRankString<<" ";
                            out<<"Torsion sigma vector: "<<torsionSigmaString<<" ";
                            out<<"Torsion Legendre symbol vector: "<<torsionLegendreString<<" ";
                            out<<"Embedability comment: "<<embedabilityString<<" "; }
@@ -68,10 +68,10 @@ void homologicalData::computeccIndexing()
         unsigned long j=0;
         tri->calculateSkeleton();
 
-        for (NTriangulation::VertexIterator vit = tri->vertices.begin(); vit != tri->vertices.end(); vit++) 
+        for (NTriangulation::VertexIterator vit = tri->vertices.begin(); vit != tri->vertices.end(); vit++)
                 {if (!((*vit)->isIdeal())) sNIV.push_back(i); i++;} // sNIV
 
-        for (NTriangulation::EdgeIterator eit = tri->edges.begin(); eit != tri->edges.end(); eit++) {for (i=0;i<2;i++) 
+        for (NTriangulation::EdgeIterator eit = tri->edges.begin(); eit != tri->edges.end(); eit++) {for (i=0;i<2;i++)
           {if ((*eit)->getVertex(i)->isIdeal()) sIEOE.push_back(2*j+i);} j++; }        j=0; // sIEOE
 
         for (NTriangulation::FaceIterator fit = tri->faces.begin(); fit != tri->faces.end(); fit++) {for (i=0;i<3;i++)
@@ -82,12 +82,12 @@ void homologicalData::computeccIndexing()
 
         for (NTriangulation::VertexIterator vit = tri->vertices.begin(); vit != tri->vertices.end(); vit++) // dNINBV
                 {if ((!((*vit)->isIdeal())) && (!((*vit)->isBoundary()))) dNINBV.push_back(j); j++; } j=0;
-        for (NTriangulation::EdgeIterator eit = tri->edges.begin(); eit != tri->edges.end(); eit++) {if (!((*eit)->isBoundary()))        
+        for (NTriangulation::EdgeIterator eit = tri->edges.begin(); eit != tri->edges.end(); eit++) {if (!((*eit)->isBoundary()))
                 dNBE.push_back(j); j++;        } j=0; // dNBE
         for (NTriangulation::FaceIterator fit = tri->faces.begin(); fit != tri->faces.end(); fit++)
                 {if (!((*fit)->isBoundary()))        dNBF.push_back(j); j++;        } i=0; // dNBF
 
-        for (NTriangulation::VertexIterator vit = tri->vertices.begin(); vit != tri->vertices.end(); vit++) // sBNIV 
+        for (NTriangulation::VertexIterator vit = tri->vertices.begin(); vit != tri->vertices.end(); vit++) // sBNIV
                 {if ( (!((*vit)->isIdeal())) && ((*vit)->isBoundary())) sBNIV.push_back(i); i++;} i=0;
         for (NTriangulation::EdgeIterator eit = tri->edges.begin(); eit != tri->edges.end(); eit++) // sBNIE
                 {if ((*eit)->isBoundary()) sBNIE.push_back(i); i++; } i=0;
@@ -162,17 +162,17 @@ if (!chainComplexesComputed)
           // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us the vertex of this face
         p1=tri->faces[sIEEOF[i]/3]->getEdgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1)
-                {A1->entry(sNIV.size() + sIEOE.index(2*( 
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1), tri->edges.size()+i)-=1;}  
+                {A1->entry(sNIV.size() + sIEOE.index(2*(
+                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1), tri->edges.size()+i)-=1;}
            else
-                {A1->entry(sNIV.size() + sIEOE.index(2*( 
+                {A1->entry(sNIV.size() + sIEOE.index(2*(
                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->edges.size()+i)-=1;}
         p1=tri->faces[sIEEOF[i]/3]->getEdgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1)
-                {A1->entry(sNIV.size() + sIEOE.index(2*( 
-                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->edges.size()+i)+=1;}  
+                {A1->entry(sNIV.size() + sIEOE.index(2*(
+                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , tri->edges.size()+i)+=1;}
            else
-                {A1->entry(sNIV.size() + sIEOE.index(2*( 
+                {A1->entry(sNIV.size() + sIEOE.index(2*(
                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1) , tri->edges.size()+i)+=1;}
         }
         // that handles matrix A1.
@@ -187,7 +187,7 @@ if (!chainComplexesComputed)
                 if ( (j/3) == 0)
                  {
                  p1=tri->faces[i]->getEdgeMapping(j % 3);
-                 A2->entry( tri->edges.index(tri->faces[i]->getEdge(j % 3)) ,i) += 
+                 A2->entry( tri->edges.index(tri->faces[i]->getEdge(j % 3)) ,i) +=
                         ( (p1.sign()==1) ? +1 : -1 );
                  }
                 else
@@ -203,15 +203,15 @@ if (!chainComplexesComputed)
         // sIEFOT[i] /4 is the tetrahedron number
         // sIEFOT[i] % 4 is the vertex number for this tetrahedron
         // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4) are the respective faces
-         // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4) gives the perm 
+         // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4) gives the perm
         // faces.index( tetrahedra[sIEFOT[i]/4].getFace(sIEFOT[i] + 1,2,3 % 4) is therefore the
         //  face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)^{-1}
         //  applied to sIEFOT[i] % 4 is the vertex of this face.
         for (j=1;j<4;j++)
                 {
                 p1=tri->tetrahedra[ sIEFOT[i]/4 ]->getFaceMapping((sIEFOT[i] + j) % 4);
-                A2->entry( tri->edges.size() + sIEEOF.index(3*tri->faces.index(tri->tetrahedra[ 
-                sIEFOT[i]/4 ]->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) , 
+                A2->entry( tri->edges.size() + sIEEOF.index(3*tri->faces.index(tri->tetrahedra[
+                sIEFOT[i]/4 ]->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
                 tri->faces.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
                 }
         }
@@ -224,33 +224,33 @@ if (!chainComplexesComputed)
                 {
                 // first go through standard faces 0 through 3
                 p1=tri->tetrahedra[i]->getFaceMapping(j);
-                A3->entry( tri->faces.index( tri->tetrahedra[i]->getFace(j) ), i) += 
-                        ( (p1.sign()==1) ? 1 : -1 ); 
+                A3->entry( tri->faces.index( tri->tetrahedra[i]->getFace(j) ), i) +=
+                        ( (p1.sign()==1) ? 1 : -1 );
                 // then ideal faces 0 through 3, if they exist
                 if (tri->tetrahedra[i]->getVertex(j)->isIdeal()==1)
                         { // this part is in error.
                         A3->entry( tri->faces.size() + sIEFOT.index((4*i) + j), i) += 1;
                         }
-                }        
+                }
         }
         // end A3
 
 
 
-        // start B1: for each dual edge == non-boundary face, 
+        // start B1: for each dual edge == non-boundary face,
         //              find the tetrahedra that bound it
         for (i=0;i<dNBF.size();i++)
         {
-        B1->entry( tri->tetrahedra.index( 
+        B1->entry( tri->tetrahedra.index(
                 tri->faces[dNBF[i]]->getEmbedding(1).getTetrahedron() ),i)+=1;
-        B1->entry( tri->tetrahedra.index( 
+        B1->entry( tri->tetrahedra.index(
                 tri->faces[dNBF[i]]->getEmbedding(0).getTetrahedron() ),i)-=1;
         }
         // end B1
 
 
         std::deque<NEdgeEmbedding> edgeque;
-        // start B2: for each dual face == non-boundary edge, 
+        // start B2: for each dual face == non-boundary edge,
         //             find dual edges it bounds == link of tetrahedra that contain it
         for (i=0;i<dNBE.size();i++)
         {
@@ -265,12 +265,12 @@ if (!chainComplexesComputed)
                 // getEmbedding(0).getFace() is this current face p1[2]...
 
                 B2->entry( dNBF.index( tri->faces.index(
-                 edgeque[j].getTetrahedron()->getFace(p1[2]) ) ) ,i)+= 
-                ( ( edgeque[j].getTetrahedron() == 
-                        edgeque[j].getTetrahedron()->getFace( 
+                 edgeque[j].getTetrahedron()->getFace(p1[2]) ) ) ,i)+=
+                ( ( edgeque[j].getTetrahedron() ==
+                        edgeque[j].getTetrahedron()->getFace(
                         p1[2] )->getEmbedding( 0 ).getTetrahedron() &&
-                edgeque[j].getTetrahedron()->getFace( 
-                        p1[2] )->getEmbedding( 0 ).getFace() == p1[2] ) 
+                edgeque[j].getTetrahedron()->getFace(
+                        p1[2] )->getEmbedding( 0 ).getFace() == p1[2] )
                 ? 1 : -1);
                 }
         }
@@ -290,7 +290,7 @@ if (!chainComplexesComputed)
 
         NEdgeEmbedding tempe;
 
-        // start B3: for each dual tetrahedron==nonboundary vertex, 
+        // start B3: for each dual tetrahedron==nonboundary vertex,
         //           find the corresp edges==non-boundary boundary faces
 
         for (i=0;i<dNINBV.size();i++)
@@ -315,11 +315,11 @@ if (!chainComplexesComputed)
         // will be chosen so that vtetlist[0] is positively oriented,
         // ie: tetor[0]==1 always.
 
-        tetor[0]=1; 
+        tetor[0]=1;
         unorientedlist.erase( 4*tri->tetrahedra.index(vtetlist[0].getTetrahedron()) +
                         vtetlist[0].getVertex() );
 
-        while (!unorientedlist.empty())        for (j=0;j<vtetlist.size();j++) 
+        while (!unorientedlist.empty())        for (j=0;j<vtetlist.size();j++)
           // go through all oriented tetrahedra and orient the adjacent tetrahedra
          {
           ind1=orig_uol[j];
@@ -332,7 +332,7 @@ if (!chainComplexesComputed)
                 if (k== (ind1 % 4)) k++;
                 p1=vtetlist[j].getTetrahedron() -> getAdjacentTetrahedronGluing(k);
                 ind2=4*tri->tetrahedra.index( vtetlist[j].getTetrahedron() ->
-                 getAdjacentTetrahedron(k) ) + p1[ind1 % 4]; 
+                 getAdjacentTetrahedron(k) ) + p1[ind1 % 4];
 
                 if (unorientedlist.index( ind2 )  != (-1) )
                         {// we have an adjacent unoriented tetrahedron.
@@ -351,9 +351,9 @@ if (!chainComplexesComputed)
         // data will be stored as 4*(edge index) + 2*(endpt index) + sign stored as 0 or 1.
         edge_adjacency.resize(0);
 
-        for (j=0;j<vtetlist.size();j++) for (k=0;k<6;k++) 
+        for (j=0;j<vtetlist.size();j++) for (k=0;k<6;k++)
          {
-         ind2=vtetlist[j].getTetrahedron()->getEdgeMapping(k).preImageOf( 
+         ind2=vtetlist[j].getTetrahedron()->getEdgeMapping(k).preImageOf(
                 vtetlist[j].getVertex() );
           if ( ind2<2 )
                 { // edge k of tetrahedron j, moreover we know that
@@ -361,13 +361,13 @@ if (!chainComplexesComputed)
                 tempe=NEdgeEmbedding( vtetlist[j].getTetrahedron(), k );
                 // the corresp orientation coming from our local orientation
                 // plus orienting the edge out of vertex k % 2...
-                
+
                 p1=tempe.getVertices();
                 if ( ind2 == 1 ) p1=p1*(NPerm(0,1));
                 // now p1 sends 0 to point corresp to v, 1 to point corresp to end of edge.
                 // if p1.sign() == tetor[j] then sign = +1 otherwise -1.
 
-                ind1=4*tri->edges.index( vtetlist[j].getTetrahedron()->getEdge(k) ) + 2*ind2 + 
+                ind1=4*tri->edges.index( vtetlist[j].getTetrahedron()->getEdge(k) ) + 2*ind2 +
                 (p1.sign() == tetor[j] ? 1 : 0);
 
                 if (edge_adjacency.index(ind1) == (-1) ) edge_adjacency.push_back(ind1);
@@ -376,14 +376,14 @@ if (!chainComplexesComputed)
 
         for (j=0;j<edge_adjacency.size();j++)
                 {
-                B3->entry( dNBE.index(edge_adjacency[j]/4) , i) += 
+                B3->entry( dNBE.index(edge_adjacency[j]/4) , i) +=
                 ( ( (edge_adjacency[j] % 2)==0 ) ? 1 : -1 );
                 }
         }
         // end B3
 
         // proceed to fill out H1map
-        // the algorithm will proceed in 2 steps. 
+        // the algorithm will proceed in 2 steps.
 
         // step 1) fix once and for all a map from dual 0-cells to regular 0-cells,
         //            the only condition this map needs to satisfy is that the regular 0-cell
@@ -398,7 +398,7 @@ if (!chainComplexesComputed)
         {
         // cycle through the vertices, take the first non-ideal one if it exists.
         j=0;
-        while ( (j<4) && (tri->tetrahedra[i] -> getVertex(j) -> isIdeal() ) ) j++;        
+        while ( (j<4) && (tri->tetrahedra[i] -> getVertex(j) -> isIdeal() ) ) j++;
         if (j<4) zeroCellMap[i]=4*j+j; else zeroCellMap[i]=1;
         }
 
@@ -407,7 +407,7 @@ if (!chainComplexesComputed)
         //           map of 1-cells simply choose any path from the first 0-cell to the 2nd
         //           0-cell with the condition that the path stays inside the two ideal simplicies
         //           and only crosses the face corresponding to the dual 1-cell once. (and no
-        //           other faces). 
+        //           other faces).
 
         for (j=0; j<H1map->columns(); j++) // H1map.columns() is supposed to be faces.size()
                                   // while H1map.rows() is edges.size()+sIEEOF.size()
@@ -415,7 +415,7 @@ if (!chainComplexesComputed)
         unsigned tet0FaceIndex = tri->faces[j]->getEmbedding(0).getFace(); // face numbers of the common
         unsigned tet1FaceIndex = tri->faces[j]->getEmbedding(1).getFace(); // face in the two tetrahedra.
 
-        unsigned vert0Num = zeroCellMap[tri->tetrahedra.index( tri->faces[j] -> 
+        unsigned vert0Num = zeroCellMap[tri->tetrahedra.index( tri->faces[j] ->
                  getEmbedding(0).getTetrahedron() )]/4; // vertex number of start vertex in tet0
         unsigned vert1Num = zeroCellMap[tri->tetrahedra.index( tri->faces[j] ->
                  getEmbedding(1).getTetrahedron() )]/4;  // vertex number of end vertex in tet1.
@@ -441,13 +441,13 @@ if (!chainComplexesComputed)
         if (vert0Num == tet0FaceIndex)  // stage 0
                 {
                 stage0nec = true;
-                
+
                 if (vert0Num == vert0id)
                  { stage0choice = (tet0FaceIndex + 1) % 4; } // not ideal
                 else
                  { stage0choice = vert0id; } // ideal
 
-                stage0edgeNum = tri->edges.index(tri->faces[j] -> getEmbedding(0).getTetrahedron() -> 
+                stage0edgeNum = tri->edges.index(tri->faces[j] -> getEmbedding(0).getTetrahedron() ->
                         getEdge( edgeNumber[vert0Num][stage0choice] ));
                 stage0posOr = ( tri->faces[j] -> getEmbedding(0).getTetrahedron()->getEdgeMapping(
                  edgeNumber[vert0Num][stage0choice])[1] == stage0choice ) ? true : false ;
@@ -459,18 +459,18 @@ if (!chainComplexesComputed)
         bool stage4posOr;
         unsigned stage4choice;
 
-        if (vert1Num == tet1FaceIndex) 
+        if (vert1Num == tet1FaceIndex)
                 {
                 stage4nec = true;
-                
+
                 if (vert1Num == vert1id) // the non-ideal case.
-                 { 
-                stage4choice = (tet1FaceIndex + 1) % 4; 
+                 {
+                stage4choice = (tet1FaceIndex + 1) % 4;
                  } // duh, this is all wrong.
                 else
                  { stage4choice = vert1id; }
 
-                stage4edgeNum = tri->edges.index(tri->faces[j] -> getEmbedding(1).getTetrahedron() -> 
+                stage4edgeNum = tri->edges.index(tri->faces[j] -> getEmbedding(1).getTetrahedron() ->
                         getEdge( edgeNumber[vert1Num][stage4choice] ));
                 stage4posOr = ( tri->faces[j] -> getEmbedding(1).getTetrahedron()->getEdgeMapping(
                  edgeNumber[vert1Num][stage4choice])[1] == vert1Num ) ?        true : false ;
@@ -484,10 +484,10 @@ if (!chainComplexesComputed)
         unsigned stage1FaceToUse;
 
         if (stage0nec && tri->faces[j] -> getEmbedding(0).getTetrahedron() ->
-                 getVertex(stage0choice)->isIdeal() )  
+                 getVertex(stage0choice)->isIdeal() )
           {
           stage1v = stage0choice; stage1vi = vert0Num; stage1nec=true;
-          } else 
+          } else
         if ((!stage0nec) && (vert0Num != vert0id) && (vert0id == tet0FaceIndex))
           {
           stage1v = vert0Num; stage1vi = vert0id; stage1nec = true;
@@ -497,22 +497,22 @@ if (!chainComplexesComputed)
           stage1FaceToUse = tri->faces[j] -> getEmbedding(0).getTetrahedron()->getEdgeMapping(
                 edgeNumber[stage1v][tet0FaceIndex] )[2];
           P3 = tri->faces[j] -> getEmbedding(0).getTetrahedron()->getFaceMapping(stage1FaceToUse);
-          stage1edgeNum = tri->edges.size() + sIEEOF.index( 
-                3*(tri->faces.index(tri->faces[j] -> getEmbedding(0).getTetrahedron() -> 
+          stage1edgeNum = tri->edges.size() + sIEEOF.index(
+                3*(tri->faces.index(tri->faces[j] -> getEmbedding(0).getTetrahedron() ->
                 getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
           stage1posOr = ( ( P3[(P3.preImageOf(stage1v)+1) % 3] != stage1vi ) ? true : false );
          }
-        bool stage3nec = false;        
+        bool stage3nec = false;
         unsigned stage3v, stage3vi;
         unsigned long stage3edgeNum;
         bool stage3posOr;
         unsigned stage3FaceToUse;
 
         if (stage4nec && tri->faces[j] -> getEmbedding(1).getTetrahedron() ->
-                 getVertex(stage4choice)->isIdeal() )  
-          { // ideal case 
+                 getVertex(stage4choice)->isIdeal() )
+          { // ideal case
           stage3v = stage4choice; stage3vi = vert1Num; stage3nec=true;
-          } else 
+          } else
         if ((!stage4nec) && (vert1Num != vert1id) && (vert1id == tet1FaceIndex))
           { // non-ideal case
           stage3v = vert1Num; stage3vi = vert1id; stage3nec = true;
@@ -522,21 +522,21 @@ if (!chainComplexesComputed)
           stage3FaceToUse = tri->faces[j] -> getEmbedding(1).getTetrahedron()->getEdgeMapping(
                 edgeNumber[stage3v][tet1FaceIndex] )[2];
           P3 = tri->faces[j] -> getEmbedding(1).getTetrahedron()->getFaceMapping(stage3FaceToUse);
-          stage3edgeNum = tri->edges.size() + sIEEOF.index( 
-                3*(tri->faces.index(tri->faces[j] -> getEmbedding(1).getTetrahedron() -> 
+          stage3edgeNum = tri->edges.size() + sIEEOF.index(
+                3*(tri->faces.index(tri->faces[j] -> getEmbedding(1).getTetrahedron() ->
                 getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
           stage3posOr = ( ( P3[(P3.preImageOf(stage3v)+1) % 3] == stage3vi ) ? true : false );
          }
 
         unsigned stage2startdata, stage2enddata;
         // 3*vertex number(0,1,2) + another vertex number (0,1,2)
-        // these are the same indicates the vertex is non-ideal 
-        // these are different indicates the vertex is ideal and dir of relevant point.. 
-        
+        // these are the same indicates the vertex is non-ideal
+        // these are different indicates the vertex is ideal and dir of relevant point..
+
         if (stage1nec) // set up stage2startdata
          {
-         stage2startdata = 3*P1.preImageOf( stage1v ) + 
-                P1.preImageOf((tri->faces[j] -> getEmbedding(0).getTetrahedron() -> 
+         stage2startdata = 3*P1.preImageOf( stage1v ) +
+                P1.preImageOf((tri->faces[j] -> getEmbedding(0).getTetrahedron() ->
                 getEdgeMapping( edgeNumber[stage1v][stage1vi] ))[3] );
          }
         else
@@ -546,7 +546,7 @@ if (!chainComplexesComputed)
           // b) neither stage 0 or 1 was called and this may or may not be an ideal vertex
           if (stage0nec)
            { // this is the non-ideal situation
-           stage2startdata = 3*P1.preImageOf( stage0choice ) + 
+           stage2startdata = 3*P1.preImageOf( stage0choice ) +
                 ((P1.preImageOf( stage0choice )+1) % 3);
            }
           else
@@ -560,15 +560,15 @@ if (!chainComplexesComputed)
 
         if (stage3nec) // set up stage2enddata
          {
-         stage2enddata = 3*P2.preImageOf( stage3v ) + 
-                P2.preImageOf((tri->faces[j] -> getEmbedding(1).getTetrahedron() -> 
+         stage2enddata = 3*P2.preImageOf( stage3v ) +
+                P2.preImageOf((tri->faces[j] -> getEmbedding(1).getTetrahedron() ->
                 getEdgeMapping( edgeNumber[stage3v][stage3vi] ))[3] );
          }
         else
          {
           if (stage4nec)
            { // this is the non-ideal situation
-           stage2enddata = 3*P2.preImageOf( stage4choice ) + 
+           stage2enddata = 3*P2.preImageOf( stage4choice ) +
                 ((P2.preImageOf( stage4choice ) + 1) % 3);
            }
           else
@@ -599,7 +599,7 @@ if (!chainComplexesComputed)
                 }
           if ( currV/3  != prevV/3 ) // regular edge
                 {
-                H1map->entry( tri->edges.index(tri->faces[j]->getEdge( ((currV/3) + 1) % 3 )), j ) += 
+                H1map->entry( tri->edges.index(tri->faces[j]->getEdge( ((currV/3) + 1) % 3 )), j ) +=
                 ( (tri->faces[j] -> getEdgeMapping(((currV/3) + 1) % 3)[1] == currV/3) ? +1 : -1);
                 }
           // move prevV to be equal to currV.
@@ -629,17 +629,17 @@ if (!chainComplexesComputed)
           // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us the vertex of this face
         p1=tri->faces[sIEEOF[i]/3]->getEdgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1)
-                {Bd1->entry(sBNIV.size() + sIEOE.index(2*( 
-                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1), sBNIE.size()+i)-=1;}  
+                {Bd1->entry(sBNIV.size() + sIEOE.index(2*(
+                tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1), sBNIE.size()+i)-=1;}
            else
-                {Bd1->entry(sBNIV.size() + sIEOE.index(2*( 
+                {Bd1->entry(sBNIV.size() + sIEOE.index(2*(
                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , sBNIE.size()+i)-=1;}
         p1=tri->faces[sIEEOF[i]/3]->getEdgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1)
-                {Bd1->entry(sBNIV.size() + sIEOE.index(2*( 
-                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , sBNIE.size()+i)+=1;}  
+                {Bd1->entry(sBNIV.size() + sIEOE.index(2*(
+                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )) , sBNIE.size()+i)+=1;}
            else
-                {Bd1->entry(sBNIV.size() + sIEOE.index(2*( 
+                {Bd1->entry(sBNIV.size() + sIEOE.index(2*(
                 tri->edges.index((tri->faces[sIEEOF[i]/3])->getEdge(p1[2])) )+1) , sBNIE.size()+i)+=1;}
         }
         // that handles matrix Bd1.
@@ -654,7 +654,7 @@ if (!chainComplexesComputed)
                 if ( (j/3) == 0)
                  {
                  p1=tri->faces[sBNIF[i]]->getEdgeMapping(j % 3);
-                 Bd2->entry( sBNIE.index( tri->edges.index(tri->faces[sBNIF[i]]->getEdge(j % 3)) ) ,i) += 
+                 Bd2->entry( sBNIE.index( tri->edges.index(tri->faces[sBNIF[i]]->getEdge(j % 3)) ) ,i) +=
                         ( (p1.sign()==1) ? +1 : -1 );
                  }
                 else
@@ -671,29 +671,29 @@ if (!chainComplexesComputed)
         // sIEFOT[i] /4 is the tetrahedron number
         // sIEFOT[i] % 4 is the vertex number for this tetrahedron
         // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4) are the respective faces
-         // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4) gives the perm 
+         // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4) gives the perm
         // faces.index( tetrahedra[sIEFOT[i]/4].getFace(sIEFOT[i] + 1,2,3 % 4) is therefore the
         //  face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)^{-1}
         //  applied to sIEFOT[i] % 4 is the vertex of this face.
         for (j=1;j<4;j++)
                 {
                 p1=tri->tetrahedra[ sIEFOT[i]/4 ]->getFaceMapping((sIEFOT[i] + j) % 4);
-                Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->faces.index(tri->tetrahedra[ 
-                sIEFOT[i]/4 ]->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) , 
+                Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->faces.index(tri->tetrahedra[
+                sIEFOT[i]/4 ]->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
                 sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
                 }
         }
         // end Bd2
 
         // fill out b0Incl
-        // boundary 0-cells: 
+        // boundary 0-cells:
         for (i=0;i<B0Incl->columns();i++)
-        B0Incl->entry( ( ( i < sBNIV.size()) ? sNIV.index(sBNIV[i]) : 
+        B0Incl->entry( ( ( i < sBNIV.size()) ? sNIV.index(sBNIV[i]) :
                 sNIV.size() + i - sBNIV.size() ) ,i)+=1;
         // fill out b1Incl
         for (i=0;i<B1Incl->columns();i++) // each boundary edge corresponds to a triangulation
                                 // edge
-        B1Incl->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] : 
+        B1Incl->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] :
                 tri->edges.size() + i - sBNIE.size() ) ,i)+=1;
         // fill out b2Incl
         for (i=0;i<B2Incl->columns();i++)
@@ -743,27 +743,27 @@ MarkedAbelianGroup homologicalData::getBMH(unsigned q)
 {
 MarkedAbelianGroup* retval(0);
 
-if (q==0) { if (!bHomology0Computed) 
+if (q==0) { if (!bHomology0Computed)
         {
         computeChainComplexes();
         bHomology0Computed = true;
         bHomology0 = new MarkedAbelianGroup(*Bd0,*Bd1);
         }
 retval = bHomology0; } else
-if (q==1) { if (!bHomology1Computed) 
+if (q==1) { if (!bHomology1Computed)
         {
         computeChainComplexes();
         bHomology1Computed = true;
         bHomology1 = new MarkedAbelianGroup(*Bd1,*Bd2);
         }
 retval = bHomology1; } else
-if (q==2) { if (!bHomology2Computed) 
+if (q==2) { if (!bHomology2Computed)
         {
         computeChainComplexes();
         bHomology2Computed = true;
         bHomology2 = new MarkedAbelianGroup(*Bd2,*Bd3);
         }
-retval = bHomology2; } 
+retval = bHomology2; }
 
 return (*retval);
 }
@@ -772,34 +772,34 @@ MarkedAbelianGroup homologicalData::getDMH(unsigned q)
 {
 MarkedAbelianGroup* retval(0);
 
-if (q==0) { if (!dmHomology0Computed) 
+if (q==0) { if (!dmHomology0Computed)
         {
         computeChainComplexes();
         dmHomology0Computed = true;
         dmHomology0 = new MarkedAbelianGroup(*B0,*B1);
         }
 retval = dmHomology0; } else
-if (q==1) { if (!dmHomology1Computed) 
+if (q==1) { if (!dmHomology1Computed)
         {
         computeChainComplexes();
         dmHomology1Computed = true;
         dmHomology1 = new MarkedAbelianGroup(*B1,*B2);
         }
 retval = dmHomology1; } else
-if (q==2) { if (!dmHomology2Computed) 
+if (q==2) { if (!dmHomology2Computed)
         {
         computeChainComplexes();
         dmHomology2Computed = true;
         dmHomology2 = new MarkedAbelianGroup(*B2,*B3);
         }
 retval = dmHomology2; } else
-if (q==3) { if (!dmHomology3Computed) 
+if (q==3) { if (!dmHomology3Computed)
         {
         computeChainComplexes();
         dmHomology3Computed = true;
         dmHomology3 = new MarkedAbelianGroup(*B3,*B4);
         }
-retval = dmHomology3; } 
+retval = dmHomology3; }
 
 return (*retval);
 }
@@ -873,7 +873,7 @@ if (!dmHomology3Computed)
         dmHomology3 = new MarkedAbelianGroup(*B3,*B4);
         }
 }
-        
+
 HomMarkedAbelianGroup homologicalData::getH1cellap()
 {
 if (!dmTomMap1Computed)
@@ -881,7 +881,7 @@ if (!dmTomMap1Computed)
         computeHomology();
         computeDHomology();
         dmTomMap1Computed = true;
-        dmTomMap1 = new HomMarkedAbelianGroup( *dmHomology1, *mHomology1, *H1map ); 
+        dmTomMap1 = new HomMarkedAbelianGroup( *dmHomology1, *mHomology1, *H1map );
         }
 return (*dmTomMap1);
 }
@@ -895,7 +895,7 @@ if (q==0) { if (!bmMap0Computed)
         computeHomology();
         computeBHomology();
         bmMap0Computed = true;
-        bmMap0 = new HomMarkedAbelianGroup( *bHomology0, *mHomology0, *B0Incl ); 
+        bmMap0 = new HomMarkedAbelianGroup( *bHomology0, *mHomology0, *B0Incl );
         }
 retval = bmMap0; } else
 if (q==1) { if (!bmMap1Computed)
@@ -903,7 +903,7 @@ if (q==1) { if (!bmMap1Computed)
         computeHomology();
         computeBHomology();
         bmMap1Computed = true;
-        bmMap1 = new HomMarkedAbelianGroup( *bHomology1, *mHomology1, *B1Incl ); 
+        bmMap1 = new HomMarkedAbelianGroup( *bHomology1, *mHomology1, *B1Incl );
         }
 retval = bmMap1; } else
 if (q==2) { if (!bmMap2Computed)
@@ -911,7 +911,7 @@ if (q==2) { if (!bmMap2Computed)
         computeHomology();
         computeBHomology();
         bmMap2Computed = true;
-        bmMap2 = new HomMarkedAbelianGroup( *bHomology2, *mHomology2, *B2Incl ); 
+        bmMap2 = new HomMarkedAbelianGroup( *bHomology2, *mHomology2, *B2Incl );
         }
 retval = bmMap2; }
 
@@ -1005,9 +1005,9 @@ std::pair< NLargeInteger, std::vector< std::pair<unsigned long, unsigned long> >
 for (unsigned long i=0; i<pPrList.size(); i++)
  { // for each entry in pPrList, find its appropriate position in indexing.
    // so this means comparing pPrList[i].first with all elts indexing[j].first and stopping
-   // at first >= comparison. 
+   // at first >= comparison.
 
-   it1 = indexing.begin(); // now run up p until we either get to the end, or pPrList[i].first >= it1->first 
+   it1 = indexing.begin(); // now run up p until we either get to the end, or pPrList[i].first >= it1->first
    il1 = indexing.end(); // the idea is that this while loop will terminate with il1 pointing to the right
                         // insertion location.
    while ( it1 != indexing.end() )
@@ -1017,20 +1017,20 @@ for (unsigned long i=0; i<pPrList.size(); i++)
         }
    // now do the same for the power... but we have to make a decision on whether to grow the
    // indexing or not... we grow the indexing iff il1 == indexing.end() or
-   //         (pPrList[i].first > il1->first) 
+   //         (pPrList[i].first > il1->first)
    if (il1 == indexing.end())
         {
         dummyv.first = pPrList[i].first;
         dummyv.second.resize(1);
         dummyv.second[0] = std::make_pair( pPrList[i].second, i );
-        indexing.insert( il1, dummyv );        
+        indexing.insert( il1, dummyv );
         } else
    if (pPrList[i].first < il1->first)
         {
         dummyv.first = pPrList[i].first;
         dummyv.second.resize(1);
         dummyv.second[0] = std::make_pair( pPrList[i].second, i );
-        indexing.insert( il1, dummyv );        
+        indexing.insert( il1, dummyv );
         }
    else
         {// NOW we know this prime is already in the list, so we do the same search for the power...
@@ -1072,7 +1072,7 @@ RBMOD_smithNormalForm(ON, R, Ri, C, Ci);
 //                                             ---- stepa -----
 //                  ---------------- stepb ---
 //               ----stepc----
-// first I guess we need to determine rank of ON? 
+// first I guess we need to determine rank of ON?
 NMatrixInt areboundariesM( standardBasis );
 
 for (unsigned long i=0; i<standardBasis.rows(); i++)
@@ -1082,7 +1082,7 @@ for (unsigned long i=0; i<standardBasis.rows(); i++)
 NMatrixInt stepa( areboundariesM.rows(), areboundariesM.columns() );
 for (unsigned long i=0; i<standardBasis.rows(); i++)
  for (unsigned long j=0; j<standardBasis.columns(); j++)
-  for (unsigned long k=0; k<C.columns(); k++) 
+  for (unsigned long k=0; k<C.columns(); k++)
         stepa.entry(i,j) += C.entry(i,k)*areboundariesM.entry(k,j);
 
 unsigned long rankON=0;
@@ -1131,9 +1131,9 @@ for (unsigned long i=0; i<pvList.size(); i++)
 
    // boundingMat is vectors in standard 2-complex so it has the same dimension
    //  as the standard 2-cells + ideal 2-cells, standard ones coming first.
-   // pvList is vectors in dual 1-cells 
-   torsionLinkingFormPresentationMat.entry(i,j) += 
-        NRational( 
+   // pvList is vectors in dual 1-cells
+   torsionLinkingFormPresentationMat.entry(i,j) +=
+        NRational(
          boundingMat.entry(dNBF[k],i)*pvList[j][k]*
          NLargeInteger(
           tri->faces[dNBF[k]]->getEmbedding(0).getTetrahedron()->orientation()*
@@ -1158,11 +1158,11 @@ for (unsigned long i=0; i<pvList.size(); i++)
         for (unsigned long j=0; j<indexing[i].second.size(); j++)
                 h1PrimePowerDecomp[i].second[j] = indexing[i].second[j].first;
 
-        linkingFormPD[i] = new NMatrixRing<NRational>(indexing[i].second.size(), 
+        linkingFormPD[i] = new NMatrixRing<NRational>(indexing[i].second.size(),
                                                       indexing[i].second.size() );
         for (unsigned long j=0; j<indexing[i].second.size(); j++)
                 for (unsigned long k=0; k<indexing[i].second.size(); k++)
-                 linkingFormPD[i]->entry(j,k) = 
+                 linkingFormPD[i]->entry(j,k) =
                   torsionLinkingFormPresentationMat.entry(
                         indexing[i].second[j].second,
                         indexing[i].second[k].second
@@ -1170,18 +1170,18 @@ for (unsigned long i=0; i<pvList.size(); i++)
         }
 
 // step 5: torsionFormComputed = true
-torsionFormComputed=true; 
+torsionFormComputed=true;
 
 // now we should implement the classification of these forms
 // due to Seifert, Wall, Burger, Kawauchi, Kojima, Deloup:
 // this will have 3 parts, first the rank vector will be a list
 // n1 Z_p1^k1 + ... + nj Z_pj^kj which will be in lexicographically
-// increasing order: first the p?'s then the k?'s. 
+// increasing order: first the p?'s then the k?'s.
 // the 2nd part will be the 2-torsion sigma-vector:
 // sigma_k for k=1,2,3,... these are fractions 0/8, ..., 7/8 or infinity.
 // the 3rd part will be the odd p-torsion Legendre symbol data
 // this will be in lexicographical increasing order, first
-// by the prime, then by k \chi_p^k k=1,2,3,... 
+// by the prime, then by k \chi_p^k k=1,2,3,...
 
 // CLASSIFICATION
 
@@ -1190,7 +1190,7 @@ torsionFormComputed=true;
 //           rankv[i].first is the prime, and rankv[i].second is the vector which lists the ranks
 //           ie: if rankv[i].first==3 then rankv[i].second=(0,1,0,2,0,1) means that
 //           there are no copies of Z_3, one copy of Z_9, no copies of Z_27 but two copies of
-//           Z_{3^4}, etc. 
+//           Z_{3^4}, etc.
 
 // std::vector< std::pair< NLargeInteger, std::vector<std::pair<unsigned long, unsigned long> > > > indexing;
 //                         prime        , list of (exponents, index)
@@ -1203,7 +1203,7 @@ for (unsigned long i=0; i<indexing.size(); i++)
  torRankV[i].first = indexing[i].first;
  torRankV[i].second.resize(indexing[i].second[indexing[i].second.size()-1].first, 0);
  for (unsigned long j=0; j<indexing[i].second.size(); j++)
-        { // indexing[i].second[j] is a pair (order, index) where the order k indicates 
+        { // indexing[i].second[j] is a pair (order, index) where the order k indicates
           // one copy of p^k where p==indexing[i].first.
           torRankV[i].second[indexing[i].second[j].first-1]++;
         }
@@ -1215,7 +1215,7 @@ for (unsigned long i=0; i<indexing.size(); i++)
 // step 2: KK 2-torsion invariant (need to implement)
 //           *what is a smart way to implement the sigma invariant?*
 //           I guess it should be of the form std::vector< int >
-//           since it is only holding the reps 0,1,2,3,4,5,6,7 and inf. 
+//           since it is only holding the reps 0,1,2,3,4,5,6,7 and inf.
 //           inf we can represent by -1 or something? or we could use
 //           and NLargeInteger instead.
 
@@ -1262,8 +1262,8 @@ if (h1PrimePowerDecomp.size() > 0) if (h1PrimePowerDecomp[0].first == NLargeInte
         // the idea will be to have a start vector (0,0,...,0) and then
         // increment it until at the end vector.  For this purpose it makes
         // more sense to use the
-        // std::vector< std::pair< NLargeInteger, std::vector<unsigned long> > > h1PrimePowerDecomp; 
-        // as it's easier to work with. 
+        // std::vector< std::pair< NLargeInteger, std::vector<unsigned long> > > h1PrimePowerDecomp;
+        // as it's easier to work with.
         // h1PrimePowerDecomp[0].first == 2
         // so we just need to cycle through h1PrimePowerDecomp[0].second which is an increasing list
         // of the powers of 2, ie: 2^i...
@@ -1273,7 +1273,7 @@ if (h1PrimePowerDecomp.size() > 0) if (h1PrimePowerDecomp[0].first == NLargeInte
 
         xlD=0.0; ylD=0.0;
 
-        // now start the sum through the group.         
+        // now start the sum through the group.
         notatend=true;
         while (notatend)
          {
@@ -1293,7 +1293,7 @@ if (h1PrimePowerDecomp.size() > 0) if (h1PrimePowerDecomp[0].first == NLargeInte
           // we ignore `inrange' parameter as the number is reduced mod 1, so either way it is
           // returning essentially the correct number.
           xlD = xlD + cos(tLD);
-          ylD = ylD + sin(tLD);         
+          ylD = ylD + sin(tLD);
           // increment the groupV
          incind=0;
          incrun=true; // tells while loop to increment at incind
@@ -1320,7 +1320,7 @@ if (h1PrimePowerDecomp.size() > 0) if (h1PrimePowerDecomp[0].first == NLargeInte
          if ( fabs(xlD) < 0.001*fabs(ylD) )
           {
           if (ylD > 0.0) twoTorSigmaV[i]=NLargeInteger(2);
-           else twoTorSigmaV[i]=NLargeInteger(6);        
+           else twoTorSigmaV[i]=NLargeInteger(6);
           } else
          if ( fabs(ylD) < 0.001*fabs(xlD) )
           {
@@ -1350,7 +1350,7 @@ if (h1PrimePowerDecomp.size() > 0) if (h1PrimePowerDecomp[0].first == NLargeInte
 //           to do this I need to add a determinant to NMatrixRing class
 //           this invariant will be expressed as a
 //           std::vector< std::pair< NLargeInteger, std::vector< int > > >
-//           storing the odd prime, list of Legendre symbols -1, 0, 1. 
+//           storing the odd prime, list of Legendre symbols -1, 0, 1.
 //           one for each quotient up to p^k where k is the largest order of
 //           p in the torsion subgroup.
 
@@ -1364,7 +1364,7 @@ unsigned long curri;
 NMatrixInt *tempM;
 
 for (unsigned long i=starti; i<torRankV.size(); i++) // for each prime
- { 
+ {
    tempa.resize(0);
    curri=0;
 
@@ -1391,8 +1391,8 @@ for (unsigned long i=starti; i<torRankV.size(); i++) // for each prime
         // compute determinant.
 
         // delete the temp matrix.
-        // if (tempM != 0) 
-	delete tempM;
+        // if (tempM != 0)
+        delete tempM;
 
         // increment curri
         curri = curri + torRankV[i].second[j]; // crashes here.
@@ -1402,7 +1402,7 @@ for (unsigned long i=starti; i<torRankV.size(); i++) // for each prime
 
 
 // step 4: kk test for: split, hyperbolic, and the embeddability (need to implement)
-//           2^k-torsion condition. 
+//           2^k-torsion condition.
 
 torsionLinkingFormIsSplit=true;
 torsionLinkingFormIsHyperbolic=true;
@@ -1428,7 +1428,7 @@ if (torsionLinkingFormIsSplit)
     else
      {
      if (oddTorLegSymV[i].second[j] == 1) torsionLinkingFormIsSplit=false;
-     } 
+     }
     }
  }
 if (starti==1) // have 2-torsion
@@ -1444,7 +1444,7 @@ if (torsionLinkingFormIsSplit==false) torsionLinkingFormIsHyperbolic=false;
 if ( (torsionLinkingFormIsSplit) && (starti==1) )
  { torsionLinkingFormIsHyperbolic = true;
    for (unsigned long i=0; i<twoTorSigmaV.size(); i++)
-    if (twoTorSigmaV[i]!=NLargeInteger::zero) 
+    if (twoTorSigmaV[i]!=NLargeInteger::zero)
           torsionLinkingFormIsHyperbolic=false;
  }
 
@@ -1452,10 +1452,10 @@ NRational tRat;
 
 torsionLinkingFormSatisfiesKKtwoTorCondition=true;
 if (starti==1)
- { // for each k need to compute 2^{k-1}*form(x,x) on all 
+ { // for each k need to compute 2^{k-1}*form(x,x) on all
    // elements of order 2^k, check to see if it is zero.
    // so this is not yet quite implemented, yet....
-        //std::vector< std::pair< NLargeInteger, std::vector<unsigned long> > > h1PrimePowerDecomp; 
+        //std::vector< std::pair< NLargeInteger, std::vector<unsigned long> > > h1PrimePowerDecomp;
         // stored as list { (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1, 2)) }
         //std::vector< NMatrixRing<NRational>* > linkingFormPD;
    for (unsigned long i=0; i<h1PrimePowerDecomp[0].second.size(); i++)
@@ -1516,7 +1516,7 @@ embedabilityString.assign("");
 if (tri->isOrientable())
  {
  if (getBMH(0).isTrivial())
-  { 
+  {
   if (getTorsionRankVector().size()==0)
    { // orientable, boundaryless, no torsion
     if (tri->knowsThreeSphere())
@@ -1537,8 +1537,8 @@ if (tri->isOrientable())
         "is no homological obstruction to this manifold embedding in a homology 4-sphere.");
    }
   }
- else        
-  { 
+ else
+  {
   if (getTorsionRankVector().size()==0)
    {// orientable with boundary, no torsion.
     if (getBMmapH(1).isEpic())
@@ -1567,7 +1567,7 @@ else
     // torsion matters here? I guess not.
     embedabilityString.append("Minimal embedding dimension is 5.");
   }
- else        
+ else
   { // nonorientable with boundary
    // double cover check?
    if (getBMmapH(1).isEpic())

@@ -37,8 +37,8 @@ namespace regina {
         Given matrix, it returns four matrices RowSpaceBasis, ColSpaceBasis,
         RowSpaceBasisInv, ColSpaceBasisInv such that
         ColSpaceBasis * matrix * RowSpaceBasis is in smith normal form.
-**/  
-void RBMOD_smithNormalForm(NMatrixInt& matrix, 
+**/
+void RBMOD_smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& RowSpaceBasis, NMatrixInt& RowSpaceBasisInv,
         NMatrixInt& ColSpaceBasis, NMatrixInt& ColSpaceBasisInv) {
     unsigned long currStage = 0;
@@ -50,11 +50,11 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
     NLargeInteger tmp;
 
     for (i=0;i<matrix.columns();i++)
-        { RowSpaceBasis.entry(i,i)=1; 
-          RowSpaceBasisInv.entry(i,i)=1; } 
+        { RowSpaceBasis.entry(i,i)=1;
+          RowSpaceBasisInv.entry(i,i)=1; }
     for (i=0;i<matrix.rows();i++)
         { ColSpaceBasis.entry(i,i)=1;
-          ColSpaceBasisInv.entry(i,i)=1; } 
+          ColSpaceBasisInv.entry(i,i)=1; }
 
     while ((currStage < nonEmptyRows) && (currStage < nonEmptyCols)) {
         loopStart:
@@ -78,9 +78,9 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
                 }
             for (i=0;i<matrix.rows();i++)
                 { // Corresponding ops for ColpaceBasis(Inv)
-                ColSpaceBasis.entry( currStage, i).swap( 
+                ColSpaceBasis.entry( currStage, i).swap(
                         ColSpaceBasis.entry( nonEmptyRows-1, i));
-                ColSpaceBasisInv.entry( i, currStage ).swap( 
+                ColSpaceBasisInv.entry( i, currStage ).swap(
                         ColSpaceBasisInv.entry( i, nonEmptyRows-1 ));
                 }
                 nonEmptyRows--;
@@ -125,7 +125,7 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to columns currStage and i.
-            for (j=currStage; j<nonEmptyRows; j++) 
+            for (j=currStage; j<nonEmptyRows; j++)
             {
                 tmp = u * matrix.entry(j, currStage) +
                     v * matrix.entry(j, i);
@@ -139,7 +139,7 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
                     v * RowSpaceBasis.entry(j, i);
                 RowSpaceBasis.entry(j, i) = a * RowSpaceBasis.entry(j, i) -
                     b * RowSpaceBasis.entry(j, currStage);
-                RowSpaceBasis.entry(j, currStage) = tmp; 
+                RowSpaceBasis.entry(j, currStage) = tmp;
 
                 tmp = a * RowSpaceBasisInv.entry(currStage, j) +
                     b * RowSpaceBasisInv.entry(i, j);
@@ -188,7 +188,7 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
             // The clean row was mucked up.
             continue;
         }
-        
+
         // Check that entry (currStage, currStage) divides everything
         // else.
         for (i=currStage+1; i<nonEmptyRows; i++)
@@ -223,7 +223,7 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
 }
 
 
-/** Given a matrix M and a list of rows from M, rowList, this altorithm puts 
+/** Given a matrix M and a list of rows from M, rowList, this altorithm puts
         M in reduced column echelon form with respect to the rowList.
         It returns the corresponding change of coordinate matrices R and Ri.
         M*R=columnechelon(M), columnechelon(M)Ri = M. M is replaced by its column
@@ -231,7 +231,7 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
         function as the identity matrix.
         */
 
-void RBADD_columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri, 
+void RBADD_columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
                                 std::vector<unsigned> &rowList)
 { // R and Ri are square with dimensions equal to M.columns(). If R and Ri begin
   // as the identity matrices, then MR=columnechelon(M) and columnechelon(M)Ri = M.
@@ -240,7 +240,7 @@ void RBADD_columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
 
 unsigned i,j;
 
-// now we start the column echelon reduction. 
+// now we start the column echelon reduction.
 // our convention is that a matrix is in column-echelon form if:
 //  A) each column is either zero or there is a first non-zero entry which is positive.
 //  B) from left-to-right, the first non-zero entries have strictly increasing indices.
@@ -249,8 +249,8 @@ unsigned i,j;
 //  D) in a row which has no first non-zero column entry, all elements are zero.
 //  E) thus all the zero columns are on the right-side of the matrix.
 
-unsigned CR=0; unsigned CC=0; 
-        // these are the indices of the current WORKING rows and columns respectively. 
+unsigned CR=0; unsigned CC=0;
+        // these are the indices of the current WORKING rows and columns respectively.
         // thus the entries of M above CR will not change, and to the left of CC all that
         // can happen is some reduction.
 
@@ -262,20 +262,20 @@ NLargeInteger d,r; // given two NLargeIntegers a and b, we will represent
 NLargeInteger u,v,gcd, a,b; // for column operations u,v,a,b represent a 2x2 matrix.
 NLargeInteger tmp;
 
-while ( (CR<rowList.size()) && (CC<M.columns())) // the algorithm will think of itself as 
+while ( (CR<rowList.size()) && (CC<M.columns())) // the algorithm will think of itself as
                                                 // working top to bottom.
         {
         // build rowNZlist
         rowNZlist.clear();
 
         for (i=CC;i<M.columns();i++) if (M.entry(rowList[CR],i) != 0) rowNZlist.push_back(i);
-        
+
         // now the column operations
         if (rowNZlist.size() == 0) { CR++; continue; } // nothing to do.
         else if (rowNZlist.size() == 1) // let's move this entry to be the leading entry.
                 {
-                if (rowNZlist[0]==CC) 
-                        { 
+                if (rowNZlist[0]==CC)
+                        {
                         // step 1: ensure entry(CR,CC) is positive.
                         if (M.entry(rowList[CR],CC)<0)
                                 {
@@ -292,21 +292,21 @@ while ( (CR<rowList.size()) && (CC<M.columns())) // the algorithm will think of 
                                 { // write entry(CR,i) as d*entry(CR,CC) + r.
                                   d = M.entry(rowList[CR],i).divisionAlg( M.entry(rowList[CR],CC), r );
                                   // perform reduction on column i. this is subtracting
-                                  // d times column CC from column i. 
-                                  for (j=0;j<M.rows();j++) M.entry(j,i) = 
+                                  // d times column CC from column i.
+                                  for (j=0;j<M.rows();j++) M.entry(j,i) =
                                         M.entry(j,i) - d*M.entry(j,CC);
                                   // modify R
-                                  for (j=0;j<R.rows();j++) R.entry(j,i) = 
+                                  for (j=0;j<R.rows();j++) R.entry(j,i) =
                                         R.entry(j,i) - d*R.entry(j,CC);
                                   // modify Ri -- the corresponding row op is addition of
                                         // d times row i to row CC
-                                  for (j=0;j<Ri.columns();j++) Ri.entry(CC,j) = 
+                                  for (j=0;j<Ri.columns();j++) Ri.entry(CC,j) =
                                         Ri.entry(CC,j) + d*Ri.entry(i,j);
                                   // done.
                                 }
-                        // done, move on.                        
-                        CC++; CR++; 
-                        continue; 
+                        // done, move on.
+                        CC++; CR++;
+                        continue;
                         }
                 else
                         {
@@ -320,17 +320,17 @@ while ( (CR<rowList.size()) && (CC<M.columns())) // the algorithm will think of 
                         continue;
                         }
                 }
-        else        { // there is at least 2 non-zero entries to deal with. we go through them, 
-                  // one by one, a pair at a time. 
+        else        { // there is at least 2 non-zero entries to deal with. we go through them,
+                  // one by one, a pair at a time.
                  while (rowNZlist.size()>1)
                         {
                         // do column reduction on columns rowNZlist[0] and rowNZlist[1]
                         // first we need to find the approp modification matrix. This will
                         // be the matrix ( u -b ) where ua+vb = 1. We get a and b from
                         //               ( v a  ) from entry(CR, r[0]) and entry(CR, r[1])
-                        // by dividing by their GCD, found with 
+                        // by dividing by their GCD, found with
                         // rowNZlist[0].gcdWithCoeffs(rowNZlist[1],u,v)
-                        gcd = M.entry(rowList[CR], rowNZlist[0]).gcdWithCoeffs( 
+                        gcd = M.entry(rowList[CR], rowNZlist[0]).gcdWithCoeffs(
                                 M.entry(rowList[CR], rowNZlist[1]), u,v);
                         a = M.entry(rowList[CR], rowNZlist[0]).divExact(gcd);
                         b = M.entry(rowList[CR], rowNZlist[1]).divExact(gcd);
@@ -342,7 +342,7 @@ while ( (CR<rowList.size()) && (CC<M.columns())) // the algorithm will think of 
                                 tmp = u * M.entry( i, rowNZlist[0] ) + v * M.entry(i, rowNZlist[1] );
                                 M.entry(i,rowNZlist[1]) = a * M.entry( i, rowNZlist[1]) -
                                                           b * M.entry( i, rowNZlist[0]);
-                                M.entry(i,rowNZlist[0]) = tmp; 
+                                M.entry(i,rowNZlist[0]) = tmp;
                                 }
                         // modify R
                         for (i=0;i<R.rows();i++)
@@ -350,7 +350,7 @@ while ( (CR<rowList.size()) && (CC<M.columns())) // the algorithm will think of 
                                 tmp = u * R.entry( i, rowNZlist[0] ) + v * R.entry(i, rowNZlist[1] );
                                 R.entry(i,rowNZlist[1]) = a * R.entry( i, rowNZlist[1]) -
                                                           b * R.entry( i, rowNZlist[0]);
-                                R.entry(i,rowNZlist[0]) = tmp; 
+                                R.entry(i,rowNZlist[0]) = tmp;
                                 }
                         // modify Ri
                         for (i=0;i<Ri.columns();i++)
@@ -363,7 +363,7 @@ while ( (CR<rowList.size()) && (CC<M.columns())) // the algorithm will think of 
                         // modify rowNZlist by deleting the entry corresp. to rowNZlist[1]
                         rowNZlist.erase( rowNZlist.begin()+1 );
                         // done.
-                        } 
+                        }
                  continue;
                 }
         }
@@ -377,7 +377,7 @@ while ( (CR<rowList.size()) && (CC<M.columns())) // the algorithm will think of 
         A basis is returned.
         */
 NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom, std::vector<NLargeInteger>& L)
-{        // there are two main steps to this algorithm. 
+{        // there are two main steps to this algorithm.
         // 1) find a basis for the domain which splits into a) vectors sent to the complement
         //    of the primitive subspace generated by the range lattice and b) a basis of
         //    vectors sent to the primitive subspace generated by the range lattice.
@@ -390,14 +390,14 @@ unsigned i,j;
 
 NMatrixInt basis(hom.columns(), hom.columns() ); basis.makeIdentity();
 NMatrixInt basisi(hom.columns(), hom.columns() ); basisi.makeIdentity();
-// and we proceed to modify it solely via column operations. 
+// and we proceed to modify it solely via column operations.
 // one for every column operation performed on homModL
 NMatrixInt homModL(hom);
 
 // set up two lists: the coordinates that correspond to free generators of the range
 // and coordinates corresponding to torsion generators.
 
-// these lists need to be built from L 
+// these lists need to be built from L
 std::vector<unsigned> freeList;
 std::vector<unsigned> torList;
 for (i=0;i<L.size();i++) if (L[i]==0) freeList.push_back(i); else torList.push_back(i);
@@ -416,16 +416,16 @@ for (i=0; i<homModL.columns(); i++)
         if (zeroCol) torCol.push_back(i);
         }
 
-// set up a new matrix consisting of columns being sent to the primitive subspace 
-// generated by the torsion lattice. 
+// set up a new matrix consisting of columns being sent to the primitive subspace
+// generated by the torsion lattice.
 
 NMatrixInt tHom( homModL.rows(), torCol.size() );
 NMatrixInt tBasis( basis.rows(), torCol.size() ); // this will be the the eventual retval.
 NMatrixInt dummy( torCol.size(), 0 ); // needed when we call RBADD_columnEchelonForm. choosing
                                 // it to have 0 columns speeds up the algorithm.
 
-for (i=0;i<tHom.rows();i++) for (j=0;j<tHom.columns();j++) 
-        tHom.entry(i,j) = homModL.entry(i, torCol[j]); 
+for (i=0;i<tHom.rows();i++) for (j=0;j<tHom.columns();j++)
+        tHom.entry(i,j) = homModL.entry(i, torCol[j]);
 
 for (i=0;i<basis.rows();i++) for (j=0;j<torCol.size();j++)
         tBasis.entry(i,j) = basis.entry(i, torCol[j]);
@@ -449,13 +449,13 @@ NLargeInteger d,r; // given two NLargeIntegers a and b, we will represent
 NLargeInteger u,v,gcd, a,b; // for column operations u,v,a,b represent a 2x2 matrix.
 NLargeInteger tmp;
 
-while (CR<torList.size()) 
+while (CR<torList.size())
         {
         // build rowNZlist
         rowNZlist.clear();
 
         for (i=0;i<tHom.columns();i++) if (tHom.entry(torList[CR],i) != 0) rowNZlist.push_back(i);
-        // okay, so now we have a list of non-zero entries. 
+        // okay, so now we have a list of non-zero entries.
         // case 1: rowNZlist.size()==0, increment CR, continue;
 
         if (rowNZlist.size()==0) { CR++; continue; }
@@ -481,9 +481,9 @@ while (CR<torList.size())
                 // first we need to find the approp modification matrix. This will
                 // be the matrix ( u -b ) where ua+vb = 1. We get a and b from
                 //               ( v a  ) from entry(torList[CR], r[0]) and entry(torlist[CR], r[1])
-                // by dividing by their GCD, found with 
+                // by dividing by their GCD, found with
                 // rowNZlist[0].gcdWithCoeffs(rowNZlist[1],u,v)
-                gcd = tHom.entry(torList[CR], rowNZlist[0]).gcdWithCoeffs( 
+                gcd = tHom.entry(torList[CR], rowNZlist[0]).gcdWithCoeffs(
                         tHom.entry(torList[CR], rowNZlist[1]), u,v);
                 a = tHom.entry(torList[CR], rowNZlist[0]).divExact(gcd);
                 b = tHom.entry(torList[CR], rowNZlist[1]).divExact(gcd);
@@ -492,12 +492,12 @@ while (CR<torList.size())
                 // -b r[0] + a r[1].
                 for (i=0;i<torList.size();i++)
                         {
-                        tmp = u * tHom.entry( torList[i], rowNZlist[0] ) + 
+                        tmp = u * tHom.entry( torList[i], rowNZlist[0] ) +
                               v * tHom.entry( torList[i], rowNZlist[1] );
-                        tHom.entry( torList[i],rowNZlist[1]) = 
+                        tHom.entry( torList[i],rowNZlist[1]) =
                               a * tHom.entry( torList[i], rowNZlist[1]) -
                               b * tHom.entry( torList[i], rowNZlist[0]);
-                        tHom.entry( torList[i],rowNZlist[0]) = tmp; 
+                        tHom.entry( torList[i],rowNZlist[0]) = tmp;
                         }
                 // modify tBasis
                 for (i=0;i<tBasis.rows();i++)
@@ -505,7 +505,7 @@ while (CR<torList.size())
                         tmp = u * tBasis.entry( i, rowNZlist[0] ) + v * tBasis.entry(i, rowNZlist[1] );
                         tBasis.entry(i,rowNZlist[1]) = a * tBasis.entry( i, rowNZlist[1]) -
                                                        b * tBasis.entry( i, rowNZlist[0]);
-                        tBasis.entry(i,rowNZlist[0]) = tmp; 
+                        tBasis.entry(i,rowNZlist[0]) = tmp;
                         }
 
                 // now rowNZlist[1] entry is zero, remove it from the list.
@@ -529,23 +529,23 @@ unsigned long rbGetRank(const NMatrixInt& M) // I don't know how to avoid using 
 
 MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N) :
         OM(M), ON(N), OMR(M.columns(),M.columns()),
-        OMC(M.rows(),M.rows()), OMRi(M.columns(),M.columns()),OMCi(M.rows(),M.rows()), 
+        OMC(M.rows(),M.rows()), OMRi(M.columns(),M.columns()),OMCi(M.rows(),M.rows()),
         rankOM(rbGetRank(M)),
         ORN(N.rows()-rbGetRank(M),N.columns()),
         ornR(N.columns(),N.columns()),        ornRi(N.columns(),N.columns()),
         ornC(N.rows()-rbGetRank(M),N.rows()-rbGetRank(M)),
-        ornCi(N.rows()-rbGetRank(M),N.rows()-rbGetRank(M)),        
+        ornCi(N.rows()-rbGetRank(M),N.rows()-rbGetRank(M)),
         SNF_ORN(N.rows()-rbGetRank(M),N.columns()),
         InvFacList(0), InvFacIndex(0),
         snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0)
  {
- // find SNF(M). 
+ // find SNF(M).
  NMatrixInt tM(M);
 
  RBMOD_smithNormalForm(tM, OMR, OMRi, OMC, OMCi);
  // now construct OMRi * N, and delete first SNF_OM_firstzero rows, constructing ORN.
 
- NMatrixRing<NLargeInteger>* prod=OMRi*ON; 
+ NMatrixRing<NLargeInteger>* prod=OMRi*ON;
 
  unsigned long i;
  unsigned long j;
@@ -569,7 +569,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N)
  while ((i<SNF_ORN.rows()) && (i<SNF_ORN.columns()))
         {
         if (SNF_ORN.entry(i,i)==1) totO++;
-        else if (SNF_ORN.entry(i,i)>1) 
+        else if (SNF_ORN.entry(i,i)>1)
                 {
                 totIF++;
                 InvFacIndex.push_back(i);
@@ -584,7 +584,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N)
  InvFacList.resize(InvFacIndex.size());
  for (i=0;i<InvFacList.size();i++)
          InvFacList[i]=SNF_ORN.entry(InvFacIndex[i],InvFacIndex[i]);
- 
+
  snfrank=SNF_ORN.rows()-totO-totIF;
  snffreeindex=totO+totIF;
 }
@@ -596,9 +596,9 @@ MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N)
 // invariant factors are stored in the matrix SNF_ORN so one has to
 // get past the entries labelled with 1, and avoid any possible tail
 // entries labelled with 0.
-/** Gives the index-th invariant factor, in increasing order. 
+/** Gives the index-th invariant factor, in increasing order.
         returns 0 for an invalid index. */
-const NLargeInteger& MarkedAbelianGroup::getInvariantFactor( unsigned long index) const 
+const NLargeInteger& MarkedAbelianGroup::getInvariantFactor( unsigned long index) const
 {
         return InvFacList[index];
 }
@@ -608,13 +608,13 @@ unsigned long MarkedAbelianGroup::getNumberOfInvariantFactors() const
         return InvFacList.size();
 }
 
-unsigned MarkedAbelianGroup::getTorsionRank(const NLargeInteger& degree) const 
+unsigned MarkedAbelianGroup::getTorsionRank(const NLargeInteger& degree) const
 {
     unsigned ans = 0;
     for (unsigned long i=0;i<InvFacList.size();i++)
         {
         if (InvFacList[i] % degree == 0) ans++;
-        }                
+        }
     return ans;
 }
 
@@ -659,19 +659,19 @@ void MarkedAbelianGroup::writeTextShort(std::ostream& out) const {
         out << '0';
 }
 
-unsigned MarkedAbelianGroup::getRank() const 
+unsigned MarkedAbelianGroup::getRank() const
 {
     return snfrank;
 }
 
-bool MarkedAbelianGroup::isTrivial() const 
+bool MarkedAbelianGroup::isTrivial() const
 {
     bool retval=true;
     if ( (snfrank>0) || (InvFacList.size()>0) ) retval=false;
     return (retval);
 }
 
-bool MarkedAbelianGroup::operator == (const MarkedAbelianGroup& other) const 
+bool MarkedAbelianGroup::operator == (const MarkedAbelianGroup& other) const
 {
     bool retval=false;
     if ((InvFacList == other.InvFacList) && (snfrank==other.snfrank)) retval=true;
@@ -683,7 +683,7 @@ bool MarkedAbelianGroup::operator == (const MarkedAbelianGroup& other) const
  * The marked abelian group was defined by matrices M and N
  * with M*N==0.  Think of M as m by l and N as l by n.  Then
  * this routine returns the index-th free generator of the
- * ker(M)/img(N) in Z^l. 
+ * ker(M)/img(N) in Z^l.
  */
 std::vector<NLargeInteger> MarkedAbelianGroup::getFreeRep(unsigned long index) const
 {
@@ -700,7 +700,7 @@ for (unsigned long i=0;i<ornCi.rows();i++) temp[i+rankOM]=ornCi.entry(i,index+sn
 for (unsigned long i=0;i<retval.size();i++)
  for (unsigned long j=0;j<OMR.columns();j++)
   retval[i] += OMR.entry(i,j)*temp[j];
-// the above takes temp and multiplies it by the matrix OMR. 
+// the above takes temp and multiplies it by the matrix OMR.
 
 return retval;
 }
@@ -710,7 +710,7 @@ return retval;
  * The marked abelian group was defined by matrices M and N
  * with M*N==0.  Think of M as m by l and N as l by n.  Then
  * this routine returns the index-th torsion generator of the
- * ker(M)/img(N) in Z^l. 
+ * ker(M)/img(N) in Z^l.
  */
 std::vector<NLargeInteger> MarkedAbelianGroup::getTorRep(unsigned long index) const
 {
@@ -727,7 +727,7 @@ for (unsigned long i=0;i<ornCi.rows();i++) temp[i+rankOM]=ornCi.entry(i,InvFacIn
 for (unsigned long i=0;i<retval.size();i++)
  for (unsigned long j=0;j<OMR.columns();j++)
   retval[i] += OMR.entry(i,j)*temp[j];
-// the above takes temp and multiplies it by the matrix OMR. 
+// the above takes temp and multiplies it by the matrix OMR.
 
 return retval;
 }
@@ -735,7 +735,7 @@ return retval;
 
 /*
  * The marked abelian group was defined by matrices M and N
- * with M*N==0.  Think of M as m by l and N as l by n.  
+ * with M*N==0.  Think of M as m by l and N as l by n.
  * When the group was initialized, it was computed to be isomorphic
  * to some Z^d + Z_{d1} + ... + Z_{dk} where d1 | d2 | ... | dk
  * this routine assumes element is in Z^l, and it returns a vector
@@ -765,13 +765,13 @@ for (unsigned long i=0;i<rankOM;i++) if (temp[i] != 0) eltinker=false;
 if (eltinker==true)
         {
         // set up retval. The first snfrank elts are the free generators
-        for (unsigned long i=0;i<snfrank;i++) 
-                for (unsigned long j=rankOM;j<ON.rows();i++)        
+        for (unsigned long i=0;i<snfrank;i++)
+                for (unsigned long j=rankOM;j<ON.rows();i++)
                 retval[i] += ornC.entry(snffreeindex+i,j)*temp[j];
         // the remaining InvFacList.size() elts are torsion generators.
-        for (unsigned long i=0;i<ifNum;i++) 
+        for (unsigned long i=0;i<ifNum;i++)
                 {
-                for (unsigned long j=rankOM;j<ON.rows();i++)        
+                for (unsigned long j=rankOM;j<ON.rows();i++)
                 retval[i+snfrank] += ornC.entry(ifLoc+i,j)*temp[j];
                 retval[i+snfrank] = (retval[i+snfrank] % InvFacList[i]);
                 }
@@ -783,10 +783,10 @@ return retval;
 }
 
 
-HomMarkedAbelianGroup::HomMarkedAbelianGroup(const MarkedAbelianGroup& dom, 
+HomMarkedAbelianGroup::HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
                                const MarkedAbelianGroup& ran,
                               const NMatrixInt &mat):
-domain(dom), range(ran), matrix(mat), 
+domain(dom), range(ran), matrix(mat),
 reducedMatrixComputed(false), reducedMatrix(0),
 kernelComputed(false), kernel(0),
 coKernelComputed(false), coKernel(0),
@@ -848,19 +848,19 @@ if (!reducedMatrixComputed)
                           dcckb.entry(k,j + domain.getRankOM() );
 
  for (i=0;i<kerMatrix.rows();i++) for (j=0;j<kerMatrix.columns();j++)
-  for (k=0;k<rcckb.rows();k++) 
+  for (k=0;k<rcckb.rows();k++)
    kerMatrix.entry(i,j) += rcckb.entry(i+range.getRankOM(), k) * temp1.entry(k,j);
 
- NMatrixInt redMatrix( kerMatrix.rows()-range.getTorLoc(), 
+ NMatrixInt redMatrix( kerMatrix.rows()-range.getTorLoc(),
                       kerMatrix.columns()-domain.getTorLoc() );
 
  NMatrixInt dccqb(domain.getNCBi());
  NMatrixInt rccqb(range.getNCB());
 
- NMatrixInt temp2( kerMatrix.rows(), 
+ NMatrixInt temp2( kerMatrix.rows(),
         kerMatrix.columns() - domain.getTorLoc() );
  for (i=0;i<temp2.rows();i++) for (j=0;j<temp2.columns();j++)
-  for (k=0;k<kerMatrix.columns();k++)   
+  for (k=0;k<kerMatrix.columns();k++)
          {temp2.entry(i,j) += kerMatrix.entry(i,k) *
                          dccqb.entry(k,j + domain.getTorLoc() ); }
 
@@ -877,9 +877,9 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice()
  if (!reducedKernelLattice)
  {
  computeReducedMatrix();
- 
+
  unsigned long i;
- 
+
  NMatrixInt redMatrix(*reducedMatrix);
 
  // the kernel is the dcLpreimage lattice mod the domain lattice.
@@ -887,7 +887,7 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice()
  // the domain lattice in its coordinates.
 
  std::vector<NLargeInteger> dcL(range.getRank() + range.getNumberOfInvariantFactors() );
- for (i=0; i<dcL.size(); i++) if (i<range.getNumberOfInvariantFactors()) 
+ for (i=0; i<dcL.size(); i++) if (i<range.getNumberOfInvariantFactors())
         dcL[i]=range.getInvariantFactor(i); else dcL[i]="0";
 
  reducedKernelLatticeComputed = true;
@@ -897,13 +897,13 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice()
 
 void HomMarkedAbelianGroup::computeKernel()
 {
- if (!kernelComputed)        
+ if (!kernelComputed)
  {
  computeReducedKernelLattice();
  NMatrixInt dcLpreimage( *reducedKernelLattice );
 
  unsigned long i,j,k;
- 
+
  NMatrixInt R( dcLpreimage.columns(), dcLpreimage.columns() );
  NMatrixInt Ri( dcLpreimage.columns(), dcLpreimage.columns() );
  NMatrixInt C( dcLpreimage.rows(), dcLpreimage.rows() );
@@ -917,7 +917,7 @@ void HomMarkedAbelianGroup::computeKernel()
  NMatrixInt workMat( dcLpreimage.columns(), domain.getNumberOfInvariantFactors() );
 
  for (i=0;i<workMat.rows();i++) for (j=0;j<workMat.columns();j++)
-        for (k=0;k<R.columns();k++) 
+        for (k=0;k<R.columns();k++)
         {
         workMat.entry(i,j) += (domain.getInvariantFactor(j) *
                 R.entry(i,k) * C.entry(k,j) ) / dcLpreimage.entry(k,k);
@@ -939,12 +939,12 @@ if (!coKernelComputed)
  {
  computeReducedMatrix();
 
- NMatrixInt ccrelators( reducedMatrix->rows(), reducedMatrix->columns() + 
+ NMatrixInt ccrelators( reducedMatrix->rows(), reducedMatrix->columns() +
                         range.getNumberOfInvariantFactors() );
  unsigned i,j;
  for (i=0;i<reducedMatrix->rows();i++) for (j=0;j<reducedMatrix->columns();j++)
         ccrelators.entry(i,j)=reducedMatrix->entry(i,j);
- for (i=0;i<range.getNumberOfInvariantFactors();i++) 
+ for (i=0;i<range.getNumberOfInvariantFactors();i++)
         ccrelators.entry(i,i+reducedMatrix->columns())=range.getInvariantFactor(i);
 
  NMatrixInt ccgenerators( 1, reducedMatrix->rows() );
@@ -959,9 +959,9 @@ if (!coKernelComputed)
 
 void HomMarkedAbelianGroup::computeImage()
 {
-if (!imageComputed)        
- { 
- computeReducedKernelLattice();   
+if (!imageComputed)
+ {
+ computeReducedKernelLattice();
  NMatrixInt dcLpreimage( *reducedKernelLattice );
 
  unsigned long i,j;
@@ -998,7 +998,7 @@ bool HomMarkedAbelianGroup::isMonic()
         return retval;
 }
 
-bool HomMarkedAbelianGroup::isIso() 
+bool HomMarkedAbelianGroup::isIso()
 {
         bool retval=false;
         if (getCoKernel().isTrivial() && getKernel().isTrivial())
@@ -1006,7 +1006,7 @@ bool HomMarkedAbelianGroup::isIso()
         return retval;
 }
 
-bool HomMarkedAbelianGroup::isZero() 
+bool HomMarkedAbelianGroup::isZero()
 {
         bool retval=false;
         if (getImage().isTrivial())
@@ -1016,7 +1016,7 @@ bool HomMarkedAbelianGroup::isZero()
 
 
 
-MarkedAbelianGroup HomMarkedAbelianGroup::getKernel() 
+MarkedAbelianGroup HomMarkedAbelianGroup::getKernel()
 {
 computeKernel();
 return *kernel;
@@ -1061,15 +1061,15 @@ for (i=0;i<reducedMatrix->rows();i++)
 
 
 void HomMarkedAbelianGroup::writeTextShort(std::ostream& out)
-{ 
+{
 
-if (isIso()) out<<"isomorphism "; else 
+if (isIso()) out<<"isomorphism "; else
 if (isZero()) out<<"zero map "; else
 if (isMonic())
          { // monic not epic
           out<<"monic, with cokernel ";
           getCoKernel().writeTextShort(out);
-         } else 
+         } else
 if (isEpic())
          { // epic not monic
           out<<"epic, with kernel ";
@@ -1084,7 +1084,7 @@ else
           out<<" | image ";
           getImage().writeTextShort(out);
           }
-     
+
 }
 
 
