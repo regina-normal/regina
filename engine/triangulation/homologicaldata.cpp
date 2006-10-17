@@ -231,6 +231,7 @@ void homologicalData::computeChainComplexes() {
             temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(1)));
             (A1->entry( ((temp==(-1)) ? (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
         } // ok
+
         for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
             // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us the vertex of this face
             p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
@@ -268,6 +269,7 @@ void homologicalData::computeChainComplexes() {
                 }
             }
         }
+
         for (i=0;i<sIEFOT.size();i++) { // boundary edges from ideal faces of tetrahedra.
             // sIEFOT[i] /4 is the tetrahedron number
             // sIEFOT[i] % 4 is the vertex number for this tetrahedron
@@ -301,7 +303,6 @@ void homologicalData::computeChainComplexes() {
         // end A3
 
 
-
         // start B1: for each dual edge == non-boundary face,
         //              find the tetrahedra that bound it
         for (i=0;i<dNBF.size();i++) {
@@ -311,7 +312,6 @@ void homologicalData::computeChainComplexes() {
                         tri->getFace(dNBF[i])->getEmbedding(0).getTetrahedron() ),i)-=1;
         }
         // end B1
-
 
         std::deque<NEdgeEmbedding> edgeque;
         // start B2: for each dual face == non-boundary edge,
@@ -459,31 +459,33 @@ void homologicalData::computeChainComplexes() {
         // step 2) fill out the matrix. each dual 1-cell corresponds to a face of the ideal
         //           triangulation. the map of 0-cells has already been chosen so for the
         //           map of 1-cells simply choose any path from the first 0-cell to the 2nd
-        //           0-cell with the condition that the path stays inside the two ideal simplicies
-        //           and only crosses the face corresponding to the dual 1-cell once. (and no
-        //           other faces).
+        //           0-cell with the condition that the path stays inside the two ideal 
+	//           simplicies and only crosses the face corresponding to the dual 
+	// 	     1-cell once. (and no other faces).
 
-        for (j=0; j<H1map->columns(); j++) // H1map.columns() is supposed to be faces().size()
+        for (j=0; j<H1map->columns(); j++) // H1map.columns()==dNBF.size() 
             // while H1map.rows() is edges.size()+sIEEOF.size()
         {// now we have to decide where dual edge j == ideal triangulation face j is sent.
-            unsigned tet0FaceIndex = tri->getFace(j)->getEmbedding(0).getFace(); // face numbers of the common
-            unsigned tet1FaceIndex = tri->getFace(j)->getEmbedding(1).getFace(); // face in the two tetrahedra.
 
-            unsigned vert0Num = zeroCellMap[tri->getTetrahedronIndex( tri->getFace(j) ->
+            unsigned tet0FaceIndex = tri->getFace(dNBF[j])->getEmbedding(0).getFace(); 
+            unsigned tet1FaceIndex = tri->getFace(dNBF[j])->getEmbedding(1).getFace(); 
+
+            unsigned vert0Num = zeroCellMap[tri->getTetrahedronIndex( tri->getFace(dNBF[j]) ->
                     getEmbedding(0).getTetrahedron() )]/4; // vertex number of start vertex in tet0
-            unsigned vert1Num = zeroCellMap[tri->getTetrahedronIndex( tri->getFace(j) ->
+            unsigned vert1Num = zeroCellMap[tri->getTetrahedronIndex( tri->getFace(dNBF[j]) ->
                     getEmbedding(1).getTetrahedron() )]/4;  // vertex number of end vertex in tet1.
-            unsigned vert0id = zeroCellMap[tri->getTetrahedronIndex( tri->getFace(j) ->
+            unsigned vert0id = zeroCellMap[tri->getTetrahedronIndex( tri->getFace(dNBF[j]) ->
                     getEmbedding(0).getTetrahedron() )] % 4; // not equal to vert0Num if and only if
             // vert0 is ideal.
-            unsigned vert1id = zeroCellMap[tri->getTetrahedronIndex( tri->getFace(j) ->
-                    getEmbedding(1).getTetrahedron() )] % 4; // not equal to vert1Num if and only if
-            // vert1 is ideal.
-
-            NPerm P1 = tri->getFace(j)->getEmbedding(0).getVertices();
-            NPerm P2 = tri->getFace(j)->getEmbedding(1).getVertices();
+            unsigned vert1id = zeroCellMap[tri->getTetrahedronIndex( tri->getFace(dNBF[j]) ->
+                    getEmbedding(1).getTetrahedron() )] % 4; 
+		// not equal to vert1Num if and only if
+                // vert1 is ideal.
+            NPerm P1 = tri->getFace(dNBF[j])->getEmbedding(0).getVertices();
+            NPerm P2 = tri->getFace(dNBF[j])->getEmbedding(1).getVertices();
             NPerm P3;
-            NPerm P0to1 = P2 * ( P1.inverse() ); // the permutation from the start simplex vertices
+            NPerm P0to1 = P2 * ( P1.inverse() ); 
+	    // the permutation from the start simplex vertices
             // to the end simplex.
 
             bool stage0nec = false;
@@ -503,9 +505,9 @@ void homologicalData::computeChainComplexes() {
                     stage0choice = vert0id;
                 } // ideal
 
-                stage0edgeNum = tri->getEdgeIndex(tri->getFace(j) -> getEmbedding(0).getTetrahedron() ->
+                stage0edgeNum = tri->getEdgeIndex(tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() ->
                         getEdge( edgeNumber[vert0Num][stage0choice] ));
-                stage0posOr = ( tri->getFace(j) -> getEmbedding(0).getTetrahedron()->getEdgeMapping(
+                stage0posOr = ( tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron()->getEdgeMapping(
                             edgeNumber[vert0Num][stage0choice])[1] == stage0choice ) ? true : false ;
             }
 
@@ -526,9 +528,9 @@ void homologicalData::computeChainComplexes() {
                     stage4choice = vert1id;
                 }
 
-                stage4edgeNum = tri->getEdgeIndex(tri->getFace(j) -> getEmbedding(1).getTetrahedron() ->
+                stage4edgeNum = tri->getEdgeIndex(tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() ->
                         getEdge( edgeNumber[vert1Num][stage4choice] ));
-                stage4posOr = ( tri->getFace(j) -> getEmbedding(1).getTetrahedron()->getEdgeMapping(
+                stage4posOr = ( tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron()->getEdgeMapping(
                             edgeNumber[vert1Num][stage4choice])[1] == vert1Num ) ?        true : false ;
             }
 
@@ -539,7 +541,7 @@ void homologicalData::computeChainComplexes() {
             bool stage1posOr;
             unsigned stage1FaceToUse;
 
-            if (stage0nec && tri->getFace(j) -> getEmbedding(0).getTetrahedron() ->
+            if (stage0nec && tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() ->
                     getVertex(stage0choice)->isIdeal() ) {
                 stage1v = stage0choice;
                 stage1vi = vert0Num;
@@ -551,11 +553,11 @@ void homologicalData::computeChainComplexes() {
                     stage1nec = true;
                 }
             if (stage1nec) { // we need to decide which face to use...
-                stage1FaceToUse = tri->getFace(j) -> getEmbedding(0).getTetrahedron()->getEdgeMapping(
+                stage1FaceToUse = tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron()->getEdgeMapping(
                             edgeNumber[stage1v][tet0FaceIndex] )[2];
-                P3 = tri->getFace(j) -> getEmbedding(0).getTetrahedron()->getFaceMapping(stage1FaceToUse);
+                P3 = tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron()->getFaceMapping(stage1FaceToUse);
                 stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                            3*(tri->getFaceIndex(tri->getFace(j) -> getEmbedding(0).getTetrahedron() ->
+                            3*(tri->getFaceIndex(tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() ->
                                     getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
                 stage1posOr = ( ( P3[(P3.preImageOf(stage1v)+1) % 3] != stage1vi ) ? true : false );
             }
@@ -565,7 +567,7 @@ void homologicalData::computeChainComplexes() {
             bool stage3posOr;
             unsigned stage3FaceToUse;
 
-            if (stage4nec && tri->getFace(j) -> getEmbedding(1).getTetrahedron() ->
+            if (stage4nec && tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() ->
                     getVertex(stage4choice)->isIdeal() ) { // ideal case
                 stage3v = stage4choice;
                 stage3vi = vert1Num;
@@ -577,11 +579,11 @@ void homologicalData::computeChainComplexes() {
                     stage3nec = true;
                 }
             if (stage3nec) { // we need to decide which face to use...
-                stage3FaceToUse = tri->getFace(j) -> getEmbedding(1).getTetrahedron()->getEdgeMapping(
+                stage3FaceToUse = tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron()->getEdgeMapping(
                             edgeNumber[stage3v][tet1FaceIndex] )[2];
-                P3 = tri->getFace(j) -> getEmbedding(1).getTetrahedron()->getFaceMapping(stage3FaceToUse);
+                P3 = tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron()->getFaceMapping(stage3FaceToUse);
                 stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                            3*(tri->getFaceIndex(tri->getFace(j) -> getEmbedding(1).getTetrahedron() ->
+                            3*(tri->getFaceIndex(tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() ->
                                     getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
                 stage3posOr = ( ( P3[(P3.preImageOf(stage3v)+1) % 3] == stage3vi ) ? true : false );
             }
@@ -594,7 +596,7 @@ void homologicalData::computeChainComplexes() {
             if (stage1nec) // set up stage2startdata
             {
                 stage2startdata = 3*P1.preImageOf( stage1v ) +
-                        P1.preImageOf((tri->getFace(j) -> getEmbedding(0).getTetrahedron() ->
+                        P1.preImageOf((tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() ->
                                 getEdgeMapping( edgeNumber[stage1v][stage1vi] ))[3] );
             } else {
                 // we have to deal with 2 possibilities a) stage 0 was called and it jumped here, so
@@ -614,7 +616,7 @@ void homologicalData::computeChainComplexes() {
             if (stage3nec) // set up stage2enddata
             {
                 stage2enddata = 3*P2.preImageOf( stage3v ) +
-                        P2.preImageOf((tri->getFace(j) -> getEmbedding(1).getTetrahedron() ->
+                        P2.preImageOf((tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() ->
                                 getEdgeMapping( edgeNumber[stage3v][stage3vi] ))[3] );
             } else {
                 if (stage4nec) { // this is the non-ideal situation
@@ -657,14 +659,14 @@ void homologicalData::computeChainComplexes() {
                         break;
                     }
                     // main alg here.
-                    if (( currV/3  == prevV/3 ) && (tri->getFace(j)->getVertex(currV/3)->isIdeal()) )  // ideal edge
+                    if (( currV/3  == prevV/3 ) && (tri->getFace(dNBF[j])->getVertex(currV/3)->isIdeal()) )  // ideal edge
                     {
-                        H1map->entry( tri->getNumberOfEdges() + sIEEOF.index(3*j + (currV/3)) , j ) += 1;
+                        H1map->entry( tri->getNumberOfEdges() + sIEEOF.index(3*dNBF[j] + (currV/3)) , j ) += 1;
                     }
                     if ( currV/3  != prevV/3 ) // regular edge
                     {
-                        H1map->entry( tri->getEdgeIndex(tri->getFace(j)->getEdge( ((currV/3) + 1) % 3 )), j ) +=
-                            ( (tri->getFace(j) -> getEdgeMapping(((currV/3) + 1) % 3)[1] == currV/3) ? +1 : -1);
+                        H1map->entry( tri->getEdgeIndex(tri->getFace(dNBF[j])->getEdge( ((currV/3) + 1) % 3 )), j ) +=
+                            ( (tri->getFace(dNBF[j]) -> getEdgeMapping(((currV/3) + 1) % 3)[1] == currV/3) ? +1 : -1);
                     }
                     // move prevV to be equal to currV.
                     prevV = currV;
@@ -759,6 +761,7 @@ void homologicalData::computeChainComplexes() {
             B2Incl->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
                     tri->getNumberOfFaces() + i - sBNIF.size() ) ,i)+=1;
     }
+
 }
 
 MarkedAbelianGroup homologicalData::getMH(unsigned q) {
