@@ -71,7 +71,7 @@ class NMatrixInt;
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
  */
-class MarkedAbelianGroup : public ShareableObject{
+class MarkedAbelianGroup : public ShareableObject {
     protected:
         /** Internal original M */
         NMatrixInt OM; // copy of initializing M
@@ -79,7 +79,7 @@ class MarkedAbelianGroup : public ShareableObject{
         NMatrixInt ON; // copy of initializing N assumes M*N == 0
         /** Internal change of basis */
         NMatrixInt OMR;  // OMC*OM*OMR is the SNF of OM
-         /** Internal change of basis */
+        /** Internal change of basis */
         NMatrixInt OMC;
         /** Internal change of basis */
         NMatrixInt OMRi; // OM = OMCi*SNF(OM)*OMRi
@@ -87,7 +87,7 @@ class MarkedAbelianGroup : public ShareableObject{
         NMatrixInt OMCi;
         /** Internal rank of M */
         unsigned long rankOM; // this is the index of the first zero entry
-                                        // in the SNF of OM.
+                              // in the SNF of OM.
         /** Internal reduced N matrix */
         NMatrixInt ORN; // this is the reducted ON matrix, ORN = [OMRi * ON] with
                         // where the brackets indicate removal of the first
@@ -141,7 +141,7 @@ class MarkedAbelianGroup : public ShareableObject{
          */
         virtual ~MarkedAbelianGroup();
 
-         /**
+        /**
          * Returns the rank of the group.
          * This is the number of included copies of <i>Z</i>.
          *
@@ -277,7 +277,7 @@ class MarkedAbelianGroup : public ShareableObject{
          *  Z^d + Z_{d1} + ... + Z_{dk} form.
          */
         std::vector<NLargeInteger> getSNFisoRep(std::vector<NLargeInteger>& element)
-                const;
+            const;
 
         /**
          * These routines return information on how we determined the isomorphism-class of
@@ -382,7 +382,7 @@ class MarkedAbelianGroup : public ShareableObject{
          *
          * @return the matrix getNCBi() described above.
          */
-       NMatrixInt getNCBi() const;
+        NMatrixInt getNCBi() const;
 
         /**
          * Gives the rank of the defining matrix M.
@@ -439,28 +439,56 @@ inline MarkedAbelianGroup::MarkedAbelianGroup(const MarkedAbelianGroup& g) :
         SNF_ORN(g.SNF_ORN),
         InvFacList(g.InvFacList), InvFacIndex(g.InvFacIndex),
         snfrank(g.snfrank), snffreeindex(g.snffreeindex),
-        ifNum(g.ifNum), ifLoc(g.ifLoc)
- {}
+        ifNum(g.ifNum), ifLoc(g.ifLoc) {
+}
 
 // destructor
 inline MarkedAbelianGroup::~MarkedAbelianGroup() {}
 
-inline        NMatrixInt MarkedAbelianGroup::getMRB() const { return OMR; }
-inline        NMatrixInt MarkedAbelianGroup::getMRBi() const { return OMRi; }
-inline        NMatrixInt MarkedAbelianGroup::getMCB() const { return OMC; }
-inline        NMatrixInt MarkedAbelianGroup::getMCBi() const { return OMCi; }
-inline        NMatrixInt MarkedAbelianGroup::getNRB() const { return ornR; }
-inline        NMatrixInt MarkedAbelianGroup::getNRBi() const { return ornRi; }
-inline        NMatrixInt MarkedAbelianGroup::getNCB() const { return ornC; }
-inline        NMatrixInt MarkedAbelianGroup::getNCBi() const { return ornCi; }
+inline NMatrixInt MarkedAbelianGroup::getMRB() const {
+    return OMR;
+}
+inline NMatrixInt MarkedAbelianGroup::getMRBi() const {
+    return OMRi;
+}
+inline NMatrixInt MarkedAbelianGroup::getMCB() const {
+    return OMC;
+}
+inline NMatrixInt MarkedAbelianGroup::getMCBi() const {
+    return OMCi;
+}
+inline NMatrixInt MarkedAbelianGroup::getNRB() const {
+    return ornR;
+}
+inline NMatrixInt MarkedAbelianGroup::getNRBi() const {
+    return ornRi;
+}
+inline NMatrixInt MarkedAbelianGroup::getNCB() const {
+    return ornC;
+}
+inline NMatrixInt MarkedAbelianGroup::getNCBi() const {
+    return ornCi;
+}
 
-inline        unsigned long MarkedAbelianGroup::getRankOM() const { return rankOM; }
-inline        unsigned long MarkedAbelianGroup::getFreeLoc() const { return snffreeindex; }
-inline        unsigned long MarkedAbelianGroup::getTorLoc() const { return ifLoc; }
-inline        unsigned long MarkedAbelianGroup::getTorNum() const { return InvFacList.size(); }
+inline unsigned long MarkedAbelianGroup::getRankOM() const {
+    return rankOM;
+}
+inline unsigned long MarkedAbelianGroup::getFreeLoc() const {
+    return snffreeindex;
+}
+inline unsigned long MarkedAbelianGroup::getTorLoc() const {
+    return ifLoc;
+}
+inline unsigned long MarkedAbelianGroup::getTorNum() const {
+    return InvFacList.size();
+}
 
-inline        NMatrixInt MarkedAbelianGroup::getOM() const { return OM; }
-inline        NMatrixInt MarkedAbelianGroup::getON() const { return ON; }
+inline NMatrixInt MarkedAbelianGroup::getOM() const {
+    return OM;
+}
+inline NMatrixInt MarkedAbelianGroup::getON() const {
+    return ON;
+}
 
 
 
@@ -496,7 +524,7 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
   * @param rowList the rows to pay attention to.
   */
 void RBADD_columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
-                                std::vector<unsigned> &rowList);
+        std::vector<unsigned> &rowList);
 
 /**
   * Given a homomorphism (hom) from Z^n to Z^m and a sublattice of Z^m represented
@@ -523,7 +551,7 @@ NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom, std::vector<NLargeInteger>& 
  * @author Ryan Budney
  */
 
-class HomMarkedAbelianGroup {
+class HomMarkedAbelianGroup : public ShareableObject {
     protected:
         /** domain */
         MarkedAbelianGroup domain;
@@ -580,8 +608,8 @@ class HomMarkedAbelianGroup {
          * the chain-complex coordinates.
          */
         HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
-                               const MarkedAbelianGroup& ran,
-                              const NMatrixInt &mat);
+                const MarkedAbelianGroup& ran,
+                const NMatrixInt &mat);
 //         * Creates a clone of the given group.
 //         *
 //         * @param cloneMe the group to clone.
@@ -638,7 +666,7 @@ class HomMarkedAbelianGroup {
          *
          * @return image of the homomorphism, as a marked abelian group
          */
-       MarkedAbelianGroup getImage();
+        MarkedAbelianGroup getImage();
 
         /**
          * Short text representation: this will state if the
@@ -673,21 +701,27 @@ class HomMarkedAbelianGroup {
 };
 
 
-inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup()
- {
- if (reducedMatrixComputed) { delete reducedMatrix; }
- if (kernelComputed) { delete kernel; }
- if (coKernelComputed) { delete coKernel; }
- if (imageComputed) { delete image; }
- if (reducedKernelLatticeComputed) { delete reducedKernelLattice; }
- }
+inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() {
+    if (reducedMatrixComputed)
+        delete reducedMatrix;
+    if (kernelComputed)
+        delete kernel;
+    if (coKernelComputed)
+        delete coKernel;
+    if (imageComputed)
+        delete image;
+    if (reducedKernelLatticeComputed)
+        delete reducedKernelLattice;
+}
 
-inline NMatrixInt HomMarkedAbelianGroup::getDefiningMatrix()
- { return matrix; }
+inline NMatrixInt HomMarkedAbelianGroup::getDefiningMatrix() {
+    return matrix;
+}
 
-inline NMatrixInt HomMarkedAbelianGroup::getRedMatrix()
- { computeReducedMatrix();
-   return *reducedMatrix; }
+inline NMatrixInt HomMarkedAbelianGroup::getRedMatrix() {
+    computeReducedMatrix();
+    return *reducedMatrix;
+}
 
 
 
