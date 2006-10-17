@@ -947,26 +947,26 @@ void HomMarkedAbelianGroup::computeImage() {
 
 
 
-bool HomMarkedAbelianGroup::isEpic() {
+bool HomMarkedAbelianGroup::isEpic() const {
     bool retval=false;
     if (getCoKernel().isTrivial()) retval=true;
     return retval;
 }
 
-bool HomMarkedAbelianGroup::isMonic() {
+bool HomMarkedAbelianGroup::isMonic() const {
     bool retval=false;
     if (getKernel().isTrivial()) retval=true;
     return retval;
 }
 
-bool HomMarkedAbelianGroup::isIso() {
+bool HomMarkedAbelianGroup::isIso() const {
     bool retval=false;
     if (getCoKernel().isTrivial() && getKernel().isTrivial())
         retval=true;
     return retval;
 }
 
-bool HomMarkedAbelianGroup::isZero() {
+bool HomMarkedAbelianGroup::isZero() const {
     bool retval=false;
     if (getImage().isTrivial())
         retval=true;
@@ -975,18 +975,27 @@ bool HomMarkedAbelianGroup::isZero() {
 
 
 
-MarkedAbelianGroup HomMarkedAbelianGroup::getKernel() {
-    computeKernel();
+MarkedAbelianGroup HomMarkedAbelianGroup::getKernel() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<HomMarkedAbelianGroup*>(this)->computeKernel();
     return *kernel;
 }
 
-MarkedAbelianGroup HomMarkedAbelianGroup::getImage() {
-    computeImage();
+MarkedAbelianGroup HomMarkedAbelianGroup::getImage() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<HomMarkedAbelianGroup*>(this)->computeImage();
     return *image;
 }
 
-MarkedAbelianGroup HomMarkedAbelianGroup::getCoKernel() {
-    computeCoKernel();
+MarkedAbelianGroup HomMarkedAbelianGroup::getCoKernel() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<HomMarkedAbelianGroup*>(this)->computeCoKernel();
     return *coKernel;
 }
 
@@ -1012,8 +1021,7 @@ void HomMarkedAbelianGroup::writeRedMatrix(std::ostream& out) {
 
 }
 
-
-void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) {
+void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
 
     if (isIso()) out<<"isomorphism ";
     else
@@ -1036,12 +1044,6 @@ void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) {
                 }
 
 }
-
-
-
-
-
-
 
 } // namespace regina
 

@@ -629,44 +629,44 @@ class HomMarkedAbelianGroup : public ShareableObject {
          *
          * @return true if homomorphism is epic
          */
-        bool isEpic();
+        bool isEpic() const;
         /**
          * Is it monic? query
          *
          * @return true if homomorphism is monic
          */
-        bool isMonic();
+        bool isMonic() const;
         /**
          * Is it an isomorphism? query
          *
          * @return true if homomorphism is an isomorphism
          */
-        bool isIso();
+        bool isIso() const;
         /**
          * Is it the zero map? query.
          *
          * @return true if homomorphism is the zero map
          */
-        bool isZero();
+        bool isZero() const;
 
         /**
          * Computes the kernel.
          *
          * @return the kernel of the homomorphism, as a marked abelian group
          */
-        MarkedAbelianGroup getKernel();
+        MarkedAbelianGroup getKernel() const;
         /**
          * Computes the cokernel.
          *
          * @return cokernel of the homomorphism, as a marked abelian group
          */
-        MarkedAbelianGroup getCoKernel();
+        MarkedAbelianGroup getCoKernel() const;
         /**
          * Computes the image.
          *
          * @return image of the homomorphism, as a marked abelian group
          */
-        MarkedAbelianGroup getImage();
+        MarkedAbelianGroup getImage() const;
 
         /**
          * Short text representation: this will state if the
@@ -674,7 +674,7 @@ class HomMarkedAbelianGroup : public ShareableObject {
          * if it is not monoic, describes kernel, not epic, describes
          * co-kernel and image.
          */
-        virtual void writeTextShort(std::ostream& out);
+        virtual void writeTextShort(std::ostream& out) const;
 
         /**
          * Writes a text-readable version of the reduced matrix, this is
