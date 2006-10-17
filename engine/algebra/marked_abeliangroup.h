@@ -673,21 +673,21 @@ class HomMarkedAbelianGroup : public ShareableObject {
          *
          * @param out is the output stream
          */
-        void writeRedMatrix(std::ostream& out);
+        void writeRedMatrix(std::ostream& out) const;
 
         /**
          * Returns the defining matrix for the homomorphism.
          *
          * @return the matrix which was used to define the homomorphism.
          */
-        NMatrixInt getDefiningMatrix();
+        NMatrixInt getDefiningMatrix() const;
         /**
          * Gets the internal reduced matrix representing the
          * homomorphism.
          *
          * @return a copy of the internal representation of the homomorphism.
          */
-        NMatrixInt getRedMatrix();
+        NMatrixInt getRedMatrix() const;
 };
 
 
@@ -704,12 +704,15 @@ inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() {
         delete reducedKernelLattice;
 }
 
-inline NMatrixInt HomMarkedAbelianGroup::getDefiningMatrix() {
+inline NMatrixInt HomMarkedAbelianGroup::getDefiningMatrix() const {
     return matrix;
 }
 
-inline NMatrixInt HomMarkedAbelianGroup::getRedMatrix() {
-    computeReducedMatrix();
+inline NMatrixInt HomMarkedAbelianGroup::getRedMatrix() const {
+    // Cast away const to compute the reduced matrix -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
     return *reducedMatrix;
 }
 

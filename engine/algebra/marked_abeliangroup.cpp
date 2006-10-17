@@ -833,7 +833,7 @@ void HomMarkedAbelianGroup::computeReducedMatrix() {
 }
 
 void HomMarkedAbelianGroup::computeReducedKernelLattice() {
-    if (!reducedKernel) {
+    if (!reducedKernelLattice) {
         computeReducedMatrix();
 
         unsigned long i;
@@ -988,8 +988,12 @@ MarkedAbelianGroup HomMarkedAbelianGroup::getCoKernel() const {
 
 
 
-void HomMarkedAbelianGroup::writeRedMatrix(std::ostream& out) {
-    computeReducedMatrix();
+void HomMarkedAbelianGroup::writeRedMatrix(std::ostream& out) const {
+    // Cast away const to compute the reduced matrix -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+
     unsigned long i,j;
     out<<"Reduced Matrix is "<<reducedMatrix->rows()<<" by "<<reducedMatrix->columns()<<
     " corresponding to domain ";
