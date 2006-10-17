@@ -30,7 +30,6 @@
 #include "algebra/marked_abeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "maths/numbertheory.h"
-#include "maths/nmatrixint.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/homologicaldata.h"
 
@@ -55,9 +54,6 @@
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 #include <qvalidator.h>
-
-#include <sstream>
-#include <iostream>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -634,55 +630,35 @@ void NTriTuraevViroUI::calculateInvariant() {
         and it is a submenu of the Algebra menu. **/
 
 void NTriCellularInfoUI::refresh() {
-    std::ostringstream tempString;
-    std::ostringstream ssh1;
-    std::ostringstream ssh2;
-    std::ostringstream ssh0;
-    std::ostringstream ssh3;
-
     if (tri->isValid()) {
-
         regina::homologicalData minfo(*tri);
 
-        tempString<<minfo.getNumStandardCells()[0]<<", "<<
-        minfo.getNumStandardCells()[1]<<", "<<minfo.getNumStandardCells()[2]<<
-            ", "<<minfo.getNumStandardCells()[3];
-        Cells->setText(tempString.str());
-        tempString.str("");
+        Cells->setText(i18n("%1, %2, %3, %4").
+            arg(minfo.getNumStandardCells()[0]).
+            arg(minfo.getNumStandardCells()[1]).
+            arg(minfo.getNumStandardCells()[2]).
+            arg(minfo.getNumStandardCells()[3]));
 
-        tempString<<minfo.getNumDualCells()[0]<<", "<<
-        minfo.getNumDualCells()[1]<<", "<<minfo.getNumDualCells()[2]<<
-            ", "<<minfo.getNumDualCells()[3];
-        DualCells->setText(tempString.str());
-        tempString.str("");
+        DualCells->setText(i18n("%1, %2, %3, %4").
+            arg(minfo.getNumDualCells()[0]).
+            arg(minfo.getNumDualCells()[1]).
+            arg(minfo.getNumDualCells()[2]).
+            arg(minfo.getNumDualCells()[3]));
 
-        tempString<<minfo.getEulerChar();
-        EulerChar->setText(tempString.str());
-        tempString.str("");
+        EulerChar->setText(QString::number(minfo.getEulerChar()));
 
-        minfo.getMH(0).writeTextShort(ssh0);
-        minfo.getMH(1).writeTextShort(ssh1);
-        minfo.getMH(2).writeTextShort(ssh2);
-        minfo.getMH(3).writeTextShort(ssh3);
-        tempString.str("");
-        tempString<<"H0 = "<<ssh0.str()<<",  H1 = "<<ssh1.str()<<
-                    ",  H2 = "<<ssh2.str()<<",  H3 = "<<ssh3.str();
-        H0H1H2H3->setText(tempString.str());
+        H0H1H2H3->setText(i18n("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
+            arg(minfo.getMH(0).toString()).
+            arg(minfo.getMH(1).toString()).
+            arg(minfo.getMH(2).toString()).
+            arg(minfo.getMH(3).toString()));
 
-        tempString.str(""); ssh0.str(""); ssh1.str(""); ssh2.str("");
+        HBdry->setText(i18n("H0 = %1,  H1 = %2,  H2 = %3").
+            arg(minfo.getBMH(0).toString()).
+            arg(minfo.getBMH(1).toString()).
+            arg(minfo.getBMH(2).toString()));
 
-        minfo.getBMH(0).writeTextShort(ssh0);
-        minfo.getBMH(1).writeTextShort(ssh1);
-        minfo.getBMH(2).writeTextShort(ssh2);
-
-        tempString<<"H0 = "<<ssh0.str()<<",  H1 = "<<ssh1.str()<<
-            ",  H2 = "<<ssh2.str();
-        HBdry->setText(tempString.str());
-
-        tempString.str(""); ssh1.str("");
-        minfo.getBMmapH(1).writeTextShort(ssh1);
-        tempString<<ssh1.str();
-        BdryMap->setText(tempString.str());
+        BdryMap->setText(minfo.getBMmapH(1).toString());
 
         minfo.computeTorsionLinkingForm();
 
@@ -691,7 +667,6 @@ void NTriCellularInfoUI::refresh() {
         TorForSigma->setText(minfo.getTorsionSigmaVectorString());
         TorForLegendre->setText(minfo.getTorsionLegendreSymbolVectorString());
         EmbeddingComments->setText(minfo.getEmbeddabilityComment());
-
     } else {
         QString msg(i18n("Invalid Triangulation."));
         Cells->setText(msg);
