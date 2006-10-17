@@ -109,7 +109,7 @@ class NTriHomologyUI : public PacketViewerTab {
 /** RBMOD
  * A page for viewing detailed cellular information about the manifold.
  */
-class NTriDetailedCellularInfoUI: public PacketViewerTab {
+class NTriCellularInfoUI: public PacketViewerTab {
     private:
         /**
          * Packet details
@@ -135,7 +135,7 @@ class NTriDetailedCellularInfoUI: public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriDetailedCellularInfoUI(regina::NTriangulation* packet,
+        NTriCellularInfoUI(regina::NTriangulation* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
@@ -255,8 +255,5 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
 inline void NTriFundGroupUI::setGAPExec(const QString& newGAPExec) {
     GAPExec = newGAPExec;
 }
-
-
-
 
 #endif

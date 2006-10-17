@@ -198,7 +198,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
             triPrefs->comboInitialAlgebraTab->setCurrentItem(1); break;
         case ReginaPrefSet::TuraevViro:
             triPrefs->comboInitialAlgebraTab->setCurrentItem(2); break;
-        case ReginaPrefSet::DetailedCellularInfo:
+        case ReginaPrefSet::CellularInfo:
             triPrefs->comboInitialAlgebraTab->setCurrentItem(3); break;
         default:
             triPrefs->comboInitialAlgebraTab->setCurrentItem(0); break;
@@ -297,7 +297,7 @@ void ReginaPreferences::slotApply() {
         case 2:
             prefSet.triInitialAlgebraTab = ReginaPrefSet::TuraevViro; break;
         case 3:
-            prefSet.triInitialAlgebraTab = ReginaPrefSet::DetailedCellularInfo; break;
+            prefSet.triInitialAlgebraTab = ReginaPrefSet::CellularInfo; break;
         default:
             prefSet.triInitialAlgebraTab = ReginaPrefSet::Homology; break;
     }
@@ -543,7 +543,7 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
     comboInitialAlgebraTab->insertItem(i18n("Homology"));
     comboInitialAlgebraTab->insertItem(i18n("Fundamental Group"));
     comboInitialAlgebraTab->insertItem(i18n("Turaev-Viro"));
-    comboInitialAlgebraTab->insertItem(i18n("Detailed Cellular Information"));
+    comboInitialAlgebraTab->insertItem(i18n("Cellular Info"));
     msg = i18n("Specifies which tab should be initially visible "
         "when a new triangulation algebra viewer is opened.");
     QWhatsThis::add(label, msg);

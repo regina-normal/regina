@@ -139,7 +139,7 @@ NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
     addTab(new NTriHomologyUI(packet, this), i18n("&Homology"));
     addTab(fundGroup, i18n("&Fund. Group"));
     addTab(new NTriTuraevViroUI(packet, this), i18n("&Turaev-Viro"));
-    addTab(new NTriDetailedCellularInfoUI(packet, this), i18n("&DCI"));
+    addTab(new NTriCellularInfoUI(packet, this), i18n("&Cellular Info"));
 
     switch (prefs.triInitialAlgebraTab) {
         case ReginaPrefSet::Homology:
@@ -148,8 +148,8 @@ NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
             setCurrentTab(1); break;
         case ReginaPrefSet::TuraevViro:
             setCurrentTab(2); break;
-        case ReginaPrefSet::DetailedCellularInfo:
-            setCurrentTab(3); break; // EDIT
+        case ReginaPrefSet::CellularInfo:
+            setCurrentTab(3); break;
     }
 }
 
@@ -264,7 +264,7 @@ void NTriHomologyUI::editingElsewhere() {
         and it is a submenu of the Algebra menu. **/
 
 
-void NTriDetailedCellularInfoUI::refresh() {
+void NTriCellularInfoUI::refresh() {
     std::ostringstream tempString;
     std::ostringstream ssh1;
     std::ostringstream ssh2;
@@ -334,7 +334,7 @@ void NTriDetailedCellularInfoUI::refresh() {
         }
 }
 
-NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* packet,
+NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -458,15 +458,15 @@ NTriDetailedCellularInfoUI::NTriDetailedCellularInfoUI(regina::NTriangulation* p
 }
 
 
-regina::NPacket* NTriDetailedCellularInfoUI::getPacket() {
+regina::NPacket* NTriCellularInfoUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriDetailedCellularInfoUI::getInterface() {
+QWidget* NTriCellularInfoUI::getInterface() {
     return ui;
 }
 
-void NTriDetailedCellularInfoUI::editingElsewhere() {
+void NTriCellularInfoUI::editingElsewhere() {
     QString msg(i18n("Editing..."));
 
     Cells->setText(msg);

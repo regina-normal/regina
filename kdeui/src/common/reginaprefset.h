@@ -68,7 +68,7 @@ struct ReginaPrefSet {
         /**< Available top-level tabs in a triangulation viewer/editor. */
     enum TriSkeletonTab { SkelComp, FacePairingGraph };
         /**< Available tabs in a triangulation skeleton viewer. */
-    enum TriAlgebraTab { Homology, FundGroup, TuraevViro, DetailedCellularInfo };
+    enum TriAlgebraTab { Homology, FundGroup, TuraevViro, CellularInfo };
         /**< Available tabs in a triangulation algebra viewer. */
 
     bool autoDock;
