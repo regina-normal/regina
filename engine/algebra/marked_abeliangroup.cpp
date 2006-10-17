@@ -763,40 +763,32 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
         const MarkedAbelianGroup& ran,
         const NMatrixInt &mat):
         domain(dom), range(ran), matrix(mat),
-        reducedMatrixComputed(false), reducedMatrix(0),
-        kernelComputed(false), kernel(0),
-        coKernelComputed(false), coKernel(0),
-        imageComputed(false), image(0),
-reducedKernelLatticeComputed(false), reducedKernelLattice(0) {}
+        reducedMatrix(0), kernel(0), coKernel(0), image(0),
+        reducedKernelLattice(0) {
+}
 
 
 HomMarkedAbelianGroup::HomMarkedAbelianGroup(const HomMarkedAbelianGroup& g):
         ShareableObject(), domain(g.domain), range(g.range), matrix(g.matrix) {
-    reducedMatrixComputed=g.reducedMatrixComputed;
-    kernelComputed=g.kernelComputed;
-    coKernelComputed=g.coKernelComputed;
-    imageComputed=g.imageComputed;
-    reducedKernelLatticeComputed=g.reducedKernelLatticeComputed;
-
-    if (reducedMatrixComputed) {
+    if (g.reducedMatrix) {
         reducedMatrix = new NMatrixInt(*g.reducedMatrix);
     } else reducedMatrix = 0;
-    if (kernelComputed) {
+    if (g.kernel) {
         kernel = new MarkedAbelianGroup(*g.kernel);
     } else kernel = 0;
-    if (coKernelComputed) {
+    if (g.coKernel) {
         coKernel = new MarkedAbelianGroup(*g.coKernel);
     } else coKernel = 0;
-    if (imageComputed) {
+    if (g.image) {
         image = new MarkedAbelianGroup(*g.image);
     } else image = 0;
-    if (reducedKernelLatticeComputed) {
+    if (g.reducedKernelLattice) {
         reducedKernelLattice = new NMatrixInt(*g.reducedKernelLattice);
     } else reducedKernelLattice = 0;
 }
 
 void HomMarkedAbelianGroup::computeReducedMatrix() {
-    if (!reducedMatrixComputed) {
+    if (!reducedMatrix) {
         unsigned long i,j,k;
 
         NMatrixInt kerMatrix( matrix.rows()-range.getRankOM(),
@@ -837,12 +829,11 @@ void HomMarkedAbelianGroup::computeReducedMatrix() {
                         rccqb.entry(i+range.getTorLoc(), k) * temp2.entry(k,j);
 
         reducedMatrix = new NMatrixInt(redMatrix);
-        reducedMatrixComputed=true;
     }
 }
 
 void HomMarkedAbelianGroup::computeReducedKernelLattice() {
-    if (!reducedKernelLattice) {
+    if (!reducedKernel) {
         computeReducedMatrix();
 
         unsigned long i;
@@ -858,13 +849,12 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice() {
                 dcL[i]=range.getInvariantFactor(i);
             else dcL[i]="0";
 
-        reducedKernelLatticeComputed = true;
         reducedKernelLattice = new NMatrixInt( RBADD_preImageOfLattice( redMatrix, dcL ) );
     }
 }
 
 void HomMarkedAbelianGroup::computeKernel() {
-    if (!kernelComputed) {
+    if (!kernel) {
         computeReducedKernelLattice();
         NMatrixInt dcLpreimage( *reducedKernelLattice );
 
@@ -892,7 +882,6 @@ void HomMarkedAbelianGroup::computeKernel() {
 
         MarkedAbelianGroup retval( dummy, workMat );
 
-        kernelComputed=true;
         kernel = new MarkedAbelianGroup(retval);
     }
 }
@@ -900,7 +889,7 @@ void HomMarkedAbelianGroup::computeKernel() {
 
 
 void HomMarkedAbelianGroup::computeCoKernel() {
-    if (!coKernelComputed) {
+    if (!coKernel) {
         computeReducedMatrix();
 
         NMatrixInt ccrelators( reducedMatrix->rows(), reducedMatrix->columns() +
@@ -914,7 +903,6 @@ void HomMarkedAbelianGroup::computeCoKernel() {
         NMatrixInt ccgenerators( 1, reducedMatrix->rows() );
         MarkedAbelianGroup retval(ccgenerators, ccrelators);
 
-        coKernelComputed=true;
         coKernel = new MarkedAbelianGroup(retval);
     }
 }
@@ -923,7 +911,7 @@ void HomMarkedAbelianGroup::computeCoKernel() {
 
 
 void HomMarkedAbelianGroup::computeImage() {
-    if (!imageComputed) {
+    if (!image) {
         computeReducedKernelLattice();
         NMatrixInt dcLpreimage( *reducedKernelLattice );
 
@@ -940,7 +928,6 @@ void HomMarkedAbelianGroup::computeImage() {
 
         MarkedAbelianGroup retval(imgCCm, imgCCn);
 
-        imageComputed=true;
         image = new MarkedAbelianGroup(retval);
     }
 }

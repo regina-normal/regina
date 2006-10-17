@@ -561,24 +561,14 @@ class HomMarkedAbelianGroup : public ShareableObject {
          ** used to construct domain and range */
         NMatrixInt matrix;
 
-        /** true if reducedMatrix allocated */
-        bool reducedMatrixComputed;
         /** short description of matrix in SNF coordinates */
         NMatrixInt* reducedMatrix;
-        /** true if kernel computed */
-        bool kernelComputed;
         /** pointer to kernel of map */
         MarkedAbelianGroup* kernel;
-        /** true if coKernel computed */
-        bool coKernelComputed;
         /** pointer to coKernel of map */
         MarkedAbelianGroup* coKernel;
-        /** true if image computed */
-        bool imageComputed;
         /** pointer to image */
         MarkedAbelianGroup* image;
-        /** true if reducedKernelLattice computed */
-        bool reducedKernelLatticeComputed;
         /** pointer to a lattice which describes the kernel of the homomorphism. */
         NMatrixInt* reducedKernelLattice;
 
@@ -702,15 +692,15 @@ class HomMarkedAbelianGroup : public ShareableObject {
 
 
 inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() {
-    if (reducedMatrixComputed)
+    if (reducedMatrix)
         delete reducedMatrix;
-    if (kernelComputed)
+    if (kernel)
         delete kernel;
-    if (coKernelComputed)
+    if (coKernel)
         delete coKernel;
-    if (imageComputed)
+    if (image)
         delete image;
-    if (reducedKernelLatticeComputed)
+    if (reducedKernelLattice)
         delete reducedKernelLattice;
 }
 
