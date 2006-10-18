@@ -56,15 +56,15 @@ class NMatrixInt;
  * Represents a finitely generated abelian group given by a chain complex.
  *
  * This class is initialized with a chain complex.  The chain complex is given
- * in terms of two NMatrixInt classes, M and N such that M*N=0. The abelian group
- * is the kernel of M mod the image of N. It then allows one to
+ * in terms of two NMatrixInt classes, M and N such that M*N=0. The abelian
+ * group is the kernel of M mod the image of N. It then allows one to
  * retrieve the invariant factors, the rank, and the corresponding vectors in
  * the kernel of M.  Moreover, given a vector in the kernel of M, it decribes
  * the homology class of the vector (the free part, and its position in the
  * invariant factors).  The purpose of this class is to allow one to not only
- * represent homology groups, but it gives the foundation for studying maps between
- * homology groups.  This is used in the computation of the torsion H_1 form
- * coming from Poincare Duality.
+ * represent homology groups, but it gives the foundation for studying maps
+ * between homology groups.  This is used in the computation of the torsion
+ * H_1 form coming from Poincare Duality.
  *
  * @author Ryan Budney
  *
@@ -89,9 +89,9 @@ class MarkedAbelianGroup : public ShareableObject {
         unsigned long rankOM; // this is the index of the first zero entry
                               // in the SNF of OM.
         /** Internal reduced N matrix */
-        NMatrixInt ORN; // this is the reducted ON matrix, ORN = [OMRi * ON] with
-                        // where the brackets indicate removal of the first
-                        // rankOM rows.
+        NMatrixInt ORN; // this is the reducted ON matrix, ORN = [OMRi * ON]
+                        // where the brackets indicate removal of the
+                        // first rankOM rows.
         /** Internal change of basis */
         NMatrixInt ornR;
         /** Internal change of basis */
@@ -276,13 +276,13 @@ class MarkedAbelianGroup : public ShareableObject {
          * @return a vector that describes element in the standard
          *  Z^d + Z_{d1} + ... + Z_{dk} form.
          */
-        std::vector<NLargeInteger> getSNFisoRep(std::vector<NLargeInteger>& element)
-            const;
+        std::vector<NLargeInteger> getSNFisoRep(
+            std::vector<NLargeInteger>& element) const;
 
         /**
-         * These routines return information on how we determined the isomorphism-class of
-         * the group.  Originally, the group was defined by two matrices M and N with
-         * M*N==0.
+         * These routines return information on how we determined the
+         * isomorphism-class of the group.  Originally, the group was defined
+         * by two matrices M and N with M*N==0.
          *
          * getMCB() * M * getMRB() is the Smith Normal Form of M.
          * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
@@ -292,9 +292,9 @@ class MarkedAbelianGroup : public ShareableObject {
          */
         NMatrixInt getMRB() const; // these matrices are for putting OM in SNF
         /**
-         * These routines return information on how we determined the isomorphism-class of
-         * the group.  Originally, the group was defined by two matrices M and N with
-         * M*N==0.
+         * These routines return information on how we determined the
+         * isomorphism-class of the group.  Originally, the group was defined
+         * by two matrices M and N with M*N==0.
          *
          * getMCB() * M * getMRB() is the Smith Normal Form of M.
          * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
@@ -304,9 +304,9 @@ class MarkedAbelianGroup : public ShareableObject {
          */
         NMatrixInt getMRBi() const;// getMCB() * OM * getMRB() = SNF(OM)
         /**
-         * These routines return information on how we determined the isomorphism-class of
-         * the group.  Originally, the group was defined by two matrices M and N with
-         * M*N==0.
+         * These routines return information on how we determined the
+         * isomorphism-class of the group.  Originally, the group was defined
+         * by two matrices M and N with M*N==0.
          *
          * getMCB() * M * getMRB() is the Smith Normal Form of M.
          * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
@@ -316,9 +316,9 @@ class MarkedAbelianGroup : public ShareableObject {
          */
         NMatrixInt getMCB() const;
         /**
-         * These routines return information on how we determined the isomorphism-class of
-         * the group.  Originally, the group was defined by two matrices M and N with
-         * M*N==0.
+         * These routines return information on how we determined the
+         * isomorphism-class of the group.  Originally, the group was defined
+         * by two matrices M and N with M*N==0.
          *
          * getMCB() * M * getMRB() is the Smith Normal Form of M.
          * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
@@ -330,9 +330,10 @@ class MarkedAbelianGroup : public ShareableObject {
 
         /**
          * The 2nd step in determining the isomorphism class of the group is to
-         * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
-         * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
-         * matrix into Smith Normal Form, and keep track of the matrices that do it.
+         * look at the matrix getMRBi()*N. Some of its columns are zero, so we
+         * truncate this matrix and denote it by [getMRBi()*N)].  Now we put
+         * this truncated matrix into Smith Normal Form, and keep track of
+         * the matrices that do it.
          *
          * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
          * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
@@ -344,9 +345,10 @@ class MarkedAbelianGroup : public ShareableObject {
 
         /**
          * The 2nd step in determining the isomorphism class of the group is to
-         * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
-         * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
-         * matrix into Smith Normal Form, and keep track of the matrices that do it.
+         * look at the matrix getMRBi()*N. Some of its columns are zero, so we
+         * truncate this matrix and denote it by [getMRBi()*N)].  Now we put
+         * this truncated matrix into Smith Normal Form, and keep track of
+         * the matrices that do it.
          *
          * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
          * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
@@ -358,9 +360,10 @@ class MarkedAbelianGroup : public ShareableObject {
 
         /**
          * The 2nd step in determining the isomorphism class of the group is to
-         * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
-         * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
-         * matrix into Smith Normal Form, and keep track of the matrices that do it.
+         * look at the matrix getMRBi()*N. Some of its columns are zero, so we
+         * truncate this matrix and denote it by [getMRBi()*N)].  Now we put
+         * this truncated matrix into Smith Normal Form, and keep track of
+         * the matrices that do it.
          *
          * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
          * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
@@ -372,9 +375,10 @@ class MarkedAbelianGroup : public ShareableObject {
 
         /**
          * The 2nd step in determining the isomorphism class of the group is to
-         * look at the matrix getMRBi()*N. Some of its columns are zero, so we truncate
-         * this matrix and denote it by [getMRBi()*N)].  Now we put this truncated
-         * matrix into Smith Normal Form, and keep track of the matrices that do it.
+         * look at the matrix getMRBi()*N. Some of its columns are zero, so we
+         * truncate this matrix and denote it by [getMRBi()*N)].  Now we put
+         * this truncated matrix into Smith Normal Form, and keep track of
+         * the matrices that do it.
          *
          * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
          * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
@@ -492,61 +496,66 @@ inline NMatrixInt MarkedAbelianGroup::getON() const {
 
 
 
-/** These are intended to be internal routines, although they could be used for
-  *  other purposes. RBMOD_smithNormalForm is a modification of the smithNormalForm
-  *  algorithm, it returns the appropriate change-of-basis matrices corresponding to
-  *  all the row and column operations performed in the process of constructing the
-  *  smithNormalForm.  RBADD_columnEchelonForm puts a matrix into reduced column
-  *  echelon form with respect to a certain submatrix specified by rowList. This
-  *  is used in the RBADD_preImageOfLattice algorithm, which computes the kernel
-  *  of a homomorphism Z^n --> Z_p1 + Z_p2 + ... + Z_pk specified by a matrix.
-  * @param matrix is the original m x n matrix to put into Smith Normal Form. When the
-  *        algorithm terminates, it *is* in its Smith Normal Form.
-  * @param RowSpaceBasis change of basis matrix
-  * @param RowSpaceBasisInv inverse of RowSpaceBasis
-  * @param ColSpaceBasis change of basis matrix
-  * @param ColSpaceBasisInv invase of ColSpaceBasis
-  * when the algorithm terminates, the original matrix is equal to
-  * ColSpaceBasisInv * matrix * RowSpaceBasisInv.
-  * thus, one obtains matrix from the old matrix by multiplying on the
-  * left by ColSpaceBasis and on the right by RowSpaceBasis.
-  */
+/**
+ * These are intended to be internal routines, although they could be used for
+ * other purposes. RBMOD_smithNormalForm is a modification of the
+ * smithNormalForm algorithm, it returns the appropriate change-of-basis
+ * matrices corresponding to all the row and column operations performed in
+ * the process of constructing the smithNormalForm.  RBADD_columnEchelonForm
+ * puts a matrix into reduced column echelon form with respect to a certain
+ * submatrix specified by rowList. This is used in the RBADD_preImageOfLattice
+ * algorithm, which computes the kernel of a homomorphism
+ * Z^n --> Z_p1 + Z_p2 + ... + Z_pk specified by a matrix.
+ *
+ * @param matrix is the original m x n matrix to put into Smith Normal Form.
+ * When the algorithm terminates, it *is* in its Smith Normal Form.
+ * @param RowSpaceBasis change of basis matrix
+ * @param RowSpaceBasisInv inverse of RowSpaceBasis
+ * @param ColSpaceBasis change of basis matrix
+ * @param ColSpaceBasisInv invase of ColSpaceBasis
+ * when the algorithm terminates, the original matrix is equal to
+ * ColSpaceBasisInv * matrix * RowSpaceBasisInv.
+ * thus, one obtains matrix from the old matrix by multiplying on the
+ * left by ColSpaceBasis and on the right by RowSpaceBasis.
+ */
 void RBMOD_smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& RowSpaceBasis, NMatrixInt& RowSpaceBasisInv,
         NMatrixInt& ColSpaceBasis, NMatrixInt& ColSpaceBasisInv);
 
-/** Modification of RBMOD_smithNormalForm to only put the matrix in Column Echelon
-  *  form with respect to a collection of rows.
-  *
-  * @param M matrix to reduce
-  * @param R row-reduction matrix
-  * @param Ri the inverse of R
-  * @param rowList the rows to pay attention to.
-  */
+/**
+ * Modification of RBMOD_smithNormalForm to only put the matrix in Column
+ * Echelon form with respect to a collection of rows.
+ *
+ * @param M matrix to reduce
+ * @param R row-reduction matrix
+ * @param Ri the inverse of R
+ * @param rowList the rows to pay attention to.
+ */
 void RBADD_columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
         std::vector<unsigned> &rowList);
 
 /**
-  * Given a homomorphism (hom) from Z^n to Z^m and a sublattice of Z^m represented
-  * by L, this procedure computes the preimage of L under hom.
-  *
-  * @param hom the matrix representing the homomorphism from Z^n to Z^m
-  * @param L the sublattice of Z^m
-  * @return a matrix whose columns are a basis for the preimage lattice.
-  */
+ * Given a homomorphism (hom) from Z^n to Z^m and a sublattice of Z^m
+ * represented by L, this procedure computes the preimage of L under hom.
+ *
+ * @param hom the matrix representing the homomorphism from Z^n to Z^m
+ * @param L the sublattice of Z^m
+ * @return a matrix whose columns are a basis for the preimage lattice.
+ */
 NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom, std::vector<NLargeInteger>& L);
 
 
 /**
  * Represents a homomorphism of finitely generated abelian groups.
- * One initializes a homomorphism of f.g. abelian groups by passing the constructor
- * two f.g. abelian groups and a matrix which describes the linear map between the
- * free abelian groups in the centre of the respective chain complexes that you
- * used when defining the f.g. abelian groups.  So for example, if dom was initialized
- * by the chain complex  Z^a -- A --> Z^b -- B --> Z^c and ran was initialized by
- * Z^d -- D --> Z^e -- E --> Z^f, then mat needs to be an e-by-b matrix, and of course,
- * you only get something that's well-defined if mat extends to a chain map, which
- * this function assumes.
+ * One initializes a homomorphism of f.g. abelian groups by passing the
+ * constructor two f.g. abelian groups and a matrix which describes the
+ * linear map between the free abelian groups in the centre of the respective
+ * chain complexes that you used when defining the f.g. abelian groups.  So
+ * for example, if dom was initialized by the chain complex
+ * Z^a -- A --> Z^b -- B --> Z^c and ran was initialized by
+ * Z^d -- D --> Z^e -- E --> Z^f, then mat needs to be an e-by-b matrix, and
+ * of course, you only get something that's well-defined if mat extends to
+ * a chain map, which this function assumes.
  *
  * @author Ryan Budney
  */
@@ -557,8 +566,8 @@ class HomMarkedAbelianGroup : public ShareableObject {
         MarkedAbelianGroup domain;
         /** range */
         MarkedAbelianGroup range;
-        /** matrix describing map from domain to range, in the coordinates of the chain complexes
-         ** used to construct domain and range */
+        /** matrix describing map from domain to range, in the coordinates
+            of the chain complexes used to construct domain and range */
         NMatrixInt matrix;
 
         /** short description of matrix in SNF coordinates */
@@ -569,7 +578,8 @@ class HomMarkedAbelianGroup : public ShareableObject {
         MarkedAbelianGroup* coKernel;
         /** pointer to image */
         MarkedAbelianGroup* image;
-        /** pointer to a lattice which describes the kernel of the homomorphism. */
+        /** pointer to a lattice which describes the kernel of the
+            homomorphism. */
         NMatrixInt* reducedKernelLattice;
 
         /** compute the ReducedKernelLattice */
@@ -586,29 +596,25 @@ class HomMarkedAbelianGroup : public ShareableObject {
     public:
 
 //       * Homomorphisms of marked abelian groups are generally created from
-//         * two marked abelian groups and a matrix that indicates where the generators
-//         * are sent.
+//       * two marked abelian groups and a matrix that indicates where the
+//       * generators are sent.
         /**
-         * This is the sole HomMarkedAbelianGroup constructor, other than the copy
-         * constructor.
+         * This is the sole HomMarkedAbelianGroup constructor, other than
+         * the copy constructor.
          *
          * @param dom domain group
          * @param ran range group
-         * @param mat the matrix that describes the homomorphism from dom to ran, given in
-         * the chain-complex coordinates.
+         * @param mat the matrix that describes the homomorphism from dom
+         * to ran, given in the chain-complex coordinates.
          */
         HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
                 const MarkedAbelianGroup& ran,
                 const NMatrixInt &mat);
-//         * Creates a clone of the given group.
-//         *
-//         * @param cloneMe the group to clone.
         /**
          * Copy constructor.
          * @param g object to copy
          */
         HomMarkedAbelianGroup(const HomMarkedAbelianGroup& g);
-//         * Destroys the group.
         /**
          * Destructor.
          */
