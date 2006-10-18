@@ -660,17 +660,11 @@ unsigned MarkedAbelianGroup::getRank() const {
 }
 
 bool MarkedAbelianGroup::isTrivial() const {
-    bool retval=true;
-    if ( (snfrank>0) || (InvFacList.size()>0) )
-        retval=false;
-    return (retval);
+    return ! ( (snfrank>0) || (InvFacList.size()>0) );
 }
 
 bool MarkedAbelianGroup::operator == (const MarkedAbelianGroup& other) const {
-    bool retval=false;
-    if ((InvFacList == other.InvFacList) && (snfrank==other.snfrank))
-        retval=true;
-    return retval;
+    return ((InvFacList == other.InvFacList) && (snfrank==other.snfrank));
 }
 
 
@@ -983,29 +977,19 @@ void HomMarkedAbelianGroup::computeImage() {
 
 
 bool HomMarkedAbelianGroup::isEpic() const {
-    bool retval=false;
-    if (getCoKernel().isTrivial()) retval=true;
-    return retval;
+    return getCoKernel().isTrivial();
 }
 
 bool HomMarkedAbelianGroup::isMonic() const {
-    bool retval=false;
-    if (getKernel().isTrivial()) retval=true;
-    return retval;
+    return getKernel().isTrivial();
 }
 
 bool HomMarkedAbelianGroup::isIso() const {
-    bool retval=false;
-    if (getCoKernel().isTrivial() && getKernel().isTrivial())
-        retval=true;
-    return retval;
+    return (getCoKernel().isTrivial() && getKernel().isTrivial());
 }
 
 bool HomMarkedAbelianGroup::isZero() const {
-    bool retval=false;
-    if (getImage().isTrivial())
-        retval=true;
-    return retval;
+    return getImage().isTrivial();
 }
 
 
