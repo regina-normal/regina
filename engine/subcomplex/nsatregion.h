@@ -157,8 +157,8 @@ struct NSatBlockSpec {
  * such as expand() which may add more blocks to the region will update
  * the block adjacencies accordingly.
  *
- * \todo Have this class track the boundary components properly, with
- * annuli grouped and oriented according to the region boundaries (as
+ * \todo \feature Have this class track the boundary components properly,
+ * with annuli grouped and oriented according to the region boundaries (as
  * opposed to individual block boundaries).
  */
 class NSatRegion : public ShareableObject {

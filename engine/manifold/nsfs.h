@@ -182,9 +182,9 @@ std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
  * being adapted to the new NSFSpace class (i.e., it may require more
  * than just substituting class names).
  *
- * \todo Implement recognition of more common names.
- * \todo Implement triangulation construction and homology calculation
- * for more Seifert fibred spaces.
+ * \todo \featurelong Implement recognition of more common names.
+ * \todo \featurelong Implement triangulation construction and homology
+ * calculation for more Seifert fibred spaces.
  */
 class NSFSpace : public NManifold {
     public:

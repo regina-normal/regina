@@ -214,7 +214,7 @@ class NPrimes {
          * The current implementation of this routine merely calls
          * primeDecomp() and rewrites the list of factors by grouping primes.
          *
-         * \todo Implement this routine natively to avoid the overhead
+         * \todo \opt Implement this routine natively to avoid the overhead
          * of the temporary primeDecomp() vector.
          *
          * \ifacespython In addition to this routine, the routine
