@@ -146,6 +146,15 @@ AC_ARG_ENABLE(docs, AC_HELP_STRING([--disable-docs],
     REGINA_DO_NOT_COMPILE([DOCSENGINE])
   fi
 ])
+AC_ARG_ENABLE(release-mode, AC_HELP_STRING([--enable-release-mode],
+    [additional tasks for preparing new source releases]), [
+  if test "$enableval" = "yes"; then
+    release_mode=true
+  else
+    release_mode=false
+  fi
+])
+AM_CONDITIONAL(COND_RELEASE_MODE, test "$release_mode" = true)
 
 ###########################################################
 #

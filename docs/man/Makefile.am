@@ -26,7 +26,7 @@ EXTRA_DIST = $(man_MANS)
 
 # Only regenerate manpages if you're the maintainer and you have a
 # working docbook2man.
-if MAINTAINER_MODE
+if COND_RELEASE_MODE
 if HAVE_DOCBOOK2MAN
 man_docbook = \
   ../../kdeui/doc/en/manonly.docbook \
