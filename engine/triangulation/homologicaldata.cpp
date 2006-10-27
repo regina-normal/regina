@@ -1441,7 +1441,7 @@ void homologicalData::computeTorsionLinkingForm() {
     }
 
 
-// step 4: kk test for: split, hyperbolic, and the embeddability (need to implement)
+// step 4: kk test for: split, hyperbolic, and the embeddability
 //           2^k-torsion condition.
 
     torsionLinkingFormIsSplit=true;
@@ -1453,11 +1453,9 @@ void homologicalData::computeTorsionLinkingForm() {
     for (unsigned long i=0; i<torRankV.size(); i++)
         for (unsigned long j=0; j<torRankV[i].second.size(); j++)
             if ( (torRankV[i].second[j] % 2) != 0 ) torsionLinkingFormIsSplit=false;
-// now go through the chi/legendre symbol vector
     if (torsionLinkingFormIsSplit) {
         for (unsigned long i=0; i<oddTorLegSymV.size(); i++)
             for (unsigned long j=0; j<oddTorLegSymV[i].second.size(); j++) {
-                // chi^k_p == (-1)^{r^k_p(p-1)/4} ??
                 if ( ( (NLargeInteger(torRankV[i+starti].second[j])*(torRankV[i+starti].first -
                         NLargeInteger::one))/NLargeInteger(4) ) % NLargeInteger(2) == NLargeInteger::zero ) {
                     if (oddTorLegSymV[i].second[j] != 1) torsionLinkingFormIsSplit=false;
@@ -1508,8 +1506,6 @@ void homologicalData::computeTorsionLinkingForm() {
 
     }
 
-//        std::string torsionRankString;
-
     torsionRankString.assign("");
     if (torRankV.size()==0) torsionRankString.append("no torsion");
     else for (unsigned long i=0; i<torRankV.size(); i++) {
@@ -1522,24 +1518,32 @@ void homologicalData::computeTorsionLinkingForm() {
             torsionRankString.append(") ");
         }
 
-    torsionSigmaString.assign("");
-    if (twoTorSigmaV.size()==0) torsionSigmaString.append("no 2-torsion");
-    else for (unsigned long i=0; i<twoTorSigmaV.size(); i++) {
+    if (tri->isOrientable())
+ 	{
+        torsionSigmaString.assign("");
+        if (twoTorSigmaV.size()==0) torsionSigmaString.append("no 2-torsion");
+        else for (unsigned long i=0; i<twoTorSigmaV.size(); i++) {
             torsionSigmaString.append(twoTorSigmaV[i].stringValue());
             torsionSigmaString.append(" ");
-        }
+            }
+	}
+    else torsionSigmaString.assign("manifold is non-orientable");
 
-    torsionLegendreString.assign("");
-    if (oddTorLegSymV.size()==0) torsionLegendreString.append("no odd p-torsion");
-    else for (unsigned long i=0; i<oddTorLegSymV.size(); i++) {
+    if (tri->isOrientable())
+ 	{
+        torsionLegendreString.assign("");
+        if (oddTorLegSymV.size()==0) torsionLegendreString.append("no odd p-torsion");
+        else for (unsigned long i=0; i<oddTorLegSymV.size(); i++) {
             torsionLegendreString.append(oddTorLegSymV[i].first.stringValue());
             torsionLegendreString.append("(");
             for (unsigned long j=0; j<oddTorLegSymV[i].second.size(); j++) {
                 torsionLegendreString.append( NLargeInteger(oddTorLegSymV[i].second[j]).stringValue());
                 if (j<oddTorLegSymV[i].second.size()-1) torsionLegendreString.append(" ");
-            }
+                }
             torsionLegendreString.append(") ");
-        }
+            }
+	}
+    else torsionLegendreString.append("manifold is non-orientable");
 
     embedabilityString.assign("");
     if (tri->isOrientable()) {
@@ -1580,10 +1584,9 @@ void homologicalData::computeTorsionLinkingForm() {
         }
     } else {
         if (getBMH(0).isTrivial()) { // nonorientable, boundaryless
-            // torsion matters here? I guess not.
             embedabilityString.append("Minimal embedding dimension is 5.");
         } else { // nonorientable with boundary
-            // double cover check?
+            // double cover check? might this eventually help gain some kind of insight?
             if (getBMmapH(1).isEpic())
                 embedabilityString.append("Embeds in a homology 3-sphere.");
             else
