@@ -701,7 +701,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(Cells, 1, 2);
     msg = i18n("The listing of the number of 0-cells, number of 1-cells, "
                 "number of 2-cells and number of 3-cells for a proper "
-                "CW-decomposition of the manifold specified by this "
+                "CW-decomposition of the compact manifold specified by this "
                 "triangulation. ");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(Cells, msg);
@@ -711,7 +711,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     DualCells = new QLabel(ui);
     homologyGrid->addWidget(DualCells, 2, 2);
     msg = i18n("The number of cells in the dual CW-decomposition "
-                "corresponding to the triangulation.  Listed in order "
+                "corresponding to the triangulation of this "
+		"compact manifold.  Listed in order "
                 "of ascending dimension. ");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(DualCells, msg);
@@ -720,7 +721,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 3, 1);
     EulerChar = new QLabel(ui);
     homologyGrid->addWidget(EulerChar, 3, 2);
-    msg = i18n("The Euler Characteristic of this manifold. ");
+    msg = i18n("The Euler Characteristic of this compact manifold. ");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(EulerChar, msg);
 
@@ -783,7 +784,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(TorForLegendre, 9, 2);
     msg = i18n("If H1 has odd torsion, this is the "
                "Legendre symbol vector, the last of the "
-               "Kawauchi-Kojima invariants, this one originally "
+               "Kawauchi-Kojima invariants, also originally "
                "constructed by Seifert. "
                 );
     QWhatsThis::add(label, msg);
