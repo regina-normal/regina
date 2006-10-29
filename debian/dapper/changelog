@@ -1,18 +1,9 @@
-regina-normal (4.3.2-1) unstable; urgency=low
+regina-normal (4.3.1-2ubuntu1) unstable; urgency=low
 
-  * New upstream release.
-  * No longer uses virtual template member functions (closes: #370183).
-
- -- Ben Burton <bab@debian.org>  Sun,  8 Oct 2006 11:35:15 +1000
-
-regina-normal (4.3.1-2) unstable; urgency=low
-
+  * Backport newer regina-normal to ubuntu/dapper.
   * Patched trisetcmp to give appropriate messages for subcomplex testing
     (instead of using the same messages as for isomorphism testing).
-  * Added XS-Python-Version and XB-Python-Version fields to debian/control
-    as requested by new python policy (closes: #380931).
   * Switched to debhelper compatibility level 5.
-  * Bumped standards-version to 3.7.2.1 (no changes required).
 
  -- Ben Burton <bab@debian.org>  Sun,  8 Oct 2006 11:35:15 +1000
 

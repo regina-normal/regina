@@ -3,15 +3,14 @@
 # Python version checker for Regina.
 #
 # Ensures that python versions are consistent between the binaries
-# (specifically, the compiled python module regina.so), the
-# regina-python startup script, and the debian control file.
+# (specifically, the compiled python module regina.so) and the
+# regina-python startup script.
 #
 # For use during the final stage of the debian package build.
 #
 set -e
 
 tmp=debian/tmp
-control=debian/control
 python_script=/usr/bin/regina-python
 python_script_src=python/regina-python
 python_lib=/usr/lib/regina-normal/python/regina.so
@@ -23,12 +22,6 @@ pyver_script=`grep 'python[0-9]\.[0-9]' $tmp$python_script | \
 
 pyver_lib=`ldd $tmp$python_lib | grep 'libpython[0-9]\.[0-9]\.so' | \
   sed -e 's/^.*libpython\([0-9]\.[0-9]\).so.*$/\1/'`
-
-pyver_control_src=`grep ^XS-Python-Version $control | \
-  sed -e 's/^XS-Python-Version: //'`
-
-pyver_control_bin=`grep ^XB-Python-Version $control | \
-  sed -e 's/^XB-Python-Version: //'`
 
 case "$pyver_script" in
   ?.? )
@@ -50,26 +43,6 @@ case "$pyver_lib" in
     ;;
 esac
 
-case "$pyver_control_src" in
-  ?.? )
-    # Okay; we expect something of the form X.Y.
-    ;;
-  * )
-    echo "ERROR: Could not determine the XS-Python-Version specified in $control."
-    exit 1
-    ;;
-esac
-
-case "$pyver_control_bin" in
-  ?.? )
-    # Okay; we expect something of the form X.Y.
-    ;;
-  * )
-    echo "ERROR: Could not determine the XB-Python-Version specified in $control."
-    exit 1
-    ;;
-esac
-
 if ! test "$pyver_script" = "$pyver_lib"; then
   echo
   echo "ERROR: Mismatched python versions between binaries and startup script."
@@ -80,30 +53,6 @@ if ! test "$pyver_script" = "$pyver_lib"; then
   echo "       This can be fixed in the sources by changing the python version "
   echo "           number in $python_script_src and $python_script_src.in"
   echo "           (find the section where \$which_python is initialised)."
-  exit 1
-fi
-
-if ! test "$pyver_lib" = "$pyver_control_src"; then
-  echo
-  echo "ERROR: Mismatched python versions between binaries and $control."
-  echo
-  echo "       $python_lib uses python$pyver_lib."
-  echo "       $control (source) specifies python$pyver_control."
-  echo
-  echo "       This can be fixed in the sources by changing the"
-  echo "           XS-Python-Version field in $control."
-  exit 1
-fi
-
-if ! test "$pyver_lib" = "$pyver_control_bin"; then
-  echo
-  echo "ERROR: Mismatched python versions between binaries and $control."
-  echo
-  echo "       $python_lib uses python$pyver_lib."
-  echo "       $control (binary) specifies python$pyver_control."
-  echo
-  echo "       This can be fixed in the sources by changing the"
-  echo "           XB-Python-Version field in $control."
   exit 1
 fi
 

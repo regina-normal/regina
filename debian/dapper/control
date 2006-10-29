@@ -4,8 +4,7 @@ Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
 Build-Depends: automake1.9, debhelper (>= 5.0.0), doxygen, kdelibs4-dev (>= 4:3.5.1-3), libboost-python-dev (>= 1.33.0), libcppunit-dev (>= 1.10.2-4), libgmp3-dev (>= 4.1.4-10), libmpich1.0-dev (>= 1.2.7-1), libpopt-dev, libxml2-dev, zlib1g-dev
 Build-Conflicts: regina-normal-dev (<< 4.3.1-0), regina-normal-dev (>= 4.3.2-0)
-Standards-Version: 3.7.2.1
-XS-Python-Version: 2.4
+Standards-Version: 3.6.2.2
 
 Package: regina-normal
 Architecture: any
@@ -26,7 +25,6 @@ Description: 3-manifold topology software with normal surface support
  Python interface, as well as the users' reference manual.  For the
  Python reference (i.e., the API documentation for the Regina
  calculation engine), see the package regina-normal-doc.
-XB-Python-Version: 2.4
 
 Package: regina-normal-dev
 Architecture: any
