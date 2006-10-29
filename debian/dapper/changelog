@@ -1,8 +1,11 @@
 regina-normal (4.3.1-2ubuntu1) unstable; urgency=low
 
-  * Backport newer regina-normal to ubuntu/dapper.
+  * Backport of newer regina-normal to ubuntu/dapper.
   * Patched trisetcmp to give appropriate messages for subcomplex testing
     (instead of using the same messages as for isomorphism testing).
+  * Removed www-browser as an alternative to konqueror in regina-normal-doc
+    recommendations, since the GUI needs konqueror specifically to open the
+    API docs from the help menu.
   * Switched to debhelper compatibility level 5.
 
  -- Ben Burton <bab@debian.org>  Sun,  8 Oct 2006 11:35:15 +1000

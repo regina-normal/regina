@@ -1,3 +1,11 @@
+regina-normal (4.3.1-1ubuntu2) unstable; urgency=low
+
+  * Removed www-browser as an alternative to konqueror in regina-normal-doc
+    recommendations, since the GUI needs konqueror specifically to open the
+    API docs from the help menu.
+
+ -- Ben Burton <bab@debian.org>  Sun, 29 Oct 2006 22:25:06 +1100
+
 regina-normal (4.3.1-1ubuntu1) unstable; urgency=low
 
   * New upstream release.
