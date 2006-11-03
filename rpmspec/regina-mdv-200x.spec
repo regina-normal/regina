@@ -1,5 +1,5 @@
 # Known to work for:
-# - Mandriva 10.2 (LE 2005)
+# - Mandrake 10.2 (LE 2005)
 # - Mandriva 2006.0
 # - Mandriva 2007.0
 
