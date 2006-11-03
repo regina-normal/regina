@@ -1,6 +1,7 @@
 # Known to work for:
-# - Mandrake 10.2 (LE 2005)
-# - Mandrake 2006.0
+# - Mandriva 10.2 (LE 2005)
+# - Mandriva 2006.0
+# - Mandriva 2007.0
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
@@ -24,7 +25,7 @@ BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
 BuildRequires: libboost1-devel
-BuildRequires: libcppunit2-devel
+BuildRequires: libcppunit-devel
 BuildRequires: libgmp3-devel
 BuildRequires: libkdecore4-devel
 BuildRequires: libmpich1-devel
