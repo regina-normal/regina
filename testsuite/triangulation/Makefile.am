@@ -12,7 +12,7 @@ INCLUDES = -I$(top_srcdir) @ENGINE_INCLUDES@
 
 check_LIBRARIES = libtriangulation.a
 
-libtriangulation_a_SOURCES = connectedsumdecomp.cpp eltmoves.cpp nisomorphism.cpp nperm.cpp ntriangulation.cpp
+libtriangulation_a_SOURCES = connectedsumdecomp.cpp eltmoves.cpp homologicaldata.cpp nisomorphism.cpp nperm.cpp ntriangulation.cpp
 
 noinst_HEADERS = testtriangulation.h
 

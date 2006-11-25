@@ -124,6 +124,7 @@ bool runAllTests() {
     addConnectedSumDecomp(runner);
     addElementaryMoves(runner);
     addNIsomorphism(runner);
+    addHomologicalData(runner);
 
     // Surfaces:
     addNNormalSurfaceList(runner);

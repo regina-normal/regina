@@ -93,6 +93,7 @@ Version 4.3.2  [ under development ]
         - Added tests for the orientable double cover of a triangulation.
         - Added tests for the new NPrimes class.
         - Added division algorithm tests for NLargeInteger.
+        - Added tests for the new HomologicalData class.
         - Initial work on tests for the NRational class.
 
 Version 4.3.1  [ 5 May, 2006 ]
