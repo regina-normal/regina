@@ -177,6 +177,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void verifyTorsionRankVector(NTriangulation& tri,
                 const char* name, const char* ans) {
             homologicalData dat(tri);
+	    dat.computeTorsionLinkingForm();
             std::string val = dat.getTorsionRankVectorString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -197,6 +198,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void verifyTorsionSigmaVector(NTriangulation& tri,
                 const char* name, const char* ans) {
             homologicalData dat(tri);
+	    dat.computeTorsionLinkingForm();
             std::string val = dat.getTorsionSigmaVectorString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -216,6 +218,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void verifyTorsionLegendreSymbolVector(NTriangulation& tri,
                 const char* name, const char* ans) {
             homologicalData dat(tri);
+	    dat.computeTorsionLinkingForm();
             std::string val = dat.getTorsionLegendreSymbolVectorString();
             if (val != ans) {
                 std::ostringstream msg;
