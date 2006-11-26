@@ -1095,15 +1095,13 @@ void HomMarkedAbelianGroup::writeRedMatrix(std::ostream& out) const {
         }
         out<<"]\n";
     }
-
 }
 
 void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
-
     if (isIso())
-        out<<"isomorphism ";
+        out<<"isomorphism";
     else if (isZero())
-        out<<"zero map ";
+        out<<"zero map";
     else if (isMonic()) { // monic not epic
         out<<"monic, with cokernel ";
         getCoKernel().writeTextShort(out);
@@ -1118,7 +1116,6 @@ void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
         out<<" | image ";
         getImage().writeTextShort(out);
     }
-
 }
 
 } // namespace regina
