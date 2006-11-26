@@ -42,10 +42,11 @@ class NRationalTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        static const double epsilon = 0.0000001;
+        static const double epsilon;
             /** Used for determining whether a number is "close enough"
                 to zero.  This helps avoid the inaccuracies inherent in
-                using == with floating point numbers. */
+                using == with floating point numbers.  See the bottom
+                of this file for its definition. */
 
     public:
         void setUp() {
@@ -130,6 +131,8 @@ class NRationalTest : public CppUnit::TestFixture {
             checkDoubleOutOfRange(NRational(-2, out), "-2/13^2702");
         }
 };
+
+const double NRationalTest::epsilon = 0.0000001;
 
 void addNRational(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(NRationalTest::suite());
