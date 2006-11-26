@@ -379,6 +379,9 @@ public:
     virtual ~homologicalData();
     /**
      * Needed as a member of SharableObject
+     * Note this only writes pre-computed data.  Thus if you have
+     * not yet asked homologicalData to compute anything about this
+     * triangulation, writeTextShort may be empty. 
      * @param out the stream to write to.
      */
     virtual void writeTextShort(std::ostream& out) const;
@@ -485,6 +488,8 @@ public:
      *        given in prime power form.  Ie it is a vector of pairs (p,x) where
      *        p is a prime, and x is its exponent.
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *	    It returns an empty string unless computeTorsionLinkingForm() has
+     *      been called.
      */
     std::vector< std::pair< NLargeInteger,
     std::vector< unsigned long > > > getTorsionRankVector() const;
@@ -492,6 +497,9 @@ public:
      * Same as getTorsionRankVector() but returns as a human-readable string.
      * @return human-readable prime power factorization of the order of the torsion subgroup
      * of H1.
+     * \pre The triangulation is of a connected orientable 3-manifold.
+     *	    It returns an empty string unless computeTorsionLinkingForm() has
+     *      been called.
      **/
     std::string getTorsionRankVectorString() const;
     /**
@@ -500,12 +508,16 @@ public:
      * connected.
      * @return The Kawauchi-Kojima sigma-vector.
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *	    It returns an empty string unless computeTorsionLinkingForm() has
+     *      been called.
      */
     std::vector< NLargeInteger > getTorsionSigmaVector() const;
     /**
      * @return The Kawauchi-Kojima sigma-vector in human readable form.
      * \pre The triangulation is of a connected orientable 3-manifold.
-     */
+     *	    It returns an empty string unless computeTorsionLinkingForm() has
+     *      been called.
+    */
     std::string getTorsionSigmaVectorString() const;
 
     /**
@@ -514,12 +526,16 @@ public:
      * manifold is orientable and connected.
      * @return The Legendre symbol vector associated to the torsion linking form.
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *	    It returns an empty string unless computeTorsionLinkingForm() has
+     *      been called.
      */
     std::vector< std::pair< NLargeInteger, std::vector< int > > >
     getLegendreSymbolVector() const;
     /**
      * @return the Legendre symbol vector in human-readable form.
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *	    It returns an empty string unless computeTorsionLinkingForm() has
+     *      been called.
      */
     std::string getTorsionLegendreSymbolVectorString() const;
 
@@ -528,11 +544,14 @@ public:
      * the linking-form sense of the word.
      * @return bool value, true iff torsion linking form is hyperbolic.
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *	    It returns an empty string unless computeTorsionLinkingForm() has
+     *      been called.
      */
     bool formIsHyperbolic() const;
     /**
      * Returns true iff torsion linking form is split.
      * @return bool value, true if the linking form is split.
+     * \pre Computed when computeTorsionLinkingForm() is called.
      */
     bool formIsSplit() const;
     /**
@@ -544,6 +563,8 @@ public:
      * @return bool value, true iff form satisfies the 2-torsion
      * condition of Kawauchi-Kojima.
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *	    Not computed unless computeTorsionLinkingForm() has
+     *      been called.
      */
     bool formSatKK() const;
     /**
@@ -554,6 +575,9 @@ public:
      * @return string which gives a one-line description of what
      * is known about where this manifold embeds, based solely
      * on the manifold's homological data.
+     * \pre The triangulation is of a connected orientable 3-manifold.
+     *	    Not computed unless computeTorsionLinkingForm() has
+     *      been called.
      */
     std::string getEmbeddabilityComment() const;
 };
@@ -813,14 +837,19 @@ inline long int homologicalData::getEulerChar() // euler characteristic
 }
 
 inline std::vector< std::pair< NLargeInteger,
-std::vector< unsigned long > > > homologicalData::getTorsionRankVector() const {
+std::vector< unsigned long > > > homologicalData::getTorsionRankVector() const 
+{
     return torRankV;
 }
-inline std::vector< NLargeInteger > homologicalData::getTorsionSigmaVector() const {
+
+inline std::vector< NLargeInteger > homologicalData::getTorsionSigmaVector() const 
+{
     return twoTorSigmaV;
 }
+
 inline std::vector< std::pair< NLargeInteger, std::vector< int > > >
-homologicalData::getLegendreSymbolVector() const {
+homologicalData::getLegendreSymbolVector() const 
+{
     return oddTorLegSymV;
 }
 
