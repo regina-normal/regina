@@ -140,7 +140,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void standardCells() {
             verifyStandardCells(lens7_1, "L(7,1)", 1, 5, 8, 4);
             verifyStandardCells(d88xz15, "S^3 / D_88 x Z_15", 1, 10, 18, 9);
-            verifyStandardCells(lst3_4_7, "LST(3,4,7)", 1, 11, 19, 9);
+            verifyStandardCells(lst3_4_7, "LST(3,4,7)", 1, 5, 7, 3);
             // TODO
         }
 
@@ -170,7 +170,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void dualCells() {
             verifyDualCells(lens7_1, "L(7,1)", 4, 8, 5, 1);
             verifyDualCells(d88xz15, "S^3 / D_88 x Z_15", 9, 18, 10, 1);
-            verifyDualCells(lst3_4_7, "LST(3,4,7)", 9, 17, 8, 0);
+            verifyDualCells(lst3_4_7, "LST(3,4,7)", 3, 5, 2, 0);
             // TODO
         }
 
