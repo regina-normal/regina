@@ -177,7 +177,6 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void verifyTorsionRankVector(NTriangulation& tri,
                 const char* name, const char* ans) {
             homologicalData dat(tri);
-	    dat.computeTorsionLinkingForm();
             std::string val = dat.getTorsionRankVectorString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -198,7 +197,6 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void verifyTorsionSigmaVector(NTriangulation& tri,
                 const char* name, const char* ans) {
             homologicalData dat(tri);
-	    dat.computeTorsionLinkingForm();
             std::string val = dat.getTorsionSigmaVectorString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -210,7 +208,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
 
         void torsionSigmaVector() {
             verifyTorsionSigmaVector(lens7_1, "L(7,1)", "no 2-torsion");
-            verifyTorsionSigmaVector(d88xz15, "S^3 / D_88 x Z_15", "1 1 inf");
+            verifyTorsionSigmaVector(d88xz15, "S^3 / D_88 x Z_15", "7 7 inf");
             verifyTorsionSigmaVector(lst3_4_7, "LST(3,4,7)", "no 2-torsion");
             // TODO
         }
@@ -218,7 +216,6 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void verifyTorsionLegendreSymbolVector(NTriangulation& tri,
                 const char* name, const char* ans) {
             homologicalData dat(tri);
-	    dat.computeTorsionLinkingForm();
             std::string val = dat.getTorsionLegendreSymbolVectorString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -231,7 +228,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void torsionLegendreSymbolVector() {
             verifyTorsionLegendreSymbolVector(lens7_1, "L(7,1)", "7(1)");
             verifyTorsionLegendreSymbolVector(d88xz15, "S^3 / D_88 x Z_15",
-                "3(-1) 5(1)");
+                "3(1) 5(1)");
             verifyTorsionLegendreSymbolVector(lst3_4_7, "LST(3,4,7)",
                 "no odd p-torsion");
             // TODO
