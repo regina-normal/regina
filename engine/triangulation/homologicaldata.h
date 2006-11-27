@@ -319,15 +319,14 @@ protected:
 
     /** true when the torsionlinking form has been computed. */
     bool torsionFormComputed;
+    /**
+     * This routine computes the H1 torsion linking form. It is only
+     * well-defined for orientable 3-manifolds, so don't bother calling
+     * this routine unless you know the manifold is orientable.
+     * \pre The triangulation is of a connected orientable 3-manifold.
+     */
+    void computeTorsionLinkingForm();
 
-
-    // the new format will be:
-    // h1PrimePowerDecomp a vector<NLargeInteger> that contains the prime power decomposition of
-    //        h1 of the 3-manifold
-    // pTorsionH1Mat an NMatrixInt pointer containing the corresponding chain complex vectors
-    //         corresponding to the above prime power decomposition.
-    // linkingFormPD        a vector< NMatrixRing<NRational>* >
-    //         giving the primary decomposition of the torsion linking form matrix.
     /** the prime power decomposition of the torsion subgroup of H1
      ** So if the invariant factors were 2,2,4,3,9,9,27,5,5, this would
      ** be the list: (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1)) */
@@ -473,13 +472,6 @@ public:
     long int getEulerChar(); // euler characteristic
 
     /**
-     * This routine computes the H1 torsion linking form. It is only
-     * well-defined for orientable 3-manifolds, so don't bother calling
-     * this routine unless you know the manifold is orientable.
-     * \pre The triangulation is of a connected orientable 3-manifold.
-     */
-    void computeTorsionLinkingForm();
-    /**
      * Returns the torsion subgroup rank vector. This is the first of
      * the 3 Kawauchi-Kojima complete invariants of the torsion
      * linking form.  The algorithm assumes the 3-manifold is both
@@ -492,7 +484,7 @@ public:
      *      been called.
      */
     std::vector< std::pair< NLargeInteger,
-    std::vector< unsigned long > > > getTorsionRankVector() const;
+    std::vector< unsigned long > > > getTorsionRankVector();
     /**
      * Same as getTorsionRankVector() but returns as a human-readable string.
      * @return human-readable prime power factorization of the order of the torsion subgroup
@@ -501,7 +493,7 @@ public:
      *	    It returns an empty string unless computeTorsionLinkingForm() has
      *      been called.
      **/
-    std::string getTorsionRankVectorString() const;
+    std::string getTorsionRankVectorString();
     /**
      * Returns the 2-torsion sigma vector. This is the 2nd of the three
      * Kawauchi-Kojima invariants. Assumes manifold is orientable and
@@ -511,14 +503,14 @@ public:
      *	    It returns an empty string unless computeTorsionLinkingForm() has
      *      been called.
      */
-    std::vector< NLargeInteger > getTorsionSigmaVector() const;
+    std::vector< NLargeInteger > getTorsionSigmaVector();
     /**
      * @return The Kawauchi-Kojima sigma-vector in human readable form.
      * \pre The triangulation is of a connected orientable 3-manifold.
      *	    It returns an empty string unless computeTorsionLinkingForm() has
      *      been called.
     */
-    std::string getTorsionSigmaVectorString() const;
+    std::string getTorsionSigmaVectorString();
 
     /**
      * Returns the odd p-torsion Legendre symbol vector. This is the
@@ -530,14 +522,14 @@ public:
      *      been called.
      */
     std::vector< std::pair< NLargeInteger, std::vector< int > > >
-    getLegendreSymbolVector() const;
+    getLegendreSymbolVector();
     /**
      * @return the Legendre symbol vector in human-readable form.
      * \pre The triangulation is of a connected orientable 3-manifold.
      *	    It returns an empty string unless computeTorsionLinkingForm() has
      *      been called.
      */
-    std::string getTorsionLegendreSymbolVectorString() const;
+    std::string getTorsionLegendreSymbolVectorString();
 
     /**
      * Returns true iff torsion linking form is `hyperbolic' in
@@ -547,13 +539,13 @@ public:
      *	    It returns an empty string unless computeTorsionLinkingForm() has
      *      been called.
      */
-    bool formIsHyperbolic() const;
+    bool formIsHyperbolic();
     /**
      * Returns true iff torsion linking form is split.
      * @return bool value, true if the linking form is split.
      * \pre Computed when computeTorsionLinkingForm() is called.
      */
-    bool formIsSplit() const;
+    bool formIsSplit();
     /**
      * Returns true iff torsion linking form satisfies the
      * Kawauchi-Kojima 2-torsion condition that on all elements
@@ -566,7 +558,7 @@ public:
      *	    Not computed unless computeTorsionLinkingForm() has
      *      been called.
      */
-    bool formSatKK() const;
+    bool formSatKK();
     /**
      * Returns a comment on if the manifold might embed in
      * a homology 3-sphere or 4-sphere. Basically, it runs
@@ -579,7 +571,7 @@ public:
      *	    Not computed unless computeTorsionLinkingForm() has
      *      been called.
      */
-    std::string getEmbeddabilityComment() const;
+    std::string getEmbeddabilityComment();
 };
 
 /*@}*/
@@ -627,7 +619,8 @@ inline homologicalData::homologicalData(const NTriangulation& input):
         H1map(0),
 
         torsionFormComputed(false),
-h1PrimePowerDecomp(0), linkingFormPD(0) {
+        h1PrimePowerDecomp(0), linkingFormPD(0) 
+{
     tri = new NTriangulation(input);
 }
 
@@ -837,46 +830,58 @@ inline long int homologicalData::getEulerChar() // euler characteristic
 }
 
 inline std::vector< std::pair< NLargeInteger,
-std::vector< unsigned long > > > homologicalData::getTorsionRankVector() const 
+std::vector< unsigned long > > > homologicalData::getTorsionRankVector() 
 {
+    computeTorsionLinkingForm();
     return torRankV;
 }
-
-inline std::vector< NLargeInteger > homologicalData::getTorsionSigmaVector() const 
+inline std::vector< NLargeInteger > homologicalData::getTorsionSigmaVector()  
 {
+    computeTorsionLinkingForm();
     return twoTorSigmaV;
 }
-
 inline std::vector< std::pair< NLargeInteger, std::vector< int > > >
-homologicalData::getLegendreSymbolVector() const 
+homologicalData::getLegendreSymbolVector() 
 {
+    computeTorsionLinkingForm();
     return oddTorLegSymV;
 }
-
-inline bool homologicalData::formIsHyperbolic() const {
+inline bool homologicalData::formIsHyperbolic()  
+{
+    computeTorsionLinkingForm();
     return torsionLinkingFormIsHyperbolic;
 }
-inline bool homologicalData::formIsSplit() const {
+inline bool homologicalData::formIsSplit() 
+{
+     computeTorsionLinkingForm();
     return torsionLinkingFormIsSplit;
 }
-inline bool homologicalData::formSatKK() const {
-    return torsionLinkingFormSatisfiesKKtwoTorCondition;
+inline bool homologicalData::formSatKK() 
+{
+      computeTorsionLinkingForm();
+   return torsionLinkingFormSatisfiesKKtwoTorCondition;
 }
-
-
-inline std::string homologicalData::getTorsionRankVectorString() const {
+inline std::string homologicalData::getTorsionRankVectorString() 
+{
+     computeTorsionLinkingForm();
     return torsionRankString;
 }
 
-inline std::string homologicalData::getTorsionSigmaVectorString() const {
+inline std::string homologicalData::getTorsionSigmaVectorString()
+{     
+    computeTorsionLinkingForm();
     return torsionSigmaString;
 }
 
-inline std::string homologicalData::getTorsionLegendreSymbolVectorString() const {
+inline std::string homologicalData::getTorsionLegendreSymbolVectorString() 
+{
+     computeTorsionLinkingForm();
     return torsionLegendreString;
 }
 
-inline std::string homologicalData::getEmbeddabilityComment() const {
+inline std::string homologicalData::getEmbeddabilityComment() 
+{
+     computeTorsionLinkingForm();
     return embedabilityString;
 }
 

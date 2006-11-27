@@ -104,8 +104,6 @@ void homologicalData::writeTextShort(std::ostream& out) const {
 
 }
 
-
-
 void homologicalData::computeccIndexing() {
     if (!ccIndexingComputed) {
         unsigned long i=0;
@@ -940,7 +938,8 @@ HomMarkedAbelianGroup homologicalData::getH1cellap() {
     return (*dmTomMap1);
 }
 
-HomMarkedAbelianGroup homologicalData::getBMmapH(unsigned q) {
+HomMarkedAbelianGroup homologicalData::getBMmapH(unsigned q) 
+{
     HomMarkedAbelianGroup* retval(0);
 
     if (q==0) {
@@ -989,14 +988,17 @@ void homologicalData::computeBIncl() {
         bmMap2Computed = true;
         bmMap2 = new HomMarkedAbelianGroup( *bHomology2, *mHomology2, *B2Incl );
     }
-}
+ }
 
 
-void homologicalData::computeTorsionLinkingForm() {
+void homologicalData::computeTorsionLinkingForm() 
+{ 
+ if (!torsionFormComputed) {  
     HomMarkedAbelianGroup h1CellAp(getH1cellap()); // dual h1 --> standard h1 isomorphism
     unsigned long niv(dmHomology1->getNumberOfInvariantFactors()); // min number of torsion gens.
     std::vector<std::pair<NLargeInteger, unsigned long> > tFac; // for holding prime decompositions.
     NLargeInteger tI;
+
 
 // step 1: go through H1 of the manifold, take prime power decomposition of each
 //            summand.  building primePowerH1Torsion vector and pTorsionH1Mat matrix...
@@ -1051,12 +1053,15 @@ void homologicalData::computeTorsionLinkingForm() {
     std::vector< std::pair<unsigned long, unsigned long> >::iterator il2;
     std::pair< NLargeInteger, std::vector< std::pair<unsigned long, unsigned long> > > dummyv;
 
-    for (unsigned long i=0; i<pPrList.size(); i++) { // for each entry in pPrList, find its appropriate position in indexing.
+    for (unsigned long i=0; i<pPrList.size(); i++) { 
+// for each entry in pPrList, find its appropriate position in indexing.
         // so this means comparing pPrList[i].first with all elts indexing[j].first and stopping
         // at first >= comparison.
 
-        it1 = indexing.begin(); // now run up p until we either get to the end, or pPrList[i].first >= it1->first
-        il1 = indexing.end(); // the idea is that this while loop will terminate with il1 pointing to the right
+        it1 = indexing.begin(); 
+// now run up p until we either get to the end, or pPrList[i].first >= it1->first
+        il1 = indexing.end(); 
+// the idea is that this while loop will terminate with il1 pointing to the right
         // insertion location.
         while ( it1 != indexing.end() ) {
             if (pPrList[i].first <= it1->first) {
@@ -1079,7 +1084,8 @@ void homologicalData::computeTorsionLinkingForm() {
                 dummyv.second.resize(1);
                 dummyv.second[0] = std::make_pair( pPrList[i].second, i );
                 indexing.insert( il1, dummyv );
-            } else {// NOW we know this prime is already in the list, so we do the same search for the power...
+            } else {
+// NOW we know this prime is already in the list, so we do the same search for the power...
                 it2 = il1->second.begin();
                 il2 = il1->second.end();
                 while ( it2 != il1->second.end() ) { // it2->first is the power, it2->second is the index.
@@ -1093,7 +1099,6 @@ void homologicalData::computeTorsionLinkingForm() {
             }
 
     }
-
 
 // step 2: construct dual vectors
 //           for every pvList vector, find corresponding standard vector.
@@ -1216,9 +1221,6 @@ void homologicalData::computeTorsionLinkingForm() {
                     );
     }
 
-// step 5: torsionFormComputed = true
-    torsionFormComputed=true;
-
 // now we should implement the classification of these forms
 // due to Seifert, Wall, Burger, Kawauchi, Kojima, Deloup:
 // this will have 3 parts, first the rank vector will be a list
@@ -1248,13 +1250,12 @@ void homologicalData::computeTorsionLinkingForm() {
     for (unsigned long i=0; i<indexing.size(); i++) {
         torRankV[i].first = indexing[i].first;
         torRankV[i].second.resize(indexing[i].second[indexing[i].second.size()-1].first, 0);
-        for (unsigned long j=0; j<indexing[i].second.size(); j++) { // indexing[i].second[j] is a pair (order, index) where the order k indicates
-            // one copy of p^k where p==indexing[i].first.
+        for (unsigned long j=0; j<indexing[i].second.size(); j++) { 
+// indexing[i].second[j] is a pair (order, index) where the order k indicates
+// one copy of p^k where p==indexing[i].first.
             torRankV[i].second[indexing[i].second[j].first-1]++;
         }
     }
-
-
 
 
 // step 2: KK 2-torsion invariant (need to implement)
@@ -1263,27 +1264,25 @@ void homologicalData::computeTorsionLinkingForm() {
 //           since it is only holding the reps 0,1,2,3,4,5,6,7 and inf.
 //           inf we can represent by -1 or something? or we could use
 //           and NLargeInteger instead.
-
-//std::vector< NLargeInteger > twoTorSigmaV;
 // decide on if there is 2-torsion...
     NLargeInteger twoPow;
     static NRational pi( NRational(
-                NLargeInteger("314159265358979323846264338327950288419716939937510582097494459230781640628"),
-                NLargeInteger("100000000000000000000000000000000000000000000000000000000000000000000000000") ));
+                NLargeInteger("314159265358979323846264338327950288"),
+                NLargeInteger("100000000000000000000000000000000000") ));
     std::vector< NLargeInteger > groupV;
     bool notatend;
     NRational tSum;
 
     unsigned long incind;
     bool incrun;
-//NLargeInteger tN,tD,tR;
     long double tLD;
     long double xlD, ylD;
 
     std::vector< NLargeInteger > ProperPrimePower;
 
-    if (h1PrimePowerDecomp.size() > 0) if (h1PrimePowerDecomp[0].first == NLargeInteger(2)) { // there is 2-torsion. now we put together the sigma vector twoTorSigmaV
-            // first initialize the length of twoTorSigmaV
+    if (h1PrimePowerDecomp.size() > 0) if (h1PrimePowerDecomp[0].first == NLargeInteger(2)) { 
+     // there is 2-torsion. now we put together the sigma vector twoTorSigmaV
+     // first initialize the length of twoTorSigmaV
             twoTorSigmaV.resize(torRankV[0].second.size());
 
             groupV.resize(h1PrimePowerDecomp[0].second.size(), NLargeInteger("0") );
@@ -1381,11 +1380,6 @@ void homologicalData::computeTorsionLinkingForm() {
             }
         }
 
-
-
-
-
-
 // step 3: Seifert odd p-torsion legendre symbol invariant (done)
 //           to do this I need to add a determinant to NMatrixRing class
 //           this invariant will be expressed as a
@@ -1394,10 +1388,9 @@ void homologicalData::computeTorsionLinkingForm() {
 //           one for each quotient up to p^k where k is the largest order of
 //           p in the torsion subgroup.
 
-//std::vector< std::pair< NLargeInteger, std::vector< int > > > oddTorLegSymV;
     unsigned long starti=0;
     if (torRankV.size() > 0) if (torRankV[0].first == NLargeInteger(2)) starti=1;
-// this ensures we skip the 2-torsion
+    // this ensures we skip the 2-torsion
     std::vector<int> tempa;
     unsigned long curri;
 
@@ -1439,7 +1432,6 @@ void homologicalData::computeTorsionLinkingForm() {
         }
         oddTorLegSymV.push_back( make_pair( torRankV[i].first , tempa) );
     }
-
 
 // step 4: kk test for: split, hyperbolic, and the embeddability
 //           2^k-torsion condition.
@@ -1515,8 +1507,9 @@ void homologicalData::computeTorsionLinkingForm() {
                 torsionRankString.append( NLargeInteger(torRankV[i].second[j]).stringValue() );
                 if (j < torRankV[i].second.size()-1) torsionRankString.append(" ");
             }
-            torsionRankString.append(") ");
-        }
+            torsionRankString.append(")");
+	    if (i<(torRankV.size()-1)) torsionRankString.append(" ");
+    }
 
     if (tri->isOrientable())
  	{
@@ -1524,7 +1517,7 @@ void homologicalData::computeTorsionLinkingForm() {
         if (twoTorSigmaV.size()==0) torsionSigmaString.append("no 2-torsion");
         else for (unsigned long i=0; i<twoTorSigmaV.size(); i++) {
             torsionSigmaString.append(twoTorSigmaV[i].stringValue());
-            torsionSigmaString.append(" ");
+            if (i<(twoTorSigmaV.size()-1)) torsionSigmaString.append(" ");
             }
 	}
     else torsionSigmaString.assign("manifold is non-orientable");
@@ -1540,7 +1533,8 @@ void homologicalData::computeTorsionLinkingForm() {
                 torsionLegendreString.append( NLargeInteger(oddTorLegSymV[i].second[j]).stringValue());
                 if (j<oddTorLegSymV[i].second.size()-1) torsionLegendreString.append(" ");
                 }
-            torsionLegendreString.append(") ");
+            torsionLegendreString.append(")");
+	    if (i<(oddTorLegSymV.size()-1)) torsionLegendreString.append(" ");
             }
 	}
     else torsionLegendreString.append("manifold is non-orientable");
@@ -1548,16 +1542,16 @@ void homologicalData::computeTorsionLinkingForm() {
     embedabilityString.assign("");
     if (tri->isOrientable()) {
         if (getBMH(0).isTrivial()) {
-            if (getTorsionRankVector().size()==0) { // orientable, boundaryless, no torsion
+            if (torRankV.size()==0) { // orientable, boundaryless, no torsion
                 if (tri->knowsThreeSphere())
                     embedabilityString.append("This is S^3.");
                 else embedabilityString.append("No information. Could embed in a homology 4-sphere.");
             } else {// orientable, boundaryless with torsion
-                if (!formSatKK())
+                if (!torsionLinkingFormSatisfiesKKtwoTorCondition)
                     embedabilityString.append("This manifold does not embed in any homology "
                             "4-sphere. Moreover, if one punctures this manifold, the resulting manifold "
                             "does not embed in a homology 4-sphere.");
-                else if (!formIsHyperbolic())
+                else if (!torsionLinkingFormIsHyperbolic)
                     embedabilityString.append("This manifold does not embed in any homology "
                             "4-sphere. ");
                 else
@@ -1565,20 +1559,20 @@ void homologicalData::computeTorsionLinkingForm() {
                             "is no homological obstruction to this manifold embedding in a homology 4-sphere.");
             }
         } else {
-            if (getTorsionRankVector().size()==0) {// orientable with boundary, no torsion.
+            if (torRankV.size()==0) {// orientable with boundary, no torsion.
                 if (getBMmapH(1).isEpic())
                     embedabilityString.append("Embeds in a homology 3-sphere.");
                 else
                     embedabilityString.append("Does not embed in a homology 3-sphere.");
             } else {// orientable with boundary and torsion
                 // kk condition + boundary map to check.
-                if ( !formSatKK() && getBMmapH(1).isEpic() )
+                if ( !torsionLinkingFormSatisfiesKKtwoTorCondition && getBMmapH(1).isEpic() )
                     embedabilityString.append("Embeds in homology 3-sphere but not homology 4-sphere.");
-                if ( formSatKK() && getBMmapH(1).isEpic() )
+                if ( torsionLinkingFormSatisfiesKKtwoTorCondition && getBMmapH(1).isEpic() )
                     embedabilityString.append("Embeds in homology 3-sphere.");
-                if ( !formSatKK() && !getBMmapH(1).isEpic() )
+                if ( !torsionLinkingFormSatisfiesKKtwoTorCondition && !getBMmapH(1).isEpic() )
                     embedabilityString.append("Does not embed in homology 3-sphere, nor homology 4-sphere.");
-                if ( formSatKK() && !getBMmapH(1).isEpic() )
+                if (  torsionLinkingFormSatisfiesKKtwoTorCondition&& !getBMmapH(1).isEpic() )
                     embedabilityString.append("Does not embed in homology 3-sphere.");
             }
         }
@@ -1594,8 +1588,9 @@ void homologicalData::computeTorsionLinkingForm() {
         }
     }
 
-
-}
+    torsionFormComputed = true;
+ } // torsionFormComputed == false branch
+} // end computeTorsionLinkingForm()
 
 
 
