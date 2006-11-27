@@ -74,7 +74,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             /**< The manifold s028 from the cusped hyperbolic census of
                  Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
         NTriangulation s955;
-            /**< The manifold s028 from the cusped hyperbolic census of
+            /**< The manifold s955 from the cusped hyperbolic census of
                  Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
 
         // Bounded:
