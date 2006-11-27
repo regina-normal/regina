@@ -712,7 +712,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(DualCells, 2, 2);
     msg = i18n("The number of cells in the dual CW-decomposition "
                 "corresponding to the triangulation of this "
-		"compact manifold.  Listed in order "
+                "compact manifold.  Listed in order "
                 "of ascending dimension. ");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(DualCells, msg);
