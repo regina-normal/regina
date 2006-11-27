@@ -660,7 +660,7 @@ void NTriCellularInfoUI::refresh() {
 
         BdryMap->setText(minfo.getBMmapH(1).toString());
 
-        minfo.computeTorsionLinkingForm();
+//        minfo.computeTorsionLinkingForm();
 
         // 8 principle cases orientable y/n, boundary y/n, torsion exists y/n
         TorForOrders->setText(minfo.getTorsionRankVectorString());
