@@ -233,7 +233,7 @@ std::string NTriangulation::dehydrate() const {
     unsigned currGluingPos = 0;
 
     unsigned nextUnused = 1;
-    unsigned tet, dest, face;
+    unsigned tetIndex, tet, dest, face;
     NPerm map;
     unsigned mapIndex;
 
@@ -244,10 +244,14 @@ std::string NTriangulation::dehydrate() const {
     vertexMap[0] = NPerm();
     newTet[0] = 0;
 
-    for (tet = 0; tet < nTets; tet++)
+    for (tetIndex = 0; tetIndex < nTets; tetIndex++) {
+        // We must run through the tetrahedra in image order, not
+        // preimage order.
+        tet = preImage[tetIndex];
+
         for (face = 0; face < 4; face++) {
             // INVARIANTS (held while tet < nTets):
-            // - nextUnused > tet
+            // - nextUnused > tetIndex
             // - image[tet], preImage[image[tet]] and vertexMap[tet] are
             //   all filled in.
             // These invariants are preserved because the triangulation is
@@ -299,6 +303,7 @@ std::string NTriangulation::dehydrate() const {
                 newTet[newTetPos] = 0;
             }
         }
+    }
 
     // We have all we need.  Tidy up the strings and put them all
     // together.
