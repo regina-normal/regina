@@ -63,6 +63,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(zeroEfficiency);
     CPPUNIT_TEST(turaevViro);
     CPPUNIT_TEST(doubleCover);
+    CPPUNIT_TEST(dehydration);
     CPPUNIT_TEST(propertyUpdates);
 
     CPPUNIT_TEST_SUITE_END();
@@ -1600,6 +1601,68 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Cusped solid genus 2 torus");
             verifyDoubleCover(pinchedSolidTorus, "Pinched solid torus");
             verifyDoubleCover(pinchedSolidKB, "Pinched solid Klein bottle");
+        }
+
+        void verifyDehydration(const NTriangulation& tri, const char* name) {
+            std::string dehydrate = tri.dehydrate();
+            if (dehydrate.empty()) {
+                std::ostringstream msg;
+                msg << name << ": Cannot dehydrate.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NTriangulation rehydrate;
+            if (! rehydrate.insertRehydration(dehydrate)) {
+                std::ostringstream msg;
+                msg << name << ": Cannot rehydrate \"" << dehydrate << "\".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! rehydrate.isIsomorphicTo(tri).get()) {
+                std::ostringstream msg;
+                msg << name << ": Rehydration of \"" << dehydrate
+                    << "\" is not isomorphic to the original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyNoDehydration(const NTriangulation& tri, const char* name) {
+            std::string dehydrate = tri.dehydrate();
+            if (! dehydrate.empty()) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Should not dehydrate, but instead dehydrates to \""
+                    << dehydrate << "\".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void dehydration() {
+            verifyDehydration(empty, "Empty triangulation");
+            verifyNoDehydration(singleTet, "Single tetrahedron");
+            verifyDehydration(s3, "S^3");
+            verifyDehydration(s2xs1, "S^2 x S^1");
+            verifyDehydration(rp3, "RP^3");
+            verifyDehydration(lens3_1, "L(3,1)");
+            verifyDehydration(lens8_3, "L(8,3)");
+            verifyDehydration(lens8_3_large, "Large L(8,3)");
+            verifyDehydration(lens7_1_loop, "Layered loop L(7,1)");
+            verifyDehydration(rp3rp3, "RP^3 # RP^3");
+            verifyDehydration(q32xz3, "S^3 / Q_32 x Z_3");
+            verifyDehydration(q28, "S^3 / Q_28");
+            verifyNoDehydration(lens100_1, "L(100,1)");
+            verifyNoDehydration(lst3_4_7, "LST(3,4,7)");
+            verifyDehydration(figure8, "Figure eight knot complement");
+            verifyDehydration(rp2xs1, "RP^2 x S^1");
+            verifyNoDehydration(solidKB, "Solid Klein bottle");
+            verifyDehydration(gieseking, "Gieseking manifold");
+            verifyDehydration(invalidEdges, "Triangulation with invalid edges");
+            verifyDehydration(twoProjPlaneCusps,
+                "Triangulation with RP^2 cusps");
+            verifyDehydration(cuspedGenusTwoTorus,
+                "Cusped solid genus 2 torus");
+            verifyNoDehydration(pinchedSolidTorus, "Pinched solid torus");
+            verifyNoDehydration(pinchedSolidKB, "Pinched solid Klein bottle");
         }
 
         void propertyUpdates() {
