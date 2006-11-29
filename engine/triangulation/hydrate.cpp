@@ -233,7 +233,7 @@ std::string NTriangulation::dehydrate() const {
     unsigned currGluingPos = 0;
 
     unsigned nextUnused = 1;
-    unsigned tetIndex, tet, dest, face;
+    unsigned tetIndex, tet, dest, faceIndex, face;
     NPerm map;
     unsigned mapIndex;
 
@@ -249,7 +249,10 @@ std::string NTriangulation::dehydrate() const {
         // preimage order.
         tet = preImage[tetIndex];
 
-        for (face = 0; face < 4; face++) {
+        for (faceIndex = 0; faceIndex < 4; faceIndex++) {
+            // Likewise for faces.
+            face = vertexMap[tet].preImageOf(faceIndex);
+
             // INVARIANTS (held while tet < nTets):
             // - nextUnused > tetIndex
             // - image[tet], preImage[image[tet]] and vertexMap[tet] are
