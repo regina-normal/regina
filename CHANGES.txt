@@ -71,6 +71,7 @@ Version 4.3.2  [ under development ]
               transverse matrix was obtained instead of the correct matrix).
         Class NTriangulation:
             - New routine layerOn() for performing layerings.
+            - New routine dehydrate() for extracting dehydration strings.
             - Optimised the skeletal calculations, which now run *much* faster.
             - Fixed a crash in splitIntoComponents() that occurred when
               the triangulation skeleton had not yet been calculated.

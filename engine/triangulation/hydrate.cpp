@@ -190,5 +190,147 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
     return (! broken);
 }
 
+std::string NTriangulation::dehydrate() const {
+    // Can we even dehydrate at all?
+    if (tetrahedra.size() > 25 || hasBoundaryFaces() || ! isConnected())
+        return "";
+
+    // Get the empty case out of the way, since it requires an
+    // additional two redundant letters (two blocks of N+1 letters to
+    // specify "non-obvious gluings").
+    if (tetrahedra.empty())
+        return "aaa";
+
+    // Find an isomorphism that will put the triangulation in a form
+    // sufficiently "canonical" to be described by a dehydration string.
+    // When walking through faces from start to finish, this affects
+    // only gluings to previously unseen tetrahedra:
+    // (i) such gluings must be to the smallest numbered unused tetrahedron;
+    // (ii) the gluing permutation must be the identity permutation.
+    //
+    // The array image[] maps tetrahedron numbers from this
+    // triangulation to the canonical triangulation; preImage[] is the
+    // inverse map.  The array vertexMap[] describes the corresponding
+    // rearrangement of tetrahedron vertices and faces; specifically,
+    // vertex i of tetrahedron t of this triangulation maps to vertex
+    // vertexMap[t][i] of tetrahedron image[t].
+    //
+    // Each element of newTet[] is an 8-bit integer.  These bits
+    // describe whether the gluings for some corresponding 8 faces
+    // point to previously-seen or previously-unseen tetrahedra.
+    // See the Callahan, Hildebrand and Weeks paper for details.
+    unsigned nTets = tetrahedra.size();
+    int* image = new int[nTets];
+    int* preImage = new int[nTets];
+    NPerm* vertexMap = new NPerm[nTets];
+
+    unsigned char* newTet = new unsigned char[(nTets / 4) + 2];
+    unsigned newTetPos = 0;
+    unsigned newTetBit = 0;
+
+    char* destChars = new char[nTets + 2];
+    char* permChars = new char[nTets + 2];
+    unsigned currGluingPos = 0;
+
+    unsigned nextUnused = 1;
+    unsigned tet, dest, face;
+    NPerm map;
+    unsigned mapIndex;
+
+    for (tet = 0; tet < nTets; tet++)
+        image[tet] = preImage[tet] = -1;
+
+    image[0] = preImage[0] = 0;
+    vertexMap[0] = NPerm();
+    newTet[0] = 0;
+
+    for (tet = 0; tet < nTets; tet++)
+        for (face = 0; face < 4; face++) {
+            // INVARIANTS (held while tet < nTets):
+            // - nextUnused > tet
+            // - image[tet], preImage[image[tet]] and vertexMap[tet] are
+            //   all filled in.
+            // These invariants are preserved because the triangulation is
+            // connected.  They break when tet == nTets.
+            dest = getTetrahedronIndex(
+                tetrahedra[tet]->getAdjacentTetrahedron(face));
+
+            // Is it a gluing we've already seen from the other side?
+            if (image[dest] >= 0)
+                if (image[dest] < image[tet] || (image[dest] == image[tet] &&
+                        vertexMap[tet][tetrahedra[tet]->getAdjacentFace(face)]
+                        < vertexMap[tet][face]))
+                    continue;
+
+            // Is it a completely new tetrahedron?
+            if (image[dest] < 0) {
+                // Previously unseen.
+                image[dest] = nextUnused;
+                preImage[nextUnused] = dest;
+                vertexMap[dest] = vertexMap[tet] *
+                    tetrahedra[tet]->getAdjacentTetrahedronGluing(face).
+                    inverse();
+                nextUnused++;
+
+                newTet[newTetPos] |= (1 << newTetBit);
+            } else {
+                // It's a tetrahedron we've seen before.  Record the gluing.
+                // Don't forget that our permutation abcd becomes dcba
+                // in dehydration language.
+                destChars[currGluingPos] = LETTER(image[dest]);
+                map = vertexMap[dest] *
+                    tetrahedra[tet]->getAdjacentTetrahedronGluing(face) *
+                    vertexMap[tet].inverse() * NPerm(3, 2, 1, 0);
+                // Just loop to find the index of the corresponding
+                // gluing permutation.  There's only 24 permutations and
+                // at most 25 tetrahedra; we'll live with it.
+                for (mapIndex = 0; mapIndex < 24; mapIndex++)
+                    if (map == orderedPermsS4[mapIndex])
+                        break;
+                permChars[currGluingPos] = LETTER(mapIndex);
+
+                currGluingPos++;
+            }
+
+            newTetBit++;
+            if (newTetBit == 8) {
+                newTetPos++;
+                newTetBit = 0;
+                newTet[newTetPos] = 0;
+            }
+        }
+
+    // We have all we need.  Tidy up the strings and put them all
+    // together.
+    if (newTetBit > 0) {
+        // We're partway through a bitset; assume it's finished and
+        // point to the next unused slot in the array.
+        newTetPos++;
+        newTetBit = 0;
+    }
+
+    // At this stage we should have currGluingPos == nTets + 1.
+    destChars[currGluingPos] = 0;
+    permChars[currGluingPos] = 0;
+
+    std::string ans;
+    ans += LETTER(nTets);
+    for (unsigned i = 0; i < newTetPos; i++) {
+        ans += LETTER(newTet[i] >> 4);
+        ans += LETTER(newTet[i] & 15);
+    }
+    ans += destChars;
+    ans += permChars;
+
+    // Done!
+    delete[] permChars;
+    delete[] destChars;
+    delete[] vertexMap;
+    delete[] preImage;
+    delete[] image;
+
+    return ans;
+}
+
 } // namespace regina
 

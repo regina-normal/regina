@@ -256,6 +256,7 @@ void addNTriangulation() {
         .def("insertSFSOverSphere", &NTriangulation::insertSFSOverSphere)
         .def("insertTriangulation", &NTriangulation::insertTriangulation)
         .def("insertRehydration", &NTriangulation::insertRehydration)
+        .def("dehydrate", &NTriangulation::dehydrate)
         .def("dumpConstruction", &NTriangulation::dumpConstruction)
         .def("enterTextTriangulation", enterTextTriangulation_stdio,
             return_value_policy<manage_new_object>())

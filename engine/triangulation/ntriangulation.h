@@ -2041,6 +2041,12 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * in the order in which they appear in the rehydrated triangulation,
          * and the numbering of their vertices (0-3) will not change.
          *
+         * The routine dehydrate() can be used to extract a dehydration
+         * string from an existing triangulation.  Dehydration followed
+         * by rehydration might not produce a triangulation identical to
+         * the original, but it is guaranteed to produce an isomorphic
+         * copy.  See dehydrate() for the reasons behind this.
+         *
          * For a full description of the dehydrated triangulation
          * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
          * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
@@ -2053,6 +2059,44 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \c false if the given string could not be rehydrated.
          */
         bool insertRehydration(const std::string& dehydration);
+        /**
+         * Dehydrates this triangulation into an alphabetical string.
+         *
+         * A <i>dehydration string</i> is a compact text representation
+         * of a triangulation, introduced by Callahan, Hildebrand and Weeks
+         * for their cusped hyperbolic census (see below).  The dehydration
+         * string of an <i>n</i>-tetrahedron triangulation consists of
+         * approximately (but not precisely) 5<i>n</i>/2 lower-case letters.
+         *
+         * Dehydration strings come with some restrictions:
+         * - They rely on the triangulation being "canonical" in some
+         *   combinatorial sense.  This is not enforced here; instead
+         *   a combinatorial isomorphism is applied to make the
+         *   triangulation canonical, and this isomorphic triangulation
+         *   is dehydrated instead.  Note that the original triangulation
+         *   is not changed.
+         * - They require the triangulation to be connected.
+         * - They require the triangulation to have no boundary faces
+         *   (though ideal triangulations are fine).
+         * - They can only support triangulations with at most 25 tetrahedra.
+         *
+         * The routine insertRehydration() can be used to recover a
+         * triangulation from a dehydration string.  Note that the
+         * triangulation recovered <b>might not be identical</b> to the
+         * original, but it is guaranteed to be an isomorphic copy.
+         *
+         * For a full description of the dehydrated triangulation
+         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
+         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
+         * 1999.
+         *
+         * @return a dehydrated representation of this triangulation
+         * (or an isomorphic variant of this triangulation), or the
+         * empty string if dehydration is not possible because the
+         * triangulation is disconnected, has boundary faces or contains
+         * too many tetrahedra.
+         */
+        std::string dehydrate() const;
         /**
          * Inserts into this triangulation a set of tetrahedra and their
          * gluings as described by the given integer arrays.
