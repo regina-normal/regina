@@ -190,6 +190,11 @@ void NTriCompositionUI::refresh() {
     } else
         addTopLevelSection(i18n("Triangulation not recognised"));
 
+    // Offer a dehydration string if we have one.
+    std::string dehydration = tri->dehydrate();
+    if (! dehydration.empty())
+        addTopLevelSection(i18n("Dehydration: ") + dehydration.c_str());
+
     // Look for complete closed triangulations.
     findAugTriSolidTori();
     findL31Pillows();
