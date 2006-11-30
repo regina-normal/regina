@@ -13,9 +13,10 @@ SUBDIRS = @REGINA_BUILD_MPI@
 INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@ @UTILS_LIBS@
 
-noinst_PROGRAMS = censuscat distinguish equiv identify manifolds pluggedibundles reduce trisort volume
+noinst_PROGRAMS = censuscat dehydrate distinguish equiv identify manifolds pluggedibundles reduce trisort volume
 
 censuscat_SOURCES = censuscat.cpp
+dehydrate_SOURCES = dehydrate.cpp
 distinguish_SOURCES = distinguish.cpp
 equiv_SOURCES = equiv.cpp
 identify_SOURCES = identify.cpp
