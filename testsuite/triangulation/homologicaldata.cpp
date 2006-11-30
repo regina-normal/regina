@@ -88,7 +88,15 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             d88xz15.insertAugTriSolidTorus(2, -1, 2, -1, 11, -30);
             lst3_4_7.insertLayeredSolidTorus(3, 4);
 
-            // TODO: Deal with the others.
+            // The others we recreate using dehydration strings.
+            // The dehydration strings were obtained by running
+            // NTriangulation::dehydrate() over triangulations from
+            // the relevant census data files.
+            closedHypA.insertRehydration("jgpadaaeffghfiihirmxitdagbj");
+            closedHypB.insertRehydration("mnnjjcabehfgjijkijllaaqabhoehrtab");
+            norA.insertRehydration("jofbdaabccfhgihiiffhofoxohx");
+            s028.insertRehydration("gkfacaccdeffffohhhf");
+            s955.insertRehydration("gbpaabcfdffefohfxhf");
         }
 
         void tearDown() {
