@@ -405,7 +405,7 @@ AC_DEFUN([REGINA_LIB_BOOST_PYTHON], [
     pyversionlist=none
   ])
   if test "x$pyversionlist" = "xnone"; then
-    pyversionlist="python python2.4 python2.3 python2.2"
+    pyversionlist="python python2.6 python2.5 python2.4 python2.3 python2.2"
   fi
 
   AC_ARG_WITH(boost-suffix, AC_HELP_STRING([--with-boost-suffix=SUFFIX],
