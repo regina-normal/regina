@@ -116,7 +116,12 @@ void NFacePairing::writeDot(std::ostream& out, const char* prefix,
     else
         writeDotHeader(out, (prefix + std::string("_graph")).c_str());
 
+    // Ancient versions of graphviz seem to ignore the default label="".
+    // Make this explicit for each node.
     unsigned t;
+    for (t = 0; t < nTetrahedra; t++)
+        out << prefix << '_' << t << " [label=\"\"]" << std::endl;
+
     int f;
     NTetFace adj;
     for (t = 0; t < nTetrahedra; t++)

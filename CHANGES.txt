@@ -33,6 +33,9 @@ Version 4.3.2  [ under development ]
               has been removed.
             - Made all member functions static.  Objects of this class
               can no longer be created.
+        Class NFacePairing:
+            - Modified writeDot() to behave well with ancient versions
+              of GraphViz.
         Class NLargeInteger:
             - New routine divisionAlg() for using the division algorithm.
             - New routine legendre() for calculating Legendre symbols.
