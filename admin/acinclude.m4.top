@@ -420,7 +420,7 @@ AC_DEFUN([REGINA_LIB_BOOST_PYTHON], [
     boostliblist=none
   ])
   if test "x$boostliblist" = "xnone"; then
-    boostliblist="boost_python boost_python-gcc-mt-1_32 boost_python-gcc-mt-1_31"
+    boostliblist="boost_python boost_python-gcc-mt-1_33_1 boost_python-gcc-mt-1_32 boost_python-gcc-mt-1_31"
   fi
 
   AC_CHECK_HEADERS([boost/shared_ptr.hpp], [
@@ -455,7 +455,8 @@ AC_DEFUN([REGINA_LIB_BOOST_PYTHON], [
             # Check for -lpython.
             for pylib in "$pyver" $pyversionlist; do
               for pylibdir in /usr/lib /usr/local/lib \
-                  "/usr/lib/$pyver/config" "/usr/local/lib/$pyver/config"; do
+                  "/usr/lib/$pyver/config" "/usr/local/lib/$pyver/config" \
+                  "$prefix/lib" "$prefix/lib/$pyver/config"; do
                 for extralibs in "" "-lpthread -lm -lutil -ldl"; do
                   if test "x$extralibs" = "x"; then
                     extralibsmsg=""
