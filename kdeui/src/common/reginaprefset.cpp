@@ -38,6 +38,14 @@ namespace {
     std::string INACTIVE("## INACTIVE ##");
 }
 
+const GraphvizStatus GraphvizStatus::unknown(0);
+const GraphvizStatus GraphvizStatus::notFound(-1);
+const GraphvizStatus GraphvizStatus::notExist(-2);
+const GraphvizStatus GraphvizStatus::notExecutable(-3);
+const GraphvizStatus GraphvizStatus::unsupported(-4);
+const GraphvizStatus GraphvizStatus::version1(1);
+const GraphvizStatus GraphvizStatus::version2(2);
+
 ReginaPrefSet::ReginaPrefSet() :
         autoDock(true),
         autoFileExtension(true),
@@ -53,6 +61,7 @@ ReginaPrefSet::ReginaPrefSet() :
         triEditMode(DirectEdit),
         triGAPExec("gap"),
         triGraphvizExec("neato"),
+        triGraphvizStatus(GraphvizStatus::unknown),
         triInitialTab(Gluings),
         triInitialSkeletonTab(SkelComp),
         triInitialAlgebraTab(Homology),

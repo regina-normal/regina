@@ -59,6 +59,83 @@ struct ReginaFilePref {
 typedef QValueVector<ReginaFilePref> ReginaFilePrefList;
 
 /**
+ * Describes the many possible ways in which ReginaPrefSet::triGraphvizExec
+ * might or might not reflect a usable Graphviz installation on the current
+ * machine.
+ */
+class GraphvizStatus {
+    public:
+        /**
+         * Indicates that the current Graphviz status is unknown.
+         */
+        static const GraphvizStatus unknown;
+        /**
+         * Indicates that ReginaPrefSet::triGraphvizExec describes an
+         * executable with no path information that could not be found
+         * on the current system.
+         */
+        static const GraphvizStatus notFound;
+        /**
+         * Indicates that ReginaPrefSet::triGraphvizExec describes an
+         * executable, possibly including path information, that does
+         * not exist on the current system.
+         */
+        static const GraphvizStatus notExist;
+        /**
+         * Indicates that ReginaPrefSet::triGraphvizExec describes a
+         * program that exists but is not marked as executable on the
+         * current system.
+         */
+        static const GraphvizStatus notExecutable;
+        /**
+         * Indicates that Graphviz has been found on the current system,
+         * but its version is unsupported by Regina.
+         */
+        static const GraphvizStatus unsupported;
+        /**
+         * Indicates that Graphviz version 1.x has been found on the
+         * current system.
+         */
+        static const GraphvizStatus version1;
+        /**
+         * Indicates that Graphviz version 2.x or later has been found
+         * on the current system.
+         */
+        static const GraphvizStatus version2;
+
+    private:
+        int flag_;
+            /**< A constant that distinguishes between the different
+                 status types. */
+
+    public:
+        /**
+         * Constructors.  The default constructor sets this status to
+         * GraphvizStatus::unknown.
+         */
+        GraphvizStatus();
+        GraphvizStatus(const GraphvizStatus& status);
+
+        GraphvizStatus& operator = (const GraphvizStatus& status);
+        bool operator == (const GraphvizStatus& status) const;
+        bool operator != (const GraphvizStatus& status) const;
+
+        /**
+         * Is it known that the Graphviz cannot be used on the
+         * current machine?
+         */
+        bool unusable() const;
+        /**
+         * Is it known that the Graphviz can be used on the
+         * current machine?
+         */
+        bool usable() const;
+
+    private:
+        GraphvizStatus(int flag);
+};
+
+/**
  * A structure holding all Regina preferences.
  */
 struct ReginaPrefSet {
@@ -109,6 +186,9 @@ struct ReginaPrefSet {
              for drawing undirected graphs; the recommended Graphviz tool
              is neato.  This need not include a directory (in which case
              the search path will be used). */
+    GraphvizStatus triGraphvizStatus;
+        /**< The status of the Graphviz installation on the current
+             machine. */
     TriTab triInitialTab;
         /**< The initially visible top-level tab for a new triangulation
              viewer/editor. */
@@ -150,6 +230,39 @@ struct ReginaPrefSet {
      */
     bool writePythonLibraries() const;
 };
+
+inline GraphvizStatus::GraphvizStatus() : flag_(unknown.flag_) {
+}
+
+inline GraphvizStatus::GraphvizStatus(const GraphvizStatus& status) :
+        flag_(status.flag_) {
+}
+
+inline GraphvizStatus::GraphvizStatus(int flag) : flag_(flag) {
+}
+
+inline GraphvizStatus& GraphvizStatus::operator = (
+        const GraphvizStatus& status) {
+    flag_ = status.flag_;
+    return *this;
+}
+
+inline bool GraphvizStatus::operator == (const GraphvizStatus& status) const {
+    return (flag_ == status.flag_);
+}
+
+inline bool GraphvizStatus::operator != (const GraphvizStatus& status) const {
+    return (flag_ != status.flag_);
+}
+
+inline bool GraphvizStatus::unusable() const {
+    return (*this == notFound || *this == notExist ||
+        *this == notExecutable || *this == unsupported);
+}
+
+inline bool GraphvizStatus::usable() const {
+    return (*this == version1 || *this == version2);
+}
 
 inline ReginaFilePref::ReginaFilePref() : active(true) {
 }
