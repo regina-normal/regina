@@ -846,11 +846,7 @@ homologicalData::getLegendreSymbolVector()
     computeTorsionLinkingForm();
     return oddTorLegSymV;
 }
-inline bool homologicalData::formIsHyperbolic()  
-{
-    computeTorsionLinkingForm();
-    return torsionLinkingFormIsHyperbolic;
-}
+
 inline bool homologicalData::formIsSplit() 
 {
      computeTorsionLinkingForm();
