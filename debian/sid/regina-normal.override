@@ -3,5 +3,5 @@ regina-normal: script-not-executable ./usr/share/regina-normal/scripts/runscript
 regina-normal: unusual-interpreter ./usr/share/regina-normal/scripts/runscript.py #!/bin/false
 
 # Regina does not provide a standalone library package.
-regina-normal: package-name-doesnt-match-sonames libregina-engine-4.3.1 libregina-kdecommon-4.3.1
-regina-normal: package-name-doesnt-match-sonames libregina-kdecommon-4.3.1 libregina-engine-4.3.1
+regina-normal: package-name-doesnt-match-sonames libregina-engine-4.3.1a libregina-kdecommon-4.3.1a
+regina-normal: package-name-doesnt-match-sonames libregina-kdecommon-4.3.1a libregina-engine-4.3.1a

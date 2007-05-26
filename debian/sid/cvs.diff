@@ -5,7 +5,7 @@
  if (! $python_cmd) {
      my $which_python;
 -    chomp($which_python = `which python`);
-+    chomp($which_python = `which python2.4`);
++    chomp($which_python = `which python2.5`);
      if (! $which_python) {
          &err("E: A Python interpreter could not be found.\n");
          &err("E: Set \$REGINA_PYTHON to a Python interpreter (such as /usr/bin/python)\n");
