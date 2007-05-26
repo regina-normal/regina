@@ -2,7 +2,7 @@ regina-normal (4.3.1-4) unstable; urgency=low
 
   * Update autoconf boost check to account for the recent transition
     from libboost_python.so to libboost_python-mt.so (closes: #425926).
-  * Updated all dependencies to require python2.5, since this is now what
+  * Update all dependencies to require python2.5, since this is now what
     boost uses.  Build-depends on libboost-python-dev >= 1.34.0 accordingly.
   * Incorporate patch from upstream SVN that removes virtual templates,
     thus allowing regina-normal to build under gcc-4.2 (closes: #370183).
