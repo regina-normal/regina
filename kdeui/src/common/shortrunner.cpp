@@ -47,6 +47,8 @@ QString ShortRunner::run(bool mergeStderr) {
         return output;
     } else {
         // Timed out.
+        if (! proc.kill())
+            proc.kill(SIGKILL);
         reachedTimeout = true;
         return QString::null;
     }
