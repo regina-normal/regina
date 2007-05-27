@@ -33,6 +33,7 @@
 #ifndef __REGINAPREFSET_H
 #define __REGINAPREFSET_H
 
+#include <qmutex.h>
 #include <qvaluevector.h>
 
 /**
@@ -113,6 +114,26 @@ class GraphvizStatus {
             /**< A constant that distinguishes between the different
                  status types. */
 
+    private:
+        static QMutex cacheGraphvizMutex;
+            /**< Protects the graphviz status cache, whose variables are
+                 defined below. */
+
+        // The Graphviz status cache.  This stores the results of the
+        // last call to status(), so future calls with the same
+        // Graphviz executable are fast.
+        static QString cacheGraphvizExec;
+            /**< The last user-provided executable that was tested.
+                 This corresponds to ReginaPrefSet::triGraphvizExec,
+                 and need not include full path details. */
+        static QString cacheGraphvizExecFull;
+            /**< The full pathname to the Graphviz executable corresponding
+                 to \a cacheGraphvizExec, or QString::null if this full
+                 pathname is unknown. */
+        static GraphvizStatus cacheGraphvizStatus;
+            /**< The status of the Graphviz installation corresponding
+                 to \a cacheGraphvizExec. */
+
     public:
         /**
          * Constructors.  The default constructor sets this status to
@@ -138,6 +159,28 @@ class GraphvizStatus {
 
     private:
         GraphvizStatus(int flag);
+
+        /**
+         * Determines the status of the Graphviz installation on this
+         * machine corresponding to the given executable \a userExec.
+         * This executable corresponds to ReginaPrefSet::triGraphvizExec,
+         * and need not include full path details.
+         *
+         * The status is returned as the usual return value from this
+         * routine, and the full pathname to the Graphviz executable is
+         * returns in \a fullExec (this might be QString::null if the
+         * Graphviz installation is not usable).
+         *
+         * Subsequent calls to this routine with the same \a userExec
+         * argument are fast, since the last returned values are cached.
+         * Calling with a different \a userExec will cause the cache to
+         * be cleared (i.e., only one set of results is cached at a time).
+         * The cache can be ignored by passing \a forceRecheck as \c true.
+         *
+         * This routine is thread-safe.
+         */
+         static GraphvizStatus status(const QString& userExec,
+            QString& fullExec, bool forceRecheck = false);
 };
 
 /**
@@ -191,15 +234,6 @@ struct ReginaPrefSet {
              for drawing undirected graphs; the recommended Graphviz tool
              is neato.  This need not include a directory (in which case
              the search path will be used). */
-    QString triGraphvizExecFull;
-        /**< The full pathname to the Graphviz executable \a triGraphvizExec
-             if known, or QString::null if not known.  This is derived at
-             runtime, and is not read from or written to the configuration
-             file. */
-    GraphvizStatus triGraphvizStatus;
-        /**< The status of the Graphviz installation on the current
-             machine.  This is derived at runtime, and is not read from
-             or written to the configuration file. */
     TriTab triInitialTab;
         /**< The initially visible top-level tab for a new triangulation
              viewer/editor. */
@@ -240,14 +274,6 @@ struct ReginaPrefSet {
      * file.
      */
     bool writePythonLibraries() const;
-
-    /**
-     * Updates the known status of the Graphviz installation on the current
-     * machine.  Members \a triGraphvizStatus and \a triGraphvizExecFull
-     * are set by this routine.  By default, the status will not be
-     * rechecked if \a triGraphvizStatus is not GraphvizStatus::unknown.
-     */
-    void checkGraphvizStatus(bool forceRecheck = false);
 };
 
 inline GraphvizStatus::GraphvizStatus() : flag_(unknown.flag_) {

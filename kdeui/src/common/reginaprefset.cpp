@@ -50,6 +50,63 @@ const GraphvizStatus GraphvizStatus::unsupported(-5);
 const GraphvizStatus GraphvizStatus::version1(1);
 const GraphvizStatus GraphvizStatus::version2(2);
 
+// No need to initialise these, since the cache is only used when the
+// given executable matches cacheGraphvizExec (which begins life as null).
+QMutex GraphvizStatus::cacheGraphvizMutex;
+QString GraphvizStatus::cacheGraphvizExec;
+QString GraphvizStatus::cacheGraphvizExecFull;
+GraphvizStatus GraphvizStatus::cacheGraphvizStatus;
+
+GraphvizStatus GraphvizStatus::status(const QString& userExec,
+        QString& fullExec, bool forceRecheck) {
+    QMutexLocker lock(&cacheGraphvizMutex);
+
+    if ((! forceRecheck) && cacheGraphvizStatus != unknown &&
+            userExec == cacheGraphvizExec) {
+        fullExec = cacheGraphvizExecFull;
+        return cacheGraphvizStatus;
+    }
+
+    // We need a full requery.
+    if (userExec.find("/") < 0) {
+        // Hunt on the search path.
+        fullExec = KStandardDirs::findExe(userExec);
+        if (fullExec.isNull())
+            return notFound;
+    } else
+        fullExec = QFileInfo(userExec).absFilePath();
+
+    // We have a full path to the Graphviz executable.
+    QFileInfo info(fullExec);
+    if (! info.exists())
+        return notExist;
+    if (! (info.isFile() && info.isExecutable()))
+        return notExecutable;
+
+    // Run to extract a version string.
+    ShortRunner graphviz;
+    graphviz << fullExec << "-V";
+    QString output = graphviz.run(true);
+    if (output.isNull()) {
+        if (graphviz.timedOut())
+            return unsupported;
+        else
+            return notStartable;
+    }
+
+    if (output.find("version 1.") >= 0)
+        return version1;
+    else if (output.find("version 0.") >= 0)
+        return unsupported;
+    else if (output.find("version") >= 0) {
+        // Assume any other version is >= 2.x.
+        return version2;
+    } else {
+        // Could not find a version string at all.
+        return unsupported;
+    }
+}
+
 ReginaPrefSet::ReginaPrefSet() :
         autoDock(true),
         autoFileExtension(true),
@@ -65,7 +122,6 @@ ReginaPrefSet::ReginaPrefSet() :
         triEditMode(DirectEdit),
         triGAPExec("gap"),
         triGraphvizExec("neato"),
-        triGraphvizStatus(GraphvizStatus::unknown),
         triInitialTab(Gluings),
         triInitialSkeletonTab(SkelComp),
         triInitialAlgebraTab(Homology),
@@ -142,57 +198,5 @@ bool ReginaPrefSet::writePythonLibraries() const {
             out << INACTIVE << ' ' << (*it).filename << '\n';
 
     return true;
-}
-
-void ReginaPrefSet::checkGraphvizStatus(bool forceRecheck) {
-    if (triGraphvizStatus != GraphvizStatus::unknown && ! forceRecheck)
-        return;
-
-    if (triGraphvizExec.find("/") < 0) {
-        // Hunt on the search path.
-        triGraphvizExecFull = KStandardDirs::findExe(triGraphvizExec);
-        if (triGraphvizExecFull.isNull()) {
-            triGraphvizStatus = GraphvizStatus::notFound;
-            return;
-        }
-    } else
-        triGraphvizExecFull = QFileInfo(triGraphvizExec).absFilePath();
-
-    // We have a full path to the Graphviz executable.
-    QFileInfo info(triGraphvizExecFull);
-    if (! info.exists()) {
-        triGraphvizStatus = GraphvizStatus::notExist;
-        return;
-    }
-    if (! (info.isFile() && info.isExecutable())) {
-        triGraphvizStatus = GraphvizStatus::notExecutable;
-        return;
-    }
-
-    // Run to extract a version string.
-    ShortRunner graphviz;
-    graphviz << triGraphvizExecFull << "-V";
-    QString output = graphviz.run(true);
-    if (output.isNull()) {
-        if (graphviz.timedOut())
-            triGraphvizStatus = GraphvizStatus::unsupported;
-        else
-            triGraphvizStatus = GraphvizStatus::notStartable;
-        return;
-    }
-
-    if (output.find("version 1.") >= 0)
-        triGraphvizStatus = GraphvizStatus::version1;
-    else if (output.find("version 0.") >= 0)
-        triGraphvizStatus = GraphvizStatus::unsupported;
-    else if (output.find("version") >= 0) {
-        // Assume any other version is >= 2.x.
-        triGraphvizStatus = GraphvizStatus::version2;
-    } else {
-        // Could not find a version string at all.
-        triGraphvizStatus = GraphvizStatus::unsupported;
-    }
-
-    return;
 }
 
