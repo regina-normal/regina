@@ -88,6 +88,11 @@ class GraphvizStatus {
          */
         static const GraphvizStatus notExecutable;
         /**
+         * Indicates that ReginaPrefSet::triGraphvizExec describes an
+         * executable that could not be started.
+         */
+        static const GraphvizStatus notStartable;
+        /**
          * Indicates that Graphviz has been found on the current system,
          * but its version is unsupported by Regina.
          */
@@ -186,9 +191,15 @@ struct ReginaPrefSet {
              for drawing undirected graphs; the recommended Graphviz tool
              is neato.  This need not include a directory (in which case
              the search path will be used). */
+    QString triGraphvizExecFull;
+        /**< The full pathname to the Graphviz executable \a triGraphvizExec
+             if known, or QString::null if not known.  This is derived at
+             runtime, and is not read from or written to the configuration
+             file. */
     GraphvizStatus triGraphvizStatus;
         /**< The status of the Graphviz installation on the current
-             machine. */
+             machine.  This is derived at runtime, and is not read from
+             or written to the configuration file. */
     TriTab triInitialTab;
         /**< The initially visible top-level tab for a new triangulation
              viewer/editor. */
@@ -229,6 +240,14 @@ struct ReginaPrefSet {
      * file.
      */
     bool writePythonLibraries() const;
+
+    /**
+     * Updates the known status of the Graphviz installation on the current
+     * machine.  Members \a triGraphvizStatus and \a triGraphvizExecFull
+     * are set by this routine.  By default, the status will not be
+     * rechecked if \a triGraphvizStatus is not GraphvizStatus::unknown.
+     */
+    void checkGraphvizStatus(bool forceRecheck = false);
 };
 
 inline GraphvizStatus::GraphvizStatus() : flag_(unknown.flag_) {
@@ -257,7 +276,8 @@ inline bool GraphvizStatus::operator != (const GraphvizStatus& status) const {
 
 inline bool GraphvizStatus::unusable() const {
     return (*this == notFound || *this == notExist ||
-        *this == notExecutable || *this == unsupported);
+        *this == notExecutable || *this == notStartable ||
+        *this == unsupported);
 }
 
 inline bool GraphvizStatus::usable() const {
