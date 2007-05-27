@@ -30,7 +30,7 @@
 
 QString ShortRunner::run(bool mergeStderr) {
     // Prepare to receive standard output.
-    connect(&proc, SIGNAL(KProcess::receivedStdout(KProcess*, char*, int)),
+    connect(&proc, SIGNAL(receivedStdout(KProcess*, char*, int)),
         this, SLOT(collectOutput(KProcess*, char*, int)));
 
     // Start the child process running.
