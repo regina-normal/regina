@@ -20,7 +20,8 @@ noinst_HEADERS = \
 	qtcompat.h \
 	reginaabout.h \
 	reginafilter.h \
-	reginaprefset.h
+	reginaprefset.h \
+	shortrunner.h
 
 lib_LTLIBRARIES = libregina-kdecommon.la
 
@@ -39,7 +40,8 @@ libregina_kdecommon_la_SOURCES = \
 	pythonmanager.cpp \
 	qtcompat.cpp \
 	reginaabout.cpp \
-	reginaprefset.cpp
+	reginaprefset.cpp \
+	shortrunner.cpp
 
 METASOURCES = AUTO
 
