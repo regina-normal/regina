@@ -48,7 +48,8 @@ const GraphvizStatus GraphvizStatus::notExecutable(-3);
 const GraphvizStatus GraphvizStatus::notStartable(-4);
 const GraphvizStatus GraphvizStatus::unsupported(-5);
 const GraphvizStatus GraphvizStatus::version1(1);
-const GraphvizStatus GraphvizStatus::version2(2);
+const GraphvizStatus GraphvizStatus::version1NotDot(2);
+const GraphvizStatus GraphvizStatus::version2(3);
 
 // No need to initialise these, since the cache is only used when the
 // given executable matches cacheGraphvizExec (which begins life as null).
@@ -94,9 +95,14 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
             return notStartable;
     }
 
-    if (output.find("version 1.") >= 0)
-        return version1;
-    else if (output.find("version 0.") >= 0)
+    if (output.find("version 1.") >= 0) {
+        // Only test for "dot", not "/dot".  I'd rather not get tripped
+        // up with alternate path separators, and this still
+        // distinguishes between the different 1.x graph drawing tools.
+        if (userExec.endsWith("dot", false))
+            return version1;
+        return version1NotDot;
+    } else if (output.find("version 0.") >= 0)
         return unsupported;
     else if (output.find("version") >= 0) {
         // Assume any other version is >= 2.x.

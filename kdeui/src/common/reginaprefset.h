@@ -100,9 +100,18 @@ class GraphvizStatus {
         static const GraphvizStatus unsupported;
         /**
          * Indicates that Graphviz version 1.x has been found on the
-         * current system.
+         * current system, and that dot appears to be selected.
+         * Under Graphviz 1.x, dot seems to be the only tool that can
+         * handle multiple edges correctly.
          */
         static const GraphvizStatus version1;
+        /**
+         * Indicates that Graphviz version 1.x has been found on the
+         * current system, but that dot does not appear to be selected.
+         * Under Graphviz 1.x, dot seems to be the only tool that can
+         * handle multiple edges correctly.
+         */
+        static const GraphvizStatus version1NotDot;
         /**
          * Indicates that Graphviz version 2.x or later has been found
          * on the current system.
@@ -157,9 +166,6 @@ class GraphvizStatus {
          */
         bool usable() const;
 
-    private:
-        GraphvizStatus(int flag);
-
         /**
          * Determines the status of the Graphviz installation on this
          * machine corresponding to the given executable \a userExec.
@@ -181,6 +187,9 @@ class GraphvizStatus {
          */
          static GraphvizStatus status(const QString& userExec,
             QString& fullExec, bool forceRecheck = false);
+
+    private:
+        GraphvizStatus(int flag);
 };
 
 /**
