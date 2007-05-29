@@ -51,6 +51,9 @@ const GraphvizStatus GraphvizStatus::version1(1);
 const GraphvizStatus GraphvizStatus::version1NotDot(2);
 const GraphvizStatus GraphvizStatus::version2(3);
 
+const char* ReginaPrefSet::defaultGAPExec = "gap";
+const char* ReginaPrefSet::defaultGraphvizExec = "neato";
+
 // No need to initialise these, since the cache is only used when the
 // given executable matches cacheGraphvizExec (which begins life as null).
 QMutex GraphvizStatus::cacheGraphvizMutex;
@@ -126,8 +129,8 @@ ReginaPrefSet::ReginaPrefSet() :
         surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
         treeJumpSize(10),
         triEditMode(DirectEdit),
-        triGAPExec("gap"),
-        triGraphvizExec("neato"),
+        triGAPExec(defaultGAPExec),
+        triGraphvizExec(defaultGraphvizExec),
         triInitialTab(Gluings),
         triInitialSkeletonTab(SkelComp),
         triInitialAlgebraTab(Homology),

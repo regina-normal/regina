@@ -196,6 +196,14 @@ class GraphvizStatus {
  * A structure holding all Regina preferences.
  */
 struct ReginaPrefSet {
+    // Some defaults that other classes may need to access:
+    static const char* defaultGAPExec;
+        /**< The default setting for \a triGAPExec. */
+    static const char* defaultGraphvizExec;
+        /**< The default setting for \a triGraphvizExec. */
+
+    // The preferences themselves:
+
     enum TriEditMode { DirectEdit, Dialog };
         /**< Possible edit modes for triangulation gluings. */
     enum TriTab { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
