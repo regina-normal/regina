@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "regina-config.h"
+
 #include "file/nfileinfo.h"
 
 #include "coordinatechooser.h"
@@ -359,13 +361,11 @@ void ReginaPreferences::slotApply() {
     strVal = triPrefs->editGraphvizExec->text().stripWhiteSpace();
     if (strVal.isEmpty()) {
         // No no no.
+        // Disallow the change.
         triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
-    } else if (strVal == "neato") {
-        // Don't run any checks, since this is the default.
-        // Graphviz might not be installed.
-        prefSet.triGraphvizExec = strVal;
     } else if (strVal == "graphviz" || strVal.endsWith("/graphviz")) {
         // The user is trying to use "graphviz" as the executable name.
+        // Disallow the change.
         KMessageBox::error(this, i18n("<qt>Graphviz is the name of a "
             "software suite, not the actual executable.  Graphviz supplies "
             "several different executables for drawing graphs in several "
@@ -373,39 +373,114 @@ void ReginaPreferences::slotApply() {
             "Regina is <i>neato</i>.<p>"
             "See <i>http://www.graphviz.org/</i> for further details.</qt>"));
         triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
-    } else if (strVal.find('/') >= 0) {
-        // We've specified our own executable with a full path.
-        // Let's be anal about it.
-        QFileInfo info(strVal);
-        if (! info.exists()) {
-            KMessageBox::error(this, i18n("The Graphviz executable \"%1\" "
-                "does not exist.").arg(strVal));
-            triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
-        } else if (! (info.isFile() && info.isExecutable())) {
-            KMessageBox::error(this, i18n("The Graphviz executable \"%1\" "
-                "is not actually an executable file.").arg(strVal));
-            triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
-        } else {
-            // Looking fine.  Make it absolute.
-            prefSet.triGraphvizExec = info.absFilePath();
-            triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
-        }
     } else {
-        // Search on the system path.
-        // Leave their setting alone, whatever it is, since they're
-        // being vague about it.  Maybe they don't have Graphviz installed.
-        if (KStandardDirs::findExe(strVal).isNull())
-            KMessageBox::informationList(this, i18n(
-                "The Graphviz executable \"%1\" could not be found on the "
-                "default search path.  This means that you will not be able "
-                "to use Graphviz from within Regina.\n"
-                "This is not really a problem; it just means that Regina "
-                "will not be able to display the face pairing graphs "
-                "of triangulations.\n"
-                "The following directories are included in the default "
-                "search path:").arg(strVal), KStandardDirs::systemPaths(),
-                i18n("Graphviz Executable Not Found"));
-        prefSet.triGraphvizExec = strVal;
+        // Time to check it out.
+        QString gvFullExec;
+        GraphvizStatus gvStatus =
+            GraphvizStatus::status(strVal, gvFullExec, true);
+
+        if (gvStatus == GraphvizStatus::version1 ||
+                gvStatus == GraphvizStatus::version2) {
+            // Looking fine.
+            // Allow the change, and make the path absolute.
+            prefSet.triGraphvizExec = gvFullExec;
+            triPrefs->editGraphvizExec->setText(gvFullExec);
+        } else if (strVal == ReginaPrefSet::defaultGraphvizExec &&
+                gvStatus != GraphvizStatus::version1NotDot) {
+            // Since we have stayed with the default, allow it with almost
+            // no checks -- Graphviz might not even be installed.  However,
+            // we still warn users if it's likely to give _wrong_ answers
+            // (as in the case version1NotDot).
+            //
+            // Do not make the path absolute, since we want it to stay
+            // looking like the default.
+            prefSet.triGraphvizExec = strVal;
+        } else {
+            // We have a problem.
+            // We will need to ask the user for confirmation before
+            // making the change.  Set up messages that are common to
+            // all casese.
+            int action;
+            QString title = i18n("Graphviz Not Usable");
+            QString tail = i18n(
+                "A misconfigured Graphviz is not really "
+                "a problem.  It just means that Regina will not be "
+                "able to display the face pairing graphs of "
+                "triangulations.<p>"
+                "Are you sure you wish to save your new Graphviz "
+                "setting?");
+
+            // Treat the individual error types as appropriate.
+            if (gvStatus == GraphvizStatus::notFound)
+                action = KMessageBox::warningYesNoList(this, i18n(
+                    "<qt>The Graphviz executable \"%1\" could not be found "
+                    "on the default search path.<p>"
+                    "The directories in the default search path are "
+                    "listed below.<p>%2</qt>").arg(strVal).arg(tail),
+                    KStandardDirs::systemPaths(),
+                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+            else if (gvStatus == GraphvizStatus::notExist)
+                action = KMessageBox::warningYesNo(this, i18n(
+                    "<qt>The Graphviz executable \"%1\" does not exist.<p>"
+                    "%2</qt>").arg(strVal).arg(tail),
+                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+            else if (gvStatus == GraphvizStatus::notExecutable)
+                action = KMessageBox::warningYesNo(this, i18n(
+                    "<qt>The Graphviz executable \"%1\" is not actually "
+                    "an executable file.<p>%2</qt>").arg(strVal).arg(tail),
+                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+            else if (gvStatus == GraphvizStatus::notStartable)
+                action = KMessageBox::warningYesNo(this, i18n(
+                    "<qt>The Graphviz executable \"%1\" cannot be started."
+                    "<p>%2</qt>").arg(strVal).arg(tail),
+                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+            else if (gvStatus == GraphvizStatus::unsupported)
+                action = KMessageBox::warningYesNo(this, i18n(
+                    "<qt>I cannot determine the "
+                    "version of Graphviz that you are running.<p>"
+                    "This is a bad sign - your Graphviz version might "
+                    "be too old (version 0.x), or the program \"%1\" might "
+                    "not be from Graphviz at all.<p>"
+                    "It is strongly recommended that you double-check this "
+                    "setting.  This should be a Graphviz graph drawing "
+                    "program, such as <i>neato</i> or <i>dot</i>.<p>"
+                    "See <i>http://www.graphviz.org/</i> for information "
+                    "on Graphviz.  If you believe this message is in error, "
+                    "please notify the Regina authors at <i>%2</i>.<p>"
+                    "Are you sure you wish to save your new Graphviz "
+                    "setting?</qt>").arg(strVal).arg(PACKAGE_BUGREPORT),
+                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+            else if (gvStatus == GraphvizStatus::version1NotDot)
+                action = KMessageBox::warningYesNo(this, i18n(
+                    "<qt>You appear to be running "
+                    "a very old version of Graphviz (version 1.x).<p>"
+                    "Many tools in older versions of Graphviz, including "
+                    "<i>neato</i> (the default setting here), cannot handle "
+                    "graphs with multiple edges.<p>"
+                    "It is <b>highly recommended</b> that you change this "
+                    "setting to <i>dot</i>, which handles multiple edges "
+                    "correctly even in this old version.<p>"
+                    "Alternatively, you could upgrade to a more recent "
+                    "version of Graphviz (such as 2.x).  See "
+                    "<i>http://www.graphviz.org/</i> for further "
+                    "information.<p>"
+                    "Are you sure you wish to save your new Graphviz "
+                    "setting?</qt>"),
+                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+            else
+                action = KMessageBox::warningYesNo(this, i18n(
+                    "<qt>The status of the Graphviz installation on "
+                    "this machine could not be determined.<p>"
+                    "This is very unusual, and the author would be "
+                    "grateful if you could file a bug report at "
+                    "<i>%1</i>.<p>%2</qt>").arg(PACKAGE_BUGREPORT).arg(tail),
+                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+
+            if (action == KMessageBox::Yes)
+                prefSet.triGraphvizExec = strVal;
+            else
+                triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
+        }
     }
 
     prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
