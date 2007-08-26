@@ -24,6 +24,14 @@ else
 	configmpi =
 endif
 
+# Fetch the python version out of debian/control so we can pass it to
+# ./configure.  This keeps things sane when multiple python*-dev packages
+# are installed.
+#
+# Use grep instead of pyversions so that we don't need to build-depend
+# on the default python (in addition to whatever python boost requires).
+pyver = $(subst XS-Python-Version: ,,$(shell grep ^XS-Python-Version debian/control))
+
 -include debian/debiandirs
 
 debian/debiandirs: admin/debianrules
@@ -45,6 +53,7 @@ configure-stamp:
 	# Back to the standard configure.
 	chmod a+x configure
 	./configure --disable-maintainer-mode PKGNAME=regina-normal \
+	  --with-python-version=$(pyver) \
 	  --includedir=/usr/include $(configkde) $(configmpi) \
 	  --includedir=/usr/include
 	touch configure-stamp
@@ -59,7 +68,7 @@ build-stamp:
 clean:
 	dh_testdir
 	dh_testroot
-	-$(MAKE) distclean
+	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -f build-stamp configure-stamp
 	rm -f debian/debiandirs
 	dh_clean
@@ -76,6 +85,10 @@ install: build
 	# Make sure python versions are consistent between the binaries and
 	# the startup script.
 	sh debian/pycheck
+
+	# Make sure we've got the multithreaded boost.python, not the
+	# single-threaded boost.python.
+	sh debian/mtcheck
 
 ifneq ($(NO_MPI),1)
 	# Make sure MPI support was enabled.
