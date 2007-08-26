@@ -413,14 +413,14 @@ AC_DEFUN([REGINA_LIB_BOOST_PYTHON], [
     boostliblist=none
     if test "x$withval" != "xno"; then
       if test "x$withval" != "x"; then
-        boostliblist="boost_python-$withval boost_python"
+        boostliblist="boost_python-$withval boost_python-mt boost_python"
       fi
     fi
   ], [
     boostliblist=none
   ])
   if test "x$boostliblist" = "xnone"; then
-    boostliblist="boost_python boost_python-mt boost_python-gcc-mt-1_33_1 boost_python-gcc-mt-1_32 boost_python-gcc-mt-1_31"
+    boostliblist="boost_python-mt boost_python boost_python-gcc-mt-1_33_1 boost_python-gcc-mt-1_32 boost_python-gcc-mt-1_31"
   fi
 
   AC_CHECK_HEADERS([boost/shared_ptr.hpp], [
