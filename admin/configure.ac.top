@@ -303,6 +303,10 @@ AC_SUBST(ENGINE_LIBS)
 TESTSUITE_LIBS="$CPPUNIT_LIBS"
 AC_SUBST(TESTSUITE_LIBS)
 
+# The set of all Qt/KDE libraries required by the GUI.
+GUI_KDE_LIBS="$LIB_KPARTS $LIB_KABC $LIB_KDEUI $LIB_KIO $LIB_KDECORE $LIB_QT -lktexteditor"
+AC_SUBST(GUI_KDE_LIBS)
+
 # Do we wish to statically link the calculation engine into final targets?
 __static_final=no
 LIB_ENGINE="\$(top_srcdir)/engine/libregina-engine.la"

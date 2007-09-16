@@ -21,7 +21,7 @@ bin_PROGRAMS = regina-kde
 
 regina_kde_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 regina_kde_LDADD   = ../common/libregina-kdecommon.la \
-	$(LIB_ENGINE) $(LIB_KPARTS) $(LIB_KABC) $(LIB_KDEUI) $(LIB_KIO) $(LIB_KDECORE) $(LIB_QT) -lktexteditor
+	$(LIB_ENGINE) $(GUI_KDE_LIBS)
 regina_kde_SOURCES = \
 	examplesaction.cpp \
 	main.cpp \
