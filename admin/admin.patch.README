@@ -1,0 +1,19 @@
+Patches to standard build components
+------------------------------------
+
+Some components of the standard build infrastructure have been patched
+for Regina.  These changes are recorded in the file admin.patch, and the
+reasons for these changes are outlined below.
+
+- Adding -flat_namespace to libtool.m4.ext:
+
+  On MacOSX, when $MACOSX_DEPLOYMENT_TARGET is defined and set
+  sufficiently high, libtool defaults to using two-level namespaces.
+  This causes problems with the python module; in particular,
+  regina-python crashes with a bus error because the module cannot
+  resolve the core python symbols.  Adding the -flat_namespace flag
+  resolves this problem (presumably because it can now resolve the
+  symbols from the surrounding python executable).
+
+  Patched 23 September 2007.
+

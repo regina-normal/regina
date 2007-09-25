@@ -1,0 +1,22 @@
+Index: libtool.m4.ext
+===================================================================
+--- libtool.m4.ext	(revision 3228)
++++ libtool.m4.ext	(working copy)
+@@ -3029,7 +3029,7 @@
+                _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}suppress'
+                ;;
+              10.*)
+-               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-undefined ${wl}dynamic_lookup'
++               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}dynamic_lookup'
+                ;;
+            esac
+          fi
+@@ -5816,7 +5816,7 @@
+                _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}suppress'
+                ;;
+              10.*)
+-               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-undefined ${wl}dynamic_lookup'
++               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}dynamic_lookup'
+                ;;
+            esac
+          fi
