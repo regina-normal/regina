@@ -28,9 +28,11 @@
 
 void addNAbelianGroup();
 void addNGroupPresentation();
+void addNMarkedAbelianGroup();
 
 void addAlgebra() {
     addNAbelianGroup();
     addNGroupPresentation();
+    addNMarkedAbelianGroup();
 }
 

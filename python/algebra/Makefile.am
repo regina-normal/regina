@@ -13,5 +13,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libalgebra.la
 
-libalgebra_la_SOURCES = nabeliangroup.cpp ngrouppresentation.cpp pyalgebra.cpp
+libalgebra_la_SOURCES = nabeliangroup.cpp ngrouppresentation.cpp nmarkedabeliangroup.cpp pyalgebra.cpp
 
