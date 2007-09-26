@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file nmarkedabeliangroup.h
- *  \brief Deals with finitely generated abelian groups.
+ *  \brief Deals with abelian groups given by chain complexes.
  */
 
 #ifndef __NMARKEDABELIANGROUP_H
