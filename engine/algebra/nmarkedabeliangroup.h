@@ -26,13 +26,13 @@
 
 /* end stub */
 
-/*! \file marked_abeliangroup.h
+/*! \file nmarkedabeliangroup.h
  *  \brief Deals with finitely generated abelian groups.
  */
 
-#ifndef __MARKEDABELIANGROUP_H
+#ifndef __NMARKEDABELIANGROUP_H
 #ifndef __DOXYGEN
-#define __MARKEDABELIANGROUP_H
+#define __NMARKEDABELIANGROUP_H
 #endif
 
 #include <vector>
@@ -43,12 +43,8 @@
 
 namespace regina {
 
-class NFile;
-class NMatrixInt;
-
 /**
- * \addtogroup algebra Algebraic Structures
- * Various algebraic structures.
+ * \weakgroup algebra
  * @{
  */
 
@@ -71,7 +67,7 @@ class NMatrixInt;
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
  */
-class MarkedAbelianGroup : public ShareableObject {
+class NMarkedAbelianGroup : public ShareableObject {
     protected:
         /** Internal original M */
         NMatrixInt OM; // copy of initializing M
@@ -120,26 +116,26 @@ class MarkedAbelianGroup : public ShareableObject {
     public:
 
         /**
-         * MarkedAbelianGroups can only be created via a chain complex.
+         * NMarkedAbelianGroups can only be created via a chain complex.
          * this assumes the product M*N=0, so among other things, it needs
          * to be well-defined, ie: M.rows()==N.columns().
          *
          * @param M `right' matrix in chain complex
          * @param N `left' matrix in chain complex
          */
-        MarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
+        NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
 
         /**
          * Creates a clone of the given group.
          *
          * @param cloneMe the group to clone.
          */
-        MarkedAbelianGroup(const MarkedAbelianGroup& cloneMe);
+        NMarkedAbelianGroup(const NMarkedAbelianGroup& cloneMe);
 
         /**
          * Destroys the group.
          */
-        virtual ~MarkedAbelianGroup();
+        virtual ~NMarkedAbelianGroup();
 
         /**
          * Returns the rank of the group.
@@ -188,7 +184,7 @@ class MarkedAbelianGroup : public ShareableObject {
         /**
          * Returns the number of invariant factors that describe the
          * torsion elements of this group.
-         * See the MarkedAbelianGroup class notes for further details.
+         * See the NMarkedAbelianGroup class notes for further details.
          *
          * @return the number of invariant factors.
          */
@@ -197,7 +193,7 @@ class MarkedAbelianGroup : public ShareableObject {
         /**
          * Returns the given invariant factor describing the torsion
          * elements of this group.
-         * See the MarkedAbelianGroup class notes for further details.
+         * See the NMarkedAbelianGroup class notes for further details.
          *
          * If the invariant factors are <i>d0</i>|<i>d1</i>|...|<i>dn</i>,
          * this routine will return <i>di</i> where <i>i</i> is the
@@ -224,14 +220,14 @@ class MarkedAbelianGroup : public ShareableObject {
          * @param other the group with which this should be compared.
          * @return \c true if and only if the two groups are isomorphic.
          */
-        bool operator == (const MarkedAbelianGroup& other) const;
+        bool operator == (const NMarkedAbelianGroup& other) const;
 
         /**
          * The text representation will be of the form
          * <tt>3 Z + 4 Z_2 + Z_120</tt>.
          * The torsion elements will be written in terms of the
          * invariant factors of the group, as described in the
-         * MarkedAbelianGroup notes.
+         * NMarkedAbelianGroup notes.
          *
          * @param out is the stream to write to.
          */
@@ -432,10 +428,10 @@ class MarkedAbelianGroup : public ShareableObject {
 
 /*@}*/
 
-// Inline functions for MarkedAbelianGroup
+// Inline functions for NMarkedAbelianGroup
 
 // copy constructor
-inline MarkedAbelianGroup::MarkedAbelianGroup(const MarkedAbelianGroup& g) :
+inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
         ShareableObject(),
         OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
         rankOM(g.rankOM),
@@ -447,50 +443,50 @@ inline MarkedAbelianGroup::MarkedAbelianGroup(const MarkedAbelianGroup& g) :
 }
 
 // destructor
-inline MarkedAbelianGroup::~MarkedAbelianGroup() {}
+inline NMarkedAbelianGroup::~NMarkedAbelianGroup() {}
 
-inline NMatrixInt MarkedAbelianGroup::getMRB() const {
+inline NMatrixInt NMarkedAbelianGroup::getMRB() const {
     return OMR;
 }
-inline NMatrixInt MarkedAbelianGroup::getMRBi() const {
+inline NMatrixInt NMarkedAbelianGroup::getMRBi() const {
     return OMRi;
 }
-inline NMatrixInt MarkedAbelianGroup::getMCB() const {
+inline NMatrixInt NMarkedAbelianGroup::getMCB() const {
     return OMC;
 }
-inline NMatrixInt MarkedAbelianGroup::getMCBi() const {
+inline NMatrixInt NMarkedAbelianGroup::getMCBi() const {
     return OMCi;
 }
-inline NMatrixInt MarkedAbelianGroup::getNRB() const {
+inline NMatrixInt NMarkedAbelianGroup::getNRB() const {
     return ornR;
 }
-inline NMatrixInt MarkedAbelianGroup::getNRBi() const {
+inline NMatrixInt NMarkedAbelianGroup::getNRBi() const {
     return ornRi;
 }
-inline NMatrixInt MarkedAbelianGroup::getNCB() const {
+inline NMatrixInt NMarkedAbelianGroup::getNCB() const {
     return ornC;
 }
-inline NMatrixInt MarkedAbelianGroup::getNCBi() const {
+inline NMatrixInt NMarkedAbelianGroup::getNCBi() const {
     return ornCi;
 }
 
-inline unsigned long MarkedAbelianGroup::getRankOM() const {
+inline unsigned long NMarkedAbelianGroup::getRankOM() const {
     return rankOM;
 }
-inline unsigned long MarkedAbelianGroup::getFreeLoc() const {
+inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
     return snffreeindex;
 }
-inline unsigned long MarkedAbelianGroup::getTorLoc() const {
+inline unsigned long NMarkedAbelianGroup::getTorLoc() const {
     return ifLoc;
 }
-inline unsigned long MarkedAbelianGroup::getTorNum() const {
+inline unsigned long NMarkedAbelianGroup::getTorNum() const {
     return InvFacList.size();
 }
 
-inline NMatrixInt MarkedAbelianGroup::getOM() const {
+inline NMatrixInt NMarkedAbelianGroup::getOM() const {
     return OM;
 }
-inline NMatrixInt MarkedAbelianGroup::getON() const {
+inline NMatrixInt NMarkedAbelianGroup::getON() const {
     return ON;
 }
 
@@ -560,12 +556,12 @@ NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom, std::vector<NLargeInteger>& 
  * @author Ryan Budney
  */
 
-class HomMarkedAbelianGroup : public ShareableObject {
+class NHomMarkedAbelianGroup : public ShareableObject {
     protected:
         /** domain */
-        MarkedAbelianGroup domain;
+        NMarkedAbelianGroup domain;
         /** range */
-        MarkedAbelianGroup range;
+        NMarkedAbelianGroup range;
         /** matrix describing map from domain to range, in the coordinates
             of the chain complexes used to construct domain and range */
         NMatrixInt matrix;
@@ -573,11 +569,11 @@ class HomMarkedAbelianGroup : public ShareableObject {
         /** short description of matrix in SNF coordinates */
         NMatrixInt* reducedMatrix;
         /** pointer to kernel of map */
-        MarkedAbelianGroup* kernel;
+        NMarkedAbelianGroup* kernel;
         /** pointer to coKernel of map */
-        MarkedAbelianGroup* coKernel;
+        NMarkedAbelianGroup* coKernel;
         /** pointer to image */
-        MarkedAbelianGroup* image;
+        NMarkedAbelianGroup* image;
         /** pointer to a lattice which describes the kernel of the
             homomorphism. */
         NMatrixInt* reducedKernelLattice;
@@ -599,7 +595,7 @@ class HomMarkedAbelianGroup : public ShareableObject {
 //       * two marked abelian groups and a matrix that indicates where the
 //       * generators are sent.
         /**
-         * This is the sole HomMarkedAbelianGroup constructor, other than
+         * This is the sole NHomMarkedAbelianGroup constructor, other than
          * the copy constructor.
          *
          * @param dom domain group
@@ -607,18 +603,18 @@ class HomMarkedAbelianGroup : public ShareableObject {
          * @param mat the matrix that describes the homomorphism from dom
          * to ran, given in the chain-complex coordinates.
          */
-        HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
-                const MarkedAbelianGroup& ran,
+        NHomMarkedAbelianGroup(const NMarkedAbelianGroup& dom,
+                const NMarkedAbelianGroup& ran,
                 const NMatrixInt &mat);
         /**
          * Copy constructor.
          * @param g object to copy
          */
-        HomMarkedAbelianGroup(const HomMarkedAbelianGroup& g);
+        NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& g);
         /**
          * Destructor.
          */
-        virtual ~HomMarkedAbelianGroup();
+        virtual ~NHomMarkedAbelianGroup();
 
         /**
          * Is it epic? query.
@@ -650,19 +646,19 @@ class HomMarkedAbelianGroup : public ShareableObject {
          *
          * @return the kernel of the homomorphism, as a marked abelian group
          */
-        MarkedAbelianGroup getKernel() const;
+        NMarkedAbelianGroup getKernel() const;
         /**
          * Computes the cokernel.
          *
          * @return cokernel of the homomorphism, as a marked abelian group
          */
-        MarkedAbelianGroup getCoKernel() const;
+        NMarkedAbelianGroup getCoKernel() const;
         /**
          * Computes the image.
          *
          * @return image of the homomorphism, as a marked abelian group
          */
-        MarkedAbelianGroup getImage() const;
+        NMarkedAbelianGroup getImage() const;
 
         /**
          * Short text representation: this will state if the
@@ -675,7 +671,7 @@ class HomMarkedAbelianGroup : public ShareableObject {
         /**
          * Writes a text-readable version of the reduced matrix, this is
          * a description of the homomorphism in some specific coordinates
-         * at present only meant to be internal to HomMarkedAbelianGroup.
+         * at present only meant to be internal to NHomMarkedAbelianGroup.
          *
          * @param out is the output stream
          */
@@ -697,7 +693,7 @@ class HomMarkedAbelianGroup : public ShareableObject {
 };
 
 
-inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() {
+inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
     if (reducedMatrix)
         delete reducedMatrix;
     if (kernel)
@@ -710,15 +706,15 @@ inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() {
         delete reducedKernelLattice;
 }
 
-inline NMatrixInt HomMarkedAbelianGroup::getDefiningMatrix() const {
+inline NMatrixInt NHomMarkedAbelianGroup::getDefiningMatrix() const {
     return matrix;
 }
 
-inline NMatrixInt HomMarkedAbelianGroup::getRedMatrix() const {
+inline NMatrixInt NHomMarkedAbelianGroup::getRedMatrix() const {
     // Cast away const to compute the reduced matrix -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
     return *reducedMatrix;
 }
 

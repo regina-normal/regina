@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "algebra/marked_abeliangroup.h"
+#include "algebra/nmarkedabeliangroup.h"
 #include "maths/matrixops.h"
 #include "file/nfile.h"
 #include <iostream>
@@ -567,7 +567,7 @@ NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom,
 
 unsigned long rbGetRank(const NMatrixInt& M) // I don't know how to avoid
                                              // using this, unfortunately.
-{ // this is needed in MarkedAbelianGroup::MarkedAbelianGroup
+{ // this is needed in NMarkedAbelianGroup::NMarkedAbelianGroup
     NMatrixInt temp(M);
     smithNormalForm(temp);
     unsigned long i=0;
@@ -576,7 +576,7 @@ unsigned long rbGetRank(const NMatrixInt& M) // I don't know how to avoid
     return i; // i is the rank of M
 }
 
-MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M,
+NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
         const NMatrixInt& N) :
         OM(M), ON(N), OMR(M.columns(),M.columns()),
         OMC(M.rows(),M.rows()), OMRi(M.columns(),M.columns()),
@@ -650,16 +650,16 @@ MarkedAbelianGroup::MarkedAbelianGroup(const NMatrixInt& M,
 // entries labelled with 0.
 /** Gives the index-th invariant factor, in increasing order.
         returns 0 for an invalid index. */
-const NLargeInteger& MarkedAbelianGroup::getInvariantFactor(
+const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
         unsigned long index) const {
     return InvFacList[index];
 }
 
-unsigned long MarkedAbelianGroup::getNumberOfInvariantFactors() const {
+unsigned long NMarkedAbelianGroup::getNumberOfInvariantFactors() const {
     return InvFacList.size();
 }
 
-unsigned MarkedAbelianGroup::getTorsionRank(const NLargeInteger& degree) const {
+unsigned NMarkedAbelianGroup::getTorsionRank(const NLargeInteger& degree) const {
     unsigned ans = 0;
     for (unsigned long i=0;i<InvFacList.size();i++) {
         if (InvFacList[i] % degree == 0)
@@ -669,7 +669,7 @@ unsigned MarkedAbelianGroup::getTorsionRank(const NLargeInteger& degree) const {
 }
 
 
-void MarkedAbelianGroup::writeTextShort(std::ostream& out) const {
+void NMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
     bool writtenSomething = false;
 
     if (snfrank > 0) {
@@ -709,15 +709,15 @@ void MarkedAbelianGroup::writeTextShort(std::ostream& out) const {
         out << '0';
 }
 
-unsigned MarkedAbelianGroup::getRank() const {
+unsigned NMarkedAbelianGroup::getRank() const {
     return snfrank;
 }
 
-bool MarkedAbelianGroup::isTrivial() const {
+bool NMarkedAbelianGroup::isTrivial() const {
     return ! ( (snfrank>0) || (InvFacList.size()>0) );
 }
 
-bool MarkedAbelianGroup::operator == (const MarkedAbelianGroup& other) const {
+bool NMarkedAbelianGroup::operator == (const NMarkedAbelianGroup& other) const {
     return ((InvFacList == other.InvFacList) && (snfrank==other.snfrank));
 }
 
@@ -728,7 +728,7 @@ bool MarkedAbelianGroup::operator == (const MarkedAbelianGroup& other) const {
  * this routine returns the index-th free generator of the
  * ker(M)/img(N) in Z^l.
  */
-std::vector<NLargeInteger> MarkedAbelianGroup::getFreeRep(unsigned long index)
+std::vector<NLargeInteger> NMarkedAbelianGroup::getFreeRep(unsigned long index)
         const {
     std::vector<NLargeInteger> retval(OM.columns(),"0");
     // index corresponds to the (index+snffreeindex)-th column of ornCi
@@ -757,7 +757,7 @@ std::vector<NLargeInteger> MarkedAbelianGroup::getFreeRep(unsigned long index)
  * this routine returns the index-th torsion generator of the
  * ker(M)/img(N) in Z^l.
  */
-std::vector<NLargeInteger> MarkedAbelianGroup::getTorRep(unsigned long index)
+std::vector<NLargeInteger> NMarkedAbelianGroup::getTorRep(unsigned long index)
         const {
     std::vector<NLargeInteger> retval(OM.columns(),NLargeInteger::zero);
     // index corresponds to the (InvFacIndex[index])-th column of ornCi
@@ -793,7 +793,7 @@ std::vector<NLargeInteger> MarkedAbelianGroup::getTorRep(unsigned long index)
  * element is not in the kernel of M. element is assumed to have
  * OM.columns()==ON.rows() entries.
  */
-std::vector<NLargeInteger> MarkedAbelianGroup::getSNFisoRep(
+std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFisoRep(
         std::vector<NLargeInteger>& element)  const {
     std::vector<NLargeInteger> retval(snfrank+InvFacList.size(),
         NLargeInteger::zero);
@@ -833,8 +833,8 @@ std::vector<NLargeInteger> MarkedAbelianGroup::getSNFisoRep(
 }
 
 
-HomMarkedAbelianGroup::HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
-        const MarkedAbelianGroup& ran,
+NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMarkedAbelianGroup& dom,
+        const NMarkedAbelianGroup& ran,
         const NMatrixInt &mat):
         domain(dom), range(ran), matrix(mat),
         reducedMatrix(0), kernel(0), coKernel(0), image(0),
@@ -842,22 +842,22 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
 }
 
 
-HomMarkedAbelianGroup::HomMarkedAbelianGroup(const HomMarkedAbelianGroup& g):
+NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& g):
         ShareableObject(), domain(g.domain), range(g.range), matrix(g.matrix) {
     if (g.reducedMatrix) {
         reducedMatrix = new NMatrixInt(*g.reducedMatrix);
     } else reducedMatrix = 0;
 
     if (g.kernel) {
-        kernel = new MarkedAbelianGroup(*g.kernel);
+        kernel = new NMarkedAbelianGroup(*g.kernel);
     } else kernel = 0;
 
     if (g.coKernel) {
-        coKernel = new MarkedAbelianGroup(*g.coKernel);
+        coKernel = new NMarkedAbelianGroup(*g.coKernel);
     } else coKernel = 0;
 
     if (g.image) {
-        image = new MarkedAbelianGroup(*g.image);
+        image = new NMarkedAbelianGroup(*g.image);
     } else image = 0;
 
     if (g.reducedKernelLattice) {
@@ -865,7 +865,7 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(const HomMarkedAbelianGroup& g):
     } else reducedKernelLattice = 0;
 }
 
-void HomMarkedAbelianGroup::computeReducedMatrix() {
+void NHomMarkedAbelianGroup::computeReducedMatrix() {
     if (!reducedMatrix) {
         unsigned long i,j,k;
 
@@ -917,7 +917,7 @@ void HomMarkedAbelianGroup::computeReducedMatrix() {
     }
 }
 
-void HomMarkedAbelianGroup::computeReducedKernelLattice() {
+void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
     if (!reducedKernelLattice) {
         computeReducedMatrix();
 
@@ -942,7 +942,7 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice() {
     }
 }
 
-void HomMarkedAbelianGroup::computeKernel() {
+void NHomMarkedAbelianGroup::computeKernel() {
     if (!kernel) {
         computeReducedKernelLattice();
         NMatrixInt dcLpreimage( *reducedKernelLattice );
@@ -971,15 +971,15 @@ void HomMarkedAbelianGroup::computeKernel() {
 
         NMatrixInt dummy( 1, dcLpreimage.columns() );
 
-        MarkedAbelianGroup retval( dummy, workMat );
+        NMarkedAbelianGroup retval( dummy, workMat );
 
-        kernel = new MarkedAbelianGroup(retval);
+        kernel = new NMarkedAbelianGroup(retval);
     }
 }
 
 
 
-void HomMarkedAbelianGroup::computeCoKernel() {
+void NHomMarkedAbelianGroup::computeCoKernel() {
     if (!coKernel) {
         computeReducedMatrix();
 
@@ -994,16 +994,16 @@ void HomMarkedAbelianGroup::computeCoKernel() {
                 range.getInvariantFactor(i);
 
         NMatrixInt ccgenerators( 1, reducedMatrix->rows() );
-        MarkedAbelianGroup retval(ccgenerators, ccrelators);
+        NMarkedAbelianGroup retval(ccgenerators, ccrelators);
 
-        coKernel = new MarkedAbelianGroup(retval);
+        coKernel = new NMarkedAbelianGroup(retval);
     }
 }
 
 
 
 
-void HomMarkedAbelianGroup::computeImage() {
+void NHomMarkedAbelianGroup::computeImage() {
     if (!image) {
         computeReducedKernelLattice();
         NMatrixInt dcLpreimage( *reducedKernelLattice );
@@ -1022,63 +1022,63 @@ void HomMarkedAbelianGroup::computeImage() {
                 imgCCn.entry(i,j+domain.getNumberOfInvariantFactors()) =
                     dcLpreimage.entry(i,j);
 
-        MarkedAbelianGroup retval(imgCCm, imgCCn);
+        NMarkedAbelianGroup retval(imgCCm, imgCCn);
 
-        image = new MarkedAbelianGroup(retval);
+        image = new NMarkedAbelianGroup(retval);
     }
 }
 
 
 
-bool HomMarkedAbelianGroup::isEpic() const {
+bool NHomMarkedAbelianGroup::isEpic() const {
     return getCoKernel().isTrivial();
 }
 
-bool HomMarkedAbelianGroup::isMonic() const {
+bool NHomMarkedAbelianGroup::isMonic() const {
     return getKernel().isTrivial();
 }
 
-bool HomMarkedAbelianGroup::isIso() const {
+bool NHomMarkedAbelianGroup::isIso() const {
     return (getCoKernel().isTrivial() && getKernel().isTrivial());
 }
 
-bool HomMarkedAbelianGroup::isZero() const {
+bool NHomMarkedAbelianGroup::isZero() const {
     return getImage().isTrivial();
 }
 
 
 
-MarkedAbelianGroup HomMarkedAbelianGroup::getKernel() const {
+NMarkedAbelianGroup NHomMarkedAbelianGroup::getKernel() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<HomMarkedAbelianGroup*>(this)->computeKernel();
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeKernel();
     return *kernel;
 }
 
-MarkedAbelianGroup HomMarkedAbelianGroup::getImage() const {
+NMarkedAbelianGroup NHomMarkedAbelianGroup::getImage() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<HomMarkedAbelianGroup*>(this)->computeImage();
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeImage();
     return *image;
 }
 
-MarkedAbelianGroup HomMarkedAbelianGroup::getCoKernel() const {
+NMarkedAbelianGroup NHomMarkedAbelianGroup::getCoKernel() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<HomMarkedAbelianGroup*>(this)->computeCoKernel();
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeCoKernel();
     return *coKernel;
 }
 
 
 
-void HomMarkedAbelianGroup::writeRedMatrix(std::ostream& out) const {
+void NHomMarkedAbelianGroup::writeRedMatrix(std::ostream& out) const {
     // Cast away const to compute the reduced matrix -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
 
     unsigned long i,j;
     out<<"Reduced Matrix is "<<reducedMatrix->rows()<<" by "
@@ -1097,7 +1097,7 @@ void HomMarkedAbelianGroup::writeRedMatrix(std::ostream& out) const {
     }
 }
 
-void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
+void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
     if (isIso())
         out<<"isomorphism";
     else if (isZero())

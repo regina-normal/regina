@@ -28,7 +28,7 @@
 
 #include "maths/matrixops.h"
 #include "maths/nprimes.h"
-#include "triangulation/homologicaldata.h"
+#include "triangulation/nhomologicaldata.h"
 #include <iostream>
 #include <sstream>
 #include <cmath>
@@ -762,14 +762,14 @@ void NHomologicalData::computeChainComplexes() {
 
 }
 
-MarkedAbelianGroup NHomologicalData::getMH(unsigned q) {
-    MarkedAbelianGroup* retval(0);
+NMarkedAbelianGroup NHomologicalData::getMH(unsigned q) {
+    NMarkedAbelianGroup* retval(0);
 
     if (q==0) {
         if (!mHomology0Computed) {
             computeChainComplexes();
             mHomology0Computed = true;
-            mHomology0 = new MarkedAbelianGroup(*A0,*A1);
+            mHomology0 = new NMarkedAbelianGroup(*A0,*A1);
         }
         retval = mHomology0;
     } else
@@ -777,7 +777,7 @@ MarkedAbelianGroup NHomologicalData::getMH(unsigned q) {
             if (!mHomology1Computed) {
                 computeChainComplexes();
                 mHomology1Computed = true;
-                mHomology1 = new MarkedAbelianGroup(*A1,*A2);
+                mHomology1 = new NMarkedAbelianGroup(*A1,*A2);
             }
             retval = mHomology1;
         } else
@@ -785,7 +785,7 @@ MarkedAbelianGroup NHomologicalData::getMH(unsigned q) {
                 if (!mHomology2Computed) {
                     computeChainComplexes();
                     mHomology2Computed = true;
-                    mHomology2 = new MarkedAbelianGroup(*A2,*A3);
+                    mHomology2 = new NMarkedAbelianGroup(*A2,*A3);
                 }
                 retval = mHomology2;
             } else
@@ -793,7 +793,7 @@ MarkedAbelianGroup NHomologicalData::getMH(unsigned q) {
                     if (!mHomology3Computed) {
                         computeChainComplexes();
                         mHomology3Computed = true;
-                        mHomology3 = new MarkedAbelianGroup(*A3,*A4);
+                        mHomology3 = new NMarkedAbelianGroup(*A3,*A4);
                     }
                     retval = mHomology3;
                 }
@@ -802,14 +802,14 @@ MarkedAbelianGroup NHomologicalData::getMH(unsigned q) {
     // the A's should probably be redone as an array of pointers...
 }
 
-MarkedAbelianGroup NHomologicalData::getBMH(unsigned q) {
-    MarkedAbelianGroup* retval(0);
+NMarkedAbelianGroup NHomologicalData::getBMH(unsigned q) {
+    NMarkedAbelianGroup* retval(0);
 
     if (q==0) {
         if (!bHomology0Computed) {
             computeChainComplexes();
             bHomology0Computed = true;
-            bHomology0 = new MarkedAbelianGroup(*Bd0,*Bd1);
+            bHomology0 = new NMarkedAbelianGroup(*Bd0,*Bd1);
         }
         retval = bHomology0;
     } else
@@ -817,7 +817,7 @@ MarkedAbelianGroup NHomologicalData::getBMH(unsigned q) {
             if (!bHomology1Computed) {
                 computeChainComplexes();
                 bHomology1Computed = true;
-                bHomology1 = new MarkedAbelianGroup(*Bd1,*Bd2);
+                bHomology1 = new NMarkedAbelianGroup(*Bd1,*Bd2);
             }
             retval = bHomology1;
         } else
@@ -825,7 +825,7 @@ MarkedAbelianGroup NHomologicalData::getBMH(unsigned q) {
                 if (!bHomology2Computed) {
                     computeChainComplexes();
                     bHomology2Computed = true;
-                    bHomology2 = new MarkedAbelianGroup(*Bd2,*Bd3);
+                    bHomology2 = new NMarkedAbelianGroup(*Bd2,*Bd3);
                 }
                 retval = bHomology2;
             }
@@ -833,14 +833,14 @@ MarkedAbelianGroup NHomologicalData::getBMH(unsigned q) {
     return (*retval);
 }
 
-MarkedAbelianGroup NHomologicalData::getDMH(unsigned q) {
-    MarkedAbelianGroup* retval(0);
+NMarkedAbelianGroup NHomologicalData::getDMH(unsigned q) {
+    NMarkedAbelianGroup* retval(0);
 
     if (q==0) {
         if (!dmHomology0Computed) {
             computeChainComplexes();
             dmHomology0Computed = true;
-            dmHomology0 = new MarkedAbelianGroup(*B0,*B1);
+            dmHomology0 = new NMarkedAbelianGroup(*B0,*B1);
         }
         retval = dmHomology0;
     } else
@@ -848,7 +848,7 @@ MarkedAbelianGroup NHomologicalData::getDMH(unsigned q) {
             if (!dmHomology1Computed) {
                 computeChainComplexes();
                 dmHomology1Computed = true;
-                dmHomology1 = new MarkedAbelianGroup(*B1,*B2);
+                dmHomology1 = new NMarkedAbelianGroup(*B1,*B2);
             }
             retval = dmHomology1;
         } else
@@ -856,7 +856,7 @@ MarkedAbelianGroup NHomologicalData::getDMH(unsigned q) {
                 if (!dmHomology2Computed) {
                     computeChainComplexes();
                     dmHomology2Computed = true;
-                    dmHomology2 = new MarkedAbelianGroup(*B2,*B3);
+                    dmHomology2 = new NMarkedAbelianGroup(*B2,*B3);
                 }
                 retval = dmHomology2;
             } else
@@ -864,7 +864,7 @@ MarkedAbelianGroup NHomologicalData::getDMH(unsigned q) {
                     if (!dmHomology3Computed) {
                         computeChainComplexes();
                         dmHomology3Computed = true;
-                        dmHomology3 = new MarkedAbelianGroup(*B3,*B4);
+                        dmHomology3 = new NMarkedAbelianGroup(*B3,*B4);
                     }
                     retval = dmHomology3;
                 }
@@ -876,19 +876,19 @@ void NHomologicalData::computeHomology() {
     computeChainComplexes();
     if (!mHomology0Computed) {
         mHomology0Computed = true;
-        mHomology0 = new MarkedAbelianGroup(*A0,*A1);
+        mHomology0 = new NMarkedAbelianGroup(*A0,*A1);
     }
     if (!mHomology1Computed) {
         mHomology1Computed = true;
-        mHomology1 = new MarkedAbelianGroup(*A1,*A2);
+        mHomology1 = new NMarkedAbelianGroup(*A1,*A2);
     }
     if (!mHomology2Computed) {
         mHomology2Computed = true;
-        mHomology2 = new MarkedAbelianGroup(*A2,*A3);
+        mHomology2 = new NMarkedAbelianGroup(*A2,*A3);
     }
     if (!mHomology3Computed) {
         mHomology3Computed = true;
-        mHomology3 = new MarkedAbelianGroup(*A3,*A4);
+        mHomology3 = new NMarkedAbelianGroup(*A3,*A4);
     }
 }
 
@@ -896,15 +896,15 @@ void NHomologicalData::computeBHomology() {
     computeChainComplexes();
     if (!bHomology0Computed) {
         bHomology0Computed = true;
-        bHomology0 = new MarkedAbelianGroup(*Bd0,*Bd1);
+        bHomology0 = new NMarkedAbelianGroup(*Bd0,*Bd1);
     }
     if (!bHomology1Computed) {
         bHomology1Computed = true;
-        bHomology1 = new MarkedAbelianGroup(*Bd1,*Bd2);
+        bHomology1 = new NMarkedAbelianGroup(*Bd1,*Bd2);
     }
     if (!bHomology2Computed) {
         bHomology2Computed = true;
-        bHomology2 = new MarkedAbelianGroup(*Bd2,*Bd3);
+        bHomology2 = new NMarkedAbelianGroup(*Bd2,*Bd3);
     }
 }
 
@@ -912,42 +912,42 @@ void NHomologicalData::computeDHomology() {
     computeChainComplexes();
     if (!dmHomology0Computed) {
         dmHomology0Computed = true;
-        dmHomology0 = new MarkedAbelianGroup(*B0,*B1);
+        dmHomology0 = new NMarkedAbelianGroup(*B0,*B1);
     }
     if (!dmHomology1Computed) {
         dmHomology1Computed = true;
-        dmHomology1 = new MarkedAbelianGroup(*B1,*B2);
+        dmHomology1 = new NMarkedAbelianGroup(*B1,*B2);
     }
     if (!dmHomology2Computed) {
         dmHomology2Computed = true;
-        dmHomology2 = new MarkedAbelianGroup(*B2,*B3);
+        dmHomology2 = new NMarkedAbelianGroup(*B2,*B3);
     }
     if (!dmHomology3Computed) {
         dmHomology3Computed = true;
-        dmHomology3 = new MarkedAbelianGroup(*B3,*B4);
+        dmHomology3 = new NMarkedAbelianGroup(*B3,*B4);
     }
 }
 
-HomMarkedAbelianGroup NHomologicalData::getH1cellap() {
+NHomMarkedAbelianGroup NHomologicalData::getH1cellap() {
     if (!dmTomMap1Computed) {
         computeHomology();
         computeDHomology();
         dmTomMap1Computed = true;
-        dmTomMap1 = new HomMarkedAbelianGroup( *dmHomology1, *mHomology1, *H1map );
+        dmTomMap1 = new NHomMarkedAbelianGroup( *dmHomology1, *mHomology1, *H1map );
     }
     return (*dmTomMap1);
 }
 
-HomMarkedAbelianGroup NHomologicalData::getBMmapH(unsigned q) 
+NHomMarkedAbelianGroup NHomologicalData::getBMmapH(unsigned q) 
 {
-    HomMarkedAbelianGroup* retval(0);
+    NHomMarkedAbelianGroup* retval(0);
 
     if (q==0) {
         if (!bmMap0Computed) {
             computeHomology();
             computeBHomology();
             bmMap0Computed = true;
-            bmMap0 = new HomMarkedAbelianGroup( *bHomology0, *mHomology0, *B0Incl );
+            bmMap0 = new NHomMarkedAbelianGroup( *bHomology0, *mHomology0, *B0Incl );
         }
         retval = bmMap0;
     } else
@@ -956,7 +956,7 @@ HomMarkedAbelianGroup NHomologicalData::getBMmapH(unsigned q)
                 computeHomology();
                 computeBHomology();
                 bmMap1Computed = true;
-                bmMap1 = new HomMarkedAbelianGroup( *bHomology1, *mHomology1, *B1Incl );
+                bmMap1 = new NHomMarkedAbelianGroup( *bHomology1, *mHomology1, *B1Incl );
             }
             retval = bmMap1;
         } else
@@ -965,7 +965,7 @@ HomMarkedAbelianGroup NHomologicalData::getBMmapH(unsigned q)
                     computeHomology();
                     computeBHomology();
                     bmMap2Computed = true;
-                    bmMap2 = new HomMarkedAbelianGroup( *bHomology2, *mHomology2, *B2Incl );
+                    bmMap2 = new NHomMarkedAbelianGroup( *bHomology2, *mHomology2, *B2Incl );
                 }
                 retval = bmMap2;
             }
@@ -978,15 +978,15 @@ void NHomologicalData::computeBIncl() {
     computeBHomology();
     if (!bmMap0Computed) {
         bmMap0Computed = true;
-        bmMap0 = new HomMarkedAbelianGroup( *bHomology0, *mHomology0, *B0Incl );
+        bmMap0 = new NHomMarkedAbelianGroup( *bHomology0, *mHomology0, *B0Incl );
     }
     if (!bmMap1Computed) {
         bmMap1Computed = true;
-        bmMap1 = new HomMarkedAbelianGroup( *bHomology1, *mHomology1, *B1Incl );
+        bmMap1 = new NHomMarkedAbelianGroup( *bHomology1, *mHomology1, *B1Incl );
     }
     if (!bmMap2Computed) {
         bmMap2Computed = true;
-        bmMap2 = new HomMarkedAbelianGroup( *bHomology2, *mHomology2, *B2Incl );
+        bmMap2 = new NHomMarkedAbelianGroup( *bHomology2, *mHomology2, *B2Incl );
     }
  }
 
@@ -994,7 +994,7 @@ void NHomologicalData::computeBIncl() {
 void NHomologicalData::computeTorsionLinkingForm() 
 { 
  if (!torsionFormComputed) {  
-    HomMarkedAbelianGroup h1CellAp(getH1cellap()); // dual h1 --> standard h1 isomorphism
+    NHomMarkedAbelianGroup h1CellAp(getH1cellap()); // dual h1 --> standard h1 isomorphism
     unsigned long niv(dmHomology1->getNumberOfInvariantFactors()); // min number of torsion gens.
     std::vector<std::pair<NLargeInteger, unsigned long> > tFac; // for holding prime decompositions.
     NLargeInteger tI;

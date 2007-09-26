@@ -26,13 +26,13 @@
 
 /* end stub */
 
-/*! \file homologicaldata.h
+/*! \file nhomologicaldata.h
  *  \brief Deals with all the details of cellular homology of a manifold.
  */
 
-#ifndef __HOMOLOGICALDATA_H
+#ifndef __NHOMOLOGICALDATA_H
 #ifndef __DOXYGEN
-#define __HOMOLOGICALDATA_H
+#define __NHOMOLOGICALDATA_H
 #endif
 
 #include <vector>
@@ -48,13 +48,8 @@
 
 namespace regina {
 
-class NFile;
-class NMatrixInt; // what are these for?
-//class NTriangulation;
-
 /**
- * \addtogroup algebra Algebraic Structures
- * Various algebraic structures.
+ * \weakgroup algebra
  * @{
  */
 
@@ -128,88 +123,88 @@ protected:
     /**
      * Pointer to the 0-th homology group in standard cellular coordinates.
      */
-    MarkedAbelianGroup* mHomology0; // manifolds `regular' cellular homology groups
+    NMarkedAbelianGroup* mHomology0; // manifolds `regular' cellular homology groups
     /** true if mHomology0 allocated */
     bool mHomology0Computed;
     /**
      * Pointer to the 1st homology group in standard cellular coordinates.
      */
-    MarkedAbelianGroup* mHomology1;
+    NMarkedAbelianGroup* mHomology1;
     /** true if mHomology1 allocated */
     bool mHomology1Computed;
     /**
      * Pointer to the 2nd homology group in standard cellular coordinates.
      */
-    MarkedAbelianGroup* mHomology2;
+    NMarkedAbelianGroup* mHomology2;
     /** true if mHomology2 allocated */
     bool mHomology2Computed;
     /**
      * Pointer to the 3rd homology group in standard cellular coordinates.
      */
-    MarkedAbelianGroup* mHomology3;
+    NMarkedAbelianGroup* mHomology3;
     /** true if mHomology3 allocated */
     bool mHomology3Computed;
 
     /**
      * Pointer to the 0-th boundary homology group in standard cellular coordinates.
      */
-    MarkedAbelianGroup* bHomology0; // boundary `regular' cellular homology groups
+    NMarkedAbelianGroup* bHomology0; // boundary `regular' cellular homology groups
     /** true if bHomology0 allocated */
     bool bHomology0Computed;
     /**
      * Pointer to the 1st boundary homology group in standard cellular coordinates.
      */
-    MarkedAbelianGroup* bHomology1;
+    NMarkedAbelianGroup* bHomology1;
     /** true if bHomology1 allocated */
     bool bHomology1Computed;
     /**
      * Pointer to the 2nd boundary homology group in standard cellular coordinates.
      */
-    MarkedAbelianGroup* bHomology2;
+    NMarkedAbelianGroup* bHomology2;
     /** true if bHomology2 allocated */
     bool bHomology2Computed;
 
     /**
      * Pointer to the boundary inclusion on 0-th homology, standard cellular coordinates.
      */
-    HomMarkedAbelianGroup* bmMap0; // maps from bHomology? to mHomology?
+    NHomMarkedAbelianGroup* bmMap0; // maps from bHomology? to mHomology?
     /** true if bmMap0 allocated */
     bool bmMap0Computed;
     /**
      * Pointer to the boundary inclusion on 1st homology, standard cellular coordinates.
      */
-    HomMarkedAbelianGroup* bmMap1;
+    NHomMarkedAbelianGroup* bmMap1;
     /** true if bmMap1 allocated */
     bool bmMap1Computed;
     /**
      * Pointer to the boundary inclusion on 2nd homology, standard cellular coordinates.
      */
-    HomMarkedAbelianGroup* bmMap2;
+    NHomMarkedAbelianGroup* bmMap2;
     /** true if bmMap2 allocated */
     bool bmMap2Computed;
 
     /**
      * Pointer to the 0-th homology group in dual cellular coordinates.
      */
-    MarkedAbelianGroup* dmHomology0; // manifold's `dual' cellular homology groups
+    NMarkedAbelianGroup* dmHomology0; // manifold's `dual' cellular homology groups
     /** true if dmHomology0 allocated */
     bool dmHomology0Computed;
     /**
      * Pointer to the 1st homology group in dual cellular coordinates.
      */
-    MarkedAbelianGroup* dmHomology1;
+    NMarkedAbelianGroup* dmHomology1;
     /** true if dmHomology1 allocated */
     bool dmHomology1Computed;
     /**
      * Pointer to the 2nd homology group in dual cellular coordinates.
      */
-    MarkedAbelianGroup* dmHomology2;
+    NMarkedAbelianGroup* dmHomology2;
     /** true if dmHomology2 allocated */
     bool dmHomology2Computed;
     /**
      * Pointer to the 3rd homology group in dual cellular coordinates.
      */
-    MarkedAbelianGroup* dmHomology3;
+    NMarkedAbelianGroup* dmHomology3;
     /** true if dmHomology3 allocated */
     bool dmHomology3Computed;
 
@@ -217,7 +212,7 @@ protected:
      * Pointer to the cellular approx of the identity H1(M) --> H1(M) from dual
      * to standard cellular coordinates.
      */
-    HomMarkedAbelianGroup* dmTomMap1;
+    NHomMarkedAbelianGroup* dmTomMap1;
     /** true if dmTomMap1 allocated */
     bool dmTomMap1Computed;
 
@@ -390,7 +385,7 @@ public:
      * with the regular CW-decomposition.
      * @param q the dimension of the homology group, can be 0, 1, 2 or 3.
      */
-    MarkedAbelianGroup getMH(unsigned q);
+    NMarkedAbelianGroup getMH(unsigned q);
     //the manifold's homology groups, computed with the standard CW
     //decomposition. This is typically slower than getDMH? since
     //getDMH? uses the dual cw-decomposition which typically has
@@ -403,7 +398,7 @@ public:
      * @return the q-th homology group, in standard cellular homology
      * coordinates
      */
-    MarkedAbelianGroup getBMH(unsigned q);//boundary homology groups
+    NMarkedAbelianGroup getBMH(unsigned q);//boundary homology groups
 
     /**
      * This routine gives access to the homomorphism from the
@@ -412,7 +407,7 @@ public:
      * @return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
-    HomMarkedAbelianGroup getBMmapH(unsigned q);//map from boundary to the manifold
+    NHomMarkedAbelianGroup getBMmapH(unsigned q);//map from boundary to the manifold
 
     /**
      * This routine gives access to the manifold's homology computed
@@ -420,7 +415,7 @@ public:
      * @param q the dimension of the homology group, can be 0, 1, 2 or 3.
      * @return H_q of the manifold, computed in the dual CW-decomposition.
      */
-    MarkedAbelianGroup getDMH(unsigned q);//manifold's homology computed with the dual CW-decomposition
+    NMarkedAbelianGroup getDMH(unsigned q);//manifold's homology computed with the dual CW-decomposition
 
     /**
      * This routine gives access to the isomorphism from getDMH(1) to
@@ -430,7 +425,7 @@ public:
      * a cellular approximation of the identity map from the first 1-skeleton
      * to the 2nd.
      */
-    HomMarkedAbelianGroup getH1cellap();//isomorphism from getDMH1 to getMH1 computed via a
+    NHomMarkedAbelianGroup getH1cellap();//isomorphism from getDMH1 to getMH1 computed via a
     // cellular approximation of the identity map.
 
     /**
@@ -637,13 +632,13 @@ ShareableObject() {
     mHomology2Computed = g.mHomology2Computed;
     mHomology3Computed = g.mHomology3Computed;
 
-    if (mHomology0Computed) mHomology0 = new MarkedAbelianGroup(*g.mHomology0);
+    if (mHomology0Computed) mHomology0 = new NMarkedAbelianGroup(*g.mHomology0);
     else mHomology0=0;
-    if (mHomology1Computed) mHomology1 = new MarkedAbelianGroup(*g.mHomology1);
+    if (mHomology1Computed) mHomology1 = new NMarkedAbelianGroup(*g.mHomology1);
     else mHomology1=0;
-    if (mHomology2Computed) mHomology2 = new MarkedAbelianGroup(*g.mHomology2);
+    if (mHomology2Computed) mHomology2 = new NMarkedAbelianGroup(*g.mHomology2);
     else mHomology2=0;
-    if (mHomology3Computed) mHomology3 = new MarkedAbelianGroup(*g.mHomology3);
+    if (mHomology3Computed) mHomology3 = new NMarkedAbelianGroup(*g.mHomology3);
     else mHomology3=0;
 
     // regular boundary cellular homology
@@ -651,11 +646,11 @@ ShareableObject() {
     bHomology1Computed = g.bHomology1Computed;
     bHomology2Computed = g.bHomology2Computed;
 
-    if (bHomology0Computed) bHomology0 = new MarkedAbelianGroup(*g.bHomology0);
+    if (bHomology0Computed) bHomology0 = new NMarkedAbelianGroup(*g.bHomology0);
     else bHomology0=0;
-    if (bHomology1Computed) bHomology1 = new MarkedAbelianGroup(*g.bHomology1);
+    if (bHomology1Computed) bHomology1 = new NMarkedAbelianGroup(*g.bHomology1);
     else bHomology1=0;
-    if (bHomology2Computed) bHomology2 = new MarkedAbelianGroup(*g.bHomology2);
+    if (bHomology2Computed) bHomology2 = new NMarkedAbelianGroup(*g.bHomology2);
     else bHomology2=0;
 
     // boundary map
@@ -663,11 +658,11 @@ ShareableObject() {
     bmMap1Computed = g.bmMap1Computed;
     bmMap2Computed = g.bmMap2Computed;
 
-    if (bmMap0Computed) bmMap0 = new HomMarkedAbelianGroup(*g.bmMap0);
+    if (bmMap0Computed) bmMap0 = new NHomMarkedAbelianGroup(*g.bmMap0);
     else bmMap0=0;
-    if (bmMap1Computed) bmMap1 = new HomMarkedAbelianGroup(*g.bmMap1);
+    if (bmMap1Computed) bmMap1 = new NHomMarkedAbelianGroup(*g.bmMap1);
     else bmMap1=0;
-    if (bmMap2Computed) bmMap2 = new HomMarkedAbelianGroup(*g.bmMap2);
+    if (bmMap2Computed) bmMap2 = new NHomMarkedAbelianGroup(*g.bmMap2);
     else bmMap2=0;
 
     // dual cellular homology
@@ -676,19 +671,19 @@ ShareableObject() {
     dmHomology2Computed = g.dmHomology2Computed;
     dmHomology3Computed = g.dmHomology3Computed;
 
-    if (dmHomology0Computed) dmHomology0 = new MarkedAbelianGroup(*g.dmHomology0);
+    if (dmHomology0Computed) dmHomology0 = new NMarkedAbelianGroup(*g.dmHomology0);
     else dmHomology0=0;
-    if (dmHomology1Computed) dmHomology1 = new MarkedAbelianGroup(*g.dmHomology1);
+    if (dmHomology1Computed) dmHomology1 = new NMarkedAbelianGroup(*g.dmHomology1);
     else dmHomology1=0;
-    if (dmHomology2Computed) dmHomology2 = new MarkedAbelianGroup(*g.dmHomology2);
+    if (dmHomology2Computed) dmHomology2 = new NMarkedAbelianGroup(*g.dmHomology2);
     else dmHomology2=0;
-    if (dmHomology3Computed) dmHomology3 = new MarkedAbelianGroup(*g.dmHomology3);
+    if (dmHomology3Computed) dmHomology3 = new NMarkedAbelianGroup(*g.dmHomology3);
     else dmHomology3=0;
 
     // isomorphism between dual H1 and regular H1.
     dmTomMap1Computed = g.dmTomMap1Computed;
 
-    if (dmTomMap1Computed) dmTomMap1 = new HomMarkedAbelianGroup(*g.dmTomMap1);
+    if (dmTomMap1Computed) dmTomMap1 = new NHomMarkedAbelianGroup(*g.dmTomMap1);
     else dmTomMap1=0;
 
     // the chain complexes...
