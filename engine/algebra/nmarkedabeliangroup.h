@@ -445,6 +445,11 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
 // destructor
 inline NMarkedAbelianGroup::~NMarkedAbelianGroup() {}
 
+inline unsigned NMarkedAbelianGroup::getTorsionRank(unsigned long degree)
+        const {
+    return getTorsionRank(NLargeInteger(degree));
+}
+
 inline NMatrixInt NMarkedAbelianGroup::getMRB() const {
     return OMR;
 }
