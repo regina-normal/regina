@@ -36,7 +36,7 @@
 #endif
 
 #include <vector>
-#include "algebra/marked_abeliangroup.h"
+#include "algebra/nmarkedabeliangroup.h"
 #include "utilities/nmpi.h"
 #include "utilities/nrational.h"
 #include "utilities/nindexedarray.h"
@@ -117,7 +117,7 @@ class NMatrixInt; // what are these for?
  *
  * @author Ryan Budney
  */
-class homologicalData : public ShareableObject {
+class NHomologicalData : public ShareableObject {
 protected:
     /**
      * Stored pointer to a valid triangulation. All routines use this
@@ -366,20 +366,20 @@ public:
      * Takes as input a triangulation.
      * @param input the triangulation to use
      */
-    homologicalData(const NTriangulation& input);
+    NHomologicalData(const NTriangulation& input);
     /**
      * Copy constructor.
      * @param g
      */
-    homologicalData(const homologicalData& g);
+    NHomologicalData(const NHomologicalData& g);
     /**
      * Destructor.
      */
-    virtual ~homologicalData();
+    virtual ~NHomologicalData();
     /**
      * Needed as a member of SharableObject
      * Note this only writes pre-computed data.  Thus if you have
-     * not yet asked homologicalData to compute anything about this
+     * not yet asked NHomologicalData to compute anything about this
      * triangulation, writeTextShort may be empty. 
      * @param out the stream to write to.
      */
@@ -576,10 +576,10 @@ public:
 
 /*@}*/
 
-// Inline functions for homologicalData
+// Inline functions for NHomologicalData
 
 // constructor
-inline homologicalData::homologicalData(const NTriangulation& input):
+inline NHomologicalData::NHomologicalData(const NTriangulation& input):
         ShareableObject(),
 
         mHomology0(0),        mHomology0Computed(false),
@@ -627,7 +627,7 @@ inline homologicalData::homologicalData(const NTriangulation& input):
 
 
 // copy constructor
-inline homologicalData::homologicalData(const homologicalData& g) :
+inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
 ShareableObject() {
     tri = new NTriangulation(*g.tri);
 
@@ -755,7 +755,7 @@ ShareableObject() {
 }
 
 // destructor
-inline homologicalData::~homologicalData() {
+inline NHomologicalData::~NHomologicalData() {
     delete tri;
 
     if (mHomology0Computed) delete mHomology0;
@@ -805,77 +805,77 @@ inline homologicalData::~homologicalData() {
     }
 }
 
-inline std::vector<unsigned long> homologicalData::getNumStandardCells() // number of cells of dimension 0, 1, 2, 3.
+inline std::vector<unsigned long> NHomologicalData::getNumStandardCells() // number of cells of dimension 0, 1, 2, 3.
 {
     computeccIndexing();
     return numStandardCells;
 }
 
-inline std::vector<unsigned long> homologicalData::getNumDualCells() // dual cells
+inline std::vector<unsigned long> NHomologicalData::getNumDualCells() // dual cells
 {
     computeccIndexing();
     return numDualCells;
 }
 
-inline std::vector<unsigned long> homologicalData::getNumBdryCells() // standard boundary cells
+inline std::vector<unsigned long> NHomologicalData::getNumBdryCells() // standard boundary cells
 {
     computeccIndexing();
     return numBdryCells;
 }
 
-inline long int homologicalData::getEulerChar() // euler characteristic
+inline long int NHomologicalData::getEulerChar() // euler characteristic
 {
     computeccIndexing();
     return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3];
 }
 
 inline std::vector< std::pair< NLargeInteger,
-std::vector< unsigned long > > > homologicalData::getTorsionRankVector() 
+std::vector< unsigned long > > > NHomologicalData::getTorsionRankVector() 
 {
     computeTorsionLinkingForm();
     return torRankV;
 }
-inline std::vector< NLargeInteger > homologicalData::getTorsionSigmaVector()  
+inline std::vector< NLargeInteger > NHomologicalData::getTorsionSigmaVector()  
 {
     computeTorsionLinkingForm();
     return twoTorSigmaV;
 }
 inline std::vector< std::pair< NLargeInteger, std::vector< int > > >
-homologicalData::getLegendreSymbolVector() 
+NHomologicalData::getLegendreSymbolVector() 
 {
     computeTorsionLinkingForm();
     return oddTorLegSymV;
 }
 
-inline bool homologicalData::formIsSplit() 
+inline bool NHomologicalData::formIsSplit() 
 {
      computeTorsionLinkingForm();
     return torsionLinkingFormIsSplit;
 }
-inline bool homologicalData::formSatKK() 
+inline bool NHomologicalData::formSatKK() 
 {
       computeTorsionLinkingForm();
    return torsionLinkingFormSatisfiesKKtwoTorCondition;
 }
-inline std::string homologicalData::getTorsionRankVectorString() 
+inline std::string NHomologicalData::getTorsionRankVectorString() 
 {
      computeTorsionLinkingForm();
     return torsionRankString;
 }
 
-inline std::string homologicalData::getTorsionSigmaVectorString()
+inline std::string NHomologicalData::getTorsionSigmaVectorString()
 {     
     computeTorsionLinkingForm();
     return torsionSigmaString;
 }
 
-inline std::string homologicalData::getTorsionLegendreSymbolVectorString() 
+inline std::string NHomologicalData::getTorsionLegendreSymbolVectorString() 
 {
      computeTorsionLinkingForm();
     return torsionLegendreString;
 }
 
-inline std::string homologicalData::getEmbeddabilityComment() 
+inline std::string NHomologicalData::getEmbeddabilityComment() 
 {
      computeTorsionLinkingForm();
     return embedabilityString;

@@ -27,11 +27,11 @@
 /* end stub */
 
 // Regina core includes:
-#include "algebra/marked_abeliangroup.h"
 #include "algebra/ngrouppresentation.h"
+#include "algebra/nmarkedabeliangroup.h"
 #include "maths/numbertheory.h"
+#include "triangulation/nhomologicaldata.h"
 #include "triangulation/ntriangulation.h"
-#include "triangulation/homologicaldata.h"
 
 // UI includes:
 #include "../gridlistview.h"
@@ -631,7 +631,7 @@ void NTriTuraevViroUI::calculateInvariant() {
 
 void NTriCellularInfoUI::refresh() {
     if (tri->isValid()) {
-        regina::homologicalData minfo(*tri);
+        regina::NHomologicalData minfo(*tri);
 
         Cells->setText(i18n("%1, %2, %3, %4").
             arg(minfo.getNumStandardCells()[0]).

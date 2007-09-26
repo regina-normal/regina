@@ -36,7 +36,7 @@
 namespace regina {
 
 
-void homologicalData::writeTextShort(std::ostream& out) const {
+void NHomologicalData::writeTextShort(std::ostream& out) const {
     if (mHomology0Computed) {
         out<<"H_0(M) = ";
         mHomology0->writeTextShort(out);
@@ -104,7 +104,7 @@ void homologicalData::writeTextShort(std::ostream& out) const {
 
 }
 
-void homologicalData::computeccIndexing() {
+void NHomologicalData::computeccIndexing() {
     if (!ccIndexingComputed) {
         unsigned long i=0;
         unsigned long j=0;
@@ -187,7 +187,7 @@ void homologicalData::computeccIndexing() {
     }
 }
 
-void homologicalData::computeChainComplexes() {
+void NHomologicalData::computeChainComplexes() {
     if (!chainComplexesComputed) {
         if (!ccIndexingComputed) computeccIndexing();
 
@@ -762,7 +762,7 @@ void homologicalData::computeChainComplexes() {
 
 }
 
-MarkedAbelianGroup homologicalData::getMH(unsigned q) {
+MarkedAbelianGroup NHomologicalData::getMH(unsigned q) {
     MarkedAbelianGroup* retval(0);
 
     if (q==0) {
@@ -802,7 +802,7 @@ MarkedAbelianGroup homologicalData::getMH(unsigned q) {
     // the A's should probably be redone as an array of pointers...
 }
 
-MarkedAbelianGroup homologicalData::getBMH(unsigned q) {
+MarkedAbelianGroup NHomologicalData::getBMH(unsigned q) {
     MarkedAbelianGroup* retval(0);
 
     if (q==0) {
@@ -833,7 +833,7 @@ MarkedAbelianGroup homologicalData::getBMH(unsigned q) {
     return (*retval);
 }
 
-MarkedAbelianGroup homologicalData::getDMH(unsigned q) {
+MarkedAbelianGroup NHomologicalData::getDMH(unsigned q) {
     MarkedAbelianGroup* retval(0);
 
     if (q==0) {
@@ -872,7 +872,7 @@ MarkedAbelianGroup homologicalData::getDMH(unsigned q) {
     return (*retval);
 }
 
-void homologicalData::computeHomology() {
+void NHomologicalData::computeHomology() {
     computeChainComplexes();
     if (!mHomology0Computed) {
         mHomology0Computed = true;
@@ -892,7 +892,7 @@ void homologicalData::computeHomology() {
     }
 }
 
-void homologicalData::computeBHomology() {
+void NHomologicalData::computeBHomology() {
     computeChainComplexes();
     if (!bHomology0Computed) {
         bHomology0Computed = true;
@@ -908,7 +908,7 @@ void homologicalData::computeBHomology() {
     }
 }
 
-void homologicalData::computeDHomology() {
+void NHomologicalData::computeDHomology() {
     computeChainComplexes();
     if (!dmHomology0Computed) {
         dmHomology0Computed = true;
@@ -928,7 +928,7 @@ void homologicalData::computeDHomology() {
     }
 }
 
-HomMarkedAbelianGroup homologicalData::getH1cellap() {
+HomMarkedAbelianGroup NHomologicalData::getH1cellap() {
     if (!dmTomMap1Computed) {
         computeHomology();
         computeDHomology();
@@ -938,7 +938,7 @@ HomMarkedAbelianGroup homologicalData::getH1cellap() {
     return (*dmTomMap1);
 }
 
-HomMarkedAbelianGroup homologicalData::getBMmapH(unsigned q) 
+HomMarkedAbelianGroup NHomologicalData::getBMmapH(unsigned q) 
 {
     HomMarkedAbelianGroup* retval(0);
 
@@ -973,7 +973,7 @@ HomMarkedAbelianGroup homologicalData::getBMmapH(unsigned q)
     return (*retval);
 }
 
-void homologicalData::computeBIncl() {
+void NHomologicalData::computeBIncl() {
     computeHomology();
     computeBHomology();
     if (!bmMap0Computed) {
@@ -991,7 +991,7 @@ void homologicalData::computeBIncl() {
  }
 
 
-void homologicalData::computeTorsionLinkingForm() 
+void NHomologicalData::computeTorsionLinkingForm() 
 { 
  if (!torsionFormComputed) {  
     HomMarkedAbelianGroup h1CellAp(getH1cellap()); // dual h1 --> standard h1 isomorphism
@@ -1633,7 +1633,7 @@ void homologicalData::computeTorsionLinkingForm()
        NTriangulation *orTri;
        orTri = new NTriangulation(*tri);
        orTri->makeDoubleCover();
-       homologicalData covHomol(*orTri);
+       NHomologicalData covHomol(*orTri);
 	// break up into two cases, boundary and no boundary...
 	if (covHomol.getBMH(0).isTrivial())
 	 { // no boundary
@@ -1667,7 +1667,7 @@ void homologicalData::computeTorsionLinkingForm()
 } // end computeTorsionLinkingForm()
 
 
-bool homologicalData::formIsHyperbolic()  
+bool NHomologicalData::formIsHyperbolic()  
 { // TODO: this is not minimal effort!
     // minimal effort approach: for each invariant factor check
     // corresp. getTorsionRank is even. ONLY if all these tests
