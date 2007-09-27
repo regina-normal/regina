@@ -142,11 +142,13 @@ class NMatrix {
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
          *
-         * \ifacespython The entry() routine is provided in const
-         * form only.  To set an element of an NMatrixInt, use the
-         * syntax matrix.set(row, column, value).  This set() routine
-         * returns nothing, and is provided for python only (i.e., it
-         * is not part of the C++ calculation engine).
+         * \ifacespython Although the entry() routine gives direct
+         * read-write access to matrix elements, the syntax
+         * <tt>matrix.entry(row, column) = value</tt> still cannot be
+         * used in python to set a matrix element directly.  For this,
+         * you can use the syntax <tt>matrix.set(row, column, value)</tt>.
+         * This set() routine returns nothing, and is provided for python
+         * only (i.e., it is not part of the C++ calculation engine).
          *
          * @param row the row of the desired entry.
          * @param column the column of the desired entry.
@@ -161,6 +163,9 @@ class NMatrix {
          *
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
+         *
+         * \ifacespython Not present, although the non-const form of
+         * this routine is.
          *
          * @param row the row of the desired entry.
          * @param column the column of the desired entry.

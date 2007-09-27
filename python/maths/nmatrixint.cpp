@@ -33,8 +33,8 @@ using namespace boost::python;
 using regina::NMatrixInt;
 
 namespace {
-    const regina::NLargeInteger& (NMatrixInt::*entry_const)(unsigned long,
-        unsigned long) const = &NMatrixInt::entry;
+    regina::NLargeInteger& (NMatrixInt::*entry_non_const)(unsigned long,
+        unsigned long) = &NMatrixInt::entry;
     void (NMatrixInt::*addRow_triple)(unsigned long, unsigned long,
         regina::NLargeInteger) = &NMatrixInt::addRow;
     void (NMatrixInt::*addCol_triple)(unsigned long, unsigned long,
@@ -65,7 +65,7 @@ void addNMatrixInt() {
         .def("initialise", &NMatrixInt::initialise)
         .def("rows", &NMatrixInt::rows)
         .def("columns", &NMatrixInt::columns)
-        .def("entry", entry_const, return_internal_reference<>())
+        .def("entry", entry_non_const, return_internal_reference<>())
         .def("set", setEntry)
         .def("isIdentity", &NMatrixInt::isIdentity)
         .def("swapRows", &NMatrixInt::swapRows)
