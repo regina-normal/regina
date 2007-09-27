@@ -46,12 +46,14 @@ void smithNormalForm(NMatrixInt& matrix) {
         flag = true;
         for (i=currStage; i<nonEmptyCols; i++)
             if (matrix.entry(currStage, i) != 0) {
-                flag = false; break;
+                flag = false;
+                break;
             }
         if (flag) {
             // Empty row!
             if (currStage == nonEmptyRows-1) {
-                nonEmptyRows--; continue;
+                nonEmptyRows--;
+                continue;
             }
             // Switch it with a row at the bottom.
             for (i=currStage; i<nonEmptyCols; i++)
@@ -65,12 +67,14 @@ void smithNormalForm(NMatrixInt& matrix) {
         flag = true;
         for (i=currStage; i<nonEmptyRows; i++)
             if (matrix.entry(i, currStage) != 0) {
-                flag = false; break;
+                flag = false;
+                break;
             }
         if (flag) {
             // Empty column!
             if (currStage == nonEmptyCols-1) {
-                nonEmptyCols--; continue;
+                nonEmptyCols--;
+                continue;
             }
             // Switch it with a column on the end.
             for (i=currStage; i<nonEmptyRows; i++)
