@@ -38,6 +38,7 @@ class MatrixOpsTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(MatrixOpsTest);
 
     CPPUNIT_TEST(smithNormalForm);
+    CPPUNIT_TEST(smithNormalFormBasis);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -123,6 +124,57 @@ class MatrixOpsTest : public CppUnit::TestFixture {
 
         void smithNormalForm() {
             checkSNF3(square3, "simple 3x3 example", 2, 6, 12);
+        }
+
+        static void checkSNFBasis(const NMatrixInt& m, const char* name) {
+            // Assume here that the one-argument smithNormalForm() is known to
+            // be working.
+            //
+            // What we do here is examine the change of basis matrices and
+            // verify that they behave as advertised.
+
+            // Get the SNF result from the one-argument routine.
+            NMatrixInt snf(m);
+            regina::smithNormalForm(snf);
+
+            // Tests where R and C begin as identity matrices:
+            NMatrixInt snfBasis(m);
+            NMatrixInt R(m.columns(), m.columns());
+            NMatrixInt C(m.rows(), m.rows());
+            R.makeIdentity();
+            C.makeIdentity();
+            NMatrixInt invR(R);
+            NMatrixInt invC(C);
+
+            regina::smithNormalForm(snfBasis, R, invR, C, invC);
+
+            if (! (R * invR)->isIdentity()) {
+                CPPUNIT_FAIL(std::string("In smithNormalForm(") +
+                    name + "), rowSpaceBasis and rowSpaceBasisInv are "
+                    "not inverses.");
+            }
+
+            if (! (C * invC)->isIdentity()) {
+                CPPUNIT_FAIL(std::string("In smithNormalForm(") +
+                    name + "), colSpaceBasis and colSpaceBasisInv are "
+                    "not inverses.");
+            }
+
+            if (*(C * *(m * R)) != snfBasis) {
+                CPPUNIT_FAIL(std::string("In smithNormalForm(") +
+                    name + "), colSpaceBasis and rowSpaceBasis do not "
+                    "satisfy the required relationship.");
+            }
+
+            if (*(invC * *(snfBasis * invR)) != m) {
+                CPPUNIT_FAIL(std::string("In smithNormalForm(") +
+                    name + "), colSpaceBasisInv and rowSpaceBasisInv do "
+                    "not satisfy the required relationship.");
+            }
+        }
+
+        void smithNormalFormBasis() {
+            checkSNFBasis(square3, "simple 3x3 example");
         }
 };
 
