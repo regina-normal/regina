@@ -22,6 +22,7 @@ Version 4.4  [ under development ]
         - Tidied up the directory hierarchy a little.  The old engine/engine/
           is now just engine/, and the old engine/doc-files/ is now
           engine/doxygen/.
+        - Thanks to Ryan Budney for his many contributions to this release!
     ENGINE:
         Class NClosedPrimeMinSearcher:
             - Census generation is much faster again for larger numbers of
@@ -87,6 +88,13 @@ Version 4.4  [ under development ]
               using double descriptor anyway.  The virtual template
               member functions caused problems with g++-4.2, which was
               the final push.  NDoubleDescriptor is now a standalone class.
+        Routine smithNormalForm():
+            - New five-argument version that not only calculates the Smith
+              normal form but also returns appropriate change of basis
+              matrices; thanks to Ryan Budney.
+        Routines columnEchelonForm() and preImageOfLattice():
+            - New routines for working with matrices and homomorphisms;
+              thanks again to Ryan Bydney.
         Routines factorise(), primesUpTo():
             - Deprecated in favour of routines from the new NPrimes class.
     UTILITIES:
