@@ -137,12 +137,11 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             NMatrixInt snf(m);
             regina::smithNormalForm(snf);
 
-            // Tests where R and C begin as identity matrices:
+            // Do it now with the five-argument routine, to collect
+            // change of basis matrices.
             NMatrixInt snfBasis(m);
             NMatrixInt R(m.columns(), m.columns());
             NMatrixInt C(m.rows(), m.rows());
-            R.makeIdentity();
-            C.makeIdentity();
             NMatrixInt invR(R);
             NMatrixInt invC(C);
 
