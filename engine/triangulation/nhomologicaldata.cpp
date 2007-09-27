@@ -1122,7 +1122,7 @@ void NHomologicalData::computeTorsionLinkingForm()
     NMatrixInt C(ON.rows(),ON.rows());
     NMatrixInt Ci(ON.rows(),ON.rows());
 
-    RBMOD_smithNormalForm(ON, R, Ri, C, Ci);
+    smithNormalForm(ON, R, Ri, C, Ci);
 // boundingMat=R*(divide by ON diag, rescale(C*areboundariesM))
 //                                             ---- stepa -----
 //                  ---------------- stepb ---

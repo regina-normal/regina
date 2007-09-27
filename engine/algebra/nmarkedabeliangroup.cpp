@@ -60,7 +60,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     // find SNF(M).
     NMatrixInt tM(M);
 
-    RBMOD_smithNormalForm(tM, OMR, OMRi, OMC, OMCi);
+    smithNormalForm(tM, OMR, OMRi, OMC, OMCi);
     // now construct OMRi * N, and delete first SNF_OM_firstzero rows,
     // constructing ORN.
 
@@ -76,7 +76,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     delete(prod);
 
     NMatrixInt tX(ORN);
-    RBMOD_smithNormalForm(tX, ornR, ornRi, ornC, ornCi);
+    smithNormalForm(tX, ornR, ornRi, ornC, ornCi);
     for (i=0;i<tX.rows();i++)
         for (j=0;j<tX.columns();j++)
             SNF_ORN.entry(i,j)=tX.entry(i,j);
@@ -405,7 +405,7 @@ void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
             else
                 dcL[i]="0";
 
-        reducedKernelLattice = new NMatrixInt( RBADD_preImageOfLattice(
+        reducedKernelLattice = new NMatrixInt( preImageOfLattice(
             redMatrix, dcL ) );
     }
 }
@@ -422,7 +422,7 @@ void NHomMarkedAbelianGroup::computeKernel() {
         NMatrixInt C( dcLpreimage.rows(), dcLpreimage.rows() );
         NMatrixInt Ci( dcLpreimage.rows(), dcLpreimage.rows() );
 
-        RBMOD_smithNormalForm( dcLpreimage, R, Ri, C, Ci );
+        smithNormalForm( dcLpreimage, R, Ri, C, Ci );
 
         // the matrix representing the domain lattice in dcLpreimage
         // coordinates is given by domainLattice * R * (dcLpreimage inverse) * C

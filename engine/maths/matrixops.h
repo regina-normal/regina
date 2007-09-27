@@ -65,15 +65,14 @@ namespace regina {
 void smithNormalForm(NMatrixInt& matrix);
 
 /**
- * These are intended to be internal routines, although they could be used for
- * other purposes. RBMOD_smithNormalForm is a modification of the
- * smithNormalForm algorithm, it returns the appropriate change-of-basis
- * matrices corresponding to all the row and column operations performed in
- * the process of constructing the smithNormalForm.  RBADD_columnEchelonForm
- * puts a matrix into reduced column echelon form with respect to a certain
- * submatrix specified by rowList. This is used in the RBADD_preImageOfLattice
- * algorithm, which computes the kernel of a homomorphism
- * Z^n --> Z_p1 + Z_p2 + ... + Z_pk specified by a matrix.
+ * A Smith normal form algorithm that also returns change of basis matrices.
+ *
+ * This is a modification of smithNormalForm(NMatrixInt&).  It returns
+ * the appropriate change-of-basis matrices corresponding to all the
+ * row and column operations performed in the process of constructing the
+ * Smith normal form.  In particular,
+ * <tt>ColSpaceBasis * original_matrix * RowSpaceBasis = final_matrix</tt>
+ * (which is in Smith normal form).
  *
  * @param matrix is the original m x n matrix to put into Smith Normal Form.
  * When the algorithm terminates, it *is* in its Smith Normal Form.
@@ -88,13 +87,42 @@ void smithNormalForm(NMatrixInt& matrix);
  *
  * \author Ryan Budney
  */
-void RBMOD_smithNormalForm(NMatrixInt& matrix,
-        NMatrixInt& RowSpaceBasis, NMatrixInt& RowSpaceBasisInv,
-        NMatrixInt& ColSpaceBasis, NMatrixInt& ColSpaceBasisInv);
+void smithNormalForm(NMatrixInt& matrix,
+        NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
+        NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
 
 /**
- * Modification of RBMOD_smithNormalForm to only put the matrix in Column
- * Echelon form with respect to a collection of rows.
+ * Puts a given matrix into column echelon form with respect to a
+ * collection of rows.
+ *
+ * Given the matrix \a M and the list \a rowList of rows from \a M, this
+ * algorithm puts \a M in column echelon form with respect to the
+ * given list of rows.
+ *
+ * This routine also returns the corresponding change of coordinate
+ * matrices \a R and \a Ri:
+ *
+ * - If \a R and \a Ri are passed as identity matrices, the returned
+ *   matrices will be such that <tt>original_M * R = final_M</tt> and
+ *   <tt>final_M * Ri = original_M</tt> (and of course <tt>final_M</tt> is
+ *   in column echelon form with respect to the given rows).
+ * - If \a R and \a Ri are already non-trivial coordinate transformations,
+ *   they are modified appropriately by the algorithm.
+ *
+ * Our convention is that a matrix is in column echelon form if:
+ *
+ * -# each column is either zero or there is a first non-zero entry which
+ *    is positive;
+ * -# from left to right, the first non-zero entries have strictly increasing
+ *    indices (i.e., row numbers);
+ * -# given a first non-zero column entry, in that row all the elements to
+ *    the left are smaller and non-negative (all elements to the right are
+ *    already zero by the previous condition);
+ * -# in a row which has no first non-zero column entry, all elements are zero;
+ * -# thus all the zero columns are on the right hand side of the matrix.
+ *
+ * \pre Both \a R and \a Ri are square matrices with dimensions equal to
+ * M.columns(), and these matrices are inverses of each other.
  *
  * @param M matrix to reduce
  * @param R row-reduction matrix
@@ -103,12 +131,18 @@ void RBMOD_smithNormalForm(NMatrixInt& matrix,
  *
  * \author Ryan Budney
  */
-void RBADD_columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
+void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
         const std::vector<unsigned> &rowList);
 
 /**
  * Given a homomorphism (hom) from Z^n to Z^m and a sublattice of Z^m
  * represented by L, this procedure computes the preimage of L under hom.
+ *
+ * Given a homomorphism from Z^n to Z_p1 + ... + Z_pk, the kernel
+ * of this homomorphism is some rank-n lattice in Z^n.  This algorithm
+ * finds a basis for the lattice.  hom is a k by n matrix representing
+ * the homomorphism and L is a k-vector whose entries are p1 through pk.
+ * A basis is returned.
  *
  * @param hom the matrix representing the homomorphism from Z^n to Z^m
  * @param L the sublattice of Z^m
@@ -116,7 +150,7 @@ void RBADD_columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  *
  * \author Ryan Budney
  */
-NMatrixInt RBADD_preImageOfLattice(const NMatrixInt& hom,
+NMatrixInt preImageOfLattice(const NMatrixInt& hom,
         const std::vector<NLargeInteger>& L);
 
 /*@}*/

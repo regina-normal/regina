@@ -30,8 +30,16 @@
 #include <boost/python.hpp>
 
 using namespace boost::python;
+using regina::NMatrixInt;
+
+namespace {
+    void (*SNF_nobasis)(NMatrixInt&) = regina::smithNormalForm;
+    void (*SNF_basis)(NMatrixInt&, NMatrixInt&, NMatrixInt&,
+        NMatrixInt&, NMatrixInt&) = regina::smithNormalForm;
+}
 
 void addMatrixOps() {
-    def("smithNormalForm", regina::smithNormalForm);
+    def("smithNormalForm", SNF_nobasis);
+    def("smithNormalForm", SNF_basis);
 }
 
