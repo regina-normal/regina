@@ -40,6 +40,12 @@ namespace {
     void (NMatrixInt::*addCol_triple)(unsigned long, unsigned long,
         regina::NLargeInteger) = &NMatrixInt::addCol;
 
+    std::auto_ptr<NMatrixInt> multiply(const NMatrixInt& m1,
+            const NMatrixInt& m2) {
+        return std::auto_ptr<NMatrixInt>(
+            static_cast<NMatrixInt*>((m1 * m2).release()));
+    }
+
     void setEntry(NMatrixInt& matrix, unsigned long row, unsigned long column,
             const regina::NLargeInteger& value) {
         matrix.entry(row, column) = value;
@@ -61,6 +67,7 @@ void addNMatrixInt() {
         .def("columns", &NMatrixInt::columns)
         .def("entry", entry_const, return_internal_reference<>())
         .def("set", setEntry)
+        .def("isIdentity", &NMatrixInt::isIdentity)
         .def("swapRows", &NMatrixInt::swapRows)
         .def("swapColumns", &NMatrixInt::swapColumns)
         .def("makeIdentity", &NMatrixInt::makeIdentity)
@@ -69,6 +76,9 @@ void addNMatrixInt() {
         .def("multRow", &NMatrixInt::multRow)
         .def("multCol", &NMatrixInt::multCol)
         .def("det", &NMatrixInt::det)
+        .def(self == self)
+        .def(self != self)
+        .def("__mul__", multiply)
     ;
 
     s.attr("zero") = NMatrixInt::zero;

@@ -35,6 +35,8 @@
 #define __NMATRIX_H
 #endif
 
+#include <memory>
+
 namespace regina {
 
 /**
@@ -169,6 +171,63 @@ class NMatrix {
         }
 
         /**
+         * Determines whether this and the given matrix are identical.
+         *
+         * Two matrices are identical if and only if (i) their dimensions
+         * are the same, and (ii) the corresponding elements of each
+         * matrix are equal.
+         *
+         * Note that this routine can happily deal with two matrices of
+         * different dimensions (in which case it will always return
+         * \c false).
+         *
+         * This routine returns \c true if and only if the inequality operator
+         * (!=) returns \c false.
+         *
+         * \pre The type \a T provides an equality operator (==).
+         *
+         * @param other the matrix to compare with this.
+         * @return \c true if the matrices are equal as described above,
+         * or \c false otherwise.
+         */
+        bool operator == (const NMatrix<T>& other) const {
+            if (nRows != other.nRows || nCols != other.nCols)
+                return false;
+
+            unsigned long r, c;
+            for (r = 0; r < nRows; ++r)
+                for (c = 0; c < nCols; ++c)
+                    if (! (data[r][c] == other.data[r][c]))
+                        return false;
+
+            return true;
+        }
+
+        /**
+         * Determines whether this and the given matrix are different.
+         *
+         * Two matrices are different if either (i) their dimensions
+         * differ, or (ii) the corresponding elements of each matrix differ
+         * in at least one location.
+         *
+         * Note that this routine can happily deal with two matrices of
+         * different dimensions (in which case it will always return
+         * \c true).
+         *
+         * This routine returns \c true if and only if the equality operator
+         * (==) returns \c false.
+         *
+         * \pre The type \a T provides an equality operator (==).
+         *
+         * @param other the matrix to compare with this.
+         * @return \c true if the matrices are different as described above,
+         * or \c false otherwise.
+         */
+        bool operator != (const NMatrix<T>& other) const {
+            return ! ((*this) == other);
+        }
+
+        /**
          * Writes a complete representation of the matrix to the given
          * output stream.
          * Each row will be written on a separate line with elements in
@@ -292,6 +351,34 @@ class NMatrixRing : public NMatrix<T> {
         }
 
         /**
+         * Determines whether this matrix is a square identity matrix.
+         *
+         * If this matrix is square, isIdentity() will return \c true if
+         * and only if the matrix has ones in the main diagonal and zeroes
+         * everywhere else.
+         *
+         * If this matrix is not square, isIdentity() will always return
+         * \c false (even if makeIdentity() was called earlier).
+         *
+         * @return \c true if and only if this is a square identity matrix.
+         */
+        bool isIdentity() const {
+            if (this->nRows != this->nCols)
+                return false;
+
+            unsigned long r, c;
+            for (r = 0; r < this->nRows; ++r)
+                for (c = 0; c < this->nCols; ++c) {
+                    if (r == c && this->data[r][c] != one)
+                        return false;
+                    if (r != c && this->data[r][c] != zero)
+                        return false;
+                }
+
+            return true;
+        }
+
+        /**
          * Adds the given source row to the given destination row.
          *
          * \pre The two given rows are distinct and between 0 and
@@ -394,15 +481,15 @@ class NMatrixRing : public NMatrix<T> {
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
          *
-         * \ifacespython Not present, even if a subclass of NMatrix
-         * is mirrored and its inherited routines are mirrored also.
-         *
          * @param other the matrix by which to multiply this matrix.
          * @return a newly allocated matrix representing
          * <tt>this * other</tt>.
          */
-        NMatrixRing<T>* operator * (const NMatrixRing<T>& other) const {
-            NMatrixRing<T>* ans = new NMatrixRing<T>(this->nRows, other.nCols);
+        std::auto_ptr<NMatrixRing<T> > operator * (const NMatrixRing<T>& other)
+                const {
+            std::auto_ptr<NMatrixRing<T> > ans(new NMatrixRing<T>(
+                this->nRows, other.nCols));
+
             unsigned long row, col, k;
             for (row = 0; row < this->nRows; row++)
                 for (col = 0; col < other.nCols; col++) {
@@ -411,6 +498,7 @@ class NMatrixRing : public NMatrix<T> {
                         ans->data[row][col] +=
                             (this->data[row][k] * other.data[k][col]);
                 }
+
             return ans;
         }
 

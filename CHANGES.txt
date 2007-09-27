@@ -40,11 +40,18 @@ Version 4.4  [ under development ]
         Class NLargeInteger:
             - New routine divisionAlg() for using the division algorithm.
             - New routine legendre() for calculating Legendre symbols.
+        Class NMatrix:
+            - New == and != operators for element-by-element comparison.
         Class NMatrixInt:
             - Added a set() routine to the python interface for setting
               matrix elements (which was previously not possible in python).
+            - Made matrix multiplication available in the python interface.
         Class NMatrixRing:
             - New routine det() for fast calculation of matrix determinants.
+            - New convenience routine isIdentity().
+            - Changed the return type of operator * from a raw pointer to a
+              std::auto_ptr, to make it easier to multiply matrices inside
+              temporary expressions.
         Class NPacket:
             - New routine reparent() to simplify ownership issues when
               using Python scripting.
