@@ -76,16 +76,24 @@ void smithNormalForm(NMatrixInt& matrix);
  * <tt>ColSpaceBasis * original_matrix * RowSpaceBasis = final_matrix</tt>
  * (which is in Smith normal form).
  *
- * @param matrix is the original m x n matrix to put into Smith Normal Form.
- * When the algorithm terminates, it *is* in its Smith Normal Form.
- * @param RowSpaceBasis change of basis matrix
- * @param RowSpaceBasisInv inverse of RowSpaceBasis
- * @param ColSpaceBasis change of basis matrix
- * @param ColSpaceBasisInv invase of ColSpaceBasis
- * when the algorithm terminates, the original matrix is equal to
+ * When the algorithm terminates, the original matrix is equal to
  * ColSpaceBasisInv * matrix * RowSpaceBasisInv.
  * thus, one obtains matrix from the old matrix by multiplying on the
  * left by ColSpaceBasis and on the right by RowSpaceBasis.
+ *
+ * The four change of basis matrices will be reset on entry to the
+ * function; their original values will be ignored.
+ *
+ * @param matrix is the original m x n matrix to put into Smith Normal Form.
+ * When the algorithm terminates, it *is* in its Smith Normal Form.
+ * @param rowSpaceBasis change of basis matrix; this must be square with
+ * size matrix.columns().
+ * @param rowSpaceBasisInv inverse of RowSpaceBasis; this must also be
+ * square with size matrix.columns().
+ * @param colSpaceBasis change of basis matrix; this must be square with
+ * size matrix.rows().
+ * @param colSpaceBasisInv invase of ColSpaceBasis; this must also be
+ * square with size matrix.rows().
  *
  * \author Ryan Budney
  */
