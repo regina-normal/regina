@@ -28,11 +28,11 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "triangulation/homologicaldata.h"
+#include "triangulation/nhomologicaldata.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
-using regina::homologicalData;
+using regina::NHomologicalData;
 using regina::NTriangulation;
 
 /**
@@ -104,7 +104,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
 
         void verifyBdryManifoldMapH1(NTriangulation& tri, const char* name,
                 const char* ans) {
-            homologicalData dat(tri);
+            NHomologicalData dat(tri);
             std::string val = dat.getBMmapH(1).toString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -133,7 +133,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void verifyStandardCells(NTriangulation& tri, const char* name,
                 unsigned long c0, unsigned long c1, unsigned long c2,
                 unsigned long c3) {
-            homologicalData dat(tri);
+            NHomologicalData dat(tri);
             std::vector<unsigned long> vals = dat.getNumStandardCells();
 
             if (vals.size() != 4) {
@@ -169,7 +169,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void verifyDualCells(NTriangulation& tri, const char* name,
                 unsigned long c0, unsigned long c1, unsigned long c2,
                 unsigned long c3) {
-            homologicalData dat(tri);
+            NHomologicalData dat(tri);
             std::vector<unsigned long> vals = dat.getNumDualCells();
 
             if (vals.size() != 4) {
@@ -204,7 +204,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
 
         void verifyTorsionRankVector(NTriangulation& tri,
                 const char* name, const char* ans) {
-            homologicalData dat(tri);
+            NHomologicalData dat(tri);
             std::string val = dat.getTorsionRankVectorString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -230,7 +230,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
 
         void verifyTorsionSigmaVector(NTriangulation& tri,
                 const char* name, const char* ans) {
-            homologicalData dat(tri);
+            NHomologicalData dat(tri);
             std::string val = dat.getTorsionSigmaVectorString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -256,7 +256,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
 
         void verifyTorsionLegendreSymbolVector(NTriangulation& tri,
                 const char* name, const char* ans) {
-            homologicalData dat(tri);
+            NHomologicalData dat(tri);
             std::string val = dat.getTorsionLegendreSymbolVectorString();
             if (val != ans) {
                 std::ostringstream msg;
