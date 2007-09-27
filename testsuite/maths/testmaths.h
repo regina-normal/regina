@@ -40,4 +40,5 @@
 
 void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
 void addNPrimes(CppUnit::TextUi::TestRunner& runner);
+void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
 

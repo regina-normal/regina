@@ -117,6 +117,7 @@ bool runAllTests() {
     // Maths:
     addNPrimes(runner);
     addNumberTheory(runner);
+    addMatrixOps(runner);
 
     // Triangulation:
     addNPerm(runner);

@@ -60,6 +60,8 @@ namespace regina {
  * It does not use modular arithmetic to control the intermediate
  * coefficient explosion.
  *
+ * \testpartial
+ *
  * @param matrix the matrix to transform.
  */
 void smithNormalForm(NMatrixInt& matrix);
