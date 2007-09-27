@@ -39,6 +39,9 @@ Version 4.4  [ under development ]
         Class NLargeInteger:
             - New routine divisionAlg() for using the division algorithm.
             - New routine legendre() for calculating Legendre symbols.
+        Class NMatrixInt:
+            - Added a set() routine to the python interface for setting
+              matrix elements (which was previously not possible in python).
         Class NMatrixRing:
             - New routine det() for fast calculation of matrix determinants.
         Class NPacket:

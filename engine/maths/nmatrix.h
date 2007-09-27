@@ -140,6 +140,12 @@ class NMatrix {
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
          *
+         * \ifacespython The entry() routine is provided in const
+         * form only.  To set an element of an NMatrixInt, use the
+         * syntax matrix.set(row, column, value).  This set() routine
+         * returns nothing, and is provided for python only (i.e., it
+         * is not part of the C++ calculation engine).
+         *
          * @param row the row of the desired entry.
          * @param column the column of the desired entry.
          * @return a reference to the entry in the given row and column.
@@ -153,9 +159,6 @@ class NMatrix {
          *
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
-         *
-         * \ifacespython Not present, although the non-const form of
-         * this routine is.
          *
          * @param row the row of the desired entry.
          * @param column the column of the desired entry.

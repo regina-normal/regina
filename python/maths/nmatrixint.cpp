@@ -33,12 +33,17 @@ using namespace boost::python;
 using regina::NMatrixInt;
 
 namespace {
-    regina::NLargeInteger& (NMatrixInt::*entry_non_const)(unsigned long,
-        unsigned long) = &NMatrixInt::entry;
+    const regina::NLargeInteger& (NMatrixInt::*entry_const)(unsigned long,
+        unsigned long) const = &NMatrixInt::entry;
     void (NMatrixInt::*addRow_triple)(unsigned long, unsigned long,
         regina::NLargeInteger) = &NMatrixInt::addRow;
     void (NMatrixInt::*addCol_triple)(unsigned long, unsigned long,
         regina::NLargeInteger) = &NMatrixInt::addCol;
+
+    void setEntry(NMatrixInt& matrix, unsigned long row, unsigned long column,
+            const regina::NLargeInteger& value) {
+        matrix.entry(row, column) = value;
+    }
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRow,
         NMatrixInt::addRow, 2, 3);
@@ -54,7 +59,8 @@ void addNMatrixInt() {
         .def("initialise", &NMatrixInt::initialise)
         .def("rows", &NMatrixInt::rows)
         .def("columns", &NMatrixInt::columns)
-        .def("entry", entry_non_const, return_internal_reference<>())
+        .def("entry", entry_const, return_internal_reference<>())
+        .def("set", setEntry)
         .def("swapRows", &NMatrixInt::swapRows)
         .def("swapColumns", &NMatrixInt::swapColumns)
         .def("makeIdentity", &NMatrixInt::makeIdentity)
