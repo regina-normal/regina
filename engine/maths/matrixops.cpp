@@ -150,8 +150,8 @@ void smithNormalForm(NMatrixInt& matrix) {
 }
 
 void smithNormalForm(NMatrixInt& matrix,
-        NMatrixInt& RowSpaceBasis, NMatrixInt& RowSpaceBasisInv,
-        NMatrixInt& ColSpaceBasis, NMatrixInt& ColSpaceBasisInv) {
+        NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
+        NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv) {
     unsigned long currStage = 0;
     unsigned long nonEmptyRows = matrix.rows();
     unsigned long nonEmptyCols = matrix.columns();
@@ -161,12 +161,12 @@ void smithNormalForm(NMatrixInt& matrix,
     NLargeInteger tmp;
 
     for (i=0;i<matrix.columns();i++) {
-        RowSpaceBasis.entry(i,i)=1;
-        RowSpaceBasisInv.entry(i,i)=1;
+        rowSpaceBasis.entry(i,i)=1;
+        rowSpaceBasisInv.entry(i,i)=1;
     }
     for (i=0;i<matrix.rows();i++) {
-        ColSpaceBasis.entry(i,i)=1;
-        ColSpaceBasisInv.entry(i,i)=1;
+        colSpaceBasis.entry(i,i)=1;
+        colSpaceBasisInv.entry(i,i)=1;
     }
 
     while ((currStage < nonEmptyRows) && (currStage < nonEmptyCols)) {
@@ -192,10 +192,10 @@ void smithNormalForm(NMatrixInt& matrix,
             }
             for (i=0;i<matrix.rows();i++) {
                 // Corresponding ops for ColpaceBasis(Inv)
-                ColSpaceBasis.entry( currStage, i).swap(
-                    ColSpaceBasis.entry( nonEmptyRows-1, i));
-                ColSpaceBasisInv.entry( i, currStage ).swap(
-                    ColSpaceBasisInv.entry( i, nonEmptyRows-1 ));
+                colSpaceBasis.entry( currStage, i).swap(
+                    colSpaceBasis.entry( nonEmptyRows-1, i));
+                colSpaceBasisInv.entry( i, currStage ).swap(
+                    colSpaceBasisInv.entry( i, nonEmptyRows-1 ));
             }
             nonEmptyRows--;
             continue;
@@ -220,10 +220,10 @@ void smithNormalForm(NMatrixInt& matrix,
                     matrix.entry(i, nonEmptyCols-1));
             }
             for (i=0; i<matrix.columns();i++) {
-                RowSpaceBasis.entry(i, currStage).swap(
-                    RowSpaceBasis.entry(i, nonEmptyCols-1));
-                RowSpaceBasisInv.entry(currStage, i).swap(
-                    RowSpaceBasisInv.entry(nonEmptyCols-1, i));
+                rowSpaceBasis.entry(i, currStage).swap(
+                    rowSpaceBasis.entry(i, nonEmptyCols-1));
+                rowSpaceBasisInv.entry(currStage, i).swap(
+                    rowSpaceBasisInv.entry(nonEmptyCols-1, i));
             }
             nonEmptyCols--;
             continue;
@@ -247,18 +247,18 @@ void smithNormalForm(NMatrixInt& matrix,
                 matrix.entry(j, currStage) = tmp;
             }
             for (j=0; j<matrix.columns(); j++) {
-                tmp = u * RowSpaceBasis.entry(j, currStage) +
-                    v * RowSpaceBasis.entry(j, i);
-                RowSpaceBasis.entry(j, i) = a * RowSpaceBasis.entry(j, i) -
-                    b * RowSpaceBasis.entry(j, currStage);
-                RowSpaceBasis.entry(j, currStage) = tmp;
+                tmp = u * rowSpaceBasis.entry(j, currStage) +
+                    v * rowSpaceBasis.entry(j, i);
+                rowSpaceBasis.entry(j, i) = a * rowSpaceBasis.entry(j, i) -
+                    b * rowSpaceBasis.entry(j, currStage);
+                rowSpaceBasis.entry(j, currStage) = tmp;
 
-                tmp = a * RowSpaceBasisInv.entry(currStage, j) +
-                    b * RowSpaceBasisInv.entry(i, j);
-                RowSpaceBasisInv.entry(i, j) =
-                    u * RowSpaceBasisInv.entry(i, j) -
-                    v * RowSpaceBasisInv.entry(currStage, j);
-                RowSpaceBasisInv.entry(currStage, j) = tmp;
+                tmp = a * rowSpaceBasisInv.entry(currStage, j) +
+                    b * rowSpaceBasisInv.entry(i, j);
+                rowSpaceBasisInv.entry(i, j) =
+                    u * rowSpaceBasisInv.entry(i, j) -
+                    v * rowSpaceBasisInv.entry(currStage, j);
+                rowSpaceBasisInv.entry(currStage, j) = tmp;
             }
         }
         // Get zeros in the current column.
@@ -283,18 +283,18 @@ void smithNormalForm(NMatrixInt& matrix,
                 matrix.entry(currStage, j) = tmp;
             }
             for (j=0; j<matrix.rows(); j++) {
-                tmp = u * ColSpaceBasis.entry(currStage, j) +
-                    v * ColSpaceBasis.entry(i, j);
-                ColSpaceBasis.entry(i, j) = a * ColSpaceBasis.entry(i, j) -
-                    b * ColSpaceBasis.entry(currStage, j);
-                ColSpaceBasis.entry(currStage, j) = tmp;
+                tmp = u * colSpaceBasis.entry(currStage, j) +
+                    v * colSpaceBasis.entry(i, j);
+                colSpaceBasis.entry(i, j) = a * colSpaceBasis.entry(i, j) -
+                    b * colSpaceBasis.entry(currStage, j);
+                colSpaceBasis.entry(currStage, j) = tmp;
 
-                tmp = a * ColSpaceBasisInv.entry(j, currStage) +
-                    b * ColSpaceBasisInv.entry(j, i);
-                ColSpaceBasisInv.entry(j, i) =
-                    u * ColSpaceBasisInv.entry(j, i) -
-                    v * ColSpaceBasisInv.entry(j, currStage);
-                ColSpaceBasisInv.entry(j, currStage) = tmp;
+                tmp = a * colSpaceBasisInv.entry(j, currStage) +
+                    b * colSpaceBasisInv.entry(j, i);
+                colSpaceBasisInv.entry(j, i) =
+                    u * colSpaceBasisInv.entry(j, i) -
+                    v * colSpaceBasisInv.entry(j, currStage);
+                colSpaceBasisInv.entry(j, currStage) = tmp;
             }
         }
         if (flag) {
@@ -313,10 +313,10 @@ void smithNormalForm(NMatrixInt& matrix,
                     for (k=currStage+1; k<nonEmptyCols; k++)
                         matrix.entry(currStage, k) += matrix.entry(i, k);
                     for (k=0; k<matrix.rows();k++) {
-                        ColSpaceBasis.entry(currStage,k) +=
-                            ColSpaceBasis.entry(i,k);
-                        ColSpaceBasisInv.entry(k, i) -=
-                            ColSpaceBasisInv.entry(k,currStage);
+                        colSpaceBasis.entry(currStage,k) +=
+                            colSpaceBasis.entry(i,k);
+                        colSpaceBasisInv.entry(k, i) -=
+                            colSpaceBasisInv.entry(k,currStage);
                     }
                     goto loopStart;
                 }
@@ -326,8 +326,8 @@ void smithNormalForm(NMatrixInt& matrix,
             matrix.entry(currStage, currStage).negate();
             for (j=0; j<matrix.rows(); j++) {
                 // we're thinking of this as a row op
-                ColSpaceBasis.entry( currStage, j ).negate();
-                ColSpaceBasisInv.entry( j,currStage ).negate();
+                colSpaceBasis.entry( currStage, j ).negate();
+                colSpaceBasisInv.entry( j,currStage ).negate();
             }
         }
         currStage++;
