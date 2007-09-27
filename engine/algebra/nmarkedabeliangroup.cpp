@@ -64,7 +64,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     // now construct OMRi * N, and delete first SNF_OM_firstzero rows,
     // constructing ORN.
 
-    NMatrixRing<NLargeInteger>* prod=OMRi*ON;
+    std::auto_ptr<NMatrixRing<NLargeInteger> > prod=OMRi*ON;
 
     unsigned long i;
     unsigned long j;
@@ -72,8 +72,6 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     for (i=0;i<ORN.rows();i++)
         for (j=0;j<ORN.columns();j++)
             ORN.entry(i,j) = prod->entry(i+rankOM,j);
-
-    delete(prod);
 
     NMatrixInt tX(ORN);
     smithNormalForm(tX, ornR, ornRi, ornC, ornCi);
