@@ -160,14 +160,10 @@ void smithNormalForm(NMatrixInt& matrix,
     NLargeInteger d, u, v, a, b;
     NLargeInteger tmp;
 
-    for (i=0;i<matrix.columns();i++) {
-        rowSpaceBasis.entry(i,i)=1;
-        rowSpaceBasisInv.entry(i,i)=1;
-    }
-    for (i=0;i<matrix.rows();i++) {
-        colSpaceBasis.entry(i,i)=1;
-        colSpaceBasisInv.entry(i,i)=1;
-    }
+    rowSpaceBasis.makeIdentity();
+    rowSpaceBasisInv.makeIdentity();
+    colSpaceBasis.makeIdentity();
+    colSpaceBasisInv.makeIdentity();
 
     while ((currStage < nonEmptyRows) && (currStage < nonEmptyCols)) {
         loopStart:
