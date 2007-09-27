@@ -116,8 +116,8 @@ void RBADD_columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  *
  * \author Ryan Budney
  */
-NMatrixInt RBADD_preImageOfLattice(NMatrixInt& hom,
-        std::vector<NLargeInteger>& L);
+NMatrixInt RBADD_preImageOfLattice(const NMatrixInt& hom,
+        const std::vector<NLargeInteger>& L);
 
 /*@}*/
 
