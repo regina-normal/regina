@@ -190,13 +190,9 @@ void smithNormalForm(NMatrixInt& matrix,
                 matrix.entry(currStage, i).swap(
                     matrix.entry(nonEmptyRows-1, i));
             }
-            for (i=0;i<matrix.rows();i++) {
-                // Corresponding ops for ColpaceBasis(Inv)
-                colSpaceBasis.entry( currStage, i).swap(
-                    colSpaceBasis.entry( nonEmptyRows-1, i));
-                colSpaceBasisInv.entry( i, currStage ).swap(
-                    colSpaceBasisInv.entry( i, nonEmptyRows-1 ));
-            }
+            colSpaceBasis.swapRows(currStage, nonEmptyRows-1);
+            colSpaceBasisInv.swapColumns(currStage, nonEmptyRows-1);
+
             nonEmptyRows--;
             continue;
         }
@@ -219,15 +215,13 @@ void smithNormalForm(NMatrixInt& matrix,
                 matrix.entry(i, currStage).swap(
                     matrix.entry(i, nonEmptyCols-1));
             }
-            for (i=0; i<matrix.columns();i++) {
-                rowSpaceBasis.entry(i, currStage).swap(
-                    rowSpaceBasis.entry(i, nonEmptyCols-1));
-                rowSpaceBasisInv.entry(currStage, i).swap(
-                    rowSpaceBasisInv.entry(nonEmptyCols-1, i));
-            }
+            rowSpaceBasis.swapColumns(currStage, nonEmptyCols-1);
+            rowSpaceBasisInv.swapRows(currStage, nonEmptyCols-1);
+
             nonEmptyCols--;
             continue;
         }
+
         // Get zeros in the current row.
         for (i=currStage+1; i<nonEmptyCols; i++) {
             if (matrix.entry(currStage, i) == 0)
@@ -261,6 +255,7 @@ void smithNormalForm(NMatrixInt& matrix,
                 rowSpaceBasisInv.entry(currStage, j) = tmp;
             }
         }
+
         // Get zeros in the current column.
         // Check to see if we change anything and thus muck up the row.
         flag = false;
@@ -312,14 +307,12 @@ void smithNormalForm(NMatrixInt& matrix,
                     // stage over.
                     for (k=currStage+1; k<nonEmptyCols; k++)
                         matrix.entry(currStage, k) += matrix.entry(i, k);
-                    for (k=0; k<matrix.rows();k++) {
-                        colSpaceBasis.entry(currStage,k) +=
-                            colSpaceBasis.entry(i,k);
-                        colSpaceBasisInv.entry(k, i) -=
-                            colSpaceBasisInv.entry(k,currStage);
-                    }
+                    colSpaceBasis.addRow(i, currStage);
+                    colSpaceBasisInv.addCol(currStage, i, -1);
+
                     goto loopStart;
                 }
+
         // This stage is complete!
         // Make sure the diagonal entry is positive before leaving it.
         if (matrix.entry(currStage, currStage) < 0) {
