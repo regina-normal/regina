@@ -257,8 +257,7 @@ class NMatrix {
         /**
          * Swaps the elements of the two given rows in the matrix.
          *
-         * \pre The two given rows are distinct and between 0 and
-         * rows()-1 inclusive.
+         * \pre The two given rows are between 0 and rows()-1 inclusive.
          *
          * @param first the first row to swap.
          * @param second the second row to swap.
@@ -274,8 +273,7 @@ class NMatrix {
         /**
          * Swaps the elements of the two given columns in the matrix.
          *
-         * \pre The two given columns are distinct and between 0 and
-         * columns()-1 inclusive.
+         * \pre The two given columns are between 0 and columns()-1 inclusive.
          *
          * @param first the first column to swap.
          * @param second the second column to swap.
@@ -481,10 +479,21 @@ class NMatrixRing : public NMatrix<T> {
         }
 
         /**
-         * Multiplies this by the given matrix.
+         * Multiplies this by the given matrix, and returns the result.
+         * This matrix is not changed.
          *
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
+         *
+         * \warning The returned matrix will be of the exact class
+         * NMatrixRing<T>, even if both this and \a other are of some common
+         * subclass of NMatrixRing<T>.  If you need a subclass to be returned,
+         * consider calling multiplyAs() instead.
+         *
+         * \ifacespython The multiplication operator for a subclass (such as
+         * NMatrixInt) will return a new matrix of that same subclass.
+         * That is, the python multiplication operator really calls
+         * multiplyAs(), not this routine.
          *
          * @param other the matrix by which to multiply this matrix.
          * @return a newly allocated matrix representing
@@ -493,6 +502,43 @@ class NMatrixRing : public NMatrix<T> {
         std::auto_ptr<NMatrixRing<T> > operator * (const NMatrixRing<T>& other)
                 const {
             std::auto_ptr<NMatrixRing<T> > ans(new NMatrixRing<T>(
+                this->nRows, other.nCols));
+
+            unsigned long row, col, k;
+            for (row = 0; row < this->nRows; row++)
+                for (col = 0; col < other.nCols; col++) {
+                    ans->data[row][col] = zero;
+                    for (k = 0; k < this->nCols; k++)
+                        ans->data[row][col] +=
+                            (this->data[row][k] * other.data[k][col]);
+                }
+
+            return ans;
+        }
+
+        /**
+         * Multiplies this by the given matrix, and returns a new matrix of
+         * subclass \a MatrixClass.  This matrix is not changed.
+         *
+         * \pre The number of columns in this matrix equals the number
+         * of rows in the given matrix.
+         * \pre The class \a MatrixClass is a subclass of NMatrixRing<T>,
+         * and can be fully initialised by calling the two-argument constructor
+         * (passing the row and column counts) and then settng individual
+         * elements via \a data[r][c].  In particular, there should not be any
+         * new data members that need explicit initialisation.
+         *
+         * \ifacespython Not present, but the python multiplication operator
+         * performs the same task (see the python notes for operator *).
+         *
+         * @param other the matrix by which to multiply this matrix.
+         * @return a newly allocated matrix representing
+         * <tt>this * other</tt>.
+         */
+        template <class MatrixClass>
+        std::auto_ptr<MatrixClass> multiplyAs(const NMatrixRing<T>& other)
+                const {
+            std::auto_ptr<MatrixClass> ans(new MatrixClass(
                 this->nRows, other.nCols));
 
             unsigned long row, col, k;

@@ -42,8 +42,7 @@ namespace {
 
     std::auto_ptr<NMatrixInt> multiply(const NMatrixInt& m1,
             const NMatrixInt& m2) {
-        return std::auto_ptr<NMatrixInt>(
-            static_cast<NMatrixInt*>((m1 * m2).release()));
+        return m1.multiplyAs<NMatrixInt>(m2);
     }
 
     void setEntry(NMatrixInt& matrix, unsigned long row, unsigned long column,

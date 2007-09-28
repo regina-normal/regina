@@ -52,6 +52,8 @@ Version 4.4  [ under development ]
             - Changed the return type of operator * from a raw pointer to a
               std::auto_ptr, to make it easier to multiply matrices inside
               temporary expressions.
+            - Added a new multiplyAs() template routine that multiplies but
+              (unlike operator *) returns a subclass of NMatrixRing.
         Class NPacket:
             - New routine reparent() to simplify ownership issues when
               using Python scripting.
