@@ -48,20 +48,51 @@ class MatrixOpsTest : public CppUnit::TestFixture {
                  Smith normal form page on Wikipedia (September 2007).
                  The Smith normal form has diagonal (2, 6, 12). */
 
+        NMatrixInt rect34;
+            /**< A more complex 3-by-4 example whose Smith normal form has
+                 diagonal (1, 1, 6). */
+
+        NMatrixInt rect43;
+            /**< A 4-by-3 matrix, filled with the same data as \a rect34 but
+                 wrapping to a new row every third element instead of every
+                 fourth.  The Smith normal form has diagonal (1, 1, 12). */
+
+        NMatrixInt red43;
+            /**< A 4-by-3 matrix with both redundant rows and columns.
+                 The Smith normal form has diagonal (1, 4, 0). */
+
     public:
-        MatrixOpsTest() : square3(3, 3) {
+        MatrixOpsTest() : square3(3, 3), rect34(3, 4), rect43(4, 3),
+                red43(4, 3) {
         }
 
         void setUp() {
-            square3.entry(0, 0) = 2;
-            square3.entry(0, 1) = 4;
+            square3.entry(0, 0) = 2;   square3.entry(0, 1) = 4;
             square3.entry(0, 2) = 4;
-            square3.entry(1, 0) = -6;
-            square3.entry(1, 1) = 6;
+            square3.entry(1, 0) = -6;  square3.entry(1, 1) = 6;
             square3.entry(1, 2) = 12;
-            square3.entry(2, 0) = 10;
-            square3.entry(2, 1) = -4;
+            square3.entry(2, 0) = 10;  square3.entry(2, 1) = -4;
             square3.entry(2, 2) = -16;
+
+            rect34.entry(0, 0) = 4;  rect34.entry(0, 1) = -17;
+            rect34.entry(0, 2) = 0L; rect34.entry(0, 3) = 6;
+            rect34.entry(1, 0) = -2; rect34.entry(1, 1) = 4;
+            rect34.entry(1, 2) = 9;  rect34.entry(1, 3) = 0L;
+            rect34.entry(2, 0) = 6;  rect34.entry(2, 1) = -3;
+            rect34.entry(2, 2) = -2; rect34.entry(2, 3) = 10;
+
+            int i;
+            for (i = 0; i < 12; ++i)
+                rect43.entry(i / 3, i % 3) = rect34.entry(i / 4, i % 4);
+
+            red43.entry(0, 0) = 3; red43.entry(0, 1) = 1;
+            red43.entry(0, 2) = 2;
+            red43.entry(1, 0) = 8; red43.entry(1, 1) = 4;
+            red43.entry(1, 2) = 8;
+            red43.entry(2, 0) = 11; red43.entry(2, 1) = 5;
+            red43.entry(2, 2) = 10;
+            red43.entry(3, 0) = -5; red43.entry(3, 1) = -3;
+            red43.entry(3, 2) = -6;
         }
 
         void tearDown() {
@@ -124,6 +155,9 @@ class MatrixOpsTest : public CppUnit::TestFixture {
 
         void smithNormalForm() {
             checkSNF3(square3, "simple 3x3 example", 2, 6, 12);
+            checkSNF3(rect34, "simple 3x4 example", 1, 1, 6);
+            checkSNF3(rect43, "simple 4x3 example", 1, 1, 12);
+            checkSNF3(red43, "redundant 4x3 example", 1, 4, 0);
         }
 
         static void checkSNFBasis(const NMatrixInt& m, const char* name) {
@@ -174,6 +208,9 @@ class MatrixOpsTest : public CppUnit::TestFixture {
 
         void smithNormalFormBasis() {
             checkSNFBasis(square3, "simple 3x3 example");
+            checkSNFBasis(rect34, "simple 3x4 example");
+            checkSNFBasis(rect43, "simple 4x3 example");
+            checkSNFBasis(red43, "redundant 4x3 example");
         }
 };
 
