@@ -69,31 +69,42 @@ void smithNormalForm(NMatrixInt& matrix);
 /**
  * A Smith normal form algorithm that also returns change of basis matrices.
  *
- * This is a modification of smithNormalForm(NMatrixInt&).  It returns
- * the appropriate change-of-basis matrices corresponding to all the
- * row and column operations performed in the process of constructing the
- * Smith normal form.  In particular,
- * <tt>ColSpaceBasis * original_matrix * RowSpaceBasis = final_matrix</tt>
- * (which is in Smith normal form).
+ * This is a modification of the one-argument smithNormalForm(NMatrixInt&).
+ * As well as converting the given matrix \a matrix into Smith normal form,
+ * it also returns the appropriate change-of-basis matrices corresponding
+ * to all the row and column operations that were performed.
  *
- * When the algorithm terminates, the original matrix is equal to
- * ColSpaceBasisInv * matrix * RowSpaceBasisInv.
- * thus, one obtains matrix from the old matrix by multiplying on the
- * left by ColSpaceBasis and on the right by RowSpaceBasis.
+ * The only input argument is \a matrix.  The four remaining arguments
+ * (the change of basis matrices) will be refilled, though they must be
+ * constructed with the correct dimensions as seen in the preconditions
+ * below.  All five arguments are used to return information as follows.
  *
- * The four change of basis matrices will be reset on entry to the
- * function; their original values will be ignored.
+ * Let \a M be the initial value of \a matrix, and let \a S be the Smith
+ * normal form of \a M.  After this routine exits:
  *
- * @param matrix is the original m x n matrix to put into Smith Normal Form.
- * When the algorithm terminates, it *is* in its Smith Normal Form.
- * @param rowSpaceBasis change of basis matrix; this must be square with
- * size matrix.columns().
- * @param rowSpaceBasisInv inverse of RowSpaceBasis; this must also be
- * square with size matrix.columns().
- * @param colSpaceBasis change of basis matrix; this must be square with
- * size matrix.rows().
- * @param colSpaceBasisInv invase of ColSpaceBasis; this must also be
- * square with size matrix.rows().
+ * - The argument \a matrix will contain the Smith normal form \a S;
+ * - <tt>colSpaceBasis * M * rowSpaceBasis = S</tt>;
+ * - <tt>colSpaceBasisInv * S * rowSpaceBasisInv = M</tt>;
+ * - <tt>colSpaceBasis * colSpaceBasisInv</tt> and
+ *   <tt>rowSpaceBasis * rowSpaceBasisInv</tt> are both identity matrices.
+ *
+ * Thus, one obtains the Smith normal form the original matrix by multiplying
+ * on the left by ColSpaceBasis and on the right by RowSpaceBasis.
+ *
+ * \pre The matrices \a rowSpaceBasis and \a rowSpaceBasisInv that are
+ * passed are square, with side length matrix.columns().
+ * \pre The matrices \a colSpaceBasis and \a colSpaceBasisInv that are
+ * passed are square, with side length matrix.rows().
+ *
+ * @param matrix the original matrix to put into Smith Normal Form (this
+ * need not be square).  When the algorithm terminates, this matrix \e is
+ * in its Smith Normal Form.
+ * @param rowSpaceBasis used to return a change of basis matrix (see
+ * above for details).
+ * @param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
+ * @param colSpaceBasis used to return a change of basis matrix (see
+ * above for details).
+ * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
  *
  * \author Ryan Budney
  */
