@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Startup Script
 #
-# Copyright (c) 2002-2006, Ben Burton
+# Copyright (c) 2002-2007, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This script simply starts the Python interpreter and imports the Regina

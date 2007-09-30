@@ -57,7 +57,7 @@ namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
             "\nA Normal Surface Theory Calculator" +
-            "\nCopyright (c) 1999-2006, Ben Burton";
+            "\nCopyright (c) 1999-2007, Ben Burton";
     }
 
     void shareableWriteTextShort(const ShareableObject& obj) {
