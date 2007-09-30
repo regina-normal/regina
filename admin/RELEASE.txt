@@ -5,7 +5,7 @@ All locations are relative to the primary source directory.
 Program version:
     CHANGES.txt, HIGHLIGHTS.txt, kdeui/doc/en/HIGHLIGHTS.txt (version, date)
     admin/configure.ac.top (AC_INIT, AM_INIT_AUTOMAKE)
-    debian/changelog (version, date)
+    debian/*/changelog (version, date)
     kdeui/doc/en/index.docbook (&regversion;, &regdate;, date, releaseinfo)
     kdeui/src/common/reginaabout.cpp (regReleased)
     kdeui/src/{shell,part}/*.rc (kpartgui version)
