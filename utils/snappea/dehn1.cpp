@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Perform a Dehn filling on a one-cusp SnapPea census manifold          *
  *                                                                        *
- *  Copyright (c) 2004-2006, Ben Burton                                   *
+ *  Copyright (c) 2004-2007, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
