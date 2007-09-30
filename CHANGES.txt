@@ -46,6 +46,8 @@ Version 4.4  [ under development ]
             - Added a set() routine to the python interface for setting
               matrix elements (which was previously not possible in python).
             - Made matrix multiplication available in the python interface.
+            - Added a python-only variant of initialise() that fills a
+              matrix given a complete list of elements.
         Class NMatrixRing:
             - New routine det() for fast calculation of matrix determinants.
             - New convenience routine isIdentity().

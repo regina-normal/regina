@@ -118,6 +118,23 @@ class NMatrix {
                     data[r][c] = value;
         }
 
+#ifdef __DOXYGEN
+        /**
+         * A Python-only routine that fills the matrix with the given
+         * set of elements.
+         *
+         * The argument \a allValues must be a Python tuple of length
+         * rows() * columns().  Its values will be inserted into the
+         * matrix row by row (i.e., the first row will be filled, then
+         * the second row, and so on).
+         *
+         * \ifacescpp Not available; this routine is for Python only.
+         *
+         * @param allValues the individual elements to place into the matrix.
+         */
+        void initialise(Tuple allValues);
+#endif
+
         /**
          * Returns the number of rows in this matrix.
          *

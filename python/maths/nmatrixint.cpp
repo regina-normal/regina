@@ -50,6 +50,46 @@ namespace {
         matrix.entry(row, column) = value;
     }
 
+    void initialise_list(NMatrixInt& matrix, boost::python::list values) {
+        if (boost::python::len(values) != matrix.rows() * matrix.columns()) {
+            PyErr_SetString(PyExc_IndexError,
+                "Initialisation list does not contain the "
+                "expected number of elements.");
+            boost::python::throw_error_already_set();
+        } else {
+            unsigned long r, c;
+            unsigned i = 0;
+            for (r = 0; r < matrix.rows(); ++r)
+                for (c = 0; c < matrix.columns(); ++c) {
+                    // Accept any type that we know how to convert to a
+                    // large integer.
+                    extract<regina::NLargeInteger&> x_large(values[i]);
+                    if (x_large.check()) {
+                        matrix.entry(r, c) = x_large();
+                        ++i;
+                        continue;
+                    }
+
+                    extract<long> x_long(values[i]);
+                    if (x_long.check()) {
+                        matrix.entry(r, c) = x_long();
+                        ++i;
+                        continue;
+                    }
+
+                    extract<const char*> x_str(values[i]);
+                    if (x_str.check()) {
+                        matrix.entry(r, c) = x_str();
+                        ++i;
+                        continue;
+                    }
+
+                    // Throw an exception.
+                    x_large();
+                }
+        }
+    }
+
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRow,
         NMatrixInt::addRow, 2, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addCol,
@@ -62,6 +102,7 @@ void addNMatrixInt() {
             init<unsigned long, unsigned long>())
         .def(init<const NMatrixInt&>())
         .def("initialise", &NMatrixInt::initialise)
+        .def("initialise", initialise_list)
         .def("rows", &NMatrixInt::rows)
         .def("columns", &NMatrixInt::columns)
         .def("entry", entry_non_const, return_internal_reference<>())
