@@ -139,8 +139,7 @@ void smithNormalForm(NMatrixInt& matrix,
  * -# given a first non-zero column entry, in that row all the elements to
  *    the left are smaller and non-negative (all elements to the right are
  *    already zero by the previous condition);
- * -# in a row which has no first non-zero column entry, all elements are zero;
- * -# thus all the zero columns are on the right hand side of the matrix.
+ * -# all the zero columns are on the right hand side of the matrix.
  *
  * \pre Both \a R and \a Ri are square matrices with dimensions equal to
  * M.columns(), and these matrices are inverses of each other.
