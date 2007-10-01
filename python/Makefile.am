@@ -26,7 +26,9 @@ SUBDIRS = srcutils \
   subcomplex \
   surfaces \
   triangulation \
-  utilities
+  utilities \
+  . \
+  testsuite
 
 pkgpythonlibdir = $(pkglibdir)/python
 
