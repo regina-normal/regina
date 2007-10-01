@@ -28,6 +28,7 @@
 
 #include "maths/nmatrixint.h"
 #include <boost/python.hpp>
+#include <boost/python/detail/api_placeholder.hpp> // For len().
 
 using namespace boost::python;
 using regina::NMatrixInt;
