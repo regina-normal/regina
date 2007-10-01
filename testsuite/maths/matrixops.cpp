@@ -43,6 +43,15 @@ class MatrixOpsTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
+        NMatrixInt zero34;
+            /**< A zero 3-by-4 matrix. */
+
+        NMatrixInt zero43;
+            /**< A zero 4-by-3 matrix. */
+
+        NMatrixInt identity3;
+            /**< A 3-by-3 identity matrix. */
+
         NMatrixInt square3;
             /**< A simple 3-by-3 integer matrix given as an example in the
                  Smith normal form page on Wikipedia (September 2007).
@@ -61,12 +70,24 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             /**< A 4-by-3 matrix with both redundant rows and columns.
                  The Smith normal form has diagonal (1, 4, 0). */
 
+        NMatrixInt dup34;
+            /**< A 3-by-4 matrix with a trivial duplicate row and a Smith
+                 normal form with diagonal (1, 1, 1). */
+
+        NMatrixInt dup43;
+            /**< The exact transpose of \a dup34. */
+
     public:
-        MatrixOpsTest() : square3(3, 3), rect34(3, 4), rect43(4, 3),
-                red43(4, 3) {
+        MatrixOpsTest() : zero34(3, 4), zero43(4, 3), identity3(3, 3),
+                square3(3, 3), rect34(3, 4), rect43(4, 3),
+                red43(4, 3), dup34(3, 4), dup43(4, 3) {
         }
 
         void setUp() {
+            zero34.initialise(0L);
+            zero43.initialise(0L);
+            identity3.makeIdentity();
+
             square3.entry(0, 0) = 2;   square3.entry(0, 1) = 4;
             square3.entry(0, 2) = 4;
             square3.entry(1, 0) = -6;  square3.entry(1, 1) = 6;
@@ -85,14 +106,24 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             for (i = 0; i < 12; ++i)
                 rect43.entry(i / 3, i % 3) = rect34.entry(i / 4, i % 4);
 
-            red43.entry(0, 0) = 3; red43.entry(0, 1) = 1;
+            red43.entry(0, 0) = 3;  red43.entry(0, 1) = 1;
             red43.entry(0, 2) = 2;
-            red43.entry(1, 0) = 8; red43.entry(1, 1) = 4;
+            red43.entry(1, 0) = 8;  red43.entry(1, 1) = 4;
             red43.entry(1, 2) = 8;
             red43.entry(2, 0) = 11; red43.entry(2, 1) = 5;
             red43.entry(2, 2) = 10;
             red43.entry(3, 0) = -5; red43.entry(3, 1) = -3;
             red43.entry(3, 2) = -6;
+
+            dup34.entry(0, 0) = 1;  dup34.entry(0, 1) = 1;
+            dup34.entry(0, 2) = 1;  dup34.entry(0, 3) = 1;
+            dup34.entry(1, 0) = 0L; dup34.entry(1, 1) = 0L;
+            dup34.entry(1, 2) = 2;  dup34.entry(1, 3) = 3;
+            dup34.entry(2, 0) = 0L; dup34.entry(2, 1) = 0L;
+            dup34.entry(2, 2) = 3;  dup34.entry(2, 3) = 5;
+
+            for (i = 0; i < 12; ++i)
+                dup43.entry(i / 3, i % 3) = dup34.entry(i % 3, i / 3);
         }
 
         void tearDown() {
@@ -113,20 +144,51 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             unsigned r, c;
             for (r = 0; r < m.rows(); ++r)
                 for (c = 0; c < m.columns(); ++c)
-                    if (r != c && ans.entry(r, c) != 0) {
-                        std::ostringstream msg;
-                        msg << "Smith normal form for " << name
-                            << " has a non-zero off-diagonal entry at "
-                            << "(" << r << ", " << c << ").";
-                        CPPUNIT_FAIL(msg.str());
-                    } else if (r == c && r > 0) {
-                        if (ans.entry(r, c) % ans.entry(r - 1, c - 1) != 0) {
+                    if (r != c) {
+                        // Off the main diagonal.
+                        if (ans.entry(r, c) != 0) {
                             std::ostringstream msg;
                             msg << "Smith normal form for " << name
-                                << " breaks the divisibility chain: "
-                                << ans.entry(r, c) << " does not divide "
-                                << ans.entry(r - 1, c - 1) << ".";
+                                << " has a non-zero off-diagonal entry at "
+                                << "(" << r << ", " << c << ").";
                             CPPUNIT_FAIL(msg.str());
+                        }
+                    } else {
+                        // On the main diagonal.
+                        if (ans.entry(r, c) < 0) {
+                            std::ostringstream msg;
+                            msg << "Smith normal form for " << name
+                                << " has a negative diagonal entry at "
+                                << "(" << r << ", " << c << ").";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+
+                        if (r > 0) {
+                            if (ans.entry(r - 1, c - 1) == 0) {
+                                // We're following a zero.  Better be all zeroes
+                                // from here onwards.
+                                if (ans.entry(r, c) != 0) {
+                                    std::ostringstream msg;
+                                    msg << "Smith normal form for " << name
+                                        << " has non-zero entries following"
+                                           " zero entries on the main"
+                                           " diagonal.";
+                                    CPPUNIT_FAIL(msg.str());
+                                }
+                            } else {
+                                // We're not following a zero.  Check for
+                                // divisibility.
+                                if (ans.entry(r, c) %
+                                        ans.entry(r - 1, c - 1) != 0) {
+                                    std::ostringstream msg;
+                                    msg << "Smith normal form for " << name
+                                        << " breaks the divisibility chain: "
+                                        << ans.entry(r, c)
+                                        << " does not divide "
+                                        << ans.entry(r - 1, c - 1) << ".";
+                                    CPPUNIT_FAIL(msg.str());
+                                }
+                            }
                         }
                     }
 
@@ -154,10 +216,15 @@ class MatrixOpsTest : public CppUnit::TestFixture {
         }
 
         void smithNormalForm() {
+            checkSNF3(zero34, "zero 3x4 example", 0, 0, 0);
+            checkSNF3(zero43, "zero 4x3 example", 0, 0, 0);
+            checkSNF3(identity3, "identity 3x3 example", 1, 1, 1);
             checkSNF3(square3, "simple 3x3 example", 2, 6, 12);
             checkSNF3(rect34, "simple 3x4 example", 1, 1, 6);
             checkSNF3(rect43, "simple 4x3 example", 1, 1, 12);
             checkSNF3(red43, "redundant 4x3 example", 1, 4, 0);
+            checkSNF3(dup34, "duplicated 3x4 example", 1, 1, 1);
+            checkSNF3(dup43, "duplicated 4x3 example", 1, 1, 1);
         }
 
         static void checkSNFBasis(const NMatrixInt& m, const char* name) {
@@ -207,10 +274,15 @@ class MatrixOpsTest : public CppUnit::TestFixture {
         }
 
         void smithNormalFormBasis() {
+            checkSNFBasis(zero34, "zero 3x4 example");
+            checkSNFBasis(zero43, "zero 4x3 example");
+            checkSNFBasis(identity3, "identity 3x3 example");
             checkSNFBasis(square3, "simple 3x3 example");
             checkSNFBasis(rect34, "simple 3x4 example");
             checkSNFBasis(rect43, "simple 4x3 example");
             checkSNFBasis(red43, "redundant 4x3 example");
+            checkSNFBasis(dup34, "duplicated 3x4 example");
+            checkSNFBasis(dup43, "duplicated 4x3 example");
         }
 };
 
