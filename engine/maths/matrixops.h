@@ -113,12 +113,14 @@ void smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
 
 /**
- * Puts a given matrix into column echelon form with respect to a
+ * Transforms a given matrix into column echelon form with respect to a
  * collection of rows.
  *
  * Given the matrix \a M and the list \a rowList of rows from \a M, this
- * algorithm puts \a M in column echelon form with respect to the
- * given list of rows.
+ * algorithm puts \a M in column echelon form with respect to the rows
+ * in \a rowList.  The only purpose of \a rowList is to clarify and/or
+ * weaken precisely what is meant by "column echelon form"; all rows of
+ * \a M are affected by the resulting column operations that take place.
  *
  * This routine also returns the corresponding change of coordinate
  * matrices \a R and \a Ri:
@@ -126,28 +128,36 @@ void smithNormalForm(NMatrixInt& matrix,
  * - If \a R and \a Ri are passed as identity matrices, the returned
  *   matrices will be such that <tt>original_M * R = final_M</tt> and
  *   <tt>final_M * Ri = original_M</tt> (and of course <tt>final_M</tt> is
- *   in column echelon form with respect to the given rows).
+ *   in column echelon form with respect to the given row list).
  * - If \a R and \a Ri are already non-trivial coordinate transformations,
  *   they are modified appropriately by the algorithm.
  *
  * Our convention is that a matrix is in column echelon form if:
  *
  * -# each column is either zero or there is a first non-zero entry which
- *    is positive;
- * -# from left to right, the first non-zero entries have strictly increasing
- *    indices (i.e., row numbers);
+ *    is positive (but see the note regarding \a rowList below);
+ * -# moving from the leftmost column to the rightmost column, the rows
+ *    containing the first non-zero entries for these columns have strictly
+ *    increasing indices in \a rowList;
  * -# given a first non-zero column entry, in that row all the elements to
  *    the left are smaller and non-negative (all elements to the right are
  *    already zero by the previous condition);
  * -# all the zero columns are on the right hand side of the matrix.
  *
- * \pre Both \a R and \a Ri are square matrices with dimensions equal to
- * M.columns(), and these matrices are inverses of each other.
+ * By a "zero column" here we simply mean "zero for every row in \a
+ * rowList".  Likewise, by "first non-zero entry" we mean "first row in
+ * \a rowList with a non-zero entry".
  *
- * @param M matrix to reduce
- * @param R row-reduction matrix
- * @param Ri the inverse of R
- * @param rowList the rows to pay attention to.
+ * \pre Both \a R and \a Ri are square matrices with side length M.columns(),
+ * and these matrices are inverses of each other.
+ *
+ * @param M the matrix to reduce.
+ * @param R used to return the row-reduction matrix, as described above.
+ * @param Ri used to return the inverse of \a R.
+ * @param rowList the rows to pay attention to.  This list must contain
+ * distinct integers, all between 0 and M.rows()-1 inclusive.  The
+ * integers may appear in any order (though changing the order will
+ * change the resulting column echelon form).
  *
  * \author Ryan Budney
  */
@@ -155,23 +165,33 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
         const std::vector<unsigned> &rowList);
 
 /**
- * Given a homomorphism (hom) from Z^n to Z^m and a sublattice of Z^m
- * represented by L, this procedure computes the preimage of L under hom.
+ * Given a homomorphism from Z^n to Z^k and a sublattice of Z^k,
+ * compute the preimage of this sublattice under this homomorphism.
  *
- * Given a homomorphism from Z^n to Z_p1 + ... + Z_pk, the kernel
- * of this homomorphism is some rank-n lattice in Z^n.  This algorithm
- * finds a basis for the lattice.  hom is a k by n matrix representing
- * the homomorphism and L is a k-vector whose entries are p1 through pk.
- * A basis is returned.
+ * The homomorphism from Z^n to Z^k is described by the given
+ * \a k by \a n matrix \a hom.  The sublattice is of the form
+ * <tt>(p1 Z) * (p2 Z) * ... * (pk Z)</tt>, where the integers
+ * \a p1, ..., \a pk are passed in the given list \a sublattice.
  *
- * @param hom the matrix representing the homomorphism from Z^n to Z^m
- * @param L the sublattice of Z^m
- * @return a matrix whose columns are a basis for the preimage lattice.
+ * An equivalent problem is to consider \a hom to be a homomorphism
+ * from Z^n to Z_p1 + ... + Z_pk; this routine then finds the kernel
+ * of this homomorphism.
+ *
+ * The preimage of the sublattice (equivalently, the kernel described
+ * above) is some rank \a n lattice in Z^n.  This algorithm finds and
+ * returns a basis for the lattice.
+ *
+ * @param hom the matrix representing the homomorphism from Z^n to Z^k;
+ * this must be a \a k by \a n matrix.
+ * @param sublattice a list of length \a k describing the sublattice of Z^k;
+ * the elements of this list must be \a p1, ..., \a pk as described above.
+ * @return a new matrix whose columns are a basis for the preimage lattice.
+ * This matrix will have precisely \a n rows.
  *
  * \author Ryan Budney
  */
 std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
-        const std::vector<NLargeInteger>& L);
+        const std::vector<NLargeInteger>& sublattice);
 
 /*@}*/
 
