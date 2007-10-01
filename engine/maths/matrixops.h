@@ -170,7 +170,7 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  *
  * The homomorphism from Z^n to Z^k is described by the given
  * \a k by \a n matrix \a hom.  The sublattice is of the form
- * <tt>(p1 Z) * (p2 Z) * ... * (pk Z)</tt>, where the integers
+ * <tt>(p1 Z) * (p2 Z) * ... * (pk Z)</tt>, where the non-negative integers
  * \a p1, ..., \a pk are passed in the given list \a sublattice.
  *
  * An equivalent problem is to consider \a hom to be a homomorphism
