@@ -403,8 +403,7 @@ void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
             else
                 dcL[i]="0";
 
-        reducedKernelLattice = new NMatrixInt( preImageOfLattice(
-            redMatrix, dcL ) );
+        reducedKernelLattice = preImageOfLattice( redMatrix, dcL ).release();
     }
 }
 

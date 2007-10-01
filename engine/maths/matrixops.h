@@ -171,7 +171,7 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  *
  * \author Ryan Budney
  */
-NMatrixInt preImageOfLattice(const NMatrixInt& hom,
+std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
         const std::vector<NLargeInteger>& L);
 
 /*@}*/
