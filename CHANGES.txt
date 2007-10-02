@@ -114,6 +114,8 @@ Version 4.4  [ under development ]
               subcomplex testing (previously the same messages were used
               for both subcomplex testing and isomorphism testing).
     TEST SUITE:
+        - Added a new test suite for python bindings, in addition to the
+          usual C++ test suite that is already present.
         - Added tests for the NPerm class.
         - Added tests for vertex link calculations.
         - Added tests for the orientable double cover of a triangulation.
