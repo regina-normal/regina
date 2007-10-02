@@ -1,0 +1,4 @@
+# Miscellaneous tests, just to see that things run.
+t = regina.NTriangulation()
+t.insertLayeredLensSpace(5,1)
+print t.getHomologyH1()
