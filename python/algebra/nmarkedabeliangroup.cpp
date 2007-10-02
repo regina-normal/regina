@@ -55,20 +55,30 @@ void addNMarkedAbelianGroup() {
         .def("getInvariantFactor", &NMarkedAbelianGroup::getInvariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
-        .def("getMRB", &NMarkedAbelianGroup::getMRB)
-        .def("getMRBi", &NMarkedAbelianGroup::getMRBi)
-        .def("getMCB", &NMarkedAbelianGroup::getMCB)
-        .def("getMCBi", &NMarkedAbelianGroup::getMCBi)
-        .def("getNRB", &NMarkedAbelianGroup::getNRB)
-        .def("getNRBi", &NMarkedAbelianGroup::getNRBi)
-        .def("getNCB", &NMarkedAbelianGroup::getNCB)
-        .def("getNCBi", &NMarkedAbelianGroup::getNCBi)
+        .def("getMRB", &NMarkedAbelianGroup::getMRB,
+            return_internal_reference<>())
+        .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
+            return_internal_reference<>())
+        .def("getMCB", &NMarkedAbelianGroup::getMCB,
+            return_internal_reference<>())
+        .def("getMCBi", &NMarkedAbelianGroup::getMCBi,
+            return_internal_reference<>())
+        .def("getNRB", &NMarkedAbelianGroup::getNRB,
+            return_internal_reference<>())
+        .def("getNRBi", &NMarkedAbelianGroup::getNRBi,
+            return_internal_reference<>())
+        .def("getNCB", &NMarkedAbelianGroup::getNCB,
+            return_internal_reference<>())
+        .def("getNCBi", &NMarkedAbelianGroup::getNCBi,
+            return_internal_reference<>())
         .def("getRankOM", &NMarkedAbelianGroup::getRankOM)
         .def("getFreeLoc", &NMarkedAbelianGroup::getFreeLoc)
         .def("getTorLoc", &NMarkedAbelianGroup::getTorLoc)
         .def("getTorNum", &NMarkedAbelianGroup::getTorNum)
-        .def("getOM", &NMarkedAbelianGroup::getOM)
-        .def("getON", &NMarkedAbelianGroup::getON)
+        .def("getOM", &NMarkedAbelianGroup::getOM,
+            return_internal_reference<>())
+        .def("getON", &NMarkedAbelianGroup::getON,
+            return_internal_reference<>())
         .def(self == self)
     ;
 }
