@@ -286,7 +286,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getMRB() described above.
          */
-        NMatrixInt getMRB() const; // these matrices are for putting OM in SNF
+        const NMatrixInt& getMRB() const;
         /**
          * These routines return information on how we determined the
          * isomorphism-class of the group.  Originally, the group was defined
@@ -298,7 +298,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getMRBi() described above.
          */
-        NMatrixInt getMRBi() const;// getMCB() * OM * getMRB() = SNF(OM)
+        const NMatrixInt& getMRBi() const;
         /**
          * These routines return information on how we determined the
          * isomorphism-class of the group.  Originally, the group was defined
@@ -310,7 +310,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getMCB() described above.
          */
-        NMatrixInt getMCB() const;
+        const NMatrixInt& getMCB() const;
         /**
          * These routines return information on how we determined the
          * isomorphism-class of the group.  Originally, the group was defined
@@ -322,7 +322,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getMCBi() described above.
          */
-        NMatrixInt getMCBi() const;
+        const NMatrixInt& getMCBi() const;
 
         /**
          * The 2nd step in determining the isomorphism class of the group is to
@@ -337,7 +337,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getNRB() described above.
          */
-        NMatrixInt getNRB() const;
+        const NMatrixInt& getNRB() const;
 
         /**
          * The 2nd step in determining the isomorphism class of the group is to
@@ -352,7 +352,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getNRBi() described above.
          */
-        NMatrixInt getNRBi() const;
+        const NMatrixInt& getNRBi() const;
 
         /**
          * The 2nd step in determining the isomorphism class of the group is to
@@ -367,7 +367,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getNCB() described above.
          */
-        NMatrixInt getNCB() const;
+        const NMatrixInt& getNCB() const;
 
         /**
          * The 2nd step in determining the isomorphism class of the group is to
@@ -382,7 +382,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getNCBi() described above.
          */
-        NMatrixInt getNCBi() const;
+        const NMatrixInt& getNCBi() const;
 
         /**
          * Gives the rank of the defining matrix M.
@@ -417,13 +417,13 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return a copy of the defining matrix M.
          */
-        NMatrixInt getOM() const;
+        const NMatrixInt& getOM() const;
         /**
          * Copies of the original chain complex matrices.
          *
          * @return a copy of the defining matrix N.
          */
-        NMatrixInt getON() const;
+        const NMatrixInt& getON() const;
 };
 
 /*@}*/
@@ -450,28 +450,28 @@ inline unsigned NMarkedAbelianGroup::getTorsionRank(unsigned long degree)
     return getTorsionRank(NLargeInteger(degree));
 }
 
-inline NMatrixInt NMarkedAbelianGroup::getMRB() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
     return OMR;
 }
-inline NMatrixInt NMarkedAbelianGroup::getMRBi() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getMRBi() const {
     return OMRi;
 }
-inline NMatrixInt NMarkedAbelianGroup::getMCB() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getMCB() const {
     return OMC;
 }
-inline NMatrixInt NMarkedAbelianGroup::getMCBi() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getMCBi() const {
     return OMCi;
 }
-inline NMatrixInt NMarkedAbelianGroup::getNRB() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getNRB() const {
     return ornR;
 }
-inline NMatrixInt NMarkedAbelianGroup::getNRBi() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getNRBi() const {
     return ornRi;
 }
-inline NMatrixInt NMarkedAbelianGroup::getNCB() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getNCB() const {
     return ornC;
 }
-inline NMatrixInt NMarkedAbelianGroup::getNCBi() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getNCBi() const {
     return ornCi;
 }
 
@@ -488,10 +488,10 @@ inline unsigned long NMarkedAbelianGroup::getTorNum() const {
     return InvFacList.size();
 }
 
-inline NMatrixInt NMarkedAbelianGroup::getOM() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getOM() const {
     return OM;
 }
-inline NMatrixInt NMarkedAbelianGroup::getON() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getON() const {
     return ON;
 }
 
@@ -600,19 +600,19 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          *
          * @return the kernel of the homomorphism, as a marked abelian group
          */
-        NMarkedAbelianGroup getKernel() const;
+        const NMarkedAbelianGroup& getKernel() const;
         /**
          * Computes the cokernel.
          *
          * @return cokernel of the homomorphism, as a marked abelian group
          */
-        NMarkedAbelianGroup getCoKernel() const;
+        const NMarkedAbelianGroup& getCoKernel() const;
         /**
          * Computes the image.
          *
          * @return image of the homomorphism, as a marked abelian group
          */
-        NMarkedAbelianGroup getImage() const;
+        const NMarkedAbelianGroup& getImage() const;
 
         /**
          * Short text representation: this will state if the
@@ -636,14 +636,14 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix which was used to define the homomorphism.
          */
-        NMatrixInt getDefiningMatrix() const;
+        const NMatrixInt& getDefiningMatrix() const;
         /**
          * Gets the internal reduced matrix representing the
          * homomorphism.
          *
          * @return a copy of the internal representation of the homomorphism.
          */
-        NMatrixInt getRedMatrix() const;
+        const NMatrixInt& getRedMatrix() const;
 };
 
 
@@ -660,11 +660,11 @@ inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
         delete reducedKernelLattice;
 }
 
-inline NMatrixInt NHomMarkedAbelianGroup::getDefiningMatrix() const {
+inline const NMatrixInt& NHomMarkedAbelianGroup::getDefiningMatrix() const {
     return matrix;
 }
 
-inline NMatrixInt NHomMarkedAbelianGroup::getRedMatrix() const {
+inline const NMatrixInt& NHomMarkedAbelianGroup::getRedMatrix() const {
     // Cast away const to compute the reduced matrix -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.

@@ -513,7 +513,7 @@ bool NHomMarkedAbelianGroup::isZero() const {
 
 
 
-NMarkedAbelianGroup NHomMarkedAbelianGroup::getKernel() const {
+const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getKernel() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
@@ -521,7 +521,7 @@ NMarkedAbelianGroup NHomMarkedAbelianGroup::getKernel() const {
     return *kernel;
 }
 
-NMarkedAbelianGroup NHomMarkedAbelianGroup::getImage() const {
+const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getImage() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
@@ -529,7 +529,7 @@ NMarkedAbelianGroup NHomMarkedAbelianGroup::getImage() const {
     return *image;
 }
 
-NMarkedAbelianGroup NHomMarkedAbelianGroup::getCoKernel() const {
+const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCoKernel() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
