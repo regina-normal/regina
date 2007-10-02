@@ -1,0 +1,98 @@
+# Use checksums so that we don't make the output file large with very long
+# output strings, but so that we can still check that these long output
+# strings are correct.
+import md5
+
+def vitalStats(tri):
+	# To guard against accidental changes.
+	old = tri.toStringLong()
+
+	print "-------------------------------"
+	print tri.getPacketLabel()
+	print "-------------------------------"
+	print
+	print tri.toStringLong()
+	print tri.getNumberOfComponents(), "components"
+	print tri.getNumberOfBoundaryComponents(), "boundary components"
+	print tri.getNumberOfTetrahedra(), "tetrahedra"
+	print tri.getNumberOfFaces(), "faces"
+	print tri.getNumberOfEdges(), "edges"
+	print tri.getNumberOfVertices(), "vertices"
+	print "2-sphere boundaries:", tri.hasTwoSphereBoundaryComponents()
+	print "Negative ideal boundaries:", tri.hasNegativeIdealBoundaryComponents()
+	print "EC:", tri.getEulerCharacteristic()
+	print "Valid:", tri.isValid()
+	print "Ideal:", tri.isIdeal()
+	print "Standard:", tri.isStandard()
+	print "Boundary Faces:", tri.hasBoundaryFaces()
+	print "Closed:", tri.isClosed()
+	print "Orientable:", tri.isOrientable()
+	print "Connected:", tri.isConnected()
+	print
+	print "Fundamental group:", tri.getFundamentalGroup().recogniseGroup()
+	print tri.getFundamentalGroup().toStringLong()
+	print "H1:", tri.getHomologyH1()
+	if tri.isValid():
+		print "H1Bdry:", tri.getHomologyH1Bdry()
+		print "H1Rel:", tri.getHomologyH1Rel()
+		print "H2:", tri.getHomologyH2()
+		print "H2Z2:", tri.getHomologyH2Z2(), "Z_2"
+	if tri.isValid() and tri.isClosed() and tri.getNumberOfTetrahedra() > 0:
+		print "TV(5, 3):", tri.turaevViro(5, 3)
+
+	# Normal surface computations should only be run on sufficiently
+	# small triangulations, so as to keep the tests relatively fast.
+	if tri.getNumberOfTetrahedra() < 7:
+		print "0-efficient:", tri.isZeroEfficient()
+		if tri.isConnected():
+			print "Splitting surface:", tri.hasSplittingSurface()
+
+	# Though this can use normal surfaces, its prechecks and
+	# optimisations should make it fast enough for our examples.
+	print "3-sphere:", tri.isThreeSphere()
+
+	print "Double cover:"
+	t = regina.NTriangulation(tri)
+	t.makeDoubleCover()
+	print "Checksum =", md5.new(t.toStringLong()).hexdigest()
+
+	print "Ideal to finite:"
+	t = regina.NTriangulation(tri)
+	print "Result =", t.idealToFinite()
+	print "Checksum =", md5.new(t.toStringLong()).hexdigest()
+
+	print "Finite to ideal:"
+	t = regina.NTriangulation(tri)
+	print "Result =", t.finiteToIdeal()
+	print "Checksum =", md5.new(t.toStringLong()).hexdigest()
+
+	print "Barycentric subdivision:"
+	t = regina.NTriangulation(tri)
+	t.barycentricSubdivision()
+	print "Checksum =", md5.new(t.toStringLong()).hexdigest()
+
+	print "Dehydration:", tri.dehydrate()
+
+	if tri.toStringLong() != old:
+		print "ERROR: Original triangulation has changed!"
+
+	print
+
+t = regina.NTriangulation()
+t.setPacketLabel("Empty triangulation")
+vitalStats(t)
+
+vitalStats(regina.NExampleTriangulation.threeSphere())
+vitalStats(regina.NExampleTriangulation.s2xs1())
+vitalStats(regina.NExampleTriangulation.rp2xs1())
+vitalStats(regina.NExampleTriangulation.rp3rp3())
+vitalStats(regina.NExampleTriangulation.lens8_3())
+vitalStats(regina.NExampleTriangulation.poincareHomologySphere())
+vitalStats(regina.NExampleTriangulation.smallClosedOrblHyperbolic())
+vitalStats(regina.NExampleTriangulation.smallClosedNonOrblHyperbolic())
+vitalStats(regina.NExampleTriangulation.lst3_4_7())
+vitalStats(regina.NExampleTriangulation.solidKleinBottle())
+vitalStats(regina.NExampleTriangulation.figureEightKnotComplement())
+vitalStats(regina.NExampleTriangulation.whiteheadLinkComplement())
+vitalStats(regina.NExampleTriangulation.gieseking())
+vitalStats(regina.NExampleTriangulation.cuspedGenusTwoTorus())
