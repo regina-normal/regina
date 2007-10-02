@@ -1,0 +1,91 @@
+#!/bin/bash
+#
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Runner
+#
+# Copyright (c) 2007, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Usage: testall
+#
+# Runs the entire Python test suite.  This script searches for files
+# named *.test in or beneath the current directory, runs them through
+# regina-python, and compares the results byte-by-byte with the
+# corresponding *.out files.  Any mismatches are considered to be test
+# failures.
+#
+# This script MUST be run from this directory (python/testsuite).
+# It runs regina-python directly out of the source tree.  It does not
+# require regina to be installed on the system (and indeed it ignores
+# any installation that it might find).
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+set -e
+
+executable=../regina-python
+tmpout=test.tmp
+
+echo "---------------------------------------"
+echo "Test suite for Regina's python bindings"
+echo "---------------------------------------"
+echo
+
+if ! test -d ../../admin -a -f ../regina-python.in; then
+	echo "ERROR: You do not appear to be within the python/testsuite directory."
+	echo "       This script must be run from directly within the source tree."
+	echo "       Please change into the python/testsuite directory in the "
+	echo "       source tree and try again."
+	exit 1
+fi
+
+if ! test -f "$executable"; then
+	echo "ERROR: Cannot find the executable $executable."
+	echo "       Be sure to run this script from within the source tree "
+	echo "       (directly within the python/testsuite directory), and "
+	echo "       ensure that the python module has already been built."
+	exit 1
+fi
+
+broken=
+for i in `find . -name "*.test"`; do
+	echo -n "Running $i ... "
+
+	output="${i/.test/.out}"
+	if ! ( "$executable" "$i" > "$tmpout" 2>&1 ); then
+		echo "COULD NOT RUN"
+		broken=1
+	else
+		if ! ( diff "$tmpout" "$output" > /dev/null ); then
+			echo "TEST FAILED"
+			broken=1
+		else
+			echo "ok"
+		fi
+	fi
+	rm -f "$tmpout"
+done
+
+if test -n "$broken"; then
+	echo
+	echo "One or more tests failed."
+	echo "Please see the list above for details."
+	exit 1
+fi
+
+echo
+echo "All tests passed!"
+exit 0

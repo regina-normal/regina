@@ -1,0 +1,1 @@
+print regina.testEngine(3)

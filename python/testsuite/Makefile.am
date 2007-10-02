@@ -8,3 +8,9 @@
 
 KDE_OPTIONS=noautodist
 
+TESTS = testall
+
+check_SCRIPTS = testall
+
+EXTRA_DIST = \
+	engine.test engine.out
