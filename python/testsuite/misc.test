@@ -1,4 +1,35 @@
-# Miscellaneous tests, just to see that things run.
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides small miscellaneous tests to ensure that things are up and running.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+
+# The most trivial test: can we talk to the calculation engine at all?
+print regina.testEngine(3)\
+
+# Some slightly less trivial tests.
 t = regina.NTriangulation()
 t.insertLayeredLensSpace(5,1)
 print t.getHomologyH1()

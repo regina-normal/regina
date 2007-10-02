@@ -1,6 +1,30 @@
-# Use checksums so that we don't make the output file large with very long
-# output strings, but so that we can still check that these long output
-# strings are correct.
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides more thorough tests for different types of triangulation.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
 import md5
 
 def vitalStats(tri):
@@ -51,6 +75,10 @@ def vitalStats(tri):
 	# optimisations should make it fast enough for our examples.
 	print "3-sphere:", tri.isThreeSphere()
 
+	# Some of the following operations can create large triangulations,
+	# which give *lots* of output when we try to dump their face gluings
+	# and skeletal details.  We'd like to keep the output files small,
+	# so dump checksums of the details instead of the details themselves.
 	print "Double cover:"
 	t = regina.NTriangulation(tri)
 	t.makeDoubleCover()
