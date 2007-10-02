@@ -60,7 +60,7 @@ namespace regina {
  * It does not use modular arithmetic to control the intermediate
  * coefficient explosion.
  *
- * \testpartial
+ * \testpart
  *
  * @param matrix the matrix to transform.
  */
@@ -95,6 +95,8 @@ void smithNormalForm(NMatrixInt& matrix);
  * passed are square, with side length matrix.columns().
  * \pre The matrices \a colSpaceBasis and \a colSpaceBasisInv that are
  * passed are square, with side length matrix.rows().
+ *
+ * \testpart
  *
  * @param matrix the original matrix to put into Smith Normal Form (this
  * need not be square).  When the algorithm terminates, this matrix \e is
@@ -184,7 +186,8 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  * @param hom the matrix representing the homomorphism from Z^n to Z^k;
  * this must be a \a k by \a n matrix.
  * @param sublattice a list of length \a k describing the sublattice of Z^k;
- * the elements of this list must be \a p1, ..., \a pk as described above.
+ * the elements of this list must be the non-negative integers
+ * \a p1, ..., \a pk as described above.
  * @return a new matrix whose columns are a basis for the preimage lattice.
  * This matrix will have precisely \a n rows.
  *
