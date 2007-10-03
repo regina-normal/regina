@@ -110,7 +110,7 @@ class NTriangulation;
  * @author Ryan Budney
  */
 class NHomologicalData : public ShareableObject {
-protected:
+private:
     /**
      * Stored pointer to a valid triangulation. All routines use this
      * triangulation as reference.
