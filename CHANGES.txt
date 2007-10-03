@@ -56,6 +56,9 @@ Version 4.4  [ under development ]
               temporary expressions.
             - Added a new multiplyAs() template routine that multiplies but
               (unlike operator *) returns a subclass of NMatrixRing.
+        Class NMarkedAbelianGroup, NHomMarkedAbelianGroup:
+            - New classes for working with groups defined by chain
+              complexes; thanks to Ryan Budney for these.
         Class NPacket:
             - New routine reparent() to simplify ownership issues when
               using Python scripting.
