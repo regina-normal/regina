@@ -36,9 +36,6 @@
 #endif
 
 #include <vector>
-#include "utilities/nmpi.h"
-#include "utilities/nindexedarray.h"
-#include "shareableobject.h"
 #include "maths/nmatrixint.h"
 
 namespace regina {
@@ -102,7 +99,7 @@ class NMarkedAbelianGroup : public ShareableObject {
         /** Internal list of invariant factors. */
         std::vector<NLargeInteger> InvFacList;
         /** Internal list of indices of invariant factors. */
-        NIndexedArray<unsigned long> InvFacIndex;
+        std::vector<unsigned long> InvFacIndex;
         /** The number of free generators, from SNF_ORN */
         unsigned long snfrank;
         /** The row index of the first free generator in SNF_ORN. */
