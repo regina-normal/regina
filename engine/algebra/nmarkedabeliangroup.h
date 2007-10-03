@@ -423,76 +423,6 @@ class NMarkedAbelianGroup : public ShareableObject {
         const NMatrixInt& getON() const;
 };
 
-/*@}*/
-
-// Inline functions for NMarkedAbelianGroup
-
-// copy constructor
-inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
-        ShareableObject(),
-        OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
-        rankOM(g.rankOM),
-        ORN(g.ORN), ornR(g.ornR), ornRi(g.ornRi), ornC(g.ornC), ornCi(g.ornCi),
-        SNF_ORN(g.SNF_ORN),
-        InvFacList(g.InvFacList), InvFacIndex(g.InvFacIndex),
-        snfrank(g.snfrank), snffreeindex(g.snffreeindex),
-        ifNum(g.ifNum), ifLoc(g.ifLoc) {
-}
-
-// destructor
-inline NMarkedAbelianGroup::~NMarkedAbelianGroup() {}
-
-inline unsigned NMarkedAbelianGroup::getTorsionRank(unsigned long degree)
-        const {
-    return getTorsionRank(NLargeInteger(degree));
-}
-
-inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
-    return OMR;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getMRBi() const {
-    return OMRi;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getMCB() const {
-    return OMC;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getMCBi() const {
-    return OMCi;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getNRB() const {
-    return ornR;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getNRBi() const {
-    return ornRi;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getNCB() const {
-    return ornC;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getNCBi() const {
-    return ornCi;
-}
-
-inline unsigned long NMarkedAbelianGroup::getRankOM() const {
-    return rankOM;
-}
-inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
-    return snffreeindex;
-}
-inline unsigned long NMarkedAbelianGroup::getTorLoc() const {
-    return ifLoc;
-}
-inline unsigned long NMarkedAbelianGroup::getTorNum() const {
-    return InvFacList.size();
-}
-
-inline const NMatrixInt& NMarkedAbelianGroup::getOM() const {
-    return OM;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getON() const {
-    return ON;
-}
-
-
 /**
  * Represents a homomorphism of finitely generated abelian groups.
  * One initializes a homomorphism of f.g. abelian groups by passing the
@@ -643,6 +573,76 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         const NMatrixInt& getRedMatrix() const;
 };
 
+/*@}*/
+
+// Inline functions for NMarkedAbelianGroup
+
+// copy constructor
+inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
+        ShareableObject(),
+        OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
+        rankOM(g.rankOM),
+        ORN(g.ORN), ornR(g.ornR), ornRi(g.ornRi), ornC(g.ornC), ornCi(g.ornCi),
+        SNF_ORN(g.SNF_ORN),
+        InvFacList(g.InvFacList), InvFacIndex(g.InvFacIndex),
+        snfrank(g.snfrank), snffreeindex(g.snffreeindex),
+        ifNum(g.ifNum), ifLoc(g.ifLoc) {
+}
+
+// destructor
+inline NMarkedAbelianGroup::~NMarkedAbelianGroup() {}
+
+inline unsigned NMarkedAbelianGroup::getTorsionRank(unsigned long degree)
+        const {
+    return getTorsionRank(NLargeInteger(degree));
+}
+
+inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
+    return OMR;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::getMRBi() const {
+    return OMRi;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::getMCB() const {
+    return OMC;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::getMCBi() const {
+    return OMCi;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::getNRB() const {
+    return ornR;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::getNRBi() const {
+    return ornRi;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::getNCB() const {
+    return ornC;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::getNCBi() const {
+    return ornCi;
+}
+
+inline unsigned long NMarkedAbelianGroup::getRankOM() const {
+    return rankOM;
+}
+inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
+    return snffreeindex;
+}
+inline unsigned long NMarkedAbelianGroup::getTorLoc() const {
+    return ifLoc;
+}
+inline unsigned long NMarkedAbelianGroup::getTorNum() const {
+    return InvFacList.size();
+}
+
+inline const NMatrixInt& NMarkedAbelianGroup::getOM() const {
+    return OM;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::getON() const {
+    return ON;
+}
+
+// Inline functions for NHomMarkedAbelianGroup
 
 inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
     if (reducedMatrix)
@@ -668,8 +668,6 @@ inline const NMatrixInt& NHomMarkedAbelianGroup::getRedMatrix() const {
     const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
     return *reducedMatrix;
 }
-
-
 
 } // namespace regina
 
