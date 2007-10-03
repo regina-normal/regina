@@ -185,12 +185,6 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         QWidget* messageLayer(QLabel*& text, const char* icon);
         void showInfo(const QString& msg);
         void showError(const QString& msg);
-
-        /**
-         * Returns the full path to the Graphviz executable, or QString::null
-         * if the Graphviz executable does not appear to be valid.
-         */
-        QString verifyGraphvizExec();
 };
 
 inline void NTriSkeletonUI::updatePreferences(const ReginaPrefSet& newPrefs) {

@@ -33,6 +33,7 @@
 // UI includes:
 #include "ntriskeleton.h"
 #include "skeletonwindow.h"
+#include "reginaprefset.h"
 
 #include <fstream>
 #include <kiconloader.h>
@@ -323,6 +324,8 @@ QWidget* NTriFaceGraphUI::getInterface() {
 }
 
 void NTriFaceGraphUI::refresh() {
+    neverDrawn = false;
+
     if (tri->getNumberOfTetrahedra() == 0) {
         showInfo(i18n("<qt>This triangulation is empty.</qt>"));
         return;
@@ -338,9 +341,53 @@ void NTriFaceGraphUI::refresh() {
     // TODO: Tell them that we're processing, in case the graphviz call
     // should lock up for some reason.
 
-    QString useExec = verifyGraphvizExec();
-    if (useExec.isNull())
+    // Check out the status of the current graphviz installation.
+    QString useExec;
+    GraphvizStatus gvStatus = GraphvizStatus::status(graphvizExec, useExec);
+
+    if (useExec.isNull() || ! gvStatus.usable()) {
+        // There seems to be a problem.
+        QString header = i18n("<qt>Regina uses <i>Graphviz</i> for displaying "
+            "face pairing graphs.  ");
+        QString footer = i18n("<p>If you have Graphviz installed, "
+            "please update the relevant setting in Regina's "
+            "triangulation options.</qt>");
+
+        QString error;
+        if (gvStatus == GraphvizStatus::unknown)
+            error = i18n("However, Regina could not determine the status "
+                "of your Graphviz installation.");
+        else if (gvStatus == GraphvizStatus::notFound)
+            error = i18n("However, the Graphviz executable \"%1\" "
+                "could not be found on the default search "
+                "path.").arg(graphvizExec);
+        else if (gvStatus == GraphvizStatus::notExist)
+            error = i18n("However, the Graphviz executable \"%1\" "
+                "does not exist.").arg(graphvizExec);
+        else if (gvStatus == GraphvizStatus::notExecutable)
+            error = i18n("However, the Graphviz executable \"%1\" "
+                "does not appear to be an executable "
+                "file.").arg(graphvizExec);
+        else if (gvStatus == GraphvizStatus::notStartable)
+            error = i18n("However, the Graphviz executable \"%1\" "
+                "cannot be started.").arg(graphvizExec);
+        else if (gvStatus == GraphvizStatus::unsupported)
+            error = i18n("However, I cannot determine the version of "
+                "Graphviz that you are running.  Perhaps your Graphviz "
+                "is too old (version 0.x), or perhaps the program "
+                "\"%1\" is not from Graphviz at all.").arg(graphvizExec);
+        else if (gvStatus == GraphvizStatus::version1NotDot)
+            error = i18n("Your Graphviz seems to be very old (version 1.x).  "
+                "Many tools in older versions of Graphviz cannot handle "
+                "multiple edges, including the tool <i>neato</i> which "
+                "Regina normally uses by default.<p>"
+                "For this reason, you will need to change your Graphviz "
+                "executable to <i>dot</i>, which handles multiple edges "
+                "correctly even in this old version.");
+
+        showError(header + error + footer);
         return;
+    }
 
     KTempFile tmpDot(locateLocal("tmp", "fpg-"), ".dot");
     tmpDot.close();
@@ -407,8 +454,6 @@ void NTriFaceGraphUI::refresh() {
     tmpPng.unlink();
 
     stack->raiseWidget(layerGraph);
-
-    neverDrawn = false;
 }
 
 void NTriFaceGraphUI::editingElsewhere() {
@@ -453,47 +498,6 @@ void NTriFaceGraphUI::showInfo(const QString& msg) {
 void NTriFaceGraphUI::showError(const QString& msg) {
     msgError->setText(msg);
     stack->raiseWidget(layerError);
-}
-
-QString NTriFaceGraphUI::verifyGraphvizExec() {
-    QString useExec = graphvizExec;
-
-    if (useExec.find('/') < 0) {
-        // Hunt on the search path.
-        useExec = KStandardDirs::findExe(useExec);
-        if (useExec.isNull()) {
-            showError(i18n("<qt>Regina uses <i>Graphviz</i> for displaying "
-                "face pairing graphs.  However, the Graphviz executable "
-                "\"%1\" could not be found on the default search path.<p>"
-                "If you have Graphviz installed, please update the relevant "
-                "setting in Regina's triangulation options.</qt>").
-                arg(graphvizExec));
-            return QString::null;
-        }
-    }
-
-    // We have a full path to the Graphviz executable.
-    QFileInfo info(useExec);
-    if (! info.exists()) {
-        showError(i18n("<qt>Regina uses <i>Graphviz</i> for displaying "
-            "face pairing graphs.  However, the Graphviz executable "
-            "\"%1\" does not exist.<p>"
-            "If you have Graphviz installed, please update the relevant "
-            "setting in Regina's triangulation options.</qt>").
-            arg(useExec));
-        return QString::null;
-    } else if (! (info.isFile() && info.isExecutable())) {
-        showError(i18n("<qt>Regina uses <i>Graphviz</i> for displaying "
-            "face pairing graphs.  However, the Graphviz executable "
-            "\"%1\" does not appear to be an executable file.<p>"
-            "If you have Graphviz installed, please update the relevant "
-            "setting in Regina's triangulation options.</qt>").
-            arg(useExec));
-        return QString::null;
-    }
-
-    // All good.
-    return useExec;
 }
 
 #include "ntriskeleton.moc"
