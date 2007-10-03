@@ -49,12 +49,15 @@ namespace regina {
  * Represents a finitely generated abelian group given by a chain complex.
  *
  * This class is initialized with a chain complex.  The chain complex is given
- * in terms of two NMatrixInt classes, M and N such that M*N=0. The abelian
- * group is the kernel of M mod the image of N. It then allows one to
- * retrieve the invariant factors, the rank, and the corresponding vectors in
- * the kernel of M.  Moreover, given a vector in the kernel of M, it decribes
- * the homology class of the vector (the free part, and its position in the
- * invariant factors).  The purpose of this class is to allow one to not only
+ * in terms of two integer matrices \a M and \a N such that M*N=0. The abelian
+ * group is the kernel of \a M mod the image of \a N.
+ *
+ * This class allows one to retrieve the invariant factors, the rank, and
+ * the corresponding vectors in the kernel of \a M.  Moreover, given a
+ * vector in the kernel of \a M, it decribes the homology class of the
+ * vector (the free part, and its position in the invariant factors).
+ *
+ * The purpose of this class is to allow one to not only
  * represent homology groups, but it gives the foundation for studying maps
  * between homology groups.  This is used in the computation of the torsion
  * H_1 form coming from Poincare Duality.
@@ -65,7 +68,7 @@ namespace regina {
  * the like.
  */
 class NMarkedAbelianGroup : public ShareableObject {
-    protected:
+    private:
         /** Internal original M */
         NMatrixInt OM; // copy of initializing M
         /** Internal original N */
@@ -113,8 +116,10 @@ class NMarkedAbelianGroup : public ShareableObject {
     public:
 
         /**
-         * NMarkedAbelianGroups can only be created via a chain complex.
-         * this assumes the product M*N=0, so among other things, it needs
+         * Creates a marked abelian group from a chain complex.
+         * See the class notes for details.
+         *
+         * This assumes the product M*N=0, so among other things, it needs
          * to be well-defined, ie: M.rows()==N.columns().
          *
          * @param M `right' matrix in chain complex
@@ -440,7 +445,7 @@ class NMarkedAbelianGroup : public ShareableObject {
  * @author Ryan Budney
  */
 class NHomMarkedAbelianGroup : public ShareableObject {
-    protected:
+    private:
         /** domain */
         NMarkedAbelianGroup domain;
         /** range */
