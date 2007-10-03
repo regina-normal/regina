@@ -28,7 +28,6 @@
 
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/matrixops.h"
-#include "file/nfile.h"
 #include <iostream>
 
 namespace regina {

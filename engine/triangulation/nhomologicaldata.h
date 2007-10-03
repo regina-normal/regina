@@ -35,18 +35,15 @@
 #define __NHOMOLOGICALDATA_H
 #endif
 
-#include <vector>
 #include "algebra/nmarkedabeliangroup.h"
-#include "utilities/nmpi.h"
-#include "utilities/nrational.h"
-#include "utilities/nindexedarray.h"
-#include "shareableobject.h"
-#include "maths/nmatrixint.h"
-#include "maths/nmatrix.h"
 #include "triangulation/ntriangulation.h"
-#include <sstream>
+#include "utilities/nindexedarray.h"
+#include "utilities/nrational.h"
+#include <vector>
 
 namespace regina {
+
+class NTriangulation;
 
 /**
  * \weakgroup algebra
