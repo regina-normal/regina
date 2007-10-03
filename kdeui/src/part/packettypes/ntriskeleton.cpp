@@ -259,7 +259,7 @@ void NTriSkelCompUI::viewBoundaryComponents() {
 NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI,
         const QString& useGraphvizExec) :
-        PacketViewerTab(useParentUI), tri(packet),
+        PacketViewerTab(useParentUI), tri(packet), neverDrawn(true),
         graphvizExec(useGraphvizExec) {
     ui = new QWidget();
     QBoxLayout* baseLayout = new QVBoxLayout(ui);
@@ -290,11 +290,28 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
 }
 
 void NTriFaceGraphUI::setGraphvizExec(const QString& newGraphvizExec) {
-    graphvizExec = newGraphvizExec;
+    // If the graphviz executable has actually changed, redraw the graph
+    // with the newly selected tool.
 
-    // If we're currently showing an error, see if the update helps matters.
-    if (stack->visibleWidget() == layerError)
-        refresh();
+    // If the executable *path* hasn't changed but somebody did a
+    // reinstall (i.e., the graphviz *behaviour* has changed), they
+    // can always hit refresh anyway.
+    if (graphvizExec != newGraphvizExec) {
+        graphvizExec = newGraphvizExec;
+
+        // If we wanted to be polite, we could queue this refresh till
+        // later.  In practice there shouldn't be too many viewers
+        // actively open and we shouldn't be changing the graphviz
+        // executable too often, so it doesn't really seem worth losing
+        // sleep over.
+
+        // Actually, we can be a little polite.  If the face pairing
+        // graph hasn't been drawn yet (i.e., nobody has ever selected
+        // the graph tab), there's no need to refresh since this will
+        // be done anyway when the tab is first shown.
+        if (! neverDrawn)
+            refresh();
+    }
 }
 
 regina::NPacket* NTriFaceGraphUI::getPacket() {
@@ -390,6 +407,8 @@ void NTriFaceGraphUI::refresh() {
     tmpPng.unlink();
 
     stack->raiseWidget(layerGraph);
+
+    neverDrawn = false;
 }
 
 void NTriFaceGraphUI::editingElsewhere() {

@@ -150,6 +150,7 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         QLabel* msgInfo;
         QLabel* msgError;
         QLabel* graph;
+        bool neverDrawn;
 
         /**
          * The Graphviz executable.
