@@ -237,8 +237,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * ker(M)/img(N) in Z^l.
          *
          * @param index specifies which free generator we're looking up.
-         * @return vector<NLargeInteger> gives the coordinates of the
-         * free generator in the nullspace of M
+         * @return the coordinates of the free generator in the nullspace of M
          */
         std::vector<NLargeInteger> getFreeRep(unsigned long index) const;
 
@@ -249,8 +248,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * ker(M)/img(N) in Z^l.
          *
          * @param index specifies which generator in the torsion subgroup
-         * @return vector<NLargeInteger>  gives the coordinates of
-         * the generator in the nullspace of M
+         * @return the coordinates of the generator in the nullspace of M
          */
         std::vector<NLargeInteger> getTorRep(unsigned long index) const;
 
@@ -265,9 +263,13 @@ class NMarkedAbelianGroup : public ShareableObject {
          * projections to Z_{d1} + ... + Z_{dk}. Of these last elements, they
          * will be returned mod di respectively.
          *
+         * \pre The vector \a element has precisely OM.columns() entries
+         * (or equivalently, ON.rows() entries).
+         *
          * @param element is a vector in the nullspace of M
          * @return a vector that describes element in the standard
-         *  Z^d + Z_{d1} + ... + Z_{dk} form.
+         * Z^d + Z_{d1} + ... + Z_{dk} form, or an empty vector if
+         * \a element is not in the kernel of \a M.
          */
         std::vector<NLargeInteger> getSNFisoRep(
             std::vector<NLargeInteger>& element) const;
