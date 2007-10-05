@@ -1263,7 +1263,7 @@ void NHomologicalData::computeTorsionLinkingForm()
 //           and NLargeInteger instead.
 // decide on if there is 2-torsion...
     NLargeInteger twoPow;
-    static NRational pi( NRational(
+    static const NRational pi( NRational(
                 NLargeInteger("314159265358979323846264338327950288"),
                 NLargeInteger("100000000000000000000000000000000000") ));
     std::vector< NLargeInteger > groupV;
