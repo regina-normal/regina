@@ -476,9 +476,6 @@ public:
      * linking form.  The algorithm assumes the 3-manifold is both
      * orientable and connected.
      *
-     * It returns an empty string unless computeTorsionLinkingForm() has
-     * been called.
-     *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * @return A vector that describes the rank of the torsion subgroup of H1,
@@ -489,9 +486,6 @@ public:
     std::vector< unsigned long > > > getTorsionRankVector();
     /**
      * Same as getTorsionRankVector() but returns as a human-readable string.
-     *
-     * It returns an empty string unless computeTorsionLinkingForm() has
-     * been called.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
@@ -504,22 +498,18 @@ public:
      * Kawauchi-Kojima invariants. Assumes manifold is orientable and
      * connected.
      *
-     * It returns an empty string unless computeTorsionLinkingForm() has
-     * been called.
-     *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * @return The Kawauchi-Kojima sigma-vector.
      */
     std::vector< NLargeInteger > getTorsionSigmaVector();
     /**
-     * It returns an empty string unless computeTorsionLinkingForm() has
-     * been called.
+     * Same as getTorsionSigmaVector() but returns as a human-readable string.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * @return The Kawauchi-Kojima sigma-vector in human readable form.
-    */
+     */
     std::string getTorsionSigmaVectorString();
 
     /**
@@ -527,37 +517,37 @@ public:
      * last of the three Kawauchi-Kojima invariants.  Assumes the
      * manifold is orientable and connected.
      *
-     * It returns an empty string unless computeTorsionLinkingForm() has
-     * been called.
-     *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * @return The Legendre symbol vector associated to the torsion
      * linking form.
      */
     std::vector< std::pair< NLargeInteger, std::vector< int > > >
-    getLegendreSymbolVector();
+        getLegendreSymbolVector();
     /**
-     * @return the Legendre symbol vector in human-readable form.
+     * Same as getLegendreSymbolVector() but returns as a human-readable string.
+     *
      * \pre The triangulation is of a connected orientable 3-manifold.
-     *	    It returns an empty string unless computeTorsionLinkingForm() has
-     *      been called.
+     *
+     * @return the Legendre symbol vector in human-readable form.
      */
     std::string getTorsionLegendreSymbolVectorString();
 
     /**
      * Returns true iff torsion linking form is `hyperbolic' in
      * the linking-form sense of the word.
-     * @return bool value, true iff torsion linking form is hyperbolic.
+     *
      * \pre The triangulation is of a connected orientable 3-manifold.
-     *	    It returns an empty string unless computeTorsionLinkingForm() has
-     *      been called.
+     *
+     * @return bool value, true iff torsion linking form is hyperbolic.
      */
     bool formIsHyperbolic();
     /**
      * Returns true iff torsion linking form is split.
+     *
+     * \pre The triangulation is of a connected orientable 3-manifold.
+     *
      * @return bool value, true if the linking form is split.
-     * \pre Computed when computeTorsionLinkingForm() is called.
      */
     bool formIsSplit();
     /**
@@ -566,11 +556,11 @@ public:
      * x of order 2^k, 2^{k-1}form(x,x) == 0.  This is a
      * neccessary condition for an orientable 3-manifold
      * perhaps with boundary to embed in a homology 4-sphere.
+     *
+     * \pre The triangulation is of a connected orientable 3-manifold.
+     *
      * @return bool value, true iff form satisfies the 2-torsion
      * condition of Kawauchi-Kojima.
-     * \pre The triangulation is of a connected orientable 3-manifold.
-     *	    Not computed unless computeTorsionLinkingForm() has
-     *      been called.
      */
     bool formSatKK();
     /**
@@ -578,12 +568,12 @@ public:
      * a homology 3-sphere or 4-sphere. Basically, it runs
      * through all the Kawauchi-Kojima conditions, plus a
      * few other `elementary' conditions.
+     *
+     * \pre The triangulation is of a connected orientable 3-manifold.
+     *
      * @return string which gives a one-line description of what
      * is known about where this manifold embeds, based solely
      * on the manifold's homological data.
-     * \pre The triangulation is of a connected orientable 3-manifold.
-     *	    Not computed unless computeTorsionLinkingForm() has
-     *      been called.
      */
     std::string getEmbeddabilityComment();
 };
