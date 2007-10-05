@@ -109,12 +109,14 @@ void NHomologicalData::computeccIndexing() {
         unsigned long i=0;
         unsigned long j=0;
 
-        for (NTriangulation::VertexIterator vit = tri->getVertices().begin(); vit != tri->getVertices().end(); vit++) {
+        for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
+                vit != tri->getVertices().end(); vit++) {
             if (!((*vit)->isIdeal())) sNIV.push_back(i);
             i++;
         } // sNIV
 
-        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin(); eit != tri->getEdges().end(); eit++) {
+        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
+                eit != tri->getEdges().end(); eit++) {
             for (i=0;i<2;i++) {
                 if ((*eit)->getVertex(i)->isIdeal()) sIEOE.push_back(2*j+i);
             }
@@ -122,7 +124,8 @@ void NHomologicalData::computeccIndexing() {
         }
         j=0; // sIEOE
 
-        for (NTriangulation::FaceIterator fit = tri->getFaces().begin(); fit != tri->getFaces().end(); fit++) {
+        for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
+                fit != tri->getFaces().end(); fit++) {
             for (i=0;i<3;i++) {
                 if ((*fit)->getVertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);
             }
@@ -130,7 +133,9 @@ void NHomologicalData::computeccIndexing() {
         }
         j=0; // sIEEOF
 
-        for (NTriangulation::TetrahedronIterator tit = tri->getTetrahedra().begin(); tit != tri->getTetrahedra().end(); tit++) {
+        for (NTriangulation::TetrahedronIterator tit =
+                tri->getTetrahedra().begin();
+                tit != tri->getTetrahedra().end(); tit++) {
             for (i=0;i<4;i++)  {
                 if ((*tit)->getVertex(i)->isIdeal()) {
                     sIEFOT.push_back(4*j+i);
@@ -140,50 +145,69 @@ void NHomologicalData::computeccIndexing() {
         }
         j=0;// sIEFOT
 
-        for (NTriangulation::VertexIterator vit = tri->getVertices().begin(); vit != tri->getVertices().end(); vit++) // dNINBV
-        {if ((!((*vit)->isIdeal())) && (!((*vit)->isBoundary()))) dNINBV.push_back(j);
+        for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
+                vit != tri->getVertices().end(); vit++) // dNINBV
+        {if ((!((*vit)->isIdeal())) &&
+                (!((*vit)->isBoundary()))) dNINBV.push_back(j);
             j++;
         } j=0;
-        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin(); eit != tri->getEdges().end(); eit++) {
+        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
+                eit != tri->getEdges().end(); eit++) {
             if (!((*eit)->isBoundary()))
                 dNBE.push_back(j);
             j++;
         }
         j=0; // dNBE
-        for (NTriangulation::FaceIterator fit = tri->getFaces().begin(); fit != tri->getFaces().end(); fit++) {
+        for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
+                fit != tri->getFaces().end(); fit++) {
             if (!((*fit)->isBoundary()))        dNBF.push_back(j);
             j++;
         }
         i=0; // dNBF
 
-        for (NTriangulation::VertexIterator vit = tri->getVertices().begin(); vit != tri->getVertices().end(); vit++) // sBNIV
-        {if ( (!((*vit)->isIdeal())) && ((*vit)->isBoundary())) sBNIV.push_back(i);
+        for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
+                vit != tri->getVertices().end(); vit++) // sBNIV
+        {if ( (!((*vit)->isIdeal())) &&
+                ((*vit)->isBoundary())) sBNIV.push_back(i);
             i++;
         } i=0;
-        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin(); eit != tri->getEdges().end(); eit++) // sBNIE
+        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
+                eit != tri->getEdges().end(); eit++) // sBNIE
         {if ((*eit)->isBoundary()) sBNIE.push_back(i);
             i++;
         } i=0;
-        for (NTriangulation::FaceIterator fit = tri->getFaces().begin(); fit != tri->getFaces().end(); fit++) // sBNIF
+        for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
+                fit != tri->getFaces().end(); fit++) // sBNIF
         {if ((*fit)->isBoundary()) sBNIF.push_back(i);
             i++;
         }
 
         ccIndexingComputed = true;
 
-        numStandardCells.push_back(sNIV.size() + sIEOE.size()); // standard 0-cells
-        numStandardCells.push_back(tri->getNumberOfEdges() + sIEEOF.size()); // standard 1-cells
-        numStandardCells.push_back(tri->getNumberOfFaces() + sIEFOT.size()); // standard 2-cells
-        numStandardCells.push_back(tri->getNumberOfTetrahedra()); // standard 3-cells
+        // standard 0-cells:
+        numStandardCells.push_back(sNIV.size() + sIEOE.size());
+        // standard 1-cells:
+        numStandardCells.push_back(tri->getNumberOfEdges() + sIEEOF.size());
+        // standard 2-cells:
+        numStandardCells.push_back(tri->getNumberOfFaces() + sIEFOT.size());
+        // standard 3-cells:
+        numStandardCells.push_back(tri->getNumberOfTetrahedra());
 
-        numDualCells.push_back(tri->getNumberOfTetrahedra()); // dual 0-cells
-        numDualCells.push_back(dNBF.size()); // dual 1-cells
-        numDualCells.push_back(dNBE.size()); // dual 2-cells
-        numDualCells.push_back(dNINBV.size()); // dual 3-cells
+        // dual 0-cells:
+        numDualCells.push_back(tri->getNumberOfTetrahedra());
+        // dual 1-cells:
+        numDualCells.push_back(dNBF.size());
+        // dual 2-cells:
+        numDualCells.push_back(dNBE.size());
+        // dual 3-cells:
+        numDualCells.push_back(dNINBV.size());
 
-        numBdryCells.push_back(sBNIV.size() + sIEOE.size()); // boundary 0-cells
-        numBdryCells.push_back(sBNIE.size() + sIEEOF.size()); // boundary 1-cells
-        numBdryCells.push_back(sBNIF.size() + sIEFOT.size()); // boundary 2-cells
+        // boundary 0-cells:
+        numBdryCells.push_back(sBNIV.size() + sIEOE.size());
+        // boundary 1-cells:
+        numBdryCells.push_back(sBNIE.size() + sIEEOF.size());
+        // boundary 2-cells:
+        numBdryCells.push_back(sBNIF.size() + sIEFOT.size());
     }
 }
 
@@ -225,13 +249,16 @@ void NHomologicalData::computeChainComplexes() {
         // This fills out matrix A1
         for (i=0;i<tri->getNumberOfEdges();i++) { // these are the standard edges
             temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(0)));
-            (A1->entry( ((temp==(-1)) ? (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
+            (A1->entry( ((temp==(-1)) ?
+                (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
             temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(1)));
-            (A1->entry( ((temp==(-1)) ? (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
+            (A1->entry( ((temp==(-1)) ?
+                (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
         } // ok
 
         for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
-            // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us the vertex of this face
+            // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us
+            // the vertex of this face
             p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
             if (p1.sign()==1) {
                 A1->entry(sNIV.size() + sIEOE.index(2*(
@@ -258,29 +285,39 @@ void NHomologicalData::computeChainComplexes() {
                 // edges (if they exist)
                 if ( (j/3) == 0) {
                     p1=tri->getFace(i)->getEdgeMapping(j % 3);
-                    A2->entry( tri->getEdgeIndex(tri->getFace(i)->getEdge(j % 3)) ,i) +=
+                    A2->entry( tri->getEdgeIndex(
+                        tri->getFace(i)->getEdge(j % 3)) ,i) +=
                         ( (p1.sign()==1) ? +1 : -1 );
                 } else {
                     // check face i vertex j % 3 is ideal
                     if (tri->getFace(i)->getVertex(j % 3)->isIdeal())
-                        A2->entry( tri->getNumberOfEdges() + sIEEOF.index((3*i) + (j % 3)), i) += 1;
+                        A2->entry( tri->getNumberOfEdges() +
+                            sIEEOF.index((3*i) + (j % 3)), i) += 1;
                 }
             }
         }
 
-        for (i=0;i<sIEFOT.size();i++) { // boundary edges from ideal faces of tetrahedra.
+        for (i=0;i<sIEFOT.size();i++) {
+            // boundary edges from ideal faces of tetrahedra.
             // sIEFOT[i] /4 is the tetrahedron number
             // sIEFOT[i] % 4 is the vertex number for this tetrahedron
-            // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4) are the respective faces
-            // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4) gives the perm
-            // faces().index( tetrahedra[sIEFOT[i]/4].getFace(sIEFOT[i] + 1,2,3 % 4) is therefore the
-            //  face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)^{-1}
-            //  applied to sIEFOT[i] % 4 is the vertex of this face.
+            // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4)
+            // are the respective faces
+            // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)
+            // gives the perm
+            // faces().index( tetrahedra[sIEFOT[i]/4].getFace(
+            // sIEFOT[i] + 1,2,3 % 4) is therefore the face number, and
+            // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(
+            // sIEFOT[i] + 1,2,3 % 4)^{-1} applied to sIEFOT[i] % 4 is the
+            // vertex of this face.
             for (j=1;j<4;j++) {
-                p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping((sIEFOT[i] + j) % 4);
-                A2->entry( tri->getNumberOfEdges() + sIEEOF.index(3*tri->getFaceIndex(tri->getTetrahedron(
-                            sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
-                        tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
+                p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
+                    (sIEFOT[i] + j) % 4);
+                A2->entry( tri->getNumberOfEdges() + sIEEOF.index(
+                    3*tri->getFaceIndex(tri->getTetrahedron(
+                    sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) +
+                    p1.preImageOf(sIEFOT[i] % 4) ) ,
+                    tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
             }
         }
         // end A2
@@ -290,11 +327,14 @@ void NHomologicalData::computeChainComplexes() {
             for (j=0;j<4;j++) {
                 // first go through standard faces 0 through 3
                 p1=tri->getTetrahedron(i)->getFaceMapping(j);
-                A3->entry( tri->getFaceIndex( tri->getTetrahedron(i)->getFace(j) ), i) +=
+                A3->entry( tri->getFaceIndex(
+                    tri->getTetrahedron(i)->getFace(j) ), i) +=
                     ( (p1.sign()==1) ? 1 : -1 );
                 // then ideal faces 0 through 3, if they exist
-                if (tri->getTetrahedron(i)->getVertex(j)->isIdeal()==1) { // this part is in error.
-                    A3->entry( tri->getNumberOfFaces() + sIEFOT.index((4*i) + j), i) += 1;
+                if (tri->getTetrahedron(i)->getVertex(j)->isIdeal()==1) {
+                    // this part is in error.
+                    A3->entry( tri->getNumberOfFaces() +
+                        sIEFOT.index((4*i) + j), i) += 1;
                 }
             }
         }
@@ -1639,10 +1679,12 @@ bool NHomologicalData::formIsHyperbolic()
         {
         if ((nif % 2) == 0)
          {
-         // check invariant factors agree in pairs, if so call computeTorsionLinkingForm
+         // check invariant factors agree in pairs, if so call
+         // computeTorsionLinkingForm
          for (unsigned long i=0;i<(nif/2);i++)
            {
-            if (tri->getHomologyH1().getInvariantFactor(2*i)<tri->getHomologyH1().getInvariantFactor((2*i)+1))
+            if (tri->getHomologyH1().getInvariantFactor(2*i) <
+                tri->getHomologyH1().getInvariantFactor((2*i)+1))
              retval=false;
             if (retval==true) 
              {
