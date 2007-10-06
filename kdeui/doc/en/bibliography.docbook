@@ -23,9 +23,11 @@
   </author>
   <title>Structures of small closed non-orientable 3-manifold
    triangulations</title>
-  <edition>To appear in J. Knot Theory Ramifications</edition>
-  <issuenum>math.GT/0311113</issuenum>
-  <date>November 2003</date>
+  <edition>J. Knot Theory Ramifications</edition>
+  <volumenum>vol. 16</volumenum>
+  <issuenum>no. 5</issuenum>
+  <artpagenums>pp. 545&ndash;574</artpagenums>
+  <date>2007</date>
  </biblioentry>
 
  <biblioentry id="bib-burton-facegraphs">
@@ -51,9 +53,11 @@
    <surname>Burton</surname>
   </author>
   <title>Observations from the 8-tetrahedron non-orientable census</title>
-  <edition>To appear in Experiment. Math.</edition>
-  <issuenum>math.GT/0509345</issuenum>
-  <date>September 2005</date>
+  <edition>Experiment. Math.</edition>
+  <volumenum>vol. 16</volumenum>
+  <issuenum>no. 2</issuenum>
+  <artpagenums>pp. 129&ndash;144</artpagenums>
+  <date>2007</date>
  </biblioentry>
 
  <biblioentry id="bib-burton-nor10">
@@ -65,7 +69,7 @@
   </author>
   <title>Enumeration of non-orientable 3-manifolds using face pairing
    graphs and union-find</title>
-  <edition>Preprint</edition>
+  <edition>To appear in Discrete Comput. Geom.</edition>
   <issuenum>math.GT/0604584</issuenum>
   <date>April 2006</date>
  </biblioentry>

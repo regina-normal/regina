@@ -32,8 +32,7 @@
  * Each triangulation is examined to see it is recognised as a plugged
  * thin I-bundle or a plugged thick I-bundle, as described in
  * "Structures of small closed non-orientable 3-manifold triangulations",
- * Benjamin A. Burton, to appear in J. Knot Theory Ramifications (see
- * math.GT/0311113 in the meantime).
+ * Benjamin A. Burton, J. Knot Theory Ramifications 16 (2007), 545--574.
  *
  * Every triangulation is written on its own output line.  If a
  * triangulation is found to be a plugged thin/thick I-bundle, the

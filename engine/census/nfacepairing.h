@@ -623,7 +623,8 @@ class NFacePairing : public NThread {
          * cannot model a closed minimal irreducible P^2-irreducible
          * 3-manifold triangulation on more than two tetrahedra.  See
          * "Enumeration of non-orientable 3-manifolds using face pairing
-         * graphs and union-find", Benjamin A. Burton, math.GT/0604584.
+         * graphs and union-find", Benjamin A. Burton, math.GT/0604584,
+         * to appear in Discrete and Comput. Geom.
          *
          * @return \c true if and only if this face pairing contains a
          * wedged double-ended chain.
@@ -666,7 +667,8 @@ class NFacePairing : public NThread {
          * cannot model a closed minimal irreducible P^2-irreducible
          * 3-manifold triangulation on more than two tetrahedra.  See
          * "Enumeration of non-orientable 3-manifolds using face pairing
-         * graphs and union-find", Benjamin A. Burton, math.GT/0604584.
+         * graphs and union-find", Benjamin A. Burton, math.GT/0604584,
+         * to appear in Discrete and Comput. Geom.
          *
          * @return \c true if and only if this face pairing contains a
          * one-ended chain with a stray bigon.
@@ -695,7 +697,8 @@ class NFacePairing : public NThread {
          * cannot model a closed minimal irreducible P^2-irreducible
          * 3-manifold triangulation on more than two tetrahedra.  See
          * "Enumeration of non-orientable 3-manifolds using face pairing
-         * graphs and union-find", Benjamin A. Burton, math.GT/0604584.
+         * graphs and union-find", Benjamin A. Burton, math.GT/0604584,
+         * to appear in Discrete and Comput. Geom.
          *
          * @return \c true if and only if this face pairing contains a
          * triple one-ended chain.

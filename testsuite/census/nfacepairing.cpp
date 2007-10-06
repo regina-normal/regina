@@ -144,7 +144,8 @@ class NFacePairingTest : public CppUnit::TestFixture {
 
             // Figures taken from "Enumeration of non-orientable
             // 3-manifolds using face pairing graphs and union-find",
-            // Benjamin A. Burton, preprint, math.GT/0604584.
+            // Benjamin A. Burton, preprint, math.GT/0604584, to appear
+            // in Discrete and Comput. Geom.
             unsigned nWedged[] = { 0, 0, 0, 0, 1, 2, 5, 13, 46 };
             unsigned nStray[] = { 0, 0, 0, 1, 4, 13, 56, 227, 1083 };
             unsigned nTripleChain[] = { 0, 0, 0, 0, 0, 1, 2, 5, 14 };

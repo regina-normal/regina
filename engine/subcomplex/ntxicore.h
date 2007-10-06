@@ -301,8 +301,8 @@ class NTxICore : public ShareableObject {
  *
  * A triangulation of this family is most easily defined in terms of its
  * central torus.  Central surfaces are described in detail in
- * "Structures of small closed non-orientable 3-manifold triangulations"
- * (Burton 2003, to appear in J. Knot Theory Ramifications, math.GT/0311113);
+ * "Structures of small closed non-orientable 3-manifold triangulations",
+ * Benjamin A. Burton, J. Knot Theory Ramifications 16 (2007), 545--574;
  * in particular, see the section on thin I-bundles.
  *
  * The central torus begins with two triangles \a u0 and \a u1 (which
@@ -390,7 +390,8 @@ class NTxIDiagonalCore : public NTxICore {
  * This triangulation contains the fewest possible number of tetrahedra
  * (NTxICore triangulations are not seen below six tetrahedra).  It is
  * referred to as <tt>T_6^1</tt> in the paper "Structures of small closed
- * non-orientable 3-manifold triangulations" (Burton 2003, math.GT/0311113).
+ * non-orientable 3-manifold triangulations", Benjamin A. Burton,
+ * J. Knot Theory Ramifications 16 (2007), 545--574.
  * In Regina it is given the name <tt>T_6*</tt>, to avoid confusion with
  * the different NTxIDiagonalCore triangulation <tt>T_6:1</tt>.
  *

@@ -87,9 +87,8 @@ class NBlockedSFS : public NStandardTriangulation {
          * Determines whether this triangulation is a plugged thin
          * I-bundle or a plugged thick I-bundle.  These structures are
          * described in "Structures of small closed non-orientable
-         * 3-manifold triangulations", Benjamin A. Burton, to appear in
-         * J. Knot Theory Ramifications (accepted Feb 2006) and available
-         * meanwhile as math.GT/0311113.
+         * 3-manifold triangulations", Benjamin A. Burton,
+         * J. Knot Theory Ramifications 16 (2007), 545--574.
          *
          * \ifacespython The argument \a name is not present.  Instead,
          * this routine returns a tuple of size two: the boolean usually
