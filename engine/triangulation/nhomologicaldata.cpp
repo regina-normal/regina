@@ -603,10 +603,13 @@ void NHomologicalData::computeChainComplexes() {
                     stage4choice = vert1id;
                 }
 
-                stage4edgeNum = tri->getEdgeIndex(tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() ->
-                        getEdge( edgeNumber[vert1Num][stage4choice] ));
-                stage4posOr = ( tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron()->getEdgeMapping(
-                            edgeNumber[vert1Num][stage4choice])[1] == vert1Num ) ?        true : false ;
+                stage4edgeNum = tri->getEdgeIndex(tri->getFace(dNBF[j]) ->
+                    getEmbedding(1).getTetrahedron() ->
+                    getEdge( edgeNumber[vert1Num][stage4choice] ));
+                stage4posOr = ( tri->getFace(dNBF[j]) ->
+                    getEmbedding(1).getTetrahedron()->getEdgeMapping(
+                    edgeNumber[vert1Num][stage4choice])[1] == vert1Num ) ?
+                    true : false ;
             }
 
             // decide if stages 1 and 3 are neccessary...
@@ -616,25 +619,31 @@ void NHomologicalData::computeChainComplexes() {
             bool stage1posOr;
             unsigned stage1FaceToUse;
 
-            if (stage0nec && tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() ->
+            if (stage0nec && tri->getFace(dNBF[j]) ->
+                    getEmbedding(0).getTetrahedron() ->
                     getVertex(stage0choice)->isIdeal() ) {
                 stage1v = stage0choice;
                 stage1vi = vert0Num;
                 stage1nec=true;
             } else
-                if ((!stage0nec) && (vert0Num != vert0id) && (vert0id == tet0FaceIndex)) {
+                if ((!stage0nec) && (vert0Num != vert0id) &&
+                        (vert0id == tet0FaceIndex)) {
                     stage1v = vert0Num;
                     stage1vi = vert0id;
                     stage1nec = true;
                 }
             if (stage1nec) { // we need to decide which face to use...
-                stage1FaceToUse = tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron()->getEdgeMapping(
-                            edgeNumber[stage1v][tet0FaceIndex] )[2];
-                P3 = tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron()->getFaceMapping(stage1FaceToUse);
+                stage1FaceToUse = tri->getFace(dNBF[j]) ->
+                    getEmbedding(0).getTetrahedron()->getEdgeMapping(
+                    edgeNumber[stage1v][tet0FaceIndex] )[2];
+                P3 = tri->getFace(dNBF[j])->getEmbedding(0).getTetrahedron()->
+                    getFaceMapping(stage1FaceToUse);
                 stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                            3*(tri->getFaceIndex(tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() ->
-                                    getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
-                stage1posOr = ( ( P3[(P3.preImageOf(stage1v)+1) % 3] != stage1vi ) ? true : false );
+                    3*(tri->getFaceIndex(tri->getFace(dNBF[j]) ->
+                    getEmbedding(0).getTetrahedron() ->
+                    getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
+                stage1posOr = ( ( P3[(P3.preImageOf(stage1v)+1) % 3] !=
+                    stage1vi ) ? true : false );
             }
             bool stage3nec = false;
             unsigned stage3v, stage3vi;
@@ -642,77 +651,94 @@ void NHomologicalData::computeChainComplexes() {
             bool stage3posOr;
             unsigned stage3FaceToUse;
 
-            if (stage4nec && tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() ->
+            if (stage4nec && tri->getFace(dNBF[j]) ->
+                    getEmbedding(1).getTetrahedron() ->
                     getVertex(stage4choice)->isIdeal() ) { // ideal case
                 stage3v = stage4choice;
                 stage3vi = vert1Num;
                 stage3nec=true;
             } else
-                if ((!stage4nec) && (vert1Num != vert1id) && (vert1id == tet1FaceIndex)) { // non-ideal case
+                if ((!stage4nec) && (vert1Num != vert1id) &&
+                        (vert1id == tet1FaceIndex)) { // non-ideal case
                     stage3v = vert1Num;
                     stage3vi = vert1id;
                     stage3nec = true;
                 }
             if (stage3nec) { // we need to decide which face to use...
-                stage3FaceToUse = tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron()->getEdgeMapping(
-                            edgeNumber[stage3v][tet1FaceIndex] )[2];
-                P3 = tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron()->getFaceMapping(stage3FaceToUse);
+                stage3FaceToUse = tri->getFace(dNBF[j]) ->
+                    getEmbedding(1).getTetrahedron()->getEdgeMapping(
+                    edgeNumber[stage3v][tet1FaceIndex] )[2];
+                P3 = tri->getFace(dNBF[j])->getEmbedding(1).getTetrahedron()->
+                    getFaceMapping(stage3FaceToUse);
                 stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                            3*(tri->getFaceIndex(tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() ->
-                                    getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
-                stage3posOr = ( ( P3[(P3.preImageOf(stage3v)+1) % 3] == stage3vi ) ? true : false );
+                    3*(tri->getFaceIndex(tri->getFace(dNBF[j]) ->
+                    getEmbedding(1).getTetrahedron() ->
+                    getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
+                stage3posOr = ( ( P3[(P3.preImageOf(stage3v)+1) % 3] ==
+                    stage3vi ) ? true : false );
             }
 
             unsigned stage2startdata, stage2enddata;
             // 3*vertex number(0,1,2) + another vertex number (0,1,2)
             // these are the same indicates the vertex is non-ideal
-            // these are different indicates the vertex is ideal and dir of relevant point..
+            // these are different indicates the vertex is ideal and dir
+            // of relevant point..
 
             if (stage1nec) // set up stage2startdata
             {
                 stage2startdata = 3*P1.preImageOf( stage1v ) +
-                        P1.preImageOf((tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() ->
-                                getEdgeMapping( edgeNumber[stage1v][stage1vi] ))[3] );
+                    P1.preImageOf((tri->getFace(dNBF[j]) ->
+                    getEmbedding(0).getTetrahedron() ->
+                    getEdgeMapping( edgeNumber[stage1v][stage1vi] ))[3] );
             } else {
-                // we have to deal with 2 possibilities a) stage 0 was called and it jumped here, so
-                // it is not an ideal vertex.
-                // b) neither stage 0 or 1 was called and this may or may not be an ideal vertex
+                // we have to deal with 2 possibilities a) stage 0 was called
+                // and it jumped here, so it is not an ideal vertex.
+                // b) neither stage 0 or 1 was called and this may or may
+                // not be an ideal vertex
                 if (stage0nec) { // this is the non-ideal situation
                     stage2startdata = 3*P1.preImageOf( stage0choice ) +
                             ((P1.preImageOf( stage0choice )+1) % 3);
-                } else { // this is the starting point... back to using vert0 info...
+                } else {
+                    // this is the starting point... back to using vert0 info...
                     if (vert0Num != vert0id)
-                        stage2startdata = 3*P1.preImageOf( vert0Num ) + P1.preImageOf( vert0id );
+                        stage2startdata = 3*P1.preImageOf( vert0Num ) +
+                            P1.preImageOf( vert0id );
                     else
-                        stage2startdata = 3*P1.preImageOf( vert0Num ) + ((P1.preImageOf( vert0Num ) + 1) % 3);
+                        stage2startdata = 3*P1.preImageOf( vert0Num ) +
+                            ((P1.preImageOf( vert0Num ) + 1) % 3);
                 }
             }
 
             if (stage3nec) // set up stage2enddata
             {
                 stage2enddata = 3*P2.preImageOf( stage3v ) +
-                        P2.preImageOf((tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() ->
-                                getEdgeMapping( edgeNumber[stage3v][stage3vi] ))[3] );
+                    P2.preImageOf((tri->getFace(dNBF[j]) ->
+                    getEmbedding(1).getTetrahedron() ->
+                    getEdgeMapping( edgeNumber[stage3v][stage3vi] ))[3] );
             } else {
                 if (stage4nec) { // this is the non-ideal situation
                     stage2enddata = 3*P2.preImageOf( stage4choice ) +
                             ((P2.preImageOf( stage4choice ) + 1) % 3);
-                } else { // this is the starting point... back to using vert1 info...
+                } else {
+                    // this is the starting point... back to using vert1 info...
                     if (vert1Num != vert1id)
-                        stage2enddata = 3*P2.preImageOf( vert1Num ) + P2.preImageOf( vert1id );
+                        stage2enddata = 3*P2.preImageOf( vert1Num ) +
+                            P2.preImageOf( vert1id );
                     else
-                        stage2enddata = 3*P2.preImageOf( vert1Num ) + ((P2.preImageOf( vert1Num ) + 1) % 3);
+                        stage2enddata = 3*P2.preImageOf( vert1Num ) +
+                            ((P2.preImageOf( vert1Num ) + 1) % 3);
                 }
             }
-            // now cycle through pairs of adjacent vertices on the face and check to see
-            // if the corresponding edge is required...
+            // now cycle through pairs of adjacent vertices on the face
+            // and check to see if the corresponding edge is required...
 
             unsigned currV = stage2startdata;
             unsigned prevV = stage2startdata;
             if (stage2startdata != stage2enddata)
                 while (currV != stage2enddata) {
-                    // first, increment currV -- this is a number from the set { 1, 2, 3, 5, 6, 7 }
-                    // describing an ideal vertex of the face is triadic 3*vert num + direction...
+                    // first, increment currV -- this is a number from the
+                    // set { 1, 2, 3, 5, 6, 7 } describing an ideal vertex
+                    // of the face is triadic 3*vert num + direction...
                     switch (currV) {
                     case 1:
                         currV = 3;
@@ -734,71 +760,91 @@ void NHomologicalData::computeChainComplexes() {
                         break;
                     }
                     // main alg here.
-                    if (( currV/3  == prevV/3 ) && (tri->getFace(dNBF[j])->getVertex(currV/3)->isIdeal()) )  // ideal edge
+                    if (( currV/3  == prevV/3 ) && (tri->getFace(dNBF[j])->
+                            getVertex(currV/3)->isIdeal()) )  // ideal edge
                     {
-                        H1map->entry( tri->getNumberOfEdges() + sIEEOF.index(3*dNBF[j] + (currV/3)) , j ) += 1;
+                        H1map->entry( tri->getNumberOfEdges() +
+                            sIEEOF.index(3*dNBF[j] + (currV/3)) , j ) += 1;
                     }
                     if ( currV/3  != prevV/3 ) // regular edge
                     {
-                        H1map->entry( tri->getEdgeIndex(tri->getFace(dNBF[j])->getEdge( ((currV/3) + 1) % 3 )), j ) +=
-                            ( (tri->getFace(dNBF[j]) -> getEdgeMapping(((currV/3) + 1) % 3)[1] == currV/3) ? +1 : -1);
+                        H1map->entry( tri->getEdgeIndex(tri->getFace(dNBF[j])->
+                            getEdge( ((currV/3) + 1) % 3 )), j ) +=
+                            ( (tri->getFace(dNBF[j]) -> getEdgeMapping(
+                            ((currV/3) + 1) % 3)[1] == currV/3) ? +1 : -1);
                     }
                     // move prevV to be equal to currV.
                     prevV = currV;
                 }
             // now we fill out the matrix.
-            if (stage0nec) H1map->entry( stage0edgeNum, j ) += ( stage0posOr ? 1 : -1 );
-            if (stage1nec) H1map->entry( stage1edgeNum, j ) += ( stage1posOr ? 1 : -1 );
+            if (stage0nec)
+                H1map->entry( stage0edgeNum, j ) += ( stage0posOr ? 1 : -1 );
+            if (stage1nec)
+                H1map->entry( stage1edgeNum, j ) += ( stage1posOr ? 1 : -1 );
 
-            if (stage3nec) H1map->entry( stage3edgeNum, j ) += ( stage3posOr ? 1 : -1 );
-            if (stage4nec) H1map->entry( stage4edgeNum, j ) += ( stage4posOr ? 1 : -1 );
+            if (stage3nec)
+                H1map->entry( stage3edgeNum, j ) += ( stage3posOr ? 1 : -1 );
+            if (stage4nec)
+                H1map->entry( stage4edgeNum, j ) += ( stage4posOr ? 1 : -1 );
 
         }
 
-        // This fills out matrix Bd1: rows==sBNIV.size()+sIEOE.size(), cols==sBNIE.size()+sIEEOF.size()
+        // This fills out matrix Bd1: rows==sBNIV.size()+sIEOE.size(),
+        // cols==sBNIE.size()+sIEEOF.size()
         for (i=0;i<sBNIE.size();i++) { // these are the standard boundary edges
             // temp == -1 when the boundary edge end is ideal.
-            temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->getVertex(0)));
+            temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->
+                getVertex(0)));
             (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
-            temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->getVertex(1)));
+            temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->
+                getVertex(1)));
             (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
         } // ok
 
         for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
-            // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us the vertex of this face
+            // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us
+            // the vertex of this face
             p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
             if (p1.sign()==1) {
                 Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                            tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->getEdge(p1[2])) )+1), sBNIE.size()+i)-=1;
+                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                    getEdge(p1[2])) )+1), sBNIE.size()+i)-=1;
             } else {
                 Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                            tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->getEdge(p1[2])) )) , sBNIE.size()+i)-=1;
+                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                    getEdge(p1[2])) )) , sBNIE.size()+i)-=1;
             }
             p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
             if (p1.sign()==1) {
                 Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                            tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->getEdge(p1[2])) )) , sBNIE.size()+i)+=1;
+                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                    getEdge(p1[2])) )) , sBNIE.size()+i)+=1;
             } else {
                 Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                            tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->getEdge(p1[2])) )+1) , sBNIE.size()+i)+=1;
+                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                    getEdge(p1[2])) )+1) , sBNIE.size()+i)+=1;
             }
         }
         // that handles matrix Bd1.
 
-        // start filling out Bd2: rows==sBNIE.size()+sIEEOF.size(), cols==sBNIF.size()+sIEFOT.size()
+        // start filling out Bd2: rows==sBNIE.size()+sIEEOF.size(),
+        // cols==sBNIF.size()+sIEFOT.size()
         for (i=0;i<sBNIF.size();i++) // boundary non-ideal faces...
         { // put boundary edges into Bd2..
-            for (j=0;j<6;j++) { // run through the 6 possible boundary edges of the face
+            for (j=0;j<6;j++) {
+                // run through the 6 possible boundary edges of the face
                 // the first 3 are standard, the last three are the ideal
                 // edges (if they exist)
                 if ( (j/3) == 0) {
                     p1=tri->getFace(sBNIF[i])->getEdgeMapping(j % 3);
-                    Bd2->entry( sBNIE.index( tri->getEdgeIndex(tri->getFace(sBNIF[i])->getEdge(j % 3)) ) ,i) +=
+                    Bd2->entry( sBNIE.index( tri->getEdgeIndex(tri->getFace(
+                        sBNIF[i])->getEdge(j % 3)) ) ,i) +=
                         ( (p1.sign()==1) ? +1 : -1 );
                 } else {
                     // check face i vertex j % 3 is ideal
                     if (tri->getFace(sBNIF[i])->getVertex(j % 3)->isIdeal())
-                        Bd2->entry( sBNIF.size() + sIEEOF.index((3*i) + (j % 3)), i) += 1;
+                        Bd2->entry( sBNIF.size() + sIEEOF.index(
+                            (3*i) + (j % 3)), i) += 1;
                 }
             }
         }
@@ -807,16 +853,22 @@ void NHomologicalData::computeChainComplexes() {
         { // boundary edges from ideal faces of tetrahedra.
             // sIEFOT[i] /4 is the tetrahedron number
             // sIEFOT[i] % 4 is the vertex number for this tetrahedron
-            // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4) are the respective faces
-            // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4) gives the perm
-            // faces().index( tetrahedra[sIEFOT[i]/4].getFace(sIEFOT[i] + 1,2,3 % 4) is therefore the
-            //  face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)^{-1}
-            //  applied to sIEFOT[i] % 4 is the vertex of this face.
+            // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4) are
+            // the respective faces
+            // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)
+            // gives the perm
+            // faces().index( tetrahedra[sIEFOT[i]/4].getFace(
+            //     sIEFOT[i] + 1,2,3 % 4) is therefore the
+            // face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(
+            //     sIEFOT[i] + 1,2,3 % 4)^{-1}
+            // applied to sIEFOT[i] % 4 is the vertex of this face.
             for (j=1;j<4;j++) {
-                p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping((sIEFOT[i] + j) % 4);
-                Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->getFaceIndex(tri->getTetrahedron(
-                            sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
-                        sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
+                p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
+                    (sIEFOT[i] + j) % 4);
+                Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->getFaceIndex(
+                    tri->getTetrahedron(sIEFOT[i]/4 )->getFace(
+                    (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
+                    sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
             }
         }
         // end Bd2
@@ -827,8 +879,8 @@ void NHomologicalData::computeChainComplexes() {
             B0Incl->entry( ( ( i < sBNIV.size()) ? sNIV.index(sBNIV[i]) :
                     sNIV.size() + i - sBNIV.size() ) ,i)+=1;
         // fill out b1Incl
-        for (i=0;i<B1Incl->columns();i++) // each boundary edge corresponds to a triangulation
-            // edge
+        for (i=0;i<B1Incl->columns();i++)
+            // each boundary edge corresponds to a triangulation edge
             B1Incl->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] :
                     tri->getNumberOfEdges() + i - sBNIE.size() ) ,i)+=1;
         // fill out b2Incl
@@ -871,7 +923,8 @@ NMarkedAbelianGroup NHomologicalData::getMH(unsigned q) {
                     retval = mHomology3;
                 }
 
-    return (*retval); // right now this'll probably crash if q is not 0,1,2 or 3.
+    return (*retval);
+    // right now this'll probably crash if q is not 0,1,2 or 3.
     // the A's should probably be redone as an array of pointers...
 }
 
@@ -976,7 +1029,8 @@ NHomMarkedAbelianGroup NHomologicalData::getH1cellap() {
     if (!dmTomMap1) {
         computeHomology();
         computeDHomology();
-        dmTomMap1 = new NHomMarkedAbelianGroup( *dmHomology1, *mHomology1, *H1map );
+        dmTomMap1 = new NHomMarkedAbelianGroup(
+            *dmHomology1, *mHomology1, *H1map );
     }
     return (*dmTomMap1);
 }
@@ -989,7 +1043,8 @@ NHomMarkedAbelianGroup NHomologicalData::getBMmapH(unsigned q)
         if (!bmMap0) {
             computeHomology();
             computeBHomology();
-            bmMap0 = new NHomMarkedAbelianGroup( *bHomology0, *mHomology0, *B0Incl );
+            bmMap0 = new NHomMarkedAbelianGroup(
+                *bHomology0, *mHomology0, *B0Incl );
         }
         retval = bmMap0;
     } else
@@ -997,7 +1052,8 @@ NHomMarkedAbelianGroup NHomologicalData::getBMmapH(unsigned q)
             if (!bmMap1) {
                 computeHomology();
                 computeBHomology();
-                bmMap1 = new NHomMarkedAbelianGroup( *bHomology1, *mHomology1, *B1Incl );
+                bmMap1 = new NHomMarkedAbelianGroup(
+                    *bHomology1, *mHomology1, *B1Incl );
             }
             retval = bmMap1;
         } else
@@ -1005,7 +1061,8 @@ NHomMarkedAbelianGroup NHomologicalData::getBMmapH(unsigned q)
                 if (!bmMap2) {
                     computeHomology();
                     computeBHomology();
-                    bmMap2 = new NHomMarkedAbelianGroup( *bHomology2, *mHomology2, *B2Incl );
+                    bmMap2 = new NHomMarkedAbelianGroup(
+                        *bHomology2, *mHomology2, *B2Incl );
                 }
                 retval = bmMap2;
             }
@@ -1156,11 +1213,11 @@ void NHomologicalData::computeTorsionLinkingForm() {
     NMatrixInt Ci(ON.rows(),ON.rows());
 
     smithNormalForm(ON, R, Ri, C, Ci);
-// boundingMat=R*(divide by ON diag, rescale(C*areboundariesM))
-//                                             ---- stepa -----
-//                  ---------------- stepb ---
-//               ----stepc----
-// first I guess we need to determine rank of ON?
+    // boundingMat=R*(divide by ON diag, rescale(C*areboundariesM))
+    //                                             ---- stepa -----
+    //                  ---------------- stepb ---
+    //               ----stepc----
+    // first I guess we need to determine rank of ON?
     NMatrixInt areboundariesM( standardBasis );
 
     for (unsigned long i=0; i<standardBasis.rows(); i++)
@@ -1190,9 +1247,10 @@ void NHomologicalData::computeTorsionLinkingForm() {
             for (unsigned long k=0; k<R.columns(); k++)
                 boundingMat.entry(i,j) += R.entry(i,k)*stepb.entry(k,j);
 
-// step 4: intersect, construct matrix.
+    // step 4: intersect, construct matrix.
 
-    NMatrixRing<NRational> torsionLinkingFormPresentationMat( pvList.size(), pvList.size() );
+    NMatrixRing<NRational> torsionLinkingFormPresentationMat(
+        pvList.size(), pvList.size() );
 
     NLargeInteger tN,tD,tR;
 
@@ -1215,15 +1273,18 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 //
                 // faces[dNBF[k]] is the face pointer of the dual 1-cell
 
-                // boundingMat is vectors in standard 2-complex so it has the same dimension
-                //  as the standard 2-cells + ideal 2-cells, standard ones coming first.
+                // boundingMat is vectors in standard 2-complex so it has
+                // the same dimension as the standard 2-cells + ideal 2-cells,
+                // standard ones coming first.
                 // pvList is vectors in dual 1-cells
                 torsionLinkingFormPresentationMat.entry(i,j) +=
                     NRational(
                         boundingMat.entry(dNBF[k],i)*pvList[j][k]*
                         NLargeInteger(
-                            tri->getFace(dNBF[k])->getEmbedding(0).getTetrahedron()->orientation()*
-                            tri->getFace(dNBF[k])->getEmbedding(0).getVertices().sign() ), ppList[i] );
+                            tri->getFace(dNBF[k])->getEmbedding(0).
+                                getTetrahedron()->orientation()*
+                            tri->getFace(dNBF[k])->getEmbedding(0).
+                                getVertices().sign() ), ppList[i] );
             }
             tN=torsionLinkingFormPresentationMat.entry(i,j).getNumerator();
             tD=torsionLinkingFormPresentationMat.entry(i,j).getDenominator();
@@ -1291,13 +1352,13 @@ void NHomologicalData::computeTorsionLinkingForm() {
     }
 
 
-// step 2: KK 2-torsion invariant (need to implement)
-//           *what is a smart way to implement the sigma invariant?*
-//           I guess it should be of the form std::vector< int >
-//           since it is only holding the reps 0,1,2,3,4,5,6,7 and inf.
-//           inf we can represent by -1 or something? or we could use
-//           and NLargeInteger instead.
-// decide on if there is 2-torsion...
+    // step 2: KK 2-torsion invariant (need to implement)
+    //           *what is a smart way to implement the sigma invariant?*
+    //           I guess it should be of the form std::vector< int >
+    //           since it is only holding the reps 0,1,2,3,4,5,6,7 and inf.
+    //           inf we can represent by -1 or something? or we could use
+    //           and NLargeInteger instead.
+    // decide on if there is 2-torsion...
     NLargeInteger twoPow;
     static const NRational pi( NRational(
                 NLargeInteger("314159265358979323846264338327950288"),
@@ -1429,13 +1490,13 @@ void NHomologicalData::computeTorsionLinkingForm() {
             }
         }
 
-// step 3: Seifert odd p-torsion legendre symbol invariant (done)
-//           to do this I need to add a determinant to NMatrixRing class
-//           this invariant will be expressed as a
-//           std::vector< std::pair< NLargeInteger, std::vector< int > > >
-//           storing the odd prime, list of Legendre symbols -1, 0, 1.
-//           one for each quotient up to p^k where k is the largest order of
-//           p in the torsion subgroup.
+    // step 3: Seifert odd p-torsion legendre symbol invariant (done)
+    //           to do this I need to add a determinant to NMatrixRing class
+    //           this invariant will be expressed as a
+    //           std::vector< std::pair< NLargeInteger, std::vector< int > > >
+    //           storing the odd prime, list of Legendre symbols -1, 0, 1.
+    //           one for each quotient up to p^k where k is the largest order of
+    //           p in the torsion subgroup.
 
     unsigned long starti=0;
     if (torRankV.size() > 0)
@@ -1453,7 +1514,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
         curri=0;
 
         // now we cut out the appropriate section of linkingFormPD[i]
-        // std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > torRankV(indexing.size());
+        // std::vector< std::pair< NLargeInteger,
+        //     std::vector< unsigned long > > > torRankV(indexing.size());
         // starting at curri ending at torRankV[i].second[j]
 
         for (unsigned long j=0; j<torRankV[i].second.size(); j++)
@@ -1486,8 +1548,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
         oddTorLegSymV.push_back( make_pair( torRankV[i].first , tempa) );
     }
 
-// step 4: kk test for: split, hyperbolic, and the embeddability
-//           2^k-torsion condition.
+    // step 4: kk test for: split, hyperbolic, and the embeddability
+    //           2^k-torsion condition.
 
     torsionLinkingFormIsSplit=true;
     torsionLinkingFormIsHyperbolic=true;
@@ -1540,7 +1602,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
     if (starti==1) { // for each k need to compute 2^{k-1}*form(x,x) on all
         // elements of order 2^k, check to see if it is zero.
         // so this is not yet quite implemented, yet....
-        //std::vector< std::pair< NLargeInteger, std::vector<unsigned long> > > h1PrimePowerDecomp;
+        // std::vector< std::pair< NLargeInteger,
+        //     std::vector<unsigned long> > > h1PrimePowerDecomp;
         // stored as list { (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1, 2)) }
         //std::vector< NMatrixRing<NRational>* > linkingFormPD;
         for (unsigned long i=0; i<h1PrimePowerDecomp[0].second.size(); i++) {
@@ -1642,95 +1705,110 @@ void NHomologicalData::computeTorsionLinkingForm() {
         { // boundary : orientable
             if (torRankV.size()==0) 
                 {
-	        // orientable with boundary, no torsion. We have no tests so far for checking
-		// if it embeds in a homology 4-sphere unless we implement the Kojima alexander
-		// polynomials.
-		// H1 map check... boundary map has full rank iff embeds in rational homology 3-sph
-		// boundary map epic iff embeds in homology 3-sphere
+                // orientable with boundary, no torsion. We have no tests
+                // so far for checking if it embeds in a homology 4-sphere
+                // unless we implement the Kojima alexander polynomials.
+                // H1 map check... boundary map has full rank iff embeds in
+                // rational homology 3-sph
+                // boundary map epic iff embeds in homology 3-sphere
                  if (getBMmapH(1).isEpic())
-		    {
-                    embedabilityString.append("Embeds in a homology 3-sphere \n as a ");
-		    if (getBMH(1).getRank() == 2*getBMH(0).getRank())
-			{
-			if (getBMH(0).getRank()==1) embedabilityString.append("knot complement.");
-			else embedabilityString.append("link complement.");
-			}
+                    {
+                    embedabilityString.append(
+                        "Embeds in a homology 3-sphere \n as a ");
+                    if (getBMH(1).getRank() == 2*getBMH(0).getRank())
+                        {
+                        if (getBMH(0).getRank()==1)
+                            embedabilityString.append("knot complement.");
+                        else
+                            embedabilityString.append("link complement.");
+                        }
                     else
-			embedabilityString.append("graph complement.");
-		    } 
-	         else if (getBMmapH(1).getCoKernel().getRank()==0)
-		    {
-                    embedabilityString.append("Embeds in a rational homology 3-sphere \n as a ");
-		    if (getBMH(1).getRank() == 2*getBMH(0).getRank() )
-			{
-			if (getBMH(0).getRank()==1) embedabilityString.append("knot complement.");
-			else embedabilityString.append("link complement.");
-			}
+                        embedabilityString.append("graph complement.");
+                    }
+                 else if (getBMmapH(1).getCoKernel().getRank()==0)
+                    {
+                    embedabilityString.append(
+                        "Embeds in a rational homology 3-sphere \n as a ");
+                    if (getBMH(1).getRank() == 2*getBMH(0).getRank() )
+                        {
+                        if (getBMH(0).getRank()==1)
+                            embedabilityString.append("knot complement.");
+                        else
+                            embedabilityString.append("link complement.");
+                        }
                     else
-			embedabilityString.append("graph complement.");
-		    } 
-	         else embedabilityString.append("Does not embed in a rational \n homology 3-sphere.");
-		 } // no torsion : boundary, orientable
+                        embedabilityString.append("graph complement.");
+                    } 
+                 else
+                    embedabilityString.append(
+                        "Does not embed in a rational \n homology 3-sphere.");
+                 } // no torsion : boundary, orientable
             else
-		{ // torsion : boundary, orientable
-		if (!torsionLinkingFormSatisfiesKKtwoTorCondition)
-		 { // two tor condition not satisfied
-		 if (getBMmapH(1).isEpic())
-                   embedabilityString.append("Embeds in homology 3-sphere \n but not homology 4-sphere.");
+                { // torsion : boundary, orientable
+                if (!torsionLinkingFormSatisfiesKKtwoTorCondition)
+                 { // two tor condition not satisfied
+                 if (getBMmapH(1).isEpic())
+                   embedabilityString.append("Embeds in homology 3-sphere \n"
+                   " but not homology 4-sphere.");
                  else if (getBMmapH(1).getCoKernel().getRank()==0)
-                   embedabilityString.append("Embeds in rational homology 3-sphere \n but not homology"
-			" 4-sphere.");
-		 else 
-                    embedabilityString.append("Does not embed in homology 3-sphere,\n"
-			" nor homology 4-sphere.");
-	         }
-		else
-		 { // KK twotor condition satisfied...
-		 if (getBMmapH(1).isEpic())
+                   embedabilityString.append(
+                        "Embeds in rational homology 3-sphere \n but not "
+                        "homology 4-sphere.");
+                 else 
+                    embedabilityString.append(
+                        "Does not embed in homology 3-sphere,\n"
+                        " nor homology 4-sphere.");
+                 }
+                else
+                 { // KK twotor condition satisfied...
+                 if (getBMmapH(1).isEpic())
                    embedabilityString.append("Embeds in homology 3-sphere.\n"
-			"KK 2-tor condition satisfied.");
+                        "KK 2-tor condition satisfied.");
                  else if (getBMmapH(1).getCoKernel().getRank()==0)
-                   embedabilityString.append("Embeds in rational homology 3-sphere.\n"
-			"KK 2-tor condition satisfied.");
-		 else 
-                    embedabilityString.append("Does not embed in homology 3-sphere.\n"
-			"KK 2-tor condition satisfied.");
-		 }
-		} // torsion : boundary, orientable
+                   embedabilityString.append(
+                        "Embeds in rational homology 3-sphere.\n"
+                        "KK 2-tor condition satisfied.");
+                 else 
+                    embedabilityString.append(
+                        "Does not embed in homology 3-sphere.\n"
+                        "KK 2-tor condition satisfied.");
+                 }
+                } // torsion : boundary, orientable
         } // boundary : orientable 
      } // end orientable 
      else 
      { // triangulation is NOT orientable, therefore can not embed
-       // in any rational homology 3-sphere.  So we look at the orientation cover...
+       // in any rational homology 3-sphere.  So we look at the
+       // orientation cover...
        NTriangulation *orTri;
        orTri = new NTriangulation(*tri);
        orTri->makeDoubleCover();
        NHomologicalData covHomol(*orTri);
-	// break up into two cases, boundary and no boundary...
-	if (covHomol.getBMH(0).isTrivial())
-	 { // no boundary
+        // break up into two cases, boundary and no boundary...
+        if (covHomol.getBMH(0).isTrivial())
+         { // no boundary
           if (covHomol.formIsHyperbolic())
-	    {
-	    embedabilityString.append("Orientation cover has hyperbolic\n"
-				      " torsion linking form.");
-	    }
-	  else
-	    {
-	    embedabilityString.append("Does not embed in homology 4-sphere.");
-	    }
-	 }
-	else
-	 {// boundary
+            {
+            embedabilityString.append("Orientation cover has hyperbolic\n"
+                                      " torsion linking form.");
+            }
+          else
+            {
+            embedabilityString.append("Does not embed in homology 4-sphere.");
+            }
+         }
+        else
+         {// boundary
           if (covHomol.formSatKK())
-	    {
+            {
             embedabilityString.append("Orientation cover satisfies\n"
-				      " KK 2-torsion condition.");
-	    }
-	  else
-	    {
-	    embedabilityString.append("Does not embed in homology 4-sphere.");
-	    }
-	 }
+                                      " KK 2-torsion condition.");
+            }
+          else
+            {
+            embedabilityString.append("Does not embed in homology 4-sphere.");
+            }
+         }
        delete orTri;
      }
 
