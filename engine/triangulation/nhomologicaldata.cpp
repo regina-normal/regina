@@ -1472,19 +1472,19 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     // need to check for
                     // xld==0, yld<>0, yld==0, xld<>0 and xld/yld=pm1
                     if ( fabs(xlD) < 0.001*fabs(ylD) ) {
-                        if (ylD > 0.0) twoTorSigmaV[i]=NLargeInteger(2);
-                        else twoTorSigmaV[i]=NLargeInteger(6);
+                        if (ylD > 0.0) twoTorSigmaV[i]=2;
+                        else twoTorSigmaV[i]=6;
                     } else
                         if ( fabs(ylD) < 0.001*fabs(xlD) ) {
-                            if (xlD > 0.0) twoTorSigmaV[i]=NLargeInteger::zero;
-                            else twoTorSigmaV[i]=NLargeInteger(4);
+                            if (xlD > 0.0) twoTorSigmaV[i]=0L;
+                            else twoTorSigmaV[i]=4;
                         } else
                             if (xlD/ylD > 0.0 ) {
-                                if (xlD > 0.0) twoTorSigmaV[i]=NLargeInteger::one;
-                                else twoTorSigmaV[i]=NLargeInteger(5);
+                                if (xlD > 0.0) twoTorSigmaV[i]=1;
+                                else twoTorSigmaV[i]=5;
                             } else {
-                                if (xlD > 0.0) twoTorSigmaV[i]=NLargeInteger(7);
-                                else twoTorSigmaV[i]=NLargeInteger(3);
+                                if (xlD > 0.0) twoTorSigmaV[i]=7;
+                                else twoTorSigmaV[i]=3;
                             }
                 }
             }
