@@ -3,7 +3,7 @@
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
-Version: 4.3.1
+Version: 4.4
 Release: 1.%{_vendor}
 License: GPL
 # I wish there were a more sane group (like Applications/Mathematics).
@@ -123,6 +123,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/regina
 
 %changelog
+* Sun Oct 28 2007 Ben Burton <bab@debian.org> 4.4
+- New upstream release.
+
 * Sun Feb 4 2007 Ben Burton <bab@debian.org> 4.3.1
 - Packaging the 4.3.1 release (May 2006) for SuSE 10.2.
 - Reenabled Python scripting for SuSE 10.1 and 10.2, since SuSE has
