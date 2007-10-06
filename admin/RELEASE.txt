@@ -44,8 +44,9 @@ Don't forget:
     update \test... notes in API docs
     python bindings for new routines
     rebuild manpages
-    website
+    website, including updated news
     debian packages (include cvs.diff)
     fedora/mandriva/suse packages
     tag the subversion repository
+    upload new data files, both from examples/ and the large data repository
     mail regina-announce
