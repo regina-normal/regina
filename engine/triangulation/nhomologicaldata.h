@@ -54,20 +54,14 @@ class NTriangulation;
  * Data type that deals with all the detailed homological information in a
  * manifold, including:
  *
- *   a) the manifold's homology.
- *
- *   b) the boundary's homology.
- *
- *   c) the map from boundary -> manifold.
- *
- *   d) the dual cellular homology.
- *
- *   e) the isomorphism on H1 from the dual cellular homology to the regular
- *      cellular homology.
- *
- *   f) the H1 torsion form.
- *
- *   g) the Kawauchi-Kojima invariants of torsion linking forms.
+ * -# the manifold's homology.
+ * -# the boundary's homology.
+ * -# the map from boundary -> manifold.
+ * -# the dual cellular homology.
+ * -# the isomorphism on H1 from the dual cellular homology to the regular
+ *    cellular homology.
+ * -# the H1 torsion form.
+ * -# the Kawauchi-Kojima invariants of torsion linking forms.
  *
  * These algorithms take a "least effort" approach to all computations. It
  * only computes what is neccessary for your requests.  It also keeps a
@@ -79,36 +73,38 @@ class NTriangulation;
  * They correspond to the (ideal) triangulation, given a proper boundary, and
  * the CW-dual as in the proof of Poincare Duality.
  *
- *  We describe the canonical ordering of both the cells and
- *  dual cells of tri.
+ * We describe the canonical ordering of both the cells and
+ * dual cells of tri.
  *
- *  The standard CW decomposition -- this is the one that most
- *  closely resembles the ideal triangulation.
+ * The standard CW decomposition -- this is the one that most
+ * closely resembles the ideal triangulation.
  *
- *   0-cells: The non-ideal vertices given in the order vertices.begin()
+ * - 0-cells: The non-ideal vertices given in the order vertices.begin()
  *            to vertices.end() followed by the ideal endpoints of the
  *            edges in lexicographical order edges.begin() to edges.end()
  *            followed by the endpts 0, 1.
  *
- *   1-cells: edges.begin() to edges.end() followed by the ideal edges of
+ * - 1-cells: edges.begin() to edges.end() followed by the ideal edges of
  *            faces.begin() to faces.end() in order 0,1,2.
  *
- *   2-cells: faces.begin() to faces.end() followed by ideal faces of
+ * - 2-cells: faces.begin() to faces.end() followed by ideal faces of
  *            tetrahedra.begin() through tetrahedra.end() in order 0,1,2,3.
  *
- *   3-cells: tetrahedra.begin() through tetrahedra.end().
+ * - 3-cells: tetrahedra.begin() through tetrahedra.end().
  *
- *   The Dual CW decomposition -- if the above CW-decomposition came from a
- *   morse function f, this would be the one for -f.
+ * The Dual CW decomposition -- if the above CW-decomposition came from a
+ * morse function f, this would be the one for -f.
  *
- *   0-cells: tetrahedra.begin() through tetrahedra.end().
+ * - 0-cells: tetrahedra.begin() through tetrahedra.end().
  *
- *   1-cells: the non-boundary faces.begin() through faces.end().
+ * - 1-cells: the non-boundary faces.begin() through faces.end().
  *
- *   2-cells: the non-boundary edges.begin() through edges.end().
+ * - 2-cells: the non-boundary edges.begin() through edges.end().
  *
- *   3-cells: the non-boundary, non-ideal vertices.begin() through
+ * - 3-cells: the non-boundary, non-ideal vertices.begin() through
  *            vertices.end().
+ *
+ * \testpart
  *
  * @author Ryan Budney
  */
@@ -357,12 +353,20 @@ public:
 
     /**
      * Takes as input a triangulation.
-     * @param input the triangulation to use
+     *
+     * This class takes its own copy of the input triangulation.  This
+     * means that the input triangulation can change or even be
+     * destroyed, and this homological data will happily continue to work
+     * with the original triangulation as it was first passed to the
+     * constructor.
+     *
+     * @param input the triangulation to use.
      */
     NHomologicalData(const NTriangulation& input);
     /**
      * Copy constructor.
-     * @param g
+     *
+     * @param g the homological data to clone.
      */
     NHomologicalData(const NHomologicalData& g);
     /**
@@ -392,6 +396,7 @@ public:
      * This routine gives access to the homology of the boundary
      * of the manifold, computed
      * with the regular CW-decomposition.
+     *
      * @param q the dimension of the homology group: can be 0, 1 or 2.
      * @return the q-th homology group, in standard cellular homology
      * coordinates
@@ -401,6 +406,7 @@ public:
     /**
      * This routine gives access to the homomorphism from the
      * homology of the boundary to the homology of the manifold.
+     *
      * @param q the dimension of the map, can be 0, 1 or 2.
      * @return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
@@ -410,6 +416,7 @@ public:
     /**
      * This routine gives access to the manifold's homology computed
      * with the dual CW-decomposition.
+     *
      * @param q the dimension of the homology group, can be 0, 1, 2 or 3.
      * @return H_q of the manifold, computed in the dual CW-decomposition.
      */
@@ -419,6 +426,7 @@ public:
      * This routine gives access to the isomorphism from getDMH(1) to
      * getMH(1) given by a cellular approximation to the identity map
      * on the manifold.
+     *
      * @return The isomorphism from getDMH(1) to getMH(1) computed via
      * a cellular approximation of the identity map from the first 1-skeleton
      * to the 2nd.
@@ -431,8 +439,8 @@ public:
      *
      * In the case that the triangulation is a proper
      * triangulation of a manifold (or delta-complex decomposition) it
-     * simply returns the same information in the nTriangulation::vertices,
-     * edges, faces, tetrahedra lists.
+     * simply returns the same information as in the NTriangulation
+     * vertex, edge, face and tetrahedron lists.
      *
      * In the case that this is an ideal triangulation, this algorithm is
      * returning the details of the corresponding compact manifold with
@@ -445,30 +453,33 @@ public:
     /**
      * A list of the number of cells in the dual CW-decomposition
      * of the manifold. This is typically much smaller than
-     * getNumStandardCells.
+     * getNumStandardCells().
+     *
      * @return A vector that contains the number of cells in the dual
      * CW-decomposition to the triangulation.
      */
-    std::vector<unsigned long> getNumDualCells(); // dual cells
+    std::vector<unsigned long> getNumDualCells();
     /**
      * A list of the number of cells in the standard CW-decomposition
      * of the boundary of the manifold. This is the subcomplex of
-     * the complex used in getNumStandardCells.
+     * the complex used in getNumStandardCells().
+     *
      * @return A vector which lists the number of cells in the standard
      * CW-decomposition of the boundary.
      */
-    std::vector<unsigned long> getNumBdryCells(); // standard boundary cells
+    std::vector<unsigned long> getNumBdryCells();
     /**
      * The proper Euler characteristic of the manifold, computed from
      * getNumDualCells. This is the genuine Euler characteristic as defined
      * in any algebraic topology textbooks. It differs from
      * regina::NTriangulation::getEulerCharacteristic(), which handles
      * ideal triangulations in a non-standard way.
+     *
      * @return The Euler characteristic of the corresponding compact
      * triangulated 3-manifold ie: ideal vertices are considered surface
      * boundary components.
      */
-    long int getEulerChar(); // euler characteristic
+    long int getEulerChar();
 
     /**
      * Returns the torsion subgroup rank vector. This is the first of
