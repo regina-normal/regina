@@ -112,6 +112,8 @@ Version 4.4  [ under development ]
         Routines factorise(), primesUpTo():
             - Deprecated in favour of routines from the new NPrimes class.
     USER INTERFACE:
+        - New Algebra -> Cellular Info tab containing a variety of new
+          homological data for triangulations; thanks to Ryan Budney.
         - Graphs now look better when drawn using an old Graphviz 1.x
           (previously the graphs were only tested under Graphviz 2.x).
         - Better infrastructure for determining the status of the
