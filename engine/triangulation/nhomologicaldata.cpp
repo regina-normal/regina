@@ -1084,21 +1084,28 @@ void NHomologicalData::computeBIncl() {
 
 void NHomologicalData::computeTorsionLinkingForm() {
  if (!torsionFormComputed) {  
-    NHomMarkedAbelianGroup h1CellAp(getH1cellap()); // dual h1 --> standard h1 isomorphism
-    unsigned long niv(dmHomology1->getNumberOfInvariantFactors()); // min number of torsion gens.
-    std::vector<std::pair<NLargeInteger, unsigned long> > tFac; // for holding prime decompositions.
+    // dual h1 --> standard h1 isomorphism:
+    NHomMarkedAbelianGroup h1CellAp(getH1cellap());
+    // min number of torsion gens:
+    unsigned long niv(dmHomology1->getNumberOfInvariantFactors());
+    // for holding prime decompositions.:
+    std::vector<std::pair<NLargeInteger, unsigned long> > tFac;
+
     NLargeInteger tI;
 
 
-// step 1: go through H1 of the manifold, take prime power decomposition of each
-//            summand.  building primePowerH1Torsion vector and pTorsionH1Mat matrix...
-//           also, we need to find the 2-chains bounding2c
-//            boundary(bounding2c[i]) = orderinh1(pvList[i])*pvList[i]
+    // step 1: go through H1 of the manifold, take prime power decomposition
+    //            of each summand.  building primePowerH1Torsion vector and
+    //            pTorsionH1Mat matrix...
+    //            also, we need to find the 2-chains bounding2c
+    //            boundary(bounding2c[i]) = orderinh1(pvList[i])*pvList[i]
 
-    std::vector< NLargeInteger > tV; // temporary vector for holding dual cc vectors.
+    std::vector< NLargeInteger > tV; // temporary vector for holding dual
+                                     // cc vectors.
 
     std::vector<NLargeInteger> ppList; // prime power list
-    std::vector< std::pair<NLargeInteger, unsigned long> > pPrList; // proper prime power list.
+    std::vector< std::pair<NLargeInteger, unsigned long> >
+        pPrList; // proper prime power list.
     std::vector< std::vector<NLargeInteger> > pvList; // list of vectors
     // the above two lists will have the same length. for each i,
     // pvList[i] will be a vector in the dual h1 homology chain complex, and
@@ -1121,7 +1128,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
             // fac1i is the inverse of fac1 mod fac2
             ppList.push_back( fac1 ); // record the order...
             // now the corresponding vector...
-            // this will have to be fac1i * vector corresponding to getInvariantFactor(i).
+            // this will have to be fac1i * vector corresponding to
+            // getInvariantFactor(i).
             tV = dmHomology1->getTorRep(i);
 
             for (unsigned long k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
@@ -1130,29 +1138,36 @@ void NHomologicalData::computeTorsionLinkingForm() {
         }
     }
 
-// step1a: construct (2 2 4) (3 3 9 27) ... indexing of ppList, pvList, etc...
-//           the indexing will be as a vector of pairs < prime, vector< pair< power, index> > >
-    std::vector< std::pair< NLargeInteger, std::vector<std::pair<unsigned long, unsigned long> > > > indexing;
-// indexing[i] is the i-th prime in increasing order, the first bit is the prime,
-//           the 2nd bit is the vector list of powers, the power is an unsigned long, and
-//           its respective index in ppList and pvList is the 2nd bit...
-    std::vector< std::pair< NLargeInteger, std::vector<std::pair<unsigned long, unsigned long> > > >::iterator it1;
-    std::vector< std::pair< NLargeInteger, std::vector<std::pair<unsigned long, unsigned long> > > >::iterator il1;
+    // step1a: construct (2 2 4) (3 3 9 27) ... indexing of ppList, pvList, etc.
+    // the indexing will be as a vector of pairs
+    // < prime, vector< pair< power, index> > >
+    std::vector< std::pair< NLargeInteger, std::vector<
+        std::pair<unsigned long, unsigned long> > > > indexing;
+    // indexing[i] is the i-th prime in increasing order, the first bit is
+    // the prime, the 2nd bit is the vector list of powers, the power is an
+    // unsigned long, and its respective index in ppList and pvList is the
+    // 2nd bit...
+    std::vector< std::pair< NLargeInteger, std::vector<
+        std::pair<unsigned long, unsigned long> > > >::iterator it1;
+    std::vector< std::pair< NLargeInteger, std::vector<
+        std::pair<unsigned long, unsigned long> > > >::iterator il1;
 
     std::vector< std::pair<unsigned long, unsigned long> >::iterator it2;
     std::vector< std::pair<unsigned long, unsigned long> >::iterator il2;
-    std::pair< NLargeInteger, std::vector< std::pair<unsigned long, unsigned long> > > dummyv;
+    std::pair< NLargeInteger, std::vector<
+        std::pair<unsigned long, unsigned long> > > dummyv;
 
     for (unsigned long i=0; i<pPrList.size(); i++) { 
-// for each entry in pPrList, find its appropriate position in indexing.
-        // so this means comparing pPrList[i].first with all elts indexing[j].first and stopping
-        // at first >= comparison.
+        // for each entry in pPrList, find its appropriate position in indexing.
+        // so this means comparing pPrList[i].first with all elts
+        // indexing[j].first and stopping at first >= comparison.
 
         it1 = indexing.begin(); 
-// now run up p until we either get to the end, or pPrList[i].first >= it1->first
+        // now run up p until we either get to the end, or
+        // pPrList[i].first >= it1->first
         il1 = indexing.end(); 
-// the idea is that this while loop will terminate with il1 pointing to the right
-        // insertion location.
+        // the idea is that this while loop will terminate with il1 pointing
+        // to the right insertion location.
         while ( it1 != indexing.end() ) {
             if (pPrList[i].first <= it1->first) {
                 il1 = it1;
@@ -1160,7 +1175,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
             }
             if (it1 != indexing.end()) it1++;
         }
-        // now do the same for the power... but we have to make a decision on whether to grow the
+        // now do the same for the power... but we have to make a decision
+        // on whether to grow the
         // indexing or not... we grow the indexing iff il1 == indexing.end() or
         //         (pPrList[i].first > il1->first)
         if (il1 == indexing.end()) {
@@ -1175,23 +1191,25 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 dummyv.second[0] = std::make_pair( pPrList[i].second, i );
                 indexing.insert( il1, dummyv );
             } else {
-// NOW we know this prime is already in the list, so we do the same search for the power...
+                // NOW we know this prime is already in the list, so we do
+                // the same search for the power...
                 it2 = il1->second.begin();
                 il2 = il1->second.end();
-                while ( it2 != il1->second.end() ) { // it2->first is the power, it2->second is the index.
+                while ( it2 != il1->second.end() ) {
+                    // it2->first is the power, it2->second is the index.
                     if (pPrList[i].second <= it2->first) {
                         il2 = it2;
                         it2 = il1->second.end();
                     }
                     if (it2 != il1->second.end()) it2++;
                 }
-                il1->second.insert( il2, std::make_pair( pPrList[i].second, i ) );
+                il1->second.insert(il2, std::make_pair( pPrList[i].second, i ));
             }
 
     }
 
-// step 2: construct dual vectors
-//           for every pvList vector, find corresponding standard vector.
+    // step 2: construct dual vectors
+    //           for every pvList vector, find corresponding standard vector.
 
 
     NMatrixInt standardBasis( numStandardCells[1], pvList.size() );
@@ -1200,11 +1218,13 @@ void NHomologicalData::computeTorsionLinkingForm() {
     for (unsigned long i=0; i<standardBasis.rows(); i++)
         for (unsigned long j=0; j<standardBasis.columns(); j++)
             for (unsigned long k=0; k<dualtostandard.columns(); k++)
-                standardBasis.entry(i,j) += dualtostandard.entry(i,k)*pvList[j][k];
+                standardBasis.entry(i,j) +=
+                    dualtostandard.entry(i,k)*pvList[j][k];
 
-// step 3: construct bounding classes
-//            the j-th column of standardBasis, when multiplied by ppList[j] bounds,
-//           so find a chain with that boundary and put its info in a matrix.
+    // step 3: construct bounding classes
+    //           the j-th column of standardBasis, when multiplied by
+    //           ppList[j] bounds, so find a chain with that boundary and
+    //           put its info in a matrix.
 
     NMatrixInt ON(mHomology1->getON());
     NMatrixInt R(ON.columns(),ON.columns());
@@ -1315,38 +1335,44 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     );
     }
 
-// now we should implement the classification of these forms
-// due to Seifert, Wall, Burger, Kawauchi, Kojima, Deloup:
-// this will have 3 parts, first the rank vector will be a list
-// n1 Z_p1^k1 + ... + nj Z_pj^kj which will be in lexicographically
-// increasing order: first the p?'s then the k?'s.
-// the 2nd part will be the 2-torsion sigma-vector:
-// sigma_k for k=1,2,3,... these are fractions 0/8, ..., 7/8 or infinity.
-// the 3rd part will be the odd p-torsion Legendre symbol data
-// this will be in lexicographical increasing order, first
-// by the prime, then by k \chi_p^k k=1,2,3,...
+    // now we should implement the classification of these forms
+    // due to Seifert, Wall, Burger, Kawauchi, Kojima, Deloup:
+    // this will have 3 parts, first the rank vector will be a list
+    // n1 Z_p1^k1 + ... + nj Z_pj^kj which will be in lexicographically
+    // increasing order: first the p?'s then the k?'s.
+    // the 2nd part will be the 2-torsion sigma-vector:
+    // sigma_k for k=1,2,3,... these are fractions 0/8, ..., 7/8 or infinity.
+    // the 3rd part will be the odd p-torsion Legendre symbol data
+    // this will be in lexicographical increasing order, first
+    // by the prime, then by k \chi_p^k k=1,2,3,...
 
-// CLASSIFICATION
+    // CLASSIFICATION
 
-// step 1: rank vectors (done)
-//           this will be a std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > >
-//           rankv[i].first is the prime, and rankv[i].second is the vector which lists the ranks
-//           ie: if rankv[i].first==3 then rankv[i].second=(0,1,0,2,0,1) means that
-//           there are no copies of Z_3, one copy of Z_9, no copies of Z_27 but two copies of
-//           Z_{3^4}, etc.
+    // step 1: rank vectors (done)
+    //
+    // this will be a std::vector< std::pair< NLargeInteger,
+    //                                        std::vector< unsigned long > > >
+    // rankv[i].first is the prime, and rankv[i].second is the vector which
+    // lists the ranks
+    // ie: if rankv[i].first==3 then rankv[i].second=(0,1,0,2,0,1) means that
+    // there are no copies of Z_3, one copy of Z_9, no copies of Z_27 but two
+    // copies of Z_{3^4}, etc.
 
-// std::vector< std::pair< NLargeInteger, std::vector<std::pair<unsigned long, unsigned long> > > > indexing;
-//                         prime        , list of (exponents, index)
+    // std::vector< std::pair< NLargeInteger,
+    //     std::vector<std::pair<unsigned long, unsigned long> > > > indexing;
+    //                         prime        , list of (exponents, index)
 
     torRankV.resize(indexing.size());
-//std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > torRankV(indexing.size());
-// vector which lists the primes and the number of each power...
+    // std::vector< std::pair< NLargeInteger,
+    //     std::vector< unsigned long > > > torRankV(indexing.size());
+    // vector which lists the primes and the number of each power...
     for (unsigned long i=0; i<indexing.size(); i++) {
         torRankV[i].first = indexing[i].first;
-        torRankV[i].second.resize(indexing[i].second[indexing[i].second.size()-1].first, 0);
+        torRankV[i].second.resize(
+            indexing[i].second[indexing[i].second.size()-1].first, 0);
         for (unsigned long j=0; j<indexing[i].second.size(); j++) { 
-// indexing[i].second[j] is a pair (order, index) where the order k indicates
-// one copy of p^k where p==indexing[i].first.
+        // indexing[i].second[j] is a pair (order, index) where the order k
+        // indicates one copy of p^k where p==indexing[i].first.
             torRankV[i].second[indexing[i].second[j].first-1]++;
         }
     }
