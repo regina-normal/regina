@@ -1702,7 +1702,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         { // no boundary : orientable
             if (torRankV.size()==0) 
             { // no torsion : no boundary, orientable
-                if (tri->knowsThreeSphere())
+                if (tri->knowsThreeSphere() && tri->isThreeSphere())
                     embeddabilityString = "This manifold is S^3.";
                 else if (getDMH(1).isTrivial())
                     embeddabilityString = "Manifold is a homology 3-sphere.";
