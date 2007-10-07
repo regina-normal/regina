@@ -1703,28 +1703,27 @@ void NHomologicalData::computeTorsionLinkingForm() {
             if (torRankV.size()==0) 
             { // no torsion : no boundary, orientable
                 if (tri->knowsThreeSphere())
-                    embeddabilityString.append("This manifold is S^3."); else 
-                if (getDMH(1).isTrivial())
-                    embeddabilityString.append(
-                        "Manifold is a homology 3-sphere.");
+                    embeddabilityString = "This manifold is S^3.";
+                else if (getDMH(1).isTrivial())
+                    embeddabilityString = "Manifold is a homology 3-sphere.";
                 else
-                    embeddabilityString.append("No information.");
+                    embeddabilityString = "No information.";
             } // no torsion : no boundary, orientable 
             else 
             {// torsion : no boundary, orientable
                 if (!torsionLinkingFormSatisfiesKKtwoTorCondition)
-                    embeddabilityString.append(
-                        "This manifold, once-punctured, \n"
-                        "does not embed in a homology 4-sphere.");
+                    embeddabilityString =
+                        "This manifold, once-punctured, "
+                        "does not embed in a homology 4-sphere.";
                 else if (!torsionLinkingFormIsHyperbolic)
-                    embeddabilityString.append("This manifold does not embed "
-                        "in any \n homology 4-sphere. ");
+                    embeddabilityString = "This manifold does not embed "
+                        "in any homology 4-sphere.";
                 else
-                    embeddabilityString.append("The torsion linking form is "
-                        "of \n hyperbolic type.");
+                    embeddabilityString = "The torsion linking form is "
+                        "of hyperbolic type.";
                 if (getDMH(1).getRank()==0)
-                    embeddabilityString.append(" Manifold is a rational "
-                        "homology sphere. ");
+                    embeddabilityString += "  Manifold is a rational "
+                        "homology sphere.";
             } // torsion : no boundary, orientable
         } // no boundary : orientable
         else 
@@ -1739,65 +1738,67 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 // boundary map epic iff embeds in homology 3-sphere
                  if (getBMmapH(1).isEpic())
                     {
-                    embeddabilityString.append(
-                        "Embeds in a homology 3-sphere \n as a ");
+                    embeddabilityString =
+                        "Embeds in a homology 3-sphere as a ";
                     if (getBMH(1).getRank() == 2*getBMH(0).getRank())
                         {
                         if (getBMH(0).getRank()==1)
-                            embeddabilityString.append("knot complement.");
+                            embeddabilityString += "knot complement.";
                         else
-                            embeddabilityString.append("link complement.");
+                            embeddabilityString += "link complement.";
                         }
                     else
-                        embeddabilityString.append("graph complement.");
+                        embeddabilityString += "graph complement.";
                     }
                  else if (getBMmapH(1).getCoKernel().getRank()==0)
                     {
-                    embeddabilityString.append(
-                        "Embeds in a rational homology 3-sphere \n as a ");
+                    embeddabilityString =
+                        "Embeds in a rational homology 3-sphere as a ";
                     if (getBMH(1).getRank() == 2*getBMH(0).getRank() )
                         {
                         if (getBMH(0).getRank()==1)
-                            embeddabilityString.append("knot complement.");
+                            embeddabilityString += "knot complement.";
                         else
-                            embeddabilityString.append("link complement.");
+                            embeddabilityString += "link complement.";
                         }
                     else
-                        embeddabilityString.append("graph complement.");
+                        embeddabilityString += "graph complement.";
                     } 
                  else
-                    embeddabilityString.append(
-                        "Does not embed in a rational \n homology 3-sphere.");
+                    embeddabilityString =
+                        "Does not embed in a rational homology 3-sphere.";
                  } // no torsion : boundary, orientable
             else
                 { // torsion : boundary, orientable
                 if (!torsionLinkingFormSatisfiesKKtwoTorCondition)
                  { // two tor condition not satisfied
                  if (getBMmapH(1).isEpic())
-                   embeddabilityString.append("Embeds in homology 3-sphere \n"
-                   " but not homology 4-sphere.");
+                   embeddabilityString =
+                        "Embeds in homology 3-sphere "
+                        "but not homology 4-sphere.";
                  else if (getBMmapH(1).getCoKernel().getRank()==0)
-                   embeddabilityString.append(
-                        "Embeds in rational homology 3-sphere \n but not "
-                        "homology 4-sphere.");
+                   embeddabilityString =
+                        "Embeds in rational homology 3-sphere but not "
+                        "homology 4-sphere.";
                  else 
-                    embeddabilityString.append(
-                        "Does not embed in homology 3-sphere,\n"
-                        " nor homology 4-sphere.");
+                    embeddabilityString =
+                        "Does not embed in homology 3-sphere, "
+                        "nor homology 4-sphere.";
                  }
                 else
                  { // KK twotor condition satisfied...
                  if (getBMmapH(1).isEpic())
-                   embeddabilityString.append("Embeds in homology 3-sphere.\n"
-                        "KK 2-tor condition satisfied.");
+                   embeddabilityString =
+                        "Embeds in homology 3-sphere.  "
+                        "KK 2-tor condition satisfied.";
                  else if (getBMmapH(1).getCoKernel().getRank()==0)
-                   embeddabilityString.append(
-                        "Embeds in rational homology 3-sphere.\n"
-                        "KK 2-tor condition satisfied.");
+                   embeddabilityString =
+                        "Embeds in rational homology 3-sphere.  "
+                        "KK 2-tor condition satisfied.";
                  else 
-                    embeddabilityString.append(
-                        "Does not embed in homology 3-sphere.\n"
-                        "KK 2-tor condition satisfied.");
+                    embeddabilityString =
+                        "Does not embed in homology 3-sphere.  "
+                        "KK 2-tor condition satisfied.";
                  }
                 } // torsion : boundary, orientable
         } // boundary : orientable 
@@ -1815,24 +1816,24 @@ void NHomologicalData::computeTorsionLinkingForm() {
          { // no boundary
           if (covHomol.formIsHyperbolic())
             {
-            embeddabilityString.append("Orientation cover has hyperbolic\n"
-                                      " torsion linking form.");
+            embeddabilityString = "Orientation cover has hyperbolic"
+                                  " torsion linking form.";
             }
           else
             {
-            embeddabilityString.append("Does not embed in homology 4-sphere.");
+            embeddabilityString = "Does not embed in homology 4-sphere.";
             }
          }
         else
          {// boundary
           if (covHomol.formSatKK())
             {
-            embeddabilityString.append("Orientation cover satisfies\n"
-                                      " KK 2-torsion condition.");
+            embeddabilityString = "Orientation cover satisfies"
+                                      " KK 2-torsion condition.";
             }
           else
             {
-            embeddabilityString.append("Does not embed in homology 4-sphere.");
+            embeddabilityString = "Does not embed in homology 4-sphere.";
             }
          }
        delete orTri;
