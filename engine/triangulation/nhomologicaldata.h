@@ -347,7 +347,7 @@ private:
     std::string torsionLegendreString;
     /** comment on what kind of homology spheres the manifold may or may
      ** not embed in. */
-    std::string embedabilityString;
+    std::string embeddabilityString;
 
 public:
 
@@ -746,7 +746,7 @@ ShareableObject() {
         torsionRankString = g.torsionRankString;
         torsionSigmaString = g.torsionSigmaString;
         torsionLegendreString = g.torsionLegendreString;
-        embedabilityString = g.embedabilityString;
+        embeddabilityString = g.embeddabilityString;
     }
 }
 
@@ -878,7 +878,7 @@ inline std::string NHomologicalData::getTorsionLegendreSymbolVectorString()
 inline std::string NHomologicalData::getEmbeddabilityComment() 
 {
      computeTorsionLinkingForm();
-    return embedabilityString;
+    return embeddabilityString;
 }
 
 
