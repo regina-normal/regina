@@ -1807,10 +1807,9 @@ void NHomologicalData::computeTorsionLinkingForm() {
      { // triangulation is NOT orientable, therefore can not embed
        // in any rational homology 3-sphere.  So we look at the
        // orientation cover...
-       NTriangulation *orTri;
-       orTri = new NTriangulation(*tri);
-       orTri->makeDoubleCover();
-       NHomologicalData covHomol(*orTri);
+       NTriangulation orTri(*tri);
+       orTri.makeDoubleCover();
+       NHomologicalData covHomol(orTri);
         // break up into two cases, boundary and no boundary...
         if (covHomol.getBMH(0).isTrivial())
          { // no boundary
@@ -1836,7 +1835,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
             embeddabilityString = "Does not embed in homology 4-sphere.";
             }
          }
-       delete orTri;
      }
 
     torsionFormComputed = true;
