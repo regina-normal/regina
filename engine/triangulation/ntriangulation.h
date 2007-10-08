@@ -1084,6 +1084,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * isZeroEfficient() will be very fast (simply returning the
          * precalculated value).
          *
+         * \warning This routine does not actually tell you \e whether
+         * this triangulation is 0-efficient; it merely tells you whether
+         * the answer has already been computed.
+         *
          * @return \c true if and only if this property is already known.
          */
         bool knowsZeroEfficient() const;
@@ -1108,6 +1112,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * If this property is already known, future calls to
          * hasSplittingSurface() will be very fast (simply returning the
          * precalculated value).
+         *
+         * \warning This routine does not actually tell you \e whether
+         * this triangulation has a splitting surface; it merely tells you
+         * whether the answer has already been computed.
          *
          * @return \c true if and only if this property is already known.
          */
@@ -1719,6 +1727,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * Otherwise a call to isThreeSphere() may potentially require more
          * significant work, and so this routine will return \c false.
+         *
+         * \warning This routine does not actually tell you \e whether
+         * this triangulation forms a 3-sphere; it merely tells you whether
+         * the answer has already been computed (or is very easily computed).
          *
          * @return \c true if and only if this property is already known
          * or trivial to calculate.
