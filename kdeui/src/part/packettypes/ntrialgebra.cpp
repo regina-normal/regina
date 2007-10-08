@@ -692,6 +692,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(11, 1);
     homologyGrid->setColStretch(0, 1);
+    homologyGrid->setColStretch(2, 1); // Give the embeddability comment
+                                       // a little room to breathe.
     homologyGrid->setColStretch(3, 1);
 
     QLabel* label;
