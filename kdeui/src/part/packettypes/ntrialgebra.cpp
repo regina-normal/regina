@@ -704,7 +704,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     msg = i18n("The listing of the number of 0-cells, number of 1-cells, "
                 "number of 2-cells and number of 3-cells for a proper "
                 "CW-decomposition of the compact manifold specified by this "
-                "triangulation. ");
+                "triangulation.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(Cells, msg);
 
@@ -715,7 +715,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     msg = i18n("The number of cells in the dual CW-decomposition "
                 "corresponding to the triangulation of this "
                 "compact manifold.  Listed in order "
-                "of ascending dimension. ");
+                "of ascending dimension.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(DualCells, msg);
 
@@ -723,7 +723,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 3, 1);
     EulerChar = new QLabel(ui);
     homologyGrid->addWidget(EulerChar, 3, 2);
-    msg = i18n("The Euler Characteristic of this compact manifold. ");
+    msg = i18n("The Euler Characteristic of this compact manifold.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(EulerChar, msg);
 
@@ -732,7 +732,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     H0H1H2H3 = new QLabel(ui);
     homologyGrid->addWidget(H0H1H2H3, 4, 2);
     msg = i18n("The homology groups of this manifold, in order of "
-                "ascending dimension. Coefficients in the integers. ");
+                "ascending dimension. Coefficients in the integers.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(H0H1H2H3, msg);
 
@@ -741,7 +741,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     HBdry = new QLabel(ui);
     homologyGrid->addWidget(HBdry, 5, 2);
     msg = i18n("The homology groups of this manifolds boundary, in order of "
-                "ascending dimension. Coefficients in the integers. ");
+                "ascending dimension. Coefficients in the integers.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(HBdry, msg);
 
@@ -750,7 +750,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     BdryMap = new QLabel(ui);
     homologyGrid->addWidget(BdryMap, 6, 2);
     msg = i18n("The boundary is a submanifold of the original "
-                "manifold. This describes the induced map on H1. "
+                "manifold. This describes the induced map on H1."
                 );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(BdryMap, msg);
@@ -787,7 +787,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     msg = i18n("If H1 has odd torsion, this is the "
                "Legendre symbol vector, the last of the "
                "Kawauchi-Kojima invariants, also originally "
-               "constructed by Seifert. "
+               "constructed by Seifert."
                 );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForLegendre, msg);
@@ -796,12 +796,14 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 10, 1);
     EmbeddingComments = new QLabel(ui);
     homologyGrid->addWidget(EmbeddingComments, 10, 2);
-    msg = i18n("If the homology allows one to make any deductions "
-                "about the embeddability of this manifold in R^3, S^3, "
-                "S^4 or a homology sphere, we mention it here. "
+    msg = i18n("<qt>If the homology allows one to make any deductions "
+                "about the embeddability of this manifold in "
+                "R<sup>3</sup>, S<sup>3</sup>, S<sup>4</sup> "
+                "or a homology sphere, we mention it here. "
                 "Aside from the Kawauchi-Kojima paper, these comments "
-                "use C.T.C. Wall's theorem that 3-manifold embed in S^5 "
-                "and some elementary homological observations. "
+                "use C.T.C. Wall's theorem that 3-manifold embed in "
+                "S<sup>5</sup> and some elementary homological "
+                "observations.</qt>"
                 );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(EmbeddingComments, msg);
