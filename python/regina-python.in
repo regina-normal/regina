@@ -54,6 +54,7 @@ my $libs_conf = $home . "/.regina-libs";
 
 my $quiet = 0;
 my $verbose = 0;
+my $interactive = 0;
 my $regina_home = '';
 my $from_source = 0;
 my $python_lib_dir = '';
@@ -132,14 +133,22 @@ foreach my $arg (@ARGV) {
         next;
     }
 
+    if ($arg eq '-i' or $arg eq '--interactive') {
+        $interactive = 1;
+        next;
+    }
+
     if ($arg =~ /^-/) {
-        &err("Unrecognised option: $arg\n");
-        &usage;
+        &usage("Unrecognised option: $arg");
     }
 
     # We must be onto the script.
     $script = $arg;
     $readingScriptArgs = 1;
+}
+
+if ($interactive and not $script) {
+    &usage("The interactive option (-i, --interactive) can only be used with a script.");
 }
 
 # --- Check that the current options are reasonable. ---
@@ -214,10 +223,11 @@ my @fullCommandLine = ( $python_cmd );
 
 if ($script) {
     if (! -e $script) {
-        &err("E: The script $script could not be found.\n");
-        &usage();
+        &usage("E: The script $script could not be found.");
     }
-    my @fullCommandLine = ( $python_cmd, "$regina_home/scripts/runscript.py");
+    my @fullCommandLine = ( $python_cmd );
+    $interactive and push @fullCommandLine, '-i';
+    push @fullCommandLine, "$regina_home/scripts/runscript.py";
     push @fullCommandLine, @python_libs;
     push @fullCommandLine, ( '--', $script );
     push @fullCommandLine, @script_args;
@@ -300,8 +310,11 @@ sub err {
 # Display usage information and exit.
 #
 sub usage {
-    print STDERR "Usage: $prog_name [ -q, --quiet | -v, --verbose ]\n";
-    print STDERR "       [ script [ script_args ... ]]\n";
+    my $msg = shift;
+    defined($msg) and print STDERR "$msg\n\n";
+    print STDERR "Usage: 1. $prog_name [ -q, --quiet | -v, --verbose ]\n";
+    print STDERR "       2. $prog_name [ -q, --quiet | -v, --verbose ]\n";
+    print STDERR "               [ -i, --interactive ] script [ script_args ... ]\n";
     exit 1;
 }
 

@@ -101,7 +101,16 @@
      <arg><option>-q, --quiet</option></arg>
      <arg><option>-v, --verbose</option></arg>
     </group>
-    <arg><replaceable>script</replaceable> <arg><replaceable>script-args</replaceable></arg></arg>
+   </cmdsynopsis>
+   <cmdsynopsis>
+    <command>regina-python</command>
+    <group>
+     <arg><option>-q, --quiet</option></arg>
+     <arg><option>-v, --verbose</option></arg>
+    </group>
+    <arg><option>-i, --interactive</option></arg>
+    <arg choice="req"><replaceable>script</replaceable></arg>
+    <arg><replaceable>script-args</replaceable></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
 
@@ -132,7 +141,8 @@
     will be run, again with the <parameter>regina</parameter> module
     imported and libraries loaded beforehand.  Once the script has
     finished the user will be returned to the command-line, i.e., there
-    will be no subsequent &python; interaction.
+    will be no subsequent &python; interaction (this behaviour can be
+    changed by passing <option>--interactive</option>).
    </para>
    <para>
     Note that <command>regina-python</command> may be run directly out
@@ -170,6 +180,22 @@
       <para>
        This is equivalent to setting the environment variable
        <parameter>REGINA_VERBOSITY</parameter>=<literal>2</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-i</option></term>
+     <term><option>--interactive</option></term>
+     <listitem>
+      <para>
+       Run the script in interactive mode.  The given script will be
+       executed, and then the user will be left in the &python;
+       interpreter to run their own additonal commands.
+      </para>
+      <para>
+       This option is only available when a script is passed.
+       If no script is passed, <command>regina-python</command> will
+       always start in interactive mode.
       </para>
      </listitem>
     </varlistentry>
