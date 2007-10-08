@@ -10,6 +10,12 @@ Regina - A Normal Surface Theory Calculator
 Version 4.4  [ under development ] - The "hug a Mac today" release.
 
     OVERALL:
+        - Builds and runs happily on MacOS!  Requires Fink to be installed.
+        - Tidied up the directory hierarchy a little.  The old engine/engine/
+          is now just engine/, and the old engine/doc-files/ is now
+          engine/doxygen/.
+        - Thanks to Ryan Budney for his many contributions to this release!
+    CENSUS:
         - Expanded the closed non-orientable census to 11 tetrahedra.
         - Expanded the closed orientable census to 11 tetrahedra, and
           split it into three data files.  The 9-tetrahedron and
@@ -19,13 +25,9 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
           separately from the Regina website.
         - Modified the closed orientable census files to use more
           consistent choices of monodromy matrices for torus bundles.
-        - Tidied up the directory hierarchy a little.  The old engine/engine/
-          is now just engine/, and the old engine/doc-files/ is now
-          engine/doxygen/.
-        - Thanks to Ryan Budney for his many contributions to this release!
     ENGINE:
         Class NClosedPrimeMinSearcher:
-            - Census generation is much faster again for larger numbers of
+            - Census generation is much faster for larger numbers of
               tetrahedra, due to new tests for high-genus vertex links.
             - Also made census generation more efficient by pruning on
               high-degree edges (as well as the usual low-degree edges).
@@ -92,7 +94,8 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
               transpose matrix was obtained instead of the correct matrix).
         Class NTriangulation:
             - New routine layerOn() for performing layerings.
-            - New routine dehydrate() for extracting dehydration strings.
+            - New routine dehydrate() for extracting Callahan-Hildebrand-Weeks
+              dehydration strings.
             - Optimised the skeletal calculations, which now run *much* faster.
             - Fixed a crash in splitIntoComponents() that occurred when
               the triangulation skeleton had not yet been calculated.
@@ -122,9 +125,9 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
           multiple edges.
     UTILITIES:
         trisetcmp:
-            - Fixed messages so that appropriate messages are used when
-              subcomplex testing (previously the same messages were used
-              for both subcomplex testing and isomorphism testing).
+            - Now outputs more appropriate messages when subcomplex testing
+              (previously the same messages were used for both subcomplex
+              testing and isomorphism testing).
     TEST SUITE:
         - Added a new test suite for python bindings, in addition to the
           usual C++ test suite that is already present.
@@ -137,8 +140,8 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
         - Added tests for triangulation dehydrations and rehydrations.
         - Initial work on tests for the NRational class.
     BUILD ENVIRONMENT:
-        - Updated libtool from version 1.5a to 1.5.22 with Debian patches.
-          Regina now builds and runs happily on MacOSX (Darwin/Fink).
+        - Updated libtool from version 1.5a to 1.5.22 with Debian patches
+          (required for MacOS support).
 
 Version 4.3.1  [ 5 May, 2006 ]
 
