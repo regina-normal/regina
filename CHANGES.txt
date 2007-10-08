@@ -36,7 +36,7 @@ Version 4.4  [ under development ]
               can no longer be created.
         Class NFacePairing:
             - Modified writeDot() to behave well with ancient versions
-              of GraphViz.
+              of Graphviz.
         Class NLargeInteger:
             - New routine divisionAlg() for using the division algorithm.
             - New routine legendre() for calculating Legendre symbols.
