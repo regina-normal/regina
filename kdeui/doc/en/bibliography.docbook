@@ -200,6 +200,23 @@
   <date>February 2006</date>
  </biblioentry>
 
+ <biblioentry id="bib-layeredlensspaces">
+  <abbrev>KK</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Akio</firstname>
+    <surname>Kawauchi</surname>
+   </author>
+   <author>
+    <firstname>Sadayoshi</firstname>
+    <surname>Kojima</surname>
+   </author>
+  </authorgroup>
+  <title>Algebraic classification of linking pairings on 3-manifolds</title>
+  <edition>Math. Ann. 253 (1980), no. 1, 29--42</edition>
+  <date>1980</date>
+ </biblioentry>
+
  <biblioentry id="bib-lackenby-taut">
   <abbrev>La1</abbrev>
   <author>
