@@ -8,7 +8,36 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
-Version 4.4  [ under development ]
+Version 4.4  [ under development ] - The "hug a Mac today" release.
+
+    Features and Improvements:
+        - New Algebra -> Cellular Info tab containing a variety of new
+          homological data for triangulations; thanks to Ryan Budney for this!
+        - Expanded both the closed orientable and non-orientable censuses
+          to 11 tetrahedra (the 11-tetrahedron section of the orientable
+          census is very large and must be downloaded separately).
+        - Can construct any Seifert fibred space over the 2-sphere (previously
+          at most three exceptional fibres could be supplied).
+        - Shows Callahan-Hildebrand-Weeks dehydration strings in the
+          triangulation composition tab.
+        - Matrices are significantly easier to work with in Python scripts,
+          with several new functions and operators now available.
+        - More consistent choice of monodromy matrices when identifying
+          torus bundles.
+        - The regina-python tool can now run scripts in interactive mode (-i).
+        - Builds and runs on MacOS!  This requires Fink to be installed.
+    Optimisations:
+        - Census generation made significantly faster yet again, using
+          tests for high-genus vertex links and other optimisations.
+        - Streamlined some core parts of the triangulation code for
+          faster processing.
+    Bug Fixes:
+        - Face pairing graphs now look better when the old Graphviz 1.x is
+          installed (previously they were designed for Graphviz 2.x only).
+        - Fixed a matrix reduction bug when dealing with non-orientable
+          torus bundles (sometimes the transverse matrix was given instead).
+        - Updated the trisetcmp program to output more appropriate messages
+          when testing for subcomplexes.
 
 Version 4.3.1  [ 5 May, 2006 ]
 
