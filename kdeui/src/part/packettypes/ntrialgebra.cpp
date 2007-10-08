@@ -51,6 +51,7 @@
 #include <qpushbutton.h>
 #include <qregexp.h>
 #include <qstyle.h>
+#include <qstylesheet.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 #include <qvalidator.h>
@@ -667,7 +668,7 @@ void NTriCellularInfoUI::refresh() {
         TorForSigma->setText(minfo.getTorsionSigmaVectorString());
         TorForLegendre->setText(minfo.getTorsionLegendreSymbolVectorString());
         EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
-            minfo.getEmbeddabilityComment()));
+            QStyleSheet::escape(minfo.getEmbeddabilityComment())));
     } else {
         QString msg(i18n("Invalid Triangulation."));
         Cells->setText(msg);
