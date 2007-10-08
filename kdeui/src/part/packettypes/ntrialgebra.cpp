@@ -666,7 +666,8 @@ void NTriCellularInfoUI::refresh() {
         TorForOrders->setText(minfo.getTorsionRankVectorString());
         TorForSigma->setText(minfo.getTorsionSigmaVectorString());
         TorForLegendre->setText(minfo.getTorsionLegendreSymbolVectorString());
-        EmbeddingComments->setText(minfo.getEmbeddabilityComment());
+        EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
+            minfo.getEmbeddabilityComment()));
     } else {
         QString msg(i18n("Invalid Triangulation."));
         Cells->setText(msg);
