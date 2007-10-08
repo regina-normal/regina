@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 4.4  [ under development ]
+Version 4.4  [ under development ] - The "hug a Mac today" release.
 
     OVERALL:
         - Expanded the closed non-orientable census to 11 tetrahedra.
@@ -89,7 +89,7 @@ Version 4.4  [ under development ]
               where equivalent torus bundles should give equal matrices.
             - Fixed a bug in the matrix reduction for non-symmetric
               matrices in non-orientable manifolds (sometimes the
-              transverse matrix was obtained instead of the correct matrix).
+              transpose matrix was obtained instead of the correct matrix).
         Class NTriangulation:
             - New routine layerOn() for performing layerings.
             - New routine dehydrate() for extracting dehydration strings.

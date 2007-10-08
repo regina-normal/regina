@@ -35,7 +35,7 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
         - Face pairing graphs now look better when the old Graphviz 1.x is
           installed (previously they were designed for Graphviz 2.x only).
         - Fixed a matrix reduction bug when dealing with non-orientable
-          torus bundles (sometimes the transverse matrix was given instead).
+          torus bundles (sometimes the transpose matrix was given instead).
         - Updated the trisetcmp program to output more appropriate messages
           when testing for subcomplexes.
 
