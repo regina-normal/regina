@@ -74,6 +74,14 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                  as SFS [S2: (2,1) (2,1) (11,19)]. */
         NTriangulation* poincare;
             /**< The poincare homology sphere. */
+        NTriangulation torusBundleA;
+            /**< The torus bundle T x I / [ 0,1 | -1,0 ], built using an
+                 augmented triangular solid torus. */
+        NTriangulation torusBundleB;
+            /**< The torus bundle T x I / [ -1,1 | -1,0 ], built using an
+                 augmented triangular solid torus. */
+        NTriangulation twistedKBxS1;
+            /**< The orientable twisted product KB/n2 x~ S^1. */
         NTriangulation closedHypA;
             /**< The manifold with volume 1.01494161 from the
                  Hodgson-Weeks closed orientable census. */
@@ -87,6 +95,10 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         // Closed non-orientable:
         NTriangulation norA;
             /**< The non-orientable manifold SFS [M_/n2: (2,1)]. */
+        NTriangulation norB;
+            /**< The non-orientable manifold SFS [RP2: (2,1) (2,1)]. */
+        NTriangulation norTorusBundle;
+            /**< The non-orientable torus bundle T x I / [ 2,1 | 1,0 ]. */
 
         // Ideal orientable:
         NTriangulation s028;
@@ -112,16 +124,21 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             lens4_1.insertLayeredLensSpace(4, 1);
             lens7_1.insertLayeredLensSpace(7, 1);
             d88xz15.insertAugTriSolidTorus(2, -1, 2, -1, 11, -30);
+            torusBundleA.insertAugTriSolidTorus(2, 1, 4, -7, 4, 1);
+            torusBundleB.insertAugTriSolidTorus(3, -1, 3, -1, 3, -1);
             lst3_4_7.insertLayeredSolidTorus(3, 4);
 
             // The others we recreate using dehydration strings.
             // The dehydration strings were obtained by running
             // NTriangulation::dehydrate() over triangulations from
             // the relevant census data files.
+            twistedKBxS1.insertRehydration("gepaacdfefefknakanx");
             closedHypA.insertRehydration("jgpadaaeffghfiihirmxitdagbj");
             closedHypB.insertRehydration("mnnjjcabehfgjijkijllaaqabhoehrtab");
             closedHypC.insertRehydration("jlncbaabdghfggiiiafxhbccqei");
             norA.insertRehydration("jofbdaabccfhgihiiffhofoxohx");
+            norB.insertRehydration("gepaacdfefefaaknnkx");
+            norTorusBundle.insertRehydration("hipabcedfggfggbgforro");
             s028.insertRehydration("gkfacaccdeffffohhhf");
             s955.insertRehydration("gbpaabcfdffefohfxhf");
         }
@@ -345,6 +362,17 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyEmbeddability(closedHypC, "Closed Hyp (vol=1.26370924)",
                 "The torsion linking form is of hyperbolic type.  "
                 "Manifold is a rational homology sphere.");
+            verifyEmbeddability(torusBundleA, "T x I / [ 0,1 | -1,0 ]",
+                "This manifold, once-punctured, does not embed in a "
+                "homology 4-sphere.");
+            verifyEmbeddability(torusBundleB, "T x I / [ -1,1 | -1,0 ]",
+                "This manifold does not embed in any homology 4-sphere.");
+            verifyEmbeddability(twistedKBxS1, "KB/n2 x~ S^1",
+                "The torsion linking form is of hyperbolic type.");
+            verifyEmbeddability(norB, "SFS [RP2: (2,1) (2,1)]",
+                "Orientation cover has hyperbolic torsion linking form.");
+            verifyEmbeddability(norTorusBundle, "T x I / [ 2,1 | 1,0 ]",
+                "Does not embed in homology 4-sphere.");
         }
 };
 
