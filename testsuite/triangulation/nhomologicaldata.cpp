@@ -100,13 +100,31 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         NTriangulation norTorusBundle;
             /**< The non-orientable torus bundle T x I / [ 2,1 | 1,0 ]. */
 
-        // Ideal orientable:
+        // Ideal:
+        NTriangulation* gieseking;
+            /**< The Gieseking manifold. */
+        NTriangulation* figureEight;
+            /**< The figure eight knot complement. */
+        NTriangulation m003;
+            /**< The manifold m003 from the cusped hyperbolic census of
+                 Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
+        NTriangulation m041;
+            /**< The manifold m041 from the cusped hyperbolic census of
+                 Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
+        NTriangulation m045;
+            /**< The manifold m045 from the cusped hyperbolic census of
+                 Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
         NTriangulation s028;
             /**< The manifold s028 from the cusped hyperbolic census of
+                 Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
+        NTriangulation s887;
+            /**< The manifold s887 from the cusped hyperbolic census of
                  Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
         NTriangulation s955;
             /**< The manifold s955 from the cusped hyperbolic census of
                  Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
+        NTriangulation genusTwoBdry;
+            /**< An ideal triangulation with a single genus two cusp. */
 
         // Bounded:
         NTriangulation lst3_4_7;
@@ -118,6 +136,8 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             s3 = NExampleTriangulation::threeSphere();
             s2xs1 = NExampleTriangulation::s2xs1();
             poincare = NExampleTriangulation::poincareHomologySphere();
+            gieseking = NExampleTriangulation::gieseking();
+            figureEight = NExampleTriangulation::figureEightKnotComplement();
 
             // Next deal with triangulations that are easy to build.
             lens3_1.insertLayeredLensSpace(3, 1);
@@ -139,8 +159,13 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             norA.insertRehydration("jofbdaabccfhgihiiffhofoxohx");
             norB.insertRehydration("gepaacdfefefaaknnkx");
             norTorusBundle.insertRehydration("hipabcedfggfggbgforro");
+            m003.insertRehydration("cabbbbmlq");
+            m041.insertRehydration("eahcdbddbokpv");
+            m045.insertRehydration("eahccdcddbfof");
             s028.insertRehydration("gkfacaccdeffffohhhf");
+            s887.insertRehydration("gknaaacefffennqbnjf");
             s955.insertRehydration("gbpaabcfdffefohfxhf");
+            genusTwoBdry.insertRehydration("eanadccdnxfno");
         }
 
         void tearDown() {
@@ -148,6 +173,8 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             delete s3;
             delete s2xs1;
             delete poincare;
+            delete gieseking;
+            delete figureEight;
         }
 
         void verifyBdryManifoldMapH1(NTriangulation& tri, const char* name,
@@ -373,6 +400,22 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                 "Orientation cover has hyperbolic torsion linking form.");
             verifyEmbeddability(norTorusBundle, "T x I / [ 2,1 | 1,0 ]",
                 "Does not embed in homology 4-sphere.");
+            verifyEmbeddability(*gieseking, "Gieseking manifold",
+                "Orientation cover satisfies KK 2-torsion condition.");
+            verifyEmbeddability(*figureEight, "Figure eight knot complement",
+                "Embeds in a homology 3-sphere as a knot complement.");
+            verifyEmbeddability(m003, "SnapPea m003",
+                "Embeds in rational homology 3-sphere.  KK 2-tor "
+                "condition satisfied.");
+            verifyEmbeddability(m041, "SnapPea m041",
+                "Does not embed in homology 4-sphere.");
+            verifyEmbeddability(m045, "SnapPea m045",
+                "Embeds in rational homology 3-sphere but not "
+                "homology 4-sphere.");
+            verifyEmbeddability(s887, "SnapPea s887",
+                "Embeds in a homology 3-sphere as a link complement.");
+            verifyEmbeddability(genusTwoBdry, "Manifold with genus two cusp",
+                "Embeds in a homology 3-sphere as a graph complement.");
         }
 };
 
