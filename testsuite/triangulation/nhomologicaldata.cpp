@@ -28,10 +28,12 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
+#include "triangulation/nexampletriangulation.h"
 #include "triangulation/nhomologicaldata.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
+using regina::NExampleTriangulation;
 using regina::NHomologicalData;
 using regina::NTriangulation;
 
@@ -48,22 +50,39 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(torsionRankVector);
     CPPUNIT_TEST(torsionSigmaVector);
     CPPUNIT_TEST(torsionLegendreSymbolVector);
+    CPPUNIT_TEST(embeddabilityComment);
 
     CPPUNIT_TEST_SUITE_END();
 
     private:
+        // Some triangulations are pointers; this is because they are
+        // constructed on the fly by NExampleTriangulation.
+
         // Closed orientable:
+        NTriangulation* s3;
+            /**< A one-tetrahedron 3-sphere. */
+        NTriangulation* s2xs1;
+            /**< The two-tetrahedron S^2 x S^1. */
+        NTriangulation lens3_1;
+            /**< The layered lens space L(3,1). */
+        NTriangulation lens4_1;
+            /**< The layered lens space L(4,1). */
         NTriangulation lens7_1;
             /**< The layered lens space L(7,1). */
         NTriangulation d88xz15;
             /**< The orbit manifold S^3 / D_88 x Z_15, also known
                  as SFS [S2: (2,1) (2,1) (11,19)]. */
+        NTriangulation* poincare;
+            /**< The poincare homology sphere. */
         NTriangulation closedHypA;
             /**< The manifold with volume 1.01494161 from the
                  Hodgson-Weeks closed orientable census. */
         NTriangulation closedHypB;
             /**< The manifold with volume 2.45402944 from the
                  Hodgson-Weeks closed orientable census. */
+        NTriangulation closedHypC;
+            /**< The manifold with volume 1.26370924 from Regina's
+                 closed orientable census. */
 
         // Closed non-orientable:
         NTriangulation norA;
@@ -83,7 +102,14 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            // Deal with the easy ones first.
+            // First deal with ready-made example triangulations.
+            s3 = NExampleTriangulation::threeSphere();
+            s2xs1 = NExampleTriangulation::s2xs1();
+            poincare = NExampleTriangulation::poincareHomologySphere();
+
+            // Next deal with triangulations that are easy to build.
+            lens3_1.insertLayeredLensSpace(3, 1);
+            lens4_1.insertLayeredLensSpace(4, 1);
             lens7_1.insertLayeredLensSpace(7, 1);
             d88xz15.insertAugTriSolidTorus(2, -1, 2, -1, 11, -30);
             lst3_4_7.insertLayeredSolidTorus(3, 4);
@@ -94,12 +120,17 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             // the relevant census data files.
             closedHypA.insertRehydration("jgpadaaeffghfiihirmxitdagbj");
             closedHypB.insertRehydration("mnnjjcabehfgjijkijllaaqabhoehrtab");
+            closedHypC.insertRehydration("jlncbaabdghfggiiiafxhbccqei");
             norA.insertRehydration("jofbdaabccfhgihiiffhofoxohx");
             s028.insertRehydration("gkfacaccdeffffohhhf");
             s955.insertRehydration("gbpaabcfdffefohfxhf");
         }
 
         void tearDown() {
+            // Delete triangulations that were dynamically allocated.
+            delete s3;
+            delete s2xs1;
+            delete poincare;
         }
 
         void verifyBdryManifoldMapH1(NTriangulation& tri, const char* name,
@@ -281,6 +312,39 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyTorsionLegendreSymbolVector(s955, "SnapPea s955", "5(-1)");
             verifyTorsionLegendreSymbolVector(lst3_4_7, "LST(3,4,7)",
                 "no odd p-torsion");
+        }
+
+        void verifyEmbeddability(const NTriangulation& tri,
+                const char* name, const char* ans) {
+            NHomologicalData dat(tri);
+            std::string val = dat.getEmbeddabilityComment();
+            if (val != ans) {
+                std::ostringstream msg;
+                msg << name << ": Embeddability comment is \"" << val
+                    << "\", not \"" << ans << "\".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void embeddabilityComment() {
+            // Watch the comment for S^3 change once we run a
+            // three-sphere recognition.
+            verifyEmbeddability(*s3, "S^3", "Manifold is a homology 3-sphere.");
+            s3->isThreeSphere();
+            verifyEmbeddability(*s3, "S^3", "This manifold is S^3.");
+
+            verifyEmbeddability(*s2xs1, "S^2 x S^1", "No information.");
+            verifyEmbeddability(*poincare, "Poincare homology sphere",
+                "Manifold is a homology 3-sphere.");
+            verifyEmbeddability(lens3_1, "L(3,1)",
+                "This manifold does not embed in any homology 4-sphere.  "
+                "Manifold is a rational homology sphere.");
+            verifyEmbeddability(lens4_1, "L(4,1)",
+                "This manifold, once-punctured, does not embed in a "
+                "homology 4-sphere.  Manifold is a rational homology sphere.");
+            verifyEmbeddability(closedHypC, "Closed Hyp (vol=1.26370924)",
+                "The torsion linking form is of hyperbolic type.  "
+                "Manifold is a rational homology sphere.");
         }
 };
 
