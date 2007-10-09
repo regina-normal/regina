@@ -39,8 +39,8 @@ using regina::NTriangulation;
  * Thanks to Ryan Budney for supplying the questions and answers for
  * these tests!
  */
-class HomologicalDataTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(HomologicalDataTest);
+class NHomologicalDataTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(NHomologicalDataTest);
 
     CPPUNIT_TEST(bdryManifoldMapH1);
     CPPUNIT_TEST(standardCells);
@@ -284,7 +284,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         }
 };
 
-void addHomologicalData(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(HomologicalDataTest::suite());
+void addNHomologicalData(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(NHomologicalDataTest::suite());
 }
 
