@@ -104,6 +104,9 @@ class NTriangulation;
  * - 3-cells: the non-boundary, non-ideal vertices.begin() through
  *            vertices.end().
  *
+ * \python Python bindings are not yet available for this class.
+ *         They should be in place for the following release of Regina.
+ *
  * \testpart
  *
  * @author Ryan Budney
