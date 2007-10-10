@@ -578,10 +578,15 @@ public:
      */
     bool formSatKK();
     /**
-     * Returns a comment on if the manifold might embed in
+     * Returns a comment on whether the manifold might embed in
      * a homology 3-sphere or 4-sphere. Basically, it runs
      * through all the Kawauchi-Kojima conditions, plus a
      * few other `elementary' conditions.
+     *
+     * Each comment will be formatted as one or more English sentences
+     * (i.e., with capitalisation and punctuation).  The comments
+     * themselves are subject to change between releases of Regina,
+     * since later releases may have more detailed tests at their disposal.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
