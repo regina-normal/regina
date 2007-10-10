@@ -381,7 +381,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyEmbeddability(*poincare, "Poincare homology sphere",
                 "Manifold is a homology 3-sphere.");
             verifyEmbeddability(lens3_1, "L(3,1)",
-                "This manifold does not embed in any homology 4-sphere.  "
+                "Does not embed in homology 4-sphere.  "
                 "Manifold is a rational homology sphere.");
             verifyEmbeddability(lens4_1, "L(4,1)",
                 "This manifold, once-punctured, does not embed in a "
@@ -393,7 +393,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                 "This manifold, once-punctured, does not embed in a "
                 "homology 4-sphere.");
             verifyEmbeddability(torusBundleB, "T x I / [ -1,1 | -1,0 ]",
-                "This manifold does not embed in any homology 4-sphere.");
+                "Does not embed in homology 4-sphere.");
             verifyEmbeddability(twistedKBxS1, "KB/n2 x~ S^1",
                 "The torsion linking form is of hyperbolic type.");
             verifyEmbeddability(norB, "SFS [RP2: (2,1) (2,1)]",

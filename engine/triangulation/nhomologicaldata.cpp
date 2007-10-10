@@ -1716,8 +1716,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
                         "This manifold, once-punctured, "
                         "does not embed in a homology 4-sphere.";
                 else if (!torsionLinkingFormIsHyperbolic)
-                    embeddabilityString = "This manifold does not embed "
-                        "in any homology 4-sphere.";
+                    embeddabilityString =
+                        "Does not embed in homology 4-sphere.";
                 else
                     embeddabilityString = "The torsion linking form is "
                         "of hyperbolic type.";
