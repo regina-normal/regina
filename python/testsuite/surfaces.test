@@ -1,0 +1,64 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides various tests for normal surface enumeration.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+import string
+
+def surfaceStats(tri):
+	print "-------------------------------"
+	print tri.getPacketLabel()
+	print "-------------------------------"
+	print
+	n = regina.NNormalSurfaceList.enumerate(tri,
+		regina.NNormalSurfaceList.STANDARD)
+
+	# Dump the surfaces in sort order, since don't really mind if the
+	# ordering changes between releases.
+	surfaces = string.split(n.toStringLong(), '\n')
+	surfaces.sort()
+	# Let the text headers appear up top.
+	surfaces.reverse()
+	for s in surfaces:
+		print s
+
+	# Nothing else to say.
+	print
+
+t = regina.NTriangulation()
+t.setPacketLabel("Empty triangulation")
+surfaceStats(t)
+
+surfaceStats(regina.NExampleTriangulation.threeSphere())
+surfaceStats(regina.NExampleTriangulation.s2xs1())
+surfaceStats(regina.NExampleTriangulation.rp2xs1())
+surfaceStats(regina.NExampleTriangulation.rp3rp3())
+surfaceStats(regina.NExampleTriangulation.lens8_3())
+surfaceStats(regina.NExampleTriangulation.poincareHomologySphere())
+surfaceStats(regina.NExampleTriangulation.lst3_4_7())
+surfaceStats(regina.NExampleTriangulation.solidKleinBottle())
+surfaceStats(regina.NExampleTriangulation.figureEightKnotComplement())
+surfaceStats(regina.NExampleTriangulation.whiteheadLinkComplement())
+surfaceStats(regina.NExampleTriangulation.gieseking())
