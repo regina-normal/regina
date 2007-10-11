@@ -67,6 +67,55 @@ namespace {
 
         return ans;
     }
+
+    boost::python::list getSNFisoRep_list_list(
+            const NMarkedAbelianGroup& g, boost::python::list element) {
+        unsigned long needLen = g.getOM().columns();
+
+        if (boost::python::len(element) != needLen) {
+            PyErr_SetString(PyExc_IndexError,
+                "The element vector does not contain the expected "
+                "number of elements.");
+            boost::python::throw_error_already_set();
+        }
+
+        std::vector<regina::NLargeInteger> eltVector;
+
+        for (unsigned long i = 0; i < needLen; ++i) {
+            // Accept any type that we know how to convert to a large
+            // integer.
+            extract<regina::NLargeInteger&> x_large(element[i]);
+            if (x_large.check()) {
+                eltVector.push_back(x_large());
+                continue;
+            }
+
+            extract<long> x_long(element[i]);
+            if (x_long.check()) {
+                eltVector.push_back(x_long());
+                continue;
+            }
+
+            extract<const char*> x_str(element[i]);
+            if (x_str.check()) {
+                eltVector.push_back(x_str());
+                continue;
+            }
+
+            // Throw an exception.
+            x_large();
+        }
+
+        std::vector<regina::NLargeInteger> rep = g.getSNFisoRep(eltVector);
+
+        boost::python::list ans;
+        for (std::vector<regina::NLargeInteger>::const_iterator
+                it = rep.begin(); it != rep.end(); ++it) {
+            ans.append(*it);
+        }
+
+        return ans;
+    }
 }
 
 void addNMarkedAbelianGroup() {
@@ -84,6 +133,7 @@ void addNMarkedAbelianGroup() {
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
         .def("getFreeRep", getFreeRep_list)
         .def("getTorRep", getTorRep_list)
+        .def("getSNFisoRep", getSNFisoRep_list_list)
         .def("getMRB", &NMarkedAbelianGroup::getMRB,
             return_internal_reference<>())
         .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
