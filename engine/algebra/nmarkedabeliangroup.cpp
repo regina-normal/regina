@@ -259,7 +259,7 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getTorRep(unsigned long index)
  * OM.columns()==ON.rows() entries.
  */
 std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFisoRep(
-        std::vector<NLargeInteger>& element)  const {
+        const std::vector<NLargeInteger>& element)  const {
     std::vector<NLargeInteger> retval(snfrank+InvFacList.size(),
         NLargeInteger::zero);
     // apply OMRi, crop, then apply ornC, tidy up and return.

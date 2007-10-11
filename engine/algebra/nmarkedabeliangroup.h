@@ -279,7 +279,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * \a element is not in the kernel of \a M.
          */
         std::vector<NLargeInteger> getSNFisoRep(
-            std::vector<NLargeInteger>& element) const;
+            const std::vector<NLargeInteger>& element) const;
 
         /**
          * These routines return information on how we determined the
