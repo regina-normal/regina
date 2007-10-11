@@ -121,8 +121,8 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * This assumes the product M*N=0, so among other things, it needs
          * to be well-defined, ie: M.columns()==N.rows(), ie: we are computing
-	 * the homology of the chain complex Z^a -- N --> Z^b -- M --> Z^c
-	 * where a==N.columns(), M.columns()==b==N.rows(), c==M.rows(). 
+         * the homology of the chain complex Z^a -- N --> Z^b -- M --> Z^c
+         * where a==N.columns(), M.columns()==b==N.rows(), c==M.rows(). 
          *
          * @param M `right' matrix in chain complex
          * @param N `left' matrix in chain complex
