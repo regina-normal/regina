@@ -243,6 +243,8 @@ class NMarkedAbelianGroup : public ShareableObject {
          * this routine returns the index-th free generator of the
          * ker(M)/img(N) in Z^l.
          *
+         * \python The return value will be a python list.
+         *
          * @param index specifies which free generator we're looking up.
          * @return the coordinates of the free generator in the nullspace of M
          */
@@ -253,6 +255,8 @@ class NMarkedAbelianGroup : public ShareableObject {
          * with M*N==0.  Think of M as m by l and N as l by n.  Then
          * this routine returns the index-th torsion generator of the
          * ker(M)/img(N) in Z^l.
+         *
+         * \python The return value will be a python list.
          *
          * @param index specifies which generator in the torsion subgroup
          * @return the coordinates of the generator in the nullspace of M
@@ -272,6 +276,8 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * \pre The vector \a element has precisely OM.columns() entries
          * (or equivalently, ON.rows() entries).
+         *
+         * \python Both \a element and the return value are python lists.
          *
          * @param element is a vector in the nullspace of M
          * @return a vector that describes element in the standard
