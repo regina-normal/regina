@@ -37,9 +37,36 @@ using regina::NMatrixInt;
 
 namespace {
     unsigned (NMarkedAbelianGroup::*getTorsionRank_large)(
-        const regina::NLargeInteger&) const = &NMarkedAbelianGroup::getTorsionRank;
+        const regina::NLargeInteger&) const =
+        &NMarkedAbelianGroup::getTorsionRank;
     unsigned (NMarkedAbelianGroup::*getTorsionRank_long)(unsigned long)
         const = &NMarkedAbelianGroup::getTorsionRank;
+
+    boost::python::list getFreeRep_list(
+            const NMarkedAbelianGroup& g, unsigned long index) {
+        boost::python::list ans;
+
+        std::vector<regina::NLargeInteger> rep = g.getFreeRep(index);
+        for (std::vector<regina::NLargeInteger>::const_iterator
+                it = rep.begin(); it != rep.end(); ++it) {
+            ans.append(*it);
+        }
+
+        return ans;
+    }
+
+    boost::python::list getTorRep_list(
+            const NMarkedAbelianGroup& g, unsigned long index) {
+        boost::python::list ans;
+
+        std::vector<regina::NLargeInteger> rep = g.getTorRep(index);
+        for (std::vector<regina::NLargeInteger>::const_iterator
+                it = rep.begin(); it != rep.end(); ++it) {
+            ans.append(*it);
+        }
+
+        return ans;
+    }
 }
 
 void addNMarkedAbelianGroup() {
@@ -55,6 +82,8 @@ void addNMarkedAbelianGroup() {
         .def("getInvariantFactor", &NMarkedAbelianGroup::getInvariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
+        .def("getFreeRep", getFreeRep_list)
+        .def("getTorRep", getTorRep_list)
         .def("getMRB", &NMarkedAbelianGroup::getMRB,
             return_internal_reference<>())
         .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
