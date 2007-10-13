@@ -212,12 +212,16 @@ if (open(LIBS, $libs_conf)) {
 
 # --- Go ahead and run the application. ---
 
-if ($ENV{PYTHONPATH}) {
-    $ENV{PYTHONPATH} = "$python_lib_dir:$ENV{PYTHONPATH}";
-} else {
-    $ENV{PYTHONPATH} = $python_lib_dir;
+&extendEnvVar('PYTHONPATH', $python_lib_dir);
+
+if ($from_source) {
+    # Since we're running from the source tree, we need to ensure that
+    # the calculation engine library can be found.
+    &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/.libs");
+
+    # MacOS users will need DYLD_LIBRARY_PATH also.
+    &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/.libs");
 }
-&info("I: Using \$PYTHONPATH=$ENV{PYTHONPATH}.\n");
 
 my @fullCommandLine = ( $python_cmd );
 
@@ -284,6 +288,14 @@ sub setReginaHome() {
         exit 1;
     }
     $regina_home = $_[0];
+}
+sub extendEnvVar() {
+    &info("I: Appending $_[1] to \$$_[0].\n");
+    if ($ENV{$_[0]}) {
+        $ENV{$_[0]} = "$_[1]:$ENV{$_[0]}";
+    } else {
+        $ENV{$_[0]} = $_[1];
+    }
 }
 
 # Write the given message to stderr if verbose mode is on.
