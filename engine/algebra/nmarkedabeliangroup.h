@@ -52,6 +52,10 @@ namespace regina {
  * in terms of two integer matrices \a M and \a N such that M*N=0. The abelian
  * group is the kernel of \a M mod the image of \a N.
  *
+ * In other words, we are computing the homology of the chain complex
+ * <tt>Z^a --N--> Z^b --M--> Z^c</tt>
+ * where a=N.columns(), M.columns()=b=N.rows(), and c=M.rows(). 
+ *
  * This class allows one to retrieve the invariant factors, the rank, and
  * the corresponding vectors in the kernel of \a M.  Moreover, given a
  * vector in the kernel of \a M, it decribes the homology class of the
@@ -119,10 +123,8 @@ class NMarkedAbelianGroup : public ShareableObject {
          * Creates a marked abelian group from a chain complex.
          * See the class notes for details.
          *
-         * This assumes the product M*N=0, so among other things, it needs
-         * to be well-defined, ie: M.columns()==N.rows(), ie: we are computing
-         * the homology of the chain complex Z^a -- N --> Z^b -- M --> Z^c
-         * where a==N.columns(), M.columns()==b==N.rows(), c==M.rows(). 
+         * \pre M.columns() = N.rows().
+         * \pre The product M*N = 0.
          *
          * @param M `right' matrix in chain complex
          * @param N `left' matrix in chain complex
@@ -233,11 +235,13 @@ class NMarkedAbelianGroup : public ShareableObject {
          * invariant factors of the group, as described in the
          * NMarkedAbelianGroup notes.
          *
-         * @param out is the stream to write to.
+         * @param out the stream to write to.
          */
         virtual void writeTextShort(std::ostream& out) const;
 
         /**
+         * Returns the requested free generator.
+         *
          * The marked abelian group was defined by matrices M and N
          * with M*N==0.  Think of M as m by l and N as l by n.  Then
          * this routine returns the index-th free generator of the
@@ -245,12 +249,16 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * \python The return value will be a python list.
          *
-         * @param index specifies which free generator we're looking up.
-         * @return the coordinates of the free generator in the nullspace of M
+         * @param index specifies which free generator we're looking up;
+         * this must be between 0 and getRank()-1 inclusive.
+         * @return the coordinates of the free generator in the nullspace of
+         * \a M; this vector will have length M.columns().
          */
         std::vector<NLargeInteger> getFreeRep(unsigned long index) const;
 
         /**
+         * Returns the requested generator of the torsion subgroup.
+         *
          * The marked abelian group was defined by matrices M and N
          * with M*N==0.  Think of M as m by l and N as l by n.  Then
          * this routine returns the index-th torsion generator of the
@@ -258,8 +266,11 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * \python The return value will be a python list.
          *
-         * @param index specifies which generator in the torsion subgroup
-         * @return the coordinates of the generator in the nullspace of M
+         * @param index specifies which generator in the torsion subgroup;
+         * this must be at least 0 and strictly less than the number of
+         * non-trivial invariant factors.
+         * @return the coordinates of the generator in the nullspace of
+         * \a M; this vector will have length M.columns().
          */
         std::vector<NLargeInteger> getTorRep(unsigned long index) const;
 
@@ -279,9 +290,9 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * \python Both \a element and the return value are python lists.
          *
-         * @param element is a vector in the nullspace of M
+         * @param element a vector of length M.columns().
          * @return a vector that describes element in the standard
-         * Z^d + Z_{d1} + ... + Z_{dk} form, or an empty vector if
+         * Z^d + Z_{d1} + ... + Z_{dk} form, or the empty vector if
          * \a element is not in the kernel of \a M.
          */
         std::vector<NLargeInteger> getSNFisoRep(
