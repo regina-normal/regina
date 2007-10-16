@@ -449,14 +449,16 @@ class NMarkedAbelianGroup : public ShareableObject {
 
 /**
  * Represents a homomorphism of finitely generated abelian groups.
+ *
  * One initializes a homomorphism of f.g. abelian groups by passing the
  * constructor two f.g. abelian groups and a matrix which describes the
  * linear map between the free abelian groups in the centre of the respective
- * chain complexes that you used when defining the f.g. abelian groups.  So
- * for example, if dom was initialized by the chain complex
- * Z^a -- A --> Z^b -- B --> Z^c and ran was initialized by
- * Z^d -- D --> Z^e -- E --> Z^f, then mat needs to be an e-by-b matrix, and
- * of course, you only get something that's well-defined if mat extends to
+ * chain complexes that you used when defining the f.g. abelian groups.
+ *
+ * So for example, if the domain was initialized by the chain complex
+ * <tt>Z^a --A--> Z^b --B--> Z^c</tt> and the range was initialized by
+ * <tt>Z^d --D--> Z^e --E--> Z^f</tt>, then mat needs to be an e-by-b matrix,
+ * and of course, you only get something that's well-defined if mat extends to
  * a chain map, which this function assumes.
  *
  * @author Ryan Budney
@@ -496,20 +498,17 @@ class NHomMarkedAbelianGroup : public ShareableObject {
 
     public:
 
-//       * Homomorphisms of marked abelian groups are generally created from
-//       * two marked abelian groups and a matrix that indicates where the
-//       * generators are sent.
         /**
-         * This is the sole NHomMarkedAbelianGroup constructor, other than
-         * the copy constructor.
+         * Constructs a homomorphism from two marked abelian groups and
+         * a matrix that indicates where the generators are sent.
          *
-         * @param dom domain group
-         * @param ran range group
-         * @param mat the matrix that describes the homomorphism from dom
-         * to ran, given in the chain-complex coordinates.
+         * @param domain domain group
+         * @param range range group
+         * @param mat the matrix that describes the homomorphism from
+         * \a domain to \a range, given in the chain-complex coordinates.
          */
-        NHomMarkedAbelianGroup(const NMarkedAbelianGroup& dom,
-                const NMarkedAbelianGroup& ran,
+        NHomMarkedAbelianGroup(const NMarkedAbelianGroup& domain,
+                const NMarkedAbelianGroup& range,
                 const NMatrixInt &mat);
         /**
          * Copy constructor.
@@ -522,46 +521,46 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         virtual ~NHomMarkedAbelianGroup();
 
         /**
-         * Is it epic? query.
+         * Is this group epic?
          *
-         * @return true if homomorphism is epic
+         * @return true if homomorphism is epic.
          */
         bool isEpic() const;
         /**
-         * Is it monic? query
+         * Is this group monic?
          *
-         * @return true if homomorphism is monic
+         * @return true if homomorphism is monic.
          */
         bool isMonic() const;
         /**
-         * Is it an isomorphism? query
+         * Is this group an isomorphism?
          *
-         * @return true if homomorphism is an isomorphism
+         * @return true if homomorphism is an isomorphism.
          */
         bool isIso() const;
         /**
-         * Is it the zero map? query.
+         * Is this group the zero map?
          *
-         * @return true if homomorphism is the zero map
+         * @return true if homomorphism is the zero map.
          */
         bool isZero() const;
 
         /**
          * Computes the kernel.
          *
-         * @return the kernel of the homomorphism, as a marked abelian group
+         * @return the kernel of the homomorphism, as a marked abelian group.
          */
         const NMarkedAbelianGroup& getKernel() const;
         /**
          * Computes the cokernel.
          *
-         * @return cokernel of the homomorphism, as a marked abelian group
+         * @return cokernel of the homomorphism, as a marked abelian group.
          */
         const NMarkedAbelianGroup& getCoKernel() const;
         /**
          * Computes the image.
          *
-         * @return image of the homomorphism, as a marked abelian group
+         * @return image of the homomorphism, as a marked abelian group.
          */
         const NMarkedAbelianGroup& getImage() const;
 
@@ -574,27 +573,47 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         virtual void writeTextShort(std::ostream& out) const;
 
         /**
-         * Writes a text-readable version of the reduced matrix, this is
-         * a description of the homomorphism in some specific coordinates
-         * at present only meant to be internal to NHomMarkedAbelianGroup.
+         * Returns the domain of this homomorphism.
          *
-         * @param out is the output stream
+         * @return the domain that was used to define the homomorphism.
          */
-        void writeRedMatrix(std::ostream& out) const;
-
+        const NMarkedAbelianGroup& getDomain() const;
+        /**
+         * Returns the range of this homomorphism.
+         *
+         * @return the range that was used to define the homomorphism.
+         */
+        const NMarkedAbelianGroup& getRange() const;
         /**
          * Returns the defining matrix for the homomorphism.
          *
          * @return the matrix which was used to define the homomorphism.
          */
         const NMatrixInt& getDefiningMatrix() const;
+
         /**
+         * For internal use only.
+         *
          * Gets the internal reduced matrix representing the
          * homomorphism.
          *
          * @return a copy of the internal representation of the homomorphism.
          */
-        const NMatrixInt& getRedMatrix() const;
+        const NMatrixInt& getReducedMatrix() const;
+
+        /**
+         * For internal use only.
+         *
+         * Writes a text-readable version of the reduced matrix, this is
+         * a description of the homomorphism in some specific coordinates
+         * at present only meant to be internal to NHomMarkedAbelianGroup.
+         *
+         * \ifacespython The \a out argument is missing; instead this is
+         * assumed to be standard output.
+         *
+         * @param out the output stream.
+         */
+        void writeReducedMatrix(std::ostream& out) const;
 };
 
 /*@}*/
@@ -680,11 +699,17 @@ inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
         delete reducedKernelLattice;
 }
 
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getDomain() const {
+    return domain;
+}
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getRange() const {
+    return range;
+}
 inline const NMatrixInt& NHomMarkedAbelianGroup::getDefiningMatrix() const {
     return matrix;
 }
 
-inline const NMatrixInt& NHomMarkedAbelianGroup::getRedMatrix() const {
+inline const NMatrixInt& NHomMarkedAbelianGroup::getReducedMatrix() const {
     // Cast away const to compute the reduced matrix -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.

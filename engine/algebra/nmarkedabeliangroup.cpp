@@ -533,7 +533,7 @@ const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCoKernel() const {
 
 
 
-void NHomMarkedAbelianGroup::writeRedMatrix(std::ostream& out) const {
+void NHomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
     // Cast away const to compute the reduced matrix -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
