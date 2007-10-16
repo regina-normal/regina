@@ -414,7 +414,7 @@ public:
      * @return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
-    NHomMarkedAbelianGroup getBMmapH(unsigned q);
+    const NHomMarkedAbelianGroup& getBMmapH(unsigned q);
 
     /**
      * This routine gives access to the manifold's homology computed
@@ -434,7 +434,7 @@ public:
      * a cellular approximation of the identity map from the first 1-skeleton
      * to the 2nd.
      */
-    NHomMarkedAbelianGroup getH1cellap();
+    const NHomMarkedAbelianGroup& getH1cellap();
 
     /**
      * A list of the number of cells in the standard genuine CW-decomposition

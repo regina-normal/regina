@@ -1010,7 +1010,7 @@ void NHomologicalData::computeDHomology() {
         dmHomology3 = new NMarkedAbelianGroup(*B3,*B4);
 }
 
-NHomMarkedAbelianGroup NHomologicalData::getH1cellap() {
+const NHomMarkedAbelianGroup& NHomologicalData::getH1cellap() {
     if (!dmTomMap1) {
         computeHomology();
         computeDHomology();
@@ -1020,10 +1020,7 @@ NHomMarkedAbelianGroup NHomologicalData::getH1cellap() {
     return (*dmTomMap1);
 }
 
-NHomMarkedAbelianGroup NHomologicalData::getBMmapH(unsigned q) 
-{
-    NHomMarkedAbelianGroup* retval(0);
-
+const NHomMarkedAbelianGroup& NHomologicalData::getBMmapH(unsigned q) {
     if (q==0) {
         if (!bmMap0) {
             computeHomology();
@@ -1031,28 +1028,26 @@ NHomMarkedAbelianGroup NHomologicalData::getBMmapH(unsigned q)
             bmMap0 = new NHomMarkedAbelianGroup(
                 *bHomology0, *mHomology0, *B0Incl );
         }
-        retval = bmMap0;
-    } else
-        if (q==1) {
-            if (!bmMap1) {
-                computeHomology();
-                computeBHomology();
-                bmMap1 = new NHomMarkedAbelianGroup(
-                    *bHomology1, *mHomology1, *B1Incl );
-            }
-            retval = bmMap1;
-        } else
-            if (q==2) {
-                if (!bmMap2) {
-                    computeHomology();
-                    computeBHomology();
-                    bmMap2 = new NHomMarkedAbelianGroup(
-                        *bHomology2, *mHomology2, *B2Incl );
-                }
-                retval = bmMap2;
-            }
-
-    return (*retval);
+        return *bmMap0;
+    } else if (q==1) {
+        if (!bmMap1) {
+            computeHomology();
+            computeBHomology();
+            bmMap1 = new NHomMarkedAbelianGroup(
+                *bHomology1, *mHomology1, *B1Incl );
+        }
+        return *bmMap1;
+    } else {
+        // Assume q == 2.  This will at least avoid a crash if q lies
+        // outside the required range.
+        if (!bmMap2) {
+            computeHomology();
+            computeBHomology();
+            bmMap2 = new NHomMarkedAbelianGroup(
+                *bHomology2, *mHomology2, *B2Incl );
+        }
+        return *bmMap2;
+    }
 }
 
 void NHomologicalData::computeBIncl() {
