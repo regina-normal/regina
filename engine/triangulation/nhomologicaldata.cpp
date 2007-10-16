@@ -891,104 +891,89 @@ void NHomologicalData::computeChainComplexes() {
 
 }
 
-NMarkedAbelianGroup NHomologicalData::getMH(unsigned q) {
-    NMarkedAbelianGroup* retval(0);
-
+const NMarkedAbelianGroup& NHomologicalData::getMH(unsigned q) {
     if (q==0) {
         if (!mHomology0) {
             computeChainComplexes();
             mHomology0 = new NMarkedAbelianGroup(*A0,*A1);
         }
-        retval = mHomology0;
-    } else
-        if (q==1) {
-            if (!mHomology1) {
-                computeChainComplexes();
-                mHomology1 = new NMarkedAbelianGroup(*A1,*A2);
-            }
-            retval = mHomology1;
-        } else
-            if (q==2) {
-                if (!mHomology2) {
-                    computeChainComplexes();
-                    mHomology2 = new NMarkedAbelianGroup(*A2,*A3);
-                }
-                retval = mHomology2;
-            } else
-                if (q==3) {
-                    if (!mHomology3) {
-                        computeChainComplexes();
-                        mHomology3 = new NMarkedAbelianGroup(*A3,*A4);
-                    }
-                    retval = mHomology3;
-                }
-
-    return (*retval);
-    // right now this'll probably crash if q is not 0,1,2 or 3.
+        return *mHomology0;
+    } else if (q==1) {
+        if (!mHomology1) {
+            computeChainComplexes();
+            mHomology1 = new NMarkedAbelianGroup(*A1,*A2);
+        }
+        return *mHomology1;
+    } else if (q==2) {
+        if (!mHomology2) {
+            computeChainComplexes();
+            mHomology2 = new NMarkedAbelianGroup(*A2,*A3);
+        }
+        return *mHomology2;
+    } else {
+        // Assume q == 3.  This will at least avoid a crash if q lies
+        // outside the required range.
+        if (!mHomology3) {
+            computeChainComplexes();
+            mHomology3 = new NMarkedAbelianGroup(*A3,*A4);
+        }
+        return *mHomology3;
+    }
     // the A's should probably be redone as an array of pointers...
 }
 
-NMarkedAbelianGroup NHomologicalData::getBMH(unsigned q) {
-    NMarkedAbelianGroup* retval(0);
-
+const NMarkedAbelianGroup& NHomologicalData::getBMH(unsigned q) {
     if (q==0) {
         if (!bHomology0) {
             computeChainComplexes();
             bHomology0 = new NMarkedAbelianGroup(*Bd0,*Bd1);
         }
-        retval = bHomology0;
-    } else
-        if (q==1) {
-            if (!bHomology1) {
-                computeChainComplexes();
-                bHomology1 = new NMarkedAbelianGroup(*Bd1,*Bd2);
-            }
-            retval = bHomology1;
-        } else
-            if (q==2) {
-                if (!bHomology2) {
-                    computeChainComplexes();
-                    bHomology2 = new NMarkedAbelianGroup(*Bd2,*Bd3);
-                }
-                retval = bHomology2;
-            }
-
-    return (*retval);
+        return *bHomology0;
+    } else if (q==1) {
+        if (!bHomology1) {
+            computeChainComplexes();
+            bHomology1 = new NMarkedAbelianGroup(*Bd1,*Bd2);
+        }
+        return *bHomology1;
+    } else {
+        // Assume q == 2.  This will at least avoid a crash if q lies
+        // outside the required range.
+        if (!bHomology2) {
+            computeChainComplexes();
+            bHomology2 = new NMarkedAbelianGroup(*Bd2,*Bd3);
+        }
+        return *bHomology2;
+    }
 }
 
-NMarkedAbelianGroup NHomologicalData::getDMH(unsigned q) {
-    NMarkedAbelianGroup* retval(0);
-
+const NMarkedAbelianGroup& NHomologicalData::getDMH(unsigned q) {
     if (q==0) {
         if (!dmHomology0) {
             computeChainComplexes();
             dmHomology0 = new NMarkedAbelianGroup(*B0,*B1);
         }
-        retval = dmHomology0;
-    } else
-        if (q==1) {
-            if (!dmHomology1) {
-                computeChainComplexes();
-                dmHomology1 = new NMarkedAbelianGroup(*B1,*B2);
-            }
-            retval = dmHomology1;
-        } else
-            if (q==2) {
-                if (!dmHomology2) {
-                    computeChainComplexes();
-                    dmHomology2 = new NMarkedAbelianGroup(*B2,*B3);
-                }
-                retval = dmHomology2;
-            } else
-                if (q==3) {
-                    if (!dmHomology3) {
-                        computeChainComplexes();
-                        dmHomology3 = new NMarkedAbelianGroup(*B3,*B4);
-                    }
-                    retval = dmHomology3;
-                }
-
-    return (*retval);
+        return *dmHomology0;
+    } else if (q==1) {
+        if (!dmHomology1) {
+            computeChainComplexes();
+            dmHomology1 = new NMarkedAbelianGroup(*B1,*B2);
+        }
+        return *dmHomology1;
+    } else if (q==2) {
+        if (!dmHomology2) {
+            computeChainComplexes();
+            dmHomology2 = new NMarkedAbelianGroup(*B2,*B3);
+        }
+        return *dmHomology2;
+    } else {
+        // Assume q == 3.  This will at least avoid a crash if q lies
+        // outside the required range.
+        if (!dmHomology3) {
+            computeChainComplexes();
+            dmHomology3 = new NMarkedAbelianGroup(*B3,*B4);
+        }
+        return *dmHomology3;
+    }
 }
 
 void NHomologicalData::computeHomology() {

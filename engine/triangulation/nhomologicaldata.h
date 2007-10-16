@@ -390,7 +390,7 @@ public:
      * with the regular CW-decomposition.
      * @param q the dimension of the homology group, can be 0, 1, 2 or 3.
      */
-    NMarkedAbelianGroup getMH(unsigned q);
+    const NMarkedAbelianGroup& getMH(unsigned q);
     //the manifold's homology groups, computed with the standard CW
     //decomposition. This is typically slower than getDMH? since
     //getDMH? uses the dual cw-decomposition which typically has
@@ -404,7 +404,7 @@ public:
      * @return the q-th homology group, in standard cellular homology
      * coordinates
      */
-    NMarkedAbelianGroup getBMH(unsigned q);//boundary homology groups
+    const NMarkedAbelianGroup& getBMH(unsigned q);
 
     /**
      * This routine gives access to the homomorphism from the
@@ -423,7 +423,7 @@ public:
      * @param q the dimension of the homology group, can be 0, 1, 2 or 3.
      * @return H_q of the manifold, computed in the dual CW-decomposition.
      */
-    NMarkedAbelianGroup getDMH(unsigned q);
+    const NMarkedAbelianGroup& getDMH(unsigned q);
 
     /**
      * This routine gives access to the isomorphism from getDMH(1) to
