@@ -26,33 +26,20 @@
 
 /* end stub */
 
-void addNBoundaryComponent();
-void addNComponent();
-void addNEdge();
-void addNExampleTriangulation();
-void addNFace();
-void addNFacePair();
-void addNHomologicalData();
-void addNIsomorphism();
-void addNPerm();
-void addNTetFace();
-void addNTetrahedron();
-void addNTriangulation();
-void addNVertex();
+#include "triangulation/nhomologicaldata.h"
+#include <boost/python.hpp>
 
-void addTriangulation() {
-    addNBoundaryComponent();
-    addNComponent();
-    addNEdge();
-    addNExampleTriangulation();
-    addNFace();
-    addNFacePair();
-    addNHomologicalData();
-    addNIsomorphism();
-    addNPerm();
-    addNTetFace();
-    addNTetrahedron();
-    addNTriangulation();
-    addNVertex();
+using namespace boost::python;
+using regina::NHomologicalData;
+using regina::NTriangulation;
+
+void addNHomologicalData() {
+    class_<NHomologicalData, bases<regina::ShareableObject>,
+            std::auto_ptr<NHomologicalData>, boost::noncopyable>
+            ("NHomologicalData", init<const NTriangulation&>())
+        .def(init<const NHomologicalData&>())
+        .def("getMH", &NHomologicalData::getMH,
+            return_internal_reference<>())
+    ;
 }
 
