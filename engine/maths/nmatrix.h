@@ -123,7 +123,7 @@ class NMatrix {
          * A Python-only routine that fills the matrix with the given
          * set of elements.
          *
-         * The argument \a allValues must be a Python tuple of length
+         * The argument \a allValues must be a Python list of length
          * rows() * columns().  Its values will be inserted into the
          * matrix row by row (i.e., the first row will be filled, then
          * the second row, and so on).
@@ -132,7 +132,7 @@ class NMatrix {
          *
          * @param allValues the individual elements to place into the matrix.
          */
-        void initialise(Tuple allValues);
+        void initialise(List allValues);
 #endif
 
         /**
