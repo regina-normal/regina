@@ -153,7 +153,7 @@ void smithNormalForm(NMatrixInt& matrix,
  * \pre Both \a R and \a Ri are square matrices with side length M.columns(),
  * and these matrices are inverses of each other.
  *
- * \python The argument \a rowList should be supplied as a python list.
+ * \ifacespython The argument \a rowList should be supplied as a python list.
  *
  * @param M the matrix to reduce.
  * @param R used to return the row-reduction matrix, as described above.
@@ -185,7 +185,7 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  * above) is some rank \a n lattice in Z^n.  This algorithm finds and
  * returns a basis for the lattice.
  *
- * \python The argument \a sublattice should be supplied as a python list.
+ * \ifacespython The argument \a sublattice should be supplied as a python list.
  *
  * @param hom the matrix representing the homomorphism from Z^n to Z^k;
  * this must be a \a k by \a n matrix.

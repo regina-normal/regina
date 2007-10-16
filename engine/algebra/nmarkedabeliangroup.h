@@ -245,7 +245,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * this routine returns the index-th free generator of the
          * ker(M)/img(N) in Z^l.
          *
-         * \python The return value will be a python list.
+         * \ifacespython The return value will be a python list.
          *
          * @param index specifies which free generator we're looking up;
          * this must be between 0 and getRank()-1 inclusive.
@@ -262,7 +262,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * this routine returns the index-th torsion generator of the
          * ker(M)/img(N) in Z^l.
          *
-         * \python The return value will be a python list.
+         * \ifacespython The return value will be a python list.
          *
          * @param index specifies which generator in the torsion subgroup;
          * this must be at least 0 and strictly less than the number of
@@ -286,7 +286,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * \pre The vector \a element has precisely OM.columns() entries
          * (or equivalently, ON.rows() entries).
          *
-         * \python Both \a element and the return value are python lists.
+         * \ifacespython Both \a element and the return value are python lists.
          *
          * @param element a vector of length M.columns().
          * @return a vector that describes element in the standard
