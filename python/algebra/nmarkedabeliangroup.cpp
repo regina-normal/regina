@@ -32,6 +32,7 @@
 #include <boost/python/detail/api_placeholder.hpp> // For len().
 
 using namespace boost::python;
+using regina::NHomMarkedAbelianGroup;
 using regina::NMarkedAbelianGroup;
 using regina::NMatrixInt;
 
@@ -116,6 +117,10 @@ namespace {
 
         return ans;
     }
+
+    void writeReducedMatrix_stdout(const NHomMarkedAbelianGroup& h) {
+        h.writeReducedMatrix(std::cout);
+    }
 }
 
 void addNMarkedAbelianGroup() {
@@ -159,6 +164,33 @@ void addNMarkedAbelianGroup() {
         .def("getON", &NMarkedAbelianGroup::getON,
             return_internal_reference<>())
         .def(self == self)
+    ;
+
+    class_<NHomMarkedAbelianGroup, bases<regina::ShareableObject>,
+            std::auto_ptr<NHomMarkedAbelianGroup>, boost::noncopyable>(
+            "NHomMarkedAbelianGroup",
+            init<const NMarkedAbelianGroup&, const NMarkedAbelianGroup&,
+                const NMatrixInt&>())
+        .def(init<const NHomMarkedAbelianGroup&>())
+        .def("isEpic", &NHomMarkedAbelianGroup::isEpic)
+        .def("isMonic", &NHomMarkedAbelianGroup::isMonic)
+        .def("isIso", &NHomMarkedAbelianGroup::isIso)
+        .def("isZero", &NHomMarkedAbelianGroup::isZero)
+        .def("getKernel", &NHomMarkedAbelianGroup::getKernel,
+            return_internal_reference<>())
+        .def("getCoKernel", &NHomMarkedAbelianGroup::getCoKernel,
+            return_internal_reference<>())
+        .def("getImage", &NHomMarkedAbelianGroup::getImage,
+            return_internal_reference<>())
+        .def("getDomain", &NHomMarkedAbelianGroup::getDomain,
+            return_internal_reference<>())
+        .def("getRange", &NHomMarkedAbelianGroup::getRange,
+            return_internal_reference<>())
+        .def("getDefiningMatrix", &NHomMarkedAbelianGroup::getDefiningMatrix,
+            return_internal_reference<>())
+        .def("getReducedMatrix", &NHomMarkedAbelianGroup::getReducedMatrix,
+            return_internal_reference<>())
+        .def("writeReducedMatrix", writeReducedMatrix_stdout)
     ;
 }
 
