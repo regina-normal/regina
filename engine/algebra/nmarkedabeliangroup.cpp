@@ -86,7 +86,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     while ((i<SNF_ORN.rows()) && (i<SNF_ORN.columns())) {
         if (SNF_ORN.entry(i,i)==1) totO++;
         else if (SNF_ORN.entry(i,i)>1) totIF++; 
-	else totFR++;
+        else totFR++;
         i++;
     }
 
