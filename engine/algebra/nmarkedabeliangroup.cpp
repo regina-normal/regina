@@ -54,8 +54,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
         ornC(N.rows()-rbGetRank(M),N.rows()-rbGetRank(M)),
         ornCi(N.rows()-rbGetRank(M),N.rows()-rbGetRank(M)),
         SNF_ORN(N.rows()-rbGetRank(M),N.columns()),
-        InvFacList(0), InvFacIndex(0),
-        snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0) {
+        InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0) {
     // find SNF(M).
     NMatrixInt tM(M);
 
@@ -85,22 +84,18 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     unsigned long totFR=0;// number diag entries == 0
 
     while ((i<SNF_ORN.rows()) && (i<SNF_ORN.columns())) {
-        if (SNF_ORN.entry(i,i)==1)
-            totO++;
-        else if (SNF_ORN.entry(i,i)>1) {
-            totIF++;
-            InvFacIndex.push_back(i);
-        } else
-            totFR++;
+        if (SNF_ORN.entry(i,i)==1) totO++;
+        else if (SNF_ORN.entry(i,i)>1) totIF++; 
+	else totFR++;
         i++;
     }
 
     ifNum=totIF;
     ifLoc=totO;
 
-    InvFacList.resize(InvFacIndex.size());
-    for (i=0;i<InvFacList.size();i++)
-        InvFacList[i]=SNF_ORN.entry(InvFacIndex[i],InvFacIndex[i]);
+    InvFacList.resize(ifNum);
+    for (i=0;i<ifNum;i++)
+        InvFacList[i]=SNF_ORN.entry(ifLoc+i,ifLoc+i);
 
     snfrank=SNF_ORN.rows()-totO-totIF;
     snffreeindex=totO+totIF;
@@ -232,7 +227,7 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getTorRep(unsigned long index)
     std::vector<NLargeInteger> temp(ornCi.rows()+rankOM,NLargeInteger::zero);
 
     for (unsigned long i=0;i<ornCi.rows();i++)
-        temp[i+rankOM]=ornCi.entry(i,InvFacIndex[index]);
+        temp[i+rankOM]=ornCi.entry(i,ifLoc+index);
     // the above line takes the index+snffreeindex-th column of ornCi and
     // pads it.
 
