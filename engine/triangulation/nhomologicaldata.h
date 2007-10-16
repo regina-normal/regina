@@ -496,8 +496,8 @@ public:
      * given in prime power form.  Ie it is a vector of pairs (p,x) where
      * p is a prime, and x is its exponent.
      */
-    std::vector< std::pair< NLargeInteger,
-    std::vector< unsigned long > > > getTorsionRankVector();
+    const std::vector< std::pair< NLargeInteger,
+        std::vector< unsigned long > > >& getTorsionRankVector();
     /**
      * Same as getTorsionRankVector() but returns as a human-readable string.
      *
@@ -516,7 +516,7 @@ public:
      *
      * @return The Kawauchi-Kojima sigma-vector.
      */
-    std::vector< NLargeInteger > getTorsionSigmaVector();
+    const std::vector<NLargeInteger>& getTorsionSigmaVector();
     /**
      * Same as getTorsionSigmaVector() but returns as a human-readable string.
      *
@@ -536,7 +536,7 @@ public:
      * @return The Legendre symbol vector associated to the torsion
      * linking form.
      */
-    std::vector< std::pair< NLargeInteger, std::vector< int > > >
+    const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
         getLegendreSymbolVector();
     /**
      * Same as getLegendreSymbolVector() but returns as a human-readable string.
@@ -837,18 +837,19 @@ inline long int NHomologicalData::getEulerChar()
     return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3];
 }
 
-inline std::vector< std::pair< NLargeInteger,
-std::vector< unsigned long > > > NHomologicalData::getTorsionRankVector() 
+inline const std::vector< std::pair< NLargeInteger,
+std::vector< unsigned long > > >& NHomologicalData::getTorsionRankVector() 
 {
     computeTorsionLinkingForm();
     return torRankV;
 }
-inline std::vector< NLargeInteger > NHomologicalData::getTorsionSigmaVector()  
+inline const std::vector<NLargeInteger>&
+NHomologicalData::getTorsionSigmaVector()  
 {
     computeTorsionLinkingForm();
     return twoTorSigmaV;
 }
-inline std::vector< std::pair< NLargeInteger, std::vector< int > > >
+inline const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
 NHomologicalData::getLegendreSymbolVector() 
 {
     computeTorsionLinkingForm();
@@ -857,17 +858,17 @@ NHomologicalData::getLegendreSymbolVector()
 
 inline bool NHomologicalData::formIsSplit() 
 {
-     computeTorsionLinkingForm();
+    computeTorsionLinkingForm();
     return torsionLinkingFormIsSplit;
 }
 inline bool NHomologicalData::formSatKK() 
 {
-      computeTorsionLinkingForm();
-   return torsionLinkingFormSatisfiesKKtwoTorCondition;
+    computeTorsionLinkingForm();
+    return torsionLinkingFormSatisfiesKKtwoTorCondition;
 }
 inline std::string NHomologicalData::getTorsionRankVectorString() 
 {
-     computeTorsionLinkingForm();
+    computeTorsionLinkingForm();
     return torsionRankString;
 }
 
@@ -879,18 +880,15 @@ inline std::string NHomologicalData::getTorsionSigmaVectorString()
 
 inline std::string NHomologicalData::getTorsionLegendreSymbolVectorString() 
 {
-     computeTorsionLinkingForm();
+    computeTorsionLinkingForm();
     return torsionLegendreString;
 }
 
 inline std::string NHomologicalData::getEmbeddabilityComment() 
 {
-     computeTorsionLinkingForm();
+    computeTorsionLinkingForm();
     return embeddabilityString;
 }
-
-
-
 
 } // namespace regina
 
