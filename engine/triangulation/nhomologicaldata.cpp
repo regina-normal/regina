@@ -359,7 +359,6 @@ void NHomologicalData::computeChainComplexes() {
     }
     // end B1
 
-    std::deque<NEdgeEmbedding> edgeque;
     // start B2: for each dual face == non-boundary edge,
     // find dual edges it bounds == link of tetrahedra that contain it
     for (i=0;i<dNBE.size();i++) {
