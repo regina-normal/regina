@@ -1127,21 +1127,18 @@ void NHomologicalData::computeTorsionLinkingForm() {
     // the indexing will be as a list of pairs
     // < prime, vector< pair< power, index> > >
     // Use a list because we are continually inserting items in the middle.
-    std::list< std::pair< NLargeInteger, std::vector<
-        std::pair<unsigned long, unsigned long> > > > indexing;
+    typedef std::vector<std::pair<unsigned long, unsigned long> >
+        IndexingPowerVector;
+    typedef std::pair<NLargeInteger, IndexingPowerVector> IndexingPrimePair;
+    typedef std::list<IndexingPrimePair> IndexingList;
+    IndexingList indexing;
     // indexing[i] is the i-th prime in increasing order, the first bit is
     // the prime, the 2nd bit is the vector list of powers, the power is an
     // unsigned long, and its respective index in ppList and pvList is the
     // 2nd bit...
-    std::list< std::pair< NLargeInteger, std::vector<
-        std::pair<unsigned long, unsigned long> > > >::iterator it1;
-    std::list< std::pair< NLargeInteger, std::vector<
-        std::pair<unsigned long, unsigned long> > > >::iterator il1;
-
-    std::vector< std::pair<unsigned long, unsigned long> >::iterator it2;
-    std::vector< std::pair<unsigned long, unsigned long> >::iterator il2;
-    std::pair< NLargeInteger, std::vector<
-        std::pair<unsigned long, unsigned long> > > dummyv;
+    IndexingList::iterator it1, il1;
+    IndexingPowerVector::iterator it2, il2;
+    IndexingPrimePair dummyv;
 
     for (i=0; i<pPrList.size(); i++) { 
         // for each entry in pPrList, find its appropriate position in indexing.
@@ -1301,8 +1298,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
             torsionLinkingFormPresentationMat.entry(i,j)=NRational(tR,tD);
         }
 
-    // Compute indexing.size() just once, since for std::list this might be a slow
-    // operation.
+    // Compute indexing.size() just once, since for std::list this might be
+    // a slow operation.
     unsigned long indexingSize = indexing.size();
 
     h1PrimePowerDecomp.resize(indexingSize);
