@@ -499,13 +499,21 @@ class NHomMarkedAbelianGroup : public ShareableObject {
     public:
 
         /**
+         * This is the sole NHomMarkedAbelianGroup constructor, other than
+         * the copy constructor. 
          * Constructs a homomorphism from two marked abelian groups and
          * a matrix that indicates where the generators are sent.
          *
-         * @param domain domain group
-         * @param range range group
-         * @param mat the matrix that describes the homomorphism from
-         * \a domain to \a range, given in the chain-complex coordinates.
+         * @param dom domain group.  
+         * @param ran range group.
+         * @param mat the matrix that describes the homomorphism from dom
+         * to ran, given in the chain-complex coordinates. If dom was defined
+	 * via the chain complex Z^a --N1--> Z^b --M1--> Z^c, and ran was
+	 * defined via Z^d --N2--> Z^e --M2--> Z^f, then mat is a matrix that
+	 * describes a homomorphism from Z^b to Z^e (an e-by-b matrix). In
+	 * order for this to make sense as a homomorphism of the groups
+	 * represented by "dom" and "ran" respectively, one requires the identity
+	 * img(mat*N1) \subset img(N2).  This is not checked, but assumed.
          */
         NHomMarkedAbelianGroup(const NMarkedAbelianGroup& domain,
                 const NMarkedAbelianGroup& range,
