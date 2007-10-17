@@ -166,6 +166,8 @@ class NPrimes {
          * primes will be expanded as necessary; there is no need for
          * the caller to manage this list manually.
          *
+         * \todo \opt Add a version that does not return the factors by value.
+         *
          * \ifacespython In addition to this routine, the routine
          * primeDecompInt() is also available.  The routine
          * primeDecompInt() behaves identically to this routine except
@@ -216,6 +218,8 @@ class NPrimes {
          *
          * \todo \opt Implement this routine natively to avoid the overhead
          * of the temporary primeDecomp() vector.
+         *
+         * \todo \opt Add a version that does not return the factors by value.
          *
          * \ifacespython In addition to this routine, the routine
          * primePowerDecompInt() is also available.  The routine
