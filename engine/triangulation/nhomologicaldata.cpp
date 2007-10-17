@@ -1196,7 +1196,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
 
     NMatrixInt standardBasis( numStandardCells[1], pvList.size() );
-    NMatrixInt dualtostandard(h1CellAp.getDefiningMatrix());
+    const NMatrixInt& dualtostandard(h1CellAp.getDefiningMatrix());
 
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
@@ -1519,8 +1519,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
     std::vector<int> tempa;
     unsigned long curri;
 
-    NMatrixInt *tempM;
-
     for (i=starti; i<torRankV.size(); i++) // for each prime
     {
         tempa.resize(0);
@@ -1535,7 +1533,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         // dimensions of p^{j+1} subspace
         {
             // initialize a torRankV[i].second[j] square matrix.
-            tempM=new NMatrixInt(torRankV[i].second[j], torRankV[i].second[j]);
+            NMatrixInt tempM(torRankV[i].second[j], torRankV[i].second[j]);
 
             // tempM will be the torRankV[i].second[j] square submatrix
             // starting at curri, multiplied by tI == p^j
@@ -1544,16 +1542,12 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
             for (k=0; k<torRankV[i].second[j]; k++)
                 for (l=0; l<torRankV[i].second[j]; l++)
-                    tempM->entry(k,l) = (NRational(tI)*linkingFormPD[i]->
+                    tempM.entry(k,l) = (NRational(tI)*linkingFormPD[i]->
                         entry(k+curri,l+curri)).getNumerator();
 
-            tempa.push_back( tempM->det().legendre(torRankV[i].first) );
+            tempa.push_back( tempM.det().legendre(torRankV[i].first) );
             // legendre symbol, compute and append to tempa
             // compute determinant.
-
-            // delete the temp matrix.
-            // if (tempM != 0)
-            delete tempM;
 
             // increment curri
             curri = curri + torRankV[i].second[j]; // crashes here.
