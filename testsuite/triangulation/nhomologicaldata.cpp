@@ -209,23 +209,18 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                 unsigned long c0, unsigned long c1, unsigned long c2,
                 unsigned long c3) {
             NHomologicalData dat(tri);
-            std::vector<unsigned long> vals = dat.getNumStandardCells();
-
-            if (vals.size() != 4) {
-                std::ostringstream msg;
-                msg << name << ": Standard cell count contains "
-                    << vals.size() << " element(s), not four.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
             unsigned long ans[4] = { c0, c1, c2, c3 };
-            for (int i = 0; i < 4; i++)
-                if (vals[i] != ans[i]) {
+
+            unsigned long val;
+            for (int i = 0; i < 4; i++) {
+                val = dat.getNumStandardCells(i);
+                if (val != ans[i]) {
                     std::ostringstream msg;
                     msg << name << ": Number of standard cells of dimension "
-                        << i << " is " << vals[i] << ", not " << ans[i] << ".";
+                        << i << " is " << val << ", not " << ans[i] << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
+            }
         }
 
         void standardCells() {
@@ -245,23 +240,18 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                 unsigned long c0, unsigned long c1, unsigned long c2,
                 unsigned long c3) {
             NHomologicalData dat(tri);
-            std::vector<unsigned long> vals = dat.getNumDualCells();
-
-            if (vals.size() != 4) {
-                std::ostringstream msg;
-                msg << name << ": Dual cell count contains "
-                    << vals.size() << " element(s), not four.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
             unsigned long ans[4] = { c0, c1, c2, c3 };
-            for (int i = 0; i < 4; i++)
-                if (vals[i] != ans[i]) {
+
+            unsigned long val;
+            for (int i = 0; i < 4; i++) {
+                val = dat.getNumDualCells(i);
+                if (val != ans[i]) {
                     std::ostringstream msg;
                     msg << name << ": Number of dual cells of dimension "
-                        << i << " is " << vals[i] << ", not " << ans[i] << ".";
+                        << i << " is " << val << ", not " << ans[i] << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
+            }
         }
 
         void dualCells() {

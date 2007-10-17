@@ -635,16 +635,16 @@ void NTriCellularInfoUI::refresh() {
         regina::NHomologicalData minfo(*tri);
 
         Cells->setText(i18n("%1, %2, %3, %4").
-            arg(minfo.getNumStandardCells()[0]).
-            arg(minfo.getNumStandardCells()[1]).
-            arg(minfo.getNumStandardCells()[2]).
-            arg(minfo.getNumStandardCells()[3]));
+            arg(minfo.getNumStandardCells(0)).
+            arg(minfo.getNumStandardCells(1)).
+            arg(minfo.getNumStandardCells(2)).
+            arg(minfo.getNumStandardCells(3)));
 
         DualCells->setText(i18n("%1, %2, %3, %4").
-            arg(minfo.getNumDualCells()[0]).
-            arg(minfo.getNumDualCells()[1]).
-            arg(minfo.getNumDualCells()[2]).
-            arg(minfo.getNumDualCells()[3]));
+            arg(minfo.getNumDualCells(0)).
+            arg(minfo.getNumDualCells(1)).
+            arg(minfo.getNumDualCells(2)).
+            arg(minfo.getNumDualCells(3)));
 
         EulerChar->setText(QString::number(minfo.getEulerChar()));
 
