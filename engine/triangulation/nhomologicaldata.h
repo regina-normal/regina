@@ -39,6 +39,7 @@
 #include "triangulation/ntriangulation.h"
 #include "utilities/nindexedarray.h"
 #include "utilities/nrational.h"
+#include <algorithm>
 #include <vector>
 
 namespace regina {
@@ -209,11 +210,11 @@ private:
     bool ccIndexingComputed;
 
     /** number of standard cells in dimension 0, 1, 2, 3. */
-    std::vector<unsigned long> numStandardCells;
+    unsigned long numStandardCells[4];
     /** number of dual cells in dimension 0, 1, 2, 3. */
-    std::vector<unsigned long> numDualCells;
+    unsigned long numDualCells[4];
     /** number of (standard) boundary cells in dimension 0, 1, 2. */
-    std::vector<unsigned long> numBdryCells;
+    unsigned long numBdryCells[3];
 
     /** non-ideal vertices */
     NIndexedArray<unsigned long> sNIV;
@@ -391,14 +392,13 @@ public:
      * @param q the dimension of the homology group, can be 0, 1, 2 or 3.
      */
     const NMarkedAbelianGroup& getMH(unsigned q);
-    //the manifold's homology groups, computed with the standard CW
-    //decomposition. This is typically slower than getDMH? since
-    //getDMH? uses the dual cw-decomposition which typically has
-    //an order of magnitude less cells.
     /**
      * This routine gives access to the homology of the boundary
-     * of the manifold, computed
-     * with the regular CW-decomposition.
+     * of the manifold, computed with the regular CW-decomposition.
+     *
+     * This is typically slower than getDHM(), since getDHM() uses the
+     * dual CW-decomposition which typically has an order of magnitude
+     * fewer cells.
      *
      * @param q the dimension of the homology group: can be 0, 1 or 2.
      * @return the q-th homology group, in standard cellular homology
@@ -437,8 +437,8 @@ public:
     const NHomMarkedAbelianGroup& getH1cellap();
 
     /**
-     * A list of the number of cells in the standard genuine CW-decomposition
-     * of the manifold.
+     * A list of the number of cells of the given dimension
+     * in the standard genuine CW-decomposition of the manifold.
      *
      * In the case that the triangulation is a proper
      * triangulation of a manifold (or delta-complex decomposition) it
@@ -449,28 +449,31 @@ public:
      * returning the details of the corresponding compact manifold with
      * boundary a union of closed surfaces.
      *
-     * @return a vector that contains the number of cells in the standard
+     * @param the dimension of the cells in question; this must be 0, 1, 2 or 3.
+     * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the closed manifold.
      */
-    std::vector<unsigned long> getNumStandardCells();
+    unsigned long getNumStandardCells(unsigned dimension);
     /**
-     * A list of the number of cells in the dual CW-decomposition
-     * of the manifold. This is typically much smaller than
-     * getNumStandardCells().
+     * A list of the number of cells of the given dimension
+     * in the dual CW-decomposition of the manifold. This is typically
+     * much smaller than getNumStandardCells().
      *
-     * @return A vector that contains the number of cells in the dual
+     * @param the dimension of the cells in question; this must be 0, 1, 2 or 3.
+     * @return the number of cells of the given dimension in the dual
      * CW-decomposition to the triangulation.
      */
-    std::vector<unsigned long> getNumDualCells();
+    unsigned long getNumDualCells(unsigned dimension);
     /**
-     * A list of the number of cells in the standard CW-decomposition
-     * of the boundary of the manifold. This is the subcomplex of
-     * the complex used in getNumStandardCells().
+     * A list of the number of cells of the given dimension in the
+     * standard CW-decomposition of the boundary of the manifold.
+     * This is the subcomplex of the complex used in getNumStandardCells().
      *
-     * @return A vector which lists the number of cells in the standard
+     * @param the dimension of the cells in question; this must be 0, 1 or 2.
+     * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the boundary.
      */
-    std::vector<unsigned long> getNumBdryCells();
+    unsigned long getNumBdryCells(unsigned dimension);
     /**
      * The proper Euler characteristic of the manifold, computed from
      * getNumDualCells. This is the genuine Euler characteristic as defined
@@ -506,7 +509,7 @@ public:
      * @return human-readable prime power factorization of the order of
      * the torsion subgroup of H1.
      */
-    std::string getTorsionRankVectorString();
+    const std::string& getTorsionRankVectorString();
     /**
      * Returns the 2-torsion sigma vector. This is the 2nd of the three
      * Kawauchi-Kojima invariants. Assumes manifold is orientable and
@@ -524,7 +527,7 @@ public:
      *
      * @return The Kawauchi-Kojima sigma-vector in human readable form.
      */
-    std::string getTorsionSigmaVectorString();
+    const std::string& getTorsionSigmaVectorString();
 
     /**
      * Returns the odd p-torsion Legendre symbol vector. This is the
@@ -545,7 +548,7 @@ public:
      *
      * @return the Legendre symbol vector in human-readable form.
      */
-    std::string getTorsionLegendreSymbolVectorString();
+    const std::string& getTorsionLegendreSymbolVectorString();
 
     /**
      * Returns true iff torsion linking form is `hyperbolic' in
@@ -594,7 +597,7 @@ public:
      * is known about where this manifold embeds, based solely
      * on the manifold's homological data.
      */
-    std::string getEmbeddabilityComment();
+    const std::string& getEmbeddabilityComment();
 };
 
 /*@}*/
@@ -627,8 +630,6 @@ inline NHomologicalData::NHomologicalData(const NTriangulation& input):
 
         ccIndexingComputed(false),
 
-        numStandardCells(0), numDualCells(0), numBdryCells(0),
-
         sNIV(0), sIEOE(0), sIEEOF(0), sIEFOT(0),
         dNINBV(0), dNBE(0), dNBF(0),
         sBNIV(0), sBNIE(0), sBNIF(0),
@@ -645,6 +646,10 @@ inline NHomologicalData::NHomologicalData(const NTriangulation& input):
         h1PrimePowerDecomp(0), linkingFormPD(0) 
 {
     tri = new NTriangulation(input);
+
+    std::fill(numStandardCells, numStandardCells + 4, 0);
+    std::fill(numDualCells, numDualCells + 4, 0);
+    std::fill(numBdryCells, numBdryCells + 3, 0);
 }
 
 
@@ -698,10 +703,10 @@ ShareableObject() {
     ccIndexingComputed = g.ccIndexingComputed;
 
     if (ccIndexingComputed) {
-        numStandardCells = g.numStandardCells; // number of cells of
-                                               // dimension 0, 1, 2, 3.
-        numDualCells = g.numDualCells; // dual cells
-        numBdryCells = g.numBdryCells; // standard boundary cells
+        // Numbers of cells, dual cells and standard boundary cells
+        std::copy(g.numStandardCells, g.numStandardCells + 4, numStandardCells);
+        std::copy(g.numDualCells, g.numDualCells + 4, numDualCells);
+        std::copy(g.numBdryCells, g.numBdryCells + 3, numBdryCells);
 
         sNIV = g.sNIV;   // non-ideal vertices
         sIEOE = g.sIEOE;  // ideal endpoints of edges
@@ -809,25 +814,25 @@ inline NHomologicalData::~NHomologicalData() {
     }
 }
 
-inline std::vector<unsigned long> NHomologicalData::getNumStandardCells()
+inline unsigned long NHomologicalData::getNumStandardCells(unsigned dimension)
 {
     // number of cells of dimension 0, 1, 2, 3.
     computeccIndexing();
-    return numStandardCells;
+    return numStandardCells[dimension];
 }
 
-inline std::vector<unsigned long> NHomologicalData::getNumDualCells()
+inline unsigned long NHomologicalData::getNumDualCells(unsigned dimension)
 {
     // dual cells
     computeccIndexing();
-    return numDualCells;
+    return numDualCells[dimension];
 }
 
-inline std::vector<unsigned long> NHomologicalData::getNumBdryCells()
+inline unsigned long NHomologicalData::getNumBdryCells(unsigned dimension)
 {
     // standard boundary cells
     computeccIndexing();
-    return numBdryCells;
+    return numBdryCells[dimension];
 }
 
 inline long int NHomologicalData::getEulerChar()
@@ -866,25 +871,25 @@ inline bool NHomologicalData::formSatKK()
     computeTorsionLinkingForm();
     return torsionLinkingFormSatisfiesKKtwoTorCondition;
 }
-inline std::string NHomologicalData::getTorsionRankVectorString() 
+inline const std::string& NHomologicalData::getTorsionRankVectorString() 
 {
     computeTorsionLinkingForm();
     return torsionRankString;
 }
 
-inline std::string NHomologicalData::getTorsionSigmaVectorString()
+inline const std::string& NHomologicalData::getTorsionSigmaVectorString()
 {
     computeTorsionLinkingForm();
     return torsionSigmaString;
 }
 
-inline std::string NHomologicalData::getTorsionLegendreSymbolVectorString() 
+inline const std::string& NHomologicalData::getTorsionLegendreSymbolVectorString() 
 {
     computeTorsionLinkingForm();
     return torsionLegendreString;
 }
 
-inline std::string NHomologicalData::getEmbeddabilityComment() 
+inline const std::string& NHomologicalData::getEmbeddabilityComment() 
 {
     computeTorsionLinkingForm();
     return embeddabilityString;

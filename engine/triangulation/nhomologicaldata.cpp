@@ -184,30 +184,22 @@ void NHomologicalData::computeccIndexing() {
 
         ccIndexingComputed = true;
 
-        // standard 0-cells:
-        numStandardCells.push_back(sNIV.size() + sIEOE.size());
-        // standard 1-cells:
-        numStandardCells.push_back(tri->getNumberOfEdges() + sIEEOF.size());
-        // standard 2-cells:
-        numStandardCells.push_back(tri->getNumberOfFaces() + sIEFOT.size());
-        // standard 3-cells:
-        numStandardCells.push_back(tri->getNumberOfTetrahedra());
+        // standard (0..3)-cells:
+        numStandardCells[0] = sNIV.size() + sIEOE.size();
+        numStandardCells[1] = tri->getNumberOfEdges() + sIEEOF.size();
+        numStandardCells[2] = tri->getNumberOfFaces() + sIEFOT.size();
+        numStandardCells[3] = tri->getNumberOfTetrahedra();
 
-        // dual 0-cells:
-        numDualCells.push_back(tri->getNumberOfTetrahedra());
-        // dual 1-cells:
-        numDualCells.push_back(dNBF.size());
-        // dual 2-cells:
-        numDualCells.push_back(dNBE.size());
-        // dual 3-cells:
-        numDualCells.push_back(dNINBV.size());
+        // dual (0..3)-cells:
+        numDualCells[0] = tri->getNumberOfTetrahedra();
+        numDualCells[1] = dNBF.size();
+        numDualCells[2] = dNBE.size();
+        numDualCells[3] = dNINBV.size();
 
-        // boundary 0-cells:
-        numBdryCells.push_back(sBNIV.size() + sIEOE.size());
-        // boundary 1-cells:
-        numBdryCells.push_back(sBNIE.size() + sIEEOF.size());
-        // boundary 2-cells:
-        numBdryCells.push_back(sBNIF.size() + sIEFOT.size());
+        // boundary (0..2)-cells:
+        numBdryCells[0] = sBNIV.size() + sIEOE.size();
+        numBdryCells[1] = sBNIE.size() + sIEEOF.size();
+        numBdryCells[2] = sBNIF.size() + sIEFOT.size();
     }
 }
 
