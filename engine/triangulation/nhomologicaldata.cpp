@@ -1067,7 +1067,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         return;
 
     // dual h1 --> standard h1 isomorphism:
-    NHomMarkedAbelianGroup h1CellAp(getH1cellap());
+    const NHomMarkedAbelianGroup& h1CellAp(getH1cellap());
     // min number of torsion gens:
     unsigned long niv(dmHomology1->getNumberOfInvariantFactors());
     // for holding prime decompositions.:
