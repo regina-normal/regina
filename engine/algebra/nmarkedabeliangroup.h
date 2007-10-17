@@ -499,22 +499,31 @@ class NHomMarkedAbelianGroup : public ShareableObject {
     public:
 
         /**
-         * This is the sole NHomMarkedAbelianGroup constructor, other than
-         * the copy constructor. 
          * Constructs a homomorphism from two marked abelian groups and
          * a matrix that indicates where the generators are sent.
+         * This is the sole NHomMarkedAbelianGroup constructor, other than
+         * the copy constructor.
          *
-         * @param dom domain group.  
-         * @param ran range group.
-         * @param mat the matrix that describes the homomorphism from dom
-         * to ran, given in the chain-complex coordinates. If dom was defined
-	 * via the chain complex Z^a --N1--> Z^b --M1--> Z^c, and ran was
-	 * defined via Z^d --N2--> Z^e --M2--> Z^f, then mat is a matrix that
-	 * describes a homomorphism from Z^b to Z^e (an e-by-b matrix). In
-	 * order for this to make sense as a homomorphism of the groups
-	 * represented by "dom" and "ran" respectively, one requires the identity
-	 * img(mat*N1) \subset img(N2).  This is not checked, but assumed.
-	 * similarly, ker(M1) must be sent into ker(M2).
+         * The matrix must be given in the chain-complex coordinates.
+         * If \a domain was defined via the chain complex
+         * <tt>Z^a --N1--> Z^b --M1--> Z^c</tt>, and \a range was
+         * defined via <tt>>Z^d --N2--> Z^e --M2--> Z^f</tt>, then \a mat is
+         * a matrix that describes a homomorphism from Z^b to Z^e
+         * (an e-by-b matrix).
+         *
+         * In order for this to make sense as a homomorphism of the groups
+         * represented by \a domain and \a range respectively, one requires
+         * img(mat*N1) to be a subset of img(N2).  This is not checked, but
+         * assumed.  Similarly, ker(M1) must be sent into ker(M2).
+         *
+         * \pre The matrix \a has the required dimensions and sends
+         * img(mat*N1) and ker(M1) into img(N2) and ker(M2) respectively,
+         * as described above.
+         *
+         * @param domain the domain group.
+         * @param range the range group.
+         * @param mat the matrix that describes the homomorphism from \a domain
+         * to \a range.
          */
         NHomMarkedAbelianGroup(const NMarkedAbelianGroup& domain,
                 const NMarkedAbelianGroup& range,
