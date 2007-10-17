@@ -363,8 +363,9 @@ void NHomologicalData::computeChainComplexes() {
     // start B2: for each dual face == non-boundary edge,
     // find dual edges it bounds == link of tetrahedra that contain it
     for (i=0;i<dNBE.size();i++) {
-        edgeque=tri->getEdge(dNBE[i])->getEmbeddings();
-        for (j=0;j<tri->getEdge(dNBE[i])->getNumberOfEmbeddings();j++) {
+        const std::deque<NEdgeEmbedding>& edgeque(
+            tri->getEdge(dNBE[i])->getEmbeddings());
+        for (j=0;j<edgeque.size();j++) {
             p1=edgeque[j].getVertices();
             // the face of the tetrahedron corresponding to vertex 2 is
             // what we want to orient... but we need to decide on its
@@ -384,7 +385,6 @@ void NHomologicalData::computeChainComplexes() {
     }
     // end B2
 
-    std::vector<NVertexEmbedding> vtetlist;
     NIndexedArray<long int> unorientedlist; // this should be the list of
                                             // unoriented tetrahedra
     // together with marked vertices, stored as
@@ -404,7 +404,8 @@ void NHomologicalData::computeChainComplexes() {
 
     for (i=0;i<dNINBV.size();i++) {
         // dNINBV[i] is the vertices.index() of this vertex.
-        vtetlist=tri->getVertex(dNINBV[i])->getEmbeddings();
+        const std::vector<NVertexEmbedding>& vtetlist(
+            tri->getVertex(dNINBV[i])->getEmbeddings());
         tetor.resize(vtetlist.size(),0);
         unorientedlist.resize(0);
 
