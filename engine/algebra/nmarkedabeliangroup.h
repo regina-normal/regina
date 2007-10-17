@@ -514,6 +514,7 @@ class NHomMarkedAbelianGroup : public ShareableObject {
 	 * order for this to make sense as a homomorphism of the groups
 	 * represented by "dom" and "ran" respectively, one requires the identity
 	 * img(mat*N1) \subset img(N2).  This is not checked, but assumed.
+	 * similarly, ker(M1) must be sent into ker(M2).
          */
         NHomMarkedAbelianGroup(const NMarkedAbelianGroup& domain,
                 const NMarkedAbelianGroup& range,
