@@ -336,8 +336,8 @@ void NHomMarkedAbelianGroup::computeReducedMatrix() {
         // step 1) temp1 = truncate columns (matrix * domain.getMRBi )
         // step 2) kerMatrix = truncate rows (range.getMRBi * temp1 )
 
-        NMatrixInt dcckb(domain.getMRB());
-        NMatrixInt rcckb(range.getMRBi());
+        const NMatrixInt& dcckb(domain.getMRB());
+        const NMatrixInt& rcckb(range.getMRBi());
 
         NMatrixInt temp1( matrix.rows(), matrix.columns()-domain.getRankOM() );
         for (i=0;i<temp1.rows();i++)
@@ -352,11 +352,11 @@ void NHomMarkedAbelianGroup::computeReducedMatrix() {
                     kerMatrix.entry(i,j) +=
                         rcckb.entry(i+range.getRankOM(), k) * temp1.entry(k,j);
 
-        NMatrixInt redMatrix( kerMatrix.rows()-range.getTorLoc(),
+        reducedMatrix = new NMatrixInt( kerMatrix.rows()-range.getTorLoc(),
                 kerMatrix.columns()-domain.getTorLoc() );
 
-        NMatrixInt dccqb(domain.getNCBi());
-        NMatrixInt rccqb(range.getNCB());
+        const NMatrixInt& dccqb(domain.getNCBi());
+        const NMatrixInt& rccqb(range.getNCB());
 
         NMatrixInt temp2( kerMatrix.rows(),
             kerMatrix.columns() - domain.getTorLoc() );
@@ -367,13 +367,11 @@ void NHomMarkedAbelianGroup::computeReducedMatrix() {
                         dccqb.entry(k,j + domain.getTorLoc() );
                 }
 
-        for (i=0;i<redMatrix.rows();i++)
-            for (j=0;j<redMatrix.columns();j++)
+        for (i=0;i<reducedMatrix->rows();i++)
+            for (j=0;j<reducedMatrix->columns();j++)
                 for (k=0;k<rccqb.rows();k++)
-                    redMatrix.entry(i,j) +=
+                    reducedMatrix->entry(i,j) +=
                         rccqb.entry(i+range.getTorLoc(), k) * temp2.entry(k,j);
-
-        reducedMatrix = new NMatrixInt(redMatrix);
     }
 }
 
@@ -383,7 +381,7 @@ void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
 
         unsigned long i;
 
-        NMatrixInt redMatrix(*reducedMatrix);
+        const NMatrixInt& redMatrix(*reducedMatrix);
 
         // the kernel is the dcLpreimage lattice mod the domain lattice.
         // so after computing the dcLpreimage lattice, we need to represent
@@ -430,9 +428,7 @@ void NHomMarkedAbelianGroup::computeKernel() {
 
         NMatrixInt dummy( 1, dcLpreimage.columns() );
 
-        NMarkedAbelianGroup retval( dummy, workMat );
-
-        kernel = new NMarkedAbelianGroup(retval);
+        kernel = new NMarkedAbelianGroup(dummy, workMat);
     }
 }
 
@@ -453,9 +449,8 @@ void NHomMarkedAbelianGroup::computeCoKernel() {
                 range.getInvariantFactor(i);
 
         NMatrixInt ccgenerators( 1, reducedMatrix->rows() );
-        NMarkedAbelianGroup retval(ccgenerators, ccrelators);
 
-        coKernel = new NMarkedAbelianGroup(retval);
+        coKernel = new NMarkedAbelianGroup(ccgenerators, ccrelators);
     }
 }
 
@@ -465,7 +460,7 @@ void NHomMarkedAbelianGroup::computeCoKernel() {
 void NHomMarkedAbelianGroup::computeImage() {
     if (!image) {
         computeReducedKernelLattice();
-        NMatrixInt dcLpreimage( *reducedKernelLattice );
+        const NMatrixInt& dcLpreimage( *reducedKernelLattice );
 
         unsigned long i,j;
 
@@ -481,9 +476,7 @@ void NHomMarkedAbelianGroup::computeImage() {
                 imgCCn.entry(i,j+domain.getNumberOfInvariantFactors()) =
                     dcLpreimage.entry(i,j);
 
-        NMarkedAbelianGroup retval(imgCCm, imgCCn);
-
-        image = new NMarkedAbelianGroup(retval);
+        image = new NMarkedAbelianGroup(imgCCm, imgCCn);
     }
 }
 
