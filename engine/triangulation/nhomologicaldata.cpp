@@ -105,782 +105,789 @@ void NHomologicalData::writeTextShort(std::ostream& out) const {
 }
 
 void NHomologicalData::computeccIndexing() {
-    if (!ccIndexingComputed) {
-        unsigned long i=0;
-        unsigned long j=0;
+    // Only do this if we haven't already done it.
+    if (ccIndexingComputed)
+        return;
 
-        for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
-                vit != tri->getVertices().end(); vit++) {
-            if (!((*vit)->isIdeal())) sNIV.push_back(i);
-            i++;
-        } // sNIV
+    // Off we go...
 
-        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
-                eit != tri->getEdges().end(); eit++) {
-            for (i=0;i<2;i++) {
-                if ((*eit)->getVertex(i)->isIdeal()) sIEOE.push_back(2*j+i);
-            }
-            j++;
+    unsigned long i=0;
+    unsigned long j=0;
+
+    for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
+            vit != tri->getVertices().end(); vit++) {
+        if (!((*vit)->isIdeal())) sNIV.push_back(i);
+        i++;
+    } // sNIV
+
+    for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
+            eit != tri->getEdges().end(); eit++) {
+        for (i=0;i<2;i++) {
+            if ((*eit)->getVertex(i)->isIdeal()) sIEOE.push_back(2*j+i);
         }
-        j=0; // sIEOE
-
-        for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-                fit != tri->getFaces().end(); fit++) {
-            for (i=0;i<3;i++) {
-                if ((*fit)->getVertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);
-            }
-            j++;
-        }
-        j=0; // sIEEOF
-
-        for (NTriangulation::TetrahedronIterator tit =
-                tri->getTetrahedra().begin();
-                tit != tri->getTetrahedra().end(); tit++) {
-            for (i=0;i<4;i++)  {
-                if ((*tit)->getVertex(i)->isIdeal()) {
-                    sIEFOT.push_back(4*j+i);
-                }
-            }
-            j++;
-        }
-        j=0;// sIEFOT
-
-        for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
-                vit != tri->getVertices().end(); vit++) // dNINBV
-        {if ((!((*vit)->isIdeal())) &&
-                (!((*vit)->isBoundary()))) dNINBV.push_back(j);
-            j++;
-        } j=0;
-        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
-                eit != tri->getEdges().end(); eit++) {
-            if (!((*eit)->isBoundary()))
-                dNBE.push_back(j);
-            j++;
-        }
-        j=0; // dNBE
-        for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-                fit != tri->getFaces().end(); fit++) {
-            if (!((*fit)->isBoundary()))        dNBF.push_back(j);
-            j++;
-        }
-        i=0; // dNBF
-
-        for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
-                vit != tri->getVertices().end(); vit++) // sBNIV
-        {if ( (!((*vit)->isIdeal())) &&
-                ((*vit)->isBoundary())) sBNIV.push_back(i);
-            i++;
-        } i=0;
-        for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
-                eit != tri->getEdges().end(); eit++) // sBNIE
-        {if ((*eit)->isBoundary()) sBNIE.push_back(i);
-            i++;
-        } i=0;
-        for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-                fit != tri->getFaces().end(); fit++) // sBNIF
-        {if ((*fit)->isBoundary()) sBNIF.push_back(i);
-            i++;
-        }
-
-        ccIndexingComputed = true;
-
-        // standard (0..3)-cells:
-        numStandardCells[0] = sNIV.size() + sIEOE.size();
-        numStandardCells[1] = tri->getNumberOfEdges() + sIEEOF.size();
-        numStandardCells[2] = tri->getNumberOfFaces() + sIEFOT.size();
-        numStandardCells[3] = tri->getNumberOfTetrahedra();
-
-        // dual (0..3)-cells:
-        numDualCells[0] = tri->getNumberOfTetrahedra();
-        numDualCells[1] = dNBF.size();
-        numDualCells[2] = dNBE.size();
-        numDualCells[3] = dNINBV.size();
-
-        // boundary (0..2)-cells:
-        numBdryCells[0] = sBNIV.size() + sIEOE.size();
-        numBdryCells[1] = sBNIE.size() + sIEEOF.size();
-        numBdryCells[2] = sBNIF.size() + sIEFOT.size();
+        j++;
     }
+    j=0; // sIEOE
+
+    for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
+            fit != tri->getFaces().end(); fit++) {
+        for (i=0;i<3;i++) {
+            if ((*fit)->getVertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);
+        }
+        j++;
+    }
+    j=0; // sIEEOF
+
+    for (NTriangulation::TetrahedronIterator tit =
+            tri->getTetrahedra().begin();
+            tit != tri->getTetrahedra().end(); tit++) {
+        for (i=0;i<4;i++)  {
+            if ((*tit)->getVertex(i)->isIdeal()) {
+                sIEFOT.push_back(4*j+i);
+            }
+        }
+        j++;
+    }
+    j=0;// sIEFOT
+
+    for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
+            vit != tri->getVertices().end(); vit++) // dNINBV
+    {if ((!((*vit)->isIdeal())) &&
+            (!((*vit)->isBoundary()))) dNINBV.push_back(j);
+        j++;
+    } j=0;
+    for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
+            eit != tri->getEdges().end(); eit++) {
+        if (!((*eit)->isBoundary()))
+            dNBE.push_back(j);
+        j++;
+    }
+    j=0; // dNBE
+    for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
+            fit != tri->getFaces().end(); fit++) {
+        if (!((*fit)->isBoundary()))        dNBF.push_back(j);
+        j++;
+    }
+    i=0; // dNBF
+
+    for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
+            vit != tri->getVertices().end(); vit++) // sBNIV
+    {if ( (!((*vit)->isIdeal())) &&
+            ((*vit)->isBoundary())) sBNIV.push_back(i);
+        i++;
+    } i=0;
+    for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
+            eit != tri->getEdges().end(); eit++) // sBNIE
+    {if ((*eit)->isBoundary()) sBNIE.push_back(i);
+        i++;
+    } i=0;
+    for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
+            fit != tri->getFaces().end(); fit++) // sBNIF
+    {if ((*fit)->isBoundary()) sBNIF.push_back(i);
+        i++;
+    }
+
+    ccIndexingComputed = true;
+
+    // standard (0..3)-cells:
+    numStandardCells[0] = sNIV.size() + sIEOE.size();
+    numStandardCells[1] = tri->getNumberOfEdges() + sIEEOF.size();
+    numStandardCells[2] = tri->getNumberOfFaces() + sIEFOT.size();
+    numStandardCells[3] = tri->getNumberOfTetrahedra();
+
+    // dual (0..3)-cells:
+    numDualCells[0] = tri->getNumberOfTetrahedra();
+    numDualCells[1] = dNBF.size();
+    numDualCells[2] = dNBE.size();
+    numDualCells[3] = dNINBV.size();
+
+    // boundary (0..2)-cells:
+    numBdryCells[0] = sBNIV.size() + sIEOE.size();
+    numBdryCells[1] = sBNIE.size() + sIEEOF.size();
+    numBdryCells[2] = sBNIF.size() + sIEFOT.size();
 }
 
 void NHomologicalData::computeChainComplexes() {
-    if (!chainComplexesComputed) {
-        if (!ccIndexingComputed) computeccIndexing();
+    // Only do this if we haven't already done it.
+    if (chainComplexesComputed)
+        return;
 
-        chainComplexesComputed = true;
+    // Off we go...
 
-        // need to convert this so that it does not use tri
-        B0 = new NMatrixInt(1, numDualCells[0]);
-        B1 = new NMatrixInt(numDualCells[0], numDualCells[1]);
-        B2 = new NMatrixInt(numDualCells[1], numDualCells[2]);
-        B3 = new NMatrixInt(numDualCells[2], numDualCells[3]);
-        B4 = new NMatrixInt(numDualCells[3], 1);
+    if (!ccIndexingComputed) computeccIndexing();
 
-        A0 = new NMatrixInt(1, numStandardCells[0]);
-        A1 = new NMatrixInt(numStandardCells[0], numStandardCells[1]);
-        A2 = new NMatrixInt(numStandardCells[1], numStandardCells[2]);
-        A3 = new NMatrixInt(numStandardCells[2], numStandardCells[3]);
-        A4 = new NMatrixInt(numStandardCells[3], 1);
+    chainComplexesComputed = true;
 
-        H1map = new NMatrixInt(numStandardCells[1], numDualCells[1]);
+    // need to convert this so that it does not use tri
+    B0 = new NMatrixInt(1, numDualCells[0]);
+    B1 = new NMatrixInt(numDualCells[0], numDualCells[1]);
+    B2 = new NMatrixInt(numDualCells[1], numDualCells[2]);
+    B3 = new NMatrixInt(numDualCells[2], numDualCells[3]);
+    B4 = new NMatrixInt(numDualCells[3], 1);
 
-        Bd0 = new NMatrixInt(1, numBdryCells[0]);
-        Bd1 = new NMatrixInt(numBdryCells[0], numBdryCells[1]);
-        Bd2 = new NMatrixInt(numBdryCells[1], numBdryCells[2]);
-        Bd3 = new NMatrixInt(numBdryCells[2], 1);
+    A0 = new NMatrixInt(1, numStandardCells[0]);
+    A1 = new NMatrixInt(numStandardCells[0], numStandardCells[1]);
+    A2 = new NMatrixInt(numStandardCells[1], numStandardCells[2]);
+    A3 = new NMatrixInt(numStandardCells[2], numStandardCells[3]);
+    A4 = new NMatrixInt(numStandardCells[3], 1);
 
-        B0Incl = new NMatrixInt(numStandardCells[0], numBdryCells[0]);
-        B1Incl = new NMatrixInt(numStandardCells[1], numBdryCells[1]);
-        B2Incl = new NMatrixInt(numStandardCells[2], numBdryCells[2]);
+    H1map = new NMatrixInt(numStandardCells[1], numDualCells[1]);
 
-        long int temp;
-        unsigned long i,j;
+    Bd0 = new NMatrixInt(1, numBdryCells[0]);
+    Bd1 = new NMatrixInt(numBdryCells[0], numBdryCells[1]);
+    Bd2 = new NMatrixInt(numBdryCells[1], numBdryCells[2]);
+    Bd3 = new NMatrixInt(numBdryCells[2], 1);
 
-        NPerm p1,p2;
+    B0Incl = new NMatrixInt(numStandardCells[0], numBdryCells[0]);
+    B1Incl = new NMatrixInt(numStandardCells[1], numBdryCells[1]);
+    B2Incl = new NMatrixInt(numStandardCells[2], numBdryCells[2]);
 
-        // This fills out matrix A1
-        for (i=0;i<tri->getNumberOfEdges();i++) {
-            // these are the standard edges
-            temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(0)));
-            (A1->entry( ((temp==(-1)) ?
-                (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
-            temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(1)));
-            (A1->entry( ((temp==(-1)) ?
-                (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
-        } // ok
+    long int temp;
+    unsigned long i,j;
 
-        for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
-            // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us
-            // the vertex of this face
-            p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
-            if (p1.sign()==1) {
-                A1->entry(sNIV.size() + sIEOE.index(2*(
-                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
-                    getEdge(p1[2])) )+1), tri->getNumberOfEdges()+i)-=1;
+    NPerm p1,p2;
+
+    // This fills out matrix A1
+    for (i=0;i<tri->getNumberOfEdges();i++) {
+        // these are the standard edges
+        temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(0)));
+        (A1->entry( ((temp==(-1)) ?
+            (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
+        temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(1)));
+        (A1->entry( ((temp==(-1)) ?
+            (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
+    } // ok
+
+    for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
+        // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us
+        // the vertex of this face
+        p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
+        if (p1.sign()==1) {
+            A1->entry(sNIV.size() + sIEOE.index(2*(
+                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                getEdge(p1[2])) )+1), tri->getNumberOfEdges()+i)-=1;
+        } else {
+            A1->entry(sNIV.size() + sIEOE.index(2*(
+                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)-=1;
+        }
+        p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
+        if (p1.sign()==1) {
+            A1->entry(sNIV.size() + sIEOE.index(2*(
+                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)+=1;
+        } else {
+            A1->entry(sNIV.size() + sIEOE.index(2*(
+                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                getEdge(p1[2])) )+1) , tri->getNumberOfEdges()+i)+=1;
+        }
+    }
+    // that handles matrix A1.
+
+    // start filling out A2...
+    for (i=0;i<tri->getNumberOfFaces();i++) {
+        // put boundary edges into A2..
+        for (j=0;j<6;j++) {
+            // run through the 6 possible boundary edges of the face
+            // the first 3 are standard, the last three are the ideal
+            // edges (if they exist)
+            if ( (j/3) == 0) {
+                p1=tri->getFace(i)->getEdgeMapping(j % 3);
+                A2->entry( tri->getEdgeIndex(
+                    tri->getFace(i)->getEdge(j % 3)) ,i) +=
+                    ( (p1.sign()==1) ? +1 : -1 );
             } else {
-                A1->entry(sNIV.size() + sIEOE.index(2*(
-                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
-                    getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)-=1;
-            }
-            p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
-            if (p1.sign()==1) {
-                A1->entry(sNIV.size() + sIEOE.index(2*(
-                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
-                    getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)+=1;
-            } else {
-                A1->entry(sNIV.size() + sIEOE.index(2*(
-                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
-                    getEdge(p1[2])) )+1) , tri->getNumberOfEdges()+i)+=1;
+                // check face i vertex j % 3 is ideal
+                if (tri->getFace(i)->getVertex(j % 3)->isIdeal())
+                    A2->entry( tri->getNumberOfEdges() +
+                        sIEEOF.index((3*i) + (j % 3)), i) += 1;
             }
         }
-        // that handles matrix A1.
+    }
 
-        // start filling out A2...
-        for (i=0;i<tri->getNumberOfFaces();i++) {
-            // put boundary edges into A2..
-            for (j=0;j<6;j++) {
-                // run through the 6 possible boundary edges of the face
-                // the first 3 are standard, the last three are the ideal
-                // edges (if they exist)
-                if ( (j/3) == 0) {
-                    p1=tri->getFace(i)->getEdgeMapping(j % 3);
-                    A2->entry( tri->getEdgeIndex(
-                        tri->getFace(i)->getEdge(j % 3)) ,i) +=
-                        ( (p1.sign()==1) ? +1 : -1 );
-                } else {
-                    // check face i vertex j % 3 is ideal
-                    if (tri->getFace(i)->getVertex(j % 3)->isIdeal())
-                        A2->entry( tri->getNumberOfEdges() +
-                            sIEEOF.index((3*i) + (j % 3)), i) += 1;
-                }
+    for (i=0;i<sIEFOT.size();i++) {
+        // boundary edges from ideal faces of tetrahedra.
+        // sIEFOT[i] /4 is the tetrahedron number
+        // sIEFOT[i] % 4 is the vertex number for this tetrahedron
+        // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4)
+        // are the respective faces
+        // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)
+        // gives the perm
+        // faces().index( tetrahedra[sIEFOT[i]/4].getFace(
+        // sIEFOT[i] + 1,2,3 % 4) is therefore the face number, and
+        // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(
+        // sIEFOT[i] + 1,2,3 % 4)^{-1} applied to sIEFOT[i] % 4 is the
+        // vertex of this face.
+        for (j=1;j<4;j++) {
+            p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
+                (sIEFOT[i] + j) % 4);
+            A2->entry( tri->getNumberOfEdges() + sIEEOF.index(
+                3*tri->getFaceIndex(tri->getTetrahedron(
+                sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) +
+                p1.preImageOf(sIEFOT[i] % 4) ) ,
+                tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
+        }
+    }
+    // end A2
+
+    // start A3
+    for (i=0;i<tri->getNumberOfTetrahedra();i++) {
+        for (j=0;j<4;j++) {
+            // first go through standard faces 0 through 3
+            p1=tri->getTetrahedron(i)->getFaceMapping(j);
+            A3->entry( tri->getFaceIndex(
+                tri->getTetrahedron(i)->getFace(j) ), i) +=
+                ( (p1.sign()==1) ? 1 : -1 );
+            // then ideal faces 0 through 3, if they exist
+            if (tri->getTetrahedron(i)->getVertex(j)->isIdeal()==1) {
+                // this part is in error.
+                A3->entry( tri->getNumberOfFaces() +
+                    sIEFOT.index((4*i) + j), i) += 1;
             }
         }
+    }
+    // end A3
 
-        for (i=0;i<sIEFOT.size();i++) {
-            // boundary edges from ideal faces of tetrahedra.
-            // sIEFOT[i] /4 is the tetrahedron number
-            // sIEFOT[i] % 4 is the vertex number for this tetrahedron
-            // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4)
-            // are the respective faces
-            // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)
-            // gives the perm
-            // faces().index( tetrahedra[sIEFOT[i]/4].getFace(
-            // sIEFOT[i] + 1,2,3 % 4) is therefore the face number, and
-            // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(
-            // sIEFOT[i] + 1,2,3 % 4)^{-1} applied to sIEFOT[i] % 4 is the
-            // vertex of this face.
-            for (j=1;j<4;j++) {
-                p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
-                    (sIEFOT[i] + j) % 4);
-                A2->entry( tri->getNumberOfEdges() + sIEEOF.index(
-                    3*tri->getFaceIndex(tri->getTetrahedron(
-                    sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) +
-                    p1.preImageOf(sIEFOT[i] % 4) ) ,
-                    tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
-            }
+
+    // start B1: for each dual edge == non-boundary face,
+    //              find the tetrahedra that bound it
+    for (i=0;i<dNBF.size();i++) {
+        B1->entry( tri->getTetrahedronIndex(
+            tri->getFace(dNBF[i])->getEmbedding(1).getTetrahedron() ),i)+=1;
+        B1->entry( tri->getTetrahedronIndex(
+            tri->getFace(dNBF[i])->getEmbedding(0).getTetrahedron() ),i)-=1;
+    }
+    // end B1
+
+    std::deque<NEdgeEmbedding> edgeque;
+    // start B2: for each dual face == non-boundary edge,
+    // find dual edges it bounds == link of tetrahedra that contain it
+    for (i=0;i<dNBE.size();i++) {
+        edgeque=tri->getEdge(dNBE[i])->getEmbeddings();
+        for (j=0;j<tri->getEdge(dNBE[i])->getNumberOfEmbeddings();j++) {
+            p1=edgeque[j].getVertices();
+            // the face of the tetrahedron corresponding to vertex 2 is
+            // what we want to orient... but we need to decide on its
+            // orientation.  For that we check to see if this face's
+            // getEmbedding(0).getTetrahedron() is the current tet, and
+            // getEmbedding(0).getFace() is this current face p1[2]...
+
+            B2->entry( dNBF.index( tri->getFaceIndex(
+                edgeque[j].getTetrahedron()->getFace(p1[2]) ) ) ,i)+=
+                    ( ( edgeque[j].getTetrahedron() ==
+                        edgeque[j].getTetrahedron()->getFace(
+                            p1[2] )->getEmbedding( 0 ).getTetrahedron() &&
+                        edgeque[j].getTetrahedron()->getFace(
+                            p1[2] )->getEmbedding( 0 ).getFace() == p1[2] )
+                              ? 1 : -1);
         }
-        // end A2
+    }
+    // end B2
 
-        // start A3
-        for (i=0;i<tri->getNumberOfTetrahedra();i++) {
-            for (j=0;j<4;j++) {
-                // first go through standard faces 0 through 3
-                p1=tri->getTetrahedron(i)->getFaceMapping(j);
-                A3->entry( tri->getFaceIndex(
-                    tri->getTetrahedron(i)->getFace(j) ), i) +=
-                    ( (p1.sign()==1) ? 1 : -1 );
-                // then ideal faces 0 through 3, if they exist
-                if (tri->getTetrahedron(i)->getVertex(j)->isIdeal()==1) {
-                    // this part is in error.
-                    A3->entry( tri->getNumberOfFaces() +
-                        sIEFOT.index((4*i) + j), i) += 1;
-                }
-            }
+    std::vector<NVertexEmbedding> vtetlist;
+    NIndexedArray<long int> unorientedlist; // this should be the list of
+                                            // unoriented tetrahedra
+    // together with marked vertices, stored as
+    // 4*tetindex + vertex no.
+    NIndexedArray<long int> orig_uol;
+    NIndexedArray<long int> edge_adjacency;
+
+    std::vector<int> tetor;
+    long int ind1;
+    long int ind2;
+    int k;
+
+    NEdgeEmbedding tempe;
+
+    // start B3: for each dual tetrahedron==nonboundary vertex,
+    //           find the corresp edges==non-boundary boundary faces
+
+    for (i=0;i<dNINBV.size();i++) {
+        // dNINBV[i] is the vertices.index() of this vertex.
+        vtetlist=tri->getVertex(dNINBV[i])->getEmbeddings();
+        tetor.resize(vtetlist.size(),0);
+        unorientedlist.resize(0);
+
+        for (j=0;j<vtetlist.size();j++) { // here is the first problem.
+            unorientedlist.push_back(
+                4*tri->getTetrahedronIndex( vtetlist[j].getTetrahedron() ) +
+                vtetlist[j].getVertex() );
         }
-        // end A3
+        orig_uol=unorientedlist;
 
+        // need to set up a local orientation for the tangent
+        // bundle at the vertex so that we can compare with the
+        // normal orientations of the edges incident. This normal
+        // orientation will have the form of a sign +-1 for each
+        // NVertexEmbedding in the list vtetlist. Our orientation convention
+        // will be chosen so that vtetlist[0] is positively oriented,
+        // ie: tetor[0]==1 always.
 
-        // start B1: for each dual edge == non-boundary face,
-        //              find the tetrahedra that bound it
-        for (i=0;i<dNBF.size();i++) {
-            B1->entry( tri->getTetrahedronIndex(
-                tri->getFace(dNBF[i])->getEmbedding(1).getTetrahedron() ),i)+=1;
-            B1->entry( tri->getTetrahedronIndex(
-                tri->getFace(dNBF[i])->getEmbedding(0).getTetrahedron() ),i)-=1;
-        }
-        // end B1
+        tetor[0]=1;
+        unorientedlist.erase( 4*tri->getTetrahedronIndex(
+            vtetlist[0].getTetrahedron()) + vtetlist[0].getVertex() );
 
-        std::deque<NEdgeEmbedding> edgeque;
-        // start B2: for each dual face == non-boundary edge,
-        // find dual edges it bounds == link of tetrahedra that contain it
-        for (i=0;i<dNBE.size();i++) {
-            edgeque=tri->getEdge(dNBE[i])->getEmbeddings();
-            for (j=0;j<tri->getEdge(dNBE[i])->getNumberOfEmbeddings();j++) {
-                p1=edgeque[j].getVertices();
-                // the face of the tetrahedron corresponding to vertex 2 is
-                // what we want to orient... but we need to decide on its
-                // orientation.  For that we check to see if this face's
-                // getEmbedding(0).getTetrahedron() is the current tet, and
-                // getEmbedding(0).getFace() is this current face p1[2]...
+        while (!unorientedlist.empty())
+          for (j=0;j<vtetlist.size();j++)
+            // go through all oriented tetrahedra and orient
+            // the adjacent tetrahedra
+            {
+                ind1=orig_uol[j];
 
-                B2->entry( dNBF.index( tri->getFaceIndex(
-                    edgeque[j].getTetrahedron()->getFace(p1[2]) ) ) ,i)+=
-                        ( ( edgeque[j].getTetrahedron() ==
-                            edgeque[j].getTetrahedron()->getFace(
-                                p1[2] )->getEmbedding( 0 ).getTetrahedron() &&
-                            edgeque[j].getTetrahedron()->getFace(
-                                p1[2] )->getEmbedding( 0 ).getFace() == p1[2] )
-                                  ? 1 : -1);
-            }
-        }
-        // end B2
+                if ( unorientedlist.index( ind1 ) == (-1) ) {
+                    // this tetrahedron has been oriented check to see
+                    // if any of the adjacent
+                    // tetrahedra are unoriented, and if so, orient them.
+                    for (k=0;k<4;k++) {
+                        if (k== (ind1 % 4)) k++;
+                        p1=vtetlist[j].getTetrahedron() ->
+                            getAdjacentTetrahedronGluing(k);
+                        ind2=4*tri->getTetrahedronIndex(
+                            vtetlist[j].getTetrahedron() ->
+                                getAdjacentTetrahedron(k) ) + p1[ind1 % 4];
 
-        std::vector<NVertexEmbedding> vtetlist;
-        NIndexedArray<long int> unorientedlist; // this should be the list of
-                                                // unoriented tetrahedra
-        // together with marked vertices, stored as
-        // 4*tetindex + vertex no.
-        NIndexedArray<long int> orig_uol;
-        NIndexedArray<long int> edge_adjacency;
-
-        std::vector<int> tetor;
-        long int ind1;
-        long int ind2;
-        int k;
-
-        NEdgeEmbedding tempe;
-
-        // start B3: for each dual tetrahedron==nonboundary vertex,
-        //           find the corresp edges==non-boundary boundary faces
-
-        for (i=0;i<dNINBV.size();i++) {
-            // dNINBV[i] is the vertices.index() of this vertex.
-            vtetlist=tri->getVertex(dNINBV[i])->getEmbeddings();
-            tetor.resize(vtetlist.size(),0);
-            unorientedlist.resize(0);
-
-            for (j=0;j<vtetlist.size();j++) { // here is the first problem.
-                unorientedlist.push_back(
-                    4*tri->getTetrahedronIndex( vtetlist[j].getTetrahedron() ) +
-                    vtetlist[j].getVertex() );
-            }
-            orig_uol=unorientedlist;
-
-            // need to set up a local orientation for the tangent
-            // bundle at the vertex so that we can compare with the
-            // normal orientations of the edges incident. This normal
-            // orientation will have the form of a sign +-1 for each
-            // NVertexEmbedding in the list vtetlist. Our orientation convention
-            // will be chosen so that vtetlist[0] is positively oriented,
-            // ie: tetor[0]==1 always.
-
-            tetor[0]=1;
-            unorientedlist.erase( 4*tri->getTetrahedronIndex(
-                vtetlist[0].getTetrahedron()) + vtetlist[0].getVertex() );
-
-            while (!unorientedlist.empty())
-              for (j=0;j<vtetlist.size();j++)
-                // go through all oriented tetrahedra and orient
-                // the adjacent tetrahedra
-                {
-                    ind1=orig_uol[j];
-
-                    if ( unorientedlist.index( ind1 ) == (-1) ) {
-                        // this tetrahedron has been oriented check to see
-                        // if any of the adjacent
-                        // tetrahedra are unoriented, and if so, orient them.
-                        for (k=0;k<4;k++) {
-                            if (k== (ind1 % 4)) k++;
-                            p1=vtetlist[j].getTetrahedron() ->
-                                getAdjacentTetrahedronGluing(k);
-                            ind2=4*tri->getTetrahedronIndex(
-                                vtetlist[j].getTetrahedron() ->
-                                    getAdjacentTetrahedron(k) ) + p1[ind1 % 4];
-
-                            if (unorientedlist.index( ind2 )  != (-1) ) {
-                                // we have an adjacent unoriented tetrahedron.
-                                // we orient it and erase from unorientedlist.
-                                tetor[ orig_uol.index(ind2) ] =
-                                    (-1)*tetor[j]*p1.sign();
-                                unorientedlist.erase( ind2 );
-                            }
+                        if (unorientedlist.index( ind2 )  != (-1) ) {
+                            // we have an adjacent unoriented tetrahedron.
+                            // we orient it and erase from unorientedlist.
+                            tetor[ orig_uol.index(ind2) ] =
+                                (-1)*tetor[j]*p1.sign();
+                            unorientedlist.erase( ind2 );
                         }
                     }
                 }
-
-            // now a local orientation is set up and can compute the boundary.
-            // to do this, it seems best to compile a list of incident edges
-            // which contains their endpoint data and sign.
-            // the list will be an NIndexedArray<long int> edge_adjacency,
-            // data will be stored as
-            // 4*(edge index) + 2*(endpt index) + sign stored as 0 or 1.
-            edge_adjacency.resize(0);
-
-            for (j=0;j<vtetlist.size();j++)
-                for (k=0;k<6;k++) {
-                    ind2=vtetlist[j].getTetrahedron()->getEdgeMapping(k).
-                        preImageOf( vtetlist[j].getVertex() );
-                    if ( ind2<2 ) {
-                        // edge k of tetrahedron j, moreover we know that
-                        // the vertex of the edge corresponds to ind2
-                        tempe=NEdgeEmbedding( vtetlist[j].getTetrahedron(), k );
-                        // the corresp orientation coming from our local
-                        // orientation
-                        // plus orienting the edge out of vertex k % 2...
-
-                        p1=tempe.getVertices();
-                        if ( ind2 == 1 ) p1=p1*(NPerm(0,1));
-                        // now p1 sends 0 to point corresp to v, 1 to point
-                        // corresp to end of edge.
-                        // if p1.sign() == tetor[j] then sign = +1 otherwise -1.
-
-                        ind1=4*tri->getEdgeIndex(
-                            vtetlist[j].getTetrahedron()->getEdge(k) )
-                            + 2*ind2 + (p1.sign() == tetor[j] ? 1 : 0);
-
-                        if (edge_adjacency.index(ind1) == (-1) )
-                            edge_adjacency.push_back(ind1);
-                    }
-                }
-
-            for (j=0;j<edge_adjacency.size();j++) {
-                B3->entry( dNBE.index(edge_adjacency[j]/4) , i) +=
-                    ( ( (edge_adjacency[j] % 2)==0 ) ? 1 : -1 );
             }
+
+        // now a local orientation is set up and can compute the boundary.
+        // to do this, it seems best to compile a list of incident edges
+        // which contains their endpoint data and sign.
+        // the list will be an NIndexedArray<long int> edge_adjacency,
+        // data will be stored as
+        // 4*(edge index) + 2*(endpt index) + sign stored as 0 or 1.
+        edge_adjacency.resize(0);
+
+        for (j=0;j<vtetlist.size();j++)
+            for (k=0;k<6;k++) {
+                ind2=vtetlist[j].getTetrahedron()->getEdgeMapping(k).
+                    preImageOf( vtetlist[j].getVertex() );
+                if ( ind2<2 ) {
+                    // edge k of tetrahedron j, moreover we know that
+                    // the vertex of the edge corresponds to ind2
+                    tempe=NEdgeEmbedding( vtetlist[j].getTetrahedron(), k );
+                    // the corresp orientation coming from our local
+                    // orientation
+                    // plus orienting the edge out of vertex k % 2...
+
+                    p1=tempe.getVertices();
+                    if ( ind2 == 1 ) p1=p1*(NPerm(0,1));
+                    // now p1 sends 0 to point corresp to v, 1 to point
+                    // corresp to end of edge.
+                    // if p1.sign() == tetor[j] then sign = +1 otherwise -1.
+
+                    ind1=4*tri->getEdgeIndex(
+                        vtetlist[j].getTetrahedron()->getEdge(k) )
+                        + 2*ind2 + (p1.sign() == tetor[j] ? 1 : 0);
+
+                    if (edge_adjacency.index(ind1) == (-1) )
+                        edge_adjacency.push_back(ind1);
+                }
+            }
+
+        for (j=0;j<edge_adjacency.size();j++) {
+            B3->entry( dNBE.index(edge_adjacency[j]/4) , i) +=
+                ( ( (edge_adjacency[j] % 2)==0 ) ? 1 : -1 );
         }
-        // end B3
+    }
+    // end B3
 
-        // proceed to fill out H1map
-        // the algorithm will proceed in 2 steps.
+    // proceed to fill out H1map
+    // the algorithm will proceed in 2 steps.
 
-        // step 1) fix once and for all a map from dual 0-cells to regular
-        // 0-cells, the only condition this map needs to satisfy is that the
-        // regular 0-cell associated to a dual 0-cell must be contained in
-        // the same ideal simplex.
+    // step 1) fix once and for all a map from dual 0-cells to regular
+    // 0-cells, the only condition this map needs to satisfy is that the
+    // regular 0-cell associated to a dual 0-cell must be contained in
+    // the same ideal simplex.
 
-        std::vector<unsigned long> zeroCellMap(tri->getNumberOfTetrahedra());
-        // zeroCellMap[i] describes the vertex of tetrahedra[i] that the dual
-        // 0-cell is sent to. It will be stored as
-        // 4*(vertex number 0,1,2,3) + 0,1,2,3 (equal to prev. number if
-        // non-ideal
+    std::vector<unsigned long> zeroCellMap(tri->getNumberOfTetrahedra());
+    // zeroCellMap[i] describes the vertex of tetrahedra[i] that the dual
+    // 0-cell is sent to. It will be stored as
+    // 4*(vertex number 0,1,2,3) + 0,1,2,3 (equal to prev. number if
+    // non-ideal
 
-        for (i=0; i<zeroCellMap.size(); i++) {
-            // cycle through the vertices, take the first non-ideal one if
-            // it exists.
-            j=0;
-            while ( j<4 && tri->getTetrahedron(i)->getVertex(j)->isIdeal())
-                j++;
-            if (j<4) zeroCellMap[i]=4*j+j;
-            else zeroCellMap[i]=1;
-        }
-
-        // step 2) fill out the matrix. each dual 1-cell corresponds to a
-        // face of the ideal triangulation. the map of 0-cells has already
-        // been chosen so for the map of 1-cells simply choose any path
-        // from the first 0-cell to the 2nd 0-cell with the condition that
-        // the path stays inside the two ideal simplicies and only crosses
-        // the face corresponding to the dual 1-cell once. (and no other faces).
-
-        for (j=0; j<H1map->columns(); j++) // H1map.columns()==dNBF.size() 
-            // while H1map.rows() is edges.size()+sIEEOF.size()
-        {
-            // now we have to decide where dual edge j == ideal triangulation
-            // face j is sent.
-
-            unsigned tet0FaceIndex = tri->getFace(dNBF[j])->
-                getEmbedding(0).getFace(); 
-            unsigned tet1FaceIndex = tri->getFace(dNBF[j])->
-                getEmbedding(1).getFace(); 
-
-            unsigned vert0Num = zeroCellMap[tri->getTetrahedronIndex(
-                tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() )]/4;
-                // vertex number of start vertex in tet0
-            unsigned vert1Num = zeroCellMap[tri->getTetrahedronIndex(
-                tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]/4;
-                // vertex number of end vertex in tet1.
-            unsigned vert0id = zeroCellMap[tri->getTetrahedronIndex(
-                tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() )]%4;
-                // not equal to vert0Num if and only if vert0 is ideal.
-            unsigned vert1id = zeroCellMap[tri->getTetrahedronIndex(
-                tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]%4;
-                // not equal to vert1Num if and only if vert1 is ideal.
-            NPerm P1 = tri->getFace(dNBF[j])->getEmbedding(0).getVertices();
-            NPerm P2 = tri->getFace(dNBF[j])->getEmbedding(1).getVertices();
-            NPerm P3;
-            NPerm P0to1 = P2 * ( P1.inverse() ); 
-            // the permutation from the start simplex vertices
-            // to the end simplex.
-
-            bool stage0nec = false;
-            unsigned long stage0edgeNum;
-            bool stage0posOr;
-            unsigned stage0choice; // this indicates the vertex of the simplex
-            // that our chosen edge
-            // with its induced orientation ends...
-
-            if (vert0Num == tet0FaceIndex)  // stage 0
-            {
-                stage0nec = true;
-
-                if (vert0Num == vert0id) {
-                    stage0choice = (tet0FaceIndex + 1) % 4;
-                } // not ideal
-                else {
-                    stage0choice = vert0id;
-                } // ideal
-
-                stage0edgeNum = tri->getEdgeIndex(tri->getFace(dNBF[j]) ->
-                    getEmbedding(0).getTetrahedron() ->
-                    getEdge( edgeNumber[vert0Num][stage0choice] ));
-                stage0posOr = ( tri->getFace(dNBF[j]) ->
-                    getEmbedding(0).getTetrahedron()->getEdgeMapping(
-                    edgeNumber[vert0Num][stage0choice])[1] == stage0choice ) ?
-                    true : false ;
-            }
-
-
-            bool stage4nec = false; // stage 4
-            unsigned long stage4edgeNum;
-            bool stage4posOr;
-            unsigned stage4choice;
-
-            if (vert1Num == tet1FaceIndex) {
-                stage4nec = true;
-
-                if (vert1Num == vert1id) // the non-ideal case.
-                {
-                    stage4choice = (tet1FaceIndex + 1) % 4;
-                } // duh, this is all wrong.
-                else {
-                    stage4choice = vert1id;
-                }
-
-                stage4edgeNum = tri->getEdgeIndex(tri->getFace(dNBF[j]) ->
-                    getEmbedding(1).getTetrahedron() ->
-                    getEdge( edgeNumber[vert1Num][stage4choice] ));
-                stage4posOr = ( tri->getFace(dNBF[j]) ->
-                    getEmbedding(1).getTetrahedron()->getEdgeMapping(
-                    edgeNumber[vert1Num][stage4choice])[1] == vert1Num ) ?
-                    true : false ;
-            }
-
-            // decide if stages 1 and 3 are neccessary...
-            bool stage1nec = false;         // stage 1
-            unsigned stage1v, stage1vi;
-            unsigned long stage1edgeNum;
-            bool stage1posOr;
-            unsigned stage1FaceToUse;
-
-            if (stage0nec && tri->getFace(dNBF[j]) ->
-                    getEmbedding(0).getTetrahedron() ->
-                    getVertex(stage0choice)->isIdeal() ) {
-                stage1v = stage0choice;
-                stage1vi = vert0Num;
-                stage1nec=true;
-            } else
-                if ((!stage0nec) && (vert0Num != vert0id) &&
-                        (vert0id == tet0FaceIndex)) {
-                    stage1v = vert0Num;
-                    stage1vi = vert0id;
-                    stage1nec = true;
-                }
-            if (stage1nec) { // we need to decide which face to use...
-                stage1FaceToUse = tri->getFace(dNBF[j]) ->
-                    getEmbedding(0).getTetrahedron()->getEdgeMapping(
-                    edgeNumber[stage1v][tet0FaceIndex] )[2];
-                P3 = tri->getFace(dNBF[j])->getEmbedding(0).getTetrahedron()->
-                    getFaceMapping(stage1FaceToUse);
-                stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                    3*(tri->getFaceIndex(tri->getFace(dNBF[j]) ->
-                    getEmbedding(0).getTetrahedron() ->
-                    getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
-                stage1posOr = ( ( P3[(P3.preImageOf(stage1v)+1) % 3] !=
-                    stage1vi ) ? true : false );
-            }
-            bool stage3nec = false;
-            unsigned stage3v, stage3vi;
-            unsigned long stage3edgeNum;
-            bool stage3posOr;
-            unsigned stage3FaceToUse;
-
-            if (stage4nec && tri->getFace(dNBF[j]) ->
-                    getEmbedding(1).getTetrahedron() ->
-                    getVertex(stage4choice)->isIdeal() ) { // ideal case
-                stage3v = stage4choice;
-                stage3vi = vert1Num;
-                stage3nec=true;
-            } else
-                if ((!stage4nec) && (vert1Num != vert1id) &&
-                        (vert1id == tet1FaceIndex)) { // non-ideal case
-                    stage3v = vert1Num;
-                    stage3vi = vert1id;
-                    stage3nec = true;
-                }
-            if (stage3nec) { // we need to decide which face to use...
-                stage3FaceToUse = tri->getFace(dNBF[j]) ->
-                    getEmbedding(1).getTetrahedron()->getEdgeMapping(
-                    edgeNumber[stage3v][tet1FaceIndex] )[2];
-                P3 = tri->getFace(dNBF[j])->getEmbedding(1).getTetrahedron()->
-                    getFaceMapping(stage3FaceToUse);
-                stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                    3*(tri->getFaceIndex(tri->getFace(dNBF[j]) ->
-                    getEmbedding(1).getTetrahedron() ->
-                    getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
-                stage3posOr = ( ( P3[(P3.preImageOf(stage3v)+1) % 3] ==
-                    stage3vi ) ? true : false );
-            }
-
-            unsigned stage2startdata, stage2enddata;
-            // 3*vertex number(0,1,2) + another vertex number (0,1,2)
-            // these are the same indicates the vertex is non-ideal
-            // these are different indicates the vertex is ideal and dir
-            // of relevant point..
-
-            if (stage1nec) // set up stage2startdata
-            {
-                stage2startdata = 3*P1.preImageOf( stage1v ) +
-                    P1.preImageOf((tri->getFace(dNBF[j]) ->
-                    getEmbedding(0).getTetrahedron() ->
-                    getEdgeMapping( edgeNumber[stage1v][stage1vi] ))[3] );
-            } else {
-                // we have to deal with 2 possibilities a) stage 0 was called
-                // and it jumped here, so it is not an ideal vertex.
-                // b) neither stage 0 or 1 was called and this may or may
-                // not be an ideal vertex
-                if (stage0nec) { // this is the non-ideal situation
-                    stage2startdata = 3*P1.preImageOf( stage0choice ) +
-                            ((P1.preImageOf( stage0choice )+1) % 3);
-                } else {
-                    // this is the starting point... back to using vert0 info...
-                    if (vert0Num != vert0id)
-                        stage2startdata = 3*P1.preImageOf( vert0Num ) +
-                            P1.preImageOf( vert0id );
-                    else
-                        stage2startdata = 3*P1.preImageOf( vert0Num ) +
-                            ((P1.preImageOf( vert0Num ) + 1) % 3);
-                }
-            }
-
-            if (stage3nec) // set up stage2enddata
-            {
-                stage2enddata = 3*P2.preImageOf( stage3v ) +
-                    P2.preImageOf((tri->getFace(dNBF[j]) ->
-                    getEmbedding(1).getTetrahedron() ->
-                    getEdgeMapping( edgeNumber[stage3v][stage3vi] ))[3] );
-            } else {
-                if (stage4nec) { // this is the non-ideal situation
-                    stage2enddata = 3*P2.preImageOf( stage4choice ) +
-                            ((P2.preImageOf( stage4choice ) + 1) % 3);
-                } else {
-                    // this is the starting point... back to using vert1 info...
-                    if (vert1Num != vert1id)
-                        stage2enddata = 3*P2.preImageOf( vert1Num ) +
-                            P2.preImageOf( vert1id );
-                    else
-                        stage2enddata = 3*P2.preImageOf( vert1Num ) +
-                            ((P2.preImageOf( vert1Num ) + 1) % 3);
-                }
-            }
-            // now cycle through pairs of adjacent vertices on the face
-            // and check to see if the corresponding edge is required...
-
-            unsigned currV = stage2startdata;
-            unsigned prevV = stage2startdata;
-            if (stage2startdata != stage2enddata)
-                while (currV != stage2enddata) {
-                    // first, increment currV -- this is a number from the
-                    // set { 1, 2, 3, 5, 6, 7 } describing an ideal vertex
-                    // of the face is triadic 3*vert num + direction...
-                    switch (currV) {
-                    case 1:
-                        currV = 3;
-                        break;
-                    case 2:
-                        currV = 1;
-                        break;
-                    case 3:
-                        currV=5;
-                        break;
-                    case 5:
-                        currV = 7;
-                        break;
-                    case 6:
-                        currV = 2;
-                        break;
-                    case 7:
-                        currV=6;
-                        break;
-                    }
-                    // main alg here.
-                    if (( currV/3  == prevV/3 ) && (tri->getFace(dNBF[j])->
-                            getVertex(currV/3)->isIdeal()) )  // ideal edge
-                    {
-                        H1map->entry( tri->getNumberOfEdges() +
-                            sIEEOF.index(3*dNBF[j] + (currV/3)) , j ) += 1;
-                    }
-                    if ( currV/3  != prevV/3 ) // regular edge
-                    {
-                        H1map->entry( tri->getEdgeIndex(tri->getFace(dNBF[j])->
-                            getEdge( ((currV/3) + 1) % 3 )), j ) +=
-                            ( (tri->getFace(dNBF[j]) -> getEdgeMapping(
-                            ((currV/3) + 1) % 3)[1] == currV/3) ? +1 : -1);
-                    }
-                    // move prevV to be equal to currV.
-                    prevV = currV;
-                }
-            // now we fill out the matrix.
-            if (stage0nec)
-                H1map->entry( stage0edgeNum, j ) += ( stage0posOr ? 1 : -1 );
-            if (stage1nec)
-                H1map->entry( stage1edgeNum, j ) += ( stage1posOr ? 1 : -1 );
-
-            if (stage3nec)
-                H1map->entry( stage3edgeNum, j ) += ( stage3posOr ? 1 : -1 );
-            if (stage4nec)
-                H1map->entry( stage4edgeNum, j ) += ( stage4posOr ? 1 : -1 );
-
-        }
-
-        // This fills out matrix Bd1: rows==sBNIV.size()+sIEOE.size(),
-        // cols==sBNIE.size()+sIEEOF.size()
-        for (i=0;i<sBNIE.size();i++) { // these are the standard boundary edges
-            // temp == -1 when the boundary edge end is ideal.
-            temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->
-                getVertex(0)));
-            (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
-            temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->
-                getVertex(1)));
-            (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
-        } // ok
-
-        for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
-            // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us
-            // the vertex of this face
-            p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
-            if (p1.sign()==1) {
-                Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
-                    getEdge(p1[2])) )+1), sBNIE.size()+i)-=1;
-            } else {
-                Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
-                    getEdge(p1[2])) )) , sBNIE.size()+i)-=1;
-            }
-            p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
-            if (p1.sign()==1) {
-                Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
-                    getEdge(p1[2])) )) , sBNIE.size()+i)+=1;
-            } else {
-                Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                    tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
-                    getEdge(p1[2])) )+1) , sBNIE.size()+i)+=1;
-            }
-        }
-        // that handles matrix Bd1.
-
-        // start filling out Bd2: rows==sBNIE.size()+sIEEOF.size(),
-        // cols==sBNIF.size()+sIEFOT.size()
-        for (i=0;i<sBNIF.size();i++) // boundary non-ideal faces...
-        { // put boundary edges into Bd2..
-            for (j=0;j<6;j++) {
-                // run through the 6 possible boundary edges of the face
-                // the first 3 are standard, the last three are the ideal
-                // edges (if they exist)
-                if ( (j/3) == 0) {
-                    p1=tri->getFace(sBNIF[i])->getEdgeMapping(j % 3);
-                    Bd2->entry( sBNIE.index( tri->getEdgeIndex(tri->getFace(
-                        sBNIF[i])->getEdge(j % 3)) ) ,i) +=
-                        ( (p1.sign()==1) ? +1 : -1 );
-                } else {
-                    // check face i vertex j % 3 is ideal
-                    if (tri->getFace(sBNIF[i])->getVertex(j % 3)->isIdeal())
-                        Bd2->entry( sBNIF.size() + sIEEOF.index(
-                            (3*i) + (j % 3)), i) += 1;
-                }
-            }
-        }
-
-        for (i=0;i<sIEFOT.size();i++) // ideal faces...
-        { // boundary edges from ideal faces of tetrahedra.
-            // sIEFOT[i] /4 is the tetrahedron number
-            // sIEFOT[i] % 4 is the vertex number for this tetrahedron
-            // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4) are
-            // the respective faces
-            // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)
-            // gives the perm
-            // faces().index( tetrahedra[sIEFOT[i]/4].getFace(
-            //     sIEFOT[i] + 1,2,3 % 4) is therefore the
-            // face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(
-            //     sIEFOT[i] + 1,2,3 % 4)^{-1}
-            // applied to sIEFOT[i] % 4 is the vertex of this face.
-            for (j=1;j<4;j++) {
-                p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
-                    (sIEFOT[i] + j) % 4);
-                Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->getFaceIndex(
-                    tri->getTetrahedron(sIEFOT[i]/4 )->getFace(
-                    (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
-                    sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
-            }
-        }
-        // end Bd2
-
-        // fill out b0Incl
-        // boundary 0-cells:
-        for (i=0;i<B0Incl->columns();i++)
-            B0Incl->entry( ( ( i < sBNIV.size()) ? sNIV.index(sBNIV[i]) :
-                    sNIV.size() + i - sBNIV.size() ) ,i)+=1;
-        // fill out b1Incl
-        for (i=0;i<B1Incl->columns();i++)
-            // each boundary edge corresponds to a triangulation edge
-            B1Incl->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] :
-                    tri->getNumberOfEdges() + i - sBNIE.size() ) ,i)+=1;
-        // fill out b2Incl
-        for (i=0;i<B2Incl->columns();i++)
-            B2Incl->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
-                    tri->getNumberOfFaces() + i - sBNIF.size() ) ,i)+=1;
+    for (i=0; i<zeroCellMap.size(); i++) {
+        // cycle through the vertices, take the first non-ideal one if
+        // it exists.
+        j=0;
+        while ( j<4 && tri->getTetrahedron(i)->getVertex(j)->isIdeal())
+            j++;
+        if (j<4) zeroCellMap[i]=4*j+j;
+        else zeroCellMap[i]=1;
     }
 
+    // step 2) fill out the matrix. each dual 1-cell corresponds to a
+    // face of the ideal triangulation. the map of 0-cells has already
+    // been chosen so for the map of 1-cells simply choose any path
+    // from the first 0-cell to the 2nd 0-cell with the condition that
+    // the path stays inside the two ideal simplicies and only crosses
+    // the face corresponding to the dual 1-cell once. (and no other faces).
+
+    for (j=0; j<H1map->columns(); j++) // H1map.columns()==dNBF.size() 
+        // while H1map.rows() is edges.size()+sIEEOF.size()
+    {
+        // now we have to decide where dual edge j == ideal triangulation
+        // face j is sent.
+
+        unsigned tet0FaceIndex = tri->getFace(dNBF[j])->
+            getEmbedding(0).getFace(); 
+        unsigned tet1FaceIndex = tri->getFace(dNBF[j])->
+            getEmbedding(1).getFace(); 
+
+        unsigned vert0Num = zeroCellMap[tri->getTetrahedronIndex(
+            tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() )]/4;
+            // vertex number of start vertex in tet0
+        unsigned vert1Num = zeroCellMap[tri->getTetrahedronIndex(
+            tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]/4;
+            // vertex number of end vertex in tet1.
+        unsigned vert0id = zeroCellMap[tri->getTetrahedronIndex(
+            tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() )]%4;
+            // not equal to vert0Num if and only if vert0 is ideal.
+        unsigned vert1id = zeroCellMap[tri->getTetrahedronIndex(
+            tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]%4;
+            // not equal to vert1Num if and only if vert1 is ideal.
+        NPerm P1 = tri->getFace(dNBF[j])->getEmbedding(0).getVertices();
+        NPerm P2 = tri->getFace(dNBF[j])->getEmbedding(1).getVertices();
+        NPerm P3;
+        NPerm P0to1 = P2 * ( P1.inverse() ); 
+        // the permutation from the start simplex vertices
+        // to the end simplex.
+
+        bool stage0nec = false;
+        unsigned long stage0edgeNum;
+        bool stage0posOr;
+        unsigned stage0choice; // this indicates the vertex of the simplex
+        // that our chosen edge
+        // with its induced orientation ends...
+
+        if (vert0Num == tet0FaceIndex)  // stage 0
+        {
+            stage0nec = true;
+
+            if (vert0Num == vert0id) {
+                stage0choice = (tet0FaceIndex + 1) % 4;
+            } // not ideal
+            else {
+                stage0choice = vert0id;
+            } // ideal
+
+            stage0edgeNum = tri->getEdgeIndex(tri->getFace(dNBF[j]) ->
+                getEmbedding(0).getTetrahedron() ->
+                getEdge( edgeNumber[vert0Num][stage0choice] ));
+            stage0posOr = ( tri->getFace(dNBF[j]) ->
+                getEmbedding(0).getTetrahedron()->getEdgeMapping(
+                edgeNumber[vert0Num][stage0choice])[1] == stage0choice ) ?
+                true : false ;
+        }
+
+
+        bool stage4nec = false; // stage 4
+        unsigned long stage4edgeNum;
+        bool stage4posOr;
+        unsigned stage4choice;
+
+        if (vert1Num == tet1FaceIndex) {
+            stage4nec = true;
+
+            if (vert1Num == vert1id) // the non-ideal case.
+            {
+                stage4choice = (tet1FaceIndex + 1) % 4;
+            } // duh, this is all wrong.
+            else {
+                stage4choice = vert1id;
+            }
+
+            stage4edgeNum = tri->getEdgeIndex(tri->getFace(dNBF[j]) ->
+                getEmbedding(1).getTetrahedron() ->
+                getEdge( edgeNumber[vert1Num][stage4choice] ));
+            stage4posOr = ( tri->getFace(dNBF[j]) ->
+                getEmbedding(1).getTetrahedron()->getEdgeMapping(
+                edgeNumber[vert1Num][stage4choice])[1] == vert1Num ) ?
+                true : false ;
+        }
+
+        // decide if stages 1 and 3 are neccessary...
+        bool stage1nec = false;         // stage 1
+        unsigned stage1v, stage1vi;
+        unsigned long stage1edgeNum;
+        bool stage1posOr;
+        unsigned stage1FaceToUse;
+
+        if (stage0nec && tri->getFace(dNBF[j]) ->
+                getEmbedding(0).getTetrahedron() ->
+                getVertex(stage0choice)->isIdeal() ) {
+            stage1v = stage0choice;
+            stage1vi = vert0Num;
+            stage1nec=true;
+        } else
+            if ((!stage0nec) && (vert0Num != vert0id) &&
+                    (vert0id == tet0FaceIndex)) {
+                stage1v = vert0Num;
+                stage1vi = vert0id;
+                stage1nec = true;
+            }
+        if (stage1nec) { // we need to decide which face to use...
+            stage1FaceToUse = tri->getFace(dNBF[j]) ->
+                getEmbedding(0).getTetrahedron()->getEdgeMapping(
+                edgeNumber[stage1v][tet0FaceIndex] )[2];
+            P3 = tri->getFace(dNBF[j])->getEmbedding(0).getTetrahedron()->
+                getFaceMapping(stage1FaceToUse);
+            stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
+                3*(tri->getFaceIndex(tri->getFace(dNBF[j]) ->
+                getEmbedding(0).getTetrahedron() ->
+                getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
+            stage1posOr = ( ( P3[(P3.preImageOf(stage1v)+1) % 3] !=
+                stage1vi ) ? true : false );
+        }
+        bool stage3nec = false;
+        unsigned stage3v, stage3vi;
+        unsigned long stage3edgeNum;
+        bool stage3posOr;
+        unsigned stage3FaceToUse;
+
+        if (stage4nec && tri->getFace(dNBF[j]) ->
+                getEmbedding(1).getTetrahedron() ->
+                getVertex(stage4choice)->isIdeal() ) { // ideal case
+            stage3v = stage4choice;
+            stage3vi = vert1Num;
+            stage3nec=true;
+        } else
+            if ((!stage4nec) && (vert1Num != vert1id) &&
+                    (vert1id == tet1FaceIndex)) { // non-ideal case
+                stage3v = vert1Num;
+                stage3vi = vert1id;
+                stage3nec = true;
+            }
+        if (stage3nec) { // we need to decide which face to use...
+            stage3FaceToUse = tri->getFace(dNBF[j]) ->
+                getEmbedding(1).getTetrahedron()->getEdgeMapping(
+                edgeNumber[stage3v][tet1FaceIndex] )[2];
+            P3 = tri->getFace(dNBF[j])->getEmbedding(1).getTetrahedron()->
+                getFaceMapping(stage3FaceToUse);
+            stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
+                3*(tri->getFaceIndex(tri->getFace(dNBF[j]) ->
+                getEmbedding(1).getTetrahedron() ->
+                getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
+            stage3posOr = ( ( P3[(P3.preImageOf(stage3v)+1) % 3] ==
+                stage3vi ) ? true : false );
+        }
+
+        unsigned stage2startdata, stage2enddata;
+        // 3*vertex number(0,1,2) + another vertex number (0,1,2)
+        // these are the same indicates the vertex is non-ideal
+        // these are different indicates the vertex is ideal and dir
+        // of relevant point..
+
+        if (stage1nec) // set up stage2startdata
+        {
+            stage2startdata = 3*P1.preImageOf( stage1v ) +
+                P1.preImageOf((tri->getFace(dNBF[j]) ->
+                getEmbedding(0).getTetrahedron() ->
+                getEdgeMapping( edgeNumber[stage1v][stage1vi] ))[3] );
+        } else {
+            // we have to deal with 2 possibilities a) stage 0 was called
+            // and it jumped here, so it is not an ideal vertex.
+            // b) neither stage 0 or 1 was called and this may or may
+            // not be an ideal vertex
+            if (stage0nec) { // this is the non-ideal situation
+                stage2startdata = 3*P1.preImageOf( stage0choice ) +
+                        ((P1.preImageOf( stage0choice )+1) % 3);
+            } else {
+                // this is the starting point... back to using vert0 info...
+                if (vert0Num != vert0id)
+                    stage2startdata = 3*P1.preImageOf( vert0Num ) +
+                        P1.preImageOf( vert0id );
+                else
+                    stage2startdata = 3*P1.preImageOf( vert0Num ) +
+                        ((P1.preImageOf( vert0Num ) + 1) % 3);
+            }
+        }
+
+        if (stage3nec) // set up stage2enddata
+        {
+            stage2enddata = 3*P2.preImageOf( stage3v ) +
+                P2.preImageOf((tri->getFace(dNBF[j]) ->
+                getEmbedding(1).getTetrahedron() ->
+                getEdgeMapping( edgeNumber[stage3v][stage3vi] ))[3] );
+        } else {
+            if (stage4nec) { // this is the non-ideal situation
+                stage2enddata = 3*P2.preImageOf( stage4choice ) +
+                        ((P2.preImageOf( stage4choice ) + 1) % 3);
+            } else {
+                // this is the starting point... back to using vert1 info...
+                if (vert1Num != vert1id)
+                    stage2enddata = 3*P2.preImageOf( vert1Num ) +
+                        P2.preImageOf( vert1id );
+                else
+                    stage2enddata = 3*P2.preImageOf( vert1Num ) +
+                        ((P2.preImageOf( vert1Num ) + 1) % 3);
+            }
+        }
+        // now cycle through pairs of adjacent vertices on the face
+        // and check to see if the corresponding edge is required...
+
+        unsigned currV = stage2startdata;
+        unsigned prevV = stage2startdata;
+        if (stage2startdata != stage2enddata)
+            while (currV != stage2enddata) {
+                // first, increment currV -- this is a number from the
+                // set { 1, 2, 3, 5, 6, 7 } describing an ideal vertex
+                // of the face is triadic 3*vert num + direction...
+                switch (currV) {
+                case 1:
+                    currV = 3;
+                    break;
+                case 2:
+                    currV = 1;
+                    break;
+                case 3:
+                    currV=5;
+                    break;
+                case 5:
+                    currV = 7;
+                    break;
+                case 6:
+                    currV = 2;
+                    break;
+                case 7:
+                    currV=6;
+                    break;
+                }
+                // main alg here.
+                if (( currV/3  == prevV/3 ) && (tri->getFace(dNBF[j])->
+                        getVertex(currV/3)->isIdeal()) )  // ideal edge
+                {
+                    H1map->entry( tri->getNumberOfEdges() +
+                        sIEEOF.index(3*dNBF[j] + (currV/3)) , j ) += 1;
+                }
+                if ( currV/3  != prevV/3 ) // regular edge
+                {
+                    H1map->entry( tri->getEdgeIndex(tri->getFace(dNBF[j])->
+                        getEdge( ((currV/3) + 1) % 3 )), j ) +=
+                        ( (tri->getFace(dNBF[j]) -> getEdgeMapping(
+                        ((currV/3) + 1) % 3)[1] == currV/3) ? +1 : -1);
+                }
+                // move prevV to be equal to currV.
+                prevV = currV;
+            }
+        // now we fill out the matrix.
+        if (stage0nec)
+            H1map->entry( stage0edgeNum, j ) += ( stage0posOr ? 1 : -1 );
+        if (stage1nec)
+            H1map->entry( stage1edgeNum, j ) += ( stage1posOr ? 1 : -1 );
+
+        if (stage3nec)
+            H1map->entry( stage3edgeNum, j ) += ( stage3posOr ? 1 : -1 );
+        if (stage4nec)
+            H1map->entry( stage4edgeNum, j ) += ( stage4posOr ? 1 : -1 );
+
+    }
+
+    // This fills out matrix Bd1: rows==sBNIV.size()+sIEOE.size(),
+    // cols==sBNIE.size()+sIEEOF.size()
+    for (i=0;i<sBNIE.size();i++) { // these are the standard boundary edges
+        // temp == -1 when the boundary edge end is ideal.
+        temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->
+            getVertex(0)));
+        (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
+        temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->
+            getVertex(1)));
+        (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
+    } // ok
+
+    for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
+        // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us
+        // the vertex of this face
+        p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
+        if (p1.sign()==1) {
+            Bd1->entry(sBNIV.size() + sIEOE.index(2*(
+                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                getEdge(p1[2])) )+1), sBNIE.size()+i)-=1;
+        } else {
+            Bd1->entry(sBNIV.size() + sIEOE.index(2*(
+                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                getEdge(p1[2])) )) , sBNIE.size()+i)-=1;
+        }
+        p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
+        if (p1.sign()==1) {
+            Bd1->entry(sBNIV.size() + sIEOE.index(2*(
+                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                getEdge(p1[2])) )) , sBNIE.size()+i)+=1;
+        } else {
+            Bd1->entry(sBNIV.size() + sIEOE.index(2*(
+                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                getEdge(p1[2])) )+1) , sBNIE.size()+i)+=1;
+        }
+    }
+    // that handles matrix Bd1.
+
+    // start filling out Bd2: rows==sBNIE.size()+sIEEOF.size(),
+    // cols==sBNIF.size()+sIEFOT.size()
+    for (i=0;i<sBNIF.size();i++) // boundary non-ideal faces...
+    { // put boundary edges into Bd2..
+        for (j=0;j<6;j++) {
+            // run through the 6 possible boundary edges of the face
+            // the first 3 are standard, the last three are the ideal
+            // edges (if they exist)
+            if ( (j/3) == 0) {
+                p1=tri->getFace(sBNIF[i])->getEdgeMapping(j % 3);
+                Bd2->entry( sBNIE.index( tri->getEdgeIndex(tri->getFace(
+                    sBNIF[i])->getEdge(j % 3)) ) ,i) +=
+                    ( (p1.sign()==1) ? +1 : -1 );
+            } else {
+                // check face i vertex j % 3 is ideal
+                if (tri->getFace(sBNIF[i])->getVertex(j % 3)->isIdeal())
+                    Bd2->entry( sBNIF.size() + sIEEOF.index(
+                        (3*i) + (j % 3)), i) += 1;
+            }
+        }
+    }
+
+    for (i=0;i<sIEFOT.size();i++) // ideal faces...
+    { // boundary edges from ideal faces of tetrahedra.
+        // sIEFOT[i] /4 is the tetrahedron number
+        // sIEFOT[i] % 4 is the vertex number for this tetrahedron
+        // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4) are
+        // the respective faces
+        // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)
+        // gives the perm
+        // faces().index( tetrahedra[sIEFOT[i]/4].getFace(
+        //     sIEFOT[i] + 1,2,3 % 4) is therefore the
+        // face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(
+        //     sIEFOT[i] + 1,2,3 % 4)^{-1}
+        // applied to sIEFOT[i] % 4 is the vertex of this face.
+        for (j=1;j<4;j++) {
+            p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
+                (sIEFOT[i] + j) % 4);
+            Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->getFaceIndex(
+                tri->getTetrahedron(sIEFOT[i]/4 )->getFace(
+                (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
+                sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
+        }
+    }
+    // end Bd2
+
+    // fill out b0Incl
+    // boundary 0-cells:
+    for (i=0;i<B0Incl->columns();i++)
+        B0Incl->entry( ( ( i < sBNIV.size()) ? sNIV.index(sBNIV[i]) :
+                sNIV.size() + i - sBNIV.size() ) ,i)+=1;
+    // fill out b1Incl
+    for (i=0;i<B1Incl->columns();i++)
+        // each boundary edge corresponds to a triangulation edge
+        B1Incl->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] :
+                tri->getNumberOfEdges() + i - sBNIE.size() ) ,i)+=1;
+    // fill out b2Incl
+    for (i=0;i<B2Incl->columns();i++)
+        B2Incl->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
+                tri->getNumberOfFaces() + i - sBNIF.size() ) ,i)+=1;
 }
 
 const NMarkedAbelianGroup& NHomologicalData::getMH(unsigned q) {
@@ -1055,7 +1062,10 @@ void NHomologicalData::computeBIncl() {
 
 
 void NHomologicalData::computeTorsionLinkingForm() {
- if (!torsionFormComputed) {  
+    // Only do this if we haven't done it already.
+    if (torsionFormComputed)
+        return;
+
     // dual h1 --> standard h1 isomorphism:
     NHomMarkedAbelianGroup h1CellAp(getH1cellap());
     // min number of torsion gens:
@@ -1810,7 +1820,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
      }
 
     torsionFormComputed = true;
- } // end torsionFormComputed == false branch
 } // end computeTorsionLinkingForm()
 
 
