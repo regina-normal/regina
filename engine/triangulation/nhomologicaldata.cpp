@@ -29,6 +29,7 @@
 #include "maths/matrixops.h"
 #include "maths/nprimes.h"
 #include "triangulation/nhomologicaldata.h"
+#include <list>
 #include <iostream>
 #include <sstream>
 #include <cmath>
@@ -1093,11 +1094,13 @@ void NHomologicalData::computeTorsionLinkingForm() {
     // pvList[i] will be a vector in the dual h1 homology chain complex, and
     // ppList[i] will be its order.
 
-    for (unsigned long i=0; i<niv; i++) {
+    unsigned long i, j, k, l;
+
+    for (i=0; i<niv; i++) {
         tI = dmHomology1->getInvariantFactor(i);
         tFac = NPrimes::primePowerDecomp(tI);
 
-        for (unsigned long j=0; j<tFac.size(); j++) {
+        for (j=0; j<tFac.size(); j++) {
             pPrList.push_back(tFac[j]);
             NLargeInteger fac1, fac2, fac1i, fac2i;
 
@@ -1114,24 +1117,25 @@ void NHomologicalData::computeTorsionLinkingForm() {
             // getInvariantFactor(i).
             tV = dmHomology1->getTorRep(i);
 
-            for (unsigned long k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
+            for (k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
 
             pvList.push_back(tV);
         }
     }
 
     // step1a: construct (2 2 4) (3 3 9 27) ... indexing of ppList, pvList, etc.
-    // the indexing will be as a vector of pairs
+    // the indexing will be as a list of pairs
     // < prime, vector< pair< power, index> > >
-    std::vector< std::pair< NLargeInteger, std::vector<
+    // Use a list because we are continually inserting items in the middle.
+    std::list< std::pair< NLargeInteger, std::vector<
         std::pair<unsigned long, unsigned long> > > > indexing;
     // indexing[i] is the i-th prime in increasing order, the first bit is
     // the prime, the 2nd bit is the vector list of powers, the power is an
     // unsigned long, and its respective index in ppList and pvList is the
     // 2nd bit...
-    std::vector< std::pair< NLargeInteger, std::vector<
+    std::list< std::pair< NLargeInteger, std::vector<
         std::pair<unsigned long, unsigned long> > > >::iterator it1;
-    std::vector< std::pair< NLargeInteger, std::vector<
+    std::list< std::pair< NLargeInteger, std::vector<
         std::pair<unsigned long, unsigned long> > > >::iterator il1;
 
     std::vector< std::pair<unsigned long, unsigned long> >::iterator it2;
@@ -1139,7 +1143,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     std::pair< NLargeInteger, std::vector<
         std::pair<unsigned long, unsigned long> > > dummyv;
 
-    for (unsigned long i=0; i<pPrList.size(); i++) { 
+    for (i=0; i<pPrList.size(); i++) { 
         // for each entry in pPrList, find its appropriate position in indexing.
         // so this means comparing pPrList[i].first with all elts
         // indexing[j].first and stopping at first >= comparison.
@@ -1197,9 +1201,9 @@ void NHomologicalData::computeTorsionLinkingForm() {
     NMatrixInt standardBasis( numStandardCells[1], pvList.size() );
     NMatrixInt dualtostandard(h1CellAp.getDefiningMatrix());
 
-    for (unsigned long i=0; i<standardBasis.rows(); i++)
-        for (unsigned long j=0; j<standardBasis.columns(); j++)
-            for (unsigned long k=0; k<dualtostandard.columns(); k++)
+    for (i=0; i<standardBasis.rows(); i++)
+        for (j=0; j<standardBasis.columns(); j++)
+            for (k=0; k<dualtostandard.columns(); k++)
                 standardBasis.entry(i,j) +=
                     dualtostandard.entry(i,k)*pvList[j][k];
 
@@ -1222,31 +1226,31 @@ void NHomologicalData::computeTorsionLinkingForm() {
     // first I guess we need to determine rank of ON?
     NMatrixInt areboundariesM( standardBasis );
 
-    for (unsigned long i=0; i<standardBasis.rows(); i++)
-        for (unsigned long j=0; j<standardBasis.columns(); j++)
+    for (i=0; i<standardBasis.rows(); i++)
+        for (j=0; j<standardBasis.columns(); j++)
             areboundariesM.entry(i,j) *= ppList[j];
 
     NMatrixInt stepa( areboundariesM.rows(), areboundariesM.columns() );
-    for (unsigned long i=0; i<standardBasis.rows(); i++)
-        for (unsigned long j=0; j<standardBasis.columns(); j++)
-            for (unsigned long k=0; k<C.columns(); k++)
+    for (i=0; i<standardBasis.rows(); i++)
+        for (j=0; j<standardBasis.columns(); j++)
+            for (k=0; k<C.columns(); k++)
                 stepa.entry(i,j) += C.entry(i,k)*areboundariesM.entry(k,j);
 
     unsigned long rankON=0;
-    for (unsigned long i=0; ((i<ON.rows()) && (i<ON.columns())); i++)
+    for (i=0; ((i<ON.rows()) && (i<ON.columns())); i++)
         if (ON.entry(i,i) != NLargeInteger::zero) rankON++;
 
     NMatrixInt stepb( R.columns(), stepa.columns() );
 
-    for (unsigned long i=0; i<rankON; i++)
-        for (unsigned long j=0; j<stepb.columns(); j++)
+    for (i=0; i<rankON; i++)
+        for (j=0; j<stepb.columns(); j++)
             stepb.entry(i,j) = stepa.entry(i,j).divByExact(ON.entry(i,i));
 
     NMatrixInt boundingMat( stepb.rows(), stepb.columns() );
 
-    for (unsigned long i=0; i<stepb.rows(); i++)
-        for (unsigned long j=0; j<stepb.columns(); j++)
-            for (unsigned long k=0; k<R.columns(); k++)
+    for (i=0; i<stepb.rows(); i++)
+        for (j=0; j<stepb.columns(); j++)
+            for (k=0; k<R.columns(); k++)
                 boundingMat.entry(i,j) += R.entry(i,k)*stepb.entry(k,j);
 
     // step 4: intersect, construct matrix.
@@ -1256,9 +1260,9 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     NLargeInteger tN,tD,tR;
 
-    for (unsigned long i=0; i<pvList.size(); i++)
-        for (unsigned long j=0; j<pvList.size(); j++) {
-            for (unsigned long k=0; k<dNBF.size(); k++) {
+    for (i=0; i<pvList.size(); i++)
+        for (j=0; j<pvList.size(); j++) {
+            for (k=0; k<dNBF.size(); k++) {
                 // we need to determine the sign of the intersection of
                 // boundingMat.entry(k,i) * pvList[j][k]
                 // the denominator will be ppList[i]
@@ -1297,23 +1301,27 @@ void NHomologicalData::computeTorsionLinkingForm() {
             torsionLinkingFormPresentationMat.entry(i,j)=NRational(tR,tD);
         }
 
-    h1PrimePowerDecomp.resize(indexing.size());
-    linkingFormPD.resize(indexing.size());
-    for (unsigned long i=0; i<indexing.size(); i++) {
-        h1PrimePowerDecomp[i].second.resize(indexing[i].second.size());
-        h1PrimePowerDecomp[i].first = indexing[i].first;
+    // Compute indexing.size() just once, since for std::list this might be a slow
+    // operation.
+    unsigned long indexingSize = indexing.size();
 
-        for (unsigned long j=0; j<indexing[i].second.size(); j++)
-            h1PrimePowerDecomp[i].second[j] = indexing[i].second[j].first;
+    h1PrimePowerDecomp.resize(indexingSize);
+    linkingFormPD.resize(indexingSize);
+    for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) {
+        h1PrimePowerDecomp[i].second.resize(it1->second.size());
+        h1PrimePowerDecomp[i].first = it1->first;
 
-        linkingFormPD[i] = new NMatrixRing<NRational>(indexing[i].second.size(),
-                indexing[i].second.size() );
-        for (unsigned long j=0; j<indexing[i].second.size(); j++)
-            for (unsigned long k=0; k<indexing[i].second.size(); k++)
+        for (j=0; j<it1->second.size(); j++)
+            h1PrimePowerDecomp[i].second[j] = it1->second[j].first;
+
+        linkingFormPD[i] = new NMatrixRing<NRational>(it1->second.size(),
+                it1->second.size() );
+        for (j=0; j<it1->second.size(); j++)
+            for (k=0; k<it1->second.size(); k++)
                 linkingFormPD[i]->entry(j,k) =
                     torsionLinkingFormPresentationMat.entry(
-                        indexing[i].second[j].second,
-                        indexing[i].second[k].second
+                        it1->second[j].second,
+                        it1->second[k].second
                     );
     }
 
@@ -1344,18 +1352,18 @@ void NHomologicalData::computeTorsionLinkingForm() {
     //     std::vector<std::pair<unsigned long, unsigned long> > > > indexing;
     //                         prime        , list of (exponents, index)
 
-    torRankV.resize(indexing.size());
+    torRankV.resize(indexingSize);
     // std::vector< std::pair< NLargeInteger,
     //     std::vector< unsigned long > > > torRankV(indexing.size());
     // vector which lists the primes and the number of each power...
-    for (unsigned long i=0; i<indexing.size(); i++) {
-        torRankV[i].first = indexing[i].first;
+    for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) {
+        torRankV[i].first = it1->first;
         torRankV[i].second.resize(
-            indexing[i].second[indexing[i].second.size()-1].first, 0);
-        for (unsigned long j=0; j<indexing[i].second.size(); j++) { 
+            it1->second[it1->second.size()-1].first, 0);
+        for (j=0; j<it1->second.size(); j++) { 
         // indexing[i].second[j] is a pair (order, index) where the order k
         // indicates one copy of p^k where p==indexing[i].first.
-            torRankV[i].second[indexing[i].second[j].first-1]++;
+            torRankV[i].second[it1->second[j].first-1]++;
         }
     }
 
@@ -1393,13 +1401,13 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 NLargeInteger("0") );
 
             ProperPrimePower.resize( h1PrimePowerDecomp[0].second.size() );
-            for (unsigned long i=0; i<ProperPrimePower.size(); i++) {
+            for (i=0; i<ProperPrimePower.size(); i++) {
                 ProperPrimePower[i] = NLargeInteger(2);
                 ProperPrimePower[i].raiseToPower(h1PrimePowerDecomp[0].
                     second[i] );
             }
 
-            for (unsigned long i=0; i<twoTorSigmaV.size(); i++) {
+            for (i=0; i<twoTorSigmaV.size(); i++) {
                 // now we construct the sum over the group of
                 // e^{ 2^{i+1} pi i form(x,x) } where x is a group element
                 // torRankV[0].second[0] through torRankV.second[size()-1]
@@ -1432,8 +1440,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     // first we evaluate the form(x,x) for x==groupV.
                     // the form is linkingformPD[0]
                     tSum=NRational::zero;
-                    for (unsigned long j=0; j<linkingFormPD[0]->rows(); j++)
-                        for (unsigned long k=0; k<linkingFormPD[0]->columns();
+                    for (j=0; j<linkingFormPD[0]->rows(); j++)
+                        for (k=0; k<linkingFormPD[0]->columns();
                                 k++)
                             tSum += NRational(groupV[j]*groupV[k])*
                                 linkingFormPD[0]->entry(j,k);
@@ -1516,7 +1524,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     NMatrixInt *tempM;
 
-    for (unsigned long i=starti; i<torRankV.size(); i++) // for each prime
+    for (i=starti; i<torRankV.size(); i++) // for each prime
     {
         tempa.resize(0);
         curri=0;
@@ -1526,7 +1534,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         //     std::vector< unsigned long > > > torRankV(indexing.size());
         // starting at curri ending at torRankV[i].second[j]
 
-        for (unsigned long j=0; j<torRankV[i].second.size(); j++)
+        for (j=0; j<torRankV[i].second.size(); j++)
         // dimensions of p^{j+1} subspace
         {
             // initialize a torRankV[i].second[j] square matrix.
@@ -1537,8 +1545,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
             tI = torRankV[i].first;
             tI.raiseToPower(j+1);
 
-            for (unsigned long k=0; k<torRankV[i].second[j]; k++)
-                for (unsigned long l=0; l<torRankV[i].second[j]; l++)
+            for (k=0; k<torRankV[i].second[j]; k++)
+                for (l=0; l<torRankV[i].second[j]; l++)
                     tempM->entry(k,l) = (NRational(tI)*linkingFormPD[i]->
                         entry(k+curri,l+curri)).getNumerator();
 
@@ -1567,13 +1575,13 @@ void NHomologicalData::computeTorsionLinkingForm() {
         if (torRankV[0].first == NLargeInteger(2))
             starti=1;
 
-    for (unsigned long i=0; i<torRankV.size(); i++)
-        for (unsigned long j=0; j<torRankV[i].second.size(); j++)
+    for (i=0; i<torRankV.size(); i++)
+        for (j=0; j<torRankV[i].second.size(); j++)
             if ( (torRankV[i].second[j] % 2) != 0 )
                 torsionLinkingFormIsSplit=false;
     if (torsionLinkingFormIsSplit) {
-        for (unsigned long i=0; i<oddTorLegSymV.size(); i++)
-            for (unsigned long j=0; j<oddTorLegSymV[i].second.size(); j++) {
+        for (i=0; i<oddTorLegSymV.size(); i++)
+            for (j=0; j<oddTorLegSymV[i].second.size(); j++) {
                 if ( ( (NLargeInteger(torRankV[i+starti].second[j])*
                         (torRankV[i+starti].first -
                         NLargeInteger::one))/NLargeInteger(4) ) %
@@ -1589,7 +1597,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     }
     if (starti==1) // have 2-torsion
     { // all the sigmas need to be 0 or inf.
-        for (unsigned long i=0; i<twoTorSigmaV.size(); i++)
+        for (i=0; i<twoTorSigmaV.size(); i++)
             if ( (twoTorSigmaV[i]!=NLargeInteger::zero) &&
                     (twoTorSigmaV[i]!=NLargeInteger::infinity) )
                 torsionLinkingFormIsSplit=false;
@@ -1599,7 +1607,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     if ( (torsionLinkingFormIsSplit) && (starti==1) ) {
         torsionLinkingFormIsHyperbolic = true;
-        for (unsigned long i=0; i<twoTorSigmaV.size(); i++)
+        for (i=0; i<twoTorSigmaV.size(); i++)
             if (twoTorSigmaV[i]!=NLargeInteger::zero)
                 torsionLinkingFormIsHyperbolic=false;
     }
@@ -1614,7 +1622,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         //     std::vector<unsigned long> > > h1PrimePowerDecomp;
         // stored as list { (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1, 2)) }
         //std::vector< NMatrixRing<NRational>* > linkingFormPD;
-        for (unsigned long i=0; i<h1PrimePowerDecomp[0].second.size(); i++) {
+        for (i=0; i<h1PrimePowerDecomp[0].second.size(); i++) {
             // run down diagonal of linkingFormPD[0], for each (i,i) entry
             // multiply it by 2^{h1PrimePowerDecomp[0].second[i]-1} check if
             // congruent to zero. if not, trigger flag.
@@ -1632,10 +1640,10 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     torsionRankString.assign("");
     if (torRankV.size()==0) torsionRankString.append("no torsion");
-    else for (unsigned long i=0; i<torRankV.size(); i++) {
+    else for (i=0; i<torRankV.size(); i++) {
             torsionRankString.append(torRankV[i].first.stringValue());
             torsionRankString.append("(");
-            for (unsigned long j=0; j<torRankV[i].second.size(); j++) {
+            for (j=0; j<torRankV[i].second.size(); j++) {
                 torsionRankString.append(
                     NLargeInteger(torRankV[i].second[j]).stringValue() );
                 if (j < torRankV[i].second.size()-1)
@@ -1649,7 +1657,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     if (tri->isOrientable()) {
         torsionSigmaString.assign("");
         if (twoTorSigmaV.size()==0) torsionSigmaString.append("no 2-torsion");
-        else for (unsigned long i=0; i<twoTorSigmaV.size(); i++) {
+        else for (i=0; i<twoTorSigmaV.size(); i++) {
             torsionSigmaString.append(twoTorSigmaV[i].stringValue());
             if (i<(twoTorSigmaV.size()-1)) torsionSigmaString.append(" ");
             }
@@ -1660,10 +1668,10 @@ void NHomologicalData::computeTorsionLinkingForm() {
         torsionLegendreString.assign("");
         if (oddTorLegSymV.size()==0)
             torsionLegendreString.append("no odd p-torsion");
-        else for (unsigned long i=0; i<oddTorLegSymV.size(); i++) {
+        else for (i=0; i<oddTorLegSymV.size(); i++) {
             torsionLegendreString.append(oddTorLegSymV[i].first.stringValue());
             torsionLegendreString.append("(");
-            for (unsigned long j=0; j<oddTorLegSymV[i].second.size(); j++) {
+            for (j=0; j<oddTorLegSymV[i].second.size(); j++) {
                 torsionLegendreString.append( NLargeInteger(
                     oddTorLegSymV[i].second[j]).stringValue());
                 if (j<oddTorLegSymV[i].second.size()-1)
