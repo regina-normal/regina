@@ -1,0 +1,52 @@
+------------------------
+New marked abelian group
+------------------------
+
+Group: Z + Z_6
+Free generators:
+0: [ -1 0 0 0 1 ]
+Torsion generators:
+0: [ 1 1 -1 0 -1 ]
+
+------------------------
+New marked abelian group
+------------------------
+
+Group: 2 Z + 2 Z_2
+Free generators:
+0: [ -1 0 0 1 0 ]
+1: [ -1 0 0 0 1 ]
+Torsion generators:
+0: [ 1 -1 0 0 0 ]
+1: [ -3 0 1 1 1 ]
+
+----------------
+New homomorphism
+----------------
+
+Domain: 2 Z + 2 Z_2
+Range: Z + Z_6
+Kernel: Z + Z_2
+Cokernel: Z_5
+Image: Z + Z_6
+
+----------------
+New homomorphism
+----------------
+
+Domain: 2 Z + 2 Z_2
+Range: Z + Z_6
+Kernel: Z + Z_2
+Cokernel: Z_15
+Image: Z + Z_2
+
+----------------
+New homomorphism
+----------------
+
+Domain: 2 Z + 2 Z_2
+Range: Z + Z_6
+Kernel: 2 Z + Z_2
+Cokernel: Z
+Image: Z_6
+
