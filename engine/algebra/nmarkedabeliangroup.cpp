@@ -217,7 +217,7 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getFreeRep(unsigned long index)
  * this routine returns the index-th torsion generator of the
  * ker(M)/img(N) in Z^l.
  */
-std::vector<NLargeInteger> NMarkedAbelianGroup::getTorRep(unsigned long index)
+std::vector<NLargeInteger> NMarkedAbelianGroup::getTorsionRep(unsigned long index)
         const {
     std::vector<NLargeInteger> retval(OM.columns(),NLargeInteger::zero);
     // index corresponds to the (InvFacIndex[index])-th column of ornCi
@@ -253,7 +253,7 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getTorRep(unsigned long index)
  * element is not in the kernel of M. element is assumed to have
  * OM.columns()==ON.rows() entries.
  */
-std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFisoRep(
+std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFIsoRep(
         const std::vector<NLargeInteger>& element)  const {
     std::vector<NLargeInteger> retval(snfrank+InvFacList.size(),
         NLargeInteger::zero);
@@ -329,8 +329,8 @@ void NHomMarkedAbelianGroup::computeReducedMatrix() {
     if (!reducedMatrix) {
         unsigned long i,j,k;
 
-        NMatrixInt kerMatrix( matrix.rows()-range.getRankOM(),
-                matrix.columns()-domain.getRankOM() );
+        NMatrixInt kerMatrix( matrix.rows()-range.getRankM(),
+                matrix.columns()-domain.getRankM() );
         // kerMatrix = truncate (range.getMRBi() * matrix * domain.getMRBi)
         // to construct this we do it in two steps:
         // step 1) temp1 = truncate columns (matrix * domain.getMRBi )
@@ -339,39 +339,40 @@ void NHomMarkedAbelianGroup::computeReducedMatrix() {
         const NMatrixInt& dcckb(domain.getMRB());
         const NMatrixInt& rcckb(range.getMRBi());
 
-        NMatrixInt temp1( matrix.rows(), matrix.columns()-domain.getRankOM() );
+        NMatrixInt temp1( matrix.rows(), matrix.columns()-domain.getRankM() );
         for (i=0;i<temp1.rows();i++)
             for (j=0;j<temp1.columns();j++)
                 for (k=0;k<matrix.columns();k++)
                     temp1.entry(i,j) += matrix.entry(i,k) *
-                        dcckb.entry(k,j + domain.getRankOM() );
+                        dcckb.entry(k,j + domain.getRankM() );
 
         for (i=0;i<kerMatrix.rows();i++)
             for (j=0;j<kerMatrix.columns();j++)
                 for (k=0;k<rcckb.rows();k++)
                     kerMatrix.entry(i,j) +=
-                        rcckb.entry(i+range.getRankOM(), k) * temp1.entry(k,j);
+                        rcckb.entry(i+range.getRankM(), k) * temp1.entry(k,j);
 
-        reducedMatrix = new NMatrixInt( kerMatrix.rows()-range.getTorLoc(),
-                kerMatrix.columns()-domain.getTorLoc() );
+        reducedMatrix = new NMatrixInt( kerMatrix.rows()-range.getTorsionLoc(),
+                kerMatrix.columns()-domain.getTorsionLoc() );
 
         const NMatrixInt& dccqb(domain.getNCBi());
         const NMatrixInt& rccqb(range.getNCB());
 
         NMatrixInt temp2( kerMatrix.rows(),
-            kerMatrix.columns() - domain.getTorLoc() );
+            kerMatrix.columns() - domain.getTorsionLoc() );
         for (i=0;i<temp2.rows();i++)
             for (j=0;j<temp2.columns();j++)
                 for (k=0;k<kerMatrix.columns();k++) {
                     temp2.entry(i,j) += kerMatrix.entry(i,k) *
-                        dccqb.entry(k,j + domain.getTorLoc() );
+                        dccqb.entry(k,j + domain.getTorsionLoc() );
                 }
 
         for (i=0;i<reducedMatrix->rows();i++)
             for (j=0;j<reducedMatrix->columns();j++)
                 for (k=0;k<rccqb.rows();k++)
                     reducedMatrix->entry(i,j) +=
-                        rccqb.entry(i+range.getTorLoc(), k) * temp2.entry(k,j);
+                        rccqb.entry(i+range.getTorsionLoc(), k) *
+                        temp2.entry(k,j);
     }
 }
 

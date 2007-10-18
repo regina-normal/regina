@@ -56,11 +56,11 @@ namespace {
         return ans;
     }
 
-    boost::python::list getTorRep_list(
+    boost::python::list getTorsionRep_list(
             const NMarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
-        std::vector<regina::NLargeInteger> rep = g.getTorRep(index);
+        std::vector<regina::NLargeInteger> rep = g.getTorsionRep(index);
         for (std::vector<regina::NLargeInteger>::const_iterator
                 it = rep.begin(); it != rep.end(); ++it) {
             ans.append(*it);
@@ -69,9 +69,9 @@ namespace {
         return ans;
     }
 
-    boost::python::list getSNFisoRep_list_list(
+    boost::python::list getSNFIsoRep_list_list(
             const NMarkedAbelianGroup& g, boost::python::list element) {
-        unsigned long needLen = g.getOM().columns();
+        unsigned long needLen = g.getM().columns();
 
         if (boost::python::len(element) != needLen) {
             PyErr_SetString(PyExc_IndexError,
@@ -107,7 +107,7 @@ namespace {
             x_large();
         }
 
-        std::vector<regina::NLargeInteger> rep = g.getSNFisoRep(eltVector);
+        std::vector<regina::NLargeInteger> rep = g.getSNFIsoRep(eltVector);
 
         boost::python::list ans;
         for (std::vector<regina::NLargeInteger>::const_iterator
@@ -137,8 +137,8 @@ void addNMarkedAbelianGroup() {
             return_value_policy<return_by_value>())
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
         .def("getFreeRep", getFreeRep_list)
-        .def("getTorRep", getTorRep_list)
-        .def("getSNFisoRep", getSNFisoRep_list_list)
+        .def("getTorsionRep", getTorsionRep_list)
+        .def("getSNFIsoRep", getSNFIsoRep_list_list)
         .def("getMRB", &NMarkedAbelianGroup::getMRB,
             return_internal_reference<>())
         .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
@@ -155,13 +155,13 @@ void addNMarkedAbelianGroup() {
             return_internal_reference<>())
         .def("getNCBi", &NMarkedAbelianGroup::getNCBi,
             return_internal_reference<>())
-        .def("getRankOM", &NMarkedAbelianGroup::getRankOM)
+        .def("getRankM", &NMarkedAbelianGroup::getRankM)
         .def("getFreeLoc", &NMarkedAbelianGroup::getFreeLoc)
-        .def("getTorLoc", &NMarkedAbelianGroup::getTorLoc)
-        .def("getTorNum", &NMarkedAbelianGroup::getTorNum)
-        .def("getOM", &NMarkedAbelianGroup::getOM,
+        .def("getTorsionLoc", &NMarkedAbelianGroup::getTorsionLoc)
+        .def("getTorsionNum", &NMarkedAbelianGroup::getTorsionNum)
+        .def("getM", &NMarkedAbelianGroup::getM,
             return_internal_reference<>())
-        .def("getON", &NMarkedAbelianGroup::getON,
+        .def("getN", &NMarkedAbelianGroup::getN,
             return_internal_reference<>())
         .def(self == self)
     ;

@@ -61,8 +61,8 @@ def groupStats(g):
 	for i in range(g.getRank()):
 		print str(i) + ':', vecToString(g.getFreeRep(i))
 	print 'Torsion generators:'
-	for i in range(g.getTorNum()):
-		print str(i) + ':', vecToString(g.getTorRep(i))
+	for i in range(g.getTorsionNum()):
+		print str(i) + ':', vecToString(g.getTorsionRep(i))
 
 	# Nothing else to say.
 	print

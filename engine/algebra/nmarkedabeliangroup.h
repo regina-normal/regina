@@ -270,7 +270,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * @return the coordinates of the generator in the nullspace of
          * \a M; this vector will have length M.columns().
          */
-        std::vector<NLargeInteger> getTorRep(unsigned long index) const;
+        std::vector<NLargeInteger> getTorsionRep(unsigned long index) const;
 
         /**
          * The marked abelian group was defined by matrices M and N
@@ -293,7 +293,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * Z^d + Z_{d1} + ... + Z_{dk} form, or the empty vector if
          * \a element is not in the kernel of \a M.
          */
-        std::vector<NLargeInteger> getSNFisoRep(
+        std::vector<NLargeInteger> getSNFIsoRep(
             const std::vector<NLargeInteger>& element) const;
 
         /**
@@ -410,7 +410,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the rank of the defining matrix M.
          */
-        unsigned long getRankOM() const;
+        unsigned long getRankM() const;
 
         /**
          * Index of first free generator in the reduced N matrix.
@@ -424,27 +424,27 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return Index of the first torsion generator in the reduced N matrix.
          */
-        unsigned long getTorLoc() const; // internal: ifLoc
+        unsigned long getTorsionLoc() const; // internal: ifLoc
 
         /**
          * Number of invariant factors ie: minimal number of torsion generators.
          *
          * @return number of invariant factors in torsion subgroup.
          */
-        unsigned long getTorNum() const; // internal: InvFacList.size()
+        unsigned long getTorsionNum() const; // internal: InvFacList.size()
 
         /**
          * Copies of the original chain complex matrices.
          *
          * @return a copy of the defining matrix M.
          */
-        const NMatrixInt& getOM() const;
+        const NMatrixInt& getM() const;
         /**
          * Copies of the original chain complex matrices.
          *
          * @return a copy of the defining matrix N.
          */
-        const NMatrixInt& getON() const;
+        const NMatrixInt& getN() const;
 };
 
 /**
@@ -682,23 +682,23 @@ inline const NMatrixInt& NMarkedAbelianGroup::getNCBi() const {
     return ornCi;
 }
 
-inline unsigned long NMarkedAbelianGroup::getRankOM() const {
+inline unsigned long NMarkedAbelianGroup::getRankM() const {
     return rankOM;
 }
 inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
     return snffreeindex;
 }
-inline unsigned long NMarkedAbelianGroup::getTorLoc() const {
+inline unsigned long NMarkedAbelianGroup::getTorsionLoc() const {
     return ifLoc;
 }
-inline unsigned long NMarkedAbelianGroup::getTorNum() const {
+inline unsigned long NMarkedAbelianGroup::getTorsionNum() const {
     return InvFacList.size();
 }
 
-inline const NMatrixInt& NMarkedAbelianGroup::getOM() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getM() const {
     return OM;
 }
-inline const NMatrixInt& NMarkedAbelianGroup::getON() const {
+inline const NMatrixInt& NMarkedAbelianGroup::getN() const {
     return ON;
 }
 

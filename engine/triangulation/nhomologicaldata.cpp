@@ -1115,7 +1115,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
             // now the corresponding vector...
             // this will have to be fac1i * vector corresponding to
             // getInvariantFactor(i).
-            tV = dmHomology1->getTorRep(i);
+            tV = dmHomology1->getTorsionRep(i);
 
             for (k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
 
@@ -1209,7 +1209,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     //           ppList[j] bounds, so find a chain with that boundary and
     //           put its info in a matrix.
 
-    NMatrixInt ON(mHomology1->getON());
+    NMatrixInt ON(mHomology1->getN());
     NMatrixInt R(ON.columns(),ON.columns());
     NMatrixInt Ri(ON.columns(),ON.columns());
     NMatrixInt C(ON.rows(),ON.rows());
