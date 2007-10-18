@@ -406,23 +406,27 @@ class NMarkedAbelianGroup : public ShareableObject {
         const NMatrixInt& getNCBi() const;
 
         /**
-         * Gives the rank of the defining matrix M.
+         * Gives the rank of the defining matrix \a M.
+         *
+         * The matrix \a M is the `right' matrix used in defining the chain
+         * complex.  See the class overview for further details.
          *
          * @return the rank of the defining matrix M.
          */
         unsigned long getRankM() const;
 
         /**
-         * Index of first free generator in the reduced N matrix.
+         * Index of first free generator in the reduced \a N matrix.
          *
          * @return index of the first free generator in reduced N matrix.
          */
         unsigned long getFreeLoc() const;// internal: snffreeindex
 
         /**
-         * Index of the first torsion generator in the reduced N matrix.
+         * Index of the first torsion generator in the reduced \a N matrix.
          *
-         * @return Index of the first torsion generator in the reduced N matrix.
+         * @return Index of the first torsion generator in the reduced \a N
+         * matrix.
          */
         unsigned long getTorsionLoc() const; // internal: ifLoc
 
@@ -434,15 +438,23 @@ class NMarkedAbelianGroup : public ShareableObject {
         unsigned long getTorsionNum() const; // internal: InvFacList.size()
 
         /**
-         * Copies of the original chain complex matrices.
+         * Returns the `right' matrix used in defining the chain complex.
          *
-         * @return a copy of the defining matrix M.
+         * This is a copy of the matrix \a M that was originally passed to the
+         * class constructor.  See the class overview for further details on
+         * matrices \a M and \a N and their roles in defining the chain complex.
+         *
+         * @return a reference to the defining matrix M.
          */
         const NMatrixInt& getM() const;
         /**
-         * Copies of the original chain complex matrices.
+         * Returns the `left' matrix used in defining the chain complex.
          *
-         * @return a copy of the defining matrix N.
+         * This is a copy of the matrix \a N that was originally passed to the
+         * class constructor.  See the class overview for further details on
+         * matrices \a M and \a N and their roles in defining the chain complex.
+         *
+         * @return a reference to the defining matrix N.
          */
         const NMatrixInt& getN() const;
 };
@@ -645,7 +657,8 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
         rankOM(g.rankOM),
         ORN(g.ORN), ornR(g.ornR), ornRi(g.ornRi), ornC(g.ornC), ornCi(g.ornCi),
         SNF_ORN(g.SNF_ORN),
-        InvFacList(g.InvFacList), snfrank(g.snfrank), snffreeindex(g.snffreeindex),
+        InvFacList(g.InvFacList), snfrank(g.snfrank),
+        snffreeindex(g.snffreeindex),
         ifNum(g.ifNum), ifLoc(g.ifLoc) {
 }
 
