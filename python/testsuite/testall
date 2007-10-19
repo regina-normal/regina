@@ -60,12 +60,17 @@ if ! test -f "$executable"; then
 	exit 1
 fi
 
+# Clobber environment variables that the user might already have set.
+export REGINA_VERBOSITY=
+export REGINA_PYLIBDIR=
+export REGINA_HOME=
+
 broken=
 for i in `find . -name "*.test"`; do
 	echo -n "Running $i ... "
 
 	output="${i/.test/.out}"
-	if ! ( "$executable" "$i" > "$tmpout" 2>&1 ); then
+	if ! ( "$executable" -n "$i" > "$tmpout" 2>&1 ); then
 		echo "COULD NOT RUN"
 		broken=1
 	else

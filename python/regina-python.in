@@ -55,6 +55,7 @@ my $libs_conf = $home . "/.regina-libs";
 my $quiet = 0;
 my $verbose = 0;
 my $interactive = 0;
+my $nolibs = 0;
 my $regina_home = '';
 my $from_source = 0;
 my $python_lib_dir = '';
@@ -138,6 +139,11 @@ foreach my $arg (@ARGV) {
         next;
     }
 
+    if ($arg eq '-n' or $arg eq '--nolibs') {
+        $nolibs = 1;
+        next;
+    }
+
     if ($arg =~ /^-/) {
         &usage("Unrecognised option: $arg");
     }
@@ -189,7 +195,9 @@ if (! $python_lib_dir) {
 
 # --- Read the list of libraries to load. ---
 
-if (open(LIBS, $libs_conf)) {
+if ($nolibs) {
+    &info("I: Not loading user libraries, as requested on the command-line.\n");
+} elsif (open(LIBS, $libs_conf)) {
     my @lines = <LIBS>;
     chomp @lines;
     close(LIBS);
