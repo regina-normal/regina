@@ -123,6 +123,10 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
           current Graphviz installation.  For version 1.x, Regina now
           insists on using dot, since the old neato 1.x cannot handle
           multiple edges.
+    PYTHON:
+        - The regina-python tool has new options -i/--interactive (run a
+          script and leave the interpreter open) and -n/--nolibs (do not
+          load any of the normal user libraries).
     UTILITIES:
         trisetcmp:
             - Now outputs more appropriate messages when subcomplex testing

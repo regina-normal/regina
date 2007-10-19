@@ -101,6 +101,7 @@
      <arg><option>-q, --quiet</option></arg>
      <arg><option>-v, --verbose</option></arg>
     </group>
+    <arg><option>-n, --nolibs</option></arg>
    </cmdsynopsis>
    <cmdsynopsis>
     <command>regina-python</command>
@@ -108,6 +109,7 @@
      <arg><option>-q, --quiet</option></arg>
      <arg><option>-v, --verbose</option></arg>
     </group>
+    <arg><option>-n, --nolibs</option></arg>
     <arg><option>-i, --interactive</option></arg>
     <arg choice="req"><replaceable>script</replaceable></arg>
     <arg><replaceable>script-args</replaceable></arg>
@@ -180,6 +182,17 @@
       <para>
        This is equivalent to setting the environment variable
        <parameter>REGINA_VERBOSITY</parameter>=<literal>2</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-n</option></term>
+     <term><option>--nolibs</option></term>
+     <listitem>
+      <para>
+       Do not load any user libraries.  This refers to the libraries
+       specified in &regina-libs; and/or configured through the &kde; user
+       interface, as described in the overview above.
       </para>
      </listitem>
     </varlistentry>
