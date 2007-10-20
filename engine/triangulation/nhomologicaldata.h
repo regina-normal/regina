@@ -39,7 +39,9 @@
 #include "triangulation/ntriangulation.h"
 #include "utilities/nindexedarray.h"
 #include "utilities/nrational.h"
+#include "utilities/ptrutils.h"
 #include <algorithm>
+#include <memory>
 #include <vector>
 
 namespace regina {
@@ -118,89 +120,90 @@ private:
     /**
      * Stored pointer to a valid triangulation. All routines use this
      * triangulation as reference.
+     * This is the triangulation that it is initialized by.
      */
-    NTriangulation* tri; // this is the triangulation that it is initialized by.
+    std::auto_ptr<NTriangulation> tri;
 
     /**
      * Pointer to the 0-th homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* mHomology0;
+    std::auto_ptr<NMarkedAbelianGroup> mHomology0;
     /**
      * Pointer to the 1st homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* mHomology1;
+    std::auto_ptr<NMarkedAbelianGroup> mHomology1;
     /**
      * Pointer to the 2nd homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* mHomology2;
+    std::auto_ptr<NMarkedAbelianGroup> mHomology2;
     /**
      * Pointer to the 3rd homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* mHomology3;
+    std::auto_ptr<NMarkedAbelianGroup> mHomology3;
 
     /**
      * Pointer to the 0-th boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* bHomology0;
+    std::auto_ptr<NMarkedAbelianGroup> bHomology0;
     /**
      * Pointer to the 1st boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* bHomology1;
+    std::auto_ptr<NMarkedAbelianGroup> bHomology1;
     /**
      * Pointer to the 2nd boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* bHomology2;
+    std::auto_ptr<NMarkedAbelianGroup> bHomology2;
 
     /**
      * Pointer to the boundary inclusion on 0-th homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    NHomMarkedAbelianGroup* bmMap0; // maps from bHomology? to mHomology?
+    std::auto_ptr<NHomMarkedAbelianGroup> bmMap0;
     /**
      * Pointer to the boundary inclusion on 1st homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    NHomMarkedAbelianGroup* bmMap1;
+    std::auto_ptr<NHomMarkedAbelianGroup> bmMap1;
     /**
      * Pointer to the boundary inclusion on 2nd homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    NHomMarkedAbelianGroup* bmMap2;
+    std::auto_ptr<NHomMarkedAbelianGroup> bmMap2;
 
     /**
      * Pointer to the 0-th homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* dmHomology0;
+    std::auto_ptr<NMarkedAbelianGroup> dmHomology0;
     /**
      * Pointer to the 1st homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* dmHomology1;
+    std::auto_ptr<NMarkedAbelianGroup> dmHomology1;
     /**
      * Pointer to the 2nd homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* dmHomology2;
+    std::auto_ptr<NMarkedAbelianGroup> dmHomology2;
     /**
      * Pointer to the 3rd homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    NMarkedAbelianGroup* dmHomology3;
+    std::auto_ptr<NMarkedAbelianGroup> dmHomology3;
 
     /**
      * Pointer to the cellular approx of the identity H1(M) --> H1(M)
      * from dual to standard cellular coordinates, or 0 if it has not yet
      * been computed.
      */
-    NHomMarkedAbelianGroup* dmTomMap1;
+    std::auto_ptr<NHomMarkedAbelianGroup> dmTomMap1;
 
     // below here and the public declaration go the internal bits of
     // data that are not publicly accessible...
@@ -244,49 +247,49 @@ private:
 
     /** 0th term in chain complex for cellular homology, using standard
         CW-complex struc */
-    NMatrixInt* A0;
+    std::auto_ptr<NMatrixInt> A0;
     /** 1st term in chain complex for cellular homology, using standard
         CW-complex struc */
-    NMatrixInt* A1;
+    std::auto_ptr<NMatrixInt> A1;
     /** 2nd term in chain complex for cellular homology, using standard
         CW-complex struc */
-    NMatrixInt* A2;
+    std::auto_ptr<NMatrixInt> A2;
     /** 3rd term in chain complex for cellular homology, using standard
         CW-complex struc */
-    NMatrixInt* A3;
+    std::auto_ptr<NMatrixInt> A3;
     /** 4th term in chain complex for cellular homology, using standard
         CW-complex struc */
-    NMatrixInt* A4;
+    std::auto_ptr<NMatrixInt> A4;
 
     /** 0-th term in chain complex for dual cellular homology */
-    NMatrixInt* B0;
+    std::auto_ptr<NMatrixInt> B0;
     /** 1st term in chain complex for dual cellular homology */
-    NMatrixInt* B1;
+    std::auto_ptr<NMatrixInt> B1;
     /** 2nd term in chain complex for dual cellular homology */
-    NMatrixInt* B2;
+    std::auto_ptr<NMatrixInt> B2;
     /** 3rd term in chain complex for dual cellular homology */
-    NMatrixInt* B3;
+    std::auto_ptr<NMatrixInt> B3;
     /** 4th term in chain complex for dual cellular homology */
-    NMatrixInt* B4;
+    std::auto_ptr<NMatrixInt> B4;
 
     /** 0th term in chain complex for boundary cellular homology */
-    NMatrixInt* Bd0;
+    std::auto_ptr<NMatrixInt> Bd0;
     /** 1st term in chain complex for boundary cellular homology */
-    NMatrixInt* Bd1;
+    std::auto_ptr<NMatrixInt> Bd1;
     /** 2nd term in chain complex for boundary cellular homology */
-    NMatrixInt* Bd2;
+    std::auto_ptr<NMatrixInt> Bd2;
     /** 3rd term in chain complex for boundary cellular homology */
-    NMatrixInt* Bd3;
+    std::auto_ptr<NMatrixInt> Bd3;
 
     /** Chain map from C_0 boundary to C_0 manifold, standard coords */
-    NMatrixInt* B0Incl;
+    std::auto_ptr<NMatrixInt> B0Incl;
     /** Chain map from C_1 boundary to C_1 manifold, standard coords */
-    NMatrixInt* B1Incl;
+    std::auto_ptr<NMatrixInt> B1Incl;
     /** Chain map from C_2 boundary to C_2 manifold, standard coords */
-    NMatrixInt* B2Incl;
+    std::auto_ptr<NMatrixInt> B2Incl;
 
     /** Isomorphism from C_1 dual to C_1 standard */
-    NMatrixInt* H1map;
+    std::auto_ptr<NMatrixInt> H1map;
 
     /** Call this routine to demand the indexing of the chain complexes. */
     void computeccIndexing();
@@ -614,25 +617,7 @@ public:
 inline NHomologicalData::NHomologicalData(const NTriangulation& input):
         ShareableObject(),
 
-        mHomology0(0),
-        mHomology1(0),
-        mHomology2(0),
-        mHomology3(0),
-
-        bHomology0(0),
-        bHomology1(0),
-        bHomology2(0),
-
-        bmMap0(0),
-        bmMap1(0),
-        bmMap2(0),
-
-        dmHomology0(0),
-        dmHomology1(0),
-        dmHomology2(0),
-        dmHomology3(0),
-
-        dmTomMap1(0),
+        tri(new NTriangulation(input)),
 
         ccIndexingComputed(false),
 
@@ -642,17 +627,9 @@ inline NHomologicalData::NHomologicalData(const NTriangulation& input):
 
         chainComplexesComputed(false),
 
-        A0(0), A1(0), A2(0), A3(0), A4(0),
-        B0(0), B1(0), B2(0), B3(0), B4(0),
-        Bd0(0),Bd1(0),Bd2(0),Bd3(0),
-        B0Incl(0),B1Incl(0),B2Incl(0),
-        H1map(0),
-
         torsionFormComputed(false),
         h1PrimePowerDecomp(0), linkingFormPD(0) 
 {
-    tri = new NTriangulation(input);
-
     std::fill(numStandardCells, numStandardCells + 4, 0);
     std::fill(numDualCells, numDualCells + 4, 0);
     std::fill(numBdryCells, numBdryCells + 3, 0);
@@ -662,52 +639,47 @@ inline NHomologicalData::NHomologicalData(const NTriangulation& input):
 
 // copy constructor
 inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
-ShareableObject() {
-    tri = new NTriangulation(*g.tri);
+        ShareableObject(),
 
-    // regular cellular homology
-    if (g.mHomology0) mHomology0 = new NMarkedAbelianGroup(*g.mHomology0);
-    else mHomology0=0;
-    if (g.mHomology1) mHomology1 = new NMarkedAbelianGroup(*g.mHomology1);
-    else mHomology1=0;
-    if (g.mHomology2) mHomology2 = new NMarkedAbelianGroup(*g.mHomology2);
-    else mHomology2=0;
-    if (g.mHomology3) mHomology3 = new NMarkedAbelianGroup(*g.mHomology3);
-    else mHomology3=0;
+        tri(clonePtr(g.tri)),
 
-    // regular boundary cellular homology
-    if (g.bHomology0) bHomology0 = new NMarkedAbelianGroup(*g.bHomology0);
-    else bHomology0=0;
-    if (g.bHomology1) bHomology1 = new NMarkedAbelianGroup(*g.bHomology1);
-    else bHomology1=0;
-    if (g.bHomology2) bHomology2 = new NMarkedAbelianGroup(*g.bHomology2);
-    else bHomology2=0;
+        mHomology0(clonePtr(g.mHomology0)),
+        mHomology1(clonePtr(g.mHomology1)),
+        mHomology2(clonePtr(g.mHomology2)),
+        mHomology3(clonePtr(g.mHomology3)),
 
-    // boundary map
-    if (g.bmMap0) bmMap0 = new NHomMarkedAbelianGroup(*g.bmMap0);
-    else bmMap0=0;
-    if (g.bmMap1) bmMap1 = new NHomMarkedAbelianGroup(*g.bmMap1);
-    else bmMap1=0;
-    if (g.bmMap2) bmMap2 = new NHomMarkedAbelianGroup(*g.bmMap2);
-    else bmMap2=0;
+        bHomology0(clonePtr(g.bHomology0)),
+        bHomology1(clonePtr(g.bHomology1)),
+        bHomology2(clonePtr(g.bHomology2)),
 
-    // dual cellular homology
-    if (g.dmHomology0) dmHomology0 = new NMarkedAbelianGroup(*g.dmHomology0);
-    else dmHomology0=0;
-    if (g.dmHomology1) dmHomology1 = new NMarkedAbelianGroup(*g.dmHomology1);
-    else dmHomology1=0;
-    if (g.dmHomology2) dmHomology2 = new NMarkedAbelianGroup(*g.dmHomology2);
-    else dmHomology2=0;
-    if (g.dmHomology3) dmHomology3 = new NMarkedAbelianGroup(*g.dmHomology3);
-    else dmHomology3=0;
+        bmMap0(clonePtr(g.bmMap0)),
+        bmMap1(clonePtr(g.bmMap1)),
+        bmMap2(clonePtr(g.bmMap2)),
 
-    // isomorphism between dual H1 and regular H1.
-    if (g.dmTomMap1) dmTomMap1 = new NHomMarkedAbelianGroup(*g.dmTomMap1);
-    else dmTomMap1=0;
+        dmHomology0(clonePtr(g.dmHomology0)),
+        dmHomology1(clonePtr(g.dmHomology1)),
+        dmHomology2(clonePtr(g.dmHomology2)),
+        dmHomology3(clonePtr(g.dmHomology3)),
 
-    // the chain complexes...
-    ccIndexingComputed = g.ccIndexingComputed;
+        dmTomMap1(clonePtr(g.dmTomMap1)),
 
+        ccIndexingComputed(g.ccIndexingComputed),
+
+        chainComplexesComputed(g.chainComplexesComputed),
+        A0(clonePtr(g.A0)), A1(clonePtr(g.A1)), A2(clonePtr(g.A2)),
+        A3(clonePtr(g.A3)), A4(clonePtr(g.A4)),
+        B0(clonePtr(g.B0)), B1(clonePtr(g.B1)), B2(clonePtr(g.B2)),
+        B3(clonePtr(g.B3)), B4(clonePtr(g.B4)),
+        Bd0(clonePtr(g.Bd0)), Bd1(clonePtr(g.Bd1)),
+        Bd2(clonePtr(g.Bd2)), Bd3(clonePtr(g.Bd3)),
+        B0Incl(clonePtr(g.B0Incl)),
+        B1Incl(clonePtr(g.B1Incl)),
+        B2Incl(clonePtr(g.B2Incl)),
+        H1map(clonePtr(g.H1map)),
+
+        torsionFormComputed(g.torsionFormComputed)
+{
+    // More complex initialisation:
     if (ccIndexingComputed) {
         // Numbers of cells, dual cells and standard boundary cells
         std::copy(g.numStandardCells, g.numStandardCells + 4, numStandardCells);
@@ -726,30 +698,6 @@ ShareableObject() {
         sBNIF = g.sBNIF;  // boundary non-ideal faces
     }
 
-    chainComplexesComputed = g.chainComplexesComputed;
-
-    if (chainComplexesComputed) {
-        A0 = new NMatrixInt(*g.A0);
-        A1 = new NMatrixInt(*g.A1);
-        A2 = new NMatrixInt(*g.A2);
-        A3 = new NMatrixInt(*g.A3);
-        A4 = new NMatrixInt(*g.A4);
-        B0 = new NMatrixInt(*g.B0);
-        B1 = new NMatrixInt(*g.B1);
-        B2 = new NMatrixInt(*g.B2);
-        B3 = new NMatrixInt(*g.B3);
-        B4 = new NMatrixInt(*g.B4);
-        Bd0 = new NMatrixInt(*g.Bd0);
-        Bd1 = new NMatrixInt(*g.Bd1);
-        Bd2 = new NMatrixInt(*g.Bd2);
-        Bd3 = new NMatrixInt(*g.Bd3);
-        B0Incl = new NMatrixInt(*g.B0Incl);
-        B1Incl = new NMatrixInt(*g.B1Incl);
-        B2Incl = new NMatrixInt(*g.B2Incl);
-        H1map = new NMatrixInt(*g.H1map);
-    }
-
-    torsionFormComputed = g.torsionFormComputed;
     if (torsionFormComputed) {
         h1PrimePowerDecomp = g.h1PrimePowerDecomp;
         linkingFormPD.resize( g.linkingFormPD.size(), 0 );
@@ -771,49 +719,6 @@ ShareableObject() {
 
 // destructor
 inline NHomologicalData::~NHomologicalData() {
-    delete tri;
-
-    if (mHomology0) delete mHomology0;
-    if (mHomology1) delete mHomology1;
-    if (mHomology2) delete mHomology2;
-    if (mHomology3) delete mHomology3;
-
-    if (bHomology0) delete bHomology0;
-    if (bHomology1) delete bHomology1;
-    if (bHomology2) delete bHomology2;
-
-    if (bmMap0) delete bmMap0;
-    if (bmMap1) delete bmMap1;
-    if (bmMap2) delete bmMap2;
-
-    if (dmHomology0) delete dmHomology0;
-    if (dmHomology1) delete dmHomology1;
-    if (dmHomology2) delete dmHomology2;
-    if (dmHomology3) delete dmHomology3;
-
-    if (dmTomMap1) delete dmTomMap1;
-
-    if (chainComplexesComputed) {
-        delete A0;
-        delete A1;
-        delete A2;
-        delete A3;
-        delete A4;
-        delete B0;
-        delete B1;
-        delete B2;
-        delete B3;
-        delete B4;
-        delete Bd0;
-        delete Bd1;
-        delete Bd2;
-        delete Bd3;
-        delete B0Incl;
-        delete B1Incl;
-        delete B2Incl;
-        delete H1map;
-    }
-
     if (torsionFormComputed) {
         for (unsigned long i=0; i<linkingFormPD.size(); i++)
             delete linkingFormPD[i];

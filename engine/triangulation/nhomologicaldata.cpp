@@ -38,60 +38,60 @@ namespace regina {
 
 
 void NHomologicalData::writeTextShort(std::ostream& out) const {
-    if (mHomology0) {
+    if (mHomology0.get()) {
         out<<"H_0(M) = ";
         mHomology0->writeTextShort(out);
         out<<" ";
     }
-    if (mHomology1) {
+    if (mHomology1.get()) {
         out<<"H_1(M) = ";
         mHomology1->writeTextShort(out);
         out<<" ";
     }
-    if (mHomology2) {
+    if (mHomology2.get()) {
         out<<"H_2(M) = ";
         mHomology2->writeTextShort(out);
         out<<" ";
     }
-    if (mHomology3) {
+    if (mHomology3.get()) {
         out<<"H_3(M) = ";
         mHomology3->writeTextShort(out);
         out<<" ";
     }
 
-    if (bHomology0) {
+    if (bHomology0.get()) {
         out<<"H_0(BM) = ";
         bHomology0->writeTextShort(out);
         out<<" ";
     }
-    if (bHomology1) {
+    if (bHomology1.get()) {
         out<<"H_1(BM) = ";
         bHomology1->writeTextShort(out);
         out<<" ";
     }
-    if (bHomology2) {
+    if (bHomology2.get()) {
         out<<"H_2(BM) = ";
         bHomology2->writeTextShort(out);
         out<<" ";
     }
 
-    if (bmMap0) {
+    if (bmMap0.get()) {
         out<<"H_0(BM) --> H_0(M) = ";
         bmMap0->writeTextShort(out);
         out<<" ";
     }
-    if (bmMap1) {
+    if (bmMap1.get()) {
         out<<"H_1(BM) --> H_1(M) = ";
         bmMap1->writeTextShort(out);
         out<<" ";
     }
-    if (bmMap2) {
+    if (bmMap2.get()) {
         out<<"H_2(BM) --> H_2(M) = ";
         bmMap2->writeTextShort(out);
         out<<" ";
     }
 
-    if (dmTomMap1) {
+    if (dmTomMap1.get()) {
         out<<"PD map = ";
         dmTomMap1->writeTextShort(out);
         out<<" ";
@@ -220,28 +220,28 @@ void NHomologicalData::computeChainComplexes() {
     chainComplexesComputed = true;
 
     // need to convert this so that it does not use tri
-    B0 = new NMatrixInt(1, numDualCells[0]);
-    B1 = new NMatrixInt(numDualCells[0], numDualCells[1]);
-    B2 = new NMatrixInt(numDualCells[1], numDualCells[2]);
-    B3 = new NMatrixInt(numDualCells[2], numDualCells[3]);
-    B4 = new NMatrixInt(numDualCells[3], 1);
+    B0.reset(new NMatrixInt(1, numDualCells[0]));
+    B1.reset(new NMatrixInt(numDualCells[0], numDualCells[1]));
+    B2.reset(new NMatrixInt(numDualCells[1], numDualCells[2]));
+    B3.reset(new NMatrixInt(numDualCells[2], numDualCells[3]));
+    B4.reset(new NMatrixInt(numDualCells[3], 1));
 
-    A0 = new NMatrixInt(1, numStandardCells[0]);
-    A1 = new NMatrixInt(numStandardCells[0], numStandardCells[1]);
-    A2 = new NMatrixInt(numStandardCells[1], numStandardCells[2]);
-    A3 = new NMatrixInt(numStandardCells[2], numStandardCells[3]);
-    A4 = new NMatrixInt(numStandardCells[3], 1);
+    A0.reset(new NMatrixInt(1, numStandardCells[0]));
+    A1.reset(new NMatrixInt(numStandardCells[0], numStandardCells[1]));
+    A2.reset(new NMatrixInt(numStandardCells[1], numStandardCells[2]));
+    A3.reset(new NMatrixInt(numStandardCells[2], numStandardCells[3]));
+    A4.reset(new NMatrixInt(numStandardCells[3], 1));
 
-    H1map = new NMatrixInt(numStandardCells[1], numDualCells[1]);
+    H1map.reset(new NMatrixInt(numStandardCells[1], numDualCells[1]));
 
-    Bd0 = new NMatrixInt(1, numBdryCells[0]);
-    Bd1 = new NMatrixInt(numBdryCells[0], numBdryCells[1]);
-    Bd2 = new NMatrixInt(numBdryCells[1], numBdryCells[2]);
-    Bd3 = new NMatrixInt(numBdryCells[2], 1);
+    Bd0.reset(new NMatrixInt(1, numBdryCells[0]));
+    Bd1.reset(new NMatrixInt(numBdryCells[0], numBdryCells[1]));
+    Bd2.reset(new NMatrixInt(numBdryCells[1], numBdryCells[2]));
+    Bd3.reset(new NMatrixInt(numBdryCells[2], 1));
 
-    B0Incl = new NMatrixInt(numStandardCells[0], numBdryCells[0]);
-    B1Incl = new NMatrixInt(numStandardCells[1], numBdryCells[1]);
-    B2Incl = new NMatrixInt(numStandardCells[2], numBdryCells[2]);
+    B0Incl.reset(new NMatrixInt(numStandardCells[0], numBdryCells[0]));
+    B1Incl.reset(new NMatrixInt(numStandardCells[1], numBdryCells[1]));
+    B2Incl.reset(new NMatrixInt(numStandardCells[2], numBdryCells[2]));
 
     long int temp;
     unsigned long i,j;
@@ -893,29 +893,29 @@ void NHomologicalData::computeChainComplexes() {
 
 const NMarkedAbelianGroup& NHomologicalData::getMH(unsigned q) {
     if (q==0) {
-        if (!mHomology0) {
+        if (!mHomology0.get()) {
             computeChainComplexes();
-            mHomology0 = new NMarkedAbelianGroup(*A0,*A1);
+            mHomology0.reset(new NMarkedAbelianGroup(*A0,*A1));
         }
         return *mHomology0;
     } else if (q==1) {
-        if (!mHomology1) {
+        if (!mHomology1.get()) {
             computeChainComplexes();
-            mHomology1 = new NMarkedAbelianGroup(*A1,*A2);
+            mHomology1.reset(new NMarkedAbelianGroup(*A1,*A2));
         }
         return *mHomology1;
     } else if (q==2) {
-        if (!mHomology2) {
+        if (!mHomology2.get()) {
             computeChainComplexes();
-            mHomology2 = new NMarkedAbelianGroup(*A2,*A3);
+            mHomology2.reset(new NMarkedAbelianGroup(*A2,*A3));
         }
         return *mHomology2;
     } else {
         // Assume q == 3.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!mHomology3) {
+        if (!mHomology3.get()) {
             computeChainComplexes();
-            mHomology3 = new NMarkedAbelianGroup(*A3,*A4);
+            mHomology3.reset(new NMarkedAbelianGroup(*A3,*A4));
         }
         return *mHomology3;
     }
@@ -924,23 +924,23 @@ const NMarkedAbelianGroup& NHomologicalData::getMH(unsigned q) {
 
 const NMarkedAbelianGroup& NHomologicalData::getBMH(unsigned q) {
     if (q==0) {
-        if (!bHomology0) {
+        if (!bHomology0.get()) {
             computeChainComplexes();
-            bHomology0 = new NMarkedAbelianGroup(*Bd0,*Bd1);
+            bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
         }
         return *bHomology0;
     } else if (q==1) {
-        if (!bHomology1) {
+        if (!bHomology1.get()) {
             computeChainComplexes();
-            bHomology1 = new NMarkedAbelianGroup(*Bd1,*Bd2);
+            bHomology1.reset(new NMarkedAbelianGroup(*Bd1,*Bd2));
         }
         return *bHomology1;
     } else {
         // Assume q == 2.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!bHomology2) {
+        if (!bHomology2.get()) {
             computeChainComplexes();
-            bHomology2 = new NMarkedAbelianGroup(*Bd2,*Bd3);
+            bHomology2.reset(new NMarkedAbelianGroup(*Bd2,*Bd3));
         }
         return *bHomology2;
     }
@@ -948,29 +948,29 @@ const NMarkedAbelianGroup& NHomologicalData::getBMH(unsigned q) {
 
 const NMarkedAbelianGroup& NHomologicalData::getDMH(unsigned q) {
     if (q==0) {
-        if (!dmHomology0) {
+        if (!dmHomology0.get()) {
             computeChainComplexes();
-            dmHomology0 = new NMarkedAbelianGroup(*B0,*B1);
+            dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
         }
         return *dmHomology0;
     } else if (q==1) {
-        if (!dmHomology1) {
+        if (!dmHomology1.get()) {
             computeChainComplexes();
-            dmHomology1 = new NMarkedAbelianGroup(*B1,*B2);
+            dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
         }
         return *dmHomology1;
     } else if (q==2) {
-        if (!dmHomology2) {
+        if (!dmHomology2.get()) {
             computeChainComplexes();
-            dmHomology2 = new NMarkedAbelianGroup(*B2,*B3);
+            dmHomology2.reset(new NMarkedAbelianGroup(*B2,*B3));
         }
         return *dmHomology2;
     } else {
         // Assume q == 3.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!dmHomology3) {
+        if (!dmHomology3.get()) {
             computeChainComplexes();
-            dmHomology3 = new NMarkedAbelianGroup(*B3,*B4);
+            dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
         }
         return *dmHomology3;
     }
@@ -978,73 +978,73 @@ const NMarkedAbelianGroup& NHomologicalData::getDMH(unsigned q) {
 
 void NHomologicalData::computeHomology() {
     computeChainComplexes();
-    if (!mHomology0)
-        mHomology0 = new NMarkedAbelianGroup(*A0,*A1);
-    if (!mHomology1)
-        mHomology1 = new NMarkedAbelianGroup(*A1,*A2);
-    if (!mHomology2)
-        mHomology2 = new NMarkedAbelianGroup(*A2,*A3);
-    if (!mHomology3)
-        mHomology3 = new NMarkedAbelianGroup(*A3,*A4);
+    if (!mHomology0.get())
+        mHomology0.reset(new NMarkedAbelianGroup(*A0,*A1));
+    if (!mHomology1.get())
+        mHomology1.reset(new NMarkedAbelianGroup(*A1,*A2));
+    if (!mHomology2.get())
+        mHomology2.reset(new NMarkedAbelianGroup(*A2,*A3));
+    if (!mHomology3.get())
+        mHomology3.reset(new NMarkedAbelianGroup(*A3,*A4));
 }
 
 void NHomologicalData::computeBHomology() {
     computeChainComplexes();
-    if (!bHomology0)
-        bHomology0 = new NMarkedAbelianGroup(*Bd0,*Bd1);
-    if (!bHomology1)
-        bHomology1 = new NMarkedAbelianGroup(*Bd1,*Bd2);
-    if (!bHomology2)
-        bHomology2 = new NMarkedAbelianGroup(*Bd2,*Bd3);
+    if (!bHomology0.get())
+        bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
+    if (!bHomology1.get())
+        bHomology1.reset(new NMarkedAbelianGroup(*Bd1,*Bd2));
+    if (!bHomology2.get())
+        bHomology2.reset(new NMarkedAbelianGroup(*Bd2,*Bd3));
 }
 
 void NHomologicalData::computeDHomology() {
     computeChainComplexes();
-    if (!dmHomology0)
-        dmHomology0 = new NMarkedAbelianGroup(*B0,*B1);
-    if (!dmHomology1)
-        dmHomology1 = new NMarkedAbelianGroup(*B1,*B2);
-    if (!dmHomology2)
-        dmHomology2 = new NMarkedAbelianGroup(*B2,*B3);
-    if (!dmHomology3)
-        dmHomology3 = new NMarkedAbelianGroup(*B3,*B4);
+    if (!dmHomology0.get())
+        dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
+    if (!dmHomology1.get())
+        dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
+    if (!dmHomology2.get())
+        dmHomology2.reset(new NMarkedAbelianGroup(*B2,*B3));
+    if (!dmHomology3.get())
+        dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
 }
 
 const NHomMarkedAbelianGroup& NHomologicalData::getH1cellap() {
-    if (!dmTomMap1) {
+    if (!dmTomMap1.get()) {
         computeHomology();
         computeDHomology();
-        dmTomMap1 = new NHomMarkedAbelianGroup(
-            *dmHomology1, *mHomology1, *H1map );
+        dmTomMap1.reset(new NHomMarkedAbelianGroup(
+            *dmHomology1, *mHomology1, *H1map ));
     }
     return (*dmTomMap1);
 }
 
 const NHomMarkedAbelianGroup& NHomologicalData::getBMmapH(unsigned q) {
     if (q==0) {
-        if (!bmMap0) {
+        if (!bmMap0.get()) {
             computeHomology();
             computeBHomology();
-            bmMap0 = new NHomMarkedAbelianGroup(
-                *bHomology0, *mHomology0, *B0Incl );
+            bmMap0.reset(new NHomMarkedAbelianGroup(
+                *bHomology0, *mHomology0, *B0Incl ));
         }
         return *bmMap0;
     } else if (q==1) {
-        if (!bmMap1) {
+        if (!bmMap1.get()) {
             computeHomology();
             computeBHomology();
-            bmMap1 = new NHomMarkedAbelianGroup(
-                *bHomology1, *mHomology1, *B1Incl );
+            bmMap1.reset(new NHomMarkedAbelianGroup(
+                *bHomology1, *mHomology1, *B1Incl ));
         }
         return *bmMap1;
     } else {
         // Assume q == 2.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!bmMap2) {
+        if (!bmMap2.get()) {
             computeHomology();
             computeBHomology();
-            bmMap2 = new NHomMarkedAbelianGroup(
-                *bHomology2, *mHomology2, *B2Incl );
+            bmMap2.reset(new NHomMarkedAbelianGroup(
+                *bHomology2, *mHomology2, *B2Incl ));
         }
         return *bmMap2;
     }
@@ -1053,12 +1053,15 @@ const NHomMarkedAbelianGroup& NHomologicalData::getBMmapH(unsigned q) {
 void NHomologicalData::computeBIncl() {
     computeHomology();
     computeBHomology();
-    if (!bmMap0)
-        bmMap0 = new NHomMarkedAbelianGroup(*bHomology0, *mHomology0, *B0Incl);
-    if (!bmMap1)
-        bmMap1 = new NHomMarkedAbelianGroup(*bHomology1, *mHomology1, *B1Incl);
-    if (!bmMap2)
-        bmMap2 = new NHomMarkedAbelianGroup(*bHomology2, *mHomology2, *B2Incl);
+    if (!bmMap0.get())
+        bmMap0.reset(new NHomMarkedAbelianGroup(
+            *bHomology0, *mHomology0, *B0Incl));
+    if (!bmMap1.get())
+        bmMap1.reset(new NHomMarkedAbelianGroup(
+            *bHomology1, *mHomology1, *B1Incl));
+    if (!bmMap2.get())
+        bmMap2.reset(new NHomMarkedAbelianGroup(
+            *bHomology2, *mHomology2, *B2Incl));
 }
 
 
