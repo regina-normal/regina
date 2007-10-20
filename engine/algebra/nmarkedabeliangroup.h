@@ -187,7 +187,8 @@ class NMarkedAbelianGroup : public ShareableObject {
 
         /**
          * Returns the number of invariant factors that describe the
-         * torsion elements of this group.
+         * torsion elements of this group.  This is the minimal number
+         * of torsion generators.
          * See the NMarkedAbelianGroup class notes for further details.
          *
          * @return the number of invariant factors.
@@ -240,27 +241,30 @@ class NMarkedAbelianGroup : public ShareableObject {
         /**
          * Returns the requested free generator.
          *
-         * The marked abelian group was defined by matrices M and N
-         * with M*N==0.  Think of M as m by l and N as l by n.  Then
-         * this routine returns the index-th free generator of the
-         * ker(M)/img(N) in Z^l.
+         * As described in the class overview, this marked abelian group
+         * is defined by matrices \a M and \a N where M*N = 0.
+         * If \a M is an \a m by \a l matrix and \N is an \a l by \a n
+         * matrix, then this routine returns the (\a index)th free
+         * generator of ker(M)/img(N) in <tt>Z^l</tt>.
          *
          * \ifacespython The return value will be a python list.
          *
-         * @param index specifies which free generator we're looking up;
+         * @param index specifies which free generator to look up;
          * this must be between 0 and getRank()-1 inclusive.
          * @return the coordinates of the free generator in the nullspace of
-         * \a M; this vector will have length M.columns().
+         * \a M; this vector will have length M.columns() (or
+         * equivalently, N.rows()).
          */
         std::vector<NLargeInteger> getFreeRep(unsigned long index) const;
 
         /**
          * Returns the requested generator of the torsion subgroup.
          *
-         * The marked abelian group was defined by matrices M and N
-         * with M*N==0.  Think of M as m by l and N as l by n.  Then
-         * this routine returns the index-th torsion generator of the
-         * ker(M)/img(N) in Z^l.
+         * As described in the class overview, this marked abelian group
+         * is defined by matrices \a M and \a N where M*N = 0.
+         * If \a M is an \a m by \a l matrix and \N is an \a l by \a n
+         * matrix, then this routine returns the (\a index)th torsion
+         * generator of ker(M)/img(N) in <tt>Z^l</tt>.
          *
          * \ifacespython The return value will be a python list.
          *
@@ -268,7 +272,8 @@ class NMarkedAbelianGroup : public ShareableObject {
          * this must be at least 0 and strictly less than the number of
          * non-trivial invariant factors.
          * @return the coordinates of the generator in the nullspace of
-         * \a M; this vector will have length M.columns().
+         * \a M; this vector will have length M.columns() (or
+         * equivalently, N.rows()).
          */
         std::vector<NLargeInteger> getTorsionRep(unsigned long index) const;
 
@@ -283,8 +288,8 @@ class NMarkedAbelianGroup : public ShareableObject {
          * projections to Z_{d1} + ... + Z_{dk}. Of these last elements, they
          * will be returned mod di respectively.
          *
-         * \pre The vector \a element has precisely OM.columns() entries
-         * (or equivalently, ON.rows() entries).
+         * \pre The vector \a element has precisely M.columns() entries
+         * (or equivalently, N.rows() entries).
          *
          * \ifacespython Both \a element and the return value are python lists.
          *
@@ -406,36 +411,30 @@ class NMarkedAbelianGroup : public ShareableObject {
         const NMatrixInt& getNCBi() const;
 
         /**
-         * Gives the rank of the defining matrix \a M.
+         * Returns the rank of the defining matrix \a M.
          *
          * The matrix \a M is the `right' matrix used in defining the chain
          * complex.  See the class overview for further details.
          *
-         * @return the rank of the defining matrix M.
+         * @return the rank of the defining matrix \a M.
          */
         unsigned long getRankM() const;
 
         /**
-         * Index of first free generator in the reduced \a N matrix.
+         * Returns the index of the first free generator in the reduced
+         * \a N matrix.
          *
-         * @return index of the first free generator in reduced N matrix.
+         * @return the index of the first free generator.
          */
-        unsigned long getFreeLoc() const;// internal: snffreeindex
+        unsigned long getFreeLoc() const; // internal: snffreeindex
 
         /**
-         * Index of the first torsion generator in the reduced \a N matrix.
+         * Returns the index of the first torsion generator in the
+         * reduced \a N matrix.
          *
-         * @return Index of the first torsion generator in the reduced \a N
-         * matrix.
+         * @return the index of the first torsion generator.
          */
         unsigned long getTorsionLoc() const; // internal: ifLoc
-
-        /**
-         * Number of invariant factors ie: minimal number of torsion generators.
-         *
-         * @return number of invariant factors in torsion subgroup.
-         */
-        unsigned long getTorsionNum() const; // internal: InvFacList.size()
 
         /**
          * Returns the `right' matrix used in defining the chain complex.
@@ -670,6 +669,10 @@ inline unsigned NMarkedAbelianGroup::getTorsionRank(unsigned long degree)
     return getTorsionRank(NLargeInteger(degree));
 }
 
+inline unsigned long NMarkedAbelianGroup::getNumberOfInvariantFactors() const {
+    return InvFacList.size();
+}
+
 inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
     return OMR;
 }
@@ -703,9 +706,6 @@ inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
 }
 inline unsigned long NMarkedAbelianGroup::getTorsionLoc() const {
     return ifLoc;
-}
-inline unsigned long NMarkedAbelianGroup::getTorsionNum() const {
-    return InvFacList.size();
 }
 
 inline const NMatrixInt& NMarkedAbelianGroup::getM() const {

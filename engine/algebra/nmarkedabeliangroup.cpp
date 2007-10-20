@@ -115,10 +115,6 @@ const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
     return InvFacList[index];
 }
 
-unsigned long NMarkedAbelianGroup::getNumberOfInvariantFactors() const {
-    return InvFacList.size();
-}
-
 unsigned NMarkedAbelianGroup::getTorsionRank(const NLargeInteger& degree) const {
     unsigned ans = 0;
     for (unsigned long i=0;i<InvFacList.size();i++) {

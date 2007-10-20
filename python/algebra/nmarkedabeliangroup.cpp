@@ -158,7 +158,6 @@ void addNMarkedAbelianGroup() {
         .def("getRankM", &NMarkedAbelianGroup::getRankM)
         .def("getFreeLoc", &NMarkedAbelianGroup::getFreeLoc)
         .def("getTorsionLoc", &NMarkedAbelianGroup::getTorsionLoc)
-        .def("getTorsionNum", &NMarkedAbelianGroup::getTorsionNum)
         .def("getM", &NMarkedAbelianGroup::getM,
             return_internal_reference<>())
         .def("getN", &NMarkedAbelianGroup::getN,
