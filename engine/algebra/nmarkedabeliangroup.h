@@ -302,51 +302,69 @@ class NMarkedAbelianGroup : public ShareableObject {
             const std::vector<NLargeInteger>& element) const;
 
         /**
-         * These routines return information on how we determined the
-         * isomorphism-class of the group.  Originally, the group was defined
-         * by two matrices M and N with M*N==0.
+         * Returns a change-of-basis matrix for the Smith normal form of \a M.
          *
-         * getMCB() * M * getMRB() is the Smith Normal Form of M.
-         * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
-         * respectively.
+         * This is one of several routines that returns information on
+         * how we determine the isomorphism-class of this group.
          *
-         * @return the matrix getMRB() described above.
+         * Recall from the class overview that this marked abelian group
+         * is defined by matrices \a M and \a N, where M*N = 0.
+         *
+         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
+         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         *   respectively.
+         *
+         * @return the matrix getMRB() as described above.
          */
         const NMatrixInt& getMRB() const;
         /**
-         * These routines return information on how we determined the
-         * isomorphism-class of the group.  Originally, the group was defined
-         * by two matrices M and N with M*N==0.
+         * Returns an inverse change-of-basis matrix for the Smith normal
+         * form of \a M.
          *
-         * getMCB() * M * getMRB() is the Smith Normal Form of M.
-         * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
-         * respectively.
+         * This is one of several routines that returns information on
+         * how we determine the isomorphism-class of this group.
          *
-         * @return the matrix getMRBi() described above.
+         * Recall from the class overview that this marked abelian group
+         * is defined by matrices \a M and \a N, where M*N = 0.
+         *
+         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
+         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         *   respectively.
+         *
+         * @return the matrix getMRBi() as described above.
          */
         const NMatrixInt& getMRBi() const;
         /**
-         * These routines return information on how we determined the
-         * isomorphism-class of the group.  Originally, the group was defined
-         * by two matrices M and N with M*N==0.
+         * Returns a change-of-basis matrix for the Smith normal form of \a M.
          *
-         * getMCB() * M * getMRB() is the Smith Normal Form of M.
-         * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
-         * respectively.
+         * This is one of several routines that returns information on
+         * how we determine the isomorphism-class of this group.
          *
-         * @return the matrix getMCB() described above.
+         * Recall from the class overview that this marked abelian group
+         * is defined by matrices \a M and \a N, where M*N = 0.
+         *
+         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
+         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         *   respectively.
+         *
+         * @return the matrix getMCB() as described above.
          */
         const NMatrixInt& getMCB() const;
         /**
-         * These routines return information on how we determined the
-         * isomorphism-class of the group.  Originally, the group was defined
-         * by two matrices M and N with M*N==0.
+         * Returns an inverse change-of-basis matrix for the Smith normal
+         * form of \a M.
          *
-         * getMCB() * M * getMRB() is the Smith Normal Form of M.
-         * getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
-         * respectively.
+         * This is one of several routines that returns information on
+         * how we determine the isomorphism-class of this group.
          *
-         * @return the matrix getMCBi() described above.
+         * Recall from the class overview that this marked abelian group
+         * is defined by matrices \a M and \a N, where M*N = 0.
+         *
+         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
+         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         *   respectively.
+         *
+         * @return the matrix getMCBi() as described above.
          */
         const NMatrixInt& getMCBi() const;
 
