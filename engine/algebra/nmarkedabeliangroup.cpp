@@ -187,8 +187,8 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getFreeRep(unsigned long index)
  * this routine returns the index-th torsion generator of the
  * ker(M)/img(N) in Z^l.
  */
-std::vector<NLargeInteger> NMarkedAbelianGroup::getTorsionRep(unsigned long index)
-        const {
+std::vector<NLargeInteger> NMarkedAbelianGroup::getTorsionRep(
+        unsigned long index) const {
     std::vector<NLargeInteger> retval(OM.columns(),NLargeInteger::zero);
     // index corresponds to the (InvFacIndex[index])-th column of ornCi
     // we then pad this vector (at the front) with rankOM 0's
@@ -228,8 +228,8 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFIsoRep(
     std::vector<NLargeInteger> retval(snfrank+InvFacList.size(),
         NLargeInteger::zero);
     // apply OMRi, crop, then apply ornC, tidy up and return.
-    std::vector<NLargeInteger> nullvec(0); // this is returned if element
-                                           // not in ker(M)
+    static const std::vector<NLargeInteger> nullvec; // this is returned if
+                                                     // element not in ker(M)
 
     std::vector<NLargeInteger> temp(ON.rows(),
         NLargeInteger::zero); // this holds OMRi * element
@@ -239,7 +239,7 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFIsoRep(
 
     // set up temp.
     for (unsigned long i=0;i<ON.rows();i++)
-        for (unsigned long j=0;j<ON.rows();i++)
+        for (unsigned long j=0;j<ON.rows();j++)
             temp[i] += OMRi.entry(i,j)*element[j];
     for (unsigned long i=0;i<rankOM;i++)
         if (temp[i] != 0)
@@ -248,18 +248,17 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFIsoRep(
     if (eltinker==true) {
         // set up retval. The first snfrank elts are the free generators
         for (unsigned long i=0;i<snfrank;i++)
-            for (unsigned long j=rankOM;j<ON.rows();i++)
+            for (unsigned long j=rankOM;j<ON.rows();j++)
                 retval[i] += ornC.entry(snffreeindex+i,j)*temp[j];
         // the remaining InvFacList.size() elts are torsion generators.
         for (unsigned long i=0;i<ifNum;i++) {
-            for (unsigned long j=rankOM;j<ON.rows();i++)
+            for (unsigned long j=rankOM;j<ON.rows();j++)
                 retval[i+snfrank] += ornC.entry(ifLoc+i,j)*temp[j];
             retval[i+snfrank] = (retval[i+snfrank] % InvFacList[i]);
         }
-    } else retval=nullvec;
-
-
-    return retval;
+        return retval;
+    } else
+        return nullvec;
 }
 
 
