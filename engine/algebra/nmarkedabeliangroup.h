@@ -578,55 +578,56 @@ class NHomMarkedAbelianGroup : public ShareableObject {
                 const NMatrixInt &mat);
         /**
          * Copy constructor.
-         * @param g object to copy
+         *
+         * @param h the homomorphism to clone.
          */
-        NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& g);
+        NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& h);
         /**
          * Destructor.
          */
         virtual ~NHomMarkedAbelianGroup();
 
         /**
-         * Is this group epic?
+         * Is this an epic homomorphism?
          *
-         * @return true if homomorphism is epic.
+         * @return true if this homomorphism is epic.
          */
         bool isEpic() const;
         /**
-         * Is this group monic?
+         * Is this a monic homomorphism?
          *
-         * @return true if homomorphism is monic.
+         * @return true if this homomorphism is monic.
          */
         bool isMonic() const;
         /**
-         * Is this group an isomorphism?
+         * Is this an isomorphism?
          *
-         * @return true if homomorphism is an isomorphism.
+         * @return true if this homomorphism is an isomorphism.
          */
         bool isIso() const;
         /**
-         * Is this group the zero map?
+         * Is this the zero map?
          *
-         * @return true if homomorphism is the zero map.
+         * @return true if this homomorphism is the zero map.
          */
         bool isZero() const;
 
         /**
-         * Computes the kernel.
+         * Returns the kernel of this homomorphism.
          *
          * @return the kernel of the homomorphism, as a marked abelian group.
          */
         const NMarkedAbelianGroup& getKernel() const;
         /**
-         * Computes the cokernel.
+         * Returns the cokernel of this homomorphism.
          *
-         * @return cokernel of the homomorphism, as a marked abelian group.
+         * @return the cokernel of the homomorphism, as a marked abelian group.
          */
         const NMarkedAbelianGroup& getCoKernel() const;
         /**
-         * Computes the image.
+         * Returns the image of this homomorphism.
          *
-         * @return image of the homomorphism, as a marked abelian group.
+         * @return the image of the homomorphism, as a marked abelian group.
          */
         const NMarkedAbelianGroup& getImage() const;
 
@@ -653,14 +654,14 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         /**
          * Returns the defining matrix for the homomorphism.
          *
-         * @return the matrix which was used to define the homomorphism.
+         * @return the matrix that was used to define the homomorphism.
          */
         const NMatrixInt& getDefiningMatrix() const;
 
         /**
          * For internal use only.
          *
-         * Gets the internal reduced matrix representing the
+         * Returns the internal reduced matrix representing the
          * homomorphism.
          *
          * @return a copy of the internal representation of the homomorphism.
@@ -670,9 +671,10 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         /**
          * For internal use only.
          *
-         * Writes a text-readable version of the reduced matrix, this is
-         * a description of the homomorphism in some specific coordinates
-         * at present only meant to be internal to NHomMarkedAbelianGroup.
+         * Writes a human-readable version of the reduced matrix to the
+         * given output stream.  This is a description of the homomorphism
+         * in some specific coordinates at present only meant to be
+         * internal to NHomMarkedAbelianGroup.
          *
          * \ifacespython The \a out argument is missing; instead this is
          * assumed to be standard output.
