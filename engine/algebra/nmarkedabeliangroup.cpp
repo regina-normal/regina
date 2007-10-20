@@ -100,15 +100,8 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
 }
 
 
-// this goes through the list of invariant factors in order, stops
-// at the `index'-th one in increasing order and returns it...
-/** Gives the index-th invariant factor, in increasing order. */
-const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
-        unsigned long index) const {
-    return InvFacList[index];
-}
-
-unsigned NMarkedAbelianGroup::getTorsionRank(const NLargeInteger& degree) const {
+unsigned NMarkedAbelianGroup::getTorsionRank(const NLargeInteger& degree)
+        const {
     unsigned ans = 0;
     for (unsigned long i=0;i<InvFacList.size();i++) {
         if (InvFacList[i] % degree == 0)
@@ -156,18 +149,6 @@ void NMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
 
     if (! writtenSomething)
         out << '0';
-}
-
-unsigned NMarkedAbelianGroup::getRank() const {
-    return snfrank;
-}
-
-bool NMarkedAbelianGroup::isTrivial() const {
-    return ! ( (snfrank>0) || (InvFacList.size()>0) );
-}
-
-bool NMarkedAbelianGroup::operator == (const NMarkedAbelianGroup& other) const {
-    return ((InvFacList == other.InvFacList) && (snfrank==other.snfrank));
 }
 
 
@@ -279,15 +260,6 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFIsoRep(
 
 
     return retval;
-}
-
-
-NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMarkedAbelianGroup& dom,
-        const NMarkedAbelianGroup& ran,
-        const NMatrixInt &mat):
-        domain(dom), range(ran), matrix(mat),
-        reducedMatrix(0), kernel(0), coKernel(0), image(0),
-        reducedKernelLattice(0) {
 }
 
 
@@ -471,51 +443,6 @@ void NHomMarkedAbelianGroup::computeImage() {
 }
 
 
-
-bool NHomMarkedAbelianGroup::isEpic() const {
-    return getCoKernel().isTrivial();
-}
-
-bool NHomMarkedAbelianGroup::isMonic() const {
-    return getKernel().isTrivial();
-}
-
-bool NHomMarkedAbelianGroup::isIso() const {
-    return (getCoKernel().isTrivial() && getKernel().isTrivial());
-}
-
-bool NHomMarkedAbelianGroup::isZero() const {
-    return getImage().isTrivial();
-}
-
-
-
-const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getKernel() const {
-    // Cast away const to compute the kernel -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeKernel();
-    return *kernel;
-}
-
-const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getImage() const {
-    // Cast away const to compute the kernel -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeImage();
-    return *image;
-}
-
-const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCoKernel() const {
-    // Cast away const to compute the kernel -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeCoKernel();
-    return *coKernel;
-}
-
-
-
 void NHomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
     // Cast away const to compute the reduced matrix -- the only reason we're
     // changing data members now is because we delayed calculations
@@ -561,6 +488,4 @@ void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
 }
 
 } // namespace regina
-
-
 

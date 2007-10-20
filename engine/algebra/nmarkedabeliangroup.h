@@ -709,6 +709,24 @@ inline unsigned long NMarkedAbelianGroup::getNumberOfInvariantFactors() const {
     return InvFacList.size();
 }
 
+inline const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
+        unsigned long index) const {
+    return InvFacList[index];
+}
+
+inline unsigned NMarkedAbelianGroup::getRank() const {
+    return snfrank;
+}
+
+inline bool NMarkedAbelianGroup::isTrivial() const {
+    return ! ( (snfrank>0) || (InvFacList.size()>0) );
+}
+
+inline bool NMarkedAbelianGroup::operator == (
+        const NMarkedAbelianGroup& other) const {
+    return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
+}
+
 inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
     return OMR;
 }
@@ -753,6 +771,15 @@ inline const NMatrixInt& NMarkedAbelianGroup::getN() const {
 
 // Inline functions for NHomMarkedAbelianGroup
 
+inline NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(
+        const NMarkedAbelianGroup& dom,
+        const NMarkedAbelianGroup& ran,
+        const NMatrixInt &mat) :
+        domain(dom), range(ran), matrix(mat),
+        reducedMatrix(0), kernel(0), coKernel(0), image(0),
+        reducedKernelLattice(0) {
+}
+
 inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
     if (reducedMatrix)
         delete reducedMatrix;
@@ -782,6 +809,46 @@ inline const NMatrixInt& NHomMarkedAbelianGroup::getReducedMatrix() const {
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
     return *reducedMatrix;
+}
+
+inline bool NHomMarkedAbelianGroup::isEpic() const {
+    return getCoKernel().isTrivial();
+}
+
+inline bool NHomMarkedAbelianGroup::isMonic() const {
+    return getKernel().isTrivial();
+}
+
+inline bool NHomMarkedAbelianGroup::isIso() const {
+    return (getCoKernel().isTrivial() && getKernel().isTrivial());
+}
+
+inline bool NHomMarkedAbelianGroup::isZero() const {
+    return getImage().isTrivial();
+}
+
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getKernel() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeKernel();
+    return *kernel;
+}
+
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getImage() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeImage();
+    return *image;
+}
+
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCoKernel() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeCoKernel();
+    return *coKernel;
 }
 
 } // namespace regina
