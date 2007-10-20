@@ -177,7 +177,7 @@ void addNMarkedAbelianGroup() {
         .def("isZero", &NHomMarkedAbelianGroup::isZero)
         .def("getKernel", &NHomMarkedAbelianGroup::getKernel,
             return_internal_reference<>())
-        .def("getCoKernel", &NHomMarkedAbelianGroup::getCoKernel,
+        .def("getCokernel", &NHomMarkedAbelianGroup::getCokernel,
             return_internal_reference<>())
         .def("getImage", &NHomMarkedAbelianGroup::getImage,
             return_internal_reference<>())

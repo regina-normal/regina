@@ -75,7 +75,7 @@ def homStats(h):
 	print 'Domain:', h.getDomain()
 	print 'Range:', h.getRange()
 	print 'Kernel:', h.getKernel()
-	print 'Cokernel:', h.getCoKernel()
+	print 'Cokernel:', h.getCokernel()
 	print 'Image:', h.getImage()
 
 	# Nothing else to say.

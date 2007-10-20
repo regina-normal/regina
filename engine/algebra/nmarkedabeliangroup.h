@@ -539,8 +539,8 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         void computeReducedMatrix();
         /** compute the Kernel */
         void computeKernel();
-        /** compute the CoKernel */
-        void computeCoKernel();
+        /** compute the Cokernel */
+        void computeCokernel();
         /** compute the Image */
         void computeImage();
 
@@ -623,7 +623,7 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          *
          * @return the cokernel of the homomorphism, as a marked abelian group.
          */
-        const NMarkedAbelianGroup& getCoKernel() const;
+        const NMarkedAbelianGroup& getCokernel() const;
         /**
          * Returns the image of this homomorphism.
          *
@@ -814,7 +814,7 @@ inline const NMatrixInt& NHomMarkedAbelianGroup::getReducedMatrix() const {
 }
 
 inline bool NHomMarkedAbelianGroup::isEpic() const {
-    return getCoKernel().isTrivial();
+    return getCokernel().isTrivial();
 }
 
 inline bool NHomMarkedAbelianGroup::isMonic() const {
@@ -822,7 +822,7 @@ inline bool NHomMarkedAbelianGroup::isMonic() const {
 }
 
 inline bool NHomMarkedAbelianGroup::isIso() const {
-    return (getCoKernel().isTrivial() && getKernel().isTrivial());
+    return (getCokernel().isTrivial() && getKernel().isTrivial());
 }
 
 inline bool NHomMarkedAbelianGroup::isZero() const {
@@ -845,11 +845,11 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getImage() const {
     return *image;
 }
 
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCoKernel() const {
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCokernel() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeCoKernel();
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeCokernel();
     return *coKernel;
 }
 

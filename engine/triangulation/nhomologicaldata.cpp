@@ -1731,7 +1731,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     else
                         embeddabilityString += "graph complement.";
                     }
-                 else if (getBMmapH(1).getCoKernel().getRank()==0)
+                 else if (getBMmapH(1).getCokernel().getRank()==0)
                     {
                     embeddabilityString =
                         "Embeds in a rational homology 3-sphere as a ";
@@ -1757,7 +1757,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                    embeddabilityString =
                         "Embeds in homology 3-sphere "
                         "but not homology 4-sphere.";
-                 else if (getBMmapH(1).getCoKernel().getRank()==0)
+                 else if (getBMmapH(1).getCokernel().getRank()==0)
                    embeddabilityString =
                         "Embeds in rational homology 3-sphere but not "
                         "homology 4-sphere.";
@@ -1772,7 +1772,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                    embeddabilityString =
                         "Embeds in homology 3-sphere.  "
                         "KK 2-tor condition satisfied.";
-                 else if (getBMmapH(1).getCoKernel().getRank()==0)
+                 else if (getBMmapH(1).getCokernel().getRank()==0)
                    embeddabilityString =
                         "Embeds in rational homology 3-sphere.  "
                         "KK 2-tor condition satisfied.";

@@ -396,7 +396,7 @@ void NHomMarkedAbelianGroup::computeKernel() {
 
 
 
-void NHomMarkedAbelianGroup::computeCoKernel() {
+void NHomMarkedAbelianGroup::computeCokernel() {
     if (!coKernel) {
         computeReducedMatrix();
 
@@ -473,7 +473,7 @@ void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
         out<<"zero map";
     else if (isMonic()) { // monic not epic
         out<<"monic, with cokernel ";
-        getCoKernel().writeTextShort(out);
+        getCokernel().writeTextShort(out);
     } else if (isEpic()) { // epic not monic
         out<<"epic, with kernel ";
         getKernel().writeTextShort(out);
@@ -481,7 +481,7 @@ void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
         out<<"kernel ";
         getKernel().writeTextShort(out);
         out<<" | cokernel ";
-        getCoKernel().writeTextShort(out);
+        getCokernel().writeTextShort(out);
         out<<" | image ";
         getImage().writeTextShort(out);
     }
