@@ -283,28 +283,59 @@ class NMarkedAbelianGroup : public ShareableObject {
         std::vector<NLargeInteger> getTorsionRep(unsigned long index) const;
 
         /**
-         * The marked abelian group was defined by matrices M and N
-         * with M*N==0.  Think of M as m by l and N as l by n.
-         * When the group was initialized, it was computed to be isomorphic
-         * to some Z^d + Z_{d1} + ... + Z_{dk} where d1 | d2 | ... | dk
-         * this routine assumes element is in Z^l, and it returns a vector
-         * of length d+k where the first d elements represent which class the
-         * vector projects to in Z^d, and the last k elements represent the
-         * projections to Z_{d1} + ... + Z_{dk}. Of these last elements, they
-         * will be returned mod di respectively.
+         * Expresses the given vector as a combination of free and torsion
+         * generators.
          *
-         * \pre The vector \a element has precisely M.columns() entries
-         * (or equivalently, N.rows() entries).
+         * Recall that this marked abelian was defined by matrices \a M
+         * and \a N with M*N=0; suppose that \a M is an \a m by \a l matrix
+         * and \a N is an \a l by \a n matrix.  This abelian group is then
+         * the quotient ker(M)/img(N) in \a Z^l.
          *
-         * \ifacespython Both \a element and the return value are python lists.
+         * When it is constructed, this group is computed to be isomorphic to
+         * some Z^d + Z_{d0} + ... + Z_{dk}, where:
          *
-         * @param element a vector of length M.columns().
-         * @return a vector that describes element in the standard
+         * - \a d is the number of free generators, as returned by getRank();
+         * - \a d1, ..., \a dk are the invariant factors that describe the
+         *   torsion elements of the group, where
+         *   1 < \a d1 | \a d2 | ... | \a dk.
+         *
+         * This routine takes a single argument \a v, which must be a
+         * vector in \a Z^l.
+         *
+         * If \a v belongs to ker(M), this routine describes how it
+         * projects onto the group ker(M)/img(N).  Specifically, it
+         * returns a vector of length \a d + \a k, where:
+         *
+         * - the first \a d elements describe the projection of \a v
+         *   to the free component \a Z^d;
+         * - the remaining \a k elements describe the projection of \a v
+         *   to the torsion component Z_{d1} + ... + Z_{dk}.  These
+         *   elements are returned as non-negative integers modulo
+         *   \a d1, ..., \a dk respectively.
+         *
+         * In other words, suppose \a v belongs to ker(M) and getSNFIsoRep(v)
+         * returns the vector (\a a1, ..., \a ad, \a b1, ..., \a bk).
+         * Suppose furthermore that the free generators returned
+         * by getFreeRep(0..(d-1)) are \a f1, ..., \a fd respectively, and
+         * that the torsion generators returned by getTorsionRep(0..(k-1))
+         * are \a t1, ..., \a tk respectively.  Then
+         * \a v = \a a1.f1 + ... + \a ad.fd + \a b1.t1 + ... + \a bk.tk
+         * modulo img(N).
+         *
+         * If \a v does not belong to ker(M), this routine simply returns
+         * the empty vector.
+         *
+         * \pre Vector \a v has length M.columns(), or equivalently N.rows().
+         *
+         * \ifacespython Both \a v and the return value are python lists.
+         *
+         * @param v a vector of length M.columns().
+         * @return a vector that describes \a v in the standard
          * Z^d + Z_{d1} + ... + Z_{dk} form, or the empty vector if
-         * \a element is not in the kernel of \a M.
+         * \a v is not in the kernel of \a M.
          */
         std::vector<NLargeInteger> getSNFIsoRep(
-            const std::vector<NLargeInteger>& element) const;
+            const std::vector<NLargeInteger>& v) const;
 
         /**
          * Returns a change-of-basis matrix for the Smith normal form of \a M.
