@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file nhomologicaldata.h
- *  \brief Deals with all the details of cellular homology of a manifold.
+ *  \brief Deals with all the details of the cellular homology of a manifold.
  */
 
 #ifndef __NHOMOLOGICALDATA_H
@@ -55,55 +55,56 @@ class NTriangulation;
  * Data type that deals with all the detailed homological information in a
  * manifold, including:
  *
- * -# the manifold's homology.
- * -# the boundary's homology.
- * -# the map from boundary -> manifold.
- * -# the dual cellular homology.
- * -# the isomorphism on H1 from the dual cellular homology to the regular
- *    cellular homology.
- * -# the H1 torsion form.
- * -# the Kawauchi-Kojima invariants of torsion linking forms.
+ * - the manifold's homology;
+ * - the boundary's homology;
+ * - the map from boundary -> manifold;
+ * - the dual cellular homology;
+ * - the isomorphism on H1 from the dual cellular homology to the regular
+ *   cellular homology;
+ * - the H1 torsion form;
+ * - the Kawauchi-Kojima invariants of torsion linking forms.
  *
- * These algorithms take a "least effort" approach to all computations. It
+ * This class takes a "least effort" approach to all computations. It
  * only computes what is neccessary for your requests.  It also keeps a
  * record of all previous computations you've made, so that in case a
- * future computation could be sped-up by not recomputing
+ * future computation could be sped up by not recomputing the
  * some data, it takes that short-cut.
  *
  * All these algorithms use two transverse CW decompositions of the manifold.
  * They correspond to the (ideal) triangulation, given a proper boundary, and
  * the CW-dual as in the proof of Poincare Duality.
  *
- * We describe the canonical ordering of both the cells and
- * dual cells of tri.
+ * In the following lists we describe the canonical ordering of both the
+ * cells and the dual cells of the given triangulation.
  *
- * The standard CW decomposition -- this is the one that most
- * closely resembles the ideal triangulation.
+ * First we list the cell orderings for the <i>standard CW decomposition</i>,
+ * which most closely resembles the ideal triangulation.
  *
- * - 0-cells: The non-ideal vertices given in the order vertices.begin()
- *            to vertices.end() followed by the ideal endpoints of the
- *            edges in lexicographical order edges.begin() to edges.end()
- *            followed by the endpts 0, 1.
+ * - \b 0-cells: The non-ideal vertices given in the order vertices.begin()
+ *               to vertices.end(), followed by the ideal endpoints of the
+ *               edges edges.begin() to edges.end() with endpoints
+ *               for each edge taken in the order 0,1.
  *
- * - 1-cells: edges.begin() to edges.end() followed by the ideal edges of
- *            faces.begin() to faces.end() in order 0,1,2.
+ * - \b 1-cells: edges.begin() to edges.end(), followed by the ideal edges of
+ *               faces.begin() to faces.end() in order 0,1,2.
  *
- * - 2-cells: faces.begin() to faces.end() followed by ideal faces of
- *            tetrahedra.begin() through tetrahedra.end() in order 0,1,2,3.
+ * - \b 2-cells: faces.begin() to faces.end(), followed by the ideal faces of
+ *               tetrahedra.begin() through tetrahedra.end() in order 0,1,2,3.
  *
- * - 3-cells: tetrahedra.begin() through tetrahedra.end().
+ * - \b 3-cells: tetrahedra.begin() through tetrahedra.end().
  *
- * The Dual CW decomposition -- if the above CW-decomposition came from a
- * morse function f, this would be the one for -f.
+ * Next we list the cell orderings for the <i>dual CW decomposition</i>:
+ * if the standard CW decomposition came from a morse function \a f, this
+ * would be the one for -\a f.
  *
- * - 0-cells: tetrahedra.begin() through tetrahedra.end().
+ * - \b 0-cells: tetrahedra.begin() through tetrahedra.end().
  *
- * - 1-cells: the non-boundary faces.begin() through faces.end().
+ * - \b 1-cells: the non-boundary faces.begin() through faces.end().
  *
- * - 2-cells: the non-boundary edges.begin() through edges.end().
+ * - \b 2-cells: the non-boundary edges.begin() through edges.end().
  *
- * - 3-cells: the non-boundary, non-ideal vertices.begin() through
- *            vertices.end().
+ * - \b 3-cells: the non-boundary, non-ideal vertices.begin() through
+ *               vertices.end().
  *
  * \ifacespython Python bindings are not yet available for this class.
  * They should be in place for the following release of Regina.
@@ -370,18 +371,20 @@ public:
     /**
      * Copy constructor.
      *
-     * @param g the homological data to clone.
+     * @param h the homological data to clone.
      */
-    NHomologicalData(const NHomologicalData& g);
+    NHomologicalData(const NHomologicalData& h);
     /**
      * Destructor.
      */
     virtual ~NHomologicalData();
     /**
-     * Needed as a member of SharableObject
+     * Short text representation as required by SharableObject.
+     *
      * Note this only writes pre-computed data.  Thus if you have
      * not yet asked NHomologicalData to compute anything about this
      * triangulation, writeTextShort may be empty. 
+     *
      * @param out the stream to write to.
      */
     virtual void writeTextShort(std::ostream& out) const;
@@ -389,20 +392,23 @@ public:
     /**
      * This routine gives access to the manifold's homology computed
      * with the regular CW-decomposition.
-     * @param q the dimension of the homology group, can be 0, 1, 2 or 3.
+     *
+     * This is typically slower than getDMH(), since getDMH() uses the
+     * dual CW-decomposition which typically has an order of magnitude
+     * fewer cells.
+     *
+     * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
+     * @return the q-th homology group, computed in the standard
+     * CW-decomposition.
      */
     const NMarkedAbelianGroup& getMH(unsigned q);
     /**
      * This routine gives access to the homology of the boundary
      * of the manifold, computed with the regular CW-decomposition.
      *
-     * This is typically slower than getDHM(), since getDHM() uses the
-     * dual CW-decomposition which typically has an order of magnitude
-     * fewer cells.
-     *
      * @param q the dimension of the homology group: can be 0, 1 or 2.
-     * @return the q-th homology group, in standard cellular homology
-     * coordinates
+     * @return the q-th boundary homology group, in standard cellular
+     * homology coordinates
      */
     const NMarkedAbelianGroup& getBMH(unsigned q);
 
@@ -410,7 +416,7 @@ public:
      * This routine gives access to the homomorphism from the
      * homology of the boundary to the homology of the manifold.
      *
-     * @param q the dimension of the map, can be 0, 1 or 2.
+     * @param q the dimension of the map: can be 0, 1 or 2.
      * @return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
@@ -420,8 +426,8 @@ public:
      * This routine gives access to the manifold's homology computed
      * with the dual CW-decomposition.
      *
-     * @param q the dimension of the homology group, can be 0, 1, 2 or 3.
-     * @return H_q of the manifold, computed in the dual CW-decomposition.
+     * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
+     * @return the q-th homology group, computed in the dual CW-decomposition.
      */
     const NMarkedAbelianGroup& getDMH(unsigned q);
 
