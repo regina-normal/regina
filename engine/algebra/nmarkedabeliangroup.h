@@ -374,62 +374,74 @@ class NMarkedAbelianGroup : public ShareableObject {
         const NMatrixInt& getMCBi() const;
 
         /**
-         * The 2nd step in determining the isomorphism class of the group is to
-         * look at the matrix getMRBi()*N. Some of its columns are zero, so we
-         * truncate this matrix and denote it by [getMRBi()*N)].  Now we put
-         * this truncated matrix into Smith Normal Form, and keep track of
-         * the matrices that do it.
+         * Returns a change-of-basis matrix for the Smith normal form of
+         * the internal presentation matrix.
          *
-         * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
-         * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
-         * respectively.
+         * This is one of several routines that returns information on
+         * how we determine the isomorphism-class of this group.
          *
-         * @return the matrix getNRB() described above.
+         * For details on the internal presentation matrix, see the class
+         * overview.  If \a P is the internal presentation matrix, then:
+         *
+         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
+         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         *   respectively.
+         *
+         * @return the matrix getNRB() as described above.
          */
         const NMatrixInt& getNRB() const;
 
         /**
-         * The 2nd step in determining the isomorphism class of the group is to
-         * look at the matrix getMRBi()*N. Some of its columns are zero, so we
-         * truncate this matrix and denote it by [getMRBi()*N)].  Now we put
-         * this truncated matrix into Smith Normal Form, and keep track of
-         * the matrices that do it.
+         * Returns an inverse change-of-basis matrix for the Smith normal
+         * form of the internal presentation matrix.
          *
-         * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
-         * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
-         * respectively.
+         * This is one of several routines that returns information on
+         * how we determine the isomorphism-class of this group.
          *
-         * @return the matrix getNRBi() described above.
+         * For details on the internal presentation matrix, see the class
+         * overview.  If \a P is the internal presentation matrix, then:
+         *
+         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
+         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         *   respectively.
+         *
+         * @return the matrix getNRBi() as described above.
          */
         const NMatrixInt& getNRBi() const;
 
         /**
-         * The 2nd step in determining the isomorphism class of the group is to
-         * look at the matrix getMRBi()*N. Some of its columns are zero, so we
-         * truncate this matrix and denote it by [getMRBi()*N)].  Now we put
-         * this truncated matrix into Smith Normal Form, and keep track of
-         * the matrices that do it.
+         * Returns a change-of-basis matrix for the Smith normal form of
+         * the internal presentation matrix.
          *
-         * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
-         * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
-         * respectively.
+         * This is one of several routines that returns information on
+         * how we determine the isomorphism-class of this group.
          *
-         * @return the matrix getNCB() described above.
+         * For details on the internal presentation matrix, see the class
+         * overview.  If \a P is the internal presentation matrix, then:
+         *
+         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
+         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         *   respectively.
+         *
+         * @return the matrix getNCB() as described above.
          */
         const NMatrixInt& getNCB() const;
 
         /**
-         * The 2nd step in determining the isomorphism class of the group is to
-         * look at the matrix getMRBi()*N. Some of its columns are zero, so we
-         * truncate this matrix and denote it by [getMRBi()*N)].  Now we put
-         * this truncated matrix into Smith Normal Form, and keep track of
-         * the matrices that do it.
+         * Returns an inverse change-of-basis matrix for the Smith normal
+         * form of the internal presentation matrix.
          *
-         * getNCB()*[getMRBi()*N]*getNRB() is the SNF of [getMRBi()*N].
-         * getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
-         * respectively.
+         * This is one of several routines that returns information on
+         * how we determine the isomorphism-class of this group.
          *
-         * @return the matrix getNCBi() described above.
+         * For details on the internal presentation matrix, see the class
+         * overview.  If \a P is the internal presentation matrix, then:
+         *
+         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
+         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         *   respectively.
+         *
+         * @return the matrix getNCBi() as described above.
          */
         const NMatrixInt& getNCBi() const;
 
