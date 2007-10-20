@@ -104,12 +104,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
 
 // this goes through the list of invariant factors in order, stops
 // at the `index'-th one in increasing order and returns it...
-// if the index is out of bounds, it returns zero.
-// invariant factors are stored in the matrix SNF_ORN so one has to
-// get past the entries labelled with 1, and avoid any possible tail
-// entries labelled with 0.
-/** Gives the index-th invariant factor, in increasing order.
-        returns 0 for an invalid index. */
+/** Gives the index-th invariant factor, in increasing order. */
 const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
         unsigned long index) const {
     return InvFacList[index];
