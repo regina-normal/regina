@@ -49,7 +49,6 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
         OMC(M.rows(),M.rows()), OMRi(M.columns(),M.columns()),
         OMCi(M.rows(),M.rows()),
         rankOM(rbGetRank(M)),
-        ORN(N.rows()-rankOM,N.columns()),
         ornR(N.columns(),N.columns()),        ornRi(N.columns(),N.columns()),
         ornC(N.rows()-rankOM,N.rows()-rankOM),
         ornCi(N.rows()-rankOM,N.rows()-rankOM),
@@ -61,7 +60,10 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     // now construct OMRi * N, and delete first SNF_OM_firstzero rows,
     // constructing ORN.
 
+    // construct the internal presentation matrix.
     std::auto_ptr<NMatrixRing<NLargeInteger> > prod=OMRi*ON;
+
+    NMatrixInt ORN(N.rows()-rankOM, N.columns());
 
     unsigned long i;
     unsigned long j;
@@ -70,18 +72,18 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
         for (j=0;j<ORN.columns();j++)
             ORN.entry(i,j) = prod->entry(i+rankOM,j);
 
-    NMatrixInt SNF_ORN(ORN);
-    smithNormalForm(SNF_ORN, ornR, ornRi, ornC, ornCi);
-    // now build the list of invariant factors and their row indexes
+    // put the presentation matrix in Smith normal form, and
+    // build the list of invariant factors and their row indexes
     // now compute the rank and column indexes ...
+    smithNormalForm(ORN, ornR, ornRi, ornC, ornCi);
     i=0;
     unsigned long totO=0; // number diag entries == 1
     unsigned long totIF=0;// number diag entries > 1
     unsigned long totFR=0;// number diag entries == 0
 
-    while ((i<SNF_ORN.rows()) && (i<SNF_ORN.columns())) {
-        if (SNF_ORN.entry(i,i)==1) totO++;
-        else if (SNF_ORN.entry(i,i)>1) totIF++; 
+    while ((i<ORN.rows()) && (i<ORN.columns())) {
+        if (ORN.entry(i,i)==1) totO++;
+        else if (ORN.entry(i,i)>1) totIF++; 
         else totFR++;
         i++;
     }
@@ -91,9 +93,9 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
 
     InvFacList.resize(ifNum);
     for (i=0;i<ifNum;i++)
-        InvFacList[i]=SNF_ORN.entry(ifLoc+i,ifLoc+i);
+        InvFacList[i]=ORN.entry(ifLoc+i,ifLoc+i);
 
-    snfrank=SNF_ORN.rows()-totO-totIF;
+    snfrank=ORN.rows()-totO-totIF;
     snffreeindex=totO+totIF;
 }
 

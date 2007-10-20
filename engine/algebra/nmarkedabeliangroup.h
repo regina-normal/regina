@@ -66,6 +66,11 @@ namespace regina {
  * between homology groups.  This is used in the computation of the torsion
  * H_1 form coming from Poincare Duality.
  *
+ * Some routines in this class refer to the internal <i>presentation
+ * matrix</i>.  This is a proper presentation matrix for the abelian group,
+ * and is created by constructing the product getMRBi() * \a N, and then
+ * removing the first getRankM() rows.
+ *
  * @author Ryan Budney
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and
@@ -88,10 +93,12 @@ class NMarkedAbelianGroup : public ShareableObject {
         /** Internal rank of M */
         unsigned long rankOM; // this is the index of the first zero entry
                               // in the SNF of OM.
-        /** Internal reduced N matrix */
-        NMatrixInt ORN; // this is the reducted ON matrix, ORN = [OMRi * ON]
-                        // where the brackets indicate removal of the
-                        // first rankOM rows.
+
+        /* Internal reduced N matrix: */
+        // In the notes below, ORN refers to the internal presentation
+        // matrix [OMRi * ON], where the brackets indicate removal of the
+        // first rankOM rows.
+
         /** Internal change of basis */
         NMatrixInt ornR;
         /** Internal change of basis */
@@ -437,16 +444,18 @@ class NMarkedAbelianGroup : public ShareableObject {
         unsigned long getRankM() const;
 
         /**
-         * Returns the index of the first free generator in the reduced
-         * \a N matrix.
+         * Returns the index of the first free generator in the Smith
+         * normal form of the internal presentation matrix.  See the class
+         * overview for details.
          *
          * @return the index of the first free generator.
          */
         unsigned long getFreeLoc() const; // internal: snffreeindex
 
         /**
-         * Returns the index of the first torsion generator in the
-         * reduced \a N matrix.
+         * Returns the index of the first torsion generator in the Smith
+         * normal form of the internal presentation matrix.  See the class
+         * overview for details.
          *
          * @return the index of the first torsion generator.
          */
@@ -670,7 +679,7 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
         ShareableObject(),
         OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
         rankOM(g.rankOM),
-        ORN(g.ORN), ornR(g.ornR), ornRi(g.ornRi), ornC(g.ornC), ornCi(g.ornCi),
+        ornR(g.ornR), ornRi(g.ornRi), ornC(g.ornC), ornCi(g.ornCi),
         InvFacList(g.InvFacList), snfrank(g.snfrank),
         snffreeindex(g.snffreeindex),
         ifNum(g.ifNum), ifLoc(g.ifLoc) {
