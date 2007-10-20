@@ -100,18 +100,16 @@ class NMarkedAbelianGroup : public ShareableObject {
         NMatrixInt ornC;
         /** Internal change of basis */
         NMatrixInt ornCi;
-        /** Internal SNF of reduced N matrix */
-        NMatrixInt SNF_ORN;
 
         /** Internal list of invariant factors. */
         std::vector<NLargeInteger> InvFacList;
-        /** The number of free generators, from SNF_ORN */
+        /** The number of free generators, from SNF(ORN) */
         unsigned long snfrank;
-        /** The row index of the first free generator in SNF_ORN. */
+        /** The row index of the first free generator in SNF(ORN). */
         unsigned long snffreeindex;
         /** Number of invariant factors. */
         unsigned long ifNum;
-        /** Row index of invariant factors in SNF_ORN */
+        /** Row index of invariant factors in SNF(ORN) */
         unsigned long ifLoc;
 
 
@@ -673,7 +671,6 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
         OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
         rankOM(g.rankOM),
         ORN(g.ORN), ornR(g.ornR), ornRi(g.ornRi), ornC(g.ornC), ornCi(g.ornCi),
-        SNF_ORN(g.SNF_ORN),
         InvFacList(g.InvFacList), snfrank(g.snfrank),
         snffreeindex(g.snffreeindex),
         ifNum(g.ifNum), ifLoc(g.ifLoc) {

@@ -49,11 +49,10 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
         OMC(M.rows(),M.rows()), OMRi(M.columns(),M.columns()),
         OMCi(M.rows(),M.rows()),
         rankOM(rbGetRank(M)),
-        ORN(N.rows()-rbGetRank(M),N.columns()),
+        ORN(N.rows()-rankOM,N.columns()),
         ornR(N.columns(),N.columns()),        ornRi(N.columns(),N.columns()),
-        ornC(N.rows()-rbGetRank(M),N.rows()-rbGetRank(M)),
-        ornCi(N.rows()-rbGetRank(M),N.rows()-rbGetRank(M)),
-        SNF_ORN(N.rows()-rbGetRank(M),N.columns()),
+        ornC(N.rows()-rankOM,N.rows()-rankOM),
+        ornCi(N.rows()-rankOM,N.rows()-rankOM),
         InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0) {
     // find SNF(M).
     NMatrixInt tM(M);
@@ -71,11 +70,8 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
         for (j=0;j<ORN.columns();j++)
             ORN.entry(i,j) = prod->entry(i+rankOM,j);
 
-    NMatrixInt tX(ORN);
-    smithNormalForm(tX, ornR, ornRi, ornC, ornCi);
-    for (i=0;i<tX.rows();i++)
-        for (j=0;j<tX.columns();j++)
-            SNF_ORN.entry(i,j)=tX.entry(i,j);
+    NMatrixInt SNF_ORN(ORN);
+    smithNormalForm(SNF_ORN, ornR, ornRi, ornC, ornCi);
     // now build the list of invariant factors and their row indexes
     // now compute the rank and column indexes ...
     i=0;
