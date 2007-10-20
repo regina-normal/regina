@@ -249,11 +249,11 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFIsoRep(
         // set up retval. The first snfrank elts are the free generators
         for (unsigned long i=0;i<snfrank;i++)
             for (unsigned long j=rankOM;j<ON.rows();j++)
-                retval[i] += ornC.entry(snffreeindex+i,j)*temp[j];
+                retval[i] += ornC.entry(snffreeindex+i,j-rankOM)*temp[j];
         // the remaining InvFacList.size() elts are torsion generators.
         for (unsigned long i=0;i<ifNum;i++) {
             for (unsigned long j=rankOM;j<ON.rows();j++)
-                retval[i+snfrank] += ornC.entry(ifLoc+i,j)*temp[j];
+                retval[i+snfrank] += ornC.entry(ifLoc+i,j-rankOM)*temp[j];
             retval[i+snfrank] = (retval[i+snfrank] % InvFacList[i]);
         }
         return retval;
