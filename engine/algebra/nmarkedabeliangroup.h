@@ -243,9 +243,9 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * As described in the class overview, this marked abelian group
          * is defined by matrices \a M and \a N where M*N = 0.
-         * If \a M is an \a m by \a l matrix and \N is an \a l by \a n
+         * If \a M is an \a m by \a l matrix and \a N is an \a l by \a n
          * matrix, then this routine returns the (\a index)th free
-         * generator of ker(M)/img(N) in <tt>Z^l</tt>.
+         * generator of ker(M)/img(N) in \a Z^l.
          *
          * \ifacespython The return value will be a python list.
          *
@@ -262,9 +262,9 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * As described in the class overview, this marked abelian group
          * is defined by matrices \a M and \a N where M*N = 0.
-         * If \a M is an \a m by \a l matrix and \N is an \a l by \a n
+         * If \a M is an \a m by \a l matrix and \a N is an \a l by \a n
          * matrix, then this routine returns the (\a index)th torsion
-         * generator of ker(M)/img(N) in <tt>Z^l</tt>.
+         * generator of ker(M)/img(N) in \a Z^l.
          *
          * \ifacespython The return value will be a python list.
          *
