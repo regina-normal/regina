@@ -114,6 +114,9 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
               thanks again to Ryan Bydney.
         Routines factorise(), primesUpTo():
             - Deprecated in favour of routines from the new NPrimes class.
+        Routine clonePtr():
+            - New routine to assist copy constructors for classes that
+              compute data on demand.
     USER INTERFACE:
         - New Algebra -> Cellular Info tab containing a variety of new
           homological data for triangulations; thanks to Ryan Budney.

@@ -45,6 +45,51 @@ namespace regina {
  */
 
 /**
+ * A simple routine for cloning an object if and only if it exists.
+ *
+ * If the given pointer is non-null, this routine returns a new clone of the
+ * object, created using the copy constructor for type \a T.  Otherwise
+ * this routine simply returns a null pointer.
+ *
+ * The caller of this routine is responsible for deleting the new clone
+ * when it is no longer required.
+ *
+ * This routine can be useful when implementing copy constructors for
+ * classes that only initialise internal data members on demand.
+ *
+ * @param cloneMe a pointer to the object to clone; this may be null.
+ * @return a newly allocated copy of the given object, or the null
+ * pointer if \a cloneMe is null.
+ */
+template <typename T>
+inline T* clonePtr(T* cloneMe) {
+    return (cloneMe ? new T(*cloneMe) : 0);
+}
+
+/**
+ * A simple routine for cloning an object if and only if it exists.
+ *
+ * If the given pointer is non-null, this routine returns a new clone of the
+ * object, created using the copy constructor for type \a T.  Otherwise
+ * this routine simply returns a null pointer.
+ *
+ * Note that, even though this routine takes a std::auto_ptr, it returns
+ * a raw pointer.  The caller of this routine is responsible for
+ * deleting the new clone when it is no longer required.
+ *
+ * This routine can be useful when implementing copy constructors for
+ * classes that only initialise internal data members on demand.
+ *
+ * @param cloneMe a pointer to the object to clone; this may be null.
+ * @return a newly allocated copy of the given object, or the null
+ * pointer if \a cloneMe is null.
+ */
+template <typename T>
+inline T* clonePtr(const std::auto_ptr<T>& cloneMe) {
+    return (cloneMe.get() ? new T(*cloneMe) : 0);
+}
+
+/**
  * An adaptable binary function used to compare the objects to which
  * pointers are pointing.  This class is for use with the Standard Template
  * Library.
