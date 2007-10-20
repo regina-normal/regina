@@ -255,6 +255,12 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFIsoRep(
             for (unsigned long j=rankOM;j<ON.rows();j++)
                 retval[i+snfrank] += ornC.entry(ifLoc+i,j-rankOM)*temp[j];
             retval[i+snfrank] = (retval[i+snfrank] % InvFacList[i]);
+
+            // the element might still be negative, though in this case
+            // it should be no less than (- InvFacList[i] + 1).
+            // we can put it in the required range just by adding InvFacList[i].
+            if (retval[i+snfrank] < 0)
+                retval[i+snfrank] += InvFacList[i];
         }
         return retval;
     } else
