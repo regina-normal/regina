@@ -498,16 +498,19 @@ class NMarkedAbelianGroup : public ShareableObject {
 /**
  * Represents a homomorphism of finitely generated abelian groups.
  *
- * One initializes a homomorphism of f.g. abelian groups by passing the
- * constructor two f.g. abelian groups and a matrix which describes the
- * linear map between the free abelian groups in the centre of the respective
- * chain complexes that you used when defining the f.g. abelian groups.
+ * One initializes such a homomorphism by providing:
+ *
+ * - two finitely generated abelian groups, which act as domain and range;
+ * - a matrix describing the linear map between the free abelian
+ *   groups in the centres of the respective chain complexes that were
+ *   used to define the domain and range.
  *
  * So for example, if the domain was initialized by the chain complex
  * <tt>Z^a --A--> Z^b --B--> Z^c</tt> and the range was initialized by
- * <tt>Z^d --D--> Z^e --E--> Z^f</tt>, then mat needs to be an e-by-b matrix,
- * and of course, you only get something that's well-defined if mat extends to
- * a chain map, which this function assumes.
+ * <tt>Z^d --D--> Z^e --E--> Z^f</tt>, then the matrix needs to be an
+ * e-by-b matrix.  Furthermore, you only obtain a well-defined
+ * homomorphism if this matrix extends to a chain map (which this class
+ * assumes).
  *
  * @author Ryan Budney
  */
@@ -552,26 +555,29 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          * This is the sole NHomMarkedAbelianGroup constructor, other than
          * the copy constructor.
          *
+         * The roles of the two groups and the matrix are described in
+         * detail in the NHomMarkedAbelianGroup class overview.
+         *
          * The matrix must be given in the chain-complex coordinates.
-         * If \a domain was defined via the chain complex
-         * <tt>Z^a --N1--> Z^b --M1--> Z^c</tt>, and \a range was
-         * defined via <tt>>Z^d --N2--> Z^e --M2--> Z^f</tt>, then \a mat is
-         * a matrix that describes a homomorphism from Z^b to Z^e
-         * (an e-by-b matrix).
+         * Specifically, if \a domain was defined via the chain complex
+         * <tt>Z^a --N1--> Z^b --M1--> Z^c</tt> and \a range was
+         * defined via <tt>Z^d --N2--> Z^e --M2--> Z^f</tt>, then \a mat is
+         * an e-by-b matrix that describes a homomorphism from Z^b to Z^e.
          *
          * In order for this to make sense as a homomorphism of the groups
          * represented by \a domain and \a range respectively, one requires
-         * img(mat*N1) to be a subset of img(N2).  This is not checked, but
-         * assumed.  Similarly, ker(M1) must be sent into ker(M2).
+         * img(mat*N1) to be a subset of img(N2).  Similarly, ker(M1) must
+         * be sent into ker(M2).  These facts are not checked, but are
+         * assumed as preconditions of this constructor.
          *
-         * \pre The matrix \a has the required dimensions and sends
-         * img(mat*N1) and ker(M1) into img(N2) and ker(M2) respectively,
-         * as described above.
+         * \pre The matrix \a mat has the required dimensions e-by-b,
+         * gives img(mat*N1) as a subset of img(N2), and sends ker(M1)
+         * into ker(M2), as explained in the detailed notes above.
          *
          * @param domain the domain group.
          * @param range the range group.
-         * @param mat the matrix that describes the homomorphism from \a domain
-         * to \a range.
+         * @param mat the matrix that describes the homomorphism from 
+         * \a domain to \a range.
          */
         NHomMarkedAbelianGroup(const NMarkedAbelianGroup& domain,
                 const NMarkedAbelianGroup& range,
@@ -632,10 +638,16 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         const NMarkedAbelianGroup& getImage() const;
 
         /**
-         * Short text representation: this will state if the
-         * map is an isomorphism or not, if monoid or epic, and
-         * if it is not monoic, describes kernel, not epic, describes
-         * co-kernel and image.
+         * Short text representation.  This will state some basic
+         * properties of the homomorphism, such as:
+         *
+         * - whether the map is an isomorphism;
+         * - whether the map is monic or epic;
+         * - if it is not monic, describes the kernel;
+         * - if it is not epic, describes the co-kernel;
+         * - if it is neither monic nor epic, describes the image.
+         *
+         * @param out the stream to write to.
          */
         virtual void writeTextShort(std::ostream& out) const;
 
