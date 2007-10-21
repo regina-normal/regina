@@ -328,13 +328,7 @@ private:
      ** construct the Kawauchi-Kojima invariants. */
     std::vector< NMatrixRing<NRational>* > linkingFormPD;
 
-    /** True if torsion linking form is `hyperbolic'. To be a little more
-	precise, Poincare-duality in a compact orientable boundaryless manifold
-	gives an isomorphism between the torsion subgroup of H_1(M) 
-	denoted tH_1(M) and Hom(tH_1(M),Q/Z) where Q is the rationals and Z the 
-	integers.  The associated bilinear form (with values in Q/Z) is said to be
-	`hyperbolic' if tH_1(M) splits as a direct sum A \oplus B such
-	that Poincare duality sends A to Hom(B,Q/Z) and B to Hom(A,Q/Z).   */
+    /** True if torsion linking form is `hyperbolic'.   */
     bool torsionLinkingFormIsHyperbolic;
     /** True if torsion linking form is `split' */
     bool torsionLinkingFormIsSplit;
@@ -582,7 +576,13 @@ public:
 
     /**
      * Returns true iff torsion linking form is `hyperbolic' in
-     * the linking-form sense of the word.
+     * the linking-form sense of the word.  To be a little more
+     * precise, Poincare-duality in a compact orientable boundaryless manifold
+     * gives an isomorphism between the torsion subgroup of H_1(M) 
+     * denoted tH_1(M) and Hom(tH_1(M),Q/Z) where Q is the rationals and Z the 
+     * integers.  The associated bilinear form (with values in Q/Z) is said to be
+     * `hyperbolic' if tH_1(M) splits as a direct sum A \oplus B such
+     * that Poincare duality sends A to Hom(B,Q/Z) and B to Hom(A,Q/Z).
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
