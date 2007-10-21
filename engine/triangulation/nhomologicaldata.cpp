@@ -1829,10 +1829,6 @@ void NHomologicalData::computeEmbeddabilityString() {
 
 
 bool NHomologicalData::formIsHyperbolic() {
-    // TODO: this is not minimal effort!
-    // minimal effort approach: for each invariant factor check
-    // corresp. getTorsionRank is even. ONLY if all these tests
-    // pass, then computeTorsionLinkingForm();
     if (torsionFormComputed)
         return torsionLinkingFormIsHyperbolic;
 
