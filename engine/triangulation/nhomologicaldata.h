@@ -519,6 +519,10 @@ public:
      * given in prime power form.  It is a vector of pairs (\a p, \a x),
      * where \a p is a prime and \a x is its exponent.
      *
+     * For details, see "Algebraic classification of linking pairings on
+     * 3-manifolds", Akio Kawauchi and Sadayoshi Kojima,
+     * Math. Ann. 253 (1980), 29--42.
+     *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * @return the torsion subgroup rank vector.
@@ -538,6 +542,10 @@ public:
      * Returns the 2-torsion sigma vector. This is the second of the three
      * Kawauchi-Kojima invariants.
      *
+     * For details, see "Algebraic classification of linking pairings on
+     * 3-manifolds", Akio Kawauchi and Sadayoshi Kojima,
+     * Math. Ann. 253 (1980), 29--42.
+     *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * @return the Kawauchi-Kojima sigma-vector.
@@ -555,6 +563,10 @@ public:
     /**
      * Returns the odd p-torsion Legendre symbol vector. This is the
      * last of the three Kawauchi-Kojima invariants.
+     *
+     * For details, see "Algebraic classification of linking pairings on
+     * 3-manifolds", Akio Kawauchi and Sadayoshi Kojima,
+     * Math. Ann. 253 (1980), 29--42.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
