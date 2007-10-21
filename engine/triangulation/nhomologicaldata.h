@@ -549,9 +549,10 @@ public:
      * linking form.
      */
     const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
-        getLegendreSymbolVector();
+        getTorsionLegendreSymbolVector();
     /**
-     * Same as getLegendreSymbolVector() but returns as a human-readable string.
+     * Same as getTorsionLegendreSymbolVector() but returns as a
+     * human-readable string.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
@@ -766,7 +767,7 @@ NHomologicalData::getTorsionSigmaVector()
     return twoTorSigmaV;
 }
 inline const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
-NHomologicalData::getLegendreSymbolVector() 
+NHomologicalData::getTorsionLegendreSymbolVector() 
 {
     computeTorsionLinkingForm();
     return oddTorLegSymV;
