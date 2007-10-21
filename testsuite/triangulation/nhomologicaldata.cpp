@@ -44,6 +44,7 @@ using regina::NTriangulation;
 class NHomologicalDataTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NHomologicalDataTest);
 
+    CPPUNIT_TEST(homologyConsistency);
     CPPUNIT_TEST(bdryManifoldMapH1);
     CPPUNIT_TEST(standardCells);
     CPPUNIT_TEST(dualCells);
@@ -177,8 +178,73 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             delete figureEight;
         }
 
-        void verifyBdryManifoldMapH1(NTriangulation& tri, const char* name,
-                const char* ans) {
+        void verifyHomologyConsistency(const NTriangulation& tri,
+                const char* name) {
+            NHomologicalData dat(tri);
+
+            std::string fromStandard, fromDual;
+            for (int i = 0; i <= 3; ++i) {
+                fromStandard = dat.getHomology(i).toString();
+                fromDual = dat.getDualHomology(i).toString();
+
+                if (fromStandard != fromDual) {
+                    std::ostringstream msg;
+                    msg << name << ": Homologies computed from "
+                        "standard and dual complexes do not agree "
+                        "(H_" << i << " = " << fromStandard
+                        << " vs " << fromDual << ").";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            std::string fromTri = tri.getHomologyH1().toString();
+            fromDual = dat.getDualHomology(1).toString();
+
+            if (fromTri != fromDual) {
+                std::ostringstream msg;
+                msg << name << ": Homologies computed from "
+                    "triangulation and dual complexes do not agree "
+                    "(H_1 = " << fromTri << " vs " << fromDual << ").";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void homologyConsistency() {
+            verifyHomologyConsistency(*s3, "S^3");
+            verifyHomologyConsistency(*s2xs1, "S^2 x S^1");
+            verifyHomologyConsistency(lens3_1, "L(3,1)");
+            verifyHomologyConsistency(lens4_1, "L(4,1)");
+            verifyHomologyConsistency(lens7_1, "L(7,1)");
+            verifyHomologyConsistency(*poincare, "Poincare homology sphere");
+            verifyHomologyConsistency(d88xz15, "S^3 / D_88 x Z_15");
+            verifyHomologyConsistency(closedHypA,
+                "Closed Hyp (vol=1.01494161)");
+            verifyHomologyConsistency(closedHypB,
+                "Closed Hyp (vol=2.45402944)");
+            verifyHomologyConsistency(closedHypC,
+                "Closed Hyp (vol=1.26370924)");
+            verifyHomologyConsistency(torusBundleA, "T x I / [ 0,1 | -1,0 ]");
+            verifyHomologyConsistency(torusBundleB, "T x I / [ -1,1 | -1,0 ]");
+            verifyHomologyConsistency(twistedKBxS1, "KB/n2 x~ S^1");
+            verifyHomologyConsistency(norA, "SFS [M_/n2: (2,1)]");
+            verifyHomologyConsistency(norB, "SFS [RP2: (2,1) (2,1)]");
+            verifyHomologyConsistency(norTorusBundle, "T x I / [ 2,1 | 1,0 ]");
+            verifyHomologyConsistency(lst3_4_7, "LST(3,4,7)");
+            verifyHomologyConsistency(*gieseking, "Gieseking manifold");
+            verifyHomologyConsistency(*figureEight,
+                "Figure eight knot complement");
+            verifyHomologyConsistency(m003, "SnapPea m003");
+            verifyHomologyConsistency(m041, "SnapPea m041");
+            verifyHomologyConsistency(m045, "SnapPea m045");
+            verifyHomologyConsistency(s028, "SnapPea s028");
+            verifyHomologyConsistency(s887, "SnapPea s887");
+            verifyHomologyConsistency(s955, "SnapPea s955");
+            verifyHomologyConsistency(genusTwoBdry,
+                "Manifold with genus two cusp");
+        }
+
+        void verifyBdryManifoldMapH1(const NTriangulation& tri,
+                const char* name, const char* ans) {
             NHomologicalData dat(tri);
             std::string val = dat.getBdryHomologyMap(1).toString();
             if (val != ans) {
