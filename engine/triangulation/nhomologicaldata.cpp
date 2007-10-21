@@ -1010,7 +1010,7 @@ void NHomologicalData::computeDHomology() {
         dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
 }
 
-const NHomMarkedAbelianGroup& NHomologicalData::getH1cellap() {
+const NHomMarkedAbelianGroup& NHomologicalData::getH1CellAp() {
     if (!dmTomMap1.get()) {
         computeHomology();
         computeDHomology();
@@ -1071,7 +1071,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         return;
 
     // dual h1 --> standard h1 isomorphism:
-    const NHomMarkedAbelianGroup& h1CellAp(getH1cellap());
+    const NHomMarkedAbelianGroup& h1CellAp(getH1CellAp());
     // min number of torsion gens:
     unsigned long niv(dmHomology1->getNumberOfInvariantFactors());
     // for holding prime decompositions.:

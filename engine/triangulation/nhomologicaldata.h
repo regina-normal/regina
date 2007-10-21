@@ -443,7 +443,7 @@ public:
      * computed via a cellular approximation of the identity map from
      * the first 1-skeleton to the second.
      */
-    const NHomMarkedAbelianGroup& getH1cellap();
+    const NHomMarkedAbelianGroup& getH1CellAp();
 
     /**
      * A list of the number of cells of the given dimension
