@@ -1020,7 +1020,7 @@ const NHomMarkedAbelianGroup& NHomologicalData::getH1CellAp() {
     return (*dmTomMap1);
 }
 
-const NHomMarkedAbelianGroup& NHomologicalData::getBMmapH(unsigned q) {
+const NHomMarkedAbelianGroup& NHomologicalData::getBdryHomologyMap(unsigned q) {
     if (q==0) {
         if (!bmMap0.get()) {
             computeHomology();
@@ -1720,7 +1720,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 // H1 map check... boundary map has full rank iff embeds in
                 // rational homology 3-sph
                 // boundary map epic iff embeds in homology 3-sphere
-                 if (getBMmapH(1).isEpic())
+                 if (getBdryHomologyMap(1).isEpic())
                     {
                     embeddabilityString =
                         "Embeds in a homology 3-sphere as a ";
@@ -1735,7 +1735,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     else
                         embeddabilityString += "graph complement.";
                     }
-                 else if (getBMmapH(1).getCokernel().getRank()==0)
+                 else if (getBdryHomologyMap(1).getCokernel().getRank()==0)
                     {
                     embeddabilityString =
                         "Embeds in a rational homology 3-sphere as a ";
@@ -1758,11 +1758,11 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 { // torsion : boundary, orientable
                 if (!torsionLinkingFormSatisfiesKKtwoTorCondition)
                  { // two tor condition not satisfied
-                 if (getBMmapH(1).isEpic())
+                 if (getBdryHomologyMap(1).isEpic())
                    embeddabilityString =
                         "Embeds in homology 3-sphere "
                         "but not homology 4-sphere.";
-                 else if (getBMmapH(1).getCokernel().getRank()==0)
+                 else if (getBdryHomologyMap(1).getCokernel().getRank()==0)
                    embeddabilityString =
                         "Embeds in rational homology 3-sphere but not "
                         "homology 4-sphere.";
@@ -1773,11 +1773,11 @@ void NHomologicalData::computeTorsionLinkingForm() {
                  }
                 else
                  { // KK twotor condition satisfied...
-                 if (getBMmapH(1).isEpic())
+                 if (getBdryHomologyMap(1).isEpic())
                    embeddabilityString =
                         "Embeds in homology 3-sphere.  "
                         "KK 2-tor condition satisfied.";
-                 else if (getBMmapH(1).getCokernel().getRank()==0)
+                 else if (getBdryHomologyMap(1).getCokernel().getRank()==0)
                    embeddabilityString =
                         "Embeds in rational homology 3-sphere.  "
                         "KK 2-tor condition satisfied.";

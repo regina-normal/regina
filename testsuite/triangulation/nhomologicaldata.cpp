@@ -180,7 +180,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void verifyBdryManifoldMapH1(NTriangulation& tri, const char* name,
                 const char* ans) {
             NHomologicalData dat(tri);
-            std::string val = dat.getBMmapH(1).toString();
+            std::string val = dat.getBdryHomologyMap(1).toString();
             if (val != ans) {
                 std::ostringstream msg;
                 msg << name << ": Map from H1(bdry) to H1(mfd) is "

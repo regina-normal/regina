@@ -423,7 +423,7 @@ public:
      * @return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
-    const NHomMarkedAbelianGroup& getBMmapH(unsigned q);
+    const NHomMarkedAbelianGroup& getBdryHomologyMap(unsigned q);
 
     /**
      * This routine gives access to the manifold's homology computed

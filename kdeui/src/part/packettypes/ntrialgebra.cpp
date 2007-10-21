@@ -659,7 +659,7 @@ void NTriCellularInfoUI::refresh() {
             arg(minfo.getBdryHomology(1).toString()).
             arg(minfo.getBdryHomology(2).toString()));
 
-        BdryMap->setText(minfo.getBMmapH(1).toString());
+        BdryMap->setText(minfo.getBdryHomologyMap(1).toString());
 
 //        minfo.computeTorsionLinkingForm();
 
