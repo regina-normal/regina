@@ -627,7 +627,7 @@ public:
     bool formSatKK();
     /**
      * Returns a comment on whether the manifold might embed in
-     * a homology 3-sphere or 4-sphere. Basically, it runs
+     * a homology 3-sphere or 4-sphere. Basically, this routine runs
      * through all the Kawauchi-Kojima conditions, plus a
      * few other `elementary' conditions.
      *
@@ -636,9 +636,13 @@ public:
      * themselves are subject to change between releases of Regina,
      * since later releases may have more detailed tests at their disposal.
      *
-     * \pre The triangulation is of a connected orientable 3-manifold.
+     * This routine is available for both orientable and non-orientable
+     * triangulations.  In the non-orientable case it may return
+     * additional information regarding the orientable double cover.
      *
-     * @return string which gives a one-line description of what
+     * \pre The triangulation is of a connected 3-manifold.
+     *
+     * @return a string giving a one-line description of what
      * is known about where this manifold embeds, based solely
      * on the manifold's homological data.
      */
