@@ -512,15 +512,16 @@ public:
 
     /**
      * Returns the torsion subgroup rank vector. This is the first of
-     * the 3 Kawauchi-Kojima complete invariants of the torsion
-     * linking form.  The algorithm assumes the 3-manifold is both
-     * orientable and connected.
+     * the three Kawauchi-Kojima complete invariants of the torsion
+     * linking form.
+     *
+     * This vector describes the rank of the torsion subgroup of H1,
+     * given in prime power form.  It is a vector of pairs (\a p, \a x),
+     * where \a p is a prime and \a x is its exponent.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * @return A vector that describes the rank of the torsion subgroup of H1,
-     * given in prime power form.  Ie it is a vector of pairs (p,x) where
-     * p is a prime, and x is its exponent.
+     * @return the torsion subgroup rank vector.
      */
     const std::vector< std::pair< NLargeInteger,
         std::vector< unsigned long > > >& getTorsionRankVector();
@@ -534,13 +535,12 @@ public:
      */
     const std::string& getTorsionRankVectorString();
     /**
-     * Returns the 2-torsion sigma vector. This is the 2nd of the three
-     * Kawauchi-Kojima invariants. Assumes manifold is orientable and
-     * connected.
+     * Returns the 2-torsion sigma vector. This is the second of the three
+     * Kawauchi-Kojima invariants.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * @return The Kawauchi-Kojima sigma-vector.
+     * @return the Kawauchi-Kojima sigma-vector.
      */
     const std::vector<NLargeInteger>& getTorsionSigmaVector();
     /**
@@ -548,18 +548,17 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * @return The Kawauchi-Kojima sigma-vector in human readable form.
+     * @return the Kawauchi-Kojima sigma-vector in human readable form.
      */
     const std::string& getTorsionSigmaVectorString();
 
     /**
      * Returns the odd p-torsion Legendre symbol vector. This is the
-     * last of the three Kawauchi-Kojima invariants.  Assumes the
-     * manifold is orientable and connected.
+     * last of the three Kawauchi-Kojima invariants.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * @return The Legendre symbol vector associated to the torsion
+     * @return the Legendre symbol vector associated to the torsion
      * linking form.
      */
     const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
@@ -576,37 +575,41 @@ public:
 
     /**
      * Returns true iff torsion linking form is `hyperbolic' in
-     * the linking-form sense of the word.  To be a little more
-     * precise, Poincare-duality in a compact orientable boundaryless manifold
+     * the linking-form sense of the word.
+     *
+     * To be a little more precise, Poincare-duality in a
+     * compact orientable boundaryless manifold
      * gives an isomorphism between the torsion subgroup of H_1(M) 
-     * denoted tH_1(M) and Hom(tH_1(M),Q/Z) where Q is the rationals and Z the 
-     * integers.  The associated bilinear form (with values in Q/Z) is said to be
-     * `hyperbolic' if tH_1(M) splits as a direct sum A+B such
+     * denoted tH_1(M) and Hom(tH_1(M),Q/Z), where Q is the rationals and Z the 
+     * integers.  The associated bilinear form (with values in Q/Z) is said
+     * to be `hyperbolic' if tH_1(M) splits as a direct sum A+B such
      * that Poincare duality sends A to Hom(B,Q/Z) and B to Hom(A,Q/Z).
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * @return bool value, true iff torsion linking form is hyperbolic.
+     * @return \c true iff the torsion linking form is hyperbolic.
      */
     bool formIsHyperbolic();
     /**
-     * Returns true iff torsion linking form is split.
+     * Returns true iff the torsion linking form is split.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * @return bool value, true if the linking form is split.
+     * @return \c true iff the linking form is split.
      */
     bool formIsSplit();
     /**
-     * Returns true iff torsion linking form satisfies the
-     * Kawauchi-Kojima 2-torsion condition that on all elements
-     * x of order 2^k, 2^{k-1}form(x,x) == 0.  This is a
-     * neccessary condition for an orientable 3-manifold
+     * Returns true iff the torsion linking form satisfies the
+     * Kawauchi-Kojima 2-torsion condition.  This condition
+     * states that on all elements \a x of order 2^k,
+     * 2^{k-1}form(x,x) = 0.
+     *
+     * This is a neccessary condition for an orientable 3-manifold
      * perhaps with boundary to embed in a homology 4-sphere.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * @return bool value, true iff form satisfies the 2-torsion
+     * @return \c true iff the form satisfies the 2-torsion
      * condition of Kawauchi-Kojima.
      */
     bool formSatKK();
@@ -775,35 +778,35 @@ inline long int NHomologicalData::getEulerChar()
 }
 
 inline const std::vector< std::pair< NLargeInteger,
-std::vector< unsigned long > > >& NHomologicalData::getTorsionRankVector() 
+std::vector< unsigned long > > >& NHomologicalData::getTorsionRankVector()
 {
     computeTorsionLinkingForm();
     return torRankV;
 }
 inline const std::vector<NLargeInteger>&
-NHomologicalData::getTorsionSigmaVector()  
+NHomologicalData::getTorsionSigmaVector()
 {
     computeTorsionLinkingForm();
     return twoTorSigmaV;
 }
 inline const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
-NHomologicalData::getTorsionLegendreSymbolVector() 
+NHomologicalData::getTorsionLegendreSymbolVector()
 {
     computeTorsionLinkingForm();
     return oddTorLegSymV;
 }
 
-inline bool NHomologicalData::formIsSplit() 
+inline bool NHomologicalData::formIsSplit()
 {
     computeTorsionLinkingForm();
     return torsionLinkingFormIsSplit;
 }
-inline bool NHomologicalData::formSatKK() 
+inline bool NHomologicalData::formSatKK()
 {
     computeTorsionLinkingForm();
     return torsionLinkingFormSatisfiesKKtwoTorCondition;
 }
-inline const std::string& NHomologicalData::getTorsionRankVectorString() 
+inline const std::string& NHomologicalData::getTorsionRankVectorString()
 {
     computeTorsionLinkingForm();
     return torsionRankString;
@@ -815,13 +818,14 @@ inline const std::string& NHomologicalData::getTorsionSigmaVectorString()
     return torsionSigmaString;
 }
 
-inline const std::string& NHomologicalData::getTorsionLegendreSymbolVectorString() 
+inline const std::string&
+NHomologicalData::getTorsionLegendreSymbolVectorString()
 {
     computeTorsionLinkingForm();
     return torsionLegendreString;
 }
 
-inline const std::string& NHomologicalData::getEmbeddabilityComment() 
+inline const std::string& NHomologicalData::getEmbeddabilityComment()
 {
     computeTorsionLinkingForm();
     return embeddabilityString;
