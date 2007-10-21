@@ -782,6 +782,28 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * as surface boundary components when computing the Euler
          * characteristic), see NHomologicalData::getEulerChar().
          *
+         * This routine was previously called getEulerCharacteristic() in
+         * Regina 4.3.1 and earlier.  It was renamed in Regina 4.4 to
+         * clarify the non-standard handling of cusps.
+         *
+         * @return the Euler characteristic of this triangulation.
+         */
+        long getEulerCharTri() const;
+
+        /**
+         * A deprecated alias for getEulerCharTri().
+         *
+         * This routine calculates the Euler characteristic of this
+         * triangulation.  Since it treats cusps in a non-standard way,
+         * it was renamed to getEulerCharTri() in Regina 4.4 to clarify
+         * that this might differ from the Euler characteristic of the
+         * corresponding compact manifold.
+         *
+         * See getEulerCharTri() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getEulerCharTri() instead.
+         *
          * @return the Euler characteristic of this triangulation.
          */
         long getEulerCharacteristic() const;
@@ -2524,11 +2546,15 @@ inline unsigned long NTriangulation::getNumberOfFaces() const {
     return faces.size();
 }
 
-inline long NTriangulation::getEulerCharacteristic() const {
+inline long NTriangulation::getEulerCharTri() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return long(vertices.size()) - long(edges.size())
         + long(faces.size()) - long(tetrahedra.size());
+}
+
+inline long NTriangulation::getEulerCharacteristic() const {
+    return getEulerCharTri();
 }
 
 inline const NIndexedArray<NTetrahedron*, HashPointer>&

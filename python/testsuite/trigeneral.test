@@ -44,7 +44,7 @@ def vitalStats(tri):
 	print tri.getNumberOfVertices(), "vertices"
 	print "2-sphere boundaries:", tri.hasTwoSphereBoundaryComponents()
 	print "Negative ideal boundaries:", tri.hasNegativeIdealBoundaryComponents()
-	print "EC:", tri.getEulerCharacteristic()
+	print "EC:", tri.getEulerCharTri()
 	print "Valid:", tri.isValid()
 	print "Ideal:", tri.isIdeal()
 	print "Standard:", tri.isStandard()

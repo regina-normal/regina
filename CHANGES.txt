@@ -97,6 +97,10 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
             - New routine dehydrate() for extracting Callahan-Hildebrand-Weeks
               dehydration strings.
             - Optimised the skeletal calculations, which now run *much* faster.
+            - Renamed getEulerCharacteristic() to getEulerCharTri() to make
+              it clearer that, for ideal triangulations, this does not match
+              the Euler characteristic of the corresponding compact manifold.
+              The old name is kept as an alias but is now deprecated.
             - Fixed a crash in splitIntoComponents() that occurred when
               the triangulation skeleton had not yet been calculated.
         Class NVertexEnumerator:
