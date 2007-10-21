@@ -710,7 +710,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(Cells, msg);
 
-    label = new QLabel(i18n("Dual Cells: "), ui);
+    label = new QLabel(i18n("Dual cells: "), ui);
     homologyGrid->addWidget(label, 2, 1);
     DualCells = new QLabel(ui);
     homologyGrid->addWidget(DualCells, 2, 2);
@@ -721,7 +721,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(DualCells, msg);
 
-    label = new QLabel(i18n("Euler Characteristic: "), ui);
+    label = new QLabel(i18n("Euler characteristic: "), ui);
     homologyGrid->addWidget(label, 3, 1);
     EulerChar = new QLabel(ui);
     homologyGrid->addWidget(EulerChar, 3, 2);
@@ -782,7 +782,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForSigma, msg);
 
-    label = new QLabel(i18n("Legendre sym. vector: "), ui);
+    label = new QLabel(i18n("Legendre symbol vector: "), ui);
     homologyGrid->addWidget(label, 9, 1);
     TorForLegendre = new QLabel(ui);
     homologyGrid->addWidget(TorForLegendre, 9, 2);
