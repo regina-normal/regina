@@ -38,7 +38,7 @@ void addNHomologicalData() {
             std::auto_ptr<NHomologicalData>, boost::noncopyable>
             ("NHomologicalData", init<const NTriangulation&>())
         .def(init<const NHomologicalData&>())
-        .def("getMH", &NHomologicalData::getMH,
+        .def("getHomology", &NHomologicalData::getHomology,
             return_internal_reference<>())
     ;
 }
