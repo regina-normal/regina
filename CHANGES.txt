@@ -39,6 +39,9 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
         Class NFacePairing:
             - Modified writeDot() to behave well with ancient versions
               of Graphviz.
+        Class NHomologicalData:
+            - New class for computing all sorts of detailed homological
+              information for a manifold; thanks to Ryan Budney for this.
         Class NLargeInteger:
             - New routine divisionAlg() for using the division algorithm.
             - New routine legendre() for calculating Legendre symbols.
