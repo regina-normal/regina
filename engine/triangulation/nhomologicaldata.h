@@ -315,9 +315,18 @@ private:
      * This routine computes the H1 torsion linking form. It is only
      * well-defined for orientable 3-manifolds, so don't bother calling
      * this routine unless you know the manifold is orientable.
+     *
      * \pre The triangulation is of a connected orientable 3-manifold.
      */
     void computeTorsionLinkingForm();
+    /**
+     * Unlike computeTorsionLinkingForm(), this routine \e can be called
+     * for non-orientable manifolds (in which case we look at the
+     * orientable double cover).
+     *
+     * \pre The triangulation is of a connected 3-manifold.
+     */
+    void computeEmbeddabilityString();
 
     /** the prime power decomposition of the torsion subgroup of H1
      ** So if the invariant factors were 2,2,4,3,9,9,27,5,5, this would
@@ -717,7 +726,8 @@ inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
         B2Incl(clonePtr(g.B2Incl)),
         H1map(clonePtr(g.H1map)),
 
-        torsionFormComputed(g.torsionFormComputed)
+        torsionFormComputed(g.torsionFormComputed),
+        embeddabilityString(g.embeddabilityString)
 {
     // More complex initialisation:
     if (ccIndexingComputed) {
@@ -753,7 +763,6 @@ inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
         torsionRankString = g.torsionRankString;
         torsionSigmaString = g.torsionSigmaString;
         torsionLegendreString = g.torsionLegendreString;
-        embeddabilityString = g.embeddabilityString;
     }
 }
 
@@ -843,7 +852,7 @@ NHomologicalData::getTorsionLegendreSymbolVectorString()
 
 inline const std::string& NHomologicalData::getEmbeddabilityComment()
 {
-    computeTorsionLinkingForm();
+    computeEmbeddabilityString();
     return embeddabilityString;
 }
 

@@ -100,6 +100,8 @@ void NHomologicalData::writeTextShort(std::ostream& out) const {
         out<<"Torsion subgroup rank vector: "<<torsionRankString<<" ";
         out<<"Torsion sigma vector: "<<torsionSigmaString<<" ";
         out<<"Torsion Legendre symbol vector: "<<torsionLegendreString<<" ";
+    }
+    if (! embeddabilityString.empty()) {
         out<<"Embedability comment: "<<embeddabilityString<<" ";
     }
 
@@ -1679,9 +1681,18 @@ void NHomologicalData::computeTorsionLinkingForm() {
     else
         torsionLegendreString.append("manifold is non-orientable");
 
-    embeddabilityString.assign("");
-    if (tri->isOrientable()) 
-      { // orientable
+    torsionFormComputed = true;
+} // end computeTorsionLinkingForm()
+
+void NHomologicalData::computeEmbeddabilityString() {
+    // Only do this if we haven't done it already.
+    if (! embeddabilityString.empty())
+        return;
+
+    if (tri->isOrientable())
+      { // orientable -- we need the torsion linking form
+        computeTorsionLinkingForm();
+
         if (getBdryHomology(0).isTrivial()) 
         { // no boundary : orientable
             if (torRankV.size()==0) 
@@ -1800,31 +1811,21 @@ void NHomologicalData::computeTorsionLinkingForm() {
         if (covHomol.getBdryHomology(0).isTrivial())
          { // no boundary
           if (covHomol.formIsHyperbolic())
-            {
             embeddabilityString = "Orientation cover has hyperbolic"
                                   " torsion linking form.";
-            }
           else
-            {
             embeddabilityString = "Does not embed in homology 4-sphere.";
-            }
          }
         else
          {// boundary
           if (covHomol.formSatKK())
-            {
             embeddabilityString = "Orientation cover satisfies"
                                       " KK 2-torsion condition.";
-            }
           else
-            {
             embeddabilityString = "Does not embed in homology 4-sphere.";
-            }
          }
      }
-
-    torsionFormComputed = true;
-} // end computeTorsionLinkingForm()
+} // end computeEmbeddabilityString()
 
 
 bool NHomologicalData::formIsHyperbolic() {
