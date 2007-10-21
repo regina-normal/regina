@@ -396,9 +396,9 @@ public:
      * This routine gives access to the manifold's homology computed
      * with the regular CW-decomposition.
      *
-     * This routine is typically slower than getDualHomology(), which uses
-     * the dual CW-decomposition with typically has an order of magnitude
-     * fewer cells.
+     * This routine is typically slower than getDualHomology(), since
+     * getDualHomology() uses the dual CW-decomposition which typically
+     * has an order of magnitude fewer cells.
      *
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the standard
@@ -428,6 +428,9 @@ public:
     /**
      * This routine gives access to the manifold's homology computed
      * with the dual CW-decomposition.
+     *
+     * This routine is typically faster than getHomology() since the
+     * dual CW-decomposition generally has far fewer cells.
      *
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the dual CW-decomposition.
