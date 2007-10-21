@@ -891,7 +891,7 @@ void NHomologicalData::computeChainComplexes() {
                 tri->getNumberOfFaces() + i - sBNIF.size() ) ,i)+=1;
 }
 
-const NMarkedAbelianGroup& NHomologicalData::getMH(unsigned q) {
+const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q) {
     if (q==0) {
         if (!mHomology0.get()) {
             computeChainComplexes();
@@ -922,7 +922,7 @@ const NMarkedAbelianGroup& NHomologicalData::getMH(unsigned q) {
     // the A's should probably be redone as an array of pointers...
 }
 
-const NMarkedAbelianGroup& NHomologicalData::getBMH(unsigned q) {
+const NMarkedAbelianGroup& NHomologicalData::getBdryHomology(unsigned q) {
     if (q==0) {
         if (!bHomology0.get()) {
             computeChainComplexes();
@@ -946,7 +946,7 @@ const NMarkedAbelianGroup& NHomologicalData::getBMH(unsigned q) {
     }
 }
 
-const NMarkedAbelianGroup& NHomologicalData::getDMH(unsigned q) {
+const NMarkedAbelianGroup& NHomologicalData::getDualHomology(unsigned q) {
     if (q==0) {
         if (!dmHomology0.get()) {
             computeChainComplexes();
@@ -1682,13 +1682,13 @@ void NHomologicalData::computeTorsionLinkingForm() {
     embeddabilityString.assign("");
     if (tri->isOrientable()) 
       { // orientable
-        if (getBMH(0).isTrivial()) 
+        if (getBdryHomology(0).isTrivial()) 
         { // no boundary : orientable
             if (torRankV.size()==0) 
             { // no torsion : no boundary, orientable
                 if (tri->knowsThreeSphere() && tri->isThreeSphere())
                     embeddabilityString = "This manifold is S^3.";
-                else if (getDMH(1).isTrivial())
+                else if (getDualHomology(1).isTrivial())
                     embeddabilityString = "Manifold is a homology 3-sphere.";
                 else
                     embeddabilityString = "No information.";
@@ -1705,7 +1705,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 else
                     embeddabilityString = "The torsion linking form is "
                         "of hyperbolic type.";
-                if (getDMH(1).getRank()==0)
+                if (getDualHomology(1).getRank()==0)
                     embeddabilityString += "  Manifold is a rational "
                         "homology sphere.";
             } // torsion : no boundary, orientable
@@ -1724,9 +1724,10 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     {
                     embeddabilityString =
                         "Embeds in a homology 3-sphere as a ";
-                    if (getBMH(1).getRank() == 2*getBMH(0).getRank())
+                    if (getBdryHomology(1).getRank() ==
+                            2*getBdryHomology(0).getRank())
                         {
-                        if (getBMH(0).getRank()==1)
+                        if (getBdryHomology(0).getRank()==1)
                             embeddabilityString += "knot complement.";
                         else
                             embeddabilityString += "link complement.";
@@ -1738,9 +1739,10 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     {
                     embeddabilityString =
                         "Embeds in a rational homology 3-sphere as a ";
-                    if (getBMH(1).getRank() == 2*getBMH(0).getRank() )
+                    if (getBdryHomology(1).getRank() ==
+                            2*getBdryHomology(0).getRank() )
                         {
-                        if (getBMH(0).getRank()==1)
+                        if (getBdryHomology(0).getRank()==1)
                             embeddabilityString += "knot complement.";
                         else
                             embeddabilityString += "link complement.";
@@ -1795,7 +1797,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
        orTri.makeDoubleCover();
        NHomologicalData covHomol(orTri);
         // break up into two cases, boundary and no boundary...
-        if (covHomol.getBMH(0).isTrivial())
+        if (covHomol.getBdryHomology(0).isTrivial())
          { // no boundary
           if (covHomol.formIsHyperbolic())
             {

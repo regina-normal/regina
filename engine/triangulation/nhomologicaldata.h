@@ -55,7 +55,7 @@ class NTriangulation;
 
 /**
  * Data type that deals with all the detailed homological information in a
- * manifold, including:
+ * manifold.  This information includes:
  *
  * - the manifold's homology;
  * - the boundary's homology;
@@ -396,15 +396,15 @@ public:
      * This routine gives access to the manifold's homology computed
      * with the regular CW-decomposition.
      *
-     * This is typically slower than getDMH(), since getDMH() uses the
-     * dual CW-decomposition which typically has an order of magnitude
+     * This routine is typically slower than getDualHomology(), which uses
+     * the dual CW-decomposition with typically has an order of magnitude
      * fewer cells.
      *
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the standard
      * CW-decomposition.
      */
-    const NMarkedAbelianGroup& getMH(unsigned q);
+    const NMarkedAbelianGroup& getHomology(unsigned q);
     /**
      * This routine gives access to the homology of the boundary
      * of the manifold, computed with the regular CW-decomposition.
@@ -413,7 +413,7 @@ public:
      * @return the q-th boundary homology group, in standard cellular
      * homology coordinates
      */
-    const NMarkedAbelianGroup& getBMH(unsigned q);
+    const NMarkedAbelianGroup& getBdryHomology(unsigned q);
 
     /**
      * This routine gives access to the homomorphism from the
@@ -432,16 +432,16 @@ public:
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the dual CW-decomposition.
      */
-    const NMarkedAbelianGroup& getDMH(unsigned q);
+    const NMarkedAbelianGroup& getDualHomology(unsigned q);
 
     /**
-     * This routine gives access to the isomorphism from getDMH(1) to
-     * getMH(1) given by a cellular approximation to the identity map
+     * This routine gives access to the isomorphism from getDualHomology(1) to
+     * getHomology(1) given by a cellular approximation to the identity map
      * on the manifold.
      *
-     * @return The isomorphism from getDMH(1) to getMH(1) computed via
-     * a cellular approximation of the identity map from the first 1-skeleton
-     * to the 2nd.
+     * @return The isomorphism from getDualHomology(1) to getHomology(1)
+     * computed via a cellular approximation of the identity map from
+     * the first 1-skeleton to the second.
      */
     const NHomMarkedAbelianGroup& getH1cellap();
 
