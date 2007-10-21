@@ -770,14 +770,19 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
 
         /**
          * Returns the Euler characteristic of this triangulation.
+         * This will be evaluated strictly as \a V-E+F-T.
          *
-         * This will be evaluated strictly as
-         * <i>V</i>-<i>E</i>+<i>F</i>-<i>T</i>.  Thus if the manifold
-         * contains cusps, the Euler characteristic will almost
-         * certainly not be the same as the corresponding 3-manifold
-         * with the cusps truncated.
+         * Note that this routine handles cusps in a non-standard way.
+         * Since it computes the Euler characteristic of the
+         * triangulation (and not the underlying manifold), this routine
+         * will treat each cusp as a single vertex, and \e not as
+         * a surface boundary component.
          *
-         * @return the Euler characteristic.
+         * For a routine that handles cusps properly (i.e., treats them
+         * as surface boundary components when computing the Euler
+         * characteristic), see NHomologicalData::getEulerChar().
+         *
+         * @return the Euler characteristic of this triangulation.
          */
         long getEulerCharacteristic() const;
 

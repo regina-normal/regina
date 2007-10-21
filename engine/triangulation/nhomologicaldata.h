@@ -400,6 +400,10 @@ public:
      * getDualHomology() uses the dual CW-decomposition which typically
      * has an order of magnitude fewer cells.
      *
+     * Note that the groups returned by getHomology() and getDualHomology()
+     * are isomorphic, though they are generally described by different
+     * presentations.
+     *
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the standard
      * CW-decomposition.
@@ -432,15 +436,18 @@ public:
      * This routine is typically faster than getHomology() since the
      * dual CW-decomposition generally has far fewer cells.
      *
+     * Note that the groups returned by getHomology() and getDualHomology()
+     * are isomorphic, though they are generally described by different
+     * presentations.
+     *
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the dual CW-decomposition.
      */
     const NMarkedAbelianGroup& getDualHomology(unsigned q);
 
     /**
-     * This routine gives access to the isomorphism from getDualHomology(1) to
-     * getHomology(1) given by a cellular approximation to the identity map
-     * on the manifold.
+     * Returns the isomorphism from getDualHomology(1) to getHomology(1)
+     * given by a cellular approximation to the identity map on the manifold.
      *
      * @return The isomorphism from getDualHomology(1) to getHomology(1)
      * computed via a cellular approximation of the identity map from
@@ -449,7 +456,7 @@ public:
     const NHomMarkedAbelianGroup& getH1CellAp();
 
     /**
-     * A list of the number of cells of the given dimension
+     * Returns the number of cells of the given dimension
      * in the standard genuine CW-decomposition of the manifold.
      *
      * In the case that the triangulation is a proper
@@ -457,8 +464,8 @@ public:
      * simply returns the same information as in the NTriangulation
      * vertex, edge, face and tetrahedron lists.
      *
-     * In the case that this is an ideal triangulation, this algorithm is
-     * returning the details of the corresponding compact manifold with
+     * In the case that this is an ideal triangulation, this algorithm
+     * returns the details of the corresponding compact manifold with
      * boundary a union of closed surfaces.
      *
      * @param the dimension of the cells in question; this must be 0, 1, 2 or 3.
@@ -467,7 +474,7 @@ public:
      */
     unsigned long getNumStandardCells(unsigned dimension);
     /**
-     * A list of the number of cells of the given dimension
+     * Returns the number of cells of the given dimension
      * in the dual CW-decomposition of the manifold. This is typically
      * much smaller than getNumStandardCells().
      *
@@ -477,9 +484,9 @@ public:
      */
     unsigned long getNumDualCells(unsigned dimension);
     /**
-     * A list of the number of cells of the given dimension in the
+     * Returns the number of cells of the given dimension in the
      * standard CW-decomposition of the boundary of the manifold.
-     * This is the subcomplex of the complex used in getNumStandardCells().
+     * This is a subcomplex of the complex used in getNumStandardCells().
      *
      * @param the dimension of the cells in question; this must be 0, 1 or 2.
      * @return the number of cells of the given dimension in the standard
@@ -488,16 +495,20 @@ public:
     unsigned long getNumBdryCells(unsigned dimension);
     /**
      * The proper Euler characteristic of the manifold, computed from
-     * getNumDualCells. This is the genuine Euler characteristic as defined
-     * in any algebraic topology textbooks. It differs from
-     * regina::NTriangulation::getEulerCharacteristic(), which handles
-     * ideal triangulations in a non-standard way.
+     * the dual CW-decomposition.
      *
-     * @return The Euler characteristic of the corresponding compact
-     * triangulated 3-manifold ie: ideal vertices are considered surface
-     * boundary components.
+     * This routine calculates the Euler characteristic of the
+     * corresponding compact triangulated 3-manifold, with each ideal
+     * vertex treated as a surface boundary component.
+     *
+     * This differs from NTriangulation::getEulerCharacteristic(), which
+     * handles ideal triangulations in a non-standard way (treating each
+     * ideal vertex as just a single vertex).
+     *
+     * @return the Euler characteristic of the corresponding compact
+     * triangulated 3-manifold.
      */
-    long int getEulerChar();
+    long getEulerChar();
 
     /**
      * Returns the torsion subgroup rank vector. This is the first of
