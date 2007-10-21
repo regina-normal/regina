@@ -40,6 +40,33 @@ void addNHomologicalData() {
         .def(init<const NHomologicalData&>())
         .def("getHomology", &NHomologicalData::getHomology,
             return_internal_reference<>())
+        .def("getBdryHomology", &NHomologicalData::getBdryHomology,
+            return_internal_reference<>())
+        .def("getBdryHomologyMap", &NHomologicalData::getBdryHomologyMap,
+            return_internal_reference<>())
+        .def("getDualHomology", &NHomologicalData::getDualHomology,
+            return_internal_reference<>())
+        .def("getH1CellAp", &NHomologicalData::getH1CellAp,
+            return_internal_reference<>())
+        .def("getNumStandardCells", &NHomologicalData::getNumStandardCells)
+        .def("getNumDualCells", &NHomologicalData::getNumDualCells)
+        .def("getNumBdryCells", &NHomologicalData::getNumBdryCells)
+        .def("getEulerChar", &NHomologicalData::getEulerChar)
+        .def("getTorsionRankVectorString",
+            &NHomologicalData::getTorsionRankVectorString,
+            return_value_policy<copy_const_reference>())
+        .def("getTorsionSigmaVectorString",
+            &NHomologicalData::getTorsionSigmaVectorString,
+            return_value_policy<copy_const_reference>())
+        .def("getTorsionLegendreSymbolVectorString",
+            &NHomologicalData::getTorsionLegendreSymbolVectorString,
+            return_value_policy<copy_const_reference>())
+        .def("formIsHyperbolic", &NHomologicalData::formIsHyperbolic)
+        .def("formIsSplit", &NHomologicalData::formIsSplit)
+        .def("formSatKK", &NHomologicalData::formSatKK)
+        .def("getEmbeddabilityComment",
+            &NHomologicalData::getEmbeddabilityComment,
+            return_value_policy<copy_const_reference>())
     ;
 }
 

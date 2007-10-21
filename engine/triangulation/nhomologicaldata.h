@@ -108,9 +108,6 @@ class NTriangulation;
  * - \b 3-cells: the non-boundary, non-ideal vertices.begin() through
  *               vertices.end().
  *
- * \ifacespython Python bindings are not yet available for this class.
- * They should be in place for the following release of Regina.
- *
  * \testpart
  *
  * @author Ryan Budney
@@ -534,6 +531,9 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \ifacespython Not available, though the string routine
+     * getTorsionRankVectorString() can still be used.
+     *
      * @return the torsion subgroup rank vector.
      */
     const std::vector< std::pair< NLargeInteger,
@@ -557,6 +557,9 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \ifacespython Not available, though the string routine
+     * getTorsionSigmaVectorString() can still be used.
+     *
      * @return the Kawauchi-Kojima sigma-vector.
      */
     const std::vector<NLargeInteger>& getTorsionSigmaVector();
@@ -578,6 +581,9 @@ public:
      * Math. Ann. 253 (1980), 29--42.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \ifacespython Not available, though the string routine
+     * getTorsionLegendreSymbolVectorString() can still be used.
      *
      * @return the Legendre symbol vector associated to the torsion
      * linking form.
