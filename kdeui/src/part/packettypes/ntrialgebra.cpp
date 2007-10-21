@@ -649,15 +649,15 @@ void NTriCellularInfoUI::refresh() {
         EulerChar->setText(QString::number(minfo.getEulerChar()));
 
         H0H1H2H3->setText(i18n("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-            arg(minfo.getMH(0).toString()).
-            arg(minfo.getMH(1).toString()).
-            arg(minfo.getMH(2).toString()).
-            arg(minfo.getMH(3).toString()));
+            arg(minfo.getHomology(0).toString()).
+            arg(minfo.getHomology(1).toString()).
+            arg(minfo.getHomology(2).toString()).
+            arg(minfo.getHomology(3).toString()));
 
         HBdry->setText(i18n("H0 = %1,  H1 = %2,  H2 = %3").
-            arg(minfo.getBMH(0).toString()).
-            arg(minfo.getBMH(1).toString()).
-            arg(minfo.getBMH(2).toString()));
+            arg(minfo.getBdryHomology(0).toString()).
+            arg(minfo.getBdryHomology(1).toString()).
+            arg(minfo.getBdryHomology(2).toString()));
 
         BdryMap->setText(minfo.getBMmapH(1).toString());
 
