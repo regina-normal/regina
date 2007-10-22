@@ -829,7 +829,10 @@ void NTriCellularInfoUI::editingElsewhere() {
     H0H1H2H3->setText(msg);
     HBdry->setText(msg);
     BdryMap->setText(msg);
-
+    TorForRank->setText(msg);
+    TorForSigma->setText(msg);
+    TorForLegendre->setText(msg);
+    EmbeddingComments->setText(msg);
 }
 
 #include "ntrialgebra.moc"
