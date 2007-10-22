@@ -57,6 +57,8 @@ namespace regina {
  * This routine can be useful when implementing copy constructors for
  * classes that only initialise internal data members on demand.
  *
+ * \ifacespython Not present.
+ *
  * @param cloneMe a pointer to the object to clone; this may be null.
  * @return a newly allocated copy of the given object, or the null
  * pointer if \a cloneMe is null.
@@ -79,6 +81,8 @@ inline T* clonePtr(T* cloneMe) {
  *
  * This routine can be useful when implementing copy constructors for
  * classes that only initialise internal data members on demand.
+ *
+ * \ifacespython Not present.
  *
  * @param cloneMe a pointer to the object to clone; this may be null.
  * @return a newly allocated copy of the given object, or the null
