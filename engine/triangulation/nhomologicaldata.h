@@ -474,7 +474,8 @@ public:
      * returns the details of the corresponding compact manifold with
      * boundary a union of closed surfaces.
      *
-     * @param the dimension of the cells in question; this must be 0, 1, 2 or 3.
+     * @param dimension the dimension of the cells in question; this must
+     * be 0, 1, 2 or 3.
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the closed manifold.
      */
@@ -484,7 +485,8 @@ public:
      * in the dual CW-decomposition of the manifold. This is typically
      * much smaller than getNumStandardCells().
      *
-     * @param the dimension of the cells in question; this must be 0, 1, 2 or 3.
+     * @param dimension the dimension of the cells in question; this must
+     * be 0, 1, 2 or 3.
      * @return the number of cells of the given dimension in the dual
      * CW-decomposition to the triangulation.
      */
@@ -494,7 +496,8 @@ public:
      * standard CW-decomposition of the boundary of the manifold.
      * This is a subcomplex of the complex used in getNumStandardCells().
      *
-     * @param the dimension of the cells in question; this must be 0, 1 or 2.
+     * @param dimension the dimension of the cells in question; this must
+     * be 0, 1 or 2.
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the boundary.
      */
