@@ -507,9 +507,14 @@ public:
      * corresponding compact triangulated 3-manifold, with each ideal
      * vertex treated as a surface boundary component.
      *
-     * This differs from NTriangulation::getEulerCharacteristic(), which
-     * handles ideal triangulations in a non-standard way (treating each
-     * ideal vertex as just a single vertex).
+     * This routine returns the same value as
+     * NTriangulation::getEulerCharManifold(), though it computes it
+     * in a different way.
+     *
+     * On the other hand, this routine differs from
+     * NTriangulation::getEulerCharTri(), which handles ideal triangulations
+     * in a non-standard way (treating each ideal vertex as just a single
+     * vertex).
      *
      * @return the Euler characteristic of the corresponding compact
      * triangulated 3-manifold.
