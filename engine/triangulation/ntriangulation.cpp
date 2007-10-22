@@ -457,6 +457,33 @@ NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
     return triang;
 }
 
+long NTriangulation::getEulerCharManifold() const {
+    // Begin with V - E + F - T.
+    // This call to getEulerCharTri() also ensures that the skeleton has
+    // been calculated.
+    long ans = getEulerCharTri();
+
+    // Truncate any ideal vertices.
+    for (BoundaryComponentIterator it = boundaryComponents.begin();
+            it != boundaryComponents.end(); ++it)
+        if ((*it)->isIdeal())
+            ans += (*it)->getEulerCharacteristic() - 1;
+
+    // If we have an invalid triangulation, we need to locate non-standard
+    // boundary vertices and invalid edges, and truncate those unwanted bits
+    // also.
+    if (! valid) {
+        for (VertexIterator it = vertices.begin(); it != vertices.end(); ++it)
+            if ((*it)->getLink() == NVertex::NON_STANDARD_BDRY)
+                ans += (*it)->getLinkEulerCharacteristic() - 1;
+        for (EdgeIterator it = edges.begin(); it != edges.end(); ++it)
+            if (! (*it)->isValid())
+                ++ans;
+    }
+
+    return ans;
+}
+
 void NTriangulation::deleteTetrahedra() {
     for_each(tetrahedra.begin(), tetrahedra.end(), FuncDelete<NTetrahedron>());
     tetrahedra.clear();

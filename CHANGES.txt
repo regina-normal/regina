@@ -100,10 +100,12 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
             - New routine dehydrate() for extracting Callahan-Hildebrand-Weeks
               dehydration strings.
             - Optimised the skeletal calculations, which now run *much* faster.
-            - Renamed getEulerCharacteristic() to getEulerCharTri() to make
-              it clearer that, for ideal triangulations, this does not match
+            - Renamed getEulerCharacteristic() to getEulerCharTri(), since for
+              ideal triangulations this differs from the Euler characteristic
+              of the corresponding compact manifold.  The old name is kept as
+              an alias but is now deprecated.
+            - Added a new routine getEulerCharManifold(), which *does* calculate
               the Euler characteristic of the corresponding compact manifold.
-              The old name is kept as an alias but is now deprecated.
             - Fixed a crash in splitIntoComponents() that occurred when
               the triangulation skeleton had not yet been calculated.
         Class NVertexEnumerator:
@@ -150,7 +152,7 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
         - Added tests for the orientable double cover of a triangulation.
         - Added tests for the new NPrimes class.
         - Added division algorithm tests for NLargeInteger.
-        - Added tests for the new HomologicalData class.
+        - Added tests for the new NHomologicalData class.
         - Added tests for triangulation dehydrations and rehydrations.
         - Initial work on tests for the NRational class.
     BUILD ENVIRONMENT:

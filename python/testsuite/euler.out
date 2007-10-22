@@ -1,0 +1,15 @@
+Euler characteristics for triangulation vs compact manifold:
+0 0 --- Empty triangulation
+0 0 --- L(8,3)
+0 0 --- RP2 x S1
+0 0 --- Solid Klein bottle
+0 0 --- LST(3,4,7)
+1 1 --- Solid ball
+1 0 --- Figure eight knot complement
+2 0 --- Whitehead link complement
+1 0 --- Gieseking manifold
+2 -1 --- Cusped genus two torus
+-1 1 --- Invalid edge
+1 1 --- Two projective plane cusps
+1 0 --- Pinched solid torus
+1 0 --- Pinched solid Klein bottle

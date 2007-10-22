@@ -780,7 +780,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * For a routine that handles cusps properly (i.e., treats them
          * as surface boundary components when computing the Euler
-         * characteristic), see NHomologicalData::getEulerChar().
+         * characteristic), see getEulerCharManifold() instead.
          *
          * This routine was previously called getEulerCharacteristic() in
          * Regina 4.3.1 and earlier.  It was renamed in Regina 4.4 to
@@ -789,6 +789,30 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return the Euler characteristic of this triangulation.
          */
         long getEulerCharTri() const;
+
+        /**
+         * Returns the Euler characteristic of the corresponding compact
+         * 3-manifold.
+         *
+         * Instead of simply calculating \a V-E+F-T, this routine also:
+         *
+         * - treats ideal vertices as surface boundary components
+         *   (i.e., effectively truncates them);
+         * - truncates invalid boundary vertices (i.e., boundary vertices
+         *   whose links are not discs);
+         * - truncates the projective plane cusps at the midpoints of invalid
+         *   edges (edges identified with themselves in reverse).
+         *
+         * For ideal triangulations, this routine therefore computes
+         * the proper Euler characteristic of the manifold (unlike
+         * getEulerCharTri(), which does not).
+         *
+         * For triangulations whose vertex links are all spheres or discs,
+         * this routine and getEulerCharTri() give identical results.
+         *
+         * @return the Euler characteristic of this triangulation.
+         */
+        long getEulerCharManifold() const;
 
         /**
          * A deprecated alias for getEulerCharTri().

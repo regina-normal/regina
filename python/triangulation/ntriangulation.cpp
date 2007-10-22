@@ -195,6 +195,7 @@ void addNTriangulation() {
         .def("hasNegativeIdealBoundaryComponents",
             &NTriangulation::hasNegativeIdealBoundaryComponents)
         .def("getEulerCharTri", &NTriangulation::getEulerCharTri)
+        .def("getEulerCharManifold", &NTriangulation::getEulerCharManifold)
         .def("getEulerCharacteristic", &NTriangulation::getEulerCharacteristic)
         .def("isValid", &NTriangulation::isValid)
         .def("isIdeal", &NTriangulation::isIdeal)

@@ -1,0 +1,90 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests different Euler characteristic calculations.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+def printEuler(t, name):
+	print t.getEulerCharTri(), t.getEulerCharManifold(), \
+		'---', name
+
+print 'Euler characteristics for triangulation vs compact manifold:'
+
+# Empty:
+printEuler(regina.NTriangulation(), "Empty triangulation")
+
+# Closed:
+printEuler(regina.NExampleTriangulation.lens8_3(), "L(8,3)")
+printEuler(regina.NExampleTriangulation.rp2xs1(), "RP2 x S1")
+
+# Bounded:
+printEuler(regina.NExampleTriangulation.solidKleinBottle(),
+	"Solid Klein bottle")
+printEuler(regina.NExampleTriangulation.lst3_4_7(), "LST(3,4,7)")
+
+tri = regina.NTriangulation()
+tri.addTetrahedron(regina.NTetrahedron())
+printEuler(tri, "Solid ball")
+
+# Ideal:
+printEuler(regina.NExampleTriangulation.figureEightKnotComplement(),
+	"Figure eight knot complement")
+printEuler(regina.NExampleTriangulation.whiteheadLinkComplement(),
+	"Whitehead link complement")
+printEuler(regina.NExampleTriangulation.gieseking(),
+	"Gieseking manifold")
+printEuler(regina.NExampleTriangulation.cuspedGenusTwoTorus(),
+	"Cusped genus two torus")
+
+# Edge joined to itself:
+tri = regina.NTriangulation()
+t = regina.NTetrahedron()
+t.joinTo(0, t, regina.NPerm(1,0,3,2))
+t.joinTo(2, t, regina.NPerm(1,0,3,2))
+tri.addTetrahedron(t)
+printEuler(tri, "Invalid edge")
+
+# Subdivide to obtain a valid triangulation:
+tri.barycentricSubdivision()
+printEuler(tri, "Two projective plane cusps")
+
+# Invalid boundary vertex links:
+tri = regina.NTriangulation()
+t = regina.NTetrahedron()
+s = regina.NTetrahedron()
+t.joinTo(3, s, regina.NPerm(0,1,2,3))
+t.joinTo(2, s, regina.NPerm(0,3,1,2))
+tri.addTetrahedron(t)
+tri.addTetrahedron(s)
+printEuler(tri, "Pinched solid torus")
+
+tri = regina.NTriangulation()
+t = regina.NTetrahedron()
+s = regina.NTetrahedron()
+t.joinTo(3, s, regina.NPerm(0,1,2,3))
+t.joinTo(2, s, regina.NPerm(0,2,1,3))
+tri.addTetrahedron(t)
+tri.addTetrahedron(s)
+printEuler(tri, "Pinched solid Klein bottle")
+
