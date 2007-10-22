@@ -62,6 +62,8 @@ namespace regina {
  *
  * Rationals will always be stored in lowest terms with non-negative
  * denominator.
+ *
+ * \testpart
  */
 class NRational {
     public:
