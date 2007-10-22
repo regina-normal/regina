@@ -65,12 +65,12 @@
     </para>
    </sect3>
 
-   <sect3 id="tri-sfs3">
+   <sect3 id="tri-sfs">
     <title>&SFSLong;</title>
 
     <para>
-     This will create an orientable &sfslong; over the 2-sphere with at
-     most three exceptional fibres.  &regina; will choose the simplest
+     This will create an orientable &sfslong; over the 2-sphere with any
+     number of exceptional fibres.  &regina; will choose the simplest
      construction that it knows based upon the given &sfslong; parameters.
      Examples of constructions that are used include
      <link linkend="tri-new-lens">layered lens spaces</link>,
@@ -79,23 +79,23 @@
      all of which are described elsewhere in this section.
     </para>
     <para>
-     The parameters for the &sfslong; must be given as three pairs of
-     integers (&a1;,&b1;) (&a2;,&b2;) (&a3;,&b3;) representing the three
-     exceptional fibres.  The two integers in each pair must be
-     relatively prime, and none of &a1;, &a2; or &a3; may be zero.
+     The parameters for the &sfslong; must be given as a sequence of pairs of
+     integers (&a1;,&b1;) (&a2;,&b2;) ... (&an;,&bn;); an example might
+     be (2,-1)&nbsp;(3,4)&nbsp;(5,-4), which represents the &poincare;
+     homology sphere.  Each pair (&ai;,&bi;) represents
+     a single exceptional fibre.  The two integers in each pair must be
+     relatively prime, and none of &a1;, &a2;, ..., &an; may be zero.
     </para>
     <para>
-     Each pair of parameters
-     (<replaceable>a</replaceable>,<replaceable>b</replaceable>)
+     Each pair of parameters (&ai;,&bi;)
      does not need to be normalised, i.e., the parameters may be positive or
-     negative and <replaceable>b</replaceable> may lie outside the range
-     [0,<replaceable>a</replaceable>).  There is no separate twisting
+     negative and &bi; may lie outside the range
+     [0,&ai;).  There is no separate twisting
      parameter; each additional twist can be incorporated into the existing
      parameters by replacing some pair
-     (<replaceable>a</replaceable>,<replaceable>b</replaceable>) with the pair
-     (<replaceable>a</replaceable>,<replaceable>a</replaceable>+<replaceable>b</replaceable>).
+     (&ai;,&bi;) with the pair (&ai;,&ai;+&bi;).
      Including pairs of the form (1,<replaceable>k</replaceable>) and even
-     (1,0) is acceptable (in which case a lens space will result).
+     (1,0) is acceptable (in which case a lens space may result).
     </para>
    </sect3>
 

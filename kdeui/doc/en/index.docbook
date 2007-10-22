@@ -37,10 +37,14 @@
   <!ENTITY a1 "<replaceable>a<subscript>1</subscript></replaceable>">
   <!ENTITY a2 "<replaceable>a<subscript>2</subscript></replaceable>">
   <!ENTITY a3 "<replaceable>a<subscript>3</subscript></replaceable>">
+  <!ENTITY ai "<replaceable>a<subscript><replaceable>i</replaceable></subscript></replaceable>">
+  <!ENTITY an "<replaceable>a<subscript><replaceable>n</replaceable></subscript></replaceable>">
   <!ENTITY api "<acronym>API</acronym>">
   <!ENTITY b1 "<replaceable>b<subscript>1</subscript></replaceable>">
   <!ENTITY b2 "<replaceable>b<subscript>2</subscript></replaceable>">
   <!ENTITY b3 "<replaceable>b<subscript>3</subscript></replaceable>">
+  <!ENTITY bi "<replaceable>b<subscript><replaceable>i</replaceable></subscript></replaceable>">
+  <!ENTITY bn "<replaceable>b<subscript><replaceable>n</replaceable></subscript></replaceable>">
   <!ENTITY bibtex "<application>BibTeX</application>">
   <!ENTITY boost-python "<application>boost.python</application>">
   <!ENTITY casson "<application>Casson</application>">
@@ -65,6 +69,7 @@
   <!ENTITY orbcasson "&orb; / &casson;">
   <!ENTITY orburl "<ulink url='http://www.ms.unimelb.edu.au/~snap/orb.html'>&orb;</ulink>">
   <!ENTITY pi "<literal>Pi</literal>">
+  <!ENTITY poincare "Poincar&eacute;">
   <!ENTITY ppirr
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">
   <!ENTITY python "<application>Python</application>">
