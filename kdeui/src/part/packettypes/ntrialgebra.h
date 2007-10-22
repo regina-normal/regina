@@ -210,8 +210,10 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
         void calculateInvariant();
 };
 
-/** RBMOD
+/**
  * A page for viewing detailed cellular information about the manifold.
+ *
+ * \author Ryan Budney
  */
 class NTriCellularInfoUI: public PacketViewerTab {
     private:
