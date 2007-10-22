@@ -661,20 +661,44 @@ void NTriCellularInfoUI::refresh() {
 
         BdryMap->setText(minfo.getBdryHomologyMap(1).toString());
 
-//        minfo.computeTorsionLinkingForm();
+        if (! tri->isConnected()) {
+            QString msg(i18n("Triangulation is disconnected."));
 
-        // 8 principle cases orientable y/n, boundary y/n, torsion exists y/n
-        TorForOrders->setText(minfo.getTorsionRankVectorString());
-        TorForSigma->setText(minfo.getTorsionSigmaVectorString());
-        TorForLegendre->setText(minfo.getTorsionLegendreSymbolVectorString());
-        EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
-            QStyleSheet::escape(minfo.getEmbeddabilityComment())));
+            TorForOrders->setText(msg);
+            TorForSigma->setText(msg);
+            TorForLegendre->setText(msg);
+            EmbeddingComments->setText(msg);
+        } else {
+            // 8 principle cases:
+            // orientable y/n, boundary y/n, torsion exists y/n
+            if (tri->isOrientable()) {
+                TorForOrders->setText(minfo.getTorsionRankVectorString());
+                TorForSigma->setText(minfo.getTorsionSigmaVectorString());
+                TorForLegendre->setText(
+                    minfo.getTorsionLegendreSymbolVectorString());
+            } else {
+                // The torsion linking form routines insist on orientability,
+                // so we should avoid calling them.
+                QString msg(i18n("Manifold is non-orientable."));
+
+                TorForOrders->setText(msg);
+                TorForSigma->setText(msg);
+                TorForLegendre->setText(msg);
+            }
+
+            // The embeddability comment is good for both orientable and
+            // non-orientable triangulations.
+            // Encase it in <qt>..</qt> so it can wrap over multiple lines.
+            EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
+                QStyleSheet::escape(minfo.getEmbeddabilityComment())));
+        }
     } else {
         QString msg(i18n("Invalid Triangulation."));
         Cells->setText(msg);
         DualCells->setText(msg);
         EulerChar->setText(msg);
         H0H1H2H3->setText(msg);
+        HBdry->setText(msg);
         BdryMap->setText(msg);
         TorForOrders->setText(msg);
         TorForSigma->setText(msg);
