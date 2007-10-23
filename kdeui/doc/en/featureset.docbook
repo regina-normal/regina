@@ -84,6 +84,11 @@
       <xref linkend="bib-turaevviro"/>;
      </para></listitem>
      <listitem><para>
+      The Kawauchi-Kojima invariants of the torsion linking form
+      <xref linkend="bib-kktorsionlinkingform"/>, and comments on
+      where the triangulation might be embeddable;
+     </para></listitem>
+     <listitem><para>
       3-sphere recognition, as well as a complete connected sum
       decomposition for closed orientable triangulations;
      </para></listitem>
