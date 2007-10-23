@@ -165,6 +165,15 @@
       otherwise you will need to provide a full path to the executable
       (such as <filename>/usr/local/bin/neato</filename>).
      </para>
+     <para><tip><para>
+      Although &regina; was designed for the newer &graphviz;
+      versions&nbsp;2.x, it can also work with older &graphviz;&nbsp;1.x
+      installations.  If you are using &graphviz;&nbsp;1.x then
+      you will need to set your &graphviz; executable to <command>dot</command>,
+      since older versions of <command>neato</command> cannot display
+      multiple edges.  &regina; will check your version of &graphviz;
+      and warn you if you seem to be using the wrong executable.
+     </para></tip></para>
     </glossdef>
    </glossentry>
   </glosslist>
