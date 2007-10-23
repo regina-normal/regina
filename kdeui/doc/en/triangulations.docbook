@@ -212,6 +212,11 @@
      Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
      in which the dehydration format is explicitly described.
     </para>
+    <para>
+     The dehydration string for an existing triangulation can be viewed
+     through the <link linkend="tri-composition-composition">triangulation
+     composition</link> tab.
+    </para>
    </sect3>
 
    <sect3 id="tri-new-splitting">
@@ -858,7 +863,7 @@
    </sect3>
 
    <sect3 id="tri-composition-composition">
-    <title>Triangulation Composition</title>
+    <title>Triangulation Composition and Dehydration</title>
     <para>
      Forming the lower portion of the composition tab is a large region
      in which further details of the triangulation composition and the
@@ -875,14 +880,31 @@
      searches for a variety of standard subcomplexes within the
      triangulation.  If any of these subcomplexes are found, these too
      are reported along with precise details of where they occur.
+     Many of these subcomplexes are described in detail in Burton's PhD thesis
+     <xref linkend="bib-burton-phd"/>
+     and the papers <xref linkend="bib-burton-nor7"/> and
+     <xref linkend="bib-burton-satblocks"/>;
+     these descriptions can be quite laborious and will not be repeated here.
     </para>
     <para>
-     Many of the subcomplexes that are identified are
-     described in detail in Burton's PhD thesis
-     <xref linkend="bib-burton-phd"/> (available from the &regwebsite;),
-     and the papers <xref linkend="bib-burton-nor7"/> and
-     <xref linkend="bib-burton-satblocks"/>.
-     These descriptions can be quite laborious and will not be repeated here.
+     If it exists, the dehydration string for the triangulation is also
+     reported here.  Dehydration strings, described by
+     Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
+     allow complex triangulations to be represented by a simple strings
+     of letters.  &regina; can convert a dehydration string back into a
+     real triangulation, either by
+     <link linkend="tri-new-dehydration">creating a new triangulation</link>
+     or by <link linkend="import-dehydrationlist">importing a list of
+     dehydration strings</link>.
+    </para>
+    <para>
+     Note that dehydration strings only exist for connected
+     triangulations with no boundary faces and at most 25 tetrahedra.
+     Furthermore, they implicitly describe a canonical ordering of the
+     triangulation tetrahedra and vertices &mdash; dehydrating and then
+     recreating a triangulation may not give you the same triangulation
+     back, though it will certainly give you an <emphasis>isomorphic</emphasis>
+     triangulation.
     </para>
     <screenshot>
      <screeninfo>Viewing the triangulation composition</screeninfo>

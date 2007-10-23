@@ -320,6 +320,8 @@
    a list of dehydration strings</link></para></glossdef>
   <glossdef><para><link linkend="tri-new-dehydration">rehydrating from
    a dehydration string</link></para></glossdef>
+  <glossdef><para><link linkend="tri-composition-composition">viewing
+   the dehydration string for a triangulation</link></para></glossdef>
  </glossentry>
 
  <glossentry>
