@@ -557,11 +557,11 @@ public:
     const std::string& getTorsionRankVectorString();
     /**
      * Returns the 2-torsion sigma vector. This is the second of the three
-     * Kawauchi-Kojima invariants.
+     * Kawauchi-Kojima invariants. It is orientation-sensitive.
      *
      * For details, see "Algebraic classification of linking pairings on
      * 3-manifolds", Akio Kawauchi and Sadayoshi Kojima,
-     * Math. Ann. 253 (1980), 29--42.
+     * Math. Ann. 253 (1980), 29--42. This is an orientation-sensitive invariant.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
@@ -573,6 +573,7 @@ public:
     const std::vector<NLargeInteger>& getTorsionSigmaVector();
     /**
      * Same as getTorsionSigmaVector() but returns as a human-readable string.
+     * This is an orientation-sensitive invariant.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
