@@ -233,6 +233,45 @@ did not match C++ signature:
 Triangulation with 0 tetrahedra.
 &gt;&gt;&gt;
 </programlisting>
+  <tip>
+   <para>
+    Although it does not help with the example above (inserting a brand new
+    packet into the tree), the routine
+    <function>NPacket.reparent()</function> makes it easy to avoid ownership
+    problems when moving a packet from one place in a tree to another.
+   </para>
+   <para>
+    The troublesome way of doing this is to call
+    <function>makeOrphan()</function> followed by an insertion routine
+    such as <function>insertChildFirst()</function>, which causes the
+    problems described above.  The following example tries to move the
+    packet <varname>child</varname> from the old parent
+    <varname>p1</varname> to the new parent <varname>p2</varname>:
+   </para>
+<programlisting>
+&gt;&gt;&gt; ...
+&gt;&gt;&gt; child = p1.getFirstTreeChild()
+&gt;&gt;&gt; child.makeOrphan()
+&gt;&gt;&gt; p2.insertChildLast(child)
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+Boost.Python.ArgumentError: ...
+</programlisting>
+   <para>
+    A better way of doing this is to use a single call to
+    <function>reparent()</function>, which works flawlessly:
+   </para>
+<programlisting>
+&gt;&gt;&gt; ...
+&gt;&gt;&gt; child = p1.getFirstTreeChild()
+&gt;&gt;&gt; child.reparent(p2)
+&gt;&gt;&gt; print child
+Triangulation with 2 tetrahedra.
+&gt;&gt;&gt; print p2.getLastTreeChild()
+Triangulation with 2 tetrahedra.
+&gt;&gt;&gt;
+</programlisting>
+  </tip>
   </sect2>
  </sect1>
 
