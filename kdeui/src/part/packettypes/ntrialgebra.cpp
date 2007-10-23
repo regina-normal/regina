@@ -693,7 +693,7 @@ void NTriCellularInfoUI::refresh() {
                 QStyleSheet::escape(minfo.getEmbeddabilityComment())));
         }
     } else {
-        QString msg(i18n("Invalid Triangulation."));
+        QString msg(i18n("Invalid Triangulation"));
         Cells->setText(msg);
         DualCells->setText(msg);
         EulerChar->setText(msg);
@@ -775,8 +775,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 6, 1);
     BdryMap = new QLabel(ui);
     homologyGrid->addWidget(BdryMap, 6, 2);
-    msg = i18n("The boundary is a submanifold of the original "
-                "manifold. This describes the induced map on H1."
+    msg = i18n("<qt>The boundary is a submanifold of the original "
+                "manifold. This describes the induced map on "
+                "H<sub>1</sub>.</qt>"
                 );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(BdryMap, msg);
@@ -785,12 +786,18 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 7, 1);
     TorForOrders = new QLabel(ui);
     homologyGrid->addWidget(TorForOrders, 7, 2);
-    msg = i18n("This is the first of 3 of the Kawauchi-Kojima "
-                "invariants of the torsion linking form on the "
-                "torsion subgroup of H1 of an oriented 3-manifold. "
-                "They are a complete set of invariants. This one is "
-                "the vector which lists the rank of all the subgroups "
-                "of various prime power orders." );
+    msg = i18n("<qt>This is the first of three of the Kawauchi-Kojima "
+               "invariants of the torsion linking form on the "
+               "torsion subgroup of H1 of an oriented 3-manifold.  "
+               "They are a complete set of invariants.  This one is "
+               "the vector which lists the rank of all the subgroups "
+               "of various prime power orders."
+               "<p>For further information, see "
+               "Kawauchi and Kojima's paper "
+               "<i>Algebraic classification of linking pairings "
+               "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
+               "no. 1, 29&ndash;42.</qt>"
+                );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForOrders, msg);
 
@@ -798,11 +805,14 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 8, 1);
     TorForSigma = new QLabel(ui);
     homologyGrid->addWidget(TorForSigma, 8, 2);
-    msg = i18n("If H1 has 2-torsion, this is the Kawauchi-Kojima "
-               "2-torsion sigma-vector. See Kawauchi and Kojima's "
-               "paper `Algebraic classification of linking pairings "
-               "on 3-manifolds' in Math. Ann. 253 (1980), no. 1 29--42. "
-	       "The sigma-vector is an orientation-sensitive invariant."
+    msg = i18n("<qt>If H1 has 2-torsion, this is the Kawauchi-Kojima "
+               "2-torsion sigma-vector.  "
+               "The sigma-vector is an orientation-sensitive invariant."
+               "<p>For further information, see "
+               "Kawauchi and Kojima's paper "
+               "<i>Algebraic classification of linking pairings "
+               "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
+               "no. 1, 29&ndash;42.</qt>"
                 );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForSigma, msg);
@@ -811,10 +821,15 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 9, 1);
     TorForLegendre = new QLabel(ui);
     homologyGrid->addWidget(TorForLegendre, 9, 2);
-    msg = i18n("If H1 has odd torsion, this is the "
+    msg = i18n("<qt>If H<sub>1</sub> has odd torsion, this is the "
                "Legendre symbol vector, the last of the "
                "Kawauchi-Kojima invariants, originally "
                "constructed by Seifert."
+               "<p>For further information, see "
+               "Kawauchi and Kojima's paper "
+               "<i>Algebraic classification of linking pairings "
+               "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
+               "no. 1, 29&ndash;42.</qt>"
                 );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForLegendre, msg);
@@ -823,7 +838,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 10, 1);
     EmbeddingComments = new QLabel(ui);
     homologyGrid->addWidget(EmbeddingComments, 10, 2);
-    msg = i18n("<qt>If the homology allows one to make any deductions "
+    msg = i18n("<qt>If the homology allows us to make any deductions "
                 "about the embeddability of this manifold in "
                 "R<sup>3</sup>, S<sup>3</sup>, S<sup>4</sup> "
                 "or a homology sphere, we mention it here. "
