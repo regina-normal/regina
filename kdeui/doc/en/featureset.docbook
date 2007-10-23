@@ -2,16 +2,6 @@
  <title>What does Regina do?</title>
 
  <para>
-  At the time of submission of the author's PhD thesis (May 2003), &regina;
-  contained approximately 41,000 physical source lines of code (&ie;,
-  lines of code that are neither blank nor comment) and approximately
-  38,000 additional lines of comment within this source code (still
-  excluding this reference manual).<footnote><para>Estimates
-  were obtained using the software metrics tools
-  <ulink url="http://www.dwheeler.com/sloccount/"><application>SLOCCount</application></ulink>
-  by David A.&nbsp;Wheeler and
-  <ulink url="http://cccc.sourceforge.net/"><application>CCCC</application></ulink>
-  by Tim Littlefair.</para></footnote>
   A list of the more noteworthy features of &regina; is presented below.
  </para>
 
@@ -105,7 +95,11 @@
      <listitem><para>
       A visual representation of the face pairing graph
       <xref linkend="bib-burton-facegraphs"/>, with the help
-      of &graphviz;.
+      of &graphviz;;
+     </para></listitem>
+     <listitem><para>
+      Dehydration strings <xref linkend="bib-cuspedcensus"/>,
+      for those triangulations that can support them.
      </para></listitem>
     </itemizedlist>
    </para>
