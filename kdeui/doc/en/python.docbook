@@ -82,13 +82,24 @@
     Wherever &regina; gives you access to &python;, you may assume that the
     <parameter>regina</parameter> module has been imported (thus giving you
     access to everything contained within it).
-    You may also assume that all configured libraries have been loaded.
-    These &python; libraries can be configured through the
-    <link linkend="python-libraries">&python; options</link> page or can be
-    added by hand to the file &regina-libs; (which is described in detail in the
-    <link linkend="man-regina-python"><command>regina-python</command></link>
-    reference).
+    You may also assume that all user libraries have been loaded, as
+    described below.
    </para>
+   <tip>
+    <para>
+     If you have code that you find yourself writing again and again,
+     you can put it in a <firstterm>user library</firstterm>.  User
+     libraries are files containing &python; code (typically function
+     definitions) that is run at the beginning of every &python;
+     session, both within the &gui; and within the text-based
+     <link linkend="man-regina-python"><command>regina-python</command></link>.
+     The list of user libraries can be configured through the
+     <link linkend="python-libraries">&python; options</link> page, or can be
+     maintained by hand-editing the file &regina-libs; as described in the
+     <link linkend="man-regina-python"><command>regina-python</command></link>
+     reference.
+    </para>
+   </tip>
   </sect2>
 
   <sect2 id="python-docs">
