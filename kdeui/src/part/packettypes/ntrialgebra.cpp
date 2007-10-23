@@ -801,7 +801,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     msg = i18n("If H1 has 2-torsion, this is the Kawauchi-Kojima "
                "2-torsion sigma-vector. See Kawauchi and Kojima's "
                "paper `Algebraic classification of linking pairings "
-               "on 3-manifolds' in Math. Ann. 253 (1980), no. 1 29--42."
+               "on 3-manifolds' in Math. Ann. 253 (1980), no. 1 29--42. "
+	       "The sigma-vector is an orientation-sensitive invariant."
                 );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForSigma, msg);
@@ -812,7 +813,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(TorForLegendre, 9, 2);
     msg = i18n("If H1 has odd torsion, this is the "
                "Legendre symbol vector, the last of the "
-               "Kawauchi-Kojima invariants, also originally "
+               "Kawauchi-Kojima invariants, originally "
                "constructed by Seifert."
                 );
     QWhatsThis::add(label, msg);
