@@ -1118,6 +1118,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>user libraries</glossterm>
+  <glosssee>libraries</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="tri-edgetype">valid edges,
    testing for</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
