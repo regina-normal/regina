@@ -51,11 +51,11 @@ namespace regina {
  *
  * There are 10 disc types.  Types 0-3 represent triangles 0-3,
  * types 4-6 represent quads 0-2 and types 7-9 represent
- * octahedra 0-2.
+ * octagons 0-2.
  *
  * Discs of a specific type are assigned numbers from 0 upwards.
  * Triangular discs are numbered outwards from the vertex they surround.
- * Quad discs and octahedral discs are numbered outwards away from vertex 0
+ * Quad discs and octagonal discs are numbered outwards away from vertex 0
  * of the tetrahedron.
  *
  * \warning This class converts the indices of normal discs of a

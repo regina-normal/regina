@@ -93,8 +93,8 @@ unsigned long NDiscSetTet::arcFromDisc(int /* arcFace */, int arcVertex,
     if (discType < 4)
         return discNumber;
 
-    // It's a quad or an octahedron.
-    // Note that there is at most one octahedral or quad type present
+    // It's a quad or an octagon.
+    // Note that there is at most one octagonal or quad type present
     // (since the surface must be embedded), so this must be it.
     if (arcVertex == 0 || arcVertex ==
             vertexSplitPartner[(discType - 1) % 3][0])
@@ -114,8 +114,8 @@ void NDiscSetTet::discFromArc(int arcFace, int arcVertex,
         return;
     }
 
-    // It's a quad or an octahedron.
-    // Note that there is at most one octahedral or quad type present
+    // It's a quad or an octagon.
+    // Note that there is at most one octagonal or quad type present
     // (since the surface must be embedded), so this must be it.
     if (internalNDiscs[vertexSplit[arcVertex][arcFace] + 4] > 0)
         discType = vertexSplit[arcVertex][arcFace] + 4;

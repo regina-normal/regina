@@ -125,7 +125,7 @@ std::ostream& operator << (std::ostream& out, const NPrismSpec& spec);
  * any normal quads).
  *
  * \pre This class should only be used with \e embedded normal surfaces
- * containing no octahedral discs.
+ * containing no octagonal discs.
  *
  * \warning This class doesn't really do much as yet.
  */
@@ -142,7 +142,7 @@ class NPrismSetSurface {
          * by the given normal surface.
          *
          * \pre The given normal surface is embedded and contains no
-         * octahedral discs.
+         * octagonal discs.
          *
          * @param surface the normal surface that defines the prisms in
          * this set.

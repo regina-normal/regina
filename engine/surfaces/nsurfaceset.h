@@ -81,7 +81,7 @@ class NSurfaceSet {
         /**
          * Determines if the flavour of coordinate system being used
          * allows for almost normal surfaces, that is, allows for
-         * octahedral discs.
+         * octagonal discs.
          *
          * @return \c true if and only if almost normal surfaces are
          * allowed.

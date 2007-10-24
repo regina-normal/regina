@@ -59,7 +59,7 @@ class NMatrixInt;
  * triangular discs about vertex 0, 1, 2 and 3, the next
  * three represent the number of quadrilateral discs of type 0,
  * 1 and 2 (see NNormalSurface::getQuadCoord()) and the final three
- * represent the number of octahedral discs of type 0, 1 and 2 (see
+ * represent the number of octagonal discs of type 0, 1 and 2 (see
  * NNormalSurface::getOctCoord()).
  *
  * \ifacespython Not present.

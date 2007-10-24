@@ -217,7 +217,7 @@ bool NNormalSurfaceVector::hasMultipleOctDiscs(NTriangulation* triang) const {
                 return false;
             return true;
         }
-    // There are no octahedral types at all.
+    // There are no octagonal types at all.
     return false;
 }
 

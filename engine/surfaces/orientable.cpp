@@ -137,7 +137,7 @@ void NNormalSurface::calculateOrientable() const {
             for (i = 0; i < 4; i++)
                 arc[i] = quadDiscArcs(use.type - 4, i);
         } else {
-            // Current disc is an octahedron.
+            // Current disc is an octagon.
             nGluingArcs = 8;
             for (i = 0; i < 8; i++)
                 arc[i] = octDiscArcs(use.type - 7, i);

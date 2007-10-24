@@ -145,12 +145,12 @@ extern const NPerm __quadDiscArcs[12];
 
 /**
  * Lists in consecutive order the directed normal arcs that form the
- * boundary of each type of octahedral normal disc.  Each permutation \a p
+ * boundary of each type of octagonal normal disc.  Each permutation \a p
  * represents an arc about vertex <tt>p[0]</tt> parallel to the directed
  * edge from <tt>p[1]</tt> to <tt>p[2]</tt>.
  *
  * Array <tt>octDiscArcs[i]</tt> lists the boundary arcs of the
- * octahedral disc of type <i>i</i>.  See NNormalSurface::getOctCoord()
+ * octagonal disc of type <i>i</i>.  See NNormalSurface::getOctCoord()
  * for further details.
  *
  * Note that permutation <tt>octDiscArcs[i][j]</tt> will be even
@@ -248,10 +248,10 @@ class NNormalSurfaceVector : public NRay {
         /**
          * Determines if the specific underlying coordinate system
          * allows for almost normal surfaces, that is, allows for
-         * octahedral discs.
+         * octagonal discs.
          *
          * Note that this has nothing to do with whether or not this
-         * specific surface contains octahedral discs.
+         * specific surface \e contains octagonal discs.
          *
          * @return \c true if and only if almost normal surfaces are allowed.
          */
@@ -259,13 +259,13 @@ class NNormalSurfaceVector : public NRay {
 
         /**
          * Determines if this normal surface has more than one
-         * octahedral disc.  It may be assumed that at most one
-         * octahedral type exists in this surface.  This routine will
-         * return \c true if an octahedral type does exist and its
+         * octagonal disc.  It may be assumed that at most one
+         * octagonal disc type exists in this surface.  This routine will
+         * return \c true if an octagonal type does exist and its
          * coordinate is greater than one.
          *
          * The default implementation for this routine simply calculates
-         * all the octahedral coordinates and returns as soon as a
+         * all the octagonal coordinates and returns as soon as a
          * positive or negative result can be established.  Subclasses
          * of NNormalSurfaceVector should override this if they can provide a
          * faster implementation.
@@ -274,13 +274,13 @@ class NNormalSurfaceVector : public NRay {
          * routine will never be called and thus does not need to be
          * overwritten.
          *
-         * \pre At most one octahedral type exists in this surface.
+         * \pre At most one octagonal disc type exists in this surface.
          * \pre This normal surface vector is using a
          * flavour of coordinate system that allows for almost normal
          * surfaces.
          *
          * @param triang the triangulation in which this normal surface lives.
-         * @return \c true if and only if there is an octahedral type
+         * @return \c true if and only if there is an octagonal disc type
          * present and its coordinate is greater than one.
          */
         virtual bool hasMultipleOctDiscs(NTriangulation* triang) const;
@@ -424,19 +424,19 @@ class NNormalSurfaceVector : public NRay {
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
             int quadType, NTriangulation* triang) const = 0;
         /**
-         * Returns the number of octahedral discs of the given type
+         * Returns the number of octagonal discs of the given type
          * in this normal surface.
          * See NNormalSurface::getOctCoord() for further details.
          *
          * @param tetIndex the index in the triangulation of the
-         * tetrahedron in which the requested octahedrons reside;
+         * tetrahedron in which the requested octagons reside;
          * this should be between 0 and
          * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
          * @param octType the number of the vertex splitting that this
-         * octahedron type represents; this should be between 0 and 2
+         * octagon type represents; this should be between 0 and 2
          * inclusive.
          * @param triang the triangulation in which this normal surface lives.
-         * @return the number of octahedral discs of the given type.
+         * @return the number of octagonal discs of the given type.
          */
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
             int octType, NTriangulation* triang) const = 0;
@@ -663,22 +663,22 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         NLargeInteger getQuadCoord(unsigned long tetIndex,
             int quadType) const;
         /**
-         * Returns the number of octahedral discs of the given type
+         * Returns the number of octagonal discs of the given type
          * in this normal surface.
-         * An octahedral disc type is identified by specifying a
+         * An octagonal disc type is identified by specifying a
          * tetrahedron and a vertex splitting of that tetrahedron that
-         * describes how the octahedron partitions the tetrahedron
+         * describes how the octagon partitions the tetrahedron
          * vertices.  See \a vertexSplit for more details on vertex
          * splittings.
          *
          * @param tetIndex the index in the triangulation of the
-         * tetrahedron in which the requested octahedrons reside;
+         * tetrahedron in which the requested octagons reside;
          * this should be between 0 and
          * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
          * @param octType the number of the vertex splitting that this
-         * octahedron type represents; this should be between 0 and 2
+         * octagon type represents; this should be between 0 and 2
          * inclusive.
-         * @return the number of octahedral discs of the given type.
+         * @return the number of octagonal discs of the given type.
          */
         NLargeInteger getOctCoord(unsigned long tetIndex,
             int octType) const;
@@ -743,7 +743,7 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
 
         /**
          * The text representation will be in standard triangle-quad-oct
-         * coordinates.  Octahedral coordinates will only be written if
+         * coordinates.  Octagonal coordinates will only be written if
          * the surface is of a potentially almost normal flavour.
          *
          * \ifacespython The paramater \a out does not exist, and is
@@ -980,7 +980,7 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * currently returns an empty triangulation.</b>
          *
          * \pre This normal surface is compact and embedded.
-         * \pre This normal surface contains no octahedral discs.
+         * \pre This normal surface contains no octagonal discs.
          *
          * \todo \feature Implement this routine.
          *
@@ -1024,7 +1024,7 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * (edges whose midpoints are projective plane cusps).
          *
          * \pre This normal surface is compact and embedded.
-         * \pre This normal surface contains no octahedral discs.
+         * \pre This normal surface contains no octagonal discs.
          *
          * @return a pointer to the newly allocated resulting
          * triangulation.
@@ -1056,7 +1056,7 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * to improve with future releases.
          *
          * \pre This normal surface is compact and embedded.
-         * \pre This normal surface contains no octahedral discs.
+         * \pre This normal surface contains no octagonal discs.
          *
          * \todo \feature Implement this routine!  At least
          * for embedded 2-spheres.

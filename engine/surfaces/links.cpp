@@ -130,7 +130,7 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
     unsigned long tet;
     int type;
 
-    // Check that there are no octahedral discs.
+    // Check that there are no octagonal discs.
     if (allowsAlmostNormal())
         for (tet = 0; tet < nTets; tet++)
             for (type = 0; type < 3; type++)

@@ -98,10 +98,10 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
 
     // Note that our surfaces are guaranteed to be in smallest possible
     // integer coordinates.
-    // We are also guaranteed at most one non-zero octahedral coordinate.
+    // We are also guaranteed at most one non-zero octagonal coordinate.
 
     // Note that in this search a 1-sided projective plane is no good,
-    // since when doubled it gives too many octahedral discs.
+    // since when doubled it gives too many octagonal discs.
 
     const NNormalSurface* s;
     unsigned long tet;
@@ -112,17 +112,17 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
 
         // No need to test for connectedness since these are vertex surfaces.
         // No need to test for vertex links since we're about to test
-        // for octahedra.
+        // for octagons.
         if (s->isCompact() && (! s->hasRealBoundary())) {
             if (s->getEulerCharacteristic() == 2) {
-                // Test for the existence of precisely one octahedron.
+                // Test for the existence of precisely one octagon.
                 for (tet = 0; tet < nTets; tet++)
                     for (oct = 0; oct < 3; oct++)
                         if ((octCoord = s->getOctCoord(tet, oct)) > 0) {
                             // We found our one and only non-zero
-                            // octahedral coordinate.
+                            // octagonal coordinate.
                             if (octCoord > 1) {
-                                // Too many octahedra.  Move along.
+                                // Too many octagons.  Move along.
                                 // Bail out of all our loops.
                                 oct = 3;
                                 tet = nTets;
@@ -137,7 +137,7 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
                                 return ans;
                             }
                         }
-                // Either too many octahedra or none at all.
+                // Either too many octagons or none at all.
                 // On to the next surface.
             }
         }

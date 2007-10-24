@@ -45,14 +45,14 @@ NLargeInteger NNormalSurfaceVectorANStandard::getEdgeWeight(
     int start = emb.getVertices()[0];
     int end = emb.getVertices()[1];
 
-    // Add up the triangles, quads and octahedra meeting that edge.
+    // Add up the triangles, quads and octagons meeting that edge.
     // Triangles:
     NLargeInteger ans((*this)[10 * tetIndex + start]);
     ans += (*this)[10 * tetIndex + end];
     // Quads:
     ans += (*this)[10 * tetIndex + 4 + vertexSplitMeeting[start][end][0]];
     ans += (*this)[10 * tetIndex + 4 + vertexSplitMeeting[start][end][1]];
-    // Octahedra:
+    // Octagons:
     ans += (*this)[10 * tetIndex + 7];
     ans += (*this)[10 * tetIndex + 8];
     ans += (*this)[10 * tetIndex + 9];
@@ -75,7 +75,7 @@ NLargeInteger NNormalSurfaceVectorANStandard::getFaceArcs(
     NLargeInteger ans((*this)[10 * tetIndex + vertex]);
     // Quads:
     ans += (*this)[10 * tetIndex + 4 + vertexSplit[vertex][backOfFace]];
-    // Octahedra:
+    // Octagons:
     ans += (*this)[10 * tetIndex + 7 +
         vertexSplitMeeting[vertex][backOfFace][0]];
     ans += (*this)[10 * tetIndex + 7 +
@@ -116,7 +116,7 @@ NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
                     vertexSplit[perm0[i]][perm0[3]]) += 1;
                 ans->entry(row, 10*tet1 + 4 +
                     vertexSplit[perm1[i]][perm1[3]]) -= 1;
-                // Octahedra:
+                // Octagons:
                 ans->entry(row, 10*tet0 + 7 +
                     vertexSplitMeeting[perm0[i]][perm0[3]][0]) += 1;
                 ans->entry(row, 10*tet1 + 7 +
