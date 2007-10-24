@@ -216,7 +216,9 @@
    normal surfaces<footnote><para>Almost normal surfaces are closely related
    to normal surfaces and are used by Rubinstein in his 3-sphere recognition
    algorithm <xref linkend="bib-rubin-3sphere1"/>,
-   <xref linkend="bib-rubin-3sphere2"/>.</para></footnote> of a triangulation,
+   <xref linkend="bib-rubin-3sphere2"/>.  &regina; only considers octagonal
+   almost normal discs, and does not consider annular pieces.</para></footnote>
+   of a triangulation,
    an operation required by most high-level topological algorithms that
    utilise normal surface theory.
   </para>

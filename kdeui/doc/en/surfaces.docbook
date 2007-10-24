@@ -27,10 +27,17 @@
   &regina; will also calculate <firstterm>almost normal
   surfaces</firstterm>, which have the same restrictions as normal
   surfaces except that they must contain precisely one additional
-  octahedral disc.
-  An octahedral disc touches each tetrahedron edge twice, and there are
-  three possible types of octahedral disc.
+  octagonal disc.
+  An octagonal disc touches each tetrahedron edge twice, and there are
+  three possible types of octagonal disc.
  </para>
+ <note><para>
+  More general definitions of almost normal surfaces allow for an annular
+  piece instead of an octagonal disc.  &regina; works with the more
+  restrictive octagon-only definition as described by Thompson
+  <xref linkend="bib-thinposition"/>, since this is much simpler
+  to deal with computationally.
+ </para></note>
  <para>
   Normal surfaces are represented as integer vectors indicating how many
   discs of each type in each tetrahedron are used to make up the surface.
@@ -265,16 +272,16 @@
       <glossdef>
        <para>
         Standard almost normal coordinates are identical to standard
-        normal coordinates except that octahedral discs are also
+        normal coordinates except that octagonal discs are also
         considered.
        </para>
        <para>
-        Octahedral discs are labelled similarly to quadrilateral discs
-        (each octahedral disc also separates some two vertices of the
+        Octagonal discs are labelled similarly to quadrilateral discs
+        (each octagonal disc also separates some two vertices of the
         corresponding tetrahedron from the other two).  To make it clear
         which coordinates are which, each triangle label begins with a
         <literal>T</literal>, each quadrilateral label begins with
-        a <literal>Q</literal> and each octahedral label begins
+        a <literal>Q</literal> and each octagon label begins
         with a <literal>K</literal>.
        </para>
       </glossdef>
@@ -416,25 +423,6 @@
         </glossentry>
        </glosslist>
       </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm>Crush</glossterm>
-      <glossdef>
-       <para>
-        This column signifies whether the program can deduce that the
-        surface can be crushed to a point in the underlying triangulation
-        with no unintended topological side-effects.
-        Unintended side-effects include any topological changes other than
-        the pure topological effects of cutting along this surface and
-        then identifying the new boundary surface(s) to points.
-       </para>
-       <para>
-        Note that this column will only ever contain
-        <literal>Yes</literal> or <literal>Unknown</literal>, according
-        to whether the surface can with certainty be crushed or whether
-        the program cannot deduce the answer on its own.
-       </para>
-      </glossdef>
      </glossentry>
      <glossentry>
       <glossterm>Type</glossterm>

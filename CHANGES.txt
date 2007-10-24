@@ -135,6 +135,8 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
           current Graphviz installation.  For version 1.x, Regina now
           insists on using dot, since the old neato 1.x cannot handle
           multiple edges.
+        - Removed the Crush column from normal surface lists, since it has
+          never contained any information beyond "N/A" or "Unknown".
     PYTHON:
         - The regina-python tool has new options -i/--interactive (run a
           script and leave the interpreter open) and -n/--nolibs (do not

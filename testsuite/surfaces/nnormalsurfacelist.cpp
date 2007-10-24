@@ -407,7 +407,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 false /* vertex link */, 2 /* edge link */,
                 1 /* central */, true /* splitting */);
             countCompactSurfaces(list, "a single tetrahedron",
-                "octahedral discs", 3,
+                "octagonal discs", 3,
                 1 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
                 true /* realBdry */,

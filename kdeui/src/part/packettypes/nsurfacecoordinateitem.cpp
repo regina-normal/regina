@@ -53,7 +53,7 @@ NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
 }
 
 unsigned NSurfaceCoordinateItem::propertyColCount(bool embeddedOnly) {
-    return (embeddedOnly ? 8 : 5);
+    return (embeddedOnly ? 7 : 5);
 }
 
 QString NSurfaceCoordinateItem::propertyColName(int whichCol,
@@ -66,8 +66,7 @@ QString NSurfaceCoordinateItem::propertyColName(int whichCol,
             case 3 : return i18n("Sides");
             case 4 : return i18n("Bdry");
             case 5 : return i18n("Link");
-            case 6 : return i18n("Crush");
-            case 7 : return i18n("Type");
+            case 6 : return i18n("Type");
         }
     } else {
         switch (whichCol) {
@@ -94,8 +93,7 @@ QString NSurfaceCoordinateItem::propertyColDesc(int whichCol,
             case 4: return i18n("Does this surface have boundary?");
             case 5: return i18n("Has this surface been identified as "
                 "the link of a particular subcomplex?");
-            case 6: return i18n("Is it safe to crush this surface to a point?");
-            case 7: return i18n("Other interesting properties");
+            case 6: return i18n("Other interesting properties");
         }
     } else {
         switch (whichCol) {
@@ -180,13 +178,6 @@ QString NSurfaceCoordinateItem::text(int column) const {
                     return QString::null;
             }
             case 6:
-                if (surfaces->allowsAlmostNormal() || ! surface->isCompact())
-                    return i18n("N/A");
-                else if (surface->knownCanCrush())
-                    return i18n("Yes");
-                else
-                    return i18n("Unknown");
-            case 7:
                 {
                     regina::NLargeInteger tot;
                     if (surface->isSplitting())
@@ -316,13 +307,6 @@ NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
                     return Red;
                 else
                     return Green;
-            case 6:
-                if (surfaces->allowsAlmostNormal() || ! surface->isCompact())
-                    return Yellow;
-                else if (surface->knownCanCrush())
-                    return Green;
-                else
-                    return Yellow;
         }
     } else {
         switch (column) {

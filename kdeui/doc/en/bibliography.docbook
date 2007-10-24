@@ -344,6 +344,21 @@
   <date>1997</date>
  </biblioentry>
 
+ <biblioentry id="bib-thinposition">
+  <abbrev>Th</abbrev>
+  <author>
+   <firstname>Abigail</firstname>
+   <surname>Thompson</surname>
+  </author>
+  <title>Thin position and the recognition problem
+   for S<superscript>3</superscript></title>
+  <edition>Math. Res. Lett.</edition>
+  <volumenum>vol. 1</volumenum>
+  <issuenum>no. 5</issuenum>
+  <artpagenums>pp. 613&ndash;630</artpagenums>
+  <date>1994</date>
+ </biblioentry>
+
  <biblioentry id="bib-tillus-spun">
   <abbrev>Ti</abbrev>
   <author>
