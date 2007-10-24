@@ -35,8 +35,8 @@
   More general definitions of almost normal surfaces allow for an annular
   piece instead of an octagonal disc.  &regina; works with the more
   restrictive octagon-only definition as described by Thompson
-  <xref linkend="bib-thinposition"/>, since this is much simpler
-  to deal with computationally.
+  <xref linkend="bib-thinposition"/> (which is much simpler
+  to deal with computationally).
  </para></note>
  <para>
   Normal surfaces are represented as integer vectors indicating how many
