@@ -722,7 +722,7 @@
    <warning><para>
     There is no guarantee that invalid edges (edges
     glued to themselves in reverse) will be dealt with correctly.
-    In particular, the projective plane cusps they produce will be
+    In particular, the projective plane cusps they produce may be
     ignored.
    </para></warning>
 
@@ -817,6 +817,172 @@
      provided.  Turaev-Viro invariants are saved to file with the
      triangulation, so they do not need to be recalculated when the file
      is closed and reopened.
+    </para>
+   </sect3>
+   <sect3 id="tri-algebra-cellular">
+    <title>Cellular Information</title>
+    <para>
+     The <guilabel>Cellular Info</guilabel> tab of the algebra viewer
+     displays information on the standard and dual CW-decompositions,
+     a variety of homology groups and mappings, the
+     Kawauchi-Kojima invariants of the torsion linking form, and
+     comments on where the triangulation might be embeddable.
+     Many thanks are due to Ryan Budney for implementing these features.
+    </para>
+    <para>
+     Like the other algebraic results, all information on the
+     <guilabel>Cellular Information</guilabel> tab
+     refers to the compact manifold that the triangulation represents.
+     In particular, ideal vertices are truncated and considered as
+     real boundary surfaces.
+    </para>
+    <para>
+     Specific results on this tab include:
+     <glosslist>
+      <glossentry>
+       <glossterm>Cells</glossterm>
+       <glossdef>
+        <para>
+         Lists the number of cells of each dimension for a standard
+         CW-decomposition of the manifold.  This is a list of four
+         numbers, counting the 0-cells, 1-cells, 2-cells and 3-cells
+         respectively.
+        </para>
+        <para>
+         For a closed triangulation (no ideal vertices), this is simply
+         the number of vertices, edges, faces and tetrahedra.  For an
+         ideal triangulation this takes into account the truncation of
+         ideal vertices, and is therefore a little more complex.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Dual cells</glossterm>
+       <glossdef><para>
+         Lists the number of cells of each dimension in the
+         dual CW-decomposition.  As before, this is a list of four
+         numbers that count the 0-cells, 1-cells, 2-cells and 3-cells
+         in order.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Euler characteristic</glossterm>
+       <glossdef><para>
+        Gives the Euler characteristic of the manifold, as computed from
+        the CW-decompositions.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Homology groups</glossterm>
+       <glossdef><para>
+        Lists the homology groups of the manifold with coefficients in
+        the integers.  The four groups
+        H<subscript>0</subscript>, H<subscript>1</subscript>,
+        H<subscript>2</subscript> and H<subscript>3</subscript> are listed
+        in order.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Boundary homology groups</glossterm>
+       <glossdef><para>
+        Lists the homology groups of the boundary of the manifold, again
+        with coefficients in the integers.  The three groups
+        H<subscript>0</subscript>, H<subscript>1</subscript> and
+        H<subscript>2</subscript> are listed in order.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>H1(Bdry M &ndash;&gt; M)</glossterm>
+       <glossdef><para>
+        Since the boundary is a submanifold of the original manifold,
+        there is an induced map on the first homology group.  This
+        item on the <guilabel>Cellular Information</guilabel> tab
+        describes some properties of this induced map.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Torsion form rank vector</glossterm>
+       <glossdef>
+        <para>
+         This is the first of the three Kawauchi-Kojima invariants of the
+         torsion linking form on the torsion subgroup of
+         H<subscript>1</subscript>.  These form a complete set of invariants.
+         For details of these invariants, see
+         <xref linkend="bib-kktorsionlinkingform"/>.
+        </para>
+        <para>
+         This is the <firstterm>torsion subgroup rank vector</firstterm>,
+         which lists the ranks of all the subgroups of
+         various prime power orders.
+        </para>
+        <para>
+         Note that the Kawauchi-Kojima invariants are only computed for
+         connected orientable manifolds.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Sigma vector</glossterm>
+       <glossdef>
+        <para>
+         This is the second of the three Kawauchi-Kojima invariants
+         described above <xref linkend="bib-kktorsionlinkingform"/>.
+         This is the <firstterm>2-torsion sigma vector</firstterm>,
+         and is relevant for manifolds in which H<subscript>1</subscript>
+         has 2-torsion.  This invariant is orientation-sensitive.
+        </para>
+        <para>
+         As noted above, the Kawauchi-Kojima invariants are only computed
+         for connected orientable manifolds.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Legendre symbol vector</glossterm>
+       <glossdef>
+        <para>
+         This is the third of the three Kawauchi-Kojima invariants of the
+         torsion linking form <xref linkend="bib-kktorsionlinkingform"/>.
+         This is the <firstterm>odd p-torsion Legendre symbol
+         vector</firstterm>, originally constructed by Seifert,
+         and is relevant for manifolds in which H<subscript>1</subscript>
+         has odd torsion.
+        </para>
+        <para>
+         Again, the Kawauchi-Kojima invariants are only computed for
+         connected orientable manifolds.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Comments</glossterm>
+       <glossdef>
+        <para>
+         This final entry in the
+         <guilabel>Cellular Information</guilabel> tab comments upon
+         where the manifold might embed.  In particular, it attempts to
+         make deductions about whether the manifold might embed in
+         R<superscript>3</superscript>, S<superscript>3</superscript>,
+         S<superscript>4</superscript> or a homology sphere.
+        </para>
+        <para>
+         The information in this field might change over time
+         (specifically, it might become more detailed in future releases
+         of &regina; as more tests become available).
+         Currently it examines the homology, the Kawauchi-Kojima
+         invariants and some other elementary properties, and uses
+         C.&nbsp;T.&nbsp;C.&nbsp;Wall's theorem that 3-manifolds embed
+         in S<superscript>5</superscript>.
+        </para>
+        <para>
+         These comments are provided for both orientable and
+         non-orientable manifolds.  In the non-orientable case they may
+         provide additional information regarding the
+         <link linkend="tri-cover">orientable double cover</link>.
+        </para>
+       </glossdef>
+      </glossentry>
+     </glosslist>
     </para>
    </sect3>
   </sect2>
