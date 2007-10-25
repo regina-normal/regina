@@ -136,3 +136,30 @@ files and running long census calculations.  See the
 details.
 </html>
 </tip>
+<tip category="Regina">
+<html>
+<p>
+There are two ways of editing the gluings between tetrahedron faces.
+<p>
+Impatient users can use <i>direct edit</i> mode, where you type a
+string such as <tt>1&nbsp;(201)</tt> directly into the table.
+New users might prefer <i>pop-up dialog</i> mode, where you double-click
+on a table cell to bring up a dialog box instead.
+<p>
+You can switch between modes through Regina's settings, by selecting
+<i>Triangulation Options</i> and looking for <i>Edit mode</i>.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+If you use Regina's python interface and you find yourself writing the same
+code over and over again, you can put this code in a <i>python library</i>.
+<p>
+A python library is simply a text file (usually containing function
+definitions) that is executed at the beginning of each python session.
+<p>
+To add a new python library, simply open Regina's settings,
+select <i>Python Options</i> and add your file to the list.
+</html>
+</tip>
