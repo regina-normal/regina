@@ -302,6 +302,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm><link linkend="tri-algebra-cellular">CW-decomposition</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm>data files</glossterm>
   <glosssee>files</glosssee>
  </glossentry>
@@ -346,6 +351,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>dual CW-decomposition</glossterm>
+  <glosssee>CW-decomposition</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="man-regfiledump">dumping contents of a
    file</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
@@ -380,6 +390,12 @@
  </glossentry>
 
  <glossentry>
+  <glossterm><link linkend="tri-algebra-cellular">embeddability in
+   homology spheres</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="surfaces-embeddedonly">embedded normal surfaces,
    enumerating</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
@@ -404,6 +420,8 @@
 
  <glossentry>
   <glossterm>Euler characteristic</glossterm>
+  <glossdef><para><link linkend="tri-algebra-cellular">of a
+   manifold</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-propeuler">of a normal
    surface</link></para></glossdef>
  </glossentry>
@@ -526,7 +544,12 @@
  <glossentry>
   <glossterm><link linkend="tri-algebra-homology">homology
    groups</link></glossterm>
-  <glossdef><para>&nbsp;</para></glossdef>
+  <glossdef><para><link linkend="tri-algebra-cellular">all homology
+   groups</link></para></glossdef>
+  <glossdef><para><link linkend="tri-algebra-homology">first homology
+   group</link></para></glossdef>
+  <glossdef><para><link linkend="tri-algebra-cellular">induced map from
+   manifold to boundary</link></para></glossdef>
  </glossentry>
 
  <glossentry>
@@ -570,6 +593,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>induced homology map</glossterm>
+  <glosssee>homology groups</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm>interface</glossterm>
   <glosssee>user interface</glosssee>
  </glossentry>
@@ -588,6 +616,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>Kawauchi-Kojima invariants</glossterm>
+  <glosssee>torsion linking form</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="tri-new-lens">layered lens space,
    creation</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
@@ -603,6 +636,12 @@
   <glossterm><link linkend="tri-new-layered">layered solid torus,
    creation</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>Legendre symbol vector</glossterm>
+  <glossdef><para><link linkend="tri-algebra-cellular">invariant of
+   torsion linking form</link></para></glossdef>
  </glossentry>
 
  <glossentry>
@@ -782,6 +821,12 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>rank vector</glossterm>
+  <glossdef><para><link linkend="tri-algebra-cellular">invariant of
+   torsion linking form</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm>real boundary</glossterm>
   <glosssee>boundary</glosssee>
  </glossentry>
@@ -867,6 +912,12 @@
   <glossterm><link linkend="surfaces-propsides">sidedness of a
    normal surface</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>sigma vector</glossterm>
+  <glossdef><para><link linkend="tri-algebra-cellular">invariant of
+   torsion linking form</link></para></glossdef>
  </glossentry>
 
  <glossentry>
@@ -1003,6 +1054,12 @@
  <glossentry>
   <glossterm><link linkend="packet-text">text packets</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>torsion linking form</glossterm>
+  <glossdef><para><link linkend="tri-algebra-cellular">Kawauchi-Kojima
+   invariants</link></para></glossdef>
  </glossentry>
 
  <glossentry>
