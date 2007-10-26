@@ -49,4 +49,6 @@ Don't forget:
     fedora/mandriva/suse packages
     tag the subversion repository
     upload new data files, both from examples/ and the large data repository
+    upload reference manual as an HTML bundle
+    update docs/ and engine-docs/ on the website
     mail regina-announce
