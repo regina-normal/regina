@@ -144,9 +144,9 @@ if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^metrics\(/\|$\)' | \
     grep -v '^python/regina-python$' | \
     grep -v '^redist\(/\|$\)' | \
-    grep -v '^regina.*\.tar\.bz2$' | \
-    grep -v '^regina.*\.tar\.gz$' | \
-    grep -v '^regina.*\.zip$' | \
+    grep -v '^regina-[0-9.]\+\.tar\.bz2$' | \
+    grep -v '^regina-[0-9.]\+\.tar\.gz$' | \
+    grep -v '^regina-[0-9.]\+\.zip$' | \
     grep -v '^rpmspec\(/\|$\)' | \
     grep -v '^sfdist\(/\|$\)' | \
     grep -v '^stuff\(/\|$\)' | \
