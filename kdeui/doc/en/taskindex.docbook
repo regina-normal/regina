@@ -9,6 +9,8 @@
 <glossary id="taskindex">
  <title>Index</title>
 
+ <glossdiv><title>0-9</title>
+
  <glossentry id="idx-0-efficiency">
   <glossterm>0-efficiency</glossterm>
   <glossdef><para><link linkend="tri-make0eff">making a triangulaton
@@ -53,6 +55,8 @@
   <glosssee>elementary moves</glosssee>
  </glossentry>
 
+ </glossdiv><glossdiv><title>A</title>
+
  <glossentry>
   <glossterm>almost normal surfaces</glossterm>
   <glosssee>normal surfaces</glosssee>
@@ -86,6 +90,8 @@
   <glossterm><link linkend="options-python">auto-indent</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
+
+ </glossdiv><glossdiv><title>B</title>
 
  <glossentry>
   <glossterm><link linkend="tri-subdivision">barycentric
@@ -123,6 +129,8 @@
   <glossterm><link linkend="services">bug reporting</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
+
+ </glossdiv><glossdiv><title>C</title>
 
  <glossentry>
   <glossterm>&cpp; source</glossterm>
@@ -306,6 +314,8 @@
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
 
+ </glossdiv><glossdiv><title>D</title>
+
  <glossentry>
   <glossterm>data files</glossterm>
   <glosssee>files</glosssee>
@@ -360,6 +370,8 @@
    file</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
+
+ </glossdiv><glossdiv><title>E</title>
 
  <glossentry>
   <glossterm><link linkend="surfaces-proplink">edge linking surfaces,
@@ -445,6 +457,8 @@
    boundary</link></para></glossdef>
  </glossentry>
 
+ </glossdiv><glossdiv><title>F</title>
+
  <glossentry>
   <glossterm>face arc normal coordinates</glossterm>
   <glosssee>coordinate systems</glosssee>
@@ -517,6 +531,8 @@
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
 
+ </glossdiv><glossdiv><title>G</title>
+
  <glossentry>
   <glossterm>&gaplong;</glossterm>
   <glossdef><para><link linkend="options-triangulation">configuration</link></para></glossdef>
@@ -541,6 +557,8 @@
    display face pairing graphs</link></para></glossdef>
  </glossentry>
 
+ </glossdiv><glossdiv><title>H</title>
+
  <glossentry>
   <glossterm><link linkend="tri-algebra-homology">homology
    groups</link></glossterm>
@@ -558,6 +576,8 @@
    type</link></para></glossdef>
   <glossdef><para><link linkend="tri-snappea-info">volume</link></para></glossdef>
  </glossentry>
+
+ </glossdiv><glossdiv><title>I</title>
 
  <glossentry>
   <glossterm>ideal vertices</glossterm>
@@ -615,10 +635,14 @@
    sets of triangulations</link></para></glossdef>
  </glossentry>
 
+ </glossdiv><glossdiv><title>K</title>
+
  <glossentry>
   <glossterm>Kawauchi-Kojima invariants</glossterm>
   <glosssee>torsion linking form</glosssee>
  </glossentry>
+
+ </glossdiv><glossdiv><title>L</title>
 
  <glossentry>
   <glossterm><link linkend="tri-new-lens">layered lens space,
@@ -673,6 +697,8 @@
   <glosssee>search</glosssee>
  </glossentry>
 
+ </glossdiv><glossdiv><title>M</title>
+
  <glossentry>
   <glossterm><link linkend="services">mailing lists</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
@@ -688,6 +714,8 @@
   <glossterm>&mpi;</glossterm>
   <glosssee>parallel processing</glosssee>
  </glossentry>
+
+ </glossdiv><glossdiv><title>N</title>
 
  <glossentry>
   <glossterm>naming</glossterm>
@@ -731,6 +759,8 @@
    recognising</link></para></glossdef>
  </glossentry>
 
+ </glossdiv><glossdiv><title>O</title>
+
  <glossentry>
   <glossterm>one-sidedness</glossterm>
   <glosssee>sidedness</glosssee>
@@ -765,6 +795,8 @@
    cover</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
+
+ </glossdiv><glossdiv><title>P</title>
 
  <glossentry>
   <glossterm>packet tree</glossterm>
@@ -809,6 +841,8 @@
   <glosssee>scripting</glosssee>
  </glossentry>
 
+ </glossdiv><glossdiv><title>Q</title>
+
  <glossentry>
   <glossterm>quad normal coordinates</glossterm>
   <glosssee>coordinate systems</glosssee>
@@ -819,6 +853,8 @@
    asked</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
+
+ </glossdiv><glossdiv><title>R</title>
 
  <glossentry>
   <glossterm>rank vector</glossterm>
@@ -850,6 +886,8 @@
   <glossterm><link linkend="services">reporting bugs</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
+
+ </glossdiv><glossdiv><title>S</title>
 
  <glossentry>
   <glossterm>samples</glossterm>
@@ -1029,6 +1067,8 @@
   <glosssee>normal surfaces</glosssee>
  </glossentry>
 
+ </glossdiv><glossdiv><title>T</title>
+
  <glossentry>
   <glossterm><link linkend="options-python">tab size</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
@@ -1166,6 +1206,8 @@
   <glosssee>sidedness</glosssee>
  </glossentry>
 
+ </glossdiv><glossdiv><title>U</title>
+
  <glossentry id="idx-user-interface">
   <glossterm>user interface</glossterm>
   <glossdef><para><link linkend="man-regina-python">command-line scripting
@@ -1180,6 +1222,8 @@
   <glossterm>user libraries</glossterm>
   <glosssee>libraries</glosssee>
  </glossentry>
+
+ </glossdiv><glossdiv><title>V</title>
 
  <glossentry>
   <glossterm><link linkend="tri-edgetype">valid edges,
@@ -1225,8 +1269,12 @@
   <glosssee>hyperbolic volume</glosssee>
  </glossentry>
 
+ </glossdiv><glossdiv><title>Z</title>
+
  <glossentry>
   <glossterm>zero-efficiency</glossterm>
   <glosssee>0-effiency</glosssee>
  </glossentry>
+
+ </glossdiv>
 </glossary>
