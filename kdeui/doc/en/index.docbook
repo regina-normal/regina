@@ -62,6 +62,7 @@
   <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY java "<application>Java</application>">
   <!ENTITY html "<acronym>HTML</acronym>">
+  <!ENTITY khelpcenter "<application>&kde; Help Center</application>">
   <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">

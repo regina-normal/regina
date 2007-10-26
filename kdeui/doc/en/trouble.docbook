@@ -279,6 +279,70 @@ checking host system type... i686-pc-linux-gnu
     </answer>
    </qandaentry>
 
+   <qandaentry id="trouble-manual-unavailable">
+    <question><para>
+     I cannot open the &regina; reference manual.  I try
+     selecting <guilabel>Regina Handbook</guilabel> from the
+     <guilabel>Help</guilabel> menu but I get an error message.
+    </para></question>
+    <answer>
+     <para>
+      There are two common causes for this problem:
+      <itemizedlist>
+       <listitem><para>
+        If you get an error such as &quot;Could not launch the &kde; Help
+        Center&quot; or &quot;Could not find khelpcenter executable&quot;,
+        you probably do not have the &khelpcenter; installed.  Search your
+        &linux; distribution for the <literal>kdebase</literal> package
+        (some distributions call this <literal>kdebase3</literal>,
+        <literal>kdebase-progs</literal> or <literal>kdebase-unified</literal>).
+        Hopefully installing this package will make your problem go away.
+       </para></listitem>
+       <listitem><para>
+        If you get an error such as &quot;There is no documentation available
+        for /regina/index.html&quot;, you probably have the &regina; reference
+        manual installed in the wrong location.
+        <itemizedlist>
+         <listitem><para>
+          If you installed &regina; from a ready-made package, please contact
+          the package maintainer &mdash; the package has been built incorrectly
+          and needs to be fixed.  For most of the ready-made packages, you
+          can reach the package maintainer by mailing &reguserlist;.
+         </para></listitem>
+         <listitem>
+          <para>
+           If you built &regina; yourself from sources, you need to pass an
+           extra argument to the <userinput>./configure</userinput> script.
+           Try to find which directory on your system contains the &kde;
+           user manuals; typically this is something like
+           <filename>/usr/share/doc/kde</filename> or
+           <filename>/usr/share/doc/kde/HTML</filename>.  This directory
+           should have an <filename>en/</filename> subdirectory, and beneath
+           that a subdirectory for each application (such as
+           <filename>en/kicker</filename>, <filename>en/kate</filename> and
+           so on).
+          </para>
+          <para>
+           Once you have found this directory, pass it as a
+           <option>kde_htmldir</option> argument to the
+           <userinput>./configure</userinput> script (note that this
+           option does not begin with <literal>--</literal>).  An example
+           for a &debian; system is given below.
+          </para>
+<screen>
+<prompt>example:~/source/regina&gt;</prompt> <userinput>./configure kde_htmldir=/usr/share/doc/kde/HTML</userinput>
+checking build system type... i686-pc-linux-gnu
+checking host system type... i686-pc-linux-gnu
+...
+</screen>
+         </listitem>
+        </itemizedlist>
+       </para></listitem>
+      </itemizedlist>
+     </para>
+    </answer>
+   </qandaentry>
+
    <qandaentry id="trouble-python-disabled">
     <question><para>
      The program complains that &python; scripting has been disabled.
