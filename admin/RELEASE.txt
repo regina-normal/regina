@@ -47,6 +47,7 @@ Don't forget:
     website, including updated news
     debian packages (include cvs.diff)
     fedora/mandriva/suse packages
+    update tips for building on different platforms
     tag the subversion repository
     upload new data files, both from examples/ and the large data repository
     upload reference manual as an HTML bundle
