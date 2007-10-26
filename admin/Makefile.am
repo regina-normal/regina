@@ -12,6 +12,7 @@ SUBDIRS = stubs
 
 EXTRA_DIST = \
   README.txt RELEASE.txt \
+  admin.patch admin.patch.README \
   acinclude.m4.top acx_mpi.m4.ext as-ac-expand.m4.ext cppunit.m4.ext \
   kde.m4.ext libtool.m4.ext configure.ac.bot configure.ac.top \
   Doxyfile.am Doxyfile.global Makefile.common am_edit \

@@ -12,5 +12,8 @@ TESTS = testall
 
 check_SCRIPTS = testall
 
-EXTRA_DIST = \
-	engine.test engine.out
+PYTHON_TESTS = euler groups misc surfaces trigeneral
+
+EXTRA_DIST = README.txt testall \
+	$(PYTHON_TESTS:=.test) \
+	$(PYTHON_TESTS:=.out)
