@@ -1689,7 +1689,12 @@ void NHomologicalData::computeEmbeddabilityString() {
     if (! embeddabilityString.empty())
         return;
 
-    if (tri->isOrientable())
+    if (tri->getNumberOfTetrahedra() == 0)
+      {
+        // special-case the empty triangulation
+        embeddabilityString = "Manifold is empty.";
+      }
+    else if (tri->isOrientable())
       { // orientable -- we need the torsion linking form
         computeTorsionLinkingForm();
 
