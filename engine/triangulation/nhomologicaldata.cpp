@@ -97,7 +97,7 @@ void NHomologicalData::writeTextShort(std::ostream& out) const {
         out<<" ";
     }
     if (torsionFormComputed) {
-        out<<"Torsion subgroup rank vector: "<<torsionRankString<<" ";
+        out<<"Torsion form rank vector: "<<torsionRankString<<" ";
         out<<"Torsion sigma vector: "<<torsionSigmaString<<" ";
         out<<"Torsion Legendre symbol vector: "<<torsionLegendreString<<" ";
     }

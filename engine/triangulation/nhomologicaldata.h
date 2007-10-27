@@ -525,7 +525,7 @@ public:
     long getEulerChar();
 
     /**
-     * Returns the torsion subgroup rank vector. This is the first of
+     * Returns the torsion form rank vector. This is the first of
      * the three Kawauchi-Kojima complete invariants of the torsion
      * linking form.
      *
@@ -542,7 +542,7 @@ public:
      * \ifacespython Not available, though the string routine
      * getTorsionRankVectorString() can still be used.
      *
-     * @return the torsion subgroup rank vector.
+     * @return the torsion form rank vector.
      */
     const std::vector< std::pair< NLargeInteger,
         std::vector< unsigned long > > >& getTorsionRankVector();

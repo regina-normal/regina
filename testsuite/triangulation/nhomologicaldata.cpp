@@ -339,7 +339,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             std::string val = dat.getTorsionRankVectorString();
             if (val != ans) {
                 std::ostringstream msg;
-                msg << name << ": Torsion subgroup rank vector is "
+                msg << name << ": Torsion form rank vector is "
                     << val << ", not " << ans << ".";
                 CPPUNIT_FAIL(msg.str());
             }
