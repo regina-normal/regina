@@ -1,6 +1,6 @@
 
 <!-- This alternate index file is used by docbook2man to generate man pages
-     without the need to parse the entire reference manual. -->
+     without the need to parse the entire handbook. -->
 
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
   <!ENTITY regina "<application>Regina</application>">

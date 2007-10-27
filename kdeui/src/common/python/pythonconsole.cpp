@@ -131,7 +131,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         SLOT(scriptingOverview()), actionCollection(), "help_scripting");
     act->setToolTip(i18n("Read Python scripting overview"));
     act->setWhatsThis(i18n("Open the <i>Python Scripting</i> section of the "
-        "users' reference manual."));
+        "users' handbook."));
     act->plug(menuHelp);
 
     act = new KAction(i18n("&Python Reference"), "python_console", 0, this,

@@ -144,7 +144,7 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
         "combinatorial structures found within the triangulation.  Also "
         "displays the precise name of the triangulation and/or underlying "
         "3-manifold if these happen to be recognised immediately.<p>"
-        "See the reference manual for further details on the different "
+        "See the users' handbook for further details on the different "
         "combinatorial structures that can be found.</qt>");
 
     label = new QLabel(i18n("Triangulation composition:"), ui);

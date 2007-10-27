@@ -177,7 +177,7 @@ QString SkeletonWindow::overview(SkeletalObject type) {
             "Each row describes properties of the vertex as well as "
             "listing precisely which vertices of which tetrahedra it "
             "corresponds to.<p>"
-            "See the reference manual for further details on what each "
+            "See the users' handbook for further details on what each "
             "column of the table means.</qt>");
         case Edges: return i18n("<qt>Displays details of each edge of "
             "this triangulation.<p>"
@@ -185,7 +185,7 @@ QString SkeletonWindow::overview(SkeletalObject type) {
             "Each row describes properties of the edge as well as "
             "listing precisely which vertices of which tetrahedra it "
             "corresponds to.<p>"
-            "See the reference manual for further details on what each "
+            "See the users' handbook for further details on what each "
             "column of the table means.</qt>");
         case Faces: return i18n("<qt>Displays details of each "
             "face of this triangulation.<p>"
@@ -193,14 +193,14 @@ QString SkeletonWindow::overview(SkeletalObject type) {
             "Each row describes the shape of the face as well as "
             "listing precisely which vertices of which tetrahedra it "
             "corresponds to.<p>"
-            "See the reference manual for further details on what each "
+            "See the users' handbook for further details on what each "
             "column of the table means.</qt>");
         case Components: return i18n("<qt>Displays details of each "
             "connected component of this triangulation.<p>"
             "The different components are numbered from 0 upwards.  "
             "Each row describes properties of the component as well as "
             "listing precisely which tetrahedra the component contains.<p>"
-            "See the reference manual for further details on what each "
+            "See the users' handbook for further details on what each "
             "column of the table means.</qt>");
         case BoundaryComponents: return i18n("<qt>Displays details of each "
             "boundary component of this triangulation.  A boundary "
@@ -212,7 +212,7 @@ QString SkeletonWindow::overview(SkeletalObject type) {
             "well as which tetrahedron faces (for a real boundary component) "
             "or which tetrahedron vertex (for an ideal boundary component) "
             "it is formed from.<p>"
-            "See the reference manual for further details on what each "
+            "See the users' handbook for further details on what each "
             "column of the table means.</qt>");
     }
     return QString::null;

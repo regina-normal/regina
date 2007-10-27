@@ -30,7 +30,7 @@ and connected sum decomposition).
 <tip category="Regina">
 <html>
 <p>
-Regina comes with a full reference manual, including an index of common
+Regina comes with a full users' handbook, including an index of common
 tasks.  You can read it by selecting <i>Regina Handbook</i> from
 the <i>Help</i> menu, or by typing <tt>help:/regina</tt> directly into
 Konqueror.
@@ -132,8 +132,7 @@ captures closed orientable surfaces with Euler characteristic zero.
 <p>
 Regina ships with several command-line utilities for manipulating data
 files and running long census calculations.  See the
-<i>Specialised Utilities</i> section of the reference manual for
-details.
+<i>Specialised Utilities</i> section of the users' handbook for details.
 </html>
 </tip>
 <tip category="Regina">

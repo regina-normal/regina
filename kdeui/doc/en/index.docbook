@@ -133,7 +133,7 @@
 
 <book lang="&language;">
  <bookinfo>
-  <title>&regina; Reference Manual</title>
+  <title>The &regina; Handbook</title>
 
   <authorgroup>
    &regauthor;
@@ -152,7 +152,7 @@
   <abstract>
    &regabstract;
    <para>
-    This reference manual is current as of &regdate; for &regina; &regversion;.
+    This handbook is current as of &regdate; for &regina; &regversion;.
    </para>
   </abstract>
 

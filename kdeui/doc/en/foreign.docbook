@@ -220,7 +220,7 @@
     ###
     ### Begin Script
 
-    # See the reference manual for more elaborate sample Python
+    # See the users' handbook for more elaborate sample Python
     # sessions.
 
     # Output the homology of each triangulation.

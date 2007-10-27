@@ -402,8 +402,8 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(i18n("Open the detailed documentation for Regina's "
         "mathematical engine.  This describes the classes, methods and "
         "routines that Regina makes available to Python scripts.<p>"
-        "See the <i>Python Scripting</i> chapter of the user's reference "
-        "manual for more information (the user's reference manual is "
+        "See the <i>Python Scripting</i> chapter of the user's handbook "
+        "for more information (the handbook is "
         "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
 
     new KAction(i18n("&Tip of the Day"), "idea", 0, this,

@@ -61,7 +61,7 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
         "coordinates, and the entries in each row are the coefficients "
         "in each linear combination.<p>"
         "For details of what each coordinate represents, hover the mouse "
-        "over the column header (or refer to the reference manual).</qt>"));
+        "over the column header (or refer to the users' handbook).</qt>"));
 
     // Don't bother creating columns until we first create a set of
     // matching equations.

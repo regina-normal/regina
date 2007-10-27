@@ -94,7 +94,7 @@ bool NewPacketDialog::validate() {
         "Some packets have particular requirements of their parents.  "
         "For instance, a list of normal surfaces or angle structures must "
         "be created beneath the triangulation in which they live.\n"
-        "See the reference manual for further information."));
+        "See the users' handbook for further information."));
     return false;
 }
 

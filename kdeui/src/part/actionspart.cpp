@@ -298,7 +298,7 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(i18n("Export a triangulation from this packet tree "
         "to a C++ source file.<p>"
         "The exported C++ code will reconstruct the original triangulation.  "
-        "See the reference manual for further information on using Regina "
+        "See the users' handbook for further information on using Regina "
         "in your own code."));
 
     act = new KAction(i18n("&Python Script"), "packet_script", 0,

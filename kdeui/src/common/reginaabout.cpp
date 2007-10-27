@@ -60,7 +60,7 @@ const char* ReginaAbout::regLicense =
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
     "you would any other paper that you use.  The introductory chapter of the\n"
-    "Regina reference manual includes a suggested form of reference.\n\n"
+    "Regina handbook includes a suggested form of reference.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"

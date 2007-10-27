@@ -7,11 +7,11 @@ Two main binaries are provided with Regina:
 - /usr/bin/regina-python, which starts a command-line Python session.
 
 Several other specialised binaries are also provided; see the users'
-reference manual for details.
+handbook for details.
 
-The users' reference manual is provided with this package and can be
-viewed in the KDE Help Centre, or by entering the URL 'help:/regina/'
-directly into konqueror.
+The users' handbook is provided with this package and can be viewed in
+the KDE Help Centre, or by entering the URL 'help:/regina/' directly
+into konqueror.
 
 Sample topology data files and sample Python sessions are provided in
 the directory /usr/share/doc/regina-normal/examples/.

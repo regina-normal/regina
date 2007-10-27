@@ -84,8 +84,8 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         "each entry in the table is an internal dihedral angle assigned to "
         "some pair of edges in a tetrahedron.<p>"
         "For details of which tetrahedron edges each column represents, hover "
-        "the mouse over the column header (or refer to the reference "
-        "manual).</qt>"));
+        "the mouse over the column header (or refer to the users' "
+        "handbook).</qt>"));
 
     table->addColumn(i18n("Type"), DEFAULT_ANGLE_COLUMN_WIDTH);
 

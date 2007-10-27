@@ -390,8 +390,8 @@
   <title>Documentation</title>
   <para>
    Significant effort has been spent on documentation for the software.
-   A full reference manual is available for using &regina;
-   (you are reading this manual now).
+   A full users' handbook is available for &regina;
+   (you are reading this handbook now).
    In addition, the graphical user interface offers extensive assistance
    through tooltips and &quot;What's This?&quot; texts.
    For users writing &python; scripts or for programmers seeking to modify
@@ -408,7 +408,7 @@
    allows multiple triangulations, normal surface lists and other topological
    structures to be stored together in an organised fashion but it also supports
    the storing of miscellaneous data such as text notes and &python; scripts.
-   The file format is well documented in the reference manual and uses
+   The file format is well documented in the users' handbook and uses
    compressed XML<footnote><para>XML is the <firstterm>Extensible Markup
    Language</firstterm>, an open and widely-supported text-based data
    format.</para></footnote>, allowing for the simple

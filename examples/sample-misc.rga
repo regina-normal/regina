@@ -423,7 +423,7 @@
 	parent="Container">
   <var name="tri" value="Triangulations"/>
   <line></line>
-  <line># See the reference manual for more elaborate sample Python sessions.</line>
+  <line># See the Regina handbook for more elaborate sample Python sessions.</line>
   <line></line>
   <line># Output the homology of each triangulation.</line>
   <line>t = tri.getFirstTreeChild()</line>

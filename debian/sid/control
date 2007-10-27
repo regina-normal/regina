@@ -23,9 +23,9 @@ Description: 3-manifold topology software with normal surface support
  Python scripting giving full access to the calculation engine.
  .
  This package includes the KDE user interface and the command-line
- Python interface, as well as the users' reference manual.  For the
- Python reference (i.e., the API documentation for the Regina
- calculation engine), see the package regina-normal-doc.
+ Python interface, as well as the users' handbook.  For the Python
+ reference (i.e., the API documentation for the Regina calculation
+ engine), see the package regina-normal-doc.
 XB-Python-Version: 2.4
 
 Package: regina-normal-dev

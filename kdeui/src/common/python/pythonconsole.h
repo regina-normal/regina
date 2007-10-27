@@ -142,7 +142,7 @@ class PythonConsole : public KMainWindow {
         void saveLog();
 
         /**
-         * Open the reference manual at the scripting overview.
+         * Open the users' handbook at the scripting overview.
          */
         void scriptingOverview();
 

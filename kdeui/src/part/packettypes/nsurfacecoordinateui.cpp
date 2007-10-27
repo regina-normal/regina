@@ -116,7 +116,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "coordinate system.<p>"
         "For details on what each property means or what each coordinate "
         "represents, hover the mouse over the column header (or refer "
-        "to the reference manual).</qt>");
+        "to the users' handbook).</qt>");
 
     // Set up the surface list actions.
     surfaceActions = new KActionCollection(0, 0, 0,

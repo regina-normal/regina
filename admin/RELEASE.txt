@@ -38,7 +38,7 @@ Acknowledgements:
 Don't forget:
     changes & highlights (both . and kdeui/doc/en)
     what's this & tooltips
-    documentation in reference manual, feature set & index
+    documentation in handbook, feature set & index
     journal references (www, KDE docs, example files, headers)
     check for doxygen warnings
     update \test... notes in API docs
@@ -50,6 +50,6 @@ Don't forget:
     update tips for building on different platforms
     tag the subversion repository
     upload new data files, both from examples/ and the large data repository
-    upload reference manual as an HTML bundle
+    upload handbook as an HTML bundle
     update docs/ and engine-docs/ on the website
     mail regina-announce

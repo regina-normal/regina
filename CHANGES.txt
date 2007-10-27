@@ -137,6 +137,8 @@ Version 4.4  [ under development ] - The "hug a Mac today" release.
           multiple edges.
         - Removed the Crush column from normal surface lists, since it has
           never contained any information beyond "N/A" or "Unknown".
+        - The Regina reference manual is now called the Regina handbook,
+          for consistency with other KDE applications.
     PYTHON:
         - The regina-python tool has new options -i/--interactive (run a
           script and leave the interpreter open) and -n/--nolibs (do not

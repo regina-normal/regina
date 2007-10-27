@@ -46,7 +46,7 @@
  *
  *  If you find Regina useful in your research, please consider citing it as
  *  you would any other paper that you use.  The introductory chapter of the
- *  Regina reference manual includes a suggested form of reference.
+ *  Regina handbook includes a suggested form of reference.
  *
  *  <h3>Copying and Modification</h3>
  *
@@ -85,6 +85,6 @@
  *
  *  Many people have been of assistance with this project, be it through
  *  time, knowledge, testing or code.  Please see the full list of
- *  acknowledgements in the final chapter of the reference manual.
+ *  acknowledgements in the final chapter of the Regina handbook.
  */
 
