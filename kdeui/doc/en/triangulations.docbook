@@ -904,16 +904,25 @@
        <glossterm>Torsion form rank vector</glossterm>
        <glossdef>
         <para>
+         Given an oriented 3-manifold M, there is a symmetric bilinear function 
+         tH1(M) x tH1(M) --> Q/Z where tH1(M) is the torsion subgroup of H1(M).  
+         It is computed in this way: let x and y be 1-dimensional torsion 
+         homology classes.  Then nx is the boundary of some 2-cycle z (transverse 
+         to y) for some integer n.  The torsion linking form of x and y is the 
+         oriented intersection number of z and y, divided by n.  Kawauchi and Kojima
+         gave a complete classification of such torsion linking forms
+         <xref linkend="bib-kktorsionlinkingform"/>.  Regina computes the 
+         torsion linking form, and implements the Kawauchi-Kojima classification.
          This is the first of the three Kawauchi-Kojima invariants of the
          torsion linking form on the torsion subgroup of
-         H<subscript>1</subscript>.  These form a complete set of invariants.
-         For details of these invariants, see
-         <xref linkend="bib-kktorsionlinkingform"/>.
+         H<subscript>1</subscript>.  
         </para>
         <para>
          This is the <firstterm>torsion subgroup rank vector</firstterm>,
-         which lists the ranks of all the subgroups of
-         various prime power orders.
+         lists the prime power decomposition of the torsion subgroup of H1(M).  
+         For example, if H1(M) is a direct sum of n copies of Z_20 and m copies of
+         Z_18, then torsion form rank vector would be: 2(m n) 3(0 m) 5(n) since
+         the group is isomorphic to mZ_{2^1} + nZ_{2^2} + 0Z_3 + mZ_{3^2} + nZ_5.
         </para>
         <para>
          Note that the Kawauchi-Kojima invariants are only computed for
@@ -929,7 +938,9 @@
          described above <xref linkend="bib-kktorsionlinkingform"/>.
          This is the <firstterm>2-torsion sigma vector</firstterm>,
          and is relevant for manifolds in which H<subscript>1</subscript>
-         has 2-torsion.  This invariant is orientation-sensitive.
+         has 2-torsion.  It is an orientation-sensitive invariant, where
+         the orientation is chosen so that the first tetrahedron in the
+         triangulation is positively-oriented with its standard parametrization.
         </para>
         <para>
          As noted above, the Kawauchi-Kojima invariants are only computed
@@ -963,7 +974,11 @@
          where the manifold might embed.  In particular, it attempts to
          make deductions about whether the manifold might embed in
          R<superscript>3</superscript>, S<superscript>3</superscript>,
-         S<superscript>4</superscript> or a homology sphere.
+         S<superscript>4</superscript> or a homology sphere. If the manifold
+         is orientable it tests for the hyperbolicity of the torsion linking
+         form.  It also performs the Kawauchi-Kojima 2-torsion test, useful
+         for determining if manifolds with boundary does not embed in any 
+         homology 4-sphere.
         </para>
         <para>
          The information in this field might change over time
@@ -977,8 +992,8 @@
         <para>
          These comments are provided for both orientable and
          non-orientable manifolds.  In the non-orientable case they may
-         provide additional information regarding the
-         <link linkend="tri-cover">orientable double cover</link>.
+         provide additional information regarding the embeddability of the
+         <link linkend="tri-cover">orientable double cover</link>.  
         </para>
        </glossdef>
       </glossentry>
