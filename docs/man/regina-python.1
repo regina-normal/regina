@@ -3,13 +3,16 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGINA-PYTHON" "1" "01 May 2006" "" "Main Applications"
+.TH "REGINA-PYTHON" "1" "27 October 2007" "" "Main Applications"
 
 .SH NAME
 regina-python \- Regina command-line Python interface
 .SH SYNOPSIS
 
-\fBregina-python\fR [ \fB-q, --quiet\fR | \fB-v, --verbose\fR ] [ \fB\fIscript\fB  [ \fIscript-args\fB ]\fR ]
+\fBregina-python\fR [ \fB-q, --quiet\fR | \fB-v, --verbose\fR ] [ \fB-n, --nolibs\fR ]
+
+
+\fBregina-python\fR [ \fB-q, --quiet\fR | \fB-v, --verbose\fR ] [ \fB-n, --nolibs\fR ] [ \fB-i, --interactive\fR ] \fB\fIscript\fB\fR [ \fB\fIscript-args\fB\fR ]
 
 .SH "DESCRIPTION"
 .PP
@@ -38,7 +41,8 @@ can be passed (with arguments if desired).  In this case the script
 will be run, again with the \fIregina\fR module
 imported and libraries loaded beforehand.  Once the script has
 finished the user will be returned to the command-line, i.e., there
-will be no subsequent \fBPython\fR interaction.
+will be no subsequent \fBPython\fR interaction (this behaviour can be
+changed by passing \fB--interactive\fR).
 .PP
 Note that \fBregina-python\fR may be run directly out
 of its source tree without being properly installed.  Default locations
@@ -63,6 +67,24 @@ information will be output.
 
 This is equivalent to setting the environment variable
 \fIREGINA_VERBOSITY\fR=2\&.
+.TP
+\fB-n\fR
+.TP
+\fB--nolibs\fR
+Do not load any user libraries.  This refers to the libraries
+specified in \fI~/.regina-libs\fR and/or configured through the \fBKDE\fR user
+interface, as described in the overview above.
+.TP
+\fB-i\fR
+.TP
+\fB--interactive\fR
+Run the script in interactive mode.  The given script will be
+executed, and then the user will be left in the \fBPython\fR
+interpreter to run their own additonal commands.
+
+This option is only available when a script is passed.
+If no script is passed, \fBregina-python\fR will
+always start in interactive mode.
 .SH "ENVIRONMENT VARIABLES"
 .PP
 The following environment variables influence the behaviour of
