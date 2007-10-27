@@ -65,6 +65,7 @@
   <!ENTITY graphvizurl "<ulink url='http://www.graphviz.org/'>&graphviz;</ulink>">
   <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY java "<application>Java</application>">
+  <!ENTITY hom1 "H<subscript>1</subscript>">
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY khelpcenter "<application>&kde; Help Center</application>">
   <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
@@ -99,6 +100,12 @@
   <!ENTITY trists "triangular solid tori">
   <!ENTITY twopi "<literal>2*Pi</literal>">
   <!ENTITY url "<acronym>URL</acronym>">
+  <!ENTITY varM "<replaceable>M</replaceable>">
+  <!ENTITY varm "<replaceable>m</replaceable>">
+  <!ENTITY varn "<replaceable>n</replaceable>">
+  <!ENTITY varx "<replaceable>x</replaceable>">
+  <!ENTITY vary "<replaceable>y</replaceable>">
+  <!ENTITY varz "<replaceable>z</replaceable>">
   <!ENTITY xml "<acronym>XML</acronym>">
 
   <!ENTITY reginaabout SYSTEM "about.docbook">

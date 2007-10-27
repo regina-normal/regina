@@ -904,25 +904,42 @@
        <glossterm>Torsion form rank vector</glossterm>
        <glossdef>
         <para>
-         Given an oriented 3-manifold M, there is a symmetric bilinear function 
-         tH1(M) x tH1(M) &mdash;> Q/Z where tH1(M) is the torsion subgroup of H1(M).  
-         It is computed in this way: let x and y be 1-dimensional torsion 
-         homology classes.  Then nx is the boundary of some 2-cycle z (transverse 
-         to y) for some integer n.  The torsion linking form of x and y is the 
-         oriented intersection number of z and y, divided by n.  Kawauchi and Kojima
+         Given an oriented 3-manifold &varM;,
+         there is a symmetric bilinear function
+         t&hom1;(&varM;)&nbsp;x&nbsp;t&hom1;(&varM;)&nbsp;&mdash;>&nbsp;Q/Z
+         where t&hom1;(&varM;) is the torsion subgroup of &hom1;(&varM;).  
+         It is computed in this way: let &varx; and &vary; be 1-dimensional
+         torsion homology classes.  Then &varn;&varx; is the boundary of
+         some 2-cycle &varz; (transverse to &vary;) for some integer &varn;.
+         The <firstterm>torsion linking form</firstterm> of
+         &varx; and &vary; is the 
+         oriented intersection number of &varz; and &vary;, divided by &varn;.
+        </para>
+        <para>
+         Kawauchi and Kojima
          gave a complete classification of such torsion linking forms
-         <xref linkend="bib-kktorsionlinkingform"/>.  Regina computes the 
-         torsion linking form, and implements the Kawauchi-Kojima classification.
+         <xref linkend="bib-kktorsionlinkingform"/>.  &regina; computes the 
+         torsion linking form, and implements the Kawauchi-Kojima
+         classification.
          This is the first of the three Kawauchi-Kojima invariants of the
-         torsion linking form on the torsion subgroup of
-         H<subscript>1</subscript>.  
+         torsion linking form on the torsion subgroup of &hom1;.
         </para>
         <para>
          This is the <firstterm>torsion subgroup rank vector</firstterm>,
-         lists the prime power decomposition of the torsion subgroup of H1(M).  
-         For example, if H1(M) is a direct sum of n copies of Z_20 and m copies of
-         Z_18, then torsion form rank vector would be: 2(m n) 3(0 m) 5(n) since
-         the group is isomorphic to mZ_{2^1} + nZ_{2^2} + 0Z_3 + mZ_{3^2} + nZ_5.
+         which 
+         lists the prime power decomposition of the torsion subgroup of
+         &hom1;(&varM;).  
+         For example, if &hom1;(&varM;) is a direct sum of &varn; copies of
+         Z<subscript>20</subscript> and &varm; copies of
+         Z<subscript>18</subscript>, then the torsion form rank vector
+         would be: 2(&varm;&nbsp;&varn;)&nbsp;3(0&nbsp;&varm;)&nbsp;5(&varn;)
+         since
+         the group is isomorphic to
+         &varm;Z<subscript>2^1</subscript> +
+         &varn;Z<subscript>2^2</subscript> +
+         0Z<subscript>3</subscript> +
+         &varm;Z<subscript>3^2</subscript> +
+         &varn;Z<subscript>5</subscript>.
         </para>
         <para>
          Note that the Kawauchi-Kojima invariants are only computed for
