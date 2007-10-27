@@ -1749,7 +1749,12 @@ void NHomologicalData::computeEmbeddabilityString() {
                             embeddabilityString += "link complement.";
                         }
                     else
-                        embeddabilityString += "graph complement.";
+                        {
+                        if (getBdryHomology(1).getRank() == 0)
+                            embeddabilityString += "ball complement.";
+                        else
+                            embeddabilityString += "graph complement.";
+                        }
                     }
                  else if (getBdryHomologyMap(1).getCokernel().getRank()==0)
                     {
@@ -1764,7 +1769,12 @@ void NHomologicalData::computeEmbeddabilityString() {
                             embeddabilityString += "link complement.";
                         }
                     else
-                        embeddabilityString += "graph complement.";
+                        {
+                        if (getBdryHomology(1).getRank() == 0)
+                            embeddabilityString += "ball complement.";
+                        else
+                            embeddabilityString += "graph complement.";
+                        }
                     } 
                  else
                     embeddabilityString =
