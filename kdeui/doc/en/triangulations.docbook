@@ -925,7 +925,7 @@
          torsion linking form on the torsion subgroup of &hom1;.
         </para>
         <para>
-         This is the <firstterm>torsion subgroup rank vector</firstterm>,
+         This is the <firstterm>torsion form rank vector</firstterm>,
          which 
          lists the prime power decomposition of the torsion subgroup of
          &hom1;(&varM;).  
