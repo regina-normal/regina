@@ -892,7 +892,7 @@
        </para></glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>H1(Bdry M &ndash;&gt; M)</glossterm>
+       <glossterm>H1(Bdry M &mdash;&gt; M)</glossterm>
        <glossdef><para>
         Since the boundary is a submanifold of the original manifold,
         there is an induced map on the first homology group.  This
@@ -905,7 +905,7 @@
        <glossdef>
         <para>
          Given an oriented 3-manifold M, there is a symmetric bilinear function 
-         tH1(M) x tH1(M) --> Q/Z where tH1(M) is the torsion subgroup of H1(M).  
+         tH1(M) x tH1(M) &mdash;> Q/Z where tH1(M) is the torsion subgroup of H1(M).  
          It is computed in this way: let x and y be 1-dimensional torsion 
          homology classes.  Then nx is the boundary of some 2-cycle z (transverse 
          to y) for some integer n.  The torsion linking form of x and y is the 
@@ -977,7 +977,7 @@
          S<superscript>4</superscript> or a homology sphere. If the manifold
          is orientable it tests for the hyperbolicity of the torsion linking
          form.  It also performs the Kawauchi-Kojima 2-torsion test, useful
-         for determining if manifolds with boundary does not embed in any 
+         for determining if a manifold with boundary does not embed in any 
          homology 4-sphere.
         </para>
         <para>
