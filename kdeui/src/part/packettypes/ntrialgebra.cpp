@@ -727,10 +727,10 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 1, 1);
     Cells = new QLabel(ui);
     homologyGrid->addWidget(Cells, 1, 2);
-    msg = i18n("The listing of the number of 0-cells, number of 1-cells, "
-                "number of 2-cells and number of 3-cells for a proper "
-                "CW-decomposition of the compact manifold specified by this "
-                "triangulation.");
+    msg = i18n("The number of cells in a proper CW-decomposition of "
+               "the compact manifold specified by this triangulation.  "
+               "The four numbers displayed here count 0-cells, 1-cells, "
+               "2-cells and 3-cells respectively.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(Cells, msg);
 
@@ -740,8 +740,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(DualCells, 2, 2);
     msg = i18n("The number of cells in the dual CW-decomposition "
                 "corresponding to the triangulation of this "
-                "compact manifold.  Listed in order "
-                "of ascending dimension.");
+                "compact manifold.  The four numbers displayed here "
+                "count 0-cells, 1-cells, 2-cells and 3-cells respectively.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(DualCells, msg);
 
@@ -749,7 +749,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 3, 1);
     EulerChar = new QLabel(ui);
     homologyGrid->addWidget(EulerChar, 3, 2);
-    msg = i18n("The Euler Characteristic of this compact manifold.");
+    msg = i18n("The Euler characteristic of this compact manifold.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(EulerChar, msg);
 
@@ -757,8 +757,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 4, 1);
     H0H1H2H3 = new QLabel(ui);
     homologyGrid->addWidget(H0H1H2H3, 4, 2);
-    msg = i18n("The homology groups of this manifold, in order of "
-                "ascending dimension. Coefficients in the integers.");
+    msg = i18n("The homology groups of this manifold with coefficients "
+               "in the integers.  The groups are listed in order of "
+                "increasing dimension.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(H0H1H2H3, msg);
 
@@ -766,8 +767,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 5, 1);
     HBdry = new QLabel(ui);
     homologyGrid->addWidget(HBdry, 5, 2);
-    msg = i18n("The homology groups of this manifolds boundary, in order of "
-                "ascending dimension. Coefficients in the integers.");
+    msg = i18n("The homology groups of this manifold's boundary with "
+               "coefficients in the integers.  The groups are listed "
+               "in order of increasing dimension.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(HBdry, msg);
 
@@ -776,8 +778,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     BdryMap = new QLabel(ui);
     homologyGrid->addWidget(BdryMap, 6, 2);
     msg = i18n("<qt>The boundary is a submanifold of the original "
-                "manifold. This describes the induced map on "
-                "H<sub>1</sub>.</qt>"
+                "manifold.  This item describes some properties of "
+                "the induced map on H<sub>1</sub>.</qt>"
                 );
     QWhatsThis::add(label, msg);
     QWhatsThis::add(BdryMap, msg);
@@ -786,14 +788,14 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 7, 1);
     TorForOrders = new QLabel(ui);
     homologyGrid->addWidget(TorForOrders, 7, 2);
-    msg = i18n("<qt>This is the first of three of the Kawauchi-Kojima "
-               "invariants of the torsion linking form on the "
-               "torsion subgroup of H1 of an oriented 3-manifold.  "
-               "They are a complete set of invariants.  This one is "
-               "the vector which lists the rank of all the subgroups "
-               "of various prime power orders."
-               "<p>For further information, see "
-               "Kawauchi and Kojima's paper "
+    msg = i18n("<qt>This is the first of the three Kawauchi-Kojima "
+               "invariants.  These are invariants of the torsion linking "
+               "form on the torsion subgroup of H<sub>1</sub> of an "
+               "oriented manifold, and they form a complete set of "
+               "invariants.<p>"
+               "The torsion form rank vector lists the rank of all the "
+               "subgroups of various prime power orders."
+               "<p>For further information, see Kawauchi and Kojima's paper "
                "<i>Algebraic classification of linking pairings "
                "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
                "no. 1, 29&ndash;42.</qt>"
@@ -805,11 +807,11 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     homologyGrid->addWidget(label, 8, 1);
     TorForSigma = new QLabel(ui);
     homologyGrid->addWidget(TorForSigma, 8, 2);
-    msg = i18n("<qt>If H1 has 2-torsion, this is the Kawauchi-Kojima "
-               "2-torsion sigma-vector.  "
-               "The sigma-vector is an orientation-sensitive invariant."
-               "<p>For further information, see "
-               "Kawauchi and Kojima's paper "
+    msg = i18n("<qt>If H<sub>1</sub> has 2-torsion, this is the "
+               "2-torsion sigma-vector.  The sigma-vector is the "
+               "second of the Kawauchi-Kojima invariants, and is an "
+               "orientation-sensitive invariant."
+               "<p>For further information, see Kawauchi and Kojima's paper "
                "<i>Algebraic classification of linking pairings "
                "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
                "no. 1, 29&ndash;42.</qt>"
@@ -822,11 +824,10 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     TorForLegendre = new QLabel(ui);
     homologyGrid->addWidget(TorForLegendre, 9, 2);
     msg = i18n("<qt>If H<sub>1</sub> has odd torsion, this is the "
-               "Legendre symbol vector, the last of the "
-               "Kawauchi-Kojima invariants, originally "
-               "constructed by Seifert."
-               "<p>For further information, see "
-               "Kawauchi and Kojima's paper "
+               "Legendre symbol vector.  The Legendre symbol vector "
+               "is the last of the Kawauchi-Kojima invariants, and was "
+               "originally constructed by Seifert."
+               "<p>For further information, see Kawauchi and Kojima's paper "
                "<i>Algebraic classification of linking pairings "
                "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
                "no. 1, 29&ndash;42.</qt>"
@@ -841,9 +842,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     msg = i18n("<qt>If the homology allows us to make any deductions "
                 "about the embeddability of this manifold in "
                 "R<sup>3</sup>, S<sup>3</sup>, S<sup>4</sup> "
-                "or a homology sphere, we mention it here. "
+                "or a homology sphere, we mention it here.  "
                 "Aside from the Kawauchi-Kojima paper, these comments "
-                "use C.T.C. Wall's theorem that 3-manifold embed in "
+                "use C.T.C. Wall's theorem that 3-manifolds embed in "
                 "S<sup>5</sup> and some elementary homological "
                 "observations.</qt>"
                 );
