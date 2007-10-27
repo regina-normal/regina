@@ -140,12 +140,14 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     layout->addSpacing(5);
 
     // Set up the composition viewer.
-    msg = i18n("<qt>Displays the details of any standard "
-        "combinatorial structures found within the triangulation.  Also "
-        "displays the precise name of the triangulation and/or underlying "
-        "3-manifold if these happen to be recognised immediately.<p>"
-        "See the users' handbook for further details on the different "
-        "combinatorial structures that can be found.</qt>");
+    msg = i18n("<qt>Displays (i) the precise name of the triangulation "
+        "and/or underlying 3-manifold if these can be recognised "
+        "immediately, (ii) the Callahan-Hildebrand-Weeks dehydration "
+        "string if the triangulation supports it, and (iii) the details "
+        "of any standard combinatorial structures found within the "
+        "triangulation.<p>"
+        "See the users' handbook for further details on the information "
+        "listed here.</qt>");
 
     label = new QLabel(i18n("Triangulation composition:"), ui);
     QWhatsThis::add(label, msg);
