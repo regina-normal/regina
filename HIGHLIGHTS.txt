@@ -8,7 +8,7 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
-Version 4.4  [ under development ] - The "hug a Mac today" release.
+Version 4.4  [ 11 November, 2007 ] - The "hug a Mac today" release.
 
     Features and Improvements:
         - New Algebra -> Cellular Info tab containing a variety of new
