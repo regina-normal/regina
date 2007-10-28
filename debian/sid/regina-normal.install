@@ -1,6 +1,6 @@
 usr/bin
-usr/lib/libregina-engine-4.3.1a.so
-usr/lib/libregina-kdecommon-4.3.1a.so
+usr/lib/libregina-engine-4.4.so
+usr/lib/libregina-kdecommon-4.4.so
 usr/lib/kde3/libreginapart.so
 usr/lib/kde3/libreginapart.la
 usr/lib/regina-normal/python/regina.so

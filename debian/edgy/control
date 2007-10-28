@@ -3,7 +3,7 @@ Section: math
 Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
 Build-Depends: automake1.9, debhelper (>= 5.0.0), doxygen, kdelibs4-dev (>= 4:3.5.1-3), libboost-python-dev (>= 1.33.0), libcppunit-dev (>= 1.10.2-4), libgmp3-dev (>= 4.1.4-10), libmpich1.0-dev (>= 1.2.7-1), libpopt-dev, libxml2-dev, zlib1g-dev
-Build-Conflicts: regina-normal-dev (<< 4.3.1-0), regina-normal-dev (>= 4.3.2-0)
+Build-Conflicts: regina-normal-dev (<< 4.4-0), regina-normal-dev (>= 4.4.1-0)
 Standards-Version: 3.7.2.1
 XS-Python-Version: 2.4
 
