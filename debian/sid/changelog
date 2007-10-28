@@ -4,6 +4,13 @@ regina-normal (4.4-1) unstable; urgency=low
 
  -- Ben Burton <bab@debian.org>  Sun, 11 Nov 2007 10:28:59 +1100
 
+regina-normal (4.3.1-6) unstable; urgency=low
+
+  * Updated for new debian menu layout.  Menu entries have moved from
+    Apps/Math to Applications/Science/Mathematics.
+
+ -- Ben Burton <bab@debian.org>  Sat, 13 Oct 2007 07:46:20 +1000
+
 regina-normal (4.3.1-5) unstable; urgency=low
 
   * Another step in the python dance.  Everything is back to python2.4,
