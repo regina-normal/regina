@@ -1,0 +1,173 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+tmp = debian/tmp
+
+INSTALL_DIR = install -p -d -o root -g root -m 755
+INSTALL_FILE = install -p -o root -g root -m 644
+
+ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -g
+endif
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	INSTALL_PROGRAM += -s
+endif
+
+ifeq ($(shell dpkg-architecture -qDEB_BUILD_ARCH),ia64)
+	# MPI utilities fail to link under ia64.
+	NO_MPI = 1
+	configmpi = --disable-mpi
+else
+	NO_MPI = 0
+	configmpi =
+endif
+
+# Fetch the python version out of debian/control so we can pass it to
+# ./configure.  This keeps things sane when multiple python*-dev packages
+# are installed.
+#
+# Use grep instead of pyversions so that we don't need to build-depend
+# on the default python (in addition to whatever python boost requires).
+pyver = $(subst XS-Python-Version: ,,$(shell grep ^XS-Python-Version debian/control))
+
+-include debian/debiandirs
+
+debian/debiandirs: admin/debianrules
+	perl -w admin/debianrules echodirs > debian/debiandirs
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+
+	# Update to debian's patched scripts.
+	admin/ac_gen
+	aclocal
+	autoheader
+	autoconf
+	automake
+	perl -w admin/am_edit
+
+	# Back to the standard configure.
+	chmod a+x configure
+	./configure --disable-maintainer-mode PKGNAME=regina-normal \
+	  --with-python-version=$(pyver) \
+	  --includedir=/usr/include $(configkde) $(configmpi) \
+	  --includedir=/usr/include
+	touch configure-stamp
+
+build: configure-stamp build-stamp
+build-stamp:
+	dh_testdir
+	$(MAKE)
+	$(MAKE) check
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	[ ! -f Makefile ] || $(MAKE) distclean
+	rm -f build-stamp configure-stamp
+	rm -f debian/debiandirs
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	# Main install.
+	$(MAKE) install DESTDIR=`pwd`/$(tmp)
+
+	# Make sure python versions are consistent between the binaries and
+	# the startup script.
+	sh debian/pycheck
+
+	# Make sure we've got the multithreaded boost.python, not the
+	# single-threaded boost.python.
+	sh debian/mtcheck
+
+ifneq ($(NO_MPI),1)
+	# Make sure MPI support was enabled.
+	if ! test -e $(tmp)/usr/bin/tricensus-mpi; then \
+	  echo "ERROR: MPI utilities were not built and installed."; \
+	  echo "       Check your configure options."; \
+	  /bin/false; \
+	fi
+else
+	# Remove unnecessary MPI files.
+	rm -f debian/regina-normal/usr/share/doc/README.MPI
+endif
+
+	# Split into separate binary packages.
+	dh_install --sourcedir=debian/tmp --list-missing
+
+	# Ensure sample data files are stored as compressed XML.
+	for i in debian/regina-normal/usr/share/doc/regina-normal/examples/*.rga; do \
+	  utils/regconvert -x $$i $$i; \
+	done
+
+	# Install linda and lintian overrides.
+	for pkg in `dh_listpackages`; do \
+	  if test -e debian/$$pkg.override; then \
+	    $(INSTALL_DIR) debian/$$pkg/usr/share/lintian/overrides; \
+	    $(INSTALL_FILE) debian/$$pkg.override \
+	      debian/$$pkg/usr/share/lintian/overrides/$$pkg; \
+	  fi; \
+	  if test -e debian/$$pkg.linda; then \
+	    $(INSTALL_DIR) debian/$$pkg/usr/share/linda/overrides; \
+	    $(INSTALL_FILE) debian/$$pkg.linda \
+	      debian/$$pkg/usr/share/linda/overrides/$$pkg; \
+	  fi; \
+	done
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs -i
+	dh_installexamples -i
+	dh_installman -i
+	dh_installmenu -i
+	dh_installmime -i
+	dh_installchangelogs -i CHANGES.txt
+	dh_link -i
+	dh_strip -i
+	dh_compress -i -X.bz2 -X.css -X.docbook -X.rga
+	dh_fixperms -i
+	# dh_makeshlibs -i
+	dh_installdeb -i
+	dh_perl -i
+	dh_shlibdeps -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs -a
+	dh_installexamples -a
+	dh_installman -a
+	dh_installmenu -a
+	dh_installmime -a
+	dh_installchangelogs -a CHANGES.txt
+	dh_link -a
+	dh_strip -a
+	dh_compress -a -X.bz2 -X.css -X.docbook -X.rga
+	for i in `find debian/regina-normal/usr/share/doc/kde -name "*.gz"`; do \
+	  gunzip $$i; done
+	dh_fixperms -a
+	dh_makeshlibs -a
+	dh_installdeb -a
+	dh_perl -a
+	dh_shlibdeps -a -ldebian/regina-normal/usr/lib
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

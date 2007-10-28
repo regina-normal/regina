@@ -1,0 +1,53 @@
+This package was debianised by Ben Burton <bab@debian.org> on
+Mon,  1 Oct 2001 20:44:04 -0500.
+
+It was downloaded from http://regina.sourceforge.net/.
+
+Upstream Author: Ben Burton <bab@debian.org>
+
+Copyright:
+
+   Regina - A Normal Surface Theory Calculator
+   Copyright (c) 1999-2007, Ben Burton
+
+   CITATION:
+
+   If you find Regina useful in your research, please consider citing it as
+   you would any other paper that you use.  The introductory chapter of the
+   Regina handbook includes a suggested form of reference.
+
+   COPYING AND MODIFICATION:
+
+   This package is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or (at
+   your option) any later version.
+
+   This package is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this package; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+
+   SNAPPEA KERNEL:
+
+   Since version 4.2 (July 2005), Regina includes portions of the
+   SnapPea kernel which it uses for certain geometric calculations.
+   SnapPea is copyright (c) 1991-2005 by Jeff Weeks, who has graciously
+   given permission for it to be distributed under the terms of the GNU
+   General Public License as described above.
+
+   ORB KERNEL:
+
+   Since version 4.3.1 (May 2006), Regina includes snippets of code from
+   Orb for use in importing and exporting files in Orb / Casson format.
+   Orb is based on SnapPea (see above) with additional code written by
+   Damian Heard, who has also given permission for his code to be
+   distributed under the terms of the GNU General Public License.
+
+On Debian GNU/Linux systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL'.
+
