@@ -1,6 +1,6 @@
 --- python/regina-python.in	10 Oct 2003 02:37:15 -0000	1.8
 +++ python/regina-python.in	14 Nov 2003 07:56:31 -0000
-@@ -163,7 +163,7 @@ if (! $regina_home) {
+@@ -178,7 +178,7 @@ if (! $regina_home) {
  
  if (! $python_cmd) {
      my $which_python;
