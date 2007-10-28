@@ -59,6 +59,17 @@ FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
 ./configure --disable-debug --mandir=%{_mandir}
+
+# Stop for a sanity check to see if the right bits are going to be built.
+grep '^REGINA_BUILD_DOCSENGINE=.engine.$' config.log > /dev/null
+grep '^REGINA_BUILD_ENGINE=.engine.$' config.log > /dev/null
+grep '^REGINA_BUILD_KDEUI=.kdeui.$' config.log > /dev/null
+grep '^REGINA_BUILD_MPI=.mpi.$' config.log > /dev/null
+grep '^REGINA_BUILD_PYTHON=.python.$' config.log > /dev/null
+grep '^REGINA_BUILD_TESTSUITE=.testsuite.$' config.log > /dev/null
+grep '^REGINA_BUILD_UTILS=.utils.$' config.log > /dev/null
+
+# On with the show.
 make
 make check
 
