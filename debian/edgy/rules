@@ -36,8 +36,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 
-	# Update to debian's patched libtool.
-	cp debian/libtool/* admin
+	# Update to debian's patched scripts.
 	admin/ac_gen
 	aclocal
 	autoheader
