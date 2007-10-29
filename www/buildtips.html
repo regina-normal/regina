@@ -1,0 +1,125 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="regina.css">
+    <title>Tips for Building Regina</title>
+</head>
+<body bgcolor="#FFFFFF" text="#000000"
+    link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<h1><a name="contents">Tips for Building Regina</a></h1>
+
+The following sections show how Regina can be built successfully on
+various GNU/Linux distributions and other systems.
+These suggestions come from past experiences in building debian packages and
+RPMs on several different platforms.
+<p>
+<table class="contentswrapper" cellspacing=0>
+<tbody>
+<tr><td valign="top">
+    <table class="contents" cellspacing=0><tbody>
+    <tr><td><a href="#debian">Debian GNU/Linux</a></td></tr>
+    <tr><td><a href="#fedora">Fedora Core</a></td></tr>
+    <tr><td><a href="#fink">Fink on MacOS X</a></td></tr>
+    <tr><td><a href="#mandriva">Mandriva Linux</a></td></tr>
+    <tr><td><a href="#suse">SuSE Linux</a></td></tr>
+    <tr><td><a href="#ubuntu">Ubuntu</a></td></tr>
+    <tr><td><a href="index.html">Back to main page ...</a></td></tr>
+    </tbody></table>
+</td></tr>
+</tbody>
+</table>
+<p>
+As always, it is generally simpler just to download and
+install a binary package if you can.  Take a look at the
+<a href="http://sourceforge.net/project/showfiles.php?group_id=19698">Regina
+download site</a> and see if your distribution is supported.
+<p>
+Please also see the page on <a href="source.html">building from sources</a>
+for system requirements and a general overview of the build process.
+<p>
+If these tips do not work for you, please
+<a href="mailto:regina-devel@lists.sourceforge.net">send an email</a>
+(including your <tt>config.log</tt> if possible) so that this page
+and/or the automatic configuration scripts can be updated to reflect
+systems like yours.
+
+<h2><a name="debian">Debian GNU/Linux</a></h2>
+
+The KDE user manuals are kept in an unusual directory, and so the users'
+handbook is sometimes installed where KDE cannot find it.  Try passing
+the following additional argument to the <tt>./configure</tt> script:
+<p>
+<tt>example$ ./configure kde_htmldir=/usr/share/doc/kde/HTML</tt>
+
+<h2><a name="fedora">Fedora Core</a></h2>
+
+Before running the <tt>./configure</tt> script, try the following:
+<ul>
+<li> Run "<tt>source /etc/profile.d/qt.sh</tt>" if you use a bash-style shell
+(such as bash or zsh);</li>
+<li> Run "<tt>source /etc/profile.d/qt.csh</tt>" if you use a csh-style shell
+(such as csh or tcsh).</li>
+</ul>
+This will help the <tt>./configure</tt> script locate your Qt/KDE
+installation.
+
+<h2><a name="fink">Fink on MacOS X</a></h2>
+
+Assuming you have installed Fink beneath <tt>/sw</tt>, you may need to
+pass the following arguments to <tt>./configure</tt> to ensure that it
+can find the Fink libraries:
+<p>
+<tt>example$ ./configure --with-extra-includes=/sw/include
+--with-extra-libs=/sw/lib</tt>
+<p>
+In addition, the users' handbook is sometimes installed in the wrong
+location, which means the KDE Help Centre cannot find it.  This can be
+fixed with the following additional argument:
+<p>
+<tt>example$ ./configure kde_htmldir=/sw/share/doc/kde ...</tt>
+
+<h2><a name="mandriva">Mandriva Linux</a></h2>
+
+Before running the <tt>./configure</tt> script, try the following:
+<ul>
+<li> Run "<tt>source /etc/profile.d/qtdir3.sh</tt>" if you use a bash-style
+shell (such as bash or zsh);</li>
+<li> Run "<tt>source /etc/profile.d/qtdir3.csh</tt>" if you use a csh-style
+shell (such as csh or tcsh).</li>
+</ul>
+This will help the <tt>./configure</tt> script locate your Qt/KDE
+installation.
+
+<h2><a name="suse">SuSE Linux</a></h2>
+
+Because SuSE installs KDE beneath <tt>/opt</tt>, you might need
+to pass several arguments to the <tt>./configure</tt> to ensure that
+the KDE parts of Regina are installed where KDE can find them, and
+the non-KDE parts of Regina are installed in a more standard location.
+<p>
+The arguments used to build the SuSE packages include:
+<p>
+<tt>example$ ./configure --prefix=/opt/kde3 --includedir=/usr/include
+--mandir=/usr/share/man</tt>
+<p>
+In addition, if you wish to build the MPI utilities (assuming you have
+<tt>mpich-devel</tt> installed), you may need the following argument:
+<p>
+<tt>example$ ./configure MPICXX=/opt/mpich/ch-p4/bin/mpicxx ...</tt>
+
+<h2><a name="ubuntu">Ubuntu</a></h2>
+
+The KDE user manuals are kept in an unusual directory, and so the users'
+handbook is sometimes installed where KDE cannot find it.  Try passing
+the following additional argument to the <tt>./configure</tt> script:
+<p>
+<tt>example$ ./configure kde_htmldir=/usr/share/doc/kde/HTML</tt>
+
+<p class="return">
+<a href="index.html"><img src="return.jpg" alt="Back to main page ..."
+    border="0" width="32" height="32" align="middle"></a>
+<a href="index.html">Back to main page ...</a></p>
+
+</body>
+</html>
+
