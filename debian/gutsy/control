@@ -1,0 +1,60 @@
+Source: regina-normal
+Section: math
+Priority: extra
+Maintainer: Ben Burton <bab@debian.org>
+Build-Depends: automake1.9, debhelper (>= 5.0.0), doxygen, kdelibs4-dev (>= 4:3.5.1-3), libboost-python-dev (>= 1.33.0), libcppunit-dev (>= 1.10.2-4), libgmp3-dev (>= 4.1.4-10), libmpich1.0-dev (>= 1.2.7-1), libpopt-dev, libxml2-dev, zlib1g-dev
+Build-Conflicts: regina-normal-dev (<< 4.4-0), regina-normal-dev (>= 4.4.1-0)
+Standards-Version: 3.7.2.2
+XS-Python-Version: 2.5
+
+Package: regina-normal
+Architecture: any
+Section: math
+Depends: ${shlibs:Depends}, ${perl:Depends}
+Recommends: khelpcenter
+Suggests: gap, graphviz, konqueror, mpich-bin, regina-normal-doc, regina-normal-dev, snappea
+Description: 3-manifold topology software with normal surface support
+ Regina is a suite of mathematical software for 3-manifold topologists.
+ It focuses upon the study of 3-manifold triangulations and includes
+ support for normal surfaces and angle structures.
+ .
+ Highlights of Regina include triangulation analysis and simplification,
+ census creation and normal surface enumeration.  It offers embedded
+ Python scripting giving full access to the calculation engine.
+ .
+ This package includes the KDE user interface and the command-line
+ Python interface, as well as the users' handbook.  For the Python
+ reference (i.e., the API documentation for the Regina calculation
+ engine), see the package regina-normal-doc.
+XB-Python-Version: 2.5
+
+Package: regina-normal-dev
+Architecture: any
+Section: libdevel
+Depends: regina-normal (= ${binary:Version}), libgmp3-dev, libxml2-dev, zlib1g-dev
+Suggests: regina-normal-doc
+Description: development files for Regina, the 3-manifold topology software
+ Regina is a suite of mathematical software for 3-manifold topologists.
+ This package provides development files for compiling the Regina
+ calculation engine into other projects.
+ .
+ The calculation engine is provided as a C++ shared library.  For complete
+ API documentation, see the package regina-normal-doc.
+ .
+ Highlights of Regina include triangulation analysis and simplification,
+ census creation and normal surface enumeration.
+
+Package: regina-normal-doc
+Architecture: all
+Section: doc
+Recommends: konqueror
+Suggests: regina-normal, regina-normal-dev
+Description: API docs for Regina, the 3-manifold topology software
+ Regina is a suite of mathematical software for 3-manifold topologists.
+ This package provides complete API documentation for the Regina calculation
+ engine.  This documentation can be used with Python scripting in Regina, as
+ well as for compiling Regina's C++ calculation engine into other projects.
+ .
+ Highlights of Regina include triangulation analysis and simplification,
+ census creation and normal surface enumeration.  It offers embedded
+ Python scripting giving full access to the calculation engine.

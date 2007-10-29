@@ -1,0 +1,11 @@
+--- python/regina-python.in	10 Oct 2003 02:37:15 -0000	1.8
++++ python/regina-python.in	14 Nov 2003 07:56:31 -0000
+@@ -178,7 +178,7 @@ if (! $regina_home) {
+ 
+ if (! $python_cmd) {
+     my $which_python;
+-    chomp($which_python = `which python`);
++    chomp($which_python = `which python2.5`);
+     if (! $which_python) {
+         &err("E: A Python interpreter could not be found.\n");
+         &err("E: Set \$REGINA_PYTHON to a Python interpreter (such as /usr/bin/python)\n");

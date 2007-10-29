@@ -1,0 +1,7 @@
+# This script is not meant to be run.
+regina-normal: script-not-executable ./usr/share/regina-normal/scripts/runscript.py
+regina-normal: unusual-interpreter ./usr/share/regina-normal/scripts/runscript.py #!/bin/false
+
+# Regina does not provide a standalone library package.
+regina-normal: package-name-doesnt-match-sonames libregina-engine-4.4 libregina-kdecommon-4.4
+regina-normal: package-name-doesnt-match-sonames libregina-kdecommon-4.4 libregina-engine-4.4
