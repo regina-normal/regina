@@ -9,21 +9,3 @@
      if (! $which_python) {
          &err("E: A Python interpreter could not be found.\n");
          &err("E: Set \$REGINA_PYTHON to a Python interpreter (such as /usr/bin/python)\n");
---- admin/kde.m4.ext	2005-06-28 13:30:28.000000000 +1000
-+++ admin/kde.m4.ext	2006-01-06 15:08:54.000000000 +1100
-@@ -1665,15 +1665,6 @@
-        KDE_USE_CLOSURE_TRUE="#"
-        KDE_USE_CLOSURE_FALSE=""
-        KDE_NO_UNDEFINED=""
--       case $host in 
--         *-*-linux-gnu)
--           KDE_CHECK_COMPILER_FLAG([Wl,--no-undefined],
--                [KDE_CHECK_COMPILER_FLAG([Wl,--allow-shlib-undefined],
--		[KDE_NO_UNDEFINED="-Wl,--no-undefined -Wl,--allow-shlib-undefined"],
--		[KDE_NO_UNDEFINED=""])],
--	    [KDE_NO_UNDEFINED=""])
--           ;;
--       esac
-   fi
-   AC_SUBST(KDE_USE_CLOSURE_TRUE)
-   AC_SUBST(KDE_USE_CLOSURE_FALSE)
