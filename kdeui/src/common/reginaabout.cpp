@@ -116,6 +116,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
         I18N_NOOP("Use of the SnapPea kernel and helpful discussions"));
     addCredit("The American Institute of Mathematics",
         I18N_NOOP("Generous support"));
+    addCredit("The Australian Research Council",
+        I18N_NOOP("Hardware support"));
     addCredit("Oklahoma State University",
         I18N_NOOP("Generous support"));
     addCredit("RMIT University, Australia",
