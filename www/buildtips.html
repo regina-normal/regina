@@ -1,12 +1,12 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="regina.css">
-    <title>Tips for Building Regina</title>
+    <title>Building Regina on Different Distributions</title>
 </head>
 <body bgcolor="#FFFFFF" text="#000000"
     link="#0000EE" vlink="#551A8B" alink="#FF0000">
 
-<h1><a name="contents">Tips for Building Regina</a></h1>
+<h1><a name="contents">Building Regina on Different Distributions</a></h1>
 
 <p>
 The following sections show how Regina can be built successfully on
@@ -65,16 +65,20 @@ the following additional argument to the <tt>./configure</tt> script:
 <h2><a name="fedora">Fedora Core</a></h2>
 
 <p>
-Before running the <tt>./configure</tt> script, try the following:
+If the <tt>./configure</tt> script is having trouble locating your
+Qt/KDE installation, try the following:
 <ul>
 <li> Run "<tt>source /etc/profile.d/qt.sh</tt>" if you use a bash-style shell
 (such as bash or zsh);</li>
 <li> Run "<tt>source /etc/profile.d/qt.csh</tt>" if you use a csh-style shell
 (such as csh or tcsh).</li>
 </ul>
-This will help the <tt>./configure</tt> script locate your Qt/KDE
-installation.
+An example for a bash user is given below:
 </p>
+<div class="example"><p>
+<tt>example$ source /etc/profile.d/qt.sh<br>
+example$ ./configure</tt>
+</p></div>
 
 <h2><a name="fink">Fink on MacOS X</a></h2>
 
@@ -85,8 +89,8 @@ can find the Fink libraries:
 </p>
 <div class="example">
 <p>
-<tt>example$ ./configure --with-extra-includes=/sw/include
---with-extra-libs=/sw/lib</tt>
+<tt>example$ ./configure
+--with-extra-includes=/sw/include --with-extra-libs=/sw/lib</tt>
 </p>
 </div>
 <p>
@@ -95,22 +99,28 @@ location, which means the KDE Help Centre cannot find it.  This can be
 fixed with the following additional argument:
 </p>
 <div class="example"><p>
-<tt>example$ ./configure kde_htmldir=/sw/share/doc/kde ...</tt>
+<tt>example$ ./configure
+--with-extra-includes=/sw/include --with-extra-libs=/sw/lib
+kde_htmldir=/sw/share/doc/kde</tt>
 </p></div>
 
 <h2><a name="mandriva">Mandriva Linux</a></h2>
 
 <p>
-Before running the <tt>./configure</tt> script, try the following:
+If the <tt>./configure</tt> script is having trouble locating your
+Qt/KDE installation, try the following:
 <ul>
 <li> Run "<tt>source /etc/profile.d/qtdir3.sh</tt>" if you use a bash-style
 shell (such as bash or zsh);</li>
 <li> Run "<tt>source /etc/profile.d/qtdir3.csh</tt>" if you use a csh-style
 shell (such as csh or tcsh).</li>
 </ul>
-This will help the <tt>./configure</tt> script locate your Qt/KDE
-installation.
+An example for a bash user is given below:
 </p>
+<div class="example"><p>
+<tt>example$ source /etc/profile.d/qtdir3.sh<br>
+example$ ./configure</tt>
+</p></div>
 
 <h2><a name="suse">SuSE Linux</a></h2>
 
@@ -121,18 +131,21 @@ the KDE parts of Regina are installed where KDE can find them, and
 the non-KDE parts of Regina are installed in a more standard location.
 </p>
 <p>
-The arguments used to build the SuSE packages include:
+The arguments used by the author to build the SuSE packages include:
 </p>
 <div class="example"><p>
-<tt>example$ ./configure --prefix=/opt/kde3 --includedir=/usr/include
---mandir=/usr/share/man</tt>
+<tt>example$ ./configure --prefix=/opt/kde3
+--includedir=/usr/include --mandir=/usr/share/man</tt>
 </p></div>
 <p>
 In addition, if you wish to build the MPI utilities (assuming you have
-<tt>mpich-devel</tt> installed), you may need the following argument:
+<tt>mpich-devel</tt> installed), you may need the following
+additional argument:
 </p>
 <div class="example"><p>
-<tt>example$ ./configure MPICXX=/opt/mpich/ch-p4/bin/mpicxx ...</tt>
+<tt>example$ ./configure --prefix=/opt/kde3
+--includedir=/usr/include --mandir=/usr/share/man
+MPICXX=/opt/mpich/ch-p4/bin/mpicxx</tt>
 </p></div>
 
 <h2><a name="ubuntu">Ubuntu</a></h2>
