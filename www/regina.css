@@ -212,3 +212,15 @@ table.data td.optfirst {
   border-style: solid
 }
 
+div.example p {
+  background-color: #C1FFB5;
+  border-width: 1px;
+  border-color: #8EBA8B;
+  border-style: solid;
+  margin-left: 5ex;
+  padding-top: 1ex;
+  padding-bottom: 1ex;
+  padding-left: 1ex;
+  padding-right: 1ex;
+}
+
