@@ -119,6 +119,7 @@ void NSurfaceCoordinateItem::setText(int column, const QString& str) {
 QString NSurfaceCoordinateItem::text(int column) const {
     regina::NTriBool triBool;
     if (surfaces->isEmbeddedOnly()) {
+        const int nCols = 7;
         switch (column) {
             case 0:
                 return name;
@@ -188,17 +189,18 @@ QString NSurfaceCoordinateItem::text(int column) const {
                         return QString::null;
                 }
             default:
-                if (column >= coordCols + 8 || column < 0)
+                if (column >= coordCols + nCols || column < 0)
                     return QString::null;
 
                 regina::NLargeInteger ans = Coordinates::getCoordinate(
-                    coordSystem, *surface, column - 8);
+                    coordSystem, *surface, column - nCols);
                 if (ans == (long)0)
                     return QString::null;
                 else
                     return ans.stringValue().c_str();
         }
     } else {
+        const int nCols = 5;
         switch (column) {
             case 0:
                 return name;
@@ -241,11 +243,11 @@ QString NSurfaceCoordinateItem::text(int column) const {
                 else
                     return QString::null;
             default:
-                if (column >= coordCols + 5 || column < 0)
+                if (column >= coordCols + nCols || column < 0)
                     return QString::null;
 
                 regina::NLargeInteger ans = Coordinates::getCoordinate(
-                    coordSystem, *surface, column - 5);
+                    coordSystem, *surface, column - nCols);
                 if (ans == (long)0)
                     return QString::null;
                 else
