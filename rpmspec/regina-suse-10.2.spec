@@ -1,5 +1,6 @@
 # Known to work for:
 # - SuSE 10.2
+# - SuSE 10.3
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
