@@ -84,7 +84,7 @@ Depends: <<
 <<
 Suggests: graphviz, regina-normal-dev
 
-ConfigureParams: --disable-mpi --with-python-version=2.5 kde_htmldir='${datadir}/doc/kde' PKGNAME=regina-normal
+ConfigureParams: --disable-mpi --with-python-version=2.5 kde_htmldir='${datadir}/doc/kde' PKGNAME=regina-normal --disable-dependency-tracking
 CompileScript: <<
 	# Rerun autotools to use our patched libtool and configuration tests.
 	admin/ac_gen
