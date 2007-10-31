@@ -49,8 +49,6 @@ the -shlibs package name.
 GCC: 4.0
 BuildDepends: <<
 	arts-dev,
-	autoconf,
-	automake1.9 | automaken,
 	boost1.33 (>= 1.33.1-1008),
 	cctools-single-module,
 	doxygen,
@@ -89,14 +87,6 @@ Suggests: graphviz, regina-normal-dev
 
 ConfigureParams: --disable-mpi --with-python-version=2.5 kde_htmldir='${datadir}/doc/kde' PKGNAME=regina-normal --disable-dependency-tracking
 CompileScript: <<
-	# Rerun autotools to use our patched libtool and configuration tests.
-	admin/ac_gen
-	aclocal
-	autoheader
-	autoconf
-	automake
-	perl -w admin/am_edit
-
 	# Run configuration tests.
 	./configure %c
 
