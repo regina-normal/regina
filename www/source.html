@@ -8,6 +8,10 @@
 
 <h1><a name="contents">Building Regina from Source</a></h1>
 
+<b>Update (November 2007):</b> <i>See the new page on
+<a href="buildtips.html">building Regina on different distributions</a>,
+which offers advice tailored for your particular type of machine.</i>
+<p>
 Building Regina from its sources can be either trivially simple or quite
 painstaking depending upon your system configuration.  With each new
 release, the scripts that automatically detect your system configuration
@@ -34,7 +38,10 @@ Basically the steps are as follows.
     <li>From within this directory run <tt><b>./configure</b></tt>.  This will
     run the automatic detection scripts that search for the necessary tools
     and libraries on your system and work out how they can be used to
-    build Regina.</li>
+    build Regina.<br>
+    <b>Please visit <a href="buildtips.html">this page</a> for additional
+    configure arguments that you might need for your particular machine.</b>
+    </li>
     <li>If the configure succeeds, run <tt><b>make</b></tt> to build Regina.
     Then, as root, run <tt><b>make install</b></tt> to install Regina on your
     system.</li>
@@ -62,7 +69,7 @@ Regina can easily find and use.  Where you will find such packages
 depends upon your distribution.  For instance, Debian packages can all
 be found on the <a href="http://packages.debian.org/">usual Debian
 servers</a>, Fedora Core packages can be found on the
-<a href="http://download.fedora.redhat.com/pub/fedora/linux/core/4/i386/os/Fedora/RPMS/">Fedora
+<a href="http://download.fedora.redhat.com/pub/fedora/linux/core/6/i386/os/Fedora/RPMS/">Fedora
 download servers</a> and so on.
 <p>
 The following table lists each requirement along with its Debian package
@@ -121,7 +128,7 @@ need to install the package <i>libjpeg-devel</i>.
 <tr><td class="optfirst">Python libraries <em>(libpython)</em></td>
     <td class="opt">Python scripting</td>
     <td>&gt;= 2.2</td>
-    <td>libpython2.3-dev (DEB)<br>python-devel / libpython2.4-devel (RPM)<br>
+    <td>libpython2.4-dev (DEB)<br>python-devel / libpython2.4-devel (RPM)<br>
     <a href="http://www.python.org/">http://www.python.org/</a><br>
     <em>(note that some RPM-based systems also require libselinux-devel)</em>
     </td></tr>
