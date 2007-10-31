@@ -7,6 +7,6 @@ releases.
 
 Only the Debian packager(s) for Regina should need to use this directory.
 
-Move into the parent directory and type "make help" for details on
+Move into the root source directory and type "make help" for details on
 building Regina for yourself.
 
