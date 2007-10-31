@@ -15,10 +15,13 @@ Source-MD5: 5ea66b9b43754483577a5e96523de37d
 SourceRename: %n-%v.tar.gz
 SourceDirectory: regina-%v
 
-# This patch makes regina-python explicitly run python2.5 instead of
-# `which python`.
-#
-Patch: %n.patch
+PatchScript: <<
+	# Make regina-python explicitly run fink's python2.5, instead of
+	# running whatever python installation it can find.
+	sed 's|`which python`|"%p/bin/python2.5"|' \
+		< python/regina-python.in > python/regina-python.in.new
+	mv -f python/regina-python.in.new python/regina-python.in
+<<
 
 DescPackaging: <<
 Although the upstream application is called regina, this package is called
