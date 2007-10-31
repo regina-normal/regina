@@ -1,0 +1,264 @@
+Package: regina-normal
+Version: 4.3.1
+Revision: 1
+
+Maintainer: Ben Burton <bab@debian.org>
+HomePage: http://regina.sourceforge.net/
+License: GPL
+Description: Computational 3-manifold topology software
+
+# TODO: Once gap is available in fink stable, have regina-normal suggest it.
+# TODO: Once lammpi hits fink intel/stable, build MPI-related utilities.
+
+Source: mirror:sourceforge:regina/regina-%v.tar.gz
+Source-MD5: 5ea66b9b43754483577a5e96523de37d
+SourceRename: %n-%v.tar.gz
+SourceDirectory: regina-%v
+
+# This patch includes:
+# - a patch to explicitly run python2.5 instead of `which python`;
+# - an updated libtool (needed for linking on MacOS);
+# - updated boost.python configuration tests (needed to support Fink's
+#   python version and installation directory);
+# - updated linker flags (needed to link the kpart with libpythonX.Y);
+# - an additional libtool patch that forces -flat_namespace, so that
+#   the python module operates correctly.
+#
+# All of these patches have been incorporated in the upstream repository
+# (except for the python2.5 patch, which is specific to fink).  This means
+# that most of these patches will not be required once regina 4.4 is released.
+Patch: %n.patch
+
+DescPackaging: <<
+Although the upstream application is called regina, this package is called
+regina-normal to avoid confusion with regina the REXX interpreter.
+.
+Regarding shared libraries:  Regina builds two shared libraries in /sw/lib
+(libregina-engine and libregina-kdecommon), plus some dlopenable modules
+in other directories (including a python module and a kpart for KDE).
+.
+The library libregina-kdecommon is for internal use only, and is shared
+between the kpart and the KDE executable.  It is part of the main
+regina-normal package, and does not provide any headers or library symlinks.
+.
+The library libregina-engine is designed for external use.  The library is
+shipped in the splitoff regina-normal%v-shlibs, and headers and symlinks
+are shipped in the splitoff regina-normal-dev.
+.
+Since the library APIs are likely to change with each new release, these
+libraries are built using -release instead of -version-info.  This means
+that each new upstream release gives the libraries a new version number.
+For this reason, the entire upstream version number is hard-coded into
+the -shlibs package name.
+<<
+
+GCC: 4.0
+BuildDepends: <<
+	arts-dev,
+	autoconf,
+	automake1.9 | automaken,
+	boost1.33 (>= 1.33.1-1008),
+	cctools-single-module,
+	doxygen,
+	fink,
+	gmp,
+	kdelibs3-unified-dev,
+	libart2,
+	libgettext3-dev,
+	libiconv-dev,
+	libidn,
+	libjpeg,
+	libpng3,
+	libxml2,
+	popt,
+	qt3,
+	x11-dev
+<<
+BuildConflicts: regina-normal-dev
+Depends: <<
+	%n%v-shlibs,
+	boost1.33-shlibs,
+	gmp-shlibs,
+	kdebase3-unified,
+	kdelibs3-unified-shlibs,
+	libart2-shlibs,
+	libgettext3-shlibs,
+	libiconv,
+	libidn-shlibs,
+	libjpeg-shlibs,
+	libpng3-shlibs,
+	libxml2-shlibs,
+	python25,
+	qt3-shlibs
+<<
+Suggests: graphviz, regina-normal-dev
+
+ConfigureParams: --disable-mpi --with-python-version=2.5 kde_htmldir='${datadir}/doc/kde' PKGNAME=regina-normal
+CompileScript: <<
+	# Rerun autotools to use our patched libtool and configuration tests.
+	admin/ac_gen
+	aclocal
+	autoheader
+	autoconf
+	automake
+	perl -w admin/am_edit
+
+	# Run configuration tests.
+	./configure %c
+
+	# Stop for a sanity check to see if the right bits and pieces are
+	# going to be built (i.e., if all the required dependencies were
+	# found).  It's a long build, and we'd rather know now than later.
+	#
+	# If any of these grep tests fails, it means that either something is
+	# missing from the BuildDepends list, or else one of the build
+	# dependencies has recently changed in a way that makes it
+	# incompatible with this .info file.  Either way, please email
+	# the package maintainer so that this can be fixed -- thanks!
+	grep '^REGINA_BUILD_DOCSENGINE=.engine.$' config.log > /dev/null
+	grep '^REGINA_BUILD_ENGINE=.engine.$' config.log > /dev/null
+	grep '^REGINA_BUILD_KDEUI=.kdeui.$' config.log > /dev/null
+	grep '^REGINA_BUILD_PYTHON=.python.$' config.log > /dev/null
+	grep '^REGINA_BUILD_UTILS=.utils.$' config.log > /dev/null
+
+	# On with the usual build procedure.
+	make
+<<
+InstallScript: <<
+	# Standard install procedure.
+	make install DESTDIR=%d
+
+	# Remove library files that we don't actually want.
+	# This includes static versions of modules that we plan to dlopen,
+	# and also development files for libraries that are not meant to
+	# be shared outside this package.
+	rm %i/lib/libregina-kdecommon.a
+	rm %i/lib/libregina-kdecommon.la
+	rm %i/lib/libregina-kdecommon.dylib
+	rm %i/lib/regina-normal/python/regina.a
+	rm %i/lib/kde3/libreginapart.a
+
+	# Make a symlink from the documentation directory into the directory
+	# containing the sample data files.
+	install -d -m 755 %i/share/doc/%n
+	ln -s %p/share/regina-normal/examples %i/share/doc/%n/examples
+<<
+
+DocFiles: AUTHORS.txt CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
+
+PostInstScript: <<
+	# Rebuild the global KDE system configuration cache.
+	env KDEDIR= KDEDIRS= HOME=/tmp XDG_CACHE_HOME=/tmp/kb/cache XDG_CONFIG_HOME=/tmp/kb/config \
+		XDG_DATA_HOME=/tmp/kb/share HISTFILE=/tmp/kb/.bash_history USER=root LOGNAME=root \
+		%p/bin/kbuildsycoca --global --noincremental --nosignal >/dev/null 2>&1 || :
+<<
+
+DescDetail: <<
+Regina is a suite of mathematical software for 3-manifold topologists.
+It focuses upon the study of 3-manifold triangulations and includes
+support for normal surfaces and angle structures.
+.
+Highlights of Regina include triangulation analysis and simplification,
+census creation and normal surface enumeration.  It offers embedded
+Python scripting giving full access to the calculation engine.
+.
+This package includes the KDE user interface and the command-line
+Python interface, as well as the users' reference manual and the
+Python reference (i.e., the API documentation for the Regina
+calculation engine).
+<<
+DescUsage: <<
+Two main binaries are provided with Regina:
+.
+- %p/bin/regina-kde, which starts the KDE user interface;
+- %p/bin/regina-python, which starts a command-line Python session.
+.
+Several other specialised binaries are also provided; see the users'
+reference manual for details.
+.
+The users' reference manual is provided with this package and can be
+viewed in the KDE Help Centre, or by entering the URL 'help:/regina/'
+directly into konqueror.  It can also be viewed through Regina's graphical
+user interface by selecting "Help -> Regina Handbook".
+.
+Sample topology data files and sample Python sessions are provided in
+the directory %p/share/doc/regina-normal/examples/.
+.
+If you are using Python scripting or if you are building the Regina
+calculation engine into your own projects, you will probably want the
+calculation engine API documentation.  This API documentation is
+installed in the directory %p/share/regina-normal/engine-docs/, and
+can also be viewed through Regina's graphical user interface by selecting
+"Help -> Python Reference".
+.
+Headers and other development files required for building Regina's C++
+calculation engine into your own projects are provided by the package
+regina-normal-dev.
+.
+If you find Regina useful in your research, please consider citing it as
+you would any other paper that you use.  The introductory chapter of the
+Regina reference manual includes a suggested form of reference.
+<<
+
+SplitOff: <<
+	Package: regina-normal4.3.1-shlibs
+	Description: Shared libraries for 3-manifold topology software
+	Depends: <<
+		libiconv,
+		libxml2-shlibs,
+		gmp-shlibs
+	<<
+	Files: <<
+		lib/libregina-engine-%v.dylib
+	<<
+	DocFiles: AUTHORS.txt CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
+	Shlibs: <<
+		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.3.1-1)
+	<<
+	DescDetail: <<
+Regina is a suite of mathematical software for 3-manifold topologists.
+Highlights of Regina include triangulation analysis and simplification,
+census creation and normal surface enumeration.
+.
+This package provides the Regina calculation engine as a C++ shared
+library, for use in other projects.  For complete API documentation, see
+the package regina-normal.
+	<<
+<<
+
+SplitOff2: <<
+	Package: regina-normal-dev
+	Description: Development files for 3-manifold topology software
+	BuildDependsOnly: True
+	Depends: %N (= %v-%r)
+	Files: <<
+		include
+		lib/libregina-engine.a
+		lib/libregina-engine.la
+		lib/libregina-engine.dylib
+	<<
+	DocFiles: AUTHORS.txt CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
+	DescDetail: <<
+Regina is a suite of mathematical software for 3-manifold topologists.
+Highlights of Regina include triangulation analysis and simplification,
+census creation and normal surface enumeration.
+.
+This package provides development files for compiling the Regina
+calculation engine into other projects.
+	<<
+	DescUsage: <<
+The Regina calculation engine is provided in the C++ shared library
+%p/lib/libregina-engine.dylib.
+.
+The corresponding headers can be found in %p/include/regina-normal/.
+.
+Complete API documentation for this library can be found in the package
+regina-normal.  This documentation is typically installed in the directory
+%p/share/regina-normal/engine-docs/, and can also be viewed through
+Regina's graphical user interface by selecting "Help -> Python Reference".
+.
+Developers can run %p/bin/regina-engine-config to obtain the
+necessary compiler and linker options.
+	<<
+<<
+
