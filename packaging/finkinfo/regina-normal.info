@@ -15,18 +15,9 @@ Source-MD5: 5ea66b9b43754483577a5e96523de37d
 SourceRename: %n-%v.tar.gz
 SourceDirectory: regina-%v
 
-# This patch includes:
-# - a patch to explicitly run python2.5 instead of `which python`;
-# - an updated libtool (needed for linking on MacOS);
-# - updated boost.python configuration tests (needed to support Fink's
-#   python version and installation directory);
-# - updated linker flags (needed to link the kpart with libpythonX.Y);
-# - an additional libtool patch that forces -flat_namespace, so that
-#   the python module operates correctly.
+# This patch makes regina-python explicitly run python2.5 instead of
+# `which python`.
 #
-# All of these patches have been incorporated in the upstream repository
-# (except for the python2.5 patch, which is specific to fink).  This means
-# that most of these patches will not be required once regina 4.4 is released.
 Patch: %n.patch
 
 DescPackaging: <<
