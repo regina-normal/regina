@@ -124,7 +124,6 @@ if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^autom4te.cache\(/\|$\)' | \
     grep -v '^config.log$' | \
     grep -v '^config.status$' | \
-    grep -v '^debian\(/\|$\)' | \
     grep -v '^docs/engine/.*\.css$' | \
     grep -v '^docs/engine/.*\.gif$' | \
     grep -v '^docs/engine/.*\.html$' | \
@@ -142,12 +141,12 @@ if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^kdeui/src/shell/regina-kde$' | \
     grep -v '^libtool$' | \
     grep -v '^metrics\(/\|$\)' | \
+    grep -v '^packaging\(/\|$\)' | \
     grep -v '^python/regina-python$' | \
     grep -v '^redist\(/\|$\)' | \
     grep -v '^regina-[0-9.]\+\.tar\.bz2$' | \
     grep -v '^regina-[0-9.]\+\.tar\.gz$' | \
     grep -v '^regina-[0-9.]\+\.zip$' | \
-    grep -v '^rpmspec\(/\|$\)' | \
     grep -v '^sfdist\(/\|$\)' | \
     grep -v '^stuff\(/\|$\)' | \
     grep -v '^test\(/\|$\)' | \
