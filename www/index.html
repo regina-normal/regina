@@ -132,41 +132,92 @@ Click on an image to see a full scale version.
 
 <h2><a name="download">Download</a></h2>
 
-Prebuilt packages for Regina are available for the following GNU/Linux
-distributions.  Most packages are available from the
-<a href="http://sourceforge.net/project/showfiles.php?group_id=19698">Regina
-download site</a> (the few exceptions are noted below).  All of the
-packages are named <tt>regina-normal</tt> to avoid conflicting with the
-<a href="http://regina-rexx.sourceforge.net/">other Regina</a>.
+Prebuilt packages for Regina are available for several GNU/Linux
+distributions, as listed in the table below.  To fetch the package for your
+distribution:
+<ul>
+<li>If you see a <i>Download</i> link, click on this to fetch
+the package directly from SourceForge.net.</li>
+<li>If you see an <i>Instructions</i> link, it means the packages are
+kept off-site (for instance, some Debian packages are hosted directly on
+debian.org).  Click on the <i>Instructions</i> link for details.
+</ul>
+All of the packages are named <tt>regina-normal</tt> to avoid conflicting
+with the <a href="http://regina-rexx.sourceforge.net/">other Regina</a>.
+
 <blockquote><table cellspacing=0 border=0 align=center class="data">
-<tr><th class="first">Distribution</th><th>Versions</th><th>Notes</th></tr>
-<tr><td class="first">Debian</td>
-    <td>Sarge, Etch and Sid</td>
-    <td>Packages are kept elsewhere; see the <i>README.debian</i> files
-    on the download site for details.</td></tr>
-<tr><td class="first">Fedora Core</td>
-    <td>3, 4, 5 and 6</td>
-    <td>&nbsp;</td></tr>
-<tr><td class="first">Mandriva</td>
-    <td>10.2 (Limited Edition 2005), 2006.0 and 2007.0</td>
-    <td>&nbsp;</td></tr>
-<tr><td class="first">SuSE</td>
-    <td>9.2, 9.3, 10.0 and 10.1</td>
-    <td>Scripting is disabled on SuSE 10.0 because their boost packages
-    are broken (they chose
-    <a href="https://bugzilla.novell.com/show_bug.cgi?id=137558">not
-    to fix this until SuSE 10.1</a>).<br>
-    The API documentation is broken on SuSE 9.3 because their
-    doxygen is buggy; you can always
-    <a href="engine-docs/modules.html">read the API documentation
-    here</a>.</td></tr>
-<tr><td class="first">Ubuntu</td>
-    <td>Breezy Badger, Dapper Drake and Edgy Eft</td>
-    <td>Packages are kept elsewhere; see the <i>README.ubuntu</i> files
-    on the download site for details.</td></tr>
-<tr><td class="first" colspan=3>All of these packages have been built on
-<b>fully updated machines</b> (all security and other recommended
-updates installed).  You might need to update your machine also.</td></tr>
+<tr><th class="first">Distribution</th>
+    <th>Version</th>
+    <th>32-bit package (i386 or i586)</th>
+    <th>64-bit package (amd64 or x86_64)</th>
+    </tr>
+<tr><td rowspan=3 class="first">Debian</td>
+    <td>4.0 (etch)</td>
+    <td align="center" colspan=2>Instructions</td>
+    </tr>
+<tr>
+    <td>testing (lenny)</td>
+    <td align="center" colspan=2>Instructions</td>
+    </tr>
+<tr>
+    <td>unstable (sid)</td>
+    <td align="center" colspan=2>Instructions</td>
+    </tr>
+<tr><td rowspan=3 class="altfirst">Fedora Core</td>
+    <td class="alt">8</td>
+    <td class="alt" align="center" colspan=2>Available mid-November</td>
+    </tr>
+<tr>
+    <td class="alt">7</td>
+    <td class="alt" align="center">Download</td>
+    <td class="alt" align="center">Download</td>
+    </tr>
+<tr>
+    <td class="alt">6</td>
+    <td class="alt" align="center">Download</td>
+    <td class="alt" align="center">N/A</td>
+    </tr>
+<tr><td rowspan=1 class="first">Fink / MacOS X</td>
+    <td>&gt;= 10.4</td>
+    <td align="center" colspan=2>Instructions</td>
+    </tr>
+<tr><td rowspan=3 class="altfirst">Mandriva</td>
+    <td class="alt">2008.0</td>
+    <td class="alt" align="center">Download</td>
+    <td class="alt" align="center">Download</td>
+    </tr>
+<tr>
+    <td class="alt">2007.1</td>
+    <td class="alt" align="center">Download</td>
+    <td class="alt" align="center">N/A</td>
+    </tr>
+<tr>
+    <td class="alt">2007.0</td>
+    <td class="alt" align="center">Download</td>
+    <td class="alt" align="center">N/A</td>
+    </tr>
+<tr><td rowspan=2 class="first">SuSE</td>
+    <td>10.3</td>
+    <td align="center">Download</td>
+    <td align="center">Download</td>
+    </tr>
+<tr>
+    <td>10.2</td>
+    <td align="center">Download</td>
+    <td align="center">Download</td>
+    </tr>
+<tr><td rowspan=3 class="altfirst">Ubuntu</td>
+    <td class="alt">7.10 (gutsy)</td>
+    <td class="alt" align="center" colspan=2>Instructions</td>
+    </tr>
+<tr>
+    <td class="alt">7.04 (feisty)</td>
+    <td class="alt" align="center" colspan=2>Instructions</td>
+    </tr>
+<tr>
+    <td class="alt">6.06 LTS (dapper)</td>
+    <td class="alt" align="center" colspan=2>Instructions</td>
+    </tr>
 </table></blockquote>
 <p>
 For other platforms or distributions, Regina is available in source form
