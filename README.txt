@@ -50,8 +50,13 @@ The steps involved are as follows.
 To start Regina once you've installed it, run "regina-kde" (or
 alternatively try to locate Regina in your menu of applications).
 
-For some systems this build procedure will need to be customised.  For
-this reason it is strongly recommended that you read the tips and warnings
+For some systems this build procedure will need to be customised.  Please
+visit the following page for typical customisations that are needed on
+various GNU/Linux distributions:
+
+    http://regina.sourceforge.net/buildtips.html
+
+It is also strongly recommended that you read the tips and warnings
 section below.
 
 --------------------
