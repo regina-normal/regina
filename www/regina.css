@@ -10,10 +10,7 @@ p {
 p.return {
   margin: 2em 0px 0px 0px;
   padding: 5px 0px 5px 0px;
-  border-top: 4px;
-  border-bottom: 4px;
-  border-left: 0px;
-  border-right: 0px;
+  border-width: 4px 0px 4px 0px;
   border-color: #B5BCF8;
   border-style: solid;
 }
@@ -26,10 +23,7 @@ h1 {
   background-color: #FFFFFF;
   margin: 2em 0px 1em 0px;
   padding: 5px 0px 5px 0px;
-  border-top: 4px;
-  border-bottom: 4px;
-  border-left: 0px;
-  border-right: 0px;
+  border-width: 4px 0px 4px 0px;
   border-color: #B5BCF8;
   border-style: solid;
 }
@@ -53,10 +47,7 @@ h4 {
   font-size: medium;
   font-weight: bold;
   color: #3D3F53;
-  border-top: 0px;
-  border-bottom: 0px;
-  border-left: 0px;
-  border-right: 0px;
+  border-width: 0px 0px 0px 0px;
   border-color: #B5BCF8;
   border-style: solid;
 }
@@ -71,10 +62,7 @@ table.contentswrapper th {
   color: #3D3F53;
   background-color: #B5BCF8;
   padding: 2px 1ex 2px 1ex;
-  border-top: 0px;
-  border-bottom: 1px;
-  border-left: 1px;
-  border-right: 1px;
+  border-width: 0px 1px 1px 1px;
   border-color: #FFFFFF;
   border-style: solid;
 }
@@ -82,20 +70,19 @@ table.contentswrapper th {
 table.contentswrapper td {
   background-color: #E0E2F8;
   padding: 5px 1ex 5px 1ex;
-  border-top: 1px;
-  border-bottom: 1px;
-  border-left: 1px;
-  border-right: 1px;
+  border-width: 1px 1px 1px 1px;
   border-color: #FFFFFF;
   border-style: solid;
 }
 
 table.contents td {
   padding: 1px 1px 1px 1px;
-  border-top: 0px;
-  border-bottom: 0px;
-  border-left: 0px;
-  border-right: 0px;
+  border-width: 0px 0px 0px 0px;
+}
+
+table.data td, table.data th {
+  border-color: #B5BCF8;
+  border-style: solid
 }
 
 table.data th {
@@ -103,113 +90,45 @@ table.data th {
   color: #3D3F53;
   background-color: #E0E2F8;
   padding: 2px 1ex 2px 1ex;
-  border-top: 2px;
-  border-bottom: 2px;
-  border-left: 0px;
-  border-right: 2px;
-  border-color: #B5BCF8;
-  border-style: solid;
+  border-width: 2px 2px 2px 0px;
 }
 
 table.data th.first {
-  font-weight: bold;
-  color: #3D3F53;
-  background-color: #E0E2F8;
-  padding: 2px 1ex 2px 1ex;
-  border-top: 2px;
-  border-bottom: 2px;
-  border-left: 2px;
-  border-right: 2px;
-  border-color: #B5BCF8;
-  border-style: solid;
+  border-width: 2px 2px 2px 2px;
 }
 
 table.data td {
   background-color: #F2F4F8;
   padding: 2px 2px 2px 2px;
-  border-top: 0px;
-  border-bottom: 2px;
-  border-left: 0px;
-  border-right: 2px;
-  border-color: #B5BCF8;
-  border-style: solid
+  border-width: 0px 2px 2px 0px;
 }
 
-table.data td.first {
-  background-color: #F2F4F8;
-  padding: 2px 2px 2px 2px;
-  border-top: 0px;
-  border-bottom: 2px;
-  border-left: 2px;
-  border-right: 2px;
-  border-color: #B5BCF8;
-  border-style: solid
+table.data td.na {
+  background-color: #B5BCF8;
 }
 
-table.data td.req {
+table.data td.first, table.data td.altfirst, table.data td.reqfirst, table.data td.recfirst, table.data td.optfirst {
+  border-width: 0px 2px 2px 2px;
+}
+
+table.data td.alt, table.data td.altfirst {
+  background-color: #E9EAF8;
+}
+
+table.data td.req, table.data td.reqfirst {
   background-color: #D4FFD1;
-  padding: 2px 2px 2px 2px;
-  border-top: 0px;
-  border-bottom: 2px;
-  border-left: 0px;
-  border-right: 2px;
-  border-color: #B5BCF8;
-  border-style: solid
 }
 
-table.data td.reqfirst {
-  background-color: #D4FFD1;
-  padding: 2px 2px 2px 2px;
-  border-top: 0px;
-  border-bottom: 2px;
-  border-left: 2px;
-  border-right: 2px;
-  border-color: #B5BCF8;
-  border-style: solid
-}
-
-table.data td.rec {
+table.data td.rec, table.data td.recfirst {
   background-color: #80FF80;
-  padding: 2px 2px 2px 2px;
-  border-top: 0px;
-  border-bottom: 2px;
-  border-left: 0px;
-  border-right: 2px;
-  border-color: #B5BCF8;
-  border-style: solid
 }
 
-table.data td.recfirst {
-  background-color: #80FF80;
-  padding: 2px 2px 2px 2px;
-  border-top: 0px;
-  border-bottom: 2px;
-  border-left: 2px;
-  border-right: 2px;
-  border-color: #B5BCF8;
-  border-style: solid
-}
-
-table.data td.opt {
+table.data td.opt, table.data td.optfirst {
   background-color: #F0D7FF;
-  padding: 2px 2px 2px 2px;
-  border-top: 0px;
-  border-bottom: 2px;
-  border-left: 0px;
-  border-right: 2px;
-  border-color: #B5BCF8;
-  border-style: solid
 }
 
-table.data td.optfirst {
-  background-color: #F0D7FF;
-  padding: 2px 2px 2px 2px;
-  border-top: 0px;
-  border-bottom: 2px;
-  border-left: 2px;
-  border-right: 2px;
-  border-color: #B5BCF8;
-  border-style: solid
+div.example p, div.announce p {
+  padding: 1ex 1ex 1ex 1ex;
 }
 
 div.example p {
@@ -218,21 +137,13 @@ div.example p {
   border-color: #8EBA8B;
   border-style: solid;
   margin-left: 5ex;
-  padding-top: 1ex;
-  padding-bottom: 1ex;
-  padding-left: 1ex;
-  padding-right: 1ex;
 }
 
 div.announce p {
   background-color: #E0E2F8;
+  border-width: 2px;
   border-color: #B5BCF8;
   border-style: solid;
-  border-width: 2px;
-  padding-top: 1ex;
-  padding-bottom: 1ex;
-  padding-left: 1ex;
-  padding-right: 1ex;
 }
 
 div.announce b {
