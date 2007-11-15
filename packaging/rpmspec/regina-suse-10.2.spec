@@ -135,7 +135,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/regina
 
 %changelog
-* Sun Nov 11 2007 Ben Burton <bab@debian.org> 4.4
+* Sun Nov 25 2007 Ben Burton <bab@debian.org> 4.4
 - New upstream release.
 
 * Sun Feb 4 2007 Ben Burton <bab@debian.org> 4.3.1

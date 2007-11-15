@@ -2,7 +2,7 @@ regina-normal (4.4-1ubuntu1~feisty1) unstable; urgency=low
 
   * New upstream release, backported to ubuntu feisty.
 
- -- Ben Burton <bab@debian.org>  Sun, 11 Nov 2007 10:28:59 +1100
+ -- Ben Burton <bab@debian.org>  Sun, 25 Nov 2007 10:28:59 +1100
 
 regina-normal (4.3.1-6) unstable; urgency=low
 

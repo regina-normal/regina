@@ -120,7 +120,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/*
 
 %changelog
-* Sun Nov 11 2007 Ben Burton <bab@debian.org> 4.4
+* Sun Nov 25 2007 Ben Burton <bab@debian.org> 4.4
 - New upstream release.
 
 * Fri May 5 2006 Ben Burton <bab@debian.org> 4.3.1

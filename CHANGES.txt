@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 4.4  [ 11 November, 2007 ] - The "hug a Mac today" release.
+Version 4.4  [ 25 November, 2007 ] - The "hug a Mac today" release.
 
     OVERALL:
         - Builds and runs happily on MacOS!  Requires Fink to be installed.
