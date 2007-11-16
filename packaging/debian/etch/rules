@@ -15,14 +15,19 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
 endif
 
-ifeq ($(shell dpkg-architecture -qDEB_BUILD_ARCH),ia64)
-	# MPI utilities fail to link under ia64.
-	NO_MPI = 1
-	configmpi = --disable-mpi
-else
-	NO_MPI = 0
-	configmpi =
-endif
+# Let's see if the ia64 MPI link failure has been fixed.
+#
+NO_MPI = 0
+configmpi =
+
+# ifeq ($(shell dpkg-architecture -qDEB_BUILD_ARCH),ia64)
+# 	# MPI utilities fail to link under ia64.
+# 	NO_MPI = 1
+# 	configmpi = --disable-mpi
+# else
+# 	NO_MPI = 0
+# 	configmpi =
+# endif
 
 # Fetch the python version out of debian/control so we can pass it to
 # ./configure.  This keeps things sane when multiple python*-dev packages
@@ -96,9 +101,6 @@ ifneq ($(NO_MPI),1)
 	  echo "       Check your configure options."; \
 	  /bin/false; \
 	fi
-else
-	# Remove unnecessary MPI files.
-	rm -f debian/regina-normal/usr/share/doc/README.MPI
 endif
 
 	# Split into separate binary packages.

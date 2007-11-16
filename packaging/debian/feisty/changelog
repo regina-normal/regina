@@ -4,6 +4,15 @@ regina-normal (4.4-1ubuntu1~feisty1) unstable; urgency=low
 
  -- Ben Burton <bab@debian.org>  Sun, 25 Nov 2007 10:28:59 +1100
 
+regina-normal (4.3.1-7) unstable; urgency=low
+
+  * Split the MPI utilities into a separate package regina-normal-mpi.  This
+    means that desktop users don't need to install mpich.
+  * Re-enabled MPI utilities on the ia64 architecture (these were disabled in
+    early 2006 due to linker failures).
+
+ -- Ben Burton <bab@debian.org>  Fri, 16 Nov 2007 06:26:03 +1100
+
 regina-normal (4.3.1-6) unstable; urgency=low
 
   * Updated for new debian menu layout.  Menu entries have moved from

@@ -1,4 +1,8 @@
-usr/bin
+usr/bin/reg*
+usr/bin/sig*
+usr/bin/tricensus
+usr/bin/tricensus-manager
+usr/bin/trisetcmp
 usr/lib/libregina-engine-4.4.so
 usr/lib/libregina-kdecommon-4.4.so
 usr/lib/kde3/libreginapart.so
@@ -10,7 +14,11 @@ usr/share/apps/regina
 usr/share/apps/reginapart
 usr/share/doc/kde/HTML
 usr/share/icons
-usr/share/man
+usr/share/man/man1/reg*
+usr/share/man/man1/sig*
+usr/share/man/man1/tricensus.1
+usr/share/man/man1/tricensus-manager.1
+usr/share/man/man1/trisetcmp.1
 usr/share/mimelnk
 usr/share/regina-normal/examples usr/share/doc/regina-normal
 usr/share/regina-normal/icons

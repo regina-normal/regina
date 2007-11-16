@@ -25,4 +25,7 @@ Headers and other development files required for building Regina's C++
 calculation engine into your own projects are provided by the package
 regina-normal-dev.
 
- -- Ben Burton <bab@debian.org>, Sun,  3 Jul 2005 18:35:25 +1000
+Components of Regina that are designed to run on clusters can be found
+in the separate package regina-normal-mpi.
+
+ -- Ben Burton <bab@debian.org>, Fri, 16 Nov 2007 06:26:03 +1100

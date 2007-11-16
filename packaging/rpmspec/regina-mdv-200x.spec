@@ -12,7 +12,6 @@ License: GPL
 Group: Sciences/Mathematics
 Source: http://prdownloads.sourceforge.net/regina/regina-%{version}.tar.gz
 URL: http://regina.sourceforge.net/
-Patch: regina-mpich.patch
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
@@ -28,13 +27,11 @@ BuildRequires: libboost1-devel
 BuildRequires: libcppunit-devel
 BuildRequires: libgmp3-devel
 BuildRequires: libkdecore4-devel
-BuildRequires: libmpich1-devel
 BuildRequires: libpython2.4-devel
 BuildRequires: libqt3-devel >= 3.2
 BuildRequires: libselinux1-devel
 BuildRequires: libstdc++6-devel
 BuildRequires: libxml2-devel
-BuildRequires: mpic++
 BuildRequires: popt-devel
 BuildRequires: zlib1-devel
 
@@ -58,13 +55,13 @@ unset QTDIR || : ; . /etc/profile.d/qtdir3.sh
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
-./configure --disable-debug --mandir=%{_mandir}
+./configure --disable-mpi --disable-debug --mandir=%{_mandir}
 
 # Stop for a sanity check to see if the right bits are going to be built.
 grep '^REGINA_BUILD_DOCSENGINE=.engine.$' config.log > /dev/null
 grep '^REGINA_BUILD_ENGINE=.engine.$' config.log > /dev/null
 grep '^REGINA_BUILD_KDEUI=.kdeui.$' config.log > /dev/null
-grep '^REGINA_BUILD_MPI=.mpi.$' config.log > /dev/null
+grep '^REGINA_BUILD_MPI=..$' config.log > /dev/null
 grep '^REGINA_BUILD_PYTHON=.python.$' config.log > /dev/null
 grep '^REGINA_BUILD_TESTSUITE=.testsuite.$' config.log > /dev/null
 grep '^REGINA_BUILD_UTILS=.utils.$' config.log > /dev/null
@@ -122,7 +119,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc CHANGES.txt
 %doc HIGHLIGHTS.txt
 %doc LICENSE.txt
-%doc README.MPI
 %docdir %{_docdir}/HTML/en/regina
 %docdir %{_datadir}/regina/engine-docs
 # Make sure we don't catch the multiarch_bin directory.
@@ -158,6 +154,8 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sun Nov 25 2007 Ben Burton <bab@debian.org> 4.4
 - New upstream release.
+- Removed MPI-enabled utilities from packages, since this causes hassles
+  for ordinary desktop users who need to hunt down MPICH dependencies.
 
 * Fri May 5 2006 Ben Burton <bab@debian.org> 4.3.1
 - New upstream release.

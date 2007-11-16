@@ -1,0 +1,18 @@
+MPI-Enabled Utilities in Regina
+-------------------------------
+
+This package provides the components of Regina that are designed to run
+large computations on clusters.  For the standard components of Regina,
+such as the graphical user interface and the users' handbook, see the
+main package "regina-normal".
+
+The utilities in this package make use of MPI (the Message Passing Interface).
+In particular, they have been built against the MPICH implementation of MPI.
+This means that they must be run under the MPICH runtime environment
+(and not LAM).  The MPICH runtime environment can be found in the
+package "mpich-bin".
+
+If you have no need for MPI, Regina also ships with non-MPI alternatives
+to the above utilities in the main package "regina-normal".
+
+ -- Ben Burton <bab@debian.org>, Fri, 16 Nov 2007 06:26:03 +1100
