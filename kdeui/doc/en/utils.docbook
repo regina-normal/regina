@@ -1476,8 +1476,7 @@
 
   <refnamediv>
    <refname>tricensus-mpi-status</refname>
-   <refpurpose>Summarise the log file of an &mpi; census of
-    triangulations</refpurpose>
+   <refpurpose>Summarise the log file of an &mpi; census of triangulations</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>

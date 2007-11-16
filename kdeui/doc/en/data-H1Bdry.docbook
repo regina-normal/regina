@@ -10,8 +10,7 @@
 
  <refnamediv>
   <refname>H1Bdry</refname>
-  <refpurpose>The first homology group of the boundary of
-   a triangulation</refpurpose>
+  <refpurpose>The first homology group of the boundary of a triangulation</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
