@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+
+if [ -e debian ]; then
+	echo "Please remove the debian directory (or file)."
+	exit 1
+fi
+
+for i in *; do
+	if [ -d "$i" ]; then
+		echo "Making $i ..."
+		mkdir debian
+		cp -p $i/* debian
+		tar -zcf $i.tgz debian
+		rm -rf debian
+	fi
+done
