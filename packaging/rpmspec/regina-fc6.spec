@@ -48,7 +48,6 @@ Python scripting giving full access to the calculation engine.
 
 %prep
 %setup -n regina-%{version}
-%patch
 
 %build
 unset QTDIR || : ; . /etc/profile.d/qt.sh

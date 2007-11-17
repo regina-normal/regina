@@ -57,7 +57,6 @@ Python scripting giving full access to the calculation engine.
 
 %prep
 %setup -n regina-%{version}
-%patch
 
 %build
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
