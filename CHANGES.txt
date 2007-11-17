@@ -25,6 +25,7 @@ Version 4.4  [ 25 November, 2007 ] - The "hug a Mac today" release.
           separately from the Regina website.
         - Modified the closed orientable census files to use more
           consistent choices of monodromy matrices for torus bundles.
+        - Clarified the matrix notation used with graph manifolds.
     ENGINE:
         Class NClosedPrimeMinSearcher:
             - Census generation is much faster for larger numbers of
