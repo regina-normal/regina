@@ -1,3 +1,4 @@
+Running /Users/bab/regscripts/bab.py...
 -------------------------------
 Empty triangulation
 -------------------------------
@@ -125,7 +126,7 @@ H1Bdry: 0
 H1Rel: 0
 H2: 0
 H2Z2: 0 Z_2
-TV(5, 3): 0.361803398875
+TV(5, 3): 0.36180
 0-efficient: True
 Splitting surface: False
 3-sphere: True
@@ -203,7 +204,7 @@ H1Bdry: 0
 H1Rel: Z
 H2: Z
 H2Z2: 1 Z_2
-TV(5, 3): 1.0
+TV(5, 3): 1.00000
 0-efficient: False
 Splitting surface: True
 3-sphere: False
@@ -286,7 +287,7 @@ H1Bdry: 0
 H1Rel: Z + Z_2
 H2: Z_2
 H2Z2: 2 Z_2
-TV(5, 3): 1.0
+TV(5, 3): 1.00000
 0-efficient: True
 Splitting surface: True
 3-sphere: False
@@ -373,7 +374,7 @@ H1Bdry: 0
 H1Rel: 2 Z_2
 H2: 0
 H2Z2: 2 Z_2
-TV(5, 3): -8.881784197e-16
+TV(5, 3): 0.00000
 0-efficient: False
 Splitting surface: True
 3-sphere: False
@@ -451,7 +452,7 @@ H1Bdry: 0
 H1Rel: Z_8
 H2: 0
 H2Z2: 1 Z_2
-TV(5, 3): 0.27639320225
+TV(5, 3): 0.27639
 0-efficient: True
 Splitting surface: True
 3-sphere: False
@@ -542,7 +543,7 @@ H1Bdry: 0
 H1Rel: 0
 H2: 0
 H2Z2: 0 Z_2
-TV(5, 3): 0.0527864045
+TV(5, 3): 0.05279
 0-efficient: True
 Splitting surface: False
 3-sphere: False
@@ -649,7 +650,7 @@ H1Bdry: 0
 H1Rel: 2 Z_5
 H2: 0
 H2Z2: 0 Z_2
-TV(5, 3): 0.5
+TV(5, 3): 0.50000
 3-sphere: False
 Double cover:
 Checksum = 4ddc4e873944154fe9b1f94dfec8a345
@@ -763,7 +764,7 @@ H1Bdry: 0
 H1Rel: Z
 H2: Z_2
 H2Z2: 1 Z_2
-TV(5, 3): 2.61803398875
+TV(5, 3): 2.61803
 3-sphere: False
 Double cover:
 Checksum = 386e2eacd3992134c955fd4d10e7fe5c
