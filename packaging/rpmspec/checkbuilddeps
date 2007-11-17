@@ -1,0 +1,14 @@
+#!/usr/bin/perl -w
+
+my $dep;
+my $has;
+while (<>) {
+	/^BuildRequires: (\S+)($| )/ or next;
+	$dep = $1;
+
+	chomp ($has = `rpm -q "$dep"`);
+	$has =~ /not installed/ and print "$has\n";
+}
+
+chomp ($has = `rpm -q regina-normal`);
+$has =~ /not installed/ or print "$has\n";
