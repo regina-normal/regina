@@ -11,7 +11,7 @@ Description: Computational 3-manifold topology software
 # TODO: Once lammpi hits fink intel/stable, build MPI-related utilities.
 
 Source: mirror:sourceforge:regina/regina-%v.tar.gz
-Source-MD5: 5ea66b9b43754483577a5e96523de37d
+Source-MD5: 6beda0609482f1ccb88bff98a82ee084
 SourceRename: %n-%v.tar.gz
 SourceDirectory: regina-%v
 
