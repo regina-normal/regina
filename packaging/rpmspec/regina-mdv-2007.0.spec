@@ -1,7 +1,5 @@
 # Known to work for:
-# - Mandrake 10.2 (LE 2005)
-# - Mandriva 2006.0
-# - Mandriva 2007.0
+# - Mandriva 2007.0 (i586)
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
