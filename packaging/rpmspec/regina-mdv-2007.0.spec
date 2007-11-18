@@ -19,20 +19,19 @@ Requires: kdebase-progs
 Requires: python
 Conflicts: regina
 
+BuildRequires: boost-devel
+BuildRequires: cppunit-devel
 BuildRequires: doxygen
 BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
-BuildRequires: libboost1-devel
-BuildRequires: libcppunit-devel
-BuildRequires: libgmp3-devel
-BuildRequires: libkdecore4-devel
-BuildRequires: libpython2.4-devel
-BuildRequires: libqt3-devel >= 3.2
-BuildRequires: libselinux1-devel
-BuildRequires: libstdc++6-devel
+BuildRequires: gmp-devel
+BuildRequires: kdelibs-devel
+BuildRequires: libstdc++-devel
 BuildRequires: libxml2-devel
+BuildRequires: qt3-devel >= 3.2
 BuildRequires: popt-devel
+BuildRequires: python-devel
 BuildRequires: zlib1-devel
 
 Prereq: /sbin/ldconfig
@@ -90,12 +89,18 @@ icon="%{name}.png" needs="X11" \
 section="More Applications/Education/Sciences" \
 title="Regina" longtitle="3-manifold topology software" \
 startup_notify="true" mimetypes="application/x-regina,application/x-python" \
-accept_url="true" multiple_files="true"
+accept_url="true" multiple_files="true" xdg="true"
 EOF
 
 # Install icons for the Mandrake menu.
 install -m644 icons/reginatiny.png -D $RPM_BUILD_ROOT%{_miconsdir}/%{name}.png
 install -m644 icons/regina.png -D $RPM_BUILD_ROOT%{_iconsdir}/%{name}.png
+
+# Support for the Mandriva flavour of the XDG menu system.
+desktop-file-install --vendor="" \
+--add-category="X-MandrivaLinux-MoreApplications-Education-Sciences" \
+--dir $RPM_BUILD_ROOT%{_datadir}/applications/kde \
+$RPM_BUILD_ROOT%{_datadir}/applications/kde/*
 
 # Multiarch support.
 %multiarch_binaries $RPM_BUILD_ROOT%{_bindir}/regina-engine-config
