@@ -1,20 +1,21 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="../regina.css">
-    <title>Regina for Debian GNU/Linux:  Etch (Stable)</title>
+    <title>Regina for Debian GNU/Linux:  Etch (Debian 4.0)</title>
 </head>
 <body bgcolor="#FFFFFF" text="#000000"
     link="#0000EE" vlink="#551A8B" alink="#FF0000">
 
-<h1><a name="contents">Regina for Debian GNU/Linux:  Etch (Stable)</a></h1>
+<h1><a name="contents">Regina for Debian GNU/Linux:  Etch (Debian 4.0)</a></h1>
 
 <p>
 Debian packages for Regina are not distributed from the SourceForge site.
 </p>
 <p>
 Instead, users of Etch (the Debian 4.0 stable release) may obtain
-packages from the repository on people.debian.org.  This involves the
-following steps:
+packages from the repository on people.debian.org.  These packages
+are available for the <b>i386</b> and <b>amd64</b> architectures.
+To install them:
 </p>
 <ol>
 <li><p>
@@ -25,7 +26,7 @@ following steps:
    Open the file /etc/apt/sources.list and add the following line:
    </p>
    <div class="example"><p>
-   deb http://people.debian.org/~bab/regina/etch/ ./
+   <tt>deb http://people.debian.org/~bab/regina/ etch main</tt>
    </p></div>
    </li>
 <li><p>
@@ -37,7 +38,7 @@ following steps:
    an example for aptitude users is given below.
    </p>
    <div class="example"><p>
-     example$ aptitude update
+   <tt>example$ aptitude update</tt>
    </p></div>
    </li>
 <li><p>
@@ -48,7 +49,7 @@ following steps:
    Aptitude users might run the following command.
    </p>
    <div class="example"><p>
-     example$ aptitude install regina-normal
+   <tt>example$ aptitude install regina-normal</tt>
    </p></div>
    <p>
    At this point your package manager should download and install Regina
@@ -57,11 +58,13 @@ following steps:
    </li>
 </ol>
 <p>
-Note that Regina is split into several packages for Debian.  To start
-with you will probably just want the <tt>regina-normal</tt> package.  If you
-are doing Python scripting and/or compiling Regina's mathematical core
+Regina is split into several packages for Debian.  To start
+with you will probably just want the <tt>regina-normal</tt> package.
+If you are doing Python scripting and/or compiling Regina's mathematical core
 into your own code, you may want the <tt>regina-normal-dev</tt> and
-<tt>regina-normal-doc</tt> packages also.
+<tt>regina-normal-doc</tt> packages also.  The
+<tt>regina-normal-mpi</tt> package is available for users running long
+census calculations on clusters.
 </p>
 <p>
 You might have noticed that Etch already ships with Regina as part of its
