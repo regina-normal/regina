@@ -1,5 +1,7 @@
 # Known to work for:
 # - Mandriva 2008.0 (i586, x86_64)
+# - Mandriva 2007.1 (i586, x86_64)
+# - Mandriva 2007.0 (i586)
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
