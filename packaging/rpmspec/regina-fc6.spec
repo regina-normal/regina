@@ -54,7 +54,11 @@ unset QTDIR || : ; . /etc/profile.d/qt.sh
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
-./configure --disable-mpi --disable-debug --mandir=%{_mandir}
+./configure \
+%if "%{_lib}" != "lib"
+  --enable-libsuffix="%(A=%{_lib}; echo ${A/lib/})" \
+%endif
+  --disable-mpi --disable-debug --mandir=%{_mandir}
 
 # Stop for a sanity check to see if the right bits are going to be built.
 grep '^REGINA_BUILD_DOCSENGINE=.engine.$' config.log > /dev/null
