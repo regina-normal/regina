@@ -1,6 +1,6 @@
 # Known to work for:
-# - SuSE 10.2
-# - SuSE 10.3
+# - SuSE 10.2 (i586, x86_64)
+# - SuSE 10.3 (i586, x86_64)
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
@@ -62,7 +62,11 @@ Python scripting giving full access to the calculation engine.
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
-./configure --disable-mpi --disable-debug --includedir=%{_includedir} --mandir=%{_mandir} --with-python-version=2.5
+./configure \
+%if "%{_lib}" != "lib"
+  --enable-libsuffix="%(A=%{_lib}; echo ${A/lib/})" \
+%endif
+  --disable-mpi --disable-debug --includedir=%{_includedir} --mandir=%{_mandir} --with-python-version=2.5
 
 # Stop for a sanity check to see if the right bits are going to be built.
 grep '^REGINA_BUILD_DOCSENGINE=.engine.$' config.log > /dev/null
