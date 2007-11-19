@@ -19,6 +19,7 @@ RPMs on several different platforms.
 <tbody>
 <tr><td valign="top">
     <table class="contents" cellspacing=0><tbody>
+    <tr><td><a href="#64bit">64-bit systems (x86_64, amd64)</a></td></tr>
     <tr><td><a href="#debian">Debian GNU/Linux</a></td></tr>
     <tr><td><a href="#fedora">Fedora Core</a></td></tr>
     <tr><td><a href="#fink">Fink on MacOS X</a></td></tr>
@@ -49,6 +50,28 @@ and/or the automatic configuration scripts can be updated to reflect
 systems like yours.
 </p>
 
+<h2><a name="64bit">64-bit systems (x86_64, amd64)</a></h2>
+
+<p>
+If your machine runs a 64-bit version of linux (the <tt>x86_64</tt> or
+<tt>amd64</tt> architectures) and you use an RPM-based distribution such
+as Fedora, Mandriva or SuSE, you may need to pass the following argument to
+the <tt>./configure</tt> script:
+</p>
+<div class="example"><p>
+<tt>example$ ./configure --enable-libsuffix=64</tt>
+</p></div>
+<p>
+This enables <tt>./configure</tt> to find the correct 64-bit development
+libraries in <tt>/usr/lib64/</tt>, and also ensures that files are
+installed in the correct final location.
+</p>
+<p>
+If you are using a Debian-based distribution such as Debian or Ubuntu,
+<b>you should not give this argument</b> since 64-bit Debian places
+libraries directly in <tt>/usr/lib/</tt>.
+</p>
+
 <h2><a name="debian">Debian GNU/Linux</a></h2>
 
 <p>
@@ -56,11 +79,9 @@ The KDE user manuals are kept in a different directory, and so the users'
 handbook is sometimes installed where KDE cannot find it.  Try passing
 the following additional argument to the <tt>./configure</tt> script:
 </p>
-<div class="example">
-<p>
+<div class="example"><p>
 <tt>example$ ./configure kde_htmldir=/usr/share/doc/kde/HTML</tt>
-</p>
-</div>
+</p></div>
 
 <h2><a name="fedora">Fedora Core</a></h2>
 
@@ -79,6 +100,10 @@ An example for a bash user is given below:
 <tt>example$ source /etc/profile.d/qt.sh<br>
 example$ ./configure</tt>
 </p></div>
+<p>
+Users running the <tt>x86_64</tt> architecture should also see the
+section on <a href="#64bit">64-bit systems</a>.
+</p>
 
 <h2><a name="fink">Fink on MacOS X</a></h2>
 
@@ -122,13 +147,9 @@ An example for a bash user is given below:
 example$ ./configure</tt>
 </p></div>
 <p>
-If you have a 64-bit machine (that is, you use the <tt>x86_64</tt>
-architecture), you may also need to adjust your library path with the
-following argument:
+Users running the <tt>x86_64</tt> architecture should also see the
+section on <a href="#64bit">64-bit systems</a>.
 </p>
-<div class="example"><p>
-<tt>example$ ./configure --enable-libsuffix=64</tt>
-</p></div>
 
 <h2><a name="suse">SuSE Linux</a></h2>
 
@@ -156,15 +177,9 @@ additional argument:
 MPICXX=/opt/mpich/ch-p4/bin/mpicxx</tt>
 </p></div>
 <p>
-Finally, if you have a 64-bit machine (that is, you use the <tt>x86_64</tt>
-architecture) then you may also need the following argument:
+Users running the <tt>x86_64</tt> architecture should also see the
+section on <a href="#64bit">64-bit systems</a>.
 </p>
-<div class="example"><p>
-<tt>example$ ./configure --prefix=/opt/kde3
---includedir=/usr/include --mandir=/usr/share/man
-MPICXX=/opt/mpich/ch-p4/bin/mpicxx
---enable-libsuffix=64</tt>
-</p></div>
 
 <h2><a name="ubuntu">Ubuntu</a></h2>
 
