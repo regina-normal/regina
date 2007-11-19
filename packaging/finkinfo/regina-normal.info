@@ -8,7 +8,6 @@ License: GPL
 Description: Computational 3-manifold topology software
 
 # TODO: Once gap is available in fink stable, have regina-normal suggest it.
-# TODO: Once lammpi hits fink intel/stable, build MPI-related utilities.
 
 Source: mirror:sourceforge:regina/regina-%v.tar.gz
 Source-MD5: a2a9f2ffe6f3c8cba9b016755ba288b1
