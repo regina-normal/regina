@@ -121,6 +121,14 @@ An example for a bash user is given below:
 <tt>example$ source /etc/profile.d/qtdir3.sh<br>
 example$ ./configure</tt>
 </p></div>
+<p>
+If you have a 64-bit machine (that is, you use the <tt>x86_64</tt>
+architecture), you may also need to adjust your library path with the
+following argument:
+</p>
+<div class="example"><p>
+<tt>example$ ./configure --enable-libsuffix=64</tt>
+</p></div>
 
 <h2><a name="suse">SuSE Linux</a></h2>
 
@@ -146,6 +154,16 @@ additional argument:
 <tt>example$ ./configure --prefix=/opt/kde3
 --includedir=/usr/include --mandir=/usr/share/man
 MPICXX=/opt/mpich/ch-p4/bin/mpicxx</tt>
+</p></div>
+<p>
+Finally, if you have a 64-bit machine (that is, you use the <tt>x86_64</tt>
+architecture) then you may also need the following argument:
+</p>
+<div class="example"><p>
+<tt>example$ ./configure --prefix=/opt/kde3
+--includedir=/usr/include --mandir=/usr/share/man
+MPICXX=/opt/mpich/ch-p4/bin/mpicxx
+--enable-libsuffix=64</tt>
 </p></div>
 
 <h2><a name="ubuntu">Ubuntu</a></h2>
