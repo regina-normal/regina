@@ -1,5 +1,5 @@
 # Known to work for:
-# - Fedora Core 7 (i386)
+# - Fedora Core 7 (i386, x86_64)
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
