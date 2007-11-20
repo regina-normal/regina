@@ -6,7 +6,9 @@
 www:
 	-rm -rf staging
 	mkdir staging
+	mkdir staging/info
 	cp -p *.html *.jpg *.css staging
+	cp -p info/*.html staging/info
 	cp -pr shots staging
 	cp -pr ../examples staging/census
 	cp -pr ../docs/engine staging/engine-docs
