@@ -4,7 +4,7 @@
 # Only the original software author(s) should need to use this Makefile.
 
 VERSION = $(shell grep ^VERSION= ../config.log | sed -e "s/^VERSION='\(.\+\)'$$/\1/")
-HANDBOOK_DIR = regina-$(VERSION)-handbook
+HANDBOOK_DIR = regina-handbook-$(VERSION)
 HANDBOOK_TGZ = $(HANDBOOK_DIR).tgz
 HANDBOOK_ZIP = $(HANDBOOK_DIR).zip
 TMPFILE = .tmp.html
