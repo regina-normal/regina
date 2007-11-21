@@ -15,7 +15,7 @@ www: handbook
 	mkdir website
 
 	cp -p *.html *.jpg *.css website
-	cp -pr info website
+	cp -pr install website
 	cp -pr shots website
 	cp -pr ../examples website/census
 
