@@ -24,13 +24,10 @@ Manual checks:
       - face pairing graphs
       - GUI scripting
       - handbook and engine docs (including graphs)
-  - konqueror embedding
   - regina-python
-  - documentation files including README.MPI
   - dependencies (rpm -qR regina-normal)
-  - manually make check on fedora
 
 If you are interested in helping package Regina for one or more
 distributions, please contact the author at the address below.
 
- -- Ben Burton <bab@debian.org>, Mon, 27 Mar 2006 08:48:41 +1100
+ -- Ben Burton <bab@debian.org>, Sun, 25 Nov 2007 10:28:59 +1100
