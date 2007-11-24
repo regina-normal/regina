@@ -15,19 +15,12 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
 endif
 
-# Let's see if the ia64 MPI link failure has been fixed.
+# The MPI code currently builds on all architectures.  If it should fail
+# on some architecture, that architecture should set NO_MPI = 1 and
+# configmpi = --disable-mpi .
 #
 NO_MPI = 0
 configmpi =
-
-# ifeq ($(shell dpkg-architecture -qDEB_BUILD_ARCH),ia64)
-# 	# MPI utilities fail to link under ia64.
-# 	NO_MPI = 1
-# 	configmpi = --disable-mpi
-# else
-# 	NO_MPI = 0
-# 	configmpi =
-# endif
 
 # Hard-code the python version so we can pass it to ./configure.  This keeps
 # things sane when multiple python*-dev packages are installed.
