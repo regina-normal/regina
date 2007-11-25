@@ -67,7 +67,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
         for (face = 0; face < 4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
-                adjPos = tetrahedra.index(adjTet);
+                adjPos = getTetrahedronIndex(adjTet);
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face))
@@ -103,7 +103,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     // Note that component index lookup is faster than tetrahedron index
     // lookup.
     for (tetPos = 0; tetPos < nTets; tetPos++)
-        newTris[components.index(tetrahedra[tetPos]->getComponent())]->
+        newTris[getComponentIndex(tetrahedra[tetPos]->getComponent())]->
             addTetrahedron(newTets[tetPos]);
 
     // And clean up.

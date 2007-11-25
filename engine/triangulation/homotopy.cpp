@@ -80,7 +80,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
                 currTet = (*embit).getTetrahedron();
                 currTetFace = (*embit).getVertices()[2];
                 face = currTet->getFace(currTetFace);
-                faceGenIndex = genIndex[faces.index(face)];
+                faceGenIndex = genIndex[getFaceIndex(face)];
                 if (faceGenIndex >= 0) {
                     if ((face->getEmbedding(0).getTetrahedron() == currTet) &&
                             (face->getEmbedding(0).getFace() == currTetFace))

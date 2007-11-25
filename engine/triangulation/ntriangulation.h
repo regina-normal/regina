@@ -37,14 +37,13 @@
 
 #include <map>
 #include <memory>
+#include <vector>
 
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
-#include "utilities/hashset.h"
 #include "utilities/hashutils.h"
-#include "utilities/nindexedarray.h"
 #include "utilities/nproperty.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/nface.h"
@@ -109,22 +108,17 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
     public:
         static const int packetType;
 
-        typedef NIndexedArray<NTetrahedron*, HashPointer>::const_iterator
-                TetrahedronIterator;
+        typedef std::vector<NTetrahedron*>::const_iterator TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
-        typedef NIndexedArray<NFace*, HashPointer>::const_iterator
-                FaceIterator;
+        typedef std::vector<NFace*>::const_iterator FaceIterator;
             /**< Used to iterate through faces. */
-        typedef NIndexedArray<NEdge*, HashPointer>::const_iterator
-                EdgeIterator;
+        typedef std::vector<NEdge*>::const_iterator EdgeIterator;
             /**< Used to iterate through edges. */
-        typedef NIndexedArray<NVertex*, HashPointer>::const_iterator
-                VertexIterator;
+        typedef std::vector<NVertex*>::const_iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef NIndexedArray<NComponent*, HashPointer>::const_iterator
-                ComponentIterator;
+        typedef std::vector<NComponent*>::const_iterator ComponentIterator;
             /**< Used to iterate through components. */
-        typedef NIndexedArray<NBoundaryComponent*, HashPointer>::const_iterator
+        typedef std::vector<NBoundaryComponent*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
@@ -136,18 +130,17 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         mutable bool calculatedSkeleton;
             /**< Has the skeleton been calculated? */
 
-        NIndexedArray<NTetrahedron*, HashPointer> tetrahedra;
+        std::vector<NTetrahedron*> tetrahedra;
             /**< The tetrahedra that form the triangulation. */
-        mutable NIndexedArray<NFace*, HashPointer> faces;
+        mutable std::vector<NFace*> faces;
             /**< The faces in the triangulation skeleton. */
-        mutable NIndexedArray<NEdge*, HashPointer> edges;
+        mutable std::vector<NEdge*> edges;
             /**< The edges in the triangulation skeleton. */
-        mutable NIndexedArray<NVertex*, HashPointer> vertices;
+        mutable std::vector<NVertex*> vertices;
             /**< The vertices in the triangulation skeleton. */
-        mutable NIndexedArray<NComponent*, HashPointer> components;
+        mutable std::vector<NComponent*> components;
             /**< The components that form the triangulation. */
-        mutable NIndexedArray<NBoundaryComponent*, HashPointer>
-            boundaryComponents;
+        mutable std::vector<NBoundaryComponent*> boundaryComponents;
             /**< The components that form the boundary of the
                  triangulation. */
 
@@ -266,7 +259,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the list of all tetrahedra.
          */
-        const NIndexedArray<NTetrahedron*, HashPointer>& getTetrahedra() const;
+        const std::vector<NTetrahedron*>& getTetrahedra() const;
         /**
          * Returns the tetrahedron with the given index number in the
          * triangulation.
@@ -440,7 +433,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the list of all components.
          */
-        const NIndexedArray<NComponent*, HashPointer>& getComponents() const;
+        const std::vector<NComponent*>& getComponents() const;
         /**
          * Returns all boundary components of this triangulation.
          * Note that each ideal vertex forms its own boundary component.
@@ -457,8 +450,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the list of all boundary components.
          */
-        const NIndexedArray<NBoundaryComponent*, HashPointer>&
-            getBoundaryComponents() const;
+        const std::vector<NBoundaryComponent*>& getBoundaryComponents() const;
         /**
          * Returns all vertices of this triangulation.
          *
@@ -474,7 +466,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the list of all vertices.
          */
-        const NIndexedArray<NVertex*, HashPointer>& getVertices() const;
+        const std::vector<NVertex*>& getVertices() const;
         /**
          * Returns all edges of this triangulation.
          *
@@ -490,7 +482,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the list of all edges.
          */
-        const NIndexedArray<NEdge*, HashPointer>& getEdges() const;
+        const std::vector<NEdge*>& getEdges() const;
         /**
          * Returns all faces of this triangulation.
          *
@@ -506,7 +498,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the list of all faces.
          */
-        const NIndexedArray<NFace*, HashPointer>& getFaces() const;
+        const std::vector<NFace*>& getFaces() const;
         /**
          * Returns the requested triangulation component.
          *
@@ -2506,7 +2498,8 @@ inline const NTetrahedron* NTriangulation::getTetrahedron(unsigned long index)
 
 inline long NTriangulation::getTetrahedronIndex(
         const NTetrahedron* tet) const {
-    return tetrahedra.index(const_cast<NTetrahedron*>(tet));
+    return std::find(tetrahedra.begin(), tetrahedra.end(),
+        tet) - tetrahedra.begin();
 }
 
 inline void NTriangulation::addTetrahedron(NTetrahedron* t) {
@@ -2525,7 +2518,7 @@ inline NTetrahedron* NTriangulation::removeTetrahedronAt(unsigned long index) {
 inline NTetrahedron* NTriangulation::removeTetrahedron(
         NTetrahedron* tet) {
     tet->isolate();
-    tetrahedra.erase(tet);
+    tetrahedra.erase(tetrahedra.begin() + getTetrahedronIndex(tet));
     gluingsHaveChanged();
     return tet;
 }
@@ -2581,40 +2574,37 @@ inline long NTriangulation::getEulerCharacteristic() const {
     return getEulerCharTri();
 }
 
-inline const NIndexedArray<NTetrahedron*, HashPointer>&
-        NTriangulation::getTetrahedra() const {
+inline const std::vector<NTetrahedron*>& NTriangulation::getTetrahedra() const {
     return tetrahedra;
 }
 
-inline const NIndexedArray<NBoundaryComponent*, HashPointer>&
+inline const std::vector<NBoundaryComponent*>&
         NTriangulation::getBoundaryComponents() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return boundaryComponents;
 }
 
-inline const NIndexedArray<NComponent*, HashPointer>&
-        NTriangulation::getComponents() const {
+inline const std::vector<NComponent*>& NTriangulation::getComponents() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return components;
 }
 
-inline const NIndexedArray<NVertex*, HashPointer>&
-        NTriangulation::getVertices() const {
+inline const std::vector<NVertex*>& NTriangulation::getVertices() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return vertices;
 }
 
-inline const NIndexedArray<NEdge*, HashPointer>& NTriangulation::getEdges()
+inline const std::vector<NEdge*>& NTriangulation::getEdges()
         const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return edges;
 }
 
-inline const NIndexedArray<NFace*, HashPointer>& NTriangulation::getFaces()
+inline const std::vector<NFace*>& NTriangulation::getFaces()
         const {
     if (! calculatedSkeleton)
         calculateSkeleton();
@@ -2656,33 +2646,35 @@ inline long NTriangulation::getComponentIndex(
         const NComponent* component) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return components.index(const_cast<NComponent*>(component));
+    return std::find(components.begin(), components.end(),
+        component) - components.begin();
 }
 
 inline long NTriangulation::getBoundaryComponentIndex(
         const NBoundaryComponent* boundaryComponent) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return boundaryComponents.index(
-        const_cast<NBoundaryComponent*>(boundaryComponent));
+    return std::find(boundaryComponents.begin(), boundaryComponents.end(),
+        boundaryComponent) - boundaryComponents.begin();
 }
 
 inline long NTriangulation::getVertexIndex(const NVertex* vertex) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return vertices.index(const_cast<NVertex*>(vertex));
+    return std::find(vertices.begin(), vertices.end(),
+        vertex) - vertices.begin();
 }
 
 inline long NTriangulation::getEdgeIndex(const NEdge* edge) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return edges.index(const_cast<NEdge*>(edge));
+    return std::find(edges.begin(), edges.end(), edge) - edges.begin();
 }
 
 inline long NTriangulation::getFaceIndex(const NFace* face) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return faces.index(const_cast<NFace*>(face));
+    return std::find(faces.begin(), faces.end(), face) - faces.begin();
 }
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {

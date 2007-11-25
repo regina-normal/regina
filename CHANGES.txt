@@ -9,6 +9,14 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.4.1  [ under development ]
 
+    ENGINE:
+        Class NTriangulation:
+            - Streamlined the implementation to save both time and
+              memory.  The tetrahedra and skeletal components are now
+              stored as std::vectors instead of NIndexedArrays; this
+              affects the return types of getTetrahedra(), getVertices()
+              and so on.
+
 Version 4.4  [ 25 November, 2007 ] - The "hug a Mac today" release.
 
     OVERALL:

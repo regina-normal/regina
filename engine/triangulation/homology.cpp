@@ -90,7 +90,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
                 currTet = (*embit).getTetrahedron();
                 currTetFace = (*embit).getVertices()[2];
                 face = currTet->getFace(currTetFace);
-                faceGenIndex = genIndex[faces.index(face)];
+                faceGenIndex = genIndex[getFaceIndex(face)];
                 if (faceGenIndex >= 0) {
                     if ((face->getEmbedding(0).getTetrahedron() == currTet) &&
                             (face->getEmbedding(0).getFace() == currTetFace))
@@ -179,7 +179,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
                 // Examine the edge from vertex edgeStart to edgeEnd
                 // in tetrahedron currTet.
                 currEdge = edgeNumber[currEdgeStart][currEdgeEnd];
-                edgeGenIndex = genIndex[edges.index(
+                edgeGenIndex = genIndex[getEdgeIndex(
                     currTet->getEdge(currEdge))];
                 if (edgeGenIndex >= 0) {
                     if (currTet->getEdgeMapping(currEdge)[0] == currEdgeStart)
