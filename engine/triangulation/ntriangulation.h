@@ -44,6 +44,7 @@
 #include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
 #include "utilities/hashutils.h"
+#include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/nface.h"
@@ -130,7 +131,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         mutable bool calculatedSkeleton;
             /**< Has the skeleton been calculated? */
 
-        std::vector<NTetrahedron*> tetrahedra;
+        NMarkedVector<NTetrahedron*> tetrahedra;
             /**< The tetrahedra that form the triangulation. */
         mutable std::vector<NFace*> faces;
             /**< The faces in the triangulation skeleton. */
@@ -298,6 +299,33 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * Note that tetrahedron indexing may change when a tetrahedron
          * is added or removed from the triangulation.
+         *
+         * This routine was introduced in Regina 4.4.1, and replaces the
+         * old getTetrahedronIndex().  The name has been changed
+         * because, unlike the old routine, it requires that the given
+         * tetrahedron belongs to the triangulation (a consequence of
+         * some significant memory optimisations).
+         *
+         * \pre The given tetrahedron is contained in this triangulation.
+         *
+         * @param tet specifies which tetrahedron to find in the
+         * triangulation.
+         * @return the index of the specified tetrahedron, where 0 is
+         * the first tetrahedron, 1 is the second and so on.
+         */
+        long tetrahedronIndex(const NTetrahedron* tet) const;
+        /**
+         * Returns the index of the given tetrahedron in the
+         * triangulation.
+         *
+         * Note that tetrahedron indexing may change when a tetrahedron
+         * is added or removed from the triangulation.
+         *
+         * \deprecated As of Regina 4.4.1, this is now a slow linear
+         * time routine (a consequence of some significant memory
+         * optimisations).  The alternative tetrahedronIndex() is
+         * fast, but insists that \a tet belongs to the triangulation.
+         * This slower routine will be removed at some point in the future.
          *
          * @param tet specifies which tetrahedron to find in the
          * triangulation.
@@ -2496,10 +2524,14 @@ inline const NTetrahedron* NTriangulation::getTetrahedron(unsigned long index)
     return tetrahedra[index];
 }
 
-inline long NTriangulation::getTetrahedronIndex(
-        const NTetrahedron* tet) const {
-    return std::find(tetrahedra.begin(), tetrahedra.end(),
-        tet) - tetrahedra.begin();
+inline long NTriangulation::tetrahedronIndex(const NTetrahedron* tet) const {
+    return tet->markedIndex();
+}
+
+inline long NTriangulation::getTetrahedronIndex(const NTetrahedron* tet) const {
+    TetrahedronIterator pos =
+        std::find(tetrahedra.begin(), tetrahedra.end(), tet);
+    return (pos == tetrahedra.end() ? -1 : pos - tetrahedra.begin());
 }
 
 inline void NTriangulation::addTetrahedron(NTetrahedron* t) {
@@ -2575,7 +2607,7 @@ inline long NTriangulation::getEulerCharacteristic() const {
 }
 
 inline const std::vector<NTetrahedron*>& NTriangulation::getTetrahedra() const {
-    return tetrahedra;
+    return (const std::vector<NTetrahedron*>&)(tetrahedra);
 }
 
 inline const std::vector<NBoundaryComponent*>&
@@ -2646,35 +2678,45 @@ inline long NTriangulation::getComponentIndex(
         const NComponent* component) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return std::find(components.begin(), components.end(),
-        component) - components.begin();
+
+    ComponentIterator pos = std::find(components.begin(), components.end(),
+        component);
+    return (pos == components.end() ? -1 : pos - components.begin());
 }
 
 inline long NTriangulation::getBoundaryComponentIndex(
         const NBoundaryComponent* boundaryComponent) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return std::find(boundaryComponents.begin(), boundaryComponents.end(),
-        boundaryComponent) - boundaryComponents.begin();
+
+    BoundaryComponentIterator pos = std::find(boundaryComponents.begin(),
+        boundaryComponents.end(), boundaryComponent);
+    return (pos == boundaryComponents.end() ? -1 :
+        pos - boundaryComponents.begin());
 }
 
 inline long NTriangulation::getVertexIndex(const NVertex* vertex) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return std::find(vertices.begin(), vertices.end(),
-        vertex) - vertices.begin();
+
+    VertexIterator pos = std::find(vertices.begin(), vertices.end(), vertex);
+    return (pos == vertices.end() ? -1 : pos - vertices.begin());
 }
 
 inline long NTriangulation::getEdgeIndex(const NEdge* edge) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return std::find(edges.begin(), edges.end(), edge) - edges.begin();
+
+    EdgeIterator pos = std::find(edges.begin(), edges.end(), edge);
+    return (pos == edges.end() ? -1 : pos - edges.begin());
 }
 
 inline long NTriangulation::getFaceIndex(const NFace* face) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return std::find(faces.begin(), faces.end(), face) - faces.begin();
+
+    FaceIterator pos = std::find(faces.begin(), faces.end(), face);
+    return (pos == faces.end() ? -1 : pos - faces.begin());
 }
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {

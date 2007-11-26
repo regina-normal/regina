@@ -37,6 +37,7 @@
 
 #include "shareableobject.h"
 #include "triangulation/nperm.h"
+#include "utilities/nmarkedvector.h"
 
 namespace regina {
 
@@ -66,7 +67,7 @@ class NComponent;
  * will ensure that skeletal information and other properties of the
  * triangulation are recalculated when necessary.
  */
-class NTetrahedron : public ShareableObject {
+class NTetrahedron : public ShareableObject, public NMarkedElement {
     private:
         NTetrahedron* tetrahedra[4];
             /**< Represents the tetrahedra glued to each face of this
