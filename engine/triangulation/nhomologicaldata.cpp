@@ -355,9 +355,9 @@ void NHomologicalData::computeChainComplexes() {
     // start B1: for each dual edge == non-boundary face,
     //              find the tetrahedra that bound it
     for (i=0;i<dNBF.size();i++) {
-        B1->entry( tri->getTetrahedronIndex(
+        B1->entry( tri->tetrahedronIndex(
             tri->getFace(dNBF[i])->getEmbedding(1).getTetrahedron() ),i)+=1;
-        B1->entry( tri->getTetrahedronIndex(
+        B1->entry( tri->tetrahedronIndex(
             tri->getFace(dNBF[i])->getEmbedding(0).getTetrahedron() ),i)-=1;
     }
     // end B1
@@ -411,9 +411,10 @@ void NHomologicalData::computeChainComplexes() {
         tetor.resize(vtetlist.size(),0);
         unorientedlist.resize(0);
 
-        for (j=0;j<vtetlist.size();j++) { // here is the first problem.
+        for (j=0;j<vtetlist.size();j++) { // unoriented list stores the tetrahedra
+	  // adjacent to the vertex plus the vertex index in that tetrahedra's coords
             unorientedlist.push_back(
-                4*tri->getTetrahedronIndex( vtetlist[j].getTetrahedron() ) +
+                4*tri->tetrahedronIndex( vtetlist[j].getTetrahedron() ) +
                 vtetlist[j].getVertex() );
         }
         orig_uol=unorientedlist;
@@ -427,7 +428,7 @@ void NHomologicalData::computeChainComplexes() {
         // ie: tetor[0]==1 always.
 
         tetor[0]=1;
-        unorientedlist.erase( 4*tri->getTetrahedronIndex(
+        unorientedlist.erase( 4*tri->tetrahedronIndex(
             vtetlist[0].getTetrahedron()) + vtetlist[0].getVertex() );
 
         while (!unorientedlist.empty())
@@ -442,20 +443,19 @@ void NHomologicalData::computeChainComplexes() {
                     // if any of the adjacent
                     // tetrahedra are unoriented, and if so, orient them.
                     for (k=0;k<4;k++) {
-                        if (k== (ind1 % 4)) k++;
-                        p1=vtetlist[j].getTetrahedron() ->
-                            getAdjacentTetrahedronGluing(k);
-                        ind2=4*tri->getTetrahedronIndex(
-                            vtetlist[j].getTetrahedron() ->
+                        if (k!= (ind1 % 4)) 
+                        {
+                         p1=vtetlist[j].getTetrahedron() -> getAdjacentTetrahedronGluing(k);
+                             ind2=4*tri->tetrahedronIndex( vtetlist[j].getTetrahedron() ->
                                 getAdjacentTetrahedron(k) ) + p1[ind1 % 4];
-
-                        if (unorientedlist.index( ind2 )  != (-1) ) {
-                            // we have an adjacent unoriented tetrahedron.
-                            // we orient it and erase from unorientedlist.
-                            tetor[ orig_uol.index(ind2) ] =
-                                (-1)*tetor[j]*p1.sign();
-                            unorientedlist.erase( ind2 );
-                        }
+                             if (unorientedlist.index( ind2 )  != (-1) ) 
+                             {
+                             // we have an adjacent unoriented tetrahedron.
+                             // we orient it and erase from unorientedlist.
+                             tetor[ orig_uol.index(ind2) ] = (-1)*tetor[j]*p1.sign();
+                             unorientedlist.erase( ind2 );
+                             }
+                         }
                     }
                 }
             }
@@ -544,16 +544,16 @@ void NHomologicalData::computeChainComplexes() {
         unsigned tet1FaceIndex = tri->getFace(dNBF[j])->
             getEmbedding(1).getFace(); 
 
-        unsigned vert0Num = zeroCellMap[tri->getTetrahedronIndex(
+        unsigned vert0Num = zeroCellMap[tri->tetrahedronIndex(
             tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() )]/4;
             // vertex number of start vertex in tet0
-        unsigned vert1Num = zeroCellMap[tri->getTetrahedronIndex(
+        unsigned vert1Num = zeroCellMap[tri->tetrahedronIndex(
             tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]/4;
             // vertex number of end vertex in tet1.
-        unsigned vert0id = zeroCellMap[tri->getTetrahedronIndex(
+        unsigned vert0id = zeroCellMap[tri->tetrahedronIndex(
             tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() )]%4;
             // not equal to vert0Num if and only if vert0 is ideal.
-        unsigned vert1id = zeroCellMap[tri->getTetrahedronIndex(
+        unsigned vert1id = zeroCellMap[tri->tetrahedronIndex(
             tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]%4;
             // not equal to vert1Num if and only if vert1 is ideal.
         NPerm P1 = tri->getFace(dNBF[j])->getEmbedding(0).getVertices();
