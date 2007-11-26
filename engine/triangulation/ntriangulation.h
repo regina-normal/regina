@@ -2550,7 +2550,7 @@ inline NTetrahedron* NTriangulation::removeTetrahedronAt(unsigned long index) {
 inline NTetrahedron* NTriangulation::removeTetrahedron(
         NTetrahedron* tet) {
     tet->isolate();
-    tetrahedra.erase(tetrahedra.begin() + getTetrahedronIndex(tet));
+    tetrahedra.erase(tetrahedra.begin() + tetrahedronIndex(tet));
     gluingsHaveChanged();
     return tet;
 }

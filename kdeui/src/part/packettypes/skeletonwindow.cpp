@@ -282,7 +282,7 @@ QString VertexItem::text(int column) const {
             for (it = item->getEmbeddings().begin();
                     it != item->getEmbeddings().end(); it++)
                 appendToList(ans, QString("%1 (%2)").
-                    arg(tri->getTetrahedronIndex((*it).getTetrahedron())).
+                    arg(tri->tetrahedronIndex((*it).getTetrahedron())).
                     arg((*it).getVertex()));
             return ans;
     }
@@ -308,7 +308,7 @@ QString EdgeItem::text(int column) const {
             for (it = item->getEmbeddings().begin();
                     it != item->getEmbeddings().end(); it++)
                 appendToList(ans, QString("%1 (%2)").
-                    arg(tri->getTetrahedronIndex((*it).getTetrahedron())).
+                    arg(tri->tetrahedronIndex((*it).getTetrahedron())).
                     arg(regina::edgeDescription((*it).getVertices()).c_str()));
             return ans;
     }
@@ -349,7 +349,7 @@ QString FaceItem::text(int column) const {
             QString ans;
             for (unsigned i = 0; i < item->getNumberOfEmbeddings(); i++)
                 appendToList(ans, QString("%1 (%2)").
-                    arg(tri->getTetrahedronIndex(
+                    arg(tri->tetrahedronIndex(
                         item->getEmbedding(i).getTetrahedron())).
                     arg(regina::faceDescription(
                         item->getEmbedding(i).getVertices()).c_str()));
@@ -370,7 +370,7 @@ QString ComponentItem::text(int column) const {
         case 3:
             QString ans;
             for (unsigned long i = 0; i < item->getNumberOfTetrahedra(); i++)
-                appendToList(ans, QString::number(tri->getTetrahedronIndex(
+                appendToList(ans, QString::number(tri->tetrahedronIndex(
                     item->getTetrahedron(i))));
             return ans;
     }

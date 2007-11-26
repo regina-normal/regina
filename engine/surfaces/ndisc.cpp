@@ -170,7 +170,7 @@ NDiscSpec* NDiscSetSurface::adjacentDisc(const NDiscSpec& disc,
         return 0;
 
     NDiscSpec* ans = new NDiscSpec;
-    ans->tetIndex = triangulation->getTetrahedronIndex(
+    ans->tetIndex = triangulation->tetrahedronIndex(
         tet->getAdjacentTetrahedron(arcFace));
     adjArc = tet->getAdjacentTetrahedronGluing(arcFace) * arc;
 

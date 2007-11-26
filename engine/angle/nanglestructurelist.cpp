@@ -76,7 +76,7 @@ void* NAngleStructureList::Enumerator::run(void*) {
             continue;
         for (embit = (*eit)->getEmbeddings().begin();
                 embit != (*eit)->getEmbeddings().end(); embit++) {
-            index = triang->getTetrahedronIndex((*embit).getTetrahedron());
+            index = triang->tetrahedronIndex((*embit).getTetrahedron());
             perm = (*embit).getVertices();
             eqns.entry(row, 3 * index + vertexSplit[perm[0]][perm[1]]) += 1;
         }

@@ -67,7 +67,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
         for (face = 0; face < 4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
-                adjPos = getTetrahedronIndex(adjTet);
+                adjPos = tetrahedronIndex(adjTet);
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face))

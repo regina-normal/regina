@@ -281,7 +281,7 @@ bool NTriangulation::crushMaximalForest() {
     // For each tetrahedron, remove it and delete it.
     for (stdhash::hash_set<NTetrahedron*, HashPointer>::iterator tetIt =
             cTetrahedra.begin(); tetIt != cTetrahedra.end(); tetIt++) {
-        tetrahedra.erase(tetrahedra.begin() + getTetrahedronIndex(*tetIt));
+        tetrahedra.erase(tetrahedra.begin() + tetrahedronIndex(*tetIt));
         delete *tetIt;
     }
 

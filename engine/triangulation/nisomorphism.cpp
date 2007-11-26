@@ -75,7 +75,7 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
         for (f = 0; f < 4; f++)
             if ((adjTet = myTet->getAdjacentTetrahedron(f))) {
                 // We have an adjacent tetrahedron.
-                adjTetIndex = original->getTetrahedronIndex(adjTet);
+                adjTetIndex = original->tetrahedronIndex(adjTet);
                 gluingPerm = myTet->getAdjacentTetrahedronGluing(f);
 
                 // Make the gluing from one side only.

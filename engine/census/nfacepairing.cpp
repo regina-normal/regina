@@ -67,7 +67,7 @@ NFacePairing::NFacePairing(const NTriangulation& tri) :
         for (f = 0; f < 4; f++) {
             adj = tet->getAdjacentTetrahedron(f);
             if (adj) {
-                pairs[index].tet = tri.getTetrahedronIndex(adj);
+                pairs[index].tet = tri.tetrahedronIndex(adj);
                 pairs[index].face = tet->getAdjacentFace(f);
             } else
                 pairs[index].setBoundary(nTetrahedra);

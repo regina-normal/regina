@@ -98,7 +98,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
                 out << " boundary";
             else {
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
-                out << std::setw(3) << getTetrahedronIndex(adjTet) << " (";
+                out << std::setw(3) << tetrahedronIndex(adjTet) << " (";
                 for (vertex=0; vertex<4; vertex++) {
                     if (vertex == face) continue;
                     out << adjPerm[vertex];
@@ -172,7 +172,7 @@ void NTriangulation::writePacket(NFile& out) const {
         for (face=0; face<4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
-                adjPos = getTetrahedronIndex(adjTet);
+                adjPos = tetrahedronIndex(adjTet);
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {
@@ -299,7 +299,7 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
         for (face = 0; face < 4; face++) {
             adjTet = (*it)->getAdjacentTetrahedron(face);
             if (adjTet) {
-                out << getTetrahedronIndex(adjTet) << ' '
+                out << tetrahedronIndex(adjTet) << ' '
                     << static_cast<int>((*it)->
                         getAdjacentTetrahedronGluing(face).getPermCode())
                     << ' ';
@@ -525,7 +525,7 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
         for (face=0; face<4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
-                adjPos = X.getTetrahedronIndex(adjTet);
+                adjPos = X.tetrahedronIndex(adjTet);
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {
@@ -580,7 +580,7 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
         for (face=0; face<4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
-                adjPos = X.getTetrahedronIndex(adjTet);
+                adjPos = X.tetrahedronIndex(adjTet);
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {
@@ -664,7 +664,7 @@ std::string NTriangulation::dumpConstruction() const {
         ans << "    { ";
         for (f = 0; f < 4; f++) {
             if (tet->getAdjacentTetrahedron(f)) {
-                ans << getTetrahedronIndex(tet->getAdjacentTetrahedron(f));
+                ans << tetrahedronIndex(tet->getAdjacentTetrahedron(f));
             } else
                 ans << "-1";
 

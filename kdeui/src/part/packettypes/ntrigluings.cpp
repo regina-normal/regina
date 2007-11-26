@@ -398,7 +398,7 @@ void NTriGluingsUI::refresh() {
             adj = tet->getAdjacentTetrahedron(face);
             if (adj)
                 faceTable->setItem(tetNum, 4 - face, new FaceGluingItem(
-                    faceTable, editMode, face, tri->getTetrahedronIndex(adj),
+                    faceTable, editMode, face, tri->tetrahedronIndex(adj),
                     tet->getAdjacentTetrahedronGluing(face)));
             else
                 faceTable->setItem(tetNum, 4 - face,

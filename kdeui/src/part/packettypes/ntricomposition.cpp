@@ -373,9 +373,9 @@ void NTriCompositionUI::findAugTriSolidTori() {
             const regina::NTriSolidTorus& core = aug->getCore();
             details = new KListViewItem(id, details,
                 i18n("Core: tets %1, %2, %3").
-                arg(tri->getTetrahedronIndex(core.getTetrahedron(0))).
-                arg(tri->getTetrahedronIndex(core.getTetrahedron(1))).
-                arg(tri->getTetrahedronIndex(core.getTetrahedron(2))));
+                arg(tri->tetrahedronIndex(core.getTetrahedron(0))).
+                arg(tri->tetrahedronIndex(core.getTetrahedron(1))).
+                arg(tri->tetrahedronIndex(core.getTetrahedron(2))));
 
             if (aug->hasLayeredChain()) {
                 QString chainType;
@@ -460,11 +460,11 @@ void NTriCompositionUI::describeSatRegion(const NSatRegion& region,
             new KListViewItem(annuli,
                 i18n("%1 : Tet %2 (%3%4%5), Tet %6 (%7%8%9)").
                 arg(thisAnnulus).
-                arg(tri->getTetrahedronIndex(ann.tet[0])).
+                arg(tri->tetrahedronIndex(ann.tet[0])).
                 arg(ann.roles[0][0]).
                 arg(ann.roles[0][1]).
                 arg(ann.roles[0][2]).
-                arg(tri->getTetrahedronIndex(ann.tet[1])).
+                arg(tri->tetrahedronIndex(ann.tet[1])).
                 arg(ann.roles[1][0]).
                 arg(ann.roles[1][1]).
                 arg(ann.roles[1][2]));
@@ -724,8 +724,8 @@ void NTriCompositionUI::findLayeredSolidTori() {
                 torus->getName().c_str());
 
             details = new KListViewItem(id, i18n("Base: tet %1").arg(
-                tri->getTetrahedronIndex(torus->getBase())));
-            topIndex = tri->getTetrahedronIndex(torus->getTopLevel());
+                tri->tetrahedronIndex(torus->getBase())));
+            topIndex = tri->tetrahedronIndex(torus->getTopLevel());
             details = new KListViewItem(id, details, i18n("Top level: tet %1").
                 arg(topIndex));
 
@@ -800,9 +800,9 @@ void NTriCompositionUI::findPlugTriSolidTori() {
             const regina::NTriSolidTorus& core(plug->getCore());
             details = new KListViewItem(id, details,
                 i18n("Core: tets %1, %2, %3").
-                arg(tri->getTetrahedronIndex(core.getTetrahedron(0))).
-                arg(tri->getTetrahedronIndex(core.getTetrahedron(1))).
-                arg(tri->getTetrahedronIndex(core.getTetrahedron(2))));
+                arg(tri->tetrahedronIndex(core.getTetrahedron(0))).
+                arg(tri->tetrahedronIndex(core.getTetrahedron(1))).
+                arg(tri->tetrahedronIndex(core.getTetrahedron(2))));
 
             QString lengths(i18n("Chain lengths: "));
             for (int j = 0; j < 3; j++) {
@@ -917,8 +917,7 @@ void NTriCompositionUI::findSpiralSolidTori() {
 
             unsigned long* tetIndex = new unsigned long[spiralTets];
             for (j = 0; j < spiralTets; j++)
-                tetIndex[j] = tri->getTetrahedronIndex(
-                    spiral->getTetrahedron(j));
+                tetIndex[j] = tri->tetrahedronIndex(spiral->getTetrahedron(j));
 
             QString tetSet(spiralTets == 1 ? i18n("Tet: ") : i18n("Tets: "));
             for (j = 0; j < spiralTets; j++) {

@@ -314,7 +314,7 @@ unsigned long NTriangulation::findIsomorphisms(
         // Note that there is only one way of doing this (as seen by
         // following adjacent tetrahedron gluings).  It either works or
         // it doesn't.
-        tetIndex = getTetrahedronIndex(components[comp]->getTetrahedron(0));
+        tetIndex = tetrahedronIndex(components[comp]->getTetrahedron(0));
 
         whichComp[startTet[comp]] = comp;
         iso.tetImage(tetIndex) = startTet[comp];
@@ -349,8 +349,8 @@ unsigned long NTriangulation::findIsomorphisms(
                         break;
                     }
                     // Work out what the isomorphism *should* say.
-                    adjIndex = getTetrahedronIndex(adj);
-                    destAdjIndex = other.getTetrahedronIndex(destAdj);
+                    adjIndex = tetrahedronIndex(adj);
+                    destAdjIndex = other.tetrahedronIndex(destAdj);
                     adjPerm =
                         destTet->getAdjacentTetrahedronGluing(tetPerm[face]) *
                         tetPerm *

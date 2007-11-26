@@ -96,7 +96,7 @@ void NTriangulation::barycentricSubdivision() {
                             if (oldTet->getAdjacentTetrahedron(face)) {
                                 p = oldTet->getAdjacentTetrahedronGluing(face);
                                 newTet[24*tet+tetIndex[face][edge][corner]]->
-                                    joinTo(face, newTet[24*getTetrahedronIndex(
+                                    joinTo(face, newTet[24*tetrahedronIndex(
                                     oldTet->getAdjacentTetrahedron(face))+
                                     tetIndex[p[face]][p[edge]][p[corner]] ],
                                     NPerm(p) );
@@ -185,7 +185,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
         ot = getTetrahedron(i);
         for (j=0; j<4; j++)
             if (ot->getAdjacentTetrahedron(j)) {
-                 oppTet = getTetrahedronIndex(ot->getAdjacentTetrahedron(j));
+                 oppTet = tetrahedronIndex(ot->getAdjacentTetrahedron(j));
                  p = ot->getAdjacentTetrahedronGluing(j);
 
                  // First deal with the tip tetrahedra.

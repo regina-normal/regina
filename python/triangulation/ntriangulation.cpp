@@ -151,6 +151,7 @@ void addNTriangulation() {
         .def("getTetrahedra", getTetrahedra_list)
         .def("getTetrahedron", getTetrahedron_non_const,
             return_value_policy<reference_existing_object>())
+        .def("tetrahedronIndex", &NTriangulation::tetrahedronIndex)
         .def("getTetrahedronIndex", &NTriangulation::getTetrahedronIndex)
         .def("addTetrahedron", addTetrahedron_own)
         .def("removeTetrahedron", &NTriangulation::removeTetrahedron,

@@ -173,6 +173,10 @@ bool writeSnapPea(const char* filename, NTriangulation& tri) {
     int i, j;
     for (NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
             it != tri.getTetrahedra().end(); it++) {
+        // Although our precondition states that there are no boundary
+        // faces, tetrahedronIndex() will crash if there are; safer to
+        // use the slower getTetrahedronIndex() instead, in case somebody
+        // has made a mistake.
         for (i = 0; i < 4; i++)
             out << "   " << tri.getTetrahedronIndex(
                 (*it)->getAdjacentTetrahedron(i)) << ' ';
