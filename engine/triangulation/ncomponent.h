@@ -37,6 +37,7 @@
 
 #include <vector>
 #include "shareableobject.h"
+#include "utilities/nmarkedvector.h"
 
 namespace regina {
 
@@ -56,7 +57,7 @@ class NBoundaryComponent;
  * Components are highly temporary; once a triangulation changes, all
  * its component objects will be deleted and new ones will be created.
  */
-class NComponent : public ShareableObject {
+class NComponent : public ShareableObject, public NMarkedElement {
     private:
         std::vector<NTetrahedron*> tetrahedra;
             /**< List of tetrahedra in the component. */

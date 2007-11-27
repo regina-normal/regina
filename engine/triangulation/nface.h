@@ -109,7 +109,7 @@ class NFaceEmbedding {
  * Faces are highly temporary; once a triangulation changes, all its
  * face objects will be deleted and new ones will be created.
  */
-class NFace : public ShareableObject {
+class NFace : public ShareableObject, public NMarkedElement {
     public:
         static const int TRIANGLE;
             /**< Specifies a face with no identified vertices or edges. */

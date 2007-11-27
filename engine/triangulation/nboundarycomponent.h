@@ -68,7 +68,7 @@ class NEdge;
  * changes, all its boundary component objects will be deleted and new
  * ones will be created.
  */
-class NBoundaryComponent : public ShareableObject {
+class NBoundaryComponent : public ShareableObject, public NMarkedElement {
     private:
         std::vector<NFace*> faces;
             /**< List of faces in the component. */

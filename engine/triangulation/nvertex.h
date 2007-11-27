@@ -37,6 +37,7 @@
 
 #include <vector>
 #include "shareableobject.h"
+#include "utilities/nmarkedvector.h"
 
 namespace regina {
 
@@ -118,7 +119,7 @@ class NVertexEmbedding {
  *
  * \testpart
  */
-class NVertex : public ShareableObject {
+class NVertex : public ShareableObject, public NMarkedElement {
     public:
         static const int SPHERE;
             /**< Specifies a vertex link that is a sphere. */

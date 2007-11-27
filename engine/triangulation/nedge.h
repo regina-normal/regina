@@ -163,7 +163,7 @@ class NEdgeEmbedding {
  * Edges are highly temporary; once a triangulation changes, all its
  * edge objects will be deleted and new ones will be created.
  */
-class NEdge : public ShareableObject {
+class NEdge : public ShareableObject, public NMarkedElement {
     private:
         std::deque<NEdgeEmbedding> embeddings;
             /**< A list of descriptors of how this edge forms a part of

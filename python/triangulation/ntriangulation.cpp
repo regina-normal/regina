@@ -181,11 +181,17 @@ void addNTriangulation() {
             return_value_policy<reference_existing_object>())
         .def("getFace", &NTriangulation::getFace,
             return_value_policy<reference_existing_object>())
+        .def("componentIndex", &NTriangulation::componentIndex)
         .def("getComponentIndex", &NTriangulation::getComponentIndex)
+        .def("boundaryComponentIndex",
+            &NTriangulation::boundaryComponentIndex)
         .def("getBoundaryComponentIndex",
             &NTriangulation::getBoundaryComponentIndex)
+        .def("vertexIndex", &NTriangulation::vertexIndex)
         .def("getVertexIndex", &NTriangulation::getVertexIndex)
+        .def("edgeIndex", &NTriangulation::edgeIndex)
         .def("getEdgeIndex", &NTriangulation::getEdgeIndex)
+        .def("faceIndex", &NTriangulation::faceIndex)
         .def("getFaceIndex", &NTriangulation::getFaceIndex)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
