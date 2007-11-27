@@ -10,12 +10,21 @@ Regina - A Normal Surface Theory Calculator
 Version 4.4.1  [ under development ]
 
     ENGINE:
+        Class NMarkedVector, NMarkedElement:
+            - New class for a vector with fast reverse lookups.  This
+              is more memory efficient than NIndexedArray, but requires
+              modifications to the data type being stored.
         Class NTriangulation:
             - Streamlined the implementation to save both time and
-              memory.  The tetrahedra and skeletal components are now
-              stored as std::vectors instead of NIndexedArrays; this
-              affects the return types of getTetrahedra(), getVertices()
-              and so on.
+              memory.  As a result:
+                + Tetrahedra and skeletal components are now stored using
+                  NMarkedVector, not NIndexedArray.  As a result the return
+                  types of getTetrahedra(), getVertices(), etc. have changed.
+                + The old reverse lookup routines getTetrahedronIndex(),
+                  getVertexIndex(), etc. are now deprecated.  The new routines
+                  tetrahedronIndex(), vertexIndex(), etc. are even faster,
+                  but have new preconditions requiring the given tetrahedron,
+                  vertex, etc. to belong to the triangulation.
 
 Version 4.4  [ 25 November, 2007 ] - The "hug a Mac today" release.
 
