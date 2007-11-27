@@ -49,7 +49,7 @@ class NMarkedElement {
         long marking;
 
     public:
-        long markedIndex() const {
+        inline long markedIndex() const {
             return marking;
         }
 
