@@ -163,17 +163,17 @@ QString NSurfaceCoordinateItem::text(int column) const {
 
                 if ((v = surface->isVertexLink()))
                     return i18n("Vertex %1").arg(
-                        surfaces->getTriangulation()->getVertexIndex(v));
+                        surfaces->getTriangulation()->vertexIndex(v));
                 else if ((e = surface->isThinEdgeLink()).first) {
                     if (e.second)
                         return i18n("Thin edges %1, %2").
-                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                            arg(surfaces->getTriangulation()->edgeIndex(
                                 e.first)).
-                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                            arg(surfaces->getTriangulation()->edgeIndex(
                                 e.second));
                     else
                         return i18n("Thin edge %1").
-                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                            arg(surfaces->getTriangulation()->edgeIndex(
                                 e.first));
                 } else
                     return QString::null;
@@ -222,17 +222,17 @@ QString NSurfaceCoordinateItem::text(int column) const {
 
                 if ((v = surface->isVertexLink()))
                     return i18n("Vertex %1").arg(
-                        surfaces->getTriangulation()->getVertexIndex(v));
+                        surfaces->getTriangulation()->vertexIndex(v));
                 else if ((e = surface->isThinEdgeLink()).first) {
                     if (e.second)
                         return i18n("Thin edges %1, %2").
-                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                            arg(surfaces->getTriangulation()->edgeIndex(
                                 e.first)).
-                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                            arg(surfaces->getTriangulation()->edgeIndex(
                                 e.second));
                     else
                         return i18n("Thin edge %1").
-                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                            arg(surfaces->getTriangulation()->edgeIndex(
                                 e.first));
                 } else
                     return QString::null;

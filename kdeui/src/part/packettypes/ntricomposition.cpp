@@ -608,7 +608,7 @@ void NTriCompositionUI::findL31Pillows() {
 
             details = new KListViewItem(id, details,
                 i18n("Pillow interior vertex: %1").
-                arg(tri->getVertexIndex(
+                arg(tri->vertexIndex(
                     pillow->getTetrahedron(0)->getVertex(
                     pillow->getInteriorVertex(0)))));
 
@@ -693,14 +693,14 @@ void NTriCompositionUI::findLayeredLoops() {
                     "Length %1, twisted").arg(loop->getLength()));
                 details = new KListViewItem(id, details, i18n(
                     "Hinge: edge %1").
-                    arg(tri->getEdgeIndex(loop->getHinge(0))));
+                    arg(tri->edgeIndex(loop->getHinge(0))));
             } else {
                 details = new KListViewItem(id, details, i18n(
                     "Length %1, not twisted").arg(loop->getLength()));
                 details = new KListViewItem(id, details, i18n(
                     "Hinges: edge %1, %2").
-                    arg(tri->getEdgeIndex(loop->getHinge(0))).
-                    arg(tri->getEdgeIndex(loop->getHinge(1))));
+                    arg(tri->edgeIndex(loop->getHinge(0))).
+                    arg(tri->edgeIndex(loop->getHinge(1))));
             }
 
             delete loop;
@@ -770,9 +770,9 @@ void NTriCompositionUI::findPillowSpheres() {
 
                 details = new KListViewItem(id, details, i18n(
                     "Equator: edges %1, %2, %3").
-                     arg(tri->getEdgeIndex(f1->getEdge(0))).
-                     arg(tri->getEdgeIndex(f1->getEdge(1))).
-                     arg(tri->getEdgeIndex(f1->getEdge(2))));
+                     arg(tri->edgeIndex(f1->getEdge(0))).
+                     arg(tri->edgeIndex(f1->getEdge(1))).
+                     arg(tri->edgeIndex(f1->getEdge(2))));
 
                 delete pillow;
             }
@@ -876,7 +876,7 @@ void NTriCompositionUI::findSnappedSpheres() {
 
                 const regina::NSnappedBall* ball = sphere->getSnappedBall(0);
                 details = new KListViewItem(id, details, i18n(
-                    "Equator: edge %1").arg(tri->getEdgeIndex(
+                    "Equator: edge %1").arg(tri->edgeIndex(
                     ball->getTetrahedron()->getEdge(ball->getEquatorEdge()))));
 
                 delete sphere;

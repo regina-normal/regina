@@ -389,12 +389,12 @@ QString BoundaryComponentItem::text(int column) const {
                 i18n("%1 faces").arg(item->getNumberOfFaces()));
         case 3:
             if (item->isIdeal())
-                return i18n("Vertex %1").arg(tri->getVertexIndex(
+                return i18n("Vertex %1").arg(tri->vertexIndex(
                     item->getVertex(0)));
             else {
                 QString ans;
                 for (unsigned long i = 0; i < item->getNumberOfFaces(); i++)
-                    appendToList(ans, QString::number(tri->getFaceIndex(
+                    appendToList(ans, QString::number(tri->faceIndex(
                         item->getFace(i))));
                 return i18n("Faces ") + ans;
             }
