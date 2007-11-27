@@ -411,8 +411,9 @@ void NHomologicalData::computeChainComplexes() {
         tetor.resize(vtetlist.size(),0);
         unorientedlist.resize(0);
 
-        for (j=0;j<vtetlist.size();j++) { // unoriented list stores the tetrahedra
-	  // adjacent to the vertex plus the vertex index in that tetrahedra's coords
+        for (j=0;j<vtetlist.size();j++) {
+            // unoriented list stores the tetrahedra adjacent to the vertex
+            // plus the vertex index in that tetrahedra's coords
             unorientedlist.push_back(
                 4*tri->tetrahedronIndex( vtetlist[j].getTetrahedron() ) +
                 vtetlist[j].getVertex() );
@@ -443,19 +444,22 @@ void NHomologicalData::computeChainComplexes() {
                     // if any of the adjacent
                     // tetrahedra are unoriented, and if so, orient them.
                     for (k=0;k<4;k++) {
-                        if (k!= (ind1 % 4)) 
+                        if (k!= (ind1 % 4))
                         {
-                         p1=vtetlist[j].getTetrahedron() -> getAdjacentTetrahedronGluing(k);
-                             ind2=4*tri->tetrahedronIndex( vtetlist[j].getTetrahedron() ->
+                            p1=vtetlist[j].getTetrahedron() ->
+                                getAdjacentTetrahedronGluing(k);
+                            ind2=4*tri->tetrahedronIndex(
+                                vtetlist[j].getTetrahedron() ->
                                 getAdjacentTetrahedron(k) ) + p1[ind1 % 4];
-                             if (unorientedlist.index( ind2 )  != (-1) ) 
-                             {
-                             // we have an adjacent unoriented tetrahedron.
-                             // we orient it and erase from unorientedlist.
-                             tetor[ orig_uol.index(ind2) ] = (-1)*tetor[j]*p1.sign();
-                             unorientedlist.erase( ind2 );
-                             }
-                         }
+                            if (unorientedlist.index( ind2 )  != (-1) )
+                            {
+                                // we have an adjacent unoriented tetrahedron.
+                                // we orient it and erase from unorientedlist.
+                                tetor[ orig_uol.index(ind2) ] =
+                                   (-1)*tetor[j]*p1.sign();
+                                unorientedlist.erase( ind2 );
+                            }
+                        }
                     }
                 }
             }
