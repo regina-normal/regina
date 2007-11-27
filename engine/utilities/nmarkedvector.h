@@ -53,22 +53,12 @@ class NMarkedElement {
             return marking;
         }
 
-    friend class NMarkedElementManager;
-};
-
-class NMarkedElementManager {
-    public:
-        inline void mark(NMarkedElement& elt, long marking) const {
-            elt.marking = marking;
-        }
-
-        inline long& marking(NMarkedElement& elt) const {
-            return elt.marking;
-        }
+    template <typename T>
+    friend class NMarkedVector;
 };
 
 template <typename T>
-class NMarkedVector : private std::vector<T>, private NMarkedElementManager {
+class NMarkedVector : private std::vector<T> {
     public:
         using std::vector<T>::iterator;
         using std::vector<T>::const_iterator;
@@ -92,7 +82,7 @@ class NMarkedVector : private std::vector<T>, private NMarkedElementManager {
         }
 
         inline void push_back(const T& item) {
-            mark(*item, size());
+            item->marking = size();
             std::vector<T>::push_back(item);
         }
 
@@ -100,7 +90,7 @@ class NMarkedVector : private std::vector<T>, private NMarkedElementManager {
                 typename std::vector<T>::iterator pos) {
             typename std::vector<T>::iterator it = pos;
             for (++it; it != end(); ++it)
-                --marking(**it);
+                --((*it)->marking);
             return std::vector<T>::erase(pos);
         }
 
@@ -108,7 +98,7 @@ class NMarkedVector : private std::vector<T>, private NMarkedElementManager {
                 typename std::vector<T>::iterator first,
                 typename std::vector<T>::iterator last) {
             for (typename std::vector<T>::iterator it = last; it != end(); ++it)
-                marking(**it) -= (first - last);
+                (*it)->marking -= (first - last);
             return std::vector<T>::erase(first, last);
         }
 };
