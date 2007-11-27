@@ -115,7 +115,9 @@ class NMarkedElement {
  *   same time results in undefined behaviour.
  *
  * Using this class is fairly simple.  The class provides a restricted
- * subset of the std::vector functionality (this subset may grow over
+ * subset of the std::vector functionality, including \a iterator,
+ * \a const_iterator, \a begin, \a end, \a size, \a empty, \a front,
+ * \a back, operator [], and \a clear (this subset may grow over
  * time if required).  In addition, any const method of std::vector can
  * be accessed through an explicit cast to const std::vector&.  To
  * perform a reverse lookup (find the index at which an array is stored),
