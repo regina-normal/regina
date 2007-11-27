@@ -131,17 +131,17 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         mutable bool calculatedSkeleton;
             /**< Has the skeleton been calculated? */
 
-        NMarkedVector<NTetrahedron*> tetrahedra;
+        NMarkedVector<NTetrahedron> tetrahedra;
             /**< The tetrahedra that form the triangulation. */
-        mutable NMarkedVector<NFace*> faces;
+        mutable NMarkedVector<NFace> faces;
             /**< The faces in the triangulation skeleton. */
-        mutable NMarkedVector<NEdge*> edges;
+        mutable NMarkedVector<NEdge> edges;
             /**< The edges in the triangulation skeleton. */
-        mutable NMarkedVector<NVertex*> vertices;
+        mutable NMarkedVector<NVertex> vertices;
             /**< The vertices in the triangulation skeleton. */
-        mutable NMarkedVector<NComponent*> components;
+        mutable NMarkedVector<NComponent> components;
             /**< The components that form the triangulation. */
-        mutable NMarkedVector<NBoundaryComponent*> boundaryComponents;
+        mutable NMarkedVector<NBoundaryComponent> boundaryComponents;
             /**< The components that form the boundary of the
                  triangulation. */
 
