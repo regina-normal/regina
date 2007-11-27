@@ -150,7 +150,7 @@ bool NTriangulation::crushMaximalForest() {
         cerr << "Dual Faces: " << dual.size() << '\n';
         NPointerSetIterator<NFace> it(dual);
         while (! it.done()) {
-            cerr << getFaceIndex(*it) << ' ';
+            cerr << faceIndex(*it) << ' ';
             it++;
         }
         cerr << '\n';
@@ -160,7 +160,7 @@ bool NTriangulation::crushMaximalForest() {
     {
         NPointerSetIterator<NEdge> it(cEdges);
         while (! it.done()) {
-            cerr << getEdgeIndex(*it) << ' ';
+            cerr << edgeIndex(*it) << ' ';
             it++;
         }
         cerr << '\n';

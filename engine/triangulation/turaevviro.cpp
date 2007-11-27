@@ -257,17 +257,17 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
                 valColour *= init.edgeContrib(colour[i]);
             for (i = 0; i < nFaces; i++)
                 valColour *= init.faceContrib(
-                    colour[getEdgeIndex(faces[i]->getEdge(0))],
-                    colour[getEdgeIndex(faces[i]->getEdge(1))],
-                    colour[getEdgeIndex(faces[i]->getEdge(2))]);
+                    colour[edgeIndex(faces[i]->getEdge(0))],
+                    colour[edgeIndex(faces[i]->getEdge(1))],
+                    colour[edgeIndex(faces[i]->getEdge(2))]);
             for (i = 0; i < tetrahedra.size(); i++)
                 valColour *= init.tetContrib(
-                    colour[getEdgeIndex(tetrahedra[i]->getEdge(0))],
-                    colour[getEdgeIndex(tetrahedra[i]->getEdge(1))],
-                    colour[getEdgeIndex(tetrahedra[i]->getEdge(3))],
-                    colour[getEdgeIndex(tetrahedra[i]->getEdge(5))],
-                    colour[getEdgeIndex(tetrahedra[i]->getEdge(4))],
-                    colour[getEdgeIndex(tetrahedra[i]->getEdge(2))]
+                    colour[edgeIndex(tetrahedra[i]->getEdge(0))],
+                    colour[edgeIndex(tetrahedra[i]->getEdge(1))],
+                    colour[edgeIndex(tetrahedra[i]->getEdge(3))],
+                    colour[edgeIndex(tetrahedra[i]->getEdge(5))],
+                    colour[edgeIndex(tetrahedra[i]->getEdge(4))],
+                    colour[edgeIndex(tetrahedra[i]->getEdge(2))]
                     );
 
             ans += valColour;
@@ -292,10 +292,10 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
         admissible = true;
         const std::deque<NEdgeEmbedding>& embs(edges[curr]->getEmbeddings());
         for (embit = embs.begin(); embit != embs.end(); embit++) {
-            index1 = getEdgeIndex((*embit).getTetrahedron()->getEdge(
+            index1 = edgeIndex((*embit).getTetrahedron()->getEdge(
                 edgeNumber[(*embit).getVertices()[0]]
                 [(*embit).getVertices()[2]]));
-            index2 = getEdgeIndex((*embit).getTetrahedron()->getEdge(
+            index2 = edgeIndex((*embit).getTetrahedron()->getEdge(
                 edgeNumber[(*embit).getVertices()[1]]
                 [(*embit).getVertices()[2]]));
             if (index1 <= curr && index2 <= curr) {

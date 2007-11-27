@@ -118,7 +118,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
         out << "  " << std::setw(3) << tetPos << "  |          ";
         for (vertex=0; vertex<4; vertex++)
             out << ' ' << std::setw(3) <<
-                getVertexIndex(tet->getVertex(vertex));
+                vertexIndex(tet->getVertex(vertex));
         out << '\n';
     }
     out << '\n';
@@ -132,7 +132,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
         for (start=0; start<4; start++)
             for (end=start+1; end<4; end++)
                 out << ' ' << std::setw(3)
-                    << getEdgeIndex(tet->getEdge(edgeNumber[start][end]));
+                    << edgeIndex(tet->getEdge(edgeNumber[start][end]));
         out << '\n';
     }
     out << '\n';
@@ -144,7 +144,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
         tet = tetrahedra[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |        ";
         for (face=3; face>=0; face--)
-            out << ' ' << std::setw(3) << getFaceIndex(tet->getFace(face));
+            out << ' ' << std::setw(3) << faceIndex(tet->getFace(face));
         out << '\n';
     }
     out << '\n';

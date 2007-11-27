@@ -253,10 +253,10 @@ void NHomologicalData::computeChainComplexes() {
     // This fills out matrix A1
     for (i=0;i<tri->getNumberOfEdges();i++) {
         // these are the standard edges
-        temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(0)));
+        temp=sNIV.index(tri->vertexIndex(tri->getEdge(i)->getVertex(0)));
         (A1->entry( ((temp==(-1)) ?
             (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
-        temp=sNIV.index(tri->getVertexIndex(tri->getEdge(i)->getVertex(1)));
+        temp=sNIV.index(tri->vertexIndex(tri->getEdge(i)->getVertex(1)));
         (A1->entry( ((temp==(-1)) ?
             (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
     } // ok
@@ -267,21 +267,21 @@ void NHomologicalData::computeChainComplexes() {
         p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1) {
             A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
                 getEdge(p1[2])) )+1), tri->getNumberOfEdges()+i)-=1;
         } else {
             A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
                 getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)-=1;
         }
         p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1) {
             A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
                 getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)+=1;
         } else {
             A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
                 getEdge(p1[2])) )+1) , tri->getNumberOfEdges()+i)+=1;
         }
     }
@@ -296,7 +296,7 @@ void NHomologicalData::computeChainComplexes() {
             // edges (if they exist)
             if ( (j/3) == 0) {
                 p1=tri->getFace(i)->getEdgeMapping(j % 3);
-                A2->entry( tri->getEdgeIndex(
+                A2->entry( tri->edgeIndex(
                     tri->getFace(i)->getEdge(j % 3)) ,i) +=
                     ( (p1.sign()==1) ? +1 : -1 );
             } else {
@@ -325,7 +325,7 @@ void NHomologicalData::computeChainComplexes() {
             p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
                 (sIEFOT[i] + j) % 4);
             A2->entry( tri->getNumberOfEdges() + sIEEOF.index(
-                3*tri->getFaceIndex(tri->getTetrahedron(
+                3*tri->faceIndex(tri->getTetrahedron(
                 sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) +
                 p1.preImageOf(sIEFOT[i] % 4) ) ,
                 tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
@@ -338,7 +338,7 @@ void NHomologicalData::computeChainComplexes() {
         for (j=0;j<4;j++) {
             // first go through standard faces 0 through 3
             p1=tri->getTetrahedron(i)->getFaceMapping(j);
-            A3->entry( tri->getFaceIndex(
+            A3->entry( tri->faceIndex(
                 tri->getTetrahedron(i)->getFace(j) ), i) +=
                 ( (p1.sign()==1) ? 1 : -1 );
             // then ideal faces 0 through 3, if they exist
@@ -375,7 +375,7 @@ void NHomologicalData::computeChainComplexes() {
             // getEmbedding(0).getTetrahedron() is the current tet, and
             // getEmbedding(0).getFace() is this current face p1[2]...
 
-            B2->entry( dNBF.index( tri->getFaceIndex(
+            B2->entry( dNBF.index( tri->faceIndex(
                 edgeque[j].getTetrahedron()->getFace(p1[2]) ) ) ,i)+=
                     ( ( edgeque[j].getTetrahedron() ==
                         edgeque[j].getTetrahedron()->getFace(
@@ -490,7 +490,7 @@ void NHomologicalData::computeChainComplexes() {
                     // corresp to end of edge.
                     // if p1.sign() == tetor[j] then sign = +1 otherwise -1.
 
-                    ind1=4*tri->getEdgeIndex(
+                    ind1=4*tri->edgeIndex(
                         vtetlist[j].getTetrahedron()->getEdge(k) )
                         + 2*ind2 + (p1.sign() == tetor[j] ? 1 : 0);
 
@@ -585,7 +585,7 @@ void NHomologicalData::computeChainComplexes() {
                 stage0choice = vert0id;
             } // ideal
 
-            stage0edgeNum = tri->getEdgeIndex(tri->getFace(dNBF[j]) ->
+            stage0edgeNum = tri->edgeIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
                 getEdge( edgeNumber[vert0Num][stage0choice] ));
             stage0posOr = ( tri->getFace(dNBF[j]) ->
@@ -611,7 +611,7 @@ void NHomologicalData::computeChainComplexes() {
                 stage4choice = vert1id;
             }
 
-            stage4edgeNum = tri->getEdgeIndex(tri->getFace(dNBF[j]) ->
+            stage4edgeNum = tri->edgeIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
                 getEdge( edgeNumber[vert1Num][stage4choice] ));
             stage4posOr = ( tri->getFace(dNBF[j]) ->
@@ -647,7 +647,7 @@ void NHomologicalData::computeChainComplexes() {
             P3 = tri->getFace(dNBF[j])->getEmbedding(0).getTetrahedron()->
                 getFaceMapping(stage1FaceToUse);
             stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                3*(tri->getFaceIndex(tri->getFace(dNBF[j]) ->
+                3*(tri->faceIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
                 getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
             stage1posOr = ( ( P3[(P3.preImageOf(stage1v)+1) % 3] !=
@@ -679,7 +679,7 @@ void NHomologicalData::computeChainComplexes() {
             P3 = tri->getFace(dNBF[j])->getEmbedding(1).getTetrahedron()->
                 getFaceMapping(stage3FaceToUse);
             stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                3*(tri->getFaceIndex(tri->getFace(dNBF[j]) ->
+                3*(tri->faceIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
                 getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
             stage3posOr = ( ( P3[(P3.preImageOf(stage3v)+1) % 3] ==
@@ -776,7 +776,7 @@ void NHomologicalData::computeChainComplexes() {
                 }
                 if ( currV/3  != prevV/3 ) // regular edge
                 {
-                    H1map->entry( tri->getEdgeIndex(tri->getFace(dNBF[j])->
+                    H1map->entry( tri->edgeIndex(tri->getFace(dNBF[j])->
                         getEdge( ((currV/3) + 1) % 3 )), j ) +=
                         ( (tri->getFace(dNBF[j]) -> getEdgeMapping(
                         ((currV/3) + 1) % 3)[1] == currV/3) ? +1 : -1);
@@ -801,10 +801,10 @@ void NHomologicalData::computeChainComplexes() {
     // cols==sBNIE.size()+sIEEOF.size()
     for (i=0;i<sBNIE.size();i++) { // these are the standard boundary edges
         // temp == -1 when the boundary edge end is ideal.
-        temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->
+        temp=sBNIV.index(tri->vertexIndex(tri->getEdge(sBNIE[i])->
             getVertex(0)));
         (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
-        temp=sBNIV.index(tri->getVertexIndex(tri->getEdge(sBNIE[i])->
+        temp=sBNIV.index(tri->vertexIndex(tri->getEdge(sBNIE[i])->
             getVertex(1)));
         (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
     } // ok
@@ -815,21 +815,21 @@ void NHomologicalData::computeChainComplexes() {
         p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1) {
             Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
                 getEdge(p1[2])) )+1), sBNIE.size()+i)-=1;
         } else {
             Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
                 getEdge(p1[2])) )) , sBNIE.size()+i)-=1;
         }
         p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1) {
             Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
                 getEdge(p1[2])) )) , sBNIE.size()+i)+=1;
         } else {
             Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->getEdgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
                 getEdge(p1[2])) )+1) , sBNIE.size()+i)+=1;
         }
     }
@@ -845,7 +845,7 @@ void NHomologicalData::computeChainComplexes() {
             // edges (if they exist)
             if ( (j/3) == 0) {
                 p1=tri->getFace(sBNIF[i])->getEdgeMapping(j % 3);
-                Bd2->entry( sBNIE.index( tri->getEdgeIndex(tri->getFace(
+                Bd2->entry( sBNIE.index( tri->edgeIndex(tri->getFace(
                     sBNIF[i])->getEdge(j % 3)) ) ,i) +=
                     ( (p1.sign()==1) ? +1 : -1 );
             } else {
@@ -873,7 +873,7 @@ void NHomologicalData::computeChainComplexes() {
         for (j=1;j<4;j++) {
             p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
                 (sIEFOT[i] + j) % 4);
-            Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->getFaceIndex(
+            Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->faceIndex(
                 tri->getTetrahedron(sIEFOT[i]/4 )->getFace(
                 (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
                 sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );

@@ -103,7 +103,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     // Note that component index lookup is faster than tetrahedron index
     // lookup.
     for (tetPos = 0; tetPos < nTets; tetPos++)
-        newTris[getComponentIndex(tetrahedra[tetPos]->getComponent())]->
+        newTris[componentIndex(tetrahedra[tetPos]->getComponent())]->
             addTetrahedron(newTets[tetPos]);
 
     // And clean up.
