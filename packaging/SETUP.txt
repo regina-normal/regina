@@ -24,7 +24,8 @@ For each new installation:
 Distribution-specific caveats for the author's machine:
 
   - FC8 needs the nopcmcia option when installed.
-  - Ubuntu gutsy needs to install in safe graphics mode.
+  - Ubuntu gutsy needs to install in safe graphics mode, and needs
+    grub to boot with options vga=791 nosplash.
   - Ubuntu feisty needs to install from the alternate CD, and needs
     options vga=791 nosplash.
 
