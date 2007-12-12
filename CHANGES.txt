@@ -9,6 +9,8 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.4.1  [ under development ]
 
+    OVERALL:
+        - Builds under gcc 4.3.
     ENGINE:
         Class NMarkedVector, NMarkedElement:
             - New class for a vector with fast reverse lookups.  This
