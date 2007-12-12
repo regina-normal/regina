@@ -39,6 +39,7 @@
 
 #include <regina-config.h>
 
+#include <cstring>
 #include <fstream>
 
 namespace regina {
