@@ -1,3 +1,10 @@
+regina-normal (4.4.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Builds under gcc 4.3 (closes: #455296).
+
+ -- Ben Burton <bab@debian.org>  Sun, 25 Nov 2007 10:28:59 +1100
+
 regina-normal (4.4-1) unstable; urgency=low
 
   * New upstream release.
