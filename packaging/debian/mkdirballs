@@ -7,7 +7,7 @@ if [ -e debian ]; then
 fi
 
 for i in *; do
-	if [ -d "$i" ]; then
+	if [ -d "$i" -a "$i" != chroots ]; then
 		echo "Making $i ..."
 		mkdir debian
 		cp -p $i/* debian
