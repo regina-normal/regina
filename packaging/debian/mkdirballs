@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Creates a tarball of each type of debian directory for easy transportation.
+#
 set -e
 
 if [ -e debian ]; then
