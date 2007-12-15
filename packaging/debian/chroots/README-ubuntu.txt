@@ -91,10 +91,10 @@ Guest configuration
   (to avoid problems in the guest /var/lib/dpkg/statoverride:)
   prompt$ schroot -c gutsy aptitude purge postfix
 
-- Install regina's build dependencies:
+- Install packages necessary for building regina:
 
   prompt$ schroot -c gutsy aptitude install
-          build-essential fakeroot automake1.9 debhelper doxygen
+          build-essential fakeroot lintian automake1.9 debhelper doxygen
           kdelibs4-dev libboost-python-dev libcppunit-dev libgmp3-dev
           libmpich1.0-dev libpopt-dev libxml2-dev zlib1g-dev
   prompt$ schroot -c gutsy aptitude clean
