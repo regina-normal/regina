@@ -42,17 +42,17 @@ Guest configuration
 - Bootstrap the system:
 
   (for amd64:)
-  prompt$ debootstrap gutsy /srv/chroot/ubuntu/gutsy-amd64
+  prompt# debootstrap gutsy /srv/chroot/ubuntu/gutsy-amd64
           http://archive.ubuntu.com/ubuntu/
 
   (for i386:)
-  prompt$ debootstrap --arch i386 gutsy /srv/chroot/ubuntu/gutsy-i386
+  prompt# debootstrap --arch i386 gutsy /srv/chroot/ubuntu/gutsy-i386
   http://archive.ubuntu.com/ubuntu/
 
 - Create guest home directory:
 
-  prompt$ mkdir /srv/chroot/ubuntu/gutsy-amd64/home/bab
-  prompt$ chown bab.bab /srv/chroot/ubuntu/gutsy-amd64/home/bab
+  prompt# mkdir /srv/chroot/ubuntu/gutsy-amd64/home/bab
+  prompt# chown bab.bab /srv/chroot/ubuntu/gutsy-amd64/home/bab
 
 - Set up schroot entry:
 
@@ -76,36 +76,36 @@ Guest configuration
 
   deb http://archive.ubuntu.com/ubuntu gutsy main universe
 
-  prompt$ schroot -c gutsy aptitude update
+  prompt# schroot -c gutsy aptitude update
 
 - Stop host processes that conflict with the guest install:
 
-  prompt$ /etc/init.d/acpid stop  (*** This may cause X to restart! ***)
+  prompt# /etc/init.d/acpid stop  (*** This may cause X to restart! ***)
 
 - Install base system:
 
-  prompt$ schroot -c gutsy aptitude install
+  prompt# schroot -c gutsy aptitude install
           ubuntu-desktop language-pack-en man xserver-xephyr
 
 - Purge packages that cause problems in chroots:
 
   (to avoid problems copying the host /etc/resolv.conf:)
-  prompt$ schroot -c gutsy aptitude purge resolvconf
+  prompt# schroot -c gutsy aptitude purge resolvconf
 
   (to avoid problems in the guest /var/lib/dpkg/statoverride:)
-  prompt$ schroot -c gutsy aptitude purge postfix
+  prompt# schroot -c gutsy aptitude purge postfix
 
 - Install packages necessary for building regina:
 
-  prompt$ schroot -c gutsy aptitude install
+  prompt# schroot -c gutsy aptitude install
           build-essential fakeroot lintian automake1.9 debhelper doxygen
           kdelibs4-dev libboost-python-dev libcppunit-dev libgmp3-dev
           libmpich1.0-dev libpopt-dev libxml2-dev zlib1g-dev
-  prompt$ schroot -c gutsy aptitude clean
+  prompt# schroot -c gutsy aptitude clean
 
 - Allow user to administer the system:
 
-  prompt$ schroot -c gutsy visudo
+  prompt# schroot -c gutsy visudo
 
   bab ALL=(ALL) ALL
 
