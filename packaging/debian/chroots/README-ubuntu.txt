@@ -27,6 +27,12 @@ Host (debian etch) configuration
   -           do_mount "-o rw,bind" "/home"    "${CHROOT_PATH}/home"
   +           do_mount "-o rw,bind" "/home"    "${CHROOT_PATH}/home/master"
 
+- Edit /etc/schroot/setup.d/20network to copy /etc/hosts:
+
+  (line 8-9:)
+     cp $VERBOSE /etc/resolv.conf "${CHROOT_PATH}/etc/resolv.conf"
+  +  cp $VERBOSE /etc/hosts "${CHROOT_PATH}/etc/hosts"
+
 - Prepare the ubuntu partition to mount as /srv/chroot/ubuntu
 
 
@@ -92,6 +98,12 @@ Guest configuration
           kdelibs4-dev libboost-python-dev libcppunit-dev libgmp3-dev
           libmpich1.0-dev libpopt-dev libxml2-dev zlib1g-dev
   prompt$ schroot -c gutsy aptitude clean
+
+- Allow user to administer the system:
+
+  prompt$ schroot -c gutsy visudo
+
+  bab ALL=(ALL) ALL
 
 - Set up X authorisation:
 
