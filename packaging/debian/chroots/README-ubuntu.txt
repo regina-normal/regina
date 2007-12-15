@@ -78,6 +78,10 @@ Guest configuration
 
   prompt$ schroot -c gutsy aptitude update
 
+- Stop host processes that conflict with the guest install:
+
+  prompt$ /etc/init.d/acpid stop  (*** This may cause X to restart! ***)
+
 - Install base system:
 
   prompt$ schroot -c gutsy aptitude install
