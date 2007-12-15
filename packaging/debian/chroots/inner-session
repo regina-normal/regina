@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Enable job control, so that the final 'fg' does what it should.
+set -m
+
+arch=`uname -m`
+os=`cat /etc/issue`
+
+USE=:5
+
+case "$os" in
+	Ubuntu\ 6.06* )
+		distro=Dapper
+		;;
+	Ubuntu\ 7.04* )
+		distro=Feisty
+		;;
+	Ubuntu\ 7.10* )
+		distro=Gutsy
+		;;
+	* )
+		distro=Unknown
+		;;
+esac
+
+if [ "$distro" = Dapper -a "$arch" = x86_64 ]; then
+	type=xnest
+else
+	type=xephyr
+fi
+
+title="$distro ($arch)"
+echo "Starting embedded server for $title ..."
+if [ "$type" = xnest ]; then
+	Xnest -display :0 -geometry 1024x768 -name "$title" $USE &
+else
+	DISPLAY=:0 Xephyr -screen 1024x768 $USE &
+fi
+
+DISPLAY=$USE gnome-session
+
+# Terminate the X server.
+kill %1
+
+# And wait for internal GNOME programs to shut down.
+echo
+echo "Politely waiting on gnome..."
+sleep 30s
