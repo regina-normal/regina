@@ -6,7 +6,19 @@ set -m
 arch=`uname -m`
 os=`cat /etc/issue`
 
-USE=:5
+# Find a free display number.
+for i in `seq 100`; do
+	if [ ! -e "/tmp/.X$i-lock" ]; then break; fi
+	i=$(($i+1))
+done
+if [ -e "/tmp/.X$i-lock" ]; then
+	echo "ERROR: Could not find a free display number."
+	echo "       Try removing some stale X lock files from /tmp."
+	exit 1
+fi
+
+USE=:$i
+echo "Using display $USE."
 
 case "$os" in
 	Ubuntu\ 6.06* )
