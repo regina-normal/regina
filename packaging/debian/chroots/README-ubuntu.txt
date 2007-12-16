@@ -85,7 +85,7 @@ Guest configuration
 - Install base system:
 
   prompt# schroot -c gutsy aptitude install
-          ubuntu-desktop language-pack-en man xserver-xephyr
+          ubuntu-desktop language-pack-en man xnest xserver-xephyr
 
 - Purge packages that cause problems in chroots:
 
@@ -102,6 +102,10 @@ Guest configuration
           kdelibs4-dev libboost-python-dev libcppunit-dev libgmp3-dev
           libmpich1.0-dev libpopt-dev libxml2-dev zlib1g-dev
   prompt# schroot -c gutsy aptitude clean
+
+- Install other packages needed when running regina:
+
+  prompt# schroot -c gutsy aptitude install graphviz khelpcenter konqueror
 
 - Allow user to administer the system:
 
