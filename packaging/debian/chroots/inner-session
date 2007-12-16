@@ -53,7 +53,16 @@ else
 	DISPLAY=:0 Xephyr -screen 1024x768 $USE &
 fi
 
-DISPLAY=$USE /usr/bin/dbus-launch --exit-with-session gnome-session
+dbus=1
+if [ "$distro" = Dapper ]; then
+	dbus=
+fi
+
+if [ "$dbus" = 1 ]; then
+	DISPLAY=$USE /usr/bin/dbus-launch --exit-with-session gnome-session
+else
+	DISPLAY=$USE gnome-session
+fi
 
 # Terminate the X server.
 kill %1
