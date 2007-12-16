@@ -35,11 +35,15 @@ case "$os" in
 		;;
 esac
 
-if [ "$distro" = Dapper -a "$arch" = x86_64 ]; then
-	type=xnest
-else
-	type=xephyr
-fi
+#if [ "$distro" = Dapper -a "$arch" = x86_64 ]; then
+#	type=xnest
+#else
+#	type=xephyr
+#fi
+
+# Always use Xnest for now; xephyr in a chroot has some serious problems
+# with feisty and gutsy.
+type=xnest
 
 title="$distro ($arch)"
 echo "Starting embedded server for $title ..."
@@ -49,7 +53,7 @@ else
 	DISPLAY=:0 Xephyr -screen 1024x768 $USE &
 fi
 
-DISPLAY=$USE gnome-session
+DISPLAY=$USE /usr/bin/dbus-launch --exit-with-session gnome-session
 
 # Terminate the X server.
 kill %1
