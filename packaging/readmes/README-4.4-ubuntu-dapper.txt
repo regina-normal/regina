@@ -5,7 +5,7 @@ Ubuntu packages for Regina are not distributed from the SourceForge site.
 
 Instead, users of Dapper Drake (the Ubuntu 6.06 LTS release) may obtain
 packages from the repository on people.debian.org.  These packages are
-available for the i386 architecture only.  To install them:
+available for the i386 and amd64 architectures.  To install them:
 
 1. Add Regina's location to your list of repositories.
 
