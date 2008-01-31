@@ -103,9 +103,9 @@ Guest configuration
           libmpich1.0-dev libpopt-dev libxml2-dev zlib1g-dev
   prompt# schroot -c gutsy aptitude clean
 
-- Install other packages needed when running regina:
+- Install other packages useful for running and testing regina:
 
-  prompt# schroot -c gutsy aptitude install graphviz khelpcenter konqueror
+  prompt# schroot -c gutsy aptitude install graphviz khelpcenter kig konqueror
 
 - Allow user to administer the system:
 
