@@ -3,8 +3,8 @@ usr/bin/sig*
 usr/bin/tricensus
 usr/bin/tricensus-manager
 usr/bin/trisetcmp
-usr/lib/libregina-engine-4.4.so
-usr/lib/libregina-kdecommon-4.4.so
+usr/lib/libregina-engine-4.4.1.so
+usr/lib/libregina-kdecommon-4.4.1.so
 usr/lib/kde3/libreginapart.so
 usr/lib/kde3/libreginapart.la
 usr/lib/regina-normal/python/regina.so
