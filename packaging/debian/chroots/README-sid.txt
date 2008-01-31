@@ -53,9 +53,10 @@ Guest configuration
   run-setup-scripts=true
   run-exec-scripts=true
 
-- Install basic KDE system:
+- Install basic graphical system:
 
-  prompt# schroot -c sid aptitude install kdebase kdelibs less vim zsh
+  prompt# schroot -c sid aptitude install
+          less vim zsh kdelibs kdebase xnest xserver-xephyr
 
 - Stop host processes that conflict with the guest install:
 
