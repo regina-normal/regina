@@ -119,5 +119,5 @@ Guest configuration
 
 - Start a chrooted session using the inner-session script in this directory:
 
-  bab@host$ schroot -c dapper .../path/to/inner-session
+  bab@host$ schroot -c gutsy .../path/to/inner-session
 
