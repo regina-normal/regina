@@ -4,7 +4,14 @@
 set -m
 
 arch=`uname -m`
-os=`cat /etc/issue`
+
+if [ -e /etc/issue ]; then
+	os=`cat /etc/issue`
+elif [ -e /etc/release ]; then
+	os=`cat /etc/release`
+else
+	os=Unknown
+fi
 
 # Find a free display number.
 for i in `seq 100`; do
@@ -22,24 +29,34 @@ echo "Using display $USE."
 
 kde=
 dbus=
+exitwait=
 case "$os" in
 	Ubuntu\ 6.06* )
 		distro=Dapper
+		exitwait=1
 		;;
 	Ubuntu\ 7.04* )
 		distro=Feisty
 		dbus=1
+		exitwait=1
 		;;
 	Ubuntu\ 7.10* )
 		distro=Gutsy
 		dbus=1
+		exitwait=1
 		;;
 	Debian\ GNU/Linux\ */sid\ * )
 		distro=Sid
 		kde=1
 		;;
+	Mandriva\ Linux\ release\ 2007.0\ * )
+		distro="Mandriva 2007.0"
+		exitwait=1
+		kde=1
+		;;
 	* )
 		distro=Unknown
+		exitwait=1
 		kde=1
 		;;
 esac
@@ -76,8 +93,8 @@ fi
 kill %1
 
 # And wait for internal GNOME programs to shut down.
-if [ "$kde" != 1 ]; then
+if [ "$exitwait" = 1 ]; then
 	echo
-	echo "Politely waiting on GNOME..."
-	sleep 30s
+	echo "Politely waiting on daemons to shut down..."
+	sleep 45s
 fi
