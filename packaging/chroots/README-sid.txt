@@ -24,9 +24,15 @@ This file follows on from README-ubuntu.txt; please read that file first.
 Host (debian etch) configuration
 --------------------------------
 
-- Same as for the ubuntu chroots; see README-ubuntu.txt for details
+- Follow the steps described in README-init-schroot.txt to
+  set up schroot on the host debian system.
 
-- Prepare the sid partition to mount as /srv/chroot/sid
+- Install debootstrap.
+
+- Mount the sid partition as /srv/chroot/sid:
+
+  (from /etc/fstab:)
+  LABEL=/sid /srv/chroot/sid ext3 defaults,errors=remount-ro 0 0
 
 
 Guest configuration

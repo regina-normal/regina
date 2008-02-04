@@ -26,24 +26,12 @@ System layout
 Host (debian etch) configuration
 --------------------------------
 
+- Follow the steps described in README-init-schroot.txt to
+  set up schroot on the host debian system.
+
 - Install debootstrap from sid (which has ubuntu hooks).
 
-- Install schroot.
-
 - Install hpilp (to avoid later errors in $CHROOT/var/lib/dpkg/statoverride).
-
-- Edit /etc/schroot/setup.d/10mount to mount host /home as guest /home/master,
-  to avoid mixing configurations for different versions of software:
-
-  (line 82:)
-  -           do_mount "-o rw,bind" "/home"    "${CHROOT_PATH}/home"
-  +           do_mount "-o rw,bind" "/home"    "${CHROOT_PATH}/home/master"
-
-- Edit /etc/schroot/setup.d/20network to copy /etc/hosts:
-
-  (line 8-9:)
-     cp $VERBOSE /etc/resolv.conf "${CHROOT_PATH}/etc/resolv.conf"
-  +  cp $VERBOSE /etc/hosts "${CHROOT_PATH}/etc/hosts"
 
 - Mount the ubuntu partition as /srv/chroot/ubuntu:
 

@@ -44,22 +44,8 @@ Host mandriva system configuration
 Host debian system configuration (debian etch)
 ----------------------------------------------
 
-- Edit /etc/schroot/setup.d/* as described in README-ubuntu.txt (see
-  the host configuration section).
-
-- Edit /etc/schroot/setup.d/30passwd so that it only copies password
-  files on debian-based systems:
-
-  (line 1:)
-   #!/bin/sh
-   
-  +# Only do this on a debian/ubuntu system.
-  +# For RPM-based system we will just add users and groups manually.
-  +if [ ! -e ${CHROOT_PATH}/var/lib/dpkg/status ]; then
-  +  exit
-  +fi
-  +
-   if [ "$AUTH_VERBOSITY" = "verbose" ]; then
+- Follow the steps described in README-init-schroot.txt to
+  set up schroot on the host debian system.
 
 - Mount the guest mandriva partition as /srv/chroot/mandriva, and mount
   the host mandriva partition as /srv/chroot/mdvhost:
