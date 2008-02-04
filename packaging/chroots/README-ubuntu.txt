@@ -1,8 +1,9 @@
-Setting up ubuntu chroots under debian etch
--------------------------------------------
+Setting up ubuntu chroots under debian etch (amd64)
+---------------------------------------------------
 
 This file documents what I've done on my debian etch system to set up
-chroots in which I can build and test ubuntu packages for regina.
+i386 and amd64 chroots in which I can build and test ubuntu packages for
+regina.
 
 This is *not* in any way meant to be a general set of instructions for
 arbitrary people doing arbitrary things in chroots.  Much better general
@@ -44,7 +45,10 @@ Host (debian etch) configuration
      cp $VERBOSE /etc/resolv.conf "${CHROOT_PATH}/etc/resolv.conf"
   +  cp $VERBOSE /etc/hosts "${CHROOT_PATH}/etc/hosts"
 
-- Prepare the ubuntu partition to mount as /srv/chroot/ubuntu.
+- Mount the ubuntu partition as /srv/chroot/ubuntu:
+
+  (from /etc/fstab:)
+  LABEL=/ubuntu /srv/chroot/ubuntu ext3 defaults,errors=remount-ro 0 0
 
 
 Guest configuration
@@ -53,19 +57,19 @@ Guest configuration
 - Bootstrap the system:
 
   (for amd64:)
-  prompt# debootstrap gutsy /srv/chroot/ubuntu/gutsy-amd64
+  debian# debootstrap gutsy /srv/chroot/ubuntu/gutsy-amd64
           http://archive.ubuntu.com/ubuntu/
 
   (for i386:)
-  prompt# debootstrap --arch i386 gutsy /srv/chroot/ubuntu/gutsy-i386
-  http://archive.ubuntu.com/ubuntu/
+  debian# debootstrap --arch i386 gutsy /srv/chroot/ubuntu/gutsy-i386
+          http://archive.ubuntu.com/ubuntu/
 
 - Create guest home directory:
 
-  prompt# mkdir /srv/chroot/ubuntu/gutsy-amd64/home/bab
-  prompt# chown bab.bab /srv/chroot/ubuntu/gutsy-amd64/home/bab
+  debian# mkdir /srv/chroot/ubuntu/gutsy-amd64/home/bab
+  debian# chown bab.bab /srv/chroot/ubuntu/gutsy-amd64/home/bab
 
-- Set up schroot entry:
+- Add a schroot entry:
 
   [gutsy-amd64]
   type=directory
@@ -83,52 +87,52 @@ Guest configuration
   (for i386 chroots:)
   personality=linux32
 
-- Add universe to /etc/apt/sources.list:
+- Add universe to /etc/apt/sources.list in the guest system:
 
   deb http://archive.ubuntu.com/ubuntu gutsy main universe
 
-  prompt# schroot -c gutsy aptitude update
+  debian# schroot -c gutsy aptitude update
 
 - Stop host processes that conflict with the guest install:
 
-  prompt# /etc/init.d/acpid stop  (*** This may cause X to restart! ***)
+  debian# /etc/init.d/acpid stop  (*** This may cause X to restart! ***)
 
 - Install base system:
 
-  prompt# schroot -c gutsy aptitude install
+  debian# schroot -c gutsy aptitude install
           ubuntu-desktop language-pack-en man xnest xserver-xephyr zsh
 
 - Purge packages that cause problems in chroots:
 
   (to avoid problems copying the host /etc/resolv.conf:)
-  prompt# schroot -c gutsy aptitude purge resolvconf
+  debian# schroot -c gutsy aptitude purge resolvconf
 
   (to avoid problems in the guest /var/lib/dpkg/statoverride:)
-  prompt# schroot -c gutsy aptitude purge postfix
+  debian# schroot -c gutsy aptitude purge postfix
 
 - Install packages necessary for building regina:
 
-  prompt# schroot -c gutsy aptitude install
+  debian# schroot -c gutsy aptitude install
           build-essential fakeroot lintian automake1.9 debhelper doxygen
           kdelibs4-dev libboost-python-dev libcppunit-dev libgmp3-dev
           libmpich1.0-dev libpopt-dev libxml2-dev zlib1g-dev
-  prompt# schroot -c gutsy aptitude clean
+  debian# schroot -c gutsy aptitude clean
 
 - Install other packages useful for running and testing regina:
 
-  prompt# schroot -c gutsy aptitude install graphviz khelpcenter kig konqueror
+  debian# schroot -c gutsy aptitude install graphviz khelpcenter kig konqueror
 
 - Allow user to administer the system:
 
-  prompt# schroot -c gutsy visudo
+  debian# schroot -c gutsy visudo
 
   bab ALL=(ALL) ALL
 
 - Set up X authorisation:
 
-  bab@host$ schroot -c gutsy -- ln -s ../master/bab/.Xauthority .Xauthority
+  bab@debian$ schroot -c gutsy -- ln -s ../master/bab/.Xauthority .Xauthority
 
 - Start a chrooted session using the inner-session script in this directory:
 
-  bab@host$ schroot -c gutsy .../path/to/inner-session
+  bab@debian$ schroot -c gutsy .../path/to/inner-session
 
