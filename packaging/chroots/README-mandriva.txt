@@ -147,22 +147,6 @@ Guest mandriva system configuration
   mdvguest# groupadd -g 1000 bab
   mdvguest# useradd -u 1000 -g 1000 bab
 
-- Symlink important files in the guest user's home directory, including
-  X authorisation:
-
-  bab@debian$ schroot -c mdv2007.0-i586 --
-              ln -s ../master/bab/.Xauthority .Xauthority
-  bab@debian$ schroot -c mdv2007.0-i586 --
-              ln -s ../master/bab master
-  bab@debian$ schroot -c mdv2007.0-i586 --
-              ln -s ../master/bab/svn/regina/regina/packaging/chroots/inner-session inner-session
-
-- Copy important dotfiles into the guest user's home directory:
-
-  bab@debian$ cp ~/.vimrc ~/.zprofile ~/.zshrc
-              /srv/chroot/mandriva/2007.0-x86_64/home/bab
-
-- Start a chrooted session using the inner-session script in this directory:
-
-  bab@debian$ schroot -c gutsy ./inner-session
+- Follow the final steps described in README-final-guestuser.txt to
+  start a chrooted session.
 

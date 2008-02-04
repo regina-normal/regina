@@ -76,11 +76,6 @@ Guest configuration
 
   prompt# schroot -c sid aptitude install gap graphviz kig mpich-bin
 
-- Set up X authorisation:
-
-  bab@host$ schroot -c sid -- ln -s ../master/bab/.Xauthority .Xauthority
-
-- Start a chrooted session using the inner-session script in this directory:
-
-  bab@host$ schroot -c sid .../path/to/inner-session
+- Follow the final steps described in README-final-guestuser.txt to
+  start a chrooted session.
 
