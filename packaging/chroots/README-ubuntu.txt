@@ -11,14 +11,25 @@ specifically to my personal setup, and is intended purely as a reminder
 to myself in case I get a new machine and need to do this all over again.
 
 
+System layout
+-------------
+
+- All work is done under debian etch (the "host system").
+
+- /srv/chroot/ubuntu is a directory on the host system containing one
+  subdirectory for each ubuntu chroot (the "guest systems").  This is
+  mounted from a separate partition (currently 18G, and with six ubuntu
+  chroots it is 91% full).
+
+
 Host (debian etch) configuration
 --------------------------------
 
-- Install debootstrap from sid (which has ubuntu hooks)
+- Install debootstrap from sid (which has ubuntu hooks).
 
-- Install schroot
+- Install schroot.
 
-- Install hpilp (to avoid later errors in $CHROOT/var/lib/dpkg/statoverride)
+- Install hpilp (to avoid later errors in $CHROOT/var/lib/dpkg/statoverride).
 
 - Edit /etc/schroot/setup.d/10mount to mount host /home as guest /home/master,
   to avoid mixing configurations for different versions of software:
@@ -33,7 +44,7 @@ Host (debian etch) configuration
      cp $VERBOSE /etc/resolv.conf "${CHROOT_PATH}/etc/resolv.conf"
   +  cp $VERBOSE /etc/hosts "${CHROOT_PATH}/etc/hosts"
 
-- Prepare the ubuntu partition to mount as /srv/chroot/ubuntu
+- Prepare the ubuntu partition to mount as /srv/chroot/ubuntu.
 
 
 Guest configuration
@@ -85,7 +96,7 @@ Guest configuration
 - Install base system:
 
   prompt# schroot -c gutsy aptitude install
-          ubuntu-desktop language-pack-en man xnest xserver-xephyr
+          ubuntu-desktop language-pack-en man xnest xserver-xephyr zsh
 
 - Purge packages that cause problems in chroots:
 
