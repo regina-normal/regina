@@ -30,6 +30,7 @@ echo "Using display $USE."
 kde=
 dbus=
 exitwait=
+xephyr=
 case "$os" in
 	Ubuntu\ 6.06* )
 		distro=Dapper
@@ -48,11 +49,24 @@ case "$os" in
 	Debian\ GNU/Linux\ */sid\ * )
 		distro=Sid
 		kde=1
+		xephyr=1
 		;;
 	Mandriva\ Linux\ release\ 2007.0\ * )
 		distro="Mandriva 2007.0"
 		exitwait=1
 		kde=1
+		;;
+	Mandriva\ Linux\ release\ 2007.1\ * )
+		distro="Mandriva 2007.1"
+		exitwait=1
+		kde=1
+		xephyr=1
+		;;
+	Mandriva\ Linux\ release\ 2008.0\ * )
+		distro="Mandriva 2008.1"
+		exitwait=1
+		kde=1
+		xephyr=1
 		;;
 	* )
 		distro=Unknown
@@ -61,20 +75,14 @@ case "$os" in
 		;;
 esac
 
-# Use Xnest in most cases; Xephyr in a chroot has some serious problems
-# with ubuntu feisty and gutsy.
-type=xnest
-
-if [ "$distro" = Sid ]; then
-	type=xephyr
-fi
-
 title="$distro ($arch)"
 echo "Starting embedded server for $title ..."
-if [ "$type" = xnest ]; then
-	Xnest -display :0 -geometry 1024x768 -name "$title" $USE &
-else
+if [ "$xephyr" = 1 ]; then
 	DISPLAY=:0 Xephyr -screen 1024x768 $USE &
+else
+	# Use Xnest in most cases; Xephyr in a chroot has some serious problems
+	# with ubuntu feisty and gutsy.
+	Xnest -display :0 -geometry 1024x768 -name "$title" $USE &
 fi
 
 if [ "$kde" = 1 ]; then
