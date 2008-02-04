@@ -128,11 +128,22 @@ Guest configuration
 
   bab ALL=(ALL) ALL
 
-- Set up X authorisation:
+- Symlink important files in the guest user's home directory, including
+  X authorisation:
 
-  bab@debian$ schroot -c gutsy -- ln -s ../master/bab/.Xauthority .Xauthority
+  bab@debian$ schroot -c gutsy --
+              ln -s ../master/bab/.Xauthority .Xauthority
+  bab@debian$ schroot -c gutsy --
+              ln -s ../master/bab master
+  bab@debian$ schroot -c gutsy --
+              ln -s ../master/bab/svn/regina/regina/packaging/chroots/inner-session inner-session
+
+- Copy important dotfiles into the guest user's home directory:
+
+  bab@debian$ cp ~/.vimrc ~/.zprofile ~/.zshrc
+              /srv/chroot/ubuntu/gutsy-amd64/home/bab
 
 - Start a chrooted session using the inner-session script in this directory:
 
-  bab@debian$ schroot -c gutsy .../path/to/inner-session
+  bab@debian$ schroot -c gutsy ./inner-session
 

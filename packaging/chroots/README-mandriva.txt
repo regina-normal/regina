@@ -147,7 +147,8 @@ Guest mandriva system configuration
   mdvguest# groupadd -g 1000 bab
   mdvguest# useradd -u 1000 -g 1000 bab
 
-- Symlink important files in the guest user's home directory:
+- Symlink important files in the guest user's home directory, including
+  X authorisation:
 
   bab@debian$ schroot -c mdv2007.0-i586 --
               ln -s ../master/bab/.Xauthority .Xauthority
