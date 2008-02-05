@@ -63,7 +63,7 @@ case "$os" in
 		xephyr=1
 		;;
 	Mandriva\ Linux\ release\ 2008.0\ * )
-		distro="Mandriva 2008.1"
+		distro="Mandriva 2008.0"
 		exitwait=1
 		kde=1
 		;;
