@@ -15,10 +15,14 @@ This file was created on 31 January 2008.  Since sid is a fast-moving
 target, these instructions might need changing as time goes by.
 
 
-Prior reading
+System layout
 -------------
 
-This file follows on from README-ubuntu.txt; please read that file first.
+- All work is done under debian etch (the "host system").
+
+- /srv/chroot/sid is the chroot directory on the host system containing
+  debian sid (the "guest system").  This is mounted from a separate
+  partition (currently 10G and only about 20% full at the time of writing).
 
 
 Host (debian etch) configuration
@@ -35,19 +39,19 @@ Host (debian etch) configuration
   LABEL=/sid /srv/chroot/sid ext3 defaults,errors=remount-ro 0 0
 
 
-Guest configuration
--------------------
+Guest (debian sid) configuration
+--------------------------------
 
 - Bootstrap the system:
 
-  prompt# debootstrap sid /srv/chroot/sid http://ftp.au.debian.org/debian/
+  etch# debootstrap sid /srv/chroot/sid http://ftp.au.debian.org/debian/
 
 - Create guest home directory:
 
-  prompt# mkdir /srv/chroot/sid/home/bab
-  prompt# chown bab.bab /srv/chroot/sid/home/bab
+  etch# mkdir /srv/chroot/sid/home/bab
+  etch# chown bab.bab /srv/chroot/sid/home/bab
 
-- Set up schroot entry:
+- Add a schroot entry:
 
   [sid]
   type=directory
@@ -61,8 +65,8 @@ Guest configuration
 
 - Install basic graphical system:
 
-  prompt# schroot -c sid aptitude install
-          less vim zsh kdelibs kdebase xnest xserver-xephyr
+  etch# schroot -c sid aptitude install
+        less vim zsh kdelibs kdebase xnest xserver-xephyr
 
 - Stop host processes that conflict with the guest install:
 
@@ -71,16 +75,16 @@ Guest configuration
 
 - Install packages necessary for building regina:
 
-  prompt# schroot -c sid aptitude install
-          build-essential devscripts fakeroot lintian
-          automake1.9 debhelper doxygen kdelibs4-dev libboost-python-dev
-          libcppunit-dev libgmp3-dev libmpich1.0-dev libpopt-dev
-          libxml2-dev zlib1g-dev
-  prompt# schroot -c sid aptitude clean
+  etch# schroot -c sid aptitude install
+        build-essential devscripts fakeroot lintian
+        automake1.9 debhelper doxygen kdelibs4-dev libboost-python-dev
+        libcppunit-dev libgmp3-dev libmpich1.0-dev libpopt-dev
+        libxml2-dev zlib1g-dev
+  etch# schroot -c sid aptitude clean
 
 - Install other packages useful for running and testing regina:
 
-  prompt# schroot -c sid aptitude install gap graphviz kig mpich-bin
+  etch# schroot -c sid aptitude install gap graphviz kig mpich-bin
 
 - Follow the final steps described in README-final-guestuser.txt to
   start a chrooted session.
