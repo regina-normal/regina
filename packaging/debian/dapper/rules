@@ -8,11 +8,12 @@ tmp = debian/tmp
 INSTALL_DIR = install -p -d -o root -g root -m 755
 INSTALL_FILE = install -p -o root -g root -m 644
 
-ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -g
-endif
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
+endif
+ifeq ($(shell dpkg-architecture -qDEB_BUILD_ARCH),arm)
+	CFLAGS += -O0
+	CXXFLAGS += -O0
 endif
 
 # The MPI code currently builds on all architectures.  If it should fail
@@ -45,10 +46,29 @@ configure-stamp:
 
 	# Back to the standard configure.
 	chmod a+x configure
-	./configure --disable-maintainer-mode PKGNAME=regina-normal \
+	CFLAGS=$(CFLAGS) CXXFLAGS=$(CXXFLAGS) \
+	  ./configure --disable-maintainer-mode PKGNAME=regina-normal \
 	  --with-python-version=$(pyver) \
 	  --includedir=/usr/include $(configkde) $(configmpi) \
 	  --includedir=/usr/include
+
+	# Stop for a sanity check to see if the right bits and pieces are
+	# going to be built (i.e., if all the required dependencies were
+	# found).  It's a long build, and we'd rather know now than later.
+	#
+	# If any of these grep tests fails, it means that either something is
+	# missing from the build-depends, or else one of the build dependencies
+	# has recently changed in a way that makes it incompatible with the
+	# current packaging.
+	grep '^REGINA_BUILD_DOCSENGINE=.engine.$$' config.log > /dev/null
+	grep '^REGINA_BUILD_ENGINE=.engine.$$' config.log > /dev/null
+	grep '^REGINA_BUILD_KDEUI=.kdeui.$$' config.log > /dev/null
+	grep '^REGINA_BUILD_MPI=.mpi.$$' config.log > /dev/null
+	grep '^REGINA_BUILD_PYTHON=.python.$$' config.log > /dev/null
+	grep '^REGINA_BUILD_TESTSUITE=.testsuite.$$' config.log > /dev/null
+	grep '^REGINA_BUILD_UTILS=.utils.$$' config.log > /dev/null
+
+	# All good!
 	touch configure-stamp
 
 build: configure-stamp build-stamp

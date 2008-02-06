@@ -1,6 +1,24 @@
-regina-normal (4.4-1ubuntu1~gutsy1) unstable; urgency=low
+regina-normal (4.4.1-1ubuntu1~gutsy1) unstable; urgency=low
 
   * New upstream release, backported to ubuntu gutsy.
+
+ -- Ben Burton <bab@debian.org>  Tue,  5 Feb 2008 20:23:37 +1100
+
+regina-normal (4.4-2) unstable; urgency=low
+
+  * Build with -O0 on arm, since compiler optimisations on arm chipsets can
+    lead to a strange failure in the test suite.  The root cause of this
+    failure is still being hunted down.
+  * Added sanity checks in debian/rules immediately after configure, so we
+    don't need to wait an hour to discover that one of the optional pieces
+    (such as the python bindings or MPI utilities) is not going to be built.
+  * Bumped standards-version to 3.7.3 (no changes required).
+
+ -- Ben Burton <bab@debian.org>  Tue,  5 Feb 2008 20:23:37 +1100
+
+regina-normal (4.4-1) unstable; urgency=low
+
+  * New upstream release.
 
  -- Ben Burton <bab@debian.org>  Sun, 25 Nov 2007 10:28:59 +1100
 
