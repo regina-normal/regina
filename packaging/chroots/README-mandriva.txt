@@ -29,7 +29,7 @@ System layout
 - /srv/chroot/mandriva is a directory on the host debian system containing
   one subdirectory for each final mandriva chroot (the "guest mandriva
   systems").  This is mounted from a separate partition (currently 18G,
-  and with plenty of room to spare).
+  and only about 50% full).
 
 
 Host mandriva system configuration
