@@ -133,6 +133,11 @@ Guest mandriva system configuration
   mdvguest# groupadd -g 1000 bab
   mdvguest# useradd -u 1000 -g 1000 bab
 
+- For Mandriva 2008.0, set up standard directories (otherwise the
+  desktop directory is treated as /, not $HOME/Desktop):
+
+  bab@debian$ schroot -c mdv2008.0-i586 xdg-user-dirs-update
+
 - Follow the final steps described in README-final-guestuser.txt to
   start a chrooted session.
 
