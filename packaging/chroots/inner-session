@@ -74,9 +74,6 @@ case "$os" in
 		;;
 esac
 
-# Help Mandriva 2008.0 find the desktop directory.
-export XDG_DESKTOP_DIR=/home/bab
-
 title="$distro ($arch)"
 echo "Starting embedded server for $title ..."
 if [ "$xephyr" = 1 ]; then
