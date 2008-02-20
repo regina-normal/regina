@@ -67,6 +67,18 @@ case "$os" in
 		exitwait=1
 		kde=1
 		;;
+	Fedora\ release\ 7\ * )
+		distro="Fedora 7"
+		exitwait=1
+		kde=1
+		xephyr=1
+		;;
+	Fedora\ release\ 8\ * )
+		distro="Fedora 8"
+		exitwait=1
+		kde=1
+		xephyr=1
+		;;
 	* )
 		distro=Unknown
 		exitwait=1
