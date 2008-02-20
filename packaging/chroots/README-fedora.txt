@@ -1,0 +1,75 @@
+
+TODO: Blurb, system layout.
+
+TODO: Works for FC8.  Fonts are all broken for FC7 (to the point of
+killing the server).  Humm.
+
+Host debian system configuration (debian etch)
+----------------------------------------------
+
+TODO: Just like mandriva, though the bind mount goes somewhere different.
+
+Host fedora system configuration
+--------------------------------
+
+- Ensure that mock is installed:
+
+  debian# schroot -c fchost yum install mock
+
+Guest mandriva system configuration
+-----------------------------------
+
+- Enter the fedora host in order to bootstrap the guest system:
+
+  debian# schroot -c fchost
+
+Comment out updates repo in /etc/mock/*.cfg
+
+Set up a base system:
+
+  fchost# mock -r fedora-7-x86_64 --init
+
+Basic graphical system:
+
+  fchost# mock -r fedora-7-x86_64 --install yum man kdelibs kdebase
+
+Note that updates are still enabled in the guest repos.  Check this out.
+(both in /etc/yum/yum.conf and /etc/yum.repos.d/fedora-updates.repo)
+Also set debuglevel=2 in /etc/yum.conf (at least, if it's currently smaller)
+
+Add schroot entries
+
+- Enter the guest fedora system to continue the installation:
+
+  debian# schroot -c fc7-x86_64
+
+- Rebuild the RPM database in the format expected by the guest system:
+
+  fcguest# rm /var/lib/rpm/__db.*
+  fcguest# rpm --rebuilddb
+
+  fcguest# yum repolist (to ensure no updates are selected)
+
+- Install useful utilities:
+
+  fcguest# yum install patchutils rootfiles vim-enhanced wget zsh
+                       xdg-utils kde-settings
+
+- Install embedded X servers and some basic fonts:
+
+  fcguest# yum install xorg-x11-server-{Xorg,Xnest,Xephyr}
+                       xorg-x11-fonts-{truetype,100dpi,misc,Type1}
+
+- Symlink /bin/zsh to /usr/bin/zsh:
+
+  fcguest# ln -s /bin/zsh /usr/bin/zsh
+
+- Manually add an ordinary user:
+
+  fcguest# groupadd -g 1000 bab
+  fcguest# useradd -u 1000 -g 1000 bab
+
+- Follow the final steps described in README-final-guestuser.txt to
+  start a chrooted session.
+
+*** TODO: HOW TO DISABLE ccache?
