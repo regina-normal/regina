@@ -60,6 +60,18 @@ Add schroot entries
   fcguest# yum install xorg-x11-server-{Xorg,Xnest,Xephyr}
                        xorg-x11-fonts-{truetype,100dpi,misc,Type1}
 
+- Install packages for building and running regina:
+
+  fcguest# yum install rpmlint boost-devel cppunit-devel doxygen
+                       gmp-devel kdelibs-devel libselinux-devel
+                       libxml2-devel python-devel qt-devel zlib-devel
+
+  fcguest# yum install popt-devel        (on fc8)
+  fcguest# yum install popt              (on fc7)
+  fcguest# yum install popt libaio-devel (on fc6)
+
+  fcguest# yum install kdeedu graphviz
+
 - Symlink /bin/zsh to /usr/bin/zsh:
 
   fcguest# ln -s /bin/zsh /usr/bin/zsh
