@@ -37,7 +37,10 @@ Final guest configuration
   bab@debian$ cp ~/.vimrc ~/.zprofile ~/.zshrc
               /srv/chroot/ubuntu/gutsy-amd64/home/bab
 
+- Edit the guest user's zsh prompt to make it clear when the user is
+  inside the chroot.  For example, in the prompt line "export PS1=...",
+  replace "%M" (the machine name) with "%M_gutsy-i386" (or whatever).
+
 - A chrooted session can now be started using the inner-session script:
 
   bab@debian$ schroot -c gutsy ./inner-session
-
