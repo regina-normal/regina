@@ -2,7 +2,13 @@ regina-normal (4.4.1-1ubuntu1~gutsy1) unstable; urgency=low
 
   * New upstream release, backported to ubuntu gutsy.
 
- -- Ben Burton <bab@debian.org>  Tue,  5 Feb 2008 20:23:37 +1100
+ -- Ben Burton <bab@debian.org>  Mon,  3 Mar 2008 19:28:46 +1100
+
+regina-normal (4.4-3) unstable; urgency=low
+
+  * Added an extra #include for gcc-4.3 compatibility (closes: #455296).
+
+ -- Ben Burton <bab@debian.org>  Mon,  3 Mar 2008 19:28:46 +1100
 
 regina-normal (4.4-2) unstable; urgency=low
 
