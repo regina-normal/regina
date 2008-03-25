@@ -48,6 +48,7 @@ case "$os" in
 		;;
 	Debian\ GNU/Linux\ */sid\ * )
 		distro=Sid
+		exitwait=1
 		kde=1
 		xephyr=1
 		;;
