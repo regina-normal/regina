@@ -81,7 +81,7 @@ Add schroot entries
   fcguest# groupadd -g 1000 bab
   fcguest# useradd -u 1000 -g 1000 bab
 
-- Follow the final steps described in README-final-guestuser.txt to
+- Follow the final steps described in 9_final-guestuser.txt to
   start a chrooted session.
 
 *** TODO: HOW TO DISABLE ccache?

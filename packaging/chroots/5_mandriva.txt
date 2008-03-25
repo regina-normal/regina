@@ -44,8 +44,8 @@ Host mandriva system configuration
 Host debian system configuration (debian etch)
 ----------------------------------------------
 
-- Follow the steps described in README-init-schroot.txt to
-  set up schroot on the host debian system.
+- Follow the steps described in 0_init-schroot.txt to set up schroot on
+  the host debian system.
 
 - Mount the guest mandriva partition as /srv/chroot/mandriva, and mount
   the host mandriva partition as /srv/chroot/mdvhost:
@@ -138,6 +138,6 @@ Guest mandriva system configuration
 
   bab@debian$ schroot -c mdv2008.0-i586 xdg-user-dirs-update
 
-- Follow the final steps described in README-final-guestuser.txt to
-  start a chrooted session.
+- Follow the final steps described in 9_final-guestuser.txt to start a
+  chrooted session.
 

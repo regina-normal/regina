@@ -4,9 +4,9 @@ Guest chroot configuration:  Final steps
 This details the final steps for setting up the guest user's account in
 a chroot.  These steps are common to most (if not all) chroot setups.
 
-Please see the distribution-specific README files (such as
-README-ubuntu.txt or README-mandriva.txt) for full instructions on
-setting up a chroot for building and testing regina.
+Please see the distribution-specific information files (such as
+5_ubuntu.txt or 5_mandriva.txt) for full instructions on setting up a
+chroot for building and testing regina.
 
 
 Assumptions

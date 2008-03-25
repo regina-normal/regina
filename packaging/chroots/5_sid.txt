@@ -28,8 +28,8 @@ System layout
 Host (debian etch) configuration
 --------------------------------
 
-- Follow the steps described in README-init-schroot.txt to
-  set up schroot on the host debian system.
+- Follow the steps described in 0_init-schroot.txt to set up schroot on
+  the host debian system.
 
 - Install debootstrap.
 
@@ -86,6 +86,6 @@ Guest (debian sid) configuration
 
   etch# schroot -c sid aptitude install gap graphviz kig mpich-bin
 
-- Follow the final steps described in README-final-guestuser.txt to
-  start a chrooted session.
+- Follow the final steps described in 9_final-guestuser.txt to start a
+  chrooted session.
 

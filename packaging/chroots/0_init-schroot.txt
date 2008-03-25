@@ -4,9 +4,9 @@ Host debian system:  Initial schroot setup
 This details the initial steps for setting up schroot on the host debian
 system.  These steps need to be performed before any chroots are created.
 
-Please see the distribution-specific README files (such as
-README-ubuntu.txt or README-mandriva.txt) for full instructions on
-setting up a chroot for building and testing regina.
+Please see the distribution-specific information files (such as
+5_ubuntu.txt or 5_mandriva.txt) for full instructions on setting up a
+chroot for building and testing regina.
 
 
 Assumptions
