@@ -1,8 +1,8 @@
 Notes for building RPM-based packages
 -------------------------------------
 
-This list of notes is simply to help the author build and test
-RPM-based packages for Regina without forgetting anything.
+This list of notes is simply to help the author build RPM-based packages
+for Regina without forgetting anything.
 
 Preparing, building and installing:
 
@@ -15,19 +15,7 @@ Preparing, building and installing:
   - Build (rpmbuild -ba <spec-file>)
   - Install (rpm -Uvh <rpm-file>)
 
-Manual checks:
-
-  - KDE user interface:
-      - menu entry
-      - open sample file
-      - snappea calculations
-      - face pairing graphs
-      - GUI scripting
-      - handbook and engine docs (including graphs)
-  - regina-python
-  - dependencies (rpm -qR regina-normal)
-
 If you are interested in helping package Regina for one or more
 distributions, please contact the author at the address below.
 
- -- Ben Burton <bab@debian.org>, Sun, 25 Nov 2007 10:28:59 +1100
+ -- Ben Burton <bab@debian.org>, Wed, 26 Mar 2008 06:45:23 +1100

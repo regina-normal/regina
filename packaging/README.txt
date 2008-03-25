@@ -39,3 +39,8 @@ Installation of GNU/Linux Distributions
   distributions into their own partitions for separate booting.  Again
   these notes are specific to the developers' hardware and setup.
 
+
+If you are interested in helping package Regina for one or more
+distributions, please contact the author at the address below.
+
+ -- Ben Burton <bab@debian.org>, Wed, 26 Mar 2008 06:45:23 +1100

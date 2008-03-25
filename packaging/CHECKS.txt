@@ -1,0 +1,22 @@
+Manual checks for Regina packages
+---------------------------------
+
+This list of notes is simply to help the author test packages for Regina
+without forgetting anything.
+
+Manual checks:
+  - KDE user interface:
+      - menu entry
+      - open sample file
+      - snappea calculations
+      - face pairing graphs
+      - GUI scripting
+      - handbook and engine docs (including graphs)
+  - regina-python
+      - print regina.NExampleTriangulation.lens8_3().getHomologyH1()
+  - dependencies (apt-cache show regina-normal ; rpm -qR regina-normal)
+
+If you are interested in helping package Regina for one or more
+distributions, please contact the author at the address below.
+
+ -- Ben Burton <bab@debian.org>, Wed, 26 Mar 2008 06:45:23 +1100
