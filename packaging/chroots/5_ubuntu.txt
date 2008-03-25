@@ -5,11 +5,8 @@ This file documents what I've done on my debian etch system to set up
 i386 and amd64 chroots in which I can build and test ubuntu packages for
 regina.
 
-This is *not* in any way meant to be a general set of instructions for
-arbitrary people doing arbitrary things in chroots.  Much better general
-instructions can be found on the web.  This document is tailored
-specifically to my personal setup, and is intended purely as a reminder
-to myself in case I get a new machine and need to do this all over again.
+These notes are tailored specifically to my own setup, and are not
+intended for general use.  See NOTES.txt for further information.
 
 
 System layout

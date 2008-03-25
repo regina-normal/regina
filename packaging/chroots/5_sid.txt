@@ -5,11 +5,8 @@ This file documents what I've done on my debian etch system to set up a
 chroot in which I can build and test packages for regina under debian
 unstable (otherwise known as sid).
 
-This is *not* in any way meant to be a general set of instructions for
-arbitrary people doing arbitrary things in chroots.  Much better general
-instructions can be found on the web.  This document is tailored
-specifically to my personal setup, and is intended purely as a reminder
-to myself in case I get a new machine and need to do this all over again.
+These notes are tailored specifically to my own setup, and are not
+intended for general use.  See NOTES.txt for further information.
 
 This file was created on 31 January 2008.  Since sid is a fast-moving
 target, these instructions might need changing as time goes by.
