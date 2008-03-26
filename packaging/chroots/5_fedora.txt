@@ -1,23 +1,80 @@
+Setting up fedora chroots under debian etch (amd64)
+---------------------------------------------------
 
-TODO: Blurb, system layout.
+This file documents what I've done on my debian etch system to set up
+i386 and x86_64 chroots in which I can build and test fedora packages
+for regina.
 
-TODO: Works for FC8.  Fonts are all broken for FC7 (to the point of
-killing the server).  Humm.
+These notes are tailored specifically to my own setup, and are not
+intended for general use.  See NOTES.txt for further information.
+
+
+System layout
+-------------
+
+- Unless otherwise specified, all work is done under debian etch
+  (the "host debian system").
+
+- A standalone fedora installation (the "host fedora system") is
+  installed on its own separate partition (currently 4G and 75% full).
+  This is mounted within the host debian system in /srv/chroot/fchost.
+
+  The host fedora system is used purely for calling mock to bootstrap
+  the various fedora chroots.  At the time of writing it runs fedora 8
+  (x86_64) but this may be upgraded from time to time.
+
+- /srv/chroot/fedora is a directory on the host debian system containing
+  one subdirectory for each final fedora chroot (the "guest fedora systems").
+  This area is mounted from a separate partition (currently 20G, and only
+  about 60% full).  Each subdirectory is managed by mock, and the chroot
+  filesystems live within root/ inside each of these subdirectories.
+
 
 Host debian system configuration (debian etch)
 ----------------------------------------------
 
-TODO: Just like mandriva, though the bind mount goes somewhere different.
+- Follow the steps described in 0_init-schroot.txt to set up schroot on
+  the host debian system.
+
+- Mount the guest fedora partition as /srv/chroot/fedora, and mount
+  the host fedora partition as /srv/chroot/fchost:
+
+  (from /etc/fstab:)
+  LABEL=/fedora /srv/chroot/fedora ext3 defaults,errors=remount-ro 0 0
+  LABEL=/ /srv/chroot/fchost ext3 defaults,errors=remount-ro 0 0
+
+- Bind-mount the guest fedora partition inside the host fedora partition,
+  in the location where mock expects to find it:
+
+  (from /etc/fstab:)
+  /srv/chroot/fedora /srv/chroot/fchost/var/lib/mock none rw,bind 0 0
+
+- Add a schroot entry for the fedora host, which will only be used as root:
+
+  [fchost]
+  type=directory
+  description=Fedora chroot host
+  location=/srv/chroot/fchost
+  priority=3
+  root-users=root
+  run-setup-scripts=true
+  run-exec-scripts=true
+
 
 Host fedora system configuration
 --------------------------------
 
-- Ensure that mock is installed:
+- Chroot into the host fedora system and ensure that mock is installed:
 
   debian# schroot -c fchost yum install mock
 
-Guest mandriva system configuration
+
+Guest fedora system configuration
 -----------------------------------
+
+
+TODO: Everything above is tidied and proofread; everything below is not.
+
 
 - Enter the fedora host in order to bootstrap the guest system:
 
