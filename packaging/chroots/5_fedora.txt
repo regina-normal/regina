@@ -59,6 +59,7 @@ Add schroot entries
 
   fcguest# yum install xorg-x11-server-{Xorg,Xnest,Xephyr}
                        xorg-x11-fonts-{truetype,100dpi,misc,Type1}
+                       vnc-server
 
 - Install packages for building and running regina:
 

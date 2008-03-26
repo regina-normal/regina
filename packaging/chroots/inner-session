@@ -15,8 +15,13 @@ fi
 
 # Find a free display number.
 for i in `seq 100`; do
-	if [ ! -e "/tmp/.X$i-lock" ]; then break; fi
-	i=$(($i+1))
+	if [ -e "/tmp/.X$i-lock" -o -e "/tmp/.X11-unix/X$i" ]; then
+		# This display number is taken.
+		i=$(($i+1))
+	else
+		# Good to go.
+		break
+	fi
 done
 if [ -e "/tmp/.X$i-lock" ]; then
 	echo "ERROR: Could not find a free display number."
@@ -30,6 +35,7 @@ echo "Using display $USE."
 kde=
 dbus=
 exitwait=
+vnc=
 xephyr=
 case "$os" in
 	Ubuntu\ 6.06* )
@@ -72,7 +78,7 @@ case "$os" in
 		distro="Fedora 7"
 		exitwait=1
 		kde=1
-		xephyr=1
+		vnc=1
 		;;
 	Fedora\ release\ 8\ * )
 		distro="Fedora 8"
@@ -91,6 +97,10 @@ title="$distro ($arch)"
 echo "Starting embedded server for $title ..."
 if [ "$xephyr" = 1 ]; then
 	DISPLAY=:0 Xephyr -screen 1024x768 $USE &
+elif [ "$vnc" = 1 ]; then
+	vncserver $USE -name "$title" 
+	echo; echo; echo "VNC server is running on $USE, please connect."
+	echo; echo
 else
 	# Use Xnest in most cases; Xephyr in a chroot has some serious problems
 	# with ubuntu feisty and gutsy.
@@ -110,7 +120,11 @@ else
 fi
 
 # Terminate the X server.
-kill %1
+if [ "$vnc" = 1 ]; then
+	vncserver -kill $USE
+else
+	kill %1
+fi
 
 # And wait for internal GNOME programs to shut down.
 if [ "$exitwait" = 1 ]; then
