@@ -8,6 +8,8 @@ for regina.
 These notes are tailored specifically to my own setup, and are not
 intended for general use.  See NOTES.txt for further information.
 
+TODO: A note should be added on disabling ccache on the guest system.
+
 
 System layout
 -------------
@@ -72,51 +74,88 @@ Host fedora system configuration
 Guest fedora system configuration
 -----------------------------------
 
-
-TODO: Everything above is tidied and proofread; everything below is not.
-
-
 - Enter the fedora host in order to bootstrap the guest system:
 
   debian# schroot -c fchost
 
-Comment out updates repo in /etc/mock/*.cfg
+- Locate the relevant config file in /etc/mock/:
 
-Set up a base system:
+  fchost# ls /etc/mock
+  ...
+  fedora-7-i386.cfg
+  fedora-7-x86_64.cfg
+  ...
+
+- Comment out the updates repository from this config file:
+
+  (from /etc/mock/fedora-7-x86_64.cfg:)
+  # [updates-released]
+  # name=updates
+  # mirrorlist=...
+
+- Set up a base graphical system:
 
   fchost# mock -r fedora-7-x86_64 --init
-
-Basic graphical system:
-
   fchost# mock -r fedora-7-x86_64 --install yum man kdelibs kdebase
 
-Note that updates are still enabled in the guest repos.  Check this out.
-(both in /etc/yum/yum.conf and /etc/yum.repos.d/fedora-updates.repo)
-Also set debuglevel=2 in /etc/yum.conf (at least, if it's currently smaller)
+- Edit the guest yum configuration to (i) disable updates, and (ii) output
+  useful information during download and installation:
 
-Add schroot entries
+  (from /var/lib/mock/fedora-7-x86_64/root/etc/yum.conf:)
+  ...
+  debuglevel=2
+  ...
+  # [updates-released]
+  # name=updates
+  # mirrorlist=
+  ...
+
+  (from /var/lib/mock/fedora-7-x86_64/root/etc/yum.repos.d/fedora-updates.repo:)
+  enabled=0
+
+- Verify that only the main repository is enabled:
+
+  fchost# grep enabled=1 /var/lib/mock/fedora-7-x86_64/root/etc/yum.repos.d/*
+  /var/lib/mock/fedora-7-x86_64/root/etc/yum.repos.d/fedora.repo:enabled=1
+
+- Add a schroot entry in the debian host system:
+
+  [fc7-x86_64]
+  type=directory
+  description=Fedora 7 (x86_64)
+  location=/srv/chroot/fedora/fedora-7-x86_64/root
+  priority=3
+  users=bab
+  root-users=root
+  run-setup-scripts=true
+  run-exec-scripts=true
+
+  (for x86_64 chroots:)
+  aliases=fc7
+
+  (for i386 chroots:)
+  personality=linux32
 
 - Enter the guest fedora system to continue the installation:
 
   debian# schroot -c fc7-x86_64
 
-- Rebuild the RPM database in the format expected by the guest system:
+- Rebuild the RPM database in the format expected by the guest system
+  (rather than the fedora host system):
 
   fcguest# rm /var/lib/rpm/__db.*
   fcguest# rpm --rebuilddb
 
-  fcguest# yum repolist (to ensure no updates are selected)
+- Double-check again that no updates are enabled:
 
-- Install useful utilities:
+  fcguest# yum repolist
+
+- Install useful utilities, embedded X servers and some basic fonts:
 
   fcguest# yum install patchutils rootfiles vim-enhanced wget zsh
                        xdg-utils kde-settings
-
-- Install embedded X servers and some basic fonts:
-
-  fcguest# yum install xorg-x11-server-{Xorg,Xnest,Xephyr}
+  fcguest# yum install xorg-x11-server-{Xorg,Xnest,Xephyr} vnc-server
                        xorg-x11-fonts-{truetype,100dpi,misc,Type1}
-                       vnc-server
 
 - Install packages for building and running regina:
 
@@ -126,7 +165,6 @@ Add schroot entries
 
   fcguest# yum install popt-devel        (on fc8)
   fcguest# yum install popt              (on fc7)
-  fcguest# yum install popt libaio-devel (on fc6)
 
   fcguest# yum install kdeedu graphviz
 
@@ -139,7 +177,6 @@ Add schroot entries
   fcguest# groupadd -g 1000 bab
   fcguest# useradd -u 1000 -g 1000 bab
 
-- Follow the final steps described in 9_final-guestuser.txt to
-  start a chrooted session.
+- Follow the final steps described in 9_final-guestuser.txt to start a
+  chrooted session.
 
-*** TODO: HOW TO DISABLE ccache?
