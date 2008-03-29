@@ -53,16 +53,17 @@ Guest suse system configuration
 
   + Packages needed for building regina:
 
-    boost boost-devel cppunit cppunit-devel doxygen gcc gcc-c++ glibc-devel
-    gmp gmp-devel kdelibs3-devel libjpeg-devel libstdc++-devel libxml2-devel
-    popt popt-devel python python-devel qt3-devel zlib-devel
+    boost-devel doxygen gcc-c++ gmp-devel kdelibs3-devel libcppunit-devel
+    libjpeg-devel libstdc++-devel libxml2-devel popt-devel python-devel
+    qt3-devel zlib-devel
 
   + Packages needed for running regina, and for supporting the chroot:
 
     graphviz kdeedu3 zsh xorg-x11-server-extra
 
-  + On SuSE 10.2, there is no xorg-x11-server-extra package (it is all
-    bundled in with the plain xorg-x11-server package).
+  + On SuSE 10.2 (and presumably earlier), there is no need for a separate
+    xorg-x11-server-extra package, and the libcppunit packages are just
+    called cppunit/cppunit-devel.
 
   + Some packages are not shipped with the standard DVDs/CDs (notably
     cppunit and sometimes kdeedu3).  These can be downloaded locally from
