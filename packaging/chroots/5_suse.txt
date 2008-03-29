@@ -1,0 +1,106 @@
+Setting up suse chroots under debian etch (amd64)
+-------------------------------------------------
+
+This file documents what I've done on my debian etch system to set up
+i586 and x86_64 chroots in which I can build and test suse packages
+for regina.
+
+These notes are tailored specifically to my own setup, and are not
+intended for general use.  See NOTES.txt for further information.
+
+
+System layout
+-------------
+
+- Unless otherwise specified, all work is done under debian etch
+  (the "host debian system").
+
+- In constrast to every other distribution described here (debian,
+  fedora, mandriva and ubuntu), each final suse chroot lives in its own
+  separate partition that can be booted as a standalone GNU/Linux
+  system.  These partitions (the "guest suse systems") are mounted as
+  subdirectories of /srv/chroot/suse on the debian host.  Each partition
+  is 5G in size with at least 1.5G free.
+
+  The reason for using separate partitions is that I cannot find a nice
+  way of doing for suse what debootstrap, urpmi and mock do for other
+  distributions, i.e., bootstrapping a new suse installation inside a
+  subdirectory of some larger suse system (which may be a different version
+  and/or architecture).  If anybody knows how to do this, I'm all ears.
+
+
+Host debian system configuration (debian etch)
+----------------------------------------------
+
+- Follow the steps described in 0_init-schroot.txt to set up schroot on
+  the host debian system.
+
+
+Guest suse system configuration
+-------------------------------
+
+- Reboot and install the guest SuSE system into its own partition using
+  the standard install DVDs/CDs.
+
+  + During software selection, ensure that both openoffice and the java
+    runtime are marked as taboo (this is to save on space).
+
+  + Be sure to skip the online update step during the installation.
+    Moreover, when the new SuSE system is first booted, reconfigure
+    the online update applet to *not* start automatically.
+
+- Fire up YaST to install the necessary software, which includes:
+
+  + Packages needed for building regina:
+
+    boost boost-devel cppunit cppunit-devel doxygen gcc gcc-c++ glibc-devel
+    gmp gmp-devel kdelibs3-devel libjpeg-devel libstdc++-devel libxml2-devel
+    popt popt-devel python python-devel qt3-devel zlib-devel
+
+  + Packages needed for running regina, and for supporting the chroot:
+
+    graphviz kdeedu3 zsh xorg-x11-server-extra
+
+  + On SuSE 10.2, there is no xorg-x11-server-extra package (it is all
+    bundled in with the plain xorg-x11-server package).
+
+  + Some packages are not shipped with the standard DVDs/CDs (notably
+    cppunit and sometimes kdeedu3).  These can be downloaded locally from
+    ftp://mirror.pacific.net.au/linux/opensuse/distribution/.
+
+- Remove unnecessary software until the partition has >= 1.5G free.
+  Multimedia apps and large documentation packages are good targets.
+
+- Reboot into the host debian system.
+
+- Give the new suse filesystem a unique label (to be used in /etc/fstab):
+
+  debian# tune2fs -L /suse10.3-x86_64 /dev/sda8
+
+- Mount the guest suse partition as a subdirectory of /srv/chroot/suse:
+
+  (from /etc/fstab:)
+  LABEL=/suse10.3-x86_64 /srv/chroot/suse/10.3-x86_64 ext3
+      defaults,errors=remount-ro 0 0
+
+- Add a schroot entry in the debian host system:
+
+  [suse10.3-x86_64]
+  type=directory
+  description=SuSE 10.3 (x86_64)
+  location=/srv/chroot/suse/10.3-x86_64
+  priority=3
+  users=bab
+  root-users=root
+  run-setup-scripts=true
+  run-exec-scripts=true
+
+  (for x86_64 chroots:)
+  aliases=suse10.3
+
+  (for i586 chroots:)
+  personality=linux32
+
+- Follow the final steps described in 9_final-guestuser.txt to start a
+  chrooted session.
+

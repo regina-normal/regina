@@ -19,11 +19,9 @@ Assumptions
 Final guest configuration
 -------------------------
 
-- Symlink important files in the guest user's home directory, including
-  X authorisation and the inner-session script:
+- Add symlinks in the guest user's home directory, for the purpose of
+  accessing the host home directory and the inner-session script:
 
-  bab@debian$ schroot -c gutsy --
-              ln -s ../master/bab/.Xauthority .Xauthority
   bab@debian$ schroot -c gutsy --
               ln -s ../master/bab master
   bab@debian$ schroot -c gutsy --
@@ -31,6 +29,16 @@ Final guest configuration
 
   Note that the inner-session script is symlinked from the regina source
   tree, so its location might vary.
+
+- If the guest system runs ONLY as a chroot, and cannot be booted as a stand-
+  alone GNU/Linux installation, then also symlink the X authorisation file:
+
+  bab@debian$ schroot -c gutsy --
+              ln -s ../master/bab/.Xauthority .Xauthority
+
+  For systems that can also boot separately (such as the SuSE partitions
+  described in 5_suse.txt), the inner-session script will copy .Xauthority
+  across each time it is run.
 
 - Copy important dotfiles into the guest user's home directory:
 
