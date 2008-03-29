@@ -32,6 +32,18 @@ fi
 USE=:$i
 echo "Using display $USE."
 
+# If we aren't symlinking our .Xauthority (for instance, when mounting a
+# standalone partition), copy it from the mounted host home directory.
+if [ ! -L ~/.Xauthority ]; then
+	if [ -e ~/master/.Xauthority ]; then
+		cp ~/master/.Xauthority ~/.Xauthority
+	else
+		echo "ERROR: Could not find a usable .Xauthority file."
+		echo "       Is your host home directory mounted?"
+		exit 1
+	fi
+fi
+
 kde=
 dbus=
 exitwait=
@@ -82,6 +94,17 @@ case "$os" in
 		;;
 	Fedora\ release\ 8\ * )
 		distro="Fedora 8"
+		exitwait=1
+		kde=1
+		xephyr=1
+		;;
+	?Welcome\ to\ openSUSE\ 10.2\ * )
+		distro="SuSE 10.2"
+		exitwait=1
+		kde=1
+		;;
+	?Welcome\ to\ openSUSE\ 10.3\ * )
+		distro="SuSE 10.3"
 		exitwait=1
 		kde=1
 		xephyr=1
