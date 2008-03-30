@@ -68,13 +68,13 @@ class NTriangulation;
  *
  * This class takes a "least effort" approach to all computations. It
  * only computes what is neccessary for your requests.  It also keeps a
- * record of all previous computations you've made, so that in case a
- * future computation could be sped up by not recomputing the
- * some data, it takes that short-cut.
+ * record of all previous computations you've made. If a computation can
+ * be sped up by not recomputing some data, it takes that short-cut.
  *
  * All these algorithms use two transverse CW decompositions of the manifold.
- * They correspond to the (ideal) triangulation, given a proper boundary, and
- * the CW-dual as in the proof of Poincare Duality.
+ * They correspond to the (possibly ideal) triangulation native to Regina, 
+ * and the dual polyhedral (CW) decomposition which appears in Seifert and
+ * Threlfall's textbook.
  *
  * In the following lists we describe the canonical ordering of both the
  * cells and the dual cells of the given triangulation.
@@ -561,8 +561,7 @@ public:
      *
      * For details, see "Algebraic classification of linking pairings on
      * 3-manifolds", Akio Kawauchi and Sadayoshi Kojima,
-     * Math. Ann. 253 (1980), 29--42. This is an orientation-sensitive
-     * invariant.
+     * Math. Ann. 253 (1980), 29--42. 
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
