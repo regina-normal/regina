@@ -49,8 +49,8 @@ int main(int argc, char **argv) {
     KApplication app;
 
     // Talk to and from the calculation engine in UTF-8.
-    QTextCodec* codec = QTextCodec::codecForName("utf8");
-    QTextCodec::setCodecForCStrings(codec);
+    if (QTextCodec* codec = QTextCodec::codecForName("utf8"))
+        QTextCodec::setCodecForCStrings(codec);
 
     // Register ourselves as a dcop client.
     app.dcopClient()->registerAs(app.name(), false);
