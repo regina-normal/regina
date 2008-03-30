@@ -637,9 +637,12 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
     return changed;
 }
 
-void NPacket::writeXMLFile(std::ostream& out) const {
+void NPacket::writeXMLFile(std::ostream& out, const char* encoding) const {
     // Write the XML header.
-    out << "<?xml version=\"1.0\"?>\n";
+    if (encoding)
+        out << "<?xml version=\"1.0\" encoding=\"" << encoding << "\"?>\n";
+    else
+        out << "<?xml version=\"1.0\"?>\n";
 
     // Write the regina data opening tag including engine version.
     out << "<reginadata engine=\"" << regina::getVersionString() << "\">\n";

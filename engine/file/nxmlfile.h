@@ -60,11 +60,15 @@ class NPacket;
  * @param subtree the matriarch of the packet tree that should be written.
  * @param compressed \c true if the XML file should be compressed or
  * \c false if it should be stored as plain text.
+ * @param encoding an optional text encoding to write in the XML header, such
+ * as <tt>UTF-8</tt> or <tt>ISO-8859-1</tt>.  If this is null (the default),
+ * no encoding will be written at all.  If any parts of the packet tree
+ * are not in UTF-8 (or plain ASCII) then an encoding must be provided.
  * @return \c true if and only if the packet subtree was successfully
  * written.
  */
 bool writeXMLFile(const char* fileName, NPacket* subtree,
-    bool compressed = true);
+    bool compressed = true, const char* encoding = 0);
 
 /**
  * Reads the packet tree stored in the given XML file.  It does not

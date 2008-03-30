@@ -10,12 +10,15 @@ Regina - A Normal Surface Theory Calculator
 Version 4.4.1  [ under development ]
 
     OVERALL:
-        - Builds under gcc 4.3.
+        - Now builds under gcc 4.3.
     ENGINE:
         Class NMarkedVector, NMarkedElement:
             - New class for a vector with fast reverse lookups.  This
               is more memory efficient than NIndexedArray, but requires
               modifications to the data type being stored.
+        Class NPacket:
+            - Routine writeXMLFile() now takes an optional text encoding
+              argument, to be written in the XML header.
         Class NTriangulation:
             - Streamlined the implementation, cutting ~ 1/3 of the memory
               usage and improving speed also.  As a result:
@@ -27,6 +30,9 @@ Version 4.4.1  [ under development ]
                   tetrahedronIndex(), vertexIndex(), etc. are even faster,
                   but have new preconditions requiring the given tetrahedron,
                   vertex, etc. to belong to the triangulation.
+        Routine writeXMLFile():
+            - Added an optional text encoding argument, to be written in
+              the XML header.
 
 Version 4.4  [ 25 November, 2007 ] - The "hug a Mac today" release.
 
