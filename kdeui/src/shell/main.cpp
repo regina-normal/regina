@@ -34,6 +34,7 @@
 #include <kcmdlineargs.h>
 #include <klocale.h>
 #include <ktip.h>
+#include <qtextcodec.h>
 
 static KCmdLineOptions options[] = {
     { "+[URL]", I18N_NOOP("Document to open."), 0 },
@@ -46,6 +47,10 @@ int main(int argc, char **argv) {
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
+
+    // Talk to and from the calculation engine in UTF-8.
+    QTextCodec* codec = QTextCodec::codecForName("utf8");
+    QTextCodec::setCodecForCStrings(codec);
 
     // Register ourselves as a dcop client.
     app.dcopClient()->registerAs(app.name(), false);
