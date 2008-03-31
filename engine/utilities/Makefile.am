@@ -14,7 +14,7 @@ utilitiesincludedir = $(pkgincludedir)/utilities
 
 noinst_LTLIBRARIES = libutilities.la
 
-libutilities_la_SOURCES = hashutils.cpp nbooleans.cpp nmatrix2.cpp nmpi.cpp nrational.cpp nthread.cpp stringutils.cpp xmlutils.cpp zstream.cpp
+libutilities_la_SOURCES = hashutils.cpp nbooleans.cpp nmatrix2.cpp nmpi.cpp nrational.cpp nrecoder.cpp nthread.cpp stringutils.cpp xmlutils.cpp zstream.cpp
 
-utilitiesinclude_HEADERS = boostutils.h hashmap.h hashset.h hashutils.h memutils.h nbooleans.h nindexedarray.h nlistoncall.h nmarkedvector.h nmatrix2.h nmpi.h nproperty.h nrational.h nthread.h ptrutils.h stlutils.h stringutils.h stringutils.tcc xmlutils.h zstream.h
+utilitiesinclude_HEADERS = boostutils.h hashmap.h hashset.h hashutils.h memutils.h nbooleans.h nindexedarray.h nlistoncall.h nmarkedvector.h nmatrix2.h nmpi.h nproperty.h nrational.h nrecoder.h nthread.h ptrutils.h stlutils.h stringutils.h stringutils.tcc xmlutils.h zstream.h
 
