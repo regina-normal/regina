@@ -25,11 +25,6 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import os
-import sys
-import tempfile
-
-# Phase 1: Loading files
 
 # Load a file created by an old version of regina.  This file stores it
 # strings as LATIN1, which should be converted to UTF-8 on import.
@@ -56,39 +51,4 @@ if subscriptImport != None:
 subscriptLoad = regina.readFileMagic('O2_1.rga')
 if subscriptLoad != None:
 	print subscriptLoad.getFirstTreeChild().getPacketLabel()
-
-
-# Phase 2: Writing files
-
-def newTempFilename():
-	# Use the more secure mkstemp() if our python version supports it.
-	# if sys.hexversion >= 0x02030000:
-	if 0:
-		file = tempfile.mkstemp()
-		os.close(file[0])
-		return file[1]
-	else:
-		return tempfile.mktemp()
-
-f = newTempFilename()
-regina.writeXMLFile(f, i18nOld, 0)
-compareRegXML(f, 'i18n-latin1.rga')
-compareRegXML(f, 'i18n-utf8.rga')
-os.unlink(f)
-
-f = newTempFilename()
-regina.writeXMLFile(f, i18nNew, 0)
-compareRegXML(f, 'i18n-latin1.rga')
-compareRegXML(f, 'i18n-utf8.rga')
-os.unlink(f)
-
-f = newTempFilename()
-regina.writeXMLFile(f, subscriptImport, 0)
-compareRegXML(f, 'O2_1.rga')
-os.unlink(f)
-
-f = newTempFilename()
-regina.writeXMLFile(f, subscriptLoad, 0)
-compareRegXML(f, 'O2_1.rga')
-os.unlink(f)
 
