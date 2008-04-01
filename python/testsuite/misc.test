@@ -27,7 +27,7 @@
 
 
 # The most trivial test: can we talk to the calculation engine at all?
-print regina.testEngine(3)\
+print regina.testEngine(3)
 
 # Some slightly less trivial tests.
 t = regina.NTriangulation()
