@@ -28,6 +28,7 @@
 
 #include <cstdarg>
 #include <iostream>
+#include <libxml/parserInternals.h>
 #include "utilities/xmlutils.h"
 
 #define ERROR_BUFF_SIZE 1024
@@ -73,11 +74,16 @@ XMLParser::XMLParser(XMLParserCallback& callback) : _parser_callback(callback) {
     _context->replaceEntities = 1;
 }
 
+bool XMLParser::switchEncoding(xmlCharEncoding enc) {
+    return (xmlSwitchEncoding(_context, enc) == 0);
+}
+
 xmlEntityPtr XMLParser::_get_entity(void*, const xmlChar* n) {
     return xmlGetPredefinedEntity(n);
 }
 void XMLParser::_start_document(void* parser) {
-    static_cast<XMLParser*>(parser)->_parser_callback.start_document();
+    static_cast<XMLParser*>(parser)->_parser_callback.start_document(
+        static_cast<XMLParser*>(parser));
 }
 void XMLParser::_end_document(void* parser) {
     static_cast<XMLParser*>(parser)->_parser_callback.end_document();

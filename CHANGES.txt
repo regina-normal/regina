@@ -30,6 +30,18 @@ Version 4.4.1  [ under development ]
                   tetrahedronIndex(), vertexIndex(), etc. are even faster,
                   but have new preconditions requiring the given tetrahedron,
                   vertex, etc. to belong to the triangulation.
+        Class NXMLElementReader:
+            - New routine usingParser() that is used to pass the current
+              parser to the top-level element reader.
+        Class XMLParser:
+            - New routine switchEncoding() for handling legacy XML data files.
+        Class XMLParserCallback:
+            - Callback routine start_document() now takes a single argument
+              that points to the current XMLParser.
+        Routine readXMLFile(), readFileMagic():
+            - Assumes that any Regina data files created by version 4.4 or
+              earlier use a LATIN-1 encoding, which is what the old GUI used
+              by default.  From 4.4.1 onwards, all data is stored in UTF-8.
         Routine writeXMLFile():
             - Added an optional text encoding argument, to be written in
               the XML header.

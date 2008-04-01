@@ -41,6 +41,10 @@ NXMLCallback::~NXMLCallback() {
         abort();
 }
     
+void NXMLCallback::start_document(regina::xml::XMLParser* parser) {
+    topReader.usingParser(parser);
+}
+
 void NXMLCallback::end_document() {
     if (state == WAITING) {
         errStream << "XML Fatal Error: File contains no tags." << std::endl;

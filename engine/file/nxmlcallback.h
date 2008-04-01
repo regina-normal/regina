@@ -123,6 +123,7 @@ class NXMLCallback : public regina::xml::XMLParserCallback {
          */
         void abort();
 
+        virtual void start_document(regina::xml::XMLParser* parser);
         virtual void end_document();
         virtual void start_element(const std::string& n,
             const regina::xml::XMLPropertyDict& p);

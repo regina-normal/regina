@@ -63,6 +63,8 @@ namespace xml {
  * @{
  */
 
+class XMLParser;
+
 /**
  * Represents a hashed map from property names to property values.
  *
@@ -112,8 +114,10 @@ class XMLParserCallback {
 
         /**
          * Called at the start of the document.
+         *
+         * @param parser the XML parser that is currently parsing this document.
          */
-        virtual void start_document();
+        virtual void start_document(XMLParser* parser);
         /**
          * Called when the document is finalised.
          */
@@ -216,6 +220,17 @@ class XMLParser {
          * Signals that there are no more XML chunks to parse.
          */
         void finish();
+
+        /**
+         * Changes the character encoding that the XML parser uses to read the
+         * input stream.  If the XML input does not declare an encoding and
+         * this routine is not called, then the encoding is assumed to be UTF-8.
+         *
+         * @param enc the new encoding to use.  A valid \e libxml2 encoding
+         * constant must be passed, as defined in \e libxml2/encoding.h .
+         * @return \c true if the change was successful, or \c false if not.
+         */
+        bool switchEncoding(xmlCharEncoding enc);
 
         /**
          * Parses an entire XML file.  The given stream will be read
@@ -363,7 +378,7 @@ inline const std::string& XMLPropertyDict::lookup(const std::string& key,
 
 inline XMLParserCallback::~XMLParserCallback() {
 }
-inline void XMLParserCallback::start_document() {
+inline void XMLParserCallback::start_document(XMLParser*) {
 }
 inline void XMLParserCallback::end_document() {
 }

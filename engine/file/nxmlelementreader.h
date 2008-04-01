@@ -75,6 +75,10 @@ namespace regina {
  * new regina::xml::XMLParser with an NXMLCallback as its corresponding
  * callback object.
  *
+ * When parsing begins on an entire XML file, an additional call is made:
+ * usingParser() will be called on the top-level element reader, so that
+ * it can gain direct access to the parser if required.
+ *
  * \ifacespython Not present.
  */
 class NXMLElementReader {
@@ -156,6 +160,16 @@ class NXMLElementReader {
          * The default implementation does nothing.
          */
         virtual void endElement();
+        /**
+         * Called for the top-level element in an XML file when parsing
+         * begins.  This allows direct access to the parser if needed
+         * (for instance, to change the character encoding).
+         *
+         * The default implementation does nothing.
+         *
+         * @param parser the current XML parser.
+         */
+        virtual void usingParser(regina::xml::XMLParser* parser);
 
         /**
          * Signifies that XML parsing has been aborted.
@@ -229,6 +243,9 @@ inline void NXMLElementReader::endSubElement(const std::string&,
 }
 
 inline void NXMLElementReader::endElement() {
+}
+
+inline void NXMLElementReader::usingParser(regina::xml::XMLParser*) {
 }
 
 inline void NXMLElementReader::abort(NXMLElementReader*) {
