@@ -66,8 +66,8 @@ bool versionUsesUTF8(const char* version) {
         // Definitely begins with 4 and 4 alone.
         // The only way to save ourselves is to have 4.x for
         // the right x.
-        if (version[1] == '.')
-            return true;
+        if (version[1] != '.')
+            return false;
 
         // We definitely begin with "4.".
         // The only good possibilities now are to begin with:
