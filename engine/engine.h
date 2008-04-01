@@ -75,6 +75,34 @@ int getVersionMajor();
 int getVersionMinor();
 
 /**
+ * Did the given version of Regina consistently use UTF-8 in its data
+ * files?
+ *
+ * In Regina versions 4.4 and below, no particular attention was paid to
+ * character encodings.  As a result, the GUI typically stored data in
+ * LATIN1 (the default for the Qt libraries).
+ *
+ * As of Regina 4.4.1, all strings are now stored in UTF-8 where possible.
+ *
+ * This routine allows programs to determine which regime a particular
+ * version of Regina belongs to.  This can be useful when working with
+ * Regina data files on a low-level basis.
+ *
+ * Any whitespace in the version string will confuse the result, and the
+ * return value will be undefined.
+ *
+ * As a special case, an empty string is treated as belonging to the
+ * UTF-8 regime.
+ *
+ * @param version a version string from some release of Regina, such as "4.2".
+ * This must not contain any whitespace padding.
+ * @return \c true if the given version uses UTF-8 consistently, or
+ * \c false if the given version is an older version that did not pay
+ * attention to character encodings.
+ */
+bool versionUsesUTF8(const char* version);
+
+/**
  * Tests to see if an interface can successfully communicate with the
  * underlying C++ calculation engine.
  *

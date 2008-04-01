@@ -28,6 +28,7 @@
 
 #include <cctype>
 #include <fstream>
+#include "engine.h"
 #include "file/nfile.h"
 #include "file/nfileinfo.h"
 #include "file/nxmlcallback.h"
@@ -81,7 +82,7 @@ namespace {
                     regina::xml::XMLPropertyDict::const_iterator it =
                         tagProps.find("engine");
                     if (it != tagProps.end())
-                        if (parser && reginaUsedLatin1(it->second.c_str()))
+                        if (parser && ! versionUsesUTF8(it->second.c_str()))
                             parser->switchEncoding(XML_CHAR_ENCODING_8859_1);
                 }
             }
@@ -91,63 +92,6 @@ namespace {
                 while (NPacket* child = container.getFirstTreeChild()) {
                     child->makeOrphan();
                     delete child;
-                }
-            }
-
-        private:
-            /**
-             * Did the given version of Regina store data files in latin1
-             * instead of utf8, without specifying an encoding?  This
-             * covers all versions up to and including 4.4.
-             *
-             * @param version a Regina version string.
-             * @return \c true if and only if the given version stored
-             * XML files in latin1.
-             */
-            bool reginaUsedLatin1(const char* version) {
-                // No version is fine.
-                // Also any version that does not begin with 0-4 is fine.
-                if (version[0] < '0' || version[0] > '4')
-                    return false;
-
-                if (version[0] < '4') {
-                    // Deal with 0.x .. 3.x.
-                    // Unless this is the beginning of a larger number,
-                    // this is a bad version.
-                    return (version[0] == '0' ||
-                        version[1] < '0' || version[1] > '9');
-                } else {
-                    // The 4.x case is a bit messier to deal with.
-
-                    // If it's the beginning of a larger number, we're fine.
-                    if (version[1] >= '0' && version[1] <= '9')
-                        return false;
-
-                    // Definitely begins with 4 and 4 alone.
-                    // The only way to save ourselves is to have 4.x for
-                    // the right x.
-                    if (version[1] != '.')
-                        return true;
-
-                    // We definitely begin with "4.".
-                    // The only good possibilities now are to begin with:
-                    // - 4.[number larger than 4]
-                    // - 4.4.[digit larger than 1]
-                    if (version[2] >= '0' && version[2] <= '3')
-                        return (version[2] == '0' ||
-                            version[3] < '0' || version[3] > '9');
-                    else if (version[2] == '4') {
-                        if (version[3] >= '0' && version[3] <= '9')
-                            return false;
-                        else if (version[3] == '.' &&
-                                version[4] >= '1' && version[4] <= '9')
-                            return false;
-                        else
-                            return true;
-                    } else if (version[2] >= '5' && version[2] <= '9')
-                        return false;
-                    else
-                        return true;
                 }
             }
     };

@@ -98,6 +98,7 @@ BOOST_PYTHON_MODULE(regina) {
     boost::python::def("getVersionString", regina::getVersionString);
     boost::python::def("getVersionMajor", regina::getVersionMajor);
     boost::python::def("getVersionMinor", regina::getVersionMinor);
+    boost::python::def("versionUsesUTF8", regina::versionUsesUTF8);
     boost::python::def("testEngine", regina::testEngine);
 
     // ShareableObject class:
