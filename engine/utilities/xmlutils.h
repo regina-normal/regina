@@ -227,7 +227,7 @@ class XMLParser {
          * this routine is not called, then the encoding is assumed to be UTF-8.
          *
          * @param enc the new encoding to use.  A valid \e libxml2 encoding
-         * constant must be passed, as defined in \e libxml2/encoding.h .
+         * constant must be passed, as defined in <tt>libxml2/encoding.h</tt>.
          * @return \c true if the change was successful, or \c false if not.
          */
         bool switchEncoding(xmlCharEncoding enc);
