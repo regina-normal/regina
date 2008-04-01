@@ -55,7 +55,7 @@ bool ReginaHandler::exportData(regina::NPacket* data,
             "This packet cannot be separated from its parent."));
         return false;
     }
-    if (! regina::writeXMLFile(fileName.ascii(), data, compressed, "UTF-8")) {
+    if (! regina::writeXMLFile(fileName.ascii(), data, compressed)) {
         KMessageBox::error(parentWidget, i18n(
             "This packet subtree could not be exported.  An unknown error, "
             "probably related to file I/O, occurred during the export."));

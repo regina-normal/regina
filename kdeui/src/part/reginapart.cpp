@@ -234,7 +234,7 @@ bool ReginaPart::saveFile() {
     if (! isReadWrite())
         return false;
 
-    if (regina::writeXMLFile(m_file, packetTree, true, "UTF-8"))
+    if (regina::writeXMLFile(m_file, packetTree))
         return true;
     else {
         KMessageBox::error(widget(), i18n(

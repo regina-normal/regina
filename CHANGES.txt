@@ -16,9 +16,6 @@ Version 4.4.1  [ under development ]
             - New class for a vector with fast reverse lookups.  This
               is more memory efficient than NIndexedArray, but requires
               modifications to the data type being stored.
-        Class NPacket:
-            - Routine writeXMLFile() now takes an optional text encoding
-              argument, to be written in the XML header.
         Class NTriangulation:
             - Streamlined the implementation, cutting ~ 1/3 of the memory
               usage and improving speed also.  As a result:
@@ -42,9 +39,6 @@ Version 4.4.1  [ under development ]
             - Assumes that any Regina data files created by version 4.4 or
               earlier use a LATIN-1 encoding, which is what the old GUI used
               by default.  From 4.4.1 onwards, all data is stored in UTF-8.
-        Routine writeXMLFile():
-            - Added an optional text encoding argument, to be written in
-              the XML header.
 
 Version 4.4  [ 25 November, 2007 ] - The "hug a Mac today" release.
 

@@ -936,13 +936,8 @@ class NPacket : public ShareableObject {
          * \ifacespython Not present.
          *
          * @param out the output stream to which the XML should be written.
-         * @param encoding an optional text encoding to write in the XML
-         * header, such as <tt>UTF-8</tt> or <tt>ISO-8859-1</tt>.  If this is
-         * null (the default), no encoding will be written at all.  If any
-         * parts of the packet tree are not in UTF-8 (or plain ASCII) then an
-         * encoding must be provided.
          */
-        void writeXMLFile(std::ostream& out, const char* encoding = 0) const;
+        void writeXMLFile(std::ostream& out) const;
 
         /**
          * Writes the packet details to the given old-style binary file.
