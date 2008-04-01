@@ -1,0 +1,94 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007-2008, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests for UTF-8 character encodings when loading and importing files
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+import os
+import sys
+import tempfile
+
+# Phase 1: Loading files
+
+# Load a file created by an old version of regina.  This file stores it
+# strings as LATIN1, which should be converted to UTF-8 on import.
+i18nOld = regina.readFileMagic('i18n-latin1.rga')
+if i18nOld != None:
+	print i18nOld.getPacketLabel()
+	print i18nOld.getText()
+
+# Load a version of the same file created by a newer version of Regina,
+# which stores strings directly in UTF-8.
+i18nNew = regina.readFileMagic('i18n-utf8.rga')
+if i18nNew != None:
+	print i18nNew.getPacketLabel()
+	print i18nNew.getText()
+
+# Import a triangulation from SnapPea that uses a subscript character in
+# the triangulation name.
+subscriptImport = regina.readSnapPea('O2_1.tri')
+if subscriptImport != None:
+	print subscriptImport.getPacketLabel()
+
+# Load a Regina data file with a pre-saved version of this same SnapPea
+# triangulation.
+subscriptLoad = regina.readFileMagic('O2_1.rga')
+if subscriptLoad != None:
+	print subscriptLoad.getFirstTreeChild().getPacketLabel()
+
+
+# Phase 2: Writing files
+
+def newTempFilename():
+	# Use the more secure mkstemp() if our python version supports it.
+	# if sys.hexversion >= 0x02030000:
+	if 0:
+		file = tempfile.mkstemp()
+		os.close(file[0])
+		return file[1]
+	else:
+		return tempfile.mktemp()
+
+f = newTempFilename()
+regina.writeXMLFile(f, i18nOld, 0)
+compareRegXML(f, 'i18n-latin1.rga')
+compareRegXML(f, 'i18n-utf8.rga')
+os.unlink(f)
+
+f = newTempFilename()
+regina.writeXMLFile(f, i18nNew, 0)
+compareRegXML(f, 'i18n-latin1.rga')
+compareRegXML(f, 'i18n-utf8.rga')
+os.unlink(f)
+
+f = newTempFilename()
+regina.writeXMLFile(f, subscriptImport, 0)
+compareRegXML(f, 'O2_1.rga')
+os.unlink(f)
+
+f = newTempFilename()
+regina.writeXMLFile(f, subscriptLoad, 0)
+compareRegXML(f, 'O2_1.rga')
+os.unlink(f)
+
