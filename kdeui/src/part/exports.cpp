@@ -37,9 +37,11 @@
 #include "foreign/sourcehandler.h"
 #include "reginafilter.h"
 
+#include <kencodingfiledialog.h>
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qtextcodec.h>
 
 void ReginaPart::exportPython() {
     exportFile(PythonHandler::instance, i18n(FILTER_PYTHON_SCRIPTS),
@@ -73,10 +75,21 @@ void ReginaPart::exportFile(const PacketExporter& exporter,
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* data = dlg.selectedPacket();
         if (data) {
-            QString file = KFileDialog::getSaveFileName(QString::null,
-                fileFilter, widget(), dialogTitle);
-            if (! file.isEmpty())
-                exporter.exportData(data, file, widget());
+            if (exporter.offerExportEncoding()) {
+                KEncodingFileDialog::Result result =
+                    KEncodingFileDialog::getSaveFileNameAndEncoding(
+                        QString::null /* encoding */, QString::null,
+                        fileFilter, widget(), dialogTitle);
+                if ((! result.fileNames.empty()) &&
+                        (! result.fileNames.front().isEmpty()))
+                    exporter.exportData(data, result.fileNames.front(),
+                        QTextCodec::codecForName(result.encoding), widget());
+            } else {
+                QString file = KFileDialog::getSaveFileName(QString::null,
+                    fileFilter, widget(), dialogTitle);
+                if (! file.isEmpty())
+                    exporter.exportData(data, file, widget());
+            }
         }
     }
 }

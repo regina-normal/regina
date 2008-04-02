@@ -124,8 +124,13 @@ PacketFilter* PythonHandler::canExport() const {
     return new SingleTypeFilter<regina::NScript>();
 }
 
-bool PythonHandler::exportData(regina::NPacket* data,
-        const QString& fileName, QWidget* parentWidget) const {
+bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
+        QWidget* parentWidget) const {
+    return exportData(data, fileName, 0, parentWidget);
+}
+
+bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
+        QTextCodec* encoding, QWidget* parentWidget) const {
     regina::NScript* script = dynamic_cast<regina::NScript*>(data);
 
     std::ofstream out(fileName.ascii());
@@ -136,21 +141,33 @@ bool PythonHandler::exportData(regina::NPacket* data,
     }
 
     // Write the name of the script.
-    out << "### " << scriptMarker << ' '
-        << script->getPacketLabel() << std::endl;
+    out << "### " << scriptMarker << ' ';
+    if (encoding)
+        out << encoding->fromUnicode(script->getPacketLabel()) << std::endl;
+    else
+        out << script->getPacketLabel() << std::endl;
     out << "###" << std::endl;
 
     // Output the value of each variable.
     unsigned long i;
     for (i = 0; i < script->getNumberOfVariables(); i++)
-        out << "### " << varMarker << script->getVariableName(i)
-            << ": " << script->getVariableValue(i) << std::endl;
+        if (encoding)
+            out << "### " << varMarker
+                << encoding->fromUnicode(script->getVariableName(i)) << ": "
+                << encoding->fromUnicode(script->getVariableValue(i))
+                << std::endl;
+        else
+            out << "### " << varMarker << script->getVariableName(i)
+                << ": " << script->getVariableValue(i) << std::endl;
 
     out << "###" << std::endl;
     out << "### " << endMetadataMarker << std::endl;
 
     for (i = 0; i < script->getNumberOfLines(); i++)
-        out << script->getLine(i) << std::endl;
+        if (encoding)
+            out << encoding->fromUnicode(script->getLine(i)) << std::endl;
+        else
+            out << script->getLine(i) << std::endl;
 
     // All done!
     return true;

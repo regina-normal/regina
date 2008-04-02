@@ -64,8 +64,11 @@ class PythonHandler : public PacketImporter, public PacketExporter {
          * PacketExporter overrides:
          */
         virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::NPacket* data,
-            const QString& fileName, QWidget* parentWidget) const;
+        virtual bool exportData(regina::NPacket* data, const QString& fileName,
+            QWidget* parentWidget) const;
+        virtual bool exportData(regina::NPacket* data, const QString& fileName,
+            QTextCodec* encoding, QWidget* parentWidget) const;
+        virtual bool offerExportEncoding() const;
 
     private:
         /**
@@ -78,6 +81,10 @@ inline PythonHandler::PythonHandler() {
 }
 
 inline bool PythonHandler::offerImportEncoding() const {
+    return true;
+}
+
+inline bool PythonHandler::offerExportEncoding() const {
     return true;
 }
 
