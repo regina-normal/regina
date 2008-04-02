@@ -30,5 +30,5 @@ tricensus_SOURCES = tricensus.cpp
 
 trisetcmp_SOURCES = trisetcmp.cpp
 
-EXTRA_DIST = README.txt tricensus-manager
+EXTRA_DIST = README.txt findtext tricensus-manager
 
