@@ -10,6 +10,12 @@ Regina - A Normal Surface Theory Calculator
 Version 4.4.1  [ under development ]
 
     OVERALL:
+        - Regina finally pays attention to character encodings.  All strings
+          in the calculation engine are assumed to be UTF-8, and data files
+          are stored using UTF-8 also.  The KDE user interface ensures that
+          character encodings are correct, but users who pass strings directly
+          to the calculation engine (through the python or C++ interface) must
+          ensure that their strings are either UTF-8 or just plain ASCII.
         - Now builds under gcc 4.3.
     ENGINE:
         Class NMarkedVector, NMarkedElement:
@@ -37,8 +43,9 @@ Version 4.4.1  [ under development ]
               that points to the current XMLParser.
         Routine readXMLFile(), readFileMagic():
             - Assumes that any Regina data files created by version 4.4 or
-              earlier use a LATIN-1 encoding, which is what the old GUI used
-              by default.  From 4.4.1 onwards, all data is stored in UTF-8.
+              earlier use a LATIN-1 encoding (which is what the old GUI used
+              by default), and that any data files created by version 4.4.1
+              or later use UTF-8.
         Routine versionUsesUTF8():
             - Added to assist code that works with files on a low-level basis.
 
