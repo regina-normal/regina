@@ -73,9 +73,10 @@ bool versionUsesUTF8(const char* version) {
         // The only good possibilities now are to begin with:
         // - 4.[number larger than 4]
         // - 4.4.[digit larger than 1]
-        if (version[2] >= '0' && version[2] <= '3')
-            return (version[2] != '0' &&
-                version[3] >= '0' && version[3] <= '9');
+        if (version[2] == '0')
+            return false;
+        else if (version[2] >= '1' && version[2] <= '3')
+            return (version[3] >= '0' && version[3] <= '9');
         else if (version[2] == '4') {
             if (version[3] >= '0' && version[3] <= '9')
                 return true;
