@@ -35,17 +35,23 @@
 #include <fstream>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qtextcodec.h>
 
 namespace {
-    const std::string scriptMarker("Regina Script:");
-    const std::string varMarker("Variable ");
-    const std::string endMetadataMarker("Begin Script");
+    const QString scriptMarker("Regina Script:");
+    const QString varMarker("Variable ");
+    const QString endMetadataMarker("Begin Script");
 }
 
 const PythonHandler PythonHandler::instance;
 
 regina::NPacket* PythonHandler::import(const QString& fileName,
         QWidget* parentWidget) const {
+    return import(fileName, 0, parentWidget);
+}
+
+regina::NPacket* PythonHandler::import(const QString& fileName,
+        QTextCodec* encoding, QWidget* parentWidget) const {
     std::ifstream in(fileName.ascii());
     if (! in) {
         KMessageBox::error(parentWidget, i18n(
@@ -58,31 +64,36 @@ regina::NPacket* PythonHandler::import(const QString& fileName,
 
     // Read in the script.
     bool readingMetadata = true;
-    std::string line, metadata;
-    std::string::size_type pos;
+    std::string rawLine;
+    QString line, metadata;
+    int pos;
 
-    getline(in, line);
-    while (! (line.empty() && in.eof())) {
-        if (readingMetadata && regina::startsWith(line, "###")) {
+    getline(in, rawLine);
+    while (! (rawLine.empty() && in.eof())) {
+        if (encoding)
+            line = encoding->toUnicode(rawLine.c_str());
+        else
+            line = rawLine;
+
+        if (readingMetadata && line.startsWith("###")) {
             // This is a line of metadata.  Perhaps.
-            metadata = regina::stripWhitespace(line.substr(3));
-            if (metadata.empty()) {
+            metadata = line.mid(3).stripWhiteSpace();
+            if (metadata.isEmpty()) {
                 // An empty metadata line.
-            } else if (regina::startsWith(metadata, scriptMarker)) {
+            } else if (metadata.startsWith(scriptMarker)) {
                 // The script label.
-                metadata = regina::stripWhitespace(metadata.substr(
-                    scriptMarker.length()));
-                if (! metadata.empty())
+                metadata = metadata.mid(scriptMarker.length()).
+                    stripWhiteSpace();
+                if (! metadata.isEmpty())
                     ans->setPacketLabel(metadata);
-            } else if (regina::startsWith(metadata, varMarker)) {
+            } else if (metadata.startsWith(varMarker)) {
                 // A script variable.
-                metadata = regina::stripWhitespace(metadata.substr(
-                    varMarker.length()));
+                metadata = metadata.mid(varMarker.length()).stripWhiteSpace();
                 pos = metadata.find(':');
-                if (pos < metadata.length()) {
+                if (pos >= 0) {
                     ans->addVariable(
-                        regina::stripWhitespace(metadata.substr(0, pos)),
-                        regina::stripWhitespace(metadata.substr(pos + 1)));
+                        metadata.left(pos).stripWhiteSpace(),
+                        metadata.mid(pos + 1).stripWhiteSpace());
                 } else {
                     // Hmm, it wasn't a script variable after all.
                     readingMetadata = false;
@@ -102,8 +113,8 @@ regina::NPacket* PythonHandler::import(const QString& fileName,
             ans->addLast(line);
         }
 
-        line.clear(); // To deal with files with no final newline.
-        getline(in, line);
+        rawLine.clear(); // To deal with files with no final newline.
+        getline(in, rawLine);
     }
 
     return ans;

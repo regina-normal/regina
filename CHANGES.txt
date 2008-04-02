@@ -48,6 +48,9 @@ Version 4.4.1  [ under development ]
               or later use UTF-8.
         Routine versionUsesUTF8():
             - Added to assist code that works with files on a low-level basis.
+    USER INTERFACE:
+        - Imports and exports to/from python scripts now allow the user
+          to select an explicit character encoding.
 
 Version 4.4  [ 25 November, 2007 ] - The "hug a Mac today" release.
 

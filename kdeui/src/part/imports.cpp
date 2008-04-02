@@ -38,8 +38,10 @@
 #include "foreign/snappeahandler.h"
 #include "reginafilter.h"
 
+#include <kencodingfiledialog.h>
 #include <kfiledialog.h>
 #include <klocale.h>
+#include <qtextcodec.h>
 
 void ReginaPart::importDehydration() {
     importFile(DehydrationHandler::instance, 0, i18n(FILTER_ALL),
@@ -72,18 +74,32 @@ void ReginaPart::importFile(const PacketImporter& importer,
     if (! checkReadWrite())
         return;
 
-    QString file = KFileDialog::getOpenFileName(QString::null,
-        fileFilter, widget(), dialogTitle);
-    if (! file.isEmpty()) {
-        regina::NPacket* newTree = importer.import(file, widget());
-        if (newTree) {
-            ImportDialog dlg(widget(), newTree, packetTree,
-                treeView->selectedPacket(), parentFilter, dialogTitle);
-            if (dlg.validate() && dlg.exec() == QDialog::Accepted)
-                packetView(newTree, true);
-            else
-                delete newTree;
-        }
+    regina::NPacket* newTree = 0;
+
+    if (importer.offerImportEncoding()) {
+        KEncodingFileDialog::Result result =
+            KEncodingFileDialog::getOpenFileNameAndEncoding(
+            QString::null /* default encoding */,
+            QString::null, fileFilter, widget(), dialogTitle);
+        if (result.fileNames.empty() || result.fileNames.front().isEmpty())
+            return;
+        newTree = importer.import(result.fileNames.front(),
+            QTextCodec::codecForName(result.encoding), widget());
+    } else {
+        QString file = KFileDialog::getOpenFileName(QString::null,
+            fileFilter, widget(), dialogTitle);
+        if (file.isEmpty())
+            return;
+        newTree = importer.import(file, widget());
+    }
+
+    if (newTree) {
+        ImportDialog dlg(widget(), newTree, packetTree,
+            treeView->selectedPacket(), parentFilter, dialogTitle);
+        if (dlg.validate() && dlg.exec() == QDialog::Accepted)
+            packetView(newTree, true);
+        else
+            delete newTree;
     }
 }
 
