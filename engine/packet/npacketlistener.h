@@ -109,7 +109,7 @@ class NPacketListener {
          */
         virtual void packetWasChanged(NPacket* packet);
         /**
-         * Called when the packet label has been changed.
+         * Called when the packet label or tags have been changed.
          *
          * The default implementation of this routine is to do nothing.
          *

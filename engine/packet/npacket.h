@@ -1223,23 +1223,6 @@ inline bool NPacket::hasTags() const {
     return (! tags->empty());
 }
 
-inline bool NPacket::addTag(const std::string& tag) {
-    if (! tags.get())
-        tags.reset(new std::set<std::string>());
-    return tags->insert(tag).second;
-}
-
-inline bool NPacket::removeTag(const std::string& tag) {
-    if (! tags.get())
-        return false;
-    return tags->erase(tag);
-}
-
-inline void NPacket::removeAllTags() {
-    if (tags.get())
-        tags->clear();
-}
-
 inline const std::set<std::string>& NPacket::getTags() const {
     if (! tags.get())
         const_cast<NPacket*>(this)->tags.reset(new std::set<std::string>());

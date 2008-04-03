@@ -637,6 +637,51 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
     return changed;
 }
 
+bool NPacket::addTag(const std::string& tag) {
+    if (! tags.get())
+        tags.reset(new std::set<std::string>());
+
+    if (tags->insert(tag).second) {
+        // Fire a packet event.
+        if (listeners.get()) {
+            for (std::set<NPacketListener*>::const_iterator it =
+                    listeners->begin(); it != listeners->end(); it++)
+                (*it)->packetWasRenamed(this);
+        }
+        return true;
+    } else
+        return false;
+}
+
+bool NPacket::removeTag(const std::string& tag) {
+    if (! tags.get())
+        return false;
+
+    if (tags->erase(tag)) {
+        // Fire a packet event.
+        if (listeners.get()) {
+            for (std::set<NPacketListener*>::const_iterator it =
+                    listeners->begin(); it != listeners->end(); it++)
+                (*it)->packetWasRenamed(this);
+        }
+        return true;
+    } else
+        return false;
+}
+
+void NPacket::removeAllTags() {
+    if (tags.get() && ! tags->empty()) {
+        tags->clear();
+
+        // Fire a packet event.
+        if (listeners.get()) {
+            for (std::set<NPacketListener*>::const_iterator it =
+                    listeners->begin(); it != listeners->end(); it++)
+                (*it)->packetWasRenamed(this);
+        }
+    }
+}
+
 void NPacket::writeXMLFile(std::ostream& out) const {
     // Write the XML header.
     out << "<?xml version=\"1.0\"?>\n";
