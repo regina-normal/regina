@@ -52,11 +52,12 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
     // Rewrite the string in lower case and verify that it contains only
     // letters.
     std::string proper(dehydration);
-    for (std::string::iterator it = proper.begin(); it != proper.end(); it++)
-        if (! isalpha(*it))
+    for (std::string::iterator it = proper.begin(); it != proper.end(); it++) {
+        if (*it >= 'A' && *it <= 'Z')
+            *it = *it + ('a' - 'A');
+        else if (*it < 'a' || *it > 'z')
             return false;
-        else if (isupper(*it))
-            *it = tolower(*it);
+    }
 
     // Determine the number of tetrahedra.
     unsigned nTet = VAL(proper[0]);
