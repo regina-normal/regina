@@ -178,11 +178,11 @@ void PacketTreeItem::refreshSubtree() {
 
 void PacketTreeItem::refreshLabel() {
     if (packet) {
-        std::string newLabel = packet->getPacketLabel();
+        QString newLabel = packet->getPacketLabel();
         if (packet->hasTags())
             newLabel += " (+)";
-        if (text(0) != newLabel.c_str())
-            setText(0, newLabel.c_str());
+        if (text(0) != newLabel)
+            setText(0, newLabel);
     } else
         setText(0, i18n("<Deleted>"));
 }

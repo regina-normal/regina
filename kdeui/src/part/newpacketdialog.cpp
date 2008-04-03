@@ -115,16 +115,15 @@ void NewPacketDialog::slotOk() {
     }
 
     // Check the label.
-    std::string useLabel = label->text().stripWhiteSpace().ascii();
-    if (useLabel.empty()) {
-        KMessageBox::error(this, i18n(
-            "The packet label cannot be empty.").arg(useLabel.c_str()));
+    QString useLabel = label->text().stripWhiteSpace();
+    if (useLabel.isEmpty()) {
+        KMessageBox::error(this, i18n("The packet label cannot be empty."));
         return;
     }
     if (tree->findPacketLabel(useLabel)) {
         KMessageBox::error(this, i18n(
-            "There is already a packet labelled %1.").arg(useLabel.c_str()));
-        label->setText(tree->makeUniqueLabel(useLabel).c_str());
+            "There is already a packet labelled %1.").arg(useLabel));
+        label->setText(tree->makeUniqueLabel(useLabel));
         return;
     }
 
