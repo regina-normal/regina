@@ -38,7 +38,7 @@
 #include <qfileinfo.h>
 
 namespace {
-    std::string INACTIVE("## INACTIVE ##");
+    QString INACTIVE("## INACTIVE ##");
 }
 
 const GraphvizStatus GraphvizStatus::unknown(0);
@@ -166,26 +166,28 @@ bool ReginaPrefSet::readPythonLibraries() {
         return false;
 
     bool active;
-    std::string line;
+    std::string rawLine;
+    QString line;
     while (! in.eof()) {
-        line.clear();
-        std::getline(in, line);
+        rawLine.clear();
+        std::getline(in, rawLine);
+        line = rawLine;
 
         // Is the file inactive?
         active = true;
-        if (regina::startsWith(line, INACTIVE)) {
+        if (line.startsWith(INACTIVE)) {
             active = false;
-            line = line.substr(INACTIVE.length());
+            line = line.mid(INACTIVE.length());
         }
 
-        line = regina::stripWhitespace(line);
+        line = line.stripWhiteSpace();
 
         // Is it a file at all?
-        if (line.empty() || line[0] == '#')
+        if (line.isEmpty() || line[0] == '#')
             continue;
 
         // Add the file.
-        pythonLibraries.push_back(ReginaFilePref(line.c_str(), active));
+        pythonLibraries.push_back(ReginaFilePref(line, active));
     }
 
     return true;
