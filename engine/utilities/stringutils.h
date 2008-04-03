@@ -77,6 +77,11 @@ bool startsWith(const std::string& str, const std::string& prefix);
  * The new stripped string is returned; the original string is not
  * altered.
  *
+ * \warning This routine treats all strings as plain ASCII.  In
+ * particular, characters are examined one at a time, and the C routine
+ * isspace() is used to identify whitespace.  Use it on strings with
+ * international characters at your own peril.
+ *
  * \ifacespython Not present.
  *
  * @param str the string to be stripped.
@@ -245,6 +250,11 @@ bool valueOf(const std::string& str, NBoolSet& dest);
  * Decomposes the given string into tokens.
  * This is an extremely simple tokeniser; tokens are defined to be
  * separated by whitespace.
+ *
+ * \warning This routine treats all strings as plain ASCII.  In
+ * particular, characters are examined one at a time, and the C routine
+ * isspace() is used to identify whitespace.  Use it on strings with
+ * international characters at your own peril.
  *
  * \ifacespython Not present.
  *
