@@ -74,13 +74,17 @@ NSignature* NSignature::parse(const std::string& str) {
 
     unsigned len = str.length();
     unsigned pos;
-    char letter;
     for (pos = 0; pos < len; pos++)
-        if (isalpha(str[pos])) {
+        // Avoid isalpha(), etc. and be explicit, in case the signature
+        // string contains international characters.
+        if (str[pos] >= 'A' && str[pos] <= 'Z') {
             nAlpha++;
-            letter = tolower(str[pos]);
-            if (largestLetter < letter - 'a')
-                largestLetter = letter - 'a';
+            if (largestLetter < str[pos] - 'A')
+                largestLetter = str[pos] - 'A';
+        } else if (str[pos] >= 'a' && str[pos] <= 'z') {
+            nAlpha++;
+            if (largestLetter < str[pos] - 'a')
+                largestLetter = str[pos] - 'a';
         }
 
     if (static_cast<int>(nAlpha) != 2 * (largestLetter + 1))
@@ -106,14 +110,19 @@ NSignature* NSignature::parse(const std::string& str) {
     for (pos = 0; pos < len; pos++) {
         if (isspace(str[pos]))
             continue;
-        if (! isalpha(str[pos])) {
+        if (! ((str[pos] >= 'A' && str[pos] <= 'Z') ||
+                (str[pos] >= 'a' && str[pos] <= 'z'))) {
             if (cycleStart[nCycles] < whichPos) {
                 // We've just ended a cycle.
                 nCycles++;
                 cycleStart[nCycles] = whichPos;
             }
         } else {
-            letterIndex = tolower(str[pos]) - 'a';
+            if (str[pos] >= 'A' && str[pos] <= 'Z')
+                letterIndex = str[pos] - 'A';
+            else
+                letterIndex = str[pos] - 'a';
+
             freq[letterIndex]++;
             if (freq[letterIndex] > 2) {
                 // We've seen this letter a third time!
@@ -124,7 +133,7 @@ NSignature* NSignature::parse(const std::string& str) {
                 return 0;
             }
             label[whichPos] = letterIndex;
-            labelInv[whichPos] = isupper(str[pos]);
+            labelInv[whichPos] = (str[pos] >= 'A' && str[pos] <= 'Z');
             whichPos++;
         }
     }
