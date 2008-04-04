@@ -88,3 +88,41 @@
  *  acknowledgements in the final chapter of the Regina handbook.
  */
 
+/*! \page i18n Encodings for international strings
+ *
+ *  As of version 4.4.1, Regina (finally) pays attention to character
+ *  encodings.
+ *
+ *  The calculation engine uses UTF-8 for all strings (except possibly
+ *  for filenames; see below).  This means that programmers who pass
+ *  strings \e into routines must ensure that they use UTF-8, and
+ *  programmers who receive strings \e from routines may assume that
+ *  they are returned in UTF-8.  Note that plain ASCII is a subset of
+ *  UTF-8, so plain ASCII text is always fine to use.
+ *
+ *  Regina's XML data files are also stored using UTF-8.  Older
+ *  versions of Regina used LATIN1 (the default for the Qt libraries)
+ *  and did not specify an encoding in the XML header; however, Regina's
+ *  file I/O routines are aware of this, and will convert older data into
+ *  UTF-8 as it is loaded into memory (the files themselves are
+ *  of course not modified).  The routine versionUsesUTF8() may be
+ *  useful for programmers who need to work with older data files at a
+ *  low level.
+ *
+ *  Filename strings are a special case, since here Regina must interact with
+ *  the underlying operating system.  All filenames that are passed into
+ *  routines must be presented in whatever encoding the operating system
+ *  expects.  They are manipulated inside Regina as simple strings of
+ *  (single-byte) characters, and passed directly to file I/O classes
+ *  such as std::ofstream and std::ifstream.
+ *
+ *  \ifacespython Users and programmers who use the Python interface must
+ *  take special care, since Python does not pass strings around in UTF-8
+ *  by default.
+ *
+ *  Proper support for character encodings is quite new, and the main
+ *  author rarely uses this (being a native English speaker).  If you
+ *  see Regina treating international characters in unexpected ways,
+ *  please mail the author(s) or file a bug report so the problem can be
+ *  fixed!
+ */
