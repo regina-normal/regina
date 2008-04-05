@@ -28,7 +28,6 @@
 
 #include <cstdio>
 #include <cstring>
-#include <fstream>
 #include <sstream>
 #include "file/nfile.h"
 #include "file/nfileinfo.h"
