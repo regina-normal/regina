@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # View a concise summary of events in a tricensus-mpi log file
 #
-# Copyright (c) 2005-2007, Ben Burton
+# Copyright (c) 2005-2008, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: tricensus-mpi-status <log-file>

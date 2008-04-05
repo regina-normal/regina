@@ -35,7 +35,7 @@
  *  <center><b>
  *  Regina<br>
  *  A Normal Surface Theory Calculator<br>
- *  Copyright &copy; 1999-2007, Ben Burton
+ *  Copyright &copy; 1999-2008, Ben Burton
  *  </b></center>
  *
  *  This documentation describes the functions, classes and related

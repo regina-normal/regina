@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007, Ben Burton
+# Copyright (c) 2007-2008, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides various tests for normal surface enumeration.
