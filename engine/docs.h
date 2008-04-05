@@ -109,12 +109,12 @@
  *  useful for programmers who need to work with older data files at a
  *  low level.
  *
- *  Filename strings are a special case, since here Regina must interact with
+ *  Filenames are a special case, since here Regina must interact with
  *  the underlying operating system.  All filenames that are passed into
  *  routines must be presented in whatever encoding the operating system
- *  expects.  They are manipulated inside Regina as simple strings of
- *  (single-byte) characters, and passed directly to file I/O classes
- *  such as std::ofstream and std::ifstream.
+ *  expects; Regina will simply pass them through to the standard C++ file
+ *  I/O classes (such as std::ifstream and std::ofstream) without modifying
+ *  them in any way.
  *
  *  \ifacespython Users and programmers who use the Python interface must
  *  take special care, since Python does not pass strings around in UTF-8
