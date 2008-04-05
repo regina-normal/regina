@@ -80,6 +80,12 @@ class NPacket;
  * routine will return null.  The behaviour regarding problematic
  * subpackets is identical to that of NFile::readPacketTree().
  *
+ * \i18n Old-style binary files only support plain ASCII strings.  For
+ * international character support, new-style XML data files \e must be used.
+ * Also, this routine makes no assumptions about the character encoding
+ * used in the given file \e name, and simply passes it through unchanged to
+ * low-level C/C++ file I/O routines.
+ *
  * \deprecated The preferred way of representing data is using XML which
  * is accessed using text I/O streams.  See routines readXMLFile() and
  * readFileMagic() for corresponding XML all-at-once read routines.
@@ -95,6 +101,12 @@ NPacket* readFromFile(const char* fileName);
 /**
  * Writes the given packet tree to the given old-style binary file doing
  * everything in a single step.
+ *
+ * \i18n Old-style binary files only support plain ASCII strings.  For
+ * international character support, new-style XML data files \e must be used.
+ * Also, this routine makes no assumptions about the character encoding
+ * used in the given file \e name, and simply passes it through unchanged to
+ * low-level C/C++ file I/O routines.
  *
  * \deprecated The preferred way of representing data is using XML which
  * is accessed using text I/O streams.  See routine writeXMLFile() for a
@@ -112,6 +124,9 @@ bool writeToFile(const char* fileName, NPacket* packet);
 /**
  * Represents an old-style binary file containing a packet tree.
  * Provides routines for opening, closing, reading and writing.
+ *
+ * \i18n Old-style binary files only support plain ASCII strings.  For
+ * international character support, new-style XML data files \e must be used.
  *
  * \deprecated The preferred way of representing data is using XML which
  * is accessed using text I/O streams.
@@ -170,6 +185,10 @@ class NFile : public ShareableObject {
          * existing file contents.
          *
          * \pre This file is currently closed.
+         *
+         * \i18n This routine makes no assumptions about the character encoding
+         * used in the given file \e name, and simply passes it through
+         * unchanged to low-level C/C++ file I/O routines.
          *
          * @param fileName the pathname of the file to open.
          * @param newOpenMode specifies in which mode the file is to be

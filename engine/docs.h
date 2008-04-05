@@ -109,12 +109,17 @@
  *  useful for programmers who need to work with older data files at a
  *  low level.
  *
- *  Filenames are a special case, since here Regina must interact with
+ *  File \e names are a special case, since here Regina must interact with
  *  the underlying operating system.  All filenames that are passed into
  *  routines must be presented in whatever encoding the operating system
- *  expects; Regina will simply pass them through to the standard C++ file
- *  I/O classes (such as std::ifstream and std::ofstream) without modifying
+ *  expects; Regina will simply pass them through to the standard C/C++ file
+ *  I/O routines (such as fopen() or std::ifstream::open()) without modifying
  *  them in any way.
+ *
+ *  It should be noted that ancient data files that use the old binary
+ *  format (Regina 2.x, before mid-2002) only support plain ASCII text.
+ *  Support for the old binary format is likely to be removed entirely in the
+ *  very near future.
  *
  *  \ifacespython Users and programmers who use the Python interface must
  *  take special care, since Python does not pass strings around in UTF-8

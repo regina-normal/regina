@@ -80,6 +80,11 @@ class NFileInfo : public ShareableObject {
         /**
          * Returns the pathname of the data file being described.
          *
+         * \i18n The \ref i18n "character encoding" used in the pathname will
+         * be whatever was originally passed to identify().  This might or
+         * might not be UTF-8, since it needs to be understood by the
+         * low-level C/C++ file I/O routines.
+         *
          * @return the pathname.
          */
         const std::string& getPathname() const;
@@ -119,6 +124,12 @@ class NFileInfo : public ShareableObject {
 
         /**
          * Return information about the given Regina data file.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given path \e name,
+         * and simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.  If an NFileInfo structure is returned, its getPathname()
+         * routine will use the same encoding that is passed here.
          *
          * @param idPathname the pathname of the data file to be examined.
          * @return a newly created NFileInfo structure containing

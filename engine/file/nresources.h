@@ -171,6 +171,10 @@ class NLocalFileResource : public NRandomAccessResource {
          * The file will not be accessed until one of the <tt>open...</tt>
          * routines is called.
          *
+         * \i18n This routine makes no assumptions about the character
+         * encoding used in the given file \e name, and simply passes it
+         * through unchanged to low-level C/C++ file I/O routines.
+         *
          * \pre Parameter \a newFileName is not an empty string.
          *
          * @param newFileName the pathname of the file that is this

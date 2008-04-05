@@ -62,6 +62,11 @@ class NTriangulation;
  * \pre The first two lines of the SnapPea file each contain at most
  * 1000 characters.
  *
+ * \i18n This routine makes no assumptions about the
+ * \ref i18n "character encoding" used in the given file \e name, and
+ * simply passes it through unchanged to low-level C/C++ file I/O routines.
+ * It assumes however that the \e contents of the file are in UTF-8.
+ *
  * @param filename the name of the SnapPea file from which to read.
  * @return a new triangulation containing the data read from the SnapPea
  * file, or 0 on error.
@@ -77,6 +82,11 @@ NTriangulation* readSnapPea(const char *filename);
  *
  * \pre The given triangulation is not invalid, and does not contain any
  * boundary faces.
+ *
+ * \i18n This routine makes no assumptions about the
+ * \ref i18n "character encoding" used in the given file \e name, and
+ * simply passes it through unchanged to low-level C/C++ file I/O routines.
+ * The \e contents of the file will be written using UTF-8.
  *
  * @param filename the name of the SnapPea file to which to write.
  * @param tri the triangulation to write to the SnapPea file.

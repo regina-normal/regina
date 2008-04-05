@@ -56,6 +56,10 @@ class NPacket;
  *
  * \pre The given packet does not depend on its parent.
  *
+ * \i18n This routine makes no assumptions about the
+ * \ref i18n "character encoding" used in the given file \e name, and simply
+ * passes it through unchanged to low-level C/C++ file I/O routines.
+ *
  * @param fileName the pathname of the file to write to.
  * @param subtree the matriarch of the packet tree that should be written.
  * @param compressed \c true if the XML file should be compressed or
@@ -74,6 +78,10 @@ bool writeXMLFile(const char* fileName, NPacket* subtree,
  * will return 0.  If a lower-level packet could not be read, it (and
  * its descendants) will simply be ignored.
  *
+ * \i18n This routine makes no assumptions about the
+ * \ref i18n "character encoding" used in the given file \e name, and simply
+ * passes it through unchanged to low-level C/C++ file I/O routines.
+ *
  * @param fileName the pathname of the file to read from.
  * @return the packet tree read from file, or 0 if problems were
  * encountered or the file could not be opened.
@@ -90,6 +98,10 @@ NPacket* readXMLFile(const char* fileName);
  *
  * The given file will almost certainly be opened and closed multiple
  * times during this routine.
+ *
+ * \i18n This routine makes no assumptions about the
+ * \ref i18n "character encoding" used in the given file \e name, and simply
+ * passes it through unchanged to low-level C/C++ file I/O routines.
  *
  * @param fileName the pathname of the file to read from.
  * @return the packet tree read from file, or 0 if problems were

@@ -168,9 +168,10 @@ class ZBuffer : public std::streambuf {
          * If a file is already open, it will be closed before the new
          * file is opened.
          *
-         * This routine makes no assumptions about the character
-         * encoding used in the given filename, and simply passes it
-         * through unchanged to low-level C/C++ file I/O routines.
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name,
+         * and simply passes it through unchanged to low-level C/C++ file
+         * I/O routines.
          *
          * @param path the pathname of the new file to open.
          * @param mode the mode in which to open the file; this must be
@@ -200,9 +201,10 @@ class CompressionBuffer : public ZBuffer {
          * Creates a new compression stream buffer that writes to the
          * given file.  The underlying file will be opened automatically.
          *
-         * This routine makes no assumptions about the character
-         * encoding used in the given filename, and simply passes it
-         * through unchanged to low-level C/C++ file I/O routines.
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name,
+         * and simply passes it through unchanged to low-level C/C++ file
+         * I/O routines.
          *
          * @param path the pathname of the new file to open.
          */
@@ -213,9 +215,10 @@ class CompressionBuffer : public ZBuffer {
          * If a file is already open, it will be closed before the new
          * file is opened.
          *
-         * This routine makes no assumptions about the character
-         * encoding used in the given filename, and simply passes it
-         * through unchanged to low-level C/C++ file I/O routines.
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name,
+         * and simply passes it through unchanged to low-level C/C++ file
+         * I/O routines.
          *
          * @param path the pathname of the new file to open.
          * @return 0 on success, or zEOF on error.
@@ -243,9 +246,10 @@ class DecompressionBuffer : public ZBuffer {
          * Creates a new decompression stream buffer that reads from the
          * given file.  The underlying file will be opened automatically.
          *
-         * This routine makes no assumptions about the character
-         * encoding used in the given filename, and simply passes it
-         * through unchanged to low-level C/C++ file I/O routines.
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name,
+         * and simply passes it through unchanged to low-level C/C++ file
+         * I/O routines.
          *
          * @param path the pathname of the new file to open.
          */
@@ -256,9 +260,10 @@ class DecompressionBuffer : public ZBuffer {
          * If a file is already open, it will be closed before the new
          * file is opened.
          *
-         * This routine makes no assumptions about the character
-         * encoding used in the given filename, and simply passes it
-         * through unchanged to low-level C/C++ file I/O routines.
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name,
+         * and simply passes it through unchanged to low-level C/C++ file
+         * I/O routines.
          *
          * @param path the pathname of the new file to open.
          * @return 0 on success, or zEOF on error.
@@ -288,9 +293,10 @@ class CompressionStream : public std::ostream {
          * Creates a new compression stream that writes to the given
          * file.  The underlying file will be opened automatically.
          *
-         * This routine makes no assumptions about the character
-         * encoding used in the given filename, and simply passes it
-         * through unchanged to low-level C/C++ file I/O routines.
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name,
+         * and simply passes it through unchanged to low-level C/C++ file
+         * I/O routines.
          *
          * @param path the pathname of the new file to open.
          */
@@ -301,9 +307,10 @@ class CompressionStream : public std::ostream {
          * If a file is already open, it will be closed before the new
          * file is opened.
          *
-         * This routine makes no assumptions about the character
-         * encoding used in the given filename, and simply passes it
-         * through unchanged to low-level C/C++ file I/O routines.
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name,
+         * and simply passes it through unchanged to low-level C/C++ file
+         * I/O routines.
          *
          * @param path the pathname of the new file to open.
          * @return 0 on success, or ZBuffer::zEOF on error.
@@ -340,9 +347,10 @@ class DecompressionStream : public std::istream {
          * Creates a new decompression stream that reads from the given
          * file.  The underlying file will be opened automatically.
          *
-         * This routine makes no assumptions about the character
-         * encoding used in the given filename, and simply passes it
-         * through unchanged to low-level C/C++ file I/O routines.
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name,
+         * and simply passes it through unchanged to low-level C/C++ file
+         * I/O routines.
          *
          * @param path the pathname of the new file to open.
          */
@@ -353,9 +361,10 @@ class DecompressionStream : public std::istream {
          * If a file is already open, it will be closed before the new
          * file is opened.
          *
-         * This routine makes no assumptions about the character
-         * encoding used in the given filename, and simply passes it
-         * through unchanged to low-level C/C++ file I/O routines.
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name,
+         * and simply passes it through unchanged to low-level C/C++ file
+         * I/O routines.
          *
          * @param path the pathname of the new file to open.
          * @return 0 on success, or ZBuffer::zEOF on error.
