@@ -1,6 +1,6 @@
 
             Regina - A Normal Surface Theory Calculator
-                Copyright (c) 1999-2007, Ben Burton
+                Copyright (c) 1999-2008, Ben Burton
 
 
 CITATION:

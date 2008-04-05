@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # KDE DocBook Reformatting Utility
 #
-# Copyright (c) 2007, Ben Burton
+# Copyright (c) 2007-2008, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: index2gloss < input.docbook > output.docbook
