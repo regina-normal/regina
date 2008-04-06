@@ -35,6 +35,7 @@
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qfile.h>
 
 const DehydrationHandler DehydrationHandler::instance;
 
@@ -47,7 +48,8 @@ regina::NPacket* DehydrationHandler::import(const QString& fileName,
         "Callahan, Hildebrand and Weeks, published in "
         "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>");
 
-    regina::NPacket* ans = regina::readDehydrationList(fileName.ascii());
+    regina::NPacket* ans = regina::readDehydrationList(
+        static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans) {
         KMessageBox::error(parentWidget, i18n("<qt>An error occurred "
             "whilst attempting to read from the file %1.").arg(fileName) +

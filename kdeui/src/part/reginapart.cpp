@@ -38,6 +38,7 @@
 #include "reginapart.h"
 
 #include <qcolor.h>
+#include <qfile.h>
 #include <qfileinfo.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -212,7 +213,8 @@ bool ReginaPart::openFile() {
         setModified(false);
     }
 
-    packetTree = regina::readFileMagic(m_file.ascii());
+    packetTree = regina::readFileMagic(
+        static_cast<const char*>(QFile::encodeName(m_file)));
 
     if (packetTree) {
         treeView->fill(packetTree);
@@ -234,7 +236,8 @@ bool ReginaPart::saveFile() {
     if (! isReadWrite())
         return false;
 
-    if (regina::writeXMLFile(m_file, packetTree))
+    if (regina::writeXMLFile(
+            static_cast<const char*>(QFile::encodeName(m_file)), packetTree))
         return true;
     else {
         KMessageBox::error(widget(), i18n(

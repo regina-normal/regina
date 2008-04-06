@@ -35,7 +35,9 @@
 #include <fstream>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qfile.h>
 #include <qtextcodec.h>
+#include <qtextstream.h>
 
 namespace {
     const QString scriptMarker("Regina Script:");
@@ -52,29 +54,29 @@ regina::NPacket* PythonHandler::import(const QString& fileName,
 
 regina::NPacket* PythonHandler::import(const QString& fileName,
         QTextCodec* encoding, QWidget* parentWidget) const {
-    std::ifstream in(fileName.ascii());
-    if (! in) {
+    QFile f(fileName);
+    if (! f.open(IO_ReadOnly)) {
         KMessageBox::error(parentWidget, i18n(
             "The import file %1 could not be read.").arg(fileName));
         return 0;
     }
+    QTextStream in(&f);
+
+    if (encoding)
+        in.setCodec(encoding);
+    else
+        in.setEncoding(QTextStream::UnicodeUTF8);
 
     regina::NScript* ans = new regina::NScript();
     ans->setPacketLabel(i18n("Imported Script").ascii());
 
     // Read in the script.
     bool readingMetadata = true;
-    std::string rawLine;
     QString line, metadata;
     int pos;
 
-    getline(in, rawLine);
-    while (! (rawLine.empty() && in.eof())) {
-        if (encoding)
-            line = encoding->toUnicode(rawLine.c_str());
-        else
-            line = rawLine;
-
+    line = in.readLine();
+    while (! line.isNull()) {
         if (readingMetadata && line.startsWith("###")) {
             // This is a line of metadata.  Perhaps.
             metadata = line.mid(3).stripWhiteSpace();
@@ -113,8 +115,7 @@ regina::NPacket* PythonHandler::import(const QString& fileName,
             ans->addLast(line);
         }
 
-        rawLine.clear(); // To deal with files with no final newline.
-        getline(in, rawLine);
+        line = in.readLine();
     }
 
     return ans;
@@ -133,41 +134,43 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
         QTextCodec* encoding, QWidget* parentWidget) const {
     regina::NScript* script = dynamic_cast<regina::NScript*>(data);
 
-    std::ofstream out(fileName.ascii());
-    if (! out) {
+    QFile f(fileName);
+    if (! f.open(IO_WriteOnly)) {
         KMessageBox::error(parentWidget, i18n(
             "The export file %1 could not be written to.").arg(fileName));
         return false;
     }
+    QTextStream out(&f);
+
+    if (encoding)
+        out.setCodec(encoding);
+    else
+        out.setEncoding(QTextStream::UnicodeUTF8);
 
     // Write the name of the script.
     out << "### " << scriptMarker << ' ';
-    if (encoding)
-        out << encoding->fromUnicode(script->getPacketLabel()) << std::endl;
-    else
-        out << script->getPacketLabel() << std::endl;
-    out << "###" << std::endl;
+    out << QString(script->getPacketLabel());
+    endl(out);
+    out << "###";
+    endl(out);
 
     // Output the value of each variable.
     unsigned long i;
-    for (i = 0; i < script->getNumberOfVariables(); i++)
-        if (encoding)
-            out << "### " << varMarker
-                << encoding->fromUnicode(script->getVariableName(i)) << ": "
-                << encoding->fromUnicode(script->getVariableValue(i))
-                << std::endl;
-        else
-            out << "### " << varMarker << script->getVariableName(i)
-                << ": " << script->getVariableValue(i) << std::endl;
+    for (i = 0; i < script->getNumberOfVariables(); i++) {
+        out << "### " << varMarker << QString(script->getVariableName(i))
+            << ": " << QString(script->getVariableValue(i));
+        endl(out);
+    }
 
-    out << "###" << std::endl;
-    out << "### " << endMetadataMarker << std::endl;
+    out << "###";
+    endl(out);
+    out << "### " << endMetadataMarker;
+    endl(out);
 
-    for (i = 0; i < script->getNumberOfLines(); i++)
-        if (encoding)
-            out << encoding->fromUnicode(script->getLine(i)) << std::endl;
-        else
-            out << script->getLine(i) << std::endl;
+    for (i = 0; i < script->getNumberOfLines(); i++) {
+        out << QString(script->getLine(i));
+        endl(out);
+    }
 
     // All done!
     return true;

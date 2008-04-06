@@ -34,6 +34,8 @@
 #include <fstream>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qfile.h>
+#include <qtextstream.h>
 
 const SourceHandler SourceHandler::instance;
 
@@ -41,17 +43,29 @@ PacketFilter* SourceHandler::canExport() const {
     return new SingleTypeFilter<regina::NTriangulation>();
 }
 
-bool SourceHandler::exportData(regina::NPacket* data,
-        const QString& fileName, QWidget* parentWidget) const {
+bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
+        QWidget* parentWidget) const {
+    return exportData(data, fileName, 0, parentWidget);
+}
+
+bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
+        QTextCodec* encoding, QWidget* parentWidget) const {
     regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
 
-    std::ofstream out(fileName.ascii());
-    if (! out) {
+    QFile f(fileName);
+    if (! f.open(IO_WriteOnly)) {
         KMessageBox::error(parentWidget, i18n(
             "This triangulation could not be exported.  The target "
             "file %1 could not be opened for writing.").arg(fileName));
         return false;
     }
+    QTextStream out(&f);
+
+    if (encoding)
+        out.setCodec(encoding);
+    else
+        out.setEncoding(QTextStream::UnicodeUTF8);
+
     out << tri->dumpConstruction();
     return true;
 }

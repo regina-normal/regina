@@ -34,12 +34,14 @@
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qfile.h>
 
 const OrbHandler OrbHandler::instance;
 
 regina::NPacket* OrbHandler::import(const QString& fileName,
         QWidget* parentWidget) const {
-    regina::NPacket* ans = regina::readOrb(fileName.ascii());
+    regina::NPacket* ans = regina::readOrb(
+        static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
         KMessageBox::error(parentWidget, i18n(
             "The Orb / Casson file %1 could not be imported.  Perhaps the "

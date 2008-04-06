@@ -34,12 +34,14 @@
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qfile.h>
 
 const SnapPeaHandler SnapPeaHandler::instance;
 
 regina::NPacket* SnapPeaHandler::import(const QString& fileName,
         QWidget* parentWidget) const {
-    regina::NPacket* ans = regina::readSnapPea(fileName.ascii());
+    regina::NPacket* ans = regina::readSnapPea(
+        static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
         KMessageBox::error(parentWidget, i18n(
             "The SnapPea file %1 could not be imported.  Perhaps the data "
@@ -66,7 +68,8 @@ bool SnapPeaHandler::exportData(regina::NPacket* data,
             "because it has one or more boundary faces."));
         return false;
     }
-    if (! regina::writeSnapPea(fileName.ascii(), *tri)) {
+    if (! regina::writeSnapPea(
+            static_cast<const char*>(QFile::encodeName(fileName)), *tri)) {
         KMessageBox::error(parentWidget, i18n(
             "This triangulation could not be exported.  An unknown error, "
             "probably related to file I/O, occurred during the export."));
