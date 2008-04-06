@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 4.4.1  [ under development ]
+Version 4.5  [ under development ]
 
     OVERALL:
         - Regina finally pays attention to character encodings.  All strings
