@@ -64,28 +64,18 @@ bool versionUsesUTF8(const char* version) {
             return true;
 
         // Definitely begins with 4 and 4 alone.
-        // The only way to save ourselves is to have 4.x for
-        // the right x.
+        // The only way to save ourselves is to have 4.x for x >= 5.
         if (version[1] != '.')
             return false;
 
         // We definitely begin with "4.".
         // The only good possibilities now are to begin with:
         // - 4.[number larger than 4]
-        // - 4.4.[digit larger than 1]
         if (version[2] == '0')
             return false;
-        else if (version[2] >= '1' && version[2] <= '3')
+        else if (version[2] >= '1' && version[2] <= '4')
             return (version[3] >= '0' && version[3] <= '9');
-        else if (version[2] == '4') {
-            if (version[3] >= '0' && version[3] <= '9')
-                return true;
-            else if (version[3] == '.' &&
-                    version[4] >= '1' && version[4] <= '9')
-                return true;
-            else
-                return false;
-        } else if (version[2] >= '5' && version[2] <= '9')
+        else if (version[2] >= '5' && version[2] <= '9')
             return true;
         else
             return false;
