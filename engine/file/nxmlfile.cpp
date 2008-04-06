@@ -78,7 +78,7 @@ namespace {
                 if (n == "reginadata") {
                     isReginaData = true;
 
-                    // Old files (pre-4.4.1) are stored in latin1, not utf8.
+                    // Old files (pre-4.5) are stored in latin1, not utf8.
                     regina::xml::XMLPropertyDict::const_iterator it =
                         tagProps.find("engine");
                     if (it != tagProps.end())

@@ -90,8 +90,7 @@
 
 /*! \page i18n Encodings for international strings
  *
- *  As of version 4.4.1, Regina (finally) pays attention to character
- *  encodings.
+ *  As of version 4.5, Regina (finally) pays attention to character encodings.
  *
  *  The calculation engine uses UTF-8 for all strings (except possibly
  *  for filenames; see below).  This means that programmers who pass

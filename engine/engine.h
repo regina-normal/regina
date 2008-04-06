@@ -82,7 +82,7 @@ int getVersionMinor();
  * character encodings.  As a result, the GUI typically stored data in
  * LATIN1 (the default for the Qt libraries).
  *
- * As of Regina 4.4.1, all strings are now stored in UTF-8 where possible.
+ * As of Regina 4.5, all strings are now stored in UTF-8 where possible.
  *
  * This routine allows programs to determine which regime a particular
  * version of Regina belongs to.  This can be useful when working with

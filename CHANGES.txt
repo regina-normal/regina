@@ -48,8 +48,8 @@ Version 4.5  [ under development ]
         Routine readXMLFile(), readFileMagic():
             - Assumes that any Regina data files created by version 4.4 or
               earlier use a LATIN-1 encoding (which is what the old GUI used
-              by default), and that any data files created by version 4.4.1
-              or later use UTF-8.
+              by default), and that any data files created by version 4.5 or
+              later use UTF-8.
         Routine versionUsesUTF8():
             - Added to assist code that works with files on a low-level basis.
     USER INTERFACE:

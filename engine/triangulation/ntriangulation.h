@@ -300,7 +300,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Note that tetrahedron indexing may change when a tetrahedron
          * is added or removed from the triangulation.
          *
-         * This routine was introduced in Regina 4.4.1, and replaces the
+         * This routine was introduced in Regina 4.5, and replaces the
          * old getTetrahedronIndex().  The name has been changed
          * because, unlike the old routine, it requires that the given
          * tetrahedron belongs to the triangulation (a consequence of
@@ -327,7 +327,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Note that tetrahedron indexing may change when a tetrahedron
          * is added or removed from the triangulation.
          *
-         * \deprecated As of Regina 4.4.1, this is now a slow linear
+         * \deprecated As of Regina 4.5, this is now a slow linear
          * time routine (a consequence of some significant memory
          * optimisations).  The alternative tetrahedronIndex() is
          * fast, but insists that \a tet belongs to the triangulation.
@@ -597,7 +597,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Returns the index of the given component in the triangulation.
          *
-         * This routine was introduced in Regina 4.4.1, and replaces the
+         * This routine was introduced in Regina 4.5, and replaces the
          * old getComponentIndex().  The name has been changed
          * because, unlike the old routine, it requires that the given
          * component belongs to the triangulation (a consequence of
@@ -617,7 +617,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Returns the index of the given component in the triangulation.
          *
-         * \deprecated As of Regina 4.4.1, this is now a slow linear
+         * \deprecated As of Regina 4.5, this is now a slow linear
          * time routine (a consequence of some significant memory
          * optimisations).  The alternative componentIndex() is
          * fast, but insists that \a component belongs to the triangulation.
@@ -634,7 +634,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Returns the index of the given boundary component
          * in the triangulation.
          *
-         * This routine was introduced in Regina 4.4.1, and replaces the
+         * This routine was introduced in Regina 4.5, and replaces the
          * old getBoundaryComponentIndex().  The name has been changed
          * because, unlike the old routine, it requires that the given
          * boundary component belongs to the triangulation (a consequence of
@@ -655,7 +655,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Returns the index of the given boundary component
          * in the triangulation.
          *
-         * \deprecated As of Regina 4.4.1, this is now a slow linear
+         * \deprecated As of Regina 4.5, this is now a slow linear
          * time routine (a consequence of some significant memory
          * optimisations).  The alternative boundaryComponentIndex() is
          * fast, but insists that \a bc belongs to the triangulation.
@@ -672,7 +672,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Returns the index of the given vertex in the triangulation.
          *
-         * This routine was introduced in Regina 4.4.1, and replaces the
+         * This routine was introduced in Regina 4.5, and replaces the
          * old getVertexIndex().  The name has been changed
          * because, unlike the old routine, it requires that the given
          * vertex belongs to the triangulation (a consequence of
@@ -692,7 +692,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Returns the index of the given vertex in the triangulation.
          *
-         * \deprecated As of Regina 4.4.1, this is now a slow linear
+         * \deprecated As of Regina 4.5, this is now a slow linear
          * time routine (a consequence of some significant memory
          * optimisations).  The alternative vertexIndex() is
          * fast, but insists that \a vertex belongs to the triangulation.
@@ -708,7 +708,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Returns the index of the given edge in the triangulation.
          *
-         * This routine was introduced in Regina 4.4.1, and replaces the
+         * This routine was introduced in Regina 4.5, and replaces the
          * old getEdgeIndex().  The name has been changed
          * because, unlike the old routine, it requires that the given
          * edge belongs to the triangulation (a consequence of
@@ -728,7 +728,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Returns the index of the given edge in the triangulation.
          *
-         * \deprecated As of Regina 4.4.1, this is now a slow linear
+         * \deprecated As of Regina 4.5, this is now a slow linear
          * time routine (a consequence of some significant memory
          * optimisations).  The alternative edgeIndex() is
          * fast, but insists that \a edge belongs to the triangulation.
@@ -744,7 +744,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Returns the index of the given face in the triangulation.
          *
-         * This routine was introduced in Regina 4.4.1, and replaces the
+         * This routine was introduced in Regina 4.5, and replaces the
          * old getFaceIndex().  The name has been changed
          * because, unlike the old routine, it requires that the given
          * face belongs to the triangulation (a consequence of
@@ -764,7 +764,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Returns the index of the given face in the triangulation.
          *
-         * \deprecated As of Regina 4.4.1, this is now a slow linear
+         * \deprecated As of Regina 4.5, this is now a slow linear
          * time routine (a consequence of some significant memory
          * optimisations).  The alternative faceIndex() is
          * fast, but insists that \a face belongs to the triangulation.
