@@ -260,6 +260,13 @@
     When you are selecting the file to an import, a drop-down list of
     encodings should appear in the dialog, as illustrated below.
    </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="i18n-import.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
   </sect2>
  </sect1>
 
