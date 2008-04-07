@@ -42,15 +42,17 @@ static KCmdLineOptions options[] = {
 };
 
 int main(int argc, char **argv) {
+    // Always talk to and from the calculation engine in UTF-8.
+    // This must be specified *before* constructing our about data,
+    // since some of the about data is stored as plain C strings.
+    if (QTextCodec* codec = QTextCodec::codecForName("UTF-8"))
+        QTextCodec::setCodecForCStrings(codec);
+
     ReginaAbout about("regina");
 
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
-
-    // Talk to and from the calculation engine in UTF-8.
-    if (QTextCodec* codec = QTextCodec::codecForName("utf8"))
-        QTextCodec::setCodecForCStrings(codec);
 
     // Register ourselves as a dcop client.
     app.dcopClient()->registerAs(app.name(), false);
