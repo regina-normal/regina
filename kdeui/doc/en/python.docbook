@@ -284,6 +284,34 @@ Triangulation with 2 tetrahedra.
 </programlisting>
   </tip>
   </sect2>
+
+  <sect2 id="python-i18n">
+   <title>International Characters</title>
+   <para>
+    As of version &utf8intro;, &regina; uses &utf8; consistently for
+    international characters throughout its calculation engine.  If you ever
+    pass a string into one of &regina;'s functions, you must ensure that it
+    is encoded in &utf8;; conversely, when a string is returned from a
+    function you should assume it is encoded in &utf8;.
+   </para>
+   <para>
+    This is important for &python; users to be aware of, since &python;
+    strings do not use &utf8; by default.  It is hoped that future
+    versions of &regina; can make conversions between &python; strings
+    and &utf8; strings more transparent.
+   </para>
+   <para>
+    As a single exception, file <emphasis>names</emphasis> should be in
+    whatever encoding the operating system expects; these will be passed
+    through to low-level &ccpp; file I/O routines without any changes or
+    re-encoding.
+   </para>
+   <tip><para>
+    Users who only ever deal with plain &ascii; text do not need to
+    worry about text encodings at all, since plain &ascii; is a subset
+    of &utf8;.
+   </para></tip>
+  </sect2>
  </sect1>
 
  <sect1 id="sessions">

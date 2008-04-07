@@ -8,6 +8,7 @@
   <!ENTITY regauthorplain "Ben Burton">
   <!ENTITY snappeaintro "4.2 (July 2005)">
   <!ENTITY orbintro "4.3.1 (May 2006)">
+  <!ENTITY utf8intro "4.5 (May 2008)">
   <!ENTITY copyrightyears "1999&ndash;2008">
   <!ENTITY copyrightholder "&regauthorplain;">
   <!ENTITY copyrightnotice
@@ -44,6 +45,7 @@
   <!ENTITY ai "<replaceable>a<subscript><replaceable>i</replaceable></subscript></replaceable>">
   <!ENTITY an "<replaceable>a<subscript><replaceable>n</replaceable></subscript></replaceable>">
   <!ENTITY api "<acronym>API</acronym>">
+  <!ENTITY ascii "<acronym>ASCII</acronym>">
   <!ENTITY b1 "<replaceable>b<subscript>1</subscript></replaceable>">
   <!ENTITY b2 "<replaceable>b<subscript>2</subscript></replaceable>">
   <!ENTITY b3 "<replaceable>b<subscript>3</subscript></replaceable>">
@@ -52,6 +54,8 @@
   <!ENTITY bibtex "<application>BibTeX</application>">
   <!ENTITY boost-python "<application>boost.python</application>">
   <!ENTITY casson "<application>Casson</application>">
+  <!ENTITY c "<application>C</application>">
+  <!ENTITY ccpp "&c;/&cpp;">
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY debian "<productname>Debian</productname>">
   <!ENTITY fedora "<productname>Fedora Core</productname>">
@@ -68,6 +72,7 @@
   <!ENTITY hom1 "H<subscript>1</subscript>">
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY khelpcenter "<application>&kde; Help Center</application>">
+  <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">
@@ -100,6 +105,7 @@
   <!ENTITY trists "triangular solid tori">
   <!ENTITY twopi "<literal>2*Pi</literal>">
   <!ENTITY url "<acronym>URL</acronym>">
+  <!ENTITY utf8 "<acronym>UTF-8</acronym>">
   <!ENTITY varM "<replaceable>M</replaceable>">
   <!ENTITY varm "<replaceable>m</replaceable>">
   <!ENTITY varn "<replaceable>n</replaceable>">

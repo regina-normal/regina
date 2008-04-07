@@ -104,6 +104,7 @@
    <para>
     The file should be a plain text file in &snappea;'s triangulation
     format; an example is shown below.
+    Any international characters should be encoded in &utf8;.
    </para>
    <programlisting>
     % Triangulation
@@ -149,6 +150,7 @@
     The file should be a plain text file in &orbcasson; format, which
     describes a triangulation in terms of its 1-skeleton.  The beginning
     of such a file is illustrated below.
+    Any international characters should be encoded in &utf8;.
    </para>
    <programlisting>
     % orb
@@ -252,6 +254,12 @@
     packet</link> to a &python; file, a comment block such as this will
     be automatically added.
    </para></note>
+   <para>
+    If the script contains any international characters, you must
+    specify the text encoding used (such as &utf8; or &latin1;).
+    When you are selecting the file to an import, a drop-down list of
+    encodings should appear in the dialog, as illustrated below.
+   </para>
   </sect2>
  </sect1>
 
@@ -371,6 +379,10 @@
     cannot be an <link linkend="tri-propvalid">invalid triangulation</link>,
     and it may not have any boundary faces.
    </para>
+   <para>
+    Any international characters in the exported &snappea; file will be
+    encoded using &utf8;.
+   </para>
   </sect2>
 
   <sect2 id="export-cpp">
@@ -389,6 +401,22 @@
     chapter on <link linkend="compiling">including the &regina;
     calculation engine in your own code</link>.
    </para>
+   <para>
+    If the triangulation includes any international characters (for
+    instance, in the packet label or the tetrahedron names), these might
+    appear as comments in the exported &cpp; code.  You can choose the
+    text encoding that will be used for these characters (such as &utf8;
+    or &latin1;).  When you are selecting the file to export to, a
+    drop-down list of encodings should appear in the dialog, as
+    illustrated below.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="i18n-export.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
   </sect2>
 
   <sect2 id="export-pyscript">
@@ -400,6 +428,12 @@
     of this script file describing the packet label and the script
     variables.  This special comment block is described in more detail in the
     earlier section on <link linkend="import-pyscript">&python; imports</link>.
+   </para>
+   <para>
+    If the script contains any international characters, you may choose
+    how these will be encoded in the exported &python; script.  When you
+    select the file to export to, a drop-down list of encodings should
+    appear in the dialog, as illustrated in the &cpp; source section above.
    </para>
   </sect2>
  </sect1>

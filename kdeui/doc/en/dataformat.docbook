@@ -16,6 +16,14 @@
    a &regina; data file and how they are used.  The top-level element
    for a data file is &xml-reginadata;.
   </para>
+  <para>
+   Regarding international characters:
+   As of &regina; version &utf8intro;, all &xml; data is encoded using &utf8;
+   (which includes plain &ascii; as a subset).  In versions 4.4 and earlier,
+   data was encoded in &latin1; without declaring this explicitly in the
+   &xml; header; &regina; is aware of this, and treats all older
+   data files as &latin1; when they are loaded.
+  </para>
  </partintro>
 
  &data-abeliangroup;
