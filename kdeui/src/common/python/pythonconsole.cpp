@@ -41,7 +41,7 @@
 #include <iostream>
 #include <kaction.h>
 #include <kapplication.h>
-#include <kfiledialog.h>
+#include <kencodingfiledialog.h>
 #include <kglobalsettings.h>
 #include <khelpmenu.h>
 #include <klocale.h>
@@ -50,8 +50,11 @@
 #include <kpopupmenu.h>
 #include <kstatusbar.h>
 #include <ktextedit.h>
+#include <qfile.h>
 #include <qhbox.h>
 #include <qlabel.h>
+#include <qtextcodec.h>
+#include <qtextstream.h>
 #include <qvbox.h>
 #include <qwhatsthis.h>
 
@@ -283,7 +286,8 @@ void PythonConsole::loadAllLibraries() {
 
         QString shortName = QFileInfo((*it).filename).fileName();
         addOutput(i18n("Loading %1...").arg(shortName));
-        if (! interpreter->runScript((*it).filename, shortName)) {
+        if (! interpreter->runScript(
+                static_cast<const char*>(it->encodeFilename()), shortName)) {
             if (! QFileInfo((*it).filename).exists())
                 addError(i18n("The library %1 does not exist.").
                     arg((*it).filename));
@@ -318,14 +322,26 @@ void PythonConsole::executeScript(const QString& script,
 }
 
 void PythonConsole::saveLog() {
-    QString file = KFileDialog::getSaveFileName(QString::null,
+    KEncodingFileDialog::Result result =
+        KEncodingFileDialog::getSaveFileNameAndEncoding(
+        QString::null /* encoding */, QString::null,
         i18n(FILTER_ALL), this, i18n("Save Session Transcript"));
-    if (! file.isEmpty()) {
-        std::ofstream out(file.ascii());
-        if (! out)
+    if ((! result.fileNames.empty()) &&
+            (! result.fileNames.front().isEmpty())) {
+        QFile f(result.fileNames.front());
+        if (! f.open(IO_WriteOnly))
             KMessageBox::error(this, i18n("An error occurred whilst "
-                "attempting to write to the file %1.").arg(file));
+                "attempting to write to the file %1.").
+                arg(result.fileNames.front()));
         else {
+            QTextStream out(&f);
+
+            if (QTextCodec* encoding = QTextCodec::codecForName(
+                    result.encoding))
+                out.setCodec(encoding);
+            else
+                out.setEncoding(QTextStream::UnicodeUTF8);
+
             // Write the contents to file.
             // We can't just dump text() since this includes HTML tags.
             // We also can't just remove tags since tags and text that
@@ -335,7 +351,8 @@ void PythonConsole::saveLog() {
             // For the moment we'll do it through selections.  I'm sure
             // there's a better way.
             session->selectAll(true);
-            out << session->selectedText() << std::endl;
+            out << session->selectedText();
+            endl(out);
             session->selectAll(false);
         }
     }

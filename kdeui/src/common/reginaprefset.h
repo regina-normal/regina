@@ -51,6 +51,12 @@ struct ReginaFilePref {
      */
     ReginaFilePref();
     ReginaFilePref(const QString& newFilename, bool newActive = true);
+
+    /**
+     * Return the filename in an 8-bit encoding suitable for passing to
+     * low-level file I/O routines.
+     */
+    QCString encodeFilename() const;
 };
 
 /**

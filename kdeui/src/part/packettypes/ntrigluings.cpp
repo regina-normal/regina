@@ -807,7 +807,8 @@ void NTriGluingsUI::censusLookup() {
         progress->setLabel(i18n("Searching %1...").arg((*it).filename));
         KApplication::kApplication()->processEvents();
 
-        census = regina::readFileMagic((*it).filename.ascii());
+        census = regina::readFileMagic(
+            static_cast<const char*>(it->encodeFilename()));
         if (! census) {
             KMessageBox::error(ui, i18n("The census data file %1 "
                 "could not be read.\nYou might consider temporarily "

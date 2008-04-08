@@ -41,6 +41,7 @@
 #include <kprocess.h>
 #include <kstandarddirs.h>
 #include <ktempfile.h>
+#include <qfile.h>
 #include <qfileinfo.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -392,7 +393,8 @@ void NTriFaceGraphUI::refresh() {
     KTempFile tmpDot(locateLocal("tmp", "fpg-"), ".dot");
     tmpDot.close();
 
-    std::ofstream outDot(tmpDot.name().ascii());
+    std::ofstream outDot(
+        static_cast<const char*>(QFile::encodeName(tmpDot.name())));
     if (! outDot) {
         showError(i18n("<qt>The temporary DOT file <i>%1</i> "
             "could not be opened for writing.</qt>").arg(tmpDot.name()));

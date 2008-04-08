@@ -61,6 +61,10 @@ QString GraphvizStatus::cacheGraphvizExec;
 QString GraphvizStatus::cacheGraphvizExecFull;
 GraphvizStatus GraphvizStatus::cacheGraphvizStatus;
 
+QCString ReginaFilePref::encodeFilename() const {
+    return static_cast<const char*>(QFile::encodeName(filename));
+}
+
 GraphvizStatus GraphvizStatus::status(const QString& userExec,
         QString& fullExec, bool forceRecheck) {
     QMutexLocker lock(&cacheGraphvizMutex);
