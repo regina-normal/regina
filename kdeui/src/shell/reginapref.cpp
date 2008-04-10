@@ -810,8 +810,8 @@ void ReginaPrefCensus::add() {
                 it != files.end(); it++) {
             // Run a basic check over the file.
             bool active = true;
-            regina::NFileInfo* info =
-                regina::NFileInfo::identify((*it).ascii());
+            regina::NFileInfo* info = regina::NFileInfo::identify(
+                static_cast<const char*>(QFile::encodeName(*it)));
             if (! info) {
                 if (KMessageBox::warningContinueCancel(this,
                         i18n("The file %1 does not appear "
