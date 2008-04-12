@@ -61,7 +61,7 @@
  * Filename filter for SnapPea files.
  */
 #define FILTER_SNAPPEA \
-    "*|SnapPea Files\n*|All Files"
+    "*.tri|SnapPea Files\n*|All Files"
 
 /**
  * Filename filter for Orb files.

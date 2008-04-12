@@ -53,8 +53,9 @@ Version 4.5  [ under development ]
         Routine versionUsesUTF8():
             - Added to assist code that works with files on a low-level basis.
     USER INTERFACE:
-        - Imports and exports to/from python scripts now allow the user
-          to select an explicit character encoding.
+        - The default SnapPea filename filter is now *.tri instead of just *.
+        - Several imports and exports (e.g., to/from python scripts and C++
+          source) now allow the user to select an explicit character encoding.
 
 Version 4.4  [ 25 November, 2007 ] - The "hug a Mac today" release.
 
