@@ -80,7 +80,7 @@ Guest mandriva system configuration
 
   mdvhost# urpmi.addmedia --interactive --distrib
            --urpmi-root /chroot/2007.0-x86_64
-           http://ftp.riken.go.jp/Linux/mandrake/official/2007.0/x86_64
+           ftp://ftp.gtlib.cc.gatech.edu/pub/mandrake/official/2007.0/x86_64
 
   The --interactive option asks you to approve each source.  Only
   approve the release sources (main, contrib, etc).  Do not approve the
