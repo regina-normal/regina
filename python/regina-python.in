@@ -193,6 +193,18 @@ if (! $python_lib_dir) {
         "$libdir/$package/python");
 }
 
+# --- Find the default charset to use for filename encodings. ---
+
+my $codeset = undef;
+eval {
+    require I18N::Langinfo;
+    $codeset = I18N::Langinfo::langinfo(I18N::Langinfo::CODESET());
+};
+if (not defined $codeset) {
+    &warn("W: Could not determine default character encoding for filenames.\n");
+    &warn("W: Try setting \$LANG if this is causing problems.\n");
+}
+
 # --- Read the list of libraries to load. ---
 
 if ($nolibs) {
@@ -202,17 +214,31 @@ if ($nolibs) {
     chomp @lines;
     close(LIBS);
 
+    my $lib;
     foreach my $line (@lines) {
         if ($line =~ /^\s*#/) {
             next;
         }
         if ($line =~ /^\s*(\S(.*\S)?)\s*$/) {
             # Treat this as a library file.
-            if (-e $1) {
-                &info("I: Adding library $1.\n");
-                push @python_libs, $1;
+            $lib = $1;
+
+            # Libraries are stored in UTF-8; convert to a local encoding
+            # if we know how.
+            if (defined $codeset) {
+                if (not defined eval {
+                    require Encode;
+                    Encode::from_to($lib = $1, 'utf8', $codeset);
+                }) {
+                    &warn("W: Could not convert filename $1 from UTF-8 to $codeset.\n");
+                    $lib = $1;
+                }
+            }
+            if (-e $lib) {
+                &info("I: Adding library $lib.\n");
+                push @python_libs, $lib;
             } else {
-                &err("E: Python library $1 does not exist (found in $libs_conf).\n");
+                &err("E: Python library $lib does not exist (found in $libs_conf).\n");
             }
         }
     }
