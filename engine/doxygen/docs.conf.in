@@ -6,7 +6,7 @@
 
 PROJECT_NAME         = "Regina Calculation Engine"
 
-OUTPUT_DIRECTORY     = ../docs/engine
+OUTPUT_DIRECTORY     = @top_builddir@/docs/engine
 
 DISABLE_INDEX        = NO
 EXTRACT_ALL          = NO

@@ -309,12 +309,12 @@ AC_SUBST(GUI_KDE_LIBS)
 
 # Do we wish to statically link the calculation engine into final targets?
 __static_final=no
-LIB_ENGINE="\$(top_srcdir)/engine/libregina-engine.la"
+LIB_ENGINE="\$(top_builddir)/engine/libregina-engine.la"
 AC_ARG_ENABLE(static-final, AC_HELP_STRING([--enable-static-final],
     [statically link the calculation engine into final executables and modules [[default=no]]]), [
   if test "$enableval" != "no"; then
     __static_final=yes
-    LIB_ENGINE="\$(top_srcdir)/engine/libregina-engine-noinst.la"
+    LIB_ENGINE="\$(top_builddir)/engine/libregina-engine-noinst.la"
   fi
 ])
 AM_CONDITIONAL(STATIC_FINAL, test "$__static_final" = "yes")

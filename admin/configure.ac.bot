@@ -1,5 +1,6 @@
 
 # Other files:
+AC_CONFIG_FILES([engine/doxygen/docs.conf])
 AC_CONFIG_FILES([python/regina-python], [chmod +x python/regina-python])
 AC_CONFIG_FILES([engine/regina-engine-config], [chmod +x engine/regina-engine-config])
 
