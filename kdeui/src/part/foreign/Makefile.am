@@ -8,7 +8,7 @@
 
 KDE_OPTIONS=noautodist
 
-INCLUDES = $(all_includes) -I../../common
+INCLUDES = @ENGINE_INCLUDES@ $(all_includes) -I$(top_srcdir)/kdeui/src/common
 
 noinst_LTLIBRARIES = libforeign.la
 

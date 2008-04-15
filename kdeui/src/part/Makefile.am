@@ -11,7 +11,7 @@ KDE_OPTIONS=noautodist
 SUBDIRS = foreign packettypes
 
 AM_CXXFLAGS = '-DREGINA_DATADIR="$(pkgdatadir)"'
-INCLUDES = $(all_includes) -I../common
+INCLUDES = @ENGINE_INCLUDES@ $(all_includes) -I$(top_srcdir)/kdeui/src/common
 
 noinst_HEADERS = \
 	eventids.h \
