@@ -1188,6 +1188,63 @@ class NPacket : public ShareableObject {
          * will be inserted.
          */
         void internalCloneDescendants(NPacket* parent) const;
+
+        /**
+         * Calls NPacketListener::packetWasRenamed() for all registered
+         * packet listeners.
+         *
+         * Calling this routine is better than iterating through listeners
+         * manually, since it behaves correctly even if listeners unregister
+         * themselves as they handle the event.
+         */
+        void fireRenamedEvent();
+
+        /**
+         * Calls NPacketListener::packetToBeDestroyed() for all registered
+         * packet listeners.
+         *
+         * This routine unregisters each listener just before it calls
+         * packetToBeDestroyed() for that listener.
+         *
+         * Calling this routine is better than iterating through listeners
+         * manually, since it behaves correctly even if listeners unregister
+         * themselves (or even destroy themselves) as they handle the event.
+         */
+        void fireDestructionEvent();
+
+        /**
+         * Calls NPacketListener::childWasAdded() for all registered
+         * packet listeners.
+         *
+         * Calling this routine is better than iterating through listeners
+         * manually, since it behaves correctly even if listeners unregister
+         * themselves as they handle the event.
+         *
+         * @param the child packet that was added beneath this packet.
+         */
+        void fireAddedEvent(NPacket* child);
+
+        /**
+         * Calls NPacketListener::childWasRemoved() for all registered
+         * packet listeners.
+         *
+         * Calling this routine is better than iterating through listeners
+         * manually, since it behaves correctly even if listeners unregister
+         * themselves as they handle the event.
+         *
+         * @param the child packet that was removed from beneath this packet.
+         */
+        void fireRemovedEvent(NPacket* child);
+
+        /**
+         * Calls NPacketListener::childrenWereReordered() for all registered
+         * packet listeners.
+         *
+         * Calling this routine is better than iterating through listeners
+         * manually, since it behaves correctly even if listeners unregister
+         * themselves as they handle the event.
+         */
+        void fireReorderedEvent();
 };
 
 /*@}*/
