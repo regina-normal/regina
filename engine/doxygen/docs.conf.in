@@ -57,10 +57,14 @@ WARN_IF_UNDOCUMENTED = YES
 
 # Input related options:
 
-INPUT = . ../python/globalarray.h
+INPUT = \
+    @top_srcdir@/engine \
+    @top_srcdir@/python/globalarray.h
 FILE_PATTERNS        = *.h
 RECURSIVE            = YES
-EXCLUDE = foreign/casson.h snappea/kernel
+EXCLUDE = \
+    @top_srcdir@/engine/foreign/casson.h \
+    @top_srcdir@/engine/snappea/kernel
 
 IMAGE_PATH           =
 
@@ -73,7 +77,7 @@ IGNORE_PREFIX        = N
 
 GENERATE_HTML        = YES
 HTML_OUTPUT          = .
-HTML_FOOTER          = doxygen/doc-footer.html
+HTML_FOOTER          = @top_srcdir@/engine/doxygen/doc-footer.html
 HTML_ALIGN_MEMBERS   = YES
 GENERATE_HTMLHELP    = NO
 
@@ -95,7 +99,7 @@ ENABLE_PREPROCESSING = YES
 MACRO_EXPANSION      = NO
 
 SEARCH_INCLUDES      = YES
-INCLUDE_PATH         = .
+INCLUDE_PATH         = @top_srcdir@/engine
 
 PREDEFINED           = __DOXYGEN
 

@@ -22,7 +22,9 @@ Version 4.5  [ under development ]
             + Users who pass strings directly to the calculation engine
               (through the python or C++ interface) must ensure that
               their strings are either UTF-8 or just plain ASCII.
-        - Regina now builds under gcc 4.3.
+        - Builds under gcc 4.3.
+        - Supports building out-of-tree (e.g., making separate builds in
+          debug/ and release/ subdirectories).
     ENGINE:
         Class NMarkedVector, NMarkedElement:
             - New class for a vector with fast reverse lookups.  This

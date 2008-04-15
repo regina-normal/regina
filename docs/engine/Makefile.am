@@ -10,7 +10,7 @@ KDE_OPTIONS=noautodist
 
 ## ----------------------- Variables ---------------------------------
 
-engine_index = index.html
+engine_index = @top_builddir@/docs/engine/index.html
 
 extensions = css dot gif html jpg png txt
 
@@ -20,8 +20,8 @@ pkgdocdir = $(pkgdatadir)/engine-docs
 
 all-local : $(engine_index)
 $(engine_index) :
-	cd ../../engine && @DOXYGEN@ doxygen/docs.conf
-	cp `find ../../engine -name "*.png"` .
+	@DOXYGEN@ @top_builddir@/engine/doxygen/docs.conf
+	cp `find @top_srcdir@/engine -name "*.png"` .
 
 mostlyclean-local :
 	rm -f *.html *.png *.gif *.css *.dot
