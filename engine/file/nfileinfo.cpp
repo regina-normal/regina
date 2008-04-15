@@ -118,39 +118,68 @@ NFileInfo* NFileInfo::identify(const std::string& idPathname) {
         ans->type = NFileInfo::TYPE_XML;
         ans->typeDescription = "XML Regina data file";
 
+        // Make it an invalid file until we know otherwise.
+        ans->invalid = true;
+
         regina::DecompressionStream in(idPathname.c_str());
         if (! in)
-            ans->invalid = true;
-        else {
-            bool err = false;
-            std::string s[4];
+            return ans;
 
-            for (int i = 0; i < 4; i++)
-                if (! in.eof())
-                    in >> s[i];
+        std::string s;
 
-            if (s[0] != "<?xml" || s[2] != "<reginadata")
-                err = true;
-            else if (s[3].length() < 8)
-                err = true;
-            else if (s[3].substr(0, 8).compare("engine=\"") != 0)
-                err = true;
-            else {
-                s[3].erase(0, 8);
-                unsigned pos = s[3].find('"');
-                if (pos == s[3].length())
-                    err = true;
-                else
-                    s[3] = s[3].substr(0, pos);
-            }
+        // Start by slurping in the opening "<?xml".
+        if (in.eof())
+            return ans;
+        in >> s;
+        if (s != "<?xml")
+            return ans;
 
-            if (err)
-                ans->invalid = true;
-            else {
-                ans->engine = s[3];
-                ans->invalid = false;
-            }
+        // Hunt for the matching "...?>".
+        // Try skipping through several strings in case there are extra
+        // arguments in the XML prologue (such as encoding or standalone
+        // declarations).
+        int i;
+        for (i = 0; ; i++) {
+            if (in.eof())
+                return ans;
+            in >> s;
+            if (s.length() >= 2 &&
+                    s[s.length() - 2] == '?' &&
+                    s[s.length() - 1] == '>')
+                break;
+
+            // If we can't find it after enough tries, just give up.
+            // Ten tries should be more than sufficient, since the current XML
+            // spec supports only version, encoding and standalone arguments
+            // at present.
+            if (i >= 10)
+                return ans;
         }
+
+        // The next thing we see should be the <reginadata ...> element.
+        if (in.eof())
+            return ans;
+        in >> s;
+        if (s != "<reginadata")
+            return ans;
+
+        // Next should be the engine version.
+        if (in.eof())
+            return ans;
+        in >> s;
+        if (s.length() < 8)
+            return ans;
+        if (s.substr(0, 8).compare("engine=\"") != 0)
+            return ans;
+
+        // We've found the engine attribute; extract its value.
+        std::string::size_type pos = s.find('"', 8);
+        if (pos == std::string::npos)
+            return ans;
+        ans->engine = s.substr(8, pos - 8);
+
+        // That's as far as we need to go; we've extracted everything we want.
+        ans->invalid = false;
         return ans;
     }
 

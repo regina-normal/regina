@@ -26,6 +26,10 @@ Version 4.5  [ under development ]
         - Supports building out-of-tree (e.g., making separate builds in
           debug/ and release/ subdirectories).
     ENGINE:
+        Class NFileInfo:
+            - Make the XML identification routines more robust, so that
+              they work even if extra parameters (such as encoding or
+              standalone declarations) are present in the XML prologue.
         Class NMarkedVector, NMarkedElement:
             - New class for a vector with fast reverse lookups.  This
               is more memory efficient than NIndexedArray, but requires
