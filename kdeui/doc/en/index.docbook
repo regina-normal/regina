@@ -137,6 +137,8 @@
   <!ENTITY sessiontree SYSTEM "tree.session">
   <!ENTITY sessionprogress SYSTEM "progress.session">
 
+  <!ENTITY submani18n SYSTEM "submani18n.docbook">
+
   <!ENTITY % dataformat-entities SYSTEM "dataformat.ent">
   %dataformat-entities;
 

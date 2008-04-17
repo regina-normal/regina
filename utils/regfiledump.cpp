@@ -30,6 +30,7 @@
 #include <list>
 #include "file/nxmlfile.h"
 #include "packet/npacket.h"
+#include "utilities/i18nutils.h"
 
 using regina::NPacket;
 
@@ -157,6 +158,11 @@ int main(int argc, char* argv[]) {
         usage(argv[0],
             "You cannot specify individual packets if packets are not to be displayed.");
 
+    // Make sure that we write any international characters in an encoding
+    // that the user can read.
+    regina::i18n::IConvStream out(std::cout,
+        "UTF-8", regina::i18n::Locale::codeset());
+
     // Do the actual work.
     NPacket* tree = regina::readFileMagic(file);
     if (! tree) {
@@ -168,22 +174,22 @@ int main(int argc, char* argv[]) {
         NPacket* p;
         if (packets.empty())
             for (p = tree; p; p = p->nextTreePacket())
-                dumpPacket(std::cout, p, dumpOpt);
+                dumpPacket(out, p, dumpOpt);
         else
             for (StringList::const_iterator it = packets.begin();
                     it != packets.end(); it++) {
                 p = tree->findPacketLabel(*it);
                 if (p)
-                    dumpPacket(std::cout, p, dumpOpt);
+                    dumpPacket(out, p, dumpOpt);
                 else
-                    dumpNoPacket(std::cout, *it, dumpOpt);
+                    dumpNoPacket(out, *it, dumpOpt);
             }
     }
 
     if (count) {
         if (dumpOpt != 'n')
-            std::cout << '\n';
-        std::cout << tree->getTotalTreeSize() << " total packets in file.\n";
+            out << '\n';
+        out << tree->getTotalTreeSize() << " total packets in file.\n";
     }
 
     delete tree;

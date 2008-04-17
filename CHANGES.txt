@@ -26,6 +26,9 @@ Version 4.5  [ under development ]
         - Supports building out-of-tree (e.g., making separate builds in
           debug/ and release/ subdirectories).
     ENGINE:
+        Class Locale, IConvBuffer, IConvStream:
+            - New classes in the regina::i18n namespace for working with
+              internationalisation and character encodings.
         Class NFileInfo:
             - Make the XML identification routines more robust, so that
               they work even if extra parameters (such as encoding or
@@ -71,6 +74,11 @@ Version 4.5  [ under development ]
         - The default SnapPea filename filter is now *.tri instead of just *.
         - Several imports and exports (e.g., to/from python scripts and C++
           source) now allow the user to select an explicit character encoding.
+    UTILITIES:
+        regfiledump, trisetcmp:
+            - Now respects the default locale; any international characters
+              in packet labels or packet contents are displayed using the
+              correct character set (e.g., LATIN-1 for Western European users).
 
 Version 4.4  [ 25 November, 2007 ] - The "hug a Mac today" release.
 

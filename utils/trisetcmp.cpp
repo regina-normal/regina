@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include "file/nxmlfile.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/i18nutils.h"
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -56,14 +57,14 @@ void usage(const char* progName, const std::string& error = std::string()) {
     exit(1);
 }
 
-void runMatches(NPacket* tree1, NPacket* tree2) {
+void runMatches(NPacket* tree1, NPacket* tree2, std::ostream& out) {
     NPacket *p1, *p2;
 
     if (subcomplexTesting)
-        std::cout << "Matching (isomorphic subcomplex) triangulations:\n"
+        out << "Matching (isomorphic subcomplex) triangulations:\n"
             << std::endl;
     else
-        std::cout << "Matching (isomorphic) triangulations:\n" << std::endl;
+        out << "Matching (isomorphic) triangulations:\n" << std::endl;
 
     long nMatches = 0;
 
@@ -73,25 +74,25 @@ void runMatches(NPacket* tree1, NPacket* tree2) {
                 if (p2->getPacketType() == NTriangulation::packetType)
                     if (compare(static_cast<NTriangulation*>(p1),
                             static_cast<NTriangulation*>(p2))) {
-                        std::cout << "    " << p1->getPacketLabel()
+                        out << "    " << p1->getPacketLabel()
                             << (subcomplexTesting ? "  <=  " : "  ==  ")
                             << p2->getPacketLabel() << std::endl;
                         nMatches++;
                     }
 
     if (nMatches == 0)
-        std::cout << "No matches found." << std::endl;
+        out << "No matches found." << std::endl;
     else if (nMatches == 1)
-        std::cout << std::endl << "1 match." << std::endl;
+        out << std::endl << "1 match." << std::endl;
     else
-        std::cout << std::endl << nMatches << " matches." << std::endl;
+        out << std::endl << nMatches << " matches." << std::endl;
 }
 
 void runNonMatches(const std::string& file1, NPacket* tree1,
-        const std::string& file2, NPacket* tree2) {
+        const std::string& file2, NPacket* tree2, std::ostream& out) {
     NPacket *p1, *p2;
 
-    std::cout << "Triangulations in " << file1 << " but not " << file2
+    out << "Triangulations in " << file1 << " but not " << file2
         << ":\n" << std::endl;
     long nMissing = 0;
 
@@ -105,17 +106,17 @@ void runNonMatches(const std::string& file1, NPacket* tree1,
                             static_cast<NTriangulation*>(p2)))
                         matched = true;
             if (! matched) {
-                std::cout << "    " << p1->getPacketLabel() << std::endl;
+                out << "    " << p1->getPacketLabel() << std::endl;
                 nMissing++;
             }
         }
 
     if (nMissing == 0)
-        std::cout << "All triangulations matched." << std::endl;
+        out << "All triangulations matched." << std::endl;
     else if (nMissing == 1)
-        std::cout << std::endl << "1 non-match." << std::endl;
+        out << std::endl << "1 non-match." << std::endl;
     else
-        std::cout << std::endl << nMissing << " non-matches." << std::endl;
+        out << std::endl << nMissing << " non-matches." << std::endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -188,14 +189,19 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // Since we will be writing packet labels on stdout, make sure we use a
+    // character encoding that the user can read.
+    regina::i18n::IConvStream out(std::cout,
+        "UTF-8", regina::i18n::Locale::codeset());
+
     // Run our tests.
     if (listMatches)
-        runMatches(tree1, tree2);
+        runMatches(tree1, tree2, out);
     else {
-        runNonMatches(file1, tree1, file2, tree2);
+        runNonMatches(file1, tree1, file2, tree2, out);
         if (! subcomplexTesting) {
-            std::cout << std::endl << "--------------------\n" << std::endl;
-            runNonMatches(file2, tree2, file1, tree1);
+            out << std::endl << "--------------------\n" << std::endl;
+            runNonMatches(file2, tree2, file1, tree1, out);
         }
     }
 
