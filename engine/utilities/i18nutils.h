@@ -91,8 +91,8 @@ class Locale {
  * Users should not normally instantiate this class directly; instead
  * see IConvStream for a higher-level interface to character conversion.
  *
- * This class will still work perfectly well if \e iconv is not supported
- * on the build machine, though it will simply pass data through without
+ * This class will still work if \e iconv is not supported on the build
+ * machine, though in this case it will simply pass data through without
  * performing any translations.
  *
  * \ifacespython Not included.
@@ -146,6 +146,10 @@ class IConvStreamBuffer : public std::streambuf {
          * forward data to the given output stream but no conversion
          * will take place.
          *
+         * See the \e iconv documentation for information on what
+         * encodings are supported.  For the GNU C library implementation,
+         * valid encodings can be found by running <tt>iconv --list</tt>.
+         *
          * \pre The destination output stream is already open.
          *
          * @param dest the destination output stream.
@@ -165,10 +169,17 @@ class IConvStreamBuffer : public std::streambuf {
         IConvStreamBuffer* close() throw();
 
         /**
-         * Forwards the given character to the destination output stream,
+         * Sends buffered data to the destination output stream,
          * converting between character sets en route.
          *
-         * @param c the unconverted character to write.
+         * The buffer will be flushed as far as possible, and any
+         * invalid characters will be replaced with one or more question
+         * marks.  If the buffer ends in an incomplete multibyte character,
+         * this incomplete character will be held back (since it presumably
+         * needs to be combined with later input).
+         *
+         * @param c an extra character to send that did not fit in the
+         * internal buffer, or EOF if we simply wish to flush the buffer.
          * @return 0 on success, or EOF on error.
          */
         int_type overflow(int_type c);
@@ -179,7 +190,8 @@ class IConvStreamBuffer : public std::streambuf {
          */
         int_type underflow();
         /**
-         * Flushes the output buffer.
+         * Flushes all output buffers.  The buffers for both this stream
+         * and the destination output stream will be flushed.
          *
          * @return 0 on success, or -1 on error.
          */
@@ -187,7 +199,7 @@ class IConvStreamBuffer : public std::streambuf {
 };
 
 /**
- * An output stream that convertes between character encodings.
+ * An output stream that converts between character encodings.
  * The \e iconv library does all the work behind the scenes.
  *
  * An IConvStream acts as a wrapper around some other destination
@@ -202,9 +214,9 @@ class IConvStreamBuffer : public std::streambuf {
  * - Destroy this IConvStream.  The destination output stream will
  *   remain open.
  *
- * This class will still work perfectly well if \e iconv is not supported
- * on the build machine.  In this case it will simply pass all data
- * directly through to the destination output stream.
+ * This class will still work if \e iconv is not supported on the build
+ * machine, though in this case it will simply pass data straight through
+ * to the destination output stream without any conversion.
  *
  * \ifacespython Not present.
  *
@@ -225,6 +237,10 @@ class IConvStream : public std::ostream {
          * If the given encodings are invalid, this stream will still
          * forward data to the given output stream but no conversion
          * will take place.
+         *
+         * See the \e iconv documentation for information on what
+         * encodings are supported.  For the GNU C library implementation,
+         * valid encodings can be found by running <tt>iconv --list</tt>.
          *
          * \pre The destination output stream is already open.
          *

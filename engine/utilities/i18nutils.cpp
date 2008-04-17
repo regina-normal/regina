@@ -69,6 +69,9 @@ IConvStreamBuffer* IConvStreamBuffer::open(std::ostream& dest,
     }
 #endif
 
+    // When we give the buffer to std::streambuf, leave space for an
+    // extra overflow character; this will make the implementation of
+    // overflow() simpler.
     setp(preBuffer, preBuffer + (sizeof(preBuffer) - 1));
     return this;
 }
@@ -203,7 +206,7 @@ int IConvStreamBuffer::sync() {
     if (sink) {
         IConvStreamBuffer::int_type ret = overflow(traits_type::eof());
         sink->flush();
-        return ret == traits_type::eof() || sink->fail() ? -1 : 0;
+        return (ret == traits_type::eof() || sink->fail()) ? -1 : 0;
     } else
         return -1;
 }
