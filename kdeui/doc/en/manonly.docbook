@@ -21,6 +21,7 @@
   <!ENTITY kde "<application><acronym>KDE</acronym></application>">
   <!ENTITY khelpcenter "<application>&kde; Help Centre</application>">
   <!ENTITY konqueror "<application>Konqueror</application>">
+  <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">
   <!ENTITY python "<application>Python</application>">
@@ -29,6 +30,8 @@
 
   <!ENTITY reginaman SYSTEM "reginaman.docbook">
   <!ENTITY reginautils SYSTEM "utils.docbook">
+
+  <!ENTITY submani18n SYSTEM "submani18n.docbook">
 ]>
 
 <book>
