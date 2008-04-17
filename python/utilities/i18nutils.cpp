@@ -26,19 +26,15 @@
 
 /* end stub */
 
-void addLocale();
-void addNBoolSet();
-void addNLargeInteger();
-void addNMatrix2();
-void addNRational();
-void addNTriBool();
+#include "utilities/i18nutils.h"
+#include <boost/python.hpp>
 
-void addUtilities() {
-    addLocale();
-    addNBoolSet();
-    addNLargeInteger();
-    addNMatrix2();
-    addNRational();
-    addNTriBool();
+using namespace boost::python;
+
+void addLocale() {
+    scope s = class_<regina::i18n::Locale>("Locale", ::boost::python::no_init)
+        .def("codeset", &regina::i18n::Locale::codeset)
+        .staticmethod("codeset")
+    ;
 }
 
