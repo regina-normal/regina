@@ -222,6 +222,8 @@ REGINA_HEADER_OPTIONAL(popt.h, [UTILS MPI], [command-line utilities])
 REGINA_LIB_OPTIONAL(popt, poptGetContext, UTILS_LIBS, [UTILS MPI],
   [command-line utilities])
 
+AM_ICONV
+
 AM_PATH_CPPUNIT([1.8.0], , [
   REGINA_WARN_MISSING([Library cppunit], [the test suite])
   REGINA_DO_NOT_COMPILE(TESTSUITE)
