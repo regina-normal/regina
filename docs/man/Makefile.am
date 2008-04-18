@@ -29,15 +29,24 @@ EXTRA_DIST = $(man_MANS)
 if COND_RELEASE_MODE
 if HAVE_DOCBOOK2MAN
 man_docbook = \
-  ../../kdeui/doc/en/manonly.docbook \
-  ../../kdeui/doc/en/reginaman.docbook \
-  ../../kdeui/doc/en/utils.docbook
+  $(top_srcdir)/kdeui/doc/en/manonly.docbook \
+  $(top_srcdir)/kdeui/doc/en/reginaman.docbook \
+  $(top_srcdir)/kdeui/doc/en/submani18n.docbook \
+  $(top_srcdir)/kdeui/doc/en/utils.docbook
 
-$(man_MANS) : $(man_docbook)
-	cd ../../kdeui/doc/en && @DOCBOOK2MAN@ -o ../../../docs/man manonly.docbook
+# This might not be terribly portable, but then again it only ever gets
+# called by the software author.
+man_output = $(addprefix $(top_srcdir)/docs/man/,$(man_MANS))
+
+# Update the man pages directly in the source tree, so they can be
+# checked in to the repository and bundled up into the source tarball.
+$(man_output) : $(man_docbook)
+	cd $(top_srcdir)/kdeui/doc/en && \
+		@DOCBOOK2MAN@ -o ../../../docs/man manonly.docbook
 endif
 endif
 
 mostlyclean-local :
-	rm -f manpage.links manpage.refs
+	rm -f $(top_srcdir)/docs/man/manpage.links \
+		$(top_srcdir)/docs/man/manpage.refs
 
