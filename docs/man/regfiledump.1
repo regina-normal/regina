@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGFILEDUMP" "1" "16 November 2007" "" "Specialised Utilities"
+.TH "REGFILEDUMP" "1" "18 April 2008" "" "Specialised Utilities"
 
 .SH NAME
 regfiledump \- Dump the contents of a Regina data file
@@ -35,6 +35,28 @@ count (see option \fB-c\fR).
 .TP
 \fB-c\fR
 Finish output with a count of all packets in the given file.
+.SH "INTERNATIONALISATION"
+.PP
+If any packets contain international characters,
+\fBRegina\fR will attempt to convert these to your local character
+encoding as it writes them to the output.
+.PP
+You can tell \fBRegina\fR what character encoding to use by setting
+standard locale-related environment variables, such as
+\fBLANG\fR, \fBLC_CTYPE\fR or
+\fBLC_ALL\fR\&.
+.PP
+For example, if \fBLANG\fR is set to
+en_AU then output will be written in the
+Western European character set ISO-8859-1,
+and if \fBLANG\fR is set to
+en_AU.UTF-8 then output will be written in the
+universal character set UTF-8\&.
+.PP
+Typically these environment variables will have been set for you when
+you installed your GNU/Linux system, and \fBRegina\fR should just use the
+right character set out of the box.  See your GNU/Linux system reference
+for further information on support for different locales.
 .SH "SEE ALSO"
 .PP
 regina-kde\&.
