@@ -8,5 +8,5 @@
 
 KDE_OPTIONS=noautodist
 
-EXTRA_DIST = doc-footer.html docs.conf
+EXTRA_DIST = doc-footer.html docs.conf.in
 
