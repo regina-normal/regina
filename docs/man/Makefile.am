@@ -34,8 +34,8 @@ man_docbook = \
   $(top_srcdir)/kdeui/doc/en/submani18n.docbook \
   $(top_srcdir)/kdeui/doc/en/utils.docbook
 
-# This might not be terribly portable, but then again it only ever gets
-# called by the software author.
+# This might not be terribly portable (it uses features specific to GNU make),
+# but then again it only ever gets called by the software author.
 man_output = $(addprefix $(top_srcdir)/docs/man/,$(man_MANS))
 
 # Update the man pages directly in the source tree, so they can be
