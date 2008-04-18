@@ -26,6 +26,14 @@
 # MA 02110-1301, USA.
 
 
+# Fetch the python/testsuite path in the source tree, since we will need
+# to access external files.
+import sys
+if (len(sys.argv) > 1):
+	testpath = sys.argv[1]
+else:
+	testpath = '.'
+
 # Make sure we get the transition between LATIN1 and UTF-8 regimes correct.
 oldVersions = [ '0', '01', '1', '2', '3', '4',
 	'0.0', '0.1', '0.4', '0.5', '0.9', '0.10',
@@ -52,27 +60,27 @@ for v in newVersions:
 
 # Load a file created by an old version of regina.  This file stores it
 # strings as LATIN1, which should be converted to UTF-8 on import.
-i18nOld = regina.readFileMagic('i18n-latin1.rga')
+i18nOld = regina.readFileMagic(testpath + '/i18n-latin1.rga')
 if i18nOld != None:
 	print i18nOld.getPacketLabel()
 	print i18nOld.getText()
 
 # Load a version of the same file created by a newer version of Regina,
 # which stores strings directly in UTF-8.
-i18nNew = regina.readFileMagic('i18n-utf8.rga')
+i18nNew = regina.readFileMagic(testpath + '/i18n-utf8.rga')
 if i18nNew != None:
 	print i18nNew.getPacketLabel()
 	print i18nNew.getText()
 
 # Import a triangulation from SnapPea that uses a subscript character in
 # the triangulation name.
-subscriptImport = regina.readSnapPea('O2_1.tri')
+subscriptImport = regina.readSnapPea(testpath + '/O2_1.tri')
 if subscriptImport != None:
 	print subscriptImport.getPacketLabel()
 
 # Load a Regina data file with a pre-saved version of this same SnapPea
 # triangulation.
-subscriptLoad = regina.readFileMagic('O2_1.rga')
+subscriptLoad = regina.readFileMagic(testpath + '/O2_1.rga')
 if subscriptLoad != None:
 	print subscriptLoad.getFirstTreeChild().getPacketLabel()
 

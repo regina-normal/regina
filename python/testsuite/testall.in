@@ -14,10 +14,15 @@
 # corresponding *.out files.  Any mismatches are considered to be test
 # failures.
 #
-# This script MUST be run from this directory (python/testsuite).
-# It runs regina-python directly out of the source tree.  It does not
-# require regina to be installed on the system (and indeed it ignores
-# any installation that it might find).
+# This script MUST be run from the python/testsuite directory in the
+# build tree.  It runs regina-python directly out of the build tree.
+# It does not require regina to be installed on the system (and indeed
+# it ignores any installation that it might find).
+#
+# Because tests might need to access other files within the source tree
+# (which might not be the same as the build tree), the corresponding
+# python/testsuite directory within the source tree will be passed as an
+# argument to each test script.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -37,6 +42,7 @@
 set -e
 
 executable=../regina-python
+testdir="@top_srcdir@/python/testsuite"
 tmpout=test.tmp
 
 echo "---------------------------------------"
@@ -44,19 +50,12 @@ echo "Test suite for Regina's python bindings"
 echo "---------------------------------------"
 echo
 
-if ! test -d ../../admin -a -f ../regina-python.in; then
-	echo "ERROR: You do not appear to be within the python/testsuite directory."
-	echo "       This script must be run from directly within the source tree."
-	echo "       Please change into the python/testsuite directory in the "
-	echo "       source tree and try again."
-	exit 1
-fi
-
-if ! test -f "$executable"; then
-	echo "ERROR: Cannot find the executable $executable."
-	echo "       Be sure to run this script from within the source tree "
-	echo "       (directly within the python/testsuite directory), and "
-	echo "       ensure that the python module has already been built."
+if ! test -d ../../admin -a -f Makefile -a -f "$executable"; then
+	echo "ERROR: You do not appear to be within the python/testsuite directory"
+	echo "       in the build tree.  This script must be run from directly"
+	echo "       within the build tree (where you ran the configure script)."
+	echo "       Please change into the python/testsuite directory in the"
+	echo "       build tree and try again."
 	exit 1
 fi
 
@@ -66,11 +65,14 @@ export REGINA_PYLIBDIR=
 export REGINA_HOME=
 
 broken=
-for i in `find . -name "*.test"`; do
-	echo -n "Running $i ... "
+found=
+for i in `find "$testdir" -name "*.test"`; do
+	found=1
+	testname=`basename "$i"`
+	echo -n "Running $testname ... "
 
 	output="${i/.test/.out}"
-	if ! ( "$executable" -n "$i" > "$tmpout" 2>&1 ); then
+	if ! ( "$executable" -n "$i" "$testdir" > "$tmpout" 2>&1 ); then
 		echo "COULD NOT RUN"
 		broken=1
 	else
@@ -83,6 +85,18 @@ for i in `find . -name "*.test"`; do
 	fi
 	rm -f "$tmpout"
 done
+
+if ! test -n "$found"; then
+	echo "ERROR: No tests were found!"
+	echo
+	echo "       Please check your installation, and please ensure that"
+	echo "       you are running this script from within the python/testsuite"
+	echo "       directory of the build tree."
+	echo
+	echo "       Note that the build tree might not be the same as the source"
+	echo "       tree.  The build tree is where you ran the configure script."
+	exit 1
+fi
 
 if test -n "$broken"; then
 	echo

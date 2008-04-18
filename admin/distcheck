@@ -131,6 +131,7 @@ if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^docs/engine/doxygen' | \
     grep -v '^docs/engine/graph_legend' | \
     grep -v '^docs/man/manpage\.' | \
+    grep -v '^engine/doxygen/docs.conf$' | \
     grep -v '^engine/regina-config\.h$' | \
     grep -v '^engine/regina-engine-config$' | \
     grep -v '^engine/snappea/kernel/unused\(/\|$\)' | \
@@ -143,6 +144,7 @@ if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^metrics\(/\|$\)' | \
     grep -v '^packaging\(/\|$\)' | \
     grep -v '^python/regina-python$' | \
+    grep -v '^python/testsuite/testall$' | \
     grep -v '^redist\(/\|$\)' | \
     grep -v '^regina-[0-9.]\+\.tar\.bz2$' | \
     grep -v '^regina-[0-9.]\+\.tar\.gz$' | \

@@ -57,6 +57,7 @@ my $verbose = 0;
 my $interactive = 0;
 my $nolibs = 0;
 my $regina_home = '';
+my $runscript_py = '';
 my $from_source = 0;
 my $python_lib_dir = '';
 my $python_cmd = '';
@@ -166,10 +167,18 @@ my $libdir = "@libdir@";
 my $package = "@PACKAGE@";
 
 if (! $regina_home) {
-    if ( -e "$prog_name.in" and -f dirname($prog_name) . '/../admin/ac_gen') {
+    my $prog_dir = dirname($prog_name);
+    if ( -f "$prog_dir/regina.la" and -f "$prog_dir/../config.log") {
         &info("I: Running from the source tree.\n");
         $from_source = 1;
-        &setReginaHome(dirname($prog_name) . '/..');
+
+        # Setting $regina_home is interesting, because we want things
+        # from both the builddir and the srcdir.  Use both.
+        my $builddir = "$prog_dir/..";
+        my $srcdir = "@top_srcdir@";
+        $srcdir =~ /^\// or $srcdir = "$prog_dir/$srcdir";
+
+        &setReginaHome($builddir, $srcdir);
     } else {
         &info("I: Running from an installation.\n");
         &setReginaHome("$datadir/$package");
@@ -265,14 +274,13 @@ if ($script) {
     }
     my @fullCommandLine = ( $python_cmd );
     $interactive and push @fullCommandLine, '-i';
-    push @fullCommandLine, "$regina_home/scripts/runscript.py";
+    push @fullCommandLine, $runscript_py;
     push @fullCommandLine, @python_libs;
     push @fullCommandLine, ( '--', $script );
     push @fullCommandLine, @script_args;
     exec @fullCommandLine or &execError();
 } else {
-    my @fullCommandLine = ( $python_cmd, '-i',
-        "$regina_home/scripts/runscript.py" );
+    my @fullCommandLine = ( $python_cmd, '-i', $runscript_py );
     push @fullCommandLine, @python_libs;
     exec @fullCommandLine or &execError();
 }
@@ -313,15 +321,29 @@ sub setPythonLibDir() {
     $python_lib_dir = $_[0];
 }
 sub setReginaHome() {
-    &info("I: Setting Regina home directory to $_[0].\n");
-    if ( ! -e "$_[0]/scripts/runscript.py") {
+    # Set both $regina_home and $runscript_py.
+    if (defined $_[1]) {
+        # Interpret the two arguments as a "binary" home and a "source" home.
+        # This makes sense when running out of the source tree.
+        &info("I: Setting Regina home directories to ($_[0], $_[1]).\n");
+        $regina_home = $_[0];
+        $runscript_py = "$_[1]/scripts/runscript.py";
+    } else {
+        # Interpret the single argument as a traditional REGINA_HOME.
+        # This makes sense when running out of a standard installation.
+        &info("I: Setting Regina home directory to $_[0].\n");
+        $regina_home = $_[0];
+        $runscript_py = "$_[0]/scripts/runscript.py";
+    }
+
+    # Sanity test.
+    if ( ! -e $runscript_py) {
         &err("E: \$REGINA_HOME should be set to the Regina base directory.\n");
         &err("   This is the directory containing the 'scripts' subdirectory,\n");
         &err("   the 'icons' subdirectory and so on.\n");
-        &err("E: It is currently set to $regina_home.\n");
+        &err("E: It is currently set to $regina_home .\n");
         exit 1;
     }
-    $regina_home = $_[0];
 }
 sub extendEnvVar() {
     &info("I: Appending $_[1] to \$$_[0].\n");
