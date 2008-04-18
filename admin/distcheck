@@ -61,6 +61,28 @@ else
   exit 1
 fi
 
+# Find any builddirs that should be ignored.
+builddirs=`find "$svntree" -mindepth 2 -name config.log | \
+	sed -e 's%^[^/]*/%%' -e 's%/config.log$%%'`
+
+display_builddirs=
+grep_builddirs=
+for i in $builddirs; do
+	if [ -z "$grep_builddirs" ]; then
+		display_builddirs="$i"
+		grep_builddirs="$i"
+	else
+		display_builddirs="$display_builddirs $i"
+		grep_builddirs="$grep_builddirs\\|$i"
+	fi
+done
+if [ -z "$grep_builddirs" ]; then
+	grep_builddirs="^$"
+else
+	echo "Ignoring build directories: $display_builddirs"
+	grep_builddirs="^\\($grep_builddirs\\)\\(/\\|$\\)"
+fi
+
 # Prepare the two temporary file lists.
 svnlist="`mktemp -t svnlist.XXXXXXXXXX`" || svnlist=
 distlist="`mktemp -t distlist.XXXXXXXXXX`" || distlist=
@@ -106,6 +128,7 @@ fi
 echo "Analysing subversion source tree..."
 
 if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
+    grep -v "$grep_builddirs" | \
     grep -v '^\.$' | \
     grep -v '^\.\.$' | \
     grep -v '\(^\|/\)\.svn$' | \
