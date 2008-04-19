@@ -50,7 +50,7 @@ configure-stamp:
 
 	# Back to the standard configure.
 	chmod a+x configure
-	CFLAGS=$(CFLAGS) CXXFLAGS=$(CXXFLAGS) \
+	CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
 	  ./configure --disable-maintainer-mode PKGNAME=regina-normal \
 	  --with-python-version=$(pyver) \
 	  --includedir=/usr/include $(configkde) $(configmpi) \
