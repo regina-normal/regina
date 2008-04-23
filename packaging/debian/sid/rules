@@ -23,13 +23,9 @@ endif
 NO_MPI = 0
 configmpi =
 
-# Fetch the python version out of debian/control so we can pass it to
-# ./configure.  This keeps things sane when multiple python*-dev packages
-# are installed.
-#
-# Use grep instead of pyversions so that we don't need to build-depend
-# on the default python (in addition to whatever python boost requires).
-pyver = $(subst XS-Python-Version: ,,$(shell grep ^XS-Python-Version debian/control))
+# Find the default python version so we can pass it to ./configure.  This 
+# keeps things sane when multiple python*-dev packages are installed.
+pyver = $(subst python,,$(shell /usr/bin/pyversions --default))
 
 -include debian/debiandirs
 
@@ -47,6 +43,12 @@ configure-stamp:
 	autoconf
 	automake
 	perl -w admin/am_edit
+
+	# Patch regina-python to explicitly use the same python version that
+	# we are building against.
+	sed 's|`which python`|"/usr/bin/python$(pyver)"|' \
+		< python/regina-python.in > python/regina-python.in.new
+	mv -f python/regina-python.in.new python/regina-python.in
 
 	# Back to the standard configure.
 	chmod a+x configure
@@ -98,10 +100,6 @@ install: build
 
 	# Main install.
 	$(MAKE) install DESTDIR=`pwd`/$(tmp)
-
-	# Make sure python versions are consistent between the binaries and
-	# the startup script.
-	sh debian/pycheck
 
 	# Make sure we've got the multithreaded boost.python, not the
 	# single-threaded boost.python.
@@ -177,6 +175,8 @@ binary-arch: build install
 	  gunzip $$i; done
 	dh_fixperms -a
 	dh_makeshlibs -a
+	# Only run the python scripts on regina-normal.
+	dh_pysupport -pregina-normal /usr/lib/regina-normal/python
 	dh_installdeb -a
 	dh_perl -a
 	dh_shlibdeps -a -ldebian/regina-normal/usr/lib

@@ -2,15 +2,14 @@ Source: regina-normal
 Section: math
 Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
-Build-Depends: automake1.9, debhelper (>= 5.0.0), doxygen, kdelibs4-dev (>= 4:3.5.1-3), libboost-python-dev (>= 1.34.1-2), libcppunit-dev (>= 1.10.2-4), libgmp3-dev (>= 4.1.4-10), libmpich1.0-dev (>= 1.2.7-1), libpopt-dev, libxml2-dev, python2.4-dev, zlib1g-dev
+Build-Depends: automake1.9, debhelper (>= 5.0.0), doxygen, kdelibs4-dev (>= 4:3.5.1-3), libboost-python-dev (>= 1.34.1-10), libcppunit-dev (>= 1.10.2-4), libgmp3-dev (>= 4.1.4-10), libmpich1.0-dev (>= 1.2.7-1~), libpopt-dev, libxml2-dev, python-dev (>= 2.5.2-1~), python-support (>= 0.6), zlib1g-dev
 Build-Conflicts: regina-normal-dev (<< 4.5-0), regina-normal-dev (>= 4.5.1-0)
 Standards-Version: 3.7.3
-XS-Python-Version: 2.4
 
 Package: regina-normal
 Architecture: any
 Section: math
-Depends: ${shlibs:Depends}, ${perl:Depends}
+Depends: ${shlibs:Depends}, ${perl:Depends}, ${python:Depends}
 Recommends: khelpcenter
 Suggests: gap, graphviz, konqueror, regina-normal-doc, regina-normal-dev, regina-normal-mpi, snappea
 Description: 3-manifold topology software with normal surface support
@@ -30,7 +29,6 @@ Description: 3-manifold topology software with normal surface support
  Components of Regina that are designed to run on clusters are no longer
  shipped in this package.  They can now be found in the separate package
  regina-normal-mpi.
-XB-Python-Version: 2.4
 
 Package: regina-normal-dev
 Architecture: any

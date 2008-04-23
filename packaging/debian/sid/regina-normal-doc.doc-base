@@ -6,7 +6,7 @@ Abstract: Regina is a suite of mathematical software for 3-manifold
  Regina calculation engine.  It is useful for users wishing to use Python
  scripting with Regina, or wishing to build the C++ calculation engine
  into their own projects.
-Section: Apps/Math
+Section: Science/Mathematics
 
 Format: HTML
 Index: /usr/share/doc/regina-normal-doc/engine-docs/index.html

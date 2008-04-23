@@ -2,7 +2,21 @@ regina-normal (4.5-1) unstable; urgency=low
 
   * New upstream release.
 
- -- Ben Burton <bab@debian.org>  Mon,  3 Mar 2008 19:28:46 +1100
+ -- Ben Burton <bab@debian.org>  Sat, 19 Apr 2008 11:39:33 +1000
+
+regina-normal (4.4-4) unstable; urgency=low
+
+  * Switched to use the default python version, now that boost.python supports
+    multiple python versions.  Updated the versioned build-depends on
+    libboost-python-dev accordingly.
+  * Added a build-depends on python-dev for boost.python, and versioned this
+    to ensure that we catch the recent python2.5 transition.
+  * Now uses python-support for handling python policy requirements.  The old
+    X[BS]-Python-Version control fields have been removed.
+  * Properly quoted CFLAGS / CXXFLAGS in debian/rules (closes: #476029).
+  * Changed doc-base section from Apps/Math to Science/Mathematics.
+
+ -- Ben Burton <bab@debian.org>  Sat, 19 Apr 2008 11:39:33 +1000
 
 regina-normal (4.4-3) unstable; urgency=low
 
