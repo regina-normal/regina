@@ -64,6 +64,11 @@ case "$os" in
 		dbus=1
 		exitwait=1
 		;;
+	Ubuntu\ 8.04* )
+		distro=Hardy
+		dbus=1
+		exitwait=1
+		;;
 	Debian\ GNU/Linux\ */sid\ * )
 		distro=Sid
 		exitwait=1
