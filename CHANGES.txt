@@ -59,7 +59,8 @@ Version 4.5  [ under development ]
             - New routine usingParser() that is used to pass the current
               parser to the top-level element reader.
         Class XMLParser:
-            - New routine switchEncoding() for handling legacy XML data files.
+            - New routine switchEncoding() for switching between character
+              encodings during parsing.  This routine must be used with care.
         Class XMLParserCallback:
             - Callback routine start_document() now takes a single argument
               that points to the current XMLParser.
