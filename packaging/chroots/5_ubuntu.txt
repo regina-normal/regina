@@ -85,7 +85,7 @@ Guest configuration
 - Install base system:
 
   debian# schroot -c gutsy aptitude install
-          ubuntu-desktop language-pack-en man xnest xserver-xephyr zsh
+          ubuntu-desktop language-pack-en vim xnest xserver-xephyr zsh
 
 - Purge packages that cause problems in chroots:
 
@@ -106,6 +106,7 @@ Guest configuration
 - Install other packages useful for running and testing regina:
 
   debian# schroot -c gutsy aptitude install graphviz khelpcenter kig konqueror
+  debian# schroot -c gutsy aptitude clean
 
 - Allow user to administer the system:
 
