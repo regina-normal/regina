@@ -67,11 +67,13 @@
    <othername>A.</othername>
    <surname>Burton</surname>
   </author>
-  <title>Enumeration of non-orientable 3-manifolds using face pairing
+  <title>Enumeration of non-orientable 3-manifolds using face-pairing
    graphs and union-find</title>
-  <edition>To appear in Discrete Comput. Geom.</edition>
-  <issuenum>math.GT/0604584</issuenum>
-  <date>April 2006</date>
+  <edition>Discrete Comput. Geom.</edition>
+  <volumenum>vol. 38</volumenum>
+  <issuenum>no. 3</issuenum>
+  <artpagenums>pp. 527&ndash;571</artpagenums>
+  <date>2007</date>
  </biblioentry>
 
  <biblioentry id="bib-burton-satblocks">
