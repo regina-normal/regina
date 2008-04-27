@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<reginadata engine="4.1.2">
+<reginadata engine="4.5">
 <packet label="GAP simplification tests"
 	type="Container" typeid="1"
 	parent="">
