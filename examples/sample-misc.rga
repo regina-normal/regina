@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
-<reginadata engine="3.0.0">
+<reginadata engine="4.5">
 <packet label="Container"
 	type="Container" typeid="1"
 	parent="">
 <packet label="Sample Data File"
 	type="Text" typeid="2"
 	parent="Container">
-  <text>In this file you will find some sample packets that illustrate the objects with which Regina can work.</text>
+  <text>In this file you will find some sample packets that illustrate the objects with
+which Regina can work.</text>
 </packet> <!-- Sample Data File (Text) -->
 <packet label="Triangulations"
 	type="Container" typeid="1"
@@ -15,8 +16,8 @@
 	type="Triangulation" typeid="3"
 	parent="Triangulations">
   <tetrahedra ntet="2">
-    <tet desc=""> 1 108 1 75 1 30 1 -58 </tet>
-    <tet desc=""> 0 108 0 75 0 30 0 -58 </tet>
+    <tet desc=""> 1 108 1 75 1 30 1 198 </tet>
+    <tet desc=""> 0 108 0 75 0 30 0 198 </tet>
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 <packet label="Tri-Quad Normal Surfaces"
@@ -26,12 +27,12 @@
 	flavour="Standard normal (tri-quad)"/>
   <surface len="14" name=""> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
-</packet> <!-- Tri-Quad Normal Surfaces (Normal Surface List) -->
+</packet> <!-- Tri_Quad Normal Surfaces (Normal Surface List) -->
 <packet label="Quad Normal Surfaces"
 	type="Normal Surface List" typeid="6"
 	parent="Figure 8 Knot Complement">
@@ -66,10 +67,10 @@
 	type="Triangulation" typeid="3"
 	parent="Triangulations">
   <tetrahedra ntet="4">
-    <tet desc=""> 1 54 1 -100 -1 -1 -1 -1 </tet>
-    <tet desc=""> 2 54 2 -100 0 -121 0 120 </tet>
-    <tet desc=""> 3 39 3 -40 1 -121 1 120 </tet>
-    <tet desc=""> 3 57 3 -109 2 -40 2 39 </tet>
+    <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
+    <tet desc=""> 2 54 2 156 0 135 0 120 </tet>
+    <tet desc=""> 3 39 3 216 1 135 1 120 </tet>
+    <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
 <packet label="Normal Surfaces"
@@ -79,86 +80,86 @@
 	flavour="Standard normal (tri-quad)"/>
   <surface len="28" name=""> 6 1 12 1 18 1 26 1
 	<euler value="-1"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 2 1 3 1 4 1 7 1 8 1 9 1 10 1 14 1 15 1 18 1 26 2
 	<euler value="-2"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 5 2 9 1 10 1 11 1 14 1 15 1 18 1 26 2
 	<euler value="-2"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 0 2 1 2 6 1 7 1 8 1 13 1 14 1 15 1 26 1
 	<euler value="0"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1 14 1 15 1 18 1 26 2
 	<euler value="-1"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 2 1 3 1 4 1 7 1 8 1 9 1 10 1 14 1 15 1 16 1 17 1 21 1 22 1 23 1 24 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 5 2 9 1 10 1 11 1 14 1 15 1 16 1 17 1 21 1 22 1 23 1 24 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1 14 1 15 1 16 1 17 1 21 1 22 1 23 1 24 1
 	<euler value="1"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 6 2 12 2 16 1 17 1 18 1 21 1 22 1 23 1 24 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 4 2 13 2 19 2 23 1 24 1 25 1
 	<euler value="-2"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 0 2 1 2 13 2 19 2 23 1 24 1 25 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="28" name=""> 0 4 1 4 6 3 7 3 8 3 13 1 14 1 15 1 20 2 21 1 22 1 27 1
 	<euler value="1"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
 </packet> <!-- Normal Surfaces (Normal Surface List) -->
@@ -169,177 +170,177 @@
 	flavour="Standard almost normal (tri-quad-oct)"/>
   <surface len="40" name=""> 0 1 1 1 5 1 18 1 20 1 21 1 35 1
 	<euler value="-2"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 6 1 15 1 24 1 35 1
 	<euler value="-1"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 2 1 3 1 4 1 10 1 11 1 12 1 13 1 20 1 21 1 24 1 35 2
 	<euler value="-2"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 1 1 1 7 1 10 1 11 1 12 1 13 1 20 1 21 1 24 1 35 2
 	<euler value="-2"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 1 1 1 8 1 10 1 11 1 16 1 20 1 21 1 35 1
 	<euler value="-2"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 2 1 3 1 8 1 10 1 11 1 12 1 13 1 15 1 20 1 21 1 24 2 35 3
 	<euler value="-4"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 5 2 12 1 13 1 14 1 20 1 21 1 24 1 35 2
 	<euler value="-2"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 2 1 2 6 1 10 1 11 1 16 1 20 1 21 1 35 1
 	<euler value="0"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 2 1 2 6 2 10 1 11 1 17 1 20 1 21 1 24 1 35 2
 	<euler value="-2"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 1 1 1 2 1 3 1 10 1 11 1 12 1 13 1 20 1 21 1 24 1 35 2
 	<euler value="-1"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 2 1 3 1 5 1 12 1 13 1 19 1 20 1 21 1 24 2 35 3
 	<euler value="-4"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 6 1 15 1 22 1 23 1 38 1
 	<euler value="-1"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 2 1 3 1 4 1 10 1 11 1 12 1 13 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 1 1 1 7 1 10 1 11 1 12 1 13 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 5 2 12 1 13 1 14 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 2 1 2 6 2 10 1 11 1 17 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 1 1 1 2 1 3 1 10 1 11 1 12 1 13 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
 	<euler value="1"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 6 2 15 2 22 1 23 1 24 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 4 1 4 6 2 10 2 11 2 16 2 20 1 21 1 27 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 3 1 3 2 1 3 1 6 1 10 2 11 2 18 1 20 1 21 1 26 2 30 1 31 1 36 1
 	<euler value="-1"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 4 2 16 2 25 2 32 1 33 1 34 1
 	<euler value="-2"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 2 1 2 16 2 25 2 32 1 33 1 34 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 4 1 4 6 1 10 1 11 1 16 3 20 1 21 1 25 2 32 1 33 1 39 1
 	<euler value="-1"/>
-	<orbl value="-1"/>
-	<twosided value="-1"/>
-	<connected value="1"/>
+	<orbl value="false"/>
+	<twosided value="false"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 4 1 4 6 3 10 3 11 3 16 1 20 1 21 1 26 2 30 1 31 1 36 1
 	<euler value="1"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
   <surface len="40" name=""> 0 6 1 6 6 4 10 4 11 4 16 2 20 2 21 2 26 2 30 1 31 1 37 1
 	<euler value="0"/>
-	<orbl value="1"/>
-	<twosided value="1"/>
-	<connected value="1"/>
+	<orbl value="true"/>
+	<twosided value="true"/>
+	<connected value="true"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
 </packet> <!-- Almost Normal Surfaces (Normal Surface List) -->
@@ -348,11 +349,11 @@
 	type="Triangulation" typeid="3"
 	parent="Triangulations">
   <tetrahedra ntet="5">
-    <tet desc=""> 1 120 2 -109 3 78 4 39 </tet>
-    <tet desc=""> 0 -100 2 54 3 -109 4 78 </tet>
-    <tet desc=""> 0 57 1 -121 3 45 4 -109 </tet>
-    <tet desc=""> 0 78 1 57 2 99 4 -55 </tet>
-    <tet desc=""> 0 39 1 78 2 57 3 -46 </tet>
+    <tet desc=""> 1 120 2 147 3 78 4 39 </tet>
+    <tet desc=""> 0 156 2 54 3 147 4 78 </tet>
+    <tet desc=""> 0 57 1 135 3 45 4 147 </tet>
+    <tet desc=""> 0 78 1 57 2 99 4 201 </tet>
+    <tet desc=""> 0 39 1 78 2 57 3 210 </tet>
   </tetrahedra>
   <fundgroup>
 <group generators="2">
@@ -371,9 +372,9 @@
 	type="Triangulation" typeid="3"
 	parent="Triangulations">
   <tetrahedra ntet="3">
-    <tet desc=""> 1 -28 1 -28 2 -115 2 120 </tet>
-    <tet desc=""> 0 -28 0 -28 2 39 2 -46 </tet>
-    <tet desc=""> 0 114 0 -100 1 39 1 -55 </tet>
+    <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
+    <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
+    <tet desc=""> 0 114 0 156 1 39 1 201 </tet>
   </tetrahedra>
   <fundgroup>
 <group generators="2">
