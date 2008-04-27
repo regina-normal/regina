@@ -251,6 +251,11 @@ class NSnapPeaTriangulation : public ShareableObject {
          * Like dump(), this routine is provided primarily as a diagnostic
          * tool.
          *
+         * For a general export-to-SnapPea method, users are referred to
+         * regina::writeSnapPea() instead, which avoids the internal SnapPea
+         * conversion entirely and simply writes Regina's native
+         * triangulation data in SnapPea's text format.
+         *
          * Passing an empty string as the filename will cause the
          * SnapPea data to be written to standard output, just like
          * dump().  See the dump() documentation for caveats when
