@@ -75,6 +75,9 @@ Version 4.5  [ under development ]
         - The default SnapPea filename filter is now *.tri instead of just *.
         - Several imports and exports (e.g., to/from python scripts and C++
           source) now allow the user to select an explicit character encoding.
+    PYTHON:
+        - Use docstrings for the helper routines in pylib/, so documentation
+          for these routines can be accessed from within python at runtime.
     UTILITIES:
         regfiledump, trisetcmp:
             - Now respects the default locale; any international characters
