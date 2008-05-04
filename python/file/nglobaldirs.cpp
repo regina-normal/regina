@@ -26,13 +26,24 @@
 
 /* end stub */
 
-void addNFileInfo();
-void addNGlobalDirs();
-void addNXMLFile();
+#include "file/nglobaldirs.h"
+#include <boost/python.hpp>
 
-void addFile() {
-    addNFileInfo();
-    addNGlobalDirs();
-    addNXMLFile();
+using namespace boost::python;
+using regina::NGlobalDirs;
+
+void addNGlobalDirs() {
+    class_<NGlobalDirs>("NGlobalDirs", no_init)
+        .def("home", &NGlobalDirs::home)
+        .def("pythonModule", &NGlobalDirs::pythonModule)
+        .def("pythonLibs", &NGlobalDirs::pythonLibs)
+        .def("examples", &NGlobalDirs::examples)
+        .def("engineDocs", &NGlobalDirs::engineDocs)
+        .staticmethod("home")
+        .staticmethod("pythonModule")
+        .staticmethod("pythonLibs")
+        .staticmethod("examples")
+        .staticmethod("engineDocs")
+    ;
 }
 

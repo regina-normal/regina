@@ -10,7 +10,6 @@ KDE_OPTIONS=noautodist
 
 SUBDIRS = @REGINA_BUILD_PYTHON@
 
-AM_CXXFLAGS = '-DREGINA_DATADIR="$(pkgdatadir)"'
 INCLUDES = @ENGINE_INCLUDES@ $(all_includes)
 
 noinst_HEADERS = \

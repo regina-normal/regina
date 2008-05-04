@@ -31,6 +31,8 @@
  * sources, written by Michael Koch and released under the GNU LGPL v2.
  */
 
+#include "file/nglobaldirs.h"
+
 #include "examplesaction.h"
 
 #include <kapplication.h>
@@ -39,6 +41,7 @@
 #include <ktoolbar.h>
 #include <ktoolbarbutton.h>
 #include <kurl.h>
+#include <qfile.h>
 #include <qwhatsthis.h>
 
 ExamplesAction::ExamplesAction(const QObject* receiver, const char* slot,
@@ -69,7 +72,9 @@ ExamplesAction::~ExamplesAction() {
 }
 
 void ExamplesAction::addURL(const QString& fileName, const QString& text) {
-    urls_.append("file:" REGINA_DATADIR "/examples/" + fileName);
+    urls_.append(QString("file:%1/%2")
+        .arg(QFile::decodeName(regina::NGlobalDirs::examples().c_str()))
+        .arg(fileName));
     descs_.append(text);
 
     setItems(descs_);

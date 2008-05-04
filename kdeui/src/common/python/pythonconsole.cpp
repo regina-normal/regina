@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "regina-config.h"
+#include "file/nglobaldirs.h"
 #include "packet/npacket.h"
 
 // Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
@@ -227,7 +228,8 @@ bool PythonConsole::importRegina() {
             "The module should be installed as the file "
             "<tt>%1/regina.so</tt>.  Please write to %2 if you require "
             "further assistance.</qt>")
-            .arg(REGINA_PYLIBDIR).arg(PACKAGE_BUGREPORT));
+            .arg(QFile::decodeName(regina::NGlobalDirs::pythonModule().c_str()))
+            .arg(PACKAGE_BUGREPORT));
         addError(i18n("Unable to load module \"regina\"."));
         return false;
     }

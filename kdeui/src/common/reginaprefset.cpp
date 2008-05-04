@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "file/nglobaldirs.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "utilities/stringutils.h"
 
@@ -146,16 +147,12 @@ ReginaPrefSet::ReginaPrefSet() :
 ReginaFilePrefList ReginaPrefSet::defaultCensusFiles() {
     ReginaFilePrefList ans;
 
-    ans.push_back(ReginaFilePref(REGINA_DATADIR
-        "/examples/closed-or-census.rga"));
-    ans.push_back(ReginaFilePref(REGINA_DATADIR
-        "/examples/closed-nor-census.rga"));
-    ans.push_back(ReginaFilePref(REGINA_DATADIR
-        "/examples/knot-link-census.rga"));
-    ans.push_back(ReginaFilePref(REGINA_DATADIR
-        "/examples/snappea-census.rga"));
-    ans.push_back(ReginaFilePref(REGINA_DATADIR
-        "/examples/closed-hyp-census.rga"));
+    QString exDir = QFile::decodeName(regina::NGlobalDirs::examples().c_str());
+    ans.push_back(ReginaFilePref(exDir + "/closed-or-census.rga"));
+    ans.push_back(ReginaFilePref(exDir + "/closed-nor-census.rga"));
+    ans.push_back(ReginaFilePref(exDir + "/knot-link-census.rga"));
+    ans.push_back(ReginaFilePref(exDir + "/snappea-census.rga"));
+    ans.push_back(ReginaFilePref(exDir + "/closed-hyp-census.rga"));
 
     return ans;
 }

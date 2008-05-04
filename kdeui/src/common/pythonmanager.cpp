@@ -27,12 +27,14 @@
 /* end stub */
 
 #include "regina-config.h"
+#include "file/nglobaldirs.h"
 
 #include "pythonmanager.h"
 
 #include <kapplication.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qfile.h>
 #include <qfileinfo.h>
 
 PythonManager::~PythonManager() {
@@ -48,7 +50,10 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
 }
 
 void PythonManager::openPythonReference(QWidget* parent) {
-    QString index = QString(REGINA_DATADIR) + "/engine-docs/modules.html";
+    QString docDir =
+        QFile::decodeName(regina::NGlobalDirs::engineDocs().c_str());
+    QString index = docDir + "/modules.html";
+
     if (QFileInfo(index).exists())
         KApplication::kApplication()->invokeBrowser("file:" + index);
     else
@@ -56,7 +61,7 @@ void PythonManager::openPythonReference(QWidget* parent) {
             "not be found.  Perhaps it is not installed?<p>"
             "The Python reference (i.e., the API documentation for the "
             "Regina calculation engine) should be installed in the directory "
-            "<tt>%1/engine-docs/</tt>.</qt>").arg(REGINA_DATADIR));
+            "<tt>%1/</tt>.</qt>").arg(docDir));
 }
 
 #ifdef HAVE_BOOST_PYTHON

@@ -33,6 +33,9 @@ Version 4.5  [ under development ]
             - Make the XML identification routines more robust, so that
               they work even if extra parameters (such as encoding or
               standalone declarations) are present in the XML prologue.
+        Class NGlobalDirs:
+            - New class for easy access to system installation directories
+              for various components of Regina.
         Class NMarkedVector, NMarkedElement:
             - New class for a vector with fast reverse lookups.  This
               is more memory efficient than NIndexedArray, but requires

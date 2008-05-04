@@ -13,5 +13,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libfile.la
 
-libfile_la_SOURCES = nfileinfo.cpp nxmlfile.cpp pyfile.cpp
+libfile_la_SOURCES = nfileinfo.cpp nglobaldirs.cpp nxmlfile.cpp pyfile.cpp
 

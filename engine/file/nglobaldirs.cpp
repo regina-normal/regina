@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2008, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,13 +26,29 @@
 
 /* end stub */
 
-void addNFileInfo();
-void addNGlobalDirs();
-void addNXMLFile();
+#include "file/nglobaldirs.h"
 
-void addFile() {
-    addNFileInfo();
-    addNGlobalDirs();
-    addNXMLFile();
+namespace regina {
+
+std::string NGlobalDirs::home() {
+    return REGINA_DATADIR;
 }
+
+std::string NGlobalDirs::pythonModule() {
+    return REGINA_PYLIBDIR;
+}
+
+std::string NGlobalDirs::pythonLibs() {
+    return home() + "/pylib";
+}
+
+std::string NGlobalDirs::examples() {
+    return home() + "/examples";
+}
+
+std::string NGlobalDirs::engineDocs() {
+    return home() + "/engine-docs";
+}
+
+} // namespace regina
 

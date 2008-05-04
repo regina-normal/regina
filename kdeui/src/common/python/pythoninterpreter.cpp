@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "regina-config.h"
+#include "file/nglobaldirs.h"
 #include "packet/npacket.h"
 
 // Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
@@ -270,7 +271,8 @@ bool PythonInterpreter::importRegina() {
     // Adjust the python path.
     PyObject* path = PySys_GetObject("path"); // Borrowed reference.
     if (path) {
-        PyObject* regModuleDir = PyString_FromString(REGINA_PYLIBDIR);
+        PyObject* regModuleDir = PyString_FromString(
+            regina::NGlobalDirs::pythonModule().c_str());
         PyList_Append(path, regModuleDir);
         Py_DECREF(regModuleDir);
     }
