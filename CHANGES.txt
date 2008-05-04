@@ -81,6 +81,9 @@ Version 4.5  [ under development ]
     PYTHON:
         - Use docstrings for the helper routines in pylib/, so documentation
           for these routines can be accessed from within python at runtime.
+        - Added loadCensus.py as a new collection of optional helper routines
+          in pylib/.  These make it easy to load census data files from within
+          python.
     UTILITIES:
         regfiledump, trisetcmp:
             - Now respects the default locale; any international characters

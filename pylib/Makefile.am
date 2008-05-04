@@ -11,6 +11,7 @@ KDE_OPTIONS=noautodist
 pylibdir = $(pkgdatadir)/pylib
 
 pylib_DATA = README.txt \
+  loadCensus.py \
   packetType.py
 
 EXTRA_DIST = $(pylib_DATA)
