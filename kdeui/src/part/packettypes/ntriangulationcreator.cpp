@@ -82,6 +82,7 @@ namespace {
         EXAMPLE_POINCARE,
         EXAMPLE_RP2xS1,
         EXAMPLE_S2xS1,
+        EXAMPLE_SEIFERTWEBER,
         EXAMPLE_SOLIDKLEIN,
         EXAMPLE_WHITEHEAD
     };
@@ -276,6 +277,7 @@ NTriangulationCreator::NTriangulationCreator() {
     exampleWhich->insertItem(i18n("Poincare homology sphere"));
     exampleWhich->insertItem(i18n("Product RP2 x S1"));
     exampleWhich->insertItem(i18n("Product S2 x S1"));
+    exampleWhich->insertItem(i18n("Seifert-Weber dodecahedral space"));
     exampleWhich->insertItem(i18n("Solid Klein bottle"));
     exampleWhich->insertItem(i18n("Whitehead link complement"));
     exampleWhich->setCurrentItem(0);
@@ -583,6 +585,8 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 return NExampleTriangulation::rp2xs1();
             case EXAMPLE_S2xS1:
                 return NExampleTriangulation::s2xs1();
+            case EXAMPLE_SEIFERTWEBER:
+                return NExampleTriangulation::seifertWeber();
             case EXAMPLE_SOLIDKLEIN:
                 return NExampleTriangulation::solidKleinBottle();
             case EXAMPLE_WHITEHEAD:

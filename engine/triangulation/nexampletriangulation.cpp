@@ -179,6 +179,22 @@ NTriangulation* NExampleTriangulation::poincareHomologySphere() {
     return ans;
 }
 
+NTriangulation* NExampleTriangulation::seifertWeber() {
+    NTriangulation* ans = new NTriangulation();
+    ans->setPacketLabel("Seifert-Weber dodecahedral space");
+
+    // Bah.  Dehydration strings are somewhat impenetrable,
+    // but the alternative is 23 lines of hard-coded tetrahedron gluings.
+    //
+    // This triangulation was constructed by building a 60-tetrahedron
+    // dodecahedron and identifying opposite faces with a 3/10 twist,
+    // and then simplifying down to one vertex and 23 tetrahedra.
+    ans->insertRehydration(
+        "xppphocgaeaaahimmnkontspmuuqrsvuwtvwwxwjjsvvcxxjjqattdwworrko");
+
+    return ans;
+}
+
 NTriangulation* NExampleTriangulation::smallClosedOrblHyperbolic() {
     NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel("Closed orientable hyperbolic 3-manifold");

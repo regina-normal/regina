@@ -119,6 +119,15 @@ class NExampleTriangulation {
         static NTriangulation* poincareHomologySphere();
 
         /**
+         * Returns a one-vertex triangulation of the Seifert-Weber
+         * dodecahedral space.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NTriangulation* seifertWeber();
+
+        /**
          * Returns the nine-tetrahedron closed orientable hyperbolic
          * 3-manifold with volume 0.94270736.
          *
