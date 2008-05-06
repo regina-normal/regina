@@ -1208,7 +1208,8 @@ class NPacket : public ShareableObject {
          *
          * Calling this routine is better than iterating through listeners
          * manually, since it behaves correctly even if listeners unregister
-         * themselves (or even destroy themselves) as they handle the event.
+         * themselves or even destroy themselves and/or other listeners as
+         * they handle the event.
          */
         void fireDestructionEvent();
 

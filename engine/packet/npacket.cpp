@@ -631,18 +631,18 @@ void NPacket::fireRenamedEvent() {
 }
 
 void NPacket::fireDestructionEvent() {
-    // Unregister *before* we fire the event for each listener -- otherwise,
-    // if we have a listener that deletes itself then things could get nasty.
-    // In the strange case that the listener deletes the *next* listener
-    // though we could still be in trouble, since this will invalidate
-    // the iterator curr.
     if (listeners.get()) {
-        std::set<NPacketListener*>::const_iterator it = listeners->begin();
-        std::set<NPacketListener*>::const_iterator curr;
-        while (it != listeners->end()) {
-            curr = it++;
-            (*curr)->packets.erase(this);
-            (*curr)->packetToBeDestroyed(this);
+        std::set<NPacketListener*>::const_iterator it;
+        while (! listeners->empty()) {
+            it = listeners->begin();
+
+            // Unregister *before* we fire the event for each listener.
+            // If we have a listener that deletes itself (or other listeners),
+            // we don't want things to get nasty.
+            listeners->erase(it);
+            (*it)->packets.erase(this);
+
+            (*it)->packetToBeDestroyed(this);
         }
     }
 }
