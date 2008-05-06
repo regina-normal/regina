@@ -96,6 +96,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
             /**< The orbit manifold S^3 / Q_32 x Z_3. */
         NTriangulation q28;
             /**< A twisted layered loop representing S^3 / Q_28. */
+        NTriangulation seifertWeber;
+            /**< The Seifert-Weber dodecahedral space.  With 23 tetrahedra,
+                 this is too large for running normal surface algorithms.*/
 
         // Closed orientable, very large:
         NTriangulation lens100_1;
@@ -181,6 +184,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             // Some are hard-coded in the calculation engine as sample
             // triangulations.
+            copyAndDelete(seifertWeber, NExampleTriangulation::seifertWeber());
             copyAndDelete(figure8,
                 NExampleTriangulation::figureEightKnotComplement());
             copyAndDelete(solidKB, NExampleTriangulation::solidKleinBottle());
@@ -260,6 +264,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 rp3rp3.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 is not valid.",
                 q28.isValid());
+            CPPUNIT_ASSERT_MESSAGE(
+                "The Seifert-Weber dodecahedral space is not valid.",
+                seifertWeber.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not valid.",
                 q32xz3.isValid());
             CPPUNIT_ASSERT_MESSAGE("L(100,1) is not valid.",
@@ -315,6 +322,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 rp3rp3.isStandard());
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 is not standard.",
                 q28.isStandard());
+            CPPUNIT_ASSERT_MESSAGE(
+                "The Seifert-Weber dodecahedral space is not standard.",
+                seifertWeber.isStandard());
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not standard.",
                 q32xz3.isStandard());
             CPPUNIT_ASSERT_MESSAGE("L(100,1) is not standard.",
@@ -369,6 +379,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 rp3rp3.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 is not orientable.",
                 q28.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE(
+                "The Seifert-Weber dodecahedral space is not orientable.",
+                seifertWeber.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not orientable.",
                 q32xz3.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("L(100,1) is not orientable.",
@@ -424,6 +437,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 rp3rp3.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 has boundary components.",
                 q28.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE(
+                "The Seifert-Weber dodecahedral space has boundary components.",
+                seifertWeber.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 has boundary components.",
                 q32xz3.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("L(100,1) has boundary components.",
@@ -973,6 +989,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyVertexCount(q28, 1, "S^3 / Q_28");
             verifyVertexSphere(q28, 0, "S^3 / Q_28");
 
+            verifyVertexCount(seifertWeber, 1,
+                "Seifert-Weber dodecahedral space");
+            verifyVertexSphere(seifertWeber, 0,
+                "Seifert-Weber dodecahedral space");
+
             verifyVertexCount(lens100_1, 1, "L(100,1)");
             verifyVertexSphere(lens100_1, 0, "L(100,1)");
 
@@ -1112,6 +1133,32 @@ class NTriangulationTest : public CppUnit::TestFixture {
             }
         }
 
+        void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
+                unsigned rank, unsigned long torsionDegree1,
+                unsigned long torsionDegree2, unsigned long torsionDegree3) {
+            // Construct the error message.
+            std::ostringstream msg;
+            msg << grpName << " is " << g.toString() << ", not ";
+            if (rank == 1)
+                msg << "Z + ";
+            else if (rank > 1)
+                msg << rank << " Z + ";
+            msg << "Z_" << torsionDegree1 << " + Z_" << torsionDegree2
+                << " + Z_" << torsionDegree3 << '.';
+
+            // Check the group.
+            if (g.getRank() != rank)
+                CPPUNIT_FAIL(msg.str());
+            else {
+                // Ranks match.
+                if (g.getNumberOfInvariantFactors() != 3 ||
+                        g.getInvariantFactor(0) != torsionDegree1 ||
+                        g.getInvariantFactor(1) != torsionDegree2 ||
+                        g.getInvariantFactor(2) != torsionDegree3)
+                    CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void homologyH1() {
             verifyGroup(empty.getHomologyH1(),
                 "H1(empty triangulation)", 0);
@@ -1135,6 +1182,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "H1(RP^3 # RP^3)", 0, 2, 2);
             verifyGroup(q28.getHomologyH1(),
                 "H1(S^3 / Q_28)", 0, 4);
+            verifyGroup(seifertWeber.getHomologyH1(),
+                "H1(SeifertWeber)", 0, 5, 5, 5);
             verifyGroup(q32xz3.getHomologyH1(),
                 "H1(S^3 / Q_32 x Z_3)", 0, 2, 6);
             verifyGroup(lens100_1.getHomologyH1(),
@@ -1184,6 +1233,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Boundary H1(RP^3 # RP^3)", 0);
             verifyGroup(q28.getHomologyH1Bdry(),
                 "Boundary H1(S^3 / Q_28)", 0);
+            verifyGroup(seifertWeber.getHomologyH1Bdry(),
+                "Boundary H1(Seifert-Weber)", 0);
             verifyGroup(q32xz3.getHomologyH1Bdry(),
                 "Boundary H1(S^3 / Q_32 x Z_3)", 0);
             verifyGroup(lens100_1.getHomologyH1Bdry(),
@@ -1242,6 +1293,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             //    "Fund(RP^3 # RP^3)", 0, 2, 2);
             //verifyFundGroup(q28.getFundamentalGroup(),
             //    "Fund(S^3 / Q_28)", 0, 4);
+            //verifyGroup(seifertWeber.getHomologyH1(),
+            //    "Fund(SeifertWeber)", 0, 5, 5, 5);
             //verifyFundGroup(q32xz3.getFundamentalGroup(),
             //    "Fund(S^3 / Q_32 x Z_3)", 0, 2, 6);
             verifyFundGroup(lens100_1.getFundamentalGroup(),
@@ -1455,6 +1508,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyTV3(lens8_3_large, "Large L(8,3)");
             verifyTV3(rp3rp3, "RP^3 # RP^3");
             verifyTV3(q28, "S^3 / Q_28");
+            verifyTV3(seifertWeber, "Seifert-Weber");
             verifyTV3(q32xz3, "S^3 / Q_32 x Z_3");
             verifyTV3(rp2xs1, "RP^2 x S^1");
 
@@ -1588,6 +1642,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyDoubleCover(rp3rp3, "RP^3 # RP^3");
             verifyDoubleCover(q32xz3, "S^3 / Q_32 x Z_3");
             verifyDoubleCover(q28, "S^3 / Q_28");
+            verifyDoubleCover(seifertWeber, "Seifert-Weber");
             verifyDoubleCover(lens100_1, "L(100,1)");
             verifyDoubleCover(lst3_4_7, "LST(3,4,7)");
             verifyDoubleCover(figure8, "Figure eight knot complement");
@@ -1650,6 +1705,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyDehydration(rp3rp3, "RP^3 # RP^3");
             verifyDehydration(q32xz3, "S^3 / Q_32 x Z_3");
             verifyDehydration(q28, "S^3 / Q_28");
+            verifyDehydration(seifertWeber, "Seifert-Weber");
             verifyNoDehydration(lens100_1, "L(100,1)");
             verifyNoDehydration(lst3_4_7, "LST(3,4,7)");
             verifyDehydration(figure8, "Figure eight knot complement");

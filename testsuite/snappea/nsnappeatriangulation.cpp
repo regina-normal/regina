@@ -76,6 +76,11 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
         NTriangulation closedHypOr, closedHypNor;
 
         /**
+         * The Seifert-Weber dodecahedral space:
+         */
+        NTriangulation seifertWeber;
+
+        /**
          * Triangulations of 3-manifolds whose reported volume should be zero.
          *
          * These were found through an exhaustive census of small ideal
@@ -138,6 +143,9 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 NExampleTriangulation::smallClosedOrblHyperbolic());
             copyAndDelete(closedHypNor,
                 NExampleTriangulation::smallClosedNonOrblHyperbolic());
+
+            copyAndDelete(seifertWeber,
+                NExampleTriangulation::seifertWeber());
 
             t = new NTetrahedron();
             s = new NTetrahedron();
@@ -327,6 +335,19 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 "should not be representable in SnapPea format.");
 
             CPPUNIT_ASSERT_MESSAGE(
+                "The Seifert-Weber dodecahedral space "
+                "appears to have been incorrectly constructed.",
+                seifertWeber.isValid() &&
+                seifertWeber.isConnected() &&
+                seifertWeber.isOrientable() &&
+                (! seifertWeber.isIdeal()) &&
+                seifertWeber.isStandard() &&
+                (! seifertWeber.hasBoundaryFaces()));
+            testIncompatible(seifertWeber,
+                "The Seifert-Weber dodecahedral space is closed, and so "
+                "should not be representable in SnapPea format.");
+
+            CPPUNIT_ASSERT_MESSAGE(
                 "The cusped solid torus with finite vertex "
                 "appears to have been incorrectly constructed.",
                 cuspedTorus.isValid() &&
@@ -403,6 +424,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             // testVolume(closedHypOr, "or_0.94270736", 0.94270736, 7);
             // testVolume(closedHypNor, "nor_2.02988321", 2.02988121, 7);
+            // testVolume(seifertWeber, "Seifert Weber", 11.1990647, 6);
         }
 
         void testZeroVolume(const char* triName, double foundVol,
