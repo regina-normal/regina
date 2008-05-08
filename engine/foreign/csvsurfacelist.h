@@ -116,7 +116,7 @@ enum SurfaceExportFields {
  * normal surfaces (such as Euler characteristic, orientability, and so on)
  * can be included as extra fields in the export.  Users can select
  * precisely which properties to include by passing a bitmask formed
- * from SurfaceExportFields constants.
+ * from regina::SurfaceExportFields constants.
  *
  * The CSV format used here begins with a header row, and uses commas as
  * field separators.  Text fields with arbitrary contents are placed inside
@@ -133,13 +133,13 @@ enum SurfaceExportFields {
  *
  * @param filename the name of the CSV file to export to.
  * @param surfaces the list of normal surfaces to export.
- * @param additionalFields a bitwise combination of SurfaceExportFields
+ * @param additionalFields a bitwise combination of regina::SurfaceExportFields
  * constants indicating which additional properties of surfaces should
  * be included in the export.
  * @return \c true if the export was successful, or \c false otherwise.
  */
 bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
-    SurfaceExportFields additionalFields = surfaceExportAll);
+    int additionalFields = surfaceExportAll);
 
 /**
  * Exports the given list of normal surfaces as a plain text CSV
@@ -156,7 +156,7 @@ bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
  * normal surfaces (such as Euler characteristic, orientability, and so on)
  * can be included as extra fields in the export.  Users can select
  * precisely which properties to include by passing a bitmask formed
- * from SurfaceExportFields constants.
+ * from regina::SurfaceExportFields constants.
  *
  * The CSV format used here begins with a header row, and uses commas as
  * field separators.  Text fields with arbitrary contents are placed inside
@@ -173,13 +173,13 @@ bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
  *
  * @param filename the name of the CSV file to export to.
  * @param surfaces the list of normal surfaces to export.
- * @param additionalFields a bitwise combination of SurfaceExportFields
+ * @param additionalFields a bitwise combination of regina::SurfaceExportFields
  * constants indicating which additional properties of surfaces should
  * be included in the export.
  * @return \c true if the export was successful, or \c false otherwise.
  */
 bool writeCSVEdgeWeight(const char* filename, NNormalSurfaceList& surfaces,
-    SurfaceExportFields additionalFields = surfaceExportAll);
+    int additionalFields = surfaceExportAll);
 
 /*@}*/
 

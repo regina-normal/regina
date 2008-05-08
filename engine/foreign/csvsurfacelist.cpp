@@ -56,7 +56,7 @@ namespace {
      * Writes a piece of the CSV header corresponding to the given set
      * of optional fields.
      */
-    void writePropHeader(std::ostream& out, SurfaceExportFields fields) {
+    void writePropHeader(std::ostream& out, int fields) {
         if (fields & surfaceExportName)
             out << "name,";
         if (fields & surfaceExportEuler)
@@ -77,8 +77,7 @@ namespace {
      * Writes a piece of the CSV data for the given normal surface
      * corresponding to the given set of optional fields.
      */
-    void writePropData(std::ostream& out, const NNormalSurface* s,
-            SurfaceExportFields fields) {
+    void writePropData(std::ostream& out, const NNormalSurface* s, int fields) {
         if (fields & surfaceExportName) {
             if (s->getName().length() > 0)
                 writeCSVQuotedString(out, s->getName().c_str());
@@ -152,7 +151,7 @@ namespace {
 }
 
 bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
-        SurfaceExportFields additionalFields) {
+        int additionalFields) {
     std::ofstream out(filename);
     if (! out)
         return false;
@@ -227,7 +226,7 @@ bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
 }
 
 bool writeCSVEdgeWeight(const char* filename, NNormalSurfaceList& surfaces,
-        SurfaceExportFields additionalFields) {
+        int additionalFields) {
     std::ofstream out(filename);
     if (! out)
         return false;
