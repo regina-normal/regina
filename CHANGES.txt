@@ -77,6 +77,10 @@ Version 4.5  [ under development ]
               later use UTF-8.
         Routine versionUsesUTF8():
             - Added to assist code that works with files on a low-level basis.
+        Routines writeCSVStandard(), writeCSVEdgeWeight():
+            - New routines for exporting normal surface lists to plain-text
+              CSV files (which can then be imported into a spreadsheet or
+              database).
     USER INTERFACE:
         - The default SnapPea filename filter is now *.tri instead of just *.
         - Several imports and exports (e.g., to/from python scripts and C++

@@ -14,8 +14,8 @@ foreignincludedir = $(pkgincludedir)/foreign
 
 noinst_LTLIBRARIES = libforeign.la
 
-libforeign_la_SOURCES = dehydration.cpp orb.cpp snappea.cpp
+libforeign_la_SOURCES = csvsurfacelist.cpp dehydration.cpp orb.cpp snappea.cpp
 
-foreigninclude_HEADERS = dehydration.h orb.h snappea.h
+foreigninclude_HEADERS = csvsurfacelist.h dehydration.h orb.h snappea.h
 noinst_HEADERS = casson.h
 
