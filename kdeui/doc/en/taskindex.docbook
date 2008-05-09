@@ -214,6 +214,12 @@
  </glossentry>
 
  <glossentry>
+  <glossterm><link linkend="surfaces-viewsurfaceprops">compactness of normal
+   surfaces</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm>compiling</glossterm>
   <glossdef><para><link linkend="compiling">compiling &regina; into other
    code</link></para></glossdef>
@@ -1017,6 +1023,12 @@
    triangulation from</link></para></glossdef>
   <glossdef><para><link linkend="tri-propsplitting">testing for existence
    in a triangulation</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="surfaces-viewsurfaceprops">spun normal
+   surfaces</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
 
  <glossentry>

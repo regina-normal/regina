@@ -382,8 +382,33 @@
      <glossentry id="surfaces-boundary">
       <glossterm>Bdry</glossterm>
       <glossdef><para>
-       This column shows whether or not each surface meets the boundary of the
-       enclosing triangulation.
+       This column describes whether each surface is bounded.
+       In particular, it will take one of the following values:
+       <glosslist>
+        <glossentry>
+         <glossterm>Closed</glossterm>
+         <glossdef><para>
+          Indicates that the surface is compact (contains finitely many discs)
+          and closed (does not have any boundary).
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm>Real Bdry</glossterm>
+         <glossdef><para>
+          Indicates that the surface is compact (contains finitely many discs)
+          and bounded (meets the boundary of the enclosing triangulation).
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm>Infinite</glossterm>
+         <glossdef><para>
+          Indicates that the surface is non-compact, i.e., contains infinitely
+          many normal or almost normal discs.  Examples of such surfaces are
+          spun normal surfaces, which can be found in quad space for some ideal
+          triangulations.
+         </para></glossdef>
+        </glossentry>
+       </glosslist>
       </para></glossdef>
      </glossentry>
      <glossentry id="surfaces-proplink">
@@ -392,7 +417,7 @@
        If a normal surface or a rational multiple of that surface
        is recognised as being a link of any interesting subcomplexes
        within the triangulation, these subcomplexes will be listed here.
-       The following links are currently recognised.
+       The following links are currently recognised:
        <glosslist>
         <glossentry>
          <glossterm>Vertex</glossterm>
@@ -430,7 +455,7 @@
        If a normal surface is recognised as playing a particular role
        within the triangulation, that role will be listed in this column.
        At most one such role will be displayed for any particular surface.
-       The following roles are currently recognised.
+       The following roles are currently recognised:
        <glosslist>
         <glossentry id="surfaces-propsplitting">
          <glossterm>Splitting</glossterm>
