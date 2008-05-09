@@ -274,6 +274,7 @@ class ReginaPart : public KParts::ReadWritePart {
         /**
          * Packet export routines.
          */
+        void exportCSVSurfaceList();
         void exportPython();
         void exportRegina();
         void exportReginaUncompressed();

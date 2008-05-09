@@ -30,6 +30,7 @@
 
 #include "packettreeview.h"
 #include "reginapart.h"
+#include "foreign/csvsurfacehandler.h"
 #include "foreign/exportdialog.h"
 #include "foreign/pythonhandler.h"
 #include "foreign/reginahandler.h"
@@ -42,6 +43,11 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qtextcodec.h>
+
+void ReginaPart::exportCSVSurfaceList() {
+    exportFile(CSVSurfaceHandler::instance, i18n(FILTER_CSV),
+        i18n("Export CSV Surface List"));
+}
 
 void ReginaPart::exportPython() {
     exportFile(PythonHandler::instance, i18n(FILTER_PYTHON_SCRIPTS),

@@ -26,66 +26,34 @@
 
 /* end stub */
 
-/*! \file reginafilter.h
- *  \brief A variety of filename filters for use with KFileDialog.
- */
+#include "foreign/csvsurfacelist.h"
+#include "surfaces/nnormalsurfacelist.h"
 
-#ifndef __REGINAFILTER_H
-#define __REGINAFILTER_H
+#include "csvsurfacehandler.h"
+#include "../packetfilter.h"
 
-/**
- * Filename filter for all supported files.
- */
-#define FILTER_SUPPORTED \
-    "*.rga|Regina Data Files\n*.py|Python Libraries\n*|All Files"
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <qfile.h>
 
-/**
- * Filename filter for Regina data files.
- */
-#define FILTER_REGINA \
-    "*.rga|Regina Data Files\n*|All Files"
+const CSVSurfaceHandler CSVSurfaceHandler::instance;
 
-/**
- * Filename filter for Python libraries.
- */
-#define FILTER_PYTHON_LIBRARIES \
-    "*.py|Python Libraries\n*|All Files"
+PacketFilter* CSVSurfaceHandler::canExport() const {
+    return new SingleTypeFilter<regina::NNormalSurfaceList>();
+}
 
-/**
- * Filename filter for Python scripts.
- */
-#define FILTER_PYTHON_SCRIPTS \
-    "*.py|Python Scripts\n*|All Files"
-
-/**
- * Filename filter for SnapPea files.
- */
-#define FILTER_SNAPPEA \
-    "*.tri|SnapPea Files\n*|All Files"
-
-/**
- * Filename filter for Orb files.
- */
-#define FILTER_ORB \
-    "*.orb|Orb and Casson Files\n*|All Files"
-
-/**
- * Filename filter for C++ source files.
- */
-#define FILTER_CPP_SOURCE \
-    "*.cpp *.cc *.C|C++ Source Files\n*|All Files"
-
-/**
- * Filename filter for CSV (comma-separated value) files.
- */
-#define FILTER_CSV \
-    "*.csv|Text Files with Comma-Separated Values\n*|All Files"
-
-/**
- * Filename filter for all files.
- */
-#define FILTER_ALL \
-    "*|All Files"
-
-#endif
+bool CSVSurfaceHandler::exportData(regina::NPacket* data,
+        const QString& fileName, QWidget* parentWidget) const {
+    regina::NNormalSurfaceList* list =
+        dynamic_cast<regina::NNormalSurfaceList*>(data);
+    if (! regina::writeCSVStandard(
+            static_cast<const char*>(QFile::encodeName(fileName)), *list)) {
+        KMessageBox::error(parentWidget, i18n(
+            "This normal surface list could not be exported.  An unknown "
+            "error, probably related to file I/O, occurred during the "
+            "export."));
+        return false;
+    }
+    return true;
+}
 

@@ -301,6 +301,19 @@ void ReginaPart::setupActions() {
         "See the users' handbook for further information on using Regina "
         "in your own code."));
 
+    act = new KAction(i18n("CS&V Surface List"), "view_text", 0,
+        this, SLOT(exportCSVSurfaceList()), actionCollection(),
+        "export_csv_surfaces");
+    act->setToolTip(i18n("Export a normal surface list as a "
+        "text file with comma-separated values"));
+    act->setWhatsThis(i18n("Export a normal surface list from this packet tree "
+        "to a CSV file (a text file with comma-separated values).  Files of "
+        "this type are suitable for importing into spreadsheets and "
+        "databases.<p>"
+        "Individual disc coordinates as well as various properties of the "
+        "normal surfaces (such as orientability and Euler characteristic) "
+        "will all be stored as separate fields in the CSV file."));
+
     act = new KAction(i18n("&Python Script"), "packet_script", 0,
         this, SLOT(exportPython()), actionCollection(), "export_python");
     act->setToolTip(i18n("Export a Python script"));

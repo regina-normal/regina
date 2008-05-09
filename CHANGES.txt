@@ -82,6 +82,8 @@ Version 4.5  [ under development ]
               CSV files (which can then be imported into a spreadsheet or
               database).
     USER INTERFACE:
+        - Normal surface lists can now be exported to plain-text CSV files
+          (which can then be imported into a spreadsheet or database).
         - The default SnapPea filename filter is now *.tri instead of just *.
         - Several imports and exports (e.g., to/from python scripts and C++
           source) now allow the user to select an explicit character encoding.

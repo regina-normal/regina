@@ -13,6 +13,7 @@ INCLUDES = @ENGINE_INCLUDES@ $(all_includes) -I$(top_srcdir)/kdeui/src/common
 noinst_LTLIBRARIES = libforeign.la
 
 noinst_HEADERS = \
+	csvsurfacehandler.h \
 	dehydrationhandler.h \
 	exportdialog.h \
 	importdialog.h \
@@ -25,6 +26,7 @@ noinst_HEADERS = \
 	sourcehandler.h
 
 libforeign_la_SOURCES = \
+	csvsurfacehandler.cpp \
 	dehydrationhandler.cpp \
 	exportdialog.cpp \
 	importdialog.cpp \

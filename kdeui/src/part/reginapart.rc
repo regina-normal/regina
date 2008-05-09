@@ -16,6 +16,7 @@
       <Action name="export_regina_uncompressed"/>
       <Action name="export_snappea"/>
       <Action name="export_source"/>
+      <Action name="export_csv_surfaces"/>
       <Action name="export_python"/>
     </Menu>
   </Menu>
