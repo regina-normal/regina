@@ -89,7 +89,7 @@ Guest mandriva system configuration
 - Install packages for a base graphical system:
 
   mdvhost# urpmi --urpmi-root /chroot/2007.0-x86_64
-           basesystem urpmi zsh task-kde
+           basesystem urpmi man zsh task-kde
 
 - Install packages for building regina:
 
