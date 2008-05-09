@@ -4,7 +4,7 @@
 # files for a given regular expression, ignoring makefiles and other
 # bits of the build infrastructure that could otherwise give noisy results.
 
-find . \
+find . '(' \
 	-name "*.h" -o -name "*.c" -o \
-	-name "*.hpp" -o -name "*.tcc" -o -name "*.cpp" \
+	-name "*.hpp" -o -name "*.tcc" -o -name "*.cpp" ')' \
 	-exec grep -e "$1" {} \; -print
