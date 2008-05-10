@@ -10,5 +10,5 @@ KDE_OPTIONS=noautodist
 
 SUBDIRS = doc src
 
-EXTRA_DIST = README.txt TODO.txt findtext
+EXTRA_DIST = README.txt TODO.txt
 

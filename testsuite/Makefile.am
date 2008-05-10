@@ -35,5 +35,5 @@ regtestsuite_LDADD = \
   @LIB_ENGINE@ \
   @TESTSUITE_LIBS@
 
-EXTRA_DIST = README.txt findtext
+EXTRA_DIST = README.txt
 

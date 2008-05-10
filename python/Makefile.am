@@ -56,7 +56,7 @@ regina_la_LIBADD = @LIB_ENGINE@ @BOOST_PYTHON_LIBS@ \
 
 noinst_HEADERS = globalarray.h
 
-EXTRA_DIST = README.txt TODO.txt findtext regina-python.in
+EXTRA_DIST = README.txt TODO.txt regina-python.in
 
 install-exec-local :
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

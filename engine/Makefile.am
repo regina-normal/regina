@@ -65,8 +65,7 @@ libregina_engine_noinst_la_LIBADD = $(libregina_engine_la_LIBADD)
 
 man_MANS = regina-engine-config.1
 
-EXTRA_DIST = README.txt findtext checkdocs \
-  regina-engine-config.in $(man_MANS)
+EXTRA_DIST = README.txt checkdocs regina-engine-config.in $(man_MANS)
 
 ## ----------------------- Custom targets ----------------------------
 

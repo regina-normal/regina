@@ -24,7 +24,8 @@ SUBDIRS = \
 
 EXTRA_DIST = CHANGES.txt HIGHLIGHTS.txt \
   AUTHORS.txt INSTALL.txt LICENSE.txt README.txt \
-  Makefile-help Makefile.svn
+  Makefile-help Makefile.svn \
+  findtext
 
 ## ----------------------- Custom targets ----------------------------
 
