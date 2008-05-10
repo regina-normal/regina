@@ -222,24 +222,6 @@ class XMLParser {
         void finish();
 
         /**
-         * Changes the character encoding that the XML parser uses to read the
-         * input stream.  If the XML input does not declare an encoding and
-         * this routine is not called, then the encoding is assumed to be UTF-8.
-         *
-         * \warning \e libxml2 has its own way of determining the encoding
-         * of an XML data stream.  This routine can interfere with
-         * \e libxml2's automatic detection, and if called at the wrong
-         * time can cause parsing to fail entirely.  Developers who use
-         * this routine must be familiar with \e libxml2 internals and
-         * must know what they are doing!
-         *
-         * @param enc the new encoding to use.  A valid \e libxml2 encoding
-         * constant must be passed, as defined in <tt>libxml2/encoding.h</tt>.
-         * @return \c true if the change was successful, or \c false if not.
-         */
-        bool switchEncoding(xmlCharEncoding enc);
-
-        /**
          * Parses an entire XML file.  The given stream will be read
          * from until end-of-file is reached.
          *

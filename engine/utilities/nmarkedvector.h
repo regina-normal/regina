@@ -67,6 +67,8 @@ namespace regina {
  * in undefined behaviour.
  *
  * See NMarkedVector for further information.
+ *
+ * \ifacespython Not present.
  */
 class NMarkedElement {
     private:
@@ -129,6 +131,8 @@ class NMarkedElement {
  * is eventually destroyed.
  *
  * \pre The type \a T is a class derived from NMarkedElement.
+ *
+ * \ifacespython Not present.
  */
 template <typename T>
 class NMarkedVector : private std::vector<T*> {

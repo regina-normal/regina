@@ -74,10 +74,6 @@ XMLParser::XMLParser(XMLParserCallback& callback) : _parser_callback(callback) {
     _context->replaceEntities = 1;
 }
 
-bool XMLParser::switchEncoding(xmlCharEncoding enc) {
-    return (xmlSwitchEncoding(_context, enc) == 0);
-}
-
 xmlEntityPtr XMLParser::_get_entity(void*, const xmlChar* n) {
     return xmlGetPredefinedEntity(n);
 }
