@@ -29,6 +29,7 @@
 #include "regina-config.h"
 
 #include "file/nfileinfo.h"
+#include "file/nglobaldirs.h"
 
 #include "coordinatechooser.h"
 #include "reginafilter.h"
@@ -48,6 +49,7 @@
 #include <ktexteditor/editorchooser.h>
 #include <ktip.h>
 #include <qcheckbox.h>
+#include <qfile.h>
 #include <qheader.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -1022,7 +1024,8 @@ void ReginaPrefPython::updateButtons() {
 }
 
 void ReginaPrefPython::add() {
-    QStringList files = KFileDialog::getOpenFileNames(QString::null,
+    QStringList files = KFileDialog::getOpenFileNames(
+        QFile::decodeName(regina::NGlobalDirs::pythonLibs().c_str()),
         FILTER_PYTHON_LIBRARIES, this, i18n("Add Python Libraries"));
     if (! files.isEmpty()) {
         for (QStringList::const_iterator it = files.begin();
