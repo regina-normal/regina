@@ -301,7 +301,7 @@ void ReginaPart::setupActions() {
         "See the users' handbook for further information on using Regina "
         "in your own code."));
 
-    act = new KAction(i18n("CS&V Surface List"), "view_text", 0,
+    act = new KAction(i18n("CS&V Surface List"), "csvexport", 0,
         this, SLOT(exportCSVSurfaceList()), actionCollection(),
         "export_csv_surfaces");
     act->setToolTip(i18n("Export a normal surface list as a "
