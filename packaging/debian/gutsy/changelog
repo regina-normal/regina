@@ -2,7 +2,7 @@ regina-normal (4.5-1ubuntu1~gutsy1) unstable; urgency=low
 
   * New upstream release, backported to ubuntu gutsy.
 
- -- Ben Burton <bab@debian.org>  Sat, 19 Apr 2008 11:39:33 +1000
+ -- Ben Burton <bab@debian.org>  Sat, 17 May 2008 11:39:33 +1000
 
 regina-normal (4.4-4) unstable; urgency=low
 

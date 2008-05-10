@@ -134,6 +134,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/regina
 
 %changelog
+* Sat May 17 2008 Ben Burton <bab@debian.org> 4.5
+- New upstream release.
+
 * Sun Nov 25 2007 Ben Burton <bab@debian.org> 4.4
 - New upstream release.
 - Removed MPI-enabled utilities from packages, since this causes hassles
