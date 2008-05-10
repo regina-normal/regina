@@ -345,7 +345,7 @@ which Regina can work.</text>
 	<compact value="T"/> </surface>
 </packet> <!-- Almost Normal Surfaces (Normal Surface List) -->
 </packet> <!-- Layered Solid Torus (Triangulation) -->
-<packet label="Poincare Homology Sphere"
+<packet label="Poincaré Homology Sphere"
 	type="Triangulation" typeid="3"
 	parent="Triangulations">
   <tetrahedra ntet="5">
@@ -367,7 +367,7 @@ which Regina can work.</text>
   <H2><abeliangroup rank="0"> </abeliangroup></H2>
   <zeroeff value="T"/>
   <splitsfce value="F"/>
-</packet> <!-- Poincare Homology Sphere (Triangulation) -->
+</packet> <!-- Poincaré Homology Sphere (Triangulation) -->
 <packet label="RP2xS1"
 	type="Triangulation" typeid="3"
 	parent="Triangulations">
