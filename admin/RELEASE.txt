@@ -9,6 +9,7 @@ Program version:
     kdeui/src/common/reginaabout.cpp (regReleased)
     kdeui/src/{shell,part}/*.rc (kpartgui version)
     packaging/debian/*/changelog (version, date)
+    packaging/finkinfo/*.info.* (version, revision)
     packaging/rpmspec/*.spec (version, changelog)
     www/index.html (last updated, current version)
     www/source.html (unpacking instructions: filename, directory)
