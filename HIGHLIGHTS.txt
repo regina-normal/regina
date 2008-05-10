@@ -10,6 +10,36 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.5  [ 17 May, 2008 ]
 
+    Features and Improvements:
+        - Full support for international characters (finally!):
+            + Users should be able to use international characters in data
+              files without problems, and they should display, save and load
+              correctly.  Regina's own data files are stored using UTF-8,
+              and users can choose an encoding where relevant for imports
+              and exports.
+            + Programmers who plan to use international characters with the
+              python interface or in their own C++ code should read the new
+              page "Encodings for international strings", listed under
+              "Related Pages" in Regina's python reference.
+        - Normal surface lists can now be exported as plain-text CSV files
+          (comma-separated values), which can then be imported into
+          spreadsheets or databases.
+        - Added the Seifert-Weber dodecahedral space as one of the ready-made
+          examples offered when creating a new triangulation.
+        - Added the new python library loadCensus.py, which gives easy access
+          to the prepackaged census data files.  To make use of this library,
+          add it through Regina's python settings.
+    Optimisations:
+        - Regina is now somewhat less memory-hungry; in particular, memory
+          usage for triangulations has been cut by about 1/3.  This should
+          help when opening very large data files, such as census data.
+    Bug Fixes:
+        - Fixed some crashes that occured when packets were deleted from the
+          tree while they were still being used elsewhere.
+    Build Infrastructure:
+        - Supports building out-of-tree (e.g., making separate builds in
+          debug/ and release/ subdirectories).
+
 Version 4.4  [ 25 November, 2007 ] - The "hug a Mac today" release.
 
     Features and Improvements:
