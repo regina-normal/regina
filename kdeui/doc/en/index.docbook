@@ -57,6 +57,7 @@
   <!ENTITY c "<application>C</application>">
   <!ENTITY ccpp "&c;/&cpp;">
   <!ENTITY cpp "<application>C++</application>">
+  <!ENTITY csv "<acronym>CSV</acronym>">
   <!ENTITY debian "<productname>Debian</productname>">
   <!ENTITY fedora "<productname>Fedora Core</productname>">
   <!ENTITY gap "<application><acronym>GAP</acronym></application>">

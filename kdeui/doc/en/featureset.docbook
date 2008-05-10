@@ -413,6 +413,7 @@
    Language</firstterm>, an open and widely-supported text-based data
    format.</para></footnote>, allowing for the simple
    transfer of native &regina; data to and from other programs.
+   International characters are fully supported.
   </para>
  </sect2>
 </sect1>

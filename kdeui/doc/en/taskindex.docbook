@@ -173,6 +173,16 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>character encodings</glossterm>
+  <glossdef><para><link linkend="foreign">in
+   imports and exports</link></para></glossdef>
+  <glossdef><para><link linkend="python-i18n">in
+   &python;</link></para></glossdef>
+  <glossdef><para><link linkend="dataformat">in
+   &regina; data files</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="packet-clone">cloning packets</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
@@ -204,6 +214,12 @@
   <glossterm><link linkend="surfaces-filtercomb">combining surface
    filters</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>comma-separated values</glossterm>
+  <glossdef><para><link linkend="export-csvsurfacelist">exporting
+   normal surface lists to &csv; files</link></para></glossdef>
  </glossentry>
 
  <glossentry>
@@ -301,6 +317,11 @@
   <glossterm><link linkend="surfaces-crush">crushing a normal
    surface</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>&csv;</glossterm>
+  <glosssee>comma-separated values</glosssee>
  </glossentry>
 
  <glossentry>
@@ -420,6 +441,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>encodings</glossterm>
+  <glosssee>character encodings</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="angles-creation">enumerating vertex angle
    structures</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
@@ -489,6 +515,12 @@
 
  <glossentry>
   <glossterm><link linkend="featureset">feature set</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-new-example">figure eight
+   knot complement</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
 
@@ -629,6 +661,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>internationalisation</glossterm>
+  <glosssee>character encodings</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm>invalid</glossterm>
   <glosssee>valid</glosssee>
  </glossentry>
@@ -649,6 +686,11 @@
  </glossentry>
 
  </glossdiv><glossdiv><title>L</title>
+
+ <glossentry>
+  <glossterm>&latin1;</glossterm>
+  <glosssee>character encodings</glosssee>
+ </glossentry>
 
  <glossentry>
   <glossterm><link linkend="tri-new-lens">layered lens space,
@@ -753,6 +795,8 @@
    recognising</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-creation">enumerating vertex
    normal surfaces</link></para></glossdef>
+  <glossdef><para><link linkend="export-csvsurfacelist">exporting to
+   &csv; files</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-filtering">filtering surface
    lists</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-viewmatching">matching
@@ -840,6 +884,12 @@
   <glossterm>parallel processing</glossterm>
   <glossdef><para><link linkend="man-tricensus-mpi">census
    creation</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-new-example">&poincare;
+   homology sphere</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
 
  <glossentry>
@@ -939,6 +989,12 @@
 
  <glossentry>
   <glossterm><link linkend="tri-sfs">&sfslong;, creation</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="tri-new-example">Seifert-Weber
+   dodecahedral space</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
 
@@ -1233,6 +1289,11 @@
  <glossentry>
   <glossterm>user libraries</glossterm>
   <glosssee>libraries</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>&utf8;</glossterm>
+  <glosssee>character encodings</glosssee>
  </glossentry>
 
  </glossdiv><glossdiv><title>V</title>

@@ -426,6 +426,37 @@
    </para>
   </sect2>
 
+  <sect2 id="export-csvsurfacelist">
+   <title>&csv; Surface List</title>
+
+   <para>
+    This allows a normal surface list to be exported as a plain-text
+    &csv; file (comma-separated values).  &csv; files can be easily
+    imported into spreadsheets and databases.
+   </para>
+   <para>
+    The &csv; file will begin with a header row, which will be followed
+    by one line for each surface in the list.  Surfaces will be listed
+    in standard coordinates (tri-quad coordinates for normal surfaces,
+    or tri-quad-oct coordinates for almost normal surfaces), and each
+    coordinate will be listed as a separate field in the &csv; file.
+   </para>
+   <para>
+    In addition to the raw coordinates, the &csv; file will include
+    several additional properties of the normal surfaces, such as
+    Euler characteristic and orientability (amongst others).  These
+    additional fields mirror the properties that are displayed on
+    screen when viewing a normal surface; see the notes on
+    <link linkend="surfaces-viewsurfaceprops">normal surface properties</link>
+    for details.
+   </para>
+   <para>
+    If any of the surfaces have been given names that include
+    international characters, these will be encoded in &utf8;
+    in the exported &csv; file.
+   </para>
+  </sect2>
+
   <sect2 id="export-pyscript">
    <title>&python; Script</title>
 
