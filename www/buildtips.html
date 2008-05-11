@@ -135,15 +135,15 @@ kde_htmldir=/sw/share/doc/kde</tt>
 If the <tt>./configure</tt> script is having trouble locating your
 Qt/KDE installation, try the following:
 <ul>
-<li> Run "<tt>source /etc/profile.d/qtdir3.sh</tt>" if you use a bash-style
+<li> Run "<tt>export QTDIR=/usr/lib/qt3/</tt>" if you use a bash-style
 shell (such as bash or zsh);</li>
-<li> Run "<tt>source /etc/profile.d/qtdir3.csh</tt>" if you use a csh-style
+<li> Run "<tt>setenv QTDIR /usr/lib/qt3/</tt>" if you use a csh-style
 shell (such as csh or tcsh).</li>
 </ul>
 An example for a bash user is given below:
 </p>
 <div class="example"><p>
-<tt>example$ source /etc/profile.d/qtdir3.sh<br>
+<tt>example$ export QTDIR=/usr/lib/qt3/<br>
 example$ ./configure</tt>
 </p></div>
 <p>

@@ -1,7 +1,8 @@
 # Known to work for:
+# - Mandriva 2008.1 (i586, x86_64)
 # - Mandriva 2008.0 (i586, x86_64)
 # - Mandriva 2007.1 (i586, x86_64)
-# - Mandriva 2007.0 (i586)
+# - Mandriva 2007.0 (i586, x86_64)
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
@@ -49,7 +50,7 @@ Python scripting giving full access to the calculation engine.
 %setup -n regina-%{version}
 
 %build
-unset QTDIR || : ; . /etc/profile.d/qtdir3.sh
+unset QTINC || : ; unset QTLIB || : ; export QTDIR=/usr/lib/qt3/
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
