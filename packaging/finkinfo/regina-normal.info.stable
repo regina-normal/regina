@@ -10,7 +10,7 @@ Description: Computational 3-manifold topology software
 # TODO: Once gap is available in fink stable, have regina-normal suggest it.
 
 Source: mirror:sourceforge:regina/regina-%v.tar.gz
-Source-MD5: a2a9f2ffe6f3c8cba9b016755ba288b1
+Source-MD5: 5c57eee10db13625fcdb43652acfea3e
 SourceRename: %n-%v.tar.gz
 SourceDirectory: regina-%v
 
