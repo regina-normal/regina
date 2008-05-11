@@ -1,6 +1,10 @@
-# This script is not meant to be run.
+# These scripts are not meant to be run.
 regina-normal: script-not-executable ./usr/share/regina-normal/scripts/runscript.py
 regina-normal: unusual-interpreter ./usr/share/regina-normal/scripts/runscript.py #!/bin/false
+regina-normal: script-not-executable ./usr/share/regina-normal/pylib/loadCensus.py
+regina-normal: unusual-interpreter ./usr/share/regina-normal/pylib/loadCensus.py #!/bin/false
+regina-normal: script-not-executable ./usr/share/regina-normal/pylib/packetType.py
+regina-normal: unusual-interpreter ./usr/share/regina-normal/pylib/packetType.py #!/bin/false
 
 # Regina does not provide a standalone library package.
 regina-normal: package-name-doesnt-match-sonames libregina-engine-4.5 libregina-kdecommon-4.5
