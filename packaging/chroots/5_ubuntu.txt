@@ -98,8 +98,8 @@ Guest configuration
 - Install packages necessary for building regina:
 
   debian# schroot -c gutsy aptitude install
-          build-essential fakeroot lintian automake1.9 debhelper doxygen
-          kdelibs4-dev libboost-python-dev libcppunit-dev libgmp3-dev
+          build-essential devscripts fakeroot lintian automake1.9 debhelper
+          doxygen kdelibs4-dev libboost-python-dev libcppunit-dev libgmp3-dev
           libmpich1.0-dev libpopt-dev libxml2-dev zlib1g-dev
   debian# schroot -c gutsy aptitude clean
 
