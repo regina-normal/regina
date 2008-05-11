@@ -197,7 +197,7 @@ Shlibs: <<
 <<
 
 SplitOff: <<
-	Package: regina-normal4.4-shlibs
+	Package: regina-normal4.5-shlibs
 	Description: Shared libraries for 3-manifold topology software
 	Depends: <<
 		libiconv,
@@ -209,7 +209,7 @@ SplitOff: <<
 	<<
 	DocFiles: AUTHORS.txt CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
 	Shlibs: <<
-		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.4-1)
+		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.5-1)
 	<<
 	DescDetail: <<
 Regina is a suite of mathematical software for 3-manifold topologists.
