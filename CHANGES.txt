@@ -89,8 +89,8 @@ Version 4.5  [ 17 May, 2008 ]
         - When adding a new library in Regina's python settings, the file
           dialog now opens in the pylib/ directory where sample libraries
           are installed.
-        - Application icons have been moved from crystalsvg to hicolor, which
-          should make them easier for other desktop environments to find.
+        - Application icons are now listed under hicolor instead of crystalsvg,
+          which should make them easier for other desktop environments to find.
     PYTHON:
         - Use docstrings for the helper routines in pylib/, so documentation
           for these routines can be accessed from within python at runtime.
