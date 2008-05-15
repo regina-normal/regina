@@ -96,7 +96,9 @@ Guest fedora system configuration
 - Set up a base graphical system:
 
   fchost# mock -r fedora-7-x86_64 --init
+  fchost# mock -r fedora-7-x86_64 --install yum man kdelibs kdebase (on <= fc8)
   fchost# mock -r fedora-7-x86_64 --install yum man kdelibs kdebase
+                                            kdebase-workspace       (on >= fc9)
 
 - Edit the guest yum configuration to (i) disable updates, and (ii) output
   useful information during download and installation:
@@ -165,7 +167,7 @@ Guest fedora system configuration
   fcguest# yum install popt              (on <= fc7)
   fcguest# yum install popt-devel        (on >= fc8)
 
-  fcguest# yum install kdelibs-devel qt-devel (on <= fc8)
+  fcguest# yum install kdelibs-devel qt-devel   (on <= fc8)
   fcguest# yum install kdelibs3-devel qt3-devel (on >= fc9)
 
   fcguest# yum install kdeedu graphviz
