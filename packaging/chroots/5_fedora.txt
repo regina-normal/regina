@@ -159,12 +159,14 @@ Guest fedora system configuration
 
 - Install packages for building and running regina:
 
-  fcguest# yum install rpmlint boost-devel cppunit-devel doxygen
-                       gmp-devel kdelibs-devel libselinux-devel
-                       libxml2-devel python-devel qt-devel zlib-devel
+  fcguest# yum install rpmlint boost-devel cppunit-devel doxygen gmp-devel
+                       libselinux-devel libxml2-devel python-devel zlib-devel
 
-  fcguest# yum install popt-devel        (on fc8)
-  fcguest# yum install popt              (on fc7)
+  fcguest# yum install popt              (on <= fc7)
+  fcguest# yum install popt-devel        (on >= fc8)
+
+  fcguest# yum install kdelibs-devel qt-devel (on <= fc8)
+  fcguest# yum install kdelibs3-devel qt3-devel (on >= fc9)
 
   fcguest# yum install kdeedu graphviz
 
