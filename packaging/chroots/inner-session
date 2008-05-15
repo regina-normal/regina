@@ -103,6 +103,15 @@ case "$os" in
 		kde=1
 		xephyr=1
 		;;
+	Fedora\ release\ 9\ * )
+		distro="Fedora 9"
+		exitwait=1
+		kde=1
+		if [ "$arch" = "i686" ]; then
+			# Xephyr looks much better with KDE4, but seems to break on x86_64.
+			xephyr=1
+		fi
+		;;
 	?Welcome\ to\ openSUSE\ 10.2\ * )
 		distro="SuSE 10.2"
 		exitwait=1
