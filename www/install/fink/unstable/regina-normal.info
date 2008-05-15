@@ -1,5 +1,5 @@
 Package: regina-normal
-Version: 4.4
+Version: 4.5
 Revision: 0.1
 
 Maintainer: Ben Burton <bab@debian.org>
@@ -10,7 +10,7 @@ Description: Computational 3-manifold topology software
 # TODO: Once gap is available in fink stable, have regina-normal suggest it.
 
 Source: mirror:sourceforge:regina/regina-%v.tar.gz
-Source-MD5: a2a9f2ffe6f3c8cba9b016755ba288b1
+Source-MD5: d79262b3d14a7f0f1b43b039ed44ded1
 SourceRename: %n-%v.tar.gz
 SourceDirectory: regina-%v
 
@@ -43,6 +43,11 @@ libraries are built using -release instead of -version-info.  This means
 that each new upstream release gives the libraries a new version number.
 For this reason, the entire upstream version number is hard-coded into
 the -shlibs package name.
+.
+Regarding cppunit:  If the cppunit development files are installed at build
+time, they will be used to build and run the C++ test suite.  This is merely
+for extra sanity testing however, and the final .debs will be the same
+whether cppunit is installed or not.
 <<
 
 GCC: 4.0
@@ -51,7 +56,7 @@ BuildDepends: <<
 	boost1.33 (>= 1.33.1-1008),
 	cctools-single-module,
 	doxygen,
-	fink,
+	fink (>= 0.28.0-1),
 	gmp,
 	kdelibs3-unified-dev,
 	libart2,
@@ -79,10 +84,14 @@ Depends: <<
 	libjpeg-shlibs,
 	libpng3-shlibs,
 	libxml2-shlibs,
+	popt-shlibs,
 	python25,
 	qt3-shlibs
 <<
 Suggests: graphviz, regina-normal-dev
+
+# The following line works around the libGL linker problem on leopard:
+SetLDFLAGS: -Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
 
 ConfigureParams: --disable-mpi --with-python-version=2.5 kde_htmldir='${datadir}/doc/kde' PKGNAME=regina-normal --disable-dependency-tracking
 CompileScript: <<
@@ -183,8 +192,12 @@ you would any other paper that you use.  The introductory chapter of the
 Regina reference manual includes a suggested form of reference.
 <<
 
+Shlibs: <<
+	!%p/lib/libregina-kdecommon-%v.dylib
+<<
+
 SplitOff: <<
-	Package: regina-normal4.4-shlibs
+	Package: regina-normal4.5-shlibs
 	Description: Shared libraries for 3-manifold topology software
 	Depends: <<
 		libiconv,
@@ -196,7 +209,7 @@ SplitOff: <<
 	<<
 	DocFiles: AUTHORS.txt CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
 	Shlibs: <<
-		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.4-1)
+		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.5-1)
 	<<
 	DescDetail: <<
 Regina is a suite of mathematical software for 3-manifold topologists.
