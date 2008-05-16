@@ -66,6 +66,10 @@ Host debian system configuration (debian etch)
 Host fedora system configuration
 --------------------------------
 
+- After installing the host fedora system, run the SELinux Administration
+  tool and make SELinux disabled by default.  Otherwise schroot can mess
+  with the SELinux file labellings and render the host system unbootable.
+
 - Chroot into the host fedora system and ensure that mock is installed:
 
   debian# schroot -c fchost yum install mock
