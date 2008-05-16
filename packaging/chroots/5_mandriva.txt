@@ -101,6 +101,7 @@ Guest mandriva system configuration
 
   mdvhost# urpmi --urpmi-root /chroot/2007.0-x86_64
            graphviz kdeedu x11-server-xnest x11-server-xephyr
+           x11-server-xvnc vnc-server
 
 - Add a schroot entry in the debian host system:
 
@@ -137,4 +138,15 @@ Guest mandriva system configuration
 
 - Follow the final steps described in 9_final-guestuser.txt to start a
   chrooted session.
+
+- WARNING: For Mandriva 2008.1, I simply cannot get KDE to start
+  properly in an embedded X server, and I cannot get vnc-server running
+  properly at all.  My current best-of-the-worst solution is:
+
+  + In the debian host system, log in using a bare-bones window manager
+    such as twm;
+  + Start an xterm, schroot into the guest mandriva system and run
+    "DISPLAY=:0 kicker";
+  + Test the regina installation by running regina and/or konsole from the
+    KDE menu in mandriva's kicker, which will be running inside the host twm.
 
