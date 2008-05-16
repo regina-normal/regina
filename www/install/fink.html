@@ -15,7 +15,7 @@ Regina now builds and runs under MacOS X, thanks to the
 <p>
 To run Regina, you will need:
 <ul>
-<li><p><i>A working source-based Fink installation.</i></p>
+<li><p><i>A working source-based Fink installation:</i></p>
 <p>
 Fink can be used as a binary distribution (download pre-built packages
 only) or as a source distribution (automatically build each package from
@@ -34,16 +34,21 @@ The <a href="http://www.finkproject.org/download/">Quick Start page</a>
 on the Fink website explains how you can get all of this up and running.
 </p>
 <p>
-Regina is known to work with the Fink 10.4 tree (it has not been tried
-under Leopard).  Both the stable and unstable branches of Fink are
-supported.
+Regina is known to work on MacOS 10.4 (Tiger) with both the Fink stable
+and unstable branches.  It builds happily on MacOS 10.5 (Leopard) with
+the Fink unstable branch, but the author has not been able to test it
+personally.
 </p>
 </li>
-<li><p><i>The Fink info file for Regina.</i></p>
+<li><p><i>The Fink info file for Regina:</i></p>
 <p>
 The info file is a short text file that tells Fink how to build and
-install Regina.  You can <a href="fink/regina-normal.info">download
-it here</a>.  Copy it into <tt>/sw/fink/dists/local/main/finkinfo/</tt>
+install Regina.  You can download it
+<a href="fink/stable/regina-normal.info">here for the Fink stable
+branch</a>, or
+<a href="fink/unstable/regina-normal.info">here for the Fink unstable
+branch</a>.
+Copy it into <tt>/sw/fink/dists/local/main/finkinfo/</tt>
 so that Fink can find it:
 </p>
 <div class="example"><p>
@@ -52,8 +57,8 @@ so that Fink can find it:
 <p>
 Users of the Fink unstable branch can skip this step, since
 Regina is now included in the Fink distribution.  Please note though
-that new versions of Regina might not appear in the Fink archive until a
-few weeks after their release.
+that new versions of Regina might not appear in the Fink archive until
+several weeks after their release.
 </p>
 </li>
 </ul>
@@ -76,7 +81,7 @@ need the Regina development package:
 <tt>example$ fink install regina-normal-dev</tt>
 </p></div>
 <p>
-MacOS X support is very new for Regina, so please do mail me
+MacOS X support is relatively new for Regina, so please do mail me
 at <i>bab@debian.org</i> if you run into difficulties.
 It is hoped that future releases of Regina can be
 offered as standalone pre-build Mac applications (the sort that you
