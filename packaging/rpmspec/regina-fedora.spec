@@ -1,5 +1,8 @@
 # Known to work for:
-# - Fedora Core 9 (i386, x86_64)
+# - Fedora 9 (i386, x86_64)
+# - Fedora 8 (i386, x86_64)
+# - Fedora 7 (i386, x86_64)
+# - Fedora 6 (i386)
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
@@ -18,6 +21,7 @@ Requires: kdebase
 Requires: python
 Conflicts: regina
 
+# Generic build-depends:
 BuildRequires: boost-devel
 BuildRequires: cppunit-devel
 BuildRequires: doxygen
@@ -25,14 +29,30 @@ BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
 BuildRequires: gmp-devel
-BuildRequires: kdelibs3-devel >= 3.2
 BuildRequires: libselinux-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libxml2-devel
-BuildRequires: popt-devel
 BuildRequires: python-devel
-BuildRequires: qt3-devel >= 3.2
 BuildRequires: zlib-devel
+
+# Fedora-version-specific build-depends:
+%if 0%{?fedora} >= 8
+BuildRequires: popt-devel
+%else
+BuildRequires: popt
+%endif
+
+%if 0%{?fedora} >= 9
+BuildRequires: kdelibs3-devel >= 3.2
+BuildRequires: qt3-devel >= 3.2
+%else
+BuildRequires: kdelibs-devel >= 3.2
+BuildRequires: qt-devel >= 3.2
+%endif
+
+%if 0%{?fedora} <= 6
+BuildRequires: libaio-devel
+%endif
 
 Prereq: /sbin/ldconfig
 
