@@ -1,6 +1,7 @@
 # Known to work for:
-# - SuSE 10.2 (i586, x86_64)
+# - SuSE 11.0 (i586, x86_64)
 # - SuSE 10.3 (i586, x86_64)
+# - SuSE 10.2 (i586, x86_64)
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
@@ -17,6 +18,7 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 Requires: kdelibs3
 Requires: kdebase3
 Requires: python
+Requires: susehelp
 Conflicts: regina
 
 BuildRequires: boost
@@ -66,6 +68,9 @@ export CXXFLAGS="$FLAGS"
 %if "%{_lib}" != "lib"
   --enable-libsuffix="%(A=%{_lib}; echo ${A/lib/})" \
 %endif
+%if 0%{?suse_version} == 1100
+  --disable-python \
+%endif
   --disable-mpi --disable-debug --includedir=%{_includedir} --mandir=%{_mandir} --with-python-version=2.5
 
 # Stop for a sanity check to see if the right bits are going to be built.
@@ -73,7 +78,9 @@ grep '^REGINA_BUILD_DOCSENGINE=.engine.$' config.log > /dev/null
 grep '^REGINA_BUILD_ENGINE=.engine.$' config.log > /dev/null
 grep '^REGINA_BUILD_KDEUI=.kdeui.$' config.log > /dev/null
 grep '^REGINA_BUILD_MPI=..$' config.log > /dev/null
+%if 0%{?suse_version} != 1100
 grep '^REGINA_BUILD_PYTHON=.python.$' config.log > /dev/null
+%endif
 grep '^REGINA_BUILD_TESTSUITE=.testsuite.$' config.log > /dev/null
 grep '^REGINA_BUILD_UTILS=.utils.$' config.log > /dev/null
 
@@ -119,8 +126,10 @@ rm -rf $RPM_BUILD_ROOT
 # Make sure we don't ship unwanted static libs by accident.
 %{_libdir}/kde3/libreginapart.la
 %{_libdir}/kde3/libreginapart.so
+%if 0%{?suse_version} != 1100
 %{_libdir}/regina/python/regina.la
 %{_libdir}/regina/python/regina.so
+%endif
 %{_kdedocdir}/HTML/en/regina
 %{_datadir}/applications/kde/*
 %{_datadir}/apps/regina
@@ -134,6 +143,11 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/regina
 
 %changelog
+* Wed Jun 25 2008 Ben Burton <bab@debian.org> 4.5 (SuSE 11.0)
+- Built packages for SuSE 11.0.
+- Disabled python scripting under SuSE 11.0, since SuSE is once again
+  shipping with a broken boost.python.
+
 * Sat May 17 2008 Ben Burton <bab@debian.org> 4.5
 - New upstream release.
 
