@@ -143,8 +143,8 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/regina
 
 %changelog
-* Wed Jun 25 2008 Ben Burton <bab@debian.org> 4.5 (SuSE 11.0)
-- Built packages for SuSE 11.0.
+* Sun Jun 29 2008 Ben Burton <bab@debian.org> 4.5 (SuSE 11.0)
+- Packaging the 4.5 release (May 2008) for SuSE 11.0.
 - Disabled python scripting under SuSE 11.0, since SuSE is again shipping with
   a broken boost.python (https://bugzilla.novell.com/show_bug.cgi?id=401964).
 
