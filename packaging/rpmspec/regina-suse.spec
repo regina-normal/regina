@@ -22,7 +22,13 @@ Requires: susehelp
 Conflicts: regina
 
 BuildRequires: boost
+%if 0%{?suse_version} == 1100
+# The boost.python originally shipped with SuSE 11.0 is broken (bug #401964).
+# Insist on a patched boost from the updates repository.
+BuildRequires: boost-devel >= 1.34.1-42.2
+%else
 BuildRequires: boost-devel
+%endif
 BuildRequires: cppunit
 BuildRequires: cppunit-devel
 BuildRequires: doxygen
@@ -68,9 +74,6 @@ export CXXFLAGS="$FLAGS"
 %if "%{_lib}" != "lib"
   --enable-libsuffix="%(A=%{_lib}; echo ${A/lib/})" \
 %endif
-%if 0%{?suse_version} == 1100
-  --disable-python \
-%endif
   --disable-mpi --disable-debug --includedir=%{_includedir} --mandir=%{_mandir} --with-python-version=2.5
 
 # Stop for a sanity check to see if the right bits are going to be built.
@@ -78,9 +81,7 @@ grep '^REGINA_BUILD_DOCSENGINE=.engine.$' config.log > /dev/null
 grep '^REGINA_BUILD_ENGINE=.engine.$' config.log > /dev/null
 grep '^REGINA_BUILD_KDEUI=.kdeui.$' config.log > /dev/null
 grep '^REGINA_BUILD_MPI=..$' config.log > /dev/null
-%if 0%{?suse_version} != 1100
 grep '^REGINA_BUILD_PYTHON=.python.$' config.log > /dev/null
-%endif
 grep '^REGINA_BUILD_TESTSUITE=.testsuite.$' config.log > /dev/null
 grep '^REGINA_BUILD_UTILS=.utils.$' config.log > /dev/null
 
@@ -126,10 +127,8 @@ rm -rf $RPM_BUILD_ROOT
 # Make sure we don't ship unwanted static libs by accident.
 %{_libdir}/kde3/libreginapart.la
 %{_libdir}/kde3/libreginapart.so
-%if 0%{?suse_version} != 1100
 %{_libdir}/regina/python/regina.la
 %{_libdir}/regina/python/regina.so
-%endif
 %{_kdedocdir}/HTML/en/regina
 %{_datadir}/applications/kde/*
 %{_datadir}/apps/regina
@@ -145,8 +144,10 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sun Jun 29 2008 Ben Burton <bab@debian.org> 4.5 (SuSE 11.0)
 - Packaging the 4.5 release (May 2008) for SuSE 11.0.
-- Disabled python scripting under SuSE 11.0, since SuSE is again shipping with
-  a broken boost.python (https://bugzilla.novell.com/show_bug.cgi?id=401964).
+- Note that regina-normal needs to be built against boost 1.34.1-42.2 (or
+  later) from the updates repository, since the boost packages originally
+  shipped with SuSE 11.0 are broken.  See
+  https://bugzilla.novell.com/show_bug.cgi?id=401964 for details.
 
 * Sat May 17 2008 Ben Burton <bab@debian.org> 4.5
 - New upstream release.
