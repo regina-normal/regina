@@ -35,6 +35,7 @@
 #define __NMATRIX_H
 #endif
 
+#include <iostream>
 #include <memory>
 
 namespace regina {
