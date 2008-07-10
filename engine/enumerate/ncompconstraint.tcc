@@ -30,14 +30,14 @@
 
 namespace regina {
 
-template <class T>
-bool NCompConstraint::isSatisfied(const NVector<T>& first,
-        const NVector<T>& second) const {
+template <class VectorType>
+bool NCompConstraint::isSatisfied(const VectorType& first,
+        const VectorType& second) const {
     unsigned nonZero = 0;
     for (std::set<unsigned>::const_iterator it = coordinates.begin();
             it != coordinates.end(); it++)
-        if (! (first[*it] == NVector<T>::zero &&
-                second[*it] == NVector<T>::zero)) {
+        if (! (first[*it] == VectorType::zero &&
+                second[*it] == VectorType::zero)) {
             nonZero++;
             if (nonZero > maxNonZero)
                 return false;
@@ -45,12 +45,12 @@ bool NCompConstraint::isSatisfied(const NVector<T>& first,
     return true;
 }
 
-template <class T>
-bool NCompConstraint::isSatisfied(const NVector<T>& v) const {
+template <class VectorType>
+bool NCompConstraint::isSatisfied(const VectorType& v) const {
     unsigned nonZero = 0;
     for (std::set<unsigned>::const_iterator it = coordinates.begin();
             it != coordinates.end(); it++)
-        if (! (v[*it] == NVector<T>::zero)) {
+        if (! (v[*it] == VectorType::zero)) {
             nonZero++;
             if (nonZero > maxNonZero)
                 return false;
@@ -58,17 +58,17 @@ bool NCompConstraint::isSatisfied(const NVector<T>& v) const {
     return true;
 }
 
-template <class T>
-bool NCompConstraintSet::isSatisfied(const NVector<T>& first,
-        const NVector<T>& second) const {
+template <class VectorType>
+bool NCompConstraintSet::isSatisfied(const VectorType& first,
+        const VectorType& second) const {
     for (const_iterator it = begin(); it != end(); it++)
         if (! (*it)->isSatisfied(first, second))
             return false;
     return true;
 }
 
-template <class T>
-bool NCompConstraintSet::isSatisfied(const NVector<T>& v) const {
+template <class VectorType>
+bool NCompConstraintSet::isSatisfied(const VectorType& v) const {
     for (const_iterator it = begin(); it != end(); it++)
         if (! (*it)->isSatisfied(v))
             return false;

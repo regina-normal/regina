@@ -132,14 +132,18 @@ class NCompConstraint {
          * Determines whether the given pair of vectors satisfies this
          * constraint.
          *
+         * \pre The vector type \a VectorType has a subscript operator []
+         * and a class constant \a VectorType::zero.  Amongst others, any
+         * vector class derived from NVector or NFastVector will be suitable.
+         *
          * @param first the first of the two vectors to examine.
          * @param second the second of the two vectors to examine.
          * @return \c true if the given pair of vectors satisfies this
          * constraint, or \c false otherwise.
          */
-        template <class T>
-        bool isSatisfied(const NVector<T>& first,
-            const NVector<T>& second) const;
+        template <class VectorType>
+        bool isSatisfied(const VectorType& first,
+            const VectorType& second) const;
         /**
          * Determines whether the given vector satisfies this constraint.
          *
@@ -152,12 +156,16 @@ class NCompConstraint {
          * is equivalent to deciding whether the pair (<i>v</i>, <i>v</i>)
          * or equivalently the pair (<i>v</i>, 0) satisfies the constraint.
          *
+         * \pre The vector type \a VectorType has a subscript operator []
+         * and a class constant \a VectorType::zero.  Amongst others, any
+         * vector class derived from NVector or NFastVector will be suitable.
+         *
          * @param v the vector to examine.
          * @return \c true if the given vector satisfies this constraint,
          * or \c false otherwise.
          */
-        template <class T>
-        bool isSatisfied(const NVector<T>& v) const;
+        template <class VectorType>
+        bool isSatisfied(const VectorType& v) const;
 };
 
 /**
@@ -186,15 +194,19 @@ class NCompConstraintSet : public std::deque<NCompConstraint*> {
          * Determines whether the given pair of vectors satisfies every
          * constraint in this set.
          *
+         * \pre The vector type \a VectorType has a subscript operator []
+         * and a class constant \a VectorType::zero.  Amongst others, any
+         * vector class derived from NVector or NFastVector will be suitable.
+         *
          * @param first the first of the two vectors to examine.
          * @param second the second of the two vectors to examine.
          * @return \c true if the given pair of vectors satisfies every
          * constraint in this set, or \c false if some constraint is not
          * satisfied.
          */
-        template <class T>
-        bool isSatisfied(const NVector<T>& first,
-            const NVector<T>& second) const;
+        template <class VectorType>
+        bool isSatisfied(const VectorType& first,
+            const VectorType& second) const;
         /**
          * Determines whether the given vector satisfies every
          * constraint in this set.
@@ -208,13 +220,17 @@ class NCompConstraintSet : public std::deque<NCompConstraint*> {
          * is equivalent to deciding whether the pair (<i>v</i>, <i>v</i>)
          * or equivalently the pair (<i>v</i>, 0) satisfies the constraint.
          *
+         * \pre The vector type \a VectorType has a subscript operator []
+         * and a class constant \a VectorType::zero.  Amongst others, any
+         * vector class derived from NVector or NFastVector will be suitable.
+         *
          * @param v the vector to examine.
          * @return \c true if the given vector satisfies every
          * constraint in this set, or \c false if some constraint is not
          * satisfied.
          */
-        template <class T>
-        bool isSatisfied(const NVector<T>& v) const;
+        template <class VectorType>
+        bool isSatisfied(const VectorType& v) const;
 };
 
 /*@}*/
