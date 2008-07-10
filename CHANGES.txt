@@ -9,6 +9,11 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.5.1  [ Under development ]
 
+    ENGINE:
+        Class NFastVector:
+            - New vector class that is less flexible than NVector but
+              more streamlined, largely because it has no virtual functions.
+
 Version 4.5  [ 17 May, 2008 ]
 
     OVERALL:
