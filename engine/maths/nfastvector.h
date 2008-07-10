@@ -46,7 +46,7 @@ namespace regina {
  */
 
 template <class T>
-class NFastVector;
+class NVector;
 
 /**
  * A fast but inflexible vector of elements from a given ring T.
@@ -96,9 +96,9 @@ class NFastVector {
     protected:
         T* elements;
             /**< The internal array containing all vector elements. */
-        unsigned vectorSize;
-            /**< The size of the vector, possibly including zero
-             *   elements. */
+        T* end;
+            /**< A pointer just beyond the end of the internal array.
+                 The size of the vector can be computed as (end - elements). */
 
     public:
         /**
@@ -109,7 +109,7 @@ class NFastVector {
          * vector; this must be strictly positive.
          */
         inline NFastVector(unsigned newVectorSize) :
-                elements(new T[newVectorSize]), vectorSize(newVectorSize) {
+                elements(new T[newVectorSize]), end(elements + newVectorSize) {
         }
         /**
          * Creates a new vector and initialises every element to the
@@ -121,8 +121,8 @@ class NFastVector {
          * vector.
          */
         inline NFastVector(unsigned newVectorSize, const T& initValue) :
-                elements(new T[newVectorSize]), vectorSize(newVectorSize) {
-            std::fill(elements, elements + vectorSize, initValue);
+                elements(new T[newVectorSize]), end(elements + newVectorSize) {
+            std::fill(elements, end, initValue);
         }
         /**
          * Creates a new vector that is a clone of the given vector.
@@ -130,10 +130,21 @@ class NFastVector {
          * @param cloneMe the vector to clone.
          */
         inline NFastVector(const NFastVector<T>& cloneMe) :
-                elements(new T[cloneMe.vectorSize]),
-                vectorSize(cloneMe.vectorSize) {
-            std::copy(cloneMe.elements, cloneMe.elements + vectorSize,
-                elements);
+                elements(new T[cloneMe.end - cloneMe.elements]),
+                end(elements + (cloneMe.end - cloneMe.elements)) {
+            std::copy(cloneMe.elements, cloneMe.end, elements);
+        }
+        /**
+         * Creates a new vector that is a clone of the given NVector.
+         *
+         * @param cloneMe the vector to clone.
+         */
+        inline NFastVector(const NVector<T>& cloneMe) :
+                elements(new T[cloneMe.size()]),
+                end(elements + cloneMe.size()) {
+            unsigned i = 0;
+            for (T* e = elements; e < end; ++e, ++i)
+                *e = cloneMe[i];
         }
         /**
          * Destroys this vector.
@@ -147,7 +158,7 @@ class NFastVector {
          * @return the vector size.
          */
         inline unsigned size() const {
-            return vectorSize;
+            return end - elements;
         }
         /**
          * Returns the element at the given index in the vector.
@@ -186,8 +197,7 @@ class NFastVector {
          * are equal.
          */
         inline bool operator == (const NFastVector<T>& compare) const {
-            return std::equal(elements, elements + vectorSize,
-                compare.elements);
+            return std::equal(elements, end, compare.elements);
         }
         /**
          * Sets this vector equal to the given vector.
@@ -198,8 +208,7 @@ class NFastVector {
          * vector.
          */
         inline void operator = (const NFastVector<T>& cloneMe) {
-            std::copy(cloneMe.elements, cloneMe.elements + vectorSize,
-                elements);
+            std::copy(cloneMe.elements, cloneMe.end, elements);
         }
         /**
          * Adds the given vector to this vector.
@@ -211,7 +220,7 @@ class NFastVector {
         inline void operator += (const NFastVector<T>& other) {
             T* e = elements;
             const T* o = other.elements;
-            for ( ; e < elements + vectorSize; ++e, ++o)
+            for ( ; e < end; ++e, ++o)
                 *e += *o;
         }
         /**
@@ -224,7 +233,7 @@ class NFastVector {
         inline void operator -= (const NFastVector<T>& other) {
             T* e = elements;
             const T* o = other.elements;
-            for ( ; e < elements + vectorSize; ++e, ++o)
+            for ( ; e < end; ++e, ++o)
                 *e -= *o;
         }
         /**
@@ -235,7 +244,7 @@ class NFastVector {
         inline void operator *= (const T& factor) {
             if (factor == NFastVector<T>::one)
                 return;
-            for (T* e = elements; e < elements + vectorSize; ++e)
+            for (T* e = elements; e < end; ++e)
                 *e *= factor;
         }
         /**
@@ -251,7 +260,7 @@ class NFastVector {
 
             const T* e = elements;
             const T* o = other.elements;
-            for ( ; e < elements + vectorSize; ++e, ++o)
+            for ( ; e < end; ++e, ++o)
                 ans += (*e) * (*o);
 
             return ans;
@@ -260,7 +269,7 @@ class NFastVector {
          * Negates every element of this vector.
          */
         inline void negate() {
-            for (T* e = elements; e < elements + vectorSize; ++e)
+            for (T* e = elements; e < end; ++e)
                 *e = -*e;
         }
         /**
@@ -271,7 +280,7 @@ class NFastVector {
          */
         inline T norm() const {
             T ans(zero);
-            for (const T* e = elements; e < elements + vectorSize; ++e)
+            for (const T* e = elements; e < end; ++e)
                 ans += (*e) * (*e);
             return ans;
         }
@@ -282,7 +291,7 @@ class NFastVector {
          */
         inline T elementSum() const {
             T ans(zero);
-            for (const T* e = elements; e < elements + vectorSize; ++e)
+            for (const T* e = elements; e < end; ++e)
                 ans += *e;
             return ans;
         }
@@ -309,7 +318,7 @@ class NFastVector {
             }
             T* e = elements;
             const T* o = other.elements;
-            for ( ; e < elements + vectorSize; ++e, ++o)
+            for ( ; e < end; ++e, ++o)
                 *e += *o * multiple;
         }
         /**
@@ -335,7 +344,7 @@ class NFastVector {
             }
             T* e = elements;
             const T* o = other.elements;
-            for ( ; e < elements + vectorSize; ++e, ++o)
+            for ( ; e < end; ++e, ++o)
                 *e -= *o * multiple;
         }
 };
