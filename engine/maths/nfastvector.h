@@ -26,15 +26,16 @@
 
 /* end stub */
 
-/*! \file nvector.h
- *  \brief Provides a slow but flexible mathematical vector template.
+/*! \file nfastvector.h
+ *  \brief Provides a fast but inflexible vector class for heavy computation.
  */
 
-#ifndef __NVECTOR_H
+#ifndef __NFASTVECTOR_H
 #ifndef __DOXYGEN
-#define __NVECTOR_H
+#define __NFASTVECTOR_H
 #endif
 
+#include <algorithm>
 #include <iostream>
 
 namespace regina {
@@ -45,25 +46,18 @@ namespace regina {
  */
 
 template <class T>
-class NVector;
+class NFastVector;
 
 /**
- * A slow but flexible vector class of elements from a given ring T.
- * Various mathematical vector operations are available.
+ * A fast but inflexible vector of elements from a given ring T.
+ * This class is intended for heavy computation; as a result it has a
+ * streamlined implementation with no virtual methods, but it cannot talk to
+ * any vector class other than itself.  For a slower but more flexible vector
+ * class, see the NVector hierarchy instead.
  *
- * This is a virtual base class for a variety of concrete
- * implementations, allowing for memory-efficient representations of
- * sparse, dense and other specialty vectors.  Different vector
- * subclasses based upon the same ring T can happily
- * interact with each other.
- *
- * The side-effect of this flexibility is that this vector class is slow
- * (in particular, many functions are virtual).  For a fast vector class
- * better suited to heavy computation, see NFastVector instead.
- *
- * This class and its subclasses are written with bulky types
- * in mind (such as arbitrary precision integers), so creations and
- * operations are kept to a minimum.
+ * Like NVector, this class is written with bulky types in mind (such as
+ * arbitrary precision integers), so that creations and operations are kept
+ * to a minimum.
  *
  * \pre Type T has a copy constructor.  That is,
  * if \c a and \c b are of type T, then \c a can be initialised to the value
@@ -81,7 +75,7 @@ class NVector;
  * \ifacespython Not present.
  */
 template <class T>
-class NVector {
+class NFastVector {
     public:
         static T zero;
             /**< Zero in the underlying number system.
@@ -99,26 +93,62 @@ class NVector {
              *   some compilers don't like this.  It should never be
              *   modified! */
 
+    protected:
+        T* elements;
+            /**< The internal array containing all vector elements. */
+        unsigned vectorSize;
+            /**< The size of the vector, possibly including zero
+             *   elements. */
+
     public:
         /**
-         * Destroys the vector.
+         * Creates a new vector.
+         * Its elements will not be initialised.
+         *
+         * @param newVectorSize the number of elements in the new
+         * vector; this must be strictly positive.
          */
-        virtual ~NVector() {
+        NFastVector(unsigned newVectorSize) :
+                elements(new T[newVectorSize]), vectorSize(newVectorSize) {
         }
         /**
-         * Makes a newly allocated clone of this vector.
-         * The clone will be of the same subclass of NVector as
-         * this vector.
+         * Creates a new vector and initialises every element to the
+         * given value.
          *
-         * @return a clone of this vector.
+         * @param newVectorSize the number of elements in the new
+         * vector; this must be strictly positive.
+         * @param initValue the value to assign to every element of the
+         * vector.
          */
-        virtual NVector<T>* clone() const = 0;
+        NFastVector(unsigned newVectorSize, const T& initValue) :
+                elements(new T[newVectorSize]), vectorSize(newVectorSize) {
+            std::fill(elements, elements + vectorSize, initValue);
+        }
+        /**
+         * Creates a new vector that is a clone of the given vector.
+         *
+         * @param cloneMe the vector to clone.
+         */
+        NFastVector(const NFastVector<T>& cloneMe) :
+                elements(new T[cloneMe.vectorSize]),
+                vectorSize(cloneMe.vectorSize) {
+            std::copy(cloneMe.elements, cloneMe.elements + vectorSize,
+                elements);
+        }
+        /**
+         * Destroys this vector.
+         */
+        ~NFastVector() {
+            delete[] elements;
+        }
         /**
          * Returns the number of elements in the vector.
          *
          * @return the vector size.
          */
-        virtual unsigned size() const = 0;
+        unsigned size() const {
+            return vectorSize;
+        }
         /**
          * Returns the element at the given index in the vector.
          * A constant reference to the element is returned; the element
@@ -129,7 +159,9 @@ class NVector {
          * @param index the vector index to examine.
          * @return the vector element at the given index.
          */
-        virtual const T& operator[](unsigned index) const = 0;
+        const T& operator[](unsigned index) const {
+            return elements[index];
+        }
         /**
          * Sets the element at the given index in the vector to the
          * given value.
@@ -140,12 +172,12 @@ class NVector {
          * @param value the new value to assign to the element.
          * @return the vector element at the given index.
          */
-        virtual void setElement(unsigned index, const T& value) = 0;
+        void setElement(unsigned index, const T& value) {
+            elements[index] = value;
+        }
 
         /**
          * Determines if this vector is equal to the given vector.
-         * The default implementation simply compares elements one at a
-         * time.
          *
          * \pre This and the given vector have the same size.
          * 
@@ -153,12 +185,9 @@ class NVector {
          * @return \c true if and only if the this and the given vector
          * are equal.
          */
-        virtual bool operator == (const NVector<T>& compare) const {
-            unsigned tot = size();
-            for (unsigned i=0; i<tot; i++)
-                if (! ((*this)[i] == compare[i]))
-                    return false;
-            return true;
+        bool operator == (const NFastVector<T>& compare) const {
+            return std::equal(elements, elements + vectorSize,
+                compare.elements);
         }
         /**
          * Sets this vector equal to the given vector.
@@ -168,7 +197,10 @@ class NVector {
          * @param cloneMe the vector whose value shall be assigned to this
          * vector.
          */
-        virtual void operator = (const NVector<T>& cloneMe) = 0;
+        void operator = (const NFastVector<T>& cloneMe) {
+            std::copy(cloneMe.elements, cloneMe.elements + vectorSize,
+                elements);
+        }
         /**
          * Adds the given vector to this vector.
          *
@@ -176,7 +208,10 @@ class NVector {
          *
          * @param other the vector to add to this vector.
          */
-        virtual void operator += (const NVector<T>& other) = 0;
+        void operator += (const NFastVector<T>& other) {
+            for (unsigned i=0; i<vectorSize; i++)
+                elements[i] += other.elements[i];
+        }
         /**
          * Subtracts the given vector from this vector.
          *
@@ -184,69 +219,63 @@ class NVector {
          *
          * @param other the vector to subtract from this vector.
          */
-        virtual void operator -= (const NVector<T>& other) = 0;
+        void operator -= (const NFastVector<T>& other) {
+            for (unsigned i=0; i<vectorSize; i++)
+                elements[i] -= other.elements[i];
+        }
         /**
          * Multiplies this vector by the given scalar.
          *
          * @param factor the scalar with which this will be multiplied.
          */
-        virtual void operator *= (const T& factor) = 0;
+        void operator *= (const T& factor) {
+            if (factor == NFastVector<T>::one)
+                return;
+            for (unsigned i=0; i<vectorSize; i++)
+                elements[i] *= factor;
+        }
         /**
          * Calculates the dot product of this vector and the given vector.
-         * The default implementation simply runs through the two
-         * vectors multiplying elements in pairs.
          *
          * \pre This and the given vector have the same size.
          *
          * @param other the vector with which this will be multiplied.
          * @return the dot product of this and the given vector.
          */
-        virtual T operator * (const NVector<T>& other) const {
-            T ans(0L);
-            unsigned tot = size();
-            T term;
-            for (unsigned i=0; i<tot; i++) {
-                term = (*this)[i];
-                term *= other[i];
-                ans += term;
-            }
+        T operator * (const NFastVector<T>& other) const {
+            T ans(zero);
+            for (unsigned i=0; i<vectorSize; i++)
+                ans += elements[i] * other.elements[i];
             return ans;
         }
         /**
          * Negates every element of this vector.
          */
-        virtual void negate() = 0;
+        void negate() {
+            for (unsigned i=0; i<vectorSize; i++)
+                elements[i] = -elements[i];
+        }
         /**
          * Returns the norm of this vector.
          * This is the dot product of the vector with itself.
-         * The default implementation simply runs through the elements
-         * squaring each one in turn.
          *
          * @return the norm of this vector.
          */
-        virtual T norm() const {
-            T ans(0L);
-            unsigned tot = size();
-            T term;
-            for (unsigned i=0; i<tot; i++) {
-                term = (*this)[i];
-                term *= (*this)[i];
-                ans += term;
-            }
+        T norm() const {
+            T ans(zero);
+            for (unsigned i=0; i<vectorSize; i++)
+                ans += elements[i] * elements[i];
             return ans;
         }
         /**
          * Returns the sum of all elements of this vector.
-         * The default implementation simply runs through the elements
-         * adding each one in turn.
          *
          * @return the sum of the elements of this vector.
          */
-        virtual T elementSum() const {
-            T ans(0L);
-            unsigned tot = size();
-            for (unsigned i=0; i<tot; i++)
-                ans += (*this)[i];
+        T elementSum() const {
+            T ans(zero);
+            for (unsigned i=0; i<vectorSize; i++)
+                ans += elements[i];
             return ans;
         }
         /**
@@ -259,8 +288,20 @@ class NVector {
          * @param multiple the multiple of \a other to be added to this
          * vector.
          */
-        virtual void addCopies(const NVector<T>& other,
-                const T& multiple) = 0;
+        void addCopies(const NFastVector<T>& other, const T& multiple) {
+            if (multiple == NFastVector<T>::zero)
+                return;
+            if (multiple == NFastVector<T>::one) {
+                (*this) += other;
+                return;
+            }
+            if (multiple == NFastVector<T>::minusOne) {
+                (*this) -= other;
+                return;
+            }
+            for (unsigned i=0; i<vectorSize; i++)
+                elements[i] += other[i] * multiple;
+        }
         /**
          * Subtracts the given multiple of the given vector to this vector.
          *
@@ -271,29 +312,19 @@ class NVector {
          * @param multiple the multiple of \a other to be subtracted
          * from this vector.
          */
-        virtual void subtractCopies(const NVector<T>& other,
-                const T& multiple) = 0;
-        /**
-         * Returns a newly created vector that is a linear combination
-         * of this vector and another given vector.
-         * The vector returned will be
-         * <tt>myCoeff * this + yourCoeff * you</tt>.
-         *
-         * The new vector will initially be created by cloning this
-         * vector, which will thus determine its specific NVector
-         * subclass.
-         *
-         * @param myCoeff the coefficient of this vector in the linear
-         * combination.
-         * @param you the other vector to combine with this.
-         * @param yourCoeff the coefficient of \a you in the linear
-         * combination.
-         */
-        NVector<T>* makeLinComb(const T& myCoeff,
-                const NVector<T>& you, const T& yourCoeff) const {
-            NVector<T>* ans = clone();
-            ans *= myCoeff;
-            ans->addCopies(you, yourCoeff);
+        void subtractCopies(const NFastVector<T>& other, const T& multiple) {
+            if (multiple == NFastVector<T>::zero)
+                return;
+            if (multiple == NFastVector<T>::one) {
+                (*this) -= other;
+                return;
+            }
+            if (multiple == NFastVector<T>::minusOne) {
+                (*this) += other;
+                return;
+            }
+            for (unsigned i=0; i<vectorSize; i++)
+                elements[i] -= other[i] * multiple;
         }
 };
 
@@ -309,7 +340,7 @@ class NVector {
  * @return a reference to \a out.
  */
 template <class T>
-std::ostream& operator << (std::ostream& out, const NVector<T>& vector) {
+std::ostream& operator << (std::ostream& out, const NFastVector<T>& vector) {
     unsigned size = vector.size();
     if (size == 0)
         return out;
@@ -320,19 +351,19 @@ std::ostream& operator << (std::ostream& out, const NVector<T>& vector) {
 }
 
 template <class T>
-T NVector<T>::zero(0L);
+T NFastVector<T>::zero(0L);
     /**< Zero in the underlying number system.
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be
      *   modified! */
 template <class T>
-T NVector<T>::one(1L);
+T NFastVector<T>::one(1L);
     /**< One in the underlying number system.
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be
      *   modified! */
 template <class T>
-T NVector<T>::minusOne(-1L);
+T NFastVector<T>::minusOne(-1L);
     /**< Negative one in the underlying number system.
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be

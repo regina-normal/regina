@@ -48,6 +48,10 @@ namespace regina {
  * A dense vector of objects of type T.
  * The vector is represented as a simple array on the heap.
  *
+ * This vector class is flexible but slow; for a fast but inflexible
+ * vector class that is better suited for heavy computation, see
+ * NFastVector instead.
+ *
  * \pre See the preconditions for NVector<T>.
  *
  * \ifacespython Not present.
@@ -66,7 +70,7 @@ class NVectorDense : public NVector<T> {
          * Its elements will not be initialised.
          *
          * @param newVectorSize the number of elements in the new
-         * vector.
+         * vector; this must be strictly positive.
          */
         NVectorDense(unsigned newVectorSize) :
                 elements(new T[newVectorSize]), vectorSize(newVectorSize) {
@@ -76,7 +80,7 @@ class NVectorDense : public NVector<T> {
          * given value.
          *
          * @param newVectorSize the number of elements in the new
-         * vector.
+         * vector; this must be strictly positive.
          * @param initValue the value to assign to every element of the
          * vector.
          */
