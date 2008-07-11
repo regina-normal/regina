@@ -59,7 +59,7 @@ Guest suse system configuration
 
   + Packages needed for running regina, and for supporting the chroot:
 
-    graphviz kdeedu3 zsh xorg-x11-server-extra
+    graphviz kdebase3 kdeedu3 susehelp zsh xorg-x11-server-extra
 
   + On SuSE 10.2 (and presumably earlier), there is no need for a separate
     xorg-x11-server-extra package, and the libcppunit packages are just
