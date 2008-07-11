@@ -36,7 +36,10 @@
 #define __NDOUBLEDESCRIPTOR_H
 #endif
 
+#include "maths/nfastvector.h"
 #include "maths/nray.h"
+#include <iterator>
+#include <list>
 
 namespace regina {
 
@@ -159,35 +162,199 @@ class NDoubleDescriptor {
 
     private:
         /**
+         * A helper class for vertex enumeration, describing both a ray
+         * (a vertex of the solution space) and the set of faces that
+         * this ray belongs to.
+         *
+         * The \a BitmaskType template argument describes how the set of
+         * faces will be stored.  Specifically, the set of faces is
+         * stored as bitmask, with one bit per face; each bit is set if
+         * and only if this ray belongs to the corresponding face.
+         *
+         * Since this class is used heavily, faster bitmask types such
+         * as NBitmask1 and NBitmask2 are preferred; however, if the
+         * number of faces is too large then the slower general-use NBitmask
+         * class will need to be used instead.
+         *
+         * \pre The template argument \a BitmaskType is one of Regina's
+         * bitmask types, such as NBitmask, NBitmask1 or NBitmask2.
+         */
+        template <class BitmaskType>
+        class RaySpec : public NFastVector<NLargeInteger> {
+            private:
+                BitmaskType faces;
+                    /**< A bitmask listing which faces this ray belongs to. */
+
+            public:
+                /**
+                 * Creates a new ray specification.  The bitmask listing
+                 * which faces the ray belongs to will be computed
+                 * automatically for the given range of faces.
+                 *
+                 * \pre The given range of faces is not empty, but is
+                 * small enough that \a BitmaskType can hold the
+                 * corresponding number of bits.
+                 *
+                 * @param ray the new ray, in pure vector form.
+                 * @param facesFirst the beginning of the range of
+                 * faces, as passed to the main routine
+                 * NDoubleDescriptor::enumerateVertices().
+                 * @param facesLast the end of the range of
+                 * faces, as passed to the main routine
+                 * NDoubleDescriptor::enumerateVertices().
+                 */
+                template <class FaceIterator>
+                inline RaySpec(const NRay& ray,
+                    FaceIterator facesFirst, FaceIterator facesLast);
+
+                /**
+                 * Creates a new ray, describing where the plane between
+                 * two given rays meets the given hyperplane.
+                 *
+                 * \pre The two given rays lie on opposite sides of the
+                 * given hyperplane, and neither ray actually lies \e in
+                 * the given hyperplane.
+                 *
+                 * @param first the first of the given rays.
+                 * @param second the second of the given rays.
+                 * @param hyperplane the hyperplane that runs between
+                 * the two given rays.
+                 */
+                RaySpec(const RaySpec& first, const RaySpec& second,
+                    const NVector<NLargeInteger>& hyperplane);
+
+                /**
+                 * Determines whether this ray belongs to all of the
+                 * faces that are common to both given rays.
+                 *
+                 * For this routine to return \c true, every face that
+                 * contains both \a x and \a y must contain this ray also.
+                 *
+                 * @param x the first of the given rays.
+                 * @param y the second of the given rays.
+                 * @return \c true if and only if this ray belongs to all
+                 * of the faces that \e both \a x and \a y belong to.
+                 */
+                inline bool onAllCommonFaces(
+                    const RaySpec& x, const RaySpec& y) const;
+
+                /**
+                 * Returns the scalar (dot) product of this ray with the given
+                 * vector.
+                 *
+                 * \pre The vector defining this ray and the given vector
+                 * both have the same length.
+                 *
+                 * @param v the vector whose scalar product we are
+                 * taking with this ray.
+                 * @return the corresponding scalar product.
+                 */
+                inline NLargeInteger operator * (
+                    const NVector<NLargeInteger>& v) const;
+
+                /**
+                 * Scale this ray down as far as possible, so that the
+                 * coordinates remain integers but are as small in
+                 * magnitude as possible.
+                 *
+                 * The scaling factor is guaranteed to be positive (i.e., the
+                 * underlying vector will not accidentally negate itself).
+                 */
+                void scaleDown();
+        };
+
+        /**
          * Private constructor to ensure that objects of this class are
          * never created.
          */
         NDoubleDescriptor();
 
         /**
-         * Implements vertex enumeration for the simplified case in which
-         * the given linear subspace is just a single hyperplane.
+         * Identical to the public routine enumerateVertices(), except
+         * that there is an extra template parameter \a BitmaskType.
+         * This specifies what type should be used for the bitmask
+         * describing which faces a ray belongs to.
          *
-         * In all other respects this routine behaves identically to
-         * the full vertex enumeration routine
-         * enumerateVertices(OutputIterator, RayIterator, RayIterator, FaceIterator, FaceIterator, const NMatrixInt&, const NCompConstraintSet*).
+         * All arguments to this function are identical to those for the
+         * public routine enumerateVertices().
          *
-         * All parameters not listed are identical to those for the full
-         * vertex enumeration routine.
-         *
-         * @param hyperplane the hyperplane that forms the given linear
-         * subspace; this hyperplane is represented by a vertex
-         * perpendicular to it.
+         * \pre The bitmask type is one of Regina's bitmask types, such
+         * as NBitmask, NBitmask1 or NBitmask2.
+         * \pre The type \a BitmaskType can handle at least \a f bits,
+         * where \a f is the number of faces in the given range.
+         * \pre The given range of faces is not empty.
          */
-        template <class OutputIterator, class RayIterator, class FaceIterator>
-        static void enumerateVertices(OutputIterator results,
+        template <class BitmaskType,
+                  class OutputIterator, class RayIterator, class FaceIterator>
+        static void enumerateUsingBitmask(OutputIterator results,
             RayIterator oldRaysFirst, RayIterator oldRaysLast,
             FaceIterator facesFirst, FaceIterator facesLast,
+            const NMatrixInt& subspace, const NCompConstraintSet* constraints,
+            NProgressNumber* progress);
+
+        /**
+         * A part of the full double descriptor algorithm that
+         * intersects the current solution set with a new hyperplane.
+         *
+         * The input list \a src must contain the vertices of the
+         * current solution space.  This routine intersects the current
+         * solution space with the given hyperplane, and places the
+         * vertices of the new solution space in the output list \a dest.
+         *
+         * \pre The input list \a src owns its elements, and the output
+         * list \a dest is empty.
+         * \post The input list \a src will be empty, and the output
+         * list \a dest will own all of the elements that it contains.
+         *
+         * @param src contains the vertices of the current solution space
+         * before this routine is called.
+         * @param dest contains the vertices of the new solution space
+         * after this routine returns.
+         * @param hyperplane the hyperplane to intersect, represented by
+         * a vector perpendicular to it.
+         * @param constraints the set of compatibility constraints, as
+         * passed to the main routine enumerateVertices().  This may be 0
+         * if no additional constraints should be imposed.
+         */
+        template <class BitmaskType>
+        static void intersectHyperplane(
+            std::list<RaySpec<BitmaskType>*>& src,
+            std::list<RaySpec<BitmaskType>*>& dest,
             const NVector<NLargeInteger>& hyperplane,
             const NCompConstraintSet* constraints);
 };
 
 /*@}*/
+
+// Inline functions for NDoubleDescriptor::RayDesc
+
+template <class BitmaskType>
+template <class FaceIterator>
+inline NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
+        const NRay& ray, FaceIterator facesFirst, FaceIterator facesLast) :
+        NFastVector<NLargeInteger>(ray),
+        faces(std::distance(facesFirst, facesLast)) {
+    FaceIterator it;
+    unsigned i = 0;
+    for (it = facesFirst; it != facesLast; ++i, ++it)
+        faces.set(i, (**it) * ray == 0);
+}
+
+template <class BitmaskType>
+inline bool NDoubleDescriptor::RaySpec<BitmaskType>::onAllCommonFaces(
+        const RaySpec<BitmaskType>& x, const RaySpec<BitmaskType>& y) const {
+    return faces.containsIntn(x.faces, y.faces);
+}
+
+template <class BitmaskType>
+inline NLargeInteger NDoubleDescriptor::RaySpec<BitmaskType>::operator * (
+        const NVector<NLargeInteger>& v) const {
+    NLargeInteger ans(zero);
+    const NLargeInteger* e = elements;
+    for (unsigned i = 0; e < end; ++i, ++e)
+        ans += v[i] * (*e);
+    return ans;
+}
 
 // Inline functions for NDoubleDescriptor
 
