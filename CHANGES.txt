@@ -10,6 +10,10 @@ Regina - A Normal Surface Theory Calculator
 Version 4.5.1  [ Under development ]
 
     ENGINE:
+        Class NBitmask, NBitmask1, NBitmask2:
+            - New classes for manipulating bitmasks.  NBitmask is for bitmasks
+              of arbitrary length, whereas NBitmask1 and NBitmask2 are
+              optimised for situations where the length is known to be small.
         Class NFastVector:
             - New vector class that is less flexible than NVector but
               more streamlined, largely because it has no virtual functions.
