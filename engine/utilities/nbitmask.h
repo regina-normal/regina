@@ -253,7 +253,7 @@ class NBitmask1 {
          * @return the value of the (\a index)th bit.
          */
         inline bool get(unsigned index) const {
-            return (mask & (static_cast<T>(1) << index));
+            return (mask & (T(1) << index));
         }
 
         /**
@@ -264,9 +264,9 @@ class NBitmask1 {
          * @param value the value that will be assigned to the (\a index)th bit.
          */
         inline void set(unsigned index, bool value) {
-            mask |= (static_cast<T>(1) << index);
+            mask |= (T(1) << index);
             if (! value)
-                mask ^= (static_cast<T>(1) << index);
+                mask ^= (T(1) << index);
         }
 
         /**
@@ -422,9 +422,9 @@ class NBitmask2 {
          */
         inline bool get(unsigned index) const {
             if (index < 8 * sizeof(T))
-                return (low & (static_cast<T>(1) << index));
+                return (low & (T(1) << index));
             else
-                return (high & (static_cast<U>(1) << (index - 8 * sizeof(T))));
+                return (high & (U(1) << (index - 8 * sizeof(T))));
         }
 
         /**
@@ -436,13 +436,13 @@ class NBitmask2 {
          */
         inline void set(unsigned index, bool value) {
             if (index < 8 * sizeof(T)) {
-                low |= (static_cast<T>(1) << index);
+                low |= (T(1) << index);
                 if (! value)
-                    low ^= (static_cast<T>(1) << index);
+                    low ^= (T(1) << index);
             } else {
-                high |= (static_cast<U>(1) << (index - 8 * sizeof(T)));
+                high |= (U(1) << (index - 8 * sizeof(T)));
                 if (! value)
-                    high ^= (static_cast<U>(1) << (index - 8 * sizeof(T)));
+                    high ^= (U(1) << (index - 8 * sizeof(T)));
             }
         }
 
@@ -564,15 +564,15 @@ inline NBitmask::~NBitmask() {
 
 inline bool NBitmask::get(unsigned index) const {
     return (mask[index / (8 * sizeof(unsigned))] &
-        (static_cast<unsigned>(1) << (index % (8 * sizeof(unsigned)))));
+        (unsigned(1) << (index % (8 * sizeof(unsigned)))));
 }
 
 inline void NBitmask::set(unsigned index, bool value) {
     mask[index / (8 * sizeof(unsigned))] |=
-        (static_cast<unsigned>(1) << (index % (8 * sizeof(unsigned))));
+        (unsigned(1) << (index % (8 * sizeof(unsigned))));
     if (! value)
         mask[index / (8 * sizeof(unsigned))] ^=
-            (static_cast<unsigned>(1) << (index % (8 * sizeof(unsigned))));
+            (unsigned(1) << (index % (8 * sizeof(unsigned))));
 }
 
 inline NBitmask& NBitmask::operator &= (const NBitmask& other) {
