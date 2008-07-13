@@ -39,7 +39,7 @@
 #include "maths/nfastvector.h"
 #include "maths/nray.h"
 #include <iterator>
-#include <list>
+#include <vector>
 
 namespace regina {
 
@@ -318,8 +318,8 @@ class NDoubleDescriptor {
          */
         template <class BitmaskType>
         static void intersectHyperplane(
-            std::list<RaySpec<BitmaskType>*>& src,
-            std::list<RaySpec<BitmaskType>*>& dest,
+            std::vector<RaySpec<BitmaskType>*>& src,
+            std::vector<RaySpec<BitmaskType>*>& dest,
             const NVector<NLargeInteger>& hyperplane,
             const NCompConstraintSet* constraints);
 };
@@ -334,10 +334,9 @@ inline NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
         const NRay& ray, FaceIterator facesFirst, FaceIterator facesLast) :
         NFastVector<NLargeInteger>(ray),
         faces(std::distance(facesFirst, facesLast)) {
-    FaceIterator it;
-    unsigned i = 0;
-    for (it = facesFirst; it != facesLast; ++i, ++it)
-        faces.set(i, (**it) * ray == 0);
+    FaceIterator it = facesFirst;
+    for (unsigned i = 0; it != facesLast; ++i)
+        faces.set(i, (**it++) * ray == 0);
 }
 
 template <class BitmaskType>
@@ -351,8 +350,8 @@ inline NLargeInteger NDoubleDescriptor::RaySpec<BitmaskType>::operator * (
         const NVector<NLargeInteger>& v) const {
     NLargeInteger ans(zero);
     const NLargeInteger* e = elements;
-    for (unsigned i = 0; e < end; ++i, ++e)
-        ans += v[i] * (*e);
+    for (unsigned i = 0; e < end; ++i)
+        ans += v[i] * (*e++);
     return ans;
 }
 

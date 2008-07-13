@@ -160,7 +160,7 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
 
     // Create the two vector lists with which we will work.
     // Fill the first with the initial set of rays.
-    typedef std::list<RaySpec<BitmaskType>*> RaySpecList;
+    typedef std::vector<RaySpec<BitmaskType>*> RaySpecList;
     RaySpecList list[2];
 
     FaceIterator fit;
@@ -203,14 +203,14 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
 
 template <class BitmaskType>
 void NDoubleDescriptor::intersectHyperplane(
-        std::list<RaySpec<BitmaskType>*>& src,
-        std::list<RaySpec<BitmaskType>*>& dest,
+        std::vector<RaySpec<BitmaskType>*>& src,
+        std::vector<RaySpec<BitmaskType>*>& dest,
         const NVector<NLargeInteger>& hyperplane,
         const NCompConstraintSet* constraints) {
     if (src.empty())
         return;
 
-    typedef std::list<RaySpec<BitmaskType>*> RayList;
+    typedef std::vector<RaySpec<BitmaskType>*> RayList;
     RayList pos, neg;
 
     // Run through the old rays and determine which side of the
