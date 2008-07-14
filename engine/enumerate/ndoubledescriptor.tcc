@@ -176,10 +176,29 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
     typedef std::vector<RaySpec<BitmaskType>*> RaySpecList;
     RaySpecList list[2];
 
-    FaceIterator fit;
     for (RayIterator rit = oldRaysFirst; rit != oldRaysLast; ++rit)
         list[0].push_back(new RaySpec<BitmaskType>(
             **rit, facesFirst, facesLast));
+
+    // Convert the set of constraints into a bitmask, where for every
+    // face listed in the constraint the corresponding bit is set to 1.
+    BitmaskType* constraintsBegin = 0;
+    BitmaskType* constraintsEnd = 0;
+    if (constraints && ! constraints->empty()) {
+        constraintsBegin = new BitmaskType[constraints->size()];
+
+        unsigned nFaces = std::distance(facesFirst, facesLast);
+        NCompConstraintSet::const_iterator cit;
+        std::set<unsigned>::const_iterator sit;
+        for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
+                cit != constraints->end(); ++cit, ++constraintsEnd) {
+            constraintsEnd->reset(nFaces);
+
+            for (sit = (*cit)->getCoordinates().begin();
+                    sit != (*cit)->getCoordinates().end(); ++sit)
+                constraintsEnd->set(*sit, true);
+        }
+    }
 
     // Intersect the hyperplanes one at a time.
     // At any point we should have the latest results in
@@ -188,7 +207,8 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
     unsigned i;
     for (i=0; i<nEqns; i++) {
         intersectHyperplane(list[workingList], list[1 - workingList],
-            NVectorMatrixRow<NLargeInteger>(subspace, i), constraints);
+            NVectorMatrixRow<NLargeInteger>(subspace, i),
+            constraintsBegin, constraintsEnd);
 
         workingList = 1 - workingList;
 
@@ -200,6 +220,9 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
     }
 
     // We're done!
+    if (constraintsBegin)
+        delete[] constraintsBegin;
+
     // Use the first input ray as a factory for creating output rays of
     // the correct class.
     RayClass* ans;
@@ -219,7 +242,8 @@ void NDoubleDescriptor::intersectHyperplane(
         std::vector<RaySpec<BitmaskType>*>& src,
         std::vector<RaySpec<BitmaskType>*>& dest,
         const NVector<NLargeInteger>& hyperplane,
-        const NCompConstraintSet* constraints) {
+        const BitmaskType* constraintsBegin,
+        const BitmaskType* constraintsEnd) {
     if (src.empty())
         return;
 
@@ -251,13 +275,29 @@ void NDoubleDescriptor::intersectHyperplane(
     // new solution set.
     typename RayList::iterator posit, negit, otherit;
 
-    bool adjacent;
+    const BitmaskType* constraint;
+    bool adjacent, broken;
     for (posit = pos.begin(); posit != pos.end(); ++posit)
         for (negit = neg.begin(); negit != neg.end(); ++negit) {
             // Are we supposed to check for compatibility?
-            if (constraints)
-                if (! constraints->isSatisfied(**posit, **negit))
+            if (constraintsBegin) {
+                BitmaskType join((*posit)->faces());
+                join &= ((*negit)->faces());
+                join.flip();
+
+                broken = false;
+                for (constraint = constraintsBegin;
+                        constraint != constraintsEnd; ++constraint) {
+                    BitmaskType mask(join);
+                    mask &= *constraint;
+                    if (! mask.atMostOneBit()) {
+                        broken = true;
+                        break;
+                    }
+                }
+                if (broken)
                     continue;
+            }
 
             // Two rays are joined by an edge if and only if there is no
             // other ray belonging to all of their common faces.

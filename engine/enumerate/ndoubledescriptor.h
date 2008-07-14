@@ -312,6 +312,13 @@ class NDoubleDescriptor {
          * solution space with the given hyperplane, and places the
          * vertices of the new solution space in the output list \a dest.
          *
+         * The set of compatibility constraints must be passed here as a
+         * C-style array of bitmasks.  Each bitmask is a bitmask of faces,
+         * as seen in the RaySpec inner class.  Each constraint is of the
+         * form "a point cannot live outside more than one of these faces";
+         * the bits for these faces must be set to 1 in the corresponding
+         * bitmask, and all other bits must be set to 0.
+         *
          * \pre The input list \a src owns its elements, and the output
          * list \a dest is empty.
          * \post The input list \a src will be empty, and the output
@@ -323,16 +330,20 @@ class NDoubleDescriptor {
          * after this routine returns.
          * @param hyperplane the hyperplane to intersect, represented by
          * a vector perpendicular to it.
-         * @param constraints the set of compatibility constraints, as
-         * passed to the main routine enumerateVertices().  This may be 0
-         * if no additional constraints should be imposed.
+         * @param constraintsBegin the beginning of the C-style array of
+         * compatibility constraints.  This should be 0 if no additional
+         * constraints are to be imposed.
+         * @param constraintsEnd a pointer just past the end of the
+         * C-style array of compatibility constraints.  This should be 0
+         * if no additional constraints are to be imposed.
          */
         template <class BitmaskType>
         static void intersectHyperplane(
             std::vector<RaySpec<BitmaskType>*>& src,
             std::vector<RaySpec<BitmaskType>*>& dest,
             const NVector<NLargeInteger>& hyperplane,
-            const NCompConstraintSet* constraints);
+            const BitmaskType* constraintsBegin,
+            const BitmaskType* constraintsEnd);
 };
 
 /*@}*/

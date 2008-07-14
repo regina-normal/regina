@@ -74,8 +74,6 @@ class NCompConstraint {
     private:
         std::set<unsigned> coordinates;
             /**< The set of coordinate positions under consideration. */
-        unsigned maxNonZero;
-            /**< The non-zero coordinate cap for this constraint. */
 
     public:
         /**
@@ -83,15 +81,6 @@ class NCompConstraint {
          * positions and a non-zero coordinate cap of zero.
          */
         NCompConstraint();
-        /**
-         * Creates a new constraint with an empty set of coordinate
-         * positions and the given non-zero coordinate cap.
-         *
-         * @param newMaxNonZero the maximum number of coordinate positions
-         * from the associated set for which some vector may have
-         * non-zero entries without breaking this constraint.
-         */
-        NCompConstraint(unsigned newMaxNonZero);
 
         /**
          * Returns the set of coordinate positions under consideration
@@ -110,62 +99,6 @@ class NCompConstraint {
          * @return the associated set of coordinate positions.
          */
         std::set<unsigned>& getCoordinates();
-
-        /**
-         * Returns the non-zero coordinate cap for this constraint.
-         *
-         * @return the maximum number of coordinate positions
-         * from the associated set for which some vector may have
-         * non-zero entries without breaking this constraint.
-         */
-        unsigned getMaxNonZero() const;
-        /**
-         * Sets the non-zero coordinate cap for this constraint.
-         *
-         * @param newMaxNonZero the maximum number of coordinate positions
-         * from the associated set for which some vector may have
-         * non-zero entries without breaking this constraint.
-         */
-        void setMaxNonZero(unsigned newMaxNonZero);
-
-        /**
-         * Determines whether the given pair of vectors satisfies this
-         * constraint.
-         *
-         * \pre The vector type \a VectorType has a subscript operator []
-         * and a class constant \a VectorType::zero.  Amongst others, any
-         * vector class derived from NVector or NFastVector will be suitable.
-         *
-         * @param first the first of the two vectors to examine.
-         * @param second the second of the two vectors to examine.
-         * @return \c true if the given pair of vectors satisfies this
-         * constraint, or \c false otherwise.
-         */
-        template <class VectorType>
-        bool isSatisfied(const VectorType& first,
-            const VectorType& second) const;
-        /**
-         * Determines whether the given vector satisfies this constraint.
-         *
-         * Although constraints are defined in terms of pairs of
-         * vectors, a single vector can also be said to satisfy a constraint
-         * if the number of non-zero coordinates amongst the given set of
-         * coordinate positions is at most the given maximum.
-         *
-         * Examining whether a single vector <i>v</i> satisfies a constraint
-         * is equivalent to deciding whether the pair (<i>v</i>, <i>v</i>)
-         * or equivalently the pair (<i>v</i>, 0) satisfies the constraint.
-         *
-         * \pre The vector type \a VectorType has a subscript operator []
-         * and a class constant \a VectorType::zero.  Amongst others, any
-         * vector class derived from NVector or NFastVector will be suitable.
-         *
-         * @param v the vector to examine.
-         * @return \c true if the given vector satisfies this constraint,
-         * or \c false otherwise.
-         */
-        template <class VectorType>
-        bool isSatisfied(const VectorType& v) const;
 };
 
 /**
@@ -189,58 +122,13 @@ class NCompConstraintSet : public std::deque<NCompConstraint*> {
          * belonging to this set will be deallocated.
          */
         ~NCompConstraintSet();
-
-        /**
-         * Determines whether the given pair of vectors satisfies every
-         * constraint in this set.
-         *
-         * \pre The vector type \a VectorType has a subscript operator []
-         * and a class constant \a VectorType::zero.  Amongst others, any
-         * vector class derived from NVector or NFastVector will be suitable.
-         *
-         * @param first the first of the two vectors to examine.
-         * @param second the second of the two vectors to examine.
-         * @return \c true if the given pair of vectors satisfies every
-         * constraint in this set, or \c false if some constraint is not
-         * satisfied.
-         */
-        template <class VectorType>
-        bool isSatisfied(const VectorType& first,
-            const VectorType& second) const;
-        /**
-         * Determines whether the given vector satisfies every
-         * constraint in this set.
-         *
-         * Although constraints are defined in terms of pairs of
-         * vectors, a single vector can also be said to satisfy a constraint
-         * if the number of non-zero coordinates amongst the given set of
-         * coordinate positions is at most the given maximum.
-         *
-         * Examining whether a single vector <i>v</i> satisfies a constraint
-         * is equivalent to deciding whether the pair (<i>v</i>, <i>v</i>)
-         * or equivalently the pair (<i>v</i>, 0) satisfies the constraint.
-         *
-         * \pre The vector type \a VectorType has a subscript operator []
-         * and a class constant \a VectorType::zero.  Amongst others, any
-         * vector class derived from NVector or NFastVector will be suitable.
-         *
-         * @param v the vector to examine.
-         * @return \c true if the given vector satisfies every
-         * constraint in this set, or \c false if some constraint is not
-         * satisfied.
-         */
-        template <class VectorType>
-        bool isSatisfied(const VectorType& v) const;
 };
 
 /*@}*/
 
 // Inline functions for NCompConstraint
 
-inline NCompConstraint::NCompConstraint() : maxNonZero(0) {
-}
-inline NCompConstraint::NCompConstraint(unsigned newMaxNonZero) :
-        maxNonZero(newMaxNonZero) {
+inline NCompConstraint::NCompConstraint() {
 }
 
 inline const std::set<unsigned>& NCompConstraint::getCoordinates() const {
@@ -248,13 +136,6 @@ inline const std::set<unsigned>& NCompConstraint::getCoordinates() const {
 }
 inline std::set<unsigned>& NCompConstraint::getCoordinates() {
     return coordinates;
-}
-
-inline unsigned NCompConstraint::getMaxNonZero() const {
-    return maxNonZero;
-}
-inline void NCompConstraint::setMaxNonZero(unsigned newMaxNonZero) {
-    maxNonZero = newMaxNonZero;
 }
 
 // Inline functions for NCompConstraintSet
@@ -266,10 +147,6 @@ inline NCompConstraintSet::~NCompConstraintSet() {
 }
 
 } // namespace regina
-
-// Template definitions
-
-#include "enumerate/ncompconstraint.tcc"
 
 #endif
 

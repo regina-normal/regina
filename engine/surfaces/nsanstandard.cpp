@@ -135,7 +135,7 @@ NCompConstraintSet* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
     // At most one quad/oct per tetrahedron.
     // Also at most one oct type overall.
     NCompConstraintSet* ans = new NCompConstraintSet();
-    NCompConstraint* globalOctConstraint = new NCompConstraint(1);
+    NCompConstraint* globalOctConstraint = new NCompConstraint();
     std::set<unsigned>& globalOctCoords(globalOctConstraint->getCoordinates());
     NCompConstraint* constraint;
 
@@ -143,7 +143,7 @@ NCompConstraintSet* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
     unsigned long base = 0;
     for (unsigned long tet = 0; tet < triangulation->getNumberOfTetrahedra();
             tet++) {
-        constraint = new NCompConstraint(1);
+        constraint = new NCompConstraint();
         for (i = 4; i < 10; i++)
             constraint->getCoordinates().insert(
                 constraint->getCoordinates().end(), base + i);

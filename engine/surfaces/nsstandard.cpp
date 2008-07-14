@@ -120,7 +120,7 @@ NCompConstraintSet* NNormalSurfaceVectorStandard::makeEmbeddedConstraints(
     unsigned long base = 0;
     for (unsigned long tet = 0; tet < triangulation->getNumberOfTetrahedra();
             tet++) {
-        constraint = new NCompConstraint(1);
+        constraint = new NCompConstraint();
         for (i = 4; i < 7; i++)
             constraint->getCoordinates().insert(
                 constraint->getCoordinates().end(), base + i);
