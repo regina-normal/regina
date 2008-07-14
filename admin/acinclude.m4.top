@@ -211,6 +211,65 @@ AC_DEFUN([REGINA_CHECK_KDE_VERSION], [
 ])
 
 dnl
+dnl    REGINA_CHECK_LONG_LONG
+dnl
+dnl    Checks whether long long integers and 64-bit integer literals are valid.
+dnl
+dnl    AC_DEFINE()s the following variables:
+dnl
+dnl        HAVE_LONG_LONG: Defined as 1 if both signed and unsigned long long
+dnl                        types are available, or remains undefined otherwise.
+dnl        HAVE_NUMERIC_64: Defined as 1 if 64-bit integer literals with no
+dnl                         L/LL suffix are vaild, or remains undefined
+dnl                         otherwise.
+dnl        HAVE_NUMERIC_64_LL: Defined as 1 if 64-bit integer literals with an
+dnl                            LL suffix are valid, or remains undefined
+dnl                            otherwise.
+dnl
+dnl    Example: REGINA_CHECK_LONG_LONG
+dnl
+AC_DEFUN([REGINA_CHECK_LONG_LONG], [
+  AC_LANG_PUSH(C++)
+
+  AC_MSG_CHECKING([for the long long integer type])
+  AC_TRY_COMPILE([], [
+    long long x;
+    signed long long y;
+    unsigned long long z;
+  ], [
+    AC_MSG_RESULT([yes])
+    AC_DEFINE(HAVE_LONG_LONG, 1,
+      [Define to 1 if both signed and unsigned long long types are available.])
+  ], [
+    AC_MSG_RESULT([no])
+  ])
+
+  AC_MSG_CHECKING([for 64-bit integer literals with no suffix])
+  AC_TRY_COMPILE([], [
+    0xFFFFFFFFFFFFFFFF;
+  ], [
+    AC_MSG_RESULT([yes])
+    AC_DEFINE(HAVE_NUMERIC_64, 1,
+      [Define to 1 if 64-bit integer literals are available with no suffix])
+  ], [
+    AC_MSG_RESULT([no])
+  ])
+
+  AC_MSG_CHECKING([for 64-bit integer literals with the LL suffix])
+  AC_TRY_COMPILE([], [
+    0xFFFFFFFFFFFFFFFFLL;
+  ], [
+    AC_MSG_RESULT([yes])
+    AC_DEFINE(HAVE_NUMERIC_64_LL, 1,
+      [Define to 1 if 64-bit integer literals are available using the LL suffix])
+  ], [
+    AC_MSG_RESULT([no])
+  ])
+
+  AC_LANG_POP(C++)
+])
+
+dnl
 dnl    REGINA_CXX_PARTIAL_SPECIALISATION
 dnl
 dnl    Ensures that the C++ compiler supports partial specialisation.
