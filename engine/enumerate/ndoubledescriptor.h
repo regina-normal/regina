@@ -182,7 +182,7 @@ class NDoubleDescriptor {
         template <class BitmaskType>
         class RaySpec : public NFastVector<NLargeInteger> {
             private:
-                BitmaskType faces;
+                BitmaskType faces_;
                     /**< A bitmask listing which faces this ray belongs to. */
 
             public:
@@ -222,6 +222,17 @@ class NDoubleDescriptor {
                  */
                 RaySpec(const RaySpec& first, const RaySpec& second,
                     const NVector<NLargeInteger>& hyperplane);
+
+                /**
+                 * Returns a raw bitmask listing which faces this ray
+                 * belongs to.  The individual bits correspond to the
+                 * faces passed to the RaySpec constructor; bits are set
+                 * to \c true if and only if this ray belongs to the
+                 * corresponding face.
+                 *
+                 * @return a bitmask of faces.
+                 */
+                inline const BitmaskType& faces() const;
 
                 /**
                  * Determines whether this ray belongs to all of the
@@ -333,16 +344,22 @@ template <class FaceIterator>
 inline NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
         const NRay& ray, FaceIterator facesFirst, FaceIterator facesLast) :
         NFastVector<NLargeInteger>(ray),
-        faces(std::distance(facesFirst, facesLast)) {
+        faces_(std::distance(facesFirst, facesLast)) {
     FaceIterator it = facesFirst;
     for (unsigned i = 0; it != facesLast; ++i)
-        faces.set(i, (**it++) * ray == 0);
+        faces_.set(i, (**it++) * ray == 0);
+}
+
+template <class BitmaskType>
+inline const BitmaskType& NDoubleDescriptor::RaySpec<BitmaskType>::faces()
+        const {
+    return faces_;
 }
 
 template <class BitmaskType>
 inline bool NDoubleDescriptor::RaySpec<BitmaskType>::onAllCommonFaces(
         const RaySpec<BitmaskType>& x, const RaySpec<BitmaskType>& y) const {
-    return faces.containsIntn(x.faces, y.faces);
+    return faces_.containsIntn(x.faces_, y.faces_);
 }
 
 template <class BitmaskType>

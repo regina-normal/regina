@@ -28,6 +28,7 @@
 
 /* To be included from ndoubledescriptor.h. */
 
+#include "regina-config.h"
 #include "enumerate/ncompconstraint.h"
 #include "maths/nvectormatrix.h"
 #include "maths/nmatrixint.h"
@@ -42,7 +43,7 @@ NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& first,
         const RaySpec<BitmaskType>& second,
         const NVector<NLargeInteger>& hyperplane) :
-        NFastVector<NLargeInteger>(second), faces(second.faces) {
+        NFastVector<NLargeInteger>(second), faces_(second.faces_) {
     // We are currently a perfect clone of second.
     // Convert ourselves into
     // (hyperplane * first) second - (hyperplane * second) first.
@@ -57,7 +58,7 @@ NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
         negate();
 
     // Compute the new set of faces.
-    faces &= first.faces;
+    faces_ &= first.faces_;
 }
 
 template <class BitmaskType>
@@ -99,30 +100,42 @@ void NDoubleDescriptor::enumerateVertices(OutputIterator results,
     // bitmask type if we can.
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
-    if (nFaces <= sizeof(unsigned))
+    if (nFaces <= 8 * sizeof(unsigned))
         enumerateUsingBitmask<NBitmask1<unsigned> >(results,
             oldRaysFirst, oldRaysLast, facesFirst, facesLast,
             subspace, constraints, progress);
-    else if (nFaces <= sizeof(unsigned long))
+    else if (nFaces <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<NBitmask1<unsigned long> >(results,
             oldRaysFirst, oldRaysLast, facesFirst, facesLast,
             subspace, constraints, progress);
-    else if (nFaces <= sizeof(unsigned long long))
+#ifdef HAVE_LONG_LONG
+    else if (nFaces <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<NBitmask1<unsigned long long> >(results,
             oldRaysFirst, oldRaysLast, facesFirst, facesLast,
             subspace, constraints, progress);
-    else if (nFaces <= sizeof(unsigned long long) + sizeof(unsigned))
+    else if (nFaces <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<NBitmask2<unsigned long long, unsigned> >(results,
             oldRaysFirst, oldRaysLast, facesFirst, facesLast,
             subspace, constraints, progress);
-    else if (nFaces <= sizeof(unsigned long long) + sizeof(unsigned long))
+    else if (nFaces <= 8 * sizeof(unsigned long long) +
+            8 * sizeof(unsigned long))
         enumerateUsingBitmask<NBitmask2<unsigned long long, unsigned long> >(
             results, oldRaysFirst, oldRaysLast, facesFirst, facesLast,
             subspace, constraints, progress);
-    else if (nFaces <= 2 * sizeof(unsigned long long))
+    else if (nFaces <= 16 * sizeof(unsigned long long))
         enumerateUsingBitmask<NBitmask2<unsigned long long> >(results,
             oldRaysFirst, oldRaysLast, facesFirst, facesLast,
             subspace, constraints, progress);
+#else
+    else if (nFaces <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
+        enumerateUsingBitmask<NBitmask2<unsigned long, unsigned> >(results,
+            oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            subspace, constraints, progress);
+    else if (nFaces <= 16 * sizeof(unsigned long))
+        enumerateUsingBitmask<NBitmask2<unsigned long> >(results,
+            oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            subspace, constraints, progress);
+#endif
     else
         enumerateUsingBitmask<NBitmask>(results,
             oldRaysFirst, oldRaysLast, facesFirst, facesLast,
