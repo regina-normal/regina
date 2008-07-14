@@ -71,7 +71,7 @@ class BitManipulator {
              * This compile-time constant is set to 0 for the generic
              * implementation of BitManipulator, and 1 for all specialisations.
              */
-            specialised = 0;
+            specialised = 0
         };
 
         /**
@@ -98,8 +98,8 @@ template <typename T>
 class BitManipulator<T, 1> {
     public:
         enum {
-            specialised = 1;
-        }
+            specialised = 1
+        };
 
         inline static int bits(T x) {
             x = (x & T(0x55)) + ((x & T(0xAA)) >> 1);
@@ -112,8 +112,8 @@ template <typename T>
 class BitManipulator<T, 2> {
     public:
         enum {
-            specialised = 1;
-        }
+            specialised = 1
+        };
 
         inline static int bits(T x) {
             x = (x & T(0x5555)) + ((x & T(0xAAAA)) >> 1);
@@ -127,8 +127,8 @@ template <typename T>
 class BitManipulator<T, 4> {
     public:
         enum {
-            specialised = 1;
-        }
+            specialised = 1
+        };
 
         inline static int bits(T x) {
             x = (x & T(0x55555555)) + ((x & T(0xAAAAAAAA)) >> 1);
@@ -146,8 +146,8 @@ template <typename T>
 class BitManipulator<T, 8> {
     public:
         enum {
-            specialised = 1;
-        }
+            specialised = 1
+        };
 
         inline static int bits(T x) {
             x = (x & T(0x5555555555555555)) +
@@ -169,8 +169,8 @@ template <typename T>
 class BitManipulator<T, 8> {
     public:
         enum {
-            specialised = 1;
-        }
+            specialised = 1
+        };
 
         inline static int bits(T x) {
             x = (x & T(0x5555555555555555LL)) +
