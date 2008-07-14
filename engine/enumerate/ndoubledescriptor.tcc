@@ -193,10 +193,7 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
         for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
                 cit != constraints->end(); ++cit, ++constraintsEnd) {
             constraintsEnd->reset(nFaces);
-
-            for (sit = (*cit)->getCoordinates().begin();
-                    sit != (*cit)->getCoordinates().end(); ++sit)
-                constraintsEnd->set(*sit, true);
+            (*cit)->toBitmask(*constraintsEnd);
         }
     }
 

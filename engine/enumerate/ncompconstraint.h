@@ -99,6 +99,10 @@ class NCompConstraint {
          * @return the associated set of coordinate positions.
          */
         std::set<unsigned>& getCoordinates();
+
+        // TODO: PRE: BitmaskType can take enough bits.
+        template <typename BitmaskType>
+        inline void toBitmask(BitmaskType& mask) const;
 };
 
 /**
@@ -136,6 +140,14 @@ inline const std::set<unsigned>& NCompConstraint::getCoordinates() const {
 }
 inline std::set<unsigned>& NCompConstraint::getCoordinates() {
     return coordinates;
+}
+
+template <typename BitmaskType>
+inline void NCompConstraint::toBitmask(BitmaskType& mask) const {
+    mask.reset();
+    for (std::set<unsigned>::const_iterator it = coordinates.begin();
+            it != coordinates.end(); ++it)
+        mask.set(*it, true);
 }
 
 // Inline functions for NCompConstraintSet
