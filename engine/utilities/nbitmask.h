@@ -234,6 +234,14 @@ class NBitmask {
         bool containsIntn(const NBitmask& x, const NBitmask& y) const;
 
         /**
+         * Returns the number of bits currently set to \c true in this
+         * bitmask.
+         *
+         * @return the number of \c true bits.
+         */
+        unsigned bits() const;
+
+        /**
          * Determines whether at most one bit is set to \c true in this
          * bitmask.
          *
@@ -436,6 +444,16 @@ class NBitmask1 {
         inline bool containsIntn(const NBitmask1<T>& x, const NBitmask1<T>& y)
                 const {
             return ((mask | (x.mask & y.mask)) == mask);
+        }
+
+        /**
+         * Returns the number of bits currently set to \c true in this
+         * bitmask.
+         *
+         * @return the number of \c true bits.
+         */
+        inline unsigned bits() const {
+            return BitManipulator<T>::bits(mask);
         }
 
         /**
@@ -667,6 +685,16 @@ class NBitmask2 {
         }
 
         /**
+         * Returns the number of bits currently set to \c true in this
+         * bitmask.
+         *
+         * @return the number of \c true bits.
+         */
+        inline unsigned bits() const {
+            return BitManipulator<T>::bits(low) + BitManipulator<U>::bits(high);
+        }
+
+        /**
          * Determines whether at most one bit is set to \c true in this
          * bitmask.
          *
@@ -778,6 +806,13 @@ inline bool NBitmask::containsIntn(const NBitmask& x, const NBitmask& y) const {
         if ((mask[i] | (x.mask[i] & y.mask[i])) != mask[i])
             return false;
     return true;
+}
+
+inline unsigned NBitmask::bits() const {
+    unsigned ans = 0;
+    for (unsigned i = 0; i < pieces; ++i)
+        ans += BitManipulator<Piece>::bits(mask[i]);
+    return ans;
 }
 
 inline bool NBitmask::atMostOneBit() const {
