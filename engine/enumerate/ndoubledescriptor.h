@@ -38,6 +38,7 @@
 
 #include "maths/nfastvector.h"
 #include "maths/nray.h"
+#include "maths/nvectormatrix.h"
 #include <iterator>
 #include <vector>
 
@@ -275,6 +276,66 @@ class NDoubleDescriptor {
         };
 
         /**
+         * A comparison object that helps sort hyperplanes into a good
+         * order before running the double descriptor algorithm.
+         *
+         * A hyperplane is described by a row of the \a subspace matrix passed
+         * to NDoubleDescriptor::enumerateVertices().  Specifically, the
+         * matrix row is a vector perpendicular to the hyperplane.
+         *
+         * The ordering also involves the range of faces passed to
+         * NDoubleDescriptor::enumerateVertices(), and is defined as follows.
+         * For each hyperplane, we create a sequence (h_1, ..., h_f), where
+         * h_i is 0 if the hyperplane and the ith face are perpendicular, or
+         * 1 if not.  We then simply compare these sequences lexicographically.
+         */
+        template <typename FaceIterator>
+        class LexComp {
+            private:
+                const NMatrixInt& matrix_;
+                    /**< The \a subspace matrix passed to
+                         NDoubleDescriptor::enumerateVertices(). */
+                FaceIterator facesFirst_;
+                    /**< The beginning of the range of faces passed to
+                         NDoubleDescriptor::enumerateVertices(). */
+                FaceIterator facesLast_;
+                    /**< The end of the range of faces passed to
+                         NDoubleDescriptor::enumerateVertices(). */
+
+            public:
+                /**
+                 * Creates a new helper object for comparing hyperplanes.
+                 *
+                 * @param matrix the \a subspace matrix as passed to
+                 * NDoubleDescriptor::enumerateVertices().
+                 * @param facesFirst the beginning of the range of faces
+                 * passed to NDoubleDescriptor::enumerateVertices().
+                 * @param facesLast the end of the range of faces
+                 * passed to NDoubleDescriptor::enumerateVertices().
+                 */
+                inline LexComp(const NMatrixInt& matrix,
+                        FaceIterator facesFirst, FaceIterator faceLast);
+
+                /**
+                 * Determines whether the hyperplane described by
+                 * row \a i of the matrix is lexicographically smaller
+                 * than the hyperplane described by row \a j.  See the
+                 * LexComp class notes for details on what
+                 * "lexicographically smaller" means here.
+                 *
+                 * @param i the first matrix row index; this must be between
+                 * 0 and matrix.rows()-1 inclusive, where \a matrix is
+                 * the matrix passed to the class constructor.
+                 * @param j the second matrix row index; this must also be
+                 * between 0 and matrix.rows()-1 inclusive.
+                 * @return \c true if and only if the hyperplane
+                 * described by row \a i is lexicographically smaller
+                 * than the hyperplane described by row \a j.
+                 */
+                inline bool operator () (int i, int j) const;
+        };
+
+        /**
          * Private constructor to ensure that objects of this class are
          * never created.
          */
@@ -330,6 +391,10 @@ class NDoubleDescriptor {
          * after this routine returns.
          * @param hyperplane the hyperplane to intersect, represented by
          * a vector perpendicular to it.
+         * @param prevHyperplanes the number of hyperplanes that have
+         * already been intersected with the original cone to form the
+         * current solution set.  This does not include the hyperplane
+         * currently under consideration.
          * @param constraintsBegin the beginning of the C-style array of
          * compatibility constraints.  This should be 0 if no additional
          * constraints are to be imposed.
@@ -342,6 +407,7 @@ class NDoubleDescriptor {
             std::vector<RaySpec<BitmaskType>*>& src,
             std::vector<RaySpec<BitmaskType>*>& dest,
             const NVector<NLargeInteger>& hyperplane,
+            unsigned prevHyperplanes,
             const BitmaskType* constraintsBegin,
             const BitmaskType* constraintsEnd);
 };
@@ -381,6 +447,30 @@ inline NLargeInteger NDoubleDescriptor::RaySpec<BitmaskType>::operator * (
     for (unsigned i = 0; e < end; ++i)
         ans += v[i] * (*e++);
     return ans;
+}
+
+// Inline functions for NDoubleDescriptor::LexComp
+
+template <typename FaceIterator>
+inline NDoubleDescriptor::LexComp<FaceIterator>::LexComp(
+        const NMatrixInt& matrix,
+        FaceIterator facesFirst, FaceIterator facesLast) :
+        matrix_(matrix), facesFirst_(facesFirst), facesLast_(facesLast) {
+}
+
+template <typename FaceIterator>
+inline bool NDoubleDescriptor::LexComp<FaceIterator>::operator () (
+        int i, int j) const {
+    NLargeInteger iProd, jProd;
+    for (FaceIterator it = facesFirst_; it != facesLast_; ++it) {
+        iProd = (**it) * NVectorMatrixRow<NLargeInteger>(matrix_, i);
+        jProd = (**it) * NVectorMatrixRow<NLargeInteger>(matrix_, j);
+        if (iProd == 0 && jProd != 0)
+            return true;
+        if (iProd != 0 && jProd == 0)
+            return false;
+    }
+    return false;
 }
 
 // Inline functions for NDoubleDescriptor

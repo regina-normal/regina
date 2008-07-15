@@ -28,6 +28,7 @@
 
 /* To be included from ndoubledescriptor.h. */
 
+#include <algorithm>
 #include "regina-config.h"
 #include "enumerate/ncompconstraint.h"
 #include "maths/nvectormatrix.h"
@@ -197,14 +198,28 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
         }
     }
 
+    // We want to process the hyperplanes in a good order;
+    // Fukuda and Prodon (1996) recommend this, and experimental
+    // experience with Regina agrees.  The ordering we use here is
+    // described in the notes for the inner class NDoubleDescriptor::LexComp.
+    //
+    // Sort the integers 1..(nEqns-1) into the order in which we plan to
+    // process the hyperplanes.
+    int* hyperplanes = new int[nEqns];
+    unsigned i;
+    for (i = 0; i < nEqns; ++i)
+        hyperplanes[i] = i;
+
+    std::sort(hyperplanes, hyperplanes + nEqns,
+        LexComp<FaceIterator>(subspace, facesFirst, facesLast));
+
     // Intersect the hyperplanes one at a time.
     // At any point we should have the latest results in
     // list[workingList], with the other list empty.
     int workingList = 0;
-    unsigned i;
     for (i=0; i<nEqns; i++) {
         intersectHyperplane(list[workingList], list[1 - workingList],
-            NVectorMatrixRow<NLargeInteger>(subspace, i),
+            NVectorMatrixRow<NLargeInteger>(subspace, hyperplanes[i]), i,
             constraintsBegin, constraintsEnd);
 
         workingList = 1 - workingList;
@@ -217,6 +232,7 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
     }
 
     // We're done!
+    delete[] hyperplanes;
     if (constraintsBegin)
         delete[] constraintsBegin;
 
@@ -239,6 +255,7 @@ void NDoubleDescriptor::intersectHyperplane(
         std::vector<RaySpec<BitmaskType>*>& src,
         std::vector<RaySpec<BitmaskType>*>& dest,
         const NVector<NLargeInteger>& hyperplane,
+        unsigned prevHyperplanes,
         const BitmaskType* constraintsBegin,
         const BitmaskType* constraintsEnd) {
     if (src.empty())
@@ -276,10 +293,19 @@ void NDoubleDescriptor::intersectHyperplane(
     bool adjacent, broken;
     for (posit = pos.begin(); posit != pos.end(); ++posit)
         for (negit = neg.begin(); negit != neg.end(); ++negit) {
+            BitmaskType join((*posit)->faces());
+            join &= ((*negit)->faces());
+
+            // We only care about adjacent rays, i.e., rays joined by an edge.
+            // For the rays to be adjacent, the number of faces that
+            // both belong to must be >= dimension(subspace) - 2,
+            // which is >= hyperplane.size() - prevHyperplanes - 2.
+            // See Fukuda and Prodon (1996), Proposition 9.
+            if (join.bits() + prevHyperplanes + 2 < hyperplane.size())
+                continue;
+
             // Are we supposed to check for compatibility?
             if (constraintsBegin) {
-                BitmaskType join((*posit)->faces());
-                join &= ((*negit)->faces());
                 join.flip();
 
                 broken = false;
