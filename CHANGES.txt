@@ -22,6 +22,9 @@ Version 4.5.1  [ Under development ]
         Class NFastVector:
             - New vector class that is less flexible than NVector but
               more streamlined, largely because it has no virtual functions.
+        Routine rowBasis():
+            - Added to find the rank of an integer matrix and a basis
+              for its row space.
 
 Version 4.5  [ 17 May, 2008 ]
 

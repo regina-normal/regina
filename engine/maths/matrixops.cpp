@@ -328,6 +328,50 @@ void smithNormalForm(NMatrixInt& matrix,
 
 }
 
+unsigned rowBasis(NMatrixInt& matrix) {
+    NMatrixInt echelon(matrix);
+
+    unsigned doneRows = 0;
+    unsigned rank = echelon.rows();
+
+    unsigned lead, r;
+    NLargeInteger coeff1, coeff2;
+    while (doneRows < rank) {
+        // Find the first non-zero entry in row doneRows.
+        for (lead = 0; lead < echelon.columns(); ++lead)
+            if (echelon.entry(doneRows, lead) != NMatrixInt::zero)
+                break;
+
+        if (lead == echelon.columns()) {
+            // We have a zero row.  Push it to the bottom.
+            --rank;
+            if (doneRows < rank) {
+                echelon.swapRows(doneRows, rank);
+                matrix.swapRows(doneRows, rank);
+            }
+        } else {
+            // We have a non-zero row.
+            // Make all other entries in column lead equal to zero.
+            // Do this with only integer arithmetic.  This could lead to
+            // some very large matrix entries, though we're using NLargeInteger
+            // so the worst that can happen is that things get slow.
+            coeff1 = echelon.entry(doneRows, lead);
+            for (r = doneRows + 1; r < rank; ++r) {
+                coeff2 = echelon.entry(r, lead);
+                if (coeff2 != NMatrixInt::zero) {
+                    echelon.multRow(r, coeff1);
+                    echelon.addRow(doneRows, r, -coeff2);
+
+                    // TODO: Do we want to factor out the gcd of this row?
+                }
+            }
+            ++doneRows;
+        }
+    }
+
+    return rank;
+}
+
 void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
         const std::vector<unsigned> &rowList) {
     unsigned i,j;

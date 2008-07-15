@@ -115,6 +115,24 @@ void smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
 
 /**
+ * Find a basis for the row space of the given matrix.
+ *
+ * This routine will rearrange the rows of the given matrix so that the
+ * first \a rank rows form a basis of the row space.  The rank itself
+ * will be returned.  No other changes will be made to the matrix aside
+ * from swapping rows.
+ *
+ * Although this routine takes an integer matrix (and only uses integer
+ * operations), we consider the row space to be over the \e rationals.
+ * That is, although we never divide, we act as though we could if we
+ * wanted to.
+ *
+ * @param the matrix to examine and rearrange.
+ * @return the rank of the given matrix.
+ */
+unsigned rowBasis(NMatrixInt& matrix);
+
+/**
  * Transforms a given matrix into column echelon form with respect to a
  * collection of rows.
  *
