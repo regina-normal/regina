@@ -5,7 +5,7 @@
 
   <!ENTITY regversion "4.5.1">
   <!ENTITY regdate "17 May 2008">
-  <!ENTITY regauthorplain "Ben Burton">
+  <!ENTITY regauthorplain "Benjamin Burton">
   <!ENTITY snappeaintro "4.2 (July 2005)">
   <!ENTITY orbintro "4.3.1 (May 2006)">
   <!ENTITY utf8intro "4.5 (May 2008)">
@@ -16,13 +16,13 @@
   <!ENTITY reguserlist "<email>regina-user@lists.sourceforge.net</email>">
   <!ENTITY regemail "<email>bab@debian.org</email>">
   <!ENTITY regauthor
-   "<author>
+   "<authorgroup><author>
      <firstname>Benjamin</firstname>
      <surname>Burton</surname>
      <affiliation>
       <address>&regemail;</address>
      </affiliation>
-    </author>">
+    </author></authorgroup>">
   <!ENTITY regabstract
    "<para>
      &regina; is a suite of mathematical software for 3-manifold
@@ -151,9 +151,7 @@
  <bookinfo>
   <title>The &regina; Handbook</title>
 
-  <authorgroup>
-   &regauthor;
-  </authorgroup>
+  &regauthor;
 
   <copyright>
    <year>&copyrightyears;</year>

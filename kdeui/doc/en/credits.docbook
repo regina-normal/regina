@@ -51,49 +51,30 @@
  <sect1 id="acknowledgements">
   <title>Acknowledgements</title>
   <para>
-   &regina; was written by &regauthor;.
+   &regina; was written by &regauthorplain;.
   </para>
 
   <para>
-   Normal 1.0 was written by
-   <author><firstname>David</firstname><surname>Letscher</surname></author>,
+   Normal 1.0 was written by David Letscher,
    who also provided excellent technical advice for this project.
   </para>
 
   <para>Additional code contributed by:
    <itemizedlist>
-    <listitem><para><author>
-     <firstname>Ryan</firstname><surname>Budney</surname>
-    </author></para></listitem>
-    <listitem><para><author>
-     <firstname>David</firstname><surname>Letscher</surname>
-    </author></para></listitem>
-    <listitem><para><author>
-     <firstname>Jeff</firstname><surname>Weeks</surname>
-    </author></para></listitem>
+    <listitem><para>Ryan Budney</para></listitem>
+    <listitem><para>David Letscher</para></listitem>
+    <listitem><para>Jeff Weeks</para></listitem>
    </itemizedlist>
   </para>
   <para>Thanks also to:
    <itemizedlist>
-    <listitem><para><author>
-     <firstname>Marc</firstname><surname>Culler</surname>
-    </author></para></listitem>
-    <listitem><para><author>
-     <firstname>Dominique</firstname><surname>Devriese</surname>
-    </author></para></listitem>
-    <listitem><para><author>
-     <firstname>Nathan</firstname><surname>Dunfield</surname>
-    </author></para></listitem>
-    <listitem><para><author>
-     <firstname>William</firstname><surname>Jaco</surname>
-    </author></para></listitem>
-    <listitem><para><author>
-     <firstname>Craig</firstname><surname>Macintyre</surname>
-    </author></para></listitem>
-    <listitem><para><author>
-     <firstname>J.</firstname><othername>Hyam</othername>
-     <surname>Rubinstein</surname>
-    </author></para></listitem>
+    <listitem><para>Bernard Blackham</para></listitem>
+    <listitem><para>Marc Culler</para></listitem>
+    <listitem><para>Dominique Devriese</para></listitem>
+    <listitem><para>Nathan Dunfield</para></listitem>
+    <listitem><para>William Jaco</para></listitem>
+    <listitem><para>Craig Macintyre</para></listitem>
+    <listitem><para>J. Hyam Rubinstein</para></listitem>
     <listitem><para>The American Institute of Mathematics</para></listitem>
     <listitem><para>The Australian Research Council</para></listitem>
     <listitem><para>Oklahoma State University</para></listitem>

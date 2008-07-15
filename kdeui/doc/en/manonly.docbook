@@ -5,7 +5,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
   <!ENTITY regina "<application>Regina</application>">
 
-  <!ENTITY regauthorplain "Ben Burton">
+  <!ENTITY regauthorplain "Benjamin Burton">
   <!ENTITY regemail "<email>bab@debian.org</email>">
   <!ENTITY regabstract
    "<para>
