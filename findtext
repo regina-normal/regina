@@ -8,4 +8,3 @@ find . '(' \
 	-name "*.h" -o -name "*.c" -o \
 	-name "*.hpp" -o -name "*.tcc" -o -name "*.cpp" ')' \
 	-exec grep -e "$1" {} \; -print
-
