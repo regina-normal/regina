@@ -25,6 +25,10 @@ Version 4.5.1  [ Under development ]
         Routine rowBasis():
             - Added to find the rank of an integer matrix and a basis
               for its row space.
+    TEST SUITE:
+        - Added new tests for normal surfaces that exploit generic properties
+          of layered loops; these tests push to 50 tetrahedra, and can
+          easily be extended further as surface enumeration becomes faster.
 
 Version 4.5  [ 17 May, 2008 ]
 

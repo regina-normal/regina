@@ -66,6 +66,9 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(almostNormalLoopC2);
     CPPUNIT_TEST(almostNormalLoopCtw3);
     CPPUNIT_TEST(almostNormalTwistedKxI);
+    CPPUNIT_TEST(largeDimensionsStandard);
+    CPPUNIT_TEST(largeDimensionsQuad);
+    CPPUNIT_TEST(largeDimensionsAlmostNormal);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -964,6 +967,131 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 0 /* central */, false /* splitting */);
 
             delete list;
+        }
+
+        void testStandardLoopCtwGeneric(unsigned len) {
+            NTriangulation loop;
+            loop.insertLayeredLoop(len, true);
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &loop, NNormalSurfaceList::STANDARD);
+
+            std::ostringstream name;
+            name << "the twisted layered loop C~(" << len << ")";
+
+            // For standard normal and almost normal coordinates we just
+            // count the surfaces (as opposed to in quad space, where we can
+            // describe the surfaces precisely, with proof).
+
+            // The following pattern has been observed experimentally.
+            // For the purposes of the test suite I'm happy to assume it
+            // holds in general; certainly it has been verified for all
+            // the cases that we actually test here.
+            unsigned long curr, prev, tmp;
+            if (len == 1)
+                curr = 2;
+            else if (len == 2)
+                curr = 4;
+            else {
+                curr = 4;
+                prev = 2;
+                for (unsigned counted = 2; counted < len; ++counted) {
+                    tmp = curr + prev - 1;
+                    prev = curr;
+                    curr = tmp;
+                }
+            }
+
+            testSize(list, name.str().c_str(), "standard normal surfaces",
+                curr);
+        }
+
+        void testQuadLoopCtwGeneric(unsigned len) {
+            NTriangulation loop;
+            loop.insertLayeredLoop(len, true);
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &loop, NNormalSurfaceList::QUAD);
+
+            std::ostringstream name;
+            name << "the twisted layered loop C~(" << len << ")";
+
+            // It is easy to prove in general that C~(len) has precisely
+            // (len + 1) vertex surfaces, as described by the following tests.
+            testSize(list, name.str().c_str(), "quad normal surfaces", len + 1);
+            countCompactSurfaces(list, name.str().c_str(),
+                "quad normal edge linking tori", len,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, name.str().c_str(),
+                "quad normal splitting Klein bottles", 1,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                len /* central */, true /* splitting */);
+
+            delete list;
+        }
+
+        void testAlmostNormalLoopCtwGeneric(unsigned len) {
+            NTriangulation loop;
+            loop.insertLayeredLoop(len, true);
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &loop, NNormalSurfaceList::AN_STANDARD);
+
+            std::ostringstream name;
+            name << "the twisted layered loop C~(" << len << ")";
+
+            // For standard normal and almost normal coordinates we just
+            // count the surfaces (as opposed to in quad space, where we can
+            // describe the surfaces precisely, with proof).
+
+            // The following pattern has been observed experimentally.
+            // For the purposes of the test suite I'm happy to assume it
+            // holds in general; certainly it has been verified for all
+            // the cases that we actually test here.
+            unsigned long curr, prev, tmp;
+            if (len == 1)
+                curr = 3;
+            else if (len == 2)
+                curr = 4;
+            else {
+                curr = 4;
+                prev = 2;
+                for (unsigned counted = 2; counted < len; ++counted) {
+                    tmp = curr + prev - 1;
+                    prev = curr;
+                    curr = tmp;
+                }
+                if (len % 2 == 0)
+                    curr += len;
+            }
+
+            testSize(list, name.str().c_str(),
+                "standard almost normal surfaces", curr);
+        }
+
+        void largeDimensionsStandard() {
+            testStandardLoopCtwGeneric(4);
+            testStandardLoopCtwGeneric(8);
+            testStandardLoopCtwGeneric(12);
+        }
+
+        void largeDimensionsQuad() {
+            testQuadLoopCtwGeneric(5);
+            testQuadLoopCtwGeneric(10);
+            testQuadLoopCtwGeneric(20);
+            testQuadLoopCtwGeneric(30);
+            testQuadLoopCtwGeneric(40);
+            testQuadLoopCtwGeneric(50);
+        }
+
+        void largeDimensionsAlmostNormal() {
+            testAlmostNormalLoopCtwGeneric(3);
+            testAlmostNormalLoopCtwGeneric(6);
+            testAlmostNormalLoopCtwGeneric(9);
         }
 };
 
