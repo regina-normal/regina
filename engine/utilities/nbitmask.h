@@ -61,6 +61,9 @@ namespace regina {
  *
  * Once a bitmask is created, the only way its length (the number of bits)
  * can be changed is by calling reset(unsigned).
+ *
+ * \todo \opt Insist that sizeof(Piece) is a power of two, and replace
+ * expensive division/mod operations with cheap bit operations.
  */
 class NBitmask {
     private:
@@ -129,6 +132,70 @@ class NBitmask {
          * @param value the value that will be assigned to the (\a index)th bit.
          */
         void set(unsigned index, bool value);
+
+        /**
+         * Sets all bits in the given sorted list to the given value.
+         *
+         * This is a convenience routine for setting many bits at once.
+         * The indices of the bits to set should be sorted and stored in
+         * some container, such as a std::set or a C-style array.  This
+         * routine takes iterators over this container, and sets the
+         * bits at the corresponding indices to the given value.
+         *
+         * For example, the following code would set bits 3, 5 and 6
+         * to \c true:
+         *
+         * \code
+         * std::vector<unsigned> indices;
+         * indices.push(3); indices.push(5); indices.push(6);
+         * bitmask.set(indices.begin(), indices.end(), true);
+         * \endcode
+         *
+         * Likewise, the following code would set bits 1, 4 and 7 to \c false:
+         *
+         * \code
+         * unsigned indices[3] = { 1, 4, 7 };
+         * bitmask.set(indices, indices + 3, false);
+         * \endcode
+         *
+         * All other bits of this bitmask are unaffected by this routine.
+         *
+         * \pre \a ForwardIterator is a forward iterator type that iterates
+         * over integer values.
+         * \pre The list of indices described by these iterators is
+         * in \e sorted order.  This is to allow optimisations for
+         * larger bitmask types.
+         * \pre All indices in the given list are at least zero and
+         * strictly less than the length of this bitmask.
+         *
+         * @param indexBegin the beginning of the iterator range
+         * containing the sorted indices of the bits to set.
+         * @param indexEnd the end of the iterator range containing the
+         * sorted indices of the bits to set.
+         * @param value the value that will be assigned to each of the
+         * corresponding bits.
+         */
+        template <typename ForwardIterator>
+        void set(ForwardIterator indexBegin, ForwardIterator indexEnd,
+                bool value) {
+            Piece* base = mask;
+            unsigned offset = 0;
+            unsigned diff;
+
+            for ( ; indexBegin != indexEnd; ++indexBegin) {
+                // INV: offset = (base - mask) * 8 * sizeof(Piece)
+                // INV: *indexBegin >= offset
+                if (*indexBegin >= offset + (8 * sizeof(Piece))) {
+                    diff = ((*indexBegin - offset) / (8 * sizeof(Piece)));
+                    base += diff;
+                    offset += (8 * sizeof(Piece) * diff);
+                }
+
+                *base |= (Piece(1) << (*indexBegin - offset));
+                if (! value)
+                    *base ^= (Piece(1) << (*indexBegin - offset));
+            }
+        }
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -348,6 +415,58 @@ class NBitmask1 {
             mask |= (T(1) << index);
             if (! value)
                 mask ^= (T(1) << index);
+        }
+
+        /**
+         * Sets all bits in the given sorted list to the given value.
+         *
+         * This is a convenience routine for setting many bits at once.
+         * The indices of the bits to set should be sorted and stored in
+         * some container, such as a std::set or a C-style array.  This
+         * routine takes iterators over this container, and sets the
+         * bits at the corresponding indices to the given value.
+         *
+         * For example, the following code would set bits 3, 5 and 6
+         * to \c true:
+         *
+         * \code
+         * std::vector<unsigned> indices;
+         * indices.push(3); indices.push(5); indices.push(6);
+         * bitmask.set(indices.begin(), indices.end(), true);
+         * \endcode
+         *
+         * Likewise, the following code would set bits 1, 4 and 7 to \c false:
+         *
+         * \code
+         * unsigned indices[3] = { 1, 4, 7 };
+         * bitmask.set(indices, indices + 3, false);
+         * \endcode
+         *
+         * All other bits of this bitmask are unaffected by this routine.
+         *
+         * \pre \a ForwardIterator is a forward iterator type that iterates
+         * over integer values.
+         * \pre The list of indices described by these iterators is
+         * in \e sorted order.  This is to allow optimisations for
+         * larger bitmask types.
+         * \pre All indices in the given list are between
+         * 0 and (8 * sizeof(\a T) - 1) inclusive.
+         *
+         * @param indexBegin the beginning of the iterator range
+         * containing the sorted indices of the bits to set.
+         * @param indexEnd the end of the iterator range containing the
+         * sorted indices of the bits to set.
+         * @param value the value that will be assigned to each of the
+         * corresponding bits.
+         */
+        template <typename ForwardIterator>
+        void set(ForwardIterator indexBegin, ForwardIterator indexEnd,
+                bool value) {
+            for ( ; indexBegin != indexEnd; ++indexBegin) {
+                mask |= (T(1) << *indexBegin);
+                if (! value)
+                    mask ^= (T(1) << *indexBegin);
+            }
         }
 
         /**
@@ -579,6 +698,67 @@ class NBitmask2 {
                 high |= (U(1) << (index - 8 * sizeof(T)));
                 if (! value)
                     high ^= (U(1) << (index - 8 * sizeof(T)));
+            }
+        }
+
+        /**
+         * Sets all bits in the given sorted list to the given value.
+         *
+         * This is a convenience routine for setting many bits at once.
+         * The indices of the bits to set should be sorted and stored in
+         * some container, such as a std::set or a C-style array.  This
+         * routine takes iterators over this container, and sets the
+         * bits at the corresponding indices to the given value.
+         *
+         * For example, the following code would set bits 3, 5 and 6
+         * to \c true:
+         *
+         * \code
+         * std::vector<unsigned> indices;
+         * indices.push(3); indices.push(5); indices.push(6);
+         * bitmask.set(indices.begin(), indices.end(), true);
+         * \endcode
+         *
+         * Likewise, the following code would set bits 1, 4 and 7 to \c false:
+         *
+         * \code
+         * unsigned indices[3] = { 1, 4, 7 };
+         * bitmask.set(indices, indices + 3, false);
+         * \endcode
+         *
+         * All other bits of this bitmask are unaffected by this routine.
+         *
+         * \pre \a ForwardIterator is a forward iterator type that iterates
+         * over integer values.
+         * \pre The list of indices described by these iterators is
+         * in \e sorted order.  This is to allow optimisations for
+         * larger bitmask types.
+         * \pre All indices in the given list are between
+         * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
+         *
+         * @param indexBegin the beginning of the iterator range
+         * containing the sorted indices of the bits to set.
+         * @param indexEnd the end of the iterator range containing the
+         * sorted indices of the bits to set.
+         * @param value the value that will be assigned to each of the
+         * corresponding bits.
+         */
+        template <typename ForwardIterator>
+        void set(ForwardIterator indexBegin, ForwardIterator indexEnd,
+                bool value) {
+            // First deal with the bits stored in low.
+            for ( ; indexBegin != indexEnd && *indexBegin < 8 * sizeof(T);
+                    ++indexBegin) {
+                low |= (T(1) << *indexBegin);
+                if (! value)
+                    low ^= (T(1) << *indexBegin);
+            }
+
+            // Now deal with the bits stored in high.
+            for ( ; indexBegin != indexEnd; ++indexBegin) {
+                high |= (U(1) << ((*indexBegin) - 8 * sizeof(T)));
+                if (! value)
+                    high ^= (U(1) << ((*indexBegin) - 8 * sizeof(T)));
             }
         }
 
