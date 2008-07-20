@@ -64,6 +64,8 @@ namespace regina {
  *
  * \todo \opt Insist that sizeof(Piece) is a power of two, and replace
  * expensive division/mod operations with cheap bit operations.
+ *
+ * \ifacespython Not present.
  */
 class NBitmask {
     private:
@@ -345,6 +347,8 @@ class NBitmask {
  * arbitrarily many bits, see NBitmask.
  *
  * \pre Type \a T is an unsigned integral numeric type.
+ *
+ * \ifacespython Not present.
  */
 template <typename T>
 class NBitmask1 {
@@ -615,6 +619,8 @@ class NBitmask1 {
  * see NBitmask.
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
+ *
+ * \ifacespython Not present.
  */
 template <typename T, typename U = T>
 class NBitmask2 {
