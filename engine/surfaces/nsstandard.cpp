@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "enumerate/ncompconstraint.h"
+#include "enumerate/nenumconstraint.h"
 #include "surfaces/nsstandard.h"
 #include "utilities/nrational.h"
 #include "maths/nmatrixint.h"
@@ -111,22 +111,17 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
     return ans;
 }
 
-NCompConstraintSet* NNormalSurfaceVectorStandard::makeEmbeddedConstraints(
+NEnumConstraintList* NNormalSurfaceVectorStandard::makeEmbeddedConstraints(
         NTriangulation* triangulation) {
-    NCompConstraintSet* ans = new NCompConstraintSet();
-    NCompConstraint* constraint;
+    NEnumConstraintList* ans = new NEnumConstraintList(
+        triangulation->getNumberOfTetrahedra());
 
-    unsigned i;
-    unsigned long base = 0;
-    for (unsigned long tet = 0; tet < triangulation->getNumberOfTetrahedra();
-            tet++) {
-        constraint = new NCompConstraint();
-        for (i = 4; i < 7; i++)
-            constraint->getCoordinates().insert(
-                constraint->getCoordinates().end(), base + i);
+    unsigned base = 0;
+    for (unsigned c = 0; c < ans->size(); ++c) {
+        (*ans)[c].insert((*ans)[c].end(), base + 4);
+        (*ans)[c].insert((*ans)[c].end(), base + 5);
+        (*ans)[c].insert((*ans)[c].end(), base + 6);
         base += 7;
-
-        ans->push_back(constraint);
     }
 
     return ans;

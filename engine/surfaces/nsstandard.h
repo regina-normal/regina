@@ -96,7 +96,7 @@ class NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
         static void createNonNegativeCone(NTriangulation* triangulation,
             RayOutputIterator rays, FaceOutputIterator faces);
         static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
-        static NCompConstraintSet* makeEmbeddedConstraints(
+        static NEnumConstraintList* makeEmbeddedConstraints(
             NTriangulation* triangulation);
 };
 

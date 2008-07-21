@@ -110,15 +110,15 @@ void* NAngleStructureList::Enumerator::run(void*) {
     for (index = 0; index < nCoords - 1; index++)
         faces.push_back(new NVectorUnit<NLargeInteger>(nCoords, index));
     NVectorDense<NLargeInteger>* finalFace =
-        new NVectorDense<NLargeInteger>(nCoords, NLargeInteger::one);
-    finalFace->setElement(nCoords - 1, -startValue);
+        new NVectorDense<NLargeInteger>(nCoords, - NLargeInteger::one);
+    finalFace->setElement(nCoords - 1, startValue);
     faces.push_back(finalFace);
 
     if (progress)
         progress->incCompleted();
 
     // Find the angle structures.
-    NDoubleDescriptor::enumerateVertices(StructureInserter(*list, triang),
+    NDoubleDescriptor::enumerateExtremalRays(StructureInserter(*list, triang),
         originalCone.begin(), originalCone.end(), faces.begin(), faces.end(),
         eqns, 0, progress);
 

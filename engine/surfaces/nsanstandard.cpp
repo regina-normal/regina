@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "enumerate/ncompconstraint.h"
+#include "enumerate/nenumconstraint.h"
 #include "surfaces/nsanstandard.h"
 #include "utilities/nrational.h"
 #include "maths/nmatrixint.h"
@@ -130,31 +130,29 @@ NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
     return ans;
 }
 
-NCompConstraintSet* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
+NEnumConstraintList* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
         NTriangulation* triangulation) {
     // At most one quad/oct per tetrahedron.
     // Also at most one oct type overall.
-    NCompConstraintSet* ans = new NCompConstraintSet();
-    NCompConstraint* globalOctConstraint = new NCompConstraint();
-    std::set<unsigned>& globalOctCoords(globalOctConstraint->getCoordinates());
-    NCompConstraint* constraint;
+    NEnumConstraintList* ans = new NEnumConstraintList(
+        triangulation->getNumberOfTetrahedra() + 1);
 
-    unsigned i;
-    unsigned long base = 0;
-    for (unsigned long tet = 0; tet < triangulation->getNumberOfTetrahedra();
-            tet++) {
-        constraint = new NCompConstraint();
-        for (i = 4; i < 10; i++)
-            constraint->getCoordinates().insert(
-                constraint->getCoordinates().end(), base + i);
-        for (i = 7; i < 10; i++)
-            globalOctCoords.insert(globalOctCoords.end(), base + i);
+    unsigned base = 0;
+    for (unsigned c = 1; c < ans->size(); ++c) {
+        (*ans)[c].insert((*ans)[c].end(), base + 4);
+        (*ans)[c].insert((*ans)[c].end(), base + 5);
+        (*ans)[c].insert((*ans)[c].end(), base + 6);
+        (*ans)[c].insert((*ans)[c].end(), base + 7);
+        (*ans)[c].insert((*ans)[c].end(), base + 8);
+        (*ans)[c].insert((*ans)[c].end(), base + 9);
+
+        (*ans)[0].insert((*ans)[0].end(), base + 7);
+        (*ans)[0].insert((*ans)[0].end(), base + 8);
+        (*ans)[0].insert((*ans)[0].end(), base + 9);
+
         base += 10;
-
-        ans->push_back(constraint);
     }
 
-    ans->push_back(globalOctConstraint);
     return ans;
 }
 

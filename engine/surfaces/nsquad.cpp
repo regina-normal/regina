@@ -27,7 +27,7 @@
 /* end stub */
 
 #include <deque>
-#include "enumerate/ncompconstraint.h"
+#include "enumerate/nenumconstraint.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsstandard.h"
 #include "utilities/nrational.h"
@@ -75,22 +75,17 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
     return ans;
 }
 
-NCompConstraintSet* NNormalSurfaceVectorQuad::makeEmbeddedConstraints(
+NEnumConstraintList* NNormalSurfaceVectorQuad::makeEmbeddedConstraints(
         NTriangulation* triangulation) {
-    NCompConstraintSet* ans = new NCompConstraintSet();
-    NCompConstraint* constraint;
+    NEnumConstraintList* ans = new NEnumConstraintList(
+        triangulation->getNumberOfTetrahedra());
 
-    unsigned i;
-    unsigned long base = 0;
-    for (unsigned long tet = 0; tet < triangulation->getNumberOfTetrahedra();
-            tet++) {
-        constraint = new NCompConstraint();
-        for (i = 0; i < 3; i++)
-            constraint->getCoordinates().insert(
-                constraint->getCoordinates().end(), base + i);
+    unsigned base = 0;
+    for (unsigned c = 0; c < ans->size(); ++c) {
+        (*ans)[c].insert((*ans)[c].end(), base);
+        (*ans)[c].insert((*ans)[c].end(), base + 1);
+        (*ans)[c].insert((*ans)[c].end(), base + 2);
         base += 3;
-
-        ans->push_back(constraint);
     }
 
     return ans;

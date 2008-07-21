@@ -167,11 +167,11 @@ extern const NPerm __octDiscArcs[24];
 #define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
 #endif
 
+class NEnumConstraintList;
 class NTriangulation;
 class NEdge;
 class NVertex;
 class NXMLNormalSurfaceReader;
-class NCompConstraintSet;
 
 /**
  * Stores the vector of a single normal surface in a 3-manifold.
@@ -517,18 +517,18 @@ class NNormalSurfaceVector : public NRay {
                 NTriangulation* triangulation);
         #endif
         /**
-         * Creates a new set of compatibility constraints representing
+         * Creates a new set of validity constraints representing
          * the condition that normal surfaces be embedded.  The
-         * compatibility constraints will be expressed relative to the
+         * validity constraints will be expressed relative to the
          * flavour of coordinate system corresponding to this particular
          * subclass of NNormalSurfaceVector.
          *
          * @param triangulation the triangulation upon which these
-         * compatibility constraints will be based.
+         * validity constraints will be based.
          * @return a newly allocated set of constraints.
          */
         #ifdef __DOXYGEN
-            static NCompConstraintSet* makeEmbeddedConstraints(
+            static NEnumConstraintList* makeEmbeddedConstraints(
                 NTriangulation* triangulation);
         #endif
 };

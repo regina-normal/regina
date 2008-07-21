@@ -44,7 +44,7 @@
 
 namespace regina {
 
-class NCompConstraintSet;
+class NEnumConstraintList;
 class NMatrixInt;
 class NProgressNumber;
 
@@ -71,50 +71,52 @@ class NDoubleDescriptor {
          * allocated and written to the given output iterator.  Their
          * deallocation is the responsibility of whoever called this routine.
          *
-         * The given cone is represented by a list of its extremal rays and a
-         * list of hyperplanes that determine its faces.  Specifically the list
-         * of face hyperplanes must be a set of hyperplanes passing through the
-         * origin for which the actual faces of the cone are determined by
-         * intersecting this set of hyperplanes with some subspace of the entire
-         * vector space.  Note that this list of hyperplanes might well be the
-         * faces themselves.
+         * The given cone must be of full dimension and must have its vertex
+         * at the origin.  The cone is represented by:
          *
-         * The new linear subspace to intersect is represented by a matrix in
-         * which each row represents a hyperplane through
-         * the origin; the subspace is the intersection of all these
-         * hyperplanes.  Each hyperplane is represented by the vector of a ray
-         * perpendicular to it.
+         * - a list of its extremal rays (all described as vectors
+         *   through the origin);
          *
-         * The resulting list of extremal rays is guaranteed not to contain any
-         * duplicates or redundancies.  They are guaranteed to be of the same
-         * subclass of NRay as the initial extremal rays.
+         * - a list of the facets of this cone (all described as hyperplanes
+         *   through the origin, where the cone sits on the non-negative
+         *   side).
          *
-         * Parameter \a constraints may contain a set of compatibility
-         * constraints representing necessary and sufficient conditions
-         * for a convex combination of two valid rays to be also valid,
-         * where the definition of \e valid depends upon the specific
-         * application at hand.  If a set of constraints is passed, only
-         * valid extremal rays (as defined by these constraints) will
-         * be found.  In this case the given cone may be a union of many
-         * smaller cones, since validity need not be preserved under addition.
-         * These smaller cones may intersect, and an extremal ray may belong to
-         * more than one such cone.  In such cases, the ray should \b not be
-         * duplicated.
+         * The extremal rays must indeed be extremal (i.e., one cannot
+         * be a convex combination of the others).  The facet list must
+         * not contain any redundant hyperplanes (i.e., the given hyperplanes
+         * must be in one-to-one correspondence with the actual facets of the
+         * cone).
+         *
+         * This routine also takes a linear subspace, defined by the
+         * intersection of a set of hyperplanes through the origin (this
+         * subspace is described as a matrix, with each row giving the
+         * equation for one hyperplane).
+         *
+         * The purpose of this routine is to compute the extremal rays of
+         * the new cone formed by intersecting the original cone with this
+         * linear subspace.  The resulting list of extremal rays will
+         * contain no duplicates or redundancies, and they are guaranteed to
+         * be of the same subclass of NRay as the initial extremal rays.
+         *
+         * Parameter \a constraints may contain a set of validity constraints,
+         * in which case this routine will only return \e valid extremal
+         * rays.  Each validity constraint is of the form "an extremal ray
+         * may only lie outside at most one of these original facets"; see the
+         * NEnumConstraintList class for details.  These contraints have the
+         * important property that, although validity is not preserved
+         * under convex combination, \e invalidity is.
          *
          * A numeric progress watcher may be passed for progress reporting.
          * If so, this routine will poll for cancellation requests accordingly.
          *
          * \pre The cone described by <tt>[oldRaysFirst, oldRaysLast)</tt> and
-         * <tt>[facesFirst, facesLast)</tt> is convex and
-         * satisfies the structural requirements given above.
-         * \pre The list <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
-         * does not contain any duplicates or redundancies.
+         * <tt>[facetsFirst, facetsLast)</tt> is convex and
+         * satisfies the structural requirements given above.  In
+         * particular, it is full dimensional, and neither the ray list nor
+         * the facet list contains duplicates or redundancies.
          * \pre If \a constraints is non-zero, then the given list
          * <tt>[oldRaysFirst, oldRaysLast)</tt> must contain only valid rays,
-         * where validity is defined by the given set of compatibility
-         * constraints.
-         *
-         * \todo \opt Intersect the hyperplanes in a good order.
+         * where validity is defined by the given set of validity constraints.
          *
          * @param results the output iterator to which the resulting extremal
          * rays will be written; this must accept objects of type <tt>NRay*</tt>
@@ -122,30 +124,22 @@ class NDoubleDescriptor {
          * used for the initial list of rays).
          * @param oldRaysFirst the beginning of the list
          * <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
-         * defining the cone to intersect with the given subspace; this must
-         * be a forward iterator over objects of type <tt>const NRay*</tt>
-         * (or some subclass thereof).
-         * @param oldRaysLast the end of the list
-         * <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
-         * defining the cone to intersect with the given subspace; this must
-         * be a forward iterator over objects of type <tt>const NRay*</tt>
-         * (or some subclass thereof).
-         * @param facesFirst the beginning of the list <tt>[facesFirst,
-         * facesLast)</tt> of hyperplanes that determine the faces of the given
-         * cone, as described above; each hyperplane is represented by the
-         * vector of a ray perpendicular
-         * to it.  Note that this list is allowed to contain duplicates or
-         * redundancies.  This must be a forward iterator over objects of type
+         * defining the original cone; this must be a forward iterator over
+         * objects of type <tt>const NRay*</tt> (or some subclass thereof).
+         * @param oldRaysLast the end of the list of extremal rays
+         * defining the original cone.
+         * @param facetsFirst the beginning of the list <tt>[facetsFirst,
+         * facetsLast)</tt> of facets of the original cone; this must be a
+         * forward iterator over objects of type
          * <tt>NVector\<NLargeInteger\>*</tt>.
-         * @param facesLast the end of the list <tt>[facesFirst, facesLast)</tt>
-         * of hyperplanes that determine the faces of the given cone.
-         * This must be a forward iterator over objects of type
-         * <tt>NVector\<NLargeInteger\>*</tt>.
-         * @param subspace a matrix whose rows are hyperplanes whose
-         * intersection defines the subspace to intersect with the given cone.
-         * @param constraints a set of compatibility constraints that define
-         * validity if we are only to find "valid" extremal rays, or 0 if
-         * no additional constraints should be imposed.
+         * @param facetsLast the end of the list of facets of the original cone.
+         * @param subspace a matrix defining the linear subspace to intersect
+         * with the given cone.  Each row of this matrix is the equation
+         * for one of the hyperplanes whose intersection forms this linear
+         * subspace.  The number of columns in this matrix must be the
+         * dimension of the overall space in which we are working.
+         * @param constraints a set of validity constraints as described
+         * above, or 0 if no additional constraints should be imposed.
          * @param progress a numeric progress watcher through which progress
          * will be reported, or 0 if no progress reporting is required.  If
          * a progress watcher is passed, its expected total will be
@@ -154,27 +148,28 @@ class NDoubleDescriptor {
          * NProgress::setFinished() will \e not be called, since
          * whoever called this routine may need to do further processing.
          */
-        template <class OutputIterator, class RayIterator, class FaceIterator>
-        static void enumerateVertices(OutputIterator results,
+        template <class OutputIterator, class RayIterator, class FacetIterator>
+        static void enumerateExtremalRays(OutputIterator results,
             RayIterator oldRaysFirst, RayIterator oldRaysLast,
-            FaceIterator facesFirst, FaceIterator facesLast,
-            const NMatrixInt& subspace, const NCompConstraintSet* constraints,
+            FacetIterator facetsFirst, FacetIterator facetsLast,
+            const NMatrixInt& subspace,
+            const NEnumConstraintList* constraints,
             NProgressNumber* progress = 0);
 
     private:
         /**
          * A helper class for vertex enumeration, describing both a ray
-         * (a vertex of the solution space) and the set of faces that
-         * this ray belongs to.
+         * (a vertex of the solution space) and the set of original facets
+         * that this ray belongs to.
          *
          * The \a BitmaskType template argument describes how the set of
-         * faces will be stored.  Specifically, the set of faces is
-         * stored as bitmask, with one bit per face; each bit is set if
-         * and only if this ray belongs to the corresponding face.
+         * original facets will be stored.  Specifically, the set of facets is
+         * stored as a bitmask, with one bit per facet; each bit is set if
+         * and only if this ray belongs to the corresponding original facet.
          *
          * Since this class is used heavily, faster bitmask types such
          * as NBitmask1 and NBitmask2 are preferred; however, if the
-         * number of faces is too large then the slower general-use NBitmask
+         * number of facets is too large then the slower general-use NBitmask
          * class will need to be used instead.
          *
          * \pre The template argument \a BitmaskType is one of Regina's
@@ -183,30 +178,29 @@ class NDoubleDescriptor {
         template <class BitmaskType>
         class RaySpec : public NFastVector<NLargeInteger> {
             private:
-                BitmaskType faces_;
-                    /**< A bitmask listing which faces this ray belongs to. */
+                BitmaskType facets_;
+                    /**< A bitmask listing which original facets this ray
+                         belongs to. */
 
             public:
                 /**
                  * Creates a new ray specification.  The bitmask listing
-                 * which faces the ray belongs to will be computed
-                 * automatically for the given range of faces.
+                 * which facets the ray belongs to will be computed
+                 * automatically for the given range of facets.
                  *
-                 * \pre The given range of faces is not empty, but is
+                 * \pre The given range of facets is not empty, but is
                  * small enough that \a BitmaskType can hold the
                  * corresponding number of bits.
                  *
                  * @param ray the new ray, in pure vector form.
-                 * @param facesFirst the beginning of the range of
-                 * faces, as passed to the main routine
-                 * NDoubleDescriptor::enumerateVertices().
-                 * @param facesLast the end of the range of
-                 * faces, as passed to the main routine
-                 * NDoubleDescriptor::enumerateVertices().
+                 * @param facetsFirst the beginning of the range of
+                 * original facets, as passed to the main routine
+                 * NDoubleDescriptor::enumerateExtremalRays().
+                 * @param facetsLast the end of the range of original facets.
                  */
-                template <class FaceIterator>
+                template <class FacetIterator>
                 inline RaySpec(const NRay& ray,
-                    FaceIterator facesFirst, FaceIterator facesLast);
+                    FacetIterator facetsFirst, FacetIterator facetsLast);
 
                 /**
                  * Creates a new ray, describing where the plane between
@@ -225,29 +219,29 @@ class NDoubleDescriptor {
                     const NVector<NLargeInteger>& hyperplane);
 
                 /**
-                 * Returns a raw bitmask listing which faces this ray
-                 * belongs to.  The individual bits correspond to the
-                 * faces passed to the RaySpec constructor; bits are set
+                 * Returns a raw bitmask listing which original facets this
+                 * ray belongs to.  The individual bits correspond to the
+                 * facets passed to the RaySpec constructor; bits are set
                  * to \c true if and only if this ray belongs to the
-                 * corresponding face.
+                 * corresponding facet.
                  *
-                 * @return a bitmask of faces.
+                 * @return a bitmask of facets.
                  */
-                inline const BitmaskType& faces() const;
+                inline const BitmaskType& facets() const;
 
                 /**
                  * Determines whether this ray belongs to all of the
-                 * faces that are common to both given rays.
+                 * facets that are common to both given rays.
                  *
-                 * For this routine to return \c true, every face that
+                 * For this routine to return \c true, every facet that
                  * contains both \a x and \a y must contain this ray also.
                  *
                  * @param x the first of the given rays.
                  * @param y the second of the given rays.
                  * @return \c true if and only if this ray belongs to all
-                 * of the faces that \e both \a x and \a y belong to.
+                 * of the facets that \e both \a x and \a y belong to.
                  */
-                inline bool onAllCommonFaces(
+                inline bool onAllCommonFacets(
                     const RaySpec& x, const RaySpec& y) const;
 
                 /**
@@ -278,43 +272,42 @@ class NDoubleDescriptor {
         /**
          * A comparison object that helps sort hyperplanes into a good
          * order before running the double descriptor algorithm.
+         * A hyperplane is described by a row of the \a subspace matrix
+         * passed to NDoubleDescriptor::enumerateExtremalRays().
          *
-         * A hyperplane is described by a row of the \a subspace matrix passed
-         * to NDoubleDescriptor::enumerateVertices().  Specifically, the
-         * matrix row is a vector perpendicular to the hyperplane.
-         *
-         * The ordering also involves the range of faces passed to
-         * NDoubleDescriptor::enumerateVertices(), and is defined as follows.
-         * For each hyperplane, we create a sequence (h_1, ..., h_f), where
-         * h_i is 0 if the hyperplane and the ith face are perpendicular, or
-         * 1 if not.  We then simply compare these sequences lexicographically.
+         * The ordering also involves the range of original facets passed
+         * to NDoubleDescriptor::enumerateExtremalRays(), and is defined
+         * as follows.  For each hyperplane, we create a sequence
+         * (h_1, ..., h_f), where h_i is 0 if the hyperplane and the
+         * ith facet are perpendicular, or 1 if not.  We then simply
+         * compare these sequences lexicographically.
          */
-        template <typename FaceIterator>
+        template <typename FacetIterator>
         class LexComp {
             private:
                 const NMatrixInt& matrix_;
                     /**< The \a subspace matrix passed to
-                         NDoubleDescriptor::enumerateVertices(). */
-                FaceIterator facesFirst_;
-                    /**< The beginning of the range of faces passed to
-                         NDoubleDescriptor::enumerateVertices(). */
-                FaceIterator facesLast_;
-                    /**< The end of the range of faces passed to
-                         NDoubleDescriptor::enumerateVertices(). */
+                         NDoubleDescriptor::enumerateExtremalRays(). */
+                FacetIterator facetsFirst_;
+                    /**< The beginning of the range of original facets passed
+                         to NDoubleDescriptor::enumerateExtremalRays(). */
+                FacetIterator facetsLast_;
+                    /**< The end of the range of original facets passed to
+                         NDoubleDescriptor::enumerateExtremalRays(). */
 
             public:
                 /**
                  * Creates a new helper object for comparing hyperplanes.
                  *
                  * @param matrix the \a subspace matrix as passed to
-                 * NDoubleDescriptor::enumerateVertices().
-                 * @param facesFirst the beginning of the range of faces
-                 * passed to NDoubleDescriptor::enumerateVertices().
-                 * @param facesLast the end of the range of faces
-                 * passed to NDoubleDescriptor::enumerateVertices().
+                 * NDoubleDescriptor::enumerateExtremalRays().
+                 * @param facetsFirst the beginning of the range of original
+                 * facets passed to NDoubleDescriptor::enumerateExtremalRays().
+                 * @param facetsLast the end of the range of original facets
+                 * passed to NDoubleDescriptor::enumerateExtremalRays().
                  */
                 inline LexComp(const NMatrixInt& matrix,
-                        FaceIterator facesFirst, FaceIterator faceLast);
+                        FacetIterator facetsFirst, FacetIterator facetsLast);
 
                 /**
                  * Determines whether the hyperplane described by
@@ -342,26 +335,27 @@ class NDoubleDescriptor {
         NDoubleDescriptor();
 
         /**
-         * Identical to the public routine enumerateVertices(), except
+         * Identical to the public routine enumerateExtremalRays(), except
          * that there is an extra template parameter \a BitmaskType.
          * This specifies what type should be used for the bitmask
-         * describing which faces a ray belongs to.
+         * describing which original facets a ray belongs to.
          *
          * All arguments to this function are identical to those for the
-         * public routine enumerateVertices().
+         * public routine enumerateExtremalRays().
          *
          * \pre The bitmask type is one of Regina's bitmask types, such
          * as NBitmask, NBitmask1 or NBitmask2.
          * \pre The type \a BitmaskType can handle at least \a f bits,
-         * where \a f is the number of faces in the given range.
-         * \pre The given range of faces is not empty.
+         * where \a f is the number of original facets in the given range.
+         * \pre The given range of facets is not empty.
          */
         template <class BitmaskType,
-                  class OutputIterator, class RayIterator, class FaceIterator>
+                  class OutputIterator, class RayIterator, class FacetIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             RayIterator oldRaysFirst, RayIterator oldRaysLast,
-            FaceIterator facesFirst, FaceIterator facesLast,
-            const NMatrixInt& subspace, const NCompConstraintSet* constraints,
+            FacetIterator facetsFirst, FacetIterator facetsLast,
+            const NMatrixInt& subspace,
+            const NEnumConstraintList* constraints,
             NProgressNumber* progress);
 
         /**
@@ -373,11 +367,11 @@ class NDoubleDescriptor {
          * solution space with the given hyperplane, and places the
          * vertices of the new solution space in the output list \a dest.
          *
-         * The set of compatibility constraints must be passed here as a
-         * C-style array of bitmasks.  Each bitmask is a bitmask of faces,
+         * The set of validity constraints must be passed here as a
+         * C-style array of bitmasks.  Each bitmask is a bitmask of facets,
          * as seen in the RaySpec inner class.  Each constraint is of the
-         * form "a point cannot live outside more than one of these faces";
-         * the bits for these faces must be set to 1 in the corresponding
+         * form "a point cannot live outside more than one of these facets";
+         * the bits for these facets must be set to 1 in the corresponding
          * bitmask, and all other bits must be set to 0.
          *
          * \pre The input list \a src owns its elements, and the output
@@ -389,17 +383,16 @@ class NDoubleDescriptor {
          * before this routine is called.
          * @param dest contains the vertices of the new solution space
          * after this routine returns.
-         * @param hyperplane the hyperplane to intersect, represented by
-         * a vector perpendicular to it.
+         * @param hyperplane the equation for the new hyperplane to intersect.
          * @param prevHyperplanes the number of hyperplanes that have
          * already been intersected with the original cone to form the
          * current solution set.  This does not include the hyperplane
          * currently under consideration.
          * @param constraintsBegin the beginning of the C-style array of
-         * compatibility constraints.  This should be 0 if no additional
+         * validity constraints.  This should be 0 if no additional
          * constraints are to be imposed.
          * @param constraintsEnd a pointer just past the end of the
-         * C-style array of compatibility constraints.  This should be 0
+         * C-style array of validity constraints.  This should be 0
          * if no additional constraints are to be imposed.
          */
         template <class BitmaskType>
@@ -417,26 +410,26 @@ class NDoubleDescriptor {
 // Inline functions for NDoubleDescriptor::RayDesc
 
 template <class BitmaskType>
-template <class FaceIterator>
+template <class FacetIterator>
 inline NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
-        const NRay& ray, FaceIterator facesFirst, FaceIterator facesLast) :
+        const NRay& ray, FacetIterator facetsFirst, FacetIterator facetsLast) :
         NFastVector<NLargeInteger>(ray),
-        faces_(std::distance(facesFirst, facesLast)) {
-    FaceIterator it = facesFirst;
-    for (unsigned i = 0; it != facesLast; ++i)
-        faces_.set(i, (**it++) * ray == 0);
+        facets_(std::distance(facetsFirst, facetsLast)) {
+    FacetIterator it = facetsFirst;
+    for (unsigned i = 0; it != facetsLast; ++i)
+        facets_.set(i, (**it++) * ray == 0);
 }
 
 template <class BitmaskType>
-inline const BitmaskType& NDoubleDescriptor::RaySpec<BitmaskType>::faces()
+inline const BitmaskType& NDoubleDescriptor::RaySpec<BitmaskType>::facets()
         const {
-    return faces_;
+    return facets_;
 }
 
 template <class BitmaskType>
-inline bool NDoubleDescriptor::RaySpec<BitmaskType>::onAllCommonFaces(
+inline bool NDoubleDescriptor::RaySpec<BitmaskType>::onAllCommonFacets(
         const RaySpec<BitmaskType>& x, const RaySpec<BitmaskType>& y) const {
-    return faces_.containsIntn(x.faces_, y.faces_);
+    return facets_.containsIntn(x.facets_, y.facets_);
 }
 
 template <class BitmaskType>
@@ -451,18 +444,18 @@ inline NLargeInteger NDoubleDescriptor::RaySpec<BitmaskType>::operator * (
 
 // Inline functions for NDoubleDescriptor::LexComp
 
-template <typename FaceIterator>
-inline NDoubleDescriptor::LexComp<FaceIterator>::LexComp(
+template <typename FacetIterator>
+inline NDoubleDescriptor::LexComp<FacetIterator>::LexComp(
         const NMatrixInt& matrix,
-        FaceIterator facesFirst, FaceIterator facesLast) :
-        matrix_(matrix), facesFirst_(facesFirst), facesLast_(facesLast) {
+        FacetIterator facetsFirst, FacetIterator facetsLast) :
+        matrix_(matrix), facetsFirst_(facetsFirst), facetsLast_(facetsLast) {
 }
 
-template <typename FaceIterator>
-inline bool NDoubleDescriptor::LexComp<FaceIterator>::operator () (
+template <typename FacetIterator>
+inline bool NDoubleDescriptor::LexComp<FacetIterator>::operator () (
         int i, int j) const {
     NLargeInteger iProd, jProd;
-    for (FaceIterator it = facesFirst_; it != facesLast_; ++it) {
+    for (FacetIterator it = facetsFirst_; it != facetsLast_; ++it) {
         iProd = (**it) * NVectorMatrixRow<NLargeInteger>(matrix_, i);
         jProd = (**it) * NVectorMatrixRow<NLargeInteger>(matrix_, j);
         if (iProd == 0 && jProd != 0)

@@ -30,11 +30,13 @@
 
 #include <algorithm>
 #include "regina-config.h"
-#include "enumerate/ncompconstraint.h"
+#include "enumerate/nenumconstraint.h"
+#include "maths/matrixops.h"
 #include "maths/nvectormatrix.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogresstypes.h"
 #include "utilities/boostutils.h"
+#include "utilities/memutils.h"
 #include "utilities/nbitmask.h"
 
 namespace regina {
@@ -44,7 +46,7 @@ NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& first,
         const RaySpec<BitmaskType>& second,
         const NVector<NLargeInteger>& hyperplane) :
-        NFastVector<NLargeInteger>(second), faces_(second.faces_) {
+        NFastVector<NLargeInteger>(second), facets_(second.facets_) {
     // We are currently a perfect clone of second.
     // Convert ourselves into
     // (hyperplane * first) second - (hyperplane * second) first.
@@ -58,8 +60,8 @@ NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
     if (firstCoeff < zero)
         negate();
 
-    // Compute the new set of faces.
-    faces_ &= first.faces_;
+    // Compute the new set of facets.
+    facets_ &= first.facets_;
 }
 
 template <class BitmaskType>
@@ -82,73 +84,75 @@ void NDoubleDescriptor::RaySpec<BitmaskType>::scaleDown() {
             e->divByExact(gcd);
 }
 
-template <class OutputIterator, class RayIterator, class FaceIterator>
-void NDoubleDescriptor::enumerateVertices(OutputIterator results,
+template <class OutputIterator, class RayIterator, class FacetIterator>
+void NDoubleDescriptor::enumerateExtremalRays(OutputIterator results,
         RayIterator oldRaysFirst, RayIterator oldRaysLast,
-        FaceIterator facesFirst, FaceIterator facesLast,
-        const NMatrixInt& subspace, const NCompConstraintSet* constraints,
+        FacetIterator facetsFirst, FacetIterator facetsLast,
+        const NMatrixInt& subspace,
+        const NEnumConstraintList* constraints,
         NProgressNumber* progress) {
-    unsigned nFaces = std::distance(facesFirst, facesLast);
+    unsigned nFacets = std::distance(facetsFirst, facetsLast);
 
-    if (nFaces == 0) {
+    if (nFacets == 0) {
         // Something is wrong.. every one of the initial rays should
-        // belong to at least one face.  Return no results.
+        // belong to at least one facet.  Return no results.
         return;
     }
 
-    // Choose a bitmask type for representing the set of faces that a
+    // Choose a bitmask type for representing the set of facets that a
     // ray belongs to; in particular, use a (much faster) optimised
     // bitmask type if we can.
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
-    if (nFaces <= 8 * sizeof(unsigned))
+    if (nFacets <= 8 * sizeof(unsigned))
         enumerateUsingBitmask<NBitmask1<unsigned> >(results,
-            oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            oldRaysFirst, oldRaysLast, facetsFirst, facetsLast,
             subspace, constraints, progress);
-    else if (nFaces <= 8 * sizeof(unsigned long))
+    else if (nFacets <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<NBitmask1<unsigned long> >(results,
-            oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            oldRaysFirst, oldRaysLast, facetsFirst, facetsLast,
             subspace, constraints, progress);
 #ifdef HAVE_LONG_LONG
-    else if (nFaces <= 8 * sizeof(unsigned long long))
+    else if (nFacets <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<NBitmask1<unsigned long long> >(results,
-            oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            oldRaysFirst, oldRaysLast, facetsFirst, facetsLast,
             subspace, constraints, progress);
-    else if (nFaces <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
+    else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<NBitmask2<unsigned long long, unsigned> >(results,
-            oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            oldRaysFirst, oldRaysLast, facetsFirst, facetsLast,
             subspace, constraints, progress);
-    else if (nFaces <= 8 * sizeof(unsigned long long) +
+    else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<NBitmask2<unsigned long long, unsigned long> >(
-            results, oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            results, oldRaysFirst, oldRaysLast, facetsFirst, facetsLast,
             subspace, constraints, progress);
-    else if (nFaces <= 16 * sizeof(unsigned long long))
+    else if (nFacets <= 16 * sizeof(unsigned long long))
         enumerateUsingBitmask<NBitmask2<unsigned long long> >(results,
-            oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            oldRaysFirst, oldRaysLast, facetsFirst, facetsLast,
             subspace, constraints, progress);
 #else
-    else if (nFaces <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
+    else if (nFacets <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<NBitmask2<unsigned long, unsigned> >(results,
-            oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            oldRaysFirst, oldRaysLast, facetsFirst, facetsLast,
             subspace, constraints, progress);
-    else if (nFaces <= 16 * sizeof(unsigned long))
+    else if (nFacets <= 16 * sizeof(unsigned long))
         enumerateUsingBitmask<NBitmask2<unsigned long> >(results,
-            oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            oldRaysFirst, oldRaysLast, facetsFirst, facetsLast,
             subspace, constraints, progress);
 #endif
     else
         enumerateUsingBitmask<NBitmask>(results,
-            oldRaysFirst, oldRaysLast, facesFirst, facesLast,
+            oldRaysFirst, oldRaysLast, facetsFirst, facetsLast,
             subspace, constraints, progress);
 }
 
 template <class BitmaskType,
-          class OutputIterator, class RayIterator, class FaceIterator>
+          class OutputIterator, class RayIterator, class FacetIterator>
 void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
         RayIterator oldRaysFirst, RayIterator oldRaysLast,
-        FaceIterator facesFirst, FaceIterator facesLast,
-        const NMatrixInt& subspace, const NCompConstraintSet* constraints,
+        FacetIterator facetsFirst, FacetIterator facetsLast,
+        const NMatrixInt& subspace,
+        const NEnumConstraintList* constraints,
         NProgressNumber* progress) {
     typedef typename std::iterator_traits<RayIterator>::value_type RayClassPtr;
     typedef typename regina::boost::remove_pointer<RayClassPtr>::type RayClass;
@@ -179,22 +183,22 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
 
     for (RayIterator rit = oldRaysFirst; rit != oldRaysLast; ++rit)
         list[0].push_back(new RaySpec<BitmaskType>(
-            **rit, facesFirst, facesLast));
+            **rit, facetsFirst, facetsLast));
 
-    // Convert the set of constraints into a bitmask, where for every
-    // face listed in the constraint the corresponding bit is set to 1.
+    // Convert the set of constraints into a bitmask, where for every original
+    // facet listed in the constraint the corresponding bit is set to 1.
     BitmaskType* constraintsBegin = 0;
     BitmaskType* constraintsEnd = 0;
     if (constraints && ! constraints->empty()) {
         constraintsBegin = new BitmaskType[constraints->size()];
 
-        unsigned nFaces = std::distance(facesFirst, facesLast);
-        NCompConstraintSet::const_iterator cit;
+        unsigned nFacets = std::distance(facetsFirst, facetsLast);
+        NEnumConstraintList::const_iterator cit;
         std::set<unsigned>::const_iterator sit;
         for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
                 cit != constraints->end(); ++cit, ++constraintsEnd) {
-            constraintsEnd->reset(nFaces);
-            (*cit)->toBitmask(*constraintsEnd);
+            constraintsEnd->reset(nFacets);
+            constraintsEnd->set(cit->begin(), cit->end(), true);
         }
     }
 
@@ -203,7 +207,7 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
     // experience with Regina agrees.  The ordering we use here is
     // described in the notes for the inner class NDoubleDescriptor::LexComp.
     //
-    // Sort the integers 1..(nEqns-1) into the order in which we plan to
+    // Sort the integers 0..(nEqns-1) into the order in which we plan to
     // process the hyperplanes.
     int* hyperplanes = new int[nEqns];
     unsigned i;
@@ -211,7 +215,7 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
         hyperplanes[i] = i;
 
     std::sort(hyperplanes, hyperplanes + nEqns,
-        LexComp<FaceIterator>(subspace, facesFirst, facesLast));
+        LexComp<FacetIterator>(subspace, facetsFirst, facetsLast));
 
     // Intersect the hyperplanes one at a time.
     // At any point we should have the latest results in
@@ -293,11 +297,11 @@ void NDoubleDescriptor::intersectHyperplane(
     bool adjacent, broken;
     for (posit = pos.begin(); posit != pos.end(); ++posit)
         for (negit = neg.begin(); negit != neg.end(); ++negit) {
-            BitmaskType join((*posit)->faces());
-            join &= ((*negit)->faces());
+            BitmaskType join((*posit)->facets());
+            join &= ((*negit)->facets());
 
             // We only care about adjacent rays, i.e., rays joined by an edge.
-            // For the rays to be adjacent, the number of faces that
+            // For the rays to be adjacent, the number of original facets that
             // both belong to must be >= dimension(subspace) - 2,
             // which is >= hyperplane.size() - prevHyperplanes - 2.
             // See Fukuda and Prodon (1996), Proposition 9.
@@ -323,11 +327,11 @@ void NDoubleDescriptor::intersectHyperplane(
             }
 
             // Two rays are joined by an edge if and only if there is no
-            // other ray belonging to all of their common faces.
+            // other ray belonging to all of their common facets.
             adjacent = true;
             for (otherit = src.begin(); otherit != src.end(); ++otherit)
                 if (*otherit != *posit && *otherit != *negit &&
-                        (*otherit)->onAllCommonFaces(**posit, **negit)) {
+                        (*otherit)->onAllCommonFacets(**posit, **negit)) {
                     adjacent = false;
                     break;
                 }

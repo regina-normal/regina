@@ -16,9 +16,27 @@ Version 4.5.1  [ Under development ]
               optimised for situations where the length is known to be small.
               BitManipulator makes it easier to offer optimised template
               specialisations.
+        Class NCompConstraint, NCompConstraintSet:
+            - Removed.  Compatibility constraints now refer to facets of
+              the original cone, not coordinate positions (hence the
+              rename, since the semantics have changed in a fundamental way).
+              Individual compatibility constraints are now straight sets of
+              integers, and the deque-based NCompConstraintSet has been
+              replaced with the new vector-based class NEnumConstraintList.
         Class NDoubleDescriptor:
             - Streamlined the vertex enumeration routine, which is now
-              significantly faster.
+              *much* faster.
+            - The vertex enumeration routine now takes its arguments in
+              a different form, and more importantly has new preconditions
+              (such as a full-dimensional cone, and no redundant facets).
+              To ensure that python/C++ users notice that things have changed,
+              this routine has been renamed from enumerateVertices() to
+              enumerateExtremalRays().
+            - Major overhaul of the documentation, which is now (hopefully)
+              much clearer.
+        Class NEnumConstraintList:
+            - Added to replace the old NCompConstraintSet class.  See
+              the notes above on NCompConstraintSet for details.
         Class NFastVector:
             - New vector class that is less flexible than NVector but
               more streamlined, largely because it has no virtual functions.

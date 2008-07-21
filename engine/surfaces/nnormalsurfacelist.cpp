@@ -77,8 +77,8 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
     }
 
     // Perform any pre-enumeration tests and fetch any necessary
-    // compatibility constraints.
-    NCompConstraintSet* constraints = 0;
+    // validity constraints.
+    NEnumConstraintList* constraints = 0;
     bool noSurfaces = false;
     switch(list->flavour) {
         // Import cases from the flavour registry.
@@ -112,7 +112,7 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
         progress->incCompleted();
 
     // Find the normal surfaces.
-    NDoubleDescriptor::enumerateVertices(SurfaceInserter(*list, triang),
+    NDoubleDescriptor::enumerateExtremalRays(SurfaceInserter(*list, triang),
         originalCone.begin(), originalCone.end(), faces.begin(), faces.end(),
         *eqns, constraints, progress);
 
