@@ -351,7 +351,7 @@ unsigned rowBasis(NMatrixInt& matrix) {
             }
         } else {
             // We have a non-zero row.
-            // Make all other entries in column lead equal to zero.
+            // Make all lower entries in column lead equal to zero.
             // Do this with only integer arithmetic.  This could lead to
             // some very large matrix entries, though we're using NLargeInteger
             // so the worst that can happen is that things get slow.
@@ -370,6 +370,84 @@ unsigned rowBasis(NMatrixInt& matrix) {
         }
     }
 
+    return rank;
+}
+
+unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
+    unsigned n = input.columns();
+
+    // Make a copy of the input matrix, and reduce it to row echelon form.
+    NMatrixInt echelon(input);
+
+    unsigned doneRows = 0;
+    unsigned rank = echelon.rows();
+
+    unsigned* lead = new unsigned[n];
+    unsigned r, c, tmp;
+    for (c = 0; c < n; ++c)
+        lead[c] = c;
+
+    NLargeInteger coeff1, coeff2;
+    NLargeInteger lcmLead = 1;
+    while (doneRows < rank) {
+        // INV: For i < doneRows, echelon[i, lead[i]] is non-zero, and
+        // every other entry echelon[j, lead[i]] is zero for j > i.
+
+        // Find the first non-zero entry in row doneRows.
+        for (c = doneRows; c < n; ++c)
+            if (echelon.entry(doneRows, lead[c]) != NMatrixInt::zero)
+                break;
+
+        if (c == n) {
+            // We have a zero row.  Push it to the bottom.
+            --rank;
+            if (doneRows < rank) {
+                echelon.swapRows(doneRows, rank);
+                input.swapRows(doneRows, rank);
+            }
+        } else {
+            // We have a non-zero row.
+            // Save the column in which we found our non-zero entry.
+            tmp = lead[doneRows]; lead[doneRows] = lead[c]; lead[c] = tmp;
+
+            // Make all lower entries in column lead[doneRows] equal to zero.
+            // Do this with only integer arithmetic.  This could lead to
+            // some very large matrix entries, though we're using NLargeInteger
+            // so the worst that can happen is that things get slow.
+            coeff1 = echelon.entry(doneRows, lead[doneRows]);
+            lcmLead = lcmLead.lcm(coeff1);
+
+            for (r = doneRows + 1; r < rank; ++r) {
+                coeff2 = echelon.entry(r, lead[doneRows]);
+                if (coeff2 != NMatrixInt::zero) {
+                    echelon.multRow(r, coeff1);
+                    echelon.addRow(doneRows, r, -coeff2);
+
+                    // Factor out the gcd of this row.
+                    echelon.reduceRow(r);
+                }
+            }
+            ++doneRows;
+        }
+    }
+
+    // Now form the basis for the orthogonal complement.
+    complement.initialise(NMatrixInt::zero);
+
+    for (r = 0; r < n; ++r) {
+        complement.entry(r, lead[r]) = lcmLead;
+        complement.entry(r, lead[r]).negate();
+
+        for (c = 0; c < rank && c < r; ++c) {
+            complement.entry(r, lead[c]) = echelon.entry(c, lead[r]) * lcmLead;
+            complement.entry(r, lead[c]).divByExact(echelon.entry(c, lead[c]));
+        }
+
+        complement.reduceRow(r);
+    }
+
+    // All done!
+    delete[] lead;
     return rank;
 }
 

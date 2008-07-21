@@ -118,9 +118,9 @@ void smithNormalForm(NMatrixInt& matrix,
  * Find a basis for the row space of the given matrix.
  *
  * This routine will rearrange the rows of the given matrix so that the
- * first \a rank rows form a basis of the row space.  The rank itself
- * will be returned.  No other changes will be made to the matrix aside
- * from swapping rows.
+ * first \a rank rows form a basis for the row space (where \a rank is
+ * the rank of the matrix).  The rank itself will be returned.  No other
+ * changes will be made to the matrix aside from swapping rows.
  *
  * Although this routine takes an integer matrix (and only uses integer
  * operations), we consider the row space to be over the \e rationals.
@@ -131,6 +131,43 @@ void smithNormalForm(NMatrixInt& matrix,
  * @return the rank of the given matrix.
  */
 unsigned rowBasis(NMatrixInt& matrix);
+
+/**
+ * Finds a basis for the row space of the given matrix, as well as an
+ * "incremental" basis for its orthogonal complement.
+ *
+ * This routine takes an (\a r by \a c) matrix \a input, as well as a
+ * square (\a c by \a c) matrix \a complement, and does the following:
+ *
+ * - The rows of \a input are rearranged so that the first \a rank rows form
+ *   a basis for the row space (where \a rank is the rank of the matrix).
+ *   No other changes are made to this matrix aside from swapping rows.
+ *
+ * - The matrix \a complement is re-filled (any previous contents are
+ *   thrown away) so that, for any \a i between 0 and \a rank-1 inclusive,
+ *   the final (\a c - \a i) rows of \a complement form a basis for the
+ *   orthogonal complement of the first \a i rows of the rearranged \a input.
+ *
+ * - The rank of the matrix \a input is returned from this routine.
+ *
+ * This routine can help with larger procedures that need to build up a row
+ * space and simultaneously cut down the complement one dimension at a time.
+ *
+ * Although this routine takes integer matrices (and only uses integer
+ * operations), we consider all bases to be over the \e rationals.
+ * That is, although we never divide, we act as though we could if we
+ * wanted to.
+ *
+ * \pre The matrix \a complement is a square matrix, whose size is equal
+ * to the number of columns in \a input.
+ *
+ * @param input the input matrix whose row space we will describe; this
+ * matrix will be changed (though only by swapping rows).
+ * @param complement the square matrix that will be re-filled with the
+ * "incremental" basis for the orthogonal complement of \a input.
+ * @return the rank of the given matrix \a input.
+ */
+unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement);
 
 /**
  * Transforms a given matrix into column echelon form with respect to a

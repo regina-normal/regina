@@ -43,9 +43,9 @@ Version 4.5.1  [ Under development ]
         Class NMatrixInt:
             - New integer-specific routines divRowExact(), divColExact(),
               gcdRow(), gcdCol(), reduceRow() and reduceCol().
-        Routine rowBasis():
-            - Added to find the rank of an integer matrix and a basis
-              for its row space.
+        Routines rowBasis(), rowBasisAndOrthComp():
+            - Added to find the rank of an integer matrix and bases for its
+              row space and orthogonal complement.
     TEST SUITE:
         - Added new tests for normal surfaces that exploit generic properties
           of layered loops; these tests push to 50 tetrahedra, and can

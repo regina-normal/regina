@@ -102,6 +102,7 @@ void addMatrixOps() {
     def("smithNormalForm", SNF_nobasis);
     def("smithNormalForm", SNF_basis);
     def("rowBasis", regina::rowBasis);
+    def("rowBasisAndOrthComp", regina::rowBasisAndOrthComp);
     def("columnEchelonForm", columnEchelonForm_list);
     def("preImageOfLattice", preImageOfLattice_list);
 }
