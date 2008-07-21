@@ -40,6 +40,9 @@ Version 4.5.1  [ Under development ]
         Class NFastVector:
             - New vector class that is less flexible than NVector but
               more streamlined, largely because it has no virtual functions.
+        Class NMatrixInt:
+            - New integer-specific routines divRowExact(), divColExact(),
+              gcdRow(), gcdCol(), reduceRow() and reduceCol().
         Routine rowBasis():
             - Added to find the rank of an integer matrix and a basis
               for its row space.

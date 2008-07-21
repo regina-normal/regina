@@ -334,8 +334,8 @@ unsigned rowBasis(NMatrixInt& matrix) {
     unsigned doneRows = 0;
     unsigned rank = echelon.rows();
 
-    unsigned lead, r, c;
-    NLargeInteger coeff1, coeff2, gcd;
+    unsigned lead, r;
+    NLargeInteger coeff1, coeff2;
     while (doneRows < rank) {
         // Find the first non-zero entry in row doneRows.
         for (lead = 0; lead < echelon.columns(); ++lead)
@@ -363,18 +363,7 @@ unsigned rowBasis(NMatrixInt& matrix) {
                     echelon.addRow(doneRows, r, -coeff2);
 
                     // Factor out the gcd of this row.
-                    gcd = echelon.entry(r, 0);
-                    for (c = 1; c < echelon.columns(); ++c)
-                        if (echelon.entry(r, c) != NMatrixInt::zero) {
-                            gcd = gcd.gcd(echelon.entry(r, c));
-                            if (gcd < 0)
-                                gcd.negate();
-                            if (gcd == NMatrixInt::one)
-                                break;
-                        }
-                    if (gcd != NMatrixInt::zero && gcd != NMatrixInt::one)
-                        for (c = 0; c < echelon.columns(); ++c)
-                            echelon.entry(r, c).divByExact(gcd);
+                    echelon.reduceRow(r);
                 }
             }
             ++doneRows;

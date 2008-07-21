@@ -74,6 +74,122 @@ class NMatrixInt : public NMatrixRing<NLargeInteger>, public ShareableObject {
          */
         NMatrixInt(const NMatrixInt& cloneMe);
 
+        /**
+         * Divides all elements of the given row by the given integer.
+         * This can only be used when the given integer divides into all
+         * row elements exactly (with no remainder), and is much faster
+         * than ordinary division.
+         *
+         * \pre The argument \a divBy is neither zero nor infinity, and
+         * none of the elements of the given row are infinity.
+         * \pre The argument \a divBy divides exactly into every element
+         * of the given row (i.e., it leaves no remainder).
+         * \pre The given row number is between 0 and rows()-1 inclusive.
+         *
+         * @param row the index of the row whose elements should be
+         * divided by \a divBy.
+         * @param divBy the integer to divide each row element by.
+         */
+        void divRowExact(unsigned long row, const NLargeInteger& divBy) {
+            for (NLargeInteger* x = this->data[row];
+                    x != this->data[row] + nCols; ++x)
+                x->divByExact(divBy);
+        }
+
+        /**
+         * Divides all elements of the given column by the given integer.
+         * This can only be used when the given integer divides into all
+         * column elements exactly (with no remainder), and is much faster
+         * than ordinary division.
+         *
+         * \pre The argument \a divBy is neither zero nor infinity, and
+         * none of the elements of the given column are infinity.
+         * \pre The argument \a divBy divides exactly into every element
+         * of the given column (i.e., it leaves no remainder).
+         * \pre The given column number is between 0 and columns()-1 inclusive.
+         *
+         * @param col the index of the column whose elements should be
+         * divided by \a divBy.
+         * @param divBy the integer to divide each column element by.
+         */
+        void divColExact(unsigned long col, const NLargeInteger& divBy) {
+            for (NLargeInteger** row = this->data; row != this->data + nRows;
+                    ++row)
+                (*row)[col].divByExact(divBy);
+        }
+
+        /**
+         * Computes the greatest common divisor of all elements of the
+         * given row.  The value returned is guaranteed to be non-negative.
+         *
+         * \pre The given row number is between 0 and rows()-1 inclusive.
+         *
+         * @param row the index of the row whose gcd should be computed.
+         * @return the greatest common divisor of all elements of this row.
+         */
+        NLargeInteger gcdRow(unsigned long row) {
+            NLargeInteger* x = this->data[row];
+
+            NLargeInteger gcd = *x++;
+            while (x != this->data[row] + nCols && gcd != 1 && gcd != -1)
+                gcd = gcd.gcd(*x++);
+
+            if (gcd < 0)
+                gcd.negate();
+            return gcd;
+        }
+
+        /**
+         * Computes the greatest common divisor of all elements of the
+         * given column.  The value returned is guaranteed to be non-negative.
+         *
+         * \pre The given column number is between 0 and columns()-1 inclusive.
+         *
+         * @param col the index of the column whose gcd should be computed.
+         * @return the greatest common divisor of all elements of this column.
+         */
+        NLargeInteger gcdCol(unsigned long col) {
+            NLargeInteger** row = this->data;
+
+            NLargeInteger gcd = (*row++)[col];
+            while (row != this->data + nRows && gcd != 1 && gcd != -1)
+                gcd = gcd.gcd((*row++)[col]);
+
+            if (gcd < 0)
+                gcd.negate();
+            return gcd;
+        }
+
+        /**
+         * Reduces the given row by dividing all its elements by their
+         * greatest common divisor.  It is guaranteed that, if the row is
+         * changed at all, it will be divided by a \e positive integer.
+         *
+         * \pre The given row number is between 0 and rows()-1 inclusive.
+         *
+         * @param row the index of the row to reduce.
+         */
+        void reduceRow(unsigned long row) {
+            NLargeInteger gcd = gcdRow(row);
+            if (gcd != NLargeInteger::zero && gcd != NLargeInteger::one)
+                divRowExact(row, gcd);
+        }
+
+        /**
+         * Reduces the given column by dividing all its elements by their
+         * greatest common divisor.  It is guaranteed that, if the column is
+         * changed at all, it will be divided by a \e positive integer.
+         *
+         * \pre The given column number is between 0 and columns()-1 inclusive.
+         *
+         * @param col the index of the column to reduce.
+         */
+        void reduceCol(unsigned long col) {
+            NLargeInteger gcd = gcdCol(col);
+            if (gcd != NLargeInteger::zero && gcd != NLargeInteger::one)
+                divColExact(col, gcd);
+        }
+
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
 };
