@@ -127,7 +127,7 @@ void smithNormalForm(NMatrixInt& matrix,
  * That is, although we never divide, we act as though we could if we
  * wanted to.
  *
- * @param the matrix to examine and rearrange.
+ * @param matrix the matrix to examine and rearrange.
  * @return the rank of the given matrix.
  */
 unsigned rowBasis(NMatrixInt& matrix);
