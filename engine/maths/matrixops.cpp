@@ -388,7 +388,6 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
         lead[c] = c;
 
     NLargeInteger coeff1, coeff2;
-    NLargeInteger lcmLead = 1;
     while (doneRows < rank) {
         // INV: For i < doneRows, echelon[i, lead[i]] is non-zero, and
         // every other entry echelon[j, lead[i]] is zero for j > i.
@@ -415,7 +414,6 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
             // some very large matrix entries, though we're using NLargeInteger
             // so the worst that can happen is that things get slow.
             coeff1 = echelon.entry(doneRows, lead[doneRows]);
-            lcmLead = lcmLead.lcm(coeff1);
 
             for (r = doneRows + 1; r < rank; ++r) {
                 coeff2 = echelon.entry(r, lead[doneRows]);
@@ -434,16 +432,35 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
     // Now form the basis for the orthogonal complement.
     complement.initialise(NMatrixInt::zero);
 
+    NLargeInteger lcmLead = 1;
     for (r = 0; r < n; ++r) {
         complement.entry(r, lead[r]) = lcmLead;
         complement.entry(r, lead[r]).negate();
 
-        for (c = 0; c < rank && c < r; ++c) {
+        for (c = 0; c < r && c < rank; ++c) {
             complement.entry(r, lead[c]) = echelon.entry(c, lead[r]) * lcmLead;
             complement.entry(r, lead[c]).divByExact(echelon.entry(c, lead[c]));
         }
 
         complement.reduceRow(r);
+
+        if (r < rank) {
+            coeff1 = echelon.entry(r, lead[r]);
+            lcmLead = lcmLead.lcm(coeff1);
+
+            for (tmp = 0; tmp < r; ++tmp) {
+                coeff2 = echelon.entry(tmp, lead[r]);
+                if (coeff2 != NMatrixInt::zero) {
+                    echelon.multRow(tmp, coeff1);
+                    echelon.addRow(r, tmp, -coeff2);
+
+                    // Factor out the gcd of this row.
+                    echelon.reduceRow(tmp);
+                }
+                // TODO: Is this actually necessary?
+                lcmLead = lcmLead.lcm(echelon.entry(tmp, lead[tmp]));
+            }
+        }
     }
 
     // All done!
