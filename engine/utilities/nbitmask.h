@@ -62,6 +62,10 @@ namespace regina {
  * Once a bitmask is created, the only way its length (the number of bits)
  * can be changed is by calling reset(unsigned).
  *
+ * The length of the bitmask is not actually stored in this structure.
+ * This means that, upon construction (or reset), the length will be
+ * automatically rounded up to the next "raw unit of storage".
+ *
  * \todo \opt Insist that sizeof(Piece) is a power of two, and replace
  * expensive division/mod operations with cheap bit operations.
  *
@@ -327,7 +331,24 @@ class NBitmask {
          * Disable the assignment operator by making it private.
          */
         NBitmask& operator = (const NBitmask&);
+
+    friend std::ostream& operator << (std::ostream& out, const NBitmask& mask);
 };
+
+/**
+ * Writes the given bitmask to the given output stream as a sequence of
+ * zeroes and ones.
+ *
+ * Since the length of the bitmask is not stored, the number of bits
+ * written might be greater than the length initially assigned to this
+ * bitmask (specifically, the length will be rounded up to the next "raw
+ * unit of storage").
+ *
+ * @param out the output stream to which to write.
+ * @param mask the bitmask to write.
+ * @return a reference to the given output stream.
+ */
+std::ostream& operator << (std::ostream& out, const NBitmask& mask);
 
 /**
  * A small but extremely fast bitmask class that can store up to
@@ -598,7 +619,29 @@ class NBitmask1 {
          * Disable the assignment operator by making it private.
          */
         NBitmask1<T>& operator = (const NBitmask1<T>&);
+
+    template <typename X>
+    friend std::ostream& operator << (std::ostream& out,
+        const NBitmask1<X>& mask);
 };
+
+/**
+ * Writes the given bitmask to the given output stream as a sequence of
+ * zeroes and ones.
+ *
+ * Since the length of the bitmask is not stored, the number of bits
+ * written will be 8 * sizeof(\a T).
+ *
+ * @param out the output stream to which to write.
+ * @param mask the bitmask to write.
+ * @return a reference to the given output stream.
+ */
+template <typename T>
+std::ostream& operator << (std::ostream& out, const NBitmask1<T>& mask) {
+    for (T bit = 1; bit; bit <<= 1)
+        out << ((mask.mask & bit) ? '1' : '0');
+    return out;
+}
 
 /**
  * A small but extremely fast bitmask class that can store up to
@@ -900,7 +943,31 @@ class NBitmask2 {
          * Disable the assignment operator by making it private.
          */
         NBitmask2<T, U>& operator = (const NBitmask2<T, U>&);
+
+    template <typename X, typename Y>
+    friend std::ostream& operator << (std::ostream& out,
+        const NBitmask2<X, Y>& mask);
 };
+
+/**
+ * Writes the given bitmask to the given output stream as a sequence of
+ * zeroes and ones.
+ *
+ * Since the length of the bitmask is not stored, the number of bits
+ * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
+ *
+ * @param out the output stream to which to write.
+ * @param mask the bitmask to write.
+ * @return a reference to the given output stream.
+ */
+template <typename T, typename U>
+std::ostream& operator << (std::ostream& out, const NBitmask2<T, U>& mask) {
+    for (T bit = 1; bit; bit <<= 1)
+        out << ((mask.low & bit) ? '1' : '0');
+    for (U bit = 1; bit; bit <<= 1)
+        out << ((mask.high & bit) ? '1' : '0');
+    return out;
+}
 
 /*@}*/
 
@@ -1009,6 +1076,14 @@ inline bool NBitmask::atMostOneBit() const {
             return false;
     }
     return true;
+}
+
+inline std::ostream& operator << (std::ostream& out, const NBitmask& mask) {
+    NBitmask::Piece bit;
+    for (unsigned i = 0; i < mask.pieces; ++i)
+        for (bit = 1; bit; bit <<= 1)
+            out << ((bit & mask.mask[i]) ? '1' : '0');
+    return out;
 }
 
 } // namespace regina
