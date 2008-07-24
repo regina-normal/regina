@@ -81,6 +81,12 @@ NLargeInteger NNormalSurfaceVectorANStandard::getFaceArcs(
     return ans;
 }
 
+NNormalSurfaceVector* NNormalSurfaceVectorANStandard::makeZeroVector(
+        const NTriangulation* triangulation) {
+    return new NNormalSurfaceVectorANStandard(
+        10 * triangulation->getNumberOfTetrahedra());
+}
+
 NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
         NTriangulation* triangulation) {
     unsigned long nCoords = 10 * triangulation->getNumberOfTetrahedra();

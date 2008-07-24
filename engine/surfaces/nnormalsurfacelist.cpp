@@ -49,6 +49,20 @@ const int NNormalSurfaceList::FACE_ARCS = 201;
 
 #define REGISTER_FLAVOUR(id_name, class, n, a, t) \
     case NNormalSurfaceList::id_name: \
+        return class::makeZeroVector(triangulation);
+
+NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
+        int flavour) {
+    switch(flavour) {
+        // Import cases from the flavour registry.
+        #include "surfaces/flavourregistry.h"
+    }
+    return 0;
+}
+
+#undef REGISTER_FLAVOUR
+#define REGISTER_FLAVOUR(id_name, class, n, a, t) \
+    case NNormalSurfaceList::id_name: \
         return class::makeMatchingEquations(triangulation);
 
 NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
@@ -102,24 +116,16 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
 
     // Form the matching equations and starting cone.
     NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
-
-    std::list<NNormalSurfaceVector*> originalCone;
-    std::list<NVector<NLargeInteger>*> faces;
-    createNonNegativeCone(triang, list->flavour, back_inserter(originalCone),
-        back_inserter(faces));
+    NNormalSurfaceVector* base = makeZeroVector(triang, list->flavour);
 
     if (progress)
         progress->incCompleted();
 
     // Find the normal surfaces.
     NDoubleDescriptor::enumerateExtremalRays(SurfaceInserter(*list, triang),
-        originalCone.begin(), originalCone.end(), faces.begin(), faces.end(),
-        *eqns, constraints, progress);
+        *base, *eqns, constraints, progress);
 
-    for_each(originalCone.begin(), originalCone.end(),
-        FuncDelete<NNormalSurfaceVector>());
-    for_each(faces.begin(), faces.end(),
-        FuncDelete<NVector<NLargeInteger> >());
+    delete base;
     delete eqns;
     delete constraints;
 

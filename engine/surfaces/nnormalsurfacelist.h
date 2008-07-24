@@ -232,7 +232,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * operator=(NNormalSurfaceVector*) for details.
          */
         struct SurfaceInserter : public std::iterator<
-                std::output_iterator_tag, void, void, void, void> {
+                std::output_iterator_tag, NNormalSurfaceVector*> {
             NNormalSurfaceList* list;
                 /**< The list into which surfaces will be inserted. */
             NTriangulation* owner;
@@ -374,24 +374,13 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
 };
 
 /**
- * Writes to the given output iterators newly allocated rays and faces
- * representing the cone in the given flavour of coordinate system obtained by
- * setting all coordinates non-negative.
+ * Returns a new normal surface vector of the appropriate length for the
+ * given triangulation and the given flavour of coordinate system.
+ * All elements of this vector will be initialised to zero.
  *
- * To \a rays will be written the extremal rays of this cone,
- * each being a unit vector along a coordinate axis.  They will be written
- * in order from the unit vector along the 0th coordinate axis
- * to the last, and will all be of the subclass of NNormalSurfaceVector
- * corresponding to the given flavour of coordinate system.
- *
- * To \a faces will be written the vectors perpendicular to the
- * hyperplanes that make up the faces of this cone.  Each of these
- * vectors will also be a unit vector along a coordinate axis.  These
- * vectors will be written in the same order as the rays, and
- * will all be of class NVectorUnit.
- *
- * The resulting lists of extremal rays and faces are guaranteed not to
- * contain any duplicates or redundancies.
+ * The new vector will be of the subclass of NNormalSurfaceVector
+ * corresponding to the given flavour of coordinate system.  The caller
+ * of this routine is responsible for destroying the new vector.
  *
  * \ifacespython Not present.
  *
@@ -400,15 +389,10 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
  * @param flavour the flavour of coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NNormalSurfaceList.
- * @param rays the output iterator to which the newly allocated extremal rays
- * will be written; this must accept objects of type <tt>NRay*</tt>.
- * @param faces the output iterator to which the newly allocated face
- * perpendiculars will be written; this must accept objects of type
- * <tt>NVector\<NLargeInteger\>*</tt>.
+ * @return a new zero vector of the correct class and length.
  */
-template <class RayOutputIterator, class FaceOutputIterator>
-void createNonNegativeCone(NTriangulation* triangulation, int flavour,
-    RayOutputIterator rays, FaceOutputIterator faces);
+NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
+    int flavour);
 /**
  * Creates a new set of normal surface matching equations for the
  * given triangulation using the given flavour of coordinate system.
@@ -535,10 +519,6 @@ inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* newList,
 }
 
 } // namespace regina
-
-// Template definitions
-
-#include "surfaces/nnormalsurfacelist.tcc"
 
 #endif
 

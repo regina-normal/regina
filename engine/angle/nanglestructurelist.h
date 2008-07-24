@@ -209,7 +209,7 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          * will be automatically created.
          */
         struct StructureInserter : public std::iterator<
-                std::output_iterator_tag, void, void, void, void> {
+                std::output_iterator_tag, NAngleStructureVector*> {
             NAngleStructureList* list;
                 /**< The list into which angle structures will be inserted. */
             NTriangulation* owner;

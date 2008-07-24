@@ -91,33 +91,12 @@ void* NAngleStructureList::Enumerator::run(void*) {
         row++;
     }
 
-    // Form the starting cone.
-    std::list<NAngleStructureVector*> originalCone;
-    NAngleStructureVector* vector;
-    for (index = 0; index < nCoords; index++) {
-        vector = new NAngleStructureVector(nCoords);
-        vector->setElement(index, NLargeInteger::one);
-        originalCone.push_back(vector);
-    }
-
-    // Form the face list.
-    std::list<NVector<NLargeInteger>*> faces;
-    for (index = 0; index < nCoords; index++)
-        faces.push_back(new NVectorUnit<NLargeInteger>(nCoords, index));
-
     if (progress)
         progress->incCompleted();
 
     // Find the angle structures.
     NDoubleDescriptor::enumerateExtremalRays(StructureInserter(*list, triang),
-        originalCone.begin(), originalCone.end(), faces.begin(), faces.end(),
-        eqns, 0, progress);
-
-    // Tidy up.
-    for_each(originalCone.begin(), originalCone.end(),
-        FuncDelete<NAngleStructureVector>());
-    for_each(faces.begin(), faces.end(),
-        FuncDelete<NVector<NLargeInteger> >());
+        NAngleStructureVector(nCoords), eqns, 0, progress);
 
     // All done!
     triang->insertChildLast(list);

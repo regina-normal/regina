@@ -29,6 +29,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "angle/nanglestructurelist.h"
 #include "triangulation/nexampletriangulation.h"
+#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/angle/testangle.h"
 
@@ -43,6 +44,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NAngleStructureListTest);
 
     CPPUNIT_TEST(empty);
+    CPPUNIT_TEST(oneTet);
     CPPUNIT_TEST(gieseking);
     CPPUNIT_TEST(figure8);
     CPPUNIT_TEST(loopC2);
@@ -52,6 +54,8 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
     private:
         NTriangulation triEmpty;
             /**< An empty triangulation. */
+        NTriangulation triOneTet;
+            /**< A single tetrahedron (with no face gluings). */
         NTriangulation triGieseking;
             /**< The Gieseking manifold. */
         NTriangulation triFigure8;
@@ -73,6 +77,9 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
 
             // Layered loops can be constructed automatically.
             triLoopC2.insertLayeredLoop(2, false);
+
+            // Other things must be done manually.
+            triOneTet.addTetrahedron(new NTetrahedron());
         }
 
         void tearDown() {
@@ -146,6 +153,17 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 &triEmpty);
 
             testSize(list, "the empty triangulation", 1, true, true);
+
+            delete list;
+        }
+
+        void oneTet() {
+            NAngleStructureList* list = NAngleStructureList::enumerate(
+                &triOneTet);
+
+            testSize(list, "a standalone tetrahedron", 3, true, true);
+            countStructures(list, "a standalone tetrahedron", 3,
+                false /* strict */, true /* taut */);
 
             delete list;
         }

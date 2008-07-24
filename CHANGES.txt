@@ -25,10 +25,10 @@ Version 4.5.1  [ Under development ]
               replaced with the new vector-based class NEnumConstraintList.
         Class NDoubleDescriptor:
             - Streamlined the vertex enumeration routine, which is now
-              *much* faster.
+              much, much faster.
             - The vertex enumeration routine now takes its arguments in
-              a different form, and more importantly has new preconditions
-              (such as a full-dimensional cone, and no redundant facets).
+              a different form, and more importantly now insists that
+              the original cone is in fact the non-negative orthant.
               To ensure that python/C++ users notice that things have changed,
               this routine has been renamed from enumerateVertices() to
               enumerateExtremalRays().
@@ -43,6 +43,13 @@ Version 4.5.1  [ Under development ]
         Class NMatrixInt:
             - New integer-specific routines divRowExact(), divColExact(),
               gcdRow(), gcdCol(), reduceRow() and reduceCol().
+        Class NNormalSurfaceVector:
+            - Removed createNonNegativeCone() from subclasses (which is
+              no longer required after the vertex enumeration overhaul),
+              and added makeZeroVector() (which is now required).
+        Routine createNonNegativeCone():
+            - Removed and replaced with the new makeZeroVector(), in
+              line with the NNormalSurfaceVector changes above.
         Routines rowBasis(), rowBasisAndOrthComp():
             - Added to find the rank of an integer matrix and bases for its
               row space and orthogonal complement.
@@ -50,6 +57,9 @@ Version 4.5.1  [ Under development ]
         - Added new tests for normal surfaces that exploit generic properties
           of layered loops; these tests push to 50 tetrahedra, and can
           easily be extended further as surface enumeration becomes faster.
+        - Added additional tests for normal surfaces and angle strutures
+          that compare solutions coordinate by coordinate (instead of
+          counting solutions and looking for large-scale properties).
 
 Version 4.5  [ 17 May, 2008 ]
 

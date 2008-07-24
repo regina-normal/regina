@@ -92,9 +92,8 @@ class NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
 
         virtual NVector<NLargeInteger>* clone() const;
 
-        template <class RayOutputIterator, class FaceOutputIterator>
-        static void createNonNegativeCone(NTriangulation* triangulation,
-            RayOutputIterator rays, FaceOutputIterator faces);
+        static NNormalSurfaceVector* makeZeroVector(
+            const NTriangulation* triangulation);
         static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
         static NEnumConstraintList* makeEmbeddedConstraints(
             NTriangulation* triangulation);
@@ -126,10 +125,6 @@ inline NLargeInteger NNormalSurfaceVectorStandard::getOctCoord(
 }
 
 } // namespace regina
-
-// Template definitions
-
-#include "surfaces/nsstandard.tcc"
 
 #endif
 

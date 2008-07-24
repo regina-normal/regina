@@ -50,10 +50,10 @@ namespace regina {
  * polytope vertex enumeration.
  *
  * Vertex enumeration routines such as
- * NDoubleDescriptor::enumerateExtremalRays() take a cone, described by
- * its extremal rays and facets, form the intersection of that original
- * cone with a given linear subspace, and return the extremal rays of the
- * new cone that results.
+ * NDoubleDescriptor::enumerateExtremalRays() take a cone (specifically
+ * the non-negative orthant), form the intersection of that cone with a
+ * given linear subspace, and return the extremal rays of the new cone
+ * that results.
  *
  * In some cases we are only interested in \e valid rays of the new cone.
  * The NEnumConstraintList class stores a number of "validity constraints";
@@ -61,10 +61,11 @@ namespace regina {
  *
  * Each individual constraint is presented as a set of integers; the
  * meaning of such a constraint is as follows.  We number the facets of
- * the original cone 0,1,2,... (in the order in which they were passed
- * to the vertex enumeration routine).  If a constraint is described by
- * the integers \a x, \a y, \a z, ..., then it indicates that a ray can only
- * lie outside at most one of the facets numbered \a x, \a y, \a z, ... .
+ * the original cone 0,1,2,... (where the <i>i</i>th facet is the plane
+ * perpendicular to the <i>i</i>th coordinate axis).  If a constraint is
+ * described by the integers \a x, \a y, \a z, ..., then it indicates that a
+ * ray can only lie outside at most one of the facets numbered
+ * \a x, \a y, \a z, ... .
  *
  * In practice, this allows us to represent constraints in normal
  * surface theory.  For instance, to insist that some tetrahedron

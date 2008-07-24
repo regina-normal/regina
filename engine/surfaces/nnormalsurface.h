@@ -194,9 +194,14 @@ class NXMLNormalSurfaceReader;
  * corresponding coordinate lookup routines should return
  * NLargeInteger::infinity where appropriate.
  *
- * All subclasses of NNormalSurfaceVector <b>must</b> have the property
- * that multiplying a normal surface by \a k corresponds to multiplying
- * the underlying vector by \a k for any non-negative integer \a k.
+ * All subclasses of NNormalSurfaceVector <b>must</b> have the following
+ * properties:
+ *
+ * - Normal surfaces can be enumerated by intersecting the non-negative
+ *   orthant of the underlying vector space with some linear subspace;
+ *
+ * - Multiplying a normal surface by \a k corresponds to multiplying
+ *   the underlying vector by \a k for any non-negative integer \a k.
  *
  * <b>When deriving classes from NNormalSurfaceVector:</b>
  * <ul>
@@ -215,11 +220,10 @@ class NXMLNormalSurfaceReader;
  *   implementations.</li>
  *   <li>All abstract functions must be implemented.</li>
  *   <li>Static public functions <tt>void
- *   createNonNegativeCone(NTriangulation*, int, RayOutputIterator,
- *   FaceOutputIterator)</tt> and
- *   <tt>NMatrixInt* makeMatchingEquations(NTriangulation*)</tt> must be
- *   declared and implemented.  See ::createNonNegativeCone() and
- *   ::makeMatchingEquations() for further details.</li>
+ *   makeZeroVector(const NTriangulation*)</tt>,
+ *   <tt>NMatrixInt* makeMatchingEquations(NTriangulation*)</tt> and
+ *   makeEmbeddedConstraints(NTriangulation*) must be
+ *   declared and implemented.</li>
  * </ul>
  *
  * \testpart
@@ -473,32 +477,20 @@ class NNormalSurfaceVector : public NRay {
             int faceVertex, NTriangulation* triang) const = 0;
 
         /**
-         * Writes to the given output iterators newly allocated rays and
-         * faces representing the cone obtained by setting all coordinates
-         * non-negative in the flavour of coordinate system
-         * corresponding to this particular subclass of
-         * NNormalSurfaceVector.
+         * Returns a new normal surface vector of the appropriate length
+         * for the given triangulation and for the flavour of coordinate
+         * system corresponding to this subclass of NNormalSurfaceVector.
+         * All elements of the new vector will be initialised to zero.
          *
-         * The elements written to \a rays \b must be of this
-         * particular subclass of NNormalSurfaceVector.
-         *
-         * See ::createNonNegativeCone() for further details.
+         * See ::makeZeroVector() for further details.
          *
          * @param triangulation the triangulation upon which the
          * underlying coordinate system is based.
-         * @param rays the output iterator to which the newly allocated
-         * extremal rays will be written; these rays must all be of this
-         * particular subclass of NNormalSurfaceVector.  This iterator
-         * must accept objects of type <tt>NRay*</tt>.
-         * @param faces the output iterator to which the newly allocated face
-         * perpendiculars will be written; these vectors may be of any
-         * subclass of NVector<NLargeInteger>.  This iterator must
-         * accept objects of type <tt>NVector\<NLargeInteger\>*</tt>.
+         * @return a new zero vector of the correct class and length.
          */
         #ifdef __DOXYGEN
-            template <class RayOutputIterator, class FaceOutputIterator>
-            static void createNonNegativeCone(NTriangulation* triangulation,
-                RayOutputIterator rays, FaceOutputIterator faces);
+            static NNormalSurfaceVector* makeZeroVector(
+                const NTriangulation* triangulation);
         #endif
         /**
          * Creates a new set of normal surface matching equations for

@@ -38,6 +38,12 @@
 
 namespace regina {
 
+NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeZeroVector(
+        const NTriangulation* triangulation) {
+    return new NNormalSurfaceVectorQuad(
+        3 * triangulation->getNumberOfTetrahedra());
+}
+
 NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
         NTriangulation* triangulation) {
     unsigned long nCoords = 3 * triangulation->getNumberOfTetrahedra();

@@ -30,6 +30,7 @@
 
 #include "foreign/csvsurfacelist.h"
 #include "surfaces/nnormalsurfacelist.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
