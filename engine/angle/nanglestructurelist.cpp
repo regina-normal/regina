@@ -94,25 +94,16 @@ void* NAngleStructureList::Enumerator::run(void*) {
     // Form the starting cone.
     std::list<NAngleStructureVector*> originalCone;
     NAngleStructureVector* vector;
-    NLargeInteger startValue(nCoords - 1);
-    for (index = 0; index < nCoords - 1; index++) {
+    for (index = 0; index < nCoords; index++) {
         vector = new NAngleStructureVector(nCoords);
-        vector->setElement(index, startValue);
-        vector->setElement(nCoords - 1, NLargeInteger::one);
+        vector->setElement(index, NLargeInteger::one);
         originalCone.push_back(vector);
     }
-    vector = new NAngleStructureVector(nCoords);
-    vector->setElement(nCoords - 1, NLargeInteger::one);
-    originalCone.push_back(vector);
 
     // Form the face list.
     std::list<NVector<NLargeInteger>*> faces;
-    for (index = 0; index < nCoords - 1; index++)
+    for (index = 0; index < nCoords; index++)
         faces.push_back(new NVectorUnit<NLargeInteger>(nCoords, index));
-    NVectorDense<NLargeInteger>* finalFace =
-        new NVectorDense<NLargeInteger>(nCoords, - NLargeInteger::one);
-    finalFace->setElement(nCoords - 1, startValue);
-    faces.push_back(finalFace);
 
     if (progress)
         progress->incCompleted();
