@@ -41,7 +41,7 @@
 namespace regina {
 
 template <class BitmaskType>
-inline NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(unsigned axis,
+NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(unsigned axis,
         const NMatrixInt& subspace, const int* hypOrder) :
         NFastVector<NLargeInteger>(subspace.rows()),
         facets_(subspace.columns()) {
