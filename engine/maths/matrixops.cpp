@@ -329,20 +329,30 @@ void smithNormalForm(NMatrixInt& matrix,
 }
 
 unsigned rowBasis(NMatrixInt& matrix) {
+    unsigned n = matrix.columns();
+
+    // Make a copy of the input matrix, and reduce it to row echelon form.
     NMatrixInt echelon(matrix);
 
     unsigned doneRows = 0;
     unsigned rank = echelon.rows();
 
-    unsigned lead, r;
+    unsigned* lead = new unsigned[n];
+    unsigned r, c, tmp;
+    for (c = 0; c < n; ++c)
+        lead[c] = c;
+
     NLargeInteger coeff1, coeff2;
     while (doneRows < rank) {
+        // INV: For i < doneRows, echelon[i, lead[i]] is non-zero, and
+        // every other entry echelon[j, lead[i]] is zero for j > i.
+
         // Find the first non-zero entry in row doneRows.
-        for (lead = 0; lead < echelon.columns(); ++lead)
-            if (echelon.entry(doneRows, lead) != NMatrixInt::zero)
+        for (c = doneRows; c < n; ++c)
+            if (echelon.entry(doneRows, lead[c]) != NMatrixInt::zero)
                 break;
 
-        if (lead == echelon.columns()) {
+        if (c == n) {
             // We have a zero row.  Push it to the bottom.
             --rank;
             if (doneRows < rank) {
@@ -351,13 +361,17 @@ unsigned rowBasis(NMatrixInt& matrix) {
             }
         } else {
             // We have a non-zero row.
-            // Make all lower entries in column lead equal to zero.
+            // Save the column in which we found our non-zero entry.
+            tmp = lead[doneRows]; lead[doneRows] = lead[c]; lead[c] = tmp;
+
+            // Make all lower entries in column lead[doneRows] equal to zero.
             // Do this with only integer arithmetic.  This could lead to
             // some very large matrix entries, though we're using NLargeInteger
             // so the worst that can happen is that things get slow.
-            coeff1 = echelon.entry(doneRows, lead);
+            coeff1 = echelon.entry(doneRows, lead[doneRows]);
+
             for (r = doneRows + 1; r < rank; ++r) {
-                coeff2 = echelon.entry(r, lead);
+                coeff2 = echelon.entry(r, lead[doneRows]);
                 if (coeff2 != NMatrixInt::zero) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(doneRows, r, -coeff2);
@@ -370,6 +384,8 @@ unsigned rowBasis(NMatrixInt& matrix) {
         }
     }
 
+    // All done!
+    delete[] lead;
     return rank;
 }
 
