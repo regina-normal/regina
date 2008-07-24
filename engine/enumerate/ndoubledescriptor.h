@@ -416,9 +416,12 @@ class NDoubleDescriptor {
          * @param constraintsEnd a pointer just past the end of the
          * C-style array of validity constraints.  This should be 0
          * if no additional constraints are to be imposed.
+         * @return \c true if any new vertices were added to the solution set,
+         * or \c false if every vertex in the new solution set was already
+         * a vertex of the old solution set.
          */
         template <class BitmaskType>
-        static void intersectHyperplane(
+        static bool intersectHyperplane(
             std::vector<RaySpec<BitmaskType>*>& src,
             std::vector<RaySpec<BitmaskType>*>& dest,
             unsigned dim, unsigned prevHyperplanes,
