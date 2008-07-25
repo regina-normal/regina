@@ -50,6 +50,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(standardLoopC2);
     CPPUNIT_TEST(standardLoopCtw3);
     CPPUNIT_TEST(standardTwistedKxI);
+    CPPUNIT_TEST(standardNorSFS);
     CPPUNIT_TEST(quadEmpty);
     CPPUNIT_TEST(quadOneTet);
     CPPUNIT_TEST(quadGieseking);
@@ -58,6 +59,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(quadLoopC2);
     CPPUNIT_TEST(quadLoopCtw3);
     CPPUNIT_TEST(quadTwistedKxI);
+    CPPUNIT_TEST(quadNorSFS);
     CPPUNIT_TEST(almostNormalEmpty);
     CPPUNIT_TEST(almostNormalOneTet);
     CPPUNIT_TEST(almostNormalGieseking);
@@ -90,6 +92,12 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         NTriangulation twistedKxI;
             /**< A 3-tetrahedron non-orientable twisted I-bundle over the
                  Klein bottle. */
+        NTriangulation norSFS;
+            /**< A 9-tetrahedron triangulation of the space
+                 SFS [RP2: (2,1) (2,1) (2,1)].  Specifically, this is
+                 triangulation #5 of this space from the non-orientable
+                 census as it was shipped with Regina 4.5. */
+
 
     public:
         void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
@@ -129,6 +137,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             twistedKxI.addTetrahedron(r);
             twistedKxI.addTetrahedron(s);
             twistedKxI.addTetrahedron(t);
+
+            // Build the 9-tetrahedron SFS from its dehydration string;
+            // obscure but painless at least.
+            norSFS.insertRehydration("jnnafaabcfighhihimgbpqpepbr");
         }
 
         void tearDown() {
@@ -963,6 +975,180 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 -2 /* euler */, true /* connected */,
                 false /* orient */, false /* two-sided */,
                 true /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+
+            delete list;
+        }
+
+        void standardNorSFS() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &norSFS, NNormalSurfaceList::STANDARD);
+
+            testSize(list, "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal surfaces", 25);
+
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal vertex linking spheres", 1,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                true /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal thin edge-linking Klein bottles", 6,
+                0 /* euler */, true /* connected */,
+                false /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal central(8) one-sided Klein bottles", 4,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                8 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal central(6) one-sided Klein bottles", 1,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                6 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal miscellaneous one-sided Klein bottles", 4,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal central(9) one-sided tori", 1,
+                0 /* euler */, true /* connected */,
+                true /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                9 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal miscellaneous one-sided tori", 3,
+                0 /* euler */, true /* connected */,
+                true /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal two-sided genus two tori", 1,
+                -2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal two-sided genus two Klein bottles", 1,
+                -2 /* euler */, true /* connected */,
+                false /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal one-sided genus two Klein bottles", 2,
+                -2 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "standard normal central one-sided genus two Klein bottles", 1,
+                -2 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                9 /* central */, false /* splitting */);
+
+            delete list;
+        }
+
+        void quadNorSFS() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &norSFS, NNormalSurfaceList::QUAD);
+
+            testSize(list, "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "quad normal surfaces", 21);
+
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "quad normal thin edge-linking Klein bottles", 6,
+                0 /* euler */, true /* connected */,
+                false /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "quad normal central(8) one-sided Klein bottles", 4,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                8 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "quad normal central(6) one-sided Klein bottles", 1,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                6 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "quad normal miscellaneous one-sided Klein bottles", 4,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "quad normal central(9) one-sided tori", 1,
+                0 /* euler */, true /* connected */,
+                true /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                9 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "quad normal miscellaneous one-sided tori", 3,
+                0 /* euler */, true /* connected */,
+                true /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "quad normal two-sided genus two tori", 1,
+                -2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list,
+                "SFS [RP2: (2,1) (2,1) (2,1)]",
+                "quad normal one-sided genus two Klein bottles", 1,
+                -2 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
 
