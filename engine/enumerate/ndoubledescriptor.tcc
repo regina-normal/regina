@@ -334,16 +334,13 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
     int workingList = 0;
     unsigned used = 0;
     for (i=0; i<nEqns; i++) {
-        // Only increment used if we actually get some new vertices.
-        // This gives the dimensional filtering in intersectHyperplane()
-        // greater strength.
-        // The reason this works is that, if there are no new vertices,
-        // we can pretend that instead of slicing a new hyperplane
-        // through the solution set, we simply filtered out the vertices
-        // that were lost as "invalid".
-        // Of course filtering only works if invalidity is preserved under
-        // addition, but it can be shown that this holds here with our
-        // extended view of "validity".
+        // Do not increment used if the old solution set sits entirely in
+        // and/or to only one side of the new hyperplane.  This gives the
+        // dimensional filtering in intersectHyperplane() greater strength.
+        // The reason this works is because any vertex of the solution
+        // space *with* this hyperplane is also a vertex of the solution
+        // space *without* this hyperplane (and therefore satisfies the
+        // relevant dimensional constraints without this hyperplane).
         if (intersectHyperplane(list[workingList], list[1 - workingList],
                 dim, used, constraintsBegin, constraintsEnd))
             ++used;
@@ -408,12 +405,20 @@ bool NDoubleDescriptor::intersectHyperplane(
             pos.push_back(*it);
     }
 
+    // Does one of the closed half-spaces defined by the hyperplane contain the
+    // entire old solution set?  If so, there will be no new vertices.
+    if (pos.empty() || neg.empty()) {
+        for (typename RayList::iterator it = src.begin(); it != src.end(); ++it)
+            delete *it;
+        src.clear();
+        return false;
+    }
+
     // Run through the pairs of positive and negative rays.  For every
     // pair of rays that are adjacent in the current solution space,
     // add the corresponding intersection with the new hyperplane to the
     // new solution set.
     typename RayList::iterator posit, negit, otherit;
-    bool newVertices = false;
 
     const BitmaskType* constraint;
     bool adjacent, broken;
@@ -460,17 +465,15 @@ bool NDoubleDescriptor::intersectHyperplane(
 
             // If the rays are adjacent then join them and put the
             // corresponding intersection in the results set.
-            if (adjacent) {
+            if (adjacent)
                 dest.push_back(new RaySpec<BitmaskType>(**posit, **negit));
-                newVertices = true;
-            }
         }
 
     // Clean up.
     for (otherit = src.begin(); otherit != src.end(); ++otherit)
         delete *otherit;
     src.clear();
-    return newVertices;
+    return true;
 }
 
 } // namespace regina

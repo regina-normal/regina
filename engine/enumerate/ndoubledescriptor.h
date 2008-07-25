@@ -416,9 +416,10 @@ class NDoubleDescriptor {
          * @param constraintsEnd a pointer just past the end of the
          * C-style array of validity constraints.  This should be 0
          * if no additional constraints are to be imposed.
-         * @return \c true if any new vertices were added to the solution set,
-         * or \c false if every vertex in the new solution set was already
-         * a vertex of the old solution set.
+         * @return \c true if vertices of the old solution set were found
+         * on both sides of the new hyperplane, or \c false if one of
+         * the closed half-spaces defined by the new hyperplane contained
+         * the entire old solution set.
          */
         template <class BitmaskType>
         static bool intersectHyperplane(
