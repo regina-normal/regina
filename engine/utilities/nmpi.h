@@ -994,8 +994,8 @@ inline NLargeInteger NLargeInteger::gcd(const NLargeInteger& other) const {
 }
 inline NLargeInteger NLargeInteger::lcm(const NLargeInteger& other) const {
     NLargeInteger ans(*this);
-    ans *= other;
     ans.divByExact(gcd(other));
+    ans *= other;
     return ans;
 }
 
