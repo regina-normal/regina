@@ -50,6 +50,11 @@ Version 4.5.1  [ Under development ]
         Routine createNonNegativeCone():
             - Removed and replaced with the new makeZeroVector(), in
               line with the NNormalSurfaceVector changes above.
+        Routine gcd():
+            - Now takes longs instead of unsigned longs, and guarantees
+              that the gcd returned will be non-negative.
+        Routine lcm():
+            - Added to the collection of basic number theory routines.
         Routines rowBasis(), rowBasisAndOrthComp():
             - Added to find the rank of an integer matrix and bases for its
               row space and orthogonal complement.

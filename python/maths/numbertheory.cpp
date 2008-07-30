@@ -61,6 +61,7 @@ void addNumberTheory() {
     def("reducedMod", regina::reducedMod);
     def("gcd", regina::gcd);
     def("gcdWithCoeffs", regina::gcdWithCoeffs);
+    def("lcm", regina::lcm);
     def("modularInverse", regina::modularInverse);
     def("factorise", factorise_list);
     def("primesUpTo", primesUpTo_list);

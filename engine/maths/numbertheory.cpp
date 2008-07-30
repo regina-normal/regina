@@ -43,14 +43,14 @@ long reducedMod(long k, long modBase) {
     return ans;
 }
 
-unsigned long gcd(unsigned long a, unsigned long b) {
+long gcd(long a, long b) {
     long tmp;
     while (a != b && b != 0) {
         tmp = a;
         a = b;
         b = tmp % b;
     }
-    return a;
+    return (a >= 0 ? a : -a);
 }
 
 namespace {
@@ -111,6 +111,15 @@ long gcdWithCoeffs(long a, long b, long& u, long& v) {
     u *= signA;
     v *= signB;
     return ans;
+}
+
+long lcm(long a, long b) {
+    if (a == 0 || b == 0)
+        return 0;
+
+    long tmp = regina::gcd(a, b);
+    tmp = (a / tmp) * b;
+    return (tmp >= 0 ? tmp : -tmp);
 }
 
 unsigned long modularInverse(unsigned long n, unsigned long k) {

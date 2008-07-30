@@ -145,28 +145,75 @@ class NumberTheoryTest : public CppUnit::TestFixture {
 
         void gcd() {
             // Boundary cases
-            CPPUNIT_ASSERT_EQUAL((unsigned long)0, regina::gcd(0, 0));
-            CPPUNIT_ASSERT_EQUAL(ulOddLarge, regina::gcd(0, ulOddLarge));
-            CPPUNIT_ASSERT_EQUAL(ulOddLarge, regina::gcd(ulOddLarge, 0));
-            CPPUNIT_ASSERT_EQUAL((unsigned long)1, regina::gcd(1, ulOddLarge));
-            CPPUNIT_ASSERT_EQUAL((unsigned long)1, regina::gcd(ulOddLarge, 1));
+            CPPUNIT_ASSERT_EQUAL((long)0, regina::gcd(0, 0));
+            CPPUNIT_ASSERT_EQUAL(lOddLarge, regina::gcd(0, lOddLarge));
+            CPPUNIT_ASSERT_EQUAL(lOddLarge, regina::gcd(0, -lOddLarge));
+            CPPUNIT_ASSERT_EQUAL(lOddLarge, regina::gcd(lOddLarge, 0));
+            CPPUNIT_ASSERT_EQUAL(lOddLarge, regina::gcd(-lOddLarge, 0));
+            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(1, lOddLarge));
+            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(1, -lOddLarge));
+            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(-1, lOddLarge));
+            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(-1, -lOddLarge));
+            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(lOddLarge, 1));
+            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(-lOddLarge, 1));
+            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(lOddLarge, -1));
+            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(-lOddLarge, -1));
 
             // Equality / multiple of
-            CPPUNIT_ASSERT_EQUAL(ulEvenMed, regina::gcd(ulEvenMed, ulEvenMed));
-            CPPUNIT_ASSERT_EQUAL(ulEvenMed,
-                regina::gcd(ulEvenMed, ulEvenMed * ulEvenMed));
-            CPPUNIT_ASSERT_EQUAL(ulEvenMed,
-                regina::gcd(ulEvenMed * ulEvenMed, ulEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(lEvenMed, lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(-lEvenMed, lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(lEvenMed, -lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(-lEvenMed, -lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed,
+                regina::gcd(lEvenMed, lEvenMed * lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed,
+                regina::gcd(-lEvenMed, lEvenMed * lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed,
+                regina::gcd(lEvenMed, -lEvenMed * lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed,
+                regina::gcd(-lEvenMed, -lEvenMed * lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed,
+                regina::gcd(lEvenMed * lEvenMed, lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed,
+                regina::gcd(-lEvenMed * lEvenMed, lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed,
+                regina::gcd(lEvenMed * lEvenMed, -lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed,
+                regina::gcd(-lEvenMed * lEvenMed, -lEvenMed));
 
             // Miscellaneous cases.
-            CPPUNIT_ASSERT_EQUAL((unsigned long)12, regina::gcd(96, 324));
-            CPPUNIT_ASSERT_EQUAL((unsigned long)12, regina::gcd(324, 96));
-            CPPUNIT_ASSERT_EQUAL(ulEvenMed, regina::gcd(
-                ulEvenMed * (ulEvenMed - 3),
-                ulEvenMed * (ulEvenMed - 1)));
-            CPPUNIT_ASSERT_EQUAL(ulEvenMed * 2, regina::gcd(
-                ulEvenMed * (ulEvenMed - 4),
-                ulEvenMed * (ulEvenMed - 2)));
+            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(96, 324));
+            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(96, -324));
+            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(-96, 324));
+            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(-96, -324));
+            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(324, 96));
+            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(324, -96));
+            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(-324, 96));
+            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(-324, -96));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(
+                lEvenMed * (lEvenMed - 3),
+                lEvenMed * (lEvenMed - 1)));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(
+                lEvenMed * (lEvenMed - 3),
+                -lEvenMed * (lEvenMed - 1)));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(
+                -lEvenMed * (lEvenMed - 3),
+                lEvenMed * (lEvenMed - 1)));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(
+                -lEvenMed * (lEvenMed - 3),
+                -lEvenMed * (lEvenMed - 1)));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, regina::gcd(
+                lEvenMed * (lEvenMed - 4),
+                lEvenMed * (lEvenMed - 2)));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, regina::gcd(
+                lEvenMed * (lEvenMed - 4),
+                -lEvenMed * (lEvenMed - 2)));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, regina::gcd(
+                -lEvenMed * (lEvenMed - 4),
+                lEvenMed * (lEvenMed - 2)));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, regina::gcd(
+                -lEvenMed * (lEvenMed - 4),
+                -lEvenMed * (lEvenMed - 2)));
         }
 
         static void gcdWithCoeffsSpec(long a, long b) {

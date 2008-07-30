@@ -62,10 +62,9 @@ namespace regina {
 long reducedMod(long k, long modBase);
 
 /**
- * Calculates the greatest common divisor of two given integers.
- * This routine is not recursive.
- *
- * \pre Both integers are non-negative.
+ * Calculates the greatest common divisor of two signed integers.
+ * Although the arguments may be negative, the result is guaranteed to
+ * be non-negative.  This routine is not recursive.
  *
  * \testfull
  *
@@ -73,7 +72,7 @@ long reducedMod(long k, long modBase);
  * @param b the other integer with which to work.
  * @return the greatest common divisor of \a a and \a b.
  */
-unsigned long gcd(unsigned long a, unsigned long b);
+long gcd(long a, long b);
 
 /**
  * Calculates the greatest common divisor of two given integers and finds the
@@ -105,6 +104,22 @@ unsigned long gcd(unsigned long a, unsigned long b);
  * @return the greatest common divisor of \a a and \a b.
  */
 long gcdWithCoeffs(long a, long b, long& u, long& v);
+
+/**
+ * Calculates the lowest common multiple of two signed integers.
+ * Although the arguments may be negative, the result is guaranteed to
+ * be non-negative.
+ *
+ * If either of the arguments is zero, the return value will also be zero.
+ *
+ * Regarding possible overflow:  This routine does not create any temporary
+ * integers that are larger than the final LCM.
+ *
+ * @param a one of the two integers to work with.
+ * @param b the other integer with which to work.
+ * @return the lowest common multiple of \a a and \a b.
+ */
+long lcm(long a, long b);
 
 /**
  * Calculates the multiplicative inverse of one integer modulo another.
