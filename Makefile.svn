@@ -22,9 +22,6 @@ all :
 		false; \
 	fi
 	admin/ac_gen
-	aclocal
-	autoheader
-	autoconf
-	automake
+	autoreconf --force
 	perl -w admin/am_edit
 
