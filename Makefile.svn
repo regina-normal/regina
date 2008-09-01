@@ -9,6 +9,17 @@
 ##  the standard "./configure", "make" build process.
 ##
 
+# Switch off some warnings, including:
+#
+# - `CXXFLAGS' is a user variable, you should not override it
+#   (used to disable debugging with boost.python even with --enable-debug;
+#   otherwise the binaries can become *very* large)
+#
+# - non-POSIX variable name (probably a GNU make extension)
+#   (used only by the software author when rebuilding the man pages)
+#
+WARNINGS = -W no-portability -W no-gnu
+
 all :
 	@if ! test -d CVS -o -d .svn; then \
 		echo "This Makefile is only for use with source trees that have"; \
@@ -22,6 +33,6 @@ all :
 		false; \
 	fi
 	admin/ac_gen
-	autoreconf --force
+	autoreconf --force $(WARNINGS)
 	perl -w admin/am_edit
 
