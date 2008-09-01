@@ -20,3 +20,47 @@ Index: libtool.m4.ext
                 ;;
             esac
           fi
+Index: libtool.m4.ext
+===================================================================
+--- libtool.m4.ext	(revision 3877)
++++ libtool.m4.ext	(working copy)
+@@ -7,7 +7,7 @@
+ ## unlimited permission to copy and/or distribute it, with or without
+ ## modifications, as long as this notice is preserved.
+ 
+-# serial 48 Debian 1.5.22-4 AC_PROG_LIBTOOL
++# libtool.m4 serial 48 Debian 1.5.22-4 AC_PROG_LIBTOOL
+ 
+ 
+ # AC_PROVIDE_IFELSE(MACRO-NAME, IF-PROVIDED, IF-NOT-PROVIDED)
+Index: kde.m4.ext
+===================================================================
+--- kde.m4.ext	(revision 3877)
++++ kde.m4.ext	(working copy)
+@@ -3308,7 +3308,7 @@
+ # Search path for a program which passes the given test.
+ # Ulrich Drepper <drepper@cygnus.com>, 1996.
+ 
+-# serial 1
++# kde.m4 serial 1
+ # Stephan Kulow: I appended a _KDE against name conflicts
+ 
+ dnl AM_PATH_PROG_WITH_TEST_KDE(VARIABLE, PROG-TO-CHECK-FOR,
+@@ -3353,7 +3353,7 @@
+ # Check whether LC_MESSAGES is available in <locale.h>.
+ # Ulrich Drepper <drepper@cygnus.com>, 1995.
+ 
+-# serial 1
++# kde.m4 serial 1
+ 
+ AC_DEFUN([AM_LC_MESSAGES],
+   [if test $ac_cv_header_locale_h = yes; then
+@@ -3398,7 +3398,7 @@
+ # Macro to add for using GNU gettext.
+ # Ulrich Drepper <drepper@cygnus.com>, 1995.
+ 
+-# serial 1
++# kde.m4 serial 1
+ # Stephan Kulow: I put a KDE in it to avoid name conflicts
+ 
+ AC_DEFUN([AM_KDE_GNU_GETTEXT],
