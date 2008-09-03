@@ -47,6 +47,9 @@ Version 4.5.1  [ Under development ]
             - Removed createNonNegativeCone() from subclasses (which is
               no longer required after the vertex enumeration overhaul),
               and added makeZeroVector() (which is now required).
+        Routines base64Length(), isBase64(), base64Encode(), base64Decode():
+            - New routines for base64 encoding and decoding, taken and
+              modified from the gnulib library.
         Routine createNonNegativeCone():
             - Removed and replaced with the new makeZeroVector(), in
               line with the NNormalSurfaceVector changes above.
