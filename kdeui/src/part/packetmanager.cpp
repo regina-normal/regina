@@ -65,6 +65,8 @@ QPixmap PacketManager::iconSmall(NPacket* packet, bool allowLock) {
         ans = SmallIcon("packet_angles", ReginaPart::factoryInstance());
     else if (packet->getPacketType() == NContainer::packetType)
         ans = SmallIcon("packet_container", ReginaPart::factoryInstance());
+    else if (packet->getPacketType() == NPDF::packetType)
+        ans = SmallIcon("packet_pdf", ReginaPart::factoryInstance());
     else if (packet->getPacketType() == NSurfaceFilter::packetType) {
         if (((NSurfaceFilter*)packet)->getFilterID() ==
                 NSurfaceFilterCombination::filterID)

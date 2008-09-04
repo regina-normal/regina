@@ -14,3 +14,7 @@ As an exception, the povray sources for Regina's title icon are shipped
 with the Regina sources (since they are simple text files).  They may be
 found in the directory regina-<version>/icons/povray/ .
 
+
+ATTRIBUTIONS:
+
+The packet_pdf icon is based on the pdf mimetype icon shipped with kdelibs.
