@@ -26,17 +26,26 @@
 
 /* end stub */
 
-void addForeignCSVSurfaceList();
-void addForeignDehydration();
-void addForeignOrb();
-void addForeignPDF();
-void addForeignSnapPea();
+#include "packet/npdf.h"
+#include <boost/python.hpp>
 
-void addForeign() {
-    addForeignCSVSurfaceList();
-    addForeignDehydration();
-    addForeignOrb();
-    addForeignPDF();
-    addForeignSnapPea();
+using namespace boost::python;
+using regina::NPDF;
+
+namespace {
+    void (NPDF::*reset_empty)() = &NPDF::reset;
+}
+
+void addNPDF() {
+    scope s = class_<NPDF, bases<regina::NPacket>,
+            std::auto_ptr<NPDF>, boost::noncopyable>("NPDF", init<>())
+        .def("size", &NPDF::size)
+        .def("reset", reset_empty)
+    ;
+
+    s.attr("packetType") = NPDF::packetType;
+
+    implicitly_convertible<std::auto_ptr<NPDF>,
+        std::auto_ptr<regina::NPacket> >();
 }
 

@@ -37,6 +37,7 @@
 
 #include "packet/nxmlpacketreader.h"
 #include "packet/ncontainer.h"
+#include "packet/npdf.h"
 #include "packet/nscript.h"
 #include "packet/ntext.h"
 
@@ -64,6 +65,30 @@ class NXMLContainerReader : public NXMLPacketReader {
         NXMLContainerReader();
 
         virtual NPacket* getPacket();
+};
+
+/**
+ * An XML packet reader that reads a single PDF packet.
+ *
+ * \ifacespython Not present.
+ */
+class NXMLPDFReader : public NXMLPacketReader {
+    private:
+        NPDF* pdf;
+            /**< The PDF packet currently being read. */
+
+    public:
+        /**
+         * Creates a new PDF reader.
+         */
+        NXMLPDFReader();
+
+        virtual NPacket* getPacket();
+        virtual NXMLElementReader* startContentSubElement(
+            const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps);
+        virtual void endContentSubElement(const std::string& subTagName,
+            NXMLElementReader* subReader);
 };
 
 /**
@@ -123,6 +148,15 @@ inline NXMLContainerReader::NXMLContainerReader() : container(new NContainer()) 
 
 inline NPacket* NXMLContainerReader::getPacket() {
     return container;
+}
+
+// Inline functions for NXMLPDFReader
+
+inline NXMLPDFReader::NXMLPDFReader() : pdf(new NPDF()) {
+}
+
+inline NPacket* NXMLPDFReader::getPacket() {
+    return pdf;
 }
 
 // Inline functions for NXMLScriptReader

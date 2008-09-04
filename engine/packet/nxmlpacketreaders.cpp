@@ -27,6 +27,9 @@
 /* end stub */
 
 #include "packet/nxmlpacketreaders.h"
+#include "utilities/base64.h"
+#include <cctype>
+#include <string>
 
 namespace regina {
 
@@ -59,6 +62,45 @@ namespace {
     };
 }
 
+NXMLElementReader* NXMLPDFReader::startContentSubElement(
+        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
+    if (subTagName == "pdf")
+        return new NXMLCharsReader();
+    else
+        return new NXMLElementReader();
+}
+
+void NXMLPDFReader::endContentSubElement(const std::string& subTagName,
+        NXMLElementReader* subReader) {
+    if (subTagName == "pdf") {
+        std::string base64 = dynamic_cast<NXMLCharsReader*>(subReader)->
+            getChars();
+
+        // Strip out whitespace.
+        std::string::iterator in = base64.begin();
+        std::string::iterator out = base64.begin();
+        while (in != base64.end()) {
+            if (::isspace(*in))
+                ++in;
+            else {
+                if (in == out) {
+                    ++in;
+                    ++out;
+                } else
+                    *out++ = *in++;
+            }
+        }
+
+        // Convert from base64.
+        char* data;
+        size_t dataLen;
+        if (base64Decode(base64.c_str(), out - base64.begin(), &data, &dataLen))
+            pdf->reset(data, dataLen, NPDF::OWN_NEW);
+        else
+            pdf->reset();
+    }
+}
+
 NXMLElementReader* NXMLScriptReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
@@ -83,6 +125,10 @@ void NXMLScriptReader::endContentSubElement(const std::string& subTagName,
 
 NXMLPacketReader* NContainer::getXMLReader(NPacket*) {
     return new NXMLContainerReader();
+}
+
+NXMLPacketReader* NPDF::getXMLReader(NPacket*) {
+    return new NXMLPDFReader();
 }
 
 NXMLPacketReader* NScript::getXMLReader(NPacket*) {

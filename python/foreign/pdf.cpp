@@ -26,17 +26,14 @@
 
 /* end stub */
 
-void addForeignCSVSurfaceList();
-void addForeignDehydration();
-void addForeignOrb();
-void addForeignPDF();
-void addForeignSnapPea();
+#include "foreign/pdf.h"
+#include "packet/npdf.h"
+#include <boost/python.hpp>
 
-void addForeign() {
-    addForeignCSVSurfaceList();
-    addForeignDehydration();
-    addForeignOrb();
-    addForeignPDF();
-    addForeignSnapPea();
+using namespace boost::python;
+
+void addForeignPDF() {
+    def("readPDF", regina::readPDF, return_value_policy<manage_new_object>());
+    def("writePDF", regina::writePDF);
 }
 

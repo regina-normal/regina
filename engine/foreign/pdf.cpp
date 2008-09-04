@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2008, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,17 +26,75 @@
 
 /* end stub */
 
-void addForeignCSVSurfaceList();
-void addForeignDehydration();
-void addForeignOrb();
-void addForeignPDF();
-void addForeignSnapPea();
+#include <cstdio>
+#include <sys/stat.h>
 
-void addForeign() {
-    addForeignCSVSurfaceList();
-    addForeignDehydration();
-    addForeignOrb();
-    addForeignPDF();
-    addForeignSnapPea();
+#include "foreign/pdf.h"
+#include "packet/npdf.h"
+
+namespace regina {
+
+NPDF* readPDF(const char* filename) {
+    // Use FILE* so we can call fstat().
+
+    // Open the file.
+    FILE* in = fopen(filename, "rb");
+    if (! in)
+        return 0;
+
+    // Get the file size.
+    struct stat s;
+    if (fstat(fileno(in), &s)) {
+        fclose(in);
+        return 0;
+    }
+    size_t size = s.st_size;
+
+    if (size == 0) {
+        fclose(in);
+        return new NPDF();
+    }
+
+    // Read the file contents.
+    char* data = new char[size];
+    if (fread(data, 1, size, in) != size) {
+        fclose(in);
+        return 0;
+    }
+
+    // Is there more to the file that we weren't expecting?
+    char c;
+    if (fread(&c, 1, 1, in) > 0) {
+        fclose(in);
+        return 0;
+    }
+
+    // All good!
+    fclose(in);
+    return new NPDF(data, size, NPDF::OWN_NEW);
 }
 
+bool writePDF(const char* filename, const NPDF& pdf) {
+    // Use FILE* for symmetry with readPDF().
+
+    // Open the file.
+    FILE* out = fopen(filename, "wb");
+    if (!out)
+        return false;
+
+    // Is there anything to write?
+    const char* data = pdf.data();
+    if (data) {
+        size_t size = pdf.size();
+        if (fwrite(data, 1, size, out) != size) {
+            fclose(out);
+            return false;
+        }
+    }
+
+    // All done.
+    fclose(out);
+    return true;
+}
+
+} // namespace regina

@@ -28,12 +28,14 @@
 
 void addNContainer();
 void addNPacket();
+void addNPDF();
 void addNScript();
 void addNText();
 
 void addPacket() {
     addNPacket();
     addNContainer();
+    addNPDF();
     addNScript();
     addNText();
 }

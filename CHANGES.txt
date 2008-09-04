@@ -47,6 +47,9 @@ Version 4.5.1  [ Under development ]
             - Removed createNonNegativeCone() from subclasses (which is
               no longer required after the vertex enumeration overhaul),
               and added makeZeroVector() (which is now required).
+        Class NPDF:
+            - A new packet type that allows PDF documents to be stored
+              directly as packets inside Regina data files.
         Routines base64Length(), isBase64(), base64Encode(), base64Decode():
             - New routines for base64 encoding and decoding, taken and
               modified from the gnulib library.
@@ -58,6 +61,9 @@ Version 4.5.1  [ Under development ]
               that the gcd returned will be non-negative.
         Routine lcm():
             - Added to the collection of basic number theory routines.
+        Routines readPDF(), writePDF():
+            - New routines for importing and exporting PDF packets to
+              real PDF files.
         Routines rowBasis(), rowBasisAndOrthComp():
             - Added to find the rank of an integer matrix and bases for its
               row space and orthogonal complement.
