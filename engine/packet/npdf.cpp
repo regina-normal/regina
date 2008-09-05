@@ -45,6 +45,8 @@ void NPDF::reset() {
     data_ = 0;
     size_ = 0;
     alloc_ = OWN_NEW;
+
+    fireChangedEvent();
 }
 
 void NPDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
@@ -72,6 +74,8 @@ void NPDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
         size_ = 0;
         alloc_ = OWN_NEW;
     }
+
+    fireChangedEvent();
 }
 
 void NPDF::writePacket(NFile&) const {
