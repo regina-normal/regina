@@ -91,6 +91,12 @@ void NXMLPDFReader::endContentSubElement(const std::string& subTagName,
             }
         }
 
+        // Is there any data at all?
+        if (out == base64.begin()) {
+            pdf->reset();
+            return;
+        }
+
         // Convert from base64.
         char* data;
         size_t dataLen;

@@ -59,6 +59,7 @@ NPDF* readPDF(const char* filename) {
     char* data = new char[size];
     if (fread(data, 1, size, in) != size) {
         fclose(in);
+        delete[] data;
         return 0;
     }
 
@@ -66,6 +67,7 @@ NPDF* readPDF(const char* filename) {
     char c;
     if (fread(&c, 1, 1, in) > 0) {
         fclose(in);
+        delete[] data;
         return 0;
     }
 

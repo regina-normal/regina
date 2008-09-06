@@ -90,6 +90,12 @@ NPDF* NPDF::readPacket(NFile&, NPacket*) {
 }
 
 void NPDF::writeXMLPacketData(std::ostream& out) const {
+    if (! data_) {
+        // We have an empty PDF packet.
+        out << "  <pdf encoding=\"null\"></pdf>\n";
+        return;
+    }
+
     char* base64;
     size_t len64 = base64Encode(data_, size_, &base64);
     if (! base64) {
@@ -98,15 +104,16 @@ void NPDF::writeXMLPacketData(std::ostream& out) const {
     }
 
     out << "  <pdf encoding=\"base64\">\n";
+    const char* pos = base64;
     while (len64 > BASE64_LINE_LEN) {
-        out.write(base64, BASE64_LINE_LEN);
+        out.write(pos, BASE64_LINE_LEN);
         out << std::endl;
 
-        base64 += BASE64_LINE_LEN;
+        pos += BASE64_LINE_LEN;
         len64 -= BASE64_LINE_LEN;
     }
     if (len64 > 0) {
-        out.write(base64, len64);
+        out.write(pos, len64);
         out << std::endl;
     }
     out << "  </pdf>\n";
