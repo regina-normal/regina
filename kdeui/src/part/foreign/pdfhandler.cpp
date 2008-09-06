@@ -26,72 +26,47 @@
 
 /* end stub */
 
-/*! \file reginafilter.h
- *  \brief A variety of filename filters for use with KFileDialog.
- */
+#include "foreign/pdf.h"
+#include "packet/npdf.h"
 
-#ifndef __REGINAFILTER_H
-#define __REGINAFILTER_H
+#include "pdfhandler.h"
+#include "../packetfilter.h"
 
-/**
- * Filename filter for all supported files.
- */
-#define FILTER_SUPPORTED \
-    "*.rga|Regina Data Files\n*.py|Python Libraries\n*|All Files"
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <qfile.h>
 
-/**
- * Filename filter for Regina data files.
- */
-#define FILTER_REGINA \
-    "*.rga|Regina Data Files\n*|All Files"
+const PDFHandler PDFHandler::instance;
 
-/**
- * Filename filter for Python libraries.
- */
-#define FILTER_PYTHON_LIBRARIES \
-    "*.py|Python Libraries\n*|All Files"
+regina::NPacket* PDFHandler::import(const QString& fileName,
+        QWidget* parentWidget) const {
+    regina::NPacket* ans = regina::readPDF(
+        static_cast<const char*>(QFile::encodeName(fileName)));
+    if (! ans)
+        KMessageBox::error(parentWidget, i18n(
+            "The PDF document %1 could not be read.").arg(fileName));
+    ans->setPacketLabel(i18n("PDF document").ascii());
+    return ans;
+}
 
-/**
- * Filename filter for PDF documents.
- */
-#define FILTER_PDF \
-    "*.pdf|PDF Documents\n*|All Files"
+PacketFilter* PDFHandler::canExport() const {
+    return new SingleTypeFilter<regina::NPDF>();
+}
 
-/**
- * Filename filter for Python scripts.
- */
-#define FILTER_PYTHON_SCRIPTS \
-    "*.py|Python Scripts\n*|All Files"
-
-/**
- * Filename filter for SnapPea files.
- */
-#define FILTER_SNAPPEA \
-    "*.tri|SnapPea Files\n*|All Files"
-
-/**
- * Filename filter for Orb files.
- */
-#define FILTER_ORB \
-    "*.orb|Orb and Casson Files\n*|All Files"
-
-/**
- * Filename filter for C++ source files.
- */
-#define FILTER_CPP_SOURCE \
-    "*.cpp *.cc *.C|C++ Source Files\n*|All Files"
-
-/**
- * Filename filter for CSV (comma-separated value) files.
- */
-#define FILTER_CSV \
-    "*.csv|Text Files with Comma-Separated Values\n*|All Files"
-
-/**
- * Filename filter for all files.
- */
-#define FILTER_ALL \
-    "*|All Files"
-
-#endif
+bool PDFHandler::exportData(regina::NPacket* data, const QString& fileName,
+        QWidget* parentWidget) const {
+    regina::NPDF* pdf = dynamic_cast<regina::NPDF*>(data);
+    if (! pdf->data()) {
+        KMessageBox::error(parentWidget, i18n(
+            "This PDF packet is empty, and so cannot be exported."));
+        return false;
+    }
+    if (! regina::writePDF(
+            static_cast<const char*>(QFile::encodeName(fileName)), *pdf)) {
+        KMessageBox::error(parentWidget, i18n(
+            "The PDF document %1 could not be saved.").arg(fileName));
+        return false;
+    }
+    return true;
+}
 

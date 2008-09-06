@@ -33,6 +33,7 @@
 #include "foreign/dehydrationhandler.h"
 #include "foreign/importdialog.h"
 #include "foreign/orbhandler.h"
+#include "foreign/pdfhandler.h"
 #include "foreign/pythonhandler.h"
 #include "foreign/reginahandler.h"
 #include "foreign/snappeahandler.h"
@@ -46,6 +47,11 @@
 void ReginaPart::importDehydration() {
     importFile(DehydrationHandler::instance, 0, i18n(FILTER_ALL),
         i18n("Import Dehydrated Triangulation List"));
+}
+
+void ReginaPart::importPDF() {
+    importFile(PDFHandler::instance, 0, i18n(FILTER_PDF),
+        i18n("Import PDF Document"));
 }
 
 void ReginaPart::importPython() {

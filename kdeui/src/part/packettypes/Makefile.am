@@ -23,6 +23,7 @@ noinst_HEADERS = \
 	nfacegluingitems.h \
 	nnormalsurfacecreator.h \
 	nnormalsurfaceui.h \
+	npdfui.h \
 	nscriptui.h \
 	nscriptvaritems.h \
 	nsurfacecoordinateitem.h \
@@ -55,6 +56,7 @@ libpackettypes_la_SOURCES = \
 	nfacegluingitems.cpp \
 	nnormalsurfacecreator.cpp \
 	nnormalsurfaceui.cpp \
+	npdfui.cpp \
 	nscriptui.cpp \
 	nscriptvaritems.cpp \
 	nsurfacecoordinateitem.cpp \

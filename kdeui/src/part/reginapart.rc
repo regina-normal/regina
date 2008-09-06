@@ -9,6 +9,7 @@
       <Action name="import_snappea"/>
       <Action name="import_orb"/>
       <Action name="import_dehydrated"/>
+      <Action name="import_pdf"/>
       <Action name="import_python"/>
     </Menu>
     <Menu name="file_export" group="print_merge"><text>&amp;Export</text>
@@ -17,6 +18,7 @@
       <Action name="export_snappea"/>
       <Action name="export_source"/>
       <Action name="export_csv_surfaces"/>
+      <Action name="export_pdf"/>
       <Action name="export_python"/>
     </Menu>
   </Menu>
@@ -33,6 +35,7 @@
     <Action name="tree_container"/>
     <Action name="tree_filter"/>
     <Action name="tree_surfaces"/>
+    <Action name="tree_pdf"/>
     <Action name="tree_script"/>
     <Action name="tree_text"/>
     <Action name="tree_triangulation"/>
@@ -93,6 +96,7 @@
   <Action name="tree_container"/>
   <Action name="tree_filter"/>
   <Action name="tree_surfaces"/>
+  <Action name="tree_pdf"/>
   <Action name="tree_script"/>
   <Action name="tree_text"/>
   <Action name="tree_triangulation"/>

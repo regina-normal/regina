@@ -32,6 +32,7 @@
 #include "reginapart.h"
 #include "foreign/csvsurfacehandler.h"
 #include "foreign/exportdialog.h"
+#include "foreign/pdfhandler.h"
 #include "foreign/pythonhandler.h"
 #include "foreign/reginahandler.h"
 #include "foreign/snappeahandler.h"
@@ -47,6 +48,11 @@
 void ReginaPart::exportCSVSurfaceList() {
     exportFile(CSVSurfaceHandler::instance, i18n(FILTER_CSV),
         i18n("Export CSV Surface List"));
+}
+
+void ReginaPart::exportPDF() {
+    exportFile(PDFHandler::instance, i18n(FILTER_PDF),
+        i18n("Export PDF Document"));
 }
 
 void ReginaPart::exportPython() {

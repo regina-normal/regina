@@ -67,6 +67,11 @@ Version 4.5.1  [ Under development ]
         Routines rowBasis(), rowBasisAndOrthComp():
             - Added to find the rank of an integer matrix and bases for its
               row space and orthogonal complement.
+    USER INTERFACE:
+        - PDF documents can now be embedded in data files as PDF packets.
+          Added import, export and creation facilities, plus a PDF packet
+          viewer that uses an embedded KPart (such as kpdf or kghostview's
+          embedded viewer).
     TEST SUITE:
         - Added new tests for normal surfaces that exploit generic properties
           of layered loops; these tests push to 50 tetrahedra, and can

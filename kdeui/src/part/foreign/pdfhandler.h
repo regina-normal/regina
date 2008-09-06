@@ -26,72 +26,52 @@
 
 /* end stub */
 
-/*! \file reginafilter.h
- *  \brief A variety of filename filters for use with KFileDialog.
+/*! \file pdfhandler.h
+ *  \brief Allows interaction with PDF documents.
  */
 
-#ifndef __REGINAFILTER_H
-#define __REGINAFILTER_H
+#ifndef __PDFHANDLER_H
+#define __PDFHANDLER_H
 
-/**
- * Filename filter for all supported files.
- */
-#define FILTER_SUPPORTED \
-    "*.rga|Regina Data Files\n*.py|Python Libraries\n*|All Files"
+#include "packetexporter.h"
+#include "packetimporter.h"
 
 /**
- * Filename filter for Regina data files.
+ * An object responsible for importing and exporting data to and from
+ * PDF files.
+ *
+ * Rather than creating new objects of this class, the globally
+ * available object PDFHandler::instance should always be used.
  */
-#define FILTER_REGINA \
-    "*.rga|Regina Data Files\n*|All Files"
+class PDFHandler : public PacketImporter, public PacketExporter {
+    public:
+        /**
+         * A globally available instance of this class.
+         */
+        static const PDFHandler instance;
 
-/**
- * Filename filter for Python libraries.
- */
-#define FILTER_PYTHON_LIBRARIES \
-    "*.py|Python Libraries\n*|All Files"
+    public:
+        /**
+         * PacketImporter overrides:
+         */
+        virtual regina::NPacket* import(const QString& fileName,
+            QWidget* parentWidget) const;
 
-/**
- * Filename filter for PDF documents.
- */
-#define FILTER_PDF \
-    "*.pdf|PDF Documents\n*|All Files"
+        /**
+         * PacketExporter overrides:
+         */
+        virtual PacketFilter* canExport() const;
+        virtual bool exportData(regina::NPacket* data, const QString& fileName,
+            QWidget* parentWidget) const;
 
-/**
- * Filename filter for Python scripts.
- */
-#define FILTER_PYTHON_SCRIPTS \
-    "*.py|Python Scripts\n*|All Files"
+    private:
+        /**
+         * Don't allow people to construct their own PDF handlers.
+         */
+        PDFHandler();
+};
 
-/**
- * Filename filter for SnapPea files.
- */
-#define FILTER_SNAPPEA \
-    "*.tri|SnapPea Files\n*|All Files"
-
-/**
- * Filename filter for Orb files.
- */
-#define FILTER_ORB \
-    "*.orb|Orb and Casson Files\n*|All Files"
-
-/**
- * Filename filter for C++ source files.
- */
-#define FILTER_CPP_SOURCE \
-    "*.cpp *.cc *.C|C++ Source Files\n*|All Files"
-
-/**
- * Filename filter for CSV (comma-separated value) files.
- */
-#define FILTER_CSV \
-    "*.csv|Text Files with Comma-Separated Values\n*|All Files"
-
-/**
- * Filename filter for all files.
- */
-#define FILTER_ALL \
-    "*|All Files"
+inline PDFHandler::PDFHandler() {
+}
 
 #endif
-

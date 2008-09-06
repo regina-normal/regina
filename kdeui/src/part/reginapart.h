@@ -258,6 +258,7 @@ class ReginaPart : public KParts::ReadWritePart {
         void newContainer();
         void newFilter();
         void newNormalSurfaces();
+        void newPDF();
         void newScript();
         void newText();
         void newTriangulation();
@@ -266,6 +267,7 @@ class ReginaPart : public KParts::ReadWritePart {
          * Packet import routines.
          */
         void importDehydration();
+        void importPDF();
         void importPython();
         void importRegina();
         void importSnapPea();
@@ -275,6 +277,7 @@ class ReginaPart : public KParts::ReadWritePart {
          * Packet export routines.
          */
         void exportCSVSurfaceList();
+        void exportPDF();
         void exportPython();
         void exportRegina();
         void exportReginaUncompressed();

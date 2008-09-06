@@ -20,6 +20,7 @@ noinst_HEADERS = \
 	orbhandler.h \
 	packetexporter.h \
 	packetimporter.h \
+	pdfhandler.h \
 	pythonhandler.h \
 	reginahandler.h \
 	snappeahandler.h \
@@ -31,6 +32,7 @@ libforeign_la_SOURCES = \
 	exportdialog.cpp \
 	importdialog.cpp \
 	orbhandler.cpp \
+	pdfhandler.cpp \
 	pythonhandler.cpp \
 	reginahandler.cpp \
 	snappeahandler.cpp \

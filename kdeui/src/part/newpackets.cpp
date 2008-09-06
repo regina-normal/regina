@@ -65,6 +65,11 @@ void ReginaPart::newNormalSurfaces() {
         i18n("New Normal Surface List"), i18n("Normal Surfaces"));
 }
 
+void ReginaPart::newPDF() {
+    // A PDF must be an import; just use the import routine directly.
+    importPDF();
+}
+
 void ReginaPart::newScript() {
     newPacket(new BasicPacketCreator<regina::NScript>(), 0,
         i18n("New Script"), i18n("Script"));

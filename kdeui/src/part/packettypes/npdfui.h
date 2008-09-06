@@ -26,72 +26,77 @@
 
 /* end stub */
 
-/*! \file reginafilter.h
- *  \brief A variety of filename filters for use with KFileDialog.
+/*! \file npdfui.h
+ *  \brief Provides an interface for viewing PDF packets.
  */
 
-#ifndef __REGINAFILTER_H
-#define __REGINAFILTER_H
+#ifndef __NPDFUI_H
+#define __NPDFUI_H
 
-/**
- * Filename filter for all supported files.
- */
-#define FILTER_SUPPORTED \
-    "*.rga|Regina Data Files\n*.py|Python Libraries\n*|All Files"
+#include "../packetui.h"
 
-/**
- * Filename filter for Regina data files.
- */
-#define FILTER_REGINA \
-    "*.rga|Regina Data Files\n*|All Files"
+#include <ktempfile.h>
 
-/**
- * Filename filter for Python libraries.
- */
-#define FILTER_PYTHON_LIBRARIES \
-    "*.py|Python Libraries\n*|All Files"
+class QWidgetStack;
+
+namespace KParts {
+    class ReadOnlyPart;
+};
+
+namespace regina {
+    class NPacket;
+    class NPDF;
+};
 
 /**
- * Filename filter for PDF documents.
+ * A packet interface for viewing text packets.
  */
-#define FILTER_PDF \
-    "*.pdf|PDF Documents\n*|All Files"
+class NPDFUI : public QObject, public PacketReadOnlyUI {
+    Q_OBJECT
 
-/**
- * Filename filter for Python scripts.
- */
-#define FILTER_PYTHON_SCRIPTS \
-    "*.py|Python Scripts\n*|All Files"
+    private:
+        /**
+         * Packet details
+         */
+        regina::NPDF* pdf;
 
-/**
- * Filename filter for SnapPea files.
- */
-#define FILTER_SNAPPEA \
-    "*.tri|SnapPea Files\n*|All Files"
+        /**
+         * Temporary PDF storage
+         */
+        KTempFile temp;
 
-/**
- * Filename filter for Orb files.
- */
-#define FILTER_ORB \
-    "*.orb|Orb and Casson Files\n*|All Files"
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QWidgetStack* stack;
+        KParts::ReadOnlyPart* viewer;
+        QWidget* layerInfo;
+        QWidget* layerError;
+        QLabel* msgInfo;
+        QLabel* msgError;
 
-/**
- * Filename filter for C++ source files.
- */
-#define FILTER_CPP_SOURCE \
-    "*.cpp *.cc *.C|C++ Source Files\n*|All Files"
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        NPDFUI(regina::NPDF* packet, PacketPane* newEnclosingPane);
 
-/**
- * Filename filter for CSV (comma-separated value) files.
- */
-#define FILTER_CSV \
-    "*.csv|Text Files with Comma-Separated Values\n*|All Files"
+        /**
+         * PacketUI overrides.
+         */
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        QString getPacketMenuText() const;
+        void refresh();
 
-/**
- * Filename filter for all files.
- */
-#define FILTER_ALL \
-    "*|All Files"
+    private:
+        /**
+         * Set up internal components.
+         */
+        QWidget* messageLayer(QLabel*& text, const char* icon);
+        void showInfo(const QString& msg);
+        void showError(const QString& msg);
+};
 
 #endif
-

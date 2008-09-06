@@ -205,6 +205,13 @@ void ReginaPart::setupActions() {
         "for a triangulation."));
     treeGeneralEditActions.append(act);
 
+    act = new KAction(i18n("New &PDF Document"), "packet_pdf", ALT+Key_P,
+        this, SLOT(newPDF()), actionCollection(), "tree_pdf");
+    act->setToolTip(i18n("New PDF document"));
+    act->setWhatsThis(i18n("Create a new PDF packet containing a copy of "
+        "an external PDF document."));
+    treeGeneralEditActions.append(act);
+
     act = new KAction(i18n("New &Script"), "packet_script", ALT+Key_S,
         this, SLOT(newScript()), actionCollection(), "tree_script");
     act->setToolTip(i18n("New script packet"));
@@ -264,7 +271,14 @@ void ReginaPart::setupActions() {
         "a new triangulation will be created in this packet tree."));
     treeGeneralEditActions.append(act);
 
-    act = new KAction(i18n("&Python Script"), "packet_script", 0,
+    act = new KAction(i18n("&PDF Document"), "packet_pdf", 0,
+        this, SLOT(importPDF()), actionCollection(), "import_pdf");
+    act->setToolTip(i18n("Import a PDF document"));
+    act->setWhatsThis(i18n("Import an external PDF document as a new PDF "
+        "packet in this tree."));
+    treeGeneralEditActions.append(act);
+
+    act = new KAction(i18n("P&ython Script"), "packet_script", 0,
         this, SLOT(importPython()), actionCollection(), "import_python");
     act->setToolTip(i18n("Import a Python script"));
     act->setWhatsThis(i18n("Import an external Python file as a new script "
@@ -314,7 +328,13 @@ void ReginaPart::setupActions() {
         "normal surfaces (such as orientability and Euler characteristic) "
         "will all be stored as separate fields in the CSV file."));
 
-    act = new KAction(i18n("&Python Script"), "packet_script", 0,
+    act = new KAction(i18n("&PDF Document"), "packet_pdf", 0,
+        this, SLOT(exportPDF()), actionCollection(), "export_pdf");
+    act->setToolTip(i18n("Export a PDF document"));
+    act->setWhatsThis(i18n("Export a PDF packet from this packet tree "
+        "to a separate PDF document."));
+
+    act = new KAction(i18n("P&ython Script"), "packet_script", 0,
         this, SLOT(exportPython()), actionCollection(), "export_python");
     act->setToolTip(i18n("Export a Python script"));
     act->setWhatsThis(i18n("Export a script packet from this packet tree "
