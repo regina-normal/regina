@@ -45,6 +45,9 @@ Version 4.5.1  [ Under development ]
         Class NMatrixInt:
             - New integer-specific routines divRowExact(), divColExact(),
               gcdRow(), gcdCol(), reduceRow() and reduceCol().
+        Class NMatrixField:
+            - Removed this class, since it is never used and since it does not
+              actively address the accuracy problems raised by real numbers.
         Class NNormalSurfaceVector:
             - Removed createNonNegativeCone() from subclasses (which is
               no longer required after the vertex enumeration overhaul),

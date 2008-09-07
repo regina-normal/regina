@@ -32,7 +32,6 @@
 #include "surfaces/nsstandard.h"
 #include "utilities/nrational.h"
 #include "maths/nmatrixint.h"
-#include "maths/nmatrixfield.h"
 #include "maths/nvectorunit.h"
 #include "triangulation/ntriangulation.h"
 
