@@ -40,6 +40,8 @@ Version 4.5.1  [ Under development ]
         Class NFastVector:
             - New vector class that is less flexible than NVector but
               more streamlined, largely because it has no virtual functions.
+        Class NLargeInteger:
+            - Fixed lcm() to do the right thing in the case of lcm(0,0).
         Class NMatrixInt:
             - New integer-specific routines divRowExact(), divColExact(),
               gcdRow(), gcdCol(), reduceRow() and reduceCol().

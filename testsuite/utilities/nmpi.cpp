@@ -38,6 +38,8 @@ class NLargeIntegerTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(comparisons);
     CPPUNIT_TEST(divisionAlg);
+    CPPUNIT_TEST(gcd);
+    CPPUNIT_TEST(lcm);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -417,6 +419,30 @@ class NLargeIntegerTest : public CppUnit::TestFixture {
             checkDivisionAlg(1, -3, 0, 1);
             checkDivisionAlg(-1, 3, -1, 2);
             checkDivisionAlg(-1, -3, 1, 2);
+        }
+
+        void gcd() {
+            // For now, at least make sure we treat zero correctly.
+            CPPUNIT_ASSERT_MESSAGE("gcd(0,x) incorrect.",
+                NLargeInteger::zero.gcd(10) == 10);
+            CPPUNIT_ASSERT_MESSAGE("gcd(x,0) incorrect.",
+                NLargeInteger(10).gcd(NLargeInteger::zero) == 10);
+            CPPUNIT_ASSERT_MESSAGE("gcd(0,0) incorrect.",
+                NLargeInteger::zero.gcd(NLargeInteger::zero) == 0);
+        }
+
+        void lcm() {
+            // For now, at least make sure we treat zero correctly.
+            CPPUNIT_ASSERT_MESSAGE("lcm(0,x) incorrect.",
+                NLargeInteger::zero.lcm(10) == 0);
+            CPPUNIT_ASSERT_MESSAGE("lcm(0,-x) incorrect.",
+                NLargeInteger::zero.lcm(-10) == 0);
+            CPPUNIT_ASSERT_MESSAGE("lcm(x,0) incorrect.",
+                NLargeInteger(10).lcm(NLargeInteger::zero) == 0);
+            CPPUNIT_ASSERT_MESSAGE("lcm(-x,0) incorrect.",
+                NLargeInteger(-10).lcm(NLargeInteger::zero) == 0);
+            CPPUNIT_ASSERT_MESSAGE("lcm(0,0) incorrect.",
+                NLargeInteger::zero.lcm(NLargeInteger::zero) == 0);
         }
 };
 

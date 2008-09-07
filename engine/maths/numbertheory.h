@@ -63,8 +63,10 @@ long reducedMod(long k, long modBase);
 
 /**
  * Calculates the greatest common divisor of two signed integers.
+ * This routine is not recursive.
+ *
  * Although the arguments may be negative, the result is guaranteed to
- * be non-negative.  This routine is not recursive.
+ * be non-negative.  As a special case, gcd(0,0) is considered to be zero.
  *
  * \testfull
  *
@@ -77,11 +79,11 @@ long gcd(long a, long b);
 /**
  * Calculates the greatest common divisor of two given integers and finds the
  * smallest coefficients with which these integers combine to give their
- * gcd.
- * This routine is not recursive.
+ * gcd.  This routine is not recursive.
  *
  * Note that the given integers need not be non-negative.  However, the
  * gcd returned is guaranteed to be non-negative.
+ * As a special case, gcd(0,0) is considered to be zero.
  *
  * If \a d is the gcd of \a a and \a b, the values placed in \a u and \a
  * v will be those for which <tt>u*a + v*b = d</tt>,

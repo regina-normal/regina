@@ -638,7 +638,8 @@ class NLargeInteger {
          * Determines the greatest common divisor of this and the given
          * integer.  This integer is not changed.
          *
-         * Note that the result might possibly be negative.
+         * Note that the result might possibly be negative.  As a
+         * special case, gcd(0,0) is considered to be zero.
          *
          * \pre Neither this integer nor \a other is infinite.
          *
@@ -993,6 +994,9 @@ inline NLargeInteger NLargeInteger::gcd(const NLargeInteger& other) const {
     return ans;
 }
 inline NLargeInteger NLargeInteger::lcm(const NLargeInteger& other) const {
+    if (mpz_sgn(data) == 0 || mpz_sgn(other.data) == 0)
+        return zero;
+
     NLargeInteger ans(*this);
     ans.divByExact(gcd(other));
     ans *= other;
