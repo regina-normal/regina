@@ -220,7 +220,8 @@
    almost normal discs, and does not consider annular pieces.</para></footnote>
    of a triangulation,
    an operation required by most high-level topological algorithms that
-   utilise normal surface theory.
+   utilise normal surface theory.  The underlying enumeration algorithm is
+   described in detail in <xref linkend="bib-burton-dd"/>.
   </para>
   <para>
    This vertex enumeration can be performed in a variety of coordinate

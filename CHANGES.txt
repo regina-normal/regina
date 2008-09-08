@@ -25,7 +25,8 @@ Version 4.5.1  [ Under development ]
               replaced with the new vector-based class NEnumConstraintList.
         Class NDoubleDescriptor:
             - Streamlined the vertex enumeration routine, which is now
-              much, much faster.
+              much, much faster.  See arXiv:0808.4050 for a full list of
+              improvements.
             - The vertex enumeration routine now takes its arguments in
               a different form, and more importantly now insists that
               the original cone is in fact the non-negative orthant.

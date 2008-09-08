@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file ndoubledescriptor.h
- *  \brief Provides a modified double descriptor method for polytope
+ *  \brief Provides a modified double description method for polytope
  *  vertex enumeration.
  */
 
@@ -55,8 +55,10 @@ class NProgressNumber;
  */
 
 /**
- * Implements a modified double descriptor method for polytope vertex
- * enumeration.
+ * Implements a modified double description method for polytope vertex
+ * enumeration.  For details of the underlying algorithm, see
+ * "Optimising the double description method for normal surface enumeration",
+ * Benjamin A. Burton, preprint, arXiv:0808.4050.
  *
  * All routines of interest within this class are static; no object of
  * this class should ever be created.
@@ -303,7 +305,7 @@ class NDoubleDescriptor {
 
         /**
          * A comparison object that helps sort hyperplanes into a good
-         * order before running the double descriptor algorithm.
+         * order before running the double description algorithm.
          * A hyperplane is described by a row of the \a subspace matrix
          * passed to NDoubleDescriptor::enumerateExtremalRays().
          *
@@ -374,7 +376,7 @@ class NDoubleDescriptor {
             NProgressNumber* progress);
 
         /**
-         * A part of the full double descriptor algorithm that
+         * A part of the full double description algorithm that
          * intersects the current solution set with a new hyperplane.
          *
          * The input list \a src must contain the vertices of the
