@@ -36,7 +36,7 @@ regina-normal package, and does not provide any headers or library symlinks.
 .
 The library libregina-engine is designed for external use.  The library is
 shipped in the splitoff regina-normal%v-shlibs, and headers and symlinks
-are shipped in the splitoff regina-normal-dev.
+are shipped in the splitoff regina-normal%v-dev.
 .
 Since the library APIs are likely to change with each new release, these
 libraries are built using -release instead of -version-info.  This means
@@ -70,7 +70,7 @@ BuildDepends: <<
 	qt3,
 	x11-dev
 <<
-BuildConflicts: regina-normal-dev
+BuildConflicts: regina-normal-dev, regina-normal4.5-dev
 Depends: <<
 	%n%v-shlibs,
 	boost1.33-shlibs,
@@ -88,7 +88,7 @@ Depends: <<
 	python25,
 	qt3-shlibs
 <<
-Suggests: graphviz, regina-normal-dev
+Suggests: graphviz, regina-normal%v-dev
 
 # The following line works around the libGL linker problem on leopard:
 SetLDFLAGS: -Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
@@ -185,7 +185,7 @@ can also be viewed through Regina's graphical user interface by selecting
 .
 Headers and other development files required for building Regina's C++
 calculation engine into your own projects are provided by the package
-regina-normal-dev.
+regina-normal%v-dev.
 .
 If you find Regina useful in your research, please consider citing it as
 you would any other paper that you use.  The introductory chapter of the
@@ -223,9 +223,11 @@ the package regina-normal.
 <<
 
 SplitOff2: <<
-	Package: regina-normal-dev
+	Package: regina-normal4.5-dev
 	Description: Development files for 3-manifold topology software
 	BuildDependsOnly: True
+	Conflicts: regina-normal-dev
+	Replaces: regina-normal-dev
 	Depends: %N (= %v-%r)
 	Files: <<
 		include
