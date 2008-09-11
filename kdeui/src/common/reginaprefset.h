@@ -230,6 +230,15 @@ struct ReginaPrefSet {
         /**< Should we display the pretty Regina icon? */
     bool displayTagsInTree;
         /**< Should we display packet tags in the visual tree? */
+    bool pdfEmbed;
+        /**< Should we view PDFs using an embedded KPart if possible? */
+    QString pdfExternalViewer;
+        /**< The external program used to view PDFs if we cannot find
+             (or do not want) an embedded KPart.  This string may contain
+             additional arguments for the viewer; the PDF filename will
+             added to the end (separated by whitespace) and the entire
+             string will be passed to a shell for interpretation.  If this is
+             empty, Regina will do its best to find a suitable viewer. */
     bool pythonAutoIndent;
         /**< Should auto-indent be enabled in python consoles? */
     ReginaFilePrefList pythonLibraries;
@@ -280,6 +289,24 @@ struct ReginaPrefSet {
      * Returns the default census files shipped with Regina.
      */
     static ReginaFilePrefList defaultCensusFiles();
+
+    /**
+     * Returns an external program suitable for viewing PDF files, or
+     * the null string if none could be found.  This default is used
+     * if the user preference \a pdfExternalViewer is left empty.
+     *
+     * The string returned will contain a program and possibly some
+     * additional arguments.  It is expected that a PDF filename will be
+     * added to the end of this string (separated by whitespace) and
+     * that the entire string will be parsed by a shell.
+     *
+     * This routine does not query the services that offer themselves to KDE;
+     * indeed, the generic KRun infrastructure will be used as a fallback if
+     * this routine returns the null string.  The application returned
+     * here is intended to have higher priority than what KDE knows about
+     * (for instance, this routine refers to Preview.app on MacOS 10.x).
+     */
+    static QString pdfDefaultViewer();
 
     /**
      * Returns the full path to the python libraries configuration file.

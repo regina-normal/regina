@@ -47,6 +47,7 @@ class QPushButton;
 class ReginaMain;
 class ReginaPrefCensus;
 class ReginaPrefGeneral;
+class ReginaPrefPDF;
 class ReginaPrefPython;
 class ReginaPrefSnapPea;
 class ReginaPrefSurfaces;
@@ -70,6 +71,7 @@ class ReginaPreferences : public KDialogBase {
         ReginaPrefGeneral* generalPrefs;
         ReginaPrefTri* triPrefs;
         ReginaPrefSurfaces* surfacePrefs;
+        ReginaPrefPDF* pdfPrefs;
         ReginaPrefCensus* censusPrefs;
         ReginaPrefPython* pythonPrefs;
         ReginaPrefSnapPea* snapPeaPrefs;
@@ -143,6 +145,23 @@ class ReginaPrefSurfaces : public QVBox {
 
     public:
         ReginaPrefSurfaces(QWidget* parent = 0);
+
+    friend class ReginaPreferences;
+};
+
+/**
+ * The page of the Regina configuration dialog for PDF viewing
+ * preferences.
+ */
+class ReginaPrefPDF : public QVBox {
+    Q_OBJECT
+
+    private:
+        QCheckBox* cbEmbed;
+        QLineEdit* editExternalViewer;
+
+    public:
+        ReginaPrefPDF(QWidget* parent = 0);
 
     friend class ReginaPreferences;
 };

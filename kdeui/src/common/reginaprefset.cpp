@@ -129,6 +129,7 @@ ReginaPrefSet::ReginaPrefSet() :
         censusFiles(defaultCensusFiles()),
         displayIcon(true),
         displayTagsInTree(false),
+        pdfEmbed(true),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
@@ -155,6 +156,35 @@ ReginaFilePrefList ReginaPrefSet::defaultCensusFiles() {
     ans.push_back(ReginaFilePref(exDir + "/closed-hyp-census.rga"));
 
     return ans;
+}
+
+QString ReginaPrefSet::pdfDefaultViewer() {
+    QString app;
+
+    // If we're on a mac, try the default Mac PDF viewer.
+    #ifdef __APPLE__
+    if (QFile::exists("/Applications"))
+        if (! (app = KStandardDirs::findExe("open")).isNull())
+            return app;
+    #endif
+
+    // Try KDE applications (kpdf, okular).
+    if (! (app = KStandardDirs::findExe("kpdf")).isNull())
+        return app;
+    if (! (app = KStandardDirs::findExe("okular")).isNull())
+        return app;
+
+    // Try GNOME applications (evince).
+    if (! (app = KStandardDirs::findExe("evince")).isNull())
+        return app;
+
+    // Fall back to xpdf if we can.
+    if (! (app = KStandardDirs::findExe("xpdf")).isNull())
+        return app;
+
+    // Bapow.  We'll try going through KRun if/when somebody actually
+    // tries to open a PDF packet.
+    return QString();
 }
 
 QString ReginaPrefSet::pythonLibrariesConfig() {

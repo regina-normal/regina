@@ -485,6 +485,13 @@ void ReginaMain::readOptions(KConfig* config) {
         "AutomaticExtension", true);
     fileOpenRecent->loadEntries(config);
 
+    config->setGroup("PDF");
+    globalPrefs.pdfEmbed = config->readBoolEntry("Embed", true);
+    globalPrefs.pdfExternalViewer = config->readEntry("ExternalViewer").
+        stripWhiteSpace();
+    if (globalPrefs.pdfExternalViewer.isEmpty())
+        globalPrefs.pdfExternalViewer = ReginaPrefSet::pdfDefaultViewer();
+
     config->setGroup("Python");
     globalPrefs.pythonAutoIndent = config->readBoolEntry("AutoIndent", true);
     globalPrefs.pythonSpacesPerTab = config->readUnsignedNumEntry(
@@ -576,6 +583,10 @@ void ReginaMain::saveOptions() {
     config->setGroup("File");
     config->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);
     fileOpenRecent->saveEntries(config);
+
+    config->setGroup("PDF");
+    config->writeEntry("Embed", globalPrefs.pdfEmbed);
+    config->writeEntry("ExternalViewer", globalPrefs.pdfExternalViewer);
 
     config->setGroup("Python");
     config->writeEntry("AutoIndent", globalPrefs.pythonAutoIndent);

@@ -148,6 +148,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         BarIcon("packet_surfaces", KIcon::SizeMedium));
     surfacePrefs = new ReginaPrefSurfaces(frame);
 
+    frame = addVBoxPage(i18n("PDF"), i18n("PDF Options"),
+        BarIcon("packet_pdf", KIcon::SizeMedium));
+    pdfPrefs = new ReginaPrefPDF(frame);
+
     frame = addVBoxPage(i18n("Census"), i18n("Census Options"),
         BarIcon("view_text", KIcon::SizeMedium));
     censusPrefs = new ReginaPrefCensus(frame);
@@ -215,6 +219,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     surfacePrefs->chooserCreationCoords->setCurrentSystem(
         prefSet.surfacesCreationCoords);
+
+    pdfPrefs->cbEmbed->setChecked(prefSet.pdfEmbed);
+    pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
 
     for (ReginaFilePrefList::const_iterator it = prefSet.censusFiles.begin();
             it != prefSet.censusFiles.end(); it++)
@@ -488,6 +495,15 @@ void ReginaPreferences::slotApply() {
     prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
         getCurrentSystem();
 
+    prefSet.pdfEmbed = pdfPrefs->cbEmbed->isChecked();
+
+    // Don't be too fussy about what they put in this field, since the
+    // PDF viewer tries hard to find a suitable executable regardless.
+    strVal = pdfPrefs->editExternalViewer->text().stripWhiteSpace();
+    prefSet.pdfExternalViewer = strVal;
+
+    // pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
+
     prefSet.censusFiles.clear();
     for (QListViewItem* item = censusPrefs->listFiles->firstChild();
             item; item = item->nextSibling())
@@ -698,6 +714,38 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
         "surface lists.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(chooserCreationCoords, msg);
+
+    // Add some space at the end.
+    setStretchFactor(new QWidget(this), 1);
+}
+
+ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QVBox(parent) {
+    // Set up checkboxes.
+    cbEmbed = new QCheckBox(i18n("Use embedded viewer if possible"), this);
+    QWhatsThis::add(cbEmbed, i18n("If possible, view PDF packets using "
+        "a viewer that can embed directly into Regina's main window, "
+        "such as KPDF or KGhostView."));
+
+    // Set up the external viewer.
+    QHBox* box = new QHBox(this);
+    box->setSpacing(5);
+
+    QLabel* label = new QLabel(i18n("External PDF viewer:"), box);
+    editExternalViewer = new KLineEdit(box);
+    QString msg = i18n("<qt>The command used to view PDF packets if we are "
+        "forced to use an external application.  Examples might include "
+        "<tt>kpdf</tt>, <tt>evince</tt> or <tt>xpdf</tt>.<p>"
+        "You may include optional command-line arguments here.  The PDF "
+        "filename will be added to the end of the argument list, and the "
+        "entire command will be passed to a shell for execution.<p>"
+        "You are welcome to leave this option empty, in which case Regina "
+        "will try to find a suitable application.<p>"
+        "This option only relates to external viewers.  If you have "
+        "requested an <i>embedded</i> viewer in the checkbox above (and if an "
+        "embedded viewer is available), then this option will not be "
+        "used.</qt>");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(editExternalViewer, msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);
