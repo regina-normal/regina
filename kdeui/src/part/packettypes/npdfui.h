@@ -38,6 +38,7 @@
 #include <ktempfile.h>
 
 class QWidgetStack;
+class KProcess;
 
 namespace KParts {
     class ReadOnlyPart;
@@ -47,6 +48,8 @@ namespace regina {
     class NPacket;
     class NPDF;
 };
+
+class ReginaPrefSet;
 
 /**
  * A packet interface for viewing text packets.
@@ -76,11 +79,24 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         QLabel* msgInfo;
         QLabel* msgError;
 
+        /**
+         * External process details
+         */
+        KProcess* proc;
+        QString cmd;
+
+        /**
+         * The current viewer preferences.
+         */
+        bool embed;
+        QString externalViewer;
+
     public:
         /**
          * Constructor and destructor.
          */
         NPDFUI(regina::NPDF* packet, PacketPane* newEnclosingPane);
+        ~NPDFUI();
 
         /**
          * PacketUI overrides.
@@ -90,6 +106,13 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         QString getPacketMenuText() const;
         void refresh();
 
+    public slots:
+        /**
+         * Notify this interface that the global preferences have been
+         * updated.
+         */
+        void updatePreferences(const ReginaPrefSet& newPrefs);
+
     private:
         /**
          * Set up internal components.
@@ -97,6 +120,12 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         QWidget* messageLayer(QLabel*& text, const char* icon);
         void showInfo(const QString& msg);
         void showError(const QString& msg);
+
+    private slots:
+        /**
+         * Process control for external PDF viewers.
+         */
+        void processExited(KProcess* oldProc);
 };
 
 #endif
