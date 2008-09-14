@@ -129,6 +129,7 @@ ReginaPrefSet::ReginaPrefSet() :
         censusFiles(defaultCensusFiles()),
         displayIcon(true),
         displayTagsInTree(false),
+        pdfAutoClose(true),
         pdfEmbed(true),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),

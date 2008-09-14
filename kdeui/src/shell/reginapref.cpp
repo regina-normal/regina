@@ -222,6 +222,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     pdfPrefs->cbEmbed->setChecked(prefSet.pdfEmbed);
     pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
+    pdfPrefs->cbAutoClose->setChecked(prefSet.pdfAutoClose);
 
     for (ReginaFilePrefList::const_iterator it = prefSet.censusFiles.begin();
             it != prefSet.censusFiles.end(); it++)
@@ -504,6 +505,8 @@ void ReginaPreferences::slotApply() {
 
     // pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
 
+    prefSet.pdfAutoClose = pdfPrefs->cbAutoClose->isChecked();
+
     prefSet.censusFiles.clear();
     for (QListViewItem* item = censusPrefs->listFiles->firstChild();
             item; item = item->nextSibling())
@@ -720,7 +723,7 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
 }
 
 ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QVBox(parent) {
-    // Set up checkboxes.
+    // Set up the embedded checkbox.
     cbEmbed = new QCheckBox(i18n("Use embedded viewer if possible"), this);
     QWhatsThis::add(cbEmbed, i18n("If possible, view PDF packets using "
         "a viewer that can embed directly into Regina's main window, "
@@ -746,6 +749,17 @@ ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QVBox(parent) {
         "used.</qt>");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(editExternalViewer, msg);
+
+    cbAutoClose = new QCheckBox(
+        i18n("Automatically close external viewers"), this);
+    QWhatsThis::add(cbAutoClose, i18n("When using an external PDF viewer "
+        "(such as <tt>kpdf</tt> or <tt>xpdf</tt>), "
+        "close it automatically when Regina's packet viewer is closed.  "
+        "Likewise, close and reopen the external viewer whenever Regina's "
+        "packet viewer is refreshed.<p>"
+        "If you do not select this option, Regina will never close any "
+        "external PDF viewers on its own; instead this task will be left "
+        "up to the user.</qt>"));
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);

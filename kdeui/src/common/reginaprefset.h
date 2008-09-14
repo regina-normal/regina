@@ -230,6 +230,9 @@ struct ReginaPrefSet {
         /**< Should we display the pretty Regina icon? */
     bool displayTagsInTree;
         /**< Should we display packet tags in the visual tree? */
+    bool pdfAutoClose;
+        /**< Should we close external PDF viewers automatically (e.g.,
+             when the packet is refreshed or closed)? */
     bool pdfEmbed;
         /**< Should we view PDFs using an embedded KPart if possible? */
     QString pdfExternalViewer;

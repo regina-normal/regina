@@ -486,6 +486,7 @@ void ReginaMain::readOptions(KConfig* config) {
     fileOpenRecent->loadEntries(config);
 
     config->setGroup("PDF");
+    globalPrefs.pdfAutoClose = config->readBoolEntry("AutoClose", true);
     globalPrefs.pdfEmbed = config->readBoolEntry("Embed", true);
     globalPrefs.pdfExternalViewer = config->readEntry("ExternalViewer").
         stripWhiteSpace();
@@ -585,6 +586,7 @@ void ReginaMain::saveOptions() {
     fileOpenRecent->saveEntries(config);
 
     config->setGroup("PDF");
+    config->writeEntry("AutoClose", globalPrefs.pdfAutoClose);
     config->writeEntry("Embed", globalPrefs.pdfEmbed);
     config->writeEntry("ExternalViewer", globalPrefs.pdfExternalViewer);
 

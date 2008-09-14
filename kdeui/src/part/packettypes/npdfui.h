@@ -88,6 +88,7 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         /**
          * The current viewer preferences.
          */
+        bool autoClose;
         bool embed;
         QString externalViewer;
 
@@ -120,6 +121,12 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         QWidget* messageLayer(QLabel*& text, const char* icon);
         void showInfo(const QString& msg);
         void showError(const QString& msg);
+
+        /**
+         * Either kill the current viewer process or set it free,
+         * according to the \a autoClose setting.
+         */
+        void abandonProcess();
 
     private slots:
         /**

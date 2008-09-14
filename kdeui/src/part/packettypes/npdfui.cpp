@@ -56,8 +56,6 @@
 using regina::NPacket;
 using regina::NPDF;
 
-// TODO: New preference for whether to close external viewers automatically.
-
 NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), pdf(packet),
         temp(locateLocal("tmp", "pdf-"), ".pdf"),
@@ -67,6 +65,7 @@ NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
 
     ReginaPart* part = enclosingPane->getPart();
     const ReginaPrefSet& prefs = part->getPreferences();
+    autoClose = prefs.pdfAutoClose;
     embed = prefs.pdfEmbed;
     externalViewer = prefs.pdfExternalViewer;
 
@@ -90,13 +89,7 @@ NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
 
 NPDFUI::~NPDFUI() {
     // Kill any external viewer that might currently be running.
-    if (proc) {
-        // Set proc = 0 *before* we kill the process, so that the exit signal
-        // is ignored.
-        KProcess* tmpProc = proc;
-        proc = 0;
-        tmpProc->kill();
-    }
+    abandonProcess();
 }
 
 NPacket* NPDFUI::getPacket() {
@@ -128,13 +121,7 @@ void NPDFUI::refresh() {
     }
 
     // Kill any external viewer that might currently be running.
-    if (proc) {
-        // Set proc = 0 *before* we kill the process, so that the exit signal
-        // is ignored.
-        KProcess* tmpProc = proc;
-        proc = 0;
-        tmpProc->kill();
-    }
+    abandonProcess();
 
     // Are we trying for an embedded viewer?
     if (embed) {
@@ -226,6 +213,7 @@ void NPDFUI::updatePreferences(const ReginaPrefSet& newPrefs) {
     bool needRefresh = ((embed != newPrefs.pdfEmbed) ||
         (externalViewer != newPrefs.pdfExternalViewer && viewer == 0));
 
+    autoClose = newPrefs.pdfAutoClose;
     embed = newPrefs.pdfEmbed;
     externalViewer = newPrefs.pdfExternalViewer;
 
@@ -270,6 +258,25 @@ void NPDFUI::showInfo(const QString& msg) {
 void NPDFUI::showError(const QString& msg) {
     msgError->setText(msg);
     stack->raiseWidget(layerError);
+}
+
+void NPDFUI::abandonProcess() {
+    if (proc) {
+        if (autoClose) {
+            // Set proc = 0 *before* we kill the process, so that the
+            // exit signal is ignored.
+            KProcess* tmpProc = proc;
+            proc = 0;
+            tmpProc->kill();
+            delete tmpProc;
+        } else {
+            // Cut the process free so it is not killed when the
+            // KProcess is eventually destroyed.
+            proc->detach();
+            delete proc;
+            proc = 0;
+        }
+    }
 }
 
 void NPDFUI::processExited(KProcess* oldProc) {
