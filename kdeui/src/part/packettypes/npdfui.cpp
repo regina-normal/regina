@@ -34,6 +34,7 @@
 #include "npdfui.h"
 #include "../reginapart.h"
 
+#include <csignal>
 #include <cstdio>
 #include <qfile.h>
 #include <qlabel.h>
@@ -59,7 +60,7 @@ using regina::NPDF;
 NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), pdf(packet),
         temp(locateLocal("tmp", "pdf-"), ".pdf"),
-        viewer(0), proc(0) {
+        viewer(0), proc(0), runPid(0) {
     temp.setAutoDelete(true);
     temp.close();
 
@@ -67,7 +68,7 @@ NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
     const ReginaPrefSet& prefs = part->getPreferences();
     autoClose = prefs.pdfAutoClose;
     embed = prefs.pdfEmbed;
-    externalViewer = prefs.pdfExternalViewer;
+    externalViewer = prefs.pdfExternalViewer.stripWhiteSpace();
 
     ui = new QWidget();
     QBoxLayout* baseLayout = new QVBoxLayout(ui);
@@ -172,23 +173,20 @@ void NPDFUI::refresh() {
         stack->raiseWidget(layerInfo);
     }
 
-    cmd = (externalViewer.isEmpty() ?
-        ReginaPrefSet::pdfDefaultViewer() : externalViewer);
-
-    if (cmd.isEmpty()) {
-        // No idea what to use.  Fall back to the KDE default for PDFs.
-        if (! KRun::runURL(KURL::fromPathOrURL(temp.name()), PDF_MIMETYPE,
+    if (externalViewer.isEmpty()) {
+        // Fall back to the KDE default for PDFs.
+        runPid = KRun::runURL(KURL::fromPathOrURL(temp.name()), PDF_MIMETYPE,
                 false /* delete temp file on application exit */,
-                false /* do not allow KRun to "open" executables */)) {
+                false /* do not allow KRun to "open" executables */);
+        if (! runPid)
             showError(i18n("<qt>No preferred PDF viewer has been set, and "
                 "KDE was not able to start a suitable application.<p>"
                 "Please specify your preferred PDF viewer under the "
                 "PDF options in Regina's settings.</qt>"));
-        }
     } else {
         QString filename = temp.name();
         KRun::shellQuote(filename);
-        cmd = cmd + ' ' + filename;
+        cmd = externalViewer + ' ' + filename;
 
         proc = new KProcess(this);
         proc->setUseShell(true);
@@ -209,13 +207,16 @@ void NPDFUI::refresh() {
 }
 
 void NPDFUI::updatePreferences(const ReginaPrefSet& newPrefs) {
+    // Whitespace should already have been stripped by now, but just in case...
+    QString newExternalViewer = newPrefs.pdfExternalViewer.stripWhiteSpace();
+
     // Do we need to refresh afterwards?
     bool needRefresh = ((embed != newPrefs.pdfEmbed) ||
-        (externalViewer != newPrefs.pdfExternalViewer && viewer == 0));
+        (externalViewer != newExternalViewer && viewer == 0));
 
     autoClose = newPrefs.pdfAutoClose;
     embed = newPrefs.pdfEmbed;
-    externalViewer = newPrefs.pdfExternalViewer;
+    externalViewer = newExternalViewer;
 
     if (needRefresh)
         refresh();
@@ -276,6 +277,10 @@ void NPDFUI::abandonProcess() {
             delete proc;
             proc = 0;
         }
+    } else if (runPid) {
+        if (autoClose)
+            kill(runPid, SIGTERM);
+        runPid = 0;
     }
 }
 
