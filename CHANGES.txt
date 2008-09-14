@@ -76,8 +76,9 @@ Version 4.5.1  [ Under development ]
     USER INTERFACE:
         - PDF documents can now be embedded in data files as PDF packets.
           Added import, export and creation facilities, plus a PDF packet
-          viewer that uses an embedded KPart (such as kpdf or kghostview's
-          embedded viewer).
+          viewer that uses either an embedded KPart (such as kpdf or
+          kghostview's embedded viewer) or an external application (such
+          as xpdf or evince) according to the user's preferences.
     TEST SUITE:
         - Added new tests for normal surfaces that exploit generic properties
           of layered loops; these tests push to 50 tetrahedra, and can
