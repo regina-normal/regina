@@ -62,6 +62,9 @@ class ReginaMain : public KParts::MainWindow,
         /**
          * Components
          */
+        KParts::PartManager* manager;
+            /**< The part manager that handles activation and
+                 deactivation of nested parts. */
         KParts::ReadWritePart* currentPart;
             /**< The part containing the currently opened document, or 0 if
                  no document has yet been opened. */

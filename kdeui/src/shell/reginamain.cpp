@@ -54,6 +54,7 @@
 #include <kmenubar.h>
 #include <kmessagebox.h>
 #include <kparts/event.h>
+#include <kparts/partmanager.h>
 #include <kstdaccel.h>
 #include <kstdaction.h>
 #include <ktexteditor/document.h>
@@ -89,6 +90,11 @@ ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#",
 
     // Don't forget to save toolbar/etc settings.
     setAutoSaveSettings(QString::fromLatin1("MainWindow"), true);
+
+    // Prepare to load parts.
+    manager = new KParts::PartManager(this);
+    connect(manager, SIGNAL(activePartChanged(KParts::Part*)),
+        this, SLOT(createGUI(KParts::Part*)));
 }
 
 void ReginaMain::setPreferences(const ReginaPrefSet& prefs) {
@@ -337,9 +343,11 @@ void ReginaMain::changeCaption(const QString& text) {
 
 void ReginaMain::newToolbarConfig() {
     // Work around a bug that messes up the newly created GUI.
+    /*
     createGUI(0);
     createShellGUI(false);
     createGUI(currentPart);
+    */
 
     applyMainWindowSettings(KGlobal::config(),
         QString::fromLatin1("MainWindow"));
@@ -704,7 +712,7 @@ void ReginaMain::embedPart() {
     if (currentPart) {
         setCentralWidget(currentPart->widget());
         currentPart->widget()->show();
-        createGUI(currentPart);
+        manager->addPart(currentPart, true /* active part */);
         connect(currentPart, SIGNAL(completed()), this, SLOT(addRecentFile()));
     }
 }
