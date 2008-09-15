@@ -46,6 +46,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kparts/componentfactory.h>
+#include <kparts/partmanager.h>
 #include <kprocess.h>
 #include <krun.h>
 #include <kstandarddirs.h>
@@ -134,7 +135,13 @@ void NPDFUI::refresh() {
 
             if (viewer) {
                 viewer->setProgressInfoEnabled(false);
-                // TODO: Merge UI
+
+                // Allow the viewer to merge its GUI into the main menu
+                // bar and toolbar.
+                ReginaPart* part = enclosingPane->getPart();
+                KParts::PartManager* manager = part->manager();
+                if (manager)
+                    manager->addPart(viewer, false /* set active */);
             }
         }
 
