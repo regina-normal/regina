@@ -41,6 +41,7 @@ Don't forget:
     changes & highlights (both . and kdeui/doc/en)
     what's this & tooltips
     documentation in handbook, feature set & index
+    any new tips of the day?
     journal references (www, KDE docs, example files, headers)
     check for doxygen warnings
     update \test... notes in API docs
