@@ -77,6 +77,8 @@ class NSFSpace;
  * 2-by-2 matrix.  This matrix expresses the locations of the fibres and
  * base orbifold of the corresponding end space in terms of the central
  * space.
+ * <b>Note that these are not the same matrices that appear in the
+ * manifold name in the census data files!</b>  See the warning below.
  *
  * More specifically, consider the matrix \a M that describes the
  * joining of the central space and the first end space (marked above as
@@ -113,6 +115,20 @@ class NSFSpace;
  *
  * The optional NManifold routine getHomologyH1() is implemented, but
  * the optional routine construct() is not.
+ *
+ * \warning The 2-by-2 matrices used in this class are \e not the same
+ * matrices that appear in the manifold name returned by getName()
+ * and getTeXName() and seen in the census data files.  The matrices
+ * used in this class work from the inside out, describing the boundary torus
+ * on each end space in terms of a boundary torus on the central space.
+ * The matrices used in the manifold name work from left to right in the
+ * diagram above, describing a boundary torus on the central space or
+ * rightmost end space in terms of a boundary torus on the leftmost end
+ * space or central space respectively.  The upshot of all this is that
+ * <b>the first matrix becomes inverted</b> (and the second matrix
+ * remains unchanged).  It is likely that future versions of Regina will
+ * replace this class with a more general class that (amongst other
+ * things) removes this inconsistency.
  *
  * \todo \opt Speed up homology calculations involving orientable base
  * spaces by adding rank afterwards, instead of adding generators for
