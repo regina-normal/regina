@@ -14,14 +14,16 @@ Version 4.5.1  [ Under development ]
           packets in the closed orientable / non-orientable censuses.
           These new Notation packets explain the manifold names and
           parameters precisely, and include supporting diagrams.
-        - For a pair of non-geometric non-orientable manifolds built from the
-          same Seifert fibred and hyperbolic pieces, suffixes (a) and (b) were
-          originally used to distingish between the two spaces.  The first
-          homology group (which is more meaningful) is now used instead.
-        - Likewise, a pair of orientable hyperbolic manifolds with the
-          same volume and first homology were originally distinguished using
-          suffixes (a) and (b).  The length of the shortest geodesic is
-          now used instead.
+        - Renamed some census manifolds to avoid arbitrary (a), (b) suffixes.
+          In the 11-tetrahedron closed orientable census:
+            Hyp_2.13401634 (Z_14) (a)  ->  Hyp_2.13401634 (Z_14, geod = 0.4606)
+            Hyp_2.13401634 (Z_14) (b)  ->  Hyp_2.13401634 (Z_14, geod = 0.3684)
+            (These have also been reordered in the overall list of manifolds.)
+          In the 11-tetrahedron closed non-orientable census:
+            SFS [M] U m003 (a)  ->  SFS [M] U m003 (Z + Z_5)
+            SFS [M] U m003 (b)  ->  SFS [M] U m003 (Z + Z_10)
+          These changes are only stop-gaps until hyperbolic manfiolds
+          are dealt with properly.
     ENGINE:
         Class NBitmask, NBitmask1, NBitmask2, BitManipulator:
             - New classes for manipulating bitmasks.  NBitmask is for bitmasks
