@@ -59,6 +59,8 @@ namespace regina {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  * \pre The argument \a size is a power of two, and is at most sizeof(\a T).
+ *
+ * \ifacespython Not present.
  */
 template <typename T, unsigned size = sizeof(T)>
 class BitManipulator {

@@ -344,6 +344,8 @@ class NBitmask {
  * bitmask (specifically, the length will be rounded up to the next "raw
  * unit of storage").
  *
+ * \ifacespython Not present.
+ *
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
@@ -631,6 +633,8 @@ class NBitmask1 {
  *
  * Since the length of the bitmask is not stored, the number of bits
  * written will be 8 * sizeof(\a T).
+ *
+ * \ifacespython Not present.
  *
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
@@ -955,6 +959,8 @@ class NBitmask2 {
  *
  * Since the length of the bitmask is not stored, the number of bits
  * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
+ *
+ * \ifacespython Not present.
  *
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.

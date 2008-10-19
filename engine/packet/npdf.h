@@ -59,6 +59,8 @@ class NPDF : public NPacket {
         /**
          * Describes how a PDF packet should claim ownership of a block
          * of binary data.
+         *
+         * \ifacespython Not present.
          */
         enum OwnershipPolicy {
             /**
