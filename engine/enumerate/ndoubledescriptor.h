@@ -64,6 +64,8 @@ class NProgressNumber;
  * this class should ever be created.
  *
  * \ifacespython Not present.
+ *
+ * \testpart
  */
 class NDoubleDescriptor {
     public:
