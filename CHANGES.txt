@@ -9,6 +9,19 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.5.1  [ Under development ]
 
+    CENSUS:
+        - Replaced the old plain-text Notation packets with detailed PDF
+          packets in the closed orientable / non-orientable censuses.
+          These new Notation packets explain the manifold names and
+          parameters precisely, and include supporting diagrams.
+        - For a pair of non-geometric non-orientable manifolds built from the
+          same Seifert fibred and hyperbolic pieces, suffixes (a) and (b) were
+          originally used to distingish between the two spaces.  The first
+          homology group (which is more meaningful) is now used instead.
+        - Likewise, a pair of orientable hyperbolic manifolds with the
+          same volume and first homology were originally distinguished using
+          suffixes (a) and (b).  The length of the shortest geodesic is
+          now used instead.
     ENGINE:
         Class NBitmask, NBitmask1, NBitmask2, BitManipulator:
             - New classes for manipulating bitmasks.  NBitmask is for bitmasks
