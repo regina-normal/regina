@@ -269,6 +269,8 @@
   <glossdef><para><link linkend="options-triangulation">&graphviz;</link></para></glossdef>
   <glossdef><para><link linkend="options-surfaces">normal surface
    enumeration</link></para></glossdef>
+  <glossdef><para><link linkend="options-pdf">&pdf;
+   viewing</link></para></glossdef>
   <glossdef><para><link linkend="options-python">&python;
    scripting</link></para></glossdef>
   <glossdef><para><link linkend="options-snappea">&snappea;
@@ -441,6 +443,12 @@
  </glossentry>
 
  <glossentry>
+  <glossterm><link linkend="options-pdf">embedded &pdf; viewer,
+   configuration</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm>encodings</glossterm>
   <glosssee>character encodings</glosssee>
  </glossentry>
@@ -487,6 +495,12 @@
   <glossterm>extension</glossterm>
   <glossdef><para><link linkend="tri-extension">of a triangulation
    boundary</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm><link linkend="options-pdf">external &pdf; viewer,
+   configuration</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
 
  </glossdiv><glossdiv><title>F</title>
@@ -887,9 +901,24 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>&pdf; documents</glossterm>
+  <glossdef><para><link linkend="options-pdf">embedded / external viewer
+   configuration</link></para></glossdef>
+  <glossdef><para><link linkend="export-pdf">exporting</link></para></glossdef>
+  <glossdef><para><link linkend="import-pdf">importing</link></para></glossdef>
+  <glossdef><para><link linkend="packet-pdf">&pdf;
+   packets</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="tri-new-example">&poincare;
    homology sphere</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>preferences</glossterm>
+  <glosssee>configuration</glosssee>
  </glossentry>
 
  <glossentry>

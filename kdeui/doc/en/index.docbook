@@ -72,18 +72,24 @@
   <!ENTITY java "<application>Java</application>">
   <!ENTITY hom1 "H<subscript>1</subscript>">
   <!ENTITY html "<acronym>HTML</acronym>">
+  <!ENTITY kghostview "<productname>KGhostView</productname>">
   <!ENTITY khelpcenter "<application>&kde; Help Center</application>">
+  <!ENTITY kpdf "<productname>KPDF</productname>">
+  <!ENTITY latex "<productname>LaTeX</productname>">
   <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
+  <!ENTITY macosx "<productname>MacOS&nbsp;X</productname>">
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">
   <!ENTITY orb "<application>Orb</application>">
   <!ENTITY orbcasson "&orb; / &casson;">
   <!ENTITY orburl "<ulink url='http://www.ms.unimelb.edu.au/~snap/orb.html'>&orb;</ulink>">
+  <!ENTITY pdf "<acronym>PDF</acronym>">
   <!ENTITY pi "<literal>Pi</literal>">
   <!ENTITY poincare "Poincar&eacute;">
   <!ENTITY ppirr
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">
+  <!ENTITY previewapp "<productname>Preview</productname>">
   <!ENTITY python "<application>Python</application>">
   <!ENTITY qt "<application>Qt</application>">
   <!ENTITY rhel "<productname>Red Hat Enterprise</productname>">
@@ -114,6 +120,7 @@
   <!ENTITY vary "<replaceable>y</replaceable>">
   <!ENTITY varz "<replaceable>z</replaceable>">
   <!ENTITY xml "<acronym>XML</acronym>">
+  <!ENTITY xpdf "<productname>Xpdf</productname>">
 
   <!ENTITY reginaabout SYSTEM "about.docbook">
   <!ENTITY reginafeatureset SYSTEM "featureset.docbook">

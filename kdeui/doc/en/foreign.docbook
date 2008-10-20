@@ -198,6 +198,30 @@
    </para>
   </sect2>
 
+  <sect2 id="import-pdf">
+   <title>&pdf; Document</title>
+
+   <para>
+    Any &pdf; document can be imported directly into the packet tree.
+    This allows users to document their work with formulae, diagrams and
+    anything else that can appear on the printed page.
+   </para>
+   <para>
+    Because all &pdf; packets must be created externally (such as in
+    &latex;, or some other typesetting system or word processor), the
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New PDF Document</guimenuitem>
+    </menuchoice>
+    menu item brings up exactly the same import dialog as
+    <menuchoice>
+     <guimenu>File</guimenu>
+     <guisubmenu>Import</guisubmenu>
+     <guimenuitem>PDF Document</guimenuitem>
+    </menuchoice>.
+   </para>
+  </sect2>
+
   <sect2 id="import-pyscript">
    <title>&python; Script</title>
 
@@ -454,6 +478,15 @@
     If any of the surfaces have been given names that include
     international characters, these will be encoded in &utf8;
     in the exported &csv; file.
+   </para>
+  </sect2>
+
+  <sect2 id="export-pdf">
+   <title>&pdf; Document</title>
+
+   <para>
+    This allows a single &pdf; packet to be exported as an ordinary
+    &pdf; file.  You can then open this file in any regular &pdf; viewer.
    </para>
   </sect2>
 

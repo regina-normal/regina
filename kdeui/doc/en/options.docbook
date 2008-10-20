@@ -200,6 +200,113 @@
   </glosslist>
  </sect1>
 
+ <sect1 id="options-pdf">
+  <title>&pdf; Options</title>
+
+  <para>
+   This page allows the user to configure how &regina; deals with &pdf;
+   packets.
+  </para>
+  <para>
+   &regina; does not contain any explicit code for displaying
+   &pdf; documents, and so it must rely on other programs for this task.
+   There are two ways in which this can be done:
+   <itemizedlist>
+    <listitem><para>
+     Some programs are able to embed viewers directly within &regina;'s
+     main window, complete with toolbars and menu items, as illustrated
+     below; these are called <firstterm>embedded viewers</firstterm>.
+     Examples of programs that offer embedded viewers include
+     &kpdf; and &kghostview;.
+    </para>
+     <screenshot>
+      <mediaobject>
+       <imageobject>
+        <imagedata fileref="pdf.png"/>
+       </imageobject>
+      </mediaobject>
+     </screenshot>
+    </listitem>
+    <listitem><para>
+     Other programs must be treated as standalone applications that
+     operate completely independently of &regina;; these are called
+     <firstterm>external viewers</firstterm>.  Examples of external
+     viewers include &xpdf; under &linux;, or &previewapp; under
+     &macosx;.
+    </para></listitem>
+   </itemizedlist>
+  </para>
+  <para>
+   The following options are available to configure how &regina;
+   displays &pdf; documents:
+  </para>
+
+  <glosslist>
+   <glossentry>
+    <glossterm>Use embedded viewer if possible</glossterm>
+    <glossdef><para>
+     If this box is checked, &regina; will search for an embedded
+     viewer that it can use.  If it cannot find anything suitable,
+     &regina; will fall back to an external viewer (in which case it
+     will honour the external viewer settings below).
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm>External &pdf; viewer</glossterm>
+    <glossdef>
+     <para>
+      If we are using an external viewer, this option specifies the command
+      to start the external application.
+      If the viewer is on your default search path, you may
+      simply provide the command (such as <command>xpdf</command>);
+      otherwise you will need to provide a full path to the executable
+      (such as <command>/usr/bin/xpdf</command>).
+      Examples for this option
+      might include <command>xpdf</command>, <command>evince</command>,
+      or <command>/usr/bin/open</command> for &macosx; users.
+     </para>
+     <para>
+      You may include additional command-line arguments here
+      (so, for instance, &macosx; users might enter
+      <command>/usr/bin/open&nbsp;-a&nbsp;Preview</command>).
+      &regina; will automatically add the &pdf; filename to the end of
+      this command, and the entire command will be passed to a shell for
+      execution.
+     </para>
+     <para>
+      You are welcome to leave this option empty, in which case &regina;
+      will search for a suitable application.
+     </para>
+    </glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm>Automatically close external viewers</glossterm>
+    <glossdef>
+     <para>
+      Because external viewers run as standalone applications, they do not
+      need to be closed when &regina; is finished with them (or even
+      when &regina; exits completely).
+      This option configures whether or not &regina; goes out of its
+      way to close external viewers automatically.
+     </para>
+     <para>
+      If this option is checked, &regina; will automatically close an
+      external viewer whenever &regina;'s corresponding packet
+      viewer is closed.  Likewise, &regina; will automatically close and
+      reopen the external viewer whenever &regina;'s corresponding packet
+      viewer is refreshed.
+     </para>
+     <para>
+      If this option is not checked, &regina; will never close any
+      external viewers automatically; this task will be left up to the
+      user.  Be careful, since this might leave you with a lot of
+      viewers open after a relatively short time.
+     </para>
+    </glossdef>
+   </glossentry>
+  </glosslist>
+ </sect1>
+
  <sect1 id="options-census">
   <title>Census Options</title>
 

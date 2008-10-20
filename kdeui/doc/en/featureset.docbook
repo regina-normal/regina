@@ -408,7 +408,8 @@
    conform to a well-organised hierarchical structure.  This structure not only
    allows multiple triangulations, normal surface lists and other topological
    structures to be stored together in an organised fashion but it also supports
-   the storing of miscellaneous data such as text notes and &python; scripts.
+   the storing of miscellaneous data such as text notes, &python; scripts
+   and &pdf; documents.
    The file format is well documented in the users' handbook and uses
    compressed XML<footnote><para>XML is the <firstterm>Extensible Markup
    Language</firstterm>, an open and widely-supported text-based data

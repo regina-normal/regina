@@ -84,6 +84,41 @@
    </screenshot>
   </sect2>
 
+  <sect2 id="packet-pdf">
+   <title>&pdf; Document</title>
+
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-pdf.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Like text packets, a <firstterm>&pdf; packet</firstterm> allows you
+    to document your work.  &pdf; packets support richer content,
+    including diagrams and formulae; the cost is that they are
+    read-only, and must be created outside &regina;.
+   </para>
+   <para>
+    To add a &pdf; packet, create a document in your favourite word
+    processor or typesetting system (such as &latex;) and export this
+    document to &pdf; format.  Then, within &regina;, import this
+    &pdf; document into the packet tree by selecting
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New PDF Document</guimenuitem>
+    </menuchoice>.
+   </para>
+   <screenshot>
+    <mediaobject>
+     <imageobject>
+      <imagedata fileref="pdf.png"/>
+     </imageobject>
+    </mediaobject>
+   </screenshot>
+  </sect2>
+
   <sect2 id="packet-triangulation">
    <title>Triangulation</title>
 
