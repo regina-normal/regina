@@ -51,6 +51,8 @@ Don't forget:
     debian packages (include cvs.diff)
     fedora/mandriva/suse packages
     update tips for building on different platforms
+    update debian/ubuntu/fink READMEs as required (both text and html)
+    update census download file sizes if there have been changes
     tag the subversion repository (svn copy between two remote URLs)
     upload new data files, both from examples/ and the large data repository
     upload handbook as an HTML bundle
