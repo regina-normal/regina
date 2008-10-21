@@ -7,7 +7,7 @@
 
 KDE_OPTIONS=noautodist
 
-AUTOMAKE_OPTIONS = foreign dist-zip 1.4
+AUTOMAKE_OPTIONS = foreign 1.4
 
 SUBDIRS = \
   @REGINA_BUILD_ENGINE@ \
