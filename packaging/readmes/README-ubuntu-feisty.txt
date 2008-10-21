@@ -47,4 +47,4 @@ Regina you should follow the steps outlined above.
 
 ------------------------------------
 
-Ben Burton <bab@debian.org>, Sun, 25 Nov 2007 10:28:59 +1100
+Ben Burton <bab@debian.org>, Sat, 17 May 2008 11:39:33 +1000

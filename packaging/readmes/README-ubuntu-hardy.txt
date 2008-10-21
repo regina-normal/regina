@@ -1,20 +1,20 @@
-Regina for Ubuntu:  Dapper (Ubuntu 6.06 LTS)
---------------------------------------------
+Regina for Ubuntu:  Hardy (Ubuntu 8.04 LTS)
+-------------------------------------------
 
 Ubuntu packages for Regina are not distributed from the SourceForge site.
 
-Instead, users of Dapper Drake (the Ubuntu 6.06 LTS release) may obtain
+Instead, users of Hardy Heron (the Ubuntu 8.04 LTS release) may obtain
 packages from the repository on people.debian.org.  These packages are
 available for the i386 and amd64 architectures.  To install them:
 
 1. Add Regina's location to your list of repositories.
 
    This only needs to be done once (the first time you install Regina).
-   Open the Synaptic package manager, select Settings->Repositories and
-   add a new custom repository.  Synaptic will ask you for an APT line,
-   which is:
+   Open the Synaptic package manager, select Settings->Repositories,
+   click on the tab for third-party software and add a new repository.
+   Synaptic will ask you for an APT line, which is:
 
-     deb http://people.debian.org/~bab/regina/ dapper main
+     deb http://people.debian.org/~bab/regina/ hardy main
 
    You should also enable the Community Maintained Universe in your
    list of repositories if this has not been done before.
@@ -40,11 +40,11 @@ own code, you may want the "regina-normal-dev" and "regina-normal-doc"
 packages also.  The "regina-normal-mpi" package is available for users
 running long census calculations on clusters.
 
-You might have noticed that Dapper Drake already offers Regina as part of
-its universe section.  However, this is the older version 4.2.1 (which
-was current when Dapper Drake was released).  For a newer version of
+You might have noticed that Hardy Heron already offers Regina as part of
+its universe section.  However, this is the older version 4.4 (which
+was current when Hardy Heron was released).  For a newer version of
 Regina you should follow the steps outlined above.
 
 ------------------------------------
 
-Ben Burton <bab@debian.org>, Sun, 25 Nov 2007 10:28:59 +1100
+Ben Burton <bab@debian.org>, Sat, 17 May 2008 11:39:33 +1000
