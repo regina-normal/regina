@@ -10,6 +10,23 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.5.1  [ Under development ]
 
+    Features:
+        - PDF documents can now be embedded within data files as PDF packets.
+          This allows you to document your data in detail with equations
+          and diagrams.  See File -> Open Example -> Introductory Examples
+          for an illustration.
+    Optimisations:
+        - Normal surface enumeration is now orders of magnitude faster,
+          and consumes significantly less memory.  See arXiv:0808.4050
+          for a full list of improvements.
+    Census Improvements:
+        - Replaced the old plain-text Notation packets in the closed
+          orientable / non-orientable censuses with detailed PDF packets.
+          These new PDFs explain the precise meanings and conventions used
+          in all the manifold names, and include supporting diagrams.
+        - Renamed a few census manifolds to replace the old (a)/(b) suffixes
+          with something more meaningful.  See CHANGES.txt for details.
+
 Version 4.5  [ 17 May, 2008 ]
 
     Features and Improvements:
