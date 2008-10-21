@@ -43,7 +43,7 @@ To run Regina, you will need:
    Users of the Fink unstable branch can skip this step, since Regina is
    now included in the Fink distribution.  Please note though that new
    versions of Regina might not appear in the Fink archive until several
-   weeks after their release.
+   months after their release.
 
 You can now build and install Regina as you would any other Fink package:
 
