@@ -22,8 +22,8 @@ Version 4.5.1  [ Under development ]
           In the 11-tetrahedron closed non-orientable census:
             SFS [M] U m003 (a)  ->  SFS [M] U m003 (Z + Z_5)
             SFS [M] U m003 (b)  ->  SFS [M] U m003 (Z + Z_10)
-          These changes are only stop-gaps until hyperbolic manfiolds
-          are dealt with properly.
+          These changes are only stop-gaps until hyperbolic manfiolds are
+          dealt with properly (i.e., expect the names to change again).
     ENGINE:
         Class NBitmask, NBitmask1, NBitmask2, BitManipulator:
             - New classes for manipulating bitmasks.  NBitmask is for bitmasks
@@ -90,7 +90,7 @@ Version 4.5.1  [ Under development ]
             - Added to find the rank of an integer matrix and bases for its
               row space and orthogonal complement.
     USER INTERFACE:
-        - PDF documents can now be embedded in data files as PDF packets.
+        - PDF documents can now be embedded within data files as PDF packets.
           Added import, export and creation facilities, plus a PDF packet
           viewer that uses either an embedded KPart (such as kpdf or
           kghostview's embedded viewer) or an external application (such
