@@ -1,7 +1,21 @@
 <bibliography id="bibliography">
 
+ <biblioentry id="bib-budney-emb11">
+  <abbrev>Bud08</abbrev>
+  <authorgroup><author>
+   <firstname>Ryan</firstname>
+   <surname>Budney</surname>
+  </author></authorgroup>
+  <title>Embeddings of 3-manifolds in
+   <replaceable>S</replaceable><superscript>4</superscript>
+   from the point of view of the 11-tetrahedron census</title>
+  <edition>Preprint</edition>
+  <issuenum>arXiv:0810.2346</issuenum>
+  <date>October 2008</date>
+ </biblioentry>
+
  <biblioentry id="bib-burton-phd">
-  <abbrev>Bu1</abbrev>
+  <abbrev>Bur03</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -15,7 +29,7 @@
  </biblioentry>
 
  <biblioentry id="bib-burton-facegraphs">
-  <abbrev>Bu2</abbrev>
+  <abbrev>Bur04</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -30,7 +44,7 @@
  </biblioentry>
 
  <biblioentry id="bib-burton-nor10">
-  <abbrev>Bu3</abbrev>
+  <abbrev>Bur07a</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -46,7 +60,7 @@
  </biblioentry>
 
  <biblioentry id="bib-burton-nor8">
-  <abbrev>Bu4</abbrev>
+  <abbrev>Bur07b</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -61,7 +75,7 @@
  </biblioentry>
 
  <biblioentry id="bib-burton-nor7">
-  <abbrev>Bu5</abbrev>
+  <abbrev>Bur07c</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -77,7 +91,7 @@
  </biblioentry>
 
  <biblioentry id="bib-burton-satblocks">
-  <abbrev>Bu6</abbrev>
+  <abbrev>Bur08a</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -90,7 +104,7 @@
  </biblioentry>
 
  <biblioentry id="bib-burton-dd">
-  <abbrev>Bu7</abbrev>
+  <abbrev>Bur08b</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -104,7 +118,7 @@
  </biblioentry>
 
  <biblioentry id="bib-cuspedcensus">
-  <abbrev>CHW</abbrev>
+  <abbrev>CHW99</abbrev>
   <authorgroup>
    <author>
     <firstname>Patrick</firstname>
@@ -131,7 +145,7 @@
  </biblioentry>
 
  <biblioentry id="bib-gap">
-  <abbrev>GAP</abbrev>
+  <abbrev>GAP02</abbrev>
   <corpauthor>The GAP Group</corpauthor>
   <title>GAP &mdash; Groups, Algorithms and Programming</title>
   <edition>Version 4.3</edition>
@@ -141,7 +155,7 @@
  </biblioentry>
 
  <biblioentry id="bib-haken-homeomorphism">
-  <abbrev>Ha</abbrev>
+  <abbrev>Hak62</abbrev>
   <authorgroup><author>
    <firstname>Wolfgang</firstname>
    <surname>Haken</surname>
@@ -155,7 +169,7 @@
  </biblioentry>
 
  <biblioentry id="bib-closedhypcensus">
-  <abbrev>HW</abbrev>
+  <abbrev>HW94</abbrev>
   <authorgroup>
    <author>
     <firstname>Craig</firstname>
@@ -178,7 +192,7 @@
  </biblioentry>
 
  <biblioentry id="bib-0-efficiency">
-  <abbrev>JR1</abbrev>
+  <abbrev>JR03</abbrev>
   <authorgroup>
    <author>
     <firstname>William</firstname>
@@ -199,7 +213,7 @@
  </biblioentry>
 
  <biblioentry id="bib-layeredlensspaces">
-  <abbrev>JR2</abbrev>
+  <abbrev>JR06</abbrev>
   <authorgroup>
    <author>
     <firstname>William</firstname>
@@ -217,7 +231,7 @@
  </biblioentry>
 
  <biblioentry id="bib-kktorsionlinkingform">
-  <abbrev>KK</abbrev>
+  <abbrev>KK80</abbrev>
   <authorgroup>
    <author>
     <firstname>Akio</firstname>
@@ -237,7 +251,7 @@
  </biblioentry>
 
  <biblioentry id="bib-lackenby-taut">
-  <abbrev>La1</abbrev>
+  <abbrev>Lac00a</abbrev>
   <authorgroup><author>
    <firstname>Marc</firstname>
    <surname>Lackenby</surname>
@@ -250,7 +264,7 @@
  </biblioentry>
 
  <biblioentry id="bib-lackenby-anglestruct">
-  <abbrev>La2</abbrev>
+  <abbrev>Lac00b</abbrev>
   <authorgroup><author>
    <firstname>Marc</firstname>
    <surname>Lackenby</surname>
@@ -264,7 +278,7 @@
  </biblioentry>
 
  <biblioentry id="bib-italian9">
-  <abbrev>MP</abbrev>
+  <abbrev>MP01</abbrev>
   <authorgroup>
    <author>
     <firstname>Bruno</firstname>
@@ -284,7 +298,7 @@
  </biblioentry>
 
  <biblioentry id="bib-matveev6">
-  <abbrev>Ma</abbrev>
+  <abbrev>Mat98</abbrev>
   <authorgroup><author>
    <firstname>Sergei</firstname>
    <othername>V.</othername>
@@ -298,7 +312,7 @@
  </biblioentry>
 
  <biblioentry id="bib-rivin-structures">
-  <abbrev>Ri1</abbrev>
+  <abbrev>Riv94</abbrev>
   <authorgroup><author>
    <firstname>Igor</firstname>
    <surname>Rivin</surname>
@@ -313,7 +327,7 @@
  </biblioentry>
 
  <biblioentry id="bib-rivin-combopt">
-  <abbrev>Ri2</abbrev>
+  <abbrev>Riv03</abbrev>
   <authorgroup><author>
    <firstname>Igor</firstname>
    <surname>Rivin</surname>
@@ -327,7 +341,7 @@
  </biblioentry>
 
  <biblioentry id="bib-rubin-3sphere1">
-  <abbrev>Ru1</abbrev>
+  <abbrev>Rub95</abbrev>
   <authorgroup><author>
    <firstname>J.</firstname>
    <othername>Hyam</othername>
@@ -344,7 +358,7 @@
  </biblioentry>
 
  <biblioentry id="bib-rubin-3sphere2">
-  <abbrev>Ru2</abbrev>
+  <abbrev>Rub97</abbrev>
   <authorgroup><author>
    <firstname>J.</firstname>
    <othername>Hyam</othername>
@@ -361,7 +375,7 @@
  </biblioentry>
 
  <biblioentry id="bib-thinposition">
-  <abbrev>Th</abbrev>
+  <abbrev>Tho94</abbrev>
   <authorgroup><author>
    <firstname>Abigail</firstname>
    <surname>Thompson</surname>
@@ -376,7 +390,7 @@
  </biblioentry>
 
  <biblioentry id="bib-tillus-spun">
-  <abbrev>Ti</abbrev>
+  <abbrev>Til02</abbrev>
   <authorgroup><author>
    <firstname>Stephan</firstname>
    <surname>Tillmann</surname>
@@ -389,7 +403,7 @@
  </biblioentry>
 
  <biblioentry id="bib-quadspace">
-  <abbrev>To</abbrev>
+  <abbrev>Tol98</abbrev>
   <authorgroup><author>
    <firstname>Jeffrey</firstname>
    <othername>L.</othername>
@@ -404,7 +418,7 @@
  </biblioentry>
 
  <biblioentry id="bib-turaevviro">
-  <abbrev>TV</abbrev>
+  <abbrev>TV92</abbrev>
   <authorgroup>
    <author>
     <firstname>Vladimir</firstname>

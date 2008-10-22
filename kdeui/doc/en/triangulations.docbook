@@ -1018,6 +1018,10 @@
       </glossentry>
      </glosslist>
     </para>
+    <para>
+     The paper <xref linkend="bib-budney-emb11"/> shows how some
+     of this information can be used in studying embedding problems.
+    </para>
    </sect3>
   </sect2>
 

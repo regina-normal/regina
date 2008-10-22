@@ -59,6 +59,7 @@
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY csv "<acronym>CSV</acronym>">
   <!ENTITY debian "<productname>Debian</productname>">
+  <!ENTITY evince "<application>Evince</application>">
   <!ENTITY fedora "<productname>Fedora Core</productname>">
   <!ENTITY gap "<application><acronym>GAP</acronym></application>">
   <!ENTITY gaplong "<application><acronym>GAP</acronym>
@@ -72,15 +73,17 @@
   <!ENTITY java "<application>Java</application>">
   <!ENTITY hom1 "H<subscript>1</subscript>">
   <!ENTITY html "<acronym>HTML</acronym>">
-  <!ENTITY kghostview "<productname>KGhostView</productname>">
+  <!ENTITY kdegraphics "<productname>kdegraphics</productname>">
+  <!ENTITY kghostview "<application>KGhostView</application>">
   <!ENTITY khelpcenter "<application>&kde; Help Center</application>">
-  <!ENTITY kpdf "<productname>KPDF</productname>">
-  <!ENTITY latex "<productname>LaTeX</productname>">
+  <!ENTITY kpdf "<application>KPDF</application>">
+  <!ENTITY latex "<application>LaTeX</application>">
   <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
   <!ENTITY macosx "<productname>MacOS&nbsp;X</productname>">
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">
+  <!ENTITY okular "<application>Okular</application>">
   <!ENTITY orb "<application>Orb</application>">
   <!ENTITY orbcasson "&orb; / &casson;">
   <!ENTITY orburl "<ulink url='http://www.ms.unimelb.edu.au/~snap/orb.html'>&orb;</ulink>">
@@ -89,7 +92,7 @@
   <!ENTITY poincare "Poincar&eacute;">
   <!ENTITY ppirr
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">
-  <!ENTITY previewapp "<productname>Preview</productname>">
+  <!ENTITY previewapp "<application>Preview</application>">
   <!ENTITY python "<application>Python</application>">
   <!ENTITY qt "<application>Qt</application>">
   <!ENTITY rhel "<productname>Red Hat Enterprise</productname>">
@@ -120,7 +123,7 @@
   <!ENTITY vary "<replaceable>y</replaceable>">
   <!ENTITY varz "<replaceable>z</replaceable>">
   <!ENTITY xml "<acronym>XML</acronym>">
-  <!ENTITY xpdf "<productname>Xpdf</productname>">
+  <!ENTITY xpdf "<application>Xpdf</application>">
 
   <!ENTITY reginaabout SYSTEM "about.docbook">
   <!ENTITY reginafeatureset SYSTEM "featureset.docbook">

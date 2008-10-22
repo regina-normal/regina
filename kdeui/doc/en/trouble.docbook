@@ -484,6 +484,38 @@ checking host system type... i686-pc-linux-gnu
      </para>
     </answer>
    </qandaentry>
+
+   <qandaentry id="trouble-pdf">
+    <question><para>
+     How do I view &pdf; packets?  I click on the packet but I just see
+     a box with an error message.
+    </para></question>
+    <answer>
+     <para>
+      The short answer is that you should install &kpdf;, which is part of
+      the official &kdegraphics; module shipped with &kde;&nbsp;3.x.
+      &kpdf; provides both embedded and external &pdf; viewers, and
+      &regina; knows how to use them.
+     </para>
+     <para>
+      The long answer is that you can edit &regina;'s
+      <link linkend="options-pdf">&pdf; settings</link> to display
+      &pdf; packets using whatever program you choose.  &regina; will try
+      its best to find a &pdf; viewer on its own if possible
+      (in particular, it knows about &kpdf;, &okular;, &xpdf; and &evince;,
+      as well as &previewapp; under &macosx;).  However, if your
+      installation is unusual then &regina; might need a little help;
+      in the &pdf; settings you can provide a full path to your
+      favourite &pdf; viewer application.
+     </para>
+     <para>
+      If you are having trouble getting &pdf; support working out of the
+      box, please do send an email or
+      <link linkend="services">file a bug</link> so the problem can be
+      fixed in future releases.
+     </para>
+    </answer>
+   </qandaentry>
   </qandadiv>
 
   <qandadiv><title>Miscellaneous</title>
