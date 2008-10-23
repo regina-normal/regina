@@ -8,7 +8,7 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
-Version 4.5.1  [ Under development ]
+Version 4.5.1  [ 28 October, 2008 ]
 
     Features:
         - PDF documents can now be embedded within data files as PDF packets.

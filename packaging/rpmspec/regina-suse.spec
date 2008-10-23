@@ -5,7 +5,7 @@
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
-Version: 4.5
+Version: 4.5.1
 Release: 1.%{_vendor}
 License: GPL
 # I wish there were a more sane group (like Applications/Mathematics).
@@ -142,6 +142,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/regina
 
 %changelog
+* Tue Oct 28 2008 Ben Burton <bab@debian.org> 4.5.1
+- New upstream release.
+
 * Sun Jun 29 2008 Ben Burton <bab@debian.org> 4.5 (SuSE 11.0)
 - Packaging the 4.5 release (May 2008) for SuSE 11.0.
 - Note that regina-normal needs to be built against boost 1.34.1-42.2 (or

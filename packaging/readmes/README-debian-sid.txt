@@ -22,4 +22,4 @@ servers until a few days after their release.
 
 ------------------------------------
 
-Ben Burton <bab@debian.org>, Sat, 17 May 2008 11:39:33 +1000
+Ben Burton <bab@debian.org>, Tue, 28 Oct 2008 06:19:50 +1100

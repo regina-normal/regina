@@ -1,5 +1,5 @@
 Package: regina-normal
-Version: 4.5
+Version: 4.5.1
 Revision: 0.1
 
 Maintainer: Ben Burton <bab@debian.org>
@@ -70,7 +70,7 @@ BuildDepends: <<
 	qt3,
 	x11-dev
 <<
-BuildConflicts: regina-normal-dev, regina-normal4.5-dev
+BuildConflicts: regina-normal-dev, regina-normal4.5.1-dev
 Depends: <<
 	%n%v-shlibs,
 	boost1.33-shlibs,
@@ -197,7 +197,7 @@ Shlibs: <<
 <<
 
 SplitOff: <<
-	Package: regina-normal4.5-shlibs
+	Package: regina-normal4.5.1-shlibs
 	Description: Shared libraries for 3-manifold topology software
 	Depends: <<
 		libiconv,
@@ -209,7 +209,7 @@ SplitOff: <<
 	<<
 	DocFiles: AUTHORS.txt CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
 	Shlibs: <<
-		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.5-1)
+		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.5.1-0.1)
 	<<
 	DescDetail: <<
 Regina is a suite of mathematical software for 3-manifold topologists.
@@ -223,7 +223,7 @@ the package regina-normal.
 <<
 
 SplitOff2: <<
-	Package: regina-normal4.5-dev
+	Package: regina-normal4.5.1-dev
 	Description: Development files for 3-manifold topology software
 	BuildDependsOnly: True
 	Conflicts: regina-normal-dev

@@ -11,7 +11,7 @@ Program version:
     packaging/debian/*/changelog (version, date)
     packaging/finkinfo/*.info.* (version, revision)
     packaging/rpmspec/*.spec (version, changelog)
-    www/index.html (last updated, current version)
+    www/index.html (last updated, current version, news)
     www/source.html (unpacking instructions: filename, directory)
 
 License details:
@@ -52,6 +52,7 @@ Don't forget:
     fedora/mandriva/suse packages
     update tips for building on different platforms
     update debian/ubuntu/fink READMEs as required (both text and html)
+    copy fink info file(s) beneath www/
     update census download file sizes if there have been changes
     tag the subversion repository (svn copy between two remote URLs)
     upload new data files, both from examples/ and the large data repository

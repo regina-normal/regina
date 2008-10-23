@@ -1,6 +1,12 @@
-regina-normal (4.5-1ubuntu1~feisty1) unstable; urgency=low
+regina-normal (4.5.1-1ubuntu1~feisty1) unstable; urgency=low
 
   * New upstream release, backported to ubuntu feisty.
+
+ -- Ben Burton <bab@debian.org>  Tue, 28 Oct 2008 06:19:50 +1100
+
+regina-normal (4.5-1) unstable; urgency=low
+
+  * New upstream release.
 
  -- Ben Burton <bab@debian.org>  Sat, 17 May 2008 11:39:33 +1000
 
