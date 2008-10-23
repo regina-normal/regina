@@ -53,7 +53,7 @@ whether cppunit is installed or not.
 GCC: 4.0
 BuildDepends: <<
 	arts-dev,
-	boost1.33 (>= 1.33.1-1008),
+	boost1.34.python25,
 	cctools-single-module,
 	doxygen,
 	fink (>= 0.28.0-1),
@@ -73,7 +73,7 @@ BuildDepends: <<
 BuildConflicts: regina-normal-dev, regina-normal4.5.1-dev
 Depends: <<
 	%n%v-shlibs,
-	boost1.33-shlibs,
+	boost1.34.python25-shlibs,
 	gmp-shlibs,
 	kdebase3-unified,
 	kdelibs3-unified-shlibs,
