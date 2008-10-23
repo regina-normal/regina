@@ -174,7 +174,7 @@ Guest fedora system configuration
   fcguest# yum install kdelibs-devel qt-devel   (on <= fc8)
   fcguest# yum install kdelibs3-devel qt3-devel (on >= fc9)
 
-  fcguest# yum install kdeedu graphviz
+  fcguest# yum install kdeedu kdegraphics graphviz
 
 - Symlink /bin/zsh to /usr/bin/zsh:
 

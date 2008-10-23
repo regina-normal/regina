@@ -105,7 +105,8 @@ Guest configuration
 
 - Install other packages useful for running and testing regina:
 
-  debian# schroot -c gutsy aptitude install graphviz khelpcenter kig konqueror
+  debian# schroot -c gutsy aptitude install
+          graphviz kpdf khelpcenter kig konqueror
   debian# schroot -c gutsy aptitude clean
 
 - Allow user to administer the system:

@@ -89,7 +89,9 @@ Guest mandriva system configuration
 - Install packages for a base graphical system:
 
   mdvhost# urpmi --urpmi-root /chroot/2007.0-x86_64
-           basesystem urpmi man zsh task-kde
+           basesystem urpmi man zsh task-kde          (on <= mdv2008.1)
+  mdvhost# urpmi --urpmi-root /chroot/2007.0-x86_64
+           basesystem urpmi man zsh task-kde4         (on >= mdv2009.0)
 
 - Install packages for building regina:
 
@@ -100,8 +102,8 @@ Guest mandriva system configuration
 - Install other packages for running regina and supporting the chroot:
 
   mdvhost# urpmi --urpmi-root /chroot/2007.0-x86_64
-           graphviz kdeedu x11-server-xnest x11-server-xephyr
-           x11-server-xvnc vnc-server
+           graphviz kdegraphics-kpdf kdeedu
+           x11-server-xnest x11-server-xephyr x11-server-xvnc vnc-server
 
 - Add a schroot entry in the debian host system:
 
@@ -124,6 +126,10 @@ Guest mandriva system configuration
 - Symlink /bin/zsh to /usr/bin/zsh:
 
   debian# schroot -c mdv2007.0-x86_64 -- ln -s /bin/zsh /usr/bin/zsh
+
+- For Mandriva 2009.0, give write permissions to /dev/null:
+
+  debian# schroot -c mdv2009.0-x86_64 -- chmod a+rw /dev/null
 
 - Manually add an ordinary user:
 
