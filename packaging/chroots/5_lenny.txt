@@ -75,7 +75,7 @@ Guest (debian lenny) configuration
 
 - Stop host processes that conflict with the guest install:
 
-  debian# /etc/init.d/dbus stop
+  debian# /etc/init.d/fam stop
 
 - Install packages necessary for building regina:
 
