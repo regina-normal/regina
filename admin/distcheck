@@ -166,6 +166,7 @@ if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^libtool$' | \
     grep -v '^metrics\(/\|$\)' | \
     grep -v '^packaging\(/\|$\)' | \
+    grep -v '^private\(/\|$\)' | \
     grep -v '^python/regina-python$' | \
     grep -v '^python/testsuite/testall$' | \
     grep -v '^redist\(/\|$\)' | \
