@@ -70,7 +70,6 @@ BuildDepends: <<
 	qt3,
 	x11-dev
 <<
-BuildConflicts: regina-normal-dev, regina-normal4.5.1-dev
 Depends: <<
 	%n%v-shlibs,
 	boost1.34.python25-shlibs,
@@ -226,8 +225,8 @@ SplitOff2: <<
 	Package: regina-normal4.5.1-dev
 	Description: Development files for 3-manifold topology software
 	BuildDependsOnly: True
-	Conflicts: regina-normal-dev
-	Replaces: regina-normal-dev
+	Conflicts: regina-normal-dev, regina-normal4.5-dev
+	Replaces: regina-normal-dev, regina-normal4.5-dev
 	Depends: %N (= %v-%r)
 	Files: <<
 		include
