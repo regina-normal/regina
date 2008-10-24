@@ -215,7 +215,7 @@ std::ostream& NGraphTriple::writeName(std::ostream& out) const {
 
 std::ostream& NGraphTriple::writeTeXName(std::ostream& out) const {
     end_[0]->writeTeXName(out);
-    NMatrix2 m0 = matchingReln_[1].inverse();
+    NMatrix2 m0 = matchingReln_[0].inverse();
     out << " \\bigcup_{\\homtwo{" <<
         m0[0][0] << "}{" << m0[0][1] << "}{" <<
         m0[1][0] << "}{" << m0[1][1] << "}} ";

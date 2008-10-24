@@ -56,6 +56,10 @@ Version 4.5.1  [ 28 October, 2008 ]
         Class NFastVector:
             - New vector class that is less flexible than NVector but
               more streamlined, largely because it has no virtual functions.
+        Class NGraphTriple:
+            - Fixed a bug in writeTeXName() that listed incorrect entries for
+              the first matrix.  This does not affect any census data that
+              has been published or shipped with earlier versions of Regina.
         Class NLargeInteger:
             - Fixed lcm() to do the right thing in the case of lcm(0,0).
         Class NMatrixInt:

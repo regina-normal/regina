@@ -26,6 +26,12 @@ Version 4.5.1  [ 28 October, 2008 ]
           in all the manifold names, and include supporting diagrams.
         - Renamed a few census manifolds to replace the old (a)/(b) suffixes
           with something more meaningful.  See CHANGES.txt for details.
+    Bug Fixes:
+        - Fixed a bug in the routine NGraphTriple::writeTeXName().  This does
+          not affect any census data that has been published or shipped with
+          earlier versions of Regina, but it might affect users who have
+          called writeTeXName() in their own Python scripts.  Please send an
+          email if you would like further information.
 
 Version 4.5  [ 17 May, 2008 ]
 
