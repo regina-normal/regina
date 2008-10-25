@@ -27,6 +27,8 @@ Requires: python
 Conflicts: regina
 
 # Generic build-depends:
+BuildConflicts: regina-normal < %{version}
+BuildConflicts: regina-normal > %{version}
 BuildRequires: boost-devel
 BuildRequires: cppunit-devel
 BuildRequires: doxygen

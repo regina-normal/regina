@@ -22,6 +22,8 @@ Requires: python
 Requires: susehelp
 Conflicts: regina
 
+BuildConflicts: regina-normal < %{version}
+BuildConflicts: regina-normal > %{version}
 BuildRequires: boost
 %if 0%{?suse_version} == 1100
 # The boost.python originally shipped with SuSE 11.0 is broken (bug #401964).
