@@ -7,5 +7,5 @@ regina-normal: script-not-executable ./usr/share/regina-normal/pylib/packetType.
 regina-normal: unusual-interpreter ./usr/share/regina-normal/pylib/packetType.py #!/bin/false
 
 # Regina does not provide a standalone library package.
-regina-normal: package-name-doesnt-match-sonames libregina-engine-4.5 libregina-kdecommon-4.5
-regina-normal: package-name-doesnt-match-sonames libregina-kdecommon-4.5 libregina-engine-4.5
+regina-normal: package-name-doesnt-match-sonames libregina-engine-4.5.1 libregina-kdecommon-4.5.1
+regina-normal: package-name-doesnt-match-sonames libregina-kdecommon-4.5.1 libregina-engine-4.5.1
