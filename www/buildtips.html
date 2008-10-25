@@ -147,7 +147,21 @@ An example for a bash user is given below:
 example$ ./configure</tt>
 </p></div>
 <p>
-Users running the <tt>x86_64</tt> architecture should also see the
+In addition, Mandriva versions 2009.0 and later store all KDE&nbsp;3 material
+beneath <tt>/opt</tt>.  Regina's <tt>./configure</tt> script will notice this
+and use <tt>/opt</tt> automatically; however, you might wish to pass
+additional arguments to ensure that the non-KDE parts of Regina are
+installed in a more standard location.
+</p>
+<p>
+The arguments used by the author to build the Mandriva&nbsp;2009.0
+packages include:
+</p>
+<div class="example"><p>
+<tt>example$ ./configure --includedir=/usr/include --mandir=/usr/share/man</tt>
+</p></div>
+<p>
+Finally, users running the <tt>x86_64</tt> architecture should also see the
 section on <a href="#64bit">64-bit systems</a>.
 </p>
 
