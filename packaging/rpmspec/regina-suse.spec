@@ -17,6 +17,7 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: kdelibs3
 Requires: kdebase3
+Requires: kdegraphics3-pdf
 Requires: python
 Requires: susehelp
 Conflicts: regina
@@ -144,6 +145,8 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Oct 28 2008 Ben Burton <bab@debian.org> 4.5.1
 - New upstream release.
+- Now requires kdegraphics3-pdf, which provides an embedded viewer for
+  Regina's new PDF packets.
 
 * Sun Jun 29 2008 Ben Burton <bab@debian.org> 4.5 (SuSE 11.0)
 - Packaging the 4.5 release (May 2008) for SuSE 11.0.
