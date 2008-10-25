@@ -1,6 +1,8 @@
 regina-normal (4.5.1-1) unstable; urgency=low
 
   * New upstream release.
+  * Added a Homepage field to debian/control.
+  * Bumped standards-version to 3.8.0 (no changes required).
 
  -- Ben Burton <bab@debian.org>  Tue, 28 Oct 2008 06:19:50 +1100
 
