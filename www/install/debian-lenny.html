@@ -1,0 +1,85 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../regina.css">
+    <title>Regina for Debian:  Lenny (Debian 5.0)</title>
+</head>
+<body bgcolor="#FFFFFF" text="#000000"
+    link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<h1><a name="contents">Regina for Debian:  Lenny (Debian 5.0)</a></h1>
+
+<p>
+Debian packages for Regina are not distributed from the SourceForge site.
+</p>
+<p>
+Instead, users of Lenny (the forthcoming Debian 5.0 release, which is
+frozen at the time of writing) may obtain
+packages from the repository on people.debian.org.  These packages
+are available for the <b>i386</b> and <b>amd64</b> architectures.
+To install them:
+</p>
+<ol>
+<li><p>
+   Add Regina's location to your list of repositories.
+   </p>
+   <p>
+   This only needs to be done once (the first time you install Regina).
+   Open the file <tt>/etc/apt/sources.list</tt> and add the following line:
+   </p>
+   <div class="example"><p>
+   <tt>deb http://people.debian.org/~bab/regina/ lenny main</tt>
+   </p></div>
+   </li>
+<li><p>
+   Update the list of available packages.
+   </p>
+   <p>
+   This lets your package manager know that a new version of Regina is
+   available.  How you do this depends on which package manager you use;
+   an example for aptitude users is given below.
+   </p>
+   <div class="example"><p>
+   <tt>example$ aptitude update</tt>
+   </p></div>
+   </li>
+<li><p>
+   Install or upgrade Regina like you would any other package.
+   </p>
+   <p>
+   Again how you do this depends on which package manager you use.
+   Aptitude users might run the following command:
+   </p>
+   <div class="example"><p>
+   <tt>example$ aptitude install regina-normal</tt>
+   </p></div>
+   <p>
+   At this point your package manager should download and install Regina
+   along with any necessary dependencies.
+   </p>
+   </li>
+</ol>
+<p>
+Regina is split into several packages for Debian.  To start
+with you will probably just want the <tt>regina-normal</tt> package.
+If you are doing Python scripting and/or compiling Regina's mathematical core
+into your own code, you may want the <tt>regina-normal-dev</tt> and
+<tt>regina-normal-doc</tt> packages also.  The
+<tt>regina-normal-mpi</tt> package is available for users running long
+census calculations on clusters.
+</p>
+<p>
+You might have noticed that Lenny already ships with Regina as part of its
+CD/DVD set.  However, this is the older version 4.5 (which was current
+when Lenny was frozen).  For a newer version of Regina you should follow
+the steps outlined above.
+</p>
+
+<p class="return">
+<a href="../index.html#download"><img src="../return.jpg"
+    alt="Back to main page ..."
+    border="0" width="32" height="32" align="middle"></a>
+<a href="../index.html#download">Back to main page ...</a></p>
+
+</body>
+</html>
+
