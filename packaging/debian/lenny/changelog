@@ -1,7 +1,8 @@
 regina-normal (4.5.1-1~lenny.1) unstable; urgency=low
 
   * New upstream release, backported to lenny.
-  * Recommends kpdf, which provides an embedded viewer for the new PDF packets.
+  * Now recommends kpdf, which provides an embedded viewer for Regina's
+    new PDF packets.
   * Added a Homepage field to debian/control.
   * Bumped standards-version to 3.8.0 (no changes required).
 

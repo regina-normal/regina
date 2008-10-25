@@ -1,7 +1,8 @@
 regina-normal (4.5.1-1~etch.1) unstable; urgency=low
 
   * New upstream release, backported to etch.
-  * Recommends kpdf, which provides an embedded viewer for the new PDF packets.
+  * Now recommends kpdf, which provides an embedded viewer for Regina's
+    new PDF packets.
 
  -- Ben Burton <bab@debian.org>  Tue, 28 Oct 2008 06:19:50 +1100
 
