@@ -1,5 +1,5 @@
 Package: regina-normal
-Version: 4.5
+Version: 4.5.1
 Revision: 0.1
 
 Maintainer: Ben Burton <bab@debian.org>
@@ -10,7 +10,7 @@ Description: Computational 3-manifold topology software
 # TODO: Once gap is available in fink stable, have regina-normal suggest it.
 
 Source: mirror:sourceforge:regina/regina-%v.tar.gz
-Source-MD5: d79262b3d14a7f0f1b43b039ed44ded1
+Source-MD5: ba6625c3250175f5e9a73c8ba4a53f6e
 SourceRename: %n-%v.tar.gz
 SourceDirectory: regina-%v
 
@@ -36,7 +36,7 @@ regina-normal package, and does not provide any headers or library symlinks.
 .
 The library libregina-engine is designed for external use.  The library is
 shipped in the splitoff regina-normal%v-shlibs, and headers and symlinks
-are shipped in the splitoff regina-normal-dev.
+are shipped in the splitoff regina-normal%v-dev.
 .
 Since the library APIs are likely to change with each new release, these
 libraries are built using -release instead of -version-info.  This means
@@ -53,7 +53,7 @@ whether cppunit is installed or not.
 GCC: 4.0
 BuildDepends: <<
 	arts-dev,
-	boost1.33 (>= 1.33.1-1008),
+	boost1.34.python25,
 	cctools-single-module,
 	doxygen,
 	fink (>= 0.28.0-1),
@@ -70,13 +70,13 @@ BuildDepends: <<
 	qt3,
 	x11-dev
 <<
-BuildConflicts: regina-normal-dev
 Depends: <<
 	%n%v-shlibs,
-	boost1.33-shlibs,
+	boost1.34.python25-shlibs,
 	gmp-shlibs,
 	kdebase3-unified,
 	kdelibs3-unified-shlibs,
+	kpdf,
 	libart2-shlibs,
 	libgettext3-shlibs,
 	libiconv,
@@ -88,7 +88,7 @@ Depends: <<
 	python25,
 	qt3-shlibs
 <<
-Suggests: graphviz, regina-normal-dev
+Suggests: graphviz, regina-normal%v-dev
 
 # The following line works around the libGL linker problem on leopard:
 SetLDFLAGS: -Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
@@ -185,7 +185,7 @@ can also be viewed through Regina's graphical user interface by selecting
 .
 Headers and other development files required for building Regina's C++
 calculation engine into your own projects are provided by the package
-regina-normal-dev.
+regina-normal%v-dev.
 .
 If you find Regina useful in your research, please consider citing it as
 you would any other paper that you use.  The introductory chapter of the
@@ -197,7 +197,7 @@ Shlibs: <<
 <<
 
 SplitOff: <<
-	Package: regina-normal4.5-shlibs
+	Package: regina-normal4.5.1-shlibs
 	Description: Shared libraries for 3-manifold topology software
 	Depends: <<
 		libiconv,
@@ -209,7 +209,7 @@ SplitOff: <<
 	<<
 	DocFiles: AUTHORS.txt CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
 	Shlibs: <<
-		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.5-1)
+		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.5.1-0.1)
 	<<
 	DescDetail: <<
 Regina is a suite of mathematical software for 3-manifold topologists.
@@ -223,9 +223,11 @@ the package regina-normal.
 <<
 
 SplitOff2: <<
-	Package: regina-normal-dev
+	Package: regina-normal4.5.1-dev
 	Description: Development files for 3-manifold topology software
 	BuildDependsOnly: True
+	Conflicts: regina-normal-dev, regina-normal4.5-dev
+	Replaces: regina-normal-dev, regina-normal4.5-dev
 	Depends: %N (= %v-%r)
 	Files: <<
 		include
