@@ -1,6 +1,6 @@
-regina-normal (4.5.1-1) unstable; urgency=low
+regina-normal (4.5.1-1~lenny.1) unstable; urgency=low
 
-  * New upstream release.
+  * New upstream release, backported to lenny.
   * Added a Homepage field to debian/control.
   * Bumped standards-version to 3.8.0 (no changes required).
 
