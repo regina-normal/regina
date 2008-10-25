@@ -146,6 +146,15 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Oct 28 2008 Ben Burton <bab@debian.org> 4.5.1
 - New upstream release.
+- It will help to have KPDF installed, which provides an embedded viewer
+  for Regina's new PDF packets.  However, the regina-normal packages for
+  Fedora do not list KPDF as a dependency.  This is because:
+  + Fedora <= 8 only ships KPDF as part of the monolithic kdegraphics
+    package, which is very large.
+  + Fedora >= 9 does not ship KPDF at all, but instead focuses on its KDE 4
+    successor.
+  Regina can find other ways of viewing PDF packets; see Regina's PDF settings
+  for details.
 
 * Sat May 17 2008 Ben Burton <bab@debian.org> 4.5
 - New upstream release.
