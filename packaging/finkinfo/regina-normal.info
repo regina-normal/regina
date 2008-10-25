@@ -76,6 +76,7 @@ Depends: <<
 	gmp-shlibs,
 	kdebase3-unified,
 	kdelibs3-unified-shlibs,
+	kpdf,
 	libart2-shlibs,
 	libgettext3-shlibs,
 	libiconv,
