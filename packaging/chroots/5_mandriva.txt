@@ -102,7 +102,7 @@ Guest mandriva system configuration
 - Install other packages for running regina and supporting the chroot:
 
   mdvhost# urpmi --urpmi-root /chroot/2007.0-x86_64
-           graphviz kdegraphics-kpdf kdeedu
+           graphviz kdebase-progs kdegraphics-kpdf kdeedu
            x11-server-xnest x11-server-xephyr x11-server-xvnc vnc-server
 
 - Add a schroot entry in the debian host system:
