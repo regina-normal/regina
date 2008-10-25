@@ -12,7 +12,7 @@ Package: regina-normal
 Architecture: any
 Section: math
 Depends: ${shlibs:Depends}, ${perl:Depends}
-Recommends: khelpcenter
+Recommends: khelpcenter, kpdf
 Suggests: gap, graphviz, konqueror, regina-normal-doc, regina-normal-dev, regina-normal-mpi, snappea
 Description: 3-manifold topology software with normal surface support
  Regina is a suite of mathematical software for 3-manifold topologists.

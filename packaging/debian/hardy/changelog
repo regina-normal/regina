@@ -1,6 +1,7 @@
 regina-normal (4.5.1-1ubuntu1~hardy1) unstable; urgency=low
 
   * New upstream release, backported to ubuntu hardy.
+  * Recommends kpdf, which provides an embedded viewer for the new PDF packets.
   * Added a Homepage field to debian/control.
 
  -- Ben Burton <bab@debian.org>  Tue, 28 Oct 2008 06:19:50 +1100
