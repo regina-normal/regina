@@ -137,6 +137,11 @@ Guest mandriva system configuration
   mdvguest# groupadd -g 1000 bab
   mdvguest# useradd -u 1000 -g 1000 bab
 
+- For Mandriva 2009.0, downgrade coreutils to the 2008.1 package
+  (otherwise touch and cp -p fail because the etch kernel is too old).
+
+  mdvguest# rpm -Uvh --oldpackage path/to/coreutils-<version>.rpm
+
 - For Mandriva 2008.0, set up standard directories (otherwise the
   desktop directory is treated as /, not $HOME/Desktop):
 
