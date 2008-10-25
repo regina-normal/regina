@@ -14,6 +14,7 @@ Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: kdebase-progs
+Requires: kdegraphics-kpdf
 Requires: python
 Conflicts: regina
 
@@ -143,6 +144,8 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Oct 28 2008 Ben Burton <bab@debian.org> 4.5.1
 - New upstream release.
+- Now requires kdegraphics-kpdf, which provides an embedded viewer for
+  Regina's new PDF packets.
 
 * Sat May 17 2008 Ben Burton <bab@debian.org> 4.5
 - New upstream release.
