@@ -16,8 +16,13 @@ URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
+%if 0%{?fedora} >= 9
+Requires: kdelibs3
+Requires: kdebase3
+%else
 Requires: kdelibs
 Requires: kdebase
+%endif
 Requires: python
 Conflicts: regina
 
