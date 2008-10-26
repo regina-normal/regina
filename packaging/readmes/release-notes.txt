@@ -1,0 +1,10 @@
+Regina - A Normal Surface Theory Calculator
+
+Information on these packages, including the operating systems that they
+support and the Regina components that they provide, can be found on the
+Regina website.
+
+Please visit http://regina.sourceforge.net/ and scroll to the Download
+section for details.
+
+Ben Burton (bab@debian.org)
