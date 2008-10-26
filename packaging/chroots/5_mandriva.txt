@@ -37,6 +37,14 @@ Host mandriva system configuration
 - Create a /chroot directory in which the guest mandriva systems will be
   mounted.
 
+- WARNING: Mandriva 2009.0 introduces a new RPM database format, and
+  cannot be used with older guest mandriva systems.  Attempting to do
+  this will corrupt the guest RPM database beyond simple repair.
+
+  As a result there are now two host mandriva systems on the build
+  machine: one fixed at version 2008.1, and one that updates with each
+  new mandriva release.
+
 
 Host debian system configuration (debian etch)
 ----------------------------------------------
@@ -160,4 +168,29 @@ Guest mandriva system configuration
     "DISPLAY=:0 kicker";
   + Test the regina installation by running regina and/or konsole from the
     KDE menu in mandriva's kicker, which will be running inside the host twm.
+
+
+Bootstrapping a guest system from DVD
+-------------------------------------
+
+A mandriva DVD can be used to save download time when creating a new
+guest mandriva system.  The steps involved are as follows:
+
+  mdvhost# mount /dev/hda /cdrom
+
+  mdvhost# urpmi.addmedia --urpmi-root /chroot/2008.1-x86_64 dvd-main
+           file://cdrom/x86_64/media/main
+
+  mdvhost# urpmi.addmedia --urpmi-root /chroot/2008.1-x86_64 dvd-contrib
+           file://cdrom/x86_64/media/contrib
+
+  mdvhost# urpmi --no-verify-rpm --urpmi-root /chroot/2008.1-x86_64
+           <package_name> ...
+
+  mdvhost# urpmi.removemedia --urpmi-root /chroot/2008.1-x86_64 -a
+
+  mdvhost# umount /dev/hda
+
+At this point urpmi.addmedia can be used to add online sources, and
+additional packages can be installed as described above.
 
