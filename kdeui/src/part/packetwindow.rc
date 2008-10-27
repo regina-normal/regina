@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="packetwindow" version="4.5.1">
+<kpartgui name="packetwindow" version="4.6">
 <MenuBar>
   <ActionList name="packet_type_menu"/>
 </MenuBar>
