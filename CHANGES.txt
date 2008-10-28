@@ -9,6 +9,11 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.6  [ (under development) ]
 
+    ENGINE:
+        Class NNormalSurface:
+            - New routine locallyCompatible() for testing intersections
+              between normal surfaces.
+
 Version 4.5.1  [ 28 October, 2008 ]
 
     CENSUS:

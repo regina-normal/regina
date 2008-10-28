@@ -1060,6 +1060,42 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         bool knownCanCrush() const;
 
         /**
+         * Determines whether this and the given surface are locally compatible.
+         * Local compatibility means that, within each individual tetrahedron
+         * of the triangulation, it is possible to arrange the normal
+         * discs of both surfaces so that none intersect.
+         *
+         * This is a local constraint, not a global constraint.  That is,
+         * we do not insist that we can avoid intersections within all
+         * tetrahedra \e simultaneously.  To test the global constraint,
+         * see the (much slower) routine disjoint() instead.
+         *
+         * Local compatibility can be formulated in terms of normal disc types.
+         * Two normal (or almost normal) surfaces are locally compatible if
+         * and only if they together have at most one quadrilateral or
+         * octagonal disc type per tetrahedron.
+         *
+         * Note again that this is a local constraint only.  In particular,
+         * for almost normal surfaces, it does \e not insist that there is
+         * at most one octagonal disc type anywhere within the triangulation.
+         *
+         * If one of the two surfaces breaks the local compatibility
+         * constraints on its own (for instance, it contains two different
+         * quadrilateral disc types within the same tetrahedron), then this
+         * routine will return \c false regardless of what the other surface
+         * contains.
+         *
+         * \pre Both this and the given normal surface live within the
+         * same 3-manifold triangulation.
+         *
+         * @param other the other surface to test for local compatibility with
+         * this surface.
+         * @return \c true if the two surfaces are locally compatible, or
+         * \c false if they are not.
+         */
+        bool locallyCompatible(const NNormalSurface& other) const;
+
+        /**
          * Searches for a non-vertex-linking normal 2-sphere within the
          * given triangulation.  If a non-vertex linking normal 2-sphere
          * exists anywhere at all within the triangulation, then this routine
