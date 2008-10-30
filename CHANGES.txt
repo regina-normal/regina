@@ -10,6 +10,16 @@ Regina - A Normal Surface Theory Calculator
 Version 4.6  [ (under development) ]
 
     ENGINE:
+        Class NGluingPermSearcher, NCompactSearcher, NClosedPrimeMinSearcher:
+            - Overhauled the census code so that some of the optimisations
+              used in the closed minimal irreducible / P^2-irreducible census
+              can be made available to more general censuses.  In particular,
+              the modified union-find for vertex and edge links is now
+              available to any census that insists on compact (finite)
+              3-manifolds.  For details of these optimisations, see
+              "Enumeration of non-orientable 3-manifolds using face-pairing
+              graphs and union-find", B. A. Burton, Discrete Comput. Geom. 38
+              (2007), no. 3, 527--571.
         Class NNormalSurface:
             - New routine locallyCompatible() for testing intersections
               between normal surfaces.

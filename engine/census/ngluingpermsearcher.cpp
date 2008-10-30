@@ -45,8 +45,7 @@ NGluingPermSearcher::NGluingPermSearcher(
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         whichPurge_(whichPurge), use_(use), useArgs_(useArgs),
         started(false),
-        orientation(new int[pairing->getNumberOfTetrahedra()]),
-        currFace(0, 0) {
+        orientation(new int[pairing->getNumberOfTetrahedra()]) {
     // Generate the list of face pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
     if (autosNew) {
@@ -56,14 +55,26 @@ NGluingPermSearcher::NGluingPermSearcher(
     }
 
     // Initialise arrays.
-    unsigned nTetrahedra = getNumberOfTetrahedra();
+    unsigned nTets = getNumberOfTetrahedra();
 
-    std::fill(orientation, orientation + nTetrahedra, 0);
-    std::fill(permIndices, permIndices + nTetrahedra * 4, -1);
+    std::fill(orientation, orientation + nTets, 0);
+    std::fill(permIndices, permIndices + nTets* 4, -1);
+
+    // Just fill the order[] array in a default left-to-right fashion.
+    // Subclasses can rearrange things if they choose.
+    order = new NTetFace[nTets * 2];
+    orderElt = orderSize = 0;
+
+    NTetFace face, adj;
+    for (face.setFirst(); ! face.isPastEnd(nTets, true); face++)
+        if (! pairing->isUnmatched(face))
+            if (face < pairing->dest(face))
+                order[orderSize++] = face;
 }
 
 NGluingPermSearcher::~NGluingPermSearcher() {
     delete[] orientation;
+    delete[] order;
     if (autosNew) {
         // We made them, so we'd better remove the const again and
         // delete them.
@@ -91,6 +102,10 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
                 use, useArgs);
         }
     }
+
+    if (finiteOnly)
+        return new NCompactSearcher(pairing, autos, orientableOnly,
+            whichPurge, use, useArgs);
 
     return new NGluingPermSearcher(pairing, autos, orientableOnly, finiteOnly,
         whichPurge, use, useArgs);
@@ -125,82 +140,70 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
             return;
         }
 
-        currFace.setFirst();
+        orderElt = 0;
         orientation[0] = 1;
     }
 
     // Is it a partial search that has already finished?
-    if (currFace.tet == static_cast<int>(nTetrahedra)) {
+    if (orderElt == orderSize) {
         if (isCanonical())
             use_(this, useArgs_);
         use_(0, useArgs_);
         return;
     }
 
-    long depth = 0;
-    while (depth >= 0) {
+    int minOrder = orderElt;
+    int maxOrder = orderElt + maxDepth;
+
+    NTetFace face, adj;
+
+    while (orderElt >= minOrder) {
+        face = order[orderElt];
+        adj = (*pairing)[face];
+
         // TODO: Check for cancellation.
 
         // When moving to the next permutation, be sure to preserve the
         // orientation of the permutation if necessary.
-        if ((! orientableOnly_) || pairing->dest(currFace).face == 0)
-            permIndex(currFace)++;
+        if ((! orientableOnly_) || adj.face == 0)
+            permIndex(face)++;
         else
-            permIndex(currFace) += 2;
+            permIndex(face) += 2;
 
-        if (permIndex(currFace) >= 6) {
+        if (permIndex(face) >= 6) {
             // Out of ideas for this face.
             // Head back down to the previous face.
-            permIndex(currFace) = -1;
-            currFace--;
-            while ((! currFace.isBeforeStart()) &&
-                    (pairing->isUnmatched(currFace) ||
-                        pairing->dest(currFace) < currFace)) {
-                permIndex(currFace) = -1;
-                currFace--;
-            }
-            depth--;
+            permIndex(face) = -1;
+            permIndex(adj) = -1;
+            orderElt--;
             continue;
         }
 
         // We are sitting on a new permutation to try.
+        permIndex(adj) = allPermsS3Inv[permIndex(face)];
 
         // Is this going to lead to an unwanted triangulation?
-        if (mayPurge(currFace))
+        if (mayPurge(face))
             continue;
         if (! orientableOnly_)
-            if (badEdgeLink(currFace))
+            if (badEdgeLink(face))
                 continue;
 
         // Fix the orientation if appropriate.
-        if (pairing->dest(currFace).face == 0) {
+        if (adj.face == 0) {
             // It's the first time we've hit this tetrahedron.
-            if ((permIndex(currFace) + (currFace.face == 3 ? 0 : 1) +
-                    (pairing->dest(currFace).face == 3 ? 0 : 1)) % 2 == 0)
-                orientation[pairing->dest(currFace).tet] =
-                    -orientation[currFace.tet];
+            if ((permIndex(face) + (face.face == 3 ? 0 : 1) +
+                    (adj.face == 3 ? 0 : 1)) % 2 == 0)
+                orientation[adj.tet] = -orientation[face.tet];
             else
-                orientation[pairing->dest(currFace).tet] =
-                    orientation[currFace.tet];
+                orientation[adj.tet] = orientation[face.tet];
         }
 
         // Move on to the next face.
-        for (currFace++; currFace.tet < static_cast<int>(nTetrahedra);
-                currFace++) {
-            if (pairing->isUnmatched(currFace))
-                continue;
-            if (currFace < pairing->dest(currFace))
-                break;
-
-            // We've already decided on this gluing permutation; don't
-            // forget to store the corresponding inverse permutation.
-            permIndex(currFace) =
-                allPermsS3Inv[permIndex(pairing->dest(currFace))];
-        }
-        depth++;
+        orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (currFace.tet == static_cast<int>(nTetrahedra)) {
+        if (orderElt == orderSize) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
@@ -208,47 +211,35 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
                 use_(this, useArgs_);
 
             // Back to the previous face.
-            currFace--;
-            while ((! currFace.isBeforeStart()) &&
-                    (pairing->isUnmatched(currFace) ||
-                        pairing->dest(currFace) < currFace)) {
-                permIndex(currFace) = -1;
-                currFace--;
-            }
-            depth--;
+            orderElt--;
         } else {
             // Not a full triangulation; just one level deeper.
-            if (orientableOnly_ && pairing->dest(currFace).face > 0) {
-                // Be sure to get the orientation right.
-                if (orientation[currFace.tet] ==
-                        orientation[pairing->dest(currFace).tet])
-                    permIndex(currFace) = 1;
+
+            // We've moved onto a new face.
+            // Be sure to get the orientation right.
+            face = order[orderElt];
+            if (orientableOnly_ && pairing->dest(face).face > 0) {
+                adj = (*pairing)[face];
+                if (orientation[face.tet] == orientation[adj.tet])
+                    permIndex(face) = 1;
                 else
-                    permIndex(currFace) = 0;
+                    permIndex(face) = 0;
 
-                if ((currFace.face == 3 ? 0 : 1) +
-                        (pairing->dest(currFace).face == 3 ? 0 : 1) == 1)
-                    permIndex(currFace) = (permIndex(currFace) + 1) % 2;
+                if ((face.face == 3 ? 0 : 1) + (adj.face == 3 ? 0 : 1) == 1)
+                    permIndex(face) = (permIndex(face) + 1) % 2;
 
-                permIndex(currFace) -= 2;
+                permIndex(face) -= 2;
             }
 
-            if (depth == maxDepth) {
+            if (orderElt == maxOrder) {
                 // We haven't found an entire triangulation, but we've
                 // gone as far as we need to.
                 // Process it, then step back.
                 use_(this, useArgs_);
 
                 // Back to the previous face.
-                permIndex(currFace) = -1;
-                currFace--;
-                while ((! currFace.isBeforeStart()) &&
-                        (pairing->isUnmatched(currFace) ||
-                            pairing->dest(currFace) < currFace)) {
-                    permIndex(currFace) = -1;
-                    currFace--;
-                }
-                depth--;
+                permIndex(face) = -1;
+                orderElt--;
             }
         }
     }
@@ -273,6 +264,8 @@ NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
     NGluingPermSearcher* ans;
     if (c == NGluingPermSearcher::dataTag_)
         ans = new NGluingPermSearcher(in, use, useArgs);
+    else if (c == NCompactSearcher::dataTag_)
+        ans = new NCompactSearcher(in, use, useArgs);
     else if (c == NClosedPrimeMinSearcher::dataTag_)
         ans = new NClosedPrimeMinSearcher(in, use, useArgs);
     else
@@ -296,20 +289,29 @@ void NGluingPermSearcher::dumpData(std::ostream& out) const {
     out << (started ? 's' : '.');
     out << ' ' << whichPurge_ << std::endl;
 
-    for (unsigned t = 0; t < pairing->getNumberOfTetrahedra(); t++) {
-        if (t)
+    int nTets = getNumberOfTetrahedra();
+    int i;
+
+    for (i = 0; i < nTets; i++) {
+        if (i)
             out << ' ';
-        out << orientation[t];
+        out << orientation[i];
     }
     out << std::endl;
 
-    out << currFace.tet << ' ' << currFace.face << std::endl;
+    out << orderElt << ' ' << orderSize << std::endl;
+    for (i = 0; i < orderSize; i++) {
+        if (i)
+            out << ' ';
+        out << order[i].tet << ' ' << order[i].face;
+    }
 }
 
 NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
         UseGluingPerms use, void* useArgs) :
         NGluingPerms(in), autos_(0), autosNew(false),
-        use_(use), useArgs_(useArgs), orientation(0), currFace(0, 0) {
+        use_(use), useArgs_(useArgs), orientation(0),
+        order(0), orderSize(0), orderElt(0) {
     if (inputError_)
         return;
 
@@ -350,12 +352,22 @@ NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
 
     in >> whichPurge_;
 
-    unsigned nTets = pairing->getNumberOfTetrahedra();
+    int nTets = pairing->getNumberOfTetrahedra();
+    int t;
+
     orientation = new int[nTets];
-    for (unsigned t = 0; t < nTets; t++)
+    for (t = 0; t < nTets; t++)
         in >> orientation[t];
 
-    in >> currFace.tet >> currFace.face;
+    order = new NTetFace[2 * nTets];
+    in >> orderElt >> orderSize;
+    for (t = 0; t < orderSize; t++) {
+        in >> order[t].tet >> order[t].face;
+        if (order[t].tet >= nTets || order[t].tet < 0 ||
+                order[t].face >= 4 || order[t].face < 0) {
+            inputError_ = true; return;
+        }
+    }
 
     // Did we hit an unexpected EOF?
     if (in.eof())
@@ -364,7 +376,7 @@ NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
 
 bool NGluingPermSearcher::isCanonical() const {
     NTetFace face, faceDest, faceImage;
-    int order;
+    int ordering;
 
     for (std::list<NIsomorphismDirect*>::const_iterator it = autos_->begin();
             it != autos_->end(); it++) {
@@ -378,13 +390,13 @@ bool NGluingPermSearcher::isCanonical() const {
                 continue;
 
             faceImage = (**it)[face];
-            order = gluingPerm(face).compareWith(
+            ordering = gluingPerm(face).compareWith(
                 (*it)->facePerm(faceDest.tet).inverse() * gluingPerm(faceImage)
                 * (*it)->facePerm(face.tet));
-            if (order < 0) {
+            if (ordering < 0) {
                 // This permutation set is closer.
                 break;
-            } else if (order > 0) {
+            } else if (ordering > 0) {
                 // The transformed permutation set is closer.
                 return false;
             }

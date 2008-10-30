@@ -155,10 +155,28 @@ class NGluingPermSearcher : public NGluingPerms {
                  forwards or backwards from 0 according to how many
                  times the orientation has been set or verified. */
 
-    private:
-        NTetFace currFace;
-            /**< The face that we are currently examining at this stage
-                 of the search. */
+    protected:
+        NTetFace* order;
+            /**< Describes the order in which gluing permutations are
+                 assigned to faces.  Specifically, this order is
+                 order[0], order[1], ..., order[orderSize-1].
+
+                 Note that each element of this array corresponds to a
+                 single edge of the underlying face pairing graph, which in
+                 turn represents a tetrahedron face and its image under
+                 the given face pairing.
+
+                 The specific tetrahedron face stored in this array for each
+                 edge of the underlying face pairing graph will be the smaller
+                 of the two identified tetrahedron faces (unless otherwise
+                 specified for a particular edge type; see
+                 NClosedPrimeMinSearcher for examples). */
+        int orderSize;
+            /**< The total number of edges in the face pairing graph, i.e.,
+                 the number of elements of interest in the order[] array. */
+        int orderElt;
+            /**< Marks which element of order[] we are currently examining
+                 at this stage of the search. */
 
     public:
         /**
@@ -325,7 +343,7 @@ class NGluingPermSearcher : public NGluingPerms {
          * @return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
          */
-        virtual bool completePermSet() const;
+        bool completePermSet() const;
 
         /**
          * Dumps all internal data in a plain text format, along with a
@@ -540,51 +558,26 @@ class NGluingPermSearcher : public NGluingPerms {
 
 /**
  * A gluing permutation search class that offers a specialised search
- * algorithm for when (i) only closed prime minimal P2-irreducible
- * triangulations are required, and (ii) the given face pairing has
- * order at least three.
+ * algorithm for when only compact (finite) 3-manifold triangulations are
+ * required.  The only constraints placed upon a triangulation are that
+ * every edge must be valid (i.e., not identified with itself in reverse),
+ * and that the link of every vertex must be a disk or a sphere.
  *
- * The search algorithm is significantly different from the default
- * algorithm provided by NGluingPermSearcher.  It is heavily optimised
- * and takes advantage of a number of results regarding the underlying
- * face pairing graph.
+ * The search algorithm uses modified union-find structures on both
+ * edge and vertex equivalence classes to prune searches that are
+ * guaranteed to lead to bad edge or vertex links.  For details see
+ * "Enumeration of non-orientable 3-manifolds using face-pairing graphs and
+ * union-find", Benjamin A. Burton, Discrete Comput. Geom. 38 (2007), no. 3,
+ * 527--571.
  *
- * Note that additional unwanted triangulations (e.g., non-prime or
- * non-minimal triangulations) may still be produced by this search.
- * However, significantly fewer unwanted triangulations will be produced
- * when using this class instead of NGluingPermSearcher.
+ * No additional unwanted triangulations will be produced by this search
+ * (in contrast to other search classes, such as NClosedPrimeMinSearcher).
+ * That is, \e only compact 3-manifolds will be produced.
  *
  * \ifacespython Not present.
  */
-class NClosedPrimeMinSearcher : public NGluingPermSearcher {
-    private:
-        static const unsigned EDGE_CHAIN_END;
-            /**< Represents the end of a one-ended chain in a face
-                 pairing graph. */
-        static const unsigned EDGE_CHAIN_INTERNAL_FIRST;
-            /**< Represents the first edge of a double edge within a
-                 one-ended chain in a face pairing graph.  The corresponding
-                 element of order[] stores the face closest to the loop at
-                 the end of this chain. */
-        static const unsigned EDGE_CHAIN_INTERNAL_SECOND;
-            /**< Represents the second edge of a double edge within a
-                 one-ended chain in a face pairing graph.  The corresponding
-                 element of order[] stores the face closest to the loop at
-                 the end of this chain. */
-        static const unsigned EDGE_DOUBLE_FIRST;
-            /**< Represents the first edge of a miscellaneous double
-                 edge in a face pairing graph.  The corresponding element of
-                 order[] stores the face belonging to the lower numbered
-                 tetrahedron. */
-        static const unsigned EDGE_DOUBLE_SECOND;
-            /**< Represents the second edge of a miscellaneous double
-                 edge in a face pairing graph.  The corresponding element of
-                 order[] stores the face belonging to the lower numbered
-                 tetrahedron. */
-        static const unsigned EDGE_MISC;
-            /**< Represents a miscellaneous edge in a face pairing graph. */
-
-    private:
+class NCompactSearcher : public NGluingPermSearcher {
+    protected:
         static const char VLINK_CLOSED;
             /**< Signifies that a vertex link has been closed off (i.e.,
                  the link has no remaining boundary edges). */
@@ -592,28 +585,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
             /**< Signifies that a vertex link has been made into something
                  other than a 2-sphere with zero or more punctures. */
 
-        static const char ECLASS_TWISTED;
-            /**< Signifies that an edge has been identified with itself
-                 in reverse. */
-        static const char ECLASS_LOWDEG;
-            /**< Signifies that a set of tetrahedron edges have been
-                 identified to form an internal edge of low degree
-                 (degree 1 or 2 of any type, or degree 3 with three
-                 distinct tetrahedra). */
-        static const char ECLASS_HIGHDEG;
-            /**< Signifies that a set of tetrahedron edges have been
-                 identified to form an edge of such a high degree that
-                 either a degree 1 or 2 edge must be formed elsewhere,
-                 or else the final number of edges must be too low. */
-        static const char ECLASS_CONE;
-            /**< Signifies that two edges of a face have been identified
-                 to form a cone (with no constraints on any additional
-                 identifications that might be taking place). */
-        static const char ECLASS_L31;
-            /**< Signifies that all three edges of a face have been
-                 identified to form an L(3,1) spine. */
-
-    private:
+    protected:
         static const int vertexLinkNextFace[4][4];
             /**< Maintains an ordering of the three tetrahedron faces
                  surrounding a vertex in a tetrahedron.  This ordering
@@ -625,28 +597,16 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  The remaining array elements \a vertexLinkNextFace[v][v]
                  are all -1. */
 
-        static const unsigned coneEdge[12][2];
-            /**< Lists all twelve possible ways in which two edges of a
-                 tetrahedron could be identified to create a conical face.
-                 For the ith such method, tetrahedron edges coneEdge[i][0]
-                 and coneEdge[i][1] are identified.  Every element of this
-                 array is between 0 and 5 inclusive. */
-        static const char coneNoTwist[12];
-            /**< Combines with the \a coneEdge array to list all twelve
-                 possible ways in which two edges of a tetrahedron could
-                 be identified to create a conical face.
+        static const int vertexLinkPrevFace[4][4];
+            /**< Provides backwards links for the ordering described by
+                 \a vertexLinkNextFace.
 
-                 For the ith such method, coneNoTwist[i] is 1 if tetrahedron
-                 edges coneEdge[i][0,1] should be identified according to
-                 their natural orientations, and coneNoTwist[i] is 0 if
-                 one of these two edges must be reversed.
+                 For vertex v (0..3), the tetrahedron face that precedes
+                 f (0..3) in this ordering is \a vertexLinkPrevFace[v][f].
+                 The remaining array elements \a vertexLinkPrevFace[v][v]
+                 are all -1. */
 
-                 The natural orientation of a tetrahedron edge is defined
-                 to point from the lower-numbered tetrahedron vertex to the
-                 higher.  This is consistent with the orientation used in
-                 the TetEdgeState class. */
-
-    private:
+    protected:
         /**
          * A structure used to track equivalence classes of tetrahedron
          * vertices as the gluing permutation is constructed.  Two
@@ -727,9 +687,10 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
 
                      If the vertex link is just this one triangle (i.e.,
                      all three faces of this tetrahedron surrounding this
-                     vertex are boundary faces), then both elements of
-                     \a bdryNext refer to this vertex itself.  This is the
-                     only situation in which \a bdryNext refers back to this
+                     vertex are boundary faces, or one is a boundary and
+                     the other two are joined together), then both elements of
+                     \a bdryNext refer to this vertex itself.  These are the
+                     only situations in which \a bdryNext refers back to this
                      vertex.
 
                      If the triangle is internal to the vertex link
@@ -922,44 +883,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
-    private:
-        NTetFace* order;
-            /**< Describes the order in which gluing permutations are
-                 assigned to faces.  Specifically, this order is
-                 order[0], order[1], ..., order[2n-1].
-
-                 Note that each element of this array corresponds to a
-                 single edge of the underlying face pairing graph, which in
-                 turn represents a tetrahedron face and its image under
-                 the given face pairing.
-
-                 The specific tetrahedron face stored in this array for each
-                 edge of the underlying face pairing grpah will be the smaller
-                 of the two identified tetrahedron faces (unless otherwise
-                 specified for a particular edge type). */
-        unsigned* orderType;
-            /**< For each edge in the face pairing graph stored in the
-                 order[] array, a corresponding category for this edge is
-                 stored in the orderType[] array.  Categories are described
-                 by the EDGE_... constants defined in this class. */
-
-        unsigned nChainEdges;
-            /**< The number of edges in the face pairing graph belonging
-                 to one-ended chains. */
-        int* chainPermIndices;
-            /**< Stores the two possible gluing permutations that must be
-                 tried for each face in the order[] array of type
-                 EDGE_CHAIN_END or EDGE_CHAIN_INTERNAL_FIRST.  These two
-                 possible permutations can be derived using theoretical
-                 results regarding the underlying face pairing graph.
-
-                 Note that for each face of type EDGE_CHAIN_INTERNAL_SECOND,
-                 the gluing permutation can be derived from the permutation
-                 chosen for the previous face (of type
-                 EDGE_CHAIN_INTERNAL_FIRST).  In this case we store the two
-                 permutations for this face that correspond to the two
-                 possible permutations for the previous face.  */
-
+    protected:
         unsigned nVertexClasses;
             /**< The number of equivalence classes of identified
                  tetrahedron vertices. */
@@ -1003,34 +927,10 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  with root edgeState[q], this array will store the value p.
                  Otherwise it will store the value -1. */
 
-#if PRUNE_HIGH_DEG_EDGE_SET
-        int highDegSum;
-            /**< The sum of (\a degree - 3) over all edges whose degree
-                 is three or higher.  This sum is updated throughout the
-                 search as part of the high-degree edge pruning code.
-                 See the PRUNE_HIGH_DEG_EDGE_SET macro for further details. */
-        int highDegBound;
-            /**< The maximum allowable value of \a highDegSum.  If the
-                 sum \a highDegSum exceeds this bound then it can be proven
-                 that some edge of the final triangulation must have degree
-                 one or two.  This is part of the high-degree edge pruning
-                 code; see the PRUNE_HIGH_DEG_EDGE_SET macro for further
-                 details. */
-#endif
-
-        int orderElt;
-            /**< Marks which element of order[] we are currently examining
-                 at this stage of the search. */
-
     public:
         /**
-         * Creates a new search manager for use when (i) only closed prime
-         * minimal P2-irreducible triangulations are required, and (ii) the
-         * given face pairing has order at least three.  Note that other
-         * unwanted triangulations may still be produced (e.g.,
-         * non-prime or non-minimal triangulations), but there will be
-         * far fewer of these than when using the NGluingPermSearcher
-         * class directly.
+         * Creates a new search manager for use when only compact 3-manifold
+         * triangulations are required.
          *
          * For details on how a search manager is used, see the
          * NGluingPermSearcher documentation.  Note in particular that
@@ -1041,8 +941,8 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          *
          * All constructor arguments are the same as for the
          * NGluingPermSearcher constructor, though some arguments (such as
-         * \a finiteOnly and \a whichPurge) are not needed here since they
-         * are already implied by the specialised search context.
+         * \a finiteOnly) are not needed here since they are already implied
+         * by the specialised search context.
          *
          * \pre The given face pairing is connected, i.e., it is possible
          * to reach any tetrahedron from any other tetrahedron via a
@@ -1050,12 +950,11 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * \pre The given face pairing is in canonical form as described
          * by NFacePairing::isCanonical().  Note that all face pairings
          * constructed by NFacePairing::findAllPairings() are of this form.
-         * \pre The given face pairing has no boundary faces and has at
-         * least three tetrahedra.
          */
-        NClosedPrimeMinSearcher(const NFacePairing* pairing,
+        NCompactSearcher(const NFacePairing* pairing,
                 const NFacePairingIsoList* autos,
-                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+                bool orientableOnly, int whichPurge,
+                UseGluingPerms use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1079,32 +978,24 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          *
          * @param in the input stream from which to read.
          */
-        NClosedPrimeMinSearcher(std::istream& in,
+        NCompactSearcher(std::istream& in,
             UseGluingPerms use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
          * structures.
          */
-        virtual ~NClosedPrimeMinSearcher();
+        virtual ~NCompactSearcher();
 
         // Overridden methods:
         virtual void dumpData(std::ostream& out) const;
         virtual void runSearch(long maxDepth = -1);
-        virtual bool completePermSet() const;
 
     protected:
         // Overridden methods:
         virtual char dataTag() const;
 
-    private:
-        /**
-         * Initialises the internal arrays (specifically those relating
-         * to face orderings and properties of chains) to accurately
-         * reflect the underlying face pairing.
-         */
-        void initOrder();
-
+    protected:
         /**
          * Returns the representative of the equivalence class containing
          * the given tetrahedron edge.  The class representative is
@@ -1180,25 +1071,14 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          *
          * See the TetEdgeState class for details.
          *
-         * This routine returns a bitwise (OR) combination of the
-         * ECLASS_... flags defined earlier in this class.  These
-         * flags describe what happened to the edge classes during
-         * this particular merge.  In particular, they note when edge
-         * identifications form a structure that cannot possibly appear
-         * in a closed prime minimal P2-irreducible triangulation.
+         * This routine returns a boolean that indicates whether this
+         * merge creates an invalid edge (i.e., an edge identified with
+         * itself in reverse).
          *
-         * Note that, if multiple ECLASS_... flags are appropriate, only
-         * a subset of these flags might be returned.  This is because
-         * this routine might exit early after one bad structure has been
-         * detected, without spending time testing for others.  It is
-         * guaranteed that if at least one such flag is appropriate then
-         * at least one such flag will be returned.
-         *
-         * @return a combination of ECLASS_... flags describing how
-         * the edge links were changed, or 0 if none of the changes
-         * described by these flags were observed.
+         * @return \c true if this merge creates an invalid edge, or
+         * \c false if not.
          */
-        int mergeEdgeClasses();
+        bool mergeEdgeClasses();
 
         /**
          * Split the classes of tetrahedron vertices to mirror the
@@ -1306,7 +1186,9 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * Assuming the given edge of the vertex linking triangle for the
          * given tetrahedron vertex lies on the boundary of the vertex link,
          * this routine identifies the adjacent boundary edges of the vertex
-         * link in each direction.
+         * link in each direction.  The given edge of the vertex linking
+         * triangle must belong to one of the two tetrahedron faces
+         * currently being joined.
          *
          * The tetrahedron vertex to examine is passed in \a vertexID,
          * \a tet and \a vertex, and the particular edge of the vertex
@@ -1324,6 +1206,11 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * routine is undefined.
          *
          * See the TetVertexState class for further information.
+         *
+         * \pre The tetrahedron face (\a tet, \a bdryFace) is one of the
+         * two faces that are currently being joined together.  That is,
+         * this face is either order[orderElt] or its partner in the
+         * underlying face pairing.
          *
          * @param vertexID the tetrahedron vertex to examine; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
@@ -1398,11 +1285,11 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         void vtxBdryConsistencyCheck();
 
         /**
-         * Dumps a summary of the contents of the \a bdryNext and
-         * \a bdryTwist arrays for every vertex of every tetrahedron to
-         * the given output stream.  The output format is relatively
-         * compact, and is subject to change in future versions of Regina.
-         * The output uses one line only, and a final newline is written.
+         * Dumps a summary of \a bdryNext, \a bdryTwist and \a bdryEdges
+         * for every vertex of every tetrahedron to the given output stream.
+         * The output format is relatively compact, and is subject to change
+         * in future versions of Regina.  The output uses one line only, and
+         * a final newline is written.
          *
          * See the TetVertexState class for further information.
          *
@@ -1411,64 +1298,303 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         void vtxBdryDump(std::ostream& out);
 };
 
+/**
+ * A gluing permutation search class that offers a specialised search
+ * algorithm for when (i) only closed prime minimal P2-irreducible
+ * triangulations are required, and (ii) the given face pairing has
+ * order at least three.
+ *
+ * The search algorithm is significantly different from the default
+ * algorithm provided by NGluingPermSearcher.  It is heavily optimised
+ * and takes advantage of a number of results regarding the underlying
+ * face pairing graph.
+ *
+ * Note that additional unwanted triangulations (e.g., non-prime or
+ * non-minimal triangulations) may still be produced by this search.
+ * However, significantly fewer unwanted triangulations will be produced
+ * when using this class instead of NGluingPermSearcher.
+ *
+ * \ifacespython Not present.
+ */
+class NClosedPrimeMinSearcher : public NCompactSearcher {
+    private:
+        static const unsigned EDGE_CHAIN_END;
+            /**< Represents the end of a one-ended chain in a face
+                 pairing graph. */
+        static const unsigned EDGE_CHAIN_INTERNAL_FIRST;
+            /**< Represents the first edge of a double edge within a
+                 one-ended chain in a face pairing graph.  The corresponding
+                 element of order[] stores the face closest to the loop at
+                 the end of this chain. */
+        static const unsigned EDGE_CHAIN_INTERNAL_SECOND;
+            /**< Represents the second edge of a double edge within a
+                 one-ended chain in a face pairing graph.  The corresponding
+                 element of order[] stores the face closest to the loop at
+                 the end of this chain. */
+        static const unsigned EDGE_DOUBLE_FIRST;
+            /**< Represents the first edge of a miscellaneous double
+                 edge in a face pairing graph.  The corresponding element of
+                 order[] stores the face belonging to the lower numbered
+                 tetrahedron. */
+        static const unsigned EDGE_DOUBLE_SECOND;
+            /**< Represents the second edge of a miscellaneous double
+                 edge in a face pairing graph.  The corresponding element of
+                 order[] stores the face belonging to the lower numbered
+                 tetrahedron. */
+        static const unsigned EDGE_MISC;
+            /**< Represents a miscellaneous edge in a face pairing graph. */
+
+    private:
+        static const char ECLASS_TWISTED;
+            /**< Signifies that an edge has been identified with itself
+                 in reverse. */
+        static const char ECLASS_LOWDEG;
+            /**< Signifies that a set of tetrahedron edges have been
+                 identified to form an internal edge of low degree
+                 (degree 1 or 2 of any type, or degree 3 with three
+                 distinct tetrahedra). */
+        static const char ECLASS_HIGHDEG;
+            /**< Signifies that a set of tetrahedron edges have been
+                 identified to form an edge of such a high degree that
+                 either a degree 1 or 2 edge must be formed elsewhere,
+                 or else the final number of edges must be too low. */
+        static const char ECLASS_CONE;
+            /**< Signifies that two edges of a face have been identified
+                 to form a cone (with no constraints on any additional
+                 identifications that might be taking place). */
+        static const char ECLASS_L31;
+            /**< Signifies that all three edges of a face have been
+                 identified to form an L(3,1) spine. */
+
+    private:
+        static const unsigned coneEdge[12][2];
+            /**< Lists all twelve possible ways in which two edges of a
+                 tetrahedron could be identified to create a conical face.
+                 For the ith such method, tetrahedron edges coneEdge[i][0]
+                 and coneEdge[i][1] are identified.  Every element of this
+                 array is between 0 and 5 inclusive. */
+        static const char coneNoTwist[12];
+            /**< Combines with the \a coneEdge array to list all twelve
+                 possible ways in which two edges of a tetrahedron could
+                 be identified to create a conical face.
+
+                 For the ith such method, coneNoTwist[i] is 1 if tetrahedron
+                 edges coneEdge[i][0,1] should be identified according to
+                 their natural orientations, and coneNoTwist[i] is 0 if
+                 one of these two edges must be reversed.
+
+                 The natural orientation of a tetrahedron edge is defined
+                 to point from the lower-numbered tetrahedron vertex to the
+                 higher.  This is consistent with the orientation used in
+                 the TetEdgeState class. */
+
+    public:
+        static const char dataTag_;
+            /**< A character used to identify this class when reading
+                 and writing tagged data in text format. */
+
+    private:
+        unsigned* orderType;
+            /**< For each edge in the face pairing graph stored in the
+                 order[] array, a corresponding category for this edge is
+                 stored in the orderType[] array.  Categories are described
+                 by the EDGE_... constants defined in this class. */
+
+        unsigned nChainEdges;
+            /**< The number of edges in the face pairing graph belonging
+                 to one-ended chains. */
+        int* chainPermIndices;
+            /**< Stores the two possible gluing permutations that must be
+                 tried for each face in the order[] array of type
+                 EDGE_CHAIN_END or EDGE_CHAIN_INTERNAL_FIRST.  These two
+                 possible permutations can be derived using theoretical
+                 results regarding the underlying face pairing graph.
+
+                 Note that for each face of type EDGE_CHAIN_INTERNAL_SECOND,
+                 the gluing permutation can be derived from the permutation
+                 chosen for the previous face (of type
+                 EDGE_CHAIN_INTERNAL_FIRST).  In this case we store the two
+                 permutations for this face that correspond to the two
+                 possible permutations for the previous face.  */
+
+#if PRUNE_HIGH_DEG_EDGE_SET
+        int highDegSum;
+            /**< The sum of (\a degree - 3) over all edges whose degree
+                 is three or higher.  This sum is updated throughout the
+                 search as part of the high-degree edge pruning code.
+                 See the PRUNE_HIGH_DEG_EDGE_SET macro for further details. */
+        int highDegBound;
+            /**< The maximum allowable value of \a highDegSum.  If the
+                 sum \a highDegSum exceeds this bound then it can be proven
+                 that some edge of the final triangulation must have degree
+                 one or two.  This is part of the high-degree edge pruning
+                 code; see the PRUNE_HIGH_DEG_EDGE_SET macro for further
+                 details. */
+#endif
+
+    public:
+        /**
+         * Creates a new search manager for use when (i) only closed prime
+         * minimal P2-irreducible triangulations are required, and (ii) the
+         * given face pairing has order at least three.  Note that other
+         * unwanted triangulations may still be produced (e.g.,
+         * non-prime or non-minimal triangulations), but there will be
+         * far fewer of these than when using the NGluingPermSearcher
+         * class directly.
+         *
+         * For details on how a search manager is used, see the
+         * NGluingPermSearcher documentation.  Note in particular that
+         * this class will be automatically used by
+         * NGluingPermSearcher::findAllPerms() if possible, so there is
+         * often no need for an end user to instantiate this class
+         * directly.
+         *
+         * All constructor arguments are the same as for the
+         * NGluingPermSearcher constructor, though some arguments (such as
+         * \a finiteOnly and \a whichPurge) are not needed here since they
+         * are already implied by the specialised search context.
+         *
+         * \pre The given face pairing is connected, i.e., it is possible
+         * to reach any tetrahedron from any other tetrahedron via a
+         * series of matched face pairs.
+         * \pre The given face pairing is in canonical form as described
+         * by NFacePairing::isCanonical().  Note that all face pairings
+         * constructed by NFacePairing::findAllPairings() are of this form.
+         * \pre The given face pairing has no boundary faces and has at
+         * least three tetrahedra.
+         */
+        NClosedPrimeMinSearcher(const NFacePairing* pairing,
+                const NFacePairingIsoList* autos,
+                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+
+        /**
+         * Initialises a new search manager based on data read from the
+         * given input stream.  This may be a new search or a partially
+         * completed search.
+         *
+         * This routine reads data in the format written by dumpData().
+         * If you wish to read data whose precise class is unknown,
+         * consider using dumpTaggedData() and readTaggedData() instead.
+         *
+         * If the data found in the input stream is invalid or incorrectly
+         * formatted, the routine inputError() will return \c true but
+         * the contents of this object will be otherwise undefined.
+         *
+         * The arguments \a use and \a useArgs are the same as for the
+         * NGluingPermSearcher constructor.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @param in the input stream from which to read.
+         */
+        NClosedPrimeMinSearcher(std::istream& in,
+            UseGluingPerms use, void* useArgs = 0);
+
+        /**
+         * Destroys this search manager and all supporting data
+         * structures.
+         */
+        virtual ~NClosedPrimeMinSearcher();
+
+        // Overridden methods:
+        virtual void dumpData(std::ostream& out) const;
+        virtual void runSearch(long maxDepth = -1);
+
+    protected:
+        // Overridden methods:
+        virtual char dataTag() const;
+
+    private:
+        /**
+         * Merge the classes of tetrahedron edges as required by the
+         * new gluing made at stage \a orderElt of the search.
+         *
+         * This overrides NCompactSearcher::mergeEdgeClasses(), and
+         * tests for additional structures that, whilst valid, cannot
+         * appear in a closed prime minimal P2-irreducible triangulation.
+         *
+         * This routine returns a bitwise (OR) combination of the
+         * ECLASS_... flags defined earlier in this class.  These
+         * flags describe what happened to the edge classes during
+         * this particular merge.  In particular, they note when edge
+         * identifications form a structure that cannot possibly appear
+         * in a closed prime minimal P2-irreducible triangulation.
+         *
+         * Note that, if multiple ECLASS_... flags are appropriate, only
+         * a subset of these flags might be returned.  This is because
+         * this routine might exit early after one bad structure has been
+         * detected, without spending time testing for others.  It is
+         * guaranteed that if at least one such flag is appropriate then
+         * at least one such flag will be returned.
+         *
+         * @return a combination of ECLASS_... flags describing how
+         * the edge links were changed, or 0 if none of the changes
+         * described by these flags were observed.
+         */
+        int mergeEdgeClasses();
+
+        /**
+         * Split the classes of tetrahedron edges to mirror the undoing
+         * of the gluing at stage \a orderElt of the search.
+         *
+         * This overrides NCompactSearcher::splitEdgeClasses(), so that
+         * we can undo the additional work performed in the overridden
+         * mergeEdgeClasses().
+         */
+        void splitEdgeClasses();
+};
+
 /*@}*/
 
 // Inline functions for NGluingPermSearcher
 
 inline bool NGluingPermSearcher::completePermSet() const {
-    return (currFace.tet == static_cast<int>(pairing->getNumberOfTetrahedra()));
+    return (orderElt == orderSize);
 }
 
 inline char NGluingPermSearcher::dataTag() const {
     return NGluingPermSearcher::dataTag_;
 }
 
-// Inline functions for NClosedPrimeMinSearcher
+// Inline functions for NCompactSearcher
 
-inline NClosedPrimeMinSearcher::TetVertexState::TetVertexState() :
+inline NCompactSearcher::TetVertexState::TetVertexState() :
         parent(-1), rank(0), bdry(3), twistUp(0), hadEqualRank(false) {
 }
 
-inline NClosedPrimeMinSearcher::TetEdgeState::TetEdgeState() :
+inline NCompactSearcher::TetEdgeState::TetEdgeState() :
         parent(-1), rank(0), size(1), bounded(true), twistUp(0),
         hadEqualRank(false) {
 }
 
-inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
-    delete[] order;
-    delete[] orderType;
-    if (chainPermIndices)
-        delete[] chainPermIndices;
-
+inline NCompactSearcher::~NCompactSearcher() {
     delete[] vertexState;
     delete[] vertexStateChanged;
     delete[] edgeState;
     delete[] edgeStateChanged;
 }
 
-inline bool NClosedPrimeMinSearcher::completePermSet() const {
-    return (orderElt == static_cast<int>(pairing->getNumberOfTetrahedra()) * 2);
+inline char NCompactSearcher::dataTag() const {
+    return NCompactSearcher::dataTag_;
 }
 
-inline char NClosedPrimeMinSearcher::dataTag() const {
-    return NClosedPrimeMinSearcher::dataTag_;
-}
-
-inline int NClosedPrimeMinSearcher::findEdgeClass(int edgeID) {
+inline int NCompactSearcher::findEdgeClass(int edgeID) {
     while (edgeState[edgeID].parent >= 0)
         edgeID = edgeState[edgeID].parent;
 
     return edgeID;
 }
 
-inline int NClosedPrimeMinSearcher::findEdgeClass(int edgeID, char& twisted) {
+inline int NCompactSearcher::findEdgeClass(int edgeID, char& twisted) {
     for ( ; edgeState[edgeID].parent >= 0; edgeID = edgeState[edgeID].parent)
         twisted ^= edgeState[edgeID].twistUp;
 
     return edgeID;
 }
 
-inline void NClosedPrimeMinSearcher::vtxBdryJoin(int vertexID, char end,
+inline void NCompactSearcher::vtxBdryJoin(int vertexID, char end,
         int adjVertexID, char twist) {
     vertexState[vertexID].bdryNext[static_cast<int>(end)] = adjVertexID;
     vertexState[vertexID].bdryTwist[static_cast<int>(end)] = twist;
@@ -1476,7 +1602,7 @@ inline void NClosedPrimeMinSearcher::vtxBdryJoin(int vertexID, char end,
     vertexState[adjVertexID].bdryTwist[(end ^ 1) ^ twist] = twist;
 }
 
-inline void NClosedPrimeMinSearcher::vtxBdryFixAdj(int vertexID) {
+inline void NCompactSearcher::vtxBdryFixAdj(int vertexID) {
     if (vertexState[vertexID].bdryNext[0] != vertexID) {
         vertexState[vertexState[vertexID].bdryNext[0]].
             bdryNext[1 ^ vertexState[vertexID].bdryTwist[0]] = vertexID;
@@ -1491,21 +1617,21 @@ inline void NClosedPrimeMinSearcher::vtxBdryFixAdj(int vertexID) {
     }
 }
 
-inline void NClosedPrimeMinSearcher::vtxBdryBackup(int vertexID) {
+inline void NCompactSearcher::vtxBdryBackup(int vertexID) {
     vertexState[vertexID].bdryNextOld[0] = vertexState[vertexID].bdryNext[0];
     vertexState[vertexID].bdryNextOld[1] = vertexState[vertexID].bdryNext[1];
     vertexState[vertexID].bdryTwistOld[0] = vertexState[vertexID].bdryTwist[0];
     vertexState[vertexID].bdryTwistOld[1] = vertexState[vertexID].bdryTwist[1];
 }
 
-inline void NClosedPrimeMinSearcher::vtxBdryRestore(int vertexID) {
+inline void NCompactSearcher::vtxBdryRestore(int vertexID) {
     vertexState[vertexID].bdryNext[0] = vertexState[vertexID].bdryNextOld[0];
     vertexState[vertexID].bdryNext[1] = vertexState[vertexID].bdryNextOld[1];
     vertexState[vertexID].bdryTwist[0] = vertexState[vertexID].bdryTwistOld[0];
     vertexState[vertexID].bdryTwist[1] = vertexState[vertexID].bdryTwistOld[1];
 }
 
-inline void NClosedPrimeMinSearcher::vtxBdryNext(int vertexID,
+inline void NCompactSearcher::vtxBdryNext(int vertexID,
         int tet, int vertex, int bdryFace, int next[2], char twist[2]) {
     switch (vertexState[vertexID].bdryEdges) {
         case 3: next[0] = next[1] = vertexID;
@@ -1516,11 +1642,38 @@ inline void NClosedPrimeMinSearcher::vtxBdryNext(int vertexID,
                     twist[0] = vertexState[vertexID].bdryTwist[0];
                     next[1] = vertexID;
                     twist[1] = 0;
-                } else {
+                } else if (permIndex(tet,
+                        vertexLinkPrevFace[vertex][bdryFace]) < 0) {
                     next[0] = vertexID;
                     twist[0] = 0;
                     next[1] = vertexState[vertexID].bdryNext[1];
                     twist[1] = vertexState[vertexID].bdryTwist[1];
+                } else {
+                    // We must be in the process of gluing a tetrahedron
+                    // to itself, and one of the gluings hasn't happened
+                    // yet (hence bdryEdges == 2 but only one boundary
+                    // edge shows up in the gluing permutations).
+                    // The boundary that we're not seeing must belong
+                    // to either the tetrahedron face we are currently
+                    // working with or its adjacent partner.
+                    int ghostFace = (bdryFace == order[orderElt].face ?
+                        (*pairing)[order[orderElt]].face :
+                        order[orderElt].face);
+                    if (vertexLinkNextFace[vertex][bdryFace] == ghostFace) {
+                        next[0] = vertexState[vertexID].bdryNext[0];
+                        twist[0] = vertexState[vertexID].bdryTwist[0];
+                        next[1] = vertexID;
+                        twist[1] = 0;
+                    } else {
+                        // Sanity check.
+                        if (vertexLinkPrevFace[vertex][bdryFace] != ghostFace)
+                            std::cerr << "ERROR: Inconsistent vertex link "
+                                "boundary information!" << std::endl;
+                        next[0] = vertexID;
+                        twist[0] = 0;
+                        next[1] = vertexState[vertexID].bdryNext[1];
+                        twist[1] = vertexState[vertexID].bdryTwist[1];
+                    }
                 }
                 break;
         case 1: next[0] = vertexState[vertexID].bdryNext[0];
@@ -1531,17 +1684,29 @@ inline void NClosedPrimeMinSearcher::vtxBdryNext(int vertexID,
     }
 }
 
-inline bool NClosedPrimeMinSearcher::vtxBdryLength1(int vertexID) {
+inline bool NCompactSearcher::vtxBdryLength1(int vertexID) {
     return (vertexState[vertexID].bdryNext[0] == vertexID &&
             vertexState[vertexID].bdryEdges == 1);
 }
 
-inline bool NClosedPrimeMinSearcher::vtxBdryLength2(
+inline bool NCompactSearcher::vtxBdryLength2(
         int vertexID1, int vertexID2) {
     return (vertexState[vertexID1].bdryNext[0] == vertexID2 &&
             vertexState[vertexID1].bdryNext[1] == vertexID2 &&
             vertexState[vertexID1].bdryEdges == 1 &&
             vertexState[vertexID2].bdryEdges == 1);
+}
+
+// Inline functions for NClosedPrimeMinSearcher
+
+inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
+    delete[] orderType;
+    if (chainPermIndices)
+        delete[] chainPermIndices;
+}
+
+inline char NClosedPrimeMinSearcher::dataTag() const {
+    return NClosedPrimeMinSearcher::dataTag_;
 }
 
 } // namespace regina
