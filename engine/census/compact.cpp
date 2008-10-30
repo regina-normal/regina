@@ -215,6 +215,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
         // Search initialisation.
         started = true;
         orderElt = 0;
+        orientation[0] = 1;
     }
 
     // Is it a partial search that has already finished?
