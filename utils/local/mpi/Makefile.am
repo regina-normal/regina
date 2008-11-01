@@ -19,5 +19,5 @@ distinguish_mpi_SOURCES = distinguish-mpi.cpp
 equiv_mpi_SOURCES = equiv-mpi.cpp
 normal_mpi_SOURCES = normal-mpi.cpp
 
-EXTRA_DIST = README.txt
+EXTRA_DIST = README.txt normal-mpi-sanity
 
