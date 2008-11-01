@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# Verifies that normal-mpi has produced results for all triangulations in
+# the given set of data files.
+#
+# Change into the directory containing the data files (*.rga), and run:
+#
+#   normal-mpi-sanity <output_dir>
+#
+# where <output_dir> is the output directory that was given to normal-mpi.
+
+set -e
+
+if [ -z "$1" -o -n "$2" ]; then
+  echo "Usage: $0 <output_dir>"
+  exit 1
+fi
+
+outdir="$1"
+
+count=0
+for i in *.rga; do
+  count=$(($count + 1))
+
+  echo -n "$i: "
+
+  if [ -d "$i" ]; then
+    echo "ERROR: Directory, not a file"
+    continue
+  fi
+  if [ ! -e "$i" ]; then
+    echo "ERROR: Not a file"
+    continue
+  fi
+
+  tri=`regfiledump -l "$i" | grep Triang | wc -l`
+  tri=$(($tri - 1))
+  out=`cat "$outdir/$i.dat" | wc -l`
+
+  if [ "$tri" = "$out" ]; then
+    echo "ok ($tri)"
+  else
+    echo "ERROR: $tri triangulation(s), $out lines of output"
+  fi
+done
+
+echo "$count file(s) examined."
+exit 0

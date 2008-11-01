@@ -12,10 +12,12 @@ CXX = @MPICXX@
 INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@ @UTILS_LIBS@ @MPILIBS@
 
-noinst_PROGRAMS = distinguish-mpi equiv-mpi
+noinst_PROGRAMS = distinguish-mpi equiv-mpi normal-mpi
+noinst_SCRIPTS = normal-mpi-sanity
 
 distinguish_mpi_SOURCES = distinguish-mpi.cpp
 equiv_mpi_SOURCES = equiv-mpi.cpp
+normal_mpi_SOURCES = normal-mpi.cpp
 
 EXTRA_DIST = README.txt
 
