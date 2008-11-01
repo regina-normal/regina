@@ -49,6 +49,7 @@
 #include <ctime>
 #include <dirent.h>
 #include <fstream>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include "mpi.h"
 #include "popt.h"
@@ -98,6 +99,32 @@ const char* logFileQuad = "normal-quad.log";
 bool hasError = false;
 
 
+
+/**
+ * Helper struct that allows the controller to sort files by size.
+ */
+struct DataFile {
+    std::string filename;
+    long size;
+
+    DataFile() : size(0) {
+    }
+
+    void init(const char* fileToUse) {
+        filename = fileToUse;
+
+        // If we can't stat, just pretend the size is zero.
+        struct stat info;
+        if (stat(fileToUse, &info) == 0)
+            size = info.st_size;
+        else
+            size = 0;
+    }
+
+    const bool operator < (const DataFile& rhs) const {
+        return (size > rhs.size);
+    }
+};
 
 /**
  * Generic helper routine.
@@ -236,7 +263,7 @@ int ctrlWaitForSlave() {
  * If all slaves are working then this routine will wait until some
  * slave finishes its current task.
  */
-void ctrlFarmTask(char* filename) {
+void ctrlFarmTask(const char* filename) {
     int slave;
     if (nRunningSlaves == nSlaves) {
         // We need to wait for somebody to stop first.
@@ -249,12 +276,17 @@ void ctrlFarmTask(char* filename) {
     ctrlLogStamp() << "Farmed " << filename << " to slave "
         << slave << "." << std::endl;
 
-    MPI_Send(filename, strlen(filename) + 1, MPI_CHAR, slave, TAG_REQUEST_TASK,
-        MPI_COMM_WORLD);
+    MPI_Send(const_cast<char*>(filename), strlen(filename) + 1,
+        MPI_CHAR, slave, TAG_REQUEST_TASK, MPI_COMM_WORLD);
 
     nRunningSlaves++;
 }
 
+/**
+ * Controller helper routine.
+ *
+ * Helps scandir() identify regina data files.
+ */
 int isRga(const struct dirent* entry) {
    int len = strlen(entry->d_name);
    return (len > 4 && strcmp(".rga", entry->d_name + len - 4) == 0);
@@ -282,13 +314,20 @@ int mainController() {
         return 1;
     }
 
+    // Sort the entries in descending order by size.
+    DataFile* files = new DataFile[nEntries + 1 /* in case nEntries == 0 */];
+    int i;
+    for (i = 0; i < nEntries; ++i)
+        files[i].init(entries[i]->d_name);
+    std::sort(files, files + nEntries);
+
     // Process the files.
     for (int currEntry = 0; currEntry < nEntries; ++currEntry)
-        ctrlFarmTask(entries[currEntry]->d_name);
+        ctrlFarmTask(files[currEntry].filename.c_str());
 
     // Kill off any slaves that never started working.
     if (nRunningSlaves < nSlaves)
-        for (int i = nRunningSlaves; i < nSlaves; i++)
+        for (i = nRunningSlaves; i < nSlaves; i++)
             ctrlStopSlave(i + 1);
 
     // Wait for remaining slaves to finish.
@@ -298,6 +337,7 @@ int mainController() {
     ctrlLogStamp() << "Processed " << nEntries << " file(s)." << std::endl;
 
     // We should delete the entries array, but we're exiting anyway...
+    delete[] files;
     return 0;
 }
 
