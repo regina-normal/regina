@@ -24,13 +24,14 @@ noinst_HEADERS = \
 
 lib_LTLIBRARIES = libregina-kdecommon.la
 
+libregina_kdecommon_la_LDFLAGS = -release @PACKAGE_VERSION@
+
 if COND_BUILD_PYTHON
-libregina_kdecommon_la_LDFLAGS = -release @PACKAGE_VERSION@ $(all_libraries) \
-	@BOOST_PYTHON_LDFLAGS@
-libregina_kdecommon_la_LIBADD = $(LIB_ENGINE) python/libregina-kdepython.la
+libregina_kdecommon_la_LIBADD = $(LIB_ENGINE) python/libregina-kdepython.la \
+	$(all_libraries)
 else
-libregina_kdecommon_la_LDFLAGS = -release @PACKAGE_VERSION@ $(all_libraries)
-libregina_kdecommon_la_LIBADD = $(LIB_ENGINE)
+libregina_kdecommon_la_LIBADD = $(LIB_ENGINE) \
+	$(all_libraries)
 endif
 
 libregina_kdecommon_la_SOURCES = \

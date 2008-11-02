@@ -18,9 +18,9 @@ noinst_HEADERS = \
 
 bin_PROGRAMS = regina-kde
 
-regina_kde_LDFLAGS = $(KDE_RPATH) $(all_libraries)
+regina_kde_LDFLAGS = $(KDE_RPATH)
 regina_kde_LDADD   = ../common/libregina-kdecommon.la \
-	$(LIB_ENGINE) $(GUI_KDE_LIBS)
+	$(LIB_ENGINE) $(GUI_KDE_LIBS) $(all_libraries)
 regina_kde_SOURCES = \
 	examplesaction.cpp \
 	main.cpp \

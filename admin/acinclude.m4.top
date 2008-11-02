@@ -548,8 +548,7 @@ AC_DEFUN([REGINA_LIB_BOOST_PYTHON], [
                         AC_MSG_RESULT([yes])
                         # And we're done!
                         BOOST_PYTHON_INCLUDES="-I$incdir"
-                        BOOST_PYTHON_LIBS="-l$boostlib -l$pylib $extralibs"
-                        BOOST_PYTHON_LDFLAGS="-L$pylibdir"
+                        BOOST_PYTHON_LIBS="-l$boostlib -l$pylib $extralibs -L$pylibdir"
                         __regina_py_ok=1
                       ], [
                         AC_MSG_RESULT([no])
@@ -584,7 +583,6 @@ AC_DEFUN([REGINA_LIB_BOOST_PYTHON], [
     else
       BOOST_PYTHON_INCLUDES=
       BOOST_PYTHON_LIBS=
-      BOOST_PYTHON_LDFLAGS=
       REGINA_WARN_MISSING([A working boost.python installation], [$2])
       REGINA_DO_NOT_COMPILE([$1])
     fi
@@ -595,7 +593,6 @@ AC_DEFUN([REGINA_LIB_BOOST_PYTHON], [
   AC_LANG_POP(C++)
   AC_SUBST(BOOST_PYTHON_INCLUDES)
   AC_SUBST(BOOST_PYTHON_LIBS)
-  AC_SUBST(BOOST_PYTHON_LDFLAGS)
 ])
 
 dnl

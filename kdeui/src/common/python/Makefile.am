@@ -19,7 +19,7 @@ noinst_HEADERS = \
 	pythonoutputstream.h
 
 libregina_kdepython_la_LIBADD = @BOOST_PYTHON_LIBS@
-libregina_kdepython_la_LDFLAGS = @BOOST_PYTHON_LDFLAGS@
+libregina_kdepython_la_LDFLAGS =
 libregina_kdepython_la_SOURCES = \
 	commandedit.cpp \
 	pythonconsole.cpp \

@@ -32,13 +32,8 @@ noinst_HEADERS = \
 
 kde_module_LTLIBRARIES = libreginapart.la
 
-if COND_BUILD_PYTHON
-libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries) \
-	@BOOST_PYTHON_LDFLAGS@
-else
-libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
-endif
-libreginapart_la_LIBADD = $(LIB_ENGINE) $(GUI_KDE_LIBS) \
+libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN)
+libreginapart_la_LIBADD = $(LIB_ENGINE) $(GUI_KDE_LIBS) $(all_libraries) \
 	../common/libregina-kdecommon.la \
 	foreign/libforeign.la \
 	packettypes/libpackettypes.la

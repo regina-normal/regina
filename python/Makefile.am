@@ -35,8 +35,7 @@ pkgpythonlibdir = $(pkglibdir)/python
 pkgpythonlib_LTLIBRARIES = regina.la
 
 regina_la_SOURCES = globalarray.cpp modulemain.cpp
-regina_la_LDFLAGS = -module -avoid-version @BOOST_PYTHON_LDFLAGS@ \
-  @ADD_STDCALL_ALIAS@
+regina_la_LDFLAGS = -module -avoid-version @ADD_STDCALL_ALIAS@
 regina_la_LIBADD = @LIB_ENGINE@ @BOOST_PYTHON_LIBS@ \
   algebra/libalgebra.la \
   angle/libangle.la \

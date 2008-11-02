@@ -1,3 +1,11 @@
+regina-normal (4.6-1) unstable; urgency=low
+
+  * New upstream release.
+  * Removed the build-conflicts on regina-normal-dev, since the build system
+    has now been patched to avoid the associated relinking problems.
+
+ -- Ben Burton <bab@debian.org>  Tue, 28 Oct 2008 06:19:50 +1100
+
 regina-normal (4.5.1-1) unstable; urgency=low
 
   * New upstream release.

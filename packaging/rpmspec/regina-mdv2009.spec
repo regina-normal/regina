@@ -18,8 +18,6 @@ Requires: kdegraphics-kpdf
 Requires: python
 Conflicts: regina
 
-BuildConflicts: regina-normal < %{version}
-BuildConflicts: regina-normal > %{version}
 BuildRequires: boost-devel
 BuildRequires: cppunit-devel
 BuildRequires: doxygen
