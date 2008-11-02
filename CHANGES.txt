@@ -24,9 +24,9 @@ Version 4.6  [ (under development) ]
             - New routine locallyCompatible() for testing intersections
               between normal surfaces.
     BUILD ENVIRONMENT:
-        - The build system now works fine even if older versions of the
-          Regina development libraries are still installed (this used
-          to cause relinking problems on some systems).
+        - Installing into a staging area (i.e., building packages) now works
+          fine even if older versions of the Regina development libraries are
+          installed (this used to cause relinking problems on some systems).
 
 Version 4.5.1  [ 28 October, 2008 ]
 
