@@ -40,6 +40,7 @@
 #include <memory>
 
 class PacketChooser;
+class QPopupMenu;
 class QPushButton;
 class QListView;
 class QListViewItem;
@@ -86,6 +87,8 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         QListView* details;
         QListViewItem* components;
         QListViewItem* lastComponent;
+        QPopupMenu* detailsMenu;
+        QString detailsLastSelection;
 
     public:
         /**
@@ -151,6 +154,13 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         static QString edgeString(unsigned long tetIndex,
             const regina::NPerm& roles, int startPreimage, int endPreimage);
         static QString matrixString(const regina::NMatrix2& matrix);
+
+    private slots:
+        /**
+         * Actions for the composition details list.
+         */
+        void detailsPopup(QListViewItem* item, const QPoint& pos, int);
+        void detailsCopy();
 };
 
 #endif

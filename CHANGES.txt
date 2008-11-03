@@ -23,6 +23,10 @@ Version 4.6  [ (under development) ]
         Class NNormalSurface:
             - New routine locallyCompatible() for testing intersections
               between normal surfaces.
+    USER INTERFACE:
+        - Items in the triangulation composition list can now be copied
+          into the clipboard via the right mouse button.  Amongst other
+          things, this makes extracting the dehydration string much simpler.
     BUILD ENVIRONMENT:
         - Installing into a staging area (i.e., building packages) now works
           fine even if older versions of the Regina development libraries are

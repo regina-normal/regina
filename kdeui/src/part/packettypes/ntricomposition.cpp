@@ -64,9 +64,12 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <memory>
+#include <qapplication.h>
+#include <qclipboard.h>
 #include <qheader.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qpopupmenu.h>
 #include <qpushbutton.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
@@ -157,9 +160,17 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     details->header()->hide();
     details->addColumn(QString::null);
     details->setSorting(-1);
-    details->setSelectionMode(QListView::NoSelection);
+    details->setSelectionMode(QListView::Single);
     QWhatsThis::add(details, msg);
     layout->addWidget(details, 1);
+
+    // Set up context menus.
+    detailsMenu = new QPopupMenu(details);
+    detailsMenu->insertItem(i18n("&Copy to Clipboard"),
+        this, SLOT(detailsCopy()));
+    connect(details,
+        SIGNAL(contextMenuRequested(QListViewItem*, const QPoint&, int)),
+        this, SLOT(detailsPopup(QListViewItem*, const QPoint&, int)));
 }
 
 regina::NPacket* NTriCompositionUI::getPacket() {
@@ -1000,6 +1011,19 @@ QString NTriCompositionUI::edgeString(unsigned long tetIndex,
 QString NTriCompositionUI::matrixString(const regina::NMatrix2& matrix) {
     return QString("[ %1 %2 | %3 %4 ]").
         arg(matrix[0][0]).arg(matrix[0][1]).arg(matrix[1][0]).arg(matrix[1][1]);
+}
+
+void NTriCompositionUI::detailsPopup(QListViewItem* item, const QPoint& pos,
+        int) {
+    if (item) {
+        detailsLastSelection = item->text(0);
+        detailsMenu->popup(pos);
+    }
+}
+
+void NTriCompositionUI::detailsCopy() {
+    QApplication::clipboard()->setText(detailsLastSelection,
+        QClipboard::Clipboard);
 }
 
 #include "ntricomposition.moc"
