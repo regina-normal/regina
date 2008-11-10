@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Analyse invariants of 3-manifolds in a census                         *
+ *  Count vertex normal surfaces for a set of data files                  *
  *                                                                        *
  *  Copyright (c) 2005-2008, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
