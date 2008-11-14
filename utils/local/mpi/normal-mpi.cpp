@@ -37,6 +37,8 @@
  * this to quad coordinates instead.  The output directory must be passed
  * as an additional command-line argument, and this directory must already
  * exist.
+ *
+ * A single-processor version of this tool also exists (../normal.cpp).
  */
 
 #include <file/nxmlfile.h>

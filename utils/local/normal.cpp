@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Count thin edge links for a set of data files                         *
+ *  Count vertex normal surfaces for a set of data files                  *
  *                                                                        *
  *  Copyright (c) 2005-2008, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -28,14 +28,16 @@
 
 /**
  * Reads all files *.rga in the current directory.
+ * For each file we computes the number of normal surfaces for each
+ * triangulation and write the results to a CSV file (using space separators)
+ * whose filename is based on the original regina data filename.
  *
- * For each triangulation in each data file, this utility counts the number
- * of thin edge links that appear as vertex normal surfaces in quad space.
+ * By default we use standard tri-quad coordinates; passing -q will change
+ * this to quad coordinates instead.  The output directory must be passed
+ * as an additional command-line argument, and this directory must already
+ * exist.
  *
- * Results for each data file are written to a CSV file (using space
- * separators); the output filename is based on the original regina data
- * filename.  The output directory must be passed as an additional
- * command-line argument, and this directory must already exist.
+ * An MPI-enabled version of this tool also exists (mpi/normal-mpi.cpp).
  */
 
 #include <file/nxmlfile.h>
@@ -57,10 +59,12 @@ using namespace regina;
 /**
  * Global variables.
  */
+
+int quad = 0;
 std::string outputDir;
 
 /**
- * Helper struct that allows us to sort files by size.
+ * Helper struct that allows the controller to sort files by size.
  */
 struct DataFile {
     std::string filename;
@@ -91,6 +95,9 @@ struct DataFile {
 bool parseCmdLineOptions(int argc, const char* argv[]) {
     // Set up the command-line arguments.
     poptOption opts[] = {
+        { "quad", 'q', POPT_ARG_NONE, &quad, 0,
+            "Compute surfaces in quad coordinates, not standard coordinates.",
+            0 },
         POPT_AUTOHELP
         { 0, 0, 0, 0, 0, 0, 0 }
     };
@@ -130,7 +137,7 @@ bool parseCmdLineOptions(int argc, const char* argv[]) {
 }
 
 /**
- * Help scandir() identify regina data files.
+ * Helps scandir() identify regina data files.
  */
 int isRga(const struct dirent* entry) {
    int len = strlen(entry->d_name);
@@ -153,18 +160,14 @@ bool process(const std::string& filename) {
 
     NTriangulation* t;
     NNormalSurfaceList* s;
-    long n, i, links;
     for (NPacket* p = tree; p; p = p->nextTreePacket())
         if (p->getPacketType() == NTriangulation::packetType) {
             t = static_cast<NTriangulation*>(p);
-            s = NNormalSurfaceList::enumerate(t, NNormalSurfaceList::QUAD);
-
-            links = 0;
-            n = s->getNumberOfSurfaces();
-            for (i = 0; i < n; ++i)
-                if (s->getSurface(i)->isThinEdgeLink().first)
-                    ++links;
-            out << t->getNumberOfTetrahedra() << ' ' << links << " \""
+            s = NNormalSurfaceList::enumerate(t,
+                (quad ? NNormalSurfaceList::QUAD :
+                    NNormalSurfaceList::STANDARD));
+            out << t->getNumberOfTetrahedra() << ' '
+                << s->getNumberOfSurfaces() << " \""
                 << t->getPacketLabel() << '"' << std::endl;
 
             delete s;
@@ -187,7 +190,7 @@ int main(int argc, char* argv[]) {
 
     int nEntries = scandir(".", &entries, &isRga, &alphasort);
     if (nEntries < 0) {
-        std::cerr << "ERROR: Could not read directory listing." << std::endl;
+        std::cerr << "Could not read directory listing." << std::endl;
         return 1;
     }
 
