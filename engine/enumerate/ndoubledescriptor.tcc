@@ -29,6 +29,7 @@
 /* To be included from ndoubledescriptor.h. */
 
 #include <algorithm>
+#include <iterator>
 #include "regina-config.h"
 #include "enumerate/nenumconstraint.h"
 #include "maths/matrixops.h"
