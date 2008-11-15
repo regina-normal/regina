@@ -105,6 +105,11 @@ class NDoubleDescriptor {
          * A numeric progress watcher may be passed for progress reporting.
          * If so, this routine will poll for cancellation requests accordingly.
          *
+         * \pre The \a OutputIterator class must include a \a value_type
+         * typedef (which should be a pointer to some subclass of NRay).
+         * Note that this is \e not necessarily true of the standard
+         * library inserter classes (such as std::back_inserter).
+         *
          * @param results the output iterator to which the resulting extremal
          * rays will be written; this must accept objects of type <tt>NRay*</tt>
          * (or alternatively pointers to the same subclass of NRay as
