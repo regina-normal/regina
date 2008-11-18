@@ -305,6 +305,7 @@ void NGluingPermSearcher::dumpData(std::ostream& out) const {
             out << ' ';
         out << order[i].tet << ' ' << order[i].face;
     }
+    out << std::endl;
 }
 
 NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
