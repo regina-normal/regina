@@ -10,6 +10,9 @@ Regina - A Normal Surface Theory Calculator
 Version 4.6  [ (under development) ]
 
     ENGINE:
+        Class NFastRay:
+            - New fast but inflexible ray class; this builds on NFastVector
+              in the same way that the slower NRay builds on NVector.
         Class NGluingPermSearcher, NCompactSearcher, NClosedPrimeMinSearcher:
             - Overhauled the census code so that some of the optimisations
               used in the closed minimal irreducible / P^2-irreducible census

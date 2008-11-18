@@ -36,7 +36,7 @@
 #define __NDOUBLEDESCRIPTOR_H
 #endif
 
-#include "maths/nfastvector.h"
+#include "maths/nfastray.h"
 #include "maths/nmatrixint.h"
 #include <iterator>
 #include <vector>
@@ -154,8 +154,8 @@ class NDoubleDescriptor {
          * - a bitmask indicating which facets of the original cone this
          *   ray belongs to.
          *
-         * The dot products are stored as coordinates of the superclass
-         * NFastVector<NLargeInteger>.  Dot products are only stored
+         * The dot products are stored as coordinates of the
+         * superclass NFastRay.  Dot products are only stored
          * for hyperplanes that have not yet been intersected (thus
          * the vector length becomes smaller as the main algorithm progresses).
          * Dot products are stored in the order in which hyperplanes are
@@ -177,7 +177,7 @@ class NDoubleDescriptor {
          * bitmask types, such as NBitmask, NBitmask1 or NBitmask2.
          */
         template <class BitmaskType>
-        class RaySpec : private NFastVector<NLargeInteger> {
+        class RaySpec : private NFastRay {
             private:
                 BitmaskType facets_;
                     /**< A bitmask listing which original facets this ray
@@ -297,17 +297,6 @@ class NDoubleDescriptor {
                  * (one hyperplane for each row of the matrix).
                  */
                 void recover(NRay& dest, const NMatrixInt& subspace) const;
-
-            private:
-                /**
-                 * Scale this ray down as far as possible, so that the
-                 * dot products remain integers but are as small in
-                 * magnitude as possible.
-                 *
-                 * The scaling factor is guaranteed to be positive (i.e., the
-                 * underlying vector will not accidentally negate itself).
-                 */
-                void scaleDown();
         };
 
         /**
@@ -446,7 +435,7 @@ class NDoubleDescriptor {
 template <class BitmaskType>
 inline NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& trunc) :
-        NFastVector<NLargeInteger>(trunc.size() - 1),
+        NFastRay(trunc.size() - 1),
         facets_(trunc.facets_) {
     std::copy(trunc.elements + 1, trunc.end, elements);
 }

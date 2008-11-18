@@ -27,17 +27,17 @@
 /* end stub */
 
 /*! \file nray.h
- *  \brief Provides a slow but flexible class for rational rays rooted at
- *  the origin.
+ *  \brief Provides a fast but inflexible rational ray class for heavy
+ *  computation.
  */
 
-#ifndef __NRAY_H
+#ifndef __NFASTRAY_H
 #ifndef __DOXYGEN
-#define __NRAY_H
+#define __NFASTRAY_H
 #endif
 
 #include "utilities/nmpi.h"
-#include "maths/nvectordense.h"
+#include "maths/nfastvector.h"
 
 namespace regina {
 
@@ -47,40 +47,36 @@ namespace regina {
  */
 
 /**
- * A slow but flexible class storing a ray rooted at the origin whose
- * coordinates are rational.  Such a ray is a half-line beginning at
- * the origin and is represented by an integer point that it passes through.
- * Positive scalar multiples of a ray are considered to represent the same ray.
+ * A fast but inflexible class storing a ray rooted at the origin whose
+ * coordinates are rational.
  *
- * Like its parent class NVector, this ray class is slow (in
- * particular, many functions are virtual).  For a fast ray class better
- * suited to heavy computation, see NFastRay instead.
- * 
- * \warning Subclasses of NRay \b must override clone() to return a
- * ray of the correct subclass!  Otherwise the vectors returned by
- * vertex enumeration routines might be NRay objects instead of objects
- * of the appropriate derived class.
+ * This class is similar to NRay but is better suited to heavy
+ * computation.  Like its base class NFastVector, it has a streamlined
+ * implementation with no virtual methods, but it cannot talk easily to
+ * any vector class other than itself.  For a slower but more flexible
+ * ray class, see the NRay hierarchy instead.
+ *
+ * As with the NRay class, the ray described by this class is a
+ * half-line beginning at the origin, represented by an integer point that
+ * it passes through.  Positive scalar multiples of a ray are considered to
+ * represent the same ray.
  *
  * \ifacespython Not present.
  */
-class NRay : public NVectorDense<NLargeInteger> {
+class NFastRay : public NFastVector<NLargeInteger> {
     public:
         /**
          * Creates a new ray all of whose coordinates are initialised to zero.
          *
          * @param length the number of elements in the new vector.
          */
-        NRay(unsigned length);
+        NFastRay(unsigned length);
         /**
          * Creates a new ray that is a clone of the given ray.
          *
          * @param cloneMe the ray to clone.
          */
-        NRay(const NVector<NLargeInteger>& cloneMe);
-
-        virtual NVector<NLargeInteger>* clone() const;
-
-        virtual void negate();
+        NFastRay(const NFastVector<NLargeInteger>& cloneMe);
 
         /**
          * Scales this vector down by the greatest common divisor of all
@@ -98,57 +94,18 @@ class NRay : public NVectorDense<NLargeInteger> {
         void scaleDown();
 };
 
-/**
- * Returns a newly allocated ray representing the intersection
- * of the hyperplane joining two given rays with the given additional
- * hyperplane.  The resulting ray will be in its smallest integral form.
- *
- * The given additional hyperplane must pass through the origin, and is
- * represented by a vector perpendicular to it.
- *
- * If the arguments \a pos and \a neg are on the positive and negative
- * sides of the hyperplane respectively (where positive and
- * negative sides are determined by the sign of the dot product of a
- * ray vector with the hyperplane representation vector), the resulting
- * ray is guaranteed to be a positive multiple of a convex combination of
- * the two original rays.
- *
- * The resulting ray is guaranteed to be of the same subclass of
- * NRay as argument \a neg.
- *
- * \pre The two given rays lie on opposite sides of the given additional
- * hyperplane; neither actually lies within the given additional hyperplane.
- *
- * \ifacespython Not present.
- *
- * @param pos one of the two given rays.
- * @param neg the other of the two given rays.
- * @param hyperplane a perpendicular to the given additional hyperplane.
- * @return a newly allocated ray representing the intersection of
- * \a hyperplane with the hyperplane joining \a a and \a b.
- */
-NRay* intersect(const NRay& pos, const NRay& neg,
-    const NVector<NLargeInteger>& hyperplane);
-
 /*@}*/
 
-// Inline functions for NRay
+// Inline functions for NFastRay
 
-inline NRay::NRay(unsigned length) : NVectorDense<NLargeInteger>(length, zero) {
+inline NFastRay::NFastRay(unsigned length) : NFastVector<NLargeInteger>(
+        length) {
+    // Don't bother passing zero to the parent constructor, since the
+    // default NLargeInteger constructor already sets elements to zero.
 }
 
-inline NRay::NRay(const NVector<NLargeInteger>& cloneMe) :
-        NVectorDense<NLargeInteger>(cloneMe) {
-}
-
-inline NVector<NLargeInteger>* NRay::clone() const {
-    return new NRay(*this);
-}
-
-inline void NRay::negate() {
-    // Slightly more efficient than the default implementation.
-    for (unsigned i=0; i<vectorSize; i++)
-        elements[i].negate();
+inline NFastRay::NFastRay(const NFastVector<NLargeInteger>& cloneMe) :
+        NFastVector<NLargeInteger>(cloneMe) {
 }
 
 } // namespace regina

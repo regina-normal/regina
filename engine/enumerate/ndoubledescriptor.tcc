@@ -44,7 +44,7 @@ namespace regina {
 template <class BitmaskType>
 NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(unsigned axis,
         const NMatrixInt& subspace, const int* hypOrder) :
-        NFastVector<NLargeInteger>(subspace.rows()),
+        NFastRay(subspace.rows()),
         facets_(subspace.columns()) {
     unsigned i;
 
@@ -60,7 +60,7 @@ template <class BitmaskType>
 NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& first,
         const RaySpec<BitmaskType>& second) :
-        NFastVector<NLargeInteger>(second.size() - 1),
+        NFastRay(second.size() - 1),
         facets_(second.facets_) {
     for (unsigned i = 0; i < size(); ++i)
         elements[i] = second.elements[i + 1] * (*first.elements) -
@@ -72,26 +72,6 @@ NDoubleDescriptor::RaySpec<BitmaskType>::RaySpec(
 
     // Compute the new set of facets.
     facets_ &= first.facets_;
-}
-
-template <class BitmaskType>
-void NDoubleDescriptor::RaySpec<BitmaskType>::scaleDown() {
-    NLargeInteger gcd; // Initialised to 0.
-    NLargeInteger* e;
-    for (e = elements; e < end; ++e) {
-        if (e->isInfinite() || (*e) == zero)
-            continue;
-        gcd = gcd.gcd(*e);
-        if (gcd < 0)
-            gcd.negate();
-        if (gcd == one)
-            return;
-    }
-    if (gcd == zero)
-        return;
-    for (e = elements; e < end; ++e)
-        if ((! e->isInfinite()) && (*e) != zero)
-            e->divByExact(gcd);
 }
 
 template <class BitmaskType>
@@ -321,7 +301,6 @@ void NDoubleDescriptor::enumerateUsingBitmask(OutputIterator results,
         constraintsBegin = new BitmaskType[constraints->size()];
 
         NEnumConstraintList::const_iterator cit;
-        std::set<unsigned>::const_iterator sit;
         for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
                 cit != constraints->end(); ++cit, ++constraintsEnd) {
             constraintsEnd->reset(dim);
