@@ -69,6 +69,14 @@ namespace regina {
  * \todo \opt Insist that sizeof(Piece) is a power of two, and replace
  * expensive division/mod operations with cheap bit operations.
  *
+ * \warning Because this class may increase the length of the bitmask
+ * (rounding up to the next unit of storage), bitwise computations may
+ * not give the results that you expect.  In particular, flip() may set
+ * additional \c true bits in the "dead space" between the intended length
+ * and the actual length, and this may have a flow-on effect for other
+ * operations (such as subset testing, bit counting and so on).  Be
+ * careful!
+ *
  * \ifacespython Not present.
  */
 class NBitmask {
@@ -245,6 +253,13 @@ class NBitmask {
         /**
          * Negates every bit in this bitmask.  All \c true bits will be
          * set to \c false and vice versa.
+         *
+         * \warning Because this class may increase the bitmask length
+         * (rounding up to the next unit of storage), flip() may set
+         * additional \c true bits in the "dead space" between the intended
+         * length and the actual length.  This may cause unexpected
+         * results for routines such as subset testing, bit counting and
+         * so on.  Be careful!
          */
         void flip();
 
