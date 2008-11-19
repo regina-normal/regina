@@ -49,6 +49,9 @@ namespace {
             int flavour, bool embedded, regina::NProgressManager* manager) {
         return NNormalSurfaceList::enumerate(owner, flavour, embedded, manager);
     }
+
+    NNormalSurfaceList* (*quadToStandard_public)(const NNormalSurfaceList*) =
+            &NNormalSurfaceList::quadToStandard;
 }
 
 void addNNormalSurfaceList() {
@@ -66,10 +69,13 @@ void addNNormalSurfaceList() {
             return_value_policy<reference_existing_object>())
         .def("enumerate", enumerate_4,
             return_value_policy<reference_existing_object>())
+        .def("quadToStandard", quadToStandard_public,
+            return_value_policy<reference_existing_object>())
         .def("recreateMatchingEquations",
             &NNormalSurfaceList::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
         .staticmethod("enumerate")
+        .staticmethod("quadToStandard")
     ;
 
     s.attr("packetType") = NNormalSurfaceList::packetType;

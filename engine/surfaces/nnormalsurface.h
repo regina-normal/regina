@@ -1096,6 +1096,27 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         bool locallyCompatible(const NNormalSurface& other) const;
 
         /**
+         * Gives read-only access to the raw vector that sits beneath this
+         * normal surface.
+         *
+         * Generally users should not need this function.  However, it is
+         * provided here in case the need should arise (e.g., for reasons
+         * of efficiency).
+         *
+         * \warning An NNormalSurface does not know what underlying
+         * coordinate system its raw vector uses.  Unless you already know
+         * the coordinate system in advance (i.e., you created the surface
+         * yourself), it is best to keep to the coordinate-system-agnostic
+         * access functions such as NNormalSurfaceVector::getTriCoord() and
+         * NNormalSurfaceVector::getQuadCoord().
+         *
+         * \ifacespython Not present.
+         *
+         * @return the underlying raw vector.
+         */
+        const NNormalSurfaceVector* rawVector() const;
+
+        /**
          * Searches for a non-vertex-linking normal 2-sphere within the
          * given triangulation.  If a non-vertex linking normal 2-sphere
          * exists anywhere at all within the triangulation, then this routine
@@ -1301,6 +1322,10 @@ inline bool NNormalSurface::knownCanCrush() const {
     if (! canCrush.known())
         calculateKnownCanCrush();
     return (canCrush.known() && canCrush.value());
+}
+
+inline const NNormalSurfaceVector* NNormalSurface::rawVector() const {
+    return vector;
 }
 
 } // namespace regina

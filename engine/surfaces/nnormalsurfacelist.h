@@ -50,6 +50,7 @@ namespace regina {
 class NTriangulation;
 class NMatrixInt;
 class NProgressManager;
+class NProgressNumber;
 class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
 
@@ -190,6 +191,53 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
         virtual void writePacket(NFile& out) const;
         static NNormalSurfaceList* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
+
+        /**
+         * Converts a set of embedded vertex normal surfaces in quadrilateral
+         * space to a set of embedded vertex normal surfaces in standard
+         * (tri-quad) space.
+         *
+         * This procedure is available for any triangulation whose vertex
+         * links are all spheres and/or discs, and is \e much faster than
+         * enumerating surfaces directly in standard tri-quad coordinates.
+         *
+         * Typically users do not need to call this routine directly,
+         * since the standard enumerate() routine will use it implicitly
+         * where possible.  That is, when asked for standard vertex surfaces,
+         * enumerate() will first find all \e quadrilateral vertex surfaces
+         * and then use this procedure to convert them to standard vertex
+         * surfaces; this is generally orders of magnitude faster than
+         * enumerating surfaces directly in standard coordinates.
+         *
+         * Nevertheless, this standalone routine is provided as a convenience
+         * for users who already have a set of quadrilateral vertex surfaces,
+         * and who simply wish to convert them to a set of standard
+         * vertex surfaces without the cost of implicitly enumerating the
+         * quadrilateral vertex surfaces again.
+         *
+         * It should be noted that this routine does \e not simply convert
+         * vectors from one form to another; instead it converts a full
+         * solution set of vertex surfaces in quadrilateral coordinates to a
+         * full solution set of vertex surfaces in standard coordinates.
+         * Typically there are many more vertex surfaces in standard
+         * coordinates (all of which this routine will find).
+         *
+         * \pre In the underlying triangulation (i.e., the parent packet of
+         * the given normal surface list), the link of every vertex is
+         * either a sphere or a disc.
+         * \pre The given surface list is precisely the set of all
+         * embedded vertex normal surfaces in quadrilateral space; no more,
+         * no less.  Typically this means that the given list was obtained
+         * through enumerate(), with the flavour set to
+         * NNormalSurfaceList::QUAD and with \a embeddedOnly set to \c true.
+         *
+         * @param quadList a full list of vertex normal surfaces in
+         * quadrilateral coordinates.
+         * @return a full list of vertex normal surfaces in standard
+         * (tri-quad) coordinates.
+         */
+        static NNormalSurfaceList* quadToStandard(
+            const NNormalSurfaceList* quadList);
 
         /**
          * Returns a newly created matrix containing the matching
@@ -336,6 +384,87 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * normal surfaces are also to be produced.
          */
         NNormalSurfaceList(int newFlavour, bool embeddedOnly);
+
+        /**
+         * Enumerates all embedded vertex normal surfaces in standard
+         * coordinates by first enumerating surfaces in quadrilateral
+         * coordinates and then performing a quad-to-standard conversion
+         * routine.  See quadToStandard() for further information on
+         * this procedure.
+         *
+         * The normal surface list that is created will be inserted as
+         * the last child of the given triangulation.  See enumerate() for
+         * further information on the packet tree and ownership constraints.
+         *
+         * This enumeration will always take place in the current thread.
+         * A numeric progress watcher may be passed for progress reporting,
+         * in which case this routine will poll for cancellation requests
+         * accordingly.
+         *
+         * \pre In the given triangulation, the link of every vertex is
+         * either a sphere or a disc.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param progress a numeric progress watcher through which
+         * progress will be reported, or 0 if no progress reporting is
+         * required.  If a progress watcher is passed, its expected
+         * total will be increased immediately by some number of steps
+         * and the completed total will be increased gradually by this
+         * same number.  NProgress::setFinished() will \e not be called.
+         * @return the newly created normal surface list.
+         */
+        static NNormalSurfaceList* enumerateStandardViaQuad(
+            NTriangulation* owner, NProgressNumber* progress = 0);
+
+        /**
+         * Converts a set of embedded vertex normal surfaces in quadrilateral
+         * space to a set of embedded vertex normal surfaces in standard
+         * (tri-quad) space.
+         *
+         * See quadToStandard(const NNormalSurfaceList*) for full details
+         * and preconditions for this procedure.
+         *
+         * Although this routine takes a vector of non-const pointers, it
+         * guarantees not to modify (or destroy) any of the contents.
+         *
+         * @param quadList a full list of vertex normal surfaces in
+         * quadrilateral coordinates.
+         * @return a full list of vertex normal surfaces in standard
+         * (tri-quad) coordinates.
+         */
+        static NNormalSurfaceList* quadToStandard(NTriangulation* owner,
+                const std::vector<NNormalSurfaceVector*>& quadList);
+
+        /**
+         * Converts a set of embedded vertex normal surfaces in quadrilateral
+         * space to a set of embedded vertex normal surfaces in standard
+         * (tri-quad) space.
+         *
+         * This routine contains the real work behind all of the other
+         * forms of quadToStandard().  It is templated on the type of
+         * bitmask that will be used for storing facet sets.
+         *
+         * See quadToStandard(const NNormalSurfaceList*) for full details
+         * and preconditions for this procedure.
+         *
+         * Although this is a template function, it is a private
+         * template function and so is only defined in the one <tt>.cpp</tt>
+         * file that needs it.
+         *
+         * \pre The template argument \a BitmaskType can support
+         * bitmasks of size 7 \a n, where \a n is the number of
+         * tetrahedra in the given triangulation.
+         * \pre The given triangulation is non-empty.
+         *
+         * @param quadList a full list of vertex normal surfaces in
+         * quadrilateral coordinates.
+         * @return a full list of vertex normal surfaces in standard
+         * (tri-quad) coordinates.
+         */
+        template <class BitmaskType>
+        static NNormalSurfaceList* quadToStandardUsing(NTriangulation* owner,
+                const std::vector<NNormalSurfaceVector*>& quadList);
 
         /**
          * A thread class that actually performs the normal surface
