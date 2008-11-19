@@ -90,37 +90,46 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
         manager->setProgress(progress);
     }
 
-    // Perform any pre-enumeration tests and fetch any necessary
-    // validity constraints.
-    NEnumConstraintList* constraints = 0;
-    bool noSurfaces = false;
-    switch(list->flavour) {
-        // Import cases from the flavour registry.
-        #include "surfaces/flavourregistry.h"
-    }
+    // Choose the most appropriate algorithm for the job.
+    if (list->flavour == NNormalSurfaceList::STANDARD && list->embedded &&
+            triang->isValid() && ! triang->isIdeal()) {
+        // Enumerate solutions in standard space by going via quad space.
+        list->enumerateStandardViaQuad(triang, progress);
+    } else {
+        // The catch-all double description method.
 
-    if (noSurfaces) {
-        // There are no normal surfaces at all.
-        triang->insertChildLast(list);
-
-        if (progress) {
-            progress->incCompleted();
-            progress->setFinished();
+        // Perform any pre-enumeration tests and fetch any necessary
+        // validity constraints.
+        NEnumConstraintList* constraints = 0;
+        bool noSurfaces = false;
+        switch(list->flavour) {
+            // Import cases from the flavour registry.
+            #include "surfaces/flavourregistry.h"
         }
-        return 0;
+
+        if (noSurfaces) {
+            // There are no normal surfaces at all.
+            triang->insertChildLast(list);
+
+            if (progress) {
+                progress->incCompleted();
+                progress->setFinished();
+            }
+            return 0;
+        }
+
+        // Form the matching equations and starting cone.
+        NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
+        NNormalSurfaceVector* base = makeZeroVector(triang, list->flavour);
+
+        // Find the normal surfaces.
+        NDoubleDescriptor::enumerateExtremalRays(SurfaceInserter(*list, triang),
+            *base, *eqns, constraints, progress);
+
+        delete base;
+        delete eqns;
+        delete constraints;
     }
-
-    // Form the matching equations and starting cone.
-    NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
-    NNormalSurfaceVector* base = makeZeroVector(triang, list->flavour);
-
-    // Find the normal surfaces.
-    NDoubleDescriptor::enumerateExtremalRays(SurfaceInserter(*list, triang),
-        *base, *eqns, constraints, progress);
-
-    delete base;
-    delete eqns;
-    delete constraints;
 
     // All done!
     triang->insertChildLast(list);

@@ -184,6 +184,16 @@ NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
     if (owner->isIdeal() || ! owner->isValid())
         return 0;
 
+    // Prepare a final surface list.
+    NNormalSurfaceList* ans = new NNormalSurfaceList(
+        NNormalSurfaceList::STANDARD, true);
+
+    // Get the empty triangulation out of the way now.
+    if (owner->getNumberOfTetrahedra() == 0) {
+        owner->insertChildLast(ans);
+        return ans;
+    }
+
     // Build a vector of quad vectors to pass to our internal conversion
     // routine.
     // We will need to collect non-const pointers to vectors in this list,
@@ -197,10 +207,14 @@ NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
         quadVertices.push_back(const_cast<NNormalSurfaceVector*>(
             (*it)->rawVector()));
 
-    return quadToStandard(owner, quadVertices);
+    ans->buildStandardFromQuad(owner, quadVertices);
+
+    // All done!
+    owner->insertChildLast(ans);
+    return ans;
 }
 
-NNormalSurfaceList* NNormalSurfaceList::enumerateStandardViaQuad(
+void NNormalSurfaceList::enumerateStandardViaQuad(
         NTriangulation* owner, NProgressNumber* progress) {
     // Hum.  What to do with progress?
     // For now we shall treat quad surface enumeration as the main task,
@@ -214,11 +228,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardViaQuad(
     if (owner->getNumberOfTetrahedra() == 0) {
         if (progress)
             progress->incCompleted(PROGRESS_CONVERSION_STEPS + 1);
-
-        NNormalSurfaceList* slist = new NNormalSurfaceList(
-            NNormalSurfaceList::STANDARD, true);
-        owner->insertChildLast(slist);
-        return slist;
+        return;
     }
 
     // First enumerate all quad vertex surfaces.
@@ -237,34 +247,28 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardViaQuad(
     delete eqns;
     delete constraints;
 
-    if (progress)
+    if (progress) {
         progress->incCompleted();
 
         // Check for cancellation before we go any further.
-        if (progress->isCancelled()) {
-            // Cancelled; just return an empty list.
-            NNormalSurfaceList* slist = new NNormalSurfaceList(
-                NNormalSurfaceList::STANDARD, true);
-            owner->insertChildLast(slist);
-            return slist;
-        }
+        if (progress->isCancelled())
+            return;
+    }
 
     // Feed the quad vertex surfaces through the quad-to-standard
     // conversion procedure:
-    NNormalSurfaceList* ans = quadToStandard(owner, quadVertices);
+    buildStandardFromQuad(owner, quadVertices);
 
-    // Delete the old quad vertex surfaces and return our solutions.
+    // Delete the old quad vertex surfaces and we're done!
     std::vector<NNormalSurfaceVector*>::const_iterator qit;
     for (qit = quadVertices.begin(); qit != quadVertices.end(); ++qit)
         delete *qit;
 
     if (progress)
         progress->incCompleted(PROGRESS_CONVERSION_STEPS);
-
-    return ans;
 }
 
-NNormalSurfaceList* NNormalSurfaceList::quadToStandard(NTriangulation* owner,
+void NNormalSurfaceList::buildStandardFromQuad(NTriangulation* owner,
         const std::vector<NNormalSurfaceVector*>& quadList) {
     unsigned nFacets = 7 * owner->getNumberOfTetrahedra();
 
@@ -274,37 +278,36 @@ NNormalSurfaceList* NNormalSurfaceList::quadToStandard(NTriangulation* owner,
     // Then farm the work out to the real conversion routine that is
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
-        return quadToStandardUsing<NBitmask1<unsigned> >(owner, quadList);
+        buildStandardFromQuadUsing<NBitmask1<unsigned> >(owner, quadList);
     else if (nFacets <= 8 * sizeof(unsigned long))
-        return quadToStandardUsing<NBitmask1<unsigned long> >(owner, quadList);
+        buildStandardFromQuadUsing<NBitmask1<unsigned long> >(owner, quadList);
 #ifdef HAVE_LONG_LONG
     else if (nFacets <= 8 * sizeof(unsigned long long))
-        return quadToStandardUsing<NBitmask1<unsigned long long> >(
+        buildStandardFromQuadUsing<NBitmask1<unsigned long long> >(
             owner, quadList);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        return quadToStandardUsing<NBitmask2<unsigned long long, unsigned> >(
+        buildStandardFromQuadUsing<NBitmask2<unsigned long long, unsigned> >(
             owner, quadList);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
-        return quadToStandardUsing<NBitmask2<unsigned long long,
+        buildStandardFromQuadUsing<NBitmask2<unsigned long long,
             unsigned long> >(owner, quadList);
     else if (nFacets <= 16 * sizeof(unsigned long long))
-        return quadToStandardUsing<NBitmask2<unsigned long long> >(
+        buildStandardFromQuadUsing<NBitmask2<unsigned long long> >(
             owner, quadList);
 #else
     else if (nFacets <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
-        return quadToStandardUsing<NBitmask2<unsigned long, unsigned> >(
+        buildStandardFromQuadUsing<NBitmask2<unsigned long, unsigned> >(
             owner, quadList);
     else if (nFacets <= 16 * sizeof(unsigned long))
-        return quadToStandardUsing<NBitmask2<unsigned long> >(owner, quadList);
+        buildStandardFromQuadUsing<NBitmask2<unsigned long> >(owner, quadList);
 #endif
     else
-        return quadToStandardUsing<NBitmask>(owner, quadList);
+        buildStandardFromQuadUsing<NBitmask>(owner, quadList);
 }
 
 template <class BitmaskType>
-NNormalSurfaceList* NNormalSurfaceList::quadToStandardUsing(
-        NTriangulation* owner,
+void NNormalSurfaceList::buildStandardFromQuadUsing(NTriangulation* owner,
         const std::vector<NNormalSurfaceVector*>& quadList) {
     // Prepare for the quad-to-standard double description run.
     unsigned n = owner->getNumberOfTetrahedra();
@@ -491,21 +494,15 @@ NNormalSurfaceList* NNormalSurfaceList::quadToStandardUsing(
                 (*it)->reduce(link[i]);
     }
 
-    // All done!  Put the solutions into a new normal surface list
-    // and clean up.
-    NNormalSurfaceList* slist = new NNormalSurfaceList(
-        NNormalSurfaceList::STANDARD, true);
+    // All done!  Put the solutions into the normal surface list and clean up.
     for (typename RaySpecList::iterator it = list[workingList].begin();
             it != list[workingList].end(); ++it) {
-        slist->surfaces.push_back((*it)->recover(owner));
+        surfaces.push_back((*it)->recover(owner));
         delete *it;
     }
-    owner->insertChildLast(slist);
 
     delete[] link;
     delete[] constraintsBegin;
-
-    return slist;
 }
 
 } // namespace regina

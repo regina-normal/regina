@@ -444,61 +444,86 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * routine.  See quadToStandard() for further information on
          * this procedure.
          *
-         * The normal surface list that is created will be inserted as
-         * the last child of the given triangulation.  See enumerate() for
-         * further information on the packet tree and ownership constraints.
+         * The resulting surfaces in standard coordinates will be
+         * inserted directly into this normal surface list.
+         *
+         * This routine is designed to work with surface lists that are
+         * still under construction.  As such, it ignores the packet
+         * tree completely.  The parent packet is ignored (and not changed);
+         * instead the underlying triangulation is passed explicitly as
+         * the argument \a owner.
          *
          * This enumeration will always take place in the current thread.
          * A numeric progress watcher may be passed for progress reporting,
          * in which case this routine will poll for cancellation requests
          * accordingly.
          *
+         * \pre The flavour and embedded-only flag for this surface list
+         * are set to NNormalSurfaceList::STANDARD and \c true respectively.
          * \pre The given triangulation is valid, and the link of every
          * vertex is either a sphere or a disc.
          *
          * @param owner the triangulation upon which this list of normal
-         * surfaces will be based.
+         * surfaces is to be based.
          * @param progress a numeric progress watcher through which
          * progress will be reported, or 0 if no progress reporting is
          * required.  If a progress watcher is passed, its expected
          * total will be increased immediately by some number of steps
          * and the completed total will be increased gradually by this
          * same number.  NProgress::setFinished() will \e not be called.
-         * @return the newly created normal surface list.
          */
-        static NNormalSurfaceList* enumerateStandardViaQuad(
-            NTriangulation* owner, NProgressNumber* progress = 0);
+        void enumerateStandardViaQuad(NTriangulation* owner,
+            NProgressNumber* progress = 0);
 
         /**
          * Converts a set of embedded vertex normal surfaces in quadrilateral
          * space to a set of embedded vertex normal surfaces in standard
-         * (tri-quad) space.
+         * (tri-quad) space.  The original quadrilateral space surfaces are
+         * passed in the argument \a quadList, and the resulting standard space
+         * surfaces will be inserted directly into this normal surface list.
          *
-         * See quadToStandard(const NNormalSurfaceList*) for full details
-         * and preconditions for this procedure.
+         * See quadToStandard() for full details and preconditions for this
+         * procedure.
+         *
+         * This routine is designed to work with surface lists that are
+         * still under construction.  As such, it ignores the packet
+         * tree completely.  The parent packet is ignored (and not changed);
+         * instead the underlying triangulation is passed explicitly as
+         * the argument \a owner.
          *
          * Although this routine takes a vector of non-const pointers, it
          * guarantees not to modify (or destroy) any of the contents.
          *
+         * \pre The flavour and embedded-only flag for this surface list
+         * are set to NNormalSurfaceList::STANDARD and \c true respectively.
+         * \pre The given triangulation is valid and non-empty, and the link
+         * of every vertex is either a sphere or a disc.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces is to be based.
          * @param quadList a full list of vertex normal surfaces in
-         * quadrilateral coordinates.
-         * @return a full list of vertex normal surfaces in standard
-         * (tri-quad) coordinates.
+         * quadrilateral coordinates for the given triangulation.
          */
-        static NNormalSurfaceList* quadToStandard(NTriangulation* owner,
-                const std::vector<NNormalSurfaceVector*>& quadList);
+        void buildStandardFromQuad(NTriangulation* owner,
+            const std::vector<NNormalSurfaceVector*>& quadList);
 
         /**
          * Converts a set of embedded vertex normal surfaces in quadrilateral
          * space to a set of embedded vertex normal surfaces in standard
-         * (tri-quad) space.
+         * (tri-quad) space.  The original quadrilateral space surfaces are
+         * passed in the argument \a quadList, and the resulting standard space
+         * surfaces will be inserted directly into this normal surface list.
          *
-         * This routine contains the real work behind all of the other
-         * forms of quadToStandard().  It is templated on the type of
-         * bitmask that will be used for storing facet sets.
+         * This routine contains the real work behind buildStandardFromQuad().
+         * It is templated on the type of bitmask that will be used for
+         * storing facet sets.
          *
-         * See quadToStandard(const NNormalSurfaceList*) for full details
-         * and preconditions for this procedure.
+         * See quadToStandard() for full details and preconditions for this
+         * procedure.
+         *
+         * Like buildStandardFromQuad(), this routine ignores the packet
+         * tree completely and instead takes the underlying
+         * triangulation as the explicit argument \a owner.
          *
          * Although this is a template function, it is a private
          * template function and so is only defined in the one <tt>.cpp</tt>
@@ -507,16 +532,19 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * \pre The template argument \a BitmaskType can support
          * bitmasks of size 7 \a n, where \a n is the number of
          * tetrahedra in the given triangulation.
-         * \pre The given triangulation is non-empty.
+         * \pre The flavour and embedded-only flag for this surface list
+         * are set to NNormalSurfaceList::STANDARD and \c true respectively.
+         * \pre The given triangulation is valid and non-empty, and the link
+         * of every vertex is either a sphere or a disc.
          *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces is to be based.
          * @param quadList a full list of vertex normal surfaces in
-         * quadrilateral coordinates.
-         * @return a full list of vertex normal surfaces in standard
-         * (tri-quad) coordinates.
+         * quadrilateral coordinates for the given triangulation.
          */
         template <class BitmaskType>
-        static NNormalSurfaceList* quadToStandardUsing(NTriangulation* owner,
-                const std::vector<NNormalSurfaceVector*>& quadList);
+        void buildStandardFromQuadUsing(NTriangulation* owner,
+            const std::vector<NNormalSurfaceVector*>& quadList);
 
         /**
          * A thread class that actually performs the normal surface
