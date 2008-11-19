@@ -175,22 +175,29 @@ namespace {
     };
 } // anonymous namespace
 
-NNormalSurfaceList* NNormalSurfaceList::quadToStandard(
-        const NNormalSurfaceList* quadList) {
+NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
+    NTriangulation* owner = getTriangulation();
+
+    // Basic sanity checks:
+    if (flavour != NNormalSurfaceList::QUAD || ! embedded)
+        return 0;
+    if (owner->isIdeal() || ! owner->isValid())
+        return 0;
+
     // Build a vector of quad vectors to pass to our internal conversion
     // routine.
-    // We will need to collect non-const pointers to vectors in quadList,
+    // We will need to collect non-const pointers to vectors in this list,
     // but this is okay (the internal conversion routine guarantees not
     // to modify or delete them).
     std::vector<NNormalSurfaceVector*> quadVertices;
-    quadVertices.reserve(quadList->surfaces.size());
+    quadVertices.reserve(surfaces.size());
 
     std::vector<NNormalSurface*>::const_iterator it;
-    for (it = quadList->surfaces.begin(); it != quadList->surfaces.end(); ++it)
+    for (it = surfaces.begin(); it != surfaces.end(); ++it)
         quadVertices.push_back(const_cast<NNormalSurfaceVector*>(
             (*it)->rawVector()));
 
-    return quadToStandard(quadList->getTriangulation(), quadVertices);
+    return quadToStandard(owner, quadVertices);
 }
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateStandardViaQuad(

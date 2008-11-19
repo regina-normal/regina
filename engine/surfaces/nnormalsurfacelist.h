@@ -195,7 +195,11 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
         /**
          * Converts a set of embedded vertex normal surfaces in quadrilateral
          * space to a set of embedded vertex normal surfaces in standard
-         * (tri-quad) space.
+         * (tri-quad) space.  The initial list in quadrilateral space is
+         * taken to be this normal surface list; the final list in standard
+         * space will be inserted as a new child packet of the underlying
+         * triangulation (specifically, as the final child).  As a
+         * convenience, the final list will also be returned from this routine.
          *
          * This procedure is available for any triangulation whose vertex
          * links are all spheres and/or discs, and is \e much faster than
@@ -222,22 +226,28 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * Typically there are many more vertex surfaces in standard
          * coordinates (all of which this routine will find).
          *
-         * \pre In the underlying triangulation (i.e., the parent packet of
-         * the given normal surface list), the link of every vertex is
-         * either a sphere or a disc.
-         * \pre The given surface list is precisely the set of all
+         * This routine will run some very basic sanity checks before
+         * starting.  Specifically, it will check the validity and vertex
+         * links of the underlying triangulation, and will verify that
+         * the coordinate flavour and embedded-only flag are set to
+         * NNormalSurfaceList::QUAD and \c true respectively.  If any of
+         * these checks fail, this routine will do nothing and return 0.
+         *
+         * \pre The underlying triangulation (the parent packet of this
+         * normal surface list) is valid, and the link of every vertex
+         * is either a sphere or a disc.
+         * \pre This normal surface list is precisely the set of all
          * embedded vertex normal surfaces in quadrilateral space; no more,
-         * no less.  Typically this means that the given list was obtained
-         * through enumerate(), with the flavour set to
-         * NNormalSurfaceList::QUAD and with \a embeddedOnly set to \c true.
+         * no less.  Typically this means that it was obtained through
+         * enumerate(), with the flavour set to NNormalSurfaceList::QUAD and
+         * with \a embeddedOnly set to \c true.
          *
          * @param quadList a full list of vertex normal surfaces in
          * quadrilateral coordinates.
-         * @return a full list of vertex normal surfaces in standard
-         * (tri-quad) coordinates.
+         * @return a full list of vertex normal surfaces in standard (tri-quad)
+         * coordinates, or 0 if any of the basic sanity checks failed.
          */
-        static NNormalSurfaceList* quadToStandard(
-            const NNormalSurfaceList* quadList);
+        NNormalSurfaceList* quadToStandard() const;
 
         /**
          * Returns a newly created matrix containing the matching
@@ -401,8 +411,8 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * in which case this routine will poll for cancellation requests
          * accordingly.
          *
-         * \pre In the given triangulation, the link of every vertex is
-         * either a sphere or a disc.
+         * \pre The given triangulation is valid, and the link of every
+         * vertex is either a sphere or a disc.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.

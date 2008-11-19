@@ -50,8 +50,8 @@ namespace {
         return NNormalSurfaceList::enumerate(owner, flavour, embedded, manager);
     }
 
-    NNormalSurfaceList* (*quadToStandard_public)(const NNormalSurfaceList*) =
-            &NNormalSurfaceList::quadToStandard;
+    NNormalSurfaceList* (NNormalSurfaceList::*quadToStandard_public)() const =
+        &NNormalSurfaceList::quadToStandard;
 }
 
 void addNNormalSurfaceList() {
@@ -75,7 +75,6 @@ void addNNormalSurfaceList() {
             &NNormalSurfaceList::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
         .staticmethod("enumerate")
-        .staticmethod("quadToStandard")
     ;
 
     s.attr("packetType") = NNormalSurfaceList::packetType;
