@@ -207,12 +207,13 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardViaQuad(
     // and assign an arbitrarily chosen fixed number of "steps" for the
     // final quad-to-standard conversion.
     if (progress)
-        progress->setOutOf(progress->getOutOf() + PROGRESS_CONVERSION_STEPS);
+        progress->setOutOf(
+            progress->getOutOf() + PROGRESS_CONVERSION_STEPS + 1);
 
-    // Get the empty triangulation out of the way first.
+    // Get the empty triangulation out of the way now.
     if (owner->getNumberOfTetrahedra() == 0) {
         if (progress)
-            progress->incCompleted(PROGRESS_CONVERSION_STEPS);
+            progress->incCompleted(PROGRESS_CONVERSION_STEPS + 1);
 
         NNormalSurfaceList* slist = new NNormalSurfaceList(
             NNormalSurfaceList::STANDARD, true);
@@ -236,8 +237,10 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardViaQuad(
     delete eqns;
     delete constraints;
 
-    // Check for cancellation before we go any further.
     if (progress)
+        progress->incCompleted();
+
+        // Check for cancellation before we go any further.
         if (progress->isCancelled()) {
             // Cancelled; just return an empty list.
             NNormalSurfaceList* slist = new NNormalSurfaceList(

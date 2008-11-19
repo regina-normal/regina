@@ -86,7 +86,7 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
 void* NNormalSurfaceList::Enumerator::run(void*) {
     NProgressNumber* progress = 0;
     if (manager) {
-        progress = new NProgressNumber(0, 3);
+        progress = new NProgressNumber(0, 1);
         manager->setProgress(progress);
     }
 
@@ -104,22 +104,15 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
         triang->insertChildLast(list);
 
         if (progress) {
-            progress->setOutOf(1);
-            progress->setCompleted(1);
+            progress->incCompleted();
             progress->setFinished();
         }
         return 0;
     }
 
-    if (progress)
-        progress->incCompleted();
-
     // Form the matching equations and starting cone.
     NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
     NNormalSurfaceVector* base = makeZeroVector(triang, list->flavour);
-
-    if (progress)
-        progress->incCompleted();
 
     // Find the normal surfaces.
     NDoubleDescriptor::enumerateExtremalRays(SurfaceInserter(*list, triang),
@@ -156,6 +149,31 @@ NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
         delete e;
         return ans;
     }
+}
+
+NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
+        NTriangulation* owner) {
+    NNormalSurfaceList* list = new NNormalSurfaceList(
+        NNormalSurfaceList::STANDARD, true);
+
+    // Run a vanilla enumeration in standard coordinates.
+    NEnumConstraintList* constraints =
+        NNormalSurfaceVectorStandard::makeEmbeddedConstraints(owner);
+    NMatrixInt* eqns = makeMatchingEquations(owner,
+        NNormalSurfaceList::STANDARD);
+    NNormalSurfaceVector* base = makeZeroVector(owner,
+        NNormalSurfaceList::STANDARD);
+
+    NDoubleDescriptor::enumerateExtremalRays(SurfaceInserter(*list, owner),
+        *base, *eqns, constraints);
+
+    delete base;
+    delete eqns;
+    delete constraints;
+
+    // All done!
+    owner->insertChildLast(list);
+    return list;
 }
 
 NTriangulation* NNormalSurfaceList::getTriangulation() const {

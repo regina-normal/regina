@@ -175,6 +175,48 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
             int newFlavour, bool embeddedOnly = true,
             NProgressManager* manager = 0);
 
+        /**
+         * Uses a slow-but-direct procedure to enumerate all embedded
+         * vertex normal surfaces in standard (tri-quad) coordinates
+         * within the given triangulation.
+         *
+         * The standard enumerate() routine will choose the fastest
+         * available algorithm for enumerating vertex normal surfaces.
+         * In particular, when enumerating embedded vertex normal
+         * surfaces in standard (tri-quad) coordinates, it will often take
+         * a two-step approach: (i) enumerate vertex normal surfaces in
+         * \e quadrilateral space; (ii) convert the quadrilateral space
+         * solution set to a standard tri-quad space solution set.  This
+         * two-step procedure is typically \e much faster than enumerating
+         * solutions in standard coordinates directly.
+         *
+         * This routine allows the user to force a direct enumeration in
+         * standard space, \e without going via quadrilateral space.
+         * The algorithm used is the souped-up double description method
+         * in standard coordinates as described in "Optimising the
+         * double description method for normal surface enumeration",
+         * Benjamin A. Burton, preprint, arXiv:0808.4050.
+         *
+         * Users will generally not want to call this routine, since it
+         * is often much slower than enumerate() and it gives precisely
+         * the same results.  This routine is provided mainly for interest's
+         * sake, and to allow comparisons between different algorithms.
+         *
+         * Aside from the underlying algorithm, the behaviour of this
+         * routine is identical to enumerate().  See enumerate() for
+         * details regarding preconditions, postconditions, ownership
+         * and so on.
+         *
+         * Unlike enumerate(), this routine does not support progress
+         * management and does not support running in a separate thread.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @return the newly created normal surface list.
+         */
+        static NNormalSurfaceList* enumerateStandardDirect(
+            NTriangulation* owner);
+
         virtual int getFlavour() const;
         virtual bool allowsAlmostNormal() const;
         virtual bool isEmbeddedOnly() const;
