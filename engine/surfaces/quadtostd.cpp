@@ -50,7 +50,7 @@ namespace {
      * How many progress "steps" shall we declare a quad-to-standard
      * conversion is worth?
      */
-    const unsigned PROGRESS_CONVERSION_STEPS = 3;
+    const unsigned PROGRESS_CONVERSION_STEPS = 1;
 
     /**
      * A back insertion iterator that defines \a value_type, which is
