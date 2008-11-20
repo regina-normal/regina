@@ -26,21 +26,18 @@
 
 /* end stub */
 
-void addLocale();
-void addNBoolSet();
-void addNLargeInteger();
-void addNMatrix2();
-void addNRational();
-void addNTriBool();
-void addOSUtils();
+#include "utilities/osutils.h"
+#include <boost/python.hpp>
 
-void addUtilities() {
-    addLocale();
-    addNBoolSet();
-    addNLargeInteger();
-    addNMatrix2();
-    addNRational();
-    addNTriBool();
-    addOSUtils();
+using namespace boost::python;
+
+namespace {
+    void writeResUsage_void() {
+        regina::writeResUsage(std::cout);
+    }
+}
+
+void addOSUtils() {
+    boost::python::def("writeResUsage", writeResUsage_void);
 }
 

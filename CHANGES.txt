@@ -28,6 +28,9 @@ Version 4.6  [ (under development) ]
               between normal surfaces.
             - New routine rawVector() that gives direct read-only access to
               the underlying vector in case this is needed.
+        Routine writeResUsage():
+            - New helper routine to assist with diagnostics and measurements
+              of performance.
     USER INTERFACE:
         - Items in the triangulation composition list can now be copied
           into the clipboard via the right mouse button.  Amongst other

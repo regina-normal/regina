@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2008, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,21 +26,40 @@
 
 /* end stub */
 
-void addLocale();
-void addNBoolSet();
-void addNLargeInteger();
-void addNMatrix2();
-void addNRational();
-void addNTriBool();
-void addOSUtils();
+#include "utilities/osutils.h"
 
-void addUtilities() {
-    addLocale();
-    addNBoolSet();
-    addNLargeInteger();
-    addNMatrix2();
-    addNRational();
-    addNTriBool();
-    addOSUtils();
+#include <cstdio>
+#include <ctime>
+#include <iostream>
+
+namespace regina {
+
+void writeResUsage(std::ostream& out) {
+    FILE* stat = fopen("/proc/self/stat", "r");
+    if (! stat) {
+        out << "no /proc/self/stat";
+        return;
+    }
+
+    unsigned long utime, stime, vsize;
+
+    int dtmp;
+    static char stmp[256];
+    unsigned long lutmp;
+    long ldtmp;
+
+    if (fscanf(stat, "%d%255s%255s%d%d%d%d%d%lu%lu%lu%lu%lu"
+            "%lu%lu%ld%ld%ld%ld%ld%ld%lu%lu",
+            &dtmp, stmp, stmp, &dtmp, &dtmp, &dtmp, &dtmp, &dtmp,
+            &lutmp, &lutmp, &lutmp, &lutmp, &lutmp,
+            &utime, &stime, &ldtmp, &ldtmp, &ldtmp, &ldtmp, &ldtmp, &ldtmp,
+            &lutmp, &vsize) == 23)
+        out << "utime=" << utime << ", stime=" << stime << ", vsize=" << vsize;
+    else
+        out << "could not parse /proc/self/stat";
+
+    fclose(stat);
 }
+
+} // namespace regina
 
