@@ -70,33 +70,66 @@ namespace {
     };
 
     /**
-     * TODO: Document this class.
+     * A helper class for converting between quad and standard solution
+     * sets, describing a single ray (which is typically a vertex in
+     * some partial solution space).
+     *
+     * This class derives from NFastRay, which stores the coordinates of
+     * the ray itself in standard (tri-quad) coordinates.  This RaySpec
+     * class also stores a bitmask indicating which of these coordinates are
+     * set to zero.
+     *
+     * The \a BitmaskType template argument describes how the bitmask of
+     * zero coordinates will be stored.  The <i>i</i>th coordinate position
+     * corresponds to the <i>i</i>th bit in the bitmask, and each bit is set
+     * to \c true if and only if the corresponding coordinate is zero.
+     *
+     * Since this class is used heavily, faster bitmask types such as
+     * NBitmask1 and NBitmask2 are preferred; however, if the number
+     * of coordinates is too large then the slower general-use NBitmask
+     * class will need to be used instead.
+     *
+     * \pre The template argument \a BitmaskType is one of Regina's
+     * bitmask types, such as NBitmask, NBitmask1 or NBitmask2.
      */
     template <class BitmaskType>
     class RaySpec : private NFastRay {
         private:
             BitmaskType facets_;
-                /**< One bit per tri/quad coord, bits are set to true
-                     when coordinates are zero. */
+                /**< A bitmask listing which coordinates of this ray are
+                     currently set to zero. */
 
         public:
+            /**
+             * Creates a new ray whose coordinates are a clone of the
+             * given vector.
+             *
+             * @param v the vector to clone.
+             */
             RaySpec(const NNormalSurfaceVectorStandard* v) :
                     NFastRay(v->size()), facets_(v->size()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.
-                unsigned i;
-                for (i = 0; i < v->size(); ++i)
+                for (unsigned i = 0; i < v->size(); ++i)
                     if ((elements[i] = (*v)[i]) == zero)
                         facets_.set(i, true);
             }
 
+            /**
+             * Creates a new ray that represents the \e negative of
+             * the link of the given vertex.
+             *
+             * @param tri the underlying triangulation.
+             * @param whichLink the index of the vertex whose link
+             * we should negate; this must be strictly less than
+             * <tt>tri->getNumberOfVertices()</tt>.
+             */
             RaySpec(const NTriangulation* tri, unsigned whichLink) :
                     NFastRay(7 * tri->getNumberOfTetrahedra()),
                     facets_(7 * tri->getNumberOfTetrahedra()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.
-                unsigned i;
-                for (i = 0; i < size(); ++i)
+                for (unsigned i = 0; i < size(); ++i)
                     if (i % 7 > 3)
                         facets_.set(i, true);
                     else if (tri->getTetrahedron(i / 7)->getVertex(i % 7)->
@@ -106,38 +139,88 @@ namespace {
                         facets_.set(i, true);
             }
 
-            RaySpec(const RaySpec& pos, const RaySpec& neg, unsigned triCoord) :
+            /**
+             * Creates a new ray, describing where the plane between the
+             * two given rays meets the given axis hyperplane.  Here
+             * "the given axis hyperplane" means the hyperplane along which
+             * the <i>coord</i>th coordinate is zero.
+             *
+             * \pre The <i>coord</i>th coordinates of \a pos and \a neg
+             * are strictly positive and negative respectively.
+             *
+             * @param pos the first of the given rays, in which the given
+             * coordinate is positive.
+             * @param neg the second of the given rays, in which the given
+             * coordinate is negative.
+             * @param coord the index of the coordinate that we must set
+             * to zero to form the intersecting hyperplane.
+             */
+            RaySpec(const RaySpec& pos, const RaySpec& neg, unsigned coord) :
                     NFastRay(pos.size()), facets_(pos.facets_) {
-                NLargeInteger posDiff = pos[triCoord];
-                NLargeInteger negDiff = neg[triCoord];
-
-                unsigned i;
-                for (i = 0; i < size(); ++i)
-                    elements[i] = neg[i] * posDiff - pos[i] * negDiff;
-
-                scaleDown();
-
                 facets_ &= neg.facets_;
 
-                // TODO: Make this bit slicker:
-                // We may have zeroed out some triangle coordinates.
-                for (i = 0; i < size(); ++i)
-                    if (i % 7 < 4 && elements[i] == zero)
+                // Note that we may need to re-enable some bits in \a facets_,
+                // since we may end up setting some triangle coordinates
+                // to zero that were not zero in either \a pos or \a neg.
+
+                NLargeInteger posDiff = pos[coord];
+                NLargeInteger negDiff = neg[coord];
+
+                for (unsigned i = 0; i < size(); ++i)
+                    if ((elements[i] = neg[i] * posDiff - pos[i] * negDiff)
+                            == zero)
                         facets_.set(i, true);
+
+                scaleDown();
             }
 
-            const BitmaskType& facets() const {
+            /**
+             * Returns the bitmask listing which coordinates of this ray
+             * are currently set to zero.  See the class notes for details.
+             *
+             * The length of this bitmask is the same as the length of the
+             * underlying vector for this ray.
+             *
+             * @return the bitmask of zero coordinates.
+             */
+            inline const BitmaskType& facets() const {
                 return facets_;
             }
 
-            bool onAllCommonFacets(const RaySpec& x, const RaySpec& y,
-                    const BitmaskType& ignoreFacets) const {
-                BitmaskType relevant(facets_);
-                relevant |= ignoreFacets;
-
-                return relevant.containsIntn(x.facets_, y.facets_);
+            /**
+             * Determines whether this ray has zero coordinates in every
+             * position where \e both of the given rays simultaneously
+             * have zero coordinates.
+             *
+             * The bitmask \a ignoreFacets represents a list of coordinate
+             * positions that should be ignored for the purposes of this
+             * routine.
+             *
+             * @param x the first of the two given rays to examine.
+             * @param y the second of the two given rays to examine.
+             * @param ignoreFacets a bitmask of coordinate positions to
+             * ignore.
+             * @return \c false if there is some coordinate position
+             * where (i) both \a x and \a y are zero, (ii) this vector
+             * is not zero, and (iii) the corresponding bit in \a ignoreFacets
+             * is not set (i.e., is \c false).  Returns \c true otherwise.
+             */
+            inline bool onAllCommonFacets(const RaySpec& x, const RaySpec& y,
+                    BitmaskType ignoreFacets) const {
+                ignoreFacets |= facets_;
+                return ignoreFacets.containsIntn(x.facets_, y.facets_);
             }
 
+            /**
+             * Reduces the underlying vector by subtracting as many copies
+             * of the given vertex link as possible, without allowing any of
+             * the corresponding coordinates in this ray to become negative.
+             *
+             * \pre None of the coordinates in this ray that correspond
+             * to discs in the given vertex link are already negative.
+             *
+             * @param link the vertex link to subtract copies of.
+             */
             void reduce(const RaySpec& link) {
                 if (! (facets_ <= link.facets_))
                     return;
@@ -155,6 +238,15 @@ namespace {
                             facets_.set(i, true);
             }
 
+            /**
+             * Returns a new normal surface whose standard (tri-quad)
+             * coordinates are described by this vector.  The
+             * corresponding normal surface vector will be of type
+             * NNormalSurfaceVectorStandard.
+             *
+             * @param tri the underlying triangulation.
+             * @return a newly created normal surface based on this vector.
+             */
             NNormalSurface* recover(NTriangulation* tri) const {
                 NNormalSurfaceVectorStandard* v =
                     new NNormalSurfaceVectorStandard(size());
@@ -165,12 +257,17 @@ namespace {
                 return new NNormalSurface(tri, v);
             }
 
-            inline int sign(unsigned triCoord) const {
-                if (elements[triCoord] == zero)
+            /**
+             * Returns the sign of the given element of this vector.
+             *
+             * @return 1, 0 or -1 according to whether the <i>index</i>th
+             * element of this vector is positive, zero or negative
+             * respectively.
+             */
+            inline int sign(unsigned index) const {
+                if (facets_.get(index))
                     return 0;
-                if (elements[triCoord] > zero)
-                    return 1;
-                return -1;
+                return (elements[index] > zero ? 1 : -1);
             }
     };
 } // anonymous namespace
