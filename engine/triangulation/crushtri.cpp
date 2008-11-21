@@ -235,12 +235,12 @@ bool NTriangulation::crushMaximalForest() {
         tet = *tit;
         if (! cTetrahedra.count(tet))
             for (face = 0; face < 4; face++) {
-                adjTet = tet->getAdjacentTetrahedron(face);
+                adjTet = tet->adjacentTetrahedron(face);
                 if (adjTet == 0)
                     continue;
                 if (! cTetrahedra.count(adjTet))
                     continue;
-                adjPerm = tet->getAdjacentTetrahedronGluing(face);
+                adjPerm = tet->adjacentGluing(face);
                 adjFace = adjPerm[face];
                 while(1) {
                     // Follow through to the next face.
@@ -254,13 +254,13 @@ bool NTriangulation::crushMaximalForest() {
                     }
                     // Follow edge from edgeFrom to adjFace.
                     // The face of adjTet we now move to is edgeFrom.
-                    tmpTet = adjTet->getAdjacentTetrahedron(edgeFrom);
+                    tmpTet = adjTet->adjacentTetrahedron(edgeFrom);
                     if (tmpTet == 0) {
                         // Make the original face a boundary face.
                         tet->unjoin(face);
                         break;
                     }
-                    adjPerm = adjTet->getAdjacentTetrahedronGluing(edgeFrom) *
+                    adjPerm = adjTet->adjacentGluing(edgeFrom) *
                         NPerm(adjFace, edgeFrom) * adjPerm;
                     adjFace = adjPerm[face];
                     adjTet = tmpTet;
@@ -322,7 +322,7 @@ void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
 
     NTetrahedron* adjTet;
     for (int face = 0; face < 4; face++) {
-        adjTet = tet->getAdjacentTetrahedron(face);
+        adjTet = tet->adjacentTetrahedron(face);
         if (adjTet)
             if (! (visited.count(adjTet))) {
                 faceSet.insert(tet->getFace(face));

@@ -166,13 +166,13 @@ NDiscSpec* NDiscSetSurface::adjacentDisc(const NDiscSpec& disc,
         NPerm arc, NPerm& adjArc) const {
     NTetrahedron* tet = triangulation->getTetrahedron(disc.tetIndex);
     int arcFace = arc[3];
-    if (tet->getAdjacentTetrahedron(arcFace) == 0)
+    if (tet->adjacentTetrahedron(arcFace) == 0)
         return 0;
 
     NDiscSpec* ans = new NDiscSpec;
     ans->tetIndex = triangulation->tetrahedronIndex(
-        tet->getAdjacentTetrahedron(arcFace));
-    adjArc = tet->getAdjacentTetrahedronGluing(arcFace) * arc;
+        tet->adjacentTetrahedron(arcFace));
+    adjArc = tet->adjacentGluing(arcFace) * arc;
 
     unsigned long arcNumber = discSets[disc.tetIndex]->arcFromDisc(
         arcFace, arc[0], disc.type, disc.number);

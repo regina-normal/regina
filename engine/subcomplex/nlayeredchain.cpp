@@ -35,16 +35,16 @@
 namespace regina {
 
 bool NLayeredChain::extendAbove() {
-    NTetrahedron* adj = top->getAdjacentTetrahedron(topVertexRoles[0]);
+    NTetrahedron* adj = top->adjacentTetrahedron(topVertexRoles[0]);
     if (adj == bottom || adj == top || adj == 0)
         return false;
-    if (adj != top->getAdjacentTetrahedron(topVertexRoles[3]))
+    if (adj != top->adjacentTetrahedron(topVertexRoles[3]))
         return false;
 
     // Check the gluings.
-    NPerm adjRoles = top->getAdjacentTetrahedronGluing(topVertexRoles[0]) *
+    NPerm adjRoles = top->adjacentGluing(topVertexRoles[0]) *
         topVertexRoles * NPerm(0, 1);
-    if (adjRoles != top->getAdjacentTetrahedronGluing(topVertexRoles[3]) *
+    if (adjRoles != top->adjacentGluing(topVertexRoles[3]) *
             topVertexRoles * NPerm(2, 3))
         return false;
 
@@ -56,16 +56,16 @@ bool NLayeredChain::extendAbove() {
 }
 
 bool NLayeredChain::extendBelow() {
-    NTetrahedron* adj = bottom->getAdjacentTetrahedron(bottomVertexRoles[1]);
+    NTetrahedron* adj = bottom->adjacentTetrahedron(bottomVertexRoles[1]);
     if (adj == bottom || adj == top || adj == 0)
         return false;
-    if (adj != bottom->getAdjacentTetrahedron(bottomVertexRoles[2]))
+    if (adj != bottom->adjacentTetrahedron(bottomVertexRoles[2]))
         return false;
 
     // Check the gluings.
-    NPerm adjRoles = bottom->getAdjacentTetrahedronGluing(bottomVertexRoles[1])
+    NPerm adjRoles = bottom->adjacentGluing(bottomVertexRoles[1])
         * bottomVertexRoles * NPerm(0, 1);
-    if (adjRoles != bottom->getAdjacentTetrahedronGluing(bottomVertexRoles[2])
+    if (adjRoles != bottom->adjacentGluing(bottomVertexRoles[2])
             * bottomVertexRoles * NPerm(2, 3))
         return false;
 

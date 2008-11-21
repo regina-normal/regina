@@ -44,20 +44,20 @@ bool NLayering::extendOne() {
     // See if we move to a common new tetrahedron.
     // Also make sure this really is a new tetrahedron, so we don't get
     // stuck in a loop.
-    NTetrahedron* next = newBdryTet[0]->getAdjacentTetrahedron(
+    NTetrahedron* next = newBdryTet[0]->adjacentTetrahedron(
         newBdryRoles[0][3]);
 
     if (next == 0 || next == newBdryTet[0] || next == newBdryTet[1] ||
             next == oldBdryTet[0] || next == oldBdryTet[1])
         return false;
-    if (next != newBdryTet[1]->getAdjacentTetrahedron(newBdryRoles[1][3]))
+    if (next != newBdryTet[1]->adjacentTetrahedron(newBdryRoles[1][3]))
         return false;
 
     // Get the mappings from the boundary vertex roles to the new tetrahedron
     // vertices.
-    NPerm cross0 = newBdryTet[0]->getAdjacentTetrahedronGluing(
+    NPerm cross0 = newBdryTet[0]->adjacentGluing(
         newBdryRoles[0][3]) * newBdryRoles[0];
-    NPerm cross1 = newBdryTet[1]->getAdjacentTetrahedronGluing(
+    NPerm cross1 = newBdryTet[1]->adjacentGluing(
         newBdryRoles[1][3]) * newBdryRoles[1];
 
     // Is it actually a layering?
@@ -127,8 +127,8 @@ bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
     // We can cut half our cases by assuming that upperBdry0 meets with
     // newBdryTet[0] and that upperBdry1 meets with newBdryTet[1].
     bool rot180;
-    if (upperBdry0->getAdjacentTetrahedron(upperRoles0[3]) == newBdryTet[1] &&
-            upperBdry0->getAdjacentFace(upperRoles0[3]) == newBdryRoles[1][3]) {
+    if (upperBdry0->adjacentTetrahedron(upperRoles0[3]) == newBdryTet[1] &&
+            upperBdry0->adjacentFace(upperRoles0[3]) == newBdryRoles[1][3]) {
         // If it does match, it's the opposite matching (upperBdry0 with
         // newBdryTet[1] and vice versa).  Switch them and remember what
         // we did.
@@ -147,21 +147,21 @@ bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
     }
 
     // Do we meet the right tetrahedra and faces?
-    if (upperBdry0->getAdjacentTetrahedron(upperRoles0[3]) != newBdryTet[0])
+    if (upperBdry0->adjacentTetrahedron(upperRoles0[3]) != newBdryTet[0])
         return false;
-    if (upperBdry0->getAdjacentFace(upperRoles0[3]) != newBdryRoles[0][3])
+    if (upperBdry0->adjacentFace(upperRoles0[3]) != newBdryRoles[0][3])
         return false;
-    if (upperBdry1->getAdjacentTetrahedron(upperRoles1[3]) != newBdryTet[1])
+    if (upperBdry1->adjacentTetrahedron(upperRoles1[3]) != newBdryTet[1])
         return false;
-    if (upperBdry1->getAdjacentFace(upperRoles1[3]) != newBdryRoles[1][3])
+    if (upperBdry1->adjacentFace(upperRoles1[3]) != newBdryRoles[1][3])
         return false;
 
     // Find the mapping from the upper vertex roles to the boundary
     // vertex roles.  Verify that this mapping is consistent for both faces.
     NPerm cross = newBdryRoles[0].inverse() * upperBdry0->
-        getAdjacentTetrahedronGluing(upperRoles0[3]) * upperRoles0;
+        adjacentGluing(upperRoles0[3]) * upperRoles0;
     if (cross != newBdryRoles[1].inverse() * upperBdry1->
-            getAdjacentTetrahedronGluing(upperRoles1[3]) * upperRoles1)
+            adjacentGluing(upperRoles1[3]) * upperRoles1)
         return false;
 
     // It's a match!  Run through the six possible mappings to get the

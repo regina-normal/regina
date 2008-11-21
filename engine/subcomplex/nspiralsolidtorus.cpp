@@ -151,8 +151,8 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
 
     while (1) {
         // Examine the tetrahedron beyond tet.
-        adjTet = tet->getAdjacentTetrahedron(useVertexRoles[0]);
-        adjRoles = tet->getAdjacentTetrahedronGluing(useVertexRoles[0]) *
+        adjTet = tet->adjacentTetrahedron(useVertexRoles[0]);
+        adjRoles = tet->adjacentGluing(useVertexRoles[0]) *
             useVertexRoles * invRoleMap;
 
         // Check that we haven't hit the boundary.

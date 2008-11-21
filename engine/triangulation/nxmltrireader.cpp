@@ -83,9 +83,9 @@ namespace {
                     adjFace = perm[k];
                     if (adjTet == tet && adjFace == k)
                         continue;
-                    if (tet->getAdjacentTetrahedron(k))
+                    if (tet->adjacentTetrahedron(k))
                         continue;
-                    if (adjTet->getAdjacentTetrahedron(adjFace))
+                    if (adjTet->adjacentTetrahedron(adjFace))
                         continue;
 
                     tet->joinTo(k, adjTet, perm);

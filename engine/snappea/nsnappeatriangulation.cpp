@@ -134,10 +134,10 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     for (tet = 0; tet < data.num_tetrahedra; tet++) {
         for (face = 0; face < 4; face++) {
             data.tetrahedron_data[tet].neighbor_index[face] =
-                tri.tetrahedronIndex((*it)->getAdjacentTetrahedron(face));
+                tri.tetrahedronIndex((*it)->adjacentTetrahedron(face));
             for (i = 0; i < 4; i++)
                 data.tetrahedron_data[tet].gluing[face][i] =
-                    (*it)->getAdjacentTetrahedronGluing(face)[i];
+                    (*it)->adjacentGluing(face)[i];
         }
 
         // Other fields are recalculated by SnapPea.

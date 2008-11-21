@@ -108,9 +108,9 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                         longChain->extendBelow();
                     ans->chain[1] = longChain;
                     ans->chain[0] = new NLayeredChain(
-                        firstBottom->getAdjacentTetrahedron(
+                        firstBottom->adjacentTetrahedron(
                             firstBottomRoles[0]),
-                        firstBottom->getAdjacentTetrahedronGluing(
+                        firstBottom->adjacentGluing(
                             firstBottomRoles[0]) * firstBottomRoles *
                             NPerm(0, 2, 1, 3));
 
@@ -124,7 +124,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
         }
 
         // At this point we must have run into the second chain.
-        secondBottom = firstTop->getAdjacentTetrahedron(firstTopRoles[3]);
+        secondBottom = firstTop->adjacentTetrahedron(firstTopRoles[3]);
         if (secondBottom == firstTop || secondBottom == firstBottom ||
                 secondBottom == 0) {
             delete first;
@@ -132,7 +132,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
         }
 
         second = new NLayeredChain(secondBottom,
-            firstTop->getAdjacentTetrahedronGluing(firstTopRoles[3]) *
+            firstTop->adjacentGluing(firstTopRoles[3]) *
             firstTopRoles * NPerm(1, 3, 0, 2));
         while (second->extendAbove())
             ;
@@ -150,17 +150,17 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
         // At this point we have two chains that together have the
         // correct number of tetrahedra.  All we need do is check the
         // remaining three between-chain gluings.
-        if (secondTop == firstTop->getAdjacentTetrahedron(firstTopRoles[0]) &&
-                secondBottom == firstBottom->getAdjacentTetrahedron(
+        if (secondTop == firstTop->adjacentTetrahedron(firstTopRoles[0]) &&
+                secondBottom == firstBottom->adjacentTetrahedron(
                     firstBottomRoles[2]) &&
-                secondTop == firstBottom->getAdjacentTetrahedron(
+                secondTop == firstBottom->adjacentTetrahedron(
                     firstBottomRoles[1]) &&
-                secondTopRoles == firstTop->getAdjacentTetrahedronGluing(
+                secondTopRoles == firstTop->adjacentGluing(
                     firstTopRoles[0]) * firstTopRoles * NPerm(0, 2, 1, 3) &&
-                secondBottomRoles == firstBottom->getAdjacentTetrahedronGluing(
+                secondBottomRoles == firstBottom->adjacentGluing(
                     firstBottomRoles[2]) * firstBottomRoles *
                     NPerm(3, 1, 2, 0) &&
-                secondTopRoles == firstBottom->getAdjacentTetrahedronGluing(
+                secondTopRoles == firstBottom->adjacentGluing(
                     firstBottomRoles[1]) * firstBottomRoles *
                     NPerm(2, 0, 3, 1)) {
             // We found one!

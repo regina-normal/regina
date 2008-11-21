@@ -209,9 +209,9 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
 
             // Hunt for chains.
             for (i = 0; i < 3; i++) {
-                base[0] = coreTet[(i + 1) % 3]->getAdjacentTetrahedron(
+                base[0] = coreTet[(i + 1) % 3]->adjacentTetrahedron(
                     coreRoles[(i + 1) % 3][2]);
-                base[1] = coreTet[(i + 2) % 3]->getAdjacentTetrahedron(
+                base[1] = coreTet[(i + 2) % 3]->adjacentTetrahedron(
                     coreRoles[(i + 2) % 3][1]);
                 if (base[0] != base[1]) {
                     // No chain.
@@ -221,10 +221,10 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
 
                 // Have we layered over the major axis?
                 baseRoles[0] = coreTet[(i + 1) % 3]->
-                    getAdjacentTetrahedronGluing(coreRoles[(i + 1) % 3][2]) *
+                    adjacentGluing(coreRoles[(i + 1) % 3][2]) *
                     coreRoles[(i + 1) % 3] * NPerm(0, 3, 2, 1);
                 baseRoles[1] = coreTet[(i + 2) % 3]->
-                    getAdjacentTetrahedronGluing(coreRoles[(i + 2) % 3][1]) *
+                    adjacentGluing(coreRoles[(i + 2) % 3][1]) *
                     coreRoles[(i + 2) % 3] * NPerm(2, 1, 0, 3);
                 if (baseRoles[0] == baseRoles[1]) {
                     chainType[i] = CHAIN_MAJOR;
@@ -236,10 +236,10 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
 
                 // Have we layered over the minor axis?
                 baseRoles[0] = coreTet[(i + 1) % 3]->
-                    getAdjacentTetrahedronGluing(coreRoles[(i + 1) % 3][2]) *
+                    adjacentGluing(coreRoles[(i + 1) % 3][2]) *
                     coreRoles[(i + 1) % 3] * NPerm(3, 0, 2, 1);
                 baseRoles[1] = coreTet[(i + 2) % 3]->
-                    getAdjacentTetrahedronGluing(coreRoles[(i + 2) % 3][1]) *
+                    adjacentGluing(coreRoles[(i + 2) % 3][1]) *
                     coreRoles[(i + 2) % 3] * NPerm(2, 1, 3, 0);
                 if (baseRoles[0] == baseRoles[1]) {
                     chainType[i] = CHAIN_MINOR;
@@ -293,32 +293,32 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
 
             for (i = 0; i < 3; i++) {
                 if (chain[i]) {
-                    plugTet[i][0] = chain[i]->getTop()->getAdjacentTetrahedron(
+                    plugTet[i][0] = chain[i]->getTop()->adjacentTetrahedron(
                         chain[i]->getTopVertexRoles()[3]);
-                    plugTet[i][1] = chain[i]->getTop()->getAdjacentTetrahedron(
+                    plugTet[i][1] = chain[i]->getTop()->adjacentTetrahedron(
                         chain[i]->getTopVertexRoles()[0]);
                     plugRoles[i][0] = chain[i]->getTop()->
-                        getAdjacentTetrahedronGluing(chain[i]->
+                        adjacentGluing(chain[i]->
                         getTopVertexRoles()[3]) *
                         chain[i]->getTopVertexRoles() *
                         (chainType[i] == CHAIN_MAJOR ? NPerm(0, 1, 2, 3) :
                         NPerm(1, 0, 2, 3));
                     plugRoles[i][1] = chain[i]->getTop()->
-                        getAdjacentTetrahedronGluing(chain[i]->
+                        adjacentGluing(chain[i]->
                         getTopVertexRoles()[0]) *
                         chain[i]->getTopVertexRoles() *
                         (chainType[i] == CHAIN_MAJOR ? NPerm(2, 3, 1, 0) :
                         NPerm(3, 2, 1, 0));
                 } else {
                     plugTet[i][0] = coreTet[(i + 1) % 3]->
-                        getAdjacentTetrahedron(coreRoles[(i + 1) % 3][2]);
+                        adjacentTetrahedron(coreRoles[(i + 1) % 3][2]);
                     plugTet[i][1] = coreTet[(i + 2) % 3]->
-                        getAdjacentTetrahedron(coreRoles[(i + 2) % 3][1]);
+                        adjacentTetrahedron(coreRoles[(i + 2) % 3][1]);
                     plugRoles[i][0] = coreTet[(i + 1) % 3]->
-                        getAdjacentTetrahedronGluing(coreRoles[(i + 1) % 3][2])
+                        adjacentGluing(coreRoles[(i + 1) % 3][2])
                         * coreRoles[(i + 1) % 3] * NPerm(0, 3, 1, 2);
                     plugRoles[i][1] = coreTet[(i + 2) % 3]->
-                        getAdjacentTetrahedronGluing(coreRoles[(i + 2) % 3][1])
+                        adjacentGluing(coreRoles[(i + 2) % 3][1])
                         * coreRoles[(i + 2) % 3] * NPerm(0, 3, 2, 1);
                 }
             }
@@ -382,10 +382,10 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
 
             // Finally check the internal face of the plug.
             if (! error) {
-                if (plugTet[0][0]->getAdjacentTetrahedron(realPlugRoles[0][3])
+                if (plugTet[0][0]->adjacentTetrahedron(realPlugRoles[0][3])
                         != plugTet[0][1])
                     error = true;
-                else if (plugTet[0][0]->getAdjacentTetrahedronGluing(
+                else if (plugTet[0][0]->adjacentGluing(
                         realPlugRoles[0][3]) * realPlugRoles[0] !=
                         realPlugRoles[1])
                     error = true;

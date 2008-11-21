@@ -211,12 +211,12 @@ void NSatMobius::writeAbbr(std::ostream& out, bool tex) const {
 NSatMobius* NSatMobius::isBlockMobius(const NSatAnnulus& annulus, TetList&) {
     // The two tetrahedra must be joined together along the annulus faces.
 
-    if (annulus.tet[0]->getAdjacentTetrahedron(annulus.roles[0][3]) !=
+    if (annulus.tet[0]->adjacentTetrahedron(annulus.roles[0][3]) !=
             annulus.tet[1])
         return 0;
 
     NPerm annulusGluing = annulus.roles[1].inverse() *
-        annulus.tet[0]->getAdjacentTetrahedronGluing(annulus.roles[0][3]) *
+        annulus.tet[0]->adjacentGluing(annulus.roles[0][3]) *
         annulus.roles[0];
 
     if (annulusGluing[3] != 3)
@@ -340,10 +340,10 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
 
         // Push through to the next tetrahedron.
         nextPair = NFacePair(
-            current->getAdjacentFace(currPair.upper()),
-            current->getAdjacentFace(currPair.lower())
+            current->adjacentFace(currPair.upper()),
+            current->adjacentFace(currPair.lower())
             ).complement();
-        current = current->getAdjacentTetrahedron(currPair.upper());
+        current = current->adjacentTetrahedron(currPair.upper());
         currPair = nextPair;
 
         // Make sure this next tetrahedron is usable.
@@ -361,10 +361,10 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
 
         // Push through to the next tetrahedron.
         nextPair = NFacePair(
-            current->getAdjacentFace(currPair.upper()),
-            current->getAdjacentFace(currPair.lower())
+            current->adjacentFace(currPair.upper()),
+            current->adjacentFace(currPair.lower())
             ).complement();
-        current = current->getAdjacentTetrahedron(currPair.upper());
+        current = current->adjacentTetrahedron(currPair.upper());
         currPair = nextPair;
 
         // Add this next tetrahedron to the list.
@@ -414,17 +414,17 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
         return 0;
     if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
         return 0;
-    if (annulus.tet[0]->getAdjacentTetrahedron(annulus.roles[0][0]) !=
+    if (annulus.tet[0]->adjacentTetrahedron(annulus.roles[0][0]) !=
             annulus.tet[1])
         return 0;
-    if (annulus.tet[0]->getAdjacentTetrahedronGluing(annulus.roles[0][0]) *
+    if (annulus.tet[0]->adjacentGluing(annulus.roles[0][0]) *
             annulus.roles[0] * NPerm(1, 2) != annulus.roles[1])
         return 0;
 
     // The two tetrahedra forming the annulus are joined together as
     // expected.  Look for the third tetrahedron.
 
-    NTetrahedron* adj = annulus.tet[0]->getAdjacentTetrahedron(
+    NTetrahedron* adj = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][1]);
     if (adj == 0 || adj == annulus.tet[0] || adj == annulus.tet[1])
         return 0;
@@ -432,12 +432,12 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
         return 0;
 
     NPerm adjRoles =
-        annulus.tet[0]->getAdjacentTetrahedronGluing(annulus.roles[0][1]) *
+        annulus.tet[0]->adjacentGluing(annulus.roles[0][1]) *
         annulus.roles[0] * NPerm(0, 3);
 
-    if (annulus.tet[1]->getAdjacentTetrahedron(annulus.roles[1][1]) != adj)
+    if (annulus.tet[1]->adjacentTetrahedron(annulus.roles[1][1]) != adj)
         return 0;
-    if (annulus.tet[1]->getAdjacentTetrahedronGluing(annulus.roles[1][1]) *
+    if (annulus.tet[1]->adjacentGluing(annulus.roles[1][1]) *
             annulus.roles[1] * NPerm(1, 3, 0, 2) != adjRoles)
         return 0;
 
@@ -511,9 +511,9 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
     if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
         return 0;
 
-    NTetrahedron* central0 = annulus.tet[0]->getAdjacentTetrahedron(
+    NTetrahedron* central0 = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][0]);
-    NTetrahedron* central1 = annulus.tet[0]->getAdjacentTetrahedron(
+    NTetrahedron* central1 = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][1]);
 
     if (central0 == 0 || central0 == annulus.tet[0] ||
@@ -524,35 +524,35 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
             isBad(central0, avoidTets))
         return 0;
 
-    NPerm roles0 = annulus.tet[0]->getAdjacentTetrahedronGluing(
+    NPerm roles0 = annulus.tet[0]->adjacentGluing(
         annulus.roles[0][0]) * annulus.roles[0];
-    NPerm roles1 = annulus.tet[0]->getAdjacentTetrahedronGluing(
+    NPerm roles1 = annulus.tet[0]->adjacentGluing(
         annulus.roles[0][1]) * annulus.roles[0];
 
     // We've got the two central tetrahedra.  Now look for the remaining
     // three boundary tetrahedra.
 
-    if (annulus.tet[1]->getAdjacentTetrahedron(annulus.roles[1][0]) !=
+    if (annulus.tet[1]->adjacentTetrahedron(annulus.roles[1][0]) !=
             central0)
         return 0;
-    if (annulus.tet[1]->getAdjacentTetrahedron(annulus.roles[1][1]) !=
+    if (annulus.tet[1]->adjacentTetrahedron(annulus.roles[1][1]) !=
             central1)
         return 0;
-    if (annulus.tet[1]->getAdjacentTetrahedronGluing(annulus.roles[1][0]) *
+    if (annulus.tet[1]->adjacentGluing(annulus.roles[1][0]) *
             annulus.roles[1] * NPerm(3, 2, 1, 0) != roles0)
         return 0;
-    if (annulus.tet[1]->getAdjacentTetrahedronGluing(annulus.roles[1][1]) *
+    if (annulus.tet[1]->adjacentGluing(annulus.roles[1][1]) *
             annulus.roles[1] * NPerm(2, 3, 0, 1) != roles1)
         return 0;
 
     // We've got the two tetrahedra from the annulus boundary completely
     // sorted out.  Just the two new boundary tetrahedra to go.
 
-    NTetrahedron* bdry2 = central0->getAdjacentTetrahedron(roles0[1]);
-    NPerm roles2 = central0->getAdjacentTetrahedronGluing(roles0[1]) * roles0;
+    NTetrahedron* bdry2 = central0->adjacentTetrahedron(roles0[1]);
+    NPerm roles2 = central0->adjacentGluing(roles0[1]) * roles0;
 
-    NTetrahedron* bdry3 = central0->getAdjacentTetrahedron(roles0[2]);
-    NPerm roles3 = central0->getAdjacentTetrahedronGluing(roles0[2]) * roles0;
+    NTetrahedron* bdry3 = central0->adjacentTetrahedron(roles0[2]);
+    NPerm roles3 = central0->adjacentGluing(roles0[2]) * roles0;
 
     if (bdry2 == 0 || bdry2 == annulus.tet[0] || bdry2 == annulus.tet[1] ||
             bdry2 == central0 || bdry2 == central1 ||
@@ -562,13 +562,13 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
             bdry3 == central0 || bdry3 == central1 || bdry3 == bdry2 ||
             isBad(bdry3, avoidTets))
         return 0;
-    if (central1->getAdjacentTetrahedron(roles1[0]) != bdry2)
+    if (central1->adjacentTetrahedron(roles1[0]) != bdry2)
         return 0;
-    if (central1->getAdjacentTetrahedron(roles1[2]) != bdry3)
+    if (central1->adjacentTetrahedron(roles1[2]) != bdry3)
         return 0;
-    if (central1->getAdjacentTetrahedronGluing(roles1[0]) * roles1 != roles2)
+    if (central1->adjacentGluing(roles1[0]) * roles1 != roles2)
         return 0;
-    if (central1->getAdjacentTetrahedronGluing(roles1[2]) * roles1 *
+    if (central1->adjacentGluing(roles1[2]) * roles1 *
             NPerm(1, 0, 3, 2) != roles3)
         return 0;
 
@@ -664,39 +664,39 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
         return 0;
 
-    NTetrahedron* middle = annulus.tet[0]->getAdjacentTetrahedron(
+    NTetrahedron* middle = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][0]);
-    NPerm middleRoles = annulus.tet[0]->getAdjacentTetrahedronGluing(
+    NPerm middleRoles = annulus.tet[0]->adjacentGluing(
         annulus.roles[0][0]) * annulus.roles[0] * NPerm(3, 1, 0, 2);
 
     if (notUnique(middle, annulus.tet[0], annulus.tet[1]) ||
             isBad(middle, avoidTets))
 
-    if (middle != annulus.tet[0]->getAdjacentTetrahedron(
+    if (middle != annulus.tet[0]->adjacentTetrahedron(
             annulus.roles[0][1]))
         return 0;
-    if (middle != annulus.tet[1]->getAdjacentTetrahedron(
+    if (middle != annulus.tet[1]->adjacentTetrahedron(
             annulus.roles[1][0]))
         return 0;
-    if (middle != annulus.tet[1]->getAdjacentTetrahedron(
+    if (middle != annulus.tet[1]->adjacentTetrahedron(
             annulus.roles[1][1]))
         return 0;
-    if (middleRoles != annulus.tet[0]->getAdjacentTetrahedronGluing(
+    if (middleRoles != annulus.tet[0]->adjacentGluing(
             annulus.roles[0][1]) * annulus.roles[0] * NPerm(1, 3))
         return 0;
-    if (middleRoles != annulus.tet[1]->getAdjacentTetrahedronGluing(
+    if (middleRoles != annulus.tet[1]->adjacentGluing(
             annulus.roles[1][0]) * annulus.roles[1] * NPerm(0, 2, 3, 1))
         return 0;
-    if (middleRoles != annulus.tet[1]->getAdjacentTetrahedronGluing(
+    if (middleRoles != annulus.tet[1]->adjacentGluing(
             annulus.roles[1][1]) * annulus.roles[1] * NPerm(0, 2))
         return 0;
 
     // We've found the initial segment.
     // Do we just have a segment of length one?
-    if (annulus.tet[0]->getAdjacentTetrahedron(annulus.roles[0][2]) ==
+    if (annulus.tet[0]->adjacentTetrahedron(annulus.roles[0][2]) ==
             annulus.tet[1]) {
         // It's either length one or nothing.
-        if (annulus.roles[1] == annulus.tet[0]->getAdjacentTetrahedronGluing(
+        if (annulus.roles[1] == annulus.tet[0]->adjacentGluing(
                 annulus.roles[0][2]) * annulus.roles[0] * NPerm(0, 1)) {
             // Got one that's untwisted.
             NSatReflectorStrip* ans = new NSatReflectorStrip(1, false);
@@ -709,7 +709,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             return ans;
         }
 
-        if (annulus.roles[1] == annulus.tet[0]->getAdjacentTetrahedronGluing(
+        if (annulus.roles[1] == annulus.tet[0]->adjacentGluing(
                 annulus.roles[0][2]) * annulus.roles[0]) {
             // Got one that's twisted.
             NSatReflectorStrip* ans = new NSatReflectorStrip(1, true);
@@ -750,9 +750,9 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
 
     while (1) {
         // Run off the right hand side looking for the next tetrahedron.
-        nextLeft = foundSoFar.back()->getAdjacentTetrahedron(
+        nextLeft = foundSoFar.back()->adjacentTetrahedron(
             rolesSoFar.back()[2]);
-        nextLeftRoles = foundSoFar.back()->getAdjacentTetrahedronGluing(
+        nextLeftRoles = foundSoFar.back()->adjacentGluing(
             rolesSoFar.back()[2]) * rolesSoFar.back() * NPerm(0, 1);
 
         if (nextLeft == annulus.tet[0]) {
@@ -791,31 +791,31 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
                 isBad(nextLeft, avoidTets) || isBad(nextLeft, foundSoFar))
             return 0;
 
-        nextMiddle = nextLeft->getAdjacentTetrahedron(nextLeftRoles[0]);
-        nextMiddleRoles = nextLeft->getAdjacentTetrahedronGluing(
+        nextMiddle = nextLeft->adjacentTetrahedron(nextLeftRoles[0]);
+        nextMiddleRoles = nextLeft->adjacentGluing(
             nextLeftRoles[0]) * nextLeftRoles * NPerm(3, 1, 0, 2);
 
         if (notUnique(nextMiddle, nextLeft) ||
                 isBad(nextMiddle, avoidTets) || isBad(nextMiddle, foundSoFar))
             return 0;
 
-        if (nextMiddle != nextLeft->getAdjacentTetrahedron(nextLeftRoles[1]))
+        if (nextMiddle != nextLeft->adjacentTetrahedron(nextLeftRoles[1]))
             return 0;
-        if (nextMiddleRoles != nextLeft->getAdjacentTetrahedronGluing(
+        if (nextMiddleRoles != nextLeft->adjacentGluing(
                 nextLeftRoles[1]) * nextLeftRoles * NPerm(1, 3))
             return 0;
 
-        nextRight = nextMiddle->getAdjacentTetrahedron(nextMiddleRoles[0]);
-        nextRightRoles = nextMiddle->getAdjacentTetrahedronGluing(
+        nextRight = nextMiddle->adjacentTetrahedron(nextMiddleRoles[0]);
+        nextRightRoles = nextMiddle->adjacentGluing(
             nextMiddleRoles[0]) * nextMiddleRoles * NPerm(0, 3, 1, 2);
 
         if (notUnique(nextRight, nextLeft, nextMiddle) ||
                 isBad(nextRight, avoidTets) || isBad(nextRight, foundSoFar))
             return 0;
 
-        if (nextRight != nextMiddle->getAdjacentTetrahedron(nextMiddleRoles[1]))
+        if (nextRight != nextMiddle->adjacentTetrahedron(nextMiddleRoles[1]))
             return 0;
-        if (nextRightRoles != nextMiddle->getAdjacentTetrahedronGluing(
+        if (nextRightRoles != nextMiddle->adjacentGluing(
                 nextMiddleRoles[1]) * nextMiddleRoles * NPerm(0, 2))
             return 0;
 
