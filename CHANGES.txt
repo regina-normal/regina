@@ -37,11 +37,11 @@ Version 4.6  [ (under development) ]
               we need in order to describe 4-manifold triangulations.
         Class NTetrahedron:
             - Renamed getAdjacentTetrahedron(), getAdjacentTetrahedronGluing()
-              and getAdjacentFace() to adjacent(), adjacentGluing() and
-              adjacentFace(), which should be somewhat easier on the fingers.
-              The old names are still available for backward compatibility,
-              but they are now deprecated and will be removed in some future
-              version of Regina.
+              and getAdjacentFace() to adjacentTetrahedron(), adjacentGluing()
+              and adjacentFace(), which should be somewhat easier on the
+              fingers.  The old names are still available for backward
+              compatibility, but they are now deprecated and will be removed
+              in some future version of Regina.
             - Proofreading and clarification for some of the older and more
               opaque parts of the documentation.
         Routine writeResUsage():

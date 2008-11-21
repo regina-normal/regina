@@ -90,9 +90,9 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
 
     // Declare 0 to be a top face; find its partner.
     baseTop0 = 0;
-    next = base->adjacent(0);
+    next = base->adjacentTetrahedron(0);
     for (baseTop1 = 1; baseTop1 < 4; baseTop1++) {
-        if (base->adjacent(baseTop1) != next)
+        if (base->adjacentTetrahedron(baseTop1) != next)
             continue;
 
         // Find the vertex joined to baseTop0 by a hinge.
@@ -102,8 +102,8 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
             baseBottom1 = 6 - baseBottom0 - baseTop0 - baseTop1;
 
             // Some basic property checks.
-            if (base->adjacent(baseBottom0) !=
-                    base->adjacent(baseBottom1))
+            if (base->adjacentTetrahedron(baseBottom0) !=
+                    base->adjacentTetrahedron(baseBottom1))
                 continue;
 
             hinge0 = edgeNumber[baseTop0][baseBottom0];
@@ -131,8 +131,8 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
                 // Check that both steps up lead to the same tetrahedron.
                 // Note that this check has already been done for the first
                 // iteration of this loop; never mind, no big loss.
-                if (tet->adjacent(top0) !=
-                        tet->adjacent(top1)) {
+                if (tet->adjacentTetrahedron(top0) !=
+                        tet->adjacentTetrahedron(top1)) {
                     ok = false;
                     break;
                 }
@@ -168,7 +168,7 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
                 top0 = adjTop0; top1 = adjTop1;
                 bottom0 = adjBottom0; bottom1 = adjBottom1;
                 tet = next;
-                next = tet->adjacent(top0);
+                next = tet->adjacentTetrahedron(top0);
             }
 
             if (ok) {

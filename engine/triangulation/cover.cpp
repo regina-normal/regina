@@ -80,7 +80,7 @@ void NTriangulation::makeDoubleCover() {
                 lowerTet = tetrahedra[upperTet];
 
                 for (face = 0; face < 4; face++) {
-                    lowerAdj = lowerTet->adjacent(face);
+                    lowerAdj = lowerTet->adjacentTetrahedron(face);
 
                     // See if this tetrahedron is glued to something in the
                     // lower sheet.
@@ -89,7 +89,7 @@ void NTriangulation::makeDoubleCover() {
 
                     // Make sure we haven't already fixed this gluing in
                     // the upper sheet.
-                    if (upper[upperTet]->adjacent(face))
+                    if (upper[upperTet]->adjacentTetrahedron(face))
                         continue;
 
                     // Determine the expected orientation of the

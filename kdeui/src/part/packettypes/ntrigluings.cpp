@@ -359,7 +359,7 @@ void NTriGluingsUI::commit() {
                 item = dynamic_cast<FaceGluingItem*>(faceTable->item(tetNum,
                     4 - face));
 
-                adjTetNum = item->adjacent();
+                adjTetNum = item->adjacentTetrahedron();
                 if (adjTetNum < tetNum)
                     continue;
                 adjFace = item->adjacentFace();
@@ -395,7 +395,7 @@ void NTriGluingsUI::refresh() {
         faceTable->setItem(tetNum, 0, new TetNameItem(faceTable,
             tetNum, tet->getDescription().c_str()));
         for (face = 0; face < 4; face++) {
-            adj = tet->adjacent(face);
+            adj = tet->adjacentTetrahedron(face);
             if (adj)
                 faceTable->setItem(tetNum, 4 - face, new FaceGluingItem(
                     faceTable, editMode, face, tri->tetrahedronIndex(adj),

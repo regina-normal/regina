@@ -371,7 +371,7 @@ void NNormalSurface::calculateRealBoundary() const {
                     for (face=0; face<4; face++) {
                         if (face == type)
                             continue;
-                        if (tet->adjacent(face) == 0) {
+                        if (tet->adjacentTetrahedron(face) == 0) {
                             realBoundary = true;
                             return;
                         }

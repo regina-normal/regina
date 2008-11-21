@@ -64,7 +64,7 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
             NTetrahedron* tet = torus->getTopLevel();
             int tf0 = torus->getTopFace(0);
             int tf1 = torus->getTopFace(1);
-            if (tet->adjacent(tf0) != tet) {
+            if (tet->adjacentTetrahedron(tf0) != tet) {
                 delete torus;
                 return 0;
             }

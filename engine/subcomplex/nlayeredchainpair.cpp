@@ -108,7 +108,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                         longChain->extendBelow();
                     ans->chain[1] = longChain;
                     ans->chain[0] = new NLayeredChain(
-                        firstBottom->adjacent(
+                        firstBottom->adjacentTetrahedron(
                             firstBottomRoles[0]),
                         firstBottom->adjacentGluing(
                             firstBottomRoles[0]) * firstBottomRoles *
@@ -124,7 +124,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
         }
 
         // At this point we must have run into the second chain.
-        secondBottom = firstTop->adjacent(firstTopRoles[3]);
+        secondBottom = firstTop->adjacentTetrahedron(firstTopRoles[3]);
         if (secondBottom == firstTop || secondBottom == firstBottom ||
                 secondBottom == 0) {
             delete first;
@@ -150,10 +150,10 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
         // At this point we have two chains that together have the
         // correct number of tetrahedra.  All we need do is check the
         // remaining three between-chain gluings.
-        if (secondTop == firstTop->adjacent(firstTopRoles[0]) &&
-                secondBottom == firstBottom->adjacent(
+        if (secondTop == firstTop->adjacentTetrahedron(firstTopRoles[0]) &&
+                secondBottom == firstBottom->adjacentTetrahedron(
                     firstBottomRoles[2]) &&
-                secondTop == firstBottom->adjacent(
+                secondTop == firstBottom->adjacentTetrahedron(
                     firstBottomRoles[1]) &&
                 secondTopRoles == firstTop->adjacentGluing(
                     firstTopRoles[0]) * firstTopRoles * NPerm(0, 2, 1, 3) &&

@@ -35,10 +35,10 @@
 namespace regina {
 
 bool NLayeredChain::extendAbove() {
-    NTetrahedron* adj = top->adjacent(topVertexRoles[0]);
+    NTetrahedron* adj = top->adjacentTetrahedron(topVertexRoles[0]);
     if (adj == bottom || adj == top || adj == 0)
         return false;
-    if (adj != top->adjacent(topVertexRoles[3]))
+    if (adj != top->adjacentTetrahedron(topVertexRoles[3]))
         return false;
 
     // Check the gluings.
@@ -56,10 +56,10 @@ bool NLayeredChain::extendAbove() {
 }
 
 bool NLayeredChain::extendBelow() {
-    NTetrahedron* adj = bottom->adjacent(bottomVertexRoles[1]);
+    NTetrahedron* adj = bottom->adjacentTetrahedron(bottomVertexRoles[1]);
     if (adj == bottom || adj == top || adj == 0)
         return false;
-    if (adj != bottom->adjacent(bottomVertexRoles[2]))
+    if (adj != bottom->adjacentTetrahedron(bottomVertexRoles[2]))
         return false;
 
     // Check the gluings.

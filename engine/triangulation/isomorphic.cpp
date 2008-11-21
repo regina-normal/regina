@@ -339,11 +339,11 @@ unsigned long NTriangulation::findIsomorphisms(
             }
 
             for (face = 0; face < 4; face++) {
-                adj = tet->adjacent(face);
+                adj = tet->adjacentTetrahedron(face);
                 if (adj) {
                     // There is an adjacent source tetrahedron.
                     // Is there an adjacent destination tetrahedron?
-                    destAdj = destTet->adjacent(tetPerm[face]);
+                    destAdj = destTet->adjacentTetrahedron(tetPerm[face]);
                     if (! destAdj) {
                         broken = true;
                         break;
@@ -384,7 +384,7 @@ unsigned long NTriangulation::findIsomorphisms(
                     // are after a boundary complete isomorphism.
                     // There had better be no adjacent destination
                     // tetrahedron also.
-                    if (destTet->adjacent(tetPerm[face])) {
+                    if (destTet->adjacentTetrahedron(tetPerm[face])) {
                         broken = true;
                         break;
                     }

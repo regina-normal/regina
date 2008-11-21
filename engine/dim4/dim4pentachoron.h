@@ -172,7 +172,7 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * @return the adjacent pentachoron glued to the given facet, or 0
          * if the given facet lies on the boundary.
          */
-        Dim4Pentachoron* adjacent(int facet) const;
+        Dim4Pentachoron* adjacentPentachoron(int facet) const;
         /**
          * Returns a permutation describing the correspondence between
          * vertices of this pentachoron and vertices of the adjacent
@@ -506,7 +506,7 @@ inline void Dim4Pentachoron::setDescription(const std::string& desc) {
     desc_ = desc;
 }
 
-inline Dim4Pentachoron* Dim4Pentachoron::adjacent(int facet) const {
+inline Dim4Pentachoron* Dim4Pentachoron::adjacentPentachoron(int facet) const {
     return adj_[facet];
 }
 

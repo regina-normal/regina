@@ -165,16 +165,16 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * @return the adjacent tetrahedron glued to the given face, or 0
          * if the given face lies on the boundary.
          */
-        NTetrahedron* adjacent(int face) const;
+        NTetrahedron* adjacentTetrahedron(int face) const;
         /**
-         * Deprecated in favour of adjacent().  The old routine
-         * getAdjacentTetrahedron() has been renamed to adjacent()
+         * Deprecated in favour of adjacentTetrahedron().  The old routine
+         * getAdjacentTetrahedron() has been renamed to adjacentTetrahedron()
          * as part of an effort to make programming and scripting with
          * Regina a little less work on the fingers.
          *
          * \deprecated This routine will eventually be removed in some future
-         * version of Regina.  Users are advised to use adjacent() instead,
-         * which is an identical routine with a shorter name.
+         * version of Regina.  Users are advised to use adjacentTetrahedron()
+         * instead, which is an identical routine with a shorter name.
          *
          * @param face the face of this tetrahedron to examine.  This
          * should be between 0 and 3 inclusive, where face \c i is
@@ -497,7 +497,7 @@ inline void NTetrahedron::setDescription(const std::string& desc) {
     description = desc;
 }
 
-inline NTetrahedron* NTetrahedron::adjacent(int face) const {
+inline NTetrahedron* NTetrahedron::adjacentTetrahedron(int face) const {
     return tetrahedra[face];
 }
 

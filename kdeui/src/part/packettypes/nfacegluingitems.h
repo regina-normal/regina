@@ -105,7 +105,7 @@ class FaceGluingItem : public QObject, public QTableItem {
          * Query properties.
          */
         bool isBoundary() const;
-        long adjacent() const;
+        long adjacentTetrahedron() const;
         int myFace() const;
         int adjacentFace() const;
         const regina::NPerm& adjacentGluing() const;
@@ -219,7 +219,7 @@ inline bool FaceGluingItem::isBoundary() const {
     return (adjTet < 0);
 }
 
-inline long FaceGluingItem::adjacent() const {
+inline long FaceGluingItem::adjacentTetrahedron() const {
     return adjTet;
 }
 

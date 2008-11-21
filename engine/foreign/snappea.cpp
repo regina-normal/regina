@@ -178,9 +178,9 @@ bool writeSnapPea(const char* filename, NTriangulation& tri) {
         // calls this routine with a bounded triangulation, we don't want
         // to wind up calling tetrahedronIndex(0) and crashing.
         for (i = 0; i < 4; i++)
-            if ((*it)->adjacent(i))
+            if ((*it)->adjacentTetrahedron(i))
                 out << "   " << tri.tetrahedronIndex(
-                    (*it)->adjacent(i)) << ' ';
+                    (*it)->adjacentTetrahedron(i)) << ' ';
             else
                 out << "   -1 ";
         out << '\n';

@@ -37,9 +37,9 @@ namespace regina {
 
 unsigned NSatAnnulus::meetsBoundary() const {
     unsigned ans = 0;
-    if (! tet[0]->adjacent(roles[0][3]))
+    if (! tet[0]->adjacentTetrahedron(roles[0][3]))
         ans++;
-    if (! tet[1]->adjacent(roles[1][3]))
+    if (! tet[1]->adjacentTetrahedron(roles[1][3]))
         ans++;
     return ans;
 }
@@ -50,7 +50,7 @@ void NSatAnnulus::switchSides() {
         face = roles[which][3];
         roles[which] = tet[which]->adjacentGluing(face) *
             roles[which];
-        tet[which] = tet[which]->adjacent(face);
+        tet[which] = tet[which]->adjacentTetrahedron(face);
     }
 }
 

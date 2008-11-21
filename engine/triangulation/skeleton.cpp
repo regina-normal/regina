@@ -103,7 +103,7 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
         tet = queue[queueStart++];
 
         for (face=0; face<4; face++) {
-            adjTet = tet->adjacent(face);
+            adjTet = tet->adjacentTetrahedron(face);
             if (adjTet) {
                 yourOrientation = (tet->adjacentGluing(face).
                     sign() == 1 ? -tet->tetOrientation : tet->tetOrientation);
@@ -182,7 +182,7 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
 
         for (face=0; face<4; face++) {
             if (face == vertex) continue;
-            altTet = tet->adjacent(face);
+            altTet = tet->adjacentTetrahedron(face);
             if (altTet) {
                 yourVertex = tet->adjacentGluing(face)[vertex];
                 yourFace = tet->adjacentFace(face);
@@ -275,7 +275,7 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
         while (true) {
             // Move through to the next tetrahedron.
             exitFace = tetVertices[dir == 0 ? 2 : 3];
-            nextTet = tet->adjacent(exitFace);
+            nextTet = tet->adjacentTetrahedron(exitFace);
             if (! nextTet)
                 break;
 
@@ -334,7 +334,7 @@ void NTriangulation::calculateFaces() const {
                 tet->faceMapping[face] = faceOrdering(face);
                 label->embeddings[0] = new NFaceEmbedding(tet, face);
                 label->nEmbeddings = 1;
-                adjTet = tet->adjacent(face);
+                adjTet = tet->adjacentTetrahedron(face);
                 if (adjTet) {
                     // Face is not on the boundary.
                     adjFace = tet->adjacentFace(face);
@@ -432,10 +432,10 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
                 nextFaceNumber = followFromFace;
                 nextFacePerm = NPerm();
                 nextTet = tet;
-                while (nextTet->adjacent(nextFaceNumber)) {
+                while (nextTet->adjacentTetrahedron(nextFaceNumber)) {
                     nextFacePerm = nextTet->adjacentGluing(
                         nextFaceNumber) * nextFacePerm * switchPerm;
-                    nextTet = nextTet->adjacent(nextFaceNumber);
+                    nextTet = nextTet->adjacentTetrahedron(nextFaceNumber);
                     nextFaceNumber = nextFacePerm[followFromFace];
                 }
                 nextFace = nextTet->getFace(nextFaceNumber);

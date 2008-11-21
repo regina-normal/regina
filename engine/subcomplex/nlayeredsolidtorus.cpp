@@ -115,7 +115,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
     bool okay;
     int i, j;
     for (baseFace1 = 0; baseFace1 < 3; baseFace1++)
-        if (tet->adjacent(baseFace1) == tet) {
+        if (tet->adjacentTetrahedron(baseFace1) == tet) {
             // This tetrahedron is glued to itself.
             baseFace2 = tet->adjacentFace(baseFace1);
             basePerm = tet->adjacentGluing(baseFace1);
@@ -182,9 +182,9 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
     int layerOnGroup;
     while (true) {
         // Is there a new layer?
-        tet = ans->topLevel->adjacent(ans->topFace[0]);
+        tet = ans->topLevel->adjacentTetrahedron(ans->topFace[0]);
         if (tet == 0 || tet == ans->topLevel ||
-                tet != ans->topLevel->adjacent(ans->topFace[1]))
+                tet != ans->topLevel->adjacentTetrahedron(ans->topFace[1]))
             break;
 
         // There is a new tetrahedron glued to both torus boundary faces.
@@ -327,10 +327,10 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
 
         // Verify that both new faces go to the same tetrahedron (which
         // exists).
-        next = tet->adjacent(vRoles[0]);
+        next = tet->adjacentTetrahedron(vRoles[0]);
         if (! next)
             return 0;
-        if (next != tet->adjacent(vRoles[3]))
+        if (next != tet->adjacentTetrahedron(vRoles[3]))
             return 0;
 
         // Are we folding over?
@@ -611,8 +611,8 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
         // accounted for (thus showing this loop will terminate).
         // They also cannot be boundary faces, since there are only two
         // boundary faces and these have already been seen.
-        nextTet = currTet->adjacent(underFaces.lower());
-        if (nextTet != currTet->adjacent(underFaces.upper()))
+        nextTet = currTet->adjacentTetrahedron(underFaces.lower());
+        if (nextTet != currTet->adjacentTetrahedron(underFaces.upper()))
             return 0;
 
         // They both lead to the same adjacent tetrahedron.
@@ -667,8 +667,8 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
     NPacket::ChangeEventBlock block(ans);
 
     // Reglue the top faces before deleting the layered solid torus.
-    NTetrahedron* adj0 = newTop->adjacent(topFace[0]);
-    NTetrahedron* adj1 = newTop->adjacent(topFace[1]);
+    NTetrahedron* adj0 = newTop->adjacentTetrahedron(topFace[0]);
+    NTetrahedron* adj1 = newTop->adjacentTetrahedron(topFace[1]);
 
     if (adj0 && adj1 && (adj0 != newTop)) {
         // A permutation for each adjacent tetrahedron.
@@ -710,7 +710,7 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
     curr = newBase;
     currBdryFaces = NFacePair(baseFace[0], baseFace[1]).complement();
     while (curr) {
-        next = curr->adjacent(currBdryFaces.lower());
+        next = curr->adjacentTetrahedron(currBdryFaces.lower());
 
         currBdryFaces = NFacePair(curr->adjacentFace(currBdryFaces.lower()),
             curr->adjacentFace(currBdryFaces.upper())).complement();

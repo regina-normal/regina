@@ -112,7 +112,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
 
     while (currTet < nTet) {
         // Is this face already glued?
-        if (tet[currTet]->adjacent(currFace)) {
+        if (tet[currTet]->adjacentTetrahedron(currFace)) {
             if (currFace < 3)
                 currFace++;
             else {
@@ -153,7 +153,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
 
             adjPerm = orderedPermsS4[permIndex] * reverse;
 
-            if (tet[adjTet]->adjacent(adjPerm[currFace]) ||
+            if (tet[adjTet]->adjacentTetrahedron(adjPerm[currFace]) ||
                     (adjTet == currTet && adjPerm[currFace] == currFace)) {
                 broken = true;
                 break;
@@ -261,7 +261,7 @@ std::string NTriangulation::dehydrate() const {
             // These invariants are preserved because the triangulation is
             // connected.  They break when tet == nTets.
             dest = tetrahedronIndex(
-                tetrahedra[tet]->adjacent(face));
+                tetrahedra[tet]->adjacentTetrahedron(face));
 
             // Is it a gluing we've already seen from the other side?
             if (image[dest] >= 0)

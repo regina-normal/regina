@@ -151,7 +151,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
 
     while (1) {
         // Examine the tetrahedron beyond tet.
-        adjTet = tet->adjacent(useVertexRoles[0]);
+        adjTet = tet->adjacentTetrahedron(useVertexRoles[0]);
         adjRoles = tet->adjacentGluing(useVertexRoles[0]) *
             useVertexRoles * invRoleMap;
 

@@ -71,7 +71,7 @@ NTriangulation* NNormalSurface::crush() const {
             // up correctly.
             tet = ans->getTetrahedron(whichTet);
             for (face = 0; face < 4; face++) {
-                adj = tet->adjacent(face);
+                adj = tet->adjacentTetrahedron(face);
                 if (! adj)
                     continue;
                 adjQuads = quads[ans->tetrahedronIndex(adj)];
@@ -89,7 +89,7 @@ NTriangulation* NNormalSurface::crush() const {
                     adjFace = swap[adjFace];
                     adjPerm = adj->adjacentGluing(adjFace) *
                         swap * adjPerm;
-                    adj = adj->adjacent(adjFace);
+                    adj = adj->adjacentTetrahedron(adjFace);
                     adjFace = adjPerm[face];
 
                     if (adj)

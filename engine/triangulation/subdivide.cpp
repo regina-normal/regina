@@ -93,11 +93,11 @@ void NTriangulation::barycentricSubdivision() {
                             // Glue to the new tetrahedron across an existing
                             // face
                             oldTet = getTetrahedron(tet);
-                            if (oldTet->adjacent(face)) {
+                            if (oldTet->adjacentTetrahedron(face)) {
                                 p = oldTet->adjacentGluing(face);
                                 newTet[24*tet+tetIndex[face][edge][corner]]->
                                     joinTo(face, newTet[24*tetrahedronIndex(
-                                    oldTet->adjacent(face))+
+                                    oldTet->adjacentTetrahedron(face))+
                                     tetIndex[p[face]][p[edge]][p[corner]] ],
                                     NPerm(p) );
                              }
@@ -184,8 +184,8 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     for (i=0; i<numOldTet; i++) {
         ot = getTetrahedron(i);
         for (j=0; j<4; j++)
-            if (ot->adjacent(j)) {
-                 oppTet = tetrahedronIndex(ot->adjacent(j));
+            if (ot->adjacentTetrahedron(j)) {
+                 oppTet = tetrahedronIndex(ot->adjacentTetrahedron(j));
                  p = ot->adjacentGluing(j);
 
                  // First deal with the tip tetrahedra.
@@ -289,9 +289,9 @@ bool NTriangulation::finiteToIdeal() {
             NEdgeEmbedding e1 = edge->getEmbeddings().front();
             NEdgeEmbedding e2 = edge->getEmbeddings().back();
 
-            t1 = e1.getTetrahedron()->adjacent(
+            t1 = e1.getTetrahedron()->adjacentTetrahedron(
                 e1.getVertices()[3]);
-            t2 = e2.getTetrahedron()->adjacent(
+            t2 = e2.getTetrahedron()->adjacentTetrahedron(
                 e2.getVertices()[2]);
 
             t1Face = e1.getTetrahedron()->adjacentGluing(
