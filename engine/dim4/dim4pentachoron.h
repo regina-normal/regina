@@ -412,11 +412,11 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * (running from the image of vertex 3 to the image of vertex 4).
          * For any given face of the triangulation, these corresponding
          * directed edges together form an ordered path within the
-         * triangulation that circles the corresponding face (like a face
-         * link, except that it is not near to the face and so might
+         * triangulation that circles the common face of the triangulation (like
+         * a face link, except that it is not near to the face and so might
          * intersect itself).  Furthermore, if we consider the individual
          * pentachora in the order in which they appear in the list
-         * Dim4Face::getEmbeddings(), the corresponding directed edges
+         * Dim4Face::getEmbeddings(), these corresponding directed edges
          * appear in order from the start of this path to the finish
          * (for internal faces this path is actually a cycle, and the
          * starting point is arbitrary).
@@ -436,9 +436,9 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * tetrahedron of the triangulation to the matching vertices of this
          * pentachoron.
          *
-         * In detail:  Suppose two tetrahedral facets of two pentachora
-         * are identified within the overall 4-manifold triangulation.  We
-         * call this a single "tetrahedron of the triangulation", and arbitrarily
+         * In detail:  Suppose two tetrahedral facets of two pentachora are
+         * identified within the overall 4-manifold triangulation.  We call
+         * this a single "tetrahedron of the triangulation", and arbitrarily
          * label its vertices (0,1,2,3).  This routine then maps the vertices
          * (0,1,2,3) of this tetrahedron of the triangulation to the individual
          * vertices of this pentachoron that make up the given tetrahedron.
@@ -452,7 +452,7 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * identified together as a single tetrahedron of the triangulation,
          * and choose some \a i from the set {0,1,2,3}.  Then the vertices
          * <tt>getTetrahedronMapping(...)[i]</tt> of the individual pentachora
-         * are all identified together, since they all become the same
+         * are all identified together, since they both become the same
          * vertex of the same tetrahedron of the triangulation (assuming of
          * course that we pass the correct facet number in each case to
          * getTetrahedronMapping()).
