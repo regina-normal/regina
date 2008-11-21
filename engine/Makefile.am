@@ -14,6 +14,7 @@ SUBDIRS = \
   algebra \
   angle \
   census \
+  dim4 \
   enumerate \
   file \
   foreign \
@@ -46,6 +47,7 @@ libregina_engine_la_LIBADD = \
   algebra/libalgebra.la \
   angle/libangle.la \
   census/libcensus.la \
+  dim4/libdim4.la \
   file/libfile.la \
   foreign/libforeign.la \
   manifold/libmanifold.la \

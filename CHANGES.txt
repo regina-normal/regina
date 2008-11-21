@@ -28,6 +28,9 @@ Version 4.6  [ (under development) ]
               between normal surfaces.
             - New routine rawVector() that gives direct read-only access to
               the underlying vector in case this is needed.
+        Class NPerm5:
+            - New class describing permutations of five elements, which
+              we need in order to describe 4-manifold triangulations.
         Routine writeResUsage():
             - New helper routine to assist with diagnostics and measurements
               of performance.

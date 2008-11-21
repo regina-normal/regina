@@ -15,6 +15,7 @@ SUBDIRS = srcutils \
   algebra \
   angle \
   census \
+  dim4 \
   file \
   foreign \
   manifold \
@@ -40,6 +41,7 @@ regina_la_LIBADD = @LIB_ENGINE@ @BOOST_PYTHON_LIBS@ \
   algebra/libalgebra.la \
   angle/libangle.la \
   census/libcensus.la \
+  dim4/libdim4.la \
   file/libfile.la \
   foreign/libforeign.la \
   manifold/libmanifold.la \

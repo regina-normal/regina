@@ -37,6 +37,7 @@ void addGlobalArray();
 void addAlgebra();
 void addAngle();
 void addCensus();
+void addDim4();
 void addFile();
 void addForeign();
 void addManifold();
@@ -123,6 +124,7 @@ BOOST_PYTHON_MODULE(regina) {
     addPacket();
     addTriangulation();
     addCensus();
+    addDim4();
     addFile();
     addForeign();
     addSplit();

@@ -33,6 +33,7 @@
 #include <cppunit/TextTestProgressListener.h>
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
+#include "testsuite/dim4/testdim4.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/surfaces/testsurfaces.h"
@@ -126,6 +127,9 @@ bool runAllTests() {
     addElementaryMoves(runner);
     addNIsomorphism(runner);
     addNHomologicalData(runner);
+
+    // 4-manifold triangulations:
+    addNPerm5(runner);
 
     // Surfaces:
     addNNormalSurfaceList(runner);
