@@ -341,49 +341,85 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          */
         Dim4Face* getTetrahedron(int tet) const;
         /**
-         * The edge in the skeleton corresponding to the requested
-         * edge of this pentachoron is examined, and a
-         * permutation mapping vertices (0,1) of the skeleton
-         * edge to the corresponding vertices of this pentachoron is returned.
+         * Examines the given edge of this pentachoron, and returns a
+         * mapping from the "canonical" vertices of the corresponding
+         * edge of the triangulation to the matching vertices of this
+         * pentachoron.
          *
-         * Thus, for each <tt>i=0,1</tt> and each pentachoron containing
-         * this skeleton edge,
-         * <tt>getEdgeMapping(...)[i]</tt> will refer to vertices
-         * that are all identified to each other along the skeleton
-         * edge concerned.
+         * In detail:  Suppose several edges of several pentachora are
+         * identified within the overall 4-manifold triangulation.  We
+         * call this a single "edge of the triangulation", and arbitrarily
+         * label its vertices (0,1).  This routine then maps the vertices
+         * (0,1) of this edge of the triangulation to the individual
+         * vertices of this pentachoron that make up the given edge.
+         *
+         * Because we are passing the argument \a edge, we already know
+         * \e which vertices of this pentachoron are involved.  What this
+         * routine tells us is the \a order in which they appear to form the
+         * overall edge of the triangulation.
+         *
+         * As a consequence:  Consider some collection of pentachoron edges
+         * that are identified together as a single edge of the triangulation,
+         * and choose some \a i from the set {0,1}.  Then the vertices
+         * <tt>getEdgeMapping(...)[i]</tt> of the individual pentachora
+         * are all identified together, since they all become the same
+         * vertex of the same edge of the triangulation (assuming of
+         * course that we pass the correct edge number in each case to
+         * getEdgeMapping()).
+         *
+         * The images of 2, 3 and 4 under the permutations that are returned
+         * are arbitrary.
          *
          * \pre This pentachoron belongs to a 4-manifold triangulation whose
          * skeletal information has already been calculated.
          *
          * @param edge the edge of this pentachoron to examine.
          * This should be between 0 and 9 inclusive.
-         * @return a mapping from vertices (0,1) of the requested edge
-         * to the vertices of this pentachoron.
+         * @return a mapping from vertices (0,1) of the requested
+         * triangulation edge to the vertices of this pentachoron.
          */
         NPerm5 getEdgeMapping(int edge) const;
         /**
-         * The face in the skeleton corresponding to the requested
-         * face of this pentachoron is examined, and a
-         * permutation mapping vertices (0,1,2) of the skeleton
-         * face to the corresponding vertices of this pentachoron is returned.
+         * Examines the given face of this pentachoron, and returns a
+         * mapping from the "canonical" vertices of the corresponding
+         * face of the triangulation to the matching vertices of this
+         * pentachoron.
          *
-         * Thus, for each <tt>i=0,1,2</tt> and each pentachoron containing
-         * this skeleton face,
-         * <tt>getFaceMapping(...)[i]</tt> will refer to vertices
-         * that are all identified to each other along the skeleton face
-         * concerned.
+         * In detail:  Suppose several faces of several pentachora are
+         * identified within the overall 4-manifold triangulation.  We
+         * call this a single "face of the triangulation", and arbitrarily
+         * label its vertices (0,1,2).  This routine then maps the vertices
+         * (0,1,2) of this face of the triangulation to the individual
+         * vertices of this pentachoron that make up the given face.
          *
-         * Furthermore, following the ordered edges defined by the
-         * images of (3,4) under the returned permutations
-         * will produce an ordered chain
-         * circling the skeleton face.  That is, if pentachora \c A
-         * and \c B are adjacent along the face concerned
-         * and also at vertex \a V,
-         * then if <tt>A.getFaceMapping(...)[4]</tt> refers to \a V, we will
-         * have <tt>B.getFaceMapping(...)[3]</tt> referring to \a V also, and
-         * \c B will appear immediately after \c A in the list of
-         * embeddings stored in the corresponding Dim4Face object.
-         * See Dim4Face::getEmbeddings() for further details.
+         * Because we are passing the argument \a face, we already know
+         * \e which vertices of this pentachoron are involved.  What this
+         * routine tells us is the \a order in which they appear to form the
+         * overall face of the triangulation.
+         *
+         * As a consequence:  Consider some collection of pentachoron faces
+         * that are identified together as a single face of the triangulation,
+         * and choose some \a i from the set {0,1,2}.  Then the vertices
+         * <tt>getFaceMapping(...)[i]</tt> of the individual pentachora
+         * are all identified together, since they all become the same
+         * vertex of the same face of the triangulation (assuming of
+         * course that we pass the correct face number in each case to
+         * getFaceMapping()).
+         *
+         * The images of 3 and 4 under the permutations that are returned
+         * have the following properties.  In each pentachoron, the images
+         * of 3 and 4 under this map form a directed edge of the pentachoron
+         * (running from the image of vertex 3 to the image of vertex 4).
+         * For any given face of the triangulation, these corresponding
+         * directed edges together form an ordered path within the
+         * triangulation that circles the corresponding face (like a face
+         * link, except that it is not near to the face and so might
+         * intersect itself).  Furthermore, if we consider the individual
+         * pentachora in the order in which they appear in the list
+         * Dim4Face::getEmbeddings(), the corresponding directed edges
+         * appear in order from the start of this path to the finish
+         * (for internal faces this path is actually a cycle, and the
+         * starting point is arbitrary).
          *
          * \pre This pentachoron belongs to a 4-manifold triangulation whose
          * skeletal information has already been calculated.
@@ -395,16 +431,31 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          */
         NPerm5 getFaceMapping(int face) const;
         /**
-         * The tetrahedron in the skeleton corresponding to the requested
-         * facet of this pentachoron is examined, and a
-         * permutation mapping vertices (0,1) of the skeleton tetrahedron
-         * to the corresponding vertices of this pentachoron is returned.
+         * Examines the given tetrahedral facet of this pentachoron, and
+         * returns a mapping from the "canonical" vertices of the corresponding
+         * tetrahedron of the triangulation to the matching vertices of this
+         * pentachoron.
          *
-         * Thus, for each <tt>i=0,1,2,3</tt> and each pentachoron containing
-         * this skeleton tetrahedron,
-         * <tt>getTetrahedronMapping(...)[i]</tt> will refer to vertices
-         * that are all identified to each other along the skeleton
-         * tetrahedron concerned.
+         * In detail:  Suppose two tetrahedral facets of two pentachora
+         * are identified within the overall 4-manifold triangulation.  We
+         * call this a single "tetrahedron of the triangulation", and arbitrarily
+         * label its vertices (0,1,2,3).  This routine then maps the vertices
+         * (0,1,2,3) of this tetrahedron of the triangulation to the individual
+         * vertices of this pentachoron that make up the given tetrahedron.
+         *
+         * Because we are passing the argument \a tet, we already know
+         * \e which vertices of this pentachoron are involved.  What this
+         * routine tells us is the \a order in which they appear to form the
+         * overall tetrahedron of the triangulation.
+         *
+         * As a consequence:  Consider two pentachoron facets that are
+         * identified together as a single tetrahedron of the triangulation,
+         * and choose some \a i from the set {0,1,2,3}.  Then the vertices
+         * <tt>getTetrahedronMapping(...)[i]</tt> of the individual pentachora
+         * are all identified together, since they all become the same
+         * vertex of the same tetrahedron of the triangulation (assuming of
+         * course that we pass the correct facet number in each case to
+         * getTetrahedronMapping()).
          *
          * \pre This pentachoron belongs to a 4-manifold triangulation whose
          * skeletal information has already been calculated.
