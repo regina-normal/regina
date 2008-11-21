@@ -68,10 +68,10 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
     tet[0] = comp->getTetrahedron(0);
     tet[1] = comp->getTetrahedron(1);
 
-    if (tet[0]->getAdjacentTetrahedron(0) != tet[1] ||
-            tet[0]->getAdjacentTetrahedron(1) != tet[1] ||
-            tet[0]->getAdjacentTetrahedron(2) != tet[1] ||
-            tet[0]->getAdjacentTetrahedron(3) != tet[1])
+    if (tet[0]->adjacent(0) != tet[1] ||
+            tet[0]->adjacent(1) != tet[1] ||
+            tet[0]->adjacent(2) != tet[1] ||
+            tet[0]->adjacent(3) != tet[1])
         return 0;
 
     // At this point we can prove through enumeration of all

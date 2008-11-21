@@ -359,16 +359,16 @@ void NTriGluingsUI::commit() {
                 item = dynamic_cast<FaceGluingItem*>(faceTable->item(tetNum,
                     4 - face));
 
-                adjTetNum = item->getAdjacentTetrahedron();
+                adjTetNum = item->adjacent();
                 if (adjTetNum < tetNum)
                     continue;
-                adjFace = item->getAdjacentFace();
+                adjFace = item->adjacentFace();
                 if (adjTetNum == tetNum && adjFace < face)
                     continue;
 
                 // It's a forward gluing.
                 tets[tetNum]->joinTo(face, tets[adjTetNum],
-                    item->getAdjacentTetrahedronGluing());
+                    item->adjacentGluing());
             }
 
         // Add the tetrahedra to the triangulation.
@@ -395,11 +395,11 @@ void NTriGluingsUI::refresh() {
         faceTable->setItem(tetNum, 0, new TetNameItem(faceTable,
             tetNum, tet->getDescription().c_str()));
         for (face = 0; face < 4; face++) {
-            adj = tet->getAdjacentTetrahedron(face);
+            adj = tet->adjacent(face);
             if (adj)
                 faceTable->setItem(tetNum, 4 - face, new FaceGluingItem(
                     faceTable, editMode, face, tri->tetrahedronIndex(adj),
-                    tet->getAdjacentTetrahedronGluing(face)));
+                    tet->adjacentGluing(face)));
             else
                 faceTable->setItem(tetNum, 4 - face,
                     new FaceGluingItem(faceTable, editMode));

@@ -447,10 +447,10 @@ void NHomologicalData::computeChainComplexes() {
                         if (k!= (ind1 % 4))
                         {
                             p1=vtetlist[j].getTetrahedron() ->
-                                getAdjacentTetrahedronGluing(k);
+                                adjacentGluing(k);
                             ind2=4*tri->tetrahedronIndex(
                                 vtetlist[j].getTetrahedron() ->
-                                getAdjacentTetrahedron(k) ) + p1[ind1 % 4];
+                                adjacent(k) ) + p1[ind1 % 4];
                             if (unorientedlist.index( ind2 )  != (-1) )
                             {
                                 // we have an adjacent unoriented tetrahedron.

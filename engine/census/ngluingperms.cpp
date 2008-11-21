@@ -52,7 +52,7 @@ NTriangulation* NGluingPerms::triangulate() const {
     for (t = 0; t < nTet; t++)
         for (face = 0; face < 4; face++)
             if ((! pairing->isUnmatched(t, face)) &&
-                    (! tet[t]->getAdjacentTetrahedron(face)))
+                    (! tet[t]->adjacent(face)))
                 tet[t]->joinTo(face, tet[pairing->dest(t, face).tet],
                     gluingPerm(t, face));
 

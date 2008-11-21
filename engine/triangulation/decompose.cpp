@@ -65,10 +65,10 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     for (tetPos = 0; tetPos < nTets; tetPos++) {
         tet = tetrahedra[tetPos];
         for (face = 0; face < 4; face++) {
-            adjTet = tet->getAdjacentTetrahedron(face);
+            adjTet = tet->adjacent(face);
             if (adjTet) {
                 adjPos = tetrahedronIndex(adjTet);
-                adjPerm = tet->getAdjacentTetrahedronGluing(face);
+                adjPerm = tet->adjacentGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face))
                     newTets[tetPos]->joinTo(face, newTets[adjPos], adjPerm);

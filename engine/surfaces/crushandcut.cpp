@@ -71,7 +71,7 @@ NTriangulation* NNormalSurface::crush() const {
             // up correctly.
             tet = ans->getTetrahedron(whichTet);
             for (face = 0; face < 4; face++) {
-                adj = tet->getAdjacentTetrahedron(face);
+                adj = tet->adjacent(face);
                 if (! adj)
                     continue;
                 adjQuads = quads[ans->tetrahedronIndex(adj)];
@@ -80,16 +80,16 @@ NTriangulation* NNormalSurface::crush() const {
 
                 // We're glued to a bad tetrahedron.  Follow around
                 // until we reach a good tetrahedron or a boundary.
-                adjPerm = tet->getAdjacentTetrahedronGluing(face);
+                adjPerm = tet->adjacentGluing(face);
                 adjFace = adjPerm[face];
                 while (adj && (adjQuads >= 0)) {
                     swap = NPerm(adjFace,
                         vertexSplitPartner[adjQuads][adjFace]);
 
                     adjFace = swap[adjFace];
-                    adjPerm = adj->getAdjacentTetrahedronGluing(adjFace) *
+                    adjPerm = adj->adjacentGluing(adjFace) *
                         swap * adjPerm;
-                    adj = adj->getAdjacentTetrahedron(adjFace);
+                    adj = adj->adjacent(adjFace);
                     adjFace = adjPerm[face];
 
                     if (adj)

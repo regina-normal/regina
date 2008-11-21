@@ -93,11 +93,11 @@ void NTriangulation::barycentricSubdivision() {
                             // Glue to the new tetrahedron across an existing
                             // face
                             oldTet = getTetrahedron(tet);
-                            if (oldTet->getAdjacentTetrahedron(face)) {
-                                p = oldTet->getAdjacentTetrahedronGluing(face);
+                            if (oldTet->adjacent(face)) {
+                                p = oldTet->adjacentGluing(face);
                                 newTet[24*tet+tetIndex[face][edge][corner]]->
                                     joinTo(face, newTet[24*tetrahedronIndex(
-                                    oldTet->getAdjacentTetrahedron(face))+
+                                    oldTet->adjacent(face))+
                                     tetIndex[p[face]][p[edge]][p[corner]] ],
                                     NPerm(p) );
                              }
@@ -184,9 +184,9 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     for (i=0; i<numOldTet; i++) {
         ot = getTetrahedron(i);
         for (j=0; j<4; j++)
-            if (ot->getAdjacentTetrahedron(j)) {
-                 oppTet = tetrahedronIndex(ot->getAdjacentTetrahedron(j));
-                 p = ot->getAdjacentTetrahedronGluing(j);
+            if (ot->adjacent(j)) {
+                 oppTet = tetrahedronIndex(ot->adjacent(j));
+                 p = ot->adjacentGluing(j);
 
                  // First deal with the tip tetrahedra.
                  for (k=0; k<4; k++)
@@ -289,14 +289,14 @@ bool NTriangulation::finiteToIdeal() {
             NEdgeEmbedding e1 = edge->getEmbeddings().front();
             NEdgeEmbedding e2 = edge->getEmbeddings().back();
 
-            t1 = e1.getTetrahedron()->getAdjacentTetrahedron(
+            t1 = e1.getTetrahedron()->adjacent(
                 e1.getVertices()[3]);
-            t2 = e2.getTetrahedron()->getAdjacentTetrahedron(
+            t2 = e2.getTetrahedron()->adjacent(
                 e2.getVertices()[2]);
 
-            t1Face = e1.getTetrahedron()->getAdjacentTetrahedronGluing(
+            t1Face = e1.getTetrahedron()->adjacentGluing(
                 e1.getVertices()[3]) * e1.getVertices();
-            t2Face = e2.getTetrahedron()->getAdjacentTetrahedronGluing(
+            t2Face = e2.getTetrahedron()->adjacentGluing(
                 e2.getVertices()[2]) * e2.getVertices() * NPerm(2, 3);
 
             t1->joinTo(t1Face[2], t2, t2Face * t1Face.inverse());

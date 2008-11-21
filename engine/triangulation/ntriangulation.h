@@ -310,9 +310,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * \warning Passing a null pointer to this routine will probably
          * crash your program.  If you are passing the result of some other
-         * routine that \e might return null (such as
-         * NTetrahedron::getAdjacentTetrahedron), it might be worth
-         * explicitly testing for null beforehand.
+         * routine that \e might return null (such as NTetrahedron::adjacent),
+         * it might be worth explicitly testing for null beforehand.
          *
          * @param tet specifies which tetrahedron to find in the
          * triangulation.

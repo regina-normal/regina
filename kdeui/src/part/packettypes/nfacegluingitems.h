@@ -105,10 +105,10 @@ class FaceGluingItem : public QObject, public QTableItem {
          * Query properties.
          */
         bool isBoundary() const;
-        long getAdjacentTetrahedron() const;
-        int getMyFace() const;
-        int getAdjacentFace() const;
-        const regina::NPerm& getAdjacentTetrahedronGluing() const;
+        long adjacent() const;
+        int myFace() const;
+        int adjacentFace() const;
+        const regina::NPerm& adjacentGluing() const;
 
         /**
          * Change the destination for this face gluing.  Related face
@@ -219,19 +219,19 @@ inline bool FaceGluingItem::isBoundary() const {
     return (adjTet < 0);
 }
 
-inline long FaceGluingItem::getAdjacentTetrahedron() const {
+inline long FaceGluingItem::adjacent() const {
     return adjTet;
 }
 
-inline int FaceGluingItem::getMyFace() const {
+inline int FaceGluingItem::myFace() const {
     return 4 - col();
 }
 
-inline int FaceGluingItem::getAdjacentFace() const {
-    return (adjTet < 0 ? -1 : adjPerm[getMyFace()]);
+inline int FaceGluingItem::adjacentFace() const {
+    return (adjTet < 0 ? -1 : adjPerm[myFace()]);
 }
 
-inline const regina::NPerm& FaceGluingItem::getAdjacentTetrahedronGluing()
+inline const regina::NPerm& FaceGluingItem::adjacentGluing()
         const {
     return adjPerm;
 }

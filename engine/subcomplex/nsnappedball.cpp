@@ -44,8 +44,8 @@ NSnappedBall* NSnappedBall::formsSnappedBall(NTetrahedron* tet) {
     int inFace1, inFace2;
     NPerm perm;
     for (inFace1 = 0; inFace1 < 3; inFace1++)
-        if (tet->getAdjacentTetrahedron(inFace1) == tet) {
-            perm = tet->getAdjacentTetrahedronGluing(inFace1);
+        if (tet->adjacent(inFace1) == tet) {
+            perm = tet->adjacentGluing(inFace1);
             inFace2 = perm[inFace1];
             if (perm == NPerm(inFace1, inFace2)) {
                 // This is it!

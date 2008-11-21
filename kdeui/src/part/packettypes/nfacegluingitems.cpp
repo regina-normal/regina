@@ -117,14 +117,14 @@ QWidget* FaceGluingItem::createEditor() const {
         KLineEdit* editor = new KLineEdit(table()->viewport());
         editor->setFrame(false);
         editor->setValidator(new QRegExpValidator(reFaceGluing, editor));
-        editor->setText(destString(getMyFace(), adjTet, adjPerm));
+        editor->setText(destString(myFace(), adjTet, adjPerm));
         editor->selectAll();
 
         return editor;
     } else {
         return new NFaceGluingButton(table()->numRows(),
-            row(), getMyFace(), adjTet, regina::faceDescription(
-            adjPerm * regina::faceOrdering(getMyFace())).c_str(),
+            row(), myFace(), adjTet, regina::faceDescription(
+            adjPerm * regina::faceOrdering(myFace())).c_str(),
             const_cast<FaceGluingItem*>(this));
     }
 }
@@ -143,7 +143,7 @@ void FaceGluingItem::setDestination(long newAdjTet,
         newPartner = 0;
     else
         newPartner = dynamic_cast<FaceGluingItem*>(table()->item(
-            newAdjTet, 4 - newAdjPerm[getMyFace()]));
+            newAdjTet, 4 - newAdjPerm[myFace()]));
 
     // Does this new adjacent face already have a partner?
     if (newPartner)
@@ -157,11 +157,11 @@ void FaceGluingItem::setDestination(long newAdjTet,
     if (newAdjTet >= 0) {
         adjTet = newAdjTet;
         adjPerm = newAdjPerm;
-        setText(destString(getMyFace(), adjTet, adjPerm));
+        setText(destString(myFace(), adjTet, adjPerm));
 
         newPartner->adjTet = row();
         newPartner->adjPerm = adjPerm.inverse();
-        newPartner->setText(destString(newPartner->getMyFace(),
+        newPartner->setText(destString(newPartner->myFace(),
             newPartner->adjTet, newPartner->adjPerm));
         table()->updateCell(newPartner->row(), newPartner->col());
     }
@@ -177,7 +177,7 @@ FaceGluingItem* FaceGluingItem::getPartner() {
         return 0;
     else
         return dynamic_cast<FaceGluingItem*>(table()->item(
-            adjTet, 4 - adjPerm[getMyFace()]));
+            adjTet, 4 - adjPerm[myFace()]));
 }
 
 void FaceGluingItem::unjoin() {
@@ -195,7 +195,7 @@ void FaceGluingItem::unjoin() {
 void FaceGluingItem::tetNumsToChange(const long newTetNums[]) {
     if (adjTet >= 0) {
         adjTet = newTetNums[adjTet];
-        setText(destString(getMyFace(), adjTet, adjPerm));
+        setText(destString(myFace(), adjTet, adjPerm));
         table()->updateCell(row(), col());
     }
 }
@@ -236,7 +236,7 @@ void FaceGluingItem::setContentFromEditor(QWidget* editor) {
 
             // Do we have a valid gluing?
             QString err = isFaceStringValid(table()->numRows(),
-                row(), getMyFace(), newAdjTet, tetFace, &newAdjPerm);
+                row(), myFace(), newAdjTet, tetFace, &newAdjPerm);
             if (! err.isNull()) {
                 showError(err);
                 return;

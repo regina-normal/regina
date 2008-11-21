@@ -103,9 +103,9 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
         tet = queue[queueStart++];
 
         for (face=0; face<4; face++) {
-            adjTet = tet->getAdjacentTetrahedron(face);
+            adjTet = tet->adjacent(face);
             if (adjTet) {
-                yourOrientation = (tet->getAdjacentTetrahedronGluing(face).
+                yourOrientation = (tet->adjacentGluing(face).
                     sign() == 1 ? -tet->tetOrientation : tet->tetOrientation);
                 if (adjTet->component) {
                     if (yourOrientation != adjTet->tetOrientation) {
@@ -182,16 +182,16 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
 
         for (face=0; face<4; face++) {
             if (face == vertex) continue;
-            altTet = tet->getAdjacentTetrahedron(face);
+            altTet = tet->adjacent(face);
             if (altTet) {
-                yourVertex = tet->getAdjacentTetrahedronGluing(face)[vertex];
-                yourFace = tet->getAdjacentFace(face);
+                yourVertex = tet->adjacentGluing(face)[vertex];
+                yourFace = tet->adjacentFace(face);
 
                 // We should actually be inverting faceOrdering(yourVertex).
                 // However, all we care about is the sign of the permutation,
                 // so let's save ourselves those extra few CPU cycles.
                 if ((faceOrdering(yourVertex) *
-                        tet->getAdjacentTetrahedronGluing(face) *
+                        tet->adjacentGluing(face) *
                         faceOrdering(vertex)).sign() > 0)
                     yourOrientation = -(tet->tmpOrientation[vertex]);
                 else
@@ -275,11 +275,11 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
         while (true) {
             // Move through to the next tetrahedron.
             exitFace = tetVertices[dir == 0 ? 2 : 3];
-            nextTet = tet->getAdjacentTetrahedron(exitFace);
+            nextTet = tet->adjacent(exitFace);
             if (! nextTet)
                 break;
 
-            exitPerm = tet->getAdjacentTetrahedronGluing(exitFace);
+            exitPerm = tet->adjacentGluing(exitFace);
             nextVertices = exitPerm * tetVertices * NPerm(2, 3);
             nextEdge = edgeNumber[nextVertices[0]][nextVertices[1]];
 
@@ -334,11 +334,11 @@ void NTriangulation::calculateFaces() const {
                 tet->faceMapping[face] = faceOrdering(face);
                 label->embeddings[0] = new NFaceEmbedding(tet, face);
                 label->nEmbeddings = 1;
-                adjTet = tet->getAdjacentTetrahedron(face);
+                adjTet = tet->adjacent(face);
                 if (adjTet) {
                     // Face is not on the boundary.
-                    adjFace = tet->getAdjacentFace(face);
-                    adjVertices = (tet->getAdjacentTetrahedronGluing(face))*
+                    adjFace = tet->adjacentFace(face);
+                    adjVertices = (tet->adjacentGluing(face))*
                         (label->embeddings[0]->getVertices());
                     adjTet->faces[adjFace] = label;
                     adjTet->faceMapping[adjFace] = adjVertices;
@@ -432,10 +432,10 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
                 nextFaceNumber = followFromFace;
                 nextFacePerm = NPerm();
                 nextTet = tet;
-                while (nextTet->getAdjacentTetrahedron(nextFaceNumber)) {
-                    nextFacePerm = nextTet->getAdjacentTetrahedronGluing(
+                while (nextTet->adjacent(nextFaceNumber)) {
+                    nextFacePerm = nextTet->adjacentGluing(
                         nextFaceNumber) * nextFacePerm * switchPerm;
-                    nextTet = nextTet->getAdjacentTetrahedron(nextFaceNumber);
+                    nextTet = nextTet->adjacent(nextFaceNumber);
                     nextFaceNumber = nextFacePerm[followFromFace];
                 }
                 nextFace = nextTet->getFace(nextFaceNumber);

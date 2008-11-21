@@ -70,7 +70,7 @@ class NComponent;
 class NTetrahedron : public ShareableObject, public NMarkedElement {
     private:
         NTetrahedron* tetrahedra[4];
-            /**< Represents the tetrahedra glued to each face of this
+            /**< Stores the tetrahedra glued to each face of this
                  tetrahedron.  Specifically, <tt>tetrahedra[f]</tt>
                  represents the tetrahedron joined to face \c f
                  of this tetrahedron, or is 0
@@ -78,12 +78,12 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
                  numbered from 0 to 3 inclusive, where face \c i is opposite
                  vertex \c i. */
         NPerm tetrahedronPerm[4];
-            /**< Represents the corresponence between vertices of this
+            /**< Stores the corresponence between vertices of this
                  tetrahedron and adjacent tetrahedra.  If face \c f is
                  joined to another tetrahedron, <tt>tetrahedronPerm[f]</tt>
-                 represents the permutation \c p such that vertex \c v of
-                 this tetrahedron is glued to vertex <tt>p[v]</tt> of
-                 the tetrahedron joined to face \c f. */
+                 represents the permutation \c p whereby vertex \c v of
+                 this tetrahedron is identified with vertex <tt>p[v]</tt> of
+                 the adjacent tetrahedron along face \c f. */
         std::string description;
             /**< A text description of this tetrahedron.
                  Descriptions are not mandatory and need not be unique. */
@@ -107,10 +107,10 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
              *   orientability routines, and its contents afterwards are
              *   unpredictable. */
         NPerm edgeMapping[6];
-            /**< Maps (0,1) to the tetrahedron vertices that form
+            /**< Maps (0,1) to the vertices of this tetrahedron that form
                  each edge, as described in getEdgeMapping(). */
         NPerm faceMapping[4];
-            /**< Maps (0,1,2) to the tetrahedron vertices that form
+            /**< Maps (0,1,2) to the vertices of this tetrahedron that form
                  each face, as described in getFaceMapping(). */
         int tetOrientation;
             /**< The orientation of this tetrahedron in the triangulation.
@@ -155,33 +155,68 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
         void setDescription(const std::string& desc);
 
         /**
-         * Returns the tetrahedron glued to the given face of this
+         * Returns the adjacent tetrahedron glued to the given face of this
          * tetrahedron, or 0 if the given face is on the triangulation
          * boundary.
          *
          * @param face the face of this tetrahedron to examine.  This
          * should be between 0 and 3 inclusive, where face \c i is
          * opposite vertex \c i of the tetrahedron.
-         * @return the tetrahedron glued to the given face, or 0 if the
-         * given face lies on the boundary.
+         * @return the adjacent tetrahedron glued to the given face, or 0
+         * if the given face lies on the boundary.
+         */
+        NTetrahedron* adjacent(int face) const;
+        /**
+         * Deprecated in favour of adjacent().  The old routine
+         * getAdjacentTetrahedron() has been renamed to adjacent()
+         * as part of an effort to make programming and scripting with
+         * Regina a little less work on the fingers.
+         *
+         * \deprecated This routine will eventually be removed in some future
+         * version of Regina.  Users are advised to use adjacent() instead,
+         * which is an identical routine with a shorter name.
+         *
+         * @param face the face of this tetrahedron to examine.  This
+         * should be between 0 and 3 inclusive, where face \c i is
+         * opposite vertex \c i of the tetrahedron.
+         * @return the adjacent tetrahedron glued to the given face, or 0
+         * if the given face lies on the boundary.
          */
         NTetrahedron* getAdjacentTetrahedron(int face) const;
         /**
-         * Returns a permutation representing the correspondence between
-         * vertices of this tetrahedron and vertices of the tetrahedron
-         * glued to the given face of this tetrahedron.  If we call the
-         * returned permutation \c p, then for each vertex \c v of this
+         * Returns a permutation describing the correspondence between
+         * vertices of this tetrahedron and vertices of the adjacent
+         * tetrahedron glued to the given face of this tetrahedron.
+         *
+         * If we call this permutation \c p, then for each vertex \c v of this
          * tetrahedron, <tt>p[v]</tt> will be the vertex of the adjacent
          * tetrahedron that is identified with \c v according to the gluing
          * along the given face of this tetrahedron.
          *
-         * \pre The given face of this tetrahedron has
-         * a tetrahedron (possibly this one) glued to it.
+         * \pre The given face of this tetrahedron has some tetrahedron
+         * (possibly this one) glued to it.
          *
          * @param face the face of this tetrahedron whose gluing we
-         * will examine.  This
-         * should be between 0 and 3 inclusive, where face \c i is
-         * opposite vertex \c i of the tetrahedron.
+         * will examine.  This should be between 0 and 3 inclusive, where
+         * face \c i is opposite vertex \c i of the tetrahedron.
+         * @return a permutation mapping the vertices of this
+         * tetrahedron to the vertices of the tetrahedron adjacent along
+         * the given face.
+         */
+        NPerm adjacentGluing(int face) const;
+        /**
+         * Deprecated in favour of adjacentGluing().  The old routine
+         * getAdjacentTetrahedronGluing() has been renamed to adjacentGluing()
+         * as part of an effort to make programming and scripting with
+         * Regina a little less work on the fingers.
+         *
+         * \deprecated This routine will eventually be removed in some future
+         * version of Regina.  Users are advised to use adjacentGluing()
+         * instead, which is an identical routine with a shorter name.
+         *
+         * @param face the face of this tetrahedron whose gluing we
+         * will examine.  This should be between 0 and 3 inclusive, where
+         * face \c i is opposite vertex \c i of the tetrahedron.
          * @return a permutation mapping the vertices of this
          * tetrahedron to the vertices of the tetrahedron adjacent along
          * the given face.
@@ -189,12 +224,12 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
         NPerm getAdjacentTetrahedronGluing(int face) const;
         /**
          * Examines the tetrahedron glued to the given face of this
-         * tetrahedron and returns the corresponding face of that
+         * tetrahedron, and returns the corresponding face of that
          * tetrahedron.  That is, the returned face of the adjacent
          * tetrahedron is glued to the given face of this tetrahedron.
          *
-         * \pre The given face of this tetrahedron has
-         * a tetrahedron (possibly this one) glued to it.
+         * \pre The given face of this tetrahedron has some tetrahedron
+         * (possibly this one) glued to it.
          *
          * @param face the face of this tetrahedron whose gluing we
          * will examine.  This
@@ -203,6 +238,23 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * @return the face of the tetrahedron adjacent along the given
          * face that is in fact glued to the given face of this
          * tetrahedron.
+         */
+        int adjacentFace(int face) const;
+        /**
+         * Deprecated in favour of adjacentFace().  The old routine
+         * getAdjacentFace() has been renamed to adjacentFace()
+         * as part of an effort to make programming and scripting with
+         * Regina a little less work on the fingers.
+         *
+         * \deprecated This routine will eventually be removed in some future
+         * version of Regina.  Users are advised to use adjacentFace()
+         * instead, which is an identical routine with a shorter name.
+         *
+         * @param face the face of this tetrahedron whose gluing we
+         * will examine.  This should be between 0 and 3 inclusive, where
+         * face \c i is opposite vertex \c i of the tetrahedron.
+         * @return the face of the tetrahedron adjacent along the given
+         * face that is in fact glued to the given face of this tetrahedron.
          */
         int getAdjacentFace(int face) const;
         /**
@@ -220,17 +272,14 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * automatically updated.
          *
          * \warning Note that NTriangulation::gluingsHaveChanged() will
-         * have to be called after all joins and unjoins have been
-         * performed.
+         * have to be called after all joins and unjoins have been performed.
          *
-         * \pre The given face of this tetrahedron is
-         * not currently glued to anything.
-         * \pre The face of the other tetrahedron
-         * that will be glued to the given face of this
-         * tetrahedron is not currently glued to anything.
-         * \pre If the other tetrahedron involved is
-         * this tetrahedron, we are not attempting to glue a face to
-         * itself.
+         * \pre The given face of this tetrahedron is not currently glued to
+         * anything.
+         * \pre The face of the other tetrahedron that will be glued to the
+         * given face of this tetrahedron is not currently glued to anything.
+         * \pre If the other tetrahedron involved is this tetrahedron, we are
+         * not attempting to glue a face to itself.
          *
          * @param myFace the face of this tetrahedron that will be glued
          * to the given other tetrahedron.  This
@@ -253,18 +302,16 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * one) will be automatically updated.
          *
          * \warning Note that NTriangulation::gluingsHaveChanged() will
-         * have to be called after all joins and unjoins have been
-         * performed.
+         * have to be called after all joins and unjoins have been performed.
          *
-         * \pre The given face of this tetrahedron has
-         * a tetrahedron (possibly this one) glued to it.
+         * \pre The given face of this tetrahedron has some tetrahedron
+         * (possibly this one) glued to it.
          *
          * @param myFace the face of this tetrahedron whose gluing we
-         * will undo.  This
-         * should be between 0 and 3 inclusive, where face \c i is
-         * opposite vertex \c i of the tetrahedron.
-         * @return the tetrahedron that was originally glued to the
-         * given face of this tetrahedron.
+         * will undo.  This should be between 0 and 3 inclusive, where
+         * face \c i is opposite vertex \c i of the tetrahedron.
+         * @return the ex-adjacent tetrahedron that was originally glued
+         * to the given face of this tetrahedron.
          */
         NTetrahedron* unjoin(int myFace);
         /**
@@ -277,8 +324,8 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * Returns the triangulation component to which this tetrahedron
          * belongs.
          *
-         * \pre This tetrahedron belongs to a
-         * triangulation whose skeletal information has been calculated.
+         * \pre This tetrahedron belongs to a triangulation whose skeletal
+         * information has already been calculated.
          *
          * @return the component containing this tetrahedron.
          */
@@ -287,8 +334,8 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * Returns the vertex in the triangulation skeleton
          * corresponding to the given vertex of this tetrahedron.
          *
-         * \pre This tetrahedron belongs to a
-         * triangulation whose skeletal information has been calculated.
+         * \pre This tetrahedron belongs to a triangulation whose skeletal
+         * information has already been calculated.
          *
          * @param vertex the vertex of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive.
@@ -300,8 +347,8 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * Returns the edge in the triangulation skeleton
          * corresponding to the given edge of this tetrahedron.
          *
-         * \pre This tetrahedron belongs to a
-         * triangulation whose skeletal information has been calculated.
+         * \pre This tetrahedron belongs to a triangulation whose skeletal
+         * information has already been calculated.
          *
          * @param edge the edge of this tetrahedron to examine.
          * This should be between 0 and 5 inclusive.
@@ -313,8 +360,8 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * Returns the face in the triangulation skeleton
          * corresponding to the given face of this tetrahedron.
          *
-         * \pre This tetrahedron belongs to a
-         * triangulation whose skeletal information has been calculated.
+         * \pre This tetrahedron belongs to a triangulation whose skeletal
+         * information has already been calculated.
          *
          * @param face the face of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive, where face \c i
@@ -324,54 +371,85 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          */
         NFace* getFace(int face) const;
         /**
-         * The edge in the skeleton corresponding to the requested
-         * edge of this tetrahedron is examined, and a
-         * permutation mapping vertices (0,1) of the skeleton
-         * edge to the corresponding vertices of this tetrahedron
-         * is returned.
+         * Examines the given edge of this tetrahedron, and returns a
+         * mapping from the "canonical" vertices of the corresponding
+         * edge of the triangulation to the matching vertices of this
+         * tetrahedron.
          *
-         * Thus, for each <tt>i=0,1</tt> and each tetrahedron containing
-         * this skeleton edge,
-         * <tt>getEdgeMapping(...)[i]</tt> will refer to vertices
-         * that are all identified to each other along the skeleton
-         * edge concerned.
+         * In detail:  Suppose several edges of several tetrahedra are
+         * identified within the overall triangulation.  We call this a
+         * single "edge of the triangulation", and arbitrarily
+         * label its vertices (0,1).  This routine then maps the vertices
+         * (0,1) of this edge of the triangulation to the individual
+         * vertices of this tetrahedron that make up the given edge.
          *
-         * Furthermore, following the ordered edges defined by the
-         * images of (2,3) under the returned permutations
-         * will produce an ordered chain
-         * circling the skeleton edge.  That is, if tetrahedra \c A
-         * and \c B are adjacent along the edge concerned
-         * and also at vertex \a V,
-         * then if <tt>A.getEdgeMapping(...)[3]</tt> refers to \a V, we will
-         * have <tt>B.getEdgeMapping(...)[2]</tt> referring to \a V also, and
-         * \c B will appear immediately after \c A in the list of
-         * embeddings stored in the corresponding NEdge object.
-         * See NEdge::getEmbeddings() for further details.
+         * Because we are passing the argument \a edge, we already know
+         * \e which vertices of this tetrahedron are involved.  What this
+         * routine tells us is the \a order in which they appear to form the
+         * overall edge of the triangulation.
          *
-         * \pre This tetrahedron belongs to a
-         * triangulation whose skeletal information has been calculated.
+         * As a consequence:  Consider some collection of tetrahedron edges
+         * that are identified together as a single edge of the triangulation,
+         * and choose some \a i from the set {0,1}.  Then the vertices
+         * <tt>getEdgeMapping(...)[i]</tt> of the individual tetrahedra
+         * are all identified together, since they all become the same
+         * vertex of the same edge of the triangulation (assuming of
+         * course that we pass the correct edge number in each case to
+         * getEdgeMapping()).
+         *
+         * The images of 2 and 3 under the permutations that are returned
+         * have the following properties.  In each tetrahedron, the images
+         * of 2 and 3 under this map form a directed edge of the tetrahedron
+         * (running from the image of vertex 2 to the image of vertex 3).
+         * For any given edge of the triangulation, these corresponding
+         * directed edges together form an ordered path within the
+         * triangulation that circles the common edge of the triangulation
+         * (like an edge link, except that it is not near to the edge and so
+         * might intersect itself).  Furthermore, if we consider the individual
+         * tetrahedra in the order in which they appear in the list
+         * NEdge::getEmbeddings(), these corresponding directed edges
+         * appear in order from the start of this path to the finish
+         * (for internal edges this path is actually a cycle, and the
+         * starting point is arbitrary).
+         *
+         * \pre This tetrahedron belongs to a triangulation whose
+         * skeletal information has already been calculated.
          *
          * @param edge the edge of this tetrahedron to examine.
          * This should be between 0 and 5 inclusive.
-         * @return a mapping from vertices (0,1) of the requested edge
-         * to the vertices of this tetrahedron.
+         * @return a mapping from vertices (0,1) of the requested
+         * triangulation edge to the vertices of this tetrahedron.
          */
         NPerm getEdgeMapping(int edge) const;
         /**
-         * The face in the skeleton corresponding to the requested
-         * face of this tetrahedron is examined, and a
-         * permutation mapping vertices (0,1,2) of the skeleton
-         * face to the corresponding vertices of this tetrahedron
-         * is returned.
+         * Examines the given face of this tetrahedron, and returns a
+         * mapping from the "canonical" vertices of the corresponding
+         * face of the triangulation to the matching vertices of this
+         * tetrahedron.
          *
-         * Thus, for each <tt>i=0,1,2</tt> and
-         * all tetrahedra containing this skeleton face,
-         * <tt>getFaceMapping(...)[i]</tt> will refer to vertices
-         * that are all identified to each other along the skeleton face
-         * concerned.
+         * In detail:  Suppose two faces of two tetrahedra are identified
+         * within the overall triangulation.  We call this a single
+         * "face of the triangulation", and arbitrarily label its
+         * vertices (0,1,2).  This routine then maps the vertices
+         * (0,1,2) of this face of the triangulation to the individual
+         * vertices of this tetrahedron that make up the given face.
          *
-         * \pre This tetrahedron belongs to a
-         * triangulation whose skeletal information has been calculated.
+         * Because we are passing the argument \a face, we already know
+         * \e which vertices of this tetrahedron are involved.  What this
+         * routine tells us is the \a order in which they appear to form the
+         * overall face of the triangulation.
+         *
+         * As a consequence:  Consider some pair of tetrahedron faces
+         * that are identified together as a single face of the triangulation,
+         * and choose some \a i from the set {0,1,2}.  Then the vertices
+         * <tt>getFaceMapping(...)[i]</tt> of the individual tetrahedra
+         * are identified together, since they both become the same
+         * vertex of the same face of the triangulation (assuming of
+         * course that we pass the correct face number in each case to
+         * getFaceMapping()).
+         *
+         * \pre This tetrahedron belongs to a triangulation whose
+         * skeletal information has already been calculated.
          *
          * @param face the face of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive.
@@ -391,8 +469,8 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * In a non-orientable component, orientations are still +1 and
          * -1 but no further guarantees can be made.
          *
-         * \pre This tetrahedron belongs to a
-         * triangulation whose skeletal information has been calculated.
+         * \pre This tetrahedron belongs to a triangulation whose skeletal
+         * information has already been calculated.
          *
          * @return +1 or -1 according to the orientation of this tetrahedron.
          */
@@ -419,15 +497,30 @@ inline void NTetrahedron::setDescription(const std::string& desc) {
     description = desc;
 }
 
-inline NTetrahedron* NTetrahedron::getAdjacentTetrahedron(int face) const {
+inline NTetrahedron* NTetrahedron::adjacent(int face) const {
     return tetrahedra[face];
 }
 
-inline int NTetrahedron::getAdjacentFace(int face) const {
+inline NTetrahedron* NTetrahedron::getAdjacentTetrahedron(int face) const {
+    // Deprecated.
+    return tetrahedra[face];
+}
+
+inline int NTetrahedron::adjacentFace(int face) const {
     return tetrahedronPerm[face][face];
 }
 
+inline int NTetrahedron::getAdjacentFace(int face) const {
+    // Deprecated.
+    return tetrahedronPerm[face][face];
+}
+
+inline NPerm NTetrahedron::adjacentGluing(int face) const {
+    return tetrahedronPerm[face];
+}
+
 inline NPerm NTetrahedron::getAdjacentTetrahedronGluing(int face) const {
+    // Deprecated!  Finally.
     return tetrahedronPerm[face];
 }
 

@@ -64,7 +64,7 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
             NTetrahedron* tet = torus->getTopLevel();
             int tf0 = torus->getTopFace(0);
             int tf1 = torus->getTopFace(1);
-            if (tet->getAdjacentTetrahedron(tf0) != tet) {
+            if (tet->adjacent(tf0) != tet) {
                 delete torus;
                 return 0;
             }
@@ -80,7 +80,7 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
             NLayeredLensSpace* ans = new NLayeredLensSpace();
             ans->torus = torus;
 
-            NPerm perm = tet->getAdjacentTetrahedronGluing(tf0);
+            NPerm perm = tet->adjacentGluing(tf0);
             if (perm[tf1] == tf0) {
                 // Snapped shut.
                 ans->mobiusBoundaryGroup = torus->getTopEdgeGroup(

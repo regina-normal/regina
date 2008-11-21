@@ -90,9 +90,9 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
 
     // Declare 0 to be a top face; find its partner.
     baseTop0 = 0;
-    next = base->getAdjacentTetrahedron(0);
+    next = base->adjacent(0);
     for (baseTop1 = 1; baseTop1 < 4; baseTop1++) {
-        if (base->getAdjacentTetrahedron(baseTop1) != next)
+        if (base->adjacent(baseTop1) != next)
             continue;
 
         // Find the vertex joined to baseTop0 by a hinge.
@@ -102,8 +102,8 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
             baseBottom1 = 6 - baseBottom0 - baseTop0 - baseTop1;
 
             // Some basic property checks.
-            if (base->getAdjacentTetrahedron(baseBottom0) !=
-                    base->getAdjacentTetrahedron(baseBottom1))
+            if (base->adjacent(baseBottom0) !=
+                    base->adjacent(baseBottom1))
                 continue;
 
             hinge0 = edgeNumber[baseTop0][baseBottom0];
@@ -131,20 +131,20 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
                 // Check that both steps up lead to the same tetrahedron.
                 // Note that this check has already been done for the first
                 // iteration of this loop; never mind, no big loss.
-                if (tet->getAdjacentTetrahedron(top0) !=
-                        tet->getAdjacentTetrahedron(top1)) {
+                if (tet->adjacent(top0) !=
+                        tet->adjacent(top1)) {
                     ok = false;
                     break;
                 }
 
                 // Check that the corresponding gluings are correct.
-                p = tet->getAdjacentTetrahedronGluing(top0);
+                p = tet->adjacentGluing(top0);
                 adjTop0 = p[bottom0];
                 adjTop1 = p[top1];
                 adjBottom0 = p[top0];
                 adjBottom1 = p[bottom1];
 
-                p = tet->getAdjacentTetrahedronGluing(top1);
+                p = tet->adjacentGluing(top1);
                 // Note that only three of the four comparisons are needed.
                 if (adjTop0 != p[top0] || adjTop1 != p[bottom1] ||
                         adjBottom0 != p[bottom0]) {
@@ -168,7 +168,7 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
                 top0 = adjTop0; top1 = adjTop1;
                 bottom0 = adjBottom0; bottom1 = adjBottom1;
                 tet = next;
-                next = tet->getAdjacentTetrahedron(top0);
+                next = tet->adjacent(top0);
             }
 
             if (ok) {
