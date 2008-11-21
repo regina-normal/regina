@@ -78,14 +78,14 @@ class Dim4Component;
  */
 class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
     private:
-        Dim4Pentachoron* adj_[4];
+        Dim4Pentachoron* adj_[5];
             /**< Stores the adjacent pentachora glued to each facet of this
                  pentachoron.  Specifically, <tt>adj_[f]</tt>
                  represents the pentachoron joined to facet \c f
                  of this pentachoron, or is 0 if facet \c f lies on the
                  triangulation boundary.  Facets are numbered from 0 to 4
                  inclusive, where facet \c i is opposite vertex \c i. */
-        NPerm5 adjPerm_[4];
+        NPerm5 adjPerm_[5];
             /**< Stores the corresponence between vertices of this
                  pentachoron and adjacent pentachora.  If facet \c f is
                  joined to another pentachoron, <tt>adjPerm_[f]</tt>
@@ -115,9 +115,10 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
         NPerm5 faceMapping_[10];
             /**< Maps (0,1,2) to the vertices of this pentachoron that form
                  each 2-dimensional face, as described in getFaceMapping(). */
-        NPerm5 tetMapping_[10];
+        NPerm5 tetMapping_[5];
             /**< Maps (0,1,2,3) to the vertices of this pentachoron that form
-                 each 3-dimensional facet, as described in getFaceMapping(). */
+                 each 3-dimensional facet, as described in
+                 getTetrahedronMapping(). */
         int orientation_;
             /**< The orientation of this pentachoron in the triangulation.
                  This will either be 1 or -1. */
@@ -232,7 +233,7 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * \pre If the other pentachoron involved is this pentachoron, we are
          * not attempting to glue a facet to itself.
          *
-         * @param myFace the facet of this pentachoron that will be glued to
+         * @param myFacet the facet of this pentachoron that will be glued to
          * the given other pentachoron.  This should be between 0 and 4
          * inclusive, where facet \c i is opposite vertex \c i of the pentachoron.
          * @param you the pentachoron (possibly this one) that will be
@@ -263,7 +264,7 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * @return the ex-adjacent pentachoron that was originally glued to the
          * given facet of this pentachoron.
          */
-        Dim4Pentachoron* unjoin(int myFace);
+        Dim4Pentachoron* unjoin(int myFacet);
         /**
          * Undoes any facet gluings involving this pentachoron.
          * Any other pentachora involved will be automatically updated.
