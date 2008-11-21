@@ -51,12 +51,12 @@ Version 4.6  [ (under development) ]
         - Items in the triangulation composition list can now be copied
           into the clipboard via the right mouse button.  Amongst other
           things, this makes extracting the dehydration string much simpler.
+    TEST SUITE:
+        - Added very thorough tests for small permutation classes.
     BUILD ENVIRONMENT:
         - Installing into a staging area (i.e., building packages) now works
           fine even if older versions of the Regina development libraries are
           installed (this used to cause relinking problems on some systems).
-    TEST SUITE:
-        - Added very thorough tests for small permutation classes.
 
 Version 4.5.1  [ 28 October, 2008 ]
 
