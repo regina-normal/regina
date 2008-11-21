@@ -46,10 +46,12 @@ bool Dim4Pentachoron::hasBoundary() const {
     return false;
 }
 
-void Dim4Pentachoron::isolate() {
-    for (int i=0; i<5; ++i)
-        if (adj_[i])
-            unjoin(i);
+void Dim4Pentachoron::joinTo(int myFacet, Dim4Pentachoron* you, NPerm5 gluing) {
+    adj_[myFacet] = you;
+    adjPerm_[myFacet] = gluing;
+    int yourFacet = gluing[myFacet];
+    you->adj_[yourFacet] = this;
+    you->adjPerm_[yourFacet] = gluing.inverse();
 }
 
 Dim4Pentachoron* Dim4Pentachoron::unjoin(int myFacet) {
@@ -60,12 +62,10 @@ Dim4Pentachoron* Dim4Pentachoron::unjoin(int myFacet) {
     return you;
 }
 
-void Dim4Pentachoron::joinTo(int myFacet, Dim4Pentachoron* you, NPerm5 gluing) {
-    adj_[myFacet] = you;
-    adjPerm_[myFacet] = gluing;
-    int yourFacet = gluing[myFacet];
-    you->adj_[yourFacet] = this;
-    you->adjPerm_[yourFacet] = gluing.inverse();
+void Dim4Pentachoron::isolate() {
+    for (int i=0; i<5; ++i)
+        if (adj_[i])
+            unjoin(i);
 }
 
 } // namespace regina

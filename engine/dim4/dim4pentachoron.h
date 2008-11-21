@@ -235,7 +235,8 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          *
          * @param myFacet the facet of this pentachoron that will be glued to
          * the given other pentachoron.  This should be between 0 and 4
-         * inclusive, where facet \c i is opposite vertex \c i of the pentachoron.
+         * inclusive, where facet \c i is opposite vertex \c i of the
+         * pentachoron.
          * @param you the pentachoron (possibly this one) that will be
          * glued to the given facet of this pentachoron.
          * @param gluing a permutation describing the mapping of
