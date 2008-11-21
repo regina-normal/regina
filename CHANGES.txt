@@ -28,6 +28,10 @@ Version 4.6  [ (under development) ]
               between normal surfaces.
             - New routine rawVector() that gives direct read-only access to
               the underlying vector in case this is needed.
+        Class NPerm:
+            - Deprecated the setPerm() routines; these are unnecessary
+              because NPerm objects are very small and can just be copied
+              around using the assignment operator.
         Class NTetrahedron:
             - Renamed getAdjacentTetrahedron(), getAdjacentTetrahedronGluing()
               and getAdjacentFace() to adjacentTetrahedron(), adjacentGluing()
@@ -44,6 +48,8 @@ Version 4.6  [ (under development) ]
         - Items in the triangulation composition list can now be copied
           into the clipboard via the right mouse button.  Amongst other
           things, this makes extracting the dehydration string much simpler.
+    TEST SUITE:
+        - Added very thorough tests for NPerm.
     BUILD ENVIRONMENT:
         - Installing into a staging area (i.e., building packages) now works
           fine even if older versions of the Regina development libraries are

@@ -59,7 +59,7 @@ namespace regina {
  * image of 0, the next lowest two bits represent the image of 1 and so
  * on.
  *
- * \testpart
+ * \testfull
  */
 class NPerm {
     private:
@@ -176,6 +176,11 @@ class NPerm {
          *
          * \pre \a a and \a b are in {0,1,2,3}.
          *
+         * \deprecated This routine is largely unnecessary, since NPerm
+         * objects are tiny and cheap.  Just use the assignment operator
+         * instead.  This routine will eventually be removed entirely in
+         * a future version of Regina.
+         *
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
@@ -186,6 +191,11 @@ class NPerm {
          * (<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>) respectively.
          *
          * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>} = {0,1,2,3}.
+         *
+         * \deprecated This routine is largely unnecessary, since NPerm
+         * objects are tiny and cheap.  Just use the assignment operator
+         * instead.  This routine will eventually be removed entirely in
+         * a future version of Regina.
          *
          * @param a the desired image of 0.
          * @param b the desired image of 1.
