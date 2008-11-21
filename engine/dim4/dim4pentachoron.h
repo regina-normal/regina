@@ -463,7 +463,7 @@ inline NPerm5 Dim4Pentachoron::adjacentGluing(int facet) const {
     return adjPerm_[facet];
 }
 
-inline int Dim4Pentachoron::adjacentFace(int facet) const {
+inline int Dim4Pentachoron::adjacentFacet(int facet) const {
     return adjPerm_[facet][facet];
 }
 
@@ -505,8 +505,8 @@ inline int Dim4Pentachoron::orientation() const {
 
 inline void Dim4Pentachoron::writeTextShort(std::ostream& out) const {
     out << "Pentachoron";
-    if (description.length() > 0)
-        out << " " << description;
+    if (desc_.length() > 0)
+        out << " " << desc_;
 }
 
 } // namespace regina

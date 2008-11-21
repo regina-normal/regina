@@ -32,11 +32,11 @@
 namespace regina {
 
 Dim4Pentachoron::Dim4Pentachoron() {
-    std::fill(adj_, adj_ + 5, 0);
+    std::fill(adj_, adj_ + 5, static_cast<Dim4Pentachoron*>(0));
 }
 
 Dim4Pentachoron::Dim4Pentachoron(const std::string& desc) : desc_(desc) {
-    std::fill(adj_, adj_ + 5, 0);
+    std::fill(adj_, adj_ + 5, static_cast<Dim4Pentachoron*>(0));
 }
 
 bool Dim4Pentachoron::hasBoundary() const {
