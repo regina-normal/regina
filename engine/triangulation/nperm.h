@@ -59,7 +59,7 @@ namespace regina {
  * image of 0, the next lowest two bits represent the image of 1 and so
  * on.
  *
- * \testpart
+ * \testfull
  */
 class NPerm {
     private:
