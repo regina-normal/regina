@@ -28,6 +28,10 @@ Version 4.6  [ (under development) ]
               between normal surfaces.
             - New routine rawVector() that gives direct read-only access to
               the underlying vector in case this is needed.
+        Class NPerm:
+            - Deprecated the setPerm() routines; these are unnecessary
+              because NPerm objects are very small and can just be copied
+              around using the assignment operator.
         Class NPerm5:
             - New class describing permutations of five elements, which
               we need in order to describe 4-manifold triangulations.
@@ -42,6 +46,8 @@ Version 4.6  [ (under development) ]
         - Installing into a staging area (i.e., building packages) now works
           fine even if older versions of the Regina development libraries are
           installed (this used to cause relinking problems on some systems).
+    TEST SUITE:
+        - Added very thorough tests for small permutation classes.
 
 Version 4.5.1  [ 28 October, 2008 ]
 
