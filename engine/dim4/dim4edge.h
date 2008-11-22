@@ -132,7 +132,7 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          * A table that maps vertices of a pentachoron to edge numbers.
          *
          * Edges in a pentachoron are numbered 0,...,9.  This table
-         * converts vertices to edge number; in particular, the edge
+         * converts vertices to edge numbers; in particular, the edge
          * joining vertices \a i and \a j of a pentachoron is
          * edge number <tt>edgeNumber[i][j]</tt>.  Here \a i and \a j
          * must be distinct, must be between 0 and 4 inclusive, and may
@@ -141,8 +141,9 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          *
          * Note that edge \i is always opposite face \i in a pentachoron.
          *
-         * This the 4-manifold analogue to the global array
-         * regina::edgeNumber for 3-manifold triangulations.
+         * This the 4-manifold analogue to the lookup table NEdge::edgeNumber
+         * for 3-manifold triangulations (and its deprecated predecessor,
+         * the old global array regina::edgeNumber).
          */
         static const int edgeNumber[5][5];
 
@@ -160,8 +161,9 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
          * be smaller than <tt>edgeVertex[i][1]</tt>.
          *
-         * This the 4-manifold analogue to the global arrays
-         * regina::edgeStart and regina::edgeEnd for 3-manifold triangulations.
+         * This the 4-manifold analogue to the lookup table NEdge::edgeVertex
+         * for 3-manifold triangulations (and its deprecated predecessors,
+         * the old global arrays regina::edgeStart and regina::edgeEnd).
          */
         static const int edgeVertex[10][2];
 
