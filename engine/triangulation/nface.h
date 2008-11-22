@@ -134,15 +134,15 @@ class NFace : public ShareableObject, public NMarkedElement {
                  the Lens space L(3,1). */
     private:
         NFaceEmbedding* embeddings[2];
-            /**< An array of descriptors of how this face forms a part of
-                 each individual tetrahedron it belongs to.
+            /**< An array of descriptors telling how this face forms a part of
+                 each individual tetrahedron that it belongs to.
                  These embeddings will be automatically deleted when the
                  face itself is deleted. */
         int nEmbeddings;
             /**< The number of embedding descriptors stored in
                  the embeddings array. */
         NComponent* component;
-            /**< The component that this vertex is a part of. */
+            /**< The component that this face is a part of. */
         NBoundaryComponent* boundaryComponent;
             /**< The boundary component that this face is a part of,
                  or 0 if this face is internal. */
@@ -157,7 +157,7 @@ class NFace : public ShareableObject, public NMarkedElement {
 
     public:
         /**
-         * Creates a new face and specifies it as belonging to the
+         * Creates a new face and marks it as belonging to the
          * given triangulation component.
          *
          * \ifacespython Not present.
@@ -234,10 +234,10 @@ class NFace : public ShareableObject, public NMarkedElement {
         unsigned getNumberOfEmbeddings() const;
 
         /**
-         * Returns the requested descriptor of how this face forms a
+         * Returns the requested descriptor detailing how this face forms a
          * part of a particular tetrahedron in the triangulation.
          * Note that if this face represents multiple faces of a
-         * particular tetrahedron, there will be multiple embedding
+         * particular tetrahedron, then there will be multiple embedding
          * descriptors available regarding that tetrahedron.
          *
          * @param index the index of the requested descriptor.  This
@@ -258,33 +258,31 @@ class NFace : public ShareableObject, public NMarkedElement {
          * Returns the boundary component of the triangulation to which
          * this face belongs.
          *
-         * @return the boundary component containing this face,
-         * or 0 if this face is not on the boundary of the triangulation.
+         * @return the boundary component containing this face, or 0 if this
+         * face does not lie entirely within the boundary of the triangulation.
          */
         NBoundaryComponent* getBoundaryComponent() const;
 
         /**
-         * Returns the vertex in the triangulation skeleton corresponding
+         * Returns the vertex of the triangulation that corresponds
          * to the given vertex of this face.
          *
          * Note that face vertex \a i is opposite face edge \a i.
          *
          * @param vertex the vertex of this face to examine.  This should
          * be 0, 1 or 2.
-         * @return the vertex of the skeleton corresponding to the
-         * requested face vertex.
+         * @return the corresponding vertex of the triangulation.
          */
         NVertex* getVertex(int vertex) const;
         /**
-         * Returns the edge of the triangulation skeleton corresponding
+         * Returns the edge of the triangulation that corresponds
          * to the given edge of this face.
          *
          * Note that face vertex \a i is opposite face edge \a i.
          *
          * @param edge the edge of this face to examine.  This should be
          * 0, 1 or 2.
-         * @return the edge of the skeleton corresponding to the
-         * requested face edge.
+         * @return the corresponding edge of the triangulation.
          */
         NEdge* getEdge(int edge) const;
         /**

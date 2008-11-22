@@ -51,26 +51,34 @@ class NBoundaryComponent;
  */
 
 /**
- * <tt>edgeNumber[i][j]</tt> is the number of the
- * edge linking vertices <tt>i</tt> and <tt>j</tt>
- * in a tetrahedron.  <tt>i</tt> and <tt>j</tt>
- * must be between 0 and 3 inclusive and may be given
- * in any order.
+ * <tt>edgeNumber[i][j]</tt> is the number of the edge linking vertices
+ * <tt>i</tt> and <tt>j</tt> in a tetrahedron.  <tt>i</tt> and <tt>j</tt>
+ * must be between 0 and 3 inclusive and may be given in any order.
  * The resulting edge number will be between 0 and 5 inclusive.
  *
  * Note that edge numbers of opposite edges will always add to 5.
+ *
+ * \deprecated This array has been replaced with the identical array
+ * NEdge::edgeNumber.  Users are advised to switch to NEdge::edgeNumber
+ * instead, since the old regina::edgeNumber will eventually be removed
+ * in some future version of Regina.
  */
 extern const int edgeNumber[4][4];
 
 /**
- * <tt>edgeStart[k]</tt> is the vertex of a tetrahedron
- * at which edge <tt>k</tt> of the tetrahedron begins.
- * <tt>k</tt> must be between 0 and 5 inclusive.
- * The resulting vertex number will be between 0 and 3 inclusive.
+ * <tt>edgeStart[k]</tt> is the vertex of a tetrahedron at which edge
+ * <tt>k</tt> of the tetrahedron begins.  <tt>k</tt> must be between 0 and 5
+ * inclusive.  The resulting vertex number will be between 0 and 3 inclusive.
  *
  * Note that edge numbers of opposite edges will always add to 5.
  * You are guaranteed that <tt>edgeStart[e]</tt> will always be smaller
  * than <tt>edgeEnd[e]</tt>.
+ *
+ * \deprecated This array has been superceded by NEdge::edgeVertex
+ * (where <tt>edgeStart[i]</tt> is now <tt>NEdge::edgeVertex[i][0]</tt>).
+ * Users are advised to switch to NEdge::edgeVertex instead, since the old
+ * regina::edgeStart and regina::edgeEnd will eventually be removed in some
+ * future version of Regina.
  */
 extern const int edgeStart[6];
 
@@ -83,6 +91,12 @@ extern const int edgeStart[6];
  * Note that edge numbers of opposite edges will always add to 5.
  * You are guaranteed that <tt>edgeStart[e]</tt> will always be smaller
  * than <tt>edgeEnd[e]</tt>.
+ *
+ * \deprecated This array has been superceded by NEdge::edgeVertex
+ * (where <tt>edgeEnd[i]</tt> is now <tt>NEdge::edgeVertex[i][1]</tt>).
+ * Users are advised to switch to NEdge::edgeVertex instead, since the old
+ * regina::edgeStart and regina::edgeEnd will eventually be removed in some
+ * future version of Regina.
  */
 extern const int edgeEnd[6];
 
@@ -93,7 +107,7 @@ extern const int edgeEnd[6];
 class NEdgeEmbedding {
     private:
         NTetrahedron* tetrahedron;
-            /**< The tetrahedron in which this face is contained. */
+            /**< The tetrahedron in which this edge is contained. */
         int edge;
             /**< The edge number of the tetrahedron that is this edge. */
 
@@ -106,7 +120,7 @@ class NEdgeEmbedding {
          * \ifacespython Not present.
          */
         NEdgeEmbedding();
-        
+
         /**
          * Creates an embedding descriptor containing the given data.
          *
@@ -115,7 +129,7 @@ class NEdgeEmbedding {
          * @param newEdge the edge number of \a newTet that is this edge.
          */
         NEdgeEmbedding(NTetrahedron* newTet, int newEdge);
-        
+
         /**
          * Creates an embedding descriptor containing the same data as
          * the given embedding descriptor.
@@ -138,7 +152,7 @@ class NEdgeEmbedding {
          * @return the tetrahedron.
          */
         NTetrahedron* getTetrahedron() const;
-        
+
         /**
          * Returns the edge number within getTetrahedron() that is
          * this edge.
@@ -164,10 +178,56 @@ class NEdgeEmbedding {
  * edge objects will be deleted and new ones will be created.
  */
 class NEdge : public ShareableObject, public NMarkedElement {
+    public:
+        /**
+         * A table that maps vertices of a tetrahedron to edge numbers.
+         *
+         * Edges in a tetrahedron are numbered 0,...,5.  This table
+         * converts vertices to edge numbers; in particular, the edge
+         * joining vertices \a i and \a j of a tetrahedron is edge
+         * number <tt>edgeNumber[i][j]</tt>.  Here \a i and \a j must be
+         * distinct, must be between 0 and 3 inclusive, and may be given
+         * in any order.  The resulting edge number will be between 0 and 5
+         * inclusive.
+         *
+         * Note that edge \a i is always opposite edge \a 5-i in a
+         * tetrahedron.
+         *
+         * This is identical to the old regina::edgeNumber global array.
+         * Users are advised to use this NEdge::edgeNumber array instead,
+         * since the global regina::edgeNumber is deprecated and will
+         * eventually be removed in some future version of Regina.
+         */
+        static const int edgeNumber[4][4];
+
+        /**
+         * A table that maps edges of a tetrahedron to vertex numbers.
+         *
+         * Edges in a tetrahedron are numbered 0,...,5.  This table
+         * converts edge numbers to vertices; in particular, edge \a i
+         * in a tetrahedron joins vertices <tt>edgeVertex[i][0]</tt> and
+         * <tt>edgeVertex[i][1]</tt>.  Here \a i must be bewteen 0 and 5
+         * inclusive; the resulting vertex numbers will be between 0 and 3
+         * inclusive.
+         *
+         * Note that edge \i is always opposite edge \a 5-i in a tetrahedron.
+         * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
+         * be smaller than <tt>edgeVertex[i][1]</tt>.
+         *
+         * This is a combination of the old regina::edgeStart and
+         * regina::edgeEnd global arrays (where
+         * <tt>edgeVertex[i][0] == edgeStart[i]</tt> and
+         * <tt>edgeVertex[i][1] == edgeEnd[i]</tt>).  Users are advised
+         * to use this NEdge::edgeVertex array instead, since the global
+         * regina::edgeStart and regina::edgeEnd arrays are deprecated
+         * and will eventually be removed in some future version of Regina.
+         */
+        static const int edgeVertex[6][2];
+
     private:
         std::deque<NEdgeEmbedding> embeddings;
-            /**< A list of descriptors of how this edge forms a part of
-                 each individual tetrahedron it belongs to. */
+            /**< A list of descriptors telling how this edge forms a part of
+                 each individual tetrahedron that it belongs to. */
         NComponent* component;
             /**< The component that this edge is a part of. */
         NBoundaryComponent* boundaryComponent;
@@ -178,7 +238,7 @@ class NEdge : public ShareableObject, public NMarkedElement {
 
     public:
         /**
-         * Creates a new edge and specifies it as belonging to the
+         * Creates a new edge and marks it as belonging to the
          * given triangulation component.
          *
          * \ifacespython Not present.
@@ -194,10 +254,10 @@ class NEdge : public ShareableObject, public NMarkedElement {
         ~NEdge();
 
         /**
-         * Returns the list of descriptors of how this edge forms a
+         * Returns the list of descriptors detailing how this edge forms a
          * part of various tetrahedra in the triangulation.
          * Note that if this edge represents multiple edges of a
-         * particular tetrahedron, there will be multiple embedding
+         * particular tetrahedron, then there will be multiple embedding
          * descriptors in the list regarding that tetrahedron.
          *
          * These embedding descriptors will be stored in order in
@@ -244,19 +304,18 @@ class NEdge : public ShareableObject, public NMarkedElement {
          * Returns the boundary component of the triangulation to which
          * this edge belongs.
          *
-         * @return the boundary component containing this edge,
-         * or 0 if this edge is not on the boundary of the triangulation.
+         * @return the boundary component containing this edge, or 0 if this
+         * edge does not lie entirely within the boundary of the triangulation.
          */
         NBoundaryComponent* getBoundaryComponent() const;
 
         /**
-         * Returns the vertex in the triangulation skeleton corresponding
+         * Returns the vertex of the triangulation that corresponds
          * to the given vertex of this edge.
          *
          * @param vertex the vertex of this edge to examine.  This should
          * be 0 or 1.
-         * @return the vertex of the skeleton corresponding to the
-         * requested edge vertex.
+         * @return the corresponding vertex of the triangulation.
          */
         NVertex* getVertex(int vertex) const;
 
