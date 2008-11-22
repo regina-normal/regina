@@ -16,6 +16,7 @@ SUBDIRS = \
   dim4 \
   maths \
   snappea \
+  subcomplex \
   surfaces \
   triangulation \
   utilities
@@ -31,6 +32,7 @@ regtestsuite_LDADD = \
   dim4/libdim4.a \
   maths/libmaths.a \
   snappea/libsnappea.a \
+  subcomplex/libsubcomplex.a \
   surfaces/libsurfaces.a \
   triangulation/libtriangulation.a \
   utilities/libutilities.a \

@@ -36,6 +36,7 @@
 #include "testsuite/dim4/testdim4.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
+#include "testsuite/subcomplex/testsubcomplex.h"
 #include "testsuite/surfaces/testsurfaces.h"
 #include "testsuite/triangulation/testtriangulation.h"
 #include "testsuite/utilities/testutilities.h"
@@ -130,6 +131,9 @@ bool runAllTests() {
 
     // 4-manifold triangulations:
     addNPerm5(runner);
+
+    // Subcomplexes:
+    addNStandardTriangulation(runner);
 
     // Surfaces:
     addNNormalSurfaceList(runner);

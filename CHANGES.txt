@@ -62,6 +62,8 @@ Version 4.6  [ (under development) ]
     TEST SUITE:
         - Added very thorough tests for small permutation classes.
         - Additional tests for triangulation simplification.
+        - New tests for the recognition of families of standard triangulations
+          and manifolds.
     BUILD ENVIRONMENT:
         - Installing into a staging area (i.e., building packages) now works
           fine even if older versions of the Regina development libraries are
