@@ -45,6 +45,9 @@ namespace {
     GlobalArray<int> edgeStart_arr(regina::edgeStart, 6);
     GlobalArray<int> edgeEnd_arr(regina::edgeEnd, 6);
 
+    GlobalArray2D<int> NEdge_edgeNumber(NEdge::edgeNumber, 4);
+    GlobalArray2D<int> NEdge_edgeVertex(NEdge::edgeVertex, 6);
+
     boost::python::list edge_getEmbeddings_list(const NEdge* e) {
         const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
         std::deque<NEdgeEmbedding>::const_iterator it;
@@ -57,6 +60,12 @@ namespace {
 }
 
 void addNEdge() {
+    // Global arrays:
+    scope().attr("edgeNumber") = &edgeNumber_arr;
+    scope().attr("edgeStart") = &edgeStart_arr;
+    scope().attr("edgeEnd") = &edgeEnd_arr;
+
+    // Classes:
     class_<NEdgeEmbedding>("NEdgeEmbedding",
             init<regina::NTetrahedron*, int>())
         .def(init<const NEdgeEmbedding&>())
@@ -66,7 +75,7 @@ void addNEdge() {
         .def("getVertices", &NEdgeEmbedding::getVertices)
     ;
 
-    class_<NEdge, bases<regina::ShareableObject>,
+    scope s = class_<NEdge, bases<regina::ShareableObject>,
             std::auto_ptr<NEdge>, boost::noncopyable>("NEdge", no_init)
         .def("getEmbeddings", edge_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &NEdge::getNumberOfEmbeddings)
@@ -83,9 +92,7 @@ void addNEdge() {
         .def("isValid", &NEdge::isValid)
     ;
 
-    // Global arrays:
-    scope().attr("edgeNumber") = &edgeNumber_arr;
-    scope().attr("edgeStart") = &edgeStart_arr;
-    scope().attr("edgeEnd") = &edgeEnd_arr;
+    s.attr("edgeNumber") = &NEdge_edgeNumber;
+    s.attr("edgeVertex") = &NEdge_edgeVertex;
 }
 
