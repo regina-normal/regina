@@ -55,7 +55,6 @@ const int NEdge::edgeVertex[6][2] = {
     { 1, 2 },
     { 1, 3 },
     { 2, 3 }};
-};
 
 } // namespace regina
 
