@@ -35,6 +35,7 @@
 #include "testsuite/census/testcensus.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
+#include "testsuite/subcomplex/testsubcomplex.h"
 #include "testsuite/surfaces/testsurfaces.h"
 #include "testsuite/triangulation/testtriangulation.h"
 #include "testsuite/utilities/testutilities.h"
@@ -126,6 +127,9 @@ bool runAllTests() {
     addElementaryMoves(runner);
     addNIsomorphism(runner);
     addNHomologicalData(runner);
+
+    // Subcomplexes:
+    addNStandardTriangulation(runner);
 
     // Surfaces:
     addNNormalSurfaceList(runner);

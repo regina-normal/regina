@@ -15,6 +15,7 @@ SUBDIRS = \
   census \
   maths \
   snappea \
+  subcomplex \
   surfaces \
   triangulation \
   utilities
@@ -29,6 +30,7 @@ regtestsuite_LDADD = \
   census/libcensus.a \
   maths/libmaths.a \
   snappea/libsnappea.a \
+  subcomplex/libsubcomplex.a \
   surfaces/libsurfaces.a \
   triangulation/libtriangulation.a \
   utilities/libutilities.a \
