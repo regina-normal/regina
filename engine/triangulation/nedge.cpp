@@ -42,5 +42,20 @@ const int edgeStart[6] =
 const int edgeEnd[6] =
     { 1, 2, 3, 2, 3, 3 };
 
+const int NEdge::edgeNumber[4][4] = {
+    { -1, 0, 1, 2 },
+    {  0,-1, 3, 4 },
+    {  1, 3,-1, 5 },
+    {  2, 4, 5,-1 }};
+
+const int NEdge::edgeVertex[6][2] = {
+    { 0, 1 },
+    { 0, 2 },
+    { 0, 3 },
+    { 1, 2 },
+    { 1, 3 },
+    { 2, 3 }};
+};
+
 } // namespace regina
 

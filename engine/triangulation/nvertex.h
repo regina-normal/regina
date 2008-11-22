@@ -137,8 +137,8 @@ class NVertex : public ShareableObject, public NMarkedElement {
                  disc. */
     private:
         std::vector<NVertexEmbedding> embeddings;
-            /**< A list of descriptors of how this vertex forms a part of
-                 each individual tetrahedron it belongs to. */
+            /**< A list of descriptors telling how this vertex forms a part of
+                 each individual tetrahedron that it belongs to. */
         NComponent* component;
             /**< The component that this vertex is a part of. */
         NBoundaryComponent* boundaryComponent;
@@ -154,7 +154,7 @@ class NVertex : public ShareableObject, public NMarkedElement {
 
     public:
         /**
-         * Creates a new vertex and specifies it as belonging to the
+         * Creates a new vertex and marks it as belonging to the
          * given triangulation component.
          *
          * \ifacespython Not present.
@@ -170,10 +170,10 @@ class NVertex : public ShareableObject, public NMarkedElement {
         virtual ~NVertex();
 
         /**
-         * Returns the list of descriptors of how this vertex forms a
+         * Returns the list of descriptors detailing how this vertex forms a
          * part of various tetrahedra in the triangulation.
          * Note that if this vertex represents multiple vertices of a
-         * particular tetrahedron, there will be multiple embedding
+         * particular tetrahedron, then there will be multiple embedding
          * descriptors in the list regarding that tetrahedron.
          *
          * \ifacespython This routine returns a python list.
