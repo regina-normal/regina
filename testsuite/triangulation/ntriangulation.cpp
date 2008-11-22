@@ -35,6 +35,7 @@
 #include "maths/numbertheory.h"
 #include "packet/ncontainer.h"
 #include "split/nsignature.h"
+#include "subcomplex/nstandardtri.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
@@ -45,6 +46,7 @@ using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NPerm;
 using regina::NSignature;
+using regina::NStandardTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 using regina::NVertex;
@@ -64,6 +66,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(turaevViro);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(dehydration);
+    CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(propertyUpdates);
 
     CPPUNIT_TEST_SUITE_END();
@@ -86,8 +89,6 @@ class NTriangulationTest : public CppUnit::TestFixture {
             /**< A two-vertex lens space L(3,1). */
         NTriangulation lens8_3;
             /**< The layered lens space L(8,3). */
-        NTriangulation lens8_3_large;
-            /**< The lens space L(8,3) with a non-minimal triangulation . */
         NTriangulation lens7_1_loop;
             /**< An untwisted layered loop representing L(7,1). */
         NTriangulation rp3rp3;
@@ -141,6 +142,19 @@ class NTriangulationTest : public CppUnit::TestFixture {
         NTriangulation pinchedSolidKB;
             /**< A solid Klein bottle with one longitude pinched to a point. */
 
+        // Non-minimal:
+        NTriangulation s3_large;
+            /**< A non-minimal 3-sphere triangulation. */
+        NTriangulation rp3_large;
+            /**< The manifold RP^3. */
+        NTriangulation lens8_3_large;
+            /**< The lens space L(8,3). */
+        NTriangulation q20_large;
+            /**< The manifold S^3 / Q_20. */
+        NTriangulation fig8_bary;
+            /**< The barycentric subdivision of the figure eight knot
+                 complement. */
+
     public:
         void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
             dest.insertTriangulation(*source);
@@ -178,9 +192,12 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             // Some of our triangulations can be generated from
             // splitting surfaces.
-            generateFromSig(lens8_3_large, "aabcb.cd.d");
             generateFromSig(rp3rp3, "aabccd.b.d");
             generateFromSig(q32xz3, "aabcdb.cedfef");
+            generateFromSig(s3_large, "abc.abd.cef.de.fg.g");
+            generateFromSig(lens8_3_large, "aabcb.cd.d");
+            generateFromSig(rp3_large, "aabcdedcfb.fg.e.g");
+            generateFromSig(q20_large, "abcdeabcdef.fg.g");
 
             // Some are hard-coded in the calculation engine as sample
             // triangulations.
@@ -192,6 +209,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
             copyAndDelete(gieseking, NExampleTriangulation::gieseking());
             copyAndDelete(cuspedGenusTwoTorus,
                 NExampleTriangulation::cuspedGenusTwoTorus());
+
+            copyAndDelete(fig8_bary,
+                NExampleTriangulation::figureEightKnotComplement());
+            fig8_bary.barycentricSubdivision();
 
             // The rest alas must be done manually.
             NTetrahedron* r;
@@ -1719,6 +1740,59 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Cusped solid genus 2 torus");
             verifyNoDehydration(pinchedSolidTorus, "Pinched solid torus");
             verifyNoDehydration(pinchedSolidKB, "Pinched solid Klein bottle");
+        }
+
+        void verifySimplification(const NTriangulation& tri,
+                unsigned simpleSize, const char* simpleName) {
+            NTriangulation t(tri);
+            t.intelligentSimplify();
+
+            if (t.getNumberOfTetrahedra() != simpleSize) {
+                std::ostringstream msg;
+                msg << "Large triangulation should simplify to " << simpleName
+                    << ", but simplifies to " << t.getNumberOfTetrahedra()
+                    << " tetrahedra instead of the expected " << simpleSize << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NStandardTriangulation* std =
+                NStandardTriangulation::isStandardTriangulation(&t);
+            if (std == 0) {
+                std::ostringstream msg;
+                msg << "Large triangulation should simplify to " << simpleName
+                    << ", but instead simplifies to something unrecognisable.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (std->getName() != simpleName) {
+                std::ostringstream msg;
+                msg << "Large triangulation should simplify to " << simpleName
+                    << ", but instead simplifies to " << std->getName() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Make sure it does not simplify any further.
+            NTriangulation t2(t);
+            if (t2.intelligentSimplify()) {
+                std::ostringstream msg;
+                msg << "The simple triangulation " << std->getName()
+                    << " should not simplify any further, but it does.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (t2.dumpConstruction() != t.dumpConstruction()) {
+                std::ostringstream msg;
+                msg << "The simple triangulation " << std->getName()
+                    << " should not change at all when simplified again, but it does.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void simplification() {
+            verifySimplification(s3_large, 1, "C(1)");
+            verifySimplification(rp3_large, 2, "L(2,1)");
+            verifySimplification(lens8_3_large, 2, "L(8,3)");
+            verifySimplification(q20_large, 5, "C~(5)");
+            verifySimplification(fig8_bary, 2, "SnapPea m004");
         }
 
         void propertyUpdates() {

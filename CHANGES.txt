@@ -61,6 +61,7 @@ Version 4.6  [ (under development) ]
           things, this makes extracting the dehydration string much simpler.
     TEST SUITE:
         - Added very thorough tests for small permutation classes.
+        - Additional tests for triangulation simplification.
     BUILD ENVIRONMENT:
         - Installing into a staging area (i.e., building packages) now works
           fine even if older versions of the Regina development libraries are
