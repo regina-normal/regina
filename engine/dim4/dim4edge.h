@@ -168,6 +168,15 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
         static const int edgeVertex[10][2];
 
     private:
+        enum {
+            INVALID_IDENTIFICATION = 1,
+                /**< Signifies that an edge is identified with itself in
+                     reverse. */
+            INVALID_LINK = 2
+                /**< Signifies that the link of an edge is something
+                     other than a 2-sphere or a disc. */
+        };
+
         std::vector<Dim4EdgeEmbedding> emb_;
             /**< A list of descriptors telling how this edge forms a part of
                  each individual pentachoron that it belongs to. */
@@ -176,8 +185,10 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
         Dim4BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
-        bool valid_;
-            /**< Is this edge valid? */
+        unsigned invalid_;
+            /**< Is this edge invalid?  This will 0 if the edge is
+                 valid, or a bitwise combination of \a INVALID_IDENTIFICATION
+                 and/or \a INVALID_LINK if the edge is invalid. */
 
     public:
         /**
@@ -257,12 +268,42 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
 
         /**
          * Determines if this edge is valid.
-         * An edge is valid if and only if it is not glued to itself
-         * in reverse.
+         * An edge is valid if and only if (i) it is not glued to itself
+         * in reverse, and (ii) the link of the edge is a 2-sphere or a disc.
+         *
+         * For specific reasons why an edge is invalid, see
+         * hasBadIdentification() and hasBadLink().
          *
          * @return \c true if and only if this edge is valid.
          */
         bool isValid() const;
+
+        /**
+         * Determines if this edge is identified with itself in reverse.
+         *
+         * Such an edge is invalid.  However, there can be other types of
+         * invalid edges also (i.e., an edge might be invalid even if this
+         * routine returns \c false).  See isValid() for a full discussion
+         * of edge validity.
+         *
+         * @return \c true if and only if this edge is identified with
+         * itself in reverse.
+         */
+        bool hasBadIdentification() const;
+
+        /**
+         * Determines if the link of this edge is something other than a
+         * 2-sphere or a disc.
+         *
+         * Such an edge is invalid.  However, there can be other types of
+         * invalid edges also (i.e., an edge might be invalid even if this
+         * routine returns \c false).  See isValid() for a full discussion
+         * of edge validity.
+         *
+         * @return \c true if and only if the link of this edge is
+         * neither a 2-sphere nor a disc.
+         */
+        bool hasBadLink() const;
 
         void writeTextShort(std::ostream& out) const;
 
@@ -322,7 +363,7 @@ inline NPerm5 Dim4EdgeEmbedding::getVertices() const {
 // Inline functions for Dim4Edge
 
 inline Dim4Edge::Dim4Edge(Dim4Component* component) :
-        component_(component), boundaryComponent_(0), valid_(true) {
+        component_(component), boundaryComponent_(0), invalid_(0) {
 }
 
 inline Dim4Edge::~Dim4Edge() {
@@ -363,7 +404,15 @@ inline bool Dim4Edge::isBoundary() const {
 }
 
 inline bool Dim4Edge::isValid() const {
-    return valid_;
+    return ! invalid_;
+}
+
+inline bool Dim4Edge::hasBadIdentification() const {
+    return (invalid_ & Dim4Edge::INVALID_IDENTIFICATION);
+}
+
+inline bool Dim4Edge::hasBadLink() const {
+    return (invalid_ & Dim4Edge::INVALID_LINK);
 }
 
 inline void Dim4Edge::writeTextShort(std::ostream& out) const {
