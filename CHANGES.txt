@@ -60,6 +60,9 @@ Version 4.6  [ (under development) ]
               give incorrect results when the triangulation had only one
               tetrahedron, whereby the triangulation would "simplify" to
               zero tetrahedra (i.e., the empty triangulation).
+            - Routines isZeroEfficient() and hasSplittingSurface() now
+              operate on a clone of the triangulation, to avoid triggering
+              changes to the packet tree.
         Routine writeResUsage():
             - New helper routine to assist with diagnostics and measurements
               of performance.
@@ -72,6 +75,8 @@ Version 4.6  [ (under development) ]
           things, this makes extracting the dehydration string much simpler.
         - In the triangulation viewer, the Surfaces panel now has a new
           "3-ball?" entry beneath the current "3-sphere?" entry.
+        - Fixed a bug whereby small triangulations occasionally became
+          read-only after a user visited the Surfaces panel.
     TEST SUITE:
         - Added very thorough tests for NPerm.
         - Additional tests for triangulation simplification and Euler

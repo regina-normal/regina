@@ -97,7 +97,11 @@ bool NTriangulation::hasSplittingSurface() {
 
 void NTriangulation::calculateQuadSurfaceProperties() {
     // Create a normal surface list.
-    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(this,
+    //
+    // Work on a clone of this triangulation so we don't trigger any
+    // changes to the packet tree.
+    NTriangulation working(*this);
+    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(&working,
         NNormalSurfaceList::QUAD);
 
     // All we can test here is 0-efficiency.
@@ -142,14 +146,16 @@ void NTriangulation::calculateQuadSurfaceProperties() {
     if (! zeroEfficient.known())
         zeroEfficient = true;
 
-    // Clean up.
-    surfaces->makeOrphan();
-    delete surfaces;
+    // The stack will clean things up for us automatically.
 }
 
 void NTriangulation::calculateStandardSurfaceProperties() {
     // Create a normal surface list.
-    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(this,
+    //
+    // Work on a clone of this triangulation so we don't trigger any
+    // changes to the packet tree.
+    NTriangulation working(*this);
+    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(&working,
         NNormalSurfaceList::STANDARD);
 
     // Run through all vertex surfaces.
@@ -194,9 +200,7 @@ void NTriangulation::calculateStandardSurfaceProperties() {
     if (! splittingSurface.known())
         splittingSurface = false;
 
-    // Clean up.
-    surfaces->makeOrphan();
-    delete surfaces;
+    // The stack will clean things up for us automatically.
 }
 
 } // namespace regina
