@@ -157,6 +157,13 @@ class NFace : public ShareableObject, public NMarkedElement {
 
     public:
         /**
+         * Default destructor.
+         * All embedding descriptors stored in this face will be
+         * automatically deleted.
+         */
+        virtual ~NFace();
+
+        /**
          * Determines if this face lies entirely on the boundary of the
          * triangulation.
          *
@@ -301,13 +308,6 @@ class NFace : public ShareableObject, public NMarkedElement {
          * face belongs.
          */
         NFace(NComponent* myComponent);
-
-        /**
-         * Default destructor.
-         * All embedding descriptors stored in this face will be
-         * automatically deleted.
-         */
-        virtual ~NFace();
 
     friend class NTriangulation;
         /**< Allow access to private members. */

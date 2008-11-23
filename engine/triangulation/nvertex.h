@@ -154,6 +154,11 @@ class NVertex : public ShareableObject, public NMarkedElement {
 
     public:
         /**
+         * Default destructor.
+         */
+        virtual ~NVertex();
+
+        /**
          * Returns the list of descriptors detailing how this vertex forms a
          * part of various tetrahedra in the triangulation.
          * Note that if this vertex represents multiple vertices of a
@@ -289,11 +294,6 @@ class NVertex : public ShareableObject, public NMarkedElement {
          * vertex belongs.
          */
         NVertex(NComponent* myComponent);
-
-        /**
-         * Default destructor.
-         */
-        virtual ~NVertex();
 
     friend class NTriangulation;
         /**< Allow access to private members. */

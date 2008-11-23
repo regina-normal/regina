@@ -77,6 +77,11 @@ class NComponent : public ShareableObject, public NMarkedElement {
 
     public:
         /**
+         * Default destructor.
+         */
+        virtual ~NComponent();
+
+        /**
          * Returns the number of tetrahedra in this component.
          *
          * @return the number of tetrahedra.
@@ -208,11 +213,6 @@ class NComponent : public ShareableObject, public NMarkedElement {
          * Default constructor.
          */
         NComponent();
-
-        /**
-         * Default destructor.
-         */
-        virtual ~NComponent();
 
     friend class NTriangulation;
         /**< Allow access to private members. */

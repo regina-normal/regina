@@ -238,6 +238,11 @@ class NEdge : public ShareableObject, public NMarkedElement {
 
     public:
         /**
+         * Default destructor.
+         */
+        ~NEdge();
+
+        /**
          * Returns the list of descriptors detailing how this edge forms a
          * part of various tetrahedra in the triangulation.
          * Note that if this edge represents multiple edges of a
@@ -338,11 +343,6 @@ class NEdge : public ShareableObject, public NMarkedElement {
          * edge belongs.
          */
         NEdge(NComponent* myComponent);
-
-        /**
-         * Default destructor.
-         */
-        ~NEdge();
 
     friend class NTriangulation;
         /**< Allow access to private members. */

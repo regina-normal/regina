@@ -86,6 +86,11 @@ class NBoundaryComponent : public ShareableObject, public NMarkedElement {
 
     public:
         /**
+         * Default destructor.
+         */
+        virtual ~NBoundaryComponent();
+
+        /**
          * Returns the number of faces in this boundary component.
          *
          * @return the number of faces.
@@ -192,11 +197,6 @@ class NBoundaryComponent : public ShareableObject, public NMarkedElement {
          * component.
          */
         NBoundaryComponent(NVertex* idealVertex);
-
-        /**
-         * Default destructor.
-         */
-        virtual ~NBoundaryComponent();
 
     friend class NTriangulation;
         /**< Allow access to private members. */

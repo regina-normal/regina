@@ -11,9 +11,9 @@ Version 4.6  [ (under development) ]
 
     ENGINE:
         Class NBoundaryComponent, NComponent, NEdge, NFace, NVertex:
-            - All constructors and destructors for skeletal objects are
-              now private; ordinary users should only ever have read-only
-              access to these objects.
+            - All constructors for skeletal objects are now private, since
+              only the triangulation skeletal routines should be creating them.
+            - Cleaned up some of the more obtuse parts of the documentation.
         Class NEdge:
             - Added new static arrays NEdge::edgeNumber and NEdge::edgeVertex
               to replace the old global arrays regina::edgeNumber,
