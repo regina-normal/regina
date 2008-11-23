@@ -888,14 +888,15 @@ bool NCompactSearcher::mergeEdgeClasses() {
         w2 = p[v2];
 
         // Look at the edge opposite v1-v2.
-        e = 5 - edgeNumber[v1][v2];
-        f = 5 - edgeNumber[w1][w2];
+        e = 5 - NEdge::edgeNumber[v1][v2];
+        f = 5 - NEdge::edgeNumber[w1][w2];
 
         orderIdx = v2 + 4 * orderElt;
 
         // We declare the natural orientation of an edge to be smaller
         // vertex to larger vertex.
-        hasTwist = (p[edgeStart[e]] > p[edgeEnd[e]] ? 1 : 0);
+        hasTwist = (p[NEdge::edgeVertex[e][0]] > p[NEdge::edgeVertex[e][1]] ?
+            1 : 0);
 
         parentTwists = 0;
         eRep = findEdgeClass(e + 6 * face.tet, parentTwists);
@@ -950,7 +951,7 @@ void NCompactSearcher::splitEdgeClasses() {
             continue;
 
         // Look at the edge opposite v1-v2.
-        e = 5 - edgeNumber[v1][v2];
+        e = 5 - NEdge::edgeNumber[v1][v2];
 
         eIdx = e + 6 * face.tet;
         orderIdx = v2 + 4 * orderElt;

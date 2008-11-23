@@ -62,7 +62,7 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
             if (vertex == yourVertex)
                 continue;
-            edge = tet->getEdge(edgeNumber[vertex][yourVertex]);
+            edge = tet->getEdge(NEdge::edgeNumber[vertex][yourVertex]);
             if (! (edge->isBoundary()))
                 continue;
             otherVertex = tet->getVertex(yourVertex);
@@ -125,7 +125,7 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
             if (thisStretch.count(otherVertex))
                 continue;
             madeLink = vertexSet.count(otherVertex);
-            edgeSet.insert(tet->getEdge(edgeNumber[vertex][yourVertex]));
+            edgeSet.insert(tet->getEdge(NEdge::edgeNumber[vertex][yourVertex]));
             if (! madeLink)
                 madeLink =
                     stretchForestFromVertex(otherVertex, edgeSet, vertexSet,
@@ -182,7 +182,8 @@ bool NTriangulation::crushMaximalForest() {
             for (face = 0; face < 4; face++) {
                 nLost = 0;
                 for (edge = 0; edge < 6; edge++) {
-                    if (edgeStart[edge] == face || edgeEnd[edge] == face)
+                    if (NEdge::edgeVertex[edge][0] == face ||
+                            NEdge::edgeVertex[edge][1] == face)
                         continue;
                     if (cEdges.count(tet->getEdge(edge)))
                         nLost++;
@@ -191,7 +192,8 @@ bool NTriangulation::crushMaximalForest() {
                 // faces.
                 if (nLost == 2) {
                     for (edge = 0; edge < 6; edge++) {
-                        if (edgeStart[edge] == face || edgeEnd[edge] == face)
+                        if (NEdge::edgeVertex[edge][0] == face ||
+                                NEdge::edgeVertex[edge][1] == face)
                             continue;
                         cEdges.insert(tet->getEdge(edge));
                     }
@@ -248,7 +250,7 @@ bool NTriangulation::crushMaximalForest() {
                         if (edgeFrom == adjFace)
                             continue;
                         if (! (cEdges.count(adjTet->
-                                getEdge(edgeNumber[adjFace][edgeFrom]))))
+                                getEdge(NEdge::edgeNumber[adjFace][edgeFrom]))))
                             continue;
                         break;
                     }

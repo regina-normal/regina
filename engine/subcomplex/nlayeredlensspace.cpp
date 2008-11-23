@@ -84,11 +84,11 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
             if (perm[tf1] == tf0) {
                 // Snapped shut.
                 ans->mobiusBoundaryGroup = torus->getTopEdgeGroup(
-                    5 - edgeNumber[tf0][tf1]);
+                    5 - NEdge::edgeNumber[tf0][tf1]);
             } else {
                 // Twisted shut.
                 ans->mobiusBoundaryGroup = torus->getTopEdgeGroup(
-                    edgeNumber[perm[tf1]][tf0]);
+                    NEdge::edgeNumber[perm[tf1]][tf0]);
             }
 
             // Work out p and q.

@@ -337,13 +337,13 @@ void NSatRegion::calculateBaseEuler() {
         for (ann = 0; ann < it->block->nAnnuli(); ann++) {
             annData = it->block->annulus(ann);
             baseVerticesAll.insert(annData.tet[0]->getEdge(
-                edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
+                NEdge::edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
 
             if (! it->block->hasAdjacentBlock(ann)) {
                 baseVerticesBdry.insert(annData.tet[0]->getEdge(
-                    edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
+                    NEdge::edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
                 baseVerticesBdry.insert(annData.tet[1]->getEdge(
-                    edgeNumber[annData.roles[1][0]][annData.roles[1][1]]));
+                    NEdge::edgeNumber[annData.roles[1][0]][annData.roles[1][1]]));
             }
         }
 

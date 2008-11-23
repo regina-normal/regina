@@ -51,7 +51,7 @@ NSnappedBall* NSnappedBall::formsSnappedBall(NTetrahedron* tet) {
                 // This is it!
                 NSnappedBall* ans = new NSnappedBall();
                 ans->tet = tet;
-                ans->equator = edgeNumber[inFace1][inFace2];
+                ans->equator = NEdge::edgeNumber[inFace1][inFace2];
                 return ans;
             }
         }

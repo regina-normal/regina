@@ -751,14 +751,15 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
         w2 = p[v2];
 
         // Look at the edge opposite v1-v2.
-        e = 5 - edgeNumber[v1][v2];
-        f = 5 - edgeNumber[w1][w2];
+        e = 5 - NEdge::edgeNumber[v1][v2];
+        f = 5 - NEdge::edgeNumber[w1][w2];
 
         orderIdx = v2 + 4 * orderElt;
 
         // We declare the natural orientation of an edge to be smaller
         // vertex to larger vertex.
-        hasTwist = (p[edgeStart[e]] > p[edgeEnd[e]] ? 1 : 0);
+        hasTwist = (p[NEdge::edgeVertex[e][0]] > p[NEdge::edgeVertex[e][1]] ?
+            1 : 0);
 
         parentTwists = 0;
         eRep = findEdgeClass(e + 6 * face.tet, parentTwists);
@@ -867,10 +868,11 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 if (v2 == w1)
                     continue;
 
-                parentTwists = tTwist[edgeNumber[v1][w1]] ^
-                    tTwist[edgeNumber[v2][w1]];
+                parentTwists = tTwist[NEdge::edgeNumber[v1][w1]] ^
+                    tTwist[NEdge::edgeNumber[v2][w1]];
 
-                if (tRep[edgeNumber[v1][w1]] == tRep[edgeNumber[v2][w1]]) {
+                if (tRep[NEdge::edgeNumber[v1][w1]] ==
+                        tRep[NEdge::edgeNumber[v2][w1]]) {
                     hasTwist = (v1 < w1 && w1 < v2 ? 0 : 1);
                     if (hasTwist ^ parentTwists) {
                         return ECLASS_CONE;
@@ -916,7 +918,7 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
             continue;
 
         // Look at the edge opposite v1-v2.
-        e = 5 - edgeNumber[v1][v2];
+        e = 5 - NEdge::edgeNumber[v1][v2];
 
         eIdx = e + 6 * face.tet;
         orderIdx = v2 + 4 * orderElt;

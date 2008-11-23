@@ -154,17 +154,17 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
         t = triang->getTetrahedron(tet);
         for (type = 0; type < 3; type++) {
             coord = getQuadCoord(tet, type, triang);
-            e[0] = t->getEdge(edgeNumber[vertexSplitDefn[type][0]]
+            e[0] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
                 [vertexSplitDefn[type][1]]);
-            e[1] = t->getEdge(edgeNumber[vertexSplitDefn[type][2]]
+            e[1] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][2]]
                 [vertexSplitDefn[type][3]]);
-            e[2] = t->getEdge(edgeNumber[vertexSplitDefn[type][0]]
+            e[2] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
                 [vertexSplitDefn[type][2]]);
-            e[3] = t->getEdge(edgeNumber[vertexSplitDefn[type][0]]
+            e[3] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
                 [vertexSplitDefn[type][3]]);
-            e[4] = t->getEdge(edgeNumber[vertexSplitDefn[type][1]]
+            e[4] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][1]]
                 [vertexSplitDefn[type][2]]);
-            e[5] = t->getEdge(edgeNumber[vertexSplitDefn[type][1]]
+            e[5] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][1]]
                 [vertexSplitDefn[type][3]]);
 
             if (coord == 0) {
@@ -279,7 +279,7 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
                 // edge, the coordinate should also be 0.
                 if (! expectZero[i])
                     for (j = 0; j < 3; j++)
-                        if (t->getEdge(edgeNumber[type][(type + j + 1) % 4])
+                        if (t->getEdge(NEdge::edgeNumber[type][(type+j+1) % 4])
                                 == ans[i]) {
                             expectZero[i] = true;
                             break;

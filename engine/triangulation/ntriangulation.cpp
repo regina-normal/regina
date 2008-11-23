@@ -132,7 +132,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
         for (start=0; start<4; start++)
             for (end=start+1; end<4; end++)
                 out << ' ' << std::setw(3)
-                    << edgeIndex(tet->getEdge(edgeNumber[start][end]));
+                    << edgeIndex(tet->getEdge(NEdge::edgeNumber[start][end]));
         out << '\n';
     }
     out << '\n';

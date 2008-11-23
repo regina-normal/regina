@@ -587,10 +587,10 @@ void NHomologicalData::computeChainComplexes() {
 
             stage0edgeNum = tri->edgeIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
-                getEdge( edgeNumber[vert0Num][stage0choice] ));
+                getEdge( NEdge::edgeNumber[vert0Num][stage0choice] ));
             stage0posOr = ( tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron()->getEdgeMapping(
-                edgeNumber[vert0Num][stage0choice])[1] == stage0choice ) ?
+                NEdge::edgeNumber[vert0Num][stage0choice])[1] == stage0choice) ?
                 true : false ;
         }
 
@@ -613,10 +613,10 @@ void NHomologicalData::computeChainComplexes() {
 
             stage4edgeNum = tri->edgeIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
-                getEdge( edgeNumber[vert1Num][stage4choice] ));
+                getEdge( NEdge::edgeNumber[vert1Num][stage4choice] ));
             stage4posOr = ( tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron()->getEdgeMapping(
-                edgeNumber[vert1Num][stage4choice])[1] == vert1Num ) ?
+                NEdge::edgeNumber[vert1Num][stage4choice])[1] == vert1Num ) ?
                 true : false ;
         }
 
@@ -643,7 +643,7 @@ void NHomologicalData::computeChainComplexes() {
         if (stage1nec) { // we need to decide which face to use...
             stage1FaceToUse = tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron()->getEdgeMapping(
-                edgeNumber[stage1v][tet0FaceIndex] )[2];
+                NEdge::edgeNumber[stage1v][tet0FaceIndex] )[2];
             P3 = tri->getFace(dNBF[j])->getEmbedding(0).getTetrahedron()->
                 getFaceMapping(stage1FaceToUse);
             stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
@@ -675,7 +675,7 @@ void NHomologicalData::computeChainComplexes() {
         if (stage3nec) { // we need to decide which face to use...
             stage3FaceToUse = tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron()->getEdgeMapping(
-                edgeNumber[stage3v][tet1FaceIndex] )[2];
+                NEdge::edgeNumber[stage3v][tet1FaceIndex] )[2];
             P3 = tri->getFace(dNBF[j])->getEmbedding(1).getTetrahedron()->
                 getFaceMapping(stage3FaceToUse);
             stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
@@ -697,7 +697,7 @@ void NHomologicalData::computeChainComplexes() {
             stage2startdata = 3*P1.preImageOf( stage1v ) +
                 P1.preImageOf((tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
-                getEdgeMapping( edgeNumber[stage1v][stage1vi] ))[3] );
+                getEdgeMapping( NEdge::edgeNumber[stage1v][stage1vi] ))[3] );
         } else {
             // we have to deal with 2 possibilities a) stage 0 was called
             // and it jumped here, so it is not an ideal vertex.
@@ -722,7 +722,7 @@ void NHomologicalData::computeChainComplexes() {
             stage2enddata = 3*P2.preImageOf( stage3v ) +
                 P2.preImageOf((tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
-                getEdgeMapping( edgeNumber[stage3v][stage3vi] ))[3] );
+                getEdgeMapping( NEdge::edgeNumber[stage3v][stage3vi] ))[3] );
         } else {
             if (stage4nec) { // this is the non-ideal situation
                 stage2enddata = 3*P2.preImageOf( stage4choice ) +

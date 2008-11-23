@@ -155,10 +155,14 @@ inline NTetrahedron* NSnappedBall::getTetrahedron() const {
     return tet;
 }
 inline int NSnappedBall::getBoundaryFace(int index) const {
-    return index == 0 ? edgeStart[5 - equator] : edgeEnd[5 - equator];
+    return index == 0 ?
+        NEdge::edgeVertex[5 - equator][0] :
+        NEdge::edgeVertex[5 - equator][1];
 }
 inline int NSnappedBall::getInternalFace(int index) const {
-    return index == 0 ? edgeStart[equator] : edgeEnd[equator];
+    return index == 0 ?
+        NEdge::edgeVertex[equator][0] :
+        NEdge::edgeVertex[equator][1];
 }
 inline int NSnappedBall::getEquatorEdge() const {
     return equator;

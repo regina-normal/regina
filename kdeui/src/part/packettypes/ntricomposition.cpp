@@ -74,6 +74,7 @@
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 
+using regina::NEdge;
 using regina::NPacket;
 using regina::NSatRegion;
 using regina::NTriangulation;
@@ -994,12 +995,12 @@ QString NTriCompositionUI::edgeString(unsigned long tetIndex,
         return i18n("None");
     else if (edge2 < 0)
         return QString("%1 (%2%3)").arg(tetIndex).
-            arg(regina::edgeStart[edge1]).arg(regina::edgeEnd[edge1]);
+            arg(NEdge::edgeVertex[edge1][0]).arg(NEdge::edgeVertex[edge1][1]);
     else
         return QString("%1 (%2%3) = %4 (%5%6)").arg(tetIndex).
-            arg(regina::edgeStart[edge1]).arg(regina::edgeEnd[edge1]).
+            arg(NEdge::edgeVertex[edge1][0]).arg(NEdge::edgeVertex[edge1][1]).
             arg(tetIndex).
-            arg(regina::edgeStart[edge2]).arg(regina::edgeEnd[edge2]);
+            arg(NEdge::edgeVertex[edge2][0]).arg(NEdge::edgeVertex[edge2][1]);
 }
 
 QString NTriCompositionUI::edgeString(unsigned long tetIndex,
