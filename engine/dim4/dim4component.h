@@ -84,42 +84,42 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
          *
          * @return the number of pentachora.
          */
-        unsigned getNumberOfPentachora() const;
+        unsigned long getNumberOfPentachora() const;
 
         /**
          * Returns the number of tetrahedra in this component.
          *
          * @return the number of tetrahedra.
          */
-        unsigned getNumberOfTetrahedra() const;
+        unsigned long getNumberOfTetrahedra() const;
 
         /**
          * Returns the number of faces in this component.
          *
          * @return the number of faces.
          */
-        unsigned getNumberOfFaces() const;
+        unsigned long getNumberOfFaces() const;
 
         /**
          * Returns the number of edges in this component.
          *
          * @return the number of edges.
          */
-        unsigned getNumberOfEdges() const;
+        unsigned long getNumberOfEdges() const;
 
         /**
          * Returns the number of vertices in this component.
          *
          * @return the number of vertices.
          */
-        unsigned getNumberOfVertices() const;
+        unsigned long getNumberOfVertices() const;
 
         /**
          * Returns the number of boundary components in this component.
          *
          * @return the number of boundary components.
          */
-        unsigned getNumberOfBoundaryComponents() const;
+        unsigned long getNumberOfBoundaryComponents() const;
 
         /**
          * Returns the requested pentachoron in this component.
@@ -132,7 +132,7 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
          * triangulation.
          * @return the requested pentachoron.
          */
-        Dim4Tetrahedron* getPentachoron(unsigned index) const;
+        Dim4Tetrahedron* getPentachoron(unsigned long index) const;
 
         /**
          * Returns the requested tetrahedron in this component.
@@ -145,7 +145,7 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
          * triangulation.
          * @return the requested tetrahedron.
          */
-        Dim4Tetrahedron* getTetrahedron(unsigned index) const;
+        Dim4Tetrahedron* getTetrahedron(unsigned long index) const;
 
         /**
          * Returns the requested face in this component.
@@ -158,7 +158,7 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
          * triangulation.
          * @return the requested face.
          */
-        Dim4Face* getFace(unsigned index) const;
+        Dim4Face* getFace(unsigned long index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -171,7 +171,7 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
          * triangulation.
          * @return the requested edge.
          */
-        Dim4Edge* getEdge(unsigned index) const;
+        Dim4Edge* getEdge(unsigned long index) const;
 
         /**
          * Returns the requested vertex in this component.
@@ -184,7 +184,7 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
          * triangulation.
          * @return the requested vertex.
          */
-        Dim4Vertex* getVertex(unsigned index) const;
+        Dim4Vertex* getVertex(unsigned long index) const;
 
         /**
          * Returns the requested boundary component in this component.
@@ -197,7 +197,7 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
          * entire triangulation.
          * @return the requested boundary component.
          */
-        Dim4BoundaryComponent* getBoundaryComponent(unsigned index) const;
+        Dim4BoundaryComponent* getBoundaryComponent(unsigned long index) const;
 
         /**
          * Determines if this component is ideal.
@@ -254,52 +254,54 @@ inline Dim4Component::Dim4Component() : ideal_(false), orientable_(true) {
 inline Dim4Component::~Dim4Component() {
 }
 
-inline unsigned Dim4Component::getNumberOfPentachora() const {
+inline unsigned long Dim4Component::getNumberOfPentachora() const {
     return pentachora_.size();
 }
 
-inline unsigned Dim4Component::getNumberOfTetrahedra() const {
+inline unsigned long Dim4Component::getNumberOfTetrahedra() const {
     return tetrahedra_.size();
 }
 
-inline unsigned Dim4Component::getNumberOfFaces() const {
+inline unsigned long Dim4Component::getNumberOfFaces() const {
     return faces_.size();
 }
 
-inline unsigned Dim4Component::getNumberOfEdges() const {
+inline unsigned long Dim4Component::getNumberOfEdges() const {
     return edges_.size();
 }
 
-inline unsigned Dim4Component::getNumberOfVertices() const {
+inline unsigned long Dim4Component::getNumberOfVertices() const {
     return vertices_.size();
 }
 
-inline unsigned Dim4Component::getNumberOfBoundaryComponents() const {
+inline unsigned long Dim4Component::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline Dim4Tetrahedron* Dim4Component::getPentachoron(unsigned index) const {
+inline Dim4Tetrahedron* Dim4Component::getPentachoron(unsigned long index)
+        const {
     return pentachora_[index];
 }
 
-inline Dim4Tetrahedron* Dim4Component::getTetrahedron(unsigned index) const {
+inline Dim4Tetrahedron* Dim4Component::getTetrahedron(unsigned long index)
+        const {
     return tetrahedra_[index];
 }
 
-inline Dim4Face* Dim4Component::getFace(unsigned index) const {
+inline Dim4Face* Dim4Component::getFace(unsigned long index) const {
     return faces_[index];
 }
 
-inline Dim4Edge* Dim4Component::getEdge(unsigned index) const {
+inline Dim4Edge* Dim4Component::getEdge(unsigned long index) const {
     return edges_[index];
 }
 
-inline Dim4Vertex* Dim4Component::getVertex(unsigned index) const {
+inline Dim4Vertex* Dim4Component::getVertex(unsigned long index) const {
     return vertices_[index];
 }
 
 inline Dim4BoundaryComponent* Dim4Component::getBoundaryComponent(
-        unsigned index) const {
+        unsigned long index) const {
     return boundaryComponents_[index];
 }
 
