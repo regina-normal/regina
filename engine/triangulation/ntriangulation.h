@@ -2406,9 +2406,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * unknown.  All dynamic memory used for storing known
          * properties is deallocated.
          *
-         * In most cases this functionality is achieved through a call
-         * to gluingsHaveChanged(), which also fires a packet change
-         * event.
+         * In most cases this routine is called from gluingsHaveChanged(),
+         * which also fires a packet change event.  If you plan to call
+         * this routine, it is worth examining whether gluingsHaveChanged()
+         * is a more appropriate routine to call instead.
          */
         virtual void clearAllProperties();
 
@@ -2697,8 +2698,12 @@ inline unsigned long NTriangulation::getNumberOfFaces() const {
 inline long NTriangulation::getEulerCharTri() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return long(vertices.size()) - long(edges.size())
-        + long(faces.size()) - long(tetrahedra.size());
+
+    // Cast away the unsignedness of std::vector::size().
+    return static_cast<long>(vertices.size())
+        - static_cast<long>(edges.size())
+        + static_cast<long>(faces.size())
+        - static_cast<long>(tetrahedra.size());
 }
 
 inline long NTriangulation::getEulerCharacteristic() const {
