@@ -45,6 +45,8 @@
 <!ENTITY data-tet SYSTEM "data-tet.docbook">
 <!ENTITY data-tetrahedra SYSTEM "data-tetrahedra.docbook">
 <!ENTITY data-text SYSTEM "data-text.docbook">
+<!ENTITY data-threeball SYSTEM "data-threeball.docbook">
+<!ENTITY data-threesphere SYSTEM "data-threesphere.docbook">
 <!ENTITY data-turaevviro SYSTEM "data-turaevviro.docbook">
 <!ENTITY data-twosided SYSTEM "data-twosided.docbook">
 <!ENTITY data-var SYSTEM "data-var.docbook">
@@ -136,6 +138,10 @@
  '<link linkend="data-tetrahedra"><sgmltag>tetrahedra</sgmltag></link>'>
 <!ENTITY xml-text
  '<link linkend="data-text"><sgmltag>text</sgmltag></link>'>
+<!ENTITY xml-threeball
+ '<link linkend="data-threeball"><sgmltag>threeball</sgmltag></link>'>
+<!ENTITY xml-threesphere
+ '<link linkend="data-threesphere"><sgmltag>threesphere</sgmltag></link>'>
 <!ENTITY xml-turaevviro
  '<link linkend="data-turaevviro"><sgmltag>turaevviro</sgmltag></link>'>
 <!ENTITY xml-twosided
