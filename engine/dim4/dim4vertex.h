@@ -222,6 +222,18 @@ class Dim4Vertex : public ShareableObject, public NMarkedElement {
          * fast, and calls to NTriangulation::knowsThreeSphere() will
          * return \c true.
          *
+         * The triangulation of the vertex link is built as follows.
+         * Let \a i lie between 0 and getDegree()-1 inclusive, let
+         * \a pent represent <tt>getEmbedding(i).getPentachoron()</tt>,
+         * and let \a v represent <tt>getEmbedding(i).getVertex()</tt>.
+         * Then tetrahedron \a i of the vertex link is the tetrahedron that
+         * surrounds a neighbourhood of vertex \a v of pentachoron \a pent.
+         * Moreover, the vertices 0,1,2,3 of this tetrahedron in the
+         * vertex link are numbered in the same way as the parallel
+         * tetrahedron <tt>pent->getTetrahedron(v)</tt> in the larger
+         * 4-manifold triangulation.  This numbering is described explicitly
+         * by <tt>pent->getTetrahedronMapping(v)</tt>.
+         *
          * @return the link of this vertex.
          */
         const NTriangulation* getLink() const;
