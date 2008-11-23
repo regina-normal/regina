@@ -57,9 +57,9 @@ Version 4.6  [ (under development) ]
             - Fixed a nasty bug in the is-it-valid test for shellBoundary().
               This bug had the potential to cause a crash when simplifying
               triangulations with boundary.  It also had the potential to
-              give incorrect results when the triangulation had only one
-              tetrahedron, whereby the triangulation would "simplify" to
-              zero tetrahedra (i.e., the empty triangulation).
+              give incorrect results when (and only when) simplifying
+              the 1-tetrahedron 3-vertex ball; the result would be that
+              the ball "simplified" to the empty triangulation.
             - Routines isZeroEfficient() and hasSplittingSurface() now
               operate on a clone of the triangulation, to avoid triggering
               changes to the packet tree.
