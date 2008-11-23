@@ -180,6 +180,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
 
         mutable NProperty<bool> threeSphere;
             /**< Is this a triangulation of a 3-sphere? */
+        mutable NProperty<bool> threeBall;
+            /**< Is this a triangulation of a 3-dimensional ball? */
 
         mutable TuraevViroSet turaevViroCache;
             /**< The set of Turaev-Viro invariants that have already
@@ -1906,6 +1908,49 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * or trivial to calculate.
          */
         bool knowsThreeSphere() const;
+        /**
+         * Determines whether this is a triangulation of a 3-dimensional ball.
+         *
+         * This routine is based on isThreeSphere(), which in turn combines
+         * Rubinstein's 3-sphere recognition algorithm with Jaco and
+         * Rubinstein's 0-efficiency prime decomposition algorithm.
+         *
+         * \warning The algorithms used in this routine rely on normal
+         * surface theory and so can be very slow for larger
+         * triangulations (although faster tests are used where possible).
+         * The routine knowsBall() can be called to see if this
+         * property is already known or if it happens to be very fast to
+         * calculate for this triangulation.
+         *
+         * @return \c true if and only if this is a triangulation of a
+         * 3-dimensional ball.
+         */
+        bool isBall() const;
+        /**
+         * Is it already known (or trivial to determine) whether or not this
+         * is a triangulation of a 3-dimensional ball?  See isBall() for
+         * further details.
+         *
+         * If this property is indeed already known, future calls to isBall()
+         * will be very fast (simply returning the precalculated value).
+         *
+         * If this property is not already known, this routine will
+         * nevertheless run some very fast preliminary tests to see if the
+         * answer is obviously no.  If so, it will store \c false as the
+         * precalculated value for isBall() and this routine will
+         * return \c true.
+         *
+         * Otherwise a call to isBall() may potentially require more
+         * significant work, and so this routine will return \c false.
+         *
+         * \warning This routine does not actually tell you \e whether
+         * this triangulation forms a ball; it merely tells you whether
+         * the answer has already been computed (or is very easily computed).
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        bool knowsBall() const;
         /**
          * Converts this into a 0-efficient triangulation of the same
          * underlying 3-manifold.  A triangulation is 0-efficient if its

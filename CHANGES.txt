@@ -51,6 +51,9 @@ Version 4.6  [ (under development) ]
               in some future version of Regina.
             - Proofreading and clarification for some of the older and more
               opaque parts of the documentation.
+        Class NTriangulation:
+            - New routines isBall() and knowsBall() for recognising the
+              3-dimensional ball.
         Routine writeResUsage():
             - New helper routine to assist with diagnostics and measurements
               of performance.
@@ -61,6 +64,8 @@ Version 4.6  [ (under development) ]
         - Items in the triangulation composition list can now be copied
           into the clipboard via the right mouse button.  Amongst other
           things, this makes extracting the dehydration string much simpler.
+        - In the triangulation viewer, the Surfaces panel now has a new
+          "3-ball?" entry beneath the current "3-sphere?" entry.
     TEST SUITE:
         - Added very thorough tests for NPerm.
         - Additional tests for triangulation simplification and Euler

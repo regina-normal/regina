@@ -79,7 +79,7 @@
       where the triangulation might be embeddable;
      </para></listitem>
      <listitem><para>
-      3-sphere recognition, as well as a complete connected sum
+      3-sphere and 3-ball recognition, as well as a complete connected sum
       decomposition for closed orientable triangulations;
      </para></listitem>
      <listitem><para>

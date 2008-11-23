@@ -62,9 +62,11 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QLabel* zeroEff;
         QLabel* splitting;
         QLabel* threeSphere;
+        QLabel* threeBall;
         QButton* btnZeroEff;
         QButton* btnSplitting;
         QButton* btnThreeSphere;
+        QButton* btnThreeBall;
 
         /**
          * Properties
@@ -98,6 +100,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         void calculateZeroEff();
         void calculateSplitting();
         void calculateThreeSphere();
+        void calculateThreeBall();
 };
 
 inline void NTriSurfacesUI::setAutoCalcThreshold(unsigned newThreshold) {

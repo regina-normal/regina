@@ -45,6 +45,12 @@
  </glossentry>
 
  <glossentry>
+  <glossterm><link linkend="tri-prop3ball">3-ball
+   recognition</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="tri-prop3sphere">3-sphere
    recognition</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
@@ -1210,6 +1216,8 @@
    testing for</link></para></glossdef>
   <glossdef><para><link linkend="tri-make0eff">0-efficient triangulation,
    conversion to</link></para></glossdef>
+  <glossdef><para><link linkend="tri-prop3ball">3-ball
+   recognition</link></para></glossdef>
   <glossdef><para><link linkend="tri-prop3sphere">3-sphere
    recognition</link></para></glossdef>
   <glossdef><para><link linkend="tri-subdivision">barycentric

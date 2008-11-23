@@ -1176,6 +1176,14 @@
        <xref linkend="bib-rubin-3sphere2"/>.
       </para></glossdef>
      </glossentry>
+     <glossentry id="tri-prop3ball">
+      <glossterm>3-Ball</glossterm>
+      <glossdef><para>
+       Determines whether this is a triangulation of the 3-dimensional ball.
+       This computation is based on the 3-sphere recognition algorithm,
+       as described above.
+      </para></glossdef>
+     </glossentry>
     </glosslist>
    </para>
   </sect2>

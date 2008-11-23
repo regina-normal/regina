@@ -370,6 +370,51 @@ bool NTriangulation::knowsThreeSphere() const {
     return false;
 }
 
+bool NTriangulation::isBall() const {
+    if (threeBall.known())
+        return threeBall.value();
+
+    // Basic property checks.
+    if (! (isValid() && hasBoundaryFaces() && isOrientable() && isConnected()
+            && boundaryComponents.size() == 1
+            && boundaryComponents.front()->getEulerCharacteristic() == 2)) {
+        threeBall = false;
+        return false;
+    }
+
+    // Pass straight to isThreeSphere (which in turn will check faster things
+    // like homology before pulling out the big guns).
+    //
+    // Cone the boundary to a point (i.e., fill it with a ball), then
+    // call isThreeSphere() on the resulting closed triangulation.
+
+    NTriangulation working(*this);
+    working.intelligentSimplify();
+    working.finiteToIdeal();
+
+    // Simplify again in case our coning was inefficient.
+    working.intelligentSimplify();
+
+    threeBall = working.isThreeSphere();
+    return threeBall.value();
+}
+
+bool NTriangulation::knowsBall() const {
+    if (threeBall.known())
+        return true;
+
+    // Run some very fast prelimiary tests before we give up and say no.
+    if (! (isValid() && hasBoundaryFaces() && isOrientable() && isConnected()
+            && boundaryComponents.size() == 1
+            && boundaryComponents.front()->getEulerCharacteristic() == 2)) {
+        threeBall = false;
+        return true;
+    }
+
+    // More work is required.
+    return false;
+}
+
 NPacket* NTriangulation::makeZeroEfficient() {
     // Extract a connected sum decomposition.
     NContainer* connSum = new NContainer();
