@@ -59,6 +59,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(boundaryComponents);
     CPPUNIT_TEST(vertexLinks);
+    CPPUNIT_TEST(eulerCharacteristic);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(homologyH1Bdry);
     CPPUNIT_TEST(fundGroup);
@@ -1086,6 +1087,84 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Pinched solid Klein bottle");
             verifyVertexDisc(pinchedSolidKB, 2,
                 "Pinched solid Klein bottle");
+        }
+
+        void verifyEuler(const NTriangulation& tri,
+                long expectedManifold, long expectedTri, const char* triName) {
+            long eulerManifold = tri.getEulerCharManifold();
+            long eulerTri = tri.getEulerCharTri();
+
+            if (eulerManifold != expectedManifold) {
+                std::ostringstream msg;
+                msg << triName << " gives a manifold Euler characteristic of "
+                    << eulerManifold << " instead of "
+                    << expectedManifold << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (eulerTri != expectedTri) {
+                std::ostringstream msg;
+                msg << triName
+                    << " gives a triangulation Euler characteristic of "
+                    << eulerTri << " instead of " << expectedTri << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void eulerCharacteristic() {
+            verifyEuler(empty, 0, 0, "Empty triangulation");
+            verifyEuler(singleTet, 1, 1, "Single tetrahedron");
+            verifyEuler(s3, 0, 0, "S^3");
+            verifyEuler(s2xs1, 0, 0, "S^2 x S^1");
+            verifyEuler(rp3, 0, 0, "RP^3");
+            verifyEuler(lens3_1, 0, 0, "L(3,1)");
+            verifyEuler(lens8_3, 0, 0, "L(8,3)");
+            verifyEuler(lens7_1_loop, 0, 0, "Layered loop L(7,1)");
+            verifyEuler(rp3rp3, 0, 0, "RP^3 # RP^3");
+            verifyEuler(q32xz3, 0, 0, "S^3 / Q_32 x Z_3");
+            verifyEuler(q28, 0, 0, "S^3 / Q_28");
+            verifyEuler(seifertWeber, 0, 0, "Seifert-Weber dodecahedral space");
+            verifyEuler(lens100_1, 0, 0, "L(100,1)");
+            verifyEuler(lst3_4_7, 0, 0, "LST(3,4,7)");
+            verifyEuler(figure8, 0, 1, "Figure eight knot complement");
+            verifyEuler(rp2xs1, 0, 0, "RP^2 x S^1");
+            verifyEuler(solidKB, 0, 0, "Solid Klein bottle");
+            verifyEuler(gieseking, 0, 1, "Gieseking manifold");
+
+            verifyEuler(invalidEdges, 1, -1,
+                "Triangulation with invalid edges");
+            verifyEuler(twoProjPlaneCusps, 1, 1,
+                "Triangulation with RP^2 cusps");
+            verifyEuler(cuspedGenusTwoTorus, -1, 2,
+                "Cusped solid genus two torus");
+            verifyEuler(pinchedSolidTorus, 0, 1, "Pinched solid torus");
+            verifyEuler(pinchedSolidKB, 0, 1, "Pinched solid Klein bottle");
+
+            {
+                NTriangulation t(twoProjPlaneCusps);
+                t.idealToFinite();
+                verifyEuler(t, 1, 1, "Triangulation with RP^2 boundaries");
+            }
+            {
+                NTriangulation t(cuspedGenusTwoTorus);
+                t.idealToFinite();
+                verifyEuler(t, -1, -1, "Solid genus two torus");
+            }
+            {
+                NTriangulation t(pinchedSolidTorus);
+                t.idealToFinite();
+                verifyEuler(t, 0, 0, "Unpinched solid torus");
+            }
+            {
+                NTriangulation t(pinchedSolidKB);
+                t.idealToFinite();
+                verifyEuler(t, 0, 0, "Unpinched solid Klein bottle");
+            }
+
+            verifyEuler(s3_large, 0, 0, "Large S^3");
+            verifyEuler(rp3_large, 0, 0, "Large RP^3");
+            verifyEuler(lens8_3_large, 0, 0, "Large L(8,3)");
+            verifyEuler(q20_large, 0, 0, "Large S^3 / Q_20");
+            verifyEuler(fig8_bary, 0, 1, "Large figure eight knot complement");
         }
 
         void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
