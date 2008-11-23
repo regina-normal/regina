@@ -154,22 +154,6 @@ class NVertex : public ShareableObject, public NMarkedElement {
 
     public:
         /**
-         * Creates a new vertex and marks it as belonging to the
-         * given triangulation component.
-         *
-         * \ifacespython Not present.
-         *
-         * @param myComponent the triangulation component to which this
-         * vertex belongs.
-         */
-        NVertex(NComponent* myComponent);
-
-        /**
-         * Default destructor.
-         */
-        virtual ~NVertex();
-
-        /**
          * Returns the list of descriptors detailing how this vertex forms a
          * part of various tetrahedra in the triangulation.
          * Note that if this vertex represents multiple vertices of a
@@ -295,6 +279,21 @@ class NVertex : public ShareableObject, public NMarkedElement {
         long getLinkEulerCharacteristic() const;
 
         void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * Creates a new vertex and marks it as belonging to the
+         * given triangulation component.
+         *
+         * @param myComponent the triangulation component to which this
+         * vertex belongs.
+         */
+        NVertex(NComponent* myComponent);
+
+        /**
+         * Default destructor.
+         */
+        virtual ~NVertex();
 
     friend class NTriangulation;
         /**< Allow access to private members. */

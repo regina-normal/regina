@@ -132,7 +132,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
         for (start=0; start<4; start++)
             for (end=start+1; end<4; end++)
                 out << ' ' << std::setw(3)
-                    << edgeIndex(tet->getEdge(edgeNumber[start][end]));
+                    << edgeIndex(tet->getEdge(NEdge::edgeNumber[start][end]));
         out << '\n';
     }
     out << '\n';
@@ -490,12 +490,20 @@ void NTriangulation::deleteTetrahedra() {
 }
 
 void NTriangulation::deleteSkeleton() {
-    for_each(vertices.begin(), vertices.end(), FuncDelete<NVertex>());
-    for_each(edges.begin(), edges.end(), FuncDelete<NEdge>());
-    for_each(faces.begin(), faces.end(), FuncDelete<NFace>());
-    for_each(components.begin(), components.end(), FuncDelete<NComponent>());
-    for_each(boundaryComponents.begin(), boundaryComponents.end(),
-        FuncDelete<NBoundaryComponent>());
+    // Now that skeletal destructors are private, we can't just use for_each.
+    // How primitive.  Loop through each list indivually.
+    for (VertexIterator it = vertices.begin(); it != vertices.end(); ++it)
+        delete *it;
+    for (EdgeIterator it = edges.begin(); it != edges.end(); ++it)
+        delete *it;
+    for (FaceIterator it = faces.begin(); it != faces.end(); ++it)
+        delete *it;
+    for (ComponentIterator it = components.begin();
+            it != components.end(); ++it)
+        delete *it;
+    for (BoundaryComponentIterator it = boundaryComponents.begin();
+            it != boundaryComponents.end(); ++it)
+        delete *it;
 
     vertices.clear();
     edges.clear();

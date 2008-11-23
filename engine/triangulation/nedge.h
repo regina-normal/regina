@@ -238,34 +238,17 @@ class NEdge : public ShareableObject, public NMarkedElement {
 
     public:
         /**
-         * Creates a new edge and marks it as belonging to the
-         * given triangulation component.
-         *
-         * \ifacespython Not present.
-         *
-         * @param myComponent the triangulation component to which this
-         * edge belongs.
-         */
-        NEdge(NComponent* myComponent);
-
-        /**
-         * Default destructor.
-         */
-        ~NEdge();
-
-        /**
          * Returns the list of descriptors detailing how this edge forms a
          * part of various tetrahedra in the triangulation.
          * Note that if this edge represents multiple edges of a
          * particular tetrahedron, then there will be multiple embedding
          * descriptors in the list regarding that tetrahedron.
          *
-         * These embedding descriptors will be stored in order in
-         * the list, so that running through the list and
-         * following in turn the edges defined by the
-         * images of (2,3) under the edge embedding permutations
-         * for each tetrahedron will produce an ordered
-         * chain circling the edge.
+         * These embedding descriptors will be stored in order in the
+         * list, so that if you run through the list and follow in turn
+         * the edges of each tetrahedron defined by the images of (2,3)
+         * under NEdgeEmbedding::getVertices(), then you will obtain an
+         * ordered chain circling this edge.
          *
          * \ifacespython This routine returns a python list.
          *
@@ -345,6 +328,21 @@ class NEdge : public ShareableObject, public NMarkedElement {
         bool isValid() const;
 
         void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * Creates a new edge and marks it as belonging to the
+         * given triangulation component.
+         *
+         * @param myComponent the triangulation component to which this
+         * edge belongs.
+         */
+        NEdge(NComponent* myComponent);
+
+        /**
+         * Default destructor.
+         */
+        ~NEdge();
 
     friend class NTriangulation;
         /**< Allow access to private members. */
