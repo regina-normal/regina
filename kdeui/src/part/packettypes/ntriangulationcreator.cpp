@@ -167,7 +167,7 @@ NTriangulationCreator::NTriangulationCreator() {
         "Including pairs of the form (1,<i>k</i>) and even (1,0) is "
         "acceptable.<p>"
         "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
-        "representing the Poincare homology sphere.</qt>");
+        "representing the Poincar&eacute; homology sphere.</qt>");
     QWhatsThis::add(new QLabel(i18n("Parameters (a1,b1) ... (an,bn):"),
         hArea), expln);
     sfsParams = new KLineEdit(hArea);
@@ -274,7 +274,7 @@ NTriangulationCreator::NTriangulationCreator() {
     exampleWhich->insertItem(i18n("Figure eight knot complement"));
     exampleWhich->insertItem(i18n("Gieseking manifold"));
     exampleWhich->insertItem(i18n("Lens space L(8,3)"));
-    exampleWhich->insertItem(i18n("Poincare homology sphere"));
+    exampleWhich->insertItem(i18n("Poincaré homology sphere"));
     exampleWhich->insertItem(i18n("Product RP2 x S1"));
     exampleWhich->insertItem(i18n("Product S2 x S1"));
     exampleWhich->insertItem(i18n("Seifert-Weber dodecahedral space"));
@@ -421,7 +421,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 "Including pairs of the form (1,<i>k</i>) and even (1,0) is "
                 "acceptable.<p>"
                 "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
-                "representing the Poincare homology sphere.</qt>"));
+                "representing the Poincar&eacute; homology sphere.</qt>"));
             return 0;
         }
 
