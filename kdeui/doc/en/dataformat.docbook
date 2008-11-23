@@ -69,6 +69,8 @@
  &data-tet;
  &data-tetrahedra;
  &data-text;
+ &data-threeball;
+ &data-threesphere;
  &data-turaevviro;
  &data-twosided;
  &data-var;
