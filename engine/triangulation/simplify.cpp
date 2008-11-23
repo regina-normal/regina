@@ -709,7 +709,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
             int edge = NEdge::edgeNumber[bdry[0]][bdry[1]];
             if (t->getEdge(edge)->isBoundary())
                 return false;
-            if (t->adjacentTetrahedron(NEdge::edgeVertex[6 - edge][0]) == t)
+            if (t->adjacentTetrahedron(NEdge::edgeVertex[5 - edge][0]) == t)
                 return false;
         }
     }
