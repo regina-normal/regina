@@ -318,11 +318,11 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     // Make sure we're not about to create a (0,k) curve.
     NPerm lstRoles(
         lst->getTopEdgeGroup(
-            edgeNumber[annulus.roles[0][0]][annulus.roles[0][1]]),
+            NEdge::edgeNumber[annulus.roles[0][0]][annulus.roles[0][1]]),
         lst->getTopEdgeGroup(
-            edgeNumber[annulus.roles[0][0]][annulus.roles[0][2]]),
+            NEdge::edgeNumber[annulus.roles[0][0]][annulus.roles[0][2]]),
         lst->getTopEdgeGroup(
-            edgeNumber[annulus.roles[0][1]][annulus.roles[0][2]]),
+            NEdge::edgeNumber[annulus.roles[0][1]][annulus.roles[0][2]]),
         3);
 
     if (lst->getMeridinalCuts(lstRoles[0]) == 0)

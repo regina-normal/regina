@@ -436,10 +436,9 @@ NPerm faceOrdering(int face);
  * The images of 2 and 3 in the returned permutation will be chosen so
  * that the permutation will be even.
  *
- * @param edge an edge number in a tetrahedron.  This should be between 0
- * and 5 inclusive.  The constant arrays \c edgeNumber, \c edgeStart and
- * \c edgeEnd describe which vertex numbers are joined by which edge
- * numbers.
+ * @param edge an edge number in a tetrahedron.  This should be between 0 and
+ * 5 inclusive.  The constant arrays NEdge::edgeNumber and NEdge::edgeVertex
+ * describe which vertex numbers are joined by which edge numbers.
  * @return the permutation representing the canonical ordering of
  * vertices in the given edge.
  */
@@ -474,10 +473,9 @@ std::string faceDescription(const NPerm& facePerm);
  * canonical order, as described in edgeOrdering().
  * Only the images of 0 and 1 will be put in the string.
  *
- * @param edge an edge number in a tetrahedron.  This should be between 0
- * and 5 inclusive.  The constant arrays \c edgeNumber, \c edgeStart and
- * \c edgeEnd describe which vertex numbers are joined by which edge
- * numbers.
+ * @param edge an edge number in a tetrahedron.  This should be between 0 and
+ * 5 inclusive.  The constant arrays NEdge::edgeNumber and NEdge::edgeVertex
+ * describe which vertex numbers are joined by which edge numbers.
  * @return a string representing the canonical ordering of
  * vertices in the given edge.
  */

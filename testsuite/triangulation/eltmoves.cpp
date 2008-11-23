@@ -166,7 +166,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // here in this file.
                 t.getNumberOfEdges();
 
-                NEdge* e = tet->getEdge(regina::edgeNumber[0][1]);
+                NEdge* e = tet->getEdge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-loop-tet is malformed.",
                     (! e->isBoundary()) && e->getDegree() == 1 &&
@@ -379,7 +379,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 t.getNumberOfEdges();
 
                 NEdge* e = t.getTetrahedron(0)->getEdge(
-                    regina::edgeNumber[0][1]);
+                    NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case identified-edges-S2 is malformed.",
                     (! e->isBoundary()) && e->getDegree() == 6 &&
@@ -412,7 +412,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 t.getNumberOfEdges();
 
                 NEdge* e = t.getTetrahedron(0)->getEdge(
-                    regina::edgeNumber[0][1]);
+                    NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case identified-edges-RP2 is malformed.",
                     (! e->isBoundary()) && e->getDegree() == 6 &&
@@ -432,7 +432,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // Ugly hack to regenerate skeleton, see notes above.
                 t.getNumberOfEdges();
 
-                NEdge* e = tet->getEdge(regina::edgeNumber[0][1]);
+                NEdge* e = tet->getEdge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-loop-boundary is malformed.",
                     (! e->isBoundary()) && e->getDegree() == 1 &&
@@ -450,7 +450,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 t.getNumberOfEdges();
 
                 NEdge* e = t.getTetrahedron(0)->
-                    getEdge(regina::edgeNumber[0][1]);
+                    getEdge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-cross-boundary is malformed.",
                     e->isBoundary() && e->getDegree() == 3 &&

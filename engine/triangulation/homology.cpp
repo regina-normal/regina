@@ -178,7 +178,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
                 currEdgeEnd = currTetVertices[(faceEdge + 1) % 3];
                 // Examine the edge from vertex edgeStart to edgeEnd
                 // in tetrahedron currTet.
-                currEdge = edgeNumber[currEdgeStart][currEdgeEnd];
+                currEdge = NEdge::edgeNumber[currEdgeStart][currEdgeEnd];
                 edgeGenIndex = genIndex[edgeIndex(
                     currTet->getEdge(currEdge))];
                 if (edgeGenIndex >= 0) {

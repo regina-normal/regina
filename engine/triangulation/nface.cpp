@@ -103,14 +103,14 @@ int NFace::getType() {
 NEdge* NFace::getEdge(int edge) const {
     NPerm p = embeddings[0]->getVertices();
     return embeddings[0]->getTetrahedron()->getEdge(
-        edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
+        NEdge::edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
 }
 
 NPerm NFace::getEdgeMapping(int edge) const {
     NPerm facePerm = embeddings[0]->getVertices();
         // Maps face -> tetrahedron
     NPerm edgePerm = embeddings[0]->getTetrahedron()->getEdgeMapping(
-        edgeNumber[facePerm[(edge + 1) % 3]][facePerm[(edge + 2) % 3]]);
+        NEdge::edgeNumber[facePerm[(edge + 1) % 3]][facePerm[(edge + 2) % 3]]);
         // Maps edge -> tetrahedron
     return NPerm(facePerm.preImageOf(edgePerm[0]),
         facePerm.preImageOf(edgePerm[1]), edge, 3);

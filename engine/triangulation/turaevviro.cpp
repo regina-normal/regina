@@ -293,10 +293,10 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
         const std::deque<NEdgeEmbedding>& embs(edges[curr]->getEmbeddings());
         for (embit = embs.begin(); embit != embs.end(); embit++) {
             index1 = edgeIndex((*embit).getTetrahedron()->getEdge(
-                edgeNumber[(*embit).getVertices()[0]]
+                NEdge::edgeNumber[(*embit).getVertices()[0]]
                 [(*embit).getVertices()[2]]));
             index2 = edgeIndex((*embit).getTetrahedron()->getEdge(
-                edgeNumber[(*embit).getVertices()[1]]
+                NEdge::edgeNumber[(*embit).getVertices()[1]]
                 [(*embit).getVertices()[2]]));
             if (index1 <= curr && index2 <= curr) {
                 // We've decided upon colours for all three edges of

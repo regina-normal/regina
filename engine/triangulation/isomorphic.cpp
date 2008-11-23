@@ -426,7 +426,8 @@ bool NTriangulation::compatibleTets(NTetrahedron* src, NTetrahedron* dest,
         NPerm p) {
     for (int edge = 0; edge < 6; edge++) {
         if (src->getEdge(edge)->getNumberOfEmbeddings() !=
-                dest->getEdge(edgeNumber[p[edgeStart[edge]]][p[edgeEnd[edge]]])
+                dest->getEdge(NEdge::edgeNumber[p[NEdge::edgeVertex[edge][0]]]
+                    [p[NEdge::edgeVertex[edge][1]]])
                 ->getNumberOfEmbeddings())
             return false;
     }

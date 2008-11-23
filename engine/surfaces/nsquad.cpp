@@ -177,9 +177,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
             if (i == vemb.getVertex())
                 continue;
             edge = vemb.getTetrahedron()->getEdge(
-                edgeNumber[vemb.getVertex()][i]);
+                NEdge::edgeNumber[vemb.getVertex()][i]);
             end = vemb.getTetrahedron()->getEdgeMapping(
-                edgeNumber[vemb.getVertex()][i])[0] == i ? 1 : 0;
+                NEdge::edgeNumber[vemb.getVertex()][i])[0] == i ? 1 : 0;
             if (usedEdges[end].insert(edge).second)
                 examine.push_back(EdgeEnd(edge, end));
         }
@@ -230,9 +230,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
 
                 // Remember to examine the new edge end if appropriate.
                 edge = tet->getEdge(
-                    edgeNumber[tetPerm[2]][tetPerm[current.end]]);
+                    NEdge::edgeNumber[tetPerm[2]][tetPerm[current.end]]);
                 end = tet->getEdgeMapping(
-                    edgeNumber[tetPerm[2]][tetPerm[current.end]])[0]
+                    NEdge::edgeNumber[tetPerm[2]][tetPerm[current.end]])[0]
                     == tetPerm[2] ? 1 : 0;
                 if (usedEdges[end].insert(edge).second)
                     examine.push_back(EdgeEnd(edge, end));
@@ -270,9 +270,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
 
                     // Remember to examine the new edge end if appropriate.
                     edge = tet->getEdge(
-                        edgeNumber[tetPerm[3]][tetPerm[current.end]]);
+                        NEdge::edgeNumber[tetPerm[3]][tetPerm[current.end]]);
                     end = tet->getEdgeMapping(
-                        edgeNumber[tetPerm[3]][tetPerm[current.end]])[0]
+                        NEdge::edgeNumber[tetPerm[3]][tetPerm[current.end]])[0]
                         == tetPerm[3] ? 1 : 0;
                     if (usedEdges[end].insert(edge).second)
                         examine.push_back(EdgeEnd(edge, end));

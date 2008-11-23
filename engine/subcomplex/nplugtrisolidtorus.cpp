@@ -195,7 +195,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 coreTet[i] = core->getTetrahedron(i);
                 coreRoles[i] = core->getVertexRoles(i);
                 axis[i] = coreTet[i]->getEdge(
-                    edgeNumber[coreRoles[i][0]][coreRoles[i][3]]);
+                    NEdge::edgeNumber[coreRoles[i][0]][coreRoles[i][3]]);
             }
 
             if (axis[0] == axis[1] || axis[1] == axis[2] ||

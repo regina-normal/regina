@@ -380,7 +380,8 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
             // face[i][j] will be on tetrahedron i opposite vertex j of the
             // internal edge.
         for (i=0; i<2; i++) {
-            edge[i] = tet[i]->getEdge(edgeNumber[perm[i][2]][perm[i][3]]);
+            edge[i] = tet[i]->getEdge(
+                NEdge::edgeNumber[perm[i][2]][perm[i][3]]);
             face[i][0] = tet[i]->getFace(perm[i][0]);
             face[i][1] = tet[i]->getFace(perm[i][1]);
         }
@@ -556,7 +557,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     for (i=0; i<2; i++) {
         topGlued[i] = bottomToTop[oldVertices[i + 2]];
         flatEdge[i] = top->getEdge(
-            edgeNumber[topGlued[i]][bottomToTop[oldVertices[edgeEnd]]]);
+            NEdge::edgeNumber[topGlued[i]][bottomToTop[oldVertices[edgeEnd]]]);
     }
 
     if (check) {
@@ -648,15 +649,18 @@ bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
     if (check) {
         int fVertex = -1;
         int nBdry = 0;
-        if (tet->getEdge(edgeNumber[vertices[0]][vertices[1]])->isBoundary())
+        if (tet->getEdge(NEdge::edgeNumber[vertices[0]][vertices[1]])->
+                isBoundary())
             nBdry++;
         else
             fVertex = 2;
-        if (tet->getEdge(edgeNumber[vertices[1]][vertices[2]])->isBoundary())
+        if (tet->getEdge(NEdge::edgeNumber[vertices[1]][vertices[2]])->
+                isBoundary())
             nBdry++;
         else
             fVertex = 0;
-        if (tet->getEdge(edgeNumber[vertices[2]][vertices[0]])->isBoundary())
+        if (tet->getEdge(NEdge::edgeNumber[vertices[2]][vertices[0]])->
+                isBoundary())
             nBdry++;
         else
             fVertex = 1;
@@ -698,10 +702,10 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
             if (t->getVertex(bdry[0])->isBoundary())
                 return false;
         } else if (nBdry == 2) {
-            int edge = edgeNumber[bdry[0]][bdry[1]];
+            int edge = NEdge::edgeNumber[bdry[0]][bdry[1]];
             if (t->getEdge(edge)->isBoundary())
                 return false;
-            if (t->adjacentTetrahedron(edgeStart[6 - edge]) == t)
+            if (t->adjacentTetrahedron(NEdge::edgeVertex[6 - edge][0]) == t)
                 return false;
         }
     }
@@ -772,9 +776,9 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
                 tet = (*it).getTetrahedron();
                 p = (*it).getVertices();
                 if (! (tetEdges.insert(tet->getEdge(
-                            edgeNumber[p[0]][p[2]])).second &&
+                            NEdge::edgeNumber[p[0]][p[2]])).second &&
                         tetEdges.insert(tet->getEdge(
-                            edgeNumber[p[1]][p[2]])).second))
+                            NEdge::edgeNumber[p[1]][p[2]])).second))
                     return false;
             }
 
@@ -782,9 +786,9 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             // edge embedding.
             if (e->isBoundary())
                 if (! (tetEdges.insert(tet->getEdge(
-                            edgeNumber[p[0]][p[3]])).second &&
+                            NEdge::edgeNumber[p[0]][p[3]])).second &&
                         tetEdges.insert(tet->getEdge(
-                            edgeNumber[p[1]][p[3]])).second))
+                            NEdge::edgeNumber[p[1]][p[3]])).second))
                     return false;
         }
     }

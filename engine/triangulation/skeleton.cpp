@@ -281,7 +281,7 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
 
             exitPerm = tet->adjacentGluing(exitFace);
             nextVertices = exitPerm * tetVertices * NPerm(2, 3);
-            nextEdge = edgeNumber[nextVertices[0]][nextVertices[1]];
+            nextEdge = NEdge::edgeNumber[nextVertices[0]][nextVertices[1]];
 
             if (nextTet->edges[nextEdge]) {
                 // We looped right around.
@@ -420,7 +420,8 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
         // Run through the edges.
         for (i=0; i<3; i++)
             for (j=i+1; j<3; j++) {
-                edge = tet->getEdge(edgeNumber[tetVertices[i]][tetVertices[j]]);
+                edge = tet->getEdge(NEdge::edgeNumber[tetVertices[i]]
+                    [tetVertices[j]]);
                 if (! (edge->boundaryComponent)) {
                     edge->boundaryComponent = label;
                     label->edges.push_back(edge);
