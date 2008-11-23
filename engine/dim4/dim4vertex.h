@@ -135,22 +135,6 @@ class Dim4Vertex : public ShareableObject, public NMarkedElement {
 
     public:
         /**
-         * Creates a new vertex and marks it as belonging to the
-         * given triangulation component.
-         *
-         * \ifacespython Not present.
-         *
-         * @param component the triangulation component to which this
-         * vertex belongs.
-         */
-        Dim4Vertex(Dim4Component* component);
-
-        /**
-         * Default destructor.
-         */
-        virtual ~Dim4Vertex();
-
-        /**
          * Returns the list of descriptors detailing how this vertex forms
          * a part of various pentachora in the triangulation.
          * Note that if this vertex represents multiple vertices of a
@@ -255,6 +239,21 @@ class Dim4Vertex : public ShareableObject, public NMarkedElement {
         bool isBoundary() const;
 
         void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * Creates a new vertex and marks it as belonging to the
+         * given triangulation component.
+         *
+         * @param component the triangulation component to which this
+         * vertex belongs.
+         */
+        Dim4Vertex(Dim4Component* component);
+
+        /**
+         * Default destructor.
+         */
+        virtual ~Dim4Vertex();
 
     friend class Dim4Triangulation;
         /**< Allow access to private members. */

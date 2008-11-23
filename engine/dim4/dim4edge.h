@@ -35,7 +35,7 @@
 #define __DIM4EDGE_H
 #endif
 
-#include <deque>
+#include <vector>
 #include "shareableobject.h"
 #include "dim4/dim4pentachoron.h"
 #include "dim4/nperm5.h"
@@ -141,7 +141,7 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          *
          * Note that edge \i is always opposite face \i in a pentachoron.
          *
-         * This the 4-manifold analogue to the lookup table NEdge::edgeNumber
+         * This is the 4-manifold analogue to the lookup table NEdge::edgeNumber
          * for 3-manifold triangulations (and its deprecated predecessor,
          * the old global array regina::edgeNumber).
          */
@@ -161,14 +161,14 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
          * be smaller than <tt>edgeVertex[i][1]</tt>.
          *
-         * This the 4-manifold analogue to the lookup table NEdge::edgeVertex
+         * This is the 4-manifold analogue to the lookup table NEdge::edgeVertex
          * for 3-manifold triangulations (and its deprecated predecessors,
          * the old global arrays regina::edgeStart and regina::edgeEnd).
          */
         static const int edgeVertex[10][2];
 
     private:
-        std::deque<Dim4EdgeEmbedding> emb_;
+        std::vector<Dim4EdgeEmbedding> emb_;
             /**< A list of descriptors telling how this edge forms a part of
                  each individual pentachoron that it belongs to. */
         Dim4Component* component_;
@@ -181,22 +181,6 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
 
     public:
         /**
-         * Creates a new edge and marks it as belonging to the
-         * given triangulation component.
-         *
-         * \ifacespython Not present.
-         *
-         * @param component the triangulation component to which this
-         * edge belongs.
-         */
-        Dim4Edge(Dim4Component* component);
-
-        /**
-         * Default destructor.
-         */
-        ~Dim4Edge();
-
-        /**
          * Returns the list of descriptors detailing how this edge forms a
          * part of various pentachora in the 4-manifold triangulation.
          * Note that if this edge represents multiple edges of a
@@ -208,7 +192,7 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          * @return the list of embedding descriptors.
          * @see Dim4EdgeEmbedding
          */
-        const std::deque<Dim4EdgeEmbedding>& getEmbeddings() const;
+        const std::vector<Dim4EdgeEmbedding>& getEmbeddings() const;
 
         /**
          * Returns the number of descriptors in the list returned by
@@ -282,6 +266,21 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
 
         void writeTextShort(std::ostream& out) const;
 
+    private:
+        /**
+         * Creates a new edge and marks it as belonging to the
+         * given triangulation component.
+         *
+         * @param component the triangulation component to which this
+         * edge belongs.
+         */
+        Dim4Edge(Dim4Component* component);
+
+        /**
+         * Default destructor.
+         */
+        ~Dim4Edge();
+
     friend class Dim4Triangulation;
         /**< Allow access to private members. */
 };
@@ -329,7 +328,7 @@ inline Dim4Edge::Dim4Edge(Dim4Component* component) :
 inline Dim4Edge::~Dim4Edge() {
 }
 
-inline const std::deque<Dim4EdgeEmbedding>& Dim4Edge::getEmbeddings() const {
+inline const std::vector<Dim4EdgeEmbedding>& Dim4Edge::getEmbeddings() const {
     return emb_;
 }
 
