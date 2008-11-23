@@ -137,7 +137,7 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
          * triangulation.
          * @return the requested pentachoron.
          */
-        Dim4Tetrahedron* getPentachoron(unsigned long index) const;
+        Dim4Pentachoron* getPentachoron(unsigned long index) const;
 
         /**
          * Returns the requested tetrahedron in this component.
@@ -278,7 +278,7 @@ inline unsigned long Dim4Component::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline Dim4Tetrahedron* Dim4Component::getPentachoron(unsigned long index)
+inline Dim4Pentachoron* Dim4Component::getPentachoron(unsigned long index)
         const {
     return pentachora_[index];
 }
