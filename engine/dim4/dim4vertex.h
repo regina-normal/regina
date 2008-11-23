@@ -132,6 +132,10 @@ class Dim4Vertex : public ShareableObject, public NMarkedElement {
                  3-manifold triangulation.  It is guaranteed that 3-sphere
                  recognition has already been run over this triangulation
                  (and so future 3-sphere queries will be very fast). */
+        bool valid_;
+            /**< Is this vertex valid? */
+        bool ideal_;
+            /**< Is this vertex ideal? */
 
     public:
         /**
@@ -218,9 +222,21 @@ class Dim4Vertex : public ShareableObject, public NMarkedElement {
         const NTriangulation* getLink() const;
 
         /**
+         * Determines if this vertex is valid.
+         *
+         * A vertex is valid if and only if its link is (i) a 3-ball,
+         * or (ii) a closed compact valid 3-manifold.  Conversely, a
+         * vertex is invalid if and only if its link is (i) invalid,
+         * (ii) ideal, and/or (iii) bounded but not a 3-ball.
+         *
+         * @return \c true if and only if this vertex is valid.
+         */
+        bool isValid() const;
+
+        /**
          * Determines if this vertex is an ideal vertex.
-         * This requires the vertex link to be closed and not a
-         * 3-sphere.
+         * To be an ideal, a vertex must (i) be valid, and (ii) have
+         * a closed vertex link that is not a 3-sphere.
          *
          * @return \c true if and only if this is an ideal vertex.
          */
@@ -228,10 +244,14 @@ class Dim4Vertex : public ShareableObject, public NMarkedElement {
 
         /**
          * Determines if this vertex lies on the boundary of the
-         * triangulation.  Ideal vertices are included as
-         * being on the boundary.  In fact, the only vertices not
-         * considered as on the boundary are those whose links are
-         * 3-spheres.
+         * triangulation.
+         *
+         * Ideal vertices form their own boundary components, and are
+         * therefore considered to be on the boundary.
+         *
+         * For invalid vertices, the return value of this routine is
+         * undefined; in such cases users are urged to look carefully
+         * at the vertex link to see precisely what is going on.
          *
          * @return \c true if and only if this vertex lies on the boundary.
          * @see isIdeal()
@@ -294,7 +314,8 @@ inline int Dim4VertexEmbedding::getVertex() const {
 // Inline functions for Dim4Vertex
 
 inline Dim4Vertex::Dim4Vertex(Dim4Component* component) :
-        component_(component), boundaryComponent_(0), link_(0) {
+        component_(component), boundaryComponent_(0), link_(0),
+        valid_(true), ideal_(false) {
 }
 
 inline const std::vector<Dim4VertexEmbedding>& Dim4Vertex::getEmbeddings()
@@ -325,6 +346,14 @@ inline unsigned long Dim4Vertex::getDegree() const {
 
 inline const NTriangulation* Dim4Vertex::getLink() const {
     return link_;
+}
+
+inline bool Dim4Vertex::isValid() const {
+    return valid_;
+}
+
+inline bool Dim4Vertex::isIdeal() const {
+    return ideal_;
 }
 
 inline bool Dim4Vertex::isBoundary() const {

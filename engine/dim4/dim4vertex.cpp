@@ -36,10 +36,6 @@ Dim4Vertex::~Dim4Vertex() {
     delete link_;
 }
 
-bool Dim4Vertex::isIdeal() const {
-    return (link_->isClosed() && ! link_->isThreeSphere());
-}
-
 void Dim4Vertex::writeTextShort(std::ostream& out) const {
     if (! link_->isClosed())
         out << "Boundary ";
