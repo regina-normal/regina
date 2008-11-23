@@ -249,7 +249,7 @@ class NFace : public ShareableObject, public NMarkedElement {
          * Returns the vertex of the triangulation that corresponds
          * to the given vertex of this face.
          *
-         * Note that face vertex \a i is opposite face edge \a i.
+         * Note that vertex \a i of a face is opposite edge \a i of the face.
          *
          * @param vertex the vertex of this face to examine.  This should
          * be 0, 1 or 2.
@@ -260,7 +260,7 @@ class NFace : public ShareableObject, public NMarkedElement {
          * Returns the edge of the triangulation that corresponds
          * to the given edge of this face.
          *
-         * Note that face vertex \a i is opposite face edge \a i.
+         * Note that edge \a i of a face is opposite vertex \a i of the face.
          *
          * @param edge the edge of this face to examine.  This should be
          * 0, 1 or 2.
@@ -268,19 +268,20 @@ class NFace : public ShareableObject, public NMarkedElement {
          */
         NEdge* getEdge(int edge) const;
         /**
-         * The edge in the skeleton corresponding to the requested edge
-         * of this face is examined, and a permutation mapping vertices
-         * (0,1) of the skeleton edge to the corresponding vertices of
-         * this face is returned.
+         * Examines the given edge of this face, and returns a mapping
+         * from the "canonical" vertices of the corresponding edge of
+         * the triangulation to the vertices of this face.
          *
-         * Thus for each <tt>i=0,1</tt> and each face (or tetrahedron)
-         * containing this
-         * skeleton edge, <tt>getEdgeMapping(...)[i]</tt> will refer to
-         * vertices that are all identified to each other along the
-         * skeleton edge concerned.
+         * This routine behaves much the same as
+         * NTetrahedron::getEdgeMapping(), except that it maps the edge
+         * vertices into a face, not into a pentachoron.  See
+         * NTetrahedron::getEdgeMapping() for a more detailed
+         * explanation of precisely what this mapping means.
          *
-         * The permutation returned will map 2 to the remaining face
-         * vertex (which will be parameter \a edge) and will map 3 to 3.
+         * This routine differs from NTetrahedron::getEdgeMapping() in
+         * how it handles the images of 2 and 3.  This routine will
+         * always map 2 to the remaining vertex of this face (which is
+         * equal to the argument \a edge), and will always map 3 to itself.
          *
          * @param edge the edge of this face to examine.  This should be
          * 0, 1 or 2.

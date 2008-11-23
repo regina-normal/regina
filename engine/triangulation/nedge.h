@@ -244,12 +244,11 @@ class NEdge : public ShareableObject, public NMarkedElement {
          * particular tetrahedron, then there will be multiple embedding
          * descriptors in the list regarding that tetrahedron.
          *
-         * These embedding descriptors will be stored in order in
-         * the list, so that running through the list and
-         * following in turn the edges defined by the
-         * images of (2,3) under the edge embedding permutations
-         * for each tetrahedron will produce an ordered
-         * chain circling the edge.
+         * These embedding descriptors will be stored in order in the
+         * list, so that if you run through the list and follow in turn
+         * the edges of each tetrahedron defined by the images of (2,3)
+         * under NEdgeEmbedding::getVertices(), then you will obtain an
+         * ordered chain circling this edge.
          *
          * \ifacespython This routine returns a python list.
          *
