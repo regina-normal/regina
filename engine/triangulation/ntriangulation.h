@@ -193,23 +193,24 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
 
         /**
          * Default constructor.
+         *
          * Creates an empty triangulation.
          */
         NTriangulation();
         /**
          * Copy constructor.
-         * Creates a new triangulation identical to the given
-         * triangulation.
-         * The packet tree structure and packet label are \e not
-         * copied.
+         *
+         * Creates a new triangulation identical to the given triangulation.
+         * The packet tree structure and packet label are \e not copied.
          *
          * @param cloneMe the triangulation to clone.
          */
         NTriangulation(const NTriangulation& cloneMe);
         /**
          * Destroys this triangulation.
-         * The contained tetrahedra, the cellular
-         * structure and all other properties will also be deallocated.
+         *
+         * The constituent tetrahedra, the cellular structure and all other
+         * properties will also be deallocated.
          */
         virtual ~NTriangulation();
 
@@ -267,9 +268,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Note that tetrahedron indexing may change when a tetrahedron
          * is added or removed from the triangulation.
          *
-         * This routine will ensure the skeleton is calculated, since
-         * other skeleton objects can be accessed from NTetrahedron.
-         *
          * @param index specifies which tetrahedron to return; this
          * value should be between 0 and getNumberOfTetrahedra()-1
          * inclusive.
@@ -282,9 +280,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * triangulation.
          * Note that tetrahedron indexing may change when a tetrahedron
          * is added or removed from the triangulation.
-         *
-         * This routine will ensure the skeleton is calculated, since
-         * other skeleton objects can be accessed from NTetrahedron.
          *
          * @param index specifies which tetrahedron to return; this
          * value should be between 0 and getNumberOfTetrahedra()-1
@@ -1060,11 +1055,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * result of getFundamentalGroup() will change.
          *
          * Bear in mind that each time the triangulation changes, the
-         * fundamental group will be deleted.
-         * Thus the group reference returned should not be kept for
-         * later use.  Instead, getFundamentalGroup() should be called again;
-         * this will be instantaneous if the group has already been
-         * calculated.
+         * fundamental group will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, getFundamentalGroup() should be called again; this will
+         * be instantaneous if the group has already been calculated.
          *
          * Note that this triangulation is not required to be valid
          * (see isValid()).
@@ -1113,11 +1107,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * result of getHomologyH1() will change.
          *
          * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.
-         * Thus the group reference returned should not be kept for
-         * later use.  Instead, getHomologyH1() should be called again;
-         * this will be instantaneous if the group has already been
-         * calculated.
+         * homology groups will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, getHomologyH1() should be called again; this will be
+         * instantaneous if the group has already been calculated.
          *
          * Note that this triangulation is not required to be valid
          * (see isValid()).
@@ -1131,11 +1124,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Note that ideal vertices are considered part of the boundary.
          *
          * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.
-         * Thus the group reference returned should not be kept for
-         * later use.  Instead, getHomologyH1Rel() should be called again;
-         * this will be instantaneous if the group has already been
-         * calculated.
+         * homology groups will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, getHomologyH1Rel() should be called again; this will be
+         * instantaneous if the group has already been calculated.
          *
          * \pre This triangulation is valid.
          *
@@ -1149,11 +1141,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Note that ideal vertices are considered part of the boundary.
          *
          * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.
-         * Thus the group reference returned should not be kept for
-         * later use.  Instead, getHomologyH1Bdry() should be called again;
-         * this will be instantaneous if the group has already been
-         * calculated.
+         * homology groups will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, getHomologyH1Bdry() should be called again; this will be
+         * instantaneous if the group has already been calculated.
          *
          * This routine is fairly fast, since it deduces the homology of
          * each boundary component through knowing what kind of surface
@@ -1174,11 +1165,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * second homology group.
          *
          * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.
-         * Thus the group reference returned should not be kept for
-         * later use.  Instead, getHomologyH2() should be called again;
-         * this will be instantaneous if the group has already been
-         * calculated.
+         * homology groups will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, getHomologyH2() should be called again; this will be
+         * instantaneous if the group has already been calculated.
          *
          * \pre This triangulation is valid.
          *
@@ -1472,9 +1462,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The skeleton has been calculated.
-         * Skeleton calculation can be forced by querying the skeleton,
-         * such as calling getNumberOfVertices().
+         * \pre The given edge is an edge of this triangulation.
          *
          * @param e the edge about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1503,9 +1491,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The skeleton has been calculated.
-         * Skeleton calculation can be forced by querying the skeleton,
-         * such as calling getNumberOfVertices().
+         * \pre The given face is a face of this triangulation.
          *
          * @param f the face about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1539,9 +1525,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The skeleton has been calculated.
-         * Skeleton calculation can be forced by querying the skeleton,
-         * such as calling getNumberOfVertices().
+         * \pre The given edge is an edge of this triangulation.
          *
          * @param e the edge about which to perform the move.
          * @param newAxis Specifies which axis of the octahedron the new
@@ -1587,9 +1571,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The skeleton has been calculated.
-         * Skeleton calculation can be forced by querying the skeleton,
-         * such as calling getNumberOfVertices().
+         * \pre The given edge is an edge of this triangulation.
          *
          * @param e the edge about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1624,9 +1606,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The skeleton has been calculated.
-         * Skeleton calculation can be forced by querying the skeleton,
-         * such as calling getNumberOfVertices().
+         * \pre The given vertex is a vertex of this triangulation.
          *
          * @param v the vertex about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1669,9 +1649,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The skeleton has been calculated.
-         * Skeleton calculation can be forced by querying the skeleton,
-         * such as calling getNumberOfVertices().
+         * \pre The given edge is an edge of this triangulation.
          *
          * @param e the edge about which to perform the move.
          * @param edgeEnd the end of the edge \e opposite that at
@@ -1711,9 +1689,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The skeleton has been calculated.
-         * Skeleton calculation can be forced by querying the skeleton,
-         * such as calling getNumberOfVertices().
+         * \pre The given face is a face of this triangulation.
          *
          * @param f the face about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1748,9 +1724,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The skeleton has been calculated.
-         * Skeleton calculation can be forced by querying the skeleton,
-         * such as calling getNumberOfVertices().
+         * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
          * @param t the tetrahedron upon which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1779,9 +1753,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The skeleton has been calculated.
-         * Skeleton calculation can be forced by querying the skeleton,
-         * such as calling getNumberOfVertices().
+         * \pre The given edge is an edge of this triangulation.
          *
          * \warning This routine should not be used until the
          * eligibility checks are corrected; see the bug details below.
@@ -2336,7 +2308,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * tetrahedron.  These four integers should be 0, 1, 2 and 3 in some
          * order, so that <tt>gluings[t][f][i]</tt> contains the image of
          * \a i under this permutation.  If face \a f of tetrahedron \a t
-         * is to be left as a boundary faces, <tt>gluings[t][f][0..3]</tt>
+         * is to be left as a boundary face, <tt>gluings[t][f][0..3]</tt>
          * may contain anything (and will be duly ignored).
          *
          * It is the responsibility of the caller of this routine to
