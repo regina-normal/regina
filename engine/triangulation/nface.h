@@ -208,8 +208,8 @@ class NFace : public ShareableObject, public NMarkedElement {
         bool isCone();
 
         /**
-         * Returns the number of descriptors available through
-         * getEmbedding().
+         * Returns the number of descriptors available through getEmbedding().
+         * Note that this number will never be greater than two.
          *
          * @return the number of embedding descriptors.
          */

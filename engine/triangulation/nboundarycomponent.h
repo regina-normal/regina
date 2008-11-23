@@ -55,14 +55,18 @@ class NEdge;
  * Note that an ideal vertex constitutes a boundary component of its
  * own. 
  *
- * If a vertex link is a multiply punctured surface, the corresponding
- * boundary components meeting the vertex will not necessarily be
- * considered a single boundary component.  The vertex
- * in question will be placed in all boundary components concerned,
- * although only one of these boundary components can be considered the
- * "official" boundary component of the vertex as returned by
- * NVertex::getBoundaryComponent().  Note that a triangulation
- * containing such a vertex is invalid.
+ * We can run into some interesting cases with invalid triangulations.
+ * Suppose some vertex link is a multiply punctured surface (which makes
+ * the vertex and hence the entire triangulation invalid).  This means
+ * that different parts of the 3-manifold boundary are effectively
+ * "pinched" together.  If this happens, the different parts of the
+ * boundary that are pinched might or might not be listed as part of the
+ * same boundary component; if not then the offending vertex will be
+ * included in all of these boundary components.  Nevertheless, only one
+ * of these can be considered the "official" boundary component of the
+ * vertex as returned by NVertex::getBoundaryComponent().  This is all a
+ * bit of a mess, but then again the entire triangulation is invalid and
+ * so you almost certainly have bigger problems to deal with.
  *
  * Boundary components are highly temporary; once a triangulation
  * changes, all its boundary component objects will be deleted and new
