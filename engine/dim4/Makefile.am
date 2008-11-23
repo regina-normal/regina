@@ -14,7 +14,7 @@ dim4includedir = $(pkgincludedir)/dim4
 
 noinst_LTLIBRARIES = libdim4.la
 
-libdim4_la_SOURCES = dim4edge.cpp dim4face.cpp dim4pentachoron.cpp dim4tetrahedron.cpp dim4vertex.cpp nperm5.cpp
+libdim4_la_SOURCES = dim4boundarycomponent.cpp dim4edge.cpp dim4face.cpp dim4pentachoron.cpp dim4tetrahedron.cpp dim4vertex.cpp nperm5.cpp
 
-dim4include_HEADERS = dim4component.h dim4edge.h dim4face.h dim4pentachoron.h dim4tetrahedron.h dim4vertex.h nperm5.h
+dim4include_HEADERS = dim4boundarycomponent.h dim4component.h dim4edge.h dim4face.h dim4pentachoron.h dim4tetrahedron.h dim4vertex.h nperm5.h
 
