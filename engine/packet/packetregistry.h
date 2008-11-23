@@ -87,6 +87,7 @@
     REGISTER_PACKET(NSurfaceFilter, 8, "Surface Filter")
     REGISTER_PACKET(NAngleStructureList, 9, "Angle Structure List")
     REGISTER_PACKET(NPDF, 10, "PDF")
+    REGISTER_PACKET(NPDF, 11, "4-Manifold Triangulation")
 #endif
 
 /*! \file packetregistry.h
