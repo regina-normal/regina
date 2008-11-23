@@ -234,6 +234,9 @@ class Dim4Vertex : public ShareableObject, public NMarkedElement {
          * vertex is invalid if and only if its link is (i) invalid,
          * (ii) ideal, and/or (iii) bounded but not a 3-ball.
          *
+         * Note that all invalid vertices are considered to be on the
+         * boundary; see isBoundary() for details.
+         *
          * @return \c true if and only if this vertex is valid.
          */
         bool isValid() const;
