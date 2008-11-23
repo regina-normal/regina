@@ -183,11 +183,16 @@ class Dim4Vertex : public ShareableObject, public NMarkedElement {
          * this vertex belongs.
          *
          * See the note in the Dim4BoundaryComponent overview regarding what
-         * happens if the vertex link is a multiply punctured 3-manifold.
-         * Note that such a vertex link makes the triangulation invalid.
+         * happens if the vertex link itself has more than one boundary
+         * component.  Note that such a vertex link makes the triangulation
+         * invalid.
          *
          * An ideal vertex will have its own individual boundary
          * component to which it belongs.
+         *
+         * An invalid vertex will be given its own individual boundary
+         * component if (and only if) it does not already belong to some
+         * larger boundary component.
          *
          * @return the boundary component containing this vertex,
          * or 0 if this vertex is not on the boundary of the triangulation
@@ -249,9 +254,13 @@ class Dim4Vertex : public ShareableObject, public NMarkedElement {
          * Ideal vertices form their own boundary components, and are
          * therefore considered to be on the boundary.
          *
-         * For invalid vertices, the return value of this routine is
-         * undefined; in such cases users are urged to look carefully
-         * at the vertex link to see precisely what is going on.
+         * Invalid vertices are always considered to be on the boundary;
+         * if an invalid vertex is not already part of some larger boundary
+         * component then it is given its own boundary component (much
+         * like an ideal vertex).
+         *
+         * As a matter of fact, the only vertices that are \e not
+         * considered as on the boundary are those whose links are 3-spheres.
          *
          * @return \c true if and only if this vertex lies on the boundary.
          * @see isIdeal()
