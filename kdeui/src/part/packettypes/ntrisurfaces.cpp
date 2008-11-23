@@ -63,7 +63,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout(layout, 3, 7, 5);
+    QGridLayout* grid = new QGridLayout(layout, 4, 7, 5);
     grid->setColStretch(0, 1);
     grid->setColSpacing(2, 5); // Horizontal gap
     grid->setColSpacing(4, 5); // Horizontal gap
@@ -101,6 +101,14 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(threeSphere, msg);
 
+    label = new QLabel(i18n("3-ball?"), ui);
+    grid->addWidget(label, 3, 1);
+    threeBall= new QLabel(ui);
+    grid->addWidget(threeBall, 3, 3);
+    msg = i18n("Is this a triangulation of the 3-dimensional ball?");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(threeBall, msg);
+
     btnZeroEff = new QPushButton(SmallIconSet("run", 0,
         ReginaPart::factoryInstance()), i18n("Calculate"), ui);
     QToolTip::add(btnZeroEff, i18n("Calculate 0-efficiency"));
@@ -135,6 +143,19 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnThreeSphere, 2, 5);
     connect(btnThreeSphere, SIGNAL(clicked()), this,
         SLOT(calculateThreeSphere()));
+
+    btnThreeBall = new QPushButton(SmallIconSet("run", 0,
+        ReginaPart::factoryInstance()), i18n("Calculate"), ui);
+    QToolTip::add(btnThreeBall,
+        i18n("Calculate whether this is a 3-dimensional ball"));
+    QWhatsThis::add(btnThreeBall, i18n("<qt>Calculate whether this "
+        "is a triangulation of a 3-dimensional ball.<p>"
+        "<b>Warning:</b> This calculation is occasionally quite slow for "
+        "larger triangulations (which is why 3-ball recognition is not "
+        "always run automatically).</qt>"));
+    grid->addWidget(btnThreeBall, 3, 5);
+    connect(btnThreeBall, SIGNAL(clicked()), this,
+        SLOT(calculateThreeBall()));
 
     layout->addStretch(3);
 }
@@ -196,6 +217,24 @@ void NTriSurfacesUI::refresh() {
         threeSphere->unsetPalette();
         btnThreeSphere->setEnabled(true);
     }
+
+    // Use the same threshold adjustment as for 3-sphere recognition.
+    if (tri->knowsBall() ||
+            tri->getNumberOfTetrahedra() + THREE_SPHERE_AUTO_CALC_ADJUSTMENT
+            <= autoCalcThreshold) {
+        if (tri->isBall()) {
+            threeBall->setText(i18n("True"));
+            threeBall->setPaletteForegroundColor(Qt::darkGreen);
+        } else {
+            threeBall->setText(i18n("False"));
+            threeBall->setPaletteForegroundColor(Qt::darkRed);
+        }
+        btnThreeBall->setEnabled(false);
+    } else {
+        threeBall->setText(i18n("Unknown"));
+        threeBall->unsetPalette();
+        btnThreeBall->setEnabled(true);
+    }
 }
 
 void NTriSurfacesUI::editingElsewhere() {
@@ -204,9 +243,15 @@ void NTriSurfacesUI::editingElsewhere() {
     zeroEff->unsetPalette();
     splitting->setText(msg);
     splitting->unsetPalette();
+    threeSphere->setText(msg);
+    threeSphere->unsetPalette();
+    threeBall->setText(msg);
+    threeBall->unsetPalette();
 
     btnZeroEff->setEnabled(false);
     btnSplitting->setEnabled(false);
+    btnThreeSphere->setEnabled(false);
+    btnThreeBall->setEnabled(false);
 }
 
 void NTriSurfacesUI::calculateZeroEff() {
@@ -240,6 +285,18 @@ void NTriSurfacesUI::calculateThreeSphere() {
         "Please be patient."),
         enclosingPane->getPart()->instance(), ui);
     tri->isThreeSphere();
+    delete dlg;
+
+    refresh();
+}
+
+void NTriSurfacesUI::calculateThreeBall() {
+    PatienceDialog* dlg = PatienceDialog::warn(i18n(
+        "3-ball recognition can be quite slow\n"
+        "for larger triangulations.\n\n"
+        "Please be patient."),
+        enclosingPane->getPart()->instance(), ui);
+    tri->isBall();
     delete dlg;
 
     refresh();

@@ -248,6 +248,9 @@ void addNTriangulation() {
             &NTriangulation::connectedSumDecomposition,
             OL_connectedSumDecomposition())
         .def("isThreeSphere", &NTriangulation::isThreeSphere)
+        .def("knowsThreeSphere", &NTriangulation::knowsThreeSphere)
+        .def("isBall", &NTriangulation::isBall)
+        .def("knowsBall", &NTriangulation::knowsBall)
         .def("makeDoubleCover", &NTriangulation::makeDoubleCover)
         .def("idealToFinite", &NTriangulation::idealToFinite,
             OL_idealToFinite())

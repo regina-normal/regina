@@ -64,6 +64,7 @@ void NTriangulation::clearAllProperties() {
     twoSphereBoundaryComponents.clear();
     negativeIdealBoundaryComponents.clear();
     threeSphere.clear();
+    threeBall.clear();
 
     turaevViroCache.clear();
 }
@@ -349,6 +350,8 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
             << '\n';
     if (threeSphere.known())
         out << "  " << xmlValueTag("threesphere", threeSphere.value()) << '\n';
+    if (threeBall.known())
+        out << "  " << xmlValueTag("threeball", threeBall.value()) << '\n';
     if (! turaevViroCache.empty()) {
         for (TuraevViroSet::const_iterator it = turaevViroCache.begin();
                 it != turaevViroCache.end(); it++)
@@ -563,6 +566,7 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     zeroEfficient = X.zeroEfficient;
     splittingSurface = X.splittingSurface;
     threeSphere = X.threeSphere;
+    threeBall = X.threeBall;
 
     turaevViroCache = X.turaevViroCache;
 }

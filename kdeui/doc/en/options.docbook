@@ -112,9 +112,9 @@
       documentation</link> for details.
      </para>
      <para>
-      Note that 3-sphere recognition (one of the properties
+      Note that 3-sphere and 3-ball recognition (two of the properties
       affected by this option) will use a slighly lower threshold than is
-      set here.  This is because it involves the
+      set here.  This is because both involve the
       analysis of almost normal surfaces, which are significantly slower
       than ordinary normal surfaces to work with.
      </para>

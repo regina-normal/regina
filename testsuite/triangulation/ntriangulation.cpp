@@ -152,6 +152,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             /**< The lens space L(8,3). */
         NTriangulation q20_large;
             /**< The manifold S^3 / Q_20. */
+        NTriangulation singleTet_bary;
+            /**< The barycentric subdivision of a single tetrahedron. */
         NTriangulation fig8_bary;
             /**< The barycentric subdivision of the figure eight knot
                  complement. */
@@ -210,6 +212,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
             copyAndDelete(gieseking, NExampleTriangulation::gieseking());
             copyAndDelete(cuspedGenusTwoTorus,
                 NExampleTriangulation::cuspedGenusTwoTorus());
+
+            singleTet_bary.addTetrahedron(new NTetrahedron());
+            singleTet_bary.barycentricSubdivision();
 
             copyAndDelete(fig8_bary,
                 NExampleTriangulation::figureEightKnotComplement());
@@ -1872,6 +1877,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifySimplification(lens8_3_large, 2, "L(8,3)");
             verifySimplification(q20_large, 5, "C~(5)");
             verifySimplification(fig8_bary, 2, "SnapPea m004");
+            verifySimplification(singleTet_bary, 1, "B3 (4-vtx)");
         }
 
         void propertyUpdates() {
