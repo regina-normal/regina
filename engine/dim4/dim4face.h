@@ -181,6 +181,11 @@ class Dim4Face : public ShareableObject, public NMarkedElement {
 
     public:
         /**
+         * Default destructor.
+         */
+        ~Dim4Face();
+
+        /**
          * Returns the list of descriptors detailing how this face forms a
          * part of various pentachora in the 4-manifold triangulation.
          * Note that if this face represents multiple faces of a
@@ -319,11 +324,6 @@ class Dim4Face : public ShareableObject, public NMarkedElement {
          * face belongs.
          */
         Dim4Face(Dim4Component* component);
-
-        /**
-         * Default destructor.
-         */
-        ~Dim4Face();
 
     friend class Dim4Triangulation;
         /**< Allow access to private members. */

@@ -144,6 +144,11 @@ class Dim4Tetrahedron : public ShareableObject, public NMarkedElement {
 
     public:
         /**
+         * Default destructor.
+         */
+        ~Dim4Tetrahedron();
+
+        /**
          * Returns the number of descriptors available through getEmbedding().
          * Note that this number will never be greater than two.
          *
@@ -284,11 +289,6 @@ class Dim4Tetrahedron : public ShareableObject, public NMarkedElement {
          * tetrahedron belongs.
          */
         Dim4Tetrahedron(Dim4Component* component);
-
-        /**
-         * Default destructor.
-         */
-        ~Dim4Tetrahedron();
 
     friend class Dim4Triangulation;
         /**< Allow access to private members. */

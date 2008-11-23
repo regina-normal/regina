@@ -80,6 +80,11 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
 
     public:
         /**
+         * Default destructor.
+         */
+        virtual ~Dim4Component();
+
+        /**
          * Returns the number of pentachora in this component.
          *
          * @return the number of pentachora.
@@ -234,11 +239,6 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
          * Default constructor.
          */
         Dim4Component();
-
-        /**
-         * Default destructor.
-         */
-        virtual ~Dim4Component();
 
     friend class Dim4Triangulation;
         /**< Allow access to private members. */

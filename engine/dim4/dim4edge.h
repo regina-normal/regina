@@ -192,6 +192,11 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
 
     public:
         /**
+         * Default destructor.
+         */
+        ~Dim4Edge();
+
+        /**
          * Returns the list of descriptors detailing how this edge forms a
          * part of various pentachora in the 4-manifold triangulation.
          * Note that if this edge represents multiple edges of a
@@ -316,11 +321,6 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          * edge belongs.
          */
         Dim4Edge(Dim4Component* component);
-
-        /**
-         * Default destructor.
-         */
-        ~Dim4Edge();
 
     friend class Dim4Triangulation;
         /**< Allow access to private members. */
