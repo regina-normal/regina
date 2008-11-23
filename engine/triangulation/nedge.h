@@ -238,22 +238,6 @@ class NEdge : public ShareableObject, public NMarkedElement {
 
     public:
         /**
-         * Creates a new edge and marks it as belonging to the
-         * given triangulation component.
-         *
-         * \ifacespython Not present.
-         *
-         * @param myComponent the triangulation component to which this
-         * edge belongs.
-         */
-        NEdge(NComponent* myComponent);
-
-        /**
-         * Default destructor.
-         */
-        ~NEdge();
-
-        /**
          * Returns the list of descriptors detailing how this edge forms a
          * part of various tetrahedra in the triangulation.
          * Note that if this edge represents multiple edges of a
@@ -345,6 +329,21 @@ class NEdge : public ShareableObject, public NMarkedElement {
         bool isValid() const;
 
         void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * Creates a new edge and marks it as belonging to the
+         * given triangulation component.
+         *
+         * @param myComponent the triangulation component to which this
+         * edge belongs.
+         */
+        NEdge(NComponent* myComponent);
+
+        /**
+         * Default destructor.
+         */
+        ~NEdge();
 
     friend class NTriangulation;
         /**< Allow access to private members. */

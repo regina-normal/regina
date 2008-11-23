@@ -76,36 +76,11 @@ class NBoundaryComponent : public ShareableObject, public NMarkedElement {
             /**< List of edges in the component. */
         std::vector<NVertex*> vertices;
             /**< List of vertices in the component. */
-        
+
         bool orientable;
             /**< Is this boundary component orientable? */
 
     public:
-        /**
-         * Default constructor.
-         *
-         * \ifacespython Not present.
-         */
-        NBoundaryComponent();
-
-        /**
-         * Creates a new boundary component consisting only of the given
-         * ideal vertex.
-         *
-         * \pre The given vertex is ideal as returned by NVertex::isIdeal().
-         *
-         * \ifacespython Not present.
-         *
-         * @param idealVertex the vertex to place in the new boundary
-         * component.
-         */
-        NBoundaryComponent(NVertex* idealVertex);
-
-        /**
-         * Default destructor.
-         */
-        virtual ~NBoundaryComponent();
-
         /**
          * Returns the number of faces in this boundary component.
          *
@@ -126,7 +101,7 @@ class NBoundaryComponent : public ShareableObject, public NMarkedElement {
          * @return the number of vertices.
          */
         unsigned long getNumberOfVertices() const;
-    
+
         /**
          * Returns the requested face in this boundary component.
          *
@@ -139,7 +114,7 @@ class NBoundaryComponent : public ShareableObject, public NMarkedElement {
          * @return the requested face.
          */
         NFace* getFace(unsigned long index) const;
-    
+
         /**
          * Returns the requested edge in this boundary component.
          *
@@ -152,7 +127,7 @@ class NBoundaryComponent : public ShareableObject, public NMarkedElement {
          * @return the requested edge.
          */
         NEdge* getEdge(unsigned long index) const;
-    
+
         /**
          * Returns the requested vertex in this boundary component.
          *
@@ -196,6 +171,28 @@ class NBoundaryComponent : public ShareableObject, public NMarkedElement {
         bool isOrientable() const;
 
         void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * Default constructor.
+         */
+        NBoundaryComponent();
+
+        /**
+         * Creates a new boundary component consisting only of the given
+         * ideal vertex.
+         *
+         * \pre The given vertex is ideal as returned by NVertex::isIdeal().
+         *
+         * @param idealVertex the vertex to place in the new boundary
+         * component.
+         */
+        NBoundaryComponent(NVertex* idealVertex);
+
+        /**
+         * Default destructor.
+         */
+        virtual ~NBoundaryComponent();
 
     friend class NTriangulation;
         /**< Allow access to private members. */

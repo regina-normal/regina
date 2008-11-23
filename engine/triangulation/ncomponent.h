@@ -69,25 +69,13 @@ class NComponent : public ShareableObject, public NMarkedElement {
             /**< List of vertices in the component. */
         std::vector<NBoundaryComponent*> boundaryComponents;
             /**< List of boundary components in the component. */
-        
+
         bool ideal;
             /**< Is the component ideal? */
         bool orientable;
             /**< Is the component orientable? */
 
     public:
-        /**
-         * Default constructor.
-         *
-         * \ifacespython Not present.
-         */
-        NComponent();
-
-        /**
-         * Default destructor.
-         */
-        virtual ~NComponent();
-
         /**
          * Returns the number of tetrahedra in this component.
          *
@@ -214,6 +202,17 @@ class NComponent : public ShareableObject, public NMarkedElement {
         bool isClosed() const;
 
         void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * Default constructor.
+         */
+        NComponent();
+
+        /**
+         * Default destructor.
+         */
+        virtual ~NComponent();
 
     friend class NTriangulation;
         /**< Allow access to private members. */

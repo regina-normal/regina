@@ -10,11 +10,16 @@ Regina - A Normal Surface Theory Calculator
 Version 4.6  [ (under development) ]
 
     ENGINE:
+        Class NBoundaryComponent, NComponent, NEdge, NFace, NVertex:
+            - All constructors and destructors for skeletal objects are
+              now private; ordinary users should only ever have read-only
+              access to these objects.
         Class NEdge:
             - Added new static arrays NEdge::edgeNumber and NEdge::edgeVertex
               to replace the old global arrays regina::edgeNumber,
               regina::edgeStart end regina::edgeEnd.  The old global
               arrays are now deprecated (see below).
+            - The constructor and destructor are now private (see above).
         Class NFastRay:
             - New fast but inflexible ray class; this builds on NFastVector
               in the same way that the slower NRay builds on NVector.
@@ -61,6 +66,8 @@ Version 4.6  [ (under development) ]
         - Additional tests for triangulation simplification.
         - New tests for the recognition of families of standard triangulations
           and manifolds.
+        - New tests that enumerate automorphisms of triangulations and
+          test for subcomplexes.
     BUILD ENVIRONMENT:
         - Installing into a staging area (i.e., building packages) now works
           fine even if older versions of the Regina development libraries are

@@ -157,24 +157,6 @@ class NFace : public ShareableObject, public NMarkedElement {
 
     public:
         /**
-         * Creates a new face and marks it as belonging to the
-         * given triangulation component.
-         *
-         * \ifacespython Not present.
-         *
-         * @param myComponent the triangulation component to which this
-         * face belongs.
-         */
-        NFace(NComponent* myComponent);
-
-        /**
-         * Default destructor.
-         * All embedding descriptors stored in this face will be
-         * automatically deleted.
-         */
-        virtual ~NFace();
-
-        /**
          * Determines if this face lies entirely on the boundary of the
          * triangulation.
          *
@@ -308,6 +290,23 @@ class NFace : public ShareableObject, public NMarkedElement {
         NPerm getEdgeMapping(int edge) const;
 
         void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * Creates a new face and marks it as belonging to the
+         * given triangulation component.
+         *
+         * @param myComponent the triangulation component to which this
+         * face belongs.
+         */
+        NFace(NComponent* myComponent);
+
+        /**
+         * Default destructor.
+         * All embedding descriptors stored in this face will be
+         * automatically deleted.
+         */
+        virtual ~NFace();
 
     friend class NTriangulation;
         /**< Allow access to private members. */

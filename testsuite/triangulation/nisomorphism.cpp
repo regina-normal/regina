@@ -32,6 +32,7 @@
 #include "algebra/nabeliangroup.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nisomorphism.h"
+#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
@@ -40,6 +41,7 @@ using regina::NExampleTriangulation;
 using regina::NIsomorphism;
 using regina::NIsomorphismDirect;
 using regina::NIsomorphismIndexed;
+using regina::NTetrahedron;
 using regina::NTriangulation;
 
 class NIsomorphismTest : public CppUnit::TestFixture {
@@ -48,6 +50,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(enumeration);
     CPPUNIT_TEST(application);
     CPPUNIT_TEST(isomorphic);
+    CPPUNIT_TEST(automorphismsAndSubcomplexes);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -58,11 +61,34 @@ class NIsomorphismTest : public CppUnit::TestFixture {
         NTriangulation rp2xs1;
             /**< A three-tetrahedron closed non-orientable triangulation. */
 
+        NTriangulation lens8_1;
+            /**< A highly symmetric layered lens space. */
+        NTriangulation lens13_3;
+            /**< A less symmetric layered lens space. */
+        NTriangulation twisted5;
+            /**< A twisted layered loop. */
+        NTriangulation untwisted5;
+            /**< An untwisted layered loop. */
+        NTriangulation fig8;
+            /**< The figure eight knot complement. */
+        NTriangulation aug;
+            /**< A triangulation with no non-trivial symmetries whatsoever. */
+
+        NTriangulation ball;
+            /**< A standalone tetrahedron. */
+
     public:
         void setUp() {
             NTriangulation* t = NExampleTriangulation::rp2xs1();
             rp2xs1.insertTriangulation(*t);
             delete t;
+
+            lens8_1.insertLayeredLensSpace(8, 1);
+            lens13_3.insertLayeredLensSpace(13, 3);
+            twisted5.insertLayeredLoop(5, true);
+            untwisted5.insertLayeredLoop(5, false);
+            aug.insertAugTriSolidTorus(3, -1, 5, -3, 2, -1);
+            ball.addTetrahedron(new NTetrahedron());
         }
 
         void tearDown() {
@@ -207,6 +233,125 @@ class NIsomorphismTest : public CppUnit::TestFixture {
 
         void isomorphic() {
             enumerate(3, &NIsomorphismTest::isomorphicTest);
+        }
+
+        void testAutomorphismsAndSubcomplexes(const NTriangulation& t,
+                const char* name, unsigned long symmetries) {
+            NTriangulation t2(t);
+
+            if (! t2.isIsomorphicTo(t).get()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name <<
+                    " is not isomorphic to itself.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! t2.isContainedIn(t).get()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name <<
+                    " is not a subcomplex of itself.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            std::list<NIsomorphism*> isos;
+            std::list<NIsomorphism*>::iterator it;
+            unsigned long count;
+
+            count = t2.findAllSubcomplexesIn(t, isos);
+            if (count != symmetries) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " has "
+                    << count << " symmetries, not " << symmetries
+                    << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (isos.size() != count) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name <<
+                    " has a mismatched symmetry count (" << count
+                    << " != " << isos.size() << ").";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            for (it = isos.begin(); it != isos.end(); ++it)
+                delete *it;
+            isos.clear();
+
+            // Some of these tests cannot be run on the standalone tetrahedron.
+            bool standalone = (t.getNumberOfTetrahedra() == 1 &&
+                t.getNumberOfFaces() == 4);
+
+            // Unglue a face of t2.
+            if (! standalone) {
+                t2.getTetrahedron(0)->unjoin(2);
+                if (! t2.isContainedIn(t).get()) {
+                    std::ostringstream msg;
+                    msg << "Unjoining a face of " << name <<
+                        " does not result in a subcomplex.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (t.isContainedIn(t2).get()) {
+                    std::ostringstream msg;
+                    msg << "Unjoining a face of " << name <<
+                        " results in a supercomplex (and should not).";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            // Completely remove a tetrahedron of t2.
+            t2.removeTetrahedronAt(0);
+            if (! t2.isContainedIn(t).get()) {
+                std::ostringstream msg;
+                msg << "Removing a tetrahedron of " << name <<
+                    " does not result in a subcomplex.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (t.isContainedIn(t2).get()) {
+                std::ostringstream msg;
+                msg << "Removing a tetrahedron of " << name <<
+                    " results in a supercomplex (and should not).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Add a lone tetrahedron.
+            NTetrahedron* tet = new NTetrahedron();
+            t2.addTetrahedron(tet);
+            if (! t2.isContainedIn(t).get()) {
+                std::ostringstream msg;
+                msg << "Isolating a tetrahedron of " << name <<
+                    " does not result in a subcomplex.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if ((! standalone) && t.isContainedIn(t2).get()) {
+                std::ostringstream msg;
+                msg << "Isolating a tetrahedron of " << name <<
+                    " results in a supercomplex (and should not).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Make it no longer a subcomplex.
+            // Do this by joining things together in a wacky invalid way.
+            tet->joinTo(0, tet, regina::NPerm(3, 2, 1, 0));
+            if (t2.isContainedIn(t).get()) {
+                std::ostringstream msg;
+                msg << "Making a tetrahedron of " << name <<
+                    " invalid results in a subcomplex (and should not).";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if ((! standalone) && t.isContainedIn(t2).get()) {
+                std::ostringstream msg;
+                msg << "Making a tetrahedron of " << name <<
+                    " invalid results in a supercomplex (and should not).";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void automorphismsAndSubcomplexes() {
+            testAutomorphismsAndSubcomplexes(lens8_1, "L(8,1)", 4);
+            testAutomorphismsAndSubcomplexes(lens13_3, "L(13,3)", 2);
+            testAutomorphismsAndSubcomplexes(twisted5, "C~(5)", 20);
+            testAutomorphismsAndSubcomplexes(untwisted5, "C(5)", 20);
+            testAutomorphismsAndSubcomplexes(aug, "A(3,-1 | 5,-3)", 1);
+            testAutomorphismsAndSubcomplexes(ball, "Ball", 24);
         }
 };
 
