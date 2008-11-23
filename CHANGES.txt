@@ -54,6 +54,12 @@ Version 4.6  [ (under development) ]
         Class NTriangulation:
             - New routines isBall() and knowsBall() for recognising the
               3-dimensional ball.
+            - Fixed a nasty bug in the is-it-valid test for shellBoundary().
+              This bug had the potential to cause a crash when simplifying
+              triangulations with boundary.  It also had the potential to
+              give incorrect results when the triangulation had only one
+              tetrahedron, whereby the triangulation would "simplify" to
+              zero tetrahedra (i.e., the empty triangulation).
         Routine writeResUsage():
             - New helper routine to assist with diagnostics and measurements
               of performance.
