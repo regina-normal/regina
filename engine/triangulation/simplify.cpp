@@ -688,9 +688,10 @@ bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
 bool NTriangulation::shellBoundary(NTetrahedron* t,
         bool check, bool perform) {
     // To perform the move we don't even need a skeleton.
-    // To check the move, the initial calls to getFace() will ensure
-    // that the skeleton is calculated.
     if (check) {
+        if (! calculatedSkeleton)
+            calculateSkeleton();
+
         int nBdry = 0;
         int face;
         int bdry[4];
