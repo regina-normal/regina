@@ -41,7 +41,7 @@ using regina::NFaceEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<NPerm> NFace_ordering(NFace::ordering, 4);
+    GlobalArray<regina::NPerm> NFace_ordering(NFace::ordering, 4);
 }
 
 void addNFace() {
