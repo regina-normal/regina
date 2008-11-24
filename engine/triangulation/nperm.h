@@ -419,6 +419,10 @@ extern const unsigned allPermsS2Inv[2];
  * (0,1,2) will be the vertex numbers of the vertices that make up the
  * given face of a generic tetrahedron.
  *
+ * \deprecated This routine is no longer recommended, and will be
+ * removed in some future version of Regina.  Please use the lookup
+ * table NFace::ordering instead (which gives identical results).
+ *
  * @param face a face number in a tetrahedron.  This should be between 0
  * and 3 inclusive.  Note that face <i>i</i> is opposite vertex
  * <i>i</i>.
@@ -435,6 +439,10 @@ NPerm faceOrdering(int face);
  *
  * The images of 2 and 3 in the returned permutation will be chosen so
  * that the permutation will be even.
+ *
+ * \deprecated This routine is no longer recommended, and will be
+ * removed in some future version of Regina.  Please use the lookup
+ * table NEdge::ordering instead (which gives identical results).
  *
  * @param edge an edge number in a tetrahedron.  This should be between 0 and
  * 5 inclusive.  The constant arrays NEdge::edgeNumber and NEdge::edgeVertex
