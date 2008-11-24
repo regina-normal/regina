@@ -237,6 +237,8 @@ class Dim4Component : public ShareableObject, public NMarkedElement {
     private:
         /**
          * Default constructor.
+         *
+         * Marks the component as orientable and not ideal.
          */
         Dim4Component();
 
