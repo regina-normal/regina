@@ -132,6 +132,27 @@ class NFace : public ShareableObject, public NMarkedElement {
             /**< Specifies a face with all three edges identified using
                  non-orientable gluings.  Note that this forms a spine for
                  the Lens space L(3,1). */
+
+        /**
+         * An array that maps face numbers within a tetrahedron to the
+         * canonical ordering of the individual tetrahedron vertices
+         * that form each face.
+         *
+         * This means that the vertices of face \a i in a tetrahedron
+         * are, in canonical order, <tt>ordering[i][0..2]</tt>.  As an
+         * immediate consequence, we obtain <tt>ordering[i][3] == i</tt>.
+         *
+         * This table does \e not describe the mapping from specific
+         * triangulation faces into individual tetrahedra (for that,
+         * see NTetrahedron::getFaceMapping() instead).  This table
+         * merely provides a neat and consistent way of listing the
+         * vertices of any given tetrahedron face.
+         *
+         * This lookup table replaces the deprecated routine
+         * regina::faceOrdering().
+         */
+        static const NPerm ordering[4];
+
     private:
         NFaceEmbedding* embeddings[2];
             /**< An array of descriptors telling how this face forms a part of

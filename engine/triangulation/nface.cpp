@@ -40,6 +40,13 @@ const int NFace::HORN = 6;
 const int NFace::DUNCEHAT = 7;
 const int NFace::L31 = 8;
 
+const NPerm NFace::ordering[4] = {
+    NPerm(1, 2, 3, 0),
+    NPerm(0, 2, 3, 1),
+    NPerm(0, 1, 3, 2),
+    NPerm(0, 1, 2, 3)
+};
+
 int NFace::getType() {
     if (type)
         return type;

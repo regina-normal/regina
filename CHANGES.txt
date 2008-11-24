@@ -19,7 +19,14 @@ Version 4.6  [ (under development) ]
               to replace the old global arrays regina::edgeNumber,
               regina::edgeStart end regina::edgeEnd.  The old global
               arrays are now deprecated (see below).
+            - Added a new static array NEdge::ordering to replace the old
+              global routine regina::edgeOrdering().  The old routine is
+              now deprecated (see below).
             - The constructor and destructor are now private (see above).
+        Class NFace:
+            - Added a new static array NFace::ordering to replace the old
+              global routine regina::faceOrdering().  The old routine is
+              now deprecated (see below).
         Class NFastRay:
             - New fast but inflexible ray class; this builds on NFastVector
               in the same way that the slower NRay builds on NVector.
@@ -63,6 +70,9 @@ Version 4.6  [ (under development) ]
             - Routines isZeroEfficient() and hasSplittingSurface() now
               operate on a clone of the triangulation, to avoid triggering
               changes to the packet tree.
+        Routine edgeOrdering(), faceOrdering():
+            - Deprecated these routines, in favour of the new NEdge::ordering[]
+              and NFace::ordering[] lookup tables.
         Routine writeResUsage():
             - New helper routine to assist with diagnostics and measurements
               of performance.

@@ -224,6 +224,27 @@ class NEdge : public ShareableObject, public NMarkedElement {
          */
         static const int edgeVertex[6][2];
 
+        /**
+         * An array that maps edge numbers within a tetrahedron to the
+         * canonical ordering of the individual tetrahedron vertices
+         * that form each edge.
+         *
+         * This means that the vertices of edge \a i in a tetrahedron
+         * are, in canonical order, <tt>ordering[i][0,1]</tt>.  The
+         * images <tt>ordering[i][2,3]</tt> are chosen to make each
+         * permutation even.
+         *
+         * This table does \e not describe the mapping from specific
+         * triangulation edges into individual tetrahedra (for that,
+         * see NTetrahedron::getEdgeMapping() instead).  This table
+         * merely provides a neat and consistent way of listing the
+         * vertices of any given tetrahedron edge.
+         *
+         * This lookup table replaces the deprecated routine
+         * regina::edgeOrdering().
+         */
+        static const NPerm ordering[6];
+
     private:
         std::deque<NEdgeEmbedding> embeddings;
             /**< A list of descriptors telling how this edge forms a part of
