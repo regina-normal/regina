@@ -105,7 +105,7 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
         Dim4Face* face_[10];
             /**< 2-dimensional faces in the triangulation skeleton that are
                  faces of this pentachoron. */
-        Dim4Face* tet_[5];
+        Dim4Tetrahedron* tet_[5];
             /**< Tetrahedra in the triangulation skeleton that are
                  facets of this pentachoron. */
 
@@ -340,7 +340,7 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * @return the tetrahedron of the skeleton corresponding to the
          * requested pentachoron facet.
          */
-        Dim4Face* getTetrahedron(int tet) const;
+        Dim4Tetrahedron* getTetrahedron(int tet) const;
         /**
          * Examines the given edge of this pentachoron, and returns a
          * mapping from the "canonical" vertices of the corresponding
@@ -535,7 +535,7 @@ inline Dim4Face* Dim4Pentachoron::getFace(int face) const {
     return face_[face];
 }
 
-inline Dim4Face* Dim4Pentachoron::getTetrahedron(int tet) const {
+inline Dim4Tetrahedron* Dim4Pentachoron::getTetrahedron(int tet) const {
     return tet_[tet];
 }
 
