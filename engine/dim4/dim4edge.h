@@ -203,7 +203,7 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
         unsigned invalid_;
-            /**< Is this edge invalid?  This will 0 if the edge is
+            /**< Is this edge invalid?  This will be 0 if the edge is
                  valid, or a bitwise combination of \a INVALID_IDENTIFICATION
                  and/or \a INVALID_LINK if the edge is invalid. */
 
@@ -333,6 +333,8 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
         /**
          * Creates a new edge and marks it as belonging to the
          * given triangulation component.
+         *
+         * Amongst other things, this constructor sets \a invalid_ to zero.
          *
          * @param component the triangulation component to which this
          * edge belongs.
