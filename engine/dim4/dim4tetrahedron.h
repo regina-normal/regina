@@ -129,6 +129,24 @@ class Dim4TetrahedronEmbedding {
  * tetrahedron objects will be deleted and new ones will be created.
  */
 class Dim4Tetrahedron : public ShareableObject, public NMarkedElement {
+    public:
+        /**
+         * An array that maps tetrahedron numbers within a pentachoron
+         * (i.e., facet numbers) to the canonical ordering of the
+         * individual pentachoron vertices that form each tetrahedron.
+         *
+         * This means that the vertices of tetrahedron \a i in a pentachoron
+         * are, in canonical order, <tt>ordering[i][0..3]</tt>.  As an
+         * immediate consequence, we obtain <tt>ordering[i][4] == i</tt>.
+         *
+         * This table does \e not describe the mapping from specific
+         * tetrahedra within a triangulation into individual pentachora
+         * (for that, see Dim4Pentachoron::getTetrahedronMapping() instead).
+         * This table merely provides a neat and consistent way of
+         * listing the vertices of any given pentachoron facet.
+         */
+        static const NPerm5 ordering[5];
+
     private:
         Dim4TetrahedronEmbedding emb_[2];
             /**< A list of descriptors telling how this tetrahedron forms a
