@@ -124,8 +124,9 @@ bool runAllTests() {
     // Triangulation:
     addNPerm(runner);
     addNTriangulation(runner);
-    addConnectedSumDecomp(runner);
     addElementaryMoves(runner);
+    addConnectedSumDecomp(runner);
+    addThreeSphere(runner);
     addNIsomorphism(runner);
     addNHomologicalData(runner);
 
