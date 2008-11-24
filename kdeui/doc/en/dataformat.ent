@@ -29,11 +29,13 @@
 <!ENTITY data-packet-anglestructurelist SYSTEM "data-packet-anglestructurelist.docbook">
 <!ENTITY data-packet-container SYSTEM "data-packet-container.docbook">
 <!ENTITY data-packet-normalsurfacelist SYSTEM "data-packet-normalsurfacelist.docbook">
+<!ENTITY data-packet-pdf SYSTEM "data-packet-pdf.docbook">
 <!ENTITY data-packet-script SYSTEM "data-packet-script.docbook">
 <!ENTITY data-packet-surfacefilter SYSTEM "data-packet-surfacefilter.docbook">
 <!ENTITY data-packet-text SYSTEM "data-packet-text.docbook">
 <!ENTITY data-packet-triangulation SYSTEM "data-packet-triangulation.docbook">
 <!ENTITY data-params SYSTEM "data-params.docbook">
+<!ENTITY data-pdf SYSTEM "data-pdf.docbook">
 <!ENTITY data-realbdry-filter SYSTEM "data-realbdry-filter.docbook">
 <!ENTITY data-realbdry-surface SYSTEM "data-realbdry-surface.docbook">
 <!ENTITY data-reginadata SYSTEM "data-reginadata.docbook">
@@ -106,6 +108,8 @@
  '<link linkend="data-packet-container"><sgmltag>packet</sgmltag> (container)</link>'>
 <!ENTITY xml-packet-normalsurfacelist
  '<link linkend="data-packet-normalsurfacelist"><sgmltag>packet</sgmltag> (normal surface list)</link>'>
+<!ENTITY xml-packet-pdf
+ '<link linkend="data-packet-pdf"><sgmltag>packet</sgmltag> (&pdf;)</link>'>
 <!ENTITY xml-packet-script
  '<link linkend="data-packet-script"><sgmltag>packet</sgmltag> (script)</link>'>
 <!ENTITY xml-packet-surfacefilter
@@ -116,6 +120,8 @@
  '<link linkend="data-packet-triangulation"><sgmltag>packet</sgmltag> (triangulation)</link>'>
 <!ENTITY xml-params
  '<link linkend="data-params"><sgmltag>params</sgmltag></link>'>
+<!ENTITY xml-pdf
+ '<link linkend="data-pdf"><sgmltag>pdf</sgmltag></link>'>
 <!ENTITY xml-realbdry-filter
  '<link linkend="data-realbdry-filter"><sgmltag>realbdry</sgmltag> (filter)</link>'>
 <!ENTITY xml-realbdry-surface
