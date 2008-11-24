@@ -2485,7 +2485,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * calculateSkeleton().
          */
         void calculateVertices() const;
-        void labelVertex(NTetrahedron*, int, NVertex*, int) const;
+        void labelVertex(NTetrahedron*, int, NVertex*) const;
             /**< Internal to calculateVertices(). */
         /**
          * Calculates the triangulation edges and associated
@@ -2495,7 +2495,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * calculateSkeleton().
          */
         void calculateEdges() const;
-        void labelEdge(NTetrahedron*, int, NEdge*, const NPerm&) const;
+        void labelEdge(NTetrahedron*, int, NEdge*) const;
             /**< Internal to calculateEdges(). */
         /**
          * Calculates the triangulation faces and associated
@@ -2513,7 +2513,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * calculateSkeleton().
          */
         void calculateBoundary() const;
-        void labelBoundaryFace(NFace*, NBoundaryComponent*, int) const;
+        void labelBoundaryFace(NFace*, NBoundaryComponent*) const;
             /**< Internal to calculateBoundary(). */
         /**
          * Calculates the triangulation vertex links and associated

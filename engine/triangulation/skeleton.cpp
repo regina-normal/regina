@@ -143,14 +143,14 @@ void NTriangulation::calculateVertices() const {
             if (! tet->getVertex(vertex)) {
                 label = new NVertex(tet->component);
                 tet->component->vertices.push_back(label);
-                labelVertex(tet, vertex, label, 1);
+                labelVertex(tet, vertex, label);
                 vertices.push_back(label);
             }
     }
 }
 
 void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
-        NVertex* label, int firstOrientation) const {
+        NVertex* label) const {
     // Create a queue using simple arrays.
     // Since each tetrahedron vertex is pushed on at most once, the
     // array size does not need to be very large.
@@ -160,7 +160,7 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
     int* queueVtx = new int[tetrahedra.size() * 4];
 
     firstTet->vertices[firstVertex] = label;
-    firstTet->tmpOrientation[firstVertex] = firstOrientation;
+    firstTet->tmpOrientation[firstVertex] = 1;
     label->embeddings.push_back(NVertexEmbedding(firstTet, firstVertex));
 
     unsigned queueStart = 0, queueEnd = 1;
@@ -236,21 +236,21 @@ void NTriangulation::calculateEdges() const {
             if (! tet->getEdge(edge)) {
                 label = new NEdge(tet->component);
                 tet->component->edges.push_back(label);
-                labelEdge(tet, edge, label, NEdge::ordering[edge]);
+                labelEdge(tet, edge, label);
                 edges.push_back(label);
             }
     }
 }
 
 void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
-        NEdge* label, const NPerm& firstTetVertices) const {
+        NEdge* label) const {
     // Since tetrahedron edges are joined together in a loop, the depth-first
     // search is really just a straight line in either direction.
     // We therefore do away with the usual stack/queue and just keep track
     // of the next edge to process in the current direction.
 
     firstTet->edges[firstEdge] = label;
-    firstTet->edgeMapping[firstEdge] = firstTetVertices;
+    firstTet->edgeMapping[firstEdge] = NEdge::ordering[firstEdge];
     label->embeddings.push_back(NEdgeEmbedding(firstTet, firstEdge));
 
     // The last tetrahedron edge that was successfully processed.
@@ -364,7 +364,7 @@ void NTriangulation::calculateBoundary() const {
             if (face->boundaryComponent == 0) {
                 label = new NBoundaryComponent();
                 label->orientable = true;
-                labelBoundaryFace(face, label, 1);
+                labelBoundaryFace(face, label);
                 boundaryComponents.push_back(label);
                 face->component->boundaryComponents.push_back(label);
             }
@@ -372,14 +372,14 @@ void NTriangulation::calculateBoundary() const {
 }
 
 void NTriangulation::labelBoundaryFace(NFace* firstFace,
-        NBoundaryComponent* label, int firstOrientation) const {
+        NBoundaryComponent* label) const {
     std::queue<NFace*> faceQueue;
     NFaceEmbedding* emb;
 
     emb = firstFace->embeddings[0];
     firstFace->boundaryComponent = label;
     label->faces.push_back(firstFace);
-    emb->getTetrahedron()->tmpOrientation[emb->getFace()] = firstOrientation;
+    emb->getTetrahedron()->tmpOrientation[emb->getFace()] = 1;
     faceQueue.push(firstFace);
 
     NTetrahedron* tet;
