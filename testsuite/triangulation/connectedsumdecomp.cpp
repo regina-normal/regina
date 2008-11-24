@@ -424,7 +424,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             // torus:
             tri = new NTriangulation();
             tri->insertAugTriSolidTorus(2, -1, 3, -2, 5, 1);
-            delete verifyPrime(tri, "the Poincare homology sphere (aug I)",
+            delete verifyPrime(tri, "the Poincare homology sphere (aug II)",
                 "S3/P120");
         }
 
