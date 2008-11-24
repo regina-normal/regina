@@ -31,9 +31,11 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "split/nsignature.h"
+#include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
+using regina::NExampleTriangulation;
 using regina::NPerm;
 using regina::NSignature;
 using regina::NTetrahedron;
@@ -71,6 +73,13 @@ class ThreeSphereTest : public CppUnit::TestFixture {
                     " is not recognised as such.").c_str());
             }
 
+            // Try again with a barycentric subdivision.
+            NTriangulation big(*tri);
+            if (! big.isThreeSphere()) {
+                CPPUNIT_FAIL(("The barycentric subdivision of the 3-sphere "
+                    + triName + " is not recognised as such.").c_str());
+            }
+
             return tri;
         }
 
@@ -79,6 +88,13 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             if (tri->isThreeSphere()) {
                 CPPUNIT_FAIL(("The non-3-sphere " + triName +
                     " is recognised as a 3-sphere.").c_str());
+            }
+
+            // Try again with a barycentric subdivision.
+            NTriangulation big(*tri);
+            if (big.isThreeSphere()) {
+                CPPUNIT_FAIL(("The barycentric subdivision of the non-3-sphere "
+                    + triName + " is recognised as a 3-sphere.").c_str());
             }
 
             return tri;
@@ -180,6 +196,11 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             // And of course the Poincare homology sphere(S3/P120).
             // We'll build this a few different ways.
 
+            // First, one out of the can:
+            tri = NExampleTriangulation::poincareHomologySphere();
+            delete verifyNotThreeSphere(tri,
+                "Poincare homology sphere (example)");
+
             // Poincare homology sphere as a plugged triangular solid torus:
             tri = new NTriangulation;
             NTetrahedron* tet[5];
@@ -214,9 +235,120 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             tri->insertAugTriSolidTorus(2, -1, 3, -2, 5, 1);
             delete verifyNotThreeSphere(tri,
                 "Poincare homology sphere (aug II)");
+
+            // Let's make sure silly things like balls aren't picked up.
+            tri = new NTriangulation();
+            tri->addTetrahedron(new NTetrahedron());
+            delete verifyNotThreeSphere(tri, "Standalone tetrahedron");
+
+            tri = new NTriangulation();
+            tet[0] = new NTetrahedron();
+            tet[0]->joinTo(0, tet[0], NPerm(3, 1, 2, 0));
+            tri->addTetrahedron(tet[0]);
+            delete verifyNotThreeSphere(tri, "Snapped tetrahedron");
+
+            tri = new NTriangulation();
+            tri->insertLayeredSolidTorus(1, 2);
+            delete verifyNotThreeSphere(tri, "LST(1,2,3)");
+
+            tri = new NTriangulation();
+            tri->insertLayeredSolidTorus(3, 4);
+            delete verifyNotThreeSphere(tri, "LST(3,4,7)");
+
+            tri = new NTriangulation();
+            delete verifyNotThreeSphere(tri, "Empty triangulation");
+        }
+
+        NTriangulation* verifyThreeBall(NTriangulation* tri,
+                const std::string& triName) {
+            if (! tri->isBall()) {
+                CPPUNIT_FAIL(("The 3-ball " + triName +
+                    " is not recognised as such.").c_str());
+            }
+
+            // Try again with a barycentric subdivision.
+            NTriangulation big(*tri);
+            if (! big.isBall()) {
+                CPPUNIT_FAIL(("The barycentric subdivision of the 3-ball "
+                    + triName + " is not recognised as such.").c_str());
+            }
+
+            return tri;
+        }
+
+        NTriangulation* verifyNotThreeBall(NTriangulation* tri,
+                const std::string& triName) {
+            if (tri->isBall()) {
+                CPPUNIT_FAIL(("The non-3-ball" + triName +
+                    " is recognised as a 3-ball.").c_str());
+            }
+
+            // Try again with a barycentric subdivision.
+            NTriangulation big(*tri);
+            if (big.isBall()) {
+                CPPUNIT_FAIL(("The barycentric subdivision of the non-3-ball "
+                    + triName + " is recognised as a 3-ball.").c_str());
+            }
+
+            return tri;
         }
 
         void threeBallRecognition() {
+            NTriangulation* tri;
+            NTetrahedron* tet[2];
+
+            // Balls:
+            tri = new NTriangulation();
+            tri->addTetrahedron(new NTetrahedron());
+            delete verifyThreeBall(tri, "Standalone tetrahedron");
+
+            tri = new NTriangulation();
+            tet[0] = new NTetrahedron();
+            tet[0]->joinTo(0, tet[0], NPerm(3, 1, 2, 0));
+            tri->addTetrahedron(tet[0]);
+            delete verifyThreeBall(tri, "Snapped tetrahedron");
+
+            tri = new NTriangulation();
+            tet[0] = new NTetrahedron();
+            tet[1] = new NTetrahedron();
+            tet[0]->joinTo(0, tet[1], NPerm());
+            tet[0]->joinTo(1, tet[1], NPerm());
+            tet[0]->joinTo(2, tet[1], NPerm());
+            tri->addTetrahedron(tet[0]);
+            tri->addTetrahedron(tet[1]);
+            delete verifyThreeBall(tri, "Triangular pillow");
+
+            // Non-balls:
+            tri = new NTriangulation();
+            tri->insertLayeredSolidTorus(1, 2);
+            delete verifyNotThreeBall(tri, "LST(1,2,3)");
+
+            tri = new NTriangulation();
+            tri->insertLayeredSolidTorus(3, 4);
+            delete verifyNotThreeBall(tri, "LST(3,4,7)");
+
+            tri = new NTriangulation();
+            delete verifyNotThreeBall(tri, "Empty triangulation");
+
+            // Make a punctured Poincare homology sphere.
+            tri = NExampleTriangulation::poincareHomologySphere();
+            tri->barycentricSubdivision();
+            tri->removeTetrahedronAt(0);
+            tri->intelligentSimplify();
+            delete verifyNotThreeBall(tri,
+                "Punctured Poincare homology sphere");
+
+            // Throw in a couple of closed manifolds for good measure.
+            tri = new NTriangulation();
+            tri->insertLayeredLensSpace(1,0);
+            delete verifyNotThreeBall(tri, "L(1,0)");
+
+            tri = new NTriangulation();
+            tri->insertLayeredLensSpace(2,1);
+            delete verifyNotThreeBall(tri, "L(2,1)");
+
+            tri = NExampleTriangulation::poincareHomologySphere();
+            delete verifyNotThreeBall(tri, "Poincare homology sphere");
         }
 };
 
