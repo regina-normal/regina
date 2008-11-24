@@ -124,7 +124,7 @@ QWidget* FaceGluingItem::createEditor() const {
     } else {
         return new NFaceGluingButton(table()->numRows(),
             row(), myFace(), adjTet, regina::faceDescription(
-            adjPerm * regina::faceOrdering(myFace())).c_str(),
+            adjPerm * NFace::ordering[myFace()]).c_str(),
             const_cast<FaceGluingItem*>(this));
     }
 }
@@ -287,7 +287,7 @@ QString FaceGluingItem::destString(int srcFace, int destTet,
         return "";
     else
         return QString::number(destTet) + " (" + regina::faceDescription(
-            gluing * regina::faceOrdering(srcFace)).c_str() + ')';
+            gluing * NFace::ordering[srcFace]).c_str() + ')';
 }
 
 regina::NPerm FaceGluingItem::faceStringToPerm(int srcFace,
@@ -302,7 +302,7 @@ regina::NPerm FaceGluingItem::faceStringToPerm(int srcFace,
     }
 
     return regina::NPerm(destVertex[0], destVertex[1], destVertex[2],
-        destVertex[3]) * regina::faceOrdering(srcFace).inverse();
+        destVertex[3]) * NFace::ordering[srcFace].inverse();
 }
 
 void FaceGluingItem::showError(const QString& message) {

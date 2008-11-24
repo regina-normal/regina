@@ -32,11 +32,17 @@
 #include "triangulation/nface.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/nvertex.h"
+#include "../globalarray.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NFace;
 using regina::NFaceEmbedding;
+using regina::python::GlobalArray;
+
+namespace {
+    GlobalArray<NPerm> NFace_ordering(NFace::ordering, 4);
+}
 
 void addNFace() {
     class_<NFaceEmbedding, boost::noncopyable>("NFaceEmbedding",
@@ -77,5 +83,7 @@ void addNFace() {
     s.attr("HORN") = NFace::HORN;
     s.attr("DUNCEHAT") = NFace::DUNCEHAT;
     s.attr("L31") = NFace::L31;
+
+    s.attr("ordering") = &NFace_ordering;
 }
 

@@ -47,6 +47,7 @@ namespace {
 
     GlobalArray2D<int> NEdge_edgeNumber(NEdge::edgeNumber, 4);
     GlobalArray2D<int> NEdge_edgeVertex(NEdge::edgeVertex, 6);
+    GlobalArray<NPerm> NEdge_ordering(NEdge::ordering, 6);
 
     boost::python::list edge_getEmbeddings_list(const NEdge* e) {
         const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
@@ -94,5 +95,6 @@ void addNEdge() {
 
     s.attr("edgeNumber") = &NEdge_edgeNumber;
     s.attr("edgeVertex") = &NEdge_edgeVertex;
+    s.attr("ordering") = &NEdge_ordering;
 }
 

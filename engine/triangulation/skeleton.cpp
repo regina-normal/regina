@@ -187,12 +187,12 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
                 yourVertex = tet->adjacentGluing(face)[vertex];
                 yourFace = tet->adjacentFace(face);
 
-                // We should actually be inverting faceOrdering(yourVertex).
+                // We should actually be inverting NFace::ordering[yourVertex].
                 // However, all we care about is the sign of the permutation,
                 // so let's save ourselves those extra few CPU cycles.
-                if ((faceOrdering(yourVertex) *
+                if ((NFace::ordering[yourVertex] *
                         tet->adjacentGluing(face) *
-                        faceOrdering(vertex)).sign() > 0)
+                        NFace::ordering[vertex]).sign() > 0)
                     yourOrientation = -(tet->tmpOrientation[vertex]);
                 else
                     yourOrientation = tet->tmpOrientation[vertex];
@@ -236,7 +236,7 @@ void NTriangulation::calculateEdges() const {
             if (! tet->getEdge(edge)) {
                 label = new NEdge(tet->component);
                 tet->component->edges.push_back(label);
-                labelEdge(tet, edge, label, edgeOrdering(edge));
+                labelEdge(tet, edge, label, NEdge::ordering[edge]);
                 edges.push_back(label);
             }
     }
@@ -331,7 +331,7 @@ void NTriangulation::calculateFaces() const {
                 label = new NFace(tet->component);
                 tet->component->faces.push_back(label);
                 tet->faces[face] = label;
-                tet->faceMapping[face] = faceOrdering(face);
+                tet->faceMapping[face] = NFace::ordering[face];
                 label->embeddings[0] = new NFaceEmbedding(tet, face);
                 label->nEmbeddings = 1;
                 adjTet = tet->adjacentTetrahedron(face);
