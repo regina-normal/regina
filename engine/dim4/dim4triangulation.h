@@ -914,6 +914,37 @@ class Dim4Triangulation : public NPacket {
          */
         void calculateSkeleton() const;
 
+        /**
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
+         */
+        void calculateComponents() const;
+        /**
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
+         */
+        void calculateTetrahedra() const;
+        /**
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
+         */
+        void calculateVertices() const;
+        /**
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
+         */
+        void calculateEdges() const;
+        /**
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
+         */
+        void calculateFaces() const;
+        /**
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
+         */
+        void calculateBoundary() const;
+
     friend class regina::NXMLDim4TriangulationReader;
 };
 
