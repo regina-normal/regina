@@ -27,6 +27,8 @@
 /* end stub */
 
 #include <sstream>
+#include "triangulation/nedge.h"
+#include "triangulation/nface.h"
 #include "triangulation/nperm.h"
 
 namespace regina {
@@ -137,6 +139,23 @@ std::string NPerm::toString() const {
     return ans;
 }
 
+std::string NPerm::trunc2() const {
+    char ans[3];
+    ans[0] = '0' + p[0];
+    ans[1] = '0' + p[1];
+    ans[2] = 0;
+    return ans;
+}
+
+std::string NPerm::trunc3() const {
+    char ans[4];
+    ans[0] = '0' + p[0];
+    ans[1] = '0' + p[1];
+    ans[2] = '0' + p[2];
+    ans[3] = 0;
+    return ans;
+}
+
 NPerm faceOrdering(int face) {
     switch(face) {
         case 0:
@@ -170,26 +189,11 @@ NPerm edgeOrdering(int edge) {
 }
 
 std::string faceDescription(int face) {
-    return faceDescription(faceOrdering(face));
-}
-
-std::string faceDescription(const NPerm& p) {
-    std::string ans;
-    ans += ('0' + p[0]);
-    ans += ('0' + p[1]);
-    ans += ('0' + p[2]);
-    return ans;
+    return NFace::ordering[face].trunc3();
 }
 
 std::string edgeDescription(int edge) {
-    return edgeDescription(edgeOrdering(edge));
-}
-
-std::string edgeDescription(const NPerm& p) {
-    std::string ans;
-    ans += ('0' + p[0]);
-    ans += ('0' + p[1]);
-    return ans;
+    return NEdge::ordering[edge].trunc2();
 }
 
 } // namespace regina

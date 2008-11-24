@@ -312,6 +312,24 @@ class NPerm {
          */
         std::string toString() const;
 
+        /**
+         * Returns a string representation of this permutation with only
+         * the images of 0 and 1.  The resulting string will therefore
+         * have length two.
+         *
+         * @return a truncated string representation of this permutation.
+         */
+        std::string trunc2() const;
+
+        /**
+         * Returns a string representation of this permutation with only
+         * the images of 0, 1 and 2 included.  The resulting string will
+         * therefore have length three.
+         *
+         * @return a truncated string representation of this permutation.
+         */
+        std::string trunc3() const;
+
     private:
         /**
          * Determines the image of the given integer under this
@@ -458,6 +476,10 @@ NPerm edgeOrdering(int edge);
  * canonical order, as described in faceOrdering().
  * Only the images of 0, 1 and 2 will be put in the string.
  *
+ * \deprecated This routine is no longer recommended, and will be
+ * removed in some future version of Regina.  Please use
+ * <tt>NFace::ordering[face].trunc3()</tt> (which gives identical results).
+ *
  * @param face a face number in a tetrahedron.  This should be between 0
  * and 3 inclusive.  Note that face <i>i</i> is opposite vertex
  * <i>i</i>.
@@ -470,6 +492,10 @@ std::string faceDescription(int face);
  * Returns a string representation of the given permutation with only
  * the images of 0, 1 and 2 included.
  *
+ * \deprecated This routine is no longer recommended, and will be
+ * removed in some future version of Regina.  Please use NPerm::trunc3()
+ * instead (which gives identical results).
+ *
  * @param facePerm the permutation to represent.
  * @return a restricted string representation of the given permutation.
  */
@@ -480,6 +506,10 @@ std::string faceDescription(const NPerm& facePerm);
  * (0,1) to the vertices of the given tetrahedron edge in their
  * canonical order, as described in edgeOrdering().
  * Only the images of 0 and 1 will be put in the string.
+ *
+ * \deprecated This routine is no longer recommended, and will be
+ * removed in some future version of Regina.  Please use
+ * <tt>NEdge::ordering[edge].trunc2()</tt> (which gives identical results).
  *
  * @param edge an edge number in a tetrahedron.  This should be between 0 and
  * 5 inclusive.  The constant arrays NEdge::edgeNumber and NEdge::edgeVertex
@@ -492,6 +522,10 @@ std::string edgeDescription(int edge);
 /**
  * Returns a string representation of the given permutation with only
  * the images of 0 and 1 included.
+ *
+ * \deprecated This routine is no longer recommended, and will be
+ * removed in some future version of Regina.  Please use NPerm::trunc2()
+ * instead (which gives identical results).
  *
  * @param edgePerm the permutation to represent.
  * @return a restricted string representation of the given permutation.
@@ -587,6 +621,14 @@ inline bool NPerm::operator == (const NPerm& other) const {
 
 inline bool NPerm::operator != (const NPerm& other) const {
     return (code != other.code);
+}
+
+inline std::string faceDescription(const NPerm& facePerm) {
+    return facePerm.trunc3();
+}
+
+inline std::string edgeDescription(const NPerm& edgePerm) {
+    return edgePerm.trunc2();
 }
 
 } // namespace regina
