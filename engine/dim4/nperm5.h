@@ -281,6 +281,33 @@ class NPerm5 {
          */
         std::string toString() const;
 
+        /**
+         * Returns a string representation of this permutation with only
+         * the images of 0 and 1.  The resulting string will therefore
+         * have length two.
+         *
+         * @return a truncated string representation of this permutation.
+         */
+        std::string trunc2() const;
+
+        /**
+         * Returns a string representation of this permutation with only
+         * the images of 0, 1 and 2.  The resulting string will therefore
+         * have length three.
+         *
+         * @return a truncated string representation of this permutation.
+         */
+        std::string trunc3() const;
+
+        /**
+         * Returns a string representation of this permutation with only
+         * the images of 0, 1, 2 and 3.  The resulting string will therefore
+         * have length four.
+         *
+         * @return a truncated string representation of this permutation.
+         */
+        std::string trunc4() const;
+
     private:
         /**
          * Determines the image of the given integer under this
