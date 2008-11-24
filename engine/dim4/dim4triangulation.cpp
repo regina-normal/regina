@@ -312,9 +312,7 @@ void Dim4Triangulation::writeXMLPacketData(std::ostream& out) const {
             adjPent = (*it)->adjacentPentachoron(facet);
             if (adjPent) {
                 out << pentachoronIndex(adjPent) << ' '
-                    << static_cast<int>((*it)->
-                        adjacentGluing(facet).getPermCode())
-                    << ' ';
+                    << (*it)->adjacentGluing(facet).getPermCode() << ' ';
             } else
                 out << "-1 -1 ";
         }
