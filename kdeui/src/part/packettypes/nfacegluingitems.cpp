@@ -26,6 +26,9 @@
 
 /* end stub */
 
+// Regina core includes:
+#include "triangulation/nface.h"
+
 // UI includes:
 #include "nfacegluingdialog.h"
 #include "nfacegluingitems.h"
@@ -37,6 +40,8 @@
 #include <qregexp.h>
 #include <qtable.h>
 #include <qvalidator.h>
+
+using regina::NFace;
 
 namespace {
     /**
