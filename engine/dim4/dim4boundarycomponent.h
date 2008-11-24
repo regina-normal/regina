@@ -70,9 +70,10 @@ class NTriangulation;
  * offending vertex will be included in all of these boundary components.
  * Nevertheless, only one of these can be considered the "official" boundary
  * component of the vertex as returned by Dim4Vertex::getBoundaryComponent().
- * This is all a bit of a mess, but then again the entire 4-manifold
- * triangulation is invalid and so you almost certainly have bigger
- * problems to deal with.
+ * This is all a bit of a mess (and even more so when you consider that
+ * the same thing can happen with invalid edges), but then again the
+ * entire 4-manifold triangulation is invalid and so you almost certainly
+ * have bigger problems to deal with.
  *
  * Boundary components are highly temporary; once a triangulation
  * changes, all its boundary component objects will be deleted and new

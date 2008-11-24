@@ -257,6 +257,11 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          * Returns the boundary component of the triangulation to which
          * this edge belongs.
          *
+         * See the note in the Dim4BoundaryComponent overview regarding
+         * what happens if the edge link itself has more than one
+         * boundary component.  Note that such an edge link makes the
+         * triangulation invalid.
+         *
          * @return the boundary component containing this edge, or 0 if this
          * edge does not lie entirely within the boundary of the triangulation.
          */
