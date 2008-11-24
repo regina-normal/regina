@@ -460,6 +460,8 @@ void Dim4Triangulation::calculateBoundary() const {
     Dim4Vertex* vertex;
     Dim4Edge* edge;
     Dim4Face* face;
+    Dim4FaceEmbedding faceEmb;
+    Dim4Tetrahedron* adjTet;
     int i, j;
     for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it) {
         loopTet = *it;
@@ -489,7 +491,11 @@ void Dim4Triangulation::calculateBoundary() const {
             for (i = 0; i < 5; ++i)
                 if (i != facet) {
                     vertex = pent->vertex_[i];
-                    if (! vertex->boundaryComponent_) {
+                    if (vertex->boundaryComponent_ != label) {
+                        // Note that a vertex in an invalid
+                        // triangulation might end up in more than one
+                        // boundary component.  Push it into all of the
+                        // relevant boundary components' lists.
                         vertex->boundaryComponent_ = label;
                         label->vertices_.push_back(vertex);
                     }
@@ -503,7 +509,9 @@ void Dim4Triangulation::calculateBoundary() const {
                         continue;
 
                     edge = pent->edge_[Dim4Edge::edgeNumber[i][j]];
-                    if (! edge->boundaryComponent_) {
+                    if (edge->boundaryComponent_ != label) {
+                        // Likewise, an edge in an invalid triangulation
+                        // might end up in more than one boundary component.
                         edge->boundaryComponent_ = label;
                         label->edges_.push_back(edge);
                     }
@@ -524,13 +532,44 @@ void Dim4Triangulation::calculateBoundary() const {
                     label->faces_.push_back(face);
                 }
 
-                // TODO: Gaaaa.  Pipped at the post.  This gets ugly in higher
-                // dimensions.
+                // Okay, we can be clever about this.  The current
+                // boundary tetrahedron is one end of the face link; the
+                // *adjacent* boundary tetrahedron must be at the other.
+                faceEmb = face->emb_.front();
+                if (faceEmb.getPentachoron() == pent &&
+                        faceEmb.getVertices()[3] == i &&
+                        faceEmb.getVertices()[4] == facet) {
+                    // We are currently looking at the embedding at the
+                    // front of the list.  Take the one at the back.
+                    faceEmb = face->emb_.back();
+                    adjTet = faceEmb.getPentachoron()->tet_[
+                        faceEmb.getVertices()[3]];
+                } else {
+                    // We must be looking at the embedding at the back
+                    // of the list.  Take the one at the front (which is
+                    // already stored in faceEmb).
+                    adjTet = faceEmb.getPentachoron()->tet_[
+                        faceEmb.getVertices()[4]];
 
-                // TODO: For each adjacent tetrahedron that we find:
-                // adjTet->boundaryComponent = label;
-                // label->tetrahedra_.push_back(adjTet);
-                // stack[stackSize++] = adjTet;
+                    // TODO: Sanity checking; remove this eventually.
+                    faceEmb = face->emb_.back();
+                    if (! (faceEmb.getPentachoron() == pent &&
+                            faceEmb.getVertices()[4] == i &&
+                            faceEmb.getVertices()[3] == facet)) {
+                        std::cerr << "ERROR: Something has gone terribly "
+                            "wrong in computeBoundaryComponents()."
+                            << std::endl;
+                        ::exit(1);
+                    }
+                }
+
+                // Push the adjacent tetrahedron onto the stack for
+                // processing.
+                if (! adjTet->boundaryComponent_) {
+                    adjTet->boundaryComponent_ = label;
+                    label->tetrahedra_.push_back(adjTet);
+                    stack[stackSize++] = adjTet;
+                }
             }
         }
     }
