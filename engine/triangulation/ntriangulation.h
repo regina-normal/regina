@@ -2475,7 +2475,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * calculateSkeleton().
          */
         void calculateComponents() const;
-        void labelComponent(NTetrahedron*, NComponent*, int) const;
+        void labelComponent(NTetrahedron*, NComponent*) const;
             /**< Internal to calculateComponents(). */
         /**
          * Calculates the triangulation vertices and associated

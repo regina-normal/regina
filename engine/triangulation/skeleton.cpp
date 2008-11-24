@@ -70,14 +70,14 @@ void NTriangulation::calculateComponents() const {
         tet = *it;
         if (tet->component == 0) {
             label = new NComponent();
-            labelComponent(tet, label, 1);
+            labelComponent(tet, label);
             components.push_back(label);
         }
     }
 }
 
 void NTriangulation::labelComponent(NTetrahedron* firstTet,
-        NComponent* component, int firstOrientation) const {
+        NComponent* component) const {
     // Now non-recursive; uses a queue instead.
     // The queue contains tetrahedra from which we need to propagate
     //     component labelling.
@@ -90,7 +90,7 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
 
     firstTet->component = component;
     component->tetrahedra.push_back(firstTet);
-    firstTet->tetOrientation = firstOrientation;
+    firstTet->tetOrientation = 1;
 
     unsigned queueStart = 0, queueEnd = 1;
     queue[0] = firstTet;
