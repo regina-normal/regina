@@ -141,17 +141,17 @@ std::string NPerm::toString() const {
 
 std::string NPerm::trunc2() const {
     char ans[3];
-    ans[0] = '0' + p[0];
-    ans[1] = '0' + p[1];
+    ans[0] = '0' + imageOf(0);
+    ans[1] = '0' + imageOf(1);
     ans[2] = 0;
     return ans;
 }
 
 std::string NPerm::trunc3() const {
     char ans[4];
-    ans[0] = '0' + p[0];
-    ans[1] = '0' + p[1];
-    ans[2] = '0' + p[2];
+    ans[0] = '0' + imageOf(0);
+    ans[1] = '0' + imageOf(1);
+    ans[2] = '0' + imageOf(2);
     ans[3] = 0;
     return ans;
 }
