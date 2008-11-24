@@ -1,0 +1,90 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-pdf">
+ <refmeta>
+  <refentrytitle>pdf</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>pdf</refname>
+  <refpurpose>An encoded &pdf; document</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+pdf ::= (#PCDATA)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>encoding</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-pdf; element contains a single &pdf; document, encoded in
+   a printable format.  The precise encoding format is specified by the
+   <sgmltag>encoding</sgmltag> attribute (see below).
+  </para>
+  <para>
+   Whitespace and line breaks within this element are not relevant and
+   can be ignored.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>pdf</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-pdf;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>pdf</sgmltag> has no children.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Attributes</title>
+   <variablelist>
+    <varlistentry>
+     <term><sgmltag>encoding</sgmltag></term>
+     <listitem><para>
+      Specifies how the binary &pdf; document is encoded in printable
+      format.  Possible values are <literal>base64</literal> (indicating
+      a <application>base64</application> encoding with printable character
+      set <literal>A-Za-z0-9+/</literal>), or <literal>null</literal>
+      (indicating that the &pdf; document is empty, i.e., a zero-byte file).
+     </para></listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect2>
+ </refsect1>
+</refentry>

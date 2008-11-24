@@ -53,11 +53,13 @@
  &data-packet-anglestructurelist;
  &data-packet-container;
  &data-packet-normalsurfacelist;
+ &data-packet-pdf;
  &data-packet-script;
  &data-packet-surfacefilter;
  &data-packet-text;
  &data-packet-triangulation;
  &data-params;
+ &data-pdf;
  &data-realbdry-filter;
  &data-realbdry-surface;
  &data-reginadata;
