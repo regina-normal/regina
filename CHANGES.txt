@@ -46,6 +46,8 @@ Version 4.6  [ (under development) ]
             - New routine rawVector() that gives direct read-only access to
               the underlying vector in case this is needed.
         Class NPerm:
+            - New routines trunc2() and trunc3() to build truncated
+              version of a permutation string.
             - Deprecated the setPerm() routines; these are unnecessary
               because NPerm objects are very small and can just be copied
               around using the assignment operator.
@@ -76,6 +78,9 @@ Version 4.6  [ (under development) ]
         Routine edgeOrdering(), faceOrdering():
             - Deprecated these routines, in favour of the new NEdge::ordering[]
               and NFace::ordering[] lookup tables.
+        Routine edgeDescription(), faceDescription():
+            - Deprecated these routines, in favour of the new NPerm::trunc2()
+              and NPerm::trunc3() routines.
         Routine writeResUsage():
             - New helper routine to assist with diagnostics and measurements
               of performance.

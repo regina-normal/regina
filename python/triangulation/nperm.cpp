@@ -80,6 +80,8 @@ void addNPerm() {
         .def("compareWith", &NPerm::compareWith)
         .def("isIdentity", &NPerm::isIdentity)
         .def("toString", &NPerm::toString)
+        .def("trunc2", &NPerm::toString)
+        .def("trunc3", &NPerm::toString)
         .def("__str__", &NPerm::toString)
     ;
 

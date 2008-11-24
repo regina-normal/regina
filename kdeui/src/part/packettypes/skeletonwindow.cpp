@@ -309,7 +309,7 @@ QString EdgeItem::text(int column) const {
                     it != item->getEmbeddings().end(); it++)
                 appendToList(ans, QString("%1 (%2)").
                     arg(tri->tetrahedronIndex((*it).getTetrahedron())).
-                    arg(regina::edgeDescription((*it).getVertices()).c_str()));
+                    arg((*it).getVertices().trunc2().c_str()));
             return ans;
     }
     return QString::null;
@@ -351,8 +351,7 @@ QString FaceItem::text(int column) const {
                 appendToList(ans, QString("%1 (%2)").
                     arg(tri->tetrahedronIndex(
                         item->getEmbedding(i).getTetrahedron())).
-                    arg(regina::faceDescription(
-                        item->getEmbedding(i).getVertices()).c_str()));
+                    arg(item->getEmbedding(i).getVertices().trunc3().c_str()));
             return ans;
     }
     return QString::null;

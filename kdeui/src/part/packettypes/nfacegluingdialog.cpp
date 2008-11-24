@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "triangulation/nface.h"
+
 #include "nfacegluingdialog.h"
 #include "nfacegluingitems.h"
 
@@ -77,7 +79,7 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
         "This face will be identified with a face of the adjacent "
         "tetrahedron as specified in the drop-down list below.</qt>"));
     layout->addWidget(label, 1, 1, Qt::AlignCenter);
-    label = new QLabel(regina::faceDescription(myFace).c_str(), page);
+    label = new QLabel(regina::NFace::ordering[myFace].trunc3().c_str(), page);
     QWhatsThis::add(label, i18n("<qt>Shows the three vertices that form this "
         "tetrahedron face (each tetrahedron has vertices 0, 1, 2 and 3).<p>"
         "These three vertices will be identified with the three "

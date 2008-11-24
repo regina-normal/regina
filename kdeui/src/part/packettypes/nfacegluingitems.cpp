@@ -128,8 +128,8 @@ QWidget* FaceGluingItem::createEditor() const {
         return editor;
     } else {
         return new NFaceGluingButton(table()->numRows(),
-            row(), myFace(), adjTet, regina::faceDescription(
-            adjPerm * NFace::ordering[myFace()]).c_str(),
+            row(), myFace(), adjTet,
+            (adjPerm * NFace::ordering[myFace()]).trunc3().c_str(),
             const_cast<FaceGluingItem*>(this));
     }
 }
@@ -291,8 +291,8 @@ QString FaceGluingItem::destString(int srcFace, int destTet,
     if (destTet < 0)
         return "";
     else
-        return QString::number(destTet) + " (" + regina::faceDescription(
-            gluing * NFace::ordering[srcFace]).c_str() + ')';
+        return QString::number(destTet) + " (" +
+            (gluing * NFace::ordering[srcFace]).trunc3().c_str() + ')';
 }
 
 regina::NPerm FaceGluingItem::faceStringToPerm(int srcFace,
