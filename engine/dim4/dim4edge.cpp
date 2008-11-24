@@ -49,5 +49,18 @@ const int Dim4Edge::edgeVertex[10][2] = {
     { 2, 4 },
     { 3, 4 }};
 
+const NPerm5 Dim4Edge::ordering[10] = {
+    NPerm5(0, 1, 2, 3, 4),
+    NPerm5(0, 2, 1, 3, 4),
+    NPerm5(0, 3, 1, 2, 4),
+    NPerm5(0, 4, 1, 2, 3),
+    NPerm5(1, 2, 0, 3, 4),
+    NPerm5(1, 3, 0, 2, 4),
+    NPerm5(1, 4, 0, 2, 3),
+    NPerm5(2, 3, 0, 1, 4),
+    NPerm5(2, 4, 0, 1, 3),
+    NPerm5(3, 4, 0, 1, 2)
+};
+
 } // namespace regina
 

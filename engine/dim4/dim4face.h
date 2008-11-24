@@ -167,6 +167,24 @@ class Dim4Face : public ShareableObject, public NMarkedElement {
          */
         static const int faceVertex[10][3];
 
+        /**
+         * An array that maps face numbers within a pentachoron to the
+         * canonical ordering of the individual pentachoron vertices
+         * that form each face.
+         *
+         * This means that the vertices of face \a i in a pentachoron
+         * are, in canonical order, <tt>ordering[i][0..2]</tt>.  The
+         * images of 3 and 4 under each permutation are chosen to make
+         * each permutation even.
+         *
+         * This table does \e not describe the mapping from specific
+         * triangulation faces into individual pentachora (for that, see
+         * Dim4Pentachoron::getFaceMapping() instead).  This table
+         * merely provides a neat and consistent way of listing the
+         * vertices of any given pentachoron face.
+         */
+        static const NPerm5 ordering[10];
+
     private:
         std::deque<Dim4FaceEmbedding> emb_;
             /**< A list of descriptors telling how this face forms a part of

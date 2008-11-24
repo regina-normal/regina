@@ -74,6 +74,19 @@ const int Dim4Face::faceVertex[10][3] = {
     { 0, 1, 3 },
     { 0, 1, 2 } };
 
+const NPerm5 Dim4Face::ordering[10] = {
+    NPerm5(2, 3, 4, 0, 1),
+    NPerm5(1, 3, 4, 2, 0),
+    NPerm5(1, 2, 4, 0, 3),
+    NPerm5(1, 2, 3, 4, 0),
+    NPerm5(0, 3, 4, 1, 2),
+    NPerm5(0, 2, 4, 3, 1),
+    NPerm5(0, 2, 3, 1, 4),
+    NPerm5(0, 1, 4, 2, 3),
+    NPerm5(0, 1, 3, 4, 2),
+    NPerm5(0, 1, 2, 3, 4)
+};
+
 Dim4Edge* Dim4Face::getEdge(int edge) const {
     const Dim4FaceEmbedding& e(emb_.front());
     NPerm5 p = e.getVertices();

@@ -167,6 +167,23 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          */
         static const int edgeVertex[10][2];
 
+        /**
+         * An array that maps edge numbers within a pentachoron to the
+         * canonical ordering of the individual pentachoron vertices
+         * that form each edge.
+         *
+         * This means that the vertices of edge \a i in a pentachoron
+         * are, in canonical order, <tt>ordering[i][0,1]</tt>.  The
+         * images of 2, 3 and 4 under each permutation are arbitrary.
+         *
+         * This table does \e not describe the mapping from specific
+         * triangulation edges into individual pentachora (for that,
+         * see Dim4Pentachoron::getEdgeMapping() instead).  This table
+         * merely provides a neat and consistent way of listing the
+         * vertices of any given pentachoron edge.
+         */
+        static const NPerm5 ordering[10];
+
     private:
         enum {
             INVALID_IDENTIFICATION = 1,
