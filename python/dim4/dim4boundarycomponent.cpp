@@ -26,25 +26,38 @@
 
 /* end stub */
 
-void addDim4BoundaryComponent();
-void addDim4Component();
-void addDim4Edge();
-void addDim4Face();
-void addDim4Pentachoron();
-void addDim4Tetrahedron();
-void addDim4Triangulation();
-void addDim4Vertex();
-void addNPerm5();
+#include "dim4/dim4boundarycomponent.h"
+#include "dim4/dim4edge.h"
+#include "dim4/dim4face.h"
+#include "dim4/dim4tetrahedron.h"
+#include "dim4/dim4vertex.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addDim4() {
-    addDim4BoundaryComponent();
-    addDim4Component();
-    addDim4Edge();
-    addDim4Face();
-    addDim4Pentachoron();
-    addDim4Tetrahedron();
-    addDim4Triangulation();
-    addDim4Vertex();
-    addNPerm5();
+using namespace boost::python;
+using regina::Dim4BoundaryComponent;
+
+void addDim4BoundaryComponent() {
+    class_<Dim4BoundaryComponent, bases<regina::ShareableObject>,
+            std::auto_ptr<Dim4BoundaryComponent>, boost::noncopyable>
+            ("Dim4BoundaryComponent", no_init)
+        .def("getNumberOfTetrahedra",
+            &Dim4BoundaryComponent::getNumberOfTetrahedra)
+        .def("getNumberOfFaces", &Dim4BoundaryComponent::getNumberOfFaces)
+        .def("getNumberOfEdges", &Dim4BoundaryComponent::getNumberOfEdges)
+        .def("getNumberOfVertices", &Dim4BoundaryComponent::getNumberOfVertices)
+        .def("getTetrahedron", &Dim4BoundaryComponent::getTetrahedron,
+            return_value_policy<reference_existing_object>())
+        .def("getFace", &Dim4BoundaryComponent::getFace,
+            return_value_policy<reference_existing_object>())
+        .def("getEdge", &Dim4BoundaryComponent::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("getVertex", &Dim4BoundaryComponent::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("getTriangulation", &Dim4BoundaryComponent::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("isIdeal", &Dim4BoundaryComponent::isIdeal)
+        .def("isInvalidVertex", &Dim4BoundaryComponent::isInvalidVertex)
+    ;
 }
 
