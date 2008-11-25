@@ -28,6 +28,7 @@
 
 #include "dim4/dim4exampletriangulation.h"
 #include "dim4/dim4triangulation.h"
+#include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
@@ -39,8 +40,11 @@ void addDim4ExampleTriangulation() {
             return_value_policy<manage_new_object>())
         .def("rp4", &Dim4ExampleTriangulation::rp4,
             return_value_policy<manage_new_object>())
+        .def("doubleCone", &Dim4ExampleTriangulation::doubleCone,
+            return_value_policy<manage_new_object>())
         .staticmethod("fourSphere")
         .staticmethod("rp4")
+        .staticmethod("doubleCone")
     ;
 }
 

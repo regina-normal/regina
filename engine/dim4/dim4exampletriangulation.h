@@ -39,6 +39,7 @@
 namespace regina {
 
 class Dim4Triangulation;
+class NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -92,6 +93,36 @@ class Dim4ExampleTriangulation {
         /*@}*/
         /**
          * (end: Closed Triangulations)
+         */
+
+        /**
+         * \name Constructions from 3-Manifold Triangulations
+         */
+        /*@{*/
+
+        /**
+         * Returns a double cone over the given 3-manifold triangulation.
+         *
+         * If the given 3-manifold is <tt>M</tt>, this returns an ideal
+         * triangulation of the product <tt>M x I</tt> (with two ideal
+         * boundary components).  A copy of the original 3-manifold
+         * triangulation can be found at the centre of this
+         * construction, formed from the tetrahedra that sit between the
+         * two ideal vertices.
+         *
+         * \warning If the given 3-manifold triangulation has any boundary
+         * whatsoever (either real or ideal), then unless this 3-manifold
+         * triangulation is a 3-ball you will obtain an invalid 4-manifold
+         * triangulation as a result.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Dim4Triangulation* doubleCone(const NTriangulation& base);
+
+        /*@}*/
+        /**
+         * (end: Constructions from 3-Manifold Triangulations)
          */
 };
 

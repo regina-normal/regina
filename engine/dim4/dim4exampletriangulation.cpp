@@ -28,6 +28,7 @@
 
 #include "dim4/dim4exampletriangulation.h"
 #include "dim4/dim4triangulation.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
@@ -74,6 +75,56 @@ Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
     ans->addPentachoron(r);
     ans->addPentachoron(s);
 
+    return ans;
+}
+
+Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
+        const NTriangulation& base) {
+    Dim4Triangulation* ans = new Dim4Triangulation();
+    ans->setPacketLabel("Double cone over " + base.getPacketLabel());
+
+    unsigned long n = base.getNumberOfTetrahedra();
+    if (n == 0)
+        return ans;
+
+    // We have at least one tetrahedron.  Off we go.
+    Dim4Pentachoron** pent = new Dim4Pentachoron*[2 * n];
+
+    unsigned long i;
+    int face;
+    unsigned long adjIndex;
+    const NTetrahedron *tet, *adjTet;
+    NPerm map;
+    for (i = 0; i < n; ++i) {
+        pent[i] = new Dim4Pentachoron();
+        pent[i + n] = new Dim4Pentachoron();
+        pent[i]->joinTo(4, pent[i + n], NPerm5());
+
+        tet = base.getTetrahedron(i);
+        for (face = 0; face < 4; ++face) {
+            adjTet = tet->adjacentTetrahedron(face);
+            if (adjTet == 0)
+                continue;
+
+            adjIndex = base.tetrahedronIndex(adjTet);
+            if (adjIndex > i)
+                continue;
+
+            map = tet->adjacentGluing(face);
+            if (adjIndex == i && map[face] > face)
+                continue;
+
+            pent[i]->joinTo(face, pent[adjIndex],
+                NPerm5::fromPerm4(map));
+            pent[i + n]->joinTo(face, pent[adjIndex + n],
+                NPerm5::fromPerm4(map));
+        }
+    }
+
+    for (i = 0; i < 2 * n; ++i)
+        ans->addPentachoron(pent[i]);
+
+    delete[] pent;
     return ans;
 }
 

@@ -58,8 +58,10 @@ void addNPerm5() {
         .def("compareWith", &NPerm5::compareWith)
         .def("isIdentity", &NPerm5::isIdentity)
         .def("asPerm4", &NPerm5::asPerm4)
+        .def("fromPerm4", &NPerm5::fromPerm4)
         .def("toString", &NPerm5::toString)
         .def("__str__", &NPerm5::toString)
+        .staticmethod("fromPerm4");
     ;
 }
 
