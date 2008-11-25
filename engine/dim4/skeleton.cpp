@@ -670,12 +670,48 @@ void Dim4Triangulation::calculateVertexLinks() const {
             // The only case not covered is a 3-sphere link, where we
             // have nothing to do.
         }
+
+        // Hunt down invalid edge links.
+        // If an edge has an invalid link, then we can follow this through
+        // to the vertex linking 3-manifold at the endpoint of the edge,
+        // where we will find that this 3-manifold has a corresponding
+        // invalid vertex link.
+        if (! vertex->valid_) {
+            NTriangulation::VertexIterator linkit;
+            int type;
+            for (linkit = vertex->link_->getVertices().begin();
+                    linkit != vertex->link_->getVertices().end(); ++linkit) {
+                type = (*linkit)->getLink();
+                if (type != NVertex::SPHERE && type != NVertex::DISC) {
+                    // This 3-manifold vertex is at the end of an
+                    // invalid 4-manifold edge.
+
+                    // Find a tetrahedron in the 3-manifold vertex link
+                    // containing the bad 3-manifold vertex.
+                    const NVertexEmbedding& linkemb((*linkit)->getEmbedding(0));
+
+                    // Find the corresponding pentachoron in the 4-manifold
+                    // triangulation.
+                    const Dim4VertexEmbedding& vemb(vertex->getEmbedding(
+                        vertex->link_->tetrahedronIndex(
+                            linkemb.getTetrahedron())));
+
+                    // We have the pentachoron (vemb.getPentachoron())
+                    // and one of the endpoints of the edge (vemb.getVertex()).
+                    // Find the other endpoint of the edge.
+                    int otherEnd = vemb.getPentachoron()->
+                        tetMapping_[vemb.getVertex()][linkemb.getVertex()];
+
+                    // Got it!
+                    vemb.getPentachoron()->edge_[
+                        Dim4Edge::edgeNumber[vemb.getVertex()][otherEnd]
+                        ]->invalid_ |= Dim4Edge::INVALID_LINK;
+                }
+            }
+        }
     }
 
     delete[] tet;
-
-    // TODO: Work out what happens in the case of edge links.
-    // Set both valid_ and Dim4Edge::invalid_.
 }
 
 } // namespace regina
