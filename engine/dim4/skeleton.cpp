@@ -29,6 +29,7 @@
 #include <queue>
 #include <utility>
 #include "dim4/dim4triangulation.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
@@ -95,16 +96,15 @@ void Dim4Triangulation::calculateSkeleton() const {
         // - Dim4 [ Tetrahedron, Face, Edge, Vertex ]::boundaryComponent_
         // - all Dim4BoundaryComponent members except boundary_
 
-    // TODO: Still missing boundary and vertex link 3-manifold triangulations.
-    // Specifically, we are still missing:
-    //
-    // - Dim4BoundaryComponent::boundary_
-    //
-    // - Dim4Component::ideal_
-    // - valid_ and Dim4Edge::invalid_ in the case of bad edge links
-    // - Dim4Vertex::link_
-    // - Dim4Vertex::valid_
-    // - Dim4Vertex::ideal_
+    calculateVertexLinks(); 
+        // Sets:
+        // - Dim4Vertex::link_
+        // - valid_ and Dim4Vertex::valid_ in the case of bad vertex links
+        // - valid_ and Dim4Edge::invalid_ in the case of bad edge links
+        // - ideal_, Dim4Vertex::ideal_ and Dim4Component::ideal_
+
+    // TODO: Triangulate real boundary components
+    // (Dim4BoundaryComponent::boundary_).
 
     calculatedSkeleton_ = true;
 }
@@ -574,6 +574,108 @@ void Dim4Triangulation::calculateBoundary() const {
             }
         }
     }
+}
+
+void Dim4Triangulation::calculateVertexLinks() const {
+    long n = pentachora_.size();
+
+    NTetrahedron** tet = new NTetrahedron*[5 * n]; // Pieces of vertex link.
+    long index = 0; // Index into the tet[] array.
+
+    Dim4Pentachoron *pent, *adjPent;
+    long pentIdx;
+    int vertexIdx, adjVertexIdx;
+    int exitFacet;
+    for (pentIdx = 0; pentIdx < n; ++pentIdx) {
+        pent = pentachora_[pentIdx];
+
+        for (vertexIdx = 0; vertexIdx < 5; ++vertexIdx) {
+            tet[index] = new NTetrahedron();
+
+            // Glue this piece of vertex link to any adjacent pieces of
+            // vertex link, but *only* those that we have already seen.
+            for (exitFacet = 0; exitFacet < 5; ++exitFacet) {
+                if (exitFacet == vertexIdx)
+                    continue;
+
+                adjPent = pent->adjacentPentachoron(exitFacet);
+                if (! adjPent)
+                    continue;
+                adjVertexIdx = pent->adjacentGluing(exitFacet)[vertexIdx];
+
+                // Are we gluing to something we haven't seen yet?
+                if (adjPent->markedIndex() > pentIdx ||
+                        (adjPent->markedIndex() == pentIdx &&
+                         adjVertexIdx > vertexIdx))
+                    continue;
+
+                // This tetrahedron is adjacent to a previously-seen
+                // tetrahedron.  Make the gluing.
+                tet[index]->joinTo(
+                    pent->tetMapping_[vertexIdx].preImageOf(exitFacet),
+                    tet[5 * adjPent->markedIndex() + adjVertexIdx],
+                    (adjPent->tetMapping_[adjVertexIdx].inverse() *
+                        pent->adjacentGluing(exitFacet) *
+                        pent->tetMapping_[vertexIdx]).asPerm4());
+            }
+
+            ++index;
+        }
+    }
+
+    // Have each vertex claim its own pieces of vertex link, and in the
+    // correct order as described by the Dim4Vertex::getLink() docs.
+    Dim4Vertex* vertex;
+    VertexIterator vit;
+    std::vector<Dim4VertexEmbedding>::const_iterator embit;
+    for (vit = vertices_.begin(); vit != vertices_.end(); ++vit) {
+        vertex = *vit;
+
+        // Build a 3-manifold triangulation out of all the little pieces of
+        // vertex link.
+        vertex->link_ = new NTriangulation();
+        for (embit = vertex->emb_.begin(); embit != vertex->emb_.end();
+                ++embit)
+            vertex->link_->addTetrahedron(tet[
+                5 * embit->getPentachoron()->markedIndex() +
+                embit->getVertex()]);
+
+        // Look at the vertex link and see what it says about this 4-manifold
+        // triangulation.
+        if (vertex->link_->hasBoundaryFaces()) {
+            // It's a 3-ball or nothing.
+            if (! vertex->link_->isBall()) {
+                valid_ = vertex->valid_ = false;
+                // The vertex belongs to some pentachoron with boundary
+                // tetrahedra, and so already belongs to a boundary component.
+            }
+        } else {
+            // The vertex link has no boundary faces, which means this
+            // vertex is not part of any boundary tetrahedra.
+            // Let's see what we've got.
+            if ((! vertex->link_->isValid()) || vertex->link_->isIdeal()) {
+                // Bapow.
+                valid_ = vertex->valid_ = false;
+                boundaryComponents_.push_back(
+                    vertex->boundaryComponent_ =
+                    new Dim4BoundaryComponent(vertex));
+            } else if (! vertex->link_->isThreeSphere()) {
+                // The vertex is fine but it's not a 3-sphere.
+                // We have an ideal triangulation.
+                ideal_ = vertex->component_->ideal_ = vertex->ideal_ = true;
+                boundaryComponents_.push_back(
+                    vertex->boundaryComponent_ =
+                    new Dim4BoundaryComponent(vertex));
+            }
+            // The only case not covered is a 3-sphere link, where we
+            // have nothing to do.
+        }
+    }
+
+    delete[] tet;
+
+    // TODO: Work out what happens in the case of edge links.
+    // Set both valid_ and Dim4Edge::invalid_.
 }
 
 } // namespace regina

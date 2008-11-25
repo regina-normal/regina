@@ -944,6 +944,11 @@ class Dim4Triangulation : public NPacket {
          * calculateSkeleton() for precisely what this routine does.
          */
         void calculateBoundary() const;
+        /**
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
+         */
+        void calculateVertexLinks() const;
 
     friend class regina::NXMLDim4TriangulationReader;
 };
