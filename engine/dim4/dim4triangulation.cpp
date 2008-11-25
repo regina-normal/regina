@@ -112,7 +112,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
         out << "  " << std::setw(4) << pentPos << "  |        ";
         for (i = 0; i < 5; ++i)
             for (j = i + 1; j < 5; ++j)
-                for (k = j + 1; j < 5; ++k)
+                for (k = j + 1; k < 5; ++k)
                     out << ' ' << std::setw(3)
                         << faceIndex(pent->getFace(
                             Dim4Face::faceNumber[i][j][k]));
