@@ -371,7 +371,7 @@ void Dim4Triangulation::calculateFaces() const {
     int dir, exitFacet;
     for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
         loopPent = *it;
-        for (loopFace = 0; loopFace < 10; ++loopFace) {
+        for (loopFace = 9; loopFace >= 0; --loopFace) {
             if (loopPent->face_[loopFace])
                 continue;
 
