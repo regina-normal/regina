@@ -40,9 +40,10 @@ using regina::Dim4Face;
 using regina::Dim4FaceEmbedding;
 using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
+using regina::python::GlobalArray3D;
 
 namespace {
-    // TODO: We need a GlobalArray3D to deal with faceNumber!!!
+    GlobalArray3D<int> Dim4Face_faceNumber(Dim4Face::faceNumber, 5);
     GlobalArray2D<int> Dim4Face_faceVertex(Dim4Face::faceVertex, 10);
     GlobalArray<regina::NPerm5> Dim4Face_ordering(Dim4Face::ordering, 10);
 
@@ -87,7 +88,7 @@ void addDim4Face() {
         .def("isValid", &Dim4Face::isValid)
     ;
 
-    // TODO s.attr("faceNumber") = &Dim4Face_faceNumber;
+    s.attr("faceNumber") = &Dim4Face_faceNumber;
     s.attr("faceVertex") = &Dim4Face_faceVertex;
     s.attr("ordering") = &Dim4Face_ordering;
 }
