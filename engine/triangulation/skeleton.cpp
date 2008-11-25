@@ -412,6 +412,9 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
         for (i=0; i<3; i++) {
             vertex = tet->getVertex(tetVertices[i]);
             if (vertex->boundaryComponent != label) {
+                // A vertex in an invalid triangulation might end up in
+                // more than one boundary component.  Push it into all
+                // of the relevant boundary components' lists.
                 vertex->boundaryComponent = label;
                 label->vertices.push_back(vertex);
             }
