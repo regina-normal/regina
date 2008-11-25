@@ -120,6 +120,25 @@ class Dim4ExampleTriangulation {
          */
         static Dim4Triangulation* doubleCone(const NTriangulation& base);
 
+        /**
+         * Returns a single cone over the given 3-manifold triangulation.
+         *
+         * If the given 3-manifold is <tt>M</tt>, this returns a triangulation
+         * of the product <tt>M x I</tt> that has one real boundary component
+         * and one ideal boundary component.  The triangulation of the real
+         * boundary component will be identical to the original 3-manifold
+         * triangulation \a base.
+         *
+         * \warning If the given 3-manifold triangulation has any boundary
+         * whatsoever (either real or ideal), then unless this 3-manifold
+         * triangulation is a 3-ball you will obtain an invalid 4-manifold
+         * triangulation as a result.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Dim4Triangulation* singleCone(const NTriangulation& base);
+
         /*@}*/
         /**
          * (end: Constructions from 3-Manifold Triangulations)

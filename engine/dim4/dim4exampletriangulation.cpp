@@ -128,5 +128,51 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
     return ans;
 }
 
+Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
+        const NTriangulation& base) {
+    Dim4Triangulation* ans = new Dim4Triangulation();
+    ans->setPacketLabel("Single cone over " + base.getPacketLabel());
+
+    unsigned long n = base.getNumberOfTetrahedra();
+    if (n == 0)
+        return ans;
+
+    // We have at least one tetrahedron.  Off we go.
+    Dim4Pentachoron** pent = new Dim4Pentachoron*[n];
+
+    unsigned long i;
+    int face;
+    unsigned long adjIndex;
+    const NTetrahedron *tet, *adjTet;
+    NPerm map;
+    for (i = 0; i < n; ++i) {
+        pent[i] = new Dim4Pentachoron();
+
+        tet = base.getTetrahedron(i);
+        for (face = 0; face < 4; ++face) {
+            adjTet = tet->adjacentTetrahedron(face);
+            if (adjTet == 0)
+                continue;
+
+            adjIndex = base.tetrahedronIndex(adjTet);
+            if (adjIndex > i)
+                continue;
+
+            map = tet->adjacentGluing(face);
+            if (adjIndex == i && map[face] > face)
+                continue;
+
+            pent[i]->joinTo(face, pent[adjIndex],
+                NPerm5::fromPerm4(map));
+        }
+    }
+
+    for (i = 0; i < n; ++i)
+        ans->addPentachoron(pent[i]);
+
+    delete[] pent;
+    return ans;
+}
+
 } // namespace regina
 
