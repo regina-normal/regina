@@ -33,7 +33,8 @@
 namespace regina {
 
 void Dim4Triangulation::calculateSkeleton() const {
-    // Triangulations are valid, orientable and non-ideal until proven otherwise.
+    // Triangulations are valid, orientable and non-ideal until proven
+    // otherwise.
     orientable_ = true;
     valid_ = true;
     ideal_ = false;
@@ -326,9 +327,9 @@ void Dim4Triangulation::calculateEdges() const {
                         // Note this only becomes meaningful if the edge link
                         // is an orientable surface (otherwise there is no
                         // consistent way to orient these cycles at all).
-                        adjEdge = pent->adjacentGluing(facet)[edge];
                         adjMap = pent->adjacentGluing(facet) *
                             pent->edgeMapping_[edge] * NPerm5(2, 3);
+                        adjEdge = Dim4Edge::edgeNumber[adjMap[0]][adjMap[1]];
 
                         if (adjPent->edge_[adjEdge]) {
                             // We have a bad self-identification!
