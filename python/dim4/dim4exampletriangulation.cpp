@@ -26,27 +26,21 @@
 
 /* end stub */
 
-void addDim4BoundaryComponent();
-void addDim4Component();
-void addDim4Edge();
-void addDim4ExampleTriangulation();
-void addDim4Face();
-void addDim4Pentachoron();
-void addDim4Tetrahedron();
-void addDim4Triangulation();
-void addDim4Vertex();
-void addNPerm5();
+#include "dim4/dim4exampletriangulation.h"
+#include "dim4/dim4triangulation.h"
+#include <boost/python.hpp>
 
-void addDim4() {
-    addDim4BoundaryComponent();
-    addDim4Component();
-    addDim4Edge();
-    addDim4ExampleTriangulation();
-    addDim4Face();
-    addDim4Pentachoron();
-    addDim4Tetrahedron();
-    addDim4Triangulation();
-    addDim4Vertex();
-    addNPerm5();
+using namespace boost::python;
+using regina::Dim4ExampleTriangulation;
+
+void addDim4ExampleTriangulation() {
+    class_<Dim4ExampleTriangulation>("Dim4ExampleTriangulation", no_init)
+        .def("fourSphere", &Dim4ExampleTriangulation::fourSphere,
+            return_value_policy<manage_new_object>())
+        .def("rp4", &Dim4ExampleTriangulation::rp4,
+            return_value_policy<manage_new_object>())
+        .staticmethod("fourSphere")
+        .staticmethod("rp4")
+    ;
 }
 

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2008, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,27 +26,56 @@
 
 /* end stub */
 
-void addDim4BoundaryComponent();
-void addDim4Component();
-void addDim4Edge();
-void addDim4ExampleTriangulation();
-void addDim4Face();
-void addDim4Pentachoron();
-void addDim4Tetrahedron();
-void addDim4Triangulation();
-void addDim4Vertex();
-void addNPerm5();
+#include "dim4/dim4exampletriangulation.h"
+#include "dim4/dim4triangulation.h"
 
-void addDim4() {
-    addDim4BoundaryComponent();
-    addDim4Component();
-    addDim4Edge();
-    addDim4ExampleTriangulation();
-    addDim4Face();
-    addDim4Pentachoron();
-    addDim4Tetrahedron();
-    addDim4Triangulation();
-    addDim4Vertex();
-    addNPerm5();
+namespace regina {
+
+Dim4Triangulation* Dim4ExampleTriangulation::fourSphere() {
+    // Take two pentachora and join their entire boundaries according to
+    // the identity map.
+    Dim4Triangulation* ans = new Dim4Triangulation();
+    ans->setPacketLabel("4-sphere");
+
+    Dim4Pentachoron* p = new Dim4Pentachoron();
+    Dim4Pentachoron* q = new Dim4Pentachoron();
+    p->joinTo(0, q, NPerm5());
+    p->joinTo(1, q, NPerm5());
+    p->joinTo(2, q, NPerm5());
+    p->joinTo(3, q, NPerm5());
+    p->joinTo(4, q, NPerm5());
+    ans->addPentachoron(p);
+    ans->addPentachoron(q);
+
+    return ans;
 }
+
+Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
+    Dim4Triangulation* ans = new Dim4Triangulation();
+    ans->setPacketLabel("Real projective 4-space");
+
+    // Thanks Ryan, you rock. :)
+    Dim4Pentachoron* p = new Dim4Pentachoron();
+    Dim4Pentachoron* q = new Dim4Pentachoron();
+    Dim4Pentachoron* r = new Dim4Pentachoron();
+    Dim4Pentachoron* s = new Dim4Pentachoron();
+    p->joinTo(0, s, NPerm5(1,0,3,2,4));
+    p->joinTo(1, s, NPerm5(1,0,3,2,4));
+    p->joinTo(2, q, NPerm5());
+    p->joinTo(3, q, NPerm5());
+    p->joinTo(4, r, NPerm5());
+    q->joinTo(0, r, NPerm5(1,0,3,2,4));
+    q->joinTo(1, r, NPerm5(1,0,3,2,4));
+    q->joinTo(4, s, NPerm5());
+    r->joinTo(2, s, NPerm5());
+    r->joinTo(3, s, NPerm5());
+    ans->addPentachoron(p);
+    ans->addPentachoron(q);
+    ans->addPentachoron(r);
+    ans->addPentachoron(s);
+
+    return ans;
+}
+
+} // namespace regina
 
