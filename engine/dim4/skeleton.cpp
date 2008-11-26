@@ -128,6 +128,10 @@ void Dim4Triangulation::calculateComponents() const {
 
         // Run a depth-first search from this pentachronon to
         // completely enumerate all pentachora in this component.
+        //
+        // Since we are walking from one pentachoron to another via
+        // tetrahedra, we might as well collect information on the
+        // tetrahedra while we're at it.
         loopPent->component_ = label;
         label->pentachora_.push_back(loopPent);
         loopPent->orientation_ = 1;
