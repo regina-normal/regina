@@ -159,6 +159,9 @@ class Dim4Tetrahedron : public ShareableObject, public NMarkedElement {
         Dim4BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this tetrahedron is a part of,
                  or 0 if this tetrahedron is internal. */
+        bool inDualMaximalForest_;
+            /**< Does this tetrahedron belong to the maximal forest in
+                 the dual 1-skeleton? */
 
     public:
         /**
@@ -296,6 +299,27 @@ class Dim4Tetrahedron : public ShareableObject, public NMarkedElement {
          */
         bool isBoundary() const;
 
+        /**
+         * Determines whether this tetrahedron represents an edge in the
+         * maximal forest in the dual 1-skeleton of the triangulation.
+         *
+         * For each triangulation, a maximal forest in the dual 1-skeleton
+         * is computed.  Each dual edge in this maximal forest is
+         * represented by a tetrahedron in the "real" triangulation.
+         * The purpose of this routine is to identify whether this
+         * particular tetrahedron represents one of these dual edges
+         * in the maximal forest.
+         *
+         * Note that this routine is very fast, since the maximal forest
+         * in the dual 1-skeleton will have already been computed (it is
+         * constructed at the same time as the overall skeletal structure
+         * of the triangulation).
+         *
+         * @return \c true if and only if this tetrahedron represents a
+         * dual edge in the maximal forest.
+         */
+        bool inDualMaximalForest() const;
+
         void writeTextShort(std::ostream& out) const;
 
     private:
@@ -351,7 +375,8 @@ inline NPerm5 Dim4TetrahedronEmbedding::getVertices() const {
 // Inline functions for Dim4Tetrahedron
 
 inline Dim4Tetrahedron::Dim4Tetrahedron(Dim4Component* component) :
-        nEmb_(0), component_(component), boundaryComponent_(0) {
+        nEmb_(0), component_(component), boundaryComponent_(0),
+        inDualMaximalForest_(false) {
 }
 
 inline Dim4Tetrahedron::~Dim4Tetrahedron() {

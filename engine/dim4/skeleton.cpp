@@ -201,9 +201,14 @@ void Dim4Triangulation::calculateComponents() const {
                         if (adjOrientation != adjPent->orientation_)
                             orientable_ = label->orientable_ = false;
                     } else {
+                        // Wheee!  A pentachoron we haven't seen before.
                         adjPent->component_ = label;
                         label->pentachora_.push_back(adjPent);
                         adjPent->orientation_ = adjOrientation;
+
+                        // The maximal forest in the dual 1-skeleton
+                        // grows also.
+                        tet->inDualMaximalForest_ = true;
 
                         stack[stackSize++] = adjPent;
                     }
