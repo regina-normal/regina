@@ -32,8 +32,6 @@
 
 namespace regina {
 
-// Placeholders until we can actually implement homology.
-
 const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
     if (H1_.known())
         return *H1_.value();
@@ -48,16 +46,20 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
     // Build a presentation matrix.
     // Each non-boundary not-in-forest tetrahedron is a generator.
     // Each non-boundary face is a relation.
-    unsigned long nBdryFaces = 0;
-    unsigned long nBdryTets = 0;
+    long nBdryTets = 0;
+    long nBdryFaces = 0;
     for (BoundaryComponentIterator bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); bit++) {
-        nBdryFaces += (*bit)->faces_.size();
+            bit != boundaryComponents_.end(); ++bit) {
         nBdryTets += (*bit)->tetrahedra_.size();
+        nBdryFaces += (*bit)->faces_.size();
     }
-    long nGens = tetrahedra_.size() - nBdryTets
-        - pentachora_.size() + components_.size();
-    long nRels = faces_.size() - nBdryFaces;
+
+    // Cast away all unsignedness in case we run into problems subtracting.
+    long nGens = static_cast<long>(tetrahedra_.size()) - nBdryTets
+        - static_cast<long>(pentachora_.size())
+        + static_cast<long>(components_.size());
+    long nRels = static_cast<long>(faces_.size()) - nBdryFaces;
+
     NMatrixInt pres(nRels, nGens);
 
     // Find out which tetrahedron corresponds to which generator.
@@ -68,12 +70,12 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
         if (! ((*tit)->isBoundary() || (*tit)->inDualMaximalForest()))
             genIndex[tit - tetrahedra_.begin()] = i++;
 
-    // Run through each face and put the relations in the matrix.
+    // Run through each face and put the corresponding relations into
+    // the matrix.
     std::deque<Dim4FaceEmbedding>::const_iterator embit;
-    Dim4Pentachoron* currPent;
+    Dim4Pentachoron* pent;
+    int facet;
     Dim4Tetrahedron* tet;
-    int currPentFacet;
-    long tetGenIndex;
     i = 0;
     for (FaceIterator fit = faces_.begin(); fit != faces_.end(); ++fit) {
         if ((*fit)->isBoundary())
@@ -82,19 +84,23 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
         // Put in the relation corresponding to this face.
         for (embit = (*fit)->emb_.begin();
                 embit != (*fit)->emb_.end(); ++embit) {
-            currPent = (*embit).getPentachoron();
-            currPentFacet = (*embit).getVertices()[3];
+            pent = (*embit).getPentachoron();
+            facet = (*embit).getVertices()[3];
 
-            tet = currPent->tet_[currPentFacet];
+            tet = pent->tet_[facet];
             if (tet->inDualMaximalForest())
                 continue;
 
-            tetGenIndex = genIndex[tet->markedIndex()];
-            if ((tet->emb_[0].getPentachoron() == currPent) &&
-                    (tet->emb_[0].getTetrahedron() == currPentFacet))
-                pres.entry(i, tetGenIndex) += 1;
+            // We define the "direction" for this dual edge to point
+            // from embedding tet->emb_[0] to embedding tet->emb_[1].
+            //
+            // Test whether we are traversing this dual edge forwards or
+            // backwards as we walk around the face (*fit).
+            if ((tet->emb_[0].getPentachoron() == pent) &&
+                    (tet->emb_[0].getTetrahedron() == facet))
+                pres.entry(i, genIndex[tet->markedIndex()]) += 1;
             else
-                pres.entry(i, tetGenIndex) -= 1;
+                pres.entry(i, genIndex[tet->markedIndex()]) -= 1;
         }
 
         ++i;
