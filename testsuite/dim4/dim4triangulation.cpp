@@ -49,6 +49,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Dim4TriangulationTest);
 
     CPPUNIT_TEST(validity);
+    CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(boundaryComponents);
     CPPUNIT_TEST(vertexLinks);
@@ -285,6 +286,26 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyInvalid(mixedFigEightProduct, 2, 1, 1, 0, 0);
         }
 
+        void verifyConnected(const Dim4Triangulation& tri) {
+            if (! tri.isConnected())
+                CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    " is reported as disconnected.");
+        }
+
+        void connectedness() {
+            verifyConnected(empty);
+            verifyConnected(s4_id);
+            verifyConnected(s4_doubleConeS3);
+            verifyConnected(rp4);
+            verifyConnected(ball_singlePent);
+            verifyConnected(ball_foldedPent);
+            verifyConnected(ball_singleConeS3);
+            verifyConnected(idealPoincareProduct);
+            verifyConnected(mixedPoincareProduct);
+            verifyConnected(idealFigEightProduct);
+            verifyConnected(mixedFigEightProduct);
+        }
+
         void verifyOrientable(const Dim4Triangulation& tri,
                 bool isOrientable = true) {
             if (isOrientable) {
@@ -352,6 +373,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         void fundGroup() {
             // TODO
         }
+
+        // TODO: isClosed(), isIdeal(), hasBoundaryTetrahedra(),
+        // triangulations of vertex links and real boundary components
 };
 
 void addDim4Triangulation(CppUnit::TextUi::TestRunner& runner) {
