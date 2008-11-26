@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <algorithm>
 #include <queue>
 #include <utility>
 #include "dim4/dim4triangulation.h"
@@ -94,7 +95,7 @@ void Dim4Triangulation::calculateSkeleton() const {
         // - boundaryComponents_
         // - Dim4Component::boundaryComponents_
         // - Dim4 [ Tetrahedron, Face, Edge, Vertex ]::boundaryComponent_
-        // - all Dim4BoundaryComponent members except boundary_
+        // - all Dim4BoundaryComponent members
 
     calculateVertexLinks(); 
         // Sets:
@@ -102,9 +103,6 @@ void Dim4Triangulation::calculateSkeleton() const {
         // - valid_ and Dim4Vertex::valid_ in the case of bad vertex links
         // - valid_ and Dim4Edge::invalid_ in the case of bad edge links
         // - ideal_, Dim4Vertex::ideal_ and Dim4Component::ideal_
-
-    // TODO: Triangulate real boundary components
-    // (Dim4BoundaryComponent::boundary_).
 
     calculatedSkeleton_ = true;
 }
@@ -451,18 +449,29 @@ void Dim4Triangulation::calculateBoundary() const {
     if (nBdry == 0)
         return;
 
+    // When triangulating the boundaries, we will need to be able to map
+    // (tetrahedron index in 4-manifold) to (tetrahedron in 3-manifold
+    // boundary).  There are probably better ways, but we'll just store
+    // the (3-manifold tetrahedra) in an array of size
+    // (number of 4-manifold tetrahedra).
+    NTetrahedron** bdryTetAll = new NTetrahedron*[tetrahedra_.size()];
+    std::fill(bdryTetAll, bdryTetAll + tetrahedra_.size(),
+        static_cast<NTetrahedron*>(0));
+
     Dim4BoundaryComponent* label;
     TetrahedronIterator it;
     Dim4Tetrahedron *loopTet;
     Dim4Tetrahedron** stack = new Dim4Tetrahedron*[nBdry];
     unsigned stackSize = 0;
-    Dim4Pentachoron *pent;
-    int facet;
+    Dim4Pentachoron *pent, *adjPent;
+    int facet, adjFacet;
     Dim4Vertex* vertex;
     Dim4Edge* edge;
     Dim4Face* face;
     Dim4FaceEmbedding faceEmb;
-    Dim4Tetrahedron* adjTet;
+    Dim4Tetrahedron *tet, *adjTet;
+    NTetrahedron *bdryTet, *adjBdryTet;
+    NPerm5 bdryMap;
     int i, j;
     for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it) {
         loopTet = *it;
@@ -475,6 +484,8 @@ void Dim4Triangulation::calculateBoundary() const {
         boundaryComponents_.push_back(label);
         loopTet->component_->boundaryComponents_.push_back(label);
 
+        label->boundary_ = new NTriangulation();
+
         // Run a depth-first search from this boundary tetrahedron to
         // completely enumerate all tetrahedra in this boundary component.
         loopTet->boundaryComponent_ = label;
@@ -484,9 +495,11 @@ void Dim4Triangulation::calculateBoundary() const {
         stackSize = 1;
 
         while (stackSize > 0) {
-            --stackSize;
-            pent = stack[stackSize]->emb_[0].getPentachoron();
-            facet = stack[stackSize]->emb_[0].getTetrahedron();
+            tet = stack[--stackSize];
+            pent = tet->emb_[0].getPentachoron();
+            facet = tet->emb_[0].getTetrahedron();
+
+            bdryTetAll[tet->markedIndex()] = bdryTet = new NTetrahedron();
 
             // Run through the vertices and edges on this tetrahedron.
             for (i = 0; i < 5; ++i)
@@ -543,14 +556,19 @@ void Dim4Triangulation::calculateBoundary() const {
                     // We are currently looking at the embedding at the
                     // front of the list.  Take the one at the back.
                     faceEmb = face->emb_.back();
-                    adjTet = faceEmb.getPentachoron()->tet_[
-                        faceEmb.getVertices()[3]];
+
+                    adjPent = faceEmb.getPentachoron();
+                    adjFacet = faceEmb.getVertices()[3];
+                    adjTet = adjPent->tet_[adjFacet];
+                    j = faceEmb.getVertices()[4];
                 } else {
                     // We must be looking at the embedding at the back
                     // of the list.  Take the one at the front (which is
                     // already stored in faceEmb).
-                    adjTet = faceEmb.getPentachoron()->tet_[
-                        faceEmb.getVertices()[4]];
+                    adjPent = faceEmb.getPentachoron();
+                    adjFacet = faceEmb.getVertices()[4];
+                    adjTet = adjPent->tet_[adjFacet];
+                    j = faceEmb.getVertices()[3];
 
                     // TODO: Sanity checking; remove this eventually.
                     faceEmb = face->emb_.back();
@@ -564,6 +582,39 @@ void Dim4Triangulation::calculateBoundary() const {
                     }
                 }
 
+                // Glue the corresponding boundary tetrahedra if both
+                // are ready to go.
+                adjBdryTet = bdryTetAll[adjTet->markedIndex()];
+                if (adjBdryTet) {
+                    // We might have the same tetrahedron joined to
+                    // itself; make sure we only glue in one direction.
+                    if (! bdryTet->adjacentTetrahedron(
+                            pent->tetMapping_[facet].preImageOf(i))) {
+                        // Glue away.
+
+                        // The following map will take vertices of the
+                        // common face to each other, but the remaining
+                        // vertices might or might not get mixed up with
+                        // the element 4.  This is because we have to go
+                        // via a face mapping, which only cares about
+                        // the images of 0, 1 and 2.
+                        bdryMap =
+                            adjPent->tetMapping_[adjFacet] *
+                            adjPent->faceMapping_[
+                                Dim4Edge::edgeNumber[j][adjFacet]] *
+                            pent->faceMapping_[
+                                Dim4Edge::edgeNumber[i][facet]].inverse() *
+                            pent->tetMapping_[facet];
+
+                        if (bdryMap[4] != 4)
+                            bdryMap = NPerm5(4, bdryMap[4]) * bdryMap;
+
+                        // Phew.
+                        bdryTet->joinTo(pent->tetMapping_[facet].preImageOf(i),
+                            adjBdryTet, bdryMap.asPerm4());
+                    }
+                }
+
                 // Push the adjacent tetrahedron onto the stack for
                 // processing.
                 if (! adjTet->boundaryComponent_) {
@@ -572,8 +623,12 @@ void Dim4Triangulation::calculateBoundary() const {
                     stack[stackSize++] = adjTet;
                 }
             }
+
+            label->boundary_->addTetrahedron(bdryTetAll[tet->markedIndex()]);
         }
     }
+
+    delete[] bdryTetAll;
 }
 
 void Dim4Triangulation::calculateVertexLinks() const {
