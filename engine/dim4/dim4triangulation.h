@@ -37,6 +37,7 @@
 
 #include <vector>
 #include "algebra/nabeliangroup.h"
+#include "algebra/ngrouppresentation.h"
 #include "dim4/dim4pentachoron.h"
 #include "dim4/dim4tetrahedron.h"
 #include "dim4/dim4face.h"
@@ -130,6 +131,8 @@ class Dim4Triangulation : public NPacket {
         mutable bool orientable_;
             /**< Is the triangulation orientable? */
 
+        mutable NProperty<NGroupPresentation, StoreManagedPtr> fundGroup_;
+            /**< Fundamental group of the triangulation. */
         mutable NProperty<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
         mutable NProperty<NAbelianGroup, StoreManagedPtr> H2_;
@@ -734,6 +737,50 @@ class Dim4Triangulation : public NPacket {
         /*@{*/
 
         /**
+         * Returns the fundamental group of this triangulation.
+         * If this triangulation contains any ideal vertices, the
+         * fundamental group will be calculated as if each such vertex
+         * had been truncated.
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * fundamental group will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, getFundamentalGroup() should be called again; this will
+         * be instantaneous if the group has already been calculated.
+         *
+         * \pre This triangulation is valid.
+         * \pre This triangulation has at most one component.
+         *
+         * @return the fundamental group.
+         */
+        const NGroupPresentation& getFundamentalGroup() const;
+        /**
+         * Notifies the triangulation that you have simplified the
+         * presentation of its fundamental group.  The old group
+         * presentation will be destroyed, and this triangulation will take
+         * ownership of the new (hopefully simpler) group that is passed.
+         *
+         * This routine is useful for situations in which some external
+         * body (such as GAP) has simplified the group presentation
+         * better than Regina can.
+         *
+         * Regina does \e not verify that the new group presentation is
+         * equivalent to the old, since this is - well, hard.
+         *
+         * If the fundamental group has not yet been calculated for this
+         * triangulation, this routine will nevertheless take ownership
+         * of the new group, under the assumption that you have worked
+         * out the group through some other clever means without ever
+         * having needed to call getFundamentalGroup() at all.
+         *
+         * Note that this routine will not fire a packet change event.
+         *
+         * @param newGroup a new (and hopefully simpler) presentation of
+         * the fundamental group of this triangulation.
+         */
+        void simplifiedFundamentalGroup(NGroupPresentation* newGroup);
+
+        /**
          * Returns the first homology group for this triangulation.
          * If this triangulation contains any ideal vertices, the homology
          * group will be calculated as if each such vertex had been truncated.
@@ -1225,6 +1272,11 @@ inline bool Dim4Triangulation::isConnected() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
     return (components_.size() <= 1);
+}
+
+inline void Dim4Triangulation::simplifiedFundamentalGroup(
+        NGroupPresentation* newGroup) {
+    fundGroup_ = newGroup;
 }
 
 inline Dim4Triangulation* Dim4Triangulation::readPacket(NFile&, NPacket*) {

@@ -320,6 +320,11 @@ void Dim4Triangulation::writeXMLPacketData(std::ostream& out) const {
     }
     out << "  </pentachora>\n";
 
+    if (fundGroup_.known()) {
+        out << "  <fundgroup>\n";
+        fundGroup_.value()->writeXMLData(out);
+        out << "  </fundgroup>\n";
+    }
     if (H1_.known()) {
         out << "  <H1>";
         H1_.value()->writeXMLData(out);
@@ -367,6 +372,8 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
     gluingsHaveChanged();
 
     // Properties:
+    if (X.fundGroup_.known())
+        fundGroup_ = new NGroupPresentation(*(X.fundGroup_.value()));
     if (X.H1_.known())
         H1_ = new NAbelianGroup(*(X.H1_.value()));
     if (X.H2_.known())
@@ -411,6 +418,7 @@ void Dim4Triangulation::clearAllProperties() {
         calculatedSkeleton_ = false;
     }
 
+    fundGroup_.clear();
     H1_.clear();
     H2_.clear();
 }

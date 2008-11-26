@@ -161,6 +161,41 @@ namespace {
                 }
             }
     };
+
+    /**
+     * Reads a group presentation property.
+     */
+    class NGroupPresentationPropertyReader : public NXMLElementReader {
+        public:
+            typedef NProperty<NGroupPresentation, StoreManagedPtr> PropType;
+
+        private:
+            PropType& prop_;
+
+        public:
+            NGroupPresentationPropertyReader(PropType& prop) : prop_(prop) {
+            }
+
+            virtual NXMLElementReader* startSubElement(
+                    const std::string& subTagName,
+                    const regina::xml::XMLPropertyDict&) {
+                if (subTagName == "group")
+                    if (! prop_.known())
+                        return new NXMLGroupPresentationReader();
+                return new NXMLElementReader();
+            }
+
+            virtual void endSubElement(const std::string& subTagName,
+                    NXMLElementReader* subReader) {
+                if (subTagName == "group") {
+                    NGroupPresentation* ans =
+                        dynamic_cast<NXMLGroupPresentationReader*>(subReader)->
+                        getGroup();
+                    if (ans)
+                        prop_ = ans;
+                }
+            }
+    };
 }
 
 NXMLElementReader* NXMLDim4TriangulationReader::startContentSubElement(
@@ -172,6 +207,8 @@ NXMLElementReader* NXMLDim4TriangulationReader::startContentSubElement(
         return new NAbelianGroupPropertyReader(tri_->H1_);
     else if (subTagName == "H2")
         return new NAbelianGroupPropertyReader(tri_->H2_);
+    else if (subTagName == "fundgroup")
+        return new NGroupPresentationPropertyReader(tri_->fundGroup_);
     return new NXMLElementReader();
 }
 

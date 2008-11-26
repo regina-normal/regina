@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "algebra/ngrouppresentation.h"
 #include "dim4/dim4triangulation.h"
 #include <boost/python.hpp>
 
@@ -98,6 +99,11 @@ namespace {
             ans.append(boost::python::ptr(*it));
         return ans;
     }
+
+    void simplifiedFundamentalGroup_own(Dim4Triangulation& tri,
+            std::auto_ptr<regina::NGroupPresentation> group) {
+        tri.simplifiedFundamentalGroup(group.release());
+    }
 }
 
 void addDim4Triangulation() {
@@ -156,6 +162,9 @@ void addDim4Triangulation() {
         .def("isClosed", &Dim4Triangulation::isClosed)
         .def("isOrientable", &Dim4Triangulation::isOrientable)
         .def("isConnected", &Dim4Triangulation::isConnected)
+        .def("getFundamentalGroup", &Dim4Triangulation::getFundamentalGroup,
+            return_internal_reference<>())
+        .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_own)
         .def("getHomologyH1", &Dim4Triangulation::getHomologyH1,
             return_internal_reference<>())
         .def("getHomologyH2", &Dim4Triangulation::getHomologyH2,
