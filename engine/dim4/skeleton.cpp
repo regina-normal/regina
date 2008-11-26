@@ -599,7 +599,7 @@ void Dim4Triangulation::calculateBoundary() const {
                         // via a face mapping, which only cares about
                         // the images of 0, 1 and 2.
                         bdryMap =
-                            adjPent->tetMapping_[adjFacet] *
+                            adjPent->tetMapping_[adjFacet].inverse() *
                             adjPent->faceMapping_[
                                 Dim4Edge::edgeNumber[j][adjFacet]] *
                             pent->faceMapping_[
