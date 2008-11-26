@@ -539,18 +539,21 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     NTetrahedron* oldTet = emb.getTetrahedron();
     NPerm oldVertices = emb.getVertices();
 
+    NTetrahedron* top = oldTet->adjacentTetrahedron(oldVertices[edgeEnd]);
     int otherEdgeEnd = 1 - edgeEnd;
 
-    if (check)
+    if (check) {
+        if (! top)
+            return false;
         if (oldTet->getVertex(oldVertices[edgeEnd])->isBoundary() &&
                 oldTet->getVertex(oldVertices[otherEdgeEnd])->isBoundary())
             return false;
+    }
 
     NFace* centreFace = oldTet->getFace(oldVertices[edgeEnd]);
     NFace* bottomFace = oldTet->getFace(oldVertices[otherEdgeEnd]);
     NPerm bottomToTop =
         oldTet->adjacentGluing(oldVertices[edgeEnd]);
-    NTetrahedron* top = oldTet->adjacentTetrahedron(oldVertices[edgeEnd]);
     int topGlued[2];
     NEdge* flatEdge[2];
     int i;
