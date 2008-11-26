@@ -12,7 +12,7 @@ INCLUDES = -I$(top_srcdir) @ENGINE_INCLUDES@
 
 check_LIBRARIES = libdim4.a
 
-libdim4_a_SOURCES = nperm5.cpp
+libdim4_a_SOURCES = dim4triangulation.cpp nperm5.cpp
 
 noinst_HEADERS = testdim4.h
 

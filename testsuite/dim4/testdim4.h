@@ -38,5 +38,6 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
+void addDim4Triangulation(CppUnit::TextUi::TestRunner& runner);
 void addNPerm5(CppUnit::TextUi::TestRunner& runner);
 

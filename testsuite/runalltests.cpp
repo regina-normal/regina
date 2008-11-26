@@ -132,6 +132,7 @@ bool runAllTests() {
 
     // 4-manifold triangulations:
     addNPerm5(runner);
+    addDim4Triangulation(runner);
 
     // Subcomplexes:
     addNStandardTriangulation(runner);
