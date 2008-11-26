@@ -407,6 +407,10 @@ inline bool Dim4Tetrahedron::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 
+inline bool Dim4Tetrahedron::inDualMaximalForest() const {
+    return inDualMaximalForest_;
+}
+
 inline void Dim4Tetrahedron::writeTextShort(std::ostream& out) const {
     out << (boundaryComponent_ ? "Boundary " : "Internal ") << "tetrahedron";
 }
