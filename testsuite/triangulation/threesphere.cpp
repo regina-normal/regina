@@ -295,7 +295,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
 
         void threeBallRecognition() {
             NTriangulation* tri;
-            NTetrahedron* tet[2];
+            NTetrahedron* tet[4];
 
             // Balls:
             tri = new NTriangulation();
@@ -317,6 +317,25 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             tri->addTetrahedron(tet[0]);
             tri->addTetrahedron(tet[1]);
             delete verifyThreeBall(tri, "Triangular pillow");
+
+            // This ball used to crash the simplification routines once
+            // upon a time.  Throw it into the test suite for good measure.
+            tri = new NTriangulation();
+            tet[0] = new NTetrahedron();
+            tet[1] = new NTetrahedron();
+            tet[2] = new NTetrahedron();
+            tet[3] = new NTetrahedron();
+            tet[0]->joinTo(2, tet[0], NPerm(0,2));
+            tet[0]->joinTo(1, tet[1], NPerm(2,0,1,3));
+            tet[1]->joinTo(2, tet[2], NPerm());
+            tet[1]->joinTo(1, tet[2], NPerm(2,0,1,3));
+            tet[2]->joinTo(1, tet[3], NPerm(2,0,1,3));
+            tet[3]->joinTo(2, tet[3], NPerm(1,2));
+            tri->addTetrahedron(tet[0]);
+            tri->addTetrahedron(tet[1]);
+            tri->addTetrahedron(tet[2]);
+            tri->addTetrahedron(tet[3]);
+            delete verifyThreeBall(tri, "4-tetrahedron ball");
 
             // Non-balls:
             tri = new NTriangulation();
