@@ -106,6 +106,18 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                  link, and the other has an invalid 3-manifold as its link.
                  The edge joining both vertices is invalid also, with a
                  torus link. */
+        Dim4Triangulation pillow_twoCycle;
+            /**< A "tetrahedral pillow" whose two facets are identified
+                 according to a permutation in S_4, which in this case is
+                 a pair swap. */
+        Dim4Triangulation pillow_threeCycle;
+            /**< A "tetrahedral pillow" whose two facets are identified
+                 according to a permutation in S_4, which in this case is
+                 a 3-cycle. */
+        Dim4Triangulation pillow_fourCycle;
+            /**< A "tetrahedral pillow" whose two facets are identified
+                 according to a permutation in S_4, which in this case is
+                 a 4-cycle. */
 
     public:
         void copyAndDelete(Dim4Triangulation& dest, Dim4Triangulation* source,
@@ -165,6 +177,39 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             p[0]->joinTo(2, p[0], NPerm5(2, 4));
             ball_foldedPent.addPentachoron(p[0]);
             ball_foldedPent.setPacketLabel("Folded pentachoron");
+
+            p[0] = new Dim4Pentachoron();
+            p[1] = new Dim4Pentachoron();
+            p[0]->joinTo(0, p[1], NPerm5());
+            p[0]->joinTo(1, p[1], NPerm5());
+            p[0]->joinTo(2, p[1], NPerm5());
+            p[0]->joinTo(3, p[1], NPerm5());
+            p[0]->joinTo(4, p[1], NPerm5(1, 2));
+            pillow_twoCycle.addPentachoron(p[0]);
+            pillow_twoCycle.addPentachoron(p[1]);
+            pillow_twoCycle.setPacketLabel("Invalid 2-cycle pillow");
+
+            p[0] = new Dim4Pentachoron();
+            p[1] = new Dim4Pentachoron();
+            p[0]->joinTo(0, p[1], NPerm5());
+            p[0]->joinTo(1, p[1], NPerm5());
+            p[0]->joinTo(2, p[1], NPerm5());
+            p[0]->joinTo(3, p[1], NPerm5());
+            p[0]->joinTo(4, p[1], NPerm5(2, 0, 1, 3, 4));
+            pillow_threeCycle.addPentachoron(p[0]);
+            pillow_threeCycle.addPentachoron(p[1]);
+            pillow_threeCycle.setPacketLabel("Invalid 3-cycle pillow");
+
+            p[0] = new Dim4Pentachoron();
+            p[1] = new Dim4Pentachoron();
+            p[0]->joinTo(0, p[1], NPerm5());
+            p[0]->joinTo(1, p[1], NPerm5());
+            p[0]->joinTo(2, p[1], NPerm5());
+            p[0]->joinTo(3, p[1], NPerm5());
+            p[0]->joinTo(4, p[1], NPerm5(3, 2, 0, 1, 4));
+            pillow_fourCycle.addPentachoron(p[0]);
+            pillow_fourCycle.addPentachoron(p[1]);
+            pillow_fourCycle.setPacketLabel("Invalid 4-cycle pillow");
         }
 
         void tearDown() {
@@ -284,6 +329,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyValid(mixedPoincareProduct);
             verifyInvalid(idealFigEightProduct, 3, 2, 2, 0, 0);
             verifyInvalid(mixedFigEightProduct, 2, 1, 1, 0, 0);
+            verifyInvalid(pillow_twoCycle, 2, 2, 1, 1, 2);
+            verifyInvalid(pillow_threeCycle, 0, 0, 0, 0, 1);
+            verifyInvalid(pillow_fourCycle, 0, 1, 0, 1, 0);
         }
 
         void verifyConnected(const Dim4Triangulation& tri) {
@@ -304,6 +352,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyConnected(mixedPoincareProduct);
             verifyConnected(idealFigEightProduct);
             verifyConnected(mixedFigEightProduct);
+            verifyConnected(pillow_twoCycle);
+            verifyConnected(pillow_threeCycle);
+            verifyConnected(pillow_fourCycle);
         }
 
         void verifyOrientable(const Dim4Triangulation& tri,
@@ -331,6 +382,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyOrientable(mixedPoincareProduct);
             verifyOrientable(idealFigEightProduct);
             verifyOrientable(mixedFigEightProduct);
+            verifyOrientable(pillow_twoCycle, false);
+            verifyOrientable(pillow_threeCycle);
+            verifyOrientable(pillow_fourCycle, false);
         }
 
         void boundaryComponents() {
