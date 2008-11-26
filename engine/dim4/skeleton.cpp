@@ -50,16 +50,13 @@ void Dim4Triangulation::calculateSkeleton() const {
     calculateComponents();
         // Sets:
         // - components_
+        // - tetrahedra_
         // - orientable_
         // - Dim4Component::pentachora_
+        // - Dim4Component::tetrahedra_
         // - Dim4Component::orientable_
         // - Dim4Pentachoron::component_
         // - Dim4Pentachoron::orientation_
-
-    calculateTetrahedra();
-        // Sets:
-        // - tetrahedra_
-        // - Dim4Component::tetrahedra_
         // - Dim4Pentachoron::tet_
         // - Dim4Pentachoron::tetMapping_
         // - all Dim4Tetrahedron members except boundaryComponent_
@@ -109,14 +106,18 @@ void Dim4Triangulation::calculateSkeleton() const {
 
 void Dim4Triangulation::calculateComponents() const {
     PentachoronIterator it;
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it)
+    for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
         (*it)->component_ = 0;
+        std::fill((*it)->tet_, (*it)->tet_ + 5,
+            static_cast<Dim4Tetrahedron*>(0));
+    }
 
     Dim4Component* label;
     Dim4Pentachoron** stack = new Dim4Pentachoron*[pentachora_.size()];
     unsigned stackSize = 0;
     Dim4Pentachoron *loopPent, *pent, *adjPent;
-    int facet, adjOrientation;
+    Dim4Tetrahedron* tet;
+    int facet, adjFacet, adjOrientation;
     for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
         loopPent = *it;
         if (loopPent->component_)
@@ -138,8 +139,58 @@ void Dim4Triangulation::calculateComponents() const {
             pent = stack[--stackSize];
 
             for (facet = 0; facet < 5; ++facet) {
+                // Have we already checked out this facet from the other side?
+                if (pent->tet_[facet])
+                    continue;
+
+                // Make a new tetrahedron, but leave the embeddings and
+                // mappings until we see which side we're on.  This is so
+                // that the tetrahedra *look* as though we enumerated them in
+                // lexicographical order (instead of via a depth-first search
+                // through each triangulation component).
+                tet = new Dim4Tetrahedron(pent->component_);
+
                 adjPent = pent->adjacentPentachoron(facet);
                 if (adjPent) {
+                    // We have an adjacent tetrahedron.
+                    adjFacet = pent->adjacentFacet(facet);
+
+                    pent->tet_[facet] = tet;
+                    adjPent->tet_[adjFacet] = tet;
+
+                    // Choose a tetrahedron mapping according to which side
+                    // comes "first" lexicographically.  Note that facet 4 is
+                    // really facet 0123, and so is "less than" facet 0, which
+                    // is really facet 1234.  In short, facets get ordered in
+                    // reverse.
+                    if (pent->markedIndex() < adjPent->markedIndex() ||
+                            (pent->markedIndex() == adjPent->markedIndex() &&
+                             facet > adjFacet)) {
+                        // pent comes first.
+                        pent->tetMapping_[facet] =
+                            Dim4Tetrahedron::ordering[facet];
+                        adjPent->tetMapping_[adjFacet] =
+                            pent->adjacentGluing(facet) *
+                            Dim4Tetrahedron::ordering[facet];
+
+                        tet->emb_[0] = Dim4TetrahedronEmbedding(pent, facet);
+                        tet->emb_[1] = Dim4TetrahedronEmbedding(
+                            adjPent, adjFacet);
+                    } else {
+                        // adjPent comes first.
+                        adjPent->tetMapping_[adjFacet] =
+                            Dim4Tetrahedron::ordering[adjFacet];
+                        pent->tetMapping_[facet] =
+                            adjPent->adjacentGluing(adjFacet) *
+                            Dim4Tetrahedron::ordering[adjFacet];
+
+                        tet->emb_[0] = Dim4TetrahedronEmbedding(
+                            adjPent, adjFacet);
+                        tet->emb_[1] = Dim4TetrahedronEmbedding(pent, facet);
+                    }
+                    tet->nEmb_ = 2;
+
+                    // Deal with orientations and connected components.
                     adjOrientation = (pent->adjacentGluing(facet).sign() == 1 ?
                         - pent->orientation_ : pent->orientation_);
                     if (adjPent->component_) {
@@ -152,55 +203,36 @@ void Dim4Triangulation::calculateComponents() const {
 
                         stack[stackSize++] = adjPent;
                     }
+                } else {
+                    // This is a boundary tetrahedron.
+                    pent->tet_[facet] = tet;
+                    pent->tetMapping_[facet] = Dim4Tetrahedron::ordering[facet];
+
+                    tet->emb_[0] = Dim4TetrahedronEmbedding(pent, facet);
+                    tet->nEmb_ = 1;
                 }
             }
         }
     }
-    delete[] stack;
-}
 
-void Dim4Triangulation::calculateTetrahedra() const {
-    PentachoronIterator it;
-    int loopFacet;
-    for (it = pentachora_.begin(); it != pentachora_.end(); ++it)
-        for (loopFacet = 0; loopFacet < 5; ++loopFacet)
-            (*it)->tet_[loopFacet] = 0;
-
-    Dim4Tetrahedron* label;
-    Dim4Pentachoron *loopPent, *adjPent;
-    int adjFacet;
-    NPerm5 adjVertices;
+    // Now run through again and number the tetrahedra (i.e., insert them
+    // into the main list) in lexicographical order.  Again, facets are
+    // ordered in reverse.
     for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
-        loopPent = *it;
-        for (loopFacet = 4; loopFacet >= 0; --loopFacet) {
-            if (loopPent->tet_[loopFacet])
+        pent = *it;
+        for (facet = 4; facet >= 0; --facet) {
+            tet = pent->tet_[facet];
+            if (tet->nEmb_ == 2 &&
+                    (tet->emb_[0].getPentachoron() != pent ||
+                     tet->emb_[0].getTetrahedron() != facet))
                 continue;
 
-            label = new Dim4Tetrahedron(loopPent->component_);
-            tetrahedra_.push_back(label);
-            loopPent->component_->tetrahedra_.push_back(label);
-
-            loopPent->tet_[loopFacet] = label;
-            loopPent->tetMapping_[loopFacet] =
-                Dim4Tetrahedron::ordering[loopFacet];
-            label->emb_[0] = Dim4TetrahedronEmbedding(loopPent, loopFacet);
-            label->nEmb_ = 1;
-
-            adjPent = loopPent->adjacentPentachoron(loopFacet);
-            if (adjPent) {
-                // This tetrahedron is not on the boundary.
-                adjFacet = loopPent->adjacentFacet(loopFacet);
-
-                adjPent->tet_[adjFacet] = label;
-                adjPent->tetMapping_[adjFacet] =
-                    loopPent->adjacentGluing(loopFacet) *
-                    loopPent->tetMapping_[loopFacet];
-                label->emb_[1] =
-                    Dim4TetrahedronEmbedding(adjPent, adjFacet);
-                label->nEmb_ = 2;
-            }
+            tetrahedra_.push_back(tet);
+            pent->component_->tetrahedra_.push_back(tet);
         }
     }
+
+    delete[] stack;
 }
 
 void Dim4Triangulation::calculateVertices() const {
