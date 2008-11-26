@@ -525,8 +525,8 @@ void Dim4Triangulation::calculateBoundary() const {
                 if (i == facet)
                     continue;
 
-                // Examine the face opposite vertices (i, facet).
-                // This the face opposite the edge joining vertices (i, facet).
+                // Examine the face opposite vertices (i, facet).  This is
+                // the face opposite the edge joining vertices (i, facet).
                 face = pent->face_[Dim4Edge::edgeNumber[i][facet]];
                 if (! face->boundaryComponent_) {
                     face->boundaryComponent_ = label;
@@ -582,18 +582,20 @@ void Dim4Triangulation::calculateVertexLinks() const {
     NTetrahedron** tet = new NTetrahedron*[5 * n]; // Pieces of vertex link.
     long index = 0; // Index into the tet[] array.
 
+    for (index = 0; index < 5 * n; ++index)
+        tet[index] = new NTetrahedron();
+
     Dim4Pentachoron *pent, *adjPent;
-    long pentIdx;
+    long pentIdx, adjPentIdx;
     int vertexIdx, adjVertexIdx;
-    int exitFacet;
+    int exitFacet, adjFacet;
+
+    index = 0;
     for (pentIdx = 0; pentIdx < n; ++pentIdx) {
         pent = pentachora_[pentIdx];
-
         for (vertexIdx = 0; vertexIdx < 5; ++vertexIdx) {
-            tet[index] = new NTetrahedron();
-
             // Glue this piece of vertex link to any adjacent pieces of
-            // vertex link, but *only* those that we have already seen.
+            // vertex link.
             for (exitFacet = 0; exitFacet < 5; ++exitFacet) {
                 if (exitFacet == vertexIdx)
                     continue;
@@ -601,24 +603,25 @@ void Dim4Triangulation::calculateVertexLinks() const {
                 adjPent = pent->adjacentPentachoron(exitFacet);
                 if (! adjPent)
                     continue;
-                adjVertexIdx = pent->adjacentGluing(exitFacet)[vertexIdx];
 
-                // Are we gluing to something we haven't seen yet?
-                if (adjPent->markedIndex() > pentIdx ||
-                        (adjPent->markedIndex() == pentIdx &&
-                         adjVertexIdx > vertexIdx))
+                // Make sure we perform each gluing in one direction only.
+                adjPentIdx = adjPent->markedIndex();
+                if (adjPentIdx > pentIdx)
+                    continue;
+                adjFacet = pent->adjacentFacet(exitFacet);
+                if (adjPentIdx == pentIdx && adjFacet > exitFacet)
                     continue;
 
                 // This tetrahedron is adjacent to a previously-seen
                 // tetrahedron.  Make the gluing.
+                adjVertexIdx = pent->adjacentGluing(exitFacet)[vertexIdx];
                 tet[index]->joinTo(
                     pent->tetMapping_[vertexIdx].preImageOf(exitFacet),
-                    tet[5 * adjPent->markedIndex() + adjVertexIdx],
+                    tet[5 * adjPentIdx + adjVertexIdx],
                     (adjPent->tetMapping_[adjVertexIdx].inverse() *
                         pent->adjacentGluing(exitFacet) *
                         pent->tetMapping_[vertexIdx]).asPerm4());
             }
-
             ++index;
         }
     }
