@@ -152,6 +152,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
             /**< The lens space L(8,3). */
         NTriangulation q20_large;
             /**< The manifold S^3 / Q_20. */
+        NTriangulation ball_large;
+            /**< A four tetrahedron ball that used to cause crashes in
+                 the simplification routines once upon a time. */
         NTriangulation singleTet_bary;
             /**< The barycentric subdivision of a single tetrahedron. */
         NTriangulation fig8_bary;
@@ -223,6 +226,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // The rest alas must be done manually.
             NTetrahedron* r;
             NTetrahedron* s;
+            NTetrahedron* t;
+            NTetrahedron* u;
 
             // A two-tetrahedron two-vertex L(3,1) is straightforward to
             // construct using a vertex of degree two.
@@ -263,6 +268,24 @@ class NTriangulationTest : public CppUnit::TestFixture {
             r->joinTo(2, s, NPerm(0, 2, 1, 3));
             pinchedSolidKB.addTetrahedron(r);
             pinchedSolidKB.addTetrahedron(s);
+
+            // This ball used to cause a crash once upon a time.
+            // Throw it into the test suite for good measure.
+            r = new NTetrahedron();
+            s = new NTetrahedron();
+            t = new NTetrahedron();
+            u = new NTetrahedron();
+            r->joinTo(2, r, NPerm(0,2));
+            r->joinTo(1, s, NPerm(2,0,1,3));
+            s->joinTo(2, t, NPerm());
+            s->joinTo(1, t, NPerm(2,0,1,3));
+            t->joinTo(1, u, NPerm(2,0,1,3));
+            u->joinTo(2, u, NPerm(1,2));
+            ball_large.addTetrahedron(r);
+            ball_large.addTetrahedron(s);
+            ball_large.addTetrahedron(t);
+            ball_large.addTetrahedron(u);
+
         }
 
         void tearDown() {
@@ -298,6 +321,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 q32xz3.isValid());
             CPPUNIT_ASSERT_MESSAGE("L(100,1) is not valid.",
                 lens100_1.isValid());
+            CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron ball is not valid.",
+                ball_large.isValid());
             CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) is not valid.",
                 lst3_4_7.isValid());
             CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
@@ -356,6 +381,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 q32xz3.isStandard());
             CPPUNIT_ASSERT_MESSAGE("L(100,1) is not standard.",
                 lens100_1.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron ball is not standard.",
+                ball_large.isStandard());
             CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) is not standard.",
                 lst3_4_7.isStandard());
             CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
@@ -413,6 +440,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 q32xz3.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("L(100,1) is not orientable.",
                 lens100_1.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron ball is not orientable.",
+                ball_large.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) is not orientable.",
                 lst3_4_7.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
@@ -471,6 +500,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 q32xz3.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("L(100,1) has boundary components.",
                 lens100_1.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron ball has no boundary "
+                "components.", ball_large.getNumberOfBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) has no boundary components.",
                 lst3_4_7.getNumberOfBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
@@ -1024,6 +1055,13 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyVertexCount(lens100_1, 1, "L(100,1)");
             verifyVertexSphere(lens100_1, 0, "L(100,1)");
 
+            verifyVertexCount(ball_large, 5, "4-tetrahedron ball");
+            verifyVertexDisc(ball_large, 0, "4-tetrahedron ball");
+            verifyVertexDisc(ball_large, 1, "4-tetrahedron ball");
+            verifyVertexSphere(ball_large, 2, "4-tetrahedron ball");
+            verifyVertexDisc(ball_large, 3, "4-tetrahedron ball");
+            verifyVertexDisc(ball_large, 4, "4-tetrahedron ball");
+
             verifyVertexCount(lst3_4_7, 1, "LST(3,4,7)");
             verifyVertexDisc(lst3_4_7, 0, "LST(3,4,7)");
 
@@ -1169,6 +1207,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyEuler(rp3_large, 0, 0, "Large RP^3");
             verifyEuler(lens8_3_large, 0, 0, "Large L(8,3)");
             verifyEuler(q20_large, 0, 0, "Large S^3 / Q_20");
+            verifyEuler(ball_large, 1, 1, "4-tetrahedron ball");
             verifyEuler(fig8_bary, 0, 1, "Large figure eight knot complement");
         }
 
@@ -1293,6 +1332,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "H1(S^3 / Q_32 x Z_3)", 0, 2, 6);
             verifyGroup(lens100_1.getHomologyH1(),
                 "H1(L(100,1))", 0, 100);
+            verifyGroup(ball_large.getHomologyH1(),
+                "H1(4-tetrahedron ball)", 0);
             verifyGroup(lst3_4_7.getHomologyH1(),
                 "H1(LST(3,4,7))", 1);
             verifyGroup(figure8.getHomologyH1(),
@@ -1344,6 +1385,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Boundary H1(S^3 / Q_32 x Z_3)", 0);
             verifyGroup(lens100_1.getHomologyH1Bdry(),
                 "Boundary H1(L(100,1))", 0);
+            verifyGroup(ball_large.getHomologyH1Bdry(),
+                "Boundary H1(4-tetrahedron ball)", 0);
             verifyGroup(lst3_4_7.getHomologyH1Bdry(),
                 "Boundary H1(LST(3,4,7))", 2);
             verifyGroup(figure8.getHomologyH1Bdry(),
@@ -1404,6 +1447,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             //    "Fund(S^3 / Q_32 x Z_3)", 0, 2, 6);
             verifyFundGroup(lens100_1.getFundamentalGroup(),
                 "Fund(L(100,1))", "Z_100");
+            verifyFundGroup(ball_large.getFundamentalGroup(),
+                "Fund(4-tetrahedron ball)", "0");
             verifyFundGroup(lst3_4_7.getFundamentalGroup(),
                 "Fund(LST(3,4,7))", "Z");
             //verifyFundGroup(figure8.getFundamentalGroup(),
@@ -1453,6 +1498,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 q28.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not 0-efficient.",
                 q32xz3.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron ball is 0-efficient.",
+                ! ball_large.isZeroEfficient());
+                // Contains a non-trivial disc.
             CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) is 0-efficient.",
                 ! lst3_4_7.isZeroEfficient());
                 // Contains a non-trivial disc.
@@ -1749,6 +1797,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyDoubleCover(q28, "S^3 / Q_28");
             verifyDoubleCover(seifertWeber, "Seifert-Weber");
             verifyDoubleCover(lens100_1, "L(100,1)");
+            verifyDoubleCover(ball_large, "4-tetrahedron ball");
             verifyDoubleCover(lst3_4_7, "LST(3,4,7)");
             verifyDoubleCover(figure8, "Figure eight knot complement");
             verifyDoubleCover(rp2xs1, "RP^2 x S^1");
@@ -1812,6 +1861,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyDehydration(q28, "S^3 / Q_28");
             verifyDehydration(seifertWeber, "Seifert-Weber");
             verifyNoDehydration(lens100_1, "L(100,1)");
+            verifyNoDehydration(ball_large, "4-tetrahedron ball");
             verifyNoDehydration(lst3_4_7, "LST(3,4,7)");
             verifyDehydration(figure8, "Figure eight knot complement");
             verifyDehydration(rp2xs1, "RP^2 x S^1");
@@ -1876,6 +1926,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifySimplification(rp3_large, 2, "L(2,1)");
             verifySimplification(lens8_3_large, 2, "L(8,3)");
             verifySimplification(q20_large, 5, "C~(5)");
+            verifySimplification(ball_large, 1, "B3 (3-vtx)");
             verifySimplification(fig8_bary, 2, "SnapPea m004");
             verifySimplification(singleTet_bary, 1, "B3 (4-vtx)");
         }
