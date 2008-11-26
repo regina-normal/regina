@@ -470,8 +470,8 @@ void Dim4Triangulation::calculateBoundary() const {
     Dim4Face* face;
     Dim4FaceEmbedding faceEmb;
     Dim4Tetrahedron *tet, *adjTet;
+    int tetFace, adjTetFace;
     NTetrahedron *bdryTet, *adjBdryTet;
-    NPerm5 bdryMap;
     int i, j;
     for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it) {
         loopTet = *it;
@@ -591,27 +591,13 @@ void Dim4Triangulation::calculateBoundary() const {
                     if (! bdryTet->adjacentTetrahedron(
                             pent->tetMapping_[facet].preImageOf(i))) {
                         // Glue away.
+                        tetFace = pent->tetMapping_[facet].preImageOf(i);
+                        adjTetFace = adjPent->tetMapping_[adjFacet].
+                            preImageOf(j);
 
-                        // The following map will take vertices of the
-                        // common face to each other, but the remaining
-                        // vertices might or might not get mixed up with
-                        // the element 4.  This is because we have to go
-                        // via a face mapping, which only cares about
-                        // the images of 0, 1 and 2.
-                        bdryMap =
-                            adjPent->tetMapping_[adjFacet].inverse() *
-                            adjPent->faceMapping_[
-                                Dim4Edge::edgeNumber[j][adjFacet]] *
-                            pent->faceMapping_[
-                                Dim4Edge::edgeNumber[i][facet]].inverse() *
-                            pent->tetMapping_[facet];
-
-                        if (bdryMap[4] != 4)
-                            bdryMap = NPerm5(4, bdryMap[4]) * bdryMap;
-
-                        // Phew.
-                        bdryTet->joinTo(pent->tetMapping_[facet].preImageOf(i),
-                            adjBdryTet, bdryMap.asPerm4());
+                        bdryTet->joinTo(tetFace, adjBdryTet,
+                            (adjTet->getFaceMapping(adjTetFace) *
+                             tet->getFaceMapping(tetFace).inverse()).asPerm4());
                     }
                 }
 
