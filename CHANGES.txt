@@ -63,6 +63,9 @@ Version 4.6  [ (under development) ]
         Class NTriangulation:
             - New routines isBall() and knowsBall() for recognising the
               3-dimensional ball.
+            - Fixed a crash in the is-it-valid test for twoOneMove().
+              The crash was triggered by certain types of non-minimal
+              triangulations with boundary.
             - Fixed a nasty bug in the is-it-valid test for shellBoundary().
               This bug had the potential to cause a crash when simplifying
               triangulations with boundary.  It also had the potential to

@@ -1628,19 +1628,29 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * just once and merging that tetrahedron with one of the
          * tetrahedra joining it.
          *
-         * This can be done assuming the following conditions.  The edge
-         * must be non-boundary.  The two vertices that are its endpoints
-         * cannot both be boundary.  The two remaining faces of the
-         * tetrahedron may not be joined.  Furthermore, consider the two
-         * edges of the second tetrahedron (to be merged) that run from
-         * the (identical) vertices of the original tetrahedron not
-         * touching \c e to the vertex of the second tetrahedron not
-         * touching the original tetrahedron.  These edges must be
-         * distinct and may not both be in the boundary.  Finally (which
-         * should follow from the previous conditions), the two faces
-         * joining these two edges to the vertex of \c e that is common to
-         * both tetrahedra should be distinct.  Phew.  Code documentation
-         * could really do with diagrams!
+         * This can be done assuming the following conditions:
+         *
+         * - The edge must be non-boundary, and the two vertices that are
+         *   its endpoints are not both boundary.
+         *
+         * - The two remaining faces of the tetrahedron are not joined, and
+         *   the tetrahedron face opposite the given endpoint of the edge is
+         *   not boundary.
+         *
+         * - Consider the second tetrahedron to be merged (the one
+         *   joined along the face opposite the given endpoint of the edge).
+         *   Moreover, consider the two edges of this second tetrahedron
+         *   that run from the (identical) vertices of the original
+         *   tetrahedron not touching \c e to the vertex of the second
+         *   tetrahedron not touching the original tetrahedron.  These edges
+         *   must be distinct and may not both be in the boundary.
+         *
+         * - Finally (which should follow from the previous conditions),
+         *   consider again the two edges of the second tetrahedron described
+         *   above.  The two faces joining these two edges to the vertex of
+         *   \c e that is common to both tetrahedra should be distinct.
+         *
+         * Phew.  Code documentation could really do with diagrams!
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
