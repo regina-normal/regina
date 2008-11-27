@@ -1386,17 +1386,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          */
         void maximalForestInDualSkeleton(
                 stdhash::hash_set<NFace*, HashPointer>& faceSet) const;
-        /**
-         * Attempts to reduce the number of vertices by crushing a
-         * maximal forest in the 1-skeleton.
-         *
-         * \todo \proburgent This algorithm needs to be changed from the
-         * current incorrect algorithm to Dave's algorithm that avoids
-         * crisis by using 2-3 moves.
-         *
-         * @return \c true if and only if the triangulation was changed.
-         */
-        bool crushMaximalForest();
 
         /**
          * Attempts to simplify the triangulation as intelligently as

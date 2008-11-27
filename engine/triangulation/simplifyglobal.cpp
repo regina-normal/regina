@@ -161,20 +161,6 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 calculateSkeleton();
             }
 
-            // Crush a maximal skeleton.
-            /* Don't crush a maximal skeleton until we know what the
-             * routine does!
-            if (vertices.size() > components.size()) {
-                if (crushMaximalForest()) {
-                    if (! calculatedSkeleton)
-                        calculateSkeleton();
-                    // Keep trying to simplify in this iteration of the loop.
-                    // Thus changedNow will remain false.
-                    changed = true;
-                }
-            }
-            */
-
             // Look for internal simplifications.
             for (eit = edges.begin(); eit != edges.end(); eit++) {
                 edge = *eit;

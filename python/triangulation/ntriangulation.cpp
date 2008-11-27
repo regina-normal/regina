@@ -228,7 +228,6 @@ void addNTriangulation() {
         .def("knowsZeroEfficient", &NTriangulation::knowsZeroEfficient)
         .def("hasSplittingSurface", &NTriangulation::hasSplittingSurface)
         .def("knowsSplittingSurface", &NTriangulation::knowsSplittingSurface)
-        .def("crushMaximalForest", &NTriangulation::crushMaximalForest)
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
