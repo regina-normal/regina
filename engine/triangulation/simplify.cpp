@@ -502,19 +502,26 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
-    NPerm crossover;
-    if (vertex[0] == 0)
-        crossover = tet[0]->adjacentGluing(1);
-    else
-        crossover = tet[0]->adjacentGluing(0);
     NTetrahedron* top = tet[0]->adjacentTetrahedron(vertex[0]);
     NTetrahedron* bottom = tet[1]->adjacentTetrahedron(vertex[1]);
-    int topFace = tet[0]->adjacentFace(vertex[0]);
-    NPerm gluing = tet[1]->adjacentGluing(vertex[1]) *
-        crossover * top->adjacentGluing(topFace);
-    tet[0]->unjoin(vertex[0]);
-    tet[1]->unjoin(vertex[1]);
-    top->joinTo(topFace, bottom, gluing);
+
+    if (! top) {
+        tet[1]->unjoin(vertex[1]);
+    } else if (! bottom) {
+        tet[0]->unjoin(vertex[0]);
+    } else {
+        NPerm crossover;
+        if (vertex[0] == 0)
+            crossover = tet[0]->adjacentGluing(1);
+        else
+            crossover = tet[0]->adjacentGluing(0);
+        int topFace = tet[0]->adjacentFace(vertex[0]);
+        NPerm gluing = tet[1]->adjacentGluing(vertex[1]) *
+            crossover * top->adjacentGluing(topFace);
+        tet[0]->unjoin(vertex[0]);
+        tet[1]->unjoin(vertex[1]);
+        top->joinTo(topFace, bottom, gluing);
+    }
 
     // Finally remove and dispose of the tetrahedra.
     delete removeTetrahedron(tet[0]);
