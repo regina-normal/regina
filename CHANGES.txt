@@ -66,6 +66,9 @@ Version 4.6  [ (under development) ]
         Class NTriangulation:
             - New routines isBall() and knowsBall() for recognising the
               3-dimensional ball.
+            - Removed crushMaximalForest(), which (as the documentation has
+              pointed out since the first release) has never worked properly,
+              and which is therefore never actually used.
             - Fixed crashes in twoOneMove(), twoZeroMove(NVertex*, ...)
               and shellBoundary().  These crashes were triggered by certain
               types of non-minimal triangulations with boundary.
