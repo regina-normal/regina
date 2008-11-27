@@ -14,7 +14,7 @@ censusincludedir = $(pkgincludedir)/census
 
 noinst_LTLIBRARIES = libcensus.la
 
-libcensus_la_SOURCES = closedprimemin.cpp compact.cpp completions.cpp ncensus.cpp nfacepairing.cpp ngluingperms.cpp ngluingpermsearcher.cpp
+libcensus_la_SOURCES = closedprimemin.cpp compact.cpp ncensus.cpp nfacepairing.cpp ngluingperms.cpp ngluingpermsearcher.cpp
 
 censusinclude_HEADERS = ncensus.h nfacepairing.h ngluingperms.h ngluingpermsearcher.h
 

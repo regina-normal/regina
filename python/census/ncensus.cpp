@@ -47,11 +47,6 @@ namespace {
     bool mightBeMinimal(regina::NTriangulation* t) {
         return NCensus::mightBeMinimal(t, 0);
     }
-    unsigned long findAllCompletions(regina::NPacket* p,
-            regina::NTriangulation* b, regina::NBoolSet fin,
-            regina::NBoolSet orb) {
-        return NCensus::findAllCompletions(p, b, fin, orb);
-    }
 }
 
 void addNCensus() {
@@ -60,11 +55,9 @@ void addNCensus() {
         .def("formCensus", formCensus)
         .def("formPartialCensus", formPartialCensus)
         .def("mightBeMinimal", mightBeMinimal)
-        .def("findAllCompletions", findAllCompletions)
         .staticmethod("formCensus")
         .staticmethod("formPartialCensus")
         .staticmethod("mightBeMinimal")
-        .staticmethod("findAllCompletions")
     ;
 
     s.attr("PURGE_NON_MINIMAL") = NCensus::PURGE_NON_MINIMAL;

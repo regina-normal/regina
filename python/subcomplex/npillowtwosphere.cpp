@@ -43,10 +43,6 @@ void addNPillowTwoSphere() {
         .def("getFace", &NPillowTwoSphere::getFace,
             return_value_policy<reference_existing_object>())
         .def("getFaceMapping", &NPillowTwoSphere::getFaceMapping)
-        .def("reduceTriangulation", &NPillowTwoSphere::reduceTriangulation)
-        .def("getReducedTriangulation",
-            &NPillowTwoSphere::getReducedTriangulation,
-            return_value_policy<manage_new_object>())
         .def("formsPillowTwoSphere", &NPillowTwoSphere::formsPillowTwoSphere,
             return_value_policy<manage_new_object>())
         .staticmethod("formsPillowTwoSphere")
