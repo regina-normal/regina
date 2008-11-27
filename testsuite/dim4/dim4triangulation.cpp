@@ -51,6 +51,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
+    CPPUNIT_TEST(boundary);
     CPPUNIT_TEST(boundaryComponents);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(eulerCharacteristic);
@@ -404,13 +405,92 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyOrientable(pillow_fourCycle, false);
         }
 
+        void verifyBoundary(const Dim4Triangulation& tri,
+                bool realBdry = false, int idealVertices = 0,
+                bool invalidVertices = false, bool valid = true) {
+            bool closed = ! (realBdry || idealVertices || invalidVertices);
+
+            if (closed) {
+                if (! tri.isClosed())
+                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                        " is reported as being not closed.");
+            } else {
+                if (tri.isClosed())
+                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                        " is reported as being closed.");
+            }
+
+            if (realBdry) {
+                if (! tri.hasBoundaryTetrahedra())
+                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                        " is reported as having no boundary tetrahedra.");
+            } else {
+                if (tri.hasBoundaryTetrahedra())
+                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                        " is reported as having boundary tetrahedra.");
+            }
+
+            if (idealVertices && valid) {
+                if (! tri.isIdeal())
+                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                        " is reported as being not ideal.");
+            } else {
+                if (tri.isIdeal())
+                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                        " is reported as being ideal.");
+            }
+
+            unsigned long i;
+            int found;
+
+            found = 0;
+            for (i = 0; i < tri.getNumberOfVertices(); ++i)
+                if (tri.getVertex(i)->isIdeal())
+                    ++found;
+            if (found != idealVertices) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.getPacketLabel()
+                    << " contains " << found << " ideal vertices "
+                    "instead of the expected " << idealVertices << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Hum, we've already check this but might as well cross-check.
+            if (valid) {
+                if (! tri.isValid())
+                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                        " is reported as being invalid.");
+            } else {
+                if (tri.isValid())
+                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                        " is reported as being valid.");
+            }
+        }
+
+        void boundary() {
+            verifyBoundary(empty);
+            verifyBoundary(s4_id);
+            verifyBoundary(s4_doubleConeS3);
+            verifyBoundary(rp4);
+            verifyBoundary(ball_singlePent, true);
+            verifyBoundary(ball_foldedPent, true);
+            verifyBoundary(ball_singleConeS3, true);
+            verifyBoundary(ball_layerAndFold, true);
+            verifyBoundary(idealPoincareProduct, false, 2);
+            verifyBoundary(mixedPoincareProduct, true, 1);
+            verifyBoundary(idealFigEightProduct, false, 0, true, false);
+            verifyBoundary(mixedFigEightProduct, true, 0, true, false);
+            verifyBoundary(pillow_twoCycle, false, 0, true, false);
+            verifyBoundary(pillow_threeCycle, false, 1, false, false);
+            verifyBoundary(pillow_fourCycle, false, 0, false, false);
+        }
+
         void boundaryComponents() {
-            // TODO: Include triangulations of boundaries
-            // TODO: hasBoundaryTetrahedra(), isClosed(), isIdeal()
+            // TODO: Triangulations of boundary components
         }
 
         void vertexLinks() {
-            // TODO: Include triangulations of vertex links
+            // TODO: Triangulations of vertex links
         }
 
         void verifyEulerChar(const Dim4Triangulation& tri,
