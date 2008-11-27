@@ -412,8 +412,57 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             // TODO
         }
 
+        void verifyEulerChar(const Dim4Triangulation& tri,
+                long expectedManifold, long expectedTri) {
+            long eulerManifold = tri.getEulerCharManifold();
+            long eulerTri = tri.getEulerCharTri();
+
+            if (eulerManifold != expectedManifold) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.getPacketLabel() << " gives "
+                    "manifold Euler characteristic = " << eulerManifold
+                    << " instead of the expected " << expectedManifold << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (eulerTri != expectedTri) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.getPacketLabel() << " gives "
+                    "triangulation Euler characteristic = " << eulerTri
+                    << " instead of the expected " << expectedTri << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyEulerCharTri(const Dim4Triangulation& tri,
+                long expectedTri) {
+            long eulerTri = tri.getEulerCharTri();
+
+            if (eulerTri != expectedTri) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.getPacketLabel() << " gives "
+                    "triangulation Euler characteristic = " << eulerTri
+                    << " instead of the expected " << expectedTri << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void eulerCharacteristic() {
-            // TODO
+            verifyEulerChar(empty, 0, 0);
+            verifyEulerChar(s4_id, 2, 2);
+            verifyEulerChar(s4_doubleConeS3, 2, 2);
+            verifyEulerChar(rp4, 1, 1);
+            verifyEulerChar(ball_singlePent, 1, 1);
+            verifyEulerChar(ball_foldedPent, 1, 1);
+            verifyEulerChar(ball_singleConeS3, 1, 1);
+            verifyEulerChar(ball_layerAndFold, 1, 1);
+            verifyEulerChar(idealPoincareProduct, 0, 2);
+            verifyEulerChar(mixedPoincareProduct, 0, 1);
+            verifyEulerCharTri(idealFigEightProduct, 1);
+            verifyEulerCharTri(mixedFigEightProduct, 1);
+            verifyEulerCharTri(pillow_twoCycle, 2);
+            verifyEulerCharTri(pillow_threeCycle, 2);
+            verifyEulerCharTri(pillow_fourCycle, 0);
         }
 
         void verifyHomologyH1(const Dim4Triangulation& tri, const char* H1) {
