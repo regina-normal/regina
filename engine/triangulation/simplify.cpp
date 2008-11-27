@@ -595,17 +595,25 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
 
     // First glue together the two faces that will be flattened.
     NTetrahedron* adjTet[2];
-    int adjFace[2];
-    for (i=0; i<2; i++) {
-        adjTet[i] = top->adjacentTetrahedron(topGlued[i]);
-        adjFace[i] = top->adjacentFace(topGlued[i]);
+    adjTet[0] = top->adjacentTetrahedron(topGlued[0]);
+    adjTet[1] = top->adjacentTetrahedron(topGlued[1]);
+
+    if (! adjTet[0])
+        top->unjoin(topGlued[1]);
+    else if (! adjTet[1])
+        top->unjoin(topGlued[0]);
+    else {
+        int adjFace[2];
+        adjFace[0] = top->adjacentFace(topGlued[0]);
+        adjFace[1] = top->adjacentFace(topGlued[1]);
+
+        NPerm gluing = top->adjacentGluing(topGlued[1])
+            * NPerm(topGlued[0], topGlued[1])
+            * adjTet[0]->adjacentGluing(adjFace[0]);
+        top->unjoin(topGlued[0]);
+        top->unjoin(topGlued[1]);
+        adjTet[0]->joinTo(adjFace[0], adjTet[1], gluing);
     }
-    NPerm gluing = top->adjacentGluing(topGlued[1])
-        * NPerm(topGlued[0], topGlued[1])
-        * adjTet[0]->adjacentGluing(adjFace[0]);
-    top->unjoin(topGlued[0]);
-    top->unjoin(topGlued[1]);
-    adjTet[0]->joinTo(adjFace[0], adjTet[1], gluing);
 
     // Now make the new tetrahedron and glue it to itself.
     NTetrahedron* newTet = new NTetrahedron();
@@ -628,16 +636,22 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
         int topFace = bottomToTop[bottomFace];
         NTetrahedron* adjTop = top->adjacentTetrahedron(topFace);
         NTetrahedron* adjBottom = oldTet->adjacentTetrahedron(bottomFace);
+
         NPerm bottomFacePerm = NPerm(oldVertices[edgeEnd],
             oldVertices[otherEdgeEnd], oldVertices[2], oldVertices[3]);
-        NPerm bottomGluing = oldTet->adjacentGluing(bottomFace) *
-            bottomFacePerm;
-        NPerm topGluing = top->adjacentGluing(topFace) *
-            bottomToTop * bottomFacePerm * NPerm(0,1);
-        top->unjoin(topFace);
-        oldTet->unjoin(bottomFace);
-        newTet->joinTo(0, adjTop, topGluing);
-        newTet->joinTo(1, adjBottom, bottomGluing);
+
+        if (adjTop) {
+            NPerm topGluing = top->adjacentGluing(topFace) *
+                bottomToTop * bottomFacePerm * NPerm(0,1);
+            top->unjoin(topFace);
+            newTet->joinTo(0, adjTop, topGluing);
+        }
+        if (adjBottom) {
+            NPerm bottomGluing = oldTet->adjacentGluing(bottomFace) *
+                bottomFacePerm;
+            oldTet->unjoin(bottomFace);
+            newTet->joinTo(1, adjBottom, bottomGluing);
+        }
     }
 
     // Finally remove and dispose of the unwanted tetrahedra.
