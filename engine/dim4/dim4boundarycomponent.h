@@ -37,6 +37,7 @@
 
 #include <vector>
 #include "shareableobject.h"
+#include "dim4/dim4vertex.h"
 #include "utilities/nmarkedvector.h"
 
 namespace regina {
@@ -188,19 +189,20 @@ class Dim4BoundaryComponent : public ShareableObject, public NMarkedElement {
          * component.  Note that this triangulation is read-only (though
          * of course you can clone it and then operate upon the clone).
          *
-         * If this boundary component contains no tetrahedra, then this
-         * routine returns null.  This happens for instance with ideal
-         * vertices, and also with some invalid vertices.  See the
-         * Dim4BoundaryComponent class notes and Dim4Vertex::isBoundary()
-         * for details.
-         *
-         * The triangulation of this boundary component is built as follows.
+         * If this boundary component contains one or more tetrahedra
+         * (i.e., it is a regular boundary built from pentachoron facets),
+         * then the triangulation of this boundary component is as follows.
          * Let \a i lie between 0 and getNumberOfTetrahedra()-1 inclusive.
          * Then tetrahedron \a i of the boundary 3-manifold triangulation is
          * a copy of tetrahedron <tt>getTetrahedron(i)</tt> of this 4-manifold
          * boundary component, and its vertices 0,1,2,3 are numbered in the
          * same way.  To relate tetrahedron vertex numbers to pentachoron
          * vertex numbers, see Dim4Pentachoron::getTetrahedronMapping().
+         *
+         * If this boundary component consists only of a single vertex
+         * (which happens with ideal vertices and also some invalid vertices),
+         * then this routine returns the triangulation of the corresponding
+         * vertex link.  See Dim4Vertex::getLink() for details.
          *
          * @return the triangulation of this boundary component.
          */
@@ -311,7 +313,7 @@ inline Dim4Vertex* Dim4BoundaryComponent::getVertex(unsigned long index) const {
 }
 
 inline const NTriangulation* Dim4BoundaryComponent::getTriangulation() const {
-    return boundary_;
+    return (boundary_ ? boundary_ : vertices_.front()->getLink());
 }
 
 inline void Dim4BoundaryComponent::writeTextShort(std::ostream& out) const {
