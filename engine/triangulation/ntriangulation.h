@@ -1453,8 +1453,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * about the given edge.
          * This involves replacing the three tetrahedra joined at that
          * edge with two tetrahedra joined by a face.
-         * This can be done iff the edge is non-boundary and the three
-         * tetrahedra are distinct.
+         * This can be done iff (i) the edge is valid and non-boundary,
+         * and (ii) the three tetrahedra are distinct.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
@@ -1516,8 +1516,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * tetrahedra; this has three internal axes.  The initial four
          * tetrahedra meet along the given edge which forms one of these
          * axes; the new tetrahedra will meet along a different axis.
-         * This move can be done iff the edge is non-boundary and the four
-         * tetrahedra are distinct.
+         * This move can be done iff (i) the edge is valid and non-boundary,
+         * and (ii) the four tetrahedra are distinct.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
@@ -1553,17 +1553,23 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Checks the eligibility of and/or performs a 2-0 move
          * about the given edge of degree 2.
          * This involves taking the two tetrahedra joined at that edge
-         * and squashing them flat.
-         * This can be done only if the edge is non-boundary, the two
-         * tetrahedra are distinct and the edges opposite \c e in each
-         * tetrahedron are distinct and not both boundary.  Furthermore,
-         * if faces \e f1 and \e f2 of one tetrahedron are to be
-         * flattened onto faces \e g1 and \e g2 of the other
-         * respectively, we must
-         * have (a) \e f1 and \e g1 distinct, (b) \e f2 and \e g2 distinct,
-         * (c) not both <i>f1</i>=<i>g2</i> and <i>g1</i>=<i>f2</i>,
-         * (d) not both <i>f1</i>=<i>f2</i> and <i>g1</i>=<i>g2</i> and
-         * (e) not two of the faces boundary with the other two identified.
+         * and squashing them flat.  This can be done only if:
+         *
+         * - the edge is valid and non-boundary;
+         *
+         * - the two tetrahedra are distinct;
+         *
+         * - the edges opposite \c e in each tetrahedron are distinct and
+         *   not both boundary;
+         *
+         * - if faces \a f1 and \a f2 of one tetrahedron are to be flattened
+         *   onto faces \a g1 and \a g2 of the other respectively, then
+         *   (a) \a f1 and \a g1 are distinct,
+         *   (b) \a f2 and \a g2 are distinct,
+         *   (c) we do not have both \a f1 = \a g2 and \a g1 = \a f2,
+         *   (d) we do not have both \a f1 = \a f2 and \a g1 = \a g2, and
+         *   (e) we do not have two of the faces boundary and the other
+         *   two identified.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
@@ -1592,13 +1598,18 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * about the given vertex of degree 2.
          * This involves taking the two tetrahedra joined at that vertex
          * and squashing them flat.
-         * This can be done only if the vertex is non-boundary, the two
-         * tetrahedra are distinct, the
-         * faces opposite \c v in each tetrahedron are distinct and not
-         * both boundary, and the two tetrahedra meet each other
-         * on all three faces touching the vertex (as opposed to meeting
-         * each other on one face and being glued to themselves along the
-         * other two).
+         * This can be done only if:
+         *
+         * - the vertex is non-boundary and has a 2-sphere vertex link;
+         *
+         * - the two tetrahedra are distinct;
+         *
+         * - the faces opposite \c v in each tetrahedron are distinct and not
+         *   both boundary;
+         *
+         * - the two tetrahedra meet each other on all three faces touching
+         *   the vertex (as opposed to meeting each other on one face and
+         *   being glued to themselves along the other two).
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
@@ -1631,8 +1642,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * This can be done assuming the following conditions:
          *
-         * - The edge must be non-boundary, and the two vertices that are
-         *   its endpoints are not both boundary.
+         * - The edge must be valid and non-boundary, and the two vertices
+         *   that are its endpoints are not both boundary.
          *
          * - The two remaining faces of the tetrahedron are not joined, and
          *   the tetrahedron face opposite the given endpoint of the edge is
@@ -1688,10 +1699,16 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * edges and ungluing it to create two new boundary faces and
          * thus expose the tetrahedra it initially joined, allowing for
          * potential boundary shelling moves.
-         * This move can be done only if the face meets the boundary in
-         * precisely two edges (and thus also joins two tetrahedra) and
-         * if the vertex between these two edges is a standard boundary
-         * vertex (its link is a disc).
+         * This move can be done only if:
+         *
+         * - the face meets the boundary in precisely two edges (and thus
+         *   also joins two tetrahedra);
+         *
+         * - the vertex between these two edges is a standard boundary
+         *   vertex (its link is a disc);
+         *
+         * - the remaining edge of the face (which is internal to the
+         *   triangulation) is valid.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
@@ -1720,13 +1737,19 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * move on the given tetrahedron.
          * This involves simply popping off a tetrahedron that touches
          * the boundary.
-         * This can be done only if precisely 1, 2 or 3 faces of the
-         * tetrahedron lie in the boundary.
-         * Furthermore, if 1 face lies in the boundary, the opposite
-         * vertex may not lie in the boundary.  If 2 faces lie in the
-         * boundary, the remaining edge may not lie in the boundary and
-         * the remaining two faces of the tetrahedron may not be glued
-         * together.
+         * This can be done only if:
+         *
+         * - all edges of the tetrahedron are valid;
+         *
+         * - precisely one, two or three faces of the tetrahedron lie in
+         *   the boundary;
+         *
+         * - if one face lies in the boundary, then the opposite vertex
+         *   does not lie in the boundary;
+         *
+         * - if two faces lie in the boundary, then the remaining edge does
+         *   not lie in the boundary, and the remaining two faces of the
+         *   tetrahedron are not glued together.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
