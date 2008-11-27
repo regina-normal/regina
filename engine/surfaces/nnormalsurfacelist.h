@@ -150,7 +150,6 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * \todo \featurelong Allow either subsets of normal surface
          * lists or allow deletion of surfaces from lists.
          * \todo \opt Investigate obvious compressions.
-         * \todo \opt Investigate monte carlo methods.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.

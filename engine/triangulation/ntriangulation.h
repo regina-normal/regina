@@ -93,7 +93,6 @@ class NXMLTriangulationReader;
  * \testpart
  *
  * \todo \feature Is the boundary incompressible?
- * \todo \feature Add set of cusps and three corresponding get functions.
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
  * if there is nothing left).  Am I obviously not a handlebody?
  * (Compare homology with boundary homology).
@@ -103,7 +102,6 @@ class NXMLTriangulationReader;
  * triangulation.  Include routines to crush a subcomplex or to expand a
  * subcomplex to a normal surface.
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
- * \todo \featurelong Random triangulation with <i>n</i> tetrahedra.
  */
 class NTriangulation : public NPacket, public NFilePropertyReader {
     public:
