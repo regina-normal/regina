@@ -32,6 +32,8 @@
 #include "algebra/ngrouppresentation.h"
 #include "dim4/dim4exampletriangulation.h"
 #include "dim4/dim4triangulation.h"
+#include "manifold/nmanifold.h"
+#include "subcomplex/nstandardtri.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/dim4/testdim4.h"
@@ -485,12 +487,121 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBoundary(pillow_fourCycle, false, 0, false, false);
         }
 
+        void verifyBoundaryCount(const Dim4Triangulation& tri, unsigned nBdry) {
+            unsigned long ans = tri.getNumberOfBoundaryComponents();
+            if (ans != nBdry) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.getPacketLabel() << " gives "
+                    << ans << " boundary component(s) instead of the expected "
+                    << nBdry << "." << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyBoundaryTri(const Dim4Triangulation& tri,
+                unsigned whichBdry, const char* bdryManifold,
+                bool makeBdryFinite = false) {
+            std::string ans;
+
+            regina::NTriangulation t(
+                *(tri.getBoundaryComponent(whichBdry)->getTriangulation()));
+            t.intelligentSimplify();
+
+            if (makeBdryFinite) {
+                t.idealToFinite();
+                t.intelligentSimplify();
+            }
+
+            regina::NStandardTriangulation* std =
+                regina::NStandardTriangulation::isStandardTriangulation(&t);
+            if (! std)
+                ans = "<unrecognised triangulation>";
+            else {
+                regina::NManifold* mfd = std->getManifold();
+                if (! mfd)
+                    ans = "<unrecognised manifold>";
+                else {
+                    ans = mfd->getName();
+                    delete mfd;
+                }
+                delete std;
+            }
+
+            if (ans != bdryManifold) {
+                std::ostringstream msg;
+                msg << "Boundary component " << whichBdry
+                    << " of triangulation " << tri.getPacketLabel()
+                    << " simplifies to " << ans
+                    << " instead of the expected " << bdryManifold << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void boundaryComponents() {
-            // TODO: Triangulations of boundary components
+            verifyBoundaryCount(empty, 0);
+            verifyBoundaryCount(s4_id, 0);
+            verifyBoundaryCount(s4_doubleConeS3, 0);
+            verifyBoundaryCount(rp4, 0);
+            verifyBoundaryCount(ball_singlePent, 1);
+            verifyBoundaryTri(ball_singlePent, 0, "S3");
+            verifyBoundaryCount(ball_foldedPent, 1);
+            verifyBoundaryTri(ball_foldedPent, 0, "S3");
+            verifyBoundaryCount(ball_singleConeS3, 1);
+            verifyBoundaryTri(ball_singleConeS3, 0, "S3");
+            verifyBoundaryCount(ball_layerAndFold, 1);
+            verifyBoundaryTri(ball_layerAndFold, 0, "S3");
+            verifyBoundaryCount(idealPoincareProduct, 2);
+            verifyBoundaryTri(idealPoincareProduct, 0, "S3/P120");
+            verifyBoundaryTri(idealPoincareProduct, 1, "S3/P120");
+            verifyBoundaryCount(mixedPoincareProduct, 2);
+            verifyBoundaryTri(mixedPoincareProduct, 0, "S3/P120");
+            verifyBoundaryTri(mixedPoincareProduct, 1, "S3/P120");
+            verifyBoundaryCount(idealFigEightProduct, 3);
+            // Boundary 0 of idealFigEightProduct should be the
+            // suspension of a torus.  I think.
+            verifyBoundaryTri(idealFigEightProduct, 0,
+                "<unrecognised triangulation>");
+            verifyBoundaryTri(idealFigEightProduct, 1,
+                "Figure eight knot complement");
+            verifyBoundaryTri(idealFigEightProduct, 2,
+                "Figure eight knot complement");
+            verifyBoundaryCount(mixedFigEightProduct, 2);
+            verifyBoundaryTri(mixedFigEightProduct, 0,
+                "Figure eight knot complement");
+            verifyBoundaryTri(mixedFigEightProduct, 1,
+                "Figure eight knot complement");
+            verifyBoundaryCount(pillow_twoCycle, 2);
+            // I *think* the links of the two invalid vertices for
+            // pillow_twoCycle are (RP2 x I), but with one RP2 cusp and
+            // one invalid edge (as opposed to two RP2 cusps).
+            verifyBoundaryTri(pillow_twoCycle, 0,
+                "<unrecognised triangulation>", true);
+            verifyBoundaryTri(pillow_twoCycle, 1,
+                "<unrecognised triangulation>", true);
+            verifyBoundaryCount(pillow_threeCycle, 1);
+            verifyBoundaryTri(pillow_threeCycle, 0, "L(3,1)");
+            verifyBoundaryCount(pillow_fourCycle, 0);
         }
 
         void vertexLinks() {
             // TODO: Triangulations of vertex links
+            /*
+            verifyLinksSpheres(empty, 0);
+            verifyLinksSpheres(s4_id, 5);
+            verifyLinksSpheres(s4_doubleConeS3, 4);
+            verifyLinksSpheres(rp4, 3);
+            verifyLinksBalls(ball_singlePent, 5);
+            verifyLinksBalls(ball_foldedPent, 4);
+            // verifyLinksBalls(ball_singleConeS3, 2);
+            // verifyLinksBalls(ball_layerAndFold);
+            // verifyBoundary(idealPoincareProduct, false, 2);
+            // verifyBoundary(mixedPoincareProduct, true, 1);
+            // verifyBoundary(idealFigEightProduct, false, 0, true, false);
+            // verifyBoundary(mixedFigEightProduct, true, 0, true, false);
+            // verifyBoundary(pillow_twoCycle, false, 0, true, false);
+            // verifyBoundary(pillow_threeCycle, false, 1, false, false);
+            // verifyBoundary(pillow_fourCycle, false, 0, false, false);
+            */
         }
 
         void verifyEulerChar(const Dim4Triangulation& tri,
