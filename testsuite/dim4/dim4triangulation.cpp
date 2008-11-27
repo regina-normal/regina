@@ -692,6 +692,29 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
+        void verifyLinkH1(const Dim4Triangulation& tri,
+                unsigned whichVertex, const char* h1) {
+            // For links where we have little hope of recognising the
+            // underlying triangulation or manifold.
+
+            // Do a barycentric subdivision to turn any invalid edges
+            // into proper RP^2 ideal boundaries.
+            NTriangulation t(*(tri.getVertex(whichVertex)->getLink()));
+            t.barycentricSubdivision();
+            t.intelligentSimplify();
+
+            std::string ans = t.getHomologyH1().toString();
+
+            if (ans != h1) {
+                std::ostringstream msg;
+                msg << "Vertex " << whichVertex
+                    << " of triangulation " << tri.getPacketLabel()
+                    << " has first homology " << ans
+                    << " instead of the expected " << h1 << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void vertexLinks() {
             verifyLinksSpheres(empty, 0);
             verifyLinksSpheres(s4_id, 5);
@@ -700,6 +723,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             // uncommented again.
             verifyLinkCount(s4_doubleConeS3, 3);
             // verifyLink(s4_doubleConeS3, 0, "S3");
+            verifyLinkH1(s4_doubleConeS3, 0, "0");
             verifyLink(s4_doubleConeS3, 1, "S3");
             verifyLink(s4_doubleConeS3, 2, "S3");
             verifyLinksSpheres(rp4, 3);
@@ -719,18 +743,24 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyLinkCount(idealFigEightProduct, 3);
             // The next link should be (?) the suspension of a torus.
             verifyLink(idealFigEightProduct, 0, "<unrecognised triangulation>");
+            verifyLinkH1(idealFigEightProduct, 0, "2 Z");
             verifyLink(idealFigEightProduct, 1, "Figure eight knot complement");
             verifyLink(idealFigEightProduct, 2, "Figure eight knot complement");
             verifyLinkCount(mixedFigEightProduct, 2);
             // The next link should be (?) the cone of a torus.
             verifyLink(mixedFigEightProduct, 0, "<unrecognised triangulation>");
+            verifyLinkH1(mixedFigEightProduct, 0, "2 Z");
             verifyLink(mixedFigEightProduct, 1, "Figure eight knot complement");
             verifyLinkCount(pillow_twoCycle, 4);
             // Two of these vertex links are invalid 3-manifold
             // triangulations (specifically, with invalid edges).
+            // I *think* these are each triangulations of (RP^2 x I) with one
+            // RP^2 at an ideal vertex and one RP^2 inside an invalid edge.
             verifyLink(pillow_twoCycle, 0, "<unrecognised triangulation>");
+            verifyLinkH1(pillow_twoCycle, 0, "Z_2");
             verifyLink(pillow_twoCycle, 1, "S3");
             verifyLink(pillow_twoCycle, 2, "<unrecognised triangulation>");
+            verifyLinkH1(pillow_twoCycle, 2, "Z_2");
             verifyLink(pillow_twoCycle, 3, "S3");
             verifyLinkCount(pillow_threeCycle, 3);
             verifyLink(pillow_threeCycle, 0, "S3");
