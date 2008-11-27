@@ -645,17 +645,39 @@ class Dim4Triangulation : public NPacket {
          * will treat each cusp as a single vertex, and \e not as
          * a surface boundary component.
          *
-         * On the other hand, in a valid triangulation the link of each
-         * cusp is a closed compact 3-manifold, which means its Euler
-         * characteristic is zero.  Therefore, for a valid triangulation,
-         * this routine should give the Euler characteristic of the
-         * underlying manifold also.  This is in pleasant contrast to
-         * the situation for 3-manifolds (see NTriangulation::getEulerCharTri()
-         * and NTriangulation::getEulerCharManifold() for details).
+         * For a routine that handles cusps properly (i.e., treats them
+         * as 3-manifold boundary components when computing the Euler
+         * characteristic), see getEulerCharManifold() instead.
          *
          * @return the Euler characteristic of this triangulation.
          */
         long getEulerCharTri() const;
+
+        /**
+         * Returns the Euler characteristic of the corresponding compact
+         * manifold.
+         *
+         * Instead of simply calculating \a V-E+F-T+P, this routine also
+         * treats ideal vertices as 3-manifold boundary components (i.e.,
+         * effectively truncates them).
+         *
+         * For ideal triangulations, this routine therefore computes the
+         * proper Euler characteristic of the manifold (unlike
+         * getEulerCharTri(), which does not).
+         *
+         * For triangulations whose vertex links are all 3-spheres or
+         * 3-balls, this routine and getEulerCharTri() give identical results.
+         *
+         * This routine does \e not yet handle invalid triangulations
+         * correctly.  For this reason, this routine currently insists on
+         * a valid triangulation as a precondition.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return the Euler characteristic of the corresponding compact
+         * manifold.
+         */
+        long getEulerCharManifold() const;
 
         /**
          * Determines if this triangulation is valid.

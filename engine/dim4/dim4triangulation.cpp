@@ -30,6 +30,7 @@
 #include <iostream>
 #include <sstream>
 #include "dim4/dim4triangulation.h"
+#include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -168,6 +169,28 @@ void Dim4Triangulation::insertTriangulation(const Dim4Triangulation& X) {
     }
 
     gluingsHaveChanged();
+}
+
+long Dim4Triangulation::getEulerCharManifold() const {
+    // Begin with V - E + F - T + P.
+    // This call to getEulerCharTri() also ensures that the skeleton has
+    // been calculated.
+    long ans = getEulerCharTri();
+
+    // Truncate any ideal vertices.
+    if (ideal_) {
+        for (BoundaryComponentIterator it = boundaryComponents_.begin();
+                it != boundaryComponents_.end(); ++it)
+            if ((*it)->isIdeal()) {
+                // Because our 4-manifold triangulation is valid, all
+                // vertex links in the 3-manifold boundary must be
+                // spheres or discs.  We can therefore use V - E + F - T
+                // on this boundary component.
+                ans += (*it)->vertices_.front()->link_->getEulerCharTri() - 1;
+            }
+    }
+
+    return ans;
 }
 
 void Dim4Triangulation::insertConstruction(unsigned long nPentachora,
