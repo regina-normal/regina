@@ -405,11 +405,12 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         }
 
         void boundaryComponents() {
-            // TODO
+            // TODO: Include triangulations of boundaries
+            // TODO: hasBoundaryTetrahedra(), isClosed(), isIdeal()
         }
 
         void vertexLinks() {
-            // TODO
+            // TODO: Include triangulations of vertex links
         }
 
         void verifyEulerChar(const Dim4Triangulation& tri,
@@ -524,9 +525,6 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyFundGroup(idealFigEightProduct, "");
             verifyFundGroup(mixedFigEightProduct, "");
         }
-
-        // TODO: isClosed(), isIdeal(), hasBoundaryTetrahedra(),
-        // triangulations of vertex links and real boundary components
 };
 
 void addDim4Triangulation(CppUnit::TextUi::TestRunner& runner) {
