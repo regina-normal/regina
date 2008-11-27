@@ -538,6 +538,30 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
+        void verifyBoundaryH1(const Dim4Triangulation& tri,
+                unsigned whichBdry, const char* h1) {
+            // For boundaries where we have little hope of recognising the
+            // underlying triangulation or manifold.
+
+            // Do a barycentric subdivision to turn any invalid edges
+            // into proper RP^2 ideal boundaries.
+            NTriangulation t(
+                *(tri.getBoundaryComponent(whichBdry)->getTriangulation()));
+            t.barycentricSubdivision();
+            t.intelligentSimplify();
+
+            std::string ans = t.getHomologyH1().toString();
+
+            if (ans != h1) {
+                std::ostringstream msg;
+                msg << "Boundary component " << whichBdry
+                    << " of triangulation " << tri.getPacketLabel()
+                    << " has first homology " << ans
+                    << " instead of the expected " << h1 << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void boundaryComponents() {
             verifyBoundaryCount(empty, 0);
             verifyBoundaryCount(s4_id, 0);
@@ -562,6 +586,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             // suspension of a torus.  I think.
             verifyBoundaryTri(idealFigEightProduct, 0,
                 "<unrecognised triangulation>");
+            verifyBoundaryH1(idealFigEightProduct, 0, "2 Z");
             verifyBoundaryTri(idealFigEightProduct, 1,
                 "Figure eight knot complement");
             verifyBoundaryTri(idealFigEightProduct, 2,
@@ -577,8 +602,10 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             // one invalid edge (as opposed to two RP2 cusps).
             verifyBoundaryTri(pillow_twoCycle, 0,
                 "<unrecognised triangulation>", true);
+            verifyBoundaryH1(pillow_twoCycle, 0, "Z_2");
             verifyBoundaryTri(pillow_twoCycle, 1,
                 "<unrecognised triangulation>", true);
+            verifyBoundaryH1(pillow_twoCycle, 1, "Z_2");
             verifyBoundaryCount(pillow_threeCycle, 1);
             verifyBoundaryTri(pillow_threeCycle, 0, "L(3,1)");
             verifyBoundaryCount(pillow_fourCycle, 0);
