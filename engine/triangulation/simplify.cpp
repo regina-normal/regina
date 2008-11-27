@@ -502,19 +502,26 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
-    NPerm crossover;
-    if (vertex[0] == 0)
-        crossover = tet[0]->adjacentGluing(1);
-    else
-        crossover = tet[0]->adjacentGluing(0);
     NTetrahedron* top = tet[0]->adjacentTetrahedron(vertex[0]);
     NTetrahedron* bottom = tet[1]->adjacentTetrahedron(vertex[1]);
-    int topFace = tet[0]->adjacentFace(vertex[0]);
-    NPerm gluing = tet[1]->adjacentGluing(vertex[1]) *
-        crossover * top->adjacentGluing(topFace);
-    tet[0]->unjoin(vertex[0]);
-    tet[1]->unjoin(vertex[1]);
-    top->joinTo(topFace, bottom, gluing);
+
+    if (! top) {
+        tet[1]->unjoin(vertex[1]);
+    } else if (! bottom) {
+        tet[0]->unjoin(vertex[0]);
+    } else {
+        NPerm crossover;
+        if (vertex[0] == 0)
+            crossover = tet[0]->adjacentGluing(1);
+        else
+            crossover = tet[0]->adjacentGluing(0);
+        int topFace = tet[0]->adjacentFace(vertex[0]);
+        NPerm gluing = tet[1]->adjacentGluing(vertex[1]) *
+            crossover * top->adjacentGluing(topFace);
+        tet[0]->unjoin(vertex[0]);
+        tet[1]->unjoin(vertex[1]);
+        top->joinTo(topFace, bottom, gluing);
+    }
 
     // Finally remove and dispose of the tetrahedra.
     delete removeTetrahedron(tet[0]);
@@ -588,17 +595,25 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
 
     // First glue together the two faces that will be flattened.
     NTetrahedron* adjTet[2];
-    int adjFace[2];
-    for (i=0; i<2; i++) {
-        adjTet[i] = top->adjacentTetrahedron(topGlued[i]);
-        adjFace[i] = top->adjacentFace(topGlued[i]);
+    adjTet[0] = top->adjacentTetrahedron(topGlued[0]);
+    adjTet[1] = top->adjacentTetrahedron(topGlued[1]);
+
+    if (! adjTet[0])
+        top->unjoin(topGlued[1]);
+    else if (! adjTet[1])
+        top->unjoin(topGlued[0]);
+    else {
+        int adjFace[2];
+        adjFace[0] = top->adjacentFace(topGlued[0]);
+        adjFace[1] = top->adjacentFace(topGlued[1]);
+
+        NPerm gluing = top->adjacentGluing(topGlued[1])
+            * NPerm(topGlued[0], topGlued[1])
+            * adjTet[0]->adjacentGluing(adjFace[0]);
+        top->unjoin(topGlued[0]);
+        top->unjoin(topGlued[1]);
+        adjTet[0]->joinTo(adjFace[0], adjTet[1], gluing);
     }
-    NPerm gluing = top->adjacentGluing(topGlued[1])
-        * NPerm(topGlued[0], topGlued[1])
-        * adjTet[0]->adjacentGluing(adjFace[0]);
-    top->unjoin(topGlued[0]);
-    top->unjoin(topGlued[1]);
-    adjTet[0]->joinTo(adjFace[0], adjTet[1], gluing);
 
     // Now make the new tetrahedron and glue it to itself.
     NTetrahedron* newTet = new NTetrahedron();
@@ -621,16 +636,22 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
         int topFace = bottomToTop[bottomFace];
         NTetrahedron* adjTop = top->adjacentTetrahedron(topFace);
         NTetrahedron* adjBottom = oldTet->adjacentTetrahedron(bottomFace);
+
         NPerm bottomFacePerm = NPerm(oldVertices[edgeEnd],
             oldVertices[otherEdgeEnd], oldVertices[2], oldVertices[3]);
-        NPerm bottomGluing = oldTet->adjacentGluing(bottomFace) *
-            bottomFacePerm;
-        NPerm topGluing = top->adjacentGluing(topFace) *
-            bottomToTop * bottomFacePerm * NPerm(0,1);
-        top->unjoin(topFace);
-        oldTet->unjoin(bottomFace);
-        newTet->joinTo(0, adjTop, topGluing);
-        newTet->joinTo(1, adjBottom, bottomGluing);
+
+        if (adjTop) {
+            NPerm topGluing = top->adjacentGluing(topFace) *
+                bottomToTop * bottomFacePerm * NPerm(0,1);
+            top->unjoin(topFace);
+            newTet->joinTo(0, adjTop, topGluing);
+        }
+        if (adjBottom) {
+            NPerm bottomGluing = oldTet->adjacentGluing(bottomFace) *
+                bottomFacePerm;
+            oldTet->unjoin(bottomFace);
+            newTet->joinTo(1, adjBottom, bottomGluing);
+        }
     }
 
     // Finally remove and dispose of the unwanted tetrahedra.
