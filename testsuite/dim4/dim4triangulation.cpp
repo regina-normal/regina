@@ -491,8 +491,38 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyHomologyH1(mixedFigEightProduct, "Z");
         }
 
+        void verifyFundGroup(const Dim4Triangulation& tri, const char* group) {
+            std::string ans = tri.getFundamentalGroup().recogniseGroup();
+            if (ans != group) {
+                std::string showAns = ans;
+                if (showAns.empty())
+                    showAns = "<unrecognised>";
+
+                std::string showGroup = group;
+                if (showGroup.empty())
+                    showGroup = "<unrecognised>";
+
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.getPacketLabel()
+                    << " has fundamental group = " << showAns
+                    << " instead of the expected " << showGroup << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void fundGroup() {
-            // TODO
+            verifyFundGroup(empty, "0");
+            verifyFundGroup(s4_id, "0");
+            verifyFundGroup(s4_doubleConeS3, "0");
+            verifyFundGroup(rp4, "Z_2");
+            verifyFundGroup(ball_singlePent, "0");
+            verifyFundGroup(ball_foldedPent, "0");
+            verifyFundGroup(ball_singleConeS3, "0");
+            verifyFundGroup(ball_layerAndFold, "0");
+            verifyFundGroup(idealPoincareProduct, "");
+            verifyFundGroup(mixedPoincareProduct, "");
+            verifyFundGroup(idealFigEightProduct, "");
+            verifyFundGroup(mixedFigEightProduct, "");
         }
 
         // TODO: isClosed(), isIdeal(), hasBoundaryTetrahedra(),
