@@ -954,7 +954,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * For triangulations whose vertex links are all spheres or discs,
          * this routine and getEulerCharTri() give identical results.
          *
-         * @return the Euler characteristic of this triangulation.
+         * @return the Euler characteristic of the corresponding compact
+         * manifold.
          */
         long getEulerCharManifold() const;
 
