@@ -2032,6 +2032,17 @@ class NTriangulationTest : public CppUnit::TestFixture {
             }
         }
 
+        void verifyNoSimplification(const NTriangulation& tri,
+                const char* name) {
+            NTriangulation t(tri);
+            if (t.intelligentSimplify()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " simplifies but should not.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void simplification() {
             verifySimplification(s3_large, 1, "C(1)");
             verifySimplification(rp3_large, 2, "L(2,1)");
@@ -2042,6 +2053,41 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifySimplification(ball_large_snapped, 1, "B3 (3-vtx)");
             verifySimplification(fig8_bary, 2, "SnapPea m004");
             verifySimplification(singleTet_bary, 1, "B3 (4-vtx)");
+
+            // Some triangulations that should not simplify.
+            NTriangulation* tri;
+            NTetrahedron* tet[4];
+
+            // A triangulation with two degree two projective plane cusps
+            // (that should not be simplified away):
+            tri = new NTriangulation();
+            tri->insertRehydration("cabbbbxww");
+            if (tri->getNumberOfTetrahedra() != 2)
+                CPPUNIT_FAIL("Custom two-cusped triangulation failed "
+                    "to rehydrate.");
+            verifyNoSimplification(*tri, "Custom two-cusped triangluation");
+            delete tri;
+
+            // A triangulation with an invalid edge that should not be
+            // simplified away:
+            tet[0] = new NTetrahedron();
+            tet[1] = new NTetrahedron();
+            tet[2] = new NTetrahedron();
+            tet[3] = new NTetrahedron();
+            tet[0]->joinTo(3, tet[2], NPerm());
+            tet[0]->joinTo(2, tet[1], NPerm(2, 3));
+            tet[3]->joinTo(3, tet[2], NPerm(2, 3));
+            tet[3]->joinTo(2, tet[1], NPerm(1, 0));
+            tri = new NTriangulation();
+            tri->addTetrahedron(tet[0]);
+            tri->addTetrahedron(tet[1]);
+            tri->addTetrahedron(tet[2]);
+            tri->addTetrahedron(tet[3]);
+            if (tri->isValid())
+                CPPUNIT_FAIL("Custom invalid triangulation was not built "
+                    "properly.");
+            verifyNoSimplification(*tri, "Custom invalid triangluation");
+            delete tri;
         }
 
         void propertyUpdates() {
