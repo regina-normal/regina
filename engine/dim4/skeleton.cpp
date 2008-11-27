@@ -101,6 +101,11 @@ void Dim4Triangulation::calculateSkeleton() const {
         // - valid_ and Dim4Edge::invalid_ in the case of bad edge links
         // - ideal_, Dim4Vertex::ideal_ and Dim4Component::ideal_
 
+    // Recall that for 4-manifolds we restrict "ideal" to only include
+    // valid triangulations.
+    if (! valid_)
+        ideal_ = false;
+
     calculatedSkeleton_ = true;
 }
 
