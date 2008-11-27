@@ -45,6 +45,7 @@ using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NPerm5;
+using regina::NStandardTriangulation;
 using regina::NTriangulation;
 
 class Dim4TriangulationTest : public CppUnit::TestFixture {
@@ -512,8 +513,8 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                 t.intelligentSimplify();
             }
 
-            regina::NStandardTriangulation* std =
-                regina::NStandardTriangulation::isStandardTriangulation(&t);
+            NStandardTriangulation* std =
+                NStandardTriangulation::isStandardTriangulation(&t);
             if (! std)
                 ans = "<unrecognised triangulation>";
             else {
@@ -583,25 +584,159 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBoundaryCount(pillow_fourCycle, 0);
         }
 
+        void verifyLinkCount(const Dim4Triangulation& tri, unsigned nVert) {
+            if (tri.getNumberOfVertices() != nVert) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.getPacketLabel()
+                    << " has " << tri.getNumberOfVertices()
+                    << " vertices, not the expected " << nVert << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyLinksSpheres(const Dim4Triangulation& tri, unsigned nVert) {
+            verifyLinkCount(tri, nVert);
+
+            for (unsigned i = 0; i < nVert; ++i) {
+                NTriangulation t(*(tri.getVertex(i)->getLink()));
+                t.intelligentSimplify();
+
+                std::string link;
+                NStandardTriangulation* std =
+                    NStandardTriangulation::isStandardTriangulation(&t);
+                if (! std)
+                    link = "<unrecognised triangulation>";
+                else {
+                    regina::NManifold* mfd = std->getManifold();
+                    if (! mfd)
+                        link = "<unrecognised manifold>";
+                    else {
+                        link = mfd->getName();
+                        delete mfd;
+                    }
+                    delete std;
+                }
+
+                if (link != "S3") {
+                    std::ostringstream msg;
+                    msg << "Vertex " << i << " of triangulation "
+                        << tri.getPacketLabel() << " simplifies to "
+                        << link << ", not S3 as expected.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void verifyLinksBalls(const Dim4Triangulation& tri, unsigned nVert) {
+            verifyLinkCount(tri, nVert);
+
+            for (unsigned i = 0; i < nVert; ++i) {
+                NTriangulation t(*(tri.getVertex(i)->getLink()));
+                t.intelligentSimplify();
+
+                std::string link;
+                NStandardTriangulation* std =
+                    NStandardTriangulation::isStandardTriangulation(&t);
+                if (! std)
+                    link = "<unrecognised triangulation>";
+                else {
+                    regina::NManifold* mfd = std->getManifold();
+                    if (! mfd)
+                        link = "<unrecognised manifold>";
+                    else {
+                        link = mfd->getName();
+                        delete mfd;
+                    }
+                    delete std;
+                }
+
+                if (link != "B3") {
+                    std::ostringstream msg;
+                    msg << "Vertex " << i << " of triangulation "
+                        << tri.getPacketLabel() << " simplifies to "
+                        << link << ", not B3 as expected.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void verifyLink(const Dim4Triangulation& tri,
+                unsigned whichVertex, const char* manifold) {
+            std::string link;
+
+            NTriangulation t(*(tri.getVertex(whichVertex)->getLink()));
+            t.intelligentSimplify();
+
+            NStandardTriangulation* std =
+                NStandardTriangulation::isStandardTriangulation(&t);
+            if (! std)
+                link = "<unrecognised triangulation>";
+            else {
+                regina::NManifold* mfd = std->getManifold();
+                if (! mfd)
+                    link = "<unrecognised manifold>";
+                else {
+                    link = mfd->getName();
+                    delete mfd;
+                }
+                delete std;
+            }
+
+            if (link != manifold) {
+                std::ostringstream msg;
+                msg << "Vertex " << whichVertex
+                    << " of triangulation " << tri.getPacketLabel()
+                    << " simplifies to " << link
+                    << " instead of the expected " << manifold << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void vertexLinks() {
-            // TODO: Triangulations of vertex links
-            /*
             verifyLinksSpheres(empty, 0);
             verifyLinksSpheres(s4_id, 5);
-            verifyLinksSpheres(s4_doubleConeS3, 4);
+            // TODO: Link 0 is a 3-sphere but does not yet simplify to
+            // one.  Once crushEdge() is running properly, this can be
+            // uncommented again.
+            verifyLinkCount(s4_doubleConeS3, 3);
+            // verifyLink(s4_doubleConeS3, 0, "S3");
+            verifyLink(s4_doubleConeS3, 1, "S3");
+            verifyLink(s4_doubleConeS3, 2, "S3");
             verifyLinksSpheres(rp4, 3);
             verifyLinksBalls(ball_singlePent, 5);
             verifyLinksBalls(ball_foldedPent, 4);
-            // verifyLinksBalls(ball_singleConeS3, 2);
-            // verifyLinksBalls(ball_layerAndFold);
-            // verifyBoundary(idealPoincareProduct, false, 2);
-            // verifyBoundary(mixedPoincareProduct, true, 1);
-            // verifyBoundary(idealFigEightProduct, false, 0, true, false);
-            // verifyBoundary(mixedFigEightProduct, true, 0, true, false);
-            // verifyBoundary(pillow_twoCycle, false, 0, true, false);
-            // verifyBoundary(pillow_threeCycle, false, 1, false, false);
-            // verifyBoundary(pillow_fourCycle, false, 0, false, false);
-            */
+            verifyLinkCount(ball_singleConeS3, 2);
+            verifyLink(ball_singleConeS3, 0, "B3");
+            verifyLink(ball_singleConeS3, 1, "S3");
+            verifyLinksBalls(ball_layerAndFold, 4);
+            verifyLinkCount(idealPoincareProduct, 3);
+            verifyLink(idealPoincareProduct, 0, "S3");
+            verifyLink(idealPoincareProduct, 1, "S3/P120");
+            verifyLink(idealPoincareProduct, 2, "S3/P120");
+            verifyLinkCount(mixedPoincareProduct, 2);
+            verifyLink(mixedPoincareProduct, 0, "B3");
+            verifyLink(mixedPoincareProduct, 1, "S3/P120");
+            verifyLinkCount(idealFigEightProduct, 3);
+            // The next link should be (?) the suspension of a torus.
+            verifyLink(idealFigEightProduct, 0, "<unrecognised triangulation>");
+            verifyLink(idealFigEightProduct, 1, "Figure eight knot complement");
+            verifyLink(idealFigEightProduct, 2, "Figure eight knot complement");
+            verifyLinkCount(mixedFigEightProduct, 2);
+            // The next link should be (?) the cone of a torus.
+            verifyLink(mixedFigEightProduct, 0, "<unrecognised triangulation>");
+            verifyLink(mixedFigEightProduct, 1, "Figure eight knot complement");
+            verifyLinkCount(pillow_twoCycle, 4);
+            // Two of these vertex links are invalid 3-manifold
+            // triangulations (specifically, with invalid edges).
+            verifyLink(pillow_twoCycle, 0, "<unrecognised triangulation>");
+            verifyLink(pillow_twoCycle, 1, "S3");
+            verifyLink(pillow_twoCycle, 2, "<unrecognised triangulation>");
+            verifyLink(pillow_twoCycle, 3, "S3");
+            verifyLinkCount(pillow_threeCycle, 3);
+            verifyLink(pillow_threeCycle, 0, "S3");
+            verifyLink(pillow_threeCycle, 1, "L(3,1)");
+            verifyLink(pillow_threeCycle, 2, "S3");
+            verifyLinksSpheres(pillow_fourCycle, 2);
         }
 
         void verifyEulerChar(const Dim4Triangulation& tri,
