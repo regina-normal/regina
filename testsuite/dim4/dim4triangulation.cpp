@@ -82,6 +82,10 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             /**< A single pentachoron with two facets folded together. */
         Dim4Triangulation ball_singleConeS3;
             /**< A single cone over the 3-sphere. */
+        Dim4Triangulation ball_layerAndFold;
+            /**< Layer one pentachoron onto another over a single edge.
+                 Then fold together the two remaining facets of one of the
+                 pentachora. */
 
         // Ideal orientable:
         Dim4Triangulation idealPoincareProduct;
@@ -177,6 +181,16 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             p[0]->joinTo(2, p[0], NPerm5(2, 4));
             ball_foldedPent.addPentachoron(p[0]);
             ball_foldedPent.setPacketLabel("Folded pentachoron");
+
+            p[0] = new Dim4Pentachoron();
+            p[1] = new Dim4Pentachoron();
+            p[0]->joinTo(0, p[1], NPerm5());
+            p[0]->joinTo(1, p[1], NPerm5());
+            p[0]->joinTo(2, p[1], NPerm5());
+            p[0]->joinTo(3, p[0], NPerm5(3, 4));
+            ball_layerAndFold.addPentachoron(p[0]);
+            ball_layerAndFold.addPentachoron(p[1]);
+            ball_layerAndFold.setPacketLabel("Layered and folded ball");
 
             p[0] = new Dim4Pentachoron();
             p[1] = new Dim4Pentachoron();
@@ -325,6 +339,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyValid(ball_singlePent);
             verifyValid(ball_foldedPent);
             verifyValid(ball_singleConeS3);
+            verifyValid(ball_layerAndFold);
             verifyValid(idealPoincareProduct);
             verifyValid(mixedPoincareProduct);
             verifyInvalid(idealFigEightProduct, 3, 2, 2, 0, 0);
@@ -348,6 +363,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyConnected(ball_singlePent);
             verifyConnected(ball_foldedPent);
             verifyConnected(ball_singleConeS3);
+            verifyConnected(ball_layerAndFold);
             verifyConnected(idealPoincareProduct);
             verifyConnected(mixedPoincareProduct);
             verifyConnected(idealFigEightProduct);
@@ -378,6 +394,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyOrientable(ball_singlePent);
             verifyOrientable(ball_foldedPent);
             verifyOrientable(ball_singleConeS3);
+            verifyOrientable(ball_layerAndFold);
             verifyOrientable(idealPoincareProduct);
             verifyOrientable(mixedPoincareProduct);
             verifyOrientable(idealFigEightProduct);
@@ -418,6 +435,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyHomologyH1(ball_singlePent, "0");
             verifyHomologyH1(ball_foldedPent, "0");
             verifyHomologyH1(ball_singleConeS3, "0");
+            verifyHomologyH1(ball_layerAndFold, "0");
             verifyHomologyH1(idealPoincareProduct, "0");
             verifyHomologyH1(mixedPoincareProduct, "0");
             verifyHomologyH1(idealFigEightProduct, "Z");
