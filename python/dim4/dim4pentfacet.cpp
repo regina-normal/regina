@@ -26,29 +26,40 @@
 
 /* end stub */
 
-void addDim4BoundaryComponent();
-void addDim4Component();
-void addDim4Edge();
-void addDim4ExampleTriangulation();
-void addDim4Face();
-void addDim4Pentachoron();
-void addDim4PentFacet();
-void addDim4Tetrahedron();
-void addDim4Triangulation();
-void addDim4Vertex();
-void addNPerm5();
+#include "dim4/dim4pentfacet.h"
+#include <boost/python.hpp>
 
-void addDim4() {
-    addDim4BoundaryComponent();
-    addDim4Component();
-    addDim4Edge();
-    addDim4ExampleTriangulation();
-    addDim4Face();
-    addDim4Pentachoron();
-    addDim4PentFacet();
-    addDim4Tetrahedron();
-    addDim4Triangulation();
-    addDim4Vertex();
-    addNPerm5();
+using namespace boost::python;
+using regina::Dim4PentFacet;
+
+namespace {
+    Dim4PentFacet pentfacet_inc_operator(Dim4PentFacet& p) {
+        return p++;
+    }
+
+    Dim4PentFacet pentfacet_dec_operator(Dim4PentFacet& p) {
+        return p--;
+    }
+}
+
+void addDim4PentFacet() {
+    class_<Dim4PentFacet>("Dim4PentFacet")
+        .def(init<int, int>())
+        .def(init<const Dim4PentFacet&>())
+        .def_readwrite("pent", &Dim4PentFacet::pent)
+        .def_readwrite("facet", &Dim4PentFacet::facet)
+        .def("isBoundary", &Dim4PentFacet::isBoundary)
+        .def("isBeforeStart", &Dim4PentFacet::isBeforeStart)
+        .def("isPastEnd", &Dim4PentFacet::isPastEnd)
+        .def("setFirst", &Dim4PentFacet::setFirst)
+        .def("setBoundary", &Dim4PentFacet::setBoundary)
+        .def("setBeforeStart", &Dim4PentFacet::setBeforeStart)
+        .def("setPastEnd", &Dim4PentFacet::setPastEnd)
+        .def("inc", pentfacet_inc_operator)
+        .def("dec", pentfacet_dec_operator)
+        .def(self == self)
+        .def(self < self)
+        .def(self <= self)
+    ;
 }
 
