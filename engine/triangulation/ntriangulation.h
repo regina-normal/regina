@@ -1460,7 +1460,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be invalid.
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
@@ -1489,7 +1491,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be invalid.
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a f)
+         * can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
@@ -1523,7 +1527,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be invalid.
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
@@ -1575,7 +1581,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be invalid.
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
@@ -1615,7 +1623,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be invalid.
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a v)
+         * can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
@@ -1668,7 +1678,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be invalid.
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
@@ -1714,7 +1726,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be invalid.
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a f)
+         * can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
@@ -1755,7 +1769,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be invalid.
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
@@ -1784,7 +1799,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be invalid.
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
