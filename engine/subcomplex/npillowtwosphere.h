@@ -104,32 +104,6 @@ class NPillowTwoSphere : public ShareableObject {
         NPerm getFaceMapping() const;
 
         /**
-         * Cuts along the 2-sphere and fills the two new boundary components
-         * with 3-balls.  The number of tetrahedra in the triangulation
-         * will not change.
-         *
-         * Note that if this 2-sphere is separating, this routine will
-         * effectively split the corresponding connected sum into its
-         * two original terms.
-         *
-         * \todo \proburgent This routine currently does nothing!
-         */
-        void reduceTriangulation() const;
-        /**
-         * Makes a clone of this triangulation and reduces the clone as
-         * described by reduceTriangulation().  The original
-         * triangulation containing this 2-sphere will not be modified.
-         * The clone will have no parent packet.
-         *
-         * \todo \proburgent This routine currently does nothing!
-         *
-         * @param original the triangulation in which this 2-sphere occurs.
-         * @return the newly created reduced triangulation.
-         */
-        NTriangulation* getReducedTriangulation(const NTriangulation* original)
-            const;
-
-        /**
          * Determines if the two given faces together form a pillow
          * 2-sphere.
          *

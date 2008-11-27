@@ -56,13 +56,13 @@ class NTriangulation;
 
 /**
  * A routine used to determine whether a particular triangulation should be
- * included in a census.  Such routines are used by NCensus::formCensus()
- * and NCensus::findAllCompletions().
+ * included in a census.  Routines of this type are used by
+ * NCensus::formCensus().
  *
  * The first parameter passed should be a triangulation currently under
  * consideration.
  * The second parameter may contain arbitrary data as passed to
- * NCensus::formCensus() or NCensus::findAllCompletions().
+ * NCensus::formCensus().
  *
  * The return value should be \c true if the triangulation passed should
  * be included in the census, or \c false otherwise.
@@ -359,92 +359,6 @@ class NCensus {
          * triangulation has not been determined.
          */
         static bool mightBeMinimal(NTriangulation* tri, void* ignore = 0);
-
-        /**
-         * Fills the given packet with all completions of the given base
-         * triangulation.  The base triangulation should have boundary
-         * faces; a completion is simply a new triangulation formed from
-         * the base triangulation by gluing all of the boundary faces to
-         * each other in some fashion (a completion will have no
-         * boundary faces at all).
-         *
-         * Each completion of the given base triangulation will appear
-         * as a child of the given parent packet.
-         *
-         * This routine currently enumerates \e all completions,
-         * regardless of combinatorial isomorphism.  This behaviour may
-         * change when this routine become more mature.
-         *
-         * The set of completions can be optionally restricted to only
-         * include triangulations satisfying further constraints (such
-         * as orientability and finiteness); see the individual
-         * parameter descriptions for further details.  In particular,
-         * parameter \a sieve can be used to impose artibrary
-         * restrictions that are not hard-coded into this class.
-         *
-         * Note that if constraints may be imposed using the hard-coded
-         * parameters (such as orientability and finiteness), it is
-         * generally better to do this than to use the arbitrary
-         * constraint parameter \a sieve.  Hard-coded parameters will be
-         * tested earlier, and some (such as orientability) can be
-         * incorporated directly into the completion algorithm to give a
-         * vast performance increase.
-         *
-         * Only valid triangulations will be produced; see
-         * NTriangulation::isValid() for further details.
-         *
-         * Note that this routine should only be used if the set of
-         * completions is small enough to avoid any memory disasters.
-         *
-         * If a progress manager is passed, the calculation will run in a new
-         * thread and this routine will return immediately.  Otherwise
-         * the calculation will run in the current thread and this
-         * routine will only return once the census is complete.
-         *
-         * \todo \proburgent This routine currently does nothing!
-         *
-         * \ifacespython Parameters \a sieve, \a sieveArgs and \a manager
-         * are not present (and will be treated as 0).
-         *
-         * @param parent the packet beneath which the completions that
-         * are constructed will be placed.
-         * @param base the base triangulation from which completions
-         * will be generated.
-         * @param finiteness determines whether to include finite and/or ideal
-         * triangulations.  The set should contain \c true if finite (non-ideal)
-         * triangulations are to be included, and should contain \c false if
-         * ideal triangulations are to be included.
-         * @param orientability determines whether to include orientable
-         * and/or non-orientable triangulations.  The set should contain \c true
-         * if orientable triangulations are to be included, and should contain
-         * \c false if non-orientable triangulations are to be included.
-         * @param sieve an additional constraint function that may be
-         * used to exclude certain triangulations from the set of results.
-         * If this parameter is non-zero, each triangulation produced (after
-         * passing all other criteria) will be passed through this
-         * function.  If this function returns \c true then the triangulation
-         * will be included in the set of results; otherwise it will not.
-         * When this function is called, the first (triangulation)
-         * argument will be a completion under consideration for
-         * inclusion in the results.  The second argument will be
-         * parameter \a sieveArgs as passed to findAllCompletions().
-         * Parameter \a sieve may be passed as \c null (in which case no
-         * additional constraint function will be used).
-         * @param sieveArgs the pointer to pass as the final parameter
-         * for the function \a sieve which will be called upon each
-         * triangulation found.  If \a sieve is \c null then \a sieveArgs
-         * will be ignored.
-         * @param manager a progress manager via which progess will be reported,
-         * or 0 if no progress reporting is required.  If non-zero,
-         * \a manager must point to a progress manager for which
-         * NProgressManager::isStarted() is still \c false.
-         * @return the total number of completions produced, or 0 if
-         * a progress manager was passed.
-         */
-        static unsigned long findAllCompletions(NPacket* parent,
-            NTriangulation* base, NBoolSet finiteness,
-            NBoolSet orientability, AcceptTriangulation sieve = 0,
-            void* sieveArgs = 0, NProgressManager* manager = 0);
 
     private:
         /**

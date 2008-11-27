@@ -63,7 +63,7 @@ NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
         }
     if (joinTo0 == -1)
         return 0;
-    
+
     // Now make sure the edges all match up and with the correct
     // permutations.
     NPerm perm = face2->getEdgeMapping(joinTo0) *
@@ -75,21 +75,13 @@ NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
                 perm * face1->getEdgeMapping(i)))
             return 0;
     }
-    
+
     // We have an answer.
     NPillowTwoSphere* ans = new NPillowTwoSphere();
     ans->face[0] = face1;
     ans->face[1] = face2;
     ans->faceMapping = perm;
     return ans;
-}
-
-void NPillowTwoSphere::reduceTriangulation() const {
-}
-
-NTriangulation* NPillowTwoSphere::getReducedTriangulation(
-        const NTriangulation* /* original */) const {
-    return 0;
 }
 
 } // namespace regina

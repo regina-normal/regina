@@ -67,20 +67,12 @@ NSnappedTwoSphere* NSnappedTwoSphere::formsSnappedTwoSphere(
     if (ball1->getTetrahedron()->getEdge(ball1->getEquatorEdge()) !=
             ball2->getTetrahedron()->getEdge(ball2->getEquatorEdge()))
         return 0;
-    
+
     // This is it.
     NSnappedTwoSphere* ans = new NSnappedTwoSphere();
     ans->ball[0] = ball1->clone();
     ans->ball[1] = ball2->clone();
     return ans;
-}
-
-void NSnappedTwoSphere::reduceTriangulation() const {
-}
-
-NTriangulation* NSnappedTwoSphere::getReducedTriangulation(
-        const NTriangulation* /* original */) const {
-    return 0;
 }
 
 } // namespace regina

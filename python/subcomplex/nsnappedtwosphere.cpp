@@ -52,10 +52,6 @@ void addNSnappedTwoSphere() {
             return_value_policy<manage_new_object>())
         .def("getSnappedBall", &NSnappedTwoSphere::getSnappedBall,
             return_internal_reference<>())
-        .def("reduceTriangulation", &NSnappedTwoSphere::reduceTriangulation)
-        .def("getReducedTriangulation",
-            &NSnappedTwoSphere::getReducedTriangulation,
-            return_value_policy<manage_new_object>())
         .def("formsSnappedTwoSphere", formsStructure_tets,
             return_value_policy<manage_new_object>())
         .def("formsSnappedTwoSphere", formsStructure_balls,
