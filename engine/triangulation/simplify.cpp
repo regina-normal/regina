@@ -55,7 +55,7 @@ namespace {
 bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
     if (check) {
-        if (e->isBoundary())
+        if (e->isBoundary() || ! e->isValid())
             return false;
         if (embs.size() != 3)
             return false;
@@ -309,7 +309,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
         bool perform) {
     const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
     if (check) {
-        if (e->isBoundary())
+        if (e->isBoundary() || ! e->isValid())
             return false;
         if (embs.size() != 4)
             return false;
@@ -353,7 +353,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
 
 bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     if (check) {
-        if (e->isBoundary())
+        if (e->isBoundary() || ! e->isValid())
             return false;
         if (e->getNumberOfEmbeddings() != 2)
             return false;
@@ -451,7 +451,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
 
 bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     if (check) {
-        if (v->isBoundary())
+        if (v->getLink() != NVertex::SPHERE)
             return false;
         if (v->getNumberOfEmbeddings() != 2)
             return false;
@@ -536,7 +536,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
         bool check, bool perform) {
     // edgeEnd is the end opposite where the action is.
     if (check) {
-        if (e->isBoundary())
+        if (e->isBoundary() || ! e->isValid())
             return false;
         if (e->getNumberOfEmbeddings() != 1)
             return false;
@@ -693,6 +693,8 @@ bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
             return false;
         if (tet->getVertex(vertices[fVertex])->getLink() != NVertex::DISC)
             return false;
+        if (! f->getEdge(fVertex)->isValid())
+            return false;
     }
 
     if (! perform)
@@ -717,23 +719,27 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
             calculateSkeleton();
 
         int nBdry = 0;
-        int face;
+        int i;
         int bdry[4];
-        for (face=0; face<4; face++)
-            if (t->getFace(face)->isBoundary()) {
-                bdry[nBdry] = face;
-                nBdry++;
-            }
+        for (i=0; i<4; i++)
+            if (t->getFace(i)->isBoundary())
+                bdry[nBdry++] = i;
         if (nBdry < 1 || nBdry > 3)
             return false;
         if (nBdry == 1) {
             if (t->getVertex(bdry[0])->isBoundary())
                 return false;
+            for (i = 0; i < 4; ++i)
+                if (i != bdry[0])
+                    if (! t->getEdge(NEdge::edgeNumber[bdry[0]][i])->isValid())
+                        return false;
         } else if (nBdry == 2) {
-            int edge = NEdge::edgeNumber[bdry[0]][bdry[1]];
-            if (t->getEdge(edge)->isBoundary())
+            i = NEdge::edgeNumber[bdry[0]][bdry[1]];
+            if (t->getEdge(i)->isBoundary())
                 return false;
-            if (t->adjacentTetrahedron(NEdge::edgeVertex[5 - edge][0]) == t)
+            if (! t->getEdge(i)->isValid())
+                return false;
+            if (t->adjacentTetrahedron(NEdge::edgeVertex[5 - i][0]) == t)
                 return false;
         }
     }
