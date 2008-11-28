@@ -75,6 +75,8 @@ Version 4.6  [ (under development) ]
               this routine are now correct and not overly conservative, which
               makes this routine both useful and safe to use.  The big warning
               is now gone from the collapseEdge() documentation as a result.
+            - Routine simplifyToLocalMinimum() now collapses edges, which
+              makes a big difference for multiple-vertex triangulations.
             - Removed crushMaximalForest(), which (as the documentation has
               pointed out since the first release) has never worked properly,
               and which is therefore never actually used.

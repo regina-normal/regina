@@ -1421,9 +1421,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \warning The specific behaviour of this routine is
          * very likely to change between releases.
          *
-         * \todo \proburgent This routine currently does not crush a
-         * maximal forest!
-         *
          * @param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
          * whether simplifications are possible (defaults to \c true).

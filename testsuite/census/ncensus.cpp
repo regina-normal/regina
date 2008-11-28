@@ -75,7 +75,7 @@ class NCensusTest : public CppUnit::TestFixture {
         }
 
         void rawCountsPrimeMinimalOr() {
-            unsigned nOrientable[] = { 1, 4, 12, 7, 17, 50 };
+            unsigned nOrientable[] = { 1, 4, 11, 7, 17, 50 };
             rawCountsCompare(1, 4, nOrientable, "closed orbl prime minimal",
                 NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sFalse, 0,
                 NCensus::PURGE_NON_MINIMAL_PRIME, NCensus::mightBeMinimal);

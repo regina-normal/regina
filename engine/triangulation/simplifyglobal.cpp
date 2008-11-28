@@ -161,6 +161,24 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 calculateSkeleton();
             }
 
+            // Crush edges if we can.
+            if (vertices.size() > components.size() &&
+                    vertices.size() > boundaryComponents.size()) {
+                for (eit = edges.begin(); eit != edges.end(); ++eit) {
+                    edge = *eit;
+                    if (collapseEdge(edge, true, perform)) {
+                        changedNow = changed = true;
+                        break;
+                    }
+                }
+                if (changedNow) {
+                    if (perform)
+                        continue;
+                    else
+                        return true;
+                }
+            }
+
             // Look for internal simplifications.
             for (eit = edges.begin(); eit != edges.end(); eit++) {
                 edge = *eit;
