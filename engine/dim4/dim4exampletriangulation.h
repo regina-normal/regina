@@ -42,7 +42,7 @@ class Dim4Triangulation;
 class NTriangulation;
 
 /**
- * \weakgroup triangulation
+ * \weakgroup dim4
  * @{
  */
 
