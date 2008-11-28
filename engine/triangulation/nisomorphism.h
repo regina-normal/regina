@@ -114,6 +114,9 @@ class NIsomorphism : public ShareableObject {
          * Determines the image of the given source tetrahedron under
          * this isomorphism.
          *
+         * \ifacespython Not present, though the read-only version of
+         * this routine is.
+         *
          * @param sourceTet the index of the source tetrahedron; this must
          * be between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive.
          * @return a reference to the index of the destination tetrahedron
