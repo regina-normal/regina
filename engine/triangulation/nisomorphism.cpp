@@ -66,7 +66,6 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
     for (t = 0; t < nTetrahedra; t++)
         tet[t] = new NTetrahedron();
 
-    // From here on in, if something goes wrong we goto bail.
     const NTetrahedron *myTet, *adjTet;
     unsigned long adjTetIndex;
     NPerm gluingPerm;
