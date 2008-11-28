@@ -80,6 +80,9 @@ Version 4.6  [ (under development) ]
               is now gone from the collapseEdge() documentation as a result.
             - Routine simplifyToLocalMinimum() now collapses edges, which
               makes a big difference for multiple-vertex triangulations.
+              In turn, routine intelligentSimplify() now uses book opening
+              moves to create new opportunities for collapsing edges, which
+              makes a big difference for bounded triangulations.
             - Removed crushMaximalForest(), which (as the documentation has
               pointed out since the first release) has never worked properly,
               and which is therefore never actually used.
@@ -109,6 +112,8 @@ Version 4.6  [ (under development) ]
             - Deprecated; users are advised to switch to the new arrays
               NEdge::edgeNumber and NEdge::edgeVertex instead.
     USER INTERFACE:
+        - The elementary moves dialog now has an additional "Collapse edge"
+          option.
         - Items in the triangulation composition list can now be copied
           into the clipboard via the right mouse button.  Amongst other
           things, this makes extracting the dehydration string much simpler.
