@@ -745,14 +745,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         void vertexLinks() {
             verifyLinksSpheres(empty, 0);
             verifyLinksSpheres(s4_id, 5);
-            // TODO: Link 0 is a 3-sphere but does not yet simplify to
-            // one.  Once crushEdge() is running properly, this can be
-            // uncommented again.
-            verifyLinkCount(s4_doubleConeS3, 3);
-            // verifyLink(s4_doubleConeS3, 0, "S3");
-            verifyLinkH1(s4_doubleConeS3, 0, "0");
-            verifyLink(s4_doubleConeS3, 1, "S3");
-            verifyLink(s4_doubleConeS3, 2, "S3");
+            verifyLinksSpheres(s4_doubleConeS3, 3);
             verifyLinksSpheres(rp4, 3);
             verifyLinksBalls(ball_singlePent, 5);
             verifyLinksBalls(ball_foldedPent, 4);

@@ -2044,7 +2044,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void simplification() {
-            verifySimplification(s3_large, 1, "C(1)");
+            verifySimplification(s3_large, 1, "L(1,0)");
             verifySimplification(rp3_large, 2, "L(2,1)");
             verifySimplification(lens8_3_large, 2, "L(8,3)");
             verifySimplification(q20_large, 5, "C~(5)");

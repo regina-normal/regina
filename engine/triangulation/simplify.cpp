@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <algorithm>
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -50,6 +51,37 @@ namespace {
     const NPerm twoThreeVertices[2] = {
         NPerm(1,2,3,0), NPerm(0,2,3,1)
     };
+
+    // A helper routine that uses union-find to test whether a graph
+    // contains cycles.  This is used by collapseEdge().
+    //
+    // This routine returns true if the given edge connects two distinct
+    // components of the graph, or false if both endpoints of the edge
+    // are already in the same component (i.e., a cycle has been created).
+    bool unionFindInsert(long* parent, long* depth, long vtx1, long vtx2) {
+        // Find the root of the tree containing vtx1 and vtx2.
+        long top1, top2;
+
+        for (top1 = vtx1; parent[top1] >= 0; top1 = parent[top1])
+            ;
+        for (top2 = vtx2; parent[top2] >= 0; top2 = parent[top2])
+            ;
+
+        // Are both vertices in the same component?
+        if (top1 == top2)
+            return false;
+
+        // Join the two components.
+        // Insert the shallower tree beneath the deeper tree.
+        if (depth[top1] < depth[top2]) {
+            parent[top1] = top2;
+        } else {
+            parent[top2] = top1;
+            if (depth[top1] == depth[top2])
+                ++depth[top1];
+        }
+        return true;
+    }
 }
 
 bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
@@ -766,64 +798,200 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
     NPerm p;
 
     if (check) {
-        // Check if the vertices are distinct.
+        // CHECK 0: The tetrahedra around the edge must be distinct.
+        // We check this as follows:
+        //
+        // - None of the faces containing edge e must contain e twice.
+        //   We throw this into check 2 below (see point [0a]).
+        //
+        // - The only remaining bad case is where a tetrahedron contains
+        //   e as two opposite edges.  In this case one can prove that
+        //   we have a bad chain of bigons, which will be picked up in
+        //   check 2 below.
+
+        // CHECK 1: Can we collapse the edge to a point (creating bigons and
+        // pillows with bigon boundaries)?
+
+        // The vertices must be distinct.
         if (e->getVertex(0) == e->getVertex(1))
             return false;
 
-        // Cannot have both vertices ideal.
-        if (e->getVertex(0)->isIdeal() && e->getVertex(1)->isIdeal())
-            return false;
-
-        // Cannot have an ideal vertex and one in the boundary.
-        if ((e->getVertex(0)->isIdeal() && e->getVertex(1)->isBoundary()) ||
-                (e->getVertex(1)->isIdeal() && e->getVertex(0)->isBoundary()))
-            return false;
-
-        // If both of the vertices are in the boundary then so must the edge.
-        if (e->getVertex(0)->isBoundary() && e->getVertex(1)->isBoundary() &&
-                ! e->isBoundary())
-            return false;
-
-        // Make sure no tetrahedron has a top and bottom face in the boundary.
-        for (it = embs.begin(); it != embs.end(); it++) {
-            tet = (*it).getTetrahedron();
-            p = (*it).getVertices();
-            if (! (tet->adjacentTetrahedron(p[0]) ||
-                    tet->adjacentTetrahedron(p[1])))
+        // If both vertices are in the boundary then we must be collapsing a
+        // boundary edge, and both vertices must have plain old disc links.
+        // Recall that ideal vertices return isBoundary() == true.
+        if (e->getVertex(0)->isBoundary() && e->getVertex(1)->isBoundary()) {
+            if (! e->isBoundary())
+                return false;
+            if (e->getVertex(0)->getLink() != NVertex::DISC)
+                return false;
+            if (e->getVertex(1)->getLink() != NVertex::DISC)
                 return false;
         }
 
-        // The tetrahedra around the edge must be distinct.
-        {
-            stdhash::hash_set<NTetrahedron*, HashPointer> adjTets;
-            for (it = embs.begin(); it != embs.end(); it++)
-                if (! adjTets.insert((*it).getTetrahedron()).second)
-                    return false;
-        }
+        // CHECK 2: Can we flatten each bigon to an edge (leaving
+        // triangular pillows behind)?
+        //
+        // This is trickier.  Even if every individual bigon is okay, we
+        // don't want a _chain_ of bigons together to crush a sphere or
+        // projective plane.
+        //
+        // The way we do this is as follows.  Consider each NEdge* to be
+        // a vertex of some graph G, and consider each bigon to be an edge
+        // in this graph G.  The vertices at either end of the edge in G
+        // are the (NEdge*)s that bound the bigon.
+        //
+        // We can happily flatten each bigon if and only if the graph G
+        // contains no cycles.  We shall test this using union-find,
+        // which should have log-linear complexity.
+        //
+        // We deal with boundary edges and invalid edges as follows.
+        // All boundary and/or invalid edges become the *same* vertex in
+        // the graph G.  This means, for instance, that a bigon joining two
+        // distinct boundary edges is not allowed.  Invalid edges are
+        // included here because each invalid edge contains a projective
+        // plane cusp at its centre.
+        //
+        // If edge e is itself a boundary edge, things become more
+        // interesting again.  In this case, the two *boundary* bigons
+        // are not subject to the same restrictions -- crushing bigons
+        // along the boundary does no harm, *unless* the boundary bigon
+        // edges themselves form a cycle.  This is essentially the same
+        // dilemma as before but one dimension down.  We can detect this
+        // because it implies either:
+        //
+        // - two edges of the same bigon are identified, and hence the
+        //   two vertices of edge e are identified (which has already
+        //   been disallowed in check 1 above);
+        //
+        // - the four edges of the two boundary bigons are identified in
+        //   pairs, which means the entire boundary component consists
+        //   of the two bigons and nothing else.
+        //
+        // What does this mean in a practical sense?  If edge e is a
+        // boundary edge, we:
+        //
+        // - verify that the boundary component has more than two faces;
+        //
+        // - then ignore both boundary bigons from here onwards.
+        //
+        // Quite pleasant to deal with in the end.
+        if (e->isBoundary())
+            if (e->getBoundaryComponent()->getNumberOfFaces() == 2)
+                return false;
 
-        // The edges meeting either the north or south poles must be distinct.
-        // Note this condition is stronger than necessary and will be
-        // weakened later.
         {
-            stdhash::hash_set<NEdge*, HashPointer> tetEdges;
-            for (it = embs.begin(); it != embs.end(); it++) {
-                tet = (*it).getTetrahedron();
-                p = (*it).getVertices();
-                if (! (tetEdges.insert(tet->getEdge(
-                            NEdge::edgeNumber[p[0]][p[2]])).second &&
-                        tetEdges.insert(tet->getEdge(
-                            NEdge::edgeNumber[p[1]][p[2]])).second))
+            long nEdges = edges.size();
+
+            // The parent of each edge in the union-find tree, or -1 if
+            // an edge is at the root of a tree.
+            //
+            // This array is indexed by edge number in the triangulation.
+            // Although we might not use many of these edges, it's fast
+            // and simple.  The "unified boundary" is assigned the edge
+            // number nEdges.
+            long* parent = new long[nEdges + 1];
+            std::fill(parent, parent + nEdges + 1, -1);
+
+            // The depth of each subtree in the union-find tree.
+            long* depth = new long[nEdges + 1];
+            std::fill(depth, depth + nEdges + 1, 0);
+
+            NEdge *upper, *lower;
+            long id1, id2;
+
+            // Run through all faces containing e.
+            it = embs.begin();
+
+            // Don't forget to skip the first (boundary) face if e is a
+            // boundary edge.  We will skip the last boundary face
+            // automatically, since for a boundary edge there are k+1
+            // faces but only k embeddings.
+            if (e->isBoundary())
+                ++it;
+
+            for ( ; it != embs.end(); ++it) {
+                tet = it->getTetrahedron();
+                p = it->getVertices();
+
+                upper = tet->getEdge(NEdge::edgeNumber[p[0]][p[2]]);
+                lower = tet->getEdge(NEdge::edgeNumber[p[1]][p[2]]);
+
+                if (upper == e || lower == e) {
+                    // [0a]: Check 0 fails (see explanation earlier).
+                    delete[] depth;
+                    delete[] parent;
                     return false;
+                }
+
+                id1 = ((upper->isBoundary() || ! upper->isValid()) ?
+                    nEdges : upper->markedIndex());
+                id2 = ((lower->isBoundary() || ! lower->isValid()) ?
+                    nEdges : lower->markedIndex());
+
+                // This bigon joins nodes id1 and id2 in the graph G.
+                if (! unionFindInsert(parent, depth, id1, id2)) {
+                    delete[] depth;
+                    delete[] parent;
+                    return false;
+                }
             }
 
-            // Note that tet and p currently correpond to the final
-            // edge embedding.
-            if (e->isBoundary())
-                if (! (tetEdges.insert(tet->getEdge(
-                            NEdge::edgeNumber[p[0]][p[3]])).second &&
-                        tetEdges.insert(tet->getEdge(
-                            NEdge::edgeNumber[p[1]][p[3]])).second))
+            // No bad chains of bigons!
+            delete[] depth;
+            delete[] parent;
+        }
+
+        // CHECK 3: Can we flatten each triangular pillow to a face?
+        //
+        // Again, even if each individual pillow is okay, we don't want
+        // a chain of pillows together to completely crush away a
+        // 3-manifold component.
+        //
+        // This means no cycles of pillows, and no chains of pillows
+        // that run from boundary to boundary.
+        //
+        // Test this in the same way that we tested edges.  It's kind of
+        // overkill, since each vertex in the corresponding graph G will
+        // have degree <= 2, but it's fast so we'll do it.
+        {
+            long nFaces = faces.size();
+
+            // The parent of each face in the union-find tree, or -1 if
+            // a face is at the root of a tree.
+            //
+            // This array is indexed by face number in the triangulation.
+            // The "unified boundary" is assigned the face number nFaces.
+            long* parent = new long[nFaces + 1];
+            std::fill(parent, parent + nFaces + 1, -1);
+
+            // The depth of each subtree in the union-find tree.
+            long* depth = new long[nFaces + 1];
+            std::fill(depth, depth + nFaces + 1, 0);
+
+            NFace *upper, *lower;
+            long id1, id2;
+
+            for (it = embs.begin(); it != embs.end(); ++it) {
+                tet = it->getTetrahedron();
+                p = it->getVertices();
+
+                upper = tet->getFace(p[0]);
+                lower = tet->getFace(p[1]);
+
+                id1 = (upper->isBoundary() ? nFaces : upper->markedIndex());
+                id2 = (lower->isBoundary() ? nFaces : lower->markedIndex());
+
+                // This pillow joins nodes id1 and id2 in the graph G.
+                if (! unionFindInsert(parent, depth, id1, id2)) {
+                    delete[] depth;
+                    delete[] parent;
                     return false;
+                }
+            }
+
+            // No bad chains of bigons!
+            delete[] depth;
+            delete[] parent;
         }
     }
 

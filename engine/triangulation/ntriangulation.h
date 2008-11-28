@@ -1421,9 +1421,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \warning The specific behaviour of this routine is
          * very likely to change between releases.
          *
-         * \todo \proburgent This routine currently does not crush a
-         * maximal forest!
-         *
          * @param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
          * whether simplifications are possible (defaults to \c true).
@@ -1790,19 +1787,13 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * The eligibility requirements for this move are somewhat
+         * involved, and are discussed in detail in the collapseEdge()
+         * source code for those who are interested.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
          * \pre The given edge is an edge of this triangulation.
-         *
-         * \warning This routine should not be used until the
-         * eligibility checks are corrected; see the bug details below.
-         *
-         * \todo \proburgent The restrictions on allowing this move to take
-         * place are currently wrong.  Many valid cases are ruled out
-         * (as acknowledged in the original commit of the code), but
-         * certain invalid cases are also allowed which will almost
-         * certainly crash the program.
          *
          * @param e the edge to collapse.
          * @param check \c true if we are to check whether the move is
@@ -1813,8 +1804,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * if and only if the given edge may be collapsed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
-         *
-         * @author David Letscher
          */
         bool collapseEdge(NEdge* e, bool check = true, bool perform = true);
 
