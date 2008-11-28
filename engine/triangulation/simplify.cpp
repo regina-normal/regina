@@ -850,6 +850,35 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // distinct boundary edges is not allowed.  Invalid edges are
         // included here because each invalid edge contains a projective
         // plane cusp at its centre.
+        //
+        // If edge e is itself a boundary edge, things become more
+        // interesting again.  In this case, the two *boundary* bigons
+        // are not subject to the same restrictions -- crushing bigons
+        // along the boundary does no harm, *unless* the boundary bigon
+        // edges themselves form a cycle.  This is essentially the same
+        // dilemma as before but one dimension down.  We can detect this
+        // because it implies either:
+        //
+        // - two edges of the same bigon are identified, and hence the
+        //   two vertices of edge e are identified (which has already
+        //   been disallowed in check 1 above);
+        //
+        // - the four edges of the two boundary bigons are identified in
+        //   pairs, which means the entire boundary component consists
+        //   of the two bigons and nothing else.
+        //
+        // What does this mean in a practical sense?  If edge e is a
+        // boundary edge, we:
+        //
+        // - verify that the boundary component has more than two faces;
+        //
+        // - then ignore both boundary bigons from here onwards.
+        //
+        // Quite pleasant to deal with in the end.
+        if (e->isBoundary())
+            if (e->getBoundaryComponent()->getNumberOfFaces() == 2)
+                return false;
+
         {
             long nEdges = edges.size();
 
@@ -871,39 +900,21 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             long id1, id2;
 
             // Run through all faces containing e.
-            for (it = embs.begin(); it != embs.end(); ++it) {
+            it = embs.begin();
+
+            // Don't forget to skip the first (boundary) face if e is a
+            // boundary edge.  We will skip the last boundary face
+            // automatically, since for a boundary edge there are k+1
+            // faces but only k embeddings.
+            if (e->isBoundary())
+                ++it;
+
+            for ( ; it != embs.end(); ++it) {
                 tet = it->getTetrahedron();
                 p = it->getVertices();
 
                 upper = tet->getEdge(NEdge::edgeNumber[p[0]][p[2]]);
                 lower = tet->getEdge(NEdge::edgeNumber[p[1]][p[2]]);
-
-                if (upper == e || lower == e) {
-                    // [0a]: Check 0 fails (see explanation earlier).
-                    delete[] depth;
-                    delete[] parent;
-                    return false;
-                }
-
-                id1 = ((upper->isBoundary() || ! upper->isValid()) ?
-                    nEdges : upper->markedIndex());
-                id2 = ((lower->isBoundary() || ! lower->isValid()) ?
-                    nEdges : lower->markedIndex());
-
-                // This bigon joins nodes id1 and id2 in the graph G.
-                if (! unionFindInsert(parent, depth, id1, id2)) {
-                    delete[] depth;
-                    delete[] parent;
-                    return false;
-                }
-            }
-
-            // Don't forget the extra boundary face if e is a boundary edge.
-            if (e->isBoundary()) {
-                // Variables tet and p already correpond to the final
-                // edge embedding.
-                upper = tet->getEdge(NEdge::edgeNumber[p[0]][p[3]]);
-                lower = tet->getEdge(NEdge::edgeNumber[p[1]][p[3]]);
 
                 if (upper == e || lower == e) {
                     // [0a]: Check 0 fails (see explanation earlier).
