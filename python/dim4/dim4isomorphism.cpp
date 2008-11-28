@@ -26,31 +26,36 @@
 
 /* end stub */
 
-void addDim4BoundaryComponent();
-void addDim4Component();
-void addDim4Edge();
-void addDim4ExampleTriangulation();
-void addDim4Face();
-void addDim4Isomorphism();
-void addDim4Pentachoron();
-void addDim4PentFacet();
-void addDim4Tetrahedron();
-void addDim4Triangulation();
-void addDim4Vertex();
-void addNPerm5();
+#include "dim4/dim4isomorphism.h"
+#include "dim4/dim4triangulation.h"
+#include <boost/python.hpp>
 
-void addDim4() {
-    addDim4BoundaryComponent();
-    addDim4Component();
-    addDim4Edge();
-    addDim4ExampleTriangulation();
-    addDim4Face();
-    addDim4Isomorphism();
-    addDim4Pentachoron();
-    addDim4PentFacet();
-    addDim4Tetrahedron();
-    addDim4Triangulation();
-    addDim4Vertex();
-    addNPerm5();
+using namespace boost::python;
+using regina::Dim4Isomorphism;
+
+namespace {
+    int (Dim4Isomorphism::*pentImage_const)(unsigned) const =
+        &Dim4Isomorphism::pentImage;
+    regina::NPerm5 (Dim4Isomorphism::*facetPerm_const)(unsigned) const =
+        &Dim4Isomorphism::facetPerm;
+
+    regina::Dim4PentFacet Dim4iso_getItem(const Dim4Isomorphism& iso,
+            const regina::Dim4PentFacet& f) {
+        return iso[f];
+    }
+}
+
+void addDim4Isomorphism() {
+    class_<Dim4Isomorphism, bases<regina::ShareableObject>,
+            std::auto_ptr<Dim4Isomorphism>, boost::noncopyable>
+            ("Dim4Isomorphism", init<const Dim4Isomorphism&>())
+        .def("getSourcePentachora", &Dim4Isomorphism::getSourcePentachora)
+        .def("pentImage", pentImage_const)
+        .def("facetPerm", facetPerm_const)
+        .def("__getitem__", Dim4iso_getItem)
+        .def("isIdentity", &Dim4Isomorphism::isIdentity)
+        .def("apply", &Dim4Isomorphism::apply,
+            return_value_policy<manage_new_object>())
+    ;
 }
 
