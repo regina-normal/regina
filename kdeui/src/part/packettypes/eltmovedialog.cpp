@@ -47,13 +47,14 @@ namespace {
     const int ID_21 = 5;
     const int ID_OPENBOOK = 6;
     const int ID_SHELLBDRY = 7;
+    const int ID_COLLAPSEEDGE = 8;
 }
 
 EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         KDialogBase(Plain, i18n("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
     QFrame* ui = plainPage();
-    QGridLayout* layout = new QGridLayout(ui, 8, 2, 0 /* margin */,
+    QGridLayout* layout = new QGridLayout(ui, 9, 2, 0 /* margin */,
         spacingHint());
 
     use32 = new QRadioButton(i18n("&3-2"), ui);
@@ -128,6 +129,15 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useShellBdry, 7, 0);
+    useCollapseEdge = new QRadioButton(i18n("&Collapse edge"), ui);
+    QWhatsThis::add(useCollapseEdge, i18n("<qt>Collapse an edge in this "
+        "triangulation.<p>"
+        "<i>Collapsing an edge</i> involves taking an edge between two "
+        "distinct vertices and collapsing that edge to a point.  Any "
+        "tetrahedra containing that edge will be flattened into faces.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered in the adjacent drop-down list.</qt>"));
+    layout->addWidget(useCollapseEdge, 8, 0);
 
     box32 = new KComboBox(ui);
     QWhatsThis::add(box32, i18n("<qt>Select the degree three edge about which "
@@ -196,6 +206,14 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(boxShellBdry, 7, 1);
+    boxCollapseEdge = new KComboBox(ui);
+    QWhatsThis::add(boxCollapseEdge, i18n("<qt>Select the edge joining "
+        "two distinct vertices that should be collapsed.  "
+        "The edge numbers in this list correspond to the edge numbers seen "
+        "when viewing the triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered.</qt>"));
+    layout->addWidget(boxCollapseEdge, 8, 1);
 
     fillWithMoves();
 
@@ -207,6 +225,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     use21->setEnabled(box21->count() > 0);
     useOpenBook->setEnabled(boxOpenBook->count() > 0);
     useShellBdry->setEnabled(boxShellBdry->count() > 0);
+    useCollapseEdge->setEnabled(boxCollapseEdge->count() > 0);
 
     box32->setEnabled(box32->count() > 0);
     box23->setEnabled(box23->count() > 0);
@@ -216,6 +235,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     box21->setEnabled(box21->count() > 0);
     boxOpenBook->setEnabled(boxOpenBook->count() > 0);
     boxShellBdry->setEnabled(boxShellBdry->count() > 0);
+    boxCollapseEdge->setEnabled(boxCollapseEdge->count() > 0);
 
     moveTypes = new QButtonGroup();
     moveTypes->insert(use32, ID_32);
@@ -226,6 +246,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     moveTypes->insert(use21, ID_21);
     moveTypes->insert(useOpenBook, ID_OPENBOOK);
     moveTypes->insert(useShellBdry, ID_SHELLBDRY);
+    moveTypes->insert(useCollapseEdge, ID_COLLAPSEEDGE);
 }
 
 EltMoveDialog::~EltMoveDialog() {
@@ -254,6 +275,9 @@ void EltMoveDialog::slotOk() {
     else if (useShellBdry->isChecked())
         tri->shellBoundary(tri->getTetrahedron(setShellBdry[
             boxShellBdry->currentItem()]));
+    else if (useCollapseEdge->isChecked())
+        tri->collapseEdge(tri->getEdge(setCollapseEdge[
+            boxCollapseEdge->currentItem()]));
     else {
         KMessageBox::error(this,
             i18n("No elementary move has been selected."));
@@ -304,6 +328,10 @@ void EltMoveDialog::fillWithMoves() {
         if (tri->twoOneMove(e, 1, true, false)) {
             box21->insertItem(i18n("Edge %1 (end 1)").arg(i));
             set21.push_back(std::make_pair(i, 1));
+        }
+        if (tri->collapseEdge(e, true, false)) {
+            boxCollapseEdge->insertItem(i18n("Edge %1").arg(i));
+            setCollapseEdge.push_back(i);
         }
     }
 

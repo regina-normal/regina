@@ -1491,6 +1491,14 @@
        tetrahedron involves simply removing that tetrahedron.
       </para></glossdef>
      </glossentry>
+     <glossentry>
+      <glossterm>Collapse Edge</glossterm>
+      <glossdef><para>
+       <firstterm>Collapsing an edge</firstterm> involves taking an edge
+       between two distinct vertices and collapsing that edge to a point.
+       Any tetrahedra containing that edge will be flattened into faces.
+      </para></glossdef>
+     </glossentry>
     </glosslist>
    </para>
   </sect2>

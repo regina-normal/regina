@@ -205,6 +205,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>collapsing an edge</glossterm>
+  <glosssee>elementary moves</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm><link linkend="tri-composition-composition">combinatorial
    composition</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
@@ -325,6 +330,11 @@
   <glossterm><link linkend="surfaces-crush">crushing a normal
    surface</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>crushing an edge</glossterm>
+  <glosssee>elementary moves</glosssee>
  </glossentry>
 
  <glossentry>
