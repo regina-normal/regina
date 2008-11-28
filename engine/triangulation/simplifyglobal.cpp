@@ -121,10 +121,51 @@ bool NTriangulation::intelligentSimplify() {
             // At this point we have decided that 4-4 moves will help us
             // no more.
 
-            // --- TODO: Open book moves ---
+            // --- Open book moves ---
 
-            // If we did any book opening stuff, move back to the beginning
-            // of the loop.  Otherwise exit.
+            if (hasBoundaryFaces()) {
+                // Clone again, always -- we don't want to create gratuitous
+                // boundary faces if they won't be of any help.
+                use = new NTriangulation(*this);
+
+                // Perform every book opening move we can find.
+                FaceIterator fit;
+
+                bool opened = false;
+                bool openedNow = true;
+                while (openedNow) {
+                    openedNow = false;
+
+                    for (fit = use->getFaces().begin();
+                            fit != use->getFaces().end(); ++fit)
+                        if (use->openBook(*fit, true, true)) {
+                            opened = openedNow = true;
+                            break;
+                        }
+                }
+
+                // If we're lucky, we now have an edge that we can collapse.
+                if (opened) {
+                    if (use->simplifyToLocalMinimum(true)) {
+                        // Yay!
+                        cloneFrom(*use);
+                        changed = true;
+                    } else {
+                        // No good.
+                        // Ditch use and don't open anything.
+                        opened = false;
+                    }
+                }
+
+                delete use;
+
+                // If we did any book opening stuff, do everything else
+                // all over again.
+                if (opened)
+                    continue;
+            }
+
+            // Nothing more we can do here.
             break;
         }
     } // End scope for change event block.
@@ -237,35 +278,6 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                     }
                     if (changedNow)
                         break;
-
-                    /**
-                     * Do NOT do open book moves here since they don't reduce
-                     * the triangulation per se.  We'll do this in
-                     * intelligentSimplify() instead.
-                     */
-                    /*
-                    // Run through edges of this boundary component looking
-                    // for open book moves.
-                    nEdges = (*bit)->getNumberOfEdges();
-                    for (iEdge = 0; iEdge < nEdges; iEdge++) {
-                        embbeginit = (*bit)->getEdge(iEdge)->
-                            getEmbeddings().begin();
-                        embendit = (*bit)->getEdge(iEdge)->
-                            getEmbeddings().end();
-                        for (embit = embbeginit; embit != embendit; embit++)
-                            if (openBook((*embit).getTetrahedron()->getFace(
-                                    ((*embit).getVertices())[2]),
-                                    true, perform)) {
-                                changedNow = true;
-                                changed = true;
-                                break;
-                            }
-                        if (changedNow)
-                            break;
-                    }
-                    if (changedNow)
-                        break;
-                    */
                 }
                 if (changedNow) {
                     if (perform)

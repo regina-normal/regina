@@ -1389,17 +1389,13 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Attempts to simplify the triangulation as intelligently as
          * possible without further input.
          *
-         * Currently this routine merely uses simplifyToLocalMinimum()
-         * in combination with random 4-4 moves.
+         * Currently this routine uses simplifyToLocalMinimum() in
+         * combination with random 4-4 moves and book opening moves.
          *
-         * \warning The specific behaviour of this routine is
-         * very likely to change between releases.
+         * \warning The specific behaviour of this routine may well
+         * change between releases.
          *
-         * \todo \opturgent Make this faster and more effective.
-         * Include book opening moves and random 2-3 moves to get out of
-         * wells.  Unglue faces with three boundary edges and record the
-         * corresponding change in topology.  Minimise the amount of
-         * skeletal/homological calculation.
+         * \todo \opt Include random 2-3 moves to get out of wells.
          *
          * @return \c true if and only if the triangulation was changed.
          */
@@ -1414,9 +1410,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * The moves used include 3-2, 2-0 (edge and vertex),
          * 2-1 and boundary shelling moves.
          *
-         * Note that book opening moves (which do not reduce the number
-         * of tetrahedra) are no longer used in this routine, in contrast
-         * with earlier releases of Regina.
+         * Note that moves that do not reduce the number of tetrahedra
+         * (such as 4-4 moves or book opening moves) are not used in this
+         * routine.  Such moves do however feature in intelligentSimplify().
          *
          * \warning The specific behaviour of this routine is
          * very likely to change between releases.

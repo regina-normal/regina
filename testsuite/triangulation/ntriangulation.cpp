@@ -1996,7 +1996,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Large triangulation should simplify to " << simpleName
                     << ", but simplifies to " << t.getNumberOfTetrahedra()
-                    << " tetrahedra instead of the expected " << simpleSize << ".";
+                    << " tetrahedra instead of the expected "
+                    << simpleSize << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -2027,7 +2028,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             if (t2.dumpConstruction() != t.dumpConstruction()) {
                 std::ostringstream msg;
                 msg << "The simple triangulation " << std->getName()
-                    << " should not change at all when simplified again, but it does.";
+                    << " should not change at all when simplified again, "
+                    "but it does.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -2050,9 +2052,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifySimplification(q20_large, 5, "C~(5)");
             verifySimplification(ball_large, 1, "B3 (3-vtx)");
             verifySimplification(ball_large_pillows, 1, "B3 (4-vtx)");
-            verifySimplification(ball_large_snapped, 1, "B3 (3-vtx)");
+            verifySimplification(ball_large_snapped, 1, "B3 (4-vtx)");
             verifySimplification(fig8_bary, 2, "SnapPea m004");
-            verifySimplification(singleTet_bary, 1, "B3 (4-vtx)");
+            verifySimplification(singleTet_bary, 1, "B3 (3-vtx)");
 
             // Some triangulations that should not simplify.
             NTriangulation* tri;
@@ -2068,8 +2070,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyNoSimplification(*tri, "Custom two-cusped triangluation");
             delete tri;
 
-            // A triangulation with an invalid edge that should not be
-            // simplified away:
+            // A triangulation with an invalid edge that simplifies
+            // (where the invalid edge must not be simplified away):
             tet[0] = new NTetrahedron();
             tet[1] = new NTetrahedron();
             tet[2] = new NTetrahedron();
@@ -2086,7 +2088,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
             if (tri->isValid())
                 CPPUNIT_FAIL("Custom invalid triangulation was not built "
                     "properly.");
-            verifyNoSimplification(*tri, "Custom invalid triangluation");
+
+            tri->intelligentSimplify();
+            if (tri->getNumberOfTetrahedra() != 1)
+                CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
+                    "to 1 tetrahedron.");
+            if (tri->isValid() || tri->getEdge(0)->isValid())
+                CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
+                    "to an invalid triangulation with an invalid edge.");
             delete tri;
         }
 
