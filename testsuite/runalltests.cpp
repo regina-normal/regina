@@ -78,6 +78,7 @@ class ReginaProgress : public CppUnit::TextTestProgressListener {
 
         virtual void startTest(CppUnit::Test* test) {
             std::cout << truncateFixture(test->getName()) << "... ";
+            std::cout.flush();
             failed = false;
         }
 
