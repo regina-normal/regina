@@ -64,6 +64,7 @@ class EltMoveDialog : public KDialogBase {
         QComboBox* box21;
         QComboBox* boxOpenBook;
         QComboBox* boxShellBdry;
+        QComboBox* boxCollapseEdge;
         QRadioButton* use32;
         QRadioButton* use23;
         QRadioButton* use44;
@@ -72,6 +73,7 @@ class EltMoveDialog : public KDialogBase {
         QRadioButton* use21;
         QRadioButton* useOpenBook;
         QRadioButton* useShellBdry;
+        QRadioButton* useCollapseEdge;
         QButtonGroup* moveTypes;
 
         /**
@@ -85,6 +87,7 @@ class EltMoveDialog : public KDialogBase {
         std::vector<std::pair<unsigned long, int> > set21;
         std::vector<unsigned long> setOpenBook;
         std::vector<unsigned long> setShellBdry;
+        std::vector<unsigned long> setCollapseEdge;
 
         /**
          * Packet tree structure:
