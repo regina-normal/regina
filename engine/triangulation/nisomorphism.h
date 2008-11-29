@@ -303,7 +303,7 @@ class NIsomorphismDirect : public NIsomorphism {
 
 /**
  * An isomorphism in which face permutations are stored as indices into
- * the ::allPermsS4 array.
+ * the NPerm::S4 array.
  * It is easy to iterate through possible face permutations, but there
  * is no direct write-access to the permutations themselves.
  *
@@ -315,7 +315,7 @@ class NIsomorphismDirect : public NIsomorphism {
 class NIsomorphismIndexed : public NIsomorphism {
     private:
         int* mIndex;
-            /**< The index into the ::allPermsS4 array representing the
+            /**< The index into the NPerm::S4 array representing the
                  permutation applied to the four faces of each source
                  tetrahedron. */
 
@@ -344,11 +344,11 @@ class NIsomorphismIndexed : public NIsomorphism {
 
         /**
          * Returns a read-write reference to the index into
-         * array ::allPermsS4 that points to
+         * array NPerm::S4 that points to
          * the permutation that is applied to the four faces of the
          * given source tetrahedron under this isomorphism.
          * Face \a i of tetrahedron \a sourceTet will be mapped to face
-         * <tt>allPermsS4[facePermIndex(sourceTet)][i]</tt> of tetrahedron
+         * <tt>NPerm::S4[facePermIndex(sourceTet)][i]</tt> of tetrahedron
          * <tt>tetImage(sourceTet)</tt>.
          *
          * @param sourceTet the index of the source tetrahedron containing
@@ -358,11 +358,11 @@ class NIsomorphismIndexed : public NIsomorphism {
          */
         int& facePermIndex(unsigned sourceTet);
         /**
-         * Returns the index into the array ::allPermsS4 that points to
+         * Returns the index into the array NPerm::S4 that points to
          * the permutation that is applied to the four faces of the
          * given source tetrahedron under this isomorphism.
          * Face \a i of tetrahedron \a sourceTet will be mapped to face
-         * <tt>allPermsS4[facePermIndex(sourceTet)][i]</tt> of tetrahedron
+         * <tt>NPerm::S4[facePermIndex(sourceTet)][i]</tt> of tetrahedron
          * <tt>tetImage(sourceTet)</tt>.
          *
          * @param sourceTet the index of the source tetrahedron containing
@@ -433,7 +433,7 @@ inline NIsomorphismIndexed::~NIsomorphismIndexed() {
 }
 
 inline NPerm NIsomorphismIndexed::facePerm(unsigned sourceTet) const {
-    return allPermsS4[mIndex[sourceTet]];
+    return NPerm::S4[mIndex[sourceTet]];
 }
 inline int& NIsomorphismIndexed::facePermIndex(unsigned sourceTet) {
     return mIndex[sourceTet];

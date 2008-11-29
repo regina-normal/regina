@@ -104,7 +104,7 @@ NIsomorphism* NIsomorphism::random(unsigned nTetrahedra) {
 
     // Randomly choose the individual permutations.
     for (i = 0; i < nTetrahedra; i++)
-        ans->facePerm(i) = allPermsS4[rand() % 24];
+        ans->facePerm(i) = NPerm::S4[rand() % 24];
 
     return ans;
 }

@@ -62,6 +62,80 @@ namespace regina {
  * \testfull
  */
 class NPerm {
+    public:
+        /**
+         * Contains all possible permutations of four elements.
+         *
+         * The permutations with even indices in the array are the even
+         * permutations, and those with odd indices in the array are the
+         * odd permutations.
+         *
+         * Note that the permutations are not necessarily in
+         * lexicographical order.
+         */
+        static const NPerm S4[24];
+
+        /**
+         * Contains the inverses of the permutations in the array \a S4.
+         *
+         * Specifically, the inverse of permutation <tt>S4[i]</tt> is
+         * the permutation <tt>S4[ invS4[i] ]</tt>.
+         */
+        static const unsigned invS4[24];
+
+        /**
+         * Contains all possible permutations of four elements in
+         * lexicographical order.
+         */
+        static const NPerm orderedS4[24];
+
+        /**
+         * Contains all possible permutations of three elements.
+         * In each permutation, 3 maps to 3.
+         *
+         * The permutations with even indices in the array are the even
+         * permutations, and those with odd indices in the array are the
+         * odd permutations.
+         *
+         * Note that the permutations are not necessarily in
+         * lexicographical order.
+         */
+        static const NPerm S3[6];
+
+        /**
+         * Contains the inverses of the permutations in the array \a S3.
+         *
+         * Specifically, the inverse of permutation <tt>S3[i]</tt> is
+         * the permutation <tt>S3[ invS3[i] ]</tt>.
+         */
+        static const unsigned invS3[6];
+
+        /**
+         * Contains all possible permutations of three elements in
+         * lexicographical order.  In each permutation, 3 maps to 3.
+         */
+        static const NPerm orderedS3[6];
+
+        /**
+         * Contains all possible permutations of two elements.
+         * In each permutation, 2 maps to 2 and 3 maps to 3.
+         *
+         * The permutations with even indices in the array are the even
+         * permutations, and those with odd indices in the array are the
+         * odd permutations.
+         *
+         * Note that the permutations are also in lexicographical order.
+         */
+        static const NPerm S2[2];
+
+        /**
+         * Contains the inverses of the permutations in the array \a S2.
+         *
+         * Specifically, the inverse of permutation <tt>S2[i]</tt> is
+         * the permutation <tt>S2[ invS2[i] ]</tt>.
+         */
+        static const unsigned invS2[2];
+
     private:
         unsigned char code;
             /**< The internal code representing this permutation. */
@@ -360,73 +434,115 @@ inline std::ostream& operator << (std::ostream& out, const NPerm& p) {
 // Constants
 
 /**
- * Contains all possible permutations of four elements.
- * The permutations with even indices in the array are the even
- * permutations, and those with odd indices in the array are the odd
- * permutations.
+ * An array of size 24 containing all possible permutations of four elements.
+ *
+ * The permutations with even indices in the array are the even permutations,
+ * and those with odd indices in the array are the odd permutations.
  *
  * Note that the permutations are not necessarily in lexicographical order.
+ *
+ * \deprecated This array has been moved into the NPerm class, and can now
+ * be accessed as the static array NPerm::S4.  The deprecated name
+ * regina::allPermsS4 now just points to NPerm::S4, and will be removed
+ * in some future version of Regina.
  */
-extern const NPerm allPermsS4[24];
+extern const NPerm* allPermsS4;
 
 /**
- * Contains the inverses of the permutations in array \a allPermsS4.
+ * An array of size 24 containing the inverses of the permutations in the
+ * array \a allPermsS4.
  *
  * Specifically, the inverse of permutation <tt>allPermsS4[i]</tt> is
- * permutation <tt>allPermsS4[ allPermsS4Inv[i] ]</tt>.
+ * the permutation <tt>allPermsS4[ allPermsS4Inv[i] ]</tt>.
+ *
+ * \deprecated This array has been moved into the NPerm class, and can now
+ * be accessed as the static array NPerm::invS4.  The deprecated name
+ * regina::allPermsS4Inv now just points to NPerm::invS4, and will
+ * be removed in some future version of Regina.
  */
-extern const unsigned allPermsS4Inv[24];
+extern const unsigned* allPermsS4Inv;
 
 /**
- * Contains all possible permutations of four elements in
- * lexicographical order.
+ * An array of size 24 containing all possible permutations of four elements
+ * in lexicographical order.
+ *
+ * \deprecated This array has been moved into the NPerm class, and can now
+ * be accessed as the static array NPerm::orderedS4.  The deprecated name
+ * regina::orderedPermsS4 now just points to NPerm::orderedS4, and will be
+ * removed in some future version of Regina.
  */
-extern const NPerm orderedPermsS4[24];
+extern const NPerm* orderedPermsS4;
 
 /**
- * Contains all possible permutations of three elements.
+ * An array of size 6 containing all possible permutations of three elements.
  * In each permutation, 3 maps to 3.
- * The permutations with even indices in the array are the even
- * permutations, and those with odd indices in the array are the odd
- * permutations.
+ *
+ * The permutations with even indices in the array are the even permutations,
+ * and those with odd indices in the array are the odd permutations.
  *
  * Note that the permutations are not necessarily in lexicographical order.
+ *
+ * \deprecated This array has been moved into the NPerm class, and can now
+ * be accessed as the static array NPerm::S3.  The deprecated name
+ * regina::allPermsS4 now just points to NPerm::S3, and will be removed
+ * in some future version of Regina.
  */
-extern const NPerm allPermsS3[6];
+extern const NPerm* allPermsS3;
 
 /**
- * Contains the inverses of the permutations in array \a allPermsS3.
+ * An array of size 6 containing the inverses of the permutations in the
+ * array \a allPermsS3.
  *
  * Specifically, the inverse of permutation <tt>allPermsS3[i]</tt> is
- * permutation <tt>allPermsS3[ allPermsS3Inv[i] ]</tt>.
+ * the permutation <tt>allPermsS3[ allPermsS3Inv[i] ]</tt>.
+ *
+ * \deprecated This array has been moved into the NPerm class, and can now
+ * be accessed as the static array NPerm::invS3.  The deprecated name
+ * regina::allPermsS3Inv now just points to NPerm::invS3, and will be
+ * removed in some future version of Regina.
  */
-extern const unsigned allPermsS3Inv[6];
+extern const unsigned* allPermsS3Inv;
 
 /**
- * Contains all possible permutations of three elements in
- * lexicographical order.
- * In each permutation, 3 maps to 3.
+ * An array of size 6 containing all possible permutations of three elements
+ * in lexicographical order.  In each permutation, 3 maps to 3.
+ *
+ * \deprecated This array has been moved into the NPerm class, and can now
+ * be accessed as the static array NPerm::orderedS3.  The deprecated name
+ * regina::orderedPermsS3 now just points to NPerm::orderedS3, and will be
+ * removed in some future version of Regina.
  */
-extern const NPerm orderedPermsS3[6];
+extern const NPerm* orderedPermsS3;
 
 /**
- * Contains all possible permutations of two elements.
+ * An array of size 2 containing all possible permutations of two elements.
  * In each permutation, 2 maps to 2 and 3 maps to 3.
- * The permutations with even indices in the array are the even
- * permutations, and those with odd indices in the array are the odd
- * permutations.
+ *
+ * The permutations with even indices in the array are the even permutations,
+ * and those with odd indices in the array are the odd permutations.
  *
  * Note that the permutations are also in lexicographical order.
+ *
+ * \deprecated This array has been moved into the NPerm class, and can now
+ * be accessed as the static array NPerm::S2.  The deprecated name
+ * regina::allPermsS2 now just points to NPerm::S2, and will be removed in
+ * some future version of Regina.
  */
-extern const NPerm allPermsS2[2];
+extern const NPerm* allPermsS2;
 
 /**
- * Contains the inverses of the permutations in array \a allPermsS2.
+ * An array of size 2 containing the inverses of the permutations in the
+ * array \a allPermsS2.
  *
  * Specifically, the inverse of permutation <tt>allPermsS2[i]</tt> is
- * permutation <tt>allPermsS2[ allPermsS2Inv[i] ]</tt>.
+ * the permutation <tt>allPermsS2[ allPermsS2Inv[i] ]</tt>.
+ *
+ * \deprecated This array has been moved into the NPerm class, and can now
+ * be accessed as the static array NPerm::invS2.  The deprecated name
+ * regina::allPermsS2Inv now just points to NPerm::invS2, and will be
+ * removed in some future version of Regina.
  */
-extern const unsigned allPermsS2Inv[2];
+extern const unsigned* allPermsS2Inv;
 
 // Routines for constructing the permutations associated to
 // faces and edges of the triangulation

@@ -35,14 +35,14 @@ using regina::NPerm;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<NPerm> allPermsS4_arr(regina::allPermsS4, 24);
-    GlobalArray<unsigned> allPermsS4Inv_arr(regina::allPermsS4Inv, 24);
-    GlobalArray<NPerm> orderedPermsS4_arr(regina::orderedPermsS4, 24);
-    GlobalArray<NPerm> allPermsS3_arr(regina::allPermsS3, 6);
-    GlobalArray<unsigned> allPermsS3Inv_arr(regina::allPermsS3Inv, 6);
-    GlobalArray<NPerm> orderedPermsS3_arr(regina::orderedPermsS3, 6);
-    GlobalArray<NPerm> allPermsS2_arr(regina::allPermsS2, 2);
-    GlobalArray<unsigned> allPermsS2Inv_arr(regina::allPermsS2Inv, 2);
+    GlobalArray<NPerm> NPerm_S4_arr(NPerm::S4, 24);
+    GlobalArray<unsigned> NPerm_invS4_arr(NPerm::invS4, 24);
+    GlobalArray<NPerm> NPerm_orderedS4_arr(NPerm::orderedS4, 24);
+    GlobalArray<NPerm> NPerm_S3_arr(NPerm::S3, 6);
+    GlobalArray<unsigned> NPerm_invS3_arr(NPerm::invS3, 6);
+    GlobalArray<NPerm> NPerm_orderedS3_arr(NPerm::orderedS3, 6);
+    GlobalArray<NPerm> NPerm_S2_arr(NPerm::S2, 2);
+    GlobalArray<unsigned> NPerm_invS2_arr(NPerm::invS2, 2);
 
     void (NPerm::*setPerm_pair)(int, int) = &NPerm::setPerm;
     void (NPerm::*setPerm_quartet)(int, int, int, int) = &NPerm::setPerm;
@@ -59,7 +59,26 @@ namespace {
 }
 
 void addNPerm() {
-    class_<NPerm>("NPerm")
+    // Global arrays:
+    scope().attr("allPermsS4") = &NPerm_S4_arr;
+    scope().attr("allPermsS4Inv") = &NPerm_invS4_arr;
+    scope().attr("orderedPermsS4") = &NPerm_orderedS4_arr;
+    scope().attr("allPermsS3") = &NPerm_S3_arr;
+    scope().attr("allPermsS3Inv") = &NPerm_invS3_arr;
+    scope().attr("orderedPermsS3") = &NPerm_orderedS3_arr;
+    scope().attr("allPermsS2") = &NPerm_S2_arr;
+    scope().attr("allPermsS2Inv") = &NPerm_invS2_arr;
+
+    // Global functions:
+    def("faceOrdering", regina::faceOrdering);
+    def("edgeOrdering", regina::edgeOrdering);
+    def("faceDescription", faceDescription_int);
+    def("faceDescription", faceDescription_perm);
+    def("edgeDescription", edgeDescription_int);
+    def("edgeDescription", edgeDescription_perm);
+
+    // Classes:
+    scope s = class_<NPerm>("NPerm")
         .def(init<unsigned char>())
         .def(init<int, int>())
         .def(init<int, int, int, int>())
@@ -85,22 +104,13 @@ void addNPerm() {
         .def("__str__", &NPerm::toString)
     ;
 
-    // Global arrays:
-    scope().attr("allPermsS4") = &allPermsS4_arr;
-    scope().attr("allPermsS4Inv") = &allPermsS4Inv_arr;
-    scope().attr("orderedPermsS4") = &orderedPermsS4_arr;
-    scope().attr("allPermsS3") = &allPermsS3_arr;
-    scope().attr("allPermsS3Inv") = &allPermsS3Inv_arr;
-    scope().attr("orderedPermsS3") = &orderedPermsS3_arr;
-    scope().attr("allPermsS2") = &allPermsS2_arr;
-    scope().attr("allPermsS2Inv") = &allPermsS2Inv_arr;
-
-    // Global functions:
-    def("faceOrdering", regina::faceOrdering);
-    def("edgeOrdering", regina::edgeOrdering);
-    def("faceDescription", faceDescription_int);
-    def("faceDescription", faceDescription_perm);
-    def("edgeDescription", edgeDescription_int);
-    def("edgeDescription", edgeDescription_perm);
+    s.attr("S4") = &NPerm_S4_arr;
+    s.attr("invS4") = &NPerm_invS4_arr;
+    s.attr("orderedS4") = &NPerm_orderedS4_arr;
+    s.attr("S3") = &NPerm_S3_arr;
+    s.attr("invS3") = &NPerm_invS3_arr;
+    s.attr("orderedS3") = &NPerm_orderedS3_arr;
+    s.attr("S2") = &NPerm_S2_arr;
+    s.attr("invS2") = &NPerm_invS2_arr;
 }
 

@@ -151,7 +151,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
                 break;
             }
 
-            adjPerm = orderedPermsS4[permIndex] * reverse;
+            adjPerm = NPerm::orderedS4[permIndex] * reverse;
 
             if (tet[adjTet]->adjacentTetrahedron(adjPerm[currFace]) ||
                     (adjTet == currTet && adjPerm[currFace] == currFace)) {
@@ -293,7 +293,7 @@ std::string NTriangulation::dehydrate() const {
                 // gluing permutation.  There's only 24 permutations and
                 // at most 25 tetrahedra; we'll live with it.
                 for (mapIndex = 0; mapIndex < 24; mapIndex++)
-                    if (map == orderedPermsS4[mapIndex])
+                    if (map == NPerm::orderedS4[mapIndex])
                         break;
                 permChars[currGluingPos] = LETTER(mapIndex);
 

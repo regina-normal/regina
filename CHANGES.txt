@@ -52,6 +52,11 @@ Version 4.6  [ (under development) ]
         Class NPerm:
             - New routines trunc2() and trunc3() to build truncated
               version of a permutation string.
+            - New arrays NPerm::S4, NPerm::invS4, NPerm::orderedS4,
+              NPerm::S3, NPerm::invS3, NPerm::orderedS3, NPerm::S2 and
+              NPerm::invS2.  These replace the old (and now deprecated)
+              arrays regina::allPermsS4, regina::allPermsS4Inv,
+              regina::orderedPermsS4, and so on.
             - Deprecated the setPerm() routines; these are unnecessary
               because NPerm objects are very small and can just be copied
               around using the assignment operator.
@@ -108,6 +113,11 @@ Version 4.6  [ (under development) ]
         Routine writeResUsage():
             - New helper routine to assist with diagnostics and measurements
               of performance.
+        Global arrays allPermsS4, allPermsS4Inv, orderedPermsS4, allPermsS3,
+                allPermsS3Inv, orderedPermsS3, allPermsS2, allPermsS2Inv:
+            - All of these arrays are now deprecated.  Please use the new
+              arrays NPerm::S4, NPerm::invS4, NPerm::orderedS4, NPerm::S3
+              and so on.
         Global arrays edgeNumber, edgeStart, edgeEnd:
             - Deprecated; users are advised to switch to the new arrays
               NEdge::edgeNumber and NEdge::edgeVertex instead.

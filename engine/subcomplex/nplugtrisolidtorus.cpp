@@ -182,7 +182,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
 
     for (tetIndex = 0; tetIndex < nTet - 2; tetIndex++)
         for (coreIndex = 0; coreIndex < 24; coreIndex++) {
-            coreRoles[0] = allPermsS4[coreIndex];
+            coreRoles[0] = NPerm::S4[coreIndex];
             if (coreRoles[0][0] > coreRoles[0][3])
                 continue;
 

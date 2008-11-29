@@ -201,10 +201,10 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
         int i, j;
         for (i = 0; i < 24; i++) {
             // Make sure we don't check each possible core twice.
-            if (allPermsS4[i][0] > allPermsS4[i][3])
+            if (NPerm::S4[i][0] > NPerm::S4[i][3])
                 continue;
 
-            core = NTriSolidTorus::formsTriSolidTorus(base, allPermsS4[i]);
+            core = NTriSolidTorus::formsTriSolidTorus(base, NPerm::S4[i]);
             if (core) {
                 // Check that the annuli are being glued to themselves.
                 // Since the component is orientable, that's all we need
@@ -288,7 +288,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
         int torusAnnulus;
         unsigned long chainLen;
         for (i = 0; i < 24; i++) {
-            p = allPermsS4[i];
+            p = NPerm::S4[i];
             if (p[0] > p[3])
                 continue;
             core = NTriSolidTorus::formsTriSolidTorus(tet, p);
@@ -344,7 +344,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
         int j;
         int chainType;
         for (i = 0; i < 6; i++) {
-            p = allPermsS3[i];
+            p = NPerm::S3[i];
             NLayeredChain chain(tet, p);
             chain.extendMaximal();
 
@@ -519,7 +519,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     NPerm q;
     for (int p = 0; p < 6; p++) {
         core = NTriSolidTorus::formsTriSolidTorus(coreTet,
-            swap3Top * allPermsS3[p] * swap23);
+            swap3Top * NPerm::S3[p] * swap23);
         if (core) {
             // We have a potential core.
             // Now all that remains is to ensure that the layered solid

@@ -180,7 +180,7 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = allPermsS3Inv[permIndex(face)];
+        permIndex(adj) = NPerm::invS3[permIndex(face)];
 
         // Is this going to lead to an unwanted triangulation?
         if (mayPurge(face))

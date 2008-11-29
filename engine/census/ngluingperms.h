@@ -73,7 +73,7 @@ class NGluingPerms {
                  This is guaranteed to be the minimal representative of
                  its face pairing isomorphism class. */
         int* permIndices;
-            /**< The index into array \a allPermsS3 describing how each
+            /**< The index into array NPerm::S3 describing how each
                  tetrahedron face is glued to its partner.  Note that this
                  is not a gluing permutation as such but rather a permutation
                  of 0, 1 and 2 only (see the routines gluingToIndex() and
@@ -234,7 +234,7 @@ class NGluingPerms {
         NGluingPerms(const NFacePairing* newPairing);
 
         /**
-         * Returns the index into array \a allPermsS3 describing how the
+         * Returns the index into array NPerm::S3 describing how the
          * the given face is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -250,7 +250,7 @@ class NGluingPerms {
         int& permIndex(const NTetFace& source);
 
         /**
-         * Returns the index into array \a allPermsS3 describing how the
+         * Returns the index into array NPerm::S3 describing how the
          * the given face is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -267,7 +267,7 @@ class NGluingPerms {
         int& permIndex(unsigned tet, unsigned face);
 
         /**
-         * Returns the index into array \a allPermsS3 describing how the
+         * Returns the index into array NPerm::S3 describing how the
          * the given face is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -283,7 +283,7 @@ class NGluingPerms {
         const int& permIndex(const NTetFace& source) const;
 
         /**
-         * Returns the index into array \a allPermsS3 describing how the
+         * Returns the index into array NPerm::S3 describing how the
          * the given face is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -300,12 +300,12 @@ class NGluingPerms {
         const int& permIndex(unsigned tet, unsigned face) const;
 
         /**
-         * Returns the index into array \a allPermsS3 corresponding to
+         * Returns the index into array NPerm::S3 corresponding to
          * the given gluing permutation from the given face to its
-         * partner.  This need not be the index into \a allPermsS3 that
+         * partner.  This need not be the index into NPerm::S3 that
          * is currently stored for the given face.
          *
-         * Indices into array \a allPermsS3 are stored internally in the
+         * Indices into array NPerm::S3 are stored internally in the
          * array \a permIndices.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -319,19 +319,19 @@ class NGluingPerms {
          * @param gluing a possible gluing permutation from the given
          * tetrahedron face to its partner according to the underlying
          * face pairing.
-         * @return the index into \a allPermsS3 corresponding to the
+         * @return the index into NPerm::S3 corresponding to the
          * given gluing permutation; this will be between 0 and 5
          * inclusive.
          */
         int gluingToIndex(const NTetFace& source, const NPerm& gluing) const;
 
         /**
-         * Returns the index into array \a allPermsS3 corresponding to
+         * Returns the index into array NPerm::S3 corresponding to
          * the given gluing permutation from the given face to its
-         * partner.  This need not be the index into \a allPermsS3 that
+         * partner.  This need not be the index into NPerm::S3 that
          * is currently stored for the given face.
          *
-         * Indices into array \a allPermsS3 are stored internally in the
+         * Indices into array NPerm::S3 are stored internally in the
          * array \a permIndices.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -349,7 +349,7 @@ class NGluingPerms {
          * @param gluing a possible gluing permutation from the given
          * tetrahedron face to its partner according to the underlying
          * face pairing.
-         * @return the index into \a allPermsS3 corresponding to the
+         * @return the index into NPerm::S3 corresponding to the
          * given gluing permutation; this will be between 0 and 5
          * inclusive.
          */
@@ -359,10 +359,10 @@ class NGluingPerms {
         /**
          * Returns the gluing permutation from the given face to its
          * partner that corresponds to the given index into array
-         * \a allPermsS3.  This index into \a allPermsS3 need not
+         * NPerm::S3.  This index into NPerm::S3 need not
          * be the index that is currently stored for the given face.
          *
-         * Indices into array \a allPermsS3 are stored internally in the
+         * Indices into array NPerm::S3 are stored internally in the
          * array \a permIndices.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -375,20 +375,20 @@ class NGluingPerms {
          * the underlying face pairing, i.e., is not a boundary face.
          *
          * @param source the tetrahedron face under investigation.
-         * @param index an index into \a allPermsS3; this must be
+         * @param index an index into NPerm::S3; this must be
          * between 0 and 5 inclusive.
          * @return the gluing permutation corresponding to the given
-         * index into \a allPermsS3.
+         * index into NPerm::S3.
          */
         NPerm indexToGluing(const NTetFace& source, int index) const;
 
         /**
          * Returns the gluing permutation from the given face to its
          * partner that corresponds to the given index into array
-         * \a allPermsS3.  This index into \a allPermsS3 need not
+         * NPerm::S3.  This index into NPerm::S3 need not
          * be the index that is currently stored for the given face.
          *
-         * Indices into array \a allPermsS3 are stored internally in the
+         * Indices into array NPerm::S3 are stored internally in the
          * array \a permIndices.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -405,10 +405,10 @@ class NGluingPerms {
          * consideration.
          * @param face the face of the given tetrahedron under
          * investigation; this must be between 0 and 3 inclusive.
-         * @param index an index into \a allPermsS3; this must be
+         * @param index an index into NPerm::S3; this must be
          * between 0 and 5 inclusive.
          * @return the gluing permutation corresponding to the given
-         * index into \a allPermsS3.
+         * index into NPerm::S3.
          */
         NPerm indexToGluing(unsigned tet, unsigned face, int index) const;
 };
@@ -466,13 +466,13 @@ inline const int& NGluingPerms::permIndex(unsigned tet, unsigned face) const {
 inline NPerm NGluingPerms::indexToGluing(const NTetFace& source, int index)
         const {
     return NPerm(pairing->dest(source).face, 3) *
-        allPermsS3[index] * NPerm(source.face, 3);
+        NPerm::S3[index] * NPerm(source.face, 3);
 }
 
 inline NPerm NGluingPerms::indexToGluing(unsigned tet, unsigned face,
         int index) const {
     return NPerm(pairing->dest(tet, face).face, 3) *
-        allPermsS3[index] * NPerm(face, 3);
+        NPerm::S3[index] * NPerm(face, 3);
 }
 
 } // namespace regina
