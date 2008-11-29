@@ -60,6 +60,9 @@ Version 4.6  [ (under development) ]
             - Deprecated the setPerm() routines; these are unnecessary
               because NPerm objects are very small and can just be copied
               around using the assignment operator.
+        Class NPermItS4:
+            - Deprecated, since all this class does is wrap a trivial loop.
+              Just loop through the elements of NPerm::S4 directly.
         Class NPerm5:
             - New class describing permutations of five elements, which
               we need in order to describe 4-manifold triangulations.

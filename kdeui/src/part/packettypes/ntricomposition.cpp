@@ -51,7 +51,6 @@
 #include "subcomplex/nstandardtri.h"
 #include "subcomplex/ntxicore.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/npermit.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -76,6 +75,7 @@
 
 using regina::NEdge;
 using regina::NPacket;
+using regina::NPerm;
 using regina::NSatRegion;
 using regina::NTriangulation;
 
@@ -905,15 +905,16 @@ void NTriCompositionUI::findSpiralSolidTori() {
 
     regina::NSpiralSolidTorus* spiral;
     regina::NTetrahedron* tet;
-    regina::NPermItS4 it;
+    int whichPerm;
     unsigned long i, j;
     for (i = 0; i < nTets; i++) {
         tet = tri->getTetrahedron(i);
-        for (it.init(); ! it.done(); it++) {
-            if ((*it)[0] > (*it)[3])
+        for (whichPerm = 0; whichPerm < 24 /* size of S4 */; ++whichPerm) {
+            if (NPerm::S4[whichPerm][0] > NPerm::S4[whichPerm][3])
                 continue;
 
-            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet, *it);
+            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet,
+                NPerm::S4[whichPerm]);
             if (! spiral)
                 continue;
             if (! spiral->isCanonical(tri)) {
