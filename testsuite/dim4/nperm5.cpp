@@ -36,6 +36,7 @@ using regina::NPerm5;
 class NPerm5Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NPerm5Test);
 
+    CPPUNIT_TEST(sign);
     CPPUNIT_TEST(exhaustive);
 
     CPPUNIT_TEST_SUITE_END();
@@ -45,6 +46,20 @@ class NPerm5Test : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+        }
+
+        void sign() {
+            int expected;
+            for (int i = 0; i < 120; ++i) {
+                expected = (i % 2 == 0 ? 1 : -1);
+                if (NPerm5::S5[i].sign() != expected) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " was found to have "
+                        "sign " << NPerm5::S5[i].sign()
+                        << " instead of " << expected << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 
         bool looksLikeIdentity(const NPerm5& p) {
