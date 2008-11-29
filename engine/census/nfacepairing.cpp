@@ -31,7 +31,6 @@
 #include <vector>
 #include "census/nfacepairing.h"
 #include "triangulation/nfacepair.h"
-#include "triangulation/npermit.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
@@ -1159,10 +1158,10 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
     if (isUnmatched(0, 0)) {
         // We must have just one tetrahedron with no face gluings at all.
         NIsomorphismDirect* ans;
-        for (NPermItS4 it; ! it.done(); it++) {
+        for (int i = 0; i < 24 /* size of S4 */; ++i) {
             ans = new NIsomorphismDirect(1);
             ans->tetImage(0) = 0;
-            ans->facePerm(0) = *it;
+            ans->facePerm(0) = NPerm::S4[i];
             list.push_back(ans);
         }
         return true;

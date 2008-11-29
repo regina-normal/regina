@@ -48,6 +48,10 @@ namespace regina {
  * An iterator class that runs through all 24 permutations of four
  * elements.
  *
+ * \deprecated This class will removed in a future release of Regina, since
+ * it is completely unnecessary.  Just loop directly through the 24 elements
+ * of NPerm::S4.
+ *
  * \ifacespython Not present.
  */
 class NPermItS4 {

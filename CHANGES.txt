@@ -60,6 +60,9 @@ Version 4.6  [ (under development) ]
             - Deprecated the setPerm() routines; these are unnecessary
               because NPerm objects are very small and can just be copied
               around using the assignment operator.
+        Class NPermItS4:
+            - Deprecated, since all this class does is wrap a trivial loop.
+              Just loop through the elements of NPerm::S4 directly.
         Class NPillowTwoSphere, NSnappedTwoSphere:
             - Removed reduceTriangulation() and getReducedTriangulation(),
               both of which are empty shells of routines that have never
