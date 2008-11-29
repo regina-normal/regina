@@ -27,19 +27,24 @@
 /* end stub */
 
 #include "dim4/nperm5.h"
+#include "../globalarray.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NPerm5;
+using regina::python::GlobalArray;
 
 namespace {
+    GlobalArray<NPerm5> NPerm5_S5_arr(NPerm5::S5, 120);
+    GlobalArray<NPerm5> NPerm5_orderedS5_arr(NPerm5::orderedS5, 120);
+
     int perm5_getItem(const NPerm5& p, int index) {
         return p[index];
     }
 }
 
 void addNPerm5() {
-    class_<NPerm5>("NPerm5")
+    scope s = class_<NPerm5>("NPerm5")
         .def(init<unsigned>())
         .def(init<int, int>())
         .def(init<int, int, int, int, int>())
@@ -63,5 +68,8 @@ void addNPerm5() {
         .def("__str__", &NPerm5::toString)
         .staticmethod("fromPerm4");
     ;
+
+    s.attr("S5") = &NPerm5_S5_arr;
+    s.attr("orderedS5") = &NPerm5_orderedS5_arr;
 }
 

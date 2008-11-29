@@ -63,6 +63,25 @@ namespace regina {
  * \testfull
  */
 class NPerm5 {
+    public:
+        /**
+         * Contains all possible permutations of five elements.
+         *
+         * The permutations with even indices in the array are the even
+         * permutations, and those with odd indices in the array are the
+         * odd permutations.
+         *
+         * Note that the permutations are not necessarily in
+         * lexicographical order.
+         */
+        static const NPerm5 S5[120];
+
+        /**
+         * Contains all possible permutations of five elements in
+         * lexicographical order.
+         */
+        static const NPerm5 orderedS5[120];
+
     private:
         unsigned code;
             /**< The internal code representing this permutation. */
