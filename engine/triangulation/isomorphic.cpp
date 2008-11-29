@@ -318,7 +318,7 @@ unsigned long NTriangulation::findIsomorphisms(
 
         whichComp[startTet[comp]] = comp;
         iso.tetImage(tetIndex) = startTet[comp];
-        iso.facePerm(tetIndex) = allPermsS4[startPerm[comp]];
+        iso.facePerm(tetIndex) = NPerm::S4[startPerm[comp]];
         toProcess.push(tetIndex);
 
         broken = false;

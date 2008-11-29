@@ -102,7 +102,7 @@ inline void NPermItS4::operator ++ (int) {
 }
 
 inline const NPerm& NPermItS4::operator * () const {
-    return allPermsS4[permIndex];
+    return NPerm::S4[permIndex];
 }
 inline bool NPermItS4::done() const {
     return (permIndex >= 24);

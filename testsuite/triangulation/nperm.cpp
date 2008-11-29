@@ -39,6 +39,7 @@ class NPermTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(exhaustive);
+    CPPUNIT_TEST(deprecatedArrays);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -51,13 +52,11 @@ class NPermTest : public CppUnit::TestFixture {
 
         void inverse() {
             for (int i = 0; i < 24; i++) {
-                if (regina::allPermsS4[i].inverse() !=
-                        regina::allPermsS4[regina::allPermsS4Inv[i]]) {
+                if (NPerm::S4[i].inverse() != NPerm::S4[NPerm::invS4[i]]) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " was found to have "
-                        "inverse " << regina::allPermsS4[i].inverse()
-                        << " instead of " <<
-                        regina::allPermsS4[regina::allPermsS4Inv[i]] << ".";
+                        "inverse " << NPerm::S4[i].inverse()
+                        << " instead of " << NPerm::S4[NPerm::invS4[i]] << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -67,10 +66,10 @@ class NPermTest : public CppUnit::TestFixture {
             int expected;
             for (int i = 0; i < 24; i++) {
                 expected = (i % 2 == 0 ? 1 : -1);
-                if (regina::allPermsS4[i].sign() != expected) {
+                if (NPerm::S4[i].sign() != expected) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " was found to have "
-                        "sign " << regina::allPermsS4[i].sign()
+                        "sign " << NPerm::S4[i].sign()
                         << " instead of " << expected << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -339,6 +338,43 @@ class NPermTest : public CppUnit::TestFixture {
 
             if (tested != 24)
                 CPPUNIT_FAIL("All 24 permutations in S(4) were not tested.");
+        }
+
+        void deprecatedArrays() {
+            unsigned i;
+
+            for (i = 0; i < 24; ++i) {
+                if (regina::allPermsS4[i] != NPerm::S4[i])
+                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
+                        "does not match the new NPerm::S4.");
+                if (regina::allPermsS4Inv[i] != NPerm::invS4[i])
+                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
+                        "does not match the new NPerm::S4.");
+                if (regina::orderedPermsS4[i] != NPerm::orderedS4[i])
+                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
+                        "does not match the new NPerm::S4.");
+            }
+
+            for (i = 0; i < 6; ++i) {
+                if (regina::allPermsS3[i] != NPerm::S3[i])
+                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
+                        "does not match the new NPerm::S4.");
+                if (regina::allPermsS3Inv[i] != NPerm::invS3[i])
+                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
+                        "does not match the new NPerm::S4.");
+                if (regina::orderedPermsS3[i] != NPerm::orderedS3[i])
+                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
+                        "does not match the new NPerm::S4.");
+            }
+
+            for (i = 0; i < 2; ++i) {
+                if (regina::allPermsS2[i] != NPerm::S2[i])
+                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
+                        "does not match the new NPerm::S4.");
+                if (regina::allPermsS2Inv[i] != NPerm::invS2[i])
+                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
+                        "does not match the new NPerm::S4.");
+            }
         }
 };
 

@@ -427,7 +427,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = allPermsS3Inv[permIndex(face)];
+        permIndex(adj) = NPerm::invS3[permIndex(face)];
 
         // In the following code we use several results from
         // "Face pairing graphs and 3-manifold enumeration", B. A. Burton,

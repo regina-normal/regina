@@ -75,7 +75,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
     NPerm firstBottomRoles, firstTopRoles, secondBottomRoles, secondTopRoles;
 
     for (int p = 0; p < 6; p++) {
-        first = new NLayeredChain(base, allPermsS3[p]);
+        first = new NLayeredChain(base, NPerm::S3[p]);
         first->extendMaximal();
 
         firstTop = first->getTop();
