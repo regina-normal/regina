@@ -568,9 +568,9 @@ void NHomologicalData::computeChainComplexes() {
         // to the end simplex.
 
         bool stage0nec = false;
-        unsigned long stage0edgeNum;
-        bool stage0posOr;
-        unsigned stage0choice; // this indicates the vertex of the simplex
+        unsigned long stage0edgeNum = 0;
+        bool stage0posOr = false;
+        unsigned stage0choice = 0; // this indicates the vertex of the simplex
         // that our chosen edge
         // with its induced orientation ends...
 
@@ -588,17 +588,17 @@ void NHomologicalData::computeChainComplexes() {
             stage0edgeNum = tri->edgeIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
                 getEdge( NEdge::edgeNumber[vert0Num][stage0choice] ));
-            stage0posOr = ( tri->getFace(dNBF[j]) ->
+            stage0posOr = ( static_cast<unsigned>(tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron()->getEdgeMapping(
-                NEdge::edgeNumber[vert0Num][stage0choice])[1] == stage0choice) ?
+                NEdge::edgeNumber[vert0Num][stage0choice])[1]) == stage0choice) ?
                 true : false ;
         }
 
 
         bool stage4nec = false; // stage 4
-        unsigned long stage4edgeNum;
-        bool stage4posOr;
-        unsigned stage4choice;
+        unsigned long stage4edgeNum = 0;
+        bool stage4posOr = false;
+        unsigned stage4choice = 0;
 
         if (vert1Num == tet1FaceIndex) {
             stage4nec = true;
@@ -614,18 +614,19 @@ void NHomologicalData::computeChainComplexes() {
             stage4edgeNum = tri->edgeIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
                 getEdge( NEdge::edgeNumber[vert1Num][stage4choice] ));
-            stage4posOr = ( tri->getFace(dNBF[j]) ->
+            stage4posOr = ( static_cast<unsigned>(tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron()->getEdgeMapping(
-                NEdge::edgeNumber[vert1Num][stage4choice])[1] == vert1Num ) ?
+                NEdge::edgeNumber[vert1Num][stage4choice])[1]) == vert1Num ) ?
                 true : false ;
         }
 
         // decide if stages 1 and 3 are neccessary...
         bool stage1nec = false;         // stage 1
-        unsigned stage1v, stage1vi;
-        unsigned long stage1edgeNum;
-        bool stage1posOr;
-        unsigned stage1FaceToUse;
+        unsigned stage1v = 0;
+	unsigned stage1vi = 0;
+        unsigned long stage1edgeNum = 0;
+        bool stage1posOr = false;
+        unsigned stage1FaceToUse = 0;
 
         if (stage0nec && tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
@@ -650,14 +651,15 @@ void NHomologicalData::computeChainComplexes() {
                 3*(tri->faceIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
                 getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
-            stage1posOr = ( ( P3[(P3.preImageOf(stage1v)+1) % 3] !=
+            stage1posOr = ( ( static_cast<unsigned>(P3[(P3.preImageOf(stage1v)+1) % 3]) !=
                 stage1vi ) ? true : false );
         }
         bool stage3nec = false;
-        unsigned stage3v, stage3vi;
-        unsigned long stage3edgeNum;
-        bool stage3posOr;
-        unsigned stage3FaceToUse;
+        unsigned stage3v = 0;
+	unsigned stage3vi = 0;
+        unsigned long stage3edgeNum = 0;
+        bool stage3posOr = false;
+        unsigned stage3FaceToUse = 0;
 
         if (stage4nec && tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
@@ -682,11 +684,12 @@ void NHomologicalData::computeChainComplexes() {
                 3*(tri->faceIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
                 getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
-            stage3posOr = ( ( P3[(P3.preImageOf(stage3v)+1) % 3] ==
+            stage3posOr = ( ( static_cast<unsigned>(P3[(P3.preImageOf(stage3v)+1) % 3]) ==
                 stage3vi ) ? true : false );
         }
 
-        unsigned stage2startdata, stage2enddata;
+        unsigned stage2startdata = 0;
+	unsigned stage2enddata = 0;
         // 3*vertex number(0,1,2) + another vertex number (0,1,2)
         // these are the same indicates the vertex is non-ideal
         // these are different indicates the vertex is ideal and dir
@@ -776,10 +779,14 @@ void NHomologicalData::computeChainComplexes() {
                 }
                 if ( currV/3  != prevV/3 ) // regular edge
                 {
-                    H1map->entry( tri->edgeIndex(tri->getFace(dNBF[j])->
-                        getEdge( ((currV/3) + 1) % 3 )), j ) +=
-                        ( (tri->getFace(dNBF[j]) -> getEdgeMapping(
-                        ((currV/3) + 1) % 3)[1] == currV/3) ? +1 : -1);
+                    H1map->entry(tri->edgeIndex(tri->getFace(dNBF[j])->getEdge(((currV/3) + 1) % 3 )), j) 
+                      += ( 
+                           ( 
+                             static_cast<unsigned>( 
+                              tri->getFace(dNBF[j])->getEdgeMapping(((currV/3) + 1) % 3)[1]
+                                                  ) == currV/3
+                           ) 
+                         ? +1 : -1 );
                 }
                 // move prevV to be equal to currV.
                 prevV = currV;
