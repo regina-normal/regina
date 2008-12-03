@@ -384,6 +384,7 @@ int mainSlave() {
         if (! out) {
             delete tree;
             slaveSendResult(RESULT_ERR_OUTPUT);
+            continue;
         }
 
         done = 0;
