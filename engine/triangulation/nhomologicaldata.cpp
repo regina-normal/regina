@@ -623,7 +623,7 @@ void NHomologicalData::computeChainComplexes() {
         // decide if stages 1 and 3 are neccessary...
         bool stage1nec = false;         // stage 1
         unsigned stage1v = 0;
-	unsigned stage1vi = 0;
+        unsigned stage1vi = 0;
         unsigned long stage1edgeNum = 0;
         bool stage1posOr = false;
         unsigned stage1FaceToUse = 0;
@@ -651,12 +651,13 @@ void NHomologicalData::computeChainComplexes() {
                 3*(tri->faceIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
                 getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
-            stage1posOr = ( ( static_cast<unsigned>(P3[(P3.preImageOf(stage1v)+1) % 3]) !=
+            stage1posOr = ( ( static_cast<unsigned>(
+                P3[(P3.preImageOf(stage1v)+1) % 3]) !=
                 stage1vi ) ? true : false );
         }
         bool stage3nec = false;
         unsigned stage3v = 0;
-	unsigned stage3vi = 0;
+        unsigned stage3vi = 0;
         unsigned long stage3edgeNum = 0;
         bool stage3posOr = false;
         unsigned stage3FaceToUse = 0;
@@ -684,12 +685,13 @@ void NHomologicalData::computeChainComplexes() {
                 3*(tri->faceIndex(tri->getFace(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
                 getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
-            stage3posOr = ( ( static_cast<unsigned>(P3[(P3.preImageOf(stage3v)+1) % 3]) ==
+            stage3posOr = ( ( static_cast<unsigned>(
+                P3[(P3.preImageOf(stage3v)+1) % 3]) ==
                 stage3vi ) ? true : false );
         }
 
         unsigned stage2startdata = 0;
-	unsigned stage2enddata = 0;
+        unsigned stage2enddata = 0;
         // 3*vertex number(0,1,2) + another vertex number (0,1,2)
         // these are the same indicates the vertex is non-ideal
         // these are different indicates the vertex is ideal and dir
