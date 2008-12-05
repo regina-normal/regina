@@ -134,6 +134,29 @@ namespace {
         friend class TruncTet;
     };
 
+    class TetBlockSet {
+        private:
+            unsigned long triCount_[4]; /* indexed by vertex */
+            unsigned long quadCount_;
+            int quadType_; /* -1 if no quads. */
+
+            Block** triPrism_[4]; /* indexed by vertex; counting outwards towards
+                                     the centre */
+            Block** quadPrism_; /* counting away from vertex 0 */
+            Block* truncHalfTet_[2]; /* counting away from vertex 0 */
+            Block* truncTet_;
+
+        public:
+            TetBlockSet(const NNormalSurface* s, unsigned long tetIndex);
+            ~TetBlockSet();
+
+            unsigned long numQuadBlocks(int face, int fromVertex);
+            Block* quadBlock(int fromVertex, unsigned long whichBlock);
+            Block* hexBlock(int face);
+
+            void insertInto(NTriangulation* tri);
+    };
+
     inline Block::~Block() {
         for (unsigned i = 0; i < 4; ++i)
             delete bdry_[i];
@@ -483,11 +506,196 @@ namespace {
 
         outerVertices_ = outerVertices_ * NPerm(1, 2, 0, 3);
     }
+
+    TetBlockSet::TetBlockSet(const NNormalSurface* s, unsigned long tetIndex) {
+        unsigned long i, j;
+        for (i = 0; i < 4; ++i)
+            triCount_[i] = s->getTriangleCoord(tetIndex, i).longValue();
+
+        NLargeInteger coord;
+        if ((coord = s->getQuadCoord(tetIndex, 0)) > 0) {
+            quadCount_ = coord.longValue();
+            quadType_ = 0;
+        } else if ((coord = s->getQuadCoord(tetIndex, 1)) > 0) {
+            quadCount_ = coord.longValue();
+            quadType_ = 1;
+        } else if ((coord = s->getQuadCoord(tetIndex, 2)) > 0) {
+            quadCount_ = coord.longValue();
+            quadType_ = 2;
+        } else {
+            quadCount_ = 0;
+            quadType_ = -1;
+        }
+
+        NTetrahedron* tet = s->getTriangulation()->getTetrahedron(tetIndex);
+
+        // Build the blocks.
+        // Note in all of this that we insert an extra "fake" triangle at each
+        // vertex (i.e., the entire surface gains a fake set of extra vertex links).
+        for (i = 0; i < 4; ++i) {
+            if (triCount_[i] == 0)
+                triPrism_[i] = 0;
+            else {
+                triPrism_[i] = new Block*[triCount_[i]];
+                for (j = 0; j < triCount_[i]; ++j)
+                    triPrism_[i][j] = new TriPrism(tet, i);
+            }
+        }
+
+        if (quadCount_ == 0) {
+            quadPrism_ = 0;
+            truncHalfTet_[0] = truncHalfTet_[1] = 0;
+            truncTet_ = new TruncTet(tet);
+        } else {
+            if (quadCount_ > 1) {
+                quadPrism_ = new Block*[quadCount_ - 1];
+                for (j = 0; j < quadCount_ - 1; ++j)
+                    quadPrism_[j] = new QuadPrism(tet, quadType_);
+            } else
+                quadPrism_ = 0;
+
+            truncHalfTet_[0] = new TruncHalfTet(tet, 5 - quadType_);
+            truncHalfTet_[1] = new TruncHalfTet(tet, quadType_);
+
+            truncTet_ = 0;
+        }
+    }
+
+    TetBlockSet::~TetBlockSet() {
+        unsigned long i, j;
+        for (i = 0; i < 4; ++i)
+            if (triPrism_[i]) {
+                for (j = 0; j < triCount_[i]; ++j)
+                    delete triPrism_[i][j];
+                delete[] triPrism_[i];
+            }
+
+        if (quadCount_ == 0) {
+            delete truncTet_;
+        } else {
+            if (quadPrism_) {
+                for (j = 0; j < quadCount_ - 1; ++j)
+                    delete quadPrism_[j];
+                delete[] quadPrism_;
+            }
+
+            delete truncHalfTet_[0];
+            delete truncHalfTet_[1];
+        }
+    }
+
+    unsigned long TetBlockSet::numQuadBlocks(int face, int fromVertex) {
+        // We see all triangular discs surrounding fromVertex.
+        unsigned long ans = triCount_[fromVertex];
+
+        if (quadType_ == regina::vertexSplit[face][fromVertex]) {
+            // We also see the quadrilateral discs.
+            ans += quadCount_;
+        }
+
+        return ans;
+    }
+
+    Block* TetBlockSet::quadBlock(int fromVertex,
+            unsigned long whichBlock) {
+        // First come the triangular prisms.
+        if (whichBlock < triCount_[fromVertex])
+            return triPrism_[fromVertex][whichBlock];
+
+        // Next comes the truncated half-tetrahedron.
+        if (whichBlock == triCount_[fromVertex]) {
+            if (fromVertex == 0 ||
+                    fromVertex == NEdge::edgeNumber[quadType_][1])
+                return truncHalfTet_[0];
+            else
+                return truncHalfTet_[1];
+        }
+
+        // Finally we have the quad prisms.
+        if (fromVertex == 0 || fromVertex == NEdge::edgeNumber[quadType_][1])
+            return quadPrism_[whichBlock - triCount_[fromVertex] - 1];
+        else
+            return quadPrism_[
+                quadCount_ - (whichBlock - triCount_[fromVertex]) - 1];
+    }
+
+    Block* TetBlockSet::hexBlock(int face) {
+        if (quadCount_ == 0)
+            return truncTet_;
+
+        if (face == 0 || face == NEdge::edgeNumber[quadType_][1])
+            return truncHalfTet_[1];
+        return truncHalfTet_[0];
+    }
+
+    void TetBlockSet::insertInto(NTriangulation* tri) {
+        unsigned long i, j;
+        for (i = 0; i < 4; ++i)
+            if (triPrism_[i])
+                for (j = 0; j < triCount_[i]; ++j)
+                    triPrism_[i][j]->insertInto(tri);
+
+        if (quadCount_ == 0)
+            truncTet_->insertInto(tri);
+        else {
+            if (quadPrism_)
+                for (j = 0; j < quadCount_ - 1; ++j)
+                    quadPrism_[j]->insertInto(tri);
+
+            truncHalfTet_[0]->insertInto(tri);
+            truncHalfTet_[1]->insertInto(tri);
+        }
+    }
 }
 
 NTriangulation* NNormalSurface::cutAlong() const {
-    // TODO: Actually write this routine.
     NTriangulation* ans = new NTriangulation();
+
+    unsigned long nTet = getTriangulation()->getNumberOfTetrahedra();
+    if (nTet == 0)
+        return ans;
+
+    unsigned long i;
+    TetBlockSet** sets = new TetBlockSet*[nTet];
+    for (i = 0; i < nTet; ++i)
+        sets[i] = new TetBlockSet(this, i);
+
+    NTriangulation::FaceIterator fit;
+    NFace* f;
+    unsigned long tet0, tet1;
+    int face0, face1;
+    int fromVertex0, fromVertex1;
+    unsigned long quadBlocks;
+    for (fit = getTriangulation()->getFaces().begin();
+            fit != getTriangulation()->getFaces().end(); ++fit) {
+        f = *fit;
+        if (f->isBoundary())
+            continue;
+
+        tet0 = f->getEmbedding(0).getTetrahedron()->markedIndex();
+        tet1 = f->getEmbedding(1).getTetrahedron()->markedIndex();
+        face0 = f->getEmbedding(0).getFace();
+        face1 = f->getEmbedding(1).getFace();
+
+        for (fromVertex0 = 0; fromVertex0 < 4; ++fromVertex0) {
+            if (fromVertex0 == face0)
+                continue;
+            fromVertex1 = f->getEmbedding(0).getTetrahedron()->
+                adjacentGluing(face0)[fromVertex0];
+
+            quadBlocks = sets[tet0]->numQuadBlocks(face0, fromVertex0);
+            for (i = 0; i < quadBlocks; ++i)
+                sets[tet0]->quadBlock(fromVertex0, i)->joinTo(
+                    face0, sets[tet1]->quadBlock(fromVertex1, i));
+        }
+        sets[tet0]->hexBlock(face0)->joinTo(face0, sets[tet1]->hexBlock(face1));
+    }
+
+    for (i = 0; i < nTet; ++i) {
+        sets[i]->insertInto(ans);
+        delete sets[i];
+    }
+    delete[] sets;
 
     return ans;
 }
