@@ -57,6 +57,10 @@ namespace regina {
  * split split the four tetrahedron vertices 0,1,2,3 into two pairs.
  * <tt>vertexSplit[i][j]</tt> is the number of the vertex split that
  * keeps vertices <tt>i</tt> and <tt>j</tt> together.
+ *
+ * It is guaranteed that vertex split \a i will keep the vertices of
+ * edge \a i together (and will therefore also keep the vertices of edge
+ * \a 5-i together).
  */
 extern const int vertexSplit[4][4];
 /**
@@ -971,6 +975,10 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          *
          * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octagonal discs.
+         *
+         * \todo Have some error flag so we can barf politely if the
+         * resulting number of tetrahedra is going to be too large to
+         * handle.
          *
          * @return a pointer to the newly allocated resulting
          * triangulation.
