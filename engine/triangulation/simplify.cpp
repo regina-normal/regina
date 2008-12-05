@@ -924,7 +924,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
                 // We do not need to worry about missing check 0 for
                 // the last boundary face, since if it fails there then
                 // it must also fail for the first.
-                if (e->isBoundary())
+                if (e->isBoundary() && it == embs.begin())
                     continue;
 
                 id1 = ((upper->isBoundary() || ! upper->isValid()) ?
