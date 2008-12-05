@@ -193,6 +193,10 @@ class NEdge : public ShareableObject, public NMarkedElement {
          * Note that edge \a i is always opposite edge \a 5-i in a
          * tetrahedron.
          *
+         * For reference, Regina assigns edge numbers in lexicographical
+         * order.  That is, edge 0 joins vertices 0 and 1, edge 1 joins
+         * vertices 0 and 2, edge 2 joins vertices 0 and 3, and so on.
+         *
          * This is identical to the old regina::edgeNumber global array.
          * Users are advised to use this NEdge::edgeNumber array instead,
          * since the global regina::edgeNumber is deprecated and will
