@@ -89,6 +89,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Surface list actions
          */
+        KAction* actCutAlong;
         KAction* actCrush;
         KActionCollection* surfaceActions;
         QPtrList<KAction> surfaceActionList;
@@ -132,12 +133,13 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Surface list actions.
          */
+        void cutAlong();
         void crush();
 
         /**
          * Update the states of internal components.
          */
-        void updateCrushState();
+        void updateActionStates();
 
         /**
          * Provides auto-resizing of columns.

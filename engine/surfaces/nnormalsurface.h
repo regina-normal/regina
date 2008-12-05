@@ -968,13 +968,9 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          *
          * \warning The number of tetrahedra in the new triangulation
          * can be <i>very</i> large.
-         * \warning <b>This routine has not been implemented and so
-         * currently returns an empty triangulation.</b>
          *
          * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octagonal discs.
-         *
-         * \todo \feature Implement this routine.
          *
          * @return a pointer to the newly allocated resulting
          * triangulation.

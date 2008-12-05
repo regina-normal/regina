@@ -45,6 +45,7 @@ Version 4.6  [ (under development) ]
               graphs and union-find", B. A. Burton, Discrete Comput. Geom. 38
               (2007), no. 3, 527--571.
         Class NNormalSurface:
+            - Finally implemented cutAlong()!
             - New routine locallyCompatible() for testing intersections
               between normal surfaces.
             - New routine rawVector() that gives direct read-only access to
@@ -131,6 +132,8 @@ Version 4.6  [ (under development) ]
           "3-ball?" entry beneath the current "3-sphere?" entry.
         - Fixed a bug whereby small triangulations occasionally became
           read-only after a user visited the Surfaces panel.
+        - The normal surface list viewer now has an additional "Cut Along"
+          menu item.  The shortcut letter for "Crush" has changed as well.
     TEST SUITE:
         - Added very thorough tests for NPerm.
         - Additional tests for triangulation simplification and Euler

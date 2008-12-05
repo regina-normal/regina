@@ -123,7 +123,25 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         ReginaPart::factoryInstance());
     surfaceActionList.setAutoDelete(true);
 
-    actCrush = new KAction(i18n("&Crush Surface"), QString::null /* pixmap */,
+    actCutAlong = new KAction(i18n("Cu&t Along Surface"),
+        QString::null /* pixmap */,
+        0 /* shortcut */, this, SLOT(cutAlong()), surfaceActions,
+        "surface_cutalong");
+    actCutAlong->setToolTip(i18n("Cut the triangulation along the "
+        "selected surface"));
+    actCutAlong->setEnabled(false);
+    actCutAlong->setWhatsThis(i18n("<qt>Cuts open the surround triangulation "
+        "along the selected surface.  This triangulation will not "
+        "be changed; instead a new cut-open triangulation will be created.<p>"
+        "This operation will never change the topology of the underlying "
+        "3-manifold beyond just cutting along the surface (as opposed to "
+        "the related <i>crushing</i> operation, which might).  However, "
+        "because the new surface boundaries are created from real "
+        "boundary faces, the resulting number of tetrahedra might be very "
+        "large.</qt>"));
+    surfaceActionList.append(actCutAlong);
+
+    actCrush = new KAction(i18n("Crus&h Surface"), QString::null /* pixmap */,
         0 /* shortcut */, this, SLOT(crush()), surfaceActions,
         "surface_crush");
     actCrush->setToolTip(i18n("Crush the selected surface to a point"));
@@ -231,10 +249,11 @@ void NSurfaceCoordinateUI::refreshLocal() {
     for (i = 0; i < table->columns(); i++)
         table->adjustColumn(i);
 
-    // Hook up the crush action to the new table.
+    // Hook up the cut and crush actions to the new table.
+    actCutAlong->setEnabled(false);
     actCrush->setEnabled(false);
     connect(table.get(), SIGNAL(selectionChanged()),
-        this, SLOT(updateCrushState()));
+        this, SLOT(updateActionStates()));
 
     // Final tidying up.
     connect(table.get(), SIGNAL(itemRenamed(QListViewItem*, int,
@@ -262,13 +281,38 @@ void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
             item->setRenameEnabled(0, readWrite);
     }
 
-    updateCrushState();
+    updateActionStates();
 }
 
 void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
     // Our currently applied filter is about to be destroyed.
     filter->setCurrentItem(0); // (i.e., None)
     refreshLocal();
+}
+
+void NSurfaceCoordinateUI::cutAlong() {
+    QListViewItem* item = table->selectedItem();
+    if (! item) {
+        KMessageBox::error(ui,
+            i18n("No normal surface is currently selected to cut along."));
+        return;
+    }
+
+    const regina::NNormalSurface* toCutAlong =
+        dynamic_cast<NSurfaceCoordinateItem*>(item)->getSurface();
+    if (! toCutAlong->isCompact()) {
+        KMessageBox::error(ui, i18n("The selected surface is non-compact "
+            "and so cannot be cut along."));
+        return;
+    }
+
+    // Go ahead and cut along the surface.
+    regina::NTriangulation* ans = toCutAlong->cutAlong();
+    ans->setPacketLabel(surfaces->makeUniqueLabel(i18n("Cut-open %1").arg(
+        surfaces->getTriangulation()->getPacketLabel().c_str()).ascii()));
+    surfaces->insertChildLast(ans);
+
+    enclosingPane->getPart()->packetView(ans, true);
 }
 
 void NSurfaceCoordinateUI::crush() {
@@ -296,10 +340,13 @@ void NSurfaceCoordinateUI::crush() {
     enclosingPane->getPart()->packetView(ans, true);
 }
 
-void NSurfaceCoordinateUI::updateCrushState() {
-    actCrush->setEnabled(isReadWrite && table.get() &&
+void NSurfaceCoordinateUI::updateActionStates() {
+    bool canCrushOrCut = isReadWrite && table.get() &&
         table->selectedItem() != 0 && (! surfaces->allowsAlmostNormal())
-        && surfaces->isEmbeddedOnly());
+        && surfaces->isEmbeddedOnly();
+
+    actCutAlong->setEnabled(canCrushOrCut);
+    actCrush->setEnabled(canCrushOrCut);
 }
 
 void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
