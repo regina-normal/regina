@@ -902,13 +902,6 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             // Run through all faces containing e.
             it = embs.begin();
 
-            // Don't forget to skip the first (boundary) face if e is a
-            // boundary edge.  We will skip the last boundary face
-            // automatically, since for a boundary edge there are k+1
-            // faces but only k embeddings.
-            if (e->isBoundary())
-                ++it;
-
             for ( ; it != embs.end(); ++it) {
                 tet = it->getTetrahedron();
                 p = it->getVertices();
@@ -922,6 +915,17 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
                     delete[] parent;
                     return false;
                 }
+
+                // Now that we've run check 0, skip the first (boundary)
+                // face if e is a boundary edge.  We will skip the
+                // last boundary face automatically, since for a boundary
+                // edge there are k+1 faces but only k embeddings.
+                //
+                // We do not need to worry about missing check 0 for
+                // the last boundary face, since if it fails there then
+                // it must also fail for the first.
+                if (e->isBoundary())
+                    continue;
 
                 id1 = ((upper->isBoundary() || ! upper->isValid()) ?
                     nEdges : upper->markedIndex());
