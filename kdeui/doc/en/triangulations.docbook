@@ -1669,30 +1669,57 @@
    </para>
   </sect2>
 
-  <sect2 id="tri-crush">
-   <title>Crushing Normal Surfaces</title>
+  <sect2 id="tri-cutcrush">
+   <title>Cutting Along and Crushing Normal Surfaces</title>
 
    <para>
     A triangulation can be modified by finding a normal surface within
-    it and crushing that surface to a point.  Note that this action
-    might change the topology of the 3-manifold beyond the simple act
-    of slicing along the surface, and in some cases might
-    introduce ideal vertices or even invalid edges.  For details see
-    <function><classname>NNormalSurface</classname>::crush()</function>
-    in the &regenginedocs;.
+    it, and either cutting along that surface or crushing it to a point.
+    Each operation has its advantages and disadvantages:
    </para>
+   <itemizedlist>
+    <listitem><para>
+     Cutting along a surface will never change the topology of the
+     3-manifold beyond the simple act of slicing along the surface.
+     However, it has the potential to <emphasis>vastly</emphasis>
+     increase the number of tetrahedra in the triangulation.
+    </para></listitem>
+    <listitem>
+     <para>
+      Crushing a surface to a point will never increase the number of
+      tetrahedra (and generally will reduce it).  However, crushing can
+      introduce additional unexpected changes to the topology of the
+      3-manifold, and in some cases can introduce ideal vertices or
+      invalid edges.  For details see
+      <function><classname>NNormalSurface</classname>::crush()</function>
+      in the &regenginedocs;.
+     </para>
+     <para>
+      In general you should only crush a surface to
+      a point when there are theoretical reasons to know that this is
+      safe.  Examples of safe scenarios can be found in Jaco and
+      Rubinstein's paper on 0-efficiency <xref linkend="bib-0-efficiency"/>.
+     </para>
+    </listitem>
+   </itemizedlist>
    <para>
-    A normal surface can be crushed as follows.
+    A normal surface can be cut along or crushed as follows.
     Open a list of normal surfaces,
-    select the surface to crush and invoke the
+    select the surface to operate upon, and invoke either the
+    <menuchoice>
+     <guimenu>Normal Surfaces</guimenu>
+     <guimenuitem>Cut Along Surface</guimenuitem>
+    </menuchoice>
+    or the
     <menuchoice>
      <guimenu>Normal Surfaces</guimenu>
      <guimenuitem>Crush Surface</guimenuitem>
     </menuchoice>
-    menu item (note that this menu item only appears when viewing a
+    menu item (note that these menu items only appear when viewing a
     normal surface list).
     A new triangulation will be created in which the surface has been
-    crushed.  The original triangulation will not be changed.
+    cut along or crushed accordingly.
+    The original triangulation will not be changed.
    </para>
   </sect2>
  </sect1>

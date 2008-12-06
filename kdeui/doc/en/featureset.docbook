@@ -159,7 +159,8 @@
       double cover;
      </para></listitem>
      <listitem><para>
-      Crushing normal surfaces within a triangulation to a point, as
+      Cutting along normal surfaces within a triangulation
+      or crushing them to a point, as
       described <link linkend="features-surfaces">below</link>.
      </para></listitem>
     </itemizedlist>
@@ -265,34 +266,23 @@
    </itemizedlist>
   </para>
   <para>
-   In addition the program can crush a normal surface to a point within a
-   triangulation.  Crushing is a powerful tool for the analysis of the role
-   played by a surface within a 3-manifold, and is used
-   in Jaco and Rubinstein's 0-efficiency algorithm
-   <xref linkend="bib-0-efficiency"/>.
+   In addition the program can cut along a normal surface or crush it
+   to a point within a triangulation.  Both operations are powerful
+   tools for the analysis of the role played by a surface within a
+   3-manifold.
   </para>
   <para>
-   A related but significantly more complex procedure is the cutting open
-   of a triangulation along a normal surface and the retriangulation of the
-   resulting 3-manifold(s).  This procedure was introduced by Haken
+   The procedure of cutting a triangulation open along a normal surface
+   and retriangulating the resulting 3-manifold(s) was introduced by Haken
    <xref linkend="bib-haken-homeomorphism"/> for attacking the
-   homeomorphism problem and has been used in a variety of
-   algorithms since.  Like crushing, this procedure
-   is a powerful tool and furthermore avoids the difficulties suffered by
-   the crushing process in which topological information can be lost or
-   (in the non-orientable case) invalid 3-manifold
-   triangulations can be created.
-  </para>
-  <para>
-   Cutting along a surface however is more difficult than crushing since
-   the individual tetrahedra containing the normal discs can become heavily
-   subdivided.  The many potential combinations of discs lead to many
-   different ways in which this subdivision might take place, all of which
-   must remain compatible with adjacent tetrahedra.
-   The implementation of such a routine thereby becomes lengthy and
-   exceptionally error-prone.
-   For this reason cutting along a surface is planned but
-   not implemented in &regina; at the present time.
+   homeomorphism problem, and has been used in a variety of
+   algorithms since.  The main disadvantage of this procedure is that
+   the number of tetrahedra in the triangulation can grow enourmously.
+   Crushing a surface to a point avoids this complexity explosion;
+   however, it must be used carefully since the act of crushing can
+   lose topological information or even create invalid 3-manifold
+   triangulations.  The crushing operation features in Jaco and Rubinstein's
+   0-efficiency algorithm <xref linkend="bib-0-efficiency"/>.
   </para>
  </sect2>
 
