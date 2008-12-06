@@ -605,14 +605,14 @@ namespace {
         // Next comes the truncated half-tetrahedron.
         if (whichBlock == triCount_[fromVertex]) {
             if (fromVertex == 0 ||
-                    fromVertex == NEdge::edgeNumber[quadType_][1])
+                    fromVertex == NEdge::edgeVertex[quadType_][1])
                 return truncHalfTet_[0];
             else
                 return truncHalfTet_[1];
         }
 
         // Finally we have the quad prisms.
-        if (fromVertex == 0 || fromVertex == NEdge::edgeNumber[quadType_][1])
+        if (fromVertex == 0 || fromVertex == NEdge::edgeVertex[quadType_][1])
             return quadPrism_[whichBlock - triCount_[fromVertex] - 1];
         else
             return quadPrism_[
@@ -623,7 +623,7 @@ namespace {
         if (quadCount_ == 0)
             return truncTet_;
 
-        if (face == 0 || face == NEdge::edgeNumber[quadType_][1])
+        if (face == 0 || face == NEdge::edgeVertex[quadType_][1])
             return truncHalfTet_[1];
         return truncHalfTet_[0];
     }
