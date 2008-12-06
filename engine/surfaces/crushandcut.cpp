@@ -44,7 +44,11 @@ namespace {
             unsigned nInnerTet_;
             Bdry* bdry_[4]; /* indexed by face */
 
-            // TODO: Corners!
+            NTetrahedron* link_[4];
+            NPerm linkVertices_[4]; /* maps vertices of the inner tetrahedron
+                                       on the vertex linking triangle to the
+                                       parallel vertices of the outer
+                                       tetrahedron */
 
         public:
             virtual ~Block();
@@ -55,6 +59,7 @@ namespace {
             void insertInto(NTriangulation* tri);
             NTetrahedron* layeringTetrahedron(); /* PRE: enough space,
                                                     will layer on block bdry */
+            void attachVertexNbd(NTetrahedron* nbd, int vertex);
 
         protected:
             Block(NTetrahedron* outerTet, unsigned initialNumTet,
@@ -140,11 +145,13 @@ namespace {
             unsigned long quadCount_;
             int quadType_; /* -1 if no quads. */
 
-            Block** triPrism_[4]; /* indexed by vertex; counting outwards towards
-                                     the centre */
+            Block** triPrism_[4]; /* indexed by vertex; counting outwards
+                                     towards the centre */
             Block** quadPrism_; /* counting away from vertex 0 */
             Block* truncHalfTet_[2]; /* counting away from vertex 0 */
             Block* truncTet_;
+
+            NTetrahedron* vertexNbd_[4];
 
         public:
             TetBlockSet(const NNormalSurface* s, unsigned long tetIndex);
@@ -153,6 +160,8 @@ namespace {
             unsigned long numQuadBlocks(int face, int fromVertex);
             Block* quadBlock(int fromVertex, unsigned long whichBlock);
             Block* hexBlock(int face);
+
+            NTetrahedron* vertexNbd(int vertex);
 
             void insertInto(NTriangulation* tri);
     };
@@ -179,6 +188,11 @@ namespace {
         return (innerTet_[nInnerTet_++] = new NTetrahedron());
     }
 
+    inline void Block::attachVertexNbd(NTetrahedron* nbd, int vertex) {
+        link_[vertex]->joinTo(linkVertices_[vertex].preImageOf(vertex),
+            nbd, linkVertices_[vertex]);
+    }
+
     inline Block::Block(NTetrahedron *outerTet, unsigned initialNumTet,
             unsigned maxLayerings) :
             outerTet_(outerTet),
@@ -187,7 +201,7 @@ namespace {
         unsigned i;
         for (i = 0; i < nInnerTet_; ++i)
             innerTet_[i] = new NTetrahedron();
-        std::fill(bdry_, bdry_ + 4, static_cast<Bdry*>(0));
+        std::fill(link_, link_ + 4, static_cast<NTetrahedron*>(0));
     }
 
     TriPrism::TriPrism(NTetrahedron *outerTet, int type) :
@@ -221,6 +235,9 @@ namespace {
         q->innerVertices_[0] = NPerm(3, 1, 0, 2);
         q->innerVertices_[1] = NPerm(0, 1, 3, 2);
         bdry_[vertices[3]] = q;
+
+        link_[vertices[0]] = innerTet_[0];
+        linkVertices_[vertices[0]] = vertices * NPerm(0, 1, 3, 2);
     }
 
     QuadPrism::QuadPrism(NTetrahedron *outerTet, int type) :
@@ -322,6 +339,12 @@ namespace {
         q->innerVertices_[0] = NPerm(3, 2, 1, 0);
         q->innerVertices_[1] = NPerm(1, 2, 3, 0);
         bdry_[vertices[3]] = q;
+
+        link_[vertices[2]] = innerTet_[6];
+        linkVertices_[vertices[2]] = vertices * NPerm(3, 2, 0, 1);
+
+        link_[vertices[3]] = innerTet_[7];
+        linkVertices_[vertices[3]] = vertices * NPerm(3, 1, 2, 0);
     }
 
     TruncTet::TruncTet(NTetrahedron *outerTet) :
@@ -384,6 +407,18 @@ namespace {
         h->innerVertices_[2] = NPerm(3, 0, 1, 2);
         h->innerVertices_[3] = NPerm(3, 1, 0, 2);
         bdry_[3] = h;
+
+        link_[0] = innerTet_[0];
+        linkVertices_[0] = NPerm(1, 2, 3, 0);
+
+        link_[1] = innerTet_[1];
+        linkVertices_[1] = NPerm(1, 2, 3, 0);
+
+        link_[2] = innerTet_[2];
+        linkVertices_[2] = NPerm(1, 2, 3, 0);
+
+        link_[3] = innerTet_[3];
+        linkVertices_[3] = NPerm(1, 2, 3, 0);
     }
 
     inline Bdry::~Bdry() {
@@ -531,7 +566,8 @@ namespace {
 
         // Build the blocks.
         // Note in all of this that we insert an extra "fake" triangle at each
-        // vertex (i.e., the entire surface gains a fake set of extra vertex links).
+        // vertex (i.e., the entire surface gains a fake set of extra vertex
+        // links).
         for (i = 0; i < 4; ++i) {
             if (triCount_[i] == 0)
                 triPrism_[i] = 0;
@@ -558,6 +594,20 @@ namespace {
             truncHalfTet_[1] = new TruncHalfTet(tet, quadType_);
 
             truncTet_ = 0;
+        }
+
+        for (i = 0; i < 4; ++i) {
+            vertexNbd_[i] = new NTetrahedron();
+
+            if (triCount_[i] > 0)
+                triPrism_[i][0]->attachVertexNbd(vertexNbd_[i], i);
+            else if (quadCount_ == 0)
+                truncTet_->attachVertexNbd(vertexNbd_[i], i);
+            else if (i == 0 ||
+                    static_cast<int>(i) == NEdge::edgeVertex[quadType_][1])
+                truncHalfTet_[0]->attachVertexNbd(vertexNbd_[i], i);
+            else
+                truncHalfTet_[1]->attachVertexNbd(vertexNbd_[i], i);
         }
     }
 
@@ -628,6 +678,10 @@ namespace {
         return truncHalfTet_[0];
     }
 
+    inline NTetrahedron* TetBlockSet::vertexNbd(int vertex) {
+        return vertexNbd_[vertex];
+    }
+
     void TetBlockSet::insertInto(NTriangulation* tri) {
         unsigned long i, j;
         for (i = 0; i < 4; ++i)
@@ -645,6 +699,9 @@ namespace {
             truncHalfTet_[0]->insertInto(tri);
             truncHalfTet_[1]->insertInto(tri);
         }
+
+        for (i = 0; i < 4; ++i)
+            tri->addTetrahedron(vertexNbd_[i]);
     }
 }
 
@@ -665,6 +722,7 @@ NTriangulation* NNormalSurface::cutAlong() const {
     unsigned long tet0, tet1;
     int face0, face1;
     int fromVertex0, fromVertex1;
+    NPerm gluing;
     unsigned long quadBlocks;
     for (fit = getTriangulation()->getFaces().begin();
             fit != getTriangulation()->getFaces().end(); ++fit) {
@@ -677,16 +735,20 @@ NTriangulation* NNormalSurface::cutAlong() const {
         face0 = f->getEmbedding(0).getFace();
         face1 = f->getEmbedding(1).getFace();
 
+        gluing = f->getEmbedding(0).getTetrahedron()->adjacentGluing(face0);
+
         for (fromVertex0 = 0; fromVertex0 < 4; ++fromVertex0) {
             if (fromVertex0 == face0)
                 continue;
-            fromVertex1 = f->getEmbedding(0).getTetrahedron()->
-                adjacentGluing(face0)[fromVertex0];
+            fromVertex1 = gluing[fromVertex0];
 
             quadBlocks = sets[tet0]->numQuadBlocks(face0, fromVertex0);
             for (i = 0; i < quadBlocks; ++i)
                 sets[tet0]->quadBlock(fromVertex0, i)->joinTo(
                     face0, sets[tet1]->quadBlock(fromVertex1, i));
+
+            sets[tet0]->vertexNbd(fromVertex0)->joinTo(
+                face0, sets[tet1]->vertexNbd(fromVertex1), gluing);
         }
         sets[tet0]->hexBlock(face0)->joinTo(face0, sets[tet1]->hexBlock(face1));
     }
