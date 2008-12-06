@@ -2051,8 +2051,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifySimplification(lens8_3_large, 2, "L(8,3)");
             verifySimplification(q20_large, 5, "C~(5)");
             verifySimplification(ball_large, 1, "B3 (3-vtx)");
-            verifySimplification(ball_large_pillows, 1, "B3 (4-vtx)");
-            verifySimplification(ball_large_snapped, 1, "B3 (4-vtx)");
+            verifySimplification(ball_large_pillows, 1, "B3 (3-vtx)");
+            verifySimplification(ball_large_snapped, 1, "B3 (3-vtx)");
             verifySimplification(fig8_bary, 2, "SnapPea m004");
             verifySimplification(singleTet_bary, 1, "B3 (3-vtx)");
 
