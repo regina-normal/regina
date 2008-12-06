@@ -110,7 +110,6 @@ NNormalSurface* NNormalSurface::clone() const {
     ans->connected = connected;
     ans->realBoundary = realBoundary;
     ans->compact = compact;
-    ans->canCrush = canCrush;
 
     return ans;
 }
@@ -170,8 +169,6 @@ void NNormalSurface::readIndividualProperty(NFile& infile,
         realBoundary = infile.readBool();
     else if (propType == PROPID_COMPACT)
         compact = infile.readBool();
-    else if (propType == PROPID_CANCRUSH)
-        canCrush = infile.readBool();
     else if (propType == PROPID_SURFACENAME)
         name = infile.readString();
 }
@@ -412,8 +409,6 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
         out << "\n\t" << xmlValueTag("realbdry", realBoundary.value());
     if (compact.known())
         out << "\n\t" << xmlValueTag("compact", compact.value());
-    if (canCrush.known())
-        out << "\n\t" << xmlValueTag("cancrush", canCrush.value());
 
     // Write the closing tag.
     out << " </surface>\n";
@@ -488,11 +483,6 @@ void NNormalSurface::writeToFile(NFile& out) const {
     if (compact.known()) {
         bookmark = out.writePropertyHeader(PROPID_COMPACT);
         out.writeBool(compact.value());
-        out.writePropertyFooter(bookmark);
-    }
-    if (canCrush.known()) {
-        bookmark = out.writePropertyHeader(PROPID_CANCRUSH);
-        out.writeBool(canCrush.value());
         out.writePropertyFooter(bookmark);
     }
 

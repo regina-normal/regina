@@ -5,7 +5,6 @@
 <!ENTITY data-abeliangroup SYSTEM "data-abeliangroup.docbook">
 <!ENTITY data-allowstrict SYSTEM "data-allowstrict.docbook">
 <!ENTITY data-allowtaut SYSTEM "data-allowtaut.docbook">
-<!ENTITY data-cancrush SYSTEM "data-cancrush.docbook">
 <!ENTITY data-compact-filter SYSTEM "data-compact-filter.docbook">
 <!ENTITY data-compact-surface SYSTEM "data-compact-surface.docbook">
 <!ENTITY data-connected SYSTEM "data-connected.docbook">
@@ -60,8 +59,6 @@
  '<link linkend="data-allowstrict"><sgmltag>allowstrict</sgmltag></link>'>
 <!ENTITY xml-allowtaut
  '<link linkend="data-allowtaut"><sgmltag>allowtaut</sgmltag></link>'>
-<!ENTITY xml-cancrush
- '<link linkend="data-cancrush"><sgmltag>cancrush</sgmltag></link>'>
 <!ENTITY xml-compact-filter
  '<link linkend="data-compact-filter"><sgmltag>compact</sgmltag> (filter)</link>'>
 <!ENTITY xml-compact-surface

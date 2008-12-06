@@ -50,6 +50,11 @@ Version 4.6  [ (under development) ]
               between normal surfaces.
             - New routine rawVector() that gives direct read-only access to
               the underlying vector in case this is needed.
+            - Removed canCrush() and knownCanCrush(), which are both
+              placeholders for routines that have never been implemented.
+              The corresponding <cancrush> element has been removed from
+              the data file format (though old files that happen to contain
+              it will load without problems).
         Class NPerm:
             - New routines trunc2() and trunc3() to build truncated
               version of a permutation string.

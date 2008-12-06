@@ -104,7 +104,6 @@ void addNNormalSurface() {
             return_value_policy<manage_new_object>())
         .def("crush", &NNormalSurface::crush,
             return_value_policy<manage_new_object>())
-        .def("knownCanCrush", &NNormalSurface::knownCanCrush)
         .def("locallyCompatible", &NNormalSurface::locallyCompatible)
         .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,
             return_value_policy<manage_new_object>())
