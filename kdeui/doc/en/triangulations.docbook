@@ -1573,10 +1573,16 @@
    </para>
    <para>
     As well as performing obvious reductions, this routine tries
-    random 4-4 moves if it cannot reduce the triangulation directly.
+    random 4-4 moves as well as book opening and book closing moves if it
+    cannot reduce the triangulation directly.
     It does not yet try increasing the size of the triangulation (such
     as through 2-3 moves) to escape a local minimum well in which it
     might be stuck; this is on the &todo; list.
+   </para>
+   <para>
+    For triangulations with boundary, this routine will also try to
+    make the number of boundary faces as small as possible (though again
+    there are not guarantees of achieving a global minimum).
    </para>
    <tip><para>
     In cases where this faster simplification routine is ineffective,
