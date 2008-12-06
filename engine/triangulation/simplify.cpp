@@ -743,6 +743,58 @@ bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
     return true;
 }
 
+bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
+    if (check) {
+        if (! e->isBoundary())
+            return false;
+    }
+
+    // Find the two faces on either side of edge e.
+    const NEdgeEmbedding& front = e->getEmbeddings().front();
+    const NEdgeEmbedding& back = e->getEmbeddings().back();
+
+    NTetrahedron* t0 = front.getTetrahedron();
+    NTetrahedron* t1 = back.getTetrahedron();
+    NPerm p0 = front.getVertices();
+    NPerm p1 = back.getVertices();
+
+    if (check) {
+        if (t0->getFace(p0[3]) == t1->getFace(p1[2]))
+            return false;
+        if (t0->getVertex(p0[2]) == t1->getVertex(p1[3]))
+            return false;
+        if (t0->getVertex(p0[2])->getLink() != NVertex::DISC ||
+               t1->getVertex(p1[3])->getLink() != NVertex::DISC)
+            return false;
+
+        NEdge* e1 = t0->getEdge(NEdge::edgeNumber[p0[0]][p0[2]]);
+        NEdge* e2 = t0->getEdge(NEdge::edgeNumber[p0[1]][p0[2]]);
+        NEdge* f1 = t1->getEdge(NEdge::edgeNumber[p1[0]][p1[3]]);
+        NEdge* f2 = t1->getEdge(NEdge::edgeNumber[p1[1]][p1[3]]);
+
+        if (e1 == f1 || e2 == f2)
+            return false;
+        if (e1 == e2 && f1 == f2)
+            return false;
+        if (e1 == f2 && f1 == e2)
+            return false;
+    }
+
+    if (! perform)
+        return true;
+
+    #ifdef DEBUG
+    std::cerr << "Performing close book move\n";
+    #endif
+
+    // Actually perform the move.
+    // Don't bother with a block since this is so simple.
+
+    t0->joinTo(p0[3], t1, p1 * NPerm(2, 3) * p0.inverse());
+    gluingsHaveChanged();
+    return true;
+}
+
 bool NTriangulation::shellBoundary(NTetrahedron* t,
         bool check, bool perform) {
     // To perform the move we don't even need a skeleton.

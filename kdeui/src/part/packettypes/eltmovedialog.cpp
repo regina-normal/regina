@@ -46,15 +46,16 @@ namespace {
     const int ID_20V = 4;
     const int ID_21 = 5;
     const int ID_OPENBOOK = 6;
-    const int ID_SHELLBDRY = 7;
-    const int ID_COLLAPSEEDGE = 8;
+    const int ID_CLOSEBOOK = 7;
+    const int ID_SHELLBDRY = 8;
+    const int ID_COLLAPSEEDGE = 9;
 }
 
 EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         KDialogBase(Plain, i18n("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
     QFrame* ui = plainPage();
-    QGridLayout* layout = new QGridLayout(ui, 9, 2, 0 /* margin */,
+    QGridLayout* layout = new QGridLayout(ui, 10, 2, 0 /* margin */,
         spacingHint());
 
     use32 = new QRadioButton(i18n("&3-2"), ui);
@@ -120,6 +121,16 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useOpenBook, 6, 0);
+    useCloseBook = new QRadioButton(i18n("C&lose book"), ui);
+    QWhatsThis::add(useCloseBook, i18n("<qt>Perform a book closing "
+        "move on this triangulation.<p>"
+        "A <i>book closing move</i> involves taking an edge on the boundary "
+        "of the triangulation and folding together the two boundary faces "
+        "on either side.  The aim of this move is to simplify the boundary "
+        "of the triangulation.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered in the adjacent drop-down list.</qt>"));
+    layout->addWidget(useCloseBook, 7, 0);
     useShellBdry = new QRadioButton(i18n("&Shell boundary"), ui);
     QWhatsThis::add(useShellBdry, i18n("<qt>Perform a boundary shelling "
         "move on this triangulation.<p>"
@@ -128,7 +139,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "more faces.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(useShellBdry, 7, 0);
+    layout->addWidget(useShellBdry, 8, 0);
     useCollapseEdge = new QRadioButton(i18n("&Collapse edge"), ui);
     QWhatsThis::add(useCollapseEdge, i18n("<qt>Collapse an edge in this "
         "triangulation.<p>"
@@ -137,7 +148,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "tetrahedra containing that edge will be flattened into faces.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(useCollapseEdge, 8, 0);
+    layout->addWidget(useCollapseEdge, 9, 0);
 
     box32 = new KComboBox(ui);
     QWhatsThis::add(box32, i18n("<qt>Select the degree three edge about which "
@@ -199,13 +210,21 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(boxOpenBook, 6, 1);
+    boxCloseBook = new KComboBox(ui);
+    QWhatsThis::add(boxCloseBook, i18n("<qt>Select the boundary edge "
+        "around which the book will be closed.  The edge numbers in this list "
+        "correspond to the edge numbers seen when viewing the "
+        "triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered.</qt>"));
+    layout->addWidget(boxCloseBook, 7, 1);
     boxShellBdry = new KComboBox(ui);
     QWhatsThis::add(boxShellBdry, i18n("<qt>Select the boundary tetrahedron "
         "that should be removed.  The tetrahedron numbers in this list "
         "are the usual tetrahedron numbers seen in the gluings editor.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
-    layout->addWidget(boxShellBdry, 7, 1);
+    layout->addWidget(boxShellBdry, 8, 1);
     boxCollapseEdge = new KComboBox(ui);
     QWhatsThis::add(boxCollapseEdge, i18n("<qt>Select the edge joining "
         "two distinct vertices that should be collapsed.  "
@@ -213,7 +232,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "when viewing the triangulation skeleton.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
-    layout->addWidget(boxCollapseEdge, 8, 1);
+    layout->addWidget(boxCollapseEdge, 9, 1);
 
     fillWithMoves();
 
@@ -224,6 +243,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     use20v->setEnabled(box20v->count() > 0);
     use21->setEnabled(box21->count() > 0);
     useOpenBook->setEnabled(boxOpenBook->count() > 0);
+    useCloseBook->setEnabled(boxCloseBook->count() > 0);
     useShellBdry->setEnabled(boxShellBdry->count() > 0);
     useCollapseEdge->setEnabled(boxCollapseEdge->count() > 0);
 
@@ -234,6 +254,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     box20v->setEnabled(box20v->count() > 0);
     box21->setEnabled(box21->count() > 0);
     boxOpenBook->setEnabled(boxOpenBook->count() > 0);
+    boxCloseBook->setEnabled(boxCloseBook->count() > 0);
     boxShellBdry->setEnabled(boxShellBdry->count() > 0);
     boxCollapseEdge->setEnabled(boxCollapseEdge->count() > 0);
 
@@ -245,6 +266,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     moveTypes->insert(use20v, ID_20V);
     moveTypes->insert(use21, ID_21);
     moveTypes->insert(useOpenBook, ID_OPENBOOK);
+    moveTypes->insert(useCloseBook, ID_CLOSEBOOK);
     moveTypes->insert(useShellBdry, ID_SHELLBDRY);
     moveTypes->insert(useCollapseEdge, ID_COLLAPSEEDGE);
 }
@@ -272,6 +294,8 @@ void EltMoveDialog::slotOk() {
             set21[box21->currentItem()].second);
     else if (useOpenBook->isChecked())
         tri->openBook(tri->getFace(setOpenBook[boxOpenBook->currentItem()]));
+    else if (useCloseBook->isChecked())
+        tri->closeBook(tri->getEdge(setCloseBook[boxCloseBook->currentItem()]));
     else if (useShellBdry->isChecked())
         tri->shellBoundary(tri->getTetrahedron(setShellBdry[
             boxShellBdry->currentItem()]));
@@ -328,6 +352,10 @@ void EltMoveDialog::fillWithMoves() {
         if (tri->twoOneMove(e, 1, true, false)) {
             box21->insertItem(i18n("Edge %1 (end 1)").arg(i));
             set21.push_back(std::make_pair(i, 1));
+        }
+        if (tri->closeBook(e, true, false)) {
+            boxCloseBook->insertItem(i18n("Edge %1").arg(i));
+            setCloseBook.push_back(i);
         }
         if (tri->collapseEdge(e, true, false)) {
             boxCollapseEdge->insertItem(i18n("Edge %1").arg(i));

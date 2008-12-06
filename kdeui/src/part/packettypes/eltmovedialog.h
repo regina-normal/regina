@@ -63,6 +63,7 @@ class EltMoveDialog : public KDialogBase {
         QComboBox* box20v;
         QComboBox* box21;
         QComboBox* boxOpenBook;
+        QComboBox* boxCloseBook;
         QComboBox* boxShellBdry;
         QComboBox* boxCollapseEdge;
         QRadioButton* use32;
@@ -72,6 +73,7 @@ class EltMoveDialog : public KDialogBase {
         QRadioButton* use20v;
         QRadioButton* use21;
         QRadioButton* useOpenBook;
+        QRadioButton* useCloseBook;
         QRadioButton* useShellBdry;
         QRadioButton* useCollapseEdge;
         QButtonGroup* moveTypes;
@@ -86,6 +88,7 @@ class EltMoveDialog : public KDialogBase {
         std::vector<unsigned long> set20v;
         std::vector<std::pair<unsigned long, int> > set21;
         std::vector<unsigned long> setOpenBook;
+        std::vector<unsigned long> setCloseBook;
         std::vector<unsigned long> setShellBdry;
         std::vector<unsigned long> setCollapseEdge;
 
