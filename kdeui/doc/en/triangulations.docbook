@@ -1485,6 +1485,14 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
+      <glossterm>Close Book</glossterm>
+      <glossdef><para>
+       A <firstterm>book closing move</firstterm> on a boundary edge
+       involves folding together the two boundary faces on either side.
+       The aim of this move is to simplify the boundary of the triangulation.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
       <glossterm>Shell Boundary</glossterm>
       <glossdef><para>
        A <firstterm>boundary shelling move</firstterm> on a boundary

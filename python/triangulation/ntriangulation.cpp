@@ -56,6 +56,8 @@ namespace {
         NTriangulation::twoOneMove, 2, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_openBook,
         NTriangulation::openBook, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_closeBook,
+        NTriangulation::closeBook, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_shellBoundary,
         NTriangulation::shellBoundary, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
@@ -238,6 +240,7 @@ void addNTriangulation() {
         .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
         .def("twoOneMove", &NTriangulation::twoOneMove, OL_twoOneMove())
         .def("openBook", &NTriangulation::openBook, OL_openBook())
+        .def("closeBook", &NTriangulation::closeBook, OL_closeBook())
         .def("shellBoundary", &NTriangulation::shellBoundary,
             OL_shellBoundary())
         .def("collapseEdge", &NTriangulation::collapseEdge, OL_collapseEdge())

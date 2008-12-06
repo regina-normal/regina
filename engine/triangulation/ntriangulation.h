@@ -1689,8 +1689,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * about the given face.
          * This involves taking a face meeting the boundary along two
          * edges and ungluing it to create two new boundary faces and
-         * thus expose the tetrahedra it initially joined, allowing for
-         * potential boundary shelling moves.
+         * thus expose the tetrahedra it initially joined.
+         * This move is the inverse of the closeBook() move, and is
+         * used to open the way for new shellBoundary() moves.
+         *
          * This move can be done only if:
          *
          * - the face meets the boundary in precisely two edges (and thus
@@ -1726,6 +1728,54 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * is \c false, the function simply returns \c true.
          */
         bool openBook(NFace* f, bool check = true, bool perform = true);
+        /**
+         * Checks the eligibility of and/or performs a book closing move
+         * about the given boundary edge.
+         * This involves taking a boundary edge of the triangulation and
+         * folding together the two boundary faces on either side.  This
+         * move is the inverse of the openBook() move, and is used to
+         * simplify the boundary of the triangulation.
+         * This move can be done only if:
+         *
+         * - the edge \a e is a boundary edge;
+         *
+         * - the two boundary faces that it joins are distinct;
+         *
+         * - the two vertices opposite \a e in each of these boundary faces
+         *   are valid and distinct;
+         *
+         * - if edges \a e1 and \a e2 of one boundary face are to be
+         *   folded onto edges \a f1 and \a f2 of the other boundary
+         *   face respectively, then
+         *   (a) \a e1 and \a f1 are distinct,
+         *   (b) \a e2 and \a f2 are distinct,
+         *   (c) we do not have both \a e1 = \a f2 and \a f1 = \a e2, and
+         *   (d) we do not have both \a e1 = \a e2 and \a f1 = \a f2.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a f)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no
+         * check is being run, it must be known in advance that the move
+         * is legal.
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * @param e the edge about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool closeBook(NEdge* e, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a boundary shelling
          * move on the given tetrahedron.
