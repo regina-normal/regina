@@ -2097,6 +2097,28 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
                     "to an invalid triangulation with an invalid edge.");
             delete tri;
+
+            // A solid torus that once upon a time was incorrectly simplified
+            // away to a ball.
+            tet[0] = new NTetrahedron();
+            tet[1] = new NTetrahedron();
+            tet[2] = new NTetrahedron();
+            tet[2]->joinTo(3, tet[2], NPerm(2, 3));
+            tet[2]->joinTo(1, tet[1], NPerm(0, 2, 3, 1));
+            tet[2]->joinTo(0, tet[0], NPerm(3, 0, 1, 2));
+            tet[1]->joinTo(3, tet[0], NPerm(0, 3, 1, 2));
+            tet[1]->joinTo(1, tet[0], NPerm());
+            tri = new NTriangulation();
+            tri->addTetrahedron(tet[0]);
+            tri->addTetrahedron(tet[1]);
+            tri->addTetrahedron(tet[2]);
+            if (tri->getHomologyH1().toString() != "Z")
+                CPPUNIT_FAIL("Custom solid torus has incorrect H1.");
+            tri->intelligentSimplify();
+            if (tri->getHomologyH1().toString() != "Z")
+                CPPUNIT_FAIL("Custom solid torus simplifies to "
+                    "something different.");
+            delete tri;
         }
 
         void propertyUpdates() {

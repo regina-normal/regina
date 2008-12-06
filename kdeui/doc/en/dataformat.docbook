@@ -29,7 +29,6 @@
  &data-abeliangroup;
  &data-allowstrict;
  &data-allowtaut;
- &data-cancrush;
  &data-compact-filter;
  &data-compact-surface;
  &data-connected;

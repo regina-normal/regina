@@ -57,6 +57,10 @@ namespace regina {
  * split split the four tetrahedron vertices 0,1,2,3 into two pairs.
  * <tt>vertexSplit[i][j]</tt> is the number of the vertex split that
  * keeps vertices <tt>i</tt> and <tt>j</tt> together.
+ *
+ * It is guaranteed that vertex split \a i will keep the vertices of
+ * edge \a i together (and will therefore also keep the vertices of edge
+ * \a 5-i together).
  */
 extern const int vertexSplit[4][4];
 /**
@@ -572,9 +576,6 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         mutable NProperty<bool> compact;
             /**< Is this surface compact (i.e. does it only contain
              *   finitely many discs)? */
-        mutable NProperty<bool> canCrush;
-            /**< Can this surface be crushed without unintended
-                 topological side-effects? */
 
     public:
         /**
@@ -968,13 +969,13 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          *
          * \warning The number of tetrahedra in the new triangulation
          * can be <i>very</i> large.
-         * \warning <b>This routine has not been implemented and so
-         * currently returns an empty triangulation.</b>
          *
          * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octagonal discs.
          *
-         * \todo \feature Implement this routine.
+         * \todo Have some error flag so we can barf politely if the
+         * resulting number of tetrahedra is going to be too large to
+         * handle.
          *
          * @return a pointer to the newly allocated resulting
          * triangulation.
@@ -1006,9 +1007,6 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * small Lens spaces and so on; a full list of possible changes
          * is beyond the scope of this API documentation.
          *
-         * Routine knownCanCrush() can be used to help identify whether
-         * these unintended side-effects might occur.
-         *
          * \warning This routine can have unintended topological
          * side-effects, as described above.
          * \warning In exceptional cases with non-orientable
@@ -1022,42 +1020,6 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * triangulation.
          */
         NTriangulation* crush() const;
-
-        /**
-         * Determines whether this surface can be crushed to a point in
-         * the associated triangulation with no unintended topological
-         * side-effects.
-         *
-         * Note that this routine cannot determine that there \e will be
-         * unintended side-effects; it will either determine that there
-         * \e won't be unintended side-effects or it will remain
-         * inconclusive.
-         *
-         * Unintended side-effects include any topological change other
-         * than the pure topological effects of cutting along this surface
-         * and then identifying the new boundary surface(s) to points.
-         *
-         * These unintended side-effects can occur when the algorithm
-         * used by the crush() routine collapses pillows and footballs
-         * to obtain a proper triangulation.  Some examples of the
-         * side-effects that can occur are given in the documentation
-         * for the crush() routine.
-         *
-         * \warning Currently this routine always returns \c false,
-         * i.e., an inconclusive result.  Its abilities are expected
-         * to improve with future releases.
-         *
-         * \pre This normal surface is compact and embedded.
-         * \pre This normal surface contains no octagonal discs.
-         *
-         * \todo \feature Implement this routine!  At least
-         * for embedded 2-spheres.
-         *
-         * @return \c true if this routine determines that this surface
-         * can be crushed without unintended side-effects, or \c false if
-         * this routine cannot produce a definite answer.
-         */
-        bool knownCanCrush() const;
 
         /**
          * Determines whether this and the given surface are locally compatible.
@@ -1194,13 +1156,6 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * stores the result as a property.
          */
         void calculateRealBoundary() const;
-        /**
-         * Calculates whether it can be quickly determined that this
-         * surface can be crushed to a point without unintended
-         * topological side-effects.  If conclusive, the result is
-         * stored as a property.
-         */
-        void calculateKnownCanCrush() const;
 
     friend class regina::NXMLNormalSurfaceReader;
 };
@@ -1316,12 +1271,6 @@ inline bool NNormalSurface::isSplitting() const {
 
 inline NLargeInteger NNormalSurface::isCentral() const {
     return vector->isCentral(triangulation);
-}
-
-inline bool NNormalSurface::knownCanCrush() const {
-    if (! canCrush.known())
-        calculateKnownCanCrush();
-    return (canCrush.known() && canCrush.value());
 }
 
 inline const NNormalSurfaceVector* NNormalSurface::rawVector() const {

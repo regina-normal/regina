@@ -45,10 +45,16 @@ Version 4.6  [ (under development) ]
               graphs and union-find", B. A. Burton, Discrete Comput. Geom. 38
               (2007), no. 3, 527--571.
         Class NNormalSurface:
+            - Finally implemented cutAlong()!
             - New routine locallyCompatible() for testing intersections
               between normal surfaces.
             - New routine rawVector() that gives direct read-only access to
               the underlying vector in case this is needed.
+            - Removed canCrush() and knownCanCrush(), which are both
+              placeholders for routines that have never been implemented.
+              The corresponding <cancrush> element has been removed from
+              the data file format (though old files that happen to contain
+              it will load without problems).
         Class NPerm:
             - New routines trunc2() and trunc3() to build truncated
               version of a permutation string.
@@ -97,10 +103,9 @@ Version 4.6  [ (under development) ]
             - Fixed crashes in twoOneMove(), twoZeroMove(NVertex*, ...)
               and shellBoundary().  These crashes were triggered by certain
               types of non-minimal triangulations with boundary.
-            - Fixed a nasty bug in shellBoundary(), which had the potential
-              to give incorrect results when (and only when) simplifying
-              the 1-tetrahedron 3-vertex ball; the result would be that
-              the ball "simplified" to the empty triangulation.
+            - Fixed a couple of nasty bugs in shellBoundary(), which had the
+              potential to give incorrect results when simplifying
+              triangulations with boundary.
             - Fixed bugs in several simplification routines when working
               with invalid triangulations; these sometimes "simplified"
               invalid edges to become valid edges.
@@ -134,6 +139,8 @@ Version 4.6  [ (under development) ]
           "3-ball?" entry beneath the current "3-sphere?" entry.
         - Fixed a bug whereby small triangulations occasionally became
           read-only after a user visited the Surfaces panel.
+        - The normal surface list viewer now has an additional "Cut Along"
+          menu item.  The shortcut letter for "Crush" has changed as well.
     TEST SUITE:
         - Added very thorough tests for small permutation classes.
         - Additional tests for triangulation simplification and Euler

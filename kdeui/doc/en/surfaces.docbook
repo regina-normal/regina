@@ -545,6 +545,20 @@
     <function><classname>NNormalSurface</classname>::crush()</function>
     in the &regenginedocs;.
    </para>
+   <para>
+    Why crush a surface if it can have such nasty side-effects?
+    The advantage is that, unlike the cutting operation described
+    below, crushing a surface can only ever <emphasis>reduce</emphasis>
+    the number of tetrahedra in a triangulation (the worst case is
+    where the surface only contains vertex links, whereupon the number
+    of tetrahedra will remain the same).
+   </para>
+   <para>
+    In general you should only crush a normal surface when there are
+    theoretical reasons to know that this is safe.  Examples of safe
+    scenarios can be found in Jaco and Rubinstein's paper on
+    0-efficiency <xref linkend="bib-0-efficiency"/>.
+   </para>
   </sect2>
   <sect2 id="surfaces-cut">
    <title>Cutting Along a Surface</title>
@@ -560,16 +574,36 @@
     vertices or invalid edges.
    </para>
    <para>
-    This has the disadvantage however that after cutting along a surface
-    the number of tetrahedra in the triangulation can be expected to
-    skyrocket.
+    The disadvantage is that, after cutting along a surface,
+    the number of tetrahedra in the triangulation can potentially
+    skyrocket.  This has severe implications if you wish to do anything
+    computationally intensive with the resulting triangulation(s).
    </para>
    <para>
-    But just like the waiter in Stillwater who talked us through the wine
-    list before explaining he couldn't actually sell us any because it
-    was a Sunday, at this point I explain that cutting along a surface is
-    not yet implemented in &regina;.  It's on the &todo; list.
+    To cut along a normal surface, select the surface within the table
+    and invoke the
+    <menuchoice>
+     <guimenu>Normal Surfaces</guimenu>
+     <guimenuitem>Cut Along Surface</guimenuitem>
+    </menuchoice>
+    menu item.
+    As with crushing, the original triangulation will not be changed;
+    the resulting cut-open triangulation will be added to the packet
+    tree as a new child of this surface list.
    </para>
+   <tip><para>
+    When crushing or cutting along a two-sided surface, it is possible
+    that you will end up with a disconnected triangulation.
+    The menu item
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Extract Components</guimenuitem>
+    </menuchoice>
+    can be used to split this triangulation into its connected components.
+    See the section on
+    <link linkend="tri-decomposition-component">component decomposition</link>
+    for details.
+   </para></tip>
   </sect2>
  </sect1>
 
