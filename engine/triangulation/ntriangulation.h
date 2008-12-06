@@ -1387,10 +1387,13 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
 
         /**
          * Attempts to simplify the triangulation as intelligently as
-         * possible without further input.
+         * possible without further input.  This routine will attempt to
+         * reduce both the number of tetrahedra and the number of boundary
+         * faces (with the number of tetrahedra as its priority).
          *
          * Currently this routine uses simplifyToLocalMinimum() in
-         * combination with random 4-4 moves and book opening moves.
+         * combination with random 4-4 moves, book opening moves and
+         * book closing moves.
          *
          * \warning The specific behaviour of this routine may well
          * change between releases.

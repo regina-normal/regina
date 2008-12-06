@@ -95,9 +95,11 @@ Version 4.6  [ (under development) ]
               is now gone from the collapseEdge() documentation as a result.
             - Routine simplifyToLocalMinimum() now collapses edges, which
               makes a big difference for multiple-vertex triangulations.
-              In turn, routine intelligentSimplify() now uses book opening
-              moves to create new opportunities for collapsing edges, which
-              makes a big difference for bounded triangulations.
+            - Routine intelligentSimplify() now uses book opening moves to
+              create new opportunities for collapsing edges (which makes a
+              big difference for bounded triangulations), and also uses
+              book closing moves to reduce the number of boundary faces
+              once nothing else can be done.
             - Removed crushMaximalForest(), which (as the documentation has
               pointed out since the first release) has never worked properly,
               and which is therefore never actually used.

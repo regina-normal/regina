@@ -121,7 +121,7 @@ bool NTriangulation::intelligentSimplify() {
             // At this point we have decided that 4-4 moves will help us
             // no more.
 
-            // --- Open book moves ---
+            // --- Open book and close book moves ---
 
             if (hasBoundaryFaces()) {
                 // Clone again, always -- we don't want to create gratuitous
@@ -159,9 +159,39 @@ bool NTriangulation::intelligentSimplify() {
 
                 delete use;
 
-                // If we did any book opening stuff, do everything else
-                // all over again.
+                // If we did any book opening stuff, start all over again.
                 if (opened)
+                    continue;
+
+                // If we've made it this far then there seems to be
+                // nothing left to do.
+                //
+                // Perform book *closing* moves to simplify the boundary
+                // of the triangulation, even if this does not actually
+                // reduce the number of tetrahedra.
+                //
+                // Since we always want to simplify the boundary, make
+                // the changes directly to this triangulation.
+                bool closed = false;
+
+                EdgeIterator eit;
+                for (eit = getEdges().begin(); eit != getEdges().end(); ++eit)
+                    if (closeBook(*eit, true, true)) {
+                        closed = true;
+                        changed = true;
+
+                        // We don't actually care whether we reduce the
+                        // number of tetrahedra or not.  Ignore the
+                        // return value from simplifyToLocalMinimum().
+                        simplifyToLocalMinimum(true);
+
+                        break;
+                    }
+
+                // If we *did* manage to close a book, there might be
+                // further internal simplifications that we can now do.
+                // Back to the top.
+                if (closed)
                     continue;
             }
 
