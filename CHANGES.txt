@@ -100,10 +100,9 @@ Version 4.6  [ (under development) ]
             - Fixed crashes in twoOneMove(), twoZeroMove(NVertex*, ...)
               and shellBoundary().  These crashes were triggered by certain
               types of non-minimal triangulations with boundary.
-            - Fixed a nasty bug in shellBoundary(), which had the potential
-              to give incorrect results when (and only when) simplifying
-              the 1-tetrahedron 3-vertex ball; the result would be that
-              the ball "simplified" to the empty triangulation.
+            - Fixed a couple of nasty bugs in shellBoundary(), which had the
+              potential to give incorrect results when simplifying
+              triangulations with boundary.
             - Fixed bugs in several simplification routines when working
               with invalid triangulations; these sometimes "simplified"
               invalid edges to become valid edges.

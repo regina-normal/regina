@@ -1739,11 +1739,12 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *   the boundary;
          *
          * - if one face lies in the boundary, then the opposite vertex
-         *   does not lie in the boundary;
+         *   does not lie in the boundary, and no two of the remaining three
+         *   edges are identified;
          *
          * - if two faces lie in the boundary, then the remaining edge does
          *   not lie in the boundary, and the remaining two faces of the
-         *   tetrahedron are not glued together.
+         *   tetrahedron are not identified.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.

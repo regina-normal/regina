@@ -751,7 +751,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
             calculateSkeleton();
 
         int nBdry = 0;
-        int i;
+        int i, j;
         int bdry[4];
         for (i=0; i<4; i++)
             if (t->getFace(i)->isBoundary())
@@ -761,10 +761,22 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
         if (nBdry == 1) {
             if (t->getVertex(bdry[0])->isBoundary())
                 return false;
+
+            NEdge* internal[3];
+            j = 0;
             for (i = 0; i < 4; ++i)
                 if (i != bdry[0])
-                    if (! t->getEdge(NEdge::edgeNumber[bdry[0]][i])->isValid())
-                        return false;
+                    internal[j++] = t->getEdge(NEdge::edgeNumber[bdry[0]][i]);
+
+            if (! (internal[0]->isValid() &&
+                    internal[1]->isValid() &&
+                    internal[2]->isValid()))
+                return false;
+
+            if (internal[0] == internal[1] ||
+                    internal[1] == internal[2] ||
+                    internal[2] == internal[0])
+                return false;
         } else if (nBdry == 2) {
             i = NEdge::edgeNumber[bdry[0]][bdry[1]];
             if (t->getEdge(i)->isBoundary())
