@@ -834,6 +834,9 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          *
          * \pre This normal surface is compact (has finitely many discs).
          *
+         * \todo \prob Check for absurdly large numbers of discs and bail
+         * accordingly.
+         *
          * @return true if this surface is orientable, false if this surface
          * is non-orientable and unknown if orientability cannot be
          * determined.
@@ -848,6 +851,9 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          *
          * \pre This normal surface is compact (has finitely many discs).
          *
+         * \todo \prob Check for absurdly large numbers of discs and bail
+         * accordingly.
+         *
          * @return true if this surface is two-sided, false if this surface
          * is one-sided and unknown if two-sidedness cannot be determined.
          */
@@ -860,6 +866,9 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * are too many normal discs).
          *
          * \pre This normal surface is compact (has finitely many discs).
+         *
+         * \todo \prob Check for absurdly large numbers of discs and bail
+         * accordingly.
          *
          * @return true if this surface is connected, false if this surface
          * is not connected and unknown if connectedness cannot be determined.

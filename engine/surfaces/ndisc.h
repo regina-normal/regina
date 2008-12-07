@@ -618,6 +618,26 @@ class NDiscSpecIterator {
          * Points this iterator to the next disc, or makes it
          * past-the-end if there is no next disc.
          *
+         * Unlike most standard increment operators, this operator returns
+         * \c void.  One consequence of this is that the preincrement
+         * and postincrement operators for this class are identical.  This
+         * interface will need to be made more standard some day.
+         *
+         * \pre This iterator is not past-the-end.
+         *
+         * \ifacespython This routine is called inc(), since Python does
+         * not support the increment operator.
+         */
+        void operator++();
+        /**
+         * Points this iterator to the next disc, or makes it
+         * past-the-end if there is no next disc.
+         *
+         * Unlike most standard increment operators, this operator returns
+         * \c void.  One consequence of this is that the preincrement
+         * and postincrement operators for this class are identical.  This
+         * interface will need to be made more standard some day.
+         *
          * \pre This iterator is not past-the-end.
          *
          * \ifacespython This routine is called inc(), since Python does
@@ -721,6 +741,10 @@ inline void NDiscSpecIterator::init(const NDiscSetSurface& discSet) {
     makeValid();
 }
 
+inline void NDiscSpecIterator::operator++() {
+    current.number++;
+    makeValid();
+}
 inline void NDiscSpecIterator::operator++(int) {
     current.number++;
     makeValid();
