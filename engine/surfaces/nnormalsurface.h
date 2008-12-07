@@ -811,6 +811,11 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
             NTriangulation* triangulation);
 
         /**
+         * Determines if this normal surface is empty (has no discs
+         * whatsoever).
+         */
+        bool isEmpty() const;
+        /**
          * Determines if this normal surface is compact (has
          * finitely many discs).
          *

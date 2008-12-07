@@ -46,6 +46,7 @@ Version 4.6  [ (under development) ]
               (2007), no. 3, 527--571.
         Class NNormalSurface:
             - Finally implemented cutAlong()!
+            - New routine isEmpty() for identifying empty surfaces.
             - New routine sameSurface() for comparing two normal surfaces.
             - New routines locallyCompatible() and disjoint() for testing
               intersections between normal surfaces.
