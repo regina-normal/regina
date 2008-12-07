@@ -46,8 +46,9 @@ Version 4.6  [ (under development) ]
               (2007), no. 3, 527--571.
         Class NNormalSurface:
             - Finally implemented cutAlong()!
-            - New routine locallyCompatible() for testing intersections
-              between normal surfaces.
+            - New routine sameSurface() for comparing two normal surfaces.
+            - New routines locallyCompatible() and disjoint() for testing
+              intersections between normal surfaces.
             - New routine rawVector() that gives direct read-only access to
               the underlying vector in case this is needed.
             - Removed canCrush() and knownCanCrush(), which are both

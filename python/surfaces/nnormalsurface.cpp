@@ -104,7 +104,9 @@ void addNNormalSurface() {
             return_value_policy<manage_new_object>())
         .def("crush", &NNormalSurface::crush,
             return_value_policy<manage_new_object>())
+        .def("sameSurface", &NNormalSurface::sameSurface)
         .def("locallyCompatible", &NNormalSurface::locallyCompatible)
+        .def("disjoint", &NNormalSurface::disjoint)
         .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,
             return_value_policy<manage_new_object>())
         .def("findVtxOctAlmostNormalSphere",

@@ -1031,6 +1031,29 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         NTriangulation* crush() const;
 
         /**
+         * Determines whether this and the given surface in fact
+         * represent the same normal (or almost normal) surface.
+         *
+         * Specifically, this routine examines (or computes) the number of
+         * normal or almost normal discs of each type, and returns \c true
+         * if and only if these counts are the same for both surfaces.
+         *
+         * It does not matter what coordinate systems the two surfaces
+         * use.  In particular, it does not matter if this and the
+         * given surface use different coordinate systems, and it
+         * does not matter if one surface uses an almost normal
+         * coordinate system and the other does not.
+         *
+         * \pre Both this and the given normal surface live within the
+         * same 3-manifold triangulation.
+         *
+         * @param other the surface to be compared with this surface.
+         * @return \c true if both surfaces represent the same normal or
+         * almost normal surface, or \c false if not.
+         */
+        bool sameSurface(const NNormalSurface& other) const;
+
+        /**
          * Determines whether this and the given surface are locally compatible.
          * Local compatibility means that, within each individual tetrahedron
          * of the triangulation, it is possible to arrange the normal
@@ -1065,6 +1088,39 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * \c false if they are not.
          */
         bool locallyCompatible(const NNormalSurface& other) const;
+
+        /**
+         * Determines whether this and the given surface can be placed
+         * within the surrounding triangulation so that they do not intersect
+         * anywhere at all.
+         *
+         * This is a global constraint, and therefore gives a stronger test
+         * than locallyCompatible().  However, this global constraint is
+         * also much slower to test; the running time is proportional to
+         * the total number of normal discs in both surfaces.
+         *
+         * Note that this routine has a number of preconditions.  Most
+         * importantly, it will only work if both this and the given
+         * surface use the \e same flavour of coordinate system.
+         * Running this test over two surfaces with different coordinate
+         * systems could give unpredictable results, and might
+         * crash the program entirely.
+         *
+         * \pre Both this and the given normal surface live within the
+         * same 3-manifold triangulation.
+         * \pre Both this and the given normal surface are stored using
+         * the same flavour of coordinate system (i.e., the same
+         * subclass of NNormalSurfaceVector).
+         * \pre Both this and the given surface are compact (have
+         * finitely many discs), embedded, non-empty and connected.
+         *
+         * @param other the other surface to test alongside this surface
+         * for potential intersections.
+         * @return \c true if both surfaces can be embedded without
+         * intersecting anywhere, or \c false if this and the given
+         * surface are forced to intersect at some point.
+         */
+        bool disjoint(const NNormalSurface& other) const;
 
         /**
          * Gives read-only access to the raw vector that sits beneath this

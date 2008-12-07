@@ -281,6 +281,32 @@ NLargeInteger NNormalSurfaceVector::isCentral(NTriangulation* triang) const {
     return tot;
 }
 
+bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
+    unsigned long nTet = triangulation->getNumberOfTetrahedra();
+    bool checkAlmostNormal =
+        (vector->allowsAlmostNormal() || other.vector->allowsAlmostNormal());
+
+    unsigned long t;
+    int i;
+
+    for (t = 0; t < nTet; ++t) {
+        for (i = 0; i < 4; ++i)
+            if (getTriangleCoord(t, i) != other.getTriangleCoord(t, i))
+                return false;
+
+        for (i = 0; i < 3; ++i)
+            if (getQuadCoord(t, i) != other.getQuadCoord(t, i))
+                return false;
+
+        if (checkAlmostNormal)
+            for (i = 0; i < 3; ++i)
+                if (getOctCoord(t, i) != other.getOctCoord(t, i))
+                    return false;
+    }
+
+    return true;
+}
+
 bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
     unsigned long nTets = triangulation->getNumberOfTetrahedra();
 
