@@ -307,7 +307,9 @@ void NSurfaceCoordinateUI::cutAlong() {
     }
 
     // Go ahead and cut along the surface.
+    // Be nice and simplify the triangulation, which could be very large.
     regina::NTriangulation* ans = toCutAlong->cutAlong();
+    ans->intelligentSimplify();
     ans->setPacketLabel(surfaces->makeUniqueLabel(i18n("Cut-open %1").arg(
         surfaces->getTriangulation()->getPacketLabel().c_str()).ascii()));
     surfaces->insertChildLast(ans);
