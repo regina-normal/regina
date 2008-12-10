@@ -128,6 +128,12 @@ case "$os" in
 			xephyr=1
 		fi
 		;;
+	Fedora\ release\ 10\ * )
+		distro="Fedora 10"
+		exitwait=1
+		kde=1
+		vnc=1
+		;;
 	?Welcome\ to\ openSUSE\ 10.2\ * )
 		distro="SuSE 10.2"
 		exitwait=1

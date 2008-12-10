@@ -171,10 +171,12 @@ Guest fedora system configuration
   fcguest# yum install popt              (on <= fc7)
   fcguest# yum install popt-devel        (on >= fc8)
 
-  fcguest# yum install kdelibs-devel qt-devel   (on <= fc8)
-  fcguest# yum install kdelibs3-devel qt3-devel (on >= fc9)
+  fcguest# yum install kdelibs-devel qt-devel            (on <= fc8)
+  fcguest# yum install kdelibs3-devel qt3-devel kdebase3 (on >= fc9)
 
-  fcguest# yum install kdeedu kdegraphics graphviz
+  fcguest# yum install kdegraphics graphviz
+  fcguest# yum install kdeedu (on <= fc9)
+  fcguest# yum install kdeedu-math (on >= fc10)
 
 - Symlink /bin/zsh to /usr/bin/zsh:
 

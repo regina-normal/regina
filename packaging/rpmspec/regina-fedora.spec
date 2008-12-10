@@ -1,4 +1,5 @@
 # Known to work for:
+# - Fedora 10 (i386, x86_64)
 # - Fedora 9 (i386, x86_64)
 # - Fedora 8 (i386, x86_64)
 # - Fedora 7 (i386, x86_64)
@@ -144,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/*
 
 %changelog
+* Wed Dec 10 2008 Ben Burton <bab@debian.org> 4.5.1
+- Built for Fedora 10, which was released last month.
+
 * Tue Oct 28 2008 Ben Burton <bab@debian.org> 4.5.1
 - New upstream release.
 - It will help to have KPDF installed, which provides an embedded viewer

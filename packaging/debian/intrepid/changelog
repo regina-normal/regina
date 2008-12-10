@@ -3,7 +3,9 @@ regina-normal (4.5.1-1ubuntu1~intrepid1) unstable; urgency=low
   * New upstream release, backported to ubuntu intrepid.
   * Unlike the gutsy/hardy packages, the intrepid packages do not
     recommend kpdf.  This is because kpdf (like many other KDE 3
-    applications) is no longer shipped with ubuntu.
+    applications) is no longer shipped with ubuntu.  The intrepid
+    packages recommend xpdf instead (which at least provides an
+    *external* PDF viewer, if not an embedded viewer).
   * Added a Homepage field to debian/control.
   * Bumped standards-version to 3.8.0 (no changes required).
 
