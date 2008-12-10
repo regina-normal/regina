@@ -127,7 +127,7 @@ table.data td.opt, table.data td.optfirst {
   background-color: #F0D7FF;
 }
 
-div.example p, div.announce p {
+div.example p, div.announce p, div.warning p {
   padding: 1ex 1ex 1ex 1ex;
 }
 
@@ -148,4 +148,17 @@ div.announce p {
 
 div.announce b {
   color: #3D3F53;
+}
+
+div.warning p {
+  background-color: #FFEBEB;
+  border-width: 1px;
+  border-color: #C98686;
+  border-style: solid;
+  margin-left: 5ex;
+  margin-right: 5ex;
+}
+
+div.warning b {
+  color: #502525;
 }
