@@ -6,10 +6,15 @@ regina-normal (4.5.1-1ubuntu1~intrepid1) unstable; urgency=low
     applications) is no longer shipped with ubuntu.  The intrepid
     packages recommend xpdf instead (which at least provides an
     *external* PDF viewer, if not an embedded viewer).
+  * Removed konqueror and khelpcenter from the recommends lists, since
+    (again) ubuntu no longer ships them (or at least not versions that
+    talk with KDE 3).  Unfortunately this means that users cannot view
+    documentation via the Help menu; instead they will need to download
+    the users' handbook in HTML format from the Regina website.
   * Added a Homepage field to debian/control.
   * Bumped standards-version to 3.8.0 (no changes required).
 
- -- Ben Burton <bab@debian.org>  Tue, 28 Oct 2008 06:19:50 +1100
+ -- Ben Burton <bab@debian.org>  Wed, 10 Dec 2008 21:34:16 +1100
 
 regina-normal (4.5-1) unstable; urgency=low
 
