@@ -58,4 +58,5 @@ Don't forget:
     upload new data files, both from examples/ and the large data repository
     upload handbook as an HTML bundle
     update docs/ and engine-docs/ on the website
+    update the citation years if necessary in private BibTeX databases
     mail regina-announce
