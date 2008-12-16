@@ -28,9 +28,11 @@
 
 void addNCensus();
 void addNFacePairing();
+void addDim4FacetPairing();
 
 void addCensus() {
     addNCensus();
     addNFacePairing();
+    addDim4FacetPairing();
 }
 
