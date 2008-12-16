@@ -31,6 +31,11 @@ Version 4.6  [ (under development) ]
             - Added a new static array NFace::ordering to replace the old
               global routine regina::faceOrdering().  The old routine is
               now deprecated (see below).
+        Class NFacePairing:
+            - Added a missing precondition to isCanonical(), which requires
+              that the face pairing be connected.
+            - Changed the output format of toString() to make it clearer
+              which faces are boundary faces.
         Class NFastRay:
             - New fast but inflexible ray class; this builds on NFastVector
               in the same way that the slower NRay builds on NVector.

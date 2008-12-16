@@ -261,6 +261,10 @@ class NFacePairing : public NThread {
          * <tt>dest(n-1,3)</tt>, where <tt>n</tt> is the value of
          * <tt>getNumberOfTetrahedra()</tt>.
          *
+         * \pre This face pairing is connected, i.e., it is possible
+         * to reach any tetrahedron from any other tetrahedron via a
+         * series of matched face pairs.
+         *
          * @return \c true if and only if this face pairing is in
          * canonical form.
          */
@@ -864,7 +868,7 @@ class NFacePairing : public NThread {
          *
          * \pre \a newNTetrahedra is at least 1.
          *
-         * @param newTetrahedra the number of tetrahedra under
+         * @param newNTetrahedra the number of tetrahedra under
          * consideration in this new face pairing.
          */
         NFacePairing(unsigned newNTetrahedra);
@@ -953,9 +957,9 @@ class NFacePairing : public NThread {
          * of this face pairing.  If not, the given list will be left empty.
          *
          * \pre The given list is empty.
-         * \pre For each tetrahedron \a t, it is true that
-         * the sequence <tt>dest(t,0)</tt>, <tt>dest(t,1)</tt>,
-         * <tt>dest(t,2)</tt>, <tt>dest(t,3)</tt> is non-decreasing.
+         * \pre For each tetrahedron \a t, the only case in which
+         * <tt>dest(t,i)</tt> is greater than <tt>dest(t,i+1)</tt> is where
+         * faces <tt>(t,i)</tt> and <tt>(t,i+1)</tt> are paired together.
          * \pre For each tetrahedron \a t > 0, it is true that
          * <tt>dest(t,0).tet < t</tt>.
          * \pre The sequence <tt>dest(1,0)</tt>, <tt>dest(2,0)</tt>,
