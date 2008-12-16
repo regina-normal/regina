@@ -84,7 +84,11 @@ std::string NFacePairing::toString() const {
             ans << " | ";
         else if (f.tet || f.face)
             ans << ' ';
-        ans << dest(f).tet << ':' << dest(f).face;
+
+        if (f.isBoundary(nTetrahedra))
+            ans << "bdry";
+        else
+            ans << dest(f).tet << ':' << dest(f).face;
     }
     return ans.str();
 }
