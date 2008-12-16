@@ -147,6 +147,7 @@ bool runAllTests() {
     // Census:
     addNCensus(runner);
     addNFacePairing(runner);
+    addDim4FacetPairing(runner);
 
     // SnapPea:
     addNSnapPeaTriangulation(runner);

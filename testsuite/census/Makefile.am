@@ -12,7 +12,7 @@ INCLUDES = -I$(top_srcdir) @ENGINE_INCLUDES@
 
 check_LIBRARIES = libcensus.a
 
-libcensus_a_SOURCES = ncensus.cpp nfacepairing.cpp
+libcensus_a_SOURCES = dim4facetpairing.cpp ncensus.cpp nfacepairing.cpp
 
 noinst_HEADERS = testcensus.h
 
