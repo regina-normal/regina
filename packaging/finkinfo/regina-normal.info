@@ -68,7 +68,8 @@ BuildDepends: <<
 	libxml2,
 	popt,
 	qt3,
-	x11-dev
+	x11-dev,
+	xmkmf
 <<
 Depends: <<
 	%n%v-shlibs,
@@ -93,7 +94,7 @@ Suggests: graphviz, regina-normal%v-dev
 # The following line works around the libGL linker problem on leopard:
 SetLDFLAGS: -Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
 
-ConfigureParams: --disable-mpi --with-python-version=2.5 kde_htmldir='${datadir}/doc/kde' PKGNAME=regina-normal --disable-dependency-tracking
+ConfigureParams: XMKMF=%p/lib/xmkmf/bin/xmkmf --disable-mpi --with-python-version=2.5 kde_htmldir='${datadir}/doc/kde' PKGNAME=regina-normal --disable-dependency-tracking
 CompileScript: <<
 	# Run configuration tests.
 	./configure %c
