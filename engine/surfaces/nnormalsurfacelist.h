@@ -187,7 +187,10 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * \e quadrilateral space; (ii) convert the quadrilateral space
          * solution set to a standard tri-quad space solution set.  This
          * two-step procedure is typically \e much faster than enumerating
-         * solutions in standard coordinates directly.
+         * solutions in standard coordinates directly.  For details on
+         * this procedure see "Converting between quadrilateral and
+         * standard solution sets in normal surface theory",
+         * Benjamin A. Burton, preprint, arXiv:0901.2629.
          *
          * This routine allows the user to force a direct enumeration in
          * standard space, \e without going via quadrilateral space.
@@ -234,17 +237,21 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
         virtual bool dependsOnParent() const;
 
         /**
-         * Converts a set of embedded vertex normal surfaces in quadrilateral
-         * space to a set of embedded vertex normal surfaces in standard
-         * (tri-quad) space.  The initial list in quadrilateral space is
-         * taken to be this normal surface list; the final list in standard
-         * space will be inserted as a new child packet of the underlying
-         * triangulation (specifically, as the final child).  As a
-         * convenience, the final list will also be returned from this routine.
+         * Converts the set of all embedded vertex normal surfaces in
+         * quadrilateral space to the set of all embedded vertex normal
+         * surfaces in standard (tri-quad) space.  The initial list in
+         * quadrilateral space is taken to be this normal surface list;
+         * the final list in standard space will be inserted as a new
+         * child packet of the underlying triangulation (specifically, as
+         * the final child).  As a convenience, the final list will also
+         * be returned from this routine.
          *
          * This procedure is available for any triangulation whose vertex
          * links are all spheres and/or discs, and is \e much faster than
          * enumerating surfaces directly in standard tri-quad coordinates.
+         * The underlying algorithm is described in detail in "Converting
+         * between quadrilateral and standard solution sets in normal
+         * surface theory", Benjamin A. Burton, preprint, arXiv:0901.2629.
          *
          * Typically users do not need to call this routine directly,
          * since the standard enumerate() routine will use it implicitly
@@ -283,12 +290,54 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * enumerate(), with the flavour set to NNormalSurfaceList::QUAD and
          * with \a embeddedOnly set to \c true.
          *
-         * @param quadList a full list of vertex normal surfaces in
-         * quadrilateral coordinates.
          * @return a full list of vertex normal surfaces in standard (tri-quad)
          * coordinates, or 0 if any of the basic sanity checks failed.
          */
         NNormalSurfaceList* quadToStandard() const;
+
+        /**
+         * Converts the set of all embedded vertex normal surfaces in
+         * standard (tri-quad) space to the set of all embedded vertex
+         * normal surfaces in quadrilateral space.  The initial list in
+         * standard space is taken to be this normal surface list;
+         * the final list in quadrilateral space will be inserted as a new
+         * child packet of the underlying triangulation (specifically, as
+         * the final child).  As a convenience, the final list will also
+         * be returned from this routine.
+         *
+         * This procedure is available for any triangulation whose vertex
+         * links are all spheres and/or discs.  The underlying algorithm
+         * is described in detail in "Converting between quadrilateral and
+         * standard solution sets in normal surface theory",
+         * Benjamin A. Burton, preprint, arXiv:0901.2629.
+         *
+         * It should be noted that this routine does \e not simply convert
+         * vectors from one form to another; instead it converts a full
+         * solution set of vertex surfaces in standard coordinates to a
+         * full solution set of vertex surfaces in quadrilateral coordinates.
+         * Typically there are far fewer vertex surfaces in quadrilateral
+         * coordinates (all of which this routine will find).
+         *
+         * This routine will run some very basic sanity checks before
+         * starting.  Specifically, it will check the validity and vertex
+         * links of the underlying triangulation, and will verify that
+         * the coordinate flavour and embedded-only flag are set to
+         * NNormalSurfaceList::STANDARD and \c true respectively.  If any of
+         * these checks fail, this routine will do nothing and return 0.
+         *
+         * \pre The underlying triangulation (the parent packet of this
+         * normal surface list) is valid, and the link of every vertex
+         * is either a sphere or a disc.
+         * \pre This normal surface list is precisely the set of all
+         * embedded vertex normal surfaces in standard (tri-quad) space;
+         * no more, no less.  Typically this means that it was obtained through
+         * enumerate(), with the flavour set to NNormalSurfaceList::STANDARD
+         * and with \a embeddedOnly set to \c true.
+         *
+         * @return a full list of vertex normal surfaces in quadrilateral
+         * coordinates, or 0 if any of the basic sanity checks failed.
+         */
+        NNormalSurfaceList* standardToQuad() const;
 
         /**
          * Returns a newly created matrix containing the matching
