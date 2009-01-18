@@ -219,7 +219,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
     }
 
     // Is it a partial search that has already finished?
-    if (orderElt == static_cast<int>(nTets) * 2) {
+    if (orderElt == orderSize) {
         if (isCanonical())
             use_(this, useArgs_);
         use_(0, useArgs_);
@@ -297,7 +297,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == static_cast<int>(nTets) * 2) {
+        if (orderElt == orderSize) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
