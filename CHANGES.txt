@@ -62,6 +62,17 @@ Version 4.6  [ (under development) ]
               The corresponding <cancrush> element has been removed from
               the data file format (though old files that happen to contain
               it will load without problems).
+        Class NNormalSurfaceList:
+            - Added routines quadToStandard() and standardToQuad() to
+              convert between different solution sets.  See arXiv:0901.2629
+              for details of the underlying algorithms.
+            - Changed enumerate() in standard coordinates so that, if
+              possible, it enumerates in quadrilateral coordinates instead
+              and then converts between solution sets (see above).  This
+              typically runs orders of magnitude faster.
+            - New routine enumerateStandardDirect() to allow people to
+              circumvent the above changes to enumerate() and instead use
+              the old direct enumeration from Regina 4.5.1.
         Class NPerm:
             - New routines trunc2() and trunc3() to build truncated
               version of a permutation string.
