@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Tab Conversion Utility
 #
-# Copyright (c) 1999-2008, Ben Burton
+# Copyright (c) 1999-2009, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: replacetabs <text-file> [ <text-file> ... ]

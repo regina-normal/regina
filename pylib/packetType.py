@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Helper Routines
 #
-# Copyright (c) 2002-2008, Ben Burton
+# Copyright (c) 2002-2009, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage:
