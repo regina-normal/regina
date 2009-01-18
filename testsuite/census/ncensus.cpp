@@ -44,6 +44,7 @@ class NCensusTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(rawCountsCompact);
     CPPUNIT_TEST(rawCountsPrimeMinimalOr);
     CPPUNIT_TEST(rawCountsPrimeMinimalNor);
+    CPPUNIT_TEST(rawCountsBounded);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -88,6 +89,16 @@ class NCensusTest : public CppUnit::TestFixture {
                 NBoolSet::sTrue, NBoolSet::sFalse, NBoolSet::sFalse, 0,
                 NCensus::PURGE_NON_MINIMAL_PRIME |
                 NCensus::PURGE_P2_REDUCIBLE, NCensus::mightBeMinimal);
+        }
+
+        void rawCountsBounded() {
+            unsigned nAll[] = { 1, 3, 17, 156, 2308 };
+            rawCountsCompare(1, 3, nAll, "bounded compact",
+                NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sTrue, -1, 0, 0);
+
+            unsigned nOrientable[] = { 1, 3, 14, 120, 1531 };
+            rawCountsCompare(1, 3, nOrientable, "bounded compact orbl",
+                NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sTrue, -1, 0, 0);
         }
 
         static void rawCountsCompare(unsigned minTets, unsigned maxTets,
