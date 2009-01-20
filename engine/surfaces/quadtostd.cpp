@@ -269,6 +269,8 @@ namespace {
                     return 0;
                 return (elements[index] > zero ? 1 : -1);
             }
+
+            using NFastRay::scaleDown;
     };
 } // anonymous namespace
 
@@ -583,12 +585,16 @@ void NNormalSurfaceList::buildStandardFromQuadUsing(NTriangulation* owner,
         // We're done cancelling this vertex link.
         // Now add the vertex link itself, and cancel any future vertex
         // links that we might have created.
+        // Note that cancelling future vertex links might introduce
+        // new common factors that can be divided out.
         list[workingList].push_back(linkSpec);
 
         for (it = list[workingList].begin(); it != list[workingList].end();
-                ++it)
+                ++it) {
             for (i = vtx + 1; i < llen; ++i)
                 (*it)->reduce(link[i]);
+            (*it)->scaleDown();
+        }
     }
 
     // All done!  Put the solutions into the normal surface list and clean up.

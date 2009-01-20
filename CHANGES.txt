@@ -167,6 +167,8 @@ Version 4.6  [ (under development) ]
         - New tests that enumerate automorphisms of triangulations and
           test for subcomplexes.
         - New tests for 3-sphere and 3-ball recognition.
+        - New tests to verify conversion routines between normal surface
+          solution sets in different coordinate systems.
     BUILD ENVIRONMENT:
         - Installing into a staging area (i.e., building packages) now works
           fine even if older versions of the Regina development libraries are
