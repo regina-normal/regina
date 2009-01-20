@@ -27,7 +27,7 @@
 /* end stub */
 
 #include "angle/nanglestructurelist.h"
-#include "enumerate/ndoubledescriptor.h"
+#include "enumerate/ndoubledescription.h"
 #include "file/nfile.h"
 #include "maths/nmatrixint.h"
 #include "maths/nvectorunit.h"
@@ -95,7 +95,7 @@ void* NAngleStructureList::Enumerator::run(void*) {
         progress->incCompleted();
 
     // Find the angle structures.
-    NDoubleDescriptor::enumerateExtremalRays(StructureInserter(*list, triang),
+    NDoubleDescription::enumerateExtremalRays(StructureInserter(*list, triang),
         NAngleStructureVector(nCoords), eqns, 0, progress);
 
     // All done!

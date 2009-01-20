@@ -27,7 +27,7 @@
 /* end stub */
 
 #include "regina-config.h"
-#include "enumerate/ndoubledescriptor.h"
+#include "enumerate/ndoubledescription.h"
 #include "maths/nfastray.h"
 #include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurface.h"
@@ -54,7 +54,7 @@ namespace {
 
     /**
      * A back insertion iterator that defines \a value_type, which is
-     * required by NDoubleDescriptor::enumerate().
+     * required by NDoubleDescription::enumerate().
      *
      * The standard back_insert_iterator does not provide this typedef,
      * so we subclass and provide the typedef ourselves.
@@ -336,7 +336,7 @@ void NNormalSurfaceList::enumerateStandardViaQuad(
         NNormalSurfaceList::QUAD);
 
     std::vector<NNormalSurfaceVector*> quadVertices;
-    NDoubleDescriptor::enumerateExtremalRays(
+    NDoubleDescription::enumerateExtremalRays(
         VectorInserter(quadVertices),
         *base, *eqns, constraints, progress);
 

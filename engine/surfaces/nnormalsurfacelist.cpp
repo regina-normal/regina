@@ -27,7 +27,7 @@
 /* end stub */
 
 #include <list>
-#include "enumerate/ndoubledescriptor.h"
+#include "enumerate/ndoubledescription.h"
 #include "file/nfile.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogressmanager.h"
@@ -123,8 +123,8 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
         NNormalSurfaceVector* base = makeZeroVector(triang, list->flavour);
 
         // Find the normal surfaces.
-        NDoubleDescriptor::enumerateExtremalRays(SurfaceInserter(*list, triang),
-            *base, *eqns, constraints, progress);
+        NDoubleDescription::enumerateExtremalRays(SurfaceInserter(*list,
+            triang), *base, *eqns, constraints, progress);
 
         delete base;
         delete eqns;
@@ -173,7 +173,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
     NNormalSurfaceVector* base = makeZeroVector(owner,
         NNormalSurfaceList::STANDARD);
 
-    NDoubleDescriptor::enumerateExtremalRays(SurfaceInserter(*list, owner),
+    NDoubleDescription::enumerateExtremalRays(SurfaceInserter(*list, owner),
         *base, *eqns, constraints);
 
     delete base;
