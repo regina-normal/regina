@@ -50,7 +50,7 @@ namespace regina {
  * polytope vertex enumeration.
  *
  * Vertex enumeration routines such as
- * NDoubleDescriptor::enumerateExtremalRays() take a cone (specifically
+ * NDoubleDescription::enumerateExtremalRays() take a cone (specifically
  * the non-negative orthant), form the intersection of that cone with a
  * given linear subspace, and return the extremal rays of the new cone
  * that results.

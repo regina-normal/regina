@@ -18,6 +18,13 @@ Version 4.6  [ (under development) ]
             - Removed findAllCompletions(), which (as the documentation
               points out) is an empty shell of a routine that has never been
               implemented and quite possibly never will.
+        Class NDoubleDescription, NDoubleDescriptor:
+            - The old NDoubleDescriptor class has been renamed, and is now
+              called NDoubleDescription.  This is merely for consistency
+              with documentation and papers; the functionality of the class
+              has not changed.  The old name (NDoubleDescriptor) is
+              deprecated, but for the time being a typedef is provided
+              for backward compatibility.
         Class NEdge:
             - Added new static arrays NEdge::edgeNumber and NEdge::edgeVertex
               to replace the old global arrays regina::edgeNumber,
