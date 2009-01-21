@@ -1366,21 +1366,29 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             // For the purposes of the test suite I'm happy to assume it
             // holds in general; certainly it has been verified for all
             // the cases that we actually test here.
-            unsigned long curr, prev, tmp;
-            if (len == 1)
-                curr = 3;
-            else if (len == 2)
-                curr = 4;
-            else {
-                curr = 4;
-                prev = 2;
-                for (unsigned counted = 2; counted < len; ++counted) {
-                    tmp = curr + prev - 1;
+            unsigned long curr, prev, tmp, currgap, prevgap;
+            if (len < 7) {
+                switch (len) {
+                    case 1: curr = 3; break;
+                    case 2: curr = 4; break;
+                    case 3: curr = 5; break;
+                    case 4: curr = 12; break;
+                    case 5: curr = 12; break;
+                    case 6: curr = 25; break;
+                }
+            } else {
+                prev = 12; prevgap = 2;
+                curr = 25; currgap = 1;
+
+                for (unsigned counted = 6; counted < len; ++counted) {
+                    tmp = curr + prev + currgap - 1;
                     prev = curr;
                     curr = tmp;
+
+                    tmp = currgap + prevgap;
+                    prevgap = currgap;
+                    currgap = tmp;
                 }
-                if (len % 2 == 0)
-                    curr += len;
             }
 
             testSize(list, name.str().c_str(),
@@ -1406,6 +1414,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             testAlmostNormalLoopCtwGeneric(3);
             testAlmostNormalLoopCtwGeneric(6);
             testAlmostNormalLoopCtwGeneric(9);
+            testAlmostNormalLoopCtwGeneric(12);
+            testAlmostNormalLoopCtwGeneric(15);
         }
 
         void standardQuadConversionsConstructed() {
