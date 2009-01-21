@@ -94,7 +94,7 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
     if (list->flavour == NNormalSurfaceList::STANDARD && list->embedded &&
             triang->isValid() && ! triang->isIdeal()) {
         // Enumerate solutions in standard space by going via quad space.
-        list->enumerateStandardViaQuad(triang, progress);
+        list->enumerateStandardViaReduced<NormalSpec>(triang, progress);
     } else {
         // The catch-all double description method.
 
