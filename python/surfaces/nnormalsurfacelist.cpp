@@ -69,6 +69,9 @@ void addNNormalSurfaceList() {
         .def("enumerateStandardDirect",
             &NNormalSurfaceList::enumerateStandardDirect,
             return_value_policy<reference_existing_object>())
+        .def("enumerateStandardANDirect",
+            &NNormalSurfaceList::enumerateStandardANDirect,
+            return_value_policy<reference_existing_object>())
         .def("quadToStandard", &NNormalSurfaceList::quadToStandard,
             return_value_policy<reference_existing_object>())
         .def("quadOctToStandardAN", &NNormalSurfaceList::quadOctToStandardAN,
@@ -82,6 +85,7 @@ void addNNormalSurfaceList() {
             return_value_policy<manage_new_object>())
         .staticmethod("enumerate")
         .staticmethod("enumerateStandardDirect")
+        .staticmethod("enumerateStandardANDirect")
     ;
 
     s.attr("packetType") = NNormalSurfaceList::packetType;
