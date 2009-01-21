@@ -232,7 +232,6 @@ class NXMLNormalSurfaceReader;
  *
  * \testpart
  *
- * \todo \feature Implement quad-oct space.
  * \todo \optlong Investigate using sparse vectors for storage.
  *
  * \ifacespython Not present.

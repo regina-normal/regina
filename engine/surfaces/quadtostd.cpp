@@ -49,9 +49,14 @@ namespace regina {
 
 template NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard<
         NNormalSurfaceList::NormalSpec>() const;
+template NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard<
+        NNormalSurfaceList::AlmostNormalSpec>() const;
 
 template void NNormalSurfaceList::enumerateStandardViaReduced<
         NNormalSurfaceList::NormalSpec>(NTriangulation*, NProgressNumber*);
+template void NNormalSurfaceList::enumerateStandardViaReduced<
+        NNormalSurfaceList::AlmostNormalSpec>(NTriangulation*,
+        NProgressNumber*);
 
 /**
  * Put helper classes and constants into an anonymous namespace.
@@ -116,7 +121,7 @@ namespace {
              *
              * @param v the vector to clone.
              */
-            RaySpec(const NNormalSurfaceVectorStandard* v) :
+            RaySpec(const NNormalSurfaceVector* v) :
                     NFastRay(v->size()), facets_(v->size()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.

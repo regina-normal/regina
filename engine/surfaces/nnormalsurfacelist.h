@@ -92,6 +92,8 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
              *   for almost normal surfaces. */
         static const int QUAD;
             /**< Represents quad coordinates for normal surfaces. */
+        static const int QUAD_OCT;
+            /**< Represents quad-oct coordinates for normal surfaces. */
 
         static const int EDGE_WEIGHT;
             /**< Represents edge weight coordinates for normal surfaces.
@@ -149,7 +151,6 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * space.
          * \todo \featurelong Allow either subsets of normal surface
          * lists or allow deletion of surfaces from lists.
-         * \todo \opt Investigate obvious compressions.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
@@ -219,6 +220,22 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
         static NNormalSurfaceList* enumerateStandardDirect(
             NTriangulation* owner);
 
+        /**
+         * Uses a slow-but-direct procedure to enumerate all embedded
+         * vertex almost normal surfaces in standard (tri-quad-oct)
+         * coordinates within the given triangulation.
+         *
+         * This routine is the almost normal analogue to the
+         * enumerateStandardDirect() enumeration routine; see the
+         * enumerateStandardDirect() documentation for further information.
+         *
+         * @param owner the triangulation upon which this list of
+         * almost normal surfaces will be based.
+         * @return the newly created surface list.
+         */
+        static NNormalSurfaceList* enumerateStandardANDirect(
+            NTriangulation* owner);
+
         virtual int getFlavour() const;
         virtual bool allowsAlmostNormal() const;
         virtual bool isEmbeddedOnly() const;
@@ -245,6 +262,10 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * child packet of the underlying triangulation (specifically, as
          * the final child).  As a convenience, the final list will also
          * be returned from this routine.
+         *
+         * This routine can only be used with normal surfaces, not almost
+         * normal surfaces.  For almost normal surfaces, see the similar
+         * routine quadOctToStandardAN().
          *
          * This procedure is available for any triangulation whose vertex
          * links are all spheres and/or discs, and is \e much faster than
@@ -297,6 +318,32 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
         NNormalSurfaceList* quadToStandard() const;
 
         /**
+         * Converts the set of all embedded vertex almost normal surfaces in
+         * quadrilateral-octagon space to the set of all embedded vertex
+         * almost normal surfaces in the standard tri-quad-oct space.
+         *
+         * This routine is the almost normal analogue to the
+         * quadToStandard() conversion routine; see the quadToStandard()
+         * documentation for further information.
+         *
+         * \pre The underlying triangulation (the parent packet of this
+         * normal surface list) is valid, and the link of every vertex
+         * is either a sphere or a disc.
+         * \pre This surface list is precisely the set of all embedded vertex
+         * almost normal surfaces in quadrilateral-octagon space; no more,
+         * no less.  Moreover, these vectors are stored using
+         * quadrilateral-octagon coordinates.  Typically this means that it
+         * was obtained through enumerate(), with the flavour set to
+         * NNormalSurfaceList::QUAD_OCT and with \a embeddedOnly set to
+         * \c true.
+         *
+         * @return a full list of vertex almost normal surfaces in standard
+         * tri-quad-oct coordinates, or 0 if any of the basic sanity checks
+         * failed.
+         */
+        NNormalSurfaceList* quadOctToStandardAN() const;
+
+        /**
          * Converts the set of all embedded vertex normal surfaces in
          * standard (tri-quad) space to the set of all embedded vertex
          * normal surfaces in quadrilateral space.  The initial list in
@@ -305,6 +352,10 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * child packet of the underlying triangulation (specifically, as
          * the final child).  As a convenience, the final list will also
          * be returned from this routine.
+         *
+         * This routine can only be used with normal surfaces, not almost
+         * normal surfaces.  For almost normal surfaces, see the similar
+         * routine standardANToQuadOct().
          *
          * This procedure is available for any triangulation whose vertex
          * links are all spheres and/or discs.  The underlying algorithm
@@ -341,6 +392,31 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * coordinates, or 0 if any of the basic sanity checks failed.
          */
         NNormalSurfaceList* standardToQuad() const;
+
+        /**
+         * Converts the set of all embedded vertex almost normal surfaces in
+         * standard tri-quad-oct space to the set of all embedded vertex
+         * almost normal surfaces in the smaller quadrilateral-octagon space.
+         *
+         * This routine is the almost normal analogue to the
+         * standardToQuad() conversion routine; see the standardToQuad()
+         * documentation for further information.
+         *
+         * \pre The underlying triangulation (the parent packet of this
+         * normal surface list) is valid, and the link of every vertex
+         * is either a sphere or a disc.
+         * \pre This normal surface list is precisely the set of all
+         * embedded vertex almost normal surfaces in standard tri-quad-oct
+         * space; no more, no less.  Typically this means that it was obtained
+         * through enumerate(), with the flavour set to
+         * NNormalSurfaceList::AN_STANDARD and with \a embeddedOnly set
+         * to \c true.
+         *
+         * @return a full list of vertex almost normal surfaces in
+         * quadrilateral-octagon coordinates, or 0 if any of the basic
+         * sanity checks failed.
+         */
+        NNormalSurfaceList* standardANToQuadOct() const;
 
         /**
          * Returns a newly created matrix containing the matching
@@ -516,8 +592,8 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * Enumerates all embedded vertex surfaces in (standard normal
          * or standard almost normal) coordinates by first enumerating
          * surfaces in (quad or quad-oct) coordinates and then performing
-         * a conversion routine.  See quadToStandard() and quadOctToStandard()
-         * for further information on this procedure.
+         * a conversion routine.  See quadToStandard() and
+         * quadOctToStandardAN() for further information on this procedure.
          *
          * The resulting surfaces in standard coordinates will be
          * inserted directly into this list.
@@ -566,7 +642,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * or standard almost normal) space surfaces will be inserted
          * directly into this list.
          *
-         * See quadToStandard() and quadOctToStandard() for full details
+         * See quadToStandard() and quadOctToStandardAN() for full details
          * and preconditions for this procedure.
          *
          * This routine is designed to work with surface lists that are
@@ -584,11 +660,11 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          *
          * \pre The template argument \a Variant is either NormalSpec
          * or AlmostNormalSpec, according to whether we are doing the
-         * work for quadToStandard() or quadOctToStandard() respectively.
+         * work for quadToStandard() or quadOctToStandardAN() respectively.
          * \pre The flavour for this surface list is set to
          * NNormalSurfaceList::STANDARD or NNormalSurfaceList::AN_STANDARD,
          * according to whether we are doing the work for quadToStandard()
-         * or quadOctToStandard() respectively, and the embedded-only
+         * or quadOctToStandardAN() respectively, and the embedded-only
          * flag is set to \c true.
          * \pre The given triangulation is valid and non-empty, and the link
          * of every vertex is either a sphere or a disc.
@@ -628,13 +704,13 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * standard almost normal) space.
          *
          * This is a generic implementation that performs the real work
-         * for both quadToStandard() and quadOctToStandard().  See each
+         * for both quadToStandard() and quadOctToStandardAN().  See each
          * of those routines for further details as well as relevant
          * preconditions and postconditions.
          *
          * \pre The template argument \a Variant is either NormalSpec
          * or AlmostNormalSpec, according to whether we are implementing
-         * quadToStandard() or quadOctToStandard() accordingly.
+         * quadToStandard() or quadOctToStandardAN() accordingly.
          */
         template <class Variant>
         NNormalSurfaceList* internalReducedToStandard() const;
@@ -645,13 +721,13 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * embedded vertex surfaces in (quad or quad-oct) space.
          *
          * This is a generic implementation that performs the real work
-         * for both standardToQuad() and standardToQuadOct().  See each
+         * for both standardToQuad() and standardANToQuadOct().  See each
          * of those routines for further details as well as relevant
          * preconditions and postconditions.
          *
          * \pre The template argument \a Variant is either NormalSpec
          * or AlmostNormalSpec, according to whether we are implementing
-         * standardToQuad() or standardToQuadOct() accordingly.
+         * standardToQuad() or standardANToQuadOct() accordingly.
          */
         template <class Variant>
         NNormalSurfaceList* internalStandardToReduced() const;
@@ -772,8 +848,16 @@ inline NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
     return internalReducedToStandard<NormalSpec>();
 }
 
+inline NNormalSurfaceList* NNormalSurfaceList::quadOctToStandardAN() const {
+    return internalReducedToStandard<AlmostNormalSpec>();
+}
+
 inline NNormalSurfaceList* NNormalSurfaceList::standardToQuad() const {
     return internalStandardToReduced<NormalSpec>();
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::standardANToQuadOct() const {
+    return internalStandardToReduced<AlmostNormalSpec>();
 }
 
 inline NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {

@@ -71,7 +71,11 @@ void addNNormalSurfaceList() {
             return_value_policy<reference_existing_object>())
         .def("quadToStandard", &NNormalSurfaceList::quadToStandard,
             return_value_policy<reference_existing_object>())
+        .def("quadOctToStandardAN", &NNormalSurfaceList::quadOctToStandardAN,
+            return_value_policy<reference_existing_object>())
         .def("standardToQuad", &NNormalSurfaceList::standardToQuad,
+            return_value_policy<reference_existing_object>())
+        .def("standardANToQuadOct", &NNormalSurfaceList::standardANToQuadOct,
             return_value_policy<reference_existing_object>())
         .def("recreateMatchingEquations",
             &NNormalSurfaceList::recreateMatchingEquations,
@@ -84,6 +88,7 @@ void addNNormalSurfaceList() {
     s.attr("STANDARD") = NNormalSurfaceList::STANDARD;
     s.attr("AN_STANDARD") = NNormalSurfaceList::AN_STANDARD;
     s.attr("QUAD") = NNormalSurfaceList::QUAD;
+    s.attr("QUAD_OCT") = NNormalSurfaceList::QUAD_OCT;
     s.attr("EDGE_WEIGHT") = NNormalSurfaceList::EDGE_WEIGHT;
     s.attr("FACE_ARCS") = NNormalSurfaceList::FACE_ARCS;
 

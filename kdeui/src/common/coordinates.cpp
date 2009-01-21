@@ -42,6 +42,8 @@ namespace Coordinates {
                 return i18n("Standard almost normal (tri-quad-oct)");
             if (coordSystem == NNormalSurfaceList::QUAD)
                 return i18n("Quad normal");
+            if (coordSystem == NNormalSurfaceList::QUAD_OCT)
+                return i18n("Quad-oct almost normal");
             if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT)
                 return i18n("Edge weight");
             if (coordSystem == NNormalSurfaceList::FACE_ARCS)
@@ -54,6 +56,8 @@ namespace Coordinates {
                 return i18n("standard almost normal (tri-quad-oct)");
             if (coordSystem == NNormalSurfaceList::QUAD)
                 return i18n("quad normal");
+            if (coordSystem == NNormalSurfaceList::QUAD_OCT)
+                return i18n("quad-oct almost normal");
             if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT)
                 return i18n("edge weight");
             if (coordSystem == NNormalSurfaceList::FACE_ARCS)
@@ -69,6 +73,8 @@ namespace Coordinates {
             return tri->getNumberOfTetrahedra() * 10;
         else if (coordSystem == NNormalSurfaceList::QUAD)
             return tri->getNumberOfTetrahedra() * 3;
+        else if (coordSystem == NNormalSurfaceList::QUAD_OCT)
+            return tri->getNumberOfTetrahedra() * 6;
         else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT)
             return tri->getNumberOfEdges();
         else if (coordSystem == NNormalSurfaceList::FACE_ARCS)
@@ -99,6 +105,13 @@ namespace Coordinates {
         } else if (coordSystem == NNormalSurfaceList::QUAD) {
             return QString("%1: %2").arg(whichCoord / 3).
                 arg(regina::vertexSplitString[whichCoord % 3]);
+        } else if (coordSystem == NNormalSurfaceList::QUAD_OCT) {
+            if (whichCoord % 6 < 3)
+                return i18n("Q%1: %2").arg(whichCoord / 6).
+                    arg(regina::vertexSplitString[whichCoord % 6]);
+            else
+                return i18n("K%1: %2").arg(whichCoord / 6).
+                    arg(regina::vertexSplitString[(whichCoord % 6) - 3]);
         } else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT) {
             if (! (tri && tri->getEdge(whichCoord)->isBoundary()))
                 return QString::number(whichCoord);
@@ -137,6 +150,15 @@ namespace Coordinates {
             return i18n("Tetrahedron %1, quad splitting vertices %2").
                 arg(whichCoord / 3).
                 arg(regina::vertexSplitString[whichCoord % 3]);
+        } else if (coordSystem == NNormalSurfaceList::QUAD_OCT) {
+            if (whichCoord % 6 < 3)
+                return i18n("Tetrahedron %1, quad splitting vertices %2").
+                    arg(whichCoord / 6).
+                    arg(regina::vertexSplitString[whichCoord % 6]);
+            else
+                return i18n("Tetrahedron %1, oct partitioning vertices %2").
+                    arg(whichCoord / 6).
+                    arg(regina::vertexSplitString[(whichCoord % 6) - 3]);
         } else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT) {
             if (tri) {
                 if (tri->getEdge(whichCoord)->isBoundary())
@@ -172,12 +194,19 @@ namespace Coordinates {
             else
                 return surface.getOctCoord(
                     whichCoord / 10, (whichCoord % 10) - 7);
-        } else if (coordSystem == NNormalSurfaceList::QUAD)
+        } else if (coordSystem == NNormalSurfaceList::QUAD) {
             return surface.getQuadCoord(whichCoord / 3, whichCoord % 3);
-        else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT)
+        } else if (coordSystem == NNormalSurfaceList::QUAD_OCT) {
+            if (whichCoord % 6 < 3)
+                return surface.getQuadCoord(whichCoord / 6, whichCoord % 6);
+            else
+                return surface.getOctCoord(
+                    whichCoord / 6, (whichCoord % 6) - 3);
+        } else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT) {
             return surface.getEdgeWeight(whichCoord);
-        else if (coordSystem == NNormalSurfaceList::FACE_ARCS)
+        } else if (coordSystem == NNormalSurfaceList::FACE_ARCS) {
             return surface.getFaceArcs(whichCoord / 3, whichCoord % 3);
+        }
 
         return (long)0;
     }
