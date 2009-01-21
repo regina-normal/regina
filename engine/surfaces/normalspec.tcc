@@ -30,6 +30,7 @@
 #include "surfaces/nsstandard.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsanstandard.h"
+#include "surfaces/nsquadoct.h"
 
 namespace regina {
 
@@ -136,6 +137,11 @@ struct NNormalSurfaceList::AlmostNormalSpec {
     typedef NNormalSurfaceVectorANStandard StandardVector;
 
     /**
+     * The underlying class for vectors in reduced form.
+     */
+    typedef NNormalSurfaceVectorQuadOct ReducedVector;
+
+    /**
      * Returns the flavour constant in NNormalSurfaceList corresponding to
      * standard form.
      *
@@ -146,6 +152,14 @@ struct NNormalSurfaceList::AlmostNormalSpec {
      */
     inline static int standardFlavour() {
         return NNormalSurfaceList::AN_STANDARD;
+    }
+
+    /**
+     * Returns the flavour constant in NNormalSurfaceList corresponding to
+     * reduced form.
+     */
+    inline static int reducedFlavour() {
+        return NNormalSurfaceList::QUAD_OCT;
     }
 
     /**

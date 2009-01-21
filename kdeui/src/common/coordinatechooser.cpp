@@ -46,11 +46,13 @@ void CoordinateChooser::insertAllCreators() {
     insertSystem(NNormalSurfaceList::STANDARD);
     insertSystem(NNormalSurfaceList::AN_STANDARD);
     insertSystem(NNormalSurfaceList::QUAD);
+    insertSystem(NNormalSurfaceList::QUAD_OCT);
 }
 
 void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
     if (surfaces->allowsAlmostNormal()) {
         insertSystem(NNormalSurfaceList::AN_STANDARD);
+        insertSystem(NNormalSurfaceList::QUAD_OCT);
     } else {
         insertSystem(NNormalSurfaceList::STANDARD);
         insertSystem(NNormalSurfaceList::QUAD);

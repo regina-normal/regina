@@ -30,6 +30,7 @@
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/nsquad.h"
+#include "surfaces/nsquadoct.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -42,6 +43,8 @@ namespace regina {
 
 template NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced
     <NNormalSurfaceList::NormalSpec>() const;
+template NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced
+    <NNormalSurfaceList::AlmostNormalSpec>() const;
 
 template <class Variant>
 NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {

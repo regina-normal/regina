@@ -42,8 +42,9 @@ namespace regina {
 #define __FLAVOUR_REGISTRY_BODY
 
 const int NNormalSurfaceList::STANDARD = 0;
-const int NNormalSurfaceList::AN_STANDARD = 100;
 const int NNormalSurfaceList::QUAD = 1;
+const int NNormalSurfaceList::AN_STANDARD = 100;
+const int NNormalSurfaceList::QUAD_OCT = 101;
 const int NNormalSurfaceList::EDGE_WEIGHT = 200;
 const int NNormalSurfaceList::FACE_ARCS = 201;
 
@@ -95,6 +96,11 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
             triang->isValid() && ! triang->isIdeal()) {
         // Enumerate solutions in standard space by going via quad space.
         list->enumerateStandardViaReduced<NormalSpec>(triang, progress);
+    } else if (list->flavour == NNormalSurfaceList::AN_STANDARD &&
+            list->embedded && triang->isValid() && ! triang->isIdeal()) {
+        // Enumerate solutions in standard almost normal space by going
+        // via quad-oct space.
+        list->enumerateStandardViaReduced<AlmostNormalSpec>(triang, progress);
     } else {
         // The catch-all double description method.
 
@@ -172,6 +178,31 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
         NNormalSurfaceList::STANDARD);
     NNormalSurfaceVector* base = makeZeroVector(owner,
         NNormalSurfaceList::STANDARD);
+
+    NDoubleDescription::enumerateExtremalRays(SurfaceInserter(*list, owner),
+        *base, *eqns, constraints);
+
+    delete base;
+    delete eqns;
+    delete constraints;
+
+    // All done!
+    owner->insertChildLast(list);
+    return list;
+}
+
+NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
+        NTriangulation* owner) {
+    NNormalSurfaceList* list = new NNormalSurfaceList(
+        NNormalSurfaceList::AN_STANDARD, true);
+
+    // Run a vanilla enumeration in standard almost normal coordinates.
+    NEnumConstraintList* constraints =
+        NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(owner);
+    NMatrixInt* eqns = makeMatchingEquations(owner,
+        NNormalSurfaceList::AN_STANDARD);
+    NNormalSurfaceVector* base = makeZeroVector(owner,
+        NNormalSurfaceList::AN_STANDARD);
 
     NDoubleDescription::enumerateExtremalRays(SurfaceInserter(*list, owner),
         *base, *eqns, constraints);
