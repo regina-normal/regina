@@ -80,6 +80,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(largeDimensionsAlmostNormal);
     CPPUNIT_TEST(standardQuadConversionsConstructed);
     CPPUNIT_TEST(standardQuadConversionsCensus);
+    CPPUNIT_TEST(standardANQuadOctConversionsConstructed);
+    CPPUNIT_TEST(standardANQuadOctConversionsCensus);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -391,7 +393,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             if (tri->isIdeal() || ! tri->isValid()) {
                 std::ostringstream msg;
-                msg << "Cannot verify conversion routines for "
+                msg << "Cannot verify normal conversion routines for "
                     << useName << ", which is either ideal or invalid.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -452,9 +454,85 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             delete quadConv;
         }
 
+        static void verifyConversionsAN(NTriangulation* tri,
+                const char* triName = 0) {
+            const char* useName = (triName ? triName :
+                tri->getPacketLabel().c_str());
+
+            if (tri->isIdeal() || ! tri->isValid()) {
+                std::ostringstream msg;
+                msg << "Cannot verify almost normal conversion routines for "
+                    << useName << ", which is either ideal or invalid.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NNormalSurfaceList* stdANDirect = NNormalSurfaceList::
+                enumerateStandardANDirect(tri);
+            NNormalSurfaceList* quadOctDirect = NNormalSurfaceList::enumerate(
+                tri, NNormalSurfaceList::QUAD_OCT);
+
+            NNormalSurfaceList* stdANConv =
+                quadOctDirect->quadOctToStandardAN();
+            NNormalSurfaceList* quadOctConv =
+                stdANDirect->standardANToQuadOct();
+
+            // Compare the surfaces in each list coordinate by coordinate.
+            if (! identical(stdANDirect, stdANConv)) {
+                /**
+                 * If something goes wrong, uncomment this block for a
+                 * detailed dump of the triangulation and the two lists
+                 * of surfaces.
+                 *
+                std::cerr << std::endl;
+                std::cerr << stdANDirect->toStringLong();
+                std::cerr << std::endl;
+                std::cerr << stdANConv->toStringLong();
+                std::cerr << std::endl;
+                std::cerr << tri->toStringLong();
+                 */
+
+                std::ostringstream msg;
+                msg << "Direct enumeration vs conversion gives different "
+                    "surfaces in standard almost normal coordinates for "
+                        << useName << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! identical(quadOctDirect, quadOctConv)) {
+                /**
+                 * If something goes wrong, uncomment this block for a
+                 * detailed dump of the triangulation and the two lists
+                 * of surfaces.
+                 *
+                std::cerr << std::endl;
+                std::cerr << quadOctDirect->toStringLong();
+                std::cerr << std::endl;
+                std::cerr << quadOctConv->toStringLong();
+                std::cerr << std::endl;
+                std::cerr << tri->toStringLong();
+                 */
+
+                std::ostringstream msg;
+                msg << "Direct enumeration vs conversion gives different "
+                    "surfaces in quadrilateral-octagon coordinates for "
+                        << useName << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            delete stdANDirect;
+            delete quadOctDirect;
+            delete stdANConv;
+            delete quadOctConv;
+        }
+
         static bool verifyConversionsCensus(NTriangulation* tri,
                 void* triName) {
             verifyConversions(tri, static_cast<const char*>(triName));
+            return false;
+        }
+
+        static bool verifyConversionsANCensus(NTriangulation* tri,
+                void* triName) {
+            verifyConversionsAN(tri, static_cast<const char*>(triName));
             return false;
         }
 
@@ -1366,21 +1444,29 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             // For the purposes of the test suite I'm happy to assume it
             // holds in general; certainly it has been verified for all
             // the cases that we actually test here.
-            unsigned long curr, prev, tmp;
-            if (len == 1)
-                curr = 3;
-            else if (len == 2)
-                curr = 4;
-            else {
-                curr = 4;
-                prev = 2;
-                for (unsigned counted = 2; counted < len; ++counted) {
-                    tmp = curr + prev - 1;
+            unsigned long curr, prev, tmp, currgap, prevgap;
+            if (len < 7) {
+                switch (len) {
+                    case 1: curr = 3; break;
+                    case 2: curr = 4; break;
+                    case 3: curr = 5; break;
+                    case 4: curr = 12; break;
+                    case 5: curr = 12; break;
+                    case 6: curr = 25; break;
+                }
+            } else {
+                prev = 12; prevgap = 2;
+                curr = 25; currgap = 1;
+
+                for (unsigned counted = 6; counted < len; ++counted) {
+                    tmp = curr + prev + currgap - 1;
                     prev = curr;
                     curr = tmp;
+
+                    tmp = currgap + prevgap;
+                    prevgap = currgap;
+                    currgap = tmp;
                 }
-                if (len % 2 == 0)
-                    curr += len;
             }
 
             testSize(list, name.str().c_str(),
@@ -1406,6 +1492,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             testAlmostNormalLoopCtwGeneric(3);
             testAlmostNormalLoopCtwGeneric(6);
             testAlmostNormalLoopCtwGeneric(9);
+            testAlmostNormalLoopCtwGeneric(12);
+            testAlmostNormalLoopCtwGeneric(15);
         }
 
         void standardQuadConversionsConstructed() {
@@ -1447,6 +1535,50 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 NBoolSet::sBoth /* orientable */,
                 NBoolSet::sTrue /* bounded */,
                 -1, 0, &verifyConversionsCensus,
+                const_cast<char*>("bounded compact census triangulation"));
+
+            delete parent;
+        }
+
+        void standardANQuadOctConversionsConstructed() {
+            verifyConversionsAN(&empty, "the empty triangulation");
+            verifyConversionsAN(&oneTet, "a single tetrahedron");
+            verifyConversionsAN(&S3, "the 3-sphere");
+            verifyConversionsAN(&loopC2, "the untwisted layered loop C(2)");
+            verifyConversionsAN(&loopCtw3, "the twisted layered loop C~(3)");
+            verifyConversionsAN(&twistedKxI,
+                "a 3-tetrahedron non-orientable twisted KxI");
+            verifyConversionsAN(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+        }
+
+        void standardANQuadOctConversionsCensus() {
+            NContainer* parent = new NContainer();
+
+            // Potentially minimal closed compact triangulations, 5 tetrahedra.
+            NCensus::formCensus(parent, 5,
+                NBoolSet::sTrue /* finite */,
+                NBoolSet::sBoth /* orientable */,
+                NBoolSet::sFalse /* bounded */,
+                -1,
+                NCensus::PURGE_NON_MINIMAL_PRIME | NCensus::PURGE_P2_REDUCIBLE,
+                &verifyConversionsANCensus,
+                const_cast<char*>(
+                    "possibly-minimal closed compact census triangulation"));
+
+            // All closed compact triangulations, 4 tetrahedra.
+            NCensus::formCensus(parent, 4,
+                NBoolSet::sTrue /* finite */,
+                NBoolSet::sBoth /* orientable */,
+                NBoolSet::sFalse /* bounded */,
+                -1, 0, &verifyConversionsANCensus,
+                const_cast<char*>("closed compact census triangulation"));
+
+            // All bounded compact triangulations, 3 tetrahedra.
+            NCensus::formCensus(parent, 3,
+                NBoolSet::sTrue /* finite */,
+                NBoolSet::sBoth /* orientable */,
+                NBoolSet::sTrue /* bounded */,
+                -1, 0, &verifyConversionsANCensus,
                 const_cast<char*>("bounded compact census triangulation"));
 
             delete parent;

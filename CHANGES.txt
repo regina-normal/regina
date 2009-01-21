@@ -86,6 +86,13 @@ Version 4.6  [ (under development) ]
               enumerateStandardANDirect() to allow people to circumvent the
               above changes to enumerate() and instead use the old direct
               enumeration from Regina 4.5.1.
+            - Almost normal surface enumeration no longer strips out surfaces
+              with more than one octagonal *disc* (though it still avoids
+              surfaces with more than one octagonal disc *type*).  This
+              change is necessary for conversion between quad-oct and
+              standard almost normal space, and is also necessary if we
+              wish to enumerate *all* almost normal surfaces (as opposed
+              to just all *vertex* almost normal surfaces).
         Class NPerm:
             - New routines trunc2() and trunc3() to build truncated
               version of a permutation string.

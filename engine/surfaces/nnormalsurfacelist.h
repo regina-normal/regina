@@ -454,9 +454,15 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * iterator.  In the latter case, a surrounding NNormalSurface
          * will be automatically created.
          *
-         * Some basic checks may be performed before insertion; see the
-         * documentation for operator=(NNormalSurface*) and
-         * operator=(NNormalSurfaceVector*) for details.
+         * \warning The behaviour of this class has changed!
+         * As of Regina 4.6, this class happily inserts every surface or
+         * vector that it is given.  In previous versions it checked
+         * almost normal surface vectors for multiple octagonal discs;
+         * this check has been removed to support conversions between
+         * quad-oct space and standard almost normal space, and to support
+         * the enumeration of \e all almost normal surfaces (as opposed to
+         * just vertex surfaces).  Such checks are now left to the user
+         * interface (and indeed are now optional, at the user's discretion).
          */
         struct SurfaceInserter : public std::iterator<
                 std::output_iterator_tag, NNormalSurfaceVector*> {
@@ -520,10 +526,10 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
              * normal surface and will be deallocated with the other
              * surfaces in this list.
              *
-             * If the surface list allows almost normal surfaces, the
-             * vector will be checked for multiple octagonal discs.  If
-             * multiple octagonal discs are found, the vector will be
-             * deleted immediately and no surface will be inserted.
+             * \warning The behaviour of this routine has changed!
+             * As of Regina 4.6, this routine no longer checks for
+             * multiple octagonal discs.  See the SurfaceInserter
+             * class notes for details.
              *
              * @param vector the vector of the normal surface to insert.
              * @return this output iterator.
@@ -897,11 +903,7 @@ inline NNormalSurfaceList::SurfaceInserter&
 inline NNormalSurfaceList::SurfaceInserter&
         NNormalSurfaceList::SurfaceInserter::operator =(
         NNormalSurfaceVector* vector) {
-    if ((! list->allowsAlmostNormal()) ||
-            (! vector->hasMultipleOctDiscs(owner)))
-        list->surfaces.push_back(new NNormalSurface(owner, vector));
-    else
-        delete vector;
+    list->surfaces.push_back(new NNormalSurface(owner, vector));
     return *this;
 }
 
