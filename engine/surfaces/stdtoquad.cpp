@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "surfaces/normalspec.tcc"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/nsquad.h"
@@ -33,18 +34,29 @@
 
 namespace regina {
 
-NNormalSurfaceList* NNormalSurfaceList::standardToQuad() const {
+// Although internalStandardToReduced() is a template routine, we implement
+// it here in this C++ file to avoid dragging it into the headers.
+//
+// The following declarations should ensure that the template is fully
+// instantiated where it needs to be.
+
+template NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced
+    <NNormalSurfaceList::NormalSpec>() const;
+
+template <class Variant>
+NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
+    // And off we go!
     NTriangulation* owner = getTriangulation();
 
     // Basic sanity checks:
-    if (flavour != NNormalSurfaceList::STANDARD || ! embedded)
+    if (flavour != Variant::standardFlavour() || ! embedded)
         return 0;
     if (owner->isIdeal() || ! owner->isValid())
         return 0;
 
     // Prepare a final surface list.
     NNormalSurfaceList* ans = new NNormalSurfaceList(
-        NNormalSurfaceList::QUAD, true);
+        Variant::reducedFlavour(), true);
 
     // Get the empty triangulation out of the way now.
     unsigned n = owner->getNumberOfTetrahedra();
@@ -54,22 +66,24 @@ NNormalSurfaceList* NNormalSurfaceList::standardToQuad() const {
     }
 
     // We need to get rid of vertex links entirely before we start.
-    typedef const NNormalSurface* SurfacePtr;
-    SurfacePtr* use = new SurfacePtr[surfaces.size()];
+    typedef const NNormalSurfaceVector* VectorPtr;
+    VectorPtr* use = new VectorPtr[surfaces.size()];
     unsigned long nUse = 0;
 
     std::vector<NNormalSurface*>::const_iterator it;
     for (it = surfaces.begin(); it != surfaces.end(); ++it)
         if (! (*it)->isVertexLinking())
-            use[nUse++] = *it;
+            use[nUse++] = (*it)->rawVector();
 
     // We want to take all surfaces with maximal zero sets in quad space.
     // That is, we want surface S if and only if there is no other surface T
     // where, for every quadrilateral coordinate where S is zero, T is
     // zero also.
+    // For almost normal surfaces, simply replace "quadrilateral" with
+    // "quadrilateral or octagonal".
     bool dominates, strict;
     unsigned tet, quad, pos;
-    NNormalSurfaceVectorQuad* v;
+    typename Variant::ReducedVector* v;
     unsigned long i, j;
     for (i = 0; i < nUse; ++i) {
         if (use[i] == 0)
@@ -84,16 +98,16 @@ NNormalSurfaceList* NNormalSurfaceList::standardToQuad() const {
             dominates = true;
             strict = false;
             for (tet = 0; tet < n && dominates; ++tet)
-                for (quad = 0; quad < 3; ++quad)
-                    if (use[i]->getQuadCoord(tet, quad) ==
+                for (quad = 0; quad < Variant::reducedCoords; ++quad)
+                    if ((*use[i])[Variant::stdPos(tet, 4 + quad)] ==
                                 NLargeInteger::zero &&
-                            use[j]->getQuadCoord(tet, quad) !=
+                            (*use[j])[Variant::stdPos(tet, 4 + quad)] !=
                                 NLargeInteger::zero) {
                         dominates = false;
                         break;
-                    } else if (use[i]->getQuadCoord(tet, quad) !=
+                    } else if ((*use[i])[Variant::stdPos(tet, 4 + quad)] !=
                                 NLargeInteger::zero &&
-                            use[j]->getQuadCoord(tet, quad) ==
+                            (*use[j])[Variant::stdPos(tet, 4 + quad)] ==
                                 NLargeInteger::zero) {
                         // If this *does* turn out to be a domination of
                         // zero sets, we know it's strict.
@@ -106,11 +120,12 @@ NNormalSurfaceList* NNormalSurfaceList::standardToQuad() const {
 
         if (! dominates) {
             // We want this surface.
-            v = new NNormalSurfaceVectorQuad(3 * n);
+            v = new typename Variant::ReducedVector(Variant::redLen(n));
             pos = 0;
             for (tet = 0; tet < n; ++tet)
-                for (quad = 0; quad < 3; ++quad)
-                    v->setElement(pos++, use[i]->getQuadCoord(tet, quad));
+                for (quad = 0; quad < Variant::reducedCoords; ++quad)
+                    v->setElement(pos++,
+                        (*use[i])[Variant::stdPos(tet, 4 + quad)]);
             ans->surfaces.push_back(new NNormalSurface(owner, v));
         } else if (strict) {
             // We can drop this surface entirely from our list.

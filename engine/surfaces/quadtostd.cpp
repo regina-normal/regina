@@ -32,8 +32,7 @@
 #include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
-#include "surfaces/nsquad.h"
-#include "surfaces/nsstandard.h"
+#include "surfaces/normalspec.tcc"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "utilities/nbitmask.h"
@@ -42,12 +41,24 @@
 
 namespace regina {
 
+// Although the conversion routines are template routines, we implement
+// them here in this C++ file to avoid dragging them into the headers.
+//
+// The following declarations should ensure that the templates are fully
+// instantiated where they need to be.
+
+template NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard<
+        NNormalSurfaceList::NormalSpec>() const;
+
+template void NNormalSurfaceList::enumerateStandardViaReduced<
+        NNormalSurfaceList::NormalSpec>(NTriangulation*, NProgressNumber*);
+
 /**
  * Put helper classes and constants into an anonymous namespace.
  */
 namespace {
     /**
-     * How many progress "steps" shall we declare a quad-to-standard
+     * How many progress "steps" shall we declare a reduced-to-standard
      * conversion is worth?
      */
     const unsigned PROGRESS_CONVERSION_STEPS = 1;
@@ -70,14 +81,13 @@ namespace {
     };
 
     /**
-     * A helper class for converting between quad and standard solution
-     * sets, describing a single ray (which is typically a vertex in
-     * some partial solution space).
+     * A helper class for converting between reduced and standard
+     * solution sets, describing a single ray (which is typically a
+     * vertex in some partial solution space).
      *
      * This class derives from NFastRay, which stores the coordinates of
-     * the ray itself in standard (tri-quad) coordinates.  This RaySpec
-     * class also stores a bitmask indicating which of these coordinates are
-     * set to zero.
+     * the ray itself in standard coordinates.  This RaySpec class also
+     * stores a bitmask indicating which of these coordinates are set to zero.
      *
      * The \a BitmaskType template argument describes how the bitmask of
      * zero coordinates will be stored.  The <i>i</i>th coordinate position
@@ -123,20 +133,30 @@ namespace {
              * @param whichLink the index of the vertex whose link
              * we should negate; this must be strictly less than
              * <tt>tri->getNumberOfVertices()</tt>.
+             * @param coordsPerTet the number of standard coordinate
+             * positions for each tetrahedron (that is, 7 if we are
+             * working with normal surfaces, or 10 if we are working
+             * with almost normal surfaces).
              */
-            RaySpec(const NTriangulation* tri, unsigned whichLink) :
-                    NFastRay(7 * tri->getNumberOfTetrahedra()),
-                    facets_(7 * tri->getNumberOfTetrahedra()) {
+            RaySpec(const NTriangulation* tri, unsigned whichLink,
+                    unsigned coordsPerTet) :
+                    NFastRay(coordsPerTet * tri->getNumberOfTetrahedra()),
+                    facets_(coordsPerTet * tri->getNumberOfTetrahedra()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.
                 for (unsigned i = 0; i < size(); ++i)
-                    if (i % 7 > 3)
+                    if (i % coordsPerTet > 3) {
+                        // Not a triangular coordinate.
                         facets_.set(i, true);
-                    else if (tri->getTetrahedron(i / 7)->getVertex(i % 7)->
-                            markedIndex() == whichLink)
+                    } else if (tri->getTetrahedron(i / coordsPerTet)->
+                            getVertex(i % coordsPerTet)->markedIndex()
+                            == whichLink) {
+                        // A triangular coordinate in our vertex link.
                         elements[i] = -1;
-                    else
+                    } else {
+                        // A triangular coordinate not in our vertex link.
                         facets_.set(i, true);
+                    }
             }
 
             /**
@@ -239,17 +259,17 @@ namespace {
             }
 
             /**
-             * Returns a new normal surface whose standard (tri-quad)
-             * coordinates are described by this vector.  The
-             * corresponding normal surface vector will be of type
-             * NNormalSurfaceVectorStandard.
+             * Returns a new normal (or almost normal) surface whose
+             * coordinates are described by this vector.  The template
+             * argument dictates the class of the underlying normal surface
+             * vector (i.e., the underlying coordinate system).
              *
              * @param tri the underlying triangulation.
              * @return a newly created normal surface based on this vector.
              */
+            template <class VectorClass>
             NNormalSurface* recover(NTriangulation* tri) const {
-                NNormalSurfaceVectorStandard* v =
-                    new NNormalSurfaceVectorStandard(size());
+                VectorClass* v = new VectorClass(size());
 
                 for (unsigned i = 0; i < size(); ++i)
                     v->setElement(i, elements[i]);
@@ -274,18 +294,19 @@ namespace {
     };
 } // anonymous namespace
 
-NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
+template <class Variant>
+NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
     NTriangulation* owner = getTriangulation();
 
     // Basic sanity checks:
-    if (flavour != NNormalSurfaceList::QUAD || ! embedded)
+    if (flavour != Variant::reducedFlavour() || ! embedded)
         return 0;
     if (owner->isIdeal() || ! owner->isValid())
         return 0;
 
     // Prepare a final surface list.
     NNormalSurfaceList* ans = new NNormalSurfaceList(
-        NNormalSurfaceList::STANDARD, true);
+        Variant::standardFlavour(), true);
 
     // Get the empty triangulation out of the way now.
     if (owner->getNumberOfTetrahedra() == 0) {
@@ -293,32 +314,33 @@ NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
         return ans;
     }
 
-    // Build a vector of quad vectors to pass to our internal conversion
-    // routine.
+    // Build a vector of reduced form vectors to pass to our internal
+    // conversion routine.
     // We will need to collect non-const pointers to vectors in this list,
     // but this is okay (the internal conversion routine guarantees not
     // to modify or delete them).
-    std::vector<NNormalSurfaceVector*> quadVertices;
-    quadVertices.reserve(surfaces.size());
+    std::vector<NNormalSurfaceVector*> reducedVertices;
+    reducedVertices.reserve(surfaces.size());
 
     std::vector<NNormalSurface*>::const_iterator it;
     for (it = surfaces.begin(); it != surfaces.end(); ++it)
-        quadVertices.push_back(const_cast<NNormalSurfaceVector*>(
+        reducedVertices.push_back(const_cast<NNormalSurfaceVector*>(
             (*it)->rawVector()));
 
-    ans->buildStandardFromQuad(owner, quadVertices);
+    ans->buildStandardFromReduced<Variant>(owner, reducedVertices);
 
     // All done!
     owner->insertChildLast(ans);
     return ans;
 }
 
-void NNormalSurfaceList::enumerateStandardViaQuad(
+template <class Variant>
+void NNormalSurfaceList::enumerateStandardViaReduced(
         NTriangulation* owner, NProgressNumber* progress) {
     // Hum.  What to do with progress?
-    // For now we shall treat quad surface enumeration as the main task,
-    // and assign an arbitrarily chosen fixed number of "steps" for the
-    // final quad-to-standard conversion.
+    // For now we shall treat quad or quad-oct surface enumeration as the
+    // main task, and assign an arbitrarily chosen fixed number of "steps"
+    // for the final conversion to standard form.
     if (progress)
         progress->setOutOf(
             progress->getOutOf() + PROGRESS_CONVERSION_STEPS + 1);
@@ -330,16 +352,16 @@ void NNormalSurfaceList::enumerateStandardViaQuad(
         return;
     }
 
-    // First enumerate all quad vertex surfaces.
-    NEnumConstraintList* constraints = NNormalSurfaceVectorQuad::
+    // First enumerate all quad or quad-oct vertex surfaces.
+    NEnumConstraintList* constraints = Variant::ReducedVector::
         makeEmbeddedConstraints(owner);
-    NMatrixInt* eqns = makeMatchingEquations(owner, NNormalSurfaceList::QUAD);
+    NMatrixInt* eqns = makeMatchingEquations(owner, Variant::reducedFlavour());
     NNormalSurfaceVector* base = makeZeroVector(owner,
-        NNormalSurfaceList::QUAD);
+        Variant::reducedFlavour());
 
-    std::vector<NNormalSurfaceVector*> quadVertices;
+    std::vector<NNormalSurfaceVector*> reducedVertices;
     NDoubleDescription::enumerateExtremalRays(
-        VectorInserter(quadVertices),
+        VectorInserter(reducedVertices),
         *base, *eqns, constraints, progress);
 
     delete base;
@@ -354,22 +376,23 @@ void NNormalSurfaceList::enumerateStandardViaQuad(
             return;
     }
 
-    // Feed the quad vertex surfaces through the quad-to-standard
-    // conversion procedure:
-    buildStandardFromQuad(owner, quadVertices);
+    // Feed the quad or quad-oct vertex surfaces through the
+    // reduced-to-standard conversion procedure:
+    buildStandardFromReduced<Variant>(owner, reducedVertices);
 
-    // Delete the old quad vertex surfaces and we're done!
+    // Delete the old quad or quad-oct vertex surfaces and we're done!
     std::vector<NNormalSurfaceVector*>::const_iterator qit;
-    for (qit = quadVertices.begin(); qit != quadVertices.end(); ++qit)
+    for (qit = reducedVertices.begin(); qit != reducedVertices.end(); ++qit)
         delete *qit;
 
     if (progress)
         progress->incCompleted(PROGRESS_CONVERSION_STEPS);
 }
 
-void NNormalSurfaceList::buildStandardFromQuad(NTriangulation* owner,
-        const std::vector<NNormalSurfaceVector*>& quadList) {
-    unsigned nFacets = 7 * owner->getNumberOfTetrahedra();
+template <class Variant>
+void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
+        const std::vector<NNormalSurfaceVector*>& reducedList) {
+    unsigned nFacets = Variant::stdLen(owner->getNumberOfTetrahedra());
 
     // Choose a bitmask type for representing the set of facets that a
     // ray belongs to; in particular, use a (much faster) optimised
@@ -377,49 +400,53 @@ void NNormalSurfaceList::buildStandardFromQuad(NTriangulation* owner,
     // Then farm the work out to the real conversion routine that is
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
-        buildStandardFromQuadUsing<NBitmask1<unsigned> >(owner, quadList);
+        buildStandardFromReducedUsing<Variant,
+            NBitmask1<unsigned> >(owner, reducedList);
     else if (nFacets <= 8 * sizeof(unsigned long))
-        buildStandardFromQuadUsing<NBitmask1<unsigned long> >(owner, quadList);
+        buildStandardFromReducedUsing<Variant,
+            NBitmask1<unsigned long> >(owner, reducedList);
 #ifdef HAVE_LONG_LONG
     else if (nFacets <= 8 * sizeof(unsigned long long))
-        buildStandardFromQuadUsing<NBitmask1<unsigned long long> >(
-            owner, quadList);
+        buildStandardFromReducedUsing<Variant,
+            NBitmask1<unsigned long long> >(owner, reducedList);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        buildStandardFromQuadUsing<NBitmask2<unsigned long long, unsigned> >(
-            owner, quadList);
+        buildStandardFromReducedUsing<Variant,
+            NBitmask2<unsigned long long, unsigned> >(owner, reducedList);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
-        buildStandardFromQuadUsing<NBitmask2<unsigned long long,
-            unsigned long> >(owner, quadList);
+        buildStandardFromReducedUsing<Variant,
+            NBitmask2<unsigned long long, unsigned long> >(owner, reducedList);
     else if (nFacets <= 16 * sizeof(unsigned long long))
-        buildStandardFromQuadUsing<NBitmask2<unsigned long long> >(
-            owner, quadList);
+        buildStandardFromReducedUsing<Variant,
+            NBitmask2<unsigned long long> >(owner, reducedList);
 #else
     else if (nFacets <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
-        buildStandardFromQuadUsing<NBitmask2<unsigned long, unsigned> >(
-            owner, quadList);
+        buildStandardFromReducedUsing<Variant,
+            NBitmask2<unsigned long, unsigned> >(owner, reducedList);
     else if (nFacets <= 16 * sizeof(unsigned long))
-        buildStandardFromQuadUsing<NBitmask2<unsigned long> >(owner, quadList);
+        buildStandardFromReducedUsing<Variant,
+            NBitmask2<unsigned long> >(owner, reducedList);
 #endif
     else
-        buildStandardFromQuadUsing<NBitmask>(owner, quadList);
+        buildStandardFromReducedUsing<Variant, NBitmask>(owner, reducedList);
 }
 
-template <class BitmaskType>
-void NNormalSurfaceList::buildStandardFromQuadUsing(NTriangulation* owner,
-        const std::vector<NNormalSurfaceVector*>& quadList) {
-    // Prepare for the quad-to-standard double description run.
+template <class Variant, class BitmaskType>
+void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
+        const std::vector<NNormalSurfaceVector*>& reducedList) {
+    // Prepare for the reduced-to-standard double description run.
     unsigned n = owner->getNumberOfTetrahedra();
-    unsigned slen = 7 * n;
-    unsigned llen = owner->getNumberOfVertices();
+    unsigned slen = Variant::stdLen(n); // # standard coordinates
+    unsigned llen = owner->getNumberOfVertices(); // # vertex links
 
     unsigned i;
 
-    // Recreate the quad constraints as bitmasks:
+    // Recreate the quadrilateral constraints (or the corresponding
+    // constraints for almost normal surfaces) as bitmasks.
     // Since we have a non-empty triangulation, we know the list of
     // constraints is non-empty.
     NEnumConstraintList* constraints =
-        NNormalSurfaceVectorStandard::makeEmbeddedConstraints(owner);
+        Variant::StandardVector::makeEmbeddedConstraints(owner);
 
     BitmaskType* constraintsBegin = new BitmaskType[constraints->size()];
     BitmaskType* constraintsEnd = constraintsBegin;
@@ -434,18 +461,18 @@ void NNormalSurfaceList::buildStandardFromQuadUsing(NTriangulation* owner,
     delete constraints;
 
     // Create all vertex links.
-    NNormalSurfaceVectorStandard** link =
-        new NNormalSurfaceVectorStandard*[llen];
+    typename Variant::StandardVector** link =
+        new typename Variant::StandardVector*[llen];
 
     for (i = 0; i < llen; ++i) {
-        link[i] = new NNormalSurfaceVectorStandard(slen);
+        link[i] = new typename Variant::StandardVector(slen);
 
         const std::vector<NVertexEmbedding>& emb = owner->getVertex(i)->
             getEmbeddings();
         std::vector<NVertexEmbedding>::const_iterator embit;
         for (embit = emb.begin(); embit != emb.end(); ++embit)
-            link[i]->setElement(7 * embit->getTetrahedron()->markedIndex() +
-                embit->getVertex(), 1);
+            link[i]->setElement(Variant::stdPos(
+                embit->getTetrahedron()->markedIndex(), embit->getVertex()), 1);
     }
 
     // Create the initial set of rays:
@@ -454,11 +481,11 @@ void NNormalSurfaceList::buildStandardFromQuadUsing(NTriangulation* owner,
 
     NNormalSurfaceVector* v;
     std::vector<NNormalSurfaceVector*>::const_iterator qit;
-    for (qit = quadList.begin(); qit != quadList.end(); ++qit) {
-        v = static_cast<const NNormalSurfaceVectorQuad*>(*qit)->
+    for (qit = reducedList.begin(); qit != reducedList.end(); ++qit) {
+        v = static_cast<const typename Variant::ReducedVector*>(*qit)->
             makeMirror(owner);
         list[0].push_back(new RaySpec<BitmaskType>(
-            static_cast<NNormalSurfaceVectorStandard*>(v)));
+            static_cast<typename Variant::StandardVector*>(v)));
         delete v;
     }
 
@@ -468,7 +495,7 @@ void NNormalSurfaceList::buildStandardFromQuadUsing(NTriangulation* owner,
     // And run!
     BitmaskType ignoreFacets(slen);
     for (i = 0; i < slen; ++i)
-        if (i % 7 < 4)
+        if (i % Variant::totalCoords < 4)
             ignoreFacets.set(i, true);
 
     int workingList = 0;
@@ -488,14 +515,15 @@ void NNormalSurfaceList::buildStandardFromQuadUsing(NTriangulation* owner,
         linkSpec = new RaySpec<BitmaskType>(link[vtx]);
         delete link[vtx];
 
-        list[workingList].push_back(new RaySpec<BitmaskType>(owner, vtx));
+        list[workingList].push_back(new RaySpec<BitmaskType>(owner, vtx,
+            Variant::totalCoords));
 
         const std::vector<NVertexEmbedding>& emb = owner->getVertex(vtx)->
             getEmbeddings();
         std::vector<NVertexEmbedding>::const_iterator embit;
         for (embit = emb.begin(); embit != emb.end(); ++embit) {
-            tcoord = 7 * embit->getTetrahedron()->markedIndex() +
-                embit->getVertex();
+            tcoord = Variant::stdPos(embit->getTetrahedron()->markedIndex(),
+                embit->getVertex());
 
             // Add the inequality v[tcoord] >= 0.
             for (it = list[workingList].begin(); it != list[workingList].end();
@@ -600,7 +628,8 @@ void NNormalSurfaceList::buildStandardFromQuadUsing(NTriangulation* owner,
     // All done!  Put the solutions into the normal surface list and clean up.
     for (typename RaySpecList::iterator it = list[workingList].begin();
             it != list[workingList].end(); ++it) {
-        surfaces.push_back((*it)->recover(owner));
+        surfaces.push_back((*it)->
+            template recover<typename Variant::StandardVector>(owner));
         delete *it;
     }
 
