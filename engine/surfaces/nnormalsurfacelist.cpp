@@ -39,12 +39,20 @@
 
 namespace regina {
 
+namespace {
+    // Since legacy coordinate systems don't appear in the flavour
+    // registry, give them a consistent name here.
+    const char* AN_LEGACY_NAME =
+        "Legacy standard almost normal (pruned tri-quad-oct)";
+}
+
 #define __FLAVOUR_REGISTRY_BODY
 
 const int NNormalSurfaceList::STANDARD = 0;
 const int NNormalSurfaceList::QUAD = 1;
-const int NNormalSurfaceList::AN_STANDARD = 100;
+const int NNormalSurfaceList::AN_LEGACY = 100;
 const int NNormalSurfaceList::QUAD_OCT = 101;
+const int NNormalSurfaceList::AN_STANDARD = 102;
 const int NNormalSurfaceList::EDGE_WEIGHT = 200;
 const int NNormalSurfaceList::FACE_ARCS = 201;
 
@@ -226,8 +234,10 @@ NTriangulation* NNormalSurfaceList::getTriangulation() const {
 
 bool NNormalSurfaceList::allowsAlmostNormal() const {
     switch(flavour) {
-        // Import cases from the flavour registry.
+        // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
+        // ... and legacy cases:
+        case AN_LEGACY: return true;
     }
     return false;
 }
@@ -242,9 +252,15 @@ void NNormalSurfaceList::writeTextShort(std::ostream& o) const {
         o << 's';
     o << " (";
     switch(flavour) {
-        // Import cases from the flavour registry.
+        // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
-        default: o << "Unknown"; break;
+        // ... and legacy cases:
+        case AN_LEGACY:
+            o << AN_LEGACY_NAME;
+            break;
+        default:
+            o << "Unknown";
+            break;
     }
     o << ')';
 }
@@ -261,9 +277,15 @@ void NNormalSurfaceList::writeTextLong(std::ostream& o) const {
     o << "vertex normal surfaces\n";
     o << "Coordinates: ";
     switch(flavour) {
-        // Import cases from the flavour registry.
+        // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
-        default: o << "Unknown\n"; break;
+        // ... and legacy cases:
+        case AN_LEGACY:
+            o << AN_LEGACY_NAME << '\n';
+            break;
+        default:
+            o << "Unknown\n";
+            break;
     }
     writeAllSurfaces(o);
 }
@@ -292,9 +314,15 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
         << "\" flavourid=\"" << flavour << "\"\n";
     out << "\tflavour=\"";
     switch(flavour) {
-        // Import cases from the flavour registry.
+        // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
-        default: out << "Unknown"; break;
+        // ... and legacy cases:
+        case AN_LEGACY:
+            out << regina::xml::xmlEncodeSpecialChars(AN_LEGACY_NAME);
+            break;
+        default:
+            out << "Unknown";
+            break;
     }
     out << "\"/>\n";
 
@@ -314,8 +342,10 @@ NNormalSurfaceList* NNormalSurfaceList::readPacket(NFile& in,
     // used.
     int flavour = in.readInt();
     switch(flavour) {
-        // Import cases from the flavour registry.
+        // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
+        // ... and legacy cases:
+        case AN_LEGACY: break;
         default: return 0;
     }
 

@@ -551,9 +551,13 @@ NNormalSurface* NNormalSurface::readFromFile(NFile& in, int flavour,
     unsigned vecLen = in.readUInt();
     NNormalSurfaceVector* vector;
 
-    // Bring in cases from the flavour registry.
+    // Bring in cases from the flavour registry...
     #include "surfaces/flavourregistry.h"
-        return 0; // Final else statement.
+    // ... and legacy cases:
+    if (flavour == NNormalSurfaceList::AN_LEGACY)
+        vector = new NNormalSurfaceVectorANStandard(vecLen);
+    else
+        return 0;
 
     // Read all non-zero vector entries.
     int vecPos = in.readInt();

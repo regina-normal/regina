@@ -93,6 +93,10 @@ Version 4.6  [ (under development) ]
               standard almost normal space, and is also necessary if we
               wish to enumerate *all* almost normal surfaces (as opposed
               to just all *vertex* almost normal surfaces).
+            - Added a new coordinate flavour AN_LEGACY to reflect almost
+              normal surface lists created with Regina 4.5.1 or earlier,
+              where surfaces with more than one octagon were stripped out
+              (see above).
         Class NPerm:
             - New routines trunc2() and trunc3() to build truncated
               version of a permutation string.

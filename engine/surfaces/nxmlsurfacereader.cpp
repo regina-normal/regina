@@ -58,10 +58,14 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
         return;
 
     // Create a new vector and read all non-zero entries.
-    // Bring in cases from the flavour registry.
+    // Bring in cases from the flavour registry...
     NNormalSurfaceVector* vec;
     #include "surfaces/flavourregistry.h"
-        return; // Final else statement.
+    // ... and legacy cases:
+    if (flavour == NNormalSurfaceList::AN_LEGACY)
+        vec = new NNormalSurfaceVectorANStandard(vecLen);
+    else
+        return;
 
     long pos;
     NLargeInteger value;
