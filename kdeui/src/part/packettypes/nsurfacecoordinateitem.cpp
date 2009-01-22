@@ -53,28 +53,30 @@ NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
 }
 
 unsigned NSurfaceCoordinateItem::propertyColCount(bool embeddedOnly) {
-    return (embeddedOnly ? 7 : 5);
+    return (embeddedOnly ? 8 : 6);
 }
 
 QString NSurfaceCoordinateItem::propertyColName(int whichCol,
         bool embeddedOnly) {
     if (embeddedOnly) {
         switch (whichCol) {
-            case 0 : return i18n("Name");
-            case 1 : return i18n("Euler");
-            case 2 : return i18n("Orient");
-            case 3 : return i18n("Sides");
-            case 4 : return i18n("Bdry");
-            case 5 : return i18n("Link");
-            case 6 : return i18n("Type");
+            case 0 : return QString(); // Surface number
+            case 1 : return i18n("Name");
+            case 2 : return i18n("Euler");
+            case 3 : return i18n("Orient");
+            case 4 : return i18n("Sides");
+            case 5 : return i18n("Bdry");
+            case 6 : return i18n("Link");
+            case 7 : return i18n("Type");
         }
     } else {
         switch (whichCol) {
-            case 0 : return i18n("Name");
-            case 1 : return i18n("Euler");
-            case 2 : return i18n("Bdry");
-            case 3 : return i18n("Link");
-            case 4 : return i18n("Type");
+            case 0 : return QString(); // Surface number
+            case 1 : return i18n("Name");
+            case 2 : return i18n("Euler");
+            case 3 : return i18n("Bdry");
+            case 4 : return i18n("Link");
+            case 5 : return i18n("Type");
         }
     }
 
@@ -85,25 +87,29 @@ QString NSurfaceCoordinateItem::propertyColDesc(int whichCol,
         bool embeddedOnly) {
     if (embeddedOnly) {
         switch (whichCol) {
-            case 0: return i18n("Name (this has no special meaning and "
+            case 0: return i18n("The index of this surface within the "
+                "overall list (surfaces are numbered 0,1,2,...)");
+            case 1: return i18n("Name (this has no special meaning and "
                 "can be edited)");
-            case 1: return i18n("Euler characteristic");
-            case 2: return i18n("Orientability");
-            case 3: return i18n("1-sided or 2-sided");
-            case 4: return i18n("Does this surface have boundary?");
-            case 5: return i18n("Has this surface been identified as "
+            case 2: return i18n("Euler characteristic");
+            case 3: return i18n("Orientability");
+            case 4: return i18n("1-sided or 2-sided");
+            case 5: return i18n("Does this surface have boundary?");
+            case 6: return i18n("Has this surface been identified as "
                 "the link of a particular subcomplex?");
-            case 6: return i18n("Other interesting properties");
+            case 7: return i18n("Other interesting properties");
         }
     } else {
         switch (whichCol) {
-            case 0: return i18n("Name (this has no special meaning and "
+            case 0: return i18n("The index of this surface within the "
+                "overall list (surfaces are numbered 0,1,2,...)");
+            case 1: return i18n("Name (this has no special meaning and "
                 "can be edited)");
-            case 1: return i18n("Euler characteristic");
-            case 2: return i18n("Does this surface have boundary?");
-            case 3: return i18n("Has this surface been identified as "
+            case 2: return i18n("Euler characteristic");
+            case 3: return i18n("Does this surface have boundary?");
+            case 4: return i18n("Has this surface been identified as "
                 "the link of a particular subcomplex?");
-            case 4: return i18n("Other interesting properties");
+            case 5: return i18n("Other interesting properties");
         }
     }
 
@@ -111,7 +117,7 @@ QString NSurfaceCoordinateItem::propertyColDesc(int whichCol,
 }
 
 void NSurfaceCoordinateItem::setText(int column, const QString& str) {
-    if (column == 0)
+    if (column == 1)
         name = str;
     KListViewItem::setText(column, str);
 }
@@ -119,16 +125,18 @@ void NSurfaceCoordinateItem::setText(int column, const QString& str) {
 QString NSurfaceCoordinateItem::text(int column) const {
     regina::NTriBool triBool;
     if (surfaces->isEmbeddedOnly()) {
-        const int nCols = 7;
+        const int nCols = 8;
         switch (column) {
             case 0:
-                return name;
+                return i18n("%1.").arg(surfaceIndex);
             case 1:
+                return name;
+            case 2:
                 if (! surface->isCompact())
                     return QString::null;
 
                 return surface->getEulerCharacteristic().stringValue().c_str();
-            case 2:
+            case 3:
                 if (! surface->isCompact())
                     return QString::null;
 
@@ -139,7 +147,7 @@ QString NSurfaceCoordinateItem::text(int column) const {
                     return i18n("Non-orbl");
                 else
                     return i18n("Unknown");
-            case 3:
+            case 4:
                 if (! surface->isCompact())
                     return QString::null;
 
@@ -150,14 +158,14 @@ QString NSurfaceCoordinateItem::text(int column) const {
                     return "1";
                 else
                     return i18n("Unknown");
-            case 4:
+            case 5:
                 if (! surface->isCompact())
                     return i18n("Infinite");
                 else if (surface->hasRealBoundary())
                     return i18n("Real Bdry");
                 else
                     return i18n("Closed");
-            case 5: {
+            case 6: {
                 const regina::NVertex* v;
                 std::pair<const regina::NEdge*, const regina::NEdge*> e;
 
@@ -178,7 +186,7 @@ QString NSurfaceCoordinateItem::text(int column) const {
                 } else
                     return QString::null;
             }
-            case 6:
+            case 7:
                 {
                     regina::NLargeInteger tot;
                     if (surface->isSplitting())
@@ -200,23 +208,25 @@ QString NSurfaceCoordinateItem::text(int column) const {
                     return ans.stringValue().c_str();
         }
     } else {
-        const int nCols = 5;
+        const int nCols = 6;
         switch (column) {
             case 0:
-                return name;
+                return i18n("%1.").arg(surfaceIndex);
             case 1:
+                return name;
+            case 2:
                 if (! surface->isCompact())
                     return QString::null;
 
                 return surface->getEulerCharacteristic().stringValue().c_str();
-            case 2:
+            case 3:
                 if (! surface->isCompact())
                     return i18n("Infinite");
                 else if (surface->hasRealBoundary())
                     return i18n("Real Bdry");
                 else
                     return i18n("Closed");
-            case 3: {
+            case 4: {
                 const regina::NVertex* v;
                 std::pair<const regina::NEdge*, const regina::NEdge*> e;
 
@@ -237,7 +247,7 @@ QString NSurfaceCoordinateItem::text(int column) const {
                 } else
                     return QString::null;
             }
-            case 4:
+            case 5:
                 if (surface->isSplitting())
                     return i18n("Splitting");
                 else
@@ -280,7 +290,7 @@ NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
     if (surfaces->isEmbeddedOnly()) {
         regina::NTriBool triBool;
         switch (column) {
-            case 2:
+            case 3:
                 if (! surface->isCompact())
                     return Plain;
 
@@ -291,7 +301,7 @@ NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
                     return Red;
                 else
                     return Yellow;
-            case 3:
+            case 4:
                 if (! surface->isCompact())
                     return Plain;
 
@@ -302,7 +312,7 @@ NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
                     return Red;
                 else
                     return Yellow;
-            case 4:
+            case 5:
                 if (! surface->isCompact())
                     return Yellow;
                 else if (surface->hasRealBoundary())
@@ -312,7 +322,7 @@ NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
         }
     } else {
         switch (column) {
-            case 2:
+            case 3:
                 if (! surface->isCompact())
                     return Yellow;
                 else if (surface->hasRealBoundary())
