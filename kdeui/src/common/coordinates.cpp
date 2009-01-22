@@ -40,6 +40,8 @@ namespace Coordinates {
                 return i18n("Standard normal (tri-quad)");
             if (coordSystem == NNormalSurfaceList::AN_STANDARD)
                 return i18n("Standard almost normal (tri-quad-oct)");
+            if (coordSystem == NNormalSurfaceList::AN_LEGACY)
+                return i18n("Legacy almost normal (pruned tri-quad-oct)");
             if (coordSystem == NNormalSurfaceList::QUAD)
                 return i18n("Quad normal");
             if (coordSystem == NNormalSurfaceList::QUAD_OCT)
@@ -54,6 +56,8 @@ namespace Coordinates {
                 return i18n("standard normal (tri-quad)");
             if (coordSystem == NNormalSurfaceList::AN_STANDARD)
                 return i18n("standard almost normal (tri-quad-oct)");
+            if (coordSystem == NNormalSurfaceList::AN_LEGACY)
+                return i18n("legacy almost normal (pruned tri-quad-oct)");
             if (coordSystem == NNormalSurfaceList::QUAD)
                 return i18n("quad normal");
             if (coordSystem == NNormalSurfaceList::QUAD_OCT)
@@ -70,6 +74,8 @@ namespace Coordinates {
         if (coordSystem == NNormalSurfaceList::STANDARD)
             return tri->getNumberOfTetrahedra() * 7;
         else if (coordSystem == NNormalSurfaceList::AN_STANDARD)
+            return tri->getNumberOfTetrahedra() * 10;
+        else if (coordSystem == NNormalSurfaceList::AN_LEGACY)
             return tri->getNumberOfTetrahedra() * 10;
         else if (coordSystem == NNormalSurfaceList::QUAD)
             return tri->getNumberOfTetrahedra() * 3;
@@ -92,7 +98,8 @@ namespace Coordinates {
             else
                 return QString("%1: %2").arg(whichCoord / 7).
                     arg(regina::vertexSplitString[(whichCoord % 7) - 4]);
-        } else if (coordSystem == NNormalSurfaceList::AN_STANDARD) {
+        } else if (coordSystem == NNormalSurfaceList::AN_STANDARD ||
+                coordSystem == NNormalSurfaceList::AN_LEGACY) {
             if (whichCoord % 10 < 4)
                 return i18n("T%1: %2").arg(whichCoord / 10).
                     arg(whichCoord % 10);
@@ -134,7 +141,8 @@ namespace Coordinates {
                 return i18n("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 7).
                     arg(regina::vertexSplitString[(whichCoord % 7) - 4]);
-        } else if (coordSystem == NNormalSurfaceList::AN_STANDARD) {
+        } else if (coordSystem == NNormalSurfaceList::AN_STANDARD ||
+                coordSystem == NNormalSurfaceList::AN_LEGACY) {
             if (whichCoord % 10 < 4)
                 return i18n("Tetrahedron %1, triangle about vertex %2").
                     arg(whichCoord / 10).arg(whichCoord % 10);
@@ -184,7 +192,8 @@ namespace Coordinates {
             else
                 return surface.getQuadCoord(
                     whichCoord / 7, (whichCoord % 7) - 4);
-        } else if (coordSystem == NNormalSurfaceList::AN_STANDARD) {
+        } else if (coordSystem == NNormalSurfaceList::AN_STANDARD ||
+                coordSystem == NNormalSurfaceList::AN_LEGACY) {
             if (whichCoord % 10 < 4)
                 return surface.getTriangleCoord(
                     whichCoord / 10, whichCoord % 10);

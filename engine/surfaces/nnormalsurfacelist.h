@@ -84,25 +84,50 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
     public:
         static const int packetType;
 
+        /**
+         * Represents standard triangle-quad coordinates for normal surfaces.
+         */
         static const int STANDARD;
-            /**< Represents standard triangle-quad coordinates for
-             *   normal surfaces. */
+        /**
+         * Represents standard triangle-quad-oct coordinates for
+         * almost normal surfaces.
+         */
         static const int AN_STANDARD;
-            /**< Represents standard triangle-quad-oct coordinates
-             *   for almost normal surfaces. */
+        /**
+         * Represents quad coordinates for normal surfaces.
+         */
         static const int QUAD;
-            /**< Represents quad coordinates for normal surfaces. */
+        /**
+         * Represents quad-oct coordinates for normal surfaces.
+         */
         static const int QUAD_OCT;
-            /**< Represents quad-oct coordinates for normal surfaces. */
 
+        /**
+         * Represents edge weight coordinates for normal surfaces.
+         * This flavour is for representation only; surface
+         * vectors and lists of this flavour cannot be created.
+         */
         static const int EDGE_WEIGHT;
-            /**< Represents edge weight coordinates for normal surfaces.
-             *   This flavour is for representation only; surface
-             *   vectors and lists of this flavour cannot be created. */
+        /**
+         * Represents face arc coordinates for normal surfaces.
+         * This flavour is for representation only; surface
+         * vectors and lists of this flavour cannot be created.
+         */
         static const int FACE_ARCS;
-            /**< Represents face arc coordinates for normal surfaces.
-             *   This flavour is for representation only; surface
-             *   vectors and lists of this flavour cannot be created. */
+        /**
+         * Indicates that a list of almost normal surfaces was created
+         * using Regina 4.5.1 or earlier, where surfaces with more than
+         * one octagon of the same type were stripped out of the final
+         * solution set.  As of Regina 4.6 such surfaces are now
+         * included in the solution set, since we need them if we
+         * wish to enumerate \e all almost normal surfaces (not just
+         * the \e vertex almost normal surfaces).
+         *
+         * This flavour is only used with legacy data files; new vectors
+         * and lists of this flavour cannot be created.  The underlying
+         * coordinate system is identical to AN_STANDARD.
+         */
+        static const int AN_LEGACY;
 
     protected:
         std::vector<NNormalSurface*> surfaces;

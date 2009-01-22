@@ -51,8 +51,15 @@ void CoordinateChooser::insertAllCreators() {
 
 void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
     if (surfaces->allowsAlmostNormal()) {
-        insertSystem(NNormalSurfaceList::AN_STANDARD);
-        insertSystem(NNormalSurfaceList::QUAD_OCT);
+        // For lists created with Regina 4.5.1 or earlier, we have
+        // already taken out surfaces with multiple octagons.  Make this
+        // clear to the user.
+        if (surfaces->getFlavour() == NNormalSurfaceList::AN_LEGACY)
+            insertSystem(NNormalSurfaceList::AN_LEGACY);
+        else {
+            insertSystem(NNormalSurfaceList::AN_STANDARD);
+            insertSystem(NNormalSurfaceList::QUAD_OCT);
+        }
     } else {
         insertSystem(NNormalSurfaceList::STANDARD);
         insertSystem(NNormalSurfaceList::QUAD);

@@ -95,6 +95,7 @@ void addNNormalSurfaceList() {
     s.attr("QUAD_OCT") = NNormalSurfaceList::QUAD_OCT;
     s.attr("EDGE_WEIGHT") = NNormalSurfaceList::EDGE_WEIGHT;
     s.attr("FACE_ARCS") = NNormalSurfaceList::FACE_ARCS;
+    s.attr("AN_LEGACY") = NNormalSurfaceList::AN_LEGACY;
 
     implicitly_convertible<std::auto_ptr<NNormalSurfaceList>,
         std::auto_ptr<regina::NPacket> >();
