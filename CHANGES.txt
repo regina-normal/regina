@@ -186,6 +186,8 @@ Version 4.6  [ (under development) ]
           read-only after a user visited the Surfaces panel.
         - The normal surface list viewer now has an additional "Cut Along"
           menu item.  The shortcut letter for "Crush" has changed as well.
+        - Normal surfaces are now individually numbered within surface lists,
+          which should make it easier to keep track of which is which.
     TEST SUITE:
         - Added very thorough tests for small permutation classes.
         - Additional tests for triangulation simplification and Euler

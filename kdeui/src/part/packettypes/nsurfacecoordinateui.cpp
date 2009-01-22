@@ -243,7 +243,7 @@ void NSurfaceCoordinateUI::refreshLocal() {
         if (appliedFilter && ! appliedFilter->accept(*s))
             continue;
         (new NSurfaceCoordinateItem(table.get(), surfaces, i, newName[i],
-            coordSystem))->setRenameEnabled(0, isReadWrite);
+            coordSystem))->setRenameEnabled(1, isReadWrite);
     }
 
     for (i = 0; i < table->columns(); i++)
@@ -278,7 +278,7 @@ void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
     if (table.get()) {
         for (QListViewItem* item = table->firstChild(); item;
                 item = item->nextSibling())
-            item->setRenameEnabled(0, readWrite);
+            item->setRenameEnabled(1, readWrite);
     }
 
     updateActionStates();
