@@ -117,10 +117,10 @@ class NFacePairingTest : public CppUnit::TestFixture {
             // Figures taken from "Face pairing graphs and 3-manifold
             // enumeration", Benjamin A. Burton, J. Knot Theory
             // Ramifications 13 (2004), pp. 1057--1101.
-            unsigned nPairs[] = { 1, 1, 2, 4, 10, 28, 97, 359, 1635 };
+            unsigned nPairs[] = { 0, 1, 2, 4, 10, 28, 97, 359, 1635 };
 
             unsigned nTets;
-            for (nTets = 1; nTets <= 8; nTets++) {
+            for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
                 NFacePairing::findAllPairings(nTets, NBoolSet::sFalse,
                     0, countFacePairings, &count, false);
