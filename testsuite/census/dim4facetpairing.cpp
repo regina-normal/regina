@@ -66,10 +66,10 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
             // Figures taken from sequence A129430 in the On-Line
             // Encyclopedia of Integer Sequences, as enumerated by
             // Brendan McKay using the software Nauty.
-            unsigned nPairs[] = { 1, 0, 3, 0, 26, 0, 639, 0, 40264 };
+            unsigned nPairs[] = { 0, 0, 3, 0, 26, 0, 639, 0, 40264 };
 
             unsigned size;
-            for (size = 2; size <= 5; ++size) {
+            for (size = 0; size <= 5; ++size) {
                 count = 0;
                 Dim4FacetPairing::findAllPairings(size, NBoolSet::sFalse,
                     0, countFacetPairings, &count, false);

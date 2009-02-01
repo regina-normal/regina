@@ -496,6 +496,10 @@ class Dim4FacetPairing : public NThread {
          * The facet pairing generation may be run in the current thread
          * or as a separate thread.
          *
+         * Because this class cannot represent an empty facet pairing,
+         * if the argument \a nPentachora is zero then no facet pairings
+         * will be generated at all.
+         *
          * \ifacespython Not present.
          *
          * @param nPentachora the number of pentachora whose facets should

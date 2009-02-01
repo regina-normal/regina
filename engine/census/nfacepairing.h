@@ -812,6 +812,10 @@ class NFacePairing : public NThread {
          * The face pairing generation may be run in the current thread
          * or as a separate thread.
          *
+         * Because this class cannot represent an empty face pairing,
+         * if the argument \a nTetrahedra is zero then no face pairings
+         * will be generated at all.
+         *
          * \todo \optlong When generating face pairings, do some checking to
          * eliminate cases in which tetrahedron (<i>k</i> > 0) can be swapped
          * with tetrahedron 0 to produce a smaller representation of the same
