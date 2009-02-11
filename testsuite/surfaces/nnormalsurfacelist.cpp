@@ -30,6 +30,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/ncensus.h"
 #include "packet/ncontainer.h"
+#include "split/nsignature.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
@@ -43,6 +44,7 @@ using regina::NNormalSurface;
 using regina::NNormalSurfaceList;
 using regina::NNormalSurfaceVector;
 using regina::NPerm;
+using regina::NSignature;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 
@@ -56,6 +58,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(standardS3);
     CPPUNIT_TEST(standardLoopC2);
     CPPUNIT_TEST(standardLoopCtw3);
+    CPPUNIT_TEST(standardLargeS3);
+    CPPUNIT_TEST(standardLargeRP3);
     CPPUNIT_TEST(standardTwistedKxI);
     CPPUNIT_TEST(standardNorSFS);
     CPPUNIT_TEST(quadEmpty);
@@ -65,6 +69,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(quadS3);
     CPPUNIT_TEST(quadLoopC2);
     CPPUNIT_TEST(quadLoopCtw3);
+    CPPUNIT_TEST(quadLargeS3);
+    CPPUNIT_TEST(quadLargeRP3);
     CPPUNIT_TEST(quadTwistedKxI);
     CPPUNIT_TEST(quadNorSFS);
     CPPUNIT_TEST(almostNormalEmpty);
@@ -74,6 +80,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(almostNormalS3);
     CPPUNIT_TEST(almostNormalLoopC2);
     CPPUNIT_TEST(almostNormalLoopCtw3);
+    CPPUNIT_TEST(almostNormalLargeS3);
+    CPPUNIT_TEST(almostNormalLargeRP3);
     CPPUNIT_TEST(almostNormalTwistedKxI);
     CPPUNIT_TEST(largeDimensionsStandard);
     CPPUNIT_TEST(largeDimensionsQuad);
@@ -82,6 +90,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(standardQuadConversionsCensus);
     CPPUNIT_TEST(standardANQuadOctConversionsConstructed);
     CPPUNIT_TEST(standardANQuadOctConversionsCensus);
+    CPPUNIT_TEST(disjoint);
+    CPPUNIT_TEST(cutAlong);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -100,6 +110,11 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             /**< An untwisted layered loop of length 2. */
         NTriangulation loopCtw3;
             /**< A twisted layered loop of length 3. */
+        NTriangulation largeS3;
+            /**< A 3-vertex 5-tetrahedron triangulation of the 3-sphere. */
+        NTriangulation largeRP3;
+            /**< A 2-vertex 5-tetrahedron triangulation of real
+                 projective space. */
         NTriangulation twistedKxI;
             /**< A 3-tetrahedron non-orientable twisted I-bundle over the
                  Klein bottle. */
@@ -114,6 +129,20 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
             dest.insertTriangulation(*source);
             delete source;
+        }
+
+        void generateFromSig(NTriangulation& tri, const std::string& sigStr) {
+            NSignature* sig = NSignature::parse(sigStr);
+            if (sig == 0)
+                return;
+
+            NTriangulation* triNew = sig->triangulate();
+            delete sig;
+            if (triNew == 0)
+                return;
+
+            tri.insertTriangulation(*triNew);
+            delete triNew;
         }
 
         void setUp() {
@@ -133,6 +162,11 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             S3.insertLayeredLoop(1, false);
             loopC2.insertLayeredLoop(2, false);
             loopCtw3.insertLayeredLoop(3, true);
+
+            // Some non-minimal triangulations can be generated from
+            // splitting surfaces.
+            generateFromSig(largeS3, "abcd.abe.c.d.e");
+            generateFromSig(largeRP3, "aabcd.be.c.d.e");
 
             // A 3-tetrahedron non-orientable twisted I-bundle over the
             // Klein bottle is described in Chapter 3 of Benjamin
@@ -978,6 +1012,174 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             delete list;
         }
 
+        void standardLargeS3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeS3, NNormalSurfaceList::STANDARD);
+
+            testSize(list, "a non-minimal S^3",
+                "standard normal surfaces", 15);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal vertex linking non-central spheres", 2,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                true /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal vertex linking non-central spheres", 1,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                true /* vertex link */, 0 /* edge link */,
+                2 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal edge linking non-central spheres", 2,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal edge linking non-central tori", 2,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal edge linking central tori", 1,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                5 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal miscellaneous spheres", 3,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal miscellaneous tori", 3,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal splitting genus two tori", 1,
+                -2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                5 /* central */, true /* splitting */);
+
+            delete list;
+        }
+
+        void quadLargeS3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeS3, NNormalSurfaceList::QUAD);
+
+            testSize(list, "a non-minimal S^3",
+                "quad normal surfaces", 4);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "quad normal edge linking non-central spheres", 2,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "quad normal edge linking non-central tori", 1,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "quad normal miscellaneous spheres", 1,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+
+            delete list;
+        }
+
+        void almostNormalLargeS3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeS3, NNormalSurfaceList::AN_STANDARD);
+
+            // Bleh.  Too messy.  Just count them.
+            testSize(list, "a non-minimal S^3",
+                "standard normal surfaces", 27);
+
+            delete list;
+        }
+
+        void standardLargeRP3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeRP3, NNormalSurfaceList::STANDARD);
+
+            // Bleh.  Too messy.  Just count them.
+            testSize(list, "a non-minimal RP^3",
+                "standard normal surfaces", 29);
+
+            delete list;
+        }
+
+        void quadLargeRP3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeRP3, NNormalSurfaceList::QUAD);
+
+            testSize(list, "a non-minimal RP^3",
+                "quad normal surfaces", 5);
+            countCompactSurfaces(list, "a non-minimal RP^3",
+                "quad normal edge linking non-central spheres", 2,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal RP^3",
+                "quad normal edge linking non-central tori", 1,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal RP^3",
+                "quad normal miscellaneous spheres", 1,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal RP^3",
+                "quad normal miscellaneous projective planes", 1,
+                1 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+
+            delete list;
+        }
+
+        void almostNormalLargeRP3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeRP3, NNormalSurfaceList::AN_STANDARD);
+
+            // Bleh.  Too messy.  Just count them.
+            testSize(list, "a non-minimal RP^3",
+                "standard normal surfaces", 59);
+
+            delete list;
+        }
+
         void standardTwistedKxI() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
                 &twistedKxI, NNormalSurfaceList::STANDARD);
@@ -1502,6 +1704,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             verifyConversions(&S3, "the 3-sphere");
             verifyConversions(&loopC2, "the untwisted layered loop C(2)");
             verifyConversions(&loopCtw3, "the twisted layered loop C~(3)");
+            verifyConversions(&largeS3, "a non-minimal S^3");
+            verifyConversions(&largeRP3, "a non-minimal RP^3");
             verifyConversions(&twistedKxI,
                 "a 3-tetrahedron non-orientable twisted KxI");
             verifyConversions(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
@@ -1546,6 +1750,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             verifyConversionsAN(&S3, "the 3-sphere");
             verifyConversionsAN(&loopC2, "the untwisted layered loop C(2)");
             verifyConversionsAN(&loopCtw3, "the twisted layered loop C~(3)");
+            verifyConversionsAN(&largeS3, "a non-minimal S^3");
+            verifyConversionsAN(&largeRP3, "a non-minimal RP^3");
             verifyConversionsAN(&twistedKxI,
                 "a 3-tetrahedron non-orientable twisted KxI");
             verifyConversionsAN(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
@@ -1582,6 +1788,44 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 const_cast<char*>("bounded compact census triangulation"));
 
             delete parent;
+        }
+
+        void testDisjoint(const NTriangulation& tri, const char* triName) {
+            // TODO
+        }
+
+        void disjoint() {
+            testDisjoint(empty, "the empty triangulation");
+            testDisjoint(oneTet, "a single tetrahedron");
+            testDisjoint(figure8, "the figure eight knot complement");
+            testDisjoint(gieseking, "the Gieseking manifold");
+            testDisjoint(S3, "the 3-sphere");
+            testDisjoint(loopC2, "the untwisted layered loop C(2)");
+            testDisjoint(loopCtw3, "the twisted layered loop C~(3)");
+            testDisjoint(largeS3, "a non-minimal S^3");
+            testDisjoint(largeRP3, "a non-minimal RP^3");
+            testDisjoint(twistedKxI,
+                "a 3-tetrahedron non-orientable twisted KxI");
+            testDisjoint(norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+        }
+
+        void testCutAlong(const NTriangulation& tri, const char* triName) {
+            // TODO
+        }
+
+        void cutAlong() {
+            testCutAlong(empty, "the empty triangulation");
+            testCutAlong(oneTet, "a single tetrahedron");
+            testCutAlong(figure8, "the figure eight knot complement");
+            testCutAlong(gieseking, "the Gieseking manifold");
+            testCutAlong(S3, "the 3-sphere");
+            testCutAlong(loopC2, "the untwisted layered loop C(2)");
+            testCutAlong(loopCtw3, "the twisted layered loop C~(3)");
+            testDisjoint(largeS3, "a non-minimal S^3");
+            testDisjoint(largeRP3, "a non-minimal RP^3");
+            testCutAlong(twistedKxI,
+                "a 3-tetrahedron non-orientable twisted KxI");
+            testCutAlong(norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
         }
 };
 
