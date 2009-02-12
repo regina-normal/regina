@@ -2065,6 +2065,38 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             return true;
         }
 
+        // Check whether the boundary of the given triangulation *might*
+        // be equal to (i) the surface s, (ii) two copies of the surface s,
+        // or (iii) a double cover of the surface s.
+        // Increment the relevant counters accordingly.
+        static void checkBoundaryType(const NNormalSurface* s,
+                const NTriangulation* tri, unsigned& foundS,
+                unsigned& foundTwoCopies, unsigned& foundDoubleCover) {
+            if (tri->getNumberOfBoundaryComponents() == 1) {
+                const NBoundaryComponent* b = tri->getBoundaryComponent(0);
+
+                if (s->getEulerCharacteristic() == b->getEulerCharacteristic()
+                        && s->isOrientable() == b->isOrientable())
+                    ++foundS;
+                if (s->getEulerCharacteristic() * 2 ==
+                            b->getEulerCharacteristic() &&
+                        (b->isOrientable() || s->isOrientable().isFalse()))
+                    ++foundDoubleCover;
+            } else if (tri->getNumberOfBoundaryComponents() == 2) {
+                const NBoundaryComponent* b0 = tri->getBoundaryComponent(0);
+                const NBoundaryComponent* b1 = tri->getBoundaryComponent(1);
+
+                if (
+                        s->getEulerCharacteristic() ==
+                            b0->getEulerCharacteristic() &&
+                        s->getEulerCharacteristic() ==
+                            b1->getEulerCharacteristic() &&
+                        s->isOrientable() == b0->isOrientable() &&
+                        s->isOrientable() == b1->isOrientable())
+                    ++foundTwoCopies;
+            }
+        }
+
         /**
          * PRE: tri is valid and has only one component.
          */
@@ -2207,6 +2239,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
                 // Check the boundaries of components of t.
                 unsigned expectS, expectTwoCopies, expectDoubleCover;
+                unsigned foundS, foundTwoCopies, foundDoubleCover;
                 if (separating) {
                     expectS = 2;
                     expectTwoCopies = 0;
@@ -2227,7 +2260,18 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                         << " gives the wrong number of boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                // TODO: Count subtypes.
+                foundS = foundTwoCopies = foundDoubleCover = 0;
+                for (p = comp->getFirstTreeChild(); p;
+                        p = p->getNextTreeSibling())
+                    checkBoundaryType(s, static_cast<NTriangulation*>(p),
+                        foundS, foundTwoCopies, foundDoubleCover);
+                if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
+                        foundDoubleCover < expectDoubleCover) {
+                    std::ostringstream msg;
+                    msg << "Cutting along surface #" << i << " for " << triName
+                        << " gives boundary components of the wrong type.";
+                    CPPUNIT_FAIL(msg.str());
+                }
 
                 // Check the boundaries of components of tDouble.
                 if (separating) {
@@ -2251,7 +2295,19 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                         << " gives the wrong number of boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                // TODO: Count subtypes.
+                foundS = foundTwoCopies = foundDoubleCover = 0;
+                for (p = compDouble->getFirstTreeChild(); p;
+                        p = p->getNextTreeSibling())
+                    checkBoundaryType(s, static_cast<NTriangulation*>(p),
+                        foundS, foundTwoCopies, foundDoubleCover);
+                if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
+                        foundDoubleCover < expectDoubleCover) {
+                    std::ostringstream msg;
+                    msg << "Cutting along double surface #" << i
+                        << " for " << triName
+                        << " gives boundary components of the wrong type.";
+                    CPPUNIT_FAIL(msg.str());
+                }
 
                 // Look for the product piece when cutting along the
                 // double surface.
