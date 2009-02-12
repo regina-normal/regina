@@ -55,7 +55,9 @@
 #include "triangulation/ntriangulation.h"
 #include "testsuite/surfaces/testsurfaces.h"
 
+using regina::NAbelianGroup;
 using regina::NBoolSet;
+using regina::NBoundaryComponent;
 using regina::NCensus;
 using regina::NContainer;
 using regina::NEdge;
@@ -1963,11 +1965,47 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             if (tri->getNumberOfBoundaryComponents() != 1)
                 return false;
 
-            // TODO: Check the relationship between H1 and H1Bdry.
+            // Check the relationship between H1 and H1Bdry.
             // We must have one of:
             //  -  H1 = (2g)Z, H1Bdry = (4g-2)Z;
             //  -  H1 = Z_2 + (g-1)Z, H1Bdry = Z_2 + (2g-3)Z;
             //  -  H1 = Z_2 + (g-1)Z, H1Bdry = (2g-2)Z;
+            const NAbelianGroup& h1 = tri->getHomologyH1();
+            const NAbelianGroup& bdry = tri->getHomologyH1Bdry();
+
+            if (h1.getNumberOfInvariantFactors() == 0) {
+                // Must have H1 = (2g)Z.
+                if (bdry.getNumberOfInvariantFactors() != 0)
+                    return false;
+                if (bdry.getRank() != 2 * h1.getRank() - 2)
+                    return false;
+            } else if (h1.getNumberOfInvariantFactors() == 1) {
+                // Must have H1 = Z_2 + (g-1)Z.
+                if (h1.getInvariantFactor(0) != 2)
+                    return false;
+
+                if (bdry.getNumberOfInvariantFactors() == 0) {
+                    if (bdry.getRank() != 2 * h1.getRank())
+                        return false;
+                } else {
+                    if (bdry.getNumberOfInvariantFactors() != 1)
+                        return false;
+                    if (bdry.getInvariantFactor(0) != 2)
+                        return false;
+                    if (bdry.getRank() != 2 * h1.getRank() - 1)
+                        return false;
+                }
+            } else
+                return false;
+
+            // Check that H1Rel is just Z_2.
+            const NAbelianGroup& h1Rel = tri->getHomologyH1Rel();
+            if (h1Rel.getNumberOfInvariantFactors() != 1)
+                return false;
+            if (h1Rel.getInvariantFactor(0) != 2)
+                return false;
+            if (h1Rel.getRank() != 0)
+                return false;
 
             return true;
         }
@@ -1980,8 +2018,49 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             if (tri->getNumberOfBoundaryComponents() != 2)
                 return false;
 
-            // TODO: Check that both boundary components are homeomorphic.
-            // TODO: Check that H1Bdry = 2 H1.
+            // Check that both boundary components are homeomorphic.
+            NBoundaryComponent* b0 = tri->getBoundaryComponent(0);
+            NBoundaryComponent* b1 = tri->getBoundaryComponent(1);
+
+            if (b0->getEulerCharacteristic() != b1->getEulerCharacteristic())
+                return false;
+            if (b0->isOrientable() && ! b1->isOrientable())
+                return false;
+            if (b1->isOrientable() && ! b0->isOrientable())
+                return false;
+
+            // Check that H1 is of the form (k)Z or Z_2 + (k)Z, and that
+            // H1Bdry = 2 H1.
+            const NAbelianGroup& h1 = tri->getHomologyH1();
+            const NAbelianGroup& bdry = tri->getHomologyH1Bdry();
+
+            if (h1.getNumberOfInvariantFactors() == 0) {
+                // Must have H1 = (k)Z.
+                if (bdry.getRank() != 2 * h1.getRank())
+                    return false;
+                if (bdry.getNumberOfInvariantFactors() != 0)
+                    return false;
+            } else if (h1.getNumberOfInvariantFactors() == 1) {
+                // Must have H1 = Z_2 + (k)Z.
+                if (h1.getInvariantFactor(0) != 2)
+                    return false;
+                if (bdry.getRank() != 2 * h1.getRank())
+                    return false;
+                if (bdry.getNumberOfInvariantFactors() != 2)
+                    return false;
+                if (bdry.getInvariantFactor(0) != 2)
+                    return false;
+                if (bdry.getInvariantFactor(1) != 2)
+                    return false;
+            } else
+                return false;
+
+            // Check that H1Rel is just Z.
+            const NAbelianGroup& h1Rel = tri->getHomologyH1Rel();
+            if (h1Rel.getNumberOfInvariantFactors() != 0)
+                return false;
+            if (h1Rel.getRank() != 1)
+                return false;
 
             return true;
         }
