@@ -119,15 +119,5 @@ NIsomorphismDirect::NIsomorphismDirect(const NIsomorphism& cloneMe) :
     }
 }
 
-NIsomorphismIndexed::NIsomorphismIndexed(const NIsomorphismIndexed& cloneMe) :
-        NIsomorphism(cloneMe.nTetrahedra),
-        mIndex(cloneMe.nTetrahedra > 0 ?
-            new int[cloneMe.nTetrahedra] : 0) {
-    for (unsigned i = 0; i < nTetrahedra; i++) {
-        mTetImage[i] = cloneMe.mTetImage[i];
-        mIndex[i] = cloneMe.mIndex[i];
-    }
-}
-
 } // namespace regina
 

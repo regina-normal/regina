@@ -56,6 +56,10 @@ Version 4.6  [ (under development) ]
               "Enumeration of non-orientable 3-manifolds using face-pairing
               graphs and union-find", B. A. Burton, Discrete Comput. Geom. 38
               (2007), no. 3, 527--571.
+        Class NIsomorphismIndexed:
+            - Removed entirely.  Python users will not be affected, since this
+              class was never available to them.  C++ programmers can use
+              NIsomorphism in conjunction with the NPerm::S4 array instead.
         Class NNormalSurface:
             - Finally implemented cutAlong()!
             - New routine isEmpty() for identifying empty surfaces.
