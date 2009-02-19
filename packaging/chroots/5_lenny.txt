@@ -1,7 +1,7 @@
-Setting up lenny chroots under debian etch
-------------------------------------------
+Setting up lenny chroots under debian lenny
+-------------------------------------------
 
-This file documents what I've done on my debian etch system to set up
+This file documents what I've done on my debian lenny system to set up
 i386 and amd64 chroots in which I can build and test packages for regina
 under debian 5.0 (otherwise known as lenny).
 
@@ -12,7 +12,7 @@ intended for general use.  See NOTES.txt for further information.
 System layout
 -------------
 
-- All work is done under debian etch (the "host system").
+- All work is done under debian lenny (the "host system").
 
 - /srv/chroot/sid/chroot is a directory on the host system containing one
   subdirectory for each lenny chroot (the "guest systems").  This sits
@@ -20,35 +20,32 @@ System layout
   for details on setting up this partition.
 
 
-Host (debian etch) configuration
---------------------------------
+Host configuration
+------------------
 
 - Follow the steps described in 0_init-schroot.txt to set up schroot on
   the host debian system.
 
-- Install debootstrap from sid (which has hooks for lenny).
-
 - Ensure the sid chroot partition is mounted as described in 5_sid.txt.
 
 
-Guest (debian lenny) configuration
-----------------------------------
+Guest configuration
+-------------------
 
 - Bootstrap the system:
 
   (for amd64:)
-  etch# debootstrap lenny /srv/chroot/sid/chroot/lenny-amd64
-        http://ftp.au.debian.org/debian/
+  host# debootstrap lenny /srv/chroot/sid/chroot/lenny-amd64
+        http://ftp.iinet.net.au/debian/debian/
 
   (for i386:)
-  etch# debootstrap --arch i386 lenny /srv/chroot/sid/chroot/lenny-i386
-        http://ftp.au.debian.org/debian/
-
+  host# debootstrap --arch i386 lenny /srv/chroot/sid/chroot/lenny-i386
+        http://ftp.iinet.net.au/debian/debian/
 
 - Create guest home directory:
 
-  etch# mkdir /srv/chroot/sid/chroot/lenny-amd64/home/bab
-  etch# chown bab.bab /srv/chroot/sid/chroot/lenny-amd64/home/bab
+  host# mkdir /srv/chroot/sid/chroot/lenny-amd64/home/bab
+  host# chown bab.bab /srv/chroot/sid/chroot/lenny-amd64/home/bab
 
 - Add a schroot entry:
 
@@ -70,25 +67,25 @@ Guest (debian lenny) configuration
 
 - Install basic graphical system:
 
-  etch# schroot -c lenny aptitude install
+  host# schroot -c lenny aptitude install
         less vim zsh kdelibs kdebase xnest xserver-xephyr
 
 - Stop host processes that conflict with the guest install:
 
-  debian# /etc/init.d/fam stop
+  host# /etc/init.d/fam stop
 
 - Install packages necessary for building regina:
 
-  etch# schroot -c lenny aptitude install
+  host# schroot -c lenny aptitude install
         build-essential devscripts fakeroot lintian automake1.9 debhelper
         doxygen kdelibs4-dev libboost-python-dev libcppunit-dev libgmp3-dev
         libmpich1.0-dev libpopt-dev libxml2-dev zlib1g-dev
-  etch# schroot -c lenny aptitude clean
+  host# schroot -c lenny aptitude clean
 
 - Install other packages useful for running and testing regina:
 
-  etch# schroot -c lenny aptitude install gap graphviz kpdf kig mpich-bin
-  etch# schroot -c lenny aptitude clean
+  host# schroot -c lenny aptitude install gap graphviz kpdf kig mpich-bin
+  host# schroot -c lenny aptitude clean
 
 - Follow the final steps described in 9_final-guestuser.txt to start a
   chrooted session.

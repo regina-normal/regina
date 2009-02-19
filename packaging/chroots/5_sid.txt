@@ -1,7 +1,7 @@
-Setting up a sid chroot under debian etch
------------------------------------------
+Setting up a sid chroot under debian lenny
+------------------------------------------
 
-This file documents what I've done on my debian etch system to set up a
+This file documents what I've done on my debian lenny system to set up a
 chroot in which I can build and test packages for regina under debian
 unstable (otherwise known as sid).
 
@@ -15,15 +15,15 @@ target, these instructions might need changing as time goes by.
 System layout
 -------------
 
-- All work is done under debian etch (the "host system").
+- All work is done under debian lenny (the "host system").
 
 - /srv/chroot/sid is the chroot directory on the host system containing
   debian sid (the "guest system").  This is mounted from a separate
   partition (currently 10G and only about 20% full at the time of writing).
 
 
-Host (debian etch) configuration
---------------------------------
+Host (debian lenny) configuration
+---------------------------------
 
 - Follow the steps described in 0_init-schroot.txt to set up schroot on
   the host debian system.
@@ -41,12 +41,12 @@ Guest (debian sid) configuration
 
 - Bootstrap the system:
 
-  etch# debootstrap sid /srv/chroot/sid http://ftp.au.debian.org/debian/
+  lenny# debootstrap sid /srv/chroot/sid http://ftp.iinet.net.au/debian/debian/
 
 - Create guest home directory:
 
-  etch# mkdir /srv/chroot/sid/home/bab
-  etch# chown bab.bab /srv/chroot/sid/home/bab
+  lenny# mkdir /srv/chroot/sid/home/bab
+  lenny# chown bab.bab /srv/chroot/sid/home/bab
 
 - Add a schroot entry:
 
@@ -62,8 +62,8 @@ Guest (debian sid) configuration
 
 - Install basic graphical system:
 
-  etch# schroot -c sid aptitude install
-        less vim zsh kdelibs kdebase xnest xserver-xephyr
+  lenny# schroot -c sid aptitude install
+         less vim zsh kdelibs kdebase xnest xserver-xephyr
 
 - Stop host processes that conflict with the guest install:
 
@@ -72,17 +72,17 @@ Guest (debian sid) configuration
 
 - Install packages necessary for building regina:
 
-  etch# schroot -c sid aptitude install
-        build-essential devscripts fakeroot lintian
-        automake1.9 debhelper doxygen kdelibs4-dev libboost-python-dev
-        libcppunit-dev libgmp3-dev libmpich1.0-dev libpopt-dev
-        libxml2-dev zlib1g-dev
-  etch# schroot -c sid aptitude clean
+  lenny# schroot -c sid aptitude install
+         build-essential devscripts fakeroot lintian
+         automake1.9 debhelper doxygen kdelibs4-dev libboost-python-dev
+         libcppunit-dev libgmp3-dev libmpich1.0-dev libpopt-dev
+         libxml2-dev zlib1g-dev
+  lenny# schroot -c sid aptitude clean
 
 - Install other packages useful for running and testing regina:
 
-  etch# schroot -c sid aptitude install gap graphviz kpdf kig mpich-bin
-  etch# schroot -c sid aptitude clean
+  lenny# schroot -c sid aptitude install gap graphviz kpdf kig mpich-bin
+  lenny# schroot -c sid aptitude clean
 
 - Follow the final steps described in 9_final-guestuser.txt to start a
   chrooted session.

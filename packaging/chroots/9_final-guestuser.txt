@@ -12,7 +12,7 @@ chroot for building and testing regina.
 Assumptions
 -----------
 
-- The host system is running debian etch.  In the examples below the
+- The host system is running debian lenny.  In the examples below the
   guest system is ubuntu gutsy (amd64), whose schroot name is "gutsy".
 
 

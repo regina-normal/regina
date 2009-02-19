@@ -1,7 +1,7 @@
-Setting up fedora chroots under debian etch (amd64)
----------------------------------------------------
+Setting up fedora chroots under debian lenny (amd64)
+----------------------------------------------------
 
-This file documents what I've done on my debian etch system to set up
+This file documents what I've done on my debian lenny system to set up
 i386 and x86_64 chroots in which I can build and test fedora packages
 for regina.
 
@@ -14,7 +14,7 @@ TODO: A note should be added on disabling ccache on the guest system.
 System layout
 -------------
 
-- Unless otherwise specified, all work is done under debian etch
+- Unless otherwise specified, all work is done under debian lenny
   (the "host debian system").
 
 - A standalone fedora installation (the "host fedora system") is
@@ -32,8 +32,8 @@ System layout
   filesystems live within root/ inside each of these subdirectories.
 
 
-Host debian system configuration (debian etch)
-----------------------------------------------
+Host debian system configuration (debian lenny)
+-----------------------------------------------
 
 - Follow the steps described in 0_init-schroot.txt to set up schroot on
   the host debian system.
@@ -45,11 +45,17 @@ Host debian system configuration (debian etch)
   LABEL=/fedora /srv/chroot/fedora ext3 defaults,errors=remount-ro 0 0
   LABEL=/ /srv/chroot/fchost ext3 defaults,errors=remount-ro 0 0
 
-- Bind-mount the guest fedora partition inside the host fedora partition,
-  in the location where mock expects to find it:
+- Create a new fstab file /etc/schroot/mount-fedora, which consists of
+  the standard /etc/schroot/mount-defaults plus the following extra line:
 
-  (from /etc/fstab:)
-  /srv/chroot/fedora /srv/chroot/fchost/var/lib/mock none rw,bind 0 0
+  /srv/chroot/fedora /var/lib/mock none rw,bind 0 0
+
+- Create a new schroot script /etc/schroot/script-fedora, which is a
+  copy of /etc/schroot/script-rpm but which uses the new fstab file:
+
+  (/etc/schroot/script-fedora, line 5:)
+  - FSTAB="/etc/schroot/mount-defaults"
+  + FSTAB="/etc/schroot/mount-fedora"
 
 - Add a schroot entry for the fedora host, which will only be used as root:
 
@@ -61,6 +67,7 @@ Host debian system configuration (debian etch)
   root-users=root
   run-setup-scripts=true
   run-exec-scripts=true
+  script-config=script-fedora
 
 
 Host fedora system configuration
@@ -135,6 +142,7 @@ Guest fedora system configuration
   root-users=root
   run-setup-scripts=true
   run-exec-scripts=true
+  script-config=script-rpm
 
   (for x86_64 chroots:)
   aliases=fc7

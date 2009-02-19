@@ -1,7 +1,7 @@
-Setting up suse chroots under debian etch (amd64)
--------------------------------------------------
+Setting up suse chroots under debian lenny (amd64)
+--------------------------------------------------
 
-This file documents what I've done on my debian etch system to set up
+This file documents what I've done on my debian lenny system to set up
 i586 and x86_64 chroots in which I can build and test suse packages
 for regina.
 
@@ -12,7 +12,7 @@ intended for general use.  See NOTES.txt for further information.
 System layout
 -------------
 
-- Unless otherwise specified, all work is done under debian etch
+- Unless otherwise specified, all work is done under debian lenny
   (the "host debian system").
 
 - In constrast to every other distribution described here (debian,
@@ -29,8 +29,8 @@ System layout
   and/or architecture).  If anybody knows how to do this, I'm all ears.
 
 
-Host debian system configuration (debian etch)
-----------------------------------------------
+Host debian system configuration (debian lenny)
+-----------------------------------------------
 
 - Follow the steps described in 0_init-schroot.txt to set up schroot on
   the host debian system.
@@ -96,6 +96,7 @@ Guest suse system configuration
   root-users=root
   run-setup-scripts=true
   run-exec-scripts=true
+  script-config=script-rpm
 
   (for x86_64 chroots:)
   aliases=suse10.3

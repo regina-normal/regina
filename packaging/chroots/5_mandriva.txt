@@ -1,7 +1,7 @@
-Setting up mandriva chroots under debian etch (amd64)
------------------------------------------------------
+Setting up mandriva chroots under debian lenny (amd64)
+------------------------------------------------------
 
-This file documents what I've done on my debian etch system to set up
+This file documents what I've done on my debian lenny system to set up
 i586 and x86_64 chroots in which I can build and test mandriva packages
 for regina.
 
@@ -12,7 +12,7 @@ intended for general use.  See NOTES.txt for further information.
 System layout
 -------------
 
-- Unless otherwise specified, all work is done under debian etch
+- Unless otherwise specified, all work is done under debian lenny
   (the "host debian system").
 
 - A standalone mandriva installation (the "host mandriva system") is
@@ -46,8 +46,8 @@ Host mandriva system configuration
   new mandriva release.
 
 
-Host debian system configuration (debian etch)
-----------------------------------------------
+Host debian system configuration (debian lenny)
+-----------------------------------------------
 
 - Follow the steps described in 0_init-schroot.txt to set up schroot on
   the host debian system.
@@ -59,11 +59,17 @@ Host debian system configuration (debian etch)
   LABEL=/mandriva /srv/chroot/mandriva ext3 defaults,errors=remount-ro 0 0
   LABEL=/mdvhost /srv/chroot/mdvhost ext3 defaults,errors=remount-ro 0 0
 
-- Bind-mount the guest mandriva partition inside the host mandriva
-  partition also:
+- Create a new fstab file /etc/schroot/mount-mandriva, which consists of
+  the standard /etc/schroot/mount-defaults plus the following extra line:
 
-  (from /etc/fstab:)
-  /srv/chroot/mandriva /srv/chroot/mdvhost/chroot none rw,bind 0 0
+  /srv/chroot/mandriva /chroot none rw,bind 0 0
+
+- Create a new schroot script /etc/schroot/script-mandriva, which is a
+  copy of /etc/schroot/script-rpm but which uses the new fstab file:
+
+  (/etc/schroot/script-mandriva, line 5:)
+  - FSTAB="/etc/schroot/mount-defaults"
+  + FSTAB="/etc/schroot/mount-mandriva"
 
 - Add a schroot entry for the mandriva host, which will only be used as root:
 
@@ -75,6 +81,7 @@ Host debian system configuration (debian etch)
   root-users=root
   run-setup-scripts=true
   run-exec-scripts=true
+  script-config=script-mandriva
 
 
 Guest mandriva system configuration
@@ -124,6 +131,7 @@ Guest mandriva system configuration
   root-users=root
   run-setup-scripts=true
   run-exec-scripts=true
+  script-config=script-rpm
 
   (for x86_64 chroots:)
   aliases=mdv2007.0
@@ -144,11 +152,6 @@ Guest mandriva system configuration
   debian# schroot -c mdv2007.0-x86_64
   mdvguest# groupadd -g 1000 bab
   mdvguest# useradd -u 1000 -g 1000 bab
-
-- For Mandriva 2009.0, downgrade coreutils to the 2008.1 package
-  (otherwise touch and cp -p fail because the etch kernel is too old).
-
-  mdvguest# rpm -Uvh --oldpackage path/to/coreutils-<version>.rpm
 
 - For Mandriva 2008.0, set up standard directories (otherwise the
   desktop directory is treated as /, not $HOME/Desktop):

@@ -12,7 +12,7 @@ chroot for building and testing regina.
 Assumptions
 -----------
 
-- The host system is running debian etch (amd64).
+- The host system is running debian lenny (amd64).
 
 
 Host schroot configuration
@@ -20,30 +20,31 @@ Host schroot configuration
 
 - Install schroot.
 
-- Edit /etc/schroot/setup.d/10mount to mount host /home as guest /home/master,
+- Edit /etc/schroot/mount-defaults to mount host /home as guest /home/master,
   to avoid mixing configurations for different versions of software:
 
-  (line 82:)
-  -           do_mount "-o rw,bind" "/home"    "${CHROOT_PATH}/home"
-  +           do_mount "-o rw,bind" "/home"    "${CHROOT_PATH}/home/master"
+  (/etc/schroot/mount-defaults, line 9:)
+  - /home           /home           none    rw,bind         0       0
+  + /home           /home/master    none    rw,bind         0       0
 
-- Edit /etc/schroot/setup.d/20network to copy /etc/hosts:
+- Create a new file /etc/schroot/copyfiles-rpm that only copies network
+  configuration, not users and groups:
 
-  (line 8-9:)
-     cp $VERBOSE /etc/resolv.conf "${CHROOT_PATH}/etc/resolv.conf"
-  +  cp $VERBOSE /etc/hosts "${CHROOT_PATH}/etc/hosts"
+  (/etc/schroot/copyfiles-rpm, entire file:)
+  /etc/hosts
+  /etc/resolv.conf
 
-- Edit /etc/schroot/setup.d/30passwd so that it only copies password
-  files on debian-based systems:
+  Note that the files removed from copyfiles-defaults were /etc/group,
+  /etc/passwd and /etc/shadow.
 
-  (line 1:)
-   #!/bin/sh
-   
-  +# Only do this on debian/ubuntu systems.
-  +# For RPM-based systems we will just add users and groups manually.
-  +if [ ! -e ${CHROOT_PATH}/var/lib/dpkg/status ]; then
-  +  exit
-  +fi
-  +
-   if [ "$AUTH_VERBOSITY" = "verbose" ]; then
+- Copy /etc/schroot/script-defaults to a new script /etc/schroot/script-rpm,
+  and edit this new script to source copyfiles-rpm:
+
+  (/etc/schroot/script-rpm, line 8:)
+  - COPYFILES="/etc/schroot/copyfiles-defaults"
+  + COPYFILES="/etc/schroot/copyfiles-rpm"
+
+  This new script will be used with RPM-based systems (where we do not
+  want to clobber user/group information).  The original script-defaults
+  will be used with debian-based systems.
 

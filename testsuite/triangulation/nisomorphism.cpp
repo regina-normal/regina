@@ -40,7 +40,7 @@ using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NIsomorphism;
 using regina::NIsomorphismDirect;
-using regina::NIsomorphismIndexed;
+using regina::NPerm;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 
@@ -116,7 +116,9 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             for (i = 0; i < n; i++)
                 tetPerm[i] = i;
 
-            NIsomorphismIndexed iso(n);
+            unsigned* facePermIndex = new unsigned[n];
+
+            NIsomorphismDirect iso(n);
             unsigned long which = 0;
             do {
                 // We have a permutation of tetrahedra.
@@ -125,7 +127,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
                 // rearrangements.
                 for (i = 0; i < n; i++) {
                     iso.tetImage(i) = tetPerm[i];
-                    iso.facePermIndex(i) = 0;
+                    iso.facePerm(i) = NPerm::S4[facePermIndex[i] = 0];
                 }
 
                 while (1) {
@@ -135,20 +137,21 @@ class NIsomorphismTest : public CppUnit::TestFixture {
 
                     // Move to the next face/vertex mapping.
                     pos = 0;
-                    while (pos < n && iso.facePermIndex(pos) == nVtxPerms - 1)
+                    while (pos < n && facePermIndex[pos] == nVtxPerms - 1)
                         pos++;
 
                     if (pos == n)
                         break;
 
-                    iso.facePermIndex(pos)++;
+                    iso.facePerm(pos) = NPerm::S4[++facePermIndex[pos]];
                     while (pos > 0) {
                         pos--;
-                        iso.facePermIndex(pos) = 0;
+                        iso.facePerm(pos) = NPerm::S4[facePermIndex[pos] = 0];
                     }
                 }
             } while (std::next_permutation(tetPerm, tetPerm + n));
 
+            delete[] facePermIndex;
             delete[] tetPerm;
             return which;
         }

@@ -26,23 +26,52 @@
 
 /* end stub */
 
+// When we run tests over an entire census, do we use a larger census
+// (which takes a long time to run), or a smaller census?
+// #define LARGE_CENSUS
+
+#ifdef LARGE_CENSUS
+    #define MIN_CLOSED_COMPACT_CENSUS_SIZE 5
+    #define CLOSED_COMPACT_CENSUS_SIZE 4
+    #define BOUNDED_COMPACT_CENSUS_SIZE 3
+
+    #define SMALL_MIN_CLOSED_COMPACT_CENSUS_SIZE 4
+    #define SMALL_CLOSED_COMPACT_CENSUS_SIZE 3
+    #define SMALL_BOUNDED_COMPACT_CENSUS_SIZE 2
+#else
+    #define MIN_CLOSED_COMPACT_CENSUS_SIZE 4
+    #define CLOSED_COMPACT_CENSUS_SIZE 3
+    #define BOUNDED_COMPACT_CENSUS_SIZE 2
+
+    #define SMALL_MIN_CLOSED_COMPACT_CENSUS_SIZE 3
+    #define SMALL_CLOSED_COMPACT_CENSUS_SIZE 2
+    #define SMALL_BOUNDED_COMPACT_CENSUS_SIZE 1
+#endif
+
 #include <algorithm>
 #include <cppunit/extensions/HelperMacros.h>
+#include <memory>
 #include "census/ncensus.h"
 #include "packet/ncontainer.h"
+#include "split/nsignature.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/surfaces/testsurfaces.h"
 
+using regina::NAbelianGroup;
 using regina::NBoolSet;
+using regina::NBoundaryComponent;
 using regina::NCensus;
 using regina::NContainer;
+using regina::NEdge;
 using regina::NExampleTriangulation;
 using regina::NNormalSurface;
 using regina::NNormalSurfaceList;
 using regina::NNormalSurfaceVector;
+using regina::NPacket;
 using regina::NPerm;
+using regina::NSignature;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 
@@ -56,6 +85,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(standardS3);
     CPPUNIT_TEST(standardLoopC2);
     CPPUNIT_TEST(standardLoopCtw3);
+    CPPUNIT_TEST(standardLargeS3);
+    CPPUNIT_TEST(standardLargeRP3);
     CPPUNIT_TEST(standardTwistedKxI);
     CPPUNIT_TEST(standardNorSFS);
     CPPUNIT_TEST(quadEmpty);
@@ -65,6 +96,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(quadS3);
     CPPUNIT_TEST(quadLoopC2);
     CPPUNIT_TEST(quadLoopCtw3);
+    CPPUNIT_TEST(quadLargeS3);
+    CPPUNIT_TEST(quadLargeRP3);
     CPPUNIT_TEST(quadTwistedKxI);
     CPPUNIT_TEST(quadNorSFS);
     CPPUNIT_TEST(almostNormalEmpty);
@@ -74,6 +107,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(almostNormalS3);
     CPPUNIT_TEST(almostNormalLoopC2);
     CPPUNIT_TEST(almostNormalLoopCtw3);
+    CPPUNIT_TEST(almostNormalLargeS3);
+    CPPUNIT_TEST(almostNormalLargeRP3);
     CPPUNIT_TEST(almostNormalTwistedKxI);
     CPPUNIT_TEST(largeDimensionsStandard);
     CPPUNIT_TEST(largeDimensionsQuad);
@@ -82,6 +117,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(standardQuadConversionsCensus);
     CPPUNIT_TEST(standardANQuadOctConversionsConstructed);
     CPPUNIT_TEST(standardANQuadOctConversionsCensus);
+    CPPUNIT_TEST(disjointConstructed);
+    CPPUNIT_TEST(disjointCensus);
+    CPPUNIT_TEST(cutAlongConstructed);
+    CPPUNIT_TEST(cutAlongCensus);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -100,6 +139,11 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             /**< An untwisted layered loop of length 2. */
         NTriangulation loopCtw3;
             /**< A twisted layered loop of length 3. */
+        NTriangulation largeS3;
+            /**< A 3-vertex 5-tetrahedron triangulation of the 3-sphere. */
+        NTriangulation largeRP3;
+            /**< A 2-vertex 5-tetrahedron triangulation of real
+                 projective space. */
         NTriangulation twistedKxI;
             /**< A 3-tetrahedron non-orientable twisted I-bundle over the
                  Klein bottle. */
@@ -114,6 +158,20 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
             dest.insertTriangulation(*source);
             delete source;
+        }
+
+        void generateFromSig(NTriangulation& tri, const std::string& sigStr) {
+            NSignature* sig = NSignature::parse(sigStr);
+            if (sig == 0)
+                return;
+
+            NTriangulation* triNew = sig->triangulate();
+            delete sig;
+            if (triNew == 0)
+                return;
+
+            tri.insertTriangulation(*triNew);
+            delete triNew;
         }
 
         void setUp() {
@@ -133,6 +191,11 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             S3.insertLayeredLoop(1, false);
             loopC2.insertLayeredLoop(2, false);
             loopCtw3.insertLayeredLoop(3, true);
+
+            // Some non-minimal triangulations can be generated from
+            // splitting surfaces.
+            generateFromSig(largeS3, "abcd.abe.c.d.e");
+            generateFromSig(largeRP3, "aabcd.be.c.d.e");
 
             // A 3-tetrahedron non-orientable twisted I-bundle over the
             // Klein bottle is described in Chapter 3 of Benjamin
@@ -978,6 +1041,174 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             delete list;
         }
 
+        void standardLargeS3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeS3, NNormalSurfaceList::STANDARD);
+
+            testSize(list, "a non-minimal S^3",
+                "standard normal surfaces", 15);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal vertex linking non-central spheres", 2,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                true /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal vertex linking non-central spheres", 1,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                true /* vertex link */, 0 /* edge link */,
+                2 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal edge linking non-central spheres", 2,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal edge linking non-central tori", 2,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal edge linking central tori", 1,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                5 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal miscellaneous spheres", 3,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal miscellaneous tori", 3,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "standard normal splitting genus two tori", 1,
+                -2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                5 /* central */, true /* splitting */);
+
+            delete list;
+        }
+
+        void quadLargeS3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeS3, NNormalSurfaceList::QUAD);
+
+            testSize(list, "a non-minimal S^3",
+                "quad normal surfaces", 4);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "quad normal edge linking non-central spheres", 2,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "quad normal edge linking non-central tori", 1,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal S^3",
+                "quad normal miscellaneous spheres", 1,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+
+            delete list;
+        }
+
+        void almostNormalLargeS3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeS3, NNormalSurfaceList::AN_STANDARD);
+
+            // Bleh.  Too messy.  Just count them.
+            testSize(list, "a non-minimal S^3",
+                "standard normal surfaces", 27);
+
+            delete list;
+        }
+
+        void standardLargeRP3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeRP3, NNormalSurfaceList::STANDARD);
+
+            // Bleh.  Too messy.  Just count them.
+            testSize(list, "a non-minimal RP^3",
+                "standard normal surfaces", 29);
+
+            delete list;
+        }
+
+        void quadLargeRP3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeRP3, NNormalSurfaceList::QUAD);
+
+            testSize(list, "a non-minimal RP^3",
+                "quad normal surfaces", 5);
+            countCompactSurfaces(list, "a non-minimal RP^3",
+                "quad normal edge linking non-central spheres", 2,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal RP^3",
+                "quad normal edge linking non-central tori", 1,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 1 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal RP^3",
+                "quad normal miscellaneous spheres", 1,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a non-minimal RP^3",
+                "quad normal miscellaneous projective planes", 1,
+                1 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
+                false /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                0 /* central */, false /* splitting */);
+
+            delete list;
+        }
+
+        void almostNormalLargeRP3() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &largeRP3, NNormalSurfaceList::AN_STANDARD);
+
+            // Bleh.  Too messy.  Just count them.
+            testSize(list, "a non-minimal RP^3",
+                "standard normal surfaces", 59);
+
+            delete list;
+        }
+
         void standardTwistedKxI() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
                 &twistedKxI, NNormalSurfaceList::STANDARD);
@@ -1502,6 +1733,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             verifyConversions(&S3, "the 3-sphere");
             verifyConversions(&loopC2, "the untwisted layered loop C(2)");
             verifyConversions(&loopCtw3, "the twisted layered loop C~(3)");
+            verifyConversions(&largeS3, "a non-minimal S^3");
+            verifyConversions(&largeRP3, "a non-minimal RP^3");
             verifyConversions(&twistedKxI,
                 "a 3-tetrahedron non-orientable twisted KxI");
             verifyConversions(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
@@ -1510,8 +1743,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         void standardQuadConversionsCensus() {
             NContainer* parent = new NContainer();
 
-            // Potentially minimal closed compact triangulations, 5 tetrahedra.
-            NCensus::formCensus(parent, 5,
+            // Potentially minimal closed compact triangulations:
+            NCensus::formCensus(parent, MIN_CLOSED_COMPACT_CENSUS_SIZE,
                 NBoolSet::sTrue /* finite */,
                 NBoolSet::sBoth /* orientable */,
                 NBoolSet::sFalse /* bounded */,
@@ -1521,16 +1754,16 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 const_cast<char*>(
                     "possibly-minimal closed compact census triangulation"));
 
-            // All closed compact triangulations, 4 tetrahedra.
-            NCensus::formCensus(parent, 4,
+            // All closed compact triangulations:
+            NCensus::formCensus(parent, CLOSED_COMPACT_CENSUS_SIZE,
                 NBoolSet::sTrue /* finite */,
                 NBoolSet::sBoth /* orientable */,
                 NBoolSet::sFalse /* bounded */,
                 -1, 0, &verifyConversionsCensus,
                 const_cast<char*>("closed compact census triangulation"));
 
-            // All bounded compact triangulations, 3 tetrahedra.
-            NCensus::formCensus(parent, 3,
+            // All bounded compact triangulations:
+            NCensus::formCensus(parent, BOUNDED_COMPACT_CENSUS_SIZE,
                 NBoolSet::sTrue /* finite */,
                 NBoolSet::sBoth /* orientable */,
                 NBoolSet::sTrue /* bounded */,
@@ -1546,6 +1779,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             verifyConversionsAN(&S3, "the 3-sphere");
             verifyConversionsAN(&loopC2, "the untwisted layered loop C(2)");
             verifyConversionsAN(&loopCtw3, "the twisted layered loop C~(3)");
+            verifyConversionsAN(&largeS3, "a non-minimal S^3");
+            verifyConversionsAN(&largeRP3, "a non-minimal RP^3");
             verifyConversionsAN(&twistedKxI,
                 "a 3-tetrahedron non-orientable twisted KxI");
             verifyConversionsAN(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
@@ -1554,8 +1789,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         void standardANQuadOctConversionsCensus() {
             NContainer* parent = new NContainer();
 
-            // Potentially minimal closed compact triangulations, 5 tetrahedra.
-            NCensus::formCensus(parent, 5,
+            // Potentially minimal closed compact triangulations:
+            NCensus::formCensus(parent, MIN_CLOSED_COMPACT_CENSUS_SIZE,
                 NBoolSet::sTrue /* finite */,
                 NBoolSet::sBoth /* orientable */,
                 NBoolSet::sFalse /* bounded */,
@@ -1565,20 +1800,581 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 const_cast<char*>(
                     "possibly-minimal closed compact census triangulation"));
 
-            // All closed compact triangulations, 4 tetrahedra.
-            NCensus::formCensus(parent, 4,
+            // Closed compact triangulations:
+            NCensus::formCensus(parent, CLOSED_COMPACT_CENSUS_SIZE,
                 NBoolSet::sTrue /* finite */,
                 NBoolSet::sBoth /* orientable */,
                 NBoolSet::sFalse /* bounded */,
                 -1, 0, &verifyConversionsANCensus,
                 const_cast<char*>("closed compact census triangulation"));
 
-            // All bounded compact triangulations, 3 tetrahedra.
-            NCensus::formCensus(parent, 3,
+            // Bounded compact triangulations:
+            NCensus::formCensus(parent, BOUNDED_COMPACT_CENSUS_SIZE,
                 NBoolSet::sTrue /* finite */,
                 NBoolSet::sBoth /* orientable */,
                 NBoolSet::sTrue /* bounded */,
                 -1, 0, &verifyConversionsANCensus,
+                const_cast<char*>("bounded compact census triangulation"));
+
+            delete parent;
+        }
+
+        static void testDisjoint(NTriangulation* tri, const char* triName) {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                tri, NNormalSurfaceList::AN_STANDARD);
+            unsigned long n = list->getNumberOfSurfaces();
+
+            unsigned long i, j;
+            const NNormalSurface *s, *t;
+            std::pair<const NEdge*, const NEdge*> edges;
+            unsigned long edge;
+
+            for (i = 0; i < n; ++i) {
+                s = list->getSurface(i);
+
+                // For some types of surfaces we know exactly what it
+                // should be disjoint from.
+                if (s->isVertexLinking()) {
+                    // Vertex links are disjoint from everything.
+                    for (j = 0; j < n; ++j) {
+                        t = list->getSurface(j);
+                        if (! s->disjoint(*t)) {
+                            std::ostringstream msg;
+                            msg << "Surface #" << i << " for " << triName
+                                << " is a vertex link "
+                                "and therefore should be disjoint from "
+                                "surface #" << j << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                } else if ((edges = s->isThinEdgeLink()).first) {
+                    // A thin edge link is disjoint from (i) all vertex
+                    // links, and (ii) all surfaces that do not meet the
+                    // relevant edge (except the edge link itself, if it
+                    // is 1-sided).
+                    edge = tri->edgeIndex(edges.first);
+
+                    for (j = 0; j < n; ++j) {
+                        // Deal with (s, s) later.
+                        if (j == i)
+                            continue;
+
+                        t = list->getSurface(j);
+                        if (t->isVertexLinking()) {
+                            if (! s->disjoint(*t)) {
+                                std::ostringstream msg;
+                                msg << "Surface #" << i << " for " << triName
+                                    << " is a thin edge link and therefore "
+                                    "should be disjoint from surface #" << j
+                                    << ", which is a vertex link.";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        } else if (t->getEdgeWeight(edge) == 0) {
+                            if (! s->disjoint(*t)) {
+                                std::ostringstream msg;
+                                msg << "Surface #" << i << " for " << triName
+                                    << " is a thin edge link and therefore "
+                                    "should be disjoint from surface #" << j
+                                    << ", which does not meet the "
+                                    "corresponding edge.";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        } else {
+                            if (s->disjoint(*t)) {
+                                std::ostringstream msg;
+                                msg << "Surface #" << i <<
+                                    " is a thin edge link and therefore "
+                                    "should not be disjoint from surface #"
+                                    << j << ", which meets the "
+                                    "corresponding edge.";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                    }
+                }
+
+                // Ensure that the surface is disjoint from itself
+                // iff it is two-sided.
+                if (s->isTwoSided().isTrue() && ! s->disjoint(*s)) {
+                    std::ostringstream msg;
+                    msg << "Surface #" << i << " for " << triName
+                        << " is two-sided and therefore should be "
+                        "disjoint from itself.";
+                    CPPUNIT_FAIL(msg.str());
+                } else if (s->isTwoSided().isFalse() && s->disjoint(*s)) {
+                    std::ostringstream msg;
+                    msg << "Surface #" << i << " for " << triName
+                        << " is one-sided and therefore should not be "
+                        "disjoint from itself.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            delete list;
+        }
+
+        static bool testDisjointCensus(NTriangulation* tri, void* triName) {
+            testDisjoint(tri, static_cast<const char*>(triName));
+            return false;
+        }
+
+        void disjointConstructed() {
+            testDisjoint(&oneTet, "a single tetrahedron");
+            testDisjoint(&figure8, "the figure eight knot complement");
+            testDisjoint(&gieseking, "the Gieseking manifold");
+            testDisjoint(&S3, "the 3-sphere");
+            testDisjoint(&loopC2, "the untwisted layered loop C(2)");
+            testDisjoint(&loopCtw3, "the twisted layered loop C~(3)");
+            testDisjoint(&largeS3, "a non-minimal S^3");
+            testDisjoint(&largeRP3, "a non-minimal RP^3");
+            testDisjoint(&twistedKxI,
+                "a 3-tetrahedron non-orientable twisted KxI");
+            testDisjoint(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+        }
+
+        void disjointCensus() {
+            NContainer* parent = new NContainer();
+
+            // Closed compact triangulations:
+            NCensus::formCensus(parent, CLOSED_COMPACT_CENSUS_SIZE,
+                NBoolSet::sTrue /* finite */,
+                NBoolSet::sBoth /* orientable */,
+                NBoolSet::sFalse /* bounded */,
+                -1, 0, &testDisjointCensus,
+                const_cast<char*>("closed compact census triangulation"));
+
+            // Bounded compact triangulations:
+            NCensus::formCensus(parent, BOUNDED_COMPACT_CENSUS_SIZE,
+                NBoolSet::sTrue /* finite */,
+                NBoolSet::sBoth /* orientable */,
+                NBoolSet::sTrue /* bounded */,
+                -1, 0, &testDisjointCensus,
+                const_cast<char*>("bounded compact census triangulation"));
+
+            delete parent;
+        }
+
+        static NNormalSurface* doubleSurface(const NNormalSurface* s) {
+            NNormalSurfaceVector* v =
+                static_cast<NNormalSurfaceVector*>(s->rawVector()->clone());
+            (*v) *= 2;
+            return new NNormalSurface(s->getTriangulation(), v);
+        }
+
+        /**
+         * PRE: tri is valid with only one component, and all vertex
+         * links are spheres or discs.
+         */
+        static bool mightBeTwistedProduct(const NTriangulation* tri) {
+            if (tri->getNumberOfBoundaryComponents() != 1)
+                return false;
+
+            // Check the relationship between H1 and H1Bdry.
+            // We must have one of:
+            //  -  H1 = (2g)Z, H1Bdry = (4g-2)Z;
+            //  -  H1 = Z_2 + (g-1)Z, H1Bdry = Z_2 + (2g-3)Z;
+            //  -  H1 = Z_2 + (g-1)Z, H1Bdry = (2g-2)Z;
+            const NAbelianGroup& h1 = tri->getHomologyH1();
+            const NAbelianGroup& bdry = tri->getHomologyH1Bdry();
+
+            if (h1.getNumberOfInvariantFactors() == 0) {
+                // Must have H1 = (2g)Z.
+                if (bdry.getNumberOfInvariantFactors() != 0)
+                    return false;
+                if (bdry.getRank() != 2 * h1.getRank() - 2)
+                    return false;
+            } else if (h1.getNumberOfInvariantFactors() == 1) {
+                // Must have H1 = Z_2 + (g-1)Z.
+                if (h1.getInvariantFactor(0) != 2)
+                    return false;
+
+                if (bdry.getNumberOfInvariantFactors() == 0) {
+                    if (bdry.getRank() != 2 * h1.getRank())
+                        return false;
+                } else {
+                    if (bdry.getNumberOfInvariantFactors() != 1)
+                        return false;
+                    if (bdry.getInvariantFactor(0) != 2)
+                        return false;
+                    if (bdry.getRank() != 2 * h1.getRank() - 1)
+                        return false;
+                }
+            } else
+                return false;
+
+            // Check that H1Rel is just Z_2.
+            const NAbelianGroup& h1Rel = tri->getHomologyH1Rel();
+            if (h1Rel.getNumberOfInvariantFactors() != 1)
+                return false;
+            if (h1Rel.getInvariantFactor(0) != 2)
+                return false;
+            if (h1Rel.getRank() != 0)
+                return false;
+
+            return true;
+        }
+
+        /**
+         * PRE: tri is valid with only one component, and all vertex
+         * links are spheres or discs.
+         */
+        static bool mightBeUntwistedProduct(const NTriangulation* tri) {
+            if (tri->getNumberOfBoundaryComponents() != 2)
+                return false;
+
+            // Check that both boundary components are homeomorphic.
+            NBoundaryComponent* b0 = tri->getBoundaryComponent(0);
+            NBoundaryComponent* b1 = tri->getBoundaryComponent(1);
+
+            if (b0->getEulerCharacteristic() != b1->getEulerCharacteristic())
+                return false;
+            if (b0->isOrientable() && ! b1->isOrientable())
+                return false;
+            if (b1->isOrientable() && ! b0->isOrientable())
+                return false;
+
+            // Check that H1 is of the form (k)Z or Z_2 + (k)Z, and that
+            // H1Bdry = 2 H1.
+            const NAbelianGroup& h1 = tri->getHomologyH1();
+            const NAbelianGroup& bdry = tri->getHomologyH1Bdry();
+
+            if (h1.getNumberOfInvariantFactors() == 0) {
+                // Must have H1 = (k)Z.
+                if (bdry.getRank() != 2 * h1.getRank())
+                    return false;
+                if (bdry.getNumberOfInvariantFactors() != 0)
+                    return false;
+            } else if (h1.getNumberOfInvariantFactors() == 1) {
+                // Must have H1 = Z_2 + (k)Z.
+                if (h1.getInvariantFactor(0) != 2)
+                    return false;
+                if (bdry.getRank() != 2 * h1.getRank())
+                    return false;
+                if (bdry.getNumberOfInvariantFactors() != 2)
+                    return false;
+                if (bdry.getInvariantFactor(0) != 2)
+                    return false;
+                if (bdry.getInvariantFactor(1) != 2)
+                    return false;
+            } else
+                return false;
+
+            // Check that H1Rel is just Z.
+            const NAbelianGroup& h1Rel = tri->getHomologyH1Rel();
+            if (h1Rel.getNumberOfInvariantFactors() != 0)
+                return false;
+            if (h1Rel.getRank() != 1)
+                return false;
+
+            return true;
+        }
+
+        // Check whether the boundary of the given triangulation *might*
+        // be equal to (i) the surface s, (ii) two copies of the surface s,
+        // or (iii) a double cover of the surface s.
+        // Increment the relevant counters accordingly.
+        static void checkBoundaryType(const NNormalSurface* s,
+                const NTriangulation* tri, unsigned& foundS,
+                unsigned& foundTwoCopies, unsigned& foundDoubleCover) {
+            if (tri->getNumberOfBoundaryComponents() == 1) {
+                const NBoundaryComponent* b = tri->getBoundaryComponent(0);
+
+                if (s->getEulerCharacteristic() == b->getEulerCharacteristic()
+                        && s->isOrientable() == b->isOrientable())
+                    ++foundS;
+                if (s->getEulerCharacteristic() * 2 ==
+                            b->getEulerCharacteristic() &&
+                        (b->isOrientable() || s->isOrientable().isFalse()))
+                    ++foundDoubleCover;
+            } else if (tri->getNumberOfBoundaryComponents() == 2) {
+                const NBoundaryComponent* b0 = tri->getBoundaryComponent(0);
+                const NBoundaryComponent* b1 = tri->getBoundaryComponent(1);
+
+                if (
+                        s->getEulerCharacteristic() ==
+                            b0->getEulerCharacteristic() &&
+                        s->getEulerCharacteristic() ==
+                            b1->getEulerCharacteristic() &&
+                        s->isOrientable() == b0->isOrientable() &&
+                        s->isOrientable() == b1->isOrientable())
+                    ++foundTwoCopies;
+            }
+        }
+
+        /**
+         * PRE: tri is valid and has only one component.
+         */
+        static void testCutAlong(NTriangulation* tri, const char* triName) {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                tri, NNormalSurfaceList::STANDARD);
+            unsigned long n = list->getNumberOfSurfaces();
+
+            const NNormalSurface *s;
+            std::auto_ptr<NTriangulation> t;
+            std::auto_ptr<NContainer> comp;
+            unsigned long nComp;
+
+            std::auto_ptr<NNormalSurface> sDouble;
+            std::auto_ptr<NTriangulation> tDouble;
+            std::auto_ptr<NContainer> compDouble;
+            unsigned long nCompDouble;
+
+            bool separating;
+
+            unsigned long expected;
+            NPacket* p;
+
+            // We use the fact that each normal surface is connected.
+            for (unsigned long i = 0; i < n; ++i) {
+                s = list->getSurface(i);
+                t.reset(s->cutAlong());
+                t->intelligentSimplify();
+                comp.reset(new NContainer());
+                nComp = t->splitIntoComponents(comp.get(), false);
+
+                sDouble.reset(doubleSurface(s));
+                tDouble.reset(sDouble->cutAlong());
+                tDouble->intelligentSimplify();
+                compDouble.reset(new NContainer());
+                nCompDouble = tDouble->splitIntoComponents(compDouble.get(),
+                    false);
+
+                separating = (s->isTwoSided().isTrue() && nComp > 1);
+
+                expected = (separating ? 2 : 1);
+                if (nComp != expected) {
+                    std::ostringstream msg;
+                    msg << "Cutting along surface #" << i << " for " << triName
+                        << " gives " << nComp << " component(s), not "
+                        << expected << " as expected.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                expected = (separating ? 3 : 2);
+                if (nCompDouble != expected) {
+                    std::ostringstream msg;
+                    msg << "Cutting along double surface #" << i
+                        << " for " << triName
+                        << " gives " << nCompDouble << " component(s), not "
+                        << expected << " as expected.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! t->isValid()) {
+                    std::ostringstream msg;
+                    msg << "Cutting along surface #" << i << " for " << triName
+                        << " gives an invalid triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (! tDouble->isValid()) {
+                    std::ostringstream msg;
+                    msg << "Cutting along double surface #" << i
+                        << " for " << triName
+                        << " gives an invalid triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isIdeal() && ! t->isIdeal()) {
+                    std::ostringstream msg;
+                    msg << "Cutting along surface #" << i
+                        << " for " << triName << " (which is ideal)"
+                        << " gives a non-ideal triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (tri->isIdeal() && ! tDouble->isIdeal()) {
+                    std::ostringstream msg;
+                    msg << "Cutting along double surface #" << i
+                        << " for " << triName << " (which is ideal)"
+                        << " gives a non-ideal triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if ((! tri->isIdeal()) && t->isIdeal()) {
+                    std::ostringstream msg;
+                    msg << "Cutting along surface #" << i
+                        << " for " << triName << " (which is not ideal)"
+                        << " gives an ideal triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if ((! tri->isIdeal()) && tDouble->isIdeal()) {
+                    std::ostringstream msg;
+                    msg << "Cutting along double surface #" << i
+                        << " for " << triName << " (which is not ideal)"
+                        << " gives an ideal triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isOrientable() && ! t->isOrientable()) {
+                    std::ostringstream msg;
+                    msg << "Cutting along surface #" << i
+                        << " for " << triName << " (which is orientable)"
+                        << " gives a non-orientable triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (tri->isOrientable() && ! tDouble->isOrientable()) {
+                    std::ostringstream msg;
+                    msg << "Cutting along double surface #" << i
+                        << " for " << triName << " (which is orientable)"
+                        << " gives a non-orientable triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                for (p = comp->getFirstTreeChild(); p;
+                        p = p->getNextTreeSibling())
+                    if (! static_cast<NTriangulation*>(p)->hasBoundaryFaces()) {
+                        std::ostringstream msg;
+                        msg << "Cutting along surface #" << i
+                            << " for " << triName
+                            << " gives a component with no boundary faces.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                for (p = compDouble->getFirstTreeChild(); p;
+                        p = p->getNextTreeSibling())
+                    if (! static_cast<NTriangulation*>(p)->hasBoundaryFaces()) {
+                        std::ostringstream msg;
+                        msg << "Cutting along double surface #" << i
+                            << " for " << triName
+                            << " gives a component with no boundary faces.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                // The remaining tests only work for closed triangulations.
+                if (! tri->isClosed())
+                    continue;
+
+                // Check the boundaries of components of t.
+                unsigned expectS, expectTwoCopies, expectDoubleCover;
+                unsigned foundS, foundTwoCopies, foundDoubleCover;
+                if (separating) {
+                    expectS = 2;
+                    expectTwoCopies = 0;
+                    expectDoubleCover = 0;
+                } else if (s->isTwoSided().isTrue()) {
+                    expectS = 0;
+                    expectTwoCopies = 1;
+                    expectDoubleCover = 0;
+                } else {
+                    expectS = 0;
+                    expectTwoCopies = 0;
+                    expectDoubleCover = 1;
+                }
+                if (t->getNumberOfBoundaryComponents() !=
+                        expectS + 2 * expectTwoCopies + expectDoubleCover) {
+                    std::ostringstream msg;
+                    msg << "Cutting along surface #" << i << " for " << triName
+                        << " gives the wrong number of boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                foundS = foundTwoCopies = foundDoubleCover = 0;
+                for (p = comp->getFirstTreeChild(); p;
+                        p = p->getNextTreeSibling())
+                    checkBoundaryType(s, static_cast<NTriangulation*>(p),
+                        foundS, foundTwoCopies, foundDoubleCover);
+                if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
+                        foundDoubleCover < expectDoubleCover) {
+                    std::ostringstream msg;
+                    msg << "Cutting along surface #" << i << " for " << triName
+                        << " gives boundary components of the wrong type.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // Check the boundaries of components of tDouble.
+                if (separating) {
+                    expectS = 2;
+                    expectTwoCopies = 1;
+                    expectDoubleCover = 0;
+                } else if (s->isTwoSided().isTrue()) {
+                    expectS = 0;
+                    expectTwoCopies = 2;
+                    expectDoubleCover = 0;
+                } else {
+                    expectS = 0;
+                    expectTwoCopies = 0;
+                    expectDoubleCover = 2;
+                }
+                if (tDouble->getNumberOfBoundaryComponents() !=
+                        expectS + 2 * expectTwoCopies + expectDoubleCover) {
+                    std::ostringstream msg;
+                    msg << "Cutting along double surface #" << i
+                        << " for " << triName
+                        << " gives the wrong number of boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                foundS = foundTwoCopies = foundDoubleCover = 0;
+                for (p = compDouble->getFirstTreeChild(); p;
+                        p = p->getNextTreeSibling())
+                    checkBoundaryType(s, static_cast<NTriangulation*>(p),
+                        foundS, foundTwoCopies, foundDoubleCover);
+                if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
+                        foundDoubleCover < expectDoubleCover) {
+                    std::ostringstream msg;
+                    msg << "Cutting along double surface #" << i
+                        << " for " << triName
+                        << " gives boundary components of the wrong type.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // Look for the product piece when cutting along the
+                // double surface.
+                for (p = compDouble->getFirstTreeChild(); p;
+                        p = p->getNextTreeSibling()) {
+                    if (s->isTwoSided().isTrue()) {
+                        if (mightBeUntwistedProduct(
+                                static_cast<NTriangulation*>(p)))
+                            break;
+                    } else {
+                        if (mightBeTwistedProduct(
+                                static_cast<NTriangulation*>(p)))
+                            break;
+                    }
+                }
+                if (! p) {
+                    std::ostringstream msg;
+                    msg << "Cutting along double surface #" << i
+                        << " for " << triName
+                        << " does not yield a product piece as expected.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            delete list;
+        }
+
+        static bool testCutAlongCensus(NTriangulation* tri, void* triName) {
+            testCutAlong(tri, static_cast<const char*>(triName));
+            return false;
+        }
+
+        void cutAlongConstructed() {
+            testCutAlong(&oneTet, "a single tetrahedron");
+            testCutAlong(&figure8, "the figure eight knot complement");
+            testCutAlong(&gieseking, "the Gieseking manifold");
+            testCutAlong(&S3, "the 3-sphere");
+            testCutAlong(&loopC2, "the untwisted layered loop C(2)");
+            testCutAlong(&loopCtw3, "the twisted layered loop C~(3)");
+            testCutAlong(&largeS3, "a non-minimal S^3");
+            testCutAlong(&largeRP3, "a non-minimal RP^3");
+            testCutAlong(&twistedKxI,
+                "a 3-tetrahedron non-orientable twisted KxI");
+            testCutAlong(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+        }
+
+        void cutAlongCensus() {
+            NContainer* parent = new NContainer();
+
+            // Closed compact triangulations:
+            NCensus::formCensus(parent, SMALL_CLOSED_COMPACT_CENSUS_SIZE,
+                NBoolSet::sTrue /* finite */,
+                NBoolSet::sBoth /* orientable */,
+                NBoolSet::sFalse /* bounded */,
+                -1, 0, &testCutAlongCensus,
+                const_cast<char*>("closed compact census triangulation"));
+
+            // Bounded compact triangulations:
+            NCensus::formCensus(parent, SMALL_BOUNDED_COMPACT_CENSUS_SIZE,
+                NBoolSet::sTrue /* finite */,
+                NBoolSet::sBoth /* orientable */,
+                NBoolSet::sTrue /* bounded */,
+                -1, 0, &testCutAlongCensus,
                 const_cast<char*>("bounded compact census triangulation"));
 
             delete parent;

@@ -2,7 +2,7 @@ Documentation for setting up GNU/Linux distributions in chroots
 ---------------------------------------------------------------
 
 The various text files in this directory document what I've done on my
-debian etch system to set up several different chroots with several
+debian lenny system to set up several different chroots with several
 different "guest" GNU/Linux distributions, with the specific aim of
 packaging Regina for these distributions.
 

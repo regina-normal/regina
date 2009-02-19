@@ -301,78 +301,6 @@ class NIsomorphismDirect : public NIsomorphism {
         virtual NPerm facePerm(unsigned sourceTet) const;
 };
 
-/**
- * An isomorphism in which face permutations are stored as indices into
- * the NPerm::S4 array.
- * It is easy to iterate through possible face permutations, but there
- * is no direct write-access to the permutations themselves.
- *
- * See the NIsomorphism class notes for further details on the types of
- * isomorphism that can be represented.
- *
- * \ifacespython Not present.
- */
-class NIsomorphismIndexed : public NIsomorphism {
-    private:
-        int* mIndex;
-            /**< The index into the NPerm::S4 array representing the
-                 permutation applied to the four faces of each source
-                 tetrahedron. */
-
-    public:
-        /**
-         * Creates a new isomorphism with no initialisation.
-         *
-         * @param newSourceTetrahedra the number of tetrahedra in the
-         * source triangulation associated with this isomorphism; this
-         * may be zero.
-         */
-        NIsomorphismIndexed(unsigned newSourceTetrahedra);
-        /**
-         * Creates a new isomorphism identical to the given isomorphism.
-         *
-         * @param cloneMe the isomorphism upon which to base the new
-         * isomorphism.
-         */
-        NIsomorphismIndexed(const NIsomorphismIndexed& cloneMe);
-        /**
-         * Destroys this isomorphism.
-         */
-        virtual ~NIsomorphismIndexed();
-
-        virtual NPerm facePerm(unsigned sourceTet) const;
-
-        /**
-         * Returns a read-write reference to the index into
-         * array NPerm::S4 that points to
-         * the permutation that is applied to the four faces of the
-         * given source tetrahedron under this isomorphism.
-         * Face \a i of tetrahedron \a sourceTet will be mapped to face
-         * <tt>NPerm::S4[facePermIndex(sourceTet)][i]</tt> of tetrahedron
-         * <tt>tetImage(sourceTet)</tt>.
-         *
-         * @param sourceTet the index of the source tetrahedron containing
-         * the original four faces; this must be between 0 and
-         * <tt>getSourceTetrahedra()-1</tt> inclusive.
-         * @return a read-write reference to the corresponding array index.
-         */
-        int& facePermIndex(unsigned sourceTet);
-        /**
-         * Returns the index into the array NPerm::S4 that points to
-         * the permutation that is applied to the four faces of the
-         * given source tetrahedron under this isomorphism.
-         * Face \a i of tetrahedron \a sourceTet will be mapped to face
-         * <tt>NPerm::S4[facePermIndex(sourceTet)][i]</tt> of tetrahedron
-         * <tt>tetImage(sourceTet)</tt>.
-         *
-         * @param sourceTet the index of the source tetrahedron containing
-         * the original four faces; this must be between 0 and
-         * <tt>getSourceTetrahedra()-1</tt> inclusive.
-         * @return the corresponding array index.
-         */
-        int facePermIndex(unsigned sourceTet) const;
-};
-
 /*@}*/
 
 // Inline functions for NIsomorphism
@@ -418,28 +346,6 @@ inline NPerm& NIsomorphismDirect::facePerm(unsigned sourceTet) {
 }
 inline NPerm NIsomorphismDirect::facePerm(unsigned sourceTet) const {
     return mFacePerm[sourceTet];
-}
-
-// Inline functions for NIsomorphismIndexed
-
-inline NIsomorphismIndexed::NIsomorphismIndexed(unsigned newSourceTetrahedra) :
-        NIsomorphism(newSourceTetrahedra),
-        mIndex(newSourceTetrahedra > 0 ?
-            new int[newSourceTetrahedra] : 0) {
-}
-inline NIsomorphismIndexed::~NIsomorphismIndexed() {
-    if (mIndex)
-        delete[] mIndex;
-}
-
-inline NPerm NIsomorphismIndexed::facePerm(unsigned sourceTet) const {
-    return NPerm::S4[mIndex[sourceTet]];
-}
-inline int& NIsomorphismIndexed::facePermIndex(unsigned sourceTet) {
-    return mIndex[sourceTet];
-}
-inline int NIsomorphismIndexed::facePermIndex(unsigned sourceTet) const {
-    return mIndex[sourceTet];
 }
 
 } // namespace regina
