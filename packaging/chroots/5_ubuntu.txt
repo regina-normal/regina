@@ -1,7 +1,7 @@
-Setting up ubuntu chroots under debian etch (amd64)
----------------------------------------------------
+Setting up ubuntu chroots under debian lenny (amd64)
+----------------------------------------------------
 
-This file documents what I've done on my debian etch system to set up
+This file documents what I've done on my debian lenny system to set up
 i386 and amd64 chroots in which I can build and test ubuntu packages for
 regina.
 
@@ -12,7 +12,7 @@ intended for general use.  See NOTES.txt for further information.
 System layout
 -------------
 
-- All work is done under debian etch (the "host system").
+- All work is done under debian lenny (the "host system").
 
 - /srv/chroot/ubuntu is a directory on the host system containing one
   subdirectory for each ubuntu chroot (the "guest systems").  This is
@@ -20,15 +20,13 @@ System layout
   chroots it is 91% full).
 
 
-Host (debian etch) configuration
---------------------------------
+Host (debian lenny) configuration
+---------------------------------
 
 - Follow the steps described in 0_init-schroot.txt to set up schroot on
   the host debian system.
 
 - Install debootstrap from sid (which has ubuntu hooks).
-
-- Install hpilp (to avoid later errors in $CHROOT/var/lib/dpkg/statoverride).
 
 - Mount the ubuntu partition as /srv/chroot/ubuntu:
 
