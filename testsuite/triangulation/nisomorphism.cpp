@@ -39,7 +39,6 @@
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NIsomorphism;
-using regina::NIsomorphismDirect;
 using regina::NPerm;
 using regina::NTetrahedron;
 using regina::NTriangulation;
@@ -118,7 +117,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
 
             unsigned* facePermIndex = new unsigned[n];
 
-            NIsomorphismDirect iso(n);
+            NIsomorphism iso(n);
             unsigned long which = 0;
             do {
                 // We have a permutation of tetrahedra.

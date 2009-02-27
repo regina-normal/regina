@@ -33,20 +33,30 @@
 
 namespace regina {
 
+NIsomorphism::NIsomorphism(const NIsomorphism& cloneMe) :
+        nTetrahedra(cloneMe.nTetrahedra),
+        mTetImage(cloneMe.nTetrahedra > 0 ?
+            new int[cloneMe.nTetrahedra] : 0),
+        mFacePerm(cloneMe.nTetrahedra > 0 ?
+            new NPerm[cloneMe.nTetrahedra] : 0) {
+    std::copy(cloneMe.mTetImage, cloneMe.mTetImage + nTetrahedra, mTetImage);
+    std::copy(cloneMe.mFacePerm, cloneMe.mFacePerm + nTetrahedra, mFacePerm);
+}
+
 void NIsomorphism::writeTextShort(std::ostream& out) const {
     out << "Isomorphism between triangulations";
 }
 
 void NIsomorphism::writeTextLong(std::ostream& out) const {
     for (unsigned i = 0; i < nTetrahedra; i++)
-        out << i << " -> " << tetImage(i) << " (" << facePerm(i) << ")\n";
+        out << i << " -> " << mTetImage[i] << " (" << mFacePerm[i] << ")\n";
 }
 
 bool NIsomorphism::isIdentity() const {
     for (unsigned t = 0; t < nTetrahedra; t++) {
         if (mTetImage[t] != static_cast<int>(t))
             return false;
-        if (! facePerm(t).isIdentity())
+        if (! mFacePerm[t].isIdentity())
             return false;
     }
     return true;
@@ -80,10 +90,10 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
                 // Make the gluing from one side only.
                 if (adjTetIndex > t || (adjTetIndex == t &&
                         gluingPerm[f] > f))
-                    tet[tetImage(t)]->joinTo(facePerm(t)[f],
-                        tet[tetImage(adjTetIndex)],
-                        facePerm(adjTetIndex) * gluingPerm *
-                            facePerm(t).inverse());
+                    tet[mTetImage[t]]->joinTo(mFacePerm[t][f],
+                        tet[mTetImage[adjTetIndex]],
+                        mFacePerm[adjTetIndex] * gluingPerm *
+                            mFacePerm[t].inverse());
             }
     }
 
@@ -94,7 +104,7 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
 }
 
 NIsomorphism* NIsomorphism::random(unsigned nTetrahedra) {
-    NIsomorphismDirect* ans = new NIsomorphismDirect(nTetrahedra);
+    NIsomorphism* ans = new NIsomorphism(nTetrahedra);
 
     // Randomly choose the destination tetrahedra.
     unsigned i;
@@ -104,19 +114,9 @@ NIsomorphism* NIsomorphism::random(unsigned nTetrahedra) {
 
     // Randomly choose the individual permutations.
     for (i = 0; i < nTetrahedra; i++)
-        ans->facePerm(i) = NPerm::S4[rand() % 24];
+        ans->mFacePerm[i] = NPerm::S4[rand() % 24];
 
     return ans;
-}
-
-NIsomorphismDirect::NIsomorphismDirect(const NIsomorphism& cloneMe) :
-        NIsomorphism(cloneMe.getSourceTetrahedra()),
-        mFacePerm(cloneMe.getSourceTetrahedra()> 0 ?
-            new NPerm[cloneMe.getSourceTetrahedra()] : 0) {
-    for (unsigned i = 0; i < nTetrahedra; i++) {
-        mTetImage[i] = cloneMe.tetImage(i);
-        mFacePerm[i] = cloneMe.facePerm(i);
-    }
 }
 
 } // namespace regina

@@ -36,6 +36,8 @@ using regina::NIsomorphism;
 namespace {
     int (NIsomorphism::*tetImage_const)(unsigned) const =
         &NIsomorphism::tetImage;
+    regina::NPerm (NIsomorphism::*facePerm_const)(unsigned) const =
+        &NIsomorphism::facePerm;
 
     regina::NTetFace iso_getItem(const NIsomorphism& iso,
             const regina::NTetFace& f) {
@@ -46,10 +48,10 @@ namespace {
 void addNIsomorphism() {
     class_<NIsomorphism, bases<regina::ShareableObject>,
             std::auto_ptr<NIsomorphism>, boost::noncopyable>
-            ("NIsomorphism", no_init)
+            ("NIsomorphism", init<const NIsomorphism&>())
         .def("getSourceTetrahedra", &NIsomorphism::getSourceTetrahedra)
         .def("tetImage", tetImage_const)
-        .def("facePerm", &NIsomorphism::facePerm)
+        .def("facePerm", facePerm_const)
         .def("__getitem__", iso_getItem)
         .def("isIdentity", &NIsomorphism::isIdentity)
         .def("apply", &NIsomorphism::apply,

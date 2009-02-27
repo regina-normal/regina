@@ -78,10 +78,6 @@ class NTriangulation;
  * Note that in all cases triangulation U may contain more tetrahedra
  * than triangulation T.
  *
- * This class cannot be directly instantiated; the individual subclasses
- * correspond to different methods of storing the face permutations
- * associated with each tetrahedron.
- *
  * \testpart
  *
  * \todo \feature Composition of isomorphisms.
@@ -93,12 +89,31 @@ class NIsomorphism : public ShareableObject {
         int* mTetImage;
             /**< The tetrahedron of the destination triangulation that
                  each tetrahedron of the source triangulation maps to. */
+        NPerm* mFacePerm;
+            /**< The permutation applied to the four faces of each
+                 source tetrahedron. */
 
     public:
         /**
+         * Creates a new isomorphism with no initialisation.
+         *
+         * \ifacespython Not present.
+         *
+         * @param sourceTetrahedra the number of tetrahedra in the source
+         * triangulation associated with this isomorphism; this may be zero.
+         */
+        NIsomorphism(unsigned sourceTetrahedra);
+        /**
+         * Creates a new isomorphism identical to the given isomorphism.
+         *
+         * @param cloneMe the isomorphism upon which to base the new
+         * isomorphism.
+         */
+        NIsomorphism(const NIsomorphism& cloneMe);
+        /**
          * Destroys this isomorphism.
          */
-        virtual ~NIsomorphism();
+        ~NIsomorphism();
 
         /**
          * Returns the number of tetrahedra in the source triangulation
@@ -134,6 +149,24 @@ class NIsomorphism : public ShareableObject {
          */
         int tetImage(unsigned sourceTet) const;
         /**
+         * Returns a read-write reference to the permutation that is
+         * applied to the four faces of the given source tetrahedron
+         * under this isomorphism.
+         * Face \a i of source tetrahedron \a sourceTet will be mapped to
+         * face <tt>facePerm(sourceTet)[i]</tt> of tetrahedron
+         * <tt>tetImage(sourceTet)</tt>.
+         *
+         * \ifacespython Not present, though the read-only version of this
+         * routine is.
+         *
+         * @param sourceTet the index of the source tetrahedron containing
+         * the original four faces; this must be between 0 and
+         * <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * @return a read-write reference to the permutation applied to the
+         * four faces of the source tetrahedron.
+         */
+        NPerm& facePerm(unsigned sourceTet);
+        /**
          * Determines the permutation that is applied to the four faces
          * of the given source tetrahedron under this isomorphism.
          * Face \a i of source tetrahedron \a sourceTet will be mapped to
@@ -146,7 +179,7 @@ class NIsomorphism : public ShareableObject {
          * @return the permutation applied to the four faces of the
          * source tetrahedron.
          */
-        virtual NPerm facePerm(unsigned sourceTet) const = 0;
+        NPerm facePerm(unsigned sourceTet) const;
         /**
          * Determines the image of the given source tetrahedron face
          * under this isomorphism.  Note that a value only is returned; this
@@ -234,42 +267,31 @@ class NIsomorphism : public ShareableObject {
          * @return the newly constructed random isomorphism.
          */
         static NIsomorphism* random(unsigned nTetrahedra);
-
-    protected:
-        /**
-         * Creates a new isomorphism with no initialisation.
-         *
-         * @param newSourceTetrahedra the number of tetrahedra in the source
-         * triangulation; this may be zero.
-         */
-        NIsomorphism(unsigned newSourceTetrahedra);
 };
 
 /**
- * An isomorphism in which face permutations are stored directly.
- * There is direct write-access to the individual face permutations, but
- * no simple method of iterating through possible face permutations.
+ * A deprecated synonym for NIsomorphism, provided for backward
+ * compatibility only.  See NIsomorphism for further details (and please
+ * use the NIsomorphism class instead).
  *
- * See the NIsomorphism class notes for further details on the types of
- * isomorphism that can be represented.
+ * \deprecated All of the functionality that NIsomorphismDirect used to
+ * provide in old versions of Regina has now been moved into the parent class
+ * NIsomorphism.  The NIsomorphismDirect class is now an empty subclass of
+ * NIsomorphism, provided for backward compatibility only, and should not
+ * be used in new applications.  This class will be removed from Regina
+ * in the near future.
  *
  * \ifacespython Not present.
  */
 class NIsomorphismDirect : public NIsomorphism {
-    private:
-        NPerm* mFacePerm;
-            /**< The permutation applied to the four faces of each
-                 source tetrahedron. */
-
     public:
         /**
          * Creates a new isomorphism with no initialisation.
          *
-         * @param newSourceTetrahedra the number of tetrahedra in the source
-         * triangulation associated with this isomorphism; this may be
-         * zero.
+         * @param sourceTetrahedra the number of tetrahedra in the source
+         * triangulation associated with this isomorphism; this may be zero.
          */
-        NIsomorphismDirect(unsigned newSourceTetrahedra);
+        NIsomorphismDirect(unsigned sourceTetrahedra);
         /**
          * Creates a new isomorphism identical to the given isomorphism.
          *
@@ -277,42 +299,22 @@ class NIsomorphismDirect : public NIsomorphism {
          * isomorphism.
          */
         NIsomorphismDirect(const NIsomorphism& cloneMe);
-        /**
-         * Destroys this isomorphism.
-         */
-        virtual ~NIsomorphismDirect();
-
-        /**
-         * Returns a read-write reference to the permutation that is
-         * applied to the four faces of the given source tetrahedron
-         * under this isomorphism.
-         * Face \a i of source tetrahedron \a sourceTet will be mapped to
-         * face <tt>facePerm(sourceTet)[i]</tt> of tetrahedron
-         * <tt>tetImage(sourceTet)</tt>.
-         *
-         * @param sourceTet the index of the source tetrahedron containing
-         * the original four faces; this must be between 0 and
-         * <tt>getSourceTetrahedra()-1</tt> inclusive.
-         * @return a read-write reference to the permutation applied to the
-         * four faces of the source tetrahedron.
-         */
-        NPerm& facePerm(unsigned sourceTet);
-
-        virtual NPerm facePerm(unsigned sourceTet) const;
 };
 
 /*@}*/
 
 // Inline functions for NIsomorphism
 
-inline NIsomorphism::NIsomorphism(unsigned newSourceTetrahedra) :
-        nTetrahedra(newSourceTetrahedra),
-        mTetImage(newSourceTetrahedra > 0 ?
-            new int[newSourceTetrahedra] : 0) {
+inline NIsomorphism::NIsomorphism(unsigned sourceTetrahedra) :
+        nTetrahedra(sourceTetrahedra),
+        mTetImage(sourceTetrahedra > 0 ?
+            new int[sourceTetrahedra] : 0),
+        mFacePerm(sourceTetrahedra > 0 ?
+            new NPerm[sourceTetrahedra] : 0) {
 }
 inline NIsomorphism::~NIsomorphism() {
-    if (mTetImage)
-        delete[] mTetImage;
+    delete[] mTetImage;
+    delete[] mFacePerm;
 }
 
 inline unsigned NIsomorphism::getSourceTetrahedra() const {
@@ -325,27 +327,25 @@ inline int& NIsomorphism::tetImage(unsigned sourceTet) {
 inline int NIsomorphism::tetImage(unsigned sourceTet) const {
     return mTetImage[sourceTet];
 }
+
+inline NPerm& NIsomorphism::facePerm(unsigned sourceTet) {
+    return mFacePerm[sourceTet];
+}
+inline NPerm NIsomorphism::facePerm(unsigned sourceTet) const {
+    return mFacePerm[sourceTet];
+}
+
 inline NTetFace NIsomorphism::operator [] (const NTetFace& source) const {
-    return NTetFace(mTetImage[source.tet], facePerm(source.tet)[source.face]);
+    return NTetFace(mTetImage[source.tet], mFacePerm[source.tet][source.face]);
 }
 
 // Inline functions for NIsomorphismDirect
 
-inline NIsomorphismDirect::NIsomorphismDirect(unsigned newSourceTetrahedra) :
-        NIsomorphism(newSourceTetrahedra),
-        mFacePerm(newSourceTetrahedra > 0 ?
-            new NPerm[newSourceTetrahedra] : 0) {
+inline NIsomorphismDirect::NIsomorphismDirect(unsigned sourceTetrahedra) :
+        NIsomorphism(sourceTetrahedra) {
 }
-inline NIsomorphismDirect::~NIsomorphismDirect() {
-    if (mFacePerm)
-        delete[] mFacePerm;
-}
-
-inline NPerm& NIsomorphismDirect::facePerm(unsigned sourceTet) {
-    return mFacePerm[sourceTet];
-}
-inline NPerm NIsomorphismDirect::facePerm(unsigned sourceTet) const {
-    return mFacePerm[sourceTet];
+inline NIsomorphismDirect::NIsomorphismDirect(const NIsomorphism& cloneMe) :
+        NIsomorphism(cloneMe) {
 }
 
 } // namespace regina

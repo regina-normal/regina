@@ -60,7 +60,7 @@ class NTriangulation;
  * pairwise matching of tetrahedron faces (as described by class
  * NFacePairing) into another.
  */
-typedef std::list<NIsomorphismDirect*> NFacePairingIsoList;
+typedef std::list<NIsomorphism*> NFacePairingIsoList;
 
 /**
  * A routine used to do arbitrary processing upon a pairwise matching of

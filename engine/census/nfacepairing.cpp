@@ -1070,7 +1070,7 @@ void* NFacePairing::run(void* param) {
             if (isCanonicalInternal(allAutomorphisms)) {
                 args->use(this, &allAutomorphisms, args->useArgs);
                 for_each(allAutomorphisms.begin(), allAutomorphisms.end(),
-                    FuncDelete<NIsomorphismDirect>());
+                    FuncDelete<NIsomorphism>());
                 allAutomorphisms.clear();
             }
 
@@ -1161,9 +1161,9 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
     // special-case the situation in which there are no face gluings at all.
     if (isUnmatched(0, 0)) {
         // We must have just one tetrahedron with no face gluings at all.
-        NIsomorphismDirect* ans;
+        NIsomorphism* ans;
         for (int i = 0; i < 24 /* size of S4 */; ++i) {
-            ans = new NIsomorphismDirect(1);
+            ans = new NIsomorphism(1);
             ans->tetImage(0) = 0;
             ans->facePerm(0) = NPerm::S4[i];
             list.push_back(ans);
@@ -1209,8 +1209,7 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
         // If firstFace doesn't glue to the same tetrahedron but this
         // face does, we're not in canonical form.
         if (firstFaceDest.tet != 0 && firstDestPre.tet == preImage[0].tet) {
-            for_each(list.begin(), list.end(),
-                FuncDelete<NIsomorphismDirect>());
+            for_each(list.begin(), list.end(), FuncDelete<NIsomorphism>());
             list.clear();
             delete[] image;
             delete[] preImage;
@@ -1243,7 +1242,7 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
 
             if (trying.isPastEnd(nTetrahedra, true)) {
                 // We have a complete automorphism!
-                NIsomorphismDirect* ans = new NIsomorphismDirect(nTetrahedra);
+                NIsomorphism* ans = new NIsomorphism(nTetrahedra);
                 for (i = 0; i < nTetrahedra; i++) {
                     ans->tetImage(i) = image[i * 4].tet;
                     ans->facePerm(i) = NPerm(image[i * 4].face,
@@ -1282,7 +1281,7 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                         if (isUnmatched(trying) && (! isUnmatched(pre))) {
                             // We're not in canonical form.
                             for_each(list.begin(), list.end(),
-                                FuncDelete<NIsomorphismDirect>());
+                                FuncDelete<NIsomorphism>());
                             list.clear();
                             delete[] image;
                             delete[] preImage;
@@ -1363,7 +1362,7 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                     } else if (fPre < fImg) {
                         // Whapow, we're not in canonical form.
                         for_each(list.begin(), list.end(),
-                            FuncDelete<NIsomorphismDirect>());
+                            FuncDelete<NIsomorphism>());
                         list.clear();
                         delete[] image;
                         delete[] preImage;
