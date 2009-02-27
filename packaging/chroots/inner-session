@@ -68,11 +68,13 @@ case "$os" in
 		distro=Hardy
 		dbus=1
 		exitwait=1
+		xephyr=1
 		;;
 	Ubuntu\ 8.10* )
 		distro=Intrepid
 		dbus=1
 		exitwait=1
+		xephyr=1
 		;;
 	Debian\ GNU/Linux\ 5.0\ * )
 		distro=Lenny
@@ -147,6 +149,12 @@ case "$os" in
 		;;
 	?Welcome\ to\ openSUSE\ 10.3\ * )
 		distro="SuSE 10.3"
+		exitwait=1
+		kde=1
+		xephyr=1
+		;;
+	?Welcome\ to\ openSUSE\ 11.0\ * )
+		distro="SuSE 11.0"
 		exitwait=1
 		kde=1
 		xephyr=1
