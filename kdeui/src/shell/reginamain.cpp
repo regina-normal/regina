@@ -41,6 +41,7 @@
 #include <kaccel.h>
 #include <kaction.h>
 #include <kactionclasses.h>
+#include <kapplication.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kedittoolbar.h>
@@ -331,6 +332,26 @@ void ReginaMain::helpTipOfDay() {
     KTipDialog::showTip(this, QString::null, true);
 }
 
+void ReginaMain::helpTrouble() {
+    KApplication::kApplication()->invokeHelp("troubleshooting");
+}
+
+void ReginaMain::helpNoHelp() {
+    KMessageBox::information(this,
+        i18n("<qt>If you cannot view the Regina Handbook, it is probably "
+            "because you do not have the KDE3 Help Center installed.<p>"
+            "Some users can fix this easily by installing the appropriate "
+            "package (such as <tt>khelpcenter</tt> or <tt>kdebase3</tt>).<p>"
+            "Some users cannot fix this problem, because their "
+            "GNU/Linux distribution has moved to KDE4 and no longer supports "
+            "KDE3 (for instance, recent Ubuntu releases).<p>"
+            "If all else fails, remember that you can always read the "
+            "Regina Handbook online at "
+            "<a href=\"http://regina.sourceforge.net/\">regina.sourceforge.net</a>.  "
+            "Just follow the <i>Documentation</i> links.</qt>"),
+        i18n("Handbook won't open?"));
+}
+
 /*
 void ReginaMain::changeStatusbar(const QString& text) {
     statusBar()->message(text);
@@ -416,6 +437,10 @@ void ReginaMain::setupActions() {
 
     new KAction(i18n("&Tip of the Day"), "idea", 0, this,
         SLOT(helpTipOfDay()), actionCollection(), "help_tipofday");
+    new KAction(i18n("Tr&oubleshooting"), "messagebox_warning", 0, this,
+        SLOT(helpTrouble()), actionCollection(), "help_trouble");
+    new KAction(i18n("Handbook won't open?"), "", 0, this,
+        SLOT(helpNoHelp()), actionCollection(), "help_nohelp");
 
     // All done!  Build the GUI.
     createGUI(0);

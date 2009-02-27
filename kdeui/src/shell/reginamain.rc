@@ -33,6 +33,8 @@
   <Menu name="help">
     <Action name="help_engine"/>
     <Action name="help_tipofday"/>
+    <Action name="help_trouble"/>
+    <Action name="help_nohelp"/>
   </Menu>
 </MenuBar>
 

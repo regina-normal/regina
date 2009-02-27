@@ -34,6 +34,7 @@
 #include <kapplication.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <krun.h>
 #include <qfile.h>
 #include <qfileinfo.h>
 
@@ -55,7 +56,8 @@ void PythonManager::openPythonReference(QWidget* parent) {
     QString index = docDir + "/modules.html";
 
     if (QFileInfo(index).exists())
-        KApplication::kApplication()->invokeBrowser("file:" + index);
+        new KRun("file:" + index, 0, true /* local file */,
+            false /* progress info */);
     else
         KMessageBox::sorry(parent, i18n("<qt>The Python reference could "
             "not be found.  Perhaps it is not installed?<p>"

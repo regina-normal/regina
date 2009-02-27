@@ -196,6 +196,10 @@ Version 4.6  [ (under development) ]
           menu item.  The shortcut letter for "Crush" has changed as well.
         - Normal surfaces are now individually numbered within surface lists,
           which should make it easier to keep track of which is which.
+        - Added "Troubleshooting" and "Handbook won't open?" entries to
+          the Help menu, to make it easier to find solutions if things break.
+        - The "Python Reference" entry in the Help menu should now work
+          even when konqueror is not installed.
     TEST SUITE:
         - Added very thorough tests for NPerm.
         - Additional tests for triangulation simplification and Euler

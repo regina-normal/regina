@@ -215,6 +215,8 @@ class ReginaMain : public KParts::MainWindow,
         void optionsConfigureEditor();
         void optionsPreferences();
         void helpTipOfDay();
+        void helpTrouble();
+        void helpNoHelp();
 
         // void changeStatusbar(const QString& text);
         void changeCaption(const QString& text);
