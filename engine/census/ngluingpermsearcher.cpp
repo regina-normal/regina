@@ -79,8 +79,7 @@ NGluingPermSearcher::~NGluingPermSearcher() {
         // We made them, so we'd better remove the const again and
         // delete them.
         NFacePairingIsoList* autos = const_cast<NFacePairingIsoList*>(autos_);
-        std::for_each(autos->begin(), autos->end(),
-            FuncDelete<NIsomorphismDirect>());
+        std::for_each(autos->begin(), autos->end(), FuncDelete<NIsomorphism>());
         delete autos;
     }
 }
@@ -379,7 +378,7 @@ bool NGluingPermSearcher::isCanonical() const {
     NTetFace face, faceDest, faceImage;
     int ordering;
 
-    for (std::list<NIsomorphismDirect*>::const_iterator it = autos_->begin();
+    for (NFacePairingIsoList::const_iterator it = autos_->begin();
             it != autos_->end(); it++) {
         // Compare the current set of gluing permutations with its
         // preimage under each face pairing automorphism, to see whether

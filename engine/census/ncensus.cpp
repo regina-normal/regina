@@ -97,7 +97,7 @@ unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
         census.whichPurge, NCensus::foundGluingPerms, &census);
 
     // Clean up.
-    std::for_each(autos.begin(), autos.end(), FuncDelete<NIsomorphismDirect>());
+    std::for_each(autos.begin(), autos.end(), FuncDelete<NIsomorphism>());
     return census.whichSoln - 1;
 }
 

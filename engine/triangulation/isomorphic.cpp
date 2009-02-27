@@ -68,7 +68,7 @@ unsigned long NTriangulation::findIsomorphisms(
     if (tetrahedra.empty()) {
         if (completeIsomorphism && ! other.tetrahedra.empty())
             return 0;
-        results.push_back(new NIsomorphismDirect(0));
+        results.push_back(new NIsomorphism(0));
         return 1;
     }
 
@@ -190,7 +190,7 @@ unsigned long NTriangulation::findIsomorphisms(
     unsigned long nComponents = components.size();
     unsigned i;
 
-    NIsomorphismDirect iso(nTetrahedra);
+    NIsomorphism iso(nTetrahedra);
     for (i = 0; i < nTetrahedra; i++)
         iso.tetImage(i) = -1;
 
@@ -229,8 +229,7 @@ unsigned long NTriangulation::findIsomorphisms(
         // startTet[comp] and startPerm[comp].
         if (comp == static_cast<long>(nComponents)) {
             // We have an isomorphism!!!
-            results.push_back(new NIsomorphismDirect(
-                static_cast<NIsomorphism&>(iso)));
+            results.push_back(new NIsomorphism(iso));
 
             if (firstOnly) {
                 delete[] whichComp;
