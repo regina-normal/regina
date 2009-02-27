@@ -73,6 +73,8 @@
   <!ENTITY java "<application>Java</application>">
   <!ENTITY hom1 "H<subscript>1</subscript>">
   <!ENTITY html "<acronym>HTML</acronym>">
+  <!ENTITY kde3 "&kde;&nbsp;3">
+  <!ENTITY kde4 "&kde;&nbsp;4">
   <!ENTITY kdegraphics "<productname>kdegraphics</productname>">
   <!ENTITY kghostview "<application>KGhostView</application>">
   <!ENTITY khelpcenter "<application>&kde; Help Center</application>">
@@ -114,6 +116,7 @@
   <!ENTITY trist "triangular solid torus">
   <!ENTITY trists "triangular solid tori">
   <!ENTITY twopi "<literal>2*Pi</literal>">
+  <!ENTITY ubuntu "<productname>Ubuntu</productname>">
   <!ENTITY url "<acronym>URL</acronym>">
   <!ENTITY utf8 "<acronym>UTF-8</acronym>">
   <!ENTITY varM "<replaceable>M</replaceable>">

@@ -294,21 +294,35 @@ checking host system type... i686-pc-linux-gnu
     </para></question>
     <answer>
      <para>
-      There are two common causes for this problem, each outlined below.
-      However, if all else fails you can always download
-      the handbook in &html; format directly from the
-      &regdownloadsite;, or you can simply
+      First, remember that if all else fails you can download
+      the handbook in &html; format directly from the &regdownloadsite;,
+      or you can simply
       <ulink url="http://regina.sourceforge.net/docs/">read it online</ulink>.
+     </para>
+     <para>
+      There are two common causes for this problem:
+      (i)&nbsp;the &khelpcenter; is not installed, or
+      (ii)&nbsp;the &regina; handbook is installed in the wrong location.
       <itemizedlist>
-       <listitem><para>
-        If you get an error such as &quot;Could not launch the &kde; Help
-        Center&quot; or &quot;Could not find khelpcenter executable&quot;,
-        you probably do not have the &khelpcenter; installed.  Search your
-        &linux; distribution for the <literal>kdebase</literal> package
-        (some distributions call this <literal>kdebase3</literal>,
-        <literal>kdebase-progs</literal> or <literal>kdebase-unified</literal>).
-        Hopefully installing this package will make your problem go away.
-       </para></listitem>
+       <listitem>
+        <para>
+         If you get an error such as &quot;Could not launch the &kde; Help
+         Center&quot; or &quot;Could not find khelpcenter executable&quot;,
+         you probably do not have the &khelpcenter; installed.  Search your
+         &linux; distribution for the <literal>kdebase</literal> package
+         (some distributions call this <literal>kdebase3</literal>,
+         <literal>kdebase-progs</literal> or
+         <literal>kdebase-unified</literal>).
+        </para>
+        <para>
+         Note that you will need the &kde3; version of the &khelpcenter;.
+         If your &linux; distribution has moved to &kde4; and no longer
+         supports &kde3; (such as recent &ubuntu; releases), you might not
+         be able to fix this problem at all.  In this case, your best
+         solution is to download the handbook in &html; format or read it
+         online, as described above.
+        </para>
+       </listitem>
        <listitem><para>
         If you get an error such as &quot;There is no documentation available
         for /regina/index.html&quot;, you probably have the &regina;
@@ -317,8 +331,8 @@ checking host system type... i686-pc-linux-gnu
          <listitem><para>
           If you installed &regina; from a ready-made package, please contact
           the package maintainer &mdash; the package has been built incorrectly
-          and needs to be fixed.  For most of the ready-made packages, you
-          can reach the package maintainer by mailing &reguserlist;.
+          and needs to be fixed.  If you are not sure who the maintainer is,
+          please mail &reguserlist; with your problem.
          </para></listitem>
          <listitem>
           <para>
