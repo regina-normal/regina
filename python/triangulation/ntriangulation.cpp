@@ -62,6 +62,8 @@ namespace {
         NTriangulation::shellBoundary, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
         NTriangulation::collapseEdge, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_reorderTetrahedraBFS,
+        NTriangulation::reorderTetrahedraBFS, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
         NTriangulation::splitIntoComponents, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_connectedSumDecomposition,
@@ -244,6 +246,8 @@ void addNTriangulation() {
         .def("shellBoundary", &NTriangulation::shellBoundary,
             OL_shellBoundary())
         .def("collapseEdge", &NTriangulation::collapseEdge, OL_collapseEdge())
+        .def("reorderTetrahedraBFS", &NTriangulation::reorderTetrahedraBFS,
+            OL_reorderTetrahedraBFS())
         .def("splitIntoComponents", &NTriangulation::splitIntoComponents,
             OL_splitIntoComponents())
         .def("connectedSumDecomposition",

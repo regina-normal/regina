@@ -37,6 +37,7 @@
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/nexampletriangulation.h"
+#include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "testsuite/triangulation/testtriangulation.h"
@@ -44,6 +45,7 @@
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
+using regina::NIsomorphism;
 using regina::NPerm;
 using regina::NSignature;
 using regina::NStandardTriangulation;
@@ -68,6 +70,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(dehydration);
     CPPUNIT_TEST(simplification);
+    CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
 
     CPPUNIT_TEST_SUITE_END();
@@ -2119,6 +2122,104 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("Custom solid torus simplifies to "
                     "something different.");
             delete tri;
+        }
+
+        void testReordering(const NTriangulation& t, const char* name) {
+            NTriangulation a(t);
+            a.reorderTetrahedraBFS();
+
+            NTriangulation b(t);
+            b.reorderTetrahedraBFS(true);
+
+            NIsomorphism* iso = NIsomorphism::random(t.getNumberOfTetrahedra());
+            NTriangulation* c = iso->apply(&t);
+            delete iso;
+
+            NTriangulation d(*c);
+            d.reorderTetrahedraBFS();
+
+            NTriangulation e(*c);
+            e.reorderTetrahedraBFS(true);
+
+            if (! t.isIsomorphicTo(a).get()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " changes its isomorphism class when its tetrahedra "
+                    "are reordered in the forward direction.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! t.isIsomorphicTo(b).get()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " changes its isomorphism class when its tetrahedra "
+                    "are reordered in the reverse direction.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! t.isIsomorphicTo(*c).get()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " changes its isomorphism class when a random "
+                    "isomorphism is applied.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! t.isIsomorphicTo(d).get()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " changes its isomorphism class when a random "
+                    "isomorphism is applied and then its tetrahedra are "
+                    "reordered in the forward direction.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! t.isIsomorphicTo(e).get()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " changes its isomorphism class when a random "
+                    "isomorphism is applied and then its tetrahedra are "
+                    "reordered in the reverse direction.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            delete c;
+        }
+
+        void reordering() {
+            testReordering(empty, "Empty triangulation");
+            testReordering(singleTet, "Single tetrahedron");
+            testReordering(s3, "S^3");
+            testReordering(s2xs1, "S^2 x S^1");
+            testReordering(rp3, "RP^3");
+            testReordering(lens3_1, "L(3,1)");
+            testReordering(lens8_3, "L(8,3)");
+            testReordering(lens8_3_large, "Large L(8,3)");
+            testReordering(lens7_1_loop, "Layered loop L(7,1)");
+            testReordering(rp3rp3, "RP^3 # RP^3");
+            testReordering(q32xz3, "S^3 / Q_32 x Z_3");
+            testReordering(q28, "S^3 / Q_28");
+            testReordering(seifertWeber, "Seifert-Weber");
+            testReordering(lens100_1, "L(100,1)");
+            testReordering(ball_large, "4-tetrahedron ball");
+            testReordering(ball_large_pillows, "4-tetrahedron pillow ball");
+            testReordering(ball_large_snapped, "3-tetrahedron snapped ball");
+            testReordering(lst3_4_7, "LST(3,4,7)");
+            testReordering(figure8, "Figure eight knot complement");
+            testReordering(rp2xs1, "RP^2 x S^1");
+            testReordering(solidKB, "Solid Klein bottle");
+            testReordering(gieseking, "Gieseking manifold");
+            testReordering(invalidEdges, "Triangulation with invalid edges");
+            testReordering(twoProjPlaneCusps, "Triangulation with RP^2 cusps");
+            testReordering(cuspedGenusTwoTorus, "Cusped solid genus 2 torus");
+            testReordering(pinchedSolidTorus, "Pinched solid torus");
+            testReordering(pinchedSolidKB, "Pinched solid Klein bottle");
+
+            // Try this with some disconnected triangulations also.
+            {
+                NTriangulation t;
+                t.insertTriangulation(s2xs1);
+                t.insertTriangulation(singleTet);
+                t.insertTriangulation(figure8);
+                testReordering(t, "(S^2 x S^1) U (Single tetrahedron) U "
+                    "(Figure eight knot complement)");
+            }
         }
 
         void propertyUpdates() {

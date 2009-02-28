@@ -1099,4 +1099,62 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
     return true;
 }
 
+void NTriangulation::reorderTetrahedraBFS(bool reverse) {
+    unsigned n = getNumberOfTetrahedra();
+    if (n == 0)
+        return;
+
+    ChangeEventBlock block(this);
+
+    // Run a breadth-first search over all tetrahedra.
+    NTetrahedron** ordered = new NTetrahedron*[n];
+    bool* used = new bool[n];
+
+    std::fill(used, used + n, false);
+    unsigned filled = 0;    /* Placed in the ordered array. */
+    unsigned processed = 0; /* All neighbours placed in the ordered array. */
+    unsigned nextTet = 0;   /* Used to search for connected components. */
+
+    unsigned i;
+    NTetrahedron *tet, *adj;
+    while (processed < n) {
+        if (filled == processed) {
+            // Look for the next connected component.
+            while (used[nextTet])
+                ++nextTet;
+
+            ordered[filled++] = tetrahedra[nextTet];
+            used[nextTet] = true;
+            ++nextTet;
+        }
+
+        tet = ordered[processed];
+
+        // Add all neighbours of tet to the queue.
+        for (i = 0; i < 4; ++i)
+            if ((adj = tet->adjacentTetrahedron(i)))
+                if (! used[adj->markedIndex()]) {
+                    ordered[filled++] = adj;
+                    used[adj->markedIndex()] = true;
+                }
+
+        ++processed;
+    }
+
+    // Flush the tetrahedra from the triangulation, and reinsert them in
+    // the order in which they were found during the breadth-first search.
+    tetrahedra.clear();
+
+    if (reverse) {
+        for (i = n; i > 0; )
+            addTetrahedron(ordered[--i]);
+    } else {
+        for (i = 0; i < n; )
+            addTetrahedron(ordered[i++]);
+    }
+
+    delete[] used;
+    delete[] ordered;
+}
+
 } // namespace regina
