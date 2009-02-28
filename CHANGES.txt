@@ -162,6 +162,8 @@ Version 4.6  [ (under development) ]
             - Fixed bugs in several simplification routines when working
               with invalid triangulations; these sometimes "simplified"
               invalid edges to become valid edges.
+            - New routine reorderTetrahedraBFS() for renumbering tetrahedra
+              in a more sensible fashion.
             - Routines isZeroEfficient() and hasSplittingSurface() now
               operate on a clone of the triangulation, to avoid triggering
               changes to the packet tree.

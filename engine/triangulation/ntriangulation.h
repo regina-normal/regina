@@ -1857,6 +1857,29 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          */
         bool collapseEdge(NEdge* e, bool check = true, bool perform = true);
 
+        /**
+         * Reorders the tetrahedra of this triangulation using a
+         * breadth-first search, so that small-numbered tetrahedra are
+         * adjacent to other small-numbered tetrahedra.
+         *
+         * Specifically, the reordering will operate as follows.
+         * Tetrahedron 0 will remain tetrahedron 0.  Its immediate
+         * neighbours will be numbered 1, 2, 3 and 4 (though if these
+         * neighbours are not distinct then of course fewer labels will
+         * be required).  Their immediate neighbours will in turn be
+         * numbered 5, 6, and so on, ultimately following a breadth-first
+         * search throughout the entire triangulation.
+         *
+         * If the optional argument \a reverse is \c true, then tetrahedron
+         * numbers will be assigned in reverse order.  That is, tetrahedron 0
+         * will become tetrahedron \a n-1, its neighbours will become
+         * tetrahedra \a n-2 down to \a n-5, and so on.
+         *
+         * @param reverse \c true if the new tetrahedron numbers should
+         * be assigned in reverse order, as described above.
+         */
+        void reorderTetrahedraBFS(bool reverse = false);
+
         /*@}*/
         /**
          * (end: Skeletal Transformations)
