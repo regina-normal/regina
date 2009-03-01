@@ -197,6 +197,13 @@
      for details.
     </para></glossdef>
    </glossentry>
+   <glossentry>
+    <glossterm>Default top-level tab</glossterm>
+    <glossdef><para>
+     This specifies which of the many available tabs will be made visible
+     when a new normal surface list viewer is first opened.
+    </para></glossdef>
+   </glossentry>
   </glosslist>
  </sect1>
 

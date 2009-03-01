@@ -197,6 +197,9 @@ Version 4.6  [ (under development) ]
           "3-ball?" entry beneath the current "3-sphere?" entry.
         - Fixed a bug whereby small triangulations occasionally became
           read-only after a user visited the Surfaces panel.
+        - The normal surface list viewer has two additional tabs: one to
+          summarise all surfaces in the list (which is now the default tab),
+          and one to list pairwise compatibilities between surfaces.
         - The normal surface list viewer now has an additional "Cut Along"
           menu item.  The shortcut letter for "Crush" has changed as well.
         - Normal surfaces are now individually numbered within surface lists,

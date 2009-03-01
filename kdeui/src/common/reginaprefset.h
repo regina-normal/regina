@@ -218,6 +218,8 @@ struct ReginaPrefSet {
         /**< Available tabs in a triangulation skeleton viewer. */
     enum TriAlgebraTab { Homology, FundGroup, TuraevViro, CellularInfo };
         /**< Available tabs in a triangulation algebra viewer. */
+    enum SurfacesTab { Summary, Coordinates, Matching, Compatibility };
+        /**< Available top-level tabs in a normal surface list viewer. */
 
     bool autoDock;
         /**< Do we automatically dock new packet
@@ -256,6 +258,9 @@ struct ReginaPrefSet {
              triangulations, even though it's dangerous? */
     int surfacesCreationCoords;
         /**< The default coordinate system for normal surface creation. */
+    SurfacesTab surfacesInitialTab;
+        /**< The initially visible top-level tab for a new normal
+             surface list viewer. */
     unsigned treeJumpSize;
         /**< The number of steps corresponding to a jump up or down in
              the packet tree. */

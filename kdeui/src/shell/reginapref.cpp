@@ -220,6 +220,17 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     surfacePrefs->chooserCreationCoords->setCurrentSystem(
         prefSet.surfacesCreationCoords);
 
+    switch (prefSet.surfacesInitialTab) {
+        case ReginaPrefSet::Coordinates:
+            surfacePrefs->comboInitialTab->setCurrentItem(1); break;
+        case ReginaPrefSet::Matching:
+            surfacePrefs->comboInitialTab->setCurrentItem(2); break;
+        case ReginaPrefSet::Compatibility:
+            surfacePrefs->comboInitialTab->setCurrentItem(3); break;
+        default:
+            surfacePrefs->comboInitialTab->setCurrentItem(0); break;
+    }
+
     pdfPrefs->cbEmbed->setChecked(prefSet.pdfEmbed);
     pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
     pdfPrefs->cbAutoClose->setChecked(prefSet.pdfAutoClose);
@@ -496,6 +507,17 @@ void ReginaPreferences::slotApply() {
     prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
         getCurrentSystem();
 
+    switch (surfacePrefs->comboInitialTab->currentItem()) {
+        case 1:
+            prefSet.surfacesInitialTab = ReginaPrefSet::Coordinates; break;
+        case 2:
+            prefSet.surfacesInitialTab = ReginaPrefSet::Matching; break;
+        case 3:
+            prefSet.surfacesInitialTab = ReginaPrefSet::Compatibility; break;
+        default:
+            prefSet.surfacesInitialTab = ReginaPrefSet::Summary; break;
+    }
+
     prefSet.pdfEmbed = pdfPrefs->cbEmbed->isChecked();
 
     // Don't be too fussy about what they put in this field, since the
@@ -706,6 +728,11 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
 }
 
 ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
+    setSpacing(5);
+
+    // WARNING: Note that any change of order in the combo boxes must be
+    // reflected in the ReginaPreferences methods as well.
+
     // Set up the default creation coordinate system.
     QHBox* box = new QHBox(this);
     box->setSpacing(5);
@@ -717,6 +744,21 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
         "surface lists.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(chooserCreationCoords, msg);
+
+    // Set up the initial tab.
+    box = new QHBox(this);
+    box->setSpacing(5);
+
+    label = new QLabel(i18n("Default top-level tab:"), box);
+    comboInitialTab = new KComboBox(box);
+    comboInitialTab->insertItem(i18n("Summary"));
+    comboInitialTab->insertItem(i18n("Coordinates"));
+    comboInitialTab->insertItem(i18n("Matching Equations"));
+    comboInitialTab->insertItem(i18n("Compatibility"));
+    msg = i18n("Specifies which tab should be initially visible "
+        "when a new normal surface list viewer is opened.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(comboInitialTab, msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);

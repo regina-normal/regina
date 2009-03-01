@@ -142,6 +142,7 @@ class ReginaPrefSurfaces : public QVBox {
 
     private:
         CoordinateChooser* chooserCreationCoords;
+        QComboBox* comboInitialTab;
 
     public:
         ReginaPrefSurfaces(QWidget* parent = 0);
