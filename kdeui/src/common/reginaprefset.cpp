@@ -136,6 +136,7 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonWordWrap(false),
         snapPeaClosed(false),
         surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
+        surfacesInitialTab(Summary),
         treeJumpSize(10),
         triEditMode(DirectEdit),
         triGAPExec(defaultGAPExec),

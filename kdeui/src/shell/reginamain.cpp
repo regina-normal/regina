@@ -539,6 +539,16 @@ void ReginaMain::readOptions(KConfig* config) {
     globalPrefs.surfacesCreationCoords = config->readNumEntry(
         "CreationCoordinates", regina::NNormalSurfaceList::STANDARD);
 
+    QString str = config->readEntry("InitialTab");
+    if (str == "Coordinates")
+        globalPrefs.surfacesInitialTab = ReginaPrefSet::Coordinates;
+    else if (str == "Matching")
+        globalPrefs.surfacesInitialTab = ReginaPrefSet::Matching;
+    else if (str == "Compatibility")
+        globalPrefs.surfacesInitialTab = ReginaPrefSet::Compatibility;
+    else
+        globalPrefs.surfacesInitialTab = ReginaPrefSet::Summary; /* default */
+
     config->setGroup("Tree");
     globalPrefs.treeJumpSize = config->readUnsignedNumEntry("JumpSize", 10);
 
@@ -547,7 +557,7 @@ void ReginaMain::readOptions(KConfig* config) {
         config->readEntry("EditMode") == "Dialog" ?
         ReginaPrefSet::Dialog : ReginaPrefSet::DirectEdit /* default */);
 
-    QString str = config->readEntry("InitialTab");
+    str = config->readEntry("InitialTab");
     if (str == "Skeleton")
         globalPrefs.triInitialTab = ReginaPrefSet::Skeleton;
     else if (str == "Algebra")
@@ -634,6 +644,17 @@ void ReginaMain::saveOptions() {
     config->setGroup("Surfaces");
     config->writeEntry("CreationCoordinates",
         globalPrefs.surfacesCreationCoords);
+
+    switch (globalPrefs.surfacesInitialTab) {
+        case ReginaPrefSet::Coordinates:
+            config->writeEntry("InitialTab", "Coordinates"); break;
+        case ReginaPrefSet::Matching:
+            config->writeEntry("InitialTab", "Matching"); break;
+        case ReginaPrefSet::Compatibility:
+            config->writeEntry("InitialTab", "Compatibility"); break;
+        default:
+            config->writeEntry("InitialTab", "Summary"); break;
+    }
 
     config->setGroup("Tree");
     config->writeEntry("JumpSize", globalPrefs.treeJumpSize);

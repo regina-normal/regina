@@ -26,6 +26,7 @@ noinst_HEADERS = \
 	npdfui.h \
 	nscriptui.h \
 	nscriptvaritems.h \
+	nsurfacecompatui.h \
 	nsurfacecoordinateitem.h \
 	nsurfacecoordinateui.h \
 	nsurfacefiltercomb.h \
@@ -33,6 +34,7 @@ noinst_HEADERS = \
 	nsurfacefilterprop.h \
 	nsurfacematchingitem.h \
 	nsurfacematchingui.h \
+	nsurfacesummaryui.h \
 	ntextui.h \
 	ntrialgebra.h \
 	ntriangulationcreator.h \
@@ -59,6 +61,7 @@ libpackettypes_la_SOURCES = \
 	npdfui.cpp \
 	nscriptui.cpp \
 	nscriptvaritems.cpp \
+	nsurfacecompatui.cpp \
 	nsurfacecoordinateitem.cpp \
 	nsurfacecoordinateui.cpp \
 	nsurfacefiltercomb.cpp \
@@ -66,6 +69,7 @@ libpackettypes_la_SOURCES = \
 	nsurfacefilterprop.cpp \
 	nsurfacematchingitem.cpp \
 	nsurfacematchingui.cpp \
+	nsurfacesummaryui.cpp \
 	ntextui.cpp \
 	ntrialgebra.cpp \
 	ntriangulationcreator.cpp \

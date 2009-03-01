@@ -32,8 +32,12 @@
 // UI includes:
 #include "coordinates.h"
 #include "nnormalsurfaceui.h"
+#include "nsurfacecompatui.h"
 #include "nsurfacecoordinateui.h"
 #include "nsurfacematchingui.h"
+#include "nsurfacesummaryui.h"
+#include "../reginapart.h"
+#include "reginaprefset.h"
 
 #include <klocale.h>
 #include <qlabel.h>
@@ -49,11 +53,29 @@ NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
     NSurfaceHeaderUI* header = new NSurfaceHeaderUI(packet, this);
     addHeader(header);
 
+    // WARNING: If these tabs are reordered, the code below that sets
+    // the default tab must be updated accordingly.
+    addTab(new NSurfaceSummaryUI(packet, this), i18n("&Summary"));
+
     coords = new NSurfaceCoordinateUI(packet, this,
         newEnclosingPane->isReadWrite());
-    addTab(coords, i18n("&Surface Coordinates"));
+    addTab(coords, i18n("Surface &Coordinates"));
 
     addTab(new NSurfaceMatchingUI(packet, this), i18n("&Matching Equations"));
+    addTab(new NSurfaceCompatibilityUI(packet, this),
+        i18n("Com&patibility"));
+
+    // Select the default tab.
+    switch(newEnclosingPane->getPart()->getPreferences().surfacesInitialTab) {
+        case ReginaPrefSet::Summary:
+            /* already visible */ break;
+        case ReginaPrefSet::Coordinates:
+            setCurrentTab(1); break;
+        case ReginaPrefSet::Matching:
+            setCurrentTab(2); break;
+        case ReginaPrefSet::Compatibility:
+            setCurrentTab(3); break;
+    }
 }
 
 const QPtrList<KAction>& NNormalSurfaceUI::getPacketTypeActions() {
