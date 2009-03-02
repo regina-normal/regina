@@ -37,6 +37,7 @@
 #include <klocale.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qscrollview.h>
 #include <qwhatsthis.h>
 #include <map>
 
@@ -71,20 +72,27 @@ namespace {
 NSurfaceSummaryUI::NSurfaceSummaryUI(
         regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
-    ui = new QVBox();
-    ui->setMargin(5);
-    ui->setSpacing(5);
+    QScrollView* scroller = new QScrollView();
+    scroller->setResizePolicy(QScrollView::AutoOneFit);
+    scroller->setFrameStyle(QFrame::NoFrame);
+    ui = scroller;
 
-    tot = new QLabel(ui);
+    QVBox* box = new QVBox(scroller->viewport());
+    scroller->addChild(box);
+
+    box->setMargin(5);
+    box->setSpacing(5);
+
+    tot = new QLabel(box);
     QWhatsThis::add(tot, i18n("Counts the total number of surfaces "
         "in this list."));
 
-    totClosed = new QLabel(ui);
+    totClosed = new QLabel(box);
     QWhatsThis::add(totClosed, i18n("Counts the total number of closed compact "
         "surfaces in this list (i.e., closed surfaces with finitely many "
         "discs)."));
 
-    tableClosed = new KListView(ui);
+    tableClosed = new KListView(box);
     tableClosed->setItemsMovable(false);
     tableClosed->addColumn(QString());
     tableClosed->setSorting(-1);
@@ -96,12 +104,12 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "bounded surfaces with a particular orientability, 1/2-sidedness and "
         "Euler characteristic.</qt>"));
 
-    totBounded = new QLabel(ui);
+    totBounded = new QLabel(box);
     QWhatsThis::add(totBounded, i18n("Counts the total number of compact "
         "surfaces in this list with real boundary (i.e., bounded surfaces with "
         "finitely many discs)."));
 
-    tableBounded = new KListView(ui);
+    tableBounded = new KListView(box);
     tableBounded->setItemsMovable(false);
     tableBounded->addColumn(QString());
     tableBounded->setSorting(-1);
@@ -113,12 +121,12 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "bounded surfaces with a particular orientability, 1/2-sidedness and "
         "Euler characteristic.</qt>"));
 
-    totSpun = new QLabel(ui);
+    totSpun = new QLabel(box);
     QWhatsThis::add(totSpun, i18n("Counts the total number of non-compact "
         "surfaces in this list (i.e., surfaces with infinitely many discs)."));
 
     // Add some space at the end.
-    ui->setStretchFactor(new QWidget(ui), 1);
+    box->setStretchFactor(new QWidget(box), 1);
 }
 
 NSurfaceSummaryUI::~NSurfaceSummaryUI() {
