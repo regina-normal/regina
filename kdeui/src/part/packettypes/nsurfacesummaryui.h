@@ -42,6 +42,9 @@ namespace regina {
     class NNormalSurfaceList;
 };
 
+class KListView;
+class QVBox;
+
 /**
  * A normal surface page for viewing surface coordinates.
  */
@@ -58,7 +61,13 @@ class NSurfaceSummaryUI : public QObject, public PacketViewerTab,
         /**
          * Internal components
          */
-        QWidget* ui;
+        QVBox* ui;
+        QLabel* tot;
+        QLabel* totClosed;
+        QLabel* totBounded;
+        QLabel* totSpun;
+        KListView* tableClosed;
+        KListView* tableBounded;
 
     public:
         /**
