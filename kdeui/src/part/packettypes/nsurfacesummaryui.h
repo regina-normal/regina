@@ -61,7 +61,7 @@ class NSurfaceSummaryUI : public QObject, public PacketViewerTab,
         /**
          * Internal components
          */
-        QVBox* ui;
+        QWidget* ui;
         QLabel* tot;
         QLabel* totClosed;
         QLabel* totBounded;

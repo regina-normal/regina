@@ -752,7 +752,7 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
     label = new QLabel(i18n("Default top-level tab:"), box);
     comboInitialTab = new KComboBox(box);
     comboInitialTab->insertItem(i18n("Summary"));
-    comboInitialTab->insertItem(i18n("Coordinates"));
+    comboInitialTab->insertItem(i18n("Surface Coordinates"));
     comboInitialTab->insertItem(i18n("Matching Equations"));
     comboInitialTab->insertItem(i18n("Compatibility"));
     msg = i18n("Specifies which tab should be initially visible "
