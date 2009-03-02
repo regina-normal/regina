@@ -77,22 +77,22 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
     scroller->setFrameStyle(QFrame::NoFrame);
     ui = scroller;
 
-    QVBox* box = new QVBox(scroller->viewport());
-    scroller->addChild(box);
+    pane = new QVBox(scroller->viewport());
+    scroller->addChild(pane);
 
-    box->setMargin(5);
-    box->setSpacing(5);
+    pane->setMargin(5);
+    pane->setSpacing(5);
 
-    tot = new QLabel(box);
+    tot = new QLabel(pane);
     QWhatsThis::add(tot, i18n("Counts the total number of surfaces "
         "in this list."));
 
-    totClosed = new QLabel(box);
+    totClosed = new QLabel(pane);
     QWhatsThis::add(totClosed, i18n("Counts the total number of closed compact "
         "surfaces in this list (i.e., closed surfaces with finitely many "
         "discs)."));
 
-    tableClosed = new KListView(box);
+    tableClosed = new KListView(pane);
     tableClosed->setItemsMovable(false);
     tableClosed->addColumn(QString());
     tableClosed->setSorting(-1);
@@ -104,12 +104,12 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "bounded surfaces with a particular orientability, 1/2-sidedness and "
         "Euler characteristic.</qt>"));
 
-    totBounded = new QLabel(box);
+    totBounded = new QLabel(pane);
     QWhatsThis::add(totBounded, i18n("Counts the total number of compact "
         "surfaces in this list with real boundary (i.e., bounded surfaces with "
         "finitely many discs)."));
 
-    tableBounded = new KListView(box);
+    tableBounded = new KListView(pane);
     tableBounded->setItemsMovable(false);
     tableBounded->addColumn(QString());
     tableBounded->setSorting(-1);
@@ -121,12 +121,12 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "bounded surfaces with a particular orientability, 1/2-sidedness and "
         "Euler characteristic.</qt>"));
 
-    totSpun = new QLabel(box);
+    totSpun = new QLabel(pane);
     QWhatsThis::add(totSpun, i18n("Counts the total number of non-compact "
         "surfaces in this list (i.e., surfaces with infinitely many discs)."));
 
     // Add some space at the end.
-    box->setStretchFactor(new QWidget(box), 1);
+    pane->setStretchFactor(new QWidget(pane), 1);
 }
 
 NSurfaceSummaryUI::~NSurfaceSummaryUI() {
