@@ -50,6 +50,7 @@
 #include <qpainter.h>
 #include <qpushbutton.h>
 #include <qregexp.h>
+#include <qscrollview.h>
 #include <qstyle.h>
 #include <qstylesheet.h>
 #include <qtooltip.h>
@@ -710,9 +711,15 @@ void NTriCellularInfoUI::refresh() {
 NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
-    ui = new QWidget();
+    QScrollView* scroller = new QScrollView();
+    scroller->setResizePolicy(QScrollView::AutoOneFit);
+    scroller->setFrameStyle(QFrame::NoFrame);
+    ui = scroller;
 
-    QGridLayout* homologyGrid = new QGridLayout(ui, 11, 4, 0, 5);
+    QWidget* grid = new QWidget(scroller->viewport());
+    scroller->addChild(grid);
+
+    QGridLayout* homologyGrid = new QGridLayout(grid, 11, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(11, 1);
     homologyGrid->setColStretch(0, 1);
@@ -723,9 +730,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QLabel* label;
     QString msg;
 
-    label = new QLabel(i18n("Cells: "), ui);
+    label = new QLabel(i18n("Cells: "), grid);
     homologyGrid->addWidget(label, 1, 1);
-    Cells = new QLabel(ui);
+    Cells = new QLabel(grid);
     homologyGrid->addWidget(Cells, 1, 2);
     msg = i18n("The number of cells in a proper CW-decomposition of "
                "the compact manifold specified by this triangulation.  "
@@ -734,9 +741,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(Cells, msg);
 
-    label = new QLabel(i18n("Dual cells: "), ui);
+    label = new QLabel(i18n("Dual cells: "), grid);
     homologyGrid->addWidget(label, 2, 1);
-    DualCells = new QLabel(ui);
+    DualCells = new QLabel(grid);
     homologyGrid->addWidget(DualCells, 2, 2);
     msg = i18n("The number of cells in the dual CW-decomposition "
                 "corresponding to the triangulation of this "
@@ -745,17 +752,17 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(DualCells, msg);
 
-    label = new QLabel(i18n("Euler characteristic: "), ui);
+    label = new QLabel(i18n("Euler characteristic: "), grid);
     homologyGrid->addWidget(label, 3, 1);
-    EulerChar = new QLabel(ui);
+    EulerChar = new QLabel(grid);
     homologyGrid->addWidget(EulerChar, 3, 2);
     msg = i18n("The Euler characteristic of this compact manifold.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(EulerChar, msg);
 
-    label = new QLabel(i18n("Homology groups: "), ui);
+    label = new QLabel(i18n("Homology groups: "), grid);
     homologyGrid->addWidget(label, 4, 1);
-    H0H1H2H3 = new QLabel(ui);
+    H0H1H2H3 = new QLabel(grid);
     homologyGrid->addWidget(H0H1H2H3, 4, 2);
     msg = i18n("The homology groups of this manifold with coefficients "
                "in the integers.  The groups are listed in order of "
@@ -763,9 +770,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(H0H1H2H3, msg);
 
-    label = new QLabel(i18n("Boundary homology groups: "), ui);
+    label = new QLabel(i18n("Boundary homology groups: "), grid);
     homologyGrid->addWidget(label, 5, 1);
-    HBdry = new QLabel(ui);
+    HBdry = new QLabel(grid);
     homologyGrid->addWidget(HBdry, 5, 2);
     msg = i18n("The homology groups of this manifold's boundary with "
                "coefficients in the integers.  The groups are listed "
@@ -773,9 +780,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(HBdry, msg);
 
-    label = new QLabel(i18n("H1(Bdry M -> M): "), ui);
+    label = new QLabel(i18n("H1(Bdry M -> M): "), grid);
     homologyGrid->addWidget(label, 6, 1);
-    BdryMap = new QLabel(ui);
+    BdryMap = new QLabel(grid);
     homologyGrid->addWidget(BdryMap, 6, 2);
     msg = i18n("<qt>The boundary is a submanifold of the original "
                 "manifold.  This item describes some properties of "
@@ -784,9 +791,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(BdryMap, msg);
 
-    label = new QLabel(i18n("Torsion form rank vector: "), ui);
+    label = new QLabel(i18n("Torsion form rank vector: "), grid);
     homologyGrid->addWidget(label, 7, 1);
-    TorForOrders = new QLabel(ui);
+    TorForOrders = new QLabel(grid);
     homologyGrid->addWidget(TorForOrders, 7, 2);
     msg = i18n("<qt>This is the first of the three Kawauchi-Kojima "
                "invariants.  These are invariants of the torsion linking "
@@ -803,9 +810,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForOrders, msg);
 
-    label = new QLabel(i18n("Sigma vector: "), ui);
+    label = new QLabel(i18n("Sigma vector: "), grid);
     homologyGrid->addWidget(label, 8, 1);
-    TorForSigma = new QLabel(ui);
+    TorForSigma = new QLabel(grid);
     homologyGrid->addWidget(TorForSigma, 8, 2);
     msg = i18n("<qt>If H<sub>1</sub> has 2-torsion, this is the "
                "2-torsion sigma-vector.  The sigma-vector is the "
@@ -819,9 +826,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForSigma, msg);
 
-    label = new QLabel(i18n("Legendre symbol vector: "), ui);
+    label = new QLabel(i18n("Legendre symbol vector: "), grid);
     homologyGrid->addWidget(label, 9, 1);
-    TorForLegendre = new QLabel(ui);
+    TorForLegendre = new QLabel(grid);
     homologyGrid->addWidget(TorForLegendre, 9, 2);
     msg = i18n("<qt>If H<sub>1</sub> has odd torsion, this is the "
                "Legendre symbol vector.  The Legendre symbol vector "
@@ -835,9 +842,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(TorForLegendre, msg);
 
-    label = new QLabel(i18n("Comments: "), ui);
+    label = new QLabel(i18n("Comments: "), grid);
     homologyGrid->addWidget(label, 10, 1);
-    EmbeddingComments = new QLabel(ui);
+    EmbeddingComments = new QLabel(grid);
     homologyGrid->addWidget(EmbeddingComments, 10, 2);
     msg = i18n("<qt>If the homology allows us to make any deductions "
                 "about the embeddability of this manifold in "

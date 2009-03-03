@@ -208,6 +208,8 @@ Version 4.6  [ (under development) ]
           the Help menu, to make it easier to find solutions if things break.
         - The "Python Reference" entry in the Help menu should now work
           even when konqueror is not installed.
+        - Added a scrollbar to the Cellular Info pane in case the window
+          is small.
     TEST SUITE:
         - Added very thorough tests for small permutation classes.
         - Additional tests for triangulation simplification and Euler
