@@ -115,9 +115,19 @@ struct NDiscType {
      * for which \a type is non-negative).
      *
      * @return \c true if this and the given disc type are identical, or
-     * \c false if not.
+     * \c false if they are different.
      */
     bool operator == (const NDiscType& compare) const;
+    /**
+     * Determines if this and the given disc type are different.
+     *
+     * This is the negation of the equality test; see operator == for
+     * further details.
+     *
+     * @return \c true if this and the given disc type are different, or
+     * \c false if they are identical.
+     */
+    bool operator != (const NDiscType& compare) const;
     /**
      * Provides an ordering of disc types.  Types are ordered first by
      * \a tetrahedron and then by \a type.  NONE is considered less than
@@ -162,6 +172,10 @@ inline NDiscType& NDiscType::operator = (const NDiscType& cloneMe) {
 
 inline bool NDiscType::operator == (const NDiscType& compare) const {
     return (tetIndex == compare.tetIndex && type == compare.type);
+}
+
+inline bool NDiscType::operator != (const NDiscType& compare) const {
+    return (tetIndex != compare.tetIndex || type != compare.type);
 }
 
 inline bool NDiscType::operator < (const NDiscType& compare) const {

@@ -83,9 +83,11 @@ class NSurfaceCoordinateItem : public GridListViewItem {
         /**
          * Query the property columns of the coordinate viewer.
          */
-        static unsigned propertyColCount(bool embeddedOnly);
-        static QString propertyColName(int whichCol, bool embeddedOnly);
-        static QString propertyColDesc(int whichCol, bool embeddedOnly);
+        static unsigned propertyColCount(bool embeddedOnly, bool almostNormal);
+        static QString propertyColName(int whichCol, bool embeddedOnly,
+            bool almostNormal);
+        static QString propertyColDesc(int whichCol, bool embeddedOnly,
+            bool almostNormal);
 
         /**
          * QListItem overrides.

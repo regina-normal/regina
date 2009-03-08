@@ -30,6 +30,7 @@
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/nmpi.h"
 
 // UI includes:
 #include "coordinates.h"
@@ -52,12 +53,13 @@ NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
             fromSurfaces->getTriangulation())) {
 }
 
-unsigned NSurfaceCoordinateItem::propertyColCount(bool embeddedOnly) {
-    return (embeddedOnly ? 8 : 6);
+unsigned NSurfaceCoordinateItem::propertyColCount(bool embeddedOnly,
+        bool almostNormal) {
+    return (embeddedOnly ? 8 : 6) + (almostNormal ? 1 : 0);
 }
 
 QString NSurfaceCoordinateItem::propertyColName(int whichCol,
-        bool embeddedOnly) {
+        bool embeddedOnly, bool almostNormal) {
     if (embeddedOnly) {
         switch (whichCol) {
             case 0 : return QString(); // Surface number
@@ -69,6 +71,8 @@ QString NSurfaceCoordinateItem::propertyColName(int whichCol,
             case 6 : return i18n("Link");
             case 7 : return i18n("Type");
         }
+        if (whichCol == 8 && almostNormal)
+            return i18n("Octagon");
     } else {
         switch (whichCol) {
             case 0 : return QString(); // Surface number
@@ -78,13 +82,15 @@ QString NSurfaceCoordinateItem::propertyColName(int whichCol,
             case 4 : return i18n("Link");
             case 5 : return i18n("Type");
         }
+        if (whichCol == 6 && almostNormal)
+            return i18n("Octagon");
     }
 
     return i18n("Unknown");
 }
 
 QString NSurfaceCoordinateItem::propertyColDesc(int whichCol,
-        bool embeddedOnly) {
+        bool embeddedOnly, bool almostNormal) {
     if (embeddedOnly) {
         switch (whichCol) {
             case 0: return i18n("The index of this surface within the "
@@ -99,6 +105,9 @@ QString NSurfaceCoordinateItem::propertyColDesc(int whichCol,
                 "the link of a particular subcomplex?");
             case 7: return i18n("Other interesting properties");
         }
+        if (whichCol == 8 && almostNormal)
+            return i18n("The coordinate position containing the octagonal "
+                "disc type, and the number of discs of that type");
     } else {
         switch (whichCol) {
             case 0: return i18n("The index of this surface within the "
@@ -111,6 +120,9 @@ QString NSurfaceCoordinateItem::propertyColDesc(int whichCol,
                 "the link of a particular subcomplex?");
             case 5: return i18n("Other interesting properties");
         }
+        if (whichCol == 6 && almostNormal)
+            return i18n("The coordinate position containing the octagonal "
+                "disc type, and the number of discs of that type");
     }
 
     return i18n("Unknown");
@@ -123,9 +135,11 @@ void NSurfaceCoordinateItem::setText(int column, const QString& str) {
 }
 
 QString NSurfaceCoordinateItem::text(int column) const {
+    const int nCols = propertyColCount(surfaces->isEmbeddedOnly(),
+        surfaces->allowsAlmostNormal());
+
     regina::NTriBool triBool;
     if (surfaces->isEmbeddedOnly()) {
-        const int nCols = 8;
         switch (column) {
             case 0:
                 return i18n("%1.").arg(surfaceIndex);
@@ -196,6 +210,28 @@ QString NSurfaceCoordinateItem::text(int column) const {
                     else
                         return QString::null;
                 }
+            case 8:
+                if (surfaces->allowsAlmostNormal()) {
+                    regina::NDiscType oct = surface->getOctPosition();
+                    if (oct == regina::NDiscType::NONE)
+                        return QString::null;
+                    else {
+                        regina::NLargeInteger tot = surface->getOctCoord(
+                            oct.tetIndex, oct.type);
+                        if (tot == 1) {
+                            return i18n("K%1: %2 (1 oct)").
+                                arg(oct.tetIndex).
+                                arg(regina::vertexSplitString[oct.type]);
+                        } else {
+                            return i18n("K%1: %2 (%3 octs)").
+                                arg(oct.tetIndex).
+                                arg(regina::vertexSplitString[oct.type]).
+                                arg(tot.stringValue());
+                        }
+                    }
+                }
+                // If we don't support almost normal surfaces, fall
+                // through to the default case below.
             default:
                 if (column >= coordCols + nCols || column < 0)
                     return QString::null;
@@ -208,7 +244,6 @@ QString NSurfaceCoordinateItem::text(int column) const {
                     return ans.stringValue().c_str();
         }
     } else {
-        const int nCols = 6;
         switch (column) {
             case 0:
                 return i18n("%1.").arg(surfaceIndex);
@@ -252,6 +287,28 @@ QString NSurfaceCoordinateItem::text(int column) const {
                     return i18n("Splitting");
                 else
                     return QString::null;
+            case 6:
+                if (surfaces->allowsAlmostNormal()) {
+                    regina::NDiscType oct = surface->getOctPosition();
+                    if (oct == regina::NDiscType::NONE)
+                        return QString::null;
+                    else {
+                        regina::NLargeInteger tot = surface->getOctCoord(
+                            oct.tetIndex, oct.type);
+                        if (tot == 1) {
+                            return i18n("1 oct at K%1: %2").
+                                arg(oct.tetIndex).
+                                arg(regina::vertexSplitString[oct.type]);
+                        } else {
+                            return i18n("%1 octs at K%2: %3").
+                                arg(tot.stringValue()).
+                                arg(oct.tetIndex).
+                                arg(regina::vertexSplitString[oct.type]);
+                        }
+                    }
+                }
+                // If we don't support almost normal surfaces, fall
+                // through to the default case below.
             default:
                 if (column >= coordCols + nCols || column < 0)
                     return QString::null;
@@ -320,6 +377,15 @@ NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
                 else
                     return Green;
         }
+        if (column == 8 && surfaces->allowsAlmostNormal()) {
+            regina::NDiscType oct = surface->getOctPosition();
+            if (oct != regina::NDiscType::NONE) {
+                if (surface->getOctCoord(oct.tetIndex, oct.type) > 1)
+                    return Red;
+                else
+                    return Green;
+            }
+        }
     } else {
         switch (column) {
             case 3:
@@ -329,6 +395,15 @@ NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
                     return Red;
                 else
                     return Green;
+        }
+        if (column == 6 && surfaces->allowsAlmostNormal()) {
+            regina::NDiscType oct = surface->getOctPosition();
+            if (oct != regina::NDiscType::NONE) {
+                if (surface->getOctCoord(oct.tetIndex, oct.type) > 1)
+                    return Red;
+                else
+                    return Green;
+            }
         }
     }
     return Plain;

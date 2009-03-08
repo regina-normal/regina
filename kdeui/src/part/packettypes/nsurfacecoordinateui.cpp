@@ -220,13 +220,15 @@ void NSurfaceCoordinateUI::refreshLocal() {
     regina::NTriangulation* tri = surfaces->getTriangulation();
 
     bool embeddedOnly = surfaces->isEmbeddedOnly();
-    int propCols = NSurfaceCoordinateItem::propertyColCount(embeddedOnly);
+    bool almostNormal = surfaces->allowsAlmostNormal();
+    int propCols = NSurfaceCoordinateItem::propertyColCount(embeddedOnly,
+        almostNormal);
     long coordCols = Coordinates::numColumns(coordSystem, tri);
 
     long i;
     for (i = 0; i < propCols; i++)
         table->addColumn(NSurfaceCoordinateItem::propertyColName(i,
-            embeddedOnly), DEFAULT_COORDINATE_COLUMN_WIDTH);
+            embeddedOnly, almostNormal), DEFAULT_COORDINATE_COLUMN_WIDTH);
     for (i = 0; i < coordCols; i++)
         table->addColumn(Coordinates::columnName(coordSystem, i, tri),
             DEFAULT_COORDINATE_COLUMN_WIDTH);
@@ -353,7 +355,7 @@ void NSurfaceCoordinateUI::updateActionStates() {
 
 void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
     int nNonCoordSections = NSurfaceCoordinateItem::propertyColCount(
-        surfaces->isEmbeddedOnly());
+        surfaces->isEmbeddedOnly(), surfaces->allowsAlmostNormal());
     if (currentlyResizing || section < nNonCoordSections)
         return;
 
@@ -382,12 +384,12 @@ void SurfaceHeaderToolTip::maybeTip(const QPoint& p) {
         return;
 
     int propertyCols = NSurfaceCoordinateItem::propertyColCount(
-        surfaces->isEmbeddedOnly());
+        surfaces->isEmbeddedOnly(), surfaces->allowsAlmostNormal());
 
     QString tipString;
     if (section < propertyCols)
-        tipString = NSurfaceCoordinateItem::propertyColDesc(
-            section, surfaces->isEmbeddedOnly());
+        tipString = NSurfaceCoordinateItem::propertyColDesc(section,
+            surfaces->isEmbeddedOnly(), surfaces->allowsAlmostNormal());
     else
         tipString = Coordinates::columnDesc(coordSystem,
             section - propertyCols, surfaces->getTriangulation());

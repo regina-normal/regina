@@ -39,6 +39,7 @@ void addNDiscType() {
         .def_readwrite("tetIndex", &NDiscType::tetIndex)
         .def_readwrite("type", &NDiscType::type)
         .def(self == self)
+        .def(self != self)
         .def(self < self)
         .def(self_ns::str(self))
     ;
