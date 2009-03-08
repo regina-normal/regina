@@ -58,6 +58,9 @@ namespace regina {
  * Quad discs and octagonal discs are numbered outwards away from vertex 0
  * of the tetrahedron.
  *
+ * Note that, unlike NDiscType in which the meaning of NDiscType::type is
+ * flexible, the meaning of NDiscSpec::type is fixed as described above.
+ *
  * \warning This class converts the indices of normal discs of a
  * given type from NLargeInteger to <tt>unsigned long</tt>.  See the
  * precondition below.

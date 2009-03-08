@@ -354,6 +354,27 @@ bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
     return true;
 }
 
+void NNormalSurface::calculateOctPosition() const {
+    if (! vector->allowsAlmostNormal()) {
+        octPosition = NDiscType::NONE;
+        return;
+    }
+
+    unsigned long tetIndex;
+    int type;
+
+    for (tetIndex = 0; tetIndex < triangulation->getNumberOfTetrahedra();
+            ++tetIndex)
+        for (type = 0; type < 3; ++type)
+            if (getOctCoord(tetIndex, type) != 0) {
+                octPosition = NDiscType(tetIndex, type);
+                return;
+            }
+
+    octPosition = NDiscType::NONE;
+    return;
+}
+
 void NNormalSurface::calculateEulerCharacteristic() const {
     unsigned long index, tot;
     int type;
