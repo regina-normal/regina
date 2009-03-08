@@ -206,6 +206,8 @@ Version 4.6  [ (under development) ]
           and one to list pairwise compatibilities between surfaces.
         - The normal surface list viewer now has an additional "Cut Along"
           menu item.  The shortcut letter for "Crush" has changed as well.
+        - The surface coordinate viewer now lists the location of the almost
+          normal disc(s) alongside the other high-level surface properties.
         - Normal surfaces are now individually numbered within surface lists,
           which should make it easier to keep track of which is which.
         - Added "Troubleshooting" and "Handbook won't open?" entries to
