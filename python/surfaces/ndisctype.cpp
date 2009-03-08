@@ -26,27 +26,23 @@
 
 /* end stub */
 
-void addNSurfaceSet();
-void addNDisc();
-void addNDiscType();
-void addNNormalSurface();
-void addNNormalSurfaceList();
-void addNPrism();
-void addNSurfaceFilter();
-void addNSurfaceFilterCombination();
-void addNSurfaceFilterProperties();
-void addNSurfaceSubset();
+#include "surfaces/ndisctype.h"
+#include <boost/python.hpp>
 
-void addSurfaces() {
-    addNSurfaceSet();
-    addNDisc();
-    addNDiscType();
-    addNNormalSurface();
-    addNNormalSurfaceList();
-    addNPrism();
-    addNSurfaceFilter();
-    addNSurfaceFilterCombination();
-    addNSurfaceFilterProperties();
-    addNSurfaceSubset();
+using namespace boost::python;
+using regina::NDiscType;
+
+void addNDiscType() {
+    scope s = class_<NDiscType>("NDiscType")
+        .def(init<unsigned long, int>())
+        .def(init<const NDiscType&>())
+        .def_readwrite("tetIndex", &NDiscType::tetIndex)
+        .def_readwrite("type", &NDiscType::type)
+        .def(self == self)
+        .def(self < self)
+        .def(self_ns::str(self))
+    ;
+
+    s.attr("NONE") = &NDiscType::NONE;
 }
 

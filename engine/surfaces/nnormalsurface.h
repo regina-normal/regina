@@ -39,6 +39,7 @@
 #include "shareableobject.h"
 #include "file/nfilepropertyreader.h"
 #include "maths/nray.h"
+#include "surfaces/ndisctype.h"
 #include "triangulation/nperm.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nproperty.h"
@@ -267,7 +268,7 @@ class NNormalSurfaceVector : public NRay {
         /**
          * Determines if this normal surface has more than one
          * octagonal disc.  It may be assumed that at most one
-         * octagonal disc type exists in this surface.  This routine will
+         * octagonal disc \e type exists in this surface.  This routine will
          * return \c true if an octagonal type does exist and its
          * coordinate is greater than one.
          *
@@ -281,7 +282,7 @@ class NNormalSurfaceVector : public NRay {
          * routine will never be called and thus does not need to be
          * overwritten.
          *
-         * \pre At most one octagonal disc type exists in this surface.
+         * \pre At most one octagonal disc \e type exists in this surface.
          * \pre This normal surface vector is using a
          * flavour of coordinate system that allows for almost normal
          * surfaces.
@@ -561,6 +562,11 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         std::string name;
             /**< An optional name associated with this surface. */
 
+        mutable NProperty<NDiscType> octPosition;
+            /**< The position of the first non-zero octagonal coordinate,
+                 or NDiscType::NONE if there is no non-zero octagonal
+                 coordinate.  Here NDiscType::type is an octagon type
+                 between 0 and 2 inclusive. */
         mutable NProperty<NLargeInteger> eulerChar;
             /**< The Euler characteristic of this surface. */
         mutable NProperty<NTriBool> orientable;
@@ -702,6 +708,28 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
             int faceVertex) const;
 
         /**
+         * Determines the first coordinate position at which this surface
+         * has a non-zero octagonal coordinate.  In other words, if this
+         * routine returns the disc type \a t, then the octagonal
+         * coordinate returned by getOctCoord(t.tetIndex, t.type) is non-zero.
+         * Here NDiscType::type represents an octagon type within a
+         * tetrahedron, and takes values between 0 and 2 inclusive.
+         *
+         * If this surface does not contain any octagons, this routine
+         * returns NDiscType::NONE instead.
+         *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.  Moreover, if the underlying coordinate
+         * system does not support almost normal surfaces, then even the
+         * first call is fast (it returns NDiscType::NONE immediately).
+         *
+         * @return the position of the first non-zero octagonal coordinate,
+         * or NDiscType::NONE if there is no such coordinate.
+         */
+        NDiscType getOctPosition() const;
+
+        /**
          * Returns the number of coordinates in the specific underlying
          * coordinate system being used.
          *
@@ -818,11 +846,19 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * Determines if this normal surface is compact (has
          * finitely many discs).
          *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
+         *
          * @return \c true if and only if this normal surface is compact.
          */
         bool isCompact() const;
         /**
          * Returns the Euler characteristic of this surface.
+         *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
          *
          * \pre This normal surface is compact (has finitely many discs).
          *
@@ -835,6 +871,10 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * This routine returns an NTriBool since it is possible that
          * the result cannot be determined (for instance, if there
          * are too many normal discs).
+         *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
          *
          * \pre This normal surface is compact (has finitely many discs).
          *
@@ -853,6 +893,10 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * the result cannot be determined (for instance, if there
          * are too many normal discs).
          *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
+         *
          * \pre This normal surface is compact (has finitely many discs).
          *
          * \todo \prob Check for absurdly large numbers of discs and bail
@@ -869,6 +913,10 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * the result cannot be determined (for instance, if there
          * are too many normal discs).
          *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
+         *
          * \pre This normal surface is compact (has finitely many discs).
          *
          * \todo \prob Check for absurdly large numbers of discs and bail
@@ -881,6 +929,10 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         /**
          * Determines if this surface has any real boundary, that is,
          * whether it meets any boundary faces of the triangulation.
+         *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
          *
          * @return \c true if and only if this surface has real boundary.
          */
@@ -1207,6 +1259,12 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
             unsigned propType);
 
         /**
+         * Calculates the position of the first non-zero octagon
+         * coordinate and stores it as a property.
+         */
+        void calculateOctPosition() const;
+
+        /**
          * Calculates the Euler characteristic of this surface and
          * stores it as a property.
          *
@@ -1265,6 +1323,12 @@ inline NLargeInteger NNormalSurface::getEdgeWeight(unsigned long edgeIndex)
 inline NLargeInteger NNormalSurface::getFaceArcs(unsigned long faceIndex,
         int faceVertex) const {
     return vector->getFaceArcs(faceIndex, faceVertex, triangulation);
+}
+
+inline NDiscType NNormalSurface::getOctPosition() const {
+    if (! octPosition.known())
+        calculateOctPosition();
+    return octPosition.value();
 }
 
 inline unsigned NNormalSurface::getNumberOfCoords() const {

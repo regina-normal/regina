@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2009, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,27 +26,11 @@
 
 /* end stub */
 
-void addNSurfaceSet();
-void addNDisc();
-void addNDiscType();
-void addNNormalSurface();
-void addNNormalSurfaceList();
-void addNPrism();
-void addNSurfaceFilter();
-void addNSurfaceFilterCombination();
-void addNSurfaceFilterProperties();
-void addNSurfaceSubset();
+#include "surfaces/ndisctype.h"
 
-void addSurfaces() {
-    addNSurfaceSet();
-    addNDisc();
-    addNDiscType();
-    addNNormalSurface();
-    addNNormalSurfaceList();
-    addNPrism();
-    addNSurfaceFilter();
-    addNSurfaceFilterCombination();
-    addNSurfaceFilterProperties();
-    addNSurfaceSubset();
-}
+namespace regina {
+
+const NDiscType NDiscType::NONE;
+
+} // namespace regina
 

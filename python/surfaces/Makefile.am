@@ -13,5 +13,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libsurfaces.la
 
-libsurfaces_la_SOURCES = ndisc.cpp nnormalsurface.cpp nnormalsurfacelist.cpp nprism.cpp nsurfacefilter.cpp nsurfaceset.cpp nsurfacesubset.cpp pysurfaces.cpp sfcombination.cpp sfproperties.cpp
+libsurfaces_la_SOURCES = ndisc.cpp ndisctype.cpp nnormalsurface.cpp nnormalsurfacelist.cpp nprism.cpp nsurfacefilter.cpp nsurfaceset.cpp nsurfacesubset.cpp pysurfaces.cpp sfcombination.cpp sfproperties.cpp
 
