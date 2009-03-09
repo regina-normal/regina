@@ -49,6 +49,15 @@ namespace Coordinates {
     QString name(int coordSystem, bool capitalise = true);
 
     /**
+     * Does the given coordinate system generate almost normal
+     * surfaces when used with NNormalSurfaceList::enumerate()?
+     *
+     * Only coordinate systems that are used for enumerating surfaces
+     * (not just viewing surfaces) are relevant here.
+     */
+    bool generatesAlmostNormal(int coordSystem);
+
+    /**
      * Return the number of coordinate columns in the given coordinate
      * system.
      */

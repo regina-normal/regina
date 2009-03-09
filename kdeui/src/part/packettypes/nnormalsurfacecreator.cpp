@@ -33,6 +33,7 @@
 
 // UI includes:
 #include "coordinatechooser.h"
+#include "coordinates.h"
 #include "nnormalsurfacecreator.h"
 #include "../progressdialogs.h"
 
@@ -86,13 +87,45 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         return 0;
     }
 
+    int coordSystem = coords->getCurrentSystem();
+
+    // Sanity check for immersed and/or singular surfaces.
+    if (! embedded->isChecked()) {
+        if (Coordinates::generatesAlmostNormal(coordSystem)) {
+            KMessageBox::sorry(parentWidget, i18n(
+                "<qt>You have selected an almost normal coordinate "
+                "system, but you have unchecked the box for embedded "
+                "surfaces only.<p>"
+                "This combination is not yet supported in Regina.  "
+                "At present, immersed and singular surfaces can only "
+                "be used with <i>normal</i> coordinate systems, not "
+                "<i>almost normal</i> coordinate systems.<p>"
+                "Please check the box for embedded surfaces only, or "
+                "else select a different coordinate system.</qt>"));
+            return 0;
+        }
+
+        if (KMessageBox::shouldBeShownContinue("warnOnNonEmbedded"))
+            if (KMessageBox::warningContinueCancel(parentWidget,
+                    i18n("<qt>You have unchecked the box for embedded "
+                        "surfaces only.  This means that immersed "
+                        "and/or singular surfaces will also be "
+                        "enumerated, which could take a much longer time "
+                        "and give a much larger solution set.<p>"
+                        "Are you sure you wish to go ahead with this?</qt>"),
+                    QString::null, KStdGuiItem::cont(),
+                    "warnOnNonEmbedded") == KMessageBox::Cancel) {
+                return 0;
+            }
+    }
+
     regina::NProgressManager manager;
     ProgressDialogNumeric dlg(&manager, i18n("Normal Surface Enumeration"),
         i18n("Enumerating vertex normal surfaces..."), parentWidget);
 
     NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
         dynamic_cast<regina::NTriangulation*>(parent),
-        coords->getCurrentSystem(), embedded->isChecked(), &manager);
+        coordSystem, embedded->isChecked(), &manager);
 
     if (dlg.run())
         return ans;
