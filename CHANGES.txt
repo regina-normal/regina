@@ -203,6 +203,11 @@ Version 4.6  [ (under development) ]
           and one to list pairwise compatibilities between surfaces.
         - The normal surface list viewer now has an additional "Cut Along"
           menu item.  The shortcut letter for "Crush" has changed as well.
+        - Warn the user before enumerating immersed and/or singular normal
+          surfaces, in case the "embedded surfaces only" box was unchecked
+          by accident.  Moreover, refuse to enumerate immersed and/or
+          singular *almost* normal surfaces, since this feature was designed
+          for use with normal surfaces only.
         - The surface coordinate viewer now lists the location of the almost
           normal disc(s) alongside the other high-level surface properties.
         - Normal surfaces are now individually numbered within surface lists,

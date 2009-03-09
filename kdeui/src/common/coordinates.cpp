@@ -70,6 +70,12 @@ namespace Coordinates {
         }
     }
 
+    bool generatesAlmostNormal(int coordSystem) {
+        return (coordSystem == NNormalSurfaceList::AN_STANDARD ||
+                coordSystem == NNormalSurfaceList::AN_LEGACY ||
+                coordSystem == NNormalSurfaceList::QUAD_OCT);
+    }
+
     unsigned long numColumns(int coordSystem, regina::NTriangulation* tri) {
         if (coordSystem == NNormalSurfaceList::STANDARD)
             return tri->getNumberOfTetrahedra() * 7;

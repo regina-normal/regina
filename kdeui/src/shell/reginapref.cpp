@@ -219,6 +219,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     surfacePrefs->chooserCreationCoords->setCurrentSystem(
         prefSet.surfacesCreationCoords);
+    surfacePrefs->cbWarnOnNonEmbedded->setChecked(
+        KMessageBox::shouldBeShownContinue("warnOnNonEmbedded"));
 
     switch (prefSet.surfacesInitialTab) {
         case ReginaPrefSet::Coordinates:
@@ -506,6 +508,10 @@ void ReginaPreferences::slotApply() {
 
     prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
         getCurrentSystem();
+    if (surfacePrefs->cbWarnOnNonEmbedded->isChecked())
+        KMessageBox::enableMessage("warnOnNonEmbedded");
+    else
+        KMessageBox::saveDontShowAgainContinue("warnOnNonEmbedded");
 
     switch (surfacePrefs->comboInitialTab->currentItem()) {
         case 1:
@@ -744,6 +750,14 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
         "surface lists.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(chooserCreationCoords, msg);
+
+    cbWarnOnNonEmbedded = new QCheckBox(i18n("Warn before generating "
+        "non-embedded surfaces"), this);
+    QWhatsThis::add(cbWarnOnNonEmbedded, i18n("<qt>When creating a new "
+        "normal surface list, should Regina ask for confirmation before "
+        "enumerating immersed and/or singular surfaces?  This warning "
+        "will be issued whenever the <i>Embedded surfaces only</i> box "
+        "is not checked in the dialog for a new normal surface list.</qt>"));
 
     // Set up the initial tab.
     box = new QHBox(this);
