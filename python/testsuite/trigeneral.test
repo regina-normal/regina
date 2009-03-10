@@ -25,7 +25,23 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import md5
+# For checksums, use the hashlib module if possible (this is new as of
+# python 2.5).  Otherwise fall back to the deprecated md5 module.
+# Thanks to Andreas Wenning for alerting me to this issue.
+has_hashlib = 1
+try:
+	import hashlib
+except:
+	has_hashlib = 0
+	import md5
+
+def checksum(str):
+	if has_hashlib:
+		h = hashlib.md5()
+		h.update(str)
+		return h.hexdigest()
+	else:
+		return md5.new(str).hexdigest()
 
 def vitalStats(tri):
 	# To guard against accidental changes.
@@ -92,22 +108,22 @@ def vitalStats(tri):
 	print "Double cover:"
 	t = regina.NTriangulation(tri)
 	t.makeDoubleCover()
-	print "Checksum =", md5.new(t.toStringLong()).hexdigest()
+	print "Checksum =", checksum(t.toStringLong())
 
 	print "Ideal to finite:"
 	t = regina.NTriangulation(tri)
 	print "Result =", t.idealToFinite()
-	print "Checksum =", md5.new(t.toStringLong()).hexdigest()
+	print "Checksum =", checksum(t.toStringLong())
 
 	print "Finite to ideal:"
 	t = regina.NTriangulation(tri)
 	print "Result =", t.finiteToIdeal()
-	print "Checksum =", md5.new(t.toStringLong()).hexdigest()
+	print "Checksum =", checksum(t.toStringLong())
 
 	print "Barycentric subdivision:"
 	t = regina.NTriangulation(tri)
 	t.barycentricSubdivision()
-	print "Checksum =", md5.new(t.toStringLong()).hexdigest()
+	print "Checksum =", checksum(t.toStringLong())
 
 	print "Dehydration:", tri.dehydrate()
 
