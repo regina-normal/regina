@@ -86,7 +86,7 @@
         "Standard almost normal (tri-quad-oct)", true, true)
     REGISTER_FLAVOUR(QUAD, NNormalSurfaceVectorQuad,
         "Quad normal", false, true)
-    REGISTER_FLAVOUR(QUAD_OCT, NNormalSurfaceVectorQuadOct,
+    REGISTER_FLAVOUR(AN_QUAD_OCT, NNormalSurfaceVectorQuadOct,
         "Quad-oct almost normal", true, true)
 #endif
 

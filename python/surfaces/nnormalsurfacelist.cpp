@@ -92,7 +92,7 @@ void addNNormalSurfaceList() {
     s.attr("STANDARD") = NNormalSurfaceList::STANDARD;
     s.attr("AN_STANDARD") = NNormalSurfaceList::AN_STANDARD;
     s.attr("QUAD") = NNormalSurfaceList::QUAD;
-    s.attr("QUAD_OCT") = NNormalSurfaceList::QUAD_OCT;
+    s.attr("AN_QUAD_OCT") = NNormalSurfaceList::AN_QUAD_OCT;
     s.attr("EDGE_WEIGHT") = NNormalSurfaceList::EDGE_WEIGHT;
     s.attr("FACE_ARCS") = NNormalSurfaceList::FACE_ARCS;
     s.attr("AN_LEGACY") = NNormalSurfaceList::AN_LEGACY;

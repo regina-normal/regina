@@ -1222,37 +1222,48 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         static NNormalSurface* findNonTrivialSphere(NTriangulation* tri);
 
         /**
-         * Searches the vertex octagonal almost normal surfaces for an
-         * almost normal 2-sphere within the given triangulation.  Only
-         * the vertex octagonal almost normal surfaces will be examined,
-         * i.e., if there is a tubed almost normal 2-sphere or a
-         * non-vertex octagonal almost normal 2-sphere then it is not
-         * guaranteed to be found.
+         * Searches the list of vertex octagonal almost normal surfaces for
+         * an almost normal 2-sphere within the given triangulation.  This
+         * means that tubed almost normal 2-spheres or non-vertex octagonal
+         * almost normal 2-spheres will not be found.
          *
-         * In some cases however (such as with closed orientable
-         * one-vertex 0-efficient triangulations), it is known that if
-         * any almost normal 2-sphere exists then an octagonal almost
-         * normal 2-sphere exists at a vertex of the solution space
-         * (and so will be found by this routine).  It is up to the caller
-         * of this routine to decide whether results such as this are
-         * applicable to the problem at hand.
+         * This search can be done either in standard almost normal
+         * coordinates (with triangles, quadrilaterals and octagons), or
+         * in quadrilateral-octagon coordinates.  This choice of coordinate
+         * system affects how we define "vertex".  The default is to use
+         * standard coordinates (where the set of vertex surfaces is larger).
          *
-         * Note that the surface returned (if any) depends upon the
-         * triangulation, and so must be destroyed before the triangulation
-         * itself.
+         * For "sufficiently nice" triangulations, if this routine fails
+         * to find an almost normal 2-sphere then we can be certain that
+         * the triangulation contains no almost normal 2-spheres at all.
+         * In particular, this is true for closed orientable one-vertex
+         * 0-efficient triangulations.  For a proof in standard coordinates,
+         * see "0-efficient triangulations of 3-manifolds", William Jaco
+         * and J. Hyam Rubinstein, J. Differential Geom. 65 (2003),
+         * no. 1, 61--168.  For a proof in quadrilateral-octagon coordinates,
+         * see "Quadrilateral-octagon coordinates for almost normal surfaces",
+         * Benjamin A. Burton, preprint, arXiv:0904.3041.
          *
-         * \warning Currently this routine is quite slow since it
+         * Note that the surface that this routine returns (if any) depends
+         * upon the triangulation, and so this surface must be destroyed
+         * before the triangulation is destroyed.
+         *
+         * \warning Currently this routine can be quite slow since it
          * performs a full enumeration of vertex almost normal surfaces.
          *
-         * \todo \opturgent Use maximisation of Euler characteristic to
+         * \todo \opt Use maximisation of Euler characteristic to
          * make this routine much faster than a plain vertex enumeration.
          *
          * @param tri the triangulation in which to search.
+         * @param quadOct \c true if we should search for vertex
+         * surfaces in quadrilateral-octagon coordiantes, or \c false
+         * (the default) if we should search for surfaces in standard
+         * almost normal coordinates.
          * @return a newly allocated vertex octagonal almost normal sphere
          * within the given triangulation, or 0 if no such sphere exists.
          */
         static NNormalSurface* findVtxOctAlmostNormalSphere(
-            NTriangulation* tri);
+            NTriangulation* tri, bool quadOct = false);
 
     protected:
         virtual void readIndividualProperty(NFile& infile,

@@ -30,11 +30,17 @@
 #include <memory>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
+#include "census/ncensus.h"
+#include "packet/ncontainer.h"
 #include "split/nsignature.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
+#include "utilities/nbooleans.h"
 
+using regina::NBoolSet;
+using regina::NCensus;
+using regina::NContainer;
 using regina::NExampleTriangulation;
 using regina::NPerm;
 using regina::NSignature;
@@ -45,6 +51,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ThreeSphereTest);
 
     CPPUNIT_TEST(threeSphereRecognition);
+    CPPUNIT_TEST(threeSphereCensus);
     CPPUNIT_TEST(threeBallRecognition);
 
     CPPUNIT_TEST_SUITE_END();
@@ -257,6 +264,54 @@ class ThreeSphereTest : public CppUnit::TestFixture {
 
             tri = new NTriangulation();
             delete verifyNotThreeSphere(tri, "Empty triangulation");
+        }
+
+        static bool verifyThreeSphereCensus(NTriangulation* tri, void*) {
+            // PRECONDITION: tri has <= 6 tetrahedra.
+            //
+            // We know from the closed orientable census data that the
+            // only homology 3-sphere with <= 6 tetrahedra is the
+            // Poincare homology 3-sphere.  This can be distinguished
+            // from the real 3-sphere using the (5,1) Turaev-Viro
+            // invariant -- for S^3 the invariant is 0.138197, and for
+            // the Poincare homology sphere it is 0.947214.
+
+            // What did 3-sphere recognition say?
+            bool found = tri->isThreeSphere();
+
+            bool real = (tri->isValid() &&
+                         tri->isClosed() &&
+                         tri->isOrientable() &&
+                         tri->isConnected() &&
+                         tri->getHomologyH1().isTrivial() &&
+                         tri->turaevViro(5, 1) < 0.5);
+
+            if (real && ! found)
+                CPPUNIT_FAIL("A census 3-sphere was not recognised "
+                    "as a 3-sphere.");
+            else if (found && ! real)
+                CPPUNIT_FAIL("A census non-3-sphere was recognised "
+                    "as a 3-sphere.");
+
+            return false;
+        }
+
+        void threeSphereCensus() {
+            NContainer parent;
+
+            // Enumerate orientable triangulations.
+            NCensus::formCensus(&parent, 4 /* tetrahedra */,
+                NBoolSet::sTrue /* finite */,
+                NBoolSet::sTrue /* orientable */,
+                NBoolSet::sFalse /* bounded */,
+                -1, 0, &verifyThreeSphereCensus, 0);
+
+            // Enumerate non-orientable triangulations also, for good measure.
+            NCensus::formCensus(&parent, 3 /* tetrahedra */,
+                NBoolSet::sTrue /* finite */,
+                NBoolSet::sTrue /* orientable */,
+                NBoolSet::sFalse /* bounded */,
+                -1, 0, &verifyThreeSphereCensus, 0);
         }
 
         NTriangulation* verifyThreeBall(NTriangulation* tri,

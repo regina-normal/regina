@@ -532,7 +532,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NNormalSurfaceList* stdANDirect = NNormalSurfaceList::
                 enumerateStandardANDirect(tri);
             NNormalSurfaceList* quadOctDirect = NNormalSurfaceList::enumerate(
-                tri, NNormalSurfaceList::QUAD_OCT);
+                tri, NNormalSurfaceList::AN_QUAD_OCT);
 
             NNormalSurfaceList* stdANConv =
                 quadOctDirect->quadOctToStandardAN();

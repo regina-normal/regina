@@ -187,17 +187,19 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
                 delete sphere;
                 delete processing;
             } else {
-                // Now we have a one-vertex prime 0-efficient triangulation.
+                // Now we have a closed orientable one-vertex 0-efficient
+                // triangulation.
                 // We have to look for an almost normal sphere.
                 //
                 // From the proof of Proposition 5.12 in Jaco & Rubinstein's
                 // 0-efficiency paper, we see that we can restrict our
                 // search to octagonal almost normal surfaces.
-                // Furthermore, from Casson's proof (directly following
-                // Proposition 5.12), we see that we can restrict this
-                // search further to vertex octagonal almost normal surfaces.
+                // Furthermore, from the result in the quadrilateral-octagon
+                // coordinates paper, we can restrict this search further
+                // to vertex octagonal almost normal surfaces in
+                // quadrilateral-octagonal space.
                 sphere = NNormalSurface::findVtxOctAlmostNormalSphere(
-                    processing);
+                    processing, true /* quad-oct coordinates */);
                 if (sphere) {
                     // It's a 3-sphere.  Toss this component away.
                     delete sphere;
@@ -326,17 +328,19 @@ bool NTriangulation::isThreeSphere() const {
                 delete sphere;
                 delete processing;
             } else {
-                // Now we have a one-vertex 0-efficient triangulation.
+                // Now we have a closed orientable one-vertex 0-efficient
+                // triangulation.
                 // We have to look for an almost normal sphere.
                 //
                 // From the proof of Proposition 5.12 in Jaco & Rubinstein's
                 // 0-efficiency paper, we see that we can restrict our
                 // search to octagonal almost normal surfaces.
-                // Furthermore, from Casson's proof (directly following
-                // Proposition 5.12), we see that we can restrict this
-                // search further to vertex octagonal almost normal surfaces.
+                // Furthermore, from the result in the quadrilateral-octagon
+                // coordinates paper, we can restrict this search further
+                // to vertex octagonal almost normal surfaces in
+                // quadrilateral-octagonal space.
                 sphere = NNormalSurface::findVtxOctAlmostNormalSphere(
-                    processing);
+                    processing, true /* quad-oct coordinates */);
                 if (sphere) {
                     // It's a 3-sphere.  Toss this component away.
                     delete sphere;
