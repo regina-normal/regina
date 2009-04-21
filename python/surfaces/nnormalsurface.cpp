@@ -33,6 +33,7 @@
 
 using namespace boost::python;
 using regina::NNormalSurface;
+using regina::NTriangulation;
 using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
 using regina::python::GlobalArray3D;
@@ -64,6 +65,13 @@ namespace {
             s.isThinEdgeLink();
         return make_tuple(boost::python::ptr(ans.first),
             boost::python::ptr(ans.second));
+    }
+
+    NNormalSurface* findVtxOctAlmostNormalSphere1(NTriangulation* t) {
+        return NNormalSurface::findVtxOctAlmostNormalSphere(t);
+    }
+    NNormalSurface* findVtxOctAlmostNormalSphere2(NTriangulation* t, bool b) {
+        return NNormalSurface::findVtxOctAlmostNormalSphere(t, b);
     }
 }
 
@@ -110,8 +118,9 @@ void addNNormalSurface() {
         .def("disjoint", &NNormalSurface::disjoint)
         .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,
             return_value_policy<manage_new_object>())
-        .def("findVtxOctAlmostNormalSphere",
-            &NNormalSurface::findVtxOctAlmostNormalSphere,
+        .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere1,
+            return_value_policy<manage_new_object>())
+        .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere2,
             return_value_policy<manage_new_object>())
         .staticmethod("findNonTrivialSphere")
         .staticmethod("findVtxOctAlmostNormalSphere")

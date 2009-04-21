@@ -85,22 +85,28 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
         static const int packetType;
 
         /**
-         * Represents standard triangle-quad coordinates for normal surfaces.
+         * Represents standard triangle-quadrilateral coordinates for
+         * normal surfaces.
          */
         static const int STANDARD;
         /**
-         * Represents standard triangle-quad-oct coordinates for
-         * almost normal surfaces.
+         * Represents standard triangle-quadrilateral-octagon coordinates
+         * for octagonal almost normal surfaces.
          */
         static const int AN_STANDARD;
         /**
-         * Represents quad coordinates for normal surfaces.
+         * Represents quadrilateral coordinates for normal surfaces.
+         * For details, see "Normal surface Q-theory", Jeffrey L. Tollefson,
+         * Pacific J. Math. 183 (1998), no. 2, 359--374.
          */
         static const int QUAD;
         /**
-         * Represents quad-oct coordinates for normal surfaces.
+         * Represents quadrilateral-octagon coordinates for octagonal
+         * almost normal surfaces.  For details, see
+         * "Quadrilateral-octagon coordinates for almost normal surfaces",
+         * Benjamin A. Burton, preprint, arXiv:0904.3041.
          */
-        static const int QUAD_OCT;
+        static const int AN_QUAD_OCT;
 
         /**
          * Represents edge weight coordinates for normal surfaces.
@@ -359,7 +365,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * no less.  Moreover, these vectors are stored using
          * quadrilateral-octagon coordinates.  Typically this means that it
          * was obtained through enumerate(), with the flavour set to
-         * NNormalSurfaceList::QUAD_OCT and with \a embeddedOnly set to
+         * NNormalSurfaceList::AN_QUAD_OCT and with \a embeddedOnly set to
          * \c true.
          *
          * @return a full list of vertex almost normal surfaces in standard

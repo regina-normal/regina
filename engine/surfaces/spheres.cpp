@@ -90,9 +90,9 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
 }
 
 NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
-        NTriangulation* tri) {
-    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri,
-        NNormalSurfaceList::AN_STANDARD);
+        NTriangulation* tri, bool quadOct) {
+    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri, quadOct ?
+        NNormalSurfaceList::AN_QUAD_OCT : NNormalSurfaceList::AN_STANDARD);
     unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
     unsigned long nTets = tri->getNumberOfTetrahedra();
 

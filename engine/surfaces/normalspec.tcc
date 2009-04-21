@@ -159,7 +159,7 @@ struct NNormalSurfaceList::AlmostNormalSpec {
      * reduced form.
      */
     inline static int reducedFlavour() {
-        return NNormalSurfaceList::QUAD_OCT;
+        return NNormalSurfaceList::AN_QUAD_OCT;
     }
 
     /**

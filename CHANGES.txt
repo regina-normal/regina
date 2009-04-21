@@ -84,9 +84,13 @@ Version 4.6  [ (under development) ]
               The corresponding <cancrush> element has been removed from
               the data file format (though old files that happen to contain
               it will load without problems).
+            - Added an optional argument to findVtxOctAlmostNormalSphere()
+              that lets the user choose between working in standard and
+              quadrilateral-octagon coordinates.
         Class NNormalSurfaceList:
             - Implemented quadrilateral-octagon coordinates for almost normal
-              surfaces.
+              surfaces (the relevant flavour constant is AN_QUAD_OCT).
+              See arXiv:0904.3041 for details.
             - Added routines quadToStandard() and standardToQuad() to
               convert between different solution sets.  See arXiv:0901.2629
               for details of the underlying algorithms.
@@ -154,6 +158,9 @@ Version 4.6  [ (under development) ]
               big difference for bounded triangulations), and also uses
               book closing moves to reduce the number of boundary faces
               once nothing else can be done.
+            - Routine isThreeSphere() now works in quadrilateral-octagon
+              coordinates instead of standard almost normal coordinates.
+              See arXiv:0904.3041 for details.
             - Removed crushMaximalForest(), which (as the documentation has
               pointed out since the first release) has never worked properly,
               and which is therefore never actually used.
