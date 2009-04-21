@@ -26,6 +26,7 @@ RPMs on several different platforms.
     <tr><td><a href="#mandriva">Mandriva Linux</a></td></tr>
     <tr><td><a href="#suse">SuSE Linux</a></td></tr>
     <tr><td><a href="#ubuntu">Ubuntu</a></td></tr>
+    <tr><td><a href="#cluster">Cluster environments</a></td></tr>
     <tr><td><a href="index.html">Back to main page ...</a></td></tr>
     </tbody></table>
 </td></tr>
@@ -210,6 +211,141 @@ the following additional argument to the <tt>./configure</tt> script:
 </p>
 <div class="example"><p>
 <tt>example$ ./configure kde_htmldir=/usr/share/doc/kde/HTML</tt>
+</p></div>
+
+<h2><a name="cluster">Cluster environments</a></h2>
+
+<p>
+If you plan to use Regina in a high-performance computing environment
+such as a university cluster, you may run into several complications with
+the build and installation process.
+</p>
+<h4>Disabling the graphical user interface</h4>
+<p>
+The simplest issue to deal with is that you will probably <i>not</i> want to
+build the graphical user interface.  Indeed, the cluster will probably
+not have the KDE development libraries installed, which would normally
+cause the <tt>./configure</tt> script to output an error and fail.
+You can avoid this by passing the configure argument <tt>--disable-kdeui</tt>:
+</p>
+<div class="example"><p>
+<tt>example$ ./configure --disable-kdeui</tt>
+</p></div>
+<h4>Installing beneath your home directory</h4>
+<p>
+The next problem is that you will almost certainly not have root access
+to the cluster, which means you will need to install Regina beneath your
+home directory.  You do this by creating a top-level install directory
+(say <tt>/home/bab/software</tt>) and then passing it as the install prefix
+to the <tt>./configure</tt> script:
+</p>
+<div class="example"><p>
+<tt>example$ ./configure --prefix=/home/bab/software</tt>
+</p></div>
+<p>
+Regina will then install its various components in the subdirectories
+<tt>/home/bab/software/bin</tt>,
+<tt>/home/bab/software/lib</tt>,
+<tt>/home/bab/software/share</tt> and so on.
+</p>
+<p>
+Note that you need to pass an <b>absolute path</b> as your install prefix
+(not <tt>~/software</tt> or <tt>../software</tt>, for instance).
+It is best if this is <i>not</i> the directory in which
+you unpacked Regina's sources, since otherwise you may find it hard to
+untangle sources from binaries later on.
+</p>
+<h4>Finding library dependencies</h4>
+<p>
+You may find that some of Regina's dependencies (such as
+<i>gmp</i>, <i>popt</i>, <i>libxml2</i> or <i>cppunit</i>)
+are not installed on the cluster.
+The easy solution is to mail the sysadmin and ask her to install these
+dependencies for you (remember to ask for the development files, not
+just the runtime libraries).  However, this is not always an option.  In
+this case you will need to install the dependencies beneath your
+home directory.  This involves two steps:
+</p>
+<ul>
+<li><p>Build and install the dependencies, using the same prefix as before.
+For instance, if you are building <i>popt</i> then pass your prefix to
+the <i>popt</i> configure script:</p>
+<div class="example"><p>
+<tt>example:~/sources/popt-1.7$ ./configure --prefix=/home/bab/software</tt>
+</p></div>
+<p>
+You should now find the dependencies installed across
+<tt>/home/bab/software/lib</tt>,
+<tt>/home/bab/software/include</tt> and so on.
+</p>
+</li>
+<li><p>Tell Regina where to find this software.  For generic libraries
+this involves passing the configure arguments
+<tt>--with-extra-libs</tt> and <tt>--with-extra-includes</tt>,
+giving the <tt>lib</tt> and <tt>include</tt> subdirectories of your
+prefix:
+</p>
+<div class="example"><p>
+<tt>example:~/sources/regina-4.6$ ./configure
+--with-extra-libs=/home/bab/software/lib
+--with-extra-includes=/home/bab/software/include</tt>
+</p></div>
+<p>Some specific libraries (specifically <i>libxml2</i> and
+<i>cppunit</i>) have their own configure arguments, which take the
+prefix instead (not its subdirectories):
+</p>
+<div class="example"><p>
+<tt>example:~/sources/regina-4.6$ ./configure
+--with-xml-prefix=/home/bab/software
+--with-cppunit-prefix=/home/bab/software</tt>
+</p></div></li>
+</ul>
+<p>
+For reference, the full configure line used by the author to build
+Regina on the <a href="http://www.vpac.org/">VPAC clusters</a> is:
+</p>
+<div class="example"><p>
+<tt>example$ ./configure
+--disable-kdeui
+--prefix=/home/bab/software
+--with-extra-libs=/home/bab/software/lib
+--with-extra-includes=/home/bab/software/include
+--with-cppunit-prefix=/home/bab/software</tt>
+</p></div>
+<p>
+Depending on the GNU/Linux distribution used on your cluster, it may
+also be worth reading other sections of this page
+(including the section on <a href="#64bit">64-bit systems</a>).
+</p>
+<h4>Compiling your own software against Regina</h4>
+<p>
+Once Regina is built and installed, you may wish to compile it
+into your own C++ programs.  The helper script <tt>regina-engine-config</tt>
+gives you all of the necessary compiler and linker options for doing this.
+You can find this script with the other programs in
+<tt><i>prefix</i>/bin</tt>, where <tt><i>prefix</i></tt> is your
+installation prefix.
+</p>
+<p>
+To obtain a full set of compiler options:
+</p>
+<div class="example"><p>
+<tt>example$ regina-engine-config --cflags</tt>
+</p></div>
+<p>
+To obtain a full set of linker options:
+</p>
+<div class="example"><p>
+<tt>example$ regina-engine-config --libs</tt>
+</p></div>
+<p>
+You can use this script directly on the command-line (or in your
+Makefile).  So, for instance, to compile the program <tt>myprog.cpp</tt>
+against Regina:
+</p>
+<div class="example"><p>
+<tt>example$ g++ `regina-engine-config --cflags --libs` myprog.cpp
+-o myprog</tt>
 </p></div>
 
 <p class="return">
