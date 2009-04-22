@@ -9,7 +9,16 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.6  [ (under development) ]
 
+    OVERALL:
+        - Deprecated everything relating to the non-standard STL/g++ classes
+          classes hash_set and hash_map, for the sake of portability.
+        - Added a "deprecation guide" to the website, with a table listing
+          the outdated routines/classes/etc. to be removed in Regina 5.0 and
+          the corresponding new routines/classes/etc. that replace them.
     ENGINE:
+        Class HashPointer, HashString:
+            - Deprecated, along with everything else relating to the hash_set
+              and hash_map classes.  See the "overall" notes above.
         Class NBoundaryComponent, NComponent, NEdge, NFace, NVertex:
             - All constructors for skeletal objects are now private, since
               only the triangulation skeletal routines should be creating them.
@@ -58,6 +67,11 @@ Version 4.6  [ (under development) ]
               "Enumeration of non-orientable 3-manifolds using face-pairing
               graphs and union-find", B. A. Burton, Discrete Comput. Geom. 38
               (2007), no. 3, 527--571.
+        Class NIndexedArray:
+            - Deprecated, along with everything else relating to the hash_set
+              and hash_map classes.  For a replacement, see the NMarkedVector
+              class, which is smaller and faster but requires modification
+              of the data type being stored.
         Class NIsomorphism, NIsomorphismDirect, NIsomorphismIndexed:
             - NIsomorphism has been enhanced to add all of the functionality
               of the old NIsomorphismDirect class, so NIsomorphism is now a
@@ -195,6 +209,9 @@ Version 4.6  [ (under development) ]
         Global arrays edgeNumber, edgeStart, edgeEnd:
             - Deprecated; users are advised to switch to the new arrays
               NEdge::edgeNumber and NEdge::edgeVertex instead.
+        Namespace stdhash:
+            - Deprecated, along with everything else relating to the hash_set
+              and hash_map classes.  See the "overall" notes above.
     USER INTERFACE:
         - The elementary moves dialog now has additional "Close book"
           and "Collapse edge" options.
