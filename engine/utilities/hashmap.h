@@ -32,12 +32,18 @@
  *  This header is provided as a convenience to work around the differing
  *  installations of the Standard Template Library extension classes that
  *  are available.
+ *
+ *  \deprecated Everything related to the \e hash_set and \e hash_map classes
+ *  is deprecated, since these classes are not part of the C++ standard.
+ *  This material is scheduled to be removed from Regina in version 5.0.
  */
 
 #ifndef __HASHMAP_H
 #ifndef __DOXYGEN
 #define __HASHMAP_H
 #endif
+
+#warning This header is deprecated, and will be removed in Regina 5.0.
 
 #include <regina-config.h>
 

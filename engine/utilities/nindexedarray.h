@@ -115,6 +115,12 @@ namespace regina {
  * \testfull
  *
  * \ifacespython Not present.
+ *
+ * \deprecated Like everything else that relies on the non-standard
+ * STL/g++ extension classes \e hash_set and \e hash_map, NIndexedArray is
+ * scheduled to be removed from Regina in version 5.0.  For a replacement,
+ * NMarkedVector does a similar job and is smaller and faster, though
+ * it requires modification of the data types stored in the array.
  */
 template <class Data, class HashFcn = stdhash::hash<Data>,
     class EqualTo = std::equal_to<Data> >

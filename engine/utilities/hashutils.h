@@ -29,6 +29,10 @@
 /*! \file hashutils.h
  *  \brief Provides a variety of hash functions for use with the
  *  Standard Template Library.
+ *
+ *  \deprecated Everything related to the \e hash_set and \e hash_map classes
+ *  is deprecated, since these classes are not part of the C++ standard.
+ *  This material is scheduled to be removed from Regina in version 5.0.
  */
 
 #ifndef __HASHUTILS_H
@@ -48,6 +52,10 @@
  *
  *  This alias is provided because different compilers place these classes
  *  in different namespaces.
+ *
+ *  \deprecated Everything related to the \e hash_set and \e hash_map classes
+ *  is deprecated, since these classes are not part of the C++ standard.
+ *  This material is scheduled to be removed from Regina in version 5.0.
  */
 #if __NO_NAMESPACE_ALIASES
     #define stdhash __HASH_NAMESPACE
@@ -72,6 +80,10 @@ namespace regina {
  * memory locations might very well return two different hash values.
  *
  * \ifacespython Not present.
+ *
+ * \deprecated Everything related to the \e hash_set and \e hash_map classes
+ * is deprecated, since these classes are not part of the C++ standard.
+ * This material is scheduled to be removed from Regina in version 5.0.
  */
 struct HashPointer {
     /**
@@ -92,6 +104,10 @@ struct HashPointer {
  * This class is for use with the Standard Template Library.
  *
  * \ifacespython Not present.
+ *
+ * \deprecated Everything related to the \e hash_set and \e hash_map classes
+ * is deprecated, since these classes are not part of the C++ standard.
+ * This material is scheduled to be removed from Regina in version 5.0.
  */
 struct HashString {
     private:
