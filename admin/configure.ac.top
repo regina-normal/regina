@@ -239,7 +239,14 @@ fi
 REGINA_SHOULD_BUILD_INTERNAL(KDEUI)
 if test "$should_build" = "yes"; then
   KDE_USE_QT(3.2, [>= Qt 3.2], [QT_VERSION >= 0x030200])
+
   KDE_SET_PREFIX
+  # This tromps over the default prefix even for users who *don't* want to
+  # build the GUI.  Restore the default -- this shouldn't affect users who
+  # *do* want the GUI, and even if it did then REGINA_CHECK_KDE_MODULEDIR
+  # would pick this up anyway.
+  AC_PREFIX_DEFAULT(/usr/local)
+
   AC_PATH_KDE
   REGINA_CHECK_KDE_MODULEDIR
   REGINA_CHECK_KDE_VERSION
