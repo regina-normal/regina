@@ -62,7 +62,7 @@ table.contentswrapper th {
   color: #3D3F53;
   background-color: #B5BCF8;
   padding: 2px 1ex 2px 1ex;
-  border-width: 0px 1px 1px 1px;
+  border-width: 1px 1px 1px 1px;
   border-color: #FFFFFF;
   border-style: solid;
 }
@@ -161,4 +161,17 @@ div.warning p {
 
 div.warning b {
   color: #502525;
+}
+
+span.question {
+  font-size: medium;
+  font-weight: bold;
+  color: #3D3F53;
+  border-width: 0px 0px 2px 0px;
+  border-color: #B5BCF8;
+  border-style: solid;
+}
+
+body.deprecation b {
+  color: #3D3F53;
 }
