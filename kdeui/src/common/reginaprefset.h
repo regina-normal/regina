@@ -256,6 +256,9 @@ struct ReginaPrefSet {
     bool snapPeaClosed;
         /**< Do we allow the SnapPea kernel to work with closed (non-ideal)
              triangulations, even though it's dangerous? */
+    unsigned surfacesCompatThreshold;
+        /**< The maximum number of normal surfaces in a list for which the
+             compatibility matrices will be automatically calculated. */
     int surfacesCreationCoords;
         /**< The default coordinate system for normal surface creation. */
     SurfacesTab surfacesInitialTab;

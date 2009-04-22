@@ -50,6 +50,8 @@ using regina::NNormalSurface;
 NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane) {
+    ReginaPart* part = newEnclosingPane->getPart();
+
     NSurfaceHeaderUI* header = new NSurfaceHeaderUI(packet, this);
     addHeader(header);
 
@@ -62,8 +64,13 @@ NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
     addTab(coords, i18n("Surface &Coordinates"));
 
     addTab(new NSurfaceMatchingUI(packet, this), i18n("&Matching Equations"));
-    addTab(new NSurfaceCompatibilityUI(packet, this),
-        i18n("Com&patibility"));
+
+    compat = new NSurfaceCompatibilityUI(packet, this,
+        part->getPreferences().surfacesCompatThreshold);
+    addTab(compat, i18n("Com&patibility"));
+
+    connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
+        this, SLOT(updatePreferences(const ReginaPrefSet&)));
 
     // Select the default tab.
     switch(newEnclosingPane->getPart()->getPreferences().surfacesInitialTab) {
@@ -84,6 +91,10 @@ const QPtrList<KAction>& NNormalSurfaceUI::getPacketTypeActions() {
 
 QString NNormalSurfaceUI::getPacketMenuText() const {
     return i18n("&Normal Surfaces");
+}
+
+void NNormalSurfaceUI::updatePreferences(const ReginaPrefSet& newPrefs) {
+    compat->setAutoCalcThreshold(newPrefs.surfacesCompatThreshold);
 }
 
 NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,

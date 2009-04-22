@@ -35,8 +35,10 @@
 
 #include "../packettabui.h"
 
+class NSurfaceCompatibilityUI;
 class NSurfaceCoordinateUI;
 class QLabel;
+class ReginaPrefSet;
 
 namespace regina {
     class NNormalSurfaceList;
@@ -53,6 +55,7 @@ class NNormalSurfaceUI : public PacketTabbedUI {
          * Internal components
          */
         NSurfaceCoordinateUI* coords;
+        NSurfaceCompatibilityUI* compat;
 
     public:
         /**
@@ -66,6 +69,13 @@ class NNormalSurfaceUI : public PacketTabbedUI {
          */
         const QPtrList<KAction>& getPacketTypeActions();
         QString getPacketMenuText() const;
+
+    public slots:
+        /**
+         * Notify this interface that the global preferences have been
+         * updated.
+         */
+        void updatePreferences(const ReginaPrefSet& newPrefs);
 };
 
 /**

@@ -233,6 +233,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
             surfacePrefs->comboInitialTab->setCurrentItem(0); break;
     }
 
+    surfacePrefs->editCompatThreshold->setText(
+        QString::number(prefSet.surfacesCompatThreshold));
+
     pdfPrefs->cbEmbed->setChecked(prefSet.pdfEmbed);
     pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
     pdfPrefs->cbAutoClose->setChecked(prefSet.pdfAutoClose);
@@ -524,6 +527,32 @@ void ReginaPreferences::slotApply() {
             prefSet.surfacesInitialTab = ReginaPrefSet::Summary; break;
     }
 
+    uintVal = surfacePrefs->editCompatThreshold->text().toUInt(&ok);
+    if (ok) {
+        if (uintVal > 1000) {
+            KMessageBox::error(this, i18n("<qt>I am not brave enough to allow "
+                "a compatibility matrix threshold of more than 1000.  "
+                "If there are over a thousand surfaces then each compatibility "
+                "matrix will contain over a million cells, which could cause "
+                "severe performance problems for the graphical user "
+                "interface.<p>"
+                "Remember that you can always press the <i>Calculate</i> "
+                "button manually in the compatibility viewer for any "
+                "list of normal surfaces, regardless of its size.</qt>"));
+            surfacePrefs->editCompatThreshold->setText(
+                QString::number(prefSet.surfacesCompatThreshold));
+        } else
+            prefSet.surfacesCompatThreshold = uintVal;
+    } else {
+        KMessageBox::error(this, i18n("<qt>The compatibility matrix "
+            "threshold must be a non-negative integer.  "
+            "This is the maximum number of surfaces <i>N</i> in a normal "
+            "surface list for which the <i>N</i>-by-<i>N</i> compatibility "
+            "matrices will be calculated automatically.</qt>"));
+        surfacePrefs->editCompatThreshold->setText(
+            QString::number(prefSet.surfacesCompatThreshold));
+    }
+
     prefSet.pdfEmbed = pdfPrefs->cbEmbed->isChecked();
 
     // Don't be too fussy about what they put in this field, since the
@@ -773,6 +802,24 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
         "when a new normal surface list viewer is opened.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(comboInitialTab, msg);
+
+    // Set up the compatibility matrix threshold.
+    box = new QHBox(this);
+    box->setSpacing(5);
+
+    label = new QLabel(i18n("Compatibility matrix threshold:"), box);
+    editCompatThreshold = new KLineEdit(box);
+    editCompatThreshold->setMaxLength(
+         6 /* ridiculously high number of digits */);
+    editCompatThreshold->setValidator(new QIntValidator(0,
+         999999 /* ridiculously high */, box));
+    msg = i18n("<qt>The maximum number of surfaces <i>N</i> in a normal "
+        "surface list for which the <i>N</i>-by-<i>N</i> compatibility "
+        "matrices will be calculated automatically.  For larger lists, "
+        "you can always press the <i>Calculate</i> button by hand "
+        "in the compatibility viewer.</qt>");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(editCompatThreshold, msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);

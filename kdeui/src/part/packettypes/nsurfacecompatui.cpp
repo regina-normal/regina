@@ -39,12 +39,20 @@ using regina::NNormalSurfaceList;
 using regina::NPacket;
 
 NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
-        regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI) :
-        PacketViewerTab(useParentUI), surfaces(packet) {
+        regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI,
+        unsigned newAutoCalcThreshold) :
+        PacketViewerTab(useParentUI), surfaces(packet),
+        autoCalcThreshold(newAutoCalcThreshold) {
     ui = new QWidget();
+    // TODO
 }
 
 NSurfaceCompatibilityUI::~NSurfaceCompatibilityUI() {
+}
+
+void NSurfaceCompatibilityUI::setAutoCalcThreshold(unsigned newThreshold) {
+    // TODO
+    // Include autoCalcThreshold = newThreshold, plus refresh if need be.
 }
 
 regina::NPacket* NSurfaceCompatibilityUI::getPacket() {
