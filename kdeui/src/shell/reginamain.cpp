@@ -536,6 +536,9 @@ void ReginaMain::readOptions(KConfig* config) {
     globalPrefs.snapPeaClosed = config->readBoolEntry("AllowClosed", false);
 
     config->setGroup("Surfaces");
+    globalPrefs.surfacesCompatThreshold = config->readUnsignedNumEntry(
+        "CompatibilityThreshold", 100);
+
     globalPrefs.surfacesCreationCoords = config->readNumEntry(
         "CreationCoordinates", regina::NNormalSurfaceList::STANDARD);
 
@@ -642,6 +645,8 @@ void ReginaMain::saveOptions() {
     config->writeEntry("AllowClosed", globalPrefs.snapPeaClosed);
 
     config->setGroup("Surfaces");
+    config->writeEntry("CompatibilityThreshold",
+        globalPrefs.surfacesCompatThreshold);
     config->writeEntry("CreationCoordinates",
         globalPrefs.surfacesCreationCoords);
 

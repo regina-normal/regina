@@ -135,6 +135,7 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
         snapPeaClosed(false),
+        surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
         surfacesInitialTab(Summary),
         treeJumpSize(10),

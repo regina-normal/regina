@@ -60,13 +60,23 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
          */
         QWidget* ui;
 
+        /**
+         * Properties
+         */
+        unsigned autoCalcThreshold;
+
     public:
         /**
          * Constructor and destructor.
          */
         NSurfaceCompatibilityUI(regina::NNormalSurfaceList* packet,
-            PacketTabbedUI* useParentUI);
+            PacketTabbedUI* useParentUI, unsigned newAutoCalcThreshold);
         ~NSurfaceCompatibilityUI();
+
+        /**
+         * Update properties.
+         */
+        void setAutoCalcThreshold(unsigned newThreshold);
 
         /**
          * PacketViewerTab overrides.
