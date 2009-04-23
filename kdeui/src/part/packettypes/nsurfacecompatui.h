@@ -57,6 +57,12 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
 
     private:
         /**
+         * Constants for the various "computer says no" messages that can be
+         * displayed.
+         */
+        enum MessageIndex { TOO_LARGE, NON_EMBEDDED, EMPTY_LIST };
+
+        /**
          * Packet details
          */
         regina::NNormalSurfaceList* surfaces;
@@ -109,6 +115,12 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
+
+    private:
+        /**
+         * Change the display to show the given message.
+         */
+        void setMessage(MessageIndex msg);
 
     private slots:
         /**

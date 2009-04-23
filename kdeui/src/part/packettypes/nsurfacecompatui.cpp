@@ -50,7 +50,7 @@
 using regina::NNormalSurfaceList;
 using regina::NPacket;
 
-// TODO: Refuse to deal with immersed/singular surfaces or an empty list.
+// TODO: Preference for the default compatibility test.
 
 NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
         regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI,
@@ -120,12 +120,7 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
 
         noneLayout->addSpacing(10);
 
-        msgNone = new QLabel(i18n("<qt>The compatibility matrices "
-            "have not been computed automatically, because this "
-            "list contains a large number of surfaces.<p>"
-            "If you wish to compute these matrices (and if you have "
-            "enough time and memory), then please press the "
-            "<i>Calculate</qt> button above.</qt>"), layerNone);
+        msgNone = new QLabel(layerNone);
         noneLayout->addWidget(msgNone);
         noneLayout->setStretchFactor(msgNone, 4);
 
@@ -175,13 +170,24 @@ void NSurfaceCompatibilityUI::refresh() {
         delete matrixGlobal;
     }
 
+    matrixLocal = matrixGlobal = 0;
+    layerLocal = layerGlobal = 0;
+
+    // Are we able to compute the new matrices if we want to?
+    if (surfaces->getNumberOfSurfaces() == 0) {
+        setMessage(EMPTY_LIST);
+        return;
+    }
+    if (! surfaces->isEmbeddedOnly()) {
+        setMessage(NON_EMBEDDED);
+        return;
+    }
+
     // Should we compute new matrices?
     if ((! requestedCalculation) &&
             surfaces->getNumberOfSurfaces() > autoCalcThreshold) {
         // Nope.
-        matrixLocal = matrixGlobal = 0;
-        layerLocal = layerGlobal = 0;
-
+        setMessage(TOO_LARGE);
         btnCalculate->setEnabled(true);
         return;
     }
@@ -227,6 +233,30 @@ void NSurfaceCompatibilityUI::refresh() {
     }
 
     chooseMatrix->setEnabled(true);
+}
+
+void NSurfaceCompatibilityUI::setMessage(MessageIndex msg) {
+    switch (msg) {
+        case TOO_LARGE:
+            msgNone->setText(i18n("<qt>The compatibility matrices "
+                "have not been computed automatically, because this "
+                "list contains a large number of surfaces.<p>"
+                "If you wish to compute these matrices (and if you have "
+                "enough time and memory), then please press the "
+                "<i>Calculate</qt> button above.</qt>"));
+            break;
+
+        case NON_EMBEDDED:
+            msgNone->setText(i18n("<qt>This list "
+                "may contain immersed and/or singular surfaces.<p>"
+                "Compatibility matrices can only be shown for a list "
+                "of <i>embedded</i> normal or almost normal surfaces.</qt>"));
+            break;
+
+        case EMPTY_LIST:
+            msgNone->setText(i18n("<qt>This list of surfaces is empty.</qt>"));
+            break;
+    }
 }
 
 void NSurfaceCompatibilityUI::changeLayer(int index) {
