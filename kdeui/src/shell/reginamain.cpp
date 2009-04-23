@@ -542,7 +542,14 @@ void ReginaMain::readOptions(KConfig* config) {
     globalPrefs.surfacesCreationCoords = config->readNumEntry(
         "CreationCoordinates", regina::NNormalSurfaceList::STANDARD);
 
-    QString str = config->readEntry("InitialTab");
+    QString str = config->readEntry("InitialCompat");
+    if (str == "Global")
+        globalPrefs.surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
+    else
+        globalPrefs.surfacesInitialCompat = ReginaPrefSet::LocalCompat;
+            /* default */
+
+    str = config->readEntry("InitialTab");
     if (str == "Coordinates")
         globalPrefs.surfacesInitialTab = ReginaPrefSet::Coordinates;
     else if (str == "Matching")
@@ -649,6 +656,13 @@ void ReginaMain::saveOptions() {
         globalPrefs.surfacesCompatThreshold);
     config->writeEntry("CreationCoordinates",
         globalPrefs.surfacesCreationCoords);
+
+    switch (globalPrefs.surfacesInitialCompat) {
+        case ReginaPrefSet::GlobalCompat:
+            config->writeEntry("InitialCompat", "Global"); break;
+        default:
+            config->writeEntry("InitialCompat", "Local"); break;
+    }
 
     switch (globalPrefs.surfacesInitialTab) {
         case ReginaPrefSet::Coordinates:

@@ -220,6 +220,9 @@ struct ReginaPrefSet {
         /**< Available tabs in a triangulation algebra viewer. */
     enum SurfacesTab { Summary, Coordinates, Matching, Compatibility };
         /**< Available top-level tabs in a normal surface list viewer. */
+    enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
+        /**< Possible compatibility matrices that can be displayed for a
+             normal surface list. */
 
     bool autoDock;
         /**< Do we automatically dock new packet
@@ -261,6 +264,9 @@ struct ReginaPrefSet {
              compatibility matrices will be automatically calculated. */
     int surfacesCreationCoords;
         /**< The default coordinate system for normal surface creation. */
+    SurfacesCompatMatrix surfacesInitialCompat;
+        /**< The matrix first shown when the compatibility tab is
+             opened for a normal surface list. */
     SurfacesTab surfacesInitialTab;
         /**< The initially visible top-level tab for a new normal
              surface list viewer. */

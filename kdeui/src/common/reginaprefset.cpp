@@ -137,6 +137,7 @@ ReginaPrefSet::ReginaPrefSet() :
         snapPeaClosed(false),
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
+        surfacesInitialCompat(LocalCompat),
         surfacesInitialTab(Summary),
         treeJumpSize(10),
         triEditMode(DirectEdit),

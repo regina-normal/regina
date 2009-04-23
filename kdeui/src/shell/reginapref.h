@@ -144,6 +144,7 @@ class ReginaPrefSurfaces : public QVBox {
         CoordinateChooser* chooserCreationCoords;
         QCheckBox* cbWarnOnNonEmbedded;
         QComboBox* comboInitialTab;
+        QComboBox* comboInitialCompat;
         QLineEdit* editCompatThreshold;
 
     public:

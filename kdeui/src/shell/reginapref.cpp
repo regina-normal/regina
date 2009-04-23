@@ -233,6 +233,13 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
             surfacePrefs->comboInitialTab->setCurrentItem(0); break;
     }
 
+    switch (prefSet.surfacesInitialCompat) {
+        case ReginaPrefSet::GlobalCompat:
+            surfacePrefs->comboInitialCompat->setCurrentItem(1); break;
+        default:
+            surfacePrefs->comboInitialCompat->setCurrentItem(0); break;
+    }
+
     surfacePrefs->editCompatThreshold->setText(
         QString::number(prefSet.surfacesCompatThreshold));
 
@@ -527,6 +534,13 @@ void ReginaPreferences::slotApply() {
             prefSet.surfacesInitialTab = ReginaPrefSet::Summary; break;
     }
 
+    switch (surfacePrefs->comboInitialCompat->currentItem()) {
+        case 1:
+            prefSet.surfacesInitialCompat = ReginaPrefSet::GlobalCompat; break;
+        default:
+            prefSet.surfacesInitialCompat = ReginaPrefSet::LocalCompat; break;
+    }
+
     uintVal = surfacePrefs->editCompatThreshold->text().toUInt(&ok);
     if (ok) {
         if (uintVal > 1000) {
@@ -802,6 +816,25 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
         "when a new normal surface list viewer is opened.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(comboInitialTab, msg);
+
+    // Set up the initial compatibility matrix.
+    box = new QHBox(this);
+    box->setSpacing(5);
+
+    label = new QLabel(i18n("Default compatibility matrix:"), box);
+    comboInitialCompat = new KComboBox(box);
+    comboInitialCompat->insertItem(i18n("Local (quads and octagons)"));
+    comboInitialCompat->insertItem(i18n("Global (disjoint surfaces)"));
+    msg = i18n("<qt>Specifies which compatibility matrix should be initially "
+        "displayed when the user opens the <i>Compatibility</i> tab.<p>"
+        "The <i>local</i> matrix tests whether two surfaces "
+        "can avoid local intersections within each tetrahedron (which is "
+        "determined entirely by quadrilateral and/or octagon types).  "
+        "The <i>global</i> matrix tests whether two surfaces can "
+        "simultaneously avoid intersections in <i>all</i> tetrahedra, "
+        "i.e., whether the two surfaces can be made disjoint.</qt>");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(comboInitialCompat, msg);
 
     // Set up the compatibility matrix threshold.
     box = new QHBox(this);

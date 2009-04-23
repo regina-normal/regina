@@ -42,6 +42,7 @@ class QPushButton;
 class QCanvasView;
 class QComboBox;
 class QWidgetStack;
+class ReginaPrefSet;
 
 namespace regina {
     class NPacket;
@@ -101,7 +102,7 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
          * Constructor and destructor.
          */
         NSurfaceCompatibilityUI(regina::NNormalSurfaceList* packet,
-            PacketTabbedUI* useParentUI, unsigned newAutoCalcThreshold);
+            PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs);
         ~NSurfaceCompatibilityUI();
 
         /**
