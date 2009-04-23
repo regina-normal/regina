@@ -64,6 +64,7 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
 
     QBoxLayout* hdrLayout = new QHBoxLayout(uiLayout);
     hdrLayout->setSpacing(5);
+    hdrLayout->addSpacing(5);
 
     QLabel* label = new QLabel(i18n("Display matrix:"), ui);
     hdrLayout->addWidget(label);
@@ -98,6 +99,7 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
     hdrLayout->addWidget(btnCalculate);
     connect(btnCalculate, SIGNAL(clicked()), this, SLOT(calculate()));
 
+    hdrLayout->addSpacing(5);
     uiLayout->addSpacing(5);
 
     stack = new QWidgetStack(ui);

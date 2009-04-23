@@ -72,6 +72,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
 
     QBoxLayout* hdrLayout = new QHBoxLayout(uiLayout);
     hdrLayout->setSpacing(5);
+    hdrLayout->addSpacing(5);
 
     // Set up the coordinate selector.
     QLabel* label = new QLabel(i18n("Display coordinates:"), ui);
@@ -104,6 +105,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     QWhatsThis::add(label, msg);
     QWhatsThis::add(filter, msg);
 
+    hdrLayout->addSpacing(5);
     uiLayout->addSpacing(5);
 
     // And leave space for the table.
