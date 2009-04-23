@@ -26,96 +26,55 @@
 
 /* end stub */
 
-/*! \file nsurfacecompatui.h
- *  \brief Provides a viewer for pairwise compatibility of normal surfaces.
+/*! \file ncompatcanvas.h
+ *  \brief Provides a canvas for displaying a surface compatibility matrix.
  */
 
-#ifndef __NSURFACECOMPATUI_H
-#define __NSURFACECOMPATUI_H
+#ifndef __NCOMPATCANVAS_H
+#define __NCOMPATCANVAS_H
 
-#include "packet/npacketlistener.h"
-
-#include "../packettabui.h"
-
-class NCompatCanvas;
-class QPushButton;
-class QCanvasView;
-class QComboBox;
-class QWidgetStack;
+#include <qcanvas.h>
 
 namespace regina {
-    class NPacket;
     class NNormalSurfaceList;
 };
 
 /**
- * A normal surface page for viewing surface coordinates.
+ * A canvas for displaying a compatibility matrix for a list of
+ * normal surfaces.
  */
-class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+class NCompatCanvas : public QCanvas {
     Q_OBJECT
 
     private:
         /**
-         * Packet details
+         * Matrix size and state
          */
-        regina::NNormalSurfaceList* surfaces;
-
-        /**
-         * Compatibility matrices
-         *
-         * These are null if there are too many surfaces, or real objects
-         * if we aim to display the matrices.  Note that, even if these
-         * are real objects, we do not \e fill the canvases with data
-         * points until the user actually tries to display them.
-         */
-        NCompatCanvas* matrixLocal;
-        NCompatCanvas* matrixGlobal;
-        QCanvasView* layerLocal;
-        QCanvasView* layerGlobal;
+        unsigned nSurfaces;
+        bool filled;
 
         /**
          * Internal components
          */
-        QWidget* ui;
-        QWidgetStack* stack;
-        QWidget* layerNone;
-        QLabel* msgNone;
-        QComboBox* chooseMatrix;
-        QPushButton* btnCalculate;
-
-        /**
-         * Properties
-         */
-        unsigned autoCalcThreshold;
-        bool requestedCalculation;
+        unsigned cellSize;
 
     public:
         /**
          * Constructor and destructor.
          */
-        NSurfaceCompatibilityUI(regina::NNormalSurfaceList* packet,
-            PacketTabbedUI* useParentUI, unsigned newAutoCalcThreshold);
-        ~NSurfaceCompatibilityUI();
+        NCompatCanvas(unsigned useNumSurfaces);
+        ~NCompatCanvas();
 
         /**
-         * Update properties.
+         * Fill the canvas with data.
+         *
+         * These routines will do nothing if the canvas has already been
+         * filled.
+         *
+         * \pre The given list is non-empty and contains only embedded surfaces.
          */
-        void setAutoCalcThreshold(unsigned newThreshold);
-
-        /**
-         * PacketViewerTab overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        void refresh();
-
-    private slots:
-        /**
-         * Compute or change matrices.
-         */
-        void changeLayer(int index);
-        void calculate();
+        void fillLocal(const regina::NNormalSurfaceList& surfaces);
+        void fillGlobal(const regina::NNormalSurfaceList& surfaces);
 };
 
 #endif
