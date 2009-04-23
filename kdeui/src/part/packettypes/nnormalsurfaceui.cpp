@@ -65,8 +65,7 @@ NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
 
     addTab(new NSurfaceMatchingUI(packet, this), i18n("&Matching Equations"));
 
-    compat = new NSurfaceCompatibilityUI(packet, this,
-        part->getPreferences().surfacesCompatThreshold);
+    compat = new NSurfaceCompatibilityUI(packet, this, part->getPreferences());
     addTab(compat, i18n("Com&patibility"));
 
     connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),

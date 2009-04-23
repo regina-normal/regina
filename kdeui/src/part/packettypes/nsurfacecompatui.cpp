@@ -31,6 +31,7 @@
 #include "surfaces/nnormalsurfacelist.h"
 
 // UI includes:
+#include "reginaprefset.h"
 #include "ncompatcanvas.h"
 #include "nsurfacecompatui.h"
 #include "../reginapart.h"
@@ -50,14 +51,13 @@
 using regina::NNormalSurfaceList;
 using regina::NPacket;
 
-// TODO: Preference for the default compatibility test.
-
 NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
         regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI,
-        unsigned newAutoCalcThreshold) :
+        const ReginaPrefSet& prefs) :
         PacketViewerTab(useParentUI), surfaces(packet),
         matrixLocal(0), matrixGlobal(0), layerLocal(0), layerGlobal(0),
-        autoCalcThreshold(newAutoCalcThreshold), requestedCalculation(false) {
+        autoCalcThreshold(prefs.surfacesCompatThreshold),
+        requestedCalculation(false) {
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
     uiLayout->addSpacing(5);
@@ -83,6 +83,8 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
         "i.e., whether the two surfaces can be made disjoint.</qt>");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(chooseMatrix, msg);
+    chooseMatrix->setCurrentItem(
+        prefs.surfacesInitialCompat == ReginaPrefSet::GlobalCompat ? 1 : 0);
     chooseMatrix->setEnabled(false);
 
     hdrLayout->addStretch(1);
