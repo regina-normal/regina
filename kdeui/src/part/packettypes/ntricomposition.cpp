@@ -90,6 +90,7 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
 
     // Set up the isomorphism tester.
     QBoxLayout* wideIsoArea = new QHBoxLayout(layout, 5);
+    wideIsoArea->addSpacing(5);
 
     QBoxLayout* leftIsoArea = new QVBoxLayout(wideIsoArea, 0);
     wideIsoArea->setStretchFactor(leftIsoArea, 1);
