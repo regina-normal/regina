@@ -4,14 +4,14 @@ Regina - A Normal Surface Theory Calculator
     This file contains specific details of most changes, including
     changes to the API for the calculation engine.
 
-    For general highlights of the changes between releases, see
+    For a human-readable summary of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
 Version 4.6  [ (under development) ]
 
     OVERALL:
         - Deprecated everything relating to the non-standard STL/g++ classes
-          classes hash_set and hash_map, for the sake of portability.
+          hash_set and hash_map, for the sake of portability.
         - Added a "deprecation guide" to the website, with a table listing
           the outdated routines/classes/etc. to be removed in Regina 5.0 and
           the corresponding new routines/classes/etc. that replace them.
@@ -22,7 +22,7 @@ Version 4.6  [ (under development) ]
         Class NBoundaryComponent, NComponent, NEdge, NFace, NVertex:
             - All constructors for skeletal objects are now private, since
               only the triangulation skeletal routines should be creating them.
-            - Cleaned up some of the more obtuse parts of the documentation.
+            - Cleaned up some of the more obscure parts of the documentation.
         Class NCensus:
             - Removed findAllCompletions(), which (as the documentation
               points out) is an empty shell of a routine that has never been
@@ -44,7 +44,6 @@ Version 4.6  [ (under development) ]
             - Added a new static array NEdge::ordering to replace the old
               global routine regina::edgeOrdering().  The old routine is
               now deprecated (see below).
-            - The constructor and destructor are now private (see above).
         Class NFace:
             - Added a new static array NFace::ordering to replace the old
               global routine regina::faceOrdering().  The old routine is
@@ -69,7 +68,7 @@ Version 4.6  [ (under development) ]
               (2007), no. 3, 527--571.
         Class NIndexedArray:
             - Deprecated, along with everything else relating to the hash_set
-              and hash_map classes.  For a replacement, see the NMarkedVector
+              and hash_map classes.  For a replacement, try the NMarkedVector
               class, which is smaller and faster but requires modification
               of the data type being stored.
         Class NIsomorphism, NIsomorphismDirect, NIsomorphismIndexed:
@@ -105,13 +104,12 @@ Version 4.6  [ (under development) ]
             - Implemented quadrilateral-octagon coordinates for almost normal
               surfaces (the relevant flavour constant is AN_QUAD_OCT).
               See arXiv:0904.3041 for details.
-            - Added routines quadToStandard() and standardToQuad() to
-              convert between different solution sets.  See arXiv:0901.2629
-              for details of the underlying algorithms.
-            - Added analagous routines quadOctToStandardAN() and
-              standardANToQuadOct() for almost normal surfaces.
+            - Added routines quadToStandard(), standardToQuad(),
+              quadOctToStandardAN() and standardANToQuadOct() to convert
+              between different solution sets.  See arXiv:0901.2629 for
+              details of the underlying algorithms.
             - Changed enumerate() in standard coordinates so that, if
-              possible, it enumerates in quadrilateral coordinates instead
+              possible, it enumerates in quadrilateral coordinates first
               and then converts between solution sets (see above).  This
               typically runs orders of magnitude faster.  Similarly for
               standard almost normal coordinates.
@@ -131,7 +129,7 @@ Version 4.6  [ (under development) ]
               where surfaces with more than one octagon were stripped out
               (see above).
         Class NPerm:
-            - New routines trunc2() and trunc3() to build truncated
+            - New routines trunc2() and trunc3() to build a truncated
               version of a permutation string.
             - New arrays NPerm::S4, NPerm::invS4, NPerm::orderedS4,
               NPerm::S3, NPerm::invS3, NPerm::orderedS3, NPerm::S2 and
@@ -151,10 +149,9 @@ Version 4.6  [ (under development) ]
         Class NTetrahedron:
             - Renamed getAdjacentTetrahedron(), getAdjacentTetrahedronGluing()
               and getAdjacentFace() to adjacentTetrahedron(), adjacentGluing()
-              and adjacentFace(), which should be somewhat easier on the
-              fingers.  The old names are still available for backward
-              compatibility, but they are now deprecated and will be removed
-              in some future version of Regina.
+              and adjacentFace(), which should be easier on the fingers.
+              The old names are still available for backward compatibility,
+              but they are now deprecated and will be removed in Regina 5.0.
             - Proofreading and clarification for some of the older and more
               opaque parts of the documentation.
         Class NTriangulation:
@@ -163,8 +160,8 @@ Version 4.6  [ (under development) ]
             - New elementary move closeBook().
             - Completely overhauled collapseEdge().  The eligiblity checks for
               this routine are now correct and not overly conservative, which
-              makes this routine both useful and safe to use.  The big warning
-              is now gone from the collapseEdge() documentation as a result.
+              makes this routine both useful and safe.  The big warning is
+              now gone from the collapseEdge() documentation as a result.
             - Routine simplifyToLocalMinimum() now collapses edges, which
               makes a big difference for multiple-vertex triangulations.
             - Routine intelligentSimplify() now uses book opening moves to
@@ -204,8 +201,7 @@ Version 4.6  [ (under development) ]
         Global arrays allPermsS4, allPermsS4Inv, orderedPermsS4, allPermsS3,
                 allPermsS3Inv, orderedPermsS3, allPermsS2, allPermsS2Inv:
             - All of these arrays are now deprecated.  Please use the new
-              arrays NPerm::S4, NPerm::invS4, NPerm::orderedS4, NPerm::S3
-              and so on.
+              arrays NPerm::S4, NPerm::invS4, NPerm::orderedS4, and so on.
         Global arrays edgeNumber, edgeStart, edgeEnd:
             - Deprecated; users are advised to switch to the new arrays
               NEdge::edgeNumber and NEdge::edgeVertex instead.
@@ -220,9 +216,7 @@ Version 4.6  [ (under development) ]
           things, this makes extracting the dehydration string much simpler.
         - In the triangulation viewer, the Surfaces panel now has a new
           "3-ball?" entry beneath the current "3-sphere?" entry.
-        - Fixed a bug whereby small triangulations occasionally became
-          read-only after a user visited the Surfaces panel.
-        - The normal surface list viewer has two additional tabs: one to
+        - The normal surface list viewer now has two additional tabs: one to
           summarise all surfaces in the list (which is now the default tab),
           and one to list pairwise compatibilities between surfaces.
         - The normal surface list viewer now has an additional "Cut Along"
@@ -240,6 +234,8 @@ Version 4.6  [ (under development) ]
           the Help menu, to make it easier to find solutions if things break.
         - The "Python Reference" entry in the Help menu should now work
           even when konqueror is not installed.
+        - Fixed a bug whereby small triangulations occasionally became
+          read-only after a user visited the Surfaces panel.
         - Added a scrollbar to the Cellular Info pane in case the window
           is small.
     TEST SUITE:
@@ -250,8 +246,8 @@ Version 4.6  [ (under development) ]
           and manifolds.
         - New tests that enumerate automorphisms of triangulations and
           test for subcomplexes.
-        - New tests for 3-sphere and 3-ball recognition.
-        - New tests to verify conversion routines between normal surface
+        - Added exhaustive testing for 3-sphere and 3-ball recognition.
+        - Added exhaustive testing for conversions between normal surface
           solution sets in different coordinate systems.
     BUILD ENVIRONMENT:
         - Installing into a staging area (i.e., building packages) now works
