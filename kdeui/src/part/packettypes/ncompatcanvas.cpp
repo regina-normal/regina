@@ -33,10 +33,11 @@
 #define NICE_SIZE 200
 #define MIN_CELL 5
 #define MAX_CELL 20
-#define LEFT_MARGIN 10
-#define TOP_MARGIN 10
-#define RIGHT_MARGIN 10
-#define BOTTOM_MARGIN 10
+#define LEFT_MARGIN 5
+#define TOP_MARGIN 5
+#define OUTER_MARGIN 10
+#define OUTER_MARGIN_TINY 5
+#define TICK_LENGTH 3
 
 // UI includes:
 #include "ncompatcanvas.h"
@@ -49,52 +50,167 @@ using regina::NNormalSurfaceList;
 NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
         QCanvas(),
         nSurfaces(useNumSurfaces), filled(false) {
-    if (MIN_CELL * useNumSurfaces > NICE_SIZE)
+    if (MIN_CELL * nSurfaces > NICE_SIZE)
         cellSize = MIN_CELL;
     else {
-        cellSize = NICE_SIZE / useNumSurfaces;
+        cellSize = NICE_SIZE / nSurfaces;
         if (cellSize > MAX_CELL)
             cellSize = MAX_CELL;
     }
 
-    resize(useNumSurfaces * cellSize + 1 + LEFT_MARGIN + RIGHT_MARGIN,
-           useNumSurfaces * cellSize + 1 + TOP_MARGIN + BOTTOM_MARGIN);
+    // Work out how much vertical and horizontal space we will need for
+    // text.  Assume here that (nSurfaces-1) is the largest number we
+    // will need to draw.
+    QCanvasText* t = new QCanvasText(QString::number(nSurfaces - 1), this);
+    unsigned textWidth = t->boundingRect().width();
+    unsigned textHeight = t->boundingRect().height();
+    delete t;
+
+    gridX = LEFT_MARGIN + textWidth + 2 * TICK_LENGTH;
+    gridY = TOP_MARGIN + textHeight + 2 * TICK_LENGTH;
+    gridSize = nSurfaces * cellSize + 1;
+
+    // Work out how much extra space we might need beyond the bottom of
+    // the canvas.
+    unsigned rightMargin = ((textWidth - cellSize) / 2) + OUTER_MARGIN_TINY;
+    if (rightMargin < OUTER_MARGIN)
+        rightMargin = OUTER_MARGIN;
+    unsigned bottomMargin = ((textHeight - cellSize) / 2) + OUTER_MARGIN_TINY;
+    if (bottomMargin < OUTER_MARGIN)
+        bottomMargin = OUTER_MARGIN;
+
+    resize(gridX + gridSize + rightMargin, gridY + gridSize + bottomMargin);
 
     // Draw a bounding box.
-    QCanvasRectangle* box = new QCanvasRectangle(LEFT_MARGIN, TOP_MARGIN,
-        useNumSurfaces * cellSize + 1, useNumSurfaces * cellSize + 1,
-        this);
+    QCanvasRectangle* box = new QCanvasRectangle(
+        gridX, gridY, gridSize, gridSize, this);
     box->setZ(10);
     box->show();
 
-    // Draw internal guide lines.
+    // Draw labels along the horizontal axis.
+    unsigned labelFreq = (nSurfaces >= 160 ? 20 : nSurfaces >= 30 ? 10 : 5);
+    unsigned halfCell = cellSize / 2;
+
+    unsigned pos;
     unsigned i;
-    for (i = 1; i < useNumSurfaces; ++i) {
-        QCanvasLine* l = new QCanvasLine(this);
-        if (i % 5)
-            l->setPen(Qt::lightGray);
-        l->setPoints(
-            LEFT_MARGIN,
-            TOP_MARGIN + (i * cellSize),
-            LEFT_MARGIN + (useNumSurfaces * cellSize),
-            TOP_MARGIN + (i * cellSize));
-        l->setZ(9);
-        l->show();
-    }
-    for (i = 1; i < useNumSurfaces; ++i) {
-        QCanvasLine* l = new QCanvasLine(this);
-        if (i % 5)
-            l->setPen(Qt::lightGray);
-        l->setPoints(
-            LEFT_MARGIN + (i * cellSize),
-            TOP_MARGIN,
-            LEFT_MARGIN + (i * cellSize),
-            TOP_MARGIN + (useNumSurfaces * cellSize));
-        l->setZ(9);
-        l->show();
+
+    pos = gridX + halfCell;
+    QCanvasText* prev = new QCanvasText(" 0 ", this);
+    prev->setTextFlags(Qt::AlignHCenter | Qt::AlignTop);
+    prev->move(pos, TOP_MARGIN);
+    prev->show();
+
+    QCanvasLine* tick = new QCanvasLine(this);
+    tick->setPoints(pos, TOP_MARGIN + textHeight + TICK_LENGTH,
+        pos, TOP_MARGIN + textHeight + 2 * TICK_LENGTH);
+    tick->show();
+
+    pos = gridX + halfCell + cellSize * (nSurfaces - 1);
+    QCanvasText* last = new QCanvasText(
+        QString(" %1 ").arg(nSurfaces - 1), this);
+    last->setTextFlags(Qt::AlignHCenter | Qt::AlignTop);
+    last->move(pos, TOP_MARGIN);
+    if (last->collidesWith(prev)) {
+        delete last;
+        last = 0;
+    } else {
+        last->show();
+
+        tick = new QCanvasLine(this);
+        tick->setPoints(pos, TOP_MARGIN + textHeight + TICK_LENGTH,
+            pos, TOP_MARGIN + textHeight + 2 * TICK_LENGTH);
+        tick->show();
     }
 
-    // TODO: ticks+labels; verify!!
+    if (last) {
+        for (i = labelFreq; i < nSurfaces - 1; i += labelFreq) {
+            pos = gridX + halfCell + cellSize * i;
+            t = new QCanvasText(QString(" %1 ").arg(i), this);
+            t->setTextFlags(Qt::AlignHCenter | Qt::AlignTop);
+            t->move(pos, TOP_MARGIN);
+            if (t->collidesWith(prev) || t->collidesWith(last))
+                delete t;
+            else {
+                t->show();
+                prev = t;
+
+                tick = new QCanvasLine(this);
+                tick->setPoints(pos, TOP_MARGIN + textHeight + TICK_LENGTH,
+                    pos, TOP_MARGIN + textHeight + 2 * TICK_LENGTH);
+                tick->show();
+            }
+        }
+    }
+
+    // Draw labels along the vertical axis.
+    pos = gridY + halfCell;
+    prev = new QCanvasText(" 0 ", this);
+    prev->setTextFlags(Qt::AlignRight | Qt::AlignVCenter);
+    prev->move(LEFT_MARGIN + textWidth, pos);
+    prev->show();
+
+    tick = new QCanvasLine(this);
+    tick->setPoints(LEFT_MARGIN + textWidth + TICK_LENGTH, pos,
+        LEFT_MARGIN + textWidth + 2 * TICK_LENGTH, pos);
+    tick->show();
+
+    pos = gridY + halfCell + cellSize * (nSurfaces - 1);
+    last = new QCanvasText(QString(" %1 ").arg(nSurfaces - 1), this);
+    last->setTextFlags(Qt::AlignRight | Qt::AlignVCenter);
+    last->move(LEFT_MARGIN + textWidth, pos);
+    if (last->collidesWith(prev)) {
+        delete last;
+        last = 0;
+    } else {
+        last->show();
+
+        tick = new QCanvasLine(this);
+        tick->setPoints(LEFT_MARGIN + textWidth + TICK_LENGTH, pos,
+            LEFT_MARGIN + textWidth + 2 * TICK_LENGTH, pos);
+        tick->show();
+    }
+
+    if (last) {
+        for (i = labelFreq; i < nSurfaces - 1; i += labelFreq) {
+            pos = gridY + halfCell + cellSize * i;
+            t = new QCanvasText(QString(" %1 ").arg(i), this);
+            t->setTextFlags(Qt::AlignRight | Qt::AlignVCenter);
+            t->move(LEFT_MARGIN + textWidth, pos);
+            if (t->collidesWith(prev) || t->collidesWith(last))
+                delete t;
+            else {
+                t->show();
+                prev = t;
+
+                tick = new QCanvasLine(this);
+                tick->setPoints(LEFT_MARGIN + textWidth + TICK_LENGTH, pos,
+                    LEFT_MARGIN + textWidth + 2 * TICK_LENGTH, pos);
+                tick->show();
+            }
+        }
+    }
+
+    // Draw internal guide lines.
+    for (i = 1; i < nSurfaces; ++i) {
+        QCanvasLine* l = new QCanvasLine(this);
+        if (i % 5)
+            l->setPen(Qt::lightGray);
+        l->setPoints(
+            gridX,                gridY + (i * cellSize),
+            gridX + gridSize - 1, gridY + (i * cellSize));
+        l->setZ(9);
+        l->show();
+    }
+    for (i = 1; i < nSurfaces; ++i) {
+        QCanvasLine* l = new QCanvasLine(this);
+        if (i % 5)
+            l->setPen(Qt::lightGray);
+        l->setPoints(
+            gridX + (i * cellSize), gridY,
+            gridX + (i * cellSize), gridY + gridSize - 1);
+        l->setZ(9);
+        l->show();
+    }
 
     update();
 }
@@ -120,8 +236,7 @@ void NCompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
 
             if (s->locallyCompatible(*t)) {
                 box = new QCanvasRectangle(
-                    LEFT_MARGIN + i * cellSize,
-                    TOP_MARGIN + j * cellSize,
+                    gridX + i * cellSize, gridY + j * cellSize,
                     cellSize + 1, cellSize + 1, this);
                 box->setPen(border);
                 box->setBrush(fill);
@@ -130,8 +245,7 @@ void NCompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
 
                 if (i != j) {
                     box = new QCanvasRectangle(
-                        LEFT_MARGIN + j * cellSize,
-                        TOP_MARGIN + i * cellSize,
+                        gridX + j * cellSize, gridY + i * cellSize,
                         cellSize + 1, cellSize + 1, this);
                     box->setPen(border);
                     box->setBrush(fill);
@@ -170,16 +284,14 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
     for (i = 0; i < nSurfaces; ++i) {
         if (! usable[i]) {
             box = new QCanvasRectangle(
-                LEFT_MARGIN + i * cellSize, TOP_MARGIN,
-                cellSize + 1, cellSize * nSurfaces + 1, this);
+                gridX + i * cellSize, gridY, cellSize + 1, gridSize, this);
             box->setPen(border);
             box->setBrush(hash);
             box->setZ(7);
             box->show();
 
             box = new QCanvasRectangle(
-                LEFT_MARGIN, TOP_MARGIN + i * cellSize,
-                cellSize * nSurfaces + 1, cellSize + 1, this);
+                gridX, gridY + i * cellSize, gridSize, cellSize + 1, this);
             box->setPen(border);
             box->setBrush(hash);
             box->setZ(7);
@@ -198,8 +310,7 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
 
             if (s->disjoint(*t)) {
                 box = new QCanvasRectangle(
-                    LEFT_MARGIN + i * cellSize,
-                    TOP_MARGIN + j * cellSize,
+                    gridX + i * cellSize, gridY + j * cellSize,
                     cellSize + 1, cellSize + 1, this);
                 box->setPen(border);
                 box->setBrush(fill);
@@ -208,8 +319,7 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
 
                 if (i != j) {
                     box = new QCanvasRectangle(
-                        LEFT_MARGIN + j * cellSize,
-                        TOP_MARGIN + i * cellSize,
+                        gridX + j * cellSize, gridY + i * cellSize,
                         cellSize + 1, cellSize + 1, this);
                     box->setPen(border);
                     box->setBrush(fill);
