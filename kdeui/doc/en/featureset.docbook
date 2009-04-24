@@ -221,8 +221,9 @@
    almost normal discs, and does not consider annular pieces.</para></footnote>
    of a triangulation,
    an operation required by most high-level topological algorithms that
-   utilise normal surface theory.  The underlying enumeration algorithm is
-   described in detail in <xref linkend="bib-burton-dd"/>.
+   utilise normal surface theory.  The underlying enumeration algorithms
+   are described in detail in <xref linkend="bib-burton-dd"/> and
+   <xref linkend="bib-burton-convert"/>.
   </para>
   <para>
    This vertex enumeration can be performed in a variety of coordinate
@@ -231,7 +232,13 @@
    standard triangle and quadrilateral coordinates, as well
    as the smaller set of 3<replaceable>n</replaceable> quadrilateral-only
    coordinates introduced by Tollefson for algorithmic efficiency
-   <xref linkend="bib-quadspace"/>.  The enumeration
+   <xref linkend="bib-quadspace"/>.  Likewise, for almost normal surfaces
+   this includes the 10<replaceable>n</replaceable> standard coordinates
+   as well as the 6<replaceable>n</replaceable> quadrilateral-octagon
+   coordinates <xref linkend="bib-burton-quadoct"/>.
+  </para>
+  <para>
+   The enumeration
    can be restricted to embedded normal surfaces or can be expanded to
    include immersed and singular surfaces.  Furthermore, elementary support
    is present for spun normal surfaces, discussed in detail by
@@ -258,6 +265,11 @@
      as splitting surfaces (described
      <link linkend="features-splitting">below</link>)
      and vertex and edge links;
+    </para></listitem>
+    <listitem><para>
+     Testing pairs of surfaces for local compatibility (compatible
+     quadrilaterals and/or octagons) and global compatibility (being
+     able to make the surfaces disjoint);
     </para></listitem>
     <listitem><para>
      Filtering large lists of normal surfaces by various properties
