@@ -10,6 +10,50 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.6  [ (under development) ]
 
+    Features:
+        - Some important changes regarding almost normal surfaces:
+            + Regina no longer strips out surfaces with more than one octagon
+              (though it still enforces at most one octagon *type*).  This is
+              important if you plan to use the vertex surfaces as a basis.
+            + You can now enumerate vertex almost normal surfaces in
+              quadrilateral-octagon coordinates (arXiv:0904.3041).
+            + The normal surface viewer now tells you where the octagon is,
+              so you don't have to scroll through 10n coordinates to find it.
+        - The normal surface viewer now has two new tabs:
+            + The Summary tab gives a quick overview of what kinds of
+              surfaces were found, to save scrolling through the entire list.
+            + The Compatibility tab gives a visual overview of which pairs of
+              surfaces are locally compatible (no conflicting quadrilaterals
+              or octagons), and globally compatible (can be made disjoint).
+        - You can now cut along a normal surface (which retriangulates the
+          resulting pieces).  Unlike crushing, no topology is lost.
+        - Simplification is now much more effective for triangulations with
+          boundary and/or multiple vertices.
+        - Added 3-ball recognition to the Surfaces tab for triangulations.
+        - Elementary moves now include "close book" and "collapse edge".
+        - You can now copy dehydration strings (and any other information
+          in the triangulation composition tab) by right-clicking.
+        - Normal surfaces are now automatically numbered in the viewer,
+          to help keep track of which is which.
+    Optimisations:
+        - Enumeration of normal (or almost normal) surfaces in standard
+          coordinates is now orders of magnitude faster again, thanks to the
+          quadrilateral-to-standard conversion algorithm (arXiv:0901.2629).
+        - Likewise, 3-sphere recognition is now orders of magnitude faster.
+        - Ported several recent census optimisations to the more
+          general setting of enumerating non-minimal triangulations.
+    Bug Fixes:
+        - Fixed simplification bugs for bounded and invalid triangulations:
+            + Fixed some crashes involving bounded triangulations.
+            + Fixed some nasty bugs in the boundary shelling move, which in
+              some cases could simplify bounded triangulations incorrectly.
+            + Fixed bugs whereby invalid triangulations could have the
+              offending points truncated or pushed into cusps.
+    C++ / Python Changes:
+        - A fair amount of code is now deprecated in preparation for
+          Regina 5.0.  See http://regina.sourceforge.net/deprecation.html
+          for a guide to updating your scripts and programs accordingly.
+
 Version 4.5.1  [ 28 October, 2008 ]
 
     Features:
