@@ -118,15 +118,17 @@ ReginaAbout::ReginaAbout(const char* internalName) :
     addCredit("Jeff Weeks",
         I18N_NOOP("Use of the SnapPea kernel and helpful discussions"));
     addCredit("The American Institute of Mathematics",
-        I18N_NOOP("Generous support"));
+        I18N_NOOP("Support for development (2000)"));
     addCredit("The Australian Research Council",
         I18N_NOOP("Hardware support"));
-    addCredit("Oklahoma State University",
-        I18N_NOOP("Generous support"));
+    addCredit("Oklahoma State University, USA",
+        I18N_NOOP("Support for development (2000-2001)"));
     addCredit("RMIT University, Australia",
-        I18N_NOOP("Generous support"));
+        I18N_NOOP("Support for development (2004-2006 and ongoing)"));
     addCredit("The University of Melbourne, Australia",
-        I18N_NOOP("Generous support"));
+        I18N_NOOP("Support for development (2002-2003 and ongoing)"));
+    addCredit("The University of Victoria, Canada",
+        I18N_NOOP("Hospitality and support"));
     addCredit("The Victorian Partnership for Advanced Computing",
         I18N_NOOP("Financial support and much-needed CPU cycles"));
     addCredit("Debian GNU/Linux",
