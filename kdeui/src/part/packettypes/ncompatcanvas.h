@@ -57,6 +57,9 @@ class NCompatCanvas : public QCanvas {
          * Internal components
          */
         unsigned cellSize;
+        unsigned gridX;
+        unsigned gridY;
+        unsigned gridSize;
 
     public:
         /**
