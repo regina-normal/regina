@@ -70,14 +70,24 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     gridY = TOP_MARGIN + textHeight + 2 * TICK_LENGTH;
     gridSize = nSurfaces * cellSize + 1;
 
-    // Work out how much extra space we might need beyond the bottom of
-    // the canvas.
-    unsigned rightMargin = ((textWidth - cellSize) / 2) + OUTER_MARGIN_TINY;
-    if (rightMargin < OUTER_MARGIN)
+    // Work out how much extra space we might need beyond the bottom of the
+    // canvas.  Be careful when subtracting, since we are using unsigned ints.
+    unsigned rightMargin, bottomMargin;
+
+    if (textWidth < cellSize)
         rightMargin = OUTER_MARGIN;
-    unsigned bottomMargin = ((textHeight - cellSize) / 2) + OUTER_MARGIN_TINY;
-    if (bottomMargin < OUTER_MARGIN)
+    else {
+        rightMargin = ((textWidth - cellSize) / 2) + OUTER_MARGIN_TINY;
+        if (rightMargin < OUTER_MARGIN)
+            rightMargin = OUTER_MARGIN;
+    }
+    if (textHeight < cellSize)
         bottomMargin = OUTER_MARGIN;
+    else {
+        bottomMargin = ((textHeight - cellSize) / 2) + OUTER_MARGIN_TINY;
+        if (bottomMargin < OUTER_MARGIN)
+            bottomMargin = OUTER_MARGIN;
+    }
 
     resize(gridX + gridSize + rightMargin, gridY + gridSize + bottomMargin);
 
