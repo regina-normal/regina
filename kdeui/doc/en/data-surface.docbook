@@ -62,7 +62,7 @@ surface ::= (#PCDATA,
    length depends upon the underlying coordinate system.  For instance, under
    standard tri-quad coordinates the vector will have length
    7<replaceable>T</replaceable>, and under quad coordinates it will
-   have length 4<replaceable>T</replaceable>.  The underlying coordinate
+   have length 3<replaceable>T</replaceable>.  The underlying coordinate
    system is specified in the &xml-params; element of the parent
    &xml-packet-normalsurfacelist;.
   </para>

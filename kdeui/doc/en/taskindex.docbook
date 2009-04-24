@@ -955,7 +955,12 @@
  </glossdiv><glossdiv><title>Q</title>
 
  <glossentry>
-  <glossterm>quad normal coordinates</glossterm>
+  <glossterm>quadrilateral normal coordinates</glossterm>
+  <glosssee>coordinate systems</glosssee>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>quadrilateral-octagon almost normal coordinates</glossterm>
   <glosssee>coordinate systems</glosssee>
  </glossentry>
 

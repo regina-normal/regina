@@ -112,9 +112,36 @@
   </author></authorgroup>
   <title>Optimising the double description method for normal surface
    enumeration</title>
-  <edition>Preprint</edition>
+  <edition>To appear in Math. Comp.</edition>
   <issuenum>arXiv:0808.4050</issuenum>
   <date>August 2008</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-convert">
+  <abbrev>Bur09a</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>Converting between quadrilateral and standard solution sets
+   in normal surface theory</title>
+  <edition>Preprint</edition>
+  <issuenum>arXiv:0901.2629</issuenum>
+  <date>January 2009</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-quadoct">
+  <abbrev>Bur09b</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>Quadrilateral-octagon coordinates for almost normal surfaces</title>
+  <edition>Preprint</edition>
+  <issuenum>arXiv:0904.3041</issuenum>
+  <date>April 2009</date>
  </biblioentry>
 
  <biblioentry id="bib-cuspedcensus">
