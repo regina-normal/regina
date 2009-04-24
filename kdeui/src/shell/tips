@@ -175,3 +175,25 @@ from the <i>Packet Tree</i> menu, where you can browse the filesystem and
 import your PDF document into the current Regina data file.
 </html>
 </tip>
+<tip category="Regina">
+<html>
+<p>
+The Callahan-Hildebrand-Weeks dehydration string for a triangulation (if
+it exists) is shown in the <i>Composition</i> tab of the triangulation
+viewer.
+<p>
+You can copy this dehydration string by right-clicking on the
+corresponding line of text in the composition tree, and then selecting
+<i>Copy to Clipboard</i> from the pop-up menu that appears.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+You can export a section of your packet tree into its own separate data
+file.  Select the root of the subtree that you wish to export, then
+visit the <i>File</i> menu, select <i>Export</i> and then
+<i>Regina Data File</i>.  Make sure that the correct subtree is selected
+in the dialog that appears, and press <i>OK</i>.
+</html>
+</tip>
