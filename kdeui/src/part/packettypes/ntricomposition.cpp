@@ -151,6 +151,8 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
         "string if the triangulation supports it, and (iii) the details "
         "of any standard combinatorial structures found within the "
         "triangulation.<p>"
+        "You can right-click on any line of text to copy it to the "
+        "clipboard.<p>"
         "See the users' handbook for further details on the information "
         "listed here.</qt>");
 
