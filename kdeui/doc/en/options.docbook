@@ -198,10 +198,46 @@
     </para></glossdef>
    </glossentry>
    <glossentry>
+    <glossterm>Warn before generating non-embedded surfaces</glossterm>
+    <glossdef><para>
+     If this option is checked, &regina; will ask for confirmation
+     whenever you try to enumerate a list of normal surfaces without
+     checking the <guilabel>Embedded surfaces only</guilabel> box.
+     This is because immersed and/or singular surfaces can be extremely
+     slow to enumerate, and there might be a great number of them.
+     See the documentation on
+     <link linkend="surfaces-embeddedonly">creating normal surface lists</link>
+     for further details.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
     <glossterm>Default top-level tab</glossterm>
     <glossdef><para>
      This specifies which of the many available tabs will be made visible
      when a new normal surface list viewer is first opened.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm>Default compatibility matrix</glossterm>
+    <glossdef><para>
+     This specifies which matrix will be displayed first when the user
+     opens the <guilabel>Compatibility</guilabel> tab for a normal
+     surface list.  See the documentation on
+     <link linkend="surfaces-compat">compatibility matrices</link>
+     for details.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm>Compatibility matrix threshold</glossterm>
+    <glossdef><para>
+     Compatibility matrices will not be generated automatically for
+     lists that contain a very large number of normal surfaces.
+     Here you can specify this limit on the number of surfaces.
+     Note that for larger lists you can still generate the matrices
+     manually by pressing the <guilabel>Calculate</guilabel> button,
+     as described in the
+     <link linkend="surfaces-compat">compatibility matrix
+     documentation</link>.
     </para></glossdef>
    </glossentry>
   </glosslist>

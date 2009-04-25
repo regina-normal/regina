@@ -257,6 +257,13 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>compatibility matrices for normal surfaces</glossterm>
+  <glossdef><para><link linkend="surfaces-compat">displaying</link></para></glossdef>
+  <glossdef><para><link linkend="options-surfaces">threshold for
+   automatic generation</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm>compiling</glossterm>
   <glossdef><para><link linkend="compiling">compiling &regina; into other
    code</link></para></glossdef>
@@ -330,7 +337,7 @@
    coordinate system</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-selectcoords">enumerating in a
    particular coordinate system</link></para></glossdef>
-  <glossdef><para><link linkend="surfaces-viewsurfacecoords">explanation of
+  <glossdef><para><link linkend="surfaces-defcoords">explanation of
    different coordinate systems</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-viewsurfacecoords">viewing in a
    different coordinate system</link></para></glossdef>
@@ -397,6 +404,11 @@
  <glossentry>
   <glossterm><link linkend="packet-delete">deleting packets</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>disjoint normal surfaces</glossterm>
+  <glosssee>compatibility matrices for normal surfaces</glosssee>
  </glossentry>
 
  <glossentry>
@@ -619,6 +631,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>globally compatible normal surfaces</glossterm>
+  <glosssee>compatibility matrices for normal surfaces</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm>gluings</glossterm>
   <glosssee>tetrahedron face gluings</glosssee>
  </glossentry>
@@ -679,9 +696,10 @@
  </glossentry>
 
  <glossentry>
-  <glossterm><link linkend="surfaces-embeddedonly">immersed / singular
-   normal surfaces, enumerating</link></glossterm>
-  <glossdef><para>&nbsp;</para></glossdef>
+  <glossterm>immersed / singular normal surfaces</glossterm>
+  <glossdef><para><link linkend="surfaces-embeddedonly">enumerating</link></para></glossdef>
+  <glossdef><para><link linkend="options-surfaces">warn before
+   enumerating</link></para></glossdef>
  </glossentry>
 
  <glossentry>
@@ -751,6 +769,11 @@
  </glossentry>
 
  <glossentry>
+  <glossterm>legacy almost normal coordinates</glossterm>
+  <glosssee>coordinate systems</glosssee>
+ </glossentry>
+
+ <glossentry>
   <glossterm>Legendre symbol vector</glossterm>
   <glossdef><para><link linkend="tri-algebra-cellular">invariant of
    torsion linking form</link></para></glossdef>
@@ -772,6 +795,11 @@
  <glossentry>
   <glossterm><link linkend="licenses">licence details</link></glossterm>
   <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>locally compatible normal surfaces</glossterm>
+  <glosssee>compatibility matrices for normal surfaces</glosssee>
  </glossentry>
 
  <glossentry>
@@ -818,14 +846,20 @@
   <glossterm>normal surfaces</glossterm>
   <glossdef><para><link linkend="surfaces-viewsurfaceprops">basic
    properties</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-summary">breakdown of total
+   counts by properties</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-propcentral">central
    surfaces, recognising</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-compat">compatibility
+   matrices</link></para></glossdef>
   <glossdef><para><link linkend="options-surfaces">coordinate
    systems, configuring default</link></para></glossdef>
-  <glossdef><para><link linkend="surfaces-viewsurfacecoords">coordinate
+  <glossdef><para><link linkend="surfaces-defcoords">coordinate
    systems, different systems explained</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-viewsurfacecoords">coordinate
    systems, viewing in different systems</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-summary">counting different types
+   of surfaces</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-crush">crushing a
    surface</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-cut">cutting along a
@@ -843,6 +877,8 @@
    equations</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-propname">naming
    surfaces in a list</link></para></glossdef>
+  <glossdef><para><link linkend="surfaces-viewsurfaceprops">numbering
+   surfaces in a list</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-propsplitting">splitting surfaces,
    recognising</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-proplink">vertex links,
@@ -850,6 +886,17 @@
  </glossentry>
 
  </glossdiv><glossdiv><title>O</title>
+
+ <glossentry>
+  <glossterm>octagons</glossterm>
+  <glossdef><para><link linkend="surfaces-propoctagon">locating within
+   almost normal surfaces</link></para></glossdef>
+ </glossentry>
+
+ <glossentry>
+  <glossterm>octagonal almost normal surfaces</glossterm>
+  <glosssee>normal surfaces</glosssee>
+ </glossentry>
 
  <glossentry>
   <glossterm>one-sidedness</glossterm>
@@ -1092,9 +1139,8 @@
  </glossentry>
 
  <glossentry>
-  <glossterm><link linkend="surfaces-embeddedonly">singular / immersed
-   normal surfaces, enumerating</link></glossterm>
-  <glossdef><para>&nbsp;</para></glossdef>
+  <glossterm>singular / immersed normal surfaces</glossterm>
+  <glosssee>immersed / singular surfaces</glosssee>
  </glossentry>
 
  <glossentry>

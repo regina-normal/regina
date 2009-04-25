@@ -195,6 +195,31 @@
   <date>1962</date>
  </biblioentry>
 
+ <biblioentry id="bib-hass-knotnp">
+  <abbrev>HLP99</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Joel</firstname>
+    <surname>Hass</surname>
+   </author>
+   <author>
+    <firstname>Jeffrey</firstname>
+    <othername>C.</othername>
+    <surname>Lagarias</surname>
+   </author>
+   <author>
+    <firstname>Nicholas</firstname>
+    <surname>Pippenger</surname>
+   </author>
+  </authorgroup>
+  <title>The computational complexity of knot and link problems</title>
+  <edition>J. Assoc. Comput. Mach.</edition>
+  <volumenum>vol. 46</volumenum>
+  <issuenum>no. 2</issuenum>
+  <artpagenums>pp. 185&ndash;211</artpagenums>
+  <date>1999</date>
+ </biblioentry>
+
  <biblioentry id="bib-closedhypcensus">
   <abbrev>HW94</abbrev>
   <authorgroup>
@@ -417,16 +442,16 @@
  </biblioentry>
 
  <biblioentry id="bib-tillus-spun">
-  <abbrev>Til02</abbrev>
+  <abbrev>Til08</abbrev>
   <authorgroup><author>
    <firstname>Stephan</firstname>
    <surname>Tillmann</surname>
   </author></authorgroup>
-  <title>On character varieties : surfaces associated to mutation &amp;
-   deformation of hyperbolic 3-manifolds</title>
-  <edition>PhD Thesis</edition>
-  <publishername>University of Melbourne</publishername>
-  <date>2002</date>
+  <title>Normal surfaces in topologically finite 3-manifolds</title>
+  <edition>Enseign. Math. (2)</edition>
+  <volumenum>vol. 54</volumenum>
+  <artpagenums>pp. 329&ndash;380</artpagenums>
+  <date>2008</date>
  </biblioentry>
 
  <biblioentry id="bib-quadspace">

@@ -1125,8 +1125,8 @@
     <tip><para>
      You can copy text from the composition box by right-clicking
      on a line of text and selecting
-     <menuchoice><guimenuitem>Copy</guimenuitem></menuchoice> from
-     the pop-up menu that appears.  This is particularly useful for
+     <menuchoice><guimenuitem>Copy to Clipboard</guimenuitem></menuchoice>
+     from the pop-up menu that appears.  This is particularly useful for
      copying dehydration strings.
     </para></tip>
    </sect3>
