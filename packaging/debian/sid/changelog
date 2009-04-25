@@ -1,21 +1,32 @@
 regina-normal (4.6-1) unstable; urgency=low
 
   * New upstream release.
+  * Removed the build-conflicts on regina-normal-dev, since the build system
+    has now been patched to avoid the associated relinking problems.
+
+ -- Ben Burton <bab@debian.org>  Sat, 25 Apr 2009 17:59:31 +1000
+
+regina-normal (4.5.1-2) unstable; urgency=low
+
   * Debian has migrated from KDE 3 to KDE 4.  As a consequence:
       - The regina-normal package no longer recommends kpdf (which is no
-        longer shipped in debian).  The regina-normal package now recommends
-        xpdf or okular instead, which will at least provide an external PDF
-        viewer (though not an embedded PDF viewer).
+        longer shipped in debian).  Instead it recommends xpdf or okular,
+        which will at least provide an external PDF viewer (though not an
+        embedded PDF viewer).
       - Both konqueror and khelpcenter have been removed from the recommends
         lists, since debian no longer ships versions of these packages that
         will talk with KDE 3 (and hence with regina-normal).  Unfortunately
         this means that users cannot view documentation via the Help menu;
         instead they will need to download the users' handbook in HTML
         format from the Regina website.
-  * Removed the build-conflicts on regina-normal-dev, since the build system
-    has now been patched to avoid the associated relinking problems.
+  * Added support for nocheck in DEB_BUILD_OPTIONS (if you wish to avoid
+    running the test suite during the build).
+  * Added calls to dh_desktop in debian/rules for updating the MIME type cache.
+  * Remove the automake, autoconf, etc. calls from debian/rules, since
+    we are no longer patching the build scripts.
+  * Bumped standards-version to 3.8.1.0.
 
- -- Ben Burton <bab@debian.org>  Tue, 28 Oct 2008 06:19:50 +1100
+ -- Ben Burton <bab@debian.org>  Sat, 25 Apr 2009 17:59:31 +1000
 
 regina-normal (4.5.1-1) unstable; urgency=low
 
