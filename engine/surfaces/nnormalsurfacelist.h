@@ -229,7 +229,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * The algorithm used is the souped-up double description method
          * in standard coordinates as described in "Optimising the
          * double description method for normal surface enumeration",
-         * Benjamin A. Burton, preprint, arXiv:0808.4050.
+         * Benjamin A. Burton, to appear in Math. Comp., arXiv:0808.4050.
          *
          * Users will generally not want to call this routine, since it
          * is often much slower than enumerate() and it gives precisely
