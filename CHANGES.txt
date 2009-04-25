@@ -7,7 +7,18 @@ Regina - A Normal Surface Theory Calculator
     For a human-readable summary of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 4.6  [ (under development) ]
+Version 5.0  [ (under development) ]
+
+    OVERALL:
+        - TODO: List all the new classes and tests relating to 4-manifolds.
+    ENGINE:
+        Class NPerm5:
+            - New class describing permutations of five elements, which
+              we need in order to describe 4-manifold triangulations.
+    TEST SUITE:
+        - Added very thorough tests for NPerm5.
+
+Version 4.6  [ 16 May, 2009 ]
 
     OVERALL:
         - Deprecated everything relating to the non-standard STL/g++ classes
@@ -142,9 +153,6 @@ Version 4.6  [ (under development) ]
         Class NPermItS4:
             - Deprecated, since all this class does is wrap a trivial loop.
               Just loop through the elements of NPerm::S4 directly.
-        Class NPerm5:
-            - New class describing permutations of five elements, which
-              we need in order to describe 4-manifold triangulations.
         Class NPillowTwoSphere, NSnappedTwoSphere:
             - Removed reduceTriangulation() and getReducedTriangulation(),
               both of which are empty shells of routines that have never
@@ -242,7 +250,7 @@ Version 4.6  [ (under development) ]
         - Added a scrollbar to the Cellular Info pane in case the window
           is small.
     TEST SUITE:
-        - Added very thorough tests for small permutation classes.
+        - Added very thorough tests for NPerm.
         - Additional tests for triangulation simplification and Euler
           characteristic.
         - New tests for the recognition of families of standard triangulations
