@@ -76,10 +76,6 @@ Guest configuration
 
   debian# schroot -c gutsy aptitude update
 
-- Stop host processes that conflict with the guest install:
-
-  debian# /etc/init.d/acpid stop  (*** This may cause X to restart! ***)
-
 - Install base system:
 
   debian# schroot -c gutsy aptitude install
