@@ -13,10 +13,11 @@
  <para>
   A <firstterm>normal surface</firstterm> inside a 3-manifold
   triangulation is a surface composed entirely of normal discs.  A
-  <firstterm>normal disc</firstterm> sits inside a single tetrahedron
-  (and splits that tetrahedron into two pieces), and must be either a
-  triangle (touching three of the four tetrahedron edges) or a
-  quadrilateral (touching all four of the tetrahedron edges).
+  <firstterm>normal disc</firstterm> is a properly embedded disc within
+  a single tetrahedron, and must be either a
+  triangle (whose boundary runs across three of the four tetrahedron faces)
+  or a quadrilateral (whose boundary runs across all four of the tetrahedron
+  faces).
  </para>
  <para>
   The &regina; logo shown on this page illustrates all four possible
@@ -28,8 +29,8 @@
   surfaces</firstterm>, which have the same restrictions as normal
   surfaces except that they must contain precisely one additional
   octagonal disc.
-  An octagonal disc touches each tetrahedron edge twice, and there are
-  three possible types of octagonal disc.
+  The boundary of an octagonal disc runs across each tetrahedron face twice,
+  and there are three possible types of octagonal disc.
  </para>
  <note><para>
   More general definitions of almost normal surfaces allow for an annular
@@ -43,9 +44,9 @@
   discs of each type in each tetrahedron are used to make up the surface.
  </para>
  <para>
-  A summary of enough normal surface theory to use this
-  program can be found in Burton's PhD thesis
-  <xref linkend="bib-burton-phd"/>, available from the &regwebsite;.
+  For a summary of enough normal surface theory to use this
+  program, see a reference such as
+  <xref linkend="bib-burton-convert"/> or <xref linkend="bib-hass-knotnp"/>.
  </para>
 
  <note>
@@ -82,6 +83,25 @@
    the new list; all other normal surfaces can be formed as convex
    combinations of these vertex surfaces.
   </para>
+  <warning>
+   <para>
+    For <emphasis>almost</emphasis> normal surfaces, older versions of
+    &regina; used to ignore any vertex surfaces with
+    more than one octagonal disc.
+    As of &regina;&nbsp;4.6, this behaviour has changed &mdash; now
+    &regina; will keep surfaces with more than one octagon, though it
+    still insists on at most one octagon <emphasis>type</emphasis>.
+    This is important if you wish to use vertex almost normal
+    surfaces as a basis for generating <emphasis>all</emphasis>
+    almost normal surfaces, as suggested above.
+   </para>
+   <para>
+    If you have a data file from &regina;&nbsp;4.5.1 or earlier,
+    then any vertex surfaces with more than one octagon will have already been
+    removed.  The only way to get them back is to re-run the almost normal
+    surface enumeration using &regina;&nbsp;4.6 or later.
+   </para>
+  </warning>
   <para>
    Before the normal surface list is created, you will be asked for some
    additional details as follows.
@@ -104,10 +124,11 @@
        normal surfaces will be enumerated.
       </para>
       <para>
-       Whether or not almost normal surfaces are enumerated (in addition to
+       Whether or not <emphasis>almost</emphasis>
+       normal surfaces are enumerated (in addition to
        just normal surfaces) will depend upon this choice of coordinate system.
        Currently almost normal surfaces are only enumerated when using
-       standard almost normal coordinates.
+       standard almost normal coordinates or quadrilateral-octagon coordinates.
       </para>
       <para>
        Note that this coordinate system refers only to the initial
@@ -117,12 +138,15 @@
       </para>
       <para>
        Note also that this choice of coordinate system will affect which
-       normal surfaces are produced.  For instance, quad normal
+       surfaces are produced.  For instance, quad normal
        coordinates produce spun normal surfaces which standard normal
        coordinates do not, and standard normal coordinates produce vertex
        links which quad normal coordinates do not.
       </para>
       <para>
+       The available coordinate systems are described in detail
+       in the documentation for the
+       <link linkend="surfaces-defcoords">coordinates tab</link>.
        If there is a particular coordinate system that you regularly
        use, the default offering can be changed in the
        <link linkend="options-surfaces">normal surface preferences</link>.
@@ -138,10 +162,11 @@
        considered in most of the published theory).
       </para>
       <para>
-       Be aware that a search that is
-       broadened to all surfaces (embedded, immersed and singular) is likely
-       to take somewhat longer to run than the corresponding embedded-only
-       search.
+       Be aware that a search that is broadened to <emphasis>all</emphasis>
+       surfaces (embedded, immersed and singular) could well take much
+       longer to run than the corresponding embedded-only
+       search.  Enumeration of immersed and singular surfaces is only
+       supported for normal surfaces, not almost normal surfaces.
       </para>
      </glossdef>
     </glossentry>
@@ -159,14 +184,15 @@
   </para>
 
   <sect2 id="surfaces-viewlistprops">
-   <title>List Properties</title>
+   <title>Properties of the List</title>
 
    <para>
-    Above all of the tabs in the surface list viewer are displayed some
-    basic properties of the normal surface list.  These include:
+    Above all of the tabs in the surface list viewer, a header is displayed
+    with some basic properties of the normal surface list.  These include:
     <itemizedlist>
      <listitem><para>
-      a count of the total number of vertex normal surfaces contained within;
+      a count of the total number of vertex normal surfaces contained in
+      the list;
      </para></listitem>
      <listitem><para>
       a reminder of how the surface list was
@@ -179,6 +205,48 @@
       <literal>embedded/immersed/singular</literal>.
      </para></listitem>
     </itemizedlist>
+   </para>
+   <tip><para>
+    If the header says that the list was created using
+    <emphasis>legacy</emphasis> almost normal coordinates, this means
+    the list was created using &regina;&nbsp;4.5.1 or earlier, and that
+    all surfaces with more than one octagon were deleted.
+    See the notes below on
+    <link linkend="surfaces-viewsurfacecoords">coordinates systems</link>
+    for details.
+   </para></tip>
+  </sect2>
+
+  <sect2 id="surfaces-summary">
+   <title>Summary</title>
+
+   <para>
+    The first tab contains a summary of what kinds of surfaces were found.
+    This summary breaks the total count down into several
+    sub-counts, as illustrated in the screenshot below.
+    These counts are first organised by boundary, where we distinguish
+    between closed surfaces, bounded surfaces (which have real boundary)
+    and non-compact surfaces (which have infinitely many normal or
+    almost normal discs).  Within each section, the counts are then
+    broken down further by Euler characteristic, orientability,
+    and one-or-two-sidedness.
+    For further information on these properties, see the documentation on
+    <link linkend="surfaces-viewsurfaceprops">individual
+    surface properties</link>.
+   </para>
+   <para>
+    <screenshot>
+     <screeninfo>The summary tab for a normal surface list</screeninfo>
+     <mediaobject>
+      <imageobject>
+       <imagedata fileref="surfaces-summary.png"/>
+      </imageobject>
+      <textobject>
+       <phrase>The summary tab for a normal surface list</phrase>
+      </textobject>
+      <caption><para>The summary tab for a normal surface list</para></caption>
+     </mediaobject>
+    </screenshot>
    </para>
   </sect2>
 
@@ -198,7 +266,22 @@
     properties (see the <link
     linkend="surfaces-viewsurfaceprops">individual surface properties</link>
     section below).  The remaining columns contain the actual surface
-    coordinates.
+    coordinates.  This is illustrated in the screenshot below.
+   </para>
+   <para>
+    <screenshot>
+     <screeninfo>The coordinates tab for a normal surface list</screeninfo>
+     <mediaobject>
+      <imageobject>
+       <imagedata fileref="surfaces-coords.png"/>
+      </imageobject>
+      <textobject>
+       <phrase>The coordinates tab for a normal surface list</phrase>
+      </textobject>
+      <caption><para>The coordinates tab for a normal surface
+       list</para></caption>
+     </mediaobject>
+    </screenshot>
    </para>
    <para>
     To change the coordinate system in which you are viewing the
@@ -210,13 +293,13 @@
     space search and the surfaces are viewed in standard (tri-quad)
     coordinates, this spun surface will be redisplayed in the table with
     triangular coordinates of infinity.  Furthermore, vertex links (which
-    are not found during a quad space search) will not all of a sudden
+    are not found during a quad space search) will not suddenly
     appear in the list.
    </para>
    <para>
     The meanings of the individual coordinate columns in the table
     depend upon the underlying coordinate system as follows.
-    <glosslist>
+    <glosslist id="surfaces-defcoords">
      <glossentry id="surfaces-defstandard">
       <glossterm>Standard normal (tri-quad) coordinates</glossterm>
       <glossdef>
@@ -264,6 +347,7 @@
         Quad normal coordinates are identical to standard normal
         (tri-quad) coordinates except that only quadrilateral discs are
         considered.
+        See Tollefson <xref linkend="bib-quadspace"/> for details.
        </para>
       </glossdef>
      </glossentry>
@@ -284,6 +368,64 @@
         a <literal>Q</literal> and each octagon label begins
         with a <literal>K</literal>.
        </para>
+       <para>
+        Although an almost normal surface is defined to have precisely
+        one octagonal disc, surfaces here in standard almost normal coordinates
+        are allowed to have no octagons at all, or several octagons
+        (though at most one octagon <emphasis>type</emphasis> can be used).
+        This becomes important if you wish to use vertex almost normal
+        surfaces as a basis for generating <emphasis>all</emphasis>
+        almost normal surfaces.
+       </para>
+       <para>
+        In contrast, see <link linkend="surfaces-deflegacyan">legacy
+        almost normal coordinates</link> below, where surfaces with more
+        than one octagon are explicitly removed.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry id="surfaces-defquadoct">
+      <glossterm>Quad-oct almost normal coordinates</glossterm>
+      <glossdef>
+       <para>
+        Quad-oct almost normal coordinates are identical to standard
+        almost normal (tri-quad-oct) coordinates, except that only
+        quadrilateral and octagonal discs are considered.
+        See <xref linkend="bib-burton-quadoct"/> for details.
+       </para>
+       <para>
+        Like standard almost normal coordinates, surfaces with no
+        octagons or many octagons (but all of the same type) are allowed.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry id="surfaces-deflegacyan">
+      <glossterm>Legacy almost normal (pruned tri-quad-oct)
+       coordinates</glossterm>
+      <glossdef>
+       <para>
+        These are identical to standard almost normal (tri-quad-oct)
+        coordinates, except that surfaces with more than one octagon
+        are removed entirely from the list.
+       </para>
+       <para>
+        This was in fact the behaviour in &regina; versions 4.5.1 and
+        earlier.  This behaviour was changed in &regina;&nbsp;4.6 because
+        it is important to keep surfaces with multiple octagons if you wish
+        to generate new surfaces as convex combinations of old surfaces.
+       </para>
+       <para>
+        Unfortunately, if a surface list was created in &regina;&nbsp;4.5.1
+        or earlier then such surfaces will already have been removed, and
+        there is no way to get them back (except to run a new enumeration of
+        almost normal surfaces).  Such lists will always be displayed
+        with the label <emphasis>legacy almost normal coordinates</emphasis>
+        so it is clear what has happened.
+       </para>
+       <para>
+        You cannot create a <emphasis>new</emphasis> normal
+        surface list in legacy coordinates.
+       </para>
       </glossdef>
      </glossentry>
      <glossentry id="surfaces-defedgewt">
@@ -300,6 +442,12 @@
         Edge numbers and the tetrahedron edges/vertices to which they
         correspond can be seen in the skeleton section of the
         <link linkend="tri-vertexedgeface">triangulation viewer</link>.
+       </para>
+       <para>
+        Edge weight coordinates are simply offered as a different way of
+        viewing an existing list of normal surfaces.  You cannot
+        <emphasis>enumerate</emphasis> a new list of surfaces
+        in edge weight coordinates.
        </para>
       </glossdef>
      </glossentry>
@@ -322,6 +470,12 @@
         correspond can be seen in the skeleton section of the
         <link linkend="tri-vertexedgeface">triangulation viewer</link>.
        </para>
+       <para>
+        Like edge weight coordinates, face arc coordinates are offered as a
+        different way of viewing an existing normal surface list.  You cannot
+        <emphasis>enumerate</emphasis> a new list of surfaces
+        in face arc coordinates.
+       </para>
       </glossdef>
      </glossentry>
     </glosslist>
@@ -338,12 +492,17 @@
     presents a table of all of the normal surfaces in the list.
    </para>
    <para>
-    The left few columns of this table contain a variety of surface
-    properties as described below.  Note that not all of these properties
-    are available in all situations (for instance, Euler characteristic
-    is not yet calculated for non-compact surfaces, and the orientability
-    column will not even appear if the surface list might include
-    non-embedded surfaces).
+    In the very leftmost column of this table, the individual surfaces
+    are numbered from 0 to <replaceable>S</replaceable>-1, where
+    <replaceable>S</replaceable> is the total number of surfaces in the list.
+   </para>
+   <para>
+    The next few columns describe several different properties of the
+    surfaces, as described below.  Note that not all of these properties
+    appear in all situations (for instance, &regina; does not yet calculate
+    Euler characteristic for non-compact surfaces, and the orientability
+    column will not be shown for lists that might include
+    immersed or singular surfaces).
    </para>
    <para>
     <glosslist>
@@ -383,7 +542,7 @@
       <glossterm>Bdry</glossterm>
       <glossdef><para>
        This column describes whether each surface is bounded.
-       In particular, it will take one of the following values:
+       It will take one of the following values:
        <glosslist>
         <glossentry>
          <glossterm>Closed</glossterm>
@@ -404,8 +563,9 @@
          <glossdef><para>
           Indicates that the surface is non-compact, i.e., contains infinitely
           many normal or almost normal discs.  Examples of such surfaces are
-          spun normal surfaces, which can be found in quad space for some ideal
-          triangulations.
+          <firstterm>spun normal surfaces</firstterm>
+          <xref linkend="bib-tillus-spun"/>,
+          which can be found in quad space for some ideal triangulations.
          </para></glossdef>
         </glossentry>
        </glosslist>
@@ -479,6 +639,33 @@
        </glosslist>
       </para></glossdef>
      </glossentry>
+     <glossentry id="surfaces-propoctagon">
+      <glossterm>Octagon</glossterm>
+      <glossdef>
+       <para>
+        This column only appears when dealing with almost normal surfaces.
+        Its purpose is to indicate how many octagonal discs each surface
+        contains, and where they are.
+       </para>
+       <para>
+        For a given surface, if the cell in this column is empty then
+        the surface does not contain any octagonal discs at all (i.e., it is a
+        regular <emphasis>normal</emphasis> surface).
+        Otherwise, it will contain a single coordinate label
+        and the corresponding number of octagons,
+        such as <literal>K2:&nbsp;03/12 (3&nbsp;octs)</literal>.
+       </para>
+       <para>
+        Note that there can only ever be one coordinate
+        <emphasis>position</emphasis> in any given surface
+        containing octagonal discs (this is a constraint forced upon the
+        enumeration procedure).  However, as of &regina;&nbsp;4.6,
+        this coordinate position may contain more than one octagon.
+        See the discussion on <link linkend="surfaces-deflegacyan">legacy
+        almost normal coordinates</link> for further details.
+       </para>
+      </glossdef>
+     </glossentry>
     </glosslist>
    </para>
   </sect2>
@@ -506,6 +693,119 @@
     surface coordinates mean can be found in the
     <link linkend="surfaces-viewsurfacecoords">individual surface
     coordinates</link> section above.
+   </para>
+  </sect2>
+
+  <sect2 id="surfaces-compat">
+   <title>Compatibility</title>
+
+   <para>
+    The <guilabel>Compatibility</guilabel> tab in the surface list
+    viewer shows which pairs of surfaces are compatible with each other,
+    both locally and globally.  These concepts are defined as follows:
+   </para>
+   <para>
+    <glosslist>
+     <glossentry id="surfaces-localcompat">
+      <glossterm>Locally compatible</glossterm>
+      <glossdef>
+       <para>
+        Two surfaces are <emphasis>locally compatible</emphasis> if
+        they are able to avoid intersection in any given tetrahedron of
+        the triangulation (though not necessarily in all tetrahedra
+        simultaneously).
+       </para>
+       <para>
+        In other words, two surfaces are locally compatible if, in each
+        tetrahedron, they <emphasis>together</emphasis> use at most
+        one quadrilateral or octagonal disc type.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry id="surfaces-globalcompat">
+      <glossterm>Globally compatible</glossterm>
+      <glossdef>
+       <para>
+        Two surfaces are <emphasis>globally compatible</emphasis> if
+        they are able to avoid intersection in <emphasis>all</emphasis>
+        tetrahedra of the triangulation simultaneously.
+       </para>
+       <para>
+        In other words, two surfaces are globally compatible if they can
+        be made <emphasis>disjoint</emphasis> within the triangulation.
+       </para>
+      </glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+   <para>
+    The <guilabel>Compatibility</guilabel> tab contains two matrices, one for
+    local compatibility and one for global compatibility.  You can
+    switch between these two matrices by using the drop-down box labelled
+    <guilabel>Display matrix</guilabel>.
+   </para>
+   <para>
+    Each matrix has dimensions
+    <replaceable>S</replaceable>-by-<replaceable>S</replaceable>,
+    where <replaceable>S</replaceable> is the total number of surfaces
+    in the list.  Rows and columns are both numbered from 0 to
+    <replaceable>S</replaceable>-1 inclusive, and the
+    (<replaceable>x</replaceable>,<replaceable>y</replaceable>) cell of
+    the matrix is filled if and only if surfaces
+    <replaceable>x</replaceable> and <replaceable>y</replaceable> are
+    compatible.  Here we use same numbering scheme as in the first column of
+    the <link linkend="surfaces-viewsurfaceprops">coordinate viewer</link>.
+   </para>
+   <para>
+    <screenshot>
+     <screeninfo>The global compatibility matrix for a normal
+      surface list</screeninfo>
+     <mediaobject>
+      <imageobject>
+       <imagedata fileref="surfaces-compat.png"/>
+      </imageobject>
+      <textobject>
+       <phrase>The global compatibility matrix for a
+        normal surface list</phrase>
+      </textobject>
+      <caption><para>The global compatibility matrix for a
+       normal surface list</para></caption>
+     </mediaobject>
+    </screenshot>
+   </para>
+   <para>
+    Note that the global compatibility test comes with some constraints.
+    Specifically, it cannot be run with surfaces that are empty, disconnected
+    or non-compact (such as spun normal surfaces).  For any such surfaces,
+    the corresponding rows and columns will be hashed out in the matrix
+    as illustrated below.
+   </para>
+   <para>
+    <screenshot>
+     <screeninfo>Hashing out rows and columns for
+      spun normal surfaces</screeninfo>
+     <mediaobject>
+      <imageobject>
+       <imagedata fileref="surfaces-compat-hash.png"/>
+      </imageobject>
+      <textobject>
+       <phrase>Hashing out rows and columns for
+        spun normal surfaces</phrase>
+      </textobject>
+      <caption><para>Hashing out rows and columns for
+       spun normal surfaces</para></caption>
+     </mediaobject>
+    </screenshot>
+   </para>
+   <para>
+    For very large lists of surfaces, the compatibility matrices will
+    not be generated automatically (since this could take a long time
+    and/or require a significant amount of memory).  In this case, you
+    can still compute the matrices by pressing the
+    <guilabel>Calculate</guilabel> button at the top of the tab.
+    The default threshold for automatic calculation is 100 surfaces,
+    though you can change this in the
+    <link linkend="options-surfaces">normal surface preferences</link>.
    </para>
   </sect2>
  </sect1>
