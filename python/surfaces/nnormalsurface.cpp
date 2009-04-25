@@ -88,6 +88,7 @@ void addNNormalSurface() {
         .def("getOctCoord", &NNormalSurface::getOctCoord)
         .def("getEdgeWeight", &NNormalSurface::getEdgeWeight)
         .def("getFaceArcs", &NNormalSurface::getFaceArcs)
+        .def("getOctPosition", &NNormalSurface::getOctPosition)
         .def("getNumberOfCoords", &NNormalSurface::getNumberOfCoords)
         .def("getTriangulation", &NNormalSurface::getTriangulation,
             return_value_policy<reference_existing_object>())
