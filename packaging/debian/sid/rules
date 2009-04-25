@@ -37,12 +37,12 @@ configure-stamp:
 	dh_testdir
 
 	# Update to debian's patched scripts.
-	admin/ac_gen
-	aclocal
-	autoheader
-	autoconf
-	automake
-	perl -w admin/am_edit
+	# admin/ac_gen
+	# aclocal
+	# autoheader
+	# autoconf
+	# automake
+	# perl -w admin/am_edit
 
 	# Patch regina-python to explicitly use the same python version that
 	# we are building against.
@@ -81,7 +81,9 @@ build: configure-stamp build-stamp
 build-stamp:
 	dh_testdir
 	$(MAKE)
-	$(MAKE) check
+	ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+		$(MAKE) check
+	endif
 	touch build-stamp
 
 clean:
@@ -153,6 +155,7 @@ binary-indep: build install
 	# dh_makeshlibs -i
 	dh_installdeb -i
 	dh_perl -i
+	dh_desktop -i
 	dh_shlibdeps -i
 	dh_gencontrol -i
 	dh_md5sums -i
@@ -179,6 +182,7 @@ binary-arch: build install
 	dh_pysupport -pregina-normal /usr/lib/regina-normal/python
 	dh_installdeb -a
 	dh_perl -a
+	dh_desktop -a
 	dh_shlibdeps -a -ldebian/regina-normal/usr/lib
 	dh_gencontrol -a
 	dh_md5sums -a
