@@ -107,6 +107,14 @@ Guest configuration
           graphviz kpdf khelpcenter kig konqueror
   debian# schroot -c gutsy aptitude clean
 
+- If disk space is becoming a problem, get rid of openoffice:
+
+  debian# schroot -c gutsy aptitude purge `aptitude search '~iopenoffice' |
+                           sed -e 's/^....//' | cut -f1 -d' '`
+  debian# schroot -c gutsy aptitude purge
+  debian# schroot -c gutsy aptitude install
+  debian# schroot -c gutsy aptitude clean
+
 - Allow user to administer the system:
 
   debian# schroot -c gutsy visudo
