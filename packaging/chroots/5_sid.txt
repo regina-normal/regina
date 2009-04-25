@@ -63,7 +63,7 @@ Guest (debian sid) configuration
 - Install basic graphical system:
 
   lenny# schroot -c sid aptitude install
-         less vim zsh kdelibs kdebase xnest xserver-xephyr
+         less vim zsh kdelibs kdebase kdebase-workspace xnest xserver-xephyr
 
 - Stop host processes that conflict with the guest install:
 
