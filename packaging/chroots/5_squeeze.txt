@@ -84,7 +84,7 @@ Guest (debian squeeze) configuration
 
 - Install other packages useful for running and testing regina:
 
-  lenny# schroot -c squeeze aptitude install gap graphviz kpdf kig mpich-bin
+  lenny# schroot -c squeeze aptitude install gap graphviz okular kig mpich-bin
   lenny# schroot -c squeeze aptitude clean
 
 - Follow the final steps described in 9_final-guestuser.txt to start a
