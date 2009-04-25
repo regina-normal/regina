@@ -11,7 +11,7 @@ Architecture: any
 Section: math
 Depends: ${shlibs:Depends}, ${perl:Depends}, ${python:Depends}
 Recommends: xpdf | okular
-Suggests: gap, graphviz, regina-normal-doc, regina-normal-dev, regina-normal-mpi, snappea
+Suggests: gap, graphviz, konqueror, regina-normal-doc, regina-normal-dev, regina-normal-mpi, snappea
 Description: 3-manifold topology software with normal surface support
  Regina is a suite of mathematical software for 3-manifold topologists.
  It focuses upon the study of 3-manifold triangulations and includes
@@ -71,7 +71,7 @@ Description: MPI utilities for Regina, the 3-manifold topology software
 Package: regina-normal-doc
 Architecture: all
 Section: doc
-Recommends: konqueror | www-browser
+Recommends: konqueror
 Suggests: regina-normal, regina-normal-dev
 Description: API docs for Regina, the 3-manifold topology software
  Regina is a suite of mathematical software for 3-manifold topologists.
