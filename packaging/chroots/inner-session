@@ -76,6 +76,12 @@ case "$os" in
 		exitwait=1
 		xephyr=1
 		;;
+	Ubuntu\ 9.04* )
+		distro=Jaunty
+		dbus=1
+		exitwait=1
+		xephyr=1
+		;;
 	Debian\ GNU/Linux\ 5.0\ * )
 		distro=Lenny
 		exitwait=1

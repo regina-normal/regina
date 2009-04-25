@@ -109,6 +109,10 @@ Guest configuration
           graphviz okular khelpcenter kig konqueror     (on >= intrepid)
   debian# schroot -c gutsy aptitude clean
 
+- Have another shot at purging problematic packages, in case they've returned:
+
+  debian# schroot -c gutsy aptitude purge resolvconf postfix
+
 - If disk space is becoming a problem, get rid of openoffice:
 
   debian# schroot -c gutsy aptitude purge `aptitude search '~iopenoffice' |
