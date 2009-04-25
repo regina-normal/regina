@@ -41,11 +41,11 @@ Guest configuration
 
   (for amd64:)
   debian# debootstrap gutsy /srv/chroot/ubuntu/gutsy-amd64
-          http://mirror.pacific.net.au/linux/ubuntu/
+          http://ftp.iinet.net.au/linux/ubuntu/
 
   (for i386:)
   debian# debootstrap --arch i386 gutsy /srv/chroot/ubuntu/gutsy-i386
-          http://mirror.pacific.net.au/linux/ubuntu/
+          http://ftp.iinet.net.au/linux/ubuntu/
 
 - Create guest home directory:
 
@@ -72,7 +72,7 @@ Guest configuration
 
 - Add universe to /etc/apt/sources.list in the guest system:
 
-  deb http://mirror.pacific.net.au/linux/ubuntu gutsy main universe
+  deb http://ftp.iinet.net.au/linux/ubuntu gutsy main universe
 
   debian# schroot -c gutsy aptitude update
 
