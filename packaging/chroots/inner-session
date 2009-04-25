@@ -170,6 +170,7 @@ title="$distro ($arch)"
 echo "Starting embedded server for $title ..."
 if [ "$xephyr" = 1 ]; then
 	DISPLAY=:0 Xephyr -screen 1024x768 $USE &
+	sleep 1
 elif [ "$vnc" = 1 ]; then
 	vncserver $USE -name "$title" 
 	echo; echo; echo "VNC server is running on $USE, please connect."
@@ -178,6 +179,7 @@ else
 	# Use Xnest in most cases; Xephyr in a chroot has some serious problems
 	# with ubuntu feisty and gutsy.
 	Xnest -display :0 -geometry 1024x768 -name "$title" $USE &
+	sleep 1
 fi
 
 if [ "$kde" = 1 ]; then
