@@ -62,6 +62,8 @@ class NSatRegion;
  *
  * The optional NStandardTriangulation routine getManifold() is
  * implemented for this class, but getHomologyH1() is not.
+ *
+ * \testpart
  */
 class NBlockedSFS : public NStandardTriangulation {
     private:

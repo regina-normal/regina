@@ -70,6 +70,8 @@ namespace regina {
  * for this class, though getHomologyH1() only returns a solution for
  * the very smallest SnapPea triangulations (for which the homology
  * groups have been hard-coded).
+ *
+ * \testpart
  */
 class NSnapPeaCensusTri: public NStandardTriangulation {
     public:

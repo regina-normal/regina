@@ -50,6 +50,8 @@ namespace regina {
  * bundles are considered.
  *
  * All optional NManifold routines are implemented for this class.
+ *
+ * \testpart
  */
 class NSimpleSurfaceBundle : public NManifold {
     public:

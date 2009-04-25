@@ -57,6 +57,8 @@ class NTriangulation;
  * They do not need to override writeTextShort() or writeTextLong()
  * since these routines are properly implemented in the base class
  * NManifold.
+ *
+ * \testpart
  */
 class NManifold : public ShareableObject {
     public:
