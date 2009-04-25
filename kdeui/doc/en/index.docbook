@@ -4,7 +4,7 @@
   <!ENTITY kappname "&regina;">
 
   <!ENTITY regversion "4.6">
-  <!ENTITY regdate "28 October 2008">
+  <!ENTITY regdate "16 May 2009">
   <!ENTITY regauthorplain "Ben Burton">
   <!ENTITY snappeaintro "4.2 (July 2005)">
   <!ENTITY orbintro "4.3.1 (May 2006)">
@@ -173,7 +173,7 @@
 
   <legalnotice>&underGPL;</legalnotice>
 
-  <date>2008-10-28</date>
+  <date>2009-05-16</date>
   <releaseinfo>4.6</releaseinfo>
 
   <abstract>

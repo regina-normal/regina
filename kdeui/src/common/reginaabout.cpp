@@ -49,7 +49,7 @@ const QString ReginaAbout::regDescription(
 const QString ReginaAbout::regName(I18N_NOOP("Regina"));
 
 const QString ReginaAbout::regReleased(
-    I18N_NOOP("Released ") + QDate(2008, 10, 28).toString(Qt::TextDate));
+    I18N_NOOP("Released ") + QDate(2009, 5, 16).toString(Qt::TextDate));
 
 const QString ReginaAbout::regVersion(PACKAGE_VERSION);
 
