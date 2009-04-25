@@ -67,6 +67,8 @@ class NLensSpace;
  * to work with the old NExceptionalFibre class should be looked at closely
  * before being adapted to the new NSFSFibre class (i.e., it may require
  * more than just substituting class names).
+ *
+ * \testpart
  */
 struct NSFSFibre {
     long alpha;
@@ -181,6 +183,8 @@ std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
  * to work with the old NSFS class should be looked at closely before
  * being adapted to the new NSFSpace class (i.e., it may require more
  * than just substituting class names).
+ *
+ * \testpart
  *
  * \todo \featurelong Implement recognition of more common names.
  * \todo \featurelong Implement triangulation construction and homology

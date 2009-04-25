@@ -73,6 +73,8 @@ class NEdge;
  *
  * All optional NStandardTriangulation routines are implemented for this
  * class.
+ *
+ * \testpart
  */
 class NLayeredLoop : public NStandardTriangulation {
     private:

@@ -79,6 +79,8 @@ class NComponent;
  * Of the optional NStandardTriangulation routines, getManifold() is
  * implemented for most augmented triangular solid tori and
  * getHomologyH1() is not implemented at all.
+ *
+ * \testpart
  */
 class NAugTriSolidTorus : public NStandardTriangulation {
     public:

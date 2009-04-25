@@ -50,6 +50,8 @@ namespace regina {
  *
  * All optional NStandardTriangulation routines are implemented for this
  * class.
+ *
+ * \testpart
  */
 class NTrivialTri : public NStandardTriangulation {
     public:

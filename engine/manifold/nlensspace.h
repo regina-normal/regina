@@ -48,6 +48,8 @@ namespace regina {
  * Represents a general Lens space.
  *
  * All optional NManifold routines are implemented for this class.
+ *
+ * \testpart
  */
 class NLensSpace : public NManifold {
     private:

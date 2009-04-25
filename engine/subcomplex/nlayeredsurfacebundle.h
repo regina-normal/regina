@@ -72,6 +72,8 @@ class NTxICore;
  *
  * All optional NStandardTriangulation routines are implemented for this
  * class.
+ *
+ * \testpart
  */
 class NLayeredTorusBundle : public NStandardTriangulation {
     private:

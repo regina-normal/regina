@@ -130,6 +130,8 @@ class NSFSpace;
  * replace this class with a more general class that (amongst other
  * things) removes this inconsistency.
  *
+ * \testpart
+ *
  * \todo \opt Speed up homology calculations involving orientable base
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.

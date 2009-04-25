@@ -70,6 +70,8 @@ namespace regina {
  * implemented for this class, though construct() and getHomologyH1()
  * only return solutions for the very smallest SnapPea census manifolds
  * (for which the homology groups have been hard-coded).
+ *
+ * \testpart
  */
 class NSnapPeaCensusManifold : public NManifold {
     public:
