@@ -104,7 +104,9 @@ Guest configuration
 - Install other packages useful for running and testing regina:
 
   debian# schroot -c gutsy aptitude install
-          graphviz kpdf khelpcenter kig konqueror
+          graphviz kpdf khelpcenter kig konqueror       (on <= hardy)
+  debian# schroot -c gutsy aptitude install
+          graphviz okular khelpcenter kig konqueror     (on >= intrepid)
   debian# schroot -c gutsy aptitude clean
 
 - If disk space is becoming a problem, get rid of openoffice:

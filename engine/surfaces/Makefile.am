@@ -18,3 +18,10 @@ libsurfaces_la_SOURCES = components.cpp crushandcut.cpp filters.cpp flavours.cpp
 
 surfacesinclude_HEADERS = filterregistry.h flavourregistry.h ndisc.h ndisctype.h nnormalsurface.h nnormalsurfacelist.h normalspec.tcc nprism.h nsanstandard.h nsmirrored.h nsquad.h nsquadoct.h nsstandard.h nsurfacefilter.h nsurfaceset.h nsurfacesubset.h nxmlfilterreader.h nxmlsurfacereader.h sfcombination.h sfproperties.h
 
+EXTRA_DIST = \
+	boundaries.fig \
+	cut-quadprism.fig \
+	cut-triprism.fig \
+	cut-trunchalftet.fig \
+	cut-trunctet.fig
+
