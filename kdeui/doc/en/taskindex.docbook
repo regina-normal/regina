@@ -337,7 +337,7 @@
    coordinate system</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-selectcoords">enumerating in a
    particular coordinate system</link></para></glossdef>
-  <glossdef><para><link linkend="surfaces-defcoords">explanation of
+  <glossdef><para><link linkend="surfaces-defstandard">explanation of
    different coordinate systems</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-viewsurfacecoords">viewing in a
    different coordinate system</link></para></glossdef>
@@ -854,7 +854,7 @@
    matrices</link></para></glossdef>
   <glossdef><para><link linkend="options-surfaces">coordinate
    systems, configuring default</link></para></glossdef>
-  <glossdef><para><link linkend="surfaces-defcoords">coordinate
+  <glossdef><para><link linkend="surfaces-defstandard">coordinate
    systems, different systems explained</link></para></glossdef>
   <glossdef><para><link linkend="surfaces-viewsurfacecoords">coordinate
    systems, viewing in different systems</link></para></glossdef>

@@ -146,7 +146,7 @@
       <para>
        The available coordinate systems are described in detail
        in the documentation for the
-       <link linkend="surfaces-defcoords">coordinates tab</link>.
+       <link linkend="surfaces-defstandard">coordinates tab</link>.
        If there is a particular coordinate system that you regularly
        use, the default offering can be changed in the
        <link linkend="options-surfaces">normal surface preferences</link>.
@@ -212,7 +212,7 @@
     the list was created using &regina;&nbsp;4.5.1 or earlier, and that
     all surfaces with more than one octagon were deleted.
     See the notes below on
-    <link linkend="surfaces-viewsurfacecoords">coordinates systems</link>
+    <link linkend="surfaces-deflegacyan">coordinates systems</link>
     for details.
    </para></tip>
   </sect2>
@@ -299,7 +299,7 @@
    <para>
     The meanings of the individual coordinate columns in the table
     depend upon the underlying coordinate system as follows.
-    <glosslist id="surfaces-defcoords">
+    <glosslist>
      <glossentry id="surfaces-defstandard">
       <glossterm>Standard normal (tri-quad) coordinates</glossterm>
       <glossdef>
