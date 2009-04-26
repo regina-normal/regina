@@ -4,15 +4,18 @@ Regina for Ubuntu:  Intrepid (Ubuntu 8.10)
 WARNING:
 
     Ubuntu has now removed almost all of KDE 3 from their distribution,
-    including in particular the KDE 3.x documentation viewer.  This
-    means that you will not be able to access the users' handbook or
-    the Python reference through Regina's Help menu.
+    including the KDE 3.x documentation viewer.  This means that, under
+    this version of Ubuntu, you will not be able to access the users'
+    handbook or the Python reference through Regina's Help menu.
 
     You can always view the users' handbook online at
     http://regina.sourceforge.net/docs/ , or you can download it in HTML
     format from the usual place at http://regina.sourceforge.net/ .
     The Python reference can be installed directly in HTML format by
     installing the package regina-normal-doc.
+
+    This problem has been fixed in Jaunty (Ubuntu 9.04), which provides
+    better support for running KDE 3 applications in a KDE 4 environment.
 
 Ubuntu packages for Regina are not distributed from the SourceForge site.
 
