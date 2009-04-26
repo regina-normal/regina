@@ -77,7 +77,7 @@ Guest suse system configuration
 
 - Give the new suse filesystem a unique label (to be used in /etc/fstab):
 
-  debian# tune2fs -L /suse10.3-x86_64 /dev/sda8
+  debian# tune2fs -L suse10.3-x86_64 /dev/sda8
 
 - Mount the guest suse partition as a subdirectory of /srv/chroot/suse:
 
