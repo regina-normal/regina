@@ -1,9 +1,40 @@
-regina-normal (4.5.1-1ubuntu1~hardy1) unstable; urgency=low
+regina-normal (4.6-1ubuntu1~hardy1) unstable; urgency=low
 
   * New upstream release, backported to ubuntu hardy.
+  * Restored all kpdf / khelpcenter / konqueror recommends and suggests,
+    since hardy still ships with a fully-fledged KDE 3.
+  * Removed the build-conflicts on regina-normal-dev, since the build system
+    has now been patched to avoid the associated relinking problems.
+
+ -- Ben Burton <bab@debian.org>  Sat, 16 May 2009 14:36:16 +1000
+
+regina-normal (4.5.1-2) unstable; urgency=low
+
+  * Debian has migrated from KDE 3 to KDE 4.  As a consequence:
+      - The regina-normal package no longer recommends kpdf (which is no
+        longer shipped in debian).  Instead it recommends xpdf or okular,
+        which will at least provide an external PDF viewer (though not an
+        embedded PDF viewer).
+      - Likewise, regina-normal no longer recommends khelpcenter, since the
+        KDE 4 version now shipped in debian does not talk with KDE 3 (and
+        hence regina-normal).  Unfortunately this means that users cannot
+        view documentation via the Help menu; instead they will need to
+        download the users' handbook in HTML format from the Regina website.
+  * Added support for nocheck in DEB_BUILD_OPTIONS (if you wish to avoid
+    running the test suite during the build).
+  * Remove the automake, autoconf, etc. calls from debian/rules, since
+    we are no longer patching the build scripts.
+  * Bumped standards-version to 3.8.1.0.
+
+ -- Ben Burton <bab@debian.org>  Sat, 25 Apr 2009 17:59:31 +1000
+
+regina-normal (4.5.1-1) unstable; urgency=low
+
+  * New upstream release.
   * Now recommends kpdf, which provides an embedded viewer for Regina's
     new PDF packets.
   * Added a Homepage field to debian/control.
+  * Bumped standards-version to 3.8.0 (no changes required).
 
  -- Ben Burton <bab@debian.org>  Tue, 28 Oct 2008 06:19:50 +1100
 
