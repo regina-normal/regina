@@ -212,6 +212,17 @@ the following additional argument to the <tt>./configure</tt> script:
 <div class="example"><p>
 <tt>example$ ./configure kde_htmldir=/usr/share/doc/kde/HTML</tt>
 </p></div>
+<p>
+Furthermore, recent Ubuntu releases have completely removed aRts (a key
+component of the KDE&nbsp;3 sound system), which will cause the
+<tt>./configure</tt> script to fail because it "cannot find the
+important program <tt>mcopidl</tt>".  You can happily build
+Regina without aRts, though you will need to pass an additional
+configure argument:
+</p>
+<div class="example"><p>
+<tt>example$ ./configure kde_htmldir=/usr/share/doc/kde/HTML --without-arts</tt>
+</p></div>
 
 <h2><a name="cluster">Cluster environments</a></h2>
 
