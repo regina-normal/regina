@@ -7,7 +7,7 @@
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
-Version: 4.5.1
+Version: 4.6
 Release: 1.%{_vendor}
 License: GPL
 # I wish there were a more sane group (like Applications/Mathematics).
@@ -145,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/*
 
 %changelog
+* Sat May 16 2009 Ben Burton <bab@debian.org> 4.6
+- New upstream release.
+
 * Wed Dec 10 2008 Ben Burton <bab@debian.org> 4.5.1
 - Built for Fedora 10, which was released last month.
 
