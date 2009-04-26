@@ -3,10 +3,9 @@ Regina for Debian:  Lenny (Debian 5.0)
 
 Debian packages for Regina are not distributed from the SourceForge site.
 
-Instead, users of Lenny (the forthcoming Debian 5.0 release, which is
-frozen at the time of writing) may obtain packages from the repository
-on people.debian.org.  These packages are available for the i386 and
-amd64 architectures.  To install them:
+Instead, users of Lenny (the Debian 5.0 release) may obtain packages
+from the repository on people.debian.org.  These packages are available
+for the i386 and amd64 architectures.  To install them:
 
 1. Add Regina's location to your list of repositories.
 
