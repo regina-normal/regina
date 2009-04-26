@@ -165,6 +165,12 @@ case "$os" in
 		kde=1
 		xephyr=1
 		;;
+	Welcome\ to\ openSUSE\ 11.1\ * )
+		distro="SuSE 11.1"
+		exitwait=1
+		kde=1
+		xephyr=1
+		;;
 	* )
 		distro=Unknown
 		exitwait=1
