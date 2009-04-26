@@ -344,7 +344,7 @@ void ReginaMain::helpNoHelp() {
             "package (such as <tt>khelpcenter</tt> or <tt>kdebase3</tt>).<p>"
             "Some users cannot fix this problem, because their "
             "GNU/Linux distribution has moved to KDE4 and no longer supports "
-            "KDE3 (for instance, recent Ubuntu releases).<p>"
+            "KDE3.<p>"
             "If all else fails, remember that you can always read the "
             "Regina Handbook online at "
             "<a href=\"http://regina.sourceforge.net/\">regina.sourceforge.net</a>.  "

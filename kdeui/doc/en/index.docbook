@@ -45,6 +45,7 @@
   <!ENTITY ai "<replaceable>a<subscript><replaceable>i</replaceable></subscript></replaceable>">
   <!ENTITY an "<replaceable>a<subscript><replaceable>n</replaceable></subscript></replaceable>">
   <!ENTITY api "<acronym>API</acronym>">
+  <!ENTITY arts "<productname>aRts</productname>">
   <!ENTITY ascii "<acronym>ASCII</acronym>">
   <!ENTITY b1 "<replaceable>b<subscript>1</subscript></replaceable>">
   <!ENTITY b2 "<replaceable>b<subscript>2</subscript></replaceable>">
