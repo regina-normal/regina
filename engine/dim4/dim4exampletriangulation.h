@@ -106,9 +106,19 @@ class Dim4ExampleTriangulation {
          * If the given 3-manifold is <tt>M</tt>, this returns an ideal
          * triangulation of the product <tt>M x I</tt> (with two ideal
          * boundary components).  A copy of the original 3-manifold
-         * triangulation can be found at the centre of this
+         * triangulation \a base can be found at the centre of this
          * construction, formed from the tetrahedra that sit between the
          * two ideal vertices.
+         *
+         * Note that, as a special case, if <tt>M</tt> is either a
+         * 3-sphere or a 3-ball, then this routine returns a 4-sphere or
+         * a 4-ball (since "ideal spheres" and "ideal balls" just become
+         * regular internal and boundary vertices respectively).
+         *
+         * This construction is essentially the suspension of the
+         * triangulation \a base.  We do not call it this however, since
+         * from a topological point of view, to form the ideal triangulation
+         * of <tt>M x I</tt> we "remove" the vertices at the apex of each cone.
          *
          * \warning If the given 3-manifold triangulation has any boundary
          * whatsoever (either real or ideal), then unless this 3-manifold
