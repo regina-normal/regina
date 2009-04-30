@@ -3,6 +3,9 @@ regina-normal (4.6-1) unstable; urgency=low
   * New upstream release.
   * Removed the build-conflicts on regina-normal-dev, since the build system
     has now been patched to avoid the associated relinking problems.
+  * Now builds under gcc 4.4 (closes: #526199).
+  * The test suite now avoids routines that are deprecated in python 2.6,
+    which were causing the test suite to fail (closes: #526192).
 
  -- Ben Burton <bab@debian.org>  Sat, 16 May 2009 14:36:16 +1000
 

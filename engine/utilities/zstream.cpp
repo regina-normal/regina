@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <cstdio>
 #include "utilities/zstream.h"
 
 namespace regina {
