@@ -44,166 +44,119 @@ if [ ! -L ~/.Xauthority ]; then
 	fi
 fi
 
-kde=
-dbus=
-exitwait=
+gnome=
 vnc=
-xephyr=
+xnest=
 case "$os" in
 	Ubuntu\ 6.06* )
 		distro=Dapper
-		exitwait=1
+		gnome=1
+		xnest=1
 		;;
 	Ubuntu\ 7.04* )
 		distro=Feisty
-		dbus=1
-		exitwait=1
+		gnome=1
+		xnest=1
 		;;
 	Ubuntu\ 7.10* )
 		distro=Gutsy
-		dbus=1
-		exitwait=1
+		gnome=1
+		xnest=1
 		;;
 	Ubuntu\ 8.04* )
 		distro=Hardy
-		dbus=1
-		exitwait=1
-		xephyr=1
+		gnome=1
 		;;
 	Ubuntu\ 8.10* )
 		distro=Intrepid
-		dbus=1
-		exitwait=1
-		xephyr=1
+		gnome=1
 		;;
 	Ubuntu\ 9.04* )
 		distro=Jaunty
-		dbus=1
-		exitwait=1
-		xephyr=1
+		gnome=1
 		;;
 	Debian\ GNU/Linux\ 5.0\ * )
 		distro=Lenny
-		exitwait=1
-		kde=1
-		xephyr=1
 		;;
 	Debian\ GNU/Linux\ */sid\ * )
 		distro=Sid
-		exitwait=1
-		kde=1
-		xephyr=1
 		;;
 	Mandriva\ Linux\ release\ 2007.0\ * )
 		distro="Mandriva 2007.0"
-		exitwait=1
-		kde=1
+		xnest=1
 		;;
 	Mandriva\ Linux\ release\ 2007.1\ * )
 		distro="Mandriva 2007.1"
-		exitwait=1
-		kde=1
-		xephyr=1
 		;;
 	Mandriva\ Linux\ release\ 2008.0\ * )
 		distro="Mandriva 2008.0"
-		exitwait=1
-		kde=1
+		xnest=1
 		;;
 	Mandriva\ Linux\ release\ 2008.1\ * )
 		distro="Mandriva 2008.1"
-		exitwait=1
-		kde=1
+		xnest=1
 		;;
 	Mandriva\ Linux\ release\ 2009.0\ * )
 		distro="Mandriva 2009.0"
-		exitwait=1
-		kde=1
 		vnc=1
 		;;
 	Fedora\ release\ 7\ * )
 		distro="Fedora 7"
-		exitwait=1
-		kde=1
 		vnc=1
 		;;
 	Fedora\ release\ 8\ * )
 		distro="Fedora 8"
-		exitwait=1
-		kde=1
-		xephyr=1
 		;;
 	Fedora\ release\ 9\ * )
 		distro="Fedora 9"
-		exitwait=1
-		kde=1
-		if [ "$arch" = "i686" ]; then
-			# Xephyr looks much better with KDE4, but seems to break on x86_64.
-			xephyr=1
+		# Xephyr seems to break on x86_64.
+		if [ "$arch" = "x86_64" ]; then
+			xnest=1
 		fi
 		;;
 	Fedora\ release\ 10\ * )
 		distro="Fedora 10"
-		exitwait=1
-		kde=1
 		vnc=1
 		;;
 	?Welcome\ to\ openSUSE\ 10.2\ * )
 		distro="SuSE 10.2"
-		exitwait=1
-		kde=1
+		xnest=1
 		;;
 	?Welcome\ to\ openSUSE\ 10.3\ * )
 		distro="SuSE 10.3"
-		exitwait=1
-		kde=1
-		xephyr=1
 		;;
 	?Welcome\ to\ openSUSE\ 11.0\ * )
 		distro="SuSE 11.0"
-		exitwait=1
-		kde=1
-		xephyr=1
 		;;
 	Welcome\ to\ openSUSE\ 11.1\ * )
 		distro="SuSE 11.1"
-		exitwait=1
-		kde=1
-		xephyr=1
 		;;
 	* )
 		distro=Unknown
-		exitwait=1
-		kde=1
 		;;
 esac
 
 title="$distro ($arch)"
 echo "Starting embedded server for $title ..."
-if [ "$xephyr" = 1 ]; then
-	DISPLAY=:0 Xephyr -screen 1024x768 $USE &
+
+# Use Xephyr if we can.  Xephyr is simpler to deal with than vnc, and
+# looks much better than Xnest.
+if [ "$xnest" = 1 ]; then
+	Xnest -display :0 -geometry 1024x768 -name "$title" $USE &
 	sleep 1
 elif [ "$vnc" = 1 ]; then
 	vncserver $USE -name "$title" 
 	echo; echo; echo "VNC server is running on $USE, please connect."
 	echo; echo
 else
-	# Use Xnest in most cases; Xephyr in a chroot has some serious problems
-	# with ubuntu feisty and gutsy.
-	Xnest -display :0 -geometry 1024x768 -name "$title" $USE &
+	DISPLAY=:0 Xephyr -screen 1024x768 $USE &
 	sleep 1
 fi
 
-if [ "$kde" = 1 ]; then
-	session=startkde
+if [ "$gnome" = 1 ]; then
+	DISPLAY=$USE /usr/bin/dbus-launch --exit-with-session gnome-session
 else
-	session=gnome-session
-fi
-
-if [ "$dbus" = 1 ]; then
-	DISPLAY=$USE /usr/bin/dbus-launch --exit-with-session "$session"
-else
-	DISPLAY=$USE "$session"
+	DISPLAY=$USE startkde
 fi
 
 # Terminate the X server.
@@ -213,9 +166,7 @@ else
 	kill %1
 fi
 
-# And wait for internal GNOME programs to shut down.
-if [ "$exitwait" = 1 ]; then
-	echo
-	echo "Politely waiting on daemons to shut down..."
-	sleep 45s
-fi
+# And wait for internal GNOME/KDE programs to shut down.
+echo
+echo "Politely waiting on daemons to shut down..."
+sleep 45s
