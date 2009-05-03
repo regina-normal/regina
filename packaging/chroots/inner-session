@@ -48,21 +48,6 @@ gnome=
 vnc=
 xnest=
 case "$os" in
-	Ubuntu\ 6.06* )
-		distro=Dapper
-		gnome=1
-		xnest=1
-		;;
-	Ubuntu\ 7.04* )
-		distro=Feisty
-		gnome=1
-		xnest=1
-		;;
-	Ubuntu\ 7.10* )
-		distro=Gutsy
-		gnome=1
-		xnest=1
-		;;
 	Ubuntu\ 8.04* )
 		distro=Hardy
 		gnome=1
@@ -81,27 +66,12 @@ case "$os" in
 	Debian\ GNU/Linux\ */sid\ * )
 		distro=Sid
 		;;
-	Mandriva\ Linux\ release\ 2007.0\ * )
-		distro="Mandriva 2007.0"
-		xnest=1
-		;;
-	Mandriva\ Linux\ release\ 2007.1\ * )
-		distro="Mandriva 2007.1"
-		;;
-	Mandriva\ Linux\ release\ 2008.0\ * )
-		distro="Mandriva 2008.0"
-		xnest=1
-		;;
 	Mandriva\ Linux\ release\ 2008.1\ * )
 		distro="Mandriva 2008.1"
 		xnest=1
 		;;
 	Mandriva\ Linux\ release\ 2009.0\ * )
 		distro="Mandriva 2009.0"
-		vnc=1
-		;;
-	Fedora\ release\ 7\ * )
-		distro="Fedora 7"
 		vnc=1
 		;;
 	Fedora\ release\ 8\ * )
@@ -117,13 +87,6 @@ case "$os" in
 	Fedora\ release\ 10\ * )
 		distro="Fedora 10"
 		vnc=1
-		;;
-	?Welcome\ to\ openSUSE\ 10.2\ * )
-		distro="SuSE 10.2"
-		xnest=1
-		;;
-	?Welcome\ to\ openSUSE\ 10.3\ * )
-		distro="SuSE 10.3"
 		;;
 	?Welcome\ to\ openSUSE\ 11.0\ * )
 		distro="SuSE 11.0"
