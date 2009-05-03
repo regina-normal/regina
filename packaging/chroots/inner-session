@@ -67,12 +67,16 @@ case "$os" in
 		distro=Sid
 		;;
 	Mandriva\ Linux\ release\ 2008.1\ * )
+		# In fact none of Xephyr, Xnest or VNC work here.
+		# See the Mandriva chroot notes for further information.
 		distro="Mandriva 2008.1"
 		xnest=1
 		;;
 	Mandriva\ Linux\ release\ 2009.0\ * )
 		distro="Mandriva 2009.0"
-		vnc=1
+		;;
+	Mandriva\ Linux\ release\ 2009.1\ * )
+		distro="Mandriva 2009.1"
 		;;
 	Fedora\ release\ 8\ * )
 		distro="Fedora 8"
@@ -86,7 +90,6 @@ case "$os" in
 		;;
 	Fedora\ release\ 10\ * )
 		distro="Fedora 10"
-		vnc=1
 		;;
 	?Welcome\ to\ openSUSE\ 11.0\ * )
 		distro="SuSE 11.0"

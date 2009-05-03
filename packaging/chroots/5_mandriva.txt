@@ -117,7 +117,10 @@ Guest mandriva system configuration
 - Install other packages for running regina and supporting the chroot:
 
   mdvhost# urpmi --urpmi-root /chroot/2009.1-x86_64
-           graphviz kdebase-progs kdegraphics-kpdf kdeedu
+           graphviz kdebase-progs kdegraphics-kpdf kdeedu  (on <= mdv2009.0)
+  mdvhost# urpmi --urpmi-root /chroot/2009.1-x86_64
+           graphviz kdebase3-progs kdegraphics3-kpdf kig   (on >= mdv2009.1)
+  mdvhost# urpmi --urpmi-root /chroot/2009.1-x86_64
            x11-server-xnest x11-server-xephyr x11-server-xvnc vnc-server
 
 - Add a schroot entry in the debian host system:
@@ -179,13 +182,13 @@ Bootstrapping a guest system from DVD
 A mandriva DVD can be used to save download time when creating a new
 guest mandriva system.  The steps involved are as follows:
 
-  mdvhost# mount /dev/hda /cdrom
+  mdvhost# mount /dev/hda /media/cdrom
 
   mdvhost# urpmi.addmedia --urpmi-root /chroot/2009.1-x86_64 dvd-main
-           file://cdrom/x86_64/media/main
+           file://media/cdrom/x86_64/media/main
 
   mdvhost# urpmi.addmedia --urpmi-root /chroot/2009.1-x86_64 dvd-contrib
-           file://cdrom/x86_64/media/contrib
+           file://media/cdrom/x86_64/media/contrib
 
   mdvhost# urpmi --no-verify-rpm --urpmi-root /chroot/2009.1-x86_64
            <package_name> ...
