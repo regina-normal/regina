@@ -22,7 +22,7 @@ System layout
   This is mounted within the host debian system in /srv/chroot/fchost.
 
   The host fedora system is used purely for calling mock to bootstrap
-  the various fedora chroots.  At the time of writing it runs fedora 8
+  the various fedora chroots.  At the time of writing it runs fedora 10
   (x86_64) but this may be upgraded from time to time.
 
 - /srv/chroot/fedora is a directory on the host debian system containing

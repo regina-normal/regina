@@ -68,7 +68,7 @@ Guest suse system configuration
 
   + Some packages are not shipped with the standard DVDs/CDs (notably
     cppunit and sometimes kdeedu3).  These can be downloaded locally from
-    ftp://mirror.pacific.net.au/linux/opensuse/distribution/.
+    ftp://ftp.iinet.net.au/pub/opensuse/distribution/.
 
 - Remove unnecessary software until the partition has >= 1.5G free.
   Multimedia apps and large documentation packages are good targets.

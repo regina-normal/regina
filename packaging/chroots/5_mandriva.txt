@@ -21,7 +21,7 @@ System layout
 
   The host mandriva system is used purely for calling urpmi to bootstrap
   the various mandriva chroots.  At the time of writing it runs mandriva
-  2008.0 (x86_64) but this may be upgraded from time to time.
+  2009.1 (x86_64) but this may be upgraded from time to time.
 
 - /srv/chroot/mandriva is a directory on the host debian system containing
   one subdirectory for each final mandriva chroot (the "guest mandriva
@@ -94,8 +94,8 @@ Guest mandriva system configuration
 - Add online sources for the guest system:
 
   mdvhost# urpmi.addmedia --interactive --distrib
-           --urpmi-root /chroot/2007.0-x86_64
-           ftp://ftp.gtlib.cc.gatech.edu/pub/mandrake/official/2007.0/x86_64
+           --urpmi-root /chroot/2009.1-x86_64
+           ftp://ftp.iinet.net.au/pub/MandrivaLinux/official/2009.1/x86_64
 
   The --interactive option asks you to approve each source.  Only
   approve the release sources (main, contrib, etc).  Do not approve the
@@ -103,29 +103,29 @@ Guest mandriva system configuration
 
 - Install packages for a base graphical system:
 
-  mdvhost# urpmi --urpmi-root /chroot/2007.0-x86_64
+  mdvhost# urpmi --urpmi-root /chroot/2008.1-x86_64
            basesystem urpmi man zsh task-kde          (on <= mdv2008.1)
-  mdvhost# urpmi --urpmi-root /chroot/2007.0-x86_64
+  mdvhost# urpmi --urpmi-root /chroot/2009.1-x86_64
            basesystem urpmi man zsh task-kde4         (on >= mdv2009.0)
 
 - Install packages for building regina:
 
-  mdvhost# urpmi --urpmi-root /chroot/2007.0-x86_64
+  mdvhost# urpmi --urpmi-root /chroot/2009.1-x86_64
            rpm-build rpmlint boost-devel cppunit-devel doxygen gmp-devel
            kdelibs-devel libxml2-devel popt-devel python-devel zlib1-devel
 
 - Install other packages for running regina and supporting the chroot:
 
-  mdvhost# urpmi --urpmi-root /chroot/2007.0-x86_64
+  mdvhost# urpmi --urpmi-root /chroot/2009.1-x86_64
            graphviz kdebase-progs kdegraphics-kpdf kdeedu
            x11-server-xnest x11-server-xephyr x11-server-xvnc vnc-server
 
 - Add a schroot entry in the debian host system:
 
-  [mdv2007.0-x86_64]
+  [mdv2009.1-x86_64]
   type=directory
-  description=Mandriva 2007.0 (x86_64)
-  location=/srv/chroot/mandriva/2007.0-x86_64
+  description=Mandriva 2009.1 (x86_64)
+  location=/srv/chroot/mandriva/2009.1-x86_64
   priority=3
   users=bab
   root-users=root
@@ -134,14 +134,14 @@ Guest mandriva system configuration
   script-config=script-rpm
 
   (for x86_64 chroots:)
-  aliases=mdv2007.0
+  aliases=mdv2009.1
 
   (for i586 chroots:)
   personality=linux32
 
 - Symlink /bin/zsh to /usr/bin/zsh:
 
-  debian# schroot -c mdv2007.0-x86_64 -- ln -s /bin/zsh /usr/bin/zsh
+  debian# schroot -c mdv2009.1-x86_64 -- ln -s /bin/zsh /usr/bin/zsh
 
 - For Mandriva 2009.0, give write permissions to /dev/null:
 
@@ -149,7 +149,7 @@ Guest mandriva system configuration
 
 - Manually add an ordinary user:
 
-  debian# schroot -c mdv2007.0-x86_64
+  debian# schroot -c mdv2009.1-x86_64
   mdvguest# groupadd -g 1000 bab
   mdvguest# useradd -u 1000 -g 1000 bab
 
@@ -181,16 +181,16 @@ guest mandriva system.  The steps involved are as follows:
 
   mdvhost# mount /dev/hda /cdrom
 
-  mdvhost# urpmi.addmedia --urpmi-root /chroot/2008.1-x86_64 dvd-main
+  mdvhost# urpmi.addmedia --urpmi-root /chroot/2009.1-x86_64 dvd-main
            file://cdrom/x86_64/media/main
 
-  mdvhost# urpmi.addmedia --urpmi-root /chroot/2008.1-x86_64 dvd-contrib
+  mdvhost# urpmi.addmedia --urpmi-root /chroot/2009.1-x86_64 dvd-contrib
            file://cdrom/x86_64/media/contrib
 
-  mdvhost# urpmi --no-verify-rpm --urpmi-root /chroot/2008.1-x86_64
+  mdvhost# urpmi --no-verify-rpm --urpmi-root /chroot/2009.1-x86_64
            <package_name> ...
 
-  mdvhost# urpmi.removemedia --urpmi-root /chroot/2008.1-x86_64 -a
+  mdvhost# urpmi.removemedia --urpmi-root /chroot/2009.1-x86_64 -a
 
   mdvhost# umount /dev/hda
 
