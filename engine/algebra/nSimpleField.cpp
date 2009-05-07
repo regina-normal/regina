@@ -167,7 +167,7 @@ void NSimpleField<T>::writeTextShort(std::ostream& out) const
 	}
 }
 
-
+template class NSimpleField<int>;
 
 } // namespace regina
 
