@@ -53,6 +53,9 @@ namespace regina {
  * K[x]/p(x) where p(x) is some monic polynomial in the polynomial ring K[x],
  * and K is an arbitrary templated field. We assume that K
  *
+ * WARNING: this code is not remotely ready for usage.  It compiles but does not
+ *  instantiate!
+ *
  * @author Ryan Budney
  *
  */
