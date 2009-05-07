@@ -131,20 +131,20 @@ class NSimpleField : public ShareableObject {
 	NSimpleField<T> one();
 
         /**
-         * Determines whether this and the given quaternion are equal.
+         * Determines whether this and the other field elements are the same.
          */
         bool operator == (const NSimpleField<T>& other) const;
 
 	/**
-	 * Assignment of quaternions.
+	 * Assignment of field element.
 	 */
 	NSimpleField<T> operator = (const NSimpleField<T>& other);
 	/**
-	 * Addition of quaternions.
+	 * Addition of field element.
 	 */
 	NSimpleField<T> operator + (const NSimpleField<T>& other) const;
 	/**
-	 * Multiplication of quaternions.
+	 * Multiplication of field elements.
 	 */
 	NSimpleField<T> operator * (const NSimpleField<T>& other) const;
 	/**
@@ -157,7 +157,7 @@ class NSimpleField : public ShareableObject {
 	NSimpleField<T> operator * (const T& k) const;
 
        /**
-	 * Writes the quaternionic integer to a stream in human-readable form.
+	 * Writes the element of the field in human-readable form, base field not mentioned.
          *
          * @param out the stream to write to.
          */
