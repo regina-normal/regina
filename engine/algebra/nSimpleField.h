@@ -39,8 +39,6 @@
 #include <vector>
 #include <iostream>
 
-//#include "utilities/nmpi.h"
-
 namespace regina {
 
 /**
@@ -54,7 +52,7 @@ namespace regina {
  * and K is an arbitrary templated field. We assume that K
  *
  * WARNING: this code is not remotely ready for usage.  It compiles but does not
- *  instantiate!
+ *  instantiate! and it's a great big mess. 
  *
  * @author Ryan Budney
  *
@@ -164,7 +162,7 @@ class NSimpleField : public ShareableObject {
          *
          * @param out the stream to write to.
          */
-        void writeTextShort(std::ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
 
 	/**
 	 * Vector space ops
