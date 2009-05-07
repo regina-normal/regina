@@ -51,7 +51,7 @@ NSimpleField<T> NSimpleField<T>::operator = (const NSimpleField<T>& other)
   */
 template <class T>
 NSimpleField<T>::NSimpleField(const NSimpleField<T>& cloneMe, bool zero) :
-        ShareableObject(), baseField(cloneMe.baseField), coeff(cloneMe.coeff)
+        baseField(cloneMe.baseField), coeff(cloneMe.coeff)
 {
  for (int i=0; i<coeff.size(); i++) coeff[i]=0;
 }

@@ -35,7 +35,6 @@
 #define __NSIMPLEFIELD_H
 #endif
 
-#include "shareableobject.h"
 #include <vector>
 #include <iostream>
 
@@ -59,7 +58,7 @@ namespace regina {
  */
 
 template <class T>
-class NSimpleField : public ShareableObject {
+class NSimpleField {
     private:
 	/**
 	 * NsimpleField class -- represents elements in a simple extension field: K[x]/p(x).
@@ -162,7 +161,7 @@ class NSimpleField : public ShareableObject {
          *
          * @param out the stream to write to.
          */
-        virtual void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
 	/**
 	 * Vector space ops
@@ -178,12 +177,12 @@ class NSimpleField : public ShareableObject {
 // constructor
 template <class T>
 inline NSimpleField<T>::NSimpleField(std::vector<T> bF, std::vector<T> cf) :
- ShareableObject(), baseField(bF), coeff(cf) {}
+ baseField(bF), coeff(cf) {}
 
 // copy constructor
 template <class T>
 inline NSimpleField<T>::NSimpleField(const NSimpleField<T>& g) :
-        ShareableObject(), baseField(g.baseField), coeff(g.coeff) {}
+        baseField(g.baseField), coeff(g.coeff) {}
 
 // destructor
 template <class T>
