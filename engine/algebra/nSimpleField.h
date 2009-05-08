@@ -37,6 +37,7 @@
 
 #include <vector>
 #include <iostream>
+#include "utilities/nrational.h"
 
 namespace regina {
 
@@ -48,113 +49,139 @@ namespace regina {
 /**
  * Represents elements in an elementary number field -- a polynomial ring
  * K[x]/p(x) where p(x) is some monic polynomial in the polynomial ring K[x],
- * and K is an arbitrary templated field. We assume that K
+ * and K is from NRational. 
  *
- * WARNING: this code is not remotely ready for usage.  It compiles but does not
- *  instantiate! and it's a great big mess. 
+ * WARNING: this code is not ready for usage.   
  *
  * @author Ryan Budney
  *
  */
 
-template <class T>
 class NSimpleField {
     private:
 	/**
 	 * NsimpleField class -- represents elements in a simple extension field: K[x]/p(x).
 	 * 
-	 * Requirements: K must be a field, so it needs basic arithmatic plus
-	 *  an element called zero, and all non-zero elements need a multiplicative
-	 *  inverse.  K[x]/p(x) is always a ring, but if you want inverses to be
-	 *  defined, you need p(x) to be prime in K[x].  K needs to cast 0.
-	 *
 	 * Restrictions: we'll use unsigned long integers for the exponents in the
 	 *  polynomials, so the polynomial you initialize with can have degree at
 	 *  most the largest unsigned long.  The field is templated so you get
 	 *  whatever you give, there.  This class is designed to work in Regina
-	 *  minimally with the NRational class.
+	 *  minimally with the NRational class.  It should also be able to accept
+	 *  a previously-instantiated version of itself in the template field. 
 	 *
-	 * we will have static members that keep track of 
+	 * Todo: we will eventually have static members that keep track of 
 	 * relevant data for efficient multiplication and inversion of elements
 	 * in the number field.
 	 *
 	 * Initialize class with monic polynomial p(x) = x^n - a_{n-1}x^{n-1} - ... - a_0
 	 *  the polynomial will be stored as a vector (a_0, a_1, ..., a_{n-1}) ie, in
-	 *  K[x]/p(x) we have the rule that x^n = a_0 + a_1 x + ... + a_{n-1}x^{n-1}
+	 *  K[x]/p(x) we have the defining relation x^n = a_0 + a_1 x + ... + a_{n-1}x^{n-1}
 	 *
-	 * So on initialization there is some static data we need to compute, in order
-	 *  to make multiplication efficient.  x^n, x^{n+1}, ..., x^{2n-2}
-	 *  to be written in terms of 1, x, x^2, ..., x^{n-1}.
 	 */ 
 
 
 	//static NMatrixRing < T > redDat; // reduction data for multiplication
-	std::vector<T> baseField; // temp representation of the base field
-	std::vector<T> coeff; // rep of element in the field
+	std::vector<NRational> baseField; // temp representation of the base field
+	std::vector<NRational> coeff; // rep of element in the field
+	char var; // letter used for the variable when writeTextShort is called
 
     public:
 
-        /**
-	 * General constructor.
-         */
-        NSimpleField(std::vector<T> bF, std::vector<T> cf);
+	/**
+	 * Generic constructor -- does not initialize.  In this state the only thing you can
+	 *  do with the class is initialize it. (1/5) 
+	 */
+	NSimpleField();
+	/**
+	 * If you call the above constructor, you need to follow it with an initialization
+	 * call, which is this. 
+	 */
+	void init(const std::vector<NRational> &bF, const std::vector<NRational> &cf, const char &let); 
 
         /**
-         * Creates a clone of the given field/element.
+	 * General constructor. (2/5)
+         */
+        NSimpleField(const std::vector<NRational> &bF, const std::vector<NRational> &cf, const char &let);
+	/**
+	 * Simplified general constructor
+	 * base field specified by bF, polynomial is kt^n (3/5)
+	 */
+	NSimpleField(const std::vector<NRational> &bF, const NRational &k, const unsigned long &n, const char &let);
+        /**
+         * Creates a clone of the given field/element. (4/5)
          *
          * @param cloneMe the group to clone.
          */
-        NSimpleField(const NSimpleField<T>& cloneMe);
-
+        NSimpleField(const NSimpleField& cloneMe); 
         /**
-         * Creates a clone of the given field with all 
-	 *  elements initialized to zero if zero = true, otherwise initialized
-	 *  to one.
+         * Creates a clone of the given field, with the element initialized
+	 *  to kt^n (5/5)
          *
          * @param cloneMe the group to clone.
          */
-        NSimpleField(const NSimpleField<T>& cloneMe, bool zero);
+        NSimpleField(const NSimpleField& cloneMe, const NRational &k, const unsigned long &n);
 
         /**
          * Destroys the field/element.
          */
         ~NSimpleField();
 
-	/**
-	 * The zero element of the given field.
-	 */
-	NSimpleField<T> zero();
-
-	/**
-	 * The identity element of the given field.
-	 */
-	NSimpleField<T> one();
-
         /**
          * Determines whether this and the other field elements are the same.
          */
-        bool operator == (const NSimpleField<T>& other) const;
+        bool operator == (const NSimpleField& other) const;
+        /**
+         * Determines whether this is a constant polynomial other
+         */
+        bool operator == (const NRational& other) const;
 
 	/**
 	 * Assignment of field element.
 	 */
-	NSimpleField<T> operator = (const NSimpleField<T>& other);
+	NSimpleField operator = (const NSimpleField& other);
+	/**
+	 * Assignment of coefficient.
+	 */
+	NSimpleField operator = (const NRational &other);
+
 	/**
 	 * Addition of field element.
 	 */
-	NSimpleField<T> operator + (const NSimpleField<T>& other) const;
+	NSimpleField operator + (const NSimpleField& other) const;
+	/**
+	 * Negation of field elements.
+	 */
+	NSimpleField operator - (const NSimpleField &other) const;
+	/**
+	 * Addition of field element.
+	 */
+	NSimpleField operator += (const NSimpleField& other);
+	/**
+	 * Negation of field elements.
+	 */
+	NSimpleField operator -= (const NSimpleField &other);
+	/**
+	 * Negation of field elements.
+	 */
+	NSimpleField operator *= (const NSimpleField &other);
+
 	/**
 	 * Multiplication of field elements.
 	 */
-	NSimpleField<T> operator * (const NSimpleField<T>& other) const;
+	NSimpleField operator * (const NSimpleField& other) const;
 	/**
 	 * Multiplicative inverse
 	 */
-	NSimpleField<T> inverse() const;
+	NSimpleField inverse() const;
+
 	/**
-	 * Vector space ops
+	 * Vector space ops, right multiplication by field.
 	 */
-	NSimpleField<T> operator * (const T& k) const;
+	NSimpleField operator * (const NRational& k) const;
+	/**
+	 * Vector space ops, left multiplication by field.
+	 */
+	friend NSimpleField operator*(const NRational& k, const NSimpleField& other);
 
        /**
 	 * Writes the element of the field in human-readable form, base field not mentioned.
@@ -163,38 +190,71 @@ class NSimpleField {
          */
         void writeTextShort(std::ostream& out) const;
 
-	/**
-	 * Vector space ops
-	 */
-	template <class TT>
-	friend NSimpleField<TT> operator*(const TT& k, const NSimpleField<TT>& other);
-
 };
 
 
 /*@}*/
 
-// constructor
-template <class T>
-inline NSimpleField<T>::NSimpleField(std::vector<T> bF, std::vector<T> cf) :
- baseField(bF), coeff(cf) {}
+// blank constructor (1/5)
+inline NSimpleField::NSimpleField()
+{}
 
-// copy constructor
-template <class T>
-inline NSimpleField<T>::NSimpleField(const NSimpleField<T>& g) :
-        baseField(g.baseField), coeff(g.coeff) {}
+// constructor (2/5)
+inline NSimpleField::NSimpleField(const std::vector<NRational> &bF, const std::vector<NRational> &cf, const char &let) :
+ baseField(bF), coeff(cf), var(let) {}
 
-// destructor
-template <class T>
-inline NSimpleField<T>::~NSimpleField() {}
-
-// equality
-template <class T>
-inline bool NSimpleField<T>::operator == (
-        const NSimpleField<T>& other) const {
-    return ((baseField==other.baseField) && (coeff==other.coeff) );
+/**
+ * Simplified general constructor (3/5)
+ */
+inline NSimpleField::NSimpleField(const std::vector<NRational> &bF, const NRational &k, const unsigned long &n, const char &let) :
+ baseField(bF), var(let) 
+{
+coeff = bF;
+for (unsigned long i=0; i<coeff.size(); i++) coeff[i] = ( (i==n) ? k : k-k );
 }
 
+// copy constructor (4/5)
+inline NSimpleField::NSimpleField(const NSimpleField& g) :
+        baseField(g.baseField), coeff(g.coeff), var(g.var) {}
+
+ /**
+  * Creates a clone of the given field, with the element initialized
+  *  to kt^n (/5)
+  *
+  * @param cloneMe the group to clone.
+  */
+NSimpleField::NSimpleField(const NSimpleField& cloneMe, const NRational &k, const unsigned long &n) :
+ baseField(cloneMe.baseField), coeff(cloneMe.coeff), var(cloneMe.var)
+{
+ for (unsigned long i=0; i<coeff.size(); i++) coeff[i] = ( (i==n) ? k : k-k );
+}
+
+
+// destructor
+inline NSimpleField::~NSimpleField() {}
+
+// equality
+inline bool NSimpleField::operator == ( const NSimpleField& other) const 
+{
+    return ((baseField==other.baseField) && (coeff==other.coeff) );
+}
+/**
+  * Determines whether this is a constant polynomial other
+  */
+inline bool NSimpleField::operator == (const NRational& other) const
+{
+std::vector<NRational> temp(coeff.size(), NRational::zero);
+temp[0]=other;
+return ( temp == coeff );
+}
+
+// init for if not properly constructed the 1st time...
+void NSimpleField::init(const std::vector<NRational> &bF, const std::vector<NRational> &cf, const char &let)
+{
+baseField = bF;
+coeff = cf;
+var = let;
+}
 
 
 } // namespace regina

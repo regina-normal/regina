@@ -29,98 +29,114 @@
 #include "algebra/nSimpleField.h"
 #include <iostream>
 #include "maths/nmatrix.h"
+#include "utilities/nrational.h"
 
 namespace regina {
 
 /**
  * Assignment 
  */
-template <class T>
-NSimpleField<T> NSimpleField<T>::operator = (const NSimpleField<T>& other)
+NSimpleField NSimpleField::operator = (const NSimpleField& other)
  {
  baseField = other.baseField; coeff = other.coeff; 
  return (*this);
  }
 
 /**
-  * Creates a clone of the given field with all 
-  *  elements initialized to zero if zero = true, otherwise initialized
-  *  to one.
-  *
-  * @param cloneMe the group to clone.
-  */
-template <class T>
-NSimpleField<T>::NSimpleField(const NSimpleField<T>& cloneMe, bool zero) :
-        baseField(cloneMe.baseField), coeff(cloneMe.coeff)
-{
- for (int i=0; i<coeff.size(); i++) coeff[i]=0;
-}
-
-
-/**
- * The zero element of the given field.
+ * Assignment of coefficient.
+ *  this turns other into a polynomial of degree 0.
  */
-template <class T>
-NSimpleField<T> NSimpleField<T>::zero()
-{
-}
+NSimpleField NSimpleField::operator = (const NRational &other)
+ {
+ return NSimpleField( *this, other, 0 ); 
+ }
 
-/**
- * The identity element of the given field.
- */
-template <class T>
-NSimpleField<T> NSimpleField<T>::one()
-{
-}
+
 
 /**
  * Addition of field elts
  */
-template <class T>
-NSimpleField<T> NSimpleField<T>::operator + (const NSimpleField<T>& other) const
+NSimpleField NSimpleField::operator + (const NSimpleField& other) const
 {
- NSimpleField<T> temp( other );
- for (int i=0; i<coeff.size(); i++) temp.coeff[i] += coeff[i];
+ NSimpleField temp( other );
+ for (unsigned long i=0; i<coeff.size(); i++) temp.coeff[i] += coeff[i];
+ return temp;
+}
+/**
+ * Negation of field elements.
+ */
+NSimpleField NSimpleField::operator - (const NSimpleField &other) const
+{
+ NSimpleField temp( *this );
+ for (unsigned long i=0; i<coeff.size(); i++) temp.coeff[i] -= other.coeff[i];
  return temp;
 }
 
 /**
+ * Addition of field element.
+ */
+NSimpleField NSimpleField::operator += (const NSimpleField& other)
+{
+for (unsigned long i=0; i<coeff.size(); i++) coeff[i] += other.coeff[i];
+return (*this);
+}
+/**
+ * Negation of field elements.
+ */
+NSimpleField NSimpleField::operator -= (const NSimpleField &other)
+{
+for (unsigned long i=0; i<coeff.size(); i++) coeff[i] -= other.coeff[i];
+return (*this);
+}
+
+/**
+ * Negation of field elements.
+ */
+NSimpleField NSimpleField::operator *= (const NSimpleField &other)
+{
+(*this) = (*this) * other;
+return (*this);
+}
+
+
+
+/**
  * Multiplication of field elts.
  */
-template <class T>
-NSimpleField<T> NSimpleField<T>::operator * (const NSimpleField<T>& other) const
+NSimpleField NSimpleField::operator * (const NSimpleField& other) const
 {
- NSimpleField<T> temp(other, true); // zero element
+ NSimpleField temp(other); 
 
- NMatrix<T> redMat(baseField.size(),baseField.size()-1); // computed in step 1
+ NMatrix<NRational> redMat(baseField.size(),baseField.size()-1); // computed in step 1
+ redMat.initialise(NRational::zero);
 
    // the column vectors will be representations of x^{n+j} wrt 1, x, ..., x^{n-1}
    // n=baseField.size()
 
   // step 1: compute reduction matrix
 
-  for (int i=0; i<redMat.rows(); i++) redMat.entry(i,0) = baseField[i];
+  for (unsigned long i=0; i<redMat.rows(); i++) redMat.entry(i,0) = baseField[i];
 
-  for (int i=1; i<redMat.columns(); i++)
+  for (unsigned long i=1; i<redMat.columns(); i++)
    { // shift entry(j,i) <-- (j-1,i-1)...
-    for (int j=1; j<redMat.rows(); j++)
+    for (unsigned long j=1; j<redMat.rows(); j++)
 	redMat.entry(j,i) = redMat.entry(j-1,i-1); 
-    for (int j=0; j<redMat.rows(); j++)
+    for (unsigned long j=0; j<redMat.rows(); j++)
 	redMat.entry(j,i) += redMat.entry(baseField.size()-1, i-1)*redMat.entry(j,0);
    }
 
   // step 2: compute sum_k sum_{i+j=k} a_ib_j x^k
-  std::vector<T> polySum(redMat.columns()*2, 0);
-  for (int k=0; k<polySum.size(); k++)
-	for (int i=0; i<k+1; i++) polySum[k] += coeff[i]*other.coeff[k-i];
+  std::vector<NRational> polySum(redMat.columns()*2+1,NRational::zero);
+
+  for (unsigned long k=0; k<polySum.size(); k++)
+	for (unsigned long i=((k<coeff.size())?(0):(k-coeff.size()+1)); (i<k) && (i<coeff.size()); i++) polySum[k] += coeff[i]*other.coeff[k-i];
 
   // step 3: reduce 
-  for (int k=baseField.size(); k<polySum.size(); k++)
-	{
-	for (int j=0; j<redMat.columns(); j++) // coeffs of x^{n+j} in the product
-	  for (int i=0; i<baseField.size(); i++) // component iterator
+  for (unsigned long j=0; j<redMat.columns(); j++) // coeffs of x^{n+j} in the product
+    for (unsigned long i=0; i<baseField.size(); i++) // component iterator
 		polySum[i] += polySum[baseField.size()+j]*redMat.entry(i,j);
-	}
+
+  for (unsigned long i=0; i<temp.coeff.size(); i++) temp.coeff[i] = polySum[i];
 
   return temp;
 }
@@ -128,10 +144,9 @@ NSimpleField<T> NSimpleField<T>::operator * (const NSimpleField<T>& other) const
 /**
  * Multiplicative inverse
  */
-template <class T>
-NSimpleField<T> NSimpleField<T>::inverse() const
+NSimpleField NSimpleField::inverse() const
 {
- NSimpleField<T> temp(*this);
+ NSimpleField temp(*this);
 
  // not implemented yet
 
@@ -141,33 +156,73 @@ NSimpleField<T> NSimpleField<T>::inverse() const
 /**
  * Vector space ops
  */
-template <class T>
-NSimpleField<T> NSimpleField<T>::operator * (const T& k) const
+NSimpleField NSimpleField::operator * (const NRational& k) const
 {
-// not implemented yet
+NSimpleField temp(*this);
+for (unsigned long i=0; i<coeff.size(); i++) temp.coeff[i]*=k;
+return temp;
 }
 
 /**
  * Vector space ops
  */
-template <class TT>
-NSimpleField<TT> operator * (const TT& k, const NSimpleField<TT>& other)
+NSimpleField operator * (const NRational& k, const NSimpleField& other)
 {
-// not implemented yet
+NSimpleField temp( other );
+for (unsigned long i=0; i<temp.coeff.size(); i++) temp.coeff[i]*=k;
+return temp;
 }
 
 
-template <class T>
-void NSimpleField<T>::writeTextShort(std::ostream& out) const 
+void NSimpleField::writeTextShort(std::ostream& out) const 
 {
- for (int i=0; i<coeff.size(); i++)
+// output polynomials in a sensible fashion, eg:  1+x^2,  -1,  1-x+20x^6, etc...
+//  +1, -1 special rules, and ^1 special rule, and seperator special rule...
+bool ws=false;
+
+ for (unsigned long i=0; i<coeff.size(); i++)
+	if (coeff[i]!=0)
 	{
-	out<<coeff[i]<<"x^"<<i;
-	if (i<coeff.size()-1) out<<"+"; else out<<" ";
-	}
+	if (coeff[i]==1)
+		{
+		if (ws) 
+		 {
+		  if (i==1) out<<"+"<<var; else out<<"+"<<var<<"^"<<i;
+		 } 
+		else if (i==0) out<<"1";
+	        else if (i==1) out<<var;
+		else out<<var<<"^"<<i;
+		ws=true;		
+		} 
+	else if (coeff[i]==-1)
+		{
+	 	if (ws) 
+		 {
+		  if (i==1) out<<"-"<<var; else out<<"-"<<var<<"^"<<i;
+		 }
+		else if (i==0) out<<"-1";
+		else if (i==1) out<<var;
+		else out<<"-"<<var<<"^"<<i;
+		ws=true;
+		} 
+	else
+		{
+		if (coeff[i]>0) 
+			{
+			if (ws) out<<"+";
+		        out<<coeff[i];
+			if (i==1) out<<var;
+			else if (i!=0) out<<var<<"^"<<i;
+			}
+		else    {
+			out<<coeff[i];
+			if (i==1) out<<var;
+			else if (i!=0) out<<var<<"^"<<i;
+			}
+		ws=true;
+		}
+	}	
 }
-
-template class NSimpleField<int>;
 
 } // namespace regina
 
