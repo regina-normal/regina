@@ -35,7 +35,7 @@
  *  \brief Support for finding primes and factorising integers.
  */
 
-#include "utilities/nmpi.h"
+#include "maths/nmpi.h"
 #include <vector>
 
 namespace regina {

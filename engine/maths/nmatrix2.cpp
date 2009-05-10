@@ -27,7 +27,7 @@
 /* end stub */
 
 #include <iostream>
-#include "utilities/nmatrix2.h"
+#include "maths/nmatrix2.h"
 
 namespace regina {
 

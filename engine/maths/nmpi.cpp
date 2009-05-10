@@ -27,7 +27,7 @@
 /* end stub */
 
 #include <cstdlib>
-#include "utilities/nmpi.h"
+#include "maths/nmpi.h"
 
 namespace regina {
 
