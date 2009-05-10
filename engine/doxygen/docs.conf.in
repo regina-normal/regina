@@ -63,6 +63,9 @@ INPUT = \
 FILE_PATTERNS        = *.h
 RECURSIVE            = YES
 EXCLUDE = \
+    @top_srcdir@/engine/utilities/nmatrix2.h \
+    @top_srcdir@/engine/utilities/nmpi.h \
+    @top_srcdir@/engine/utilities/nrational.h \
     @top_srcdir@/engine/foreign/casson.h \
     @top_srcdir@/engine/snappea/kernel
 
