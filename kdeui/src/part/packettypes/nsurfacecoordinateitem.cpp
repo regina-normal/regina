@@ -27,10 +27,10 @@
 /* end stub */
 
 // Regina core includes:
+#include "maths/nlargeinteger.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nmpi.h"
 
 // UI includes:
 #include "coordinates.h"

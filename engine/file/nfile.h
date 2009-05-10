@@ -42,7 +42,7 @@
 
 #include "shareableobject.h"
 #include "file/nresources.h"
-#include "utilities/nmpi.h"
+#include "maths/nlargeinteger.h"
 #include "utilities/nbooleans.h"
 
 namespace regina {

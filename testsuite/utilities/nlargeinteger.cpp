@@ -28,8 +28,8 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
+#include "maths/nlargeinteger.h"
 #include "testsuite/utilities/testutilities.h"
-#include "utilities/nmpi.h"
 
 using regina::NLargeInteger;
 

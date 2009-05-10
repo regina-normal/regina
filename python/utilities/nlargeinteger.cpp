@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "utilities/nmpi.h"
+#include "maths/nlargeinteger.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;

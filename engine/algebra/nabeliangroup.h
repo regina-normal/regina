@@ -36,7 +36,7 @@
 #endif
 
 #include <set>
-#include "utilities/nmpi.h"
+#include "maths/nlargeinteger.h"
 #include "shareableobject.h"
 
 namespace regina {

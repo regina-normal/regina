@@ -37,7 +37,7 @@
 #endif
 
 #include "maths/nfastvector.h"
-#include "maths/nmpi.h"
+#include "maths/nlargeinteger.h"
 
 namespace regina {
 
