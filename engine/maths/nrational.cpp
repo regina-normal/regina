@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "utilities/nrational.h"
+#include "maths/nrational.h"
 #include <cfloat>
 
 namespace regina {

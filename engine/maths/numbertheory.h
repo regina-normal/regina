@@ -36,7 +36,7 @@
  */
 
 #include <list>
-#include "utilities/nmpi.h"
+#include "maths/nmpi.h"
 
 namespace regina {
 

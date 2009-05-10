@@ -36,8 +36,8 @@
  */
 
 #include "shareableobject.h"
-#include "utilities/nmpi.h"
 #include "maths/nmatrix.h"
+#include "maths/nmpi.h"
 
 namespace regina {
 

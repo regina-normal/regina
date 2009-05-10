@@ -36,8 +36,8 @@
 #define __NFASTRAY_H
 #endif
 
-#include "utilities/nmpi.h"
 #include "maths/nfastvector.h"
+#include "maths/nmpi.h"
 
 namespace regina {
 
