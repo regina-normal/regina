@@ -55,7 +55,7 @@ class NXMLDim4TriangulationReader;
 class NXMLPacketReader;
 
 /**
- * \addtogroup dim4 4-Manifold Triangulation
+ * \addtogroup dim4 4-Manifold Triangulations
  * Triangulations of 4-manifolds.
  * @{
  */
