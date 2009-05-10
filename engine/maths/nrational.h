@@ -35,7 +35,7 @@
  *  \brief Deals with artibrary precision rational numbers.
  */
 
-#include "maths/nmpi.h"
+#include "maths/nlargeinteger.h"
 
 namespace regina {
 

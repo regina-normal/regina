@@ -12,7 +12,7 @@ INCLUDES = -I$(top_srcdir) @ENGINE_INCLUDES@
 
 check_LIBRARIES = libutilities.a
 
-libutilities_a_SOURCES = nindexedarray.cpp nmpi.cpp nrational.cpp
+libutilities_a_SOURCES = nindexedarray.cpp nlargeinteger.cpp nrational.cpp
 
 noinst_HEADERS = testutilities.h
 

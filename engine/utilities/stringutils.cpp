@@ -28,9 +28,9 @@
 
 #include <cstdlib>
 #include <cctype>
+#include "maths/nlargeinteger.h"
 #include "utilities/stringutils.h"
 #include "utilities/nbooleans.h"
-#include "utilities/nmpi.h"
 
 namespace regina {
 

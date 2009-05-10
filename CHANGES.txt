@@ -83,11 +83,11 @@ Version 4.6  [ 16 May, 2009 ]
               them.  C++ programmers can now use NIsomorphism in conjunction
               with the NPerm::S4 array instead.
         Class NLargeInteger:
-            - The header utilities/nmpi.h is now deprecated.  Please use
-              the identical maths/nmpi.h instead.
+            - The old header utilities/nmpi.h is now deprecated.  Please use
+              the new header maths/nlargeinteger.h instead.
         Class NMatrix2:
-            - The header utilities/nmatrix2.h is now deprecated.  Please use
-              the identical maths/nmatrix2.h instead.
+            - The old header utilities/nmatrix2.h is now deprecated.  Please
+              use the new header maths/nmatrix2.h instead.
         Class NNormalSurface:
             - Finally implemented cutAlong()!
             - New routine isEmpty() for identifying empty surfaces.
@@ -153,8 +153,8 @@ Version 4.6  [ 16 May, 2009 ]
               both of which are empty shells of routines that have never
               been implemented and quite possibly never will.
         Class NRational:
-            - The header utilities/nrational.h is now deprecated.  Please use
-              the identical maths/nrational.h instead.
+            - The old header utilities/nrational.h is now deprecated.  Please
+              use the new header maths/nrational.h instead.
         Class NTetrahedron:
             - Renamed getAdjacentTetrahedron(), getAdjacentTetrahedronGluing()
               and getAdjacentFace() to adjacentTetrahedron(), adjacentGluing()

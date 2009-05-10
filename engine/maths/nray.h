@@ -36,7 +36,7 @@
 #define __NRAY_H
 #endif
 
-#include "maths/nmpi.h"
+#include "maths/nlargeinteger.h"
 #include "maths/nvectordense.h"
 
 namespace regina {

@@ -37,9 +37,9 @@
 #endif
 
 #include <set>
+#include "maths/nlargeinteger.h"
 #include "surfaces/nsurfacefilter.h"
 #include "utilities/nbooleans.h"
-#include "utilities/nmpi.h"
 
 namespace regina {
 
