@@ -13,5 +13,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libmaths.la
 
-libmaths_la_SOURCES = matrixops.cpp nmatrixint.cpp nprimes.cpp numbertheory.cpp pymaths.cpp
+libmaths_la_SOURCES = matrixops.cpp nlargeinteger.cpp nmatrix2.cpp nmatrixint.cpp nprimes.cpp nrational.cpp numbertheory.cpp pymaths.cpp
 

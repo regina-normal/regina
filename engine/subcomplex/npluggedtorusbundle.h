@@ -36,8 +36,8 @@
 #define __NPLUGGEDTORUSBUNDLE_H
 #endif
 
+#include "maths/nmatrix2.h"
 #include "subcomplex/nstandardtri.h"
-#include "utilities/nmatrix2.h"
 
 namespace regina {
 

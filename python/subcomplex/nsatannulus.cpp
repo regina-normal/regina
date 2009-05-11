@@ -26,10 +26,10 @@
 
 /* end stub */
 
+#include "maths/nmatrix2.h"
 #include "subcomplex/nsatannulus.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nmatrix2.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;

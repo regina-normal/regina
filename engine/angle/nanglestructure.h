@@ -37,8 +37,8 @@
 
 #include "shareableobject.h"
 #include "file/nfilepropertyreader.h"
+#include "maths/nrational.h"
 #include "maths/nray.h"
-#include "utilities/nrational.h"
 
 namespace regina {
 

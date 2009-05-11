@@ -33,7 +33,7 @@
 #ifndef __NANGLESTRUCTUREITEM_H
 #define __NANGLESTRUCTUREITEM_H
 
-#include "utilities/nrational.h"
+#include "maths/nrational.h"
 
 #include "../gridlistview.h"
 

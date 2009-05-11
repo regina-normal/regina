@@ -28,18 +28,12 @@
 
 void addLocale();
 void addNBoolSet();
-void addNLargeInteger();
-void addNMatrix2();
-void addNRational();
 void addNTriBool();
 void addOSUtils();
 
 void addUtilities() {
     addLocale();
     addNBoolSet();
-    addNLargeInteger();
-    addNMatrix2();
-    addNRational();
     addNTriBool();
     addOSUtils();
 }

@@ -38,7 +38,9 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
-void addNPrimes(CppUnit::TextUi::TestRunner& runner);
 void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
+void addNLargeInteger(CppUnit::TextUi::TestRunner& runner);
+void addNPrimes(CppUnit::TextUi::TestRunner& runner);
+void addNRational(CppUnit::TextUi::TestRunner& runner);
+void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
 

@@ -28,8 +28,8 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
+#include "maths/nrational.h"
 #include "testsuite/utilities/testutilities.h"
-#include "utilities/nrational.h"
 
 using regina::NLargeInteger;
 using regina::NRational;

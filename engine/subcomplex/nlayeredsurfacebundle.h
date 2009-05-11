@@ -36,9 +36,9 @@
 #endif
 
 #include <memory>
+#include "maths/nmatrix2.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nmatrix2.h"
 
 namespace regina {
 

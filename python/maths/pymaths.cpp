@@ -27,14 +27,20 @@
 /* end stub */
 
 void addMatrixOps();
+void addNLargeInteger();
+void addNMatrix2();
 void addNMatrixInt();
 void addNPrimes();
+void addNRational();
 void addNumberTheory();
 
 void addMaths() {
     addMatrixOps();
+    addNLargeInteger();
+    addNMatrix2();
     addNMatrixInt();
     addNPrimes();
+    addNRational();
     addNumberTheory();
 }
 
