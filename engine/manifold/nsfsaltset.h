@@ -36,7 +36,7 @@
 #define __NSFSALTSET_H
 #endif
 
-#include "utilities/nmatrix2.h"
+#include "maths/nmatrix2.h"
 
 namespace regina {
 

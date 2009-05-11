@@ -35,9 +35,9 @@
 #define __NLAYERING_H
 #endif
 
+#include "maths/nmatrix2.h"
 #include "triangulation/nperm.h"
 #include "utilities/boostutils.h"
-#include "utilities/nmatrix2.h"
 
 namespace regina {
 

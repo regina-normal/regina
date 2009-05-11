@@ -36,9 +36,9 @@
 #endif
 
 #include "algebra/nmarkedabeliangroup.h"
+#include "maths/nrational.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/nindexedarray.h"
-#include "utilities/nrational.h"
 #include "utilities/ptrutils.h"
 #include <algorithm>
 #include <memory>

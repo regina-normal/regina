@@ -36,8 +36,8 @@
 #define __NTXICORE_H
 #endif
 
+#include "maths/nmatrix2.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nmatrix2.h"
 
 namespace regina {
 

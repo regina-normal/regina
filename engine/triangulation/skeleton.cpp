@@ -27,8 +27,8 @@
 /* end stub */
 
 #include <queue>
+#include "maths/nrational.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nrational.h"
 
 namespace regina {
 

@@ -36,7 +36,7 @@
 #endif
 
 #include "manifold/nmanifold.h"
-#include "utilities/nmatrix2.h"
+#include "maths/nmatrix2.h"
 
 namespace regina {
 

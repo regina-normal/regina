@@ -30,8 +30,8 @@
 #include "enumerate/nenumconstraint.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsstandard.h"
-#include "utilities/nrational.h"
 #include "maths/nmatrixint.h"
+#include "maths/nrational.h"
 #include "maths/nvectorunit.h"
 #include "triangulation/ntriangulation.h"
 

@@ -26,12 +26,12 @@
 
 /* end stub */
 
+#include "maths/nmatrix2.h"
 #include "subcomplex/nsatannulus.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nmatrix2.h"
 
 namespace regina {
 

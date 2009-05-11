@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "utilities/nmatrix2.h"
+#include "maths/nmatrix2.h"
 #include <boost/python.hpp>
 
 namespace regina {
