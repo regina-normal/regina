@@ -214,7 +214,7 @@ class NEdge : public ShareableObject, public NMarkedElement {
          * inclusive; the resulting vertex numbers will be between 0 and 3
          * inclusive.
          *
-         * Note that edge \i is always opposite edge \a 5-i in a tetrahedron.
+         * Note that edge \a i is always opposite edge \a 5-i in a tetrahedron.
          * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
          * be smaller than <tt>edgeVertex[i][1]</tt>.
          *
