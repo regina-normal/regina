@@ -33,62 +33,283 @@
 
 namespace regina {
 
+/**
+ * The bulk of this file contains the implementation for cutAlong(),
+ * which cuts along a normal surface.
+ *
+ * The way this routine operates is as follows:
+ *
+ * - We add an extra set of vertex links to the original normal surface.  We
+ *   refer to the regions inside these vertex links as "vertex neighbourhoods".
+ *   These neighbourhoods are typically balls (though around ideal vertices
+ *   they are cones over the corresponding boundary surfaces).
+ *
+ * - If we cut along the new normal surface, each tetrahedron falls
+ *   apart into the following types of blocks:
+ *
+ *   + Triangular prisms, represented by the class TriPrism.  There are
+ *     four types of triangular prism, corresponding to the four triangular
+ *     normal disc types that bound them.
+ *
+ *   + Quadrilateral prisms, represented by the class QuadPrism.  There
+ *     are three types of quadrilateral prism, corresponding to the
+ *     three quadrilateral normal disc types that bound them.
+ *
+ *   + Tetrahedra truncated at all four vertices, represented by the
+ *     class TruncTet.  There is only one type of truncated tetrahedron.
+ *
+ *   + Truncated half-tetrahedra, obtained by slicing a truncated
+ *     tetrahedron along a quadrilateral normal disc and keeping one of
+ *     the two halves that results.  This is represented by the class
+ *     TruncHalfTet.  There are six types of truncated half-tetrahedra,
+ *     corresponding to the three choices of "slicing quadrilateral" and
+ *     the two choices of which half to keep.
+ *
+ *   The reason we add the extra vertex links is to keep this list of
+ *   block types small; otherwise we must also deal with \e partially
+ *   truncated tetrahedra and half-tetrahedra.
+ *
+ * - We triangulate each of the blocks.  There are two types of boundary
+ *   for each block:  (i) boundary faces that run along the normal
+ *   surface, and (ii) boundary faces that run along the joins between
+ *   adjacent tetrahedra.  Faces (i) can be left alone (they will become
+ *   the boundary of the final triangulation); faces (ii) need to be
+ *   joined together according to how the original tetrahedra were
+ *   joined together.  Note that a handful of type (i) boundary faces
+ *   run along the extra vertex links, and so these will be glued back
+ *   onto the missing vertex neighbourhoods at the end of the cutting
+ *   procedure.
+ *
+ * - For each block, we organise the boundaries of type (ii) into
+ *   quadrilaterals and hexagons (each of which is the intersection of
+ *   the block with a single face of the enclosing tetrahedron).  These
+ *   are represented by the classes BdryQuad and BdryHex respectively.
+ *
+ * - The overall cutting algorithm then works as follows:
+ *
+ *   + Triangulate each block.  The class TetBlockSet represents a full
+ *     set of triangulated blocks within a single tetrahedron of the
+ *     original triangulation.
+ *
+ *   + Glue together the type (ii) boundaries between adjacent blocks,
+ *     using layerings as needed to make the triangulated quadrilaterals
+ *     and hexagons compatible.
+ *
+ *   + Construct the missing vertex neighbourhoods and glue them back onto
+ *     the appropriate type (i) block boundaries.
+ *
+ * See the individual classes for further details.
+ */
+
+// ------------------------------------------------------------------------
+// Supporting classes for cutAlong()
+// ------------------------------------------------------------------------
+
 namespace {
     class Bdry;
 
+    /**
+     * A single triangulated block within a single tetrahedron of the
+     * original triangulation.
+     */
     class Block {
         protected:
             NTetrahedron* outerTet_;
-            NTetrahedron** innerTet_; /* will always have enough room for
-                                         boundary layerings */
+                /**< The "outer tetrahedron".  This is the tetrahedron
+                     of the original triangulation that contains this block. */
+            NTetrahedron** innerTet_;
+                /**< The "inner tetrahedra".  These are the tetrahedra
+                     used to triangulate this block, and also to
+                     perform any necessary boundary layerings. */
             unsigned nInnerTet_;
-            Bdry* bdry_[4]; /* indexed by face */
+                /**< The number of inner tetrahedra. */
+
+            Bdry* bdry_[4];
+                /**< The four quadrilateral / hexagonal type (ii) boundaries
+                     of this block.  These are boundaries that meet faces of
+                     the outer tetrahedron (not boundaries that run along the
+                     original normal surface).  Specifically, bdry_[i]
+                     is the boundary on face i of the outer tetrahedron
+                     (or 0 if this block does not actually meet face i
+                     of the outer tetrahedron). */
 
             NTetrahedron* link_[4];
-            NPerm linkVertices_[4]; /* maps vertices of the inner tetrahedron
-                                       on the vertex linking triangle to the
-                                       parallel vertices of the outer
-                                       tetrahedron */
+                /**< Indicates which inner tetrahedra in this block (if any)
+                     face the vertices of the outer tetrahedron.
+                     Specifically, if this block contains a triangle on its
+                     boundary surrounding vertex i of the outer tetrahedron,
+                     and if this triangle is facing vertex i (so the block
+                     lies on the side of the face away from vertex i, not
+                     towards vertex i), then link_[i] is the inner
+                     tetrahedron containing this face.  Otherwise, link_[i]
+                     is null. */
+            NPerm linkVertices_[4];
+                /**< If link_[i] is non-zero, then linkVertices_[i] is
+                     a mapping from vertices of the inner tetrahedron
+                     \a link_[i] to vertices of the outer tetrahedron
+                     \a outerTet.  Specifically, if we let V denote
+                     vertex i of the outer tetrahedron, then this mapping
+                     sends the three vertices of the inner vertex linking
+                     triangle surrounding V to the three "parallel" vertices
+                     of the face opposite V in the outer tetrahedron. */
 
         public:
+            /**
+             * Destroys the four boundaries, but none of the inner
+             * tetrahedra or the outer tetrahedron.
+             */
             virtual ~Block();
 
+            /**
+             * Returns the outer tetrahedron.
+             */
             NTetrahedron* outerTet();
 
+            /**
+             * Glues this block to the given adjacent block.  This
+             * involves taking the quadrilateral or hexagon boundary of
+             * this block that sits on the given face of this block's
+             * outer tetrahedron, and gluing it (using layerings if need
+             * be) to the corresponding quadrilateral or hexagon of the
+             * adjacent block.
+             */
             void joinTo(int face, Block* other);
+
+            /**
+             * Inserts all of the inner tetrahedra for this block into
+             * the given triangulation.
+             */
             void insertInto(NTriangulation* tri);
-            NTetrahedron* layeringTetrahedron(); /* PRE: enough space,
-                                                    will layer on block bdry */
+
+            /**
+             * Creates a new inner tetrahedron within this block.
+             * It is assumed that this tetrahedron is to be used for
+             * layering on the block boundary.  However, this layering
+             * will not be performed by this routine (so the new tetrahedron
+             * that is returned will be isolated).
+             *
+             * This routine assumes that the innerTet_ array has enough
+             * space for a new tetrahedron (which should be true if the
+             * correct arguments were passed to the Block constructor).
+             */
+            NTetrahedron* layeringTetrahedron();
+
+            /**
+             * Attaches the triangle described by link_[vertex] to the
+             * given "small tetrahedron" that forms part of the corresponding
+             * vertex neighbourhood.  It is assumed that the small tetrahedron
+             * in the neighbourhood will have its vertices numbered in a
+             * way that represents a "shrunk-down" version of the outer
+             * tetrahedron (where "shrunk-down" means dilation about the
+             * given outer tetrahedron vertex).
+             */
             void attachVertexNbd(NTetrahedron* nbd, int vertex);
 
         protected:
+            /**
+             * Creates a new block within the given outer tetrahedron.
+             * This constructor creates \a initialNumTet inner tetrahedra,
+             * but also leaves enough extra room in the inner tetrahedron
+             * array for up to \a maxLayerings layerings on the boundaries.
+             */
             Block(NTetrahedron* outerTet, unsigned initialNumTet,
                 unsigned maxLayerings);
     };
 
+    /**
+     * A triangular prism, triangulated using three inner tetrahedra.
+     *
+     * See cut-triprism.fig for details of the triangulation.
+     * In this diagram, inner tetrahedra are numbered T0, T1, ..., and
+     * vertices of the inner tetrahedra are indicated using plain integers.
+     * For a block of type 0 (see the constructor for details), vertices
+     * of the outer tetrahedron are indicated using integers in circles.
+     * For blocks of other types, vertex 0 is swapped with vertex \a type
+     * in the outer tetrahedron.
+     */
     class TriPrism : public Block {
         public:
+            /**
+             * Creates a new triangular prism within the given outer
+             * tetrahedron.
+             *
+             * The given block type is an integer between 0 and 3
+             * inclusive, describing which triangle type in the
+             * outer tetrahedron supplies the two ends of the prism.
+             *
+             * Equivalently, the block type describes which vertex of
+             * the outer tetrahedron this triangular prism surrounds.
+             */
             TriPrism(NTetrahedron *outerTet, int type);
-                /* which tri type bounds it? */
     };
 
+    /**
+     * A quadrilateral prism, triangulated using five inner tetrahedra.
+     *
+     * See cut-quadprism.fig for details of the triangulation.
+     * In this diagram, inner tetrahedra are numbered T0, T1, ..., and
+     * vertices of the inner tetrahedra are indicated using plain integers.
+     * For a block of type 1 (see the constructor for details), vertices
+     * of the outer tetrahedron are indicated using integers in circles.
+     * For blocks of other types, the vertices of the outer tetrahedron
+     * are permuted accordingly.
+     */
     class QuadPrism : public Block {
         public:
+            /**
+             * Creates a new quadrilateral prism within the given outer
+             * tetrahedron.
+             *
+             * The given block type is an integer between 0 and 2
+             * inclusive, describing which quadrilateral type in the
+             * outer tetrahedron supplies the two ends of the prism.
+             */
             QuadPrism(NTetrahedron *outerTet, int type);
-                /* which quad type bounds it? */
     };
 
+    /**
+     * A truncated half-tetrahedron, triangulated using eight inner tetrahedra.
+     *
+     * See cut-trunchalftet.fig for details of the triangulation.
+     * In this diagram, inner tetrahedra are numbered T0, T1, ..., and
+     * vertices of the inner tetrahedra are indicated using plain integers.
+     * For a block of type 0 (see the constructor for details), vertices
+     * of the outer tetrahedron are indicated using integers in circles.
+     * For blocks of other types, the vertices of the outer tetrahedron
+     * are permuted accordingly.
+     */
     class TruncHalfTet : public Block {
         public:
+            /**
+             * Creates a new truncated half-tetrahedron within the given
+             * outer tetrahedron.
+             *
+             * The given block type is an integer between 0 and 5
+             * inclusive, describing which edge of the outer tetrahedron
+             * this half-tetrahedron does not meet at all.
+             */
             TruncHalfTet(NTetrahedron *outerTet, int type);
-                /* which edge does it miss entirely? */
     };
 
+    /**
+     * A truncated tetrahedron, triangulated using eleven inner tetrahedra.
+     *
+     * See cut-trunctet.fig for details of the triangulation.
+     * In this diagram, inner tetrahedra are numbered T0, T1, ...,
+     * vertices of the inner tetrahedra are indicated using plain integers,
+     * and vertices of the outer tetrahedron are indicated using integers in
+     * circles.
+     */
     class TruncTet : public Block {
         public:
+            /**
+             * Creates a new truncated tetrahedron within the given outer
+             * tetrahedron.
+             */
             TruncTet(NTetrahedron *outerTet);
     };
 
+    // TODO: HERE
     class Bdry {
         protected:
             Block* block_;
@@ -705,6 +926,10 @@ namespace {
     }
 }
 
+// ------------------------------------------------------------------------
+// Implementation of cutAlong()
+// ------------------------------------------------------------------------
+
 NTriangulation* NNormalSurface::cutAlong() const {
     NTriangulation* ans = new NTriangulation();
 
@@ -761,6 +986,10 @@ NTriangulation* NNormalSurface::cutAlong() const {
 
     return ans;
 }
+
+// ------------------------------------------------------------------------
+// Implementation of crush()
+// ------------------------------------------------------------------------
 
 NTriangulation* NNormalSurface::crush() const {
     NTriangulation* ans = new NTriangulation(*triangulation);
