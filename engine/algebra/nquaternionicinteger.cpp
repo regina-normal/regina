@@ -67,6 +67,19 @@ NQuaternionicInteger NQuaternionicInteger::operator * (const NQuaternionicIntege
 }
 
 /**
+ * Vector space op
+ */
+NQuaternionicInteger NQuaternionicInteger::operator * (const NField25& other) const
+{
+	NQuaternionicInteger retval( *this );
+	retval.Rc *= other;
+	retval.Ic *= other;
+	retval.Jc *= other;
+	retval.Kc *= other;
+	return retval;
+}
+
+/**
  * Multiplicative inverse
  */
 NQuaternionicInteger NQuaternionicInteger::inverse() const
@@ -75,6 +88,7 @@ NQuaternionicInteger NQuaternionicInteger::inverse() const
   temp.Ic.negate();
   temp.Jc.negate();
   temp.Kc.negate();
+  temp =  temp * (normsquared().inverse());
   return temp;
 }
 
@@ -86,38 +100,30 @@ void NQuaternionicInteger::writeTextShort(std::ostream& out) const
  bool ws=false; // written something	
  if ( (Ic != NRational::zero) || (Jc != NRational::zero) || (Kc != NRational::zero) ) 
   {
-  if (Rc != NRational::zero) 
-     { 
-     Rc.writeTextShort(out); ws=true; 
-     }
+  if (Rc != NRational::zero)      {      Rc.writeTextShort(out); ws=true; }
   if (Ic != NRational::zero) 
      { 
-      if (ws) 
-         { 
-          out<<"+"; Ic.writeTextShort(out); out<<"i"; 
-         }
-       else 
-         { 
-           Ic.writeTextShort(out); out<<"i"; ws=true; 
-         }  
+      if ( (ws) && (Ic.requires_padding()) ) out<<"+";
+       if (Ic.nnzt()>1) out<<"(";
+       Ic.writeTextShort(out); 
+       if (Ic.nnzt()>1) out<<")";
+       out<<"i"; ws=true; 
       }
   if (Jc != NRational::zero) 
       { 
-        if (ws) 
-            {
-              out<<"+"; Jc.writeTextShort(out); out<<"j"; 
-            }
-	else 
-            { 
-              Jc.writeTextShort(out); out<<"j"; ws=true; 
-            }  
+        if ( (ws) && (Jc.requires_padding()) ) out<<"+"; 
+        if (Jc.nnzt()>1) out<<"(";
+        Jc.writeTextShort(out);       
+        if (Jc.nnzt()>1) out<<")";
+        out<<"j"; ws=true; 
       }
   if (Kc != NRational::zero) 
       { 
-        if (ws) 
-          { 
-            out<<"+"; Kc.writeTextShort(out); out<<"k"; 
-          }
+       if ( (ws) && (Kc.requires_padding()) ) out<<"+"; 
+       if (Kc.nnzt()>1) out<<"(";
+        Kc.writeTextShort(out); 
+       if (Kc.nnzt()>1) out<<")";
+        out<<"k"; 
       }
   }
  else
@@ -126,6 +132,33 @@ void NQuaternionicInteger::writeTextShort(std::ostream& out) const
   }
 }
 
+/**
+ * determines if is equal to zero
+ */
+bool NQuaternionicInteger::iszero() const
+{
+ bool retval;
+ if ( (Rc==NRational::zero) && (Ic==NRational::zero) && (Jc==NRational::zero) && (Kc==NRational::zero) ) retval=true;
+	else retval=false;
+ return retval;
+}
+
+/**
+ * determines if is equal to an NRational
+ */
+bool NQuaternionicInteger::operator == ( const NRational& other ) const
+{
+ bool retval;
+ if ( (Rc==other) && (Ic==NRational::zero) && (Jc==NRational::zero) && (Kc==NRational::zero) ) retval=true;
+	else retval=false;
+ return retval;
+}
+
+std::ostream& operator << (std::ostream& out, const NQuaternionicInteger& dat)
+{
+	dat.writeTextShort(out);
+	return out;
+}
 
 
 } // namespace regina

@@ -54,6 +54,87 @@ NField25 NField25::inverse() const
  return temp;
 }
 
+/**
+ * the other negate
+ */
+NField25 operator - (const NField25 &o)
+{
+NField25 retval(o);
+retval.a.negate(); retval.b.negate(); retval.c.negate(); retval.d.negate();
+return retval;
+}
+
+
+
+/**
+ * Writes the element of the field in human-readable form, base field not mentioned.
+ *
+ * @param out the stream to write to.
+ */
+void NField25::writeTextShort(std::ostream& out) const
+{
+ bool ws=false; // written something yet?
+
+ if (a != NRational::zero) { out<<a; ws=true; }
+
+ if (b != NRational::zero) 
+  { 
+   if ( (ws) && (b > NRational::zero) ) out<<"+";
+   out<<b;
+   out<<"t";
+   ws = true;
+  }
+
+ if (c != NRational::zero) 
+  { 
+   if ( (ws) && (c > NRational::zero) ) out<<"+";
+   out<<c;
+   out<<"f";
+   ws = true;
+  }
+
+ if (d != NRational::zero) 
+  { 
+   if ( (ws) && (d > NRational::zero) ) out<<"+";
+   out<<d;
+   out<<"T";
+   ws = true;
+  }
+
+ if ( (ws==false) && (nnzt()==0) ) out<<"0";
+}
+
+bool NField25::requires_padding() const
+{
+	bool retval=false;
+	if (nnzt()==1)
+	 {
+	  if (a > NRational::zero) retval=true;
+	  if (b > NRational::zero) retval=true;
+	  if (c > NRational::zero) retval=true;
+	  if (d > NRational::zero) retval=true;
+	 }
+	else
+	 {
+	  if (nnzt()>1) retval=true;
+	 }
+	return retval;
+}
+
+
+std::ostream& operator << (std::ostream& out, const NField25& dat)
+{
+	dat.writeTextShort(out);
+	return out;
+}
+
+
+
+
+
+
+
+
 } // namespace regina
 
 

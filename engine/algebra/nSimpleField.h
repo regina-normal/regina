@@ -37,7 +37,7 @@
 
 #include <vector>
 #include <iostream>
-#include "utilities/nrational.h"
+#include "maths/nrational.h"
 
 namespace regina {
 

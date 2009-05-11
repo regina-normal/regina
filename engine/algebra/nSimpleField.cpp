@@ -29,7 +29,7 @@
 #include "algebra/nSimpleField.h"
 #include <iostream>
 #include "maths/nmatrix.h"
-#include "utilities/nrational.h"
+#include "maths/nrational.h"
 
 namespace regina {
 

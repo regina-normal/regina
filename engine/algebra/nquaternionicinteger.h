@@ -108,9 +108,23 @@ class NQuaternionicInteger : public ShareableObject {
 	 */
 	NQuaternionicInteger operator * (const NQuaternionicInteger& other) const;
 	/**
+	 * Vector space op
+	 */
+	NQuaternionicInteger operator * (const NField25& other) const;
+
+	/**
 	 * Multiplicative inverse
 	 */
 	NQuaternionicInteger inverse() const;
+	/**
+	 * determines if is equal to zero
+	 */
+	bool iszero() const;
+
+	/**
+	 * determines if is equal to an NRational
+	 */
+	bool operator == ( const NRational& other ) const;
 
         /**
 	 * Writes the quaternionic integer to a stream in human-readable form.
@@ -118,6 +132,13 @@ class NQuaternionicInteger : public ShareableObject {
          * @param out the stream to write to.
          */
         virtual void writeTextShort(std::ostream& out) const;
+
+	/**
+	 * Normsquared
+	 */
+	NField25 normsquared() const;	
+
+        friend std::ostream& operator << (std::ostream& out, const NQuaternionicInteger& dat);
 
 };
 
@@ -144,6 +165,15 @@ inline bool NQuaternionicInteger::operator == (
     return ((Rc==other.Rc) && (Ic==other.Ic) && (Jc==other.Jc) && (Kc==other.Kc));
 }
 
+/**
+ * Normsquared
+ */
+inline NField25 NQuaternionicInteger::normsquared() const
+{
+	NField25 retval;
+	retval = Rc*Rc + Ic*Ic + Jc*Jc + Kc*Kc;
+	return retval;
+}
 
 
 } // namespace regina

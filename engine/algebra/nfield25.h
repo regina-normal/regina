@@ -139,7 +139,7 @@ class NField25 {
 	 */
 	NField25 operator + (const NField25& other) const;
 	/**
-	 * Negation of field elements.
+	 * Subtraction of field elements.
 	 */
 	NField25 operator - (const NField25 &other) const;
 	/**
@@ -164,9 +164,13 @@ class NField25 {
 	 */
 	NField25 inverse() const;
 	/**
-	 * Multiplicative negate
+	 * negate this element
 	 */
-	NField25 negate() const;
+	void negate();
+	/**
+	 * the other negate
+	 */
+	friend NField25 operator - (const NField25 &o);
 
 	/**
 	 * Vector space ops, right multiplication by field.
@@ -183,6 +187,18 @@ class NField25 {
          * @param out the stream to write to.
          */
         void writeTextShort(std::ostream& out) const;
+
+	/**
+	 * returns the number of non-zero terms
+	 */
+	int nnzt() const; 
+
+        friend std::ostream& operator << (std::ostream& out, const NField25& dat);
+
+	/**
+	 * lets you know if the leading term is negative, for output purposes.
+	 */
+	bool requires_padding() const;
 
 };
 
@@ -308,14 +324,9 @@ inline NField25 NField25::operator * (const NField25& o) const
 /**
  * Negate
  */
-inline NField25 NField25::negate() const
+inline void NField25::negate()
 {
- NField25 temp;
- temp.a = -a;
- temp.b = -b;
- temp.c = -c;
- temp.d = -d;
- return temp;
+ a.negate(); b.negate(); c.negate(); d.negate();
 }
 
 /**
@@ -345,14 +356,19 @@ inline NField25 operator * (const NRational& k, const NField25& other)
 }
 
 /**
- * Writes the element of the field in human-readable form, base field not mentioned.
- *
- * @param out the stream to write to.
+ * returns the number of non-zero terms
  */
-inline void NField25::writeTextShort(std::ostream& out) const
+inline int NField25::nnzt() const
 {
- out<<a<<"+"<<b<<"r2+"<<c<<"r5+"<<d<<"r10";
-}
+ int retval=0;
+ if (a!=NRational::zero) retval++;
+ if (b!=NRational::zero) retval++;
+ if (c!=NRational::zero) retval++;
+ if (d!=NRational::zero) retval++;
+ return retval;
+} 
+
+
 
 } // namespace regina
 
