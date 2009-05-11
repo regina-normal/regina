@@ -251,7 +251,7 @@ inline NField25 NField25::operator = (const NRational &other)
 /**
  * Addition of field element.
  */
-NField25 NField25::operator + (const NField25& other) const 
+inline NField25 NField25::operator + (const NField25& other) const 
 {
 	NField25 retval;
 	retval.a = a + other.a; retval.b= b + other.b;
@@ -262,7 +262,7 @@ NField25 NField25::operator + (const NField25& other) const
 /**
  * Negation of field elements.
  */
-NField25 NField25::operator - (const NField25 &other) const
+inline NField25 NField25::operator - (const NField25 &other) const
 {
 	NField25 retval;
 	retval.a = a - other.a; retval.b= b - other.b;
@@ -273,19 +273,19 @@ NField25 NField25::operator - (const NField25 &other) const
 /**
  * Addition of field element.
  */
-NField25 NField25::operator += (const NField25& other) 
+inline NField25 NField25::operator += (const NField25& other) 
  { a+=other.a; b+=other.b; c+=other.c; d+=other.d; return (*this); }
 
 /**
  * Negation of field elements.
  */
-NField25 NField25::operator -= (const NField25 &other)
+inline NField25 NField25::operator -= (const NField25 &other)
  { a-=other.a; b-=other.b; c-=other.c; d-=other.d; return (*this); }
 
 /**
  * Multiplication of field elements.
  */
-NField25 NField25::operator *= (const NField25 &other)
+inline NField25 NField25::operator *= (const NField25 &other)
  {
   NField25 temp( (*this)*other );
   (*this)=temp;
@@ -295,7 +295,7 @@ NField25 NField25::operator *= (const NField25 &other)
 /**
  * Multiplication of field elements.
  */
-NField25 NField25::operator * (const NField25& o) const
+inline NField25 NField25::operator * (const NField25& o) const
  {
    NField25 temp;
    temp.a = a*o.a + c2*b*o.b + c5*c*o.c + c10*d*o.d;
@@ -306,27 +306,9 @@ NField25 NField25::operator * (const NField25& o) const
  }
 
 /**
- * Multiplicative inverse
- */
-NField25 NField25::inverse() const
-{
- NField25 temp;
- temp.a= a*a*a-c2*a*b*b+c2*c10*b*c*d-c10*a*d*d-c5*a*c*c; 
- temp.b= c2*b*b*b-b*a*a+c10*a*c*d-c10*b*d*d-c5*b*c*c; 
- temp.c= c2*c2*a*b*d-c2*b*b*c-a*a*c+c5*c*c*c-c10*c*d*d; 
- temp.d= c2*a*b*c-c2*b*b*d-a*a*d+c10*d*d*d-c5*c*c*d;
- NRational K;
- K=a*a*a*a+c2*c2*b*b*b*b+c5*c5*c*c*c*c+c10*c10*d*d*d*d
-	-c2*c2*a*a*b*b-c10*a*a*c*c-c2*c10*a*a*d*d-c2*c10*b*b*c*c-c2*c2*c10*b*b*d*d-c10*c10*c*c*d*d
-	+c2*c2*c2*c10*a*b*c*d;
- temp = temp * (K.inverse());
- return temp;
-}
-
-/**
  * Negate
  */
-NField25 NField25::negate() const
+inline NField25 NField25::negate() const
 {
  NField25 temp;
  temp.a = -a;
@@ -339,7 +321,7 @@ NField25 NField25::negate() const
 /**
  * Vector space ops, right multiplication by field.
  */
-NField25 NField25::operator * (const NRational& k) const
+inline NField25 NField25::operator * (const NRational& k) const
 {
  NField25 temp( *this );
   temp.a *= k;
@@ -352,7 +334,7 @@ NField25 NField25::operator * (const NRational& k) const
 /**
  * Vector space ops, left multiplication by field.
  */
-NField25 operator * (const NRational& k, const NField25& other)
+inline NField25 operator * (const NRational& k, const NField25& other)
 {
  NField25 temp( other );
   temp.a *= k;
@@ -367,7 +349,7 @@ NField25 operator * (const NRational& k, const NField25& other)
  *
  * @param out the stream to write to.
  */
-void NField25::writeTextShort(std::ostream& out) const
+inline void NField25::writeTextShort(std::ostream& out) const
 {
  out<<a<<"+"<<b<<"r2+"<<c<<"r5+"<<d<<"r10";
 }
