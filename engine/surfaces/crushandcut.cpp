@@ -309,32 +309,98 @@ namespace {
             TruncTet(NTetrahedron *outerTet);
     };
 
-    // TODO: HERE
+    /**
+     * Represents a quadrilateral or hexagonal piece of a block boundary.
+     * This is the intersection of a block with a single face of its
+     * outer tetrahedron.
+     *
+     * For each such quadrilateral or hexagon, we number the faces from
+     * 0 to 1 (for a quadrilateral) or 0 to 3 (for a hexagon); these are
+     * called the \e inner boundary faces.  The enclosing face of the
+     * outer tetrahedron is called the \e outer boundary face.
+     *
+     * See boundaries.fig for details of how each quadrilateral or
+     * hexagon is triangulated.  The inner boundary faces are numbered
+     * T0, T1, ..., the vertices of each inner boundary face are
+     * numbered using plain integers (these are the \e inner vertex
+     * numbers), and the vertices of the outer boundary face are numbered
+     * using integers in circles (these are the \e outer vertex numbers).
+     */
     class Bdry {
         protected:
             Block* block_;
-            NPerm outerVertices_; /* maps (0,1,2) of boundary to
-                                     vertices of block_->outerTet_. */
+                /**< The block whose boundary this is a piece of. */
+            NPerm outerVertices_;
+                /**< A mapping from the outer vertex numbers 0, 1 and 2
+                     to the corresponding vertex numbers in the
+                     outer tetrahedron (block_->outerTet). */
 
         public:
+            /**
+             * A virtual destructor that does nothing.
+             */
             virtual ~Bdry();
+
+            /**
+             * Identifies (i.e., glues together) this piece of boundary
+             * and the given piece of boundary, performing layerings if
+             * required to make sure that the boundaries are compatible.
+             *
+             * This routine assumes that this and the given piece of
+             * boundary are the same shape (i.e., both quadrilaterals or
+             * both hexagons).
+             */
             virtual void joinTo(Bdry* other) = 0; /* PRE: other is same shape */
 
         protected:
+            /**
+             * Initialises a new object with the given block and the
+             * given mapping from outer vertex numbers to vertices of
+             * the outer tetrahedron.
+             */
             Bdry(Block* block, NPerm outerVertices);
     };
 
+    /**
+     * A piece of block boundary that is a triangulated quadrilateral.
+     *
+     * See boundaries.fig for details of how the quadrilateral is
+     * triangulated, and see the Bdry class notes for what all the
+     * numbers on this diagram actually mean.
+     */
     class BdryQuad : public Bdry {
         private:
-            NTetrahedron* innerTet_[2]; /* tetrahedra providing bdry faces */
-            NPerm innerVertices_[2]; /* maps (0,1,2) of bdry face i to vertices
-                                        of innerTet_[i]. */
+            NTetrahedron* innerTet_[2];
+                /**< The two inner tetrahedra of the block that supply the
+                     two inner boundary faces for this quadrilateral. */
+            NPerm innerVertices_[2];
+                /**< For the ith inner boundary face, the permutation
+                     innerVertices_[i] maps the inner vertex numbers
+                     0, 1 and 2 to the corresponding vertex numbers in
+                     the inner tetrahedron innerTet_[i]. */
 
         public:
+            /**
+             * See Bdry::joinTo() for details.
+             */
             virtual void joinTo(Bdry* other);
 
         private:
+            /**
+             * Initialises a new object with the given block and the
+             * given mapping from outer vertex numbers to vertices of
+             * the outer tetrahedron.
+             */
             BdryQuad(Block* block, NPerm outerVertices);
+
+            /**
+             * Layers a new tetrahedron upon the quadrilateral boundary, so
+             * that the triangulated quadrilateral becomes a reflection of
+             * itself.  As a result, the diagram in boundaries.fig will
+             * likewise become reflected, and so the faces and vertex numbers
+             * within this diagram will now refer to different tetrahedra
+             * and vertices within the underlying block.
+             */
             void reflect();
 
         friend class TriPrism;
@@ -342,48 +408,208 @@ namespace {
         friend class TruncHalfTet;
     };
 
+    /**
+     * A piece of block boundary that is a triangulated hexagon.
+     *
+     * See boundaries.fig for details of how the hexagon is
+     * triangulated, and see the Bdry class notes for what all the
+     * numbers on this diagram actually mean.
+     */
     class BdryHex : public Bdry {
         private:
-            NTetrahedron* innerTet_[4]; /* tetrahedra providing bdry faces */
-            NPerm innerVertices_[4]; /* maps (0,1,2) of bdry face i to vertices
-                                        of innerTet_[i]. */
+            NTetrahedron* innerTet_[4];
+                /**< The four inner tetrahedra of the block that supply the
+                     four inner boundary faces for this quadrilateral. */
+            NPerm innerVertices_[4];
+                /**< For the ith inner boundary face, the permutation
+                     innerVertices_[i] maps the inner vertex numbers
+                     0, 1 and 2 to the corresponding vertex numbers in
+                     the inner tetrahedron innerTet_[i]. */
 
         public:
+            /**
+             * See Bdry::joinTo() for details.
+             */
             virtual void joinTo(Bdry* other);
 
         private:
+            /**
+             * Initialises a new object with the given block and the
+             * given mapping from outer vertex numbers to vertices of
+             * the outer tetrahedron.
+             */
             BdryHex(Block* block, NPerm outerVertices);
+
+            /**
+             * Layers four new tetrahedra upon the hexagon boundary, so
+             * that the triangulated hexagon becomes a reflection of
+             * itself.  As a result, the diagram in boundaries.fig will
+             * likewise become reflected, and so the faces and vertex numbers
+             * within this diagram will now refer to different tetrahedra
+             * and vertices within the underlying block.
+             */
             void reflect();
+
+            /**
+             * Rotates the diagram from boundaries.fig by a one-third turn,
+             * so that the faces and vertex numbers in boundaries.fig
+             * correspond to different tetrahedra and vertex numbers in
+             * the underlying block.
+             *
+             * This is simply a relabelling operation; no layerings are
+             * performed, and no changes are made to the triangulation
+             * of the block itself.
+             */
             void rotate();
 
         friend class TruncHalfTet;
         friend class TruncTet;
     };
 
+    /**
+     * Stores a full set of triangulated blocks within a single
+     * "outer" tetrahedron of the original triangulation, as formed by
+     * cutting along some normal surface within this original triangulation.
+     */
     class TetBlockSet {
         private:
-            unsigned long triCount_[4]; /* indexed by vertex */
+            unsigned long triCount_[4];
+                /**< The number of triangular normal discs of each type
+                     within this outer tetrahedron.  This does \e not
+                     include the "extra" vertex links that we add to
+                     slice off a neighbourhood of each vertex of the
+                     original triangulation. */
             unsigned long quadCount_;
-            int quadType_; /* -1 if no quads. */
+                /**< The number of quadrilateral normal discs (of any type)
+                     within this outer tetrahedron.  The \e type of these
+                     quadrilaterals is stored in the separate data
+                     member \a quadType_. */
+            int quadType_;
+                /**< The unique quadrilateral normal disc \e type that appears
+                     within this outer tetrahedron.  This will be 0, 1 or 2
+                     if there are indeed quadrilateral discs (i.e., quadCount_
+                     is positive), or -1 if this outer tetrahedron contains no
+                     quadrilateral discs at all (i.e., quadCount_ is zero). */
 
-            Block** triPrism_[4]; /* indexed by vertex; counting outwards
-                                     towards the centre */
-            Block** quadPrism_; /* counting away from vertex 0 */
-            Block* truncHalfTet_[2]; /* counting away from vertex 0 */
+            Block** triPrism_[4];
+                /**< The array triPrism_[i] contains all of the triangular
+                     prism blocks surrounding vertex \a i of the outer
+                     tetrahedron, or is null if there are no such blocks.
+                     Such blocks exist if and only if the normal surface
+                     contains at least one triangular disc of type \a i.
+                     If these blocks do exist, they are stored in order moving
+                     \e away from vertex \a i of the outer tetrahedron
+                     (or equivalently, moving in towards the centre of
+                     the outer tetrahedron). */
+            Block** quadPrism_;
+                /**< An array containing all of the quadrilateral prism
+                     blocks, or null if there are no such blocks within this
+                     outer tetrahedron.
+                     These blocks exist if and only if the normal
+                     surface contains two or more quadrilateral discs.
+                     If these blocks do exist, they are stored in order moving
+                     \e away from vertex 0 of the outer tetrahedron. */
+            Block* truncHalfTet_[2];
+                /**< The two truncated half-tetrahedron blocks, or null if
+                     there are no such blocks within this outer tetrahedron.
+                     These blocks exist if and only if the normal
+                     surface contains one or more quadrilateral discs.
+                     In this case, the block truncHalfTet_[0] is closer
+                     to vertex 0 of the outer tetrahedron, and the block
+                     truncHalfTet_[1] is further away. */
             Block* truncTet_;
+                /**< The unique truncated tetrahedron block, or null if there
+                     is no such block within this outer tetrahedron.
+                     This block exists if and only if the normal surface
+                     contains no quadrilateral discs. */
 
             NTetrahedron* vertexNbd_[4];
+                /**< The four small tetrahedra that contribute to the
+                     vertex neighbourhoods surrounding the four vertices
+                     of the outer tetrahedron.  The vertices of each small
+                     tetrahedron are numbered in a way that matches the
+                     outer tetrahedron (so the small tetrahedron vertexNbd_[i]
+                     looks like the outer tetrahedron, shrunk down using a
+                     dilation about vertex \a i of the outer tetrahedron). */
 
         public:
+            /**
+             * Creates a full set of triangulated blocks within the given
+             * outer tetrahedron, as formed by cutting along the given normal
+             * surface.
+             *
+             * This contructor also creates the four small tetrahedra in
+             * the vertex neighbourhoods, and glues them to the four
+             * blocks closest to the outer tetrahedron vertices.
+             */
             TetBlockSet(const NNormalSurface* s, unsigned long tetIndex);
+
+            /**
+             * Destroys all block and boundary structures within this outer
+             * tetrahedron.
+             *
+             * Note that the inner tetrahedra that make up the triangulated
+             * blocks are \e not destroyed (since presumably we are keeping
+             * these inner tetrahedra for the new sliced-open triangulation
+             * that we plan to give back to the user).
+             */
             ~TetBlockSet();
 
+            /**
+             * Returns the number of blocks that provide quadrilateral
+             * boundaries on the given face of the outer tetrahedron,
+             * surrounding the given vertex of the outer tetrahedron.
+             *
+             * It is assumed that \a face and \a fromVertex are not equal.
+             */
             unsigned long numQuadBlocks(int face, int fromVertex);
+            /**
+             * Returns the requested block that provides a quadrilateral
+             * boundary on some particular face of the outer tetrahedron,
+             * surrounding the given vertex of the outer tetrahedron.
+             *
+             * Ordinarily the face number would be passed; however,
+             * it is omitted because it is not actually necessary.
+             * Nevertheless, the choice of face number affects how \e many
+             * such blocks are available; see numQuadBlocks() for details.
+             *
+             * Blocks are numbered 0,1,... outwards from the given vertex of
+             * the outer tetrahedron, in towards the centre of the outer
+             * tetrahedron.  The argument \a whichBlock indicates which of
+             * these blocks should be returned.
+             *
+             * It is assumed that \a whichBlock is strictly less than
+             * numQuadBlocks(\a face, \a fromVertex), where \a face is
+             * the relevant face of the outer tetrahedron.
+             */
             Block* quadBlock(int fromVertex, unsigned long whichBlock);
+            /**
+             * Returns the (unique) block that provides a hexagon
+             * boundary on the given face of the outer tetrahedron, or
+             * null if there is no such block.
+             */
             Block* hexBlock(int face);
 
+            /**
+             * Returns the small tetrahedron that contributes to the
+             * vertex neighbourhood surrounding the given vertex of the
+             * outer tetrahedron.
+             *
+             * See the data member \a vertexNbd_ for further details.
+             */
             NTetrahedron* vertexNbd(int vertex);
 
+            /**
+             * Insert all of the triangulated blocks within this outer
+             * tetrahedron into the new triangulation.
+             *
+             * Specifically, for all blocks within this outer tetrahedron,
+             * all of the corresponding \e inner tetrahedra are inserted
+             * into the given triangulation.
+             *
+             * The small tetrahedra that make up the extra vertex
+             * neighbourhoods are inserted also.
+             */
             void insertInto(NTriangulation* tri);
     };
 
