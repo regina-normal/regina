@@ -381,6 +381,11 @@ class NRational {
          */
         double doubleApprox(bool* inRange = 0) const;
 
+	/**
+	 * Writes TeX-friendly output
+	 */
+	void writeTeX(std::ostream &out) const;
+
     private:
         /**
          * Initialises the class constants \a maxDouble and \a minDouble.

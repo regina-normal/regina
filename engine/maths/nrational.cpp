@@ -281,6 +281,18 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
     return out;
 }
 
+void NRational::writeTeX(std::ostream &out) const
+{
+   if (flavour == NRational::f_infinity)
+        out << "\\infty";
+    else if (flavour == NRational::f_undefined)
+        out << "0/0";
+    else if (getDenominator() == 1)
+        out << getNumerator();
+    else
+        out << "\\frac{"<<getNumerator() << "}{" << getDenominator()<<"}";
+}
+
 double NRational::doubleApprox(bool* inRange) const {
     // Initialise maxDouble and minDouble if this has not already been done.
     // Do this even if the current doubleApprox() call is trivial, since we
