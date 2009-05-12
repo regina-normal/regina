@@ -1,5 +1,5 @@
 Package: regina-normal
-Version: 4.5.1
+Version: 4.6
 Revision: 0.1
 
 Maintainer: Ben Burton <bab@debian.org>
@@ -10,7 +10,7 @@ Description: Computational 3-manifold topology software
 # TODO: Once gap is available in fink stable, have regina-normal suggest it.
 
 Source: mirror:sourceforge:regina/regina-%v.tar.gz
-Source-MD5: ba6625c3250175f5e9a73c8ba4a53f6e
+Source-MD5: 746812ac4fc1b2c6b22b36cc80882257
 SourceRename: %n-%v.tar.gz
 SourceDirectory: regina-%v
 
@@ -68,7 +68,8 @@ BuildDepends: <<
 	libxml2,
 	popt,
 	qt3,
-	x11-dev
+	x11-dev,
+	xmkmf
 <<
 Depends: <<
 	%n%v-shlibs,
@@ -93,7 +94,7 @@ Suggests: graphviz, regina-normal%v-dev
 # The following line works around the libGL linker problem on leopard:
 SetLDFLAGS: -Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
 
-ConfigureParams: --disable-mpi --with-python-version=2.5 kde_htmldir='${datadir}/doc/kde' PKGNAME=regina-normal --disable-dependency-tracking
+ConfigureParams: XMKMF=%p/lib/xmkmf/bin/xmkmf --disable-mpi --with-python-version=2.5 kde_htmldir='${datadir}/doc/kde' PKGNAME=regina-normal --disable-dependency-tracking
 CompileScript: <<
 	# Run configuration tests.
 	./configure %c
@@ -197,7 +198,7 @@ Shlibs: <<
 <<
 
 SplitOff: <<
-	Package: regina-normal4.5.1-shlibs
+	Package: regina-normal4.6-shlibs
 	Description: Shared libraries for 3-manifold topology software
 	Depends: <<
 		libiconv,
@@ -209,7 +210,7 @@ SplitOff: <<
 	<<
 	DocFiles: AUTHORS.txt CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
 	Shlibs: <<
-		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.5.1-0.1)
+		%p/lib/libregina-engine-%v.dylib 0.0.0 %n (>= 4.6-0.1)
 	<<
 	DescDetail: <<
 Regina is a suite of mathematical software for 3-manifold topologists.
@@ -223,11 +224,11 @@ the package regina-normal.
 <<
 
 SplitOff2: <<
-	Package: regina-normal4.5.1-dev
+	Package: regina-normal4.6-dev
 	Description: Development files for 3-manifold topology software
 	BuildDependsOnly: True
-	Conflicts: regina-normal-dev, regina-normal4.5-dev
-	Replaces: regina-normal-dev, regina-normal4.5-dev
+	Conflicts: regina-normal-dev, regina-normal4.5-dev, regina-normal4.5.1-dev
+	Replaces: regina-normal-dev, regina-normal4.5-dev, regina-normal4.5.1-dev
 	Depends: %N (= %v-%r)
 	Files: <<
 		include
