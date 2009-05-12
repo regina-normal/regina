@@ -47,9 +47,8 @@ namespace regina {
  */
 
 /**
- * Represents elements in an elementary number field -- a polynomial ring
- * K[x]/p(x) where p(x) is some monic polynomial in the polynomial ring K[x],
- * and K is from NRational. 
+ * Represents elements in the elementary number field given by the
+ * rationals extended by the square root of 2 and 5. Ie: Q[x,y]/( x^2-2, y^2-5 )
  *
  * WARNING: this code is not ready for usage.   
  *
@@ -192,6 +191,11 @@ class NField25 {
 	 * returns the number of non-zero terms
 	 */
 	int nnzt() const; 
+
+	/**
+	 * writes TeX output
+	 */
+	void writeTeX(std::ostream &out) const;
 
         friend std::ostream& operator << (std::ostream& out, const NField25& dat);
 

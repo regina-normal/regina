@@ -133,6 +133,46 @@ void NQuaternionicInteger::writeTextShort(std::ostream& out) const
 }
 
 /**
+ * Writes TeX output
+ */
+void NQuaternionicInteger::writeTeX(std::ostream& out) const
+{
+ bool ws=false; // written something	
+ if ( (Ic != NRational::zero) || (Jc != NRational::zero) || (Kc != NRational::zero) ) 
+  {
+  if (Rc != NRational::zero)      {      Rc.writeTeX(out); ws=true; }
+  if (Ic != NRational::zero) 
+     { 
+      if ( (ws) && (Ic.requires_padding()) ) out<<"+";
+       if (Ic.nnzt()>1) out<<"(";
+       Ic.writeTeX(out); 
+       if (Ic.nnzt()>1) out<<")";
+       out<<"i"; ws=true; 
+      }
+  if (Jc != NRational::zero) 
+      { 
+        if ( (ws) && (Jc.requires_padding()) ) out<<"+"; 
+        if (Jc.nnzt()>1) out<<"(";
+        Jc.writeTeX(out);       
+        if (Jc.nnzt()>1) out<<")";
+        out<<"j"; ws=true; 
+      }
+  if (Kc != NRational::zero) 
+      { 
+       if ( (ws) && (Kc.requires_padding()) ) out<<"+"; 
+       if (Kc.nnzt()>1) out<<"(";
+        Kc.writeTeX(out); 
+       if (Kc.nnzt()>1) out<<")";
+        out<<"k"; 
+      }
+  }
+ else
+  {
+  Rc.writeTeX(out);  
+  }
+}
+
+/**
  * determines if is equal to zero
  */
 bool NQuaternionicInteger::iszero() const

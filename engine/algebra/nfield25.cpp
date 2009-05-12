@@ -104,6 +104,42 @@ void NField25::writeTextShort(std::ostream& out) const
  if ( (ws==false) && (nnzt()==0) ) out<<"0";
 }
 
+/**
+ * writes TeX output
+ */
+void NField25::writeTeX(std::ostream &out) const
+{
+ bool ws=false; // written something yet?
+
+ if (a != NRational::zero) { a.writeTeX(out); ws=true; }
+
+ if (b != NRational::zero) 
+  { 
+   if ( (ws) && (b > NRational::zero) ) out<<"+";
+   b.writeTeX(out);
+   out<<"\\sqrt{2}";
+   ws = true;
+  }
+
+ if (c != NRational::zero) 
+  { 
+   if ( (ws) && (c > NRational::zero) ) out<<"+";
+   c.writeTeX(out);
+   out<<"\\sqrt{5}";
+   ws = true;
+  }
+
+ if (d != NRational::zero) 
+  { 
+   if ( (ws) && (d > NRational::zero) ) out<<"+";
+   d.writeTeX(out);
+   out<<"\\sqrt{10}";
+   ws = true;
+  }
+
+ if ( (ws==false) && (nnzt()==0) ) out<<"0";
+}
+
 bool NField25::requires_padding() const
 {
 	bool retval=false;

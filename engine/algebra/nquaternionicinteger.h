@@ -57,6 +57,8 @@ namespace regina {
  * At present this class is only used to represent spin structures on triangulated
  * 3 and 4-manifolds. 
  *
+ * Warning: code not quite ready for usage yet
+ *
  * @author Ryan Budney
  *
  */
@@ -132,6 +134,11 @@ class NQuaternionicInteger : public ShareableObject {
          * @param out the stream to write to.
          */
         virtual void writeTextShort(std::ostream& out) const;
+
+	/**
+	 * Writes TeX output
+	 */
+	void writeTeX(std::ostream& out) const;
 
 	/**
 	 * Normsquared
