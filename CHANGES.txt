@@ -153,6 +153,8 @@ Version 4.6  [ 16 May, 2009 ]
               both of which are empty shells of routines that have never
               been implemented and quite possibly never will.
         Class NRational:
+            - Added new routines getTeX() and writeTeX() for TeX-friendly
+              output (thanks Ryan!).
             - The old header utilities/nrational.h is now deprecated.  Please
               use the new header maths/nrational.h instead.
         Class NTetrahedron:

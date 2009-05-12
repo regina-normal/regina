@@ -43,6 +43,10 @@ namespace {
         double ans = r.doubleApprox(&inRange);
         return make_tuple(ans, inRange);
     }
+
+    void writeTeX_stdio(const NRational& r) {
+        r.writeTeX(std::cout);
+    }
 }
 
 void addNRational() {
@@ -75,6 +79,8 @@ void addNRational() {
         .def(self >= self)
         .def("doubleApprox", doubleApprox_void)
         .def("doubleApproxCheck", doubleApprox_bool)
+        .def("getTeX", &NRational::getTeX)
+        .def("writeTeX", writeTeX_stdio)
         .def(self_ns::str(self))
     ;
 
