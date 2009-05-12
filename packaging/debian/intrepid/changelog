@@ -3,6 +3,7 @@ regina-normal (4.6-1ubuntu1~intrepid1) unstable; urgency=low
   * New upstream release, backported to ubuntu intrepid.
   * Removed the build-conflicts on regina-normal-dev, since the build system
     has now been patched to avoid the associated relinking problems.
+  * Now explicitly calls mpicxx.mpich at build time (not just mpicxx).
 
  -- Ben Burton <bab@debian.org>  Sat, 16 May 2009 14:36:16 +1000
 

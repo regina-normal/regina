@@ -3,6 +3,10 @@ regina-normal (4.6-1) unstable; urgency=low
   * New upstream release.
   * Removed the build-conflicts on regina-normal-dev, since the build system
     has now been patched to avoid the associated relinking problems.
+  * Now explicitly calls mpicxx.mpich at build time (not just mpicxx).
+  * Restored the khelpcenter recommendation (though now as khelpcenter4),
+    under the assumption that kdelibs will be soon patched to talk with
+    KDE 4's help viewer (the patch is currently sitting in the BTS).
   * Now builds under gcc 4.4 (closes: #526199).
   * The test suite now avoids routines that are deprecated in python 2.6,
     which were causing the test suite to fail (closes: #526192).

@@ -21,7 +21,7 @@ endif
 # configmpi = --disable-mpi .
 #
 NO_MPI = 0
-configmpi =
+configmpi = MPICXX=/usr/bin/mpicxx.mpich
 
 # Find the default python version so we can pass it to ./configure.  This 
 # keeps things sane when multiple python*-dev packages are installed.
