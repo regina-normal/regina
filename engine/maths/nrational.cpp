@@ -28,6 +28,7 @@
 
 #include "maths/nrational.h"
 #include <cfloat>
+#include <sstream>
 
 namespace regina {
 
@@ -281,16 +282,22 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
     return out;
 }
 
-void NRational::writeTeX(std::ostream &out) const
-{
-   if (flavour == NRational::f_infinity)
+std::string NRational::getTeX() const {
+    std::ostringstream out;
+    writeTeX(out);
+    return out.str();
+}
+
+std::ostream& NRational::writeTeX(std::ostream &out) const {
+    if (flavour == NRational::f_infinity)
         out << "\\infty";
     else if (flavour == NRational::f_undefined)
         out << "0/0";
     else if (getDenominator() == 1)
         out << getNumerator();
     else
-        out << "\\frac{"<<getNumerator() << "}{" << getDenominator()<<"}";
+        out << "\\frac{" << getNumerator() << "}{" << getDenominator() << "}";
+    return out;
 }
 
 double NRational::doubleApprox(bool* inRange) const {

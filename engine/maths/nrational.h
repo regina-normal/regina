@@ -381,10 +381,29 @@ class NRational {
          */
         double doubleApprox(bool* inRange = 0) const;
 
-	/**
-	 * Writes TeX-friendly output
-	 */
-	void writeTeX(std::ostream &out) const;
+        /**
+         * Returns this rational as written using TeX formatting.
+         * No leading or trailing dollar signs will be included.
+         *
+         * @return this rational as written using TeX formatting.
+         *
+         * @author Ryan Budney
+         */
+        std::string getTeX() const;
+
+        /**
+         * Writes this rational in TeX format to the given output stream.
+         * No leading or trailing dollar signs will be included.
+         *
+         * \ifacespython The parameter \a out does not exist; instead
+         * standard output will be used.
+         *
+         * @param out the output stream to which to write.
+         * @return a reference to the given output stream.
+         *
+         * @author Ryan Budney
+         */
+        std::ostream& writeTeX(std::ostream& out) const;
 
     private:
         /**
