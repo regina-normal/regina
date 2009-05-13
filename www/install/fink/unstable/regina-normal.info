@@ -67,6 +67,7 @@ BuildDepends: <<
 	libpng3,
 	libxml2,
 	popt,
+	python25,
 	qt3,
 	x11-dev,
 	xmkmf
@@ -116,6 +117,9 @@ CompileScript: <<
 
 	# On with the usual build procedure.
 	make
+
+	# Run any test suites that are available, as an extra sanity check.
+	make check
 <<
 InstallScript: <<
 	# Standard install procedure.

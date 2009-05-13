@@ -74,7 +74,7 @@ export CXXFLAGS="$FLAGS"
   --enable-libsuffix="%(A=%{_lib}; echo ${A/lib/})" \
 %endif
 %if 0%{?suse_version} <= 1100
-  --with-python-version=2.5
+  --with-python-version=2.5 \
 %endif
   --disable-mpi --disable-debug --includedir=%{_includedir} --mandir=%{_mandir}
 
