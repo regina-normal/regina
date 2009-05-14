@@ -92,6 +92,14 @@ class NQuaternionicInteger : public ShareableObject {
          */
         virtual ~NQuaternionicInteger();
 
+	/**
+	 * r,i,j,k components
+	 */
+	NField25 rcomp() const;
+	NField25 icomp() const;
+	NField25 jcomp() const;
+	NField25 kcomp() const;
+
         /**
          * Determines whether this and the given quaternion are equal.
          */
@@ -113,6 +121,10 @@ class NQuaternionicInteger : public ShareableObject {
 	 * Vector space op
 	 */
 	NQuaternionicInteger operator * (const NField25& other) const;
+	/**
+	 * Negate
+	 */
+	friend NQuaternionicInteger operator - (const NQuaternionicInteger &o);
 
 	/**
 	 * Multiplicative inverse
@@ -182,6 +194,31 @@ inline NField25 NQuaternionicInteger::normsquared() const
 	return retval;
 }
 
+inline NField25 NQuaternionicInteger::rcomp() const
+{ return Rc; }
+
+inline NField25 NQuaternionicInteger::icomp() const
+{ return Ic; }
+
+inline NField25 NQuaternionicInteger::jcomp() const
+{ return Jc; }
+
+inline NField25 NQuaternionicInteger::kcomp() const
+{ return Kc; }
+
+
+/**
+ * Negate
+ */
+NQuaternionicInteger operator - (const NQuaternionicInteger &o)
+{
+	NQuaternionicInteger retval(o);
+	retval.Rc = (-retval.Rc);
+	retval.Ic = (-retval.Ic);
+	retval.Jc = (-retval.Jc);
+	retval.Kc = (-retval.Kc);
+	return retval;
+}
 
 } // namespace regina
 

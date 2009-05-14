@@ -108,6 +108,12 @@ class NField25 {
          */
         ~NField25();
 
+
+	/**
+	 *
+	 */
+	NRational primary() const;
+
         /**
          * Determines whether this and the other field elements are the same.
          */
@@ -225,6 +231,10 @@ inline NField25::NField25(NRational &A, NRational &B, NRational &C, NRational &D
 
 // destructor
 inline NField25::~NField25() {}
+
+inline NRational NField25::primary() const
+{ return a; }
+
 
 // equality
 inline bool NField25::operator == ( const NField25& other) const 
