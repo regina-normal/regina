@@ -37,6 +37,7 @@ class NPerm5Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NPerm5Test);
 
     CPPUNIT_TEST(sign);
+    CPPUNIT_TEST(index);
     CPPUNIT_TEST(exhaustive);
 
     CPPUNIT_TEST_SUITE_END();
@@ -57,6 +58,25 @@ class NPerm5Test : public CppUnit::TestFixture {
                     msg << "Permutation #" << i << " was found to have "
                         "sign " << NPerm5::S5[i].sign()
                         << " instead of " << expected << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void index() {
+            for (int i = 0; i < 120; ++i) {
+                if (NPerm5::S5[i].S5Index() != i) {
+                    std::ostringstream msg;
+                    msg << "Permutation S5[" << i << "] gives an "
+                        "incorrect S5 index of "
+                        << NPerm5::S5[i].S5Index() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (NPerm5::orderedS5[i].orderedS5Index() != i) {
+                    std::ostringstream msg;
+                    msg << "Permutation orderedS5[" << i << "] gives an "
+                        "incorrect orderedS5 index of "
+                        << NPerm5::orderedS5[i].orderedS5Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

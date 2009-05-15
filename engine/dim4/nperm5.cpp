@@ -206,27 +206,33 @@ std::string NPerm5::trunc4() const {
 }
 
 /**
- * Returns the number n such that NPerm5::orderedS5[n] == *this
+ * Returns the number n such that NPerm5::orderedS5[n] == *this.
  */
-int NPerm5::orderedS5indx() const {
-	int retval;
-	retval = 24*imageOf(0) + 
-                 6*( imageOf(1)-(   (imageOf(1) > imageOf(0)) ? 1 : 0) ) + 
-                 2*( imageOf(2)-( ( (imageOf(2) > imageOf(1)) ? 1 : 0) + 
-                                  ( (imageOf(2) > imageOf(0)) ? 1 : 0)     
-                                ) ) + 
-		   ( (imageOf(3) > imageOf(4)) ? 1 : 0 );
-	return retval;
+int NPerm5::orderedS5Index() const {
+    return 24*imageOf(0) +
+           6*( imageOf(1)-(   (imageOf(1) > imageOf(0)) ? 1 : 0) ) +
+           2*( imageOf(2)-( ( (imageOf(2) > imageOf(1)) ? 1 : 0) +
+                            ( (imageOf(2) > imageOf(0)) ? 1 : 0)
+                          ) ) +
+             ( (imageOf(3) > imageOf(4)) ? 1 : 0 );
 }
 
 /**
- * Returns the number n such that NPerm5::S5[n] == *this
+ * Returns the number n such that NPerm5::S5[n] == *this.
  */
-int NPerm5::S5indx() const {
-	int retval;
-	retval = orderedS5indx();
-	if ( ((retval/2) % 2 == ( ((retval/24) % 2 == 0) ? 1 : 0))  ) retval += ( (retval % 2 == 0) ?  1 : -1 );
-	return retval;
+int NPerm5::S5Index() const {
+    // S5 is almost the same as orderedS5Index, except that some pairs
+    // S5[2i] <--> S5[2i+1] have been swapped to ensure that all
+    // permutations S5[2i] are even and all permutations S5[2i+1] are odd.
+    int retval = orderedS5Index();
+
+    // Flip between 2i <--> 2i+1 if and only if
+    // one but not both of (retval / 2) and (retval / 24) is even.
+    // Here we use (retval >> 1), which is equivalent to (retval / 2).
+    if (((retval >> 1) ^ (retval / 24)) & 1)
+        retval ^= 1;
+
+    return retval;
 }
 
 

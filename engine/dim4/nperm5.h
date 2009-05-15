@@ -350,14 +350,24 @@ class NPerm5 {
          */
         std::string trunc4() const;
 
-	/**
-	 * Returns the number n such that NPerm5::S5[n] == *this
-	 */
-	int S5indx() const;
-	/**
-	 * Returns the number n such that NPerm5::orderedS5[n] == *this
-	 */
-	int orderedS5indx() const;
+        /**
+         * Returns the index of this permutation in the NPerm5::S5 array.
+         *
+         * @return the index \a i for which this permutation is equal to
+         * NPerm5::S5[i].  This will be between 0 and 119 inclusive.
+         *
+         * @author Ryan Budney
+         */
+        int S5Index() const;
+        /**
+         * Returns the index of this permutation in the NPerm5::orderedS5 array.
+         *
+         * @return the index \a i for which this permutation is equal to
+         * NPerm5::orderedS5[i].  This will be between 0 and 119 inclusive.
+         *
+         * @author Ryan Budney
+         */
+        int orderedS5Index() const;
 
     private:
         /**
