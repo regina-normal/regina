@@ -350,6 +350,15 @@ class NPerm5 {
          */
         std::string trunc4() const;
 
+	/**
+	 * Returns the number n such that NPerm5::S5[n] == *this
+	 */
+	int S5indx() const;
+	/**
+	 * Returns the number n such that NPerm5::orderedS5[n] == *this
+	 */
+	int orderedS5indx() const;
+
     private:
         /**
          * Determines the image of the given integer under this

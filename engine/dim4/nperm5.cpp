@@ -205,5 +205,30 @@ std::string NPerm5::trunc4() const {
     return ans;
 }
 
+/**
+ * Returns the number n such that NPerm5::orderedS5[n] == *this
+ */
+int NPerm5::orderedS5indx() const {
+	int retval;
+	retval = 24*imageOf(0) + 
+                 6*( imageOf(1)-(   (imageOf(1) > imageOf(0)) ? 1 : 0) ) + 
+                 2*( imageOf(2)-( ( (imageOf(2) > imageOf(1)) ? 1 : 0) + 
+                                  ( (imageOf(2) > imageOf(0)) ? 1 : 0)     
+                                ) ) + 
+		   ( (imageOf(3) > imageOf(4)) ? 1 : 0 );
+	return retval;
+}
+
+/**
+ * Returns the number n such that NPerm5::S5[n] == *this
+ */
+int NPerm5::S5indx() const {
+	int retval;
+	retval = orderedS5indx();
+	if ( ((retval/2) % 2 == ( ((retval/24) % 2 == 0) ? 1 : 0))  ) retval += ( (retval % 2 == 0) ?  1 : -1 );
+	return retval;
+}
+
+
 } // namespace regina
 
