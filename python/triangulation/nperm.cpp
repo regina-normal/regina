@@ -101,6 +101,8 @@ void addNPerm() {
         .def("toString", &NPerm::toString)
         .def("trunc2", &NPerm::toString)
         .def("trunc3", &NPerm::toString)
+        .def("S4Index", &NPerm::S4Index)
+        .def("orderedS4Index", &NPerm::orderedS4Index)
         .def("__str__", &NPerm::toString)
     ;
 

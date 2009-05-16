@@ -38,6 +38,7 @@ class NPermTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(sign);
+    CPPUNIT_TEST(index);
     CPPUNIT_TEST(exhaustive);
     CPPUNIT_TEST(deprecatedArrays);
 
@@ -71,6 +72,25 @@ class NPermTest : public CppUnit::TestFixture {
                     msg << "Permutation #" << i << " was found to have "
                         "sign " << NPerm::S4[i].sign()
                         << " instead of " << expected << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void index() {
+            for (int i = 0; i < 24; ++i) {
+                if (NPerm::S4[i].S4Index() != i) {
+                    std::ostringstream msg;
+                    msg << "Permutation S4[" << i << "] gives an "
+                        "incorrect S4 index of "
+                        << NPerm::S4[i].S4Index() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (NPerm::orderedS4[i].orderedS4Index() != i) {
+                    std::ostringstream msg;
+                    msg << "Permutation orderedS4[" << i << "] gives an "
+                        "incorrect orderedS4 index of "
+                        << NPerm::orderedS4[i].orderedS4Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

@@ -7,6 +7,13 @@ Regina - A Normal Surface Theory Calculator
     For a human-readable summary of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Version 4.6.1  [ (under development) ]
+
+    ENGINE:
+        Class NPerm:
+            - New routines S4Index() and orderedS4Index() for reverse
+              lookups into the arrays NPerm::S4 and NPerm::orderedS4.
+
 Version 4.6  [ 16 May, 2009 ]
 
     OVERALL:
