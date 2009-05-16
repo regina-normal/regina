@@ -172,6 +172,25 @@ std::string NPerm::trunc3() const {
     return ans;
 }
 
+int NPerm::orderedS4Index() const {
+    return 6 * imageOf(0) +
+           2 * (imageOf(1) - (imageOf(1) > imageOf(0) ? 1 : 0)) +
+               (imageOf(2) > imageOf(3) ? 1 : 0);
+}
+
+int NPerm::S4Index() const {
+    // S4 is almost the same as orderedS4, except that some pairs
+    // S4[2i] <--> S4[2i+1] have been swapped to ensure that all
+    // permutations S4[2i] are even and all permutations S4[2i+1] are odd.
+    int retval = orderedS4Index();
+
+    // Interchange all pairs 4i+2 <--> 4i+3.
+    if (retval & 2)
+        retval ^= 1;
+
+    return retval;
+}
+
 NPerm faceOrdering(int face) {
     switch(face) {
         case 0:

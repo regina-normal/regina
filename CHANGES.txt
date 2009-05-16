@@ -18,6 +18,13 @@ Version 5.0  [ (under development) ]
     TEST SUITE:
         - Added very thorough tests for NPerm5.
 
+Version 4.6.1  [ (under development) ]
+
+    ENGINE:
+        Class NPerm:
+            - New routines S4Index() and orderedS4Index() for reverse
+              lookups into the arrays NPerm::S4 and NPerm::orderedS4.
+
 Version 4.6  [ 16 May, 2009 ]
 
     OVERALL:

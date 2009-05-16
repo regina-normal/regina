@@ -404,6 +404,22 @@ class NPerm {
          */
         std::string trunc3() const;
 
+        /**
+         * Returns the index of this permutation in the NPerm::S4 array.
+         *
+         * @return the index \a i for which this permutation is equal to
+         * NPerm::S4[i].  This will be between 0 and 23 inclusive.
+         */
+        int S4Index() const;
+
+        /**
+         * Returns the index of this permutation in the NPerm::orderedS4 array.
+         *
+         * @return the index \a i for which this permutation is equal to
+         * NPerm::orderedS4[i].  This will be between 0 and 23 inclusive.
+         */
+        int orderedS4Index() const;
+
     private:
         /**
          * Determines the image of the given integer under this
