@@ -65,6 +65,11 @@ void addNPerm5() {
         .def("asPerm4", &NPerm5::asPerm4)
         .def("fromPerm4", &NPerm5::fromPerm4)
         .def("toString", &NPerm5::toString)
+        .def("trunc2", &NPerm5::trunc2)
+        .def("trunc3", &NPerm5::trunc3)
+        .def("trunc4", &NPerm5::trunc4)
+        .def("S5Index", &NPerm5::S5Index)
+        .def("orderedS5Index", &NPerm5::orderedS5Index)
         .def("__str__", &NPerm5::toString)
         .staticmethod("fromPerm4");
     ;
