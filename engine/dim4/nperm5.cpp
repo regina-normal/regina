@@ -221,7 +221,7 @@ int NPerm5::orderedS5Index() const {
  * Returns the number n such that NPerm5::S5[n] == *this.
  */
 int NPerm5::S5Index() const {
-    // S5 is almost the same as orderedS5Index, except that some pairs
+    // S5 is almost the same as orderedS5, except that some pairs
     // S5[2i] <--> S5[2i+1] have been swapped to ensure that all
     // permutations S5[2i] are even and all permutations S5[2i+1] are odd.
     int retval = orderedS5Index();
@@ -234,7 +234,6 @@ int NPerm5::S5Index() const {
 
     return retval;
 }
-
 
 } // namespace regina
 

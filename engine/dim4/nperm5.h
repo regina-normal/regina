@@ -359,6 +359,7 @@ class NPerm5 {
          * @author Ryan Budney
          */
         int S5Index() const;
+
         /**
          * Returns the index of this permutation in the NPerm5::orderedS5 array.
          *
