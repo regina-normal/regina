@@ -36,6 +36,7 @@ using regina::NPerm5;
 class NPerm5Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NPerm5Test);
 
+    CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(exhaustive);
@@ -47,6 +48,18 @@ class NPerm5Test : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+        }
+
+        void inverse() {
+            for (int i = 0; i < 120; i++) {
+                if (NPerm5::S5[i].inverse() != NPerm5::S5[NPerm5::invS5[i]]) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " was found to have "
+                        "inverse " << NPerm5::S5[i].inverse() <<
+                        " instead of " << NPerm5::S5[NPerm5::invS5[i]] << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 
         void sign() {

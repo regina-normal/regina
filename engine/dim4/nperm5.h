@@ -82,6 +82,14 @@ class NPerm5 {
          */
         static const NPerm5 orderedS5[120];
 
+        /**
+         * Contains the inverses of the permutations in the array \a S5.
+         *
+         * Specifically, the inverse of permutation <tt>S5[i]</tt> is
+         * the permutation <tt>S5[ invS5[i] ]</tt>.
+         */
+        static const unsigned invS5[120];
+
     private:
         unsigned code;
             /**< The internal code representing this permutation. */

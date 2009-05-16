@@ -37,6 +37,7 @@ using regina::python::GlobalArray;
 namespace {
     GlobalArray<NPerm5> NPerm5_S5_arr(NPerm5::S5, 120);
     GlobalArray<NPerm5> NPerm5_orderedS5_arr(NPerm5::orderedS5, 120);
+    GlobalArray<unsigned> NPerm5_invS5_arr(NPerm5::invS5, 120);
 
     int perm5_getItem(const NPerm5& p, int index) {
         return p[index];
@@ -76,5 +77,6 @@ void addNPerm5() {
 
     s.attr("S5") = &NPerm5_S5_arr;
     s.attr("orderedS5") = &NPerm5_orderedS5_arr;
+    s.attr("invS5") = &NPerm5_invS5_arr;
 }
 
