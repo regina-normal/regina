@@ -50,8 +50,6 @@ namespace regina {
  * Represents elements in the elementary number field given by the
  * rationals extended by the square root of 2 and 5. Ie: Q[x,y]/( x^2-2, y^2-5 )
  *
- * WARNING: this code is not ready for usage.   
- *
  * @author Ryan Budney
  *
  */

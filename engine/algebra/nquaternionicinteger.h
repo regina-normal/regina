@@ -57,8 +57,6 @@ namespace regina {
  * At present this class is only used to represent spin structures on triangulated
  * 3 and 4-manifolds. 
  *
- * Warning: code not quite ready for usage yet
- *
  * @author Ryan Budney
  *
  */

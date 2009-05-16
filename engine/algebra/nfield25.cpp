@@ -116,7 +116,8 @@ void NField25::writeTeX(std::ostream &out) const
  if (b != NRational::zero) 
   { 
    if ( (ws) && (b > NRational::zero) ) out<<"+";
-   b.writeTeX(out);
+   if ( (ws) && (b < NRational::zero) ) out<<"-";
+   if (b > NRational::zero) b.writeTeX(out); else (-b).writeTeX(out);
    out<<"\\sqrt{2}";
    ws = true;
   }
@@ -124,7 +125,8 @@ void NField25::writeTeX(std::ostream &out) const
  if (c != NRational::zero) 
   { 
    if ( (ws) && (c > NRational::zero) ) out<<"+";
-   c.writeTeX(out);
+   if ( (ws) && (c < NRational::zero) ) out<<"-";
+   if (c > NRational::zero) c.writeTeX(out); else (-c).writeTeX(out);
    out<<"\\sqrt{5}";
    ws = true;
   }
@@ -132,7 +134,8 @@ void NField25::writeTeX(std::ostream &out) const
  if (d != NRational::zero) 
   { 
    if ( (ws) && (d > NRational::zero) ) out<<"+";
-   d.writeTeX(out);
+   if ( (ws) && (d < NRational::zero) ) out<<"-";
+   if (d > NRational::zero) d.writeTeX(out); else (-d).writeTeX(out);
    out<<"\\sqrt{10}";
    ws = true;
   }

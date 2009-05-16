@@ -14,7 +14,7 @@ algebraincludedir = $(pkgincludedir)/algebra
 
 noinst_LTLIBRARIES = libalgebra.la
 
-libalgebra_la_SOURCES = nabeliangroup.cpp ngrouppresentation.cpp nmarkedabeliangroup.cpp nxmlalgebrareader.cpp nSimpleField.cpp nfield25.cpp nquaternionicinteger.cpp
+libalgebra_la_SOURCES = nabeliangroup.cpp ngrouppresentation.cpp nmarkedabeliangroup.cpp nxmlalgebrareader.cpp nSimpleField.cpp nfield25.cpp nquaternionicinteger.cpp nbinaryA5.cpp
 
-algebrainclude_HEADERS = nabeliangroup.h ngrouppresentation.h nmarkedabeliangroup.h nxmlalgebrareader.h nSimpleField.h nfield25.h nquaternionicinteger.h
+algebrainclude_HEADERS = nabeliangroup.h ngrouppresentation.h nmarkedabeliangroup.h nxmlalgebrareader.h nSimpleField.h nfield25.h nquaternionicinteger.h nbinaryA5.h nspin4simplex.h
 

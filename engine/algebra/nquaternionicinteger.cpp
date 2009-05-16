@@ -142,26 +142,26 @@ void NQuaternionicInteger::writeTeX(std::ostream& out) const
   {
   if (Rc != NRational::zero)      {      Rc.writeTeX(out); ws=true; }
   if (Ic != NRational::zero) 
-     { 
-      if ( (ws) && (Ic.requires_padding()) ) out<<"+";
+      { 
+       if ( (ws) && (Ic.requires_padding()) ) out<<"+";
        if (Ic.nnzt()>1) out<<"(";
-       Ic.writeTeX(out); 
+       if ((Ic.nnzt()==1) && !Ic.requires_padding()) { out<<"-"; (-Ic).writeTeX(out); } else Ic.writeTeX(out); 
        if (Ic.nnzt()>1) out<<")";
        out<<"i"; ws=true; 
       }
   if (Jc != NRational::zero) 
       { 
-        if ( (ws) && (Jc.requires_padding()) ) out<<"+"; 
-        if (Jc.nnzt()>1) out<<"(";
-        Jc.writeTeX(out);       
-        if (Jc.nnzt()>1) out<<")";
+       if ( (ws) && (Jc.requires_padding()) ) out<<"+"; 
+       if (Jc.nnzt()>1) out<<"(";
+       if ((Jc.nnzt()==1) && !Jc.requires_padding()) { out<<"-"; (-Jc).writeTeX(out); } else Jc.writeTeX(out);       
+       if (Jc.nnzt()>1) out<<")";
         out<<"j"; ws=true; 
       }
   if (Kc != NRational::zero) 
       { 
        if ( (ws) && (Kc.requires_padding()) ) out<<"+"; 
        if (Kc.nnzt()>1) out<<"(";
-        Kc.writeTeX(out); 
+       if ((Kc.nnzt()==1) && !Kc.requires_padding()) { out<<"-"; (-Kc).writeTeX(out); } else  Kc.writeTeX(out); 
        if (Kc.nnzt()>1) out<<")";
         out<<"k"; 
       }
