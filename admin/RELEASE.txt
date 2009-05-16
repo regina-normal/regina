@@ -11,7 +11,7 @@ Program version:
     packaging/debian/*/changelog (version, date)
     packaging/finkinfo/*.info.* (version, revision)
     packaging/rpmspec/*.spec (version, changelog)
-    www/index.html (last updated, current version, news)
+    www/index.html (last updated, current version, news, filenames)
     www/source.html (unpacking instructions: filename, directory)
 
 License details:
