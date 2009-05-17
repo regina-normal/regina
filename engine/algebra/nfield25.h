@@ -108,10 +108,21 @@ class NField25 {
 
 
 	/**
-	 *
+	 * returns the component corresponding to base field
 	 */
 	NRational primary() const;
-
+	/**
+	 * returns the component corresponding to sqrt2
+	 */
+	NRational twoary() const;
+	/**
+	 * returns the component corresponding to sqrt5
+	 */
+	NRational fiveary() const;
+	/**
+	 * returns the component corresponding to sqrt10
+	 */
+	NRational tenary() const;
         /**
          * Determines whether this and the other field elements are the same.
          */
@@ -232,6 +243,15 @@ inline NField25::~NField25() {}
 
 inline NRational NField25::primary() const
 { return a; }
+
+inline NRational NField25::twoary() const
+{ return b; }
+
+inline NRational NField25::fiveary() const
+{ return c; }
+
+inline NRational NField25::tenary() const
+{ return d; }
 
 
 // equality
