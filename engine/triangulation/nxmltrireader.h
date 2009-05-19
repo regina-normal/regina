@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nxmltrireader.h
+/*! \file triangulation/nxmltrireader.h
  *  \brief Deals with parsing XML data for triangulation packets.
  */
 

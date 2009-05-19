@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ntorusbundle.h
+/*! \file manifold/ntorusbundle.h
  *  \brief Deals with torus bundles over the circle.
  */
 

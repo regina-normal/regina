@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nlayering.h
+/*! \file subcomplex/nlayering.h
  *  \brief Assists with the analysis of layerings upon a torus boundary.
  */
 

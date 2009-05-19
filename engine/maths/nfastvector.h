@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nfastvector.h
+/*! \file maths/nfastvector.h
  *  \brief Provides a fast but inflexible vector class for heavy computation.
  */
 

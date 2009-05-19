@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file zstream.h
+/*! \file utilities/zstream.h
  *  \brief Provides compressed I/O streams.
  */
 

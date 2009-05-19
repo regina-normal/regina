@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nlayeredloop.h
+/*! \file subcomplex/nlayeredloop.h
  *  \brief Deals with layered loop components of a triangulation.
  */
 

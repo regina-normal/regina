@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file dim4exampletriangulation.h
+/*! \file dim4/dim4exampletriangulation.h
  *  \brief Offers some example 4-manifold triangulations as starting
  *  points for testing code or getting used to Regina.
  */

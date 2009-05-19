@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nanglestructurelist.h
+/*! \file angle/nanglestructurelist.h
  *  \brief Contains a packet representing a collection of angle
  *  structures on a triangulation.
  */

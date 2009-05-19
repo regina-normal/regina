@@ -31,7 +31,7 @@
 #define __NMATRIXINT_H
 #endif
 
-/*! \file nmatrixint.h
+/*! \file maths/nmatrixint.h
  *  \brief Deals with matrices of arbitrary precision integers.
  */
 

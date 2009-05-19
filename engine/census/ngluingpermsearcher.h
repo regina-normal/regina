@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ngluingpermsearcher.h
+/*! \file census/ngluingpermsearcher.h
  *  \brief Supports searching through all possible gluing permutations sets
  *  for a given face pairing.
  */

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file NSpin4Simplex.h
+/*! \file algebra/NSpin4Simplex.h
  *  \brief Deals elements of the "binary" A5 -- this is the non-trivial
  *   Z_2-central extension of A5, the alternating group on 5 elements.
  *   Think of A5 as the symmetry group of a pentachoron.  This is the lift

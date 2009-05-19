@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nquaternionicinteger.h
+/*! \file algebra/nquaternionicinteger.h
  *  \brief Deals with the types of quaternions the come up representing spin structures
  */
 

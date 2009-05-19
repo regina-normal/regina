@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nnormalsurface.h
+/*! \file surfaces/nnormalsurface.h
  *  \brief Deals with an individual normal surface.
  */
 

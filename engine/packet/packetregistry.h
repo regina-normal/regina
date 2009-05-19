@@ -91,7 +91,7 @@
     REGISTER_PACKET(Dim4Triangulation, 11, "4-Manifold Triangulation")
 #endif
 
-/*! \file packetregistry.h
+/*! \file packet/packetregistry.h
  *  \brief Contains a registry of packet types known to the engine.
  *
  *  Each time a new packet type is created, this packet registry should be

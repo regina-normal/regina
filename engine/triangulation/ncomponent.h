@@ -31,7 +31,7 @@
 #define __NCOMPONENT_H
 #endif
 
-/*! \file ncomponent.h
+/*! \file triangulation/ncomponent.h
  *  \brief Deals with components of a triangulation.
  */
 

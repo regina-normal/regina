@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file pdf.h
+/*! \file foreign/pdf.h
  *  \brief Allows reading and writing PDF documents.
  */
 

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsatannulus.h
+/*! \file subcomplex/nsatannulus.h
  *  \brief Deals with saturated two-face annuli within a Seifert fibred space.
  */
 

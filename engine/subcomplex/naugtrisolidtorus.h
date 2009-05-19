@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file naugtrisolidtorus.h
+/*! \file subcomplex/naugtrisolidtorus.h
  *  \brief Deals with augmented triangular solid torus components of a
  *  triangulation.
  */

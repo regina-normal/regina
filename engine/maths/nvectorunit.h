@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nvectorunit.h
+/*! \file maths/nvectorunit.h
  *  \brief Deals with unit vectors of various types.
  */
 

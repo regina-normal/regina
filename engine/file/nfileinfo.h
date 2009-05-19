@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nfileinfo.h
+/*! \file file/nfileinfo.h
  *  \brief Deals with determining information about Regina data files.
  */
 

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nSimpleField.h
+/*! \file algebra/nSimpleField.h
  *  \brief Deals with simple field/ring extensions K[x]/p(x)
  */
 

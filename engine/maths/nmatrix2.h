@@ -33,7 +33,7 @@
 
 #include <iostream>
 
-/*! \file nmatrix2.h
+/*! \file maths/nmatrix2.h
  *  \brief Deals with 2x2 integer matrices.
  */
 

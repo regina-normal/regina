@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsstandard.h
+/*! \file surfaces/nsstandard.h
  *  \brief Implements normal surface vectors using standard
  *  triangle-quad coordinates.
  */

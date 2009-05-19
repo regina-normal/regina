@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file approx.h
+/*! \file maths/approx.h
  *  \brief Provides facilities for working around rounding errors when
  *  dealing with real numbers.
  */

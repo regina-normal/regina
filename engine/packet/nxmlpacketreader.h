@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nxmlpacketreader.h
+/*! \file packet/nxmlpacketreader.h
  *  \brief Deals with parsing XML data for individual packets.
  */
 

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nxmlelementreader.h
+/*! \file file/nxmlelementreader.h
  *  \brief Deals with parsing XML program data at the tag level.
  */
 

@@ -18,7 +18,9 @@ JAVADOC_AUTOBRIEF    = YES
 REPEAT_BRIEF         = YES
 ALWAYS_DETAILED_SEC  = YES
 
-FULL_PATH_NAMES      = NO
+FULL_PATH_NAMES      = YES
+STRIP_FROM_PATH      = @top_srcdir@/engine @top_srcdir@
+STRIP_FROM_INC_PATH  = @top_srcdir@/engine @top_srcdir@
 
 CLASS_DIAGRAMS       = YES
 SOURCE_BROWSER       = NO

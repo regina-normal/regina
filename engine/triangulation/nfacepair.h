@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nfacepair.h
+/*! \file triangulation/nfacepair.h
  *  \brief Deals with simple pairs of face numbers.
  */
 

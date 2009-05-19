@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file npacket.h
+/*! \file packet/npacket.h
  *  \brief Deals with packets of information that form the working data
  *  objects.
  */

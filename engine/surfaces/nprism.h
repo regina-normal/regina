@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nprism.h
+/*! \file surfaces/nprism.h
  *  \brief Deals with triangular prisms defined by slicing along normal
  *  quads in a tetrahedron.
  */

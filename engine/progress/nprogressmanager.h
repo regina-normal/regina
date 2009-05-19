@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nprogressmanager.h
+/*! \file progress/nprogressmanager.h
  *  \brief Facilitates sharing NProgress objects between an
  *  operation thread and an external interface.
  */

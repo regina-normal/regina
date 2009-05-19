@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nvector.h
+/*! \file maths/nvector.h
  *  \brief Provides a slow but flexible mathematical vector template.
  */
 

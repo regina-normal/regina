@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nbooleans.h
+/*! \file utilities/nbooleans.h
  *  \brief Provides various types that extend the standard boolean.
  */
 

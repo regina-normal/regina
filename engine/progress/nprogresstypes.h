@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nprogresstypes.h
+/*! \file progress/nprogresstypes.h
  *  \brief Provides specific methods of representing progress reports.
  */
 

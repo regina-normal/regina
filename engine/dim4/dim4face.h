@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file dim4face.h
+/*! \file dim4/dim4face.h
  *  \brief Deals with faces in a 4-manifold triangulation.
  */
 

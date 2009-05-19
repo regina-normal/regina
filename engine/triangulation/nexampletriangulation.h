@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nexampletriangulation.h
+/*! \file triangulation/nexampletriangulation.h
  *  \brief Offers several example triangulations as starting points for
  *  testing code or getting used to Regina.
  */

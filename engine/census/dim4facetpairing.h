@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file dim4facetpairing.h
+/*! \file census/dim4facetpairing.h
  *  \brief Deals with pairing off pentachoron facets in a 4-manifold
  *  triangulation census.
  */

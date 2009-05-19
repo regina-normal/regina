@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nblockedsfsloop.h
+/*! \file subcomplex/nblockedsfsloop.h
  *  \brief Supports self-identified Seifert fibred spaces that are
  *  triangulated using saturated blocks.
  */

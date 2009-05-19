@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsurfacefilter.h
+/*! \file surfaces/nsurfacefilter.h
  *  \brief Contains a packet that filters through normal surfaces.
  */
 

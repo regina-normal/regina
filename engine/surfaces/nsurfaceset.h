@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsurfaceset.h
+/*! \file surfaces/nsurfaceset.h
  *  \brief Provides access to a collection of normal surfaces.
  */
 

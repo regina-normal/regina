@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file NField25.h
+/*! \file algebra/NField25.h
  *  \brief Deals with the field extension Q[x,y]/(x^2-2, y^2-5)
  */
 

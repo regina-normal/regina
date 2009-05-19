@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nperm5.h
+/*! \file dim4/nperm5.h
  *  \brief Deals with permutations of {0,1,2,3,4}.
  */
 

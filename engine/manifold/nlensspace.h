@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nlensspace.h
+/*! \file manifold/nlensspace.h
  *  \brief Deals with general Lens spaces.
  */
 

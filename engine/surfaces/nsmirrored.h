@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsmirrored.h
+/*! \file surfaces/nsmirrored.h
  *  \brief Provides a normal surface vector that is mirrored in another
  *  coordinate system to avoid frequent lengthy calculations.
  */

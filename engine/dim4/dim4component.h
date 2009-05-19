@@ -31,7 +31,7 @@
 #define __DIM4COMPONENT_H
 #endif
 
-/*! \file dim4component.h
+/*! \file dim4/dim4component.h
  *  \brief Deals with components of a 4-manifold triangulation.
  */
 

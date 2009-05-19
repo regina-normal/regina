@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ntetface.h
+/*! \file triangulation/ntetface.h
  *  \brief Allows lightweight representation of individual tetrahedron
  *  faces.
  */

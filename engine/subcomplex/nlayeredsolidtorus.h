@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nlayeredsolidtorus.h
+/*! \file subcomplex/nlayeredsolidtorus.h
  *  \brief Deals with layered solid tori in a triangulation.
  */
 

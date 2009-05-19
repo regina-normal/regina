@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nbitmask.h
+/*! \file utilities/nbitmask.h
  *  \brief Provides optimised bitmasks of arbitrary length.
  */
 

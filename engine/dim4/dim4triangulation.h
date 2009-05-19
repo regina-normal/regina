@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file dim4triangulation.h
+/*! \file dim4/dim4triangulation.h
  *  \brief Deals with 4-manifold triangulations.
  */
 

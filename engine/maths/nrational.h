@@ -31,7 +31,7 @@
 #define __NRATIONAL_H
 #endif
 
-/*! \file nrational.h
+/*! \file maths/nrational.h
  *  \brief Deals with artibrary precision rational numbers.
  */
 

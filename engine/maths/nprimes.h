@@ -31,7 +31,7 @@
 #define __NPRIMES_H
 #endif
 
-/*! \file nprimes.h
+/*! \file maths/nprimes.h
  *  \brief Support for finding primes and factorising integers.
  */
 

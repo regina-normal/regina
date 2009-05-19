@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nspiralsolidtorus.h
+/*! \file subcomplex/nspiralsolidtorus.h
  *  \brief Deals with spiralled solid tori in a triangulation.
  */
 

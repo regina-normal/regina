@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nxmlcallback.h
+/*! \file file/nxmlcallback.h
  *  \brief Deals with parsing XML program data at the file level.
  */
 

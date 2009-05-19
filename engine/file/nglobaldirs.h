@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nglobaldirs.h
+/*! \file file/nglobaldirs.h
  *  \brief Gives information about system installation directories.
  */
 

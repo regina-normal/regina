@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nperm.h
+/*! \file triangulation/nperm.h
  *  \brief Deals with permutations of {0,1,2,3}.
  */
 

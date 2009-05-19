@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file dim4pentfacet.h
+/*! \file dim4/dim4pentfacet.h
  *  \brief Allows lightweight representation of individual pentachoron
  *  facets.
  */

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file hashutils.h
+/*! \file utilities/hashutils.h
  *  \brief Provides a variety of hash functions for use with the
  *  Standard Template Library.
  *

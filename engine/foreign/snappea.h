@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file snappea.h
+/*! \file foreign/snappea.h
  *  \brief Allows reading and writing SnapPea files.
  */
 

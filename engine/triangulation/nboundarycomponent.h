@@ -31,7 +31,7 @@
 #define __NBOUNDARYCOMPONENT_H
 #endif
 
-/*! \file nboundarycomponent.h
+/*! \file triangulation/nboundarycomponent.h
  *  \brief Deals with components of the boundary of a triangulation.
  */
 

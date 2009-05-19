@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ncensus.h
+/*! \file census/ncensus.h
  *  \brief Deals with forming a census of all triangulations of a given
  *  size.
  */

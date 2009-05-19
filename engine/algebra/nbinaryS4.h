@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file NBinaryS4.h
+/*! \file algebra/NBinaryS4.h
  *  \brief Deals elements of the "binary" S4 -- this is the non-trivial
  *   Z_2-central extension of S5, the alternating group on 5 elements
  *   coming from the spin cover of SO_3 restricted to the symmetry group

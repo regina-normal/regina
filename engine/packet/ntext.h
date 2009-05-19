@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ntext.h
+/*! \file packet/ntext.h
  *  \brief Contains a packet representing a text string.
  */
 

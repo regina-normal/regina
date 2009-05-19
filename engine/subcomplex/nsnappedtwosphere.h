@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsnappedtwosphere.h
+/*! \file subcomplex/nsnappedtwosphere.h
  *  \brief Deals with 2-spheres made from two snapped 3-balls in a
  *  triangulation.
  */

@@ -90,7 +90,7 @@
         "Quad-oct almost normal", true, true)
 #endif
 
-/*! \file flavourregistry.h
+/*! \file surfaces/flavourregistry.h
  *  \brief Contains a registry of coordinate system flavours known to the
  *  engine that can actually be used to create and store normal surfaces.
  *

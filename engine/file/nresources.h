@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nresources.h
+/*! \file file/nresources.h
  *  \brief Provides methods for accessing old-style binary file-like resources.
  *  \deprecated The preferred way of representing data is using XML
  *  which is accessed using text I/O streams.

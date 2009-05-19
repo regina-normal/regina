@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nmatrix.h
+/*! \file maths/nmatrix.h
  *  \brief Deals with matrices of elements of various types.
  */
 

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nlayeredsurfacebundle.h
+/*! \file subcomplex/nlayeredsurfacebundle.h
  *  \brief Deals with layered surface bundle triangulations.
  */
 

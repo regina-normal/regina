@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsimplesurfacebundle.h
+/*! \file manifold/nsimplesurfacebundle.h
  *  \brief Deals with simple closed surface bundles.
  */
 

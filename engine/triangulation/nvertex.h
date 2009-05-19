@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nvertex.h
+/*! \file triangulation/nvertex.h
  *  \brief Deals with vertices in a triangulation.
  */
 

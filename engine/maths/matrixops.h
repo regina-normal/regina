@@ -31,7 +31,7 @@
 #define __MATRIXOPS_H
 #endif
 
-/*! \file matrixops.h
+/*! \file maths/matrixops.h
  *  \brief Provides various complex matrix calculations.
  *  \todo \featurelong Add a routine to find the rank of an integer
  *  matrix; use this to show the rank of the matching equations.

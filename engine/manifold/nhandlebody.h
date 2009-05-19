@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nhandlebody.h
+/*! \file manifold/nhandlebody.h
  *  \brief Deals with arbitrary handlebodies.
  */
 

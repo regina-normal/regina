@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nanglestructure.h
+/*! \file angle/nanglestructure.h
  *  \brief Deals with angle structures on triangulations.
  */
 

@@ -31,7 +31,7 @@
 #define __DIM4BOUNDARYCOMPONENT_H
 #endif
 
-/*! \file dim4boundarycomponent.h
+/*! \file dim4/dim4boundarycomponent.h
  *  \brief Deals with components of the boundary of a 4-manifold triangulation.
  */
 
