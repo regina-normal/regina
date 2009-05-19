@@ -143,6 +143,7 @@ class NRational {
          * Initialises to <i>newNum</i>/<i>newDen</i>.
          *
          * \pre gcd(<i>newNum</i>, <i>newDen</i>) = 1 or <i>newDen</i> = 0.
+	 *      warning! NRational(4,4) != NRational(1,1)
          * \pre \a newDen is non-negative.
          *
          * @param newNum the new numerator.
