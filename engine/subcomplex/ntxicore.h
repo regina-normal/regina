@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ntxicore.h
+/*! \file subcomplex/ntxicore.h
  *  \brief Provides various triangulations of the product of the torus
  *  and the interval.
  */

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nface.h
+/*! \file triangulation/nface.h
  *  \brief Deals with faces in a triangulation.
  */
 

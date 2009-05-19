@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ntrivialtri.h
+/*! \file subcomplex/ntrivialtri.h
  *  \brief Deals with a few specific trivial triangulations.
  */
 

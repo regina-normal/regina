@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ntrisolidtorus.h
+/*! \file subcomplex/ntrisolidtorus.h
  *  \brief Deals with triangular solid tori in a triangulation.
  */
 

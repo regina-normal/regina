@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsatblock.h
+/*! \file subcomplex/nsatblock.h
  *  \brief Deals with saturated blocks in triangulations of Seifert fibred
  *  spaces.
  */

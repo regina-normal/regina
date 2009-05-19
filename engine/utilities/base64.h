@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file base64.h
+/*! \file utilities/base64.h
  *  \brief Routines for base64 encoding and decoding taken from
  *  the \a gnulib library.
  *

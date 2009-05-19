@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nxmlfile.h
+/*! \file file/nxmlfile.h
  *  \brief Deals with storing program data (including packet trees)
  *  in XML data files.
  */

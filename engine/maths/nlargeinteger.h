@@ -31,7 +31,7 @@
 #define __NMPI_H
 #endif
 
-/*! \file nlargeinteger.h
+/*! \file maths/nlargeinteger.h
  *  \brief Deals with arbitrary precision integers.
  */
 

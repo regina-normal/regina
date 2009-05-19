@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nxmlfilterreader.h
+/*! \file surfaces/nxmlfilterreader.h
  *  \brief Deals with parsing XML data for normal surface filters.
  */
 

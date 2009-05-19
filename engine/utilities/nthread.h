@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nthread.h
+/*! \file utilities/nthread.h
  *  \brief Provides very basic thread handling.
  */
 

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsignature.h
+/*! \file split/nsignature.h
  *  \brief Deals with signatures of splitting surfaces.
  */
 

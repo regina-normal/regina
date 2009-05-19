@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsnappeacensustri.h
+/*! \file subcomplex/nsnappeacensustri.h
  *  \brief Deals with 3-manifold triangulations from the SnapPea census.
  */
 

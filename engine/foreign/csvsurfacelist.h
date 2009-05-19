@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file csvsurfacelist.h
+/*! \file foreign/csvsurfacelist.h
  *  \brief Exports normal surface lists to plain text CSV files.
  */
 

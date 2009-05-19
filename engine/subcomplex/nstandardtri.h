@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nstandardtri.h
+/*! \file subcomplex/nstandardtri.h
  *  \brief Deals with triangulations whose structures are well-understood.
  */
 

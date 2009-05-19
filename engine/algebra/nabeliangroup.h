@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nabeliangroup.h
+/*! \file algebra/nabeliangroup.h
  *  \brief Deals with finitely generated abelian groups.
  */
 

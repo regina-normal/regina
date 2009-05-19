@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ndisctype.h
+/*! \file surfaces/ndisctype.h
  *  \brief Deals with normal and almost normal disc types.
  */
 

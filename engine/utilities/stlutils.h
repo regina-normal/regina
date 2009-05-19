@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file stlutils.h
+/*! \file utilities/stlutils.h
  *  \brief Miscellaneous utility classes and routines taken or modified
  *  from the Standard Template Library.
  *

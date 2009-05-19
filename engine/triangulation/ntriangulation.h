@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ntriangulation.h
+/*! \file triangulation/ntriangulation.h
  *  \brief Deals with triangulations.
  */
 

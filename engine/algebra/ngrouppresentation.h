@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ngrouppresentation.h
+/*! \file algebra/ngrouppresentation.h
  *  \brief Deals with finite presentations of groups.
  */
 

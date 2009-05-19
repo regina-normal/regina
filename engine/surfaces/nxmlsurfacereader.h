@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nxmlsurfacereader.h
+/*! \file surfaces/nxmlsurfacereader.h
  *  \brief Deals with parsing XML data for normal surface lists.
  */
 

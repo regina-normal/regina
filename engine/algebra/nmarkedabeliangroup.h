@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nmarkedabeliangroup.h
+/*! \file algebra/nmarkedabeliangroup.h
  *  \brief Deals with abelian groups given by chain complexes.
  */
 

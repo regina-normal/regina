@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nvectordense.h
+/*! \file maths/nvectordense.h
  *  \brief Deals with dense vectors of various types.
  */
 

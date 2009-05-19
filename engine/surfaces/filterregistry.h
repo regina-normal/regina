@@ -86,7 +86,7 @@
         "Combination filter")
 #endif
 
-/*! \file filterregistry.h
+/*! \file surfaces/filterregistry.h
  *  \brief Contains a registry of normal surface filtering classes known to
  *  the engine.  Each such class should be a subclass of NSurfaceFilter.
  *

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file boostutils.h
+/*! \file utilities/boostutils.h
  *  \brief Miscellaneous utility classes taken or modified from the
  *  Boost C++ libraries.
  *

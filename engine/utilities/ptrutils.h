@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file ptrutils.h
+/*! \file utilities/ptrutils.h
  *  \brief Provides function objects for use in the Standard Template
  *  Library that take pointers as arguments but work with the pointees
  *  instead.

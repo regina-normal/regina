@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file hashmap.h
+/*! \file utilities/hashmap.h
  *  \brief Includes the Standard Template Library hash map header.
  *  
  *  This header is provided as a convenience to work around the differing

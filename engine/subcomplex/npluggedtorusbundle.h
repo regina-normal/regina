@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file npluggedtorusbundle.h
+/*! \file subcomplex/npluggedtorusbundle.h
  *  \brief Supports self-identified Seifert fibred spaces that are
  *  triangulated using a combination of thin I-bundles and saturated blocks.
  */

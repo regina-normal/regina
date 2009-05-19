@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file npillowtwosphere.h
+/*! \file subcomplex/npillowtwosphere.h
  *  \brief Deals with 2-spheres made from two faces glued along their
  *  three edges.
  */

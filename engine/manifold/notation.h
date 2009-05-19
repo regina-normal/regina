@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file notation.h
+/*! \file manifold/notation.h
  *  \brief Explains notation used for describing various types of 3-manifold.
  */
 

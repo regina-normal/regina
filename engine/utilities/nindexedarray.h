@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nindexedarray.h
+/*! \file utilities/nindexedarray.h
  *  \brief Deals with arrays of objects with fast object-to-index lookup.
  */
 

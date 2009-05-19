@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file hashset.h
+/*! \file utilities/hashset.h
  *  \brief Includes the Standard Template Library hash set header.
  *  
  *  This header is provided as a convenience to work around the differing

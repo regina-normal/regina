@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nedge.h
+/*! \file triangulation/nedge.h
  *  \brief Deals with edges in a triangulation.
  */
 

@@ -31,7 +31,7 @@
 #define __NUMBERTHEORY_H
 #endif
 
-/*! \file numbertheory.h
+/*! \file maths/numbertheory.h
  *  \brief Provides miscellaneous number theory routines.
  */
 

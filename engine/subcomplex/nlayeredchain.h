@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nlayeredchain.h
+/*! \file subcomplex/nlayeredchain.h
  *  \brief Deals with layered chains in a triangulation.
  */
 

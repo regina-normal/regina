@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nnormalsurfacelist.h
+/*! \file surfaces/nnormalsurfacelist.h
  *  \brief Contains a packet representing a collection of normal
  *  surfaces in a 3-manifold.
  */

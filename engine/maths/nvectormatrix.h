@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nvectormatrix.h
+/*! \file maths/nvectormatrix.h
  *  \brief Deals with vectors that are rows or columns of matrices.
  */
 

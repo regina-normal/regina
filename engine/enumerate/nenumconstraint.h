@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nenumconstraint.h
+/*! \file enumerate/nenumconstraint.h
  *  \brief Deals with validity constraints in polytope vertex enumeration.
  */
 

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nfilepropertyreader.h
+/*! \file file/nfilepropertyreader.h
  *  \brief Deals with reading individual properties of objects from
  *  old-style binary files.
  *  \deprecated The preferred way of storing data is using XML

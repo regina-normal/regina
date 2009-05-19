@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file npdf.h
+/*! \file packet/npdf.h
  *  \brief A packet that contains a PDF document.
  */
 

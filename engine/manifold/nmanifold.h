@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nmanifold.h
+/*! \file manifold/nmanifold.h
  *  \brief Deals with the underlying 3-manifolds of triangulations.
  */
 

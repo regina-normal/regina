@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file stringutils.h
+/*! \file utilities/stringutils.h
  *  \brief Provides various routines for use with C++ strings.
  */
 

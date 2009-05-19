@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nscript.h
+/*! \file packet/nscript.h
  *  \brief Contains a packet representing a script.
  */
 

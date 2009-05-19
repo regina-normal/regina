@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nisomorphism.h
+/*! \file triangulation/nisomorphism.h
  *  \brief Deals with combinatorial isomorphisms of triangulations.
  */
 

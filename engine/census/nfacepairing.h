@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nfacepairing.h
+/*! \file census/nfacepairing.h
  *  \brief Deals with pairing off tetrahedron faces in a triangulation
  *  census.
  */

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nproperty.h
+/*! \file utilities/nproperty.h
  *  \brief Deals with calculable properties of individual objects.
  */
 

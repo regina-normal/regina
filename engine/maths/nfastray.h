@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nray.h
+/*! \file maths/nray.h
  *  \brief Provides a fast but inflexible rational ray class for heavy
  *  computation.
  */

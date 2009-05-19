@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nfile.h
+/*! \file file/nfile.h
  *  \brief Deals with reading and writing packet trees to and from
  *  old-style binary files.
  *  \deprecated The preferred way of representing data is using XML

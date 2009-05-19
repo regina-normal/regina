@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nprogress.h
+/*! \file progress/nprogress.h
  *  \brief Allows external interfaces to obtain progress reports when
  *  running long calculations.
  */

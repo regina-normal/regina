@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file sfcombination.h
+/*! \file surfaces/sfcombination.h
  *  \brief Contains a normal surface filter that simply combines other
  *  filters.
  */

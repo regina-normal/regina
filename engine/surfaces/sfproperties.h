@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file sfproperties.h
+/*! \file surfaces/sfproperties.h
  *  \brief Contains a normal surface filter that filters by basic
  *  properties.
  */

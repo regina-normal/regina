@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file npermit.h
+/*! \file triangulation/npermit.h
  *  \brief Provides utilities for iterating through permutations.
  */
 

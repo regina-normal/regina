@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nsnappeatriangulation.h
+/*! \file snappea/nsnappeatriangulation.h
  *  \brief Allows Regina triangulations to interact with the SnapPea kernel.
  */
 

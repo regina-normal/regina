@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nray.h
+/*! \file maths/nray.h
  *  \brief Provides a slow but flexible class for rational rays rooted at
  *  the origin.
  */

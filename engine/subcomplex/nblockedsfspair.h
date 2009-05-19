@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file nblockedsfspair.h
+/*! \file subcomplex/nblockedsfspair.h
  *  \brief Supports joined pairs of Seifert fibred spaces that are
  *  triangulated using saturated blocks.
  */
