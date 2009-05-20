@@ -227,7 +227,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * This routine allows the user to force a direct enumeration in
          * standard space, \e without going via quadrilateral space.
          * The algorithm used is the souped-up double description method
-         * in standard coordinates as described in "Optimising the
+         * in standard coordinates as described in "Optimizing the
          * double description method for normal surface enumeration",
          * Benjamin A. Burton, to appear in Math. Comp., arXiv:0808.4050.
          *
