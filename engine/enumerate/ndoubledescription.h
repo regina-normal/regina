@@ -57,7 +57,7 @@ class NProgressNumber;
 /**
  * Implements a modified double description method for polytope vertex
  * enumeration.  For details of the underlying algorithm, see
- * "Optimising the double description method for normal surface enumeration",
+ * "Optimizing the double description method for normal surface enumeration",
  * Benjamin A. Burton, to appear in Math. Comp., arXiv:0808.4050.
  *
  * All routines of interest within this class are static; no object of
