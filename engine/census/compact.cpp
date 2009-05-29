@@ -216,7 +216,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
         started = true;
 
         // Do we in fact have no permutation at all to choose?
-        if (maxDepth == 0 || pairing->dest(0, 0).isBoundary(nTetrahedra)) {
+        if (maxDepth == 0 || pairing->dest(0, 0).isBoundary(nTets)) {
             use_(this, useArgs_);
             use_(0, useArgs_);
             return;
