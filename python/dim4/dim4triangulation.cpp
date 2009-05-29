@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "algebra/ngrouppresentation.h"
+#include "dim4/dim4isomorphism.h"
 #include "dim4/dim4triangulation.h"
 #include <boost/python.hpp>
 
@@ -100,6 +101,16 @@ namespace {
         return ans;
     }
 
+    regina::Dim4Isomorphism* isIsomorphicTo_ptr(Dim4Triangulation& t,
+            Dim4Triangulation& s) {
+        return t.isIsomorphicTo(s).release();
+    }
+
+    regina::Dim4Isomorphism* isContainedIn_ptr(Dim4Triangulation& t,
+            Dim4Triangulation& s) {
+        return t.isContainedIn(s).release();
+    }
+
     void simplifiedFundamentalGroup_own(Dim4Triangulation& tri,
             std::auto_ptr<regina::NGroupPresentation> group) {
         tri.simplifiedFundamentalGroup(group.release());
@@ -155,6 +166,10 @@ void addDim4Triangulation() {
         .def("edgeIndex", &Dim4Triangulation::edgeIndex)
         .def("faceIndex", &Dim4Triangulation::faceIndex)
         .def("tetrahedronIndex", &Dim4Triangulation::tetrahedronIndex)
+        .def("isIsomorphicTo", isIsomorphicTo_ptr,
+            return_value_policy<manage_new_object>())
+        .def("isContainedIn", isContainedIn_ptr,
+            return_value_policy<manage_new_object>())
         .def("getEulerCharTri", &Dim4Triangulation::getEulerCharTri)
         .def("isValid", &Dim4Triangulation::isValid)
         .def("isIdeal", &Dim4Triangulation::isIdeal)

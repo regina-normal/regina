@@ -35,6 +35,8 @@
 #define __DIM4TRIANGULATION_H
 #endif
 
+#include <list>
+#include <memory>
 #include <vector>
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
@@ -48,6 +50,10 @@
 #include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
+
+// The following headers are necessary so that std::auto_ptr can invoke
+// destructors where necessary.
+#include "dim4/dim4isomorphism.h"
 
 namespace regina {
 
@@ -631,6 +637,116 @@ class Dim4Triangulation : public NPacket {
          */
 
         /**
+         * \name Isomorphism Testing
+         */
+        /*@{*/
+
+        /**
+         * Determines if this triangulation is combinatorially
+         * isomorphic to the given triangulation.
+         *
+         * Specifically, this routine determines if there is a
+         * one-to-one and onto boundary complete combinatorial
+         * isomorphism from this triangulation to \a other.  Boundary
+         * complete isomorphisms are described in detail in the
+         * Dim4Isomorphism class notes.
+         *
+         * In particular, note that this triangulation and \a other must
+         * contain the same number of pentachora for such an isomorphism
+         * to exist.
+         *
+         * \todo \opt Improve the complexity by choosing a pentachoron
+         * mapping from each component and following gluings to
+         * determine the others.
+         *
+         * If a boundary complete isomorphism is found, the details of
+         * this isomorphism are returned.  The isomorphism is newly
+         * constructed, and so to assist with memory management is
+         * returned as a std::auto_ptr.  Thus, to test whether an
+         * isomorphism exists without having to explicitly deal with the
+         * isomorphism itself, you can call
+         * <tt>if (isIsomorphicTo(other).get())</tt> and the newly
+         * created isomorphism (if it exists) will be automatically
+         * destroyed.
+         *
+         * @param other the triangulation to compare with this one.
+         * @return details of the isomorphism if the two triangulations
+         * are combinatorially isomorphic, or a null pointer otherwise.
+         */
+        std::auto_ptr<Dim4Isomorphism> isIsomorphicTo(
+            const Dim4Triangulation& other) const;
+
+        /**
+         * Determines if an isomorphic copy of this triangulation is
+         * contained within the given triangulation, possibly as a
+         * subcomplex of some larger component (or components).
+         *
+         * Specifically, this routine determines if there is a boundary
+         * incomplete combinatorial isomorphism from this triangulation
+         * to \a other.  Boundary incomplete isomorphisms are described
+         * in detail in the Dim4Isomorphism class notes.
+         *
+         * In particular, note that boundary facets of this triangulation
+         * need not correspond to boundary facets of \a other, and that
+         * \a other can contain more pentachora than this triangulation.
+         *
+         * If a boundary incomplete isomorphism is found, the details of
+         * this isomorphism are returned.  The isomorphism is newly
+         * constructed, and so to assist with memory management is
+         * returned as a std::auto_ptr.  Thus, to test whether an
+         * isomorphism exists without having to explicitly deal with the
+         * isomorphism itself, you can call
+         * <tt>if (isContainedIn(other).get())</tt> and the newly
+         * created isomorphism (if it exists) will be automatically
+         * destroyed.
+         *
+         * If more than one such isomorphism exists, only one will be
+         * returned.  For a routine that returns all such isomorphisms,
+         * see findAllSubcomplexesIn().
+         *
+         * @param other the triangulation in which to search for an
+         * isomorphic copy of this triangulation.
+         * @return details of the isomorphism if such a copy is found,
+         * or a null pointer otherwise.
+         */
+        std::auto_ptr<Dim4Isomorphism> isContainedIn(
+            const Dim4Triangulation& other) const;
+
+        /**
+         * Finds all ways in which an isomorphic copy of this triangulation
+         * is contained within the given triangulation, possibly as a
+         * subcomplex of some larger component (or components).
+         *
+         * This routine behaves identically to isContainedIn(), except
+         * that instead of returning just one isomorphism (which may be
+         * boundary incomplete and need not be onto), all such isomorphisms
+         * are returned.
+         *
+         * See the isContainedIn() notes for additional information.
+         *
+         * The isomorphisms that are found will be inserted into the
+         * given list.  These isomorphisms will be newly created, and
+         * the caller of this routine is responsible for destroying
+         * them.  The given list will not be emptied before the new
+         * isomorphisms are inserted.
+         *
+         * \ifacespython Not present.
+         *
+         * @param other the triangulation in which to search for
+         * isomorphic copies of this triangulation.
+         * @param results the list in which any isomorphisms found will
+         * be stored.
+         * @return the number of isomorphisms that were found.
+         */
+        unsigned long findAllSubcomplexesIn(const Dim4Triangulation& other,
+                std::list<Dim4Isomorphism*>& results) const;
+
+        /*@}*/
+        /**
+         * (end: Isomorphism Testing)
+         */
+
+        /**
          * \name Basic Properties
          */
         /*@{*/
@@ -1013,6 +1129,74 @@ class Dim4Triangulation : public NPacket {
          * calculateSkeleton() for precisely what this routine does.
          */
         void calculateVertexLinks() const;
+
+        /**
+         * Determines if an isomorphic copy of this triangulation is
+         * contained within the given triangulation.
+         *
+         * If the argument \a completeIsomorphism is \c true, the
+         * isomorphism must be onto and boundary complete.
+         * That is, this triangulation must be combinatorially
+         * isomorphic to the given triangulation.
+         *
+         * If the argument \a completeIsomorphism is \c false, the
+         * isomorphism may be boundary incomplete and may or may not be
+         * onto.  That is, this triangulation must appear as a
+         * subcomplex of the given triangulation, possibly with some
+         * original boundary faces joined to new tetrahedra.
+         *
+         * See the Dim4Isomorphism class notes for further details
+         * regarding boundary complete and boundary incomplete
+         * isomorphisms.
+         *
+         * The isomorphisms found, if any, will be appended to the
+         * list \a results.  This list will not be emptied before
+         * calculations begin.  All isomorphisms will be newly created,
+         * and the caller of this routine is responsible for destroying
+         * them.
+         *
+         * If \a firstOnly is passed as \c true, only the first
+         * isomorphism found (if any) will be returned, after which the
+         * routine will return immediately.  Otherwise all isomorphisms
+         * will be returned.
+         *
+         * @param other the triangulation in which to search for an
+         * isomorphic copy of this triangulation.
+         * @param results the list in which any isomorphisms found will
+         * be stored.
+         * @param completeIsomorphism \c true if isomorphisms must be
+         * onto and boundary complete, or \c false if neither of these
+         * restrictions should be imposed.
+         * @param firstOnly \c true if only one isomorphism should be
+         * returned (if any), or \c false if all isomorphisms should be
+         * returned.
+         * @return the total number of isomorphisms found.
+         */
+        unsigned long findIsomorphisms(const Dim4Triangulation& other,
+                std::list<Dim4Isomorphism*>& results,
+                bool completeIsomorphism, bool firstOnly) const;
+
+        /**
+         * Internal to findIsomorphisms().
+         *
+         * Examines properties of the given pentachoron to find any
+         * immediate evidence that \a src may not map to \a dest in a
+         * boundary complete isomorphism (in which the vertices of \a src
+         * are mapped to the vertices of \a dest according to the
+         * permutation \a p).
+         *
+         * In particular, the degrees of faces, edges and vertices are examined.
+         *
+         * @param src the first of the two pentachora to examine.
+         * @param dest the second of the two pentachora to examine.
+         * @param p the permutation under which the vertices of \a src
+         * must map to the vertices of \a dest.
+         * @return \c true if no immediate incompatibilities between the
+         * pentachora were found, or \c false if properties of the
+         * pentachora were found that differ between \a src and \a dest.
+         */
+        static bool compatiblePents(
+                Dim4Pentachoron* src, Dim4Pentachoron* dest, NPerm5 p);
 
     friend class regina::NXMLDim4TriangulationReader;
 };
