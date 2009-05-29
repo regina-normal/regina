@@ -194,7 +194,7 @@ unsigned long NTriangulation::findIsomorphisms(
     for (i = 0; i < nTetrahedra; i++)
         iso.tetImage(i) = -1;
 
-    // Which source component does each destination component correspond to?
+    // Which source component does each destination tetrahedron correspond to?
     long* whichComp = new long[nDestTetrahedra];
     std::fill(whichComp, whichComp + nDestTetrahedra, -1);
 

@@ -27,8 +27,8 @@
 /* end stub */
 
 /*! \file census/ngluingpermsearcher.h
- *  \brief Supports searching through all possible gluing permutations sets
- *  for a given face pairing.
+ *  \brief Supports searching through all possible sets of tetrahedron
+ *  gluing permutations for a given tetrahedron face pairing.
  */
 
 #ifndef __NGLUINGPERMSEARCHER_H
@@ -71,8 +71,8 @@ class NGluingPermSearcher;
 
 /**
  * A routine used to do arbitrary processing upon a particular set of
- * gluing permutations.  Such routines are used to process permutation
- * sets found when running NGluingPermSearcher::findAllPerms().
+ * tetrahedron gluing permutations.  Such routines are used to process
+ * permutation sets found when running NGluingPermSearcher::findAllPerms().
  *
  * The first parameter passed will be a set of gluing permutations
  * (in fact it will be of the subclass NGluingPermSearcher in order to
@@ -89,7 +89,7 @@ typedef void (*UseGluingPerms)(const NGluingPermSearcher*, void*);
 
 /**
  * A utility class for searching through all possible gluing permutation
- * sets that correspond to a given face pairing.  Subclasses of
+ * sets that correspond to a given tetrahedron face pairing.  Subclasses of
  * NGluingPermSearcher correspond to specialised (and heavily optimised)
  * search algorithms that may be used in sufficiently constrained scenarios.
  * The main class NGluingPermSearcher offers a default (but slower) search
@@ -487,7 +487,7 @@ class NGluingPermSearcher : public NGluingPerms {
          * will be based.
          * @return \c true if the permutations under construction will
          * lead to an edge identified with itself in reverse, or \c false
-         * if no such edge is identified.
+         * if no such edge is found.
          */
         bool badEdgeLink(const NTetFace& face) const;
 
@@ -514,7 +514,7 @@ class NGluingPermSearcher : public NGluingPerms {
          * @return \c true if the permutations under construction will
          * lead to a low-degree edge as specified by parameters
          * \a testDegree12 and \a testDegree3, or \c false if no such
-         * edge is identified.
+         * edge is found.
          */
         bool lowDegreeEdge(const NTetFace& face, bool testDegree12,
             bool testDegree3) const;

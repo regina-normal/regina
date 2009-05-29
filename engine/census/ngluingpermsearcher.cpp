@@ -279,8 +279,6 @@ NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
 }
 
 void NGluingPermSearcher::dumpData(std::ostream& out) const {
-    // Assuming nTets < 100, estimated worst case (35 * nTets + 12) bytes total.
-    // Don't quote me on this.
     NGluingPerms::dumpData(out);
 
     out << (orientableOnly_ ? 'o' : '.');
