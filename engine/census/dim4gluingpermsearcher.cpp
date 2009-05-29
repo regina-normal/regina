@@ -135,6 +135,8 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
         return;
     }
 
+    // ---------- Selecting the individual gluing permutations ----------
+
     int minOrder = orderElt_;
     int maxOrder = orderElt_ + maxDepth;
 
@@ -146,31 +148,61 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
 
         // TODO: Check for cancellation.
 
-        // When moving to the next permutation, be sure to preserve the
-        // orientation of the permutation if necessary.
+        // Move to the next permutation.
+
+        // Be sure to preserve the orientation of the permutation if necessary.
         if ((! orientableOnly_) || adj.facet == 0)
             permIndex(facet)++;
         else
             permIndex(facet) += 2;
 
+        // Are we out of ideas for this facet?
         if (permIndex(facet) >= 24) {
-            // Out of ideas for this facet.
-            // Head back down to the previous facet.
+            // Yep.  Head back down to the previous facet.
             permIndex(facet) = -1;
             permIndex(adj) = -1;
             orderElt_--;
+
+            // Pull apart edge and face links at the previous level.
+            /* TODO: UFIND
+            if (orderElt >= minOrder) {
+                splitEdgeClasses();
+                splitFaceClasses();
+            }
+            */
+
             continue;
         }
 
         // We are sitting on a new permutation to try.
         permIndex(adj) = NPerm::invS4[permIndex(facet)];
 
+        // Merge face links and run corresponding tests.
+        /* TODO: UFIND
+        if (mergeFaceClasses()) {
+            // We created an invalid face.
+            splitFaceClasses();
+            continue;
+        }
+        */
+
+        // Merge edge links and run corresponding tests.
+        /* TODO: UFIND
+        if (mergeEdgeClasses()) {
+            // We created an invalid edge.
+            splitEdgeClasses();
+            splitFaceClasses();
+            continue;
+        }
+        */
+
+        // TODO: UFIND -> Get rid of this test.
         // Is this going to lead to an unwanted triangulation?
         if (badFaceLink(facet))
             continue;
 
         // Fix the orientation if appropriate.
-        if (adj.facet == 0) {
+        if (adj.facet == 0 && orientableOnly_) {
             // It's the first time we've hit this pentachoron.
             if ((permIndex(facet) + (facet.facet == 4 ? 0 : 1) +
                     (adj.facet == 4 ? 0 : 1)) % 2 == 0)
@@ -192,6 +224,14 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
 
             // Back to the previous facet.
             orderElt_--;
+
+            // Pull apart edge and face links at the previous level.
+            /* TODO: UFIND
+            if (orderElt >= minOrder) {
+                splitEdgeClasses();
+                splitFaceClasses();
+            }
+            */
         } else {
             // Not a full triangulation; just one level deeper.
 
@@ -199,6 +239,7 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
             // Be sure to get the orientation right.
             facet = order_[orderElt_];
             if (orientableOnly_ && pairing_->dest(facet).facet > 0) {
+                // permIndex(facet) will be set to -1 or -2 as appropriate.
                 adj = (*pairing_)[facet];
                 if (orientation_[facet.pent] == orientation_[adj.pent])
                     permIndex(facet) = 1;
@@ -220,11 +261,31 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
                 // Back to the previous facet.
                 permIndex(facet) = -1;
                 orderElt_--;
+
+                // Pull apart edge and face links at the previous level.
+                /* TODO: UFIND
+                if (orderElt >= minOrder) {
+                    splitEdgeClasses();
+                    splitFaceClasses();
+                }
+                */
             }
         }
     }
 
     // And the search is over.
+
+    /* TODO: UFIND
+    // Some extra sanity checking.
+    if (minOrder == 0) {
+        // Our edge classes had better be 10n standalone edges.
+        // TODO
+
+        // And our face classes had better be 10n standalone faces.
+        // TODO
+    }
+    */
+
     use_(0, useArgs_);
 }
 

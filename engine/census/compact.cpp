@@ -214,6 +214,14 @@ void NCompactSearcher::runSearch(long maxDepth) {
     if (! started) {
         // Search initialisation.
         started = true;
+
+        // Do we in fact have no permutation at all to choose?
+        if (maxDepth == 0 || pairing->dest(0, 0).isBoundary(nTetrahedra)) {
+            use_(this, useArgs_);
+            use_(0, useArgs_);
+            return;
+        }
+
         orderElt = 0;
         orientation[0] = 1;
     }
@@ -241,16 +249,15 @@ void NCompactSearcher::runSearch(long maxDepth) {
 
         // Move to the next permutation.
 
-        // Be sure to preserve the orientation of the permutation if
-        // necessary.
-        if ((! orientableOnly_) || pairing->dest(face).face == 0)
+        // Be sure to preserve the orientation of the permutation if necessary.
+        if ((! orientableOnly_) || adj.face == 0)
             permIndex(face)++;
         else
             permIndex(face) += 2;
 
         // Are we out of ideas for this face?
         if (permIndex(face) >= 6) {
-            // Head back down to the previous face.
+            // Yep.  Head back down to the previous face.
             permIndex(face) = -1;
             permIndex(adj) = -1;
             orderElt--;
@@ -342,7 +349,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
                 permIndex(face) = -1;
                 orderElt--;
 
-                // Pull apart vertex links at the previous level.
+                // Pull apart vertex and edge links at the previous level.
                 if (orderElt >= minOrder) {
                     splitVertexClasses();
                     splitEdgeClasses();
