@@ -78,13 +78,8 @@ int NGluingPerms::gluingToIndex(unsigned tet, unsigned face,
 }
 
 void NGluingPerms::dumpData(std::ostream& out) const {
-    // Assuming nTets < 100, estimated worst case (32 * nTets) bytes total.
-    // Don't quote me on this.
-
-    // (5 * 4 * nTets bytes)
     out << pairing->toTextRep() << std::endl;
 
-    // (3 * 4 * nTets bytes)
     unsigned tet, face;
     for (tet = 0; tet < getNumberOfTetrahedra(); tet++)
         for (face = 0; face < 4; face++) {

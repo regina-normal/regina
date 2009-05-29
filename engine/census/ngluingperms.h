@@ -55,9 +55,9 @@ class NTriangulation;
  * face that is matched with some other face will have an associated
  * permutation of four elements (as described by class NPerm).
  *
- * If a face is matched with some other face, the two corresponding
- * associated permutations will be inverses.  If a face is left
- * deliberately unmatched, it will have no associated permutation.
+ * If a face is matched with some other face, the two associated
+ * permutations in this set will be inverses.  If a face is left
+ * deliberately unmatched, it will have no associated permutation in this set.
  *
  * Such a set of permutations models part of the structure of a
  * triangulation, in which each tetrahedron face that is glued to another
@@ -69,7 +69,7 @@ class NTriangulation;
 class NGluingPerms {
     protected:
         const NFacePairing* pairing;
-            /**< The face pairing complemented by this permutation set.
+            /**< The face pairing that this permutation set complements.
                  This is guaranteed to be the minimal representative of
                  its face pairing isomorphism class. */
         int* permIndices;
