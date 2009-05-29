@@ -151,6 +151,8 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
         return;
     }
 
+    // ---------- Selecting the individual gluing permutations ----------
+
     int minOrder = orderElt;
     int maxOrder = orderElt + maxDepth;
 
@@ -162,16 +164,17 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
 
         // TODO: Check for cancellation.
 
-        // When moving to the next permutation, be sure to preserve the
-        // orientation of the permutation if necessary.
+        // Move to the next permutation.
+
+        // Be sure to preserve the orientation of the permutation if necessary.
         if ((! orientableOnly_) || adj.face == 0)
             permIndex(face)++;
         else
             permIndex(face) += 2;
 
+        // Are we out of ideas for this face?
         if (permIndex(face) >= 6) {
-            // Out of ideas for this face.
-            // Head back down to the previous face.
+            // Yep.  Head back down to the previous face.
             permIndex(face) = -1;
             permIndex(adj) = -1;
             orderElt--;
@@ -189,7 +192,7 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
                 continue;
 
         // Fix the orientation if appropriate.
-        if (adj.face == 0) {
+        if (adj.face == 0 && orientableOnly_) {
             // It's the first time we've hit this tetrahedron.
             if ((permIndex(face) + (face.face == 3 ? 0 : 1) +
                     (adj.face == 3 ? 0 : 1)) % 2 == 0)
@@ -218,6 +221,7 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
             // Be sure to get the orientation right.
             face = order[orderElt];
             if (orientableOnly_ && pairing->dest(face).face > 0) {
+                // permIndex(face) will be set to -1 or -2 as appropriate.
                 adj = (*pairing)[face];
                 if (orientation[face.tet] == orientation[adj.tet])
                     permIndex(face) = 1;
