@@ -609,7 +609,7 @@ class NCompactSearcher : public NGluingPermSearcher {
     protected:
         /**
          * A structure used to track equivalence classes of tetrahedron
-         * vertices as the gluing permutation is constructed.  Two
+         * vertices as the gluing permutation set is constructed.  Two
          * vertices are considered equivalent if they are identified
          * within the triangulation.
          *
@@ -780,7 +780,7 @@ class NCompactSearcher : public NGluingPermSearcher {
 
         /**
          * A structure used to track equivalence classes of tetrahedron
-         * edges as the gluing permutation is constructed.  Two edges
+         * edges as the gluing permutation set is constructed.  Two edges
          * are considered equivalent if they are identified within the
          * triangulation.
          *
