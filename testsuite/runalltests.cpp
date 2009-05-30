@@ -118,6 +118,7 @@ bool runAllTests() {
     addNRational(runner);
 
     // Maths:
+    addNPerm3(runner);
     addNPrimes(runner);
     addNumberTheory(runner);
     addMatrixOps(runner);

@@ -26,22 +26,50 @@
 
 /* end stub */
 
-#include "dim4/nperm5.h"
 #include "maths/nperm3.h"
-#include "triangulation/nperm.h"
-#include "globalarray.h"
+#include "../globalarray.h"
+#include <boost/python.hpp>
 
-void addGlobalArray() {
-    regina::python::GlobalArray<int>::wrapClass("GlobalArray_int");
-    regina::python::GlobalArray2D<int>::wrapClass("GlobalArray2D_int");
-    regina::python::GlobalArray3D<int>::wrapClass("GlobalArray3D_int");
-    regina::python::GlobalArray<unsigned>::wrapClass("GlobalArray_unsigned");
-    regina::python::GlobalArray<const char*>::wrapClass("GlobalArray_char_string");
-    regina::python::GlobalArray<regina::NPerm3>::wrapClass("GlobalArray_NPerm3");
-    regina::python::GlobalArray<regina::NPerm>::wrapClass("GlobalArray_NPerm");
-    regina::python::GlobalArray2D<regina::NPerm>::wrapClass("GlobalArray2D_NPerm");
-    regina::python::GlobalArray<regina::NPerm5>::wrapClass("GlobalArray_NPerm5");
-    regina::python::GlobalArray2D<regina::NPerm5>::wrapClass("GlobalArray2D_NPerm5");
-    regina::python::GlobalArray3D<regina::NPerm5>::wrapClass("GlobalArray3D_NPerm5");
+using namespace boost::python;
+using regina::NPerm3;
+using regina::python::GlobalArray;
+
+namespace {
+    GlobalArray<NPerm3> NPerm3_S3_arr(NPerm3::S3, 6);
+    GlobalArray<NPerm3> NPerm3_orderedS3_arr(NPerm3::orderedS3, 6);
+    GlobalArray<int> NPerm3_invS3_arr(NPerm3::invS3, 6);
+
+    int perm3_getItem(const NPerm3& p, int index) {
+        return p[index];
+    }
+}
+
+void addNPerm3() {
+    scope s = class_<NPerm3>("NPerm3")
+        .def(init<int>())
+        .def(init<int, int, int>())
+        .def(init<const NPerm3&>())
+        .def("getPermCode", &NPerm3::getPermCode)
+        .def("setPermCode", &NPerm3::setPermCode)
+        .def("isPermCode", &NPerm3::isPermCode)
+        .def(self * self)
+        .def("inverse", &NPerm3::inverse)
+        .def("sign", &NPerm3::sign)
+        .def("__getitem__", perm3_getItem)
+        .def("preImageOf", &NPerm3::preImageOf)
+        .def(self == self)
+        .def(self != self)
+        .def("isIdentity", &NPerm3::isIdentity)
+        .def("toString", &NPerm3::toString)
+        .def("trunc2", &NPerm3::trunc2)
+        .def("S3Index", &NPerm3::S3Index)
+        .def("orderedS3Index", &NPerm3::orderedS3Index)
+        .def("__str__", &NPerm3::toString)
+        .staticmethod("isPermCode")
+    ;
+
+    s.attr("S3") = &NPerm3_S3_arr;
+    s.attr("orderedS3") = &NPerm3_orderedS3_arr;
+    s.attr("invS3") = &NPerm3_invS3_arr;
 }
 

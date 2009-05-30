@@ -30,6 +30,7 @@ void addMatrixOps();
 void addNLargeInteger();
 void addNMatrix2();
 void addNMatrixInt();
+void addNPerm3();
 void addNPrimes();
 void addNRational();
 void addNumberTheory();
@@ -39,6 +40,7 @@ void addMaths() {
     addNLargeInteger();
     addNMatrix2();
     addNMatrixInt();
+    addNPerm3();
     addNPrimes();
     addNRational();
     addNumberTheory();

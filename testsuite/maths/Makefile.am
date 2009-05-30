@@ -12,7 +12,7 @@ INCLUDES = -I$(top_srcdir) @ENGINE_INCLUDES@
 
 check_LIBRARIES = libmaths.a
 
-libmaths_a_SOURCES = matrixops.cpp nlargeinteger.cpp nprimes.cpp nrational.cpp numbertheory.cpp
+libmaths_a_SOURCES = matrixops.cpp nlargeinteger.cpp nperm3.cpp nprimes.cpp nrational.cpp numbertheory.cpp
 
 noinst_HEADERS = testmaths.h
 
