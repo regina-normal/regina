@@ -1266,7 +1266,7 @@ class NCompactSearcher : public NGluingPermSearcher {
          * @param vertexID2 the second tetrahedron vertex to examine; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @return \c true if a one-edge boundary component is formed as
+         * @return \c true if a two-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
         bool vtxBdryLength2(int vertexID1, int vertexID2);
