@@ -13,6 +13,9 @@ Version 4.6.1  [ (under development) ]
         Class NPerm:
             - New routines S4Index() and orderedS4Index() for reverse
               lookups into the arrays NPerm::S4 and NPerm::orderedS4.
+        Class NPerm3:
+            - New class describing permutations of three elements.  This
+              is extremely fast, using lookup tables for all calculations.
 
 Version 4.6  [ 16 May, 2009 ]
 

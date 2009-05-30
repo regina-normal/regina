@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "maths/nperm3.h"
 #include "triangulation/nperm.h"
 #include "globalarray.h"
 
@@ -35,6 +36,7 @@ void addGlobalArray() {
     regina::python::GlobalArray3D<int>::wrapClass("GlobalArray3D_int");
     regina::python::GlobalArray<unsigned>::wrapClass("GlobalArray_unsigned");
     regina::python::GlobalArray<const char*>::wrapClass("GlobalArray_char_string");
+    regina::python::GlobalArray<regina::NPerm3>::wrapClass("GlobalArray_NPerm3");
     regina::python::GlobalArray<regina::NPerm>::wrapClass("GlobalArray_NPerm");
     regina::python::GlobalArray2D<regina::NPerm>::wrapClass("GlobalArray2D_NPerm");
 }

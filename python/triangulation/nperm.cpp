@@ -104,6 +104,7 @@ void addNPerm() {
         .def("S4Index", &NPerm::S4Index)
         .def("orderedS4Index", &NPerm::orderedS4Index)
         .def("__str__", &NPerm::toString)
+        .staticmethod("isPermCode")
     ;
 
     s.attr("S4") = &NPerm_S4_arr;
