@@ -1013,7 +1013,7 @@ class NCompactSearcher : public NGluingPermSearcher {
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findEdgeClass(int edgeID);
+        int findEdgeClass(int edgeID) const;
 
         /**
          * Returns the representative of the equivalence class containing
@@ -1044,7 +1044,7 @@ class NCompactSearcher : public NGluingPermSearcher {
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findEdgeClass(int edgeID, char& twisted);
+        int findEdgeClass(int edgeID, char& twisted) const;
 
         /**
          * Merge the classes of tetrahedron vertices as required by the
@@ -1580,14 +1580,14 @@ inline char NCompactSearcher::dataTag() const {
     return NCompactSearcher::dataTag_;
 }
 
-inline int NCompactSearcher::findEdgeClass(int edgeID) {
+inline int NCompactSearcher::findEdgeClass(int edgeID) const {
     while (edgeState[edgeID].parent >= 0)
         edgeID = edgeState[edgeID].parent;
 
     return edgeID;
 }
 
-inline int NCompactSearcher::findEdgeClass(int edgeID, char& twisted) {
+inline int NCompactSearcher::findEdgeClass(int edgeID, char& twisted) const {
     for ( ; edgeState[edgeID].parent >= 0; edgeID = edgeState[edgeID].parent)
         twisted ^= edgeState[edgeID].twistUp;
 
