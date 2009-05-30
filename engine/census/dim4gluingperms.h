@@ -37,6 +37,7 @@
 #endif
 
 #include "census/dim4facetpairing.h"
+#include "maths/permconv.h"
 
 namespace regina {
 
@@ -470,13 +471,13 @@ inline const int& Dim4GluingPerms::permIndex(unsigned pent, unsigned facet)
 inline NPerm5 Dim4GluingPerms::indexToGluing(
         const Dim4PentFacet& source, int index) const {
     return NPerm5(pairing_->dest(source).facet, 4) *
-        NPerm5::fromPerm4(NPerm::S4[index]) * NPerm5(source.facet, 4);
+        perm4to5(NPerm::S4[index]) * NPerm5(source.facet, 4);
 }
 
 inline NPerm5 Dim4GluingPerms::indexToGluing(unsigned pent, unsigned facet,
         int index) const {
     return NPerm5(pairing_->dest(pent, facet).facet, 4) *
-        NPerm5::fromPerm4(NPerm::S4[index]) * NPerm5(facet, 4);
+        perm4to5(NPerm::S4[index]) * NPerm5(facet, 4);
 }
 
 } // namespace regina

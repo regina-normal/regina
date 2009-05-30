@@ -30,6 +30,7 @@
 #include <queue>
 #include <utility>
 #include "dim4/dim4triangulation.h"
+#include "maths/permconv.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -642,8 +643,8 @@ void Dim4Triangulation::calculateBoundary() const {
                             preImageOf(j);
 
                         bdryTet->joinTo(tetFace, adjBdryTet,
-                            (adjTet->getFaceMapping(adjTetFace) *
-                             tet->getFaceMapping(tetFace).inverse()).asPerm4());
+                            perm5to4(adjTet->getFaceMapping(adjTetFace) *
+                            tet->getFaceMapping(tetFace).inverse()));
                     }
                 }
 
@@ -705,9 +706,9 @@ void Dim4Triangulation::calculateVertexLinks() const {
                 tet[index]->joinTo(
                     pent->tetMapping_[vertexIdx].preImageOf(exitFacet),
                     tet[5 * adjPentIdx + adjVertexIdx],
-                    (adjPent->tetMapping_[adjVertexIdx].inverse() *
+                    perm5to4(adjPent->tetMapping_[adjVertexIdx].inverse() *
                         pent->adjacentGluing(exitFacet) *
-                        pent->tetMapping_[vertexIdx]).asPerm4());
+                        pent->tetMapping_[vertexIdx]));
             }
             ++index;
         }

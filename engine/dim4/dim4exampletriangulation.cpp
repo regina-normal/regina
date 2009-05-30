@@ -28,6 +28,7 @@
 
 #include "dim4/dim4exampletriangulation.h"
 #include "dim4/dim4triangulation.h"
+#include "maths/permconv.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -114,10 +115,8 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
             if (adjIndex == i && map[face] > face)
                 continue;
 
-            pent[i]->joinTo(face, pent[adjIndex],
-                NPerm5::fromPerm4(map));
-            pent[i + n]->joinTo(face, pent[adjIndex + n],
-                NPerm5::fromPerm4(map));
+            pent[i]->joinTo(face, pent[adjIndex], perm4to5(map));
+            pent[i + n]->joinTo(face, pent[adjIndex + n], perm4to5(map));
         }
     }
 
@@ -162,8 +161,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
             if (adjIndex == i && map[face] > face)
                 continue;
 
-            pent[i]->joinTo(face, pent[adjIndex],
-                NPerm5::fromPerm4(map));
+            pent[i]->joinTo(face, pent[adjIndex], perm4to5(map));
         }
     }
 

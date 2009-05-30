@@ -36,12 +36,11 @@
 #endif
 
 #include <string>
-#include "triangulation/nperm.h"
 
 namespace regina {
 
 /**
- * \weakgroup dim4
+ * \weakgroup maths
  * @{
  */
 
@@ -300,28 +299,6 @@ class NPerm5 {
         bool isIdentity() const;
 
         /**
-         * Expresses this permutation as a permutation of 0, 1, 2 and 3.
-         * This only makes sense if the image of 4 is 4; otherwise the
-         * return value is undefined.
-         *
-         * \pre This permutation maps 4 to 4.
-         *
-         * @return this permutation expressed as a permutation of four
-         * elements, not five.
-         */
-        NPerm asPerm4() const;
-
-        /**
-         * Converts the given 4-element permutation to a 5-element permutation.
-         * The resulting 5-element permutation will map 4 to 4, and will map
-         * 0, 1, 2 and 3 to their respective images under \a base.
-         *
-         * @return the given permutation expressed as a permutation of five
-         * elements, not four.
-         */
-        static NPerm5 fromPerm4(const NPerm& base);
-
-        /**
          * Returns a string representation of this permutation.
          * The representation will consist of five adjacent digits
          * representing the images of 0, 1, 2, 3 and 4 respectively.
@@ -487,26 +464,6 @@ inline bool NPerm5::operator != (const NPerm5& other) const {
 
 inline bool NPerm5::isIdentity() const {
     return (code == 18056);
-}
-
-inline NPerm NPerm5::asPerm4() const {
-    return NPerm(static_cast<unsigned char>(
-        (code & 0x03) |
-        ((code >> 1) & 0x0c) |
-        ((code >> 2) & 0x30) |
-        ((code >> 3) & 0xc0)));
-}
-
-inline NPerm5 NPerm5::fromPerm4(const NPerm& base) {
-    // Cast the NPerm code (char) to an NPerm5 code (unsigned).
-    unsigned code = base.getPermCode();
-
-    return NPerm5(
-        (code & 0x0003) |
-        ((code & 0x000c) << 1) |
-        ((code & 0x0030) << 2) |
-        ((code & 0x00c0) << 3) |
-        (4 << 12));
 }
 
 inline int NPerm5::imageOf(int source) const {

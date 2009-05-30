@@ -63,8 +63,6 @@ void addNPerm5() {
         .def(self != self)
         .def("compareWith", &NPerm5::compareWith)
         .def("isIdentity", &NPerm5::isIdentity)
-        .def("asPerm4", &NPerm5::asPerm4)
-        .def("fromPerm4", &NPerm5::fromPerm4)
         .def("toString", &NPerm5::toString)
         .def("trunc2", &NPerm5::trunc2)
         .def("trunc3", &NPerm5::trunc3)
@@ -73,7 +71,6 @@ void addNPerm5() {
         .def("orderedS5Index", &NPerm5::orderedS5Index)
         .def("__str__", &NPerm5::toString)
         .staticmethod("isPermCode")
-        .staticmethod("fromPerm4")
     ;
 
     s.attr("S5") = &NPerm5_S5_arr;

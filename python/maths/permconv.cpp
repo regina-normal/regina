@@ -26,27 +26,13 @@
 
 /* end stub */
 
-void addMatrixOps();
-void addNLargeInteger();
-void addNMatrix2();
-void addNMatrixInt();
-void addNPerm3();
-void addNPerm5();
-void addNPrimes();
-void addNRational();
-void addNumberTheory();
-void addPermConv();
+#include "maths/permconv.h"
+#include <boost/python.hpp>
 
-void addMaths() {
-    addMatrixOps();
-    addNLargeInteger();
-    addNMatrix2();
-    addNMatrixInt();
-    addNPerm3();
-    addNPerm5();
-    addNPrimes();
-    addNRational();
-    addNumberTheory();
-    addPermConv();
+using namespace boost::python;
+
+void addPermConv() {
+    def("perm4to5", regina::perm4to5);
+    def("perm5to4", regina::perm5to4);
 }
 

@@ -66,15 +66,15 @@ Dim4Triangulation* Dim4GluingPerms::triangulate() const {
 
 int Dim4GluingPerms::gluingToIndex(const Dim4PentFacet& source,
         const NPerm5& gluing) const {
-    NPerm permS4 = (NPerm5(pairing_->dest(source).facet, 4) * gluing *
-        NPerm5(source.facet, 4)).asPerm4();
+    NPerm permS4 = perm5to4(NPerm5(pairing_->dest(source).facet, 4) *
+        gluing * NPerm5(source.facet, 4));
     return (std::find(NPerm::S4, NPerm::S4 + 24, permS4) - NPerm::S4);
 }
 
 int Dim4GluingPerms::gluingToIndex(unsigned pent, unsigned facet,
         const NPerm5& gluing) const {
-    NPerm permS4 = (NPerm5(pairing_->dest(pent, facet).facet, 4) * gluing *
-        NPerm5(facet, 4)).asPerm4();
+    NPerm permS4 = perm5to4(NPerm5(pairing_->dest(pent, facet).facet, 4) *
+        gluing * NPerm5(facet, 4));
     return (std::find(NPerm::S4, NPerm::S4 + 24, permS4) - NPerm::S4);
 }
 
