@@ -100,13 +100,214 @@ typedef void (*UseDim4GluingPerms)(const Dim4GluingPermSearcher*, void*);
  */
 class Dim4GluingPermSearcher : public Dim4GluingPerms {
     protected:
+        static const int edgeLinkNextFacet[10][5];
+            /**< Maintains an ordering of the three pentachoron facets
+                 surrounding an edge in a pentachoron.  This ordering is
+                 consistent with the orientations of triangles in the
+                 edge link used by PentEdgeState::twistUp.
+
+                 For edge e (0..9), the pentachoron facet that follows
+                 f (0..5) in this ordering is \a edgeLinkNextFacet[e][f].
+                 Note that 2/5 of the values in this array remain
+                 unaccounted for; these remaining values are set to -1. */
+        static const int edgeLinkPrevFacet[10][5];
+            /**< Provides backwards links for the ordering described by
+                 \a edgeLinkNextFacet.
+
+                 For edge e (0..9), the pentachoron facet that follows
+                 f (0..5) in this ordering is \a edgeLinkPrevFacet[e][f].
+                 Again 2/5 of the values in this array remain unaccounted for,
+                 and these remaining values are set to -1. */
+
+    protected:
+        /**
+         * A structure used to track equivalence classes of pentachoron
+         * edges as the gluing permutation set is constructed.  Two
+         * edges are considered equivalent if they are identified within
+         * the triangulation.
+         *
+         * Pentachoron faces are indexed linearly by pentachoron and
+         * then edge number.  Specifically, edge e (0..9) of
+         * pentachoron p (0..nPents-1) has index 10p+e.
+         *
+         * Each equivalence class of edges corresponds to a tree of
+         * PentEdgeState objects, arranged to form a modified union-find
+         * structure.
+         *
+         * Note that a single pentachoron edge (as described by this
+         * structure) provides a single triangular piece of the overall
+         * edge link.  This triangle piece is referred to in several of
+         * the data members below.
+         */
+        struct PentEdgeState {
+            int parent;
+                /**< The index of the parent object in the current tree,
+                     or -1 if this object is the root of the tree. */
+            unsigned rank;
+                /**< The depth of the subtree beneath this object (where
+                     a leaf node has depth zero). */
+            unsigned bdry;
+                /**< The number of boundary triangle edges in the vertex link
+                     for this equivalence class of pentachoron edges.  Any
+                     pentachoron facet whose gluing permutation has not yet
+                     been decided is treated as a boundary facet.  This value
+                     is only maintained correctly for the root of the
+                     corresponding object tree; other objects in the tree will
+                     have older values to facilitate backtracking. */
+            char twistUpEdge;
+                /**< Each pentachoron edge can be assigned an orientation
+                     pointing from the lower numbered pentachoron vertex
+                     to the higher.
+
+                     The parameter \a twistUpEdge is 0 if the identification
+                     of this object and its parent in the tree preserves this
+                     orientation, or 1 if it does not.  If this object has no
+                     parent, the value of \a twistUpEdge is undefined. */
+            char twistUpTriangle;
+                /**< The identification of this object and its parent in
+                     the tree corresponds to a gluing of two triangles in the
+                     edge link.  Each of these triangles in the edge link
+                     can be labelled with its own vertices 0, 1 and 2 and
+                     thereby be assigned a clockwise or anticlockwise
+                     orientation.
+
+                     The parameter \a twistUpTriangle is 0 if these two
+                     triangles in the edge link are joined in a way that
+                     preserves orientation, or 1 if the gluing does not
+                     preserve orientation.
+
+                     If this object has no parent, the value of \a
+                     twistUpTriangle is undefined. */
+            bool hadEqualRank;
+                /**< Did this tree have rank equal to its parent
+                     immediately before it was grafted beneath its parent?
+                     This information is used to maintain the ranks correctly
+                     when grafting operations are undone.  If this object is
+                     still the root of its tree, this value is set to false. */
+            unsigned char bdryEdges;
+                /**< The number of edges of the triangular piece of 4-manifold
+                     edge link that are in fact boundary edges of this link.
+                     Equivalently, this measures the number of facets of this
+                     pentachoron meeting this pentachoron edge that are not
+                     yet joined to their partner facets.  This always takes
+                     the value 0, 1, 2 or 3. */
+            int bdryNext[2];
+                /**< If the corresponding triangular piece of 4-manifold edge
+                     link has any boundary edges, \a bdryNext stores the
+                     indices of the pentachoron edges that provide the
+                     boundary edges following on from either end of this
+                     boundary segment.
+
+                     Note that in most cases (see below) this is not the
+                     present pentachoron edge.  For instance, if this
+                     pentachoron edge provides two boundary edges for
+                     the edge link, then this array describes the boundary
+                     before the first edge and after the second.
+
+                     The boundary segment described by \a bdryNext[1] follows
+                     on from this segment in the direction described by the
+                     \a edgeLinkNextFacet array.  The boundary segment in
+                     the other direction is described by \a bdryNext[0].
+
+                     If the 4-manifold edge link is just this one triangle
+                     (i.e., all three facets of this pentachoron surrounding
+                     this edge are boundary facets, or one is a boundary and
+                     the other two are joined together), then both elements of
+                     \a bdryNext refer to this pentachoron edge itself.  These
+                     are the only situations in which \a bdryNext refers back
+                     to this pentachoron edge.
+
+                     If the triangle is internal to the 4-manifold edge link
+                     (i.e., \a bdryEdges is zero), then this array
+                     maintains the last values it had when there was at
+                     least one boundary edge earlier in the search.
+
+                     Each element of this array lies between 0 and
+                     10p-1 inclusive, where \a p is the total number of
+                     pentachora. */
+            char bdryTwist[2];
+                /**< Describes whether the orientation of this boundary
+                     segment of the 4-manifold edge link is consistent with
+                     the orientation of the adjacent segments on either side.
+
+                     See \a bdryNext for further discussion of boundary
+                     segments.  The \a bdryNext array defines an orientation
+                     for this section of 4-manifold edge link, pointing from
+                     the end described by \a bdryNext[0] to the end described
+                     by \a bdryNext[1].
+
+                     For each \a i, the value \a bdryTwist[i] is 0 if the
+                     orientation of the adjacent segment described by
+                     \a bdryNext[i] is the same as this segment (as defined
+                     by the \a bdryNext values stored with the adjacent
+                     pentachoron edge), or 1 if the orientations differ.
+
+                     If the triangle supplied by this pentachoron edge is
+                     internal to the edge link, this array maintains the last
+                     values it had when there was at least one boundary edge
+                     earlier in the search (just like the \a bdryNext array). */
+            int bdryNextOld[2];
+                /**< Stores a snapshot of the values in the \a bdryNext
+                     array from the last point in the search when
+                     \a bdryEdges was precisely two.  If \a bdryEdges is
+                     still two or three, then this array is undefined. */
+            char bdryTwistOld[2];
+                /**< Stores a snapshot of the values in the \a bdryTwist
+                     array from the last point in the search when
+                     \a bdryEdges was precisely two.  If \a bdryEdges is
+                     still two or three, then this array is undefined. */
+
+            /**
+             * Constructor for a standalone pentachoron edge in an
+             * equivalence class all of its own.  Note that the edge
+             * link will be a single triangle with three boundary edges.
+             */
+            PentEdgeState();
+
+            /**
+             * Dumps all internal data in a plain text format to the
+             * given output stream.  This state can be recreated from
+             * this text data by calling readData().
+             *
+             * This routine may be useful for transferring objects from
+             * one processor to another.
+             *
+             * \warning The data format is liable to change between Regina
+             * releases.  Data in this format should be used on a short-term
+             * temporary basis only.
+             *
+             * @param out the output stream to which the data should be
+             * written.
+             */
+            void dumpData(std::ostream& out) const;
+
+            /**
+             * Fills this state with data read from the given input stream.
+             * This routine reads data in the format written by dumpData().
+             *
+             * \warning The data format is liable to change between Regina
+             * releases.  Data in this format should be used on a short-term
+             * temporary basis only.
+             *
+             * This routine does test for bad input data, but it
+             * does \e not test for end-of-file.
+             *
+             * @param in the input stream from which to read.
+             * @param nStates the total number of edge states under
+             * consideration (this must be ten times the number of tetrahedra).
+             * @return \c false if any errors were encountered during
+             * reading, or \c true otherwise.
+             */
+            bool readData(std::istream& in, unsigned long nStates);
+        };
+
         /**
          * A structure used to track equivalence classes of pentachoron
          * faces as the gluing permutation set is constructed.  Two
          * faces are considered equivalent if they are identified within
          * the 4-manifold triangulation.
          *
-         * Pentachoron faces are indexed linearly by tetrahedron and
+         * Pentachoron faces are indexed linearly by pentachoron and
          * then face number.  Specifically, face f (0..9) of
          * pentachoron p (0..nPents-1) has index 10p+f.
          *
@@ -231,13 +432,55 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
                  between a new search and the resumption of a partially
                  completed search. */
         int* orientation_;
-            /**< Keeps track of the orientation of each tetrahedron in the
+            /**< Keeps track of the orientation of each pentachoron in the
                  underlying triangulation.  Orientation is positive/negative,
                  or 0 if unknown.
                  Note that in some algorithms the orientation is simply
                  +/-1, and in some algorithms the orientation counts
                  forwards or backwards from 0 according to how many
                  times the orientation has been set or verified. */
+
+        Dim4PentFacet* order_;
+            /**< Describes the order in which gluing permutations are
+                 assigned to pentachoron facets.  Specifically, this order is
+                 order_[0], order_[1], ..., order_[orderSize_-1].
+
+                 Note that each element of this array corresponds to a
+                 single edge of the underlying facet pairing graph, which in
+                 turn represents a pentachoron facet and its image under
+                 the given facet pairing.
+
+                 The specific pentachoron facet stored in this array for each
+                 edge of the underlying facet pairing graph will be the smaller
+                 of the two identified pentachoron facets. */
+        int orderSize_;
+            /**< The total number of edges in the facet pairing graph, i.e.,
+                 the number of elements of interest in the order_[] array. */
+        int orderElt_;
+            /**< Marks which element of order_[] we are currently examining
+                 at this stage of the search. */
+
+        unsigned nEdgeClasses_;
+            /**< The number of equivalence classes of identified
+                 pentachoron edges. */
+        PentEdgeState* edgeState_;
+            /**< Used for tracking equivalence classes of identified
+                 pentachoron edges.  See the PentEdgeState description
+                 for details.  This array has size 10n, where edge e of
+                 pentachoron p has index 10p+e. */
+        int* edgeStateChanged_;
+            /**< Tracks the way in which the edgeState_[] array has been
+                 updated over time.  This array has size 25n.  Suppose
+                 the gluing for order[i] affects facet k of pentachoron p.
+                 Then element 10i+e of this array describes how the gluing for
+                 order[i] affects edge i of pentachoron p.  Note that almost
+                 half of this array will remain unused, since only six
+                 edges of a pentachoron are affected by any one gluing.
+
+                 If this identification of edges results in the tree
+                 with root edgeState_[x] being grafted beneath the tree
+                 with root edgeState_[y], this array will store the value x.
+                 Otherwise it will store the value -1. */
 
         unsigned nFaceClasses_;
             /**< The number of equivalence classes of identified
@@ -260,27 +503,6 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
                  with root faceState_[x] being grafted beneath the tree
                  with root faceState_[y], this array will store the value x.
                  Otherwise it will store the value -1. */
-
-    protected:
-        Dim4PentFacet* order_;
-            /**< Describes the order in which gluing permutations are
-                 assigned to pentachoron facets.  Specifically, this order is
-                 order_[0], order_[1], ..., order_[orderSize_-1].
-
-                 Note that each element of this array corresponds to a
-                 single edge of the underlying facet pairing graph, which in
-                 turn represents a pentachoron facet and its image under
-                 the given facet pairing.
-
-                 The specific pentachoron facet stored in this array for each
-                 edge of the underlying facet pairing graph will be the smaller
-                 of the two identified pentachoron facets. */
-        int orderSize_;
-            /**< The total number of edges in the facet pairing graph, i.e.,
-                 the number of elements of interest in the order_[] array. */
-        int orderElt_;
-            /**< Marks which element of order_[] we are currently examining
-                 at this stage of the search. */
 
     public:
         /**
@@ -629,6 +851,22 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
         int findFaceClass(int faceID, NPerm3& twist) const;
 
         /**
+         * Merges the classes of pentachoron edges as required by the
+         * new gluing made at stage \a orderElt of the search.
+         *
+         * See the PentEdgeState class for details.
+         *
+         * This routine returns a boolean that indicates whether this
+         * merge creates an invalid edge (i.e., an edge with identified
+         * with itself in reverse, or whose link is something other than a
+         * (possibly) punctured 2-sphere).
+         *
+         * @return \c true if this merge creates an invalid edge, or
+         * \c false if not.
+         */
+        bool mergeEdgeClasses();
+
+        /**
          * Merges the classes of pentachoron faces as required by the
          * new gluing made at stage \a orderElt of the search.
          *
@@ -644,12 +882,220 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
         bool mergeFaceClasses();
 
         /**
+         * Splits the classes of pentachoron edges to mirror the undoing
+         * of the gluing at stage \a orderElt of the search.
+         *
+         * See the PentEdgeState class for details.
+         */
+        void splitEdgeClasses();
+
+        /**
          * Splits the classes of pentachoron faces to mirror the undoing
          * of the gluing at stage \a orderElt of the search.
          *
          * See the PentFaceState class for details.
          */
         void splitFaceClasses();
+
+        /**
+         * Signifies that the boundary edges supplied by the linking triangles
+         * for the two given pentachoron edges should be marked as adjacent.
+         * The \a bdryNext and \a bdryTwist arrays for each pentachoron edge
+         * will be adjusted to point to the other.
+         *
+         * See the PentEdgeState class for details.
+         *
+         * @param edgeID the first pentachoron edge on which to operate;
+         * this must be between 0 and 10n-1 inclusive, where \a n is the number
+         * of pentachora.
+         * @param end specifies in which direction the adjacent boundary
+         * edges lie.  This must be either 0 or 1, and its value should
+         * correspond to the relevant index in the \a bdryNext and \a bdryTwist
+         * arrays for edge \a edgeID.
+         * @param adjEdgeID the pentachoron edge whose boundary edges are
+         * adjacent to the boundary edges supplied by \a edgeID; this must
+         * be between 0 and 10n-1 inclusive, where \a n is the number of
+         * pentachora.
+         * @param twist 0 if the orientations of the two boundary segments of
+         * edge link are oriented in the same direction, or 1 if they are
+         * oriented in opposite directions; see the \a bdryTwist
+         * documentation for details.
+         */
+        void edgeBdryJoin(int edgeID, char end, int adjEdgeID, char twist);
+
+        /**
+         * Adjusts the \a bdryNext and \a bdryTwist arrays for
+         * nearby pentachoron edges, to ensure that these arrays
+         * are consistent with the \a bdryNext and \a bdryTwist arrays
+         * stored with the given pentachoron edge.
+         *
+         * It is assumed that the linking triangle for the given
+         * pentachoron edge contributes at least one boundary edge to the
+         * 4-manifold edge link.  Recall from the PentEdgeState class notes
+         * that the \a bdryNext and \a bdryTwist arrays for the given
+         * pentachoron edge describe the boundary edges that follow on in
+         * either direction from the boundary edges supplied by this triangle.
+         *
+         * This routine locates the pentachoron edges that provide the
+         * neighbouring boundary edges of the link, and adjusts the \a bdryNext
+         * and \a bdryTwist arrays for these neighbouring pentachoron edges to
+         * point back to the given pentachoron edge.
+         *
+         * This routine is intended to assist with backtracking.  This
+         * routine is safe to use if the given pentachoron edge points
+         * to itself (i.e., it provides a complete boundary cycle of
+         * three edges in the 4-manifold edge link).
+         *
+         * See the PentEdgeState class for further information.
+         *
+         * \pre The linking triangle for the given pentachoron edge
+         * contributes at least one boundary edge to the 4-manifold edge link.
+         *
+         * @param edgeID the pentachoron edge to examine; this must
+         * be between 0 and 10n-1 inclusive, where \a n is the number of
+         * pentachora.
+         */
+        void edgeBdryFixAdj(int edgeID);
+
+        /**
+         * Copies the \a bdryNext and \a bdryTwist arrays to the
+         * \a bdryNextOld and \a bdryTwistOld arrays for the given
+         * pentachoron edge.
+         *
+         * See the PentEdgeState class for further information.
+         *
+         * @param edgeID the pentachoron edge on which to operate; this
+         * must be between 0 and 10n-1 inclusive, where \a n is the number of
+         * pentachora.
+         */
+        void edgeBdryBackup(int edgeID);
+
+        /**
+         * Copies the \a bdryNextOld and \a bdryTwistOld arrays to the
+         * \a bdryNext and \a bdryTwist arrays for the given pentachoron
+         * edge.
+         *
+         * See the PentEdgeState class for further information.
+         *
+         * @param edgeID the pentachoron edge on which to operate; this
+         * must be between 0 and 10n-1 inclusive, where \a n is the number of
+         * pentachora.
+         */
+        void edgeBdryRestore(int edgeID);
+
+        /**
+         * Assuming the given edge of the linking triangle for the
+         * given pentachoron edge lies on the boundary of the link,
+         * this routine identifies the adjacent boundary edges of the
+         * link in each direction.  The given edge of the linking
+         * triangle must belong to one of the two pentachoron facets
+         * currently being joined.
+         *
+         * The pentachoron edge to examine is passed in \a edgeID,
+         * \a pent and \a edge, and the particular edge of the
+         * linking triangle to examine is specified by \a bdryFacet.
+         * Details of the adjacent boundary edges are returned in the
+         * arrays \a next and \a twist.
+         *
+         * Note that the values returned might or might not correspond
+         * to the \a bdryNext and \a bdryTwist arrays of the
+         * PentEdgeState class, since the PentEdgeState arrays skip
+         * over adjacent edges belonging to the same linking triangle.
+         *
+         * If the given edge of the linking triangle is not a
+         * boundary edge of the 4-manifold edge link, the behaviour of this
+         * routine is undefined.
+         *
+         * See the PentEdgeState class for further information.
+         *
+         * \pre The pentachoron facet (\a pent, \a bdryFacet) is one of the
+         * two facets that are currently being joined together.  That is,
+         * this facet is either order_[orderElt_] or its partner in the
+         * underlying pentachoron facet pairing.
+         *
+         * @param edgeID the pentachoron edge to examine; this must
+         * be between 0 and 10n-1 inclusive, where \a n is the number of
+         * pentachora.
+         * @param pent the pentachoron described by \a edgeID; this
+         * must be (edgeID / 10).  It is passed separately to avoid a
+         * slow division operation.
+         * @param edge the pentachoron edge number described by \a edgeID;
+         * this must be (edgeID % 10).  It is passed separately to
+         * avoid a slow modulus operation.
+         * @param bdryFacet the facet number of the given pentachoron
+         * containing the edge of the linking triangle that is
+         * under consideration.  This must be between 0 and 4 inclusive.
+         * @param next returns the pentachoron edge supplying each adjacent
+         * boundary edge of the link; see the PentEdgeState::bdryNext
+         * notes for details on which directions correspond to array
+         * indices 0 and 1.
+         * @param twist returns whether the orientations of the adjacent
+         * boundary edges are consistent with the orientation of this
+         * boundary edge; see the PentEdgeState::bdryTwist notes for
+         * further information on orientations in the link.
+         */
+        void edgeBdryNext(int edgeID, int pent, int edge, int bdryFacet,
+            int next[2], char twist[2]);
+
+        /**
+         * Determines whether one of the edges of the linking triangle for
+         * the given pentachoron edge in fact forms an entire one-edge
+         * boundary component of the overall 4-manifold edge link.
+         *
+         * See the PentEdgeState class for further information.
+         *
+         * @param edgeID the pentachoron edge to examine; this must
+         * be between 0 and 10n-1 inclusive, where \a n is the number of
+         * pentachora.
+         * @return \c true if a one-edge boundary component is formed as
+         * described above, or \c false otherwise.
+         */
+        bool edgeBdryLength1(int edgeID);
+
+        /**
+         * Determines whether edges of the linking triangles for each
+         * of the given pentachoron edges combine to form an entire
+         * two-edge boundary component of the overall 4-manifold edge link,
+         * with one edge from each triangle.
+         *
+         * See the PentEdgeState class for further information.
+         *
+         * @param edgeID1 the first pentachoron edge to examine; this
+         * must be between 0 and 10n-1 inclusive, where \a n is the number of
+         * pentachora.
+         * @param edgeID2 the second pentachoron edge to examine; this
+         * must be between 0 and 10n-1 inclusive, where \a n is the number of
+         * pentachora.
+         * @return \c true if a two-edge boundary component is formed as
+         * described above, or \c false otherwise.
+         */
+        bool edgeBdryLength2(int edgeID1, int edgeID2);
+
+        /**
+         * Runs a number of tests on all pentachoron edges to locate
+         * consistency errors in the \a bdryEdges, \a bdryNext and
+         * \a bdryTwist members of the PentEdgeState class.
+         *
+         * Any errors that are identified will be written to standard error.
+         * Note that some errors might be harmless (for instance, when
+         * a call to mergeEdgeClasses() leaves processing incomplete
+         * because it has located a bad edge link and expects the
+         * merge to be immediately undone).
+         */
+        void edgeBdryConsistencyCheck();
+
+        /**
+         * Dumps a summary of \a bdryNext, \a bdryTwist and \a bdryEdges
+         * for every edge of every pentachoron to the given output stream.
+         * The output format is relatively compact, and is subject to change
+         * in future versions of Regina.  The output uses one line only, and
+         * a final newline is written.
+         *
+         * See the PentEdgeState class for further information.
+         *
+         * @param out the output stream to which to write.
+         */
+        void edgeBdryDump(std::ostream& out);
 };
 
 /*@}*/
@@ -682,6 +1128,55 @@ inline int Dim4GluingPermSearcher::findFaceClass(int faceID, NPerm3& twist)
         twist = faceState_[faceID].twistUp * twist;
 
     return faceID;
+}
+
+inline void Dim4GluingPermSearcher::edgeBdryJoin(int edgeID, char end,
+        int adjEdgeID, char twist) {
+    edgeState_[edgeID].bdryNext[static_cast<int>(end)] = adjEdgeID;
+    edgeState_[edgeID].bdryTwist[static_cast<int>(end)] = twist;
+    edgeState_[adjEdgeID].bdryNext[(end ^ 1) ^ twist] = edgeID;
+    edgeState_[adjEdgeID].bdryTwist[(end ^ 1) ^ twist] = twist;
+}
+
+inline void Dim4GluingPermSearcher::edgeBdryFixAdj(int edgeID) {
+    if (edgeState_[edgeID].bdryNext[0] != edgeID) {
+        edgeState_[edgeState_[edgeID].bdryNext[0]].
+            bdryNext[1 ^ edgeState_[edgeID].bdryTwist[0]] = edgeID;
+        edgeState_[edgeState_[edgeID].bdryNext[0]].
+            bdryTwist[1 ^ edgeState_[edgeID].bdryTwist[0]] =
+            edgeState_[edgeID].bdryTwist[0];
+        edgeState_[edgeState_[edgeID].bdryNext[1]].
+            bdryNext[0 ^ edgeState_[edgeID].bdryTwist[1]] = edgeID;
+        edgeState_[edgeState_[edgeID].bdryNext[1]].
+            bdryTwist[0 ^ edgeState_[edgeID].bdryTwist[1]] =
+            edgeState_[edgeID].bdryTwist[1];
+    }
+}
+
+inline void Dim4GluingPermSearcher::edgeBdryBackup(int edgeID) {
+    edgeState_[edgeID].bdryNextOld[0] = edgeState_[edgeID].bdryNext[0];
+    edgeState_[edgeID].bdryNextOld[1] = edgeState_[edgeID].bdryNext[1];
+    edgeState_[edgeID].bdryTwistOld[0] = edgeState_[edgeID].bdryTwist[0];
+    edgeState_[edgeID].bdryTwistOld[1] = edgeState_[edgeID].bdryTwist[1];
+}
+
+inline void Dim4GluingPermSearcher::edgeBdryRestore(int edgeID) {
+    edgeState_[edgeID].bdryNext[0] = edgeState_[edgeID].bdryNextOld[0];
+    edgeState_[edgeID].bdryNext[1] = edgeState_[edgeID].bdryNextOld[1];
+    edgeState_[edgeID].bdryTwist[0] = edgeState_[edgeID].bdryTwistOld[0];
+    edgeState_[edgeID].bdryTwist[1] = edgeState_[edgeID].bdryTwistOld[1];
+}
+
+inline bool Dim4GluingPermSearcher::edgeBdryLength1(int edgeID) {
+    return (edgeState_[edgeID].bdryNext[0] == edgeID &&
+            edgeState_[edgeID].bdryEdges == 1);
+}
+
+inline bool Dim4GluingPermSearcher::edgeBdryLength2(int edgeID1, int edgeID2) {
+    return (edgeState_[edgeID1].bdryNext[0] == edgeID2 &&
+            edgeState_[edgeID1].bdryNext[1] == edgeID2 &&
+            edgeState_[edgeID1].bdryEdges == 1 &&
+            edgeState_[edgeID2].bdryEdges == 1);
 }
 
 } // namespace regina

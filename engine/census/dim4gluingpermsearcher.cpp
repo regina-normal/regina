@@ -39,22 +39,30 @@
 // same results.
 // #define DIM4_NO_UNION_FIND
 
-/**
- * TODO: These are placeholder routines.  Replace them when edge link
- * testing is implemented properly.
- */
-namespace {
-    inline bool mergeEdgeClasses() { return false; }
-    inline void splitEdgeClasses() { }
-}
-
 namespace regina {
+
+const int Dim4GluingPermSearcher::edgeLinkNextFacet[10][5] = {
+    // TODO: UFIND
+};
+
+const int Dim4GluingPermSearcher::edgeLinkPrevFacet[10][5] = {
+    // TODO: UFIND
+};
 
 #ifdef DIM4_NO_UNION_FIND
 const char Dim4GluingPermSearcher::dataTag_ = 'b';
 #else
 const char Dim4GluingPermSearcher::dataTag_ = 'g';
 #endif
+
+void Dim4GluingPermSearcher::PentEdgeState::dumpData(std::ostream& out) const {
+    // TODO: UFIND
+}
+
+bool Dim4GluingPermSearcher::PentEdgeState::readData(std::istream& in,
+        unsigned long nStates) {
+    // TODO: UFIND
+}
 
 void Dim4GluingPermSearcher::PentFaceState::dumpData(std::ostream& out) const {
     // Be careful with the permutation code, which is an unsigned char
@@ -141,6 +149,8 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
 
     // ---------- Tracking of edge / face equivalence classes ----------
 
+    // TODO: UFIND
+
     nFaceClasses_ = nPent * 10;
     faceState_ = new PentFaceState[nPent * 10];
     // The length of faceStateChanged_[] needs to be at least 5 * orderSize_.
@@ -152,6 +162,8 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
 Dim4GluingPermSearcher::~Dim4GluingPermSearcher() {
     delete[] faceState_;
     delete[] faceStateChanged_;
+    delete[] edgeState_;
+    delete[] edgeStateChanged_;
 
     delete[] orientation_;
     delete[] order_;
@@ -357,7 +369,7 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
     // Some extra sanity checking.
     if (minOrder == 0) {
         // Our edge classes had better be 10n standalone edges.
-        // TODO
+        // TODO: UFIND
 
         // And our face classes had better be 10n standalone faces.
         if (nFaceClasses_ != 10 * nPentachora)
@@ -447,6 +459,8 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
 
     // ---------- Tracking of edge / face equivalence classes ----------
 
+    // TODO: UFIND
+
     out << nFaceClasses_ << std::endl;
     for (i = 0; i < 10 * nPent; ++i) {
         faceState_[i].dumpData(out);
@@ -465,6 +479,7 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
         Dim4GluingPerms(in), autos_(0), autosNew_(false),
         use_(use), useArgs_(useArgs), orientation_(0),
         order_(0), orderSize_(0), orderElt_(0),
+        nEdgeClasses_(0), edgeState_(0), edgeStateChanged_(0),
         nFaceClasses_(0), faceState_(0), faceStateChanged_(0) {
     if (inputError_)
         return;
@@ -530,6 +545,8 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
     // ---------- Tracking of edge / face equivalence classes ----------
 
     unsigned i;
+
+    // TODO: UFIND
 
     in >> nFaceClasses_;
     if (nFaceClasses_ > 10 * nPent) {
@@ -648,6 +665,14 @@ bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
 
     // No bad face links were found.
     return false;
+}
+
+bool Dim4GluingPermSearcher::mergeEdgeClasses() {
+    // TODO: UFIND
+}
+
+void Dim4GluingPermSearcher::splitEdgeClasses() {
+    // TODO: UFIND
 }
 
 bool Dim4GluingPermSearcher::mergeFaceClasses() {
@@ -774,6 +799,97 @@ void Dim4GluingPermSearcher::splitFaceClasses() {
             ++nFaceClasses_;
         }
     }
+}
+
+void Dim4GluingPermSearcher::edgeBdryNext(int edgeID, int pent, int edge,
+        int bdryFacet, int next[2], char twist[2]) {
+    switch (edgeState_[edgeID].bdryEdges) {
+        case 3: next[0] = next[1] = edgeID;
+                twist[0] = twist[1] = 0;
+                break;
+        case 2: if (permIndex(pent, edgeLinkNextFacet[edge][bdryFacet]) < 0) {
+                    next[0] = edgeState_[edgeID].bdryNext[0];
+                    twist[0] = edgeState_[edgeID].bdryTwist[0];
+                    next[1] = edgeID;
+                    twist[1] = 0;
+                } else if (permIndex(pent,
+                        edgeLinkPrevFacet[edge][bdryFacet]) < 0) {
+                    next[0] = edgeID;
+                    twist[0] = 0;
+                    next[1] = edgeState_[edgeID].bdryNext[1];
+                    twist[1] = edgeState_[edgeID].bdryTwist[1];
+                } else {
+                    // We must be in the process of gluing a pentachoron
+                    // to itself, and one of the gluings hasn't happened
+                    // yet (hence bdryEdges == 2 but only one boundary
+                    // edge shows up in the gluing permutations).
+                    // The boundary that we're not seeing must belong
+                    // to either the pentachoron face we are currently
+                    // working with or its adjacent partner.
+                    int ghostFace = (bdryFacet == order_[orderElt_].facet ?
+                        (*pairing_)[order_[orderElt_]].facet :
+                        order_[orderElt_].facet);
+                    if (edgeLinkNextFacet[edge][bdryFacet] == ghostFace) {
+                        next[0] = edgeState_[edgeID].bdryNext[0];
+                        twist[0] = edgeState_[edgeID].bdryTwist[0];
+                        next[1] = edgeID;
+                        twist[1] = 0;
+                    } else {
+                        // Sanity check.
+                        if (edgeLinkPrevFacet[edge][bdryFacet] != ghostFace)
+                            std::cerr << "ERROR: Inconsistent edge link "
+                                "boundary information!" << std::endl;
+                        next[0] = edgeID;
+                        twist[0] = 0;
+                        next[1] = edgeState_[edgeID].bdryNext[1];
+                        twist[1] = edgeState_[edgeID].bdryTwist[1];
+                    }
+                }
+                break;
+        case 1: next[0] = edgeState_[edgeID].bdryNext[0];
+                next[1] = edgeState_[edgeID].bdryNext[1];
+                twist[0] = edgeState_[edgeID].bdryTwist[0];
+                twist[1] = edgeState_[edgeID].bdryTwist[1];
+                break;
+    }
+}
+
+void Dim4GluingPermSearcher::edgeBdryConsistencyCheck() {
+    int adj, id, end;
+    for (id = 0; id < static_cast<int>(getNumberOfPentachora()) * 5; ++id)
+        if (edgeState_[id].bdryEdges > 0)
+            for (end = 0; end < 2; ++end) {
+                adj = edgeState_[id].bdryNext[end];
+                if (edgeState_[adj].bdryEdges == 0)
+                    std::cerr << "CONSISTENCY ERROR: Edge link boundary "
+                        << id << '/' << end
+                        << " runs into an internal edge." << std::endl;
+                if (edgeState_[adj].bdryNext[(1 ^ end) ^
+                        edgeState_[id].bdryTwist[end]] != id)
+                    std::cerr << "CONSISTENCY ERROR: Edge link boundary "
+                        << id << '/' << end
+                        << " has a mismatched adjacency." << std::endl;
+                if (edgeState_[adj].bdryTwist[(1 ^ end) ^
+                        edgeState_[id].bdryTwist[end]] !=
+                        edgeState_[id].bdryTwist[end])
+                    std::cerr << "CONSISTENCY ERROR: Edge link boundary "
+                        << id << '/' << end
+                        << " has a mismatched twist." << std::endl;
+            }
+}
+
+void Dim4GluingPermSearcher::edgeBdryDump(std::ostream& out) {
+    for (unsigned id = 0; id < getNumberOfPentachora() * 5; ++id) {
+        if (id > 0)
+            out << ' ';
+        out << edgeState_[id].bdryNext[0]
+            << (edgeState_[id].bdryTwist[0] ? '~' : '-')
+            << id
+            << (edgeState_[id].bdryTwist[1] ? '~' : '-')
+            << edgeState_[id].bdryNext[1]
+            << " [" << int(edgeState_[id].bdryEdges) << ']';
+    }
+    out << std::endl;
 }
 
 } // namespace regina
