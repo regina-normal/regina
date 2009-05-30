@@ -38,7 +38,6 @@
 #include <deque>
 #include "shareableobject.h"
 #include "dim4/dim4pentachoron.h"
-#include "dim4/nperm5.h"
 
 namespace regina {
 

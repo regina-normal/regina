@@ -37,7 +37,6 @@ void addDim4PentFacet();
 void addDim4Tetrahedron();
 void addDim4Triangulation();
 void addDim4Vertex();
-void addNPerm5();
 
 void addDim4() {
     addDim4BoundaryComponent();
@@ -51,6 +50,5 @@ void addDim4() {
     addDim4Tetrahedron();
     addDim4Triangulation();
     addDim4Vertex();
-    addNPerm5();
 }
 

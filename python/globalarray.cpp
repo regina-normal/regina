@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "dim4/nperm5.h"
 #include "maths/nperm3.h"
+#include "maths/nperm5.h"
 #include "triangulation/nperm.h"
 #include "globalarray.h"
 

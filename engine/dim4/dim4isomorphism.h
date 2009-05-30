@@ -37,7 +37,7 @@
 
 #include "shareableobject.h"
 #include "dim4/dim4pentfacet.h"
-#include "dim4/nperm5.h"
+#include "maths/nperm5.h"
 
 namespace regina {
 

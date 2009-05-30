@@ -28,7 +28,7 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "dim4/nperm5.h"
+#include "maths/nperm5.h"
 #include "testsuite/dim4/testdim4.h"
 
 using regina::NPerm5;

@@ -45,7 +45,7 @@
 #include "regina/algebra/nfield25.h"
 #include "regina/algebra/nSimpleField.h"
 #include "regina/maths/nrational.h"
-#include "regina/dim4/nperm5.h"
+#include "regina/maths/nperm5.h"
 #include "regina/algebra/nbinaryA5.h"
 #include "triangulation/nperm.h"
 

@@ -119,6 +119,7 @@ bool runAllTests() {
 
     // Maths:
     addNPerm3(runner);
+    addNPerm5(runner);
     addNPrimes(runner);
     addNumberTheory(runner);
     addMatrixOps(runner);
@@ -133,7 +134,6 @@ bool runAllTests() {
     addNHomologicalData(runner);
 
     // 4-manifold triangulations:
-    addNPerm5(runner);
     addDim4Triangulation(runner);
 
     // Subcomplexes:

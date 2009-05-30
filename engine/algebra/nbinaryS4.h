@@ -40,7 +40,7 @@
 
 #include <string>
 #include "triangulation/nperm.h"
-//#include "dim4/nperm5.h"
+//#include "maths/nperm5.h"
 
 #include <iostream>
 

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "dim4/nperm5.h"
+#include "maths/nperm5.h"
 #include "../globalarray.h"
 #include <boost/python.hpp>
 
