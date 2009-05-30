@@ -29,11 +29,80 @@
 #include <algorithm>
 #include <sstream>
 #include "census/dim4gluingpermsearcher.h"
+#include "dim4/dim4edge.h"
+#include "dim4/dim4face.h"
 #include "utilities/memutils.h"
+
+// If this symbol is uncommented, then the algorithm will become fairly
+// brute-force, with no fast union-find code at all.  The only reason for
+// offering this at all is to verify that the union-find code gives the
+// same results.
+// #define DIM4_NO_UNION_FIND
+
+/**
+ * TODO: These are placeholder routines.  Replace them when edge link
+ * testing is implemented properly.
+ */
+namespace {
+    inline bool mergeEdgeClasses() { return false; }
+    inline void splitEdgeClasses() { }
+}
 
 namespace regina {
 
+#ifdef DIM4_NO_UNION_FIND
+const char Dim4GluingPermSearcher::dataTag_ = 'b';
+#else
 const char Dim4GluingPermSearcher::dataTag_ = 'g';
+#endif
+
+void Dim4GluingPermSearcher::PentFaceState::dumpData(std::ostream& out) const {
+    // Be careful with the permutation code, which is an unsigned char
+    // but which should be written as an int.
+    out << parent << ' ' << rank << ' ' << size << ' '
+        << (bounded ? 1 : 0) << ' '
+        << static_cast<unsigned int>(twistUp.getPermCode()) << ' '
+        << (hadEqualRank ? 1 : 0);
+}
+
+bool Dim4GluingPermSearcher::PentFaceState::readData(std::istream& in,
+        unsigned long nStates) {
+    in >> parent >> rank >> size;
+
+    // bounded is a bool, but we need to read it as an int.
+    int bBounded;
+    in >> bBounded;
+    bounded = bBounded;
+
+    // The twistUp permutation code is an unsigned char, but we need to
+    // read it as an unsigned int.  Don't actually set the permutation
+    // code in twistUp until we know that the code is valid (which we
+    // test later on).
+    unsigned int twist;
+    in >> twist;
+
+    // hadEqualRank is a bool, but we need to read it as an int.
+    int bRank;
+    in >> bRank;
+    hadEqualRank = bRank;
+
+    if (parent < -1 || parent >= static_cast<long>(nStates))
+        return false;
+    if (rank >= nStates)
+        return false;
+    if (size >= nStates)
+        return false;
+    if (bBounded != 1 && bBounded != 0)
+        return false;
+    if (! NPerm::isPermCode(static_cast<unsigned char>(twist)))
+        return false;
+    if (bRank != 1 && bRank != 0)
+        return false;
+
+    twistUp.setPermCode(static_cast<unsigned char>(twist));
+
+    return true;
+}
 
 Dim4GluingPermSearcher::Dim4GluingPermSearcher(
         const Dim4FacetPairing* pairing, const Dim4FacetPairingIsoList* autos,
@@ -69,9 +138,21 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
         if (! pairing->isUnmatched(facet))
             if (facet < pairing->dest(facet))
                 order_[orderSize_++] = facet;
+
+    // ---------- Tracking of edge / face equivalence classes ----------
+
+    nFaceClasses_ = nPent * 10;
+    faceState_ = new PentFaceState[nPent * 10];
+    // The length of faceStateChanged_[] needs to be at least 5 * orderSize_.
+    // Just be conservative here -- we know that orderSize_ <= 5 * nPent / 2.
+    faceStateChanged_ = new int[25 * nPent / 2];
+    std::fill(faceStateChanged_, faceStateChanged_ + (25 * nPent / 2), -1);
 }
 
 Dim4GluingPermSearcher::~Dim4GluingPermSearcher() {
+    delete[] faceState_;
+    delete[] faceStateChanged_;
+
     delete[] orientation_;
     delete[] order_;
     if (autosNew_) {
@@ -163,13 +244,13 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
             permIndex(adj) = -1;
             orderElt_--;
 
+#ifndef DIM4_NO_UNION_FIND
             // Pull apart edge and face links at the previous level.
-            /* TODO: UFIND
-            if (orderElt >= minOrder) {
+            if (orderElt_ >= minOrder) {
                 splitEdgeClasses();
                 splitFaceClasses();
             }
-            */
+#endif
 
             continue;
         }
@@ -177,29 +258,26 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
         // We are sitting on a new permutation to try.
         permIndex(adj) = NPerm::invS4[permIndex(facet)];
 
+#ifndef DIM4_NO_UNION_FIND
         // Merge face links and run corresponding tests.
-        /* TODO: UFIND
         if (mergeFaceClasses()) {
             // We created an invalid face.
             splitFaceClasses();
             continue;
         }
-        */
 
         // Merge edge links and run corresponding tests.
-        /* TODO: UFIND
         if (mergeEdgeClasses()) {
             // We created an invalid edge.
             splitEdgeClasses();
             splitFaceClasses();
             continue;
         }
-        */
-
-        // TODO: UFIND -> Get rid of this test.
+#else
         // Is this going to lead to an unwanted triangulation?
         if (badFaceLink(facet))
             continue;
+#endif
 
         // Fix the orientation if appropriate.
         if (adj.facet == 0 && orientableOnly_) {
@@ -225,13 +303,13 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
             // Back to the previous facet.
             orderElt_--;
 
+#ifndef DIM4_NO_UNION_FIND
             // Pull apart edge and face links at the previous level.
-            /* TODO: UFIND
-            if (orderElt >= minOrder) {
+            if (orderElt_ >= minOrder) {
                 splitEdgeClasses();
                 splitFaceClasses();
             }
-            */
+#endif
         } else {
             // Not a full triangulation; just one level deeper.
 
@@ -262,29 +340,54 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
                 permIndex(facet) = -1;
                 orderElt_--;
 
+#ifndef DIM4_NO_UNION_FIND
                 // Pull apart edge and face links at the previous level.
-                /* TODO: UFIND
-                if (orderElt >= minOrder) {
+                if (orderElt_ >= minOrder) {
                     splitEdgeClasses();
                     splitFaceClasses();
                 }
-                */
+#endif
             }
         }
     }
 
     // And the search is over.
 
-    /* TODO: UFIND
+#ifndef DIM4_NO_UNION_FIND
     // Some extra sanity checking.
     if (minOrder == 0) {
         // Our edge classes had better be 10n standalone edges.
         // TODO
 
         // And our face classes had better be 10n standalone faces.
-        // TODO
+        if (nFaceClasses_ != 10 * nPentachora)
+            std::cerr << "ERROR: nFaceClasses == "
+                << nFaceClasses_ << " at end of search!" << std::endl;
+        for (unsigned i = 0; i < nPentachora * 10; ++i) {
+            if (faceState_[i].parent != -1)
+                std::cerr << "ERROR: faceState[" << i << "].parent == "
+                    << faceState_[i].parent << " at end of search!"
+                    << std::endl;
+            if (faceState_[i].rank != 0)
+                std::cerr << "ERROR: faceState[" << i << "].rank == "
+                    << faceState_[i].rank << " at end of search!" << std::endl;
+            if (faceState_[i].size != 1)
+                std::cerr << "ERROR: faceState[" << i << "].size == "
+                    << faceState_[i].size << " at end of search!" << std::endl;
+            if (! faceState_[i].bounded)
+                std::cerr << "ERROR: faceState[" << i << "].bounded == "
+                    "false at end of search!" << std::endl;
+            if (faceState_[i].hadEqualRank)
+                std::cerr << "ERROR: faceState[" << i << "].hadEqualRank == "
+                    "true at end of search!" << std::endl;
+        }
+        for (unsigned i = 0; i < nPentachora * 25 / 2; ++i)
+            if (faceStateChanged_[i] != -1)
+                std::cerr << "ERROR: faceStateChanged[" << i << "] == "
+                    << faceStateChanged_[i] << " at end of search!"
+                    << std::endl;
     }
-    */
+#endif
 
     use_(0, useArgs_);
 }
@@ -341,13 +444,28 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
         out << order_[i].pent << ' ' << order_[i].facet;
     }
     out << std::endl;
+
+    // ---------- Tracking of edge / face equivalence classes ----------
+
+    out << nFaceClasses_ << std::endl;
+    for (i = 0; i < 10 * nPent; ++i) {
+        faceState_[i].dumpData(out);
+        out << std::endl;
+    }
+    for (i = 0; i < 25 * nPent / 2; ++i) {
+        if (i)
+            out << ' ';
+        out << faceStateChanged_[i];
+    }
+    out << std::endl;
 }
 
 Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
         UseDim4GluingPerms use, void* useArgs) :
         Dim4GluingPerms(in), autos_(0), autosNew_(false),
         use_(use), useArgs_(useArgs), orientation_(0),
-        order_(0), orderSize_(0), orderElt_(0) {
+        order_(0), orderSize_(0), orderElt_(0),
+        nFaceClasses_(0), faceState_(0), faceStateChanged_(0) {
     if (inputError_)
         return;
 
@@ -400,6 +518,35 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
         in >> order_[p].pent >> order_[p].facet;
         if (order_[p].pent >= nPent || order_[p].pent < 0 ||
                 order_[p].facet >= 5 || order_[p].facet < 0) {
+            inputError_ = true; return;
+        }
+    }
+
+    // Did we hit an unexpected EOF?
+    if (in.eof()) {
+        inputError_ = true; return;
+    }
+
+    // ---------- Tracking of edge / face equivalence classes ----------
+
+    unsigned i;
+
+    in >> nFaceClasses_;
+    if (nFaceClasses_ > 10 * nPent) {
+        inputError_ = true; return;
+    }
+
+    faceState_ = new PentFaceState[10 * nPent];
+    for (i = 0; i < 10 * nPent; ++i)
+        if (! faceState_[i].readData(in, 10 * nPent)) {
+            inputError_ = true; return;
+        }
+
+    faceStateChanged_ = new int[25 * nPent / 2];
+    for (i = 0; i < 25 * nPent / 2; ++i) {
+        in >> faceStateChanged_[i];
+        if (faceStateChanged_[i] < -1 ||
+                 faceStateChanged_[i] >= 10 * static_cast<int>(nPent)) {
             inputError_ = true; return;
         }
     }
@@ -501,6 +648,132 @@ bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
 
     // No bad face links were found.
     return false;
+}
+
+bool Dim4GluingPermSearcher::mergeFaceClasses() {
+    Dim4PentFacet facet = order_[orderElt_];
+    Dim4PentFacet adj = (*pairing_)[facet];
+
+    bool retVal = false;
+
+    NPerm5 p = gluingPerm(facet);
+    int v1, w1, v2, w2;
+    int e, f;
+    int orderIdx;
+    int eRep, fRep;
+
+    v1 = facet.facet;
+    w1 = p[v1];
+
+    NPerm directTwist;
+    for (v2 = 0; v2 < 5; ++v2) {
+        if (v2 == v1)
+            continue;
+
+        w2 = p[v2];
+
+        // Look at the face opposite edge v1-v2.
+        e = Dim4Edge::edgeNumber[v1][v2];
+        f = Dim4Edge::edgeNumber[w1][w2];
+
+        orderIdx = v2 + 5 * orderElt_;
+
+        // Vertices of a face are labelled in order from smallest to largest.
+        if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][0]) {
+            if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][1])
+                directTwist = NPerm(0, 1, 2, 3);
+            else
+                directTwist = NPerm(0, 2, 1, 3);
+        } else if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][1]) {
+            if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][0])
+                directTwist = NPerm(1, 0, 2, 3);
+            else
+                directTwist = NPerm(1, 2, 0, 3);
+        } else {
+            if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][0])
+                directTwist = NPerm(2, 0, 1, 3);
+            else
+                directTwist = NPerm(2, 1, 0, 3);
+        }
+
+        NPerm eTwist, fTwist; /* Initialise to identity permutations. */
+        eRep = findFaceClass(e + 10 * facet.pent, eTwist);
+        fRep = findFaceClass(f + 10 * adj.pent, fTwist);
+
+        if (eRep == fRep) {
+            faceState_[eRep].bounded = false;
+
+            if (eTwist != fTwist * directTwist)
+                retVal = true;
+
+            faceStateChanged_[orderIdx] = -1;
+        } else {
+            if (faceState_[eRep].rank < faceState_[fRep].rank) {
+                // Join eRep beneath fRep.
+                faceState_[eRep].parent = fRep;
+                faceState_[eRep].twistUp =
+                    fTwist * directTwist * eTwist.inverse();
+                faceState_[fRep].size += faceState_[eRep].size;
+
+                faceStateChanged_[orderIdx] = eRep;
+            } else {
+                // Join fRep beneath eRep.
+                faceState_[fRep].parent = eRep;
+                faceState_[fRep].twistUp =
+                    eTwist * directTwist.inverse() * fTwist.inverse();
+                if (faceState_[eRep].rank == faceState_[fRep].rank) {
+                    faceState_[eRep].rank++;
+                    faceState_[fRep].hadEqualRank = true;
+                }
+                faceState_[eRep].size += faceState_[fRep].size;
+
+                faceStateChanged_[orderIdx] = fRep;
+            }
+            --nFaceClasses_;
+        }
+    }
+
+    return retVal;
+}
+
+void Dim4GluingPermSearcher::splitFaceClasses() {
+    Dim4PentFacet facet = order_[orderElt_];
+
+    int v1, v2;
+    int f;
+    int fIdx, orderIdx;
+    int rep, subRep;
+
+    v1 = facet.facet;
+
+    for (v2 = 4; v2 >= 0; --v2) {
+        if (v2 == v1)
+            continue;
+
+        // Look at the face opposite edge v1-v2.
+        f = Dim4Edge::edgeNumber[v1][v2];
+
+        fIdx = f + 10 * facet.pent;
+        orderIdx = v2 + 5 * orderElt_;
+
+        if (faceStateChanged_[orderIdx] < 0)
+            faceState_[findFaceClass(fIdx)].bounded = true;
+        else {
+            subRep = faceStateChanged_[orderIdx];
+            rep = faceState_[subRep].parent;
+
+            faceState_[subRep].parent = -1;
+            if (faceState_[subRep].hadEqualRank) {
+                faceState_[subRep].hadEqualRank = false;
+                faceState_[rep].rank--;
+            }
+
+            faceState_[rep].size -= faceState_[subRep].size;
+
+            faceStateChanged_[orderIdx] = -1;
+            ++nFaceClasses_;
+        }
+    }
 }
 
 } // namespace regina

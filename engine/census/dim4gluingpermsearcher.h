@@ -83,6 +83,14 @@ typedef void (*UseDim4GluingPerms)(const Dim4GluingPermSearcher*, void*);
  * constructing an object of the corresponding class (and again
  * calling runSearch() on that object directly).
  *
+ * The search algorithm used by this base class employs modified
+ * union-find structures for both face and edge equivalence classes to
+ * prune searches that are guaranteed to lead to invalid faces or edges.
+ * This is a 4-dimensional analogue to the algorithms described in
+ * "Enumeration of non-orientable 3-manifolds using face-pairing graphs and
+ * union-find", Benjamin A. Burton, Discrete Comput. Geom. 38 (2007), no. 3,
+ * 527--571.
+ *
  * Note that this class derives from Dim4GluingPerms.  The search will
  * involve building and repeatedly modifying the inherited Dim4GluingPerms
  * data in-place.
@@ -90,6 +98,107 @@ typedef void (*UseDim4GluingPerms)(const Dim4GluingPermSearcher*, void*);
  * \ifacespython Not present.
  */
 class Dim4GluingPermSearcher : public Dim4GluingPerms {
+    protected:
+        /**
+         * A structure used to track equivalence classes of pentachoron
+         * faces as the gluing permutation set is constructed.  Two
+         * faces are considered equivalent if they are identified within
+         * the 4-manifold triangulation.
+         *
+         * Pentachoron faces are indexed linearly by tetrahedron and
+         * then face number.  Specifically, face f (0..9) of
+         * pentachoron p (0..nPents-1) has index 10p+f.
+         *
+         * Each equivalence class of faces corresponds to a tree of
+         * PentFaceState objects, arranged to form a modified union-find
+         * structure.
+         */
+        struct PentFaceState {
+            int parent;
+                /**< The index of the parent object in the current tree,
+                     or -1 if this object is the root of the tree. */
+            unsigned rank;
+                /**< The depth of the subtree beneath this object (where
+                     a leaf node has depth zero). */
+            unsigned size;
+                /**< The total number of objects in the subtree descending
+                     from this object (where this object is counted also). */
+            bool bounded;
+                /**< Does this equivalence class of pentachoron faces
+                     represent a boundary face?
+
+                     If this equivalence class describes a complete loop
+                     of pentachoron faces then the value of \a bounded
+                     is \c false.  If this equivalence class describes a
+                     string of pentachoron faces with two endpoints, the
+                     value of \a bounded is \c true.  Here we treat any
+                     facet whose gluing permutation has not yet been
+                     decided as a boundary facet.
+
+                     This value is only maintained correctly for the
+                     root of the corresponding object tree; other
+                     objects in the tree will have older values to
+                     facilitate backtracking. */
+            NPerm twistUp;
+                /**< The vertices of each pentachoron face can be labelled
+                     (0,1,2) by running through the underlying pentachoron
+                     vertices from smallest index to largest index.
+
+                     The parameter \a twistUp is a permutation that maps
+                     vertices (0,1,2) of this face to vertices (0,1,2) of
+                     its parent in the tree according to the way in which
+                     the two faces are identified.  If this object has
+                     no parent, the value of \a twistUp is undefined. */
+            bool hadEqualRank;
+                /**< Did this tree have rank equal to its parent
+                     immediately before it was grafted beneath its parent?
+                     This information is used to maintain the ranks correctly
+                     when grafting operations are undone.  If this object is
+                     still the root of its tree, this value is set to false. */
+
+            /**
+             * Constructor for a standalone pentachoron face in an
+             * equivalence class all of its own.
+             */
+            PentFaceState();
+
+            /**
+             * Dumps all internal data in a plain text format to the
+             * given output stream.  This state can be recreated from
+             * this text data by calling readData().
+             *
+             * This routine may be useful for transferring objects from
+             * one processor to another.
+             *
+             * \warning The data format is liable to change between Regina
+             * releases.  Data in this format should be used on a short-term
+             * temporary basis only.
+             *
+             * @param out the output stream to which the data should be
+             * written.
+             */
+            void dumpData(std::ostream& out) const;
+
+            /**
+             * Fills this state with data read from the given input stream.
+             * This routine reads data in the format written by dumpData().
+             *
+             * \warning The data format is liable to change between Regina
+             * releases.  Data in this format should be used on a short-term
+             * temporary basis only.
+             *
+             * This routine does test for bad input data, but it does \e not
+             * test for end-of-file.
+             *
+             * @param in the input stream from which to read.
+             * @param nStates the total number of face states under
+             * consideration (this must be ten times the number of pentachora).
+             * @return \c false if any errors were encountered during
+             * reading, or \c true otherwise.
+             */
+            bool readData(std::istream& in, unsigned long nStates);
+        };
+
     public:
         static const char dataTag_;
             /**< A character used to identify this class when reading
@@ -128,6 +237,28 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
                  +/-1, and in some algorithms the orientation counts
                  forwards or backwards from 0 according to how many
                  times the orientation has been set or verified. */
+
+        unsigned nFaceClasses_;
+            /**< The number of equivalence classes of identified
+                 pentachoron faces. */
+        PentFaceState* faceState_;
+            /**< Used for tracking equivalence classes of identified
+                 pentachoron faces.  See the PentFaceState description
+                 for details.  This array has size 10n, where face f of
+                 pentachoron p has index 10p+f. */
+        int* faceStateChanged_;
+            /**< Tracks the way in which the faceState_[] array has been
+                 updated over time.  This array has size [25n/2].  Suppose
+                 the gluing for order[i] affects facet k of pentachoron p.
+                 Then element 5i+v of this array describes how the gluing for
+                 order[i] affects the face of pentachoron p opposite vertices
+                 k and v (note that a fifth of this array will remain unused,
+                 since k and v are never equal).
+
+                 If this identification of faces results in the tree
+                 with root faceState_[x] being grafted beneath the tree
+                 with root faceState_[y], this array will store the value x.
+                 Otherwise it will store the value -1. */
 
     protected:
         Dim4PentFacet* order_;
@@ -446,11 +577,88 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
          * @return the class tag.
          */
         virtual char dataTag() const;
+
+        /**
+         * Returns the representative of the equivalence class containing
+         * the given pentachoron face.  The class representative is
+         * defined to be the root of the corresponding union-find tree.
+         *
+         * See the PentFaceState class for further details.  See also
+         * the other variant of findFaceClass(), which is slower
+         * but which also tracks face rotations and reflections.
+         *
+         * @param faceID the index of a single pentachoron face; this
+         * must be between 0 and 10p-1 inclusive, where \a p is the
+         * number of pentachora.  See the PentFaceState class notes for
+         * details on face indexing.
+         * @return the index of the pentachoron face at the root of the
+         * union-find tree, i.e., the representative of the equivalence
+         * class.
+         */
+        int findFaceClass(int faceID) const;
+
+        /**
+         * Returns the representative of the equivalence class containing
+         * the given pentachoron face.  The class representative is
+         * defined to be the root of the corresponding union-find tree.
+         *
+         * The argument \a twist is also modified to indicate what
+         * rotation or reflection is used to identify vertices (0,1,2)
+         * of the given face with vertices (0,1,2) of the class
+         * representative.  Note that this argument is \e not initialised.
+         * Instead, the original \a twist will be multiplied on the left
+         * by the mapping described above.
+         *
+         * See the PentFaceState class for further details.  See also
+         * the other variant of findFaceClass(), which is faster
+         * but which does not track face rotations and reflections.
+         *
+         * @param faceID the index of a single pentachoron face; this
+         * must be between 0 and 10p-1 inclusive, where \a p is the
+         * number of pentachora.  See the PentFaceState class notes for
+         * details on face indexing.
+         * @param twist used to track face rotations and reflections, as
+         * described above.  This must be a mapping from (0,1,2) to (0,1,2)
+         * as it is passed into the function, and it will also be a mapping
+         * from (0,1,2) to (0,1,2) upon returning from the function.
+         * @return the index of the pentachoron face at the root of the
+         * union-find tree, i.e., the representative of the equivalence
+         * class.
+         */
+        int findFaceClass(int faceID, NPerm& twist) const;
+
+        /**
+         * Merges the classes of pentachoron faces as required by the
+         * new gluing made at stage \a orderElt of the search.
+         *
+         * See the PentFaceState class for details.
+         *
+         * This routine returns a boolean that indicates whether this
+         * merge creates an invalid face (i.e., a face identified with
+         * itself using a non-trivial rotation or reflection).
+         *
+         * @return \c true if this merge creates an invalid face, or
+         * \c false if not.
+         */
+        bool mergeFaceClasses();
+
+        /**
+         * Splits the classes of pentachoron faces to mirror the undoing
+         * of the gluing at stage \a orderElt of the search.
+         *
+         * See the PentFaceState class for details.
+         */
+        void splitFaceClasses();
 };
 
 /*@}*/
 
 // Inline functions for Dim4GluingPermSearcher
+
+inline Dim4GluingPermSearcher::PentFaceState::PentFaceState() :
+        parent(-1), rank(0), size(1), bounded(true), twistUp() /* ID */,
+        hadEqualRank(false) {
+}
 
 inline bool Dim4GluingPermSearcher::completePermSet() const {
     return (orderElt_ == orderSize_);
@@ -458,6 +666,21 @@ inline bool Dim4GluingPermSearcher::completePermSet() const {
 
 inline char Dim4GluingPermSearcher::dataTag() const {
     return Dim4GluingPermSearcher::dataTag_;
+}
+
+inline int Dim4GluingPermSearcher::findFaceClass(int faceID) const {
+    while (faceState_[faceID].parent >= 0)
+        faceID = faceState_[faceID].parent;
+
+    return faceID;
+}
+
+inline int Dim4GluingPermSearcher::findFaceClass(int faceID, NPerm& twist)
+        const {
+    for ( ; faceState_[faceID].parent >= 0; faceID = faceState_[faceID].parent)
+        twist = faceState_[faceID].twistUp * twist;
+
+    return faceID;
 }
 
 } // namespace regina
