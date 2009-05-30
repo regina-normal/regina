@@ -424,8 +424,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
                     << edgeState[i].size << " at end of search!" << std::endl;
             if (! edgeState[i].bounded)
                 std::cerr << "ERROR: edgeState[" << i << "].bounded == "
-                    << edgeState[i].bounded << " at end of search!"
-                    << std::endl;
+                    "false at end of search!" << std::endl;
             if (edgeState[i].hadEqualRank)
                 std::cerr << "ERROR: edgeState[" << i << "].hadEqualRank == "
                     "true at end of search!" << std::endl;
