@@ -37,6 +37,7 @@
 #endif
 
 #include "census/dim4gluingperms.h"
+#include "maths/nperm3.h"
 
 namespace regina {
 
@@ -139,7 +140,7 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
                      root of the corresponding object tree; other
                      objects in the tree will have older values to
                      facilitate backtracking. */
-            NPerm twistUp;
+            NPerm3 twistUp;
                 /**< The vertices of each pentachoron face can be labelled
                      (0,1,2) by running through the underlying pentachoron
                      vertices from smallest index to largest index.
@@ -625,7 +626,7 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findFaceClass(int faceID, NPerm& twist) const;
+        int findFaceClass(int faceID, NPerm3& twist) const;
 
         /**
          * Merges the classes of pentachoron faces as required by the
@@ -675,7 +676,7 @@ inline int Dim4GluingPermSearcher::findFaceClass(int faceID) const {
     return faceID;
 }
 
-inline int Dim4GluingPermSearcher::findFaceClass(int faceID, NPerm& twist)
+inline int Dim4GluingPermSearcher::findFaceClass(int faceID, NPerm3& twist)
         const {
     for ( ; faceState_[faceID].parent >= 0; faceID = faceState_[faceID].parent)
         twist = faceState_[faceID].twistUp * twist;

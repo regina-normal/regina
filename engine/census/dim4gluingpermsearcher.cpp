@@ -665,7 +665,7 @@ bool Dim4GluingPermSearcher::mergeFaceClasses() {
     v1 = facet.facet;
     w1 = p[v1];
 
-    NPerm directTwist;
+    NPerm3 directTwist;
     for (v2 = 0; v2 < 5; ++v2) {
         if (v2 == v1)
             continue;
@@ -681,22 +681,22 @@ bool Dim4GluingPermSearcher::mergeFaceClasses() {
         // Vertices of a face are labelled in order from smallest to largest.
         if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][0]) {
             if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][1])
-                directTwist = NPerm(0, 1, 2, 3);
+                directTwist.setPermCode(NPerm3::code012);
             else
-                directTwist = NPerm(0, 2, 1, 3);
+                directTwist.setPermCode(NPerm3::code021);
         } else if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][1]) {
             if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][0])
-                directTwist = NPerm(1, 0, 2, 3);
+                directTwist.setPermCode(NPerm3::code102);
             else
-                directTwist = NPerm(1, 2, 0, 3);
+                directTwist.setPermCode(NPerm3::code120);
         } else {
             if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][0])
-                directTwist = NPerm(2, 0, 1, 3);
+                directTwist.setPermCode(NPerm3::code201);
             else
-                directTwist = NPerm(2, 1, 0, 3);
+                directTwist.setPermCode(NPerm3::code210);
         }
 
-        NPerm eTwist, fTwist; /* Initialise to identity permutations. */
+        NPerm3 eTwist, fTwist; /* Initialise to identity permutations. */
         eRep = findFaceClass(e + 10 * facet.pent, eTwist);
         fRep = findFaceClass(f + 10 * adj.pent, fTwist);
 
