@@ -835,6 +835,7 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
     w1 = p[v1];
 
     char parentTwistEdge, hasTwistEdge;
+    char parentTwistTriangle, hasTwistTriangle;
     for (v2 = 0; v2 < 4; ++v2) {
         if (v2 == v1)
             continue;
@@ -857,19 +858,55 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
             hasTwistEdge = (p[Dim4Edge::edgeVertex[e][0]] >
                 p[Dim4Edge::edgeVertex[e][1]] ?  1 : 0);
 
-            parentTwistEdge = 0;
+            // Are the natural 012 representations of the two triangles
+            // joined with reverse orientations?
+            // Here we label triangles 012 by running through the
+            // three vertices of the opposite pentachoron face in
+            // ascending numerical order.
+            if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][0]) {
+                if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][1])
+                    // 012
+                    hasTwistTriangle = 1;
+                else
+                    // 021
+                    hasTwistTriangle = 0;
+            } else if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][1]) {
+                if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][0])
+                    // 102
+                    hasTwistTriangle = 0;
+                else
+                    // 120
+                    hasTwistTriangle = 1;
+            } else {
+                if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][0])
+                    // 201
+                    hasTwistTriangle = 1;
+                else
+                    // 210
+                    hasTwistTriangle = 0;
+            }
+
+            parentTwistEdge = parentTwistTriangle = 0;
             for (eRep = e + 10 * facet.pent; edgeState_[eRep].parent >= 0;
-                    eRep = edgeState_[eRep].parent)
+                    eRep = edgeState_[eRep].parent) {
                 parentTwistEdge ^= edgeState_[eRep].twistUpEdge;
+                parentTwistTriangle ^= edgeState_[eRep].twistUpTriangle;
+            }
             for (fRep = f + 10 * adj.pent; edgeState_[fRep].parent >= 0;
-                    fRep = edgeState_[fRep].parent)
+                    fRep = edgeState_[fRep].parent) {
                 parentTwistEdge ^= edgeState_[fRep].twistUpEdge;
+                parentTwistTriangle ^= edgeState_[fRep].twistUpTriangle;
+            }
 
             if (eRep == fRep) {
                 edgeState_[eRep].bdry -= 2;
 
                 // Have we identified an edge with itself in reverse?
                 if (hasTwistEdge ^ parentTwistEdge)
+                    retVal = true;
+
+                // Have we made the edge link non-orientable?
+                if (hasTwistTriangle ^ parentTwistTriangle)
                     retVal = true;
 
                 edgeStateChanged_[orderIdx] = -1;
@@ -881,6 +918,8 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
                     edgeState_[eRep].parent = fRep;
                     edgeState_[eRep].twistUpEdge =
                         hasTwistEdge ^ parentTwistEdge;
+                    edgeState_[eRep].twistUpTriangle =
+                        hasTwistTriangle ^ parentTwistTriangle;
                     edgeState_[fRep].bdry = edgeState_[fRep].bdry +
                         edgeState_[eRep].bdry - 2;
 
@@ -890,6 +929,8 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
                     edgeState_[fRep].parent = eRep;
                     edgeState_[fRep].twistUpEdge =
                         hasTwistEdge ^ parentTwistEdge;
+                    edgeState_[fRep].twistUpTriangle =
+                        hasTwistTriangle ^ parentTwistTriangle;
                     if (edgeState_[eRep].rank == edgeState_[fRep].rank) {
                         edgeState_[eRep].rank++;
                         edgeState_[fRep].hadEqualRank = true;
