@@ -1102,6 +1102,11 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
 
 // Inline functions for Dim4GluingPermSearcher
 
+inline Dim4GluingPermSearcher::PentEdgeState::PentEdgeState() :
+        parent(-1), rank(0), bdry(3),
+        twistUpEdge(0), twistUpTriangle(0), hadEqualRank(false) {
+}
+
 inline Dim4GluingPermSearcher::PentFaceState::PentFaceState() :
         parent(-1), rank(0), size(1), bounded(true), twistUp() /* ID */,
         hadEqualRank(false) {

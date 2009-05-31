@@ -218,7 +218,21 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
 
     // ---------- Tracking of edge / face equivalence classes ----------
 
-    // TODO: UFIND
+    nEdgeClasses_ = nPent * 10;
+    edgeState_ = new PentEdgeState[nPent * 10];
+    // The length of faceStateChanged_[] needs to be at least 10 * orderSize_.
+    // Just be conservative here -- we know that orderSize_ <= 5 * nPent / 2.
+    edgeStateChanged_ = new int[nPent * 25];
+    std::fill(edgeStateChanged_, edgeStateChanged_ + nPent * 25, -1);
+    for (unsigned i = 0; i < nPent * 10; ++i) {
+        edgeState_[i].bdryEdges = 3;
+        edgeState_[i].bdryNext[0] = edgeState_[i].bdryNext[1] = i;
+        edgeState_[i].bdryTwist[0] = edgeState_[i].bdryTwist[1] = 0;
+        // Initialise the backup members also so we're not writing
+        // uninitialised data via dumpData().
+        edgeState_[i].bdryNextOld[0] = edgeState_[i].bdryNextOld[1] = -1;
+        edgeState_[i].bdryTwistOld[0] = edgeState_[i].bdryTwistOld[1] = 0;
+    }
 
     nFaceClasses_ = nPent * 10;
     faceState_ = new PentFaceState[nPent * 10];
@@ -438,7 +452,47 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
     // Some extra sanity checking.
     if (minOrder == 0) {
         // Our edge classes had better be 10n standalone edges.
-        // TODO: UFIND
+        if (nEdgeClasses_ != 10 * nPentachora)
+            std::cerr << "ERROR: nEdgeClasses == "
+                << nEdgeClasses << " at end of search!" << std::endl;
+        for (int i = 0; i < static_cast<int>(nPentachora) * 10; ++i) {
+            if (edgeState_[i].parent != -1)
+                std::cerr << "ERROR: edgeState[" << i << "].parent == "
+                    << edgeState_[i].parent << " at end of search!"
+                    << std::endl;
+            if (edgeState_[i].rank != 0)
+                std::cerr << "ERROR: edgeState[" << i << "].rank == "
+                    << edgeState_[i].rank << " at end of search!" << std::endl;
+            if (edgeState_[i].bdry != 3)
+                std::cerr << "ERROR: edgeState[" << i << "].bdry == "
+                    << edgeState_[i].bdry << " at end of search!" << std::endl;
+            if (edgeState_[i].hadEqualRank)
+                std::cerr << "ERROR: edgeState[" << i << "].hadEqualRank == "
+                    "true at end of search!" << std::endl;
+            if (edgeState_[i].bdryEdges != 3)
+                std::cerr << "ERROR: edgeState[" << i << "].bdryEdges == "
+                    << static_cast<int>(edgeState_[i].bdryEdges)
+                    << " at end of search!" << std::endl;
+            if (edgeState_[i].bdryNext[0] != i)
+                std::cerr << "ERROR: edgeState[" << i << "].bdryNext[0] == "
+                    << edgeState_[i].bdryNext[0] << " at end of search!"
+                    << std::endl;
+            if (edgeState_[i].bdryNext[1] != i)
+                std::cerr << "ERROR: edgeState[" << i << "].bdryNext[1] == "
+                    << edgeState_[i].bdryNext[1] << " at end of search!"
+                    << std::endl;
+            if (edgeState_[i].bdryTwist[0])
+                std::cerr << "ERROR: edgeState[" << i << "].bdryTwist == "
+                    "true at end of search!" << std::endl;
+            if (edgeState_[i].bdryTwist[1])
+                std::cerr << "ERROR: edgeState[" << i << "].bdryTwist == "
+                    "true at end of search!" << std::endl;
+        }
+        for (unsigned i = 0; i < nPentachora * 25; ++i)
+            if (edgeStateChanged_[i] != -1)
+                std::cerr << "ERROR: edgeStateChanged[" << i << "] == "
+                    << edgeStateChanged_[i] << " at end of search!"
+                    << std::endl;
 
         // And our face classes had better be 10n standalone faces.
         if (nFaceClasses_ != 10 * nPentachora)
@@ -528,7 +582,17 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
 
     // ---------- Tracking of edge / face equivalence classes ----------
 
-    // TODO: UFIND
+    out << nEdgeClasses_ << std::endl;
+    for (i = 0; i < 10 * nPent; ++i) {
+        edgeState_[i].dumpData(out);
+        out << std::endl;
+    }
+    for (i = 0; i < 25 * nPent; ++i) {
+        if (i)
+            out << ' ';
+        out << edgeStateChanged_[i];
+    }
+    out << std::endl;
 
     out << nFaceClasses_ << std::endl;
     for (i = 0; i < 10 * nPent; ++i) {
@@ -615,7 +679,25 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
 
     unsigned i;
 
-    // TODO: UFIND
+    in >> nEdgeClasses_;
+    if (nEdgeClasses > 10 * nPent) {
+        inputError_ = true; return;
+    }
+
+    edgeState_ = new PentEdgeState[10 * nPent];
+    for (i = 0; i < 10 * nPent; ++i)
+        if (! edgeState_[i].readData(in, 10 * nPent)) {
+            inputError_ = true; return;
+        }
+
+    edgeStateChanged_ = new int[25 * nPent];
+    for (i = 0; i < 25 * nPent; ++i) {
+        in >> edgeStateChanged_[i];
+        if (edgeStateChanged_[i] < -1 ||
+                 edgeStateChanged_[i] >= 10 * static_cast<int>(nPent)) {
+            inputError_ = true; return;
+        }
+    }
 
     in >> nFaceClasses_;
     if (nFaceClasses_ > 10 * nPent) {
