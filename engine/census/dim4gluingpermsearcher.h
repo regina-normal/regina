@@ -147,7 +147,7 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
                 /**< The depth of the subtree beneath this object (where
                      a leaf node has depth zero). */
             unsigned bdry;
-                /**< The number of boundary triangle edges in the vertex link
+                /**< The number of boundary triangle edges in the link
                      for this equivalence class of pentachoron edges.  Any
                      pentachoron facet whose gluing permutation has not yet
                      been decided is treated as a boundary facet.  This value

@@ -56,12 +56,81 @@ const char Dim4GluingPermSearcher::dataTag_ = 'g';
 #endif
 
 void Dim4GluingPermSearcher::PentEdgeState::dumpData(std::ostream& out) const {
-    // TODO: UFIND
+    // Be careful with the twisting fields, which are chars but which should
+    // be written as ints.
+    out << parent << ' ' << rank << ' ' << bdry << ' '
+        << (twistUpEdge ? 1 : 0) << ' ' << (twistUpTriangle ? 1 : 0) << ' '
+        << (hadEqualRank ? 1 : 0) << ' '
+        << static_cast<int>(bdryEdges) << ' '
+        << bdryNext[0] << ' ' << bdryNext[1] << ' '
+        << static_cast<int>(bdryTwist[0]) << ' '
+        << static_cast<int>(bdryTwist[1]) << ' '
+        << bdryNextOld[0] << ' ' << bdryNextOld[1] << ' '
+        << static_cast<int>(bdryTwistOld[0]) << ' '
+        << static_cast<int>(bdryTwistOld[1]);
 }
 
 bool Dim4GluingPermSearcher::PentEdgeState::readData(std::istream& in,
         unsigned long nStates) {
-    // TODO: UFIND
+    in >> parent >> rank >> bdry;
+
+    // The twist fields are chars, but we need to read them as ints.
+    int twistEdge;
+    in >> twistEdge;
+    twistUpEdge = twistEdge;
+
+    int twistTriangle;
+    in >> twistTriangle;
+    twistUpTriangle = twistTriangle;
+
+    // hadEqualRank is a bool, but we need to read it as an int.
+    int bRank;
+    in >> bRank;
+    hadEqualRank = bRank;
+
+    // More chars to ints coming.
+    int bVal;
+
+    in >> bVal; bdryEdges = bVal;
+    in >> bdryNext[0] >> bdryNext[1];
+    in >> bVal; bdryTwist[0] = bVal;
+    in >> bVal; bdryTwist[1] = bVal;
+    in >> bdryNextOld[0] >> bdryNextOld[1];
+    in >> bVal; bdryTwistOld[0] = bVal;
+    in >> bVal; bdryTwistOld[1] = bVal;
+
+    if (parent < -1 || parent >= static_cast<long>(nStates))
+        return false;
+    if (rank >= nStates)
+        return false;
+    if (bdry > 3 * nStates)
+        return false;
+    if (twistEdge != 1 && twistEdge != 0)
+        return false;
+    if (twistTriangle != 1 && twistTriangle != 0)
+        return false;
+    if (bRank != 1 && bRank != 0)
+        return false;
+    if (bdryEdges > 3) /* Never < 0 since this is unsigned. */
+        return false;
+    if (bdryNext[0] < 0 || bdryNext[0] >= static_cast<long>(nStates))
+        return false;
+    if (bdryNext[1] < 0 || bdryNext[1] >= static_cast<long>(nStates))
+        return false;
+    if (bdryNextOld[0] < -1 || bdryNext[0] >= static_cast<long>(nStates))
+        return false;
+    if (bdryNextOld[1] < -1 || bdryNextOld[1] >= static_cast<long>(nStates))
+        return false;
+    if (bdryTwist[0] < 0 || bdryTwist[0] > 1)
+        return false;
+    if (bdryTwist[1] < 0 || bdryTwist[1] > 1)
+        return false;
+    if (bdryTwistOld[0] < 0 || bdryTwistOld[0] > 1)
+        return false;
+    if (bdryTwistOld[1] < 0 || bdryTwistOld[1] > 1)
+        return false;
+
+    return true;
 }
 
 void Dim4GluingPermSearcher::PentFaceState::dumpData(std::ostream& out) const {
