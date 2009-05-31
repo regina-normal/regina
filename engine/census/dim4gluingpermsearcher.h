@@ -473,7 +473,7 @@ class Dim4GluingPermSearcher : public Dim4GluingPerms {
                  updated over time.  This array has size 25n.  Suppose
                  the gluing for order[i] affects facet k of pentachoron p.
                  Then element 10i+e of this array describes how the gluing for
-                 order[i] affects edge i of pentachoron p.  Note that almost
+                 order[i] affects edge e of pentachoron p.  Note that almost
                  half of this array will remain unused, since only six
                  edges of a pentachoron are affected by any one gluing.
 

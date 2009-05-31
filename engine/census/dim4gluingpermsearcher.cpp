@@ -820,11 +820,142 @@ bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
 
 bool Dim4GluingPermSearcher::mergeEdgeClasses() {
     // TODO: UFIND
-    return false;
+    Dim4PentFacet facet = order_[orderElt_];
+    Dim4PentFacet adj = (*pairing_)[facet];
+
+    bool retVal = false;
+
+    NPerm5 p = gluingPerm(facet);
+    int v1, w1, v2, w2, v3, w3;
+    int e, f;
+    int orderIdx;
+    int eRep, fRep;
+
+    v1 = facet.facet;
+    w1 = p[v1];
+
+    char parentTwistEdge, hasTwistEdge;
+    for (v2 = 0; v2 < 4; ++v2) {
+        if (v2 == v1)
+            continue;
+
+        w2 = p[v2];
+
+        for (v3 = v2 + 1; v3 < 5; ++v3) {
+            if (v3 == v1)
+                continue;
+
+            w3 = p[v3];
+
+            // Look at the edge opposite v1, v2 and v3.
+            e = Dim4Face::faceNumber[v1][v2][v3];
+            f = Dim4Face::faceNumber[w1][w2][w3];
+            orderIdx = e + 10 * orderElt_;
+
+            // We declare the natural orientation of an edge to be
+            // smaller vertex to larger vertex.
+            hasTwistEdge = (p[Dim4Edge::edgeVertex[e][0]] >
+                p[Dim4Edge::edgeVertex[e][1]] ?  1 : 0);
+
+            parentTwistEdge = 0;
+            for (eRep = e + 10 * facet.pent; edgeState_[eRep].parent >= 0;
+                    eRep = edgeState_[eRep].parent)
+                parentTwistEdge ^= edgeState_[eRep].twistUpEdge;
+            for (fRep = f + 10 * adj.pent; edgeState_[fRep].parent >= 0;
+                    fRep = edgeState_[fRep].parent)
+                parentTwistEdge ^= edgeState_[fRep].twistUpEdge;
+
+            if (eRep == fRep) {
+                edgeState_[eRep].bdry -= 2;
+
+                // Have we identified an edge with itself in reverse?
+                if (hasTwistEdge ^ parentTwistEdge)
+                    retVal = true;
+
+                edgeStateChanged_[orderIdx] = -1;
+            } else {
+                // We are joining two distinct edges together and merging
+                // their edge links.
+                if (edgeState_[eRep].rank < edgeState_[fRep].rank) {
+                    // Join eRep beneath fRep.
+                    edgeState_[eRep].parent = fRep;
+                    edgeState_[eRep].twistUpEdge =
+                        hasTwistEdge ^ parentTwistEdge;
+                    edgeState_[fRep].bdry = edgeState_[fRep].bdry +
+                        edgeState_[eRep].bdry - 2;
+
+                    edgeStateChanged_[orderIdx] = eRep;
+                } else {
+                    // Join fRep beneath eRep.
+                    edgeState_[fRep].parent = eRep;
+                    edgeState_[fRep].twistUpEdge =
+                        hasTwistEdge ^ parentTwistEdge;
+                    if (edgeState_[eRep].rank == edgeState_[fRep].rank) {
+                        edgeState_[eRep].rank++;
+                        edgeState_[fRep].hadEqualRank = true;
+                    }
+                    edgeState_[eRep].bdry = edgeState_[eRep].bdry +
+                        edgeState_[fRep].bdry - 2;
+
+                    edgeStateChanged_[orderIdx] = fRep;
+                }
+                --nEdgeClasses_;
+            }
+        }
+    }
+
+    return retVal;
 }
 
 void Dim4GluingPermSearcher::splitEdgeClasses() {
     // TODO: UFIND
+    Dim4PentFacet facet = order_[orderElt_];
+
+    int v1, v2, v3;
+    int e;
+    int eIdx, orderIdx;
+    int rep, subRep;
+
+    v1 = facet.facet;
+
+    // Do everything in reverse.  This includes the nested loops over vertices.
+    for (v2 = 3; v2 >= 0; --v2) {
+        if (v2 == v1)
+            continue;
+        for (v3 = 4; v3 > v2; --v3) {
+            if (v3 == v1)
+                continue;
+
+            // Look at the edge opposite v1, v2 and v3.
+            e = Dim4Face::faceNumber[v1][v2][v3];
+
+            eIdx = e + 10 * facet.pent;
+            orderIdx = e + 10 * orderElt_;
+
+            if (edgeStateChanged_[orderIdx] < 0) {
+                for (rep = eIdx; edgeState_[rep].parent >= 0;
+                        rep = edgeState_[rep].parent)
+                    ;
+                edgeState_[rep].bdry += 2;
+            } else {
+                // Separate a two trees that had been grafted together.
+                subRep = edgeStateChanged_[orderIdx];
+                rep = edgeState_[subRep].parent;
+
+                edgeState_[subRep].parent = -1;
+                if (edgeState_[subRep].hadEqualRank) {
+                    edgeState_[subRep].hadEqualRank = false;
+                    edgeState_[rep].rank--;
+                }
+
+                edgeState_[rep].bdry = edgeState_[rep].bdry + 2 -
+                    edgeState_[subRep].bdry;
+
+                edgeStateChanged_[orderIdx] = -1;
+                ++nEdgeClasses_;
+            }
+        }
+    }
 }
 
 bool Dim4GluingPermSearcher::mergeFaceClasses() {
