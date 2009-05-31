@@ -394,12 +394,10 @@ void NCompactSearcher::runSearch(long maxDepth) {
                     << std::endl;
             if (vertexState[i].bdryTwist[0])
                 std::cerr << "ERROR: vertexState[" << i << "].bdryTwist == "
-                    << static_cast<int>(vertexState[i].bdryTwist[0])
-                    << " at end of search!" << std::endl;
+                    "true at end of search!" << std::endl;
             if (vertexState[i].bdryTwist[1])
                 std::cerr << "ERROR: vertexState[" << i << "].bdryTwist == "
-                    << static_cast<int>(vertexState[i].bdryTwist[1])
-                    << " at end of search!" << std::endl;
+                    "true at end of search!" << std::endl;
         }
         for (unsigned i = 0; i < nTets * 8; i++)
             if (vertexStateChanged[i] != -1)
