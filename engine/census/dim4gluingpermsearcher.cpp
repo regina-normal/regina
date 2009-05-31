@@ -454,7 +454,7 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
         // Our edge classes had better be 10n standalone edges.
         if (nEdgeClasses_ != 10 * nPentachora)
             std::cerr << "ERROR: nEdgeClasses == "
-                << nEdgeClasses << " at end of search!" << std::endl;
+                << nEdgeClasses_ << " at end of search!" << std::endl;
         for (int i = 0; i < static_cast<int>(nPentachora) * 10; ++i) {
             if (edgeState_[i].parent != -1)
                 std::cerr << "ERROR: edgeState[" << i << "].parent == "
@@ -680,7 +680,7 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
     unsigned i;
 
     in >> nEdgeClasses_;
-    if (nEdgeClasses > 10 * nPent) {
+    if (nEdgeClasses_ > 10 * nPent) {
         inputError_ = true; return;
     }
 
@@ -820,6 +820,7 @@ bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
 
 bool Dim4GluingPermSearcher::mergeEdgeClasses() {
     // TODO: UFIND
+    return false;
 }
 
 void Dim4GluingPermSearcher::splitEdgeClasses() {
