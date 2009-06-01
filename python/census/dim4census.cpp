@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Test Suite                                                            *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2009, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,20 +26,32 @@
 
 /* end stub */
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include "census/dim4census.h"
+#include "dim4/dim4triangulation.h"
+#include <boost/python.hpp>
 
-#include <cppunit/ui/text/TestRunner.h>
+using namespace boost::python;
+using regina::Dim4Census;
 
-void addNCensus(CppUnit::TextUi::TestRunner& runner);
-void addNFacePairing(CppUnit::TextUi::TestRunner& runner);
-void addDim4Census(CppUnit::TextUi::TestRunner& runner);
-void addDim4FacetPairing(CppUnit::TextUi::TestRunner& runner);
+namespace {
+    unsigned long formCensus(regina::NPacket* p, unsigned n,
+            regina::NBoolSet fin, regina::NBoolSet orb, regina::NBoolSet bdr,
+            int bf) {
+        return Dim4Census::formCensus(p, n, fin, orb, bdr, bf);
+    }
+    unsigned long formPartialCensus(const regina::Dim4FacetPairing* fp,
+            regina::NPacket* p, regina::NBoolSet fin, regina::NBoolSet orb) {
+        return Dim4Census::formPartialCensus(fp, p, fin, orb);
+    }
+}
+
+void addDim4Census() {
+    scope s = class_<Dim4Census, std::auto_ptr<Dim4Census>,
+            boost::noncopyable>("Dim4Census", no_init)
+        .def("formCensus", formCensus)
+        .def("formPartialCensus", formPartialCensus)
+        .staticmethod("formCensus")
+        .staticmethod("formPartialCensus")
+    ;
+}
 

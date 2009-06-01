@@ -28,11 +28,13 @@
 
 void addNCensus();
 void addNFacePairing();
+void addDim4Census();
 void addDim4FacetPairing();
 
 void addCensus() {
     addNCensus();
     addNFacePairing();
+    addDim4Census();
     addDim4FacetPairing();
 }
 

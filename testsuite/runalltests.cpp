@@ -148,6 +148,7 @@ bool runAllTests() {
     // Census:
     addNCensus(runner);
     addNFacePairing(runner);
+    addDim4Census(runner);
     addDim4FacetPairing(runner);
 
     // SnapPea:
