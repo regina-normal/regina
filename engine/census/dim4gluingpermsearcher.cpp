@@ -837,23 +837,30 @@ bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
 }
 
 bool Dim4GluingPermSearcher::mergeEdgeClasses() {
-    // TODO: UFIND
+    // Merge all six edge pairs for the current facet.
     Dim4PentFacet facet = order_[orderElt_];
     Dim4PentFacet adj = (*pairing_)[facet];
 
     bool retVal = false;
 
-    NPerm5 p = gluingPerm(facet);
     int v1, w1, v2, w2, v3, w3;
     int e, f;
+    int eIdx, fIdx, tmpIdx, nextIdx;
     int orderIdx;
     int eRep, fRep;
+    int eNext[2], fNext[2];
+    char eTwistTriangle[2], fTwistTriangle[2];
+
+    NPerm5 p = gluingPerm(facet);
+
+    int tmpInvariant;
+    char parentTwistEdge, hasTwistEdge;
+    char parentTwistTriangle, hasTwistTriangle;
+    char tmpTwistTriangle;
 
     v1 = facet.facet;
     w1 = p[v1];
 
-    char parentTwistEdge, hasTwistEdge;
-    char parentTwistTriangle, hasTwistTriangle;
     for (v2 = 0; v2 < 4; ++v2) {
         if (v2 == v1)
             continue;
@@ -869,6 +876,8 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
             // Look at the edge opposite v1, v2 and v3.
             e = Dim4Face::faceNumber[v1][v2][v3];
             f = Dim4Face::faceNumber[w1][w2][w3];
+            eIdx = e + 10 * facet.pent;
+            fIdx = f + 10 * adj.pent;
             orderIdx = e + 10 * orderElt_;
 
             // We declare the natural orientation of an edge to be
@@ -881,36 +890,22 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
             // Here we label triangles 012 by running through the
             // three vertices of the opposite pentachoron face in
             // ascending numerical order.
-            if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][0]) {
-                if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][1])
-                    // 012
-                    hasTwistTriangle = 1;
-                else
-                    // 021
-                    hasTwistTriangle = 0;
-            } else if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][1]) {
-                if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][0])
-                    // 102
-                    hasTwistTriangle = 0;
-                else
-                    // 120
-                    hasTwistTriangle = 1;
-            } else {
-                if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][0])
-                    // 201
-                    hasTwistTriangle = 1;
-                else
-                    // 210
-                    hasTwistTriangle = 0;
-            }
+            tmpInvariant = 0;
+            if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][0])
+                ++tmpInvariant;
+            if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][1])
+                ++tmpInvariant;
+            if (p[Dim4Face::faceVertex[e][2]] == Dim4Face::faceVertex[f][2])
+                ++tmpInvariant;
+            hasTwistTriangle = (tmpInvariant == 1 ? 0 : 1);
 
             parentTwistEdge = parentTwistTriangle = 0;
-            for (eRep = e + 10 * facet.pent; edgeState_[eRep].parent >= 0;
+            for (eRep = eIdx; edgeState_[eRep].parent >= 0;
                     eRep = edgeState_[eRep].parent) {
                 parentTwistEdge ^= edgeState_[eRep].twistUpEdge;
                 parentTwistTriangle ^= edgeState_[eRep].twistUpTriangle;
             }
-            for (fRep = f + 10 * adj.pent; edgeState_[fRep].parent >= 0;
+            for (fRep = fIdx; edgeState_[fRep].parent >= 0;
                     fRep = edgeState_[fRep].parent) {
                 parentTwistEdge ^= edgeState_[fRep].twistUpEdge;
                 parentTwistTriangle ^= edgeState_[fRep].twistUpTriangle;
@@ -928,6 +923,127 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
                     retVal = true;
 
                 edgeStateChanged_[orderIdx] = -1;
+
+                // Examine the cycles of boundary components.
+                if (eIdx == fIdx) {
+                    // Either we are folding together two adjacent edges of the
+                    // edge link, or we are making the edge link non-orientable.
+
+                    // The possible cases are:
+                    //
+                    // 1) hasTwistTriangle is true.  The edge link becomes
+                    // non-orientable, but we should already have flagged
+                    // this above.  Don't touch anything.
+                    //
+                    // 2) hasTwistTriangle is false, and
+                    // edgeState_[eIdx].bdryEdges is 3.
+                    // Here we are taking a stand-alone triangle and folding
+                    // two of its edges together.  Nothing needs to change.
+                    //
+                    // 3) hasTwistTriangle is false, and
+                    // edgeState_[eIdx].bdryEdges is 2.
+                    // This means we are folding together two edges of a
+                    // triangle whose third edge is already joined elsewhere.
+                    // We deal with this as follows:
+                    //
+                    if ((! hasTwistTriangle) &&
+                            edgeState_[eIdx].bdryEdges < 3) {
+                        // Although bdryEdges is 2, we don't bother keeping
+                        // a backup in bdryTwistOld[].  This is because
+                        // bdryEdges jumps straight from 2 to 0, and the
+                        // neighbours in bdryNext[] / bdryTwist[] never get
+                        // overwritten.
+                        if (edgeState_[eIdx].bdryNext[0] == eIdx) {
+                            // We are closing off a single boundary of length
+                            // two.  All good.
+                        } else {
+                            // Adjust each neighbour to point to the other.
+                            edgeBdryJoin(edgeState_[eIdx].bdryNext[0],
+                                1 ^ edgeState_[eIdx].bdryTwist[0],
+                                edgeState_[eIdx].bdryNext[1],
+                                edgeState_[eIdx].bdryTwist[1] ^
+                                    edgeState_[eIdx].bdryTwist[0]);
+                        }
+                    }
+
+                    edgeState_[eIdx].bdryEdges -= 2;
+                } else {
+                    // We are joining two distinct pentachoron edges that
+                    // already contribute to the same edge link.
+                    if (edgeState_[eIdx].bdryEdges == 2)
+                        edgeBdryBackup(eIdx);
+                    if (edgeState_[fIdx].bdryEdges == 2)
+                        edgeBdryBackup(fIdx);
+
+                    if (edgeBdryLength1(eIdx) && edgeBdryLength1(fIdx)) {
+                        // We are joining together two boundaries of length one.
+                        // Do nothing and mark the non-trivial genus.
+                        // std::cerr << "NON-SPHERE: 1 >-< 1" << std::endl;
+                        retVal = true;
+                    } else if (edgeBdryLength2(eIdx, fIdx)) {
+                        // We are closing off a single boundary of length two.
+                        // All good.
+                    } else {
+                        edgeBdryNext(eIdx, facet.pent, e, facet.facet,
+                            eNext, eTwistTriangle);
+                        edgeBdryNext(fIdx, adj.pent, f, adj.facet,
+                            fNext, fTwistTriangle);
+
+                        if (eNext[0] == fIdx &&
+                                fNext[1 ^ eTwistTriangle[0]] == eIdx) {
+                            // We are joining two adjacent edges of the
+                            // edge link.  Simply eliminate them.
+                            edgeBdryJoin(eNext[1], 0 ^ eTwistTriangle[1],
+                                fNext[0 ^ eTwistTriangle[0]],
+                                (eTwistTriangle[0] ^
+                                    fTwistTriangle[0 ^ eTwistTriangle[0]]) ^
+                                    eTwistTriangle[1]);
+                        } else if (eNext[1] == fIdx &&
+                                fNext[0 ^ eTwistTriangle[1]] == eIdx) {
+                            // Again, joining two adjacent edges of the
+                            // edge link.
+                            edgeBdryJoin(eNext[0], 1 ^ eTwistTriangle[0],
+                                fNext[1 ^ eTwistTriangle[1]],
+                                (eTwistTriangle[1] ^
+                                    fTwistTriangle[1 ^ eTwistTriangle[1]]) ^
+                                    eTwistTriangle[0]);
+                        } else {
+                            // See if we are joining two different boundary
+                            // cycles together; if so, we have created
+                            // non-trivial genus in the edge link.
+                            tmpIdx = edgeState_[eIdx].bdryNext[0];
+                            tmpTwistTriangle = edgeState_[eIdx].bdryTwist[0];
+                            while (tmpIdx != eIdx && tmpIdx != fIdx) {
+                                nextIdx = edgeState_[tmpIdx].
+                                    bdryNext[0 ^ tmpTwistTriangle];
+                                tmpTwistTriangle ^= edgeState_[tmpIdx].
+                                    bdryTwist[0 ^ tmpTwistTriangle];
+                                tmpIdx = nextIdx;
+                            }
+
+                            if (tmpIdx == eIdx) {
+                                // Different boundary cycles.
+                                // Don't touch anything; just flag a
+                                // high genus error.
+                                // std::cerr << "NON-SPHERE: (X)" << std::endl;
+                                retVal = true;
+                            } else {
+                                // Same boundary cycle.
+                                edgeBdryJoin(eNext[0], 1 ^ eTwistTriangle[0],
+                                    fNext[1 ^ hasTwistTriangle],
+                                    eTwistTriangle[0] ^ (hasTwistTriangle ^
+                                        fTwistTriangle[1 ^ hasTwistTriangle]));
+                                edgeBdryJoin(eNext[1], 0 ^ eTwistTriangle[1],
+                                    fNext[0 ^ hasTwistTriangle],
+                                    eTwistTriangle[1] ^ (hasTwistTriangle ^
+                                        fTwistTriangle[0 ^ hasTwistTriangle]));
+                            }
+                        }
+                    }
+
+                    edgeState_[eIdx].bdryEdges--;
+                    edgeState_[fIdx].bdryEdges--;
+                }
             } else {
                 // We are joining two distinct edges together and merging
                 // their edge links.
@@ -959,6 +1075,68 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
                     edgeStateChanged_[orderIdx] = fRep;
                 }
                 --nEdgeClasses_;
+
+                // Adjust the cycles of boundary components.
+                if (edgeState_[eIdx].bdryEdges == 2)
+                    edgeBdryBackup(eIdx);
+                if (edgeState_[fIdx].bdryEdges == 2)
+                    edgeBdryBackup(fIdx);
+
+                if (edgeBdryLength1(eIdx)) {
+                    if (edgeBdryLength1(fIdx)) {
+                        // Both eIdx and fIdx form entire boundary components
+                        // of length one; these are joined together and the
+                        // edge link is closed off.
+                        // No changes to make for the boundary cycles.
+                    } else {
+                        // Here eIdx forms a boundary component of length one,
+                        // and fIdx does not.  Ignore eIdx, and simply excise
+                        // the relevant edge from fIdx.
+                        // There is nothing to do here unless fIdx only has one
+                        // boundary edge remaining (in which case we know it
+                        // joins to some different pentachoron edge).
+                        if (edgeState_[fIdx].bdryEdges == 1) {
+                            fNext[0] = edgeState_[fIdx].bdryNext[0];
+                            fNext[1] = edgeState_[fIdx].bdryNext[1];
+                            fTwistTriangle[0] = edgeState_[fIdx].bdryTwist[0];
+                            fTwistTriangle[1] = edgeState_[fIdx].bdryTwist[1];
+
+                            edgeBdryJoin(fNext[0], 1 ^ fTwistTriangle[0],
+                                fNext[1],
+                                fTwistTriangle[0] ^ fTwistTriangle[1]);
+                        }
+                    }
+                } else if (edgeBdryLength1(fIdx)) {
+                    // As above, but with the two edges the other way around.
+                    if (edgeState_[eIdx].bdryEdges == 1) {
+                        eNext[0] = edgeState_[eIdx].bdryNext[0];
+                        eNext[1] = edgeState_[eIdx].bdryNext[1];
+                        eTwistTriangle[0] = edgeState_[eIdx].bdryTwist[0];
+                        eTwistTriangle[1] = edgeState_[eIdx].bdryTwist[1];
+
+                        edgeBdryJoin(eNext[0], 1 ^ eTwistTriangle[0], eNext[1],
+                            eTwistTriangle[0] ^ eTwistTriangle[1]);
+                    }
+                } else {
+                    // Each edge belongs to a boundary component of length
+                    // at least two.  Merge the components together.
+                    edgeBdryNext(eIdx, facet.pent, e, facet.facet, eNext,
+                        eTwistTriangle);
+                    edgeBdryNext(fIdx, adj.pent, f, adj.facet, fNext,
+                        fTwistTriangle);
+
+                    edgeBdryJoin(eNext[0], 1 ^ eTwistTriangle[0],
+                        fNext[1 ^ hasTwistTriangle],
+                        eTwistTriangle[0] ^ (hasTwistTriangle ^
+                            fTwistTriangle[1 ^ hasTwistTriangle]));
+                    edgeBdryJoin(eNext[1], 0 ^ eTwistTriangle[1],
+                        fNext[0 ^ hasTwistTriangle],
+                        eTwistTriangle[1] ^ (hasTwistTriangle ^
+                            fTwistTriangle[0 ^ hasTwistTriangle]));
+                }
+
+                edgeState_[eIdx].bdryEdges--;
+                edgeState_[fIdx].bdryEdges--;
             }
         }
     }
@@ -967,28 +1145,38 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
 }
 
 void Dim4GluingPermSearcher::splitEdgeClasses() {
-    // TODO: UFIND
     Dim4PentFacet facet = order_[orderElt_];
+    Dim4PentFacet adj = (*pairing_)[facet];
 
-    int v1, v2, v3;
-    int e;
-    int eIdx, orderIdx;
+    int v1, v2, v3, w1, w2, w3;
+    int e, f;
+    int eIdx, fIdx, orderIdx;
     int rep, subRep;
 
-    v1 = facet.facet;
+    NPerm5 p = gluingPerm(facet);
 
+    v1 = facet.facet;
+    w1 = p[v1];
+
+    // TODO: UFIND
     // Do everything in reverse.  This includes the nested loops over vertices.
     for (v2 = 3; v2 >= 0; --v2) {
         if (v2 == v1)
             continue;
+
+        w2 = p[v2];
+
         for (v3 = 4; v3 > v2; --v3) {
             if (v3 == v1)
                 continue;
 
+            w3 = p[v3];
+
             // Look at the edge opposite v1, v2 and v3.
             e = Dim4Face::faceNumber[v1][v2][v3];
-
+            f = Dim4Face::faceNumber[w1][w2][w3];
             eIdx = e + 10 * facet.pent;
+            fIdx = f + 10 * adj.pent;
             orderIdx = e + 10 * orderElt_;
 
             if (edgeStateChanged_[orderIdx] < 0) {
@@ -1012,6 +1200,54 @@ void Dim4GluingPermSearcher::splitEdgeClasses() {
 
                 edgeStateChanged_[orderIdx] = -1;
                 ++nEdgeClasses_;
+            }
+
+            // Restore cycles of boundary components.
+            if (eIdx == fIdx) {
+                edgeState_[eIdx].bdryEdges += 2;
+
+                // Adjust neighbours to point back to eIdx if required.
+                if (edgeState_[eIdx].bdryEdges == 2)
+                    edgeBdryFixAdj(eIdx);
+            } else {
+                edgeState_[fIdx].bdryEdges++;
+                edgeState_[eIdx].bdryEdges++;
+
+                switch (edgeState_[fIdx].bdryEdges) {
+                    case 3: edgeState_[fIdx].bdryNext[0] =
+                                edgeState_[fIdx].bdryNext[1] = fIdx;
+                            edgeState_[fIdx].bdryTwist[0] =
+                                edgeState_[fIdx].bdryTwist[1] = 0;
+                            break;
+
+                    case 2: edgeBdryRestore(fIdx);
+                            // Fall through to the next case, so we can
+                            // adjust the neighbours.
+
+                    case 1: // Nothing was changed for fIdx during the merge,
+                            // so there is nothing there to restore.
+
+                            // Adjust neighbours to point back to fIdx.
+                            edgeBdryFixAdj(fIdx);
+                }
+
+                switch (edgeState_[eIdx].bdryEdges) {
+                    case 3: edgeState_[eIdx].bdryNext[0] =
+                                edgeState_[eIdx].bdryNext[1] = eIdx;
+                            edgeState_[eIdx].bdryTwist[0] =
+                                edgeState_[eIdx].bdryTwist[1] = 0;
+                            break;
+
+                    case 2: edgeBdryRestore(eIdx);
+                            // Fall through to the next case, so we can
+                            // adjust the neighbours.
+
+                    case 1: // Nothing was changed for eIdx during the merge,
+                            // so there is nothing there to restore.
+
+                            // Adjust neighbours to point back to eIdx.
+                            edgeBdryFixAdj(eIdx);
+                }
             }
         }
     }
