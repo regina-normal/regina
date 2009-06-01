@@ -32,11 +32,18 @@
 #include <sstream>
 #include <popt.h>
 #include <unistd.h>
+#include "census/dim4census.h"
 #include "census/ncensus.h"
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "progress/nprogressmanager.h"
+
+#define WORD_face (dim4 ? "facet" : "face")
+#define WORD_faces (dim4 ? "facets" : "faces")
+#define WORD_tetrahedra (dim4 ? "pentachora" : "tetrahedra")
+#define WORD_tetrahedron (dim4 ? "pentachoron" : "tetrahedron")
+#define WORD_Tetrahedron (dim4 ? "Pentachoron" : "Tetrahedron")
 
 // Constants.
 const long MAXTET = 15;
@@ -51,6 +58,7 @@ regina::NBoolSet
 int minimal = 0;
 int minimalPrime = 0;
 int minimalPrimeP2 = 0;
+int dim4 = 0;
 int usePairs = 0;
 
 // Variables used for a dump of face pairings.
@@ -58,10 +66,24 @@ std::auto_ptr<std::ostream> dumpStream;
 unsigned long totPairings = 0;
 
 /**
- * Dump the given face pairing to dumpStream.
+ * Dump the given tetrahedron face pairing to dumpStream.
  */
-void dumpPairing(const regina::NFacePairing* pair,
+void dumpNFacePairing(const regina::NFacePairing* pair,
         const regina::NFacePairingIsoList*, void*) {
+    if (pair) {
+        if (dumpStream.get())
+            (*dumpStream) << (*pair).toTextRep() << std::endl;
+        else
+            std::cout << (*pair).toTextRep() << std::endl;
+        totPairings++;
+    }
+}
+
+/**
+ * Dump the given pentachoron facet pairing to dumpStream.
+ */
+void dumpDim4FacetPairing(const regina::Dim4FacetPairing* pair,
+        const regina::Dim4FacetPairingIsoList*, void*) {
     if (pair) {
         if (dumpStream.get())
             (*dumpStream) << (*pair).toTextRep() << std::endl;
@@ -79,21 +101,28 @@ regina::NText* parameterPacket() {
     desc->setPacketLabel("Parameters");
     std::ostringstream descStream;
 
+    if (dim4)
+        descStream << "Census of 4-manifold triangulations\n";
+    else
+        descStream << "Census of 3-manifold triangulations\n";
+
     if (usePairs)
-        descStream << "Only used a subset of all available face pairings.\n";
+        descStream << "Only used a subset of all available "
+            << WORD_face << " pairings\n";
     else {
-        descStream << nTet << (nTet == 1 ? " tetrahedron\n" : " tetrahedra\n");
+        descStream << nTet << ' ' <<
+            (nTet == 1 ? WORD_tetrahedron : WORD_tetrahedra) << "\n";
 
         if (boundary == regina::NBoolSet::sTrue)
-            descStream << "Boundary faces only\n";
+            descStream << "Boundary " << WORD_faces << " only\n";
         else if (boundary == regina::NBoolSet::sFalse)
-            descStream << "No boundary faces only\n";
+            descStream << "No boundary " << WORD_faces << " only\n";
         else
-            descStream << "With and without boundary faces\n";
+            descStream << "With and without boundary " << WORD_faces << "\n";
 
         if (nBdryFaces >= 0)
             descStream << "Requires precisely " << nBdryFaces <<
-                " boundary faces\n";
+                " boundary " << WORD_faces << "\n";
     }
 
     if (finiteness == regina::NBoolSet::sTrue)
@@ -155,6 +184,10 @@ int main(int argc, const char* argv[]) {
             "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", 0 },
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
             "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", 0 },
+        { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
+            "Run a census of 4-manifold triangulations, "
+            "not 3-manifold triangulations.  Here --tetrahedra counts "
+            "pentachora, and --bdryfaces counts boundary facets.", 0 },
         { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
             "Only generate face pairings, not triangulations.", 0 },
         { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
@@ -203,19 +236,23 @@ int main(int argc, const char* argv[]) {
     } else if (genPairs && (minimal || minimalPrime || minimalPrimeP2)) {
         std::cerr << "Minimality options cannot be used with -p/--genpairs.\n";
         broken = true;
+    } else if (dim4 && (minimal || minimalPrime || minimalPrimeP2)) {
+        std::cerr << "Minimality options cannot be used with -4/--dim4.\n";
+        broken = true;
     } else if (usePairs && nTet) {
-        std::cerr << "Tetrahedron options cannot be used with -P/--usepairs.\n";
+        std::cerr << WORD_Tetrahedron
+            << " options cannot be used with -P/--usepairs.\n";
         broken = true;
     } else if (usePairs && (argBdry || argNoBdry || (nBdryFaces != -1))) {
         std::cerr << "Boundary options cannot be used with -P/--usepairs.\n";
         broken = true;
     } else if ((! usePairs) && nTet == 0) {
-        std::cerr << "The number of tetrahedra must be specified using "
-            << "option -t/--tetrahedra.\n";
+        std::cerr << "The number of " << WORD_tetrahedra
+            << " must be specified using option -t/--tetrahedra.\n";
         broken = true;
     } else if ((! usePairs) && (nTet < 1 || nTet > MAXTET)) {
-        std::cerr << "The number of tetrahedra must be between 1 and "
-            << MAXTET << " inclusive.\n";
+        std::cerr << "The number of " << WORD_tetrahedra
+            << " must be between 1 and " << MAXTET << " inclusive.\n";
         broken = true;
     } else if (argBdry && argNoBdry) {
         std::cerr << "Options -b/--boundary and -i/--internal "
@@ -237,7 +274,8 @@ int main(int argc, const char* argv[]) {
 
     if ((! broken) && (nBdryFaces != -1)) {
         if (nBdryFaces < 0) {
-            std::cerr << "Number of boundary faces cannot be negative.\n";
+            std::cerr << "Number of boundary "
+                << WORD_faces << " cannot be negative.\n";
             broken = true;
         } else if (nBdryFaces == 0) {
             // Asking for no boundary faces.
@@ -247,13 +285,22 @@ int main(int argc, const char* argv[]) {
                 broken = true;
             } else
                 argNoBdry = 1;
-        } else if (nBdryFaces % 2 != 0) {
+        } else if ((! dim4) && (nBdryFaces % 2 != 0)) {
             std::cerr << "Number of boundary faces must be even.\n";
             broken = true;
-        } else if (nBdryFaces > 2 * nTet + 2) {
+        } else if (dim4 && ((nTet + nBdryFaces) % 2 != 0)) {
+            std::cerr << "Number of boundary facets must have the "
+                "same parity as the number of pentachora.\n";
+            broken = true;
+        } else if ((! dim4) && (nBdryFaces > 2 * nTet + 2)) {
             std::cerr << "Number of boundary faces for " << nTet
                 << (nTet == 1 ? " tetrahedron" : " tetrahedra")
                 << " can be at most " << (2 * nTet + 2) << ".\n";
+            broken = true;
+        } else if (dim4 && (5 * nTet - nBdryFaces < nTet - 1)) {
+            std::cerr << "Number of boundary facets for " << nTet
+                << (nTet == 1 ? " pentachoron" : " pentachora")
+                << " can be at most " << (4 * nTet + 1) << ".\n";
             broken = true;
         } else {
             // Asking for a valid positive number of boundary faces.
@@ -291,9 +338,15 @@ int main(int argc, const char* argv[]) {
             }
         }
 
-        regina::NFacePairing::findAllPairings(nTet, boundary, nBdryFaces,
-            dumpPairing, 0, false);
-        std::cerr << "Total face pairings: " << totPairings << std::endl;
+        if (dim4) {
+            regina::Dim4FacetPairing::findAllPairings(nTet, boundary,
+                nBdryFaces, dumpDim4FacetPairing, 0, false);
+            std::cerr << "Total facet pairings: " << totPairings << std::endl;
+        } else {
+            regina::NFacePairing::findAllPairings(nTet, boundary,
+                nBdryFaces, dumpNFacePairing, 0, false);
+            std::cerr << "Total face pairings: " << totPairings << std::endl;
+        }
         return 0;
     }
 
@@ -328,37 +381,69 @@ int main(int argc, const char* argv[]) {
 
     if (usePairs) {
         // Only use the face pairings read from standard input.
-        std::cout << "Trying face pairings..." << std::endl;
-        std::string pairingList("Face pairings:\n\n");
+        std::string pairingList;
+        if (dim4) {
+            std::cout << "Trying facet pairings..." << std::endl;
+            pairingList = "Facet pairings:\n\n";
+        } else {
+            std::cout << "Trying face pairings..." << std::endl;
+            pairingList = "Face pairings:\n\n";
+        }
 
         std::string pairingRep;
-        regina::NFacePairing* pairing;
+        regina::Dim4FacetPairing* pairing4;
+        regina::NFacePairing* pairing3;
         while (true) {
             std::getline(std::cin, pairingRep);
 
             if (pairingRep.length() > 0) {
-                pairing = regina::NFacePairing::fromTextRep(pairingRep);
-                if (! pairing) {
-                    std::cerr << "Invalid face pairing: " << pairingRep
-                        << std::endl;
-                    pairingList += "INVALID: ";
-                    pairingList += pairingRep;
-                    pairingList += '\n';
-                } else if (! pairing->isCanonical()) {
-                    std::cerr << "Non-canonical face pairing: " << pairingRep
-                        << std::endl;
-                    pairingList += "NON-CANONICAL: ";
-                    pairingList += pairingRep;
-                    pairingList += '\n';
-                } else {
-                    std::cout << pairing->toString() << std::endl;
-                    regina::NCensus::formPartialCensus(pairing, census,
-                        finiteness, orientability, whichPurge,
-                        ((minimal || minimalPrime || minimalPrimeP2) ?
-                        regina::NCensus::mightBeMinimal : 0), 0);
+                if (dim4) {
+                    pairing4 = regina::Dim4FacetPairing::fromTextRep(
+                        pairingRep);
+                    if (! pairing4) {
+                        std::cerr << "Invalid facet pairing: " << pairingRep
+                            << std::endl;
+                        pairingList += "INVALID: ";
+                        pairingList += pairingRep;
+                        pairingList += '\n';
+                    } else if (! pairing4->isCanonical()) {
+                        std::cerr << "Non-canonical facet pairing: "
+                            << pairingRep << std::endl;
+                        pairingList += "NON-CANONICAL: ";
+                        pairingList += pairingRep;
+                        pairingList += '\n';
+                    } else {
+                        std::cout << pairing4->toString() << std::endl;
+                        regina::Dim4Census::formPartialCensus(pairing4, census,
+                            finiteness, orientability, 0, 0);
 
-                    pairingList += pairing->toString();
-                    pairingList += '\n';
+                        pairingList += pairing4->toString();
+                        pairingList += '\n';
+                    }
+                } else {
+                    pairing3 = regina::NFacePairing::fromTextRep(pairingRep);
+                    if (! pairing3) {
+                        std::cerr << "Invalid face pairing: " << pairingRep
+                            << std::endl;
+                        pairingList += "INVALID: ";
+                        pairingList += pairingRep;
+                        pairingList += '\n';
+                    } else if (! pairing3->isCanonical()) {
+                        std::cerr << "Non-canonical face pairing: "
+                            << pairingRep << std::endl;
+                        pairingList += "NON-CANONICAL: ";
+                        pairingList += pairingRep;
+                        pairingList += '\n';
+                    } else {
+                        std::cout << pairing3->toString() << std::endl;
+                        regina::NCensus::formPartialCensus(pairing3, census,
+                            finiteness, orientability, whichPurge,
+                            ((minimal || minimalPrime || minimalPrimeP2) ?
+                            regina::NCensus::mightBeMinimal : 0), 0);
+
+                        pairingList += pairing3->toString();
+                        pairingList += '\n';
+                    }
                 }
             }
 
@@ -368,19 +453,24 @@ int main(int argc, const char* argv[]) {
 
         // Store the face pairings used with the census.
         regina::NText* pairingPacket = new regina::NText(pairingList);
-        pairingPacket->setPacketLabel("Face Pairings");
+        pairingPacket->setPacketLabel(
+            dim4 ? "Facet Pairings" : "Face Pairings");
         parent.insertChildAfter(pairingPacket, desc);
     } else {
         // An ordinary all-face-pairings census.
         std::cout << "Progress reports are periodic." << std::endl;
-        std::cout << "Not all face pairings used will be reported."
-            << std::endl;
+        std::cout << "Not all " << WORD_face
+            << " pairings used will be reported." << std::endl;
 
         regina::NProgressManager manager;
-        regina::NCensus::formCensus(census, nTet, finiteness,
-            orientability, boundary, nBdryFaces, whichPurge,
-            ((minimal || minimalPrime || minimalPrimeP2) ?
-            regina::NCensus::mightBeMinimal : 0), 0, &manager);
+        if (dim4)
+            regina::Dim4Census::formCensus(census, nTet, finiteness,
+                orientability, boundary, nBdryFaces, 0, 0, &manager);
+        else
+            regina::NCensus::formCensus(census, nTet, finiteness,
+                orientability, boundary, nBdryFaces, whichPurge,
+                ((minimal || minimalPrime || minimalPrimeP2) ?
+                regina::NCensus::mightBeMinimal : 0), 0, &manager);
 
         // Output progress and wait for the census to finish.
         while (! manager.isStarted())

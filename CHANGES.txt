@@ -15,6 +15,10 @@ Version 5.0  [ (under development) ]
         Class NPerm5:
             - New class describing permutations of five elements, which
               we need in order to describe 4-manifold triangulations.
+    UTILITIES:
+        tricensus:
+            - Can now run a census of 4-manifold triangulations (rather than
+              3-manifold triangulations) by passing the argument -4 / --dim4.
     TEST SUITE:
         - Added very thorough tests for NPerm5.
 
