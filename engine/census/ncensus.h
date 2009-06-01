@@ -27,8 +27,8 @@
 /* end stub */
 
 /*! \file census/ncensus.h
- *  \brief Deals with forming a census of all triangulations of a given
- *  size.
+ *  \brief Deals with forming a census of all 3-manifold triangulations
+ *  of a given size.
  */
 
 #ifndef __NCENSUS_H
@@ -50,30 +50,22 @@ class NTriangulation;
 
 /**
  * \addtogroup census Census of Triangulations
- * Census building for 3-manifold triangulations.
+ * Census building for 3-manifold and 4-manifold triangulations.
  * @{
  */
 
 /**
- * A routine used to determine whether a particular triangulation should be
- * included in a census.  Routines of this type are used by
- * NCensus::formCensus().
+ * A legacy typedef that is identical to NCensus::AcceptTriangulation.
+ * See NCensus::AcceptTriangulation for further details.
  *
- * The first parameter passed should be a triangulation currently under
- * consideration.
- * The second parameter may contain arbitrary data as passed to
- * NCensus::formCensus().
- *
- * The return value should be \c true if the triangulation passed should
- * be included in the census, or \c false otherwise.
+ * \deprecated This global typedef is now deprecated.  Please use the
+ * identical class typedef NCensus::AcceptTriangulation instead.
  */
 typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
 
 /**
  * A utility class used to form a complete census of 3-manifold
- * triangulations satisfying certain constraints.  Other tasks (such as
- * finding all completions of a triangulation with boundary) are also
- * offered.
+ * triangulations satisfying certain constraints.
  *
  * \testpart
  */
@@ -96,6 +88,21 @@ class NCensus {
         static const int PURGE_P2_REDUCIBLE;
             /**< Indicates that any triangulation containing an embedded
                  two-sided projective plane may be ignored. */
+
+        /**
+         * A routine used to determine whether a particular triangulation
+         * should be included in a census.  Routines of this type are used by
+         * NCensus::formCensus().
+         *
+         * The first parameter passed should be a triangulation currently
+         * under consideration.
+         * The second parameter may contain arbitrary data as passed to
+         * NCensus::formCensus().
+         *
+         * The return value should be \c true if the triangulation passed
+         * should be included in the census, or \c false otherwise.
+         */
+        typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
 
     private:
         NPacket* parent;
@@ -365,8 +372,6 @@ class NCensus {
          * Creates a new structure to hold the given information.
          * All parameters not explained are taken directly from
          * formCensus().
-         *
-         * \pre \a nTetrahedra is at least 1.
          *
          * @param newProgress the object with which to report progress
          * for the census generation, or 0 if progress reporting is not

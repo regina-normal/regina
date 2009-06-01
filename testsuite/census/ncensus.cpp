@@ -32,7 +32,6 @@
 #include "packet/ncontainer.h"
 #include "testsuite/census/testcensus.h"
 
-using regina::AcceptTriangulation;
 using regina::NBoolSet;
 using regina::NCensus;
 using regina::NContainer;
@@ -57,11 +56,11 @@ class NCensusTest : public CppUnit::TestFixture {
 
         void rawCounts() {
             unsigned nAll[] = { 1, 5, 61, 1581 };
-            rawCountsCompare(1, 3, nAll, "closed",
+            rawCountsCompare(1, 3, nAll, "closed/ideal",
                 NBoolSet::sBoth, NBoolSet::sBoth, NBoolSet::sFalse, 0, 0, 0);
 
             unsigned nOrientable[] = { 1, 4, 35, 454, 13776 };
-            rawCountsCompare(1, 3, nOrientable, "closed orbl",
+            rawCountsCompare(1, 3, nOrientable, "closed/ideal orbl",
                 NBoolSet::sBoth, NBoolSet::sTrue, NBoolSet::sFalse, 0, 0, 0);
         }
 
@@ -105,7 +104,7 @@ class NCensusTest : public CppUnit::TestFixture {
                 const unsigned* realAns, const char* censusType,
                 NBoolSet finiteness, NBoolSet orientability,
                 NBoolSet boundary, int nBdryFaces, int whichPurge,
-                AcceptTriangulation sieve) {
+                NCensus::AcceptTriangulation sieve) {
             NContainer* census;
 
             for (unsigned nTets = minTets; nTets <= maxTets; nTets++) {
