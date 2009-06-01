@@ -10,6 +10,12 @@ Regina - A Normal Surface Theory Calculator
 Version 4.6.1  [ (under development) ]
 
     ENGINE:
+        Typedef AcceptTriangulation:
+            - This global typedef has been deprecated.  Please use the
+              class typedef NCensus::AcceptTriangulation instead.
+        Class NCensus:
+            - New class typedef NCensus::AcceptTriangulation to replace the
+              old global typedef AcceptTriangulation.
         Class NPerm:
             - New routines S4Index() and orderedS4Index() for reverse
               lookups into the arrays NPerm::S4 and NPerm::orderedS4.
