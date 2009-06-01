@@ -29,6 +29,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/nperm3.h"
+#include "triangulation/nperm.h"
 #include "testsuite/maths/testmaths.h"
 
 using regina::NPerm3;
@@ -39,6 +40,7 @@ class NPerm3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
+    CPPUNIT_TEST(products);
     CPPUNIT_TEST(exhaustive);
 
     CPPUNIT_TEST_SUITE_END();
@@ -273,6 +275,41 @@ class NPerm3Test : public CppUnit::TestFixture {
                     << " does not appear to be correct.";
                 CPPUNIT_FAIL(msg.str());
             }
+        }
+
+        void products() {
+            int a, b, c, d, e, f;
+
+            for (a = 0; a < 3; ++a)
+                for (b = 0; b < 3; ++b) {
+                    if (b == a)
+                        continue;
+                    c = 3 - a - b;
+                    NPerm3 x(a, b, c);
+
+                    for (d = 0; d < 3; ++d)
+                        for (e = 0; e < 3; ++e) {
+                            if (e == d)
+                                continue;
+                            f = 3 - d - e;
+                            NPerm3 y(d, e, f);
+
+                            NPerm3 product3 = x * y;
+                            regina::NPerm product4 =
+                                regina::NPerm(a, b, c, 3) *
+                                regina::NPerm(d, e, f, 3);
+
+                            if (product3[0] != product4[0] ||
+                                    product3[1] != product4[1] ||
+                                    product3[2] != product4[2]) {
+                                std::ostringstream msg;
+                                msg << "The product is incorrect for "
+                                    << x.toString() << " * "
+                                    << y.toString() << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                }
         }
 
         void exhaustive() {
