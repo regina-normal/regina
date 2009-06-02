@@ -43,6 +43,11 @@
 namespace regina {
 
 /**
+ * \weakgroup enumerate
+ * @{
+ */
+
+/**
  * A legacy typedef provided for backward compatibility only.
  *
  * \deprecated As of Regina 4.6, the class NDoubleDescriptor has been
@@ -54,6 +59,8 @@ namespace regina {
  * future version of Regina.
  */
 typedef NDoubleDescription NDoubleDescriptor;
+
+/*@}*/
 
 } // namespace regina
 

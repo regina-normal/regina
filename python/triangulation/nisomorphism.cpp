@@ -36,7 +36,7 @@ using regina::NIsomorphism;
 namespace {
     int (NIsomorphism::*tetImage_const)(unsigned) const =
         &NIsomorphism::tetImage;
-    regina::NPerm (NIsomorphism::*facePerm_const)(unsigned) const =
+    regina::NPerm4 (NIsomorphism::*facePerm_const)(unsigned) const =
         &NIsomorphism::facePerm;
 
     regina::NTetFace iso_getItem(const NIsomorphism& iso,

@@ -27,24 +27,24 @@
 /* end stub */
 
 #include <sstream>
-#include "triangulation/nedge.h"
-#include "triangulation/nface.h"
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
+#include "triangulation/nedge.h" // deprecated
+#include "triangulation/nface.h" // deprecated
 
 namespace regina {
 
-const NPerm NPerm::S4[24] = {
-    NPerm(0,1,2,3), NPerm(0,1,3,2), NPerm(0,2,3,1), NPerm(0,2,1,3),
-    NPerm(0,3,1,2), NPerm(0,3,2,1), NPerm(1,0,3,2), NPerm(1,0,2,3),
-    NPerm(1,2,0,3), NPerm(1,2,3,0), NPerm(1,3,2,0), NPerm(1,3,0,2),
-    NPerm(2,0,1,3), NPerm(2,0,3,1), NPerm(2,1,3,0), NPerm(2,1,0,3),
-    NPerm(2,3,0,1), NPerm(2,3,1,0), NPerm(3,0,2,1), NPerm(3,0,1,2),
-    NPerm(3,1,0,2), NPerm(3,1,2,0), NPerm(3,2,1,0), NPerm(3,2,0,1)
+const NPerm4 NPerm4::S4[24] = {
+    NPerm4(0,1,2,3), NPerm4(0,1,3,2), NPerm4(0,2,3,1), NPerm4(0,2,1,3),
+    NPerm4(0,3,1,2), NPerm4(0,3,2,1), NPerm4(1,0,3,2), NPerm4(1,0,2,3),
+    NPerm4(1,2,0,3), NPerm4(1,2,3,0), NPerm4(1,3,2,0), NPerm4(1,3,0,2),
+    NPerm4(2,0,1,3), NPerm4(2,0,3,1), NPerm4(2,1,3,0), NPerm4(2,1,0,3),
+    NPerm4(2,3,0,1), NPerm4(2,3,1,0), NPerm4(3,0,2,1), NPerm4(3,0,1,2),
+    NPerm4(3,1,0,2), NPerm4(3,1,2,0), NPerm4(3,2,1,0), NPerm4(3,2,0,1)
 };
 
-const NPerm* allPermsS4 = NPerm::S4;
+const NPerm4* allPermsS4 = NPerm4::S4;
 
-const unsigned NPerm::invS4[24] = {
+const unsigned NPerm4::invS4[24] = {
     0, 1, 4, 3,
     2, 5, 6, 7,
     12, 19, 18, 13,
@@ -53,56 +53,56 @@ const unsigned NPerm::invS4[24] = {
     14, 21, 22, 17
 };
 
-const unsigned* allPermsS4Inv = NPerm::invS4;
+const unsigned* allPermsS4Inv = NPerm4::invS4;
 
-const NPerm NPerm::orderedS4[24] = {
-    NPerm(0,1,2,3), NPerm(0,1,3,2), NPerm(0,2,1,3), NPerm(0,2,3,1),
-    NPerm(0,3,1,2), NPerm(0,3,2,1), NPerm(1,0,2,3), NPerm(1,0,3,2),
-    NPerm(1,2,0,3), NPerm(1,2,3,0), NPerm(1,3,0,2), NPerm(1,3,2,0),
-    NPerm(2,0,1,3), NPerm(2,0,3,1), NPerm(2,1,0,3), NPerm(2,1,3,0),
-    NPerm(2,3,0,1), NPerm(2,3,1,0), NPerm(3,0,1,2), NPerm(3,0,2,1),
-    NPerm(3,1,0,2), NPerm(3,1,2,0), NPerm(3,2,0,1), NPerm(3,2,1,0)
+const NPerm4 NPerm4::orderedS4[24] = {
+    NPerm4(0,1,2,3), NPerm4(0,1,3,2), NPerm4(0,2,1,3), NPerm4(0,2,3,1),
+    NPerm4(0,3,1,2), NPerm4(0,3,2,1), NPerm4(1,0,2,3), NPerm4(1,0,3,2),
+    NPerm4(1,2,0,3), NPerm4(1,2,3,0), NPerm4(1,3,0,2), NPerm4(1,3,2,0),
+    NPerm4(2,0,1,3), NPerm4(2,0,3,1), NPerm4(2,1,0,3), NPerm4(2,1,3,0),
+    NPerm4(2,3,0,1), NPerm4(2,3,1,0), NPerm4(3,0,1,2), NPerm4(3,0,2,1),
+    NPerm4(3,1,0,2), NPerm4(3,1,2,0), NPerm4(3,2,0,1), NPerm4(3,2,1,0)
 };
 
-const NPerm* orderedPermsS4 = NPerm::orderedS4;
+const NPerm4* orderedPermsS4 = NPerm4::orderedS4;
 
-const NPerm NPerm::S3[6] = {
-    NPerm(0,1,2,3), NPerm(0,2,1,3),
-    NPerm(1,2,0,3), NPerm(1,0,2,3),
-    NPerm(2,0,1,3), NPerm(2,1,0,3)
+const NPerm4 NPerm4::S3[6] = {
+    NPerm4(0,1,2,3), NPerm4(0,2,1,3),
+    NPerm4(1,2,0,3), NPerm4(1,0,2,3),
+    NPerm4(2,0,1,3), NPerm4(2,1,0,3)
 };
 
-const NPerm* allPermsS3 = NPerm::S3;
+const NPerm4* allPermsS3 = NPerm4::S3;
 
-const unsigned NPerm::invS3[6] = {
+const unsigned NPerm4::invS3[6] = {
     0, 1,
     4, 3,
     2, 5
 };
 
-const unsigned* allPermsS3Inv = NPerm::invS3;
+const unsigned* allPermsS3Inv = NPerm4::invS3;
 
-const NPerm NPerm::orderedS3[6] = {
-    NPerm(0,1,2,3), NPerm(0,2,1,3),
-    NPerm(1,0,2,3), NPerm(1,2,0,3),
-    NPerm(2,0,1,3), NPerm(2,1,0,3)
+const NPerm4 NPerm4::orderedS3[6] = {
+    NPerm4(0,1,2,3), NPerm4(0,2,1,3),
+    NPerm4(1,0,2,3), NPerm4(1,2,0,3),
+    NPerm4(2,0,1,3), NPerm4(2,1,0,3)
 };
 
-const NPerm* orderedPermsS3 = NPerm::orderedS3;
+const NPerm4* orderedPermsS3 = NPerm4::orderedS3;
 
-const NPerm NPerm::S2[2] = {
-    NPerm(0,1,2,3), NPerm(1,0,2,3)
+const NPerm4 NPerm4::S2[2] = {
+    NPerm4(0,1,2,3), NPerm4(1,0,2,3)
 };
 
-const NPerm* allPermsS2 = NPerm::S2;
+const NPerm4* allPermsS2 = NPerm4::S2;
 
-const unsigned NPerm::invS2[2] = {
+const unsigned NPerm4::invS2[2] = {
     0, 1
 };
 
-const unsigned* allPermsS2Inv = NPerm::invS2;
+const unsigned* allPermsS2Inv = NPerm4::invS2;
 
-bool NPerm::isPermCode(unsigned char code) {
+bool NPerm4::isPermCode(unsigned char code) {
     unsigned char mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));
@@ -110,7 +110,7 @@ bool NPerm::isPermCode(unsigned char code) {
     return (mask == 15);
 }
 
-int NPerm::sign() const {
+int NPerm4::sign() const {
     // The code is a little non-obvious, but this routine needs to be
     // streamlined since it gets called a _lot_ during census generation.
     unsigned char matches = 0;
@@ -136,7 +136,7 @@ int NPerm::sign() const {
     return -1;
 }
 
-int NPerm::compareWith(const NPerm& other) const {
+int NPerm4::compareWith(const NPerm4& other) const {
     for (int i = 0; i < 4; i++) {
         if (imageOf(i) < other.imageOf(i))
             return -1;
@@ -146,7 +146,7 @@ int NPerm::compareWith(const NPerm& other) const {
     return 0;
 }
 
-std::string NPerm::toString() const {
+std::string NPerm4::toString() const {
     char ans[5];
     for (int i = 0; i < 4; i++)
         ans[i] = '0' + imageOf(i);
@@ -155,7 +155,7 @@ std::string NPerm::toString() const {
     return ans;
 }
 
-std::string NPerm::trunc2() const {
+std::string NPerm4::trunc2() const {
     char ans[3];
     ans[0] = '0' + imageOf(0);
     ans[1] = '0' + imageOf(1);
@@ -163,7 +163,7 @@ std::string NPerm::trunc2() const {
     return ans;
 }
 
-std::string NPerm::trunc3() const {
+std::string NPerm4::trunc3() const {
     char ans[4];
     ans[0] = '0' + imageOf(0);
     ans[1] = '0' + imageOf(1);
@@ -172,13 +172,13 @@ std::string NPerm::trunc3() const {
     return ans;
 }
 
-int NPerm::orderedS4Index() const {
+int NPerm4::orderedS4Index() const {
     return 6 * imageOf(0) +
            2 * (imageOf(1) - (imageOf(1) > imageOf(0) ? 1 : 0)) +
                (imageOf(2) > imageOf(3) ? 1 : 0);
 }
 
-int NPerm::S4Index() const {
+int NPerm4::S4Index() const {
     // S4 is almost the same as orderedS4, except that some pairs
     // S4[2i] <--> S4[2i+1] have been swapped to ensure that all
     // permutations S4[2i] are even and all permutations S4[2i+1] are odd.
@@ -191,43 +191,45 @@ int NPerm::S4Index() const {
     return retval;
 }
 
-NPerm faceOrdering(int face) {
+NPerm4 faceOrdering(int face) {
     switch(face) {
         case 0:
-            return NPerm(1,2,3,0);
+            return NPerm4(1,2,3,0);
         case 1:
-            return NPerm(0,2,3,1);
+            return NPerm4(0,2,3,1);
         case 2:
-            return NPerm(0,1,3,2);
+            return NPerm4(0,1,3,2);
         case 3:
-            return NPerm(0,1,2,3);
+            return NPerm4(0,1,2,3);
     }
-    return NPerm();
+    return NPerm4();
 }
 
-NPerm edgeOrdering(int edge) {
+NPerm4 edgeOrdering(int edge) {
     switch(edge) {
         case 0:
-            return NPerm(0,1,2,3);
+            return NPerm4(0,1,2,3);
         case 1:
-            return NPerm(0,2,3,1);
+            return NPerm4(0,2,3,1);
         case 2:
-            return NPerm(0,3,1,2);
+            return NPerm4(0,3,1,2);
         case 3:
-            return NPerm(1,2,0,3);
+            return NPerm4(1,2,0,3);
         case 4:
-            return NPerm(1,3,2,0);
+            return NPerm4(1,3,2,0);
         case 5:
-            return NPerm(2,3,0,1);
+            return NPerm4(2,3,0,1);
     }
-    return NPerm();
+    return NPerm4();
 }
 
 std::string faceDescription(int face) {
+    // deprecated
     return NFace::ordering[face].trunc3();
 }
 
 std::string edgeDescription(int edge) {
+    // deprecated
     return NEdge::ordering[edge].trunc2();
 }
 

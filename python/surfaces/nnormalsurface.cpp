@@ -50,9 +50,9 @@ namespace {
     GlobalArray2D<int> vertexSplitDefn_arr(regina::vertexSplitDefn, 3);
     GlobalArray2D<int> vertexSplitPartner_arr(regina::vertexSplitPartner, 3);
     GlobalArray<const char*> vertexSplitString_arr(vertexSplitString_1D, 3);
-    GlobalArray2D<regina::NPerm> triDiscArcs_arr(regina::__triDiscArcs, 4, 3);
-    GlobalArray2D<regina::NPerm> quadDiscArcs_arr(regina::__quadDiscArcs, 3, 4);
-    GlobalArray2D<regina::NPerm> octDiscArcs_arr(regina::__octDiscArcs, 3, 8);
+    GlobalArray2D<regina::NPerm4> triDiscArcs_arr(regina::__triDiscArcs, 4, 3);
+    GlobalArray2D<regina::NPerm4> quadDiscArcs_arr(regina::__quadDiscArcs, 3, 4);
+    GlobalArray2D<regina::NPerm4> octDiscArcs_arr(regina::__octDiscArcs, 3, 8);
 
     void writeTextShort_stdio(const NNormalSurface& s) {
         s.writeTextShort(std::cout);

@@ -38,8 +38,8 @@ void addGlobalArray() {
     regina::python::GlobalArray<unsigned>::wrapClass("GlobalArray_unsigned");
     regina::python::GlobalArray<const char*>::wrapClass("GlobalArray_char_string");
     regina::python::GlobalArray<regina::NPerm3>::wrapClass("GlobalArray_NPerm3");
-    regina::python::GlobalArray<regina::NPerm>::wrapClass("GlobalArray_NPerm");
-    regina::python::GlobalArray2D<regina::NPerm>::wrapClass("GlobalArray2D_NPerm");
+    regina::python::GlobalArray<regina::NPerm4>::wrapClass("GlobalArray_NPerm4");
+    regina::python::GlobalArray2D<regina::NPerm4>::wrapClass("GlobalArray2D_NPerm4");
     regina::python::GlobalArray<regina::NPerm5>::wrapClass("GlobalArray_NPerm5");
     regina::python::GlobalArray2D<regina::NPerm5>::wrapClass("GlobalArray2D_NPerm5");
     regina::python::GlobalArray3D<regina::NPerm5>::wrapClass("GlobalArray3D_NPerm5");

@@ -38,7 +38,6 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addNPerm(CppUnit::TextUi::TestRunner& runner);
 void addNTriangulation(CppUnit::TextUi::TestRunner& runner);
 void addElementaryMoves(CppUnit::TextUi::TestRunner& runner);
 void addConnectedSumDecomp(CppUnit::TextUi::TestRunner& runner);

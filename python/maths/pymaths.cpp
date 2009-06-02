@@ -31,6 +31,7 @@ void addNLargeInteger();
 void addNMatrix2();
 void addNMatrixInt();
 void addNPerm3();
+void addNPerm4();
 void addNPerm5();
 void addNPrimes();
 void addNRational();
@@ -43,6 +44,7 @@ void addMaths() {
     addNMatrix2();
     addNMatrixInt();
     addNPerm3();
+    addNPerm4();
     addNPerm5();
     addNPrimes();
     addNRational();
