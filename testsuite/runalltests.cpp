@@ -118,12 +118,12 @@ bool runAllTests() {
 
     // Maths:
     addNPerm3(runner);
+    addNPerm4(runner);
     addNPrimes(runner);
     addNumberTheory(runner);
     addMatrixOps(runner);
 
     // Triangulation:
-    addNPerm(runner);
     addNTriangulation(runner);
     addElementaryMoves(runner);
     addConnectedSumDecomp(runner);

@@ -36,7 +36,7 @@ using regina::NLayeredChain;
 void addNLayeredChain() {
     class_<NLayeredChain, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NLayeredChain>, boost::noncopyable>
-            ("NLayeredChain", init<regina::NTetrahedron*, regina::NPerm>())
+            ("NLayeredChain", init<regina::NTetrahedron*, regina::NPerm4>())
         .def(init<const NLayeredChain&>())
         .def("getBottom", &NLayeredChain::getBottom,
             return_value_policy<reference_existing_object>())

@@ -34,7 +34,6 @@ void addNFace();
 void addNFacePair();
 void addNHomologicalData();
 void addNIsomorphism();
-void addNPerm();
 void addNTetFace();
 void addNTetrahedron();
 void addNTriangulation();
@@ -49,7 +48,6 @@ void addTriangulation() {
     addNFacePair();
     addNHomologicalData();
     addNIsomorphism();
-    addNPerm();
     addNTetFace();
     addNTetrahedron();
     addNTriangulation();

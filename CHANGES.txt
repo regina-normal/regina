@@ -17,11 +17,16 @@ Version 4.6.1  [ (under development) ]
             - New class typedef NCensus::AcceptTriangulation to replace the
               old global typedef AcceptTriangulation.
         Class NPerm:
-            - New routines S4Index() and orderedS4Index() for reverse
-              lookups into the arrays NPerm::S4 and NPerm::orderedS4.
+            - Renamed to NPerm4.  The C++ header has also moved from
+              triangulation/nperm.h to maths/nperm4.h .  Both the old
+              class name and the old header are now deprecated.
         Class NPerm3:
             - New class describing permutations of three elements.  This
               is extremely fast, using lookup tables for all calculations.
+        Class NPerm4:
+            - This is the new name for the old class NPerm (see above).
+            - New routines S4Index() and orderedS4Index() for reverse
+              lookups into the arrays NPerm::S4 and NPerm::orderedS4.
 
 Version 4.6  [ 16 May, 2009 ]
 
