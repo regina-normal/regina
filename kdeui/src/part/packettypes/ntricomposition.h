@@ -152,7 +152,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         static QString edgeString(unsigned long tetIndex, int edge1,
             int edge2);
         static QString edgeString(unsigned long tetIndex,
-            const regina::NPerm& roles, int startPreimage, int endPreimage);
+            const regina::NPerm4& roles, int startPreimage, int endPreimage);
         static QString matrixString(const regina::NMatrix2& matrix);
 
     private slots:

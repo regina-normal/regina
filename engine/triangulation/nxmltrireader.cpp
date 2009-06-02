@@ -62,7 +62,7 @@ namespace {
                     return;
 
                 long tetIndex, permCode;
-                NPerm perm;
+                NPerm4 perm;
                 NTetrahedron* adjTet;
                 int adjFace;
                 for (int k = 0; k < 4; k ++) {
@@ -74,7 +74,7 @@ namespace {
                     if (tetIndex < 0 || tetIndex >=
                             static_cast<int>(tri->getNumberOfTetrahedra()))
                         continue;
-                    if (! NPerm::isPermCode(
+                    if (! NPerm4::isPermCode(
                             static_cast<unsigned char>(permCode)))
                         continue;
 

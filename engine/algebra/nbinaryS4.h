@@ -39,7 +39,7 @@
 #endif
 
 #include <string>
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 //#include "maths/nperm5.h"
 
 #include <iostream>
@@ -64,7 +64,7 @@ class NBinaryS4 {
 	 * 0, ..., 23 are reserved for the standard lifts and 32, ..., 55
 	 * ie: 2^5 + n for n = 0, ..., 23 for the nonstandard lifts. 
 	 *  thus 0 represents the identity, and 32 the kernel of the 
-	 *  homomorphism NBinaryS4 --> NPerm.  
+	 *  homomorphism NBinaryS4 --> NPerm4.  
          */
         unsigned code;
 
@@ -299,12 +299,12 @@ inline NBinaryS4::NBinaryS4(unsigned newCode) : code(newCode) {
 }
 
 inline NBinaryS4::NBinaryS4(int a, int b, int c, int d, bool lift) {
-    code = NPerm(a,b,c,d).S4Index() + ( lift ? 32 : 0 );
+    code = NPerm4(a,b,c,d).S4Index() + ( lift ? 32 : 0 );
 }
 
 inline NBinaryS4::NBinaryS4(int a0, int a1, int b0, int b1,
         int c0, int c1, int d0, int d1, bool lift) {
-	code = NPerm(a0,a1,b0,b1,c0,c1,d0,d1).S4Index() + ( lift ? 32 : 0 );
+	code = NPerm4(a0,a1,b0,b1,c0,c1,d0,d1).S4Index() + ( lift ? 32 : 0 );
 }
 
 inline NBinaryS4::NBinaryS4(const NBinaryS4& cloneMe) : code(cloneMe.code) {
@@ -328,25 +328,25 @@ std::cout<<" ["<<(code >> 5)<<" "<<(q.code >> 5)<<" "
 	 <<(mult_table[code & floormask] >> (q.code & floormask)) % 2<<"] ";
 std::cout.flush();
 	return NBinaryS4( // something is wrong here...
-          (NPerm::S4[code & floormask] * NPerm::S4[q.code & floormask]).S4Index() +
+          (NPerm4::S4[code & floormask] * NPerm4::S4[q.code & floormask]).S4Index() +
                        ((((code >> 5) + (q.code >> 5) + 
 		        mult_table[code & floormask] >> (q.code & floormask)) % 2) << 5)
 			);
 }
 
 inline NBinaryS4 NBinaryS4::inverse() const {
-	return NBinaryS4( NPerm::invS4[code & floormask] + 
-                          ((((mult_table[code & floormask] >> NPerm::invS4[code & floormask]) + 
+	return NBinaryS4( NPerm4::invS4[code & floormask] + 
+                          ((((mult_table[code & floormask] >> NPerm4::invS4[code & floormask]) + 
 			  (code >> 5)) % 2) << 5)
                         );
 }
 
 inline int NBinaryS4::operator[](int source) const {
-    return NPerm::S4[code & floormask][source];
+    return NPerm4::S4[code & floormask][source];
 }
 
 inline int NBinaryS4::preImageOf(int image) const {
-    return NPerm::S4[code & floormask].preImageOf(image);
+    return NPerm4::S4[code & floormask].preImageOf(image);
 }
 
 inline bool NBinaryS4::operator == (const NBinaryS4& other) const {
@@ -362,7 +362,7 @@ inline bool NBinaryS4::isIdentity() const {
 }
 
 inline int NBinaryS4::imageOf(int source) const {
-    return NPerm::S4[code & floormask][source];
+    return NPerm4::S4[code & floormask][source];
 }
 
 inline std::string NBinaryS4::toString() const {

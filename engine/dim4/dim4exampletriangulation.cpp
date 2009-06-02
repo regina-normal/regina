@@ -95,7 +95,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
     int face;
     unsigned long adjIndex;
     const NTetrahedron *tet, *adjTet;
-    NPerm map;
+    NPerm4 map;
     for (i = 0; i < n; ++i) {
         pent[i] = new Dim4Pentachoron();
         pent[i + n] = new Dim4Pentachoron();
@@ -143,7 +143,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
     int face;
     unsigned long adjIndex;
     const NTetrahedron *tet, *adjTet;
-    NPerm map;
+    NPerm4 map;
     for (i = 0; i < n; ++i) {
         pent[i] = new Dim4Pentachoron();
 

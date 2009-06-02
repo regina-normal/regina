@@ -91,7 +91,7 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
     unsigned row = 0;
     int i;
     unsigned long tet0, tet1;
-    NPerm perm0, perm1;
+    NPerm4 perm0, perm1;
     for (NTriangulation::FaceIterator fit = triangulation->getFaces().begin();
             fit != triangulation->getFaces().end(); fit++) {
         if (! (*fit)->isBoundary()) {

@@ -35,7 +35,7 @@
 #define __NPERMIT_H
 #endif
 
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 
 namespace regina {
 
@@ -50,7 +50,7 @@ namespace regina {
  *
  * \deprecated This class will removed in a future release of Regina, since
  * it is completely unnecessary.  Just loop directly through the 24 elements
- * of NPerm::S4.
+ * of NPerm4::S4.
  *
  * \ifacespython Not present.
  */
@@ -81,7 +81,7 @@ class NPermItS4 {
          *
          * @return the permutation at which this iterator is pointing.
          */
-        const NPerm& operator * () const;
+        const NPerm4& operator * () const;
         /**
          * Determines if this iterator is past-the-end (has run through
          * all possible permutations).
@@ -105,8 +105,8 @@ inline void NPermItS4::operator ++ (int) {
     permIndex++;
 }
 
-inline const NPerm& NPermItS4::operator * () const {
-    return NPerm::S4[permIndex];
+inline const NPerm4& NPermItS4::operator * () const {
+    return NPerm4::S4[permIndex];
 }
 inline bool NPermItS4::done() const {
     return (permIndex >= 24);

@@ -27,8 +27,8 @@
 /* end stub */
 
 #include "maths/nperm3.h"
+#include "maths/nperm4.h"
 #include "maths/nperm5.h"
-#include "triangulation/nperm.h"
 #include "globalarray.h"
 
 void addGlobalArray() {

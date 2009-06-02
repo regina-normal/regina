@@ -56,13 +56,13 @@ const int NEdge::edgeVertex[6][2] = {
     { 1, 3 },
     { 2, 3 }};
 
-const NPerm NEdge::ordering[6] = {
-    NPerm(0, 1, 2, 3),
-    NPerm(0, 2, 3, 1),
-    NPerm(0, 3, 1, 2),
-    NPerm(1, 2, 0, 3),
-    NPerm(1, 3, 2, 0),
-    NPerm(2, 3, 0, 1)
+const NPerm4 NEdge::ordering[6] = {
+    NPerm4(0, 1, 2, 3),
+    NPerm4(0, 2, 3, 1),
+    NPerm4(0, 3, 1, 2),
+    NPerm4(1, 2, 0, 3),
+    NPerm4(1, 3, 2, 0),
+    NPerm4(2, 3, 0, 1)
 };
 
 } // namespace regina

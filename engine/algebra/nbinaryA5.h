@@ -39,7 +39,6 @@
 #endif
 
 #include <string>
-#include "triangulation/nperm.h"
 #include "maths/nperm5.h"
 
 //#include <iostream>

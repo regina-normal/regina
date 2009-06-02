@@ -258,8 +258,8 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
 
         // We make the shell of an other-side boundary annulus; we will fill
         // in the precise vertex role permutations later on.
-        NSatAnnulus otherSide(layering[e]->getNewBoundaryTet(0), NPerm(),
-            layering[e]->getNewBoundaryTet(1), NPerm());
+        NSatAnnulus otherSide(layering[e]->getNewBoundaryTet(0), NPerm4(),
+            layering[e]->getNewBoundaryTet(1), NPerm4());
 
         if (otherSide.meetsBoundary()) {
             delete centre;
@@ -288,15 +288,15 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
                 layeringToEndAnnulus = NMatrix2(1, 0, 0, 1);
             } else if (plugPos == 1) {
                 otherSide.roles[0] = layering[e]->getNewBoundaryRoles(0) *
-                    NPerm(1, 2, 0, 3);
+                    NPerm4(1, 2, 0, 3);
                 otherSide.roles[1] = layering[e]->getNewBoundaryRoles(1) *
-                    NPerm(1, 2, 0, 3);
+                    NPerm4(1, 2, 0, 3);
                 layeringToEndAnnulus = NMatrix2(-1, 1, -1, 0);
             } else {
                 otherSide.roles[0] = layering[e]->getNewBoundaryRoles(0) *
-                    NPerm(2, 0, 1, 3);
+                    NPerm4(2, 0, 1, 3);
                 otherSide.roles[1] = layering[e]->getNewBoundaryRoles(1) *
-                    NPerm(2, 0, 1, 3);
+                    NPerm4(2, 0, 1, 3);
                 layeringToEndAnnulus = NMatrix2(0, -1, 1, -1);
             }
 

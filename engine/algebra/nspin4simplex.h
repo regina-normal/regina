@@ -47,7 +47,6 @@
 #include "maths/nrational.h"
 #include "maths/nperm5.h"
 #include "algebra/nbinaryA5.h"
-#include "triangulation/nperm.h"
 
 namespace regina {
 

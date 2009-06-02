@@ -38,8 +38,8 @@ namespace {
     //     face embedding permutation for the internal face is the identity.
     // Also, threeTwoVertices[i] refers to face i of the new tetrahedron for
     //     each i.
-    const NPerm threeTwoVertices[3] = {
-        NPerm(3,1,2,0), NPerm(3,2,0,1), NPerm(3,0,1,2)
+    const NPerm4 threeTwoVertices[3] = {
+        NPerm4(3,1,2,0), NPerm4(3,2,0,1), NPerm4(3,0,1,2)
     };
 
     // Mapping from vertices (0,1,2) of each external face of a new tetrahedron
@@ -48,8 +48,8 @@ namespace {
     //     edge embedding permutation for the internal edge is the identity.
     // Also, twoThreeVertices[i] refers to face i of the new tetrahedron for
     //     each i.
-    const NPerm twoThreeVertices[2] = {
-        NPerm(1,2,3,0), NPerm(0,2,3,1)
+    const NPerm4 twoThreeVertices[2] = {
+        NPerm4(1,2,3,0), NPerm4(0,2,3,1)
     };
 
     // A helper routine that uses union-find to test whether a graph
@@ -95,7 +95,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
 
     // Find the unwanted tetrahedra.
     NTetrahedron* oldTet[3];
-    NPerm oldVertexPerm[3];
+    NPerm4 oldVertexPerm[3];
     stdhash::hash_set<NTetrahedron*, HashPointer> oldTets;
     int oldPos = 0;
     for (std::deque<NEdgeEmbedding>::const_iterator it = embs.begin();
@@ -126,7 +126,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
 
     // Find the gluings from (0,1,2) of the new tetrahedron faces
     // to the vertices of the old tetrahedra.
-    NPerm gluings[2][3];
+    NPerm4 gluings[2][3];
     for (oldPos = 0; oldPos < 3; oldPos++)
         for (newPos = 0; newPos < 2; newPos++)
             gluings[newPos][oldPos] = oldVertexPerm[oldPos] *
@@ -204,7 +204,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
                 newTet[newPos]->joinTo(oldPos, adjTet[newPos][oldPos],
                     gluings[newPos][oldPos] *
                     threeTwoVertices[oldPos].inverse());
-    newTet[0]->joinTo(3, newTet[1], NPerm());
+    newTet[0]->joinTo(3, newTet[1], NPerm4());
 
     // Tidy up.
     gluingsHaveChanged();
@@ -220,7 +220,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
 
     // Find the unwanted tetrahedra.
     NTetrahedron* oldTet[2];
-    NPerm oldVertexPerm[2];
+    NPerm4 oldVertexPerm[2];
     int oldPos;
     for (oldPos = 0; oldPos < 2; oldPos++) {
         oldTet[oldPos] = f->getEmbedding(oldPos).getTetrahedron();
@@ -249,7 +249,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
 
     // Find the gluings from (0,1,2) of the new tetrahedron faces
     // to the vertices of the old tetrahedra.
-    NPerm gluings[3][2];
+    NPerm4 gluings[3][2];
     for (oldPos = 0; oldPos < 2; oldPos++)
         for (newPos = 0; newPos < 3; newPos++)
             gluings[newPos][oldPos] = oldVertexPerm[oldPos] *
@@ -327,7 +327,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
                 newTet[newPos]->joinTo(oldPos, adjTet[newPos][oldPos],
                     gluings[newPos][oldPos] *
                     twoThreeVertices[oldPos].inverse());
-    NPerm internalPerm = NPerm(0,1,3,2);
+    NPerm4 internalPerm = NPerm4(0,1,3,2);
     newTet[0]->joinTo(2, newTet[1], internalPerm);
     newTet[1]->joinTo(2, newTet[2], internalPerm);
     newTet[2]->joinTo(2, newTet[0], internalPerm);
@@ -392,7 +392,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     }
 
     NTetrahedron* tet[2];
-    NPerm perm[2];
+    NPerm4 perm[2];
 
     int i = 0;
     for (std::deque<NEdgeEmbedding>::const_iterator it =
@@ -446,8 +446,8 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
-    NPerm crossover = tet[0]->adjacentGluing(perm[0][2]);
-    NPerm gluing;
+    NPerm4 crossover = tet[0]->adjacentGluing(perm[0][2]);
+    NPerm4 gluing;
     NTetrahedron* top;
     NTetrahedron* bottom;
     int topFace;
@@ -542,13 +542,13 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     } else if (! bottom) {
         tet[0]->unjoin(vertex[0]);
     } else {
-        NPerm crossover;
+        NPerm4 crossover;
         if (vertex[0] == 0)
             crossover = tet[0]->adjacentGluing(1);
         else
             crossover = tet[0]->adjacentGluing(0);
         int topFace = tet[0]->adjacentFace(vertex[0]);
-        NPerm gluing = tet[1]->adjacentGluing(vertex[1]) *
+        NPerm4 gluing = tet[1]->adjacentGluing(vertex[1]) *
             crossover * top->adjacentGluing(topFace);
         tet[0]->unjoin(vertex[0]);
         tet[1]->unjoin(vertex[1]);
@@ -576,7 +576,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
 
     const NEdgeEmbedding& emb = e->getEmbeddings().front();
     NTetrahedron* oldTet = emb.getTetrahedron();
-    NPerm oldVertices = emb.getVertices();
+    NPerm4 oldVertices = emb.getVertices();
 
     NTetrahedron* top = oldTet->adjacentTetrahedron(oldVertices[edgeEnd]);
     int otherEdgeEnd = 1 - edgeEnd;
@@ -591,7 +591,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
 
     NFace* centreFace = oldTet->getFace(oldVertices[edgeEnd]);
     NFace* bottomFace = oldTet->getFace(oldVertices[otherEdgeEnd]);
-    NPerm bottomToTop =
+    NPerm4 bottomToTop =
         oldTet->adjacentGluing(oldVertices[edgeEnd]);
     int topGlued[2];
     NEdge* flatEdge[2];
@@ -639,8 +639,8 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
         adjFace[0] = top->adjacentFace(topGlued[0]);
         adjFace[1] = top->adjacentFace(topGlued[1]);
 
-        NPerm gluing = top->adjacentGluing(topGlued[1])
-            * NPerm(topGlued[0], topGlued[1])
+        NPerm4 gluing = top->adjacentGluing(topGlued[1])
+            * NPerm4(topGlued[0], topGlued[1])
             * adjTet[0]->adjacentGluing(adjFace[0]);
         top->unjoin(topGlued[0]);
         top->unjoin(topGlued[1]);
@@ -650,17 +650,17 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     // Now make the new tetrahedron and glue it to itself.
     NTetrahedron* newTet = new NTetrahedron();
     addTetrahedron(newTet);
-    newTet->joinTo(2, newTet, NPerm(2,3));
+    newTet->joinTo(2, newTet, NPerm4(2,3));
 
     // Glue the new tetrahedron into the remaining structure.
     if (oldTet->adjacentTetrahedron(oldVertices[otherEdgeEnd]) == top) {
         // The top of the new tetrahedron must be glued to the bottom.
         int topFace = bottomToTop[oldVertices[otherEdgeEnd]];
-        NPerm bottomFacePerm = NPerm(oldVertices[edgeEnd],
+        NPerm4 bottomFacePerm = NPerm4(oldVertices[edgeEnd],
             oldVertices[otherEdgeEnd], oldVertices[2], oldVertices[3]);
-        NPerm gluing = bottomFacePerm.inverse() *
+        NPerm4 gluing = bottomFacePerm.inverse() *
             top->adjacentGluing(topFace) * bottomToTop *
-            bottomFacePerm * NPerm(0,1);
+            bottomFacePerm * NPerm4(0,1);
         top->unjoin(topFace);
         newTet->joinTo(0, newTet, gluing);
     } else {
@@ -669,17 +669,17 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
         NTetrahedron* adjTop = top->adjacentTetrahedron(topFace);
         NTetrahedron* adjBottom = oldTet->adjacentTetrahedron(bottomFace);
 
-        NPerm bottomFacePerm = NPerm(oldVertices[edgeEnd],
+        NPerm4 bottomFacePerm = NPerm4(oldVertices[edgeEnd],
             oldVertices[otherEdgeEnd], oldVertices[2], oldVertices[3]);
 
         if (adjTop) {
-            NPerm topGluing = top->adjacentGluing(topFace) *
-                bottomToTop * bottomFacePerm * NPerm(0,1);
+            NPerm4 topGluing = top->adjacentGluing(topFace) *
+                bottomToTop * bottomFacePerm * NPerm4(0,1);
             top->unjoin(topFace);
             newTet->joinTo(0, adjTop, topGluing);
         }
         if (adjBottom) {
-            NPerm bottomGluing = oldTet->adjacentGluing(bottomFace) *
+            NPerm4 bottomGluing = oldTet->adjacentGluing(bottomFace) *
                 bottomFacePerm;
             oldTet->unjoin(bottomFace);
             newTet->joinTo(1, adjBottom, bottomGluing);
@@ -698,7 +698,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
 bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
     const NFaceEmbedding& emb = f->getEmbedding(0);
     NTetrahedron* tet = emb.getTetrahedron();
-    NPerm vertices = emb.getVertices();
+    NPerm4 vertices = emb.getVertices();
 
     // Check that the face has exactly two boundary edges.
     // Note that this will imply that the face joins two tetrahedra.
@@ -755,8 +755,8 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
 
     NTetrahedron* t0 = front.getTetrahedron();
     NTetrahedron* t1 = back.getTetrahedron();
-    NPerm p0 = front.getVertices();
-    NPerm p1 = back.getVertices();
+    NPerm4 p0 = front.getVertices();
+    NPerm4 p1 = back.getVertices();
 
     if (check) {
         if (t0->getFace(p0[3]) == t1->getFace(p1[2]))
@@ -790,7 +790,7 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
 
-    t0->joinTo(p0[3], t1, p1 * NPerm(2, 3) * p0.inverse());
+    t0->joinTo(p0[3], t1, p1 * NPerm4(2, 3) * p0.inverse());
     gluingsHaveChanged();
     return true;
 }
@@ -859,7 +859,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 
     std::deque<NEdgeEmbedding>::const_iterator it;
     NTetrahedron* tet = 0;
-    NPerm p;
+    NPerm4 p;
 
     if (check) {
         // CHECK 0: The tetrahedra around the edge must be distinct.
@@ -1072,7 +1072,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 
     // Perform the move.
     ChangeEventBlock block(this);
-    NPerm topPerm, botPerm;
+    NPerm4 topPerm, botPerm;
     NTetrahedron *top, *bot;
 
     // Clone the edge embeddings because we cannot rely on skeletal
@@ -1091,7 +1091,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         tet->isolate();
         if (top && bot)
             top->joinTo(topPerm[p[0]], bot,
-                botPerm * NPerm(p[0], p[1]) * topPerm.inverse());
+                botPerm * NPerm4(p[0], p[1]) * topPerm.inverse());
 
         delete removeTetrahedron(tet);
     }

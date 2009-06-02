@@ -38,9 +38,9 @@
 #include <utility>
 #include "shareableobject.h"
 #include "file/nfilepropertyreader.h"
+#include "maths/nperm4.h"
 #include "maths/nray.h"
 #include "surfaces/ndisctype.h"
-#include "triangulation/nperm.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nproperty.h"
 
@@ -118,9 +118,9 @@ extern const char vertexSplitString[3][6];
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
 #ifdef __DOXYGEN
-extern const NPerm triDiscArcs[4][3];
+extern const NPerm4 triDiscArcs[4][3];
 #else
-extern const NPerm __triDiscArcs[12];
+extern const NPerm4 __triDiscArcs[12];
 #define triDiscArcs(i, j) __triDiscArcs[(3 * (i)) + (j)]
 #endif
 
@@ -142,9 +142,9 @@ extern const NPerm __triDiscArcs[12];
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
 #ifdef __DOXYGEN
-extern const NPerm quadDiscArcs[3][4];
+extern const NPerm4 quadDiscArcs[3][4];
 #else
-extern const NPerm __quadDiscArcs[12];
+extern const NPerm4 __quadDiscArcs[12];
 #define quadDiscArcs(i, j) __quadDiscArcs[(4 * (i)) + (j)]
 #endif
 
@@ -166,9 +166,9 @@ extern const NPerm __quadDiscArcs[12];
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
 #ifdef __DOXYGEN
-extern const NPerm octDiscArcs[3][8];
+extern const NPerm4 octDiscArcs[3][8];
 #else
-extern const NPerm __octDiscArcs[24];
+extern const NPerm4 __octDiscArcs[24];
 #define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
 #endif
 

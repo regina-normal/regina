@@ -126,7 +126,7 @@ NTriangulation* readSnapPea(const char* filename) {
         // Perform the gluings.
         for (j=0; j<4; j++)
             tet[i]->joinTo(j, tet[g[j]],
-                NPerm(p[j][0], p[j][1], p[j][2], p[j][3]));
+                NPerm4(p[j][0], p[j][1], p[j][2], p[j][3]));
 
         // Read in junk.
         for (j=0; j<4; j++)

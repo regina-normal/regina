@@ -109,7 +109,7 @@ FaceGluingItem::FaceGluingItem(QTable* table,
 
 FaceGluingItem::FaceGluingItem(QTable* table,
         const ReginaPrefSet::TriEditMode& useEditMode, int myFace,
-        unsigned long destTet, const regina::NPerm& gluingPerm) :
+        unsigned long destTet, const regina::NPerm4& gluingPerm) :
         QTableItem(table, OnTyping), adjTet(destTet), adjPerm(gluingPerm),
         editMode(useEditMode), error(false) {
     setReplaceable(false);
@@ -135,7 +135,7 @@ QWidget* FaceGluingItem::createEditor() const {
 }
 
 void FaceGluingItem::setDestination(long newAdjTet,
-        const regina::NPerm& newAdjPerm, bool shouldRepaintThisTableCell) {
+        const regina::NPerm4& newAdjPerm, bool shouldRepaintThisTableCell) {
     // Have we even made a change?
     if (adjTet < 0 && newAdjTet < 0)
         return;
@@ -208,7 +208,7 @@ void FaceGluingItem::tetNumsToChange(const long newTetNums[]) {
 void FaceGluingItem::setContentFromEditor(QWidget* editor) {
     // Find the proposed new gluing.
     long newAdjTet;
-    regina::NPerm newAdjPerm;
+    regina::NPerm4 newAdjPerm;
 
     if (editor->inherits("QLineEdit")) {
         QString text = dynamic_cast<QLineEdit*>(editor)->text().
@@ -260,7 +260,7 @@ void FaceGluingItem::setContentFromEditor(QWidget* editor) {
 QString FaceGluingItem::isFaceStringValid(unsigned long nTets,
         unsigned long srcTet, int srcFace,
         unsigned long destTet, const QString& destFace,
-        regina::NPerm* gluing) {
+        regina::NPerm4* gluing) {
     if (destTet >= nTets)
         return i18n("There is no tetrahedron number %1.").arg(destTet);
 
@@ -275,7 +275,7 @@ QString FaceGluingItem::isFaceStringValid(unsigned long nTets,
         return i18n("%1 is not a valid tetrahedron face.  The three vertices "
             "forming the face must be distinct.").arg(destFace);
 
-    regina::NPerm foundGluing = faceStringToPerm(srcFace, destFace);
+    regina::NPerm4 foundGluing = faceStringToPerm(srcFace, destFace);
     if (srcTet == destTet && foundGluing[srcFace] == srcFace)
         return i18n("A face cannot be glued to itself.");
 
@@ -287,7 +287,7 @@ QString FaceGluingItem::isFaceStringValid(unsigned long nTets,
 }
 
 QString FaceGluingItem::destString(int srcFace, int destTet,
-        const regina::NPerm& gluing) {
+        const regina::NPerm4& gluing) {
     if (destTet < 0)
         return "";
     else
@@ -295,7 +295,7 @@ QString FaceGluingItem::destString(int srcFace, int destTet,
             (gluing * NFace::ordering[srcFace]).trunc3().c_str() + ')';
 }
 
-regina::NPerm FaceGluingItem::faceStringToPerm(int srcFace,
+regina::NPerm4 FaceGluingItem::faceStringToPerm(int srcFace,
         const QString& str) {
     int destVertex[4];
 
@@ -306,7 +306,7 @@ regina::NPerm FaceGluingItem::faceStringToPerm(int srcFace,
         destVertex[3] -= destVertex[i];
     }
 
-    return regina::NPerm(destVertex[0], destVertex[1], destVertex[2],
+    return regina::NPerm4(destVertex[0], destVertex[1], destVertex[2],
         destVertex[3]) * NFace::ordering[srcFace].inverse();
 }
 

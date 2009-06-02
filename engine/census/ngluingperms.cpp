@@ -64,17 +64,17 @@ NTriangulation* NGluingPerms::triangulate() const {
 }
 
 int NGluingPerms::gluingToIndex(const NTetFace& source,
-        const NPerm& gluing) const {
-    NPerm permS3 = NPerm(pairing->dest(source).face, 3) * gluing *
-        NPerm(source.face, 3);
-    return (std::find(NPerm::S3, NPerm::S3 + 6, permS3) - NPerm::S3);
+        const NPerm4& gluing) const {
+    NPerm4 permS3 = NPerm4(pairing->dest(source).face, 3) * gluing *
+        NPerm4(source.face, 3);
+    return (std::find(NPerm4::S3, NPerm4::S3 + 6, permS3) - NPerm4::S3);
 }
 
 int NGluingPerms::gluingToIndex(unsigned tet, unsigned face,
-        const NPerm& gluing) const {
-    NPerm permS3 = NPerm(pairing->dest(tet, face).face, 3) * gluing *
-        NPerm(face, 3);
-    return (std::find(NPerm::S3, NPerm::S3 + 6, permS3) - NPerm::S3);
+        const NPerm4& gluing) const {
+    NPerm4 permS3 = NPerm4(pairing->dest(tet, face).face, 3) * gluing *
+        NPerm4(face, 3);
+    return (std::find(NPerm4::S3, NPerm4::S3 + 6, permS3) - NPerm4::S3);
 }
 
 void NGluingPerms::dumpData(std::ostream& out) const {

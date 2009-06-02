@@ -36,7 +36,7 @@
 #endif
 
 #include "shareableobject.h"
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 #include "triangulation/ntetface.h"
 
 namespace regina {
@@ -89,7 +89,7 @@ class NIsomorphism : public ShareableObject {
         int* mTetImage;
             /**< The tetrahedron of the destination triangulation that
                  each tetrahedron of the source triangulation maps to. */
-        NPerm* mFacePerm;
+        NPerm4* mFacePerm;
             /**< The permutation applied to the four faces of each
                  source tetrahedron. */
 
@@ -165,7 +165,7 @@ class NIsomorphism : public ShareableObject {
          * @return a read-write reference to the permutation applied to the
          * four faces of the source tetrahedron.
          */
-        NPerm& facePerm(unsigned sourceTet);
+        NPerm4& facePerm(unsigned sourceTet);
         /**
          * Determines the permutation that is applied to the four faces
          * of the given source tetrahedron under this isomorphism.
@@ -179,7 +179,7 @@ class NIsomorphism : public ShareableObject {
          * @return the permutation applied to the four faces of the
          * source tetrahedron.
          */
-        NPerm facePerm(unsigned sourceTet) const;
+        NPerm4 facePerm(unsigned sourceTet) const;
         /**
          * Determines the image of the given source tetrahedron face
          * under this isomorphism.  Note that a value only is returned; this
@@ -310,7 +310,7 @@ inline NIsomorphism::NIsomorphism(unsigned sourceTetrahedra) :
         mTetImage(sourceTetrahedra > 0 ?
             new int[sourceTetrahedra] : 0),
         mFacePerm(sourceTetrahedra > 0 ?
-            new NPerm[sourceTetrahedra] : 0) {
+            new NPerm4[sourceTetrahedra] : 0) {
 }
 inline NIsomorphism::~NIsomorphism() {
     delete[] mTetImage;
@@ -328,10 +328,10 @@ inline int NIsomorphism::tetImage(unsigned sourceTet) const {
     return mTetImage[sourceTet];
 }
 
-inline NPerm& NIsomorphism::facePerm(unsigned sourceTet) {
+inline NPerm4& NIsomorphism::facePerm(unsigned sourceTet) {
     return mFacePerm[sourceTet];
 }
-inline NPerm NIsomorphism::facePerm(unsigned sourceTet) const {
+inline NPerm4 NIsomorphism::facePerm(unsigned sourceTet) const {
     return mFacePerm[sourceTet];
 }
 

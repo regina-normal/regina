@@ -1165,7 +1165,7 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
         for (int i = 0; i < 24 /* size of S4 */; ++i) {
             ans = new NIsomorphism(1);
             ans->tetImage(0) = 0;
-            ans->facePerm(0) = NPerm::S4[i];
+            ans->facePerm(0) = NPerm4::S4[i];
             list.push_back(ans);
         }
         return true;
@@ -1245,7 +1245,7 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                 NIsomorphism* ans = new NIsomorphism(nTetrahedra);
                 for (i = 0; i < nTetrahedra; i++) {
                     ans->tetImage(i) = image[i * 4].tet;
-                    ans->facePerm(i) = NPerm(image[i * 4].face,
+                    ans->facePerm(i) = NPerm4(image[i * 4].face,
                         image[i * 4 + 1].face, image[i * 4 + 2].face,
                         image[i * 4 + 3].face);
                 }

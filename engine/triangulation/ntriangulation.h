@@ -2697,7 +2697,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * tetrahedra were found that differ between \a src and \a dest.
          */
         static bool compatibleTets(NTetrahedron* src, NTetrahedron* dest,
-                NPerm p);
+                NPerm4 p);
 
         /**
          * Calculates all properties that can be deduced from an

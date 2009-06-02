@@ -37,7 +37,7 @@
 
 #include <deque>
 #include "shareableobject.h"
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 #include "triangulation/ntetrahedron.h"
 
 namespace regina {
@@ -169,7 +169,7 @@ class NEdgeEmbedding {
          * @return a mapping from the vertices of this edge to the
          * vertices of getTetrahedron().
          */
-        NPerm getVertices() const;
+        NPerm4 getVertices() const;
 };
 
 /**
@@ -247,7 +247,7 @@ class NEdge : public ShareableObject, public NMarkedElement {
          * This lookup table replaces the deprecated routine
          * regina::edgeOrdering().
          */
-        static const NPerm ordering[6];
+        static const NPerm4 ordering[6];
 
     private:
         std::deque<NEdgeEmbedding> embeddings;
@@ -452,7 +452,7 @@ inline int NEdgeEmbedding::getEdge() const {
     return edge;
 }
 
-inline NPerm NEdgeEmbedding::getVertices() const {
+inline NPerm4 NEdgeEmbedding::getVertices() const {
     return tetrahedron->getEdgeMapping(edge);
 }
 

@@ -78,26 +78,26 @@ const char vertexSplitString[3][6] = { "01/23", "02/13", "03/12" };
 
 // The following three arrays cannot be made 2-D because of a g++-2.95 bug.
 
-const NPerm __triDiscArcs[12] = {
-    NPerm(0,1,2,3), NPerm(0,2,3,1), NPerm(0,3,1,2),
-    NPerm(1,0,3,2), NPerm(1,3,2,0), NPerm(1,2,0,3),
-    NPerm(2,3,0,1), NPerm(2,0,1,3), NPerm(2,1,3,0),
-    NPerm(3,2,1,0), NPerm(3,1,0,2), NPerm(3,0,2,1)
+const NPerm4 __triDiscArcs[12] = {
+    NPerm4(0,1,2,3), NPerm4(0,2,3,1), NPerm4(0,3,1,2),
+    NPerm4(1,0,3,2), NPerm4(1,3,2,0), NPerm4(1,2,0,3),
+    NPerm4(2,3,0,1), NPerm4(2,0,1,3), NPerm4(2,1,3,0),
+    NPerm4(3,2,1,0), NPerm4(3,1,0,2), NPerm4(3,0,2,1)
 };
 
-const NPerm __quadDiscArcs[12] = {
-    NPerm(0,2,3,1), NPerm(3,0,1,2), NPerm(1,3,2,0), NPerm(2,1,0,3),
-    NPerm(0,3,1,2), NPerm(1,0,2,3), NPerm(2,1,3,0), NPerm(3,2,0,1),
-    NPerm(0,1,2,3), NPerm(2,0,3,1), NPerm(3,2,1,0), NPerm(1,3,0,2)
+const NPerm4 __quadDiscArcs[12] = {
+    NPerm4(0,2,3,1), NPerm4(3,0,1,2), NPerm4(1,3,2,0), NPerm4(2,1,0,3),
+    NPerm4(0,3,1,2), NPerm4(1,0,2,3), NPerm4(2,1,3,0), NPerm4(3,2,0,1),
+    NPerm4(0,1,2,3), NPerm4(2,0,3,1), NPerm4(3,2,1,0), NPerm4(1,3,0,2)
 };
 
-const NPerm __octDiscArcs[24] = {
-    NPerm(0,3,1,2), NPerm(0,1,2,3), NPerm(2,0,3,1), NPerm(2,3,1,0),
-    NPerm(1,2,0,3), NPerm(1,0,3,2), NPerm(3,1,2,0), NPerm(3,2,0,1),
-    NPerm(0,1,2,3), NPerm(0,2,3,1), NPerm(3,0,1,2), NPerm(3,1,2,0),
-    NPerm(2,3,0,1), NPerm(2,0,1,3), NPerm(1,2,3,0), NPerm(1,3,0,2),
-    NPerm(0,2,3,1), NPerm(0,3,1,2), NPerm(1,0,2,3), NPerm(1,2,3,0),
-    NPerm(3,1,0,2), NPerm(3,0,2,1), NPerm(2,3,1,0), NPerm(2,1,0,3)
+const NPerm4 __octDiscArcs[24] = {
+    NPerm4(0,3,1,2), NPerm4(0,1,2,3), NPerm4(2,0,3,1), NPerm4(2,3,1,0),
+    NPerm4(1,2,0,3), NPerm4(1,0,3,2), NPerm4(3,1,2,0), NPerm4(3,2,0,1),
+    NPerm4(0,1,2,3), NPerm4(0,2,3,1), NPerm4(3,0,1,2), NPerm4(3,1,2,0),
+    NPerm4(2,3,0,1), NPerm4(2,0,1,3), NPerm4(1,2,3,0), NPerm4(1,3,0,2),
+    NPerm4(0,2,3,1), NPerm4(0,3,1,2), NPerm4(1,0,2,3), NPerm4(1,2,3,0),
+    NPerm4(3,1,0,2), NPerm4(3,0,2,1), NPerm4(2,3,1,0), NPerm4(2,1,0,3)
 };
 
 NNormalSurface* NNormalSurface::clone() const {

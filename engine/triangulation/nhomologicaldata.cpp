@@ -248,7 +248,7 @@ void NHomologicalData::computeChainComplexes() {
     long int temp;
     unsigned long i,j;
 
-    NPerm p1,p2;
+    NPerm4 p1,p2;
 
     // This fills out matrix A1
     for (i=0;i<tri->getNumberOfEdges();i++) {
@@ -485,7 +485,7 @@ void NHomologicalData::computeChainComplexes() {
                     // plus orienting the edge out of vertex k % 2...
 
                     p1=tempe.getVertices();
-                    if ( ind2 == 1 ) p1=p1*(NPerm(0,1));
+                    if ( ind2 == 1 ) p1=p1*(NPerm4(0,1));
                     // now p1 sends 0 to point corresp to v, 1 to point
                     // corresp to end of edge.
                     // if p1.sign() == tetor[j] then sign = +1 otherwise -1.
@@ -560,10 +560,10 @@ void NHomologicalData::computeChainComplexes() {
         unsigned vert1id = zeroCellMap[tri->tetrahedronIndex(
             tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]%4;
             // not equal to vert1Num if and only if vert1 is ideal.
-        NPerm P1 = tri->getFace(dNBF[j])->getEmbedding(0).getVertices();
-        NPerm P2 = tri->getFace(dNBF[j])->getEmbedding(1).getVertices();
-        NPerm P3;
-        NPerm P0to1 = P2 * ( P1.inverse() ); 
+        NPerm4 P1 = tri->getFace(dNBF[j])->getEmbedding(0).getVertices();
+        NPerm4 P2 = tri->getFace(dNBF[j])->getEmbedding(1).getVertices();
+        NPerm4 P3;
+        NPerm4 P0to1 = P2 * ( P1.inverse() ); 
         // the permutation from the start simplex vertices
         // to the end simplex.
 

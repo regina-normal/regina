@@ -35,8 +35,8 @@
 #define __NTRISOLIDTORUS_H
 #endif
 
+#include "maths/nperm4.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/nperm.h"
 
 namespace regina {
 
@@ -85,7 +85,7 @@ class NTriSolidTorus : public NStandardTriangulation {
     private:
         NTetrahedron* tet[3];
             /**< The tetrahedra that make up this solid torus. */
-        NPerm vertexRoles[3];
+        NPerm4 vertexRoles[3];
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
                  permutation p chosen so that the axis edge for that
                  tetrahedron runs from vertex p[0] to p[3] and the
@@ -142,7 +142,7 @@ class NTriSolidTorus : public NStandardTriangulation {
          * @return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
          */
-        NPerm getVertexRoles(int index) const;
+        NPerm4 getVertexRoles(int index) const;
 
         /**
          * Determines whether the two faces of the requested annulus are
@@ -171,7 +171,7 @@ class NTriSolidTorus : public NStandardTriangulation {
          * @return \c true if and only if the two faces of the requested
          * annulus are glued together.
          */
-        bool isAnnulusSelfIdentified(int index, NPerm* roleMap) const;
+        bool isAnnulusSelfIdentified(int index, NPerm4* roleMap) const;
 
         /**
          * Determines whether the two given annuli are linked in a
@@ -258,7 +258,7 @@ class NTriSolidTorus : public NStandardTriangulation {
          * solid torus with the given vertex roles.
          */
         static NTriSolidTorus* formsTriSolidTorus(NTetrahedron* tet,
-                NPerm useVertexRoles);
+                NPerm4 useVertexRoles);
 
         NManifold* getManifold() const;
         NAbelianGroup* getHomologyH1() const;
@@ -285,7 +285,7 @@ inline NTriSolidTorus::~NTriSolidTorus() {
 inline NTetrahedron* NTriSolidTorus::getTetrahedron(int index) const {
     return tet[index];
 }
-inline NPerm NTriSolidTorus::getVertexRoles(int index) const {
+inline NPerm4 NTriSolidTorus::getVertexRoles(int index) const {
     return vertexRoles[index];
 }
 

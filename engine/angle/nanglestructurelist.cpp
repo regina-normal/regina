@@ -68,7 +68,7 @@ void* NAngleStructureList::Enumerator::run(void*) {
     unsigned long row = 0;
 
     std::deque<NEdgeEmbedding>::const_iterator embit;
-    NPerm perm;
+    NPerm4 perm;
     unsigned long index;
     for (NTriangulation::EdgeIterator eit = triang->getEdges().begin();
             eit != triang->getEdges().end(); eit++) {

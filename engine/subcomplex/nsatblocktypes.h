@@ -154,7 +154,7 @@ class NSatLST : public NSatBlock {
         NLayeredSolidTorus* lst_;
             /**< Contains details of the layered solid torus that this
                  block represents. */
-        NPerm roles_;
+        NPerm4 roles_;
             /**< Describes how the layered solid torus is attached to the
                  boundary annulus.  In particular, edge groups \a roles_[0],
                  \a roles_[1] and \a roles_[2] of the layered solid torus are
@@ -200,7 +200,7 @@ class NSatLST : public NSatBlock {
          * @return a description of how the layered solid torus is
          * attached to the boundary annulus.
          */
-        NPerm roles() const;
+        NPerm4 roles() const;
 
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
@@ -236,7 +236,7 @@ class NSatLST : public NSatBlock {
          * attached to the boundary annulus, as explained in the
          * \a roles_ data member documentation.
          */
-        NSatLST(NLayeredSolidTorus* lst, NPerm roles);
+        NSatLST(NLayeredSolidTorus* lst, NPerm4 roles);
 };
 
 /**
@@ -598,7 +598,7 @@ inline NSatBlock* NSatMobius::clone() const {
 
 // Inline functions for NSatLST
 
-inline NSatLST::NSatLST(NLayeredSolidTorus* lst, NPerm roles) : NSatBlock(1),
+inline NSatLST::NSatLST(NLayeredSolidTorus* lst, NPerm4 roles) : NSatBlock(1),
         lst_(lst), roles_(roles) {
 }
 
@@ -606,7 +606,7 @@ inline const NLayeredSolidTorus* NSatLST::lst() const {
     return lst_;
 }
 
-inline NPerm NSatLST::roles() const {
+inline NPerm4 NSatLST::roles() const {
     return roles_;
 }
 

@@ -36,7 +36,7 @@
 #endif
 
 #include "maths/nmatrix2.h"
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 #include "utilities/boostutils.h"
 
 namespace regina {
@@ -113,14 +113,14 @@ class NLayering : public boost::noncopyable {
         NTetrahedron* oldBdryTet[2];
             /**< The two tetrahedra of the old boundary (these may be
                  the same).  See the class notes for details. */
-        NPerm oldBdryRoles[2];
+        NPerm4 oldBdryRoles[2];
             /**< The corresponding two permutations of the old boundary.
                  See the class notes for details. */
 
         NTetrahedron* newBdryTet[2];
             /**< The two tetrahedra of the new boundary (these may be
                  the same).  See the class notes for details. */
-        NPerm newBdryRoles[2];
+        NPerm4 newBdryRoles[2];
             /**< The corresponding two permutations of the new boundary.
                  See the class notes for details. */
 
@@ -156,8 +156,8 @@ class NLayering : public boost::noncopyable {
          * @param roles1 the permutation describing how this second face is
          * formed from three vertices of tetrahedron \a bdry1.
          */
-        NLayering(NTetrahedron* bdry0, NPerm roles0, NTetrahedron* bdry1,
-            NPerm roles1);
+        NLayering(NTetrahedron* bdry0, NPerm4 roles0, NTetrahedron* bdry1,
+            NPerm4 roles1);
 
         /**
          * Returns the number of individual tetrahedra that have been
@@ -197,7 +197,7 @@ class NLayering : public boost::noncopyable {
          * be either 0 or 1.
          * @return the requested permutation describing the old boundary.
          */
-        NPerm getOldBoundaryRoles(unsigned which) const;
+        NPerm4 getOldBoundaryRoles(unsigned which) const;
         /**
          * Returns the tetrahedra that provide the new boundary faces.
          * These belong to the final boundary after layerings have been
@@ -223,7 +223,7 @@ class NLayering : public boost::noncopyable {
          * be either 0 or 1.
          * @return the requested permutation describing the new boundary.
          */
-        NPerm getNewBoundaryRoles(unsigned which) const;
+        NPerm4 getNewBoundaryRoles(unsigned which) const;
 
         /**
          * Returns a 2-by-2 matrix describing the relationship between
@@ -396,8 +396,8 @@ class NLayering : public boost::noncopyable {
          * @return \c true if the given boundary is found to matche the
          * new boundary of this structure, or \c false otherwise.
          */
-        bool matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
-            NTetrahedron* upperBdry1, NPerm upperRoles1,
+        bool matchesTop(NTetrahedron* upperBdry0, NPerm4 upperRoles0,
+            NTetrahedron* upperBdry1, NPerm4 upperRoles1,
             NMatrix2& upperReln) const;
 };
 
@@ -413,7 +413,7 @@ inline NTetrahedron* NLayering::getOldBoundaryTet(unsigned which) const {
     return oldBdryTet[which];
 }
 
-inline NPerm NLayering::getOldBoundaryRoles(unsigned which) const {
+inline NPerm4 NLayering::getOldBoundaryRoles(unsigned which) const {
     return oldBdryRoles[which];
 }
 
@@ -421,7 +421,7 @@ inline NTetrahedron* NLayering::getNewBoundaryTet(unsigned which) const {
     return newBdryTet[which];
 }
 
-inline NPerm NLayering::getNewBoundaryRoles(unsigned which) const {
+inline NPerm4 NLayering::getNewBoundaryRoles(unsigned which) const {
     return newBdryRoles[which];
 }
 

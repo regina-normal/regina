@@ -36,7 +36,7 @@
 #endif
 
 #include "shareableobject.h"
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 #include "triangulation/ntetrahedron.h"
 
 namespace regina {
@@ -101,7 +101,7 @@ class NFaceEmbedding {
          * @return a mapping from the vertices of this face to the
          * vertices of getTetrahedron().
          */
-        NPerm getVertices() const;
+        NPerm4 getVertices() const;
 };
 
 /**
@@ -151,7 +151,7 @@ class NFace : public ShareableObject, public NMarkedElement {
          * This lookup table replaces the deprecated routine
          * regina::faceOrdering().
          */
-        static const NPerm ordering[4];
+        static const NPerm4 ordering[4];
 
     private:
         NFaceEmbedding* embeddings[2];
@@ -316,7 +316,7 @@ class NFace : public ShareableObject, public NMarkedElement {
          * @return a mapping from vertices (0,1) of the requested edge to
          * the vertices of this face.
          */
-        NPerm getEdgeMapping(int edge) const;
+        NPerm4 getEdgeMapping(int edge) const;
 
         void writeTextShort(std::ostream& out) const;
 
@@ -409,7 +409,7 @@ inline int NFaceEmbedding::getFace() const {
     return face;
 }
 
-inline NPerm NFaceEmbedding::getVertices() const {
+inline NPerm4 NFaceEmbedding::getVertices() const {
     return tetrahedron->getFaceMapping(face);
 }
 

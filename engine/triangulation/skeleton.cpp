@@ -256,15 +256,15 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
     // The last tetrahedron edge that was successfully processed.
     NTetrahedron* tet;
     int edge;
-    NPerm tetVertices;
+    NPerm4 tetVertices;
 
     int exitFace;
-    NPerm exitPerm;
+    NPerm4 exitPerm;
 
     // The next tetrahedron edge around from this.
     NTetrahedron* nextTet;
     int nextEdge;
-    NPerm nextVertices;
+    NPerm4 nextVertices;
 
     for (int dir = 0; dir < 2; dir++) {
         // Start at the start and walk in one particular direction.
@@ -280,7 +280,7 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
                 break;
 
             exitPerm = tet->adjacentGluing(exitFace);
-            nextVertices = exitPerm * tetVertices * NPerm(2, 3);
+            nextVertices = exitPerm * tetVertices * NPerm4(2, 3);
             nextEdge = NEdge::edgeNumber[nextVertices[0]][nextVertices[1]];
 
             if (nextTet->edges[nextEdge]) {
@@ -316,7 +316,7 @@ void NTriangulation::calculateFaces() const {
     NTetrahedron* tet;
     NTetrahedron* adjTet;
     NFace* label;
-    NPerm adjVertices;
+    NPerm4 adjVertices;
     int adjFace;
     for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
@@ -383,7 +383,7 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
     faceQueue.push(firstFace);
 
     NTetrahedron* tet;
-    NPerm tetVertices;
+    NPerm4 tetVertices;
     int tetFace;
     int i,j;
     NVertex* vertex;
@@ -392,10 +392,10 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
     NFace* face;
     NFace* nextFace;
     int nextFaceNumber;
-    NPerm nextFacePerm;
+    NPerm4 nextFacePerm;
     NTetrahedron* nextTet;
     int followFromFace;
-    NPerm switchPerm;
+    NPerm4 switchPerm;
     int yourOrientation;
 
     while (! faceQueue.empty()) {
@@ -432,9 +432,9 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
 
                 // Label the adjacent boundary face with the same label.
                 followFromFace = 6 - tetVertices[i] - tetVertices[j] - tetFace;
-                switchPerm = NPerm(followFromFace, tetFace);
+                switchPerm = NPerm4(followFromFace, tetFace);
                 nextFaceNumber = followFromFace;
-                nextFacePerm = NPerm();
+                nextFacePerm = NPerm4();
                 nextTet = tet;
                 while (nextTet->adjacentTetrahedron(nextFaceNumber)) {
                     nextFacePerm = nextTet->adjacentGluing(

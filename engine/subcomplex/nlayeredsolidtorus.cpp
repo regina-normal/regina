@@ -111,7 +111,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
         NTetrahedron* tet) {
     int baseFace1;
     int baseFace2 = -1;
-    NPerm basePerm;
+    NPerm4 basePerm;
     bool okay;
     int i, j;
     for (baseFace1 = 0; baseFace1 < 3; baseFace1++)
@@ -178,7 +178,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
     int layerOnEdge[2]; // The two edges of the current top tetrahedron
                         // corresponding to adjEdge.
     int newTopEdge; // New boundary edge of degree 1 in the torus.
-    NPerm adjPerm[2];
+    NPerm4 adjPerm[2];
     int layerOnGroup;
     while (true) {
         // Is there a new layer?
@@ -296,18 +296,18 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
         NTetrahedron* tet, unsigned topFace1, unsigned topFace2) {
     NTetrahedron* top = tet;
     NTetrahedron* next;
-    NPerm cross1, cross2;
-    NPerm canon1, canon2;
+    NPerm4 cross1, cross2;
+    NPerm4 canon1, canon2;
     NFacePair pair = NFacePair(topFace1, topFace2).complement();
-    NPerm vRoles(pair.upper(), topFace1, topFace2, pair.lower());
-    NPerm topRoles(vRoles);
-    NPerm nextRoles;
+    NPerm4 vRoles(pair.upper(), topFace1, topFace2, pair.lower());
+    NPerm4 topRoles(vRoles);
+    NPerm4 nextRoles;
     long w = 1, x = 0, y = 0, z = 1;
     long w_, x_, y_, z_;
     int rotation;
     unsigned long nTets = 1;
 
-    NPerm rot180(3, 2, 1, 0);
+    NPerm4 rot180(3, 2, 1, 0);
 
     while (true) {
         // INVARIANT:
@@ -349,15 +349,15 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
 
             // Run through the three orientation-preserving permutations.
             // Note that canon1[0] == 3.
-            if (canon1 == NPerm(3, 1, 2, 0)) {
+            if (canon1 == NPerm4(3, 1, 2, 0)) {
                 // Tetrahedron is folded shut over edge vRoles[12].
                 // This does not give an LST(3,2,1) base, so we are not
                 // interested.
                 return 0;
-            } else if (canon1 == NPerm(3, 0, 1, 2)) {
+            } else if (canon1 == NPerm4(3, 0, 1, 2)) {
                 rotation = 1;
                 // a, b have weights 1, 2.
-            } else if (canon1 == NPerm(3, 2, 0, 1)) {
+            } else if (canon1 == NPerm4(3, 2, 0, 1)) {
                 rotation = 2;
                 // a, b have weights 2, 1.
             } else {
@@ -480,7 +480,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
         // Set up nextRoles so that faces tet/vRoles[0,3] are joined to
         // faces next/nextRoles[1,2] respectively.
         pair = NFacePair(cross1[vRoles[0]], cross2[vRoles[3]]).complement();
-        nextRoles = NPerm(pair.upper(), cross1[vRoles[0]], cross2[vRoles[3]],
+        nextRoles = NPerm4(pair.upper(), cross1[vRoles[0]], cross2[vRoles[3]],
             pair.lower());
 
         // Find the mapping between the canonical 0123 as described by
@@ -501,7 +501,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
         // Note that canon2[3] == 2.
         // Old a, b : 01, 02.
         // New a, b : 01, 13.
-        if (canon2 == NPerm(0, 1, 3, 2)) {
+        if (canon2 == NPerm4(0, 1, 3, 2)) {
             // 012 -> 013.
             // old a = a
             // old b = a+b
@@ -511,7 +511,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
             x_ = x;
             y_ = y + z;
             z_ = z;
-        } else if (canon2 == NPerm(0, 3, 1, 2)) {
+        } else if (canon2 == NPerm4(0, 3, 1, 2)) {
             // 012 -> 031.
             // old a = a+b
             // old b = a
@@ -521,7 +521,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
             x_ = w;
             y_ = y + z;
             z_ = y;
-        } else if (canon2 == NPerm(1, 0, 3, 2)) {
+        } else if (canon2 == NPerm4(1, 0, 3, 2)) {
             // 012 -> 103.
             // old a = -a
             // old b = b
@@ -531,7 +531,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
             x_ = x;
             y_ = -y;
             z_ = z;
-        } else if (canon2 == NPerm(1, 3, 0, 2)) {
+        } else if (canon2 == NPerm4(1, 3, 0, 2)) {
             // 012 -> 130.
             // old a = b
             // old b = -a
@@ -541,7 +541,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
             x_ = w;
             y_ = -z;
             z_ = y;
-        } else if (canon2 == NPerm(3, 0, 1, 2)) {
+        } else if (canon2 == NPerm4(3, 0, 1, 2)) {
             // 012 -> 301.
             // old a = -(a+b)
             // old b = -b
@@ -551,7 +551,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
             x_ = -w - x;
             y_ = -y;
             z_ = -y - z;
-        } else if (canon2 == NPerm(3, 1, 0, 2)) {
+        } else if (canon2 == NPerm4(3, 1, 0, 2)) {
             // 012 -> 310.
             // old a = -b
             // old b = -(a+b)
@@ -646,7 +646,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
 
 void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
     int pos;
-    NPerm adjPerm;
+    NPerm4 adjPerm;
     for (int i = 1; i >= 0; i--) {
         pos = (topEdge[sourceGroup][i] == -1 ? 0 : i);
         adjPerm = topLevel->adjacentGluing(topFace[i]);
@@ -691,7 +691,7 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
         //   0,1 -> vertices corresponding to top edge group 2
 
         // Start by representing vertices of this tetrahedron instead.
-        NPerm groups0 = NPerm(
+        NPerm4 groups0 = NPerm4(
             6 - NEdge::edgeVertex[topEdge[0][0]][0] -
                 NEdge::edgeVertex[topEdge[0][0]][1] - topFace[0],
             6 - NEdge::edgeVertex[topEdge[1][0]][0] -
@@ -701,8 +701,8 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
             topFace[0]);
 
         NFacePair underFaces = NFacePair(topFace[0], topFace[1]).complement();
-        NPerm groups1 = NPerm(topFace[0], topFace[1]) *
-            NPerm(underFaces.lower(), underFaces.upper()) * groups0;
+        NPerm4 groups1 = NPerm4(topFace[0], topFace[1]) *
+            NPerm4(underFaces.lower(), underFaces.upper()) * groups0;
 
         // Move these to vertices of the adjacent tetrahedra.
         groups0 = newTop->adjacentGluing(topFace[0]) * groups0;
@@ -713,7 +713,7 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
         adj1->unjoin(groups1[3]);
 
         adj0->joinTo(groups0[3], adj1, groups1 *
-            NPerm((mobiusBandBdry + 1) % 3, (mobiusBandBdry + 2) % 3) *
+            NPerm4((mobiusBandBdry + 1) % 3, (mobiusBandBdry + 2) % 3) *
             groups0.inverse());
     }
 
@@ -721,7 +721,7 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
     NTetrahedron* curr;
     NTetrahedron* next;
     NFacePair currBdryFaces;
-    NPerm adjPerm;
+    NPerm4 adjPerm;
 
     curr = newBase;
     currBdryFaces = NFacePair(baseFace[0], baseFace[1]).complement();

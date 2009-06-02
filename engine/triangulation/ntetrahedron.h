@@ -36,7 +36,7 @@
 #endif
 
 #include "shareableobject.h"
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 #include "utilities/nmarkedvector.h"
 
 namespace regina {
@@ -77,7 +77,7 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
                  if face \c f lies on the triangulation boundary.  Faces are
                  numbered from 0 to 3 inclusive, where face \c i is opposite
                  vertex \c i. */
-        NPerm tetrahedronPerm[4];
+        NPerm4 tetrahedronPerm[4];
             /**< Stores the corresponence between vertices of this
                  tetrahedron and adjacent tetrahedra.  If face \c f is
                  joined to another tetrahedron, <tt>tetrahedronPerm[f]</tt>
@@ -106,10 +106,10 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
              *   The array should only be used within these
              *   orientability routines, and its contents afterwards are
              *   unpredictable. */
-        NPerm edgeMapping[6];
+        NPerm4 edgeMapping[6];
             /**< Maps (0,1) to the vertices of this tetrahedron that form
                  each edge, as described in getEdgeMapping(). */
-        NPerm faceMapping[4];
+        NPerm4 faceMapping[4];
             /**< Maps (0,1,2) to the vertices of this tetrahedron that form
                  each face, as described in getFaceMapping(). */
         int tetOrientation;
@@ -203,7 +203,7 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * tetrahedron to the vertices of the tetrahedron adjacent along
          * the given face.
          */
-        NPerm adjacentGluing(int face) const;
+        NPerm4 adjacentGluing(int face) const;
         /**
          * Deprecated in favour of adjacentGluing().  The old routine
          * getAdjacentTetrahedronGluing() has been renamed to adjacentGluing()
@@ -221,7 +221,7 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * tetrahedron to the vertices of the tetrahedron adjacent along
          * the given face.
          */
-        NPerm getAdjacentTetrahedronGluing(int face) const;
+        NPerm4 getAdjacentTetrahedronGluing(int face) const;
         /**
          * Examines the tetrahedron glued to the given face of this
          * tetrahedron, and returns the corresponding face of that
@@ -295,7 +295,7 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * will be glued to the given face of this tetrahedron will be
          * face number <tt>gluing[myFace]</tt>.
          */
-        void joinTo(int myFace, NTetrahedron* you, NPerm gluing);
+        void joinTo(int myFace, NTetrahedron* you, NPerm4 gluing);
         /**
          * Unglues the given face of this tetrahedron from whatever is
          * joined to it.  The other tetrahedron involved (possibly this
@@ -420,7 +420,7 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * @return a mapping from vertices (0,1) of the requested
          * triangulation edge to the vertices of this tetrahedron.
          */
-        NPerm getEdgeMapping(int edge) const;
+        NPerm4 getEdgeMapping(int edge) const;
         /**
          * Examines the given face of this tetrahedron, and returns a
          * mapping from the "canonical" vertices of the corresponding
@@ -456,7 +456,7 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * @return a mapping from vertices (0,1,2) of the requested face
          * to the vertices of this tetrahedron.
          */
-        NPerm getFaceMapping(int face) const;
+        NPerm4 getFaceMapping(int face) const;
         /**
          * Returns the orientation of this tetrahedron in the
          * triangulation.
@@ -515,11 +515,11 @@ inline int NTetrahedron::getAdjacentFace(int face) const {
     return tetrahedronPerm[face][face];
 }
 
-inline NPerm NTetrahedron::adjacentGluing(int face) const {
+inline NPerm4 NTetrahedron::adjacentGluing(int face) const {
     return tetrahedronPerm[face];
 }
 
-inline NPerm NTetrahedron::getAdjacentTetrahedronGluing(int face) const {
+inline NPerm4 NTetrahedron::getAdjacentTetrahedronGluing(int face) const {
     // Deprecated!  Finally.
     return tetrahedronPerm[face];
 }
@@ -540,11 +540,11 @@ inline NFace* NTetrahedron::getFace(int face) const {
     return faces[face];
 }
 
-inline NPerm NTetrahedron::getEdgeMapping(int edge) const {
+inline NPerm4 NTetrahedron::getEdgeMapping(int edge) const {
     return edgeMapping[edge];
 }
 
-inline NPerm NTetrahedron::getFaceMapping(int face) const {
+inline NPerm4 NTetrahedron::getFaceMapping(int face) const {
     return faceMapping[face];
 }
 

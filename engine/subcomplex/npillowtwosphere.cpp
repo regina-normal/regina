@@ -66,7 +66,7 @@ NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
 
     // Now make sure the edges all match up and with the correct
     // permutations.
-    NPerm perm = face2->getEdgeMapping(joinTo0) *
+    NPerm4 perm = face2->getEdgeMapping(joinTo0) *
         face1->getEdgeMapping(0).inverse();
     for (i = 1; i < 3; i++) {
         if (edge[0][i] != edge[1][perm[i]])

@@ -45,9 +45,9 @@ NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
 
 void NSpiralSolidTorus::reverse() {
     NTetrahedron** newTet = new NTetrahedron*[nTet];
-    NPerm* newRoles = new NPerm[nTet];
+    NPerm4* newRoles = new NPerm4[nTet];
 
-    NPerm switchPerm(3, 2, 1, 0);
+    NPerm4 switchPerm(3, 2, 1, 0);
     for (unsigned long i = 0; i < nTet; i++) {
         newTet[i] = tet[nTet - 1 - i];
         newRoles[i] = vertexRoles[nTet - 1 - i] * switchPerm;
@@ -61,7 +61,7 @@ void NSpiralSolidTorus::reverse() {
 
 void NSpiralSolidTorus::cycle(unsigned long k) {
     NTetrahedron** newTet = new NTetrahedron*[nTet];
-    NPerm* newRoles = new NPerm[nTet];
+    NPerm4* newRoles = new NPerm4[nTet];
 
     for (unsigned long i = 0; i < nTet; i++) {
         newTet[i] = tet[(i + k) % nTet];
@@ -93,11 +93,11 @@ bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
         return false;
 
     NTetrahedron** newTet = new NTetrahedron*[nTet];
-    NPerm* newRoles = new NPerm[nTet];
+    NPerm4* newRoles = new NPerm4[nTet];
 
     if (reverseAlso) {
         // Make baseTet into tetrahedron 0 and reverse.
-        NPerm switchPerm(3, 2, 1, 0);
+        NPerm4 switchPerm(3, 2, 1, 0);
         for (unsigned long i = 0; i < nTet; i++) {
             newTet[i] = tet[(baseTet + nTet - i) % nTet];
             newRoles[i] = vertexRoles[(baseTet + nTet - i) % nTet] *
@@ -132,14 +132,14 @@ bool NSpiralSolidTorus::isCanonical(const NTriangulation* tri) const {
 }
 
 NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
-        NPerm useVertexRoles) {
-    NPerm invRoleMap(1, 2, 3, 0);  // Maps upper roles to lower roles.
+        NPerm4 useVertexRoles) {
+    NPerm4 invRoleMap(1, 2, 3, 0);  // Maps upper roles to lower roles.
 
     NTetrahedron* base = tet;
-    NPerm baseRoles(useVertexRoles);
+    NPerm4 baseRoles(useVertexRoles);
 
     std::vector<NTetrahedron*> tets;
-    std::vector<NPerm> roles;
+    std::vector<NPerm4> roles;
     stdhash::hash_set<NTetrahedron*, HashPointer> usedTets;
 
     tets.push_back(tet);
@@ -147,7 +147,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
     usedTets.insert(tet);
 
     NTetrahedron* adjTet;
-    NPerm adjRoles;
+    NPerm4 adjRoles;
 
     while (1) {
         // Examine the tetrahedron beyond tet.

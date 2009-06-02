@@ -35,17 +35,17 @@
 namespace regina {
 
 namespace {
-    NPerm exitFace(bool firstOccurrence, bool lowerCase) {
+    NPerm4 exitFace(bool firstOccurrence, bool lowerCase) {
         if (firstOccurrence) {
             if (lowerCase)
-                return NPerm(2,3,1,0);
+                return NPerm4(2,3,1,0);
             else
-                return NPerm(2,3,0,1);
+                return NPerm4(2,3,0,1);
         } else {
             if (lowerCase)
-                return NPerm(0,1,3,2);
+                return NPerm4(0,1,3,2);
             else
-                return NPerm(0,1,2,3);
+                return NPerm4(0,1,2,3);
         }
     }
 }
@@ -190,7 +190,7 @@ NTriangulation* NSignature::triangulate() const {
     // Make the face gluings.
     unsigned currCycle = 0;
     unsigned adjPos;
-    NPerm myFacePerm, yourFacePerm;
+    NPerm4 myFacePerm, yourFacePerm;
     for (pos = 0; pos < sigLen; pos++) {
         if (cycleStart[currCycle + 1] == pos + 1) {
             adjPos = cycleStart[currCycle];

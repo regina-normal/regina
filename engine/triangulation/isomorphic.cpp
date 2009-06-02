@@ -218,7 +218,7 @@ unsigned long NTriangulation::findIsomorphisms(
     NTetrahedron* destAdj;
     unsigned long tetIndex, adjIndex;
     unsigned long destTetIndex, destAdjIndex;
-    NPerm tetPerm, adjPerm;
+    NPerm4 tetPerm, adjPerm;
     int face;
     bool broken;
 
@@ -317,7 +317,7 @@ unsigned long NTriangulation::findIsomorphisms(
 
         whichComp[startTet[comp]] = comp;
         iso.tetImage(tetIndex) = startTet[comp];
-        iso.facePerm(tetIndex) = NPerm::S4[startPerm[comp]];
+        iso.facePerm(tetIndex) = NPerm4::S4[startPerm[comp]];
         toProcess.push(tetIndex);
 
         broken = false;
@@ -422,7 +422,7 @@ unsigned long NTriangulation::findIsomorphisms(
 }
 
 bool NTriangulation::compatibleTets(NTetrahedron* src, NTetrahedron* dest,
-        NPerm p) {
+        NPerm4 p) {
     for (int edge = 0; edge < 6; edge++) {
         if (src->getEdge(edge)->getNumberOfEmbeddings() !=
                 dest->getEdge(NEdge::edgeNumber[p[NEdge::edgeVertex[edge][0]]]

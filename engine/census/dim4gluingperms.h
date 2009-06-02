@@ -74,7 +74,7 @@ class Dim4GluingPerms {
                  This is guaranteed to be the minimal representative of
                  its facet pairing isomorphism class. */
         int* permIndices_;
-            /**< The index into array NPerm::S4 describing how each
+            /**< The index into array NPerm4::S4 describing how each
                  pentachoron facet is glued to its partner.  Note that this
                  is not a gluing permutation as such but rather a permutation
                  of 0, 1, 2 and 3 only (see the routines gluingToIndex() and
@@ -236,7 +236,7 @@ class Dim4GluingPerms {
         Dim4GluingPerms(const Dim4FacetPairing* pairing);
 
         /**
-         * Returns the index into array NPerm::S4 describing how the
+         * Returns the index into array NPerm4::S4 describing how the
          * the given facet is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -252,7 +252,7 @@ class Dim4GluingPerms {
         int& permIndex(const Dim4PentFacet& source);
 
         /**
-         * Returns the index into array NPerm::S4 describing how the
+         * Returns the index into array NPerm4::S4 describing how the
          * the given facet is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -269,7 +269,7 @@ class Dim4GluingPerms {
         int& permIndex(unsigned pent, unsigned facet);
 
         /**
-         * Returns the index into array NPerm::S4 describing how the
+         * Returns the index into array NPerm4::S4 describing how the
          * the given facet is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -285,7 +285,7 @@ class Dim4GluingPerms {
         const int& permIndex(const Dim4PentFacet& source) const;
 
         /**
-         * Returns the index into array NPerm::S4 describing how the
+         * Returns the index into array NPerm4::S4 describing how the
          * the given facet is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -302,12 +302,12 @@ class Dim4GluingPerms {
         const int& permIndex(unsigned pent, unsigned facet) const;
 
         /**
-         * Returns the index into array NPerm::S4 corresponding to
+         * Returns the index into array NPerm4::S4 corresponding to
          * the given gluing permutation from the given facet to its
-         * partner.  This need not be the index into NPerm::S4 that
+         * partner.  This need not be the index into NPerm4::S4 that
          * is currently stored for the given facet.
          *
-         * Indices into array NPerm::S4 are stored internally in the
+         * Indices into array NPerm4::S4 are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing 4-manifold triangulations.
          *
@@ -321,7 +321,7 @@ class Dim4GluingPerms {
          * @param gluing a possible gluing permutation from the given
          * pentachoron facet to its partner according to the underlying
          * facet pairing.
-         * @return the index into NPerm::S4 corresponding to the
+         * @return the index into NPerm4::S4 corresponding to the
          * given gluing permutation; this will be between 0 and 23
          * inclusive.
          */
@@ -329,12 +329,12 @@ class Dim4GluingPerms {
             const;
 
         /**
-         * Returns the index into array NPerm::S4 corresponding to
+         * Returns the index into array NPerm4::S4 corresponding to
          * the given gluing permutation from the given facet to its
-         * partner.  This need not be the index into NPerm::S4 that
+         * partner.  This need not be the index into NPerm4::S4 that
          * is currently stored for the given facet.
          *
-         * Indices into array NPerm::S4 are stored internally in the
+         * Indices into array NPerm4::S4 are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing 4-manifold triangulations.
          *
@@ -352,7 +352,7 @@ class Dim4GluingPerms {
          * @param gluing a possible gluing permutation from the given
          * pentachoron facet to its partner according to the underlying
          * facet pairing.
-         * @return the index into NPerm::S4 corresponding to the
+         * @return the index into NPerm4::S4 corresponding to the
          * given gluing permutation; this will be between 0 and 23
          * inclusive.
          */
@@ -362,10 +362,10 @@ class Dim4GluingPerms {
         /**
          * Returns the gluing permutation from the given facet to its
          * partner that corresponds to the given index into array
-         * NPerm::S4.  This index into NPerm::S4 need not
+         * NPerm4::S4.  This index into NPerm4::S4 need not
          * be the index that is currently stored for the given facet.
          *
-         * Indices into array NPerm::S4 are stored internally in the
+         * Indices into array NPerm4::S4 are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing 4-manifold triangulations.
          *
@@ -378,20 +378,20 @@ class Dim4GluingPerms {
          * the underlying facet pairing, i.e., is not a boundary facet.
          *
          * @param source the pentachoron facet under investigation.
-         * @param index an index into NPerm::S4; this must be
+         * @param index an index into NPerm4::S4; this must be
          * between 0 and 23 inclusive.
          * @return the gluing permutation corresponding to the given
-         * index into NPerm::S4.
+         * index into NPerm4::S4.
          */
         NPerm5 indexToGluing(const Dim4PentFacet& source, int index) const;
 
         /**
          * Returns the gluing permutation from the given facet to its
          * partner that corresponds to the given index into array
-         * NPerm::S4.  This index into NPerm::S4 need not
+         * NPerm4::S4.  This index into NPerm4::S4 need not
          * be the index that is currently stored for the given facet.
          *
-         * Indices into array NPerm::S4 are stored internally in the
+         * Indices into array NPerm4::S4 are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing 4-manifold triangulations.
          *
@@ -408,10 +408,10 @@ class Dim4GluingPerms {
          * consideration.
          * @param facet the facet of the given pentachoron under
          * investigation; this must be between 0 and 4 inclusive.
-         * @param index an index into NPerm::S4; this must be
+         * @param index an index into NPerm4::S4; this must be
          * between 0 and 23 inclusive.
          * @return the gluing permutation corresponding to the given
-         * index into NPerm::S4.
+         * index into NPerm4::S4.
          */
         NPerm5 indexToGluing(unsigned pent, unsigned facet, int index) const;
 };
@@ -471,13 +471,13 @@ inline const int& Dim4GluingPerms::permIndex(unsigned pent, unsigned facet)
 inline NPerm5 Dim4GluingPerms::indexToGluing(
         const Dim4PentFacet& source, int index) const {
     return NPerm5(pairing_->dest(source).facet, 4) *
-        perm4to5(NPerm::S4[index]) * NPerm5(source.facet, 4);
+        perm4to5(NPerm4::S4[index]) * NPerm5(source.facet, 4);
 }
 
 inline NPerm5 Dim4GluingPerms::indexToGluing(unsigned pent, unsigned facet,
         int index) const {
     return NPerm5(pairing_->dest(pent, facet).facet, 4) *
-        perm4to5(NPerm::S4[index]) * NPerm5(facet, 4);
+        perm4to5(NPerm4::S4[index]) * NPerm5(facet, 4);
 }
 
 } // namespace regina

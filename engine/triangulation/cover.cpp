@@ -65,7 +65,7 @@ void NTriangulation::makeDoubleCover() {
     unsigned long upperAdj;
     NTetrahedron* lowerAdj;
     int lowerAdjOrientation;
-    NPerm gluing;
+    NPerm4 gluing;
     for (i = 0; i < sheetSize; i++)
         if (upper[i]->tetOrientation == 0) {
             // We've found a new component.

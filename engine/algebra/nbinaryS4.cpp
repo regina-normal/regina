@@ -33,7 +33,7 @@
 namespace regina {
 
 // technically this is just the cocycle on S4 which describes the non-trivial Z_2-central extension of A5
-// elements of S4 are listed in order of NPerm::S4.
+// elements of S4 are listed in order of NPerm4::S4.
 const unsigned long NBinaryS4::mult_table[24] = { 0, 4577942, 7110958, 11033948, 8455930, 3875764, 13137498, 9778160, 3188140, 5312738, 550344, 6406214, 12687562, 2172088, 14698572, 6724390, 1424082, 2523296, 7700994, 2670952, 1245618, 8039716, 5232654, 4199512 };
 
 

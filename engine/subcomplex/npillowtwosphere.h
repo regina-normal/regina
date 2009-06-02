@@ -37,7 +37,7 @@
 #endif
 
 #include "shareableobject.h"
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 
 namespace regina {
 
@@ -68,7 +68,7 @@ class NPillowTwoSphere : public ShareableObject {
     private:
         NFace* face[2];
             /**< The two faces whose edges are joined. */
-        NPerm faceMapping;
+        NPerm4 faceMapping;
             /**< A mapping from vertices (0,1,2) of the first face to
                  vertices (0,1,2) of the second face describing how the
                  face boundaries are joined. */
@@ -101,7 +101,7 @@ class NPillowTwoSphere : public ShareableObject {
          * @return a permutation describing how the face boundaries are
          * joined.
          */
-        NPerm getFaceMapping() const;
+        NPerm4 getFaceMapping() const;
 
         /**
          * Determines if the two given faces together form a pillow
@@ -136,7 +136,7 @@ inline NPillowTwoSphere::NPillowTwoSphere() {
 inline NFace* NPillowTwoSphere::getFace(int index) const {
     return face[index];
 }
-inline NPerm NPillowTwoSphere::getFaceMapping() const {
+inline NPerm4 NPillowTwoSphere::getFaceMapping() const {
     return faceMapping;
 }
 inline void NPillowTwoSphere::writeTextShort(std::ostream& out) const {

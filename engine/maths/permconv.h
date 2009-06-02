@@ -36,8 +36,8 @@
 #endif
 
 #include "maths/nperm3.h"
+#include "maths/nperm4.h"
 #include "maths/nperm5.h"
-#include "triangulation/nperm.h"
 
 namespace regina {
 
@@ -55,7 +55,7 @@ namespace regina {
  * @return the permutation \a p expressed as a permutation of five
  * elements, not four.
  */
-NPerm5 perm4to5(const NPerm& p);
+NPerm5 perm4to5(const NPerm4& p);
 
 /**
  * Expresses the given 5-element permutation as a 4-element permutation.
@@ -69,14 +69,14 @@ NPerm5 perm4to5(const NPerm& p);
  * @return the permutation \a p expressed as a permutation of four
  * elements, not five.
  */
-NPerm perm5to4(const NPerm5& p);
+NPerm4 perm5to4(const NPerm5& p);
 
 /*@}*/
 
 // Inline conversion functions
 
-inline NPerm5 perm4to5(const NPerm& p) {
-    // Cast the NPerm code (char) to an NPerm5 code (unsigned).
+inline NPerm5 perm4to5(const NPerm4& p) {
+    // Cast the NPerm4 code (char) to an NPerm5 code (unsigned).
     unsigned code = p.getPermCode();
     return NPerm5(
         (code & 0x0003) |
@@ -86,9 +86,9 @@ inline NPerm5 perm4to5(const NPerm& p) {
         (4 << 12));
 }
 
-inline NPerm perm5to4(const NPerm5& p) {
+inline NPerm4 perm5to4(const NPerm5& p) {
     unsigned code = p.getPermCode();
-    return NPerm(static_cast<unsigned char>(
+    return NPerm4(static_cast<unsigned char>(
         (code & 0x03) |
         ((code >> 1) & 0x0c) |
         ((code >> 2) & 0x30) |

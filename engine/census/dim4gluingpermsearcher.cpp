@@ -189,7 +189,7 @@ bool Dim4GluingPermSearcher::PentFaceState::readData(std::istream& in,
         return false;
     if (bBounded != 1 && bBounded != 0)
         return false;
-    if (! NPerm::isPermCode(static_cast<unsigned char>(twist)))
+    if (! NPerm4::isPermCode(static_cast<unsigned char>(twist)))
         return false;
     if (bRank != 1 && bRank != 0)
         return false;
@@ -369,7 +369,7 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = NPerm::invS4[permIndex(facet)];
+        permIndex(adj) = NPerm4::invS4[permIndex(facet)];
 
 #ifndef DIM4_NO_UNION_FIND
         // Merge face links and run corresponding tests.
