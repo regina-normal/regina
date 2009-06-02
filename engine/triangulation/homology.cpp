@@ -164,7 +164,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
 
     // Run through each face and put the relations in the matrix.
     NTetrahedron* currTet;
-    NPerm currTetVertices;
+    NPerm4 currTetVertices;
     long edgeGenIndex;
     i = 0;
     int faceEdge, currEdgeStart, currEdgeEnd, currEdge;

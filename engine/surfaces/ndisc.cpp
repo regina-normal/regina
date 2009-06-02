@@ -46,8 +46,8 @@ bool numberDiscsAwayFromVertex(int discType, int vertex) {
 
 bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
         int edgeEnd) {
-    NPerm forwards(vertex, edgeStart, edgeEnd, 6-vertex-edgeStart-edgeEnd);
-    NPerm reverse(vertex, edgeEnd, edgeStart, 6-vertex-edgeStart-edgeEnd);
+    NPerm4 forwards(vertex, edgeStart, edgeEnd, 6-vertex-edgeStart-edgeEnd);
+    NPerm4 reverse(vertex, edgeEnd, edgeStart, 6-vertex-edgeStart-edgeEnd);
 
     if (discType < 4) {
         for (int i = 0; i < 3; i++) {
@@ -163,7 +163,7 @@ NDiscSetSurface::~NDiscSetSurface() {
 }
 
 NDiscSpec* NDiscSetSurface::adjacentDisc(const NDiscSpec& disc,
-        NPerm arc, NPerm& adjArc) const {
+        NPerm4 arc, NPerm4& adjArc) const {
     NTetrahedron* tet = triangulation->getTetrahedron(disc.tetIndex);
     int arcFace = arc[3];
     if (tet->adjacentTetrahedron(arcFace) == 0)

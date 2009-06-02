@@ -80,7 +80,7 @@ class NTxICore : public ShareableObject {
         unsigned bdryTet_[2][2];
             /**< The tetrahedra that provide the upper and lower
                  boundary faces.  See bdryTet() for details. */
-        NPerm bdryRoles_[2][2];
+        NPerm4 bdryRoles_[2][2];
             /**< Describes which tetrahedron vertices play which roles
                  in the upper and lower boundary faces.  See bdryRoles()
                  for details. */
@@ -172,7 +172,7 @@ class NTxICore : public ShareableObject {
          * @return the permutation mapping roles 0, 1 and 2 in the
          * diagram above to real tetrahedron vertex numbers.
          */
-        NPerm bdryRoles(unsigned whichBdry, unsigned whichFace) const;
+        NPerm4 bdryRoles(unsigned whichBdry, unsigned whichFace) const;
         /**
          * Returns a 2-by-2 matrix describing the \a alpha and \a beta curves
          * on a torus boundary in terms of specific tetrahedron edges.
@@ -438,7 +438,8 @@ inline unsigned NTxICore::bdryTet(unsigned whichBdry, unsigned whichFace)
     return bdryTet_[whichBdry][whichFace];
 }
 
-inline NPerm NTxICore::bdryRoles(unsigned whichBdry, unsigned whichFace) const {
+inline NPerm4 NTxICore::bdryRoles(unsigned whichBdry, unsigned whichFace)
+        const {
     return bdryRoles_[whichBdry][whichFace];
 }
 

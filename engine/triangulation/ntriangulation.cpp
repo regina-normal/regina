@@ -84,7 +84,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     NTetrahedron* adjTet;
     unsigned tetPos;
     int face, vertex, start, end;
-    NPerm adjPerm;
+    NPerm4 adjPerm;
 
     out << "Tetrahedron gluing:\n";
     out << "  Tet  |  glued to:      (012)      (013)      (023)      (123)\n";
@@ -154,7 +154,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
 void NTriangulation::writePacket(NFile& out) const {
     NTetrahedron* tet;
     NTetrahedron* adjTet;
-    NPerm adjPerm;
+    NPerm4 adjPerm;
     int face;
     long tetPos, adjPos;
 
@@ -248,7 +248,7 @@ NTriangulation* NTriangulation::readPacket(NFile& in, NPacket* /* parent */) {
     // Read in the joins.
     long tetPos, altPos;
     int face;
-    NPerm adjPerm;
+    NPerm4 adjPerm;
 
     tetPos = in.readLong();
     while (tetPos >= 0) {
@@ -256,7 +256,7 @@ NTriangulation* NTriangulation::readPacket(NFile& in, NPacket* /* parent */) {
         altPos = in.readLong();
         adjPerm = in.readChar();
         triang->tetrahedra[tetPos]->joinTo(face,
-            triang->tetrahedra[altPos], NPerm(adjPerm));
+            triang->tetrahedra[altPos], NPerm4(adjPerm));
         tetPos = in.readLong();
     }
 
@@ -446,7 +446,7 @@ NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
         }
 
         tet->joinTo(face, altTet,
-            NPerm(vertices[0], vertices[3], vertices[1], vertices[4],
+            NPerm4(vertices[0], vertices[3], vertices[1], vertices[4],
                 vertices[2], vertices[5], face, altFace));
         out << '\n';
     }
@@ -528,7 +528,7 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     long tetPos, adjPos;
     NTetrahedron* tet;
     NTetrahedron* adjTet;
-    NPerm adjPerm;
+    NPerm4 adjPerm;
     int face;
     tetPos = 0;
     for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++) {
@@ -584,7 +584,7 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
     long tetPos, adjPos;
     NTetrahedron* tet;
     NTetrahedron* adjTet;
-    NPerm adjPerm;
+    NPerm4 adjPerm;
     int face;
     tetPos = 0;
     for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++) {
@@ -615,7 +615,7 @@ void NTriangulation::insertConstruction(unsigned long nTetrahedra,
     NTetrahedron** tet = new NTetrahedron*[nTetrahedra];
 
     unsigned i, j;
-    NPerm p;
+    NPerm4 p;
 
     for (i = 0; i < nTetrahedra; i++)
         tet[i] = new NTetrahedron();
@@ -624,7 +624,7 @@ void NTriangulation::insertConstruction(unsigned long nTetrahedra,
         for (j = 0; j < 4; j++)
             if (adjacencies[i][j] >= 0 &&
                     ! tet[i]->adjacentTetrahedron(j)) {
-                p = NPerm(gluings[i][j][0], gluings[i][j][1],
+                p = NPerm4(gluings[i][j][0], gluings[i][j][1],
                     gluings[i][j][2], gluings[i][j][3]);
                 tet[i]->joinTo(j, tet[adjacencies[i][j]], p);
             }
@@ -665,7 +665,7 @@ std::string NTriangulation::dumpConstruction() const {
 
     unsigned long nTetrahedra = tetrahedra.size();
     NTetrahedron* tet;
-    NPerm p;
+    NPerm4 p;
     unsigned long t;
     int f, i;
 

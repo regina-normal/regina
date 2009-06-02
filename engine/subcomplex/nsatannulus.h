@@ -35,7 +35,7 @@
 #define __NSATANNULUS_H
 #endif
 
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 
 namespace regina {
 
@@ -122,7 +122,7 @@ struct NSatAnnulus {
     NTetrahedron* tet[2];
         /**< Describes which tetrahedra provide the first and second
              faces.  See the class notes for details. */
-    NPerm roles[2];
+    NPerm4 roles[2];
         /**< Describes how the first and second faces match up with
              individual tetrahedron vertices.  See the class notes for
              details. */
@@ -147,7 +147,7 @@ struct NSatAnnulus {
      * @param t1 the tetrahedron to assign to \a tet[1].
      * @param r1 the permutation to assign to \a roles[1].
      */
-    NSatAnnulus(NTetrahedron* t0, NPerm r0, NTetrahedron* t1, NPerm r1);
+    NSatAnnulus(NTetrahedron* t0, NPerm4 r0, NTetrahedron* t1, NPerm4 r1);
     /**
      * Makes this equal to a clone of the given structure.
      *
@@ -455,8 +455,8 @@ inline NSatAnnulus::NSatAnnulus(const NSatAnnulus& cloneMe) {
     roles[0] = cloneMe.roles[0]; roles[1] = cloneMe.roles[1];
 }
 
-inline NSatAnnulus::NSatAnnulus(NTetrahedron* t0, NPerm r0,
-        NTetrahedron* t1, NPerm r1) {
+inline NSatAnnulus::NSatAnnulus(NTetrahedron* t0, NPerm4 r0,
+        NTetrahedron* t1, NPerm4 r1) {
     tet[0] = t0; tet[1] = t1;
     roles[0] = r0; roles[1] = r1;
 }
@@ -484,13 +484,13 @@ inline NSatAnnulus NSatAnnulus::otherSide() const {
 }
 
 inline void NSatAnnulus::reflectVertical() {
-    roles[0] = roles[0] * NPerm(0, 1);
-    roles[1] = roles[1] * NPerm(0, 1);
+    roles[0] = roles[0] * NPerm4(0, 1);
+    roles[1] = roles[1] * NPerm4(0, 1);
 }
 
 inline NSatAnnulus NSatAnnulus::verticalReflection() const {
-    return NSatAnnulus(tet[0], roles[0] * NPerm(0, 1),
-                       tet[1], roles[1] * NPerm(0, 1));
+    return NSatAnnulus(tet[0], roles[0] * NPerm4(0, 1),
+                       tet[1], roles[1] * NPerm4(0, 1));
 }
 
 inline void NSatAnnulus::reflectHorizontal() {
@@ -498,14 +498,14 @@ inline void NSatAnnulus::reflectHorizontal() {
     tet[0] = tet[1];
     tet[1] = t;
 
-    NPerm r = roles[0];
-    roles[0] = roles[1] * NPerm(0, 1);
-    roles[1] = r * NPerm(0, 1);
+    NPerm4 r = roles[0];
+    roles[0] = roles[1] * NPerm4(0, 1);
+    roles[1] = r * NPerm4(0, 1);
 }
 
 inline NSatAnnulus NSatAnnulus::horizontalReflection() const {
-    return NSatAnnulus(tet[1], roles[1] * NPerm(0, 1),
-                       tet[0], roles[0] * NPerm(0, 1));
+    return NSatAnnulus(tet[1], roles[1] * NPerm4(0, 1),
+                       tet[0], roles[0] * NPerm4(0, 1));
 }
 
 inline void NSatAnnulus::rotateHalfTurn() {
@@ -513,7 +513,7 @@ inline void NSatAnnulus::rotateHalfTurn() {
     tet[0] = tet[1];
     tet[1] = t;
 
-    NPerm r = roles[0];
+    NPerm4 r = roles[0];
     roles[0] = roles[1];
     roles[1] = r;
 }

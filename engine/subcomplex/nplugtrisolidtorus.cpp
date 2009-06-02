@@ -164,15 +164,15 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
     NTriSolidTorus* core;
     NTetrahedron* coreTet[3];
     NEdge* axis[3];
-    NPerm coreRoles[3];
+    NPerm4 coreRoles[3];
     NTetrahedron* base[2];
-    NPerm baseRoles[2];
+    NPerm4 baseRoles[2];
     int i, j;
     bool error;
 
     NTetrahedron* plugTet[3][2];
-    NPerm plugRoles[3][2];
-    NPerm realPlugRoles[2];
+    NPerm4 plugRoles[3][2];
+    NPerm4 realPlugRoles[2];
 
     NLayeredChain* chain[3];
     int chainType[3];
@@ -182,7 +182,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
 
     for (tetIndex = 0; tetIndex < nTet - 2; tetIndex++)
         for (coreIndex = 0; coreIndex < 24; coreIndex++) {
-            coreRoles[0] = NPerm::S4[coreIndex];
+            coreRoles[0] = NPerm4::S4[coreIndex];
             if (coreRoles[0][0] > coreRoles[0][3])
                 continue;
 
@@ -222,10 +222,10 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 // Have we layered over the major axis?
                 baseRoles[0] = coreTet[(i + 1) % 3]->
                     adjacentGluing(coreRoles[(i + 1) % 3][2]) *
-                    coreRoles[(i + 1) % 3] * NPerm(0, 3, 2, 1);
+                    coreRoles[(i + 1) % 3] * NPerm4(0, 3, 2, 1);
                 baseRoles[1] = coreTet[(i + 2) % 3]->
                     adjacentGluing(coreRoles[(i + 2) % 3][1]) *
-                    coreRoles[(i + 2) % 3] * NPerm(2, 1, 0, 3);
+                    coreRoles[(i + 2) % 3] * NPerm4(2, 1, 0, 3);
                 if (baseRoles[0] == baseRoles[1]) {
                     chainType[i] = CHAIN_MAJOR;
                     chain[i] = new NLayeredChain(base[0], baseRoles[0]);
@@ -237,10 +237,10 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 // Have we layered over the minor axis?
                 baseRoles[0] = coreTet[(i + 1) % 3]->
                     adjacentGluing(coreRoles[(i + 1) % 3][2]) *
-                    coreRoles[(i + 1) % 3] * NPerm(3, 0, 2, 1);
+                    coreRoles[(i + 1) % 3] * NPerm4(3, 0, 2, 1);
                 baseRoles[1] = coreTet[(i + 2) % 3]->
                     adjacentGluing(coreRoles[(i + 2) % 3][1]) *
-                    coreRoles[(i + 2) % 3] * NPerm(2, 1, 3, 0);
+                    coreRoles[(i + 2) % 3] * NPerm4(2, 1, 3, 0);
                 if (baseRoles[0] == baseRoles[1]) {
                     chainType[i] = CHAIN_MINOR;
                     chain[i] = new NLayeredChain(base[0], baseRoles[0]);
@@ -301,14 +301,14 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                         adjacentGluing(chain[i]->
                         getTopVertexRoles()[3]) *
                         chain[i]->getTopVertexRoles() *
-                        (chainType[i] == CHAIN_MAJOR ? NPerm(0, 1, 2, 3) :
-                        NPerm(1, 0, 2, 3));
+                        (chainType[i] == CHAIN_MAJOR ? NPerm4(0, 1, 2, 3) :
+                        NPerm4(1, 0, 2, 3));
                     plugRoles[i][1] = chain[i]->getTop()->
                         adjacentGluing(chain[i]->
                         getTopVertexRoles()[0]) *
                         chain[i]->getTopVertexRoles() *
-                        (chainType[i] == CHAIN_MAJOR ? NPerm(2, 3, 1, 0) :
-                        NPerm(3, 2, 1, 0));
+                        (chainType[i] == CHAIN_MAJOR ? NPerm4(2, 3, 1, 0) :
+                        NPerm4(3, 2, 1, 0));
                 } else {
                     plugTet[i][0] = coreTet[(i + 1) % 3]->
                         adjacentTetrahedron(coreRoles[(i + 1) % 3][2]);
@@ -316,10 +316,10 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                         adjacentTetrahedron(coreRoles[(i + 2) % 3][1]);
                     plugRoles[i][0] = coreTet[(i + 1) % 3]->
                         adjacentGluing(coreRoles[(i + 1) % 3][2])
-                        * coreRoles[(i + 1) % 3] * NPerm(0, 3, 1, 2);
+                        * coreRoles[(i + 1) % 3] * NPerm4(0, 3, 1, 2);
                     plugRoles[i][1] = coreTet[(i + 2) % 3]->
                         adjacentGluing(coreRoles[(i + 2) % 3][1])
-                        * coreRoles[(i + 2) % 3] * NPerm(0, 3, 2, 1);
+                        * coreRoles[(i + 2) % 3] * NPerm4(0, 3, 2, 1);
                 }
             }
 
@@ -339,40 +339,40 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 if (plugRoles[0][0][0] == plugRoles[1][0][0] &&
                         plugRoles[1][0][0] == plugRoles[2][0][0]) {
                     // Type EQUATOR_MINOR.
-                    realPlugRoles[0] = plugRoles[0][0] * NPerm(3, 2, 1, 0);
-                    realPlugRoles[1] = plugRoles[0][1] * NPerm(3, 0, 2, 1);
+                    realPlugRoles[0] = plugRoles[0][0] * NPerm4(3, 2, 1, 0);
+                    realPlugRoles[1] = plugRoles[0][1] * NPerm4(3, 0, 2, 1);
 
                     if (realPlugRoles[0] != plugRoles[1][0] *
-                            NPerm(1, 3, 2, 0))
+                            NPerm4(1, 3, 2, 0))
                         error = true;
                     else if (realPlugRoles[0] != plugRoles[2][0] *
-                            NPerm(2, 1, 3, 0))
+                            NPerm4(2, 1, 3, 0))
                         error = true;
                     else if (realPlugRoles[1] != plugRoles[1][1] *
-                            NPerm(2, 3, 0, 1))
+                            NPerm4(2, 3, 0, 1))
                         error = true;
                     else if (realPlugRoles[1] != plugRoles[2][1] *
-                            NPerm(0, 2, 3, 1))
+                            NPerm4(0, 2, 3, 1))
                         error = true;
                     else
                         equatorType = EQUATOR_MINOR;
                 } else if (plugRoles[0][0][1] == plugRoles[1][0][1] &&
                         plugRoles[1][0][1] == plugRoles[2][0][1]) {
                     // Type EQUATOR_MAJOR.
-                    realPlugRoles[0] = plugRoles[0][0] * NPerm(3, 2, 0, 1);
-                    realPlugRoles[1] = plugRoles[0][1] * NPerm(3, 1, 2, 0);
+                    realPlugRoles[0] = plugRoles[0][0] * NPerm4(3, 2, 0, 1);
+                    realPlugRoles[1] = plugRoles[0][1] * NPerm4(3, 1, 2, 0);
 
                     if (realPlugRoles[0] != plugRoles[1][0] *
-                            NPerm(0, 3, 2, 1))
+                            NPerm4(0, 3, 2, 1))
                         error = true;
                     else if (realPlugRoles[0] != plugRoles[2][0] *
-                            NPerm(2, 0, 3, 1))
+                            NPerm4(2, 0, 3, 1))
                         error = true;
                     else if (realPlugRoles[1] != plugRoles[1][1] *
-                            NPerm(2, 3, 1, 0))
+                            NPerm4(2, 3, 1, 0))
                         error = true;
                     else if (realPlugRoles[1] != plugRoles[2][1] *
-                            NPerm(1, 2, 3, 0))
+                            NPerm4(1, 2, 3, 0))
                         error = true;
                     else
                         equatorType = EQUATOR_MAJOR;

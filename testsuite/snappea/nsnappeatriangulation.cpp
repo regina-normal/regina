@@ -35,7 +35,7 @@
 #include "testsuite/snappea/testsnappea.h"
 
 using regina::NExampleTriangulation;
-using regina::NPerm;
+using regina::NPerm4;
 using regina::NSnapPeaTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;
@@ -149,37 +149,37 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             t = new NTetrahedron();
             s = new NTetrahedron();
-            t->joinTo(0, s, NPerm(0,1,2,3));
-            t->joinTo(1, s, NPerm(0,1,2,3));
-            t->joinTo(2, s, NPerm(1,3,2,0));
-            t->joinTo(3, s, NPerm(1,2,0,3));
+            t->joinTo(0, s, NPerm4(0,1,2,3));
+            t->joinTo(1, s, NPerm4(0,1,2,3));
+            t->joinTo(2, s, NPerm4(1,3,2,0));
+            t->joinTo(3, s, NPerm4(1,2,0,3));
             flatOr.addTetrahedron(t);
             flatOr.addTetrahedron(s);
 
             t = new NTetrahedron();
             s = new NTetrahedron();
-            t->joinTo(0, s, NPerm(0,1,2,3));
-            t->joinTo(1, s, NPerm(2,1,0,3));
-            t->joinTo(2, s, NPerm(1,3,2,0));
-            t->joinTo(3, s, NPerm(2,1,0,3));
+            t->joinTo(0, s, NPerm4(0,1,2,3));
+            t->joinTo(1, s, NPerm4(2,1,0,3));
+            t->joinTo(2, s, NPerm4(1,3,2,0));
+            t->joinTo(3, s, NPerm4(2,1,0,3));
             flatNor.addTetrahedron(t);
             flatNor.addTetrahedron(s);
 
             t = new NTetrahedron();
             s = new NTetrahedron();
-            t->joinTo(0, t, NPerm(1,0,2,3));
-            t->joinTo(2, s, NPerm(1,2,0,3));
-            t->joinTo(3, s, NPerm(0,2,3,1));
-            s->joinTo(2, s, NPerm(1,2,3,0));
+            t->joinTo(0, t, NPerm4(1,0,2,3));
+            t->joinTo(2, s, NPerm4(1,2,0,3));
+            t->joinTo(3, s, NPerm4(0,2,3,1));
+            s->joinTo(2, s, NPerm4(1,2,3,0));
             degenerateOr.addTetrahedron(t);
             degenerateOr.addTetrahedron(s);
 
             t = new NTetrahedron();
             s = new NTetrahedron();
-            t->joinTo(0, t, NPerm(1,0,2,3));
-            t->joinTo(2, s, NPerm(1,2,0,3));
-            t->joinTo(3, s, NPerm(0,3,2,1));
-            s->joinTo(2, s, NPerm(0,2,3,1));
+            t->joinTo(0, t, NPerm4(1,0,2,3));
+            t->joinTo(2, s, NPerm4(1,2,0,3));
+            t->joinTo(3, s, NPerm4(0,3,2,1));
+            s->joinTo(2, s, NPerm4(0,2,3,1));
             degenerateNor.addTetrahedron(t);
             degenerateNor.addTetrahedron(s);
 
@@ -189,28 +189,28 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             t = new NTetrahedron();
             s = new NTetrahedron();
-            t->joinTo(0, s, NPerm(0,2,3,1));
-            t->joinTo(1, s, NPerm(2,1,3,0));
-            t->joinTo(2, s, NPerm(1,3,2,0));
-            t->joinTo(3, s, NPerm(2,0,1,3));
+            t->joinTo(0, s, NPerm4(0,2,3,1));
+            t->joinTo(1, s, NPerm4(2,1,3,0));
+            t->joinTo(2, s, NPerm4(1,3,2,0));
+            t->joinTo(3, s, NPerm4(2,0,1,3));
             genusTwoTorusCusp.addTetrahedron(t);
             genusTwoTorusCusp.addTetrahedron(s);
 
             t = new NTetrahedron();
             s = new NTetrahedron();
-            t->joinTo(0, t, NPerm(1,0,2,3));
-            t->joinTo(2, s, NPerm(1,2,0,3));
-            t->joinTo(3, s, NPerm(3,2,0,1));
-            s->joinTo(2, s, NPerm(0,2,3,1));
+            t->joinTo(0, t, NPerm4(1,0,2,3));
+            t->joinTo(2, s, NPerm4(1,2,0,3));
+            t->joinTo(3, s, NPerm4(3,2,0,1));
+            s->joinTo(2, s, NPerm4(0,2,3,1));
             projPlaneCusps.addTetrahedron(t);
             projPlaneCusps.addTetrahedron(s);
 
             t = new NTetrahedron();
             s = new NTetrahedron();
-            t->joinTo(0, t, NPerm(1,2,0,3));
-            t->joinTo(2, s, NPerm(1,2,0,3));
-            t->joinTo(3, s, NPerm(0,2,3,1));
-            s->joinTo(2, s, NPerm(0,2,3,1));
+            t->joinTo(0, t, NPerm4(1,2,0,3));
+            t->joinTo(2, s, NPerm4(1,2,0,3));
+            t->joinTo(3, s, NPerm4(0,2,3,1));
+            s->joinTo(2, s, NPerm4(0,2,3,1));
             genusFourNonOrCusp.addTetrahedron(t);
             genusFourNonOrCusp.addTetrahedron(s);
 
@@ -218,8 +218,8 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             cuspedTorus.finiteToIdeal();
 
             t = new NTetrahedron();
-            t->joinTo(0, t, NPerm(1,0,3,2));
-            t->joinTo(2, t, NPerm(1,0,3,2));
+            t->joinTo(0, t, NPerm4(1,0,3,2));
+            t->joinTo(2, t, NPerm4(1,0,3,2));
             edgeInvalid.addTetrahedron(t);
         }
 

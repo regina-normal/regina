@@ -111,8 +111,8 @@ namespace {
                              //     which an adjacent disc might may be glued.
 
         NDiscSpec* adjDisc;  // The disc to which the current disc is glued.
-        NPerm arc[8];        // Holds each gluing arc for the current disc.
-        NPerm adjArc;        // Represents the corresponding gluing arc on the
+        NPerm4 arc[8];       // Holds each gluing arc for the current disc.
+        NPerm4 adjArc;       // Represents the corresponding gluing arc on the
                              //     adjacent disc.
 
         long compID = 0;     // The current working component ID.

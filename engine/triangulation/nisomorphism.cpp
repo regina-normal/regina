@@ -38,7 +38,7 @@ NIsomorphism::NIsomorphism(const NIsomorphism& cloneMe) :
         mTetImage(cloneMe.nTetrahedra > 0 ?
             new int[cloneMe.nTetrahedra] : 0),
         mFacePerm(cloneMe.nTetrahedra > 0 ?
-            new NPerm[cloneMe.nTetrahedra] : 0) {
+            new NPerm4[cloneMe.nTetrahedra] : 0) {
     std::copy(cloneMe.mTetImage, cloneMe.mTetImage + nTetrahedra, mTetImage);
     std::copy(cloneMe.mFacePerm, cloneMe.mFacePerm + nTetrahedra, mFacePerm);
 }
@@ -78,7 +78,7 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
 
     const NTetrahedron *myTet, *adjTet;
     unsigned long adjTetIndex;
-    NPerm gluingPerm;
+    NPerm4 gluingPerm;
     for (t = 0; t < nTetrahedra; t++) {
         myTet = original->getTetrahedron(t);
         for (f = 0; f < 4; f++)
@@ -114,7 +114,7 @@ NIsomorphism* NIsomorphism::random(unsigned nTetrahedra) {
 
     // Randomly choose the individual permutations.
     for (i = 0; i < nTetrahedra; i++)
-        ans->mFacePerm[i] = NPerm::S4[rand() % 24];
+        ans->mFacePerm[i] = NPerm4::S4[rand() % 24];
 
     return ans;
 }

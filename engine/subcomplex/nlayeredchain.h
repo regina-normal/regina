@@ -35,8 +35,8 @@
 #define __NLAYEREDCHAIN_H
 #endif
 
+#include "maths/nperm4.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/nperm.h"
 
 namespace regina {
 
@@ -91,9 +91,9 @@ class NLayeredChain : public NStandardTriangulation {
             /**< The top tetrahedron of this layered chain. */
         unsigned long index;
             /**< The number of tetrahedra in this layered chain. */
-        NPerm bottomVertexRoles;
+        NPerm4 bottomVertexRoles;
             /**< The permutation described by getBottomVertexRoles(). */
-        NPerm topVertexRoles;
+        NPerm4 topVertexRoles;
             /**< The permutation described by getTopVertexRoles(). */
 
     public:
@@ -110,7 +110,7 @@ class NLayeredChain : public NStandardTriangulation {
          * in the same format as the permutation returned by
          * getBottomVertexRoles() and getTopVertexRoles().
          */
-        NLayeredChain(NTetrahedron* tet, NPerm vertexRoles);
+        NLayeredChain(NTetrahedron* tet, NPerm4 vertexRoles);
 
         /**
          * Creates a new layered chain that is a clone of the given
@@ -160,7 +160,7 @@ class NLayeredChain : public NStandardTriangulation {
          * @return a permutation representing the roles of the vertices
          * of the bottom tetrahedron.
          */
-        NPerm getBottomVertexRoles() const;
+        NPerm4 getBottomVertexRoles() const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -178,7 +178,7 @@ class NLayeredChain : public NStandardTriangulation {
          * @return a permutation representing the roles of the vertices
          * of the top tetrahedron.
          */
-        NPerm getTopVertexRoles() const;
+        NPerm4 getTopVertexRoles() const;
 
         /**
          * Checks to see whether this layered chain can be extended to
@@ -253,7 +253,7 @@ class NLayeredChain : public NStandardTriangulation {
 
 // Inline functions for NLayeredChain
 
-inline NLayeredChain::NLayeredChain(NTetrahedron* tet, NPerm vertexRoles) :
+inline NLayeredChain::NLayeredChain(NTetrahedron* tet, NPerm4 vertexRoles) :
         bottom(tet), top(tet), index(1), bottomVertexRoles(vertexRoles),
         topVertexRoles(vertexRoles) {
 }
@@ -275,10 +275,10 @@ inline unsigned long NLayeredChain::getIndex() const {
     return index;
 }
 
-inline NPerm NLayeredChain::getBottomVertexRoles() const {
+inline NPerm4 NLayeredChain::getBottomVertexRoles() const {
     return bottomVertexRoles;
 }
-inline NPerm NLayeredChain::getTopVertexRoles() const {
+inline NPerm4 NLayeredChain::getTopVertexRoles() const {
     return topVertexRoles;
 }
 

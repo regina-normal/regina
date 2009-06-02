@@ -63,7 +63,7 @@ NTetrahedron* NTetrahedron::unjoin(int myFace) {
     return you;
 }
 
-void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm gluing) {
+void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
     tetrahedra[myFace] = you;
     tetrahedronPerm[myFace] = gluing;
     int yourFace = gluing[myFace];

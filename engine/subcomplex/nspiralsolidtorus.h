@@ -35,8 +35,8 @@
 #define __NSPIRALSOLIDTORUS_H
 #endif
 
+#include "maths/nperm4.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/nperm.h"
 
 namespace regina {
 
@@ -92,7 +92,7 @@ class NSpiralSolidTorus : public NStandardTriangulation {
             /**< The number of tetrahedra in this spiralled solid torus. */
         NTetrahedron** tet;
             /**< The tetrahedra that make up this spiralled solid torus. */
-        NPerm* vertexRoles;
+        NPerm4* vertexRoles;
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
                  permutation p chosen so that vertices A, B, C and D above
                  correspond to vertices p[0], p[1], p[2] and p[3]. */
@@ -153,7 +153,7 @@ class NSpiralSolidTorus : public NStandardTriangulation {
          * @return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
          */
-        NPerm getVertexRoles(unsigned long index) const;
+        NPerm4 getVertexRoles(unsigned long index) const;
 
         /**
          * Reverses this spiralled solid torus.
@@ -229,7 +229,7 @@ class NSpiralSolidTorus : public NStandardTriangulation {
          * solid torus with the given vertex roles.
          */
         static NSpiralSolidTorus* formsSpiralSolidTorus(NTetrahedron* tet,
-                NPerm useVertexRoles);
+                NPerm4 useVertexRoles);
 
         NManifold* getManifold() const;
         NAbelianGroup* getHomologyH1() const;
@@ -255,7 +255,7 @@ class NSpiralSolidTorus : public NStandardTriangulation {
 
 inline NSpiralSolidTorus::NSpiralSolidTorus(unsigned long newNTet) :
         nTet(newNTet), tet(new NTetrahedron*[newNTet]),
-        vertexRoles(new NPerm[newNTet]) {
+        vertexRoles(new NPerm4[newNTet]) {
 }
 
 inline NSpiralSolidTorus::~NSpiralSolidTorus() {
@@ -271,7 +271,7 @@ inline NTetrahedron* NSpiralSolidTorus::getTetrahedron(unsigned long index)
         const {
     return tet[index];
 }
-inline NPerm NSpiralSolidTorus::getVertexRoles(unsigned long index) const {
+inline NPerm4 NSpiralSolidTorus::getVertexRoles(unsigned long index) const {
     return vertexRoles[index];
 }
 

@@ -29,7 +29,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/nperm3.h"
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 #include "testsuite/maths/testmaths.h"
 
 using regina::NPerm3;
@@ -295,9 +295,9 @@ class NPerm3Test : public CppUnit::TestFixture {
                             NPerm3 y(d, e, f);
 
                             NPerm3 product3 = x * y;
-                            regina::NPerm product4 =
-                                regina::NPerm(a, b, c, 3) *
-                                regina::NPerm(d, e, f, 3);
+                            regina::NPerm4 product4 =
+                                regina::NPerm4(a, b, c, 3) *
+                                regina::NPerm4(d, e, f, 3);
 
                             if (product3[0] != product4[0] ||
                                     product3[1] != product4[1] ||

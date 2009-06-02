@@ -136,7 +136,7 @@ void NFaceGluingDialog::slotOk() {
     // Check that everything looks alright.
     long newAdjTet = ((long)(tetrahedron->currentItem())) - 1;
     QString newAdjFace = perm->text();
-    regina::NPerm newAdjPerm;
+    regina::NPerm4 newAdjPerm;
 
     if (newAdjTet >= 0) {
         // Does the face description check out?

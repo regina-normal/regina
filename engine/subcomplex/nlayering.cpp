@@ -31,8 +31,8 @@
 
 namespace regina {
 
-NLayering::NLayering(NTetrahedron* bdry0, NPerm roles0, NTetrahedron* bdry1,
-        NPerm roles1) : size(0), reln(1, 0, 0, 1) {
+NLayering::NLayering(NTetrahedron* bdry0, NPerm4 roles0, NTetrahedron* bdry1,
+        NPerm4 roles1) : size(0), reln(1, 0, 0, 1) {
     oldBdryTet[0] = newBdryTet[0] = bdry0;
     oldBdryTet[1] = newBdryTet[1] = bdry1;
 
@@ -55,18 +55,18 @@ bool NLayering::extendOne() {
 
     // Get the mappings from the boundary vertex roles to the new tetrahedron
     // vertices.
-    NPerm cross0 = newBdryTet[0]->adjacentGluing(
+    NPerm4 cross0 = newBdryTet[0]->adjacentGluing(
         newBdryRoles[0][3]) * newBdryRoles[0];
-    NPerm cross1 = newBdryTet[1]->adjacentGluing(
+    NPerm4 cross1 = newBdryTet[1]->adjacentGluing(
         newBdryRoles[1][3]) * newBdryRoles[1];
 
     // Is it actually a layering?
-    if (cross1 == cross0 * NPerm(3, 2, 1, 0)) {
+    if (cross1 == cross0 * NPerm4(3, 2, 1, 0)) {
         // We're layering over the edge joining vertex roles 1 and 2.
         size++;
 
-        newBdryRoles[0] = cross0 * NPerm(0, 1, 3, 2);
-        newBdryRoles[1] = cross0 * NPerm(3, 2, 0, 1);
+        newBdryRoles[0] = cross0 * NPerm4(0, 1, 3, 2);
+        newBdryRoles[1] = cross0 * NPerm4(3, 2, 0, 1);
 
         newBdryTet[0] = newBdryTet[1] = next;
 
@@ -76,12 +76,12 @@ bool NLayering::extendOne() {
         reln[1][1] += reln[0][1];
 
         return true;
-    } else if (cross1 == cross0 * NPerm(2, 3, 0, 1)) {
+    } else if (cross1 == cross0 * NPerm4(2, 3, 0, 1)) {
         // We're layering over the edge joining vertex roles 0 and 2.
         size++;
 
-        newBdryRoles[0] = cross0 * NPerm(0, 1, 3, 2);
-        newBdryRoles[1] = cross0 * NPerm(2, 3, 1, 0);
+        newBdryRoles[0] = cross0 * NPerm4(0, 1, 3, 2);
+        newBdryRoles[1] = cross0 * NPerm4(2, 3, 1, 0);
 
         newBdryTet[0] = newBdryTet[1] = next;
 
@@ -91,12 +91,12 @@ bool NLayering::extendOne() {
         reln[1][1] -= reln[0][1];
 
         return true;
-    } else if (cross1 == cross0 * NPerm(1, 0, 3, 2)) {
+    } else if (cross1 == cross0 * NPerm4(1, 0, 3, 2)) {
         // We're layering over the edge joining vertex roles 0 and 1.
         size++;
 
-        newBdryRoles[0] = cross0 * NPerm(0, 3, 2, 1);
-        newBdryRoles[1] = cross0 * NPerm(1, 2, 3, 0);
+        newBdryRoles[0] = cross0 * NPerm4(0, 3, 2, 1);
+        newBdryRoles[1] = cross0 * NPerm4(1, 2, 3, 0);
 
         newBdryTet[0] = newBdryTet[1] = next;
 
@@ -121,8 +121,8 @@ unsigned long NLayering::extend() {
     return added;
 }
 
-bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
-        NTetrahedron* upperBdry1, NPerm upperRoles1, NMatrix2& upperReln)
+bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm4 upperRoles0,
+        NTetrahedron* upperBdry1, NPerm4 upperRoles1, NMatrix2& upperReln)
         const {
     // We can cut half our cases by assuming that upperBdry0 meets with
     // newBdryTet[0] and that upperBdry1 meets with newBdryTet[1].
@@ -136,7 +136,7 @@ bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
         upperBdry0 = upperBdry1;
         upperBdry1 = tmpTet;
 
-        NPerm tmpPerm = upperRoles0;
+        NPerm4 tmpPerm = upperRoles0;
         upperRoles0 = upperRoles1;
         upperRoles1 = tmpPerm;
 
@@ -158,7 +158,7 @@ bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
 
     // Find the mapping from the upper vertex roles to the boundary
     // vertex roles.  Verify that this mapping is consistent for both faces.
-    NPerm cross = newBdryRoles[0].inverse() * upperBdry0->
+    NPerm4 cross = newBdryRoles[0].inverse() * upperBdry0->
         adjacentGluing(upperRoles0[3]) * upperRoles0;
     if (cross != newBdryRoles[1].inverse() * upperBdry1->
             adjacentGluing(upperRoles1[3]) * upperRoles1)
@@ -166,26 +166,26 @@ bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
 
     // It's a match!  Run through the six possible mappings to get the
     // relationship matrix correct.
-    if (cross == NPerm(0, 1, 2, 3)) {
+    if (cross == NPerm4(0, 1, 2, 3)) {
         // It's the identity.
         upperReln = reln;
-    } else if (cross == NPerm(0, 2, 1, 3)) {
+    } else if (cross == NPerm4(0, 2, 1, 3)) {
         // new a = + old b
         // new b = + old a
         upperReln = NMatrix2(0, 1, 1, 0) * reln;
-    } else if (cross == NPerm(1, 0, 2, 3)) {
+    } else if (cross == NPerm4(1, 0, 2, 3)) {
         // new a = - old a
         // new b = - old a + old b
         upperReln = NMatrix2(-1, 0, -1, 1) * reln;
-    } else if (cross == NPerm(1, 2, 0, 3)) {
+    } else if (cross == NPerm4(1, 2, 0, 3)) {
         // new a = - old a + old b
         // new b = - old a
         upperReln = NMatrix2(-1, 1, -1, 0) * reln;
-    } else if (cross == NPerm(2, 0, 1, 3)) {
+    } else if (cross == NPerm4(2, 0, 1, 3)) {
         // new a = - old b
         // new b = + old a - old b
         upperReln = NMatrix2(0, -1, 1, -1) * reln;
-    } else if (cross == NPerm(2, 1, 0, 3)) {
+    } else if (cross == NPerm4(2, 1, 0, 3)) {
         // new a = + old a - old b
         // new b = - old b
         upperReln = NMatrix2(1, -1, 0, -1) * reln;

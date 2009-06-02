@@ -31,14 +31,13 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "manifold/nsimplesurfacebundle.h"
 #include "triangulation/nedge.h"
-#include "triangulation/nperm.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nexampletriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NEdge;
-using regina::NPerm;
+using regina::NPerm4;
 using regina::NSimpleSurfaceBundle;
 using regina::NTetrahedron;
 using regina::NTriangulation;
@@ -66,14 +65,14 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
         void setUp() {
             NTetrahedron* r = new NTetrahedron();
             NTetrahedron* s = new NTetrahedron();
-            r->joinTo(0, s, NPerm());
-            r->joinTo(1, s, NPerm());
+            r->joinTo(0, s, NPerm4());
+            r->joinTo(1, s, NPerm4());
             base.addTetrahedron(r);
             base.addTetrahedron(s);
 
             baseKB.insertTriangulation(base);
             baseKB.getTetrahedron(0)->joinTo(2,
-                baseKB.getTetrahedron(1), NPerm(1, 2, 3, 0));
+                baseKB.getTetrahedron(1), NPerm4(1, 2, 3, 0));
 
             baseKB.gluingsHaveChanged();
         }
@@ -154,9 +153,9 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTriangulation t;
                 t.insertTriangulation(base);
                 NTetrahedron* tet = t.getTetrahedron(0);
-                tet->joinTo(2, tet, NPerm(2, 3));
+                tet->joinTo(2, tet, NPerm4(2, 3));
                 NTetrahedron* tet2 = new NTetrahedron();
-                t.getTetrahedron(1)->joinTo(2, tet2, NPerm());
+                t.getTetrahedron(1)->joinTo(2, tet2, NPerm4());
                 t.addTetrahedron(tet2);
 
                 // Force a recalculation of the skeleton, since
@@ -184,8 +183,8 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTriangulation orig;
                 orig.insertLayeredSolidTorus(4, 7);
                 NTetrahedron* top = new NTetrahedron();
-                orig.getTetrahedron(0)->joinTo(2, top, NPerm(2, 3, 0, 1));
-                orig.getTetrahedron(0)->joinTo(3, top, NPerm(2, 3, 0, 1));
+                orig.getTetrahedron(0)->joinTo(2, top, NPerm4(2, 3, 0, 1));
+                orig.getTetrahedron(0)->joinTo(3, top, NPerm4(2, 3, 0, 1));
                 orig.addTetrahedron(top);
 
                 NTriangulation lst;
@@ -308,7 +307,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTriangulation t;
                 t.insertTriangulation(baseKB);
                 t.insertTriangulation(baseKB);
-                t.getTetrahedron(0)->joinTo(3, t.getTetrahedron(2), NPerm());
+                t.getTetrahedron(0)->joinTo(3, t.getTetrahedron(2), NPerm4());
                 t.gluingsHaveChanged();
 
                 verify20Edge(&t, 3, &baseKB, "bdry-cross-tet");
@@ -343,10 +342,10 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* q = new NTetrahedron();
                 NTetrahedron* r = new NTetrahedron();
                 NTetrahedron* s = new NTetrahedron();
-                t.getTetrahedron(0)->joinTo(2, p, NPerm());
-                t.getTetrahedron(0)->joinTo(3, q, NPerm());
-                t.getTetrahedron(1)->joinTo(2, r, NPerm());
-                t.getTetrahedron(1)->joinTo(3, s, NPerm());
+                t.getTetrahedron(0)->joinTo(2, p, NPerm4());
+                t.getTetrahedron(0)->joinTo(3, q, NPerm4());
+                t.getTetrahedron(1)->joinTo(2, r, NPerm4());
+                t.getTetrahedron(1)->joinTo(3, s, NPerm4());
                 t.addTetrahedron(p);
                 t.addTetrahedron(q);
                 t.addTetrahedron(r);
@@ -364,12 +363,12 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* q = new NTetrahedron();
                 NTetrahedron* r = new NTetrahedron();
                 NTetrahedron* s = new NTetrahedron();
-                t.getTetrahedron(0)->joinTo(2, p, NPerm());
-                t.getTetrahedron(0)->joinTo(3, q, NPerm());
-                t.getTetrahedron(1)->joinTo(2, r, NPerm());
-                t.getTetrahedron(1)->joinTo(3, s, NPerm());
-                p->joinTo(3, r, NPerm());
-                q->joinTo(2, s, NPerm());
+                t.getTetrahedron(0)->joinTo(2, p, NPerm4());
+                t.getTetrahedron(0)->joinTo(3, q, NPerm4());
+                t.getTetrahedron(1)->joinTo(2, r, NPerm4());
+                t.getTetrahedron(1)->joinTo(3, s, NPerm4());
+                p->joinTo(3, r, NPerm4());
+                q->joinTo(2, s, NPerm4());
                 t.addTetrahedron(p);
                 t.addTetrahedron(q);
                 t.addTetrahedron(r);
@@ -397,12 +396,12 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* q = new NTetrahedron();
                 NTetrahedron* r = new NTetrahedron();
                 NTetrahedron* s = new NTetrahedron();
-                t.getTetrahedron(0)->joinTo(2, p, NPerm());
-                t.getTetrahedron(0)->joinTo(3, q, NPerm());
-                t.getTetrahedron(1)->joinTo(2, r, NPerm());
-                t.getTetrahedron(1)->joinTo(3, s, NPerm());
-                p->joinTo(3, r, NPerm(0, 1));
-                q->joinTo(2, s, NPerm(0, 1));
+                t.getTetrahedron(0)->joinTo(2, p, NPerm4());
+                t.getTetrahedron(0)->joinTo(3, q, NPerm4());
+                t.getTetrahedron(1)->joinTo(2, r, NPerm4());
+                t.getTetrahedron(1)->joinTo(3, s, NPerm4());
+                p->joinTo(3, r, NPerm4(0, 1));
+                q->joinTo(2, s, NPerm4(0, 1));
                 t.addTetrahedron(p);
                 t.addTetrahedron(q);
                 t.addTetrahedron(r);
@@ -426,7 +425,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTriangulation t;
                 t.insertTriangulation(base);
                 NTetrahedron* tet = t.getTetrahedron(0);
-                tet->joinTo(2, tet, NPerm(2, 3));
+                tet->joinTo(2, tet, NPerm4(2, 3));
                 t.gluingsHaveChanged();
 
                 // Ugly hack to regenerate skeleton, see notes above.
@@ -491,8 +490,8 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 orig.insertTriangulation(base);
 
                 NTetrahedron* top = orig.getTetrahedron(0);
-                orig.getTetrahedron(3)->joinTo(3, top, NPerm(1,2,0,3));
-                orig.getTetrahedron(4)->joinTo(2, top, NPerm(0,3,2,1));
+                orig.getTetrahedron(3)->joinTo(3, top, NPerm4(1,2,0,3));
+                orig.getTetrahedron(4)->joinTo(2, top, NPerm4(0,3,2,1));
                 orig.gluingsHaveChanged();
 
                 verify20EdgeInvalid(&orig, "boundary-diag");

@@ -36,7 +36,6 @@
 using regina::NAngleStructure;
 using regina::NAngleStructureList;
 using regina::NExampleTriangulation;
-using regina::NPerm;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 

@@ -39,7 +39,7 @@
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NIsomorphism;
-using regina::NPerm;
+using regina::NPerm4;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 
@@ -126,7 +126,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
                 // rearrangements.
                 for (i = 0; i < n; i++) {
                     iso.tetImage(i) = tetPerm[i];
-                    iso.facePerm(i) = NPerm::S4[facePermIndex[i] = 0];
+                    iso.facePerm(i) = NPerm4::S4[facePermIndex[i] = 0];
                 }
 
                 while (1) {
@@ -142,10 +142,10 @@ class NIsomorphismTest : public CppUnit::TestFixture {
                     if (pos == n)
                         break;
 
-                    iso.facePerm(pos) = NPerm::S4[++facePermIndex[pos]];
+                    iso.facePerm(pos) = NPerm4::S4[++facePermIndex[pos]];
                     while (pos > 0) {
                         pos--;
-                        iso.facePerm(pos) = NPerm::S4[facePermIndex[pos] = 0];
+                        iso.facePerm(pos) = NPerm4::S4[facePermIndex[pos] = 0];
                     }
                 }
             } while (std::next_permutation(tetPerm, tetPerm + n));
@@ -332,7 +332,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
 
             // Make it no longer a subcomplex.
             // Do this by joining things together in a wacky invalid way.
-            tet->joinTo(0, tet, regina::NPerm(3, 2, 1, 0));
+            tet->joinTo(0, tet, regina::NPerm4(3, 2, 1, 0));
             if (t2.isContainedIn(t).get()) {
                 std::ostringstream msg;
                 msg << "Making a tetrahedron of " << name <<

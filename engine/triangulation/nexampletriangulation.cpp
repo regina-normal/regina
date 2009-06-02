@@ -143,8 +143,8 @@ NTriangulation* NExampleTriangulation::rp2xs1() {
 
     NTetrahedron* r = ans->getTetrahedron(0);
     NTetrahedron* t = ans->getTetrahedron(2);
-    r->joinTo(1, t, NPerm(2, 3, 0, 1));
-    r->joinTo(3, t, NPerm(2, 3, 0, 1));
+    r->joinTo(1, t, NPerm4(2, 3, 0, 1));
+    r->joinTo(3, t, NPerm4(2, 3, 0, 1));
     ans->gluingsHaveChanged();
 
     return ans;
@@ -231,10 +231,10 @@ NTriangulation* NExampleTriangulation::solidKleinBottle() {
     NTetrahedron* r = new NTetrahedron();
     NTetrahedron* s = new NTetrahedron();
     NTetrahedron* t = new NTetrahedron();
-    s->joinTo(0, r, NPerm(0, 1, 2, 3));
-    s->joinTo(3, r, NPerm(3, 0, 1, 2));
-    s->joinTo(1, t, NPerm(3, 0, 1, 2));
-    s->joinTo(2, t, NPerm(0, 1, 2, 3));
+    s->joinTo(0, r, NPerm4(0, 1, 2, 3));
+    s->joinTo(3, r, NPerm4(3, 0, 1, 2));
+    s->joinTo(1, t, NPerm4(3, 0, 1, 2));
+    s->joinTo(2, t, NPerm4(0, 1, 2, 3));
     ans->addTetrahedron(r);
     ans->addTetrahedron(s);
     ans->addTetrahedron(t);
@@ -250,10 +250,10 @@ NTriangulation* NExampleTriangulation::figureEightKnotComplement() {
     // the beginning of chapter 8 of Richard Rannard's PhD thesis.
     NTetrahedron* r = new NTetrahedron();
     NTetrahedron* s = new NTetrahedron();
-    r->joinTo(0, s, NPerm(1, 3, 0, 2));
-    r->joinTo(1, s, NPerm(2, 0, 3, 1));
-    r->joinTo(2, s, NPerm(0, 3, 2, 1));
-    r->joinTo(3, s, NPerm(2, 1, 0, 3));
+    r->joinTo(0, s, NPerm4(1, 3, 0, 2));
+    r->joinTo(1, s, NPerm4(2, 0, 3, 1));
+    r->joinTo(2, s, NPerm4(0, 3, 2, 1));
+    r->joinTo(3, s, NPerm4(2, 1, 0, 3));
     ans->addTetrahedron(r);
     ans->addTetrahedron(s);
 
@@ -274,8 +274,8 @@ NTriangulation* NExampleTriangulation::gieseking() {
     ans->setPacketLabel("Gieseking manifold");
 
     NTetrahedron* r = new NTetrahedron();
-    r->joinTo(0, r, NPerm(1, 2, 0, 3));
-    r->joinTo(2, r, NPerm(0, 2, 3, 1));
+    r->joinTo(0, r, NPerm4(1, 2, 0, 3));
+    r->joinTo(2, r, NPerm4(0, 2, 3, 1));
     ans->addTetrahedron(r);
 
     return ans;
@@ -291,11 +291,11 @@ NTriangulation* NExampleTriangulation::cuspedGenusTwoTorus() {
     NTetrahedron* s = new NTetrahedron();
     NTetrahedron* t = new NTetrahedron();
     NTetrahedron* u = new NTetrahedron();
-    r->joinTo(0, s, NPerm());
-    r->joinTo(1, t, NPerm(1, 2, 3, 0));
-    r->joinTo(2, u, NPerm(1, 0, 3, 2));
-    s->joinTo(3, t, NPerm());
-    t->joinTo(1, u, NPerm());
+    r->joinTo(0, s, NPerm4());
+    r->joinTo(1, t, NPerm4(1, 2, 3, 0));
+    r->joinTo(2, u, NPerm4(1, 0, 3, 2));
+    s->joinTo(3, t, NPerm4());
+    t->joinTo(1, u, NPerm4());
     ans->addTetrahedron(r);
     ans->addTetrahedron(s);
     ans->addTetrahedron(t);

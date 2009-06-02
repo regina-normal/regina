@@ -58,7 +58,7 @@ namespace regina {
  * The internal code is an integer between 0 and 5 inclusive,
  * representing the index of the permutation in the array NPerm3::S3.
  *
- * This class is faster and sleeker than related classes such as NPerm.
+ * This class is faster and sleeker than related classes such as NPerm4.
  * On the other hand, this class does not offer quite as rich an interface.
  *
  * \testfull
@@ -73,8 +73,8 @@ class NPerm3 {
          * odd permutations.
          *
          * This array contains the same permutations in the same order
-         * as the corresponding array NPerm::S3 (though of course this
-         * array stores NPerm3 objects instead of NPerm objects).
+         * as the corresponding array NPerm4::S3 (though of course this
+         * array stores NPerm3 objects instead of NPerm4 objects).
          *
          * Note that these permutations are not necessarily in
          * lexicographical order.

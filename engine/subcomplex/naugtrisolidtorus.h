@@ -106,7 +106,7 @@ class NAugTriSolidTorus : public NStandardTriangulation {
                  triangle, the corresponding pointer will be 0.
                  Note that <tt>augTorus[i]</tt> will be attached to
                  annulus \c i of the triangular solid torus. */
-        NPerm edgeGroupRoles[3];
+        NPerm4 edgeGroupRoles[3];
             /**< Permutation <tt>edgeGroupRoles[i]</tt> describes the role
                  played by each top level edge group of layered solid torus
                  <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
@@ -178,7 +178,7 @@ class NAugTriSolidTorus : public NStandardTriangulation {
          * @return a permutation describing the roles of the
          * corresponding top level edge groups.
          */
-        NPerm getEdgeGroupRoles(int annulus) const;
+        NPerm4 getEdgeGroupRoles(int annulus) const;
 
         /**
          * Returns the number of tetrahedra in the layered chain linking
@@ -278,7 +278,7 @@ inline const NLayeredSolidTorus* NAugTriSolidTorus::getAugTorus(
         int annulus) const {
     return augTorus[annulus];
 }
-inline NPerm NAugTriSolidTorus::getEdgeGroupRoles(int annulus) const {
+inline NPerm4 NAugTriSolidTorus::getEdgeGroupRoles(int annulus) const {
     return edgeGroupRoles[annulus];
 }
 inline unsigned long NAugTriSolidTorus::getChainLength() const {

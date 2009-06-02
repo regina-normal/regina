@@ -55,7 +55,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     NTetrahedron** newTets = new NTetrahedron*[nTets];
     NTetrahedron *tet, *adjTet;
     unsigned long tetPos, adjPos;
-    NPerm adjPerm;
+    NPerm4 adjPerm;
     int face;
 
     for (tetPos = 0; tetPos < nTets; tetPos++)

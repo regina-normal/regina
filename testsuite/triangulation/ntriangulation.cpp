@@ -46,7 +46,7 @@ using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NIsomorphism;
-using regina::NPerm;
+using regina::NPerm4;
 using regina::NSignature;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
@@ -241,10 +241,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // construct using a vertex of degree two.
             r = new NTetrahedron();
             s = new NTetrahedron();
-            r->joinTo(0, s, NPerm(0, 2, 3, 1));
-            r->joinTo(1, s, NPerm());
-            r->joinTo(2, s, NPerm());
-            r->joinTo(3, s, NPerm());
+            r->joinTo(0, s, NPerm4(0, 2, 3, 1));
+            r->joinTo(1, s, NPerm4());
+            r->joinTo(2, s, NPerm4());
+            r->joinTo(3, s, NPerm4());
             lens3_1.addTetrahedron(r);
             lens3_1.addTetrahedron(s);
 
@@ -252,8 +252,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // the faces of a tetrahedron together in pairs (as in a
             // 3-sphere triangulation) but apply a reflection to each fold.
             r = new NTetrahedron();
-            r->joinTo(0, r, NPerm(1, 0, 3, 2));
-            r->joinTo(2, r, NPerm(1, 0, 3, 2));
+            r->joinTo(0, r, NPerm4(1, 0, 3, 2));
+            r->joinTo(2, r, NPerm4(1, 0, 3, 2));
             invalidEdges.addTetrahedron(r);
 
             twoProjPlaneCusps.insertTriangulation(invalidEdges);
@@ -263,8 +263,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // identify two opposite faces of a square pyramid.
             r = new NTetrahedron();
             s = new NTetrahedron();
-            r->joinTo(3, s, NPerm(0, 1, 2, 3));
-            r->joinTo(2, s, NPerm(0, 3, 1, 2));
+            r->joinTo(3, s, NPerm4(0, 1, 2, 3));
+            r->joinTo(2, s, NPerm4(0, 3, 1, 2));
             pinchedSolidTorus.addTetrahedron(r);
             pinchedSolidTorus.addTetrahedron(s);
 
@@ -272,8 +272,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // for a twist before the opposite faces are identified.
             r = new NTetrahedron();
             s = new NTetrahedron();
-            r->joinTo(3, s, NPerm(0, 1, 2, 3));
-            r->joinTo(2, s, NPerm(0, 2, 1, 3));
+            r->joinTo(3, s, NPerm4(0, 1, 2, 3));
+            r->joinTo(2, s, NPerm4(0, 2, 1, 3));
             pinchedSolidKB.addTetrahedron(r);
             pinchedSolidKB.addTetrahedron(s);
 
@@ -283,12 +283,12 @@ class NTriangulationTest : public CppUnit::TestFixture {
             s = new NTetrahedron();
             t = new NTetrahedron();
             u = new NTetrahedron();
-            r->joinTo(2, r, NPerm(0,2));
-            r->joinTo(1, s, NPerm(2,0,1,3));
-            s->joinTo(2, t, NPerm());
-            s->joinTo(1, t, NPerm(2,0,1,3));
-            t->joinTo(1, u, NPerm(2,0,1,3));
-            u->joinTo(2, u, NPerm(1,2));
+            r->joinTo(2, r, NPerm4(0,2));
+            r->joinTo(1, s, NPerm4(2,0,1,3));
+            s->joinTo(2, t, NPerm4());
+            s->joinTo(1, t, NPerm4(2,0,1,3));
+            t->joinTo(1, u, NPerm4(2,0,1,3));
+            u->joinTo(2, u, NPerm4(1,2));
             ball_large.addTetrahedron(r);
             ball_large.addTetrahedron(s);
             ball_large.addTetrahedron(t);
@@ -300,13 +300,13 @@ class NTriangulationTest : public CppUnit::TestFixture {
             s = new NTetrahedron();
             t = new NTetrahedron();
             u = new NTetrahedron();
-            r->joinTo(0, s, NPerm());
-            r->joinTo(1, s, NPerm());
-            r->joinTo(2, s, NPerm());
-            t->joinTo(0, u, NPerm());
-            t->joinTo(1, u, NPerm());
-            t->joinTo(2, u, NPerm());
-            r->joinTo(3, t, NPerm());
+            r->joinTo(0, s, NPerm4());
+            r->joinTo(1, s, NPerm4());
+            r->joinTo(2, s, NPerm4());
+            t->joinTo(0, u, NPerm4());
+            t->joinTo(1, u, NPerm4());
+            t->joinTo(2, u, NPerm4());
+            r->joinTo(3, t, NPerm4());
             ball_large_pillows.addTetrahedron(r);
             ball_large_pillows.addTetrahedron(s);
             ball_large_pillows.addTetrahedron(t);
@@ -316,11 +316,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
             r = new NTetrahedron();
             s = new NTetrahedron();
             t = new NTetrahedron();
-            r->joinTo(2, r, NPerm(2, 3));
-            s->joinTo(2, s, NPerm(2, 3));
-            t->joinTo(2, t, NPerm(2, 1));
-            r->joinTo(1, s, NPerm());
-            s->joinTo(0, t, NPerm());
+            r->joinTo(2, r, NPerm4(2, 3));
+            s->joinTo(2, s, NPerm4(2, 3));
+            t->joinTo(2, t, NPerm4(2, 1));
+            r->joinTo(1, s, NPerm4());
+            s->joinTo(0, t, NPerm4());
             ball_large_snapped.addTetrahedron(r);
             ball_large_snapped.addTetrahedron(s);
             ball_large_snapped.addTetrahedron(t);
@@ -2079,10 +2079,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
             tet[1] = new NTetrahedron();
             tet[2] = new NTetrahedron();
             tet[3] = new NTetrahedron();
-            tet[0]->joinTo(3, tet[2], NPerm());
-            tet[0]->joinTo(2, tet[1], NPerm(2, 3));
-            tet[3]->joinTo(3, tet[2], NPerm(2, 3));
-            tet[3]->joinTo(2, tet[1], NPerm(1, 0));
+            tet[0]->joinTo(3, tet[2], NPerm4());
+            tet[0]->joinTo(2, tet[1], NPerm4(2, 3));
+            tet[3]->joinTo(3, tet[2], NPerm4(2, 3));
+            tet[3]->joinTo(2, tet[1], NPerm4(1, 0));
             tri = new NTriangulation();
             tri->addTetrahedron(tet[0]);
             tri->addTetrahedron(tet[1]);
@@ -2106,11 +2106,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
             tet[0] = new NTetrahedron();
             tet[1] = new NTetrahedron();
             tet[2] = new NTetrahedron();
-            tet[2]->joinTo(3, tet[2], NPerm(2, 3));
-            tet[2]->joinTo(1, tet[1], NPerm(0, 2, 3, 1));
-            tet[2]->joinTo(0, tet[0], NPerm(3, 0, 1, 2));
-            tet[1]->joinTo(3, tet[0], NPerm(0, 3, 1, 2));
-            tet[1]->joinTo(1, tet[0], NPerm());
+            tet[2]->joinTo(3, tet[2], NPerm4(2, 3));
+            tet[2]->joinTo(1, tet[1], NPerm4(0, 2, 3, 1));
+            tet[2]->joinTo(0, tet[0], NPerm4(3, 0, 1, 2));
+            tet[1]->joinTo(3, tet[0], NPerm4(0, 3, 1, 2));
+            tet[1]->joinTo(1, tet[0], NPerm4());
             tri = new NTriangulation();
             tri->addTetrahedron(tet[0]);
             tri->addTetrahedron(tet[1]);
@@ -2256,7 +2256,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             // Glue the tetrahedron to itself to form a solid torus.
             t.getTetrahedron(0)->joinTo(0, t.getTetrahedron(0),
-                NPerm(1, 2, 3, 0));
+                NPerm4(1, 2, 3, 0));
             t.gluingsHaveChanged();
 
             verifyGroup(t.getHomologyH1(),
@@ -2266,7 +2266,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             // Glue the remaining two faces in a non-orientable fashion.
             t.getTetrahedron(0)->joinTo(2, t.getTetrahedron(0),
-                NPerm(1, 0, 3, 2));
+                NPerm4(1, 0, 3, 2));
             t.gluingsHaveChanged();
 
             CPPUNIT_ASSERT_MESSAGE("A bad 1-tetrahedron triangulation "

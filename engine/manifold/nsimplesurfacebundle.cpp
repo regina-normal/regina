@@ -46,10 +46,10 @@ NTriangulation* NSimpleSurfaceBundle::construct() const {
         NTetrahedron* r = new NTetrahedron();
         NTetrahedron* s = new NTetrahedron();
 
-        r->joinTo(1, s, NPerm());
-        r->joinTo(3, s, NPerm());
-        r->joinTo(2, s, NPerm(3, 2, 0, 1));
-        s->joinTo(2, r, NPerm(3, 2, 0, 1));
+        r->joinTo(1, s, NPerm4());
+        r->joinTo(3, s, NPerm4());
+        r->joinTo(2, s, NPerm4(3, 2, 0, 1));
+        s->joinTo(2, r, NPerm4(3, 2, 0, 1));
 
         ans->addTetrahedron(r);
         ans->addTetrahedron(s);
@@ -59,12 +59,12 @@ NTriangulation* NSimpleSurfaceBundle::construct() const {
         NTetrahedron* s = new NTetrahedron();
         NTetrahedron* t = new NTetrahedron();
 
-        s->joinTo(0, r, NPerm(0, 1, 2, 3));
-        s->joinTo(3, r, NPerm(3, 0, 1, 2));
-        s->joinTo(1, t, NPerm(3, 0, 1, 2));
-        s->joinTo(2, t, NPerm(0, 1, 2, 3));
-        r->joinTo(1, t, NPerm(2, 3, 0, 1));
-        r->joinTo(3, t, NPerm(2, 3, 0, 1));
+        s->joinTo(0, r, NPerm4(0, 1, 2, 3));
+        s->joinTo(3, r, NPerm4(3, 0, 1, 2));
+        s->joinTo(1, t, NPerm4(3, 0, 1, 2));
+        s->joinTo(2, t, NPerm4(0, 1, 2, 3));
+        r->joinTo(1, t, NPerm4(2, 3, 0, 1));
+        r->joinTo(3, t, NPerm4(2, 3, 0, 1));
 
         ans->addTetrahedron(r);
         ans->addTetrahedron(s);

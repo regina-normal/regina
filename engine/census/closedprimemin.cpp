@@ -219,7 +219,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
     chainPermIndices = (nChainEdges == 0 ? 0 : new int[nChainEdges * 2]);
 
     NFacePair facesAdj, comp, compAdj;
-    NPerm trial1, trial2;
+    NPerm4 trial1, trial2;
     for (i = 0; i < nChainEdges; i++) {
         if (orderType[i] == EDGE_CHAIN_END) {
             faces = NFacePair(order[i].face, pairing->dest(order[i]).face);
@@ -228,15 +228,15 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
             // order[i].face == faces.lower(),
             // pairing->dest(order[i]).face == faces.upper().
             chainPermIndices[2 * i] = gluingToIndex(order[i],
-                NPerm(faces.lower(), faces.upper(),
-                      faces.upper(), comp.lower(),
-                      comp.lower(), comp.upper(),
-                      comp.upper(), faces.lower()));
+                NPerm4(faces.lower(), faces.upper(),
+                       faces.upper(), comp.lower(),
+                       comp.lower(), comp.upper(),
+                       comp.upper(), faces.lower()));
             chainPermIndices[2 * i + 1] = gluingToIndex(order[i],
-                NPerm(faces.lower(), faces.upper(),
-                      faces.upper(), comp.upper(),
-                      comp.upper(), comp.lower(),
-                      comp.lower(), faces.lower()));
+                NPerm4(faces.lower(), faces.upper(),
+                       faces.upper(), comp.upper(),
+                       comp.upper(), comp.lower(),
+                       comp.lower(), faces.lower()));
         } else if (orderType[i] == EDGE_CHAIN_INTERNAL_FIRST) {
             faces = NFacePair(order[i].face, order[i + 1].face);
             comp = faces.complement();
@@ -248,52 +248,52 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
             // order[i + 1].face == faces.upper(),
             // pairing->dest(order[i]).face == facesAdj.lower().
             // pairing->dest(order[i + 1]).face == facesAdj.upper().
-            trial1 = NPerm(faces.lower(), facesAdj.lower(),
-                           faces.upper(), compAdj.lower(),
-                           comp.lower(), compAdj.upper(),
-                           comp.upper(), facesAdj.upper());
-            trial2 = NPerm(faces.lower(), facesAdj.lower(),
-                           faces.upper(), compAdj.upper(),
-                           comp.lower(), compAdj.lower(),
-                           comp.upper(), facesAdj.upper());
+            trial1 = NPerm4(faces.lower(), facesAdj.lower(),
+                            faces.upper(), compAdj.lower(),
+                            comp.lower(), compAdj.upper(),
+                            comp.upper(), facesAdj.upper());
+            trial2 = NPerm4(faces.lower(), facesAdj.lower(),
+                            faces.upper(), compAdj.upper(),
+                            comp.lower(), compAdj.lower(),
+                            comp.upper(), facesAdj.upper());
             if (trial1.compareWith(trial2) < 0) {
                 chainPermIndices[2 * i] = gluingToIndex(order[i], trial1);
                 chainPermIndices[2 * i + 2] = gluingToIndex(order[i + 1],
-                    NPerm(faces.lower(), compAdj.upper(),
-                          faces.upper(), facesAdj.upper(),
-                          comp.lower(), facesAdj.lower(),
-                          comp.upper(), compAdj.lower()));
+                    NPerm4(faces.lower(), compAdj.upper(),
+                           faces.upper(), facesAdj.upper(),
+                           comp.lower(), facesAdj.lower(),
+                           comp.upper(), compAdj.lower()));
             } else {
                 chainPermIndices[2 * i] = gluingToIndex(order[i], trial2);
                 chainPermIndices[2 * i + 2] = gluingToIndex(order[i + 1],
-                    NPerm(faces.lower(), compAdj.lower(),
-                          faces.upper(), facesAdj.upper(),
-                          comp.lower(), facesAdj.lower(),
-                          comp.upper(), compAdj.upper()));
+                    NPerm4(faces.lower(), compAdj.lower(),
+                           faces.upper(), facesAdj.upper(),
+                           comp.lower(), facesAdj.lower(),
+                           comp.upper(), compAdj.upper()));
             }
 
-            trial1 = NPerm(faces.lower(), facesAdj.lower(),
-                           faces.upper(), compAdj.lower(),
-                           comp.lower(), facesAdj.upper(),
-                           comp.upper(), compAdj.upper());
-            trial2 = NPerm(faces.lower(), facesAdj.lower(),
-                           faces.upper(), compAdj.upper(),
-                           comp.lower(), facesAdj.upper(),
-                           comp.upper(), compAdj.lower());
+            trial1 = NPerm4(faces.lower(), facesAdj.lower(),
+                            faces.upper(), compAdj.lower(),
+                            comp.lower(), facesAdj.upper(),
+                            comp.upper(), compAdj.upper());
+            trial2 = NPerm4(faces.lower(), facesAdj.lower(),
+                            faces.upper(), compAdj.upper(),
+                            comp.lower(), facesAdj.upper(),
+                            comp.upper(), compAdj.lower());
             if (trial1.compareWith(trial2) < 0) {
                 chainPermIndices[2 * i + 1] = gluingToIndex(order[i], trial1);
                 chainPermIndices[2 * i + 3] = gluingToIndex(order[i + 1],
-                    NPerm(faces.lower(), compAdj.upper(),
-                          faces.upper(), facesAdj.upper(),
-                          comp.lower(), compAdj.lower(),
-                          comp.upper(), facesAdj.lower()));
+                    NPerm4(faces.lower(), compAdj.upper(),
+                           faces.upper(), facesAdj.upper(),
+                           comp.lower(), compAdj.lower(),
+                           comp.upper(), facesAdj.lower()));
             } else {
                 chainPermIndices[2 * i + 1] = gluingToIndex(order[i], trial2);
                 chainPermIndices[2 * i + 3] = gluingToIndex(order[i + 1],
-                    NPerm(faces.lower(), compAdj.lower(),
-                          faces.upper(), facesAdj.upper(),
-                          comp.lower(), compAdj.upper(),
-                          comp.upper(), facesAdj.lower()));
+                    NPerm4(faces.lower(), compAdj.lower(),
+                           faces.upper(), facesAdj.upper(),
+                           comp.lower(), compAdj.upper(),
+                           comp.upper(), facesAdj.lower()));
             }
         }
     }
@@ -427,7 +427,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = NPerm::invS3[permIndex(face)];
+        permIndex(adj) = NPerm4::invS3[permIndex(face)];
 
         // In the following code we use several results from
         // "Face pairing graphs and 3-manifold enumeration", B. A. Burton,
@@ -730,7 +730,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
 
     int retVal = 0;
 
-    NPerm p = gluingPerm(face);
+    NPerm4 p = gluingPerm(face);
     int v1, w1, v2, w2;
     int e, f;
     int orderIdx;

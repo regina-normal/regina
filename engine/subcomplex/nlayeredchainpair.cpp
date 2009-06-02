@@ -72,10 +72,10 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
     NTetrahedron* firstTop;
     NTetrahedron* secondBottom;
     NTetrahedron* secondTop;
-    NPerm firstBottomRoles, firstTopRoles, secondBottomRoles, secondTopRoles;
+    NPerm4 firstBottomRoles, firstTopRoles, secondBottomRoles, secondTopRoles;
 
     for (int p = 0; p < 6; p++) {
-        first = new NLayeredChain(base, NPerm::S3[p]);
+        first = new NLayeredChain(base, NPerm4::S3[p]);
         first->extendMaximal();
 
         firstTop = first->getTop();
@@ -93,7 +93,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
             if (longChain->extendBelow())
                 if (longChain->getBottom() == firstTop &&
                         longChain->getBottomVertexRoles() ==
-                        firstTopRoles * NPerm(3, 2, 1, 0)) {
+                        firstTopRoles * NPerm4(3, 2, 1, 0)) {
                     // We've got a layered loop!
                     NLayeredChainPair* ans = new NLayeredChainPair();
                     if (nTet == 2) {
@@ -112,7 +112,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                             firstBottomRoles[0]),
                         firstBottom->adjacentGluing(
                             firstBottomRoles[0]) * firstBottomRoles *
-                            NPerm(0, 2, 1, 3));
+                            NPerm4(0, 2, 1, 3));
 
                     delete first;
                     return ans;
@@ -133,7 +133,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
 
         second = new NLayeredChain(secondBottom,
             firstTop->adjacentGluing(firstTopRoles[3]) *
-            firstTopRoles * NPerm(1, 3, 0, 2));
+            firstTopRoles * NPerm4(1, 3, 0, 2));
         while (second->extendAbove())
             ;
 
@@ -156,13 +156,13 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                 secondTop == firstBottom->adjacentTetrahedron(
                     firstBottomRoles[1]) &&
                 secondTopRoles == firstTop->adjacentGluing(
-                    firstTopRoles[0]) * firstTopRoles * NPerm(0, 2, 1, 3) &&
+                    firstTopRoles[0]) * firstTopRoles * NPerm4(0, 2, 1, 3) &&
                 secondBottomRoles == firstBottom->adjacentGluing(
                     firstBottomRoles[2]) * firstBottomRoles *
-                    NPerm(3, 1, 2, 0) &&
+                    NPerm4(3, 1, 2, 0) &&
                 secondTopRoles == firstBottom->adjacentGluing(
                     firstBottomRoles[1]) * firstBottomRoles *
-                    NPerm(2, 0, 3, 1)) {
+                    NPerm4(2, 0, 3, 1)) {
             // We found one!
             NLayeredChainPair* ans = new NLayeredChainPair();
             if (first->getIndex() > second->getIndex()) {

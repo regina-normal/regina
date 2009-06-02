@@ -33,7 +33,7 @@
 #ifndef __NFACEGLUINGITEMS_H
 #define __NFACEGLUINGITEMS_H
 
-#include "triangulation/nperm.h"
+#include "maths/nperm4.h"
 
 #include "reginaprefset.h"
 
@@ -82,7 +82,7 @@ class FaceGluingItem : public QObject, public QTableItem {
     private:
         long adjTet;
             /**< The adjacent tetrahedron, or -1 if this is a boundary face. */
-        regina::NPerm adjPerm;
+        regina::NPerm4 adjPerm;
             /**< The adjacent tetrahedron gluing. */
 
         const ReginaPrefSet::TriEditMode& editMode;
@@ -99,7 +99,7 @@ class FaceGluingItem : public QObject, public QTableItem {
             const ReginaPrefSet::TriEditMode& useEditMode);
         FaceGluingItem(QTable* table,
             const ReginaPrefSet::TriEditMode& useEditMode, int myFace,
-            unsigned long destTet, const regina::NPerm& gluingPerm);
+            unsigned long destTet, const regina::NPerm4& gluingPerm);
 
         /**
          * Query properties.
@@ -108,7 +108,7 @@ class FaceGluingItem : public QObject, public QTableItem {
         long adjacentTetrahedron() const;
         int myFace() const;
         int adjacentFace() const;
-        const regina::NPerm& adjacentGluing() const;
+        const regina::NPerm4& adjacentGluing() const;
 
         /**
          * Change the destination for this face gluing.  Related face
@@ -124,7 +124,7 @@ class FaceGluingItem : public QObject, public QTableItem {
          * gluings.
          */
         void setDestination(long newDestTet,
-            const regina::NPerm& newGluingPerm,
+            const regina::NPerm4& newGluingPerm,
             bool shouldRepaintThisTableCell = true);
 
         /**
@@ -172,7 +172,7 @@ class FaceGluingItem : public QObject, public QTableItem {
         static QString isFaceStringValid(unsigned long nTets,
             unsigned long srcTet, int srcFace,
             unsigned long destTet, const QString& destFace,
-            regina::NPerm* gluing);
+            regina::NPerm4* gluing);
 
     signals:
         /**
@@ -194,7 +194,7 @@ class FaceGluingItem : public QObject, public QTableItem {
          * non-boundary faces.
          */
         static QString destString(int srcFace, int destTet,
-            const regina::NPerm& gluing);
+            const regina::NPerm4& gluing);
 
         /**
          * Convert a face string (e.g., "130") to a face permutation.
@@ -202,7 +202,7 @@ class FaceGluingItem : public QObject, public QTableItem {
          * The given face string must be valid; otherwise the results
          * could be unpredictable (and indeed a crash could result).
          */
-        static regina::NPerm faceStringToPerm(int srcFace, const QString& str);
+        static regina::NPerm4 faceStringToPerm(int srcFace, const QString& str);
 
         /**
          * Display the given error to the user if no error is already
@@ -231,7 +231,7 @@ inline int FaceGluingItem::adjacentFace() const {
     return (adjTet < 0 ? -1 : adjPerm[myFace()]);
 }
 
-inline const regina::NPerm& FaceGluingItem::adjacentGluing()
+inline const regina::NPerm4& FaceGluingItem::adjacentGluing()
         const {
     return adjPerm;
 }

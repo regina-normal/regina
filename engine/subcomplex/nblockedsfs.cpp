@@ -392,7 +392,7 @@ bool NBlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
 
     const NSatLST* lst;
     const NSatMobius* mobius;
-    NPerm roles;
+    NPerm4 roles;
 
     if ((mobius = dynamic_cast<const NSatMobius*>(torus0))) {
         if (mobius->position() == 2) {

@@ -54,7 +54,7 @@ void NTriangulation::barycentricSubdivision() {
 
     NTetrahedron** newTet = new NTetrahedron*[nOldTet * 24];
     NTetrahedron* oldTet;
-    NPerm p;
+    NPerm4 p;
     unsigned long tet;
     int face, edge, corner, other;
     for (tet=0; tet<24*nOldTet; tet++)
@@ -74,21 +74,21 @@ void NTriangulation::barycentricSubdivision() {
                             newTet[24*tet+tetIndex[face][edge][corner]]->
                                 joinTo(corner,
                                 newTet[24*tet+tetIndex[face][edge][other]],
-                                NPerm(corner,other) );
+                                NPerm4(corner,other) );
 
                             // Glue to the tetrahedron on the same face and
                             // at the same corner
                             newTet[24*tet+tetIndex[face][edge][corner]]->
                                 joinTo(other,
                                 newTet[24*tet+tetIndex[face][other][corner]],
-                                NPerm(edge,other) );
+                                NPerm4(edge,other) );
 
                             // Glue to the tetrahedron on the adjacent face
                             // sharing an edge and a vertex
                             newTet[24*tet+tetIndex[face][edge][corner]]->
                                 joinTo(edge,
                                 newTet[24*tet+tetIndex[edge][face][corner]],
-                                NPerm(face, edge) );
+                                NPerm4(face, edge) );
 
                             // Glue to the new tetrahedron across an existing
                             // face
@@ -99,7 +99,7 @@ void NTriangulation::barycentricSubdivision() {
                                     joinTo(face, newTet[24*tetrahedronIndex(
                                     oldTet->adjacentTetrahedron(face))+
                                     tetIndex[p[face]][p[edge]][p[corner]] ],
-                                    NPerm(p) );
+                                    NPerm4(p) );
                              }
                         }
     }
@@ -152,14 +152,14 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
         // Glue the tip tetrahedra to the others.
         for (j=0; j<4; j++)
             newTet[tip[j] + i * nDiv]->joinTo(j,
-                newTet[interior[j] + i * nDiv], NPerm());
+                newTet[interior[j] + i * nDiv], NPerm4());
 
         // Glue the interior tetrahedra to the others.
         for (j=0; j<4; j++) {
             for (k=0; k<4; k++)
                 if (j != k) {
                     newTet[interior[j] + i * nDiv]->joinTo(k,
-                        newTet[vertex[k][j] + i * nDiv], NPerm());
+                        newTet[vertex[k][j] + i * nDiv], NPerm4());
                 }
         }
 
@@ -168,19 +168,19 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
             for (k=0; k<4; k++)
                 if (j != k) {
                     newTet[edge[j][k] + i * nDiv]->joinTo(j,
-                        newTet[edge[k][j] + i * nDiv], NPerm(j,k));
+                        newTet[edge[k][j] + i * nDiv], NPerm4(j,k));
 
                     for (l=0; l<4; l++)
                         if ( (l != j) && (l != k) )
                             newTet[edge[j][k] + i * nDiv]->joinTo(l,
-                                newTet[vertex[j][l] + i * nDiv], NPerm(k,l));
+                                newTet[vertex[j][l] + i * nDiv], NPerm4(k,l));
                 }
     }
 
     // Now deal with the gluings between the pieces inside adjacent tetrahedra.
     NTetrahedron *ot;
     int oppTet;
-    NPerm p;
+    NPerm4 p;
     for (i=0; i<numOldTet; i++) {
         ot = getTetrahedron(i);
         for (j=0; j<4; j++)
@@ -277,8 +277,8 @@ bool NTriangulation::finiteToIdeal() {
     NEdge* edge;
     NTetrahedron* t1;
     NTetrahedron* t2;
-    NPerm t1Face;
-    NPerm t2Face;
+    NPerm4 t1Face;
+    NPerm4 t2Face;
     for (bit = boundaryComponents.begin(); bit != boundaryComponents.end();
             bit++)
         for (i = 0; i < (*bit)->getNumberOfEdges(); i++) {
@@ -297,7 +297,7 @@ bool NTriangulation::finiteToIdeal() {
             t1Face = e1.getTetrahedron()->adjacentGluing(
                 e1.getVertices()[3]) * e1.getVertices();
             t2Face = e2.getTetrahedron()->adjacentGluing(
-                e2.getVertices()[2]) * e2.getVertices() * NPerm(2, 3);
+                e2.getVertices()[2]) * e2.getVertices() * NPerm4(2, 3);
 
             t1->joinTo(t1Face[2], t2, t2Face * t1Face.inverse());
         }
