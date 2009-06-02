@@ -16,9 +16,14 @@ Version 5.0  [ (under development) ]
             - New class describing permutations of five elements, which
               we need in order to describe 4-manifold triangulations.
     UTILITIES:
-        tricensus:
+        tricensus, tricensus-mpi:
             - Can now run a census of 4-manifold triangulations (rather than
               3-manifold triangulations) by passing the argument -4 / --dim4.
+        trisetcmp:
+            - Now runs through both 3-manifold and 4-manifold triangulations.
+              However, subcomplexes must be of the same dimension (i.e.,
+              it does not identify when a 3-manifold triangulation appears
+              as a subcomplex of a 4-manifold triangulation).
     TEST SUITE:
         - Added very thorough tests for NPerm5.
 

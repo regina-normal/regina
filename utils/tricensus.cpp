@@ -66,24 +66,10 @@ std::auto_ptr<std::ostream> dumpStream;
 unsigned long totPairings = 0;
 
 /**
- * Dump the given tetrahedron face pairing to dumpStream.
+ * Dump the given face/facet pairing to dumpStream.
  */
-void dumpNFacePairing(const regina::NFacePairing* pair,
-        const regina::NFacePairingIsoList*, void*) {
-    if (pair) {
-        if (dumpStream.get())
-            (*dumpStream) << (*pair).toTextRep() << std::endl;
-        else
-            std::cout << (*pair).toTextRep() << std::endl;
-        totPairings++;
-    }
-}
-
-/**
- * Dump the given pentachoron facet pairing to dumpStream.
- */
-void dumpDim4FacetPairing(const regina::Dim4FacetPairing* pair,
-        const regina::Dim4FacetPairingIsoList*, void*) {
+template <class Pairing, class PairingIsoList>
+void dumpPairing(const Pairing* pair, const PairingIsoList*, void*) {
     if (pair) {
         if (dumpStream.get())
             (*dumpStream) << (*pair).toTextRep() << std::endl;
@@ -102,9 +88,9 @@ regina::NText* parameterPacket() {
     std::ostringstream descStream;
 
     if (dim4)
-        descStream << "Census of 4-manifold triangulations\n";
+        descStream << "Searching for 4-manifold triangulations\n";
     else
-        descStream << "Census of 3-manifold triangulations\n";
+        descStream << "Searching for 3-manifold triangulations\n";
 
     if (usePairs)
         descStream << "Only used a subset of all available "
@@ -340,11 +326,13 @@ int main(int argc, const char* argv[]) {
 
         if (dim4) {
             regina::Dim4FacetPairing::findAllPairings(nTet, boundary,
-                nBdryFaces, dumpDim4FacetPairing, 0, false);
+                nBdryFaces, dumpPairing<regina::Dim4FacetPairing,
+                regina::Dim4FacetPairingIsoList>, 0, false);
             std::cerr << "Total facet pairings: " << totPairings << std::endl;
         } else {
             regina::NFacePairing::findAllPairings(nTet, boundary,
-                nBdryFaces, dumpNFacePairing, 0, false);
+                nBdryFaces, dumpPairing<regina::NFacePairing,
+                regina::NFacePairingIsoList>, 0, false);
             std::cerr << "Total face pairings: " << totPairings << std::endl;
         }
         return 0;
@@ -391,57 +379,56 @@ int main(int argc, const char* argv[]) {
         }
 
         std::string pairingRep;
-        regina::Dim4FacetPairing* pairing4;
-        regina::NFacePairing* pairing3;
         while (true) {
             std::getline(std::cin, pairingRep);
 
             if (pairingRep.length() > 0) {
                 if (dim4) {
-                    pairing4 = regina::Dim4FacetPairing::fromTextRep(
-                        pairingRep);
-                    if (! pairing4) {
+                    regina::Dim4FacetPairing* pairing =
+                        regina::Dim4FacetPairing::fromTextRep(pairingRep);
+                    if (! pairing) {
                         std::cerr << "Invalid facet pairing: " << pairingRep
                             << std::endl;
                         pairingList += "INVALID: ";
                         pairingList += pairingRep;
                         pairingList += '\n';
-                    } else if (! pairing4->isCanonical()) {
+                    } else if (! pairing->isCanonical()) {
                         std::cerr << "Non-canonical facet pairing: "
                             << pairingRep << std::endl;
                         pairingList += "NON-CANONICAL: ";
                         pairingList += pairingRep;
                         pairingList += '\n';
                     } else {
-                        std::cout << pairing4->toString() << std::endl;
-                        regina::Dim4Census::formPartialCensus(pairing4, census,
+                        std::cout << pairing->toString() << std::endl;
+                        regina::Dim4Census::formPartialCensus(pairing, census,
                             finiteness, orientability, 0, 0);
 
-                        pairingList += pairing4->toString();
+                        pairingList += pairing->toString();
                         pairingList += '\n';
                     }
                 } else {
-                    pairing3 = regina::NFacePairing::fromTextRep(pairingRep);
-                    if (! pairing3) {
+                    regina::NFacePairing* pairing =
+                        regina::NFacePairing::fromTextRep(pairingRep);
+                    if (! pairing) {
                         std::cerr << "Invalid face pairing: " << pairingRep
                             << std::endl;
                         pairingList += "INVALID: ";
                         pairingList += pairingRep;
                         pairingList += '\n';
-                    } else if (! pairing3->isCanonical()) {
+                    } else if (! pairing->isCanonical()) {
                         std::cerr << "Non-canonical face pairing: "
                             << pairingRep << std::endl;
                         pairingList += "NON-CANONICAL: ";
                         pairingList += pairingRep;
                         pairingList += '\n';
                     } else {
-                        std::cout << pairing3->toString() << std::endl;
-                        regina::NCensus::formPartialCensus(pairing3, census,
+                        std::cout << pairing->toString() << std::endl;
+                        regina::NCensus::formPartialCensus(pairing, census,
                             finiteness, orientability, whichPurge,
                             ((minimal || minimalPrime || minimalPrimeP2) ?
                             regina::NCensus::mightBeMinimal : 0), 0);
 
-                        pairingList += pairing3->toString();
+                        pairingList += pairing->toString();
                         pairingList += '\n';
                     }
                 }

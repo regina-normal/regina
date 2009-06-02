@@ -33,13 +33,20 @@
 #include <memory>
 #include <sstream>
 #include <popt.h>
+#include "census/dim4census.h"
+#include "census/dim4gluingpermsearcher.h"
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
+#include "dim4/dim4triangulation.h"
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "triangulation/ntriangulation.h"
 #include "mpi.h"
+
+// Write messages tailored to the working dimension.
+#define WORD_face (dim4 ? "facet" : "face")
+#define WORD_Face (dim4 ? "Facet" : "Face")
 
 // MPI constants.
 #define TAG_REQUEST_TASK 10
@@ -52,6 +59,72 @@
 #define HOUR_SEC (60 * MIN_SEC)
 #define DAY_SEC (24 * HOUR_SEC)
 
+// Forward declarations required for the templates below:
+template <class CensusType>
+void slaveFoundGluingPerms(const typename CensusType::GluingPermSearcher*,
+    void*);
+
+template <class CensusType>
+void ctrlFarmPartialSearch(const typename CensusType::GluingPermSearcher*,
+    void*);
+
+// Differences between censuses of 3-manifolds vs 4-manifolds:
+struct Dim3Params {
+    typedef regina::NFacePairing Pairing;
+    typedef regina::NGluingPermSearcher GluingPermSearcher;
+    typedef regina::NTriangulation Triangulation;
+
+    inline static GluingPermSearcher* bestSearcher(Pairing* p,
+            bool orientableOnly, bool finiteOnly, int whichPurge) {
+        return GluingPermSearcher::bestSearcher(p, 0 /* autos */,
+            orientableOnly, finiteOnly, whichPurge,
+            ctrlFarmPartialSearch<Dim3Params>);
+    }
+
+    inline static void findAllPerms(Pairing* p, bool orientableOnly,
+            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
+        GluingPermSearcher::findAllPerms(p, 0,
+            orientableOnly, finiteOnly, whichPurge,
+            slaveFoundGluingPerms<Dim3Params>, dest);
+    }
+
+    inline static bool mightBeMinimal(Triangulation* tri) {
+        return regina::NCensus::mightBeMinimal(tri, 0);
+    }
+
+    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
+        return s->getFacePairing();
+    }
+};
+
+struct Dim4Params {
+    typedef regina::Dim4FacetPairing Pairing;
+    typedef regina::Dim4GluingPermSearcher GluingPermSearcher;
+    typedef regina::Dim4Triangulation Triangulation;
+
+    inline static GluingPermSearcher* bestSearcher(Pairing* p,
+            bool orientableOnly, bool finiteOnly, int /* whichPurge */) {
+        return GluingPermSearcher::bestSearcher(p, 0 /* autos */,
+            orientableOnly, finiteOnly,
+            ctrlFarmPartialSearch<Dim4Params>);
+    }
+
+    inline static void findAllPerms(Pairing* p, bool orientableOnly,
+            bool finiteOnly, int /* whichPurge */, regina::NPacket* dest) {
+        GluingPermSearcher::findAllPerms(p, 0,
+            orientableOnly, finiteOnly,
+            slaveFoundGluingPerms<Dim4Params>, dest);
+    }
+
+    inline static bool mightBeMinimal(Triangulation*) {
+        return true;
+    }
+
+    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
+        return s->getFacetPairing();
+    }
+};
+
 // Census parameters.
 regina::NBoolSet
     finiteness(true, true),
@@ -60,6 +133,7 @@ int minimal = 0;
 int minimalPrime = 0;
 int minimalPrimeP2 = 0;
 int whichPurge = 0;
+int dim4 = 0;
 long depth = 0;
 int dryRun = 0;
 
@@ -116,6 +190,9 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
             "Ignore obviously non-minimal, non-prime, disc-reducible and/or "
             "P2-reducible triangulations.", 0 },
+        { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
+            "Run a census of 4-manifold triangulations, "
+            "not 3-manifold triangulations.", 0 },
         { "depth", 'D', POPT_ARG_LONG, &depth, 0,
             "Split each face pairing into subsearches at the given depth.",
             "<depth>" },
@@ -177,6 +254,10 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
         if (isController)
             std::cerr << "Options -o/--orientable and -n/--nonorientable "
                 << "cannot be used together.\n";
+        broken = true;
+    } else if (dim4 && (minimal || minimalPrime || minimalPrimeP2)) {
+        if (isController)
+            std::cerr << "Minimality options cannot be used with -4/--dim4.\n";
         broken = true;
     } else if (depth < 0) {
         if (isController)
@@ -374,7 +455,9 @@ void ctrlFarmPairing(const std::string& pairingRep) {
  *
  * Send the given partial search to the next available slave for processing.
  */
-void ctrlFarmPartialSearch(const regina::NGluingPermSearcher* search, void*) {
+template <class CensusType>
+void ctrlFarmPartialSearch(
+        const typename CensusType::GluingPermSearcher* search, void*) {
     if (! search) {
         // That's it for this face pairing.
         ctrlLogStamp() << "Pairing " << taskID[0] << ": Farmed "
@@ -421,6 +504,7 @@ void ctrlStopSlave(int slave) {
 /**
  * Main routine for the controller.
  */
+template <class CensusType>
 int mainController() {
     // Prepare to read in the face pairings.
     std::ifstream input(pairsFile.c_str());
@@ -449,13 +533,13 @@ int mainController() {
     std::string pairingRep;
     if (depth > 0) {
         // Generate the face pairings and prepare subsearches.
-        regina::NFacePairing* pairing;
-        regina::NGluingPermSearcher* searcher;
+        typename CensusType::Pairing* pairing;
+        typename CensusType::GluingPermSearcher* searcher;
         while (! (pairingRep = ctrlNextPairing(input)).empty()) {
             taskID[0]++;
             taskID[1] = 0;
 
-            pairing = regina::NFacePairing::fromTextRep(pairingRep);
+            pairing = CensusType::Pairing::fromTextRep(pairingRep);
             if (! pairing) {
                 ctrlLogStamp() << "ERROR: Pairing " << taskID[0]
                     << " is invalid: " << pairingRep << std::endl;
@@ -469,10 +553,9 @@ int mainController() {
                 continue;
             }
 
-            searcher = regina::NGluingPermSearcher::bestSearcher(
-                pairing, 0 /* autos */,
+            searcher = CensusType::bestSearcher(pairing,
                 ! orientability.hasFalse(), ! finiteness.hasFalse(),
-                whichPurge, ctrlFarmPartialSearch);
+                whichPurge);
             searcher->runSearch(depth);
             delete searcher;
         }
@@ -514,10 +597,11 @@ int mainController() {
  *
  * Called each time the slave finds a complete triangulation.
  */
-void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms,
+template <class CensusType>
+void slaveFoundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
         void* container) {
     if (perms) {
-        regina::NTriangulation* tri = perms->triangulate();
+        typename CensusType::Triangulation* tri = perms->triangulate();
 
         bool ok = true;
         if (! tri->isValid())
@@ -529,7 +613,7 @@ void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms,
         else if ((! orientability.hasTrue()) && tri->isOrientable())
             ok = false;
         else if ((minimal || minimalPrime || minimalPrimeP2) &&
-                ! regina::NCensus::mightBeMinimal(tri, 0))
+                ! CensusType::mightBeMinimal(tri))
             ok = false;
 
         if (ok) {
@@ -556,6 +640,11 @@ void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms,
  * outupt stream.
  */
 void slaveDescribeCensusParameters(std::ostream& out) {
+    if (dim4)
+        out << "Searching for 4-manifold triangulations\n";
+    else
+        out << "Searching for 3-manifold triangulations\n";
+
     if (finiteness == regina::NBoolSet::sTrue)
         out << "Finite only\n";
     else if (finiteness == regina::NBoolSet::sFalse)
@@ -589,7 +678,9 @@ void slaveDescribeCensusParameters(std::ostream& out) {
  * The census container will not be included, and should be inserted
  * as the last child of the parent.
  */
-regina::NPacket* slaveSkeletonTree(const regina::NGluingPermSearcher* search,
+template <class CensusType>
+regina::NPacket* slaveSkeletonTree(
+        const typename CensusType::GluingPermSearcher* search,
         const char* searchRep) {
     // Create the overall parent packet.
     regina::NContainer* parent = new regina::NContainer();
@@ -600,8 +691,9 @@ regina::NPacket* slaveSkeletonTree(const regina::NGluingPermSearcher* search,
     desc->setPacketLabel("Parameters");
     std::ostringstream descStream;
 
-    descStream << "Processed a face pairing subsearch.\n\nFace pairing:\n"
-        << search->getFacePairing()->toString() << "\n\nSubsearch:\n"
+    descStream << "Processed a " << WORD_face << " pairing subsearch.\n\n"
+        << WORD_Face << " pairing:\n"
+        << CensusType::pairingFor(search)->toString() << "\n\nSubsearch:\n"
         << searchRep << "\n\n";
 
     slaveDescribeCensusParameters(descStream);
@@ -622,7 +714,9 @@ regina::NPacket* slaveSkeletonTree(const regina::NGluingPermSearcher* search,
  * The census container will not be included, and should be inserted
  * as the last child of the parent.
  */
-regina::NPacket* slaveSkeletonTree(const regina::NFacePairing* pairing) {
+template <class CensusType>
+regina::NPacket* slaveSkeletonTree(
+        const typename CensusType::Pairing* pairing) {
     // Create the overall parent packet.
     regina::NContainer* parent = new regina::NContainer();
     parent->setPacketLabel("Partial MPI census");
@@ -632,7 +726,7 @@ regina::NPacket* slaveSkeletonTree(const regina::NFacePairing* pairing) {
     desc->setPacketLabel("Parameters");
     std::ostringstream descStream;
 
-    descStream << "Processed a single face pairing:\n"
+    descStream << "Processed a single " << WORD_face << " pairing:\n"
         << pairing->toString() << "\n\n";
 
     slaveDescribeCensusParameters(descStream);
@@ -713,6 +807,7 @@ void slaveBail(const std::string& error) {
  *
  * The controller is informed of the final number of triangulations.
  */
+template <class CensusType>
 void slaveProcessPartialSearch() {
     char* searchRep = new char[taskID[2] + 1];
 
@@ -725,11 +820,11 @@ void slaveProcessPartialSearch() {
     regina::NContainer* dest = new regina::NContainer();
     dest->setPacketLabel("Triangulations");
 
-    regina::NGluingPermSearcher* search;
+    typename CensusType::GluingPermSearcher* search;
     {
         std::istringstream s(searchRep);
-        search = regina::NGluingPermSearcher::readTaggedData(s,
-            slaveFoundGluingPerms, dest);
+        search = CensusType::GluingPermSearcher::readTaggedData(s,
+            slaveFoundGluingPerms<CensusType>, dest);
     }
 
     if (search == 0 || search->inputError()) {
@@ -739,7 +834,7 @@ void slaveProcessPartialSearch() {
     }
 
     // Prepare a packet tree to wrap around the search.
-    regina::NPacket* parent = slaveSkeletonTree(search, searchRep);
+    regina::NPacket* parent = slaveSkeletonTree<CensusType>(search, searchRep);
     parent->insertChildLast(dest);
 
     // Run the partial census.
@@ -777,6 +872,7 @@ void slaveProcessPartialSearch() {
  *
  * The controller is informed of the final number of triangulations.
  */
+template <class CensusType>
 void slaveProcessPairing() {
     char* pairingRep = new char[taskID[2] + 1];
 
@@ -786,28 +882,35 @@ void slaveProcessPairing() {
         TAG_REQUEST_PAIRING, MPI_COMM_WORLD, &status);
 
     // Parse the face pairing.
-    regina::NFacePairing* pairing =
-        regina::NFacePairing::fromTextRep(pairingRep);
+    typename CensusType::Pairing* pairing =
+        CensusType::Pairing::fromTextRep(pairingRep);
     if (! pairing) {
-        slaveBail(std::string("Invalid face pairing: ") + pairingRep);
+        if (dim4)
+            slaveBail(std::string("Invalid facet pairing: ") + pairingRep);
+        else
+            slaveBail(std::string("Invalid face pairing: ") + pairingRep);
         return;
     }
     if (! pairing->isCanonical()) {
-        slaveBail(std::string("Non-canonical face pairing: ") + pairingRep);
+        if (dim4)
+            slaveBail(std::string("Non-canonical facet pairing: ") +
+                pairingRep);
+        else
+            slaveBail(std::string("Non-canonical face pairing: ") +
+                pairingRep);
         return;
     }
 
     // Run the partial census.
-    regina::NPacket* parent = slaveSkeletonTree(pairing);
+    regina::NPacket* parent = slaveSkeletonTree<CensusType>(pairing);
     regina::NContainer* dest = new regina::NContainer();
     dest->setPacketLabel("Triangulations");
     parent->insertChildLast(dest);
 
     nSolns = 0;
     if (! dryRun)
-        regina::NGluingPermSearcher::findAllPerms(pairing, 0,
-            ! orientability.hasFalse(), ! finiteness.hasFalse(), whichPurge,
-            slaveFoundGluingPerms, dest);
+        CensusType::findAllPerms(pairing, ! orientability.hasFalse(),
+            ! finiteness.hasFalse(), whichPurge, dest);
 
     if (nSolns > 0) {
         // Write the completed census to file.
@@ -831,6 +934,7 @@ void slaveProcessPairing() {
 /**
  * Main routine for a slave (ranks 1..size).
  */
+template <class CensusType>
 int mainSlave() {
     // Keep fetching and processing tasks until there are no more.
     MPI_Status status;
@@ -845,9 +949,9 @@ int mainSlave() {
             break;
 
         if (taskID[1] < 0)
-            slaveProcessPairing();
+            slaveProcessPairing<CensusType>();
         else
-            slaveProcessPartialSearch();
+            slaveProcessPartialSearch<CensusType>();
     }
 
     return 0;
@@ -884,11 +988,17 @@ int main(int argc, char* argv[]) {
                 retVal = 1;
             } else {
                 nSlaves = size - 1;
-                retVal = mainController();
+                if (dim4)
+                    retVal = mainController<Dim4Params>();
+                else
+                    retVal = mainController<Dim3Params>();
             }
         } else {
             // We're one of many slaves.
-            retVal = mainSlave();
+            if (dim4)
+                retVal = mainSlave<Dim4Params>();
+            else
+                retVal = mainSlave<Dim3Params>();
         }
     }
 

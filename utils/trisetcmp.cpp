@@ -27,16 +27,25 @@
 /* end stub */
 
 #include <cstdlib>
+#include "dim4/dim4triangulation.h"
 #include "file/nxmlfile.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/i18nutils.h"
 
+using regina::Dim4Triangulation;
 using regina::NPacket;
 using regina::NTriangulation;
 
 bool subcomplexTesting = false;
 
 bool compare(NTriangulation* t1, NTriangulation* t2) {
+    if (subcomplexTesting)
+        return t1->isContainedIn(*t2).get();
+    else
+        return t1->isIsomorphicTo(*t2).get();
+}
+
+bool compare(Dim4Triangulation* t1, Dim4Triangulation* t2) {
     if (subcomplexTesting)
         return t1->isContainedIn(*t2).get();
     else
@@ -69,7 +78,7 @@ void runMatches(NPacket* tree1, NPacket* tree2, std::ostream& out) {
     long nMatches = 0;
 
     for (p1 = tree1; p1; p1 = p1->nextTreePacket())
-        if (p1->getPacketType() == NTriangulation::packetType)
+        if (p1->getPacketType() == NTriangulation::packetType) {
             for (p2 = tree2; p2; p2 = p2->nextTreePacket())
                 if (p2->getPacketType() == NTriangulation::packetType)
                     if (compare(static_cast<NTriangulation*>(p1),
@@ -79,6 +88,17 @@ void runMatches(NPacket* tree1, NPacket* tree2, std::ostream& out) {
                             << p2->getPacketLabel() << std::endl;
                         nMatches++;
                     }
+        } else if (p1->getPacketType() == Dim4Triangulation::packetType) {
+            for (p2 = tree2; p2; p2 = p2->nextTreePacket())
+                if (p2->getPacketType() == Dim4Triangulation::packetType)
+                    if (compare(static_cast<Dim4Triangulation*>(p1),
+                            static_cast<Dim4Triangulation*>(p2))) {
+                        out << "    " << p1->getPacketLabel()
+                            << (subcomplexTesting ? "  <=  " : "  ==  ")
+                            << p2->getPacketLabel() << std::endl;
+                        nMatches++;
+                    }
+        }
 
     if (nMatches == 0)
         out << "No matches found." << std::endl;
@@ -104,6 +124,17 @@ void runNonMatches(const std::string& file1, NPacket* tree1,
                 if (p2->getPacketType() == NTriangulation::packetType)
                     if (compare(static_cast<NTriangulation*>(p1),
                             static_cast<NTriangulation*>(p2)))
+                        matched = true;
+            if (! matched) {
+                out << "    " << p1->getPacketLabel() << std::endl;
+                nMissing++;
+            }
+        } else if (p1->getPacketType() == Dim4Triangulation::packetType) {
+            matched = false;
+            for (p2 = tree2; p2 && ! matched; p2 = p2->nextTreePacket())
+                if (p2->getPacketType() == Dim4Triangulation::packetType)
+                    if (compare(static_cast<Dim4Triangulation*>(p1),
+                            static_cast<Dim4Triangulation*>(p2)))
                         matched = true;
             if (! matched) {
                 out << "    " << p1->getPacketLabel() << std::endl;
