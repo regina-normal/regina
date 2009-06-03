@@ -74,10 +74,14 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                  identified according to the identity map. */
         Dim4Triangulation s4_doubleConeS3;
             /**< A double cone over the 3-sphere. */
+        Dim4Triangulation s3xs1;
+            /**< The product S^3 x S^1. */
 
         // Closed non-orientable:
         Dim4Triangulation rp4;
             /**< Real projective 4-space, built from four pentachora. */
+        Dim4Triangulation s3xs1Twisted;
+            /**< The twisted product S^3 x~ S^1. */
 
         // Bounded orientable:
         Dim4Triangulation ball_singlePent;
@@ -142,7 +146,11 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             // via Dim4ExampleTriangulation.
             copyAndDelete(s4_id, Dim4ExampleTriangulation::fourSphere(),
                 "S^4 (identity)");
+            copyAndDelete(s3xs1, Dim4ExampleTriangulation::s3xs1(),
+                "S^3 x S^1");
             copyAndDelete(rp4, Dim4ExampleTriangulation::rp4(), "RP^4");
+            copyAndDelete(s3xs1Twisted,
+                Dim4ExampleTriangulation::s3xs1Twisted(), "S^3 x~ S^1");
 
             // Some of our triangulations are built from 3-manifold
             // triangulations.
@@ -339,7 +347,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyValid(empty);
             verifyValid(s4_id);
             verifyValid(s4_doubleConeS3);
+            verifyValid(s3xs1);
             verifyValid(rp4);
+            verifyValid(s3xs1Twisted);
             verifyValid(ball_singlePent);
             verifyValid(ball_foldedPent);
             verifyValid(ball_singleConeS3);
@@ -363,7 +373,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyConnected(empty);
             verifyConnected(s4_id);
             verifyConnected(s4_doubleConeS3);
+            verifyConnected(s3xs1);
             verifyConnected(rp4);
+            verifyConnected(s3xs1Twisted);
             verifyConnected(ball_singlePent);
             verifyConnected(ball_foldedPent);
             verifyConnected(ball_singleConeS3);
@@ -394,7 +406,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyOrientable(empty);
             verifyOrientable(s4_id);
             verifyOrientable(s4_doubleConeS3);
+            verifyOrientable(s3xs1);
             verifyOrientable(rp4, false);
+            verifyOrientable(s3xs1Twisted, false);
             verifyOrientable(ball_singlePent);
             verifyOrientable(ball_foldedPent);
             verifyOrientable(ball_singleConeS3);
@@ -474,7 +488,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBoundary(empty);
             verifyBoundary(s4_id);
             verifyBoundary(s4_doubleConeS3);
+            verifyBoundary(s3xs1);
             verifyBoundary(rp4);
+            verifyBoundary(s3xs1Twisted);
             verifyBoundary(ball_singlePent, true);
             verifyBoundary(ball_foldedPent, true);
             verifyBoundary(ball_singleConeS3, true);
@@ -566,7 +582,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBoundaryCount(empty, 0);
             verifyBoundaryCount(s4_id, 0);
             verifyBoundaryCount(s4_doubleConeS3, 0);
+            verifyBoundaryCount(s3xs1, 0);
             verifyBoundaryCount(rp4, 0);
+            verifyBoundaryCount(s3xs1Twisted, 0);
             verifyBoundaryCount(ball_singlePent, 1);
             verifyBoundaryTri(ball_singlePent, 0, "S3");
             verifyBoundaryCount(ball_foldedPent, 1);
@@ -746,7 +764,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyLinksSpheres(empty, 0);
             verifyLinksSpheres(s4_id, 5);
             verifyLinksSpheres(s4_doubleConeS3, 3);
+            verifyLinksSpheres(s3xs1, 1);
             verifyLinksSpheres(rp4, 3);
+            verifyLinksSpheres(s3xs1Twisted, 1);
             verifyLinksBalls(ball_singlePent, 5);
             verifyLinksBalls(ball_foldedPent, 4);
             verifyLinkCount(ball_singleConeS3, 2);
@@ -828,7 +848,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyEulerChar(empty, 0, 0);
             verifyEulerChar(s4_id, 2, 2);
             verifyEulerChar(s4_doubleConeS3, 2, 2);
+            verifyEulerChar(s3xs1, 0, 0);
             verifyEulerChar(rp4, 1, 1);
+            verifyEulerChar(s3xs1Twisted, 0, 0);
             verifyEulerChar(ball_singlePent, 1, 1);
             verifyEulerChar(ball_foldedPent, 1, 1);
             verifyEulerChar(ball_singleConeS3, 1, 1);
@@ -857,7 +879,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyHomologyH1(empty, "0");
             verifyHomologyH1(s4_id, "0");
             verifyHomologyH1(s4_doubleConeS3, "0");
+            verifyHomologyH1(s3xs1, "Z");
             verifyHomologyH1(rp4, "Z_2");
+            verifyHomologyH1(s3xs1Twisted, "Z");
             verifyHomologyH1(ball_singlePent, "0");
             verifyHomologyH1(ball_foldedPent, "0");
             verifyHomologyH1(ball_singleConeS3, "0");
@@ -891,7 +915,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyFundGroup(empty, "0");
             verifyFundGroup(s4_id, "0");
             verifyFundGroup(s4_doubleConeS3, "0");
+            verifyFundGroup(s3xs1, "Z");
             verifyFundGroup(rp4, "Z_2");
+            verifyFundGroup(s3xs1Twisted, "Z");
             verifyFundGroup(ball_singlePent, "0");
             verifyFundGroup(ball_foldedPent, "0");
             verifyFundGroup(ball_singleConeS3, "0");

@@ -90,6 +90,24 @@ class Dim4ExampleTriangulation {
          */
         static Dim4Triangulation* rp4();
 
+        /**
+         * Returns a two-pentachoron triangulation of the product space
+         * <tt>S^3 x S^1</tt>.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Dim4Triangulation* s3xs1();
+
+        /**
+         * Returns a two-pentachoron triangulation of the twisted product
+         * space <tt>S^3 x~ S^1</tt>.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Dim4Triangulation* s3xs1Twisted();
+
         /*@}*/
         /**
          * (end: Closed Triangulations)

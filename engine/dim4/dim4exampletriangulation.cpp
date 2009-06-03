@@ -79,6 +79,54 @@ Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
     return ans;
 }
 
+Dim4Triangulation* Dim4ExampleTriangulation::s3xs1() {
+    // Make two pentachora, and join three of the five facets according
+    // to the identity map.  Only facets 0123 and 1234 of each
+    // pentachoron remain.
+    Dim4Triangulation* ans = new Dim4Triangulation();
+    ans->setPacketLabel("S3 x S1");
+
+    Dim4Pentachoron* p = new Dim4Pentachoron();
+    Dim4Pentachoron* q = new Dim4Pentachoron();
+    p->joinTo(1, q, NPerm5());
+    p->joinTo(2, q, NPerm5());
+    p->joinTo(3, q, NPerm5());
+
+    // Now join each 0123 to a 1234, which joins up the S1 loop.
+    // Do this in the orientation-preserving way.
+    p->joinTo(0, q, NPerm5(4,0,1,2,3));
+    q->joinTo(0, p, NPerm5(4,0,1,2,3));
+
+    // All done.
+    ans->addPentachoron(p);
+    ans->addPentachoron(q);
+    return ans;
+}
+
+Dim4Triangulation* Dim4ExampleTriangulation::s3xs1Twisted() {
+    // Make two pentachora, and join three of the five facets according
+    // to the identity map.  Only facets 0123 and 1234 of each
+    // pentachoron remain.
+    Dim4Triangulation* ans = new Dim4Triangulation();
+    ans->setPacketLabel("S3 x~ S1");
+
+    Dim4Pentachoron* p = new Dim4Pentachoron();
+    Dim4Pentachoron* q = new Dim4Pentachoron();
+    p->joinTo(1, q, NPerm5());
+    p->joinTo(2, q, NPerm5());
+    p->joinTo(3, q, NPerm5());
+
+    // Now join each 0123 to a 1234, which joins up the S1 loop.
+    // Do this in the orientation-reversing way.
+    p->joinTo(0, p, NPerm5(4,0,1,2,3));
+    q->joinTo(0, q, NPerm5(4,0,1,2,3));
+
+    // All done.
+    ans->addPentachoron(p);
+    ans->addPentachoron(q);
+    return ans;
+}
+
 Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();
