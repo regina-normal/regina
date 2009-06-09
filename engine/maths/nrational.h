@@ -135,6 +135,13 @@ class NRational {
          * \pre gcd(<i>newNum</i>, <i>newDen</i>) = 1 or <i>newDen</i> = 0.
          * \pre \a newDen is non-negative.
          *
+         * \warning Failing to meet the preconditions above can result
+         * in misleading or even undefined behaviour.  As an example,
+         * NRational(4,4) (which breaks the gcd requirement) is
+         * considered different from NRational(1,1) (a valid rational),
+         * which is different again from NRational(-1,-1) (which breaks
+         * the non-negativity requirement).
+         *
          * @param newNum the new numerator.
          * @param newDen the new denominator.
          */
@@ -143,8 +150,14 @@ class NRational {
          * Initialises to <i>newNum</i>/<i>newDen</i>.
          *
          * \pre gcd(<i>newNum</i>, <i>newDen</i>) = 1 or <i>newDen</i> = 0.
-	 *      warning! NRational(4,4) != NRational(1,1)
          * \pre \a newDen is non-negative.
+         *
+         * \warning Failing to meet the preconditions above can result
+         * in misleading or even undefined behaviour.  As an example,
+         * NRational(4,4) (which breaks the gcd requirement) is
+         * considered different from NRational(1,1) (a valid rational),
+         * which is different again from NRational(-1,-1) (which breaks
+         * the non-negativity requirement).
          *
          * @param newNum the new numerator.
          * @param newDen the new denominator.
