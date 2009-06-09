@@ -1435,7 +1435,7 @@
     Pairing 86: done, 7 found
     Pairing 87: running
     Pairing 88: running
-    Census still running, last activity: Sun Mar 19 17:14:41 2006
+    Still running, 15 found, last activity: Wed Jun 10 05:57:34 2009
     <prompt>example$</prompt>
 </screen>
 
@@ -1519,8 +1519,9 @@
      mode).</para></listitem>
    </itemizedlist>
    <para>
-    The final line of output will state whether the census has finished,
-    and if not, when the last log entry was written.
+    The final line of output will list the total number of triangulations
+    found so far, whether the census has finished, and if not, when the
+    last log entry was written.
    </para>
    <para>
     For further explanation of the terminology used above, see the

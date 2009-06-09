@@ -291,7 +291,7 @@ if ($donePairings and $doneTris) {
 } else {
     ($donePairings or $doneTris) and bail('Final tallies incomplete.');
 
-    print "Census still running";
+    print "Still running, $nTris found";
     if ($lastDate) {
         print ", last activity: $lastDate";
     } else {
