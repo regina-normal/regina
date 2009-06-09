@@ -171,6 +171,7 @@ void addDim4Triangulation() {
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
         .def("getEulerCharTri", &Dim4Triangulation::getEulerCharTri)
+        .def("getEulerCharManifold", &Dim4Triangulation::getEulerCharManifold)
         .def("isValid", &Dim4Triangulation::isValid)
         .def("isIdeal", &Dim4Triangulation::isIdeal)
         .def("hasBoundaryTetrahedra", &Dim4Triangulation::hasBoundaryTetrahedra)
