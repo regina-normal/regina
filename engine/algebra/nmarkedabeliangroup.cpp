@@ -664,7 +664,20 @@ if (domain == range)
 return retval;
 }
 
- 
+bool NHomMarkedAbelianGroup::isChainMap() const
+{
+// run through a basis for ker OM, plug in and check isCycle()
+bool retval(true);
+// the last getRankCC() - getRankM() columns of getMRB() are a basis for the kernel of the defining matrix M
+for (unsigned long i=domain.getRankM(); i<domain.getRankCC(); i++)
+ {
+ std::vector<NLargeInteger> domChain(domain.getRankCC(), NLargeInteger::zero);
+ for (unsigned long j=0; j<domain.getRankCC(); j++) domChain[j] = domain.getMRB().entry(j,i);
+ if (!range.isCycle(evalCC(domChain))) retval = false;
+ }
+
+return retval;
+}
 
 
 // I think there's a smart way to compute this, as the reduced matrix is a 2x2 block matrix:

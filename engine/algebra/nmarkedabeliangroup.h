@@ -334,6 +334,13 @@ class NMarkedAbelianGroup : public ShareableObject {
 	 * Given a vector, determines if it represents a cycle in chain complex.
 	 */
 	bool isCycle(const std::vector<NLargeInteger> &input) const;
+	
+	/**
+	 * Returns the rank of the chain complex supporting the homology computation. 
+         * This is also obtainable via getOM().columns() and getON().rows() but might
+         * as well have something clear for users. 
+	 */
+	unsigned long getRankCC() const;
 
         /**
          * Expresses the given vector as a combination of free and torsion
@@ -712,6 +719,12 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          */
         virtual ~NHomMarkedAbelianGroup();
 
+	/**
+	 * Is this at least a chain map?  If not, pretty much any further computations you try with
+	 * this class will be give you nothing more than carefully-crafted garbage.
+	 */
+	bool isChainMap() const;
+
         /**
          * Is this an epic homomorphism?
          *
@@ -895,6 +908,11 @@ inline const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
 inline unsigned NMarkedAbelianGroup::getRank() const {
     return snfrank;
 }
+
+inline unsigned long NMarkedAbelianGroup::getRankCC() const {
+	return OM.columns();
+}
+
 
 inline bool NMarkedAbelianGroup::isTrivial() const {
     return ! ( (snfrank>0) || (InvFacList.size()>0) );
