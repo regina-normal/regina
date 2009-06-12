@@ -54,7 +54,8 @@ namespace regina {
  *
  * Reading down the diagonal, the final Smith normal form will have a
  * series of non-negative, non-decreasing invariant factors followed by
- * zeroes.
+ * zeroes.  `Invariant factor' referrs to the convention that the i-th 
+ * term divides the (i+1)-st term, and so they are unique.
  *
  * The algorithm used is due to Hafner and McCurley (1991).
  * It does not use modular arithmetic to control the intermediate
@@ -171,7 +172,8 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement);
 
 /**
  * Transforms a given matrix into column echelon form with respect to a
- * collection of rows.
+ * collection of rows.  In a pinch, you can also use this to compute the
+ * inverse of an invertible square matrix.
  *
  * Given the matrix \a M and the list \a rowList of rows from \a M, this
  * algorithm puts \a M in column echelon form with respect to the rows
@@ -254,6 +256,24 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  */
 std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
         const std::vector<NLargeInteger>& sublattice);
+
+/**
+ * Given an automorphism of the group Z_p1 + Z_p2 + ... + Z_pn, this procedure computes
+ * the inverse automorphism.  At present this routine is only called when constructing the
+ * inverse of an NHomMarkedAbelianGroup that is known to be invertible. 
+ *
+ * @param input is an nxn-matrix which represents a lift of the automorphism to just some
+ *        nxn matrix.  Specifically, you have a little commutative diagram with Z^n --A-->Z^n
+ *        covering the automorphism of Z_p1 + Z_p2 + ... + Z_pn, where the maps down are 
+ *        the direct sum of the standard quotients Z --> Z_pi.  So if you want this procedure
+ *        to give you meaningful output, A must be a lift of a genuine automorphism of
+ *        Z_p1 + ... + Z_pn. 
+ * @param invF is the list p1, p2, ..., pn, we assume they are invariant factors so p1|p2, 
+ *        ... pn-1 | pn. 
+ *
+ * \author Ryan Budney
+ */
+NMatrixInt torsionAutInverse(const NMatrixInt& input, const std::vector<NLargeInteger> &invF);
 
 /*@}*/
 
