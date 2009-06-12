@@ -842,7 +842,6 @@ class NHomMarkedAbelianGroup : public ShareableObject {
 	 * Returns the inverse to an NHomMarkedAbelianGroup. If not invertible, returns
 	 * the zero homomorphism.
 	 *
-	 * Note: not yet implemented.
 	 * TODO: in future, store the inverse and have this routine return a constant refernce.
 	 *
 	 * @pre Must be invertible. 
