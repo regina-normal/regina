@@ -111,8 +111,11 @@ class Dim4EdgeEmbedding {
 
         /**
          * Returns a mapping from vertices (0,1) of this edge to the
-         * corresponding vertex numbers in getPentachoron(), as described
-         * in Dim4Pentachoron::getEdgeMapping().
+         * corresponding vertex numbers in getPentachoron().  This
+         * permutation also maps (2,3,4) to the three remaining
+         * pentachoron vertices in a way that preserves orientation as
+         * you walk around the edge (assuming this is actually possible).
+         * See Dim4Pentachoron::getEdgeMapping() for details.
          *
          * @return a mapping from the vertices of this edge to the
          * vertices of getPentachoron().

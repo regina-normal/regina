@@ -110,8 +110,10 @@ class Dim4FaceEmbedding {
 
         /**
          * Returns a mapping from vertices (0,1,2) of this face to the
-         * corresponding vertex numbers in getPentachoron(), as described
-         * in Dim4Pentachoron::getFaceMapping().
+         * corresponding vertex numbers in getPentachoron().  This
+         * permutation also maps (3,4) to the two remaining pentachoron
+         * vertices in a manner that preserves orientation as you walk
+         * around the face.  See Dim4Pentachoron::getFaceMapping() for details.
          *
          * @return a mapping from the vertices of this face to the
          * vertices of getPentachoron().
