@@ -43,6 +43,22 @@ unsigned long rbGetRank(const NMatrixInt& M) // I don't know how to avoid
     return i; // i is the rank of M
 }
 
+NMarkedAbelianGroup::NMarkedAbelianGroup(const unsigned long &rk, const NLargeInteger &p) : 
+OM(rk, rk), ON(rk,rk), OMR(rk,rk), OMC(rk,rk), OMRi(rk, rk), OMCi(rk, rk), rankOM(0), ornR(rk, rk),
+ornRi(rk, rk), ornC(rk, rk), ornCi(rk, rk), InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0)
+{
+for (unsigned long i=0; i<rk; i++) ON.entry(i,i) = p;
+// everything is already in SNF, so these are identity matrices
+OMR.makeIdentity();OMC.makeIdentity(); 
+OMRi.makeIdentity();OMCi.makeIdentity(); 
+ornR.makeIdentity(); ornRi.makeIdentity(); 
+ornC.makeIdentity(); ornCi.makeIdentity(); 
+if (p != NLargeInteger::zero) ifNum=rk;
+if (ifNum != 0) InvFacList.resize(ifNum);
+for (unsigned long i=0; i<InvFacList.size(); i++) InvFacList[i] = p;
+snfrank = rk - ifNum;
+}
+
 NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
         const NMatrixInt& N) :
         OM(M), ON(N), OMR(M.columns(),M.columns()),
@@ -160,12 +176,12 @@ void NMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
  */
 std::vector<NLargeInteger> NMarkedAbelianGroup::getFreeRep(unsigned long index)
         const {
-    std::vector<NLargeInteger> retval(OM.columns(),"0");
+    std::vector<NLargeInteger> retval(OM.columns(),NLargeInteger::zero);
     // index corresponds to the (index+snffreeindex)-th column of ornCi
     // we then pad this vector (at the front) with rankOM 0's
     // and apply OMR to it.
 
-    std::vector<NLargeInteger> temp(ornCi.rows()+rankOM,"0");
+    std::vector<NLargeInteger> temp(ornCi.rows()+rankOM,NLargeInteger::zero);
 
     for (unsigned long i=0;i<ornCi.rows();i++)
         temp[i+rankOM]=ornCi.entry(i,index+snffreeindex);
@@ -211,13 +227,55 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getTorsionRep(
 
 
 /*
+ * TODO: with this do we need getTorsionRep  and getFreeRep ? 
+ *       consider erasing them.
+ */
+
+std::vector<NLargeInteger> NMarkedAbelianGroup::getCCRep(const std::vector<NLargeInteger> SNFRep) const
+{
+    std::vector<NLargeInteger> retval(OM.columns(),NLargeInteger::zero);
+    // the first
+    // index corresponds to the (InvFacIndex[index])-th column of ornCi
+    // we then pad this vector (at the front) with rankOM 0's
+    // and apply OMR to it.
+
+    std::vector<NLargeInteger> temp(ornCi.rows()+rankOM,NLargeInteger::zero);
+
+    for (unsigned long j=0; j<ifNum+snfrank; j++) for (unsigned long i=0; i<ornCi.rows(); i++)
+         temp[i+rankOM] += ornCi.entry(i,ifLoc+j) * SNFRep[j];
+
+    for (unsigned long i=0;i<retval.size();i++)
+        for (unsigned long j=0;j<OMR.columns();j++)
+            retval[i] += OMR.entry(i,j)*temp[j];
+    // the above takes temp and multiplies it by the matrix OMR.
+
+    return retval;
+}
+
+bool NMarkedAbelianGroup::isCycle(const std::vector<NLargeInteger> &input) const
+{
+bool retval = true;
+if (input.size() == OM.columns())
+ {
+   for (unsigned long i=0; i<OM.rows(); i++)
+	{
+	NLargeInteger T(NLargeInteger::zero);
+	for (unsigned long j=0; j<OM.columns(); j++) T += input[j]*OM.entry(i,j);
+	if (T != NLargeInteger::zero) retval = false;
+	}
+ } else retval = false;
+return retval;
+}
+
+
+/*
  * The marked abelian group was defined by matrices M and N
  * with M*N==0.  Think of M as m by l and N as l by n.
  * When the group was initialized, it was computed to be isomorphic
- * to some Z^d + Z_{d1} + ... + Z_{dk} where d1 | d2 | ... | dk
+ * to some Z_{d1} + ... + Z_{dk} + Z^d where d1 | d2 | ... | dk
  * this routine assumes element is in Z^l, and it returns a vector
- * of length d+k where the first d elements represent which class the
- * vector projects to in Z^d, and the last k elements represent the
+ * of length d+k where the last d elements represent which class the
+ * vector projects to in Z^d, and the first k elements represent the
  * projections to Z_{d1} + ... + Z_{dk}. Of these last elements, they
  * will be returned mod di respectively. Returns an empty vector if
  * element is not in the kernel of M. element is assumed to have
@@ -246,25 +304,75 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFIsoRep(
             eltinker=false;
     // ON.rows - rankOM == ORN.rows()
     if (eltinker==true) {
-        // set up retval. The first snfrank elts are the free generators
+        // The last snfrank elts are the free generators
         for (unsigned long i=0;i<snfrank;i++)
             for (unsigned long j=rankOM;j<ON.rows();j++)
-                retval[i] += ornC.entry(snffreeindex+i,j-rankOM)*temp[j];
-        // the remaining InvFacList.size() elts are torsion generators.
+                retval[i + ifNum] += ornC.entry(snffreeindex+i,j-rankOM)*temp[j];
+        // the ifNum elts are torsion generators.
         for (unsigned long i=0;i<ifNum;i++) {
             for (unsigned long j=rankOM;j<ON.rows();j++)
-                retval[i+snfrank] += ornC.entry(ifLoc+i,j-rankOM)*temp[j];
-            retval[i+snfrank] = (retval[i+snfrank] % InvFacList[i]);
+                retval[i] += ornC.entry(ifLoc+i,j-rankOM)*temp[j];
+            retval[i] = (retval[i] % InvFacList[i]);
 
             // the element might still be negative, though in this case
             // it should be no less than (- InvFacList[i] + 1).
             // we can put it in the required range just by adding InvFacList[i].
-            if (retval[i+snfrank] < 0)
-                retval[i+snfrank] += InvFacList[i];
+            if (retval[i] < 0)
+                retval[i] += InvFacList[i];
         }
         return retval;
     } else
         return nullvec;
+}
+
+
+
+
+// this is when you want to define an NHomMarkedAbelianGroup from a its reduced matrix, not via
+// a chain map of chain complexes. 
+// So matrix needs to be computed, and reducedMatrix properly assigned.
+// at first, we make reducedMatrix unassigned and matrix zero with the proper dimensions.
+
+NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat, 
+		       const NMarkedAbelianGroup &dom, 
+		       const NMarkedAbelianGroup &ran) : 
+domain(dom), range(ran), matrix(ran.getM().columns(), dom.getM().columns()), reducedMatrix(0), 
+kernel(0), coKernel(0), image(0), reducedKernelLattice(0)
+{
+// need to compute matrix and assign reducedMatrix
+reducedMatrix = new NMatrixInt(tobeRedMat);
+// rarely would matrix be correct at this stage, so we proceed to fix that...
+// roughly we're looking for matrix = getCCRep ( tobeRedMat * SNFIsoRep ( projkerMdomain 
+
+NMatrixInt domMRB( domain.getMRB() );
+NMatrixInt domMRBi( domain.getMRBi() );
+
+NMatrixInt domKerProj( domMRB.rows(), domMRB.columns() );
+// define this matrix to be domMRB [ 0 0 | 0 I ] domMRBi where the first 0 is getrankM() square
+for (unsigned long i=0; i<domMRB.rows(); i++) for (unsigned long j=0; j<domMRB.columns(); j++)
+ for (unsigned long k=domain.getRankM(); k<domMRB.rows(); k++)
+	domKerProj.entry(i,j) += domMRB.entry(i,k) * domMRBi.entry(k,j);
+
+for (unsigned long j=0; j<domKerProj.columns(); j++)
+ {
+ // for each column of domKerProj write as a std::vector, push through SNFIsoRep
+ std::vector<NLargeInteger> colj(domKerProj.rows());
+ for (unsigned long i=0; i<domKerProj.rows(); i++) colj[i] = domKerProj.entry(i,j);
+ std::vector<NLargeInteger> ircj(domain.getSNFIsoRep(colj));
+
+ // push through tobeRedMat
+ std::vector<NLargeInteger> rmj(ircj.size(), NLargeInteger::zero);
+ for (unsigned long i=0; i<tobeRedMat.rows(); i++) for (unsigned long k=0; k<tobeRedMat.columns(); k++) 
+  rmj[i] += tobeRedMat.entry(i,k) * ircj[k];
+
+ // apply getCCRep
+ std::vector<NLargeInteger> Mcolj(range.getCCRep(rmj));
+
+ // assemble into matrix.
+ for (unsigned long i=0; i<matrix.rows(); i++) matrix.entry(i,j) = Mcolj[i];
+ }
+
+// done
 }
 
 
@@ -335,10 +443,19 @@ void NHomMarkedAbelianGroup::computeReducedMatrix() {
 
         for (i=0;i<reducedMatrix->rows();i++)
             for (j=0;j<reducedMatrix->columns();j++)
+		{
                 for (k=0;k<rccqb.rows();k++)
                     reducedMatrix->entry(i,j) +=
                         rccqb.entry(i+range.getTorsionLoc(), k) *
                         temp2.entry(k,j);
+                // if representing torsion, mod out to reduce the size of the integers to something reasonable.
+                if (i < range.getNumberOfInvariantFactors()) 
+			{
+			reducedMatrix->entry(i,j) %= range.getInvariantFactor(i);
+			if (reducedMatrix->entry(i,j) < 0) reducedMatrix->entry(i,j) +=
+				range.getInvariantFactor(i);
+			}
+		}
     }
 }
 
@@ -422,8 +539,6 @@ void NHomMarkedAbelianGroup::computeCokernel() {
 }
 
 
-
-
 void NHomMarkedAbelianGroup::computeImage() {
     if (!image) {
         computeReducedKernelLattice();
@@ -445,6 +560,48 @@ void NHomMarkedAbelianGroup::computeImage() {
 
         image = new NMarkedAbelianGroup(imgCCm, imgCCn);
     }
+}
+
+NHomMarkedAbelianGroup NHomMarkedAbelianGroup::operator * (const NHomMarkedAbelianGroup &X) const
+{
+std::auto_ptr<NMatrixRing<NLargeInteger> > prod=matrix*X.matrix;
+
+NMatrixInt compMat(matrix.rows(), X.matrix.columns() );
+
+for (unsigned long i=0;i<prod->rows();i++) for (unsigned long j=0;j<prod->columns();j++)
+            compMat.entry(i,j) = prod->entry(i, j);
+
+return NHomMarkedAbelianGroup(X.domain, range, compMat);
+}
+
+std::vector<NLargeInteger> NHomMarkedAbelianGroup::evalCC(const std::vector<NLargeInteger> &input) const
+{
+static const std::vector<NLargeInteger> nullV;
+std::vector<NLargeInteger> retval;
+
+if (domain.isCycle(input))
+ {
+  retval.resize(matrix.rows(), NLargeInteger::zero);
+  for (unsigned long i=0; i<retval.size(); i++) for (unsigned long j=0; j<matrix.columns(); j++)
+	retval[i] += input[j]*matrix.entry(i,j);
+ } else retval = nullV;
+return retval;
+}
+
+std::vector<NLargeInteger> NHomMarkedAbelianGroup::evalSNF(const std::vector<NLargeInteger> &input) const
+{
+const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+static const std::vector<NLargeInteger> nullV; 
+std::vector<NLargeInteger> retval;
+
+if (input.size() == (domain.getRank() + domain.getNumberOfInvariantFactors()) )
+ {
+   retval.resize(range.getRank()+range.getNumberOfInvariantFactors(), NLargeInteger::zero);
+   for (unsigned long i=0; i<retval.size(); i++) for (unsigned long j=0; j<getReducedMatrix().columns(); j++)
+	retval[i] += input[j] * getReducedMatrix().entry(i,j);
+ } else retval = nullV; 
+
+return retval;
 }
 
 
@@ -472,9 +629,12 @@ void NHomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
 }
 
 void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
+// todo: have completely different set of descriptors if an endomorphism domain == range
+//       not so important at the moment though.  New descriptors would include things like
+//       automorphism, projection, differential, ... 
     if (isIso())
         out<<"isomorphism";
-    else if (isZero())
+    else if (isZero()) // zero map
         out<<"zero map";
     else if (isMonic()) { // monic not epic
         out<<"monic, with cokernel ";
@@ -491,6 +651,110 @@ void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
         getImage().writeTextShort(out);
     }
 }
+
+
+bool NHomMarkedAbelianGroup::isIdentity() const
+{
+bool retval(true);
+if (domain == range)
+ {
+     const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+     if (!reducedMatrix->isIdentity()) retval = false;
+ } else retval = false;
+return retval;
+}
+
+ 
+
+
+// I think there's a smart way to compute this, as the reduced matrix is a 2x2 block matrix:
+//
+//  [A|B]
+//  [---]  where D is an inveritble square matrix, 0 is a zero matrix,  
+//  [0|D]  A a square matrix and B maybe not square. 
+//         the columns of D represent the free factors of the domain, 
+// 	   the rows of D the free factors of the range, 
+//         the columns/rows of A represent the torsion factors of the domain/range
+// 	   respectively.  So the inverse matrix must have the form
+//  [A'|B']
+//  [-----]
+//  [0 |D']  where D' is the inverse of D, A' represents the inverse automorphism of
+//           Z_p1 + Z_p2 + ... Z_pk, etc.  And so B' must equal -A'BD', which is readily
+//           computable.  So it all boils down to computing A'.  So we need a routine which
+//           takes a matrix A representing an automorphism of Z_p1 + ... Z_pk and then computes
+//           the matrix representing the inverse automorphism.  
+//           So to do this we'll need a new matrixops.cpp command -- call it torsionAutInverse.  
+
+// okay, so torsionAutInverse seems to be okay now. I hope. Lets get this working so we can test 
+// it.
+NHomMarkedAbelianGroup NHomMarkedAbelianGroup::inverseHom() const
+{
+const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+NMatrixInt invMat( reducedMatrix->columns(), reducedMatrix->rows() );
+
+if (isIso()) 
+ {
+  // get A, B, D from reducedMatrix
+  // A must be square with domain/range.getNumberOfInvariantFactors() columns
+  // D must be square with domain/range.getRank() columns
+  // B may not be square with domain.getRank() columns and range.getNumberOfInvariantFactors() rows.
+  NMatrixInt A(range.getNumberOfInvariantFactors(), domain.getNumberOfInvariantFactors());
+  NMatrixInt B(range.getNumberOfInvariantFactors(), domain.getRank());
+  NMatrixInt D(range.getRank(), domain.getRank());
+  for (unsigned long i=0; i<A.rows(); i++) for (unsigned long j=0; j<A.columns(); j++)
+   A.entry(i,j) = reducedMatrix->entry(i,j);
+  for (unsigned long i=0; i<B.rows(); i++) for (unsigned long j=0; j<B.columns(); j++)
+   B.entry(i,j) = reducedMatrix->entry(i, j + A.columns());
+  for (unsigned long i=0; i<D.rows(); i++) for (unsigned long j=0; j<D.columns(); j++)
+   D.entry(i,j) = reducedMatrix->entry( i + A.rows(), j + A.columns() );
+  // compute A', B', D'
+  // let's use void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
+  //      const std::vector<unsigned> &rowList); from matrixOps to compute the inverse of D.
+  NMatrixInt Di(D.rows(), D.columns()); Di.makeIdentity();
+  NMatrixInt Dold(D.rows(), D.columns()); Dold.makeIdentity();
+  std::vector<unsigned> rowList(D.rows());
+  for (unsigned i=0; i<rowList.size(); i++) rowList[i]=i;
+  columnEchelonForm(D, Di, Dold, rowList); // now Di is the inverse of the old D, and D is the identity, 
+      // and Dold is the old D.
+  //NMatrixInt torsionAutInverse(const NMatrixInt& input, const std::vector<NLargeInteger> &invF);
+  // can be used to compute A'.  So we need to make a vector containing the invariant factors. 
+  std::vector<NLargeInteger> invF(domain.getNumberOfInvariantFactors());
+  for (unsigned long i=0; i<invF.size(); i++) invF[i] = domain.getInvariantFactor(i);
+  NMatrixInt Ai(torsionAutInverse( A, invF));
+  // then Bi is given by Bi = -AiBDi
+  NMatrixInt Bi(range.getNumberOfInvariantFactors(), domain.getRank());
+  NMatrixInt Btemp(range.getNumberOfInvariantFactors(), domain.getRank());
+   // Btemp will give -BDi
+   // Bi will be AiBtemp
+   // Strangely, we don't seem to have a convienient matrix multiplication available so we just do it
+   // `by hand'.  Perhaps this is what Ben's multiplyAs routine is about?  But it isn't used anywhere
+   // and the docs are pretty vague.  Ask Ben to clarify.
+  for (unsigned long i=0; i<Btemp.rows(); i++) for (unsigned long j=0; j<Btemp.columns(); j++)
+   for (unsigned long k=0; k<Btemp.columns(); k++)
+    Btemp.entry(i,j) -= B.entry(i,k)*Di.entry(k,j);
+  for (unsigned long i=0; i<Bi.rows(); i++) for (unsigned long j=0; j<Bi.columns(); j++)
+   for (unsigned long k=0; k<Ai.columns(); k++)
+    Bi.entry(i,j) += Ai.entry(i,k)*Btemp.entry(k,j);
+
+  // compute the coefficients of invMat.  We're in the funny situation where we know what invMat's
+  // reduced matrix, not its chain-complex level defining matrix.  So we use the alternative
+  // NHomMarkedAbelianGroup constructor designed specifically for this situation.  
+  // assemble into invMat  [A'|B']
+  //                       [-----]
+  //                       [0 |D'] 
+
+  for (unsigned long i=0; i<Ai.rows(); i++) for (unsigned long j=0; j<Ai.columns(); j++)
+	invMat.entry(i,j) = Ai.entry(i,j);
+  for (unsigned long i=0; i<Di.rows(); i++) for (unsigned long j=0; j<Di.columns(); j++)
+	invMat.entry(i+Ai.rows(),j+Ai.columns()) = Di.entry(i,j);
+  for (unsigned long i=0; i<Bi.rows(); i++) for (unsigned long j=0; j<Bi.columns(); j++)
+	invMat.entry(i,j+Ai.columns()) = Bi.entry(i,j);
+  // for debugging purposes check that reducedMat of inverseHom is the A' B' 0 D' matrix
+ }
+
+return NHomMarkedAbelianGroup( invMat, range, domain );
+}
+
 
 } // namespace regina
 

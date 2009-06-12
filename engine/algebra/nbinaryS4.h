@@ -31,6 +31,7 @@
  *   Z_2-central extension of S5, the alternating group on 5 elements
  *   coming from the spin cover of SO_3 restricted to the symmetry group
  *   of a tetrahedron union its geometric dual. 
+ * TODO: add action os S4
  */
 
 #ifndef __NBINARYS4_H
