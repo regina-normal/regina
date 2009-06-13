@@ -364,13 +364,9 @@ void Dim4Triangulation::calculateEdges() const {
                     if (adjPent) {
                         // When we choose an adjacent gluing map, throw in a
                         // swap to preserve the "orientation" of the cycle
-                        // formed by the images of 2, 3 and 4.  We don't
-                        // actually guarantee this in the docs, but there's
-                        // no harm coding it up now in case we decide we
-                        // want it later on.
-                        //
-                        // Note this only becomes meaningful if the edge link
-                        // is an orientable surface (otherwise there is no
+                        // formed by the images of 2, 3 and 4.  Note that this
+                        // only becomes meaningful if the edge link is an
+                        // orientable surface (otherwise there is no
                         // consistent way to orient these cycles at all).
                         adjMap = pent->adjacentGluing(facet) *
                             pent->edgeMapping_[edge] * NPerm5(2, 3);

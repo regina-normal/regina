@@ -111,10 +111,13 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
 
         NPerm5 edgeMapping_[10];
             /**< Maps (0,1) to the vertices of this pentachoron that form
-                 each edge, as described in getEdgeMapping(). */
+                 each edge whilst mapping (2,3,4) in a suitably "orientation-
+                 preserving" way, as described in getEdgeMapping(). */
         NPerm5 faceMapping_[10];
             /**< Maps (0,1,2) to the vertices of this pentachoron that form
-                 each 2-dimensional face, as described in getFaceMapping(). */
+                 each 2-dimensional face whilst mapping (3,4) in a suitably
+                 "orientation-preserving" way, as described in
+                 getFaceMapping(). */
         NPerm5 tetMapping_[5];
             /**< Maps (0,1,2,3) to the vertices of this pentachoron that form
                  each 3-dimensional facet, as described in
@@ -343,9 +346,11 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
         Dim4Tetrahedron* getTetrahedron(int tet) const;
         /**
          * Examines the given edge of this pentachoron, and returns a
-         * mapping from the "canonical" vertices of the corresponding
-         * edge of the triangulation to the matching vertices of this
-         * pentachoron.
+         * permutation that maps the "canonical" vertices (0,1) of the
+         * corresponding edge of the triangulation to the matching vertices
+         * of this pentachoron.  This permutation also maps (2,3,4) to
+         * the remaining pentachoron vertices in an "orientation-preserving"
+         * way, as described below.
          *
          * In detail:  Suppose several edges of several pentachora are
          * identified within the overall 4-manifold triangulation.  We
@@ -368,8 +373,14 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * course that we pass the correct edge number in each case to
          * getEdgeMapping()).
          *
-         * The images of 2, 3 and 4 under the permutations that are returned
-         * are arbitrary.
+         * The images of (2,3,4) under the returned permutation imply an
+         * orientation for the pentachoron face opposite the given edge.
+         * These orientations will be consistent for all pentachora
+         * containing the given edge, if this is possible (i.e., if the edge
+         * link is orientable, which is true for any valid triangulation).
+         * Note that there are still arbitrary decisions to be made for
+         * the images of 2, 3 and 4, since there will always be three
+         * possible mappings that yield the correct orientation.
          *
          * \pre This pentachoron belongs to a 4-manifold triangulation whose
          * skeletal information has already been calculated.
@@ -382,9 +393,11 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
         NPerm5 getEdgeMapping(int edge) const;
         /**
          * Examines the given face of this pentachoron, and returns a
-         * mapping from the "canonical" vertices of the corresponding
-         * face of the triangulation to the matching vertices of this
-         * pentachoron.
+         * permutation that maps the "canonical" vertices (0,1,2) of the
+         * corresponding face of the triangulation to the matching vertices
+         * of this pentachoron.  This permutation also maps (3,4) to the
+         * remaining pentachoron vertices in an "orientation-preserving"
+         * way, as described below.
          *
          * In detail:  Suppose several faces of several pentachora are
          * identified within the overall 4-manifold triangulation.  We
