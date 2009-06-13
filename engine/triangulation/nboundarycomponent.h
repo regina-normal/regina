@@ -36,7 +36,6 @@
  */
 
 #include <vector>
-#include "shareableobject.h"
 #include "triangulation/nvertex.h"
 
 namespace regina {

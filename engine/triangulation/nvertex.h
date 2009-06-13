@@ -36,8 +36,7 @@
 #endif
 
 #include <vector>
-#include "shareableobject.h"
-#include "utilities/nmarkedvector.h"
+#include "triangulation/ntetrahedron.h"
 
 namespace regina {
 
@@ -110,6 +109,19 @@ class NVertexEmbedding {
          * @return the vertex number that is this vertex.
          */
         int getVertex() const;
+
+        /**
+         * Returns a permutation that maps 0 to the vertex number within
+         * getTetrahedron() that is this vertex.  The real point of this
+         * routine is that (1,2,3) maps to the three remaining tetrahedron
+         * vertices in a manner that preserves orientation as you walk around
+         * the vertex (assuming this is actually possible).  See
+         * NTetrahedron::getVertexMapping() for details.
+         *
+         * @return a permutation that maps 0 to the vertex number that
+         * is this vertex.
+         */
+        NPerm4 getVertices() const;
 };
 
 /**
@@ -388,6 +400,10 @@ inline NTetrahedron* NVertexEmbedding::getTetrahedron() const {
 
 inline int NVertexEmbedding::getVertex() const {
     return vertex;
+}
+
+inline NPerm4 NVertexEmbedding::getVertices() const {
+    return tetrahedron->getVertexMapping(vertex);
 }
 
 } // namespace regina
