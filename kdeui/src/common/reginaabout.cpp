@@ -39,7 +39,7 @@
 const QString ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
 
 const QString ReginaAbout::regCopyright(
-    "Copyright (c) 1999-2009, Ben Burton");
+    "Copyright (c) 1999-2009, Ben Burton and Ryan Budney");
 
 const QString ReginaAbout::regDataExt(".rga");
 
@@ -56,7 +56,7 @@ const QString ReginaAbout::regVersion(PACKAGE_VERSION);
 const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
 const char* ReginaAbout::regLicense =
-    "Copyright (c) 1999-2009, Ben Burton\n\n"
+    "Copyright (c) 1999-2009, Ben Burton and Ryan Budney\n\n"
     "This program is distributed under the terms of the GPL v2.\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
@@ -95,12 +95,11 @@ ReginaAbout::ReginaAbout(const char* internalName) :
 
     // Authors:
     addAuthor("Ben Burton", 0, "bab@debian.org");
+    addAuthor("Ryan Budney", 0, "rybu@uvic.ca");
 
     // Credits:
     addCredit("Bernard Blackham",
         I18N_NOOP("Help with cache optimisation"));
-    addCredit("Ryan Budney",
-        I18N_NOOP("Code contributions and continual all-round assistance"));
     addCredit("Marc Culler",
         I18N_NOOP("Helpful discussions"));
     addCredit("Dominique Devriese",
