@@ -109,6 +109,10 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
             /**< Tetrahedra in the triangulation skeleton that are
                  facets of this pentachoron. */
 
+        NPerm5 vertexMapping_[5];
+            /**< Maps 0 to each vertex of this pentachoron in turn whilst
+                 mapping (1,2,3,4) in a suitably "orientation-preserving" way,
+                 as described in getVertexMapping(). */
         NPerm5 edgeMapping_[10];
             /**< Maps (0,1) to the vertices of this pentachoron that form
                  each edge whilst mapping (2,3,4) in a suitably "orientation-
@@ -345,6 +349,30 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          */
         Dim4Tetrahedron* getTetrahedron(int tet) const;
         /**
+         * Returns a permutation that maps 0 to the given vertex of this
+         * pentachoron, and that maps (1,2,3,4) to the four remaining vertices
+         * in the following "orientation-preserving" fashion.
+         *
+         * The images of (1,2,3,4) under this permutation imply an
+         * orientation for the pentachoron facet opposite the given vertex.
+         * These orientations will be consistent for all pentachora
+         * containing the given vertex, if this is possible (i.e., if
+         * the vertex link is an orientable 3-manifold).
+         *
+         * Note that there are still arbitrary decisions to be made for
+         * the images of (1,2,3,4), since there will always be 12 possible
+         * mappings that yield the correct orientation.
+         *
+         * \pre This pentachoron belongs to a 4-manifold triangulation whose
+         * skeletal information has already been calculated.
+         *
+         * @param vertex the vertex of this pentachoron to examine.
+         * This should be between 0 and 4 inclusive.
+         * @return a permutation that maps 0 to the given vertex of this
+         * pentachoron, with the properties outlined above.
+         */
+        NPerm5 getVertexMapping(int vertex) const;
+        /**
          * Examines the given edge of this pentachoron, and returns a
          * permutation that maps the "canonical" vertices (0,1) of the
          * corresponding edge of the triangulation to the matching vertices
@@ -550,6 +578,10 @@ inline Dim4Face* Dim4Pentachoron::getFace(int face) const {
 
 inline Dim4Tetrahedron* Dim4Pentachoron::getTetrahedron(int tet) const {
     return tet_[tet];
+}
+
+inline NPerm5 Dim4Pentachoron::getVertexMapping(int vertex) const {
+    return vertexMapping_[vertex];
 }
 
 inline NPerm5 Dim4Pentachoron::getEdgeMapping(int edge) const {

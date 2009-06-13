@@ -264,6 +264,7 @@ void Dim4Triangulation::calculateVertices() const {
     Dim4Pentachoron *loopPent, *pent, *adjPent;
     int vertex, adjVertex;
     int facet;
+    NPerm5 adjMap;
     for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
         loopPent = *it;
         for (loopVtx = 0; loopVtx < 5; ++loopVtx) {
@@ -277,6 +278,7 @@ void Dim4Triangulation::calculateVertices() const {
             // Run a depth-first search around this vertex to completely
             // enumerate all identifications.
             loopPent->vertex_[loopVtx] = label;
+            loopPent->vertexMapping_[loopVtx] = NPerm5(0, loopVtx);
             label->emb_.push_back(Dim4VertexEmbedding(loopPent, loopVtx));
 
             stack[0].first = loopPent;
@@ -293,10 +295,19 @@ void Dim4Triangulation::calculateVertices() const {
                         continue;
                     adjPent = pent->adjacentPentachoron(facet);
                     if (adjPent) {
-                        adjVertex = pent->adjacentGluing(facet)[vertex];
+                        // When we choose an adjacent gluing map, throw in a
+                        // swap to preserve the "orientation" of the tetrahedron
+                        // formed by the images of 1, 2, 3 and 4.  Note that
+                        // this only becomes meaningful if the vertex link is
+                        // an orientable 3-manifold (otherwise there is no
+                        // consistent way to orient these tetrahedra at all).
+                        adjMap = pent->adjacentGluing(facet) *
+                            pent->vertexMapping_[vertex] * NPerm5(1, 2);
+                        adjVertex = adjMap[0];
 
                         if (! adjPent->vertex_[adjVertex]) {
                             adjPent->vertex_[adjVertex] = label;
+                            adjPent->vertexMapping_[adjVertex] = adjMap;
                             label->emb_.push_back(Dim4VertexEmbedding(adjPent,
                                 adjVertex));
 

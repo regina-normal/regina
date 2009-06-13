@@ -57,6 +57,7 @@ void addDim4Vertex() {
         .def("getPentachoron", &Dim4VertexEmbedding::getPentachoron,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4VertexEmbedding::getVertex)
+        .def("getVertices", &Dim4VertexEmbedding::getVertices)
     ;
 
     scope s = class_<Dim4Vertex, bases<regina::ShareableObject>,

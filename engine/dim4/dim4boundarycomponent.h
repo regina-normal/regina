@@ -36,9 +36,7 @@
  */
 
 #include <vector>
-#include "shareableobject.h"
 #include "dim4/dim4vertex.h"
-#include "utilities/nmarkedvector.h"
 
 namespace regina {
 

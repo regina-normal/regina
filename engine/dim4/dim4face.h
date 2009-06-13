@@ -36,7 +36,6 @@
 #endif
 
 #include <deque>
-#include "shareableobject.h"
 #include "dim4/dim4pentachoron.h"
 
 namespace regina {

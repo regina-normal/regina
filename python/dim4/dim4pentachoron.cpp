@@ -64,6 +64,7 @@ void addDim4Pentachoron() {
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4Pentachoron::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("getVertexMapping", &Dim4Pentachoron::getVertexMapping)
         .def("getEdgeMapping", &Dim4Pentachoron::getEdgeMapping)
         .def("getFaceMapping", &Dim4Pentachoron::getFaceMapping)
         .def("getTetrahedronMapping", &Dim4Pentachoron::getTetrahedronMapping)

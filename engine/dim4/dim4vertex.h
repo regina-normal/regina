@@ -36,12 +36,10 @@
 #endif
 
 #include <vector>
-#include "shareableobject.h"
-#include "utilities/nmarkedvector.h"
+#include "dim4/dim4pentachoron.h"
 
 namespace regina {
 
-class Dim4Pentachoron;
 class Dim4Component;
 class Dim4BoundaryComponent;
 class NTriangulation;
@@ -110,6 +108,19 @@ class Dim4VertexEmbedding {
          * @return the vertex number that is this vertex.
          */
         int getVertex() const;
+
+        /**
+         * Returns a permutation that maps 0 to the vertex number within
+         * getPentachoron() that is this vertex.  The real point of this
+         * routine is that (1,2,3,4) maps to the four remaining pentachoron
+         * vertices in a manner that preserves orientation as you walk
+         * around the vertex (assuming this is actually possible).  See
+         * Dim4Pentachoron::getVertexMapping() for details.
+         *
+         * @return a permutation that maps 0 to the vertex number that
+         * is this vertex.
+         */
+        NPerm5 getVertices() const;
 };
 
 /**
@@ -354,6 +365,10 @@ inline unsigned long Dim4Vertex::getNumberOfEmbeddings() const {
 inline const Dim4VertexEmbedding& Dim4Vertex::getEmbedding(unsigned long index)
         const {
     return emb_[index];
+}
+
+inline NPerm5 Dim4VertexEmbedding::getVertices() const {
+    return pent_->getVertexMapping(vertex_);
 }
 
 inline Dim4Component* Dim4Vertex::getComponent() const {
