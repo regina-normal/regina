@@ -92,12 +92,16 @@ class NAbelianGroup : public ShareableObject {
         virtual ~NAbelianGroup();
 
         /**
-         * Increments the rank of the group by the given non-negative
-         * integer.
+         * Increments the rank of the group by the given integer.
+         * This integer may be positive, negative or zero.
+         *
+         * \pre The current rank plus the given integer is non-negative.
+         * In other words, if we are subtracting rank then we are not
+         * trying to subtract more rank than the group actually has.
          *
          * @param extraRank the extra rank to add; this defaults to 1.
          */
-        void addRank(unsigned extraRank = 1);
+        void addRank(int extraRank = 1);
         /**
          * Adds the given torsion element to the group.
          * Note that this routine might be slow since calculating the
@@ -340,7 +344,7 @@ inline NAbelianGroup::NAbelianGroup(const NAbelianGroup& g) :
 inline NAbelianGroup::~NAbelianGroup() {
 }
 
-inline void NAbelianGroup::addRank(unsigned extraRank) {
+inline void NAbelianGroup::addRank(int extraRank) {
     rank += extraRank;
 }
 

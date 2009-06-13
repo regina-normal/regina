@@ -33,6 +33,9 @@ Version 4.6.1  [ (under development) ]
         Typedef AcceptTriangulation:
             - This global typedef has been deprecated.  Please use the
               class typedef NCensus::AcceptTriangulation instead.
+        Class NAbelianGroup:
+            - Routine addRank() now takes a signed integer, so that you
+              can subtract from the rank as well as add to it.
         Class NCensus:
             - New class typedef NCensus::AcceptTriangulation to replace the
               old global typedef AcceptTriangulation.
