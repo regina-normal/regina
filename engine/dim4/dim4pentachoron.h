@@ -379,8 +379,8 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * containing the given edge, if this is possible (i.e., if the edge
          * link is orientable, which is true for any valid triangulation).
          * Note that there are still arbitrary decisions to be made for
-         * the images of 2, 3 and 4, since there will always be three
-         * possible mappings that yield the correct orientation.
+         * the images of (2,3,4), since there will always be three possible
+         * mappings that yield the correct orientation.
          *
          * \pre This pentachoron belongs to a 4-manifold triangulation whose
          * skeletal information has already been calculated.
