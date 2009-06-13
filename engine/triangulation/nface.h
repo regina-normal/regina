@@ -35,8 +35,6 @@
 #define __NFACE_H
 #endif
 
-#include "shareableobject.h"
-#include "maths/nperm4.h"
 #include "triangulation/ntetrahedron.h"
 
 namespace regina {

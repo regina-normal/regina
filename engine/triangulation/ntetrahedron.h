@@ -100,15 +100,20 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
 
         int tmpOrientation[4];
             /**< Temporary array used to represent orientations
-             *   of faces and vertex link triangles when calculating
-             *   orientability of boundary components and vertex links.
-             *   Each orientation will be +/-1.
-             *   The array should only be used within these
-             *   orientability routines, and its contents afterwards are
-             *   unpredictable. */
+                 of faces and vertex link triangles when calculating
+                 orientability of boundary components and vertex links.
+                 Each orientation will be +/-1.
+                 The array should only be used within these
+                 orientability routines, and its contents afterwards are
+                 unpredictable. */
+        NPerm4 vertexMapping[4];
+            /**< Maps 0 to each vertex of this tetrahedron in turn whilst
+                 mapping (1,2,3) in a suitably "orientation-preserving" way,
+                 as described in getVertexMapping(). */
         NPerm4 edgeMapping[6];
             /**< Maps (0,1) to the vertices of this tetrahedron that form
-                 each edge, as described in getEdgeMapping(). */
+                 each edge whilst mapping (2,3) in a suitably "orientation-
+                 preserving" way, as described in getEdgeMapping(). */
         NPerm4 faceMapping[4];
             /**< Maps (0,1,2) to the vertices of this tetrahedron that form
                  each face, as described in getFaceMapping(). */
@@ -371,10 +376,36 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          */
         NFace* getFace(int face) const;
         /**
+         * Returns a permutation that maps 0 to the given vertex of this
+         * tetrahedron, and that maps (1,2,3) to the three remaining vertices
+         * in the following "orientation-preserving" fashion.
+         *
+         * The images of (1,2,3) under this permutation imply an
+         * orientation for the tetrahedron face opposite the given vertex.
+         * These orientations will be consistent for all tetrahedra
+         * containing the given vertex, if this is possible (i.e., if
+         * the vertex link is orientable).
+         *
+         * Note that there are still arbitrary decisions to be made for
+         * the images of (1,2,3), since there will always be three possible
+         * mappings that yield the correct orientation.
+         *
+         * \pre This tetrahedron belongs to a triangulation whose
+         * skeletal information has already been calculated.
+         *
+         * @param vertex the vertex of this tetrahedron to examine.
+         * This should be between 0 and 3 inclusive.
+         * @return a permutation that maps 0 to the given vertex of this
+         * tetrahedron, with the properties outlined above.
+         */
+        NPerm4 getVertexMapping(int vertex) const;
+        /**
          * Examines the given edge of this tetrahedron, and returns a
-         * mapping from the "canonical" vertices of the corresponding
-         * edge of the triangulation to the matching vertices of this
-         * tetrahedron.
+         * permutation that maps the "canonical" vertices (0,1) of the
+         * corresponding edge of the triangulation to the matching vertices
+         * of this tetrahedron.  This permutation also maps (2,3) to the
+         * remaining tetrahedron vertices in an "orientation-preserving"
+         * way, as described below.
          *
          * In detail:  Suppose several edges of several tetrahedra are
          * identified within the overall triangulation.  We call this a
@@ -538,6 +569,10 @@ inline NEdge* NTetrahedron::getEdge(int edge) const {
 
 inline NFace* NTetrahedron::getFace(int face) const {
     return faces[face];
+}
+
+inline NPerm4 NTetrahedron::getVertexMapping(int vertex) const {
+    return vertexMapping[vertex];
 }
 
 inline NPerm4 NTetrahedron::getEdgeMapping(int edge) const {

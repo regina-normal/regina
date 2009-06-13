@@ -36,8 +36,6 @@
 #endif
 
 #include <deque>
-#include "shareableobject.h"
-#include "maths/nperm4.h"
 #include "triangulation/ntetrahedron.h"
 
 namespace regina {
@@ -163,8 +161,10 @@ class NEdgeEmbedding {
 
         /**
          * Returns a mapping from vertices (0,1) of this edge to the
-         * corresponding vertex numbers in getTetrahedron(), as described
-         * in NTetrahedron::getEdgeMapping().
+         * corresponding vertex numbers in getTetrahedron().  This
+         * permutation also maps (2,3) to the two remaining tetrahedron
+         * vertices in a manner that preserves orientation as you walk
+         * around the edge.  See NTetrahedron::getEdgeMapping() for details.
          *
          * @return a mapping from the vertices of this edge to the
          * vertices of getTetrahedron().

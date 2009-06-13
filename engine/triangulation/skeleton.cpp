@@ -160,6 +160,7 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
     int* queueVtx = new int[tetrahedra.size() * 4];
 
     firstTet->vertices[firstVertex] = label;
+    firstTet->vertexMapping[firstVertex] = NPerm4(0, firstVertex);
     firstTet->tmpOrientation[firstVertex] = 1;
     label->embeddings.push_back(NVertexEmbedding(firstTet, firstVertex));
 
@@ -168,12 +169,12 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
     queueVtx[0] = firstVertex;
 
     NTetrahedron* tet;
-    NTetrahedron* altTet;
+    NTetrahedron* adjTet;
     int vertex;
-    int yourVertex;
-    int yourOrientation;
-    int yourFace;
+    int adjVertex;
+    int adjOrientation;
     int face;
+    NPerm4 adjMap;
 
     while (queueStart < queueEnd) {
         tet = queueTet[queueStart];
@@ -182,33 +183,40 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
 
         for (face=0; face<4; face++) {
             if (face == vertex) continue;
-            altTet = tet->adjacentTetrahedron(face);
-            if (altTet) {
-                yourVertex = tet->adjacentGluing(face)[vertex];
-                yourFace = tet->adjacentFace(face);
+            adjTet = tet->adjacentTetrahedron(face);
+            if (adjTet) {
+                // When we choose an adjacent gluing map, throw in a
+                // swap to preserve the "orientation" of the cycle
+                // formed by the images of 1, 2 and 3.  Note that this
+                // only becomes meaningful if the vertex link is an
+                // orientable surface (otherwise there is no consistent
+                // way to orient these cycles at all).
+                adjMap = tet->adjacentGluing(face) *
+                    tet->vertexMapping[vertex] * NPerm4(1, 2);
+                adjVertex = adjMap[0];
 
-                // We should actually be inverting NFace::ordering[yourVertex].
+                // We should actually be inverting NFace::ordering[adjVertex].
                 // However, all we care about is the sign of the permutation,
                 // so let's save ourselves those extra few CPU cycles.
-                if ((NFace::ordering[yourVertex] *
+                if ((NFace::ordering[adjVertex] *
                         tet->adjacentGluing(face) *
                         NFace::ordering[vertex]).sign() > 0)
-                    yourOrientation = -(tet->tmpOrientation[vertex]);
+                    adjOrientation = -(tet->tmpOrientation[vertex]);
                 else
-                    yourOrientation = tet->tmpOrientation[vertex];
+                    adjOrientation = tet->tmpOrientation[vertex];
 
-                if (altTet->getVertex(yourVertex)) {
-                    if (altTet->tmpOrientation[yourVertex] !=
-                            yourOrientation)
+                if (adjTet->getVertex(adjVertex)) {
+                    if (adjTet->tmpOrientation[adjVertex] != adjOrientation)
                         label->linkOrientable = false;
                 } else {
-                    altTet->vertices[yourVertex] = label;
-                    altTet->tmpOrientation[yourVertex] = yourOrientation;
-                    label->embeddings.push_back(NVertexEmbedding(altTet,
-                        yourVertex));
+                    adjTet->vertices[adjVertex] = label;
+                    adjTet->vertexMapping[adjVertex] = adjMap;
+                    adjTet->tmpOrientation[adjVertex] = adjOrientation;
+                    label->embeddings.push_back(NVertexEmbedding(adjTet,
+                        adjVertex));
 
-                    queueTet[queueEnd] = altTet;
-                    queueVtx[queueEnd] = yourVertex;
+                    queueTet[queueEnd] = adjTet;
+                    queueVtx[queueEnd] = adjVertex;
                     queueEnd++;
                 }
             }

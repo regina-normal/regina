@@ -56,6 +56,7 @@ void addNVertex() {
         .def("getTetrahedron", &NVertexEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NVertexEmbedding::getVertex)
+        .def("getVertices", &NVertexEmbedding::getVertices)
     ;
 
     scope s = class_<NVertex, bases<regina::ShareableObject>,
