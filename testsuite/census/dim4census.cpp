@@ -73,8 +73,12 @@ class Dim4CensusTest : public CppUnit::TestFixture {
         }
 
         void rawCountsBounded() {
-            unsigned nAll[] = { 1, 5, 38, 782 };
-            rawCountsCompare(1, 2, nAll, "bounded compact",
+            unsigned nAll[] = { 1, 7, 51, 939 };
+            rawCountsCompare(1, 2, nAll, "bounded",
+                NBoolSet::sBoth, NBoolSet::sBoth, NBoolSet::sTrue, -1, 0);
+
+            unsigned nCompact[] = { 1, 5, 38, 782 };
+            rawCountsCompare(1, 2, nCompact, "bounded compact",
                 NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sTrue, -1, 0);
 
             unsigned nOrientable[] = { 1, 4, 27, 457 };
