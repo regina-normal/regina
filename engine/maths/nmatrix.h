@@ -309,6 +309,9 @@ class NMatrix {
 /**
  * Represents a matrix of elements from a given ring T.
  *
+ * Note that many important functions (such as entry()) are inherited
+ * from the parent class NMatrix, and are not documented again here.
+ *
  * \pre Type T has a default constructor and overloads the assignment
  * (<tt>=</tt>) operator.
  * \pre An element <i>t</i> of type T can be written to an output stream

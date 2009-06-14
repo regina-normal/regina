@@ -50,6 +50,10 @@ namespace regina {
  * Represents a matrix of arbitrary precision integers.
  * Calculations will be exact no matter how large the integers become.
  *
+ * Note that many important functions (such as entry()) are inherited
+ * from the superclasses NMatrix and NMatrixRing, and are not documented
+ * again here.
+ *
  * \ifacespython Most inherited member functions are implemented.
  * Exceptions are noted in the documentation for each individual member
  * function.
