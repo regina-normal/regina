@@ -958,6 +958,111 @@ class Dim4Triangulation : public NPacket {
          */
 
         /**
+         * \name Skeletal Transformations
+         */
+        /*@{*/
+
+        /**
+         * Attempts to simplify the triangulation as intelligently as
+         * possible without further input.  Specifically, this routine will
+         * attempt to reduce the number of pentachora in the triangulation.
+         *
+         * Currently this routine uses simplifyToLocalMinimum() in
+         * combination with book opening moves.
+         *
+         * \warning The specific behaviour of this routine will almost
+         * certainly change between releases.  At present,
+         * simplification for 4-manifold triangulations is extremely
+         * weak (as opposed to 3-manifolds, where a rich library of
+         * simplification techinques is available to call upon).
+         *
+         * @return \c true if and only if the triangulation was changed.
+         */
+        bool intelligentSimplify();
+        /**
+         * Uses all known simplification moves to reduce the triangulation
+         * monotonically to some local minimum number of pentachora.
+         * Note that this will probably not give a globally minimal
+         * triangulation; see intelligentSimplify() for further
+         * assistance in achieving this goal.
+         *
+         * The moves used currently include only boundary shelling moves.
+         *
+         * Note that moves that do not reduce the number of pentachora
+         * (such as book opening moves) are not used in this routine.
+         * Such moves do however feature in intelligentSimplify().
+         *
+         * \warning The specific behaviour of this routine will almost
+         * certainly change between releases.  At present,
+         * simplification for 4-manifold triangulations is extremely
+         * weak (as opposed to 3-manifolds, where a rich library of
+         * simplification techinques is available to call upon).
+         *
+         * @param perform \c true if we are to perform the simplifications,
+         * or \c false if we are only to investigate whether simplifications
+         * are possible (defaults to \c true).
+         * @return if \a perform is \c true, this routine returns \c true
+         * if and only if the triangulation was changed to reduce the
+         * number of pentachora; if \a perform is \c false, this routine
+         * returns \c true if and only if it determines that it is
+         * capable of performing such a change.
+         */
+        bool simplifyToLocalMinimum(bool perform = true);
+
+        /**
+         * Checks the eligibility of and/or performs a boundary shelling
+         * move on the given pentachoron.
+         * This involves simply popping off a pentachoron that touches
+         * the boundary.
+         * This can be done only if:
+         *
+         * - all edges and faces of the pentachoron are valid;
+         *
+         * - precisely one, two, three or four facets of the pentachoron
+         *   lie in the boundary;
+         *
+         * - if one facet lies in the boundary, then the opposite vertex
+         *   does not lie in the boundary, and no two of the remaining
+         *   four edges are identified;
+         *
+         * - if two facets lie in the boundary, then the edge that sits
+         *   opposite their common face does not lie in the boundary, and
+         *   no two of the remaining three faces are identified;
+         *
+         * - if three facets lie in the boundary, then the face that sits
+         *   opposite their common edge does not lie in the boundary, and
+         *   the remaining two facets of the tetrahedron are not identified.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (edges, components, etc.) will be reconstructed, which means
+         * that any pointers to old skeletal objects can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being
+         * run, it must be known in advance that the move is legal.
+         * \pre The given pentachoron is a pentachoron of this triangulation.
+         *
+         * @param p the pentachoron upon which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \a true, this function returns \c true
+         * if and only if the requested move may be performed without
+         * changing the topology of the manifold.  If \a check is \c false,
+         * this function simply returns \c true.
+         */
+        bool shellBoundary(Dim4Pentachoron* p,
+            bool check = true, bool perform = true);
+
+        /*@}*/
+        /**
+         * (end: Skeletal Transformations)
+         */
+
+        /**
          * \name Building Triangulations
          */
         /*@{*/

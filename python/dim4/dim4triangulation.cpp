@@ -38,6 +38,11 @@ namespace {
     regina::Dim4Pentachoron* (Dim4Triangulation::*getPentachoron_non_const)(
         unsigned long) = &Dim4Triangulation::getPentachoron;
 
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
+        Dim4Triangulation::simplifyToLocalMinimum, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_shellBoundary,
+        Dim4Triangulation::shellBoundary, 1, 3);
+
     void addPentachoron_own(Dim4Triangulation& tri,
             std::auto_ptr<regina::Dim4Pentachoron> pent) {
         tri.addPentachoron(pent.get());
@@ -185,6 +190,12 @@ void addDim4Triangulation() {
             return_internal_reference<>())
         .def("getHomologyH2", &Dim4Triangulation::getHomologyH2,
             return_internal_reference<>())
+        .def("intelligentSimplify", &Dim4Triangulation::intelligentSimplify)
+        .def("simplifyToLocalMinimum",
+            &Dim4Triangulation::simplifyToLocalMinimum,
+            OL_simplifyToLocalMinimum())
+        .def("shellBoundary", &Dim4Triangulation::shellBoundary,
+            OL_shellBoundary())
         .def("insertTriangulation", &Dim4Triangulation::insertTriangulation)
         .def("dumpConstruction", &Dim4Triangulation::dumpConstruction)
     ;
