@@ -257,6 +257,9 @@ void addNTriangulation() {
         .def("knowsThreeSphere", &NTriangulation::knowsThreeSphere)
         .def("isBall", &NTriangulation::isBall)
         .def("knowsBall", &NTriangulation::knowsBall)
+        .def("hasCompressingDisc", &NTriangulation::hasCompressingDisc)
+        .def("hasSimpleCompressingDisc",
+            &NTriangulation::hasSimpleCompressingDisc)
         .def("makeDoubleCover", &NTriangulation::makeDoubleCover)
         .def("idealToFinite", &NTriangulation::idealToFinite,
             OL_idealToFinite())

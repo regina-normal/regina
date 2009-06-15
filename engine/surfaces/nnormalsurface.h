@@ -1024,6 +1024,86 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         NLargeInteger isCentral() const;
 
         /**
+         * Determines whether this surface represents a compressing disc
+         * in the underlying 3-manifold.
+         *
+         * Let this surface be \a D and let the underlying 3-manifold
+         * be \a M with boundary \a B.  To be a compressing disc, \a D must
+         * be a properly embedded disc in \a M, and the boundary of \a D
+         * must not bound a disc in \a B.
+         *
+         * This routine returns an NTriBool since it is possible that
+         * the result cannot be determined (for instance, if there
+         * are too many normal discs).
+         *
+         * The implementation of this routine is somewhat inefficient at
+         * present, since it cuts along the disc, retriangulates and then
+         * examines the resulting boundary components.
+         *
+         * \pre This normal surface is compact and embedded.
+         * \pre This normal surface contains no octagonal discs.
+         *
+         * \todo \opt Reimplement this to avoid cutting along surfaces.
+         * \todo \prob Check for absurdly large numbers of discs and bail
+         * accordingly.
+         *
+         * @param knownConnected \c true if this normal surface is
+         * already known to be connected (for instance, if it came from
+         * an enumeration of vertex normal surfaces), or \c false if
+         * we should not assume any such information about this surface.
+         * @return true if this surface is a compressing disc, false if
+         * this surface is not a compressing disc, or unknown if the
+         * result cannot be determined.
+         */
+        NTriBool isCompressingDisc(bool knownConnected = false) const;
+
+        /**
+         * Determines whether this is an incompressible surface within
+         * the surrounding 3-manifold.  At present, this routine is only
+         * implemented for surfaces embedded within \e closed 3-manifold
+         * triangulations.
+         *
+         * Let \a D be some disc embedded in the underlying 3-manifold,
+         * and let \a B be the boundary of \a D.  We call \a D a
+         * <i>compressing disc</i> for this surface if (i) the intersection
+         * of \a D with this surface is the boundary \a B, and
+         * (ii) although \a B bounds a disc within the 3-manifold, it
+         * does not bound a disc within this surface.
+         *
+         * We declare this surface to be \e incompressible if there are
+         * no such compressing discs.  For our purposes, spheres are never
+         * considered incompressible (so if this surface is a sphere then
+         * this routine will always return \c false).
+         *
+         * If this surface is one-sided and the argument \a makeTwoSided
+         * is \c true, then the incompressibility test will be run on
+         * the (two-sided) double cover, not the original surface.
+         *
+         * This routine returns an NTriBool since it is possible that
+         * the result cannot be determined (for instance, if there
+         * are too many normal discs).
+         *
+         * \warning This routine can become \e extremely slow, to the
+         * point of infeasibility.  This is because the underlying
+         * algorithm cuts along this surface, retriangulates (possibly
+         * using a very large number of tetrahedra), and then runs a new
+         * (exponentially slow) normal surface enumeration.
+         *
+         * \pre The underlying 3-manifold triangulation is valid and closed.
+         * \pre This normal surface is compact, embedded and connected.
+         * \pre This normal surface contains no octagonal discs.
+         *
+         * @param makeTwoSided \c false if the test should be run on
+         * this surface directly, or \c true if, in the case of a
+         * one-sided surface, the test should be run on the two-sided
+         * double cover.
+         * @return true if this surface is incompressible, false if
+         * this surface is not incompressible (or if it is a sphere),
+         * or unknown if the result cannot be determined.
+         */
+        NTriBool isIncompressible(bool makeTwoSided = false) const;
+
+        /**
          * Cuts the associated triangulation along this surface and
          * returns a newly created resulting triangulation.
          * The original triangulation is not changed.
