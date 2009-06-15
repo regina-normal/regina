@@ -1379,6 +1379,9 @@ NTriBool NNormalSurface::isIncompressible(bool makeTwoSided) const {
     NTriBool found;
     for (NPacket* comp = cut->getFirstTreeChild(); comp;
             comp = comp->getNextTreeSibling()) {
+        // Since the original manifold is irreducible and this surface
+        // is connected, we know that the sliced-open manifold is irreducible
+        // also.
         found = static_cast<NTriangulation*>(comp)->hasCompressingDisc();
         if (found.isUnknown())
             return NTriBool::Unknown;
