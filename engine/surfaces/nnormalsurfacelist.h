@@ -450,6 +450,123 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
         NNormalSurfaceList* standardANToQuadOct() const;
 
         /**
+         * Creates a new list filled with the surfaces from this list
+         * that have at least one locally compatible partner.
+         * In other words, a surface \a S from this list will be placed
+         * in the new list if and only if there is some other surface \a T
+         * in this list for which \a S and \a T are locally compatible.
+         * See NNormalSurface::locallyCompatible() for further details on
+         * compatibility testing.
+         *
+         * The new list will be inserted as a new child packet of the
+         * underlying triangulation (specifically, as the final child).  As a
+         * convenience, the new list will also be returned from this routine.
+         *
+         * This original list is not altered in any way.  Likewise,
+         * the surfaces in the new list are deep copies of the originals
+         * (so they can be altered without affecting the original surfaces).
+         *
+         * \pre This list contains only embedded normal surfaces.  More
+         * precisely, isEmbeddedOnly() must return \c true.
+         *
+         * \warning If this list contains a vertex link (plus at least
+         * one other surface), then the new list will be identical to
+         * the old (i.e., every surface will be copied across).
+         *
+         * @return the new list, which will also have been inserted as
+         * a new child packet of the underlying triangulation.
+         */
+        NNormalSurfaceList* filterForLocallyCompatiblePairs() const;
+
+        /**
+         * Creates a new list filled with the surfaces from this list
+         * that have at least one disjoint partner.
+         * In other words, a surface \a S from this list will be placed
+         * in the new list if and only if there is some other surface \a T
+         * in this list for which \a S and \a T can be made to intersect
+         * nowhere at all.  See NNormalSurface::disjoint() for further
+         * details on disjointness testing.
+         *
+         * This routine cannot deal with empty, disconnected or
+         * non-compact surfaces.  Such surfaces will be silently
+         * ignored, and will not be used in any disjointness tests (in
+         * particular, they will never be considered as a "disjoint partner"
+         * for any other surface).
+         *
+         * The new list will be inserted as a new child packet of the
+         * underlying triangulation (specifically, as the final child).  As a
+         * convenience, the new list will also be returned from this routine.
+         *
+         * This original list is not altered in any way.  Likewise,
+         * the surfaces in the new list are deep copies of the originals
+         * (so they can be altered without affecting the original surfaces).
+         *
+         * \pre This list contains only embedded normal surfaces.  More
+         * precisely, isEmbeddedOnly() must return \c true.
+         * \pre All surfaces within this list are stored using the same
+         * flavour of coordinate system (i.e., the same subclass of
+         * NNormalSurfaceVector).
+         *
+         * \warning If this list contains a vertex link (plus at least
+         * one other surface), then the new list will be identical to
+         * the old (i.e., every surface will be copied across).
+         *
+         * \todo Deal properly with surfaces that are too large to handle.
+         *
+         * @return the new list, which will also have been inserted as
+         * a new child packet of the underlying triangulation.
+         */
+        NNormalSurfaceList* filterForDisjointPairs() const;
+
+        /**
+         * Creates a new list filled with only the surfaces from this list
+         * that "might" be incompressible.
+         * More precisely, all surfaces in this list are examined using
+         * relatively fast heuristic tests for incompressibility.  Any
+         * surface that is definitely \e not incompressible is thrown
+         * away, and all other surfaces are placed in the new list.
+         *
+         * Therefore, it is guaranteed that any incompressible surfaces
+         * from the old list will be placed in the new list.  However,
+         * it is not known whether any given surface in the new list is
+         * indeed incompressible.
+         *
+         * See NNormalSurface::isIncompressible() for the definition of
+         * incompressibility that is used here.  Note in particular that
+         * spheres are \e never considered incompressible.
+         *
+         * The new list will be inserted as a new child packet of the
+         * underlying triangulation (specifically, as the final child).  As a
+         * convenience, the new list will also be returned from this routine.
+         *
+         * This original list is not altered in any way.  Likewise,
+         * the surfaces in the new list are deep copies of the originals
+         * (so they can be altered without affecting the original surfaces).
+         *
+         * Currently this routine (i) throws away all vertex links and
+         * thin edge links, and then (ii) cuts along the remaining surfaces
+         * and runs NTriangulation::hasSimpleCompressingDisc() on the
+         * resulting bounded triangulations.
+         *
+         * \pre The underlying 3-manifold triangulation is valid and closed.
+         * In particular, it has no ideal vertices.
+         * \pre This list contains only embedded normal surfaces.  More
+         * precisely, isEmbeddedOnly() must return \c true.
+         * \pre This list contains only compact, connected normal surfaces.
+         * \pre No surfaces in this list contain any octagonal discs.
+         *
+         * \warning The behaviour of this routine is subject to change
+         * in future versions of Regina, since additional tests may be
+         * added to improve the power of this filtering.
+         *
+         * \todo Add progress tracking.
+         *
+         * @return the new list, which will also have been inserted as
+         * a new child packet of the underlying triangulation.
+         */
+        NNormalSurfaceList* filterForPotentiallyIncompressible() const;
+
+        /**
          * Returns a newly created matrix containing the matching
          * equations that were used to create this normal surface list.
          * The destruction of this matrix is the responsibility of the

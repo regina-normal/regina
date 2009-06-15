@@ -22,6 +22,11 @@ Version 4.6.1  [ (under development) ]
         Class NNormalSurface:
             - New routines isCompressingDisc() and isIncompressible() for
               testing incompressibility.
+        Class NNormalSurfaceList:
+            - New filtering routines filterForLocallyCompatiblePairs() and
+              filterForDisjointPairs().
+            - New routine filterForPotentiallyIncompressible() to assist
+              with bulk incompressibility testing.
         Class NPerm:
             - Renamed to NPerm4.  The C++ header has also moved from
               triangulation/nperm.h to maths/nperm4.h .  Both the old
