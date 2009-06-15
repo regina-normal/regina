@@ -30,7 +30,9 @@
 #include <sstream>
 
 #include "packet/ncontainer.h"
+#include "subcomplex/nsnappedball.h"
 #include "surfaces/nnormalsurface.h"
+#include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 
@@ -447,6 +449,194 @@ NPacket* NTriangulation::makeZeroEfficient() {
         delete connSum;
         return 0;
     }
+}
+
+NTriBool NTriangulation::hasCompressingDisc() const {
+    // Some sanity checks; also enforce preconditions.
+    if (! hasBoundaryFaces())
+        return false;
+    if ((! isValid()) || isIdeal())
+        return false;
+
+    // Off we go.
+    // Work with a simplified triangulation.
+    NTriangulation use(*this);
+    use.intelligentSimplify();
+
+    // Enumerate all vertex normal surfaces.
+    //
+    // Hum, are we allowed to do this in quad space?  Jaco and Tollefson
+    // use standard coordinates.  Jaco, Letscher and Rubinstein mention
+    // quad space, but don't give details (which I'd prefer to see).
+    // Leave it in standard coordinates for now.
+    NNormalSurfaceList* q = NNormalSurfaceList::enumerate(&use,
+        NNormalSurfaceList::STANDARD);
+
+    // Run through all vertex surfaces looking for a compressing disc.
+    unsigned long nSurfaces = q->getNumberOfSurfaces();
+    NTriBool b;
+    for (unsigned long i = 0; i < nSurfaces; ++i) {
+        // Use the fact that all vertex normal surfaces are connected.
+        b = q->getSurface(i)->isCompressingDisc(true);
+
+        // If either we found a compressing disc or we can't actually tell,
+        // return this information.
+        if (! b.isFalse())
+            return b;
+    }
+
+    // No compressing discs!
+    return NTriBool::False;
+}
+
+bool NTriangulation::hasSimpleCompressingDisc() const {
+    // Some sanity checks; also enforce preconditions.
+    if (! hasBoundaryFaces())
+        return false;
+    if ((! isValid()) || isIdeal())
+        return false;
+
+    // Off we go.
+    // Work with a simplified triangulation.
+    NTriangulation use(*this);
+    use.intelligentSimplify();
+
+    // Check to see whether any component is a one-tetrahedron solid torus.
+    for (ComponentIterator cit = use.getComponents().begin();
+            cit != use.getComponents().end(); ++cit)
+        if ((*cit)->getNumberOfTetrahedra() == 1 &&
+                (*cit)->getNumberOfFaces() == 3 &&
+                (*cit)->getNumberOfVertices() == 1) {
+            // Because we know the triangulation is valid, this rules out
+            // all one-tetrahedron triangulations except for LST(1,2,3).
+            return true;
+        }
+
+    // Open up as many boundary faces as possible (to make it easier to
+    // find simple compressing discs).
+    FaceIterator fit;
+    bool opened = true;
+    while (opened) {
+        opened = false;
+        for (fit = use.getFaces().begin(); fit != use.getFaces().end(); ++fit)
+            if (use.openBook(*fit, true, true)) {
+                opened = true;
+                break;
+            }
+    }
+
+    // How many boundary spheres do we currently have?
+    // This is important because we test whether a disc is a compressing
+    // disc by cutting along it and looking for any *new* boundary
+    // spheres that might result.
+    unsigned long origSphereCount = 0;
+    BoundaryComponentIterator bit;
+    for (bit = use.getBoundaryComponents().begin(); bit !=
+            use.getBoundaryComponents().end(); ++bit)
+        if ((*bit)->getEulerCharacteristic() == 2)
+            ++origSphereCount;
+
+    // Look for a single internal face surrounded by three boundary edges.
+    // It doesn't matter whether the edges and/or vertices are distinct.
+    NEdge *e0, *e1, *e2;
+    unsigned long newSphereCount;
+    for (fit = use.getFaces().begin(); fit != use.getFaces().end(); ++fit) {
+        if ((*fit)->isBoundary())
+            continue;
+
+        e0 = (*fit)->getEdge(0);
+        e1 = (*fit)->getEdge(1);
+        e2 = (*fit)->getEdge(2);
+        if (! (e0->isBoundary() && e1->isBoundary() && e2->isBoundary()))
+            continue;
+
+        // This could be a compressing disc.
+        // Cut along the face to be sure.
+        const NFaceEmbedding& emb = (*fit)->getEmbedding(0);
+
+        NTriangulation cut(use);
+        cut.getTetrahedron(emb.getTetrahedron()->markedIndex())->unjoin(
+            emb.getFace());
+        cut.gluingsHaveChanged();
+
+        // If we don't see a new boundary component, the disc boundary is
+        // non-separating in the manifold boundary and is therefore a
+        // non-trivial curve.
+        if (cut.getNumberOfBoundaryComponents() ==
+                use.getNumberOfBoundaryComponents())
+            return true;
+
+        newSphereCount = 0;
+        for (bit = cut.getBoundaryComponents().begin(); bit !=
+                cut.getBoundaryComponents().end(); ++bit)
+            if ((*bit)->getEulerCharacteristic() == 2)
+                ++newSphereCount;
+
+        // Was the boundary of the disc non-trivial?
+        if (newSphereCount == origSphereCount)
+            return true;
+    }
+
+    // Look for a tetrahedron with two faces folded together, giving a
+    // degree-one edge on the inside and a boundary edge on the outside.
+    // The boundary edge on the outside will surround a disc that cuts
+    // right through the tetrahedron.
+    TetrahedronIterator tit;
+    NSnappedBall* ball;
+    for (tit = use.tetrahedra.begin(); tit != use.tetrahedra.end(); ++tit) {
+        ball = NSnappedBall::formsSnappedBall(*tit);
+        if (! ball)
+            continue;
+
+        int equator = ball->getEquatorEdge();
+        if (! (*tit)->getEdge(equator)->isBoundary()) {
+            delete ball;
+            continue;
+        }
+
+        // This could be a compressing disc.
+        // Cut through the tetrahedron to be sure.
+        // We do this by removing the tetrahedron, and then plugging
+        // both holes on either side of the disc with new copies of the
+        // tetrahedron.
+        int upper = ball->getBoundaryFace(0);
+        delete ball;
+
+        NTetrahedron* adj = (*tit)->adjacentTetrahedron(upper);
+        if (! adj) {
+            // The disc is trivial.
+            continue;
+        }
+
+        NTriangulation cut(use);
+        cut.getTetrahedron((*tit)->markedIndex())->unjoin(upper);
+        NTetrahedron* tet = new NTetrahedron();
+        tet->joinTo(NEdge::edgeVertex[equator][0], tet, NPerm4(
+            NEdge::edgeVertex[equator][0], NEdge::edgeVertex[equator][1]));
+        tet->joinTo(upper, cut.getTetrahedron(adj->markedIndex()),
+            (*tit)->adjacentGluing(upper));
+        cut.addTetrahedron(tet);
+
+        // If we don't see a new boundary component, the disc boundary is
+        // non-separating in the manifold boundary and is therefore a
+        // non-trivial curve.
+        if (cut.getNumberOfBoundaryComponents() ==
+                use.getNumberOfBoundaryComponents())
+            return true;
+
+        newSphereCount = 0;
+        for (bit = cut.getBoundaryComponents().begin(); bit !=
+                cut.getBoundaryComponents().end(); ++bit)
+            if ((*bit)->getEulerCharacteristic() == 2)
+                ++newSphereCount;
+
+        // Was the boundary of the disc non-trivial?
+        if (newSphereCount == origSphereCount)
+            return true;
+    }
+
+    // Nothing found.
+    return false;
 }
 
 } // namespace regina

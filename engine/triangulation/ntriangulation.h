@@ -44,6 +44,7 @@
 #include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
 #include "utilities/hashutils.h"
+#include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
 #include "triangulation/ntetrahedron.h"
@@ -2092,6 +2093,92 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * original triangulation was not changed).
          */
         NPacket* makeZeroEfficient();
+
+        /**
+         * Searches for a compressing disc within the underlying
+         * 3-manifold.
+         *
+         * Let \a M be the underlying 3-manifold and let \a B be its
+         * boundary.  By a <i>compressing disc</i>, we mean a disc \a D
+         * properly embedded in \a M, where the boundary of \a D
+         * lies in \a B but does not bound a disc in \a B.
+         *
+         * This routine will first call the heuristic routine
+         * hasSimpleCompressingDisc() in the hope of obtaining a fast
+         * answer.  If this fails, it will run a full enumeration of
+         * vertex normal surfaces, which could be extremely slow.
+         *
+         * This routine returns an NTriBool since it is possible that
+         * the result cannot be determined (for instance, if some
+         * vertex normal surfaces contain too many normal discs).
+         *
+         * This routine will work on a copy of this triangulation, not
+         * the original.  In particular, the copy will be simplified, which
+         * means that there is no harm in calling this routine on an
+         * unsimplified triangulation.
+         *
+         * If this triangulation has no boundary components, this
+         * routine will simply return \c false.
+         *
+         * \pre This triangulation is valid and is not ideal.
+         *
+         * \warning This routine can be infeasibly slow for large
+         * triangulations, since it may need to perform a full enumeration
+         * of vertex normal surfaces.  See hasSimpleCompressingDisc()
+         * for a "heuristic shortcut" that is faster but might not
+         * give a definitive answer.
+         *
+         * @return true if the underlying 3-manifold contains a
+         * compressing disc, false if it does not, or unknown if the
+         * result cannot be determined.
+         */
+        NTriBool hasCompressingDisc() const;
+
+        /**
+         * Searches for a "simple" compressing disc inside this
+         * triangulation.
+         *
+         * Let \a M be the underlying 3-manifold and let \a B be its
+         * boundary.  By a <i>compressing disc</i>, we mean a disc \a D
+         * properly embedded in \a M, where the boundary of \a D
+         * lies in \a B but does not bound a disc in \a B.
+         *
+         * By a \a simple compressing disc, we mean a compressing disc
+         * that has a very simple combinatorial structure (here "simple"
+         * is subject to change; see the warning below).  Examples
+         * include the compressing disc inside a 1-tetrahedron solid
+         * torus, or a compressing disc formed from a single internal face
+         * surrounded by three boundary edges.
+         *
+         * The purpose of this routine is to avoid enumerating normal
+         * surfaces within a large triangulation where possible.  This
+         * routine is relatively fast, and if it returns \c true then this
+         * 3-manifold definitely contains a compressing disc.  If this
+         * routine returns \c false then there might or might not be a
+         * compressing disc; the user will need to perform a full normal
+         * surface enumeration using hasCompressingDisc() to be sure.
+         *
+         * This routine will work on a copy of this triangulation, not
+         * the original.  In particular, the copy will be simplified, which
+         * means that there is no harm in calling this routine on an
+         * unsimplified triangulation.
+         *
+         * If this triangulation has no boundary components, this
+         * routine will simply return \c false.
+         *
+         * \warning The definition of "simple" is subject to change in
+         * future releases of Regina.  That is, this routine may be
+         * expanded over time to identify more types of compressing discs
+         * (thus making it more useful as a "heuristic shortcut").
+         *
+         * \pre This triangulation is valid and is not ideal.
+         *
+         * @return \c true if a simple compressing disc was found,
+         * or \c false if not.  Note that even with a return value of
+         * \c false, there might still be a compressing disc (just not
+         * one with a simple combinatorial structure).
+         */
+        bool hasSimpleCompressingDisc() const;
 
         /*@}*/
         /**

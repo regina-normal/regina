@@ -19,6 +19,9 @@ Version 4.6.1  [ (under development) ]
         Class NCensus:
             - New class typedef NCensus::AcceptTriangulation to replace the
               old global typedef AcceptTriangulation.
+        Class NNormalSurface:
+            - New routines isCompressingDisc() and isIncompressible() for
+              testing incompressibility.
         Class NPerm:
             - Renamed to NPerm4.  The C++ header has also moved from
               triangulation/nperm.h to maths/nperm4.h .  Both the old
@@ -34,6 +37,9 @@ Version 4.6.1  [ (under development) ]
             - New routine getVertexMapping(), which facilitates a
               consistent orientation around the given vertex for the
               three remaining vertices in each tetrahedron.
+        Class NTriangulation:
+            - New routines hasCompressingDisc() and hasSimpleCompressingDisc()
+              to search for compressing discs.
         Class NVertexEmbedding:
             - New routine getVertices(), which facilitates a consistent
               orientation for the three remaining vertices in each tetrahedron.
