@@ -463,7 +463,12 @@ NTriBool NTriangulation::hasCompressingDisc() const {
     NTriangulation use(*this);
     use.intelligentSimplify();
 
-    // Enumerate all vertex normal surfaces.
+    // Try for a fast answer first.
+    NTriBool ans = use.hasSimpleCompressingDisc();
+    if (! ans.isFalse())
+        return ans;
+
+    // Sigh.  Enumerate all vertex normal surfaces.
     //
     // Hum, are we allowed to do this in quad space?  Jaco and Tollefson
     // use standard coordinates.  Jaco, Letscher and Rubinstein mention
