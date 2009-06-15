@@ -208,6 +208,18 @@ void NHomologicalData::computeccIndexing() {
     numBdryCells[0] = sBNIV.size() + sIEOE.size();
     numBdryCells[1] = sBNIE.size() + sIEEOF.size();
     numBdryCells[2] = sBNIF.size() + sIEFOT.size();
+
+    // number of boundary cells that are ideal ends
+    numIdBdryCells[0] = sIEOE.size(); 
+    numIdBdryCells[1] = sIEEOF.size();
+    numIdBdryCells[2] = sIEFOT.size();
+
+    // number of cells in the mixed decomposition
+    numMixCells[0] = numStandardCells[0] + numDualCells[0] + numDualCells[1] + numDualCells[2];
+    numMixCells[1] = 2*tri->getNumberOfEdges() + 3*tri->getNumberOfFaces() + numIdBdryCells[1] +
+		  4*tri->getNumberOfTetrahedra();
+    numMixCells[2] = numIdBdryCells[2] + 3*tri->getNumberOfFaces() + 6*tri->getNumberOfTetrahedra();
+    numMixCells[3] = 4*tri->getNumberOfTetrahedra();
 }
 
 void NHomologicalData::computeChainComplexes() {
@@ -215,13 +227,10 @@ void NHomologicalData::computeChainComplexes() {
     if (chainComplexesComputed)
         return;
 
-    // Off we go...
-
     if (!ccIndexingComputed) computeccIndexing();
 
     chainComplexesComputed = true;
 
-    // need to convert this so that it does not use tri
     B0.reset(new NMatrixInt(1, numDualCells[0]));
     B1.reset(new NMatrixInt(numDualCells[0], numDualCells[1]));
     B2.reset(new NMatrixInt(numDualCells[1], numDualCells[2]));
@@ -328,7 +337,7 @@ void NHomologicalData::computeChainComplexes() {
                 3*tri->faceIndex(tri->getTetrahedron(
                 sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) +
                 p1.preImageOf(sIEFOT[i] % 4) ) ,
-                tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
+                tri->getNumberOfFaces()+i ) -= p1.sign();
         }
     }
     // end A2
@@ -339,8 +348,7 @@ void NHomologicalData::computeChainComplexes() {
             // first go through standard faces 0 through 3
             p1=tri->getTetrahedron(i)->getFaceMapping(j);
             A3->entry( tri->faceIndex(
-                tri->getTetrahedron(i)->getFace(j) ), i) +=
-                ( (p1.sign()==1) ? 1 : -1 );
+                tri->getTetrahedron(i)->getFace(j) ), i) += p1.sign();
             // then ideal faces 0 through 3, if they exist
             if (tri->getTetrahedron(i)->getVertex(j)->isIdeal()==1) {
                 // this part is in error.
@@ -403,6 +411,8 @@ void NHomologicalData::computeChainComplexes() {
 
     // start B3: for each dual tetrahedron==nonboundary vertex,
     //           find the corresp edges==non-boundary boundary faces
+    // problem: this ad-hoc orientation is inaccessible elsewhere.  So it's time to use
+    //          regina's accessible one, via
 
     for (i=0;i<dNINBV.size();i++) {
         // dNINBV[i] is the vertices.index() of this vertex.
@@ -938,147 +948,152 @@ const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q) {
 }
 
 const NMarkedAbelianGroup& NHomologicalData::getBdryHomology(unsigned q) {
+    computeChainComplexes();
     if (q==0) {
-        if (!bHomology0.get()) {
-            computeChainComplexes();
-            bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
-        }
+        if (!bHomology0.get()) bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
         return *bHomology0;
     } else if (q==1) {
-        if (!bHomology1.get()) {
-            computeChainComplexes();
-            bHomology1.reset(new NMarkedAbelianGroup(*Bd1,*Bd2));
-        }
+        if (!bHomology1.get()) bHomology1.reset(new NMarkedAbelianGroup(*Bd1,*Bd2));
         return *bHomology1;
     } else {
         // Assume q == 2.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!bHomology2.get()) {
-            computeChainComplexes();
-            bHomology2.reset(new NMarkedAbelianGroup(*Bd2,*Bd3));
-        }
+        if (!bHomology2.get()) bHomology2.reset(new NMarkedAbelianGroup(*Bd2,*Bd3));
         return *bHomology2;
     }
 }
 
 const NMarkedAbelianGroup& NHomologicalData::getDualHomology(unsigned q) {
+    computeChainComplexes();
     if (q==0) {
-        if (!dmHomology0.get()) {
-            computeChainComplexes();
-            dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
-        }
+        if (!dmHomology0.get()) dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
         return *dmHomology0;
     } else if (q==1) {
-        if (!dmHomology1.get()) {
-            computeChainComplexes();
-            dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
-        }
+        if (!dmHomology1.get()) dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
         return *dmHomology1;
     } else if (q==2) {
-        if (!dmHomology2.get()) {
-            computeChainComplexes();
-            dmHomology2.reset(new NMarkedAbelianGroup(*B2,*B3));
-        }
+        if (!dmHomology2.get()) dmHomology2.reset(new NMarkedAbelianGroup(*B2,*B3));
         return *dmHomology2;
     } else {
         // Assume q == 3.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!dmHomology3.get()) {
-            computeChainComplexes();
-            dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
-        }
+        if (!dmHomology3.get()) dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
         return *dmHomology3;
     }
 }
 
-void NHomologicalData::computeHomology() {
-    computeChainComplexes();
-    if (!mHomology0.get())
-        mHomology0.reset(new NMarkedAbelianGroup(*A0,*A1));
-    if (!mHomology1.get())
-        mHomology1.reset(new NMarkedAbelianGroup(*A1,*A2));
-    if (!mHomology2.get())
-        mHomology2.reset(new NMarkedAbelianGroup(*A2,*A3));
-    if (!mHomology3.get())
-        mHomology3.reset(new NMarkedAbelianGroup(*A3,*A4));
+const NMarkedAbelianGroup& NHomologicalData::getMixedHomology(unsigned q)
+{
+  if (!M0.get()) computeBaryCC();
+  if (q==0) {
+    if (!mH0.get()) mH0.reset(new NMarkedAbelianGroup(*M0, *M1));
+    return *mH0;
+  } else if (q==1) {
+    if (!mH1.get()) mH1.reset(new NMarkedAbelianGroup(*M1, *M2));
+    return *mH1;
+  } else if (q==2) {
+    if (!mH2.get()) mH2.reset(new NMarkedAbelianGroup(*M2, *M3));
+    return *mH2;  
+  } else {
+    if (!mH3.get()) mH3.reset(new NMarkedAbelianGroup(*M3, *M4));
+    return *mH3;
+  }
 }
 
-void NHomologicalData::computeBHomology() {
-    computeChainComplexes();
-    if (!bHomology0.get())
-        bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
-    if (!bHomology1.get())
-        bHomology1.reset(new NMarkedAbelianGroup(*Bd1,*Bd2));
-    if (!bHomology2.get())
-        bHomology2.reset(new NMarkedAbelianGroup(*Bd2,*Bd3));
-}
 
-void NHomologicalData::computeDHomology() {
-    computeChainComplexes();
-    if (!dmHomology0.get())
-        dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
-    if (!dmHomology1.get())
-        dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
-    if (!dmHomology2.get())
-        dmHomology2.reset(new NMarkedAbelianGroup(*B2,*B3));
-    if (!dmHomology3.get())
-        dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
-}
-
+// this is dual cellular -> standard
 const NHomMarkedAbelianGroup& NHomologicalData::getH1CellAp() {
     if (!dmTomMap1.get()) {
-        computeHomology();
-        computeDHomology();
+        computeChainComplexes();
+        if (!dmHomology1.get())
+         dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
+        if (!mHomology1.get())
+         mHomology1.reset(new NMarkedAbelianGroup(*A1,*A2));
         dmTomMap1.reset(new NHomMarkedAbelianGroup(
             *dmHomology1, *mHomology1, *H1map ));
     }
     return (*dmTomMap1);
 }
 
+const NHomMarkedAbelianGroup& NHomologicalData::getStandardToMixedHom(unsigned q)
+{ // make it so we don't compute what we don't need... but we will compute all the chain complexes
+  //  regardless of if we use them, just not irrellevant homology groups as that tends to be the most
+  //  expensive op. 
+  computeBaryCC();
+  computeChainComplexes();
+  if (q==0) {
+    // step 1, make sure relevant homology groups have been computed
+        if (!mHomology0.get()) mHomology0.reset(new NMarkedAbelianGroup(*A0,*A1));
+        if (!mH0.get()) mH0.reset(new NMarkedAbelianGroup(*M0,*M1));
+        if (!SMHom0.get()) SMHom0.reset(new NHomMarkedAbelianGroup( *mHomology0, *mH0, *AM0 ) );
+	return *SMHom0; 
+  } else if (q==1) {
+        if (!mHomology1.get()) mHomology1.reset(new NMarkedAbelianGroup(*A1,*A2));
+        if (!mH1.get()) mH1.reset(new NMarkedAbelianGroup(*M1,*M2));
+        if (!SMHom1.get()) SMHom1.reset(new NHomMarkedAbelianGroup( *mHomology1, *mH1, *AM1 ) );
+	return *SMHom1; 
+  } else if (q==2) {
+        if (!mHomology2.get()) mHomology2.reset(new NMarkedAbelianGroup(*A2,*A3));
+        if (!mH2.get()) mH2.reset(new NMarkedAbelianGroup(*M2,*M3));
+        if (!SMHom2.get()) SMHom2.reset(new NHomMarkedAbelianGroup( *mHomology2, *mH2, *AM2 ) );
+	return *SMHom2; 
+  } else {
+        if (!mHomology3.get()) mHomology3.reset(new NMarkedAbelianGroup(*A3,*A4));
+        if (!mH3.get()) mH3.reset(new NMarkedAbelianGroup(*M3,*M4));
+        if (!SMHom3.get()) SMHom3.reset(new NHomMarkedAbelianGroup( *mHomology3, *mH3, *AM3 ) );
+	return *SMHom3; 
+  }
+}
+
+
+const NHomMarkedAbelianGroup& NHomologicalData::getDualToMixedHom(unsigned q)
+{
+  computeBaryCC();
+  computeChainComplexes();
+  if (q==0) {
+        if (!dmHomology0.get()) dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
+        if (!mH0.get()) mH0.reset(new NMarkedAbelianGroup(*M0,*M1));
+        if (!DMHom0.get()) DMHom0.reset(new NHomMarkedAbelianGroup( *dmHomology0, *mH0, *BM0 ) );
+	return *DMHom0; 
+  } else if (q==1) {
+        if (!dmHomology1.get()) dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
+        if (!mH1.get()) mH1.reset(new NMarkedAbelianGroup(*M1,*M2));
+        if (!DMHom1.get()) DMHom1.reset(new NHomMarkedAbelianGroup( *dmHomology1, *mH1, *BM1 ) );
+	return *DMHom1; 
+  } else if (q==2) {
+        if (!dmHomology2.get()) dmHomology2.reset(new NMarkedAbelianGroup(*B2,*B3));
+        if (!mH2.get()) mH2.reset(new NMarkedAbelianGroup(*M2,*M3));
+        if (!DMHom2.get()) DMHom2.reset(new NHomMarkedAbelianGroup( *dmHomology2, *mH2, *BM2 ) );
+	return *DMHom2; 
+  } else {
+        if (!dmHomology3.get()) dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
+        if (!mH3.get()) mH3.reset(new NMarkedAbelianGroup(*M3,*M4));
+        if (!DMHom3.get()) DMHom3.reset(new NHomMarkedAbelianGroup( *dmHomology3, *mH3, *BM3 ) );
+	return *DMHom3; 
+  }
+}
+
 const NHomMarkedAbelianGroup& NHomologicalData::getBdryHomologyMap(unsigned q) {
+    computeChainComplexes();
     if (q==0) {
-        if (!bmMap0.get()) {
-            computeHomology();
-            computeBHomology();
-            bmMap0.reset(new NHomMarkedAbelianGroup(
-                *bHomology0, *mHomology0, *B0Incl ));
-        }
+        if (!bHomology0.get()) bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
+        if (!mHomology0.get()) mHomology0.reset(new NMarkedAbelianGroup(*A0,*A1));
+        if (!bmMap0.get()) bmMap0.reset(new NHomMarkedAbelianGroup( *bHomology0, *mHomology0, *B0Incl ));
         return *bmMap0;
     } else if (q==1) {
-        if (!bmMap1.get()) {
-            computeHomology();
-            computeBHomology();
-            bmMap1.reset(new NHomMarkedAbelianGroup(
-                *bHomology1, *mHomology1, *B1Incl ));
-        }
+        if (!bHomology1.get()) bHomology1.reset(new NMarkedAbelianGroup(*Bd1,*Bd2));
+        if (!mHomology1.get()) mHomology1.reset(new NMarkedAbelianGroup(*A1,*A2));
+        if (!bmMap1.get()) bmMap1.reset(new NHomMarkedAbelianGroup( *bHomology1, *mHomology1, *B1Incl ));
         return *bmMap1;
     } else {
         // Assume q == 2.  This will at least avoid a crash if q lies
         // outside the required range.
-        if (!bmMap2.get()) {
-            computeHomology();
-            computeBHomology();
-            bmMap2.reset(new NHomMarkedAbelianGroup(
-                *bHomology2, *mHomology2, *B2Incl ));
-        }
+        if (!bHomology2.get()) bHomology2.reset(new NMarkedAbelianGroup(*Bd2,*Bd3));
+        if (!mHomology2.get()) mHomology2.reset(new NMarkedAbelianGroup(*A2,*A3));
+        if (!bmMap2.get()) bmMap2.reset(new NHomMarkedAbelianGroup( *bHomology2, *mHomology2, *B2Incl ));
         return *bmMap2;
     }
 }
-
-void NHomologicalData::computeBIncl() {
-    computeHomology();
-    computeBHomology();
-    if (!bmMap0.get())
-        bmMap0.reset(new NHomMarkedAbelianGroup(
-            *bHomology0, *mHomology0, *B0Incl));
-    if (!bmMap1.get())
-        bmMap1.reset(new NHomMarkedAbelianGroup(
-            *bHomology1, *mHomology1, *B1Incl));
-    if (!bmMap2.get())
-        bmMap2.reset(new NHomMarkedAbelianGroup(
-            *bHomology2, *mHomology2, *B2Incl));
-}
-
 
 void NHomologicalData::computeTorsionLinkingForm() {
     // Only do this if we haven't done it already.
@@ -1878,6 +1893,411 @@ bool NHomologicalData::formIsHyperbolic() {
     computeTorsionLinkingForm();
     return torsionLinkingFormIsHyperbolic;
 }
+
+
+
+/** Compute the chain complexes from the point of view of the barycentric CW-decomposition.
+     this will also compute all the relevant maps to the simplicial homology of the
+     triangulation and the CW-homology of the dual polyhedral decomposition. **/
+// Note: currently this does not produce a chain complex.  It appears there's an orientation 
+//       inconsistency. 
+void NHomologicalData::computeBaryCC()
+{
+ // only continue if this has not been called before.
+ if (M0.get()) return;
+ computeChainComplexes();
+ // first things first, set up chain complexes, mimick NHomologicalData::computeChainComplexes()
+ //  as everything in here will be a special case of there...
+
+ // Setting up the chain complexes.  Implicitly, all the indexing will be by 
+ //  1st pure T^i, then pure P^j, then T^i \cap P^j in lexicographical order, 
+ //  then ideal stuff in same order...
+
+ unsigned long v1 = sNIV.size(); 
+ unsigned long v2 = numStandardCells[0]; 
+ unsigned long v3 = v2 + tri->getNumberOfEdges();
+ unsigned long v4 = v3 + tri->getNumberOfFaces();
+
+ // In the mixed cell decomp, there are 0-cells for all T^0, P^0, the ends of ideal edges, 
+ // 	and intersections T^1 \cap P^2, T^2 \cap P^1
+ M0.reset(new NMatrixInt(1, numMixCells[0])); // C0 -> 0
+ // There are 1-cells for all T^1, P^1, ends of ideal faces, and T^2 \cap P^2
+ M1.reset(new NMatrixInt(numMixCells[0], numMixCells[1])); // C1 -> C0
+ // There are 2-cells for all T^2, P^2, and ends of ideal tets. 
+ M2.reset(new NMatrixInt(numMixCells[1], numMixCells[2])); // C2 -> C1
+ // There are four 3-cells for each tetrahedron. 
+ M3.reset(new NMatrixInt(numMixCells[2], numMixCells[3])); // C3 -> C2
+ // no 4-cells. 
+ M4.reset(new NMatrixInt(numMixCells[3], 1)); // 0 -> C3
+
+ // M0 == 0 already
+ long int temp;
+ NPerm4 p1, p2;
+
+ // This fills out matrix M1 in 4 parts.
+ //  1st part: standard edge boundaries
+ for (unsigned long i=0; i<tri->getNumberOfEdges(); i++)
+  { // M1.entry(?, i)
+    // each standard edge divided in 2, orientation induced from standard edge. First half
+    temp=sNIV.index(tri->vertexIndex(tri->getEdge(i)->getVertex(0))); // temp == -1 if ideal
+    (M1->entry( ((temp==(-1)) ? (v1+sIEOE.index(2*i)) : temp), 2*i)) -= 1;
+    M1->entry( v2 + i, 2*i) += 1;
+     // 2nd half
+    temp=sNIV.index(tri->vertexIndex(tri->getEdge(i)->getVertex(1))); // temp == -1 if ideal
+    (M1->entry( ((temp==(-1)) ? (v1+sIEOE.index(2*i+1)) : temp), 2*i+1)) += 1;
+    M1->entry( v2 + i, 2*i+1) -= 1;
+  }
+ // ideal edges, oriented by face
+ unsigned long tc=2*tri->getNumberOfEdges();
+ for (unsigned long i=0; i<numIdBdryCells[1]; i++)
+  { // M1.entry(?, tc + i)
+        // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us the vertex of this face
+
+        p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
+        int ei=tri->edgeIndex((tri->getFace(sIEEOF[i]/3))-> getEdge(p1[2]));
+        if (p1.sign()==1) {
+	                   M1->entry(v1 + sIEOE.index(2*ei+1), tc+i)-=1;
+        } else {
+		           M1->entry(v1 + sIEOE.index(2*ei) , tc+i)-=1;
+        }
+
+        p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
+        ei = tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->getEdge(p1[2]));
+        if (p1.sign()==1) {
+                            M1->entry(v1 + sIEOE.index(2*ei) , tc+i)+=1;
+        } else {
+                            M1->entry(v1 + sIEOE.index(2*ei+1) , tc+i)+=1;
+        }
+  }
+ // the 3 internal face edges
+ tc += numIdBdryCells[1];
+ for (unsigned long i=0; i<3*tri->getNumberOfFaces(); i++)
+  { // M1.entry(?, tc + i)
+    M1->entry( v2 + tri->edgeIndex( tri->getFace( i/3 )->getEdge( i % 3 ) ), tc + i ) += 1;
+    M1->entry( v3 + (i/3), tc + i ) -= 1;
+  }
+ // the 4 internal tet edges    
+ tc += 3*tri->getNumberOfFaces();
+ for (unsigned long i=0; i<4*tri->getNumberOfTetrahedra(); i++)
+  { // M1.entry(?, tc + i)
+    M1->entry( v3 + tri->faceIndex( tri->getTetrahedron( i/4 )->getFace( i % 4 ) ), tc+i ) += 1;
+    M1->entry( v4 + (i/4), tc + i ) -= 1;
+  }
+  // that handles matrix M1.
+
+  unsigned long w1 = 2*tri->getNumberOfEdges();
+  unsigned long w2 = w1 + numIdBdryCells[1];
+  unsigned long w3 = w2 + 3*tri->getNumberOfFaces();
+  tc=0;
+
+  // this fills out M2 in 3 parts
+  // part 1 standard faces
+  for (unsigned long i=0; i<3*tri->getNumberOfFaces(); i++)
+   { // M2.entry(?, tc+i) -- the 2-cells from 1->3 pachner on standard faces
+     M2->entry( w2 + 3*(i/3) + ((i+1) % 3), tc + i ) += 1; 
+     M2->entry( w2 + 3*(i/3) + ((i+2) % 3), tc + i ) -= 1; 
+
+     int j=tri->getFace( i/3 )->getEdgeMapping( (i+1) % 3 ).sign();
+     M2->entry( 2*tri->edgeIndex(tri->getFace( i/3 )->getEdge( (i+1) % 3 )) + ((j==1)? 1 : 0), tc + i ) += j;
+
+     j=tri->getFace( i/3 )->getEdgeMapping( (i+2) % 3 ).sign();
+     M2->entry( 2*tri->edgeIndex(tri->getFace( i/3 )->getEdge( (i+2) % 3 )) + ((j==1)? 0 : 1), tc + i ) += j;
+
+     if ( tri->getFace( i/3 )->getVertex( i%3 )->isIdeal() )
+        M2->entry( w1 + sIEEOF.index(i), tc + i ) += 1;
+   }
+  tc += 3*tri->getNumberOfFaces();
+  // part 2 ideal ends of tetrahedra
+  for (unsigned long i=0; i<numIdBdryCells[2]; i++)
+   { // M2.entry(?, tc+i)
+     for (unsigned long j=1; j<4; j++)
+     { // face mappings of things that have the relevant ideal bdry
+      p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping((sIEFOT[i] + j) % 4);
+      int fi = tri->faceIndex(tri->getTetrahedron(sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4));
+      M2->entry( w1 + sIEEOF.index(3*fi + p1.preImageOf(sIEFOT[i] % 4) ), tc + i ) -= p1.sign();
+      }
+   }
+
+  tc += numIdBdryCells[2];
+  // part 3 the 6 2-dimensional dual polyhedral bits in a tetrahedron
+  for (unsigned long i=0; i<6*tri->getNumberOfTetrahedra(); i++)
+   { // M2.entry(?, tc+i)
+     // one term for every edge of a tetrahedron. i/6 is tet index, i%6 is edge index
+     // we're orienting the faces via getEdgeMapping perm, which we modify to be in A_4
+     //  to me at the moment. So we orient the square from tet edge to p1[2] to barycentre to p1[3].
+     // the trouble almost certainly has to be here.
+     p1 = tri->getTetrahedron( i/6 ) -> getEdgeMapping( i%6 );
+     if (p1.sign()!=1) p1 = p1 * NPerm4(2,3); // getEdgeMapping not always in A_4
+     p2 = tri->getTetrahedron( i/6 ) -> getFaceMapping( p1[3] );
+
+     // two boundary edges in face
+     // near one is in face
+     M2->entry( w2 + 3*tri->faceIndex( tri->getTetrahedron( i/6 ) -> getFace( p1[3] )) + 
+	p2.preImageOf(p1[2]), tc+i ) -= 1;
+     // far one
+     p2 = tri->getTetrahedron( i/6 ) -> getFaceMapping( p1[2] );
+ 
+     M2->entry( w2 + 3*tri->faceIndex( tri->getTetrahedron( i/6 ) -> getFace( p1[2] )) + 
+	p2.preImageOf(p1[3]), tc+i ) += 1;
+
+     // two boundary edges in tet interior.
+     // near one  
+     M2->entry( w3 + 4*(i/6) + p1[3], tc+i ) -= 1; // ok
+     // far one
+     M2->entry( w3 + 4*(i/6) + p1[2], tc+i ) += 1;
+   }
+  // done M2
+
+  tc = 0;
+  unsigned long q1 = 3*tri->getNumberOfFaces();
+  unsigned long q2 = q1 + numIdBdryCells[2];
+  // this fills out M3 in 1 part
+  for (unsigned long i=0; i<4*tri->getNumberOfTetrahedra(); i++)
+   { // 3 parts to deal with, first the 3 faces adjacent to the corner
+     // I'm giving the boundary the inner-pointing normal orientation
+     p1 = tri->getTetrahedron( i/4 )->getFaceMapping( (i+1) % 4 );
+     M3->entry( 3*tri->faceIndex( tri->getTetrahedron( i/4 )->getFace( (i+1) % 4) ) + 
+	p1.preImageOf( i % 4 ), i ) += p1.sign();
+
+     p1 = tri->getTetrahedron( i/4 )->getFaceMapping( (i+2) % 4 );
+     M3->entry( 3*tri->faceIndex( tri->getTetrahedron( i/4 )->getFace( (i+2) % 4) ) + 
+	p1.preImageOf( i % 4 ), i ) += p1.sign();
+
+     p1 = tri->getTetrahedron( i/4 )->getFaceMapping( (i+3) % 4 );
+     M3->entry( 3*tri->faceIndex( tri->getTetrahedron( i/4 )->getFace( (i+3) % 4) ) + 
+	p1.preImageOf( i % 4 ), i ) += p1.sign();
+     // the 3 faces opposite the corner
+     int en = edgeNumber[i % 4][(i+1) % 4];
+     p1 = tri->getTetrahedron( i/4 )->getEdgeMapping( en ); // 0 1
+     M3->entry( q2 + 6*(i/4) + en, i) -= ((p1[0] == (i % 4)) ? 1 : -1);
+
+     en = edgeNumber[i % 4][(i+2) % 4];
+     p1 = tri->getTetrahedron( i/4 )->getEdgeMapping( en ); // 0 2
+     M3->entry( q2 + 6*(i/4) + en, i) -= ((p1[0] == (i % 4)) ? 1 : -1);
+
+     en = edgeNumber[i % 4][(i+3) % 4];
+     p1 = tri->getTetrahedron( i/4 )->getEdgeMapping( en ); // 0 3
+     M3->entry( q2 + 6*(i/4) + en, i) -= ((p1[0] == (i % 4)) ? 1 : -1);
+
+     // and the ideal face, if there is one.
+     if (tri->getTetrahedron( i/4 )->getVertex( i%4 )->isIdeal())
+	M3->entry( q1 + sIEFOT.index(i), i) += 1; // we're now using the inner
+	 // orientation convention to  agree w/ the other chain complexes.
+   }
+  // done M3
+
+  // M4 is always zero.
+
+  // now set up all the chain maps to the (more) efficient homology groups.
+   AM0.reset(new NMatrixInt(numMixCells[0], numStandardCells[0])); // AC0 -> MC0
+   AM1.reset(new NMatrixInt(numMixCells[1], numStandardCells[1])); // AC1 -> MC1
+   AM2.reset(new NMatrixInt(numMixCells[2], numStandardCells[2])); // AC2 -> MC2
+   AM3.reset(new NMatrixInt(numMixCells[3], numStandardCells[3])); // AC3 -> MC3
+
+   BM0.reset(new NMatrixInt(numMixCells[0], numDualCells[0])); // BC0 -> MC0
+   BM1.reset(new NMatrixInt(numMixCells[1], numDualCells[1])); // BC1 -> MC1
+   BM2.reset(new NMatrixInt(numMixCells[2], numDualCells[2])); // BC2 -> MC2
+   BM3.reset(new NMatrixInt(numMixCells[3], numDualCells[3])); // BC3 -> MC3
+
+   // The chain maps describing the homomorphisms standard homology -> mixed cellular
+   for (unsigned long i=0; i<v2; i++) AM0->entry(i,i) = 1; //the 0-cells
+   for (unsigned long i=0; i<w1; i++)  // the standard 1-cells 
+	AM1->entry(i,i/2) = 1;
+   for (unsigned long i=0; i<numIdBdryCells[1];i++) // the ideal 1-cells
+	AM1->entry(w1+i, w1/2 + i) = 1;
+   for (unsigned long i=0; i<q1; i++) // standard 2-cells
+	AM2->entry(i, i/3) = 1;
+   for (unsigned long i=0; i<numIdBdryCells[2];i++) // ideal 2-cells
+ 	AM2->entry(q1 + i, q1/3 + i) = 1;
+   for (unsigned long i=0; i<4*tri->getNumberOfTetrahedra(); i++)
+	AM3->entry(i, i/4) = 1;
+
+   // the chain maps describing thehomomorphisms dual homology -> mixed cellular
+   for (unsigned long i=0; i<numDualCells[0]; i++) // 0-cells
+	BM0->entry(v4+i, i) = 1;
+   for (unsigned long i=0; i<numDualCells[1]; i++) // 1-cells
+	{ // each such dual cell comes from a face, whose relative orientationis given by
+	  // getEmbedding(0 to 1).  So we need to figure out the respective two tetrahedra
+	  // and the vertices corresponding to the faces. Oh, boundary faces don't count so
+	  // there'll be some reindexing using dNBF
+	BM1->entry( w3 + 4*tri->getTetrahedronIndex(tri->getFace(dNBF[i])->getEmbedding(0).getTetrahedron())+
+	   tri->getFace(dNBF[i])->getEmbedding(0).getFace(), i ) += 1;
+	BM1->entry( w3 + 4*tri->getTetrahedronIndex(tri->getFace(dNBF[i])->getEmbedding(1).getTetrahedron())+
+           tri->getFace(dNBF[i])->getEmbedding(1).getFace(), i ) -= 1;
+	}
+   for (unsigned long i=0; i<numDualCells[2]; i++) // 2-cells
+	{ // this is more complicated as there's arbitrarily large subdivision
+	for (unsigned long j=0; j<tri->getEdge(dNBE[i])->getNumberOfEmbeddings(); j++)
+	 {
+	 BM2->entry( q2 + 6*tri->getTetrahedronIndex(tri->getEdge(dNBE[i])->getEmbedding(j).getTetrahedron())+
+	   tri->getEdge(dNBE[i])->getEmbedding(j).getEdge(), i) += 
+		tri->getEdge(dNBE[i])->getEmbedding(j).getVertices().sign() ;
+	 }	
+	}
+   for (unsigned long i=0; i<numDualCells[3]; i++) // 3-cells
+	{
+	// this should be less complicated as we're only looking at tetrahedra incident
+	// to a particular vertex...
+	// dNINBV indexes them. 
+	for (unsigned long j=0; j<tri->getVertex(dNINBV[i])->getNumberOfEmbeddings(); j++)
+	 {
+	  BM3->entry( 4*tri->getTetrahedronIndex(tri->getVertex(dNINBV[i])->getEmbedding(j).getTetrahedron())+
+ 			tri->getVertex(dNINBV[i])->getEmbedding(j).getVertex(), i) += 1;
+	 } // sign error here!
+           // it's interesting that it seems to happen most often for *oriented* triangulations....
+           // my guess: it's the dual homology CC that's the trouble. Ah! no.  Here I'm orienting
+ 	   // everything the same way, but there...
+	}
+
+  // done
+}
+
+NMarkedAbelianGroup NHomologicalData::imgH2form(unsigned long p)
+{
+// there's less work to do if p==0 so we'll start assuming that
+//  basically all we have to do is compose the two isomorphisms between the
+//  standard and dual cellular homologies at the H_2-level, then pair being 
+//  careful about the simplex's orientation in the manifold
+
+//if (p==0)
+// {
+
+	unsigned long k=getDualHomology(2).getRank();
+if ((k==0) || (!tri->isOrientable())) return NMarkedAbelianGroup( 0, NLargeInteger::zero );
+
+	NMarkedAbelianGroup freeGens( k*k, NLargeInteger::zero );
+        NMatrixInt h2pairing( numDualCells[1], k*k );
+
+	NHomMarkedAbelianGroup MtD1( getDualToMixedHom(1).inverseHom() );
+	NHomMarkedAbelianGroup DtS2( getStandardToMixedHom(2).inverseHom()*getDualToMixedHom(2) );
+
+	for (unsigned long i=0; i<k; i++) for (unsigned long j=0; j<k; j++)
+	{ // a(i) in CC coords is getDualHomology(2).getFreeRep(i)
+	  std::vector<NLargeInteger> aiDH(getDualHomology(2).getFreeRep(i));
+          // b(j) in CC coords is getDualHomology(2).getFreeRep(j)
+	  std::vector<NLargeInteger> bjDH(getDualHomology(2).getFreeRep(j));
+          // B(j) in CC coords is DtS2.evalCC( b(j) )
+	  std::vector<NLargeInteger> bjSH(DtS2.evalCC(bjDH));
+	  // compute pairing a(i) and B(j), first in mixed homology coords
+	  std::vector<NLargeInteger> pijMH(numMixCells[1], NLargeInteger::zero);
+	  // ... needs to be filled out now...
+	  // run through the list of appropriate mixed 1-cells 3*numfaces...
+          // for each one, find corresponding dual 2-cell and standard 2-cell
+	  for (unsigned long l=0; l<3*tri->getNumberOfFaces(); l++)
+	   {
+	    pijMH[2*tri->getNumberOfEdges()+numIdBdryCells[1]+l] = 
+	         bjSH[l/3] * aiDH[ dNBE.index(tri->edgeIndex(tri->getFace(l/3)->getEdge(l % 3))) ] *
+		 tri->getFace(l/3)->getEdgeMapping(l % 3).sign() *
+		 tri->getFace(l/3)->getEdge(l % 3)->getEmbedding(0).getVertices().sign() *
+	         tri->getFace(l/3)->getEdge(l % 3)->getEmbedding(0).getTetrahedron()->orientation();
+	   // intersection count is indexed by faces.  for each face find the quantity of Bj
+	   // and we look "in" to one of the adjacent tetrahedra, I guess the 0th one should be fine
+	   // as it doesn't matter which one we choose, and the 1st one might not exist if we're on
+	   // a standard boundary component.
+
+	   // now we choose an orientation convention for the intersection.  There will be
+	   // (-1)^simplex orientation * (-1)^does the corresp. edge give the correct orientation of the face
+	   // the convention is you take 3 vectors v1 v2 v3 positively orienting the space, 
+	   // the 1st in the intersection, v2 orienting the intersection, 
+	   //                              v1 v2 orienting the dual cycle
+           //	                          v2 v3 orienting the face
+	   // 				  v1 v2 v3 local orientation
+	   //              s(v1) = s(v1 v2) s(v1 v3) s(v1 v2 v3) convention. 
+ 	   //                      s(v1 v2) = +1 by our conventions.
+           //                      s(v2 v3) = relative orientation of edge in face
+           //                   s(v1 v2 v3) = edgeembedding.sign() * simplex orientation
+           //			             does not matter which simplex you choose so
+           //                                 might as well coose the 0th on the list.
+	   }
+	  std::vector<NLargeInteger> pijDH(MtD1.evalCC(pijMH));	  
+
+	  for (unsigned long l=0; l<h2pairing.rows(); l++)
+		  h2pairing.entry(l, (k*i)+j) = pijDH[l];
+	} 
+	// construct homomorphism from Z^{k^2} --> H_1 where k is the number of
+	// free generators of H_2 all in dual homology coordinates.  
+	// So an element of Z^{k^2} is a pair a,b where a and b
+	// represent H_2 classes.  Convert b to a standard class, find pairing, convert
+	// it to a dual class.  Request image of this NHomMarkedAbelianGroup, return. 
+	NHomMarkedAbelianGroup ontoImg( freeGens, getDualHomology(1), h2pairing);
+	return ontoImg.getImage();
+// }
+//else 
+// { // implement once NMarkedAbelianGroup and NHomMarkedAbelianGroup have mod-p coefficients.
+// }
+/*
+With coefficients in Z_p, H^1(M;Z_p) is isomorphic to H_2(M;Z_p) by poincare duality, and
+this is the direct sum of ker L_p on H_1(M;Z) and coker L_p on H_2(M;Z).   So with mod-p
+coefficients,  there are four types of pairings to compute:
+
+1) ker L_p H_1(M;Z) \otimes ker L_p H_1(M;Z)     ---> H_1(M;Z_p)
+
+2) ker L_p H_1(M;Z) \otimes coker L_p H_2(M;Z)   ---> H_1(M;Z_p)
+
+3) coker L_p H_2(M;Z) \otimes ker L_p H_1(M;Z)   ---> H_1(M;Z_p)
+
+4) coker L_p H_2(M;Z) \otimes coker L_p H_2(M;Z) ---> H_1(M;Z_p)
+
+By the anti-symmetry of the pairing 2 and 3 have the same image so that leaves us with only
+3 pairings to compute. 
+
+4) is simply the mod-p reduction of the integral H_2-pairing. 
+
+2) is obtained by taking [x], [y], writing px=\partial A, and computing the intersection A\cap y
+
+1) is obtained by taking [x], [y], writing px=\partial A, py=\partial B, computing the intersection A \cap B. 
+   
+So everything here can be done in integral coefficients except the last step of determining the subgroup
+of H_1(M;Z_p). So we'll have to compute H_1(M;Z_p) seperately, and cook up the homomorphism. Not so bad.
+
+Add routines to get rank p-torsion subgroup, i-th generator of is in CC coords and SNF coords
+Add routine to get num generators of G/pG and reps of i-th generators in CC and SNF coords. 
+
+Then construct H_1(M;Z_p) in mixed and dual coordinates and mixed->dual iso for Z_p, and
+construct image of pairing in H_1(M;Z_p). 
+
+Continuing the thought, NMarkedAbelianGroup can add isBoundary() routine and
+writeAsBoundary() routine.
+*/
+
+}
+
+bool NHomologicalData::verifyChainComplexes()
+{
+bool retval = true;
+computeChainComplexes(); 
+computeBaryCC();
+// todo:   1) return this 3 to 4 once the dual 0-cell orientation issue resolved.
+//         2) further implement isChainMap() for dual to mixed 3 -> 2. 
+for (unsigned long i=0; i<3; i++) if (!getDualToMixedHom(i).isCycleMap()) retval = false; // todo 3->4
+for (unsigned long i=0; i<4; i++) if (!getStandardToMixedHom(i).isCycleMap()) retval = false;
+if (!getH1CellAp().isCycleMap()) retval = false;
+for (unsigned long i=0; i<3; i++) if (!getBdryHomologyMap(i).isCycleMap()) retval = false;
+if (!getDualToMixedHom(2).isChainMap(getDualToMixedHom(1))) retval = false;
+//if (!getDualToMixedHom(3).isChainMap(getDualToMixedHom(2))) retval = false;
+if (!getStandardToMixedHom(2).isChainMap(getStandardToMixedHom(1))) retval = false;
+if (!getStandardToMixedHom(3).isChainMap(getStandardToMixedHom(2))) retval = false;
+return retval;
+}
+
+bool NHomologicalData::verifyCoordinateIsomorphisms()
+{
+bool retval = true;
+for (unsigned long i=0; i<4; i++) if (!getDualToMixedHom(i).isIso()) retval = false;
+for (unsigned long i=0; i<4; i++) if (!getStandardToMixedHom(i).isIso()) retval = false;
+for (unsigned long i=0; i<4; i++) if (!getDualToMixedHom(i).isIso()) retval = false;
+if (! (getDualToMixedHom(1).inverseHom()*getStandardToMixedHom(1)*getH1CellAp()).isIdentity() ) retval = false;
+return retval;
+}
+
+
+bool NHomologicalData::findSpin() {
+	bool retval=true;
+	// todo!
+
+	return retval;
+}
+
 
 
 } // namespace regina
