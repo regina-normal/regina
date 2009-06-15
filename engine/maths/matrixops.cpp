@@ -153,6 +153,7 @@ void smithNormalForm(NMatrixInt& matrix) {
     }
 }
 
+
 void smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv) {
@@ -918,6 +919,250 @@ for (unsigned long i=0; i<colOps.rows(); i++) for (unsigned long j=0; j<rowOps.c
 // done
 return retval;
 }
+
+/**
+ *  This is used in controlledSmithNormalForm.  When doing a column operation on a matrix there are
+ * options as to which gcdWithCoeffs coefficients to use.  This chooses the coefficients to minimize
+ * the norm in the corresponding column operation matrix. li and lj are the flexible coeffiecients in 
+ * the row operation, and this procedure changes them (li,lj) --> (li,lj) + t(lj,-li) such that
+ * after performing the column operation on R, the matrix has the smallest possible norm for all choices
+ * of t. 
+ *
+ * So apply this in the situation where you are replacing column cj by li*column(ci)+lj*column(cj)
+ * and you are concerned about the coefficient explosion in column cj of the change-of-basis matrix
+ */
+void colOpDelta( const unsigned long &ci, const unsigned long &cj, NLargeInteger &li, NLargeInteger &lj,
+ const NMatrixInt &RM)
+{
+NLargeInteger num(NLargeInteger::zero), den(NLargeInteger::zero);
+for (unsigned long i=0; i<RM.rows(); i++) 
+	{
+         num +=	(li*RM.entry(i,ci)+lj*RM.entry(i,cj))*(lj*RM.entry(i,ci)-li*RM.entry(i,cj));
+         den +=	(lj*RM.entry(i,ci)-li*RM.entry(i,cj))*(lj*RM.entry(i,ci)-li*RM.entry(i,cj));
+	}
+NLargeInteger t, R; t = num.divisionAlg(den, R); 
+if ( R+R > den ) t=t+NLargeInteger::one; // round up
+std::cout<<"coDt == "<<t<<" ";
+// replace (li, lj) by (li, lj) + t(lj, -li)
+R = li; li += t*lj; lj -= t*R;
+}
+
+// doing a row op, concerned about coefficient explosion in row j
+void rowOpDelta( const unsigned long &ri, const unsigned long &rj, NLargeInteger &li, NLargeInteger &lj,
+ const NMatrixInt &CM)
+{
+NLargeInteger num(NLargeInteger::zero), den(NLargeInteger::zero);
+for (unsigned long i=0; i<CM.columns(); i++) 
+	{
+        num += (li*CM.entry(ri,i)+lj*CM.entry(rj,i))*(lj*CM.entry(ri,i)-li*CM.entry(rj,i));
+        den += (lj*CM.entry(ri,i)-li*CM.entry(rj,i))*(lj*CM.entry(ri,i)-li*CM.entry(rj,i));
+	}
+NLargeInteger t, R; t = num.divisionAlg(den, R); 
+if ( R+R > den ) t=t+NLargeInteger::one; // round up
+std::cout<<"roDt == "<<t<<" ";
+// replace (li, lj) by (li, lj) + t(lj, -li)
+R = li; li += t*lj; lj -= t*R;
+}
+
+// todo: make some more intelligent choices of row/column ops in order to keep the change-of-basis
+//       matrix coefficients under control. This is relevant in relatively simple situations.  For 
+//       example, the 9th triangulation of SFS[ RP2 : 1/2 1/5 ] in 9-nor.rga.  In computing 
+//       getMixedHomology(2) from nhomologicaldata, the column reduction matrix for M
+//       is a roughly 100x100 matrix containing many 10,000-digit integers.  This is a little excessive!
+//       there is a pretty naieve least-squares type approach to choosing the gcd coefficients in such a 
+//       reduction.  I'll try implementing that soon.
+// 
+// The idea here is a direct modification of our smithNormalForm procedure.  In a column operation, we're
+//  looking at a 2x2 submatrix [a b| c d] and we have l1c+l2d=g (gcd(c,d)) we multiply both matrix and
+//  rowSpaceBasis by multiplication by the matrix [d' l1|-c' l2] where d' and c' are d/g and c/g resp. 
+//  gcdwcoeffs chose l1 and l2 but we have flexibility in their choice.  So we're going to choose them
+//  in the way that stepwise minimizes the norm of the rowsspacebasis.  Let v1 and v2 be the corresp
+//  columns of rowspacebasis, then our op sends v1 to d'v1-c'v2, and v2 to l1v1+l2v2.   We can change
+//  (l1,l2) by replacing it by (l1+tl2,l2-tl1) for any integer t.  After such a switch, v2 becomes
+//  (l1+tl2)v1+(l2-tl1)v2.  A standard Euclidean geometry argument tells us that t must be an integer
+//  approximation to <l1v1+l2v2, l2v1-l1v2>/|l2v1-l1v2|^2.  So we just write a routine that computes this. 
+//  Notice the denominator must be non-zero since v1 and v2 are linearly independant.
+///
+// hmm! this is doing an awful job.
+void controlledSmithNormalForm(NMatrixInt& matrix,
+        NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
+        NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv) {
+    unsigned long currStage = 0;
+    unsigned long nonEmptyRows = matrix.rows();
+    unsigned long nonEmptyCols = matrix.columns();
+    bool flag;
+    unsigned long i, j, k;
+    NLargeInteger d, u, v, a, b;
+    NLargeInteger tmp;
+
+    rowSpaceBasis.makeIdentity();
+    rowSpaceBasisInv.makeIdentity();
+    colSpaceBasis.makeIdentity();
+    colSpaceBasisInv.makeIdentity();
+
+    while ((currStage < nonEmptyRows) && (currStage < nonEmptyCols)) {
+        loopStart:
+
+        // Have we got an empty row?
+        flag = true;
+        for (i=currStage; i<nonEmptyCols; i++)
+            if (matrix.entry(currStage, i) != 0) {
+                flag = false;
+                break;
+            }
+        if (flag) {
+            // Empty row!
+            if (currStage == nonEmptyRows-1) {
+                nonEmptyRows--;
+                continue;
+            }
+            // Switch it with a row at the bottom.
+            for (i=currStage; i<nonEmptyCols; i++) {
+                matrix.entry(currStage, i).swap(
+                    matrix.entry(nonEmptyRows-1, i));
+            }
+            colSpaceBasis.swapRows(currStage, nonEmptyRows-1);
+            colSpaceBasisInv.swapColumns(currStage, nonEmptyRows-1);
+
+            nonEmptyRows--;
+            continue;
+        }
+
+        // Have we got an empty column?
+        flag = true;
+        for (i=currStage; i<nonEmptyRows; i++)
+            if (matrix.entry(i, currStage) != 0) {
+                flag = false;
+                break;
+            }
+        if (flag) {
+            // Empty column!
+            if (currStage == nonEmptyCols-1) {
+                nonEmptyCols--;
+                continue;
+            }
+            // Switch it with a column on the end.
+            for (i=currStage; i<nonEmptyRows; i++) {
+                matrix.entry(i, currStage).swap(
+                    matrix.entry(i, nonEmptyCols-1));
+            }
+            rowSpaceBasis.swapColumns(currStage, nonEmptyCols-1);
+            rowSpaceBasisInv.swapRows(currStage, nonEmptyCols-1);
+
+            nonEmptyCols--;
+            continue;
+        }
+
+        // Ensure zeros are to the right of entry (currStage,currStage)
+	// method: column operation [ u1 -b' | u2 a' ] 
+        for (i=currStage+1; i<nonEmptyCols; i++) {
+            if (matrix.entry(currStage, i) == 0)
+                continue;
+            // Put a zero in (currStage, i).
+            a = matrix.entry(currStage, currStage);
+            b = matrix.entry(currStage, i);
+            d = a.gcdWithCoeffs(b, u, v);
+            a.divByExact(d); // col op [ u1 -b' | u2 a' ] 
+            b.divByExact(d);
+	    colOpDelta( i, currStage, v, u, matrix ); // new!
+            // Do a modification to columns currStage and i.
+            for (j=currStage; j<nonEmptyRows; j++) {
+                tmp = u * matrix.entry(j, currStage) +
+                    v * matrix.entry(j, i);
+                matrix.entry(j, i) = a * matrix.entry(j, i) -
+                    b * matrix.entry(j, currStage);
+                matrix.entry(j, currStage) = tmp;
+            }
+            for (j=0; j<matrix.columns(); j++) {
+                tmp = u * rowSpaceBasis.entry(j, currStage) +
+                    v * rowSpaceBasis.entry(j, i);
+                rowSpaceBasis.entry(j, i) = a * rowSpaceBasis.entry(j, i) -
+                    b * rowSpaceBasis.entry(j, currStage);
+                rowSpaceBasis.entry(j, currStage) = tmp;
+
+                tmp = a * rowSpaceBasisInv.entry(currStage, j) +
+                    b * rowSpaceBasisInv.entry(i, j);
+                rowSpaceBasisInv.entry(i, j) =
+                    u * rowSpaceBasisInv.entry(i, j) -
+                    v * rowSpaceBasisInv.entry(currStage, j);
+                rowSpaceBasisInv.entry(currStage, j) = tmp;
+            }
+        }
+
+        // Get zeros in the current column.
+        // Check to see if we change anything and thus muck up the row.
+        flag = false;
+        for (i=currStage+1; i<nonEmptyRows; i++) {
+            if (matrix.entry(i, currStage) == 0)
+                continue;
+            // Put a zero in (i, currStage).
+            flag = true;
+            a = matrix.entry(currStage, currStage);
+            b = matrix.entry(i, currStage);
+            d = a.gcdWithCoeffs(b, u, v);
+            a.divByExact(d);  // row op [ u v | -b' a' ]
+            b.divByExact(d);
+	    rowOpDelta( i, currStage, v, u, matrix ); // new!
+
+            // Do a modification to rows currStage and i.
+            for (j=currStage; j<nonEmptyCols; j++) {
+                tmp = u * matrix.entry(currStage, j) +
+                    v * matrix.entry(i, j);
+                matrix.entry(i, j) = a * matrix.entry(i, j) -
+                    b * matrix.entry(currStage, j);
+                matrix.entry(currStage, j) = tmp;
+            }
+            for (j=0; j<matrix.rows(); j++) {
+                tmp = u * colSpaceBasis.entry(currStage, j) +
+                    v * colSpaceBasis.entry(i, j);
+                colSpaceBasis.entry(i, j) = a * colSpaceBasis.entry(i, j) -
+                    b * colSpaceBasis.entry(currStage, j);
+                colSpaceBasis.entry(currStage, j) = tmp;
+
+                tmp = a * colSpaceBasisInv.entry(j, currStage) +
+                    b * colSpaceBasisInv.entry(j, i);
+                colSpaceBasisInv.entry(j, i) =
+                    u * colSpaceBasisInv.entry(j, i) -
+                    v * colSpaceBasisInv.entry(j, currStage);
+                colSpaceBasisInv.entry(j, currStage) = tmp;
+            }
+        }
+        if (flag) {
+            // The clean row was mucked up.
+            continue;
+        }
+
+        // Check that entry (currStage, currStage) divides everything
+        // else.
+        for (i=currStage+1; i<nonEmptyRows; i++)
+            for (j=currStage+1; j<nonEmptyCols; j++)
+                if ((matrix.entry(i, j) % matrix.entry(currStage, currStage))
+                        != 0) {
+                    // Add row i to the current stage row and start this
+                    // stage over.
+                    for (k=currStage+1; k<nonEmptyCols; k++)
+                        matrix.entry(currStage, k) += matrix.entry(i, k);
+                    colSpaceBasis.addRow(i, currStage);
+                    colSpaceBasisInv.addCol(currStage, i, -1);
+
+                    goto loopStart;
+                }
+
+        // This stage is complete!
+        // Make sure the diagonal entry is positive before leaving it.
+        if (matrix.entry(currStage, currStage) < 0) {
+            matrix.entry(currStage, currStage).negate();
+            for (j=0; j<matrix.rows(); j++) {
+                // we're thinking of this as a row op
+                colSpaceBasis.entry( currStage, j ).negate();
+                colSpaceBasisInv.entry( j,currStage ).negate();
+            }
+        }
+        currStage++;
+    }
+
+}
+
 
 
 } // namespace regina

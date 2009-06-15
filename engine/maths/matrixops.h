@@ -114,6 +114,10 @@ void smithNormalForm(NMatrixInt& matrix);
 void smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
+// test
+void controlledSmithNormalForm(NMatrixInt& matrix,
+        NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
+        NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
 
 /**
  * Find a basis for the row space of the given matrix.
