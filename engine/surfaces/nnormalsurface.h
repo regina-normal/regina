@@ -1077,7 +1077,7 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          *
          * If this surface is one-sided and the argument \a makeTwoSided
          * is \c true, then the incompressibility test will be run on
-         * the (two-sided) double cover, not the original surface.
+         * the two-sided double cover, not the original surface.
          *
          * This routine returns an NTriBool since it is possible that
          * the result cannot be determined (for instance, if there
@@ -1090,6 +1090,7 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * (exponentially slow) normal surface enumeration.
          *
          * \pre The underlying 3-manifold triangulation is valid and closed.
+         * \pre The underlying 3-manifold is irreducible.
          * \pre This normal surface is compact, embedded and connected.
          * \pre This normal surface contains no octagonal discs.
          *

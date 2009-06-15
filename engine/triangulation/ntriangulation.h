@@ -2107,6 +2107,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * hasSimpleCompressingDisc() in the hope of obtaining a fast
          * answer.  If this fails, it will run a full enumeration of
          * vertex normal surfaces, which could be extremely slow.
+         * For further details on the underlying algorithms,
+         * see "Algorithms for the complete decomposition of a closed
+         * 3-manifold", William Jaco and Jeffrey L. Tollefson,
+         * Illinois J. Math. 39 (1995), no. 3, 358-406.
          *
          * This routine returns an NTriBool since it is possible that
          * the result cannot be determined (for instance, if some
@@ -2121,6 +2125,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * routine will simply return \c false.
          *
          * \pre This triangulation is valid and is not ideal.
+         * \pre The underlying 3-manifold is irreducible.
          *
          * \warning This routine can be infeasibly slow for large
          * triangulations, since it may need to perform a full enumeration
