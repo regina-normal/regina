@@ -364,6 +364,102 @@ NNormalSurfaceList* NNormalSurfaceList::readPacket(NFile& in,
     return ans;
 }
 
+NNormalSurfaceList* NNormalSurfaceList::filterForLocallyCompatiblePairs()
+        const {
+    // Sanity check:
+    if (! embedded)
+        return 0;
+
+    NNormalSurfaceList* ans = new NNormalSurfaceList();
+    ans->flavour = flavour;
+    ans->embedded = true;
+
+    // Find all surfaces that have a compatible partner.
+    std::vector<NNormalSurface*>::const_iterator first, second;
+    for (first = surfaces.begin(); first != surfaces.end(); ++first) {
+        for (second = surfaces.begin(); second != surfaces.end();
+                ++second) {
+            if (second == first)
+                continue;
+
+            if ((*first)->locallyCompatible(**second)) {
+                ans->surfaces.push_back((*first)->clone());
+                break;
+            }
+        }
+    }
+
+    getTriangulation()->insertChildLast(ans);
+    return ans;
+}
+
+NNormalSurfaceList* NNormalSurfaceList::filterForDisjointPairs() const {
+    // Sanity check:
+    if (! embedded)
+        return 0;
+
+    NNormalSurfaceList* ans = new NNormalSurfaceList();
+    ans->flavour = flavour;
+    ans->embedded = true;
+
+    // Collect all the surfaces that we might care about.
+    // This means non-empty, connected and compact.
+    std::vector<NNormalSurface*> interesting;
+    for (std::vector<NNormalSurface*>::const_iterator it = surfaces.begin();
+            it != surfaces.end(); ++it) {
+        if ((*it)->isEmpty())
+            continue;
+        if (! (*it)->isCompact())
+            continue;
+        if (! (*it)->isConnected().isTrue())
+            continue;
+
+        interesting.push_back(*it);
+    }
+
+    // Find all surfaces that have a disjoint partner.
+    std::vector<NNormalSurface*>::iterator first, second;
+    for (first = interesting.begin(); first != interesting.end(); ++first) {
+        for (second = interesting.begin(); second != interesting.end();
+                ++second) {
+            if (second == first)
+                continue;
+
+            if ((*first)->disjoint(**second)) {
+                ans->surfaces.push_back((*first)->clone());
+                break;
+            }
+        }
+    }
+
+    getTriangulation()->insertChildLast(ans);
+    return ans;
+}
+
+NNormalSurfaceList* NNormalSurfaceList::filterForPotentiallyIncompressible()
+        const {
+    NNormalSurfaceList* ans = new NNormalSurfaceList();
+    ans->flavour = flavour;
+    ans->embedded = true;
+
+    NTriangulation* t;
+    for (std::vector<NNormalSurface*>::const_iterator it = surfaces.begin();
+            it != surfaces.end(); ++it) {
+        if ((*it)->isVertexLinking())
+            continue;
+        if ((*it)->isThinEdgeLink().first)
+            continue;
+
+        t = (*it)->cutAlong();
+        if (! t->hasSimpleCompressingDisc())
+            ans->surfaces.push_back((*it)->clone());
+        delete t;
+    }
+
+    getTriangulation()->insertChildLast(ans);
+    return ans;
+}
+
 NPacket* NNormalSurfaceList::internalClonePacket(NPacket* /* parent */) const {
     NNormalSurfaceList* ans = new NNormalSurfaceList();
     ans->flavour = flavour;

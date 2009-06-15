@@ -80,6 +80,15 @@ void addNNormalSurfaceList() {
             return_value_policy<reference_existing_object>())
         .def("standardANToQuadOct", &NNormalSurfaceList::standardANToQuadOct,
             return_value_policy<reference_existing_object>())
+        .def("filterForLocallyCompatiblePairs",
+            &NNormalSurfaceList::filterForLocallyCompatiblePairs,
+            return_value_policy<reference_existing_object>())
+        .def("filterForDisjointPairs",
+            &NNormalSurfaceList::filterForDisjointPairs,
+            return_value_policy<reference_existing_object>())
+        .def("filterForPotentiallyIncompressible",
+            &NNormalSurfaceList::filterForPotentiallyIncompressible,
+            return_value_policy<reference_existing_object>())
         .def("recreateMatchingEquations",
             &NNormalSurfaceList::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
