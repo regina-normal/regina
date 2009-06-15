@@ -290,7 +290,7 @@ return retval;
 }
 
 // incomplete!
-std::vector<NLargeInteger> writeAsBoundary(const std::vector<NLargeInteger> &input) const
+std::vector<NLargeInteger> NMarkedAbelianGroup::writeAsBoundary(const std::vector<NLargeInteger> &input) const
 {
 static const std::vector<NLargeInteger> nullV;
 std::vector<NLargeInteger> retval;
