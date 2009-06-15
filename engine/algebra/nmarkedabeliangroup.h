@@ -38,6 +38,8 @@
 #include <vector>
 #include "maths/nmatrixint.h"
 
+//#define __useControlledSNF
+
 namespace regina {
 
 /**
@@ -81,6 +83,8 @@ namespace regina {
  *    arguments so that the implementations do not change and it's always assumed you
  *    want answers with Z coefficients unless otherwise specified. Could even do a p==-1
  *    for rational coefficients, if interested.  
+ * \todo \optlong Add Hom, Ext, Tor, and \otimes
+ * \todo add isBoundary() and writeAsBoundary() routines. 
  */
 class NMarkedAbelianGroup : public ShareableObject {
     private:
@@ -334,7 +338,26 @@ class NMarkedAbelianGroup : public ShareableObject {
 	 * Given a vector, determines if it represents a cycle in chain complex.
 	 */
 	bool isCycle(const std::vector<NLargeInteger> &input) const;
+
+	/**
+	 * If it's not a cycle, maybe you want to see what its differential is.  This is represents
+	 * the differential of the chain complex whose kernel is the cycles. Ie, the output is
+	 * M*CCrep
+	 */
+	std::vector<NLargeInteger> bdryMap(const std::vector<NLargeInteger> &CCrep) const;
 	
+	/**
+	 * If it's a cycle, maybe you also want to know if it's a boundary.
+         */
+	bool isBoundary(const std::vector<NLargeInteger> &input) const;
+
+	/**
+	 * And if it's a boundary, maybe you'd like to see it written as a boundary.
+	 * @return length zero vector if not a boundary. If it is a boundary, it returns
+	 *  a vector v such that Nv=input. 
+	 */
+	std::vector<NLargeInteger> writeAsBoundary(const std::vector<NLargeInteger> &input) const;
+
 	/**
 	 * Returns the rank of the chain complex supporting the homology computation. 
          * This is also obtainable via getOM().columns() and getON().rows() but might
@@ -720,10 +743,25 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         virtual ~NHomMarkedAbelianGroup();
 
 	/**
-	 * Is this at least a chain map?  If not, pretty much any further computations you try with
-	 * this class will be give you nothing more than carefully-crafted garbage.
+	 * Given two NHomMarkedAbelianGroups, you have two diagrams:
+	 *	Z^a --N1--> Z^b --M1--> Z^c   Z^g --N3--> Z^h --M3--> Z^i
+	 *                   ^                             ^
+	 *                   |this.matrix                  |other.matrix
+	 *      Z^d --N2--> Z^e --M2--> Z^f   Z^j --N4--> Z^k --M4--> Z^l
+         * and if c=g and f=j and M1=N3 and M2=N4, you can ask if these maps
+         * commute -- ie, if you have a map of chain complexes.  
+	 * @return true if and only if c=g, M1=N3, f=j, M2=N4 and the diagram 
+	 *         commutes.
 	 */
-	bool isChainMap() const;
+	bool isChainMap(const NHomMarkedAbelianGroup &other) const;
+
+	/**
+	 * Is this at least a chain map?  If not, pretty much any further computations you try with
+	 * this class will be give you nothing more than carefully-crafted garbage.  Technically, this
+         * only checks that cycles are sent to cycles as it only has access to 3 of the 4 maps you need
+         * to verify you have a chain map.  
+	 */
+	bool isCycleMap() const;
 
         /**
          * Is this an epic homomorphism?

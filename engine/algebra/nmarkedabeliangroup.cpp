@@ -71,8 +71,14 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
         InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0) {
     // find SNF(M).
     NMatrixInt tM(M);
-
+    
+    #ifdef __useControlledSNF
+    controlledSmithNormalForm(tM, OMR, OMRi, OMC, OMCi);
+    #endif
+    #ifndef __useControlledSNF
     smithNormalForm(tM, OMR, OMRi, OMC, OMCi);
+    #endif
+
     // now construct OMRi * N, and delete first SNF_OM_firstzero rows,
     // constructing ORN.
 
@@ -91,7 +97,14 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     // put the presentation matrix in Smith normal form, and
     // build the list of invariant factors and their row indexes
     // now compute the rank and column indexes ...
+
+    #ifdef __useControlledSNF
+    controlledSmithNormalForm(ORN, ornR, ornRi, ornC, ornCi);
+    #endif
+    #ifndef __useControlledSNF
     smithNormalForm(ORN, ornR, ornRi, ornC, ornCi);
+    #endif
+    
     i=0;
     unsigned long totO=0; // number diag entries == 1
     unsigned long totIF=0;// number diag entries > 1
@@ -113,6 +126,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
 
     snfrank=ORN.rows()-totO-totIF;
     snffreeindex=totO+totIF;
+
 }
 
 
@@ -226,11 +240,6 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getTorsionRep(
 }
 
 
-/*
- * TODO: with this do we need getTorsionRep  and getFreeRep ? 
- *       consider erasing them.
- */
-
 std::vector<NLargeInteger> NMarkedAbelianGroup::getCCRep(const std::vector<NLargeInteger> SNFRep) const
 {
     std::vector<NLargeInteger> retval(OM.columns(),NLargeInteger::zero);
@@ -264,6 +273,42 @@ if (input.size() == OM.columns())
 	if (T != NLargeInteger::zero) retval = false;
 	}
  } else retval = false;
+return retval;
+}
+
+bool NMarkedAbelianGroup::isBoundary(const std::vector<NLargeInteger> &input) const
+{ // isBoundary iff getSNFIsoRep is the zero vector.
+bool retval = true;
+// check dimension
+if (input.size() == OM.columns())
+ { // check if in image of the matrix.
+   std::vector<NLargeInteger> snF(getSNFIsoRep(input));
+   if (snF.size() != getNumberOfInvariantFactors() + getRank()) retval = false;
+   else for (unsigned long i=0; i<snF.size(); i++) if (snF[i]!=NLargeInteger::zero) retval = false;
+ } else retval = false;
+return retval;
+}
+
+// incomplete!
+std::vector<NLargeInteger> writeAsBoundary(const std::vector<NLargeInteger> &input) const
+{
+static const std::vector<NLargeInteger> nullV;
+std::vector<NLargeInteger> retval;
+// for this we pretty much repeat getSNFIsoRep except for the end part... start off dealing with
+// the exceptional cases:
+if ( input.size() != OM.columns() ) return nullV;
+// now let's start trying to represent it, in the process we'll determine if it's a cycle...
+// 
+return retval;
+}
+
+std::vector<NLargeInteger> NMarkedAbelianGroup::bdryMap(const std::vector<NLargeInteger> &CCrep) const
+{
+std::vector<NLargeInteger> retval(OM.rows(), NLargeInteger::zero);
+
+if (CCrep.size() == OM.columns())   for (unsigned long i=0; i<OM.rows(); i++)
+ for (unsigned long j=0; j<OM.columns(); j++) retval[i] += CCrep[j]*OM.entry(i,j);
+
 return retval;
 }
 
@@ -312,13 +357,12 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFIsoRep(
         for (unsigned long i=0;i<ifNum;i++) {
             for (unsigned long j=rankOM;j<ON.rows();j++)
                 retval[i] += ornC.entry(ifLoc+i,j-rankOM)*temp[j];
-            retval[i] = (retval[i] % InvFacList[i]);
+            retval[i] %= InvFacList[i];
 
             // the element might still be negative, though in this case
             // it should be no less than (- InvFacList[i] + 1).
             // we can put it in the required range just by adding InvFacList[i].
-            if (retval[i] < 0)
-                retval[i] += InvFacList[i];
+            if (retval[i] < 0) retval[i] += InvFacList[i];
         }
         return retval;
     } else
@@ -495,7 +539,12 @@ void NHomMarkedAbelianGroup::computeKernel() {
         NMatrixInt C( dcLpreimage.rows(), dcLpreimage.rows() );
         NMatrixInt Ci( dcLpreimage.rows(), dcLpreimage.rows() );
 
+        #ifdef __useControlledSNF
+        controlledSmithNormalForm( dcLpreimage, R, Ri, C, Ci );
+        #endif
+        #ifndef __useControlledSNF
         smithNormalForm( dcLpreimage, R, Ri, C, Ci );
+        #endif
 
         // the matrix representing the domain lattice in dcLpreimage
         // coordinates is given by domainLattice * R * (dcLpreimage inverse) * C
@@ -664,7 +713,7 @@ if (domain == range)
 return retval;
 }
 
-bool NHomMarkedAbelianGroup::isChainMap() const
+bool NHomMarkedAbelianGroup::isCycleMap() const
 {
 // run through a basis for ker OM, plug in and check isCycle()
 bool retval(true);
@@ -678,6 +727,39 @@ for (unsigned long i=domain.getRankM(); i<domain.getRankCC(); i++)
 
 return retval;
 }
+
+
+/**
+ * Given two NHomMarkedAbelianGroups, you have two diagrams:
+ *	Z^a --N1--> Z^b --M1--> Z^c   Z^g --N3--> Z^h --M3--> Z^i
+ *                   ^                             ^
+ *                   |  this                       | other
+ *      Z^d --N2--> Z^e --M2--> Z^f   Z^j --N4--> Z^k --M4--> Z^l
+ * @return true if and only if M1 == N3, M2 == N4 and diagram commutes
+ *         commutes.
+ */
+bool NHomMarkedAbelianGroup::isChainMap(const NHomMarkedAbelianGroup &other) const
+{
+bool retval(true);
+// M1 is getRange().getM()   N3 is other.getRange().getN()   so  b==g, c==h, M1 == N3
+// M2 is getDomain().getM()  N4 is other.getDomain().getN()  and e==j, f==k, M2 == N4
+
+if ( (getRange().getM().rows() != other.getRange().getN().rows()) ||
+     (getRange().getM().columns() != other.getRange().getN().columns()) ||
+     (getDomain().getM().rows() != other.getDomain().getN().rows()) ||
+     (getDomain().getM().columns() != other.getDomain().getN().columns())
+   ) retval = false;
+else if ( (getRange().getM() != other.getRange().getN()) ||
+     (getDomain().getM() != other.getDomain().getN()) ) retval = false;
+else
+{
+      std::auto_ptr< NMatrixRing<NLargeInteger> > prodLU = range.getM() * getDefiningMatrix();
+      std::auto_ptr< NMatrixRing<NLargeInteger> > prodBR = other.getDefiningMatrix() * domain.getM();
+     if ( (*prodLU) != (*prodBR) ) retval = false;
+     }
+return retval;
+}
+
 
 
 // I think there's a smart way to compute this, as the reduced matrix is a 2x2 block matrix:
