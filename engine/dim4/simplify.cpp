@@ -27,42 +27,68 @@
 /* end stub */
 
 #include "dim4/dim4triangulation.h"
+#include "triangulation/nedge.h"
 
 namespace regina {
 
-/*
-bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
-    const NFaceEmbedding& emb = f->getEmbedding(0);
-    NTetrahedron* tet = emb.getTetrahedron();
-    NPerm4 vertices = emb.getVertices();
+bool Dim4Triangulation::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
+    const Dim4TetrahedronEmbedding& emb = t->getEmbedding(0);
+    Dim4Pentachoron* pent = emb.getPentachoron();
 
     // Check that the face has exactly two boundary edges.
     // Note that this will imply that the face joins two tetrahedra.
     if (check) {
-        int fVertex = -1;
+        int i;
+        for (i = 0; i < 4; ++i)
+            if (! t->getVertex(i)->isValid())
+                return false;
+        for (i = 0; i < 6; ++i)
+            if (! t->getEdge(i)->isValid())
+                return false;
+        for (i = 0; i < 4; ++i)
+            if (! t->getFace(i)->isValid())
+                return false;
+
+        NPerm5 vertices = emb.getVertices();
+
         int nBdry = 0;
-        if (tet->getEdge(NEdge::edgeNumber[vertices[0]][vertices[1]])->
-                isBoundary())
-            nBdry++;
-        else
-            fVertex = 2;
-        if (tet->getEdge(NEdge::edgeNumber[vertices[1]][vertices[2]])->
-                isBoundary())
-            nBdry++;
-        else
-            fVertex = 0;
-        if (tet->getEdge(NEdge::edgeNumber[vertices[2]][vertices[0]])->
-                isBoundary())
-            nBdry++;
-        else
-            fVertex = 1;
+        int bdryFace[4];
 
-        if (nBdry != 2)
+        for (i = 0; i < 4; ++i)
+            if (t->getFace(i)->isBoundary())
+                bdryFace[nBdry++] = i;
+
+        if (nBdry < 1 || nBdry > 3)
             return false;
-        if (tet->getVertex(vertices[fVertex])->getLink() != NVertex::DISC)
-            return false;
-        if (! f->getEdge(fVertex)->isValid())
-            return false;
+
+        if (nBdry == 2) {
+            // Remaining edge is non-boundary.
+            int edge = NEdge::edgeNumber[bdryFace[0]][bdryFace[1]];
+            if (t->getEdge(edge)->isBoundary())
+                return false;
+
+            // Remaining two faces are not identified.
+            if (t->getFace(NEdge::edgeVertex[5 - edge][0]) ==
+                    t->getFace(NEdge::edgeVertex[5 - edge][1]))
+                return false;
+        } else if (nBdry == 1) {
+            // Remaining vertex is non-boundary.
+            if (t->getVertex(bdryFace[0])->isBoundary())
+                return false;
+
+            // No two of the remaining three edges are identified.
+            Dim4Edge* internal[3];
+            internal[0] = t->getEdge(
+                NEdge::edgeNumber[bdryFace[0]][(bdryFace[0] + 1) % 4]);
+            internal[1] = t->getEdge(
+                NEdge::edgeNumber[bdryFace[0]][(bdryFace[0] + 2) % 4]);
+            internal[2] = t->getEdge(
+                NEdge::edgeNumber[bdryFace[0]][(bdryFace[0] + 3) % 4]);
+
+            if (internal[0] == internal[1] || internal[1] == internal[2] ||
+                    internal[2] == internal[0])
+                return false;
+        }
     }
 
     if (! perform)
@@ -70,59 +96,10 @@ bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
 
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
-    tet->unjoin(emb.getFace());
+    pent->unjoin(emb.getTetrahedron());
     gluingsHaveChanged();
     return true;
 }
-
-bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
-    if (check) {
-        if (! e->isBoundary())
-            return false;
-    }
-
-    // Find the two faces on either side of edge e.
-    const NEdgeEmbedding& front = e->getEmbeddings().front();
-    const NEdgeEmbedding& back = e->getEmbeddings().back();
-
-    NTetrahedron* t0 = front.getTetrahedron();
-    NTetrahedron* t1 = back.getTetrahedron();
-    NPerm4 p0 = front.getVertices();
-    NPerm4 p1 = back.getVertices();
-
-    if (check) {
-        if (t0->getFace(p0[3]) == t1->getFace(p1[2]))
-            return false;
-        if (t0->getVertex(p0[2]) == t1->getVertex(p1[3]))
-            return false;
-        if (t0->getVertex(p0[2])->getLink() != NVertex::DISC ||
-               t1->getVertex(p1[3])->getLink() != NVertex::DISC)
-            return false;
-
-        NEdge* e1 = t0->getEdge(NEdge::edgeNumber[p0[0]][p0[2]]);
-        NEdge* e2 = t0->getEdge(NEdge::edgeNumber[p0[1]][p0[2]]);
-        NEdge* f1 = t1->getEdge(NEdge::edgeNumber[p1[0]][p1[3]]);
-        NEdge* f2 = t1->getEdge(NEdge::edgeNumber[p1[1]][p1[3]]);
-
-        if (e1 == f1 || e2 == f2)
-            return false;
-        if (e1 == e2 && f1 == f2)
-            return false;
-        if (e1 == f2 && f1 == e2)
-            return false;
-    }
-
-    if (! perform)
-        return true;
-
-    // Actually perform the move.
-    // Don't bother with a block since this is so simple.
-
-    t0->joinTo(p0[3], t1, p1 * NPerm4(2, 3) * p0.inverse());
-    gluingsHaveChanged();
-    return true;
-}
-*/
 
 bool Dim4Triangulation::shellBoundary(Dim4Pentachoron* p,
         bool check, bool perform) {

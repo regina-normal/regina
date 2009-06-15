@@ -40,6 +40,8 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         Dim4Triangulation::simplifyToLocalMinimum, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_openBook,
+        Dim4Triangulation::openBook, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_shellBoundary,
         Dim4Triangulation::shellBoundary, 1, 3);
 
@@ -194,6 +196,7 @@ void addDim4Triangulation() {
         .def("simplifyToLocalMinimum",
             &Dim4Triangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
+        .def("openBook", &Dim4Triangulation::openBook, OL_openBook())
         .def("shellBoundary", &Dim4Triangulation::shellBoundary,
             OL_shellBoundary())
         .def("insertTriangulation", &Dim4Triangulation::insertTriangulation)

@@ -1010,11 +1010,63 @@ class Dim4Triangulation : public NPacket {
         bool simplifyToLocalMinimum(bool perform = true);
 
         /**
+         * Checks the eligibility of and/or performs a book opening move
+         * about the given tetrahedron.
+         * This involves taking a tetrahedron meeting the boundary along
+         * precisely one, two or three faces, and ungluing it to create two new
+         * boundary facets (thus exposing the pentachora it initially joined).
+         * This move is intended to open the way for new shellBoundary() moves.
+         *
+         * This move can be done if:
+         *
+         * - all vertices, edges and faces of the tetrahedron are valid;
+         *
+         * - the tetrahedron meets the boundary in precisely one, two or
+         *   three faces (and therefore also joins two pentachora);
+         *
+         * - if the tetrahedron meets the boundary in precisely one face, then
+         *   the remaining vertex of the tetrahedron is non-boundary, and
+         *   no two of the remaining three edges of the tetrahedron are
+         *   identified;
+         *
+         * - if the tetrahedron meets the boundary in precisely two faces,
+         *   then the remaining edge of the tetrahedron is non-boundary, and
+         *   the remaining two faces of the tetrahedron are not identified.
+         *
+         * The validity condition in particular is stronger than it
+         * needs to be, but the resulting "lost opportunities" only
+         * affect invalid triangulations.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (edges, components, etc.) will be reconstructed, which means
+         * that any pointers to old skeletal objects (such as the argument
+         * \a t) can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given tetrahedron is a tetrahedron of this triangulation.
+         *
+         * @param t the tetrahedron about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool openBook(Dim4Tetrahedron* t,
+            bool check = true, bool perform = true);
+        /**
          * Checks the eligibility of and/or performs a boundary shelling
          * move on the given pentachoron.
          * This involves simply popping off a pentachoron that touches
          * the boundary.
-         * This can be done only if:
+         * This can be done if:
          *
          * - all edges and faces of the pentachoron are valid;
          *
@@ -1032,6 +1084,10 @@ class Dim4Triangulation : public NPacket {
          * - if three facets lie in the boundary, then the face that sits
          *   opposite their common edge does not lie in the boundary, and
          *   the remaining two facets of the tetrahedron are not identified.
+         *
+         * The validity condition in particular is stronger than it
+         * needs to be, but the resulting "lost opportunities" only
+         * affect invalid triangulations.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.

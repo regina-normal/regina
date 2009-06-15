@@ -73,7 +73,7 @@ class Dim4CensusTest : public CppUnit::TestFixture {
         }
 
         void rawCountsBounded() {
-            unsigned nAll[] = { 1, 7, 51, 939 };
+            unsigned nAll[] = { 1, 7, 51, 939, 25265 };
             rawCountsCompare(1, 2, nAll, "bounded",
                 NBoolSet::sBoth, NBoolSet::sBoth, NBoolSet::sTrue, -1, 0);
 

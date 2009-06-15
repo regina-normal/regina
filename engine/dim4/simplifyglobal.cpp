@@ -64,12 +64,10 @@ bool Dim4Triangulation::intelligentSimplify() {
 
                     for (tit = use->getTetrahedra().begin();
                             tit != use->getTetrahedra().end(); ++tit)
-                        // TODO
-                        // if (use->openBook(*tit, true, true)) {
-                        //     opened = openedNow = true;
-                        //     break;
-                        // }
-                        ; // TODO
+                        if (use->openBook(*tit, true, true)) {
+                            opened = openedNow = true;
+                            break;
+                        }
                 }
 
                 // If we're lucky, we can now simplify further.
