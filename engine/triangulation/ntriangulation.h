@@ -1543,7 +1543,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Checks the eligibility of and/or performs a 2-0 move
          * about the given edge of degree 2.
          * This involves taking the two tetrahedra joined at that edge
-         * and squashing them flat.  This can be done only if:
+         * and squashing them flat.  This can be done if:
          *
          * - the edge is valid and non-boundary;
          *
@@ -1590,7 +1590,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * about the given vertex of degree 2.
          * This involves taking the two tetrahedra joined at that vertex
          * and squashing them flat.
-         * This can be done only if:
+         * This can be done if:
          *
          * - the vertex is non-boundary and has a 2-sphere vertex link;
          *
@@ -1692,12 +1692,12 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Checks the eligibility of and/or performs a book opening move
          * about the given face.
          * This involves taking a face meeting the boundary along two
-         * edges and ungluing it to create two new boundary faces and
-         * thus expose the tetrahedra it initially joined.
+         * edges, and ungluing it to create two new boundary faces
+         * (thus exposing the tetrahedra it initially joined).
          * This move is the inverse of the closeBook() move, and is
          * used to open the way for new shellBoundary() moves.
          *
-         * This move can be done only if:
+         * This move can be done if:
          *
          * - the face meets the boundary in precisely two edges (and thus
          *   also joins two tetrahedra);
@@ -1739,7 +1739,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * folding together the two boundary faces on either side.  This
          * move is the inverse of the openBook() move, and is used to
          * simplify the boundary of the triangulation.
-         * This move can be done only if:
+         * This move can be done if:
          *
          * - the edge \a e is a boundary edge;
          *
@@ -1785,7 +1785,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * move on the given tetrahedron.
          * This involves simply popping off a tetrahedron that touches
          * the boundary.
-         * This can be done only if:
+         * This can be done if:
          *
          * - all edges of the tetrahedron are valid;
          *
