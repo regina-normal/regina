@@ -520,8 +520,11 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
 
         /**
          * Creates a new list filled with only the surfaces from this list
-         * that "might" be incompressible.
-         * More precisely, all surfaces in this list are examined using
+         * that "might" represent two-sided incompressible surfaces.
+         * More precisely, we consider all two-sided surfaces in this list,
+         * as well as the two-sided double covers of all one-sided surfaces
+         * in this list (see below for details on how one-sided surfaces
+         * are handled).  Each of these surfaces is examined using
          * relatively fast heuristic tests for incompressibility.  Any
          * surface that is definitely \e not incompressible is thrown
          * away, and all other surfaces are placed in the new list.
@@ -535,6 +538,12 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * incompressibility that is used here.  Note in particular that
          * spheres are \e never considered incompressible.
          *
+         * As indicated above, this filter works exclusively with two-sided
+         * surfaces.  If a surface in this list is one-sided, the heuristic
+         * incompressibility tests will be run on its two-sided double cover.
+         * Nevertheless, if the tests pass, the original one-sided surface
+         * (not the double cover) will be added to the new list.
+         *
          * The new list will be inserted as a new child packet of the
          * underlying triangulation (specifically, as the final child).  As a
          * convenience, the new list will also be returned from this routine.
@@ -543,10 +552,11 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * the surfaces in the new list are deep copies of the originals
          * (so they can be altered without affecting the original surfaces).
          *
-         * Currently this routine (i) throws away all vertex links and
-         * thin edge links, and then (ii) cuts along the remaining surfaces
-         * and runs NTriangulation::hasSimpleCompressingDisc() on the
-         * resulting bounded triangulations.
+         * Currently the heuristic tests include (i) throwing away
+         * all vertex links and thin edge links, and then
+         * (ii) cutting along the remaining surfaces and running
+         * NTriangulation::hasSimpleCompressingDisc() on the resulting
+         * bounded triangulations.
          *
          * \pre The underlying 3-manifold triangulation is valid and closed.
          * In particular, it has no ideal vertices.

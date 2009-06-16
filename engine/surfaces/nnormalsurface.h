@@ -1075,9 +1075,9 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * considered incompressible (so if this surface is a sphere then
          * this routine will always return \c false).
          *
-         * If this surface is one-sided and the argument \a makeTwoSided
-         * is \c true, then the incompressibility test will be run on
-         * the two-sided double cover, not the original surface.
+         * This test is designed exclusively for two-sided surfaces.
+         * If this surface is one-sided, the incompressibility test will
+         * be run on its two-sided double cover.
          *
          * This routine returns an NTriBool since it is possible that
          * the result cannot be determined (for instance, if there
@@ -1094,15 +1094,11 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * \pre This normal surface is compact, embedded and connected.
          * \pre This normal surface contains no octagonal discs.
          *
-         * @param makeTwoSided \c false if the test should be run on
-         * this surface directly, or \c true if, in the case of a
-         * one-sided surface, the test should be run on the two-sided
-         * double cover.
          * @return true if this surface is incompressible, false if
          * this surface is not incompressible (or if it is a sphere),
          * or unknown if the result cannot be determined.
          */
-        NTriBool isIncompressible(bool makeTwoSided = false) const;
+        NTriBool isIncompressible() const;
 
         /**
          * Cuts the associated triangulation along this surface and

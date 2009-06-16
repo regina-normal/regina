@@ -1348,8 +1348,9 @@ NTriBool NNormalSurface::isCompressingDisc(bool knownConnected) const {
         return NTriBool::False;
 }
 
-NTriBool NNormalSurface::isIncompressible(bool makeTwoSided) const {
-    if (makeTwoSided) {
+NTriBool NNormalSurface::isIncompressible() const {
+    // Make the surface two-sided if necessary.
+    {
         NTriBool twoSided = isTwoSided();
         if (twoSided.isUnknown())
             return NTriBool::Unknown;
@@ -1360,7 +1361,7 @@ NTriBool NNormalSurface::isIncompressible(bool makeTwoSided) const {
                 static_cast<NNormalSurfaceVector*>(rawVector()->clone());
             (*v) *= 2;
             NNormalSurface doubleSurface(getTriangulation(), v);
-            return doubleSurface.isIncompressible(false);
+            return doubleSurface.isIncompressible();
         }
     }
 

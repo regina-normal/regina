@@ -76,8 +76,6 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_isCompressingDisc,
         NNormalSurface::isCompressingDisc, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_isIncompressible,
-        NNormalSurface::isIncompressible, 0, 1);
 }
 
 void addNNormalSurface() {
@@ -117,8 +115,7 @@ void addNNormalSurface() {
         .def("isCentral", &NNormalSurface::isCentral)
         .def("isCompressingDisc", &NNormalSurface::isCompressingDisc,
             OL_isCompressingDisc())
-        .def("isIncompressible", &NNormalSurface::isIncompressible,
-            OL_isIncompressible())
+        .def("isIncompressible", &NNormalSurface::isIncompressible)
         .def("cutAlong", &NNormalSurface::cutAlong,
             return_value_policy<manage_new_object>())
         .def("crush", &NNormalSurface::crush,
