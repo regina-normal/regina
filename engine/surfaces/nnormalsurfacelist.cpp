@@ -443,8 +443,14 @@ NNormalSurfaceList* NNormalSurfaceList::filterForPotentiallyIncompressible()
     ans->embedded = true;
 
     NTriangulation* t;
+#ifdef DEBUG
+    int which = 0;
+#endif
     for (std::vector<NNormalSurface*>::const_iterator it = surfaces.begin();
             it != surfaces.end(); ++it) {
+#ifdef DEBUG
+        std::cout << "Processing surface " << which++ << "..." << std::endl;
+#endif
         if ((*it)->isVertexLinking())
             continue;
         if ((*it)->isThinEdgeLink().first)
