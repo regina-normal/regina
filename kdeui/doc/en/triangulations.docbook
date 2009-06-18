@@ -259,7 +259,7 @@
      The <guilabel>New Triangulation</guilabel> dialog includes a small
      selection of ready-made example triangulations that can be created
      on the fly; examples include the figure eight knot complement,
-     the &poincare; homology sphere and the Seifert-Weber dodecahedral
+     the &poincare; homology sphere and the Weber-Seifert dodecahedral
      space, amongst others.
      Simply select a 3-manifold from the list provided and the
      corresponding triangulation will be created for you.

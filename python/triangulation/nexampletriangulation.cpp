@@ -52,6 +52,9 @@ void addNExampleTriangulation() {
         .def("seifertWeber",
             &NExampleTriangulation::seifertWeber,
             return_value_policy<manage_new_object>())
+        .def("weberSeifert",
+            &NExampleTriangulation::weberSeifert,
+            return_value_policy<manage_new_object>())
         .def("smallClosedOrblHyperbolic",
             &NExampleTriangulation::smallClosedOrblHyperbolic,
             return_value_policy<manage_new_object>())
@@ -80,6 +83,7 @@ void addNExampleTriangulation() {
         .staticmethod("lens8_3")
         .staticmethod("poincareHomologySphere")
         .staticmethod("seifertWeber")
+        .staticmethod("weberSeifert")
         .staticmethod("smallClosedOrblHyperbolic")
         .staticmethod("smallClosedNonOrblHyperbolic")
         .staticmethod("lst3_4_7")

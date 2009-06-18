@@ -39,6 +39,10 @@ Version 4.6.1  [ (under development) ]
         Class NCensus:
             - New class typedef NCensus::AcceptTriangulation to replace the
               old global typedef AcceptTriangulation.
+        Class NExampleTriangulation:
+            - Renamed seifertWeber() to weberSeifert(), for consistency with
+              the original paper.  The old routine is now deprecated, but has
+              being preserved (for the time being) for backward compatibility.
         Class NNormalSurface:
             - New routines isCompressingDisc() and isIncompressible() for
               testing incompressibility.

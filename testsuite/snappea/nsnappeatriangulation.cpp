@@ -76,9 +76,9 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
         NTriangulation closedHypOr, closedHypNor;
 
         /**
-         * The Seifert-Weber dodecahedral space:
+         * The Weber-Seifert dodecahedral space:
          */
-        NTriangulation seifertWeber;
+        NTriangulation weberSeifert;
 
         /**
          * Triangulations of 3-manifolds whose reported volume should be zero.
@@ -144,8 +144,8 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             copyAndDelete(closedHypNor,
                 NExampleTriangulation::smallClosedNonOrblHyperbolic());
 
-            copyAndDelete(seifertWeber,
-                NExampleTriangulation::seifertWeber());
+            copyAndDelete(weberSeifert,
+                NExampleTriangulation::weberSeifert());
 
             t = new NTetrahedron();
             s = new NTetrahedron();
@@ -335,16 +335,16 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 "should not be representable in SnapPea format.");
 
             CPPUNIT_ASSERT_MESSAGE(
-                "The Seifert-Weber dodecahedral space "
+                "The Weber-Seifert dodecahedral space "
                 "appears to have been incorrectly constructed.",
-                seifertWeber.isValid() &&
-                seifertWeber.isConnected() &&
-                seifertWeber.isOrientable() &&
-                (! seifertWeber.isIdeal()) &&
-                seifertWeber.isStandard() &&
-                (! seifertWeber.hasBoundaryFaces()));
-            testIncompatible(seifertWeber,
-                "The Seifert-Weber dodecahedral space is closed, and so "
+                weberSeifert.isValid() &&
+                weberSeifert.isConnected() &&
+                weberSeifert.isOrientable() &&
+                (! weberSeifert.isIdeal()) &&
+                weberSeifert.isStandard() &&
+                (! weberSeifert.hasBoundaryFaces()));
+            testIncompatible(weberSeifert,
+                "The Weber-Seifert dodecahedral space is closed, and so "
                 "should not be representable in SnapPea format.");
 
             CPPUNIT_ASSERT_MESSAGE(
@@ -424,7 +424,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             // testVolume(closedHypOr, "or_0.94270736", 0.94270736, 7);
             // testVolume(closedHypNor, "nor_2.02988321", 2.02988121, 7);
-            // testVolume(seifertWeber, "Seifert Weber", 11.1990647, 6);
+            // testVolume(weberSeifert, "Weber-Seifert", 11.1990647, 6);
         }
 
         void testZeroVolume(const char* triName, double foundVol,

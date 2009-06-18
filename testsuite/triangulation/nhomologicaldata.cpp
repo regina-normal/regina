@@ -75,8 +75,8 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                  as SFS [S2: (2,1) (2,1) (11,19)]. */
         NTriangulation* poincare;
             /**< The poincare homology sphere. */
-        NTriangulation* seifertWeber;
-            /**< The Seifert-Weber dodecahedral space. */
+        NTriangulation* weberSeifert;
+            /**< The Weber-Seifert dodecahedral space. */
         NTriangulation torusBundleA;
             /**< The torus bundle T x I / [ 0,1 | -1,0 ], built using an
                  augmented triangular solid torus. */
@@ -139,7 +139,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             s3 = NExampleTriangulation::threeSphere();
             s2xs1 = NExampleTriangulation::s2xs1();
             poincare = NExampleTriangulation::poincareHomologySphere();
-            seifertWeber = NExampleTriangulation::seifertWeber();
+            weberSeifert = NExampleTriangulation::weberSeifert();
             gieseking = NExampleTriangulation::gieseking();
             figureEight = NExampleTriangulation::figureEightKnotComplement();
 
@@ -177,7 +177,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             delete s3;
             delete s2xs1;
             delete poincare;
-            delete seifertWeber;
+            delete weberSeifert;
             delete gieseking;
             delete figureEight;
         }
@@ -220,7 +220,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyHomologyConsistency(lens4_1, "L(4,1)");
             verifyHomologyConsistency(lens7_1, "L(7,1)");
             verifyHomologyConsistency(*poincare, "Poincare homology sphere");
-            verifyHomologyConsistency(*seifertWeber, "Seifert-Weber");
+            verifyHomologyConsistency(*weberSeifert, "Weber-Seifert");
             verifyHomologyConsistency(d88xz15, "S^3 / D_88 x Z_15");
             verifyHomologyConsistency(closedHypA,
                 "Closed Hyp (vol=1.01494161)");
@@ -263,7 +263,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void bdryManifoldMapH1() {
             verifyBdryManifoldMapH1(lens7_1, "L(7,1)", "zero map");
             verifyBdryManifoldMapH1(d88xz15, "S^3 / D_88 x Z_15", "zero map");
-            verifyBdryManifoldMapH1(*seifertWeber, "Seifert-Weber", "zero map");
+            verifyBdryManifoldMapH1(*weberSeifert, "Weber-Seifert", "zero map");
             verifyBdryManifoldMapH1(closedHypA, "Closed Hyp (vol=1.01494161)",
                 "zero map");
             verifyBdryManifoldMapH1(closedHypB, "Closed Hyp (vol=2.45402944)",
@@ -298,7 +298,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void standardCells() {
             verifyStandardCells(lens7_1, "L(7,1)", 1, 5, 8, 4);
             verifyStandardCells(d88xz15, "S^3 / D_88 x Z_15", 1, 10, 18, 9);
-            verifyStandardCells(*seifertWeber, "Seifert-Weber", 1, 24, 46, 23);
+            verifyStandardCells(*weberSeifert, "Weber-Seifert", 1, 24, 46, 23);
             verifyStandardCells(closedHypA, "Closed Hyp (vol=1.01494161)",
                 1, 10, 18, 9);
             verifyStandardCells(closedHypB, "Closed Hyp (vol=2.45402944)",
@@ -330,7 +330,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void dualCells() {
             verifyDualCells(lens7_1, "L(7,1)", 4, 8, 5, 1);
             verifyDualCells(d88xz15, "S^3 / D_88 x Z_15", 9, 18, 10, 1);
-            verifyDualCells(*seifertWeber, "Seifert-Weber", 23, 46, 24, 1);
+            verifyDualCells(*weberSeifert, "Weber-Seifert", 23, 46, 24, 1);
             verifyDualCells(closedHypA, "Closed Hyp (vol=1.01494161)",
                 9, 18, 10, 1);
             verifyDualCells(closedHypB, "Closed Hyp (vol=2.45402944)",
@@ -357,7 +357,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyTorsionRankVector(lens7_1, "L(7,1)", "7(1)");
             verifyTorsionRankVector(d88xz15, "S^3 / D_88 x Z_15",
                 "2(0 0 1) 3(1) 5(1)");
-            verifyTorsionRankVector(*seifertWeber, "Seifert-Weber", "5(3)");
+            verifyTorsionRankVector(*weberSeifert, "Weber-Seifert", "5(3)");
             verifyTorsionRankVector(closedHypA, "Closed Hyp (vol=1.01494161)",
                 "2(1) 3(2)");
             verifyTorsionRankVector(closedHypB, "Closed Hyp (vol=2.45402944)",
@@ -383,7 +383,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void torsionSigmaVector() {
             verifyTorsionSigmaVector(lens7_1, "L(7,1)", "no 2-torsion");
             verifyTorsionSigmaVector(d88xz15, "S^3 / D_88 x Z_15", "7 7 inf");
-            verifyTorsionSigmaVector(*seifertWeber, "Seifert-Weber",
+            verifyTorsionSigmaVector(*weberSeifert, "Weber-Seifert",
                 "no 2-torsion");
             verifyTorsionSigmaVector(closedHypA, "Closed Hyp (vol=1.01494161)",
                 "inf");
@@ -412,8 +412,8 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyTorsionLegendreSymbolVector(lens7_1, "L(7,1)", "7(1)");
             verifyTorsionLegendreSymbolVector(d88xz15, "S^3 / D_88 x Z_15",
                 "3(1) 5(1)");
-            verifyTorsionLegendreSymbolVector(*seifertWeber,
-                "Seifert-Weber", "5(1)");
+            verifyTorsionLegendreSymbolVector(*weberSeifert,
+                "Weber-Seifert", "5(1)");
             verifyTorsionLegendreSymbolVector(closedHypA,
                 "Closed Hyp (vol=1.01494161)", "3(1)");
             verifyTorsionLegendreSymbolVector(closedHypB,
@@ -449,8 +449,8 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyEmbeddability(*s2xs1, "S^2 x S^1", "No information.");
             verifyEmbeddability(*poincare, "Poincare homology sphere",
                 "Manifold is a homology 3-sphere.");
-            verifyEmbeddability(*seifertWeber,
-                "Seifert-Weber dodecahedral space",
+            verifyEmbeddability(*weberSeifert,
+                "Weber-Seifert dodecahedral space",
                 "Does not embed in homology 4-sphere.  "
                 "Manifold is a rational homology sphere.");
             verifyEmbeddability(lens3_1, "L(3,1)",
