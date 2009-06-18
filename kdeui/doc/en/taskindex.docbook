@@ -1100,9 +1100,8 @@
  </glossentry>
 
  <glossentry>
-  <glossterm><link linkend="tri-new-example">Seifert-Weber
-   dodecahedral space</link></glossterm>
-  <glossdef><para>&nbsp;</para></glossdef>
+  <glossterm>Seifert-Weber dodecahedral space</glossterm>
+  <glosssee>Weber-Seifert dodecahedral space</glosssee>
  </glossentry>
 
  <glossentry>
@@ -1448,6 +1447,14 @@
  <glossentry>
   <glossterm>volume</glossterm>
   <glosssee>hyperbolic volume</glosssee>
+ </glossentry>
+
+ </glossdiv><glossdiv><title>W</title>
+
+ <glossentry>
+  <glossterm><link linkend="tri-new-example">Weber-Seifert
+   dodecahedral space</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
  </glossentry>
 
  </glossdiv><glossdiv><title>Z</title>

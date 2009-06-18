@@ -179,9 +179,9 @@ NTriangulation* NExampleTriangulation::poincareHomologySphere() {
     return ans;
 }
 
-NTriangulation* NExampleTriangulation::seifertWeber() {
+NTriangulation* NExampleTriangulation::weberSeifert() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Seifert-Weber dodecahedral space");
+    ans->setPacketLabel("Weber-Seifert dodecahedral space");
 
     // Bah.  Dehydration strings are somewhat impenetrable,
     // but the alternative is 23 lines of hard-coded tetrahedron gluings.
@@ -192,6 +192,14 @@ NTriangulation* NExampleTriangulation::seifertWeber() {
     ans->insertRehydration(
         "xppphocgaeaaahimmnkontspmuuqrsvuwtvwwxwjjsvvcxxjjqattdwworrko");
 
+    return ans;
+}
+
+NTriangulation* NExampleTriangulation::seifertWeber() {
+    // Kept for backward compatibility.
+    // Use the old name in the packet label.
+    NTriangulation* ans = weberSeifert();
+    ans->setPacketLabel("Seifert-Weber dodecahedral space");
     return ans;
 }
 

@@ -119,8 +119,25 @@ class NExampleTriangulation {
         static NTriangulation* poincareHomologySphere();
 
         /**
-         * Returns a one-vertex triangulation of the Seifert-Weber
+         * Returns a one-vertex triangulation of the Weber-Seifert
          * dodecahedral space.
+         *
+         * This 3-manifold is described in "Die beiden Dodekaederraume",
+         * C. Weber and H. Seifert, Math. Z. 37 (1933), no. 1, 237-253.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NTriangulation* weberSeifert();
+
+        /**
+         * Returns a one-vertex triangulation of the Weber-Seifert
+         * dodecahedral space.
+         *
+         * \deprecated This routine is now called weberSeifert(),
+         * for consistency with Weber and Seifert's original paper.
+         * The old name seifertWeber() has been kept for backward
+         * compatibility, but will be removed in a future version of Regina.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
