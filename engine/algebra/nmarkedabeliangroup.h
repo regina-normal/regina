@@ -76,13 +76,13 @@ namespace regina {
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
- * \todo Add Z_p coefficients. This should be pretty straightforeward using 
- *    reducedKernelLattice, then tossing in extra relators.  Store mod-p computations 
- *    as some kind of vector or list.
- *    Have all routines adapt -- like getRank(), writeTextShort() have default p=0 
- *    arguments so that the implementations do not change and it's always assumed you
- *    want answers with Z coefficients unless otherwise specified. Could even do a p==-1
- *    for rational coefficients, if interested.  
+ * \todo Add Z_p coefficients. This should be pretty straightforeward by just tossing
+ *    in the extra generators re the tor terms, and the extra mod-p relations. 
+ *    Exactly what other internals need to be changes is yet to be determined. 
+ *     There'll be a new constructor where coefficients
+ *    can be specified -- keeping old constructor for Z coefficients.  We'll have to modify
+ *    some of the routines to see this p coefficient. Namely writeTextShort(), isCycle(), 
+ *    isBdry(), ... 
  * \todo \optlong Add Hom, Ext, Tor, and \otimes
  * \todo add isBoundary() and writeAsBoundary() routines. 
  */
@@ -641,11 +641,11 @@ class NMarkedAbelianGroup : public ShareableObject {
  * \todo isInImage in various coordinates -- essentially a wrapper for preimage of.
  *          Or could compute this by taking the image of the element into the cokernel and
  *          asking if this is zero. 
- * \todo add routine to check all the various chain complexes we define are really chain complexes, 
- *          and the maps between the chain complexes that induce maps on homology are actually chain
- *          maps.  Add to test suite. isCycle() is first step in this.
  * \todo add induced homomorphism on Z_p coefficients once Z_p coefficients implemented in 
  *       NMarkedAbelianGroup.
+ * \todo \optlong writeTextShort() have completely different set of descriptors if an endomorphism domain == range
+ *       not so important at the moment though.  New descriptors would include things like
+ *       automorphism, projection, differential, ... 
  *
  * @author Ryan Budney
  */

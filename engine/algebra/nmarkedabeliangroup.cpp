@@ -289,19 +289,6 @@ if (input.size() == OM.columns())
 return retval;
 }
 
-// incomplete!
-std::vector<NLargeInteger> NMarkedAbelianGroup::writeAsBoundary(const std::vector<NLargeInteger> &input) const
-{
-static const std::vector<NLargeInteger> nullV;
-std::vector<NLargeInteger> retval;
-// for this we pretty much repeat getSNFIsoRep except for the end part... start off dealing with
-// the exceptional cases:
-if ( input.size() != OM.columns() ) return nullV;
-// now let's start trying to represent it, in the process we'll determine if it's a cycle...
-// 
-return retval;
-}
-
 std::vector<NLargeInteger> NMarkedAbelianGroup::bdryMap(const std::vector<NLargeInteger> &CCrep) const
 {
 std::vector<NLargeInteger> retval(OM.rows(), NLargeInteger::zero);
@@ -678,9 +665,6 @@ void NHomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
 }
 
 void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
-// todo: have completely different set of descriptors if an endomorphism domain == range
-//       not so important at the moment though.  New descriptors would include things like
-//       automorphism, projection, differential, ... 
     if (isIso())
         out<<"isomorphism";
     else if (isZero()) // zero map
@@ -762,7 +746,7 @@ return retval;
 
 
 
-// I think there's a smart way to compute this, as the reduced matrix is a 2x2 block matrix:
+// Start with the reduced matrix which is a 2x2 block matrix:
 //
 //  [A|B]
 //  [---]  where D is an inveritble square matrix, 0 is a zero matrix,  
@@ -779,9 +763,6 @@ return retval;
 //           takes a matrix A representing an automorphism of Z_p1 + ... Z_pk and then computes
 //           the matrix representing the inverse automorphism.  
 //           So to do this we'll need a new matrixops.cpp command -- call it torsionAutInverse.  
-
-// okay, so torsionAutInverse seems to be okay now. I hope. Lets get this working so we can test 
-// it.
 NHomMarkedAbelianGroup NHomMarkedAbelianGroup::inverseHom() const
 {
 const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
@@ -850,6 +831,19 @@ if (isIso())
 return NHomMarkedAbelianGroup( invMat, range, domain );
 }
 
+
+// todo 
+std::vector<NLargeInteger> NMarkedAbelianGroup::writeAsBoundary(const std::vector<NLargeInteger> &input) const
+{
+static const std::vector<NLargeInteger> nullV;
+std::vector<NLargeInteger> retval;
+// for this we pretty much repeat getSNFIsoRep except for the end part... start off dealing with
+// the exceptional cases:
+if ( input.size() != OM.columns() ) return nullV;
+// now let's start trying to represent it, in the process we'll determine if it's a cycle...
+// 
+return retval;
+}
 
 } // namespace regina
 
