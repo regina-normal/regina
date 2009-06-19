@@ -395,14 +395,6 @@ void NHomologicalData::computeChainComplexes() {
     }
     // end B2
 
-    NIndexedArray<long int> unorientedlist; // this should be the list of
-                                            // unoriented tetrahedra
-    // together with marked vertices, stored as
-    // 4*tetindex + vertex no.
-    NIndexedArray<long int> orig_uol;
-    NIndexedArray<long int> edge_adjacency;
-
-    std::vector<int> tetor;
     long int ind1;
     long int ind2;
     int k;
@@ -412,74 +404,19 @@ void NHomologicalData::computeChainComplexes() {
     // start B3: for each dual tetrahedron==nonboundary vertex,
     //           find the corresp edges==non-boundary boundary faces
     // problem: this ad-hoc orientation is inaccessible elsewhere.  So it's time to use
-    //          regina's accessible one, via
+    //          regina's accessible one, via regina::NVertexEmbedding::getVertices()
 
     for (i=0;i<dNINBV.size();i++) {
         // dNINBV[i] is the vertices.index() of this vertex.
         const std::vector<NVertexEmbedding>& vtetlist(
             tri->getVertex(dNINBV[i])->getEmbeddings());
-        tetor.resize(vtetlist.size(),0);
-        unorientedlist.resize(0);
 
-        for (j=0;j<vtetlist.size();j++) {
-            // unoriented list stores the tetrahedra adjacent to the vertex
-            // plus the vertex index in that tetrahedra's coords
-            unorientedlist.push_back(
-                4*tri->tetrahedronIndex( vtetlist[j].getTetrahedron() ) +
-                vtetlist[j].getVertex() );
-        }
-        orig_uol=unorientedlist;
-
-        // need to set up a local orientation for the tangent
-        // bundle at the vertex so that we can compare with the
-        // normal orientations of the edges incident. This normal
-        // orientation will have the form of a sign +-1 for each
-        // NVertexEmbedding in the list vtetlist. Our orientation convention
-        // will be chosen so that vtetlist[0] is positively oriented,
-        // ie: tetor[0]==1 always.
-
-        tetor[0]=1;
-        unorientedlist.erase( 4*tri->tetrahedronIndex(
-            vtetlist[0].getTetrahedron()) + vtetlist[0].getVertex() );
-
-        while (!unorientedlist.empty())
-          for (j=0;j<vtetlist.size();j++)
-            // go through all oriented tetrahedra and orient
-            // the adjacent tetrahedra
-            {
-                ind1=orig_uol[j];
-
-                if ( unorientedlist.index( ind1 ) == (-1) ) {
-                    // this tetrahedron has been oriented check to see
-                    // if any of the adjacent
-                    // tetrahedra are unoriented, and if so, orient them.
-                    for (k=0;k<4;k++) {
-                        if (k!= (ind1 % 4))
-                        {
-                            p1=vtetlist[j].getTetrahedron() ->
-                                adjacentGluing(k);
-                            ind2=4*tri->tetrahedronIndex(
-                                vtetlist[j].getTetrahedron() ->
-                                adjacentTetrahedron(k) ) + p1[ind1 % 4];
-                            if (unorientedlist.index( ind2 )  != (-1) )
-                            {
-                                // we have an adjacent unoriented tetrahedron.
-                                // we orient it and erase from unorientedlist.
-                                tetor[ orig_uol.index(ind2) ] =
-                                   (-1)*tetor[j]*p1.sign();
-                                unorientedlist.erase( ind2 );
-                            }
-                        }
-                    }
-                }
-            }
-
-        // now a local orientation is set up and can compute the boundary.
-        // to do this, it seems best to compile a list of incident edges
+        // It seems best to compile a list of incident edges
         // which contains their endpoint data and sign.
         // the list will be an NIndexedArray<long int> edge_adjacency,
         // data will be stored as
         // 4*(edge index) + 2*(endpt index) + sign stored as 0 or 1.
+        NIndexedArray<long int> edge_adjacency;
         edge_adjacency.resize(0);
 
         for (j=0;j<vtetlist.size();j++)
@@ -502,7 +439,7 @@ void NHomologicalData::computeChainComplexes() {
 
                     ind1=4*tri->edgeIndex(
                         vtetlist[j].getTetrahedron()->getEdge(k) )
-                        + 2*ind2 + (p1.sign() == tetor[j] ? 1 : 0);
+                        + 2*ind2 + (p1.sign() == vtetlist[j].getVertices().sign() ? 1 : 0);  
 
                     if (edge_adjacency.index(ind1) == (-1) )
                         edge_adjacency.push_back(ind1);
@@ -944,7 +881,6 @@ const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q) {
         }
         return *mHomology3;
     }
-    // the A's should probably be redone as an array of pointers...
 }
 
 const NMarkedAbelianGroup& NHomologicalData::getBdryHomology(unsigned q) {
@@ -1106,10 +1042,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     unsigned long niv(dmHomology1->getNumberOfInvariantFactors());
     // for holding prime decompositions.:
     std::vector<std::pair<NLargeInteger, unsigned long> > tFac;
-
     NLargeInteger tI;
-
-
     // step 1: go through H1 of the manifold, take prime power decomposition
     //            of each summand.  building primePowerH1Torsion vector and
     //            pTorsionH1Mat matrix...
@@ -1226,8 +1159,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     // step 2: construct dual vectors
     //           for every pvList vector, find corresponding standard vector.
-
-
     NMatrixInt standardBasis( numStandardCells[1], pvList.size() );
     const NMatrixInt& dualtostandard(h1CellAp.getDefiningMatrix());
 
@@ -1398,12 +1329,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     }
 
 
-    // step 2: KK 2-torsion invariant (need to implement)
-    //           *what is a smart way to implement the sigma invariant?*
-    //           I guess it should be of the form std::vector< int >
-    //           since it is only holding the reps 0,1,2,3,4,5,6,7 and inf.
-    //           inf we can represent by -1 or something? or we could use
-    //           and NLargeInteger instead.
+    // step 2: KK 2-torsion invariant
     // decide on if there is 2-torsion...
     NLargeInteger twoPow;
     static const NRational pi = NRational(
@@ -2126,28 +2052,16 @@ void NHomologicalData::computeBaryCC()
            tri->getFace(dNBF[i])->getEmbedding(1).getFace(), i ) -= 1;
 	}
    for (unsigned long i=0; i<numDualCells[2]; i++) // 2-cells
-	{ // this is more complicated as there's arbitrarily large subdivision
 	for (unsigned long j=0; j<tri->getEdge(dNBE[i])->getNumberOfEmbeddings(); j++)
-	 {
 	 BM2->entry( q2 + 6*tri->getTetrahedronIndex(tri->getEdge(dNBE[i])->getEmbedding(j).getTetrahedron())+
 	   tri->getEdge(dNBE[i])->getEmbedding(j).getEdge(), i) += 
 		tri->getEdge(dNBE[i])->getEmbedding(j).getVertices().sign() ;
-	 }	
-	}
+
    for (unsigned long i=0; i<numDualCells[3]; i++) // 3-cells
-	{
-	// this should be less complicated as we're only looking at tetrahedra incident
-	// to a particular vertex...
-	// dNINBV indexes them. 
 	for (unsigned long j=0; j<tri->getVertex(dNINBV[i])->getNumberOfEmbeddings(); j++)
-	 {
 	  BM3->entry( 4*tri->getTetrahedronIndex(tri->getVertex(dNINBV[i])->getEmbedding(j).getTetrahedron())+
- 			tri->getVertex(dNINBV[i])->getEmbedding(j).getVertex(), i) += 1;
-	 } // sign error here!
-           // it's interesting that it seems to happen most often for *oriented* triangulations....
-           // my guess: it's the dual homology CC that's the trouble. Ah! no.  Here I'm orienting
- 	   // everything the same way, but there...
-	}
+ 			tri->getVertex(dNINBV[i])->getEmbedding(j).getVertex(), i) += 
+			tri->getVertex(dNINBV[i])->getEmbedding(j).getVertices().sign();
 
   // done
 }
@@ -2267,14 +2181,12 @@ bool NHomologicalData::verifyChainComplexes()
 bool retval = true;
 computeChainComplexes(); 
 computeBaryCC();
-// todo:   1) return this 3 to 4 once the dual 0-cell orientation issue resolved.
-//         2) further implement isChainMap() for dual to mixed 3 -> 2. 
-for (unsigned long i=0; i<3; i++) if (!getDualToMixedHom(i).isCycleMap()) retval = false; // todo 3->4
+for (unsigned long i=0; i<4; i++) if (!getDualToMixedHom(i).isCycleMap()) retval = false;
 for (unsigned long i=0; i<4; i++) if (!getStandardToMixedHom(i).isCycleMap()) retval = false;
 if (!getH1CellAp().isCycleMap()) retval = false;
 for (unsigned long i=0; i<3; i++) if (!getBdryHomologyMap(i).isCycleMap()) retval = false;
 if (!getDualToMixedHom(2).isChainMap(getDualToMixedHom(1))) retval = false;
-//if (!getDualToMixedHom(3).isChainMap(getDualToMixedHom(2))) retval = false;
+if (!getDualToMixedHom(3).isChainMap(getDualToMixedHom(2))) retval = false;
 if (!getStandardToMixedHom(2).isChainMap(getStandardToMixedHom(1))) retval = false;
 if (!getStandardToMixedHom(3).isChainMap(getStandardToMixedHom(2))) retval = false;
 return retval;

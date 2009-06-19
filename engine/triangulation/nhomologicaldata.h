@@ -118,9 +118,6 @@ class NTriangulation;
  *      UCT  0 --> H_i(M;Z) \otimes Z_p --> H_i(M;Z_p) --> Tor(H_{i-1}(M;Z), Z_p) --> 0
  *      Would it be worth it?  Dunno.  Via UCT you can get at everything pretty effectively
  *      using only homology with integral coefficients. 
- * \todo verifyChainComplexes() is currently crippled by the dual H3 <-> mixed H3 coherent
- *       orientation of dual 3-cells issue.  Ben seems to be working on this. So right now
- *	 verifyChainComplexes() just skips the 3 dimensional chain complex dual <-> mixed.
  *
  * @author Ryan Budney
  */
@@ -756,11 +753,11 @@ public:
      *
      * Note: at present the p=0 case is the only one implemented. 
      *
+     * Warning: the current implementation can be painfully slow as the linear algebra gets a little
+     *  out of control.
+     *
      * \pre The manifold needs to be oriented unless p==2, in which case non-orientable
      *      manifolds are fine.
-     *  
-     * NOTE: currently this is broken.  Segfault in 6-tet orientable census, looks like for the
-     *       manifold SFS[ S^2 : 1/3, 1/3, -2/3 ] hmm! probably an index error.  fun to look up ...
      */
     NMarkedAbelianGroup imgH2form(unsigned long p=0);
 
@@ -791,6 +788,7 @@ public:
 
     /** Computes a spin structure if one exists, 
      ** provided the manifold is orientable, this is always true. 
+     ** not yet implemented
      **/
     bool findSpin();
 
