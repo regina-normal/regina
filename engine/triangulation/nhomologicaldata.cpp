@@ -952,9 +952,7 @@ const NHomMarkedAbelianGroup& NHomologicalData::getH1CellAp() {
 }
 
 const NHomMarkedAbelianGroup& NHomologicalData::getStandardToMixedHom(unsigned q)
-{ // make it so we don't compute what we don't need... but we will compute all the chain complexes
-  //  regardless of if we use them, just not irrellevant homology groups as that tends to be the most
-  //  expensive op. 
+{ 
   computeBaryCC();
   computeChainComplexes();
   if (q==0) {

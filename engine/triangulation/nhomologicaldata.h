@@ -118,6 +118,7 @@ class NTriangulation;
  *      UCT  0 --> H_i(M;Z) \otimes Z_p --> H_i(M;Z_p) --> Tor(H_{i-1}(M;Z), Z_p) --> 0
  *      Would it be worth it?  Dunno.  Via UCT you can get at everything pretty effectively
  *      using only homology with integral coefficients. 
+ * \todo \optlong torsion linking form and intersection product as maps out of tensor products.
  *
  * @author Ryan Budney
  */
@@ -131,78 +132,28 @@ private:
     std::auto_ptr<NTriangulation> tri;
 
     /**
-     * Pointer to the 0-th homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
+     * Pointer to homology groups in standard cellular coordinates, in dimensions
+     * 0 through 3 respectively. 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology0;
-    /**
-     * Pointer to the 1st homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology1;
-    /**
-     * Pointer to the 2nd homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology2;
-    /**
-     * Pointer to the 3rd homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology3;
+    std::auto_ptr<NMarkedAbelianGroup> mHomology0, mHomology1, mHomology2, mHomology3;
 
     /**
-     * Pointer to the 0-th boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
+     * Pointer to the boundary homology groups in standard cellular
+     * coordinates, dimensions 0 through 2 respectively. 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> bHomology0;
-    /**
-     * Pointer to the 1st boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> bHomology1;
-    /**
-     * Pointer to the 2nd boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> bHomology2;
+    std::auto_ptr<NMarkedAbelianGroup> bHomology0, bHomology1, bHomology2;
 
     /**
-     * Pointer to the boundary inclusion on 0-th homology, standard
+     * Pointer to the boundary inclusion on homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NHomMarkedAbelianGroup> bmMap0;
-    /**
-     * Pointer to the boundary inclusion on 1st homology, standard
-     * cellular coordinates, or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NHomMarkedAbelianGroup> bmMap1;
-    /**
-     * Pointer to the boundary inclusion on 2nd homology, standard
-     * cellular coordinates, or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NHomMarkedAbelianGroup> bmMap2;
+    std::auto_ptr<NHomMarkedAbelianGroup> bmMap0, bmMap1, bmMap2;
 
     /**
-     * Pointer to the 0-th homology group in dual cellular coordinates, or
+     * Pointer to the homology groups in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology0;
-    /**
-     * Pointer to the 1st homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology1;
-    /**
-     * Pointer to the 2nd homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology2;
-    /**
-     * Pointer to the 3rd homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology3;
+    std::auto_ptr<NMarkedAbelianGroup> dmHomology0, dmHomology1, dmHomology2, dmHomology3;
 
     /**
      * Pointer to the cellular approx of the identity H1(M) --> H1(M)
@@ -211,6 +162,15 @@ private:
      */
     std::auto_ptr<NHomMarkedAbelianGroup> dmTomMap1;
 
+    /**
+     * Pointers to the homology in mixed cellular coordinates. 
+     */
+    std::auto_ptr<NMarkedAbelianGroup> mH0, mH1, mH2, mH3;
+
+    /** 
+     * Pointers to the homomorphisms between dmHomology, mH and dmHomology groups
+     * respectively. 
+     */
     std::auto_ptr<NHomMarkedAbelianGroup> SMHom0, SMHom1, SMHom2, SMHom3, 
 					  DMHom0, DMHom1, DMHom2, DMHom3;
 
@@ -314,14 +274,6 @@ private:
     std::auto_ptr<NMatrixInt> M3;
     /** 4th term in chain complex for mixed cellular homology 0 -> C3 */
     std::auto_ptr<NMatrixInt> M4;
-    /** H_0 in Mixed coords */
-    std::auto_ptr<NMarkedAbelianGroup> mH0;
-    /** H_1 in Mixed coords */
-    std::auto_ptr<NMarkedAbelianGroup> mH1;
-    /** H_2 in Mixed coords */
-    std::auto_ptr<NMarkedAbelianGroup> mH2;
-    /** H_3 in Mixed coords */
-    std::auto_ptr<NMarkedAbelianGroup> mH3;
 
     /** chain map standard to mixed 0 */
     std::auto_ptr<NMatrixInt> AM0;
@@ -833,8 +785,7 @@ inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
         mHomology0(clonePtr(g.mHomology0)), mHomology1(clonePtr(g.mHomology1)),
         mHomology2(clonePtr(g.mHomology2)), mHomology3(clonePtr(g.mHomology3)),
 
-        bHomology0(clonePtr(g.bHomology0)),
-        bHomology1(clonePtr(g.bHomology1)),
+        bHomology0(clonePtr(g.bHomology0)), bHomology1(clonePtr(g.bHomology1)),
         bHomology2(clonePtr(g.bHomology2)),
 
         bmMap0(clonePtr(g.bmMap0)), bmMap1(clonePtr(g.bmMap1)), bmMap2(clonePtr(g.bmMap2)),
@@ -842,9 +793,14 @@ inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
         dmHomology0(clonePtr(g.dmHomology0)),      dmHomology1(clonePtr(g.dmHomology1)),
         dmHomology2(clonePtr(g.dmHomology2)),      dmHomology3(clonePtr(g.dmHomology3)),
 
+        dmTomMap1(clonePtr(g.dmTomMap1)),
+
 	mH0(clonePtr(g.mH0)), mH1(clonePtr(g.mH1)), mH2(clonePtr(g.mH2)), mH3(clonePtr(g.mH3)),
 
-        dmTomMap1(clonePtr(g.dmTomMap1)),
+	SMHom0(clonePtr(g.SMHom0)), SMHom1(clonePtr(g.SMHom1)), 
+	SMHom2(clonePtr(g.SMHom2)), SMHom3(clonePtr(g.SMHom3)), 
+	DMHom0(clonePtr(g.DMHom0)), DMHom1(clonePtr(g.DMHom1)), 
+	DMHom2(clonePtr(g.DMHom2)), DMHom3(clonePtr(g.DMHom3)), 
 
         ccIndexingComputed(g.ccIndexingComputed),
 

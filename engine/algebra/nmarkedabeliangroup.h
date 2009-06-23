@@ -36,7 +36,9 @@
 #endif
 
 #include <vector>
+#include <memory>
 #include "maths/nmatrixint.h"
+#include "utilities/ptrutils.h"
 
 //#define __useControlledSNF
 
@@ -56,7 +58,9 @@ namespace regina {
  *
  * In other words, we are computing the homology of the chain complex
  * <tt>Z^a --N--> Z^b --M--> Z^c</tt>
- * where a=N.columns(), M.columns()=b=N.rows(), and c=M.rows(). 
+ * where a=N.columns(), M.columns()=b=N.rows(), and c=M.rows().  An additional
+ * constructor allows one to take the homology with coefficients in an arbitrary
+ * cyclic group. 
  *
  * This class allows one to retrieve the invariant factors, the rank, and
  * the corresponding vectors in the kernel of \a M.  Moreover, given a
@@ -74,17 +78,13 @@ namespace regina {
  *
  * @author Ryan Budney
  *
- * \todo \optlong Look at using sparse matrices for storage of SNF and
- * the like.
- * \todo Add Z_p coefficients. This should be pretty straightforeward by just tossing
- *    in the extra generators re the tor terms, and the extra mod-p relations. 
- *    Exactly what other internals need to be changes is yet to be determined. 
- *     There'll be a new constructor where coefficients
- *    can be specified -- keeping old constructor for Z coefficients.  We'll have to modify
- *    some of the routines to see this p coefficient. Namely writeTextShort(), isCycle(), 
- *    isBdry(), ... 
- * \todo \optlong Add Hom, Ext, Tor, and \otimes
- * \todo add isBoundary() and writeAsBoundary() routines. 
+ * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
+ * \todo Add Z_p coefficients. Done, but we still have to modify
+ *    some of the routines to see through the data correctly. 
+ *    Namely: isCycle(), isBoundary(), writeAsBoundary(), bdryMap().
+ * \todo \optlong Add Hom, Ext, Tor, and \otimes, torsion linking form and intersection product
+ *  as maps out of tensor products.  Tor is implemented at least against Z_p now... 
+ * \todo Eliminate routines like getMRB() and make the class internals more opaque to users. 
  */
 class NMarkedAbelianGroup : public ShareableObject {
     private:
@@ -101,8 +101,7 @@ class NMarkedAbelianGroup : public ShareableObject {
         /** Internal change of basis. OM = OMCi*SNF(OM)*OMRi */
         NMatrixInt OMCi;
         /** Internal rank of M */
-        unsigned long rankOM; // this is the index of the first zero entry
-                              // in the SNF of OM.
+        unsigned long rankOM; // this is the index of the first zero entry in SNF(OM)
 
         /* Internal reduced N matrix: */
         // In the notes below, ORN refers to the internal presentation
@@ -110,13 +109,11 @@ class NMarkedAbelianGroup : public ShareableObject {
         // first rankOM rows.
 
         /** Internal change of basis. ornC * ORN * ornR is the SNF(ORN). */
-        NMatrixInt ornR;
-        /** Internal change of basis. ornRi is the inverse to ornR. */
-        NMatrixInt ornRi; // 
-        /** Internal change of basis. ornC * ORN * ornR is the SNF(ORN). */
-        NMatrixInt ornC;
-        /** Internal change of basis. ornCi is the inverse to ornC. */
-        NMatrixInt ornCi;
+        std::auto_ptr<NMatrixInt> ornR, ornC;
+        /** Internal change of basis. These are the inverses of ornR and ornC resp. */
+        std::auto_ptr<NMatrixInt> ornRi, ornCi; 
+        /** Internal change of basis matrix for homology with coefficents. */
+	std::auto_ptr<NMatrixInt> otR, otC, otRi, otCi;
 
         /** Internal list of invariant factors. */
         std::vector<NLargeInteger> InvFacList;
@@ -129,12 +126,24 @@ class NMarkedAbelianGroup : public ShareableObject {
         /** Row index of invariant factors in SNF(ORN) */
         unsigned long ifLoc;
 
+	// these variables store information for mod-p homology computations.
+        /** coefficients to use in homology computation **/
+	NLargeInteger coeff;
+	/** TORLoc stores the location of the first TOR entry from the SNF of OM 
+	    TORLoc == rankOM-TORVec.size() */
+	unsigned long TORLoc;
+	/** invariant factor location in the tensor product presentation matrix SNF */
+	unsigned long tensorIfLoc;
+	/** TORVec's i-th entry stores the entries q where Z_p --q-->Z_p is the i-th
+	    TOR entry from the SNF of OM */
+	std::vector<NLargeInteger> TORVec;
 
     public:
 
         /**
-         * Creates a marked abelian group from a chain complex.
-         * See the class notes for details.
+         * Creates a marked abelian group from a chain complex. This constructo
+	 * assumes you're interested in homology with integer coefficents of the chain
+	 * complex.  See the class notes for details.
          *
          * \pre M.columns() = N.rows().
          * \pre The product M*N = 0.
@@ -143,6 +152,21 @@ class NMarkedAbelianGroup : public ShareableObject {
          * @param N `left' matrix in chain complex
          */
         NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
+
+       /**
+         * Creates a marked abelian group from a chain complex with coefficients
+         * in Z_p.   See the class notes for details.
+         *
+         * \pre M.columns() = N.rows().
+         * \pre The product M*N = 0.
+         *
+         * @param M the `right' matrix in chain complex
+         * @param N `left' matrix in chain complex
+	 * @param pcoeff specifies the coefficient ring, Z_pcoeff. We require pcoeff \geq 0.
+ 	 *     if you know beforehand that pcoeff==0, it's more efficient to use the previous
+	 *     constructor.
+         */
+        NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N, const NLargeInteger &pcoeff);
 
 	/**
 	 * Creates a free Z_p-module of a given rank using the a direct sum 
@@ -154,6 +178,7 @@ class NMarkedAbelianGroup : public ShareableObject {
 	 * @param rk is the rank of the group as a Z_p-module, ie if the group is n Z_p, 
 	 *        rk is n. 
 	 * @param p describes the type of ring that you're using to talk about `free' module. 
+	 *        
 	 */
 	NMarkedAbelianGroup(const unsigned long &rk, const NLargeInteger &p);
 
@@ -175,7 +200,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the rank of the group.
          */
-        unsigned getRank() const;
+        unsigned long getRank() const;
 
         /**
          * Returns the rank in the group of the torsion term of given degree.
@@ -193,7 +218,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned getTorsionRank(const NLargeInteger& degree) const;
+        unsigned long getTorsionRank(const NLargeInteger& degree) const;
 
         /**
          * Returns the rank in the group of the torsion term of given degree.
@@ -211,7 +236,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned getTorsionRank(unsigned long degree) const;
+        unsigned long getTorsionRank(unsigned long degree) const;
 
         /**
          * Returns the number of invariant factors that describe the
@@ -222,6 +247,11 @@ class NMarkedAbelianGroup : public ShareableObject {
          * @return the number of invariant factors.
          */
         unsigned long getNumberOfInvariantFactors() const;
+
+	/**
+	 * Minimum number of generators for the group. 
+	 */
+	unsigned long minNumberOfGenerators() const;
 
         /**
          * Returns the given invariant factor describing the torsion
@@ -295,7 +325,8 @@ class NMarkedAbelianGroup : public ShareableObject {
          * this must be between 0 and getRank()-1 inclusive.
          * @return the coordinates of the free generator in the nullspace of
          * \a M; this vector will have length M.columns() (or
-         * equivalently, N.rows()).
+         * equivalently, N.rows()). If this generator does not exist, 
+	 * you'll receive a null vector. 
          */
         std::vector<NLargeInteger> getFreeRep(unsigned long index) const;
 
@@ -313,7 +344,8 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @param index specifies which generator in the torsion subgroup;
          * this must be at least 0 and strictly less than the number of
-         * non-trivial invariant factors.
+         * non-trivial invariant factors.  If not, you receive a null
+	 * vector. 
          * @return the coordinates of the generator in the nullspace of
          * \a M; this vector will have length M.columns() (or
          * equivalently, N.rows()).
@@ -331,8 +363,12 @@ class NMarkedAbelianGroup : public ShareableObject {
          * matrix, then this routine returns the (\a index)th free
          * generator of ker(M)/img(N) in \a Z^l. This routine is the inverse
 	 * to getSNFIsoRep() described below.
+	 *
+	 * @param SNFRep must be a vector of size the number of generators of the group, ie
+	 *        it must be valid in the SNF coordinates.  If not, a null vector is
+	 *        returned.
 	 */
-	std::vector<NLargeInteger> getCCRep(const std::vector<NLargeInteger> SNFRep) const;
+	std::vector<NLargeInteger> ccRep(const std::vector<NLargeInteger> SNFRep) const;
 
 	/**
 	 * Given a vector, determines if it represents a cycle in chain complex.
@@ -353,6 +389,12 @@ class NMarkedAbelianGroup : public ShareableObject {
 
 	/**
 	 * And if it's a boundary, maybe you'd like to see it written as a boundary.
+	 * Using CC coordinates for both the return value and input.   
+	 *
+	 * Warning: If you're using mod-p coefficients and if your element projects 
+	 *  to a non-trivial element of TOR, Nv \neq input as elements of TOR aren't
+	 *  in the image of N.  In this case, input - Nv represents the projection to TOR. 
+	 *
 	 * @return length zero vector if not a boundary. If it is a boundary, it returns
 	 *  a vector v such that Nv=input. 
 	 */
@@ -418,7 +460,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * \a v is not in the kernel of \a M.
 	 *
          */
-        std::vector<NLargeInteger> getSNFIsoRep(
+        std::vector<NLargeInteger> snfRep(
             const std::vector<NLargeInteger>& v) const;
 
         /**
@@ -919,22 +961,23 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
         ShareableObject(),
         OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
         rankOM(g.rankOM),
-        ornR(g.ornR), ornRi(g.ornRi), ornC(g.ornC), ornCi(g.ornCi),
-        InvFacList(g.InvFacList), snfrank(g.snfrank),
-        snffreeindex(g.snffreeindex),
-        ifNum(g.ifNum), ifLoc(g.ifLoc) {
+        ornR(clonePtr(g.ornR)), ornC(clonePtr(g.ornC)), ornRi(clonePtr(g.ornRi)), ornCi(clonePtr(g.ornCi)),
+        otR(clonePtr(g.otR)), otC(clonePtr(g.otC)), otRi(clonePtr(g.otRi)), otCi(clonePtr(g.otCi)), 
+        InvFacList(g.InvFacList), snfrank(g.snfrank),  snffreeindex(g.snffreeindex),
+        ifNum(g.ifNum), ifLoc(g.ifLoc), coeff(g.coeff), TORLoc(g.TORLoc), 
+	tensorIfLoc(g.tensorIfLoc), TORVec(g.TORVec) {
 }
 
 // destructor
 inline NMarkedAbelianGroup::~NMarkedAbelianGroup() {}
 
-inline unsigned NMarkedAbelianGroup::getTorsionRank(unsigned long degree)
+inline unsigned long NMarkedAbelianGroup::getTorsionRank(unsigned long degree)
         const {
     return getTorsionRank(NLargeInteger(degree));
 }
 
 inline unsigned long NMarkedAbelianGroup::getNumberOfInvariantFactors() const {
-    return InvFacList.size();
+    return ifNum;
 }
 
 inline const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
@@ -942,14 +985,17 @@ inline const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
     return InvFacList[index];
 }
 
-inline unsigned NMarkedAbelianGroup::getRank() const {
+inline unsigned long NMarkedAbelianGroup::getRank() const {
     return snfrank;
+}
+
+inline unsigned long NMarkedAbelianGroup::minNumberOfGenerators() const {
+	return snfrank + ifNum;
 }
 
 inline unsigned long NMarkedAbelianGroup::getRankCC() const {
 	return OM.columns();
 }
-
 
 inline bool NMarkedAbelianGroup::isTrivial() const {
     return ! ( (snfrank>0) || (InvFacList.size()>0) );
@@ -957,13 +1003,12 @@ inline bool NMarkedAbelianGroup::isTrivial() const {
 
 inline bool NMarkedAbelianGroup::operator == (
         const NMarkedAbelianGroup& other) const {
-    return ( (OM == other.OM) && (ON == other.ON) );
+    return ( (OM == other.OM) && (ON == other.ON) && (coeff == other.coeff) );
 }
 
 inline bool NMarkedAbelianGroup::isIsomorphicTo(const NMarkedAbelianGroup &other) const {
     return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
 }
-
 
 inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
     return OMR;
@@ -978,16 +1023,16 @@ inline const NMatrixInt& NMarkedAbelianGroup::getMCBi() const {
     return OMCi;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getNRB() const {
-    return ornR;
+    return *ornR;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getNRBi() const {
-    return ornRi;
+    return *ornRi;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getNCB() const {
-    return ornC;
+    return *ornC;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getNCBi() const {
-    return ornCi;
+    return *ornCi;
 }
 
 inline unsigned long NMarkedAbelianGroup::getRankM() const {

@@ -37,10 +37,10 @@ using regina::NMarkedAbelianGroup;
 using regina::NMatrixInt;
 
 namespace {
-    unsigned (NMarkedAbelianGroup::*getTorsionRank_large)(
+    unsigned long (NMarkedAbelianGroup::*getTorsionRank_large)(
         const regina::NLargeInteger&) const =
         &NMarkedAbelianGroup::getTorsionRank;
-    unsigned (NMarkedAbelianGroup::*getTorsionRank_long)(unsigned long)
+    unsigned long (NMarkedAbelianGroup::*getTorsionRank_long)(unsigned long)
         const = &NMarkedAbelianGroup::getTorsionRank;
 
     boost::python::list getFreeRep_list(
@@ -69,7 +69,7 @@ namespace {
         return ans;
     }
 
-    boost::python::list getSNFIsoRep_list_list(
+    boost::python::list snfRep_list_list(
             const NMarkedAbelianGroup& g, boost::python::list element) {
         unsigned long needLen = g.getM().columns();
 
@@ -107,7 +107,7 @@ namespace {
             x_large();
         }
 
-        std::vector<regina::NLargeInteger> rep = g.getSNFIsoRep(eltVector);
+        std::vector<regina::NLargeInteger> rep = g.snfRep(eltVector);
 
         boost::python::list ans;
         for (std::vector<regina::NLargeInteger>::const_iterator
@@ -138,7 +138,7 @@ void addNMarkedAbelianGroup() {
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
         .def("getFreeRep", getFreeRep_list)
         .def("getTorsionRep", getTorsionRep_list)
-        .def("getSNFIsoRep", getSNFIsoRep_list_list)
+        .def("snfRep", snfRep_list_list)
         .def("getMRB", &NMarkedAbelianGroup::getMRB,
             return_internal_reference<>())
         .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
