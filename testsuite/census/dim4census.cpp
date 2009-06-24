@@ -67,7 +67,7 @@ class Dim4CensusTest : public CppUnit::TestFixture {
             rawCountsCompare(1, 3, nAll, "closed compact",
                 NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sFalse, 0, 0);
 
-            unsigned nOrientable[] = { 1, 0, 8 };
+            unsigned nOrientable[] = { 1, 0, 8, 0 };
             rawCountsCompare(1, 3, nOrientable, "closed compact orbl",
                 NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sFalse, 0, 0);
         }
