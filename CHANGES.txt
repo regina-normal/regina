@@ -36,6 +36,11 @@ Version 4.6.1  [ (under development) ]
         Class NAbelianGroup:
             - Routine addRank() now takes a signed integer, so that you
               can subtract from the rank as well as add to it.
+        Class NBitmask, NBitmask1, NBitmask2:
+            - New XOR operator ^=.
+            - New convenience typedefs NBitmaskLen8, NBitmaskLen16,
+              NBitmaskLen32 and NBitmaskLen64 for fast-and-small bitmasks
+              of predetermined sizes.
         Class NCensus:
             - New class typedef NCensus::AcceptTriangulation to replace the
               old global typedef AcceptTriangulation.

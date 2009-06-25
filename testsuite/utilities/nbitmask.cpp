@@ -26,18 +26,39 @@
 
 /* end stub */
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include <algorithm>
+#include <sstream>
+#include <cppunit/extensions/HelperMacros.h>
+#include "testsuite/utilities/testutilities.h"
+#include "utilities/nbitmask.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+class NBitmaskTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(NBitmaskTest);
 
-void addNBitmask(CppUnit::TextUi::TestRunner& runner);
-void addNIndexedArray(CppUnit::TextUi::TestRunner& runner);
+    CPPUNIT_TEST(sizes);
+
+    CPPUNIT_TEST_SUITE_END();
+
+    public:
+        void setUp() {
+        }
+
+        void tearDown() {
+        }
+
+        void sizes() {
+            if (sizeof(regina::NBitmaskLen8) < 1)
+                CPPUNIT_FAIL("NBitmaskLen8 does not hold 1 byte.");
+            if (sizeof(regina::NBitmaskLen16) < 2)
+                CPPUNIT_FAIL("NBitmaskLen16 does not hold 2 bytes.");
+            if (sizeof(regina::NBitmaskLen32) < 4)
+                CPPUNIT_FAIL("NBitmaskLen32 does not hold 4 bytes.");
+            if (sizeof(regina::NBitmaskLen64) < 8)
+                CPPUNIT_FAIL("NBitmaskLen64 does not hold 8 bytes.");
+        }
+};
+
+void addNBitmask(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(NBitmaskTest::suite());
+}
 
