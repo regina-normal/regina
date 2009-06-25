@@ -38,6 +38,7 @@
 #include <algorithm>
 #include <iostream>
 
+#include "regina-config.h"
 #include "utilities/bitmanip.h"
 
 namespace regina {
@@ -251,6 +252,18 @@ class NBitmask {
         NBitmask& operator |= (const NBitmask& other);
 
         /**
+         * Sets this to the exclusive disjunction (XOR) of this and the
+         * given bitmask.  Every bit that is set in \a other will be
+         * flipped in this bitmask.
+         *
+         * \pre This and the given bitmask have the same length.
+         *
+         * @param other the bitmask to XOR with this.
+         * @return a reference to this bitmask.
+         */
+        NBitmask& operator ^= (const NBitmask& other);
+
+        /**
          * Negates every bit in this bitmask.  All \c true bits will be
          * set to \c false and vice versa.
          *
@@ -406,6 +419,9 @@ class NBitmask1 {
          *
          * The integer argument is merely for compatibility with
          * the NBitmask constructor, and will be ignored.
+         *
+         * \warning This is \e not a constructor that initialises the
+         * bitmask to a given pattern.
          */
         inline NBitmask1(unsigned) : mask(0) {
         }
@@ -532,6 +548,19 @@ class NBitmask1 {
          */
         inline NBitmask1<T>& operator |= (const NBitmask1<T>& other) {
             mask |= other.mask;
+            return *this;
+        }
+
+        /**
+         * Sets this to the exclusive disjunction (XOR) of this and the
+         * given bitmask.  Every bit that is set in \a other will be
+         * flipped in this bitmask.
+         *
+         * @param other the bitmask to XOR with this.
+         * @return a reference to this bitmask.
+         */
+        inline NBitmask1<T>& operator ^= (const NBitmask1<T>& other) {
+            mask ^= other.mask;
             return *this;
         }
 
@@ -704,6 +733,9 @@ class NBitmask2 {
          *
          * The integer argument is merely for compatibility with
          * the NBitmask constructor, and will be ignored.
+         *
+         * \warning This is \e not a constructor that initialises the
+         * bitmask to a given pattern.
          */
         inline NBitmask2(unsigned) : low(0), high(0) {
         }
@@ -857,6 +889,20 @@ class NBitmask2 {
         }
 
         /**
+         * Sets this to the exclusive disjunction (XOR) of this and the
+         * given bitmask.  Every bit that is set in \a other will be
+         * flipped in this bitmask.
+         *
+         * @param other the bitmask to XOR with this.
+         * @return a reference to this bitmask.
+         */
+        inline NBitmask2<T, U>& operator ^= (const NBitmask2<T, U>& other) {
+            low ^= other.low;
+            high ^= other.high;
+            return *this;
+        }
+
+        /**
          * Negates every bit in this bitmask.  All \c true bits will be
          * set to \c false and vice versa.
          *
@@ -990,6 +1036,120 @@ std::ostream& operator << (std::ostream& out, const NBitmask2<T, U>& mask) {
     return out;
 }
 
+#ifndef __DOXYGEN
+/**
+ * An internal template that helps choose the correct bitmask type for
+ * a given (hard-coded) number of bits.
+ *
+ * Please do not use this class directly, since this template is internal
+ * and subject to change in future versions of Regina.  Instead please
+ * use the convenience typedefs NBitmaskLen8, NBitmaskLen16, NBitmaskLen32
+ * and NBitmaskLen64.
+ *
+ * The reason this template exists is to circumvent the fact that we cannot
+ * use sizeof() in a #if statement.  The boolean argument to this template
+ * should always be left as the default.
+ */
+template <bool IntHolds4Bytes = (sizeof(unsigned int) >= 4)>
+struct InternalBitmaskLen32;
+
+template <>
+struct InternalBitmaskLen32<true> {
+    typedef NBitmask1<unsigned int> Type;
+};
+
+template <>
+struct InternalBitmaskLen32<false> {
+    typedef NBitmask1<unsigned long> Type;
+};
+
+/**
+ * An internal template that helps choose the correct bitmask type for
+ * a given (hard-coded) number of bits.
+ *
+ * Please do not use this class directly, since this template is internal
+ * and subject to change in future versions of Regina.  Instead please
+ * use the convenience typedefs NBitmaskLen8, NBitmaskLen16, NBitmaskLen32
+ * and NBitmaskLen64.
+ *
+ * The reason this template exists is to circumvent the fact that we cannot
+ * use sizeof() in a #if statement.  The boolean argument to this template
+ * should always be left as the default.
+ */
+template <bool LongHolds8Bytes = (sizeof(unsigned long) >= 8)>
+struct InternalBitmaskLen64;
+
+template <>
+struct InternalBitmaskLen64<true> {
+    typedef NBitmask1<unsigned long> Type;
+};
+
+template <>
+struct InternalBitmaskLen64<false> {
+#if HAVE_LONG_LONG
+    typedef NBitmask1<unsigned long long> Type;
+#else
+    typedef NBitmask2<unsigned long> Type;
+#endif
+};
+#endif // End block for doxygen to ignore.
+
+/**
+ * A convenience typedef that gives a small and extremely fast bitmask
+ * class capable of holding up to 8 true-or-false bits.
+ *
+ * This bitmask class is guaranteed to be an instantiation of the
+ * template class NBitmask1.
+ *
+ * The particular instantiation is subject to change between different
+ * platforms, different compilers and/or different versions of Regina.
+ *
+ * \ifacespython Not present.
+ */
+typedef NBitmask1<unsigned char> NBitmaskLen8;
+
+/**
+ * A convenience typedef that gives a small and extremely fast bitmask
+ * class capable of holding up to 16 true-or-false bits.
+ *
+ * This bitmask class is guaranteed to be an instantiation of the
+ * template class NBitmask1.
+ *
+ * The particular instantiation is subject to change between different
+ * platforms, different compilers and/or different versions of Regina.
+ *
+ * \ifacespython Not present.
+ */
+typedef NBitmask1<unsigned int> NBitmaskLen16;
+
+/**
+ * A convenience typedef that gives a small and extremely fast bitmask
+ * class capable of holding up to 32 true-or-false bits.
+ *
+ * This bitmask class is guaranteed to be an instantiation of the
+ * template class NBitmask1.
+ *
+ * The particular instantiation is subject to change between different
+ * platforms, different compilers and/or different versions of Regina.
+ *
+ * \ifacespython Not present.
+ */
+typedef InternalBitmaskLen32<>::Type NBitmaskLen32;
+
+/**
+ * A convenience typedef that gives a small and extremely fast bitmask
+ * class capable of holding up to 64 true-or-false bits.
+ *
+ * This bitmask class is guaranteed to be an instantiation of
+ * \e either the template class NBitmask1 or the template class NBitmask2.
+ *
+ * The particular instantiation is subject to change between different
+ * platforms, different compilers and/or different versions of Regina.
+ *
+ * \ifacespython Not present.
+ */
+typedef InternalBitmaskLen64<>::Type NBitmaskLen64;
+
 /*@}*/
 
 // Inline functions for NBitmask
@@ -1049,6 +1209,12 @@ inline NBitmask& NBitmask::operator &= (const NBitmask& other) {
 inline NBitmask& NBitmask::operator |= (const NBitmask& other) {
     for (unsigned i = 0; i < pieces; ++i)
         mask[i] |= other.mask[i];
+    return *this;
+}
+
+inline NBitmask& NBitmask::operator ^= (const NBitmask& other) {
+    for (unsigned i = 0; i < pieces; ++i)
+        mask[i] ^= other.mask[i];
     return *this;
 }
 

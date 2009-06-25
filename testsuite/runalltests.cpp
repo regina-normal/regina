@@ -112,6 +112,7 @@ bool runAllTests() {
      */
 
     // Utilities:
+    addNBitmask(runner);
     addNIndexedArray(runner);
     addNLargeInteger(runner);
     addNRational(runner);
