@@ -984,6 +984,13 @@ R = li; li += t*lj; lj -= t*R;
 //  Notice the denominator must be non-zero since v1 and v2 are linearly independant.
 ///
 // hmm! this is doing an awful job.
+// reading over the paper's ben sent, Havas Holt and Rees indicate that it's good to consider which row/
+//  column one chooses as a pivot, if there's more than one possibility choose the one of smallest norm, 
+//  least number of non-zero entries, etc. so the idea will be to carry around two vectors, one indexed
+// by rows the other columns, which will store a norm for the rows and columns indicating how expensive
+// it is to use them in row/column operations.   A second strategy is to consider the order in which  we
+// do the gcd w/coeffs calculations -- try doing them all first, and choose to perform the one with 
+// lowest remainder first.
 void controlledSmithNormalForm(NMatrixInt& matrix,
         NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv) {

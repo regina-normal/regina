@@ -36,7 +36,8 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const unsigned long &rk, const NLargeIn
 OM(rk, rk), ON(rk,rk), OMR(rk,rk), OMC(rk,rk), OMRi(rk, rk), OMCi(rk, rk), rankOM(0), 
 ornR(0), ornC(0), ornRi(0), ornCi(0), otR(0), otC(0), otRi(0), otCi(0), 
 InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), 
-coeff(NLargeInteger::zero)
+coeff(NLargeInteger::zero), TORLoc(0), TORVec(0), tensorIfLoc(0), tensorIfNum(0), 
+tensorInvFacList(0)
 {
 ornR.reset(new NMatrixInt(rk, rk)); ornRi.reset(new NMatrixInt(rk, rk)); 
 ornC.reset(new NMatrixInt(rk, rk)); ornCi.reset(new NMatrixInt(rk, rk));
@@ -57,7 +58,8 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
         OMCi(M.rows(),M.rows()),
         rankOM(0),  ornR(0), ornC(0), ornRi(0), ornCi(0),
         InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), 
-	coeff(NLargeInteger::zero), TORLoc(0), tensorIfLoc(0), TORVec(0) {
+	coeff(NLargeInteger::zero), TORLoc(0), TORVec(0), tensorIfLoc(0), 
+	tensorIfNum(0), tensorInvFacList(0) {
     NMatrixInt tM(M);
  
     #ifdef __useControlledSNF
@@ -126,7 +128,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& 
         OMCi(M.rows(),M.rows()),
         rankOM(0),  ornR(0), ornC(0), ornRi(0), ornCi(0), otR(0), otC(0), otRi(0), otCi(0),
         InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), coeff(pcoeff), 
-	TORLoc(0), tensorIfLoc(0), TORVec(0)
+	TORLoc(0), TORVec(0), tensorIfLoc(0), tensorInvFacList(0)
 {
     // find SNF(M).
     NMatrixInt tM(M);
@@ -180,16 +182,16 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& 
      //  assemble these numbers into a diagonal presentation matrix and apply SNF!  First, determine
      //  the size of the matrix we'll need. 
 
-     std::vector<NLargeInteger> tensorInvFacs(0);
      for (unsigned long i=0; ( (i<tensorPres.rows()) && (i<tensorPres.columns()) ); i++)
 	{
 	if (tensorPres.entry(i,i) == 1) tensorIfLoc++; else
-	if (tensorPres.entry(i,i) > 1) tensorInvFacs.push_back(tensorPres.entry(i,i)); else
+	if (tensorPres.entry(i,i) > 1) tensorInvFacList.push_back(tensorPres.entry(i,i)); else
 	if (tensorPres.entry(i,i) == 0) snfrank++; // should always be zero. 
 	}	
+     tensorIfNum = tensorInvFacList.size();
 
-     NMatrixInt diagPres( TORVec.size() + tensorInvFacs.size() + snfrank, 
-			  TORVec.size() + tensorInvFacs.size() + snfrank);
+     NMatrixInt diagPres( TORVec.size() + tensorIfNum + snfrank, 
+			  TORVec.size() + tensorIfNum + snfrank);
      for (unsigned long i=0; i<diagPres.rows(); i++)
 	{
 	if (i<TORVec.size()) diagPres.entry(i,i) = TORVec[i].gcd(coeff); else
@@ -476,9 +478,9 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::snfRep(
      for (unsigned long i=0;i<snfrank;i++) for (unsigned long j=rankOM;j<ON.rows();j++)
                 retval[i+ifNum] += ornC->entry(i+snffreeindex,j-rankOM)*temp[j];
      for (unsigned long i=0;i<ifNum;i++)   for (unsigned long j=rankOM;j<ON.rows();j++)
-                retval[i] += ornC->entry(i+ifLoc,j-rankOM)*temp[j];
+                retval[i] += ornC->entry(i+ifLoc,j-rankOM)*temp[j]; // redundant for loops
      }
-    else
+    else 
      {
      std::vector<NLargeInteger> diagPresV( ornC->rows(), NLargeInteger::zero);
      for (unsigned long i=0; i<diagPresV.size(); i++)
@@ -504,98 +506,26 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::snfRep(
 }
 
 
-
-// convert to the SNF(ORN) coordinates and check if boundary.  If so, find what it's the boundary of
-// and convert to CC coords. 
-std::vector<NLargeInteger> NMarkedAbelianGroup::writeAsBoundary(const std::vector<NLargeInteger> &input) const
-{
-    static const std::vector<NLargeInteger> nullvec;
-    std::vector<NLargeInteger> retval(ON.columns(), NLargeInteger::zero);
-    if ( input.size() != OM.columns() ) return nullvec;
-    std::vector<NLargeInteger> temp(ON.rows(), NLargeInteger::zero); 
-    for (unsigned long i=0;i<ON.rows();i++) for (unsigned long j=0;j<ON.rows();j++)
-            temp[i] += OMRi.entry(i,j)*input[j]; //ok
-    if (coeff == 0)
-     { for (unsigned long i=0;i<rankOM;i++) if (temp[i] != 0) return nullvec; }
-    else
-     { 
-       for (unsigned long i=0; i<TORLoc; i++) 
-	{
- 	 if (temp[i] % coeff != 0) return nullvec; 
-	 temp[i]=NLargeInteger::zero; // get rid of TOR terms
-	}
-       for (unsigned long i=0; i<TORVec.size(); i++) if (temp[TORLoc+i]*TORVec[i] % coeff != 0) return nullvec;
-     } // now we can be certain we're dealing with a cycle.
-    // careful to disregard the TOR coordinates
-    std::vector<NLargeInteger> snfcoords(ornC->rows(), NLargeInteger::zero);
-    for (unsigned long i=0; i<ornC->rows(); i++) for (unsigned long j=TORVec.size(); j<ornC->columns(); j++)
-        	snfcoords[i] += ornC->entry(i, j)*temp[j+TORLoc];
-
-std::cout<<"temp[] == "; // ok
-for (unsigned long i=0; i<temp.size(); i++) std::cout<<temp[i]<<" ";
-std::cout<<"\n";
-std::cout<<
-std::cout<<"snfcoords[] == "; // ok
-for (unsigned long i=0; i<snfcoords.size(); i++) std::cout<<snfcoords[i]<<" ";
-std::cout<<"\n";
-std::cout<<"InvFacList == [";
-for (unsigned long i=0; i<InvFacList.size(); i++) std::cout<<InvFacList[i]<<" ";
-std::cout<<"] ifLoc == "<<ifLoc<<"\n";
-
-// only need to worry about coords ifLoc, ... <ifLoc+ifNum
-     // test to see if a boundary. 
-     for (unsigned long i=0; i<ifNum; i++)
-	{ // needs to be modified for integer coeffs? 
-         if (snfcoords[i+ifLoc] % InvFacList[i] != NLargeInteger::zero) return nullvec;
-	 snfcoords[i+ifLoc]=snfcoords[i+ifLoc].divExact(InvFacList[i]);
-        }
-
-std::cout<<"mod snfcoords[] == "; // ok
-for (unsigned long i=0; i<snfcoords.size(); i++) std::cout<<snfcoords[i]<<" ";
-std::cout<<"\n";
-
-     // now we apply ornR to snfcoords[] and we only care about the first ON.columns() entries.
-     for (unsigned long i=0; i<retval.size(); i++)
-	for (unsigned long j=0; j<snfcoords.size(); j++)
-		retval[i] += ornR->entry(i,j+TORVec.size()) * snfcoords[j];
-
-     // so if coeff==0 we need snfcoords[i] to be divisible by InvFacList[i]
-     //    if coeff>0  we need snfcoords[i] to be a multiple of InvFacList[i] mod coeff.
-
-return retval;
-}
-
-
-
 bool NMarkedAbelianGroup::isCycle(const std::vector<NLargeInteger> &input) const
 { 
-bool retval = true;
-if (input.size() == OM.columns())
+if (input.size() != OM.columns()) return false;
+for (unsigned long i=0; i<OM.rows(); i++)
  {
-   for (unsigned long i=0; i<OM.rows(); i++)
-	{
-	NLargeInteger T(NLargeInteger::zero);
-	for (unsigned long j=0; j<OM.columns(); j++) T += input[j]*OM.entry(i,j);
-        if (coeff == NLargeInteger::zero)	
-	  {if (T != NLargeInteger::zero) retval = false;} else
-	  if ( (T % coeff) != NLargeInteger::zero ) retval = false;
-	}
- } else retval = false;
-return retval;
+ NLargeInteger T(NLargeInteger::zero);
+ for (unsigned long j=0; j<OM.columns(); j++) T += input[j]*OM.entry(i,j);
+ if (coeff == NLargeInteger::zero) { if (T != NLargeInteger::zero) return false; } else 
+  if ( (T % coeff) != NLargeInteger::zero ) return false;
+ } 
+return true;
 }
 
 bool NMarkedAbelianGroup::isBoundary(const std::vector<NLargeInteger> &input) const
 { 
-// isBoundary iff snfRep is the zero vector.
-bool retval = true;
-// check dimension
-if (input.size() == OM.columns())
- { // check if in image of the matrix.
-   std::vector<NLargeInteger> snF(snfRep(input));
-   if (snF.size() != getNumberOfInvariantFactors() + getRank()) retval = false;
-   else for (unsigned long i=0; i<snF.size(); i++) if (snF[i]!=NLargeInteger::zero) retval = false;
- } else retval = false;
-return retval;
+if (input.size() != OM.columns()) return false;
+std::vector<NLargeInteger> snF(snfRep(input));
+if (snF.size() != getNumberOfInvariantFactors() + getRank()) return false;
+for (unsigned long i=0; i<snF.size(); i++) if (snF[i]!=NLargeInteger::zero) return false;
+return true;
 }
 
 std::vector<NLargeInteger> NMarkedAbelianGroup::bdryMap(const std::vector<NLargeInteger> &CCrep) const
@@ -615,6 +545,58 @@ return retval;
 }
 
 
+
+// routine checks to see if an object in the CC coords for our group is a boundary, and if so it returns
+// CC coords of what an object that it is a boundary of.  Null vector is returned if not boundary.  
+// So the algorithm checks if it's a cycle, converts to snf coordinates, checks if boundary, if so
+// computes preimage and moves back up to CC coords.  If we have p \neq 0, we also have to check that the 
+// TOR part is trivial. 
+std::vector<NLargeInteger> NMarkedAbelianGroup::writeAsBoundary(const std::vector<NLargeInteger> &input) const
+{
+ static const std::vector<NLargeInteger> nullvec;
+ if ( !isCycle(input) ) return nullvec;
+ // okay, it's a cycle so lets determine whether or not it is a boundary. 
+ std::vector<NLargeInteger> temp(ON.rows(), NLargeInteger::zero); 
+ for (unsigned long i=0; i<ON.rows(); i++) for (unsigned long j=0;j<ON.rows();j++)
+            temp[i] += OMRi.entry(i,j)*input[j];
+ for (unsigned long i=0; i<TORVec.size(); i++)
+	if (temp[TORLoc + i] % coeff != 0) return nullvec;
+ // now we know we're dealing with a cycle with zero TOR part. 
+ // convert into the diagPres coordinates / standard snfcoords if p==0. 
+ std::vector<NLargeInteger> retval(ON.columns(), NLargeInteger::zero);
+ if (coeff == 0)
+     {
+     std::vector<NLargeInteger> snfV(ornC->rows(), NLargeInteger::zero);
+     for (unsigned long i=0;i<ornC->rows();i++) for (unsigned long j=0;j<ornC->columns();j++)
+                snfV[i] += ornC->entry(i,j)*temp[j+rankOM];
+     // check divisibility in the invFac coords
+     for (unsigned long i=0; i<ifNum; i++)
+	{ if (snfV[i+ifLoc] % InvFacList[i] != 0) return nullvec;
+	snfV[i+ifLoc] /= InvFacList[i]; }
+     // check that it's zero on coords missed by N...
+     for (unsigned long i=0; i<snfrank; i++)
+	if (snfV[i+snffreeindex] != 0) return nullvec;
+     // we know it's in the image now. 
+     for (unsigned long i=0; i<retval.size(); i++) for (unsigned long j=0; j<snfV.size(); j++)
+	retval[i] += ornR->entry(i, j) * snfV[j];
+     }
+    else 
+     {// find tensorV -- apply otC.
+      std::vector<NLargeInteger> tensorV( otC->rows(), NLargeInteger::zero);
+      for (unsigned long i=0; i<otC->rows(); i++) for (unsigned long j=0; j<otC->columns(); j++) 
+	tensorV[i] += otC->entry(i, j) * temp[ j + rankOM ];
+      for (unsigned long i=0; i<tensorIfNum; i++)
+	{
+	if (tensorV[i+tensorIfLoc] % tensorInvFacList[i] != 0) return nullvec;
+	tensorV[i+tensorIfLoc] /= tensorInvFacList[i];
+	}
+      // so we know it's where it comes from now...
+      for (unsigned long i=0; i<retval.size(); i++) for (unsigned long j=0; j<tensorV.size(); j++)
+        retval[i] += otR->entry(i,j) * tensorV[j];
+	// ah! the other coefficients of otR gives the relevant congruence. 
+     }
+  return retval;
+}
 
 
 // this is when you want to define an NHomMarkedAbelianGroup from a its reduced matrix, not via
@@ -688,64 +670,26 @@ NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& g):
     } else reducedKernelLattice = 0;
 }
 
-void NHomMarkedAbelianGroup::computeReducedMatrix() {
-    if (!reducedMatrix) {
-        unsigned long i,j,k;
+void NHomMarkedAbelianGroup::computeReducedMatrix() 
+{
+ if (!reducedMatrix) 
+  {
+    reducedMatrix = new NMatrixInt( range.minNumberOfGenerators(),
+                                    domain.minNumberOfGenerators() );
 
-        NMatrixInt kerMatrix( matrix.rows()-range.getRankM(),
-                matrix.columns()-domain.getRankM() );
-        // kerMatrix = truncate (range.getMRBi() * matrix * domain.getMRBi)
-        // to construct this we do it in two steps:
-        // step 1) temp1 = truncate columns (matrix * domain.getMRBi )
-        // step 2) kerMatrix = truncate rows (range.getMRBi * temp1 )
+    for (unsigned long j=0; j<reducedMatrix->columns(); j++)
+     {
+      std::vector<NLargeInteger> colV( (j<domain.getNumberOfInvariantFactors()) ? 
+	domain.getTorsionRep(j) : domain.getFreeRep(j-domain.getNumberOfInvariantFactors()) );
+      std::vector<NLargeInteger> icv( matrix.rows(), NLargeInteger::zero);
+      for (unsigned long i=0; i<icv.size(); i++) for (unsigned long k=0; k<matrix.columns(); k++)
+	icv[i] += matrix.entry(i,k) * colV[k];
+      std::vector<NLargeInteger> midge( range.snfRep(icv) ); 
+      for (unsigned long i=0; i<midge.size(); i++)
+	reducedMatrix->entry(i,j) = midge[i];
+     }
 
-        const NMatrixInt& dcckb(domain.getMRB());
-        const NMatrixInt& rcckb(range.getMRBi());
-
-        NMatrixInt temp1( matrix.rows(), matrix.columns()-domain.getRankM() );
-        for (i=0;i<temp1.rows();i++)
-            for (j=0;j<temp1.columns();j++)
-                for (k=0;k<matrix.columns();k++)
-                    temp1.entry(i,j) += matrix.entry(i,k) *
-                        dcckb.entry(k,j + domain.getRankM() );
-
-        for (i=0;i<kerMatrix.rows();i++)
-            for (j=0;j<kerMatrix.columns();j++)
-                for (k=0;k<rcckb.rows();k++)
-                    kerMatrix.entry(i,j) +=
-                        rcckb.entry(i+range.getRankM(), k) * temp1.entry(k,j);
-
-        reducedMatrix = new NMatrixInt( kerMatrix.rows()-range.getTorsionLoc(),
-                kerMatrix.columns()-domain.getTorsionLoc() );
-
-        const NMatrixInt& dccqb(domain.getNCBi());
-        const NMatrixInt& rccqb(range.getNCB());
-
-        NMatrixInt temp2( kerMatrix.rows(),
-            kerMatrix.columns() - domain.getTorsionLoc() );
-        for (i=0;i<temp2.rows();i++)
-            for (j=0;j<temp2.columns();j++)
-                for (k=0;k<kerMatrix.columns();k++) {
-                    temp2.entry(i,j) += kerMatrix.entry(i,k) *
-                        dccqb.entry(k,j + domain.getTorsionLoc() );
-                }
-
-        for (i=0;i<reducedMatrix->rows();i++)
-            for (j=0;j<reducedMatrix->columns();j++)
-		{
-                for (k=0;k<rccqb.rows();k++)
-                    reducedMatrix->entry(i,j) +=
-                        rccqb.entry(i+range.getTorsionLoc(), k) *
-                        temp2.entry(k,j);
-                // if representing torsion, mod out to reduce the size of the integers to something reasonable.
-                if (i < range.getNumberOfInvariantFactors()) 
-			{
-			reducedMatrix->entry(i,j) %= range.getInvariantFactor(i);
-			if (reducedMatrix->entry(i,j) < 0) reducedMatrix->entry(i,j) +=
-				range.getInvariantFactor(i);
-			}
-		}
-    }
+  }
 }
 
 void NHomMarkedAbelianGroup::computeReducedKernelLattice() {

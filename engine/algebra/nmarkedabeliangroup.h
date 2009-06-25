@@ -79,12 +79,10 @@ namespace regina {
  * @author Ryan Budney
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
- * \todo Add Z_p coefficients. Done, but we still have to modify
- *    some of the routines to see through the data correctly. 
- *    Namely: isCycle(), isBoundary(), writeAsBoundary(), bdryMap().
  * \todo \optlong Add Hom, Ext, Tor, and \otimes, torsion linking form and intersection product
  *  as maps out of tensor products.  Tor is implemented at least against Z_p now... 
- * \todo Eliminate routines like getMRB() and make the class internals more opaque to users. 
+ * \todo Eliminate routines like getMRB() and make the class internals more opaque to users
+ *       since this stuff is useless for mod p coefficients right now...
  */
 class NMarkedAbelianGroup : public ShareableObject {
     private:
@@ -112,7 +110,8 @@ class NMarkedAbelianGroup : public ShareableObject {
         std::auto_ptr<NMatrixInt> ornR, ornC;
         /** Internal change of basis. These are the inverses of ornR and ornC resp. */
         std::auto_ptr<NMatrixInt> ornRi, ornCi; 
-        /** Internal change of basis matrix for homology with coefficents. */
+        /** Internal change of basis matrix for homology with coefficents. 
+	    otC * tensorPres * otR == SNF(tensorPres) */
 	std::auto_ptr<NMatrixInt> otR, otC, otRi, otCi;
 
         /** Internal list of invariant factors. */
@@ -132,11 +131,14 @@ class NMarkedAbelianGroup : public ShareableObject {
 	/** TORLoc stores the location of the first TOR entry from the SNF of OM 
 	    TORLoc == rankOM-TORVec.size() */
 	unsigned long TORLoc;
-	/** invariant factor location in the tensor product presentation matrix SNF */
-	unsigned long tensorIfLoc;
 	/** TORVec's i-th entry stores the entries q where Z_p --q-->Z_p is the i-th
 	    TOR entry from the SNF of OM */
 	std::vector<NLargeInteger> TORVec;
+
+	/** invariant factor location in the tensor product presentation matrix SNF */
+	unsigned long tensorIfLoc;
+        unsigned long tensorIfNum;
+	std::vector<NLargeInteger> tensorInvFacList;
 
     public:
 
@@ -546,7 +548,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getNRB() as described above.
          */
-        const NMatrixInt& getNRB() const;
+//        const NMatrixInt& getNRB() const;
 
         /**
          * Returns an inverse change-of-basis matrix for the Smith normal
@@ -564,7 +566,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getNRBi() as described above.
          */
-        const NMatrixInt& getNRBi() const;
+//        const NMatrixInt& getNRBi() const;
 
         /**
          * Returns a change-of-basis matrix for the Smith normal form of
@@ -582,7 +584,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getNCB() as described above.
          */
-        const NMatrixInt& getNCB() const;
+ //       const NMatrixInt& getNCB() const;
 
         /**
          * Returns an inverse change-of-basis matrix for the Smith normal
@@ -600,7 +602,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @return the matrix getNCBi() as described above.
          */
-        const NMatrixInt& getNCBi() const;
+//        const NMatrixInt& getNCBi() const;
 
         /**
          * Returns the rank of the defining matrix \a M.
@@ -611,24 +613,6 @@ class NMarkedAbelianGroup : public ShareableObject {
          * @return the rank of the defining matrix \a M.
          */
         unsigned long getRankM() const;
-
-        /**
-         * Returns the index of the first free generator in the Smith
-         * normal form of the internal presentation matrix.  See the class
-         * overview for details.
-         *
-         * @return the index of the first free generator.
-         */
-        unsigned long getFreeLoc() const; // internal: snffreeindex
-
-        /**
-         * Returns the index of the first torsion generator in the Smith
-         * normal form of the internal presentation matrix.  See the class
-         * overview for details.
-         *
-         * @return the index of the first torsion generator.
-         */
-        unsigned long getTorsionLoc() const; // internal: ifLoc
 
         /**
          * Returns the `right' matrix used in defining the chain complex.
@@ -654,6 +638,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          * @return a reference to the defining matrix N.
          */
         const NMatrixInt& getN() const;
+
 };
 
 /**
@@ -965,7 +950,8 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
         otR(clonePtr(g.otR)), otC(clonePtr(g.otC)), otRi(clonePtr(g.otRi)), otCi(clonePtr(g.otCi)), 
         InvFacList(g.InvFacList), snfrank(g.snfrank),  snffreeindex(g.snffreeindex),
         ifNum(g.ifNum), ifLoc(g.ifLoc), coeff(g.coeff), TORLoc(g.TORLoc), 
-	tensorIfLoc(g.tensorIfLoc), TORVec(g.TORVec) {
+	TORVec(g.TORVec), tensorIfLoc(g.tensorIfLoc), tensorIfNum(g.tensorIfNum), 
+	tensorInvFacList(g.tensorInvFacList) {
 }
 
 // destructor
@@ -1010,6 +996,7 @@ inline bool NMarkedAbelianGroup::isIsomorphicTo(const NMarkedAbelianGroup &other
     return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
 }
 
+// keep
 inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
     return OMR;
 }
@@ -1022,28 +1009,18 @@ inline const NMatrixInt& NMarkedAbelianGroup::getMCB() const {
 inline const NMatrixInt& NMarkedAbelianGroup::getMCBi() const {
     return OMCi;
 }
-inline const NMatrixInt& NMarkedAbelianGroup::getNRB() const {
-    return *ornR;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getNRBi() const {
-    return *ornRi;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getNCB() const {
-    return *ornC;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getNCBi() const {
-    return *ornCi;
-}
 
 inline unsigned long NMarkedAbelianGroup::getRankM() const {
     return rankOM;
 }
-inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
+/*inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
     return snffreeindex;
 }
 inline unsigned long NMarkedAbelianGroup::getTorsionLoc() const {
     return ifLoc;
 }
+// end stuff to erase 
+*/
 
 inline const NMatrixInt& NMarkedAbelianGroup::getM() const {
     return OM;
