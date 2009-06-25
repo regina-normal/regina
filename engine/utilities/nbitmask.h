@@ -1060,6 +1060,7 @@ struct InternalBitmaskLen32<true> {
 
 template <>
 struct InternalBitmaskLen32<false> {
+    // The standard guarantees that sizeof(long) >= 4.
     typedef NBitmask1<unsigned long> Type;
 };
 
@@ -1087,8 +1088,13 @@ struct InternalBitmaskLen64<true> {
 template <>
 struct InternalBitmaskLen64<false> {
 #if HAVE_LONG_LONG
+    // The C standard guarantees that sizeof(long long) >= 8.
+    // However, the C++ standard does not require long long to exist at
+    // all (hence the HAVE_LONG_LONG test).
     typedef NBitmask1<unsigned long long> Type;
 #else
+    // The standard guarantees that sizeof(long) >= 4.
+    // Therefore two longs will be enough for 64 bits.
     typedef NBitmask2<unsigned long> Type;
 #endif
 };
@@ -1096,7 +1102,7 @@ struct InternalBitmaskLen64<false> {
 
 /**
  * A convenience typedef that gives a small and extremely fast bitmask
- * class capable of holding up to 8 true-or-false bits.
+ * class capable of holding at least 8 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
  * template class NBitmask1.
@@ -1110,7 +1116,7 @@ typedef NBitmask1<unsigned char> NBitmaskLen8;
 
 /**
  * A convenience typedef that gives a small and extremely fast bitmask
- * class capable of holding up to 16 true-or-false bits.
+ * class capable of holding at least 16 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
  * template class NBitmask1.
@@ -1124,7 +1130,7 @@ typedef NBitmask1<unsigned int> NBitmaskLen16;
 
 /**
  * A convenience typedef that gives a small and extremely fast bitmask
- * class capable of holding up to 32 true-or-false bits.
+ * class capable of holding at least 32 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
  * template class NBitmask1.
@@ -1138,7 +1144,7 @@ typedef InternalBitmaskLen32<>::Type NBitmaskLen32;
 
 /**
  * A convenience typedef that gives a small and extremely fast bitmask
- * class capable of holding up to 64 true-or-false bits.
+ * class capable of holding at least 64 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of
  * \e either the template class NBitmask1 or the template class NBitmask2.
