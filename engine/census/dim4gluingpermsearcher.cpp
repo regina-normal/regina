@@ -189,7 +189,7 @@ bool Dim4GluingPermSearcher::PentFaceState::readData(std::istream& in,
         return false;
     if (bBounded != 1 && bBounded != 0)
         return false;
-    if (! NPerm4::isPermCode(static_cast<unsigned char>(twist)))
+    if (! NPerm3::isPermCode(static_cast<unsigned char>(twist)))
         return false;
     if (bRank != 1 && bRank != 0)
         return false;
