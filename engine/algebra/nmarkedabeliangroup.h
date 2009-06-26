@@ -141,6 +141,21 @@ class NMarkedAbelianGroup : public ShareableObject {
         // at present this is only used for inverseHom(). 
 	friend class NHomMarkedAbelianGroup;
 
+    public:
+
+        /**
+         * Creates a marked abelian group from a chain complex. This constructo
+	 * assumes you're interested in homology with integer coefficents of the chain
+	 * complex.  See the class notes for details.
+         *
+         * \pre M.columns() = N.rows().
+         * \pre The product M*N = 0.
+         *
+         * @param M the `right' matrix in chain complex
+         * @param N `left' matrix in chain complex
+         */
+        NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
+
        /**
          * Creates a marked abelian group from a chain complex with coefficients
          * in Z_p.  Making it private because it has rather limited utility at present. In 
@@ -157,21 +172,6 @@ class NMarkedAbelianGroup : public ShareableObject {
 	 *     constructor.
          */
         NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N, const NLargeInteger &pcoeff);
-
-    public:
-
-        /**
-         * Creates a marked abelian group from a chain complex. This constructo
-	 * assumes you're interested in homology with integer coefficents of the chain
-	 * complex.  See the class notes for details.
-         *
-         * \pre M.columns() = N.rows().
-         * \pre The product M*N = 0.
-         *
-         * @param M the `right' matrix in chain complex
-         * @param N `left' matrix in chain complex
-         */
-        NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
 
 	/**
 	 * Creates a free Z_p-module of a given rank using the a direct sum 
@@ -642,6 +642,18 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         /** compute the Image */
         void computeImage();
 
+	/**
+	 * For those situations where you want to define an NHomMarkedAbelianGroup
+	 * from its reduced matrix, not from a chain map.  This is in the situation where
+         * the SNF coordinates have particular meaning to the user.  At present I only use this
+         * for NHomMarkedAbelianGroup::inverseHom().  Moreover, this routine assumes tebeRedMat
+	 * actually can be the reduced matrix of some chain map -- this is not a restriction in
+	 * the coeff==0 case, but it is if coeff > 0. 
+	 */
+	NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat, 
+			       const NMarkedAbelianGroup &dom, 
+			       const NMarkedAbelianGroup &ran);
+
     public:
 
         /**
@@ -674,16 +686,6 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         NHomMarkedAbelianGroup(const NMarkedAbelianGroup& dom,
                 const NMarkedAbelianGroup& ran,
                 const NMatrixInt &mat);
-
-	/**
-	 * For those situations where you want to define an NHomMarkedAbelianGroup
-	 * from its reduced matrix, not from a chain map.  This is in the situation where
-         * the SNF coordinates have particular meaning to the user.  At present I only use this
-         * for NHomMarkedAbelianGroup::inverseHom() 
-	 */
-	NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat, 
-			       const NMarkedAbelianGroup &dom, 
-			       const NMarkedAbelianGroup &ran);
  
         /**
          * Copy constructor.
