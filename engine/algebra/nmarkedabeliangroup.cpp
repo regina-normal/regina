@@ -598,12 +598,24 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::writeAsBoundary(const std::vecto
   return retval;
 }
 
+// returns the j+TORLoc -th column of the matrix OMR, rescaled appropriately if it corresponds to
+//  a TOR vector.  
+std::vector<NLargeInteger> NMarkedAbelianGroup::cycleGen(unsigned long j) const
+{
+static const std::vector<NLargeInteger> nullv;
+if (j >= minNumberCycleGens()) return nullv;
+std::vector<NLargeInteger> retval( OM.columns(), NLargeInteger::zero);
+for (unsigned long i=0; i<retval.size(); i++) retval[i] = OMR.entry(i, j+TORLoc);
+// if j < TORVec.size() rescale by coeff / gcd(coeff, TORVec[j]
+if (j < TORVec.size()) for (unsigned long i=0; i<retval.size(); i++)
+	retval[i] *= coeff.divExact(coeff.gcd(TORVec[j]));
+return retval;
+}
 
-// this is when you want to define an NHomMarkedAbelianGroup from a its reduced matrix, not via
-// a chain map of chain complexes. 
-// So matrix needs to be computed, and reducedMatrix properly assigned.
-// at first, we make reducedMatrix unassigned and matrix zero with the proper dimensions.
 
+// todo: it looks like this needs to be upgraded for mod-p coefficients. 
+//       maybe erase this altogether as it isn't obvious how to do a good job
+//       of this for arbitrary coefficients. 
 NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat, 
 		       const NMarkedAbelianGroup &dom, 
 		       const NMarkedAbelianGroup &ran) : 
@@ -649,25 +661,16 @@ for (unsigned long j=0; j<domKerProj.columns(); j++)
 
 NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& g):
         ShareableObject(), domain(g.domain), range(g.range), matrix(g.matrix) {
-    if (g.reducedMatrix) {
-        reducedMatrix = new NMatrixInt(*g.reducedMatrix);
-    } else reducedMatrix = 0;
-
-    if (g.kernel) {
-        kernel = new NMarkedAbelianGroup(*g.kernel);
-    } else kernel = 0;
-
-    if (g.coKernel) {
-        coKernel = new NMarkedAbelianGroup(*g.coKernel);
-    } else coKernel = 0;
-
-    if (g.image) {
-        image = new NMarkedAbelianGroup(*g.image);
-    } else image = 0;
-
-    if (g.reducedKernelLattice) {
-        reducedKernelLattice = new NMatrixInt(*g.reducedKernelLattice);
-    } else reducedKernelLattice = 0;
+    if (g.reducedMatrix) { reducedMatrix = new NMatrixInt(*g.reducedMatrix); } 
+     else reducedMatrix = 0;
+    if (g.kernel) { kernel = new NMarkedAbelianGroup(*g.kernel); } 
+     else kernel = 0;
+    if (g.coKernel) { coKernel = new NMarkedAbelianGroup(*g.coKernel); } 
+     else coKernel = 0;
+    if (g.image) { image = new NMarkedAbelianGroup(*g.image); } 
+     else image = 0;
+    if (g.reducedKernelLattice) { reducedKernelLattice = new NMatrixInt(*g.reducedKernelLattice); } 
+     else reducedKernelLattice = 0;
 }
 
 void NHomMarkedAbelianGroup::computeReducedMatrix() 
@@ -696,8 +699,6 @@ void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
     if (!reducedKernelLattice) {
         computeReducedMatrix();
 
-        unsigned long i;
-
         const NMatrixInt& redMatrix(*reducedMatrix);
 
         // the kernel is the dcLpreimage lattice mod the domain lattice.
@@ -706,11 +707,11 @@ void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
 
         std::vector<NLargeInteger> dcL(range.getRank() +
             range.getNumberOfInvariantFactors() );
-        for (i=0; i<dcL.size(); i++)
+        for (unsigned long i=0; i<dcL.size(); i++)
             if (i<range.getNumberOfInvariantFactors())
                 dcL[i]=range.getInvariantFactor(i);
             else
-                dcL[i]="0";
+                dcL[i]=NLargeInteger::zero;
 
         reducedKernelLattice = preImageOfLattice( redMatrix, dcL ).release();
     }
@@ -814,15 +815,9 @@ return NHomMarkedAbelianGroup(X.domain, range, compMat);
 
 std::vector<NLargeInteger> NHomMarkedAbelianGroup::evalCC(const std::vector<NLargeInteger> &input) const
 {
-static const std::vector<NLargeInteger> nullV;
-std::vector<NLargeInteger> retval;
-
-if (domain.isCycle(input))
- {
-  retval.resize(matrix.rows(), NLargeInteger::zero);
-  for (unsigned long i=0; i<retval.size(); i++) for (unsigned long j=0; j<matrix.columns(); j++)
+std::vector<NLargeInteger> retval(matrix.rows(), NLargeInteger::zero);
+for (unsigned long i=0; i<retval.size(); i++) for (unsigned long j=0; j<matrix.columns(); j++)
 	retval[i] += input[j]*matrix.entry(i,j);
- } else retval = nullV;
 return retval;
 }
 
@@ -830,15 +825,17 @@ std::vector<NLargeInteger> NHomMarkedAbelianGroup::evalSNF(const std::vector<NLa
 {
 const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
 static const std::vector<NLargeInteger> nullV; 
-std::vector<NLargeInteger> retval;
+if (input.size() != domain.minNumberOfGenerators() ) return nullV;
+std::vector<NLargeInteger> retval( range.minNumberOfGenerators(), NLargeInteger::zero );
 
-if (input.size() == (domain.getRank() + domain.getNumberOfInvariantFactors()) )
+for (unsigned long i=0; i<retval.size(); i++) 
  {
-   retval.resize(range.getRank()+range.getNumberOfInvariantFactors(), NLargeInteger::zero);
-   for (unsigned long i=0; i<retval.size(); i++) for (unsigned long j=0; j<getReducedMatrix().columns(); j++)
-	retval[i] += input[j] * getReducedMatrix().entry(i,j);
- } else retval = nullV; 
-
+ for (unsigned long j=0; j<getReducedMatrix().columns(); j++) 
+           retval[i] += input[j] * getReducedMatrix().entry(i,j);
+ if ( i < range.getNumberOfInvariantFactors() ) { 
+    retval[i] %= range.getInvariantFactor(i);
+    if (retval[i]<0) retval[i] += range.getInvariantFactor(i); }
+ }
 return retval;
 }
 
@@ -890,28 +887,23 @@ void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
 
 bool NHomMarkedAbelianGroup::isIdentity() const
 {
-bool retval(true);
-if (domain == range)
- {
-     const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-     if (!reducedMatrix->isIdentity()) retval = false;
- } else retval = false;
-return retval;
+if (!(domain == range)) return false;
+const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+if (!reducedMatrix->isIdentity()) return false;
+return true;
 }
 
 bool NHomMarkedAbelianGroup::isCycleMap() const
 {
-// run through a basis for ker OM, plug in and check isCycle()
-bool retval(true);
-// the last getRankCC() - getRankM() columns of getMRB() are a basis for the kernel of the defining matrix M
-for (unsigned long i=domain.getRankM(); i<domain.getRankCC(); i++)
+for (unsigned long j=0; j<domain.minNumberCycleGens(); j++)
  {
- std::vector<NLargeInteger> domChain(domain.getRankCC(), NLargeInteger::zero);
- for (unsigned long j=0; j<domain.getRankCC(); j++) domChain[j] = domain.getMRB().entry(j,i);
- if (!range.isCycle(evalCC(domChain))) retval = false;
+ std::vector<NLargeInteger> cycJ( domain.cycleGen(j) );
+ std::vector<NLargeInteger> FcycJ( range.getRankCC(), NLargeInteger::zero );
+ for (unsigned long i=0; i<matrix.rows(); i++) for (unsigned long k=0; k<matrix.columns(); k++)
+  FcycJ[i] += matrix.entry(i,k) * cycJ[k];
+ if (!range.isCycle(FcycJ)) return false;
  }
-
-return retval;
+return true;
 }
 
 
@@ -926,24 +918,17 @@ return retval;
  */
 bool NHomMarkedAbelianGroup::isChainMap(const NHomMarkedAbelianGroup &other) const
 {
-bool retval(true);
-// M1 is getRange().getM()   N3 is other.getRange().getN()   so  b==g, c==h, M1 == N3
-// M2 is getDomain().getM()  N4 is other.getDomain().getN()  and e==j, f==k, M2 == N4
-
 if ( (getRange().getM().rows() != other.getRange().getN().rows()) ||
      (getRange().getM().columns() != other.getRange().getN().columns()) ||
      (getDomain().getM().rows() != other.getDomain().getN().rows()) ||
      (getDomain().getM().columns() != other.getDomain().getN().columns())
-   ) retval = false;
-else if ( (getRange().getM() != other.getRange().getN()) ||
-     (getDomain().getM() != other.getDomain().getN()) ) retval = false;
-else
-{
-      std::auto_ptr< NMatrixRing<NLargeInteger> > prodLU = range.getM() * getDefiningMatrix();
-      std::auto_ptr< NMatrixRing<NLargeInteger> > prodBR = other.getDefiningMatrix() * domain.getM();
-     if ( (*prodLU) != (*prodBR) ) retval = false;
-     }
-return retval;
+   ) return false;
+if ( (getRange().getM() != other.getRange().getN()) ||
+     (getDomain().getM() != other.getDomain().getN()) ) return false;
+ std::auto_ptr< NMatrixRing<NLargeInteger> > prodLU = range.getM() * getDefiningMatrix();
+ std::auto_ptr< NMatrixRing<NLargeInteger> > prodBR = other.getDefiningMatrix() * domain.getM();
+ if ( (*prodLU) != (*prodBR) ) return false;
+return true;
 }
 
 

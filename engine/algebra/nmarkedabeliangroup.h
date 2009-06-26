@@ -44,6 +44,8 @@
 
 namespace regina {
 
+class NHomMarkedAbelianGroup;
+
 /**
  * \weakgroup algebra
  * @{
@@ -91,13 +93,9 @@ class NMarkedAbelianGroup : public ShareableObject {
         /** Internal original N */
         NMatrixInt ON; // copy of initializing N assumes M*N == 0
         /** Internal change of basis. OMC*OM*OMR is the SNF of OM */
-        NMatrixInt OMR;  
-        /** Internal change of basis. OMC*OM*OMR is the SNF of OM */
-        NMatrixInt OMC;
+        NMatrixInt OMR, OMC;
         /** Internal change of basis. OM = OMCi*SNF(OM)*OMRi */
-        NMatrixInt OMRi;
-        /** Internal change of basis. OM = OMCi*SNF(OM)*OMRi */
-        NMatrixInt OMCi;
+        NMatrixInt OMRi, OMCi;
         /** Internal rank of M */
         unsigned long rankOM; // this is the index of the first zero entry in SNF(OM)
 
@@ -135,10 +133,30 @@ class NMarkedAbelianGroup : public ShareableObject {
 	    TOR entry from the SNF of OM */
 	std::vector<NLargeInteger> TORVec;
 
-	/** invariant factor location in the tensor product presentation matrix SNF */
+	/** invariant factor data in the tensor product presentation matrix SNF */
 	unsigned long tensorIfLoc;
         unsigned long tensorIfNum;
 	std::vector<NLargeInteger> tensorInvFacList;
+	// and NHomMarkedAbelianGroup at present needs to see some of the internals of NMarkedAbelianGroup
+        // at present this is only used for inverseHom(). 
+	friend class NHomMarkedAbelianGroup;
+
+       /**
+         * Creates a marked abelian group from a chain complex with coefficients
+         * in Z_p.  Making it private because it has rather limited utility at present. In 
+	 * particular it can't be used for mod-p coefficients except in very special 
+	 * circumstances. 
+         *
+         * \pre M.columns() = N.rows().
+         * \pre The product M*N = 0.
+         *
+         * @param M the `right' matrix in chain complex
+         * @param N `left' matrix in chain complex
+	 * @param pcoeff specifies the coefficient ring, Z_pcoeff. We require pcoeff \geq 0.
+ 	 *     if you know beforehand that pcoeff==0, it's more efficient to use the previous
+	 *     constructor.
+         */
+        NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N, const NLargeInteger &pcoeff);
 
     public:
 
@@ -154,21 +172,6 @@ class NMarkedAbelianGroup : public ShareableObject {
          * @param N `left' matrix in chain complex
          */
         NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
-
-       /**
-         * Creates a marked abelian group from a chain complex with coefficients
-         * in Z_p.   See the class notes for details.
-         *
-         * \pre M.columns() = N.rows().
-         * \pre The product M*N = 0.
-         *
-         * @param M the `right' matrix in chain complex
-         * @param N `left' matrix in chain complex
-	 * @param pcoeff specifies the coefficient ring, Z_pcoeff. We require pcoeff \geq 0.
- 	 *     if you know beforehand that pcoeff==0, it's more efficient to use the previous
-	 *     constructor.
-         */
-        NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N, const NLargeInteger &pcoeff);
 
 	/**
 	 * Creates a free Z_p-module of a given rank using the a direct sum 
@@ -465,6 +468,20 @@ class NMarkedAbelianGroup : public ShareableObject {
         std::vector<NLargeInteger> snfRep(
             const std::vector<NLargeInteger>& v) const;
 
+	/** 
+	 * Returns the number of generators of ker(M).  
+	 * M.columns() - TORLoc
+	 */
+	unsigned long minNumberCycleGens() const;
+
+        /**
+	 * Returns the i-th generator of the chains, ie: the kernel of
+	 * M in the chain complex.
+	 *
+	 * @param i between 0 and minNumCycleGens()-1 
+	 */
+        std::vector<NLargeInteger> cycleGen(unsigned long j) const;
+
         /**
          * Returns a change-of-basis matrix for the Smith normal form of \a M.
          *
@@ -498,39 +515,6 @@ class NMarkedAbelianGroup : public ShareableObject {
          * @return the matrix getMRBi() as described above.
          */
         const NMatrixInt& getMRBi() const;
-        /**
-         * Returns a change-of-basis matrix for the Smith normal form of \a M.
-         *
-         * This is one of several routines that returns information on
-         * how we determine the isomorphism-class of this group.
-         *
-         * Recall from the class overview that this marked abelian group
-         * is defined by matrices \a M and \a N, where M*N = 0.
-         *
-         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
-         *   respectively.
-         *
-         * @return the matrix getMCB() as described above.
-         */
-        const NMatrixInt& getMCB() const;
-        /**
-         * Returns an inverse change-of-basis matrix for the Smith normal
-         * form of \a M.
-         *
-         * This is one of several routines that returns information on
-         * how we determine the isomorphism-class of this group.
-         *
-         * Recall from the class overview that this marked abelian group
-         * is defined by matrices \a M and \a N, where M*N = 0.
-         *
-         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
-         *   respectively.
-         *
-         * @return the matrix getMCBi() as described above.
-         */
-        const NMatrixInt& getMCBi() const;
 
         /**
          * Returns the rank of the defining matrix \a M.
@@ -566,6 +550,13 @@ class NMarkedAbelianGroup : public ShareableObject {
          * @return a reference to the defining matrix N.
          */
         const NMatrixInt& getN() const;
+	/**
+	 * Returns the coefficients used for the computation of homology. 
+	 * @return the coefficients used in the homology calcululation.  Ie:
+	 *         coefficients in Z_p for p an integer.  Z_0 denotes the 
+	 *         integers. 
+	 */
+	const NLargeInteger& coefficients() const;
 
 };
 
@@ -577,14 +568,18 @@ class NMarkedAbelianGroup : public ShareableObject {
  * - two finitely generated abelian groups, which act as domain and range;
  * - a matrix describing the linear map between the free abelian
  *   groups in the centres of the respective chain complexes that were
- *   used to define the domain and range.
+ *   used to define the domain and range.  If the abelian groups are computed
+ *   via homology with coefficients, the range coefficients must be a quotient
+ *   of the domain coefficients. 
  *
  * So for example, if the domain was initialized by the chain complex
- * <tt>Z^a --A--> Z^b --B--> Z^c</tt> and the range was initialized by
- * <tt>Z^d --D--> Z^e --E--> Z^f</tt>, then the matrix needs to be an
+ * <tt>Z^a --A--> Z^b --B--> Z^c</tt> with mod p coefficients, and the range was initialized by
+ * <tt>Z^d --D--> Z^e --E--> Z^f</tt> with mod q coefficients then the matrix needs to be an
  * e-by-b matrix.  Furthermore, you only obtain a well-defined
- * homomorphism if this matrix extends to a chain map (which this class
- * assumes).
+ * homomorphism if this matrix extends to a cycle map, which this class assumes but
+ * the user can confirm with isCycleMap(). Moreover, q should divide p -- this allows
+ * for q > 0 and p == 0, ie: the domain having Z coefficients and the range having mod q
+ * coefficients. 
  *
  * \todo preImageOf in CC and SNF coordinates.  This routine would return a generating
  *          list of elements in the preimage, thought of as an affine subspace. Or maybe
@@ -598,9 +593,13 @@ class NMarkedAbelianGroup : public ShareableObject {
  *          asking if this is zero. 
  * \todo add induced homomorphism on Z_p coefficients once Z_p coefficients implemented in 
  *       NMarkedAbelianGroup.
- * \todo \optlong writeTextShort() have completely different set of descriptors if an endomorphism domain == range
- *       not so important at the moment though.  New descriptors would include things like
- *       automorphism, projection, differential, ... 
+ * \todo remove getMRB(), MRBi, MCB, MCBi, getrankM once NHomologicalData is fixed to not
+ *       need them. 
+ * \todo \optlong writeTextShort() have completely different set of descriptors if an 
+ *       endomorphism domain == range not so important at the moment though.  New 
+ *       descriptors would include things like automorphism, projection, differential, ... 
+ * \todo add map factorization, that every homomorphism can be split as a composite of a
+ *       projection followed by an inclusion.  
  *
  * @author Ryan Budney
  */
@@ -773,6 +772,7 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          * Short text representation.  This will state some basic
          * properties of the homomorphism, such as:
          *
+         * - whether the map is the identity
          * - whether the map is an isomorphism;
          * - whether the map is monic or epic;
          * - if it is not monic, describes the kernel;
@@ -822,7 +822,7 @@ class NHomMarkedAbelianGroup : public ShareableObject {
 
 	/**
 	 * Evaluate, in the original chain complex's coordinates. This is multiplication
-	 * by the defining matrix, returning the empty vector if the input is not a cycle. 
+	 * by the defining matrix.
 	 */
 	std::vector<NLargeInteger> evalCC(const std::vector<NLargeInteger> &input) const; 
 	/**
@@ -911,8 +911,12 @@ inline unsigned long NMarkedAbelianGroup::getRankCC() const {
 	return OM.columns();
 }
 
+inline unsigned long NMarkedAbelianGroup::minNumberCycleGens() const
+{ return OM.columns() - TORLoc; }
+
+
 inline bool NMarkedAbelianGroup::isTrivial() const {
-    return ! ( (snfrank>0) || (InvFacList.size()>0) );
+    return ( (snfrank==0) && (InvFacList.size()==0) );
 }
 
 inline bool NMarkedAbelianGroup::operator == (
@@ -924,31 +928,18 @@ inline bool NMarkedAbelianGroup::isIsomorphicTo(const NMarkedAbelianGroup &other
     return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
 }
 
-// keep
+// erase
 inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
     return OMR;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getMRBi() const {
     return OMRi;
 }
-inline const NMatrixInt& NMarkedAbelianGroup::getMCB() const {
-    return OMC;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getMCBi() const {
-    return OMCi;
-}
+// end erase
 
 inline unsigned long NMarkedAbelianGroup::getRankM() const {
     return rankOM;
 }
-/*inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
-    return snffreeindex;
-}
-inline unsigned long NMarkedAbelianGroup::getTorsionLoc() const {
-    return ifLoc;
-}
-// end stuff to erase 
-*/
 
 inline const NMatrixInt& NMarkedAbelianGroup::getM() const {
     return OM;
@@ -956,6 +947,10 @@ inline const NMatrixInt& NMarkedAbelianGroup::getM() const {
 inline const NMatrixInt& NMarkedAbelianGroup::getN() const {
     return ON;
 }
+inline const NLargeInteger& NMarkedAbelianGroup::coefficients() const {
+	return coeff;
+}
+
 
 // Inline functions for NHomMarkedAbelianGroup
 
