@@ -853,7 +853,7 @@ void NHomologicalData::computeChainComplexes() {
                 tri->getNumberOfFaces() + i - sBNIF.size() ) ,i)+=1;
 }
 
-const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q) {
+const NMarkedAbelianGroup& NHomologicalData::standardHomology(unsigned q) {
     if (q==0) {
         if (!mHomology0.get()) {
             computeChainComplexes();
@@ -883,7 +883,7 @@ const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q) {
     }
 }
 
-const NMarkedAbelianGroup& NHomologicalData::getBdryHomology(unsigned q) {
+const NMarkedAbelianGroup& NHomologicalData::boundaryHomology(unsigned q) {
     computeChainComplexes();
     if (q==0) {
         if (!bHomology0.get()) bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
@@ -899,7 +899,7 @@ const NMarkedAbelianGroup& NHomologicalData::getBdryHomology(unsigned q) {
     }
 }
 
-const NMarkedAbelianGroup& NHomologicalData::getDualHomology(unsigned q) {
+const NMarkedAbelianGroup& NHomologicalData::dualHomology(unsigned q) {
     computeChainComplexes();
     if (q==0) {
         if (!dmHomology0.get()) dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
@@ -918,7 +918,7 @@ const NMarkedAbelianGroup& NHomologicalData::getDualHomology(unsigned q) {
     }
 }
 
-const NMarkedAbelianGroup& NHomologicalData::getMixedHomology(unsigned q)
+const NMarkedAbelianGroup& NHomologicalData::mixedHomology(unsigned q)
 {
   if (!M0.get()) computeBaryCC();
   if (q==0) {
@@ -938,7 +938,7 @@ const NMarkedAbelianGroup& NHomologicalData::getMixedHomology(unsigned q)
 
 
 // this is dual cellular -> standard
-const NHomMarkedAbelianGroup& NHomologicalData::getH1CellAp() {
+const NHomMarkedAbelianGroup& NHomologicalData::h1CellAp() {
     if (!dmTomMap1.get()) {
         computeChainComplexes();
         if (!dmHomology1.get())
@@ -951,7 +951,7 @@ const NHomMarkedAbelianGroup& NHomologicalData::getH1CellAp() {
     return (*dmTomMap1);
 }
 
-const NHomMarkedAbelianGroup& NHomologicalData::getStandardToMixedHom(unsigned q)
+const NHomMarkedAbelianGroup& NHomologicalData::standardToMixedHom(unsigned q)
 { 
   computeBaryCC();
   computeChainComplexes();
@@ -980,7 +980,7 @@ const NHomMarkedAbelianGroup& NHomologicalData::getStandardToMixedHom(unsigned q
 }
 
 
-const NHomMarkedAbelianGroup& NHomologicalData::getDualToMixedHom(unsigned q)
+const NHomMarkedAbelianGroup& NHomologicalData::dualToMixedHom(unsigned q)
 {
   computeBaryCC();
   computeChainComplexes();
@@ -1007,7 +1007,7 @@ const NHomMarkedAbelianGroup& NHomologicalData::getDualToMixedHom(unsigned q)
   }
 }
 
-const NHomMarkedAbelianGroup& NHomologicalData::getBdryHomologyMap(unsigned q) {
+const NHomMarkedAbelianGroup& NHomologicalData::boundaryHomologyMap(unsigned q) {
     computeChainComplexes();
     if (q==0) {
         if (!bHomology0.get()) bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
@@ -1035,7 +1035,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         return;
 
     // dual h1 --> standard h1 isomorphism:
-    const NHomMarkedAbelianGroup& h1CellAp(getH1CellAp());
+    const NHomMarkedAbelianGroup& CellAp(h1CellAp());
     // min number of torsion gens:
     unsigned long niv(dmHomology1->getNumberOfInvariantFactors());
     // for holding prime decompositions.:
@@ -1158,7 +1158,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     // step 2: construct dual vectors
     //           for every pvList vector, find corresponding standard vector.
     NMatrixInt standardBasis( numStandardCells[1], pvList.size() );
-    const NMatrixInt& dualtostandard(h1CellAp.getDefiningMatrix());
+    const NMatrixInt& dualtostandard(CellAp.getDefiningMatrix());
 
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
@@ -1650,13 +1650,13 @@ void NHomologicalData::computeEmbeddabilityString() {
       { // orientable -- we need the torsion linking form
         computeTorsionLinkingForm();
 
-        if (getBdryHomology(0).isTrivial()) 
+        if (boundaryHomology(0).isTrivial()) 
         { // no boundary : orientable
             if (torRankV.size()==0) 
             { // no torsion : no boundary, orientable
                 if (tri->knowsThreeSphere() && tri->isThreeSphere())
                     embeddabilityString = "This manifold is S^3.";
-                else if (getDualHomology(1).isTrivial())
+                else if (dualHomology(1).isTrivial())
                     embeddabilityString = "Manifold is a homology 3-sphere.";
                 else
                     embeddabilityString = "No information.";
@@ -1673,7 +1673,7 @@ void NHomologicalData::computeEmbeddabilityString() {
                 else
                     embeddabilityString = "The torsion linking form is "
                         "of hyperbolic type.";
-                if (getDualHomology(1).getRank()==0)
+                if (dualHomology(1).getRank()==0)
                     embeddabilityString += "  Manifold is a rational "
                         "homology sphere.";
             } // torsion : no boundary, orientable
@@ -1688,41 +1688,41 @@ void NHomologicalData::computeEmbeddabilityString() {
                 // H1 map check... boundary map has full rank iff embeds in
                 // rational homology 3-sph
                 // boundary map epic iff embeds in homology 3-sphere
-                 if (getBdryHomologyMap(1).isEpic())
+                 if (boundaryHomologyMap(1).isEpic())
                     {
                     embeddabilityString =
                         "Embeds in a homology 3-sphere as a ";
-                    if (getBdryHomology(1).getRank() ==
-                            2*getBdryHomology(0).getRank())
+                    if (boundaryHomology(1).getRank() ==
+                            2*boundaryHomology(0).getRank())
                         {
-                        if (getBdryHomology(0).getRank()==1)
+                        if (boundaryHomology(0).getRank()==1)
                             embeddabilityString += "knot complement.";
                         else
                             embeddabilityString += "link complement.";
                         }
                     else
                         {
-                        if (getBdryHomology(1).getRank() == 0)
+                        if (boundaryHomology(1).getRank() == 0)
                             embeddabilityString += "ball complement.";
                         else
                             embeddabilityString += "graph complement.";
                         }
                     }
-                 else if (getBdryHomologyMap(1).getCokernel().getRank()==0)
+                 else if (boundaryHomologyMap(1).getCokernel().getRank()==0)
                     {
                     embeddabilityString =
                         "Embeds in a rational homology 3-sphere as a ";
-                    if (getBdryHomology(1).getRank() ==
-                            2*getBdryHomology(0).getRank() )
+                    if (boundaryHomology(1).getRank() ==
+                            2*boundaryHomology(0).getRank() )
                         {
-                        if (getBdryHomology(0).getRank()==1)
+                        if (boundaryHomology(0).getRank()==1)
                             embeddabilityString += "knot complement.";
                         else
                             embeddabilityString += "link complement.";
                         }
                     else
                         {
-                        if (getBdryHomology(1).getRank() == 0)
+                        if (boundaryHomology(1).getRank() == 0)
                             embeddabilityString += "ball complement.";
                         else
                             embeddabilityString += "graph complement.";
@@ -1736,11 +1736,11 @@ void NHomologicalData::computeEmbeddabilityString() {
                 { // torsion : boundary, orientable
                 if (!torsionLinkingFormSatisfiesKKtwoTorCondition)
                  { // two tor condition not satisfied
-                 if (getBdryHomologyMap(1).isEpic())
+                 if (boundaryHomologyMap(1).isEpic())
                    embeddabilityString =
                         "Embeds in homology 3-sphere "
                         "but not homology 4-sphere.";
-                 else if (getBdryHomologyMap(1).getCokernel().getRank()==0)
+                 else if (boundaryHomologyMap(1).getCokernel().getRank()==0)
                    embeddabilityString =
                         "Embeds in rational homology 3-sphere but not "
                         "homology 4-sphere.";
@@ -1751,11 +1751,11 @@ void NHomologicalData::computeEmbeddabilityString() {
                  }
                 else
                  { // KK twotor condition satisfied...
-                 if (getBdryHomologyMap(1).isEpic())
+                 if (boundaryHomologyMap(1).isEpic())
                    embeddabilityString =
                         "Embeds in homology 3-sphere.  "
                         "KK 2-tor condition satisfied.";
-                 else if (getBdryHomologyMap(1).getCokernel().getRank()==0)
+                 else if (boundaryHomologyMap(1).getCokernel().getRank()==0)
                    embeddabilityString =
                         "Embeds in rational homology 3-sphere.  "
                         "KK 2-tor condition satisfied.";
@@ -1775,7 +1775,7 @@ void NHomologicalData::computeEmbeddabilityString() {
        orTri.makeDoubleCover();
        NHomologicalData covHomol(orTri);
         // break up into two cases, boundary and no boundary...
-        if (covHomol.getBdryHomology(0).isTrivial())
+        if (covHomol.boundaryHomology(0).isTrivial())
          { // no boundary
           if (covHomol.formIsHyperbolic())
             embeddabilityString = "Orientation cover has hyperbolic"
@@ -2066,111 +2066,114 @@ void NHomologicalData::computeBaryCC()
 
 NMarkedAbelianGroup NHomologicalData::imgH2form(unsigned long p)
 {
-// there's less work to do if p==0 so we'll start assuming that
-//  basically all we have to do is compose the two isomorphisms between the
-//  standard and dual cellular homologies at the H_2-level, then pair being 
-//  careful about the simplex's orientation in the manifold
+if (p==0)
+ {
+ unsigned long k=dualHomology(2).getRank();
+ if ((k==0) || (!tri->isOrientable())) return NMarkedAbelianGroup( 0, NLargeInteger::zero );
 
-//if (p==0)
-// {
+ NMarkedAbelianGroup freeGens( k*k, NLargeInteger::zero );
+ NMatrixInt h2pairing( numDualCells[1], k*k );
+ NHomMarkedAbelianGroup MtD1( dualToMixedHom(1).inverseHom() );
+ NHomMarkedAbelianGroup DtS2( standardToMixedHom(2).inverseHom()*dualToMixedHom(2) );
 
-	unsigned long k=getDualHomology(2).getRank();
-if ((k==0) || (!tri->isOrientable())) return NMarkedAbelianGroup( 0, NLargeInteger::zero );
-
-	NMarkedAbelianGroup freeGens( k*k, NLargeInteger::zero );
-        NMatrixInt h2pairing( numDualCells[1], k*k );
-
-	NHomMarkedAbelianGroup MtD1( getDualToMixedHom(1).inverseHom() );
-	NHomMarkedAbelianGroup DtS2( getStandardToMixedHom(2).inverseHom()*getDualToMixedHom(2) );
-
-	for (unsigned long i=0; i<k; i++) for (unsigned long j=0; j<k; j++)
-	{ // a(i) in CC coords is getDualHomology(2).getFreeRep(i)
-	  std::vector<NLargeInteger> aiDH(getDualHomology(2).getFreeRep(i));
-          // b(j) in CC coords is getDualHomology(2).getFreeRep(j)
-	  std::vector<NLargeInteger> bjDH(getDualHomology(2).getFreeRep(j));
-          // B(j) in CC coords is DtS2.evalCC( b(j) )
-	  std::vector<NLargeInteger> bjSH(DtS2.evalCC(bjDH));
-	  // compute pairing a(i) and B(j), first in mixed homology coords
-	  std::vector<NLargeInteger> pijMH(numMixCells[1], NLargeInteger::zero);
-	  // ... needs to be filled out now...
-	  // run through the list of appropriate mixed 1-cells 3*numfaces...
-          // for each one, find corresponding dual 2-cell and standard 2-cell
-	  for (unsigned long l=0; l<3*tri->getNumberOfFaces(); l++)
-	   {
-	    pijMH[2*tri->getNumberOfEdges()+numIdBdryCells[1]+l] = 
-	         bjSH[l/3] * aiDH[ dNBE.index(tri->edgeIndex(tri->getFace(l/3)->getEdge(l % 3))) ] *
-		 tri->getFace(l/3)->getEdgeMapping(l % 3).sign() *
-		 tri->getFace(l/3)->getEdge(l % 3)->getEmbedding(0).getVertices().sign() *
-	         tri->getFace(l/3)->getEdge(l % 3)->getEmbedding(0).getTetrahedron()->orientation();
-	   // intersection count is indexed by faces.  for each face find the quantity of Bj
-	   // and we look "in" to one of the adjacent tetrahedra, I guess the 0th one should be fine
-	   // as it doesn't matter which one we choose, and the 1st one might not exist if we're on
-	   // a standard boundary component.
-
-	   // now we choose an orientation convention for the intersection.  There will be
-	   // (-1)^simplex orientation * (-1)^does the corresp. edge give the correct orientation of the face
-	   // the convention is you take 3 vectors v1 v2 v3 positively orienting the space, 
-	   // the 1st in the intersection, v2 orienting the intersection, 
-	   //                              v1 v2 orienting the dual cycle
-           //	                          v2 v3 orienting the face
-	   // 				  v1 v2 v3 local orientation
-	   //              s(v1) = s(v1 v2) s(v1 v3) s(v1 v2 v3) convention. 
- 	   //                      s(v1 v2) = +1 by our conventions.
-           //                      s(v2 v3) = relative orientation of edge in face
-           //                   s(v1 v2 v3) = edgeembedding.sign() * simplex orientation
-           //			             does not matter which simplex you choose so
-           //                                 might as well coose the 0th on the list.
-	   }
-	  std::vector<NLargeInteger> pijDH(MtD1.evalCC(pijMH));	  
-
+ for (unsigned long i=0; i<k; i++) for (unsigned long j=0; j<k; j++)
+  { // a(i) in CC coords is dualHomology(2).getFreeRep(i)
+  std::vector<NLargeInteger> aiDH(dualHomology(2).getFreeRep(i));
+    // b(j) in CC coords is dualHomology(2).getFreeRep(j)
+  std::vector<NLargeInteger> bjDH(dualHomology(2).getFreeRep(j));
+    // B(j) in CC coords is DtS2.evalCC( b(j) )
+  std::vector<NLargeInteger> bjSH(DtS2.evalCC(bjDH));
+    // compute pairing a(i) and B(j), first in mixed homology coords
+  std::vector<NLargeInteger> pijMH(numMixCells[1], NLargeInteger::zero);
+  // run through the list of appropriate mixed 1-cells 3*numfaces...
+  // for each one, find corresponding dual 2-cell and standard 2-cell
+  for (unsigned long l=0; l<3*tri->getNumberOfFaces(); l++)
+   {
+    pijMH[2*tri->getNumberOfEdges()+numIdBdryCells[1]+l] = 
+         bjSH[l/3] * aiDH[ dNBE.index(tri->edgeIndex(tri->getFace(l/3)->getEdge(l % 3))) ] *
+	 tri->getFace(l/3)->getEdgeMapping(l % 3).sign() *
+	 tri->getFace(l/3)->getEdge(l % 3)->getEmbedding(0).getVertices().sign() *
+         tri->getFace(l/3)->getEdge(l % 3)->getEmbedding(0).getTetrahedron()->orientation();
+   // intersection count is indexed by faces.  for each face find the quantity of Bj
+   // and we look "in" to one of the adjacent tetrahedra, I guess the 0th one should be fine
+   // as it doesn't matter which one we choose, and the 1st one might not exist if we're on
+   // a standard boundary component.
+   // now we choose an orientation convention for the intersection.  There will be
+   // (-1)^simplex orientation * (-1)^does the corresp. edge give the correct orientation of the face
+   // the convention is you take 3 vectors v1 v2 v3 positively orienting the space, 
+   // the 1st in the intersection, v2 orienting the intersection, 
+   //                              v1 v2 orienting the dual cycle
+   //	                          v2 v3 orienting the face
+   // 				  v1 v2 v3 local orientation
+   //              s(v1) = s(v1 v2) s(v1 v3) s(v1 v2 v3) convention. 
+   //                      s(v1 v2) = +1 by our conventions.
+   //                      s(v2 v3) = relative orientation of edge in face
+   //                   s(v1 v2 v3) = edgeembedding.sign() * simplex orientation
+   //			             does not matter which simplex you choose so
+   //                                 might as well coose the 0th on the list.
+   }
+   std::vector<NLargeInteger> pijDH(MtD1.evalCC(pijMH));	  
 	  for (unsigned long l=0; l<h2pairing.rows(); l++)
 		  h2pairing.entry(l, (k*i)+j) = pijDH[l];
-	} 
-	// construct homomorphism from Z^{k^2} --> H_1 where k is the number of
-	// free generators of H_2 all in dual homology coordinates.  
-	// So an element of Z^{k^2} is a pair a,b where a and b
-	// represent H_2 classes.  Convert b to a standard class, find pairing, convert
-	// it to a dual class.  Request image of this NHomMarkedAbelianGroup, return. 
-	NHomMarkedAbelianGroup ontoImg( freeGens, getDualHomology(1), h2pairing);
-	return ontoImg.getImage();
-// }
-//else 
-// { // implement once NMarkedAbelianGroup and NHomMarkedAbelianGroup have mod-p coefficients.
-// }
-/*
-With coefficients in Z_p, H^1(M;Z_p) is isomorphic to H_2(M;Z_p) by poincare duality, and
-this is the direct sum of ker L_p on H_1(M;Z) and coker L_p on H_2(M;Z).   So with mod-p
-coefficients,  there are four types of pairings to compute:
+   } 
+  // construct homomorphism from Z^{k^2} --> H_1 where k is the number of
+  // free generators of H_2 all in dual homology coordinates.  
+  // So an element of Z^{k^2} is a pair a,b where a and b
+  // represent H_2 classes.  Convert b to a standard class, find pairing, convert
+  // it to a dual class.  Request image of this NHomMarkedAbelianGroup, return. 
+  NHomMarkedAbelianGroup ontoImg( freeGens, dualHomology(1), h2pairing);
+  return ontoImg.getImage();
+  }
+ else
+  {
+  NMarkedAbelianGroup h2modpD(dualHomology(2).getM(), dualHomology(2).getN(), 
+					regina::NLargeInteger(p)); //
+  NMarkedAbelianGroup h1modpD(dualHomology(1).getM(), dualHomology(1).getN(), 
+					regina::NLargeInteger(p)); //
+  NMarkedAbelianGroup h2modpM(mixedHomology(2).getM(), mixedHomology(2).getN(), 
+					regina::NLargeInteger(p)); //
+  NMarkedAbelianGroup h1modpM(mixedHomology(1).getM(), mixedHomology(1).getN(), 
+					regina::NLargeInteger(p)); //
+  NMarkedAbelianGroup h2modpS(standardHomology(2).getM(), standardHomology(2).getN(), 
+					regina::NLargeInteger(p)); //
 
-1) ker L_p H_1(M;Z) \otimes ker L_p H_1(M;Z)     ---> H_1(M;Z_p)
+  NHomMarkedAbelianGroup DtM1(h1modpD, h1modpM, dualToMixedHom(1).getDefiningMatrix()); // req
+  NHomMarkedAbelianGroup MtD1(DtM1.inverseHom()); // need
+  NHomMarkedAbelianGroup StM2(h2modpS, h2modpM, standardToMixedHom(2).getDefiningMatrix()); // req
+  NHomMarkedAbelianGroup DtM2(h2modpD, h2modpM, dualToMixedHom(2).getDefiningMatrix()); // req
+  NHomMarkedAbelianGroup DtS2( StM2.inverseHom() * DtM2 ); // need
 
-2) ker L_p H_1(M;Z) \otimes coker L_p H_2(M;Z)   ---> H_1(M;Z_p)
+  unsigned long k=h2modpD.minNumberOfGenerators();
+  if ((p>2) && (!tri->isOrientable())) return NMarkedAbelianGroup( 0, NLargeInteger::zero );
+  NMarkedAbelianGroup freeGens( k*k, NLargeInteger::zero );
+  NMatrixInt h2pairing( numDualCells[1], k*k );
 
-3) coker L_p H_2(M;Z) \otimes ker L_p H_1(M;Z)   ---> H_1(M;Z_p)
-
-4) coker L_p H_2(M;Z) \otimes coker L_p H_2(M;Z) ---> H_1(M;Z_p)
-
-By the anti-symmetry of the pairing 2 and 3 have the same image so that leaves us with only
-3 pairings to compute. 
-
-4) is simply the mod-p reduction of the integral H_2-pairing. 
-
-2) is obtained by taking [x], [y], writing px=\partial A, and computing the intersection A\cap y
-
-1) is obtained by taking [x], [y], writing px=\partial A, py=\partial B, computing the intersection A \cap B. 
-   
-So everything here can be done in integral coefficients except the last step of determining the subgroup
-of H_1(M;Z_p). So we'll have to compute H_1(M;Z_p) seperately, and cook up the homomorphism. Not so bad.
-
-Add routines to get rank p-torsion subgroup, i-th generator of is in CC coords and SNF coords
-Add routine to get num generators of G/pG and reps of i-th generators in CC and SNF coords. 
-
-Then construct H_1(M;Z_p) in mixed and dual coordinates and mixed->dual iso for Z_p, and
-construct image of pairing in H_1(M;Z_p). 
-
-Continuing the thought, NMarkedAbelianGroup can add isBoundary() routine and
-writeAsBoundary() routine.
-*/
+ for (unsigned long i=0; i<k; i++) for (unsigned long j=0; j<k; j++)
+  { // a(i) in CC coords is dualHomology(2).getFreeRep(i)
+  std::vector<NLargeInteger> aiDH(h2modpD.getTorsionRep(i));
+    // b(j) in CC coords is dualHomology(2).getFreeRep(j)
+  std::vector<NLargeInteger> bjDH(h2modpD.getTorsionRep(j));
+    // B(j) in CC coords is DtS2.evalCC( b(j) )
+  std::vector<NLargeInteger> bjSH(DtS2.evalCC(bjDH));
+    // compute pairing a(i) and B(j), first in mixed homology coords
+  std::vector<NLargeInteger> pijMH(numMixCells[1], NLargeInteger::zero);
+  // run through the list of appropriate mixed 1-cells 3*numfaces...
+  // for each one, find corresponding dual 2-cell and standard 2-cell
+  for (unsigned long l=0; l<3*tri->getNumberOfFaces(); l++)
+   {
+    pijMH[2*tri->getNumberOfEdges()+numIdBdryCells[1]+l] = 
+         bjSH[l/3] * aiDH[ dNBE.index(tri->edgeIndex(tri->getFace(l/3)->getEdge(l % 3))) ] *
+	 tri->getFace(l/3)->getEdgeMapping(l % 3).sign() *
+	 tri->getFace(l/3)->getEdge(l % 3)->getEmbedding(0).getVertices().sign() *
+         tri->getFace(l/3)->getEdge(l % 3)->getEmbedding(0).getTetrahedron()->orientation();
+   }
+   std::vector<NLargeInteger> pijDH(MtD1.evalCC(pijMH));	  
+	  for (unsigned long l=0; l<h2pairing.rows(); l++)
+		  h2pairing.entry(l, (k*i)+j) = pijDH[l];
+   } 
+  NHomMarkedAbelianGroup ontoImg( freeGens, h1modpD, h2pairing);
+  return ontoImg.getImage();
+  }
 
 }
 
@@ -2179,25 +2182,25 @@ bool NHomologicalData::verifyChainComplexes()
 bool retval = true;
 computeChainComplexes(); 
 computeBaryCC();
-for (unsigned long i=0; i<4; i++) if (!getDualToMixedHom(i).isCycleMap()) retval = false;
-for (unsigned long i=0; i<4; i++) if (!getStandardToMixedHom(i).isCycleMap()) retval = false;
-if (!getH1CellAp().isCycleMap()) retval = false;
-for (unsigned long i=0; i<3; i++) if (!getBdryHomologyMap(i).isCycleMap()) retval = false;
-if (!getDualToMixedHom(2).isChainMap(getDualToMixedHom(1))) retval = false;
-if (!getDualToMixedHom(3).isChainMap(getDualToMixedHom(2))) retval = false;
-if (!getStandardToMixedHom(2).isChainMap(getStandardToMixedHom(1))) retval = false;
-if (!getStandardToMixedHom(3).isChainMap(getStandardToMixedHom(2))) retval = false;
+for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isCycleMap()) retval = false;
+for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isCycleMap()) retval = false;
+if (!h1CellAp().isCycleMap()) retval = false;
+for (unsigned long i=0; i<3; i++) if (!boundaryHomologyMap(i).isCycleMap()) retval = false;
+if (!dualToMixedHom(2).isChainMap(dualToMixedHom(1))) retval = false;
+if (!dualToMixedHom(3).isChainMap(dualToMixedHom(2))) retval = false;
+if (!standardToMixedHom(2).isChainMap(standardToMixedHom(1))) retval = false;
+if (!standardToMixedHom(3).isChainMap(standardToMixedHom(2))) retval = false;
 return retval;
 }
 
-bool NHomologicalData::verifyCoordinateIsomorphisms()
+bool NHomologicalData::verifyCoordinateIsomorphisms(unsigned long p)
 {
-bool retval = true;
-for (unsigned long i=0; i<4; i++) if (!getDualToMixedHom(i).isIso()) retval = false;
-for (unsigned long i=0; i<4; i++) if (!getStandardToMixedHom(i).isIso()) retval = false;
-for (unsigned long i=0; i<4; i++) if (!getDualToMixedHom(i).isIso()) retval = false;
-if (! (getDualToMixedHom(1).inverseHom()*getStandardToMixedHom(1)*getH1CellAp()).isIdentity() ) retval = false;
-return retval;
+// todo: add mod p check. 
+for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIso()) return false;
+for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isIso()) return false;
+for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIso()) return false;
+if (! (dualToMixedHom(1).inverseHom()*standardToMixedHom(1)*h1CellAp()).isIdentity() ) return false;
+return true;
 }
 
 

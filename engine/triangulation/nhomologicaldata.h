@@ -401,7 +401,7 @@ public:
      * getDualHomology() uses the dual CW-decomposition which typically
      * has an order of magnitude fewer cells.
      *
-     * Note that the groups returned by getHomology() and getDualHomology()
+     * Note that the groups returned by standardHomology() and getDualHomology()
      * are isomorphic, though they are generally described by different
      * presentations.
      *
@@ -409,7 +409,7 @@ public:
      * @return the q-th homology group, computed in the standard
      * CW-decomposition.
      */
-    const NMarkedAbelianGroup& getHomology(unsigned q);
+    const NMarkedAbelianGroup& standardHomology(unsigned q);
     /**
      * This routine gives access to the homology of the boundary
      * of the manifold, computed with the regular CW-decomposition.
@@ -418,7 +418,7 @@ public:
      * @return the q-th boundary homology group, in standard cellular
      * homology coordinates
      */
-    const NMarkedAbelianGroup& getBdryHomology(unsigned q);
+    const NMarkedAbelianGroup& boundaryHomology(unsigned q);
 
     /**
      * This routine gives access to the homomorphism from the
@@ -428,23 +428,23 @@ public:
      * @return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
-    const NHomMarkedAbelianGroup& getBdryHomologyMap(unsigned q);
+    const NHomMarkedAbelianGroup& boundaryHomologyMap(unsigned q);
 
     /**
      * This routine gives access to the manifold's homology computed
      * with the dual CW-decomposition.
      *
-     * This routine is typically faster than getHomology() since the
+     * This routine is typically faster than standardHomology() since the
      * dual CW-decomposition generally has far fewer cells.
      *
-     * Note that the groups returned by getHomology() and getDualHomology()
+     * Note that the groups returned by standardHomology() and getDualHomology()
      * are isomorphic, though they are generally described by different
      * presentations.
      *
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the dual CW-decomposition.
      */
-    const NMarkedAbelianGroup& getDualHomology(unsigned q);
+    const NMarkedAbelianGroup& dualHomology(unsigned q);
 
     /**
      * This routine gives access to the manifold's homology computed
@@ -453,32 +453,32 @@ public:
      * in the triple product H_2 x H_2 --> H_1
      *
      * Note that these groups are isomorphic to the groups given by 
-     * getHomology() and getDualHomology() though they use different, simpler
+     * standardHomology() and getDualHomology() though they use different, simpler
      * coordinates in their computations
      *
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the dual CW-decomposition.
      */
-    const NMarkedAbelianGroup& getMixedHomology(unsigned q);
+    const NMarkedAbelianGroup& mixedHomology(unsigned q);
 
     /**
      * Returns the homomorphism from standard to mixed cellular homology
      */
-    const NHomMarkedAbelianGroup& getStandardToMixedHom(unsigned q);
+    const NHomMarkedAbelianGroup& standardToMixedHom(unsigned q);
     /**
      * Returns the homomorphism from dual to mixed cellular homology
      */
-    const NHomMarkedAbelianGroup& getDualToMixedHom(unsigned q);
+    const NHomMarkedAbelianGroup& dualToMixedHom(unsigned q);
 
     /**
-     * Returns the isomorphism from getDualHomology(1) to getHomology(1)
+     * Returns the isomorphism from getDualHomology(1) to standardHomology(1)
      * given by a cellular approximation to the identity map on the manifold.
      *
-     * @return The isomorphism from getDualHomology(1) to getHomology(1)
+     * @return The isomorphism from getDualHomology(1) to standardHomology(1)
      * computed via a cellular approximation of the identity map from
      * the first 1-skeleton to the second.
      */
-    const NHomMarkedAbelianGroup& getH1CellAp();
+    const NHomMarkedAbelianGroup& h1CellAp();
 
     /**
      * Returns the number of cells of the given dimension
@@ -498,7 +498,7 @@ public:
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the closed manifold.
      */
-    unsigned long getNumStandardCells(unsigned dimension);
+    unsigned long standardCellCount(unsigned dimension);
     /**
      * Returns the number of cells of the given dimension
      * in the dual CW-decomposition of the manifold. This is typically
@@ -509,7 +509,7 @@ public:
      * @return the number of cells of the given dimension in the dual
      * CW-decomposition to the triangulation.
      */
-    unsigned long getNumDualCells(unsigned dimension);
+    unsigned long dualCellCount(unsigned dimension);
     /**
      * Returns the number of cells of the given dimension in the
      * standard CW-decomposition of the boundary of the manifold.
@@ -520,12 +520,12 @@ public:
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the boundary.
      */
-    unsigned long getNumBdryCells(unsigned dimension);
+    unsigned long bdryCellCount(unsigned dimension);
 
     /**
      * Returns the number of cells in the mixed cellular decomposition 
      */
-    unsigned long getNumMixedCells(unsigned dimension);
+    unsigned long mixedCellCount(unsigned dimension);
 
     /**
      * The proper Euler characteristic of the manifold, computed from
@@ -547,7 +547,7 @@ public:
      * @return the Euler characteristic of the corresponding compact
      * triangulated 3-manifold.
      */
-    long getEulerChar();
+    long eulerChar();
 
     /**
      * Returns the torsion form rank vector. This is the first of
@@ -570,7 +570,7 @@ public:
      * @return the torsion form rank vector.
      */
     const std::vector< std::pair< NLargeInteger,
-        std::vector< unsigned long > > >& getTorsionRankVector();
+        std::vector< unsigned long > > >& torsionRankVector();
     /**
      * Same as getTorsionRankVector() but returns as a human-readable string.
      *
@@ -579,7 +579,7 @@ public:
      * @return human-readable prime power factorization of the order of
      * the torsion subgroup of H1.
      */
-    const std::string& getTorsionRankVectorString();
+    const std::string& torsionRankVectorString();
     /**
      * Returns the 2-torsion sigma vector. This is the second of the three
      * Kawauchi-Kojima invariants. It is orientation-sensitive.
@@ -595,7 +595,7 @@ public:
      *
      * @return the Kawauchi-Kojima sigma-vector.
      */
-    const std::vector<NLargeInteger>& getTorsionSigmaVector();
+    const std::vector<NLargeInteger>& torsionSigmaVector();
     /**
      * Same as getTorsionSigmaVector() but returns as a human-readable string.
      * This is an orientation-sensitive invariant.
@@ -604,7 +604,7 @@ public:
      *
      * @return the Kawauchi-Kojima sigma-vector in human readable form.
      */
-    const std::string& getTorsionSigmaVectorString();
+    const std::string& torsionSigmaVectorString();
 
     /**
      * Returns the odd p-torsion Legendre symbol vector. This is the
@@ -623,7 +623,7 @@ public:
      * linking form.
      */
     const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
-        getTorsionLegendreSymbolVector();
+        torsionLegendreSymbolVector();
     /**
      * Same as getTorsionLegendreSymbolVector() but returns as a
      * human-readable string.
@@ -632,7 +632,7 @@ public:
      *
      * @return the Legendre symbol vector in human-readable form.
      */
-    const std::string& getTorsionLegendreSymbolVectorString();
+    const std::string& torsionLegendreSymbolVectorString();
 
     /**
      * Returns true iff torsion linking form is `hyperbolic' in
@@ -695,7 +695,7 @@ public:
      * is known about where this manifold embeds, based solely
      * on the manifold's homological data.
      */
-    const std::string& getEmbeddabilityComment();
+    const std::string& embeddabilityComment();
 
     /**
      * Computes the image H_2(M;\Zed_p) \otimes H_2(M;\Zed_p) --> H_1(M;\Zed_p)
@@ -736,7 +736,7 @@ public:
      * @return true provided every natural map between the various homology groups computable that
      *         should be isomorphisms, actually are isomorphisms. 
      */
-    bool verifyCoordinateIsomorphisms();
+    bool verifyCoordinateIsomorphisms(unsigned long p=0);
 
     /** Computes a spin structure if one exists, 
      ** provided the manifold is orientable, this is always true. 
@@ -865,34 +865,34 @@ inline NHomologicalData::~NHomologicalData() {
     }
 }
 
-inline unsigned long NHomologicalData::getNumStandardCells(unsigned dimension)
+inline unsigned long NHomologicalData::standardCellCount(unsigned dimension)
 {
     // number of cells of dimension 0, 1, 2, 3.
     computeccIndexing();
     return numStandardCells[dimension];
 }
 
-inline unsigned long NHomologicalData::getNumDualCells(unsigned dimension)
+inline unsigned long NHomologicalData::dualCellCount(unsigned dimension)
 {
     // dual cells
     computeccIndexing();
     return numDualCells[dimension];
 }
 
-inline unsigned long NHomologicalData::getNumBdryCells(unsigned dimension)
+inline unsigned long NHomologicalData::bdryCellCount(unsigned dimension)
 {
     // standard boundary cells
     computeccIndexing();
     return numBdryCells[dimension];
 }
 
-inline unsigned long NHomologicalData::getNumMixedCells(unsigned dimension)
+inline unsigned long NHomologicalData::mixedCellCount(unsigned dimension)
 {
      computeBaryCC();
      return numMixCells[dimension];
 }
 
-inline long int NHomologicalData::getEulerChar()
+inline long int NHomologicalData::eulerChar()
 {
     // euler characteristic
     computeccIndexing();
@@ -900,19 +900,19 @@ inline long int NHomologicalData::getEulerChar()
 }
 
 inline const std::vector< std::pair< NLargeInteger,
-std::vector< unsigned long > > >& NHomologicalData::getTorsionRankVector()
+std::vector< unsigned long > > >& NHomologicalData::torsionRankVector()
 {
     computeTorsionLinkingForm();
     return torRankV;
 }
 inline const std::vector<NLargeInteger>&
-NHomologicalData::getTorsionSigmaVector()
+NHomologicalData::torsionSigmaVector()
 {
     computeTorsionLinkingForm();
     return twoTorSigmaV;
 }
 inline const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
-NHomologicalData::getTorsionLegendreSymbolVector()
+NHomologicalData::torsionLegendreSymbolVector()
 {
     computeTorsionLinkingForm();
     return oddTorLegSymV;
@@ -928,26 +928,26 @@ inline bool NHomologicalData::formSatKK()
     computeTorsionLinkingForm();
     return torsionLinkingFormSatisfiesKKtwoTorCondition;
 }
-inline const std::string& NHomologicalData::getTorsionRankVectorString()
+inline const std::string& NHomologicalData::torsionRankVectorString()
 {
     computeTorsionLinkingForm();
     return torsionRankString;
 }
 
-inline const std::string& NHomologicalData::getTorsionSigmaVectorString()
+inline const std::string& NHomologicalData::torsionSigmaVectorString()
 {
     computeTorsionLinkingForm();
     return torsionSigmaString;
 }
 
 inline const std::string&
-NHomologicalData::getTorsionLegendreSymbolVectorString()
+NHomologicalData::torsionLegendreSymbolVectorString()
 {
     computeTorsionLinkingForm();
     return torsionLegendreString;
 }
 
-inline const std::string& NHomologicalData::getEmbeddabilityComment()
+inline const std::string& NHomologicalData::embeddabilityComment()
 {
     computeEmbeddabilityString();
     return embeddabilityString;

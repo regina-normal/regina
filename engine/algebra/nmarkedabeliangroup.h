@@ -83,8 +83,8 @@ class NHomMarkedAbelianGroup;
  * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
  * \todo \optlong Add Hom, Ext, Tor, and \otimes, torsion linking form and intersection product
  *  as maps out of tensor products.  Tor is implemented at least against Z_p now... 
- * \todo Eliminate routines like getMRB() and make the class internals more opaque to users
- *       since this stuff is useless for mod p coefficients right now...
+ * \todo testsuite additions: isChainComplex() true and false egs. isCycle, isBdry(), 
+ *       bdryMap(), writeAsBdry(), minNumberCycleGens, cycleGen
  */
 class NMarkedAbelianGroup : public ShareableObject {
     private:
@@ -172,6 +172,11 @@ class NMarkedAbelianGroup : public ShareableObject {
 	 *     constructor.
          */
         NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N, const NLargeInteger &pcoeff);
+
+	/**
+	 * @return true if and only if M*N == 0 where M and N are the definining matrices.
+	 */
+	bool isChainComplex() const;
 
 	/**
 	 * Creates a free Z_p-module of a given rank using the a direct sum 
@@ -301,7 +306,7 @@ class NMarkedAbelianGroup : public ShareableObject {
 	 * @param the NMarkedAbelianGroup with which this should be compared.
 	 * @return \c true if and only if the two groups have identical chain-complex definitions.
 	 */
-        bool operator == (const NMarkedAbelianGroup& other) const;
+        bool equalTo(const NMarkedAbelianGroup& other) const;
 
         /**
          * The text representation will be of the form
@@ -414,7 +419,8 @@ class NMarkedAbelianGroup : public ShareableObject {
 
         /**
          * Expresses the given vector as a combination of free and torsion
-         * generators.
+         * generators.  This answer is coordinate dependant, meaning the answer
+         * may change depending on how the Smith Normal Form is computed. 
          *
          * Recall that this marked abelian was defined by matrices \a M
          * and \a N with M*N=0; suppose that \a M is an \a m by \a l matrix
@@ -483,50 +489,6 @@ class NMarkedAbelianGroup : public ShareableObject {
         std::vector<NLargeInteger> cycleGen(unsigned long j) const;
 
         /**
-         * Returns a change-of-basis matrix for the Smith normal form of \a M.
-         *
-         * This is one of several routines that returns information on
-         * how we determine the isomorphism-class of this group.
-         *
-         * Recall from the class overview that this marked abelian group
-         * is defined by matrices \a M and \a N, where M*N = 0.
-         *
-         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
-         *   respectively.
-         *
-         * @return the matrix getMRB() as described above.
-         */
-        const NMatrixInt& getMRB() const;
-        /**
-         * Returns an inverse change-of-basis matrix for the Smith normal
-         * form of \a M.
-         *
-         * This is one of several routines that returns information on
-         * how we determine the isomorphism-class of this group.
-         *
-         * Recall from the class overview that this marked abelian group
-         * is defined by matrices \a M and \a N, where M*N = 0.
-         *
-         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
-         *   respectively.
-         *
-         * @return the matrix getMRBi() as described above.
-         */
-        const NMatrixInt& getMRBi() const;
-
-        /**
-         * Returns the rank of the defining matrix \a M.
-         *
-         * The matrix \a M is the `right' matrix used in defining the chain
-         * complex.  See the class overview for further details.
-         *
-         * @return the rank of the defining matrix \a M.
-         */
-        unsigned long getRankM() const;
-
-        /**
          * Returns the `right' matrix used in defining the chain complex.
          * Our group was defined as the kernel of \a M mod the image of \a N.  This
 	 * is that matrix, \a M. 
@@ -581,25 +543,22 @@ class NMarkedAbelianGroup : public ShareableObject {
  * for q > 0 and p == 0, ie: the domain having Z coefficients and the range having mod q
  * coefficients. 
  *
- * \todo preImageOf in CC and SNF coordinates.  This routine would return a generating
+ * \todo \optlong preImageOf in CC and SNF coordinates.  This routine would return a generating
  *          list of elements in the preimage, thought of as an affine subspace. Or maybe
  *          just one element together with the kernel inclusion.  IMO smarter to be a list
  *          because that way there's a more pleasant way to make it empty. Or could have a 
  *          variety of routines among these themes.  Store some minimal data for efficient
  *          computations of preImage -- eventually replacing the internals of inverseHom() 
- *          with a more flexible set of tools.
- * \todo isInImage in various coordinates -- essentially a wrapper for preimage of.
- *          Or could compute this by taking the image of the element into the cokernel and
- *          asking if this is zero. 
- * \todo add induced homomorphism on Z_p coefficients once Z_p coefficients implemented in 
- *       NMarkedAbelianGroup.
- * \todo remove getMRB(), MRBi, MCB, MCBi, getrankM once NHomologicalData is fixed to not
- *       need them. 
+ *          with a more flexible set of tools. Also add an isInImage() in various coordinates.
  * \todo \optlong writeTextShort() have completely different set of descriptors if an 
  *       endomorphism domain == range not so important at the moment though.  New 
  *       descriptors would include things like automorphism, projection, differential, ... 
- * \todo add map factorization, that every homomorphism can be split as a composite of a
- *       projection followed by an inclusion.  
+ *       finite order... etc..
+ * \todo \optlong add map factorization, that every homomorphism can be split as a composite of a
+ *       projection followed by an inclusion.  Add kernelInclusion(), coKerMap()...
+ *       Add a liftMap() call, ie a procedure to find a lift of a map if one exists....
+ * \todo add inverseHom() tests to test suite, add mod-p coefficient calls to test suite. 
+ *	 isChainMap, isCycleMap, *, evalCC, evalSNF. 
  *
  * @author Ryan Budney
  */
@@ -649,6 +608,8 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          * for NHomMarkedAbelianGroup::inverseHom().  Moreover, this routine assumes tebeRedMat
 	 * actually can be the reduced matrix of some chain map -- this is not a restriction in
 	 * the coeff==0 case, but it is if coeff > 0. 
+	 *
+	 * todo: erase completely once made obsolete by right/left inverse. 
 	 */
 	NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat, 
 			       const NMarkedAbelianGroup &dom, 
@@ -829,15 +790,18 @@ class NHomMarkedAbelianGroup : public ShareableObject {
 	std::vector<NLargeInteger> evalCC(const std::vector<NLargeInteger> &input) const; 
 	/**
 	 * Evaluate, in the SNF coordinates. This is just multiplication by the reduced matrix, 
-	 * returning the empty vector if the input vector has the wrong dimensions.
+	 * returning the empty vector if the input vector has the wrong dimensions. SNF coordinates
+	 * are sensitive to the implementation of the Smith Normal Form, ie they are not canonical. 
 	 */
 	std::vector<NLargeInteger> evalSNF(const std::vector<NLargeInteger> &input) const;
 
 	/**
 	 * Returns the inverse to an NHomMarkedAbelianGroup. If not invertible, returns
-	 * the zero homomorphism.
-	 *
-	 * TODO: in future, store the inverse and have this routine return a constant refernce.
+	 * the zero homomorphism.  If you are computing with mod-p coefficients, this routine
+         * will further require that this invertible map preserves the UCT splitting of the
+         * group -- ie: it gives an isomorphism of the tensor product parts and the TOR parts. 
+         * at present this suffices since we're only using this to construct maps between 
+         * homology groups in different coordinate systems.
 	 *
 	 * @pre Must be invertible. 
          */
@@ -921,26 +885,12 @@ inline bool NMarkedAbelianGroup::isTrivial() const {
     return ( (snfrank==0) && (InvFacList.size()==0) );
 }
 
-inline bool NMarkedAbelianGroup::operator == (
-        const NMarkedAbelianGroup& other) const {
+inline bool NMarkedAbelianGroup::equalTo(const NMarkedAbelianGroup& other) const {
     return ( (OM == other.OM) && (ON == other.ON) && (coeff == other.coeff) );
 }
 
 inline bool NMarkedAbelianGroup::isIsomorphicTo(const NMarkedAbelianGroup &other) const {
     return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
-}
-
-// erase
-inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
-    return OMR;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getMRBi() const {
-    return OMRi;
-}
-// end erase
-
-inline unsigned long NMarkedAbelianGroup::getRankM() const {
-    return rankOM;
 }
 
 inline const NMatrixInt& NMarkedAbelianGroup::getM() const {

@@ -636,31 +636,31 @@ void NTriCellularInfoUI::refresh() {
         regina::NHomologicalData minfo(*tri);
 
         Cells->setText(i18n("%1, %2, %3, %4").
-            arg(minfo.getNumStandardCells(0)).
-            arg(minfo.getNumStandardCells(1)).
-            arg(minfo.getNumStandardCells(2)).
-            arg(minfo.getNumStandardCells(3)));
+            arg(minfo.standardCellCount(0)).
+            arg(minfo.standardCellCount(1)).
+            arg(minfo.standardCellCount(2)).
+            arg(minfo.standardCellCount(3)));
 
         DualCells->setText(i18n("%1, %2, %3, %4").
-            arg(minfo.getNumDualCells(0)).
-            arg(minfo.getNumDualCells(1)).
-            arg(minfo.getNumDualCells(2)).
-            arg(minfo.getNumDualCells(3)));
+            arg(minfo.dualCellCount(0)).
+            arg(minfo.dualCellCount(1)).
+            arg(minfo.dualCellCount(2)).
+            arg(minfo.dualCellCount(3)));
 
-        EulerChar->setText(QString::number(minfo.getEulerChar()));
+        EulerChar->setText(QString::number(minfo.eulerChar()));
 
         H0H1H2H3->setText(i18n("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-            arg(minfo.getHomology(0).toString()).
-            arg(minfo.getHomology(1).toString()).
-            arg(minfo.getHomology(2).toString()).
-            arg(minfo.getHomology(3).toString()));
+            arg(minfo.standardHomology(0).toString()).
+            arg(minfo.standardHomology(1).toString()).
+            arg(minfo.standardHomology(2).toString()).
+            arg(minfo.standardHomology(3).toString()));
 
         HBdry->setText(i18n("H0 = %1,  H1 = %2,  H2 = %3").
-            arg(minfo.getBdryHomology(0).toString()).
-            arg(minfo.getBdryHomology(1).toString()).
-            arg(minfo.getBdryHomology(2).toString()));
+            arg(minfo.boundaryHomology(0).toString()).
+            arg(minfo.boundaryHomology(1).toString()).
+            arg(minfo.boundaryHomology(2).toString()));
 
-        BdryMap->setText(minfo.getBdryHomologyMap(1).toString());
+        BdryMap->setText(minfo.boundaryHomologyMap(1).toString());
 
         if (! tri->isConnected()) {
             QString msg(i18n("Triangulation is disconnected."));
@@ -673,10 +673,10 @@ void NTriCellularInfoUI::refresh() {
             // 8 principle cases:
             // orientable y/n, boundary y/n, torsion exists y/n
             if (tri->isOrientable()) {
-                TorForOrders->setText(minfo.getTorsionRankVectorString());
-                TorForSigma->setText(minfo.getTorsionSigmaVectorString());
+                TorForOrders->setText(minfo.torsionRankVectorString());
+                TorForSigma->setText(minfo.torsionSigmaVectorString());
                 TorForLegendre->setText(
-                    minfo.getTorsionLegendreSymbolVectorString());
+                    minfo.torsionLegendreSymbolVectorString());
             } else {
                 // The torsion linking form routines insist on orientability,
                 // so we should avoid calling them.
@@ -691,7 +691,7 @@ void NTriCellularInfoUI::refresh() {
             // non-orientable triangulations.
             // Encase it in <qt>..</qt> so it can wrap over multiple lines.
             EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
-                QStyleSheet::escape(minfo.getEmbeddabilityComment())));
+                QStyleSheet::escape(minfo.embeddabilityComment())));
         }
     } else {
         QString msg(i18n("Invalid Triangulation"));

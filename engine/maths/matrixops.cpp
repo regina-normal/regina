@@ -836,13 +836,6 @@ while (wRow > 0)
 	if (R!=0) pivCol=i;
 	} // now pivCol is the last non-zero entry in the 0..wRow square submatrix 
 
-// so if wRow > 0 and pivCol==0 we have an error, point it out for now. 
-//if ( (wRow>0) && (pivCol==0) ) 
-// {
-//  std::cout<<" * * This matrix ain't no good. * * \n";
-//  std::cout<<"wRow == "<<wRow<<" and pivCol == "<<pivCol<<"\n";
-// }
-
  // Step 2: transpose pivCol and column wRow
  if (wRow != pivCol) for (unsigned long i=0; i<workMat.rows(); i++)
   {
@@ -876,7 +869,6 @@ while (wRow > 0)
  // now workMat.entry(wRow, pivCol) is a unit mod invF[pivCol], so find its inverse
  NLargeInteger g, a1, a2;
  g= workMat.entry( wRow, pivCol ).gcdWithCoeffs( invF[pivCol], a1, a2 );
-// g should be 1, add test for this to throw an error message when debugging.
  // so a1 represents this multiplicative inverse so multiply this column by it. 
  for (unsigned long i=0; i<workMat.rows(); i++)
   {

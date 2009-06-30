@@ -139,20 +139,11 @@ void addNMarkedAbelianGroup() {
         .def("getFreeRep", getFreeRep_list)
         .def("getTorsionRep", getTorsionRep_list)
         .def("snfRep", snfRep_list_list)
-        .def("getMRB", &NMarkedAbelianGroup::getMRB,
-            return_internal_reference<>())
-        .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
-            return_internal_reference<>())
-//        .def("getMCB", &NMarkedAbelianGroup::getMCB,
-//            return_internal_reference<>())
-//        .def("getMCBi", &NMarkedAbelianGroup::getMCBi,
-//            return_internal_reference<>())
-        .def("getRankM", &NMarkedAbelianGroup::getRankM)
         .def("getM", &NMarkedAbelianGroup::getM,
             return_internal_reference<>())
         .def("getN", &NMarkedAbelianGroup::getN,
             return_internal_reference<>())
-        .def(self == self)
+        .def("equalTo", &NMarkedAbelianGroup::equalTo)
     ;
 
     class_<NHomMarkedAbelianGroup, bases<regina::ShareableObject>,

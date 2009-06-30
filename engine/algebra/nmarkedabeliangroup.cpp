@@ -249,6 +249,14 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& 
      }
 }
 
+bool NMarkedAbelianGroup::isChainComplex() const
+{
+if (OM.columns() != ON.rows()) return false;
+std::auto_ptr<NMatrixRing<NLargeInteger> > prod = OM*ON;
+for (unsigned long i=0; i<prod->rows(); i++) for (unsigned long j=0; j<prod->columns(); j++)
+ if (prod->entry(i,j) != NLargeInteger::zero) return false;
+return true;
+}
 
 unsigned long NMarkedAbelianGroup::getTorsionRank(const NLargeInteger& degree)
         const {
@@ -328,18 +336,6 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getFreeRep(unsigned long index)
      // the above takes temp and multiplies it by the matrix OMR.
     return retval;
 }
-
-void printVec(const std::vector<NLargeInteger> &V)
-{
-std::cout<<"(";
-for (unsigned long i=0; i<V.size(); i++)
- {
- if (i>0) std::cout<<" ";
- std::cout<<V[i];
- }
-std::cout<<")";
-}
-
 
 /*
  * The marked abelian group was defined by matrices M and N
@@ -613,51 +609,97 @@ return retval;
 }
 
 
-// todo: it looks like this needs to be upgraded for mod-p coefficients. 
-//       maybe erase this altogether as it isn't obvious how to do a good job
-//       of this for arbitrary coefficients. 
 NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat, 
 		       const NMarkedAbelianGroup &dom, 
 		       const NMarkedAbelianGroup &ran) : 
 domain(dom), range(ran), matrix(ran.getM().columns(), dom.getM().columns()), reducedMatrix(0), 
 kernel(0), coKernel(0), image(0), reducedKernelLattice(0)
 {
-// need to compute matrix and assign reducedMatrix
 reducedMatrix = new NMatrixInt(tobeRedMat);
-// rarely would matrix be correct at this stage, so we proceed to fix that...
-// roughly we're looking for matrix = ccRep ( tobeRedMat * SNFIsoRep ( projkerMdomain 
+// If using mod p coeff, p != 0: 
+//
+// we build up the CC map in reverse from the way we computed the structure of the domain/range groups.
+//  which was: 3) SNF(M,M'), truncate off first TORLoc coords. 
+//             2) SNF the tensorPres matrix, TOR coords fixed. Truncate off first tensorIfLoc terms.
+//             1) SNF the combined matrix, truncate off ifLoc terms.
+//
+// Step 1: ran.ornCi*[incl tobeRedMat]*[trunc dom.ornC] puts us in diagPres coords
+//         ran.ornCi.rows()-by-dom.ornC.rows()
+// Step 2: ran.otCi*(step 1)*[trunc dom.otC] puts us in trunc(SNF(M,M')) coords
+// Step 3: OMR*(step 2)*[trunc OMRi]
 
-NMatrixInt domMRB( domain.getMRB() );
-NMatrixInt domMRBi( domain.getMRBi() );
+// If using integer coefficients:
+// 
+// we build up the CC map in reverse of the process for which we found the structure of the domain/range
+// groups, which was:  2) SNF(M,M'), truncate off the first rankOM==TORLoc coords
+//                     1) SNF(N,N'), truncate off the first ifLoc terms.
+//
+// Step 1: ran.ornCi*[incl tobeRedMat]*[trunc dom.ornC] puts us in trunc(SNF(M,M')) coords
+// Step 2: --void--
+// Step 3: OMR*(step 1)*[trunc OMRi]
 
-NMatrixInt domKerProj( domMRB.rows(), domMRB.columns() );
-// define this matrix to be domMRB [ 0 0 | 0 I ] domMRBi where the first 0 is getrankM() square
-for (unsigned long i=0; i<domMRB.rows(); i++) for (unsigned long j=0; j<domMRB.columns(); j++)
- for (unsigned long k=domain.getRankM(); k<domMRB.rows(); k++)
-	domKerProj.entry(i,j) += domMRB.entry(i,k) * domMRBi.entry(k,j);
-
-for (unsigned long j=0; j<domKerProj.columns(); j++)
- {
- // for each column of domKerProj write as a std::vector, push through SNFIsoRep
- std::vector<NLargeInteger> colj(domKerProj.rows());
- for (unsigned long i=0; i<domKerProj.rows(); i++) colj[i] = domKerProj.entry(i,j);
- std::vector<NLargeInteger> ircj(domain.snfRep(colj));
-
- // push through tobeRedMat
- std::vector<NLargeInteger> rmj(ircj.size(), NLargeInteger::zero);
- for (unsigned long i=0; i<tobeRedMat.rows(); i++) for (unsigned long k=0; k<tobeRedMat.columns(); k++) 
-  rmj[i] += tobeRedMat.entry(i,k) * ircj[k];
-
- // apply ccRep
- std::vector<NLargeInteger> Mcolj(range.ccRep(rmj));
-
- // assemble into matrix.
- for (unsigned long i=0; i<matrix.rows(); i++) matrix.entry(i,j) = Mcolj[i];
+// so we have a common Step 1. 
+NMatrixInt step1Mat(ran.ornCi->rows(), dom.ornC->rows());
+for (unsigned long i=0; i<step1Mat.rows(); i++) for (unsigned long j=0; j<step1Mat.columns(); j++)
+ { // ran->ornCi.entry(i, k)*tobeRedMat.entry(k, l)*dom->ornC.entry(l, j)
+  for (unsigned long k=0; k<tobeRedMat.rows(); k++) for (unsigned long l=0;l<tobeRedMat.columns(); l++)
+   step1Mat.entry(i,j) += ran.ornCi->entry(i,k+ran.ifLoc)*tobeRedMat.entry(k,l)*dom.ornC->entry(l+dom.ifLoc,j);
  }
+// with mod p coefficients we have this fiddly middle step 2.
 
+NMatrixInt step2Mat( step1Mat.rows()+ran.tensorIfLoc, step1Mat.columns()+dom.tensorIfLoc );
+// if coeff==0, we'll just copy the step1Mat, if coeff>0 we multiply the tensor part by ran.otCi, dom.otC resp.
+if (dom.coeff == 0)
+ for (unsigned long i=0; i<step2Mat.rows(); i++) for (unsigned long j=0; j<step2Mat.columns(); j++)
+	step2Mat.entry(i,j) = step1Mat.entry(i,j);
+else
+ for (unsigned long i=0; i<step2Mat.rows(); i++) for (unsigned long j=0; j<step2Mat.columns(); j++)
+  { // (ID_TOR x ran->otCi.entry(i, k)*incl_tensorIfLoc)*step1Mat.entry(k, l)*
+    //   ID_TOR x trunc_tensorIfLoc*dom->otC.entry(l, j)) appropriately shifted...
+   if (i < ran.TORVec.size()) 
+       {
+	if (j < dom.TORVec.size()) { step2Mat.entry(i,j) = step1Mat.entry(i,j);
+	        } else { // [step1 UR corner] * [dom->otC first tensorIfLoc rows cropped]
+          for (unsigned long k=dom.tensorIfLoc; k<dom.otC->rows(); k++)
+          step2Mat.entry(i,j) += step1Mat.entry(i,k-dom.tensorIfLoc+dom.TORVec.size())*
+                                 dom.otC->entry(k,j-dom.TORVec.size());
+	 	}                                  
+	} else
+   if (j < dom.TORVec.size()) {
+          for (unsigned long k=ran.tensorIfLoc; k<ran.otCi->columns(); k++) 
+          step2Mat.entry(i,j) += ran.otCi->entry(i-ran.TORVec.size(),k)*
+                                 step1Mat.entry(k-ran.tensorIfLoc+ran.TORVec.size(),j);
+	} else {
+          for (unsigned long k=ran.tensorIfLoc; k<ran.otCi->rows(); k++) 
+	   for (unsigned long l=dom.tensorIfLoc; l<dom.otC->rows(); l++)
+          step2Mat.entry(i,j) += ran.otCi->entry(i-ran.TORVec.size(),k)*
+	   step1Mat.entry(k-ran.tensorIfLoc+ran.TORVec.size(),l-dom.tensorIfLoc+dom.TORVec.size())*
+		                 dom.otC->entry(l,j-dom.TORVec.size());
+	}
+  }
+
+// now we rescale the TOR components appropriately, various row/column mult and divisions. 
+// multiply first ran.TORLoc rows by p/gcd(p,q)
+// divide first dom.TORLoc rows by p/gcd(p/q)
+
+for (unsigned long i=0; i<ran.TORVec.size(); i++) for (unsigned long j=0; j<step2Mat.columns(); j++)
+	step2Mat.entry(i,j) *= ran.coeff.divExact(ran.coeff.gcd(ran.TORVec[i]));
+for (unsigned long i=0; i<step2Mat.rows(); i++) for (unsigned long j=0; j<dom.TORVec.size(); j++)
+	step2Mat.entry(i,j) /= dom.coeff.divExact(dom.coeff.gcd(dom.TORVec[i]));
+// previous line of code divisibility is a good thing to check when debugging. 
+
+// step 3, move it all up to the CC coordinates.
+// ran.OMR * incl_ifLoc * step2Mat * proj_ifLoc * dom.OMRi
+for (unsigned long i=0; i<matrix.rows(); i++) for (unsigned long j=0; j<matrix.columns(); j++)
+ {
+ for (unsigned long k=ran.TORLoc; k<ran.OMR.columns(); k++) 
+  for (unsigned long l=dom.TORLoc;l<dom.OMRi.rows(); l++)
+   matrix.entry(i,j) += ran.OMR.entry(i,k) *
+	                step2Mat.entry(k-ran.TORLoc,l-dom.TORLoc) *
+	                dom.OMRi.entry(l,j);
+ }
 // done
 }
-
 
 NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& g):
         ShareableObject(), domain(g.domain), range(g.range), matrix(g.matrix) {
@@ -698,12 +740,7 @@ void NHomMarkedAbelianGroup::computeReducedMatrix()
 void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
     if (!reducedKernelLattice) {
         computeReducedMatrix();
-
         const NMatrixInt& redMatrix(*reducedMatrix);
-
-        // the kernel is the dcLpreimage lattice mod the domain lattice.
-        // so after computing the dcLpreimage lattice, we need to represent
-        // the domain lattice in its coordinates.
 
         std::vector<NLargeInteger> dcL(range.getRank() +
             range.getNumberOfInvariantFactors() );
@@ -721,8 +758,6 @@ void NHomMarkedAbelianGroup::computeKernel() {
     if (!kernel) {
         computeReducedKernelLattice();
         NMatrixInt dcLpreimage( *reducedKernelLattice );
-
-        unsigned long i,j,k;
 
         NMatrixInt R( dcLpreimage.columns(), dcLpreimage.columns() );
         NMatrixInt Ri( dcLpreimage.columns(), dcLpreimage.columns() );
@@ -742,9 +777,9 @@ void NHomMarkedAbelianGroup::computeKernel() {
         NMatrixInt workMat( dcLpreimage.columns(),
             domain.getNumberOfInvariantFactors() );
 
-        for (i=0;i<workMat.rows();i++)
-            for (j=0;j<workMat.columns();j++)
-                for (k=0;k<R.columns();k++) {
+        for (unsigned long i=0;i<workMat.rows();i++)
+            for (unsigned long j=0;j<workMat.columns();j++)
+                for (unsigned long k=0;k<R.columns();k++) {
                     workMat.entry(i,j) += (domain.getInvariantFactor(j) *
                         R.entry(i,k) * C.entry(k,j) ) / dcLpreimage.entry(k,k);
                 }
@@ -783,17 +818,15 @@ void NHomMarkedAbelianGroup::computeImage() {
         computeReducedKernelLattice();
         const NMatrixInt& dcLpreimage( *reducedKernelLattice );
 
-        unsigned long i,j;
-
         NMatrixInt imgCCm(1, dcLpreimage.rows() );
         NMatrixInt imgCCn(dcLpreimage.rows(),
             dcLpreimage.columns() + domain.getNumberOfInvariantFactors() );
 
-        for (i=0;i<domain.getNumberOfInvariantFactors();i++)
+        for (unsigned long i=0;i<domain.getNumberOfInvariantFactors();i++)
             imgCCn.entry(i,i) = domain.getInvariantFactor(i);
 
-        for (i=0;i<imgCCn.rows();i++)
-            for (j=0;j< dcLpreimage.columns(); j++)
+        for (unsigned long i=0;i<imgCCn.rows();i++)
+            for (unsigned long j=0;j< dcLpreimage.columns(); j++)
                 imgCCn.entry(i,j+domain.getNumberOfInvariantFactors()) =
                     dcLpreimage.entry(i,j);
 
@@ -803,14 +836,11 @@ void NHomMarkedAbelianGroup::computeImage() {
 
 NHomMarkedAbelianGroup NHomMarkedAbelianGroup::operator * (const NHomMarkedAbelianGroup &X) const
 {
-std::auto_ptr<NMatrixRing<NLargeInteger> > prod=matrix*X.matrix;
-
-NMatrixInt compMat(matrix.rows(), X.matrix.columns() );
-
-for (unsigned long i=0;i<prod->rows();i++) for (unsigned long j=0;j<prod->columns();j++)
+ std::auto_ptr<NMatrixRing<NLargeInteger> > prod=matrix*X.matrix;
+ NMatrixInt compMat(matrix.rows(), X.matrix.columns() );
+ for (unsigned long i=0;i<prod->rows();i++) for (unsigned long j=0;j<prod->columns();j++)
             compMat.entry(i,j) = prod->entry(i, j);
-
-return NHomMarkedAbelianGroup(X.domain, range, compMat);
+ return NHomMarkedAbelianGroup(X.domain, range, compMat);
 }
 
 std::vector<NLargeInteger> NHomMarkedAbelianGroup::evalCC(const std::vector<NLargeInteger> &input) const
@@ -846,16 +876,15 @@ void NHomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
 
-    unsigned long i,j;
     out<<"Reduced Matrix is "<<reducedMatrix->rows()<<" by "
         <<reducedMatrix->columns()<<" corresponding to domain ";
     domain.writeTextShort(out);
     out<<" and range ";
     range.writeTextShort(out);
     out<<"\n";
-    for (i=0;i<reducedMatrix->rows();i++) {
+    for (unsigned long i=0;i<reducedMatrix->rows();i++) {
         out<<"[";
-        for (j=0;j<reducedMatrix->columns();j++) {
+        for (unsigned long j=0;j<reducedMatrix->columns();j++) {
             out<<reducedMatrix->entry(i,j);
             if (j+1 < reducedMatrix->columns()) out<<" ";
         }
@@ -864,11 +893,9 @@ void NHomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
 }
 
 void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
-    if (isIso())
-        out<<"isomorphism";
-    else if (isZero()) // zero map
-        out<<"zero map";
-    else if (isMonic()) { // monic not epic
+    if (isIso()) out<<"isomorphism"; else 
+    if (isZero()) out<<"zero map"; else 
+    if (isMonic()) { // monic not epic
         out<<"monic, with cokernel ";
         getCokernel().writeTextShort(out);
     } else if (isEpic()) { // epic not monic
@@ -887,10 +914,10 @@ void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
 
 bool NHomMarkedAbelianGroup::isIdentity() const
 {
-if (!(domain == range)) return false;
-const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-if (!reducedMatrix->isIdentity()) return false;
-return true;
+ if (!(domain.equalTo(range))) return false;
+ const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+ if (!reducedMatrix->isIdentity()) return false;
+ return true;
 }
 
 bool NHomMarkedAbelianGroup::isCycleMap() const
@@ -954,9 +981,7 @@ NHomMarkedAbelianGroup NHomMarkedAbelianGroup::inverseHom() const
 {
 const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
 NMatrixInt invMat( reducedMatrix->columns(), reducedMatrix->rows() );
-
-if (isIso()) 
- {
+if (!isIso()) return NHomMarkedAbelianGroup( invMat, range, domain );
   // get A, B, D from reducedMatrix
   // A must be square with domain/range.getNumberOfInvariantFactors() columns
   // D must be square with domain/range.getRank() columns
@@ -989,16 +1014,26 @@ if (isIso())
   NMatrixInt Btemp(range.getNumberOfInvariantFactors(), domain.getRank());
    // Btemp will give -BDi
    // Bi will be AiBtemp
-   // Strangely, we don't seem to have a convienient matrix multiplication available so we just do it
-   // `by hand'.  Perhaps this is what Ben's multiplyAs routine is about?  But it isn't used anywhere
-   // and the docs are pretty vague.  Ask Ben to clarify.
   for (unsigned long i=0; i<Btemp.rows(); i++) for (unsigned long j=0; j<Btemp.columns(); j++)
    for (unsigned long k=0; k<Btemp.columns(); k++)
     Btemp.entry(i,j) -= B.entry(i,k)*Di.entry(k,j);
   for (unsigned long i=0; i<Bi.rows(); i++) for (unsigned long j=0; j<Bi.columns(); j++)
    for (unsigned long k=0; k<Ai.columns(); k++)
     Bi.entry(i,j) += Ai.entry(i,k)*Btemp.entry(k,j);
-
+  // reduce Ai and Bi respectively. 
+  for (unsigned long i=0; i<Ai.rows(); i++)
+   {
+   for (unsigned long j=0; j<Ai.columns(); j++)
+      {
+      Ai.entry(i,j) %= domain.getInvariantFactor(i); 
+      if (Ai.entry(i,j) < 0) Ai.entry(i,j) += domain.getInvariantFactor(i);
+      }
+   for (unsigned long j=0; j<Bi.columns(); j++)
+      {
+      Bi.entry(i,j) %= domain.getInvariantFactor(i); 
+      if (Bi.entry(i,j) < 0) Bi.entry(i,j) += domain.getInvariantFactor(i);
+      }
+   }
   // compute the coefficients of invMat.  We're in the funny situation where we know what invMat's
   // reduced matrix, not its chain-complex level defining matrix.  So we use the alternative
   // NHomMarkedAbelianGroup constructor designed specifically for this situation.  
@@ -1012,9 +1047,7 @@ if (isIso())
 	invMat.entry(i+Ai.rows(),j+Ai.columns()) = Di.entry(i,j);
   for (unsigned long i=0; i<Bi.rows(); i++) for (unsigned long j=0; j<Bi.columns(); j++)
 	invMat.entry(i,j+Ai.columns()) = Bi.entry(i,j);
-  // for debugging purposes check that reducedMat of inverseHom is the A' B' 0 D' matrix
- }
-
+  
 return NHomMarkedAbelianGroup( invMat, range, domain );
 }
 

@@ -30,7 +30,7 @@ def printEuler(t, name):
 		'---', name
 
 	# Consistency check, while we're here.
-	eHom = regina.NHomologicalData(t).getEulerChar()
+	eHom = regina.NHomologicalData(t).eulerChar()
 	if eHom != t.getEulerCharManifold():
 		print 'ERROR: NTriangulation::getEulerCharManifold() and'
 		print '       NHomologicalData.getEulerChar() disagree!'
