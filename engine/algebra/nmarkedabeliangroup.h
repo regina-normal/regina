@@ -40,7 +40,7 @@
 #include "maths/nmatrixint.h"
 #include "utilities/ptrutils.h"
 
-//#define __useControlledSNF
+#define __useControlledSNF
 
 namespace regina {
 

@@ -63,7 +63,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     NMatrixInt tM(M);
  
     #ifdef __useControlledSNF
-    controlledSmithNormalForm(tM, OMR, OMRi, OMC, OMCi);
+    metricalSmithNormalForm(tM, OMR, OMRi, OMC, OMCi);
     #endif
     #ifndef __useControlledSNF
     smithNormalForm(tM, OMR, OMRi, OMC, OMCi);
@@ -90,7 +90,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     // now compute the rank and column indexes ...
 
     #ifdef __useControlledSNF
-    controlledSmithNormalForm(ORN, *ornR, *ornRi, *ornC, *ornCi);
+    metricalSmithNormalForm(ORN, *ornR, *ornRi, *ornC, *ornCi);
     #endif
     #ifndef __useControlledSNF
     smithNormalForm(ORN, *ornR, *ornRi, *ornC, *ornCi);
@@ -134,7 +134,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& 
     NMatrixInt tM(M);
     
     #ifdef __useControlledSNF
-    controlledSmithNormalForm(tM, OMR, OMRi, OMC, OMCi);
+    metricalSmithNormalForm(tM, OMR, OMRi, OMC, OMCi);
     #endif
     #ifndef __useControlledSNF
     smithNormalForm(tM, OMR, OMRi, OMC, OMCi);
@@ -170,7 +170,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& 
      otCi.reset(new NMatrixInt(tensorPres.rows(), tensorPres.rows() ));
 
      #ifdef __useControlledSNF
-     controlledSmithNormalForm(tensorPres, *otR, *otRi, *otC, *otCi);
+     metricalSmithNormalForm(tensorPres, *otR, *otRi, *otC, *otCi);
      #endif
      #ifndef __useControlledSNF
      smithNormalForm(tensorPres, *otR, *otRi, *otC, *otCi);
@@ -205,7 +205,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& 
      ornCi.reset(new NMatrixInt(diagPres.rows(), diagPres.rows() ));
 
      #ifdef __useControlledSNF
-     controlledSmithNormalForm(diagPres, *ornR, *ornRi, *ornC, *ornCi);
+     metricalSmithNormalForm(diagPres, *ornR, *ornRi, *ornC, *ornCi);
      #endif
      #ifndef __useControlledSNF
      smithNormalForm(diagPres, *ornR, *ornRi, *ornC, *ornCi);
@@ -232,7 +232,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& 
      ornCi.reset(new NMatrixInt(tensorPres.rows(), tensorPres.rows() ));
 
      #ifdef __useControlledSNF
-     controlledSmithNormalForm(tensorPres, *ornR, *ornRi, *ornC, *ornCi);
+     metricalSmithNormalForm(tensorPres, *ornR, *ornRi, *ornC, *ornCi);
      #endif
      #ifndef __useControlledSNF
      smithNormalForm(tensorPres, *ornR, *ornRi, *ornC, *ornCi);
@@ -765,7 +765,7 @@ void NHomMarkedAbelianGroup::computeKernel() {
         NMatrixInt Ci( dcLpreimage.rows(), dcLpreimage.rows() );
 
         #ifdef __useControlledSNF
-        controlledSmithNormalForm( dcLpreimage, R, Ri, C, Ci );
+        metricalSmithNormalForm( dcLpreimage, R, Ri, C, Ci );
         #endif
         #ifndef __useControlledSNF
         smithNormalForm( dcLpreimage, R, Ri, C, Ci );

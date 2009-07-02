@@ -115,7 +115,7 @@ void smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
 // test
-void controlledSmithNormalForm(NMatrixInt& matrix,
+void metricalSmithNormalForm(NMatrixInt& matrix,
         NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
 
