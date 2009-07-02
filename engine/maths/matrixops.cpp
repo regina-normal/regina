@@ -961,22 +961,24 @@ return pivotFound;
 
 // switch rows i and j in matrix.  Keep track of change-of-basis matrix and metrics
 void metricSwitchRows(const unsigned long &currStage, const unsigned long &i, const unsigned long &j, 
-        NMatrixInt &matrix, NMatrixInt &colBasis, NMatrixInt &colBasisInv, 
+        NMatrixInt &matrix, NMatrixInt *colBasis, NMatrixInt *colBasisInv, 
         std::vector<NLargeInteger> &rowNorm, std::vector<NLargeInteger> &rowGCD)
 {
    rowNorm[i].swap(rowNorm[j]); rowGCD[i].swap(rowGCD[j]);
-   colBasis.swapRows(i, j); colBasisInv.swapColumns(i, j);
+   if (colBasis) colBasis->swapRows(i, j); 
+   if (colBasisInv) colBasisInv->swapColumns(i, j);
    for (unsigned long k=currStage; k<matrix.columns(); k++)
 	matrix.entry(i, k).swap(matrix.entry(j,k));
 }
 
 // switch columns i and j in matrix.  Keep track of change-of-basis matrix and metrics
 void metricSwitchCols(const unsigned long &currStage, const unsigned long &i, const unsigned long &j, 
-        NMatrixInt &matrix, NMatrixInt &rowBasis, NMatrixInt &rowBasisInv, 
+        NMatrixInt &matrix, NMatrixInt *rowBasis, NMatrixInt *rowBasisInv, 
         std::vector<NLargeInteger> &colNorm)
 {
    colNorm[i].swap(colNorm[j]); 
-   rowBasis.swapColumns(i, j); rowBasisInv.swapRows(i, j);
+   if (rowBasis) rowBasis->swapColumns(i, j); 
+   if (rowBasisInv) rowBasisInv->swapRows(i, j);
    for (unsigned long k=currStage; k<matrix.rows(); k++)
 	matrix.entry(k, i).swap(matrix.entry(k, j));
 }
@@ -985,7 +987,7 @@ void metricSwitchCols(const unsigned long &currStage, const unsigned long &i, co
 void metricColOp(const unsigned long &currStage, const unsigned long &i, const unsigned long &j, 
      NMatrixInt &matrix, 
      const NLargeInteger a, const NLargeInteger b, const NLargeInteger c, const NLargeInteger d, 
-     NMatrixInt &rowBasis, NMatrixInt &rowBasisInv, 
+     NMatrixInt *rowBasis, NMatrixInt *rowBasisInv, 
      std::vector<NLargeInteger> &rowNorm, std::vector<NLargeInteger> &colNorm)
 {
  NLargeInteger t1, t2;
@@ -999,16 +1001,18 @@ void metricColOp(const unsigned long &currStage, const unsigned long &i, const u
    matrix.entry(k, i) = t1;    matrix.entry(k, j) = t2; 
    colNorm[i] += t1.abs();    colNorm[j] += t2.abs();
   } // now modify rowBasis and rowBasisInv
- for (unsigned long k=0; k<matrix.columns(); k++)
+ if (rowBasis) for (unsigned long k=0; k<matrix.columns(); k++)
   {
    // apply same column op to rowBasis
-   t1 = a*rowBasis.entry(k, i) + c*rowBasis.entry(k, j);
-   t2 = b*rowBasis.entry(k, i) + d*rowBasis.entry(k, j);
-   rowBasis.entry(k, i) = t1;  rowBasis.entry(k, j) = t2;
-   // apply inverse row op to rowBasisInv
-   t1 = d*rowBasisInv.entry(i, k) - b*rowBasisInv.entry(j, k);
-   t2 = -c*rowBasisInv.entry(i, k) + a*rowBasisInv.entry(j, k);
-   rowBasisInv.entry(i, k) = t1; rowBasisInv.entry(j, k) = t2;
+   t1 = a*rowBasis->entry(k, i) + c*rowBasis->entry(k, j);
+   t2 = b*rowBasis->entry(k, i) + d*rowBasis->entry(k, j);
+   rowBasis->entry(k, i) = t1;  rowBasis->entry(k, j) = t2;
+  }
+ if (rowBasisInv) for (unsigned long k=0; k<matrix.columns(); k++)
+  {  // apply inverse row op to rowBasisInv
+   t1 = d*rowBasisInv->entry(i, k) - b*rowBasisInv->entry(j, k);
+   t2 = -c*rowBasisInv->entry(i, k) + a*rowBasisInv->entry(j, k);
+   rowBasisInv->entry(i, k) = t1; rowBasisInv->entry(j, k) = t2;
   }
 }
 
@@ -1016,7 +1020,7 @@ void metricColOp(const unsigned long &currStage, const unsigned long &i, const u
 void metricRowOp(const unsigned long &currStage, const unsigned long &i, const unsigned long &j, 
      NMatrixInt &matrix, 
      const NLargeInteger a, const NLargeInteger b, const NLargeInteger c, const NLargeInteger d, 
-     NMatrixInt &colBasis, NMatrixInt &colBasisInv, 
+     NMatrixInt *colBasis, NMatrixInt *colBasisInv, 
      std::vector<NLargeInteger> &rowNorm, std::vector<NLargeInteger> &colNorm,
      std::vector<NLargeInteger> &rowGCD)
 {
@@ -1033,16 +1037,19 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i, const u
    rowNorm[i] += t1.abs();    rowNorm[j] += t2.abs();
    rowGCD[i] = rowGCD[i].gcd(t1);  rowGCD[j] = rowGCD[j].gcd(t2);
   } // now modify colBasis and colBasisInv
- for (unsigned long k=0; k<matrix.rows(); k++)
+ if (colBasis) for (unsigned long k=0; k<matrix.rows(); k++)
   {
    // apply same row op to colBasis
-   t1 = a*colBasis.entry(i, k) + b*colBasis.entry(j, k);
-   t2 = c*colBasis.entry(i, k) + d*colBasis.entry(j, k);
-   colBasis.entry(i, k) = t1;  colBasis.entry(j, k) = t2;
+   t1 = a*colBasis->entry(i, k) + b*colBasis->entry(j, k);
+   t2 = c*colBasis->entry(i, k) + d*colBasis->entry(j, k);
+   colBasis->entry(i, k) = t1;  colBasis->entry(j, k) = t2;
+  }
+ if (colBasisInv) for (unsigned long k=0; k<matrix.rows(); k++)
+  {
    // apply inverse column op to colBasisInv
-   t1 =  d*colBasisInv.entry(k, i) - c*colBasisInv.entry(k, j);
-   t2 = -b*colBasisInv.entry(k, i) + a*colBasisInv.entry(k, j);
-   colBasisInv.entry(k, i) = t1; colBasisInv.entry(k, j) = t2;
+   t1 =  d*colBasisInv->entry(k, i) - c*colBasisInv->entry(k, j);
+   t2 = -b*colBasisInv->entry(k, i) + a*colBasisInv->entry(k, j);
+   colBasisInv->entry(k, i) = t1; colBasisInv->entry(k, j) = t2;
   }
 }
 
@@ -1069,10 +1076,12 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i, const u
 //       We'll also keep a precomputed rowGCD vector representing the GCD of all the entries in the various
 //       rows.
 void metricalSmithNormalForm(NMatrixInt& matrix,
-        NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
-        NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv) {
-    rowSpaceBasis.makeIdentity();    rowSpaceBasisInv.makeIdentity();
-    colSpaceBasis.makeIdentity();    colSpaceBasisInv.makeIdentity();
+        NMatrixInt *rowSpaceBasis, NMatrixInt *rowSpaceBasisInv,
+        NMatrixInt *colSpaceBasis, NMatrixInt *colSpaceBasisInv) {
+    if (rowSpaceBasis) rowSpaceBasis->makeIdentity();    
+    if (rowSpaceBasisInv) rowSpaceBasisInv->makeIdentity();
+    if (colSpaceBasis) colSpaceBasis->makeIdentity();    
+    if (colSpaceBasisInv) colSpaceBasisInv->makeIdentity();
     // set up metrics. 
     std::vector<NLargeInteger> rowNorm(matrix.rows(), NLargeInteger::zero);
     std::vector<NLargeInteger> colNorm(matrix.columns(), NLargeInteger::zero);
@@ -1112,11 +1121,10 @@ void metricalSmithNormalForm(NMatrixInt& matrix,
        if (matrix.entry(currStage, currStage)<0)
         { // we'll make it a column operation
 	for (i=currStage; i<matrix.rows(); i++) matrix.entry(i, currStage).negate();
-        for (i=0; i<matrix.columns(); i++)
-	 {
-	 rowSpaceBasis.entry( i, currStage ).negate();
-         rowSpaceBasisInv.entry( currStage, i ).negate();
-	 }
+        if (rowSpaceBasis) for (i=0; i<matrix.columns(); i++)
+	 rowSpaceBasis->entry( i, currStage ).negate();
+        if (rowSpaceBasisInv) for (i=0; i<matrix.columns(); i++)
+         rowSpaceBasisInv->entry( currStage, i ).negate();
         }
        // run through rows currStage+1 to bottom, check if divisible by matrix.entry(cs,cs). 
        //  if not, record row and gcd( matrix.entry(cs,cs), rowGCD[this row],  pick the row with 

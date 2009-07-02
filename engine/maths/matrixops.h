@@ -114,10 +114,53 @@ void smithNormalForm(NMatrixInt& matrix);
 void smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
-// test
+
+/**
+ * A Smith normal form algorithm that also returns change of basis matrices.
+ * This is a variant of Hafner-McCurley and Havas-Holt-Rees's description
+ * of pivoting methods. 
+ *
+ * The only input argument is \a matrix.  The four remaining arguments
+ * (the change of basis matrices), if passed, will be refilled, though they must be
+ * constructed with the correct dimensions as seen in the preconditions
+ * below.  All five arguments are used to return information as follows.
+ *
+ * Let \a M be the initial value of \a matrix, and let \a S be the Smith
+ * normal form of \a M.  After this routine exits:
+ *
+ * - The argument \a matrix will contain the Smith normal form \a S;
+ * - <tt>colSpaceBasis * M * rowSpaceBasis = S</tt>;
+ * - <tt>colSpaceBasisInv * S * rowSpaceBasisInv = M</tt>;
+ * - <tt>colSpaceBasis * colSpaceBasisInv</tt> and
+ *   <tt>rowSpaceBasis * rowSpaceBasisInv</tt> are both identity matrices.
+ *
+ * Thus, one obtains the Smith normal form the original matrix by multiplying
+ * on the left by ColSpaceBasis and on the right by RowSpaceBasis.
+ *
+ * \pre The matrices \a rowSpaceBasis and \a rowSpaceBasisInv, if passed,
+ *  must be square with side length matrix.columns().
+ * \pre The matrices \a colSpaceBasis and \a colSpaceBasisInv, if passed,
+ *  must be square, with side length matrix.rows().
+ *
+ * \testpart
+ *
+ * @param matrix the original matrix to put into Smith Normal Form (this
+ * need not be square).  When the algorithm terminates, this matrix \e is
+ * in its Smith Normal Form.
+ * @param rowSpaceBasis used to return a change of basis matrix (see
+ * above for details). Optional -- can pass null.
+ * @param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
+ *  Optional -- can pass null.
+ * @param colSpaceBasis used to return a change of basis matrix (see
+ * above for details). Optional -- can pass null.
+ * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis, 
+ *  optional -- can pass null.
+ *
+ * \author Ryan Budney
+ */
 void metricalSmithNormalForm(NMatrixInt& matrix,
-        NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
-        NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
+        NMatrixInt *rowSpaceBasis, NMatrixInt *rowSpaceBasisInv,
+        NMatrixInt *colSpaceBasis, NMatrixInt *colSpaceBasisInv);
 
 /**
  * Find a basis for the row space of the given matrix.
