@@ -2182,10 +2182,17 @@ bool NHomologicalData::verifyChainComplexes()
 bool retval = true;
 computeChainComplexes(); 
 computeBaryCC();
+// are our defining matrices really a chain complex?
+for (unsigned long i=0; i<4; i++) if (!standardHomology(i).isChainComplex()) retval = false;
+for (unsigned long i=0; i<4; i++) if (!dualHomology(i).isChainComplex()) retval = false;
+for (unsigned long i=0; i<4; i++) if (!mixedHomology(i).isChainComplex()) retval = false;
+for (unsigned long i=0; i<3; i++) if (!boundaryHomology(i).isChainComplex()) retval = false;
+// are the maps cycle maps?
 for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isCycleMap()) retval = false;
 for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isCycleMap()) retval = false;
 if (!fastDualToStandardH1().isCycleMap()) retval = false;
 for (unsigned long i=0; i<3; i++) if (!boundaryHomologyMap(i).isCycleMap()) retval = false;
+// are the maps of chain complexes really chain maps?
 if (!dualToMixedHom(2).isChainMap(dualToMixedHom(1))) retval = false;
 if (!dualToMixedHom(3).isChainMap(dualToMixedHom(2))) retval = false;
 if (!standardToMixedHom(2).isChainMap(standardToMixedHom(1))) retval = false;
