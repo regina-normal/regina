@@ -159,8 +159,8 @@ void smithNormalForm(NMatrixInt& matrix,
  * \author Ryan Budney
  */
 void metricalSmithNormalForm(NMatrixInt& matrix,
-        NMatrixInt *rowSpaceBasis, NMatrixInt *rowSpaceBasisInv,
-        NMatrixInt *colSpaceBasis, NMatrixInt *colSpaceBasisInv);
+        NMatrixInt *rowSpaceBasis=0, NMatrixInt *rowSpaceBasisInv=0,
+        NMatrixInt *colSpaceBasis=0, NMatrixInt *colSpaceBasisInv=0);
 
 /**
  * Find a basis for the row space of the given matrix.

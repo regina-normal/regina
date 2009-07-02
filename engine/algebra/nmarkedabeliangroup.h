@@ -40,8 +40,6 @@
 #include "maths/nmatrixint.h"
 #include "utilities/ptrutils.h"
 
-#define __useControlledSNF
-
 namespace regina {
 
 class NHomMarkedAbelianGroup;
