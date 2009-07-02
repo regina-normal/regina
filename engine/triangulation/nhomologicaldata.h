@@ -478,7 +478,7 @@ public:
      * computed via a cellular approximation of the identity map from
      * the first 1-skeleton to the second.
      */
-    const NHomMarkedAbelianGroup& h1CellAp();
+    const NHomMarkedAbelianGroup& fastDualToStandardH1();
 
     /**
      * Returns the number of cells of the given dimension
@@ -520,7 +520,7 @@ public:
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the boundary.
      */
-    unsigned long bdryCellCount(unsigned dimension);
+    unsigned long boundaryCellCount(unsigned dimension);
 
     /**
      * Returns the number of cells in the mixed cellular decomposition 
@@ -879,7 +879,7 @@ inline unsigned long NHomologicalData::dualCellCount(unsigned dimension)
     return numDualCells[dimension];
 }
 
-inline unsigned long NHomologicalData::bdryCellCount(unsigned dimension)
+inline unsigned long NHomologicalData::boundaryCellCount(unsigned dimension)
 {
     // standard boundary cells
     computeccIndexing();

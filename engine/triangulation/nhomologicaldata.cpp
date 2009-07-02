@@ -938,7 +938,7 @@ const NMarkedAbelianGroup& NHomologicalData::mixedHomology(unsigned q)
 
 
 // this is dual cellular -> standard
-const NHomMarkedAbelianGroup& NHomologicalData::h1CellAp() {
+const NHomMarkedAbelianGroup& NHomologicalData::fastDualToStandardH1() {
     if (!dmTomMap1.get()) {
         computeChainComplexes();
         if (!dmHomology1.get())
@@ -1035,7 +1035,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         return;
 
     // dual h1 --> standard h1 isomorphism:
-    const NHomMarkedAbelianGroup& CellAp(h1CellAp());
+    const NHomMarkedAbelianGroup& CellAp(fastDualToStandardH1());
     // min number of torsion gens:
     unsigned long niv(dmHomology1->getNumberOfInvariantFactors());
     // for holding prime decompositions.:
@@ -2184,7 +2184,7 @@ computeChainComplexes();
 computeBaryCC();
 for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isCycleMap()) retval = false;
 for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isCycleMap()) retval = false;
-if (!h1CellAp().isCycleMap()) retval = false;
+if (!fastDualToStandardH1().isCycleMap()) retval = false;
 for (unsigned long i=0; i<3; i++) if (!boundaryHomologyMap(i).isCycleMap()) retval = false;
 if (!dualToMixedHom(2).isChainMap(dualToMixedHom(1))) retval = false;
 if (!dualToMixedHom(3).isChainMap(dualToMixedHom(2))) retval = false;
@@ -2199,7 +2199,7 @@ bool NHomologicalData::verifyCoordinateIsomorphisms(unsigned long p)
 for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIso()) return false;
 for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isIso()) return false;
 for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIso()) return false;
-if (! (dualToMixedHom(1).inverseHom()*standardToMixedHom(1)*h1CellAp()).isIdentity() ) return false;
+if (! (dualToMixedHom(1).inverseHom()*standardToMixedHom(1)*fastDualToStandardH1()).isIdentity() ) return false;
 return true;
 }
 

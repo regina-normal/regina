@@ -33,7 +33,7 @@ def printEuler(t, name):
 	eHom = regina.NHomologicalData(t).eulerChar()
 	if eHom != t.getEulerCharManifold():
 		print 'ERROR: NTriangulation::getEulerCharManifold() and'
-		print '       NHomologicalData.getEulerChar() disagree!'
+		print '       NHomologicalData.eulerChar() disagree!'
 
 print 'Euler characteristics for triangulation vs compact manifold:'
 

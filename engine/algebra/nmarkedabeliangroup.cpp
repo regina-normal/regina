@@ -494,7 +494,7 @@ for (unsigned long i=0; i<snF.size(); i++) if (snF[i]!=NLargeInteger::zero) retu
 return true;
 }
 
-std::vector<NLargeInteger> NMarkedAbelianGroup::bdryMap(const std::vector<NLargeInteger> &CCrep) const
+std::vector<NLargeInteger> NMarkedAbelianGroup::boundaryMap(const std::vector<NLargeInteger> &CCrep) const
 {
 std::vector<NLargeInteger> retval(OM.rows(), NLargeInteger::zero);
 

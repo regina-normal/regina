@@ -82,7 +82,7 @@ class NHomMarkedAbelianGroup;
  * \todo \optlong Add Hom, Ext, Tor, and \otimes, torsion linking form and intersection product
  *  as maps out of tensor products.  Tor is implemented at least against Z_p now... 
  * \todo testsuite additions: isChainComplex() true and false egs. isCycle, isBdry(), 
- *       bdryMap(), writeAsBdry(), minNumberCycleGens, cycleGen
+ *       boundaryMap(), writeAsBdry(), minNumberCycleGens, cycleGen
  */
 class NMarkedAbelianGroup : public ShareableObject {
     private:
@@ -388,7 +388,7 @@ class NMarkedAbelianGroup : public ShareableObject {
 	 * the differential of the chain complex whose kernel is the cycles. Ie, the output is
 	 * M*CCrep
 	 */
-	std::vector<NLargeInteger> bdryMap(const std::vector<NLargeInteger> &CCrep) const;
+	std::vector<NLargeInteger> boundaryMap(const std::vector<NLargeInteger> &CCrep) const;
 	
 	/**
 	 * If it's a cycle, maybe you also want to know if it's a boundary.

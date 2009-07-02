@@ -128,21 +128,33 @@ void addNMarkedAbelianGroup() {
             std::auto_ptr<NMarkedAbelianGroup>, boost::noncopyable>(
             "NMarkedAbelianGroup", init<const NMatrixInt&, const NMatrixInt&>())
         .def(init<const NMarkedAbelianGroup&>())
+        .def("isChainComplex", &NMarkedAbelianGroup::isChainComplex)
         .def("getRank", &NMarkedAbelianGroup::getRank)
         .def("getTorsionRank", getTorsionRank_large)
         .def("getTorsionRank", getTorsionRank_long)
         .def("getNumberOfInvariantFactors",
             &NMarkedAbelianGroup::getNumberOfInvariantFactors)
+        .def("minNumberOfGenerators", &NMarkedAbelianGroup::minNumberOfGenerators)
         .def("getInvariantFactor", &NMarkedAbelianGroup::getInvariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
         .def("getFreeRep", getFreeRep_list)
         .def("getTorsionRep", getTorsionRep_list)
+        .def("isCycle", &NMarkedAbelianGroup::isCycle)       
+        .def("isBoundary", &NMarkedAbelianGroup::isBoundary)
+        .def("getRankCC", &NMarkedAbelianGroup::getRankCC)
+        .def("minNumberCycleGens", &NMarkedAbelianGroup::minNumberCycleGens)
+        .def("coefficients", &NMarkedAbelianGroup::coefficients, 
+	    return_internal_reference<>())
+//        .def("writeAsBoundary", writeAsBoundary_list_list
+//        .def("boundaryMap", boundaryMap_list_list)            these should probably be implemented 
+//        .def("ccRep", getCCRep_list_list)                     intelligently, someday...
         .def("snfRep", snfRep_list_list)
         .def("getM", &NMarkedAbelianGroup::getM,
             return_internal_reference<>())
         .def("getN", &NMarkedAbelianGroup::getN,
             return_internal_reference<>())
+        .def("isIsomorphicTo", &NMarkedAbelianGroup::isIsomorphicTo)
         .def("equalTo", &NMarkedAbelianGroup::equalTo)
     ;
 
@@ -152,6 +164,9 @@ void addNMarkedAbelianGroup() {
             init<const NMarkedAbelianGroup&, const NMarkedAbelianGroup&,
                 const NMatrixInt&>())
         .def(init<const NHomMarkedAbelianGroup&>())
+        .def("isChainMap", &NHomMarkedAbelianGroup::isChainMap)
+        .def("isCycleMap", &NHomMarkedAbelianGroup::isCycleMap)
+        .def("isIdentity", &NHomMarkedAbelianGroup::isIdentity)
         .def("isEpic", &NHomMarkedAbelianGroup::isEpic)
         .def("isMonic", &NHomMarkedAbelianGroup::isMonic)
         .def("isIso", &NHomMarkedAbelianGroup::isIso)
@@ -170,6 +185,7 @@ void addNMarkedAbelianGroup() {
             return_internal_reference<>())
         .def("getReducedMatrix", &NHomMarkedAbelianGroup::getReducedMatrix,
             return_internal_reference<>())
+//        .def("inverseHom", &NHomMarkedAbelianGroup::inverseHom)      // python isn't happy with this.
         .def("writeReducedMatrix", writeReducedMatrix_stdout)
     ;
 }

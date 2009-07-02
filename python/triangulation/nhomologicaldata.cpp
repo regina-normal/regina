@@ -46,11 +46,18 @@ void addNHomologicalData() {
             return_internal_reference<>())
         .def("dualHomology", &NHomologicalData::dualHomology,
             return_internal_reference<>())
-        .def("h1CellAp", &NHomologicalData::h1CellAp,
+        .def("mixedHomology", &NHomologicalData::mixedHomology, 
+            return_internal_reference<>())
+        .def("standardToMixedHom", &NHomologicalData::standardToMixedHom, 
+            return_internal_reference<>())
+        .def("dualToMixedHom", &NHomologicalData::dualToMixedHom, 
+            return_internal_reference<>())
+        .def("fastDualToStandardH1", &NHomologicalData::fastDualToStandardH1,
             return_internal_reference<>())
         .def("standardCellCount", &NHomologicalData::standardCellCount)
         .def("dualCellCount", &NHomologicalData::dualCellCount)
-        .def("bdryCellCount", &NHomologicalData::bdryCellCount)
+        .def("boundaryCellCount", &NHomologicalData::boundaryCellCount)
+        .def("mixedCellCount", &NHomologicalData::mixedCellCount)
         .def("eulerChar", &NHomologicalData::eulerChar)
         .def("torsionRankVectorString",
             &NHomologicalData::torsionRankVectorString,
@@ -67,6 +74,10 @@ void addNHomologicalData() {
         .def("embeddabilityComment",
             &NHomologicalData::embeddabilityComment,
             return_value_policy<copy_const_reference>())
+        .def("verifyChainComplexes", &NHomologicalData::verifyChainComplexes)
+        .def("verifyCoordinateIsomorphisms", &NHomologicalData::verifyCoordinateIsomorphisms)
+//        .def("imgH2form", &NHomologicalData::imgH2form,    // no rush on implementing this as 
+//            return_internal_reference<>())                 // I'll probably change the internal rep
     ;
 }
 
