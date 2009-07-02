@@ -2179,25 +2179,24 @@ if (p==0)
 
 bool NHomologicalData::verifyChainComplexes()
 {
-bool retval = true;
 computeChainComplexes(); 
 computeBaryCC();
 // are our defining matrices really a chain complex?
-for (unsigned long i=0; i<4; i++) if (!standardHomology(i).isChainComplex()) retval = false;
-for (unsigned long i=0; i<4; i++) if (!dualHomology(i).isChainComplex()) retval = false;
-for (unsigned long i=0; i<4; i++) if (!mixedHomology(i).isChainComplex()) retval = false;
-for (unsigned long i=0; i<3; i++) if (!boundaryHomology(i).isChainComplex()) retval = false;
+for (unsigned long i=0; i<4; i++) if (!standardHomology(i).isChainComplex()) return false;
+for (unsigned long i=0; i<4; i++) if (!dualHomology(i).isChainComplex()) return false;
+for (unsigned long i=0; i<4; i++) if (!mixedHomology(i).isChainComplex()) return false;
+for (unsigned long i=0; i<3; i++) if (!boundaryHomology(i).isChainComplex()) return false;
 // are the maps cycle maps?
-for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isCycleMap()) retval = false;
-for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isCycleMap()) retval = false;
-if (!fastDualToStandardH1().isCycleMap()) retval = false;
-for (unsigned long i=0; i<3; i++) if (!boundaryHomologyMap(i).isCycleMap()) retval = false;
+for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isCycleMap()) return false;
+for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isCycleMap()) return false;
+if (!fastDualToStandardH1().isCycleMap()) return false;
+for (unsigned long i=0; i<3; i++) if (!boundaryHomologyMap(i).isCycleMap()) return false;
 // are the maps of chain complexes really chain maps?
-if (!dualToMixedHom(2).isChainMap(dualToMixedHom(1))) retval = false;
-if (!dualToMixedHom(3).isChainMap(dualToMixedHom(2))) retval = false;
-if (!standardToMixedHom(2).isChainMap(standardToMixedHom(1))) retval = false;
-if (!standardToMixedHom(3).isChainMap(standardToMixedHom(2))) retval = false;
-return retval;
+if (!dualToMixedHom(2).isChainMap(dualToMixedHom(1))) return false;
+if (!dualToMixedHom(3).isChainMap(dualToMixedHom(2))) return false;
+if (!standardToMixedHom(2).isChainMap(standardToMixedHom(1))) return false;
+if (!standardToMixedHom(3).isChainMap(standardToMixedHom(2))) return false;
+return true;
 }
 
 bool NHomologicalData::verifyCoordinateIsomorphisms(unsigned long p)
