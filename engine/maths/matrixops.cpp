@@ -919,6 +919,8 @@ return retval;
 //
 // returns false if matrix below and to right of currStage is zero.
 //
+// todo: economize on finding pivot by searching the gcd vector first -- a lexico search
+//       rather than a full matrix search. 
 bool metricFindPivot(const unsigned long &currStage, const NMatrixInt &matrix, 
 	       unsigned long &pr, unsigned long &pc,
                const std::vector<NLargeInteger> &rowNorm, const std::vector<NLargeInteger> &colNorm, 
@@ -1093,7 +1095,6 @@ void metricalSmithNormalForm(NMatrixInt& matrix,
 
     unsigned long currStage = 0;
     unsigned long i, j;
-
     while (metricFindPivot(currStage, matrix, i, j, rowNorm, colNorm, rowGCD))
      { // entry i,j is now the pivot, so we move it to currStage, currStage.
        if (i != currStage) metricSwitchRows(currStage, currStage, i, matrix, colSpaceBasis, colSpaceBasisInv, 
@@ -1101,6 +1102,7 @@ void metricalSmithNormalForm(NMatrixInt& matrix,
        if (j != currStage) metricSwitchCols(currStage, currStage, j, matrix, rowSpaceBasis, rowSpaceBasisInv, 
 					colNorm);
        NLargeInteger g, u, v;
+       rowMuckerLoop: // we come back here if the column operations later on mess up row currStage
        // first we do the col ops, eliminating entries to the right of currStage, currStage
        for (j=currStage+1; j<matrix.columns(); j++) if (matrix.entry(currStage, j) != 0)
 	{
@@ -1117,6 +1119,8 @@ void metricalSmithNormalForm(NMatrixInt& matrix,
                     u, v, -matrix.entry(i,currStage).divExact(g), matrix.entry(currStage,currStage).divExact(g), 
                     colSpaceBasis, colSpaceBasisInv, rowNorm, colNorm, rowGCD);
         }
+       // scan row currStage, if it isn't zero, goto rowMuckerLoop
+       for (j=currStage+1; j<matrix.columns(); j++) if (matrix.entry(currStage, j) != 0) goto rowMuckerLoop;
        // ensure matrix.entry(currStage, currStage) is positive
        if (matrix.entry(currStage, currStage)<0)
         { // we'll make it a column operation
