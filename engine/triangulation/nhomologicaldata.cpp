@@ -2192,20 +2192,48 @@ for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isCycleMap()) retur
 if (!fastDualToStandardH1().isCycleMap()) return false;
 for (unsigned long i=0; i<3; i++) if (!boundaryHomologyMap(i).isCycleMap()) return false;
 // are the maps of chain complexes really chain maps?
+if (!dualToMixedHom(1).isChainMap(dualToMixedHom(0))) return false;
 if (!dualToMixedHom(2).isChainMap(dualToMixedHom(1))) return false;
 if (!dualToMixedHom(3).isChainMap(dualToMixedHom(2))) return false;
+if (!standardToMixedHom(1).isChainMap(standardToMixedHom(0))) return false;
 if (!standardToMixedHom(2).isChainMap(standardToMixedHom(1))) return false;
 if (!standardToMixedHom(3).isChainMap(standardToMixedHom(2))) return false;
 return true;
 }
 
-bool NHomologicalData::verifyCoordinateIsomorphisms(unsigned long p)
+bool NHomologicalData::verifyCoordinateIsomorphisms(NLargeInteger p)
 {
 // todo: add mod p check. 
-for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIso()) return false;
-for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isIso()) return false;
-for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIso()) return false;
-if (! (dualToMixedHom(1).inverseHom()*standardToMixedHom(1)*fastDualToStandardH1()).isIdentity() ) return false;
+if (p == 0)
+ {
+ for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIso()) return false;
+ for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isIso()) return false;
+ if (! (dualToMixedHom(1).inverseHom()*standardToMixedHom(1)*fastDualToStandardH1()).isIdentity() ) return false;
+ }
+else
+ {
+ std::auto_ptr<NMarkedAbelianGroup> dom;
+ std::auto_ptr<NMarkedAbelianGroup> ran;
+ std::auto_ptr<NHomMarkedAbelianGroup> hom;
+ for (unsigned long i=0; i<4; i++)
+	{
+	dom.reset(new NMarkedAbelianGroup(dualToMixedHom(i).getDomain().getM(), 
+					  dualToMixedHom(i).getDomain().getN(), p ));
+	ran.reset(new NMarkedAbelianGroup(dualToMixedHom(i).getRange().getM(), 
+					  dualToMixedHom(i).getRange().getN(), p ));
+        hom.reset(new NHomMarkedAbelianGroup(*dom, *ran, dualToMixedHom(i).getDefiningMatrix() ));
+        if (!hom->isIso()) return false;
+	}
+ for (unsigned long i=0; i<4; i++)
+	{
+	dom.reset(new NMarkedAbelianGroup(standardToMixedHom(i).getDomain().getM(), 
+					  standardToMixedHom(i).getDomain().getN(), p ));
+	ran.reset(new NMarkedAbelianGroup(standardToMixedHom(i).getRange().getM(), 
+					  standardToMixedHom(i).getRange().getN(), p ));
+        hom.reset(new NHomMarkedAbelianGroup(*dom, *ran, standardToMixedHom(i).getDefiningMatrix() ));
+        if (!hom->isIso()) return false;
+	}
+ }
 return true;
 }
 

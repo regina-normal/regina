@@ -51,6 +51,8 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(torsionRankVector);
     CPPUNIT_TEST(torsionSigmaVector);
     CPPUNIT_TEST(torsionLegendreSymbolVector);
+    CPPUNIT_TEST(chainComplexes);
+    CPPUNIT_TEST(chainMaps);
     CPPUNIT_TEST(embeddabilityComment);
 
     CPPUNIT_TEST_SUITE_END();
@@ -426,6 +428,88 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyTorsionLegendreSymbolVector(lst3_4_7, "LST(3,4,7)",
                 "no odd p-torsion");
         }
+
+	void verifyChainComplexes(const NTriangulation &tri, const char* name) {
+	NHomologicalData dat(tri);
+	if (!dat.verifyChainComplexes())
+		{
+		std::ostringstream msg;
+		msg<<"The maps defining the homology of ["<<name<<
+		     "] are not chain complexes.";
+		CPPUNIT_FAIL(msg.str());
+		}
+	}
+
+        void chainComplexes() {
+            verifyChainComplexes(*s3, "S^3");
+            verifyChainComplexes(*s2xs1, "S^2 x S^1");
+            verifyChainComplexes(*poincare, "Poincare homology sphere");
+            verifyChainComplexes(*weberSeifert,
+                "Weber-Seifert dodecahedral space");
+            verifyChainComplexes(lens3_1, "L(3,1)");
+            verifyChainComplexes(lens4_1, "L(4,1)");
+            verifyChainComplexes(closedHypC, "Closed Hyp (vol=1.26370924)");
+            verifyChainComplexes(torusBundleA, "T x I / [ 0,1 | -1,0 ]");
+            verifyChainComplexes(torusBundleB, "T x I / [ -1,1 | -1,0 ]");
+            verifyChainComplexes(twistedKBxS1, "KB/n2 x~ S^1");
+            verifyChainComplexes(norB, "SFS [RP2: (2,1) (2,1)]");
+            verifyChainComplexes(norTorusBundle, "T x I / [ 2,1 | 1,0 ]");
+            verifyChainComplexes(*gieseking, "Gieseking manifold");
+            verifyChainComplexes(*figureEight, "Figure eight knot complement");
+            verifyChainComplexes(m003, "SnapPea m003");
+            verifyChainComplexes(m041, "SnapPea m041");
+            verifyChainComplexes(m045, "SnapPea m045");
+            verifyChainComplexes(s887, "SnapPea s887");
+            verifyChainComplexes(genusTwoBdry, "Manifold with genus two cusp");           
+        }
+
+	void verifyChainMaps(const NTriangulation &tri, const char* name) {
+	NHomologicalData dat(tri);
+	if (!dat.verifyCoordinateIsomorphisms())
+		{
+		std::ostringstream msg;
+		msg<<"The maps of homology groups for the manifold ["<<name<<
+		     "] are misbehaving.";
+		CPPUNIT_FAIL(msg.str());
+		}
+	// lets also test the maps on the level of homology with mod p coefficients, where
+	//  p is the largest invariant factor of H1(M;Z), (provided one exists)
+        if (dat.standardHomology(1).getNumberOfInvariantFactors() > 0)
+	  {
+	  regina::NLargeInteger p(dat.standardHomology(1).getInvariantFactor(
+			          dat.standardHomology(1).getNumberOfInvariantFactors()-1) );
+	  if (!dat.verifyCoordinateIsomorphisms(p))
+		{
+		std::ostringstream msg;
+		msg<<"The maps of the mod "<<p<<" homology groups for the manifold ["<<name<<
+		     "] are misbehaving.";
+		CPPUNIT_FAIL(msg.str());
+		}
+	  }
+	}
+
+	void chainMaps() {
+            verifyChainMaps(*s3, "S^3");
+            verifyChainMaps(*s2xs1, "S^2 x S^1");
+            verifyChainMaps(*poincare, "Poincare homology sphere");
+            verifyChainMaps(*weberSeifert,
+                "Weber-Seifert dodecahedral space");
+            verifyChainMaps(lens3_1, "L(3,1)");
+            verifyChainMaps(lens4_1, "L(4,1)");
+            verifyChainMaps(closedHypC, "Closed Hyp (vol=1.26370924)");
+            verifyChainMaps(torusBundleA, "T x I / [ 0,1 | -1,0 ]");
+            verifyChainMaps(torusBundleB, "T x I / [ -1,1 | -1,0 ]");
+            verifyChainMaps(twistedKBxS1, "KB/n2 x~ S^1");
+            verifyChainMaps(norB, "SFS [RP2: (2,1) (2,1)]");
+            verifyChainMaps(norTorusBundle, "T x I / [ 2,1 | 1,0 ]");
+            verifyChainMaps(*gieseking, "Gieseking manifold");
+            verifyChainMaps(*figureEight, "Figure eight knot complement");
+            verifyChainMaps(m003, "SnapPea m003");
+            verifyChainMaps(m041, "SnapPea m041");
+            verifyChainMaps(m045, "SnapPea m045");
+            verifyChainMaps(s887, "SnapPea s887");
+            verifyChainMaps(genusTwoBdry, "Manifold with genus two cusp");           
+	}
 
         void verifyEmbeddability(const NTriangulation& tri,
                 const char* name, const char* ans) {
