@@ -736,7 +736,7 @@ public:
      * @return true provided every natural map between the various homology groups computable that
      *         should be isomorphisms, actually are isomorphisms. 
      */
-    bool verifyCoordinateIsomorphisms(NLargeInteger p=NLargeInteger::zero);
+    bool verifyCoordinateIsomorphisms(NLargeInteger p = NLargeInteger::zero);
 
     /** Computes a spin structure if one exists, 
      ** provided the manifold is orientable, this is always true. 

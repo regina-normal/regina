@@ -1197,7 +1197,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     unsigned long rankON=0;
     for (i=0; ((i<ON.rows()) && (i<ON.columns())); i++)
-        if (ON.entry(i,i) != NLargeInteger::zero) rankON++;
+        if (ON.entry(i,i) != 0) rankON++;
 
     NMatrixInt stepb( R.columns(), stepa.columns() );
 
@@ -1417,9 +1417,9 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     incrun=true; // tells while loop to increment at incind
 
                     while (incrun) {
-                        groupV[incind] = (groupV[incind] + NLargeInteger::one)
-                            % ProperPrimePower[incind];
-                        if (groupV[incind] == NLargeInteger::zero) {
+			groupV[incind] += NLargeInteger::one;
+			groupV[incind] %= ProperPrimePower[incind];
+                        if (groupV[incind] == 0) {
                             incind++;
                         } else {
                             incrun=false;
@@ -1533,7 +1533,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 if ( ( (NLargeInteger(torRankV[i+starti].second[j])*
                         (torRankV[i+starti].first -
                         NLargeInteger::one))/NLargeInteger(4) ) %
-                        NLargeInteger(2) == NLargeInteger::zero ) {
+                        NLargeInteger(2) == 0 ) {
                     if (oddTorLegSymV[i].second[j] != 1)
                         torsionLinkingFormIsSplit=false;
                 } // does this know how to deal with .second[j]==0??
@@ -1546,7 +1546,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     if (starti==1) // have 2-torsion
     { // all the sigmas need to be 0 or inf.
         for (i=0; i<twoTorSigmaV.size(); i++)
-            if ( (twoTorSigmaV[i]!=NLargeInteger::zero) &&
+            if ( (twoTorSigmaV[i]!=0) &&
                     (twoTorSigmaV[i]!=NLargeInteger::infinity) )
                 torsionLinkingFormIsSplit=false;
     }
@@ -1556,7 +1556,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     if ( (torsionLinkingFormIsSplit) && (starti==1) ) {
         torsionLinkingFormIsHyperbolic = true;
         for (i=0; i<twoTorSigmaV.size(); i++)
-            if (twoTorSigmaV[i]!=NLargeInteger::zero)
+            if (twoTorSigmaV[i]!=0)
                 torsionLinkingFormIsHyperbolic=false;
     }
 
@@ -1580,7 +1580,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
             tN = tRat.getNumerator();
             tD = tRat.getDenominator();
             tN.divisionAlg(tD,tR);
-            if (tR != NLargeInteger::zero)
+            if (tR != 0)
                 torsionLinkingFormSatisfiesKKtwoTorCondition=false;
         }
 
@@ -2203,7 +2203,6 @@ return true;
 
 bool NHomologicalData::verifyCoordinateIsomorphisms(NLargeInteger p)
 {
-// todo: add mod p check. 
 if (p == 0)
  {
  for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIso()) return false;
@@ -2236,7 +2235,6 @@ else
  }
 return true;
 }
-
 
 bool NHomologicalData::findSpin() {
 	bool retval=true;

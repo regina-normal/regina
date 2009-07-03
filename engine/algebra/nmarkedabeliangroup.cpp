@@ -45,7 +45,7 @@ for (unsigned long i=0; i<rk; i++) ON.entry(i,i) = p;
 // everything is already in SNF, so these are identity matrices
 OMR.makeIdentity();OMC.makeIdentity(); OMRi.makeIdentity();OMCi.makeIdentity(); 
 ornR->makeIdentity(); ornRi->makeIdentity(); ornC->makeIdentity(); ornCi->makeIdentity(); 
-if (p != NLargeInteger::zero) ifNum=rk;
+if (p != 0) ifNum=rk;
 if (ifNum != 0) InvFacList.resize(ifNum);
 for (unsigned long i=0; i<InvFacList.size(); i++) InvFacList[i] = p;
 snfrank = rk - ifNum;
@@ -65,7 +65,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     metricalSmithNormalForm(tM, &OMR, &OMRi, &OMC, &OMCi);
 
     for (unsigned long i=0; (i<tM.rows()) && (i<tM.columns()); i++)
-	if (tM.entry(i,i) != NLargeInteger::zero) rankOM++;
+	if (tM.entry(i,i) != 0) rankOM++;
     TORLoc = rankOM; // various routines need this to be true later -- only important
 		     // to keep the mod-p calculations happy. 
 
@@ -224,7 +224,7 @@ bool NMarkedAbelianGroup::isChainComplex() const
 if (OM.columns() != ON.rows()) return false;
 std::auto_ptr<NMatrixRing<NLargeInteger> > prod = OM*ON;
 for (unsigned long i=0; i<prod->rows(); i++) for (unsigned long j=0; j<prod->columns(); j++)
- if (prod->entry(i,j) != NLargeInteger::zero) return false;
+ if (prod->entry(i,j) != 0) return false;
 return true;
 }
 
@@ -479,8 +479,8 @@ for (unsigned long i=0; i<OM.rows(); i++)
  {
  NLargeInteger T(NLargeInteger::zero);
  for (unsigned long j=0; j<OM.columns(); j++) T += input[j]*OM.entry(i,j);
- if (coeff == NLargeInteger::zero) { if (T != NLargeInteger::zero) return false; } else 
-  if ( (T % coeff) != NLargeInteger::zero ) return false;
+ if (coeff == 0) { if (T != 0) return false; } else 
+  if ( (T % coeff) != 0 ) return false;
  } 
 return true;
 }
@@ -490,7 +490,7 @@ bool NMarkedAbelianGroup::isBoundary(const std::vector<NLargeInteger> &input) co
 if (input.size() != OM.columns()) return false;
 std::vector<NLargeInteger> snF(snfRep(input));
 if (snF.size() != getNumberOfInvariantFactors() + getRank()) return false;
-for (unsigned long i=0; i<snF.size(); i++) if (snF[i]!=NLargeInteger::zero) return false;
+for (unsigned long i=0; i<snF.size(); i++) if (snF[i]!=0) return false;
 return true;
 }
 
@@ -501,10 +501,10 @@ std::vector<NLargeInteger> retval(OM.rows(), NLargeInteger::zero);
 if (CCrep.size() == OM.columns()) for (unsigned long i=0; i<OM.rows(); i++)
  {
  for (unsigned long j=0; j<OM.columns(); j++) retval[i] += CCrep[j]*OM.entry(i,j);
- if (coeff > NLargeInteger::zero) 
+ if (coeff > 0) 
   { 
    retval[i] %= coeff;
-   if (retval[i] < NLargeInteger::zero) retval[i] += coeff;
+   if (retval[i] < 0) retval[i] += coeff;
   }
  }
 return retval;
