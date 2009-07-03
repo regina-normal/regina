@@ -1146,7 +1146,7 @@ void metricalSmithNormalForm(NMatrixInt& matrix,
          metricRowOp(currStage, currStage, rowT, matrix, NLargeInteger::one, NLargeInteger::one, 
 	 	NLargeInteger::zero, NLargeInteger::one, colSpaceBasis, colSpaceBasisInv, 
                 rowNorm, colNorm, rowGCD);
-         continue;
+         goto rowMuckerLoop;
          }
        // done
        currStage++;
