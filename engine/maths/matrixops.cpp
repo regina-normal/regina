@@ -912,24 +912,22 @@ for (unsigned long i=0; i<colOps.rows(); i++) for (unsigned long j=0; j<rowOps.c
 return retval;
 }
 
-// scans matrix from row and col currStage to the right and down.  Looks for \pm 1 entries
-//  of minimal metrical weight, returns coordinates of such if exists.  If not, it looks for
-//  entry of minimal size such that the gcd of the entries in that row are minimal. This pivoting
-//  strategy comes from the Havas, Holt and Rees paper. 
-//
-// returns false if matrix below and to right of currStage is zero.
-//
-// todo: economize on finding pivot by searching the gcd vector first -- a lexico search
-//       rather than a full matrix search. 
+
 bool metricFindPivot(const unsigned long &currStage, const NMatrixInt &matrix, 
 	       unsigned long &pr, unsigned long &pc,
                const std::vector<NLargeInteger> &rowNorm, const std::vector<NLargeInteger> &colNorm, 
                const std::vector<NLargeInteger> &rowGCD)
 {
 bool pivotFound = false;
+// find the smallest positive rowGCD
+NLargeInteger SProwGCD(NLargeInteger::zero);
 
-for (unsigned long i=currStage; i<matrix.rows(); i++)
-  for (unsigned long j=currStage; j<matrix.columns(); j++)
+for (unsigned long i=currStage; i<matrix.rows(); i++) if (rowGCD[i] != 0)
+ { if (SProwGCD == 0) SProwGCD = rowGCD[i].abs();
+   else if (SProwGCD > rowGCD[i].abs()) SProwGCD = rowGCD[i].abs(); }
+
+for (unsigned long i=currStage; i<matrix.rows(); i++) if (rowGCD[i].abs() == SProwGCD)
+   for (unsigned long j=currStage; j<matrix.columns(); j++)
    {
     if (matrix.entry(i,j) == 0) continue;
     if (pivotFound == false) { pivotFound = true; pr = i; pc = j; }
@@ -947,16 +945,16 @@ for (unsigned long i=currStage; i<matrix.rows(); i++)
               (rowNorm[pr] - matrix.entry(pr,pc).abs())*(colNorm[pc] - matrix.entry(pr,pc).abs()) )
            { pr = i; pc = j; }
        } 
-      else // if magnitude > 1 we use the gcd row comparison. if rows the same?  maybe use colNorm...
+      else // if magnitude > 1 we use the rowNorm comparison. if rows the same? use colNorm...
        {
         if ( i == pr )
           { if ( colNorm[j] < colNorm[pc] ) { pr = i; pc =j; } }
         else
-          { if ( rowGCD[i] < rowGCD[pr] ) { pr = i; pc = j; } }
+          { if ( rowNorm[i] < rowNorm[pr] ) { pr = i; pc = j; } }
        }
       }
      }
-   }
+   } 
 
 return pivotFound;
 }
@@ -1055,28 +1053,6 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i, const u
   }
 }
 
-
-// problem: need to make more intelligent choices of row/column ops in order to keep the change-of-basis
-//       matrix coefficients under control. This is relevant in relatively simple situations.  For 
-//       example, the 9th triangulation of SFS[ RP2 : 1/2 1/5 ] in 9-nor.rga.  In computing 
-//       getMixedHomology(2) from nhomologicaldata, the column reduction matrix for M
-//       is a roughly 100x100 matrix containing many 10,000-digit integers.  This is a little excessive!
-//       there is a pretty naieve least-squares type approach to choosing the gcd coefficients in such a 
-//       reduction.  I'll try implementing that soon.
-//
-// Strategy: we'll keep currStage, but 1st step will be to look at submatrix below and to right 
-//           of currstage,currstage.  Find smallest non-zero entry, if \pm 1, use weight optimization
-//           to choose, otherwise just smallest nonzero entry (consider using weight opt on this, too). 
-//           move that to currstage+1,currstage+1 via row/column switch.  reduce. 
-//           Check divisibility of submatrix to the right, if not, among the entries choose the one
-//           such that its remainder after divisision by currstage+1,currstage+1 is minimal. 
-//           repeat...
-//
-// todo: precompute row/column metrics so that we don't recompute the same thing over and over again.
-//       these will be in std::vector<NLargeInteger> rowNorm, colNorm respectively and passed to fingPivot
-//       currently rowNorm and colNorm represent the sum of the absolute values of the entries.
-//       We'll also keep a precomputed rowGCD vector representing the GCD of all the entries in the various
-//       rows.
 void metricalSmithNormalForm(NMatrixInt& matrix,
         NMatrixInt *rowSpaceBasis, NMatrixInt *rowSpaceBasisInv,
         NMatrixInt *colSpaceBasis, NMatrixInt *colSpaceBasisInv) {
@@ -1158,4 +1134,6 @@ void metricalSmithNormalForm(NMatrixInt& matrix,
 
 
 } // namespace regina
+
+
 

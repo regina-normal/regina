@@ -81,8 +81,7 @@ class NHomMarkedAbelianGroup;
  * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
  * \todo \optlong Add Hom, Ext, Tor, and \otimes, torsion linking form and intersection product
  *  as maps out of tensor products.  Tor is implemented at least against Z_p now... 
- * \todo testsuite additions: isChainComplex() true and false egs. isCycle, isBdry(), 
- *       boundaryMap(), writeAsBdry(), minNumberCycleGens, cycleGen
+ * \todo testsuite additions: isBoundary(),  boundaryMap(), writeAsBdry(), cycleGen().
  */
 class NMarkedAbelianGroup : public ShareableObject {
     private:
@@ -555,8 +554,6 @@ class NMarkedAbelianGroup : public ShareableObject {
  * \todo \optlong add map factorization, that every homomorphism can be split as a composite of a
  *       projection followed by an inclusion.  Add kernelInclusion(), coKerMap()...
  *       Add a liftMap() call, ie a procedure to find a lift of a map if one exists....
- * \todo add inverseHom() tests to test suite, add mod-p coefficient calls to test suite. 
- *	 isChainMap, isCycleMap, *, evalCC, evalSNF. 
  *
  * @author Ryan Budney
  */
