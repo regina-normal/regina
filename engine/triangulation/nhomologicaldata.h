@@ -738,12 +738,6 @@ public:
      */
     bool verifyCoordinateIsomorphisms(NLargeInteger p = NLargeInteger::zero);
 
-    /** Computes a spin structure if one exists, 
-     ** provided the manifold is orientable, this is always true. 
-     ** not yet implemented
-     **/
-    bool findSpin();
-
 };
 
 /*@}*/

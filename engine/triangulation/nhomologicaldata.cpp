@@ -2236,15 +2236,6 @@ else
 return true;
 }
 
-bool NHomologicalData::findSpin() {
-	bool retval=true;
-	// todo!
-
-	return retval;
-}
-
-
-
 } // namespace regina
 
 
