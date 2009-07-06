@@ -62,14 +62,16 @@ class NBinaryA5 {
         /**
          * The internal code representing this permutation. At present this
 	 * is implemented as even n corresponds the triv lift of NPerm5::S5[n]
-	 * odd n corresponds to the non-trivial lift of NPerm5::S5[n-1]
+	 * odd n corresponds to the non-trivial lift of NPerm5::S5[n-1].  So code
+         * ranges from 0 to 119 inclusive, 0 representing the identity and 1 the
+         * central element. 
          */
         unsigned code;
 
 	static const unsigned long long mult_table[60];
 	static const std::string names[120];
-	
 	static const std::string spinornames[120];
+
 	static const unsigned long long floormask;
 
     public:
@@ -260,6 +262,11 @@ class NBinaryA5 {
 	 */
         std::string toTeX() const;
 
+	/**
+	 * Underlying NPerm5
+	 */
+	NPerm5 getNPerm5() const;
+
     private:
         /**
          * Determines the image of the given integer under this
@@ -327,13 +334,11 @@ inline NBinaryA5 NBinaryA5::operator *(const NBinaryA5& q) const {
           (NPerm5::S5[code & floormask] * NPerm5::S5[q.code & floormask]).S5Index() + 
 	  ((code + q.code + (mult_table[code >> 1] >> (q.code >> 1) )) % 2)
 			);
-// recover lift data from mult_table
 }
 
 inline NBinaryA5 NBinaryA5::inverse() const {
 	// e_1 + f(a_1,a_1^-1) mod 2 is the lift code...
 	// f(a_1,a_1^{-1}) is mult_table[code >> 1]
-
 	// NPerm5::invS5[code & floormask] code for underlying A5 inverse elt.
 	//  ((mult_table[code >> 1] >> (NPerm5::invS5[code & floormask] >> 1)) % 2)
 	return NBinaryA5( NPerm5::invS5[code & floormask] + 
@@ -367,6 +372,11 @@ inline int NBinaryA5::imageOf(int source) const {
 
 inline std::string NBinaryA5::toString() const {
 	return names[code];
+}
+
+inline NPerm5 NBinaryA5::getNPerm5() const
+{
+return NPerm5::S5[code & floormask];
 }
 
 inline std::ostream& NBinaryA5::writeTeX(std::ostream &out) const

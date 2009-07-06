@@ -61,19 +61,15 @@ namespace regina {
 class NBinaryS4 {
     private:
         /**
-         * The internal code representing this permutation. At present
-	 * 0, ..., 23 are reserved for the standard lifts and 32, ..., 55
-	 * ie: 2^5 + n for n = 0, ..., 23 for the nonstandard lifts. 
-	 *  thus 0 represents the identity, and 32 the kernel of the 
-	 *  homomorphism NBinaryS4 --> NPerm4.  
+         * The internal code representing this permutation. At present the first
+	 * bit indicates the lift, and the remaining bits are the << 1 shift of
+	 * a number 0, ..., 23 representing NPerm4::S4
          */
         unsigned code;
 
 	static const unsigned long mult_table[24];
 	static const std::string names[48];
-	
 	static const std::string spinornames[48];
-	static const unsigned long floormask;
 
     public:
         /**
@@ -262,6 +258,11 @@ class NBinaryS4 {
 	 */
         std::string toTeX() const;
 
+	/**
+	 * get underlying NPerm4
+	 */
+	NPerm4 getNPerm4() const;
+
     private:
         /**
          * Determines the image of the given integer under this
@@ -300,12 +301,12 @@ inline NBinaryS4::NBinaryS4(unsigned newCode) : code(newCode) {
 }
 
 inline NBinaryS4::NBinaryS4(int a, int b, int c, int d, bool lift) {
-    code = NPerm4(a,b,c,d).S4Index() + ( lift ? 32 : 0 );
+    code = (NPerm4(a,b,c,d).S4Index() << 1) + ( lift ? 1 : 0 );
 }
 
 inline NBinaryS4::NBinaryS4(int a0, int a1, int b0, int b1,
         int c0, int c1, int d0, int d1, bool lift) {
-	code = NPerm4(a0,a1,b0,b1,c0,c1,d0,d1).S4Index() + ( lift ? 32 : 0 );
+	code = (NPerm4(a0,a1,b0,b1,c0,c1,d0,d1).S4Index() << 1) + ( lift ? 1 : 0 );
 }
 
 inline NBinaryS4::NBinaryS4(const NBinaryS4& cloneMe) : code(cloneMe.code) {
@@ -324,30 +325,25 @@ inline NBinaryS4& NBinaryS4::operator = (const NBinaryS4& cloneMe) {
     return *this;
 }
 
-inline NBinaryS4 NBinaryS4::operator *(const NBinaryS4& q) const {
-std::cout<<" ["<<(code >> 5)<<" "<<(q.code >> 5)<<" "
-	 <<(mult_table[code & floormask] >> (q.code & floormask)) % 2<<"] ";
-std::cout.flush();
-	return NBinaryS4( // something is wrong here...
-          (NPerm4::S4[code & floormask] * NPerm4::S4[q.code & floormask]).S4Index() +
-                       ((((code >> 5) + (q.code >> 5) + 
-		        mult_table[code & floormask] >> (q.code & floormask)) % 2) << 5)
+inline NBinaryS4 NBinaryS4::operator * (const NBinaryS4& q) const {
+	return NBinaryS4( 
+          ((NPerm4::S4[code >> 1] * NPerm4::S4[q.code >> 1]).S4Index()<<1) + 
+          (( code + q.code + (mult_table[code >> 1] >> (q.code >> 1) ) ) % 2)
 			);
 }
 
 inline NBinaryS4 NBinaryS4::inverse() const {
-	return NBinaryS4( NPerm4::invS4[code & floormask] + 
-                          ((((mult_table[code & floormask] >> NPerm4::invS4[code & floormask]) + 
-			  (code >> 5)) % 2) << 5)
+	return NBinaryS4( (NPerm4::invS4[code >> 1] << 1) + 
+			  ( (code + (mult_table[code >> 1] >> NPerm4::invS4[code >> 1])) % 2 )
                         );
 }
 
 inline int NBinaryS4::operator[](int source) const {
-    return NPerm4::S4[code & floormask][source];
+    return NPerm4::S4[code >> 1][source];
 }
 
 inline int NBinaryS4::preImageOf(int image) const {
-    return NPerm4::S4[code & floormask].preImageOf(image);
+    return NPerm4::S4[code >> 1].preImageOf(image);
 }
 
 inline bool NBinaryS4::operator == (const NBinaryS4& other) const {
@@ -363,18 +359,23 @@ inline bool NBinaryS4::isIdentity() const {
 }
 
 inline int NBinaryS4::imageOf(int source) const {
-    return NPerm4::S4[code & floormask][source];
+    return NPerm4::S4[code >> 1][source];
 }
 
 inline std::string NBinaryS4::toString() const {
-	return names[ (code & floormask) + ((code & 32) ? 24 : 0)];
+	return names[code];
+}
+
+inline NPerm4 NBinaryS4::getNPerm4() const
+{
+	return NPerm4::S4[code >> 1];
 }
 
 inline std::ostream& NBinaryS4::writeTeX(std::ostream &out) const
-{ out<<spinornames[(code & floormask) + ((code & 32) ? 24 : 0)]; return out; }
+{ out<<spinornames[code]; return out; }
 
 inline std::string NBinaryS4::toTeX() const
-{ return spinornames[(code & floormask) + ((code & 32) ? 24 : 0)]; }
+{ return spinornames[code]; }
 
 
 } // namespace regina
