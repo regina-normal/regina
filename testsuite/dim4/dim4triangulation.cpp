@@ -38,6 +38,9 @@
 #include "triangulation/ntriangulation.h"
 #include "testsuite/dim4/testdim4.h"
 
+#include "algebra/nbinaryA5.h"
+#include "algebra/nbinaryS4.h"
+
 using regina::Dim4ExampleTriangulation;
 using regina::Dim4Pentachoron;
 using regina::Dim4Triangulation;
@@ -48,8 +51,14 @@ using regina::NPerm5;
 using regina::NStandardTriangulation;
 using regina::NTriangulation;
 
+using regina::NBinaryA5;
+using regina::NBinaryS4;
+
 class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Dim4TriangulationTest);
+
+    CPPUNIT_TEST(binaryA5);
+    CPPUNIT_TEST(binaryS4);
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
@@ -342,6 +351,113 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
         }
+
+        // test to ensure NBinaryA5 is a group and maps to A5.
+	void binaryA5() {
+		bool assocTestPassed=true;
+		for (unsigned long i=0; i<120; i++) 
+ 		 for (unsigned long j=0; j<120; j++) 
+		  for (unsigned long k=0; k<120; k++)
+ 			{
+  			NBinaryA5 ei(i), ej(j), ek(k);
+  			if ( (ei*ej)*ek != ei*(ej*ek) ) assocTestPassed=false;
+ 			}
+		std::ostringstream msg;
+                if (!assocTestPassed) 
+		 {
+		 msg<<"NBinaryA5 does not satisfy associativity axiom.";
+                 CPPUNIT_FAIL(msg.str());
+		 }
+
+	        bool idTestPassed=true;
+		for (unsigned long i=0; i<120; i++)
+		 {
+		 NBinaryA5 Id(0), ei(i);
+ 		 if ( (Id*ei != ei) || (ei*Id != ei) ) idTestPassed=false;
+ 		 }
+                if (!idTestPassed) 
+		 {
+		 msg<<"NBinaryA5 does not have an identity element.";
+		 CPPUNIT_FAIL(msg.str());
+		 }
+
+		bool invTest=true;
+		for (unsigned long i=0; i<120; i++)
+ 		 {
+		 NBinaryA5 Id(0), ei(i);
+ 		 if ( (ei*ei.inverse() != Id) || (ei.inverse()*ei != Id) ) invTest=false;
+ 		 }
+ 		if (!invTest) 
+		 {
+		  msg<<"NBinaryA5 does not have inverses.";
+		  CPPUNIT_FAIL(msg.str());
+		 }
+
+		bool homTest=true;
+		for (unsigned long i=0; i<120; i++) for (unsigned long j=0; j<120; j++)
+		 {
+		  NBinaryA5 ei(i), ej(j);
+		  if ( (ei*ej).getNPerm5() != ei.getNPerm5()*ej.getNPerm5() ) homTest=false;
+		 }
+	 	if (!homTest)
+		 {
+		 msg<<"NBinaryA5 does not map homomorphically onto A5.";
+		 CPPUNIT_FAIL(msg.str());
+		 }
+	}
+
+        void binaryS4() {
+		bool assocTestPassed=true;
+		for (unsigned long i=0; i<48; i++) 
+			for (unsigned long j=0; j<48; j++) 
+				for (unsigned long k=0; k<48; k++)
+		 {
+		  regina::NBinaryS4 ei(i), ej(j), ek(k);
+		  if ( (ei*ej)*ek != ei*(ej*ek) ) assocTestPassed=false;
+		 }
+		std::ostringstream msg;
+                if (!assocTestPassed) 
+		 {
+		 msg<<"NBinaryS4 does not satisfy associativity axiom.";
+                 CPPUNIT_FAIL(msg.str());
+		 }
+
+		bool idTestPassed=true;
+		for (unsigned long i=0; i<48; i++)
+		 {
+		 regina::NBinaryS4 Id(0), ei(i);
+		 if ( (Id*ei != ei) || (ei*Id != ei) ) idTestPassed=false;
+		 }
+		if (!idTestPassed) 
+		 {
+		 msg<<"NBinaryS4 does not have an identity element.";
+		 CPPUNIT_FAIL(msg.str());
+		 }
+
+		bool invTest=true;
+		for (unsigned long i=0; i<48; i++)
+		 {
+		 regina::NBinaryS4 Id(0), ei(i);
+		 if ( (ei*ei.inverse() != Id) || (ei.inverse()*ei != Id) ) invTest=false;
+		 }
+		if (!invTest) 
+		 {
+		  msg<<"NBinaryS4 does not have inverses.";
+		  CPPUNIT_FAIL(msg.str());
+		 }
+
+		bool homTest=true;
+		for (unsigned long i=0; i<48; i++) for (unsigned long j=0; j<48; j++)
+		 {
+		  regina::NBinaryS4 ei( i ), ej( j );
+		  if ( (ei*ej).getNPerm4() != ei.getNPerm4()*ej.getNPerm4() ) homTest=false;
+ 		 }
+		if (!homTest) 
+		 {
+		 msg<<"NBinaryS4 does not map homomorphically onto S4.";
+		 CPPUNIT_FAIL(msg.str());
+		 }
+	}
 
         void validity() {
             verifyValid(empty);
