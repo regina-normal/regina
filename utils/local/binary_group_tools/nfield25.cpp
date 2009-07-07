@@ -28,7 +28,7 @@
 
 
 #include "maths/nrational.h"
-#include "algebra/nfield25.h"
+#include "nfield25.h"
 
 namespace regina {
 

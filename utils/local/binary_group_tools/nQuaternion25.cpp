@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "algebra/nQuaternion25.h"
-#include "algebra/nfield25.h"
+#include "nQuaternion25.h"
+#include "nfield25.h"
 #include "maths/nrational.h"
 #include <iostream>
 

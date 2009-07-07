@@ -5,14 +5,14 @@
 #include <iostream>
 #include <iomanip>
 
-#include "regina/algebra/nQuaternion25.h"
-#include "regina/algebra/nfield25.h"
-#include "regina/algebra/nSimpleField.h"
 #include "regina/maths/nrational.h"
 #include "regina/dim4/nperm5.h"
-#include "regina/algebra/nbinaryA5.h"
-#include "regina/algebra/nspin4simplex.h"
 #include "regina/algebra/nbinaryS4.h"
+
+#include "nQuaternion25.h"
+#include "nfield25.h"
+#include "nspin4simplex.h"
+//#include "nSimpleField.h"
 
 template <class T>
 void appendIfDiff( const T &inp, const std::vector< T > &list, std::vector< T > &newlist)

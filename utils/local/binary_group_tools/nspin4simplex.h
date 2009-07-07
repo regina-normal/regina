@@ -41,12 +41,13 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "algebra/nquaternionicinteger.h"
-#include "algebra/nfield25.h"
-#include "algebra/nSimpleField.h"
 #include "maths/nrational.h"
 #include "maths/nperm5.h"
-#include "algebra/nbinaryA5.h"
+
+#include "regina/algebra/nbinaryA5.h"
+#include "nQuaternion25.h"
+#include "nfield25.h"
+//#include "algebra/nSimpleField.h"
 
 namespace regina {
 
@@ -71,18 +72,18 @@ namespace regina {
  */
 class NSpin4Simplex {
 private:
-NQuaternionicInteger x,y; // components in S^3xS^3 which is where we'll work. 
+NQuaternion25 x,y; // components in S^3xS^3 which is where we'll work. 
 
 public:
 /** 
  * Constructor 1 left multiplication by X, right multiplication by Y
  */
-NSpin4Simplex( const NQuaternionicInteger &X, const NQuaternionicInteger &Y );
+NSpin4Simplex( const NQuaternion25 &X, const NQuaternion25 &Y );
 
 /**
  * Constructor 2 left multiplication by X, right multiplication by X^{-1}
  */
-NSpin4Simplex( const NQuaternionicInteger &X );
+NSpin4Simplex( const NQuaternion25 &X );
 
 /**
   * Creates a clone of the given group.
@@ -98,11 +99,11 @@ virtual ~NSpin4Simplex();
 /**
  * 1st component
  */
-NQuaternionicInteger comp1() const;
+NQuaternion25 comp1() const;
 /**
  * 2nd component
  */
-NQuaternionicInteger comp2() const;
+NQuaternion25 comp2() const;
 
 /**
   * Determines whether this and the given quaternion are equal.
@@ -123,7 +124,7 @@ NSpin4Simplex operator * (const NSpin4Simplex& other) const;
 /**
  * Vector space op
  */
-NSpin4Simplex operator * (const NQuaternionicInteger& other) const;
+NSpin4Simplex operator * (const NQuaternion25& other) const;
 /**
  * Multiplicative inverse
  */
@@ -154,7 +155,7 @@ NField25 normsquared() const;
 /**
  * action
  */
-NQuaternionicInteger act(const NQuaternionicInteger &on) const;
+NQuaternion25 act(const NQuaternion25 &on) const;
 
 friend std::ostream& operator << (std::ostream& out, const NSpin4Simplex& dat);
 friend NSpin4Simplex operator - (const NSpin4Simplex &in);
@@ -163,13 +164,13 @@ friend NSpin4Simplex operator - (const NSpin4Simplex &in);
 /** 
  * Constructor
  */
-inline NSpin4Simplex::NSpin4Simplex( const NQuaternionicInteger &X, const NQuaternionicInteger &Y ) :
+inline NSpin4Simplex::NSpin4Simplex( const NQuaternion25 &X, const NQuaternion25 &Y ) :
 	x(X), y(Y) {}
 
 /**
  * Constructor 2 left multiplication by X, right multiplication by X^{-1}
  */
-inline NSpin4Simplex::NSpin4Simplex( const NQuaternionicInteger &X ) :
+inline NSpin4Simplex::NSpin4Simplex( const NQuaternion25 &X ) :
 	x(X), y(X.inverse()) {}
 
 /**
@@ -188,13 +189,13 @@ inline NSpin4Simplex::~NSpin4Simplex() {}
 /**
  * 1st component
  */
-NQuaternionicInteger NSpin4Simplex::comp1() const
+NQuaternion25 NSpin4Simplex::comp1() const
 { return x; }
 
 /**
  * 2nd component
  */
-NQuaternionicInteger NSpin4Simplex::comp2() const
+NQuaternion25 NSpin4Simplex::comp2() const
 { return y; }
 
 /**
@@ -230,7 +231,7 @@ inline NSpin4Simplex NSpin4Simplex::operator * (const NSpin4Simplex& other) cons
 /**
  * Vector space op
  */
-inline NSpin4Simplex NSpin4Simplex::operator * (const NQuaternionicInteger& other) const
+inline NSpin4Simplex NSpin4Simplex::operator * (const NQuaternion25& other) const
 {
 	NSpin4Simplex retval( x*other, y*other );
 	return retval;
@@ -289,7 +290,7 @@ std::ostream& operator << (std::ostream& out, const NSpin4Simplex& dat)
 /**
  * action
  */
-inline NQuaternionicInteger NSpin4Simplex::act(const NQuaternionicInteger &on) const
+inline NQuaternion25 NSpin4Simplex::act(const NQuaternion25 &on) const
 {
 	return (x*on*y);
 }

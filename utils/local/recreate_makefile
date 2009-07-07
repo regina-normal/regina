@@ -68,9 +68,11 @@ in2mk() {
 
 am2in "$reldir/Makefile"
 am2in "$reldir/mpi/Makefile"
+am2in "$reldir/binary_group_tools/Makefile"
 
 in2mk "$reldir/Makefile"
 in2mk "$reldir/mpi/Makefile"
+in2mk "$reldir/binary_group_tools/Makefile"
 
 echo "Done."
 exit 0
