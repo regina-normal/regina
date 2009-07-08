@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file algebra/nQuaternion25.h
+/*! \file utils/local/binary_group_tools/nQuaternion25.h
  *  \brief Deals with the types of quaternions the come up representing spin structures
  */
 
