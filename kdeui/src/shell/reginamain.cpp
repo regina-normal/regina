@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "regina-config.h"
+#include "snappea/nsnappeatriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "examplesaction.h"
@@ -534,6 +535,8 @@ void ReginaMain::readOptions(KConfig* config) {
 
     config->setGroup("SnapPea");
     globalPrefs.snapPeaClosed = config->readBoolEntry("AllowClosed", false);
+    regina::NSnapPeaTriangulation::enableKernelMessages(
+        config->readBoolEntry("KernelMessages", false));
 
     config->setGroup("Surfaces");
     globalPrefs.surfacesCompatThreshold = config->readUnsignedNumEntry(
@@ -650,6 +653,8 @@ void ReginaMain::saveOptions() {
 
     config->setGroup("SnapPea");
     config->writeEntry("AllowClosed", globalPrefs.snapPeaClosed);
+    config->writeEntry("KernelMessages",
+        regina::NSnapPeaTriangulation::kernelMessagesEnabled());
 
     config->setGroup("Surfaces");
     config->writeEntry("CompatibilityThreshold",

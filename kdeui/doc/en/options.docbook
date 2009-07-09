@@ -462,6 +462,34 @@
 
   <glosslist>
    <glossentry>
+    <glossterm>Diagnostic messages</glossterm>
+    <glossdef>
+     <para>
+      This specifies whether the &snappea; kernel should write
+      diagnostic messages to the console.
+     </para>
+     <para>
+      The &snappea; kernel sometimes sends out messages indicating what
+      it is doing (for instance, a frequently seen message is
+      "<emphasis>Computing hyperbolic structure .&nbsp;.&nbsp;.</emphasis>").
+      If this option is enabled, all such messages will be written to
+      the console.  If this option is disabled, these messages will
+      be suppressed.
+     </para>
+     <para>
+      When this option is enabled, if you start &regina; from the
+      command line then you will see diagnostic messages appear on the
+      same console from which you started &regina;.  If you start &regina;
+      from a menu (such as the &kde; menu), you will not see these
+      messages at all.
+     </para>
+     <para>
+      If you do not know what this is all about, you can safely leave
+      this option switched off.
+     </para>
+    </glossdef>
+   </glossentry>
+   <glossentry>
     <glossterm>Allow closed triangulations</glossterm>
     <glossdef>
      <para>

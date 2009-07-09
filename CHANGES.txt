@@ -67,6 +67,8 @@ Version 4.6.1  [ (under development) ]
             - This is the new name for the old class NPerm (see above).
             - New routines S4Index() and orderedS4Index() for reverse
               lookups into the arrays NPerm::S4 and NPerm::orderedS4.
+        Class NSnapPeaTriangulation:
+            - Kernel messages are now disabled by default.
         Class NTetrahedron:
             - New routine getVertexMapping(), which facilitates a
               consistent orientation around the given vertex for the
@@ -80,6 +82,9 @@ Version 4.6.1  [ (under development) ]
     UTILITIES:
         tricensus-mpi-status:
             - Now finishes with a running total of all triangulations found.
+    USER INTERFACE:
+        - There is now an option to enable or disable diagnostic
+          messages from the SnapPea kernel.
 
 Version 4.6  [ 16 May, 2009 ]
 

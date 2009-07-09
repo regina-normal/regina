@@ -241,6 +241,7 @@ class ReginaPrefSnapPea : public QVBox {
 
     private:
         QCheckBox* cbClosed;
+        QCheckBox* cbMessages;
 
     public:
         ReginaPrefSnapPea(QWidget* parent = 0);

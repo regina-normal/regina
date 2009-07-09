@@ -30,6 +30,7 @@
 
 #include "file/nfileinfo.h"
 #include "file/nglobaldirs.h"
+#include "snappea/nsnappeatriangulation.h"
 
 #include "coordinatechooser.h"
 #include "reginafilter.h"
@@ -264,6 +265,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     pythonPrefs->updateActiveCount();
 
     snapPeaPrefs->cbClosed->setChecked(prefSet.snapPeaClosed);
+    snapPeaPrefs->cbMessages->setChecked(
+        regina::NSnapPeaTriangulation::kernelMessagesEnabled());
 
     // Finish off.
     setHelp("options", "regina");
@@ -603,6 +606,8 @@ void ReginaPreferences::slotApply() {
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
 
     prefSet.snapPeaClosed = snapPeaPrefs->cbClosed->isChecked();
+    regina::NSnapPeaTriangulation::enableKernelMessages(
+        snapPeaPrefs->cbMessages->isChecked());
 
     // Save these preferences to the global configuration.
     mainWindow->setPreferences(prefSet);
@@ -1284,6 +1289,19 @@ void ReginaPrefPython::deactivate() {
 }
 
 ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QVBox(parent) {
+    cbMessages = new QCheckBox(i18n("Diagnostic messages"), this);
+    QWhatsThis::add(cbMessages, i18n("<qt>Should the SnapPea kernel write "
+        "diagnostic messages to the console?<p>"
+        "These diagnostic messages are emitted by the SnapPea kernel "
+        "embedded within Regina (not from Regina itself).  If you do not "
+        "know what this is all about, you can safely leave this option "
+        "switched off.<p>"
+        "When this option is switched on, if you start Regina from the "
+        "command line then you will see diagnostic messages appear on the "
+        "same console from which you started Regina.  "
+        "If you start Regina from a menu (such as the KDE menu), you will "
+        "not see these messages at all.</qt>"));
+
     cbClosed = new QCheckBox(i18n("Allow closed triangulations"), this);
     QWhatsThis::add(cbClosed, i18n("<qt>Allow the SnapPea kernel to work with "
         "closed triangulations.  By default it is only allowed to work with "
