@@ -5,14 +5,12 @@
 #include <iostream>
 #include <iomanip>
 
-#include "regina/maths/nrational.h"
-#include "regina/dim4/nperm5.h"
-#include "regina/algebra/nbinaryS4.h"
+#include "algebra/nbinaryS4.h"
+#include "maths/nrational.h"
 
 #include "nQuaternion25.h"
 #include "nfield25.h"
 #include "nspin4simplex.h"
-//#include "nSimpleField.h"
 
 template <class T>
 void appendIfDiff( const T &inp, const std::vector< T > &list, std::vector< T > &newlist)
@@ -326,7 +324,7 @@ for (int i=0; i<standardlift.size(); i++)
 
   for (int j=0; j<standardlift.size(); j++)
    {
-   if (!((standardlift[i]*standardlift[j])==standardlift[(regina::NPerm::S4[i]*regina::NPerm::S4[j]).S4Index()]))
+   if (!((standardlift[i]*standardlift[j])==standardlift[(regina::NPerm4::S4[i]*regina::NPerm4::S4[j]).S4Index()]))
 	temp = temp | r;
    r = r << 1;
    }

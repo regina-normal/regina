@@ -208,7 +208,7 @@ inline NField25 NQuaternion25::kcomp() const
 /**
  * Negate
  */
-NQuaternion25 operator - (const NQuaternion25 &o)
+inline NQuaternion25 operator - (const NQuaternion25 &o)
 {
 	NQuaternion25 retval(o);
 	retval.Rc = (-retval.Rc);

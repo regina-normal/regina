@@ -47,7 +47,6 @@
 #include "regina/algebra/nbinaryA5.h"
 #include "nQuaternion25.h"
 #include "nfield25.h"
-//#include "algebra/nSimpleField.h"
 
 namespace regina {
 
