@@ -31,6 +31,7 @@
 #include <cppunit/Test.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
+#include "testsuite/algebra/testalgebra.h"
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
 #include "testsuite/dim4/testdim4.h"
@@ -125,6 +126,10 @@ bool runAllTests() {
     addNPrimes(runner);
     addNumberTheory(runner);
     addMatrixOps(runner);
+
+    // Algebra:
+    addNBinaryA5(runner);
+    addNBinaryS4(runner);
 
     // Triangulation:
     addNTriangulation(runner);

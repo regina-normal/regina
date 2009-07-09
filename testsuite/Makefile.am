@@ -11,6 +11,7 @@ KDE_OPTIONS=noautodist
 INCLUDES = -I$(top_srcdir) @ENGINE_INCLUDES@
 
 SUBDIRS = \
+  algebra \
   angle \
   census \
   dim4 \
@@ -27,6 +28,7 @@ check_PROGRAMS = regtestsuite
 
 regtestsuite_SOURCES = runalltests.cpp
 regtestsuite_LDADD = \
+  algebra/libalgebra.a \
   angle/libangle.a \
   census/libcensus.a \
   dim4/libdim4.a \
