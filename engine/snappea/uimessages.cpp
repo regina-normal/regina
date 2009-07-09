@@ -32,7 +32,7 @@
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/SnapPea.h"
 
-bool regina::NSnapPeaTriangulation::kernelMessages = true;
+bool regina::NSnapPeaTriangulation::kernelMessages = false;
 
 /**
  * Supply bare-bones UI messaging functions for the SnapPea kernel to use.

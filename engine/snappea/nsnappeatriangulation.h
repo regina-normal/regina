@@ -275,8 +275,8 @@ class NSnapPeaTriangulation : public ShareableObject {
          * Returns whether or not the SnapPea kernel writes diagnostic
          * messages to standard output.
          *
-         * By default such diagnostic messages are enabled.  To disable
-         * them, call disableKernelMessages().
+         * By default such diagnostic messages are disabled.  To enable
+         * them, call enableKernelMessages().
          *
          * @return \c true if and only if diagonstic messages are enabled.
          */
@@ -286,7 +286,7 @@ class NSnapPeaTriangulation : public ShareableObject {
          * Configures whether or not the SnapPea kernel should write
          * diagnostic messages to standard output.
          *
-         * By default such diagnostic messages are enabled.
+         * By default such diagnostic messages are disabled.
          *
          * @param enabled \c true if diagnostic messages should be
          * enabled, or \c false otherwise.
@@ -300,7 +300,7 @@ class NSnapPeaTriangulation : public ShareableObject {
          * Calling this routine is equivalent to calling
          * enableKernelMessages(false).
          *
-         * Note that diagnostic messages are enabled by default.
+         * Note that diagnostic messages are already disabled by default.
          */
         static void disableKernelMessages();
 

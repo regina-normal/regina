@@ -1154,6 +1154,8 @@
   <glossdef><para><link linkend="tri-snappea">calculations</link></para></glossdef>
   <glossdef><para><link linkend="options-snappea">closed triangulations,
    allowing</link></para></glossdef>
+  <glossdef><para><link linkend="options-snappea">diagnostic messages,
+   enabling</link></para></glossdef>
   <glossdef><para><link linkend="export-snappea">exporting to</link></para></glossdef>
   <glossdef><para><link linkend="import-snappea">importing
    from</link></para></glossdef>
