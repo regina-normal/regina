@@ -137,7 +137,7 @@ class NPerm3Test : public CppUnit::TestFixture {
             std::ostringstream name;
             name << a << b << c;
 
-            NPerm3 p1(p.getPermCode());
+            NPerm3 p1 = NPerm3::fromPermCode(p.getPermCode());
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The internal code constructor fails for "
@@ -201,14 +201,16 @@ class NPerm3Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! looksEqual(p * NPerm3(NPerm3::code102), NPerm3(b, a, c))) {
+            if (! looksEqual(p * NPerm3::fromPermCode(NPerm3::code102),
+                    NPerm3(b, a, c))) {
                 std::ostringstream msg;
                 msg << "Multiplying permutation " << name.str()
                     << " by (0 <--> 1) does not give the expected result.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! looksEqual(p * NPerm3(NPerm3::code021), NPerm3(a, c, b))) {
+            if (! looksEqual(p * NPerm3::fromPermCode(NPerm3::code021),
+                    NPerm3(a, c, b))) {
                 std::ostringstream msg;
                 msg << "Multiplying permutation " << name.str()
                     << " by (1 <--> 2) does not give the expected result.";

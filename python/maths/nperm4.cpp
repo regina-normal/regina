@@ -87,6 +87,7 @@ void addNPerm4() {
             .def(init<const NPerm4&>())
             .def("getPermCode", &NPerm4::getPermCode)
             .def("setPermCode", &NPerm4::setPermCode)
+            .def("fromPermCode", &NPerm4::fromPermCode)
             .def("isPermCode", &NPerm4::isPermCode)
             .def("setPerm", setPerm_pair)
             .def("setPerm", setPerm_quartet)
@@ -105,6 +106,7 @@ void addNPerm4() {
             .def("S4Index", &NPerm4::S4Index)
             .def("orderedS4Index", &NPerm4::orderedS4Index)
             .def("__str__", &NPerm4::toString)
+            .staticmethod("fromPermCode")
             .staticmethod("isPermCode")
         ;
 

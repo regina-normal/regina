@@ -133,17 +133,6 @@ class NPerm3 {
         NPerm3();
 
         /**
-         * Creates a permutation from the given internal code.
-         *
-         * \pre the given code is a valid permutation code; see
-         * isPermCode() for details.
-         *
-         * @param code the internal code from which the new
-         * permutation will be created.
-         */
-        NPerm3(int code);
-
-        /**
          * Creates a permutation mapping (0,1,2) to
          * (<i>a</i>,<i>b</i>,<i>c</i>) respectively.
          *
@@ -188,9 +177,20 @@ class NPerm3 {
         void setPermCode(int code);
 
         /**
+         * Creates a permutation from the given internal code.
+         *
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
+         *
+         * @param code the internal code for the new permutation.
+         * @return the permutation represented by the given internal code.
+         */
+        static NPerm3 fromPermCode(int code);
+
+        /**
          * Determines whether the given integer is a valid internal
          * permutation code.  Valid permutation codes can be passed to
-         * setPermCode() or NPerm3(int) and are returned by getPermCode().
+         * setPermCode() or fromPermCode(), and are returned by getPermCode().
          *
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
@@ -336,6 +336,18 @@ class NPerm3 {
          */
         static const int productTable[6][6];
 
+    private:
+        /**
+         * Creates a permutation from the given internal code.
+         *
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
+         *
+         * @param code the internal code from which the new
+         * permutation will be created.
+         */
+        NPerm3(int code);
+
     friend std::ostream& operator << (std::ostream& out, const NPerm3& p);
 };
 
@@ -382,6 +394,10 @@ inline int NPerm3::getPermCode() const {
 
 inline void NPerm3::setPermCode(int code) {
     code_ = code;
+}
+
+inline NPerm3 NPerm3::fromPermCode(int code) {
+    return NPerm3(code);
 }
 
 inline bool NPerm3::isPermCode(int code) {

@@ -235,9 +235,20 @@ class NPerm4 {
         void setPermCode(unsigned char newCode);
 
         /**
+         * Creates a permutation from the given internal code.
+         *
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
+         *
+         * @param code the internal code for the new permutation.
+         * @return the permutation represented by the given internal code.
+         */
+        static NPerm4 fromPermCode(unsigned char newCode);
+
+        /**
          * Determines whether the given character is a valid internal
          * permutation code.  Valid permutation codes can be passed to
-         * setPermCode() or NPerm4(char) and are returned by getPermCode().
+         * setPermCode() or fromPermCode(), and are returned by getPermCode().
          *
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
@@ -709,6 +720,10 @@ inline void NPerm4::setPerm(int a, int b, int c, int d) {
 
 inline void NPerm4::setPermCode(unsigned char newCode) {
     code = newCode;
+}
+
+inline NPerm4 NPerm4::fromPermCode(unsigned char newCode) {
+    return NPerm4(newCode);
 }
 
 inline NPerm4& NPerm4::operator = (const NPerm4& cloneMe) {

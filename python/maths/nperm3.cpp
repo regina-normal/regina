@@ -46,11 +46,11 @@ namespace {
 
 void addNPerm3() {
     scope s = class_<NPerm3>("NPerm3")
-        .def(init<int>())
         .def(init<int, int, int>())
         .def(init<const NPerm3&>())
         .def("getPermCode", &NPerm3::getPermCode)
         .def("setPermCode", &NPerm3::setPermCode)
+        .def("fromPermCode", &NPerm3::fromPermCode)
         .def("isPermCode", &NPerm3::isPermCode)
         .def(self * self)
         .def("inverse", &NPerm3::inverse)
@@ -65,6 +65,7 @@ void addNPerm3() {
         .def("S3Index", &NPerm3::S3Index)
         .def("orderedS3Index", &NPerm3::orderedS3Index)
         .def("__str__", &NPerm3::toString)
+        .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
     ;
 
