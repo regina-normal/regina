@@ -581,13 +581,9 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     NTetrahedron* top = oldTet->adjacentTetrahedron(oldVertices[edgeEnd]);
     int otherEdgeEnd = 1 - edgeEnd;
 
-    if (check) {
+    if (check)
         if (! top)
             return false;
-        if (oldTet->getVertex(oldVertices[edgeEnd])->isBoundary() &&
-                oldTet->getVertex(oldVertices[otherEdgeEnd])->isBoundary())
-            return false;
-    }
 
     NFace* centreFace = oldTet->getFace(oldVertices[edgeEnd]);
     NFace* bottomFace = oldTet->getFace(oldVertices[otherEdgeEnd]);
@@ -772,11 +768,7 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
         NEdge* f1 = t1->getEdge(NEdge::edgeNumber[p1[0]][p1[3]]);
         NEdge* f2 = t1->getEdge(NEdge::edgeNumber[p1[1]][p1[3]]);
 
-        if (e1 == f1 || e2 == f2)
-            return false;
         if (e1 == e2 && f1 == f2)
-            return false;
-        if (e1 == f2 && f1 == e2)
             return false;
     }
 

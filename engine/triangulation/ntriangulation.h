@@ -1636,8 +1636,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * This can be done assuming the following conditions:
          *
-         * - The edge must be valid and non-boundary, and the two vertices
-         *   that are its endpoints are not both boundary.
+         * - The edge must be valid and non-boundary.
          *
          * - The two remaining faces of the tetrahedron are not joined, and
          *   the tetrahedron face opposite the given endpoint of the edge is
@@ -1651,12 +1650,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *   tetrahedron not touching the original tetrahedron.  These edges
          *   must be distinct and may not both be in the boundary.
          *
-         * - Finally (which should follow from the previous conditions),
-         *   consider again the two edges of the second tetrahedron described
-         *   above.  The two faces joining these two edges to the vertex of
-         *   \c e that is common to both tetrahedra should be distinct.
-         *
-         * Phew.  Code documentation could really do with diagrams!
+         * There are additional "distinct and not both boundary" conditions
+         * on faces of the second tetrahedron, but those follow automatically
+         * from the final condition above.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
@@ -1750,11 +1746,12 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * - if edges \a e1 and \a e2 of one boundary face are to be
          *   folded onto edges \a f1 and \a f2 of the other boundary
-         *   face respectively, then
-         *   (a) \a e1 and \a f1 are distinct,
-         *   (b) \a e2 and \a f2 are distinct,
-         *   (c) we do not have both \a e1 = \a f2 and \a f1 = \a e2, and
-         *   (d) we do not have both \a e1 = \a e2 and \a f1 = \a f2.
+         *   face respectively, then we do not have both \a e1 = \a e2
+         *   and \a f1 = \a f2.
+         *
+         * There are in fact several other "distinctness" conditions on
+         * the edges \a e1, \a e2, \a f1 and \a f2, but they follow
+         * automatically from the "distinct vertices" condition above.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
