@@ -76,6 +76,14 @@ Version 4.6.1  [ (under development) ]
         Class NTriangulation:
             - New routines hasCompressingDisc() and hasSimpleCompressingDisc()
               to search for compressing discs.
+            - The "legality conditions" on closeBook() are now simpler, since
+              some of the conditions were automatic consequences of others.
+              Practically, nothing has changed (i.e., the new conditions will
+              be satisfied if and only if the old conditions were satisfied).
+            - The "legality conditions" on twoOneMove() were originally too
+              conservative, and are now weaker.  In particular, the endpoints
+              of the edge may now both be boundary.  Practically, this means
+              that 2-1 moves may now be legal where they were not legal before.
         Class NVertexEmbedding:
             - New routine getVertices(), which facilitates a consistent
               orientation for the three remaining vertices in each tetrahedron.
