@@ -153,6 +153,11 @@ class NPerm4 {
          * \pre the given code is a valid permutation code; see
          * isPermCode() for details.
          *
+         * \deprecated Please use the static routine fromPermCode() instead,
+         * which is easier to spot and easier to grep for.
+         * This constructor will be made private in a (not too distant)
+         * future version of Regina.
+         *
          * @param newCode the internal code from which the new
          * permutation will be created.
          */
