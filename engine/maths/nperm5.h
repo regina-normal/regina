@@ -100,17 +100,6 @@ class NPerm5 {
         NPerm5();
 
         /**
-         * Creates a permutation from the given internal code.
-         *
-         * \pre the given code is a valid permutation code; see
-         * isPermCode() for details.
-         *
-         * @param newCode the internal code from which the new
-         * permutation will be created.
-         */
-        NPerm5(unsigned newCode);
-
-        /**
          * Creates the transposition of \a a and \a b.
          * Note that \a a and \a b need not be distinct.
          *
@@ -191,9 +180,20 @@ class NPerm5 {
         void setPermCode(unsigned newCode);
 
         /**
+         * Creates a permutation from the given internal code.
+         *
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
+         *
+         * @param newCode the internal code for the new permutation.
+         * @return the permutation reprsented by the given internal code.
+         */
+        static NPerm5 fromPermCode(unsigned newCode);
+
+        /**
          * Determines whether the given integer is a valid internal
          * permutation code.  Valid permutation codes can be passed to
-         * setPermCode() or NPerm5(unsigned) and are returned by getPermCode().
+         * setPermCode() or fromPermCode(), and are returned by getPermCode().
          *
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
@@ -357,6 +357,17 @@ class NPerm5 {
 
     private:
         /**
+         * Creates a permutation from the given internal code.
+         *
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
+         *
+         * @param newCode the internal code from which the new
+         * permutation will be created.
+         */
+        NPerm5(unsigned newCode);
+
+        /**
          * Determines the image of the given integer under this
          * permutation.
          *
@@ -421,6 +432,10 @@ inline unsigned NPerm5::getPermCode() const {
 
 inline void NPerm5::setPermCode(unsigned newCode) {
     code = newCode;
+}
+
+inline NPerm5 NPerm5::fromPermCode(unsigned newCode) {
+    return NPerm5(newCode);
 }
 
 inline NPerm5& NPerm5::operator = (const NPerm5& cloneMe) {

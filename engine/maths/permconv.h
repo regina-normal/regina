@@ -78,7 +78,7 @@ NPerm4 perm5to4(const NPerm5& p);
 inline NPerm5 perm4to5(const NPerm4& p) {
     // Cast the NPerm4 code (char) to an NPerm5 code (unsigned).
     unsigned code = p.getPermCode();
-    return NPerm5(
+    return NPerm5::fromPermCode(
         (code & 0x0003) |
         ((code & 0x000c) << 1) |
         ((code & 0x0030) << 2) |
@@ -88,7 +88,7 @@ inline NPerm5 perm4to5(const NPerm4& p) {
 
 inline NPerm4 perm5to4(const NPerm5& p) {
     unsigned code = p.getPermCode();
-    return NPerm4(static_cast<unsigned char>(
+    return NPerm4::fromPermCode(static_cast<unsigned char>(
         (code & 0x03) |
         ((code >> 1) & 0x0c) |
         ((code >> 2) & 0x30) |

@@ -46,13 +46,13 @@ namespace {
 
 void addNPerm5() {
     scope s = class_<NPerm5>("NPerm5")
-        .def(init<unsigned>())
         .def(init<int, int>())
         .def(init<int, int, int, int, int>())
         .def(init<int, int, int, int, int, int, int, int, int, int>())
         .def(init<const NPerm5&>())
         .def("getPermCode", &NPerm5::getPermCode)
         .def("setPermCode", &NPerm5::setPermCode)
+        .def("fromPermCode", &NPerm5::fromPermCode)
         .def("isPermCode", &NPerm5::isPermCode)
         .def(self * self)
         .def("inverse", &NPerm5::inverse)
@@ -70,6 +70,7 @@ void addNPerm5() {
         .def("S5Index", &NPerm5::S5Index)
         .def("orderedS5Index", &NPerm5::orderedS5Index)
         .def("__str__", &NPerm5::toString)
+        .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
     ;
 
