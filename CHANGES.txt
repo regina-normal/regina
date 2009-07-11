@@ -91,12 +91,15 @@ Version 4.6.1  [ (under development) ]
         Class NVertexEmbedding:
             - New routine getVertices(), which facilitates a consistent
               orientation for the three remaining vertices in each tetrahedron.
-    UTILITIES:
-        tricensus-mpi-status:
-            - Now finishes with a running total of all triangulations found.
     USER INTERFACE:
         - There is now an option to enable or disable diagnostic
           messages from the SnapPea kernel.
+    UTILITIES:
+        tricensus-mpi-status:
+            - Now finishes with a running total of all triangulations found.
+    TEST SUITE:
+        - New tests for file I/O using both modern XML and legacy binary
+          file formats.
 
 Version 4.6  [ 16 May, 2009 ]
 
