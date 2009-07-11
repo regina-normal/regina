@@ -123,7 +123,7 @@ class NPerm3 {
         };
 
     private:
-        int code_;
+        unsigned char code_;
             /**< The internal code representing this permutation. */
 
     public:
@@ -162,7 +162,7 @@ class NPerm3 {
          *
          * @return the internal code.
          */
-        int getPermCode() const;
+        unsigned char getPermCode() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -174,7 +174,7 @@ class NPerm3 {
          * @param code the internal code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(int code);
+        void setPermCode(unsigned char code);
 
         /**
          * Creates a permutation from the given internal code.
@@ -185,7 +185,7 @@ class NPerm3 {
          * @param code the internal code for the new permutation.
          * @return the permutation represented by the given internal code.
          */
-        static NPerm3 fromPermCode(int code);
+        static NPerm3 fromPermCode(unsigned char code);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -195,7 +195,7 @@ class NPerm3 {
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */
-        static bool isPermCode(int code);
+        static bool isPermCode(unsigned char code);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -325,7 +325,7 @@ class NPerm3 {
          * Specifically, the image of \a x under the permutation <tt>S3[i]</tt>
          * is <tt>imageTable[i][x]</tt>.
          */
-        static const int imageTable[6][3];
+        static const unsigned char imageTable[6][3];
 
         /**
          * Contains the full multiplication table for all possible
@@ -334,7 +334,7 @@ class NPerm3 {
          * Specifically, the product <tt>S3[x] * S3[y]</tt> is
          * the permutation <tt>S3[product[x][y]]</tt>.
          */
-        static const int productTable[6][6];
+        static const unsigned char productTable[6][6];
 
     private:
         /**
@@ -346,7 +346,7 @@ class NPerm3 {
          * @param code the internal code from which the new
          * permutation will be created.
          */
-        NPerm3(int code);
+        NPerm3(unsigned char code);
 
     friend std::ostream& operator << (std::ostream& out, const NPerm3& p);
 };
@@ -371,7 +371,7 @@ inline std::ostream& operator << (std::ostream& out, const NPerm3& p) {
 inline NPerm3::NPerm3() : code_(0) {
 }
 
-inline NPerm3::NPerm3(int code) : code_(code) {
+inline NPerm3::NPerm3(unsigned char code) : code_(code) {
 }
 
 inline NPerm3::NPerm3(int a, int b, int) {
@@ -388,20 +388,21 @@ inline NPerm3::NPerm3(int a, int b, int) {
 inline NPerm3::NPerm3(const NPerm3& cloneMe) : code_(cloneMe.code_) {
 }
 
-inline int NPerm3::getPermCode() const {
+inline unsigned char NPerm3::getPermCode() const {
     return code_;
 }
 
-inline void NPerm3::setPermCode(int code) {
+inline void NPerm3::setPermCode(unsigned char code) {
     code_ = code;
 }
 
-inline NPerm3 NPerm3::fromPermCode(int code) {
+inline NPerm3 NPerm3::fromPermCode(unsigned char code) {
     return NPerm3(code);
 }
 
-inline bool NPerm3::isPermCode(int code) {
-    return (code >= 0 && code < 6);
+inline bool NPerm3::isPermCode(unsigned char code) {
+    // code >= 0 is a no-op because we are using an unsigned data type.
+    return (code < 6);
 }
 
 inline NPerm3& NPerm3::operator = (const NPerm3& cloneMe) {

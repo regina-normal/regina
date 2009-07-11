@@ -45,7 +45,7 @@ const NPerm3 NPerm3::orderedS3[6] = {
     NPerm3(code201), NPerm3(code210)
 };
 
-const int NPerm3::imageTable[6][3] = {
+const unsigned char NPerm3::imageTable[6][3] = {
     { 0, 1, 2 },
     { 0, 2, 1 },
     { 1, 2, 0 },
@@ -54,7 +54,7 @@ const int NPerm3::imageTable[6][3] = {
     { 2, 1, 0 }
 };
 
-const int NPerm3::productTable[6][6] = {
+const unsigned char NPerm3::productTable[6][6] = {
     { 0, 1, 2, 3, 4, 5 },
     { 1, 0, 5, 4, 3, 2 },
     { 2, 3, 4, 5, 0, 1 },
