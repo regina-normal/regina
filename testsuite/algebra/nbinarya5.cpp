@@ -51,19 +51,25 @@ class NBinaryA5Test : public CppUnit::TestFixture {
         }
 
         void associativity() {
-            for (unsigned long i=0; i<120; i++)
-                for (unsigned long j=0; j<120; j++)
+            NBinaryA5 ei, ej, ek;
+            for (unsigned long i=0; i<120; i++) {
+                ei.setPermCode(i);
+                for (unsigned long j=0; j<120; j++) {
+                    ej.setPermCode(j);
                     for (unsigned long k=0; k<120; k++) {
-                        NBinaryA5 ei(i), ej(j), ek(k);
+                        ek.setPermCode(k);
                         if ( (ei*ej)*ek != ei*(ej*ek) )
                             CPPUNIT_FAIL("NBinaryA5 does not satisfy "
                                 "associativity axiom.");
                     }
+                }
+            }
         }
 
         void identity() {
+            NBinaryA5 Id, ei;
             for (unsigned long i=0; i<120; i++) {
-                NBinaryA5 Id, ei(i);
+                ei.setPermCode(i);
                 if ( (Id*ei != ei) || (ei*Id != ei) )
                     CPPUNIT_FAIL("NBinaryA5 does not have an "
                         "identity element.");
@@ -71,21 +77,25 @@ class NBinaryA5Test : public CppUnit::TestFixture {
         }
 
         void inverses() {
+            NBinaryA5 Id, ei;
             for (unsigned long i=0; i<120; i++) {
-                NBinaryA5 Id, ei(i);
+                ei.setPermCode(i);
                 if ( (ei*ei.inverse() != Id) || (ei.inverse()*ei != Id) )
                     CPPUNIT_FAIL("NBinaryA5 does not have inverses.");
             }
         }
 
         void homomorphism() {
-            for (unsigned long i=0; i<120; i++)
+            NBinaryA5 ei, ej;
+            for (unsigned long i=0; i<120; i++) {
+                ei.setPermCode(i);
                 for (unsigned long j=0; j<120; j++) {
-                    NBinaryA5 ei(i), ej(j);
+                    ej.setPermCode(j);
                     if ( (ei*ej).getNPerm5() != ei.getNPerm5()*ej.getNPerm5() )
                         CPPUNIT_FAIL("NBinaryA5 does not map "
                             "homomorphically onto A5.");
                 }
+            }
         }
 };
 

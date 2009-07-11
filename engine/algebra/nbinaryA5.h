@@ -81,17 +81,6 @@ class NBinaryA5 {
         NBinaryA5();
 
         /**
-         * Creates a permutation from the given internal code.
-         *
-         * \pre the given code is a valid permutation code; see
-         * isPermCode() for details.
-         *
-         * @param newCode the internal code from which the new
-         * permutation will be created.
-         */
-        NBinaryA5(unsigned newCode);
-
-        /**
          * Creates a permutation mapping (0,1,2,3,4) to
          * (<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>,<i>e</i>) respectively.
          *
@@ -161,6 +150,18 @@ class NBinaryA5 {
          * new value of this permutation.
          */
         void setPermCode(unsigned newCode);
+
+        /**
+         * Creates a permutation from the given internal code.
+         *
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
+         *
+         * @param code the internal code for the new permutation.
+         * @return the permutation represented by the given internal
+         * code.
+         */
+        static NBinaryA5 fromPermCode(unsigned newCode);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -269,6 +270,17 @@ class NBinaryA5 {
 
     private:
         /**
+         * Creates a permutation from the given internal code.
+         *
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
+         *
+         * @param newCode the internal code from which the new
+         * permutation will be created.
+         */
+        NBinaryA5(unsigned newCode);
+
+        /**
          * Determines the image of the given integer under this
          * permutation.
          *
@@ -322,6 +334,10 @@ inline unsigned NBinaryA5::getPermCode() const {
 
 inline void NBinaryA5::setPermCode(unsigned newCode) {
     code = newCode;
+}
+
+inline NBinaryA5 NBinaryA5::fromPermCode(unsigned newCode) {
+    return NBinaryA5(newCode);
 }
 
 inline NBinaryA5& NBinaryA5::operator = (const NBinaryA5& cloneMe) {

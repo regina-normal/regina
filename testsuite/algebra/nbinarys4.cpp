@@ -51,19 +51,25 @@ class NBinaryS4Test : public CppUnit::TestFixture {
         }
 
         void associativity() {
-            for (unsigned long i=0; i<48; i++)
-                for (unsigned long j=0; j<48; j++)
+            NBinaryS4 ei, ej, ek;
+            for (unsigned long i=0; i<48; i++) {
+                ei.setPermCode(i);
+                for (unsigned long j=0; j<48; j++) {
+                    ej.setPermCode(j);
                     for (unsigned long k=0; k<48; k++) {
-                        NBinaryS4 ei(i), ej(j), ek(k);
+                        ek.setPermCode(k);
                         if ( (ei*ej)*ek != ei*(ej*ek) )
                             CPPUNIT_FAIL("NBinaryS4 does not satisfy "
                                 "associativity axiom.");
                     }
+                }
+            }
         }
 
         void identity() {
+            NBinaryS4 Id, ei;
             for (unsigned long i=0; i<48; i++) {
-                NBinaryS4 Id, ei(i);
+                ei.setPermCode(i);
                 if ( (Id*ei != ei) || (ei*Id != ei) )
                     CPPUNIT_FAIL("NBinaryS4 does not have an "
                         "identity element.");
@@ -71,21 +77,25 @@ class NBinaryS4Test : public CppUnit::TestFixture {
         }
 
         void inverses() {
+            NBinaryS4 Id, ei;
             for (unsigned long i=0; i<48; i++) {
-                NBinaryS4 Id, ei(i);
+                ei.setPermCode(i);
                 if ( (ei*ei.inverse() != Id) || (ei.inverse()*ei != Id) )
                     CPPUNIT_FAIL("NBinaryS4 does not have inverses.");
             }
         }
 
         void homomorphism() {
-            for (unsigned long i=0; i<48; i++)
+            NBinaryS4 ei, ej;
+            for (unsigned long i=0; i<48; i++) {
+                ei.setPermCode(i);
                 for (unsigned long j=0; j<48; j++) {
-                    NBinaryS4 ei( i ), ej( j );
+                    ej.setPermCode(j);
                     if ( (ei*ej).getNPerm4() != ei.getNPerm4()*ej.getNPerm4() )
                         CPPUNIT_FAIL("NBinaryS4 does not map "
                             "homomorphically onto S4.");
                 }
+            }
         }
 };
 

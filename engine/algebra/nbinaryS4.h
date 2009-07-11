@@ -78,17 +78,6 @@ class NBinaryS4 {
         NBinaryS4();
 
         /**
-         * Creates a permutation from the given internal code.
-         *
-         * \pre the given code is a valid permutation code; see
-         * isPermCode() for details.
-         *
-         * @param newCode the internal code from which the new
-         * permutation will be created.
-         */
-        NBinaryS4(unsigned newCode);
-
-        /**
          * Creates a permutation mapping (0,1,2,3,4) to
          * (<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>,<i>e</i>) respectively.
          *
@@ -157,6 +146,18 @@ class NBinaryS4 {
          * new value of this permutation.
          */
         void setPermCode(unsigned newCode);
+
+        /**
+         * Creates a permutation from the given internal code.
+         *
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
+         *
+         * @param code the internal code for the new permutation.
+         * @return the permutation represented by the given internal
+         * code.
+         */
+        static NBinaryS4 fromPermCode(unsigned newCode);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -265,6 +266,17 @@ class NBinaryS4 {
 
     private:
         /**
+         * Creates a permutation from the given internal code.
+         *
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
+         *
+         * @param newCode the internal code from which the new
+         * permutation will be created.
+         */
+        NBinaryS4(unsigned newCode);
+
+        /**
          * Determines the image of the given integer under this
          * permutation.
          *
@@ -318,6 +330,10 @@ inline unsigned NBinaryS4::getPermCode() const {
 
 inline void NBinaryS4::setPermCode(unsigned newCode) {
     code = newCode;
+}
+
+inline NBinaryS4 NBinaryS4::fromPermCode(unsigned newCode) {
+    return NBinaryS4(newCode);
 }
 
 inline NBinaryS4& NBinaryS4::operator = (const NBinaryS4& cloneMe) {
