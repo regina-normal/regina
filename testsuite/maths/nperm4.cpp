@@ -136,7 +136,7 @@ class NPerm4Test : public CppUnit::TestFixture {
             std::ostringstream name;
             name << a << b << c << d;
 
-            NPerm4 p1(p.getPermCode());
+            NPerm4 p1 = NPerm4::fromPermCode(p.getPermCode());
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The internal code constructor fails for "
