@@ -129,9 +129,11 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
 }
 
 void NScript::readIndividualProperty(NFile& infile, unsigned propType) {
-    if (propType == PROP_VARIABLE)
-        variables.insert(std::make_pair(infile.readString(),
-            infile.readString()));
+    if (propType == PROP_VARIABLE) {
+        std::string name = infile.readString();
+        std::string value = infile.readString();
+        variables.insert(std::make_pair(name, value));
+    }
 }
 
 } // namespace regina
