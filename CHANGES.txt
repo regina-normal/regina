@@ -47,6 +47,10 @@ Version 4.6.1  [ (under development) ]
             - This is the new name for the old class NPerm (see above).
             - New routines S4Index() and orderedS4Index() for reverse
               lookups into the arrays NPerm::S4 and NPerm::orderedS4.
+        Class NScript:
+            - Fixed a bug that lost script variables when reading ancient
+              binary files (created before Regina 3.0, around mid-2002).
+              This bug only showed up on some compilers.
         Class NSnapPeaTriangulation:
             - Kernel messages are now disabled by default.
         Class NTetrahedron:
