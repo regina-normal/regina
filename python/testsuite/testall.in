@@ -66,7 +66,7 @@ export REGINA_HOME=
 
 broken=
 found=
-for i in `find "$testdir" -name "*.test"`; do
+for i in `find "$testdir" -name "*.test" | sort`; do
 	found=1
 	testname=`basename "$i"`
 	echo -n "Running $testname ... "
