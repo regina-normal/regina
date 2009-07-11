@@ -254,9 +254,9 @@ NTriangulation* NTriangulation::readPacket(NFile& in, NPacket* /* parent */) {
     while (tetPos >= 0) {
         face = in.readInt();
         altPos = in.readLong();
-        adjPerm = in.readChar();
+        adjPerm.setPermCode(in.readChar());
         triang->tetrahedra[tetPos]->joinTo(face,
-            triang->tetrahedra[altPos], NPerm4(adjPerm));
+            triang->tetrahedra[altPos], adjPerm);
         tetPos = in.readLong();
     }
 
