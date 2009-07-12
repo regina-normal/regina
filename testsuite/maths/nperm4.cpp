@@ -40,6 +40,8 @@ class NPerm4Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(exhaustive);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(deprecatedArrays);
 
     CPPUNIT_TEST_SUITE_END();
@@ -390,6 +392,63 @@ class NPerm4Test : public CppUnit::TestFixture {
 
             if (tested != 24)
                 CPPUNIT_FAIL("All 24 permutations in S(4) were not tested.");
+        }
+
+        void products() {
+            unsigned i, j, x;
+            NPerm4 p, q, r;
+
+            for (i = 0; i < 24; ++i) {
+                p = NPerm4::S4[i];
+                for (j = 0; j < 24; ++j) {
+                    q = NPerm4::S4[j];
+
+                    r = p * q;
+                    for (x = 0; x < 4; ++x) {
+                        if (r[x] != p[q[x]]) {
+                            std::ostringstream msg;
+                            msg << "Multiplication fails for the product "
+                                << p.toString() << " * " << q.toString() << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                }
+            }
+        }
+
+        void compareWith() {
+            unsigned i, j;
+            NPerm4 p, q;
+
+            for (i = 0; i < 24; ++i) {
+                p = NPerm4::orderedS4[i];
+                if (p.compareWith(p) != 0) {
+                    std::ostringstream msg;
+                    msg << "Routine compareWith() does not conclude that "
+                        << p.toString() << " == " << p.toString() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            for (i = 0; i < 24; ++i) {
+                p = NPerm4::orderedS4[i];
+                for (j = i + 1; j < 24; ++j) {
+                    q = NPerm4::orderedS4[j];
+
+                    if (p.compareWith(q) != -1) {
+                        std::ostringstream msg;
+                        msg << "Routine compareWith() does not conclude that "
+                            << p.toString() << " < " << q.toString() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (q.compareWith(p) != 1) {
+                        std::ostringstream msg;
+                        msg << "Routine compareWith() does not conclude that "
+                            << q.toString() << " > " << p.toString() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
         }
 
         void deprecatedArrays() {

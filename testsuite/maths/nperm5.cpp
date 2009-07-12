@@ -40,6 +40,8 @@ class NPerm5Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(exhaustive);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(compareWith);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -370,6 +372,63 @@ class NPerm5Test : public CppUnit::TestFixture {
 
             if (tested != 120)
                 CPPUNIT_FAIL("All 120 permutations in S(5) were not tested.");
+        }
+
+        void products() {
+            unsigned i, j, x;
+            NPerm5 p, q, r;
+
+            for (i = 0; i < 120; ++i) {
+                p = NPerm5::S5[i];
+                for (j = 0; j < 120; ++j) {
+                    q = NPerm5::S5[j];
+
+                    r = p * q;
+                    for (x = 0; x < 5; ++x) {
+                        if (r[x] != p[q[x]]) {
+                            std::ostringstream msg;
+                            msg << "Multiplication fails for the product "
+                                << p.toString() << " * " << q.toString() << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                }
+            }
+        }
+
+        void compareWith() {
+            unsigned i, j;
+            NPerm5 p, q;
+
+            for (i = 0; i < 120; ++i) {
+                p = NPerm5::orderedS5[i];
+                if (p.compareWith(p) != 0) {
+                    std::ostringstream msg;
+                    msg << "Routine compareWith() does not conclude that "
+                        << p.toString() << " == " << p.toString() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            for (i = 0; i < 120; ++i) {
+                p = NPerm5::orderedS5[i];
+                for (j = i + 1; j < 120; ++j) {
+                    q = NPerm5::orderedS5[j];
+
+                    if (p.compareWith(q) != -1) {
+                        std::ostringstream msg;
+                        msg << "Routine compareWith() does not conclude that "
+                            << p.toString() << " < " << q.toString() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (q.compareWith(p) != 1) {
+                        std::ostringstream msg;
+                        msg << "Routine compareWith() does not conclude that "
+                            << q.toString() << " > " << p.toString() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
         }
 };
 
