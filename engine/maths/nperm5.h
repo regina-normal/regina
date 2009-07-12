@@ -410,16 +410,16 @@ inline NPerm5::NPerm5(int a, int b) {
 }
 
 inline NPerm5::NPerm5(int a, int b, int c, int d, int e) {
-    code = (e << 12) + (d << 9) + (c << 6) + (b << 3) + a;
+    code = (e << 12) | (d << 9) | (c << 6) | (b << 3) | a;
 }
 
 inline NPerm5::NPerm5(int a0, int a1, int b0, int b1,
         int c0, int c1, int d0, int d1, int e0, int e1) {
     code =
-        (a1 << (3*a0)) +
-        (b1 << (3*b0)) +
-        (c1 << (3*c0)) +
-        (d1 << (3*d0)) +
+        (a1 << (3*a0)) |
+        (b1 << (3*b0)) |
+        (c1 << (3*c0)) |
+        (d1 << (3*d0)) |
         (e1 << (3*e0));
 }
 
@@ -451,9 +451,9 @@ inline NPerm5 NPerm5::operator *(const NPerm5& q) const {
 inline NPerm5 NPerm5::inverse() const {
     // Specify the inverse by its internal code.
     return NPerm5(static_cast<unsigned>(
-        (1 << (3*imageOf(1))) +
-        (2 << (3*imageOf(2))) +
-        (3 << (3*imageOf(3))) +
+        (1 << (3*imageOf(1))) |
+        (2 << (3*imageOf(2))) |
+        (3 << (3*imageOf(3))) |
         (4 << (3*imageOf(4)))));
 }
 
