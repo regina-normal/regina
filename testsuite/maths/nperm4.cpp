@@ -98,23 +98,27 @@ class NPerm4Test : public CppUnit::TestFixture {
 
         bool looksLikeIdentity(const NPerm4& p) {
             return (p.isIdentity() && p == NPerm4() &&
-                p.getPermCode() == 228 && p.toString() == "0123");
+                p.getPermCode() == 228 && p.getPermCode2() == 0 &&
+                p.toString() == "0123");
         }
 
         bool looksEqual(const NPerm4& p, const NPerm4& q) {
             return (p == q && (! (p != q)) && p.toString() == q.toString() &&
-                p.getPermCode() == q.getPermCode());
+                p.getPermCode() == q.getPermCode() &&
+                p.getPermCode2() == q.getPermCode2());
         }
 
         bool looksEqual(const NPerm4& p, const NPerm4& q,
                 const std::string& qStr) {
             return (p == q && (! (p != q)) && p.toString() == q.toString() &&
-                p.getPermCode() == q.getPermCode() && p.toString() == qStr);
+                p.getPermCode() == q.getPermCode() &&
+                p.getPermCode2() == q.getPermCode2() && p.toString() == qStr);
         }
 
         bool looksDistinct(const NPerm4& p, const NPerm4& q) {
             return (p != q && (! (p == q)) && p.toString() != q.toString() &&
-                p.getPermCode() != q.getPermCode());
+                p.getPermCode() != q.getPermCode() &&
+                p.getPermCode2() != q.getPermCode2());
         }
 
         int expectedSign(const NPerm4& p) {
@@ -136,10 +140,18 @@ class NPerm4Test : public CppUnit::TestFixture {
             std::ostringstream name;
             name << a << b << c << d;
 
-            NPerm4 p1 = NPerm4::fromPermCode(p.getPermCode());
+            NPerm4 p0 = NPerm4::fromPermCode(p.getPermCode());
+            if (! looksEqual(p0, p, name.str())) {
+                std::ostringstream msg;
+                msg << "The first-generation code constructor fails for "
+                    "the permutation " << name.str() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NPerm4 p1 = NPerm4::fromPermCode2(p.getPermCode2());
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
-                msg << "The internal code constructor fails for "
+                msg << "The second-generation code constructor fails for "
                     "the permutation " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -187,16 +199,36 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
+            NPerm4 p6(3, 2, 0, 1);
+            p6.setPermCode2(p3.getPermCode2());
+            if (! looksEqual(p6, p, name.str())) {
+                std::ostringstream msg;
+                msg << "The setPermCode2() / getPermCode2() routines fail for "
+                    "the permutation " << name.str() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             if (! NPerm4::isPermCode(p.getPermCode())) {
                 std::ostringstream msg;
                 msg << "Routine isPermCode() suggests that the permutation "
-                    << name.str() << " has an invalid permutation code.";
+                    << name.str() << " has an invalid first-generation code.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! NPerm4::isPermCode2(p.getPermCode2())) {
+                std::ostringstream msg;
+                msg << "Routine isPermCode2() suggests that the permutation "
+                    << name.str() << " has an invalid second-generation code.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (NPerm4::isPermCode(0))
                 CPPUNIT_FAIL("Routine isPermCode() suggests that 0 is a "
-                    "valid permutation code (which it is not).");
+                    "valid first-generation code (which it is not).");
+
+            if (! NPerm4::isPermCode2(0))
+                CPPUNIT_FAIL("Routine isPermCode2() suggests that 0 is not a "
+                    "valid second-generation code (which it is).");
 
             if (! looksEqual(p * NPerm4(), p)) {
                 std::ostringstream msg;

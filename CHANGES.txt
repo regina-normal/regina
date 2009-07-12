@@ -40,13 +40,30 @@ Version 4.6.1  [ (under development) ]
             - Renamed to NPerm4.  The C++ header has also moved from
               triangulation/nperm.h to maths/nperm4.h .  Both the old
               class name and the old header are now deprecated.
+            - There are many other changes; see the NPerm4 notes below.
         Class NPerm3:
             - New class describing permutations of three elements.  This
               is extremely fast, using lookup tables for all calculations.
         Class NPerm4:
             - This is the new name for the old class NPerm (see above).
             - New routines S4Index() and orderedS4Index() for reverse
-              lookups into the arrays NPerm::S4 and NPerm::orderedS4.
+              lookups into the arrays NPerm4::S4 and NPerm4::orderedS4.
+            - The constructor that takes an internal permutation code is
+              now private, and is replaced by a new static routine
+              NPerm4::fromPermCode().  This new routine is easier to
+              spot and grep for.
+            - The internal permutation codes have changed.  As a result,
+              NPerm4 operations are significantly faster.  The old codes
+              are now referred to as "first-generation", and the new codes
+              are referred to as "second-generation".
+            - Routines getPermCode(), setPermCode(), isPermCode() and
+              fromPermCode() continue to refer to first-generation codes.
+              These old routines are not recommended, since they now incur
+              additional overhead.  To replace them, the new (and faster)
+              routines getPermCode2(), setPermCode2(), isPermCode2() and
+              fromPermCode2() work with second-generation codes instead.
+            - The XML data file format continues to use first-generation
+              permutation codes (for backward compatibility).
         Class NScript:
             - Fixed a bug that lost script variables when reading ancient
               binary files (created before Regina 3.0, around mid-2002).

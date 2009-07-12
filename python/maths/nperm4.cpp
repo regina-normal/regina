@@ -46,6 +46,7 @@ namespace {
 
     void (NPerm4::*setPerm_pair)(int, int) = &NPerm4::setPerm;
     void (NPerm4::*setPerm_quartet)(int, int, int, int) = &NPerm4::setPerm;
+    int (NPerm4::*S4Index_void)() const = &NPerm4::S4Index;
     std::string (*faceDescription_int)(int) = &regina::faceDescription;
     std::string (*faceDescription_perm)(const NPerm4&) =
         &regina::faceDescription;
@@ -80,15 +81,18 @@ void addNPerm4() {
     // Classes:
     {
         scope s = class_<NPerm4>("NPerm4")
-            .def(init<unsigned char>())
             .def(init<int, int>())
             .def(init<int, int, int, int>())
             .def(init<int, int, int, int, int, int, int, int>())
             .def(init<const NPerm4&>())
             .def("getPermCode", &NPerm4::getPermCode)
+            .def("getPermCode2", &NPerm4::getPermCode2)
             .def("setPermCode", &NPerm4::setPermCode)
+            .def("setPermCode2", &NPerm4::setPermCode2)
             .def("fromPermCode", &NPerm4::fromPermCode)
+            .def("fromPermCode2", &NPerm4::fromPermCode2)
             .def("isPermCode", &NPerm4::isPermCode)
+            .def("isPermCode2", &NPerm4::isPermCode2)
             .def("setPerm", setPerm_pair)
             .def("setPerm", setPerm_quartet)
             .def(self * self)
@@ -103,11 +107,13 @@ void addNPerm4() {
             .def("toString", &NPerm4::toString)
             .def("trunc2", &NPerm4::toString)
             .def("trunc3", &NPerm4::toString)
-            .def("S4Index", &NPerm4::S4Index)
+            .def("S4Index", S4Index_void)
             .def("orderedS4Index", &NPerm4::orderedS4Index)
             .def("__str__", &NPerm4::toString)
             .staticmethod("fromPermCode")
+            .staticmethod("fromPermCode2")
             .staticmethod("isPermCode")
+            .staticmethod("isPermCode2")
         ;
 
         s.attr("S4") = &NPerm4_S4_arr;
