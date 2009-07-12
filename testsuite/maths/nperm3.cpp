@@ -280,8 +280,29 @@ class NPerm3Test : public CppUnit::TestFixture {
         }
 
         void products() {
-            int a, b, c, d, e, f;
+            // A direct test.
+            unsigned i, j, x;
+            NPerm3 p, q, r;
 
+            for (i = 0; i < 6; ++i) {
+                p = NPerm3::S3[i];
+                for (j = 0; j < 6; ++j) {
+                    q = NPerm3::S3[j];
+
+                    r = p * q;
+                    for (x = 0; x < 3; ++x) {
+                        if (r[x] != p[q[x]]) {
+                            std::ostringstream msg;
+                            msg << "Multiplication fails for the product "
+                                << p.toString() << " * " << q.toString() << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                }
+            }
+
+            // An indirect test (using NPerm4 to verify).
+            int a, b, c, d, e, f;
             for (a = 0; a < 3; ++a)
                 for (b = 0; b < 3; ++b) {
                     if (b == a)
