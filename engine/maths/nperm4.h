@@ -56,9 +56,27 @@ namespace regina {
  * Thus the internal code may be a useful means for passing
  * permutation objects to and from the engine.
  *
- * The internal code is a character.  The lowest two bits represent the
- * image of 0, the next lowest two bits represent the image of 1 and so
- * on.
+ * The internal permutation codes have changed as of Regina 4.6.1:
+ *
+ * - \e First-generation codes were used internally in Regina 4.6 and earlier.
+ *   These codes were characters whose lowest two bits represented the
+ *   image of 0, whose next lowest two bits represented the image of 1,
+ *   and so on.  The routines getPermCode(), setPermCode(), fromPermCode()
+ *   and isPermCode() continue to work with first-generation codes for
+ *   backward compatibility.  Likewise, the XML data file format
+ *   continues to use first-generation codes to describe tetrahedron gluings.
+ *
+ * - \e Second-generation codes are used internally in Regina 4.6.1 and above.
+ *   These codes are integers between 0 and 23 inclusive, representing the
+ *   index of the permutation in the array NPerm4::S4.  The routines
+ *   getPermCode2(), setPermCode2(), fromPermCode2() and isPermCode2()
+ *   work with second-generation codes.
+ *
+ * It is highly recommended that, if you need to work with permutation
+ * codes at all, you use second-generation codes where possible.  This
+ * is because the first-generation routines incur additional overhead
+ * in converting back and forth between the second-generation codes
+ * (which are used internally by NPerm4).
  *
  * \testfull
  */
@@ -138,7 +156,7 @@ class NPerm4 {
         static const unsigned invS2[2];
 
     private:
-        unsigned char code;
+        unsigned char code_;
             /**< The internal code representing this permutation. */
 
     public:
@@ -146,22 +164,6 @@ class NPerm4 {
          * Creates the identity permutation.
          */
         NPerm4();
-
-        /**
-         * Creates a permutation from the given internal code.
-         *
-         * \pre the given code is a valid permutation code; see
-         * isPermCode() for details.
-         *
-         * \deprecated Please use the static routine fromPermCode() instead,
-         * which is easier to spot and easier to grep for.
-         * This constructor will be made private in a (not too distant)
-         * future version of Regina.
-         *
-         * @param newCode the internal code from which the new
-         * permutation will be created.
-         */
-        NPerm4(unsigned char newCode);
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -216,49 +218,125 @@ class NPerm4 {
         NPerm4(const NPerm4& cloneMe);
 
         /**
-         * Returns the internal code representing this permutation.
-         * Note that the internal code is sufficient to reproduce the
-         * entire permutation.
+         * Returns the first-generation code representing this permutation.
+         * This code is sufficient to reproduce the entire permutation.
          *
-         * The code returned will be a valid permutation code as
-         * determined by isPermCode().
+         * The code returned will be a valid first-generation permutation
+         * code as determined by isPermCode().
          *
-         * @return the internal code.
+         * \warning This routine will incur additional overhead, since
+         * NPerm4 now uses second-generation codes internally.
+         * See the class notes and the routine getPermCode2() for details.
+         *
+         * @return the first-generation permutation code.
          */
         unsigned char getPermCode() const;
 
         /**
+         * Returns the second-generation code representing this permutation.
+         * This code is sufficient to reproduce the entire permutation.
+         *
+         * The code returned will be a valid second-generation permutation
+         * code as determined by isPermCode2().
+         *
+         * Second-generation codes are fast to work with, since they are
+         * used internally by the NPerm4 class.
+         *
+         * @return the second-generation permutation code.
+         */
+        unsigned char getPermCode2() const;
+
+        /**
          * Sets this permutation to that represented by the given
-         * internal code.
+         * first-generation permutation code.
          *
-         * \pre the given code is a valid permutation code; see
-         * isPermCode() for details.
+         * \pre the given code is a valid first-generation permutation code;
+         * see isPermCode() for details.
          *
-         * @param newCode the internal code that will determine the
+         * \warning This routine will incur additional overhead, since
+         * NPerm4 now uses second-generation codes internally.
+         * See the class notes and the routine setPermCode2() for details.
+         *
+         * @param code the first-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(unsigned char newCode);
+        void setPermCode(unsigned char code);
 
         /**
-         * Creates a permutation from the given internal code.
+         * Sets this permutation to that represented by the given
+         * second-generation permutation code.
          *
-         * \pre the given code is a valid permutation code; see
-         * isPermCode() for details.
+         * Second-generation codes are fast to work with, since they are
+         * used internally by the NPerm4 class.
          *
-         * @param code the internal code for the new permutation.
-         * @return the permutation represented by the given internal code.
+         * \pre the given code is a valid second-generation permutation code;
+         * see isPermCode2() for details.
+         *
+         * @param code the second-generation code that will determine the
+         * new value of this permutation.
          */
-        static NPerm4 fromPermCode(unsigned char newCode);
+        void setPermCode2(unsigned char code);
 
         /**
-         * Determines whether the given character is a valid internal
-         * permutation code.  Valid permutation codes can be passed to
+         * Creates a permutation from the given first-generation
+         * permutation code.
+         *
+         * \pre the given code is a valid first-generation permutation code;
+         * see isPermCode() for details.
+         *
+         * \warning This routine will incur additional overhead, since
+         * NPerm4 now uses second-generation codes internally.
+         * See the class notes and the routine fromPermCode2() for details.
+         *
+         * @param code the first-generation code for the new permutation.
+         * @return the permutation represented by the given code.
+         */
+        static NPerm4 fromPermCode(unsigned char code);
+
+        /**
+         * Creates a permutation from the given second-generation
+         * permutation code.
+         *
+         * Second-generation codes are fast to work with, since they are
+         * used internally by the NPerm4 class.
+         *
+         * \pre the given code is a valid second-generation permutation code;
+         * see isPermCode2() for details.
+         *
+         * @param code the second-generation code for the new permutation.
+         * @return the permutation represented by the given code.
+         */
+        static NPerm4 fromPermCode2(unsigned char code);
+
+        /**
+         * Determines whether the given character is a valid first-generation
+         * permutation code.  Valid first-generation codes can be passed to
          * setPermCode() or fromPermCode(), and are returned by getPermCode().
          *
+         * \warning This routine will incur additional overhead, since
+         * NPerm4 now uses second-generation codes internally.
+         * See the class notes and the routine isPermCode2() for details.
+         *
+         * @param code the permutation code to test.
          * @return \c true if and only if the given code is a valid
-         * internal permutation code.
+         * first-generation permutation code.
          */
-        static bool isPermCode(unsigned char newCode);
+        static bool isPermCode(unsigned char code);
+
+        /**
+         * Determines whether the given character is a valid second-generation
+         * permutation code.  Valid second-generation codes can be passed
+         * to setPermCode2() or fromPermCode2(), and are returned by
+         * getPermCode2().
+         *
+         * Second-generation codes are fast to work with, since they are
+         * used internally by the NPerm4 class.
+         *
+         * @param code the permutation code to test.
+         * @return \c true if and only if the given code is a valid
+         * second-generation permutation code.
+         */
+        static bool isPermCode2(unsigned char code);
 
         /**
          * Sets this permutation to the transposition of
@@ -439,14 +517,58 @@ class NPerm4 {
 
     private:
         /**
-         * Determines the image of the given integer under this
+         * Contains the images of every element under every possible
          * permutation.
          *
-         * @param source the integer whose image we wish to find.  This
-         * should be between 0 and 3 inclusive.
-         * @return the image of \a source.
+         * Specifically, the image of \a x under the permutation <tt>S4[i]</tt>
+         * is <tt>imageTable[i][x]</tt>.
          */
-        int imageOf(int source) const;
+        static const unsigned char imageTable[24][4];
+
+        /**
+         * Contains the full multiplication table for all possible
+         * permutations.
+         *
+         * Specifically, the product <tt>S4[x] * S4[y]</tt> is the
+         * permutation <tt>S4[product[x][y]]</tt>.
+         */
+        static const unsigned char productTable[24][24];
+
+        /**
+         * Contains a full table of two-element swaps.
+         *
+         * Specifically, the permutation that swaps \a x and \a y is
+         * <tt>S4[swapTable[x][y]]</tt>.  Here \a x and \a y may be equal.
+         */
+        static const unsigned char swapTable[4][4];
+
+    private:
+        /**
+         * Creates a permutation from the given second-generation
+         * permutation code.
+         *
+         * \pre the given code is a valid second-generation permutation code;
+         * see isPermCode2() for details.
+         *
+         * @param code the second-generation code from which the new
+         * permutation will be created.
+         */
+        NPerm4(unsigned char code);
+
+        /**
+         * Returns the index into the NPerm4::S4 array of the permutation that
+         * maps (0,1,2,3) to (<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>) respectively.
+         *
+         * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>} = {0,1,2,3}.
+         *
+         * @param a the desired image of 0.
+         * @param b the desired image of 1.
+         * @param c the desired image of 2.
+         * @param d the desired image of 3.
+         * @return the index \a i for which the given permutation is equal to
+         * NPerm4::S4[i].  This will be between 0 and 23 inclusive.
+         */
+        static int S4Index(int a, int b, int c, int d);
 
     friend std::ostream& operator << (std::ostream& out, const NPerm4& p);
 };
@@ -685,95 +807,127 @@ std::string edgeDescription(const NPerm4& edgePerm);
 
 // Inline functions for NPerm4
 
-inline NPerm4::NPerm4() : code(228) {
+inline NPerm4::NPerm4() : code_(0) {
 }
 
-inline NPerm4::NPerm4(unsigned char newCode) : code(newCode) {
+inline NPerm4::NPerm4(unsigned char code) : code_(code) {
 }
 
-inline NPerm4::NPerm4(int a, int b) {
-    code = 228;
-    code += static_cast<short>((a << (2*b)) - (b << (2*b)));
-    code += static_cast<short>((b << (2*a)) - (a << (2*a)));
+inline NPerm4::NPerm4(int a, int b) : code_(swapTable[a][b]) {
 }
 
-inline NPerm4::NPerm4(int a, int b, int c, int d) {
-    code = static_cast<short>((d << 6) + (c << 4) + (b << 2) + a);
+inline NPerm4::NPerm4(int a, int b, int c, int d) :
+        code_(static_cast<unsigned char>(S4Index(a, b, c, d))) {
 }
 
-inline NPerm4::NPerm4(int a0, int a1, int b0, int b1,
-        int c0, int c1, int d0, int d1) {
-    code = static_cast<unsigned char>(
-        (a1 << (2*a0)) +
-        (b1 << (2*b0)) +
-        (c1 << (2*c0)) +
-        (d1 << (2*d0)));
-}
-
-inline NPerm4::NPerm4(const NPerm4& cloneMe) : code(cloneMe.code) {
+inline NPerm4::NPerm4(const NPerm4& cloneMe) : code_(cloneMe.code_) {
 }
 
 inline void NPerm4::setPerm(int a, int b) {
-    code = 228;
-    code += static_cast<short>((a << (2*b)) - (b << (2*b)));
-    code += static_cast<short>((b << (2*a)) - (a << (2*a)));
+    code_ = swapTable[a][b];
 }
 
 inline void NPerm4::setPerm(int a, int b, int c, int d) {
-    code = static_cast<unsigned char>((d << 6) + (c << 4) + (b << 2) + a);
+    code_ = static_cast<unsigned char>(S4Index(a, b, c, d));
 }
 
-inline void NPerm4::setPermCode(unsigned char newCode) {
-    code = newCode;
+inline unsigned char NPerm4::getPermCode() const {
+    return (static_cast<unsigned char>(imageTable[code_][0]) |
+            (static_cast<unsigned char>(imageTable[code_][1]) << 2) |
+            (static_cast<unsigned char>(imageTable[code_][2]) << 4) |
+            (static_cast<unsigned char>(imageTable[code_][3]) << 6));
 }
 
-inline NPerm4 NPerm4::fromPermCode(unsigned char newCode) {
-    return NPerm4(newCode);
+inline unsigned char NPerm4::getPermCode2() const {
+    return code_;
+}
+
+inline void NPerm4::setPermCode(unsigned char code) {
+    code_ = static_cast<unsigned char>(S4Index(
+        code & 0x03,
+        (code >> 2) & 0x03,
+        (code >> 4) & 0x03,
+        (code >> 6) & 0x03));
+}
+
+inline void NPerm4::setPermCode2(unsigned char code) {
+    code_ = code;
+}
+
+inline NPerm4 NPerm4::fromPermCode(unsigned char code) {
+    return NPerm4(static_cast<unsigned char>(S4Index(
+        code & 0x03,
+        (code >> 2) & 0x03,
+        (code >> 4) & 0x03,
+        (code >> 6) & 0x03)));
+}
+
+inline NPerm4 NPerm4::fromPermCode2(unsigned char code) {
+    return NPerm4(code);
+}
+
+inline bool NPerm4::isPermCode2(unsigned char code) {
+    // code >= 0 is automatic because we are using an unsigned data type.
+    return (code < 24);
 }
 
 inline NPerm4& NPerm4::operator = (const NPerm4& cloneMe) {
-    code = cloneMe.code;
+    code_ = cloneMe.code_;
     return *this;
 }
 
 inline NPerm4 NPerm4::operator *(const NPerm4& q) const {
-    return NPerm4(imageOf(q[0]), imageOf(q[1]), imageOf(q[2]), imageOf(q[3]));
+    return NPerm4(productTable[code_][q.code_]);
 }
 
 inline NPerm4 NPerm4::inverse() const {
-    // Specify the inverse by its internal code.
-    return NPerm4(static_cast<unsigned char>(
-        (1 << (2*imageOf(1))) +
-        (2 << (2*imageOf(2))) +
-        (3 << (2*imageOf(3)))));
+    return NPerm4(static_cast<unsigned char>(invS4[code_]));
 }
 
-inline unsigned char NPerm4::getPermCode() const {
-    return code;
+inline int NPerm4::sign() const {
+    return (code_ % 2 ? -1 : 1);
 }
 
 inline int NPerm4::operator[](int source) const {
-    return imageOf(source);
+    return imageTable[code_][source];
 }
 
 inline int NPerm4::preImageOf(int image) const {
-    return inverse().imageOf(image);
-}
-
-inline int NPerm4::imageOf(int source) const {
-    return (code >> (2*source)) & 3;
+    return imageTable[invS4[code_]][image];
 }
 
 inline bool NPerm4::isIdentity() const {
-    return (code == 228);
+    return (code_ == 0);
 }
 
 inline bool NPerm4::operator == (const NPerm4& other) const {
-    return (code == other.code);
+    return (code_ == other.code_);
 }
 
 inline bool NPerm4::operator != (const NPerm4& other) const {
-    return (code != other.code);
+    return (code_ != other.code_);
+}
+
+inline int NPerm4::S4Index() const {
+    return code_;
+}
+
+inline int NPerm4::orderedS4Index() const {
+    // S4 is almost the same as orderedS4, except that some pairs
+    // S4[2i] <--> S4[2i+1] have been swapped to ensure that all
+    // permutations S4[2i] are even and all permutations S4[2i+1] are odd.
+    //
+    // Specifically, we must interchange all pairs 4i+2 <--> 4i+3.
+    return ((code_ & 2) ? (code_ ^ 1) : code_);
+}
+
+inline int NPerm4::S4Index(int a, int b, int c, int d) {
+    int orderedS4Index = 6 * a +
+                         2 * (b - (b > a ? 1 : 0)) +
+                             (c > d ? 1 : 0);
+
+    // As above, to obtain an S4 index, interchange all pairs 4i+2 <--> 4i+3.
+    return ((orderedS4Index & 2) ? (orderedS4Index ^ 1) : orderedS4Index);
 }
 
 inline std::string faceDescription(const NPerm4& facePerm) {

@@ -126,6 +126,7 @@ bool runAllTests() {
     addNPrimes(runner);
     addNumberTheory(runner);
     addMatrixOps(runner);
+    addPermConv(runner);
 
     // Algebra:
     addNBinaryA5(runner);

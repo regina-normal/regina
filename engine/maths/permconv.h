@@ -76,23 +76,13 @@ NPerm4 perm5to4(const NPerm5& p);
 // Inline conversion functions
 
 inline NPerm5 perm4to5(const NPerm4& p) {
-    // Cast the NPerm4 code (char) to an NPerm5 code (unsigned).
-    unsigned code = p.getPermCode();
-    return NPerm5::fromPermCode(
-        (code & 0x0003) |
-        ((code & 0x000c) << 1) |
-        ((code & 0x0030) << 2) |
-        ((code & 0x00c0) << 3) |
-        (4 << 12));
+    return NPerm5(p[0], p[1], p[2], p[3], 4);
 }
 
 inline NPerm4 perm5to4(const NPerm5& p) {
     unsigned code = p.getPermCode();
-    return NPerm4::fromPermCode(static_cast<unsigned char>(
-        (code & 0x03) |
-        ((code >> 1) & 0x0c) |
-        ((code >> 2) & 0x30) |
-        ((code >> 3) & 0xc0)));
+    return NPerm4(code & 0x03, (code >> 3) & 0x03,
+        (code >> 6) & 0x03, (code >> 9) & 0x03);
 }
 
 } // namespace regina
