@@ -185,7 +185,7 @@ int NPerm5::compareWith(const NPerm5& other) const {
 std::string NPerm5::toString() const {
     char ans[6];
     for (int i = 0; i < 5; i++)
-        ans[i] = '0' + imageOf(i);
+        ans[i] = static_cast<char>('0' + imageOf(i));
     ans[5] = 0;
 
     return ans;
@@ -193,27 +193,27 @@ std::string NPerm5::toString() const {
 
 std::string NPerm5::trunc2() const {
     char ans[3];
-    ans[0] = '0' + imageOf(0);
-    ans[1] = '0' + imageOf(1);
+    ans[0] = static_cast<char>('0' + imageOf(0));
+    ans[1] = static_cast<char>('0' + imageOf(1));
     ans[2] = 0;
     return ans;
 }
 
 std::string NPerm5::trunc3() const {
     char ans[4];
-    ans[0] = '0' + imageOf(0);
-    ans[1] = '0' + imageOf(1);
-    ans[2] = '0' + imageOf(2);
+    ans[0] = static_cast<char>('0' + imageOf(0));
+    ans[1] = static_cast<char>('0' + imageOf(1));
+    ans[2] = static_cast<char>('0' + imageOf(2));
     ans[3] = 0;
     return ans;
 }
 
 std::string NPerm5::trunc4() const {
     char ans[5];
-    ans[0] = '0' + imageOf(0);
-    ans[1] = '0' + imageOf(1);
-    ans[2] = '0' + imageOf(2);
-    ans[3] = '0' + imageOf(3);
+    ans[0] = static_cast<char>('0' + imageOf(0));
+    ans[1] = static_cast<char>('0' + imageOf(1));
+    ans[2] = static_cast<char>('0' + imageOf(2));
+    ans[3] = static_cast<char>('0' + imageOf(3));
     ans[4] = 0;
     return ans;
 }

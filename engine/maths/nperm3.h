@@ -378,11 +378,11 @@ inline NPerm3::NPerm3(unsigned char code) : code_(code) {
 inline NPerm3::NPerm3(int a, int b, int) {
     switch (a) {
         case 0:
-            code_ = (b == 1 ? 0 : 1); break;
+            code_ = static_cast<unsigned char>(b == 1 ? 0 : 1); break;
         case 1:
-            code_ = (b == 2 ? 2 : 3); break;
+            code_ = static_cast<unsigned char>(b == 2 ? 2 : 3); break;
         case 2:
-            code_ = (b == 0 ? 4 : 5); break;
+            code_ = static_cast<unsigned char>(b == 0 ? 4 : 5); break;
     }
 }
 
@@ -416,7 +416,7 @@ inline NPerm3 NPerm3::operator * (const NPerm3& q) const {
 }
 
 inline NPerm3 NPerm3::inverse() const {
-    return NPerm3(invS3[code_]);
+    return NPerm3(static_cast<unsigned char>(invS3[code_]));
 }
 
 inline int NPerm3::sign() const {

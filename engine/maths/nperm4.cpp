@@ -156,7 +156,7 @@ NPerm4::NPerm4(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1) {
 }
 
 bool NPerm4::isPermCode(unsigned char code) {
-    unsigned char mask = 0;
+    unsigned mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));
             // mask |= (1 << imageOf(i));
@@ -166,7 +166,7 @@ bool NPerm4::isPermCode(unsigned char code) {
 std::string NPerm4::toString() const {
     char ans[5];
     for (int i = 0; i < 4; i++)
-        ans[i] = '0' + static_cast<char>(imageTable[code_][i]);
+        ans[i] = static_cast<char>('0' + imageTable[code_][i]);
     ans[4] = 0;
 
     return ans;
@@ -174,17 +174,17 @@ std::string NPerm4::toString() const {
 
 std::string NPerm4::trunc2() const {
     char ans[3];
-    ans[0] = '0' + static_cast<char>(imageTable[code_][0]);
-    ans[1] = '0' + static_cast<char>(imageTable[code_][1]);
+    ans[0] = static_cast<char>('0' + imageTable[code_][0]);
+    ans[1] = static_cast<char>('0' + imageTable[code_][1]);
     ans[2] = 0;
     return ans;
 }
 
 std::string NPerm4::trunc3() const {
     char ans[4];
-    ans[0] = '0' + static_cast<char>(imageTable[code_][0]);
-    ans[1] = '0' + static_cast<char>(imageTable[code_][1]);
-    ans[2] = '0' + static_cast<char>(imageTable[code_][2]);
+    ans[0] = static_cast<char>('0' + imageTable[code_][0]);
+    ans[1] = static_cast<char>('0' + imageTable[code_][1]);
+    ans[2] = static_cast<char>('0' + imageTable[code_][2]);
     ans[3] = 0;
     return ans;
 }

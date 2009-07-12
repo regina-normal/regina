@@ -832,10 +832,11 @@ inline void NPerm4::setPerm(int a, int b, int c, int d) {
 }
 
 inline unsigned char NPerm4::getPermCode() const {
-    return (static_cast<unsigned char>(imageTable[code_][0]) |
-            (static_cast<unsigned char>(imageTable[code_][1]) << 2) |
-            (static_cast<unsigned char>(imageTable[code_][2]) << 4) |
-            (static_cast<unsigned char>(imageTable[code_][3]) << 6));
+    return static_cast<unsigned char>(
+        imageTable[code_][0] |
+        (imageTable[code_][1] << 2) |
+        (imageTable[code_][2] << 4) |
+        (imageTable[code_][3] << 6));
 }
 
 inline unsigned char NPerm4::getPermCode2() const {
