@@ -65,17 +65,17 @@ const unsigned char NPerm3::productTable[6][6] = {
 
 std::string NPerm3::toString() const {
     char ans[4];
-    ans[0] = '0' + static_cast<char>(imageTable[code_][0]);
-    ans[1] = '0' + static_cast<char>(imageTable[code_][1]);
-    ans[2] = '0' + static_cast<char>(imageTable[code_][2]);
+    ans[0] = static_cast<char>('0' + imageTable[code_][0]);
+    ans[1] = static_cast<char>('0' + imageTable[code_][1]);
+    ans[2] = static_cast<char>('0' + imageTable[code_][2]);
     ans[3] = 0;
     return ans;
 }
 
 std::string NPerm3::trunc2() const {
     char ans[3];
-    ans[0] = '0' + static_cast<char>(imageTable[code_][0]);
-    ans[1] = '0' + static_cast<char>(imageTable[code_][1]);
+    ans[0] = static_cast<char>('0' + imageTable[code_][0]);
+    ans[1] = static_cast<char>('0' + imageTable[code_][1]);
     ans[2] = 0;
     return ans;
 }
