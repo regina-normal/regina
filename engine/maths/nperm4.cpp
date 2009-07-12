@@ -163,16 +163,6 @@ bool NPerm4::isPermCode(unsigned char code) {
     return (mask == 15);
 }
 
-int NPerm4::compareWith(const NPerm4& other) const {
-    for (int i = 0; i < 4; i++) {
-        if (imageTable[code_][i] < imageTable[other.code_][i])
-            return -1;
-        if (imageTable[code_][i] > imageTable[other.code_][i])
-            return 1;
-    }
-    return 0;
-}
-
 std::string NPerm4::toString() const {
     char ans[5];
     for (int i = 0; i < 4; i++)

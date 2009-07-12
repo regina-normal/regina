@@ -896,6 +896,15 @@ inline int NPerm4::preImageOf(int image) const {
     return imageTable[invS4[code_]][image];
 }
 
+inline int NPerm4::compareWith(const NPerm4& other) const {
+    // Computing orderedS4Index() is very fast, now that we use S4 indices
+    // for internal permutation codes.  Use this instead of comparing images
+    // one at a time.
+    int o1 = orderedS4Index();
+    int o2 = other.orderedS4Index();
+    return (o1 == o2 ? 0 : o1 < o2 ? -1 : 1);
+}
+
 inline bool NPerm4::isIdentity() const {
     return (code_ == 0);
 }
