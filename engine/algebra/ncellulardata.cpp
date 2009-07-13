@@ -321,6 +321,24 @@ void fillStandardHomologyCC(const Dim4Triangulation* tri,
 
 }
 
+/* The orientations of the dual cells in Regina are given (equivalently) by: 
+ * 1) skeletalobjecttype -> getEmbedding() and skeletonobjecttype ->getEmbedding().getVertices() 
+ * and
+ * 2) Dim4Pentachoron->get(skeletalobjecttype)mapping()
+ * though (2) is not available for dual edges as getTetrahedronMapping() (dimension 4)
+ * and getFaceMapping() (dimension 3) do not give orientation data.
+ *
+ * We try to keep the orientation conventions as portable-through-dimensions as possible. 
+ * Provided the dimension of the dual cell is 2 or larger, there is a simple formula
+ * for the orientation of an incident cellular bit.  Say we're interested in a dual j-cell
+ * and the sign of an incident dual (j-1)-cell.  In a particular ambient n-simplex Delta_n, 
+ * the parts of such cells inside Delta_n correspond to their dual n-j-1 and n-j sub-simplices
+ * of Delta_n by intersection, we'll denote them E and F respectively. Let e be the element
+ * of \Sigma_{n+1} given by the inclusion E-->\Delta_{n+1} coming from Regina's getXXXMapping()
+ * function and f be the corresponding one for F-->\Delta_{n+1}.  Then the sign is given by
+ * the parity of e^{-1}\circ f \circ (transposition n-j+1, face number of E in F) as a permutation
+ * of the set {n-j+1, n-j+2, ..., n}
+ */
 void fillDualHomologyCC(const Dim4Triangulation* tri, const unsigned long numDualCells[5], 
 	const std::vector< std::vector< unsigned long > > &dcIx, std::vector< NMatrixInt* > &dCC)
 {
@@ -367,17 +385,18 @@ void fillDualHomologyCC(const Dim4Triangulation* tri, const unsigned long numDua
     for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
 	{ fac = tri->getFace( dcIx[D-1][i] );
 	  for (unsigned long j=0; j < 3; j++) {
-	    edg = tet->getEdge(j); if (!edg->isBoundary())
+	    edg = fac->getEdge(j); if (!edg->isBoundary())
 	     {
 	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->edgeIndex( edg ) ) - dcIx[D].begin();
 	      pen = fac->getEmbedding(0).getPentachoron(); // our ambient pentachoron
-	      // the natural inclusions of our tetrahedron and face into the ambient pentachoron
-	      NPerm5 facinc( tet->getEmbedding(0).getVertices() );
+	      // the natural inclusions of our face and edge into the ambient pentachoron
+	      NPerm5 facinc( fac->getEmbedding(0).getVertices() );
 	      NPerm5 edginc( pen->getEdgeMapping( 
 		Dim4Edge::edgeNumber[facinc[(j<=0) ? 1 : 0]][facinc[(j<=1)? 2 : 1]] 
 						) );
-	      NPerm5 delta( edginc.inverse()*facinc );
-	      dCC[D]->entry( i, J ) += ( (delta[4]-delta[3]-1)%3==0 ? 1 : -1 );
+	      NPerm5 delta( edginc.inverse()*facinc*NPerm5(2, j) ); // we consider this as a permutation of {2,3,4}
+              delta = delta * NPerm5( 0, delta[0] ); // kill permutation of {0,1} part of delta
+	      dCC[D]->entry( i, J ) += delta.sign();
 	     } }
 	}
 
@@ -392,7 +411,7 @@ void fillDualHomologyCC(const Dim4Triangulation* tri, const unsigned long numDua
 	      // sign...
 	      NPerm5 edginc( edg->getEmbedding(0).getVertices() );
 	      NPerm5 vrtinc( pen->getVertexMapping( edginc[j] ) );
-	      NPerm5 delta( vrtinc.inverse()*edginc );
+	      NPerm5 delta( vrtinc.inverse()*edginc*NPerm5(1, j) );
 	      dCC[D]->entry( i, J ) += delta.sign();
 	     } }
 	}
@@ -450,14 +469,20 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
    //       standard->mixed, dual->mixed, fast 1-cell approx...
 }
 
-
 bool NCellularData::chainComplexesVerified() const
 {
-// run through all the chain complexes that are defined.
 for (unsigned long i=0; i<sCC.size()-1; i++) if (sCC[i] && sCC[i+1])
   {
    if ( sCC[i]->columns() != sCC[i+1]->rows() ) return false;
    std::auto_ptr< NMatrixRing<NLargeInteger> > prod = (*sCC[i])*(*sCC[i+1]);
+   for (unsigned long j=0; j<prod->rows(); j++) for (unsigned long k=0; k<prod->columns(); k++)
+	if (prod->entry(j,k) != 0) return false;
+  }
+bool flag = false;
+for (unsigned long i=0; i<dCC.size()-1; i++) if (dCC[i] && dCC[i+1])
+  {
+   if ( dCC[i]->columns() != dCC[i+1]->rows() ) { return false; }
+   std::auto_ptr< NMatrixRing<NLargeInteger> > prod = (*dCC[i])*(*dCC[i+1]);
    for (unsigned long j=0; j<prod->rows(); j++) for (unsigned long k=0; k<prod->columns(); k++)
 	if (prod->entry(j,k) != 0) return false;
   }
@@ -468,7 +493,6 @@ for (unsigned long i=0; i<mCC.size()-1; i++) if (mCC[i] && mCC[i+1])
    for (unsigned long j=0; j<prod->rows(); j++) for (unsigned long k=0; k<prod->columns(); k++)
 	if (prod->entry(j,k) != 0) return false;
   }
-// do the same for mCC
 return true;
 }
 
@@ -493,12 +517,47 @@ const NMarkedAbelianGroup& NCellularData::markedGroup( const unsigned long dimen
 		const homology_coordinate_system coordinates) const
 {
 GroupLocator g_desc(dimension, variance, coordinates, coefficients);
-std::map< GroupLocator, NMarkedAbelianGroup* >::iterator p;
+std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator p;
 p = markedAbelianGroups.find(g_desc);
-if (p != markedAbelianGroups.end()) return 
-(*p->second);
+if (p != markedAbelianGroups.end()) return (*p->second);
 // okay, so now we know there's no group matching g_desc in markedAbelianGroups, so we make one.
-
+NMarkedAbelianGroup* mgptr;
+if (variance == coVariant) // homology requested
+ {
+  if (coordinates == DUAL_coord)
+  {
+   if (coefficients == 0) mgptr = new NMarkedAbelianGroup( *dCC[dimension], *dCC[dimension+1] );
+   else mgptr = new NMarkedAbelianGroup( *dCC[dimension], *dCC[dimension+1], NLargeInteger(coefficients) );
+   std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
+	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
+   mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
+   return *mgptr;
+ } 
+ else if (coordinates == STD_coord)
+  {
+   if (coefficients == 0) mgptr = new NMarkedAbelianGroup( *sCC[dimension], *sCC[dimension+1] );
+   else mgptr = new NMarkedAbelianGroup( *sCC[dimension], *sCC[dimension+1], NLargeInteger(coefficients) );
+   std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
+	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
+   mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
+   return *mgptr;
+  } 
+ else
+  { // coordinates == MIX_coord
+  }
+ }
+else // cohomology requested
+ {
+  if (coordinates == DUAL_coord)
+  {
+  } 
+ else if (coordinates == STD_coord)
+  {
+  } 
+ else
+  { // coordinates == MIX_coord
+  }
+ }
 
 
 }

@@ -105,6 +105,8 @@ public:
 
 	GroupLocator(unsigned long newDim, variance_type newVar, homology_coordinate_system useHcs, 
 			unsigned long useCof);
+        GroupLocator(const GroupLocator &cloneMe);
+
 	bool operator<(const GroupLocator &rhs) const;
  };
 
@@ -113,6 +115,8 @@ public:
 	GroupLocator range;
 
 	HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange);
+	HomLocator(const HomLocator &cloneMe);
+
 	bool operator<(const HomLocator &rhs) const;
  };
 
@@ -350,7 +354,15 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
 	bs_sCM(g.bs_sCM.size()), s_mCM(g.s_mCM.size()), d_mCM(g.d_mCM.size())
 {
 // copy abelianGroups, markedAbelianGroups, homMarkedAbelianGroups
-// todo!
+std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
+std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator mabi;
+std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator hmabi;
+for (abi = g.abelianGroups.begin(); abi != g.abelianGroups.end(); abi++) abelianGroups.insert( 
+ std::pair< GroupLocator, NAbelianGroup* >( abi->first, clonePtr(abi->second) ) );
+for (mabi = g.markedAbelianGroups.begin(); mabi != g.markedAbelianGroups.end(); mabi++)	markedAbelianGroups.insert( 
+ std::pair< GroupLocator, NMarkedAbelianGroup* >(mabi->first, clonePtr(mabi->second) ) );
+for (hmabi = g.homMarkedAbelianGroups.begin(); hmabi != g.homMarkedAbelianGroups.end(); hmabi++) 
+ homMarkedAbelianGroups.insert( std::pair< HomLocator, NHomMarkedAbelianGroup* >(hmabi->first, clonePtr(hmabi->second) ) );
 
 // numStandardCells[5], numDualCells[5], numMixCells[5], numStandardBdryCells[4], 
 //               numNonIdealCells[5], numIdealCells[4];
@@ -375,7 +387,15 @@ for (unsigned long i=0; i<d_mCM.size(); i++)   d_mCM[i] = clonePtr(g.d_mCM[i]);
 inline NCellularData::~NCellularData() {
  if (tri3) delete tri3; if (tri4) delete tri4;
  // iterate through abelianGroups, markedAbelianGroups, homMarkedAbelianGroups and deallocate
- // todo...
+ std::map< GroupLocator, NAbelianGroup* >::iterator abi;
+ std::map< GroupLocator, NMarkedAbelianGroup* >::iterator mabi;
+ std::map< HomLocator, NHomMarkedAbelianGroup* >::iterator hmabi;
+ for (abi = abelianGroups.begin(); abi != abelianGroups.end(); abi++)
+	delete abi->second;
+ for (mabi = markedAbelianGroups.begin(); mabi != markedAbelianGroups.end(); mabi++)
+	delete mabi->second;
+ for (hmabi = homMarkedAbelianGroups.begin(); hmabi != homMarkedAbelianGroups.end(); hmabi++)
+	delete hmabi->second;
 
  // iterate through sCC, dCC, mCC, bsCC and deallocate
  for (unsigned long i=0; i<sCC.size(); i++)   if (sCC[i])  delete sCC[i];
@@ -398,6 +418,19 @@ inline unsigned long NCellularData::mixedCellCount(unsigned dimension) const
 { return numMixCells[dimension]; }
 inline long int NCellularData::eulerChar() const
 { return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3]+numDualCells[4]; }
+
+inline NCellularData::GroupLocator::GroupLocator(unsigned long newDim, variance_type newVar,
+	 homology_coordinate_system useHcs, unsigned long useCof) :
+ dim(newDim), var(newVar), hcs(useHcs), cof(useCof) {}
+
+inline NCellularData::GroupLocator::GroupLocator(const GroupLocator &cloneMe) : 
+ dim(cloneMe.dim), var(cloneMe.var), hcs(cloneMe.hcs), cof(cloneMe.cof) {}
+
+inline NCellularData::HomLocator::HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange) : 
+  domain( newDomain ), range( newRange ) {}
+
+inline NCellularData::HomLocator::HomLocator(const HomLocator &cloneMe) :
+  domain( cloneMe.domain ), range( cloneMe.range ) {}
 
 } // namespace regina
 
