@@ -246,7 +246,7 @@ inline NRandomAccessResource::mode NLocalFileResource::getOpenMode() const {
 }
 
 inline char NLocalFileResource::getChar() {
-    return infile.get();
+    return static_cast<char>(infile.get());
 }
 inline void NLocalFileResource::putChar(char c) {
     outfile.put(c);

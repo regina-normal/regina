@@ -40,8 +40,6 @@
 
 namespace regina {
 
-class regina::NSigCensus;
-
 /**
  * \weakgroup split
  * @{

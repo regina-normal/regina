@@ -836,9 +836,9 @@ inline NBoolSet::NBoolSet(const NBoolSet& cloneMe) :
 }
 inline NBoolSet::NBoolSet(bool insertTrue, bool insertFalse) : elements(0) {
     if (insertTrue)
-        elements |= eltTrue;
+        elements = static_cast<unsigned char>(elements | eltTrue);
     if (insertFalse)
-        elements |= eltFalse;
+        elements = static_cast<unsigned char>(elements | eltFalse);
 }
 
 inline bool NBoolSet::hasTrue() const {
@@ -852,22 +852,22 @@ inline bool NBoolSet::contains(bool value) const {
 }
 
 inline void NBoolSet::insertTrue() {
-    elements |= eltTrue;
+    elements = static_cast<unsigned char>(elements | eltTrue);
 }
 inline void NBoolSet::insertFalse() {
-    elements |= eltFalse;
+    elements = static_cast<unsigned char>(elements | eltFalse);
 }
 inline void NBoolSet::removeTrue() {
-    elements &= eltFalse;
+    elements = static_cast<unsigned char>(elements & eltFalse);
 }
 inline void NBoolSet::removeFalse() {
-    elements &= eltTrue;
+    elements = static_cast<unsigned char>(elements & eltTrue);
 }
 inline void NBoolSet::empty() {
     elements = 0;
 }
 inline void NBoolSet::fill() {
-    elements = eltTrue | eltFalse;
+    elements = static_cast<unsigned char>(eltTrue | eltFalse);
 }
 
 inline bool NBoolSet::operator == (const NBoolSet& other) const {
@@ -900,31 +900,31 @@ inline NBoolSet& NBoolSet::operator = (bool member) {
     return *this;
 }
 inline NBoolSet& NBoolSet::operator |= (const NBoolSet& other) {
-    elements |= other.elements;
+    elements = static_cast<unsigned char>(elements | other.elements);
     return *this;
 }
 inline NBoolSet& NBoolSet::operator &= (const NBoolSet& other) {
-    elements &= other.elements;
+    elements = static_cast<unsigned char>(elements & other.elements);
     return *this;
 }
 inline NBoolSet& NBoolSet::operator ^= (const NBoolSet& other) {
-    elements ^= other.elements;
+    elements = static_cast<unsigned char>(elements ^ other.elements);
     return *this;
 }
 
 inline NBoolSet NBoolSet::operator | (const NBoolSet& other) const {
     NBoolSet ans;
-    ans.elements = elements | other.elements;
+    ans.elements = static_cast<unsigned char>(elements | other.elements);
     return ans;
 }
 inline NBoolSet NBoolSet::operator & (const NBoolSet& other) const {
     NBoolSet ans;
-    ans.elements = elements & other.elements;
+    ans.elements = static_cast<unsigned char>(elements & other.elements);
     return ans;
 }
 inline NBoolSet NBoolSet::operator ^ (const NBoolSet& other) const {
     NBoolSet ans;
-    ans.elements = elements ^ other.elements;
+    ans.elements = static_cast<unsigned char>(elements ^ other.elements);
     return ans;
 }
 inline NBoolSet NBoolSet::operator ~ () const {

@@ -395,7 +395,7 @@ inline XMLParser::~XMLParser() {
 }
 
 inline void XMLParser::parse_chunk(const std::string& s) {
-    xmlParseChunk(_context, s.c_str(), s.length(), 0);
+    xmlParseChunk(_context, s.c_str(), static_cast<int>(s.length()), 0);
 }
 
 inline void XMLParser::finish() {
