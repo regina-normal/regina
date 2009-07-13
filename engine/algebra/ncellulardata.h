@@ -82,6 +82,8 @@ class Dim4Triangulation;
  *
  * \testpart
  *
+ * \todo NTriangulation constructor, mixed cellular coordinates, cohomology, coordinate maps.
+ *       Bilinear forms from Poincare duality, lastly, spin structures. 
  * \todo \optlong Add an option to limit precomputed pile size, then when you reach the limit you 
  *       prune the pile according to how often / recent you use various items, deallocating the oldest
  *       least popular pile items first.
