@@ -72,8 +72,8 @@ NSignature* NSignature::parse(const std::string& str) {
     unsigned nAlpha = 0;
     int largestLetter = -1;
 
-    unsigned len = str.length();
-    unsigned pos;
+    size_t len = str.length();
+    size_t pos;
     for (pos = 0; pos < len; pos++)
         // Avoid isalpha(), etc. and be explicit, in case the signature
         // string contains international characters.
@@ -160,7 +160,8 @@ NSignature* NSignature::parse(const std::string& str) {
         if (pos == 0 || sig->cycleStart[pos + 1] - sig->cycleStart[pos] !=
                 sig->cycleStart[pos] - sig->cycleStart[pos - 1]) {
             // New cycle group.
-            sig->cycleGroupStart[sig->nCycleGroups] = pos;
+            sig->cycleGroupStart[sig->nCycleGroups] =
+                static_cast<unsigned>(pos);
             sig->nCycleGroups++;
         }
 

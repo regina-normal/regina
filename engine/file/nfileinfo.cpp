@@ -54,7 +54,7 @@ namespace {
             return STARTS_COULD_NOT_OPEN;
 
         int ans = STARTS_FALSE;
-        unsigned len = strlen(prefix);
+        size_t len = strlen(prefix);
         char* buf = new char[len];
 
         if (fread(buf, sizeof(char), len, f) == len)

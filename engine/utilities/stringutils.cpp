@@ -64,14 +64,16 @@ std::string stripWhitespace(const std::string& str) {
 }
 
 bool valueOf(const std::string& str, int& dest) {
+    // TODO: Check errno, and check for overflow when casting back to int.
     char* endPtr;
-    dest = strtol(str.c_str(), &endPtr, 10);
+    dest = static_cast<int>(strtol(str.c_str(), &endPtr, 10));
     return ((! str.empty()) && (*endPtr == 0));
 }
 
 bool valueOf(const std::string& str, unsigned& dest) {
+    // TODO: Check errno, and check for overflow when casting back to unsigned.
     char* endPtr;
-    dest = strtoul(str.c_str(), &endPtr, 10);
+    dest = static_cast<unsigned>(strtoul(str.c_str(), &endPtr, 10));
     return ((! str.empty()) && (*endPtr == 0));
 }
 

@@ -133,7 +133,7 @@ NPacket* readXMLFile(const char* fileName) {
         while (true) {
             // Read in the next chunk.
             for (chunkRead = 0; chunkRead < regChunkSize; chunkRead++) {
-                buf[chunkRead] = in.get();
+                buf[chunkRead] = static_cast<char>(in.get());
                 if (in.eof())
                     break;
             }

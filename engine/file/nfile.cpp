@@ -205,7 +205,7 @@ unsigned int NFile::readUInt() {
         ans <<= 8;
         ans += b[i];
     }
-    return ans;
+    return static_cast<unsigned>(ans);
 }
 
 unsigned long NFile::readULong() {
@@ -224,7 +224,7 @@ unsigned long NFile::readULong() {
 }
 
 void NFile::writeString(const std::string& s) {
-    unsigned len = s.length();
+    unsigned len = static_cast<unsigned>(s.length());
     writeUInt(len);
     for (unsigned i=0; i<len; i++)
         resource->putChar(s[i]);

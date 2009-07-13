@@ -60,8 +60,8 @@ unsigned basicTokenise(OutputIterator results, const std::string& str) {
             pos++;
     }
 
-    return total;
+    return static_cast<unsigned>(total);
 }
-    
+
 } // namespace regina
 
