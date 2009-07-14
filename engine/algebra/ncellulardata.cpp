@@ -177,13 +177,18 @@ void setupIndices(const NTriangulation* tri,
     // standard (0..3)-cells:
     for (unsigned i=0; i<3; i++) numStandardCells[i] = nicIx[i].size() + icIx[i].size();
     numStandardCells[3] = nicIx[3].size();
+    numStandardCells[4] = 0;
     // dual (0..3)-cells:
     for (unsigned i=0; i<4; i++) numDualCells[i] = dcIx[i].size();
+    numDualCells[4] = 0;
     // boundary (0..3)-cells:
     for (unsigned i=0; i<3; i++) numStandardBdryCells[i] = bcIx[i].size() + icIx[i].size();
+    numStandardBdryCells[3] = 0;
     // ideal and non-ideal cells:
     for (unsigned i=0; i<4; i++) numNonIdealCells[i] = nicIx[i].size();
+    numNonIdealCells[4] = 0;
     for (unsigned i=0; i<3; i++) numIdealCells[i] = icIx[i].size();
+    numIdealCells[3] = 0;
 
     // this mixed decomposition is the proper cell decomposition induced by the barycentric
     // subdivision, so all previous internal/boundary standard cells contribute barycentres
@@ -193,6 +198,7 @@ void setupIndices(const NTriangulation* tri,
 		     numIdealCells[1];
     numMixCells[2] = 3*numNonIdealCells[2] + 6*numNonIdealCells[3] + numIdealCells[2];
     numMixCells[3] = 4*numNonIdealCells[3];
+    numMixCells[4] = 0;
 }  
 
 void fillStandardHomologyCC(const Dim4Triangulation* tri, 
@@ -321,6 +327,103 @@ void fillStandardHomologyCC(const Dim4Triangulation* tri,
 
 }
 
+void fillStandardHomologyCC(const NTriangulation* tri, 
+	const unsigned long numStandardCells[5],  const unsigned long numNonIdealCells[5], 
+	const unsigned long numIdealCells[5], 	  
+	const std::vector< std::vector< unsigned long > > &nicIx, const std::vector< std::vector< unsigned long > > &icIx, 
+	std::vector< NMatrixInt* > &sCC)
+{
+    // initialize chain complex matrices.
+    for (unsigned i=1; i<4; i++) // sCC[i] defined for i == 0, ..., 5
+	sCC[i] = new NMatrixInt(numStandardCells[i-1], numStandardCells[i]);
+    sCC[0] = new NMatrixInt(1, numStandardCells[0]);
+    sCC[4] = new NMatrixInt(numStandardCells[3], 1);
+
+    // various useful pointers, index holders.
+    const NVertex* vrt;  const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
+    unsigned long I, J;
+    
+    // now we fill them out, first sCC.  sCC[0] is zero, 
+    unsigned long D=1; // sCC[D]
+    for (unsigned long j=0; j<numNonIdealCells[D]; j++) // scc[D]->entry( *,j )
+	{ // endpts getEdge(nicIx[D][j]) ideal?
+	edg = tri->getEdge(nicIx[D][j]);
+	for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
+	 {   // endpt i is ideal, find index
+          I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+	  sCC[D]->entry(numNonIdealCells[D-1] + I, j) += 1;
+	 } 
+	else // endpt i is not ideal
+	 {
+          I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri->vertexIndex( edg->getVertex(i) ) )
+	      - nicIx[D-1].begin();
+	  sCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
+	 }
+	}
+    for (unsigned long j=0; j<numIdealCells[D]; j++) // scc[D]->entry( *, numNonIdealCells[D] + j )
+        { // icIx[D][j]/(D+2) face icIx[D][j] % (D+2) vertex
+	fac = tri->getFace(icIx[D][j]/(D+2));
+	for (unsigned long i=1; i<D+2; i++)
+	 {
+          NPerm4 P( fac->getEdgeMapping( (icIx[D][j] + i) % (D+2) ) );
+	  unsigned long iX( (D+1)*tri->edgeIndex( fac->getEdge( (icIx[D][j] + i) % (D+2) ) ) // of corresp ideal 0-cell
+			            + ( P.preImageOf(icIx[D][j] % (D+2)) ) );
+	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+	  sCC[D]->entry(numNonIdealCells[D-1] + I,  numNonIdealCells[D] + j) -= P.sign();
+	 }
+	}
+
+    D = 2; // sCC[2]
+    for (unsigned long j=0; j<numNonIdealCells[D]; j++) // scc[D]->entry( *,j )
+	{
+	fac = tri->getFace(nicIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) 
+	 { 
+	  if (fac->getVertex(i)->isIdeal())
+	   { // ideal ends of faces	
+            I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+	    sCC[D]->entry(numNonIdealCells[D-1] + I, j) += 1;
+	   } // standard face boundaries
+	  NPerm4 P( fac->getEdgeMapping(i) );
+          I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri->edgeIndex( fac->getEdge(i) )) 
+		- nicIx[D-1].begin();
+	  sCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+   for (unsigned long j=0; j<numIdealCells[D]; j++) // scc[D]->entry( *, j+numNonIdealCells[D-1] )
+        { // icIx[D][j]/(D+2) tetrahedron icIx[1][j] % (D+2) vertex
+	tet = tri->getTetrahedron(icIx[D][j]/(D+2));
+	for (unsigned long i=1; i < D+2; i++)
+	 {
+          NPerm4 P( tet->getFaceMapping( (icIx[D][j] + i) % (D+2)) );
+	  unsigned long iX( (D+1)*tri->faceIndex( tet->getFace( (icIx[D][j] + i) % (D+2) ) ) // of corresp ideal 0-cell
+			            + ( P.preImageOf(icIx[D][j] % (D+2)) ) );
+	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+	  sCC[D]->entry(numNonIdealCells[D-1] + I,  numNonIdealCells[D] + j) -= P.sign(); 
+	 }
+	}
+
+    D = 3; // sCC[3]
+    for (unsigned long j=0; j<numNonIdealCells[D]; j++) // scc[D]->entry( *,j )
+	{
+	tet = tri->getTetrahedron(nicIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) 
+	 { 
+	  if (tet->getVertex(i)->isIdeal())
+	   { // ideal ends of faces	
+            I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+	    sCC[D]->entry(numNonIdealCells[D-1] + I, j) += 1;
+	   } // standard face boundaries
+	  NPerm4 P( tet->getFaceMapping(i) );
+          I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri->faceIndex( tet->getFace(i) )) 
+		- nicIx[D-1].begin();
+	  sCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+}
+
+
+
 /* The orientations of the dual cells in Regina are given (equivalently) by: 
  * 1) skeletalobjecttype -> getEmbedding() and skeletonobjecttype ->getEmbedding().getVertices() 
  * and
@@ -417,6 +520,174 @@ void fillDualHomologyCC(const Dim4Triangulation* tri, const unsigned long numDua
 	}
 }
 
+void fillDualHomologyCC(const NTriangulation* tri, const unsigned long numDualCells[5], 
+	const std::vector< std::vector< unsigned long > > &dcIx, std::vector< NMatrixInt* > &dCC)
+{
+    for (unsigned i=1; i<4; i++) // dCC[i]
+        dCC[i] = new NMatrixInt(numDualCells[i-1], numDualCells[i]);
+    dCC[0] = new NMatrixInt(1, numDualCells[0]);
+    dCC[4] = new NMatrixInt(numDualCells[3], 1);
+
+    // various useful pointers, index holders.
+    const NVertex* vrt;  const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
+    unsigned long I, J;
+
+    unsigned long D = 1; // outer loop the row parameter. We start with dCC[1]
+    for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
+	{ tet = tri->getTetrahedron( dcIx[D-1][i] );
+	  for (unsigned long j=0; j < 4; j++) {
+	    fac = tet->getFace(j);  if (!fac->isBoundary())
+	     {
+	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->faceIndex( fac ) ) - dcIx[D].begin();
+	      dCC[D]->entry( i, J ) += ( ( (fac->getEmbedding(1).getTetrahedron() == tet) && 
+				       (fac->getEmbedding(1).getFace() == j) ) ? +1 : -1 );
+	     } }
+	}
+
+    D = 2; // dCC[2]
+    for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
+	{ fac = tri->getFace( dcIx[D-1][i] );
+	  for (unsigned long j=0; j < 3; j++) {
+	    edg = fac->getEdge(j); if (!edg->isBoundary())
+	     {
+	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->edgeIndex( edg ) ) - dcIx[D].begin();
+	      tet = fac->getEmbedding(1).getTetrahedron(); // our ambient tetrahedron
+	      // the natural inclusions of our tetrahedron and face into the ambient tetrahedron
+	      NPerm4 facinc( fac->getEmbedding(1).getVertices() );
+	      NPerm4 edginc( tet->getEdgeMapping( 
+		NEdge::edgeNumber[facinc[(j<=0) ? 1 : 0]][facinc[(j<=1)? 2 : 1]] 
+						) );
+	      dCC[D]->entry( i, J ) += ( facinc[3]==edginc[3] ? 1 : -1 );
+	     } }
+	}
+ 
+    D = 3; // dCC[3]
+    for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
+	{ edg = tri->getEdge( dcIx[D-1][i] );
+	  for (unsigned long j=0; j < 2; j++) {
+	    vrt = edg->getVertex(j); if (!vrt->isBoundary() && !vrt->isIdeal())
+	     {
+	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->vertexIndex( vrt ) ) - dcIx[D].begin();
+	      tet = edg->getEmbedding(0).getTetrahedron(); // our ambient tetrahedron
+	      // sign...
+	      NPerm4 edginc( edg->getEmbedding(0).getVertices() );
+	      NPerm4 vrtinc( tet->getVertexMapping( edginc[j] ) );
+	      NPerm4 delta( vrtinc.inverse()*edginc*NPerm4(1, j) );
+	      dCC[D]->entry( i, J ) += delta.sign();
+	     } }
+	}
+}
+
+
+/* A description of the cells in the mixed cellular decomposition and their orientation 
+ * conventions.  We use the convention that nicIx[j] indexes the standard, non-ideal j-cells, 
+ * icIx[j] the standard ideal j-cells.
+ *
+ * 0-cells:  <nicIx[0]>, nicIx[1], nicIx[2], nicIx[3], [nicIx[4]], <icIx[0]>.
+ *           +           +         +         +         [+]         boundary or. 
+ * 1-cells:  <2*nicIx[1]>, 3*nicIx[2], 4*nicIx[3], [5*nicIx[4]], <icIx[1]>
+ *           edge or.      outward or. outward or. [dual]          boundary or. 
+ * 2-cells:  <3*nicIx[2]>, (4 choose 2 == 6)*nicIx[3], [(5 choose 3 == 10)*nicIx[4]], <icIx[2]>
+ *           face or.      char map conv.              [dual]               
+ * 3-cells:  <4*nicIx[3]>, [(5 choose 2 == 10)*nicIx[4]], <icIx[3]>
+ *           tetra or.     [dual]                         boundary or.
+ * 4-cells:  [<5*nicIx[4]>]
+ *           Inherits orientation of pentachoron 
+ *
+ * [] brackets indicate these cells are bits of dual polyhedral cells and can
+ * therefore inherit their orientations. 
+ * <> brackets indicate these cells are bits of the standard cellular decomposition
+ * and inherit their orientations.
+ * Our convention will be to orient <> objects via their standard cellular orientations, 
+ * and [] objects via their dual cellular orientations, with <> beating [] when they compete. 
+ * if unlabelled by [] or <> we choose a convention...
+ */
+void fillMixedHomologyCC(const Dim4Triangulation* tri, 
+     const unsigned long numMixCells[5], const unsigned long numNonIdealCells[5], 
+     const unsigned long numIdealCells[4], 
+     const std::vector< std::vector< unsigned long > > &dcIx, 
+     const std::vector< std::vector< unsigned long > > &icIx, 
+     const std::vector< std::vector< unsigned long > > &nicIx, 
+     std::vector< NMatrixInt* > &mCC)
+{    
+for (unsigned i=1; i<5; i++) // mCC[i]
+        mCC[i] = new NMatrixInt(numMixCells[i-1], numMixCells[i]);
+    mCC[0] = new NMatrixInt(1, numMixCells[0]);
+    mCC[5] = new NMatrixInt(numMixCells[4], 1);
+
+   // various useful pointers, index holders.
+    const Dim4Vertex* vrt;  const Dim4Edge* edg;  const Dim4Face* fac; 
+	const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+    unsigned long I, J;
+   // we'll also need to remember some placeholder indices
+   unsigned long ri1 = numNonIdealCells[0];        unsigned long ri2 = ri1 + numNonIdealCells[2];
+   unsigned long ri3 = ri2 + numNonIdealCells[3];  unsigned long ri4 = ri3 + numNonIdealCells[4];
+   unsigned long ci1 = 2*numNonIdealCells[1];      unsigned long ci2 = ci1 + 3*numNonIdealCells[2]; 
+   unsigned long ci3 = ci2 + 4*numNonIdealCells[3];unsigned long ci4 = ci3 + 5*numNonIdealCells[4];
+   unsigned long D = 1; // outer loop the column parameter. We start with mCC[1]
+   for (unsigned long j=0; j<2*numNonIdealCells[1]; j++)
+	{ // j % 2  sCC[D]->entry( *, j )
+	 edg = tri->getEdge(nicIx[1][j/2]);
+	}
+   for (unsigned long j=0; j<3*numNonIdealCells[2]; j++)
+	{ // j % 3  sCC[D]->entry( *, ci1+j )
+	 fac = tri->getFace(nicIx[2][j/3]);
+	}
+   for (unsigned long j=0; j<4*numNonIdealCells[3]; j++)
+	{ // j % 4  sCC[D]->entry( *, ci2+j )
+	 tet = tri->getTetrahedron(nicIx[3][j/4]);
+	}
+   for (unsigned long j=0; j<5*numNonIdealCells[4]; j++)
+	{ // j % 5  sCC[D]->entry( *, ci3+j )
+	 pen = tri->getPentachoron(nicIx[4][j/5]);
+	}
+   for (unsigned long j=0; j<numIdealCells[1]; j++)
+	{ // j%3    sCC[D]->entry( *, ci4+j )
+	 fac = tri->getFace( icIx[D][j]/3 );
+	}
+
+   ri1 = ci1; ri2 = ci2; ri3 = ci3; ri4 = ci4;
+   ci1 = 3*numNonIdealCells[2]; ci2 = ci1 + 6*numNonIdealCells[3]; ci3 = ci2 + 10*numNonIdealCells[4];
+   D = 2; // mCC[2]
+   for (unsigned long j=0; j<3*numNonIdealCells[2]; j++)
+	{ // j%3,  sCC[D]->entry( *, j )
+	 fac = tri->getFace(nicIx[2][j/3]);
+	}
+   for (unsigned long j=0; j<6*numNonIdealCells[3]; j++)
+	{ // j%6,  sCC[D]->entry( *, ci1+j )
+	 tet = tri->getTetrahedron(nicIx[3][j/6]);
+	}
+   for (unsigned long j=0; j<10*numNonIdealCells[4]; j++)
+	{ // j%10, sCC[D]->entry( *, ci2+j )
+	 pen = tri->getPentachoron(nicIx[4][j/10]);
+	}
+   for (unsigned long j=0; j<numIdealCells[2]; j++)
+	{ // j$3,  sCC[D]->entry( *, ci3+j )
+	 tet = tri->getTetrahedron( icIx[D][j]/3 );
+	}
+
+   ri1 = ci1; ri2 = ci2; ri3 = ci3;
+   ci1 = 4*numNonIdealCells[3]; ci2 = ci1 + 10*numNonIdealCells[4];
+   D = 3; // mcc[3]
+   for (unsigned long j=0; j<4*numNonIdealCells[3]; j++)
+	{ // j%4, sCC[D]->entry( *, j )
+	}
+   for (unsigned long j=0; j<10*numNonIdealCells[4]; j++)
+	{ // j%10, sCC[D]->entry( *, ci1 + j )
+	}
+   for (unsigned long j=0; j<numIdealCells[3]; j++)
+	{ // j%3, sCC[D]->entry( *, ci2 + j )
+	}
+
+   ri1 = ci1; ri2 = ci2;
+   D = 4; // mcc[4]
+   for (unsigned long j=0; j<5*numNonIdealCells[4]; j++)
+	{ // j%5, sCC[D]->entry( *, j )
+	}   
+
+}
+
+
 // constructor for 4-manifold triangulations
 NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
         tri3(0), tri4(new Dim4Triangulation(input)),
@@ -462,9 +733,9 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
     bsCC[0] = new NMatrixInt(1, numStandardBdryCells[0]);
     bsCC[3] = new NMatrixInt(numStandardBdryCells[2], 1);
 
-//   fillStandardHomologyCC( tri3, numStandardCells, numNonIdealCells, numIdealCells, 
-//			nicIx, icIx, sCC);
-//   fillDualHomologyCC( tri3, numDualCells, dcIx, dCC );
+   fillStandardHomologyCC( tri3, numStandardCells, numNonIdealCells, numIdealCells, 
+			nicIx, icIx, sCC);
+   fillDualHomologyCC( tri3, numDualCells, dcIx, dCC );
    // todo: mixed homology, boundary homology, 
    //       standard->mixed, dual->mixed, fast 1-cell approx...
 }
