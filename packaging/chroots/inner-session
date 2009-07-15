@@ -91,6 +91,9 @@ case "$os" in
 	Fedora\ release\ 10\ * )
 		distro="Fedora 10"
 		;;
+	Fedora\ release\ 11\ * )
+		distro="Fedora 10"
+		;;
 	?Welcome\ to\ openSUSE\ 11.0\ * )
 		distro="SuSE 11.0"
 		;;
