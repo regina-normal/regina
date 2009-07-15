@@ -142,9 +142,11 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          *
          * Note that edge \i is always opposite face \i in a pentachoron.
          *
-         * This is the 4-manifold analogue to the lookup table NEdge::edgeNumber
-         * for 3-manifold triangulations (and its deprecated predecessor,
-         * the old global array regina::edgeNumber).
+         * This table is the 4-manifold analogue to the 3-manifold table
+         * NEdge::edgeNumber.  Note that NEdge::edgeNumber is still used
+         * by 4-manifold triangulations to describe the numbering of
+         * \a tetrahedron edges 0,...,5; see Dim4Tetrahedron::getEdge()
+         * for details.
          */
         static const int edgeNumber[5][5];
 
@@ -162,9 +164,11 @@ class Dim4Edge : public ShareableObject, public NMarkedElement {
          * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
          * be smaller than <tt>edgeVertex[i][1]</tt>.
          *
-         * This is the 4-manifold analogue to the lookup table NEdge::edgeVertex
-         * for 3-manifold triangulations (and its deprecated predecessors,
-         * the old global arrays regina::edgeStart and regina::edgeEnd).
+         * This table is the 4-manifold analogue to the 3-manifold table
+         * NEdge::edgeVertex.  Note that NEdge::edgeVertex is still used
+         * by 4-manifold triangulations to describe the numbering of
+         * \a tetrahedron edges 0,...,5; see Dim4Tetrahedron::getEdge()
+         * for details.
          */
         static const int edgeVertex[10][2];
 
