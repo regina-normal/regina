@@ -1,4 +1,5 @@
 # Known to work for:
+# - Fedora 11 (i386, x86_64)
 # - Fedora 10 (i386, x86_64)
 # - Fedora 9 (i386, x86_64)
 # - Fedora 8 (i386, x86_64)
@@ -145,6 +146,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/*
 
 %changelog
+* Wed Jul 15 2009 Ben Burton <bab@debian.org> 4.6
+- Built for Fedora 11, which was released last month.
+
 * Sat May 16 2009 Ben Burton <bab@debian.org> 4.6
 - New upstream release.
 
