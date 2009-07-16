@@ -15,6 +15,7 @@
 # - The log filename ends in .log, and there is precisely one such file
 #   in the given directory;
 # - All data filenames end in .rga;
+# - The corresponding tricensus-mpi job made use of subsearches (--depth);
 # - The script tricensus-mpi-status is somewhere on the default search path.
 #
 set -e

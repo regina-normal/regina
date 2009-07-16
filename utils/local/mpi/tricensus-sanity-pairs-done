@@ -16,6 +16,7 @@
 #   in the given directory;
 # - The pairings filename is of the form *pairs*, and there is precisely
 #   one such file in the given directory;
+# - The corresponding tricensus-mpi job made use of subsearches (--depth);
 # - The script tricensus-mpi-status is somewhere on the default search path.
 #
 set -e
