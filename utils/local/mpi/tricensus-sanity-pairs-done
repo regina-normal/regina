@@ -17,6 +17,7 @@
 # - The pairings filename is of the form *pairs*, and there is precisely
 #   one such file in the given directory;
 # - The script tricensus-mpi-status is somewhere on the default search path.
+#
 set -e
 
 # Some sanity checking on arguments and preconditions.
