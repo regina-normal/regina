@@ -13,11 +13,15 @@ INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@ @UTILS_LIBS@ @MPILIBS@
 
 noinst_PROGRAMS = distinguish-mpi equiv-mpi normal-mpi
-noinst_SCRIPTS = normal-mpi-sanity
+noinst_SCRIPTS = normal-mpi-sanity tricensus-sanity-pairs-coverage tricensus-sanity-pairs-done tricensus-sanity-tricount
 
 distinguish_mpi_SOURCES = distinguish-mpi.cpp
 equiv_mpi_SOURCES = equiv-mpi.cpp
 normal_mpi_SOURCES = normal-mpi.cpp
 
-EXTRA_DIST = README.txt normal-mpi-sanity
+EXTRA_DIST = README.txt \
+	normal-mpi-sanity \
+	tricensus-sanity-pairs-coverage \
+	tricensus-sanity-pairs-done \
+	tricensus-sanity-tricount
 
