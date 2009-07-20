@@ -82,10 +82,8 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo cohomology, coordinate maps. bilinear forms from Poincare duality, lastly, spin structures, 
- *       have getGroup, getHom etc return pointers instead of references. 
- *       add routine so users can request whether or not ncellulardata considers
- *       a getGroup or getHom request valid. 
+ * \todo dual->mixed, boundary->standard, cohomology,
+ *       Poincare duality, bilinear forms, spin structures. 
  * \todo \optlong Add an option to limit precomputed pile size, then when you reach the limit you 
  *       prune the pile according to how often / recent you use various items, deallocating the oldest
  *       least popular pile items first.
@@ -297,8 +295,8 @@ public:
     long eulerChar() const;
 
     /**
-     * Runs through all the various standard homomorphisms between boundary, standard, dual and mixed
-     *  homologies and checks the matrices defining them really are chain maps.
+     * Verifies that the maps used to define the various homology groups for the manifold are
+     * actually chain complexes. 
      *
      * This procedure is largely for debugging purposes as in any release this should always produce
      *  true.
@@ -307,6 +305,15 @@ public:
      *         chain complexes.
      */
     bool chainComplexesVerified() const;
+
+    /**
+     * Runs through all the various standard homomorphisms between boundary, standard, dual and mixed
+     *  homologies and checks the matrices defining them really are chain maps.
+     *
+     * @return true if all homomorphisms are defined by matrices that really are chain maps of
+     *         chain complexes.
+     */
+    bool chainMapsVerified() const;
 
     /**
      * If all the chain complexes check out, might as well verify a few basic isomorphisms as well. 
@@ -323,24 +330,15 @@ public:
     /**
      * Computes an NAbelianGroup or retrieves it from the precomputed pile. 
      */
-    const NAbelianGroup& unmarkedGroup( const unsigned long dimension, 
-		const unsigned long coefficients, const variance_type variance, 
-		const homology_coordinate_system coordinates) const;
+    const NAbelianGroup* unmarkedGroup( const GroupLocator g_desc) const;
     /**
      * Computes an NMarkedAbelianGroup or retrieves it from the precomputed pile. 
      */
-    const NMarkedAbelianGroup& markedGroup( const unsigned long dimension, 
-		const unsigned long coefficients, const variance_type variance, 
-		const homology_coordinate_system coordinates) const;
+    const NMarkedAbelianGroup* markedGroup( const GroupLocator g_desc) const;
     /**
      * Computes an NHomMarkedAbelianGroup or retrieves it from the precomputed pile. 
      */
-    const NHomMarkedAbelianGroup& homGroup( const unsigned long dom_dimension, 
-		const unsigned long dom_coefficients, const variance_type dom_variance, 
-		const homology_coordinate_system dom_coordinates,  
-		const unsigned long ran_dimension, 
-		const unsigned long ran_coefficients, const variance_type ran_variance, 
-		const homology_coordinate_system ran_coordinates) const;
+    const NHomMarkedAbelianGroup* homGroup( const HomLocator h_desc) const;
 
 
     //todo: bilinear forms return object for Poincare duality objects.

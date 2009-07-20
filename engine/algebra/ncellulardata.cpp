@@ -1153,7 +1153,20 @@ void fillBoundaryHomologyCC(const NTriangulation* tri,
 	}
 }
 
+void fillStandardToMixedHomCM( unsigned aDim, 
+        const unsigned long numStandardCells[5],                 const unsigned long numMixCells[5], 
+	const unsigned long numIdealCells[4],                    const unsigned long numNonIdealCells[5],
+        std::vector< NMatrixInt* > &s_mCM)
+{
+ for (unsigned d=0; d<aDim+1; d++) s_mCM[d] = new NMatrixInt( numMixCells[d], numStandardCells[d] );
+ long int delta[aDim]; for (unsigned long d=0; d<aDim; d++) delta[d] = numMixCells[d] - numIdealCells[d] - numNonIdealCells[d];
 
+ for (unsigned long d=0; d<aDim+1; d++) for (unsigned long j=0; j<s_mCM[d]->columns(); j++)
+    { // each standard d-dimensional simplex divided into d+1 bits.
+     if (j < numNonIdealCells[d]) for (unsigned long i=0; i<d+1; i++) s_mCM[d]->entry( (d+1)*j + i, j ) = 1; 
+     else s_mCM[d]->entry( delta[d] + j, j ) = 1;
+    }
+}
 
 
 // constructor for 4-manifold triangulations
@@ -1172,8 +1185,9 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
  
    fillBoundaryHomologyCC( tri4, numStandardBdryCells, numIdealCells, numNonIdealBdryCells, bcIx, icIx, bsCC );
 
+   fillStandardToMixedHomCM( 4, numStandardCells, numMixCells, numIdealCells, numNonIdealCells, s_mCM );
+
    // next:
-   // fillStandardHom
    // fillDualHom
    // fillBdryHom
 
@@ -1195,8 +1209,9 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
 
    fillBoundaryHomologyCC( tri3, numStandardBdryCells, numIdealCells, numNonIdealBdryCells, bcIx, icIx, bsCC );
 
+   fillStandardToMixedHomCM( 3, numStandardCells, numMixCells, numIdealCells, numNonIdealCells, s_mCM );
+
    // next:
-   // fillStandardHom
    // fillDualHom
    // fillBdryHom
 
@@ -1236,6 +1251,30 @@ for (unsigned long i=0; i<bsCC.size()-1; i++) if (bsCC[i] && bsCC[i+1])
 return true;
 }
 
+void dumpMat( NMatrixRing<NLargeInteger> mat )
+{
+for (unsigned long j=0; j<mat.columns(); j++)
+ {
+ std::cout<<"[";
+ for (unsigned long i=0; i<mat.rows(); i++)
+  std::cout<<mat.entry(i,j)<<" ";
+ std::cout<<"]\n";
+ }
+}
+
+bool NCellularData::chainMapsVerified() const
+{
+// verify mCC[i]*s_mCM[i] == s_mCM[i-1]*sCC[i]
+for (unsigned long i=1; i<s_mCM.size(); i++) if (s_mCM[i] && s_mCM[i-1] && mCC[i] && sCC[i])
+ {
+  if ( (mCC[i]->columns() != s_mCM[i]->rows()) || (s_mCM[i-1]->columns() != sCC[i]->rows()) ) return false;
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*s_mCM[i]);
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*s_mCM[i-1])*(*sCC[i]);
+  if ( (*prod1) != (*prod2) ) { std::cout<<"Err dim "<<i<<" and "<<i-1<<"\n"; dumpMat(*prod1); std::cout<<"\n"; dumpMat(*prod2); return false; }
+ }
+return true;
+}
+
 bool NCellularData::coordinateIsomorphismsVerified() const
 {
 return true;
@@ -1246,84 +1285,106 @@ void NCellularData::writeTextShort(std::ostream& out) const {
 bool written=false;
 }
 
-const NAbelianGroup& NCellularData::unmarkedGroup( const unsigned long dimension, 
-		const unsigned long coefficients, const variance_type variance, 
-		const homology_coordinate_system coordinates) const
+const NAbelianGroup* NCellularData::unmarkedGroup( const GroupLocator g_desc) const
 {
+return NULL;
 }
 
-const NMarkedAbelianGroup& NCellularData::markedGroup( const unsigned long dimension, 
-		const unsigned long coefficients, const variance_type variance, 
-		const homology_coordinate_system coordinates) const
+const NMarkedAbelianGroup* NCellularData::markedGroup( const GroupLocator g_desc) const
 {
-GroupLocator g_desc(dimension, variance, coordinates, coefficients);
 std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator p;
 p = markedAbelianGroups.find(g_desc);
-if (p != markedAbelianGroups.end()) return (*p->second);
+if (p != markedAbelianGroups.end()) return (p->second);
 // okay, so now we know there's no group matching g_desc in markedAbelianGroups, so we make one.
 NMarkedAbelianGroup* mgptr;
-if (variance == coVariant) // homology requested
+if (g_desc.var == coVariant) // homology requested
  {
-  if (coordinates == DUAL_coord)
+  if (g_desc.hcs == DUAL_coord)
   {
-   if (coefficients == 0) mgptr = new NMarkedAbelianGroup( *dCC[dimension], *dCC[dimension+1] );
-   else mgptr = new NMarkedAbelianGroup( *dCC[dimension], *dCC[dimension+1], NLargeInteger(coefficients) );
+   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *dCC[g_desc.dim], *dCC[g_desc.dim+1] );
+   else mgptr = new NMarkedAbelianGroup( *dCC[g_desc.dim], *dCC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
    std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
 	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
    mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
-   return *mgptr;
+   return mgptr;
  } 
- else if (coordinates == STD_coord)
+ else if (g_desc.hcs == STD_coord)
   {
-   if (coefficients == 0) mgptr = new NMarkedAbelianGroup( *sCC[dimension], *sCC[dimension+1] );
-   else mgptr = new NMarkedAbelianGroup( *sCC[dimension], *sCC[dimension+1], NLargeInteger(coefficients) );
+   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *sCC[g_desc.dim], *sCC[g_desc.dim+1] );
+   else mgptr = new NMarkedAbelianGroup( *sCC[g_desc.dim], *sCC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
    std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
 	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
    mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
-   return *mgptr;
+   return mgptr;
   } 
- else if (coordinates == MIX_coord)
-  { // coordinates == MIX_coord
-   if (coefficients == 0) mgptr = new NMarkedAbelianGroup( *mCC[dimension], *mCC[dimension+1] );
-   else mgptr = new NMarkedAbelianGroup( *mCC[dimension], *mCC[dimension+1], NLargeInteger(coefficients) );
+ else if (g_desc.hcs == MIX_coord)
+  { // g_desc.hcs == MIX_coord
+   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *mCC[g_desc.dim], *mCC[g_desc.dim+1] );
+   else mgptr = new NMarkedAbelianGroup( *mCC[g_desc.dim], *mCC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
    std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
 	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
    mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
-   return *mgptr;
+   return mgptr;
   }
- else if (coordinates == STD_BDRY_coord)
+ else if (g_desc.hcs == STD_BDRY_coord)
   {
-   if (coefficients == 0) mgptr = new NMarkedAbelianGroup( *bsCC[dimension], *bsCC[dimension+1] );
-   else mgptr = new NMarkedAbelianGroup( *bsCC[dimension], *bsCC[dimension+1], NLargeInteger(coefficients) );
+   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *bsCC[g_desc.dim], *bsCC[g_desc.dim+1] );
+   else mgptr = new NMarkedAbelianGroup( *bsCC[g_desc.dim], *bsCC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
    std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
 	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
    mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
-   return *mgptr;
+   return mgptr;
   }
  }
 else // cohomology requested
- {
-  if (coordinates == DUAL_coord)
+ { // todo!
+  if (g_desc.hcs == DUAL_coord)
+  { 
+  } 
+ else if (g_desc.hcs == STD_coord)
   {
   } 
- else if (coordinates == STD_coord)
+ else if (g_desc.hcs == MIX_coord)
+  { 
+  }
+ else if (g_desc.hcs == STD_BDRY_coord)
   {
-  } 
- else
-  { // coordinates == MIX_coord
   }
  }
 
-
+return NULL;
 }
 
-const NHomMarkedAbelianGroup& NCellularData::homGroup( const unsigned long dom_dimension, 
-		const unsigned long dom_coefficients, const variance_type dom_variance, 
-		const homology_coordinate_system dom_coordinates,  
-		const unsigned long ran_dimension, 
-		const unsigned long ran_coefficients, const variance_type ran_variance, 
-		const homology_coordinate_system ran_coordinates) const
+const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator h_desc) const
 {
+std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator p;
+p = homMarkedAbelianGroups.find(h_desc);
+if (p != homMarkedAbelianGroups.end()) return (p->second);
+// okay, so now we know there's no group matching g_desc in markedAbelianGroups, so we make one.
+NHomMarkedAbelianGroup* hmgptr;
+//  ensure we have domain and range
+const NMarkedAbelianGroup* dom = markedGroup( h_desc.domain );
+const NMarkedAbelianGroup* ran = markedGroup( h_desc.range );
+//  find the appropriate chain complex
+if ( (h_desc.domain.var == coVariant) && (h_desc.range.var == coVariant) && // standard homology->homology map
+     (h_desc.domain.dim == h_desc.range.dim) )
+ {
+   if ( (h_desc.domain.hcs == STD_coord) && (h_desc.range.hcs == MIX_coord) )
+	{
+   	hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *(s_mCM[h_desc.domain.dim]) );
+   	std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
+		const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
+	hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
+	return hmgptr;
+	}
+ } else
+if ( (h_desc.domain.var == contraVariant) && (h_desc.range.var == contraVariant) && // standard cohomology->cohomology map
+     (h_desc.domain.dim == h_desc.range.dim) )
+ {
+ }
+
+
+return NULL;
 }
 
 
