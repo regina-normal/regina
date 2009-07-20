@@ -97,7 +97,7 @@ class Dim4Triangulation;
 class NCellularData : public ShareableObject {
 public:
 
- enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord };
+ enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord, STD_BDRY_coord };
  enum variance_type { coVariant, contraVariant }; // homology / cohomology specifier
 
  struct GroupLocator {
@@ -148,9 +148,10 @@ private:
      *                        in dimensions: 0, 1, 2, (3). 
      * numNonIdealCells - number of non-ideal cells in standard CW-decomposition in dimension: 0, 1, 2, 3, (4) 
      * numIdealCells    - number of ideal cells in standard CW-decomposition in dimension: 0, 1, 2, (3) 
+     * numNonIdealBdryCells - numStandardBdryCells - numIdealCells: 0, 1, 2, (3). 
      */
    unsigned long numStandardCells[5], numDualCells[5], numMixCells[5], numStandardBdryCells[4], 
-                 numNonIdealCells[5], numIdealCells[4];
+                 numNonIdealCells[5], numIdealCells[4], numNonIdealBdryCells[4];
 
     /** 
      * Chain complex indexing and orientation and boundary-map conventions:
@@ -376,6 +377,7 @@ for (unsigned long i=0; i<5; i++) numMixCells[i] = g.numMixCells[i];
 for (unsigned long i=0; i<4; i++) numStandardBdryCells[i] = g.numStandardBdryCells[i];
 for (unsigned long i=0; i<5; i++) numNonIdealCells[i] = g.numNonIdealCells[i];
 for (unsigned long i=0; i<4; i++) numIdealCells[i] = g.numIdealCells[i];
+for (unsigned long i=0; i<4; i++) numNonIdealBdryCells[i] = g.numNonIdealBdryCells[i];
 
 // the chain complexes and maps
 for (unsigned long i=0; i<sCC.size(); i++)       sCC[i] = clonePtr(g.sCC[i]);
