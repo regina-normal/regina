@@ -82,7 +82,7 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo dual->mixed, boundary->standard, cohomology, standard coordinates rel boundary, 
+ * \todo boundary->standard, cohomology, standard coordinates rel boundary, 
  *       map std->std w/boundary, boundary map std w/bdry -> std with shifted degree, 
  *       test for exactness of LES of pair (M, bdry M), Poincare duality, bilinear forms, spin structures. 
  * \todo \optlong Add an option to limit precomputed pile size, then when you reach the limit you 
