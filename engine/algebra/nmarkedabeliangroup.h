@@ -79,8 +79,6 @@ class NHomMarkedAbelianGroup;
  * @author Ryan Budney
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
- * \todo \optlong Add Hom, Ext, Tor, and \otimes, torsion linking form and intersection product
- *  as maps out of tensor products.  Tor is implemented at least against Z_p now... 
  * \todo testsuite additions: isBoundary(),  boundaryMap(), writeAsBdry(), cycleGen().
  */
 class NMarkedAbelianGroup : public ShareableObject {
@@ -825,6 +823,22 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          */
         void writeReducedMatrix(std::ostream& out) const;
 };
+
+/**
+  *  The bilinear form class is designed to hold homomorphisms from the tensor product of
+  *  two marked abelian groups to a marked abelian group.  This object allows for the computation
+  *  of the Kawauchi-Kojima invariants of the torsion linking form of 3-manifolds, and the
+  *  signature of a 4-manifold. 
+  */
+/*
+class NBilinearForm : public ShareableObject {
+    private:
+	NMarkedAbelianGroup lDomain, rDomain, Range;
+        // data type which holds the pairing needs to be a 3-dimensional array of NLargeIntegers or maybe just
+        // long ints, and we can have the reduced pairing.  Should we even store the original pairing? 
+    public:
+};
+*/
 
 /*@}*/
 

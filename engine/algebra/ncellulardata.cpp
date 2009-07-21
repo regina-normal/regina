@@ -1153,7 +1153,7 @@ void fillBoundaryHomologyCC(const NTriangulation* tri,
 	}
 }
 
-void fillStandardToMixedHomCM( unsigned aDim, 
+void fillStandardToMixedHomCM( unsigned aDim, // dimension of the triangulation
         const unsigned long numStandardCells[5],                 const unsigned long numMixCells[5], 
 	const unsigned long numIdealCells[4],                    const unsigned long numNonIdealCells[5],
         std::vector< NMatrixInt* > &s_mCM)
@@ -1168,6 +1168,35 @@ void fillStandardToMixedHomCM( unsigned aDim,
     }
 }
 
+/* 
+ * 0-cells:  <nicIx[0]>, nicIx[1], nicIx[2], nicIx[3], [nicIx[4]], <icIx[0]>.
+ *           +           +         +         +         [+]         boundary or. 
+ * 1-cells:  <2*nicIx[1]>, 3*nicIx[2], 4*nicIx[3], [5*nicIx[4]], <icIx[1]>
+ *           edge or.      outward or. outward or. [dual]          boundary or. 
+ * 2-cells:  <3*nicIx[2]>, (4 choose 2 == 6)*nicIx[3], [(5 choose 3 == 10)*nicIx[4]], <icIx[2]>
+ *           face or.      char map conv.              [dual]               
+ * 3-cells:  <4*nicIx[3]>, [(5 choose 2 == 10)*nicIx[4]], <icIx[3]>
+ *           tetra or.     [dual]                         boundary or.
+ * 4-cells:  [<5*nicIx[4]>]
+ *           Inherits orientation of pentachoron 
+ */
+
+/*
+void fillDualToMixedHomCM( const Dim4Triangulation* tri,
+        const unsigned long numMixCells[5], 			 const unsigned long numDualCells[5], 
+	const unsigned long numIdealCells[4],                    const unsigned long numNonIdealCells[5],
+        std::vector< NMatrixInt* > &d_mCM)
+{
+ for (unsigned d=0; d<aDim+1; d++) s_mCM[d] = new NMatrixInt( numMixCells[d], numStandardCells[d] );
+ long int delta[aDim]; for (unsigned long d=0; d<aDim; d++) delta[d] = numMixCells[d] - numIdealCells[d] - numNonIdealCells[d];
+
+ for (unsigned long d=0; d<aDim+1; d++) for (unsigned long j=0; j<s_mCM[d]->columns(); j++)
+    { // each standard d-dimensional simplex divided into d+1 bits.
+     if (j < numNonIdealCells[d]) for (unsigned long i=0; i<d+1; i++) s_mCM[d]->entry( (d+1)*j + i, j ) = 1; 
+     else s_mCM[d]->entry( delta[d] + j, j ) = 1;
+    }
+}
+*/
 
 // constructor for 4-manifold triangulations
 NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
@@ -1199,8 +1228,8 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
 	nicIx(4), icIx(3), dcIx(4), bcIx(3), // indexing cells 
 	sCC(5), dCC(5), mCC(5), bsCC(4), bs_sCM(3), s_mCM(4), d_mCM(4) // chain complexes and maps
 {
-    setupIndices( tri3, nicIx, icIx, dcIx, bcIx, numStandardCells, numDualCells, numMixCells, 
-			numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells );
+   setupIndices( tri3, nicIx, icIx, dcIx, bcIx, numStandardCells, numDualCells, numMixCells, 
+		 numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells );
         
    fillStandardHomologyCC( tri3, numStandardCells, numNonIdealCells, numIdealCells, 
 			nicIx, icIx, sCC);
@@ -1247,6 +1276,7 @@ for (unsigned long i=0; i<bsCC.size()-1; i++) if (bsCC[i] && bsCC[i+1])
    for (unsigned long j=0; j<prod->rows(); j++) for (unsigned long k=0; k<prod->columns(); k++)
        if (prod->entry(j,k) != 0) return false;
   }
+ // todo: rel boundary.
 
 return true;
 }
@@ -1270,7 +1300,7 @@ for (unsigned long i=1; i<s_mCM.size(); i++) if (s_mCM[i] && s_mCM[i-1] && mCC[i
   if ( (mCC[i]->columns() != s_mCM[i]->rows()) || (s_mCM[i-1]->columns() != sCC[i]->rows()) ) return false;
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*s_mCM[i]);
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*s_mCM[i-1])*(*sCC[i]);
-  if ( (*prod1) != (*prod2) ) { std::cout<<"Err dim "<<i<<" and "<<i-1<<"\n"; dumpMat(*prod1); std::cout<<"\n"; dumpMat(*prod2); return false; }
+  if ( (*prod1) != (*prod2) ) return false; 
  }
 return true;
 }
@@ -1280,13 +1310,37 @@ bool NCellularData::coordinateIsomorphismsVerified() const
 return true;
 }
 
-
 void NCellularData::writeTextShort(std::ostream& out) const {
 bool written=false;
 }
 
 const NAbelianGroup* NCellularData::unmarkedGroup( const GroupLocator g_desc) const
 {
+std::map< GroupLocator, NAbelianGroup* >::const_iterator p;
+p = abelianGroups.find(g_desc);
+if (p != abelianGroups.end()) return (p->second);
+// okay, so now we know there's no group matching g_desc in markedAbelianGroups, so we make one.
+NAbelianGroup* gptr;
+
+std::vector< NMatrixInt* > CC; // choose the right chain complex
+if (g_desc.hcs == DUAL_coord) CC = dCC; else if (g_desc.hcs == STD_coord) CC = sCC; else
+if (g_desc.hcs == MIX_coord) CC = mCC; else if (g_desc.hcs == STD_BDRY_coord) CC = bsCC; else
+if (g_desc.hcs == STD_REL_BDRY_coord) {}
+
+if (g_desc.var == coVariant) // homology requested
+ {
+  if (g_desc.cof == 0) gptr = new NAbelianGroup( *CC[g_desc.dim], *CC[g_desc.dim+1] );
+   else gptr = new NAbelianGroup( *CC[g_desc.dim], *CC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
+
+  std::map< GroupLocator, NAbelianGroup* > *abgptr = 
+	const_cast< std::map< GroupLocator, NAbelianGroup* > *> (&abelianGroups);
+  abgptr->insert(std::pair<GroupLocator,NAbelianGroup*>(g_desc,gptr)); 
+   return gptr;
+ }
+else // cohomology requested
+ { // todo!
+ }
+
 return NULL;
 }
 
@@ -1297,59 +1351,24 @@ p = markedAbelianGroups.find(g_desc);
 if (p != markedAbelianGroups.end()) return (p->second);
 // okay, so now we know there's no group matching g_desc in markedAbelianGroups, so we make one.
 NMarkedAbelianGroup* mgptr;
+
+std::vector< NMatrixInt* > CC; // choose the right chain complex
+if (g_desc.hcs == DUAL_coord) CC = dCC; else if (g_desc.hcs == STD_coord) CC = sCC; else
+if (g_desc.hcs == MIX_coord) CC = mCC; else if (g_desc.hcs == STD_BDRY_coord) CC = bsCC; else
+if (g_desc.hcs == STD_REL_BDRY_coord) {}
+
 if (g_desc.var == coVariant) // homology requested
  {
-  if (g_desc.hcs == DUAL_coord)
-  {
-   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *dCC[g_desc.dim], *dCC[g_desc.dim+1] );
-   else mgptr = new NMarkedAbelianGroup( *dCC[g_desc.dim], *dCC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
-   std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
+  if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *CC[g_desc.dim], *CC[g_desc.dim+1] );
+   else mgptr = new NMarkedAbelianGroup( *CC[g_desc.dim], *CC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
+
+  std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
 	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
-   mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
+  mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
    return mgptr;
- } 
- else if (g_desc.hcs == STD_coord)
-  {
-   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *sCC[g_desc.dim], *sCC[g_desc.dim+1] );
-   else mgptr = new NMarkedAbelianGroup( *sCC[g_desc.dim], *sCC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
-   std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
-	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
-   mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
-   return mgptr;
-  } 
- else if (g_desc.hcs == MIX_coord)
-  { // g_desc.hcs == MIX_coord
-   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *mCC[g_desc.dim], *mCC[g_desc.dim+1] );
-   else mgptr = new NMarkedAbelianGroup( *mCC[g_desc.dim], *mCC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
-   std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
-	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
-   mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
-   return mgptr;
-  }
- else if (g_desc.hcs == STD_BDRY_coord)
-  {
-   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *bsCC[g_desc.dim], *bsCC[g_desc.dim+1] );
-   else mgptr = new NMarkedAbelianGroup( *bsCC[g_desc.dim], *bsCC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
-   std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
-	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
-   mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
-   return mgptr;
-  }
  }
 else // cohomology requested
  { // todo!
-  if (g_desc.hcs == DUAL_coord)
-  { 
-  } 
- else if (g_desc.hcs == STD_coord)
-  {
-  } 
- else if (g_desc.hcs == MIX_coord)
-  { 
-  }
- else if (g_desc.hcs == STD_BDRY_coord)
-  {
-  }
  }
 
 return NULL;

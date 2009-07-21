@@ -82,8 +82,9 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo dual->mixed, boundary->standard, cohomology,
- *       Poincare duality, bilinear forms, spin structures. 
+ * \todo dual->mixed, boundary->standard, cohomology, standard coordinates rel boundary, 
+ *       map std->std w/boundary, boundary map std w/bdry -> std with shifted degree, 
+ *       test for exactness of LES of pair (M, bdry M), Poincare duality, bilinear forms, spin structures. 
  * \todo \optlong Add an option to limit precomputed pile size, then when you reach the limit you 
  *       prune the pile according to how often / recent you use various items, deallocating the oldest
  *       least popular pile items first.
@@ -95,7 +96,7 @@ class Dim4Triangulation;
 class NCellularData : public ShareableObject {
 public:
 
- enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord, STD_BDRY_coord };
+ enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord, STD_BDRY_coord, STD_REL_BDRY_coord };
  enum variance_type { coVariant, contraVariant }; // homology / cohomology specifier
 
  struct GroupLocator {

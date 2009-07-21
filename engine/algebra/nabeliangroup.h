@@ -86,6 +86,30 @@ class NAbelianGroup : public ShareableObject {
          * @param cloneMe the group to clone.
          */
         NAbelianGroup(const NAbelianGroup& cloneMe);
+	/**
+	 * Creates an abelian group as the homology of a chain complex.
+         *
+         * \pre M.columns() = N.rows().
+         * \pre The product M*N = 0.
+         *
+         * @param M the `right' matrix in chain complex
+         * @param N `left' matrix in chain complex	 
+         */
+	NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
+	/**
+	 * Creates an abelian group as the homology of a chain complex, using
+         * mod-p coefficients.
+         *
+         * \pre M.columns() = N.rows().
+         * \pre The product M*N = 0.
+         *
+         * @param M the `right' matrix in chain complex
+         * @param N `left' matrix in chain complex	 
+         * @param p any NLargeInteger. Zero is interpreted as a request for
+         *          integer coefficents.
+         */
+	NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N, const NLargeInteger &p);
+
         /**
          * Destroys the group.
          */
