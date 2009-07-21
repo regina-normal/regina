@@ -58,18 +58,20 @@ return false;
 // only used in the NCellularData constructor
 void setupIndices(const Dim4Triangulation* tri,   
  std::vector< std::vector<unsigned long> > &nicIx,  std::vector< std::vector<unsigned long> > &icIx, 
- std::vector< std::vector<unsigned long> > &dcIx,   std::vector< std::vector<unsigned long> > &bcIx, 
+ std::vector< std::vector<unsigned long> > &dcIx,   std::vector< std::vector<unsigned long> > &bcIx,
+ std::vector< std::vector<unsigned long> > &rIx,  
  unsigned long numStandardCells[5],    unsigned long numDualCells[5], 
  unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4], 
  unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 
- unsigned long numNonIdealBdryCells[4])
+ unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5])
 {
     // nicIx[0]  interior or boundary,  bcIx[0] boundary,  dcIx[4] interior vertices. 
     for (Dim4Triangulation::VertexIterator vit = tri->getVertices().begin();
             vit != tri->getVertices().end(); vit++) if ( !(*vit)->isIdeal() ) {
         nicIx[0].push_back( tri->vertexIndex(*vit) );
         if ((*vit)->isBoundary()) bcIx[0].push_back( tri->vertexIndex(*vit) ); else
-	 dcIx[4].push_back( tri->vertexIndex(*vit) );
+	 { dcIx[4].push_back( tri->vertexIndex(*vit) );
+           rIx[0].push_back( tri->vertexIndex(*vit) ); }
     } 
     // nicIx[1] all,  icIx[0] ideal ends, dcIx[3] nonboundary, bcIx[1] boundary
     for (Dim4Triangulation::EdgeIterator eit = tri->getEdges().begin();
@@ -78,6 +80,7 @@ void setupIndices(const Dim4Triangulation* tri,
         if ((*eit)->isBoundary()) bcIx[1].push_back( tri->edgeIndex(*eit) );
 	 else 
 	  { dcIx[3].push_back( tri->edgeIndex(*eit) );
+            rIx[1].push_back( tri->edgeIndex(*eit) );
             for (unsigned i=0;i<2;i++) if ((*eit)->getVertex(i)->isIdeal()) 
              icIx[0].push_back(2*tri->edgeIndex(*eit)+i); }
     }
@@ -88,6 +91,7 @@ void setupIndices(const Dim4Triangulation* tri,
         if ((*fit)->isBoundary()) bcIx[2].push_back( tri->faceIndex(*fit) );
 	 else
 	  { dcIx[2].push_back( tri->faceIndex(*fit) );
+            rIx[2].push_back( tri->faceIndex(*fit) );
             for (unsigned i=0;i<3;i++) if ((*fit)->getVertex(i)->isIdeal()) 
              icIx[1].push_back(3*tri->faceIndex(*fit)+i); }
     }
@@ -97,6 +101,7 @@ void setupIndices(const Dim4Triangulation* tri,
         if ((*tit)->isBoundary()) bcIx[3].push_back( tri->tetrahedronIndex(*tit) );
 	 else
  	  { dcIx[1].push_back( tri->tetrahedronIndex(*tit) );
+            rIx[3].push_back( tri->tetrahedronIndex(*tit) );
             for (unsigned i=0;i<4;i++) if ((*tit)->getVertex(i)->isIdeal()) 
              icIx[2].push_back(4*tri->tetrahedronIndex(*tit)+i); }
     }
@@ -104,6 +109,7 @@ void setupIndices(const Dim4Triangulation* tri,
             pit != tri->getPentachora().end(); pit++) {
 	nicIx[4].push_back( tri->pentachoronIndex(*pit) );
 	dcIx[0].push_back( tri->pentachoronIndex(*pit) );
+        rIx[4].push_back( tri->pentachoronIndex(*pit) );
         for (unsigned i=0;i<5;i++) if ((*pit)->getVertex(i)->isIdeal()) 
             icIx[3].push_back(5*tri->pentachoronIndex(*pit)+i);
     }
@@ -113,6 +119,7 @@ void setupIndices(const Dim4Triangulation* tri,
     numStandardCells[4] = nicIx[4].size();
     // dual (0..4)-cells:
     for (unsigned i=0; i<5; i++) numDualCells[i] = dcIx[i].size();
+    for (unsigned i=0; i<5; i++) numRelativeCells[i] = rIx[i].size();
     // boundary (0..3)-cells:
     for (unsigned i=0; i<4; i++) numStandardBdryCells[i] = bcIx[i].size() + icIx[i].size();
     // ideal and non-ideal cells:
@@ -136,17 +143,19 @@ void setupIndices(const Dim4Triangulation* tri,
 void setupIndices(const NTriangulation* tri,   
  std::vector< std::vector<unsigned long> > &nicIx,  std::vector< std::vector<unsigned long> > &icIx, 
  std::vector< std::vector<unsigned long> > &dcIx,   std::vector< std::vector<unsigned long> > &bcIx, 
+ std::vector< std::vector<unsigned long> > &rIx, 
  unsigned long numStandardCells[5],    unsigned long numDualCells[5], 
  unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4], 
  unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 
- unsigned long numNonIdealBdryCells[4])
+ unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5])
 {
     // nicIx[0]  interior or boundary,  bcIx[0] boundary,  dcIx[3] interior vertices. 
     for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
             vit != tri->getVertices().end(); vit++) if ( !(*vit)->isIdeal() ) {
         nicIx[0].push_back( tri->vertexIndex(*vit) );
         if ((*vit)->isBoundary()) bcIx[0].push_back( tri->vertexIndex(*vit) ); else
-	 dcIx[3].push_back( tri->vertexIndex(*vit) );
+	 { dcIx[3].push_back( tri->vertexIndex(*vit) );
+            rIx[0].push_back( tri->vertexIndex(*vit) ); }
     } 
     // nicIx[1] all,  icIx[0] ideal ends, dcIx[2] nonboundary, bcIx[1] boundary
     for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
@@ -155,6 +164,7 @@ void setupIndices(const NTriangulation* tri,
         if ((*eit)->isBoundary()) bcIx[1].push_back( tri->edgeIndex(*eit) );
 	 else 
 	  { dcIx[2].push_back( tri->edgeIndex(*eit) );
+	     rIx[1].push_back( tri->edgeIndex(*eit) );
             for (unsigned i=0;i<2;i++) if ((*eit)->getVertex(i)->isIdeal()) 
              icIx[0].push_back(2*tri->edgeIndex(*eit)+i); }
     }
@@ -165,6 +175,7 @@ void setupIndices(const NTriangulation* tri,
         if ((*fit)->isBoundary()) bcIx[2].push_back( tri->faceIndex(*fit) );
 	 else
 	  { dcIx[1].push_back( tri->faceIndex(*fit) );
+             rIx[2].push_back( tri->faceIndex(*fit) );
             for (unsigned i=0;i<3;i++) if ((*fit)->getVertex(i)->isIdeal()) 
              icIx[1].push_back(3*tri->faceIndex(*fit)+i); }
     }
@@ -173,6 +184,7 @@ void setupIndices(const NTriangulation* tri,
             tit != tri->getTetrahedra().end(); tit++) {
         nicIx[3].push_back( tri->tetrahedronIndex(*tit) );
         dcIx[0].push_back( tri->tetrahedronIndex(*tit) );
+         rIx[3].push_back( tri->tetrahedronIndex(*tit) );
         for (unsigned i=0;i<4;i++) if ((*tit)->getVertex(i)->isIdeal()) 
              icIx[2].push_back(4*tri->tetrahedronIndex(*tit)+i); 
     }
@@ -183,7 +195,8 @@ void setupIndices(const NTriangulation* tri,
     numStandardCells[4] = 0;
     // dual (0..3)-cells:
     for (unsigned i=0; i<4; i++) numDualCells[i] = dcIx[i].size();
-    numDualCells[4] = 0;
+    for (unsigned i=0; i<4; i++) numRelativeCells[i] = rIx[i].size();
+    numDualCells[4] = 0; numRelativeCells[4] = 0;
     // boundary (0..3)-cells:
     for (unsigned i=0; i<3; i++) numStandardBdryCells[i] = bcIx[i].size() + icIx[i].size();
     numStandardBdryCells[3] = 0;
@@ -1151,6 +1164,140 @@ void fillBoundaryHomologyCC(const NTriangulation* tri,
 	}
 }
 
+void dumpMat( NMatrixRing<NLargeInteger> mat )
+{
+for (unsigned long j=0; j<mat.columns(); j++)
+ {
+ std::cout<<"[";
+ for (unsigned long i=0; i<mat.rows(); i++)
+  std::cout<<mat.entry(i,j)<<" ";
+ std::cout<<"]\n";
+ }
+}
+
+void fillRelativeHomologyCC(const Dim4Triangulation* tri, 
+	const unsigned long numRelativeCells[5], const std::vector< std::vector< unsigned long > > &rIx, 
+	std::vector< NMatrixInt* > &rCC)
+{
+    // initialize chain complex matrices.
+    for (unsigned i=1; i<5; i++) // rCC[i] defined for i == 0, ..., 5
+	rCC[i] = new NMatrixInt(numRelativeCells[i-1], numRelativeCells[i]);
+    rCC[0] = new NMatrixInt(1, numRelativeCells[0]);
+    rCC[5] = new NMatrixInt(numRelativeCells[4], 1);
+
+    // various useful pointers, index holders.
+    const Dim4Vertex* vrt;  const Dim4Edge* edg;  const Dim4Face* fac; 
+	const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+    unsigned long I, J;
+    
+    // now we fill them out, first rCC.  rCC[0] is zero, 
+    unsigned long D=1; // rCC[D]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // rCC[D]->entry( *,j )
+	{ // endpts getEdge(rIx[D][j]) ideal?
+	edg = tri->getEdge(rIx[D][j]);
+	for (unsigned long i=0; i<D+1; i++) if ( (!edg->getVertex(i)->isIdeal()) && (!edg->getVertex(i)->isBoundary()) )
+	 {
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->vertexIndex( edg->getVertex(i) ) )
+	      - rIx[D-1].begin();
+	  rCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
+	 }
+	}
+
+    D = 2; // rCC[2]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // rCC[D]->entry( *,j )
+	{
+	fac = tri->getFace(rIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) if (!fac->getEdge(i)->isBoundary())
+	 { 
+	  NPerm5 P( fac->getEdgeMapping(i) );
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->edgeIndex( fac->getEdge(i) )) 
+		- rIx[D-1].begin();
+	  rCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+
+    D = 3; // rCC[3]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // rCC[D]->entry( *,j )
+	{
+	tet = tri->getTetrahedron(rIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) if (!tet->getFace(i)->isBoundary())
+	 { 
+	  NPerm5 P( tet->getFaceMapping(i) );
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->faceIndex( tet->getFace(i) )) 
+		- rIx[D-1].begin();
+	  rCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+
+    D = 4; // rCC[4]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // rCC[D]->entry( *,j )
+	{
+	pen = tri->getPentachoron(rIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) if (!pen->getTetrahedron(i)->isBoundary())
+	 { 
+	  NPerm5 P( pen->getTetrahedronMapping(i) );
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->tetrahedronIndex( pen->getTetrahedron(i) )) 
+		- rIx[D-1].begin();
+	  rCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+}
+
+void fillRelativeHomologyCC(const NTriangulation* tri, 
+	const unsigned long numRelativeCells[5], const std::vector< std::vector< unsigned long > > &rIx, 
+	std::vector< NMatrixInt* > &rCC)
+{
+    // initialize chain complex matrices.
+    for (unsigned i=1; i<4; i++) // rCC[i] defined for i == 0, ..., 5
+	rCC[i] = new NMatrixInt(numRelativeCells[i-1], numRelativeCells[i]);
+    rCC[0] = new NMatrixInt(1, numRelativeCells[0]);
+    rCC[4] = new NMatrixInt(numRelativeCells[3], 1);
+
+    // various useful pointers, index holders.
+    const NVertex* vrt;  const NEdge* edg;  const NFace* fac; const NTetrahedron* tet;
+    unsigned long I, J;
+    
+    // now we fill them out, first rCC.  rCC[0] is zero, 
+    unsigned long D=1; // rCC[D]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // rCC[D]->entry( *,j )
+	{ // endpts getEdge(rIx[D][j]) ideal?
+	edg = tri->getEdge(rIx[D][j]);
+	for (unsigned long i=0; i<D+1; i++) if ( (!edg->getVertex(i)->isIdeal()) && (!edg->getVertex(i)->isBoundary()) )
+	 {
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->vertexIndex( edg->getVertex(i) ) )
+	      - rIx[D-1].begin();
+	  rCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
+	 }
+	}
+
+    D = 2; // rCC[2]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // rCC[D]->entry( *,j )
+	{
+	fac = tri->getFace(rIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) if (!fac->getEdge(i)->isBoundary())
+	 { 
+	  NPerm4 P( fac->getEdgeMapping(i) );
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->edgeIndex( fac->getEdge(i) )) 
+		- rIx[D-1].begin();
+	  rCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+
+    D = 3; // rCC[3]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // rCC[D]->entry( *,j )
+	{
+	tet = tri->getTetrahedron(rIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) if (!tet->getFace(i)->isBoundary())
+	 { 
+	  NPerm4 P( tet->getFaceMapping(i) );
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->faceIndex( tet->getFace(i) )) 
+		- rIx[D-1].begin();
+	  rCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+}
+
+
 void fillStandardToMixedHomCM( unsigned aDim, // dimension of the triangulation
         const unsigned long numStandardCells[5],                 const unsigned long numMixCells[5], 
 	const unsigned long numIdealCells[4],                    const unsigned long numNonIdealCells[5],
@@ -1289,18 +1436,24 @@ void fillDualToMixedHomCM( const NTriangulation* tri, const unsigned long numDua
 // constructor for 4-manifold triangulations
 NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
         tri3(0), tri4(new Dim4Triangulation(input)),
-	nicIx(5), icIx(4), dcIx(5), bcIx(4), // indexing cells 
-	sCC(6), dCC(6), mCC(6), bsCC(5), bs_sCM(4), s_mCM(5), d_mCM(5) // chain complexes and maps
+	nicIx(5), icIx(4), dcIx(5), bcIx(4), rIx(5), // indexing cells 
+	sCC(6), dCC(6), mCC(6), bsCC(5), rCC(6), 
+	bs_sCM(4), s_mCM(5), d_mCM(5), s_rCM(5) // chain complexes and maps
 {
-   setupIndices( tri4, nicIx, icIx, dcIx, bcIx, numStandardCells, numDualCells, numMixCells, 
-			numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells );
+   setupIndices( tri4, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
+			numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells, 
+			numRelativeCells );
         
    fillStandardHomologyCC( tri4, numStandardCells, numNonIdealCells, numIdealCells, 
 			nicIx, icIx, sCC);
+
    fillDualHomologyCC( tri4, numDualCells, dcIx, dCC );
+
    fillMixedHomologyCC( tri4, numMixCells, numNonIdealCells, numIdealCells, icIx, nicIx, mCC );
  
    fillBoundaryHomologyCC( tri4, numStandardBdryCells, numIdealCells, numNonIdealBdryCells, bcIx, icIx, bsCC );
+
+   fillRelativeHomologyCC( tri4, numRelativeCells, rIx, rCC );
 
    fillStandardToMixedHomCM( 4, numStandardCells, numMixCells, numIdealCells, numNonIdealCells, s_mCM );
 
@@ -1308,33 +1461,39 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
 
    // next:
    // fillBdryHom
+   // fillRelativeHom
 
 }
 
 // constructor for 3-manifold triangulations
 NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
         tri4(0), tri3(new NTriangulation(input)), 
-	nicIx(4), icIx(3), dcIx(4), bcIx(3), // indexing cells 
-	sCC(5), dCC(5), mCC(5), bsCC(4), bs_sCM(3), s_mCM(4), d_mCM(4) // chain complexes and maps
+	nicIx(4), icIx(3), dcIx(4), bcIx(3), rIx(4), // indexing cells 
+	sCC(5), dCC(5), mCC(5), bsCC(4), rCC(5), 
+        bs_sCM(3), s_mCM(4), d_mCM(4), s_rCM(4) // chain complexes and maps
 {
-   setupIndices( tri3, nicIx, icIx, dcIx, bcIx, numStandardCells, numDualCells, numMixCells, 
-		 numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells );
+   setupIndices( tri3, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
+		 numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells,
+		 numRelativeCells );
         
    fillStandardHomologyCC( tri3, numStandardCells, numNonIdealCells, numIdealCells, 
 			nicIx, icIx, sCC);
+
    fillDualHomologyCC( tri3, numDualCells, dcIx, dCC );
+
    fillMixedHomologyCC( tri3, numMixCells, numNonIdealCells, numIdealCells, icIx, nicIx, mCC );
 
    fillBoundaryHomologyCC( tri3, numStandardBdryCells, numIdealCells, numNonIdealBdryCells, bcIx, icIx, bsCC );
+
+   fillRelativeHomologyCC( tri3, numRelativeCells, rIx, rCC );
 
    fillStandardToMixedHomCM( 3, numStandardCells, numMixCells, numIdealCells, numNonIdealCells, s_mCM );
 
    fillDualToMixedHomCM( tri3, numDualCells, numMixCells, numNonIdealCells, dcIx, d_mCM );
 
    // next:
-   // fillDualHom
    // fillBdryHom
-
+   // fillRelativeHom
 }
 
 bool NCellularData::chainComplexesVerified() const
@@ -1367,20 +1526,14 @@ for (unsigned long i=0; i<bsCC.size()-1; i++) if (bsCC[i] && bsCC[i+1])
    for (unsigned long j=0; j<prod->rows(); j++) for (unsigned long k=0; k<prod->columns(); k++)
        if (prod->entry(j,k) != 0) return false;
   }
- // todo: rel boundary.
-
+for (unsigned long i=0; i<rCC.size()-1; i++) if (rCC[i] && rCC[i+1])
+  {
+   if ( rCC[i]->columns() != rCC[i+1]->rows() ) return false;
+   std::auto_ptr< NMatrixRing<NLargeInteger> > prod = (*rCC[i])*(*rCC[i+1]);
+   for (unsigned long j=0; j<prod->rows(); j++) for (unsigned long k=0; k<prod->columns(); k++)
+       if (prod->entry(j,k) != 0) return false;
+  }
 return true;
-}
-
-void dumpMat( NMatrixRing<NLargeInteger> mat )
-{
-for (unsigned long j=0; j<mat.columns(); j++)
- {
- std::cout<<"[";
- for (unsigned long i=0; i<mat.rows(); i++)
-  std::cout<<mat.entry(i,j)<<" ";
- std::cout<<"]\n";
- }
 }
 
 bool NCellularData::chainMapsVerified() const
@@ -1425,7 +1578,7 @@ NAbelianGroup* gptr;
 std::vector< NMatrixInt* > CC; // choose the right chain complex
 if (g_desc.hcs == DUAL_coord) CC = dCC; else if (g_desc.hcs == STD_coord) CC = sCC; else
 if (g_desc.hcs == MIX_coord) CC = mCC; else if (g_desc.hcs == STD_BDRY_coord) CC = bsCC; else
-if (g_desc.hcs == STD_REL_BDRY_coord) {}
+if (g_desc.hcs == STD_REL_BDRY_coord) CC = rCC;
 
 if (g_desc.var == coVariant) // homology requested
  {
@@ -1455,7 +1608,7 @@ NMarkedAbelianGroup* mgptr;
 std::vector< NMatrixInt* > CC; // choose the right chain complex
 if (g_desc.hcs == DUAL_coord) CC = dCC; else if (g_desc.hcs == STD_coord) CC = sCC; else
 if (g_desc.hcs == MIX_coord) CC = mCC; else if (g_desc.hcs == STD_BDRY_coord) CC = bsCC; else
-if (g_desc.hcs == STD_REL_BDRY_coord) {}
+if (g_desc.hcs == STD_REL_BDRY_coord) CC = rCC;
 
 if (g_desc.var == coVariant) // homology requested
  {

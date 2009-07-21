@@ -82,8 +82,7 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo boundary->standard, cohomology, standard coordinates rel boundary, 
- *       map std->std w/boundary, boundary map std w/bdry -> std with shifted degree, 
+ * \todo boundary->standard, cohomology, map std->std w/boundary, boundary map std w/bdry -> std with shifted degree, 
  *       test for exactness of LES of pair (M, bdry M), Poincare duality, bilinear forms, spin structures. 
  * \todo \optlong Add an option to limit precomputed pile size, then when you reach the limit you 
  *       prune the pile according to how often / recent you use various items, deallocating the oldest
@@ -148,9 +147,11 @@ private:
      * numNonIdealCells - number of non-ideal cells in standard CW-decomposition in dimension: 0, 1, 2, 3, (4) 
      * numIdealCells    - number of ideal cells in standard CW-decomposition in dimension: 0, 1, 2, (3) 
      * numNonIdealBdryCells - numStandardBdryCells - numIdealCells: 0, 1, 2, (3). 
+     * numRelativeCells - number of cells from the standard CW-decomposition rel boundary.
      */
    unsigned long numStandardCells[5], numDualCells[5], numMixCells[5], numStandardBdryCells[4], 
-                 numNonIdealCells[5], numIdealCells[4], numNonIdealBdryCells[4];
+                 numNonIdealCells[5], numIdealCells[4], numNonIdealBdryCells[4], 
+	         numRelativeCells[5];
 
     /** 
      * Chain complex indexing and orientation and boundary-map conventions:
@@ -160,33 +161,34 @@ private:
      *       We orient these cells via their characteristic maps, so boundary maps
      *       signs given by getCodimOneObjectMapping().sign(), all ideal boundary bits given +1
      *       orientation.
-     * icIx is Indexing for the standard cells of the ideal variety.  Ie this are the ideal
-     *      boundaries of non-ideal cells that *have* ideal boundaries.
-     *      icIx[i][j] is stored as (i+2)*[index of (i+1)-simplex containing the j-th
-     *      ideal i-cell in its boundary] + [the corresponding index of this in (i+1)-simplex].
-     *      We orient these cells as the boundary of this i+1-simplex, so the boundary map is
-     *      -1*sign corresponding boundary map of the i+1 simplex.
-     * dcIx is Indexing for the dual cells.  dcIx[i] indexes the non-ideal, nonboundary
-     *      standard cells of dimension (3/4)-i. We orient these via the getEmbeddings
-     *      conventions in Regina.
-     * bcIx is Indexing for the boundary cells, standard decomposition, ignoring the ideal ends
-     *      of standard cells. 
+     *  icIx is Indexing for the standard cells of the ideal variety.  Ie this are the ideal
+     *       boundaries of non-ideal cells that *have* ideal boundaries.
+     *       icIx[i][j] is stored as (i+2)*[index of (i+1)-simplex containing the j-th
+     *       ideal i-cell in its boundary] + [the corresponding index of this in (i+1)-simplex].
+     *       We orient these cells as the boundary of this i+1-simplex, so the boundary map is
+     *       -1*sign corresponding boundary map of the i+1 simplex.
+     *  dcIx is Indexing for the dual cells.  dcIx[i] indexes the non-ideal, nonboundary
+     *       standard cells of dimension (3 or 4)-i. We orient these via the getEmbeddings
+     *       conventions in Regina.
+     *   rIx relative chain complex for standard homology rel boundary.
+     *  bcIx is Indexing for the boundary cells, standard decomposition, ignoring the ideal ends
+     *       of standard cells. 
      * 
      * We systematically use the outer orientation convention to define the boundary maps.
      **/
-    std::vector< std::vector<unsigned long> > nicIx, icIx, dcIx, bcIx;
+    std::vector< std::vector<unsigned long> > nicIx, icIx, dcIx, bcIx, rIx;
 
     /** 
      * chain complex for standard cellular homology of the manifold, dual cellular homology, 
      *  mixed cellular homology and standard boundary cellular homology respectively.
      */
-    std::vector< NMatrixInt* > sCC, dCC, mCC, bsCC;
+    std::vector< NMatrixInt* > sCC, dCC, mCC, bsCC, rCC;
 
     /** 
      * Chain maps: boundary to manifold in standard coords, standard to mixed, 
      *  and dual to mixed. 
      */
-    std::vector< NMatrixInt* > bs_sCM, s_mCM, d_mCM;
+    std::vector< NMatrixInt* > bs_sCM, s_mCM, d_mCM, s_rCM;
 
 public:
 
@@ -272,9 +274,14 @@ public:
      * Returns the number of cells in the mixed cellular decomposition 
      */
     unsigned long mixedCellCount(unsigned dimension) const;
-
+     /**
+     * Returns the number of cells relative CW-decomposition of the manifold
+     * rel boundary, induced by the standard cellular decomposition. 
+     */
+    unsigned long relativeCellCount(unsigned dimension) const;
+   
     /**
-     * The proper Euler characteristic of the manifold, computed from
+     * The Euler characteristic of the manifold, computed from
      * the dual CW-decomposition.
      *
      * This routine calculates the Euler characteristic of the
@@ -353,9 +360,9 @@ public:
 // copy constructor
 inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         tri4(clonePtr(g.tri4)), tri3(clonePtr(g.tri3)), 
-	nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), 
-	sCC(g.sCC.size()), dCC(g.dCC.size()), mCC(g.mCC.size()), bsCC(g.bsCC.size()), 
-	bs_sCM(g.bs_sCM.size()), s_mCM(g.s_mCM.size()), d_mCM(g.d_mCM.size())
+	nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), rIx(g.rIx), 
+	sCC(g.sCC.size()), dCC(g.dCC.size()), mCC(g.mCC.size()), bsCC(g.bsCC.size()), rCC(g.rCC.size()), 
+	bs_sCM(g.bs_sCM.size()), s_mCM(g.s_mCM.size()), d_mCM(g.d_mCM.size()), s_rCM(g.s_rCM.size())
 {
 // copy abelianGroups, markedAbelianGroups, homMarkedAbelianGroups
 std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
@@ -377,15 +384,19 @@ for (unsigned long i=0; i<4; i++) numStandardBdryCells[i] = g.numStandardBdryCel
 for (unsigned long i=0; i<5; i++) numNonIdealCells[i] = g.numNonIdealCells[i];
 for (unsigned long i=0; i<4; i++) numIdealCells[i] = g.numIdealCells[i];
 for (unsigned long i=0; i<4; i++) numNonIdealBdryCells[i] = g.numNonIdealBdryCells[i];
+for (unsigned long i=0; i<5; i++) numRelativeCells[i] = g.numRelativeCells[i];
 
-// the chain complexes and maps
+// the chain complexes
 for (unsigned long i=0; i<sCC.size(); i++)       sCC[i] = clonePtr(g.sCC[i]);
 for (unsigned long i=0; i<dCC.size(); i++)       dCC[i] = clonePtr(g.dCC[i]);
 for (unsigned long i=0; i<mCC.size(); i++)       mCC[i] = clonePtr(g.mCC[i]);
 for (unsigned long i=0; i<bsCC.size(); i++)     bsCC[i] = clonePtr(g.bsCC[i]);
+for (unsigned long i=0; i<rCC.size(); i++)       rCC[i] = clonePtr(g.rCC[i]);
+// chain maps
 for (unsigned long i=0; i<bs_sCM.size(); i++) bs_sCM[i] = clonePtr(g.bs_sCM[i]);
 for (unsigned long i=0; i<s_mCM.size(); i++)   s_mCM[i] = clonePtr(g.s_mCM[i]);
 for (unsigned long i=0; i<d_mCM.size(); i++)   d_mCM[i] = clonePtr(g.d_mCM[i]);
+for (unsigned long i=0; i<s_rCM.size(); i++)   s_rCM[i] = clonePtr(g.s_rCM[i]);
 }
 
 // destructor
@@ -407,10 +418,12 @@ inline NCellularData::~NCellularData() {
  for (unsigned long i=0; i<dCC.size(); i++)   if (dCC[i])  delete dCC[i];
  for (unsigned long i=0; i<mCC.size(); i++)   if (mCC[i])  delete mCC[i];
  for (unsigned long i=0; i<bsCC.size(); i++)  if (bsCC[i]) delete bsCC[i];
+ for (unsigned long i=0; i<rCC.size(); i++)   if (rCC[i])  delete rCC[i];
  // iterate through bs_sCM, s_mCM, d_mCM and deallocate
  for (unsigned long i=0; i<bs_sCM.size(); i++) if (bs_sCM[i]) delete bs_sCM[i];
  for (unsigned long i=0; i<s_mCM.size(); i++)  if (s_mCM[i])  delete s_mCM[i];
  for (unsigned long i=0; i<d_mCM.size(); i++)  if (d_mCM[i])  delete d_mCM[i];
+ for (unsigned long i=0; i<s_rCM.size(); i++)  if (s_rCM[i])  delete s_rCM[i];
 }
 
 inline unsigned long NCellularData::standardCellCount(unsigned dimension) const
@@ -421,6 +434,9 @@ inline unsigned long NCellularData::boundaryCellCount(unsigned dimension) const
 { return numStandardBdryCells[dimension]; }
 inline unsigned long NCellularData::mixedCellCount(unsigned dimension) const
 { return numMixCells[dimension]; }
+inline unsigned long NCellularData::relativeCellCount(unsigned dimension) const
+{ return numRelativeCells[dimension]; }
+
 inline long int NCellularData::eulerChar() const
 { return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3]+numDualCells[4]; }
 
