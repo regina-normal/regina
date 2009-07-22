@@ -1871,6 +1871,30 @@ for (unsigned long i=1; i<aDim+1; i++)
 return true;
 }
 
+bool NCellularData::poincareDualityVerified() const
+{ // at present this only checks to see if H_i(M) and H^{n-i}(M, boundary) are isomorphic.  Later
+  // I'll add the appropriate map and this will check that that map is an isomorphism. 
+unsigned long aDim = 3;
+unsigned long coeff = 0;
+//std::cout<<"A "; std::cout.flush();
+if (tri4) { aDim = 4; if (!tri4->isOrientable()) coeff = 2; }
+ else { if (!tri3->isOrientable()) coeff = 2; }
+//std::cout<<"-A "; std::cout.flush();
+
+for (unsigned long i=0; i <= aDim; i++)
+ {
+  GroupLocator homoL( i, coVariant, STD_coord, coeff );
+  GroupLocator cohomoL( aDim-i, contraVariant, STD_REL_BDRY_coord, coeff);
+  const NAbelianGroup homo( *unmarkedGroup( homoL ) );
+//  std::cout<<"B"; std::cout.flush();
+  const NAbelianGroup cohomo( *unmarkedGroup( cohomoL ) );
+//  std::cout<<"C"; std::cout.flush();
+  if (!(homo == cohomo)) return false;
+ }
+return true;
+}
+
+
 
 void NCellularData::writeTextShort(std::ostream& out) const 
 {
@@ -1906,7 +1930,19 @@ if (g_desc.var == coVariant) // homology requested
   return gptr;
  }
 else // cohomology requested
- { // todo!
+ { 
+  NMatrixInt dCCN( CC[g_desc.dim]->columns(),   CC[g_desc.dim]->rows() );
+  for (unsigned long i=0; i<dCCN.rows(); i++) for (unsigned long j=0; j<dCCN.columns(); j++)
+   dCCN.entry(i,j) = CC[g_desc.dim]->entry(j,i);
+  NMatrixInt dCCM( CC[g_desc.dim+1]->columns(), CC[g_desc.dim+1]->rows() );
+  for (unsigned long i=0; i<dCCM.rows(); i++) for (unsigned long j=0; j<dCCM.columns(); j++)
+   dCCM.entry(i,j) = CC[g_desc.dim+1]->entry(j,i);
+  if (g_desc.cof == 0) gptr = new NAbelianGroup( dCCM, dCCN );
+   else gptr = new NAbelianGroup( dCCM, dCCN, NLargeInteger(g_desc.cof) );
+  std::map< GroupLocator, NAbelianGroup* > *abgptr = 
+	const_cast< std::map< GroupLocator, NAbelianGroup* > *> (&abelianGroups);
+  abgptr->insert(std::pair<GroupLocator,NAbelianGroup*>(g_desc,gptr)); 
+  return gptr;
  }
 
 return NULL;
@@ -1936,7 +1972,19 @@ if (g_desc.var == coVariant) // homology requested
   return mgptr;
  }
 else // cohomology requested
- { // todo!
+ { 
+  NMatrixInt dCCN( CC[g_desc.dim]->columns(),   CC[g_desc.dim]->rows() );
+  for (unsigned long i=0; i<dCCN.rows(); i++) for (unsigned long j=0; j<dCCN.columns(); j++)
+   dCCN.entry(i,j) = CC[g_desc.dim]->entry(j,i);
+  NMatrixInt dCCM( CC[g_desc.dim+1]->columns(), CC[g_desc.dim+1]->rows() );
+  for (unsigned long i=0; i<dCCM.rows(); i++) for (unsigned long j=0; j<dCCM.columns(); j++)
+   dCCM.entry(i,j) = CC[g_desc.dim+1]->entry(j,i);
+  if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( dCCM, dCCN );
+   else mgptr = new NMarkedAbelianGroup( dCCM, dCCN, NLargeInteger(g_desc.cof) );
+  std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
+	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
+  mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
+  return mgptr;
  }
 
 return NULL;
