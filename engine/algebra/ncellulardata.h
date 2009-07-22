@@ -82,8 +82,8 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo boundary->standard, cohomology, map std->std w/boundary, boundary map std w/bdry -> std with shifted degree, 
- *       test for exactness of LES of pair (M, bdry M), Poincare duality, bilinear forms, spin structures. 
+ * \todo cohomology, Poincare duality, bilinear forms, spin structures, test suite stuff: 
+ *       LES of pair, natural isos, PD Z_2 and Z
  * \todo \optlong Add an option to limit precomputed pile size, then when you reach the limit you 
  *       prune the pile according to how often / recent you use various items, deallocating the oldest
  *       least popular pile items first.
@@ -110,6 +110,9 @@ public:
         GroupLocator(const GroupLocator &cloneMe);
 
 	bool operator<(const GroupLocator &rhs) const;
+        
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
  };
 
  struct HomLocator {
@@ -120,6 +123,9 @@ public:
 	HomLocator(const HomLocator &cloneMe);
 
 	bool operator<(const HomLocator &rhs) const;
+
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
  };
 
 private:
@@ -139,15 +145,16 @@ private:
     std::map< HomLocator, NHomMarkedAbelianGroup* > homMarkedAbelianGroups;
 
     /** 
-     * numStandardCells - number of cells in the standard CW decomposition in dimensions: 0, 1, 2, 3, (4). 
-     * numDualCells     - number of cells in the dual CW decomposition in dimension: 0, 1, 2, 3, (4). 
-     * numMixCells      - number of cells in the mixed CW decomposition in dimensions: 0, 1, 2, 3, (4) 
-     * numStandardBdryCells - number of cells in the standard CW decomposition of the boundary 
+     * numStandardCells = number of cells in the standard CW decomposition in dimensions: 0, 1, 2, 3, (4). 
+     * numDualCells     = number of cells in the dual CW decomposition in dimension: 0, 1, 2, 3, (4). 
+     * numMixCells      = number of cells in the mixed CW decomposition in dimensions: 0, 1, 2, 3, (4) 
+     * numStandardBdryCells = number of cells in the standard CW decomposition of the boundary 
      *                        in dimensions: 0, 1, 2, (3). 
-     * numNonIdealCells - number of non-ideal cells in standard CW-decomposition in dimension: 0, 1, 2, 3, (4) 
-     * numIdealCells    - number of ideal cells in standard CW-decomposition in dimension: 0, 1, 2, (3) 
-     * numNonIdealBdryCells - numStandardBdryCells - numIdealCells: 0, 1, 2, (3). 
-     * numRelativeCells - number of cells from the standard CW-decomposition rel boundary.
+     * numRelativeCells = number of cells from the standard CW-decomposition rel boundary.
+     *
+     * numNonIdealBdryCells = numStandardBdryCells - numIdealCells: 0, 1, 2, (3). 
+     * numNonIdealCells = number of non-ideal cells in standard CW-decomposition in dimension: 0, 1, 2, 3, (4) 
+     * numIdealCells    = number of ideal cells in standard CW-decomposition in dimension: 0, 1, 2, (3) 
      */
    unsigned long numStandardCells[5], numDualCells[5], numMixCells[5], numStandardBdryCells[4], 
                  numNonIdealCells[5], numIdealCells[4], numNonIdealBdryCells[4], 
@@ -186,9 +193,9 @@ private:
 
     /** 
      * Chain maps: boundary to manifold in standard coords, standard to mixed, 
-     *  and dual to mixed. 
+     *  dual to mixed, standard to relative, boundary map from relative to boundary.
      */
-    std::vector< NMatrixInt* > bs_sCM, s_mCM, d_mCM, s_rCM;
+    std::vector< NMatrixInt* > bs_sCM, s_mCM, d_mCM, s_rCM, rbCM;
 
 public:
 
@@ -218,16 +225,23 @@ public:
      * Destructor.
      */
     virtual ~NCellularData();
+
     /**
      * Short text representation as required by SharableObject.
-     *
-     * Note this only writes pre-computed data.  Thus if you have
-     * not yet asked NCellularData to compute anything about this
-     * triangulation, writeTextShort may be empty. 
+     * This only prints out precomputed data, so if you haven't
+     * done anything with this NCellularData object, this
+     * string will be quite short. 
      *
      * @param out the stream to write to.
      */
     virtual void writeTextShort(std::ostream& out) const;
+
+    /**
+     * Longer text representation.
+     *
+     * @param out the stream to write to.
+     */
+    virtual void writeTextLong(std::ostream& out) const;
 
     /**
      * Returns the number of cells of the given dimension
@@ -336,6 +350,15 @@ public:
     bool coordinateIsomorphismsVerified() const;
 
     /**
+     * Similarly, check that the homology long exact sequence of the pair (M, \partial M)
+     * holds.  At present this isn't fully implemented as it only checks to see that the
+     * image of one map is isomorphic to the kernel of the next, and that the composite of
+     * one map with the next is zero.  If the image/kernel is infinite this is only a partial
+     * check of exactness.  Eventually this will be patched. 
+     */
+    bool homologyLESVerified() const;
+
+    /**
      * Computes an NAbelianGroup or retrieves it from the precomputed pile. 
      */
     const NAbelianGroup* unmarkedGroup( const GroupLocator g_desc) const;
@@ -350,6 +373,7 @@ public:
 
 
     //todo: bilinear forms return object for Poincare duality objects.
+    //      fundamental group nonsense
 
 };
 
@@ -362,7 +386,8 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         tri4(clonePtr(g.tri4)), tri3(clonePtr(g.tri3)), 
 	nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), rIx(g.rIx), 
 	sCC(g.sCC.size()), dCC(g.dCC.size()), mCC(g.mCC.size()), bsCC(g.bsCC.size()), rCC(g.rCC.size()), 
-	bs_sCM(g.bs_sCM.size()), s_mCM(g.s_mCM.size()), d_mCM(g.d_mCM.size()), s_rCM(g.s_rCM.size())
+	bs_sCM(g.bs_sCM.size()), s_mCM(g.s_mCM.size()), d_mCM(g.d_mCM.size()), s_rCM(g.s_rCM.size()), 
+	rbCM(g.rbCM.size())
 {
 // copy abelianGroups, markedAbelianGroups, homMarkedAbelianGroups
 std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
@@ -397,6 +422,7 @@ for (unsigned long i=0; i<bs_sCM.size(); i++) bs_sCM[i] = clonePtr(g.bs_sCM[i]);
 for (unsigned long i=0; i<s_mCM.size(); i++)   s_mCM[i] = clonePtr(g.s_mCM[i]);
 for (unsigned long i=0; i<d_mCM.size(); i++)   d_mCM[i] = clonePtr(g.d_mCM[i]);
 for (unsigned long i=0; i<s_rCM.size(); i++)   s_rCM[i] = clonePtr(g.s_rCM[i]);
+for (unsigned long i=0; i<rbCM.size(); i++)     rbCM[i] = clonePtr(g.rbCM[i]);
 }
 
 // destructor
@@ -424,6 +450,7 @@ inline NCellularData::~NCellularData() {
  for (unsigned long i=0; i<s_mCM.size(); i++)  if (s_mCM[i])  delete s_mCM[i];
  for (unsigned long i=0; i<d_mCM.size(); i++)  if (d_mCM[i])  delete d_mCM[i];
  for (unsigned long i=0; i<s_rCM.size(); i++)  if (s_rCM[i])  delete s_rCM[i];
+ for (unsigned long i=0; i<rbCM.size(); i++)   if (rbCM[i])   delete rbCM[i];
 }
 
 inline unsigned long NCellularData::standardCellCount(unsigned dimension) const
@@ -447,11 +474,40 @@ inline NCellularData::GroupLocator::GroupLocator(unsigned long newDim, variance_
 inline NCellularData::GroupLocator::GroupLocator(const GroupLocator &cloneMe) : 
  dim(cloneMe.dim), var(cloneMe.var), hcs(cloneMe.hcs), cof(cloneMe.cof) {}
 
+inline void NCellularData::GroupLocator::writeTextShort(std::ostream& out) const
+{
+if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
+if (hcs == DUAL_coord) out<<"(dual)"; else if (hcs == MIX_coord) out<<"(mix)"; 
+out<<"H"<<( var==coVariant ? "_" : "^" )<<dim;
+if (hcs == STD_BDRY_coord) out<<"(dM;"; else if (hcs == STD_REL_BDRY_coord) out<<"(M,dM;";
+else out<<"(M;";
+if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
+}
+
+inline void NCellularData::GroupLocator::writeTextLong(std::ostream& out) const
+{
+}
+
 inline NCellularData::HomLocator::HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange) : 
   domain( newDomain ), range( newRange ) {}
 
 inline NCellularData::HomLocator::HomLocator(const HomLocator &cloneMe) :
   domain( cloneMe.domain ), range( cloneMe.range ) {}
+
+inline void NCellularData::HomLocator::writeTextShort(std::ostream& out) const
+{
+out<<"map(";
+domain.writeTextShort(out);
+out<<"-->";
+range.writeTextShort(out);
+out<<")";
+}
+
+inline void NCellularData::HomLocator::writeTextLong(std::ostream& out) const
+{
+}
+
+
 
 } // namespace regina
 

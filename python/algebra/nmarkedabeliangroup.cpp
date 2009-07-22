@@ -169,7 +169,7 @@ void addNMarkedAbelianGroup() {
         .def("isIdentity", &NHomMarkedAbelianGroup::isIdentity)
         .def("isEpic", &NHomMarkedAbelianGroup::isEpic)
         .def("isMonic", &NHomMarkedAbelianGroup::isMonic)
-        .def("isIso", &NHomMarkedAbelianGroup::isIso)
+        .def("isIsomorphism", &NHomMarkedAbelianGroup::isIsomorphism)
         .def("isZero", &NHomMarkedAbelianGroup::isZero)
         .def("getKernel", &NHomMarkedAbelianGroup::getKernel,
             return_internal_reference<>())

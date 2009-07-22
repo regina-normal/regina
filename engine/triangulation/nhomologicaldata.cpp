@@ -2205,8 +2205,8 @@ bool NHomologicalData::verifyCoordinateIsomorphisms(NLargeInteger p)
 {
 if (p == 0)
  {
- for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIso()) return false;
- for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isIso()) return false;
+ for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIsomorphism()) return false;
+ for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isIsomorphism()) return false;
  if (! (dualToMixedHom(1).inverseHom()*standardToMixedHom(1)*fastDualToStandardH1()).isIdentity() ) return false;
  }
 else
@@ -2221,7 +2221,7 @@ else
 	ran.reset(new NMarkedAbelianGroup(dualToMixedHom(i).getRange().getM(), 
 					  dualToMixedHom(i).getRange().getN(), p ));
         hom.reset(new NHomMarkedAbelianGroup(*dom, *ran, dualToMixedHom(i).getDefiningMatrix() ));
-        if (!hom->isIso()) return false;
+        if (!hom->isIsomorphism()) return false;
 	}
  for (unsigned long i=0; i<4; i++)
 	{
@@ -2230,7 +2230,7 @@ else
 	ran.reset(new NMarkedAbelianGroup(standardToMixedHom(i).getRange().getM(), 
 					  standardToMixedHom(i).getRange().getN(), p ));
         hom.reset(new NHomMarkedAbelianGroup(*dom, *ran, standardToMixedHom(i).getDefiningMatrix() ));
-        if (!hom->isIso()) return false;
+        if (!hom->isIsomorphism()) return false;
 	}
  }
 return true;

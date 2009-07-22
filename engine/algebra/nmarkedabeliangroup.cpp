@@ -858,7 +858,7 @@ void NHomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
 }
 
 void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
-    if (isIso()) out<<"isomorphism"; else 
+    if (isIsomorphism()) out<<"isomorphism"; else 
     if (isZero()) out<<"zero map"; else 
     if (isMonic()) { // monic not epic
         out<<"monic, with cokernel ";
@@ -946,7 +946,7 @@ NHomMarkedAbelianGroup NHomMarkedAbelianGroup::inverseHom() const
 {
 const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
 NMatrixInt invMat( reducedMatrix->columns(), reducedMatrix->rows() );
-if (!isIso()) return NHomMarkedAbelianGroup( invMat, range, domain );
+if (!isIsomorphism()) return NHomMarkedAbelianGroup( invMat, range, domain );
   // get A, B, D from reducedMatrix
   // A must be square with domain/range.getNumberOfInvariantFactors() columns
   // D must be square with domain/range.getRank() columns

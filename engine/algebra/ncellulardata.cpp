@@ -39,6 +39,19 @@
 
 namespace regina {
 
+/*
+void dumpMat( NMatrixRing<NLargeInteger> mat )
+{
+for (unsigned long j=0; j<mat.columns(); j++)
+ {
+ std::cout<<"[";
+ for (unsigned long i=0; i<mat.rows(); i++)
+  std::cout<<mat.entry(i,j)<<" ";
+ std::cout<<"]\n";
+ }
+}
+*/
+
 bool NCellularData::GroupLocator::operator<(const GroupLocator &rhs) const
 {
 if (dim < rhs.dim) return true; if (dim > rhs.dim) return false;
@@ -1164,17 +1177,6 @@ void fillBoundaryHomologyCC(const NTriangulation* tri,
 	}
 }
 
-void dumpMat( NMatrixRing<NLargeInteger> mat )
-{
-for (unsigned long j=0; j<mat.columns(); j++)
- {
- std::cout<<"[";
- for (unsigned long i=0; i<mat.rows(); i++)
-  std::cout<<mat.entry(i,j)<<" ";
- std::cout<<"]\n";
- }
-}
-
 void fillRelativeHomologyCC(const Dim4Triangulation* tri, 
 	const unsigned long numRelativeCells[5], const std::vector< std::vector< unsigned long > > &rIx, 
 	std::vector< NMatrixInt* > &rCC)
@@ -1432,13 +1434,224 @@ void fillDualToMixedHomCM( const NTriangulation* tri, const unsigned long numDua
   }
 }
 
+void fillBoundaryToStandardHomCM( unsigned aDim, // dimension of the triangulation
+        const unsigned long numStandardCells[5],         const unsigned long numStandardBdryCells[4], 
+        const unsigned long numNonIdealBdryCells[4],     const unsigned long numIdealCells[4],
+	const unsigned long numNonIdealCells[5],         std::vector< std::vector<unsigned long> > &nicIx, 	 
+	std::vector< std::vector<unsigned long> > &bcIx, std::vector< NMatrixInt* > &bs_sCM)
+{
+ for (unsigned d=0; d<aDim; d++) bs_sCM[d] = new NMatrixInt( numStandardCells[d], numStandardBdryCells[d] );
+ unsigned long I;
+ for (unsigned long d=0; d<aDim; d++) 
+  {// standard part of boundary
+   for (unsigned j=0; j<numNonIdealBdryCells[d]; j++)
+    {
+     I = lower_bound( nicIx[d].begin(), nicIx[d].end(), bcIx[d][j] ) - nicIx[d].begin();
+     bs_sCM[d]->entry( I, j ) = 1;
+    }
+   // ideal part of boundary
+   for (unsigned j=0; j<numIdealCells[d]; j++)
+     bs_sCM[d]->entry( numNonIdealCells[d] + j, numNonIdealBdryCells[d] + j ) = 1;
+  }
+}
+
+void fillStandardToRelativeHomCM( unsigned aDim, // dimension of the triangulation
+        const unsigned long numStandardCells[5],                 const unsigned long numRelativeCells[5], 
+	const unsigned long numNonIdealCells[5],
+	std::vector< std::vector<unsigned long> > &nicIx, 	 std::vector< std::vector<unsigned long> > &rIx, 
+        std::vector< NMatrixInt* > &s_rCM)
+{
+ for (unsigned d=0; d<aDim+1; d++) s_rCM[d] = new NMatrixInt( numRelativeCells[d], numStandardCells[d] );
+
+ unsigned long I;
+ for (unsigned long d=0; d<aDim+1; d++) for (unsigned j=0; j<numNonIdealCells[d]; j++)
+  {
+   I = lower_bound( rIx[d].begin(), rIx[d].end(), nicIx[d][j] ) - rIx[d].begin();
+   if ( I != rIx[d].size() ) s_rCM[d]->entry( I, j ) = 1;
+  }
+}
+
+// H_{d+1}(M, \partial M) --> H_d(\partial M)
+void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long numRelativeCells[5], 
+     const unsigned long numStandardBdryCells[4],      const unsigned long numNonIdealBdryCells[4],    
+     std::vector< std::vector<unsigned long> > &bcIx,  std::vector< std::vector<unsigned long> > &icIx,
+     std::vector< std::vector<unsigned long> > &rIx,   std::vector< NMatrixInt* > &rbCM)               
+{
+
+ for (unsigned d=0; d<4; d++) 
+   rbCM[d] = new NMatrixInt( numStandardBdryCells[d], numRelativeCells[d+1] );
+
+ unsigned long I;
+ // various useful pointers, index holders.
+ const Dim4Vertex* vrt;  const Dim4Edge* edg;  const Dim4Face* fac; 
+   const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+ // boundary relative 1-cells
+ unsigned long D=1;
+ for (unsigned long j=0; j<numRelativeCells[D]; j++)
+  {	
+   edg = tri->getEdge(rIx[D][j]);
+   for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
+    {   // endpt i is ideal, find index
+     I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+     rbCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+    } 
+   else if (edg->getVertex(i)->isBoundary())
+    {
+     I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->vertexIndex( edg->getVertex(i) ) )
+      - bcIx[D-1].begin();
+     rbCM[D-1]->entry(I, j) += ( i == 0 ? -1 : 1 );
+    }
+  }
+
+ // boundary relative 2-cells
+ D = 2;
+ for (unsigned long j=0; j<numRelativeCells[D]; j++)
+  {
+   fac = tri->getFace(rIx[D][j]);
+   for (unsigned long i=0; i < D+1; i++) 
+    { 
+     if (fac->getVertex(i)->isIdeal())
+      { // ideal ends of faces	
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+       rbCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+      } // standard face boundaries
+     if (fac->getEdge(i)->isBoundary())
+      {
+       NPerm5 P( fac->getEdgeMapping(i) );
+       I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->edgeIndex( fac->getEdge(i) )) 
+	- bcIx[D-1].begin();
+       rbCM[D-1]->entry(I, j) += P.sign();
+      }
+    }
+ }
+
+ // boundary relative 3-cells
+ D = 3;
+ for (unsigned long j=0; j<numRelativeCells[D]; j++)
+  {
+   tet = tri->getTetrahedron(rIx[D][j]);
+   for (unsigned long i=0; i < D+1; i++) 
+    { 
+     if (tet->getVertex(i)->isIdeal())
+      { // ideal ends of faces	
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+       rbCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+      } // standard face boundaries
+     if (tet->getFace(i)->isBoundary())
+      {
+       NPerm5 P( tet->getFaceMapping(i) );
+       I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->faceIndex( tet->getFace(i) )) 
+	- bcIx[D-1].begin();
+       rbCM[D]->entry(I, j) += P.sign();
+      }
+    }
+  }
+
+ // boundary relative 4-cells
+ D = 4;
+ for (unsigned long j=0; j<numRelativeCells[D]; j++)
+  {
+   pen = tri->getPentachoron(rIx[D][j]);
+   for (unsigned long i=0; i < D+1; i++) 
+    { 
+     if (pen->getVertex(i)->isIdeal())
+      { // ideal ends of faces	
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+       rbCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+      } // standard face boundaries
+     if (pen->getTetrahedron(i)->isBoundary())
+      {
+       NPerm5 P( pen->getTetrahedronMapping(i) );
+       I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->tetrahedronIndex( pen->getTetrahedron(i) )) 
+		- bcIx[D-1].begin();
+       rbCM[D-1]->entry(I, j) += P.sign();
+      }
+    }
+  }
+}
+
+void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long numRelativeCells[5], 
+     const unsigned long numStandardBdryCells[4],  const unsigned long numNonIdealBdryCells[4],    
+     std::vector< std::vector<unsigned long> > &bcIx,  std::vector< std::vector<unsigned long> > &icIx,
+     std::vector< std::vector<unsigned long> > &rIx,   std::vector< NMatrixInt* > &rbCM)               
+{
+ for (unsigned d=0; d<3; d++) rbCM[d] = new NMatrixInt( numStandardBdryCells[d], numRelativeCells[d+1] );
+
+ unsigned long I;
+ // various useful pointers, index holders.
+ const NVertex* vrt;  const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
+
+ // boundary relative 1-cells
+ unsigned long D=1;
+ for (unsigned long j=0; j<numRelativeCells[D]; j++)
+  {	
+   edg = tri->getEdge(rIx[D][j]);
+   for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
+    {   // endpt i is ideal, find index
+     I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+     rbCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+    } 
+   else if (edg->getVertex(i)->isBoundary())
+    {
+     I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->vertexIndex( edg->getVertex(i) ) )
+      - bcIx[D-1].begin();
+     rbCM[D-1]->entry(I, j) += ( i == 0 ? -1 : 1 );
+    }
+  }
+
+ // boundary relative 2-cells
+ D = 2;
+ for (unsigned long j=0; j<numRelativeCells[D]; j++)
+  {
+   fac = tri->getFace(rIx[D][j]);
+   for (unsigned long i=0; i < D+1; i++) 
+    { 
+     if (fac->getVertex(i)->isIdeal())
+      { // ideal ends of faces	
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+       rbCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+      } // standard face boundaries
+     if (fac->getEdge(i)->isBoundary())
+      {
+       NPerm4 P( fac->getEdgeMapping(i) );
+       I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->edgeIndex( fac->getEdge(i) )) 
+	- bcIx[D-1].begin();
+       rbCM[D-1]->entry(I, j) += P.sign();
+      }
+    }
+ }
+
+ // boundary relative 3-cells
+ D = 3;
+ for (unsigned long j=0; j<numRelativeCells[D]; j++)
+  {
+   tet = tri->getTetrahedron(rIx[D][j]);
+   for (unsigned long i=0; i < D+1; i++) 
+    { 
+     if (tet->getVertex(i)->isIdeal())
+      { // ideal ends of faces	
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+       rbCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+      } // standard face boundaries
+     if ( tet->getFace(i)->isBoundary() )
+      {
+       NPerm4 P( tet->getFaceMapping(i) );
+       I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->faceIndex( tet->getFace(i) )) 
+	- bcIx[D-1].begin();
+       rbCM[D]->entry(I, j) += P.sign();
+      }
+    }
+  }
+}
+
+
 
 // constructor for 4-manifold triangulations
 NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
         tri3(0), tri4(new Dim4Triangulation(input)),
 	nicIx(5), icIx(4), dcIx(5), bcIx(4), rIx(5), // indexing cells 
 	sCC(6), dCC(6), mCC(6), bsCC(5), rCC(6), 
-	bs_sCM(4), s_mCM(5), d_mCM(5), s_rCM(5) // chain complexes and maps
+	bs_sCM(4), s_mCM(5), d_mCM(5), s_rCM(5), rbCM(4) // chain complexes and maps
 {
    setupIndices( tri4, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 			numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells, 
@@ -1459,9 +1672,13 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
 
    fillDualToMixedHomCM( tri4, numDualCells, numMixCells, numNonIdealCells, dcIx, d_mCM );
 
-   // next:
-   // fillBdryHom
-   // fillRelativeHom
+   fillStandardToRelativeHomCM( 4, numStandardCells, numRelativeCells, numNonIdealCells, nicIx, rIx, s_rCM );
+
+   fillBoundaryToStandardHomCM( 4, numStandardCells, numStandardBdryCells, numNonIdealBdryCells, 
+        numIdealCells, numNonIdealCells, nicIx, bcIx, bs_sCM);
+
+   fillDifferentialHomCM( tri4, numRelativeCells, numStandardBdryCells,  numNonIdealBdryCells,    
+     bcIx,  icIx, rIx, rbCM );   
 
 }
 
@@ -1470,7 +1687,7 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
         tri4(0), tri3(new NTriangulation(input)), 
 	nicIx(4), icIx(3), dcIx(4), bcIx(3), rIx(4), // indexing cells 
 	sCC(5), dCC(5), mCC(5), bsCC(4), rCC(5), 
-        bs_sCM(3), s_mCM(4), d_mCM(4), s_rCM(4) // chain complexes and maps
+        bs_sCM(3), s_mCM(4), d_mCM(4), s_rCM(4), rbCM(3) // chain complexes and maps
 {
    setupIndices( tri3, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 		 numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells,
@@ -1491,9 +1708,13 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
 
    fillDualToMixedHomCM( tri3, numDualCells, numMixCells, numNonIdealCells, dcIx, d_mCM );
 
-   // next:
-   // fillBdryHom
-   // fillRelativeHom
+   fillStandardToRelativeHomCM( 3, numStandardCells, numRelativeCells, numNonIdealCells, nicIx, rIx, s_rCM );
+
+   fillBoundaryToStandardHomCM( 3, numStandardCells, numStandardBdryCells, numNonIdealBdryCells, 
+        numIdealCells, numNonIdealCells, nicIx, bcIx, bs_sCM);
+ 
+   fillDifferentialHomCM( tri3, numRelativeCells, numStandardBdryCells,  numNonIdealBdryCells,    
+     bcIx,  icIx, rIx, rbCM );   
 }
 
 bool NCellularData::chainComplexesVerified() const
@@ -1554,18 +1775,112 @@ for (unsigned long i=1; i<d_mCM.size(); i++) if (d_mCM[i] && d_mCM[i-1] && mCC[i
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*d_mCM[i-1])*(*dCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
-
+// verify rCC[i]*s_rCM[i] == s_rCM[i-1]*sCC[i]
+for (unsigned long i=1; i<s_rCM.size(); i++) if (s_rCM[i] && s_rCM[i-1] && sCC[i] && rCC[i])
+ {
+  if ( (rCC[i]->columns() != s_rCM[i]->rows()) || (s_rCM[i-1]->columns() != sCC[i]->rows()) ) return false;
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*rCC[i])*(*s_rCM[i]);
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*s_rCM[i-1])*(*sCC[i]);
+  if ( (*prod1) != (*prod2) ) return false; 
+ }
+// verify sCC[i]*bs_sCM[i] == bs_sCM[i-1]*bsCC[i]
+for (unsigned long i=1; i<bs_sCM.size(); i++) if (bs_sCM[i] && bs_sCM[i-1] && sCC[i] && bsCC[i])
+ {
+  if ( (sCC[i]->columns() != bs_sCM[i]->rows()) || (bs_sCM[i-1]->columns() != bsCC[i]->rows()) ) return false;
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*sCC[i])*(*bs_sCM[i]);
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*bs_sCM[i-1])*(*bsCC[i]);
+  if ( (*prod1) != (*prod2) ) return false; 
+ }
+// verify bsCC[i]*rbCM[i] == (-1)*rbCM[i-1]*rCC[i+1]
+for (unsigned long i=1; i<rbCM.size(); i++) if (rbCM[i] && rbCM[i-1] && rCC[i+1] && bsCC[i])
+ { // i==1 err
+  if ( (bsCC[i]->columns() != rbCM[i]->rows()) || (rbCM[i-1]->columns() != rCC[i+1]->rows()) ) return false;
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*bsCC[i])*(*rbCM[i]);
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*rbCM[i-1])*(*rCC[i+1]);
+  for (unsigned long j=0; j<prod1->rows(); j++) for (unsigned long k=0; k<prod1->columns(); k++)
+	if (prod1->entry(j,k) + prod2->entry(j,k) != 0) return false;
+ }
 return true;
 }
 
 bool NCellularData::coordinateIsomorphismsVerified() const
 {
+unsigned long aDim = ( tri3 ? 3 : 4 );
+// dual to mixed
+for (unsigned long i=0; i<aDim; i++)
+ {
+  GroupLocator dom(i, coVariant, STD_coord, 0);
+  GroupLocator ran(i, coVariant, MIX_coord, 0);
+  if (!homGroup( HomLocator(dom, ran) )->isIsomorphism()) return false;
+ }
+// standard to mixed
+for (unsigned long i=0; i<aDim; i++)
+ {
+  GroupLocator dom(i, coVariant, DUAL_coord, 0);
+  GroupLocator ran(i, coVariant, MIX_coord, 0);
+  if (!homGroup( HomLocator(dom, ran) )->isIsomorphism()) return false;
+ }
 return true;
 }
 
-void NCellularData::writeTextShort(std::ostream& out) const {
+bool NCellularData::homologyLESVerified() const
+{
+unsigned long aDim = ( tri3 ? 3 : 4 );
+// exactness at H_i M:                H_i (\partial M) --> H_i M --> H_i(M,\partial M),       i == 0, ..., aDim-1
+for (unsigned long i=0; i<aDim; i++)
+ {
+  GroupLocator middleG( i, coVariant, STD_coord, 0 );
+  GroupLocator rightG( i, coVariant, STD_REL_BDRY_coord, 0);
+  GroupLocator leftG( i, coVariant, STD_BDRY_coord, 0);
+  HomLocator secondMapLoc( middleG, rightG );
+  HomLocator firstMapLoc( leftG, middleG );
+  const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
+  const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
+  if (!(secondMap*firstMap).isZero()) return false;
+  if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) return false;
+  if ( (i==0) && !secondMap.isEpic() ) return false;  // rightmost term in LES
+ } 
+// exactness at H_i(\partial M):      H_i(M,\partial M) --> H_{i-1} \partial M --> H_{i-1} M, i == 1, ..., aDim
+for (unsigned long i=1; i<aDim+1; i++)
+ {
+  GroupLocator middleG( i-1, coVariant, STD_BDRY_coord, 0 );
+  GroupLocator rightG( i-1, coVariant, STD_coord, 0);
+  GroupLocator leftG( i, coVariant, STD_REL_BDRY_coord, 0);
+  HomLocator secondMapLoc( middleG, rightG );
+  HomLocator firstMapLoc( leftG, middleG );
+  const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
+  const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
+  if (!(secondMap*firstMap).isZero()) return false;
+  if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) return false;
+ } 
+// exactness at H_i(M, \partial M):   H_i M --> H_i(M, \partial M) --> H_{i-1} \partial M     i == 1, ..., aDim
+for (unsigned long i=1; i<aDim+1; i++)
+ {
+  GroupLocator middleG( i, coVariant, STD_REL_BDRY_coord, 0 );
+  GroupLocator rightG( i-1, coVariant, STD_BDRY_coord, 0);
+  GroupLocator leftG( i, coVariant, STD_coord, 0);
+  HomLocator secondMapLoc( middleG, rightG );
+  HomLocator firstMapLoc( leftG, middleG );
+  const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
+  const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
+  if (!(secondMap*firstMap).isZero()) return false;
+  if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) return false;
+  if ( (i == aDim) && !firstMap.isMonic() ) return false; // leftmost term in LES
+ } 
+
+return true;
+}
+
+
+void NCellularData::writeTextShort(std::ostream& out) const 
+{
 bool written=false;
 }
+
+void NCellularData::writeTextLong(std::ostream& out) const
+{
+}
+
 
 const NAbelianGroup* NCellularData::unmarkedGroup( const GroupLocator g_desc) const
 {
@@ -1657,8 +1972,33 @@ if ( (h_desc.domain.var == coVariant) && (h_desc.range.var == coVariant) && // s
 	hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
 	return hmgptr;
 	}
-
- } else
+   if ( (h_desc.domain.hcs == STD_coord) && (h_desc.range.hcs == STD_REL_BDRY_coord) )
+	{
+   	hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *(s_rCM[h_desc.domain.dim]) );
+   	std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
+		const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
+	hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
+	return hmgptr;
+	}
+   if ( (h_desc.domain.hcs == STD_BDRY_coord) && (h_desc.range.hcs == STD_coord) )
+	{
+   	hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *(bs_sCM[h_desc.domain.dim]) );
+   	std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
+		const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
+	hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
+	return hmgptr;
+	}
+ } else 
+if ( (h_desc.domain.var == coVariant) && (h_desc.range.var == coVariant) && // boundary LES homology->homology map
+     (h_desc.domain.dim == h_desc.range.dim+1) && (h_desc.domain.hcs == STD_REL_BDRY_coord) &&
+     (h_desc.range.hcs == STD_BDRY_coord) )
+ {
+   	hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *(rbCM[h_desc.range.dim]) );
+   	std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
+		const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
+	hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
+	return hmgptr;
+ } else 
 if ( (h_desc.domain.var == contraVariant) && (h_desc.range.var == contraVariant) && // standard cohomology->cohomology map
      (h_desc.domain.dim == h_desc.range.dim) )
  {

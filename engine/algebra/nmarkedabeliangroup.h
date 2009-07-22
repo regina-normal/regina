@@ -690,7 +690,7 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          *
          * @return true if this homomorphism is an isomorphism.
          */
-        bool isIso() const;
+        bool isIsomorphism() const;
         /**
          * Is this the zero map?
          *
@@ -963,7 +963,7 @@ inline bool NHomMarkedAbelianGroup::isMonic() const {
     return getKernel().isTrivial();
 }
 
-inline bool NHomMarkedAbelianGroup::isIso() const {
+inline bool NHomMarkedAbelianGroup::isIsomorphism() const {
     return (getCokernel().isTrivial() && getKernel().isTrivial());
 }
 
