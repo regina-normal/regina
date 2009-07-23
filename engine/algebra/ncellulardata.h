@@ -354,9 +354,10 @@ public:
      * holds.  At present this isn't fully implemented as it only checks to see that the
      * image of one map is isomorphic to the kernel of the next, and that the composite of
      * one map with the next is zero.  If the image/kernel is infinite this is only a partial
-     * check of exactness.  Eventually this will be patched. 
+     * check of exactness.  Eventually this will be patched. Optional parameters allow for
+     * the corresponding check for cohomology, and with coefficients.
      */
-    bool homologyLESVerified() const;
+    bool homologyLESVerified(variance_type var=coVariant, unsigned long coef=0) const;
 
     /**
      * Checks to see if Poincare duality holds.  If the manifold is orientable, it uses integer

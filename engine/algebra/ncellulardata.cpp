@@ -1823,29 +1823,30 @@ for (unsigned long i=0; i<=aDim; i++)
 return true;
 }
 
-bool NCellularData::homologyLESVerified() const
+bool NCellularData::homologyLESVerified(variance_type var, unsigned long coef) const
 {
 unsigned long aDim = ( tri3 ? 3 : 4 );
-// exactness at H_i M:                H_i (\partial M) --> H_i M --> H_i(M,\partial M),       i == 0, ..., aDim-1
-for (unsigned long i=0; i<aDim; i++)
+// exactness at H_i M:                   H_i (\partial M) --> H_i M --> H_i(M,\partial M),       i == 0, ..., aDim-1
+for (unsigned long i=0; i<aDim; i++) //  H^i (\partial M) <-- H^i M <-- H^i(M,\partial M)
  {
-  GroupLocator middleG( i, coVariant, STD_coord, 0 );
-  GroupLocator rightG( i, coVariant, STD_REL_BDRY_coord, 0);
-  GroupLocator leftG( i, coVariant, STD_BDRY_coord, 0);
+  GroupLocator middleG( i, var, STD_coord, coef );
+  GroupLocator rightG( i, var, (var == coVariant ? STD_REL_BDRY_coord : STD_BDRY_coord), coef);
+  GroupLocator leftG( i, var, (var == coVariant ? STD_BDRY_coord : STD_REL_BDRY_coord), coef);
   HomLocator secondMapLoc( middleG, rightG );
   HomLocator firstMapLoc( leftG, middleG );
   const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
   const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
   if (!(secondMap*firstMap).isZero()) return false;
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) return false;
-  if ( (i==0) && !secondMap.isEpic() ) return false;  // rightmost term in LES
+  if ( (i==0) && (var==coVariant) ) if (!secondMap.isEpic()) return false;  // rightmost term in LES, covariant case
+  if ( (i==0) && (var==contraVariant) ) if (!firstMap.isMonic()) return false; // leftmost in LES, contravariant case
  } 
-// exactness at H_i(\partial M):      H_i(M,\partial M) --> H_{i-1} \partial M --> H_{i-1} M, i == 1, ..., aDim
-for (unsigned long i=1; i<aDim+1; i++)
+// exactness at H_i(\partial M):          H_i(M,\partial M) --> H_{i-1} \partial M --> H_{i-1} M, i == 1, ..., aDim
+for (unsigned long i=1; i<=aDim; i++) //  H^i(M,\partial M) <-- H^{i-1} \partial M <-- H^{i-1} M
  {
-  GroupLocator middleG( i-1, coVariant, STD_BDRY_coord, 0 );
-  GroupLocator rightG( i-1, coVariant, STD_coord, 0);
-  GroupLocator leftG( i, coVariant, STD_REL_BDRY_coord, 0);
+  GroupLocator middleG( i-1, var, STD_BDRY_coord, coef );
+  GroupLocator rightG( (var == coVariant ? i-1 : i), var, (var == coVariant ? STD_coord : STD_REL_BDRY_coord), coef );
+  GroupLocator leftG( (var == coVariant ? i : i-1), var, (var == coVariant ? STD_REL_BDRY_coord : STD_coord), coef );
   HomLocator secondMapLoc( middleG, rightG );
   HomLocator firstMapLoc( leftG, middleG );
   const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
@@ -1853,19 +1854,20 @@ for (unsigned long i=1; i<aDim+1; i++)
   if (!(secondMap*firstMap).isZero()) return false;
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) return false;
  } 
-// exactness at H_i(M, \partial M):   H_i M --> H_i(M, \partial M) --> H_{i-1} \partial M     i == 1, ..., aDim
-for (unsigned long i=1; i<aDim+1; i++)
+// exactness at H_i(M, \partial M):       H_i M --> H_i(M, \partial M) --> H_{i-1} \partial M     i == 1, ..., aDim
+for (unsigned long i=1; i<=aDim; i++) //  H^i M <-- H^i(M, \partial M) <-- H^{i-1} \partial M
  {
-  GroupLocator middleG( i, coVariant, STD_REL_BDRY_coord, 0 );
-  GroupLocator rightG( i-1, coVariant, STD_BDRY_coord, 0);
-  GroupLocator leftG( i, coVariant, STD_coord, 0);
+  GroupLocator middleG( i, var, STD_REL_BDRY_coord, coef );
+  GroupLocator rightG( (var == coVariant ? i-1 : i), var, (var == coVariant ? STD_BDRY_coord : STD_coord), coef );
+  GroupLocator leftG( (var == coVariant ? i : i-1), var, (var == coVariant ? STD_coord : STD_BDRY_coord), coef );
   HomLocator secondMapLoc( middleG, rightG );
   HomLocator firstMapLoc( leftG, middleG );
   const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
   const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
   if (!(secondMap*firstMap).isZero()) return false;
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) return false;
-  if ( (i == aDim) && !firstMap.isMonic() ) return false; // leftmost term in LES
+  if ( (i == aDim) && (var == coVariant) ) if (!firstMap.isMonic()) return false; // leftmost term in LES, coVariant case
+  if ( (i == aDim) && (var == contraVariant) ) if (!secondMap.isEpic()) return false; // rightmost term, contravariant case
  } 
 
 return true;
