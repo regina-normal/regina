@@ -1793,7 +1793,7 @@ for (unsigned long i=1; i<bs_sCM.size(); i++) if (bs_sCM[i] && bs_sCM[i-1] && sC
  }
 // verify bsCC[i]*rbCM[i] == (-1)*rbCM[i-1]*rCC[i+1]
 for (unsigned long i=1; i<rbCM.size(); i++) if (rbCM[i] && rbCM[i-1] && rCC[i+1] && bsCC[i])
- { // i==1 err
+ { 
   if ( (bsCC[i]->columns() != rbCM[i]->rows()) || (rbCM[i-1]->columns() != rCC[i+1]->rows()) ) return false;
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*bsCC[i])*(*rbCM[i]);
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*rbCM[i-1])*(*rCC[i+1]);
@@ -1803,21 +1803,21 @@ for (unsigned long i=1; i<rbCM.size(); i++) if (rbCM[i] && rbCM[i-1] && rCC[i+1]
 return true;
 }
 
-bool NCellularData::coordinateIsomorphismsVerified() const
+bool NCellularData::coordinateIsomorphismsVerified(variance_type var, unsigned long coef) const
 {
 unsigned long aDim = ( tri3 ? 3 : 4 );
-// dual to mixed
-for (unsigned long i=0; i<aDim; i++)
+// dual to mixed, homology
+for (unsigned long i=0; i<=aDim; i++)
  {
-  GroupLocator dom(i, coVariant, STD_coord, 0);
-  GroupLocator ran(i, coVariant, MIX_coord, 0);
+  GroupLocator dom(i, var, (var == coVariant ? STD_coord : MIX_coord), coef);
+  GroupLocator ran(i, var, (var == coVariant ? MIX_coord : STD_coord), coef);
   if (!homGroup( HomLocator(dom, ran) )->isIsomorphism()) return false;
  }
-// standard to mixed
-for (unsigned long i=0; i<aDim; i++)
+// standard to mixed, homology
+for (unsigned long i=0; i<=aDim; i++)
  {
-  GroupLocator dom(i, coVariant, DUAL_coord, 0);
-  GroupLocator ran(i, coVariant, MIX_coord, 0);
+  GroupLocator dom(i, var, (var == coVariant ? DUAL_coord : MIX_coord), coef);
+  GroupLocator ran(i, var, (var == coVariant ? MIX_coord : DUAL_coord), coef);
   if (!homGroup( HomLocator(dom, ran) )->isIsomorphism()) return false;
  }
 return true;
@@ -1876,19 +1876,15 @@ bool NCellularData::poincareDualityVerified() const
   // I'll add the appropriate map and this will check that that map is an isomorphism. 
 unsigned long aDim = 3;
 unsigned long coeff = 0;
-//std::cout<<"A "; std::cout.flush();
 if (tri4) { aDim = 4; if (!tri4->isOrientable()) coeff = 2; }
  else { if (!tri3->isOrientable()) coeff = 2; }
-//std::cout<<"-A "; std::cout.flush();
 
 for (unsigned long i=0; i <= aDim; i++)
  {
   GroupLocator homoL( i, coVariant, STD_coord, coeff );
   GroupLocator cohomoL( aDim-i, contraVariant, STD_REL_BDRY_coord, coeff);
   const NAbelianGroup homo( *unmarkedGroup( homoL ) );
-//  std::cout<<"B"; std::cout.flush();
   const NAbelianGroup cohomo( *unmarkedGroup( cohomoL ) );
-//  std::cout<<"C"; std::cout.flush();
   if (!(homo == cohomo)) return false;
  }
 return true;
@@ -1948,6 +1944,7 @@ else // cohomology requested
 return NULL;
 }
 
+// todo add an aDim and ensure request is with dimension bounds
 const NMarkedAbelianGroup* NCellularData::markedGroup( const GroupLocator g_desc) const
 {
 std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator p;
@@ -1990,69 +1987,118 @@ else // cohomology requested
 return NULL;
 }
 
+
 const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator h_desc) const
 {
-std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator p;
-p = homMarkedAbelianGroups.find(h_desc);
-if (p != homMarkedAbelianGroups.end()) return (p->second);
-// okay, so now we know there's no group matching g_desc in markedAbelianGroups, so we make one.
-NHomMarkedAbelianGroup* hmgptr;
-//  ensure we have domain and range
-const NMarkedAbelianGroup* dom = markedGroup( h_desc.domain );
-const NMarkedAbelianGroup* ran = markedGroup( h_desc.range );
-//  find the appropriate chain complex
-if ( (h_desc.domain.var == coVariant) && (h_desc.range.var == coVariant) && // standard homology->homology map
-     (h_desc.domain.dim == h_desc.range.dim) )
- {
-   if ( (h_desc.domain.hcs == STD_coord) && (h_desc.range.hcs == MIX_coord) )
-	{
-   	hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *(s_mCM[h_desc.domain.dim]) );
-   	std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
-		const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
-	hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
-	return hmgptr;
-	}
-   if ( (h_desc.domain.hcs == DUAL_coord) && (h_desc.range.hcs == MIX_coord) )
-	{
-   	hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *(d_mCM[h_desc.domain.dim]) );
-   	std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
-		const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
-	hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
-	return hmgptr;
-	}
-   if ( (h_desc.domain.hcs == STD_coord) && (h_desc.range.hcs == STD_REL_BDRY_coord) )
-	{
-   	hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *(s_rCM[h_desc.domain.dim]) );
-   	std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
-		const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
-	hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
-	return hmgptr;
-	}
-   if ( (h_desc.domain.hcs == STD_BDRY_coord) && (h_desc.range.hcs == STD_coord) )
-	{
-   	hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *(bs_sCM[h_desc.domain.dim]) );
-   	std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
-		const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
-	hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
-	return hmgptr;
-	}
- } else 
-if ( (h_desc.domain.var == coVariant) && (h_desc.range.var == coVariant) && // boundary LES homology->homology map
-     (h_desc.domain.dim == h_desc.range.dim+1) && (h_desc.domain.hcs == STD_REL_BDRY_coord) &&
-     (h_desc.range.hcs == STD_BDRY_coord) )
- {
-   	hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *(rbCM[h_desc.range.dim]) );
-   	std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
-		const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
-	hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
-	return hmgptr;
- } else 
-if ( (h_desc.domain.var == contraVariant) && (h_desc.range.var == contraVariant) && // standard cohomology->cohomology map
-     (h_desc.domain.dim == h_desc.range.dim) )
- {
+ std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator p;
+ p = homMarkedAbelianGroups.find(h_desc);
+ if (p != homMarkedAbelianGroups.end()) return (p->second);
+ // okay, so now we know there's no group matching g_desc in markedAbelianGroups, so we make one.
+ unsigned long aDim = ( tri3 ? 3 : 4 ); // ambient dimension
+ // out-of-bounds request
+ if ( (h_desc.domain.dim > aDim) || (h_desc.range.dim > aDim) ) return NULL;
+ // inappropriate change of coefficients request
+ if ( h_desc.range.cof != 0 ) if ( h_desc.domain.cof % h_desc.range.cof != 0 ) return NULL;
+ // choose the right chain map, or leave unallocated if we can't make sense of the request.
+ NMatrixInt* CM(NULL); 
+
+ if (h_desc.domain.var == h_desc.range.var) // variance-preserving map requested
+  { // check if they want a pure change-of-coefficients map 
+   if ( (h_desc.domain.dim == h_desc.range.dim) && (h_desc.domain.hcs == h_desc.range.hcs) )
+    {
+      unsigned long ccdim = markedGroup( h_desc.domain )->getRankCC();
+      CM = new NMatrixInt(ccdim, ccdim); CM->makeIdentity(); 
+    }
+
+   // check if they want a subdivision-induced map, co-variant
+   if ( ( (h_desc.domain.hcs == STD_coord) || (h_desc.domain.hcs == DUAL_coord) ) && 
+          (h_desc.domain.var == coVariant) && (h_desc.range.hcs == MIX_coord) )
+         CM = ( h_desc.domain.hcs == STD_coord ? clonePtr(s_mCM[h_desc.domain.dim]) :
+					         clonePtr(d_mCM[h_desc.domain.dim]) );
+   if ( ( (h_desc.range.hcs == STD_coord) || (h_desc.range.hcs == DUAL_coord) ) && // contravariant 
+          (h_desc.domain.var == contraVariant)  && (h_desc.domain.hcs == MIX_coord) )
+      {
+	 const NMatrixInt* tCMp( h_desc.range.hcs == STD_coord ? s_mCM[h_desc.domain.dim] : 
+			                                         d_mCM[h_desc.domain.dim] );
+         CM = new NMatrixInt( tCMp->columns(), tCMp->rows() );
+         for (unsigned long i=0; i<CM->rows(); i++) for (unsigned long j=0; j<CM->columns(); j++)
+	  CM->entry( i, j ) = tCMp->entry( j, i );
+      }
+
+   // check if they want a map from the homology LES of the pair (M, \partial M) 
+   if ( h_desc.domain.var == coVariant )
+    { // \partial M --> M
+      if ( (h_desc.domain.hcs == STD_BDRY_coord) && (h_desc.range.hcs == STD_coord) &&
+           (h_desc.domain.dim == h_desc.range.dim) && (h_desc.domain.dim < aDim) )
+	CM = clonePtr( bs_sCM[h_desc.domain.dim] ); 
+      // M --> (M, \partial M)
+      else if ( (h_desc.domain.hcs == STD_coord) && (h_desc.range.hcs == STD_REL_BDRY_coord) &&
+           (h_desc.domain.dim == h_desc.range.dim) )
+	CM = clonePtr( s_rCM[h_desc.domain.dim] );
+      // (M, \partial M) --> \partial M
+      else if ( (h_desc.domain.hcs == STD_REL_BDRY_coord) && (h_desc.range.hcs == STD_BDRY_coord) &&
+           (h_desc.domain.dim == h_desc.range.dim+1) && (h_desc.range.dim < aDim) )
+	CM = clonePtr( rbCM[h_desc.range.dim] );
+   }
+   else
+    { // \partial M <-- M
+      if ( (h_desc.domain.hcs == STD_coord) && (h_desc.range.hcs == STD_BDRY_coord) &&
+           (h_desc.domain.dim == h_desc.range.dim) && (h_desc.range.dim < aDim) )
+       {	 
+         CM = new NMatrixInt( bs_sCM[h_desc.domain.dim]->columns(), bs_sCM[h_desc.domain.dim]->rows() );
+         for (unsigned long i=0; i<CM->rows(); i++) for (unsigned long j=0; j<CM->columns(); j++)
+	  CM->entry( i, j ) = bs_sCM[h_desc.domain.dim]->entry( j, i );
+       }
+      // M <-- (M, \partial M)
+      else if ( (h_desc.domain.hcs == STD_REL_BDRY_coord) && (h_desc.range.hcs == STD_coord) &&
+           (h_desc.domain.dim == h_desc.range.dim) )
+       {	 
+         CM = new NMatrixInt( s_rCM[h_desc.domain.dim]->columns(), s_rCM[h_desc.domain.dim]->rows() );
+         for (unsigned long i=0; i<CM->rows(); i++) for (unsigned long j=0; j<CM->columns(); j++)
+	  CM->entry( i, j ) = s_rCM[h_desc.domain.dim]->entry( j, i );
+       }
+      // (M, \partial M) <-- \partial M
+      else if ( (h_desc.domain.hcs == STD_BDRY_coord) && (h_desc.range.hcs == STD_REL_BDRY_coord) &&
+           (h_desc.domain.dim+1 == h_desc.range.dim) && (h_desc.domain.dim < aDim) )
+       {	 
+         CM = new NMatrixInt( rbCM[h_desc.domain.dim]->columns(), rbCM[h_desc.domain.dim]->rows() );
+         for (unsigned long i=0; i<CM->rows(); i++) for (unsigned long j=0; j<CM->columns(); j++)
+	  CM->entry( i, j ) = rbCM[h_desc.domain.dim]->entry( j, i );
+       }
+    } 
+ }
+else
+ { // variance-reversing map requested
+   // check if they want Poincare Duality
+   if ( (h_desc.domain.var == coVariant) && (h_desc.domain.hcs == DUAL_coord) &&
+        (h_desc.range.hcs == STD_REL_BDRY_coord) && (h_desc.domain.dim + h_desc.range.dim == aDim) )
+   { //todo
+   } else 
+   if ( (h_desc.domain.var == contraVariant) && (h_desc.domain.hcs == DUAL_coord) &&
+        (h_desc.range.hcs == STD_REL_BDRY_coord) && (h_desc.domain.dim + h_desc.range.dim == aDim) )
+   { //todo
+   }
+  
  }
 
+NHomMarkedAbelianGroup* hmgptr(NULL);
+if ( CM ) // we found the requested map, now make sure we have the domain and range, then we're happy.
+ {
+   //  ensure we have domain and range
+   const NMarkedAbelianGroup* dom = markedGroup( h_desc.domain );
+   const NMarkedAbelianGroup* ran = markedGroup( h_desc.range );
+   if ( dom && ran )
+    {
+     hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *CM );
+     std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
+      const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
+     hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
+     return hmgptr;
+    }
+ }
+if ( CM ) delete CM;
 
+// didn't find what was requested
 return NULL;
 }
 

@@ -68,15 +68,12 @@ class Dim4Triangulation;
  * - the bilinear forms coming from Poincare Duality: H_i \otimes H_j --> H_{i+j-n}
  *   and torsion linking \tau H_i \otimes \tau H_{n-i-1} --> Q/Z 
  *
- * This class mostly takes a "least effort" approach to all computations. It
- * only computes what is neccessary for your requests.  It also keeps a
- * record of all previous computations you've made, we'll call it the 
- * `precomputed pile'. If a computation can be sped up by not recomputing some data, it'll
- * try to take the shortcut.  The only exception to this rule is that all integer coefficient
- * chain complexes for homology in standard, dual and mixed coordinates, and all the natural
- * maps between the various chain complexes are computed on initialization.  By and large these
- * aren't very time-consuming but expecially the barycentric subdivision chain complexes and
- * maps can be fairly large and memory-intensive. 
+ * This class mostly takes a "least effort" approach to all computations. It only computes 
+ * what is neccessary for your requests.  It also keeps a record of all previous computations 
+ * you've made, we'll call it the `precomputed pile'. If a computation can be sped up by not 
+ * recomputing some data, it'll try to take the shortcut.  At present the only exception to 
+ * this rule is that all integer coefficient chain complexes and maps are computed on 
+ * initialization, but this is relatively quick.  
  *
  * @pre - Assumes input triangulation is valid. 
  *
@@ -89,6 +86,8 @@ class Dim4Triangulation;
  *       least popular pile items first.
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
+ * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
+ *       long exact sequence associated to a change-of-coefficient map.
  *
  * @author Ryan Budney
  */
@@ -340,6 +339,7 @@ public:
     /**
      * If all the chain complexes check out, might as well verify a few basic isomorphisms as well. 
      * These are the isomorphisms between homology in standard, dual and mixed coordinates. 
+     * Optional parameters allow for the check to be done on cohomology, and with coefficients.
      *
      * This is largely for debugging purposes as in any release this should always produce an answer
      * of true. 
@@ -347,7 +347,7 @@ public:
      * @return true provided every natural map between the various homology groups computable that
      *         should be isomorphisms, actually are isomorphisms. 
      */
-    bool coordinateIsomorphismsVerified() const;
+    bool coordinateIsomorphismsVerified(variance_type var=coVariant, unsigned long coef=0) const;
 
     /**
      * Similarly, check that the homology long exact sequence of the pair (M, \partial M)
@@ -373,7 +373,42 @@ public:
      */
     const NMarkedAbelianGroup* markedGroup( const GroupLocator g_desc) const;
     /**
-     * Computes an NHomMarkedAbelianGroup or retrieves it from the precomputed pile. 
+     *  Computes an NHomMarkedAbelianGroup or retrieves it from the precomputed pile. 
+     *
+     *  At present there's 4 basic varieties of homomorphisms that Regina knows how to 
+     *  compute.  
+     *
+     *  1) A pure change-of-coefficients map.  These are maps of the form H_i(*,R_1) --> H_i(*,R_2) or
+     *     H^i(*,R_2) --> H^i(*,R_1) where R_1 --> R_2 is a quotient map of rings, and
+     *     * is either M, (M,\partial M) or (\partial M), ie: any homology_coordinate_system
+     *     is valid. 
+     *     @pre h_desc.domain.(dim, var, hcs) == h_desc.range.(dim, var, hcs). 
+     *     @pre h_desc.domain.cof is an integer multiple of h_desc.range.cof 
+     *
+     *  2) Maps induced by subdivision of the cell complex maps. 
+     *     @pre h_desc.domain.(var, dim) == h_desc.range.(var, dim)
+     *     @pre if var==coVariant,    h_desc.domain.hcs == STD_coord or DUAL_coord and
+     *                                h_desc.range.hcs == MIX_coord
+     *          if var==contraVariant h_desc.domain.hcs == MIX_coord and
+     *                                h_desc.range.hcs == STD_coord or DUAL_coord
+     *     @pre h_desc.domain.cof is an integer multiple of h_desc.range.cof
+     *
+     *  3) Homology long exact sequence of the pair (M,\partial M) maps. 
+     *     @pre if var==coVariant,    h_desc.domain.hcs == STD_coord, STD_REL_BDRY_coord or STD_BDRY_coord
+     *             and respectively:  h_desc.range.hcs == STD_REL_BDRY_coord, STD_BDRY_coord or STD_coord
+     *          if var==contraVariant h_desc.domain.hcs == STD_coord, STD_BDRY_coord or STD_REL_BDRY_coord
+     *             and respectively:  h_desc.range.hcs == STD_BDRY_coord, STD_REL_BDRY_coord or STD_coord
+     *     @pre h_desc.domain.var == h_desc.range.var
+     *     @pre h_desc.domain.dim and h_desc.range.dim as in the homology long exact sequence
+     *     @pre h_desc.domain.cof is an integer multiple of h_desc.range.cof
+     *
+     *  [4] Strict Poincare Duality maps, these are maps of the form H_i(M;R_1) --> H^{n-i}(M,\partial M;R_2)
+     *      or H^i(M;R_1) --> H_{n-i}(M,\partial M;R_2). 
+     *      @pre h_desc.domain.var and h_desc.range.var opposite. 
+     *      @pre h_desc.domain.dim and h_desc.range.dim add up to the dimension of the manifold. 
+     *      @pre h_desc.domain.hcs == DUAL_coord and h_desc.range.hcs == STD_REL_BDRY_coord
+     *      @pre h_desc.domain.cof is an integer multiple of h_desc.range.cof, 
+     *       both must be Z_2 if the manifold is not orientable.
      */
     const NHomMarkedAbelianGroup* homGroup( const HomLocator h_desc) const;
 
