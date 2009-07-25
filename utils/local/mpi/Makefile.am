@@ -17,10 +17,10 @@ noinst_SCRIPTS = normal-mpi-sanity tricensus-sanity-pairs-coverage tricensus-san
 
 distinguish_mpi_SOURCES = distinguish-mpi.cpp
 equiv_mpi_SOURCES = equiv-mpi.cpp
-normal_compare_mpi_SOURCES = normal-mpi.cpp
+normal_compare_mpi_SOURCES = normal-compare-mpi.cpp
 normal_mpi_SOURCES = normal-mpi.cpp
 tricensus_freq_mpi_SOURCES = tricensus-freq-mpi.cpp
-tricensus_normal_mpi_SOURCES = tricensus-freq-mpi.cpp
+tricensus_normal_mpi_SOURCES = tricensus-normal-mpi.cpp
 
 EXTRA_DIST = README.txt \
 	normal-mpi-sanity \
