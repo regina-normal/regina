@@ -12,6 +12,8 @@
 #include "nfield25.h"
 #include "nspin4simplex.h"
 
+using regina::NBinaryS4;
+
 template <class T>
 void appendIfDiff( const T &inp, const std::vector< T > &list, std::vector< T > &newlist)
  {
@@ -339,7 +341,9 @@ std::cout<<"NBinaryS4 associativity test: "<<std::dec; std::cout.flush();
 for (unsigned long i=0; i<48; i++) for (unsigned long j=0; j<48; j++) for (unsigned long k=0; k<48; k++)
  {
   // find i,j,k-th elements of NBinaryA5, check associativity
-  regina::NBinaryS4 ei(i), ej(j), ek(k);
+  NBinaryS4 ei = NBinaryS4::fromPermCode(i);
+  NBinaryS4 ej = NBinaryS4::fromPermCode(j);
+  NBinaryS4 ek = NBinaryS4::fromPermCode(k);
   if ( (ei*ej)*ek != ei*(ej*ek) ) 
 	{
 	assocTestPassed=false;
@@ -352,7 +356,8 @@ bool idTestPassed=true;
 std::cout<<"NBinaryS4 identity test: ";
 for (unsigned long i=0; i<48; i++)
  {
- regina::NBinaryS4 Id(0), ei(i);
+ NBinaryS4 Id;
+ NBinaryS4 ei = NBinaryS4::fromPermCode(i);
  if ( (Id*ei != ei) || (ei*Id != ei) ) 
 	{
 	idTestPassed=false;
@@ -365,7 +370,8 @@ std::cout<<"NBinaryS4 inverses test: ";
 bool invTest=true;
 for (unsigned long i=0; i<48; i++)
  {
- regina::NBinaryS4 Id(0), ei(i);
+ NBinaryS4 Id;
+ NBinaryS4 ei = NBinaryS4::fromPermCode(i);
  if ( (ei*ei.inverse() != Id) || (ei.inverse()*ei != Id) ) invTest=false;
  }
 if (invTest) std::cout<<"good.\n"; else std::cout<<"failed.\n";
@@ -375,7 +381,8 @@ std::cout<<"NBinaryS4 hom to S4 test: ";
 bool homTest=true;
 for (unsigned long i=0; i<48; i++) for (unsigned long j=0; j<48; j++)
  {
-  regina::NBinaryS4 ei( i ), ej( j );
+  NBinaryS4 ei = NBinaryS4::fromPermCode(i);
+  NBinaryS4 ej = NBinaryS4::fromPermCode(j);
   if ( (ei*ej).getNPerm4() != ei.getNPerm4()*ej.getNPerm4() )  
 	{
 	homTest=false;

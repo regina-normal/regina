@@ -15,6 +15,8 @@
 #include "nfield25.h"
 #include "nspin4simplex.h"
 
+using regina::NBinaryA5;
+
 template <class T>
 void appendIfDiff( const T &inp, const std::vector< T > &list, std::vector< T > &newlist)
  {
@@ -339,7 +341,9 @@ std::cout<<"NBinaryA5 associativity test: ";
 for (unsigned long i=0; i<120; i++) for (unsigned long j=0; j<120; j++) for (unsigned long k=0; k<120; k++)
  {
   // find i,j,k-th elements of NBinaryA5, check associativity
-  regina::NBinaryA5 ei(i), ej(j), ek(k);
+  NBinaryA5 ei = NBinaryA5::fromPermCode(i);
+  NBinaryA5 ej = NBinaryA5::fromPermCode(j);
+  NBinaryA5 ek = NBinaryA5::fromPermCode(k);
   if ( (ei*ej)*ek != ei*(ej*ek) ) assocTestPassed=false;
  }
 if (assocTestPassed) std::cout<<"good.\n"; else std::cout<<"failed.\n";
@@ -349,7 +353,8 @@ bool idTestPassed=true;
 std::cout<<"NBinaryA5 identity test: ";
 for (unsigned long i=0; i<120; i++)
  {
- regina::NBinaryA5 Id(0), ei(i);
+ NBinaryA5 Id;
+ NBinaryA5 ei = NBinaryA5::fromPermCode(i);
  if ( (Id*ei != ei) || (ei*Id != ei) ) idTestPassed=false;
  }
 if (idTestPassed) std::cout<<"good.\n"; else std::cout<<"failed.\n";
@@ -360,7 +365,8 @@ std::cout<<"NBinaryA5 inverses test: ";
 bool invTest=true;
 for (unsigned long i=0; i<120; i++)
  {
- regina::NBinaryA5 Id(0), ei(i);
+ NBinaryA5 Id;
+ NBinaryA5 ei = NBinaryA5::fromPermCode(i);
  if ( (ei*ei.inverse() != Id) || (ei.inverse()*ei != Id) ) invTest=false;
  }
 if (invTest) std::cout<<"good.\n"; else std::cout<<"failed.\n";
@@ -370,7 +376,8 @@ std::cout<<"NBinaryA5 hom to A5 test: ";
 bool homTest=true;
 for (unsigned long i=0; i<120; i++) for (unsigned long j=0; j<120; j++)
  {
-  regina::NBinaryA5 ei(i), ej(j);
+  NBinaryA5 ei = NBinaryA5::fromPermCode(i);
+  NBinaryA5 ej = NBinaryA5::fromPermCode(j);
   if ( (ei*ej).getNPerm5() != ei.getNPerm5()*ej.getNPerm5() ) 
     {
      homTest=false;
