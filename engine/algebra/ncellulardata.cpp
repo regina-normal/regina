@@ -2146,11 +2146,18 @@ const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator h_desc) 
  }
 else
  { // variance-reversing map requested
+   // record if manifold orientable or not
+   bool orientable = false;
+   if ( tri3 ) if ( tri3->isOrientable() ) orientable = true;
+   if ( tri4 ) if ( tri4->isOrientable() ) orientable = true;
+
    // check if they want Poincare Duality
    if ( (h_desc.domain.var == coVariant) && (h_desc.domain.hcs == DUAL_coord) &&
         (h_desc.range.hcs == STD_REL_BDRY_coord) && (h_desc.domain.dim + h_desc.range.dim == aDim) )
    { 
-     NMatrixInt
+     NMatrixInt CM( numRelativeCells[ h_desc.range.dim ], numDualCells[ h_desc.domain.dim ] );
+     CM.makeIdentity(); // good enough if not orientable, but we need to correct if orientable. 
+     if (orientable) {}
 
    } else 
    if ( (h_desc.domain.var == contraVariant) && (h_desc.domain.hcs == DUAL_coord) &&
