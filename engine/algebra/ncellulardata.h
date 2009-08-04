@@ -382,7 +382,7 @@ public:
      *  1) A pure change-of-coefficients map.  These are maps of the form H_i(*,R_1) --> H_i(*,R_2) or
      *     H^i(*,R_2) --> H^i(*,R_1) where R_1 --> R_2 is a quotient map of rings, and
      *     * is either M, (M,\partial M) or (\partial M), ie: any homology_coordinate_system
-     *     is valid. 
+     *     is valid. todo: add full Bockstein sequence
      *     @pre h_desc.domain.(dim, var, hcs) == h_desc.range.(dim, var, hcs). 
      *     @pre h_desc.domain.cof is an integer multiple of h_desc.range.cof 
      *
@@ -414,8 +414,14 @@ public:
     const NHomMarkedAbelianGroup* homGroup( const HomLocator h_desc) const;
 
 
-    //todo: bilinear forms return object for Poincare duality objects.
-    //      fundamental group nonsense
+    //todo: 1) bilinear forms return object for Poincare duality objects.
+    //         various steps: 
+    //         a) bilinear form class
+    //         b) polynomial ring class
+    //         c) TLF and intersection pairings. For intersection pairings need to
+    //            intelligently determine relative sign of intersections. 
+    //      2) fundamental group nonsense
+    //      3) full Bockstein sequence
 
 };
 
@@ -521,7 +527,7 @@ inline void NCellularData::GroupLocator::writeTextShort(std::ostream& out) const
 if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
 if (hcs == DUAL_coord) out<<"(dual)"; else if (hcs == MIX_coord) out<<"(mix)"; 
 out<<"H"<<( var==coVariant ? "_" : "^" )<<dim;
-if (hcs == STD_BDRY_coord) out<<"(dM;"; else if (hcs == STD_REL_BDRY_coord) out<<"(M,dM;";
+if (hcs == STD_BDRY_coord) out<<"(bM;"; else if (hcs == STD_REL_BDRY_coord) out<<"(M,bM;";
 else out<<"(M;";
 if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
 }
@@ -538,11 +544,11 @@ inline NCellularData::HomLocator::HomLocator(const HomLocator &cloneMe) :
 
 inline void NCellularData::HomLocator::writeTextShort(std::ostream& out) const
 {
-out<<"map(";
+out<<"map[";
 domain.writeTextShort(out);
 out<<"-->";
 range.writeTextShort(out);
-out<<")";
+out<<"]";
 }
 
 inline void NCellularData::HomLocator::writeTextLong(std::ostream& out) const
