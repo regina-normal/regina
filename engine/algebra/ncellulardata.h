@@ -79,7 +79,7 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo Poincare duality, bilinear forms, spin structures, test suite stuff: 
+ * \todo bilinear forms, spin structures, test suite stuff: 
  *       LES of pair, natural isos, PD
  * \todo \optlong Add an option to limit precomputed pile size, then when you reach the limit you 
  *       prune the pile according to how often / recent you use various items, deallocating the oldest
@@ -475,7 +475,7 @@ for (unsigned long i=0; i<rbCM.size(); i++)     rbCM[i] = clonePtr(g.rbCM[i]);
 
 // destructor
 inline NCellularData::~NCellularData() {
- if (tri3) delete tri3; if (tri4) delete tri4;
+ if (tri4) delete tri4; if (tri3) delete tri3; 
  // iterate through abelianGroups, markedAbelianGroups, homMarkedAbelianGroups and deallocate
  std::map< GroupLocator, NAbelianGroup* >::iterator abi;
  std::map< GroupLocator, NMarkedAbelianGroup* >::iterator mabi;

@@ -1644,11 +1644,90 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
   }
 }
 
+// CM is the (appropriate size) identity matrix and wants to be the chain map inducing Poincare duality
+// so we need to correct the signs down the diagonal -- we assume CM is an identity matrix to begin with.
+void correctRelOrMat( NMatrixInt &CM, unsigned long domdim, unsigned long randim, const NTriangulation* tri3, const Dim4Triangulation* tri4, 
+ const std::vector< std::vector<unsigned long> > &dcIx )
+{
+// CM is from dual to std_rel_bdry coord
+unsigned long aDim = ( tri3 ? 3 : 4 );
+//   if ( (h_desc.domain.var == coVariant) && (h_desc.domain.hcs == DUAL_coord) &&
+//        (h_desc.range.hcs == STD_REL_BDRY_coord) && (h_desc.domain.dim + h_desc.range.dim == aDim) )
+if ( aDim == 3 )
+ { // domdim \in \{ 0, 1, 2, 3 \}
+  if (domdim == 0) for (unsigned long i=0; i<CM.rows(); i++)
+	{ // rIx[aDim][i], dcIx[0][i]
+         const NTetrahedron* tet( tri3->getTetrahedron( dcIx[domdim][i] ) );
+	 CM.entry( i, i ) = tet->orientation();
+	}
+  else if (domdim == 1) for (unsigned long i=0; i<CM.rows(); i++)
+	{
+	 const NFace* fac( tri3->getFace( dcIx[domdim][i] ) );
+         const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
+         NPerm4 emb( fac->getEmbedding(0).getVertices() );
+	 CM.entry( i, i ) = emb.sign()*tet->orientation();  
+	}   
+  else if (domdim == 2) for (unsigned long i=0; i<CM.rows(); i++)
+	{	 
+	 const NEdge* edg( tri3->getEdge( dcIx[domdim][i] ) );
+         const NTetrahedron* tet( edg->getEmbedding(0).getTetrahedron() );
+         NPerm4 emb( edg->getEmbedding(0).getVertices() );
+ 	 CM.entry( i, i ) = emb.sign()*tet->orientation();  
+       }
+  else if (domdim == 3) for (unsigned long i=0; i<CM.rows(); i++)
+	{	 
+	 const NVertex* vrt( tri3->getVertex( dcIx[domdim][i] ) );
+         const NTetrahedron* tet( vrt->getEmbedding(0).getTetrahedron() );
+         NPerm4 emb( vrt->getEmbedding(0).getVertices() );
+	 CM.entry( i, i ) = emb.sign()*tet->orientation();  
+        }
+ }
+else
+ { // aDim == 4,  domdim \in \{ 0, 1, 2, 3, 4 \}
+  if (domdim == 0) for (unsigned long i=0; i<CM.rows(); i++)
+	{ // rIx[aDim][i], dcIx[0][i]
+         const Dim4Pentachoron* pen( tri4->getPentachoron( dcIx[domdim][i] ) );
+	 CM.entry( i, i ) = pen->orientation();
+	}
+  else if (domdim == 1) for (unsigned long i=0; i<CM.rows(); i++)
+	{
+	 const Dim4Tetrahedron* tet( tri4->getTetrahedron( dcIx[domdim][i] ) );
+         const Dim4Pentachoron* pen( tet->getEmbedding(0).getPentachoron() );
+         NPerm5 emb( tet->getEmbedding(0).getVertices() );
+	 CM.entry( i, i ) = emb.sign()*pen->orientation();  
+	}   
+  else if (domdim == 2) for (unsigned long i=0; i<CM.rows(); i++)
+	{	 
+	 const Dim4Face* fac( tri4->getFace( dcIx[domdim][i] ) );
+         const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
+         NPerm5 emb( fac->getEmbedding(0).getVertices() );
+ 	 CM.entry( i, i ) = emb.sign()*pen->orientation();  
+       }
+  else if (domdim == 3) for (unsigned long i=0; i<CM.rows(); i++)
+	{	 
+	 const Dim4Edge* edg( tri4->getEdge( dcIx[domdim][i] ) );
+         const Dim4Pentachoron* pen( edg->getEmbedding(0).getPentachoron() );
+         NPerm5 emb( edg->getEmbedding(0).getVertices() );
+	 CM.entry( i, i ) = emb.sign()*pen->orientation();  
+        }
+  else if (domdim == 4) for (unsigned long i=0; i<CM.rows(); i++)
+	{
+	 const Dim4Vertex* vrt( tri4->getVertex( dcIx[domdim][i] ) );
+         const Dim4Pentachoron* pen( vrt->getEmbedding(0).getPentachoron() );
+         NPerm5 emb( vrt->getEmbedding(0).getVertices() );
+	 CM.entry( i, i ) = emb.sign()*pen->orientation();  
+        }
+ }
+}
 
+
+// end of chain map constructions
+
+// constructors
 
 // constructor for 4-manifold triangulations
 NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
-        tri3(0), tri4(new Dim4Triangulation(input)),
+        tri4(new Dim4Triangulation(input)), tri3(0), 
 	nicIx(5), icIx(4), dcIx(5), bcIx(4), rIx(5), // indexing cells 
 	sCC(6), dCC(6), mCC(6), bsCC(5), rCC(6), 
 	bs_sCM(4), s_mCM(5), d_mCM(5), s_rCM(5), rbCM(4) // chain complexes and maps
@@ -1883,12 +1962,20 @@ if (tri4) { aDim = 4; if (!tri4->isOrientable()) coeff = 2; }
 
 for (unsigned long i=0; i <= aDim; i++)
  {
-  GroupLocator homoL( i, coVariant, STD_coord, coeff );
+  GroupLocator homoL( i, coVariant, DUAL_coord, coeff );
   GroupLocator cohomoL( aDim-i, contraVariant, STD_REL_BDRY_coord, coeff);
-  const NAbelianGroup homo( *unmarkedGroup( homoL ) );
-  const NAbelianGroup cohomo( *unmarkedGroup( cohomoL ) );
-  if (!(homo == cohomo)) return false;
+  const NHomMarkedAbelianGroup duality( *homGroup( HomLocator(homoL, cohomoL) ) );
+  if (!duality.isIsomorphism()) return false;
  }
+
+for (unsigned long i=0; i <= aDim; i++)
+ {
+  GroupLocator cohomoL( i, contraVariant, DUAL_coord, coeff );
+  GroupLocator homoL( aDim-i, coVariant, STD_REL_BDRY_coord, coeff);
+  const NHomMarkedAbelianGroup duality( *homGroup( HomLocator(cohomoL, homoL) ) );
+  if (!duality.isIsomorphism()) return false;
+ }
+
 return true;
 }
 
@@ -2144,31 +2231,33 @@ const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator h_desc) 
        }
     } 
  }
-else
+ else
  { // variance-reversing map requested
    // record if manifold orientable or not
    bool orientable = false;
    if ( tri3 ) if ( tri3->isOrientable() ) orientable = true;
    if ( tri4 ) if ( tri4->isOrientable() ) orientable = true;
-
+   if ( (!orientable) && (h_desc.domain.cof != 2) && (h_desc.range.cof != 2) ) return NULL;
+ 
    // check if they want Poincare Duality
    if ( (h_desc.domain.var == coVariant) && (h_desc.domain.hcs == DUAL_coord) &&
         (h_desc.range.hcs == STD_REL_BDRY_coord) && (h_desc.domain.dim + h_desc.range.dim == aDim) )
    { 
-     NMatrixInt CM( numRelativeCells[ h_desc.range.dim ], numDualCells[ h_desc.domain.dim ] );
-     CM.makeIdentity(); // good enough if not orientable, but we need to correct if orientable. 
-     if (orientable) {}
-
+     CM = new NMatrixInt( numRelativeCells[ h_desc.range.dim ], numDualCells[ h_desc.domain.dim ] );
+     CM->makeIdentity(); // good enough if not orientable, but we need to correct if orientable. 
+     if (orientable) correctRelOrMat( *CM, h_desc.domain.dim, h_desc.range.dim, tri3, tri4, dcIx );
    } else 
    if ( (h_desc.domain.var == contraVariant) && (h_desc.domain.hcs == DUAL_coord) &&
         (h_desc.range.hcs == STD_REL_BDRY_coord) && (h_desc.domain.dim + h_desc.range.dim == aDim) )
-   { //todo
+   { 
+     CM = new NMatrixInt( numRelativeCells[ h_desc.range.dim ], numDualCells[ h_desc.domain.dim ] );
+     CM->makeIdentity(); // good enough if not orientable, but we need to correct if orientable. 
+     if (orientable) correctRelOrMat( *CM, h_desc.domain.dim, h_desc.range.dim, tri3, tri4, dcIx );   
    }
-  
  }
 
-NHomMarkedAbelianGroup* hmgptr(NULL);
-if ( CM ) // we found the requested map, now make sure we have the domain and range, then we're happy.
+ NHomMarkedAbelianGroup* hmgptr(NULL);
+ if ( CM ) // we found the requested map, now make sure we have the domain and range, then we're happy.
  {
    //  ensure we have domain and range
    const NMarkedAbelianGroup* dom = markedGroup( h_desc.domain );
@@ -2182,7 +2271,7 @@ if ( CM ) // we found the requested map, now make sure we have the domain and ra
      return hmgptr;
     }
  }
-if ( CM ) delete CM;
+ if ( CM ) delete CM;
 
 // didn't find what was requested
 return NULL;
