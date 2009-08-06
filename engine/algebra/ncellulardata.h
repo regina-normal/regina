@@ -79,11 +79,8 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo bilinear forms, spin structures, test suite stuff: 
+ * \todo bilinear forms, polynomial rings of various flavours, spin structures, test suite stuff: 
  *       LES of pair, natural isos, PD
- * \todo \optlong Add an option to limit precomputed pile size, then when you reach the limit you 
- *       prune the pile according to how often / recent you use various items, deallocating the oldest
- *       least popular pile items first.
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
