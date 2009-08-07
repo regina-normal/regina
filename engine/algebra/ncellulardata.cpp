@@ -61,12 +61,25 @@ if (hcs < rhs.hcs) return true; if (hcs > rhs.hcs) return false;
 return false;
 }
 
+bool NCellularData::GroupLocator::operator==(const GroupLocator &rhs) const
+{ return ( (var==rhs.var) && (dim == rhs.dim) && (cof == rhs.cof) && (hcs == rhs.hcs) ); }
+
+bool NCellularData::GroupLocator::operator!=(const GroupLocator &rhs) const
+{ return ( (var!=rhs.var) || (dim != rhs.dim) || (cof != rhs.cof) || (hcs != rhs.hcs) ); }
+
 bool NCellularData::HomLocator::operator<(const HomLocator &rhs) const
 {
 if ( domain < rhs.domain ) return true; if ( rhs.domain < domain ) return false; 
 if ( range < rhs.range ) return true; if ( rhs.range < range ) return false;
 return false;
 }
+
+bool NCellularData::HomLocator::operator==(const HomLocator &rhs) const
+{ return ( (domain==rhs.domain) && (range == rhs.range) ); }
+
+bool NCellularData::HomLocator::operator!=(const HomLocator &rhs) const
+{ return ( (domain!=rhs.domain) || (range != rhs.range) ); }
+
 
 // only used in the NCellularData constructor
 void setupIndices(const Dim4Triangulation* tri,   
@@ -245,9 +258,8 @@ void fillStandardHomologyCC(const Dim4Triangulation* tri,
     sCC[5] = new NMatrixInt(numStandardCells[4], 1);
 
     // various useful pointers, index holders.
-    const Dim4Vertex* vrt;  const Dim4Edge* edg;  const Dim4Face* fac; 
-	const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
-    unsigned long I, J;
+    const Dim4Edge* edg;  const Dim4Face* fac; const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+    unsigned long I;
     
     // now we fill them out, first sCC.  sCC[0] is zero, 
     unsigned long D=1; // sCC[D]
@@ -370,8 +382,8 @@ void fillStandardHomologyCC(const NTriangulation* tri,
     sCC[4] = new NMatrixInt(numStandardCells[3], 1);
 
     // various useful pointers, index holders.
-    const NVertex* vrt;  const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
-    unsigned long I, J;
+    const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
+    unsigned long I;
     
     // now we fill them out, first sCC.  sCC[0] is zero, 
     unsigned long D=1; // sCC[D]
@@ -483,7 +495,7 @@ void fillDualHomologyCC(const Dim4Triangulation* tri, const unsigned long numDua
     // various useful pointers, index holders.
     const Dim4Vertex* vrt;  const Dim4Edge* edg;  const Dim4Face* fac; 
 	const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
-    unsigned long I, J;
+    unsigned long J;
 
     unsigned long D = 1; // outer loop the row parameter. We start with dCC[1]
     for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
@@ -560,7 +572,7 @@ void fillDualHomologyCC(const NTriangulation* tri, const unsigned long numDualCe
 
     // various useful pointers, index holders.
     const NVertex* vrt;  const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
-    unsigned long I, J;
+    unsigned long J;
 
     unsigned long D = 1; // outer loop the row parameter. We start with dCC[1]
     for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
@@ -1188,9 +1200,8 @@ void fillRelativeHomologyCC(const Dim4Triangulation* tri,
     rCC[5] = new NMatrixInt(numRelativeCells[4], 1);
 
     // various useful pointers, index holders.
-    const Dim4Vertex* vrt;  const Dim4Edge* edg;  const Dim4Face* fac; 
-	const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
-    unsigned long I, J;
+    const Dim4Edge* edg;  const Dim4Face* fac; const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+    unsigned long I;
     
     // now we fill them out, first rCC.  rCC[0] is zero, 
     unsigned long D=1; // rCC[D]
@@ -1256,8 +1267,8 @@ void fillRelativeHomologyCC(const NTriangulation* tri,
     rCC[4] = new NMatrixInt(numRelativeCells[3], 1);
 
     // various useful pointers, index holders.
-    const NVertex* vrt;  const NEdge* edg;  const NFace* fac; const NTetrahedron* tet;
-    unsigned long I, J;
+    const NEdge* edg;  const NFace* fac; const NTetrahedron* tet;
+    unsigned long I;
     
     // now we fill them out, first rCC.  rCC[0] is zero, 
     unsigned long D=1; // rCC[D]
@@ -1483,8 +1494,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
 
  unsigned long I;
  // various useful pointers, index holders.
- const Dim4Vertex* vrt;  const Dim4Edge* edg;  const Dim4Face* fac; 
-   const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+ const Dim4Edge* edg;  const Dim4Face* fac; const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
  // boundary relative 1-cells
  unsigned long D=1;
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
@@ -1579,7 +1589,7 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
 
  unsigned long I;
  // various useful pointers, index holders.
- const NVertex* vrt;  const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
+ const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
 
  // boundary relative 1-cells
  unsigned long D=1;
@@ -2086,7 +2096,7 @@ if (g_desc.var == coVariant) // homology requested
 
   std::map< GroupLocator, NAbelianGroup* > *abgptr = 
 	const_cast< std::map< GroupLocator, NAbelianGroup* > *> (&abelianGroups);
-  abgptr->insert(std::pair<GroupLocator,NAbelianGroup*>(g_desc,gptr)); 
+  abgptr->insert(std::pair<GroupLocator,NAbelianGroup*>( g_desc, gptr ) ); 
   return gptr;
  }
 else // cohomology requested
@@ -2151,7 +2161,7 @@ else // cohomology requested
 return NULL;
 }
 
-// todo: pure Poincare duality iso, coefficient LES maps like Bockstein
+// todo: coefficient LES maps like Bockstein
 const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator h_desc) const
 {
  std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator p;

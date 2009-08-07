@@ -39,9 +39,6 @@
 #include "dim4/dim4triangulation.h"
 
 #include "algebra/nmarkedabeliangroup.h"
-
-#include "maths/nrational.h"
-#include "utilities/nindexedarray.h"
 #include "utilities/ptrutils.h"
 
 #include <algorithm>
@@ -106,7 +103,9 @@ public:
         GroupLocator(const GroupLocator &cloneMe);
 
 	bool operator<(const GroupLocator &rhs) const;
-        
+        bool operator==(const GroupLocator &rhs) const;
+        bool operator!=(const GroupLocator &rhs) const;
+       
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
  };
@@ -119,6 +118,8 @@ public:
 	HomLocator(const HomLocator &cloneMe);
 
 	bool operator<(const HomLocator &rhs) const;
+        bool operator==(const HomLocator &rhs) const;
+        bool operator!=(const HomLocator &rhs) const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -512,6 +513,12 @@ inline unsigned long NCellularData::relativeCellCount(unsigned dimension) const
 inline long int NCellularData::eulerChar() const
 { return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3]+numDualCells[4]; }
 
+// GroupLocator and HomLocator
+
+//inline NCellularData::GroupLocator::~GroupLocator() {}
+
+//inline NCellularData::HomLocator::~HomLocator() {}
+
 inline NCellularData::GroupLocator::GroupLocator(unsigned long newDim, variance_type newVar,
 	 homology_coordinate_system useHcs, unsigned long useCof) :
  dim(newDim), var(newVar), hcs(useHcs), cof(useCof) {}
@@ -531,6 +538,12 @@ if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
 
 inline void NCellularData::GroupLocator::writeTextLong(std::ostream& out) const
 {
+if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
+if (hcs == DUAL_coord) out<<"(dual)"; else if (hcs == MIX_coord) out<<"(mix)"; 
+out<<"H"<<( var==coVariant ? "_" : "^" )<<dim;
+if (hcs == STD_BDRY_coord) out<<"(bM;"; else if (hcs == STD_REL_BDRY_coord) out<<"(M,bM;";
+else out<<"(M;";
+if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
 }
 
 inline NCellularData::HomLocator::HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange) : 
@@ -550,6 +563,11 @@ out<<"]";
 
 inline void NCellularData::HomLocator::writeTextLong(std::ostream& out) const
 {
+out<<"map[";
+domain.writeTextShort(out);
+out<<"-->";
+range.writeTextShort(out);
+out<<"]";
 }
 
 

@@ -26,15 +26,45 @@
 
 /* end stub */
 
-#include "maths/matrixops.h"
 #include "algebra/nbilinearform.h"
 
 #include <map>
 
-#include <iostream>
-#include <sstream>
+//#include <iostream>
+//#include <sstream>
 
 namespace regina {
+
+NBilinearForm::NBilinearForm(NMarkedAbelianGroup &ldomain, NMarkedAbelianGroup &rdomain, NMarkedAbelianGroup &range, 
+			NSparseGrid< NLargeInteger > &pairing)
+{}
+
+NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe)
+{}
+
+NBilinearForm::~NBilinearForm()
+{}
+
+NBilinearForm& NBilinearForm::operator = (const NBilinearForm& cloneMe)
+{}
+
+unsigned long NBilinearForm::signature() const
+{}
+
+std::vector< unsigned long > NBilinearForm::oddKKvec() const
+{}
+
+std::vector< unsigned long > NBilinearForm::twoKKvec() const
+{}
+
+bool NBilinearForm::isHyperbolic() const
+{}
+
+NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
+{}
+
+NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
+{}
 
 } // namespace regina
 

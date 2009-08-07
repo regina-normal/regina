@@ -37,6 +37,7 @@
 #endif
 
 #include <string>
+#include "maths/nsparsegrid.h"
 
 namespace regina {
 
@@ -61,17 +62,21 @@ class NBilinearForm : public ShareableObject {
 	/**
 	 * Stores the pairing in SNF coordinates for all 3 groups. 
 	 */
-	NMatrix< std::vector< NLargeInteger > > reducedPairing; 
+	NSparseGrid< NLargeInteger > reducedPairing; 
+	/**
+	 * The defining pairing.
+	 */
+        NSparseGrid< NLargeInteger > unreducedPairing;
 
     public:
         /**
          * Creates the bilinear form as a map ldomain \otimes rdomain --> range, where the map
-         * is described by pairing, a nxm-matrix filled with k-vectors where n is the rank of
+         * is described by pairing, a nxmxk-sparse grid where n is the rank of
          * the chain complex for ldomain, m the rank of the chain complex for rdomain, and k the
          * rank of the chain complex for range. 
          */
         NBilinearForm(NMarkedAbelianGroup &ldomain, NMarkedAbelianGroup &rdomain, NMarkedAbelianGroup &range, 
-			NMatrix< std::vector< NLargeInteger > > &pairing);
+			NSparseGrid< NLargeInteger > &pairing);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -80,6 +85,11 @@ class NBilinearForm : public ShareableObject {
          * @param cloneMe the form to clone.
          */
         NBilinearForm(const NBilinearForm& cloneMe);
+
+	/**
+	 * Destructor
+	 */
+	~NBilinearForm();
 
         /**
 	 * Assignment of bilinear forms.
@@ -114,14 +124,14 @@ class NBilinearForm : public ShareableObject {
 	 *  1) A --> Hom(B,C) the "left" adjoint and
          *  2) B --> Hom(A,C) the "right adjoint.  This computes (1). 
 	 */
-	NHomMarkedAbelianGroup leftAdjoint(); const;
+	NHomMarkedAbelianGroup leftAdjoint() const;
 
 	/**
 	 * Given a map A \otimes B --> C, there are two adjoints, 
 	 *  1) A --> Hom(B,C) the "left" adjoint and
          *  2) B --> Hom(A,C) the "right adjoint.  This computes (2). 
 	 */
-	NHomMarkedAbelianGroup rightAdjoint(); const;
+	NHomMarkedAbelianGroup rightAdjoint() const;
 
 };
 
