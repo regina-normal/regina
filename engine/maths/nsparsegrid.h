@@ -40,6 +40,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include "utilities/ptrutils.h"
 
 namespace regina {
 
@@ -169,7 +170,7 @@ inline NSparseGrid<T>::NSparseGrid(unsigned long & dim)
 template <class T>
 inline NSparseGrid<T>::NSparseGrid(const NSparseGrid & cloneMe)
 {
- std::map< NMultiIndex, T* >::const_iterator i;
+ typename std::map< NMultiIndex, T* >::const_iterator i;
  for (i = cloneMe.grid.begin(); i != cloneMe.grid.end(); i++)
   grid.insert( std::pair< NMultiIndex, T* >( i->first, clonePtr(i->second) ) );
  gridim = cloneMe.gridim;
@@ -178,7 +179,7 @@ inline NSparseGrid<T>::NSparseGrid(const NSparseGrid & cloneMe)
 template <class T>
 inline NSparseGrid<T>::~NSparseGrid()
 {
- std::map< NMultiIndex, T* >::iterator i;
+ typename std::map< NMultiIndex, T* >::iterator i;
  for (i = grid.begin(); i != grid.end(); i++)
   delete(i->second);
 }
@@ -187,7 +188,7 @@ template <class T>
 inline NSparseGrid<T>& NSparseGrid<T>::operator = (const NSparseGrid& cloneMe)
 {
  // delete old grid
- std::map< NMultiIndex, T* >::iterator i;
+ typename std::map< NMultiIndex, T* >::iterator i;
  for (i = grid.begin(); i != grid.end(); i++)
    delete(i->second); 
  grid.clear();  
@@ -200,10 +201,10 @@ inline NSparseGrid<T>& NSparseGrid<T>::operator = (const NSparseGrid& cloneMe)
 }
 
 template <class T>
-inline void NSparseGrid::setEntry( const NMultiIndex &I, T &val )
+inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, T &val )
 {
 // determine if multi-index I is in grid, if so replace by val
- std::map< NMultiIndex, T* >::iterator p;
+ typename std::map< NMultiIndex, T* >::iterator p;
  p = grid.find( I );
  if ( p != grid.end() ) *(p->second) = val;
 // if not, insert
@@ -211,9 +212,9 @@ inline void NSparseGrid::setEntry( const NMultiIndex &I, T &val )
 }
 
 template <class T>
-inline const T* NSparseGrid::getEntry( const NMultiIndex &I ) const
+inline const T* NSparseGrid<T>::getEntry( const NMultiIndex &I ) const
 {
- std::map< NMultiIndex, T* >::const_iterator p;
+ typename std::map< NMultiIndex, T* >::const_iterator p;
  p = grid.find( I );
  if ( p != grid.end() ) return (p->second);
  else return NULL;
