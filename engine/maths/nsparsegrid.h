@@ -193,7 +193,6 @@ inline NSparseGrid<T>& NSparseGrid<T>::operator = (const NSparseGrid& cloneMe)
    delete(i->second); 
  grid.clear();  
  // copy cloneMe
- std::map< NMultiIndex, T* >::iterator i;
  for (i = cloneMe.grid.begin(); i != cloneMe.grid.end(); i++)
   grid.insert( std::pair< NMultiIndex, T* >( i->first, clonePtr(i->second) ) );
  gridim = cloneMe.gridim;

@@ -36,8 +36,11 @@
 #define __NBILINEARFORM_H
 #endif
 
-#include <string>
+//#include <string>
 #include "maths/nsparsegrid.h"
+#include "shareableobject.h"
+#include "maths/nlargeinteger.h"
+#include "algebra/nmarkedabeliangroup.h"
 
 namespace regina {
 
@@ -75,8 +78,8 @@ class NBilinearForm : public ShareableObject {
          * the chain complex for ldomain, m the rank of the chain complex for rdomain, and k the
          * rank of the chain complex for range. 
          */
-        NBilinearForm(NMarkedAbelianGroup &ldomain, NMarkedAbelianGroup &rdomain, NMarkedAbelianGroup &range, 
-			NSparseGrid< NLargeInteger > &pairing);
+        NBilinearForm(const NMarkedAbelianGroup &ldomain, const NMarkedAbelianGroup &rdomain, 
+		      const NMarkedAbelianGroup &range,   const NSparseGrid< NLargeInteger > &pairing);
 
         /**
          * Creates a permutation that is a clone of the given

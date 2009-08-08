@@ -27,16 +27,20 @@
 /* end stub */
 
 #include "algebra/nbilinearform.h"
+#include "maths/nsparsegrid.h"
+#include "maths/nlargeinteger.h"
+#include "shareableobject.h"
+
 
 #include <map>
-
 //#include <iostream>
 //#include <sstream>
 
 namespace regina {
 
-NBilinearForm::NBilinearForm(NMarkedAbelianGroup &ldomain, NMarkedAbelianGroup &rdomain, NMarkedAbelianGroup &range, 
-			NSparseGrid< NLargeInteger > &pairing)
+NBilinearForm::NBilinearForm(const NMarkedAbelianGroup &ldomain, const NMarkedAbelianGroup &rdomain,
+			     const NMarkedAbelianGroup &range,   const NSparseGrid< NLargeInteger > &pairing) : 
+ShareableObject() 
 {}
 
 NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe)
