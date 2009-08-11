@@ -140,17 +140,23 @@ class NBilinearForm : public ShareableObject {
 
 	/**
 	 * Given a map A \otimes B --> C, there are two adjoints, 
-	 *  1) A --> Hom(B,C) the "left" adjoint and
-         *  2) B --> Hom(A,C) the "right adjoint.  This computes (1). 
+	 *  this returns A --> Hom(B,C), the "left" adjoint. At present
+         *  we use a cheap construction of this so the domain of this map
+         *  will not satisfy isEqualTo(A)
 	 */
 	NHomMarkedAbelianGroup leftAdjoint() const;
 
 	/**
 	 * Given a map A \otimes B --> C, there are two adjoints, 
-	 *  1) A --> Hom(B,C) the "left" adjoint and
-         *  2) B --> Hom(A,C) the "right adjoint.  This computes (2). 
+         *  this returns B --> Hom(A,C), the "right adjoint.   
 	 */
 	NHomMarkedAbelianGroup rightAdjoint() const;
+
+        /**
+         * todo! maybe talk about nullity, symmetry, l/rdomain, range, etc.
+         * various invariants if they make sense, etc.
+         */
+        virtual void writeTextShort(std::ostream& out) const;
 
 };
 

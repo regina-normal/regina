@@ -80,6 +80,18 @@ bool NCellularData::HomLocator::operator==(const HomLocator &rhs) const
 bool NCellularData::HomLocator::operator!=(const HomLocator &rhs) const
 { return ( (domain!=rhs.domain) || (range != rhs.range) ); }
 
+bool NCellularData::FormLocator::operator<(const FormLocator &rhs) const
+{
+if ( ldomain < rhs.ldomain ) return true; if ( rhs.ldomain < ldomain ) return false; 
+if ( rdomain < rhs.rdomain ) return true; if ( rhs.rdomain < rdomain ) return false;
+return false;
+}
+
+bool NCellularData::FormLocator::operator==(const FormLocator &rhs) const
+{ return ( (ldomain==rhs.ldomain) && (rdomain == rhs.rdomain) ); }
+
+bool NCellularData::FormLocator::operator!=(const FormLocator &rhs) const
+{ return ( (ldomain!=rhs.ldomain) || (rdomain != rhs.rdomain) ); }
 
 // only used in the NCellularData constructor
 void setupIndices(const Dim4Triangulation* tri,   
@@ -1656,7 +1668,7 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
 
 // CM is the (appropriate size) identity matrix and wants to be the chain map inducing Poincare duality
 // so we need to correct the signs down the diagonal -- we assume CM is an identity matrix to begin with.
-void correctRelOrMat( NMatrixInt &CM, unsigned long domdim, unsigned long randim, const NTriangulation* tri3, const Dim4Triangulation* tri4, 
+void correctRelOrMat( NMatrixInt &CM, unsigned long domdim, const NTriangulation* tri3, const Dim4Triangulation* tri4, 
  const std::vector< std::vector<unsigned long> > &dcIx )
 {
 // CM is from dual to std_rel_bdry coord
@@ -2255,14 +2267,14 @@ const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator h_desc) 
    { 
      CM = new NMatrixInt( numRelativeCells[ h_desc.range.dim ], numDualCells[ h_desc.domain.dim ] );
      CM->makeIdentity(); // good enough if not orientable, but we need to correct if orientable. 
-     if (orientable) correctRelOrMat( *CM, h_desc.domain.dim, h_desc.range.dim, tri3, tri4, dcIx );
+     if (orientable) correctRelOrMat( *CM, h_desc.domain.dim, tri3, tri4, dcIx );
    } else 
    if ( (h_desc.domain.var == contraVariant) && (h_desc.domain.hcs == DUAL_coord) &&
         (h_desc.range.hcs == STD_REL_BDRY_coord) && (h_desc.domain.dim + h_desc.range.dim == aDim) )
    { 
      CM = new NMatrixInt( numRelativeCells[ h_desc.range.dim ], numDualCells[ h_desc.domain.dim ] );
      CM->makeIdentity(); // good enough if not orientable, but we need to correct if orientable. 
-     if (orientable) correctRelOrMat( *CM, h_desc.domain.dim, h_desc.range.dim, tri3, tri4, dcIx );   
+     if (orientable) correctRelOrMat( *CM, h_desc.domain.dim, tri3, tri4, dcIx );   
    }
  }
 

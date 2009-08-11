@@ -135,7 +135,9 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
          *  2) B --> Hom(A,C) the "right adjoint.  This computes (1). 
 	 */
 // step 1: construct Hom(B,C)
-
+// matrix M will be 1 -by- blah
+// matrix N will be blah -by- num rels
+// so we compute the vector of torsion thinggies...
 
 // step 2: find matrix A --> Hom(B,C)
 // step 3: return the adjoint
@@ -146,6 +148,18 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
 {
 // best to define using the unreducedPairing
 
+}
+
+void NBilinearForm::writeTextShort(std::ostream& out) const
+{
+out<<"Bilinear form: [";
+lDomain.writeTextShort(out);
+out<<" x ";
+rDomain.writeTextShort(out);
+out<<" --> ";
+Range.writeTextShort(out);
+out<<"]";
+// todo
 }
 
 } // namespace regina

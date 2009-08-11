@@ -39,6 +39,7 @@
 #include "dim4/dim4triangulation.h"
 
 #include "algebra/nmarkedabeliangroup.h"
+#include "algebra/nbilinearform.h"
 #include "utilities/ptrutils.h"
 
 #include <algorithm>
@@ -125,6 +126,21 @@ public:
         virtual void writeTextLong(std::ostream& out) const;
  };
 
+ struct FormLocator {
+	GroupLocator ldomain;
+	GroupLocator rdomain;
+
+	FormLocator(const GroupLocator &newLdomain, const GroupLocator &newRdomain);
+	FormLocator(const FormLocator &cloneMe);
+
+	bool operator<(const FormLocator &rhs) const;
+        bool operator==(const FormLocator &rhs) const;
+        bool operator!=(const FormLocator &rhs) const;
+
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
+ };
+
 private:
     /**
      * Stored pointer to a valid triangulation. All routines use either tri4 or tri3
@@ -138,8 +154,10 @@ private:
     std::map< GroupLocator, NAbelianGroup* > abelianGroups;
     // for marked abelian group computations
     std::map< GroupLocator, NMarkedAbelianGroup* > markedAbelianGroups;
-     // for homomorphisms of marked abelian group computations
+    // for homomorphisms of marked abelian group computations
     std::map< HomLocator, NHomMarkedAbelianGroup* > homMarkedAbelianGroups;
+    // for intersection forms
+    std::map< FormLocator, NBilinearForm* > bilinearForms;
 
     /** 
      * numStandardCells = number of cells in the standard CW decomposition in dimensions: 0, 1, 2, 3, (4). 
@@ -411,6 +429,10 @@ public:
      */
     const NHomMarkedAbelianGroup* homGroup( const HomLocator h_desc) const;
 
+    /**
+     *  Computes an intersection form for the manifold. 
+     */
+    const NBilinearForm* intPairing( const FormLocator f_desc ) const;
 
     //todo: 1) bilinear forms return object for Poincare duality objects.
     //         various steps: 
@@ -439,12 +461,15 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
 std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
 std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator mabi;
 std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator hmabi;
+std::map< FormLocator, NBilinearForm* >::const_iterator fi;
 for (abi = g.abelianGroups.begin(); abi != g.abelianGroups.end(); abi++) abelianGroups.insert( 
  std::pair< GroupLocator, NAbelianGroup* >( abi->first, clonePtr(abi->second) ) );
 for (mabi = g.markedAbelianGroups.begin(); mabi != g.markedAbelianGroups.end(); mabi++)	markedAbelianGroups.insert( 
  std::pair< GroupLocator, NMarkedAbelianGroup* >(mabi->first, clonePtr(mabi->second) ) );
 for (hmabi = g.homMarkedAbelianGroups.begin(); hmabi != g.homMarkedAbelianGroups.end(); hmabi++) 
  homMarkedAbelianGroups.insert( std::pair< HomLocator, NHomMarkedAbelianGroup* >(hmabi->first, clonePtr(hmabi->second) ) );
+for (fi = g.bilinearForms.begin(); fi != g.bilinearForms.end(); fi++) 
+ bilinearForms.insert( std::pair< FormLocator, NBilinearForm* >(fi->first, clonePtr(fi->second) ) );
 
 // numStandardCells[5], numDualCells[5], numMixCells[5], numStandardBdryCells[4], 
 //               numNonIdealCells[5], numIdealCells[4];
@@ -478,12 +503,15 @@ inline NCellularData::~NCellularData() {
  std::map< GroupLocator, NAbelianGroup* >::iterator abi;
  std::map< GroupLocator, NMarkedAbelianGroup* >::iterator mabi;
  std::map< HomLocator, NHomMarkedAbelianGroup* >::iterator hmabi;
+ std::map< FormLocator, NBilinearForm* >::iterator fi;
  for (abi = abelianGroups.begin(); abi != abelianGroups.end(); abi++)
 	delete abi->second;
  for (mabi = markedAbelianGroups.begin(); mabi != markedAbelianGroups.end(); mabi++)
 	delete mabi->second;
  for (hmabi = homMarkedAbelianGroups.begin(); hmabi != homMarkedAbelianGroups.end(); hmabi++)
 	delete hmabi->second;
+ for (fi = bilinearForms.begin(); fi != bilinearForms.end(); fi++)
+	delete fi->second;
 
  // iterate through sCC, dCC, mCC, bsCC and deallocate
  for (unsigned long i=0; i<sCC.size(); i++)   if (sCC[i])  delete sCC[i];
@@ -570,7 +598,17 @@ range.writeTextShort(out);
 out<<"]";
 }
 
+inline NCellularData::FormLocator::FormLocator( const GroupLocator &newLdomain, const GroupLocator &newRdomain) :
+ ldomain( newLdomain ), rdomain( newRdomain ) {}
 
+inline NCellularData::FormLocator::FormLocator( const FormLocator &cloneMe ) :
+ ldomain( cloneMe.ldomain ), rdomain( cloneMe.rdomain ) {}
+
+inline void NCellularData::FormLocator::writeTextShort(std::ostream& out) const
+{}
+
+inline void NCellularData::FormLocator::writeTextLong(std::ostream& out) const
+{}
 
 } // namespace regina
 

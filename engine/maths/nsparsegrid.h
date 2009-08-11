@@ -105,7 +105,7 @@ class NSparseGrid {
 	/**
 	 * Destructor
 	 */
-	~NSparseGrid();
+	virtual ~NSparseGrid();
 
         /**
 	 * Assignment of bilinear forms.
@@ -219,6 +219,10 @@ inline NSparseGrid<T>& NSparseGrid<T>::operator = (const NSparseGrid& cloneMe)
  gridim = cloneMe.gridim;
  return (*this);
 }
+
+template <class T>
+const std::map< NMultiIndex, T* > & NSparseGrid<T>::getGrid() const
+{ return grid; }
 
 template <class T>
 inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, const T &val )
