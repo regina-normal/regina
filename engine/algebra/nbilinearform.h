@@ -55,8 +55,9 @@ namespace regina {
  * and Kawauchi-Kojima invariants of the bilinear forms coming from Poincare duality on a 4 or
  * 3-manifold respectively. 
  *
- * TODO : have a sparse method of initialization as the "pairing" matrix is potentially huge if
- *        we're dealing with anything more than a smallish triangulation. 
+ * TODO : other constructors allowing for conjugations w/maps between groups -- needing only the
+ *        reduced pairing of a previously defined NBilinearForm. Thus we could define the intersection
+ *        product first in Dual x Standard rel Bdry coords, then in other coords via conjugations. 
  *
  * @author Ryan Budney
  */
@@ -65,11 +66,16 @@ class NBilinearForm : public ShareableObject {
 	/**
 	 * Stores the pairing in SNF coordinates for all 3 groups. 
 	 */
-	NSparseGrid< NLargeInteger > reducedPairing; 
+	NSparseGrid< NLargeInteger > *reducedPairing; 
 	/**
 	 * The defining pairing.
 	 */
-        NSparseGrid< NLargeInteger > unreducedPairing;
+        NSparseGrid< NLargeInteger > *unreducedPairing;
+
+	/**
+	 * record of ldomain, rdomain and range
+	 */
+	NMarkedAbelianGroup lDomain, rDomain, Range;
 
     public:
         /**
@@ -98,6 +104,16 @@ class NBilinearForm : public ShareableObject {
 	 * Assignment of bilinear forms.
          */
         NBilinearForm& operator = (const NBilinearForm& cloneMe);
+
+	/**
+	 * Access to the unreducedPairing map.
+	 */
+        const std::map< NMultiIndex, NLargeInteger* > & unreducedMap() const;
+
+	/**
+	 * Access to the reducedPairing map.
+	 */
+        const std::map< NMultiIndex, NLargeInteger* > & reducedMap() const;
 
 	/**
 	 * If this is a symmetric bilinear form, we can ask for its signature.  This

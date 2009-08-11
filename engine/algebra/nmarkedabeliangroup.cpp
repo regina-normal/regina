@@ -395,6 +395,45 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::ccRep(const std::vector<NLargeIn
     return retval;
 }
 
+std::vector<NLargeInteger> NMarkedAbelianGroup::ccRep(unsigned long SNFRep) const
+{
+    static const std::vector<NLargeInteger> nullV;
+    if (SNFRep >= snfrank + ifNum) return nullV;
+
+    std::vector<NLargeInteger> retval(OM.columns(),NLargeInteger::zero);
+    std::vector<NLargeInteger> temp(ornCi->rows()+TORLoc,NLargeInteger::zero);
+
+    if (coeff == 0)
+     {
+     for (unsigned long i=0; i<ornCi->rows(); i++)
+         temp[i+TORLoc] = ornCi->entry(i,ifLoc+SNFRep);
+     for (unsigned long i=0;i<retval.size();i++) for (unsigned long j=0;j<OMR.columns();j++)
+            retval[i] += OMR.entry(i,j)*temp[j];
+     }
+    else
+     { // coeff > 0
+       std::vector<NLargeInteger> firstV(TORVec.size(), NLargeInteger::zero);
+       std::vector<NLargeInteger> secondV(ornC->rows()-TORVec.size(), NLargeInteger::zero);
+       for (unsigned long i=0; i<firstV.size(); i++)
+	  firstV[i] = ornCi->entry( i, SNFRep + ifLoc );
+       for (unsigned long i=0; i<secondV.size(); i++)
+	  secondV[i] = ornCi->entry( i + firstV.size(), SNFRep + ifLoc );
+       // 1st vec needs coords scaled appropriately by p/gcd(p,q) and multiplied by appropriate OMR columns
+       for (unsigned long i=0; i<firstV.size(); i++)
+	   firstV[i] *= coeff.divExact( TORVec[i].gcd(coeff) );
+       std::vector<NLargeInteger> otCiSecondV(otCi->rows(), NLargeInteger::zero);
+       for (unsigned long i=0; i<otCi->rows(); i++) for (unsigned long j=tensorIfLoc; j<otCi->columns(); j++)
+	   otCiSecondV[i] += otCi->entry(i,j) * secondV[j-tensorIfLoc];
+       // 2nd vec needs be multiplied by otCi, padded, then have OMR applied. 
+       for (unsigned long i=0; i<retval.size(); i++) for (unsigned long j=0; j<firstV.size(); j++)
+	  retval[i] += OMR.entry(i, TORLoc + j)*firstV[j];
+       for (unsigned long i=0; i<retval.size(); i++) for (unsigned long j=0; j<otCiSecondV.size(); j++)
+	  retval[i] += OMR.entry(i, rankOM+j) * otCiSecondV[j];
+     }
+    return retval;
+}
+
+
 /*
  * The marked abelian group was defined by matrices M and N
  * with M*N==0.  Think of M as m by l and N as l by n.

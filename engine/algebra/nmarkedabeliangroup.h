@@ -376,6 +376,12 @@ class NMarkedAbelianGroup : public ShareableObject {
 	std::vector<NLargeInteger> ccRep(const std::vector<NLargeInteger> SNFRep) const;
 
 	/**
+	 * Same as ccRep(const std::vector<NLargeInteger>) but we assume you only
+	 * want the ccRepresentation of a standard basis vector from SNF coordinates.
+	 */
+	std::vector<NLargeInteger> ccRep(unsigned long SNFRep) const;
+
+	/**
 	 * Given a vector, determines if it represents a cycle in chain complex.
 	 */
 	bool isCycle(const std::vector<NLargeInteger> &input) const;

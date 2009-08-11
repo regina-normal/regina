@@ -40,6 +40,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <iostream>
 #include "utilities/ptrutils.h"
 
 namespace regina {
@@ -50,20 +51,22 @@ namespace regina {
  */
 
 /**
- * An object for describing elements in a n_1xn_2x...xn_k grid
+ * An object for describing elements in a n_1 x n_2 x ... x n_k grid
  */
 class NMultiIndex {
  private:
   std::vector< unsigned long > data;
  public: 
-  NMultiIndex(const unsigned long &dim);
+  NMultiIndex(unsigned long dim); // k == dim
   NMultiIndex(const NMultiIndex &cloneMe);
   ~NMultiIndex();
   unsigned long & operator[](const unsigned long &index);
+  const unsigned long & entry(const unsigned long &index) const;
   bool operator==(const NMultiIndex &q) const;
   bool operator!=(const NMultiIndex &q) const;
   NMultiIndex& operator=(const NMultiIndex &q);
   bool operator<(const NMultiIndex &q) const;
+  virtual void writeTextShort(std::ostream& out) const;
 };
 
 /**
@@ -89,7 +92,7 @@ class NSparseGrid {
         /**
 	 * Creates a grid with dimension dim -- ie it is indexed by dim unsigned longs.
          */
-        NSparseGrid(unsigned long & dim);
+        NSparseGrid(unsigned long dim);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -109,17 +112,23 @@ class NSparseGrid {
          */
         NSparseGrid& operator = (const NSparseGrid & cloneMe);
 
-	void setEntry( const NMultiIndex & I, T & val );
+	/**
+	 * Access to the grid map. 
+	 */
+	const std::map< NMultiIndex, T* > & getGrid() const;
+
+	void setEntry( const NMultiIndex & I, const T & val );
 
         const T* getEntry( const NMultiIndex & I ) const;
 
+        virtual void writeTextShort(std::ostream& out) const;
 };
 
 /*@}*/
 
 // Inline functions for NMultiIndex
 
-inline NMultiIndex::NMultiIndex(const unsigned long &dim)
+inline NMultiIndex::NMultiIndex(unsigned long dim)
 { data.resize(dim); }
 
 inline NMultiIndex::NMultiIndex(const NMultiIndex &cloneMe)
@@ -129,6 +138,9 @@ inline NMultiIndex::~NMultiIndex()
 {}
 
 inline unsigned long & NMultiIndex::operator[](const unsigned long &index)
+{ return data[index]; }
+
+inline const unsigned long & NMultiIndex::entry(const unsigned long &index) const
 { return data[index]; }
 
 inline bool NMultiIndex::operator==(const NMultiIndex &q) const
@@ -161,10 +173,19 @@ inline bool NMultiIndex::operator<(const NMultiIndex &q) const
  return false;
 }
 
+inline void NMultiIndex::writeTextShort(std::ostream& out) const
+{
+for (unsigned long i=0; i<data.size(); i++)
+ {
+ if (i!=0) out<<", ";
+ out<<data[i];
+ }
+}
+
 // Inline functions for NSparseGrid
 
 template <class T>
-inline NSparseGrid<T>::NSparseGrid(unsigned long & dim)
+inline NSparseGrid<T>::NSparseGrid(unsigned long dim)
 { gridim = dim; }
 
 template <class T>
@@ -200,7 +221,7 @@ inline NSparseGrid<T>& NSparseGrid<T>::operator = (const NSparseGrid& cloneMe)
 }
 
 template <class T>
-inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, T &val )
+inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, const T &val )
 {
 // determine if multi-index I is in grid, if so replace by val
  typename std::map< NMultiIndex, T* >::iterator p;
@@ -217,6 +238,20 @@ inline const T* NSparseGrid<T>::getEntry( const NMultiIndex &I ) const
  p = grid.find( I );
  if ( p != grid.end() ) return (p->second);
  else return NULL;
+}
+
+template <class T>
+inline void NSparseGrid<T>::writeTextShort(std::ostream& out) const
+{
+ typename std::map< NMultiIndex, T* >::const_iterator i;
+ for (i = grid.begin(); i != grid.end(); i++)
+  {
+   if (i!=grid.begin()) out<<", ";
+   out<<"[";
+   out<<"(";   i->first.writeTextShort(out); out<<"), ";
+   out<< (*(i->second));
+   out<<"]";
+  }
 }
 
 } // namespace regina
