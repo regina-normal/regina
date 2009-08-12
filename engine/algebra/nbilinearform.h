@@ -41,6 +41,7 @@
 #include "shareableobject.h"
 #include "maths/nlargeinteger.h"
 #include "algebra/nmarkedabeliangroup.h"
+#include "algebra/NSVPolynomialRing.h"
 
 namespace regina {
 
@@ -55,9 +56,13 @@ namespace regina {
  * and Kawauchi-Kojima invariants of the bilinear forms coming from Poincare duality on a 4 or
  * 3-manifold respectively. 
  *
- * TODO : other constructors allowing for conjugations w/maps between groups -- needing only the
+ * TODO : 1) other constructors allowing for conjugations w/maps between groups -- needing only the
  *        reduced pairing of a previously defined NBilinearForm. Thus we could define the intersection
  *        product first in Dual x Standard rel Bdry coords, then in other coords via conjugations. 
+ *        
+ *        2) Specify different methods of computation -- have an enum that allows for honest computations
+ *        where for example the domain of the leftAdjoint would satisfy isEqualTo(A), etc, vs one where
+ *        only isIsomorphicTo(A) would be satisfied -- one using unreducedPairing, the other reducedPairing, etc.
  *
  * @author Ryan Budney
  */

@@ -101,6 +101,8 @@ unsigned long NBilinearForm::signature() const
 // assumes ldomain == rdomain, form symmetric, range == Z. 
 // grab an adjoint, get its defining matrix, compute char poly, use Descartes
 // to get number of pos - neg roots. 
+if (!lDomain.equalTo(rDomain)) return false;
+
 
 }
 
@@ -125,29 +127,98 @@ bool NBilinearForm::isHyperbolic() const
 
 NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
 {
-// best to define using the unreducedPairing
-// maybe that's a long-term thing.  Let's do it with the reducedPairing
-// for now as it's easy to write out a presentation for Hom(B,C) in this
+// for now let's do it with the reducedPairing
+// as it's easy to write out a presentation for Hom(B,C) in this
 // case.
-	/**
-	 * Given a map A \otimes B --> C, there are two adjoints, 
-	 *  1) A --> Hom(B,C) the "left" adjoint and
-         *  2) B --> Hom(A,C) the "right adjoint.  This computes (1). 
-	 */
+// Given a map A \otimes B --> C, there are two adjoints, 
+//	 *  1) A --> Hom(B,C) the "left" adjoint and
+
 // step 1: construct Hom(B,C)
-// matrix M will be 1 -by- blah
-// matrix N will be blah -by- num rels
-// so we compute the vector of torsion thinggies...
+//  matrix M will be 1 -by- blah
+//  matrix N will be blah -by- num rels
+//  so we compute the vector of torsion thinggies...
+// Hom(Z_p,Z_q) == Z_{gcd(p,q)} generator LHS given by map 1 |-> q/gcd(p,q) \in Z_q. 
+// so we'll have b*c generators in lexico where b is the num gens of B, c num gens of C and
+// b'*c' rels where b' is rels for B, c' rels for C, rels given by GCD cond'n. 
+
+NMatrixInt M(1, rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
+NMatrixInt N(rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(), rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
+
+for (unsigned long i=0; i<rDomain.minNumberOfGenerators(); i++)
+ for (unsigned long j=0; j<Range.minNumberOfGenerators(); j++)
+  {
+   unsigned long k(i*Range.minNumberOfGenerators() + j);
+   if ( i < rDomain.getNumberOfInvariantFactors() )
+    {
+     if ( j < Range.getNumberOfInvariantFactors() )
+      N.entry( k, k ) = rDomain.getInvariantFactor( i ).gcd(Range.getInvariantFactor(j));
+     else
+      N.entry( k, k ) = rDomain.getInvariantFactor( i );
+    }
+   else
+    {
+     if ( j < Range.getNumberOfInvariantFactors() )
+      N.entry( k, k ) = Range.getInvariantFactor( j );
+     else
+      N.entry( k, k ) = NLargeInteger::zero;
+    }
+  }
+
+NMarkedAbelianGroup HOM(M,N);
 
 // step 2: find matrix A --> Hom(B,C)
-// step 3: return the adjoint
 
+NMatrixInt adjmat( lDomain.minNumberOfGenerators(), rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
+
+std::map< NMultiIndex, NLargeInteger* >::const_iterator I;
+for (I=reducedPairing->getGrid().begin(); I!=reducedPairing->getGrid().end(); I++)
+	{
+         adjmat.entry( I->first.entry(0), I->first.entry(1)*Range.minNumberOfGenerators() + I->first.entry(2) )
+	  = *(I->second);
+	}
+// step 3: return the adjoint
+return NHomMarkedAbelianGroup( lDomain, HOM, adjmat );
 }
 
 NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
 {
-// best to define using the unreducedPairing
+NMatrixInt M(1, lDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
+NMatrixInt N(lDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(), lDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
 
+for (unsigned long i=0; i<lDomain.minNumberOfGenerators(); i++)
+ for (unsigned long j=0; j<Range.minNumberOfGenerators(); j++)
+  {
+   unsigned long k(i*Range.minNumberOfGenerators() + j);
+   if ( i < lDomain.getNumberOfInvariantFactors() )
+    {
+     if ( j < Range.getNumberOfInvariantFactors() )
+      N.entry( k, k ) = lDomain.getInvariantFactor( i ).gcd(Range.getInvariantFactor(j));
+     else
+      N.entry( k, k ) = lDomain.getInvariantFactor( i );
+    }
+   else
+    {
+     if ( j < Range.getNumberOfInvariantFactors() )
+      N.entry( k, k ) = Range.getInvariantFactor( j );
+     else
+      N.entry( k, k ) = NLargeInteger::zero;
+    }
+  }
+
+NMarkedAbelianGroup HOM(M,N);
+
+// step 2: find matrix A --> Hom(B,C)
+
+NMatrixInt adjmat( rDomain.minNumberOfGenerators(), lDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
+
+std::map< NMultiIndex, NLargeInteger* >::const_iterator I;
+for (I=reducedPairing->getGrid().begin(); I!=reducedPairing->getGrid().end(); I++)
+	{
+         adjmat.entry( I->first.entry(1), I->first.entry(0)*Range.minNumberOfGenerators() + I->first.entry(2) )
+	  = *(I->second);
+	}
+// step 3: return the adjoint
+return NHomMarkedAbelianGroup( rDomain, HOM, adjmat );
 }
 
 void NBilinearForm::writeTextShort(std::ostream& out) const

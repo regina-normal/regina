@@ -26,45 +26,135 @@
 
 /* end stub */
 
-#include "algebra/polynomialringsv.h"
+#include "algebra/NSVPolynomialRing.h"
 
 namespace regina {
 
-void NSVPolynomialRing::setCoefficient (const unsigned long & i, const NLargeInteger& c) const
-{
-std::map< unsigned long, NLargeInteger* >::const_iterator p = cof.find(i);
-if ( p == cof.end() ) cof.insert(std::pair< unsigned long, NLargeInteger* >( i, clonePtr(&c) ) );
-else p->second = c;
-}
+const NSVPolynomialRing NSVPolynomialRing::zero;
+const NSVPolynomialRing NSVPolynomialRing::one(  NLargeInteger::one, 0 );
+const NSVPolynomialRing NSVPolynomialRing::pvar( NLargeInteger::one, 1 );
 
-void NSVPolynomialRing::setCoefficients (const std::map< unsigned long, NLargeInteger* >& c) const
-{
-// bulk setCoefficient... is there a smart way to insert in mass?  I think so...
+void NSVPolynomialRing::setCoefficient (const unsigned long & i, const NLargeInteger & c) 
+{ // redo using insert
+std::map< unsigned long, NLargeInteger* >::iterator p = cof.find(i);
+if ( p == cof.end() ) cof.insert(std::pair< unsigned long, NLargeInteger* >( i, new NLargeInteger(c) ) );
+else (*p->second)=c;
 }
 
 NSVPolynomialRing NSVPolynomialRing::operator * (const NSVPolynomialRing& q) const
-{}
+{
+// There's a faster way to do polynomial multiplication using the FFT. See
+// http://www.cs.iastate.edu/~cs577/handouts/polymultiply.pdf
+// Fateman 2005 indicates nobody has implemented such algorithms in any major package, and that
+//  the asymptotic advantage only appears for extremely large polynomials, a problem being that
+//  roots of unity are required so they seem to think arbitrary precision complex numbers are
+//  required, which is slow.  Can we avoid this using exact arithmatic? 
+std::map< unsigned long, NLargeInteger* >::const_iterator I, J;
+NSVPolynomialRing retval;
 
-friend NSVPolynomialRing NSVPolynomialRing::operator * (const NLargeInteger &k, const NSVPolynomialRing& q)
+for (I = cof.begin(); I!=cof.end(); I++) for (J=q.cof.begin(); J!=q.cof.end(); J++)
+ {
+   // lets multiply *I->second and *J->second
+   NLargeInteger* P(new NLargeInteger( (*I->second)*(*J->second) ) );
+   std::pair< std::map< unsigned long, NLargeInteger* >::iterator, bool > res = 
+    retval.cof.insert( std::pair< unsigned long, NLargeInteger* > (
+    I->first+J->first, P ) );
+   if (res.second == false) { (*res.first->second) += (*P); delete P; }
+ }
+
+//  now run through find zero coefficients and deallocate.
+std::map< unsigned long, NLargeInteger* >::iterator K;
+for (K = retval.cof.begin(); K!=retval.cof.end(); K++)
+ if ( (*K->second) == NLargeInteger::zero )
+  {
+   delete K->second;
+   retval.cof.erase(K);
+  }
+
+return retval;
+}
+
+NSVPolynomialRing operator * (const NLargeInteger &k, const NSVPolynomialRing& q)
 {
 NSVPolynomialRing retval;
-// todo...
+
 if (k != 0)
  {
+ retval = q;
  std::map< unsigned long, NLargeInteger* >::iterator ci;
- for (ci = q.cof.begin(); ci != q.cof.end(); ci++)
+ for (ci = retval.cof.begin(); ci != retval.cof.end(); ci++)
         {
-	cof.insert(std::pair< unsigned long, NLargeInteger* >( ci->first, clonePtr(ci->second) ) );
-        } // multiply by k how? 
+	(*ci->second) *= k;
+        } 
  }
+
 return retval;
 }
 
 NSVPolynomialRing NSVPolynomialRing::operator + (const NSVPolynomialRing& q) const
-{}
+{
+NSVPolynomialRing retval;
+// two iterators, one for this->cof, one for q.cof, start at beginning for both, 
+// smallest we add, if only one then that's okay. We increment smallest, repeat...
+std::map< unsigned long, NLargeInteger* >::const_iterator i,j;
+i = cof.begin(); j = q.cof.begin();
+while ( (i != cof.end()) || (j != q.cof.end()) )
+ {
+  if (i == cof.end())
+   { // only j relevant
+     retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(j->first, new NLargeInteger(*j->second) ) );
+     j++; }
+  else if (j == q.cof.end())
+   { // only i relevant
+     retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(i->first, new NLargeInteger(*i->second) ) );
+     i++; }
+  else
+   {if ( i->first < j->first )
+     { retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(i->first, new NLargeInteger(*i->second) ) );
+       i++; }
+    else if ( i->first > j->first )
+     { retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(j->first, new NLargeInteger(*j->second) ) );
+       j++; }
+    else
+     { retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(i->first, new NLargeInteger(*i->second + *j->second) ) );
+       i++; j++; } 
+   }
+ }
+
+return retval;
+}
 
 NSVPolynomialRing NSVPolynomialRing::operator - (const NSVPolynomialRing& q) const
-{}
+{
+NSVPolynomialRing retval;
+// two iterators, one for this->cof, one for q.cof, start at beginning for both, 
+// smallest we add, if only one then that's okay. We increment smallest, repeat...
+std::map< unsigned long, NLargeInteger* >::const_iterator i,j;
+i = cof.begin(); j = q.cof.begin();
+while ( (i != cof.end()) || (j != q.cof.end()) )
+ {
+  if (i == cof.end())
+   { // only j relevant
+     retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(j->first, new NLargeInteger(-(*j->second) ) ) );
+     j++; }
+  else if (j == q.cof.end())
+   { // only i relevant
+     retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(i->first, new NLargeInteger(*i->second) ) );
+     i++; }
+  else
+   {if ( i->first < j->first )
+     { retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(i->first, new NLargeInteger(*i->second) ) );
+       i++; }
+    else if ( i->first > j->first )
+     { retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(j->first, new NLargeInteger(-(*j->second) ) ) );
+       j++; }
+    else
+     { retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(i->first, new NLargeInteger(*i->second - (*j->second) ) ) );
+       i++; j++; } 
+   }
+ }
+return retval;
+}
 
 } // namespace regina
 

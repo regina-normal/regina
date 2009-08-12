@@ -35,7 +35,11 @@
 #define __NSVPolynomialRing_H
 #endif
 
-#include "maths/NSVPolynomialRing.h"
+#include <sstream>
+#include <map>
+
+#include "maths/nlargeinteger.h"
+#include "utilities/ptrutils.h"
 
 namespace regina {
 
@@ -53,6 +57,10 @@ namespace regina {
  * @author Ryan Budney
  */
 class NSVPolynomialRing {
+    public:
+	static const NSVPolynomialRing zero;
+        static const NSVPolynomialRing one;
+        static const NSVPolynomialRing pvar;
     private:
        // sparse storage of coefficients
        std::map< unsigned long, NLargeInteger* > cof;
@@ -62,6 +70,11 @@ class NSVPolynomialRing {
          * Creates an element of the polynomial ring, zero by default. 
          */
         NSVPolynomialRing();
+
+        /**
+         * Creates an element of the polynomial ring, of the form a t^k 
+         */
+        NSVPolynomialRing(const NLargeInteger &a, unsigned long k);
 
 	/**
 	 * Destructor.
@@ -84,12 +97,7 @@ class NSVPolynomialRing {
         /**
 	 * Set a coefficient.
          */
-        void setCoefficient (const unsigned long & i, const NLargeInteger& c) const;
-
-        /**
-	 * Set coefficients.
-         */
-        void setCoefficients (const std::map< unsigned long, NLargeInteger* >& c) const;
+        void setCoefficient (const unsigned long & i, const NLargeInteger& c);
 
         /**
 	 * Returns the product of two polynomials.
@@ -172,6 +180,10 @@ class NSVPolynomialRing {
 // zero element -- nothing to do
 inline NSVPolynomialRing::NSVPolynomialRing() {}
 
+// monomial constructor
+inline NSVPolynomialRing::NSVPolynomialRing(const NLargeInteger &a, unsigned long k)
+{ if (a != 0) cof.insert(std::pair<unsigned long, NLargeInteger*>( k, new NLargeInteger(a) ) ); }
+
 // destructor
 inline NSVPolynomialRing::~NSVPolynomialRing()
 {
@@ -189,17 +201,21 @@ for (ci = cloneMe.cof.begin(); ci != cloneMe.cof.end(); ci++) cof.insert(
 }
 
 // assignment
-inline NSVPolynomialRing::NSVPolynomialRing& operator = (const NSVPolynomialRing& cloneMe)
+inline NSVPolynomialRing& NSVPolynomialRing::operator = (const NSVPolynomialRing& cloneMe)
 {
 // deallocate everything
 std::map< unsigned long, NLargeInteger* >::iterator ci;
 for (ci = cof.begin(); ci != cof.end(); ci++)
 	delete ci->second;
+cof.clear();
 
 // copy everything
-std::map< unsigned long, NLargeInteger* >::iterator ci;
-for (ci = cloneMe.cof.begin(); ci != cloneMe.cof.end(); ci++)
-	cof.insert(std::pair< unsigned long, NLargeInteger* >( ci->first, clonePtr(ci->second) ));
+ci = cof.begin();
+std::map< unsigned long, NLargeInteger* >::const_iterator Ci;
+for (Ci = cloneMe.cof.begin(); Ci != cloneMe.cof.end(); Ci++)
+	ci = cof.insert(ci, std::pair< unsigned long, NLargeInteger* >( Ci->first, clonePtr(Ci->second) ));
+
+return (*this);
 }
 
 inline const NLargeInteger& NSVPolynomialRing::operator[](unsigned long i) const
@@ -227,14 +243,14 @@ inline bool NSVPolynomialRing::operator == (const NSVPolynomialRing& other) cons
 }
 
 inline bool NSVPolynomialRing::operator != (const NSVPolynomialRing& other) const
-{ return ( !(*this)==other ); }
+{ return ( !((*this)==other) ); }
 
 inline bool NSVPolynomialRing::isIdentity() const
 {
 // check only nonzero coeff is t^0 with coeff 1.
 if (cof.size() != 1) return false;
 if (cof.begin()->first != 0) return false;
-if (cof.begin()->second != NLargeInteger::one) return false;
+if (*(cof.begin()->second) != NLargeInteger::one) return false;
 return true;
 }
 
@@ -247,12 +263,31 @@ return true;
 inline std::string NSVPolynomialRing::toString() const
 {
 // run through cof, assemble into string
-std::string retval;
+std::string retval; std::stringstream ss;
 std::map< unsigned long, NLargeInteger* >::const_iterator p;
 if (cof.size() == 0) retval = "0"; else
 for (p = cof.begin(); p != cof.end(); p++)
  {
-  retval = retval + p->second->stringValue() + std::string("t^") + p->first;
+  NLargeInteger mag( p->second->abs() );
+  bool pos( ((*p->second) > 0) ? true : false );
+  unsigned long exp( p->first );
+
+  ss.str("");  ss<<p->first;
+  // ensure sensible output, eg:  5 - t + 3t^2 + t^3, etc...
+  if (p != cof.begin())
+   {
+    retval += ( pos ? "+" : "-" );
+    if (mag != 1) retval += mag.stringValue();
+    retval += "t";
+    if (exp != 1) retval += "^" + ss.str();
+   }
+  else
+   { // p == cof.begin()
+    if (!pos) retval += "-";
+    if ((exp==0) || (mag != 1)) retval += mag.stringValue();
+    if (exp > 0) retval += "t";
+    if (exp > 1) retval += "^" + ss.str();
+    }
  }
 return retval;
 }
@@ -261,23 +296,42 @@ inline void NSVPolynomialRing::writeTextShort(std::ostream& out) const
 { out<<toString(); }
 
 inline std::ostream& NSVPolynomialRing::writeTeX(std::ostream &out) const
-{ out<<toTex(); }
+{ out<<toTeX(); }
 
 inline std::string NSVPolynomialRing::toTeX() const
 {
-// run through cof, assemble into TeX-friendly string
-std::string retval;
+// run through cof, assemble into string
+std::string retval; std::stringstream ss;
 std::map< unsigned long, NLargeInteger* >::const_iterator p;
 if (cof.size() == 0) retval = "0"; else
 for (p = cof.begin(); p != cof.end(); p++)
  {
-  retval = retval + p->second->stringValue() + std::string("t^{") + p->first + std::string("}");
+  NLargeInteger mag( p->second->abs() );
+  bool pos( ((*p->second) > 0) ? true : false );
+  unsigned long exp( p->first );
+
+  ss.str("");  ss<<p->first;
+  // ensure sensible output, eg:  5 - t + 3t^2 + t^3, etc...
+  if (p != cof.begin())
+   {
+    retval += ( pos ? "+" : "-" );
+    if (mag != 1) retval += mag.stringValue();
+    retval += "t";
+    if (exp != 1) retval += "^\\{" + ss.str() + "\\}";
+   }
+  else
+   { // p == cof.begin()
+    if (!pos) retval += "-";
+    if ((exp==0) || (mag != 1)) retval += mag.stringValue();
+    if (exp > 0) retval += "t";
+    if (exp > 1) retval += "^\\{" + ss.str() + "\\}";
+    }
  }
 return retval;
 }
 
 inline std::ostream& operator << (std::ostream& out, const NSVPolynomialRing& p)
-{ p.writeTextShort(out); }
+{ p.writeTextShort(out); return out; }
 
 } // namespace regina
 
