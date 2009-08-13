@@ -77,6 +77,11 @@ class NSVPolynomialRing {
          */
         NSVPolynomialRing(const NLargeInteger &a, unsigned long k);
 
+        /**
+         * Creates an element of the polynomial ring, of the form "a" 
+         */
+        NSVPolynomialRing(long int a);
+
 	/**
 	 * Destructor.
  	 */
@@ -194,6 +199,9 @@ inline NSVPolynomialRing::NSVPolynomialRing() {}
 // monomial constructor
 inline NSVPolynomialRing::NSVPolynomialRing(const NLargeInteger &a, unsigned long k)
 { if (a != 0) cof.insert(std::pair<unsigned long, NLargeInteger*>( k, new NLargeInteger(a) ) ); }
+
+inline NSVPolynomialRing::NSVPolynomialRing(long int a)
+{ if (a != 0) cof.insert(std::pair<unsigned long, NLargeInteger*>( 0, new NLargeInteger(a) ) ); }
 
 // destructor
 inline NSVPolynomialRing::~NSVPolynomialRing()
