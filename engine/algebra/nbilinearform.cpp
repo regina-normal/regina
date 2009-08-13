@@ -73,14 +73,11 @@ for (unsigned long i=0; i<ldomain.minNumberOfGenerators(); i++)
 
 NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe) : 
 reducedPairing(clonePtr(cloneMe.reducedPairing)), unreducedPairing(clonePtr(cloneMe.unreducedPairing)),
-lDomain(cloneMe.lDomain), rDomain(cloneMe.rDomain), Range(cloneMe.Range)
-{}
+lDomain(cloneMe.lDomain), rDomain(cloneMe.rDomain), Range(cloneMe.Range) {}
 
 NBilinearForm::~NBilinearForm()
-{
-if (reducedPairing) delete reducedPairing;
-if (unreducedPairing) delete unreducedPairing;
-}
+{ if (reducedPairing) delete reducedPairing;
+  if (unreducedPairing) delete unreducedPairing; }
 
 NBilinearForm& NBilinearForm::operator = (const NBilinearForm& cloneMe)
 {
@@ -96,34 +93,102 @@ const std::map< NMultiIndex, NLargeInteger* > & NBilinearForm::unreducedMap() co
 const std::map< NMultiIndex, NLargeInteger* > & NBilinearForm::reducedMap() const
 { return reducedPairing->getGrid(); }
 
+
+
 unsigned long NBilinearForm::signature() const
 {
-// assumes ldomain == rdomain, form symmetric, range == Z. 
+if (!isSymmetric()) return 0; 
+if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, NLargeInteger::zero))) return 0;
+// ldomain == rdomain, form symmetric, range == Z.
+ 
 // grab an adjoint, get its defining matrix, compute char poly, use Descartes
 // to get number of pos - neg roots. 
-if (!lDomain.equalTo(rDomain)) return false;
-
-
+NSVPolynomialRing charPoly;
+// todo!
+return charPoly.descartesNo();
 }
 
-std::vector< unsigned long > NBilinearForm::oddKKvec() const
+
+
+std::vector< NLargeInteger > NBilinearForm::oddKKvec() const
 {
 // assumes ldomain == rdomain, form symmetric, range cyclic of order the
 // order of the torsion subgroup of ldomain and rdomain. 
+std::vector<NLargeInteger> retval;
+// todo
 
+return retval;
 }
 
-std::vector< unsigned long > NBilinearForm::twoKKvec() const
+
+
+std::vector< NLargeInteger > NBilinearForm::twoKKvec() const
 {
 // assumes ldomain == rdomain, form symmetric, range cyclic of order the
 // order of the torsion subgroup of ldomain and rdomain. 
+std::vector<NLargeInteger> retval;
+// todo
+return retval;
 }
+
+
 
 bool NBilinearForm::isHyperbolic() const
 {
 // go through oddKKvec and twoKKvec and check... import from NHomologicalData
-
+// todo!
+return true;
 }
+
+
+
+bool NBilinearForm::isSymmetric() const
+{
+if (!lDomain.equalTo(rDomain)) return 0;
+// now we check symmetry.... we'll use the reduced matrix for this...
+// todo!
+return true;
+}
+
+
+
+bool NBilinearForm::isAntiSymmetric() const
+{
+if (!lDomain.equalTo(rDomain)) return 0;
+// now we check antisymmetry.... we'll use the reduced matrix for this...
+// todo!
+return true;
+}
+	
+
+
+NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
+{
+// we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
+NSparseGrid< NLargeInteger > newPairing(3);
+// todo!
+return NBilinearForm( f.getDomain(), rDomain, Range, newPairing );
+}
+
+
+
+NBilinearForm NBilinearForm::rCompose(const NHomMarkedAbelianGroup &f) const
+{
+NSparseGrid< NLargeInteger > newPairing(3);
+// todo!
+return NBilinearForm( lDomain, f.getDomain(), Range, newPairing );
+}
+
+
+
+NBilinearForm NBilinearForm::postCompose(const NHomMarkedAbelianGroup &f) const
+{
+NSparseGrid< NLargeInteger > newPairing(3);
+// todo!
+return NBilinearForm( lDomain, rDomain, f.getRange(), newPairing );
+}
+
+
 
 NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
 {
@@ -132,7 +197,6 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
 // case.
 // Given a map A \otimes B --> C, there are two adjoints, 
 //	 *  1) A --> Hom(B,C) the "left" adjoint and
-
 // step 1: construct Hom(B,C)
 //  matrix M will be 1 -by- blah
 //  matrix N will be blah -by- num rels
@@ -140,7 +204,6 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
 // Hom(Z_p,Z_q) == Z_{gcd(p,q)} generator LHS given by map 1 |-> q/gcd(p,q) \in Z_q. 
 // so we'll have b*c generators in lexico where b is the num gens of B, c num gens of C and
 // b'*c' rels where b' is rels for B, c' rels for C, rels given by GCD cond'n. 
-
 NMatrixInt M(1, rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
 NMatrixInt N(rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(), rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
 
@@ -156,29 +219,22 @@ for (unsigned long i=0; i<rDomain.minNumberOfGenerators(); i++)
       N.entry( k, k ) = rDomain.getInvariantFactor( i );
     }
    else
-    {
-     if ( j < Range.getNumberOfInvariantFactors() )
+    {if ( j < Range.getNumberOfInvariantFactors() )
       N.entry( k, k ) = Range.getInvariantFactor( j );
-     else
-      N.entry( k, k ) = NLargeInteger::zero;
-    }
+     else N.entry( k, k ) = NLargeInteger::zero; }
   }
-
 NMarkedAbelianGroup HOM(M,N);
-
 // step 2: find matrix A --> Hom(B,C)
-
 NMatrixInt adjmat( lDomain.minNumberOfGenerators(), rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
-
 std::map< NMultiIndex, NLargeInteger* >::const_iterator I;
 for (I=reducedPairing->getGrid().begin(); I!=reducedPairing->getGrid().end(); I++)
-	{
          adjmat.entry( I->first.entry(0), I->first.entry(1)*Range.minNumberOfGenerators() + I->first.entry(2) )
 	  = *(I->second);
-	}
 // step 3: return the adjoint
 return NHomMarkedAbelianGroup( lDomain, HOM, adjmat );
 }
+
+
 
 NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
 {
@@ -221,6 +277,8 @@ for (I=reducedPairing->getGrid().begin(); I!=reducedPairing->getGrid().end(); I+
 return NHomMarkedAbelianGroup( rDomain, HOM, adjmat );
 }
 
+
+
 void NBilinearForm::writeTextShort(std::ostream& out) const
 {
 out<<"Bilinear form: [";
@@ -230,7 +288,7 @@ rDomain.writeTextShort(out);
 out<<" --> ";
 Range.writeTextShort(out);
 out<<"]";
-// todo
+// todo more?
 }
 
 } // namespace regina

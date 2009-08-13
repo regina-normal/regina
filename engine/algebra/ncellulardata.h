@@ -434,6 +434,13 @@ public:
      */
     const NBilinearForm* intPairing( const FormLocator f_desc ) const;
 
+
+    /**
+     * Computes the Poincare polynomial -- this is the polynomial such that the 
+     * coefficient of t^i is the rank of the i-th homology group of the manifold. 
+     */
+    NSVPolynomialRing poincarePolynomial() const;
+
     //todo: 1) bilinear forms return object for Poincare duality objects.
     //         various steps: 
     //         a) bilinear form class

@@ -36,9 +36,10 @@ const NSVPolynomialRing NSVPolynomialRing::pvar( NLargeInteger::one, 1 );
 
 void NSVPolynomialRing::setCoefficient (const unsigned long & i, const NLargeInteger & c) 
 { // redo using insert
-std::map< unsigned long, NLargeInteger* >::iterator p = cof.find(i);
-if ( p == cof.end() ) cof.insert(std::pair< unsigned long, NLargeInteger* >( i, new NLargeInteger(c) ) );
-else (*p->second)=c;
+NLargeInteger* P(new NLargeInteger(c));
+std::pair< std::map< unsigned long, NLargeInteger* >::iterator, bool > res = 
+ cof.insert(std::pair< unsigned long, NLargeInteger* >( i, P ) );
+if (res.second == false) { (*res.first->second) = (*P); delete P; }
 }
 
 NSVPolynomialRing NSVPolynomialRing::operator * (const NSVPolynomialRing& q) const
@@ -155,6 +156,29 @@ while ( (i != cof.end()) || (j != q.cof.end()) )
  }
 return retval;
 }
+
+signed long NSVPolynomialRing::descartesNo() const
+{
+signed long retval = 0;
+bool signP(false), signN(false); // keeps track of signs L to R for P(t) and P(-t) respectively.
+std::map< unsigned long, NLargeInteger* >::const_iterator i;
+
+for (i = cof.begin(); i!=cof.end(); i++)
+ {
+  bool NsignP = ( (*i->second) > 0 ? true : false );
+  bool NsignN = NsignP; if ( i->first % 2 == 1 ) NsignN = !NsignN; 
+
+  if (i != cof.begin()) // compare
+   {
+    if (signP != NsignP) retval++;
+    if (signN != NsignN) retval--;
+   }
+  signP = NsignP; signN = NsignN;
+ }
+
+return retval;
+}
+
 
 } // namespace regina
 

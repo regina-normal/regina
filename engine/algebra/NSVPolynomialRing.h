@@ -52,7 +52,8 @@ namespace regina {
  * This is a class for dealing with elements of a single-variable polynomial ring, 
  * implemented sparsely.
  *
- * TODO: template
+ * TODO: optlong template to allow for rational coefficients? 
+ *       +=, -=.
  *
  * @author Ryan Budney
  */
@@ -145,6 +146,12 @@ class NSVPolynomialRing {
          * element.
          */
         bool isZero() const;
+
+	/**
+	 * Returns the number of sign changes in coefficients of the polynomial P(t) - number of sign changes of P(-t) 
+         * This is the number of + roots - number of - roots, provided all real.
+         */
+	signed long descartesNo() const;
 
         /**
          * Returns a string representation of this polynomial.

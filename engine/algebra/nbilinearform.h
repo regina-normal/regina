@@ -130,18 +130,38 @@ class NBilinearForm : public ShareableObject {
          * Kawauchi-Kojima sigma vector describing the odd prime torsion, provided the
          * form is symmetric. 
          */
-	std::vector< unsigned long > oddKKvec() const;
+	std::vector< NLargeInteger > oddKKvec() const;
 
 	/**
          * Kawauchi-Kojima vector describing the 2-torsion, provided the
          * form is symmetric. 
          */
-	std::vector< unsigned long > twoKKvec() const;
+	std::vector< NLargeInteger > twoKKvec() const;
 
 	/**
 	 * Kawauchi-Kojima test for hyperbolicity, assuming form symmetric.
 	 */
 	bool isHyperbolic() const;
+
+	bool isSymmetric() const;
+
+	bool isAntiSymmetric() const;
+
+	/**
+	 *  Given a bilinear form A x B --> C and a map A' --> A, there
+         *  is a natural composite A' x B --> C
+	 */
+	NBilinearForm lCompose(const NHomMarkedAbelianGroup &f) const; 
+	/**
+	 *  Given a bilinear form A x B --> C and a map B' --> B, there
+         *  is a natural composite A x B' --> C
+	 */
+	NBilinearForm rCompose(const NHomMarkedAbelianGroup &f) const; 
+	/**
+	 *  Given a bilinear form A x B --> C and a map C --> C', there
+         *  is a natural composite A x B --> C'
+	 */
+	NBilinearForm postCompose(const NHomMarkedAbelianGroup &f) const; 
 
 	/**
 	 * Given a map A \otimes B --> C, there are two adjoints, 
