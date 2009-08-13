@@ -2303,11 +2303,8 @@ NSVPolynomialRing NCellularData::poincarePolynomial() const
 {
 NSVPolynomialRing retval;
 unsigned long aDim( tri3 ? 3 : 4 );
-for (unsigned long i=0; i<=aDim; i++)
- {
-  retval = retval + NSVPolynomialRing( NLargeInteger( 
-                    unmarkedGroup( GroupLocator(i, coVariant, DUAL_coord, 0))->getRank() ), i );
- }
+for (unsigned long i=0; i<=aDim; i++) retval += 
+ NSVPolynomialRing( NLargeInteger( unmarkedGroup( GroupLocator(i, coVariant, DUAL_coord, 0))->getRank() ), i );
 return retval;
 }
 

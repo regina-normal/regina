@@ -73,7 +73,7 @@ class NSVPolynomialRing {
         NSVPolynomialRing();
 
         /**
-         * Creates an element of the polynomial ring, of the form a t^k 
+         * Creates an element of the polynomial ring, of the form at^k 
          */
         NSVPolynomialRing(const NLargeInteger &a, unsigned long k);
 
@@ -119,6 +119,10 @@ class NSVPolynomialRing {
 	 * Returns the difference of two polynomials.
 	 */
 	NSVPolynomialRing operator - (const NSVPolynomialRing& q) const;
+
+	NSVPolynomialRing& operator -=(const NSVPolynomialRing& q);
+	NSVPolynomialRing& operator +=(const NSVPolynomialRing& q);
+	NSVPolynomialRing operator -() const;
 
         /**
 	 * Returns the the coefficient of t^i for this polynomial.

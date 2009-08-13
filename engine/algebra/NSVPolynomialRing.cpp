@@ -157,6 +157,67 @@ while ( (i != cof.end()) || (j != q.cof.end()) )
 return retval;
 }
 
+NSVPolynomialRing& NSVPolynomialRing::operator -=(const NSVPolynomialRing& q)
+{ // todo: redo with insert w/iterator
+std::map< unsigned long, NLargeInteger* >::iterator i;
+std::map< unsigned long, NLargeInteger* >::const_iterator j;
+i = cof.begin(); j = q.cof.begin();
+while ( (i != cof.end()) || (j != q.cof.end()) )
+ { if (i == cof.end())
+   { // only j relevant
+     cof.insert( std::pair< unsigned long, NLargeInteger* >(j->first, new NLargeInteger(-(*j->second) ) ) );
+     j++; }
+  else if (j == q.cof.end())
+   { i++; }
+  else
+   {if ( i->first < j->first )
+     { i++; }
+    else if ( i->first > j->first )
+     { cof.insert( std::pair< unsigned long, NLargeInteger* >(j->first, new NLargeInteger(-(*j->second) ) ) );
+       j++; }
+    else
+     { (*i->second) -= (*j->second); i++; j++; } 
+   }
+ }
+return (*this);
+}
+
+NSVPolynomialRing& NSVPolynomialRing::operator +=(const NSVPolynomialRing& q)
+{ // todo: redo with insert w/iterator
+std::map< unsigned long, NLargeInteger* >::iterator i;
+std::map< unsigned long, NLargeInteger* >::const_iterator j;
+i = cof.begin(); j = q.cof.begin();
+while ( (i != cof.end()) || (j != q.cof.end()) )
+ { if (i == cof.end())
+   { // only j relevant
+     cof.insert( std::pair< unsigned long, NLargeInteger* >(j->first, new NLargeInteger( (*j->second) ) ) );
+     j++; }
+  else if (j == q.cof.end())
+   { i++; }
+  else
+   {if ( i->first < j->first )
+     { i++; }
+    else if ( i->first > j->first )
+     { cof.insert( std::pair< unsigned long, NLargeInteger* >(j->first, new NLargeInteger( (*j->second) ) ) );
+       j++; }
+    else
+     { (*i->second) += (*j->second); i++; j++; } 
+   }
+ }
+return (*this);
+}
+
+NSVPolynomialRing NSVPolynomialRing::operator -() const
+{
+NSVPolynomialRing retval(*this);
+std::map< unsigned long, NLargeInteger* >::iterator i;
+for (i = retval.cof.begin(); i!=retval.cof.end(); i++)
+ i->second->negate();
+return retval;
+}
+
+
+
 signed long NSVPolynomialRing::descartesNo() const
 {
 signed long retval = 0;
