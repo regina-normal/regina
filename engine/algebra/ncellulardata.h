@@ -77,12 +77,16 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo bilinear forms, polynomial rings of various flavours, spin structures, test suite stuff: 
+ * \todo natural bilinear forms on a manifold, spin structures, test suite stuff: 
  *       LES of pair, natural isos, PD
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
  *       long exact sequence associated to a change-of-coefficient map.
+ * \todo \optlong To minimize memory usage maybe we should consider initializing homs and bilinear forms
+ *       using pointers to pre-existing NMarkedAbelianGroups, that way they won't have to be duplicated
+ *       and since we already control initialization/destruction via NCellularData, can avoid any pointer
+ *       troubles.
  *
  * @author Ryan Budney
  */
@@ -90,6 +94,7 @@ class NCellularData : public ShareableObject {
 public:
 
  enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord, STD_BDRY_coord, STD_REL_BDRY_coord };
+ enum form_type { intersectionForm, torsionlinkingForm, evaluationForm };
  enum variance_type { coVariant, contraVariant }; // homology / cohomology specifier
 
  struct GroupLocator {
@@ -129,8 +134,9 @@ public:
  struct FormLocator {
 	GroupLocator ldomain;
 	GroupLocator rdomain;
+        form_type ft;
 
-	FormLocator(const GroupLocator &newLdomain, const GroupLocator &newRdomain);
+	FormLocator(form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain);
 	FormLocator(const FormLocator &cloneMe);
 
 	bool operator<(const FormLocator &rhs) const;
@@ -384,11 +390,11 @@ public:
     /**
      * Computes an NAbelianGroup or retrieves it from the precomputed pile. 
      */
-    const NAbelianGroup* unmarkedGroup( const GroupLocator g_desc) const;
+    const NAbelianGroup* unmarkedGroup( const GroupLocator &g_desc) const;
     /**
      * Computes an NMarkedAbelianGroup or retrieves it from the precomputed pile. 
      */
-    const NMarkedAbelianGroup* markedGroup( const GroupLocator g_desc) const;
+    const NMarkedAbelianGroup* markedGroup( const GroupLocator &g_desc) const;
     /**
      *  Computes an NHomMarkedAbelianGroup or retrieves it from the precomputed pile. 
      *
@@ -427,13 +433,16 @@ public:
      *      @pre h_desc.domain.cof is an integer multiple of h_desc.range.cof, 
      *       both must be Z_2 if the manifold is not orientable.
      */
-    const NHomMarkedAbelianGroup* homGroup( const HomLocator h_desc) const;
+    const NHomMarkedAbelianGroup* homGroup( const HomLocator &h_desc) const;
 
     /**
-     *  Computes an intersection form for the manifold. 
+     *  Computes various bilinear forms associated to the homology of the manifold:
+     *
+     *  1) Homology-Cohomology pairing <.,.>  ie: H_i(M;R) x H^i(M;R) --> R  where R is the coefficients
+     *  2) Intersection product               ie: H_i(M;R) x H_j(M;R) --> H_{n-(i+j)}(M;R)
+     *  3) Torsion linking form               ie: H_i(M;Z) x H_j(M;Z) --> H_{n-(i+j)-1}(M;Q/Z)
      */
-    const NBilinearForm* intPairing( const FormLocator f_desc ) const;
-
+    const NBilinearForm* bilinearForm( const FormLocator &f_desc ) const;
 
     /**
      * Computes the Poincare polynomial -- this is the polynomial such that the 
@@ -605,11 +614,11 @@ range.writeTextShort(out);
 out<<"]";
 }
 
-inline NCellularData::FormLocator::FormLocator( const GroupLocator &newLdomain, const GroupLocator &newRdomain) :
- ldomain( newLdomain ), rdomain( newRdomain ) {}
+inline NCellularData::FormLocator::FormLocator( form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain) :
+ ft(FT), ldomain( newLdomain ), rdomain( newRdomain ) {}
 
 inline NCellularData::FormLocator::FormLocator( const FormLocator &cloneMe ) :
- ldomain( cloneMe.ldomain ), rdomain( cloneMe.rdomain ) {}
+ ft(cloneMe.ft), ldomain( cloneMe.ldomain ), rdomain( cloneMe.rdomain ) {}
 
 inline void NCellularData::FormLocator::writeTextShort(std::ostream& out) const
 {}

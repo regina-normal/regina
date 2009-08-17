@@ -143,8 +143,14 @@ class NBilinearForm : public ShareableObject {
 	 */
 	bool isHyperbolic() const;
 
+	/**
+	 * Determines whether or not the form is symmetric.
+	 */
 	bool isSymmetric() const;
 
+	/**
+	 * Determines whether or not the form is anti-symmetric.
+	 */
 	bool isAntiSymmetric() const;
 
 	/**

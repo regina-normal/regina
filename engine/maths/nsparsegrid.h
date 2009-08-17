@@ -51,7 +51,7 @@ namespace regina {
  */
 
 /**
- * An object for describing elements in a n_1 x n_2 x ... x n_k grid
+ * An object for describing elements in a n_1 x n_2 x ... x n_k grid.
  */
 class NMultiIndex {
  private:
@@ -71,7 +71,8 @@ class NMultiIndex {
 
 /**
  * An object for storing an arbitrary n_1xn_2x...xn_k array of data from 
- * a templated class T sparsely. 
+ * a templated class T sparsely.  T is required to be a ring type -- must have
+ * addition and a ::zero element at present. 
  *
  * @author Ryan Budney
  */
@@ -117,10 +118,29 @@ class NSparseGrid {
 	 */
 	const std::map< NMultiIndex, T* > & getGrid() const;
 
+	/**
+	 * sets the entry corresponding to index I to a pointer
+         * to a T type equal to val. If already allocated it
+         * copies val to the currently allocated T in the grid. 
+         */
 	void setEntry( const NMultiIndex & I, const T & val );
 
+	/**
+         *  Gives the entry corresponding to index I, the null
+         * pointer if it is not allocated.
+	 */
         const T* getEntry( const NMultiIndex & I ) const;
 
+	/**
+	 * Increment an entry.  This will allocate the entry if it
+         * is not already allocated, and deallocate if after incrementation
+         * it becomes zero. 
+	 */
+	void incEntry( const NMultiIndex & I, const T & val );
+
+        /**
+	 * Lists all elements in the grid.
+	 */
         virtual void writeTextShort(std::ostream& out) const;
 };
 
@@ -232,6 +252,19 @@ inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, const T &val )
  p = grid.find( I );
  if ( p != grid.end() ) *(p->second) = val;
 // if not, insert
+ else grid[I] = new T(val);
+}
+
+template <class T>
+inline void NSparseGrid<T>::incEntry( const NMultiIndex & I, const T & val )
+{
+ if (val == T::zero) return;
+ typename std::map< NMultiIndex, T* >::iterator p;
+ p = grid.find( I );
+ if ( p != grid.end() ) 
+  { (*(p->second)) += val;
+    if ( (*(p->second)) == T::zero) { delete p->second; grid.erase(p); }
+  }
  else grid[I] = new T(val);
 }
 

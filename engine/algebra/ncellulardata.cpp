@@ -82,16 +82,17 @@ bool NCellularData::HomLocator::operator!=(const HomLocator &rhs) const
 
 bool NCellularData::FormLocator::operator<(const FormLocator &rhs) const
 {
+if ( ft < rhs.ft ) return true;           if ( rhs.ft < ft ) return false;
 if ( ldomain < rhs.ldomain ) return true; if ( rhs.ldomain < ldomain ) return false; 
 if ( rdomain < rhs.rdomain ) return true; if ( rhs.rdomain < rdomain ) return false;
 return false;
 }
 
 bool NCellularData::FormLocator::operator==(const FormLocator &rhs) const
-{ return ( (ldomain==rhs.ldomain) && (rdomain == rhs.rdomain) ); }
+{ return ( (ft == rhs.ft) && (ldomain==rhs.ldomain) && (rdomain == rhs.rdomain) ); }
 
 bool NCellularData::FormLocator::operator!=(const FormLocator &rhs) const
-{ return ( (ldomain!=rhs.ldomain) || (rdomain != rhs.rdomain) ); }
+{ return ( (ft != rhs.ft) || (ldomain!=rhs.ldomain) || (rdomain != rhs.rdomain) ); }
 
 // only used in the NCellularData constructor
 void setupIndices(const Dim4Triangulation* tri,   
@@ -2085,10 +2086,11 @@ else {
          out<<", ";
         }
  out<<" Euler Char == "<<eulerChar();
+ out<<" Poincare Polynomial == "<<poincarePolynomial();
 }
 
 
-const NAbelianGroup* NCellularData::unmarkedGroup( const GroupLocator g_desc) const
+const NAbelianGroup* NCellularData::unmarkedGroup( const GroupLocator &g_desc) const
 {
 std::map< GroupLocator, NAbelianGroup* >::const_iterator p;
 p = abelianGroups.find(g_desc);
@@ -2131,7 +2133,7 @@ return NULL;
 }
 
 // todo add an aDim and ensure request is with dimension bounds
-const NMarkedAbelianGroup* NCellularData::markedGroup( const GroupLocator g_desc) const
+const NMarkedAbelianGroup* NCellularData::markedGroup( const GroupLocator &g_desc) const
 {
 std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator p;
 p = markedAbelianGroups.find(g_desc);
@@ -2174,7 +2176,7 @@ return NULL;
 }
 
 // todo: coefficient LES maps like Bockstein
-const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator h_desc) const
+const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator &h_desc) const
 {
  std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator p;
  p = homMarkedAbelianGroups.find(h_desc);
@@ -2306,6 +2308,51 @@ unsigned long aDim( tri3 ? 3 : 4 );
 for (unsigned long i=0; i<=aDim; i++) retval += 
  NSVPolynomialRing( NLargeInteger( unmarkedGroup( GroupLocator(i, coVariant, DUAL_coord, 0))->getRank() ), i );
 return retval;
+}
+
+
+/**
+ *  Computes various bilinear forms associated to the homology of the manifold:
+ *
+ *  1) Homology-Cohomology pairing <.,.>  ie: H_i(M;R) x H^i(M;R) --> R  where R is the coefficients
+ *  2) Intersection product               ie: H_i(M;R) x H_j(M;R) --> H_{n-(i+j)}(M;R)
+ *  3) Torsion linking form               ie: H_i(M;Z) x H_j(M;Z) --> H_{n-(i+j)-1}(M;Q/Z)
+ *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
+ */
+const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) const
+{
+ unsigned long aDim( tri3 ? 3 : 4 );
+
+ std::map< FormLocator, NBilinearForm* >::const_iterator p;
+ p = bilinearForms.find(f_desc);
+ if (p != bilinearForms.end()) return (p->second);
+ // okay, so now we know there's no form matching f_desc in bilinearForms, so we make one.
+
+ // case 1: homology-cohomology pairing
+
+ // case 2: intersection products i+j >= n == aDim
+ //         (dual)H_i(M;R) x (std rel)H_j(M,P;R) --> (mix)H_{n-(i+j)}(M;R) 
+ // also     (std)H_i(M;R) x (std rel)H_j(M,P;R) --> (std)H_{n-(i+j)}(M;R) 
+ //          (std)H_i(M;R) x     (std)H_j(M,P;R) --> (std)H_{n-(i+j)}(M;R) 
+
+ // we start with the most elementary intersection product...
+ if ( ( f_desc.ft == intersectionForm ) &&
+      ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
+      ( f_desc.ldomain.dim + f_desc.rdomain.dim >= aDim ) &&
+      ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
+      ( f_desc.ldomain.hcs == STD_coord ) && (f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
+  {
+   // check its orientable if R != Z_2
+   if ( (f_desc.ldomain.cof != 2) && ( tri3 ? !tri3->isOrientable() : !tri4->isOrientable() ) ) return NULL;
+   // aDim==3  1,2, 2,1  to H_0 // 2,2  to H_1
+   // aDim==4  1,3, 2,2, 3,1 to H_0 // 2,3, 3,2  to H_1 // 3,3  to H_2   
+  }
+
+ // case 3: torsion linking forms
+
+ // case 4: cup products
+
+ return NULL;
 }
 
 

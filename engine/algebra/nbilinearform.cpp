@@ -95,20 +95,24 @@ const std::map< NMultiIndex, NLargeInteger* > & NBilinearForm::reducedMap() cons
 
 
 
-unsigned long NBilinearForm::signature() const
+unsigned long NBilinearForm::signature() const 
 {
 if (!isSymmetric()) return 0; 
 if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, NLargeInteger::zero))) return 0;
 // ldomain == rdomain, form symmetric, range == Z.
 // so reducedpairing is nxnx1 -- think of it as a matrix M, computed Det(tI-M)
-NMatrixRing< NSVPolynomialRing > cM( lDomain.minNumberOfGenerators(), rDomain.minNumberOfGenerators() );
+NMatrixRing< NSVPolynomialRing > cM( lDomain.getRank(), rDomain.getRank() );
 // iterate through reducedPairing, insert into cM
 std::map< NMultiIndex, NLargeInteger* >::const_iterator i;
 for (i = reducedPairing->getGrid().begin(); i!=reducedPairing->getGrid().end(); i++)
- { cM.entry( i->first.entry(0) , i->first.entry(1) ) = NSVPolynomialRing(-(*i->second), 0); }
+ { 
+  if ( (i->first.entry(0) >= lDomain.getNumberOfInvariantFactors()) &&
+       (i->first.entry(1) >= rDomain.getNumberOfInvariantFactors()) )
+  cM.entry( i->first.entry(0) - lDomain.getNumberOfInvariantFactors() , 
+            i->first.entry(1) - rDomain.getNumberOfInvariantFactors() ) = 
+            NSVPolynomialRing(-(*i->second), 0); }
 // add t down diagonal
-for (unsigned long j=0; j<cM.rows(); j++)
- cM.entry(j,j) += NSVPolynomialRing::pvar;
+for (unsigned long j=0; j<cM.rows(); j++) cM.entry(j,j) += NSVPolynomialRing::pvar;
 // grab an adjoint, get its defining matrix, compute char poly, use Descartes
 // to get number of pos - neg roots. 
 NSVPolynomialRing charPoly(cM.det());
@@ -153,7 +157,17 @@ bool NBilinearForm::isSymmetric() const
 {
 if (!lDomain.equalTo(rDomain)) return 0;
 // now we check symmetry.... we'll use the reduced matrix for this...
-// todo!
+std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
+
+for (J = reducedPairing->getGrid().begin(); J!=reducedPairing->getGrid().end(); J++)
+  { 
+  NMultiIndex x(3);
+  x[0]=J->first.entry(1); x[1]=J->first.entry(0); x[2]=J->first.entry(2);
+  const NLargeInteger* t( reducedPairing->getEntry(x));
+  if (!t) return false;
+  if ( (*J->second) != (*t) ) return false;
+  }
+
 return true;
 }
 
@@ -162,27 +176,62 @@ return true;
 bool NBilinearForm::isAntiSymmetric() const
 {
 if (!lDomain.equalTo(rDomain)) return 0;
-// now we check antisymmetry.... we'll use the reduced matrix for this...
-// todo!
+// now we check symmetry.... we'll use the reduced matrix for this...
+std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
+
+for (J = reducedPairing->getGrid().begin(); J!=reducedPairing->getGrid().end(); J++)
+  { 
+  NMultiIndex x(3);
+  x[0]=J->first.entry(1); x[1]=J->first.entry(0); x[2]=J->first.entry(2);
+  const NLargeInteger* t( reducedPairing->getEntry(x));
+  if (!t) return false;
+  if ( (*J->second) != -(*t) ) return false;
+  }
 return true;
 }
 	
 
-
+/* p(ei,ej)=sum_k p^k_ij, f(ei)=sum_j f^j_i e_j
+ * p' = p( f x I ), p'^k_ij = sum_l f^l_i p^k_lj
+ */
 NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
 {
 // we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
 NSparseGrid< NLargeInteger > newPairing(3);
-// todo!
+// 0th index is lDomain SNF coord, 1st index rDomain SNF coord, 3rd index Range SNF coord
+std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
+
+for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
+ for (J = unreducedPairing->getGrid().begin(); J!=unreducedPairing->getGrid().end(); J++)
+  { 
+  // newPairing[ i,J[1],J[2] ] += f.getDefiningMatrix.entry( J[0], i ) * unreducedPairing[ J ]
+  NMultiIndex x(3);
+  x[0]=i; x[1]=J->first.entry(1); x[2]=J->first.entry(2);
+  newPairing.incEntry( x, f.getDefiningMatrix().entry( J->first.entry(0), i ) * (*J->second) );
+  }
+
 return NBilinearForm( f.getDomain(), rDomain, Range, newPairing );
 }
 
 
-
+/* p(ei,ej)=sum_k p^k_ij, f(ei)=sum_j f^j_i e_j
+ * p' = p( I x f ), p'^k_ij = sum_l f^l_j p^k_il
+ */
 NBilinearForm NBilinearForm::rCompose(const NHomMarkedAbelianGroup &f) const
 {
+// we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
 NSparseGrid< NLargeInteger > newPairing(3);
-// todo!
+std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
+
+for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
+ for (J = unreducedPairing->getGrid().begin(); J!=unreducedPairing->getGrid().end(); J++)
+  { 
+  // newPairing[ ?,i,? ] += f.getDefiningMatrix.entry( ?, i ) * unreducedPairing[ ?, ?, ? ]
+  NMultiIndex x(3);
+  x[0]=J->first.entry(0); x[1] = i; x[2]=J->first.entry(2);
+  newPairing.incEntry( x, f.getDefiningMatrix().entry( J->first.entry(1), i ) * (*J->second) );
+  }
+
 return NBilinearForm( lDomain, f.getDomain(), Range, newPairing );
 }
 
@@ -191,7 +240,18 @@ return NBilinearForm( lDomain, f.getDomain(), Range, newPairing );
 NBilinearForm NBilinearForm::postCompose(const NHomMarkedAbelianGroup &f) const
 {
 NSparseGrid< NLargeInteger > newPairing(3);
-// todo!
+
+std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
+
+for (J = unreducedPairing->getGrid().begin(); J!=unreducedPairing->getGrid().end(); J++)
+ for (unsigned long i=0; i<f.getRange().getRankCC(); i++)
+  { 
+  // newPairing[ ?,?,i ] += f.getDefiningMatrix.entry( i, ? ) * unreducedPairing[ ?, ?, ? ]
+  NMultiIndex x(3);
+  x[0]=J->first.entry(0); x[1] = J->first.entry(1); x[2]=i;
+  newPairing.incEntry( x, f.getDefiningMatrix().entry( i, J->first.entry(2) ) * (*J->second)  );
+  }
+
 return NBilinearForm( lDomain, rDomain, f.getRange(), newPairing );
 }
 
@@ -278,7 +338,6 @@ rDomain.writeTextShort(out);
 out<<" --> ";
 Range.writeTextShort(out);
 out<<"]";
-// todo more?
 }
 
 } // namespace regina
