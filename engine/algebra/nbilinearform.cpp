@@ -151,6 +151,10 @@ bool NBilinearForm::isHyperbolic() const
 return true;
 }
 
+NMarkedAbelianGroup NBilinearForm::image() const
+{
+// todo
+}
 
 
 bool NBilinearForm::isSymmetric() const
@@ -339,6 +343,21 @@ out<<" --> ";
 Range.writeTextShort(out);
 out<<"]";
 }
+
+void NBilinearForm::writeTextLong(std::ostream& out) const
+{
+out<<"Bilinear form: [";
+lDomain.writeTextShort(out);
+out<<" x ";
+rDomain.writeTextShort(out);
+out<<" --> ";
+Range.writeTextShort(out);
+out<<"]";
+
+if (isSymmetric()) out<<" symmetric"; 
+if (isAntiSymmetric()) out<<" anti-symmetric";
+}
+
 
 } // namespace regina
 

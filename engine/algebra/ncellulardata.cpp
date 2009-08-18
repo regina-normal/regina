@@ -2315,8 +2315,8 @@ return retval;
  *  Computes various bilinear forms associated to the homology of the manifold:
  *
  *  1) Homology-Cohomology pairing <.,.>  ie: H_i(M;R) x H^i(M;R) --> R  where R is the coefficients
- *  2) Intersection product               ie: H_i(M;R) x H_j(M;R) --> H_{n-(i+j)}(M;R)
- *  3) Torsion linking form               ie: H_i(M;Z) x H_j(M;Z) --> H_{n-(i+j)-1}(M;Q/Z)
+ *  2) Intersection product               ie: H_i(M;R) x H_j(M;R) --> H_{(i+j)-n}(M;R)
+ *  3) Torsion linking form               ie: H_i(M;Z) x H_j(M;Z) --> H_{(i+j)-(n-1)}(M;Q/Z)
  *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
  */
 const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) const
@@ -2331,23 +2331,77 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
  // case 1: homology-cohomology pairing
 
  // case 2: intersection products i+j >= n == aDim
- //         (dual)H_i(M;R) x (std rel)H_j(M,P;R) --> (mix)H_{n-(i+j)}(M;R) 
- // also     (std)H_i(M;R) x (std rel)H_j(M,P;R) --> (std)H_{n-(i+j)}(M;R) 
- //          (std)H_i(M;R) x     (std)H_j(M,P;R) --> (std)H_{n-(i+j)}(M;R) 
+ //         (dual)H_i(M;R) x (std rel)H_j(M,P;R) --> (mix)H_{(i+j)-n}(M;R) (a)
+ // also     (std)H_i(M;R) x (std rel)H_j(M,P;R) --> (std)H_{(i+j)-n}(M;R) 
+ //          (std)H_i(M;R) x     (std)H_j(M,P;R) --> (std)H_{(i+j)-n}(M;R) 
 
- // we start with the most elementary intersection product...
+ // we start with the most elementary intersection product... (a)
  if ( ( f_desc.ft == intersectionForm ) &&
       ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
       ( f_desc.ldomain.dim + f_desc.rdomain.dim >= aDim ) &&
+      ( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim < aDim - 1 ) &&
+      ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) &&
       ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
-      ( f_desc.ldomain.hcs == STD_coord ) && (f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
+      ( f_desc.ldomain.hcs == DUAL_coord ) && (f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
   {
    // check its orientable if R != Z_2
    if ( (f_desc.ldomain.cof != 2) && ( tri3 ? !tri3->isOrientable() : !tri4->isOrientable() ) ) return NULL;
+   const NMarkedAbelianGroup* lDom( markedGroup(f_desc.ldomain) );
+   const NMarkedAbelianGroup* rDom( markedGroup(f_desc.rdomain) );
+   const NMarkedAbelianGroup* rAng( markedGroup( GroupLocator( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim,
+					coVariant, MIX_coord, f_desc.ldomain.cof ) ) );
+   NSparseGrid< NLargeInteger > intM(3); 
+
+   NBilinearForm* bfptr(NULL);
    // aDim==3  1,2, 2,1  to H_0 // 2,2  to H_1
    // aDim==4  1,3, 2,2, 3,1 to H_0 // 2,3, 3,2  to H_1 // 3,3  to H_2   
-  }
+   if ( (aDim==3) && (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) )
+    {// aDim==3, (dual)H_2 x (std_rel)H_2 --> (mix)H_1
+     // lDomain DUAL_coord, rDomain STD_REL_BDRY_coord
+     // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell, 
+     // and the intersection of this STD_REL_BDRY cell and this DUAL cell is getNumberOfEmbeddings (1-cell)
+     // edges... 
+     for (unsigned long i=0; i<numRelativeCells[2]; i++)
+      {
+       const NFace* fac( tri3->getFace( rIx[2][i] ) ); const NEdge* edg;
+       const NTetrahedron* tet( fac->getEmbedding(1).getTetrahedron() );
+       for (unsigned long j=0; j<3; j++)
+	{
+	 edg = fac->getEdge(j); 
+         // get dual 2-cell index to edg, call it J
+	 if (!edg->isBoundary())
+	  { // intM[ J, i, 2*numNonIdealCells[2] + 3*i+j ] += whatever
+	    // for orientation we need to compare normal orientation of these edges to product normal orientations
+           unsigned long J;
+           J = lower_bound( dcIx[2].begin(), dcIx[2].end(), tri3->edgeIndex( edg ) ) - dcIx[2].begin();
+	   NMultiIndex x(3); x[0]=J; x[1]=i; x[2]=2*numNonIdealCells[1] + 3*rIx[2][i]+j;
 
+	   // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge in the face, so we apply
+	   // facinc to that, then get the corresp edge number
+	   NPerm4 facinc( fac->getEmbedding(1).getVertices() );
+	   NPerm4 edginc( tet->getEdgeMapping( NEdge::edgeNumber[facinc[fac->getEdgeMapping(j)[0]]][facinc[fac->getEdgeMapping(j)[1]]] ) );
+
+           NPerm4 relor( fac->getEmbedding(1).getFace(), edginc[0], edginc[1], facinc[3] );
+
+
+// fac->getEmbedding(1). getTetrahedron(), getVertices()
+// get the corresp edge embedding in this tet, 
+           intM.incEntry( x, ( relor.sign() == tet->orientation() ? 1 : -1 ) );
+// normal orientation of the intersection represented by (facindx, edg dual to 2-cell) edginc[0], edginc[1], facinc[3]) 
+	  }
+	}
+      }
+
+    }
+    
+   bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
+   std::map< FormLocator, NBilinearForm* > *mbfptr = 
+    const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
+   mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+   return bfptr; 
+  }
+//	GroupLocator(unsigned long newDim, variance_type newVar, homology_coordinate_system useHcs, 
+//			unsigned long useCof);
  // case 3: torsion linking forms
 
  // case 4: cup products

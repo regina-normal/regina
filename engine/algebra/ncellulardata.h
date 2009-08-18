@@ -94,7 +94,6 @@ class NCellularData : public ShareableObject {
 public:
 
  enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord, STD_BDRY_coord, STD_REL_BDRY_coord };
- enum form_type { intersectionForm, torsionlinkingForm, evaluationForm };
  enum variance_type { coVariant, contraVariant }; // homology / cohomology specifier
 
  struct GroupLocator {
@@ -130,6 +129,8 @@ public:
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
  };
+
+ enum form_type { intersectionForm, torsionlinkingForm, evaluationForm };
 
  struct FormLocator {
 	GroupLocator ldomain;
@@ -439,8 +440,9 @@ public:
      *  Computes various bilinear forms associated to the homology of the manifold:
      *
      *  1) Homology-Cohomology pairing <.,.>  ie: H_i(M;R) x H^i(M;R) --> R  where R is the coefficients
-     *  2) Intersection product               ie: H_i(M;R) x H_j(M;R) --> H_{n-(i+j)}(M;R)
-     *  3) Torsion linking form               ie: H_i(M;Z) x H_j(M;Z) --> H_{n-(i+j)-1}(M;Q/Z)
+     *  2) Intersection product               ie: H_i(M;R) x H_j(M;R) --> H_{(i+j)-n}(M;R)
+     *  3) Torsion linking form               ie: H_i(M;Z) x H_j(M;Z) --> H_{(i+j)-(n+1)}(M;Q/Z)
+     *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
      */
     const NBilinearForm* bilinearForm( const FormLocator &f_desc ) const;
 
