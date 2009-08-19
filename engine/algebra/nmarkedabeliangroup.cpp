@@ -131,7 +131,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& 
     // in the case coeff > 0 we need to consider the TOR part of homology. 
 
     if (coeff > 0) for (unsigned i=0; i<rankOM; i++) 
-	if (tM.entry(i,i).gcd(coeff) > 1) TORVec.push_back(tM.entry(i,i));
+	if (tM.entry(i,i).gcd(coeff) > 1) { TORVec.push_back(tM.entry(i,i)); }
     TORLoc = rankOM - TORVec.size();
 
     // okay, lets get a presentation matrix for H_*(M;Z) \otimes Z_p
@@ -618,54 +618,56 @@ return retval;
 }
 
 
+// there appears to be an error for the orientable S^1 bundle over the klein bottle, 
+// for H_2 with Z_2-coefficients, in the STD->MIXed map. 
 NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat, 
 		       const NMarkedAbelianGroup &dom, 
 		       const NMarkedAbelianGroup &ran) : 
 domain(dom), range(ran), matrix(ran.getM().columns(), dom.getM().columns()), reducedMatrix(0), 
 kernel(0), coKernel(0), image(0), reducedKernelLattice(0)
 {
-reducedMatrix = new NMatrixInt(tobeRedMat);
-// If using mod p coeff, p != 0: 
-//
-// we build up the CC map in reverse from the way we computed the structure of the domain/range groups.
-//  which was: 3) SNF(M,M'), truncate off first TORLoc coords. 
-//             2) SNF the tensorPres matrix, TOR coords fixed. Truncate off first tensorIfLoc terms.
-//             1) SNF the combined matrix, truncate off ifLoc terms.
-//
-// Step 1: ran.ornCi*[incl tobeRedMat]*[trunc dom.ornC] puts us in diagPres coords
-//         ran.ornCi.rows()-by-dom.ornC.rows()
-// Step 2: ran.otCi*(step 1)*[trunc dom.otC] puts us in trunc(SNF(M,M')) coords
-// Step 3: OMR*(step 2)*[trunc OMRi]
+ reducedMatrix = new NMatrixInt(tobeRedMat);
 
-// If using integer coefficients:
-// 
-// we build up the CC map in reverse of the process for which we found the structure of the domain/range
-// groups, which was:  2) SNF(M,M'), truncate off the first rankOM==TORLoc coords
-//                     1) SNF(N,N'), truncate off the first ifLoc terms.
-//
-// Step 1: ran.ornCi*[incl tobeRedMat]*[trunc dom.ornC] puts us in trunc(SNF(M,M')) coords
-// Step 2: --void--
-// Step 3: OMR*(step 1)*[trunc OMRi]
+ // If using mod p coeff, p != 0: 
+ //
+ // we build up the CC map in reverse from the way we computed the structure of the domain/range groups.
+ //  which was: 3) SNF(M,M'), truncate off first TORLoc coords. 
+ //             2) SNF the tensorPres matrix, TOR coords fixed. Truncate off first tensorIfLoc terms.
+ //             1) SNF the combined matrix, truncate off ifLoc terms.
+ //
+ // Step 1: ran.ornCi*[incl tobeRedMat]*[trunc dom.ornC] puts us in diagPres coords
+ //         ran.ornCi.rows()-by-dom.ornC.rows()
+ // Step 2: ran.otCi*(step 1)*[trunc dom.otC] puts us in trunc(SNF(M,M')) coords
+ // Step 3: OMR*(step 2)*[trunc OMRi]
 
-// so we have a common Step 1. 
-NMatrixInt step1Mat(ran.ornCi->rows(), dom.ornC->rows());
-for (unsigned long i=0; i<step1Mat.rows(); i++) for (unsigned long j=0; j<step1Mat.columns(); j++)
+ // If using integer coefficients:
+ // 
+ // we build up the CC map in reverse of the process for which we found the structure of the domain/range
+ // groups, which was:  2) SNF(M,M'), truncate off the first rankOM==TORLoc coords
+ //                     1) SNF(N,N'), truncate off the first ifLoc terms.
+ //
+ // Step 1: ran.ornCi*[incl tobeRedMat]*[trunc dom.ornC] puts us in trunc(SNF(M,M')) coords
+ // Step 2: --void--
+ // Step 3: OMR*(step 1)*[trunc OMRi]
+ // so we have a common Step 1. 
+ NMatrixInt step1Mat(ran.ornCi->rows(), dom.ornC->rows());
+ for (unsigned long i=0; i<step1Mat.rows(); i++) for (unsigned long j=0; j<step1Mat.columns(); j++)
  { // ran->ornCi.entry(i, k)*tobeRedMat.entry(k, l)*dom->ornC.entry(l, j)
   for (unsigned long k=0; k<tobeRedMat.rows(); k++) for (unsigned long l=0;l<tobeRedMat.columns(); l++)
    step1Mat.entry(i,j) += ran.ornCi->entry(i,k+ran.ifLoc)*tobeRedMat.entry(k,l)*dom.ornC->entry(l+dom.ifLoc,j);
  }
-// with mod p coefficients we have this fiddly middle step 2.
+ // with mod p coefficients we have this fiddly middle step 2.
 
-NMatrixInt step2Mat( step1Mat.rows()+ran.tensorIfLoc, step1Mat.columns()+dom.tensorIfLoc );
-// if coeff==0, we'll just copy the step1Mat, if coeff>0 we multiply the tensor part by ran.otCi, dom.otC resp.
-if (dom.coeff == 0)
- for (unsigned long i=0; i<step2Mat.rows(); i++) for (unsigned long j=0; j<step2Mat.columns(); j++)
-	step2Mat.entry(i,j) = step1Mat.entry(i,j);
-else
- for (unsigned long i=0; i<step2Mat.rows(); i++) for (unsigned long j=0; j<step2Mat.columns(); j++)
-  { // (ID_TOR x ran->otCi.entry(i, k)*incl_tensorIfLoc)*step1Mat.entry(k, l)*
-    //   ID_TOR x trunc_tensorIfLoc*dom->otC.entry(l, j)) appropriately shifted...
-   if (i < ran.TORVec.size()) 
+ NMatrixInt step2Mat( step1Mat.rows()+ran.tensorIfLoc, step1Mat.columns()+dom.tensorIfLoc );
+ // if coeff==0, we'll just copy the step1Mat, if coeff>0 we multiply the tensor part by ran.otCi, dom.otC resp.
+ if (dom.coeff == 0)
+  for (unsigned long i=0; i<step2Mat.rows(); i++) for (unsigned long j=0; j<step2Mat.columns(); j++)
+ 	step2Mat.entry(i,j) = step1Mat.entry(i,j);
+ else
+  for (unsigned long i=0; i<step2Mat.rows(); i++) for (unsigned long j=0; j<step2Mat.columns(); j++)
+   { // (ID_TOR x ran->otCi.entry(i, k)*incl_tensorIfLoc)*step1Mat.entry(k, l)*
+     //   ID_TOR x trunc_tensorIfLoc*dom->otC.entry(l, j)) appropriately shifted...
+    if (i < ran.TORVec.size()) 
        {
 	if (j < dom.TORVec.size()) { step2Mat.entry(i,j) = step1Mat.entry(i,j);
 	        } else { // [step1 UR corner] * [dom->otC first tensorIfLoc rows cropped]
@@ -686,27 +688,25 @@ else
 		                 dom.otC->entry(l,j-dom.TORVec.size());
 	}
   }
+ // now we rescale the TOR components appropriately, various row/column mult and divisions. 
+ // multiply first ran.TORLoc rows by p/gcd(p,q)
+ // divide first dom.TORLoc rows by p/gcd(p,q)
 
-// now we rescale the TOR components appropriately, various row/column mult and divisions. 
-// multiply first ran.TORLoc rows by p/gcd(p,q)
-// divide first dom.TORLoc rows by p/gcd(p/q)
-
-for (unsigned long i=0; i<ran.TORVec.size(); i++) for (unsigned long j=0; j<step2Mat.columns(); j++)
+ for (unsigned long i=0; i<ran.TORVec.size(); i++) for (unsigned long j=0; j<step2Mat.columns(); j++)
 	step2Mat.entry(i,j) *= ran.coeff.divExact(ran.coeff.gcd(ran.TORVec[i]));
-for (unsigned long i=0; i<step2Mat.rows(); i++) for (unsigned long j=0; j<dom.TORVec.size(); j++)
-	step2Mat.entry(i,j) /= dom.coeff.divExact(dom.coeff.gcd(dom.TORVec[i]));
-// previous line of code divisibility is a good thing to check when debugging. 
-
-// step 3, move it all up to the CC coordinates.
-// ran.OMR * incl_ifLoc * step2Mat * proj_ifLoc * dom.OMRi
-for (unsigned long i=0; i<matrix.rows(); i++) for (unsigned long j=0; j<matrix.columns(); j++)
- {
- for (unsigned long k=ran.TORLoc; k<ran.OMR.columns(); k++) 
-  for (unsigned long l=dom.TORLoc;l<dom.OMRi.rows(); l++)
-   matrix.entry(i,j) += ran.OMR.entry(i,k) *
+ for (unsigned long i=0; i<step2Mat.rows(); i++) for (unsigned long j=0; j<dom.TORVec.size(); j++)
+	step2Mat.entry(i,j) /= dom.coeff.divExact(dom.coeff.gcd(dom.TORVec[j]));
+ // previous line of code divisibility is a good thing to check when debugging. 
+ // step 3, move it all up to the CC coordinates.
+ // ran.OMR * incl_ifLoc * step2Mat * proj_ifLoc * dom.OMRi
+ for (unsigned long i=0; i<matrix.rows(); i++) for (unsigned long j=0; j<matrix.columns(); j++)
+  {
+  for (unsigned long k=ran.TORLoc; k<ran.OMR.columns(); k++) 
+   for (unsigned long l=dom.TORLoc;l<dom.OMRi.rows(); l++)
+    matrix.entry(i,j) += ran.OMR.entry(i,k) *
 	                step2Mat.entry(k-ran.TORLoc,l-dom.TORLoc) *
 	                dom.OMRi.entry(l,j);
- }
+  }
 // done
 }
 
@@ -983,9 +983,9 @@ return true;
 //           So to do this we'll need a new matrixops.cpp command -- call it torsionAutInverse.  
 NHomMarkedAbelianGroup NHomMarkedAbelianGroup::inverseHom() const
 {
-const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-NMatrixInt invMat( reducedMatrix->columns(), reducedMatrix->rows() );
-if (!isIsomorphism()) return NHomMarkedAbelianGroup( invMat, range, domain );
+ const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+ NMatrixInt invMat( reducedMatrix->columns(), reducedMatrix->rows() );
+ if (!isIsomorphism()) return NHomMarkedAbelianGroup( invMat, range, domain );
   // get A, B, D from reducedMatrix
   // A must be square with domain/range.getNumberOfInvariantFactors() columns
   // D must be square with domain/range.getRank() columns
@@ -1051,8 +1051,8 @@ if (!isIsomorphism()) return NHomMarkedAbelianGroup( invMat, range, domain );
 	invMat.entry(i+Ai.rows(),j+Ai.columns()) = Di.entry(i,j);
   for (unsigned long i=0; i<Bi.rows(); i++) for (unsigned long j=0; j<Bi.columns(); j++)
 	invMat.entry(i,j+Ai.columns()) = Bi.entry(i,j);
-  
-return NHomMarkedAbelianGroup( invMat, range, domain );
+
+return NHomMarkedAbelianGroup( invMat, range, domain ); // error here, apparently.
 }
 
 
