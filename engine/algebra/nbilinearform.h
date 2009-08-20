@@ -56,7 +56,8 @@ namespace regina {
  * and Kawauchi-Kojima invariants of the bilinear forms coming from Poincare duality on a 4 or
  * 3-manifold respectively. 
  *
- * TODO : 1) is(Anti)Symmetric not functional yet.  Implement image, compare with NHomologicalData.  Check functionality of adjoints.
+ * TODO : 1) is(Anti)Symmetric not functional yet.  compare image() with NHomologicalData imgH2Form().  
+ *           Check functionality of adjoints.
  *        
  *        2) Specify different methods of computation -- have an enum that allows for honest computations
  *        where for example the domain of the leftAdjoint would satisfy isEqualTo(A), etc, vs one where
@@ -166,6 +167,7 @@ class NBilinearForm : public ShareableObject {
          *  is a natural composite A x B' --> C
 	 */
 	NBilinearForm rCompose(const NHomMarkedAbelianGroup &f) const; 
+
 	/**
 	 *  Given a bilinear form A x B --> C and a map C --> C', there
          *  is a natural composite A x B --> C'
@@ -186,6 +188,20 @@ class NBilinearForm : public ShareableObject {
 	 */
 	NHomMarkedAbelianGroup rightAdjoint() const;
 
+	/**
+	 * Form is a bilinear function A x B --> C, this returns A.
+	 */
+	const NMarkedAbelianGroup& ldomain() const;
+	/**
+	 * Form is a bilinear function A x B --> C, this returns B.
+	 */
+	const NMarkedAbelianGroup& rdomain() const;
+	/**
+	 * Form is a bilinear function A x B --> C, this returns C.
+	 */
+	const NMarkedAbelianGroup& range() const;
+
+
         /**
          * todo! maybe talk about nullity, symmetry, l/rdomain, range, etc.
          * various invariants if they make sense, etc.
@@ -201,6 +217,14 @@ class NBilinearForm : public ShareableObject {
 };
 
 /*@}*/
+
+inline const NMarkedAbelianGroup& NBilinearForm::ldomain() const
+{ return lDomain; }
+inline const NMarkedAbelianGroup& NBilinearForm::rdomain() const
+{ return rDomain; }
+inline const NMarkedAbelianGroup& NBilinearForm::range() const
+{ return Range; }
+
 
 } // namespace regina
 

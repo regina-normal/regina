@@ -698,12 +698,10 @@ public:
     const std::string& embeddabilityComment();
 
     /**
-     * Computes the image H_2(M;\Zed_p) \otimes H_2(M;\Zed_p) --> H_1(M;\Zed_p)
-     * as an abelian group. \Zed_p is any cyclic group. Z_0 = Z, etc. 
+     * Computes the image H_2(M;R) x H_2(M;R) --> H_1(M;R)
+     * as an abelian group. R represents any cyclic group. 
      * Where the map is the H_2-intersection form -- Poincare Dual to the cup product 
-     * pairing H^1(M,\partial M;\Zed_p) \otimes H^1(M, \partial M;\Zed_p) --> H^2(M, \partial M;\Zed_p).
-     *
-     * Note: at present the p=0 case is the only one implemented. 
+     * pairing H^1(M,\partial M;R) \otimes H^1(M, \partial M;R) --> H^2(M, \partial M;R).
      *
      * Warning: the current implementation can be painfully slow as the linear algebra gets a little
      *  out of control.

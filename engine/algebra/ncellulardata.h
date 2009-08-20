@@ -78,7 +78,7 @@ class Dim4Triangulation;
  * \testpart
  *
  * \todo natural bilinear forms on a manifold, spin structures, test suite stuff: 
- *       LES of pair, natural isos, PD
+ *       LES of pair, natural isos, PD, detailed tests for intersection forms
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
@@ -87,6 +87,7 @@ class Dim4Triangulation;
  *       using pointers to pre-existing NMarkedAbelianGroups, that way they won't have to be duplicated
  *       and since we already control initialization/destruction via NCellularData, can avoid any pointer
  *       troubles.
+ * \todo Detailed fundamental group presentations and maps bdry -> M, etc. 
  *
  * @author Ryan Budney
  */
@@ -167,14 +168,17 @@ private:
     std::map< FormLocator, NBilinearForm* > bilinearForms;
 
     /** 
-     * numStandardCells = number of cells in the standard CW decomposition in dimensions: 0, 1, 2, 3, (4). 
+     * numStandardCells = number of cells in the standard CW decomposition in dimensions: 0, 1, 2, 3, (4).
+     *                  == numNonIdealCells + numIdealCells 
      * numDualCells     = number of cells in the dual CW decomposition in dimension: 0, 1, 2, 3, (4). 
      * numMixCells      = number of cells in the mixed CW decomposition in dimensions: 0, 1, 2, 3, (4) 
+     *                    (see constructor for details)
      * numStandardBdryCells = number of cells in the standard CW decomposition of the boundary 
      *                        in dimensions: 0, 1, 2, (3). 
+     *                  == numNonIdealBdryCells + numIdealCells
      * numRelativeCells = number of cells from the standard CW-decomposition rel boundary.
      *
-     * numNonIdealBdryCells = numStandardBdryCells - numIdealCells: 0, 1, 2, (3). 
+     * numNonIdealBdryCells == numStandardBdryCells - numIdealCells: 0, 1, 2, (3). 
      * numNonIdealCells = number of non-ideal cells in standard CW-decomposition in dimension: 0, 1, 2, 3, (4) 
      * numIdealCells    = number of ideal cells in standard CW-decomposition in dimension: 0, 1, 2, (3) 
      */
@@ -339,6 +343,12 @@ public:
     long eulerChar() const;
 
     /**
+     * Computes the Poincare polynomial -- this is the polynomial such that the 
+     * coefficient of t^i is the rank of the i-th homology group of the manifold. 
+     */
+    NSVPolynomialRing poincarePolynomial() const;
+
+    /**
      * Verifies that the maps used to define the various homology groups for the manifold are
      * actually chain complexes. 
      *
@@ -426,40 +436,37 @@ public:
      *     @pre h_desc.domain.dim and h_desc.range.dim as in the homology long exact sequence
      *     @pre h_desc.domain.cof is an integer multiple of h_desc.range.cof
      *
-     *  [4] Strict Poincare Duality maps, these are maps of the form H_i(M;R_1) --> H^{n-i}(M,\partial M;R_2)
-     *      or H^i(M;R_1) --> H_{n-i}(M,\partial M;R_2). 
-     *      @pre h_desc.domain.var and h_desc.range.var opposite. 
-     *      @pre h_desc.domain.dim and h_desc.range.dim add up to the dimension of the manifold. 
-     *      @pre h_desc.domain.hcs == DUAL_coord and h_desc.range.hcs == STD_REL_BDRY_coord
-     *      @pre h_desc.domain.cof is an integer multiple of h_desc.range.cof, 
-     *       both must be Z_2 if the manifold is not orientable.
+     *  4) Strict Poincare Duality maps, these are maps of the form H_i(M;R_1) --> H^{n-i}(M,\partial M;R_2)
+     *     or H^i(M;R_1) --> H_{n-i}(M,\partial M;R_2). 
+     *     @pre h_desc.domain.var and h_desc.range.var opposite. 
+     *     @pre h_desc.domain.dim and h_desc.range.dim add up to the dimension of the manifold. 
+     *     @pre h_desc.domain.hcs == DUAL_coord and h_desc.range.hcs == STD_REL_BDRY_coord
+     *     @pre h_desc.domain.cof is an integer multiple of h_desc.range.cof, 
+     *      both must be Z_2 if the manifold is not orientable.
+     *
+     *  5) Convienience maps.  These are natural maps users might be interested in that are composites of maps (1)--(4)
+     *     and their inverses.  TODO
      */
     const NHomMarkedAbelianGroup* homGroup( const HomLocator &h_desc) const;
 
     /**
-     *  Computes various bilinear forms associated to the homology of the manifold:
+     *  Computes an NBilinearForm or retrieves it from the precomputed pile. 
      *
-     *  1) Homology-Cohomology pairing <.,.>  ie: H_i(M;R) x H^i(M;R) --> R  where R is the coefficients
-     *  2) Intersection product               ie: H_i(M;R) x H_j(M;R) --> H_{(i+j)-n}(M;R)
-     *  3) Torsion linking form               ie: H_i(M;Z) x H_j(M;Z) --> H_{(i+j)-(n+1)}(M;Q/Z)
-     *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
+     *  At present there's plans for 5 bilinear form types that will be requestable.  This procedure
+     *  is not fully implemented yet and potentially buggy.  
+     *
+     *  1) Homology-Cohomology pairing <.,.>  ? ie: H_i(M;R) x H^i(M;R) --> R  where R is the coefficients
+     *
+     *  2) Intersection product               ie: (dual)H_i(M;R) x (std rel bdry)H_j(M;R) --> H_{(i+j)-n}(M;R)
+     *
+     *  3) Torsion linking form               ? ie: H_i(M;Z) x H_j(M;Z) --> H_{(i+j)-(n+1)}(M;Q/Z)
+     *
+     *  4) cup products                       ? ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
+     *
+     *  5) Convienience pairings....  these will be various composites of (1)-(4) and objects retreived from
+     *      homGroup TODO
      */
     const NBilinearForm* bilinearForm( const FormLocator &f_desc ) const;
-
-    /**
-     * Computes the Poincare polynomial -- this is the polynomial such that the 
-     * coefficient of t^i is the rank of the i-th homology group of the manifold. 
-     */
-    NSVPolynomialRing poincarePolynomial() const;
-
-    //todo: 1) bilinear forms return object for Poincare duality objects.
-    //         various steps: 
-    //         a) bilinear form class
-    //         b) polynomial ring class
-    //         c) TLF and intersection pairings. For intersection pairings need to
-    //            intelligently determine relative sign of intersections. 
-    //      2) fundamental group nonsense
-    //      3) full Bockstein sequence
 
 };
 

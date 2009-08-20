@@ -2334,7 +2334,6 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
  //         (dual)H_i(M;R) x (std rel)H_j(M,P;R) --> (mix)H_{(i+j)-n}(M;R) (a)
  // also     (std)H_i(M;R) x (std rel)H_j(M,P;R) --> (std)H_{(i+j)-n}(M;R) 
  //          (std)H_i(M;R) x     (std)H_j(M,P;R) --> (std)H_{(i+j)-n}(M;R) 
-
  // we start with the most elementary intersection product... (a)
  if ( ( f_desc.ft == intersectionForm ) &&
       ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
@@ -2357,13 +2356,10 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
    // aDim==4  1,3, 2,2, 3,1 to H_0 // 2,3, 3,2  to H_1 // 3,3  to H_2   
    if ( (aDim==3) && (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) )
     {// aDim==3, (dual)H_2 x (std_rel)H_2 --> (mix)H_1
-     // lDomain DUAL_coord, rDomain STD_REL_BDRY_coord
-     // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell, 
-     // and the intersection of this STD_REL_BDRY cell and this DUAL cell is getNumberOfEmbeddings (1-cell)
-     // edges... 
+     // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
      for (unsigned long i=0; i<numRelativeCells[2]; i++)
       {
-       const NFace* fac( tri3->getFace( rIx[2][i] ) ); const NEdge* edg;
+       const NFace* fac( tri3->getFace( rIx[2][i] ) ); const NEdge* edg(NULL);
        const NTetrahedron* tet( fac->getEmbedding(1).getTetrahedron() );
        for (unsigned long j=0; j<3; j++)
 	{
@@ -2372,28 +2368,29 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	 if (!edg->isBoundary())
 	  { // intM[ J, i, 2*numNonIdealCells[2] + 3*i+j ] += whatever
 	    // for orientation we need to compare normal orientation of these edges to product normal orientations
-           unsigned long J;
-           J = lower_bound( dcIx[2].begin(), dcIx[2].end(), tri3->edgeIndex( edg ) ) - dcIx[2].begin();
+           unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri3->edgeIndex( edg ) ) - dcIx[2].begin() );
 	   NMultiIndex x(3); x[0]=J; x[1]=i; x[2]=2*numNonIdealCells[1] + 3*rIx[2][i]+j;
 
 	   // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge in the face, so we apply
 	   // facinc to that, then get the corresp edge number
 	   NPerm4 facinc( fac->getEmbedding(1).getVertices() );
 	   NPerm4 edginc( tet->getEdgeMapping( NEdge::edgeNumber[facinc[fac->getEdgeMapping(j)[0]]][facinc[fac->getEdgeMapping(j)[1]]] ) );
-
+            // edginc[2,3] give orientation of part of dual 2-cell in this tet...
            NPerm4 relor( fac->getEmbedding(1).getFace(), edginc[0], edginc[1], facinc[3] );
 
+//         intM.incEntry( x, ( relor.sign() == tet->orientation() ? 1 : -1 ) );
+//	   intM.incEntry( x, fac->getEdgeMapping(j).sign() * tet->orientation() * facinc.sign() );
+           intM.incEntry( x, NLargeInteger(facinc.sign() * tet->orientation() * edginc.sign() * fac->getEdgeMapping(j).sign()) );
+// facinc.sign() * tet->orientation() relative orientation of face in tet with its orientation.
+// edginc.sign() * tet->orientation() ....                    edge/dual... ??
 
-// fac->getEmbedding(1). getTetrahedron(), getVertices()
-// get the corresp edge embedding in this tet, 
-           intM.incEntry( x, ( relor.sign() == tet->orientation() ? 1 : -1 ) );
-// normal orientation of the intersection represented by (facindx, edg dual to 2-cell) edginc[0], edginc[1], facinc[3]) 
 	  }
 	}
       }
-
     }
-    
+
+//intM.writeTextShort(std::cout);
+
    bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
    std::map< FormLocator, NBilinearForm* > *mbfptr = 
     const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);

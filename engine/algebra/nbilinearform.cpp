@@ -60,15 +60,27 @@ for (unsigned long i=0; i<ldomain.minNumberOfGenerators(); i++)
 	{
 	 evalcc[ I->first.entry(2) ] += lv[ I->first.entry(0) ] * rv[ I->first.entry(1) ] * (*(I->second));
 	}
+
+if ( !range.isCycle(evalcc) ) 
+{std::cout<<"("<<i<<"n"<<j<<") not cycle. ";
+ std::vector<NLargeInteger> EV(range.boundaryMap(evalcc));
+ for (unsigned long k=0; k<EV.size(); k++) std::cout<<EV[k]<<" ";
+ std::cout<<" / ";
+// for (unsigned long k=0; k<evalcc.size(); k++) std::cout<<evalcc[k]<<" ";
+// std::cout<<" // ";
+}
+
   std::vector< NLargeInteger > evalsnf( range.snfRep( evalcc ) );
   for (unsigned long k=0; k<evalsnf.size(); k++) if (evalsnf[k] != 0) 
 	{
 	 NMultiIndex J(3);
 	 J[0]=i; J[1]=j; J[2]=k;
 	 reducedPairing->setEntry( J, evalsnf[k] );
+std::cout<<" * "<<evalsnf[k]<<" * ";
 	}
   }
  }
+std::cout<<" / ";
 }
 
 NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe) : ShareableObject(),
@@ -152,8 +164,24 @@ return true;
 }
 
 NMarkedAbelianGroup NBilinearForm::image() const
-{
-// todo
+{ 
+// lets compute the image based off of the reducedpairing. 
+NMarkedAbelianGroup dom( lDomain.minNumberOfGenerators()*rDomain.minNumberOfGenerators(), NLargeInteger::zero );
+NMatrixInt mat( Range.minNumberOfGenerators(), dom.minNumberOfGenerators() );
+// fill mat -- we'll do this with an iterator through reducedPairing
+std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
+for (J = reducedPairing->getGrid().begin(); J!=reducedPairing->getGrid().end(); J++)
+  mat.entry( J->first.entry(2), J->first.entry(0)*rDomain.minNumberOfGenerators() + J->first.entry(1) ) = (*J->second);
+// now find an NMarkedAbelianGroup with the right presentation for Range such that mat makes sense as a map..
+NMatrixInt zeroM(1, Range.minNumberOfGenerators() );
+NMatrixInt redN( Range.minNumberOfGenerators(), Range.getNumberOfInvariantFactors() );
+for (unsigned long i=0; i<Range.getNumberOfInvariantFactors(); i++)
+ redN.entry(i,i) = Range.getInvariantFactor(i);
+
+NMarkedAbelianGroup modRange( zeroM, redN );
+
+NHomMarkedAbelianGroup hom( dom, modRange, mat );
+return hom.getImage();
 }
 
 
@@ -189,7 +217,9 @@ for (J = reducedPairing->getGrid().begin(); J!=reducedPairing->getGrid().end(); 
   x[0]=J->first.entry(1); x[1]=J->first.entry(0); x[2]=J->first.entry(2);
   const NLargeInteger* t( reducedPairing->getEntry(x));
   if (!t) return false;
-  if ( (*J->second) != -(*t) ) return false;
+  if ( x[2] < lDomain.getNumberOfInvariantFactors() ) 
+   { if ( ((*J->second) + (*t)) % lDomain.getInvariantFactor(x[2]) != NLargeInteger::zero ) return false; }
+  else if ( (*J->second) + (*t) != NLargeInteger::zero ) return false;
   }
 return true;
 }
@@ -354,8 +384,13 @@ out<<" --> ";
 Range.writeTextShort(out);
 out<<"]";
 
-if (isSymmetric()) out<<" symmetric"; 
-if (isAntiSymmetric()) out<<" anti-symmetric";
+if (reducedPairing->getGrid().size() == 0) out<<" zero"; else
+ {
+ if (isSymmetric()) out<<" symmetric"; 
+ if (isAntiSymmetric()) out<<" anti-symmetric";
+ out<<" image == "; image().writeTextShort(out);
+ reducedPairing->writeTextShort(out);
+ }
 }
 
 
