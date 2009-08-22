@@ -2363,26 +2363,26 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
        const NTetrahedron* tet( fac->getEmbedding(1).getTetrahedron() );
        for (unsigned long j=0; j<3; j++)
 	{
-	 edg = fac->getEdge(j); 
-         // get dual 2-cell index to edg, call it J
-	 if (!edg->isBoundary())
+	 edg = fac->getEdge(j); if (!edg->isBoundary())
 	  { // intM[ J, i, 2*numNonIdealCells[2] + 3*i+j ] += whatever
 	    // for orientation we need to compare normal orientation of these edges to product normal orientations
            unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri3->edgeIndex( edg ) ) - dcIx[2].begin() );
-	   NMultiIndex x(3); x[0]=J; x[1]=i; x[2]=2*numNonIdealCells[1] + 3*rIx[2][i]+j;
-
+	   NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j;
+// x[2] error? 
 	   // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge in the face, so we apply
 	   // facinc to that, then get the corresp edge number
 	   NPerm4 facinc( fac->getEmbedding(1).getVertices() );
 	   NPerm4 edginc( tet->getEdgeMapping( NEdge::edgeNumber[facinc[fac->getEdgeMapping(j)[0]]][facinc[fac->getEdgeMapping(j)[1]]] ) );
-            // edginc[2,3] give orientation of part of dual 2-cell in this tet...
-           NPerm4 relor( fac->getEmbedding(1).getFace(), edginc[0], edginc[1], facinc[3] );
+           // edginc[2,3] give orientation of part of dual 2-cell in this tet...
+	   // normalize edginc to ambient orientation
+	   if (tet->orientation() != edginc.sign()) edginc = edginc * NPerm4(0,1);
+	   unsigned long oppfac ( edginc[2] == fac->getEmbedding(1).getFace() ? edginc[3] : edginc[2] );
+           unsigned long facnum ( fac->getEmbedding(1).getFace() );
 
-//         intM.incEntry( x, ( relor.sign() == tet->orientation() ? 1 : -1 ) );
-//	   intM.incEntry( x, fac->getEdgeMapping(j).sign() * tet->orientation() * facinc.sign() );
-           intM.incEntry( x, NLargeInteger(facinc.sign() * tet->orientation() * edginc.sign() * fac->getEdgeMapping(j).sign()) );
-// facinc.sign() * tet->orientation() relative orientation of face in tet with its orientation.
-// edginc.sign() * tet->orientation() ....                    edge/dual... ??
+           NPerm4 relor( edginc[0], edginc[1], ( (tet->orientation()==1) ? facnum : oppfac), 
+                                               ( (tet->orientation()==1) ? oppfac : facnum) );
+
+           intM.incEntry( x, ( relor.sign() == tet->orientation() ? 1 : -1 ) );
 
 	  }
 	}
@@ -2397,8 +2397,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
    mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
    return bfptr; 
   }
-//	GroupLocator(unsigned long newDim, variance_type newVar, homology_coordinate_system useHcs, 
-//			unsigned long useCof);
+
  // case 3: torsion linking forms
 
  // case 4: cup products

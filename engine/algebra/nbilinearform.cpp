@@ -46,41 +46,29 @@ unreducedPairing = new NSparseGrid< NLargeInteger > (pairing);
 reducedPairing = new NSparseGrid< NLargeInteger > (3);
 
 for (unsigned long i=0; i<ldomain.minNumberOfGenerators(); i++)
- {
- std::vector< NLargeInteger > lv(ldomain.ccRep(i));
- for (unsigned long j=0; j<rdomain.minNumberOfGenerators(); j++)
-  {
-  std::vector< NLargeInteger > rv(rdomain.ccRep(j));
-
-  std::vector< NLargeInteger > evalcc( range.getRankCC(), NLargeInteger::zero ); // pre SNF rep
-  // sum_{ii, jj, k} lv[ii] * rv[jj] * pairing[ii,jj,k] e_k
-  // is reducedPairing[i,j,k], record if non-zero.  
-  std::map< NMultiIndex, NLargeInteger* >::const_iterator I;
-  for (I=pairing.getGrid().begin(); I!=pairing.getGrid().end(); I++)
-	{
+ { std::vector< NLargeInteger > lv(ldomain.ccRep(i));
+   for (unsigned long j=0; j<rdomain.minNumberOfGenerators(); j++)
+    { std::vector< NLargeInteger > rv(rdomain.ccRep(j));
+      std::vector< NLargeInteger > evalcc( range.getRankCC(), NLargeInteger::zero ); // pre SNF rep
+      // sum_{ii, jj, k} lv[ii] * rv[jj] * pairing[ii,jj,k] e_k
+      // is reducedPairing[i,j,k], record if non-zero.  
+      std::map< NMultiIndex, NLargeInteger* >::const_iterator I;
+      for (I=pairing.getGrid().begin(); I!=pairing.getGrid().end(); I++)
 	 evalcc[ I->first.entry(2) ] += lv[ I->first.entry(0) ] * rv[ I->first.entry(1) ] * (*(I->second));
-	}
 
 if ( !range.isCycle(evalcc) ) 
-{std::cout<<"("<<i<<"n"<<j<<") not cycle. ";
- std::vector<NLargeInteger> EV(range.boundaryMap(evalcc));
- for (unsigned long k=0; k<EV.size(); k++) std::cout<<EV[k]<<" ";
- std::cout<<" / ";
-// for (unsigned long k=0; k<evalcc.size(); k++) std::cout<<evalcc[k]<<" ";
-// std::cout<<" // ";
-}
+{ std::cout<<"\n*("<<i<<","<<j<<") not cycle, bdry == ";
+  std::vector<NLargeInteger> EV(range.boundaryMap(evalcc));
+  for (unsigned long k=0; k<EV.size(); k++) std::cout<<EV[k]<<" "; }
 
-  std::vector< NLargeInteger > evalsnf( range.snfRep( evalcc ) );
-  for (unsigned long k=0; k<evalsnf.size(); k++) if (evalsnf[k] != 0) 
+      std::vector< NLargeInteger > evalsnf( range.snfRep( evalcc ) );
+      for (unsigned long k=0; k<evalsnf.size(); k++) if (evalsnf[k] != 0) 
 	{
-	 NMultiIndex J(3);
-	 J[0]=i; J[1]=j; J[2]=k;
+	 NMultiIndex J(3); J[0]=i; J[1]=j; J[2]=k;
 	 reducedPairing->setEntry( J, evalsnf[k] );
-std::cout<<" * "<<evalsnf[k]<<" * ";
 	}
-  }
+    }
  }
-std::cout<<" / ";
 }
 
 NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe) : ShareableObject(),
@@ -389,7 +377,7 @@ if (reducedPairing->getGrid().size() == 0) out<<" zero"; else
  if (isSymmetric()) out<<" symmetric"; 
  if (isAntiSymmetric()) out<<" anti-symmetric";
  out<<" image == "; image().writeTextShort(out);
- reducedPairing->writeTextShort(out);
+// reducedPairing->writeTextShort(out);
  }
 }
 

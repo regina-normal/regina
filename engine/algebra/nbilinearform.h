@@ -63,6 +63,8 @@ namespace regina {
  *        where for example the domain of the leftAdjoint would satisfy isEqualTo(A), etc, vs one where
  *        only isIsomorphicTo(A) would be satisfied -- one using unreducedPairing, the other reducedPairing, etc.
  *
+ *        3) rcompose and lcompose are broken. 
+ *
  * @author Ryan Budney
  */
 class NBilinearForm : public ShareableObject {

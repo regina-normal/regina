@@ -117,7 +117,10 @@ while ( (i != cof.end()) || (j != q.cof.end()) )
      { retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(j->first, new NLargeInteger(*j->second) ) );
        j++; }
     else
-     { retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(i->first, new NLargeInteger(*i->second + *j->second) ) );
+     { NLargeInteger* temp(new NLargeInteger( (*i->second) + (*j->second) ) );
+       if ( (*temp) != NLargeInteger::zero )
+       retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(i->first, temp ) );
+	else delete temp;
        i++; j++; } 
    }
  }
@@ -150,7 +153,10 @@ while ( (i != cof.end()) || (j != q.cof.end()) )
      { retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(j->first, new NLargeInteger(-(*j->second) ) ) );
        j++; }
     else
-     { retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(i->first, new NLargeInteger(*i->second - (*j->second) ) ) );
+     { NLargeInteger* temp(new NLargeInteger( (*i->second) - (*j->second) ) );
+       if ( (*temp) != NLargeInteger::zero )
+       retval.cof.insert( std::pair< unsigned long, NLargeInteger* >(i->first, temp ) );
+	else delete temp;
        i++; j++; } 
    }
  }

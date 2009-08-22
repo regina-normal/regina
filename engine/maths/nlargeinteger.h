@@ -94,6 +94,9 @@ class NLargeInteger {
         bool infinite;
             /**< Does this NLargeInteger represent infinity? */
 
+	    /**< Used for generation of random NLargeIntegers. */
+	static gmp_randstate_t state;
+
     public:
         /**
          * Initialises this integer to zero.
@@ -710,6 +713,29 @@ class NLargeInteger {
          * @author Ryan Budney
          */
         int legendre(const NLargeInteger& p) const;
+
+	/**
+	 *  Call this at least once before requesting random NLargeIntegers.
+	 */
+	void seedRandomGenerator();
+
+	/**
+	 *  Generate a pseudo-random NLargeInteger that is uniformly distributed in the interval [0,*this)
+	 */
+	NLargeInteger randomBoundedByThis();
+
+	/**
+	 *  Generate a pseudo-random NLargeInteger that is uniformly distributed in the interval [0,2^n). 
+	 * Ignores *this.
+	 */
+	NLargeInteger randomBinary(unsigned long n);
+
+	/**
+	 *  Generate a pseudo-random NLargeInteger that is distributed in the interval [0,2^n),
+	 * This NLargeInteger tends to have long strings of 0's and 1's in its binary expansion. 
+	 * Ignores *this.
+	 */
+	NLargeInteger randomCornerBinary(unsigned long n);
 
     private:
         /**

@@ -34,6 +34,7 @@ namespace regina {
 const NLargeInteger NLargeInteger::zero;
 const NLargeInteger NLargeInteger::one(1);
 const NLargeInteger NLargeInteger::infinity(true, true);
+gmp_randstate_t NLargeInteger::state;
 
 std::string NLargeInteger::stringValue(int base) const {
     if (infinite)
@@ -168,6 +169,31 @@ NLargeInteger NLargeInteger::divisionAlg(const NLargeInteger& divisor,
 
     return quotient;
 }
+
+void NLargeInteger::seedRandomGenerator()
+{ gmp_randinit_default(state); }
+
+NLargeInteger NLargeInteger::randomBoundedByThis()
+{
+ NLargeInteger retval;
+ mpz_urandomm( retval.data, state, data );
+ return retval;
+}
+
+NLargeInteger NLargeInteger::randomBinary(unsigned long n)
+{
+ NLargeInteger retval;
+ mpz_urandomb( retval.data, state, n );
+ return retval;
+}
+
+NLargeInteger NLargeInteger::randomCornerBinary(unsigned long n)
+{
+ NLargeInteger retval;
+ mpz_rrandomb( retval.data, state, n );
+ return retval;
+}
+
 
 } // namespace regina
 

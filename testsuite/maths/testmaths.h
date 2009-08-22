@@ -47,4 +47,5 @@ void addNPrimes(CppUnit::TextUi::TestRunner& runner);
 void addNRational(CppUnit::TextUi::TestRunner& runner);
 void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
 void addPermConv(CppUnit::TextUi::TestRunner& runner);
+void addNSparseGrid(CppUnit::TextUi::TestRunner& runner);
 

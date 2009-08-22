@@ -72,7 +72,8 @@ class NMultiIndex {
 /**
  * An object for storing an arbitrary n_1xn_2x...xn_k array of data from 
  * a templated class T sparsely.  T is required to be a ring type -- must have
- * addition and a ::zero element at present. 
+ * addition and a ::zero element at present as this is an object intended for
+ * linear algebra applications.
  *
  * @author Ryan Budney
  */
@@ -149,7 +150,7 @@ class NSparseGrid {
 // Inline functions for NMultiIndex
 
 inline NMultiIndex::NMultiIndex(unsigned long dim)
-{ data.resize(dim); }
+{ data.resize(dim, 0); }
 
 inline NMultiIndex::NMultiIndex(const NMultiIndex &cloneMe)
 { data = cloneMe.data; }

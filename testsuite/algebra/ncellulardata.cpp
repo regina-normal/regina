@@ -26,23 +26,40 @@
 
 /* end stub */
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include <sstream>
+#include <cppunit/extensions/HelperMacros.h>
+#include "maths/nsparsegrid.h"
+#include "maths/nlargeinteger.h"
+#include "algebra/nmarkedabeliangroup.h"
+#include "testsuite/utilities/testutilities.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+using regina::NLargeInteger;
+//using regina::Dim4Triangulation;
+//using regina::Dim4ExampleTriangulation;
 
-void addNBinaryA5(CppUnit::TextUi::TestRunner& runner);
-void addNBinaryS4(CppUnit::TextUi::TestRunner& runner);
-void addNMarkedAbelianGroup(CppUnit::TextUi::TestRunner& runner);
-void addNBilinearForm(CppUnit::TextUi::TestRunner& runner);
-void addNSVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
-void addNCellularData(CppUnit::TextUi::TestRunner& runner);
+// todo: build a pre-set collection of test presentations. Maybe get them from the example triangulations?
+//       or both...
 
+class NCellularDataTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(NCellularDataTest);
+
+    CPPUNIT_TEST(basic_tests);
+
+    CPPUNIT_TEST_SUITE_END();
+
+    public:
+        void setUp() {}
+        void tearDown() {}
+
+	void basic_tests() { // constructors, isIsomorphicTo, isEqualTo, isChainComplex, getRank,
+				   // getTorsionRank, getNumberOfInvariantFactors, minNumberOfGenerators,
+				   // getInvariantFactor, isTrivial, minNumberCycleGens, writeTextShort,
+				   // cycleGen, getRankCC, getM, getN, coefficients
+	}
+
+};
+
+void addNCellularData(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(NCellularDataTest::suite());
+}
 

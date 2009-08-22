@@ -127,10 +127,15 @@ bool runAllTests() {
     addNumberTheory(runner);
     addMatrixOps(runner);
     addPermConv(runner);
+    addNSparseGrid(runner);
 
     // Algebra:
     addNBinaryA5(runner);
     addNBinaryS4(runner);
+    addNMarkedAbelianGroup(runner);
+    addNBilinearForm(runner);
+    addNSVPolynomialRing(runner);
+    addNCellularData(runner);
 
     // Triangulation:
     addNTriangulation(runner);
@@ -138,7 +143,7 @@ bool runAllTests() {
     addConnectedSumDecomp(runner);
     addThreeSphere(runner);
     addNIsomorphism(runner);
-    addNHomologicalData(runner);
+//    addNHomologicalData(runner); // we'll be phasing NHomologicalData out 
 
     // 4-manifold triangulations:
     addDim4Triangulation(runner);
