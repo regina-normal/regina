@@ -59,6 +59,10 @@ class NMarkedAbelianGroupTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(element_representation_tests);
     CPPUNIT_TEST(boundary_map_tests);
 
+    CPPUNIT_TEST(hom_basic_tests);
+    CPPUNIT_TEST(hom_induced_objects);
+    CPPUNIT_TEST(hom_detailed_tests);
+
     CPPUNIT_TEST_SUITE_END();
 
     void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
@@ -76,6 +80,10 @@ class NMarkedAbelianGroupTest : public CppUnit::TestFixture {
 
 	std::vector< NCellularData* > cdList;
         std::vector< std::string > h1List;
+
+	std::vector< std::string > ker_mtr;
+	std::vector< std::string > coker_mtr;
+
 
     public:
         void setUp() {
@@ -108,6 +116,21 @@ class NMarkedAbelianGroupTest : public CppUnit::TestFixture {
           h1List[8] = "Z + Z_2";     h1List[9] = "Z";        h1List[10] = "Z + Z_2";  h1List[11] = "2 Z + Z_2";
           h1List[12] = "2 Z_5";	     h1List[13] = "Z";       h1List[14] = "3 Z_5";    h1List[15] = "3 Z";
 	  h1List[16] = "Z_4 + Z_20";
+
+	  ker_mtr.resize(17);
+	  ker_mtr[0] = "Z";          ker_mtr[1] = "Z";       ker_mtr[2] = "Z";        ker_mtr[3] = "Z";
+ 	  ker_mtr[4] = "2 Z";        ker_mtr[5] = "2 Z";     ker_mtr[6] = "Z";        ker_mtr[7] = "Z";
+	  ker_mtr[8] = "Z + Z_2";    ker_mtr[9] = "Z";       ker_mtr[10] = "Z + Z_2"; ker_mtr[11] = "2 Z + Z_2";
+	  ker_mtr[12] = "0";         ker_mtr[13] = "0";      ker_mtr[14] = "0";       ker_mtr[15] = "0";
+          ker_mtr[16] = "0";
+
+	  coker_mtr.resize(17);
+	  coker_mtr[0] = "0";          coker_mtr[1] = "Z_5";     coker_mtr[2] = "0";        coker_mtr[3] = "2 Z_3";
+ 	  coker_mtr[4] = "0";          coker_mtr[5] = "0";       coker_mtr[6] = "0";        coker_mtr[7] = "Z_2";
+	  coker_mtr[8] = "0";          coker_mtr[9] = "Z_9";     coker_mtr[10] = "0";       coker_mtr[11] = "0";
+	  coker_mtr[12] = "2 Z_5";     coker_mtr[13] = "Z";      coker_mtr[14] = "3 Z_5";   coker_mtr[15] = "3 Z";
+          coker_mtr[16] = "Z_4 + Z_20";
+
         }
 
         void tearDown() {
@@ -115,7 +138,7 @@ class NMarkedAbelianGroupTest : public CppUnit::TestFixture {
 	}
 
 	void basic_tests() { 
-	 const regina::NMarkedAbelianGroup* test;
+	 const regina::NMarkedAbelianGroup* test(NULL);
          for (unsigned long i=0; i<cdList.size(); i++)
 	  {
 	   // precomputed isomorphism tests
@@ -189,7 +212,7 @@ class NMarkedAbelianGroupTest : public CppUnit::TestFixture {
 	}
 
 	void element_representation_tests() { // compatibility of ccRep and snfRep, getFreeRep, getTorsionRep, 
-		const regina::NMarkedAbelianGroup* test;
+		const regina::NMarkedAbelianGroup* test(NULL);
 	        // Z coeff
 		for (unsigned long i=0; i<cdList.size(); i++)
 		 {
@@ -239,7 +262,7 @@ class NMarkedAbelianGroupTest : public CppUnit::TestFixture {
 	}
 
 	void boundary_map_tests() { // isCycle, boundaryMap, writeAsBoundary, etc...
-		const regina::NMarkedAbelianGroup* test;
+		const regina::NMarkedAbelianGroup* test(NULL);
 	        // Z coeff
 		for (unsigned long i=0; i<cdList.size(); i++)
 		 {
@@ -275,12 +298,122 @@ class NMarkedAbelianGroupTest : public CppUnit::TestFixture {
 
 	}
 
+	// NHomMarkedAbelianGroup tests.
+	void hom_basic_tests() { // isCycleMap, isEpic, isMonic, isIsomorphism, isZero.
+		const regina::NHomMarkedAbelianGroup* test(NULL);
+		for (unsigned long i=0; i<cdList.size(); i++)
+		 {
+		  NCellularData::GroupLocator ga( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 );
+		  NCellularData::GroupLocator gb( 1, NCellularData::coVariant, NCellularData::MIX_coord, 0 );
+		  NCellularData::HomLocator hom( ga, gb );
+		  test = cdList[i]->homGroup( hom );
+		  if (!test->isCycleMap()) CPPUNIT_FAIL("isCycleMap() error.");
+		  if (!test->isMonic()) CPPUNIT_FAIL("isMonic() error.");
+		  if (!test->isEpic()) CPPUNIT_FAIL("isEpic() error.");
+		  if (!test->isIsomorphism()) CPPUNIT_FAIL("isIsomorphism() error.");
+		  if (test->isIdentity()) CPPUNIT_FAIL("isIdentity() error.");
+		  if (test->isZero()) CPPUNIT_FAIL("isZero() error.");
+	  	 }
+// these mod-p computations are a little time consuming so we'll leave these kinds of tests to be part of
+//  the ncellulardata tests
+		for (unsigned long i=6; i<9; i++) // restricted to <13 to avoid some big triangulations
+		 {
+		  NCellularData::GroupLocator ga( 1, NCellularData::coVariant, NCellularData::STD_coord, 10 );
+		  NCellularData::GroupLocator gb( 1, NCellularData::coVariant, NCellularData::MIX_coord, 10 );
+		  NCellularData::HomLocator hom( ga, gb );
+		  test = cdList[i]->homGroup( hom );
+		  if (!test->isCycleMap()) CPPUNIT_FAIL("isCycleMap() error (2).");
+		  if (!test->isMonic()) CPPUNIT_FAIL("isMonic() error (2).");
+		  if (!test->isEpic()) CPPUNIT_FAIL("isEpic() error (2).");
+		  if (!test->isIsomorphism()) CPPUNIT_FAIL("isIsomorphism() error (2).");
+		  if (test->isIdentity()) CPPUNIT_FAIL("isIdentity() error (2).");
+		  if (test->isZero()) CPPUNIT_FAIL("isZero() error (2).");
+	  	 }
+		}
 
-	// also todo... NHomMarkedAbelianGroup tests.
-	//          isChainMap, isEpic, isMonic, isIsomorphism, isZero, isIdentity, getKernel, getCoKernel, 
-	//          getImage, writeTextShort, getDomain, getRange, getDefiningMatrix, getReducedMatrix, 
-	//          evalCC, evalSNF, inverseHom, operator*, writeReducedMatrix
+	void hom_induced_objects() { // getKernel, getCoKernel, getImage,getDomain, getRange, getDefiningMatrix, getReducedMatrix
+		const regina::NHomMarkedAbelianGroup* test(NULL);
+                std::stringstream temp;
+		for (unsigned long i=0; i<cdList.size(); i++)
+		 {
+		  NCellularData::GroupLocator ga( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 );
+		  NCellularData::GroupLocator gb( 1, NCellularData::coVariant, NCellularData::STD_REL_BDRY_coord, 0 );
+		  NCellularData::HomLocator hom( ga, gb );
+		  test = cdList[i]->homGroup( hom );
+		  temp.str("");
+		  test->getKernel().writeTextShort(temp);
+		  if (temp.str() != ker_mtr[i]) CPPUNIT_FAIL("getKernel() error.");
+	  	 }
+		for (unsigned long i=0; i<cdList.size(); i++)
+		 {
+		  NCellularData::GroupLocator ga( 1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 );
+		  NCellularData::GroupLocator gb( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 );
+		  NCellularData::HomLocator hom( ga, gb );
+		  test = cdList[i]->homGroup( hom );
+		  temp.str("");
+		  test->getCokernel().writeTextShort(temp);
+		  if (temp.str() != coker_mtr[i]) CPPUNIT_FAIL("getCokernel() error.");
+	  	 }
+		for (unsigned long i=0; i<cdList.size(); i++)
+		 {
+		  NCellularData::GroupLocator ga( 1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 );
+		  NCellularData::GroupLocator gb( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 );
+		  NCellularData::HomLocator hom( ga, gb );
+		  test = cdList[i]->homGroup( hom );
+		  temp.str("");
+		  test->getImage().writeTextShort(temp); 
+		  if (temp.str() != ker_mtr[i]) CPPUNIT_FAIL("getImage() error.");
+	  	 }
+		// todo: explicit CC initializations to allow for some getDefiningMatrix and getReducedMatrix tests.
+		}
 
+	void hom_detailed_tests() { // writeTextShort, evalCC, evalSNF, inverseHom, operator*, isIdentity, writeReducedMatrix
+		const regina::NHomMarkedAbelianGroup* test1(NULL);
+		for (unsigned long i=0; i<cdList.size(); i++)
+		 {
+		  NCellularData::GroupLocator ga( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 );
+		  NCellularData::GroupLocator gb( 1, NCellularData::coVariant, NCellularData::MIX_coord, 0 );
+		  NCellularData::HomLocator hom( ga, gb );
+		  test1 = cdList[i]->homGroup( hom );
+		  NHomMarkedAbelianGroup test2( test1->inverseHom() );
+		  NHomMarkedAbelianGroup test3( (*test1)*test2 );
+		  NHomMarkedAbelianGroup test4( test2*(*test1) );
+		  if (!test3.isIdentity()) CPPUNIT_FAIL("right inverse error.");
+		  if (!test4.isIdentity()) CPPUNIT_FAIL("left inverse error.");
+	  	 }
+		for (unsigned long i=0; i<cdList.size(); i++)
+		 {
+		  NCellularData::GroupLocator ga( 1, NCellularData::coVariant, NCellularData::STD_coord, 10 );
+		  NCellularData::GroupLocator gb( 1, NCellularData::coVariant, NCellularData::MIX_coord, 10 );
+		  NCellularData::HomLocator hom( ga, gb );
+		  test1 = cdList[i]->homGroup( hom );
+		  NHomMarkedAbelianGroup test2( test1->inverseHom() );
+		  NHomMarkedAbelianGroup test3( (*test1)*test2 );
+		  NHomMarkedAbelianGroup test4( test2*(*test1) );
+		  if (!test3.isIdentity()) CPPUNIT_FAIL("right inverse error (2).");
+		  if (!test4.isIdentity()) CPPUNIT_FAIL("left inverse error (2).");
+	  	 }
+		// evalCC and evalSNF tests...
+		// first test: check for a commutative diagram with the homomorphism in CC and SNF coordinates.
+	        //   test on generators in snf coordinates, I suppose... shortened a little for speed considerations
+		for (unsigned long i=0; i<cdList.size(); i++)
+		 {
+		  NCellularData::GroupLocator ga( 1, NCellularData::coVariant, NCellularData::STD_coord, 10 );
+		  NCellularData::GroupLocator gb( 1, NCellularData::coVariant, NCellularData::STD_REL_BDRY_coord, 10 );
+		  NCellularData::HomLocator hom( ga, gb );
+		  test1 = cdList[i]->homGroup( hom );
+		  for (unsigned long j=0; j<test1->getDomain().minNumberOfGenerators(); j++)
+		   {
+		    std::vector< NLargeInteger > domCCj( test1->getDomain().ccRep(j) );
+		    std::vector< NLargeInteger > domSNFj( test1->getDomain().snfRep( domCCj ) );
+		    std::vector< NLargeInteger > ranCCj( test1->evalCC( domCCj ) );
+		    std::vector< NLargeInteger > ranSNFj( test1->evalSNF( domSNFj ) );
+		    std::vector< NLargeInteger > CD( test1->getRange().snfRep( ranCCj ) );
+		    if ( CD != ranSNFj ) CPPUNIT_FAIL("evalSNF / evalCC error.");
+		   }
+		 }
+		// writeReducedMatrix tests...
+		}
 };
 
 void addNMarkedAbelianGroup(CppUnit::TextUi::TestRunner& runner) {
