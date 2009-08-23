@@ -549,24 +549,19 @@ if (CCrep.size() == OM.columns()) for (unsigned long i=0; i<OM.rows(); i++)
 return retval;
 }
 
-
-
 // routine checks to see if an object in the CC coords for our group is a boundary, and if so it returns
 // CC coords of what an object that it is a boundary of.  Null vector is returned if not boundary.  
-// So the algorithm checks if it's a cycle, converts to snf coordinates, checks if boundary, if so
-// computes preimage and moves back up to CC coords.  If we have p \neq 0, we also have to check that the 
-// TOR part is trivial. 
 std::vector<NLargeInteger> NMarkedAbelianGroup::writeAsBoundary(const std::vector<NLargeInteger> &input) const
-{
+{  
  static const std::vector<NLargeInteger> nullvec;
  if ( !isCycle(input) ) return nullvec;
  // okay, it's a cycle so lets determine whether or not it is a boundary. 
  std::vector<NLargeInteger> temp(ON.rows(), NLargeInteger::zero); 
- for (unsigned long i=0; i<ON.rows(); i++) for (unsigned long j=0;j<ON.rows();j++)
+ for (unsigned long i=0; i<OMRi.rows(); i++) for (unsigned long j=0;j<OMRi.columns();j++)
             temp[i] += OMRi.entry(i,j)*input[j];
  for (unsigned long i=0; i<TORVec.size(); i++)
 	if (temp[TORLoc + i] % coeff != 0) return nullvec;
- // now we know we're dealing with a cycle with zero TOR part. 
+ // now we know we're dealing with a cycle with zero TOR part (if coeff != 0) 
  // convert into the diagPres coordinates / standard snfcoords if p==0. 
  std::vector<NLargeInteger> retval(ON.columns(), NLargeInteger::zero);
  if (coeff == 0)
@@ -577,13 +572,13 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::writeAsBoundary(const std::vecto
      // check divisibility in the invFac coords
      for (unsigned long i=0; i<ifNum; i++)
 	{ if (snfV[i+ifLoc] % InvFacList[i] != 0) return nullvec;
-	snfV[i+ifLoc] /= InvFacList[i]; }
+	  snfV[i+ifLoc] /= InvFacList[i]; }
      // check that it's zero on coords missed by N...
      for (unsigned long i=0; i<snfrank; i++)
 	if (snfV[i+snffreeindex] != 0) return nullvec;
      // we know it's in the image now. 
-     for (unsigned long i=0; i<retval.size(); i++) for (unsigned long j=0; j<snfV.size(); j++)
-	retval[i] += ornR->entry(i, j) * snfV[j];
+     for (unsigned long i=0; i<ornR->rows(); i++) for (unsigned long j=0; j<ornR->columns(); j++)
+	retval[i] += ornR->entry(i, j) * snfV[j]; 
      }
     else 
      {// find tensorV -- apply otC.

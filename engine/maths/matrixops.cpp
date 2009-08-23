@@ -1053,6 +1053,35 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i, const u
   }
 }
 
+/**
+ *  This routine converts mxn matrix "matrix" into its Smith Normal Form.
+ * It assumes rowSpaceBasis and rowSpaceBasisInv are pointers to NMatrixInts, 
+ * if alloceted, having dimension mxm, and colSpaceBasis and colSpaceBasisInv
+ * has dimensions nxn.  These matrices record the row and columns operations
+ * used to convert between "matrix" and its Smith Normal Form.  Specifically, 
+ * if orig_matrix is "matrix" before metricalSmithNormalForm is called, and
+ * after_matrix is "matrix" after metricalSmithNormalForm is called, then
+ * we have the relations:
+ *
+ *    (*colSpaceBasis) * orig_matrix * (*rowSpaceBasis) == after_matrix
+ *
+ *    (*colSpaceBasisInv) * after_matrix * (*rowSpaceBasisInv) == orig_matrix
+ *
+ *  If any of rowSpaceBasis, colSpaceBasis or rowSpaceBasisInv or colSpaceBasisInv
+ * are not allocated, this algotithm does not bother to compute them (and is
+ * correspondingly faster. 
+ *
+ *  This routine uses a first-order technique to intelligently choose the
+ * pivot when computing the Smith Normal Form, attempting to keep the matrix
+ * sparse and its norm small throughout the reduction process.  The technique
+ * is loosely based on the papers: 
+ *
+ *  Havas, Holt, Rees. Recognizing badly Presented Z-modules. Linear Algebra
+ * and its Applications. 192:137--163 (1993). 
+ *
+ *  Markowitz. The elimination form of the inverse and its application to linear
+ * programming. Management Sci. 3:255--269 (1957).
+ */
 void metricalSmithNormalForm(NMatrixInt& matrix,
         NMatrixInt *rowSpaceBasis, NMatrixInt *rowSpaceBasisInv,
         NMatrixInt *colSpaceBasis, NMatrixInt *colSpaceBasisInv) {

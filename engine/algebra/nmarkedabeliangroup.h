@@ -87,7 +87,7 @@ class NMarkedAbelianGroup : public ShareableObject {
         NMatrixInt OM; // copy of initializing M
         /** Internal original N */
         NMatrixInt ON; // copy of initializing N assumes M*N == 0
-        /** Internal change of basis. OMC*OM*OMR is the SNF of OM */
+        /** Internal change of basis. SNF(OM) == OMC*OM*OMR */
         NMatrixInt OMR, OMC;
         /** Internal change of basis. OM = OMCi*SNF(OM)*OMRi */
         NMatrixInt OMRi, OMCi;
