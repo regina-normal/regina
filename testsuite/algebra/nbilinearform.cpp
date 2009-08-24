@@ -28,12 +28,29 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
+
 #include "maths/nsparsegrid.h"
 #include "maths/nlargeinteger.h"
+#include "maths/nmatrixint.h"
+
 #include "algebra/nbilinearform.h";
+#include "algebra/ncellulardata.h"
+#include "algebra/nmarkedabeliangroup.h"
+
+#include "triangulation/nexampletriangulation.h"
+#include "triangulation/ntriangulation.h"
+
 #include "testsuite/utilities/testutilities.h"
 
 using regina::NLargeInteger;
+using regina::NTriangulation;
+using regina::NExampleTriangulation;
+using regina::NMarkedAbelianGroup;
+using regina::NHomMarkedAbelianGroup;
+using regina::NCellularData;
+using regina::NMatrixInt;
+using regina::NBilinearForm;
+using regina::NSparseGrid;
 
 class NBilinearFormTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NBilinearFormTest);
@@ -43,35 +60,58 @@ class NBilinearFormTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(composition_test);
 
     CPPUNIT_TEST_SUITE_END();
+ 
+    void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
+            dest.insertTriangulation(*source);
+            delete source; }
+
+    private:
+
+    NTriangulation weberSeifert;
+    NTriangulation s1s1s1, comp1;
+
+    std::vector< NCellularData* > cdList;
 
     public:
         void setUp() {
+          copyAndDelete(weberSeifert, NExampleTriangulation::weberSeifert());
+	  s1s1s1.insertRehydration("gepaadcefeffnkkanax");
+	  comp1.insertRehydration("jgofiaaaceedfhiiifkxkfnbtxe");
+
+	  cdList.resize(3);
+	  cdList[0] = new NCellularData( weberSeifert ); cdList[1] = new NCellularData( s1s1s1 );
+	  cdList[2] = new NCellularData( comp1 );
   	 }
 
-        void tearDown() {}
+        void tearDown() {
+	 for (unsigned long i=0; i<cdList.size(); i++) delete cdList[i];
+         }
 
 	void constructors_test() {
 	 // let's check that the standard inner product on R^n is an iso between R^n and its dual for all n == 1,2,3,...,10, say.
          for (unsigned long dim=1; dim<11; dim++)
 	  {
-	  regina::NMarkedAbelianGroup ldom( dim, regina::NLargeInteger::zero );
-	  regina::NMarkedAbelianGroup rdom( dim, regina::NLargeInteger::zero );
-	  regina::NMarkedAbelianGroup zed( 1, regina::NLargeInteger::zero );
-	  regina::NSparseGrid< regina::NLargeInteger > pairing(3);
+	  NMarkedAbelianGroup ldom( dim, NLargeInteger::zero );
+	  NMarkedAbelianGroup rdom( dim, NLargeInteger::zero );
+	  NMarkedAbelianGroup zed( 1, NLargeInteger::zero );
+	  NSparseGrid< NLargeInteger > pairing(3);
           for (unsigned long i=0; i<dim; i++)
            {
             regina::NMultiIndex I(3);
 	    I[0]=i; I[1]=i; I[2]=0;
-	    pairing.incEntry( I, regina::NLargeInteger::one );
+	    pairing.incEntry( I, NLargeInteger::one );
            }
- 	  regina::NBilinearForm innP(ldom, rdom, zed, pairing);
+ 	  NBilinearForm innP(ldom, rdom, zed, pairing);
 	  if (!innP.leftAdjoint().isIsomorphism()) CPPUNIT_FAIL("Left-adjoint to standard inner product on R^n is not isomorphism.");
 	  if (!innP.rightAdjoint().isIsomorphism()) CPPUNIT_FAIL("Right-adjoint to standard inner product on R^n is not isomorphism.");
           if (!innP.isSymmetric()) CPPUNIT_FAIL("Standard inner product isn't symmetric.");
           if (innP.signature() != dim) CPPUNIT_FAIL("Standard inner product doesn't have full signature.");
 	  }
+        // ??
 	};
 	void symmetry_test() {
+	  
+
 	// todo
         }
 	void composition_test() {

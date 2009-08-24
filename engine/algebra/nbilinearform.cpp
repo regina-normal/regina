@@ -41,34 +41,27 @@ NBilinearForm::NBilinearForm(const NMarkedAbelianGroup &ldomain, const NMarkedAb
 			     const NMarkedAbelianGroup &range,   const NSparseGrid< NLargeInteger > &pairing) : 
 ShareableObject(), reducedPairing(NULL), unreducedPairing(NULL), lDomain(ldomain), rDomain(rdomain), Range(range)
 {
-unreducedPairing = new NSparseGrid< NLargeInteger > (pairing);
-// now we construct the reducedPairing
-reducedPairing = new NSparseGrid< NLargeInteger > (3);
+ unreducedPairing = new NSparseGrid< NLargeInteger > (pairing);
+ // now we construct the reducedPairing
+ reducedPairing = new NSparseGrid< NLargeInteger > (3);
 
-for (unsigned long i=0; i<ldomain.minNumberOfGenerators(); i++)
- { std::vector< NLargeInteger > lv(ldomain.ccRep(i));
+ for (unsigned long i=0; i<ldomain.minNumberOfGenerators(); i++)
+  { std::vector< NLargeInteger > lv(ldomain.ccRep(i));
    for (unsigned long j=0; j<rdomain.minNumberOfGenerators(); j++)
     { std::vector< NLargeInteger > rv(rdomain.ccRep(j));
       std::vector< NLargeInteger > evalcc( range.getRankCC(), NLargeInteger::zero ); // pre SNF rep
+
       // sum_{ii, jj, k} lv[ii] * rv[jj] * pairing[ii,jj,k] e_k
       // is reducedPairing[i,j,k], record if non-zero.  
       std::map< NMultiIndex, NLargeInteger* >::const_iterator I;
       for (I=pairing.getGrid().begin(); I!=pairing.getGrid().end(); I++)
 	 evalcc[ I->first.entry(2) ] += lv[ I->first.entry(0) ] * rv[ I->first.entry(1) ] * (*(I->second));
 
-if ( !range.isCycle(evalcc) ) 
-{ std::cout<<"\n*("<<i<<","<<j<<") not cycle, bdry == ";
-  std::vector<NLargeInteger> EV(range.boundaryMap(evalcc));
-  for (unsigned long k=0; k<EV.size(); k++) std::cout<<EV[k]<<" "; }
-
       std::vector< NLargeInteger > evalsnf( range.snfRep( evalcc ) );
-      for (unsigned long k=0; k<evalsnf.size(); k++) if (evalsnf[k] != 0) 
-	{
-	 NMultiIndex J(3); J[0]=i; J[1]=j; J[2]=k;
-	 reducedPairing->setEntry( J, evalsnf[k] );
-	}
+      NMultiIndex J(3); J[0] = i; J[1]=j;
+      for (J[2]=0; J[2]<evalsnf.size(); J[2]++) reducedPairing->setEntry( J, evalsnf[J[2]] );
     }
- }
+  }
 }
 
 NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe) : ShareableObject(),
@@ -81,10 +74,10 @@ NBilinearForm::~NBilinearForm()
 
 NBilinearForm& NBilinearForm::operator = (const NBilinearForm& cloneMe)
 {
-if (reducedPairing) delete reducedPairing;
-if (unreducedPairing) delete unreducedPairing;
-reducedPairing = clonePtr(cloneMe.reducedPairing);
-unreducedPairing = clonePtr(cloneMe.unreducedPairing);
+ if (reducedPairing) delete reducedPairing;
+ if (unreducedPairing) delete unreducedPairing;
+ reducedPairing = clonePtr(cloneMe.reducedPairing);
+ unreducedPairing = clonePtr(cloneMe.unreducedPairing);
 }
 
 const std::map< NMultiIndex, NLargeInteger* > & NBilinearForm::unreducedMap() const

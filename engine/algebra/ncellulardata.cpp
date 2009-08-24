@@ -2368,28 +2368,24 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	    // for orientation we need to compare normal orientation of these edges to product normal orientations
            unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri3->edgeIndex( edg ) ) - dcIx[2].begin() );
 	   NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j;
-// x[2] error? 
+
 	   // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge in the face, so we apply
 	   // facinc to that, then get the corresp edge number
 	   NPerm4 facinc( fac->getEmbedding(1).getVertices() );
-	   NPerm4 edginc( tet->getEdgeMapping( NEdge::edgeNumber[facinc[fac->getEdgeMapping(j)[0]]][facinc[fac->getEdgeMapping(j)[1]]] ) );
+	   NPerm4 edginc( tet->getEdgeMapping( NEdge::edgeNumber[facinc[(j+1)%3]][facinc[(j+2)%3]] ) );
            // edginc[2,3] give orientation of part of dual 2-cell in this tet...
 	   // normalize edginc to ambient orientation
 	   if (tet->orientation() != edginc.sign()) edginc = edginc * NPerm4(0,1);
-	   unsigned long oppfac ( edginc[2] == fac->getEmbedding(1).getFace() ? edginc[3] : edginc[2] );
-           unsigned long facnum ( fac->getEmbedding(1).getFace() );
+	   int inoutor(1);
+           if (tet->orientation() != facinc.sign()) inoutor = -1;
+	   NPerm4 dualor( facinc[j], edginc[0], edginc[1], facinc[3]);           
 
-           NPerm4 relor( edginc[0], edginc[1], ( (tet->orientation()==1) ? facnum : oppfac), 
-                                               ( (tet->orientation()==1) ? oppfac : facnum) );
-
-           intM.incEntry( x, ( relor.sign() == tet->orientation() ? 1 : -1 ) );
-
+           intM.setEntry( x, dualor.sign()*inoutor*tet->orientation() );
+	
 	  }
 	}
       }
     }
-
-//intM.writeTextShort(std::cout);
 
    bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
    std::map< FormLocator, NBilinearForm* > *mbfptr = 

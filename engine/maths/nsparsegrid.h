@@ -250,6 +250,7 @@ template <class T>
 inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, const T &val )
 {
 // determine if multi-index I is in grid, if so replace by val
+ if (val == 0) return;
  typename std::map< NMultiIndex, T* >::iterator p;
  p = grid.find( I );
  if ( p != grid.end() ) {(*(p->second)) = val;}
@@ -260,12 +261,12 @@ inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, const T &val )
 template <class T>
 inline void NSparseGrid<T>::incEntry( const NMultiIndex & I, const T & val )
 {
- if (val == T::zero) return;
+ if (val == 0) return;
  typename std::map< NMultiIndex, T* >::iterator p;
  p = grid.find( I );
  if ( p != grid.end() ) 
   { (*(p->second)) += val;
-    if ( (*(p->second)) == T::zero) { delete p->second; grid.erase(p); }
+    if ( (*(p->second)) == 0) { delete p->second; grid.erase(p); }
   }
  else grid[I] = new T(val);
 }
