@@ -910,6 +910,13 @@ void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
     }
 }
 
+void NHomMarkedAbelianGroup::writeTextLong(std::ostream& out) const
+{
+ out<<"hom[ "; domain.writeTextShort(out); out<<" --> ";
+ range.writeTextShort(out); out<<" ] ";
+ writeTextShort(out);
+}
+
 
 bool NHomMarkedAbelianGroup::isIdentity() const
 {

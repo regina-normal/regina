@@ -56,14 +56,11 @@ namespace regina {
  * and Kawauchi-Kojima invariants of the bilinear forms coming from Poincare duality on a 4 or
  * 3-manifold respectively. 
  *
- * TODO : 1) is(Anti)Symmetric not functional yet.  compare image() with NHomologicalData imgH2Form().  
- *           Check functionality of adjoints.
+ * TODO : 1) Check functionality of adjoints -- they appear broken.
  *        
  *        2) Specify different methods of computation -- have an enum that allows for honest computations
  *        where for example the domain of the leftAdjoint would satisfy isEqualTo(A), etc, vs one where
  *        only isIsomorphicTo(A) would be satisfied -- one using unreducedPairing, the other reducedPairing, etc.
- *
- *        3) rcompose and lcompose are broken. 
  *
  * @author Ryan Budney
  */
@@ -202,7 +199,6 @@ class NBilinearForm : public ShareableObject {
 	 * Form is a bilinear function A x B --> C, this returns C.
 	 */
 	const NMarkedAbelianGroup& range() const;
-
 
         /**
          * todo! maybe talk about nullity, symmetry, l/rdomain, range, etc.

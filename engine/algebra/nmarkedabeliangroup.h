@@ -746,6 +746,13 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         virtual void writeTextShort(std::ostream& out) const;
 
         /**
+         * A more detailed text representation of the homomorphism.
+         *
+         * @param out the stream to write to.
+         */
+	virtual void writeTextLong(std::ostream& out) const;
+
+        /**
          * Returns the domain of this homomorphism.
          *
          * @return the domain that was used to define the homomorphism.

@@ -2322,6 +2322,7 @@ return retval;
 const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) const
 {
  unsigned long aDim( tri3 ? 3 : 4 );
+ NBilinearForm* bfptr(NULL);
 
  std::map< FormLocator, NBilinearForm* >::const_iterator p;
  p = bilinearForms.find(f_desc);
@@ -2332,9 +2333,10 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 
  // case 2: intersection products i+j >= n == aDim
  //         (dual)H_i(M;R) x (std rel)H_j(M,P;R) --> (mix)H_{(i+j)-n}(M;R) (a)
- // also     (std)H_i(M;R) x (std rel)H_j(M,P;R) --> (std)H_{(i+j)-n}(M;R) 
- //          (std)H_i(M;R) x     (std)H_j(M,P;R) --> (std)H_{(i+j)-n}(M;R) 
- // we start with the most elementary intersection product... (a)
+ // also     (std)H_i(M;R) x (std rel)H_j(M,P;R) --> (mix)H_{(i+j)-n}(M;R) (b)  (b) and (c) are "convienience pairings" 
+ //         (dual)H_i(M;R) x    (dual)H_j(M,P;R) --> (mix)H_{(i+j)-n}(M;R) (c)  computed via (a) and various natural 
+ // we start with the most elementary intersection product... (a)               change-of-coordinate maps
+
  if ( ( f_desc.ft == intersectionForm ) &&
       ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
       ( f_desc.ldomain.dim + f_desc.rdomain.dim >= aDim ) &&
@@ -2350,8 +2352,6 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
    const NMarkedAbelianGroup* rAng( markedGroup( GroupLocator( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim,
 					coVariant, MIX_coord, f_desc.ldomain.cof ) ) );
    NSparseGrid< NLargeInteger > intM(3); 
-
-   NBilinearForm* bfptr(NULL);
    // aDim==3  1,2, 2,1  to H_0 // 2,2  to H_1
    // aDim==4  1,3, 2,2, 3,1 to H_0 // 2,3, 3,2  to H_1 // 3,3  to H_2   
    if ( (aDim==3) && (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) )
@@ -2368,7 +2368,6 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	    // for orientation we need to compare normal orientation of these edges to product normal orientations
            unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri3->edgeIndex( edg ) ) - dcIx[2].begin() );
 	   NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j;
-
 	   // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge in the face, so we apply
 	   // facinc to that, then get the corresp edge number
 	   NPerm4 facinc( fac->getEmbedding(1).getVertices() );
@@ -2379,11 +2378,21 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	   int inoutor(1);
            if (tet->orientation() != facinc.sign()) inoutor = -1;
 	   NPerm4 dualor( facinc[j], edginc[0], edginc[1], facinc[3]);           
-
            intM.setEntry( x, dualor.sign()*inoutor*tet->orientation() );
-	
 	  }
 	}
+      }
+    }
+   if ( (aDim==3) && (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 1) )
+    {// aDim==3, (dual)H_2 x (std_rel)H_1 --> (mix)H_0
+     for (unsigned long i=0; i<numRelativeCells[1]; i++)
+      {
+       const NEdge* edg( tri3->getEdge( rIx[1][i] ) ); 
+       const NTetrahedron* tet( edg->getEmbedding(0).getTetrahedron() );
+       unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[1][i] ) - dcIx[2].begin() );
+       NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + i;
+       NPerm4 edginc( edg->getEmbedding(0).getVertices() );
+       intM.setEntry( x, edginc.sign()*tet->orientation() );
       }
     }
 
@@ -2393,6 +2402,58 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
    mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
    return bfptr; 
   }
+ if ( ( f_desc.ft == intersectionForm ) &&
+      ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
+      ( f_desc.ldomain.dim + f_desc.rdomain.dim >= aDim ) &&
+      ( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim < aDim - 1 ) &&
+      ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) &&
+      ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
+      ( f_desc.ldomain.hcs == DUAL_coord ) && (f_desc.rdomain.hcs == DUAL_coord) )
+  { // convienience pairing -- the DUAL x DUAL --> MIX pairing
+      GroupLocator dc( f_desc.rdomain.dim, coVariant, DUAL_coord,         f_desc.rdomain.cof );
+      GroupLocator mc( f_desc.rdomain.dim, coVariant, MIX_coord,          f_desc.rdomain.cof );
+      GroupLocator sc( f_desc.rdomain.dim, coVariant, STD_coord,          f_desc.rdomain.cof );
+      GroupLocator sb( f_desc.rdomain.dim, coVariant, STD_REL_BDRY_coord, f_desc.rdomain.cof );
+
+      const NHomMarkedAbelianGroup* sc_sb(homGroup( HomLocator( sc, sb ) ) );
+      const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
+      const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
+
+      NHomMarkedAbelianGroup f( (*sc_sb) * (sc_mc->inverseHom()) * (*dc_mc) );
+
+      FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
+
+      bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(f) );
+     std::map< FormLocator, NBilinearForm* > *mbfptr = 
+       const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
+      mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+     return bfptr; 
+  }
+ if ( ( f_desc.ft == intersectionForm ) &&
+      ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
+      ( f_desc.ldomain.dim + f_desc.rdomain.dim >= aDim ) &&
+      ( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim < aDim - 1 ) &&
+      ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) &&
+      ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
+      ( f_desc.ldomain.hcs == STD_coord ) && (f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
+  { // convienience pairing -- the STD x STD_REL_BDRY --> MIX pairing
+      GroupLocator dc( f_desc.rdomain.dim, coVariant, DUAL_coord,         f_desc.rdomain.cof );
+      GroupLocator mc( f_desc.rdomain.dim, coVariant, MIX_coord,          f_desc.rdomain.cof );
+      GroupLocator sc( f_desc.rdomain.dim, coVariant, STD_coord,          f_desc.rdomain.cof );
+      const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
+      const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
+
+      NHomMarkedAbelianGroup f( (dc_mc->inverseHom()) * (*sc_mc) );
+      
+      FormLocator prim(f_desc); prim.ldomain.hcs = DUAL_coord;
+
+      bfptr = new NBilinearForm( bilinearForm(prim)->lCompose(f) );
+      std::map< FormLocator, NBilinearForm* > *mbfptr = 
+       const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
+      mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+      return bfptr; 
+  }
+
 
  // case 3: torsion linking forms
 
