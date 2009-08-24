@@ -271,7 +271,7 @@ void fillStandardHomologyCC(const Dim4Triangulation* tri,
     sCC[5] = new NMatrixInt(numStandardCells[4], 1);
 
     // various useful pointers, index holders.
-    const Dim4Edge* edg;  const Dim4Face* fac; const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+    const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
     unsigned long I;
     
     // now we fill them out, first sCC.  sCC[0] is zero, 
@@ -395,7 +395,7 @@ void fillStandardHomologyCC(const NTriangulation* tri,
     sCC[4] = new NMatrixInt(numStandardCells[3], 1);
 
     // various useful pointers, index holders.
-    const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
+    const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long I;
     
     // now we fill them out, first sCC.  sCC[0] is zero, 
@@ -506,8 +506,8 @@ void fillDualHomologyCC(const Dim4Triangulation* tri, const unsigned long numDua
     dCC[5] = new NMatrixInt(numDualCells[4], 1);
 
     // various useful pointers, index holders.
-    const Dim4Vertex* vrt;  const Dim4Edge* edg;  const Dim4Face* fac; 
-	const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+    const Dim4Vertex* vrt(NULL);  const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); 
+	const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
     unsigned long J;
 
     unsigned long D = 1; // outer loop the row parameter. We start with dCC[1]
@@ -584,7 +584,7 @@ void fillDualHomologyCC(const NTriangulation* tri, const unsigned long numDualCe
     dCC[4] = new NMatrixInt(numDualCells[3], 1);
 
     // various useful pointers, index holders.
-    const NVertex* vrt;  const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
+    const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long J;
 
     unsigned long D = 1; // outer loop the row parameter. We start with dCC[1]
@@ -670,8 +670,8 @@ void fillMixedHomologyCC(const Dim4Triangulation* tri,
     mCC[5] = new NMatrixInt(numMixCells[4], 1);
 
    // various useful pointers, index holders.
-    const Dim4Vertex* vrt;  const Dim4Edge* edg;  const Dim4Face* fac; 
-	const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+    const Dim4Vertex* vrt(NULL);  const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); 
+	const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
     unsigned long I;
    // we'll also need to remember some placeholder indices
    unsigned long ri1 = numNonIdealCells[0];        unsigned long ri2 = ri1 + numNonIdealCells[1];
@@ -891,7 +891,7 @@ void fillMixedHomologyCC(const NTriangulation* tri,
     mCC[4] = new NMatrixInt(numMixCells[3], 1);
 
    // various useful pointers, index holders.
-    const NVertex* vrt;  const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
+    const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long I;
    // we'll also need to remember some placeholder indices
    unsigned long ri1 = numNonIdealCells[0];        unsigned long ri2 = ri1 + numNonIdealCells[1];
@@ -1031,7 +1031,7 @@ void fillBoundaryHomologyCC(const Dim4Triangulation* tri,
     bsCC[4] = new NMatrixInt(numStandardBdryCells[3], 1);
 
     // various useful pointers, index holders.
-    const Dim4Edge* edg;  const Dim4Face* fac; const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+    const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
     unsigned long I;
 
     // now we fill them out, first bsCC.  bsCC[0] is zero, 
@@ -1138,7 +1138,7 @@ void fillBoundaryHomologyCC(const NTriangulation* tri,
     bsCC[3] = new NMatrixInt(numStandardBdryCells[2], 1);
 
     // various useful pointers, index holders.
-    const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
+    const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long I;
     
     // now we fill them out, first bsCC.  bsCC[0] is zero, 
@@ -1213,7 +1213,7 @@ void fillRelativeHomologyCC(const Dim4Triangulation* tri,
     rCC[5] = new NMatrixInt(numRelativeCells[4], 1);
 
     // various useful pointers, index holders.
-    const Dim4Edge* edg;  const Dim4Face* fac; const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+    const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
     unsigned long I;
     
     // now we fill them out, first rCC.  rCC[0] is zero, 
@@ -1280,7 +1280,7 @@ void fillRelativeHomologyCC(const NTriangulation* tri,
     rCC[4] = new NMatrixInt(numRelativeCells[3], 1);
 
     // various useful pointers, index holders.
-    const NEdge* edg;  const NFace* fac; const NTetrahedron* tet;
+    const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL);
     unsigned long I;
     
     // now we fill them out, first rCC.  rCC[0] is zero, 
@@ -1352,8 +1352,8 @@ void fillDualToMixedHomCM( const Dim4Triangulation* tri, const unsigned long num
  delta[4] = 0;
 
  // various useful pointers, index holders.
- const Dim4Vertex* vrt;  const Dim4Edge* edg;  const Dim4Face* fac; 
-   const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+ const Dim4Vertex* vrt(NULL);  const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); 
+   const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
  unsigned long J;
 
  for (unsigned long j=0; j<numNonIdealCells[4]; j++)
@@ -1416,8 +1416,8 @@ void fillDualToMixedHomCM( const NTriangulation* tri, const unsigned long numDua
  delta[3] = 0;
 
  // various useful pointers, index holders.
- const NVertex* vrt;  const NEdge* edg;  const NFace* fac; 
-   const NTetrahedron* tet; 
+ const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NFace* fac(NULL); 
+   const NTetrahedron* tet(NULL); 
  unsigned long J;
 
  for (unsigned long j=0; j<numNonIdealCells[3]; j++)
@@ -1507,7 +1507,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
 
  unsigned long I;
  // various useful pointers, index holders.
- const Dim4Edge* edg;  const Dim4Face* fac; const Dim4Tetrahedron* tet; const Dim4Pentachoron* pen;
+ const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
  // boundary relative 1-cells
  unsigned long D=1;
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
@@ -1602,7 +1602,7 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
 
  unsigned long I;
  // various useful pointers, index holders.
- const NEdge* edg;  const NFace* fac; const NTetrahedron* tet; 
+ const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
 
  // boundary relative 1-cells
  unsigned long D=1;

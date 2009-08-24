@@ -88,16 +88,28 @@ class Dim4Triangulation;
  *       and since we already control initialization/destruction via NCellularData, can avoid any pointer
  *       troubles.
  * \todo Detailed fundamental group presentations and maps bdry -> M, etc. 
- * \todo test suit for polynomials, bilinearforms, ncellulardata, fundamental group stuff.
+ * \todo test suit for: bilinearforms, ncellulardata, fundamental group stuff.
  *
  * @author Ryan Budney
  */
 class NCellularData : public ShareableObject {
 public:
 
+ /**
+  * This enum specifies the coordinate system to use in a (co)homology computation. See
+  * NCellularData::unmarkedGroup, markedGroup, homGroup, bilinearForm for usage.
+  */
  enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord, STD_BDRY_coord, STD_REL_BDRY_coord };
+ /**
+  * Use this to specify if you want homology (coVariant) or cohomology (contraVariant) in a (co)homology
+  * computation. See NCellularData::unmarkedGroup, markedGroup, homGroup, bilinearForm for usage.
+  */
  enum variance_type { coVariant, contraVariant }; // homology / cohomology specifier
 
+ /**
+  * NCellularData has several routines that require GroupLocator objects as arguments: unmarkedGroup, markedGroup, 
+  *  homGroup, bilinearForm.   See NCellularData::unmarkedGroup, markedGroup, homGroup and bilinearForm for usage.
+  */
  struct GroupLocator {
         // if its an unMarkedGroup or MarkedGroup we need to know dimension, variance, coordinates, coefficients
         unsigned long dim;
@@ -105,6 +117,9 @@ public:
 	homology_coordinate_system hcs;	
 	unsigned long cof;
 
+	/**
+	 *  Constructor.
+	 */
 	GroupLocator(unsigned long newDim, variance_type newVar, homology_coordinate_system useHcs, 
 			unsigned long useCof);
         GroupLocator(const GroupLocator &cloneMe);
@@ -117,10 +132,16 @@ public:
         virtual void writeTextLong(std::ostream& out) const;
  };
 
+ /**
+  * NCellularData::homGroup requires a HomLocator object as an argument.   
+  */
  struct HomLocator {
 	GroupLocator domain;
 	GroupLocator range;
 
+	/**
+	 *  Constructor.
+	 */
 	HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange);
 	HomLocator(const HomLocator &cloneMe);
 
@@ -132,13 +153,23 @@ public:
         virtual void writeTextLong(std::ostream& out) const;
  };
 
+ /**
+  * Use this enum in the FormLocator constructor to further specify which NBilinearForm
+  *  you're interested in. 
+  */
  enum form_type { intersectionForm, torsionlinkingForm, evaluationForm };
 
+ /**
+  * NCellularData::bilinearForm requires a FormLocator object as an argument.   
+  */
  struct FormLocator {
 	GroupLocator ldomain;
 	GroupLocator rdomain;
         form_type ft;
 
+	/**
+	 *  Constructor.
+	 */
 	FormLocator(form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain);
 	FormLocator(const FormLocator &cloneMe);
 
