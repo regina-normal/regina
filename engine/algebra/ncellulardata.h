@@ -381,6 +381,12 @@ public:
     NSVPolynomialRing poincarePolynomial() const;
 
     /**
+     *  If this is a 4-manifold, this routine returns the signature of the H_2 intersection form.
+     *
+     */
+    long int signature() const;
+
+    /**
      * Verifies that the maps used to define the various homology groups for the manifold are
      * actually chain complexes. 
      *
@@ -598,11 +604,15 @@ inline unsigned long NCellularData::relativeCellCount(unsigned dimension) const
 inline long int NCellularData::eulerChar() const
 { return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3]+numDualCells[4]; }
 
+inline long int NCellularData::signature() const
+{
+ if (tri3) return 0; if (!tri4->isOrientable()) return 0;
+ const NBilinearForm* b = bilinearForm( 
+       FormLocator( intersectionForm, GroupLocator(2, coVariant, DUAL_coord, 0), GroupLocator(2, coVariant, DUAL_coord, 0) ) );
+ return b->signature();
+}
+
 // GroupLocator and HomLocator
-
-//inline NCellularData::GroupLocator::~GroupLocator() {}
-
-//inline NCellularData::HomLocator::~HomLocator() {}
 
 inline NCellularData::GroupLocator::GroupLocator(unsigned long newDim, variance_type newVar,
 	 homology_coordinate_system useHcs, unsigned long useCof) :

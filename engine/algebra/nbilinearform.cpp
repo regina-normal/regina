@@ -88,28 +88,28 @@ const std::map< NMultiIndex, NLargeInteger* > & NBilinearForm::reducedMap() cons
 
 
 
-unsigned long NBilinearForm::signature() const 
+long int NBilinearForm::signature() const 
 {
-if (!isSymmetric()) return 0; 
-if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, NLargeInteger::zero))) return 0;
-// ldomain == rdomain, form symmetric, range == Z.
-// so reducedpairing is nxnx1 -- think of it as a matrix M, computed Det(tI-M)
-NMatrixRing< NSVPolynomialRing > cM( lDomain.getRank(), rDomain.getRank() );
-// iterate through reducedPairing, insert into cM
-std::map< NMultiIndex, NLargeInteger* >::const_iterator i;
-for (i = reducedPairing->getGrid().begin(); i!=reducedPairing->getGrid().end(); i++)
- { 
+ if (!isSymmetric()) return 0; 
+ if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, NLargeInteger::zero))) return 0;
+ // ldomain == rdomain, form symmetric, range == Z.
+ // so reducedpairing is nxnx1 -- think of it as a matrix M, computed Det(tI-M)
+ NMatrixRing< NSVPolynomialRing > cM( lDomain.getRank(), rDomain.getRank() );
+ // iterate through reducedPairing, insert into cM
+ std::map< NMultiIndex, NLargeInteger* >::const_iterator i;
+ for (i = reducedPairing->getGrid().begin(); i!=reducedPairing->getGrid().end(); i++)
+  { 
   if ( (i->first.entry(0) >= lDomain.getNumberOfInvariantFactors()) &&
        (i->first.entry(1) >= rDomain.getNumberOfInvariantFactors()) )
   cM.entry( i->first.entry(0) - lDomain.getNumberOfInvariantFactors() , 
             i->first.entry(1) - rDomain.getNumberOfInvariantFactors() ) = 
             NSVPolynomialRing(-(*i->second), 0); }
-// add t down diagonal
-for (unsigned long j=0; j<cM.rows(); j++) cM.entry(j,j) += NSVPolynomialRing::pvar;
-// grab an adjoint, get its defining matrix, compute char poly, use Descartes
-// to get number of pos - neg roots. 
-NSVPolynomialRing charPoly(cM.det());
-return charPoly.descartesNo();
+ // add t down diagonal
+ for (unsigned long j=0; j<cM.rows(); j++) cM.entry(j,j) += NSVPolynomialRing::pvar;
+ // grab an adjoint, get its defining matrix, compute char poly, use Descartes
+ // to get number of pos - neg roots. 
+ NSVPolynomialRing charPoly(cM.det());
+ return charPoly.descartesNo();
 }
 
 
@@ -146,23 +146,21 @@ return true;
 
 NMarkedAbelianGroup NBilinearForm::image() const
 { 
-// lets compute the image based off of the reducedpairing. 
-NMarkedAbelianGroup dom( lDomain.minNumberOfGenerators()*rDomain.minNumberOfGenerators(), NLargeInteger::zero );
-NMatrixInt mat( Range.minNumberOfGenerators(), dom.minNumberOfGenerators() );
-// fill mat -- we'll do this with an iterator through reducedPairing
-std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
-for (J = reducedPairing->getGrid().begin(); J!=reducedPairing->getGrid().end(); J++)
-  mat.entry( J->first.entry(2), J->first.entry(0)*rDomain.minNumberOfGenerators() + J->first.entry(1) ) = (*J->second);
-// now find an NMarkedAbelianGroup with the right presentation for Range such that mat makes sense as a map..
-NMatrixInt zeroM(1, Range.minNumberOfGenerators() );
-NMatrixInt redN( Range.minNumberOfGenerators(), Range.getNumberOfInvariantFactors() );
-for (unsigned long i=0; i<Range.getNumberOfInvariantFactors(); i++)
- redN.entry(i,i) = Range.getInvariantFactor(i);
-
-NMarkedAbelianGroup modRange( zeroM, redN );
-
-NHomMarkedAbelianGroup hom( dom, modRange, mat );
-return hom.getImage();
+ // lets compute the image based off of the reducedpairing. 
+ NMarkedAbelianGroup dom( lDomain.minNumberOfGenerators()*rDomain.minNumberOfGenerators(), NLargeInteger::zero );
+ NMatrixInt mat( Range.minNumberOfGenerators(), dom.minNumberOfGenerators() );
+ // fill mat -- we'll do this with an iterator through reducedPairing
+ std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
+ for (J = reducedPairing->getGrid().begin(); J!=reducedPairing->getGrid().end(); J++)
+   mat.entry( J->first.entry(2), J->first.entry(0)*rDomain.minNumberOfGenerators() + J->first.entry(1) ) = (*J->second);
+ // now find an NMarkedAbelianGroup with the right presentation for Range such that mat makes sense as a map..
+ NMatrixInt zeroM(1, Range.minNumberOfGenerators() );
+ NMatrixInt redN( Range.minNumberOfGenerators(), Range.getNumberOfInvariantFactors() );
+ for (unsigned long i=0; i<Range.getNumberOfInvariantFactors(); i++)
+  redN.entry(i,i) = Range.getInvariantFactor(i);
+ NMarkedAbelianGroup modRange( zeroM, redN );
+ NHomMarkedAbelianGroup hom( dom, modRange, mat );
+ return hom.getImage();
 }
 
 

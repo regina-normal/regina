@@ -160,7 +160,7 @@ class NSVPolynomialRing {
 	 * Returns the number of sign changes in coefficients of the polynomial P(t) - number of sign changes of P(-t) 
          * This is the number of + roots - number of - roots, provided all real.
          */
-	signed long descartesNo() const;
+	long int descartesNo() const;
 
         /**
          * Returns a string representation of this polynomial.

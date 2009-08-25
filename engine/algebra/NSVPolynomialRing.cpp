@@ -224,9 +224,9 @@ return retval;
 
 
 
-signed long NSVPolynomialRing::descartesNo() const
+long int NSVPolynomialRing::descartesNo() const
 {
-signed long retval = 0;
+long int retval = 0;
 bool signP(false), signN(false); // keeps track of signs L to R for P(t) and P(-t) respectively.
 std::map< unsigned long, NLargeInteger* >::const_iterator i;
 
