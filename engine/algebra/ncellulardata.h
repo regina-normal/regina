@@ -382,7 +382,7 @@ public:
 
     /**
      *  If this is a 4-manifold, this routine returns the signature of the H_2 intersection form.
-     *
+     * If the manifold is not orientable (or not a 4-manifold) this routine returns 0.  
      */
     long int signature() const;
 
@@ -494,15 +494,17 @@ public:
      *  is not fully implemented yet and potentially buggy.  
      *
      *  1) Homology-Cohomology pairing <.,.>  ? ie: H_i(M;R) x H^i(M;R) --> R  where R is the coefficients
+     *     (not yet implemented)
      *
-     *  2) Intersection product               ie: (dual)H_i(M;R) x (std rel bdry)H_j(M;R) --> H_{(i+j)-n}(M;R)
+     *  2) Intersection product               ie: (dual)H_i(M;R) x (std rel bdry)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
+     *     (partially implemented)                (dual)H_i(M;R) x (dual)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
+     *                                            (std)H_i(M;R) x (std rel bdry)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
      *
      *  3) Torsion linking form               ? ie: H_i(M;Z) x H_j(M;Z) --> H_{(i+j)-(n+1)}(M;Q/Z)
+     *     (not yet implemented)
      *
      *  4) cup products                       ? ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
-     *
-     *  5) Convienience pairings....  these will be various composites of (1)-(4) and objects retreived from
-     *      homGroup TODO
+     *     (not yet implemented)
      */
     const NBilinearForm* bilinearForm( const FormLocator &f_desc ) const;
 
