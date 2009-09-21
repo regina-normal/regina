@@ -37,6 +37,8 @@
 #define __PTRUTILS_H
 #endif
 
+#include <memory>
+
 namespace regina {
 
 /**
