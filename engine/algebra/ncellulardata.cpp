@@ -2318,6 +2318,29 @@ return retval;
  *  2) Intersection product               ie: H_i(M;R) x H_j(M;R) --> H_{(i+j)-n}(M;R)
  *  3) Torsion linking form               ie: H_i(M;Z) x H_j(M;Z) --> H_{(i+j)-(n-1)}(M;Q/Z)
  *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
+ *
+ *  What has been implemented:
+ *
+ *  1) nothing
+ *
+ *  2) aDim == 3:  2,2->1, 2,1->0
+ *     aDim == 4:  2,2->0
+ *
+ *  3) nothing
+ *
+ *  4) nothing
+ *
+ *  TODO:
+ *
+ *  1) ALL
+ *
+ *  2) aDim == 3:  1,2->0
+ *     aDim == 4:  1,3->0, 3,1->0, 2,3->1, 3,2->1, 3,3->2
+ *
+ *  3) aDim == 3:  1,1->0
+ *     aDim == 4:  2,1->0, 1,2->0
+ *
+ *  4) all -- implemented via Poincare duality once (2) complete
  */
 const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) const
 {
@@ -2330,6 +2353,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
  // okay, so now we know there's no form matching f_desc in bilinearForms, so we make one.
 
  // case 1: homology-cohomology pairing
+ //  TODO
 
  // case 2: intersection products i+j >= n == aDim
  //         (dual)H_i(M;R) x (std rel)H_j(M,P;R) --> (mix)H_{(i+j)-n}(M;R) (a)
@@ -2351,104 +2375,121 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
    const NMarkedAbelianGroup* rAng( markedGroup( GroupLocator( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim,
 					coVariant, MIX_coord, f_desc.ldomain.cof ) ) );
    NSparseGrid< NLargeInteger > intM(3); 
-   // aDim==3  1,2, 2,1  to H_0 // 2,2  to H_1
-   if ( (aDim==3) && (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) )
-    {// aDim==3, (dual)H_2 x (std_rel)H_2 --> (mix)H_1
-     // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
-     for (unsigned long i=0; i<numRelativeCells[2]; i++)
-      {
-       const NFace* fac( tri3->getFace( rIx[2][i] ) ); const NEdge* edg(NULL);
-       const NTetrahedron* tet( fac->getEmbedding(1).getTetrahedron() );
-       for (unsigned long j=0; j<3; j++)
-	{
-	 edg = fac->getEdge(j); if (!edg->isBoundary())
-	  { // intM[ J, i, 2*numNonIdealCells[2] + 3*i+j ] += whatever
-	    // for orientation we need to compare normal orientation of these edges to product normal orientations
-           unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri3->edgeIndex( edg ) ) - dcIx[2].begin() );
-	   NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j;
-	   // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge in the face, so we apply
-	   // facinc to that, then get the corresp edge number
-	   NPerm4 facinc( fac->getEmbedding(1).getVertices() );
-	   NPerm4 edginc( tet->getEdgeMapping( NEdge::edgeNumber[facinc[(j+1)%3]][facinc[(j+2)%3]] ) );
-           // edginc[2,3] give orientation of part of dual 2-cell in this tet...
-	   // normalize edginc to ambient orientation
-	   if (tet->orientation() != edginc.sign()) edginc = edginc * NPerm4(0,1);
-	   int inoutor(1);
-           if (tet->orientation() != facinc.sign()) inoutor = -1;
-	   NPerm4 dualor( facinc[j], edginc[0], edginc[1], facinc[3]);           
-           intM.setEntry( x, dualor.sign()*inoutor*tet->orientation() );
-	  }
-	}
-      }
-    }
-  // aDim==4  1,3, 2,2, 3,1 to H_0 // 2,3, 3,2  to H_1 // 3,3  to H_2   
-  if ( (aDim==4) && (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) )
-   { // ldomain DUAL, rdomain STD_REL_BDRY
-    for (unsigned long i=0; i<numRelativeCells[2]; i++)
-     {
-      const Dim4Face* fac( tri4->getFace( rIx[2][i] ) );
-      const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
-      NPerm5 facinc( fac->getEmbedding(0).getVertices() );
-      unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[2][i] ) - dcIx[2].begin() );
-      NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
-      intM.setEntry( x, facinc.sign() * pen->orientation() );
-     }
-   bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
-   std::map< FormLocator, NBilinearForm* > *mbfptr = 
-    const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
-   mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
-   return bfptr; 
-   }
-  if ( (aDim==3) && (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 1) )
-    {// aDim==3, (dual)H_2 x (std_rel)H_1 --> (mix)H_0
-     for (unsigned long i=0; i<numRelativeCells[1]; i++)
-      {
-       const NEdge* edg( tri3->getEdge( rIx[1][i] ) ); 
-       const NTetrahedron* tet( edg->getEmbedding(0).getTetrahedron() );
-       unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[1][i] ) - dcIx[2].begin() );
-       NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + i;
-       NPerm4 edginc( edg->getEmbedding(0).getVertices() );
-       intM.setEntry( x, edginc.sign()*tet->orientation() );
-      }
-    }
-   bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
-   std::map< FormLocator, NBilinearForm* > *mbfptr = 
-    const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
-   mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
-   return bfptr; 
-  }
- if ( ( f_desc.ft == intersectionForm ) &&
-      ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
-      ( f_desc.ldomain.dim + f_desc.rdomain.dim >= aDim ) &&
-      ( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim < aDim - 1 ) &&
-      ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) &&
-      ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
+   
+   if (aDim == 3) // aDim==3  
+    {
+
+     if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) ) // (dual)H_2 x (std_rel)H_2 --> (mix)H_1
+       for (unsigned long i=0; i<numRelativeCells[2]; i++)
+        { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
+         const NFace* fac( tri3->getFace( rIx[2][i] ) ); const NEdge* edg(NULL);
+         const NTetrahedron* tet( fac->getEmbedding(1).getTetrahedron() );
+         for (unsigned long j=0; j<3; j++)
+	  {
+	   edg = fac->getEdge(j); if (!edg->isBoundary())
+	    { // intM[ J, i, 2*numNonIdealCells[2] + 3*i+j ] += whatever
+	      // for orientation we need to compare normal orientation of these edges to product normal orientations
+             unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri3->edgeIndex( edg ) ) - dcIx[2].begin() );
+	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j;
+	     // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge in the face, so we apply
+	     // facinc to that, then get the corresp edge number
+	     NPerm4 facinc( fac->getEmbedding(1).getVertices() );
+	     NPerm4 edginc( tet->getEdgeMapping( NEdge::edgeNumber[facinc[(j+1)%3]][facinc[(j+2)%3]] ) );
+             // edginc[2,3] give orientation of part of dual 2-cell in this tet...
+	     // normalize edginc to ambient orientation
+	     if (tet->orientation() != edginc.sign()) edginc = edginc * NPerm4(0,1);
+	     int inoutor(1);
+             if (tet->orientation() != facinc.sign()) inoutor = -1;
+	     NPerm4 dualor( facinc[j], edginc[0], edginc[1], facinc[3]);           
+             intM.setEntry( x, dualor.sign()*inoutor*tet->orientation() );
+	    }
+  	  }
+        }
+
+     if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 1) )// (dual)H_2 x (std_rel)H_1 --> (mix)H_0
+       for (unsigned long i=0; i<numRelativeCells[1]; i++)
+        {
+         const NEdge* edg( tri3->getEdge( rIx[1][i] ) ); 
+         const NTetrahedron* tet( edg->getEmbedding(0).getTetrahedron() );
+         unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[1][i] ) - dcIx[2].begin() );
+         NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + i;
+         NPerm4 edginc( edg->getEmbedding(0).getVertices() );
+         intM.setEntry( x, edginc.sign()*tet->orientation() );
+        }
+
+     if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 2) )// (dual)H_1 x (std_rel)H_2 --> (mix)H_0  TODO !
+       for (unsigned long i=0; i<numRelativeCells[2]; i++)
+        {
+         const NFace* fac( tri3->getFace( rIx[2][i] ) ); 
+         const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
+         unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), rIx[2][i] ) - dcIx[1].begin() );
+         NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
+         NPerm4 facinc( fac->getEmbedding(0).getVertices() );
+         intM.setEntry( x, facinc.sign()*tet->orientation() );
+        }
+
+     bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
+     std::map< FormLocator, NBilinearForm* > *mbfptr = 
+      const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
+     mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+     return bfptr; 
+    } // end aDim == 3
+
+   
+   if ( aDim == 4 ) // aDim==4 
+    {
+     if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) ) // H_2 x H_2 --> H_0
+       for (unsigned long i=0; i<numRelativeCells[2]; i++)
+        {
+         const Dim4Face* fac( tri4->getFace( rIx[2][i] ) );
+         const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
+         NPerm5 facinc( fac->getEmbedding(0).getVertices() );
+         unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[2][i] ) - dcIx[2].begin() );
+         NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
+         intM.setEntry( x, facinc.sign() * pen->orientation() );
+        }
+     if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 3) )// TODO: H_1 x H_3 --> H_0
+	{}
+     if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 1) )// TODO: H_3 x H_1 --> H_0
+	{}
+     if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 3) )// TODO: H_2 x H_3 --> H_1
+	{}
+     if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 2) )// TODO: H_3 x H_2 --> H_1
+	{}
+     if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 3) )// TODO: H_3 x H_3 --> H_2
+	{}
+     bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
+     std::map< FormLocator, NBilinearForm* > *mbfptr = 
+      const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
+     mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+     return bfptr; 
+    } // end aDim == 4
+  } // end DUAL x STD_REL_BDRY intersectionform loop
+
+ // convienience intersection product pairings
+ if ( ( f_desc.ft == intersectionForm ) && ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
+      ( f_desc.ldomain.dim + f_desc.rdomain.dim >= aDim ) && ( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim < aDim - 1 ) &&
+      ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) && ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
       ( f_desc.ldomain.hcs == DUAL_coord ) && (f_desc.rdomain.hcs == DUAL_coord) )
   { // convienience pairing -- the DUAL x DUAL --> MIX pairing
       GroupLocator dc( f_desc.rdomain.dim, coVariant, DUAL_coord,         f_desc.rdomain.cof );
       GroupLocator mc( f_desc.rdomain.dim, coVariant, MIX_coord,          f_desc.rdomain.cof );
       GroupLocator sc( f_desc.rdomain.dim, coVariant, STD_coord,          f_desc.rdomain.cof );
       GroupLocator sb( f_desc.rdomain.dim, coVariant, STD_REL_BDRY_coord, f_desc.rdomain.cof );
-
       const NHomMarkedAbelianGroup* sc_sb(homGroup( HomLocator( sc, sb ) ) );
       const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
       const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
-
       NHomMarkedAbelianGroup f( (*sc_sb) * (sc_mc->inverseHom()) * (*dc_mc) );
       FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
-
       bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(f) );
-     std::map< FormLocator, NBilinearForm* > *mbfptr = 
+      std::map< FormLocator, NBilinearForm* > *mbfptr = 
        const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
       mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
-     return bfptr; 
+      return bfptr; 
   }
- if ( ( f_desc.ft == intersectionForm ) &&
-      ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
-      ( f_desc.ldomain.dim + f_desc.rdomain.dim >= aDim ) &&
-      ( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim < aDim - 1 ) &&
-      ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) &&
-      ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
+ if ( ( f_desc.ft == intersectionForm ) && ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
+      ( f_desc.ldomain.dim + f_desc.rdomain.dim >= aDim ) && ( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim < aDim - 1 ) &&
+      ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) && ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
       ( f_desc.ldomain.hcs == STD_coord ) && (f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
   { // convienience pairing -- the STD x STD_REL_BDRY --> MIX pairing
       GroupLocator dc( f_desc.rdomain.dim, coVariant, DUAL_coord,         f_desc.rdomain.cof );
@@ -2456,11 +2497,8 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
       GroupLocator sc( f_desc.rdomain.dim, coVariant, STD_coord,          f_desc.rdomain.cof );
       const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
       const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
-
       NHomMarkedAbelianGroup f( (dc_mc->inverseHom()) * (*sc_mc) );
-      
       FormLocator prim(f_desc); prim.ldomain.hcs = DUAL_coord;
-
       bfptr = new NBilinearForm( bilinearForm(prim)->lCompose(f) );
       std::map< FormLocator, NBilinearForm* > *mbfptr = 
        const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
@@ -2469,8 +2507,17 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
   }
 
  // case 3: torsion linking forms
+ if ( ( f_desc.ft == torsionlinkingForm) && ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
+      ( f_desc.ldomain.dim + f_desc.rdomain.dim + 1 >= aDim ) && ( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim < aDim - 1 ) &&
+      ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) && ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
+      ( f_desc.ldomain.hcs == STD_coord ) && (f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
+  { // ... H_i x H_j --> H_0(M;Q/Z)... conditions above maybe not quite right...
+    // TODO: aDim == 3:  1,1->0
+    // TODO: aDim == 4:  2,1->0, 1,2->0
+    // add in convienience pairings for various standard coordinate systems
+  }
 
- // case 4: cup products
+ // case 4: cup products implement as dual to (2) once (2) finished
 
  return NULL;
 }

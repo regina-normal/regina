@@ -88,7 +88,8 @@ class Dim4Triangulation;
  *       and since we already control initialization/destruction via NCellularData, can avoid any pointer
  *       troubles.
  * \todo Detailed fundamental group presentations and maps bdry -> M, etc. 
- * \todo test suit for: bilinearforms, ncellulardata, fundamental group stuff.
+ * \todo test suit for: bilinearforms, ncellulardata, fundamental group stuff.  Is there a memory leak somewhere?
+ *       go over constructor / destructor call sequences
  *
  * @author Ryan Budney
  */
