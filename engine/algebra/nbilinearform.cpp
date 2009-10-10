@@ -58,6 +58,7 @@ ShareableObject(), reducedPairing(NULL), unreducedPairing(NULL), lDomain(ldomain
 	 evalcc[ I->first.entry(2) ] += lv[ I->first.entry(0) ] * rv[ I->first.entry(1) ] * (*(I->second));
 
       std::vector< NLargeInteger > evalsnf( range.snfRep( evalcc ) );
+
       NMultiIndex J(3); J[0] = i; J[1]=j;
       for (J[2]=0; J[2]<evalsnf.size(); J[2]++) reducedPairing->setEntry( J, evalsnf[J[2]] );
     }
@@ -272,28 +273,62 @@ return NBilinearForm( lDomain, rDomain, f.getRange(), newPairing );
 // A x B --> C   turned into   A --> Hom(B,C)
 NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
 { 
- NMatrixInt M(1, rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
- NMatrixInt N( rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(), 
-               rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
+ NMatrixInt M( 1, rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
+ NMatrixInt N( rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(),  // Hom(B,C) presentation
+               rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() ); // matrix
 
- for (unsigned long i=0; i<rDomain.minNumberOfGenerators(); i++) for (unsigned long j=0; j<Range.minNumberOfGenerators(); j++)
-  {unsigned long k(i*Range.minNumberOfGenerators() + j);
-   if ( i < rDomain.getNumberOfInvariantFactors() )
-    { if ( j < Range.getNumberOfInvariantFactors() ) N.entry( k, k ) = rDomain.getInvariantFactor( i ).gcd( Range.getInvariantFactor( j ) );
-      else N.entry( k, k ) = rDomain.getInvariantFactor( i ); } else
-    { if ( j < Range.getNumberOfInvariantFactors() ) N.entry( k, k ) = Range.getInvariantFactor( j );
-      else N.entry( k, k ) = NLargeInteger::zero; } }
+ for (unsigned long i=0; i<rDomain.minNumberOfGenerators(); i++) 
+  for (unsigned long j=0; j<Range.minNumberOfGenerators(); j++)
+   { 
+     unsigned long k(i*Range.minNumberOfGenerators() + j);
+     if ( i < rDomain.getNumberOfInvariantFactors() )
+      { 
+        if ( j < Range.getNumberOfInvariantFactors() ) 
+         N.entry( k, k ) = rDomain.getInvariantFactor( i ).gcd( Range.getInvariantFactor( j ) );
+        else N.entry( k, k ) = NLargeInteger::one;
+      } 
+     else
+      { 
+         if ( j < Range.getNumberOfInvariantFactors() ) 
+          N.entry( k, k ) = Range.getInvariantFactor( j );
+	 else N.entry( k, k ) = NLargeInteger::zero;
+      } 
+   }
  NMarkedAbelianGroup HOM(M,N);
 
  // step 2: find matrix A --> Hom(B,C)
  NMatrixInt adjmat( rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(), lDomain.minNumberOfGenerators() );
  std::map< NMultiIndex, NLargeInteger* >::const_iterator I;
  for (I=reducedPairing->getGrid().begin(); I!=reducedPairing->getGrid().end(); I++)
-         adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + I->first.entry(2), I->first.entry(0) )
-	  = (*(I->second));
+        {
+        if ( ( I->first.entry(2) < Range.getNumberOfInvariantFactors() ) && 
+             ( I->first.entry(1) < rDomain.getNumberOfInvariantFactors() ) )
+         {
+	  NLargeInteger P( rDomain.getInvariantFactor(I->first.entry(1)) );
+	  NLargeInteger Q( Range.getInvariantFactor(I->first.entry(2)) );
+	  NLargeInteger divBy( Q.divExact( P.gcd(Q) ) ); 
+          adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + I->first.entry(2), I->first.entry(0) ) = 
+           I->second->divExact( divBy ); // okay
+         } 
+	else
+	 {
+	  adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + I->first.entry(2), I->first.entry(0) ) = 
+           (*I->second); // okay
+	 }
+        }
 
  // step 3: return the adjoint
- return NHomMarkedAbelianGroup( lDomain, HOM, adjmat );
+ //         for this we need the SNF presentation of lDomain. 
+
+ NMatrixInt lM( 1, lDomain.minNumberOfGenerators() );
+ NMatrixInt lN( lDomain.minNumberOfGenerators(), lDomain.minNumberOfGenerators() );
+
+ for (unsigned long i=0; i<lDomain.getNumberOfInvariantFactors(); i++)
+	lN.entry(i,i) = lDomain.getInvariantFactor(i);
+
+ NMarkedAbelianGroup simpleLdomain( lM, lN );
+
+ return NHomMarkedAbelianGroup( simpleLdomain, HOM, adjmat );
 }
 
 
@@ -340,6 +375,8 @@ writeTextShort(out);
 
 if (reducedPairing->getGrid().size() == 0) out<<" zero"; else
  {
+ out<<"urp: "; unreducedPairing->writeTextShort(out);
+ out<<" rp: "; reducedPairing->writeTextShort(out);
  if (isSymmetric()) out<<" symmetric"; 
  if (isAntiSymmetric()) out<<" anti-symmetric";
  out<<" image == "; image().writeTextShort(out);

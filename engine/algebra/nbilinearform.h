@@ -172,7 +172,7 @@ class NBilinearForm : public ShareableObject {
 	NBilinearForm postCompose(const NHomMarkedAbelianGroup &f) const; 
 
 	/**
-	 * Given a map A \otimes B --> C, there are two adjoints, 
+	 * Given a map A x B --> C, there are two adjoints, 
 	 *  this returns A --> Hom(B,C), the "left" adjoint. At present
          *  we use a cheap construction of this so the domain of this map
          *  will not satisfy isEqualTo(A)
@@ -180,7 +180,7 @@ class NBilinearForm : public ShareableObject {
 	NHomMarkedAbelianGroup leftAdjoint() const;
 
 	/**
-	 * Given a map A \otimes B --> C, there are two adjoints, 
+	 * Given a map A x B --> C, there are two adjoints, 
          *  this returns B --> Hom(A,C), the "right adjoint.   
 	 */
 	NHomMarkedAbelianGroup rightAdjoint() const;

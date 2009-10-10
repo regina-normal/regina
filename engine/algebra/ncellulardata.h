@@ -77,8 +77,14 @@ class Dim4Triangulation;
  *
  * \testpart
  *
+ * Current issue: appears to be an error in NBilinearForm where conversion of coordinate systems 
+ *                disregards part of image? Ah, the problem is probably in the left/rightAdjoint code.
+ *
  * \todo natural bilinear forms on a manifold, spin structures, test suite stuff: 
  *       LES of pair, natural isos, PD, detailed tests for intersection forms
+ *       currently working on the H_2xH_1->H_0, H_1xH_2->H_0 for 3-manifolds and
+ *       everything undefined except H_2xH_2->H_0 for 4-manifolds.
+ *       still need to do homology-cohomology and torsion linking form pairings.
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
@@ -89,7 +95,7 @@ class Dim4Triangulation;
  *       troubles.
  * \todo Detailed fundamental group presentations and maps bdry -> M, etc. 
  * \todo test suit for: bilinearforms, ncellulardata, fundamental group stuff.  Is there a memory leak somewhere?
- *       go over constructor / destructor call sequences
+ *       go over constructor / destructor call sequences. 
  *
  * @author Ryan Budney
  */
@@ -98,7 +104,19 @@ public:
 
  /**
   * This enum specifies the coordinate system to use in a (co)homology computation. See
-  * NCellularData::unmarkedGroup, markedGroup, homGroup, bilinearForm for usage.
+  * NCellularData::unmarkedGroup, markedGroup, homGroup, bilinearForm for usage.  Regina uses
+  * what are sometimes called ideal semi-simplicial triangulations.  This is a notion that's more
+  * general than simplicial complexes -- in Hatcher's textbook they are called Delta Complexes. 
+  * An important aspect of these triangulations is that they are not required to be locally-Euclidean
+  * at the vertices -- but the link of a vertex is required to be a co-dimension one manifold. So if one
+  * removes a regular open neighbourhood of the vertices whose links are not spheres, one gets a genuine
+  * smooth manifold with a natural CW-decomposition (pull-back of the stratification coming from the triangulation). 
+  * STD_coord is this CW-decomposition.  DUAL_coord is the dual polyhedral decomposition to this CW-decomposition. 
+  * MIX_coord is the common coordinates barycentric subdivision, this allows the constructions of the natural
+  * isomorphisms between the homology groups in various coordinate systems.  STD_REL_BDRY_coord is STD_coord relative
+  * to the boundary subcomplex -- counting both the triangulation's original boundary and the `ideal' boundary 
+  * coming from removing the regular neighbourhood of the vertices with non-sphere links.  STD_BDRY_coord is the
+  * natural CW-decomposition of the boundary such that inclusion into STD_coord is a cellular map. 
   */
  enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord, STD_BDRY_coord, STD_REL_BDRY_coord };
  /**
@@ -156,7 +174,12 @@ public:
 
  /**
   * Use this enum in the FormLocator constructor to further specify which NBilinearForm
-  *  you're interested in. 
+  *  you're interested in.  intersectionForm is the form which is dual to the cup product, 
+  *  computed by finding homologous classes in DUAL_coord and STD_REL_BDRY_coord (which are transverse)
+  *  and intersecting them there.  torsionlinkingForm is the induced pairing on the torsion classes
+  *  in shifted degree.  evaluationForm is the homology-cohomology pairing. 
+  *
+  * \todo cupproductForm
   */
  enum form_type { intersectionForm, torsionlinkingForm, evaluationForm };
 

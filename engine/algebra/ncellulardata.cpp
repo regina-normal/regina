@@ -2414,10 +2414,10 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[1][i] ) - dcIx[2].begin() );
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + i;
          NPerm4 edginc( edg->getEmbedding(0).getVertices() );
-         intM.setEntry( x, edginc.sign()*tet->orientation() );
+         intM.setEntry( x, edginc.sign()*tet->orientation() ); // error? left-adjoint should be iso. Likely a sign error.
         }
 
-     if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 2) )// (dual)H_1 x (std_rel)H_2 --> (mix)H_0  TODO !
+     if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 2) )// (dual)H_1 x (std_rel)H_2 --> (mix)H_0 
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         {
          const NFace* fac( tri3->getFace( rIx[2][i] ) ); 
@@ -2425,8 +2425,10 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), rIx[2][i] ) - dcIx[1].begin() );
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
          NPerm4 facinc( fac->getEmbedding(0).getVertices() );
-         intM.setEntry( x, facinc.sign()*tet->orientation() );
+         intM.setEntry( x, facinc.sign()*tet->orientation() ); // error?
         }
+
+//std::cout<<" intM == "; intM.writeTextShort(std::cout); std::cout<<"  ";
 
      bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
      std::map< FormLocator, NBilinearForm* > *mbfptr = 
