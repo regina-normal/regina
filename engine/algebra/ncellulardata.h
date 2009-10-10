@@ -77,12 +77,8 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * Current issue: appears to be an error in NBilinearForm where conversion of coordinate systems 
- *                disregards part of image? Ah, the problem is probably in the left/rightAdjoint code.
- *
  * \todo natural bilinear forms on a manifold, spin structures, test suite stuff: 
  *       LES of pair, natural isos, PD, detailed tests for intersection forms
- *       currently working on the H_2xH_1->H_0, H_1xH_2->H_0 for 3-manifolds and
  *       everything undefined except H_2xH_2->H_0 for 4-manifolds.
  *       still need to do homology-cohomology and torsion linking form pairings.
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed

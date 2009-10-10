@@ -2323,8 +2323,8 @@ return retval;
  *
  *  1) nothing
  *
- *  2) aDim == 3:  2,2->1, 2,1->0
- *     aDim == 4:  2,2->0
+ *  2) aDim == 3:  (2,2)->1, (1,2)->0, (2,1)->0
+ *     aDim == 4:  (2,2)->0
  *
  *  3) nothing
  *
@@ -2334,8 +2334,7 @@ return retval;
  *
  *  1) ALL
  *
- *  2) aDim == 3:  1,2->0
- *     aDim == 4:  1,3->0, 3,1->0, 2,3->1, 3,2->1, 3,3->2
+ *  2) aDim == 4:  1,3->0, 3,1->0, 2,3->1, 3,2->1, 3,3->2
  *
  *  3) aDim == 3:  1,1->0
  *     aDim == 4:  2,1->0, 1,2->0
@@ -2427,8 +2426,6 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          NPerm4 facinc( fac->getEmbedding(0).getVertices() );
          intM.setEntry( x, facinc.sign()*tet->orientation() ); // error?
         }
-
-//std::cout<<" intM == "; intM.writeTextShort(std::cout); std::cout<<"  ";
 
      bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
      std::map< FormLocator, NBilinearForm* > *mbfptr = 
