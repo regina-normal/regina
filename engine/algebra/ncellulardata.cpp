@@ -2002,6 +2002,45 @@ for (unsigned long i=0; i <= aDim; i++)
 return true;
 }
 
+bool NCellularData::intersectionFormsVerified() const
+{ // TODO
+bool retval=true;
+unsigned long aDim = 3;
+unsigned long coeff = 0;
+if (tri4) { aDim = 4; if (!tri4->isOrientable()) coeff = 2; }
+ else { if (!tri3->isOrientable()) coeff = 2; }
+// for a n-manifold we need to check if (dual)H_1 x (std_rel_bdry)H_2 --> Z
+//  has leftadj (dual)H_i --> Hom(H_{n-i}, Z) ker is torsion subgroup, and should be onto
+//
+for (unsigned long i=1; i<=(aDim/2); i++)
+ {
+  GroupLocator LDom( i, coVariant, DUAL_coord, coeff );
+  GroupLocator RDom( aDim-i, coVariant, STD_REL_BDRY_coord, coeff );
+  FormLocator intFloc( intersectionForm, LDom, RDom );
+  const NBilinearForm intF( *bilinearForm( intFloc ) );   
+  NHomMarkedAbelianGroup lHom(intF.leftAdjoint());
+  if (!lHom.isEpic()) retval=false;
+  NMarkedAbelianGroup ker(lHom.getKernel()); 
+  // todo: add test to check kernel is the torsion subgroup
+  //       in non-orientable case ker is trivial.
+  if (coeff == 2) { if (!ker.isTrivial()) retval=false; }
+  else 
+   {
+    if (ker.getRank()!= 0) { retval=false; }
+    if (ker.getNumberOfInvariantFactors() == intF.ldomain().getNumberOfInvariantFactors())
+     {
+      for (unsigned long j=0; j<ker.getNumberOfInvariantFactors(); j++)
+ 	{
+	 if (ker.getInvariantFactor(j) !=intF.ldomain().getInvariantFactor(j))
+		{ retval = false; }
+	}
+     }
+    else { retval = false;  }
+   }
+ }
+
+return retval;
+}
 
 
 void NCellularData::writeTextShort(std::ostream& out) const 

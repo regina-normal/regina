@@ -181,7 +181,7 @@ class NBilinearForm : public ShareableObject {
 
 	/**
 	 * Given a map A x B --> C, there are two adjoints, 
-         *  this returns B --> Hom(A,C), the "right adjoint.   
+         *  this returns B --> Hom(A,C), the "right" adjoint.   
 	 */
 	NHomMarkedAbelianGroup rightAdjoint() const;
 

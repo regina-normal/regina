@@ -81,6 +81,11 @@ class Dim4Triangulation;
  *       LES of pair, natural isos, PD, detailed tests for intersection forms
  *       everything undefined except H_2xH_2->H_0 for 4-manifolds.
  *       still need to do homology-cohomology and torsion linking form pairings.
+ *       finally, move all the test routines out of the NCellularData class and
+ *       put them in the test suite proper. 
+ * \todo Detailed fundamental group presentations and maps bdry -> M, etc. 
+ * \todo test suit for: bilinearforms, ncellulardata, fundamental group stuff.  Is there a memory leak somewhere?
+ *       go over constructor / destructor call sequences. 
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
@@ -89,9 +94,6 @@ class Dim4Triangulation;
  *       using pointers to pre-existing NMarkedAbelianGroups, that way they won't have to be duplicated
  *       and since we already control initialization/destruction via NCellularData, can avoid any pointer
  *       troubles.
- * \todo Detailed fundamental group presentations and maps bdry -> M, etc. 
- * \todo test suit for: bilinearforms, ncellulardata, fundamental group stuff.  Is there a memory leak somewhere?
- *       go over constructor / destructor call sequences. 
  *
  * @author Ryan Budney
  */
@@ -455,6 +457,11 @@ public:
      * coefficients, if non-orientable it uses Z_2-coefficients.
      */
     bool poincareDualityVerified() const;
+
+    /**
+     * Ensure the intersection forms do what they're supposed to do. 
+     */
+    bool intersectionFormsVerified() const;
 
     /**
      * Computes an NAbelianGroup or retrieves it from the precomputed pile. 

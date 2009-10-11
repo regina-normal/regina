@@ -55,6 +55,7 @@ class NCellularDataTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(coordinate_isomorphisms_tests); 
     CPPUNIT_TEST(homology_LES_tests);
     CPPUNIT_TEST(poincare_duality_tests); 
+    CPPUNIT_TEST(intersectionform_tests);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -129,7 +130,10 @@ class NCellularDataTest : public CppUnit::TestFixture {
 		for (unsigned long i=0; i<cdList.size(); i++)
 		 if (!cdList[i]->poincareDualityVerified()) CPPUNIT_FAIL("Poincare Duality error.");
 	}
-
+	void intersectionform_tests() {
+		for (unsigned long i=0; i<cdList.size(); i++)
+		 if (!cdList[i]->intersectionFormsVerified()) CPPUNIT_FAIL("Intersection forms misbehaving.");
+	}
 
 };
 
