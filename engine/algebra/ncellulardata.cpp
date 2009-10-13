@@ -2038,7 +2038,6 @@ for (unsigned long i=1; i<=(aDim/2); i++)
     else { retval = false;  }
    }
  }
-
 return retval;
 }
 
@@ -2362,8 +2361,8 @@ return retval;
  *
  *  1) nothing
  *
- *  2) aDim == 3:  (2,2)->1, (1,2)->0, (2,1)->0
- *     aDim == 4:  (2,2)->0
+ *  2) aDim == 3:  (1,2)->0, (2,1)->0, (2,2)->1, 
+ *     aDim == 4:  (1,3)->0, (2,2)->0, (3,1)->0,
  *
  *  3) nothing
  *
@@ -2373,9 +2372,9 @@ return retval;
  *
  *  1) ALL
  *
- *  2) aDim == 4:  (1,3)->0, (3,1)->0, (2,3)->1, (3,2)->1, (3,3)->2
+ *  2) aDim == 4:  (2,3)->1, (3,2)->1, (3,3)->2
  *
- *  3) aDim == 3:  (1,1)->0
+ *  3) aDim == 3:  (1,1)->0 
  *     aDim == 4:  (2,1)->0, (1,2)->0
  *
  *  4) all -- implemented via Poincare duality once (2) complete
@@ -2452,7 +2451,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[1][i] ) - dcIx[2].begin() );
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + i;
          NPerm4 edginc( edg->getEmbedding(0).getVertices() );
-         intM.setEntry( x, edginc.sign()*tet->orientation() ); // error? left-adjoint should be iso. Likely a sign error.
+         intM.setEntry( x, edginc.sign()*tet->orientation() ); 
         }
 
      if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 2) )// (dual)H_1 x (std_rel)H_2 --> (mix)H_0 
@@ -2463,7 +2462,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), rIx[2][i] ) - dcIx[1].begin() );
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
          NPerm4 facinc( fac->getEmbedding(0).getVertices() );
-         intM.setEntry( x, facinc.sign()*tet->orientation() ); // error?
+         intM.setEntry( x, facinc.sign()*tet->orientation() ); 
         }
 
      bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
@@ -2486,10 +2485,26 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
          intM.setEntry( x, facinc.sign() * pen->orientation() );
         }
-     if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 3) )// TODO: H_1 x H_3 --> H_0
-	{}
-     if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 1) )// TODO: H_3 x H_1 --> H_0
-	{}
+     if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 3) )// TODO: (dual)H_1 x (std_rel_bdry)H_3 --> H_0
+       for (unsigned long i=0; i<numRelativeCells[3]; i++)
+        {
+         const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[3][i] ) );
+         const Dim4Pentachoron* pen( tet->getEmbedding(0).getPentachoron() );
+         NPerm5 tetinc( tet->getEmbedding(0).getVertices() );
+         unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), rIx[3][i] ) - dcIx[1].begin() );
+         NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + i;
+         intM.setEntry( x, tetinc.sign() * pen->orientation() );
+        }
+     if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 1) )// TODO: (dual)H_3 x (std_rel_bdry)H_1 --> H_0
+      for (unsigned long i=0; i<numRelativeCells[1]; i++)
+        {
+         const Dim4Edge* edg( tri4->getEdge( rIx[1][i] ) );
+         const Dim4Pentachoron* pen( edg->getEmbedding(0).getPentachoron() );
+         NPerm5 edginc( edg->getEmbedding(0).getVertices() );
+         unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), rIx[1][i] ) - dcIx[3].begin() );
+         NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + i;
+         intM.setEntry( x, edginc.sign() * pen->orientation() );
+        }
      if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 3) )// TODO: H_2 x H_3 --> H_1
 	{}
      if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 2) )// TODO: H_3 x H_2 --> H_1
