@@ -524,7 +524,7 @@ public:
      *     (not yet implemented)
      *
      *  2) Intersection product               ie: (dual)H_i(M;R) x (std rel bdry)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
-     *     (partially implemented)                (dual)H_i(M;R) x (dual)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
+     *                                            (dual)H_i(M;R) x (dual)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
      *                                            (std)H_i(M;R) x (std rel bdry)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
      *
      *  3) Torsion linking form               ? ie: H_i(M;Z) x H_j(M;Z) --> H_{(i+j)-(n+1)}(M;Q/Z)

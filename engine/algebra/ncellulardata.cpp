@@ -2435,8 +2435,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
              // edginc[2,3] give orientation of part of dual 2-cell in this tet...
 	     // normalize edginc to ambient orientation
 	     if (tet->orientation() != edginc.sign()) edginc = edginc * NPerm4(0,1);
-	     int inoutor(1);
-             if (tet->orientation() != facinc.sign()) inoutor = -1;
+	     int inoutor = ((tet->orientation() == facinc.sign()) ? 1 : -1);
 	     NPerm4 dualor( facinc[j], edginc[0], edginc[1], facinc[3]);           
              intM.setEntry( x, dualor.sign()*inoutor*tet->orientation() );
 	    }
@@ -2505,6 +2504,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + i;
          intM.setEntry( x, edginc.sign() * pen->orientation() );
         }
+
      if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 3) )// TODO: (dual)H_2 x (std_rel_bdry)H_3 --> H_1
        for (unsigned long i=0; i<numRelativeCells[3]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
@@ -2519,9 +2519,13 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
              unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri4->faceIndex( fac ) ) - dcIx[2].begin() );
 	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*rIx[3][i] + j;
 	     NPerm5 facinc( pen->getFaceMapping( Dim4Face::faceNumber[tetinc[(j+1)%4]][tetinc[(j+2)%4]][tetinc[(j+3)%4]] ) ); 
-
+             // adjust for coherent oriented normal fibres
+	     if (facinc.sign() != pen->orientation()) facinc=facinc*NPerm5(0,1);
+	     int inoutor = ( (tetinc.sign() == pen->orientation()) ? 1 : -1 );	     
+             // the intersection is the edge from the centre of tet to the centre of fac
+             // so the intersection edge + normal orientation is represented by tetinc[j], facinc[0,1,2], tetnum in pen
 	     NPerm5 dualor( tetinc[j], facinc[0], facinc[1], facinc[2],  tet->getEmbedding(1).getTetrahedron());           
-             intM.setEntry( x, dualor.sign()*pen->orientation() ); //??
+             intM.setEntry( x, dualor.sign()*pen->orientation()*inoutor ); 
 	    }
   	  }
         }
@@ -2540,9 +2544,14 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
              unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), tri4->edgeIndex( edg ) ) - dcIx[3].begin() );
 	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j; 
 	     NPerm5 edginc( pen->getEdgeMapping( Dim4Edge::edgeNumber[facinc[(j+1)%3]][facinc[(j+2)%3]] ) ); 
+	     // adjust for coherent oriented normal fibres
+	     if (facinc.sign() != pen->orientation()) facinc = facinc*NPerm5(3,4);
+	     if (edginc.sign() != pen->orientation()) edginc = edginc*NPerm5(0,1);
+	     // the intersection is the edge from the centre of fac to the centre of edg.
+	     // so the intersection edge + normal orientation is represented by facinc[j], edginc[0,1], facinc[3,4]
 
-	     NPerm5 dualor( facinc[j], edginc[0], edginc[1], facinc[3],  facinc[4]); //??
-             intM.setEntry( x, dualor.sign()*pen->orientation() );//??
+	     NPerm5 dualor( facinc[j], edginc[0], edginc[1], facinc[3],  facinc[4]); 
+             intM.setEntry( x, dualor.sign()*pen->orientation() );
 	    }
   	  }
         }
@@ -2552,17 +2561,28 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
          const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[3][i] ) ); const Dim4Edge* edg(NULL);
          const Dim4Pentachoron* pen( tet->getEmbedding(1).getPentachoron() );
-         NPerm5 tetinc( tet->getEmbedding(1).getVertices() );
+         NPerm5 tetinc( tet->getEmbedding(1).getVertices() ); // [0,1,2,3]->tet in pen, 4->tet num in pen.
          for (unsigned long j=0; j<6; j++)
 	  {
 	   edg = tet->getEdge(j); if (!edg->isBoundary())
 	    { // intM[ J, i, 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*i+j ] += whatever
 	      // for orientation we need to compare normal orientation of intersection to product normal orientations
              unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), tri4->edgeIndex( edg ) ) - dcIx[3].begin() );
-	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 3*numNonIdealCells[2] + 6*rIx[3][i] + j;
+	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 3*numNonIdealCells[2] + 6*i + j;
+	     NPerm5 edgintet( tet->getEdgeMapping( j ) ); // [0,1] --> verts in tet, 4->4. 
+             NPerm5 ordual2cell( tetinc * edgintet ); // [0,1] --> verts in pen, 4->tet in pen
+	     NPerm5 edginc( pen->getEdgeMapping( Dim4Edge::edgeNumber[ordual2cell[0]][ordual2cell[1]] ) );
+	     // adjust for coherent oriented normal fibres
+	     if (edginc.sign() != pen->orientation()) edginc = edginc*NPerm5(0,1);
+	     int inoutor = ( (tetinc.sign() == pen->orientation()) ? 1 : -1 );	     
+             // intersection is the mixed 2-cell corresp to dual 2-cell in tet, dual to edge j.
+	     // combined orientation NPerm5 consists of tetinc[ NEdge::ordering[j][2], NEdge::ordering[j][3] ], 
+	     //  edginc[0], edginc[1], tet->getEmbedding(1).getTetrahedron()
 
-	     //NPerm5 dualor( facinc[j], edginc[0], edginc[1], facinc[3],  facinc[4]); //??
-             intM.setEntry( x, pen->orientation() );//??
+	     NPerm5 dualor( ordual2cell[2], ordual2cell[3], edginc[0], edginc[1], 
+			    tet->getEmbedding(1).getTetrahedron() ); 
+
+             intM.setEntry( x, dualor.sign()*pen->orientation()*inoutor );
 	    }
   	  }
         }

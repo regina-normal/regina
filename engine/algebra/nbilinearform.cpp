@@ -56,7 +56,7 @@ ShareableObject(), reducedPairing(NULL), unreducedPairing(NULL), lDomain(ldomain
       std::map< NMultiIndex, NLargeInteger* >::const_iterator I;
       for (I=pairing.getGrid().begin(); I!=pairing.getGrid().end(); I++)
 	 evalcc[ I->first.entry(2) ] += lv[ I->first.entry(0) ] * rv[ I->first.entry(1) ] * (*(I->second));
-
+if (!range.isCycle(evalcc)) std::cout<<"!";
       std::vector< NLargeInteger > evalsnf( range.snfRep( evalcc ) );
 
       NMultiIndex J(3); J[0] = i; J[1]=j;
