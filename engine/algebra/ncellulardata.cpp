@@ -2505,7 +2505,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          intM.setEntry( x, edginc.sign() * pen->orientation() );
         }
 
-     if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 3) )// TODO: (dual)H_2 x (std_rel_bdry)H_3 --> H_1
+     if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 3) )// (dual)H_2 x (std_rel_bdry)H_3 --> H_1
        for (unsigned long i=0; i<numRelativeCells[3]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
          const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[3][i] ) ); const Dim4Face* fac(NULL);
@@ -2530,7 +2530,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
   	  }
         }
 	
-     if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 2) )// TODO: (dual)H_3 x (std_red_bdry)H_2 --> H_1
+     if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 2) )// (dual)H_3 x (std_red_bdry)H_2 --> H_1
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
          const Dim4Face* fac( tri4->getFace( rIx[2][i] ) ); const Dim4Edge* edg(NULL);
@@ -2556,7 +2556,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
   	  }
         }
 
-     if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 3) )// TODO: (dual)H_3 x (std_rel_bdry)H_3 --> H_2
+     if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 3) )// (dual)H_3 x (std_rel_bdry)H_3 --> H_2
        for (unsigned long i=0; i<numRelativeCells[3]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
          const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[3][i] ) ); const Dim4Edge* edg(NULL);
