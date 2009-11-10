@@ -82,7 +82,10 @@ class Dim4Triangulation;
  *       everything undefined except H_2xH_2->H_0 for 4-manifolds.
  *       still need to do homology-cohomology and torsion linking form pairings.
  *       finally, move all the test routines out of the NCellularData class and
- *       put them in the test suite proper. 
+ *       put them in the test suite proper. New coordinate systems to implement:
+ *       MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
+ *       various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
+ *       cup products. 
  * \todo Detailed fundamental group presentations and maps bdry -> M, etc. 
  * \todo test suit for: bilinearforms, ncellulardata, fundamental group stuff.  Is there a memory leak somewhere?
  *       go over constructor / destructor call sequences. 
@@ -116,7 +119,8 @@ public:
   * coming from removing the regular neighbourhood of the vertices with non-sphere links.  STD_BDRY_coord is the
   * natural CW-decomposition of the boundary such that inclusion into STD_coord is a cellular map. 
   */
- enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord, STD_BDRY_coord, STD_REL_BDRY_coord };
+ enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord, STD_BDRY_coord, STD_REL_BDRY_coord,              
+                                   MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord };
  /**
   * Use this to specify if you want homology (coVariant) or cohomology (contraVariant) in a (co)homology
   * computation. See NCellularData::unmarkedGroup, markedGroup, homGroup, bilinearForm for usage.
@@ -179,7 +183,7 @@ public:
   *
   * \todo cupproductForm
   */
- enum form_type { intersectionForm, torsionlinkingForm, evaluationForm };
+ enum form_type { intersectionForm, torsionlinkingForm, evaluationForm, cupproductForm };
 
  /**
   * NCellularData::bilinearForm requires a FormLocator object as an argument.   
@@ -521,20 +525,29 @@ public:
      *  is not fully implemented yet and potentially buggy.  
      *
      *  1) Homology-Cohomology pairing <.,.>  ? ie: H_i(M;R) x H^i(M;R) --> R  where R is the coefficients
-     *     (not yet implemented)
+     *     
      *
      *  2) Intersection product               ie: (dual)H_i(M;R) x (std rel bdry)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
      *                                            (dual)H_i(M;R) x (dual)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
      *                                            (std)H_i(M;R) x (std rel bdry)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
      *
-     *  3) Torsion linking form               ? ie: H_i(M;Z) x H_j(M;Z) --> H_{(i+j)-(n+1)}(M;Q/Z)
-     *     (not yet implemented)
+     *  3) Torsion linking form               ie: tH_i(M;Z) x tH_j(M;Z) --> Q/Z 
+     *     (not yet implemented)                  when i+j=n-1, i,j>0. So for 3-manifolds only defined for i,j = 1,1
+     *						  and for 4-manifolds i,j=1,2 or 2,1. 
      *
-     *  4) cup products                       ? ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
-     *     (not yet implemented)
+     *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
+     *     (not yet implemented)              various coordinate systems  
+     *     
      */
     const NBilinearForm* bilinearForm( const FormLocator &f_desc ) const;
 
+    /**
+     *  Describes the homomorphisms from the fundamental group of the boundary components to the fundamental
+     *  group of the manifold's components.   What this algorithm does is build a maximal forest in the dual 1-skeleton
+     *  of the triangulation for the manifold, and the standard boundary, and the ideal boundary.  This allows for
+     *  a description of the inclusion maps.
+     */
+     
 };
 
 /*@}*/

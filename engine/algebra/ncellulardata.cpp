@@ -2359,25 +2359,20 @@ return retval;
  *
  *  What has been implemented:
  *
- *  1) nothing
+ *  ALL of (1) and (2).
  *
- *  2) aDim == 3:  (1,2)->0, (2,1)->0, (2,2)->1, 
- *     aDim == 4:  (1,3)->0, (2,2)->0, (3,1)->0,
- *
- *  3) nothing
+ *  3) nothing (buggy partial implementation)
  *
  *  4) nothing
  *
  *  TODO:
  *
- *  1) ALL
+ *  (2) for new coordinate systems MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord
  *
- *  2) aDim == 4:  (2,3)->1, (3,2)->1, (3,3)->2
- *
- *  3) aDim == 3:  (1,1)->0 
+ *  3) aDim == 3:  (1,1)->0 (debug)
  *     aDim == 4:  (2,1)->0, (1,2)->0
  *
- *  4) all -- implemented via Poincare duality once (2) complete
+ *  4) all -- implement via Poincare duality once (2) complete
  */
 const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) const
 {
@@ -2390,14 +2385,29 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
  // okay, so now we know there's no form matching f_desc in bilinearForms, so we make one.
 
  // case 1: homology-cohomology pairing
- //  TODO
+ if ( ( f_desc.ft == evaluationForm ) &&
+      ( f_desc.ldomain.dim == f_desc.rdomain.dim ) && (f_desc.ldomain.var != f_desc.rdomain.var) &&
+      ( f_desc.ldomain.cof == f_desc.rdomain.cof ) && (f_desc.ldomain.hcs == f_desc.rdomain.hcs) ) 
+  { // homology-cohomology pairing definable.
+   const NMarkedAbelianGroup* lDom( markedGroup(f_desc.ldomain) );
+   const NMarkedAbelianGroup* rDom( markedGroup(f_desc.rdomain) );
+   NMarkedAbelianGroup rAng( 1, f_desc.rdomain.cof );
+
+   NSparseGrid< NLargeInteger > intM(3); 
+   NMultiIndex x(3); 
+
+   for (unsigned long i=0; i<lDom->getRankCC(); i++)
+    { x[0] = i; x[1] = i; x[2] = 0;
+      intM.setEntry( x, 1 ); } 
+
+   bfptr = new NBilinearForm( *lDom, *rDom, rAng, intM );
+   std::map< FormLocator, NBilinearForm* > *mbfptr = 
+      const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
+   mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+   return bfptr; 
+  }
 
  // case 2: intersection products i+j >= n == aDim
- //         (dual)H_i(M;R) x (std rel)H_j(M,P;R) --> (mix)H_{(i+j)-n}(M;R) (a)
- // also     (std)H_i(M;R) x (std rel)H_j(M,P;R) --> (mix)H_{(i+j)-n}(M;R) (b)  (b) and (c) are "convienience pairings" 
- //         (dual)H_i(M;R) x    (dual)H_j(M,P;R) --> (mix)H_{(i+j)-n}(M;R) (c)  computed via (a) and various natural 
- // we start with the most elementary intersection product... (a)               change-of-coordinate maps
-
  if ( ( f_desc.ft == intersectionForm ) &&
       ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
       ( f_desc.ldomain.dim + f_desc.rdomain.dim >= aDim ) &&
@@ -2637,17 +2647,112 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 
  // case 3: torsion linking forms
  if ( ( f_desc.ft == torsionlinkingForm) && ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
-      ( f_desc.ldomain.dim + f_desc.rdomain.dim + 1 >= aDim ) && ( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim < aDim - 1 ) &&
-      ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) && ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
-      ( f_desc.ldomain.hcs == STD_coord ) && (f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
-  { // ... H_i x H_j --> H_0(M;Q/Z)... conditions above maybe not quite right...
+      ( f_desc.ldomain.dim + f_desc.rdomain.dim + 1 == aDim ) && ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) &&
+      ( f_desc.ldomain.cof == 0 ) && (f_desc.rdomain.cof == 0 ) && 
+      ( f_desc.ldomain.hcs == DUAL_coord ) && (f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
+  { // step 1: construct range, ldomain and rdomain.  We'll make range Z_n where n=the gcd of the order of the torsion subgroups of
+    //         ldomain and rdomain respectively... ie: n == gcd(a,b) a, b largest inv. facs ldomain,rdomain.
+    GroupLocator ldd( f_desc.ldomain.dim, f_desc.ldomain.var, f_desc.ldomain.hcs, f_desc.ldomain.cof );
+    GroupLocator rdd( f_desc.rdomain.dim, f_desc.rdomain.var, f_desc.rdomain.hcs, f_desc.rdomain.cof );
+    const NMarkedAbelianGroup* ld(markedGroup(ldd)); 
+    const NMarkedAbelianGroup* rd(markedGroup(rdd));
+     // now we build ldomain and rdomain
+    NMatrixInt presL( ld->getNumberOfInvariantFactors(), ld->getNumberOfInvariantFactors() );
+    NMatrixInt presR( rd->getNumberOfInvariantFactors(), rd->getNumberOfInvariantFactors() );
+    NMatrixInt lnull( 1, ld->getNumberOfInvariantFactors() );
+    NMatrixInt rnull( 1, rd->getNumberOfInvariantFactors() );
+    for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
+	presL.entry(i,i) = ld->getInvariantFactor(i); 
+    for (unsigned long i=0; i<rd->getNumberOfInvariantFactors(); i++)
+	presR.entry(i,i) = rd->getInvariantFactor(i); 
+    NMarkedAbelianGroup ldomain( lnull, presL );
+    NMarkedAbelianGroup rdomain( rnull, presR );
+    NLargeInteger N(NLargeInteger::one);
+    if ( !ldomain.isTrivial() && !rdomain.isTrivial() ) N=ld->getInvariantFactor( ld->getNumberOfInvariantFactors()-1 ).gcd(
+							rd->getInvariantFactor( rd->getNumberOfInvariantFactors()-1 ) );
+    NMarkedAbelianGroup range( 1, N ); // Z_N with triv pres 0 --> Z --N--> Z --> Z_N --> 0
+    NSparseGrid< NLargeInteger > intM(3); 
+
+    // step 2: dimension-specific constructions
     // TODO: aDim == 3:  1,1->0
-    // TODO: aDim == 4:  2,1->0, 1,2->0
+    // currently having trouble with lens spaces...
+    if (aDim == 3)
+     {
+	for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
+ 	 for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
+	  {
+	   // take ccRep(j), multiply by order rd->getInvariantFactor(j), apply writeAsBoundary, 
+           std::vector< NLargeInteger > rFac( rd->getTorsionRep(j) );
+           for (unsigned long k=0; k<rFac.size(); k++) rFac[k]*=rd->getInvariantFactor(j);
+           std::vector< NLargeInteger > std_rel_bdry_2vec( rd->writeAsBoundary( rFac ) ); // error!
+           std::vector< NLargeInteger > dual_1vec( ld->getTorsionRep(i) );
+	   // intersect with ld->getInvariantFactor(i)
+	   NLargeInteger sum(NLargeInteger::zero);
+std::cout<<" / ";
+           for (unsigned long k=0; k<dual_1vec.size(); k++)
+            {
+             const NFace* fac( tri3->getFace( rIx[2][i] ) ); 
+             const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
+             NPerm4 facinc( fac->getEmbedding(0).getVertices() );
+            sum += std_rel_bdry_2vec[k]*dual_1vec[k]*facinc.sign()*tet->orientation(); // orientation convention...
+std::cout<<" "<<std_rel_bdry_2vec[k]<<" "<<dual_1vec[k]<<" "<<facinc.sign()<<" "<<tet->orientation()<<" "; std::cout.flush();
+            }
+           // rescale sum, check if relevant, append to intM if so...
+           sum *= N; sum /= rd->getInvariantFactor(j);
+           sum %= N; if (sum < NLargeInteger::zero) sum += N;
+           NMultiIndex x(3); x[0] = i; x[1] = j; x[2] = 0; 
+std::cout<<"."; std::cout.flush();
+           if (sum != NLargeInteger::zero) intM.setEntry( x, sum );
+	  }
+     }
+    
+    // TODO: aDim == 4:  2,1->0
+    if ( (aDim == 4) && (f_desc.ldomain.dim == 2) )
+     {
+	for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
+ 	 for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
+	  {
+	  }
+     } 
+    // TODO: aDim == 4: 1,2->0
+    if ( (aDim == 4) && (f_desc.ldomain.dim == 1) )
+     {
+ 	for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
+ 	 for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
+	  {
+	  }
+    } 
+
+     bfptr = new NBilinearForm( ldomain, rdomain, range, intM );
+     std::map< FormLocator, NBilinearForm* > *fptr = 
+      const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
+     fptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+     return bfptr; 
+
     // add in convienience pairings for various standard coordinate systems
   }
 
- // case 4: cup products implement as dual to (2) once (2) finished
-
+ // case 4: cup products
+ //         a) std_rel_bdry x dual
+ //         b) std_rel_bdry x std_rel_bdry
+ //         c) std_rel_bdry x std
+ //         d) std x std
+ //         e) dual x dual
+ if ( ( f_desc.ft == cupproductForm ) &&
+      ( f_desc.ldomain.var == contraVariant ) && ( f_desc.rdomain.var == contraVariant ) &&
+      ( f_desc.ldomain.dim + f_desc.rdomain.dim <= aDim ) &&
+      ( f_desc.ldomain.dim > 0 ) && ( f_desc.rdomain.dim > 0 )&&
+      ( f_desc.ldomain.cof == f_desc.rdomain.cof ) &&
+      ( f_desc.ldomain.hcs == DUAL_coord ) && (f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
+  {// TODO 
+  }
+ // dual pairing DUAL x STD_REL_BDRY
+ // dual cp1     ( f_desc.ldomain.hcs == DUAL_coord ) && (f_desc.rdomain.hcs == DUAL_coord) )
+ // dual cp2    ( f_desc.ldomain.hcs == STD_coord ) && (f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
+ // PD maps (dual)H_k --> (std_rel_bdry)H^{n-k} and
+ //         (dual)H^k --> (std_rel_bdry)H_{n-k}
+ // oh, to get H^i M x H^j M --> H^{i+j} M we need dual_boundary and dual_rel_bdry coords, and
+ // all the relevant maps, and dual_rel_bdry --> std poincare duality map... a bunch more work. 
  return NULL;
 }
 
