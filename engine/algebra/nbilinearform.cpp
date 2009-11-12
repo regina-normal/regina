@@ -407,8 +407,8 @@ writeTextShort(out);
 
 if (reducedPairing->getGrid().size() == 0) out<<" zero"; else
  {
-// out<<"urp: "; unreducedPairing->writeTextShort(out);
-// out<<" rp: "; reducedPairing->writeTextShort(out);
+//out<<"urp: "; unreducedPairing->writeTextShort(out);
+out<<" rp: "; reducedPairing->writeTextShort(out);
  if (isSymmetric()) out<<" symmetric"; 
  if (isAntiSymmetric()) out<<" anti-symmetric";
  out<<" image == "; image().writeTextShort(out);

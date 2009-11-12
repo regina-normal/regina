@@ -577,8 +577,8 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::writeAsBoundary(const std::vecto
      for (unsigned long i=0; i<snfrank; i++)
 	if (snfV[i+snffreeindex] != 0) return nullvec;
      // we know it's in the image now. 
-     for (unsigned long i=0; i<ornR->rows(); i++) for (unsigned long j=0; j<ornR->columns(); j++)
-	retval[i] += ornR->entry(i, j) * snfV[j]; 
+     for (unsigned long i=0; i<ornR->rows(); i++) for (unsigned long j=0; j<snffreeindex; j++)
+	retval[i] += ornR->entry(i, j) * snfV[j];  // problem!
      }
     else 
      {// find tensorV -- apply otC.

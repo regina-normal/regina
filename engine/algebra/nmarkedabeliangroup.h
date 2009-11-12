@@ -111,11 +111,11 @@ class NMarkedAbelianGroup : public ShareableObject {
         std::vector<NLargeInteger> InvFacList;
         /** The number of free generators, from SNF(ORN) */
         unsigned long snfrank;
-        /** The row index of the first free generator in SNF(ORN). */
+        /** The row index of the first zero along the diagonal in SNF(ORN). */
         unsigned long snffreeindex;
         /** Number of invariant factors. */
         unsigned long ifNum;
-        /** Row index of invariant factors in SNF(ORN) */
+        /** Row index of first invariant factor (ie entry > 1) in SNF(ORN) */
         unsigned long ifLoc;
 
 	// these variables store information for mod-p homology computations.

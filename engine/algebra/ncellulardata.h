@@ -85,7 +85,9 @@ class Dim4Triangulation;
  *       put them in the test suite proper. New coordinate systems to implement:
  *       MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *       various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
- *       cup products. 
+ *       cup products.  Add a test specifically for lens spaces where we check that the TLF
+ *       evaluates to q'/p for L(p,q) where qq' = \pm n^2 for some integer n.  error seems to be
+ *       occuring in the rcompose / lcompose map, or assembling the map to compose by?
  * \todo Detailed fundamental group presentations and maps bdry -> M, etc. 
  * \todo test suit for: bilinearforms, ncellulardata, fundamental group stuff.  Is there a memory leak somewhere?
  *       go over constructor / destructor call sequences. 

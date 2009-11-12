@@ -39,18 +39,26 @@
 
 namespace regina {
 
-/*
-void dumpMat( NMatrixRing<NLargeInteger> mat )
+
+/*void dumpMatrix( const NMatrixRing<NLargeInteger> &mat )
 {
-for (unsigned long j=0; j<mat.columns(); j++)
+for (unsigned long j=0; j<mat.rows(); j++)
  {
  std::cout<<"[";
- for (unsigned long i=0; i<mat.rows(); i++)
-  std::cout<<mat.entry(i,j)<<" ";
+ for (unsigned long i=0; i<mat.columns(); i++)
+  std::cout<<mat.entry(j,i)<<" ";
  std::cout<<"]\n";
  }
+}*/
+
+
+template <class T>
+void dumpVector( const std::vector<T> &vec )
+{
+for (unsigned long j=0; j<vec.size(); j++)
+ {  if (j != 0) std::cout<<" ";
+    std::cout<<vec[j]; }
 }
-*/
 
 bool NCellularData::GroupLocator::operator<(const GroupLocator &rhs) const
 {
@@ -176,6 +184,23 @@ void setupIndices(const Dim4Triangulation* tri,
 		     numIdealCells[2];
     numMixCells[3] = 4*numNonIdealCells[3] + 10*numNonIdealCells[4] + numIdealCells[3];
     numMixCells[4] = 5*numNonIdealCells[4];
+    // TODO: number of mixed cells rel boundary -- DOUBLE CHECK THESE! probably wrong...
+    //  0 -> numRelativeCells[0] + [1] + [2] + [3] + [4] 
+    //  1 -> 2*numRelativeCells[1] + 3*[2] + 4*[3] + 5*[4] 
+    //  2 -> 3*numRelativeCells[2] + 6*[3] + 10*[4] 
+    //  3 -> 4*numRelativeCells[3] + 10*[4] 
+    //  4 -> 5*numRelativeCells[4] 
+    // TODO: number of mixed boundary cells
+    //  0 -> numStandardBdryCells[0] + [1] + [2] + [3]
+    //  1 -> 2*numStandardBdryCells[1] + 3*[2] + 4*[3] 
+    //  2 -> 3*numStandardBdryCells[2] + 4*[3]
+    //  3 -> 4*numStandardBdryCells[3] 
+    // TODO: number of relative dual cells
+    //  0 -> ?, 1 -> , 2 -> , 3 -> , 4 -> 
+    // TODO: number of boundary dual cells
+    //  0 -> ?, 1 -> , 2 -> , 3 -> 
+
+
 }  
 
 // only used in the NCellularData constructor
@@ -2654,8 +2679,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
     //         ldomain and rdomain respectively... ie: n == gcd(a,b) a, b largest inv. facs ldomain,rdomain.
     GroupLocator ldd( f_desc.ldomain.dim, f_desc.ldomain.var, f_desc.ldomain.hcs, f_desc.ldomain.cof );
     GroupLocator rdd( f_desc.rdomain.dim, f_desc.rdomain.var, f_desc.rdomain.hcs, f_desc.rdomain.cof );
-    const NMarkedAbelianGroup* ld(markedGroup(ldd)); 
-    const NMarkedAbelianGroup* rd(markedGroup(rdd));
+    const NMarkedAbelianGroup* ld(markedGroup(ldd));     const NMarkedAbelianGroup* rd(markedGroup(rdd));
      // now we build ldomain and rdomain
     NMatrixInt presL( ld->getNumberOfInvariantFactors(), ld->getNumberOfInvariantFactors() );
     NMatrixInt presR( rd->getNumberOfInvariantFactors(), rd->getNumberOfInvariantFactors() );
@@ -2678,32 +2702,34 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
     // currently having trouble with lens spaces...
     if (aDim == 3)
      {
+
 	for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
+         {
  	 for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
 	  {
 	   // take ccRep(j), multiply by order rd->getInvariantFactor(j), apply writeAsBoundary, 
            std::vector< NLargeInteger > rFac( rd->getTorsionRep(j) );
            for (unsigned long k=0; k<rFac.size(); k++) rFac[k]*=rd->getInvariantFactor(j);
-           std::vector< NLargeInteger > std_rel_bdry_2vec( rd->writeAsBoundary( rFac ) ); // error!
+           std::vector< NLargeInteger > std_rel_bdry_2vec( rd->writeAsBoundary( rFac ) );
            std::vector< NLargeInteger > dual_1vec( ld->getTorsionRep(i) );
 	   // intersect with ld->getInvariantFactor(i)
 	   NLargeInteger sum(NLargeInteger::zero);
-std::cout<<" / ";
            for (unsigned long k=0; k<dual_1vec.size(); k++)
             {
              const NFace* fac( tri3->getFace( rIx[2][i] ) ); 
              const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
              NPerm4 facinc( fac->getEmbedding(0).getVertices() );
             sum += std_rel_bdry_2vec[k]*dual_1vec[k]*facinc.sign()*tet->orientation(); // orientation convention...
-std::cout<<" "<<std_rel_bdry_2vec[k]<<" "<<dual_1vec[k]<<" "<<facinc.sign()<<" "<<tet->orientation()<<" "; std::cout.flush();
             }
            // rescale sum, check if relevant, append to intM if so...
-           sum *= N; sum /= rd->getInvariantFactor(j);
+           sum *= (N / rd->getInvariantFactor(j));
            sum %= N; if (sum < NLargeInteger::zero) sum += N;
            NMultiIndex x(3); x[0] = i; x[1] = j; x[2] = 0; 
-std::cout<<"."; std::cout.flush();
+std::cout<<"("<<sum<<"/"<<N<<") ";
            if (sum != NLargeInteger::zero) intM.setEntry( x, sum );
 	  }
+//std::cout<<"\n";
+         }
      }
     
     // TODO: aDim == 4:  2,1->0
@@ -2728,8 +2754,60 @@ std::cout<<"."; std::cout.flush();
       const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
      fptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
      return bfptr; 
+  }
 
-    // add in convienience pairings for various standard coordinate systems
+ // convienience torsion linking pairings
+ if ( ( f_desc.ft == torsionlinkingForm ) && ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
+      ( f_desc.ldomain.dim + f_desc.rdomain.dim + 1 == aDim ) && ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) &&
+      ( f_desc.ldomain.cof == 0 ) && ( f_desc.rdomain.cof == 0 ) &&
+      ( f_desc.ldomain.hcs == DUAL_coord ) && (f_desc.rdomain.hcs == DUAL_coord) )
+  { // convienience pairing -- the DUAL x DUAL pairing
+    // the natural pairing is in DUAL x STD_REL_BDRY coords, so we provide the change of coordinates...
+std::cout<<" HERE(1) ";
+      GroupLocator dc( f_desc.rdomain.dim, coVariant, DUAL_coord,         f_desc.rdomain.cof );
+      GroupLocator mc( f_desc.rdomain.dim, coVariant, MIX_coord,          f_desc.rdomain.cof );
+      GroupLocator sc( f_desc.rdomain.dim, coVariant, STD_coord,          f_desc.rdomain.cof );
+      GroupLocator sb( f_desc.rdomain.dim, coVariant, STD_REL_BDRY_coord, f_desc.rdomain.cof );
+      const NHomMarkedAbelianGroup* sc_sb(homGroup( HomLocator( sc, sb ) ) );
+      const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
+      const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
+      NHomMarkedAbelianGroup f( (*sc_sb) * (sc_mc->inverseHom()) * (*dc_mc) ); // dual -> std_rel_bdry
+std::cout<<"redM == "; f.writeReducedMatrix(std::cout); std::cout<<"  ";
+      FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
+//
+std::cout<<"DUAL x STD_RB == ";
+bilinearForm(prim)->writeTextLong(std::cout);
+std::cout<<"  ";
+//
+      bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(f) ); // the error seems to occur here!
+std::cout<<"DUAL x DUAL ";
+      std::map< FormLocator, NBilinearForm* > *mbfptr =             // oh, the error seems to be that I've messed up
+								    // writeAsBoundary
+       const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
+      mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+      return bfptr; 
+  }
+ if ( ( f_desc.ft == torsionlinkingForm ) && ( f_desc.ldomain.var == coVariant ) && (f_desc.rdomain.var == coVariant) &&
+      ( f_desc.ldomain.dim + f_desc.rdomain.dim + 1 == aDim ) && ( f_desc.ldomain.dim > 0) && ( f_desc.rdomain.dim > 0 ) &&
+      ( f_desc.ldomain.cof == 0 ) && ( f_desc.rdomain.cof == 0 ) &&
+      ( f_desc.ldomain.hcs == STD_coord ) && (f_desc.rdomain.hcs == STD_coord) )
+  { // convienience pairing -- the STD x STD pairing
+    // natural pairing is DUAL x STD_REL_BDRY coords, so we need DUAL -> STD and STD -> STD_REL_BDRY maps
+std::cout<<" HERE(2) ";
+      GroupLocator dc( f_desc.rdomain.dim, coVariant, DUAL_coord,         f_desc.rdomain.cof );
+      GroupLocator mc( f_desc.rdomain.dim, coVariant, MIX_coord,          f_desc.rdomain.cof );
+      GroupLocator sc( f_desc.rdomain.dim, coVariant, STD_coord,          f_desc.rdomain.cof );
+      GroupLocator sb( f_desc.rdomain.dim, coVariant, STD_REL_BDRY_coord, f_desc.rdomain.cof );
+      const NHomMarkedAbelianGroup* sc_sb(homGroup( HomLocator( sc, sb ) ) ); // STD --> STD_REL_BDRY
+      const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
+      const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
+      NHomMarkedAbelianGroup fl( (sc_mc->inverseHom())*(*dc_mc) ); // DUAL -> STD
+      FormLocator prim(f_desc); prim.ldomain.hcs = DUAL_coord; prim.rdomain.hcs = STD_REL_BDRY_coord;
+      bfptr = new NBilinearForm( bilinearForm(prim)->lCompose(fl).rCompose(*sc_sb) ); 
+      std::map< FormLocator, NBilinearForm* > *mbfptr = 
+       const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
+      mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+      return bfptr; 
   }
 
  // case 4: cup products
