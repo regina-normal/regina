@@ -536,6 +536,10 @@ public:
      *  3) Torsion linking form               ie: tH_i(M;Z) x tH_j(M;Z) --> Q/Z 
      *     (not yet implemented)                  when i+j=n-1, i,j>0. So for 3-manifolds only defined for i,j = 1,1
      *						  and for 4-manifolds i,j=1,2 or 2,1. 
+     *      Present implementation has
+     *      ldomain and rdomain given 
+     *      trivial presentations
+     *      
      *
      *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
      *     (not yet implemented)              various coordinate systems  

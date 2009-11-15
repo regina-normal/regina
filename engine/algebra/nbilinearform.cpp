@@ -404,11 +404,11 @@ Range.writeTextShort(out);   out<<"]";
 void NBilinearForm::writeTextLong(std::ostream& out) const
 {
 writeTextShort(out);
+out<<"\nrp: "; reducedPairing->writeTextShort(out); out<<" / ";
+out<<"urp: "; unreducedPairing->writeTextShort(out); out<<"\n";
 
 if (reducedPairing->getGrid().size() == 0) out<<" zero"; else
  {
-//out<<"urp: "; unreducedPairing->writeTextShort(out);
-out<<" rp: "; reducedPairing->writeTextShort(out);
  if (isSymmetric()) out<<" symmetric"; 
  if (isAntiSymmetric()) out<<" anti-symmetric";
  out<<" image == "; image().writeTextShort(out);

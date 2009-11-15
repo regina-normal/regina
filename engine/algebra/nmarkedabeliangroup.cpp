@@ -578,7 +578,7 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::writeAsBoundary(const std::vecto
 	if (snfV[i+snffreeindex] != 0) return nullvec;
      // we know it's in the image now. 
      for (unsigned long i=0; i<ornR->rows(); i++) for (unsigned long j=0; j<snffreeindex; j++)
-	retval[i] += ornR->entry(i, j) * snfV[j];  // problem!
+	retval[i] += ornR->entry(i, j) * snfV[j];  
      }
     else 
      {// find tensorV -- apply otC.
@@ -609,6 +609,34 @@ for (unsigned long i=0; i<retval.size(); i++) retval[i] = OMR.entry(i, j+TORLoc)
 // if j < TORVec.size() rescale by coeff / gcd(coeff, TORVec[j]
 if (j < TORVec.size()) for (unsigned long i=0; i<retval.size(); i++)
 	retval[i] *= coeff.divExact(coeff.gcd(TORVec[j]));
+return retval;
+}
+
+std::vector<NLargeInteger> NMarkedAbelianGroup::cycleProjection( const std::vector<NLargeInteger> &ccelt ) const
+{
+// multiply by OMRi, truncate, multiply by OMR
+static const std::vector<NLargeInteger> nullv;
+if (ccelt.size() != OMRi.columns()) return nullv;
+std::vector<NLargeInteger> retval( OMRi.columns(), NLargeInteger::zero );
+for (unsigned long i=0; i<retval.size(); i++)
+ {
+  for (unsigned long j=rankOM; j<OMRi.rows(); j++) for (unsigned long k=0; k<ccelt.size(); k++)
+   retval[i] += OMR.entry(i,j) * OMRi.entry(j,k) * ccelt[k];
+ }
+return retval;
+}
+
+std::vector<NLargeInteger> NMarkedAbelianGroup::cycleProjection( unsigned long ccindx ) const
+{
+// truncate column cyclenum of OMRi, multiply by OMR
+static const std::vector<NLargeInteger> nullv;
+if (ccindx >= OMRi.columns()) return nullv;
+std::vector<NLargeInteger> retval( OMRi.columns(), NLargeInteger::zero );
+for (unsigned long i=0; i<retval.size(); i++)
+ {
+  for (unsigned long j=rankOM; j<OMRi.rows(); j++)
+	retval[i] += OMR.entry(i,j) * OMRi.entry(j,ccindx);
+ }
 return retval;
 }
 

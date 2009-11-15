@@ -323,6 +323,9 @@ class NMarkedAbelianGroup : public ShareableObject {
          * If \a M is an \a m by \a l matrix and \a N is an \a l by \a n
          * matrix, then this routine returns the (\a index)th free
          * generator of ker(M)/img(N) in \a Z^l.
+	 *
+	 * Warning: return value is unstable from version to version
+	 *    of Regina as it depends on the choice of Smith Normal Form. 
          *
          * \ifacespython The return value will be a python list.
          *
@@ -347,6 +350,9 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * \ifacespython The return value will be a python list.
          *
+	 * Warning: return value is unstable from version to version
+	 *    of Regina as it depends on the choice of Smith Normal Form. 
+         *
          * @param index specifies which generator in the torsion subgroup;
          * this must be at least 0 and strictly less than the number of
          * non-trivial invariant factors.  If not, you receive a null
@@ -369,6 +375,9 @@ class NMarkedAbelianGroup : public ShareableObject {
          * generator of ker(M)/img(N) in \a Z^l. This routine is the inverse
 	 * to getSNFIsoRep() described below.
 	 *
+	 * Warning: return value is unstable from version to version
+	 *    of Regina as it depends on the choice of Smith Normal Form. 
+         *
 	 * @param SNFRep must be a vector of size the number of generators of the group, ie
 	 *        it must be valid in the SNF coordinates.  If not, a null vector is
 	 *        returned.
@@ -378,8 +387,29 @@ class NMarkedAbelianGroup : public ShareableObject {
 	/**
 	 * Same as ccRep(const std::vector<NLargeInteger>) but we assume you only
 	 * want the ccRepresentation of a standard basis vector from SNF coordinates.
+	 *
+	 * Warning: return value is unstable from version to version
+	 *    of Regina as it depends on the choice of Smith Normal Form. 
 	 */
 	std::vector<NLargeInteger> ccRep(unsigned long SNFRep) const;
+
+	/**
+	 * Projects an element of the chain complex to the subspace of cycles. 
+	 * returns null vector if ccelt does not have dimensions of the chain complex.
+	 *
+	 * Warning: return value is unstable from version to version
+	 *    of Regina as it depends on the choice of Smith Normal Form. 
+	 */
+	std::vector<NLargeInteger> cycleProjection( const std::vector<NLargeInteger> &ccelt ) const;
+
+	/**
+	 * Projects an element of the chain complex to the subspace of cycles. 
+	 * Returns null vector if ccindx out of bounds.
+	 *
+	 * Warning: return value is unstable from version to version
+	 *    of Regina as it depends on the choice of Smith Normal Form. 
+	 */
+	std::vector<NLargeInteger> cycleProjection( unsigned long ccindx ) const;
 
 	/**
 	 * Given a vector, determines if it represents a cycle in chain complex.
@@ -406,6 +436,9 @@ class NMarkedAbelianGroup : public ShareableObject {
 	 *  to a non-trivial element of TOR, Nv \neq input as elements of TOR aren't
 	 *  in the image of N.  In this case, input - Nv represents the projection to TOR. 
 	 *
+	 * Warning: return value is unstable from version to version
+	 *    of Regina as it depends on the choice of Smith Normal Form. 
+         *
 	 * @return length zero vector if not a boundary. If it is a boundary, it returns
 	 *  a vector v such that Nv=input. 
 	 */
@@ -462,6 +495,9 @@ class NMarkedAbelianGroup : public ShareableObject {
          * If \a v does not belong to ker(M), this routine simply returns
          * the empty vector.
          *
+	 * Warning: return value is unstable from version to version
+	 *    of Regina as it depends on the choice of Smith Normal Form. 
+         *
          * \pre Vector \a v has length M.columns(), or equivalently N.rows().
          *
          * \ifacespython Both \a v and the return value are python lists.
@@ -485,6 +521,9 @@ class NMarkedAbelianGroup : public ShareableObject {
 	 * Returns the i-th generator of the chains, ie: the kernel of
 	 * M in the chain complex.
 	 *
+	 * Warning: return value is unstable from version to version
+	 *    of Regina as it depends on the choice of Smith Normal Form. 
+         *
 	 * @param i between 0 and minNumCycleGens()-1 
 	 */
         std::vector<NLargeInteger> cycleGen(unsigned long j) const;

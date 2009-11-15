@@ -51,7 +51,7 @@ for (unsigned long j=0; j<mat.rows(); j++)
  }
 }*/
 
-
+/*
 template <class T>
 void dumpVector( const std::vector<T> &vec )
 {
@@ -59,6 +59,7 @@ for (unsigned long j=0; j<vec.size(); j++)
  {  if (j != 0) std::cout<<" ";
     std::cout<<vec[j]; }
 }
+*/
 
 bool NCellularData::GroupLocator::operator<(const GroupLocator &rhs) const
 {
@@ -2725,10 +2726,8 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
            sum *= (N / rd->getInvariantFactor(j));
            sum %= N; if (sum < NLargeInteger::zero) sum += N;
            NMultiIndex x(3); x[0] = i; x[1] = j; x[2] = 0; 
-std::cout<<"("<<sum<<"/"<<N<<") ";
            if (sum != NLargeInteger::zero) intM.setEntry( x, sum );
 	  }
-//std::cout<<"\n";
          }
      }
     
@@ -2763,7 +2762,6 @@ std::cout<<"("<<sum<<"/"<<N<<") ";
       ( f_desc.ldomain.hcs == DUAL_coord ) && (f_desc.rdomain.hcs == DUAL_coord) )
   { // convienience pairing -- the DUAL x DUAL pairing
     // the natural pairing is in DUAL x STD_REL_BDRY coords, so we provide the change of coordinates...
-std::cout<<" HERE(1) ";
       GroupLocator dc( f_desc.rdomain.dim, coVariant, DUAL_coord,         f_desc.rdomain.cof );
       GroupLocator mc( f_desc.rdomain.dim, coVariant, MIX_coord,          f_desc.rdomain.cof );
       GroupLocator sc( f_desc.rdomain.dim, coVariant, STD_coord,          f_desc.rdomain.cof );
@@ -2771,18 +2769,43 @@ std::cout<<" HERE(1) ";
       const NHomMarkedAbelianGroup* sc_sb(homGroup( HomLocator( sc, sb ) ) );
       const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
       const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
-      NHomMarkedAbelianGroup f( (*sc_sb) * (sc_mc->inverseHom()) * (*dc_mc) ); // dual -> std_rel_bdry
-std::cout<<"redM == "; f.writeReducedMatrix(std::cout); std::cout<<"  ";
+
+      NMatrixInt rnull( 1, dc_mc->getDomain().getNumberOfInvariantFactors() );
+      NMatrixInt rpres( dc_mc->getDomain().getNumberOfInvariantFactors(), dc_mc->getDomain().getNumberOfInvariantFactors() );
+      for (unsigned long i=0; i<dc_mc->getDomain().getNumberOfInvariantFactors(); i++)
+ 	rpres.entry(i,i) = dc_mc->getDomain().getInvariantFactor(i);
+      NMarkedAbelianGroup rtrivG( rnull, rpres );
+      NMatrixInt rMap( dc_mc->getDomain().getRankCC(), dc_mc->getDomain().getNumberOfInvariantFactors() );
+      for (unsigned long j=0; j<rMap.columns(); j++)
+ 	{
+         std::vector<NLargeInteger> jtor( dc_mc->getDomain().getTorsionRep(j) );
+         for (unsigned long i=0; i<rMap.rows(); i++) 
+	  rMap.entry( i, j ) = jtor[i];
+	}
+      NHomMarkedAbelianGroup rinc( rtrivG, dc_mc->getDomain(), rMap );
+     
+      NMatrixInt lnull( 1, sc_sb->getRange().getNumberOfInvariantFactors() );
+      NMatrixInt lpres( sc_sb->getRange().getNumberOfInvariantFactors(), sc_sb->getRange().getNumberOfInvariantFactors() );
+      for (unsigned long i=0; i<sc_sb->getRange().getNumberOfInvariantFactors(); i++)
+	lpres.entry(i,i) = sc_sb->getRange().getInvariantFactor(i);
+      NMarkedAbelianGroup ltrivG( lnull, lpres );
+      NMatrixInt lMap( sc_sb->getRange().getNumberOfInvariantFactors(), sc_sb->getRange().getRankCC() );    
+      for (unsigned long j=0; j<lMap.columns(); j++)
+	{
+	 std::vector<NLargeInteger> jtor( sc_sb->getRange().snfRep( sc_sb->getRange().cycleProjection( j ) ) );
+         // entries  0 .. < sc_sb->getRange().getNum... relevant. 
+         for (unsigned long i=0; i<lMap.rows(); i++)
+	  lMap.entry( i, j ) = jtor[i];
+	}
+      NHomMarkedAbelianGroup lproj( sc_sb->getRange(), ltrivG, lMap );
+
+      NHomMarkedAbelianGroup f( lproj * (*sc_sb) * (sc_mc->inverseHom()) * (*dc_mc) * rinc ); // dual -> std_rel_bdry
       FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
-//
-std::cout<<"DUAL x STD_RB == ";
-bilinearForm(prim)->writeTextLong(std::cout);
-std::cout<<"  ";
-//
-      bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(f) ); // the error seems to occur here!
-std::cout<<"DUAL x DUAL ";
-      std::map< FormLocator, NBilinearForm* > *mbfptr =             // oh, the error seems to be that I've messed up
-								    // writeAsBoundary
+
+//if ( !bilinearForm(prim)->rdomain().equalTo(f.getRange()) ) std::cout<<"NOT COMPOSABLE ERROR!!";
+
+      bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(f) ); 
+      std::map< FormLocator, NBilinearForm* > *mbfptr =             
        const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
       mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
       return bfptr; 
@@ -2793,7 +2816,6 @@ std::cout<<"DUAL x DUAL ";
       ( f_desc.ldomain.hcs == STD_coord ) && (f_desc.rdomain.hcs == STD_coord) )
   { // convienience pairing -- the STD x STD pairing
     // natural pairing is DUAL x STD_REL_BDRY coords, so we need DUAL -> STD and STD -> STD_REL_BDRY maps
-std::cout<<" HERE(2) ";
       GroupLocator dc( f_desc.rdomain.dim, coVariant, DUAL_coord,         f_desc.rdomain.cof );
       GroupLocator mc( f_desc.rdomain.dim, coVariant, MIX_coord,          f_desc.rdomain.cof );
       GroupLocator sc( f_desc.rdomain.dim, coVariant, STD_coord,          f_desc.rdomain.cof );
