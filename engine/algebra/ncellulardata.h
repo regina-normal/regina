@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file algebra/nCellularData.h
+/*! \file algebra/ncellulardata.h
  *  \brief Deals with cellular homology of 3 and 4-manifolds. 
  */
 
@@ -41,6 +41,9 @@
 #include "algebra/nmarkedabeliangroup.h"
 #include "algebra/nbilinearform.h"
 #include "utilities/ptrutils.h"
+#include "utilities/nbooleans.h"
+#include "maths/nrational.h" // eventually I should get rid of this
+#include "maths/nsparsegrid.h"
 
 #include <algorithm>
 #include <memory>
@@ -86,8 +89,7 @@ class Dim4Triangulation;
  *       MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *       various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
  *       cup products.  Add a test specifically for lens spaces where we check that the TLF
- *       evaluates to q'/p for L(p,q) where qq' = \pm n^2 for some integer n.  error seems to be
- *       occuring in the rcompose / lcompose map, or assembling the map to compose by?
+ *       evaluates to q'/p for L(p,q) where qq' = \pm n^2 for some integer n.  
  * \todo Detailed fundamental group presentations and maps bdry -> M, etc. 
  * \todo test suit for: bilinearforms, ncellulardata, fundamental group stuff.  Is there a memory leak somewhere?
  *       go over constructor / destructor call sequences. 
@@ -415,6 +417,12 @@ public:
     long int signature() const;
 
     /**
+     * Determine if the torsion linking form is hyperbolic.  Returns true if it is, false if not, 
+     * unknown if the request doesn't make sense.
+     */
+    NTriBool torsionLinkingFormIsHyperbolic() const;
+
+    /**
      * Verifies that the maps used to define the various homology groups for the manifold are
      * actually chain complexes. 
      *
@@ -536,9 +544,9 @@ public:
      *  3) Torsion linking form               ie: tH_i(M;Z) x tH_j(M;Z) --> Q/Z 
      *     (not yet implemented)                  when i+j=n-1, i,j>0. So for 3-manifolds only defined for i,j = 1,1
      *						  and for 4-manifolds i,j=1,2 or 2,1. 
-     *      Present implementation has
-     *      ldomain and rdomain given 
-     *      trivial presentations
+     *      Present implementation has      The image of the form in Q/Z is isomorphic to Z_k where k is the largest
+     *      ldomain and rdomain given        invariant factor of tH_j(M;Z), so we implement the image as Z_k with
+     *      trivial presentations            trivial presentation 0 --> Z --k--> Z ---> Z_k ---> 0
      *      
      *
      *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
@@ -555,6 +563,55 @@ public:
      */
      
 };
+
+
+/**
+ *  This procedure takes as input the NBilinearForm intP which is required to be a torsion linking form on an abelian
+ * group.  Specifically, it's assumed the map A x A --> Q/Z is symmetric, and the range is a trivially presented Z/nZ
+ *
+ * The procedure outputs the complete Kawauchi-Kojima invariants of the form, which are:
+ *
+ * 1) The prime power decomposition of A, as ppVec.
+ *
+ * 2) The classification of the 2-torsion linking pairing.  This invariant takes the form of a vector with n elements, where
+ *    2^n is the order of the largest subgroup of A whose order is a power of two.  The entries of the vector represent which
+ *    the angle of a certain vector V in the complex plane -- this vector can either be at the origin (8), or it is a non-zero
+ *    vector along the line of angle 2(pi)i/8*k, k=0,1,2,3,4,5,6,7.  Kawauchi and Kojima use the symbol infinity to represent
+ *    zero-sums, but we use 8. The vector V is the sum of e^{ 2^{i+1} pi i form(x,x) } where x ranges over ?? read KK paper
+ *    again...  So this invariant is orientation-sensitive.  In particular if you reverse the orientation, the elements of the
+ *    vector negate mod 8 (except for 8, which remains fixed).  So a vector (1 3 8 7 8) is turned to (7 5 8 1 8) on reversal
+ *    of orientation. TODO: supply more details
+ *
+ * 3) The classification of the odd p-torsion linking pairing.  Given a prime power p^k, you consider the induced linking
+ *    form on the quotient of elements of order p^k modulo p^{k-1}.  The determinant you can consider as an element of the
+ *    field Z_p, and then you take the legendre symbol (whether or not the determinant is a square mod p).  This is the
+ *    invariant, as a list for all p^k dividing the order of A, with p odd.  This invariant is also orientation-sensitive, 
+ *    since when you change the orientation you negate the relevant matrices, so the legendre symbol changes if and 
+ *    only if the rank n of the p^k-torsion mod p^(k-1) is odd and p | n^2 + 1. 
+ *
+ * The routine also outputs linkingFormPD, which is the restriction of the torsion linking form to the subgroups of A
+ * divisible by all the prime factors of the order of A. 
+ */
+void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
+	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, // almost same except this counts
+        std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,// this lists 
+        std::vector<unsigned long> &ttVec, 
+        std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
+        std::vector< NMatrixRing<NRational>* > &linkingFormPD );
+
+/**
+ * Function takes as input the output of computeTorsionLinkingFormInvariants, and returns various text
+ * strings that interpret the result -- assuming this linking form comes from a 3-manifold.
+ */
+void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec,
+        const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
+        const std::vector<unsigned long> &ttVec, 
+        const std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
+        const std::vector< NMatrixRing<NRational>* > &linkingFormPD, 
+        bool orientable, 
+        bool &torsionLinkingFormIsSplit, bool &torsionLinkingFormIsHyperbolic, 
+        std::string &torsionRankString,     std::string &torsionSigmaString,     
+        std::string &torsionLegendreString );
 
 /*@}*/
 

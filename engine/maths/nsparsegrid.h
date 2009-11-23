@@ -57,7 +57,9 @@ class NMultiIndex {
  private:
   std::vector< unsigned long > data;
  public: 
-  NMultiIndex(unsigned long dim); // k == dim
+  NMultiIndex(unsigned long dim); // k == dim of multi-index
+  NMultiIndex(unsigned long i1, unsigned long i2); // build a pair i1, i2
+  NMultiIndex(unsigned long i1, unsigned long i2, unsigned long i3); // build a triple i1, i2, i3
   NMultiIndex(const NMultiIndex &cloneMe);
   ~NMultiIndex();
   unsigned long & operator[](const unsigned long &index);
@@ -151,6 +153,12 @@ class NSparseGrid {
 
 inline NMultiIndex::NMultiIndex(unsigned long dim)
 { data.resize(dim, 0); }
+
+inline NMultiIndex::NMultiIndex(unsigned long i1, unsigned long i2)
+{ data.resize(2, 0); data[0]=i1; data[1]=i2; }
+
+inline NMultiIndex::NMultiIndex(unsigned long i1, unsigned long i2, unsigned long i3)
+{ data.resize(3, 0); data[0]=i1; data[1]=i2; data[2]=i3; }
 
 inline NMultiIndex::NMultiIndex(const NMultiIndex &cloneMe)
 { data = cloneMe.data; }

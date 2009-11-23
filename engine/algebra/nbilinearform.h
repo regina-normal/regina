@@ -112,10 +112,18 @@ class NBilinearForm : public ShareableObject {
         const std::map< NMultiIndex, NLargeInteger* > & unreducedMap() const;
 
 	/**
-	 * Access to the reducedPairing map.
+	 * Access to the reducedPairing map.  So if you wanted to iterate through the
+         * values of the bilinear form evaluated on the generators of the homology of
+         * ldomain and rdomain, you'd construct an iterator to a std::map< NMultiIndex, NLargeInteger* > 
+         * type and iterate through reducedMap(). 
 	 */
         const std::map< NMultiIndex, NLargeInteger* > & reducedMap() const;
 
+	/**
+	 * reducedPairing access as an NSparseGrid
+	 */
+        const NSparseGrid< NLargeInteger >* reducedSparseGrid() const;
+ 
 	/**
 	 * If this is a symmetric bilinear form, we can ask for its signature.  This
 	 * routine computes said signature. 
@@ -214,6 +222,8 @@ class NBilinearForm : public ShareableObject {
 
 /*@}*/
 
+inline const NSparseGrid< NLargeInteger >* NBilinearForm::reducedSparseGrid() const
+{ return reducedPairing; }
 inline const NMarkedAbelianGroup& NBilinearForm::ldomain() const
 { return lDomain; }
 inline const NMarkedAbelianGroup& NBilinearForm::rdomain() const
