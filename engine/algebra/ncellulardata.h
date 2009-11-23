@@ -80,19 +80,17 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo natural bilinear forms on a manifold, spin structures, test suite stuff: 
- *       LES of pair, natural isos, PD, detailed tests for intersection forms
- *       everything undefined except H_2xH_2->H_0 for 4-manifolds.
- *       still need to do homology-cohomology and torsion linking form pairings.
- *       finally, move all the test routines out of the NCellularData class and
- *       put them in the test suite proper. New coordinate systems to implement:
+ * \todo 1) natural bilinear forms on a manifold, spin structures.
+ *       2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
+ *       Move all the test routines out of the NCellularData class and
+ *       put them in the test suite proper. Add a test specifically for lens spaces where we check that the TLF
+ *       evaluates to q'/p for L(p,q) where qq' = \pm n^2 for some integer n. 
+ *       3) New coordinate systems to implement:
  *       MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *       various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
- *       cup products.  Add a test specifically for lens spaces where we check that the TLF
- *       evaluates to q'/p for L(p,q) where qq' = \pm n^2 for some integer n.  
- * \todo Detailed fundamental group presentations and maps bdry -> M, etc. 
- * \todo test suit for: bilinearforms, ncellulardata, fundamental group stuff.  Is there a memory leak somewhere?
- *       go over constructor / destructor call sequences. 
+ *       cup products.  
+ *       4) Detailed fundamental group presentations and maps bdry -> M, etc. 
+ *       5) Detailed search for possible memory leaks.
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
@@ -601,7 +599,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
 
 /**
  * Function takes as input the output of computeTorsionLinkingFormInvariants, and returns various text
- * strings that interpret the result -- assuming this linking form comes from a 3-manifold.
+ * human-readable strings that interpret the result.
  */
 void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec,
         const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
