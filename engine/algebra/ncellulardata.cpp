@@ -381,9 +381,9 @@ return retval;
  *
  *  What has been implemented:
  *
- *  ALL of (1) and (2).
+ *  ALL of (1) and (2). 
  *
- *  3) nothing (buggy partial implementation)
+ *  3) 3-dimensional torsion linking form
  *
  *  4) nothing
  *
@@ -391,8 +391,7 @@ return retval;
  *
  *  (2) for new coordinate systems MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord
  *
- *  3) aDim == 3:  (1,1)->0 (debug)
- *     aDim == 4:  (2,1)->0, (1,2)->0
+ *  3) aDim == 4:  (2,1)->0, (1,2)->0
  *
  *  4) all -- implement via Poincare duality once (2) complete
  */
