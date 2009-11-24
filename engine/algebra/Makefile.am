@@ -14,7 +14,7 @@ algebraincludedir = $(pkgincludedir)/algebra
 
 noinst_LTLIBRARIES = libalgebra.la
 
-libalgebra_la_SOURCES = nabeliangroup.cpp ngrouppresentation.cpp nmarkedabeliangroup.cpp nxmlalgebrareader.cpp nbinaryA5.cpp nbinaryS4.cpp ncellulardata.cpp nbilinearform.cpp NSVPolynomialRing.cpp nhomgrouppresentation.cpp ncellulardata_init.cpp ncellulardata_locators.cpp ncellulardata_tests.cpp ncellulardata_extrafunctions.cpp
+libalgebra_la_SOURCES = nabeliangroup.cpp ngrouppresentation.cpp nmarkedabeliangroup.cpp nxmlalgebrareader.cpp nbinaryA5.cpp nbinaryS4.cpp ncellulardata.cpp nbilinearform.cpp NSVPolynomialRing.cpp nhomgrouppresentation.cpp ncellulardata.init.cpp ncellulardata.locators.cpp ncellulardata.tests.cpp ncellulardata.extra.cpp ncellulardata.output.cpp
 
 algebrainclude_HEADERS = nabeliangroup.h ngrouppresentation.h nmarkedabeliangroup.h nxmlalgebrareader.h nbinaryA5.h nbinaryS4.h ncellulardata.h nbilinearform.h NSVPolynomialRing.h nhomgrouppresentation.h
 
