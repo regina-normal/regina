@@ -526,7 +526,6 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 
 	     NPerm5 dualor( ordual2cell[2], ordual2cell[3], edginc[0], edginc[1], 
 			    tet->getEmbedding(1).getTetrahedron() ); 
-
              intM.setEntry( x, dualor.sign()*pen->orientation()*inoutor );
 	    }
   	  }
@@ -608,11 +607,8 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
     NSparseGrid< NLargeInteger > intM(3); 
 
     // step 2: dimension-specific constructions
-    // TODO: aDim == 3:  1,1->0
-    // currently having trouble with lens spaces...
     if (aDim == 3)
      {
-
 	for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
          {
  	 for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
@@ -640,21 +636,56 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          }
      }
     
-    // TODO: aDim == 4:  2,1->0
     if ( (aDim == 4) && (f_desc.ldomain.dim == 2) )
      {
 	for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
  	 for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
 	  {
+	   // take ccRep(j), multiply by order rd->getInvariantFactor(j), apply writeAsBoundary, 
+           std::vector< NLargeInteger > rFac( rd->getTorsionRep(j) );
+           for (unsigned long k=0; k<rFac.size(); k++) rFac[k]*=rd->getInvariantFactor(j);
+           std::vector< NLargeInteger > std_rel_bdry_2vec( rd->writeAsBoundary( rFac ) );
+           std::vector< NLargeInteger > dual_1vec( ld->getTorsionRep(i) );
+	   // intersect with ld->getInvariantFactor(i)
+	   NLargeInteger sum(NLargeInteger::zero);
+           for (unsigned long k=0; k<dual_1vec.size(); k++)
+            {
+             const Dim4Face* fac( tri4->getFace( rIx[2][i] ) ); 
+             const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
+             NPerm5 facinc( fac->getEmbedding(0).getVertices() );
+             sum += std_rel_bdry_2vec[k]*dual_1vec[k]*facinc.sign()*pen->orientation(); // orientation convention...
+            }
+           // rescale sum, check if relevant, append to intM if so...
+           sum *= (N / rd->getInvariantFactor(j));
+           sum %= N; if (sum < NLargeInteger::zero) sum += N;
+           NMultiIndex x(3); x[0] = i; x[1] = j; x[2] = 0; 
+           if (sum != NLargeInteger::zero) intM.setEntry( x, sum );
 	  }
      } 
-    // TODO: aDim == 4: 1,2->0
     if ( (aDim == 4) && (f_desc.ldomain.dim == 1) )
      {
  	for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
  	 for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
 	  {
-	  }
+	   // take ccRep(j), multiply by order rd->getInvariantFactor(j), apply writeAsBoundary, 
+           std::vector< NLargeInteger > rFac( rd->getTorsionRep(j) );
+           for (unsigned long k=0; k<rFac.size(); k++) rFac[k]*=rd->getInvariantFactor(j);
+           std::vector< NLargeInteger > std_rel_bdry_2vec( rd->writeAsBoundary( rFac ) );
+           std::vector< NLargeInteger > dual_1vec( ld->getTorsionRep(i) );
+	   // intersect with ld->getInvariantFactor(i)
+	   NLargeInteger sum(NLargeInteger::zero);
+           for (unsigned long k=0; k<dual_1vec.size(); k++)
+            {
+             const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[1][i] ) ); 
+             const Dim4Pentachoron* pen( tet->getEmbedding(1).getPentachoron() );
+             NPerm5 tetinc( tet->getEmbedding(1).getVertices() );
+             sum += std_rel_bdry_2vec[k]*dual_1vec[k]*tetinc.sign()*pen->orientation(); // orientation convention...
+            }
+           // rescale sum, check if relevant, append to intM if so...
+           sum *= (N / rd->getInvariantFactor(j));
+           sum %= N; if (sum < NLargeInteger::zero) sum += N;
+           NMultiIndex x(3); x[0] = i; x[1] = j; x[2] = 0; 
+           if (sum != NLargeInteger::zero) intM.setEntry( x, sum );	  }
     } 
 
      bfptr = new NBilinearForm( ldomain, rdomain, range, intM );

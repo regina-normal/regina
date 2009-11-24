@@ -82,13 +82,14 @@ class Dim4Triangulation;
  *
  * \todo 1) natural bilinear forms on a manifold, spin structures.
  *       2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
- *       Move all the test routines out of the NCellularData class and
- *       put them in the test suite proper. Add a test specifically for lens spaces where we check that the TLF
- *       evaluates to q'/p for L(p,q) where qq' = \pm n^2 for some integer n. 
+ *        Move all the test routines out of the NCellularData class and
+ *        put them in the test suite proper. Add a test specifically for lens spaces where we check that the TLF
+ *        evaluates to q'/p for L(p,q) where qq' = \pm n^2 for some integer n. 
+ *        need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first!
  *       3) New coordinate systems to implement:
- *       MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
- *       various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
- *       cup products.  
+ *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
+ *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
+ *        cup products.  
  *       4) Detailed fundamental group presentations and maps bdry -> M, etc. 
  *       5) Detailed search for possible memory leaks.
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
