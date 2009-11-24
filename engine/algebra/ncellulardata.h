@@ -92,6 +92,7 @@ class Dim4Triangulation;
  *        cup products.  
  *       4) Detailed fundamental group presentations and maps bdry -> M, etc. 
  *       5) Detailed search for possible memory leaks.
+ *       6) Sometimes the torsion linking form takes values in Z_1, sometimes in 0, why is there the difference?
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
