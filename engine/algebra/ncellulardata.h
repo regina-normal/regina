@@ -87,7 +87,7 @@ class Dim4Triangulation;
  *       3) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
- *        cup products.  
+ *        cup products.  (current efforts here)
  *       4) Detailed fundamental group presentations and maps bdry -> M, etc. 
  *       5) Detailed search for possible memory leaks.
  *       6) Sometimes the torsion linking form takes values in Z_1, sometimes in 0, why is there the difference?
@@ -299,7 +299,8 @@ private:
      */
    unsigned long numStandardCells[5], numDualCells[5], numMixCells[5], numStandardBdryCells[4], 
                  numNonIdealCells[5], numIdealCells[4], numNonIdealBdryCells[4], 
-	         numRelativeCells[5];
+	         numRelativeCells[5], numDualRelCells[5], numMixRelCells[5], numMixBdryCells[4], 
+		 numDualBdryCells[4];
 
     /** 
      * Chain complex indexing and orientation and boundary-map conventions:
@@ -615,6 +616,10 @@ for (unsigned long i=0; i<5; i++) numNonIdealCells[i] = g.numNonIdealCells[i];
 for (unsigned long i=0; i<4; i++) numIdealCells[i] = g.numIdealCells[i];
 for (unsigned long i=0; i<4; i++) numNonIdealBdryCells[i] = g.numNonIdealBdryCells[i];
 for (unsigned long i=0; i<5; i++) numRelativeCells[i] = g.numRelativeCells[i];
+for (unsigned long i=0; i<5; i++) numDualRelCells[i] = g.numDualRelCells[i];
+for (unsigned long i=0; i<5; i++) numMixRelCells[i] = g.numMixRelCells[i];
+for (unsigned long i=0; i<4; i++) numMixBdryCells[i] = g.numMixBdryCells[i];
+for (unsigned long i=0; i<4; i++) numDualBdryCells[i] = g.numDualBdryCells[i];
 
 // the chain complexes
 for (unsigned long i=0; i<sCC.size(); i++)       sCC[i] = clonePtr(g.sCC[i]);
@@ -670,10 +675,10 @@ if (hcs == DUAL_coord) return numDualCells[dimension]; else
 if (hcs == MIX_coord) return numMixCells[dimension]; else
 if (hcs == STD_BDRY_coord) return numStandardBdryCells[dimension]; else
 if (hcs == STD_REL_BDRY_coord) return numRelativeCells[dimension]; else
-if (hcs == MIX_BDRY_coord) return 0; else
-if (hcs == MIX_REL_BDRY_coord) return 0; else
-if (hcs == DUAL_BDRY_coord) return 0; else
-if (hcs == DUAL_REL_BDRY_coord) return 0; 
+if (hcs == MIX_BDRY_coord) return numMixBdryCells[dimension]; else
+if (hcs == MIX_REL_BDRY_coord) return numMixRelCells[dimension]; else
+if (hcs == DUAL_BDRY_coord) return numDualBdryCells[dimension]; else
+if (hcs == DUAL_REL_BDRY_coord) return numDualRelCells[dimension]; 
 return 0;
 }
 
@@ -742,10 +747,10 @@ out<<"]";
 }
 
 inline NCellularData::FormLocator::FormLocator( form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain) :
- ft(FT), ldomain( newLdomain ), rdomain( newRdomain ) {}
+ ldomain( newLdomain ), rdomain( newRdomain ), ft(FT)  {}
 
 inline NCellularData::FormLocator::FormLocator( const FormLocator &cloneMe ) :
- ft(cloneMe.ft), ldomain( cloneMe.ldomain ), rdomain( cloneMe.rdomain ) {}
+ ldomain( cloneMe.ldomain ), rdomain( cloneMe.rdomain ), ft(cloneMe.ft)  {}
 
 inline void NCellularData::FormLocator::writeTextShort(std::ostream& out) const
 {}

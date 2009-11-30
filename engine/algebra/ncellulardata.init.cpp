@@ -47,7 +47,9 @@ void setupIndices(const Dim4Triangulation* tri,
  unsigned long numStandardCells[5],    unsigned long numDualCells[5], 
  unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4], 
  unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 
- unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5])
+ unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5], 
+ unsigned long numDualRelCells[5],     unsigned long numMixRelCells[5],   // TODO: these last four not initialized
+ unsigned long numMixBdryCells[4],     unsigned long numDualBdryCells[4])
 {
     // nicIx[0]  interior or boundary,  bcIx[0] boundary,  dcIx[4] interior vertices. 
     for (Dim4Triangulation::VertexIterator vit = tri->getVertices().begin();
@@ -149,7 +151,9 @@ void setupIndices(const NTriangulation* tri,
  unsigned long numStandardCells[5],    unsigned long numDualCells[5], 
  unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4], 
  unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 
- unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5])
+ unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5], 
+ unsigned long numDualRelCells[5],     unsigned long numMixRelCells[5],  // TODO: these last 4 not initialized
+ unsigned long numMixBdryCells[4],     unsigned long numDualBdryCells[4])
 {
     // nicIx[0]  interior or boundary,  bcIx[0] boundary,  dcIx[3] interior vertices. 
     for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
@@ -1720,7 +1724,7 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
 {
    setupIndices( tri4, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 			numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells, 
-			numRelativeCells );
+			numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, numDualBdryCells );
         
    fillStandardHomologyCC( tri4, numStandardCells, numNonIdealCells, numIdealCells, 
 			nicIx, icIx, sCC);
@@ -1756,8 +1760,8 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
 {
    setupIndices( tri3, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 		 numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells,
-		 numRelativeCells );
-        
+		 numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, numDualBdryCells );
+
    fillStandardHomologyCC( tri3, numStandardCells, numNonIdealCells, numIdealCells, 
 			nicIx, icIx, sCC);
 
