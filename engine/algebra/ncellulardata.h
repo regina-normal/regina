@@ -156,13 +156,23 @@ public:
 
  /**
   * Use this to specify if you want homology (coVariant) or cohomology (contraVariant) in a (co)homology
-  * computation. See NCellularData::unmarkedGroup, markedGroup, homGroup, bilinearForm for usage.
+  * computation. See NCellularData::unmarkedGroup, NCellularData::markedGroup, NCellularData::homGroup, 
+  * NCellularData::bilinearForm for usage.
   */
- enum variance_type { coVariant, contraVariant }; // homology / cohomology specifier
+ enum variance_type { 
+ /**
+  * for Homology
+  */
+  coVariant, 
+ /**
+  * for coHomology
+  */
+  contraVariant };
 
  /**
   * NCellularData has several routines that require GroupLocator objects as arguments: unmarkedGroup, markedGroup, 
-  *  homGroup, bilinearForm.   See NCellularData::unmarkedGroup, markedGroup, homGroup and bilinearForm for usage.
+  *  homGroup, bilinearForm.   See NCellularData::unmarkedGroup, NCellularData::markedGroup, NCellularData::homGroup 
+  *  and NCellularData::bilinearForm for usage.
   */
  struct GroupLocator {
         // if its an unMarkedGroup or MarkedGroup we need to know dimension, variance, coordinates, coefficients
@@ -209,14 +219,28 @@ public:
 
  /**
   * Use this enum in the FormLocator constructor to further specify which NBilinearForm
-  *  you're interested in.  intersectionForm is the form which is dual to the cup product, 
-  *  computed by finding homologous classes in DUAL_coord and STD_REL_BDRY_coord (which are transverse)
-  *  and intersecting them there.  torsionlinkingForm is the induced pairing on the torsion classes
-  *  in shifted degree.  evaluationForm is the homology-cohomology pairing. 
+  *  you're interested in.     
   *
   * \todo cupproductForm
   */
- enum form_type { intersectionForm, torsionlinkingForm, evaluationForm, cupproductForm };
+ enum form_type { 
+ /**
+  * intersectionForm is the form which is dual to the cup product, computed by finding homologous 
+  * classes in DUAL_coord and STD_REL_BDRY_coord (which are transverse) and intersecting them there.
+  */
+  intersectionForm, 
+ /**
+  * torsionlinkingForm is the induced pairing on the torsion classes in shifted degree.
+  */
+  torsionlinkingForm, 
+ /**
+  * evaluationForm is the homology-cohomology pairing. 
+  */
+  evaluationForm, 
+ /**
+  * cupproductForm is the cup product pairing TODO (incomplete)
+  */
+  cupproductForm };
 
  /**
   * NCellularData::bilinearForm requires a FormLocator object as an argument.   
