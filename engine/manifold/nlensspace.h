@@ -64,7 +64,9 @@ class NLensSpace : public NManifold {
          * Creates a new Lens space with the given parameters. The lens space
          * L(p,q) is the 3-manifold you get by p/q Dehn surgery on the unknot.
          * ie: L(1,0) and L(1,1) are the 3-sphere, L(0,1) is the product S^1 x S^2, 
-         * L(p,1) is the circle bundle over S^2 with Euler class p, etc. 
+         * L(p,1) is the circle bundle over S^2 with Euler class p.  In L(p,q) if
+         * you take a generator g of H_1 and evaluate the torsion linking form on
+         * it, <g,g> = [\pm r^2 q/p] in Q/Z where r is an integer. 
          *
          * \pre The two given parameters are coprime (have a gcd of 1).
          *
