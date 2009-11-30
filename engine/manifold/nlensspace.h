@@ -61,7 +61,10 @@ class NLensSpace : public NManifold {
 
     public:
         /**
-         * Creates a new Lens space with the given parameters.
+         * Creates a new Lens space with the given parameters. The lens space
+         * L(p,q) is the 3-manifold you get by p/q Dehn surgery on the unknot.
+         * ie: L(1,0) and L(1,1) are the 3-sphere, L(0,1) is the product S^1 x S^2, 
+         * L(p,1) is the circle bundle over S^2 with Euler class p, etc. 
          *
          * \pre The two given parameters are coprime (have a gcd of 1).
          *
