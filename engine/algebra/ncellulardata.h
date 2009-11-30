@@ -40,6 +40,7 @@
 
 #include "algebra/nmarkedabeliangroup.h"
 #include "algebra/nbilinearform.h"
+#include "algebra/nhomgrouppresentation.h"
 #include "utilities/ptrutils.h"
 #include "utilities/nbooleans.h"
 #include "maths/nsparsegrid.h"
@@ -81,9 +82,8 @@ class Dim4Triangulation;
  *
  * \todo 1) natural bilinear forms on a manifold, spin structures.
  *       2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
- *        Move all the test routines out of the NCellularData class and
- *        put them in the test suite proper. 
- *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first!
+ *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
+ *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first.
  *       3) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
@@ -106,23 +106,54 @@ class NCellularData : public ShareableObject {
 public:
 
  /**
-  * This enum specifies the coordinate system to use in a (co)homology computation. See
-  * NCellularData::unmarkedGroup, markedGroup, homGroup, bilinearForm for usage.  Regina uses
-  * what are sometimes called ideal semi-simplicial triangulations.  This is a notion that's more
-  * general than simplicial complexes -- in Hatcher's textbook they are called Delta Complexes. 
-  * An important aspect of these triangulations is that they are not required to be locally-Euclidean
-  * at the vertices -- but the link of a vertex is required to be a co-dimension one manifold. So if one
-  * removes a regular open neighbourhood of the vertices whose links are not spheres, one gets a genuine
-  * smooth manifold with a natural CW-decomposition (pull-back of the stratification coming from the triangulation). 
-  * STD_coord is this CW-decomposition.  DUAL_coord is the dual polyhedral decomposition to this CW-decomposition. 
-  * MIX_coord is the common coordinates barycentric subdivision, this allows the constructions of the natural
-  * isomorphisms between the homology groups in various coordinate systems.  STD_REL_BDRY_coord is STD_coord relative
-  * to the boundary subcomplex -- counting both the triangulation's original boundary and the `ideal' boundary 
-  * coming from removing the regular neighbourhood of the vertices with non-sphere links.  STD_BDRY_coord is the
-  * natural CW-decomposition of the boundary such that inclusion into STD_coord is a cellular map. 
+  * This enum gives names to the 9 standard CW-structures associated to a semi-simplicially (ideall) triangulated
+  * manifold.  Ideal triangulations are generally not compact.  These cell decomposition are decompositions corresponding
+  * to the compact manifold such that the ideally-triangulated manifold is a dense subspace and such that its cells are
+  * the intersection of these cells to that subspace. See NCellularData::unmarkedGroup, NCellularData::markedGroup, 
+  * NCellularData::homGroup, NCellularData::bilinearForm, NCellularData::GroupLocator, NCellularData::HomLocator for usage.  
   */
- enum homology_coordinate_system { STD_coord, DUAL_coord, MIX_coord, STD_BDRY_coord, STD_REL_BDRY_coord,              
-                                   MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord };
+ enum homology_coordinate_system { 
+ /**
+  * Is the most natural CW-decomposition of a semi-simplicially (ideal) triangulated manifold.  The top-dimensional cells are
+  * the tetrahedra (of a 3-manifold) or the pentachora (of a 4-manifold).  Dual to DUAL_REL_BDRY_coord.
+  */
+  STD_coord, 
+ /**
+  * Is the dual polyhedral decomposition to this CW-decomposition. The top-dimensional cells correspond to the interior
+  * vertices of the triangulation.  Dual to STD_REL_BDRY_coord.
+  */
+  DUAL_coord, 
+ /**
+  * Is essentially the CW-decomposition of the barycentric subdivision of the triangulation.  For every k-cell in the
+  * original triangulation there's k+1 associated k-cells in this triangulation. 
+  */
+  MIX_coord, 
+ /**
+  * This is the standard cell decomposition (which is always a triangulation) of the boundary. So this consists of two
+  * natural parts -- the part from the standard boundary, and the ideal boundary. Dual to DUAL_BDRY_coord
+  */
+  STD_BDRY_coord, 
+ /**
+  * This is the same as STD_coord except the boundary cells are thrown away. Dual to DUAL_coord
+  */
+  STD_REL_BDRY_coord,              
+  /**
+  * This is the barycentric subdivision of STD_BDRY_coord. TODO (incomplete)
+  */
+  MIX_BDRY_coord, 
+ /**
+  * This is MIX_coord with the boundary cells thrown away. TODO (incomplete)
+  */
+  MIX_REL_BDRY_coord, 
+ /**
+  * This is the dual cellular decomposition of the boundary. Dual to STD_BDRY_coord. TODO (incomplete)
+  */
+  DUAL_BDRY_coord, 
+ /**
+  * This is the cell decomposition which is dual to STD_coord TODO (incomplete)
+  */
+  DUAL_REL_BDRY_coord };
+
  /**
   * Use this to specify if you want homology (coVariant) or cohomology (contraVariant) in a (co)homology
   * computation. See NCellularData::unmarkedGroup, markedGroup, homGroup, bilinearForm for usage.
@@ -330,55 +361,13 @@ public:
     virtual void writeTextLong(std::ostream& out) const;
 
     /**
-     * Returns the number of cells of the given dimension
-     * in the standard genuine CW-decomposition of the manifold.
-     *
-     * In the case that the triangulation is a proper
-     * triangulation of a manifold (or delta-complex decomposition) it
-     * simply returns the same information as in the NTriangulation
-     * vertex, edge, face and tetrahedron lists.
-     *
-     * In the case that this is an ideal triangulation, this algorithm
-     * returns the details of the corresponding compact manifold with
-     * boundary a union of closed surfaces.
-     *
+     * @param hcs specifies the cell complex.
      * @param dimension the dimension of the cells in question; this must
-     * be 0, 1, 2 or 3.
-     * @return the number of cells of the given dimension in the standard
-     * CW-decomposition of the closed manifold.
+     *  be 0, 1, 2, 3 or 4. An out-of-bounds request returns zero.
+     * @return the number of cells of the given dimension in the cell complex
+     *  specified by hcs.
      */
-    unsigned long standardCellCount(unsigned dimension) const;
-    /**
-     * Returns the number of cells of the given dimension
-     * in the dual CW-decomposition of the manifold. This is typically
-     * much smaller than getNumStandardCells().
-     *
-     * @param dimension the dimension of the cells in question; this must
-     * be 0, 1, 2 or 3.
-     * @return the number of cells of the given dimension in the dual
-     * CW-decomposition to the triangulation.
-     */
-    unsigned long dualCellCount(unsigned dimension) const;
-    /**
-     * Returns the number of cells of the given dimension in the
-     * standard CW-decomposition of the boundary of the manifold.
-     * This is a subcomplex of the complex used in getNumStandardCells().
-     *
-     * @param dimension the dimension of the cells in question; this must
-     * be 0, 1 or 2.
-     * @return the number of cells of the given dimension in the standard
-     * CW-decomposition of the boundary.
-     */
-    unsigned long boundaryCellCount(unsigned dimension) const;
-    /**
-     * Returns the number of cells in the mixed cellular decomposition 
-     */
-    unsigned long mixedCellCount(unsigned dimension) const;
-     /**
-     * Returns the number of cells relative CW-decomposition of the manifold
-     * rel boundary, induced by the standard cellular decomposition. 
-     */
-    unsigned long relativeCellCount(unsigned dimension) const;
+    unsigned long cellCount(homology_coordinate_system hcs, unsigned dimension) const;
    
     /**
      * The Euler characteristic of the manifold, computed from
@@ -555,10 +544,13 @@ public:
 
     /**
      *  Describes the homomorphisms from the fundamental group of the boundary components to the fundamental
-     *  group of the manifold's components.   What this algorithm does is build a maximal forest in the dual 1-skeleton
-     *  of the triangulation for the manifold, and the standard boundary, and the ideal boundary.  This allows for
-     *  a description of the inclusion maps.
+     *  group of the manifold's components.   This routine uses the dual cellular coordinates, building up
+     *  a maximal forest in the dual boundary 1-skeleton, then extending it to a maximal forest in the dual 
+     *  1-skeleton.  
+     *
+     * \todo eventually expand to use other coordinate systems, other group homomorphisms.
      */
+    const NHomGroupPresentation* homGroupPresentation() const;
      
 };
 
@@ -645,16 +637,21 @@ inline NCellularData::~NCellularData() {
  for (unsigned long i=0; i<rbCM.size(); i++)   if (rbCM[i])   delete rbCM[i];
 }
 
-inline unsigned long NCellularData::standardCellCount(unsigned dimension) const
-{ return numStandardCells[dimension]; }
-inline unsigned long NCellularData::dualCellCount(unsigned dimension) const
-{ return numDualCells[dimension]; }
-inline unsigned long NCellularData::boundaryCellCount(unsigned dimension) const
-{ return numStandardBdryCells[dimension]; }
-inline unsigned long NCellularData::mixedCellCount(unsigned dimension) const
-{ return numMixCells[dimension]; }
-inline unsigned long NCellularData::relativeCellCount(unsigned dimension) const
-{ return numRelativeCells[dimension]; }
+inline unsigned long NCellularData::cellCount(homology_coordinate_system hcs, unsigned dimension) const
+{
+// TODO: add an out-of-bounds check on dimension.
+// TODO: finish counts for the new coordinate systems.
+if (hcs == STD_coord) return numStandardCells[dimension]; else
+if (hcs == DUAL_coord) return numDualCells[dimension]; else
+if (hcs == MIX_coord) return numMixCells[dimension]; else
+if (hcs == STD_BDRY_coord) return numStandardBdryCells[dimension]; else
+if (hcs == STD_REL_BDRY_coord) return numRelativeCells[dimension]; else
+if (hcs == MIX_BDRY_coord) return 0; else
+if (hcs == MIX_REL_BDRY_coord) return 0; else
+if (hcs == DUAL_BDRY_coord) return 0; else
+if (hcs == DUAL_REL_BDRY_coord) return 0; 
+return 0;
+}
 
 inline long int NCellularData::eulerChar() const
 { return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3]+numDualCells[4]; }
