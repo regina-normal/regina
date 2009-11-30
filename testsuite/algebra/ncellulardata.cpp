@@ -35,7 +35,10 @@
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 
+#include "manifold/nlensspace.h"
+
 #include "algebra/ncellulardata.h"
+#include "algebra/nbilinearform.h"
 #include "algebra/nmarkedabeliangroup.h"
 
 #include "testsuite/utilities/testutilities.h"
@@ -46,7 +49,9 @@ using regina::NExampleTriangulation;
 using regina::NMarkedAbelianGroup;
 using regina::NHomMarkedAbelianGroup;
 using regina::NCellularData;
+using regina::NBilinearForm;
 using regina::NMatrixInt;
+using regina::NLensSpace;
 
 class NCellularDataTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NCellularDataTest);
@@ -56,6 +61,7 @@ class NCellularDataTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(homology_LES_tests);
     CPPUNIT_TEST(poincare_duality_tests); 
     CPPUNIT_TEST(intersectionform_tests);
+    CPPUNIT_TEST(lensspacehomotopyclassification_tests);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -134,6 +140,48 @@ class NCellularDataTest : public CppUnit::TestFixture {
 		for (unsigned long i=0; i<cdList.size(); i++)
 		 if (!cdList[i]->intersectionFormsVerified()) CPPUNIT_FAIL("Intersection forms misbehaving.");
 	}
+
+        void lensspacehomotopyclassification_tests() {
+         NLargeInteger maxP(22); maxP.seedRandomGenerator();
+         // produce some random lens spaces, compute intersection form and check it is [\pm r^2 q/p] \in Q/Z
+         // p will be anywhere from 2 to 19, q will be chosen to be coprime, how? just choose randomly 0 < q < p, 
+         // until you find something coprime, I suppose. 
+         maxP = maxP - 2;
+         bool testpassed(true);
+         std::ostringstream msg;
+         NTriangulation* lens(NULL);
+         const NBilinearForm* tif(NULL);
+         for (unsigned long i=0; i<8; i++) // 3 random lens spaces to test.
+          { 
+           NLargeInteger p( maxP.randomBoundedByThis() + 2 ); // should be at least 2
+           NLargeInteger q( p.randomBoundedByThis() );
+           while ( q.gcd(p) != 1 ) q = p.randomBoundedByThis();
+           lens = new NTriangulation(*NLensSpace(p.longValue(),q.longValue()).construct());
+           // we have our random triangulation, lets test it. 
+           NCellularData ncd( *lens );
+           NCellularData::GroupLocator h1L( 1, NCellularData::coVariant, NCellularData::DUAL_coord, 0 );
+           NCellularData::FormLocator tifL( NCellularData::torsionlinkingForm, h1L, h1L );
+           tif = new NBilinearForm( *ncd.bilinearForm(tifL) );
+           // have the form, if it evaluates to a/p we need to make sure a/p = +- r^2 q/p mod 1 for some r == 1,2,...,p-1
+           bool itestpassed(false);
+           std::vector<NLargeInteger> idV(1, NLargeInteger::one);
+           std::vector<NLargeInteger> eval(tif->evalCC(idV, idV));
+           NLargeInteger A(eval[0]); unsigned long P( p.longValue() );
+          for (unsigned long r=1; r < P; r++)
+            {
+             NLargeInteger temp(q); 
+             temp *= (r*r); 
+             if ( (temp - A) % p == 0 ) itestpassed=true;
+             if ( (temp + A) % p == 0 ) itestpassed=true; 
+            }
+           // if failed, append a message for output
+           if (itestpassed==false) { msg << "L("<<p<<","<<q<<") "; testpassed=false; }
+           // tidy up.
+           delete tif;
+           delete lens;
+          } // for i loop
+         if (!testpassed) CPPUNIT_FAIL("Lens space(s): "+msg.str()+"failed TLF test.");
+	} // lensspacehomotopyclassification_tests()
 
 };
 

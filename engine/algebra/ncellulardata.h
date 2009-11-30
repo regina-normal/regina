@@ -42,7 +42,6 @@
 #include "algebra/nbilinearform.h"
 #include "utilities/ptrutils.h"
 #include "utilities/nbooleans.h"
-#include "maths/nrational.h" // eventually I should get rid of this
 #include "maths/nsparsegrid.h"
 
 #include <algorithm>
@@ -457,7 +456,7 @@ public:
     bool coordinateIsomorphismsVerified(variance_type var=coVariant, unsigned long coef=0) const;
 
     /**
-     * Similarly, check that the homology long exact sequence of the pair (M, \partial M)
+     * Similarly, check that the homology long exact sequence of the pair (M, bdry M)
      * holds.  At present this isn't fully implemented as it only checks to see that the
      * image of one map is isomorphic to the kernel of the next, and that the composite of
      * one map with the next is zero.  If the image/kernel is infinite this is only a partial
@@ -544,8 +543,8 @@ public:
      *  3) Torsion linking form               ie: tH_i(M;Z) x tH_j(M;Z) --> Q/Z 
      *     (not yet implemented)                  when i+j=n-1, i,j>0. So for 3-manifolds only defined for i,j = 1,1
      *						  and for 4-manifolds i,j=1,2 or 2,1. 
-     *      Present implementation has      The image of the form in Q/Z is isomorphic to Z_k where k is the largest
-     *      ldomain and rdomain given        invariant factor of tH_j(M;Z), so we implement the image as Z_k with
+     *      Present implementation has      The range of the form in Q/Z will be taken to be Z_k where k is the largest
+     *      ldomain and rdomain given        invariant factor of tH_j(M;Z), so we implement the range as Z_k with
      *      trivial presentations            trivial presentation 0 --> Z --k--> Z ---> Z_k ---> 0
      *      
      *
@@ -564,54 +563,6 @@ public:
      
 };
 
-
-/**
- *  This procedure takes as input the NBilinearForm intP which is required to be a torsion linking form on an abelian
- * group.  Specifically, it's assumed the map A x A --> Q/Z is symmetric, and the range is a trivially presented Z/nZ
- *
- * The procedure outputs the complete Kawauchi-Kojima invariants of the form, which are:
- *
- * 1) The prime power decomposition of A, as ppVec.
- *
- * 2) The classification of the 2-torsion linking pairing.  This invariant takes the form of a vector with n elements, where
- *    2^n is the order of the largest subgroup of A whose order is a power of two.  The entries of the vector represent which
- *    the angle of a certain vector V in the complex plane -- this vector can either be at the origin (8), or it is a non-zero
- *    vector along the line of angle 2(pi)i/8*k, k=0,1,2,3,4,5,6,7.  Kawauchi and Kojima use the symbol infinity to represent
- *    zero-sums, but we use 8. The vector V is the sum of e^{ 2^{i+1} pi i form(x,x) } where x ranges over ?? read KK paper
- *    again...  So this invariant is orientation-sensitive.  In particular if you reverse the orientation, the elements of the
- *    vector negate mod 8 (except for 8, which remains fixed).  So a vector (1 3 8 7 8) is turned to (7 5 8 1 8) on reversal
- *    of orientation. TODO: supply more details
- *
- * 3) The classification of the odd p-torsion linking pairing.  Given a prime power p^k, you consider the induced linking
- *    form on the quotient of elements of order p^k modulo p^{k-1}.  The determinant you can consider as an element of the
- *    field Z_p, and then you take the legendre symbol (whether or not the determinant is a square mod p).  This is the
- *    invariant, as a list for all p^k dividing the order of A, with p odd.  This invariant is also orientation-sensitive, 
- *    since when you change the orientation you negate the relevant matrices, so the legendre symbol changes if and 
- *    only if the rank n of the p^k-torsion mod p^(k-1) is odd and p | n^2 + 1. 
- *
- * The routine also outputs linkingFormPD, which is the restriction of the torsion linking form to the subgroups of A
- * divisible by all the prime factors of the order of A. 
- */
-void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
-	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, // almost same except this counts
-        std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,// this lists 
-        std::vector<unsigned long> &ttVec, 
-        std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
-        std::vector< NMatrixRing<NRational>* > &linkingFormPD );
-
-/**
- * Function takes as input the output of computeTorsionLinkingFormInvariants, and returns various text
- * human-readable strings that interpret the result.
- */
-void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec,
-        const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
-        const std::vector<unsigned long> &ttVec, 
-        const std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
-        const std::vector< NMatrixRing<NRational>* > &linkingFormPD, 
-        bool orientable, 
-        bool &torsionLinkingFormIsSplit, bool &torsionLinkingFormIsHyperbolic, 
-        std::string &torsionRankString,     std::string &torsionSigmaString,     
-        std::string &torsionLegendreString );
 
 /*@}*/
 
