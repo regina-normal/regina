@@ -88,9 +88,14 @@ class Dim4Triangulation;
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
  *        cup products.  (current efforts here)
+ *        cell counts DONE
+ *        chain complex initialization TODO
+ *        chain maps TODO
+ *        PD / intersection forms TODO
  *       4) Detailed fundamental group presentations and maps bdry -> M, etc. 
  *       5) Detailed search for possible memory leaks.
  *       6) Sometimes the torsion linking form takes values in Z_1, sometimes in 0, why is there the difference?
+ *       7) add some images into documentation.
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
@@ -99,6 +104,22 @@ class Dim4Triangulation;
  *       using pointers to pre-existing NMarkedAbelianGroups, that way they won't have to be duplicated
  *       and since we already control initialization/destruction via NCellularData, can avoid any pointer
  *       troubles.
+ *
+ * Guide to ncellulardata.*.cpp files:
+ *
+ *       ncellulardata.cpp - contains only the core routines NCellularData::unMarkedGroup, NCellularData::markedGroup, 
+ *                           NCellularData::homGroup, NCellularData::poincarePolynomial, NCellularData::bilinearForm.
+ *
+ *       ncellulardata.init.cpp - contains all the setupIndices() routines, as well as all the chain complex
+ *                           initialization routines and the various precomputed maps of chain complexes. 
+ *
+ *       ncellulardata.locators.cpp - contains the FormLocator, GroupLocator and HomLocator classes.
+ *
+ *       ncellulardata.output.cpp - contains the writeTextShort routines.
+ *
+ *       ncellulardata.tests.cpp - contains all the canned diagnostic tests. 
+ *
+ *       ncellulardata.extra.cpp - currently empty
  *
  * @author Ryan Budney
  */
@@ -114,17 +135,17 @@ public:
   */
  enum homology_coordinate_system { 
  /**
-  * Is the most natural CW-decomposition of a semi-simplicially (ideal) triangulated manifold.  The top-dimensional cells are
-  * the tetrahedra (of a 3-manifold) or the pentachora (of a 4-manifold).  Dual to DUAL_REL_BDRY_coord.
+  * Is the most natural CW-decomposition of a semi-simplicially (ideal) triangulated manifold. The top-dimensional cells are
+  * the tetrahedra (of a 3-manifold) or the pentachora (of a 4-manifold). Dual to DUAL_REL_BDRY_coord.
   */
   STD_coord, 
  /**
   * Is the dual polyhedral decomposition to this CW-decomposition. The top-dimensional cells correspond to the interior
-  * vertices of the triangulation.  Dual to STD_REL_BDRY_coord.
+  * vertices of the triangulation. Dual to STD_REL_BDRY_coord.
   */
   DUAL_coord, 
  /**
-  * Is essentially the CW-decomposition of the barycentric subdivision of the triangulation.  For every k-cell in the
+  * Is essentially the CW-decomposition of the barycentric subdivision of the triangulation. For every k-cell in the
   * original triangulation there's k+1 associated k-cells in this triangulation. 
   */
   MIX_coord, 
@@ -171,7 +192,7 @@ public:
 
  /**
   * NCellularData has several routines that require GroupLocator objects as arguments: unmarkedGroup, markedGroup, 
-  *  homGroup, bilinearForm.   See NCellularData::unmarkedGroup, NCellularData::markedGroup, NCellularData::homGroup 
+  *  homGroup, bilinearForm. See NCellularData::unmarkedGroup, NCellularData::markedGroup, NCellularData::homGroup 
   *  and NCellularData::bilinearForm for usage.
   */
  struct GroupLocator {
@@ -559,7 +580,6 @@ public:
      *      Present implementation has      The range of the form in Q/Z will be taken to be Z_k where k is the largest
      *      ldomain and rdomain given        invariant factor of tH_j(M;Z), so we implement the range as Z_k with
      *      trivial presentations            trivial presentation 0 --> Z --k--> Z ---> Z_k ---> 0
-     *      
      *
      *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
      *     (not yet implemented)              various coordinate systems  
@@ -569,9 +589,9 @@ public:
 
     /**
      *  Describes the homomorphisms from the fundamental group of the boundary components to the fundamental
-     *  group of the manifold's components.   This routine uses the dual cellular coordinates, building up
+     *  group of the manifold's components. This routine uses the dual cellular coordinates, building up
      *  a maximal forest in the dual boundary 1-skeleton, then extending it to a maximal forest in the dual 
-     *  1-skeleton.  
+     *  1-skeleton. TODO: Not yet implemented.
      *
      * \todo eventually expand to use other coordinate systems, other group homomorphisms.
      */

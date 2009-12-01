@@ -48,7 +48,7 @@ void setupIndices(const Dim4Triangulation* tri,
  unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4], 
  unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 
  unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5], 
- unsigned long numDualRelCells[5],     unsigned long numMixRelCells[5],   // TODO: these last four not initialized
+ unsigned long numDualRelCells[5],     unsigned long numMixRelCells[5],   
  unsigned long numMixBdryCells[4],     unsigned long numDualBdryCells[4])
 {
     // nicIx[0]  interior or boundary,  bcIx[0] boundary,  dcIx[4] interior vertices. 
@@ -100,17 +100,20 @@ void setupIndices(const Dim4Triangulation* tri,
             icIx[3].push_back(5*tri->pentachoronIndex(*pit)+i);
     }
 
-    // standard (0..4)-cells:
+    // standard CW-decomposition (0..4)-cells / triangulation + ideal cells.
     for (unsigned i=0; i<4; i++) numStandardCells[i] = nicIx[i].size() + icIx[i].size();
     numStandardCells[4] = nicIx[4].size();
-    // dual (0..4)-cells:
+    // dual (0..4)-cells : a dual k-cell for every n-k-cell in triangulation
     for (unsigned i=0; i<5; i++) numDualCells[i] = dcIx[i].size();
+    // relative (0..4)-cells : non-boundary cells from triangulation
     for (unsigned i=0; i<5; i++) numRelativeCells[i] = rIx[i].size();
-    // boundary (0..3)-cells:
+    // boundary (0..3)-cells: boundary triangulation + ideal cells
     for (unsigned i=0; i<4; i++) numStandardBdryCells[i] = bcIx[i].size() + icIx[i].size();
-    // ideal and non-ideal cells:
+    // ideal and non-ideal cells: cells from std cw-decomposition that aren't ideal
     for (unsigned i=0; i<5; i++) numNonIdealCells[i] = nicIx[i].size();
+    // cells from std cw-decomposition that are ideal
     for (unsigned i=0; i<4; i++) numIdealCells[i] = icIx[i].size();
+    // boundary cells from std cw-decomposition that are not ideal
     for (unsigned i=0; i<4; i++) numNonIdealBdryCells[i] = bcIx[i].size();
 
     // this mixed decomposition is the proper cell decomposition induced by the barycentric
@@ -123,23 +126,27 @@ void setupIndices(const Dim4Triangulation* tri,
 		     numIdealCells[2];
     numMixCells[3] = 4*numNonIdealCells[3] + 10*numNonIdealCells[4] + numIdealCells[3];
     numMixCells[4] = 5*numNonIdealCells[4];
-    // TODO: number of mixed cells rel boundary -- DOUBLE CHECK THESE! probably wrong...
-    //  0 -> numRelativeCells[0] + [1] + [2] + [3] + [4] 
-    //  1 -> 2*numRelativeCells[1] + 3*[2] + 4*[3] + 5*[4] 
-    //  2 -> 3*numRelativeCells[2] + 6*[3] + 10*[4] 
-    //  3 -> 4*numRelativeCells[3] + 10*[4] 
-    //  4 -> 5*numRelativeCells[4] 
-    // TODO: number of mixed boundary cells
-    //  0 -> numStandardBdryCells[0] + [1] + [2] + [3]
-    //  1 -> 2*numStandardBdryCells[1] + 3*[2] + 4*[3] 
-    //  2 -> 3*numStandardBdryCells[2] + 4*[3]
-    //  3 -> 4*numStandardBdryCells[3] 
-    // TODO: number of relative dual cells
-    //  0 -> ?, 1 -> , 2 -> , 3 -> , 4 -> 
-    // TODO: number of boundary dual cells
-    //  0 -> ?, 1 -> , 2 -> , 3 -> 
 
+    // number of relative dual cells, these are dual to the standard CW-decomposition
+    for (unsigned i=0; i<5; i++) numDualRelCells[i] = numStandardCells[4-i];
 
+    // number of mixed relative cells -- each non-boundary (relative) cell gets multiplied appropriately..
+    numMixRelCells[0] = numRelativeCells[0] + numRelativeCells[1] + numRelativeCells[2] + numRelativeCells[3] +
+	                numRelativeCells[4]; 
+    numMixRelCells[1] = 2*numRelativeCells[1] + 3*numRelativeCells[2] + 4*numRelativeCells[3] + 
+		        5*numRelativeCells[4];
+    numMixRelCells[2] = 3*numRelativeCells[2] + 6*numRelativeCells[3] + 10*numRelativeCells[4];
+    numMixRelCells[3] = 4*numRelativeCells[3] + 10*numRelativeCells[4];
+    numMixRelCells[4] = 5*numRelativeCells[4];
+
+    // number of mixed boundary cells
+    numMixBdryCells[0] = numStandardBdryCells[0] + numStandardBdryCells[1] + numStandardBdryCells[2] + numStandardBdryCells[3];
+    numMixBdryCells[1] = 2*numStandardBdryCells[1] + 3*numStandardBdryCells[2] + 4*numStandardBdryCells[3];
+    numMixBdryCells[2] = 3*numStandardBdryCells[2] + 4*numStandardBdryCells[3];
+    numMixBdryCells[3] = 4*numStandardBdryCells[3];
+
+    // number of boundary dual cells -- dual to std boundary cells
+    for (unsigned i=0; i<4; i++) numDualBdryCells[i] = numStandardBdryCells[3-i];
 }  
 
 
@@ -152,7 +159,7 @@ void setupIndices(const NTriangulation* tri,
  unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4], 
  unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 
  unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5], 
- unsigned long numDualRelCells[5],     unsigned long numMixRelCells[5],  // TODO: these last 4 not initialized
+ unsigned long numDualRelCells[5],     unsigned long numMixRelCells[5],  
  unsigned long numMixBdryCells[4],     unsigned long numDualBdryCells[4])
 {
     // nicIx[0]  interior or boundary,  bcIx[0] boundary,  dcIx[3] interior vertices. 
@@ -223,6 +230,23 @@ void setupIndices(const NTriangulation* tri,
     numMixCells[2] = 3*numNonIdealCells[2] + 6*numNonIdealCells[3] + numIdealCells[2];
     numMixCells[3] = 4*numNonIdealCells[3];
     numMixCells[4] = 0;
+
+    // number of relative dual cells, these are dual to the standard CW-decomposition
+    for (unsigned i=0; i<4; i++) numDualRelCells[i] = numStandardCells[3-i];
+
+    // number of mixed relative cells -- each non-boundary (relative) cell gets multiplied appropriately..
+    numMixRelCells[0] = numRelativeCells[0] + numRelativeCells[1] + numRelativeCells[2] + numRelativeCells[3]; 
+    numMixRelCells[1] = 2*numRelativeCells[1] + 3*numRelativeCells[2] + 4*numRelativeCells[3];
+    numMixRelCells[2] = 3*numRelativeCells[2] + 6*numRelativeCells[3];
+    numMixRelCells[3] = 4*numRelativeCells[3];
+
+    // number of mixed boundary cells
+    numMixBdryCells[0] = numStandardBdryCells[0] + numStandardBdryCells[1] + numStandardBdryCells[2];
+    numMixBdryCells[1] = 2*numStandardBdryCells[1] + 3*numStandardBdryCells[2];
+    numMixBdryCells[2] = 3*numStandardBdryCells[2];
+
+    // number of boundary dual cells -- dual to std boundary cells
+    for (unsigned i=0; i<3; i++) numDualBdryCells[i] = numStandardBdryCells[2-i];
 }  
 
 void fillStandardHomologyCC(const Dim4Triangulation* tri, 
