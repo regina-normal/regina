@@ -110,16 +110,16 @@ class Dim4Triangulation;
  *       ncellulardata.cpp - contains only the core routines NCellularData::unMarkedGroup, NCellularData::markedGroup, 
  *                           NCellularData::homGroup, NCellularData::poincarePolynomial, NCellularData::bilinearForm.
  *
- *       ncellulardata.init.cpp - contains all the setupIndices() routines, as well as all the chain complex
- *                           initialization routines and the various precomputed maps of chain complexes. 
+ *       ncellulardata.init.cc.cpp - contains all the setupIndices() routines, as well as all the chain complex
+ *                           initialization routines.
+ *
+ *       ncellulardata.init.hom.cpp - contains the chain map initialization routines. 
  *
  *       ncellulardata.locators.cpp - contains the FormLocator, GroupLocator and HomLocator classes.
  *
  *       ncellulardata.output.cpp - contains the writeTextShort routines.
  *
  *       ncellulardata.tests.cpp - contains all the canned diagnostic tests. 
- *
- *       ncellulardata.extra.cpp - currently empty
  *
  * @author Ryan Budney
  */
