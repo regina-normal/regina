@@ -688,18 +688,20 @@ inline NCellularData::~NCellularData() {
 
 inline unsigned long NCellularData::cellCount(homology_coordinate_system hcs, unsigned dimension) const
 {
-// TODO: add an out-of-bounds check on dimension.
-// TODO: finish counts for the new coordinate systems.
-if (hcs == STD_coord) return numStandardCells[dimension]; else
-if (hcs == DUAL_coord) return numDualCells[dimension]; else
-if (hcs == MIX_coord) return numMixCells[dimension]; else
-if (hcs == STD_BDRY_coord) return numStandardBdryCells[dimension]; else
-if (hcs == STD_REL_BDRY_coord) return numRelativeCells[dimension]; else
-if (hcs == MIX_BDRY_coord) return numMixBdryCells[dimension]; else
-if (hcs == MIX_REL_BDRY_coord) return numMixRelCells[dimension]; else
-if (hcs == DUAL_BDRY_coord) return numDualBdryCells[dimension]; else
+if ( (dimension > 4) && tri4 ) return 0; 
+if ( (dimension > 3) && tri3 ) return 0; // out of bounds check
+if (hcs == STD_coord) return numStandardCells[dimension]; 
+if (hcs == DUAL_coord) return numDualCells[dimension]; 
+if (hcs == MIX_coord) return numMixCells[dimension];
+if (hcs == MIX_REL_BDRY_coord) return numMixRelCells[dimension]; 
+if (hcs == STD_REL_BDRY_coord) return numRelativeCells[dimension]; 
 if (hcs == DUAL_REL_BDRY_coord) return numDualRelCells[dimension]; 
-return 0;
+if ( (dimension > 3) && tri4 ) return 0;
+if ( (dimension > 2) && tri3 ) return 0;
+if (hcs == STD_BDRY_coord) return numStandardBdryCells[dimension]; 
+if (hcs == MIX_BDRY_coord) return numMixBdryCells[dimension]; 
+if (hcs == DUAL_BDRY_coord) return numDualBdryCells[dimension]; 
+return 0; // only get here if hcs out of bounds!
 }
 
 inline long int NCellularData::eulerChar() const
