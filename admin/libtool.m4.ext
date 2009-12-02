@@ -37,7 +37,7 @@ m4_define([_LT_COPYING], [dnl
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 ])
 
-# serial 56 LT_INIT
+# libtool.m4 serial 56 LT_INIT
 
 
 # LT_PREREQ(VERSION)
@@ -955,7 +955,7 @@ m4_defun_once([_LT_REQUIRED_DARWIN_CHECKS],[
 	10.[[012]]*)
 	  _lt_dar_allow_undefined='${wl}-flat_namespace ${wl}-undefined ${wl}suppress' ;;
 	10.*)
-	  _lt_dar_allow_undefined='${wl}-undefined ${wl}dynamic_lookup' ;;
+	  _lt_dar_allow_undefined='${wl}-flat_namespace ${wl}-undefined ${wl}dynamic_lookup' ;;
       esac
     ;;
   esac

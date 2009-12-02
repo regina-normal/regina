@@ -1,38 +1,25 @@
 Index: libtool.m4.ext
 ===================================================================
---- libtool.m4.ext	(revision 3228)
+--- libtool.m4.ext	(revision 4731)
 +++ libtool.m4.ext	(working copy)
-@@ -3029,7 +3029,7 @@
-                _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}suppress'
-                ;;
-              10.*)
--               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-undefined ${wl}dynamic_lookup'
-+               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}dynamic_lookup'
-                ;;
-            esac
-          fi
-@@ -5816,7 +5816,7 @@
-                _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}suppress'
-                ;;
-              10.*)
--               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-undefined ${wl}dynamic_lookup'
-+               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}dynamic_lookup'
-                ;;
-            esac
-          fi
-Index: libtool.m4.ext
-===================================================================
---- libtool.m4.ext	(revision 3877)
-+++ libtool.m4.ext	(working copy)
-@@ -7,7 +7,7 @@
- ## unlimited permission to copy and/or distribute it, with or without
- ## modifications, as long as this notice is preserved.
+@@ -37,7 +37,7 @@
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ ])
  
--# serial 48 Debian 1.5.22-4 AC_PROG_LIBTOOL
-+# libtool.m4 serial 48 Debian 1.5.22-4 AC_PROG_LIBTOOL
+-# serial 56 LT_INIT
++# libtool.m4 serial 56 LT_INIT
  
  
- # AC_PROVIDE_IFELSE(MACRO-NAME, IF-PROVIDED, IF-NOT-PROVIDED)
+ # LT_PREREQ(VERSION)
+@@ -955,7 +955,7 @@
+ 	10.[[012]]*)
+ 	  _lt_dar_allow_undefined='${wl}-flat_namespace ${wl}-undefined ${wl}suppress' ;;
+ 	10.*)
+-	  _lt_dar_allow_undefined='${wl}-undefined ${wl}dynamic_lookup' ;;
++	  _lt_dar_allow_undefined='${wl}-flat_namespace ${wl}-undefined ${wl}dynamic_lookup' ;;
+       esac
+     ;;
+   esac
 Index: kde.m4.ext
 ===================================================================
 --- kde.m4.ext	(revision 3877)
