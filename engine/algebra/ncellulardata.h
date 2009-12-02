@@ -92,7 +92,12 @@ class Dim4Triangulation;
  *        chain complex initialization TODO
  *        chain maps TODO
  *        PD / intersection forms TODO
- *       4) Detailed fundamental group presentations and maps bdry -> M, etc. 
+ *       4) Detailed fundamental group presentations and maps bdry -> M, etc.  First we need to implement 
+ *          a) max forest in dual 1-skeleton to ideal boundary, dual standard boundary, and extension to dual 1-skeleton
+ *             of the triangulation
+ *          b) extend to full 1-skeleton as dual ideal, dual std boundary, dual 1-skel of triangulation. 
+ *          c) append in all relators. That's a big pile. 
+ *          d) push out pi_1 computations for all the boundary components, interior manifold, and inclusion maps.
  *       5) Detailed search for possible memory leaks.
  *       6) Sometimes the torsion linking form takes values in Z_1, sometimes in 0, why is there the difference?
  *       7) add some images into documentation.
