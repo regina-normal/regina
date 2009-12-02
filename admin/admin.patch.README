@@ -17,7 +17,7 @@ reasons for these changes are outlined below.
 
   Patched 23 September 2007.
 
-- Mangling #serial markers in kde.m4.ext and libtool.m4.ext:
+- Mangling #serial markers in several *.m4.ext files:
 
   Automake 1.10 issues warnings because several #serial markers from several
   different places are bundled together in the same file (acinclude.m4).
