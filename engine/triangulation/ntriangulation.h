@@ -1221,6 +1221,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * e^(2i * Pi * whichRoot / 2r); this argument must be strictly
          * between 0 and 2r and must have no common factors with r.
          * @return the requested Turaev-Viro invariant.
+         *
          * @see allCalculatedTuraevViro
          */
         double turaevViro(unsigned long r, unsigned long whichRoot) const;
@@ -1241,6 +1242,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the set of all Turaev-Viro invariants that have
          * already been calculated.
+         *
          * @see turaevViro
          */
         const TuraevViroSet& allCalculatedTuraevViro() const;
@@ -2449,13 +2451,16 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          */
         void insertTriangulation(const NTriangulation& source);
         /**
-         * Inserts the rehydration of the given string into this
-         * triangulation.
+         * Inserts the rehydration of the given string into this triangulation.
+         * If you simply wish to convert a dehydration string into a
+         * new triangulation, use the static routine rehydrate() instead.
+         * See dehydrate() for more information on dehydration strings.
          *
-         * The given string will be rehydrated into a proper triangulation.
-         * The new tetrahedra will be inserted into this triangulation
-         * in the order in which they appear in the rehydrated triangulation,
-         * and the numbering of their vertices (0-3) will not change.
+         * This routine will first rehydrate the given string into a proper
+         * triangulation.  The tetrahedra from the rehydrated triangulation
+         * will then be inserted into this triangulation in the same order in
+         * which they appear in the rehydrated triangulation, and the
+         * numbering of their vertices (0-3) will not change.
          *
          * The routine dehydrate() can be used to extract a dehydration
          * string from an existing triangulation.  Dehydration followed
@@ -2473,8 +2478,39 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * will be treated as if they were lower case.
          * @return \c true if the insertion was successful, or
          * \c false if the given string could not be rehydrated.
+         *
+         * @see dehydrate
+         * @see rehydrate
          */
         bool insertRehydration(const std::string& dehydration);
+        /**
+         * Rehydrates the given alphabetical string into a new triangulation.
+         * See dehydrate() for more information on dehydration strings.
+         *
+         * This routine will rehydrate the given string into a new
+         * triangulation, and return this new triangulation.
+         *
+         * The converse routine dehydrate() can be used to extract a
+         * dehydration string from an existing triangulation.  Dehydration
+         * followed by rehydration might not produce a triangulation identical
+         * to the original, but it is guaranteed to produce an isomorphic
+         * copy.  See dehydrate() for the reasons behind this.
+         *
+         * For a full description of the dehydrated triangulation
+         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
+         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
+         * 1999.
+         *
+         * @param dehydration a dehydrated representation of the
+         * triangulation to insert.  Case is irrelevant; all letters
+         * will be treated as if they were lower case.
+         * @return a newly allocated triangulation if the rehydration was
+         * successful, or null if the given string could not be rehydrated.
+         *
+         * @see dehydrate
+         * @see insertRehydration
+         */
+        static NTriangulation* rehydrate(const std::string& dehydration);
         /**
          * Dehydrates this triangulation into an alphabetical string.
          *
@@ -2496,7 +2532,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *   (though ideal triangulations are fine).
          * - They can only support triangulations with at most 25 tetrahedra.
          *
-         * The routine insertRehydration() can be used to recover a
+         * The routine rehydrate() can be used to recover a
          * triangulation from a dehydration string.  Note that the
          * triangulation recovered <b>might not be identical</b> to the
          * original, but it is guaranteed to be an isomorphic copy.
@@ -2511,6 +2547,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * empty string if dehydration is not possible because the
          * triangulation is disconnected, has boundary faces or contains
          * too many tetrahedra.
+         *
+         * @see rehydrate
+         * @see insertRehydration
          */
         std::string dehydrate() const;
         /**
