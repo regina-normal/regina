@@ -124,6 +124,10 @@ class NExampleTriangulation {
          *
          * This 3-manifold is described in "Die beiden Dodekaederraume",
          * C. Weber and H. Seifert, Math. Z. 37 (1933), no. 1, 237-253.
+         * The triangulation returned by this routine (with 23 tetrahedra)
+         * is given in "The Weber-Seifert dodecahedral space is non-Haken",
+         * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
+         * preprint, arXiv:0909.4625.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
