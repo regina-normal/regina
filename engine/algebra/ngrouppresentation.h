@@ -163,10 +163,10 @@ struct NGroupExpressionTerm {
 std::ostream& operator << (std::ostream& out, const NGroupExpressionTerm& term);
 
 /**
- * Represents an expression involving generators from a group presentation or a free group.
- * An expression is represented as word ie: a sequence of powers of generators all of
- * which are multiplied in order.  Each power of a generator
- * corresponds to an individual NGroupExpressionTerm.
+ * Represents an expression involving generators from a group presentation
+ * or a free group.  An expression is represented as word, i.e, a sequence
+ * of powers of generators all of which are multiplied in order.  Each power
+ * of a generator corresponds to an individual NGroupExpressionTerm.
  *
  * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains the
  * three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that
