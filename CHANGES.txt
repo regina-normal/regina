@@ -105,6 +105,9 @@ Version 4.6.1  [ (under development) ]
               conservative, and are now weaker.  In particular, the endpoints
               of the edge may now both be boundary.  Practically, this means
               that 2-1 moves may now be legal where they were not legal before.
+            - New static routine rehydrate() to rehydrate a new triangulation
+              from a Callahan-Hildebrand-Weeks dehydration string.  This is a
+              more convenient version of insertRehydration().
         Class NVertexEmbedding:
             - New routine getVertices(), which facilitates a consistent
               orientation for the three remaining vertices in each tetrahedron.
