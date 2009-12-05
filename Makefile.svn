@@ -33,6 +33,9 @@ all :
 		false; \
 	fi
 	admin/ac_gen
-	autoreconf --force $(WARNINGS)
+	aclocal --force $(WARNINGS)
+	autoconf --force $(WARNINGS)
+	autoheader --force $(WARNINGS)
+	automake --force $(WARNINGS)
 	perl -w admin/am_edit
 
