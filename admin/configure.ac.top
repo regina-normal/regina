@@ -69,6 +69,11 @@ REGINA_PACKAGE_VERSIONS
 #
 ###########################################################
 
+# Work around the fact that KDE3 macros break with autoconf >= 2.64:
+AC_PROG_CC
+AC_PROG_CXX
+
+# Back to business as usual.
 AC_CHECK_COMPILERS
 
 # Put back the exception handling that KDE takes out, since we need it
