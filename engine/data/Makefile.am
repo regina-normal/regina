@@ -17,5 +17,7 @@ internaldata_DATA = README.txt \
 	snappea-census-sec7o.dat \
 	snappea-census-sec7n.dat
 
-EXTRA_DIST = $(internaldata_DATA)
+EXTRA_DIST = $(internaldata_DATA) \
+	create-snappea-census-data.py \
+	verify-snappea-census-data.py
 
