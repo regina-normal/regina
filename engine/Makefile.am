@@ -28,6 +28,7 @@ SUBDIRS = \
   surfaces \
   triangulation \
   utilities \
+  data \
   doxygen
 
 lib_LTLIBRARIES = libregina-engine.la

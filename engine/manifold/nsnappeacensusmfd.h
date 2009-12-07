@@ -66,10 +66,7 @@ namespace regina {
  * Furthermore, the section and index parameters of an NSnapPeaCensusTri
  * are identical to those of its corresponding NSnapPeaCensusManifold.
  *
- * All of the optional NManifold routines except for construct() are
- * implemented for this class, though construct() and getHomologyH1()
- * only return solutions for the very smallest SnapPea census manifolds
- * (for which the homology groups have been hard-coded).
+ * All of the optional NManifold routines are implemented for this class.
  *
  * \testpart
  */
