@@ -42,7 +42,7 @@
 
 namespace regina {
 
-NTriangulation* rehydrate(const std::string& dehydration) {
+NTriangulation* NTriangulation::rehydrate(const std::string& dehydration) {
     NTriangulation* ans = new NTriangulation;
     if (ans->insertRehydration(dehydration))
         return ans;
