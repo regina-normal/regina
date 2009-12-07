@@ -67,9 +67,7 @@ namespace regina {
  * are identical to those of its corresponding NSnapPeaCensusManifold.
  *
  * All of the optional NStandardTriangulation routines are implemented
- * for this class, though getHomologyH1() only returns a solution for
- * the very smallest SnapPea triangulations (for which the homology
- * groups have been hard-coded).
+ * for this class.
  *
  * \testpart
  */

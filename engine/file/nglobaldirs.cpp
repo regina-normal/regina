@@ -50,5 +50,9 @@ std::string NGlobalDirs::engineDocs() {
     return home() + "/engine-docs";
 }
 
+std::string NGlobalDirs::data() {
+    return home() + "/data";
+}
+
 } // namespace regina
 

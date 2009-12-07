@@ -28,6 +28,8 @@ Version 4.6.1  [ (under development) ]
             - Renamed seifertWeber() to weberSeifert(), for consistency with
               the original paper.  The old routine is now deprecated, but has
               being preserved (for the time being) for backward compatibility.
+        Class NGlobalDirs:
+            - New routine data() to return the internal data directory.
         Class NNormalSurface:
             - New routines isCompressingDisc() and isIncompressible() for
               testing incompressibility.
@@ -68,6 +70,10 @@ Version 4.6.1  [ (under development) ]
             - Fixed a bug that lost script variables when reading ancient
               binary files (created before Regina 3.0, around mid-2002).
               This bug only showed up on some compilers.
+        Class NSnapPeaCensusManifold, NSnapPeaCensusTri:
+            - Routines getHomologyH1() (for both classes) and construct()
+              (for NSnapPeaCensusManifold) are now implemented for all SnapPea
+              census manifolds/triangulations, not just the smallest few.
         Class NSnapPeaTriangulation:
             - Kernel messages are now disabled by default.
         Class NTetrahedron:

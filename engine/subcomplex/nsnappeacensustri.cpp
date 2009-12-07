@@ -172,35 +172,7 @@ NManifold* NSnapPeaCensusTri::getManifold() const {
 }
 
 NAbelianGroup* NSnapPeaCensusTri::getHomologyH1() const {
-    // Hard-code the smallest cases.
-    if (section == SEC_5) {
-        if (index == 0 || index == 4) {
-            NAbelianGroup* ans = new NAbelianGroup();
-            ans->addRank();
-            return ans;
-        }
-        if (index == 1 || index == 2) {
-            NAbelianGroup* ans = new NAbelianGroup();
-            ans->addRank();
-            ans->addTorsionElement(2);
-            return ans;
-        }
-        if (index == 3) {
-            NAbelianGroup* ans = new NAbelianGroup();
-            ans->addRank();
-            ans->addTorsionElement(5);
-            return ans;
-        }
-        if (index == 129) {
-            // Whitehead link complement.
-            NAbelianGroup* ans = new NAbelianGroup();
-            ans->addRank(2);
-            return ans;
-        }
-    }
-
-    // Leave it as an unknown.
-    return 0;
+    return NSnapPeaCensusManifold(section, index).getHomologyH1();
 }
 
 std::ostream& NSnapPeaCensusTri::writeName(std::ostream& out) const {

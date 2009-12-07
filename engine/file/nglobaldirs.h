@@ -122,6 +122,18 @@ class NGlobalDirs {
          * @return Regina's calculation engine documentation directory.
          */
         static std::string engineDocs();
+
+        /**
+         * Returns the directory containing internal data files for Regina's
+         * calculation engine.
+         *
+         * \warning Currently this routine only returns useful results
+         * if Regina has been properly installed on the system.  See the
+         * NGlobalDirs class notes for further details.
+         *
+         * @return Regina's calculation engine data directory.
+         */
+        static std::string data();
 };
 
 /*@}*/

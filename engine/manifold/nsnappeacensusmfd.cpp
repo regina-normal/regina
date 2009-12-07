@@ -26,12 +26,26 @@
 
 /* end stub */
 
+#include "file/nglobaldirs.h"
 #include "manifold/nsnappeacensusmfd.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 
+#include <cstdio>
+#include <cstring>
+
 namespace regina {
+
+namespace {
+    int homDecode(char c) {
+        if (c >= 'a' && c <= 'z')
+            return c - 'a';
+        if (c >= 'A' && c <= 'Z')
+            return c - 'A' + 26;
+        return -1;
+    }
+}
 
 const char NSnapPeaCensusManifold::SEC_5 = 'm';
 const char NSnapPeaCensusManifold::SEC_6_OR = 's';
@@ -42,6 +56,8 @@ const char NSnapPeaCensusManifold::SEC_7_NOR = 'y';
 NTriangulation* NSnapPeaCensusManifold::construct() const {
     NTriangulation* ans = 0;
 
+    // Hard-code a few special cases so that the numbering of tetrahedra
+    // and vertices is compatible with earlier versions of Regina.
     if (section == SEC_5) {
         if (index == 0) {
             ans = NExampleTriangulation::gieseking();
@@ -84,12 +100,110 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
             ans->setPacketLabel("");
         }
     }
+    if (ans)
+        return ans;
 
+    // Fetch the relevant data from the census dehydration files.
+    std::string file = NGlobalDirs::data();
+    switch (section) {
+        case SEC_5:
+            file += "/snappea-census-sec5.dat"; break;
+        case SEC_6_OR:
+            file += "/snappea-census-sec6o.dat"; break;
+        case SEC_6_NOR:
+            file += "/snappea-census-sec6n.dat"; break;
+        case SEC_7_OR:
+            file += "/snappea-census-sec7o.dat"; break;
+        case SEC_7_NOR:
+            file += "/snappea-census-sec7n.dat"; break;
+        default:
+            return 0;
+    }
+
+    FILE* dat = fopen(file.c_str(), "r");
+    if (! dat) {
+        std::cerr << "Cannot open data file: " << file << std::endl;
+        return 0;
+    }
+    char tri[30], hom[30]; /* Long enough to deal with the snappea census
+                              files for <= 7 tetrahedra. */
+    for (unsigned i = 0; i <= index; ++i) {
+        if (fscanf(dat, "%s%s", tri, hom) != 2) {
+            if (feof(dat))
+                std::cerr << "Read beyond end of data file: "
+                    << file << std::endl;
+            else
+                std::cerr << "Error reading data file: " << file << std::endl;
+            return 0;
+        }
+    }
+    fclose(dat);
+
+    ans = NTriangulation::rehydrate(tri);
     return ans;
 }
 
 NAbelianGroup* NSnapPeaCensusManifold::getHomologyH1() const {
-    return NSnapPeaCensusTri(section, index).getHomologyH1();
+    // Fetch the relevant data from the census dehydration files.
+    std::string file = NGlobalDirs::data();
+    switch (section) {
+        case SEC_5:
+            file += "/snappea-census-sec5.dat"; break;
+        case SEC_6_OR:
+            file += "/snappea-census-sec6o.dat"; break;
+        case SEC_6_NOR:
+            file += "/snappea-census-sec6n.dat"; break;
+        case SEC_7_OR:
+            file += "/snappea-census-sec7o.dat"; break;
+        case SEC_7_NOR:
+            file += "/snappea-census-sec7n.dat"; break;
+        default:
+            return 0;
+    }
+
+    FILE* dat = fopen(file.c_str(), "r");
+    if (! dat) {
+        std::cerr << "Cannot open data file: " << file << std::endl;
+        return 0;
+    }
+    char tri[30], hom[30]; /* Long enough to deal with the snappea census
+                              files for <= 7 tetrahedra. */
+    for (unsigned i = 0; i <= index; ++i) {
+        if (fscanf(dat, "%s%s", tri, hom) != 2) {
+            if (feof(dat))
+                std::cerr << "Read beyond end of data file: "
+                    << file << std::endl;
+            else
+                std::cerr << "Error reading data file: " << file << std::endl;
+            return 0;
+        }
+    }
+    fclose(dat);
+
+    NAbelianGroup* ans = new NAbelianGroup();
+    char* c;
+    int val;
+
+    // First character of the homology string represents rank.
+    val = homDecode(hom[0]); // Empty string is picked up and dealt with here.
+    if (val < 0) {
+        delete ans;
+        return 0;
+    }
+    ans->addRank(val);
+
+    // The remaining characters represent torsion.
+    std::multiset<NLargeInteger> torsion;
+    for (c = hom + 1; *c; ++c) {
+        val = homDecode(*c);
+        if (val < 0) {
+            delete ans;
+            return 0;
+        }
+        torsion.insert(val);
+    }
+    ans->addTorsionElements(torsion);
+    return ans;
 }
 
 std::ostream& NSnapPeaCensusManifold::writeName(std::ostream& out) const {
