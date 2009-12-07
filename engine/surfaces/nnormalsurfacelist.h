@@ -484,8 +484,9 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * In other words, a surface \a S from this list will be placed
          * in the new list if and only if there is some other surface \a T
          * in this list for which \a S and \a T can be made to intersect
-         * nowhere at all.  See NNormalSurface::disjoint() for further
-         * details on disjointness testing.
+         * nowhere at all, without changing either normal isotopy class.
+         * See NNormalSurface::disjoint() for further details on disjointness
+         * testing.
          *
          * This routine cannot deal with empty, disconnected or
          * non-compact surfaces.  Such surfaces will be silently
@@ -529,7 +530,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * surface that is definitely \e not incompressible is thrown
          * away, and all other surfaces are placed in the new list.
          *
-         * Therefore, it is guaranteed that any incompressible surfaces
+         * Therefore, it is guaranteed that every incompressible surface
          * from the old list will be placed in the new list.  However,
          * it is not known whether any given surface in the new list is
          * indeed incompressible.
@@ -556,7 +557,10 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * all vertex links and thin edge links, and then
          * (ii) cutting along the remaining surfaces and running
          * NTriangulation::hasSimpleCompressingDisc() on the resulting
-         * bounded triangulations.
+         * bounded triangulations.  For more details on these tests
+         * see "The Weber-Seifert dodecahedral space is non-Haken",
+         * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
+         * preprint, arXiv:0909.4625.
          *
          * \pre The underlying 3-manifold triangulation is valid and closed.
          * In particular, it has no ideal vertices.

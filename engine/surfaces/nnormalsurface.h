@@ -1225,7 +1225,7 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         /**
          * Determines whether this and the given surface can be placed
          * within the surrounding triangulation so that they do not intersect
-         * anywhere at all.
+         * anywhere at all, without changing either normal isotopy class.
          *
          * This is a global constraint, and therefore gives a stronger test
          * than locallyCompatible().  However, this global constraint is

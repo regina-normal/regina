@@ -456,6 +456,11 @@ NNormalSurfaceList* NNormalSurfaceList::filterForPotentiallyIncompressible()
         if ((*it)->isThinEdgeLink().first)
             continue;
 
+        // If we have a one-sided surface, don't worry about taking the
+        // two-sided double cover.  If the complement of the one-sided
+        // surface has a compressing disc, then the complement of the
+        // double cover has the same compressing disc, and this surface
+        // can happily be tossed away.
         t = (*it)->cutAlong();
         if (! t->hasSimpleCompressingDisc())
             ans->surfaces.push_back((*it)->clone());
