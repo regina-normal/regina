@@ -56,8 +56,13 @@ Version 4.6.1  [ (under development) ]
         Class NNormalSurfaceList:
             - New filtering routines filterForLocallyCompatiblePairs() and
               filterForDisjointPairs().
-            - New routine filterForPotentiallyIncompressible() to assist
-              with bulk incompressibility testing.
+            - New routine filterForPotentiallyIncompressible() to assist with
+              bulk incompressibility testing; see arXiv:0909.4625 for details.
+        Class NPacket:
+            - In the python interface, makeOrphan() now returns the packet
+              itself and the ownership becomes the responsibility of whoever
+              takes this return value.  If nobody takes this return value
+              then the packet and its descendants are automatically destroyed.
         Class NPerm:
             - Renamed to NPerm4.  The C++ header has also moved from
               triangulation/nperm.h to maths/nperm4.h .  Both the old
@@ -102,7 +107,7 @@ Version 4.6.1  [ (under development) ]
               three remaining vertices in each tetrahedron.
         Class NTriangulation:
             - New routines hasCompressingDisc() and hasSimpleCompressingDisc()
-              to search for compressing discs.
+              to search for compressing discs; see arXiv:0909.4625 for details.
             - The "legality conditions" on closeBook() are now simpler, since
               some of the conditions were automatic consequences of others.
               Practically, nothing has changed (i.e., the new conditions will

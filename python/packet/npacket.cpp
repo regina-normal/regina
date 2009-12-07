@@ -76,6 +76,11 @@ namespace {
         child.release();
     }
 
+    NPacket* makeOrphan_return(NPacket* subtree) {
+        subtree->makeOrphan();
+        return subtree;
+    }
+
     boost::python::list getTags_list(const NPacket* p) {
         const std::set<std::string>& tags = p->getTags();
         std::set<std::string>::const_iterator it;
@@ -126,7 +131,8 @@ void addNPacket() {
         .def("insertChildFirst", insertChildFirst_own)
         .def("insertChildLast", insertChildLast_own)
         .def("insertChildAfter", insertChildAfter_own)
-        .def("makeOrphan", &NPacket::makeOrphan)
+        .def("makeOrphan", makeOrphan_return,
+            return_value_policy<manage_new_object>())
         .def("reparent", reparent_check, OL_reparent())
         .def("swapWithNextSibling", &NPacket::swapWithNextSibling)
         .def("moveUp", &NPacket::moveUp, OL_moveUp())
