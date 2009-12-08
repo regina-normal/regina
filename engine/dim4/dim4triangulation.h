@@ -1010,6 +1010,102 @@ class Dim4Triangulation : public NPacket {
         bool simplifyToLocalMinimum(bool perform = true);
 
         /**
+         * Checks the eligibility of and/or performs a 4-2 move
+         * about the given edge.
+         * This involves replacing the four pentachora joined at that
+         * edge with two pentachora joined along a single facet.
+         * This can be done iff (i) the edge is valid and non-boundary,
+         * (ii) the four pentachora are distinct, and (iii) the pentachora
+         * are joined in such a way that the link of the edge is the
+         * standard 3-simplex triangulation of the 2-sphere.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (facets, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * @param e the edge about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool fourTwoMove(Dim4Edge* e, bool check = true, bool perform = true);
+        /**
+         * Checks the eligibility of and/or performs a 3-3 move
+         * about the given face.
+         * This involves replacing the three pentachora joined along that
+         * face with three pentachora joined along a transverse face.
+         * This can be done iff (i) the face is valid and non-boundary,
+         * and (ii) the three pentachora are distinct.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (facets, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a f)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given face is a face of this triangulation.
+         *
+         * @param f the face about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool threeThreeMove(Dim4Face* f, bool check = true,
+            bool perform = true);
+        /**
+         * Checks the eligibility of and/or performs a 2-4 move
+         * about the given facet.
+         * This involves replacing the two pentachora joined along that
+         * facet with four pentachora joined along a transverse edge.
+         * This can be done iff the two pentachora are distinct.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (facets, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a f)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given facet is a facet of this triangulation.
+         *
+         * @param f the facet about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool twoFourMove(Dim4Tetrahedron* f, bool check = true,
+            bool perform = true);
+        /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given tetrahedron.
          * This involves taking a tetrahedron meeting the boundary along
@@ -1112,6 +1208,39 @@ class Dim4Triangulation : public NPacket {
          */
         bool shellBoundary(Dim4Pentachoron* p,
             bool check = true, bool perform = true);
+        /**
+         * Checks the eligibility of and/or performs a collapse of
+         * an edge in such a way that the topology of the manifold
+         * does not change and the number of vertices of the triangulation
+         * decreases by one.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (facets, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * The eligibility requirements for this move are somewhat
+         * involved, and are discussed in detail in the collapseEdge()
+         * source code for those who are interested.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * @param e the edge to collapse.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the given edge may be collapsed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool collapseEdge(Dim4Edge* e, bool check = true, bool perform = true);
 
         /*@}*/
         /**
