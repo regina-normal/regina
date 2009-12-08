@@ -854,6 +854,10 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
     NPerm4 p;
 
     if (check) {
+        // Note: We never check whether the edge is valid, but this
+        // comes automatically from the other tests.  In particular, an
+        // invalid edge must join the same vertex to itself.
+
         // CHECK 0: The tetrahedra around the edge must be distinct.
         // We check this as follows:
         //
