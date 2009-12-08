@@ -50,6 +50,8 @@ namespace {
         Dim4Triangulation::openBook, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_shellBoundary,
         Dim4Triangulation::shellBoundary, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
+        Dim4Triangulation::collapseEdge, 1, 3);
 
     void addPentachoron_own(Dim4Triangulation& tri,
             std::auto_ptr<regina::Dim4Pentachoron> pent) {
@@ -209,6 +211,8 @@ void addDim4Triangulation() {
         .def("openBook", &Dim4Triangulation::openBook, OL_openBook())
         .def("shellBoundary", &Dim4Triangulation::shellBoundary,
             OL_shellBoundary())
+        .def("collapseEdge", &Dim4Triangulation::collapseEdge,
+            OL_collapseEdge())
         .def("insertTriangulation", &Dim4Triangulation::insertTriangulation)
         .def("dumpConstruction", &Dim4Triangulation::dumpConstruction)
     ;
