@@ -779,10 +779,10 @@ inline NCellularData::FormLocator::FormLocator( form_type FT, const GroupLocator
 inline NCellularData::FormLocator::FormLocator( const FormLocator &cloneMe ) :
  ldomain( cloneMe.ldomain ), rdomain( cloneMe.rdomain ), ft(cloneMe.ft)  {}
 
-inline void NCellularData::FormLocator::writeTextShort(std::ostream& out) const
+inline void NCellularData::FormLocator::writeTextShort(std::ostream&) const
 {}
 
-inline void NCellularData::FormLocator::writeTextLong(std::ostream& out) const
+inline void NCellularData::FormLocator::writeTextLong(std::ostream&) const
 {}
 
 } // namespace regina
