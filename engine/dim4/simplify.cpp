@@ -32,6 +32,41 @@
 namespace regina {
 
 namespace {
+    // A helper routine that describes the mapping between subcomplexes
+    // in a 2-4 / 4-2 move.
+    //
+    // For the two-pentachoron subcomplex S2, the common facet is 0123.
+    // The pentachora are joined as follows:
+    //   P0 : 0123 <-> P1 : 0123 (identity)
+    //
+    // For the four-pentachoron subcomplex S4, the common edge is 01.
+    // The pentachora are joined as follows:
+    //   P0 : 0134 <-> P1 : 0143
+    //   P0 : 0124 <-> P2 : 0142
+    //   P0 : 0123 <-> P3 : 0132
+    //   P1 : 0123 <-> P2 : 0132
+    //   P1 : 0124 <-> P3 : 0142
+    //   P2 : 0134 <-> P3 : 0143
+    //
+    // For i in 0,1 and j in 0,1,2,3:
+    // S2 pentachoron i, facet j <-> S4 pentachoron j, facet i.
+    // The gluing permutation is as follows:
+    //   S4,i   <-> S2,j
+    //   S4,1-i <-> S2,4
+    //   S4,2   <-> S2,(1-j) % 4
+    //   S4,3   <-> S2,(2+j) % 4
+    //   S4,4   <-> S2,(3-j)
+    //
+    // This routine merely constructs this gluing permutation.
+    // The permutation returned runs from S4 to S2 (so i -> j).
+    NPerm5 fourTwoPerm(int i /* 0 or 1 */, int j /* 0, 1, 2 or 3 */) {
+        // Use & 3 instead of % 4 for non-negative integers.
+        if (i == 0)
+            return NPerm5(j, 4, (5 - j) & 3, (2 + j) & 3, (3 - j) & 3);
+        else
+            return NPerm5(4, j, (5 - j) & 3, (2 + j) & 3, (3 - j) & 3);
+    }
+
     // A helper routine that uses union-find to test whether a graph
     // contains cycles.  This is used by Dim4Triangulation::collapseEdge().
     //
@@ -132,10 +167,67 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     // Perform the move.
     ChangeEventBlock block(this);
 
-    // TODO
+    // Create two new pentachora.
+    Dim4Pentachoron* newPent[2];
+    for (i = 0; i < 2; ++i)
+        newPent[i] = new Dim4Pentachoron();
 
-    // Tidy up.
-    gluingsHaveChanged();
+    // Find where their facets need to be glued.
+    // Old pentachoron j, facet i <-> New pentachoron i, facet j.
+    Dim4Pentachoron* adjPent[2][4];
+    NPerm5 adjGluing[2][4];
+    int k,l;
+    for (i = 0; i < 2; ++i) { // new pentachora ; old facets
+        for (j = 0; j < 4; ++j) { // new facets ; old pentachora
+            adjPent[i][j] = oldPent[j]->adjacentPentachoron(oldVertices[j][i]);
+            adjGluing[i][j] = oldPent[j]->adjacentGluing(oldVertices[j][i]) *
+                oldVertices[j] * fourTwoPerm(i, j).inverse();
+
+            // Are we are gluing a new pentachoron to itself?
+            for (k = 0; k < 4; ++k) {
+                if (adjPent[i][j] == oldPent[k]) {
+                    for (l = 0; l < 2; ++l) {
+                        if (adjGluing[i][j][j] == oldVertices[k][l]) {
+                            // This glues to old pentachoron k,
+                            // facet oldVertices[k][l].
+                            // This means we glue new(i:j) to new(l:k).
+                            if (i > l || (i == l && j > k)) {
+                                // Ensure we make the gluing in just one
+                                // direction, not both directions.
+                                adjPent[i][j] = 0;
+                            } else {
+                                // Adjust the gluing to point to the new
+                                // pentachoron.
+                                adjPent[i][j] = newPent[l];
+                                adjGluing[i][j] =
+                                    fourTwoPerm(l, k) *
+                                    oldVertices[k].inverse() *
+                                    adjGluing[i][j];
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    // Now go ahead and make the gluings.
+    for (j = 0; j < 4; ++j)
+        oldPent[j]->isolate();
+    for (i = 0; i < 2; ++i)
+        for (j = 0; j < 4; ++j)
+            if (adjPent[i][j])
+                newPent[i]->joinTo(j, adjPent[i][j], adjGluing[i][j]);
+
+    // Delete the old pentachora and insert the new.
+    for (i = 0; i < 4; ++i)
+        delete removePentachoron(oldPent[i]);
+    for (i = 0; i < 2; ++i)
+        addPentachoron(newPent[i]);
+
+    // All done!
     return true;
 }
 
