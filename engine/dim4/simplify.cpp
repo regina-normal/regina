@@ -67,6 +67,36 @@ namespace {
             return NPerm5(4, j, (5 - j) & 3, (2 + j) & 3, (3 - j) & 3);
     }
 
+    // A helper routine that describes the mapping between subcomplexes
+    // in a 3-3 move.
+    //
+    // For each three-pentachoron subcomplex, the common face is 012.
+    // The pentachora are joined as follows:
+    //   P0 : 0124 <-> P1 : 0123
+    //   P1 : 0124 <-> P2 : 0123
+    //   P2 : 0124 <-> P0 : 0123
+    //
+    // For i in 0,1,2 and j in 0,1,2:
+    // S3a pentachoron i, facet j <-> S3b pentachoron j, facet i.
+    // The gluing permutation is as follows:
+    //   S3a,j         <-> S3b,i
+    //   S3a,(j+1) % 3 <-> S3b,3
+    //   S3a,(j+2) % 3 <-> S3b,4
+    //   S3a,3         <-> S3b,(i+1) % 3
+    //   S3a,4         <-> S3b,(i+2) % 3
+    //
+    // This routine merely constructs this gluing permutation.
+    // The permutation returned runs from S3b to S3a (so i -> j).
+    // Note that threeThreePerm(i,j).inverse() == threeThreePerm(j,i).
+    NPerm5 threeThreePerm(int i /* 0, 1 or 2 */, int j /* 0, 1 or 2 */) {
+        if (i == 0)
+            return NPerm5(j, 3, 4, (j + 1) % 3, (j + 2) % 3);
+        else if (i == 1)
+            return NPerm5(4, j, 3, (j + 1) % 3, (j + 2) % 3);
+        else
+            return NPerm5(3, 4, j, (j + 1) % 3, (j + 2) % 3);
+    }
+
     // A helper routine that uses union-find to test whether a graph
     // contains cycles.  This is used by Dim4Triangulation::collapseEdge().
     //
@@ -262,10 +292,70 @@ bool Dim4Triangulation::threeThreeMove(Dim4Face* f, bool check, bool perform) {
     // Perform the move.
     ChangeEventBlock block(this);
 
-    // TODO
+    // Create three new pentachora.
+    Dim4Pentachoron* newPent[3];
+    for (i = 0; i < 3; ++i)
+        newPent[i] = new Dim4Pentachoron();
 
-    // Tidy up.
-    gluingsHaveChanged();
+    // Find where their facets need to be glued.
+    // Old pentachoron j, facet i <-> New pentachoron i, facet j.
+    Dim4Pentachoron* adjPent[3][3];
+    NPerm5 adjGluing[3][3];
+    int k,l;
+    for (i = 0; i < 3; ++i) { // new pentachora ; old facets
+        for (j = 0; j < 3; ++j) { // new facets ; old pentachora
+            adjPent[i][j] = oldPent[j]->adjacentPentachoron(oldVertices[j][i]);
+            adjGluing[i][j] = oldPent[j]->adjacentGluing(oldVertices[j][i]) *
+                oldVertices[j] * threeThreePerm(j, i);
+
+            // Are we are gluing a new pentachoron to itself?
+            for (k = 0; k < 3; ++k) {
+                if (adjPent[i][j] == oldPent[k]) {
+                    for (l = 0; l < 3; ++l) {
+                        if (adjGluing[i][j][j] == oldVertices[k][l]) {
+                            // This glues to old pentachoron k,
+                            // facet oldVertices[k][l].
+                            // This means we glue new(i:j) to new(l:k).
+                            if (i > l || (i == l && j > k)) {
+                                // Ensure we make the gluing in just one
+                                // direction, not both directions.
+                                adjPent[i][j] = 0;
+                            } else {
+                                // Adjust the gluing to point to the new
+                                // pentachoron.
+                                adjPent[i][j] = newPent[l];
+                                adjGluing[i][j] =
+                                    threeThreePerm(l, k) *
+                                    oldVertices[k].inverse() *
+                                    adjGluing[i][j];
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    // Now go ahead and make the gluings.
+    for (j = 0; j < 3; ++j)
+        oldPent[j]->isolate();
+    for (i = 0; i < 3; ++i)
+        for (j = 0; j < 3; ++j)
+            if (adjPent[i][j])
+                newPent[i]->joinTo(j, adjPent[i][j], adjGluing[i][j]);
+    newPent[0]->joinTo(3, newPent[1], NPerm5(3, 4));
+    newPent[1]->joinTo(3, newPent[2], NPerm5(3, 4));
+    newPent[2]->joinTo(3, newPent[0], NPerm5(3, 4));
+
+    // Delete the old pentachora and insert the new.
+    for (i = 0; i < 3; ++i)
+        delete removePentachoron(oldPent[i]);
+    for (i = 0; i < 3; ++i)
+        addPentachoron(newPent[i]);
+
+    // All done!
     return true;
 }
 
