@@ -968,7 +968,7 @@ class Dim4Triangulation : public NPacket {
          * attempt to reduce the number of pentachora in the triangulation.
          *
          * Currently this routine uses simplifyToLocalMinimum() in
-         * combination with book opening moves.
+         * combination with random 3-3 moves and book opening moves.
          *
          * \warning The specific behaviour of this routine will almost
          * certainly change between releases.  At present,
@@ -986,7 +986,8 @@ class Dim4Triangulation : public NPacket {
          * triangulation; see intelligentSimplify() for further
          * assistance in achieving this goal.
          *
-         * The moves used currently include only boundary shelling moves.
+         * The moves used currently include collapsing edges, 4-2 moves,
+         * and boundary shelling moves.
          *
          * Note that moves that do not reduce the number of pentachora
          * (such as book opening moves) are not used in this routine.
