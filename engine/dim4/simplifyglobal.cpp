@@ -29,6 +29,9 @@
 #include <cstdlib>
 #include "dim4/dim4triangulation.h"
 
+// Affects the number of random 3-3 moves attempted during simplification.
+#define COEFF_3_3 3
+
 namespace regina {
 
 bool Dim4Triangulation::intelligentSimplify() {
@@ -46,7 +49,74 @@ bool Dim4Triangulation::intelligentSimplify() {
         // Clone to work with when we might want to roll back changes.
         Dim4Triangulation* use;
 
+        // Variables for selecting random 3-3 moves.
+        std::vector<Dim4Face*> threeThreeAvailable;
+        Dim4Face* threeThreeChoice;
+
+        unsigned long threeThreeAttempts;
+        unsigned long threeThreeCap;
+
+        Dim4Face* face;
+        FaceIterator fit;
+
         while (true) {
+            // --- Random 3-3 moves ---
+
+            // Clone the triangulation and start making changes that might or
+            // might not lead to a simplification.
+            // If we've already simplified then there's no need to use a
+            // separate clone since we won't need to undo further changes.
+            use = (changed ? this : new Dim4Triangulation(*this));
+
+            // Make random 3-3 moves.
+            threeThreeAttempts = threeThreeCap = 0;
+            while (true) {
+                // Calculate the list of available 3-3 moves.
+                threeThreeAvailable.clear();
+                // Use getFaces() to ensure the skeleton has been calculated.
+                for (fit = use->getFaces().begin();
+                        fit != use->getFaces().end(); ++fit) {
+                    face = *fit;
+                    if (use->threeThreeMove(face, true, false))
+                        threeThreeAvailable.push_back(face);
+                }
+
+                // Increment threeThreeCap if needed.
+                if (threeThreeCap < COEFF_3_3 * threeThreeAvailable.size())
+                    threeThreeCap = COEFF_3_3 * threeThreeAvailable.size();
+
+                // Have we tried enough 3-3 moves?
+                if (threeThreeAttempts >= threeThreeCap)
+                    break;
+
+                // Perform a random 3-3 move on the clone.
+                threeThreeChoice = threeThreeAvailable[
+                    static_cast<unsigned>(rand()) % threeThreeAvailable.size()];
+                use->threeThreeMove(threeThreeChoice, false, true);
+
+                // See if we can simplify now.
+                if (use->simplifyToLocalMinimum(true)) {
+                    // We have successfully simplified!
+                    // Start all over again.
+                    threeThreeAttempts = threeThreeCap = 0;
+                } else
+                    threeThreeAttempts++;
+            }
+
+            // Sync the real triangulation with the clone if appropriate.
+            if (use != this) {
+                // At this point, changed == false.
+                if (use->getNumberOfPentachora() < getNumberOfPentachora()) {
+                    // The 3-3 moves were successful; accept them.
+                    cloneFrom(*use);
+                    changed = true;
+                }
+                delete use;
+            }
+
+            // At this point we have decided that 3-3 moves will help us
+            // no more.
+
             // --- Open book moves ---
 
             if (hasBoundaryTetrahedra()) {
