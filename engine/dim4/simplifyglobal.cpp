@@ -101,7 +101,9 @@ bool Dim4Triangulation::intelligentSimplify() {
 }
 
 bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
+    EdgeIterator eit;
     BoundaryComponentIterator bit;
+    Dim4Edge* edge;
     Dim4BoundaryComponent* bc;
     unsigned long nTetrahedra;
     unsigned long iTet;
@@ -119,6 +121,39 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
             changedNow = false;
             if (! calculatedSkeleton_) {
                 calculateSkeleton();
+            }
+
+            // Crush edges if we can.
+            if (vertices_.size() > components_.size() &&
+                    vertices_.size() > boundaryComponents_.size()) {
+                for (eit = edges_.begin(); eit != edges_.end(); ++eit) {
+                    edge = *eit;
+                    if (collapseEdge(edge, true, perform)) {
+                        changedNow = changed = true;
+                        break;
+                    }
+                }
+                if (changedNow) {
+                    if (perform)
+                        continue;
+                    else
+                        return true;
+                }
+            }
+
+            // Look for internal simplifications.
+            for (eit = edges_.begin(); eit != edges_.end(); eit++) {
+                edge = *eit;
+                if (fourTwoMove(edge, true, perform)) {
+                    changedNow = changed = true;
+                    break;
+                }
+            }
+            if (changedNow) {
+                if (perform)
+                    continue;
+                else
+                    return true;
             }
 
             // Look for boundary simplifications.
