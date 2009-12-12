@@ -296,10 +296,73 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
     // Perform the move.
     ChangeEventBlock block(this);
 
-    // TODO
+    // Create four new pentachora.
+    Dim4Pentachoron* newPent[4];
+    for (i = 0; i < 4; ++i)
+        newPent[i] = new Dim4Pentachoron();
 
-    // Tidy up.
-    gluingsHaveChanged();
+    // Find where their facets need to be glued.
+    // Old pentachoron j, facet i <-> New pentachoron i, facet j.
+    Dim4Pentachoron* adjPent[4][2];
+    NPerm5 adjGluing[4][2];
+    int j,k,l;
+    for (i = 0; i < 4; ++i) { // new pentachora ; old facets
+        for (j = 0; j < 2; ++j) { // new facets ; old pentachora
+            adjPent[i][j] = oldPent[j]->adjacentPentachoron(oldVertices[j][i]);
+            adjGluing[i][j] = oldPent[j]->adjacentGluing(oldVertices[j][i]) *
+                oldVertices[j] * fourTwoPerm(j, i);
+
+            // Are we are gluing a new pentachoron to itself?
+            for (k = 0; k < 2; ++k) {
+                if (adjPent[i][j] == oldPent[k]) {
+                    for (l = 0; l < 4; ++l) {
+                        if (adjGluing[i][j][j] == oldVertices[k][l]) {
+                            // This glues to old pentachoron k,
+                            // facet oldVertices[k][l].
+                            // This means we glue new(i:j) to new(l:k).
+                            if (i > l || (i == l && j > k)) {
+                                // Ensure we make the gluing in just one
+                                // direction, not both directions.
+                                adjPent[i][j] = 0;
+                            } else {
+                                // Adjust the gluing to point to the new
+                                // pentachoron.
+                                adjPent[i][j] = newPent[l];
+                                adjGluing[i][j] =
+                                    fourTwoPerm(k, l).inverse() *
+                                    oldVertices[k].inverse() *
+                                    adjGluing[i][j];
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    // Now go ahead and make the gluings.
+    for (j = 0; j < 2; ++j)
+        oldPent[j]->isolate();
+    for (i = 0; i < 4; ++i)
+        for (j = 0; j < 2; ++j)
+            if (adjPent[i][j])
+                newPent[i]->joinTo(j, adjPent[i][j], adjGluing[i][j]);
+    newPent[0]->joinTo(2, newPent[1], NPerm5(3, 4));
+    newPent[0]->joinTo(3, newPent[2], NPerm5(2, 4));
+    newPent[0]->joinTo(4, newPent[3], NPerm5(2, 3));
+    newPent[1]->joinTo(4, newPent[2], NPerm5(2, 3));
+    newPent[1]->joinTo(3, newPent[3], NPerm5(2, 4));
+    newPent[2]->joinTo(2, newPent[3], NPerm5(3, 4));
+
+    // Delete the old pentachora and insert the new.
+    for (i = 0; i < 2; ++i)
+        delete removePentachoron(oldPent[i]);
+    for (i = 0; i < 4; ++i)
+        addPentachoron(newPent[i]);
+
+    // All done!
     return true;
 }
 
