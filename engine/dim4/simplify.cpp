@@ -220,6 +220,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
         for (j = 0; j < 4; ++j)
             if (adjPent[i][j])
                 newPent[i]->joinTo(j, adjPent[i][j], adjGluing[i][j]);
+    newPent[0]->joinTo(4, newPent[1], NPerm5());
 
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 4; ++i)
