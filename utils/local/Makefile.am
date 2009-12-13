@@ -13,13 +13,14 @@ SUBDIRS = @REGINA_BUILD_MPI@ binary_group_tools
 INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@ @UTILS_LIBS@
 
-noinst_PROGRAMS = censuscat dehydrate distinguish edgelinks equiv identify manifolds normal normal-compare pluggedibundles reduce trisort volume
+noinst_PROGRAMS = censuscat dehydrate distinguish edgelinks equiv equiv-dim4 identify manifolds normal normal-compare pluggedibundles reduce trisort volume
 
 censuscat_SOURCES = censuscat.cpp
 dehydrate_SOURCES = dehydrate.cpp
 distinguish_SOURCES = distinguish.cpp
 edgelinks_SOURCES = edgelinks.cpp
 equiv_SOURCES = equiv.cpp
+equiv_dim4_SOURCES = equiv-dim4.cpp
 identify_SOURCES = identify.cpp
 manifolds_SOURCES = manifolds.cpp
 normal_SOURCES = normal.cpp
