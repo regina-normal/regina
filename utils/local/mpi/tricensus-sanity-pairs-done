@@ -52,7 +52,7 @@ fi
 
 # Are there any pairings still running?
 running=`tricensus-mpi-status "$1"/*.log | grep -v 'all .* done' | \
-  grep -v 'Census still running' | grep -v '^All done'` || true
+  grep -v 'Still running,' | grep -v '^All done'` || true
 if test -n "$running"; then
   echo "ERROR: Log in $1 shows pairings still running."
   exit 1
