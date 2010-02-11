@@ -42,7 +42,7 @@ elif [ "$nlogs" != 1 ]; then
 fi
 
 # Count triangulations.
-totlog=`tricensus-mpi-status "$1"/*.log | grep found | \
+totlog=`tricensus-mpi-status "$1"/*.log | grep '^Pairing' | grep found | \
   sed -e 's/^.* \([0-9]\+\) found.*$/\1/' | awk '{s+=$1} END {print s}'` \
   || true
 echo "Triangulations found according to log file:   $totlog"
