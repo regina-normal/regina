@@ -99,8 +99,7 @@ class Dim4Triangulation;
  *          c) append in all relators. That's a big pile. 
  *          d) push out pi_1 computations for all the boundary components, interior manifold, and inclusion maps.
  *       5) Detailed search for possible memory leaks.
- *       6) Sometimes the torsion linking form takes values in Z_1, sometimes in 0, why is there the difference?
- *       7) add some images into documentation.
+ *       6) add some images into documentation.
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
