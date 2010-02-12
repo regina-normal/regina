@@ -72,6 +72,15 @@ bool written=false;
 	 hmabi->second->writeTextShort(out);
 	 written = true;
         }
+ std::map< FormLocator, NBilinearForm* >::const_iterator fmit;
+ for (fmit = bilinearForms.begin(); fmit != bilinearForms.end(); fmit++)
+ 	{
+	 if (written) out<<" ";
+	 fmit->first.writeTextShort(out);
+	 out<<" is ";
+	 fmit->second->writeTextShort(out);
+	 written = true;
+	}
 }
 
 void NCellularData::writeTextLong(std::ostream& out) const
@@ -122,6 +131,15 @@ else {
 	 hmabi->second->writeTextShort(out);
          out<<", ";
         }
+ std::map< FormLocator, NBilinearForm* >::const_iterator fmit;
+ for (fmit = bilinearForms.begin(); fmit != bilinearForms.end(); fmit++)
+ 	{
+	 out<<" ";
+	 fmit->first.writeTextShort(out);
+	 out<<" is ";
+	 fmit->second->writeTextShort(out);
+	 out<<", ";
+	}
  out<<" Euler Char == "<<eulerChar();
  out<<" Poincare Polynomial == "<<poincarePolynomial();
 }
