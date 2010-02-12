@@ -39,16 +39,17 @@ InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0),
 coeff(NLargeInteger::zero), TORLoc(0), TORVec(0), tensorIfLoc(0), tensorIfNum(0), 
 tensorInvFacList(0)
 {
+// special case p==1 trivial group
 ornR.reset(new NMatrixInt(rk, rk)); ornRi.reset(new NMatrixInt(rk, rk)); 
 ornC.reset(new NMatrixInt(rk, rk)); ornCi.reset(new NMatrixInt(rk, rk));
 for (unsigned long i=0; i<rk; i++) ON.entry(i,i) = p;
 // everything is already in SNF, so these are identity matrices
 OMR.makeIdentity();OMC.makeIdentity(); OMRi.makeIdentity();OMCi.makeIdentity(); 
 ornR->makeIdentity(); ornRi->makeIdentity(); ornC->makeIdentity(); ornCi->makeIdentity(); 
-if (p != 0) ifNum=rk;
+if ( (p != 0 ) && ( p != 1 ) ) ifNum=rk;
 if (ifNum != 0) InvFacList.resize(ifNum);
 for (unsigned long i=0; i<InvFacList.size(); i++) InvFacList[i] = p;
-snfrank = rk - ifNum;
+if ( p != 1 ) snfrank = rk - ifNum;
 }
 
 NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
