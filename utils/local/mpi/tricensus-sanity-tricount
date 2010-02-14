@@ -13,7 +13,8 @@
 # Assumptions:
 #
 # - The log filename ends in .log, and there is precisely one such file
-#   in the given directory;
+#   in the given directory (compressed .log.gz and .log.bz2 files are
+#   also supported);
 # - All data filenames end in .rga;
 # - The corresponding tricensus-mpi job made use of subsearches (--depth);
 # - The script tricensus-mpi-status is somewhere on the default search path.
@@ -32,7 +33,9 @@ if [ ! -d "$1" ]; then
   exit 1
 fi
 
-nlogs=`find "$1" -maxdepth 1 -name "*.log" | wc -l`
+nlogs=`find "$1" -maxdepth 1 -name "*.log" -o \
+                             -name "*.log.gz" -o \
+                             -name "*.log.bz2" | wc -l`
 if [ "$nlogs" = 0 ]; then
   echo "ERROR: Directory contains no log file (*.log)"
   exit 1
@@ -41,8 +44,13 @@ elif [ "$nlogs" != 1 ]; then
   exit 1
 fi
 
+# Locate the unique log file.
+logfile=`find "$1" -maxdepth 1 -name "*.log" -o \
+                               -name "*.log.gz" -o \
+                               -name "*.log.bz2"`
+
 # Count triangulations.
-totlog=`tricensus-mpi-status "$1"/*.log | grep '^Pairing' | grep found | \
+totlog=`tricensus-mpi-status "$logfile" | grep '^Pairing' | grep found | \
   sed -e 's/^.* \([0-9]\+\) found.*$/\1/' | awk '{s+=$1} END {print s}'` \
   || true
 echo "Triangulations found according to log file:   $totlog"

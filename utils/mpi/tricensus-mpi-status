@@ -27,7 +27,10 @@
 #
 
 use File::stat;
+use IO::Uncompress::AnyUncompress qw(anyuncompress $AnyUncompressError);
 use strict;
+
+my $LOG;
 
 # Display basic usage information.
 #
@@ -43,7 +46,7 @@ sub bail {
     foreach (@_) {
         print STDERR "ERROR: $_\n";
     }
-    close(LOG);
+    close($LOG);
     exit(1);
 }
 
@@ -53,8 +56,10 @@ usage unless @ARGV;
 my $logFile = pop @ARGV;
 usage if @ARGV;
 
-if (! open(LOG, '<', $logFile)) {
+$LOG = new IO::Uncompress::AnyUncompress $logFile;
+if (! $LOG) {
     print STDERR "ERROR: Could not read the log file $logFile.\n";
+    print STDERR "       ($AnyUncompressError)\n";
     exit(1);
 }
 
@@ -111,7 +116,7 @@ my $doneTris = 0;
 
 my $lastDate = undef;
 my $ref;
-while (<LOG>) {
+while (<$LOG>) {
     # Strip off the date and newline.
     chomp;
     s/^([A-Za-z0-9:\. ]{19} \d\d\d\d)  // and $lastDate = $1;
@@ -306,6 +311,6 @@ if ($donePairings and $doneTris) {
     print "\n";
 }
 
-close(LOG);
+close($LOG);
 exit(0);
 
