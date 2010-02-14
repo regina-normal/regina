@@ -13,7 +13,8 @@
 # Assumptions:
 #
 # - The log filename ends in .log, and there is precisely one such file
-#   in the given directory;
+#   in the given directory (compressed .log.gz and .log.bz2 files are
+#   also supported);
 # - The pairings filename is of the form *pairs*, and there is precisely
 #   one such file in the given directory;
 # - The corresponding tricensus-mpi job made use of subsearches (--depth);
@@ -32,7 +33,9 @@ if [ ! -d "$1" ]; then
   exit 1
 fi
 
-nlogs=`find "$1" -maxdepth 1 -name "*.log" | wc -l`
+nlogs=`find "$1" -maxdepth 1 -name "*.log" -o \
+                             -name "*.log.gz" -o \
+                             -name "*.log.bz2" | wc -l`
 if [ "$nlogs" = 0 ]; then
   echo "ERROR: Directory contains no log file (*.log)"
   exit 1
@@ -50,8 +53,13 @@ elif [ "$npairs" != 1 ]; then
   exit 1
 fi
 
+# Locate the unique log file.
+logfile=`find "$1" -maxdepth 1 -name "*.log" -o \
+                               -name "*.log.gz" -o \
+                               -name "*.log.bz2"`
+
 # Are there any pairings still running?
-running=`tricensus-mpi-status "$1"/*.log | grep -v 'all .* done' | \
+running=`tricensus-mpi-status "$logfile" | grep -v 'all .* done' | \
   grep -v 'Still running,' | grep -v '^All done'` || true
 if test -n "$running"; then
   echo "ERROR: Log in $1 shows pairings still running."
@@ -59,7 +67,7 @@ if test -n "$running"; then
 fi
 
 # Count pairings.
-lastpair=`tricensus-mpi-status "$1"/*.log | grep 'all .* done' | \
+lastpair=`tricensus-mpi-status "$logfile" | grep 'all .* done' | \
   tail -1 | sed -e 's/^.*Pairing \([0-9]\+\):.*$/\1/'` || true
 echo "Pairings completed according to log file: $lastpair"
 

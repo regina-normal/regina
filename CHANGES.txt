@@ -108,6 +108,8 @@ Version 4.6.1  [ (under development) ]
     UTILITIES:
         tricensus-mpi-status:
             - Now finishes with a running total of all triangulations found.
+            - Compressed logs (using gzip or bzip2) are now supported.
+              Requires the perl module IO::Uncompress::AnyUncompress.
     TEST SUITE:
         - New tests for file I/O using both modern XML and legacy binary
           file formats.
