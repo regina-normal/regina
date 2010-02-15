@@ -28,8 +28,8 @@
 
 /*********************
  *
- *  Coordinate System Flavour Registry
- *  ----------------------------------
+ *  Normal Surface Coordinate System Flavour Registry
+ *  -------------------------------------------------
  *
  *
  *    THIS FILE SHOULD BE EDITED EACH TIME A NEW FLAVOUR OF COORDINATE
@@ -57,8 +57,8 @@
  *            It may be assumed that the variable [triang] represents the
  *            triangulation for which we are enumerating surfaces.
  *
- *    The appropriate include files should also be placed with full path
- *        and without full path in the appropriate include sections below.
+ *    The appropriate include files should also be placed in the
+ *        appropriate include sections below.
  *
  *    To use the flavour registry, simply #include this file.  If you
  *        have not defined __FLAVOUR_REGISTRY_BODY, only the include
@@ -92,7 +92,8 @@
 
 /*! \file surfaces/flavourregistry.h
  *  \brief Contains a registry of coordinate system flavours known to the
- *  engine that can actually be used to create and store normal surfaces.
+ *  engine that can actually be used to create and store normal surfaces
+ *  in 3-manifold triangulations.
  *
  *  Each time a new flavour is created, this flavour registry should be
  *  updated.  Instructions regarding how to do this are included in

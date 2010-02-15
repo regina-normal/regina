@@ -27,7 +27,8 @@
 /* end stub */
 
 /*! \file surfaces/nnormalsurface.h
- *  \brief Deals with an individual normal surface.
+ *  \brief Deals with an individual normal surface in a 3-manifold
+ *  triangulation.
  */
 
 #ifndef __NNORMALSURFACE_H
@@ -48,14 +49,14 @@ namespace regina {
 
 /**
  * \addtogroup surfaces Normal Surfaces
- * Normal surfaces in triangulations.
+ * Normal surfaces in 3-manifold triangulations.
  * @{
  */
 
 /**
- * Lists which vertex splits split which pairs of vertices.
+ * Lists which vertex splits separate which pairs of vertices.
  * There are three vertex splits, numbered 0,1,2.  Each vertex
- * split split the four tetrahedron vertices 0,1,2,3 into two pairs.
+ * split separates the four tetrahedron vertices 0,1,2,3 into two pairs.
  * <tt>vertexSplit[i][j]</tt> is the number of the vertex split that
  * keeps vertices <tt>i</tt> and <tt>j</tt> together.
  *
@@ -609,6 +610,9 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
 
         /**
          * Creates a newly allocated clone of this normal surface.
+         *
+         * The name of the normal surface will \e not be copied to the
+         * clone; instead the clone will have an empty name.
          *
          * @return a clone of this normal surface.
          */
@@ -1267,8 +1271,8 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * coordinate system its raw vector uses.  Unless you already know
          * the coordinate system in advance (i.e., you created the surface
          * yourself), it is best to keep to the coordinate-system-agnostic
-         * access functions such as NNormalSurfaceVector::getTriCoord() and
-         * NNormalSurfaceVector::getQuadCoord().
+         * access functions such as NNormalSurfaceVector::getTriangleCoord()
+         * and NNormalSurfaceVector::getQuadCoord().
          *
          * \ifacespython Not present.
          *

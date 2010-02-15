@@ -599,7 +599,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
 
     protected:
         /**
-         * Creates a new normal surface list performing no intialisation
+         * Creates a new normal surface list performing no initialisation
          * whatsoever other than property initialisation.
          */
         NNormalSurfaceList();
@@ -674,7 +674,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
              * surface list.
              *
              * The given surface will be deallocated with the other
-             * surfaces in this list.
+             * surfaces in this list when the list is eventually destroyed.
              *
              * @param surface the normal surface to insert.
              * @return this output iterator.
@@ -686,7 +686,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
              *
              * The given vector will be owned by the newly created
              * normal surface and will be deallocated with the other
-             * surfaces in this list.
+             * surfaces in this list when the list is eventually destroyed.
              *
              * \warning The behaviour of this routine has changed!
              * As of Regina 4.6, this routine no longer checks for
