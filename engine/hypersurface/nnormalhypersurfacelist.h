@@ -522,12 +522,13 @@ inline NNormalHypersurfaceList::Enumerator::Enumerator(
         list_(list), triang_(triang), manager_(manager) {
 }
 
-inline void NNormalHypersurfaceList::writePacket(Nfile&) const {
+inline void NNormalHypersurfaceList::writePacket(NFile&) const {
     // No need to add support for the old pre-2002 binary format.
     // This format is deprecated and about to be removed from Regina entirely.
 }
 
-inline Dim4Triangulation* Dim4Triangulation::readPacket(NFile&, NPacket*) {
+inline NNormalHypersurfaceList* NNormalHypersurfaceList::readPacket(
+        NFile&, NPacket*) {
     // Don't bother supporting the old pre-2002 binary format.
     return 0;
 }
