@@ -79,6 +79,7 @@
     #include "angle/nanglestructurelist.h"
     #include "packet/npdf.h"
     #include "dim4/dim4triangulation.h"
+    #include "hypersurface/nnormalhypersurfacelist.h"
 #else
     REGISTER_PACKET(NContainer, 1, "Container")
     REGISTER_PACKET(NText, 2, "Text")
