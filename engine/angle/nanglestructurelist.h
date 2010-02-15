@@ -256,7 +256,8 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
              * structure list.
              *
              * The given angle structure will be deallocated with the
-             * other angle structures in this list.
+             * other angle structures in this list when the list is
+             * eventually destroyed.
              *
              * @param structure the angle structure to insert.
              * @return this output iterator.
@@ -268,7 +269,8 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
              *
              * The given vector will be owned by the newly created
              * angle structure and will be deallocated with the
-             * other angle structures in this list.
+             * other angle structures in this list when the list is
+             * eventually destroyed.
              *
              * @param vector the vector of the angle structure to insert.
              * @return this output iterator.

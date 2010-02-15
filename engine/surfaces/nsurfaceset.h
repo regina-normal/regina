@@ -101,10 +101,9 @@ class NSurfaceSet {
          */
         virtual bool isEmbeddedOnly() const = 0;
         /**
-         * Returns the triangulation upon which these normal surfaces are
-         * based.
+         * Returns the triangulation in which these normal surfaces live.
          * 
-         * @return the triangulation upon which these surfaces are based.
+         * @return the triangulation in which these surfaces live.
          */
         virtual NTriangulation* getTriangulation() const = 0;
 
