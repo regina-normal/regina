@@ -89,6 +89,7 @@
     REGISTER_PACKET(NAngleStructureList, 9, "Angle Structure List")
     REGISTER_PACKET(NPDF, 10, "PDF")
     REGISTER_PACKET(Dim4Triangulation, 11, "4-Manifold Triangulation")
+    REGISTER_PACKET(NNormalHypersurfaceList, 13, "Normal Hypersurface List")
 #endif
 
 /*! \file packet/packetregistry.h

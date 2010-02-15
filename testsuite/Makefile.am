@@ -15,6 +15,7 @@ SUBDIRS = \
   angle \
   census \
   dim4 \
+  hypersurface \
   maths \
   snappea \
   subcomplex \

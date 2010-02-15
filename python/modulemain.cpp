@@ -40,6 +40,7 @@ void addCensus();
 void addDim4();
 void addFile();
 void addForeign();
+void addHypersurface();
 void addManifold();
 void addMaths();
 void addPacket();
@@ -133,5 +134,6 @@ BOOST_PYTHON_MODULE(regina) {
     addManifold();
     addAngle();
     addSurfaces();
+    addHypersurface();
 }
 

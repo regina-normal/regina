@@ -18,6 +18,7 @@ SUBDIRS = \
   enumerate \
   file \
   foreign \
+  hypersurface \
   manifold \
   maths \
   packet \

@@ -18,6 +18,7 @@ SUBDIRS = srcutils \
   dim4 \
   file \
   foreign \
+  hypersurface \
   manifold \
   maths \
   packet \
