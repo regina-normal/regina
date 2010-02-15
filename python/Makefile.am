@@ -45,6 +45,7 @@ regina_la_LIBADD = @LIB_ENGINE@ @BOOST_PYTHON_LIBS@ \
   dim4/libdim4.la \
   file/libfile.la \
   foreign/libforeign.la \
+  hypersurface/libhypersurface.la \
   manifold/libmanifold.la \
   maths/libmaths.la \
   packet/libpacket.la \

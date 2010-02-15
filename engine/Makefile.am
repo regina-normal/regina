@@ -52,6 +52,7 @@ libregina_engine_la_LIBADD = \
   dim4/libdim4.la \
   file/libfile.la \
   foreign/libforeign.la \
+  hypersurface/libhypersurface.la \
   manifold/libmanifold.la \
   maths/libmaths.la \
   packet/libpacket.la \
