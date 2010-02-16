@@ -51,8 +51,9 @@ namespace regina {
  * @{
  */
 
-class NEnumConstraintList;
 class Dim4Triangulation;
+class NEnumConstraintList;
+class NTriangulation;
 class NXMLNormalHypersurfaceReader;
 
 /**
@@ -449,6 +450,26 @@ class NNormalHypersurface : public ShareableObject {
          * @return \c true if and only if this hypersurface has real boundary.
          */
         bool hasRealBoundary() const;
+
+        /**
+         * Returns a 3-manifold triangulation describing this normal
+         * hypersurface.
+         *
+         * The triangulation will be simplified via
+         * NTriangulation::intelligentSimplify(), which means that the
+         * tetrahedra of the final triangulation are not likely to
+         * correspond to any particular tetrahedron/prism pieces of
+         * this normal hypersurface.
+         *
+         * The 3-manifold triangulation will be newly allocated, and
+         * destroying it is the responsibility of the caller of this routine.
+         *
+         * \todo \prob Check for absurdly large numbers of pieces and
+         * return 0 accordingly.
+         *
+         * @return a triangulation of this normal hypersurface.
+         */
+        NTriangulation* triangulate() const;
 
         /**
          * Determines whether this and the given hypersurface in fact

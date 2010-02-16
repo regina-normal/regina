@@ -14,7 +14,7 @@ hypersurfaceincludedir = $(pkgincludedir)/hypersurface
 
 noinst_LTLIBRARIES = libhypersurface.la
 
-libhypersurface_la_SOURCES = hsflavours.cpp nhsstandard.cpp nnormalhypersurface.cpp nnormalhypersurfacelist.cpp nxmlhypersurfacereader.cpp
+libhypersurface_la_SOURCES = hsflavours.cpp nhsstandard.cpp nnormalhypersurface.cpp nnormalhypersurfacelist.cpp nxmlhypersurfacereader.cpp triangulate.cpp
 
 hypersurfaceinclude_HEADERS = hsflavourregistry.h nhsstandard.h nhsmirrored.h nnormalhypersurface.h nnormalhypersurfacelist.h nxmlhypersurfacereader.h
 
