@@ -138,8 +138,8 @@ NEnumConstraintList* NNormalHypersurfaceVectorStandard::makeEmbeddedConstraints(
     unsigned base = 5;
     unsigned edge1, edge2;
     unsigned c = 0;
-    unsigned i;
-    for (unsigned pent = 0; pent < ans->size(); ++pent) {
+    unsigned pent, i;
+    for (pent = 0; pent < triangulation->getNumberOfPentachora(); ++pent) {
         for (edge1 = 0; edge1 < 10; ++edge1)
             for (i = 0; i < 3; ++i) {
                 edge2 = Dim4Edge::edgeNumber[

@@ -29,7 +29,7 @@
 void addNNormalHypersurface();
 void addNNormalHypersurfaceList();
 
-void addSurfaces() {
+void addHypersurface() {
     addNNormalHypersurface();
     addNNormalHypersurfaceList();
 }
