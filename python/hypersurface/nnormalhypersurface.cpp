@@ -64,6 +64,11 @@ void addNNormalHypersurface() {
         .def("isEmpty", &NNormalHypersurface::isEmpty)
         .def("isCompact", &NNormalHypersurface::isCompact)
         .def("hasRealBoundary", &NNormalHypersurface::hasRealBoundary)
+        .def("isVertexLinking", &NNormalHypersurface::isVertexLinking)
+        .def("isVertexLink", &NNormalHypersurface::isVertexLink,
+            return_value_policy<reference_existing_object>())
+        .def("isThinEdgeLink", &NNormalHypersurface::isThinEdgeLink,
+            return_value_policy<reference_existing_object>())
         .def("triangulate", &NNormalHypersurface::triangulate,
             return_value_policy<manage_new_object>())
         .def("sameSurface", &NNormalHypersurface::sameSurface)

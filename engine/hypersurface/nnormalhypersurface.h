@@ -51,7 +51,9 @@ namespace regina {
  * @{
  */
 
+class Dim4Edge;
 class Dim4Triangulation;
+class Dim4Vertex;
 class NEnumConstraintList;
 class NTriangulation;
 class NXMLNormalHypersurfaceReader;
@@ -141,6 +143,53 @@ class NNormalHypersurfaceVector : public NRay {
          * is compact.
          */
         virtual bool isCompact(Dim4Triangulation* triang) const;
+        /**
+         * Determines if the normal hypersurface represented is vertex
+         * linking.  A <i>vertex linking</i> hypersurface contains only
+         * tetrahedra.
+         *
+         * The default implementation for this routine simply runs
+         * through every non-tetrahedron piece type ensuring that each
+         * has no corresponding pieces.
+         * Subclasses of NNormalHypersurfaceVector should override this if
+         * they can provide a faster implementation.
+         *
+         * @param triang the triangulation in which this normal hypersurface
+         * lives.
+         * @return \c true if and only if the normal hypersurface represented
+         * is vertex linking.
+         */
+        virtual bool isVertexLinking(Dim4Triangulation* triang) const;
+        /**
+         * Determines if a rational multiple of the normal hypersurface
+         * represented is the link of a single vertex.
+         *
+         * The default implementation for this routine involves counting the
+         * number of pieces of every type.
+         * Subclasses of NNormalSurfaceVector should override this if
+         * they can provide a faster implementation.
+         *
+         * @param triang the triangulation in which this normal hypersurface
+         * lives.
+         * @return the vertex linked by this hypersurface, or 0 if this
+         * hypersurface is not the link of a single vertex.
+         */
+        virtual const Dim4Vertex* isVertexLink(Dim4Triangulation* triang) const;
+        /**
+         * Determines if a rational multiple of the normal hypersurface
+         * represented is the thin link of a single edge.
+         *
+         * The default implementation for this routine involves counting the
+         * number of pieces of every type.
+         * Subclasses of NNormalHypersurfaceVector should override this if
+         * they can provide a faster implementation.
+         *
+         * @param triang the triangulation in which this normal hypersurface
+         * lives.
+         * @return the edge linked by this hypersurface, or 0 if this
+         * hypersurface is not a thin edge link.
+         */
+        virtual const Dim4Edge* isThinEdgeLink(Dim4Triangulation* triang) const;
 
         /**
          * Returns the number of tetrahedron pieces of the given type in
@@ -450,6 +499,47 @@ class NNormalHypersurface : public ShareableObject {
          * @return \c true if and only if this hypersurface has real boundary.
          */
         bool hasRealBoundary() const;
+        /**
+         * Determines whether or not this hypersurface is vertex linking.
+         * A <i>vertex linking</i> hypersurface contains only tetrahedra.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \todo \opt Cache results.
+         *
+         * @return \c true if and only if this hypersurface is vertex linking.
+         */
+        bool isVertexLinking() const;
+        /**
+         * Determines whether or not a rational multiple of this hypersurface
+         * is the link of a single vertex.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \todo \opt Cache results.
+         *
+         * @return the vertex linked by this hypersurface, or 0 if this
+         * hypersurface is not the link of a single vertex.
+         */
+        virtual const Dim4Vertex* isVertexLink() const;
+        /**
+         * Determines whether or not a rational multiple of this hypersurface
+         * is the thin link of a single edge.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \todo \opt Cache results.
+         *
+         * @return the edge linked by this hypersurface, or 0 if this
+         * hypersurface is not a thin edge link.
+         */
+        virtual const Dim4Edge* isThinEdgeLink() const;
 
         /**
          * Returns a 3-manifold triangulation describing this normal
@@ -582,6 +672,18 @@ inline bool NNormalHypersurface::hasRealBoundary() const {
     if (! realBoundary_.known())
         calculateRealBoundary();
     return realBoundary_.value();
+}
+
+inline bool NNormalHypersurface::isVertexLinking() const {
+    return vector_->isVertexLinking(triangulation_);
+}
+
+inline const Dim4Vertex* NNormalHypersurface::isVertexLink() const {
+    return vector_->isVertexLink(triangulation_);
+}
+
+inline const Dim4Edge* NNormalHypersurface::isThinEdgeLink() const {
+    return vector_->isThinEdgeLink(triangulation_);
 }
 
 inline const NNormalHypersurfaceVector* NNormalHypersurface::rawVector() const {
