@@ -67,11 +67,15 @@ NTetrahedron* NTetrahedron::unjoin(int myFace) {
 }
 
 void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
-    assert(! tetrahedra[myFace]);
+    assert((! tetrahedra[myFace]) ||
+        (tetrahedra[myFace] == you &&
+            tetrahedronPerm[myFace] == gluing));
     tetrahedra[myFace] = you;
     tetrahedronPerm[myFace] = gluing;
     int yourFace = gluing[myFace];
-    assert(! you->tetrahedra[yourFace]);
+    assert((! you->tetrahedra[yourFace]) ||
+        (you->tetrahedra[yourFace] == this &&
+            you->tetrahedronPerm[yourFace] == gluing.inverse()));
     assert(! (you == this && yourFace == myFace));
     you->tetrahedra[yourFace] = this;
     you->tetrahedronPerm[yourFace] = gluing.inverse();
