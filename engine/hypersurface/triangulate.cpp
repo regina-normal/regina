@@ -420,7 +420,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 outerTet = outerPent->getTetrahedron(facet);
                 outerTetEmb = outerPent->getTetrahedronMapping(facet);
                 outerTetDisc.tetIndex = outer->tetrahedronIndex(outerTet);
-                outerTetDisc.type = vertexSplit
+                outerTetDisc.type = 4 + vertexSplit
                     [outerTetEmb.preImageOf(e0)][outerTetEmb.preImageOf(e1)];
                 // Quadrilaterals are numbered away from vertex 0 of the
                 // outer tetrahedron.  Prisms are numbered away from
@@ -439,10 +439,10 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 // Map (A,B,C,D) of the outer tetrahedron to vertices of
                 // the pentachoron.
                 roles = outerTetEmb * NPerm5(
-                    vertexSplitDefn[outerTetDisc.type][0],
-                    vertexSplitDefn[outerTetDisc.type][1],
-                    vertexSplitDefn[outerTetDisc.type][2],
-                    vertexSplitDefn[outerTetDisc.type][3],
+                    vertexSplitDefn[outerTetDisc.type - 4][0],
+                    vertexSplitDefn[outerTetDisc.type - 4][1],
+                    vertexSplitDefn[outerTetDisc.type - 4][2],
+                    vertexSplitDefn[outerTetDisc.type - 4][3],
                     4);
 
                 // Set things up to be correct if A,B,C,D == e0,e1,f1,f2.
@@ -471,7 +471,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 outerTet = outerPent->getTetrahedron(facet);
                 outerTetEmb = outerPent->getTetrahedronMapping(facet);
                 outerTetDisc.tetIndex = outer->tetrahedronIndex(outerTet);
-                outerTetDisc.type = vertexSplit
+                outerTetDisc.type = 4 + vertexSplit
                     [outerTetEmb.preImageOf(e0)][outerTetEmb.preImageOf(e1)];
                 // Quadrilaterals are numbered away from vertex 0 of the
                 // outer tetrahedron.  Prisms are numbered away from
@@ -490,10 +490,10 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 // Map (A,B,C,D) of the outer tetrahedron to vertices of
                 // the pentachoron.
                 roles = outerTetEmb * NPerm5(
-                    vertexSplitDefn[outerTetDisc.type][0],
-                    vertexSplitDefn[outerTetDisc.type][1],
-                    vertexSplitDefn[outerTetDisc.type][2],
-                    vertexSplitDefn[outerTetDisc.type][3],
+                    vertexSplitDefn[outerTetDisc.type - 4][0],
+                    vertexSplitDefn[outerTetDisc.type - 4][1],
+                    vertexSplitDefn[outerTetDisc.type - 4][2],
+                    vertexSplitDefn[outerTetDisc.type - 4][3],
                     4);
 
                 // Set things up to be correct if A,B,C,D == e0,e1,f0,f2.
@@ -522,7 +522,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 outerTet = outerPent->getTetrahedron(facet);
                 outerTetEmb = outerPent->getTetrahedronMapping(facet);
                 outerTetDisc.tetIndex = outer->tetrahedronIndex(outerTet);
-                outerTetDisc.type = vertexSplit
+                outerTetDisc.type = 4 + vertexSplit
                     [outerTetEmb.preImageOf(e0)][outerTetEmb.preImageOf(e1)];
                 // Quadrilaterals are numbered away from vertex 0 of the
                 // outer tetrahedron.  Prisms are numbered away from
@@ -541,10 +541,10 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 // Map (A,B,C,D) of the outer tetrahedron to vertices of
                 // the pentachoron.
                 roles = outerTetEmb * NPerm5(
-                    vertexSplitDefn[outerTetDisc.type][0],
-                    vertexSplitDefn[outerTetDisc.type][1],
-                    vertexSplitDefn[outerTetDisc.type][2],
-                    vertexSplitDefn[outerTetDisc.type][3],
+                    vertexSplitDefn[outerTetDisc.type - 4][0],
+                    vertexSplitDefn[outerTetDisc.type - 4][1],
+                    vertexSplitDefn[outerTetDisc.type - 4][2],
+                    vertexSplitDefn[outerTetDisc.type - 4][3],
                     4);
 
                 // Set things up to be correct if A,B,C,D == e0,e1,f0,f1.
@@ -581,6 +581,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 discData = &tetData[tet]->data(type, pieceNumber);
                 for (which = 0; which < (type < 4 ? 1 : 2); ++which) {
                     triData = discData->data + which;
+                    assert(triData->nMaps == 1 || triData->nMaps == 2);
                     if (triData->nMaps > 1) {
                         triData->map[0].dest->joinTo(
                             triData->map[0].vertexMap[3],
@@ -596,8 +597,6 @@ NTriangulation* NNormalHypersurface::triangulate() const {
     for (tet = 0; tet < nTets; ++tet)
         delete tetData[tet];
     delete[] tetData;
-
-    assert(false);
 
     inner->gluingsHaveChanged();
     inner->intelligentSimplify();
