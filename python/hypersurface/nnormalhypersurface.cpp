@@ -28,6 +28,7 @@
 
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurface.h"
+#include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
@@ -63,6 +64,8 @@ void addNNormalHypersurface() {
         .def("isEmpty", &NNormalHypersurface::isEmpty)
         .def("isCompact", &NNormalHypersurface::isCompact)
         .def("hasRealBoundary", &NNormalHypersurface::hasRealBoundary)
+        .def("triangulate", &NNormalHypersurface::triangulate,
+            return_value_policy<manage_new_object>())
         .def("sameSurface", &NNormalHypersurface::sameSurface)
     ;
 }
