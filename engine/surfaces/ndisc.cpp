@@ -87,6 +87,22 @@ NDiscSetTet::NDiscSetTet(const NNormalSurface& surface,
         internalNDiscs[i] = surface.getOctCoord(tetIndex, i - 7).longValue();
 }
 
+NDiscSetTet::NDiscSetTet(unsigned long tri0, unsigned long tri1,
+        unsigned long tri2, unsigned long tri3,
+        unsigned long quad0, unsigned long quad1, unsigned long quad2,
+        unsigned long oct0, unsigned long oct1, unsigned long oct2) {
+    internalNDiscs[0] = tri0;
+    internalNDiscs[1] = tri1;
+    internalNDiscs[2] = tri2;
+    internalNDiscs[3] = tri3;
+    internalNDiscs[4] = quad0;
+    internalNDiscs[5] = quad1;
+    internalNDiscs[6] = quad2;
+    internalNDiscs[7] = oct0;
+    internalNDiscs[8] = oct1;
+    internalNDiscs[9] = oct2;
+}
+
 unsigned long NDiscSetTet::arcFromDisc(int /* arcFace */, int arcVertex,
         int discType, unsigned long discNumber) const {
     // Is it a triangle?
