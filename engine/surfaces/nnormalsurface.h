@@ -348,15 +348,15 @@ class NNormalSurfaceVector : public NRay {
         virtual const NVertex* isVertexLink(NTriangulation* triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
-         * is the link of a single thin edge.
+         * is the thin link of a single edge.
          *
-         * If there are two different thin edges <i>e1</i> and <i>e2</i> for
-         * which the surface could be expressed as either the link of
-         * <i>e1</i> or the link of <i>e2</i>, the pair
+         * If there are two different edges <i>e1</i> and <i>e2</i> for
+         * which the surface could be expressed as the thin link of
+         * either <i>e1</i> or <i>e2</i>, the pair
          * (<i>e1</i>,<i>e2</i>) will be returned.
-         * If the surface is the link of only one thin edge <i>e</i>,
+         * If the surface is the thin link of only one edge <i>e</i>,
          * the pair (<i>e</i>,0) will be returned.
-         * If the surface is not the link of any thin edges, the pair
+         * If the surface is not the thin link of any edges, the pair
          * (0,0) will be returned.
          *
          * The default implementation for this routine involves counting the
@@ -365,7 +365,7 @@ class NNormalSurfaceVector : public NRay {
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal surface lives.
-         * @return a pair containing the thin edge(s) linked by this surface,
+         * @return a pair containing the edge(s) linked by this surface,
          * as described above.
          */
         virtual std::pair<const NEdge*, const NEdge*> isThinEdgeLink(
@@ -979,15 +979,15 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         virtual const NVertex* isVertexLink() const;
         /**
          * Determines whether or not a rational multiple of this surface
-         * is the link of a single thin edge.
+         * is the thin link of a single edge.
          *
-         * If there are two different thin edges <i>e1</i> and <i>e2</i> for
-         * which this surface could be expressed as either the link of
-         * <i>e1</i> or the link of <i>e2</i>, the pair
+         * If there are two different edges <i>e1</i> and <i>e2</i> for
+         * which this surface could be expressed as the thin link of
+         * either <i>e1</i> or <i>e2</i>, the pair
          * (<i>e1</i>,<i>e2</i>) will be returned.
-         * If this surface is the link of only one thin edge <i>e</i>,
+         * If this surface is the thin link of only one edge <i>e</i>,
          * the pair (<i>e</i>,0) will be returned.
-         * If this surface is not the link of any thin edges, the pair
+         * If this surface is not the thin link of any edges, the pair
          * (0,0) will be returned.
          *
          * Note that the results of this routine are not cached.
@@ -998,7 +998,7 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          *
          * \ifacespython This routine returns a tuple of size 2.
          *
-         * @return a pair containing the thin edge(s) linked by this surface,
+         * @return a pair containing the edge(s) linked by this surface,
          * as described above.
          */
         virtual std::pair<const NEdge*, const NEdge*> isThinEdgeLink() const;
