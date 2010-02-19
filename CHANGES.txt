@@ -24,6 +24,10 @@ Version 4.6.1  [ (under development) ]
         Class NCensus:
             - New class typedef NCensus::AcceptTriangulation to replace the
               old global typedef AcceptTriangulation.
+        Class NDiscSetTetData:
+            - Added assertions in data() to ensure that the given disc
+              type and number are valid.  These can be circumvented by
+              compiling with -DNDEBUG.
         Class NExampleTriangulation:
             - Renamed seifertWeber() to weberSeifert(), for consistency with
               the original paper.  The old routine is now deprecated, but has
@@ -85,6 +89,9 @@ Version 4.6.1  [ (under development) ]
             - New routine getVertexMapping(), which facilitates a
               consistent orientation around the given vertex for the
               three remaining vertices in each tetrahedron.
+            - Added assertions in joinTo() and unjoin() to ensure that
+              the preconditions are met.  These can be circumvented by
+              compiling with -DNDEBUG.
         Class NTriangulation:
             - New routines hasCompressingDisc() and hasSimpleCompressingDisc()
               to search for compressing discs; see arXiv:0909.4625 for details.

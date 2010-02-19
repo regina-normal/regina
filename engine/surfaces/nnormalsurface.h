@@ -80,6 +80,14 @@ extern const int vertexSplitMeeting[4][4][2];
  * Vertex split number \c i splits the vertex pairs
  * <tt>vertexSplitDefn[i][0,1]</tt> and
  * <tt>vertexSplitDefn[i][2,3]</tt>.
+ *
+ * It is guaranteed that:
+ *
+ * - <tt>vertexSplitDefn[i][0] < vertexSplitDefn[i][1]</tt>;
+ *
+ * - <tt>vertexSplitDefn[i][2] < vertexSplitDefn[i][3]</tt>;
+ *
+ * - <tt>vertexSplitDefn[i][0] < vertexSplitDefn[i][2]</tt>.
  */
 extern const int vertexSplitDefn[3][4];
 

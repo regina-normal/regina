@@ -36,6 +36,7 @@
 #define __NDISC_H
 #endif
 
+#include <cassert>
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 
@@ -209,6 +210,26 @@ class NDiscSetTet {
          */
         NDiscSetTet(const NNormalSurface& surface, unsigned long tetIndex);
         /**
+         * Creates a new set of normal discs where the number of discs of
+         * each type is explicitly given.
+         *
+         * @param tri0 the number of triangular discs surrounding vertex 0.
+         * @param tri1 the number of triangular discs surrounding vertex 1.
+         * @param tri2 the number of triangular discs surrounding vertex 2.
+         * @param tri3 the number of triangular discs surrounding vertex 3.
+         * @param quad0 the number of quadrilateral discs of type 0.
+         * @param quad1 the number of quadrilateral discs of type 1.
+         * @param quad2 the number of quadrilateral discs of type 2.
+         * @param oct0 the number of octahedral discs of type 0.
+         * @param oct1 the number of octahedral discs of type 1.
+         * @param oct2 the number of octahedral discs of type 2.
+         */
+        NDiscSetTet(unsigned long tri0, unsigned long tri1,
+            unsigned long tri2, unsigned long tri3,
+            unsigned long quad0, unsigned long quad1, unsigned long quad2,
+            unsigned long oct0 = 0, unsigned long oct1 = 0,
+            unsigned long oct2 = 0);
+        /**
          * Destroys this disc set.
          */
         virtual ~NDiscSetTet();
@@ -362,6 +383,35 @@ class NDiscSetTetData : public NDiscSetTet {
                     internalData[i] = 0;
         }
         /**
+         * Creates a new disc set where the number of discs of each type
+         * is explicitly given.  The data for each disc will remain
+         * uninitialised.
+         *
+         * @param tri0 the number of triangular discs surrounding vertex 0.
+         * @param tri1 the number of triangular discs surrounding vertex 1.
+         * @param tri2 the number of triangular discs surrounding vertex 2.
+         * @param tri3 the number of triangular discs surrounding vertex 3.
+         * @param quad0 the number of quadrilateral discs of type 0.
+         * @param quad1 the number of quadrilateral discs of type 1.
+         * @param quad2 the number of quadrilateral discs of type 2.
+         * @param oct0 the number of octahedral discs of type 0.
+         * @param oct1 the number of octahedral discs of type 1.
+         * @param oct2 the number of octahedral discs of type 2.
+         */
+        NDiscSetTetData(unsigned long tri0, unsigned long tri1,
+                unsigned long tri2, unsigned long tri3,
+                unsigned long quad0, unsigned long quad1, unsigned long quad2,
+                unsigned long oct0 = 0, unsigned long oct1 = 0,
+                unsigned long oct2 = 0) :
+                NDiscSetTet(tri0, tri1, tri2, tri3, quad0, quad1, quad2,
+                    oct0, oct1, oct2) {
+            for (int i=0; i<10; i++)
+                if (internalNDiscs[i])
+                    internalData[i] = new T[internalNDiscs[i]];
+                else
+                    internalData[i] = 0;
+        }
+        /**
          * Destroys this disc set and deallocates all data arrays.
          * Note that no assumption is made about type \c T, so if data
          * elements are pointers to dynamically allocated objects, these
@@ -387,6 +437,8 @@ class NDiscSetTetData : public NDiscSetTet {
          * normal disc.
          */
         T& data(int discType, unsigned long discNumber) {
+            assert(0 <= discType && discType < 10);
+            assert(discNumber < internalNDiscs[discType]);
             return internalData[discType][discNumber];
         }
 };

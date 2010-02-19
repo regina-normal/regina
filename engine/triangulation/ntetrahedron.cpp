@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <cassert>
 #include "triangulation/ntetrahedron.h"
 
 namespace regina {
@@ -58,15 +59,20 @@ void NTetrahedron::isolate() {
 NTetrahedron* NTetrahedron::unjoin(int myFace) {
     NTetrahedron* you = tetrahedra[myFace];
     int yourFace = tetrahedronPerm[myFace][myFace];
+    assert(you);
+    assert(you->tetrahedra[yourFace]);
     you->tetrahedra[yourFace] = 0;
     tetrahedra[myFace] = 0;
     return you;
 }
 
 void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
+    assert(! tetrahedra[myFace]);
     tetrahedra[myFace] = you;
     tetrahedronPerm[myFace] = gluing;
     int yourFace = gluing[myFace];
+    assert(! you->tetrahedra[yourFace]);
+    assert(! (you == this && yourFace == myFace));
     you->tetrahedra[yourFace] = this;
     you->tetrahedronPerm[yourFace] = gluing.inverse();
 }
