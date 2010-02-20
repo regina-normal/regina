@@ -31,6 +31,14 @@
 
 namespace regina {
 
+namespace {
+    /**
+     * TODO
+     */
+    void partiallyCanonical() {
+    }
+}
+
 bool Dim4Triangulation::makeCanonical() {
     // TODO: Write.
     return true;
