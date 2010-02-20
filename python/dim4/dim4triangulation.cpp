@@ -183,6 +183,7 @@ void addDim4Triangulation() {
         .def("tetrahedronIndex", &Dim4Triangulation::tetrahedronIndex)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
+        .def("makeCanonical", &Dim4Triangulation::makeCanonical)
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
         .def("getEulerCharTri", &Dim4Triangulation::getEulerCharTri)
