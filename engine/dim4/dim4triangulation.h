@@ -741,6 +741,20 @@ class Dim4Triangulation : public NPacket {
         unsigned long findAllSubcomplexesIn(const Dim4Triangulation& other,
                 std::list<Dim4Isomorphism*>& results) const;
 
+        /**
+         * Relabel the pentachora and their vertices so that this
+         * triangulation is in canonical form.  This is essentially
+         * the lexicographically smallest labelling when the facet
+         * pairings are written out in order.
+         *
+         * Two triangulations are isomorphic if and only if their canonical
+         * forms are identical.
+         *
+         * @return \c true if the triangulation was changed, or \c false
+         * if the triangulation was in canonical form to begin with.
+         */
+        bool makeCanonical();
+
         /*@}*/
         /**
          * (end: Isomorphism Testing)
