@@ -56,6 +56,10 @@ void addDim4Isomorphism() {
         .def("isIdentity", &Dim4Isomorphism::isIdentity)
         .def("apply", &Dim4Isomorphism::apply,
             return_value_policy<manage_new_object>())
+        .def("applyInPlace", &Dim4Isomorphism::applyInPlace)
+        .def("random", &Dim4Isomorphism::random,
+            return_value_policy<manage_new_object>())
+        .staticmethod("random")
     ;
 }
 

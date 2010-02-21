@@ -756,6 +756,10 @@ class Dim4Triangulation : public NPacket {
          * followed by the gluing permutation (which in turn is written
          * as the images of 0,1,2,3,4 in order).
          *
+         * \pre This routine currently works only when the triangulation
+         * is connected.  It may be extended to work with disconnected
+         * triangulations in later versions of Regina.
+         *
          * @return \c true if the triangulation was changed, or \c false
          * if the triangulation was in canonical form to begin with.
          */

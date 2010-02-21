@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <algorithm>
+#include <cstdlib>
 #include "dim4/dim4isomorphism.h"
 #include "dim4/dim4triangulation.h"
 
@@ -66,6 +67,10 @@ Dim4Triangulation* Dim4Isomorphism::apply(
     for (p = 0; p < nPentachora_; ++p)
         pent[p] = new Dim4Pentachoron();
 
+    for (p = 0; p < nPentachora_; ++p)
+        pent[pentImage_[p]]->setDescription(
+            original->getPentachoron(p)->getDescription());
+
     const Dim4Pentachoron *myPent, *adjPent;
     unsigned long adjPentIndex;
     NPerm5 gluingPerm;
@@ -93,6 +98,53 @@ Dim4Triangulation* Dim4Isomorphism::apply(
     return ans;
 }
 
+void Dim4Isomorphism::applyInPlace(Dim4Triangulation* tri) const {
+    if (tri->getNumberOfPentachora() != nPentachora_)
+        return;
+
+    if (nPentachora_ == 0)
+        return;
+
+    Dim4Pentachoron** pent = new Dim4Pentachoron*[nPentachora_];
+    unsigned long p;
+    int f;
+
+    for (p = 0; p < nPentachora_; ++p)
+        pent[p] = new Dim4Pentachoron();
+
+    for (p = 0; p < nPentachora_; ++p)
+        pent[pentImage_[p]]->setDescription(
+            tri->getPentachoron(p)->getDescription());
+
+    const Dim4Pentachoron *myPent, *adjPent;
+    unsigned long adjPentIndex;
+    NPerm5 gluingPerm;
+    for (p = 0; p < nPentachora_; ++p) {
+        myPent = tri->getPentachoron(p);
+        for (f = 0; f < 5; ++f)
+            if ((adjPent = myPent->adjacentPentachoron(f))) {
+                // We have an adjacent pentachoron.
+                adjPentIndex = tri->pentachoronIndex(adjPent);
+                gluingPerm = myPent->adjacentGluing(f);
+
+                // Make the gluing from one side only.
+                if (adjPentIndex > p || (adjPentIndex == p &&
+                        gluingPerm[f] > f))
+                    pent[pentImage_[p]]->joinTo(facetPerm_[p][f],
+                        pent[pentImage_[adjPentIndex]],
+                        facetPerm_[adjPentIndex] * gluingPerm *
+                            facetPerm_[p].inverse());
+            }
+    }
+
+    // Don't do too many updates in quick succession, this can confuse
+    // the UI badly...
+    NPacket::ChangeEventBlock block(tri);
+    tri->removeAllPentachora();
+    for (p = 0; p < nPentachora_; ++p)
+        tri->addPentachoron(pent[p]);
+}
+
 Dim4Isomorphism::Dim4Isomorphism(const Dim4Isomorphism& cloneMe) :
         ShareableObject(),
         nPentachora_(cloneMe.nPentachora_),
@@ -104,6 +156,22 @@ Dim4Isomorphism::Dim4Isomorphism(const Dim4Isomorphism& cloneMe) :
         pentImage_);
     std::copy(cloneMe.facetPerm_, cloneMe.facetPerm_ + nPentachora_,
         facetPerm_);
+}
+
+Dim4Isomorphism* Dim4Isomorphism::random(unsigned nPentachora) {
+    Dim4Isomorphism* ans = new Dim4Isomorphism(nPentachora);
+
+    // Randomly choose the destination pentachora.
+    unsigned i;
+    for (i = 0; i < nPentachora; i++)
+        ans->pentImage_[i] = i;
+    std::random_shuffle(ans->pentImage_, ans->pentImage_ + nPentachora);
+
+    // Randomly choose the individual permutations.
+    for (i = 0; i < nPentachora; i++)
+        ans->facetPerm_[i] = NPerm5::S5[rand() % 120];
+
+    return ans;
 }
 
 } // namespace regina

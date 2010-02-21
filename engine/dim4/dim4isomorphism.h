@@ -75,7 +75,7 @@ class Dim4Triangulation;
  * copy of triangulation T as a subcomplex of some possibly larger component
  * (or components) of U.
  *
- * Note that in all cases triangulation U may contain more tetrahedra
+ * Note that in all cases triangulation U may contain more pentachora
  * than triangulation T.
  */
 class Dim4Isomorphism : public ShareableObject {
@@ -202,7 +202,8 @@ class Dim4Isomorphism : public ShareableObject {
         bool isIdentity() const;
 
         /**
-         * Applies this isomorphism to the given triangulation.
+         * Applies this isomorphism to the given triangulation and
+         * returns the result as a new triangulation.
          *
          * The given triangulation (call this T) is not modified in any way.
          * A new triangulation (call this S) is returned, so that this
@@ -240,8 +241,63 @@ class Dim4Isomorphism : public ShareableObject {
          */
         Dim4Triangulation* apply(const Dim4Triangulation* original) const;
 
+        /**
+         * Applies this isomorphism to the given triangulation,
+         * modifying the given triangulation directly.
+         *
+         * This is similar to apply(), except that instead of creating a
+         * new triangulation, the pentachora and vertices of the given
+         * triangulation are modified directly.
+         *
+         * See apply() for further details on how this operation is performed.
+         *
+         * As with apply(), there are several preconditions to this routine.
+         * This routine does a small amount of sanity checking (and returns
+         * without changes if an error is detected), but it certainly does
+         * not check the entire set of preconditions.  It is up to the
+         * caller of this routine to verify that all of the following
+         * preconditions are met.
+         *
+         * \pre The number of pentachora in the given triangulation is
+         * precisely the number returned by getSourcePentachora() for
+         * this isomorphism.
+         * \pre This is a valid isomorphism (i.e., it has been properly
+         * initialised, so that all pentachoron images are non-negative
+         * and distinct, and all facet permutations are real permutations
+         * of (0,1,2,3,4).
+         * \pre Each pentachoron image for this isomorphism lies
+         * between 0 and <tt>getSourcePentachora()-1</tt> inclusive
+         * (i.e., this isomorphism does not represent a mapping from a
+         * smaller triangulation into a larger triangulation).
+         *
+         * @param tri the triangulation to which this isomorphism
+         * should be applied.
+         */
+        void applyInPlace(Dim4Triangulation* tri) const;
+
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
+
+        /**
+         * Returns a random isomorphism for the given number of
+         * pentachora.  This isomorphism will reorder pentachora
+         * 0 to <tt>nPentachora-1</tt> in a random fashion, and for
+         * each pentachoron a random permutation of its five vertices
+         * will be selected.
+         *
+         * The isomorphism returned is newly constructed, and must be
+         * destroyed by the caller of this routine.
+         *
+         * Note that both the STL random number generator and the
+         * standard C function rand() are used in this routine.  All
+         * possible isomorphisms for the given number of pentachora are
+         * equally likely.
+         *
+         * @param nPentachora the number of pentachora that the new
+         * isomorphism should operate upon.
+         * @return the newly constructed random isomorphism.
+         */
+        static Dim4Isomorphism* random(unsigned nPentachora);
 };
 
 /*@}*/
