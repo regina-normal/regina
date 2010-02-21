@@ -56,14 +56,23 @@ namespace {
             const Dim4Isomorphism& best, const Dim4Isomorphism& bestInv) {
         bool better = false;
 
+        unsigned nPents = tri->getNumberOfPentachora();
         unsigned pent;
         int facet;
 
         unsigned origPent, origPentBest;
         int origFacet, origFacetBest;
 
+        Dim4Pentachoron *adjPent, *adjPentBest;
+        unsigned adjPentIndex, adjPentIndexBest;
+
+        NPerm5 gluingPerm, gluingPermBest;
+        NPerm5 finalGluing, finalGluingBest;
+        int comp;
+
+        bool justAssigned;
         unsigned lastAssigned = 0;
-        for (pent = 0; pent < tri->getNumberOfPentachora(); ++pent) {
+        for (pent = 0; pent < nPents; ++pent) {
             // INV: We have already selected the preimage of pent and
             // the corresponding facet permutation by the time we reach
             // this point.
@@ -75,22 +84,64 @@ namespace {
                 origFacetBest = best.facetPerm(origPentBest).preImageOf(facet);
 
                 // Check out the adjacency along pent/facet.
-                // TODO: Down to here.
-                // TODO: Don't forget to update better, lastAssigned.
+                adjPent = tri->getPentachoron(origPent)->
+                    adjacentPentachoron(origFacet);
+                adjPentIndex = (adjPent ?
+                    tri->pentachoronIndex(adjPent) : nPents);
+                adjPentBest = tri->getPentachoron(origPentBest)->
+                    adjacentPentachoron(origFacetBest);
+                adjPentIndexBest = (adjPentBest ?
+                    tri->pentachoronIndex(adjPentBest) : nPents);
+
+                justAssigned = false;
+                if (adjPent && current.pentImage(adjPentIndex) < 0) {
+                    // We have a new pentachoron that needs assignment.
+                    ++lastAssigned;
+                    current.pentImage(adjPentIndex) = lastAssigned;
+                    currentInv.pentImage(lastAssigned) = adjPentIndex;
+                    justAssigned = true;
+                }
+
+                // We now have a gluing (but possibly not a gluing
+                // permutation).  Compare adjacent pentachoron indices.
+                if ((! better) && current.pentImage(adjPentIndex) >
+                        best.pentImage(adjPentIndexBest))
+                    return false; // Worse than best-so-far.
+                if (current.pentImage(adjPentIndex) <
+                        best.pentImage(adjPentIndexBest))
+                    better = true;
+
+                // Time now to look at the gluing permutation.
+                if (! adjPent)
+                    continue;
+
+                gluingPerm = tri->getPentachoron(origPent)->
+                    adjacentGluing(origFacet);
+                gluingPermBest = tri->getPentachoron(origPentBest)->
+                    adjacentGluing(origFacetBest);
+
+                if (justAssigned) {
+                    // We can choose the permutation ourselves.
+                    // Make it so that the final gluing (computed later
+                    // below) becomes the identity.
+                    current.facetPerm(adjPentIndex) =
+                        current.facetPerm(origPent) * gluingPerm.inverse();
+                    currentInv.facetPerm(lastAssigned) =
+                        current.facetPerm(adjPentIndex).inverse();
+                }
+
+                finalGluing = current.facetPerm(adjPentIndex) *
+                    gluingPerm * current.facetPerm(origPent).inverse();
+                finalGluingBest = best.facetPerm(adjPentIndexBest) *
+                    gluingPermBest * best.facetPerm(origPentBest).inverse();
+
+                comp = finalGluing.compareWith(finalGluingBest);
+                if ((! better) && comp > 0)
+                    return false; // Worse than best-so-far.
+                if (comp < 0)
+                    better = true;
             }
         }
-        /*
-        myPent = tri->getPentachoron(origP);
-        adjPent = myPent->adjacentPentachoron(origF);
-        adjPentIndex = tri->pentachoronIndex(adjPent);
-        gluingPerm = myPent->adjacentGluing(origF);
-
-        pent[p]->joinTo(f,
-            pent[pentImage_[adjPentIndex]],
-            facetPerm_[adjPentIndex] *
-                gluingPerm *
-                facetPerm_[origP].inverse());
-        */
 
         return better;
     }
