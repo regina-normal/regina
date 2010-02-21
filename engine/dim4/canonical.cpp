@@ -46,9 +46,6 @@ namespace {
      * isomorphism is both fully constructed and moreover a strict
      * improvement upon the best found so far).
      *
-     * On entry to this routine, \a current should have all pentachoron
-     * images set to -1, aside from the selected preimage of pentachoron 0.
-     *
      * This routine currently only works for connected triangulations.
      */
     bool extendIsomorphism(const Dim4Triangulation* tri,
@@ -58,6 +55,10 @@ namespace {
 
         unsigned nPents = tri->getNumberOfPentachora();
         unsigned pent;
+
+        for (pent = 1; pent < nPents; ++pent)
+            current.pentImage(pent) = -1;
+
         int facet;
 
         unsigned origPent, origPentBest;
@@ -170,12 +171,9 @@ bool Dim4Triangulation::makeCanonical() {
     for (pent = 0; pent < nPents; ++pent) {
         current.pentImage(pent) = 0;
         currentInv.pentImage(0) = pent;
-        for (perm = 0; perm < 120; ++pent) {
+        for (perm = 0; perm < 120; ++perm) {
             // Build a "perhaps canonical" isomorphism based on this
             // preimage of pentachoron 0.
-            for (pent = 0; pent < nPents; ++pent)
-                current.pentImage(pent) = -1;
-
             current.facetPerm(pent) = NPerm5::S5[NPerm5::invS5[perm]];
             currentInv.facetPerm(0) = NPerm5::S5[perm];
 
