@@ -206,7 +206,8 @@ class NIsomorphism : public ShareableObject {
         bool isIdentity() const;
 
         /**
-         * Applies this isomorphism to the given triangulation.
+         * Applies this isomorphism to the given triangulation and
+         * returns the result as a new triangulation.
          *
          * The given triangulation (call this T) is not modified in any way.
          * A new triangulation (call this S) is returned, so that this
@@ -243,6 +244,40 @@ class NIsomorphism : public ShareableObject {
          * was encountered (i.e., an unmet precondition was noticed).
          */
         NTriangulation* apply(const NTriangulation* original) const;
+
+        /**
+         * Applies this isomorphism to the given triangulation,
+         * modifying the given triangulation directly.
+         *
+         * This is similar to apply(), except that instead of creating a
+         * new triangulation, the tetrahedra and vertices of the given
+         * triangulation are modified directly.
+         *
+         * See apply() for further details on how this operation is performed.
+         *
+         * As with apply(), there are several preconditions to this routine.
+         * This routine does a small amount of sanity checking (and returns
+         * without changes if an error is detected), but it certainly does
+         * not check the entire set of preconditions.  It is up to the
+         * caller of this routine to verify that all of the following
+         * preconditions are met.
+         *
+         * \pre The number of tetrahedra in the given triangulation is
+         * precisely the number returned by getSourceTetrahedra() for
+         * this isomorphism.
+         * \pre This is a valid isomorphism (i.e., it has been properly
+         * initialised, so that all tetrahedron images are non-negative
+         * and distinct, and all face permutations are real permutations
+         * of (0,1,2,3).
+         * \pre Each tetrahedron image for this isomorphism lies
+         * between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive
+         * (i.e., this isomorphism does not represent a mapping from a
+         * smaller triangulation into a larger triangulation).
+         *
+         * @param tri the triangulation to which this isomorphism
+         * should be applied.
+         */
+        void applyInPlace(NTriangulation* tri) const;
 
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

@@ -76,6 +76,10 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
     for (t = 0; t < nTetrahedra; t++)
         tet[t] = new NTetrahedron();
 
+    for (t = 0; t < nTetrahedra; t++)
+        tet[mTetImage[t]]->setDescription(
+            original->getTetrahedron(t)->getDescription());
+
     const NTetrahedron *myTet, *adjTet;
     unsigned long adjTetIndex;
     NPerm4 gluingPerm;
@@ -101,6 +105,53 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
     for (t = 0; t < nTetrahedra; t++)
         ans->addTetrahedron(tet[t]);
     return ans;
+}
+
+void NIsomorphism::applyInPlace(NTriangulation* tri) const {
+    if (tri->getNumberOfTetrahedra() != nTetrahedra)
+        return;
+
+    if (nTetrahedra == 0)
+        return;
+
+    NTetrahedron** tet = new NTetrahedron*[nTetrahedra];
+    unsigned long t;
+    int f;
+
+    for (t = 0; t < nTetrahedra; t++)
+        tet[t] = new NTetrahedron();
+
+    for (t = 0; t < nTetrahedra; t++)
+        tet[mTetImage[t]]->setDescription(
+            tri->getTetrahedron(t)->getDescription());
+
+    const NTetrahedron *myTet, *adjTet;
+    unsigned long adjTetIndex;
+    NPerm4 gluingPerm;
+    for (t = 0; t < nTetrahedra; t++) {
+        myTet = tri->getTetrahedron(t);
+        for (f = 0; f < 4; f++)
+            if ((adjTet = myTet->adjacentTetrahedron(f))) {
+                // We have an adjacent tetrahedron.
+                adjTetIndex = tri->tetrahedronIndex(adjTet);
+                gluingPerm = myTet->adjacentGluing(f);
+
+                // Make the gluing from one side only.
+                if (adjTetIndex > t || (adjTetIndex == t &&
+                        gluingPerm[f] > f))
+                    tet[mTetImage[t]]->joinTo(mFacePerm[t][f],
+                        tet[mTetImage[adjTetIndex]],
+                        mFacePerm[adjTetIndex] * gluingPerm *
+                            mFacePerm[t].inverse());
+            }
+    }
+
+    // Don't do too many updates in quick succession, this can confuse
+    // the UI badly...
+    NPacket::ChangeEventBlock block(tri);
+    tri->removeAllTetrahedra();
+    for (t = 0; t < nTetrahedra; t++)
+        tri->addTetrahedron(tet[t]);
 }
 
 NIsomorphism* NIsomorphism::random(unsigned nTetrahedra) {
