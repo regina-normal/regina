@@ -31,6 +31,7 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "dim4/dim4exampletriangulation.h"
+#include "dim4/dim4isomorphism.h"
 #include "dim4/dim4triangulation.h"
 #include "manifold/nmanifold.h"
 #include "subcomplex/nstandardtri.h"
@@ -39,6 +40,7 @@
 #include "testsuite/dim4/testdim4.h"
 
 using regina::Dim4ExampleTriangulation;
+using regina::Dim4Isomorphism;
 using regina::Dim4Pentachoron;
 using regina::Dim4Triangulation;
 using regina::NAbelianGroup;
@@ -60,6 +62,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(eulerCharacteristic);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(fundGroup);
+    CPPUNIT_TEST(makeCanonical);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -926,6 +929,56 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyFundGroup(mixedPoincareProduct, "");
             verifyFundGroup(idealFigEightProduct, "");
             verifyFundGroup(mixedFigEightProduct, "");
+        }
+
+        void verifyMakeCanonical(const Dim4Triangulation& tri,
+                int trials = 10) {
+            Dim4Triangulation canonical(tri);
+            canonical.makeCanonical();
+
+            for (int i = 0; i < trials; ++i) {
+                Dim4Isomorphism* iso = Dim4Isomorphism::random(
+                    tri.getNumberOfPentachora());
+                Dim4Triangulation* t = iso->apply(&tri);
+                delete iso;
+
+                t->makeCanonical();
+
+                if (! t->isIsomorphicTo(tri).get()) {
+                    std::ostringstream msg;
+                    msg << "Canonical form for "
+                        << tri.getPacketLabel() << " is non-isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (t->toStringLong() != canonical.toStringLong()) {
+                    std::ostringstream msg;
+                    msg << "Canonical form for "
+                        << tri.getPacketLabel() << " is inconsistent.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete t;
+            }
+        }
+
+        void makeCanonical() {
+            verifyMakeCanonical(empty);
+            verifyMakeCanonical(s4_id);
+            verifyMakeCanonical(s4_doubleConeS3);
+            verifyMakeCanonical(s3xs1);
+            verifyMakeCanonical(rp4);
+            verifyMakeCanonical(s3xs1Twisted);
+            verifyMakeCanonical(ball_singlePent);
+            verifyMakeCanonical(ball_foldedPent);
+            verifyMakeCanonical(ball_singleConeS3);
+            verifyMakeCanonical(ball_layerAndFold);
+            verifyMakeCanonical(idealPoincareProduct);
+            verifyMakeCanonical(mixedPoincareProduct);
+            verifyMakeCanonical(idealFigEightProduct);
+            verifyMakeCanonical(mixedFigEightProduct);
+            verifyMakeCanonical(pillow_twoCycle);
+            verifyMakeCanonical(pillow_threeCycle);
+            verifyMakeCanonical(pillow_fourCycle);
         }
 };
 
