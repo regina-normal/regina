@@ -56,8 +56,9 @@ namespace {
         unsigned nPents = tri->getNumberOfPentachora();
         unsigned pent;
 
-        for (pent = 1; pent < nPents; ++pent)
-            current.pentImage(pent) = -1;
+        for (pent = 0; pent < nPents; ++pent)
+            if (pent != currentInv.pentImage(0))
+                current.pentImage(pent) = -1;
 
         int facet;
 
@@ -160,7 +161,7 @@ bool Dim4Triangulation::makeCanonical() {
     Dim4Isomorphism best(nPents), bestInv(nPents);
 
     // The thing to best is the identity isomorphism.
-    unsigned pent;
+    unsigned pent, inner;
     for (pent = 0; pent < nPents; ++pent) {
         best.pentImage(pent) = bestInv.pentImage(pent) = pent;
         best.facetPerm(pent) = bestInv.facetPerm(pent) = NPerm5();
@@ -169,19 +170,22 @@ bool Dim4Triangulation::makeCanonical() {
     // Run through potential preimages of pentachoron 0.
     int perm;
     for (pent = 0; pent < nPents; ++pent) {
-        current.pentImage(pent) = 0;
-        currentInv.pentImage(0) = pent;
         for (perm = 0; perm < 120; ++perm) {
             // Build a "perhaps canonical" isomorphism based on this
             // preimage of pentachoron 0.
+            current.pentImage(pent) = 0;
+            currentInv.pentImage(0) = pent;
+
             current.facetPerm(pent) = NPerm5::S5[NPerm5::invS5[perm]];
             currentInv.facetPerm(0) = NPerm5::S5[perm];
 
             if (extendIsomorphism(this, current, currentInv, best, bestInv)) {
                 // This is better than anything we've seen before.
-                for (pent = 0; pent < nPents; ++pent) {
-                    best.pentImage(pent) = current.pentImage(pent);
-                    best.facetPerm(pent) = current.facetPerm(pent);
+                for (inner = 0; inner < nPents; ++inner) {
+                    best.pentImage(inner) = current.pentImage(inner);
+                    best.facetPerm(inner) = current.facetPerm(inner);
+                    bestInv.pentImage(inner) = currentInv.pentImage(inner);
+                    bestInv.facetPerm(inner) = currentInv.facetPerm(inner);
                 }
             }
         }
