@@ -56,6 +56,7 @@ void addNIsomorphism() {
         .def("isIdentity", &NIsomorphism::isIdentity)
         .def("apply", &NIsomorphism::apply,
             return_value_policy<manage_new_object>())
+        .def("applyInPlace", &NIsomorphism::applyInPlace)
         .def("random", &NIsomorphism::random,
             return_value_policy<manage_new_object>())
         .staticmethod("random")

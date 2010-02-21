@@ -34,6 +34,10 @@ Version 4.6.1  [ (under development) ]
               being preserved (for the time being) for backward compatibility.
         Class NGlobalDirs:
             - New routine data() to return the internal data directory.
+        Class NIsomorphism:
+            - New routine applyInPlace() to directly modify a triangulation.
+            - Routine apply() now copies tetrahedron descriptions as
+              well as gluings (and so does the new routine applyInPlace()).
         Class NNormalSurface:
             - New routines isCompressingDisc() and isIncompressible() for
               testing incompressibility.
