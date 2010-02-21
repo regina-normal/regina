@@ -67,6 +67,7 @@ namespace {
 
         Dim4Pentachoron *adjPent, *adjPentBest;
         unsigned adjPentIndex, adjPentIndexBest;
+        unsigned finalImage, finalImageBest;
 
         NPerm5 gluingPerm, gluingPermBest;
         NPerm5 finalGluing, finalGluingBest;
@@ -104,13 +105,16 @@ namespace {
                     justAssigned = true;
                 }
 
+                finalImage = (adjPent ?
+                    current.pentImage(adjPentIndex) : nPents);
+                finalImageBest = (adjPentBest ?
+                    best.pentImage(adjPentIndexBest) : nPents);
+
                 // We now have a gluing (but possibly not a gluing
                 // permutation).  Compare adjacent pentachoron indices.
-                if ((! better) && current.pentImage(adjPentIndex) >
-                        best.pentImage(adjPentIndexBest))
+                if ((! better) && finalImage > finalImageBest)
                     return false; // Worse than best-so-far.
-                if (current.pentImage(adjPentIndex) <
-                        best.pentImage(adjPentIndexBest))
+                if (finalImage < finalImageBest)
                     better = true;
 
                 // Time now to look at the gluing permutation.
@@ -132,6 +136,14 @@ namespace {
                         current.facetPerm(adjPentIndex).inverse();
                 }
 
+                // Although adjPent is guaranteed to exist, adjPentBest is
+                // not.  However, if adjPentBest does not exist then our
+                // isomorphism-under-construction must already be an
+                // improvement over best.
+                if (better)
+                    continue;
+
+                // Now we are guaranteed that adjPentBest exists.
                 finalGluing = current.facetPerm(adjPentIndex) *
                     gluingPerm * current.facetPerm(origPent).inverse();
                 finalGluingBest = best.facetPerm(adjPentIndexBest) *
