@@ -107,6 +107,13 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * Benjamin A. Burton, preprint, arXiv:0904.3041.
          */
         static const int AN_QUAD_OCT;
+        /**
+         * Like standard triangle-quadrilateral coordinates, but with an
+         * additional final coordinate that stores Euler characteristic.
+         * This is used for enumerating just those surfaces with non-negative
+         * Euler characteristic.
+         */
+        static const int STANDARD_EC;
 
         /**
          * Represents edge weight coordinates for normal surfaces.
