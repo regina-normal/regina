@@ -112,7 +112,7 @@ NMatrixInt* NNormalSurfaceVectorStandardEC::makeMatchingEquations(
                 // Face i is a boundary face.
                 for (j = 0; j < 7; ++j)
                     if (j != i)
-                        ans->entry(0, pos + i) += 1;
+                        ans->entry(0, pos + j) += 1;
             }
 
         pos += 7;
