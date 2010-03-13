@@ -27,7 +27,7 @@
 /* end stub */
 
 #include "enumerate/nenumconstraint.h"
-#include "surfaces/nsstandard.h"
+#include "surfaces/nsstandardec.h"
 #include "maths/nmatrixint.h"
 #include "maths/nrational.h"
 #include "maths/nvectorunit.h"
@@ -87,14 +87,60 @@ NMatrixInt* NNormalSurfaceVectorStandardEC::makeMatchingEquations(
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
     // Add an initial equation for Euler characteristic.
-    // TODO: Eqn; also make sure it gets sorted first.
-    unsigned row = 0;
-    int i;
+    // The equation will be of the form 2\chi - 2F + 2E - 2V = 0.
+    // We compute (2E - 2F) by iterating through disc types in
+    // tetrahedra, and we compute 2V by iterating through edge weights.
     unsigned long tet0, tet1;
-    NPerm4 perm0, perm1;
+    int i,j;
+    NTetrahedron* t;
+    unsigned pos = 0;
+    for (NTriangulation::TetrahedronIterator tit =
+            triangulation->getTetrahedra().begin();
+            tit != triangulation->getTetrahedra().end(); ++tit) {
+        t = *tit;
+
+        ans->entry(0, pos) = 1;
+        ans->entry(0, pos + 1) = 1;
+        ans->entry(0, pos + 2) = 1;
+        ans->entry(0, pos + 3) = 1;
+        ans->entry(0, pos + 4) = 2;
+        ans->entry(0, pos + 5) = 2;
+        ans->entry(0, pos + 6) = 2;
+
+        for (i = 0; i < 4; ++i)
+            if (! t->getAdjacentTetrahedron(i)) {
+                // Face i is a boundary face.
+                for (j = 0; j < 7; ++j)
+                    if (j != i)
+                        ans->entry(0, pos + i) += 1;
+            }
+
+        pos += 7;
+    }
+
+    ans->entry(0, pos) = 2;
+
+    for (NTriangulation::EdgeIterator eit = triangulation->getEdges().begin();
+            eit != triangulation->getEdges().end(); eit++) {
+        // Find a tetrahedron next to the edge in question.
+        const NEdgeEmbedding& emb = (*eit)->getEmbeddings().front();
+        tet0 = triangulation->tetrahedronIndex(emb.getTetrahedron());
+        i = emb.getVertices()[0];
+        j = emb.getVertices()[1];
+
+        // Add up the triangles and quads meeting that edge.
+        // Triangles:
+        ans->entry(0, 7 * tet0 + i) -= 2;
+        ans->entry(0, 7 * tet0 + j) -= 2;
+        // Quads:
+        ans->entry(0, 7 * tet0 + 4 + vertexSplitMeeting[i][j][0]) -= 2;
+        ans->entry(0, 7 * tet0 + 4 + vertexSplitMeeting[i][j][1]) -= 2;
+    }
 
     // Run through each internal face and add the corresponding three
     // equations.
+    unsigned row = 1;
+    NPerm4 perm0, perm1;
     for (NTriangulation::FaceIterator fit = triangulation->getFaces().begin();
             fit != triangulation->getFaces().end(); fit++) {
         if (! (*fit)->isBoundary()) {
