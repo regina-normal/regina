@@ -79,7 +79,6 @@
     #include "surfaces/nsanstandard.h"
     #include "surfaces/nsquad.h"
     #include "surfaces/nsquadoct.h"
-    #include "surfaces/nsstandardec.h"
 #else
     REGISTER_FLAVOUR(STANDARD, NNormalSurfaceVectorStandard,
         "Standard normal (tri-quad)", false, true)
@@ -89,8 +88,6 @@
         "Quad normal", false, true)
     REGISTER_FLAVOUR(AN_QUAD_OCT, NNormalSurfaceVectorQuadOct,
         "Quad-oct almost normal", true, true)
-    REGISTER_FLAVOUR(STANDARD_EC, NNormalSurfaceVectorStandardEC,
-        "Standard normal with Euler characteristic", false, true)
 #endif
 
 /*! \file surfaces/flavourregistry.h

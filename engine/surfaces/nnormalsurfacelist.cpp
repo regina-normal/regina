@@ -55,7 +55,6 @@ const int NNormalSurfaceList::AN_QUAD_OCT = 101;
 const int NNormalSurfaceList::AN_STANDARD = 102;
 const int NNormalSurfaceList::EDGE_WEIGHT = 200;
 const int NNormalSurfaceList::FACE_ARCS = 201;
-const int NNormalSurfaceList::STANDARD_EC = 300;
 
 #define REGISTER_FLAVOUR(id_name, class, n, a, t) \
     case NNormalSurfaceList::id_name: \
@@ -139,7 +138,8 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
 
         // Find the normal surfaces.
         NDoubleDescription::enumerateExtremalRays(SurfaceInserter(*list,
-            triang), *base, *eqns, constraints, progress);
+            triang), *base, *eqns, constraints, progress,
+            (list->flavour == STANDARD_EC ? 1 : 0));
 
         delete base;
         delete eqns;
