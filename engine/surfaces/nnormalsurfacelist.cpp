@@ -138,8 +138,7 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
 
         // Find the normal surfaces.
         NDoubleDescription::enumerateExtremalRays(SurfaceInserter(*list,
-            triang), *base, *eqns, constraints, progress,
-            (list->flavour == STANDARD_EC ? 1 : 0));
+            triang), *base, *eqns, constraints, progress);
 
         delete base;
         delete eqns;
