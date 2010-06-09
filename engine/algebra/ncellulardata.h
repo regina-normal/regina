@@ -84,6 +84,7 @@ class Dim4Triangulation;
  *       2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
  *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first.
+ *        double check torsion linking form behaves properly.
  *       3) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
@@ -92,9 +93,11 @@ class Dim4Triangulation;
  *        chain complex initialization TODO
  *        chain maps TODO
  *        PD / intersection forms TODO
+ *        TODO need to set up local orientations for dual boundary coordinates, for the barycentres
+ *        of all standard boundary simplices.  We'll put something in setupIndices for this.
  *       4) Detailed fundamental group presentations and maps bdry -> M, etc.  First we need to implement 
  *          a) max forest in dual 1-skeleton to ideal boundary, dual standard boundary, and extension to dual 1-skeleton
- *             of the triangulation
+ *             of the triangulation.  I suppose this could be stored as three NBitmask elements.
  *          b) extend to full 1-skeleton as dual ideal, dual std boundary, dual 1-skel of triangulation. 
  *          c) append in all relators. That's a big pile. 
  *          d) push out pi_1 computations for all the boundary components, interior manifold, and inclusion maps.
@@ -113,6 +116,8 @@ class Dim4Triangulation;
  *
  *       ncellulardata.cpp - contains only the core routines NCellularData::unMarkedGroup, NCellularData::markedGroup, 
  *                           NCellularData::homGroup, NCellularData::poincarePolynomial, NCellularData::bilinearForm.
+ *
+ *       ncellulardata.init.pi1.cpp - contains initialization routines for the fundamental groups and maps between them.
  *
  *       ncellulardata.init.cc.cpp - contains all the setupIndices() routines, as well as all the chain complex
  *                           initialization routines.
@@ -344,25 +349,62 @@ private:
      *  dcIx is Indexing for the dual cells.  dcIx[i] indexes the non-ideal, nonboundary
      *       standard cells of dimension (3 or 4)-i. We orient these via the getEmbeddings
      *       conventions in Regina.
-     *   rIx relative chain complex for standard homology rel boundary.
+     *   srCC relative chain complex for standard homology rel boundary.
      *  bcIx is Indexing for the boundary cells, standard decomposition, ignoring the ideal ends
      *       of standard cells. 
      * 
      * We systematically use the outer orientation convention to define the boundary maps.
      **/
-    std::vector< std::vector<unsigned long> > nicIx, icIx, dcIx, bcIx, rIx;
+    std::vector< std::vector<unsigned long> > nicIx, icIx, dcIx, bcIx, srCC;
 
     /** 
-     * chain complex for standard cellular homology of the manifold, dual cellular homology, 
-     *  mixed cellular homology and standard boundary cellular homology respectively.
+     * chain complexes for:
+     *
+     *   standard simplicial homology
+     *  sCC  - standard cellular homology of the manifold
+     *  sbCC - standard boundary cellular homology 
+     *  srCC  - standard relative cellular homology
+     *
+     *   dual cellular homology
+     *  dCC  - dual cellular homology
+     *  dbCC - dual boundary cellular homology
+     *  drCC - dual relative cellular homology
+     *
+     *   mixed cellular homology 
+     *  mCC  - mixed cellular homology
+     *  mbCC - mixed boundary cellular homology
+     *  mrCC - dual relative cellular homology
      */
-    std::vector< NMatrixInt* > sCC, dCC, mCC, bsCC, rCC;
+    std::vector< NMatrixInt* > sCC, sbCC, rCC, dCC, dbCC, drCC, mCC, mbCC, mrCC;
 
     /** 
-     * Chain maps: boundary to manifold in standard coords, standard to mixed, 
-     *  dual to mixed, standard to relative, boundary map from relative to boundary.
+     * Chain maps: 
+     * 
+     * standard: 
+     * bs_sCM -  sbCC -> sCC inclusion
+     * s_rCM  -  sCC  -> srCC projection
+     * rbCM   -  connecting map srCC -> sbCC 
+     *
+     * dual:
+     * bd_dCM -  dbCC -> dCC inclusion
+     * d_rCM  -  dCC  -> drCC projection
+     * dcCM   -  connecting map drCC -> dbCC
+     * 
+     * mixed:
+     * bm_mCM -  mbCC -> mCC inclusion
+     * m_rCM  -  mCC -> mrCC projection
+     * mcCM   -  connecting map mrCC -> mbCC
+     *
+     * coord maps:
+     * s_mCM  -  standard to mixed sCC -> mCC
+     * d_mCM  -  dual to mixed     dCC -> mCC
+     * s_mbCM -  sbCC -> mbCC
+     * d_mbCM -  dbCC -> mbCC
+     * s_mrbCM - rIX -> mrCC
+     * d_mrbCM - drCC -> mrCC
      */
-    std::vector< NMatrixInt* > bs_sCM, s_mCM, d_mCM, s_rCM, rbCM;
+    std::vector< NMatrixInt* > bs_sCM, s_rCM, rbCM,   bd_dCM, d_rCM, dcCM,   bm_mCM, m_rCM, mcCM,  
+ 			       s_mCM, d_mCM,          s_mbCM, d_mbCM,        s_mrbCM, d_mrbCM;
 
 public:
 
@@ -611,10 +653,19 @@ public:
 // copy constructor
 inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         tri4(clonePtr(g.tri4)), tri3(clonePtr(g.tri3)), 
-	nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), rIx(g.rIx), 
-	sCC(g.sCC.size()), dCC(g.dCC.size()), mCC(g.mCC.size()), bsCC(g.bsCC.size()), rCC(g.rCC.size()), 
-	bs_sCM(g.bs_sCM.size()), s_mCM(g.s_mCM.size()), d_mCM(g.d_mCM.size()), s_rCM(g.s_rCM.size()), 
-	rbCM(g.rbCM.size())
+ // chain complex indexing
+	nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), srCC(g.srCC), 
+ // chain complexes
+	sCC(g.sCC.size()), sbCC(g.sbCC.size()), rCC(g.rCC.size()), 
+        dCC(g.dCC.size()), dbCC(g.dbCC.size()), drCC(g.drCC.size()), 
+        mCC(g.mCC.size()), mbCC(g.mbCC.size()), mrCC(g.mrCC.size()),  
+ // chain maps 
+	bs_sCM(g.bs_sCM.size()), s_rCM(g.s_rCM.size()), rbCM(g.rbCM.size()), 
+        bd_dCM(g.bd_dCM.size()), d_rCM(g.d_rCM.size()), dcCM(g.dcCM.size()), 
+        bm_mCM(g.bm_mCM.size()), m_rCM(g.m_rCM.size()), mcCM(g.mcCM.size()), 
+        s_mCM(g.s_mCM.size()),   d_mCM(g.d_mCM.size()), 
+	s_mbCM(g.s_mbCM.size()),  d_mbCM(g.d_mbCM.size()), 
+        s_mrbCM(g.s_mrbCM.size()), d_mrbCM(g.d_mrbCM.size())
 {
 // copy abelianGroups, markedAbelianGroups, homMarkedAbelianGroups
 std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
@@ -646,17 +697,32 @@ for (unsigned long i=0; i<4; i++) numMixBdryCells[i] = g.numMixBdryCells[i];
 for (unsigned long i=0; i<4; i++) numDualBdryCells[i] = g.numDualBdryCells[i];
 
 // the chain complexes
-for (unsigned long i=0; i<sCC.size(); i++)       sCC[i] = clonePtr(g.sCC[i]);
-for (unsigned long i=0; i<dCC.size(); i++)       dCC[i] = clonePtr(g.dCC[i]);
-for (unsigned long i=0; i<mCC.size(); i++)       mCC[i] = clonePtr(g.mCC[i]);
-for (unsigned long i=0; i<bsCC.size(); i++)     bsCC[i] = clonePtr(g.bsCC[i]);
-for (unsigned long i=0; i<rCC.size(); i++)       rCC[i] = clonePtr(g.rCC[i]);
+for (unsigned long i=0; i<sCC.size(); i++)       sCC[i]  = clonePtr(g.sCC[i]);
+for (unsigned long i=0; i<sbCC.size(); i++)      sbCC[i] = clonePtr(g.sbCC[i]);
+for (unsigned long i=0; i<rCC.size(); i++)       rCC[i]  = clonePtr(g.rCC[i]);
+for (unsigned long i=0; i<dCC.size(); i++)       dCC[i]  = clonePtr(g.dCC[i]);
+for (unsigned long i=0; i<dbCC.size(); i++)      dbCC[i] = clonePtr(g.dbCC[i]);
+for (unsigned long i=0; i<drCC.size(); i++)      drCC[i] = clonePtr(g.drCC[i]);
+for (unsigned long i=0; i<mCC.size(); i++)       mCC[i]  = clonePtr(g.mCC[i]);
+for (unsigned long i=0; i<mbCC.size(); i++)      mbCC[i] = clonePtr(g.mbCC[i]);
+for (unsigned long i=0; i<mrCC.size(); i++)      mrCC[i] = clonePtr(g.mrCC[i]);
+
 // chain maps
-for (unsigned long i=0; i<bs_sCM.size(); i++) bs_sCM[i] = clonePtr(g.bs_sCM[i]);
-for (unsigned long i=0; i<s_mCM.size(); i++)   s_mCM[i] = clonePtr(g.s_mCM[i]);
-for (unsigned long i=0; i<d_mCM.size(); i++)   d_mCM[i] = clonePtr(g.d_mCM[i]);
-for (unsigned long i=0; i<s_rCM.size(); i++)   s_rCM[i] = clonePtr(g.s_rCM[i]);
-for (unsigned long i=0; i<rbCM.size(); i++)     rbCM[i] = clonePtr(g.rbCM[i]);
+for (unsigned long i=0; i<bs_sCM.size(); i++)    bs_sCM[i] =  clonePtr(g.bs_sCM[i]);
+for (unsigned long i=0; i<s_rCM.size(); i++)     s_rCM[i] =   clonePtr(g.s_rCM[i]);
+for (unsigned long i=0; i<rbCM.size(); i++)      rbCM[i] =    clonePtr(g.rbCM[i]);
+for (unsigned long i=0; i<bd_dCM.size(); i++)    bd_dCM[i] =  clonePtr(g.bd_dCM[i]);
+for (unsigned long i=0; i<d_rCM.size(); i++)     d_rCM[i] =   clonePtr(g.d_rCM[i]);
+for (unsigned long i=0; i<dcCM.size(); i++)      dcCM[i] =    clonePtr(g.dcCM[i]);
+for (unsigned long i=0; i<bm_mCM.size(); i++)    bm_mCM[i] =  clonePtr(g.bm_mCM[i]);
+for (unsigned long i=0; i<m_rCM.size(); i++)     m_rCM[i] =   clonePtr(g.m_rCM[i]);
+for (unsigned long i=0; i<mcCM.size(); i++)      mcCM[i] =    clonePtr(g.mcCM[i]);
+for (unsigned long i=0; i<s_mCM.size(); i++)     s_mCM[i] =   clonePtr(g.s_mCM[i]);
+for (unsigned long i=0; i<d_mCM.size(); i++)     d_mCM[i] =   clonePtr(g.d_mCM[i]);
+for (unsigned long i=0; i<s_mbCM.size(); i++)    s_mbCM[i] =  clonePtr(g.s_mbCM[i]);
+for (unsigned long i=0; i<d_mbCM.size(); i++)    d_mbCM[i] =  clonePtr(g.d_mbCM[i]);
+for (unsigned long i=0; i<s_mrbCM.size(); i++)   s_mrbCM[i] = clonePtr(g.s_mrbCM[i]);
+for (unsigned long i=0; i<d_mrbCM.size(); i++)   d_mrbCM[i] = clonePtr(g.d_mrbCM[i]);
 }
 
 // destructor
@@ -676,18 +742,35 @@ inline NCellularData::~NCellularData() {
  for (fi = bilinearForms.begin(); fi != bilinearForms.end(); fi++)
 	delete fi->second;
 
- // iterate through sCC, dCC, mCC, bsCC and deallocate
+ // iterate through sCC, sbCC, rCC,  dCC, dbCC, drCC,  mCC, mbCC, mrCC and deallocate
  for (unsigned long i=0; i<sCC.size(); i++)   if (sCC[i])  delete sCC[i];
- for (unsigned long i=0; i<dCC.size(); i++)   if (dCC[i])  delete dCC[i];
- for (unsigned long i=0; i<mCC.size(); i++)   if (mCC[i])  delete mCC[i];
- for (unsigned long i=0; i<bsCC.size(); i++)  if (bsCC[i]) delete bsCC[i];
+ for (unsigned long i=0; i<sbCC.size(); i++)  if (sbCC[i]) delete sbCC[i];
  for (unsigned long i=0; i<rCC.size(); i++)   if (rCC[i])  delete rCC[i];
- // iterate through bs_sCM, s_mCM, d_mCM and deallocate
+ for (unsigned long i=0; i<dCC.size(); i++)   if (dCC[i])  delete dCC[i];
+ for (unsigned long i=0; i<dbCC.size(); i++)  if (dbCC[i]) delete dbCC[i];
+ for (unsigned long i=0; i<drCC.size(); i++)  if (drCC[i]) delete drCC[i];
+ for (unsigned long i=0; i<mCC.size(); i++)   if (mCC[i])  delete mCC[i];
+ for (unsigned long i=0; i<mbCC.size(); i++)  if (mbCC[i]) delete mbCC[i];
+ for (unsigned long i=0; i<mrCC.size(); i++)  if (mrCC[i]) delete mrCC[i];
+
+ // iterate through bs_sCM, s_rCM, rbCM,  bd_dCM, d_rCM, dcCM,  
+ //                 bm_mCM, m_rCM, mcCM,  s_mCM, d_mCM, s_mbCM, 
+ //                 d_mbCM, s_mrbCM, d_mrbCM and deallocate
  for (unsigned long i=0; i<bs_sCM.size(); i++) if (bs_sCM[i]) delete bs_sCM[i];
- for (unsigned long i=0; i<s_mCM.size(); i++)  if (s_mCM[i])  delete s_mCM[i];
- for (unsigned long i=0; i<d_mCM.size(); i++)  if (d_mCM[i])  delete d_mCM[i];
  for (unsigned long i=0; i<s_rCM.size(); i++)  if (s_rCM[i])  delete s_rCM[i];
  for (unsigned long i=0; i<rbCM.size(); i++)   if (rbCM[i])   delete rbCM[i];
+ for (unsigned long i=0; i<bd_dCM.size(); i++) if (bd_dCM[i]) delete bd_dCM[i];
+ for (unsigned long i=0; i<d_rCM.size(); i++)  if (d_rCM[i])  delete d_rCM[i];
+ for (unsigned long i=0; i<dcCM.size(); i++)   if (dcCM[i])   delete dcCM[i];
+ for (unsigned long i=0; i<bm_mCM.size(); i++) if (bm_mCM[i]) delete bm_mCM[i];
+ for (unsigned long i=0; i<m_rCM.size(); i++)  if (m_rCM[i])  delete m_rCM[i];
+ for (unsigned long i=0; i<mcCM.size(); i++)   if (mcCM[i])   delete mcCM[i];
+ for (unsigned long i=0; i<s_mCM.size(); i++)  if (s_mCM[i])  delete s_mCM[i];
+ for (unsigned long i=0; i<d_mCM.size(); i++)  if (d_mCM[i])  delete d_mCM[i];
+ for (unsigned long i=0; i<s_mbCM.size(); i++) if (s_mbCM[i]) delete s_mbCM[i];
+ for (unsigned long i=0; i<d_mbCM.size(); i++) if (d_mbCM[i]) delete d_mbCM[i];
+ for (unsigned long i=0; i<s_mrbCM.size(); i++)if (s_mrbCM[i])delete s_mrbCM[i];
+ for (unsigned long i=0; i<d_mrbCM.size(); i++)if (d_mrbCM[i])delete d_mrbCM[i];
 }
 
 inline unsigned long NCellularData::cellCount(homology_coordinate_system hcs, unsigned dimension) const
@@ -731,19 +814,23 @@ inline NCellularData::GroupLocator::GroupLocator(const GroupLocator &cloneMe) :
 inline void NCellularData::GroupLocator::writeTextShort(std::ostream& out) const
 {
 if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
-if (hcs == DUAL_coord) out<<"(dual)"; else if (hcs == MIX_coord) out<<"(mix)"; 
+if ( (hcs == DUAL_coord) || (hcs == DUAL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) ) out<<"(dual)"; else 
+if ( (hcs == MIX_coord) || (hcs == MIX_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(mix)"; 
 out<<"H"<<( var==coVariant ? "_" : "^" )<<dim;
-if (hcs == STD_BDRY_coord) out<<"(bM;"; else if (hcs == STD_REL_BDRY_coord) out<<"(M,bM;";
+if ( (hcs == STD_BDRY_coord) || (hcs == DUAL_BDRY_coord) || (hcs == MIX_BDRY_coord) ) out<<"(bM;"; else 
+if ( (hcs == STD_REL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(M,bM;";
 else out<<"(M;";
 if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
 }
 
 inline void NCellularData::GroupLocator::writeTextLong(std::ostream& out) const
-{
+{ // at present this is the same as writeTextShort
 if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
-if (hcs == DUAL_coord) out<<"(dual)"; else if (hcs == MIX_coord) out<<"(mix)"; 
+if ( (hcs == DUAL_coord) || (hcs == DUAL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) ) out<<"(dual)"; else 
+if ( (hcs == MIX_coord) || (hcs == MIX_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(mix)"; 
 out<<"H"<<( var==coVariant ? "_" : "^" )<<dim;
-if (hcs == STD_BDRY_coord) out<<"(bM;"; else if (hcs == STD_REL_BDRY_coord) out<<"(M,bM;";
+if ( (hcs == STD_BDRY_coord) || (hcs == DUAL_BDRY_coord) || (hcs == MIX_BDRY_coord) ) out<<"(bM;"; else 
+if ( (hcs == STD_REL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(M,bM;";
 else out<<"(M;";
 if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
 }

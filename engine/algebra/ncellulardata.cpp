@@ -74,7 +74,7 @@ NAbelianGroup* gptr;
 
 std::vector< NMatrixInt* > CC; // choose the right chain complex
 if (g_desc.hcs == DUAL_coord) CC = dCC; else if (g_desc.hcs == STD_coord) CC = sCC; else
-if (g_desc.hcs == MIX_coord) CC = mCC; else if (g_desc.hcs == STD_BDRY_coord) CC = bsCC; else
+if (g_desc.hcs == MIX_coord) CC = mCC; else if (g_desc.hcs == STD_BDRY_coord) CC = sbCC; else
 if (g_desc.hcs == STD_REL_BDRY_coord) CC = rCC;
 
 if (g_desc.var == coVariant) // homology requested
@@ -117,7 +117,7 @@ NMarkedAbelianGroup* mgptr;
 
 std::vector< NMatrixInt* > CC; // choose the right chain complex
 if (g_desc.hcs == DUAL_coord) CC = dCC; else if (g_desc.hcs == STD_coord) CC = sCC; else
-if (g_desc.hcs == MIX_coord) CC = mCC; else if (g_desc.hcs == STD_BDRY_coord) CC = bsCC; else
+if (g_desc.hcs == MIX_coord) CC = mCC; else if (g_desc.hcs == STD_BDRY_coord) CC = sbCC; else
 if (g_desc.hcs == STD_REL_BDRY_coord) CC = rCC;
 
 if (g_desc.var == coVariant) // homology requested
@@ -364,7 +364,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) ) // (dual)H_2 x (std_rel)H_2 --> (mix)H_1
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
-         const NFace* fac( tri3->getFace( rIx[2][i] ) ); const NEdge* edg(NULL);
+         const NFace* fac( tri3->getFace( srCC[2][i] ) ); const NEdge* edg(NULL);
          const NTetrahedron* tet( fac->getEmbedding(1).getTetrahedron() );
          for (unsigned long j=0; j<3; j++)
 	  {
@@ -372,7 +372,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	    { // intM[ J, i, 2*numNonIdealCells[2] + 3*i+j ] += whatever
 	      // for orientation we need to compare normal orientation of these edges to product normal orientations
              unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri3->edgeIndex( edg ) ) - dcIx[2].begin() );
-	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j;
+	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*srCC[2][i] + j;
 	     // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge in the face, so we apply
 	     // facinc to that, then get the corresp edge number
 	     NPerm4 facinc( fac->getEmbedding(1).getVertices() );
@@ -390,9 +390,9 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 1) )// (dual)H_2 x (std_rel)H_1 --> (mix)H_0
        for (unsigned long i=0; i<numRelativeCells[1]; i++)
         {
-         const NEdge* edg( tri3->getEdge( rIx[1][i] ) ); 
+         const NEdge* edg( tri3->getEdge( srCC[1][i] ) ); 
          const NTetrahedron* tet( edg->getEmbedding(0).getTetrahedron() );
-         unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[1][i] ) - dcIx[2].begin() );
+         unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), srCC[1][i] ) - dcIx[2].begin() );
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + i;
          NPerm4 edginc( edg->getEmbedding(0).getVertices() );
          intM.setEntry( x, edginc.sign()*tet->orientation() ); 
@@ -401,9 +401,9 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 2) )// (dual)H_1 x (std_rel)H_2 --> (mix)H_0 
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         {
-         const NFace* fac( tri3->getFace( rIx[2][i] ) ); 
+         const NFace* fac( tri3->getFace( srCC[2][i] ) ); 
          const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
-         unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), rIx[2][i] ) - dcIx[1].begin() );
+         unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), srCC[2][i] ) - dcIx[1].begin() );
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
          NPerm4 facinc( fac->getEmbedding(0).getVertices() );
          intM.setEntry( x, facinc.sign()*tet->orientation() ); 
@@ -422,30 +422,30 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) ) // H_2 x H_2 --> H_0
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         {
-         const Dim4Face* fac( tri4->getFace( rIx[2][i] ) );
+         const Dim4Face* fac( tri4->getFace( srCC[2][i] ) );
          const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
          NPerm5 facinc( fac->getEmbedding(0).getVertices() );
-         unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[2][i] ) - dcIx[2].begin() );
+         unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), srCC[2][i] ) - dcIx[2].begin() );
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
          intM.setEntry( x, facinc.sign() * pen->orientation() );
         }
      if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 3) )// (dual)H_1 x (std_rel_bdry)H_3 --> H_0
        for (unsigned long i=0; i<numRelativeCells[3]; i++)
         {
-         const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[3][i] ) );
+         const Dim4Tetrahedron* tet( tri4->getTetrahedron( srCC[3][i] ) );
          const Dim4Pentachoron* pen( tet->getEmbedding(0).getPentachoron() );
          NPerm5 tetinc( tet->getEmbedding(0).getVertices() );
-         unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), rIx[3][i] ) - dcIx[1].begin() );
+         unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), srCC[3][i] ) - dcIx[1].begin() );
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + i;
          intM.setEntry( x, tetinc.sign() * pen->orientation() );
         }
      if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 1) )// (dual)H_3 x (std_rel_bdry)H_1 --> H_0
       for (unsigned long i=0; i<numRelativeCells[1]; i++)
         {
-         const Dim4Edge* edg( tri4->getEdge( rIx[1][i] ) );
+         const Dim4Edge* edg( tri4->getEdge( srCC[1][i] ) );
          const Dim4Pentachoron* pen( edg->getEmbedding(0).getPentachoron() );
          NPerm5 edginc( edg->getEmbedding(0).getVertices() );
-         unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), rIx[1][i] ) - dcIx[3].begin() );
+         unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), srCC[1][i] ) - dcIx[3].begin() );
          NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + i;
          intM.setEntry( x, edginc.sign() * pen->orientation() );
         }
@@ -453,7 +453,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 3) )// (dual)H_2 x (std_rel_bdry)H_3 --> H_1
        for (unsigned long i=0; i<numRelativeCells[3]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
-         const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[3][i] ) ); const Dim4Face* fac(NULL);
+         const Dim4Tetrahedron* tet( tri4->getTetrahedron( srCC[3][i] ) ); const Dim4Face* fac(NULL);
          const Dim4Pentachoron* pen( tet->getEmbedding(1).getPentachoron() );
          NPerm5 tetinc( tet->getEmbedding(1).getVertices() );
          for (unsigned long j=0; j<4; j++)
@@ -462,7 +462,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	    { // intM[ J, i, 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*i+j ] += whatever
 	      // for orientation we need to compare normal orientation of intersection to product normal orientations
              unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri4->faceIndex( fac ) ) - dcIx[2].begin() );
-	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*rIx[3][i] + j;
+	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*srCC[3][i] + j;
 	     NPerm5 facinc( pen->getFaceMapping( Dim4Face::faceNumber[tetinc[(j+1)%4]][tetinc[(j+2)%4]][tetinc[(j+3)%4]] ) ); 
              // adjust for coherent oriented normal fibres
 	     if (facinc.sign() != pen->orientation()) facinc=facinc*NPerm5(0,1);
@@ -478,7 +478,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 2) )// (dual)H_3 x (std_red_bdry)H_2 --> H_1
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
-         const Dim4Face* fac( tri4->getFace( rIx[2][i] ) ); const Dim4Edge* edg(NULL);
+         const Dim4Face* fac( tri4->getFace( srCC[2][i] ) ); const Dim4Edge* edg(NULL);
          const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
          NPerm5 facinc( fac->getEmbedding(0).getVertices() );
          for (unsigned long j=0; j<3; j++)
@@ -487,7 +487,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	    { // intM[ J, i, 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*i+j ] += whatever
 	      // for orientation we need to compare normal orientation of intersection to product normal orientations
              unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), tri4->edgeIndex( edg ) ) - dcIx[3].begin() );
-	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j; 
+	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*srCC[2][i] + j; 
 	     NPerm5 edginc( pen->getEdgeMapping( Dim4Edge::edgeNumber[facinc[(j+1)%3]][facinc[(j+2)%3]] ) ); 
 	     // adjust for coherent oriented normal fibres
 	     if (facinc.sign() != pen->orientation()) facinc = facinc*NPerm5(3,4);
@@ -504,7 +504,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 3) )// (dual)H_3 x (std_rel_bdry)H_3 --> H_2
        for (unsigned long i=0; i<numRelativeCells[3]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
-         const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[3][i] ) ); const Dim4Edge* edg(NULL);
+         const Dim4Tetrahedron* tet( tri4->getTetrahedron( srCC[3][i] ) ); const Dim4Edge* edg(NULL);
          const Dim4Pentachoron* pen( tet->getEmbedding(1).getPentachoron() );
          NPerm5 tetinc( tet->getEmbedding(1).getVertices() ); // [0,1,2,3]->tet in pen, 4->tet num in pen.
          for (unsigned long j=0; j<6; j++)
@@ -622,7 +622,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	   NLargeInteger sum(NLargeInteger::zero);
            for (unsigned long k=0; k<dual_1vec.size(); k++)
             {
-             const NFace* fac( tri3->getFace( rIx[2][i] ) ); 
+             const NFace* fac( tri3->getFace( srCC[2][i] ) ); 
              const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
              NPerm4 facinc( fac->getEmbedding(0).getVertices() );
             sum += std_rel_bdry_2vec[k]*dual_1vec[k]*facinc.sign()*tet->orientation(); // orientation convention...
@@ -650,7 +650,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	   NLargeInteger sum(NLargeInteger::zero);
            for (unsigned long k=0; k<dual_1vec.size(); k++)
             {
-             const Dim4Face* fac( tri4->getFace( rIx[2][i] ) ); 
+             const Dim4Face* fac( tri4->getFace( srCC[2][i] ) ); 
              const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
              NPerm5 facinc( fac->getEmbedding(0).getVertices() );
              sum += std_rel_bdry_2vec[k]*dual_1vec[k]*facinc.sign()*pen->orientation(); // orientation convention...
@@ -676,7 +676,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	   NLargeInteger sum(NLargeInteger::zero);
            for (unsigned long k=0; k<dual_1vec.size(); k++)
             {
-             const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[1][i] ) ); 
+             const Dim4Tetrahedron* tet( tri4->getTetrahedron( srCC[1][i] ) ); 
              const Dim4Pentachoron* pen( tet->getEmbedding(1).getPentachoron() );
              NPerm5 tetinc( tet->getEmbedding(1).getVertices() );
              sum += std_rel_bdry_2vec[k]*dual_1vec[k]*tetinc.sign()*pen->orientation(); // orientation convention...

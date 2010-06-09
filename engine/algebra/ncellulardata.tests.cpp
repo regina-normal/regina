@@ -63,10 +63,10 @@ for (unsigned long i=0; i<mCC.size()-1; i++) if (mCC[i] && mCC[i+1])
    for (unsigned long j=0; j<prod->rows(); j++) for (unsigned long k=0; k<prod->columns(); k++)
        if (prod->entry(j,k) != 0) return false;
   }
-for (unsigned long i=0; i<bsCC.size()-1; i++) if (bsCC[i] && bsCC[i+1])
+for (unsigned long i=0; i<sbCC.size()-1; i++) if (sbCC[i] && sbCC[i+1])
   {
-   if ( bsCC[i]->columns() != bsCC[i+1]->rows() ) return false;
-   std::auto_ptr< NMatrixRing<NLargeInteger> > prod = (*bsCC[i])*(*bsCC[i+1]);
+   if ( sbCC[i]->columns() != sbCC[i+1]->rows() ) return false;
+   std::auto_ptr< NMatrixRing<NLargeInteger> > prod = (*sbCC[i])*(*sbCC[i+1]);
    for (unsigned long j=0; j<prod->rows(); j++) for (unsigned long k=0; k<prod->columns(); k++)
        if (prod->entry(j,k) != 0) return false;
   }
@@ -106,19 +106,19 @@ for (unsigned long i=1; i<s_rCM.size(); i++) if (s_rCM[i] && s_rCM[i-1] && sCC[i
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*s_rCM[i-1])*(*sCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
-// verify sCC[i]*bs_sCM[i] == bs_sCM[i-1]*bsCC[i]
-for (unsigned long i=1; i<bs_sCM.size(); i++) if (bs_sCM[i] && bs_sCM[i-1] && sCC[i] && bsCC[i])
+// verify sCC[i]*bs_sCM[i] == bs_sCM[i-1]*sbCC[i]
+for (unsigned long i=1; i<bs_sCM.size(); i++) if (bs_sCM[i] && bs_sCM[i-1] && sCC[i] && sbCC[i])
  {
-  if ( (sCC[i]->columns() != bs_sCM[i]->rows()) || (bs_sCM[i-1]->columns() != bsCC[i]->rows()) ) return false;
+  if ( (sCC[i]->columns() != bs_sCM[i]->rows()) || (bs_sCM[i-1]->columns() != sbCC[i]->rows()) ) return false;
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*sCC[i])*(*bs_sCM[i]);
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*bs_sCM[i-1])*(*bsCC[i]);
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*bs_sCM[i-1])*(*sbCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
-// verify bsCC[i]*rbCM[i] == (-1)*rbCM[i-1]*rCC[i+1]
-for (unsigned long i=1; i<rbCM.size(); i++) if (rbCM[i] && rbCM[i-1] && rCC[i+1] && bsCC[i])
+// verify sbCC[i]*rbCM[i] == (-1)*rbCM[i-1]*rCC[i+1]
+for (unsigned long i=1; i<rbCM.size(); i++) if (rbCM[i] && rbCM[i-1] && rCC[i+1] && sbCC[i])
  { 
-  if ( (bsCC[i]->columns() != rbCM[i]->rows()) || (rbCM[i-1]->columns() != rCC[i+1]->rows()) ) return false;
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*bsCC[i])*(*rbCM[i]);
+  if ( (sbCC[i]->columns() != rbCM[i]->rows()) || (rbCM[i-1]->columns() != rCC[i+1]->rows()) ) return false;
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*sbCC[i])*(*rbCM[i]);
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*rbCM[i-1])*(*rCC[i+1]);
   for (unsigned long j=0; j<prod1->rows(); j++) for (unsigned long k=0; k<prod1->columns(); k++)
 	if (prod1->entry(j,k) + prod2->entry(j,k) != 0) return false;
