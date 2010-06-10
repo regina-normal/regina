@@ -349,13 +349,13 @@ private:
      *  dcIx is Indexing for the dual cells.  dcIx[i] indexes the non-ideal, nonboundary
      *       standard cells of dimension (3 or 4)-i. We orient these via the getEmbeddings
      *       conventions in Regina.
-     *   srCC relative chain complex for standard homology rel boundary.
+     *  rIx relative chain complex for standard homology rel boundary. 
      *  bcIx is Indexing for the boundary cells, standard decomposition, ignoring the ideal ends
      *       of standard cells. 
      * 
      * We systematically use the outer orientation convention to define the boundary maps.
      **/
-    std::vector< std::vector<unsigned long> > nicIx, icIx, dcIx, bcIx, srCC;
+    std::vector< std::vector<unsigned long> > nicIx, icIx, dcIx, bcIx, rIx;
 
     /** 
      * chain complexes for:
@@ -375,7 +375,7 @@ private:
      *  mbCC - mixed boundary cellular homology
      *  mrCC - dual relative cellular homology
      */
-    std::vector< NMatrixInt* > sCC, sbCC, rCC, dCC, dbCC, drCC, mCC, mbCC, mrCC;
+    std::vector< NMatrixInt* > sCC, sbCC, srCC, dCC, dbCC, drCC, mCC, mbCC, mrCC;
 
     /** 
      * Chain maps: 
@@ -654,9 +654,9 @@ public:
 inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         tri4(clonePtr(g.tri4)), tri3(clonePtr(g.tri3)), 
  // chain complex indexing
-	nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), srCC(g.srCC), 
+	nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), rIx(g.rIx), 
  // chain complexes
-	sCC(g.sCC.size()), sbCC(g.sbCC.size()), rCC(g.rCC.size()), 
+	sCC(g.sCC.size()), sbCC(g.sbCC.size()), srCC(g.srCC.size()), 
         dCC(g.dCC.size()), dbCC(g.dbCC.size()), drCC(g.drCC.size()), 
         mCC(g.mCC.size()), mbCC(g.mbCC.size()), mrCC(g.mrCC.size()),  
  // chain maps 
@@ -699,7 +699,7 @@ for (unsigned long i=0; i<4; i++) numDualBdryCells[i] = g.numDualBdryCells[i];
 // the chain complexes
 for (unsigned long i=0; i<sCC.size(); i++)       sCC[i]  = clonePtr(g.sCC[i]);
 for (unsigned long i=0; i<sbCC.size(); i++)      sbCC[i] = clonePtr(g.sbCC[i]);
-for (unsigned long i=0; i<rCC.size(); i++)       rCC[i]  = clonePtr(g.rCC[i]);
+for (unsigned long i=0; i<srCC.size(); i++)       srCC[i]  = clonePtr(g.srCC[i]);
 for (unsigned long i=0; i<dCC.size(); i++)       dCC[i]  = clonePtr(g.dCC[i]);
 for (unsigned long i=0; i<dbCC.size(); i++)      dbCC[i] = clonePtr(g.dbCC[i]);
 for (unsigned long i=0; i<drCC.size(); i++)      drCC[i] = clonePtr(g.drCC[i]);
@@ -742,10 +742,10 @@ inline NCellularData::~NCellularData() {
  for (fi = bilinearForms.begin(); fi != bilinearForms.end(); fi++)
 	delete fi->second;
 
- // iterate through sCC, sbCC, rCC,  dCC, dbCC, drCC,  mCC, mbCC, mrCC and deallocate
+ // iterate through sCC, sbCC, srCC,  dCC, dbCC, drCC,  mCC, mbCC, mrCC and deallocate
  for (unsigned long i=0; i<sCC.size(); i++)   if (sCC[i])  delete sCC[i];
  for (unsigned long i=0; i<sbCC.size(); i++)  if (sbCC[i]) delete sbCC[i];
- for (unsigned long i=0; i<rCC.size(); i++)   if (rCC[i])  delete rCC[i];
+ for (unsigned long i=0; i<srCC.size(); i++)   if (srCC[i])  delete srCC[i];
  for (unsigned long i=0; i<dCC.size(); i++)   if (dCC[i])  delete dCC[i];
  for (unsigned long i=0; i<dbCC.size(); i++)  if (dbCC[i]) delete dbCC[i];
  for (unsigned long i=0; i<drCC.size(); i++)  if (drCC[i]) delete drCC[i];

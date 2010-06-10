@@ -189,7 +189,7 @@ void fillBoundaryToStandardHomCM( unsigned aDim, // dimension of the triangulati
 void fillStandardToRelativeHomCM( unsigned aDim, // dimension of the triangulation
         const unsigned long numStandardCells[5],                 const unsigned long numRelativeCells[5], 
 	const unsigned long numNonIdealCells[5],
-	std::vector< std::vector<unsigned long> > &nicIx, 	 std::vector< std::vector<unsigned long> > &srCC, 
+	std::vector< std::vector<unsigned long> > &nicIx, 	 std::vector< std::vector<unsigned long> > &rIx, 
         std::vector< NMatrixInt* > &s_rCM)
 {
  for (unsigned d=0; d<aDim+1; d++) s_rCM[d] = new NMatrixInt( numRelativeCells[d], numStandardCells[d] );
@@ -197,8 +197,8 @@ void fillStandardToRelativeHomCM( unsigned aDim, // dimension of the triangulati
  unsigned long I;
  for (unsigned long d=0; d<aDim+1; d++) for (unsigned j=0; j<numNonIdealCells[d]; j++)
   {
-   I = lower_bound( srCC[d].begin(), srCC[d].end(), nicIx[d][j] ) - srCC[d].begin();
-   if ( I != srCC[d].size() ) s_rCM[d]->entry( I, j ) = 1;
+   I = lower_bound( rIx[d].begin(), rIx[d].end(), nicIx[d][j] ) - rIx[d].begin();
+   if ( I != rIx[d].size() ) s_rCM[d]->entry( I, j ) = 1;
   }
 }
 
@@ -206,7 +206,7 @@ void fillStandardToRelativeHomCM( unsigned aDim, // dimension of the triangulati
 void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long numRelativeCells[5], 
      const unsigned long numStandardBdryCells[4],      const unsigned long numNonIdealBdryCells[4],    
      std::vector< std::vector<unsigned long> > &bcIx,  std::vector< std::vector<unsigned long> > &icIx,
-     std::vector< std::vector<unsigned long> > &srCC,   std::vector< NMatrixInt* > &rbCM)               
+     std::vector< std::vector<unsigned long> > &rIx,   std::vector< NMatrixInt* > &rbCM)               
 {
  for (unsigned d=0; d<4; d++) 
    rbCM[d] = new NMatrixInt( numStandardBdryCells[d], numRelativeCells[d+1] );
@@ -217,7 +217,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
  unsigned long D=1;
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
   {	
-   edg = tri->getEdge(srCC[D][j]);
+   edg = tri->getEdge(rIx[D][j]);
    for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
     {   // endpt i is ideal, find index
      I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
@@ -235,7 +235,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
  D = 2;
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
   {
-   fac = tri->getFace(srCC[D][j]);
+   fac = tri->getFace(rIx[D][j]);
    for (unsigned long i=0; i < D+1; i++) 
     { 
      if (fac->getVertex(i)->isIdeal())
@@ -257,7 +257,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
  D = 3;
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
   {
-   tet = tri->getTetrahedron(srCC[D][j]);
+   tet = tri->getTetrahedron(rIx[D][j]);
    for (unsigned long i=0; i < D+1; i++) 
     { 
      if (tet->getVertex(i)->isIdeal())
@@ -279,7 +279,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
  D = 4;
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
   {
-   pen = tri->getPentachoron(srCC[D][j]);
+   pen = tri->getPentachoron(rIx[D][j]);
    for (unsigned long i=0; i < D+1; i++) 
     { 
      if (pen->getVertex(i)->isIdeal())
@@ -301,7 +301,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
 void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long numRelativeCells[5], 
      const unsigned long numStandardBdryCells[4],  const unsigned long numNonIdealBdryCells[4],    
      std::vector< std::vector<unsigned long> > &bcIx,  std::vector< std::vector<unsigned long> > &icIx,
-     std::vector< std::vector<unsigned long> > &srCC,   std::vector< NMatrixInt* > &rbCM)               
+     std::vector< std::vector<unsigned long> > &rIx,   std::vector< NMatrixInt* > &rbCM)               
 {
  for (unsigned d=0; d<3; d++) rbCM[d] = new NMatrixInt( numStandardBdryCells[d], numRelativeCells[d+1] );
 
@@ -313,7 +313,7 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
  unsigned long D=1;
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
   {	
-   edg = tri->getEdge(srCC[D][j]);
+   edg = tri->getEdge(rIx[D][j]);
    for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
     {   // endpt i is ideal, find index
      I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
@@ -331,7 +331,7 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
  D = 2;
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
   {
-   fac = tri->getFace(srCC[D][j]);
+   fac = tri->getFace(rIx[D][j]);
    for (unsigned long i=0; i < D+1; i++) 
     { 
      if (fac->getVertex(i)->isIdeal())
@@ -353,7 +353,7 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
  D = 3;
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
   {
-   tet = tri->getTetrahedron(srCC[D][j]);
+   tet = tri->getTetrahedron(rIx[D][j]);
    for (unsigned long i=0; i < D+1; i++) 
     { 
      if (tet->getVertex(i)->isIdeal())
@@ -384,7 +384,7 @@ unsigned long aDim = ( tri3 ? 3 : 4 );
 if ( aDim == 3 )
  { // domdim \in \{ 0, 1, 2, 3 \}
   if (domdim == 0) for (unsigned long i=0; i<CM.rows(); i++)
-	{ // srCC[aDim][i], dcIx[0][i]
+	{ // rIx[aDim][i], dcIx[0][i]
          const NTetrahedron* tet( tri3->getTetrahedron( dcIx[domdim][i] ) );
 	 CM.entry( i, i ) = tet->orientation();
 	}
@@ -413,7 +413,7 @@ if ( aDim == 3 )
 else
  { // aDim == 4,  domdim \in \{ 0, 1, 2, 3, 4 \}
   if (domdim == 0) for (unsigned long i=0; i<CM.rows(); i++)
-	{ // srCC[aDim][i], dcIx[0][i]
+	{ // rIx[aDim][i], dcIx[0][i]
          const Dim4Pentachoron* pen( tri4->getPentachoron( dcIx[domdim][i] ) );
 	 CM.entry( i, i ) = pen->orientation();
 	}
@@ -456,7 +456,7 @@ void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4,
                     unsigned long numMixRelCells[5],      unsigned long numMixBdryCells[4],  unsigned long numDualBdryCells[4], 
                     std::vector< std::vector<unsigned long> > &nicIx, std::vector< std::vector<unsigned long> > &icIx, 
                     std::vector< std::vector<unsigned long> > &dcIx,  std::vector< std::vector<unsigned long> > &bcIx, 
-                    std::vector< std::vector<unsigned long> > &srCC, 
+                    std::vector< std::vector<unsigned long> > &rIx, 
                     std::vector< NMatrixInt* > &bs_sCM, std::vector< NMatrixInt* > &s_mCM, 
                     std::vector< NMatrixInt* > &d_mCM,  std::vector< NMatrixInt* > &s_rCM, 
                     std::vector< NMatrixInt* > &rbCM )
@@ -467,13 +467,13 @@ void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4,
 
    fillDualToMixedHomCM( tri4, numDualCells, numMixCells, numNonIdealCells, dcIx, d_mCM );
 
-   fillStandardToRelativeHomCM( 4, numStandardCells, numRelativeCells, numNonIdealCells, nicIx, srCC, s_rCM );
+   fillStandardToRelativeHomCM( 4, numStandardCells, numRelativeCells, numNonIdealCells, nicIx, rIx, s_rCM );
 
    fillBoundaryToStandardHomCM( 4, numStandardCells, numStandardBdryCells, numNonIdealBdryCells, 
         numIdealCells, numNonIdealCells, nicIx, bcIx, bs_sCM);
 
    fillDifferentialHomCM( tri4, numRelativeCells, numStandardBdryCells,  numNonIdealBdryCells,    
-     bcIx,  icIx, srCC, rbCM );   
+     bcIx,  icIx, rIx, rbCM );   
   }
  if (tri3)
   {
@@ -481,13 +481,13 @@ void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4,
 
    fillDualToMixedHomCM( tri3, numDualCells, numMixCells, numNonIdealCells, dcIx, d_mCM );
 
-   fillStandardToRelativeHomCM( 3, numStandardCells, numRelativeCells, numNonIdealCells, nicIx, srCC, s_rCM );
+   fillStandardToRelativeHomCM( 3, numStandardCells, numRelativeCells, numNonIdealCells, nicIx, rIx, s_rCM );
 
    fillBoundaryToStandardHomCM( 3, numStandardCells, numStandardBdryCells, numNonIdealBdryCells, 
         numIdealCells, numNonIdealCells, nicIx, bcIx, bs_sCM);
  
    fillDifferentialHomCM( tri3, numRelativeCells, numStandardBdryCells,  numNonIdealBdryCells,    
-     bcIx,  icIx, srCC, rbCM );   
+     bcIx,  icIx, rIx, rbCM );   
   }
 }
 
