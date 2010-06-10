@@ -380,31 +380,31 @@ private:
     /** 
      * Chain maps: 
      * 
-     * standard: 
-     * bs_sCM -  sbCC -> sCC inclusion
-     * s_rCM  -  sCC  -> srCC projection
-     * rbCM   -  connecting map srCC -> sbCC 
+     *   standard: 
+     * sbiCM  -  sbCC -> sCC      std coords, boundary inclusion       
+     * strCM  -  sCC  -> srCC     std coords, relative projection       
+     * schCM  -  srCC -> sbCC     std coords, connecting hom 
      *
-     * dual:
-     * bd_dCM -  dbCC -> dCC inclusion
-     * d_rCM  -  dCC  -> drCC projection
-     * dcCM   -  connecting map drCC -> dbCC
+     *     dual:
+     * dbiCM  -  dbCC -> dCC      dual coords, boundary inclusion         
+     * dtrCM  -  dCC  -> drCC     dual coords, relative projection      
+     * dchCM  -  drCC -> dbCC     dual coords, connecting hom
      * 
-     * mixed:
-     * bm_mCM -  mbCC -> mCC inclusion
-     * m_rCM  -  mCC -> mrCC projection
-     * mcCM   -  connecting map mrCC -> mbCC
+     *    mixed:
+     * mbiCM  -  mbCC -> mCC      mixed coords, boundary inclusion  
+     * mtrCM  -  mCC  -> mrCC     mixed coords, relative projection
+     * mchCM  -  mrCC -> mbCC     mixed coords, connecting hom
      *
-     * coord maps:
-     * s_mCM  -  standard to mixed sCC -> mCC
-     * d_mCM  -  dual to mixed     dCC -> mCC
-     * s_mbCM -  sbCC -> mbCC
-     * d_mbCM -  dbCC -> mbCC
-     * s_mrbCM - rIX -> mrCC
-     * d_mrbCM - drCC -> mrCC
+     *   inter-coordinate maps:
+     * smCM   -   sCC -> mCC       standard to mixed
+     * dmCM   -   dCC -> mCC       dual to mixed
+     * smbCM  -  sbCC -> mbCC      standard to mixed,   boundary map         
+     * dmbCM  -  dbCC -> mbCC      dual to mixed,       boundary map         
+     * srmCM  -  srCC -> mrCC      standard to mixed,   relative map                
+     * drmCM  -  drCC -> mrCC      dual to mixed,       relative map               
      */
-    std::vector< NMatrixInt* > bs_sCM, s_rCM, rbCM,   bd_dCM, d_rCM, dcCM,   bm_mCM, m_rCM, mcCM,  
- 			       s_mCM, d_mCM,          s_mbCM, d_mbCM,        s_mrbCM, d_mrbCM;
+    std::vector< NMatrixInt* > sbiCM, strCM, schCM,   dbiCM, dtrCM, dchCM,   mbiCM, mtrCM, mchCM,  
+ 			       smCM, dmCM,            smbCM, dmbCM,          srmCM, drmCM;
 
 public:
 
@@ -660,12 +660,12 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         dCC(g.dCC.size()), dbCC(g.dbCC.size()), drCC(g.drCC.size()), 
         mCC(g.mCC.size()), mbCC(g.mbCC.size()), mrCC(g.mrCC.size()),  
  // chain maps 
-	bs_sCM(g.bs_sCM.size()), s_rCM(g.s_rCM.size()), rbCM(g.rbCM.size()), 
-        bd_dCM(g.bd_dCM.size()), d_rCM(g.d_rCM.size()), dcCM(g.dcCM.size()), 
-        bm_mCM(g.bm_mCM.size()), m_rCM(g.m_rCM.size()), mcCM(g.mcCM.size()), 
-        s_mCM(g.s_mCM.size()),   d_mCM(g.d_mCM.size()), 
-	s_mbCM(g.s_mbCM.size()),  d_mbCM(g.d_mbCM.size()), 
-        s_mrbCM(g.s_mrbCM.size()), d_mrbCM(g.d_mrbCM.size())
+	sbiCM(g.sbiCM.size()), strCM(g.strCM.size()), schCM(g.schCM.size()), 
+        dbiCM(g.dbiCM.size()), dtrCM(g.dtrCM.size()), dchCM(g.dchCM.size()), 
+        mbiCM(g.mbiCM.size()), mtrCM(g.mtrCM.size()), mchCM(g.mchCM.size()), 
+        smCM(g.smCM.size()),   dmCM(g.dmCM.size()), 
+	smbCM(g.smbCM.size()),  dmbCM(g.dmbCM.size()), 
+        srmCM(g.srmCM.size()), drmCM(g.drmCM.size())
 {
 // copy abelianGroups, markedAbelianGroups, homMarkedAbelianGroups
 std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
@@ -708,21 +708,21 @@ for (unsigned long i=0; i<mbCC.size(); i++)      mbCC[i] = clonePtr(g.mbCC[i]);
 for (unsigned long i=0; i<mrCC.size(); i++)      mrCC[i] = clonePtr(g.mrCC[i]);
 
 // chain maps
-for (unsigned long i=0; i<bs_sCM.size(); i++)    bs_sCM[i] =  clonePtr(g.bs_sCM[i]);
-for (unsigned long i=0; i<s_rCM.size(); i++)     s_rCM[i] =   clonePtr(g.s_rCM[i]);
-for (unsigned long i=0; i<rbCM.size(); i++)      rbCM[i] =    clonePtr(g.rbCM[i]);
-for (unsigned long i=0; i<bd_dCM.size(); i++)    bd_dCM[i] =  clonePtr(g.bd_dCM[i]);
-for (unsigned long i=0; i<d_rCM.size(); i++)     d_rCM[i] =   clonePtr(g.d_rCM[i]);
-for (unsigned long i=0; i<dcCM.size(); i++)      dcCM[i] =    clonePtr(g.dcCM[i]);
-for (unsigned long i=0; i<bm_mCM.size(); i++)    bm_mCM[i] =  clonePtr(g.bm_mCM[i]);
-for (unsigned long i=0; i<m_rCM.size(); i++)     m_rCM[i] =   clonePtr(g.m_rCM[i]);
-for (unsigned long i=0; i<mcCM.size(); i++)      mcCM[i] =    clonePtr(g.mcCM[i]);
-for (unsigned long i=0; i<s_mCM.size(); i++)     s_mCM[i] =   clonePtr(g.s_mCM[i]);
-for (unsigned long i=0; i<d_mCM.size(); i++)     d_mCM[i] =   clonePtr(g.d_mCM[i]);
-for (unsigned long i=0; i<s_mbCM.size(); i++)    s_mbCM[i] =  clonePtr(g.s_mbCM[i]);
-for (unsigned long i=0; i<d_mbCM.size(); i++)    d_mbCM[i] =  clonePtr(g.d_mbCM[i]);
-for (unsigned long i=0; i<s_mrbCM.size(); i++)   s_mrbCM[i] = clonePtr(g.s_mrbCM[i]);
-for (unsigned long i=0; i<d_mrbCM.size(); i++)   d_mrbCM[i] = clonePtr(g.d_mrbCM[i]);
+for (unsigned long i=0; i<sbiCM.size(); i++)    sbiCM[i] =  clonePtr(g.sbiCM[i]);
+for (unsigned long i=0; i<strCM.size(); i++)     strCM[i] =   clonePtr(g.strCM[i]);
+for (unsigned long i=0; i<schCM.size(); i++)      schCM[i] =    clonePtr(g.schCM[i]);
+for (unsigned long i=0; i<dbiCM.size(); i++)    dbiCM[i] =  clonePtr(g.dbiCM[i]);
+for (unsigned long i=0; i<dtrCM.size(); i++)     dtrCM[i] =   clonePtr(g.dtrCM[i]);
+for (unsigned long i=0; i<dchCM.size(); i++)      dchCM[i] =    clonePtr(g.dchCM[i]);
+for (unsigned long i=0; i<mbiCM.size(); i++)    mbiCM[i] =  clonePtr(g.mbiCM[i]);
+for (unsigned long i=0; i<mtrCM.size(); i++)     mtrCM[i] =   clonePtr(g.mtrCM[i]);
+for (unsigned long i=0; i<mchCM.size(); i++)      mchCM[i] =    clonePtr(g.mchCM[i]);
+for (unsigned long i=0; i<smCM.size(); i++)     smCM[i] =   clonePtr(g.smCM[i]);
+for (unsigned long i=0; i<dmCM.size(); i++)     dmCM[i] =   clonePtr(g.dmCM[i]);
+for (unsigned long i=0; i<smbCM.size(); i++)    smbCM[i] =  clonePtr(g.smbCM[i]);
+for (unsigned long i=0; i<dmbCM.size(); i++)    dmbCM[i] =  clonePtr(g.dmbCM[i]);
+for (unsigned long i=0; i<srmCM.size(); i++)   srmCM[i] = clonePtr(g.srmCM[i]);
+for (unsigned long i=0; i<drmCM.size(); i++)   drmCM[i] = clonePtr(g.drmCM[i]);
 }
 
 // destructor
@@ -753,24 +753,24 @@ inline NCellularData::~NCellularData() {
  for (unsigned long i=0; i<mbCC.size(); i++)  if (mbCC[i]) delete mbCC[i];
  for (unsigned long i=0; i<mrCC.size(); i++)  if (mrCC[i]) delete mrCC[i];
 
- // iterate through bs_sCM, s_rCM, rbCM,  bd_dCM, d_rCM, dcCM,  
- //                 bm_mCM, m_rCM, mcCM,  s_mCM, d_mCM, s_mbCM, 
- //                 d_mbCM, s_mrbCM, d_mrbCM and deallocate
- for (unsigned long i=0; i<bs_sCM.size(); i++) if (bs_sCM[i]) delete bs_sCM[i];
- for (unsigned long i=0; i<s_rCM.size(); i++)  if (s_rCM[i])  delete s_rCM[i];
- for (unsigned long i=0; i<rbCM.size(); i++)   if (rbCM[i])   delete rbCM[i];
- for (unsigned long i=0; i<bd_dCM.size(); i++) if (bd_dCM[i]) delete bd_dCM[i];
- for (unsigned long i=0; i<d_rCM.size(); i++)  if (d_rCM[i])  delete d_rCM[i];
- for (unsigned long i=0; i<dcCM.size(); i++)   if (dcCM[i])   delete dcCM[i];
- for (unsigned long i=0; i<bm_mCM.size(); i++) if (bm_mCM[i]) delete bm_mCM[i];
- for (unsigned long i=0; i<m_rCM.size(); i++)  if (m_rCM[i])  delete m_rCM[i];
- for (unsigned long i=0; i<mcCM.size(); i++)   if (mcCM[i])   delete mcCM[i];
- for (unsigned long i=0; i<s_mCM.size(); i++)  if (s_mCM[i])  delete s_mCM[i];
- for (unsigned long i=0; i<d_mCM.size(); i++)  if (d_mCM[i])  delete d_mCM[i];
- for (unsigned long i=0; i<s_mbCM.size(); i++) if (s_mbCM[i]) delete s_mbCM[i];
- for (unsigned long i=0; i<d_mbCM.size(); i++) if (d_mbCM[i]) delete d_mbCM[i];
- for (unsigned long i=0; i<s_mrbCM.size(); i++)if (s_mrbCM[i])delete s_mrbCM[i];
- for (unsigned long i=0; i<d_mrbCM.size(); i++)if (d_mrbCM[i])delete d_mrbCM[i];
+ // iterate through sbiCM, strCM, schCM,  dbiCM, dtrCM, dchCM,  
+ //                 mbiCM, mtrCM, mchCM,  smCM, dmCM, smbCM, 
+ //                 dmbCM, srmCM, drmCM and deallocate
+ for (unsigned long i=0; i<sbiCM.size(); i++) if (sbiCM[i]) delete sbiCM[i];
+ for (unsigned long i=0; i<strCM.size(); i++)  if (strCM[i])  delete strCM[i];
+ for (unsigned long i=0; i<schCM.size(); i++)   if (schCM[i])   delete schCM[i];
+ for (unsigned long i=0; i<dbiCM.size(); i++) if (dbiCM[i]) delete dbiCM[i];
+ for (unsigned long i=0; i<dtrCM.size(); i++)  if (dtrCM[i])  delete dtrCM[i];
+ for (unsigned long i=0; i<dchCM.size(); i++)   if (dchCM[i])   delete dchCM[i];
+ for (unsigned long i=0; i<mbiCM.size(); i++) if (mbiCM[i]) delete mbiCM[i];
+ for (unsigned long i=0; i<mtrCM.size(); i++)  if (mtrCM[i])  delete mtrCM[i];
+ for (unsigned long i=0; i<mchCM.size(); i++)   if (mchCM[i])   delete mchCM[i];
+ for (unsigned long i=0; i<smCM.size(); i++)  if (smCM[i])  delete smCM[i];
+ for (unsigned long i=0; i<dmCM.size(); i++)  if (dmCM[i])  delete dmCM[i];
+ for (unsigned long i=0; i<smbCM.size(); i++) if (smbCM[i]) delete smbCM[i];
+ for (unsigned long i=0; i<dmbCM.size(); i++) if (dmbCM[i]) delete dmbCM[i];
+ for (unsigned long i=0; i<srmCM.size(); i++)if (srmCM[i])delete srmCM[i];
+ for (unsigned long i=0; i<drmCM.size(); i++)if (drmCM[i])delete drmCM[i];
 }
 
 inline unsigned long NCellularData::cellCount(homology_coordinate_system hcs, unsigned dimension) const

@@ -1381,9 +1381,9 @@ void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4,
                     std::vector< std::vector<unsigned long> > &nicIx, std::vector< std::vector<unsigned long> > &icIx, 
                     std::vector< std::vector<unsigned long> > &dcIx,  std::vector< std::vector<unsigned long> > &bcIx, 
                     std::vector< std::vector<unsigned long> > &rIx, 
-                    std::vector< NMatrixInt* > &bs_sCM, std::vector< NMatrixInt* > &s_mCM, 
-                    std::vector< NMatrixInt* > &d_mCM,  std::vector< NMatrixInt* > &s_rCM, 
-                    std::vector< NMatrixInt* > &rbCM );
+                    std::vector< NMatrixInt* > &sbiCM, std::vector< NMatrixInt* > &smCM, 
+                    std::vector< NMatrixInt* > &dmCM,  std::vector< NMatrixInt* > &strCM, 
+                    std::vector< NMatrixInt* > &schCM );
 
 // sets up relative orientations of dual cells in the *standard boundary* of an (ideal) triangulation.
 // so for every dual object of the standard boundary of the triangulation we construct the list of boundary
@@ -1498,8 +1498,8 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
         tri4(new Dim4Triangulation(input)), tri3(0), 
 	nicIx(5), icIx(4), dcIx(5), bcIx(4), rIx(5), // indexing cells 
 	sCC(6), sbCC(5), srCC(6),   dCC(6), dbCC(5), drCC(6),   mCC(6), mbCC(5), mrCC(6), // chain complexes 
-	bs_sCM(4), s_rCM(5), rbCM(4),   bd_dCM(4), d_rCM(5), dcCM(4),   bm_mCM(4), m_rCM(5), mcCM(4), 
-        s_mCM(5), d_mCM(5), s_mbCM(4), d_mbCM(4), s_mrbCM(5), d_mrbCM(5) // chain maps
+	sbiCM(4), strCM(5), schCM(4),   dbiCM(4), dtrCM(5), dchCM(4),   mbiCM(4), mtrCM(5), mchCM(4), 
+        smCM(5), dmCM(5), smbCM(4), dmbCM(4), srmCM(5), drmCM(5) // chain maps
 {
    setupIndices( tri4, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 			numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells, 
@@ -1525,7 +1525,7 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
 	                          numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, 
 		                  numDualBdryCells, 
                     nicIx, icIx, dcIx, bcIx, rIx, 
-                    bs_sCM, s_mCM, d_mCM, s_rCM, rbCM );
+                    sbiCM, smCM, dmCM, strCM, schCM );
 
    // probably need to updatefillChainMaps once the CC's are updated
 }
@@ -1535,8 +1535,8 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
         tri4(0), tri3(new NTriangulation(input)), 
 	nicIx(4), icIx(3), dcIx(4), bcIx(3), rIx(4), // indexing cells 
 	sCC(5), sbCC(4), srCC(5),   dCC(5), dbCC(4), drCC(5),   mCC(5), mbCC(4), mrCC(5), // chain complexes 
-	bs_sCM(3), s_rCM(4), rbCM(3),   bd_dCM(3), d_rCM(4), dcCM(3),   bm_mCM(3), m_rCM(4), mcCM(3), 
-        s_mCM(4), d_mCM(4), s_mbCM(3), d_mbCM(3), s_mrbCM(4), d_mrbCM(4) // chain maps
+	sbiCM(3), strCM(4), schCM(3),   dbiCM(3), dtrCM(4), dchCM(3),   mbiCM(3), mtrCM(4), mchCM(3), 
+        smCM(4), dmCM(4), smbCM(3), dmbCM(3), srmCM(4), drmCM(4) // chain maps
 {
    setupIndices( tri3, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 		 numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells,
@@ -1559,7 +1559,7 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
 	                          numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, 
 		                  numDualBdryCells, 
                     nicIx, icIx, dcIx, bcIx, rIx, 
-                    bs_sCM, s_mCM, d_mCM, s_rCM, rbCM );
+                    sbiCM, smCM, dmCM, strCM, schCM );
    // probably need to updatefillChainMaps once the CC's are updated
 }
 

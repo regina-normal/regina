@@ -175,13 +175,13 @@ const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator &h_desc)
    // check if they want a subdivision-induced map, co-variant
    if ( ( (h_desc.domain.hcs == STD_coord) || (h_desc.domain.hcs == DUAL_coord) ) && 
           (h_desc.domain.var == coVariant) && (h_desc.range.hcs == MIX_coord) )
-         CM = ( h_desc.domain.hcs == STD_coord ? clonePtr(s_mCM[h_desc.domain.dim]) :
-					         clonePtr(d_mCM[h_desc.domain.dim]) );
+         CM = ( h_desc.domain.hcs == STD_coord ? clonePtr(smCM[h_desc.domain.dim]) :
+					         clonePtr(dmCM[h_desc.domain.dim]) );
    if ( ( (h_desc.range.hcs == STD_coord) || (h_desc.range.hcs == DUAL_coord) ) && // contravariant 
           (h_desc.domain.var == contraVariant)  && (h_desc.domain.hcs == MIX_coord) )
       {
-	 const NMatrixInt* tCMp( h_desc.range.hcs == STD_coord ? s_mCM[h_desc.domain.dim] : 
-			                                         d_mCM[h_desc.domain.dim] );
+	 const NMatrixInt* tCMp( h_desc.range.hcs == STD_coord ? smCM[h_desc.domain.dim] : 
+			                                         dmCM[h_desc.domain.dim] );
          CM = new NMatrixInt( tCMp->columns(), tCMp->rows() );
          for (unsigned long i=0; i<CM->rows(); i++) for (unsigned long j=0; j<CM->columns(); j++)
 	  CM->entry( i, j ) = tCMp->entry( j, i );
@@ -192,40 +192,40 @@ const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator &h_desc)
     { // \partial M --> M
       if ( (h_desc.domain.hcs == STD_BDRY_coord) && (h_desc.range.hcs == STD_coord) &&
            (h_desc.domain.dim == h_desc.range.dim) && (h_desc.domain.dim < aDim) )
-	CM = clonePtr( bs_sCM[h_desc.domain.dim] ); 
+	CM = clonePtr( sbiCM[h_desc.domain.dim] ); 
       // M --> (M, \partial M)
       else if ( (h_desc.domain.hcs == STD_coord) && (h_desc.range.hcs == STD_REL_BDRY_coord) &&
            (h_desc.domain.dim == h_desc.range.dim) )
-	CM = clonePtr( s_rCM[h_desc.domain.dim] );
+	CM = clonePtr( strCM[h_desc.domain.dim] );
       // (M, \partial M) --> \partial M
       else if ( (h_desc.domain.hcs == STD_REL_BDRY_coord) && (h_desc.range.hcs == STD_BDRY_coord) &&
            (h_desc.domain.dim == h_desc.range.dim+1) && (h_desc.range.dim < aDim) )
-	CM = clonePtr( rbCM[h_desc.range.dim] );
+	CM = clonePtr( schCM[h_desc.range.dim] );
    }
    else
     { // \partial M <-- M
       if ( (h_desc.domain.hcs == STD_coord) && (h_desc.range.hcs == STD_BDRY_coord) &&
            (h_desc.domain.dim == h_desc.range.dim) && (h_desc.range.dim < aDim) )
        {	 
-         CM = new NMatrixInt( bs_sCM[h_desc.domain.dim]->columns(), bs_sCM[h_desc.domain.dim]->rows() );
+         CM = new NMatrixInt( sbiCM[h_desc.domain.dim]->columns(), sbiCM[h_desc.domain.dim]->rows() );
          for (unsigned long i=0; i<CM->rows(); i++) for (unsigned long j=0; j<CM->columns(); j++)
-	  CM->entry( i, j ) = bs_sCM[h_desc.domain.dim]->entry( j, i );
+	  CM->entry( i, j ) = sbiCM[h_desc.domain.dim]->entry( j, i );
        }
       // M <-- (M, \partial M)
       else if ( (h_desc.domain.hcs == STD_REL_BDRY_coord) && (h_desc.range.hcs == STD_coord) &&
            (h_desc.domain.dim == h_desc.range.dim) )
        {	 
-         CM = new NMatrixInt( s_rCM[h_desc.domain.dim]->columns(), s_rCM[h_desc.domain.dim]->rows() );
+         CM = new NMatrixInt( strCM[h_desc.domain.dim]->columns(), strCM[h_desc.domain.dim]->rows() );
          for (unsigned long i=0; i<CM->rows(); i++) for (unsigned long j=0; j<CM->columns(); j++)
-	  CM->entry( i, j ) = s_rCM[h_desc.domain.dim]->entry( j, i );
+	  CM->entry( i, j ) = strCM[h_desc.domain.dim]->entry( j, i );
        }
       // (M, \partial M) <-- \partial M
       else if ( (h_desc.domain.hcs == STD_BDRY_coord) && (h_desc.range.hcs == STD_REL_BDRY_coord) &&
            (h_desc.domain.dim+1 == h_desc.range.dim) && (h_desc.domain.dim < aDim) )
        {	 
-         CM = new NMatrixInt( rbCM[h_desc.domain.dim]->columns(), rbCM[h_desc.domain.dim]->rows() );
+         CM = new NMatrixInt( schCM[h_desc.domain.dim]->columns(), schCM[h_desc.domain.dim]->rows() );
          for (unsigned long i=0; i<CM->rows(); i++) for (unsigned long j=0; j<CM->columns(); j++)
-	  CM->entry( i, j ) = rbCM[h_desc.domain.dim]->entry( j, i );
+	  CM->entry( i, j ) = schCM[h_desc.domain.dim]->entry( j, i );
        }
     } 
  }
