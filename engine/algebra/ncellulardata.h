@@ -41,6 +41,7 @@
 #include "algebra/nmarkedabeliangroup.h"
 #include "algebra/nbilinearform.h"
 #include "algebra/nhomgrouppresentation.h"
+#include "algebra/ngrouppresentation.h"
 #include "utilities/ptrutils.h"
 #include "utilities/nbooleans.h"
 #include "maths/nsparsegrid.h"
@@ -294,6 +295,53 @@ public:
         virtual void writeTextLong(std::ostream& out) const;
  };
 
+ enum submanifold_type { whole_manifold, standard_boundary, ideal_boundary };
+
+ /**
+  * NCellularData::groupPresentation requires a groupPresentationLocator as
+  * an argument.
+  */
+ struct GroupPresLocator {
+   submanifold_type sub_man; // specify which submanifold
+   unsigned long component_index; // which component of the submanifold
+
+   /**
+    *  Constructor.
+    */
+   GroupPresLocator( submanifold_type ST, unsigned long CI );
+   GroupPresLocator( const GroupPresLocator &cloneMe );
+   
+   bool operator<(const GroupPresLocator &rhs) const;
+   bool operator==(const GroupPresLocator &rhs) const;
+   bool operator!=(const GroupPresLocator &rhs) const;
+
+   virtual void writeTextShort(std::ostream& out) const;
+   virtual void writeTextLong(std::ostream& out) const;
+ };
+
+ /**
+  * NCellularData::homGroupPresentation requires a homGroupPresentationLocator as
+  * an argument.
+  */
+ struct HomGroupPresLocator {
+   submanifold_type inclusion_sub_man; // specify which submanifold
+   unsigned long subman_component_index; // which component of the submanifold
+
+   /**
+    *  Constructor.
+    */
+   HomGroupPresLocator( submanifold_type ST, unsigned long CI );
+   HomGroupPresLocator( const HomGroupPresLocator &cloneMe );
+   
+   bool operator<(const HomGroupPresLocator &rhs) const;
+   bool operator==(const HomGroupPresLocator &rhs) const;
+   bool operator!=(const HomGroupPresLocator &rhs) const;
+
+   virtual void writeTextShort(std::ostream& out) const;
+   virtual void writeTextLong(std::ostream& out) const;
+ };
+
+
 private:
     /**
      * Stored pointer to a valid triangulation. All routines use either tri4 or tri3
@@ -309,8 +357,12 @@ private:
     std::map< GroupLocator, NMarkedAbelianGroup* > markedAbelianGroups;
     // for homomorphisms of marked abelian group computations
     std::map< HomLocator, NHomMarkedAbelianGroup* > homMarkedAbelianGroups;
-    // for intersection forms
+    // for bilinear forms
     std::map< FormLocator, NBilinearForm* > bilinearForms;
+    // for group presentations
+    std::map< GroupPresLocator, NGroupPresentation* > groupPresentations;
+    // for homomorphisms of group presentations
+    std::map< HomGroupPresLocator, NHomGroupPresentation* > homGroupPresentations;
 
     /** 
      * numStandardCells = number of cells in the standard CW decomposition in dimensions: 0, 1, 2, 3, (4).
@@ -353,7 +405,7 @@ private:
      *  bcIx is Indexing for the boundary cells, standard decomposition, ignoring the ideal ends
      *       of standard cells. 
      * 
-     * We systematically use the outer orientation convention to define the boundary maps.
+     * We systematically use the outwards orientation convention to define the boundary maps.
      **/
     std::vector< std::vector<unsigned long> > nicIx, icIx, dcIx, bcIx, rIx;
 
@@ -366,14 +418,14 @@ private:
      *  srCC  - standard relative cellular homology
      *
      *   dual cellular homology
-     *  dCC  - dual cellular homology
-     *  dbCC - dual boundary cellular homology
-     *  drCC - dual relative cellular homology
+     *  dCC  - dual cellular homology                         
+     *  dbCC - dual boundary cellular homology              TODO
+     *  drCC - dual relative cellular homology              TODO
      *
      *   mixed cellular homology 
      *  mCC  - mixed cellular homology
-     *  mbCC - mixed boundary cellular homology
-     *  mrCC - dual relative cellular homology
+     *  mbCC - mixed boundary cellular homology             TODO
+     *  mrCC - dual relative cellular homology              TODO
      */
     std::vector< NMatrixInt* > sCC, sbCC, srCC, dCC, dbCC, drCC, mCC, mbCC, mrCC;
 
@@ -381,27 +433,27 @@ private:
      * Chain maps: 
      * 
      *   standard: 
-     * sbiCM  -  sbCC -> sCC      std coords, boundary inclusion       
+     * sbiCM  -  sbCC -> sCC      std coords, boundary inclusion             
      * strCM  -  sCC  -> srCC     std coords, relative projection       
      * schCM  -  srCC -> sbCC     std coords, connecting hom 
      *
      *     dual:
-     * dbiCM  -  dbCC -> dCC      dual coords, boundary inclusion         
-     * dtrCM  -  dCC  -> drCC     dual coords, relative projection      
-     * dchCM  -  drCC -> dbCC     dual coords, connecting hom
+     * dbiCM  -  dbCC -> dCC      dual coords, boundary inclusion     TODO & TESTS
+     * dtrCM  -  dCC  -> drCC     dual coords, relative projection    TODO & TESTS
+     * dchCM  -  drCC -> dbCC     dual coords, connecting hom         TODO & TESTS
      * 
      *    mixed:
-     * mbiCM  -  mbCC -> mCC      mixed coords, boundary inclusion  
-     * mtrCM  -  mCC  -> mrCC     mixed coords, relative projection
-     * mchCM  -  mrCC -> mbCC     mixed coords, connecting hom
+     * mbiCM  -  mbCC -> mCC      mixed coords, boundary inclusion    TODO & TESTS
+     * mtrCM  -  mCC  -> mrCC     mixed coords, relative projection   TODO & TESTS
+     * mchCM  -  mrCC -> mbCC     mixed coords, connecting hom        TODO & TESTS
      *
      *   inter-coordinate maps:
      * smCM   -   sCC -> mCC       standard to mixed
      * dmCM   -   dCC -> mCC       dual to mixed
-     * smbCM  -  sbCC -> mbCC      standard to mixed,   boundary map         
-     * dmbCM  -  dbCC -> mbCC      dual to mixed,       boundary map         
-     * srmCM  -  srCC -> mrCC      standard to mixed,   relative map                
-     * drmCM  -  drCC -> mrCC      dual to mixed,       relative map               
+     * smbCM  -  sbCC -> mbCC      standard to mixed,   boundary map  TODO & TESTS
+     * dmbCM  -  dbCC -> mbCC      dual to mixed,       boundary map  TODO & TESTS
+     * srmCM  -  srCC -> mrCC      standard to mixed,   relative map  TODO & TESTS      
+     * drmCM  -  drCC -> mrCC      dual to mixed,       relative map  TODO & TESTS 
      */
     std::vector< NMatrixInt* > sbiCM, strCM, schCM,   dbiCM, dtrCM, dchCM,   mbiCM, mtrCM, mchCM,  
  			       smCM, dmCM,            smbCM, dmbCM,          srmCM, drmCM;
@@ -634,14 +686,18 @@ public:
     const NBilinearForm* bilinearForm( const FormLocator &f_desc ) const;
 
     /**
-     *  Describes the homomorphisms from the fundamental group of the boundary components to the fundamental
-     *  group of the manifold's components. This routine uses the dual cellular coordinates, building up
-     *  a maximal forest in the dual boundary 1-skeleton, then extending it to a maximal forest in the dual 
-     *  1-skeleton. TODO: Not yet implemented.
-     *
-     * \todo eventually expand to use other coordinate systems, other group homomorphisms.
+     *  Describes presentations of various groups associated to the manifold.  There is the fundamental
+     *  group, and fundamental groups of the various boundary components. 
      */
-    const NHomGroupPresentation* homGroupPresentation() const;
+    const NGroupPresentation* groupPresentation( const GroupPresLocator &g_desc ) const;
+
+    /**
+     *  Describes the homomorphisms from the fundamental group of the boundary components to the
+     *  fundamental group of the manifold's components. This routine uses the dual cellular
+     *  coordinates, constructing a maximal forest in the dual 1-skeleton which restricts to 
+     *  maximal forests in the boundary and ideal boundary components. TODO
+     */
+    const NHomGroupPresentation* homGroupPresentation( const HomGroupPresLocator &h_desc ) const;
      
 };
 
@@ -663,23 +719,36 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
 	sbiCM(g.sbiCM.size()), strCM(g.strCM.size()), schCM(g.schCM.size()), 
         dbiCM(g.dbiCM.size()), dtrCM(g.dtrCM.size()), dchCM(g.dchCM.size()), 
         mbiCM(g.mbiCM.size()), mtrCM(g.mtrCM.size()), mchCM(g.mchCM.size()), 
-        smCM(g.smCM.size()),   dmCM(g.dmCM.size()), 
-	smbCM(g.smbCM.size()),  dmbCM(g.dmbCM.size()), 
-        srmCM(g.srmCM.size()), drmCM(g.drmCM.size())
+        smCM(g.smCM.size()),   dmCM(g.dmCM.size()),   smbCM(g.smbCM.size()), 
+        dmbCM(g.dmbCM.size()), srmCM(g.srmCM.size()), drmCM(g.drmCM.size())
 {
-// copy abelianGroups, markedAbelianGroups, homMarkedAbelianGroups
+// copy abelianGroups, markedAbelianGroups, homMarkedAbelianGroups, bilinearForms, groupPresentations, 
+//      homGroupPresentations...
 std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
-std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator mabi;
-std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator hmabi;
-std::map< FormLocator, NBilinearForm* >::const_iterator fi;
 for (abi = g.abelianGroups.begin(); abi != g.abelianGroups.end(); abi++) abelianGroups.insert( 
  std::pair< GroupLocator, NAbelianGroup* >( abi->first, clonePtr(abi->second) ) );
+ // markedAbelianGroups
+std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator mabi;
 for (mabi = g.markedAbelianGroups.begin(); mabi != g.markedAbelianGroups.end(); mabi++)	markedAbelianGroups.insert( 
  std::pair< GroupLocator, NMarkedAbelianGroup* >(mabi->first, clonePtr(mabi->second) ) );
+ // homMarkedAbelianGroups
+std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator hmabi;
 for (hmabi = g.homMarkedAbelianGroups.begin(); hmabi != g.homMarkedAbelianGroups.end(); hmabi++) 
  homMarkedAbelianGroups.insert( std::pair< HomLocator, NHomMarkedAbelianGroup* >(hmabi->first, clonePtr(hmabi->second) ) );
+ // bilinearForms
+std::map< FormLocator, NBilinearForm* >::const_iterator fi;
 for (fi = g.bilinearForms.begin(); fi != g.bilinearForms.end(); fi++) 
  bilinearForms.insert( std::pair< FormLocator, NBilinearForm* >(fi->first, clonePtr(fi->second) ) );
+ // groupPresentations
+std::map< GroupPresLocator, NGroupPresentation* >::const_iterator pi;
+for (pi = g.groupPresentations.begin(); pi != g.groupPresentations.end(); pi++) 
+ groupPresentations.insert( std::pair< GroupPresLocator, NGroupPresentation* >(pi->first, 
+ clonePtr(pi->second) ) );
+ // homGroupPresentations
+std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator hpi;
+for (hpi = g.homGroupPresentations.begin(); hpi != g.homGroupPresentations.end(); hpi++) 
+ homGroupPresentations.insert( std::pair< HomGroupPresLocator, NHomGroupPresentation* >(hpi->first,
+  clonePtr(hpi->second) ) );
 
 // numStandardCells[5], numDualCells[5], numMixCells[5], numStandardBdryCells[4], 
 //               numNonIdealCells[5], numIdealCells[4];
@@ -699,7 +768,7 @@ for (unsigned long i=0; i<4; i++) numDualBdryCells[i] = g.numDualBdryCells[i];
 // the chain complexes
 for (unsigned long i=0; i<sCC.size(); i++)       sCC[i]  = clonePtr(g.sCC[i]);
 for (unsigned long i=0; i<sbCC.size(); i++)      sbCC[i] = clonePtr(g.sbCC[i]);
-for (unsigned long i=0; i<srCC.size(); i++)       srCC[i]  = clonePtr(g.srCC[i]);
+for (unsigned long i=0; i<srCC.size(); i++)      srCC[i] = clonePtr(g.srCC[i]);
 for (unsigned long i=0; i<dCC.size(); i++)       dCC[i]  = clonePtr(g.dCC[i]);
 for (unsigned long i=0; i<dbCC.size(); i++)      dbCC[i] = clonePtr(g.dbCC[i]);
 for (unsigned long i=0; i<drCC.size(); i++)      drCC[i] = clonePtr(g.drCC[i]);
@@ -709,20 +778,20 @@ for (unsigned long i=0; i<mrCC.size(); i++)      mrCC[i] = clonePtr(g.mrCC[i]);
 
 // chain maps
 for (unsigned long i=0; i<sbiCM.size(); i++)    sbiCM[i] =  clonePtr(g.sbiCM[i]);
-for (unsigned long i=0; i<strCM.size(); i++)     strCM[i] =   clonePtr(g.strCM[i]);
-for (unsigned long i=0; i<schCM.size(); i++)      schCM[i] =    clonePtr(g.schCM[i]);
+for (unsigned long i=0; i<strCM.size(); i++)    strCM[i] =  clonePtr(g.strCM[i]);
+for (unsigned long i=0; i<schCM.size(); i++)    schCM[i] =  clonePtr(g.schCM[i]);
 for (unsigned long i=0; i<dbiCM.size(); i++)    dbiCM[i] =  clonePtr(g.dbiCM[i]);
-for (unsigned long i=0; i<dtrCM.size(); i++)     dtrCM[i] =   clonePtr(g.dtrCM[i]);
-for (unsigned long i=0; i<dchCM.size(); i++)      dchCM[i] =    clonePtr(g.dchCM[i]);
+for (unsigned long i=0; i<dtrCM.size(); i++)    dtrCM[i] =  clonePtr(g.dtrCM[i]);
+for (unsigned long i=0; i<dchCM.size(); i++)    dchCM[i] =  clonePtr(g.dchCM[i]);
 for (unsigned long i=0; i<mbiCM.size(); i++)    mbiCM[i] =  clonePtr(g.mbiCM[i]);
-for (unsigned long i=0; i<mtrCM.size(); i++)     mtrCM[i] =   clonePtr(g.mtrCM[i]);
-for (unsigned long i=0; i<mchCM.size(); i++)      mchCM[i] =    clonePtr(g.mchCM[i]);
-for (unsigned long i=0; i<smCM.size(); i++)     smCM[i] =   clonePtr(g.smCM[i]);
-for (unsigned long i=0; i<dmCM.size(); i++)     dmCM[i] =   clonePtr(g.dmCM[i]);
+for (unsigned long i=0; i<mtrCM.size(); i++)    mtrCM[i] =  clonePtr(g.mtrCM[i]);
+for (unsigned long i=0; i<mchCM.size(); i++)    mchCM[i] =  clonePtr(g.mchCM[i]);
+for (unsigned long i=0; i<smCM.size(); i++)     smCM[i]  =  clonePtr(g.smCM[i]);
+for (unsigned long i=0; i<dmCM.size(); i++)     dmCM[i]  =  clonePtr(g.dmCM[i]);
 for (unsigned long i=0; i<smbCM.size(); i++)    smbCM[i] =  clonePtr(g.smbCM[i]);
 for (unsigned long i=0; i<dmbCM.size(); i++)    dmbCM[i] =  clonePtr(g.dmbCM[i]);
-for (unsigned long i=0; i<srmCM.size(); i++)   srmCM[i] = clonePtr(g.srmCM[i]);
-for (unsigned long i=0; i<drmCM.size(); i++)   drmCM[i] = clonePtr(g.drmCM[i]);
+for (unsigned long i=0; i<srmCM.size(); i++)    srmCM[i] =  clonePtr(g.srmCM[i]);
+for (unsigned long i=0; i<drmCM.size(); i++)    drmCM[i] =  clonePtr(g.drmCM[i]);
 }
 
 // destructor
@@ -745,7 +814,7 @@ inline NCellularData::~NCellularData() {
  // iterate through sCC, sbCC, srCC,  dCC, dbCC, drCC,  mCC, mbCC, mrCC and deallocate
  for (unsigned long i=0; i<sCC.size(); i++)   if (sCC[i])  delete sCC[i];
  for (unsigned long i=0; i<sbCC.size(); i++)  if (sbCC[i]) delete sbCC[i];
- for (unsigned long i=0; i<srCC.size(); i++)   if (srCC[i])  delete srCC[i];
+ for (unsigned long i=0; i<srCC.size(); i++)  if (srCC[i]) delete srCC[i];
  for (unsigned long i=0; i<dCC.size(); i++)   if (dCC[i])  delete dCC[i];
  for (unsigned long i=0; i<dbCC.size(); i++)  if (dbCC[i]) delete dbCC[i];
  for (unsigned long i=0; i<drCC.size(); i++)  if (drCC[i]) delete drCC[i];
@@ -757,20 +826,20 @@ inline NCellularData::~NCellularData() {
  //                 mbiCM, mtrCM, mchCM,  smCM, dmCM, smbCM, 
  //                 dmbCM, srmCM, drmCM and deallocate
  for (unsigned long i=0; i<sbiCM.size(); i++) if (sbiCM[i]) delete sbiCM[i];
- for (unsigned long i=0; i<strCM.size(); i++)  if (strCM[i])  delete strCM[i];
- for (unsigned long i=0; i<schCM.size(); i++)   if (schCM[i])   delete schCM[i];
+ for (unsigned long i=0; i<strCM.size(); i++) if (strCM[i]) delete strCM[i];
+ for (unsigned long i=0; i<schCM.size(); i++) if (schCM[i]) delete schCM[i];
  for (unsigned long i=0; i<dbiCM.size(); i++) if (dbiCM[i]) delete dbiCM[i];
- for (unsigned long i=0; i<dtrCM.size(); i++)  if (dtrCM[i])  delete dtrCM[i];
- for (unsigned long i=0; i<dchCM.size(); i++)   if (dchCM[i])   delete dchCM[i];
+ for (unsigned long i=0; i<dtrCM.size(); i++) if (dtrCM[i]) delete dtrCM[i];
+ for (unsigned long i=0; i<dchCM.size(); i++) if (dchCM[i]) delete dchCM[i];
  for (unsigned long i=0; i<mbiCM.size(); i++) if (mbiCM[i]) delete mbiCM[i];
- for (unsigned long i=0; i<mtrCM.size(); i++)  if (mtrCM[i])  delete mtrCM[i];
- for (unsigned long i=0; i<mchCM.size(); i++)   if (mchCM[i])   delete mchCM[i];
+ for (unsigned long i=0; i<mtrCM.size(); i++) if (mtrCM[i]) delete mtrCM[i];
+ for (unsigned long i=0; i<mchCM.size(); i++) if (mchCM[i]) delete mchCM[i];
  for (unsigned long i=0; i<smCM.size(); i++)  if (smCM[i])  delete smCM[i];
  for (unsigned long i=0; i<dmCM.size(); i++)  if (dmCM[i])  delete dmCM[i];
  for (unsigned long i=0; i<smbCM.size(); i++) if (smbCM[i]) delete smbCM[i];
  for (unsigned long i=0; i<dmbCM.size(); i++) if (dmbCM[i]) delete dmbCM[i];
- for (unsigned long i=0; i<srmCM.size(); i++)if (srmCM[i])delete srmCM[i];
- for (unsigned long i=0; i<drmCM.size(); i++)if (drmCM[i])delete drmCM[i];
+ for (unsigned long i=0; i<srmCM.size(); i++) if (srmCM[i]) delete srmCM[i];
+ for (unsigned long i=0; i<drmCM.size(); i++) if (drmCM[i]) delete drmCM[i];
 }
 
 inline unsigned long NCellularData::cellCount(homology_coordinate_system hcs, unsigned dimension) const
@@ -866,10 +935,68 @@ inline NCellularData::FormLocator::FormLocator( const FormLocator &cloneMe ) :
  ldomain( cloneMe.ldomain ), rdomain( cloneMe.rdomain ), ft(cloneMe.ft)  {}
 
 inline void NCellularData::FormLocator::writeTextShort(std::ostream&) const
-{}
+{} // TODO
 
 inline void NCellularData::FormLocator::writeTextLong(std::ostream&) const
-{}
+{} // TODO
+
+// groupPresLocator
+inline NCellularData::GroupPresLocator::GroupPresLocator( submanifold_type ST, unsigned long CI ) :
+ sub_man( ST ), component_index( CI ) {}
+
+inline NCellularData::GroupPresLocator::GroupPresLocator( const GroupPresLocator &cloneMe ) :
+ sub_man( cloneMe.sub_man ), component_index( cloneMe.component_index ) {}
+
+inline bool NCellularData::GroupPresLocator::operator<(const GroupPresLocator &rhs) const
+ { if ( sub_man < rhs.sub_man ) return true; if ( sub_man > rhs.sub_man ) return false;
+   if ( component_index < rhs.component_index ) return true; if ( component_index > rhs.component_index ) return false;
+   return false;
+ }
+
+inline bool NCellularData::GroupPresLocator::operator==(const GroupPresLocator &rhs) const
+ { if ( (sub_man == rhs.sub_man) && (component_index == rhs.component_index) ) return true;
+    else return false;
+ }
+
+inline bool NCellularData::GroupPresLocator::operator!=(const GroupPresLocator &rhs) const
+ { if ( (sub_man != rhs.sub_man) || (component_index != rhs.component_index) ) return true;
+    else return false;
+ }
+
+inline void NCellularData::GroupPresLocator::writeTextShort(std::ostream&) const
+{} // TODO
+
+inline void NCellularData::GroupPresLocator::writeTextLong(std::ostream&) const
+{} // TODO
+
+// homGroupPresLocator
+inline NCellularData::HomGroupPresLocator::HomGroupPresLocator( submanifold_type ST, unsigned long CI ) :
+ inclusion_sub_man( ST ), subman_component_index( CI ) {}
+
+inline NCellularData::HomGroupPresLocator::HomGroupPresLocator( const HomGroupPresLocator &cloneMe ) :
+ inclusion_sub_man( cloneMe.inclusion_sub_man ), subman_component_index( cloneMe.subman_component_index ) {}
+
+inline bool NCellularData::HomGroupPresLocator::operator<(const HomGroupPresLocator &rhs) const
+ { if ( inclusion_sub_man < rhs.inclusion_sub_man ) return true; if ( inclusion_sub_man > rhs.inclusion_sub_man ) return false;
+   if ( subman_component_index < rhs.subman_component_index ) return true; if ( subman_component_index > rhs.subman_component_index ) return true;
+   return false;
+ }
+
+inline bool NCellularData::HomGroupPresLocator::operator==(const HomGroupPresLocator &rhs) const
+ { if ( (inclusion_sub_man == rhs.inclusion_sub_man) && (subman_component_index == rhs.subman_component_index) ) 
+   return true; else return false;
+ }
+
+inline bool NCellularData::HomGroupPresLocator::operator!=(const HomGroupPresLocator &rhs) const
+ { if ( (inclusion_sub_man != rhs.inclusion_sub_man) || (subman_component_index != rhs.subman_component_index) ) 
+   return true; else return false;
+ }
+
+inline void NCellularData::HomGroupPresLocator::writeTextShort(std::ostream&) const
+{} // TODO
+
+inline void NCellularData::HomGroupPresLocator::writeTextLong(std::ostream&) const
+{} // TODO
 
 } // namespace regina
 
