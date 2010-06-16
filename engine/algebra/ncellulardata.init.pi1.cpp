@@ -56,24 +56,82 @@ namespace regina {
  *
  * Assumes triangulation is connected.
  */
-void buildMaximalTree(Dim4Triangulation* tri4 )
+void NCellularData::buildMaximalTree() const
 {
-// store the tree forest as std::vector< unsigned long > with reference to
+// store the tree forest as std::set< unsigned long > with reference to
 //  nicIx, icIx, dcIx, bcIx, rIx. Store this in the domain of these functions.
 
-// step 1: walk through dual 1-skeleton until we hit a boundary component we haven't
-//         hit before.  We keep track of three things:
-//         a) pentachora visited. 
-//         b) ideal boundary tetrahedra visited
-//         c) standard boundary tetrahedra visited
+// Iterate: walk through dual 1-skeleton until we hit a boundary component we haven't hit before.  During the iteration we
+//  keep track of several things. 
+//  the 0-cell list will consist of: Indexing of the barycentres of the pentachora, boundary tetrahedra and ideal boundary 
+//   tetrahedra, indexed as the ideal ends of 1-cells 5*pen index + vertex index.  So we'll build it using a while loop that
+//   goes back through the list of what's been done, and tries to expand it.  Priority will be to the boundary and ideal
+//   boundary so that those trees are fully-developed as soon as the tree hits the boundary, as we want the tree to restrict
+//   to trees in the boundary.   We also need to keep track of the tree itself.  This will be kept track of by the indexing
+//   of (extended) dual 1-cells [index set the tetrahedra] and ideal dual 1-cells [index set
 
-// (a)(b)(c) visited will be stored as a map ? 
-std::map< unsigned long, unsigned long > visitedPen, visitedTet, visitedIdTet;
+std::set< unsigned long > visitedPen, visitedBdTet, visitedIdTet; // 0-cells in maximal tree
+ // indexed by            nicIx[4],   
+ //                                   bcIx[3], 
+ //                                                 icIx[3] respectively.
 
-// step 2: boundary_comp::iterate through dual 1-skeleton until exhausted
-//         b) if in ideal boundary tet, walk to all adjacent tets until can't find
-//            an unvisited one.
-//         c) same with standard boundary tetrahedra
+std::set< unsigned long > visitedInTet, visitedBdFac, visitedIdFac; // 1-cells in maximal tree
+ // indexed by            nicIx[3] 
+ //                                     bcIx[2] 
+ //                                                   icIx[2]
+
+// let's seed the process and start in pentachoron 0.
+visitedPen.insert(0);
+
+while ( (visitedPen.size() < numStandardCells[4] ) || (visitedBdTet.size() < numNonIdealBdryCells[3]) ||
+        (visitedIdTet.size() < numIdealCells[3]) ) // or use a "while (somethingtodo)" style loop ?
+ {
+  // first we look to expand the forest in the standard boundary
+  std::set< unsigned long >::iterator btet_it = visitedBdTet.begin();
+  std::set< unsigned long >::iterator new_it = visitedBdTet.end();
+  while (btet_it != visitedBdTet.end())
+   {
+    // look for adjacent tetrahedra to btet_it whose addition wouldn't introduce any loops
+    const Dim4Tetrahedron* btet(NULL); const Dim4Pentachoron* pen(NULL); unsigned long tetnum;
+
+    btet = tri4 -> getTetrahedron( *btet_it );     //btet
+    pen = btet -> getEmbedding(0).getPentachoron();//ambient pen
+    tetnum = btet -> getEmbedding(0).getTetrahedron(); // btet's number in ambient tet
+
+    for (unsigned long i=1; i<5; i++)
+      {
+       const Dim4Tetrahedron* adjtet(NULL); const Dim4Pentachoron* adjpen(NULL); const Dim4Tetrahedron* septet(NULL);
+       septet = pen -> getTetrahedron( (tetnum + i) % 5 );
+       const NPerm5 septetmap( pen -> getTetrahedronMapping( (tetnum + i) % 5 ) );
+       const Dim4Face* bfac(NULL);
+       bfac = septet->getFace( septetmap.preImageOf( tetnum ) );
+       const unsigned long bfacnum( tri4->faceIndex(bfac) );
+
+       adjpen = pen -> adjacentPentachoron( (tetnum + i) % 5 );
+       adjtet = adjpen -> getTetrahedron( pen -> adjacentGluing( (tetnum + i) % 5)[tetnum] );
+       // suitably update visitedBdTet and visitedBdFac indexed by bcIx[3] and bcIx[2] resp.
+       // find adjtet's index in bcIx[3]
+       unsigned long I,J; 
+       I = lower_bound( bcIx[3].begin(), bcIx[3].end(), tri4->tetrahedronIndex(adjtet) ) - bcIx[3].begin();
+       J = lower_bound( bcIx[2].begin(), bcIx[2].end(), bfacnum ) - bcIx[2].begin();
+       // check to see if I is in visitedBdTet
+       if (!binary_search( visitedBdTet.begin(), visitedBdTet.end(), I) ) // not found
+        {
+         std::set< unsigned long >::iterator temp_it = visitedBdTet.insert(I).first;
+         visitedBdFac.insert(J);
+         if ( (*temp_it) < (*btet_it) ) if ( (*temp_it) < (*new_it) ) new_it = temp_it;
+        }
+      }
+     if ( (*new_it) < (*btet_it) ) btet_it = new_it; else btet_it++;
+   }
+
+  // then we look to expand the forest in the ideal boundary
+
+  // finally we look to expand the forest in the manifold's interior (or towards a boundary)
+
+ }
+
+
 }
 
 void buildFundamentalGroups(Dim4Triangulation* tri4 )

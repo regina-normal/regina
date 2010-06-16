@@ -379,9 +379,9 @@ private:
      * numNonIdealCells = number of non-ideal cells in standard CW-decomposition in dimension: 0, 1, 2, 3, (4) 
      * numIdealCells    = number of ideal cells in standard CW-decomposition in dimension: 0, 1, 2, (3) 
      */
-   unsigned long numStandardCells[5], numDualCells[5], numMixCells[5], numStandardBdryCells[4], 
-                 numNonIdealCells[5], numIdealCells[4], numNonIdealBdryCells[4], 
-	         numRelativeCells[5], numDualRelCells[5], numMixRelCells[5], numMixBdryCells[4], 
+   unsigned long numStandardCells[5], numDualCells[5],    numMixCells[5],          numStandardBdryCells[4], 
+                 numNonIdealCells[5], numIdealCells[4],   numNonIdealBdryCells[4], 
+	         numRelativeCells[5], numDualRelCells[5], numMixRelCells[5],       numMixBdryCells[4], 
 		 numDualBdryCells[4];
 
     /** 
@@ -401,7 +401,7 @@ private:
      *  dcIx is Indexing for the dual cells.  dcIx[i] indexes the non-ideal, nonboundary
      *       standard cells of dimension (3 or 4)-i. We orient these via the getEmbeddings
      *       conventions in Regina.
-     *  rIx relative chain complex for standard homology rel boundary. 
+     *  rIx  relative chain complex for standard homology rel boundary. 
      *  bcIx is Indexing for the boundary cells, standard decomposition, ignoring the ideal ends
      *       of standard cells. 
      * 
@@ -699,6 +699,8 @@ public:
      */
     const NHomGroupPresentation* homGroupPresentation( const HomGroupPresLocator &h_desc ) const;
      
+    // temporary... fix TODO
+    void buildMaximalTree() const;
 };
 
 
