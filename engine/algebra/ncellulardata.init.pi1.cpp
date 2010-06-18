@@ -75,29 +75,59 @@ std::set< unsigned long > visitedPen, visitedBdTet, visitedIdTet; // 0-cells in 
  //                                   bcIx[3], 
  //                                                 icIx[3] respectively.
 
-std::set< unsigned long > visitedInTet, visitedBdFac, visitedIdFac; // 1-cells in maximal tree
+std::set< unsigned long > visitedInTet, visitedBdFac, visitedIdFac, visitedPenIdTet; // 1-cells in maximal tree
  // indexed by            nicIx[3] 
  //                                     bcIx[2] 
  //                                                   icIx[2]
 
+std::set< unsigned long > newVertexListS, newVertexListB, newVertexListI; // 0-cell indices yet unexplored...
+
 // let's seed the process and start in pentachoron 0.
-visitedPen.insert(0);
+visitedPen.insert(0); newVertexListS.insert(0);
 
-while ( (visitedPen.size() < numStandardCells[4] ) || (visitedBdTet.size() < numNonIdealBdryCells[3]) ||
-        (visitedIdTet.size() < numIdealCells[3]) ) // or use a "while (somethingtodo)" style loop ?
+while ( (newVertexListS.size() > 0) || (newVertexListB.size() > 0) || (newVertexListI.size() > 0) ) // unexplored vertices...
  {
-  // first we look to expand the forest in the standard boundary
-  std::set< unsigned long >::iterator btet_it = visitedBdTet.begin();
-  std::set< unsigned long >::iterator new_it = visitedBdTet.end();
-  while (btet_it != visitedBdTet.end())
+  // iterator to go through unexplored vertices
+  std::set< unsigned long >::iterator unexploredV( newVertexListI.begin() );
+
+  // first check to see if there are ideal vertices unexplored
+  while (unexploredV != newVertexListI.end())
    {
-    // look for adjacent tetrahedra to btet_it whose addition wouldn't introduce any loops
+    // *unexploredV is the icIx[3]-index of the ideal dual 0-cell
+    const Dim4Pentachoron* pen(NULL); unsigned long idvnum; const Dim4Tetrahedron* septet(NULL); const Dim4Pentachoron* adjpen(NULL);
+    NPerm5 adjglue, tetmap;
+
+    pen = tri4 -> getPentachoron( icIx[3][*unexploredV]/5 );
+    idvnum = icIx[3][*unexploredV] % 5;
+    for (unsigned long i=1; i<5; i++) // look at adjacent pentachora
+     {
+      septet = pen -> getTetrahedron( (idvnum + i) % 5 );
+      adjpen = pen -> adjacentPentachoron( (idvnum + i) % 5 );
+      adjglue = pen -> adjacentGluing( (idvnum + i) % 5 );
+      tetmap = pen -> getTetrahedronMapping( (idvnum + i) % 5 );
+      // let's determine the number of adjpen
+      unsigned long adjpennum = tri4 -> pentachoronIndex( adjpen );
+      unsigned long adj0cellnum = 5*adjpennum + adjglue[idvnum]; // dual ideal 0-cell value, should be indexed by icIx[3]
+      unsigned long I = lower_bound( icIx[3].begin(), icIx[3].end(), adj0cellnum ) - icIx[3].begin();
+      // make J into the index of the ideal boundary face...
+      unsigned long tetnum = tri4 -> tetrahedronIndex( septet );
+      unsigned long J = lower_bound( icIx[2].begin(), icIx[2].end(), 4*tetnum + tetmap.preImageOf( idvnum ) ) - icIx[2].begin();
+      // check to see if I is in visitedIdTet
+      if (!binary_search( visitedIdTet.begin(), visitedIdTet.end(), I) ) // not found
+       { visitedIdTet.insert(I); newVertexListI.insert(I); visitedIdFac.insert(J); }
+     }
+    newVertexListI.erase(unexploredV++); // increment unexploredV but return the unincremented iterator for erase arg...
+   }
+
+  unexploredV = newVertexListB.begin();
+  // then check to see if there are standard boundary vertices unexplored
+  while (unexploredV != newVertexListB.end())
+   {
+    // *unexploredV is the bcIx[3]-index of the standard boundary dual 0-cell
     const Dim4Tetrahedron* btet(NULL); const Dim4Pentachoron* pen(NULL); unsigned long tetnum;
-
-    btet = tri4 -> getTetrahedron( *btet_it );     //btet
-    pen = btet -> getEmbedding(0).getPentachoron();//ambient pen
+    btet = tri4 -> getTetrahedron( bcIx[3][*unexploredV] ); // btet
+    pen = btet -> getEmbedding(0).getPentachoron(); // ambient pen
     tetnum = btet -> getEmbedding(0).getTetrahedron(); // btet's number in ambient tet
-
     for (unsigned long i=1; i<5; i++)
       {
        const Dim4Tetrahedron* adjtet(NULL); const Dim4Pentachoron* adjpen(NULL); const Dim4Tetrahedron* septet(NULL);
@@ -116,18 +146,57 @@ while ( (visitedPen.size() < numStandardCells[4] ) || (visitedBdTet.size() < num
        J = lower_bound( bcIx[2].begin(), bcIx[2].end(), bfacnum ) - bcIx[2].begin();
        // check to see if I is in visitedBdTet
        if (!binary_search( visitedBdTet.begin(), visitedBdTet.end(), I) ) // not found
-        {
-         std::set< unsigned long >::iterator temp_it = visitedBdTet.insert(I).first;
-         visitedBdFac.insert(J);
-         if ( (*temp_it) < (*btet_it) ) if ( (*temp_it) < (*new_it) ) new_it = temp_it;
-        }
+        { visitedBdTet.insert(I); newVertexListB.insert(I); visitedBdFac.insert(J); }
       }
-     if ( (*new_it) < (*btet_it) ) btet_it = new_it; else btet_it++;
+     newVertexListB.erase(unexploredV++); // increment unexploredV but return the unincremented iterator...
    }
 
-  // then we look to expand the forest in the ideal boundary
+  unexploredV = newVertexListS.begin();
+  // then check to see if there are standard vertices unexplored
+  while (unexploredV != newVertexListS.end())
+   {
+    // *unexploredV is the nicIx[4]-index of the dual 0-cell
+    const Dim4Pentachoron* pen(NULL); unsigned long idvnum; const Dim4Tetrahedron* septet(NULL); const Dim4Pentachoron* adjpen(NULL);
+    NPerm5 adjglue, tetmap;
+    pen = tri4 -> getPentachoron( *unexploredV );
 
-  // finally we look to expand the forest in the manifold's interior (or towards a boundary)
+    // step 1 look for ideal connectors.  If one found, record and exit loop TODO
+    for (unsigned long i=0; i<5; i++) if ( pen -> getVertex(i) -> isIdeal() )
+     {
+      unsigned long idvind = 5*(*unexploredV) + i; 
+      unsigned long I = lower_bound( icIx[3].begin(), icIx[3].end(), idvind ) - icIx[3].begin();  
+      // check to see if I in visitedIdTet
+      if (!binary_search( visitedIdTet.begin(), visitedIdTet.end(), I) ) // not found
+       { visitedIdTet.insert(I); newVertexListI.insert(I);  
+         // visitedIdFac.insert(J); 
+       }
+     }
+ //std::set< unsigned long > visitedPen, visitedBdTet, visitedIdTet; // 0-cells in maximal tree
+ // indexed by            nicIx[4],   
+ //                                   bcIx[3], 
+ //                                                 icIx[3] respectively.
+ //std::set< unsigned long > visitedInTet, visitedBdFac, visitedIdFac, visitedPenIdTet; // 1-cells in maximal tree
+ // indexed by            nicIx[3] -- edges across tetrahedra including pen to boundary tet.
+ //                                     bcIx[2] -- edges across boundary faces
+ //                                                   icIx[2] -- edges across ideal boundary faces.
+ //                                                                    icIx[3] -- edges from pentachora to ideal boundary barycentres...
+
+ //std::set< unsigned long > newVertexListS, newVertexListB, newVertexListI; // 0-cell indices yet unexplored...
+
+    // step 2 look for standard boundary connectors. If one found, record and exit loop TODO
+    for (unsigned long i=0; i<5; i++) if ( pen -> getTetrahedron(i) -> isBoundary() )
+     {
+     }
+
+    // step 3 look for internal connectors. Only way to make it to the end of the loop TODO
+    for (unsigned long i=0; i<5; i++) if ( !pen -> getTetrahedron(i) -> isBoundary() )
+     {
+     }
+
+    newVertexListS.erase(unexploredV++); // increment unexploredV but return the unincremented iterator for erase arg...
+   }
+
+
 
  }
 
