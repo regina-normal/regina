@@ -1026,6 +1026,25 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * orientable.
          */
         bool isOrientable() const;
+
+        /**
+         * Determines if this triangulation is oriented.
+         *
+         * @return \c true if and only if all tetrahedra are oriented 
+         * consistently.
+         */         
+        bool isOriented() const;
+
+        /**
+         * Determines if this triangulation is ordered.
+         *
+         * @return \c true if and only if all gluing permutations are
+         * order preserving on the faces. Equivalently whether all edges
+         * of the triangulation are oriented such that they induce a 
+         * consistent ordering on each tetrahedron.
+         */
+        bool isOrdered() const;
+
         /**
          * Determines if this triangulation is connected.
          *
@@ -1879,6 +1898,39 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * be assigned in reverse order, as described above.
          */
         void reorderTetrahedraBFS(bool reverse = false);
+
+        /**
+         * Returns a triangulation with all tetrahedra oriented consistently.
+         *
+         * Specifically, it will flip vertices 2 and 3 of each tetrahedron with
+         * negative orientation.
+         *
+         * @return If all components are orientable, returns a oriented
+         * triangulation, otherwise, returns \c NULL.
+         */
+
+        NTriangulation* orient() const;
+
+        /**
+         * Returns an ordered triangulation.
+         *
+         * Specifically, all face gluings (when restricted to the face) are 
+         * order preserving. In other words, all edges of the triangulation are
+         * oriented in such a fashion that they are consistent with the 
+         * ordering of each tetrahedron.
+         *
+         * The method backtracks through all possible edge orientations until a
+         * a consistent one has been found.
+         *
+         * @param force_oriented. If \c true, the triangulation returned will
+         * be oriented and ordered, and NULL will be returned if the 
+         * triangulation cannot be oriented and ordered at the same time.
+         *
+         * @return If the triangulation can be ordered by relabeling vertices
+         * of the tetrahedra, return the resulting triangulation. Otherwise,
+         * return NULL.
+         */
+        NTriangulation* order(bool force_oriented = false) const;
 
         /*@}*/
         /**

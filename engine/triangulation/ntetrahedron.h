@@ -351,6 +351,8 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
         /**
          * Returns the edge in the triangulation skeleton
          * corresponding to the given edge of this tetrahedron.
+         * See regina::NEdge:edgeNumber and regina::NEdge:edgeVertex for
+         * the conventions of edge numbers.
          *
          * \pre This tetrahedron belongs to a triangulation whose skeletal
          * information has already been calculated.
