@@ -2754,6 +2754,16 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          */
         void calculateSkeleton() const;
         /**
+         * Checks that the permutations on face gluings are valid and
+         * that adjacent face gluings match, i.e. if face A of tet X is glued
+         * to face B of tet Y, then face B of tet Y is also glued to face A of
+         * tet X using the inverse permutation.
+         *
+         * \warning This should only be called from within
+         * calculateSkeleton().
+         */
+        void checkPermutations() const;
+        /**
          * Calculates the triangulation components and associated
          * properties.
          *
