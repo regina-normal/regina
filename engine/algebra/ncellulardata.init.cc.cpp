@@ -1527,6 +1527,8 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
                     nicIx, icIx, dcIx, bcIx, rIx, 
                     sbiCM, smCM, dmCM, strCM, schCM );
 
+   buildFundGrpPres(); // TODO erase. this is just for tests.
+
    // probably need to updatefillChainMaps once the CC's are updated
 }
 
@@ -1538,6 +1540,7 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
 	sbiCM(3), strCM(4), schCM(3),   dbiCM(3), dtrCM(4), dchCM(3),   mbiCM(3), mtrCM(4), mchCM(3), 
         smCM(4), dmCM(4), smbCM(3), dmbCM(3), srmCM(4), drmCM(4) // chain maps
 {
+
    setupIndices( tri3, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 		 numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells,
 		 numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, numDualBdryCells );
@@ -1560,6 +1563,10 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
 		                  numDualBdryCells, 
                     nicIx, icIx, dcIx, bcIx, rIx, 
                     sbiCM, smCM, dmCM, strCM, schCM );
+   // standard face boundaries
+
+   buildFundGrpPres(); // TODO erase. this is just for tests.
+
    // probably need to updatefillChainMaps once the CC's are updated
 }
 

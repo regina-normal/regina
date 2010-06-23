@@ -458,6 +458,77 @@ private:
     std::vector< NMatrixInt* > sbiCM, strCM, schCM,   dbiCM, dtrCM, dchCM,   mbiCM, mtrCM, mchCM,  
  			       smCM, dmCM,            smbCM, dmbCM,          srmCM, drmCM;
 
+   /**
+    *  Data that stores the maximal tree in the dual 1-skeleton.  n=dimension of top-dimensional simplices.
+    *
+    *  maxTreeStd    stores the edges dual to co-dimension 1 simplices, indexed by nicIx[n-1]
+    *  maxTreeStB    boundary edges dual to co-dimension 2 boundary faces, indexed by bcIx[n-2]
+    *  maxTreeIdB    boundary edges dual to co-dimension 2 ideal boundary faces, indexed by icIx[n-2]
+    *  maxTreeSttIdB edges connecting top-dimensional simplices barycentres to boundary cd1 barycentres,
+    *										indexed by icIx[n-1]
+    */
+   std::set< unsigned long > maxTreeStd, maxTreeStB, maxTreeIdB, maxTreeSttIdB; // 1-cells in maximal tree
+
+    /**
+     *  Routine returns true if and only if tet is represents an edge in the maximal tree for the dual 1-skeleton of the triangulation.
+     *  Any tetrahedron from the triangulation can potentially represent an edge. Corresponds to maxTreeStd
+     */
+    bool inMaximalTree(const Dim4Tetrahedron* tet);
+
+    /**
+     *  Routine returns true if and only if fac is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
+     *  Only boundary faces can represent edges in the dual 1-skeleton. Corresponds to maxTreeStB
+     */
+    bool inMaximalTree(const Dim4Face* fac);
+
+    /**
+     *  Routine returns true if and only if pair (tet, num) represents is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
+     *  This refers to the part of the dual 1-skeleton in the ideal boundary, represented by ideal ends of tetrahedra. Corresponds to maxTreeIdB
+     */
+    bool inMaximalTree(const Dim4Tetrahedron* tet, unsigned long num);
+
+    /**
+     *  Routine returns true if and only if pair (pen, num) is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
+     *  Paths from pentachora barycentres to ideal boundary barycentres. Represented by ideal ends of pentachora. Corresponds to maxTreeSttIdB
+     */
+    bool inMaximalTree(const Dim4Pentachoron* pen, unsigned long num);
+
+    /**
+     *  Routine returns true if and only if tet is represents an edge in the maximal tree for the dual 1-skeleton of the triangulation.
+     *  Any face from the triangulation can potentially represent an edge. Corresponds to maxTreeStd
+     */
+    bool inMaximalTree(const NFace* fac);
+
+    /**
+     *  Routine returns true if and only if fac is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
+     *  Only boundary edges can represent edges in the dual 1-skeleton. Corresponds to maxTreeStB
+     */
+    bool inMaximalTree(const NEdge* edg);
+
+    /**
+     *  Routine returns true if and only if pair (fac, num) represents is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
+     *  This refers to the part of the dual 1-skeleton in the ideal boundary, represented by ideal ends of faces. Corresponds to maxTreeIdB
+     */
+    bool inMaximalTree(const NFace* fac, unsigned long num);
+
+    /**
+     *  Routine returns true if and only if pair (tet, num) is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
+     *  Paths from tetrahedra barycentres to ideal boundary barycentres. Represented by ideal ends of tetrahedra. Corresponds to maxTreeSttIdB
+     */
+    bool inMaximalTree(const NTetrahedron* tet, unsigned long num);
+    
+   /**
+    * internal routine to build the maximal tree in the dual 1-skeleton, suitable for computing
+    *  pi1 information about the manifold. 
+    */
+   void buildMaximalTree();
+
+   /**
+    *  Builds the internal data structures for the presentations of the fundamental groups of the manifold, 
+    *   standard boundary and ideal boundary components.
+    */
+   void buildFundGrpPres();
+
 public:
 
     /**
@@ -680,14 +751,29 @@ public:
      *      trivial presentations            trivial presentation 0 --> Z --k--> Z ---> Z_k ---> 0
      *
      *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
-     *     (not yet implemented)              various coordinate systems  
+     *     (not yet implemented)              various coordinate systems  TODO
      *     
      */
     const NBilinearForm* bilinearForm( const FormLocator &f_desc ) const;
 
     /**
      *  Describes presentations of various groups associated to the manifold.  There is the fundamental
-     *  group, and fundamental groups of the various boundary components. 
+     *  group of the entire manifold, and fundamental groups of the various boundary components.
+     *
+     *  The fundamental groups are computed by first finding a maximal tree in the dual 1-skeleton to
+     *  the manifold.  Unlike NTriangulation and Dim4Triangulation's maximal forest routines, this routine
+     *  produces a maximal tree in the dual 1-skeleton that restricts to maximal trees in the boundary
+     *  and ideal boundaries of the manifold. So it is quite a bit larger in general than the NTriangulation
+     *  and Dim4Triangulation routine outputs. But this allows for computations of maps between groups.
+     *  The generators of pi1 are the dual 1-cells not in the maximal tree. They are indexed in this order:
+     *
+     *  First the dual 1-cells that cross co-dimension 1 simplices from the triangulation. 
+     *  Second the dual 1-cells in the standard boundary that cross co-dimension 2 simplices from the
+     *   boundary triangulation. 
+     *  Third, the dual 1-cells in the ideal boundary that cross co-dimension 2 ideal simplices from the
+     *   ideal boundary triangulation. 
+     *  Fourth, the dual 1-cells connecting top-dimensional simplex barycentres to ideal boundary simplex
+     *   barycentres.
      */
     const NGroupPresentation* groupPresentation( const GroupPresLocator &g_desc ) const;
 
@@ -698,9 +784,6 @@ public:
      *  maximal forests in the boundary and ideal boundary components. TODO
      */
     const NHomGroupPresentation* homGroupPresentation( const HomGroupPresLocator &h_desc ) const;
-     
-    // temporary... fix TODO
-    void buildMaximalTree() const;
 };
 
 

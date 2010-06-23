@@ -149,7 +149,7 @@ else // cohomology requested
 return NULL;
 }
 
-// todo: coefficient LES maps like Bockstein
+// TODO: coefficient LES maps like Bockstein
 const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator &h_desc) const
 {
  std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator p;

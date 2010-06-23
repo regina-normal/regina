@@ -357,16 +357,18 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
    for (unsigned long i=0; i < D+1; i++) 
     { 
      if (tet->getVertex(i)->isIdeal())
-      { // ideal ends of faces	
+      { // ideal ends of tetrahedra
        I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
        schCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
-      } // standard face boundaries
-     if ( tet->getFace(i)->isBoundary() )
+      } 
+     if ( tet->getFace(i)->isBoundary() ) // standard face boundaries
       {
        NPerm4 P( tet->getFaceMapping(i) );
+
        I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->faceIndex( tet->getFace(i) )) 
 	- bcIx[D-1].begin();
-       schCM[D]->entry(I, j) += P.sign();
+
+       schCM[D-1]->entry(I, j) += P.sign();
       }
     }
   }
@@ -485,9 +487,9 @@ void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4,
 
    fillBoundaryToStandardHomCM( 3, numStandardCells, numStandardBdryCells, numNonIdealBdryCells, 
         numIdealCells, numNonIdealCells, nicIx, bcIx, sbiCM);
- 
+
    fillDifferentialHomCM( tri3, numRelativeCells, numStandardBdryCells,  numNonIdealBdryCells,    
-     bcIx,  icIx, rIx, schCM );   
+     bcIx,  icIx, rIx, schCM );  
   }
 }
 
