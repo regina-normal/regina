@@ -46,6 +46,80 @@ namespace regina {
  */
 
 /**
+ * A generic class for bitwise analysis and manipulation of native data types.
+ *
+ * This class is not optimised for common data types; its
+ * sole functionality is to provide default implementations for some
+ * operations that are not yet optimised (or do not need to be).
+ *
+ * End users should use BitManipulator<T, size> instead, which is better
+ * optimised and which has all the functionality of this class.
+ *
+ * See BitManipulator for further information.
+ *
+ * \pre Type \a T is an unsigned integral numeric type.
+ * \pre The argument \a size is a power of two, and is at most sizeof(\a T).
+ *
+ * \ifacespython Not present.
+ */
+template <typename T, unsigned size = sizeof(T)>
+class GenericBitManipulator {
+    public:
+        /**
+         * Returns the index of the first \c true bit in the given
+         * integer, or -1 if the given integer is zero.
+         * Bits are indexed from 0 upwards, starting at the least
+         * significant bit.
+         *
+         * @param the integer of type \a T to examine.
+         * @return the position of the first \c true bit, or -1 if there
+         * are no \c true bits.
+         */
+        inline static int firstBit(T x) {
+            if (! x)
+                return -1;
+
+            // This binary search will break if size is not a power of two.
+            unsigned chunkSize = size << 3; // 8 * size
+            unsigned chunkStart = 0;
+
+            while (chunkSize > 1) {
+                chunkSize >>= 1;
+                if (! (x & (((T(1) << chunkSize) - T(1)) << chunkStart)))
+                    chunkStart += chunkSize;
+            }
+            return chunkStart;
+        }
+
+        /**
+         * Returns the index of the last \c true bit in the given
+         * integer, or -1 if the given integer is zero.
+         * Bits are indexed from 0 upwards, starting at the least
+         * significant bit.
+         *
+         * @param the integer of type \a T to examine.
+         * @return the position of the last \c true bit, or -1 if there
+         * are no \c true bits.
+         */
+        inline static int lastBit(T x) {
+            if (! x)
+                return -1;
+
+            // This binary search will break if size is not a power of two.
+            unsigned chunkSize = size << 3; // 8 * size
+            unsigned chunkStart = 0;
+
+            while (chunkSize > 1) {
+                chunkSize >>= 1;
+                if (x & (((T(1) << chunkSize) - T(1))
+                        << (chunkStart + chunkSize)))
+                    chunkStart += chunkSize;
+            }
+            return chunkStart;
+        }
+};
+
+/**
  * An optimised class for bitwise analysis and manipulation of native
  * data types.
  *
@@ -58,13 +132,16 @@ namespace regina {
  * that are carefully optimised (precisely what gets specialised depends
  * upon properties of the compiler).
  *
+ * Like this class, all specialisations either inherit or override the
+ * default implementations from the base class GenericBitManipulator.
+ *
  * \pre Type \a T is an unsigned integral numeric type.
  * \pre The argument \a size is a power of two, and is at most sizeof(\a T).
  *
  * \ifacespython Not present.
  */
 template <typename T, unsigned size = sizeof(T)>
-class BitManipulator {
+class BitManipulator : public GenericBitManipulator<T, size> {
     public:
         enum {
             /**
@@ -98,7 +175,7 @@ class BitManipulator {
 #ifndef __DOXYGEN
 
 template <typename T>
-class BitManipulator<T, 1> {
+class BitManipulator<T, 1> : public GenericBitManipulator<T, 1> {
     public:
         enum {
             specialised = 1
@@ -112,7 +189,7 @@ class BitManipulator<T, 1> {
 };
 
 template <typename T>
-class BitManipulator<T, 2> {
+class BitManipulator<T, 2> : public GenericBitManipulator<T, 2> {
     public:
         enum {
             specialised = 1
@@ -127,7 +204,7 @@ class BitManipulator<T, 2> {
 };
 
 template <typename T>
-class BitManipulator<T, 4> {
+class BitManipulator<T, 4> : public GenericBitManipulator<T, 4> {
     public:
         enum {
             specialised = 1
@@ -146,7 +223,7 @@ class BitManipulator<T, 4> {
 // back to the generic two-lots-of-32-bit implementation.
 #if defined(HAVE_NUMERIC_64)
 template <typename T>
-class BitManipulator<T, 8> {
+class BitManipulator<T, 8> : public GenericBitManipulator<T, 8> {
     public:
         enum {
             specialised = 1
@@ -169,7 +246,7 @@ class BitManipulator<T, 8> {
 };
 #elif defined(HAVE_NUMERIC_64_LL)
 template <typename T>
-class BitManipulator<T, 8> {
+class BitManipulator<T, 8> : public GenericBitManipulator<T, 8> {
     public:
         enum {
             specialised = 1

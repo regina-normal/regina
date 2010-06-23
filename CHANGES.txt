@@ -13,11 +13,20 @@ Version 4.6.1  [ (under development) ]
         Typedef AcceptTriangulation:
             - This global typedef has been deprecated.  Please use the
               class typedef NCensus::AcceptTriangulation instead.
+        Class BitManipulator, GenericBitManipulator:
+            - BitManipulator has new routines firstBit() and lastBit(), which
+              return the positions of the first and last true bit respectively.
+              This has required the addition of a new non-optimised base class
+              GenericBitManipulator, which end users need never use directly.
         Class NAbelianGroup:
             - Routine addRank() now takes a signed integer, so that you
               can subtract from the rank as well as add to it.
         Class NBitmask, NBitmask1, NBitmask2:
-            - New XOR operator ^=.
+            - New operators ^= (XOR) and -= (set difference).
+            - New routine truncate(), which truncates a bitmask to a given
+              number of bits by setting all subsequent bits to zero.
+            - New routines firstBit() and lastBit(), which return the
+              positions of the first and last true bit respectively.
             - New convenience typedefs NBitmaskLen8, NBitmaskLen16,
               NBitmaskLen32 and NBitmaskLen64 for fast-and-small bitmasks
               of predetermined sizes.
@@ -28,6 +37,10 @@ Version 4.6.1  [ (under development) ]
             - Added assertions in data() to ensure that the given disc
               type and number are valid.  These can be circumvented by
               compiling with -DNDEBUG.
+        Class NDoubleDescription:
+            - Improved the speed of adjacency testing by using an
+              NTrieSet instead of a linear search through all vertices.
+              See the NNormalSurfaceList notes below for further information.
         Class NExampleTriangulation:
             - Renamed seifertWeber() to weberSeifert(), for consistency with
               the original paper.  The old routine is now deprecated, but has
@@ -42,6 +55,11 @@ Version 4.6.1  [ (under development) ]
             - New routines isCompressingDisc() and isIncompressible() for
               testing incompressibility.
         Class NNormalSurfaceList:
+            - Sped up enumeration (again), this time by using a
+              trie-like structure for adjacency testing.  For the
+              Weber-Seifert space this improves speed threefold (roughly).
+              Many thanks to Jonathan Shewchuk for encouraging me to
+              focus on the adjacency testing bottleneck.
             - New filtering routines filterForLocallyCompatiblePairs() and
               filterForDisjointPairs().
             - New routine filterForPotentiallyIncompressible() to assist with
@@ -110,6 +128,10 @@ Version 4.6.1  [ (under development) ]
             - New static routine rehydrate() to rehydrate a new triangulation
               from a Callahan-Hildebrand-Weeks dehydration string.  This is a
               more convenient version of insertRehydration().
+        Class NTrieSet:
+            - A new class for storing and querying a large number of sets,
+              where the elements of these sets are taken from a small universe.
+              The underlying data structure is essentially a trie of bitmasks.
         Class NVertexEmbedding:
             - New routine getVertices(), which facilitates a consistent
               orientation for the three remaining vertices in each tetrahedron.
@@ -124,6 +146,7 @@ Version 4.6.1  [ (under development) ]
     TEST SUITE:
         - New tests for file I/O using both modern XML and legacy binary
           file formats.
+        - More detailed tests for bitmask operations.
 
 Version 4.6  [ 16 May, 2009 ]
 

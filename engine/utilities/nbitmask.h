@@ -230,6 +230,20 @@ class NBitmask {
         void reset(unsigned length);
 
         /**
+         * Leaves the first \a numBits bits of this bitmask intact, but
+         * sets all subsequent bits to \c false.  In other words, this
+         * routine "truncates" this bitmask to the given number of bits.
+         *
+         * This routine does not change the \e length of this bitmask
+         * (as passed to the contructor or to reset()).
+         *
+         * \pre \a numBits is at most the length of this bitmask.
+         *
+         * @param the number of bits that will \e not be cleared.
+         */
+        void truncate(unsigned numBits);
+
+        /**
          * Sets this to the intersection of this and the given bitmask.
          * Every bit that is unset in \a other will be unset in this bitmask.
          *
@@ -262,6 +276,17 @@ class NBitmask {
          * @return a reference to this bitmask.
          */
         NBitmask& operator ^= (const NBitmask& other);
+
+        /**
+         * Sets this to the set difference of this and the given bitmask.
+         * Every bit that is set in \a other will be cleared in this bitmask.
+         *
+         * \pre This and the given bitmask have the same length.
+         *
+         * @param other the bitmask to XOR with this.
+         * @return a reference to this bitmask.
+         */
+        NBitmask& operator -= (const NBitmask& other);
 
         /**
          * Negates every bit in this bitmask.  All \c true bits will be
@@ -341,6 +366,22 @@ class NBitmask {
          * @return the number of \c true bits.
          */
         unsigned bits() const;
+
+        /**
+         * Returns the index of the first \c true bit in this bitmask,
+         * or -1 if there are no \c true bits.
+         *
+         * @return the index of the first \c true bit.
+         */
+        int firstBit() const;
+
+        /**
+         * Returns the index of the last \c true bit in this bitmask,
+         * or -1 if there are no \c true bits.
+         *
+         * @return the index of the last \c true bit.
+         */
+        int lastBit() const;
 
         /**
          * Determines whether at most one bit is set to \c true in this
@@ -449,6 +490,21 @@ class NBitmask1 {
          */
         inline void reset(unsigned) {
             mask = 0;
+        }
+
+        /**
+         * Leaves the first \a numBits bits of this bitmask intact, but
+         * sets all subsequent bits to \c false.  In other words, this
+         * routine "truncates" this bitmask to the given number of bits.
+         *
+         * This routine does not change the \e length of this bitmask
+         * (as passed to the contructor or to reset()).
+         *
+         * @param the number of bits that will \e not be cleared.
+         */
+        inline void truncate(unsigned numBits) {
+            if (numBits < 8 * sizeof(T))
+                mask &= ((T(1) << numBits) - T(1));
         }
 
         /**
@@ -565,6 +621,19 @@ class NBitmask1 {
         }
 
         /**
+         * Sets this to the set difference of this and the given bitmask.
+         * Every bit that is set in \a other will be cleared in this bitmask.
+         *
+         * @param other the bitmask to XOR with this.
+         * @return a reference to this bitmask.
+         */
+        inline NBitmask1<T>& operator -= (const NBitmask1<T>& other) {
+            mask |= other.mask;
+            mask ^= other.mask;
+            return *this;
+        }
+
+        /**
          * Negates every bit in this bitmask.  All \c true bits will be
          * set to \c false and vice versa.
          *
@@ -644,6 +713,26 @@ class NBitmask1 {
          */
         inline unsigned bits() const {
             return BitManipulator<T>::bits(mask);
+        }
+
+        /**
+         * Returns the index of the first \c true bit in this bitmask,
+         * or -1 if there are no \c true bits.
+         *
+         * @return the index of the first \c true bit.
+         */
+        inline int firstBit() const {
+            return BitManipulator<T>::firstBit(mask);
+        }
+
+        /**
+         * Returns the index of the last \c true bit in this bitmask,
+         * or -1 if there are no \c true bits.
+         *
+         * @return the index of the last \c true bit.
+         */
+        inline int lastBit() const {
+            return BitManipulator<T>::lastBit(mask);
         }
 
         /**
@@ -766,6 +855,27 @@ class NBitmask2 {
         inline void reset(unsigned) {
             low = 0;
             high = 0;
+        }
+
+        /**
+         * Leaves the first \a numBits bits of this bitmask intact, but
+         * sets all subsequent bits to \c false.  In other words, this
+         * routine "truncates" this bitmask to the given number of bits.
+         *
+         * This routine does not change the \e length of this bitmask
+         * (as passed to the contructor or to reset()).
+         *
+         * @param the number of bits that will \e not be cleared.
+         */
+        inline void truncate(unsigned numBits) {
+            if (numBits < 8 * sizeof(T)) {
+                low &= ((T(1) << numBits) - T(1));
+                high = 0;
+            } else {
+                numBits -= 8 * sizeof(T);
+                if (numBits < 8 * sizeof(U))
+                    high &= ((U(1) << numBits) - U(1));
+            }
         }
 
         /**
@@ -903,6 +1013,21 @@ class NBitmask2 {
         }
 
         /**
+         * Sets this to the set difference of this and the given bitmask.
+         * Every bit that is set in \a other will be cleared in this bitmask.
+         *
+         * @param other the bitmask to XOR with this.
+         * @return a reference to this bitmask.
+         */
+        inline NBitmask2<T, U>& operator -= (const NBitmask2<T, U>& other) {
+            low |= other.low;
+            low ^= other.low;
+            high |= other.high;
+            high ^= other.high;
+            return *this;
+        }
+
+        /**
          * Negates every bit in this bitmask.  All \c true bits will be
          * set to \c false and vice versa.
          *
@@ -986,6 +1111,37 @@ class NBitmask2 {
          */
         inline unsigned bits() const {
             return BitManipulator<T>::bits(low) + BitManipulator<U>::bits(high);
+        }
+
+        /**
+         * Returns the index of the first \c true bit in this bitmask,
+         * or -1 if there are no \c true bits.
+         *
+         * @return the index of the first \c true bit.
+         */
+        inline int firstBit() const {
+            // -1 case does not work out of the box in the second IF branch
+            // due to the 8 * sizeof(T).
+            if (low)
+                return BitManipulator<T>::firstBit(low);
+            else if (high)
+                return 8 * sizeof(T) + BitManipulator<U>::firstBit(high);
+            else
+                return -1;
+        }
+
+        /**
+         * Returns the index of the last \c true bit in this bitmask,
+         * or -1 if there are no \c true bits.
+         *
+         * @return the index of the last \c true bit.
+         */
+        inline int lastBit() const {
+            // -1 case works out of the box in the second IF branch.
+            if (high)
+                return 8 * sizeof(T) + BitManipulator<U>::lastBit(high);
+            else
+                return BitManipulator<T>::lastBit(low);
         }
 
         /**
@@ -1193,6 +1349,18 @@ inline void NBitmask::reset(unsigned length) {
     std::fill(mask, mask + pieces, 0);
 }
 
+inline void NBitmask::truncate(unsigned numBits) {
+    unsigned skip = numBits / (8 * sizeof(Piece));
+    numBits = numBits % (8 * sizeof(Piece));
+
+    Piece* piece = mask + skip;
+    if (piece < mask + pieces) {
+        (*piece) &= ((Piece(1) << numBits) - Piece(1));
+        for (++piece; piece < mask + pieces; ++piece)
+            *piece = 0;
+    }
+}
+
 inline bool NBitmask::get(unsigned index) const {
     return (mask[index / (8 * sizeof(Piece))] &
         (Piece(1) << (index % (8 * sizeof(Piece)))));
@@ -1221,6 +1389,14 @@ inline NBitmask& NBitmask::operator |= (const NBitmask& other) {
 inline NBitmask& NBitmask::operator ^= (const NBitmask& other) {
     for (unsigned i = 0; i < pieces; ++i)
         mask[i] ^= other.mask[i];
+    return *this;
+}
+
+inline NBitmask& NBitmask::operator -= (const NBitmask& other) {
+    for (unsigned i = 0; i < pieces; ++i) {
+        mask[i] |= other.mask[i];
+        mask[i] ^= other.mask[i];
+    }
     return *this;
 }
 
@@ -1259,6 +1435,22 @@ inline unsigned NBitmask::bits() const {
     for (unsigned i = 0; i < pieces; ++i)
         ans += BitManipulator<Piece>::bits(mask[i]);
     return ans;
+}
+
+inline int NBitmask::firstBit() const {
+    for (unsigned i = 0; i < pieces; ++i)
+        if (mask[i])
+            return 8 * sizeof(Piece) * i +
+                BitManipulator<Piece>::firstBit(mask[i]);
+    return -1;
+}
+
+inline int NBitmask::lastBit() const {
+    for (int i = pieces - 1; i >= 0; --i)
+        if (mask[i])
+            return 8 * sizeof(Piece) * i +
+                BitManipulator<Piece>::lastBit(mask[i]);
+    return -1;
 }
 
 inline bool NBitmask::atMostOneBit() const {
