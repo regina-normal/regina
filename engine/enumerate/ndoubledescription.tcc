@@ -38,6 +38,7 @@
 #include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 #include "utilities/nbitmask.h"
+#include "utilities/ntrieset.h"
 
 namespace regina {
 
@@ -403,7 +404,15 @@ bool NDoubleDescription::intersectHyperplane(
     typename RayList::iterator posit, negit, otherit;
 
     const BitmaskType* constraint;
-    bool adjacent, broken;
+    bool broken;
+
+    // We use the NTrieSet data structure to speed up adjacency testing
+    // in the code below.  Construct an NTrieSet that records the facet
+    // structure for every vertex in the old solution set.
+    NTrieSet<BitmaskType> trie;
+    for (otherit = src.begin(); otherit != src.end(); ++otherit)
+        trie.insert((*otherit)->facets());
+
     for (posit = pos.begin(); posit != pos.end(); ++posit)
         for (negit = neg.begin(); negit != neg.end(); ++negit) {
             BitmaskType join((*posit)->facets());
@@ -419,12 +428,13 @@ bool NDoubleDescription::intersectHyperplane(
 
             // Are we supposed to check for compatibility?
             if (constraintsBegin) {
-                join.flip();
+                BitmaskType inv(join);
+                inv.flip();
 
                 broken = false;
                 for (constraint = constraintsBegin;
                         constraint != constraintsEnd; ++constraint) {
-                    BitmaskType mask(join);
+                    BitmaskType mask(inv);
                     mask &= *constraint;
                     if (! mask.atMostOneBit()) {
                         broken = true;
@@ -435,19 +445,13 @@ bool NDoubleDescription::intersectHyperplane(
                     continue;
             }
 
-            // Two rays are joined by an edge if and only if there is no
-            // other ray belonging to all of their common facets.
-            adjacent = true;
-            for (otherit = src.begin(); otherit != src.end(); ++otherit)
-                if (*otherit != *posit && *otherit != *negit &&
-                        (*otherit)->onAllCommonFacets(**posit, **negit)) {
-                    adjacent = false;
-                    break;
-                }
-
-            // If the rays are adjacent then join them and put the
-            // corresponding intersection in the results set.
-            if (adjacent)
+            // Two rays are adjacent (joined by an edge) if and only if
+            // there is no other ray belonging to all of their common facets.
+            //
+            // If the rays *are* adjacent, join them and put the
+            // corresponding intersection in the new results set.
+            if (! trie.hasExtraSuperset(join,
+                    (*posit)->facets(), (*negit)->facets(), dim))
                 dest.push_back(new RaySpec<BitmaskType>(**posit, **negit));
         }
 
