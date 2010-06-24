@@ -419,6 +419,15 @@ if (!binary_search( maxTreeIdB.begin(), maxTreeIdB.end(), I ) ) return false;
 return true;
 }
 
+// counts number of elements in thelist less than obj
+unsigned long num_less_than(const std::set<unsigned long> &thelist, const unsigned long &obj)
+{
+unsigned long retval = 0;
+std::set<unsigned long>::const_iterator i;
+for (i=thelist.begin(); i!=thelist.end(); i++) {  if ( (*i) < obj ) retval++; else return retval; }
+return retval; 
+}
+
 bool NCellularData::inMaximalTree(const NTetrahedron* tet, unsigned long num)
 {
 if (!binary_search(icIx[2].begin(), icIx[2].end(), 4*tri3->tetrahedronIndex( tet ) + num ) ) return false; 
@@ -431,50 +440,150 @@ return true;
 
 void NCellularData::buildFundGrpPres()
 {
+ NGroupPresentation pres;
  // for now the group presentation will consist of: a list of numbers for the generators, 
  //  a list of words in the generators corresponding to the relators. 
  // the generators consist of edges of the dual 1-skeleton not in the maximal tree
-
- // first we count the generators and we'll do our first test for bugs, to see if it 
- //  corresponds to what we expect.
- 
  buildMaximalTree();
 
- // co-dim 1 simplices oriented according into getEmbedding(0) co-dim 0 simplex.
- 
- // 0-cell count
- unsigned long tzcells, pocells;
  if (tri4)
   {
-   // theoretical
-   tzcells = numStandardCells[4] + numStandardBdryCells[3];
-   // actual
-   pocells = maxTreeStd.size() + maxTreeStB.size() + maxTreeIdB.size() + maxTreeSttIdB.size();
-//   if (tzcells != pocells + 1) std::cout<<"Error! "<<tzcells +1 <<" vs. "<<pocells<<" "; else std::cout<<"Cell count okay.";
-   std::cout.flush();
+   // we sort the 1-cells by: standard boundary, ideal boundary, standard interior cells, edges to ideal boundary
+   // so wedge indexed by:     - maxTreeStB.size,  - maxTreeIdB.size(), - maxTreeStd.size(),  maxTreeSttIdB.size()
+
+   unsigned long delta0( numNonIdealBdryCells[2] - maxTreeStB.size() ); 
+   unsigned long delta1( delta0 + numIdealCells[2] - maxTreeIdB.size() );
+   unsigned long delta2( delta1 + numNonIdealCells[3] - maxTreeStd.size() );
+   unsigned long delta3( delta2 ); // to know what is out of range
+   for (Dim4Triangulation::VertexIterator i = tri4->getVertices().begin(); i!= tri4->getVertices().end(); i++)
+    if ((*i)->isIdeal()) delta3++; 
+   pres.addGenerator( delta3 );// we've set the generators for the presentation.
+
+   Dim4Tetrahedron* currTet (NULL); Dim4Pentachoron* currPen (NULL); Dim4Tetrahedron* tet (NULL); unsigned long currPenFace;
+
+   // okay, lets start finding relators. First, from the interior faces. There are two types. 
+   //  1) Non-boundary. 
+   //  2) Boundary. 
+   for (Dim4Triangulation::FaceIterator fac = tri4->getFaces().begin(); fac!=tri4->getFaces().end(); fac++)
+    {
+     NGroupExpression relator; 
+
+     if ( !(*fac)->isBoundary() ) // non-boundary
+      {
+       std::deque<Dim4FaceEmbedding>::const_iterator embit;
+       for (embit = (*fac)->getEmbeddings().begin();
+                    embit != (*fac)->getEmbeddings().end(); embit++)
+        { // now we have to determine whether or not the embedding coincides with the normal or of the tet.
+         currPen = (*embit).getPentachoron();
+         currPenFace = (*embit).getVertices()[4]; 
+         tet = currPen->getTetrahedron(currPenFace);  
+         // and is the tet in the maximal tree?    
+         if (!inMaximalTree(tet)) 
+          {
+          // get index. 
+          unsigned long tetind = delta1 + tri4->tetrahedronIndex( tet ) - num_less_than( maxTreeStd, tri4->tetrahedronIndex( tet ) );
+          if ( (tet -> getEmbedding(0).getPentachoron() == currPen) && (tet -> getEmbedding(0).getTetrahedron() == currPenFace) )
+           relator.addTermFirst( tetind, 1 ); else relator.addTermFirst( tetind, -1 );
+          }
+        } 
+       NGroupExpression* relate;
+       relate = new NGroupExpression(relator);
+       pres.addRelation(relate);
+      }
+     else // boundary face
+      {// this is much like the non-boundary case, only we have to pad the word at the front and back and we don't count .begin()
+       // initial pad
+       unsigned long tetind;
+
+       std::deque<Dim4FaceEmbedding>::const_iterator embit = (*fac)->getEmbeddings().begin();
+       currPen = (*embit).getPentachoron();
+       currPenFace = (*embit).getVertices()[4]; 
+       tet = currPen->getTetrahedron(currPenFace);
+       if (!tet->isBoundary()) std::cout<<"ERROR (1)!!"; std::cout.flush();
+       if (!inMaximalTree(tet))
+        {
+         tetind = delta1 + tri4->tetrahedronIndex( tet ) - num_less_than( maxTreeStd, tri4->tetrahedronIndex( tet ) );
+         relator.addTermFirst( tetind, -1 ); // all 1-cells dual to boundary tets assumed oriented outwards
+        }
    
+       // main loop
+       embit++;
+       for (;embit != (*fac)->getEmbeddings().end(); embit++)
+        { // now we have to determine whether or not the embedding coincides with the normal or of the tet.
+         currPen = (*embit).getPentachoron();
+         currPenFace = (*embit).getVertices()[4]; 
+         tet = currPen->getTetrahedron(currPenFace);  
+         // and is the tet in the maximal tree?    
+         if (!inMaximalTree(tet)) 
+          {
+          // get index. 
+          tetind = delta1 + tri4->tetrahedronIndex( tet ) - num_less_than( maxTreeStd, tri4->tetrahedronIndex( tet ) );
+          if ( (tet -> getEmbedding(0).getPentachoron() == currPen) && (tet -> getEmbedding(0).getTetrahedron() == currPenFace) )
+           relator.addTermFirst( tetind, 1 ); else relator.addTermFirst( tetind, -1 );
+          }
+        } 
+       // end pad
+       embit--;
+       currPenFace= (*embit).getVertices()[3];
+       tet = currPen->getTetrahedron(currPenFace);
+       if (!tet->isBoundary()) std::cout<<"ERROR (2)!!"; std::cout.flush();
+       if (!inMaximalTree(tet))
+        {
+         tetind = delta1 + tri4->tetrahedronIndex( tet ) - num_less_than( maxTreeStd, tri4->tetrahedronIndex( tet ) );
+         relator.addTermFirst( tetind, 1 ); // all 1-cells dual to boundary tets assumed oriented outwards
+        }
 
+       // finish
+       NGroupExpression* relate;
+       relate = new NGroupExpression(relator);
+       pres.addRelation(relate);
+      }
+    }// that finishes interior cells dual to faces. 
 
+   // now for boundary dual 2-cells TODO
+   // run through bcIx[1], for each edge call getEmbeddings(), this describes a disc and we need to crawl around the boundary.
+//   Dim4Tetrahedron* currTet (NULL); Dim4Pentachoron* currPen (NULL); Dim4Tetrahedron* tet (NULL); unsigned long currPenFace;
+   Dim4Edge* edg(NULL);
+   for (unsigned long i=0; i<bcIx[1].size(); i++)
+    {
+     edg = tri4->getEdge( bcIx[1][i] );
+     std::vector<Dim4EdgeEmbedding>::const_iterator embit;
+     for (embit = edg->getEmbeddings().begin(); embit != edg->getEmbeddings().end(); embit++)
+      { // step 1: determine if embit contains a boundary simplex -- ie two of (*embit)'s [2,3,4] vertices being on
+        //         the boundary, if not ignore it. Ben might solve this problem for me...
+
+      }
+    }
+   // end boundary dual 2-cells
+
+   // now for ideal dual 2-cells TODO
+   // run through icIx[2]
+   // end ideal dual 2-cells
+
+   // lower_bound on a sorted list returns first object greater than or equal to. 
+   // upper_bound                          first object strictly greater than
+   // so an edge's index in the wedge of circles for the pi1-computation consists of its index
+   // in the appropriate edge list, minus the corresponding upper_bound - first index search, appropriately
+   // shifted. 
+
+   // co-dim 2 simplices which are in the boundary, oriented according into getEmbedding(0)
+   //     (and from getEmbedding(last)
+   // co-dim 2 ideal simplices in ideal boundary -- oriented according to getEmbedding(0) from the 
+   //     simplex of which it is the ideal end. 
+   // edges from top-dim simplex to barycentre of ideal end. 
+
+   // the relators correspond to the boundary of the 2-cells.  There are several varieties:
+   //  2-cells dual to co-dimension 2 simplices in the triangulation
   }
  else
   {
-   // theoretical
-   tzcells = numStandardCells[3] + numStandardBdryCells[2];
-   // actual
-   pocells = maxTreeStd.size() + maxTreeStB.size() + maxTreeIdB.size() + maxTreeSttIdB.size();
-//   if (tzcells != pocells + 1) std::cout<<"Error! "<<tzcells +1 <<" vs. "<<pocells<<" "; else std::cout<<"Cell count okay.";
-   std::cout.flush();
 
   }
 
- // co-dim 2 simplices which are in the boundary, oriented according into getEmbedding(0)
- //     (and from getEmbedding(last)
- // co-dim 2 ideal simplices in ideal boundary -- oriented according to getEmbedding(0) from the 
- //     simplex of which it is the ideal end. 
- // edges from top-dim simplex to barycentre of ideal end. 
 
- // the relators correspond to the boundary of the 2-cells.  There are several varieties:
- //  2-cells dual to co-dimension 2 simplices in the triangulation
+// TODO erase this line and do something else. debuggin purposes only.  We're so far okay for manifolds with no boundary.
+pres.intelligentSimplify();
+pres.writeTextLong(std::cout);
 }
 
 } // namespace regina

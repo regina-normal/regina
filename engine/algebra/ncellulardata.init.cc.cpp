@@ -1527,7 +1527,7 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
                     nicIx, icIx, dcIx, bcIx, rIx, 
                     sbiCM, smCM, dmCM, strCM, schCM );
 
-   buildFundGrpPres(); // TODO erase. this is just for tests.
+//   buildFundGrpPres(); // TODO erase. this is just for tests.
 
    // probably need to updatefillChainMaps once the CC's are updated
 }
@@ -1565,7 +1565,7 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
                     sbiCM, smCM, dmCM, strCM, schCM );
    // standard face boundaries
 
-   buildFundGrpPres(); // TODO erase. this is just for tests.
+//   buildFundGrpPres(); // TODO erase. this is just for tests.
 
    // probably need to updatefillChainMaps once the CC's are updated
 }
