@@ -315,7 +315,7 @@ inline void NSVPolynomialRing::writeTextShort(std::ostream& out) const
 { out<<toString(); }
 
 inline std::ostream& NSVPolynomialRing::writeTeX(std::ostream &out) const
-{ out<<toTeX(); }
+{ out<<toTeX(); return out; }
 
 inline std::string NSVPolynomialRing::toTeX() const
 {

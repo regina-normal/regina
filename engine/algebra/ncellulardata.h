@@ -45,6 +45,7 @@
 #include "utilities/ptrutils.h"
 #include "utilities/nbooleans.h"
 #include "maths/nsparsegrid.h"
+#include "maths/nperm3.h"
 
 #include <algorithm>
 #include <memory>
@@ -97,11 +98,9 @@ class Dim4Triangulation;
  *        TODO need to set up local orientations for dual boundary coordinates, for the barycentres
  *        of all standard boundary simplices.  We'll put something in setupIndices for this.
  *       4) Detailed fundamental group presentations and maps bdry -> M, etc.  First we need to implement 
- *          a) max forest in dual 1-skeleton to ideal boundary, dual standard boundary, and extension to dual 1-skeleton
- *             of the triangulation.  I suppose this could be stored as three NBitmask elements.
- *          b) extend to full 1-skeleton as dual ideal, dual std boundary, dual 1-skel of triangulation. 
- *          c) append in all relators. That's a big pile. 
- *          d) push out pi_1 computations for all the boundary components, interior manifold, and inclusion maps.
+ *          a) Put in all relators.  
+ *          b) push out pi_1 computations for all the boundary components, interior manifold, and inclusion maps.
+ *          c) finish intelligentSimplify in nhomgrouppresentation.h
  *       5) Detailed search for possible memory leaks.
  *       6) add some images into documentation.
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
@@ -223,8 +222,8 @@ public:
         bool operator==(const GroupLocator &rhs) const;
         bool operator!=(const GroupLocator &rhs) const;
        
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
  };
 
  /**
@@ -244,8 +243,8 @@ public:
         bool operator==(const HomLocator &rhs) const;
         bool operator!=(const HomLocator &rhs) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
  };
 
  /**
@@ -291,8 +290,8 @@ public:
         bool operator==(const FormLocator &rhs) const;
         bool operator!=(const FormLocator &rhs) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
  };
 
  enum submanifold_type { whole_manifold, standard_boundary, ideal_boundary };
@@ -315,8 +314,8 @@ public:
    bool operator==(const GroupPresLocator &rhs) const;
    bool operator!=(const GroupPresLocator &rhs) const;
 
-   virtual void writeTextShort(std::ostream& out) const;
-   virtual void writeTextLong(std::ostream& out) const;
+   void writeTextShort(std::ostream& out) const;
+   void writeTextLong(std::ostream& out) const;
  };
 
  /**
@@ -337,8 +336,8 @@ public:
    bool operator==(const HomGroupPresLocator &rhs) const;
    bool operator!=(const HomGroupPresLocator &rhs) const;
 
-   virtual void writeTextShort(std::ostream& out) const;
-   virtual void writeTextLong(std::ostream& out) const;
+   void writeTextShort(std::ostream& out) const;
+   void writeTextLong(std::ostream& out) const;
  };
 
 
@@ -469,6 +468,46 @@ private:
     */
    std::set< unsigned long > maxTreeStd, maxTreeStB, maxTreeIdB, maxTreeSttIdB; // 1-cells in maximal tree
 
+   struct dim4BoundaryFaceInclusion
+    { Dim4Tetrahedron* firsttet, secondtet;
+      unsigned long firstfacnum, secondfacnum; };
+
+   struct dim4BoundaryEdgeInclusion
+    { std::vector< Dim4Tetrahedron* > tet;
+      std::vector< unsigned long > edgenum; 
+      std::vector< NPerm4 > edginc; };
+
+   struct dim3BoundaryEdgeInclusion
+    { NFace* firstfac, secondfac;
+      unsigned long firstedgnum, secondedgnum; };
+
+   struct dim3BoundaryVertexInclusion
+    { std::vector< NFace* > face;
+      std::vector< unsigned long > vrtnum; 
+      std::vector< NPerm3 > vrtinc; };
+
+    /**
+     * Normal orientations for cells Regina does not naturally give normal orientations to. 
+     *
+     * normalsDim4BdryFaces is a vector that assigns to the i-th boundary face [tri4->getFace(bcIx[2][i])]
+     *  the two boundary tetrahedra that contain it and the face number of the face in the tetrahedron. 
+     *
+     * normalsDim4BdryEdges is a vector that assigns to the i-th boundary edge [tri4->getFace(bcIx[1][i])]
+     *  the circle of tetrahedra incident to that edge, with edginc[2] and edginc[3] forming the normal orientation
+     *  in agreement with the indexing of tet. 
+     *
+     * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face [tri3->getEdge(bcIx[1][i])]
+     *  the two boundary faces that contain it and the edge number of the edge in the NFace. 
+     *
+     * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex [tri3->getVertex(bcIx[0][i])]
+     *  the circle of faces incident to that vertex, with vrtinc[1] and vrtinc[2] forming the normal orientation
+     *  in agreement with the indexing of face. 
+     */
+   std::vector< dim4BoundaryFaceInclusion > normalsDim4BdryFaces;
+   std::vector< dim4BoundaryEdgeInclusion > normalsDim4BdryEdges;  
+   std::vector< dim3BoundaryEdgeInclusion > normalsDim3BdryEdges;
+   std::vector< dim3BoundaryVertexInclusion > normalsDim3BdryVertices; 
+
     /**
      *  Routine returns true if and only if tet is represents an edge in the maximal tree for the dual 1-skeleton of the triangulation.
      *  Any tetrahedron from the triangulation can potentially represent an edge. Corresponds to maxTreeStd
@@ -529,6 +568,12 @@ private:
     */
    void buildFundGrpPres();
 
+   /**
+    *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges normalsDim3BdryEdges normalsDim3BdryVertices
+    * for homology and fundamental group computations. 
+    */
+   void buildExtraNormalData();
+
 public:
 
     /**
@@ -556,7 +601,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~NCellularData();
+    ~NCellularData();
 
     /**
      * Short text representation as required by SharableObject.
@@ -566,14 +611,14 @@ public:
      *
      * @param out the stream to write to.
      */
-    virtual void writeTextShort(std::ostream& out) const;
+    void writeTextShort(std::ostream& out) const;
 
     /**
      * Longer text representation.
      *
      * @param out the stream to write to.
      */
-    virtual void writeTextLong(std::ostream& out) const;
+    void writeTextLong(std::ostream& out) const;
 
     /**
      * @param hcs specifies the cell complex.
@@ -806,6 +851,8 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         mbiCM(g.mbiCM.size()), mtrCM(g.mtrCM.size()), mchCM(g.mchCM.size()), 
         smCM(g.smCM.size()),   dmCM(g.dmCM.size()),   smbCM(g.smbCM.size()), 
         dmbCM(g.dmbCM.size()), srmCM(g.srmCM.size()), drmCM(g.drmCM.size())
+ // extra normal data, uninitialized
+//    normalsDim4BdryFaces(0),  normalsDim4BdryEdges(0), normalsDim3BdryEdges(0), normalsDim3BdryVertices(0) 
 {
 // copy abelianGroups, markedAbelianGroups, homMarkedAbelianGroups, bilinearForms, groupPresentations, 
 //      homGroupPresentations...

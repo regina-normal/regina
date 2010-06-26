@@ -92,6 +92,14 @@ class NHomGroupPresentation : public ShareableObject {
 	 */
 	NGroupExpression operator[](const NGroupExpression &arg);
 
+        /**
+         * Attempts to simplify simultaneously: 1) the presentation of the domain
+         *                                      2) the presentation of the range
+         *                                      3) the description of the map
+         *  TODO : not yet implemented
+         */
+        bool intelligentSimplify();
+
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
 };

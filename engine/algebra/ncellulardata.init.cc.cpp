@@ -1385,113 +1385,6 @@ void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4,
                     std::vector< NMatrixInt* > &dmCM,  std::vector< NMatrixInt* > &strCM, 
                     std::vector< NMatrixInt* > &schCM );
 
-// sets up relative orientations of dual cells in the *standard boundary* of an (ideal) triangulation.
-// so for every dual object of the standard boundary of the triangulation we construct the list of boundary
-// objects and record the relative orientation data, this will include an inclusion permutation together with
-// Regina's standard way of orienting -- in co-dimension 1 we use the order of the list (1st vs. 2nd)
-// in co-dimension 2 the last two vertices of the permutation give the orientation, codimension 3 the last 3
-// vertices orient the link S^2, etc.
-void setupDualBdryRelOR( Dim4Triangulation* tri,  // the triangulation
-		         unsigned long numNonIdealBdryCells[4], 
-                         std::vector< std::vector<unsigned long> > &bcIx, 
-                         std::vector< std::pair< unsigned long, unsigned long> > &incidenceCD1, 
-                          // for each face, list indicent tets, (first, second)
-                         std::vector< std::vector< std::pair< unsigned long, NPerm3 > > > &incidenceCD2, 
-                          // for each edge, list incident tets and inclusion perm for normal orientation
-                         std::vector< std::vector< std::pair< unsigned long, NPerm4 > > > &incidenceCD3 
-                         //  for each vertext, list incident tets and inclusion perm for normal orientation
-			 // we use bcIx to index boundary cells!
-                       ) 
-{
-// incidenceCD1 should have an element for each boundary face, numNonIdealBdryCells[2]
-incidenceCD1.resize(numNonIdealBdryCells[2]);
-for (unsigned long i=0; i<numNonIdealBdryCells[2]; i++)
- {
-  // get the face corresponding to bcIx[2][i], compute its embeddings list...
-  // this one is easy since there's a list of embeddings and we take first/last.
-  NPerm5 facinc( tri->getFace(bcIx[2][i])->getEmbedding(0).getVertices() );
-  unsigned long I = lower_bound( bcIx[3].begin(), bcIx[3].end(), tri->tetrahedronIndex( 
-    tri->getFace(bcIx[2][i])->getEmbedding(0).getPentachoron()->getTetrahedron( facinc[4] ) )
-   ) - bcIx[3].begin();
-  facinc = tri->getFace(bcIx[2][i])->getEmbedding( tri->getFace(bcIx[2][i])->getNumberOfEmbeddings() - 1).getVertices();
-
-  unsigned long J = lower_bound( bcIx[3].begin(), bcIx[3].end(), tri->tetrahedronIndex( 
-    tri->getFace(bcIx[2][i])->getEmbedding( tri->getFace(bcIx[2][i])->getNumberOfEmbeddings() - 1 ).getPentachoron()->getTetrahedron( facinc[3] ) ) ) - bcIx[3].begin();
-  incidenceCD1[i] = std::make_pair<unsigned long, unsigned long>( I, J );
- }
-
-// incidenceCD2 should have an element for each boundary edge, numNonIdealBdryCells[1]
-incidenceCD2.resize(numNonIdealBdryCells[1]);
-for (unsigned long i=0; i<numNonIdealBdryCells[1]; i++)
- {
-  // get the edge corresponding to bcIx[1][i], compute its embeddings list...
-  const Dim4Edge* edg ( tri->getEdge(bcIx[1][i]) );
-  NPerm5 edginc; const Dim4Pentachoron* pen;
-  for (unsigned long j=0; j<edg->getNumberOfEmbeddings(); j++) // we're indexing through a triangulated D^2 worth
-   { // of edge embeddings.  First -- we only care about the boundary S^1 family, and we need to choose a circular
-     // ordering of that circle. in particular we want one of edginc[2,3,4] to be a boundary vertex, put such in 
-     // a list then order them?
-     // Ben's suggestion is to consider the end points of edg, call Dim4Vertex::getLink(), this gives a triangulation
-     // of a 3-ball. Our edg in effect is a boundary vertex of getLink() (see getLink() docs for how to index this),
-     // and we want the link of "edg" in Dim4Vertex::getLink() TODO
-    edginc = edg->getEmbedding(j).getVertices();
-    pen = edg->getEmbedding(j).getPentachoron();
-   }
- }
-
-// incidenceCD3 should have an element for each boundary vertex, numNonIdealBdryCells[0]
-incidenceCD3.resize(numNonIdealBdryCells[0]);
-for (unsigned long i=0; i<numNonIdealBdryCells[0]; i++)
- {
-  // get the vertex corresponding to bcIx[0][i], compute its embeddings list...
-  // Dim4Vertex::getLink() and then list off the boundary faces w/standard orientation 
-  // then we put this vrt together with the boundary face together to construct a boundary tet in tri.
-  const Dim4Vertex* vrt( tri->getVertex(bcIx[0][i]) );
-  const NTriangulation* vlink( vrt->getLink() ); // remember to call a skeltal query to ensure orientations ??req??
-  // now lets run through the boundary of the triangulation vlink. the list incidenceCD3[i] should be resized to the
-  // number of boundary faces of vlink. 
-  unsigned long bfacecount=0;
-  for (unsigned long j=0; j<vlink->getNumberOfFaces(); j++) if (vlink->getFace(j)->isBoundary()) bfacecount ++;
-  incidenceCD3[i].resize( bfacecount );
-  // now for every boundary face we assemble the associated tetrahedron from vrt, fac, and cook up the appropriate
-  // orientation data. 
-  unsigned long tj = 0;
-  for (unsigned long j=0; j<vlink->getNumberOfFaces(); j++) if (vlink->getFace(j)->isBoundary())
-   {
-    // now we build incidenceCD3[i][tj] = pair (unsigned long, NPerm4 ) appropriately. 
-    // TODO
-
-    // first, lets compute the tet == (vrt, vlink->getFace(j)) index. 
-
-    const NFace* fac3( vlink->getFace(j) ); // is a boundary face
-
-    // vlink->getFace(j) is boundary so it includes into exactly one tetrahedron of vlink. Find it. 
-    const NTetrahedron* tet3( vlink->getFace(j)->getEmbedding(0).getTetrahedron() );
-    NPerm4 facinc3( vlink->getFace(j)->getEmbedding(0).getVertices() ); 
-    // so facinc3[3] is the number of this face in tet3. 
-
-    const Dim4Pentachoron* pen( vrt->getEmbedding(j).getPentachoron() ); // indexing error!
-     
-   
-    vrt->getEmbedding(j).getVertices(); // 0 corresp to vry in the j-th pentachoron / indexing error
-    pen->getTetrahedronMapping( vrt->getEmbedding(j).getVertex() ); // indexing error
-     
-    // the permutation from vrt->getEmbedding(j).getVertices[1,2,3,4] to fac3 vertices [0,1,2,3] is
-    // the composite (pen->getTetrahedronMapping(vrt.getEmb(j).getVertex())^{-1}*vrt->getEmbedding(j).getVertices()
-    
-    // which tet are we talking about: combine vrt and fac3
-
-// we'll have to call the appropriate vrt->getEmbedding(??) and pen->getTetrahedronEmbedding(??) to compute the
-// corresponding vertices in the pentachoron for the face, then use that to compute the tet number. 
-
-//    unsigned long J = lower_bound( bcIx[3].begin(), bcIx[3].end(), tri->tetrahedronIndex( ) ) - bcIx[3].begin();
-
-//    incidenceCD3[i][tj] = std::make_pair<unsigned long, NPerm4>( , );
-    tj++; // increment the boundary face count.
-   }
- }
-
-}
 
 // constructor for 4-manifold triangulations
 NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
@@ -1500,13 +1393,13 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
 	sCC(6), sbCC(5), srCC(6),   dCC(6), dbCC(5), drCC(6),   mCC(6), mbCC(5), mrCC(6), // chain complexes 
 	sbiCM(4), strCM(5), schCM(4),   dbiCM(4), dtrCM(5), dchCM(4),   mbiCM(4), mtrCM(5), mchCM(4), 
         smCM(5), dmCM(5), smbCM(4), dmbCM(4), srmCM(5), drmCM(5) // chain maps
+//        normalsDim4BdryFaces(0),  normalsDim4BdryEdges(0), normalsDim3BdryEdges(0), normalsDim3BdryVertices(0) // orientations
 {
+
    setupIndices( tri4, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 			numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells, 
 			numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, numDualBdryCells );
         
- //  setupDualBdryRelOR( ); //todo
-
    fillStandardHomologyCC( tri4, numStandardCells, numNonIdealCells, numIdealCells, 
 			nicIx, icIx, sCC);
 
@@ -1539,6 +1432,7 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
 	sCC(5), sbCC(4), srCC(5),   dCC(5), dbCC(4), drCC(5),   mCC(5), mbCC(4), mrCC(5), // chain complexes 
 	sbiCM(3), strCM(4), schCM(3),   dbiCM(3), dtrCM(4), dchCM(3),   mbiCM(3), mtrCM(4), mchCM(3), 
         smCM(4), dmCM(4), smbCM(3), dmbCM(3), srmCM(4), drmCM(4) // chain maps
+//        normalsDim4BdryFaces(0),  normalsDim4BdryEdges(0), normalsDim3BdryEdges(0), normalsDim3BdryVertices(0) // orientations
 {
 
    setupIndices( tri3, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 

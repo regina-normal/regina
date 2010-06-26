@@ -95,10 +95,10 @@ if (tri4 != NULL)
     idvnum = icIx[3][*unexploredV] % 5;
     for (unsigned long i=1; i<5; i++) // look at adjacent pentachora
      {
-      septet = pen -> getTetrahedron( (idvnum + i) % 5 );
-      adjpen = pen -> adjacentPentachoron( (idvnum + i) % 5 );
-      adjglue = pen -> adjacentGluing( (idvnum + i) % 5 );
-      tetmap = pen -> getTetrahedronMapping( (idvnum + i) % 5 );
+      septet = pen -> getTetrahedron( int( (idvnum + i) % 5) );
+      adjpen = pen -> adjacentPentachoron( int( (idvnum + i) % 5) );
+      adjglue = pen -> adjacentGluing( int( (idvnum + i) % 5) );
+      tetmap = pen -> getTetrahedronMapping( int( (idvnum + i) % 5) );
       // let's determine the number of adjpen
       unsigned long adjpennum = tri4 -> pentachoronIndex( adjpen );
       unsigned long adj0cellnum = 5*adjpennum + adjglue[idvnum]; // dual ideal 0-cell value, should be indexed by icIx[3]
@@ -126,8 +126,8 @@ if (tri4 != NULL)
     for (unsigned long i=1; i<5; i++)
       {
        const Dim4Tetrahedron* adjtet(NULL); const Dim4Pentachoron* adjpen(NULL); const Dim4Tetrahedron* septet(NULL);
-       septet = pen -> getTetrahedron( (tetnum + i) % 5 );
-       const NPerm5 septetmap( pen -> getTetrahedronMapping( (tetnum + i) % 5 ) );
+       septet = pen -> getTetrahedron( int((tetnum + i) % 5) );
+       const NPerm5 septetmap( pen -> getTetrahedronMapping( int((tetnum + i) % 5 )) );
        const Dim4Face* bfac(NULL);
        bfac = septet->getFace( septetmap.preImageOf( tetnum ) );
        const unsigned long bfacnum( tri4->faceIndex(bfac) );
@@ -143,8 +143,8 @@ if (tri4 != NULL)
         }
        else 
         {
-         adjpen = pen -> adjacentPentachoron( (tetnum + i) % 5 );
-         adjtet = adjpen -> getTetrahedron( pen -> adjacentGluing( (tetnum + i) % 5)[tetnum] );
+         adjpen = pen -> adjacentPentachoron( int((tetnum + i) % 5) );
+         adjtet = adjpen -> getTetrahedron( pen -> adjacentGluing( int((tetnum + i) % 5) )[int(tetnum)] );
          // suitably update visitedBd and maxTreeSttIdB indexed by bcIx[3] and bcIx[2] resp.
          // find adjtet's index in bcIx[3]
          unsigned long I,J; 
@@ -168,7 +168,7 @@ if (tri4 != NULL)
     pen = tri4 -> getPentachoron( *unexploredV );
 
     // step 1 look for ideal connectors.  If one found, record and exit loop 
-    for (unsigned long i=0; i<5; i++) if ( pen -> getVertex(i) -> isIdeal() )
+    for (unsigned long i=0; i<5; i++) if ( pen -> getVertex(int(i)) -> isIdeal() )
      {
       unsigned long idvind = 5*(*unexploredV) + i; 
       unsigned long I = lower_bound( icIx[3].begin(), icIx[3].end(), idvind ) - icIx[3].begin();  
@@ -179,7 +179,7 @@ if (tri4 != NULL)
      }
 
     // step 2 look for standard boundary connectors. If one found, record and exit loop
-    for (unsigned long i=0; i<5; i++) if ( pen -> getTetrahedron(i) -> isBoundary() )
+    for (unsigned long i=0; i<5; i++) if ( pen -> getTetrahedron(int(i)) -> isBoundary() )
      {
       const Dim4Tetrahedron* btet( pen -> getTetrahedron(i) );
       unsigned long I = lower_bound( bcIx[3].begin(), bcIx[3].end(), tri4->tetrahedronIndex( btet ) ) - bcIx[3].begin();
@@ -438,6 +438,57 @@ if (!binary_search( maxTreeSttIdB.begin(), maxTreeSttIdB.end(), I ) ) return fal
 return true;
 }
 
+
+   /**
+     * Normal orientations for cells Regina does not naturally give normal orientations to. 
+     *
+     * normalsDim4BdryFaces is a vector that assigns to the i-th boundary face [tri4->getFace(bcIx[2][i])]
+     *  the two boundary tetrahedra that contain it and the face number of the face in the tetrahedron. 
+     *
+     * normalsDim4BdryEdges is a vector that assigns to the i-th boundary edge [tri4->getFace(bcIx[1][i])]
+     *  the circle of tetrahedra incident to that edge, with edginc[2] and edginc[3] forming the normal orientation
+     *  in agreement with the indexing of tet. 
+     *
+     * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face [tri3->getEdge(bcIx[1][i])]
+     *  the two boundary faces that contain it and the edge number of the edge in the NFace. 
+     *
+     * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex [tri3->getVertex(bcIx[0][i])]
+     *  the circle of faces incident to that vertex, with vrtinc[1] and vrtinc[2] forming the normal orientation
+     *  in agreement with the indexing of face. 
+     */
+void NCellularData::buildExtraNormalData()
+{
+
+if (tri4!=NULL)
+ { // construct normalsDim4BdryFaces and normalsDim4BdryEdges
+  if (normalsDim4BdryFaces.size()==0) return; // this routine has already been called, no need to call twice.   
+
+  // for normalsDim4BdryEdges, run through bcIx[1]...
+  normalsDim4BdryEdges.reserve( bcIx[1].size() );
+  for (unsigned long i=0; i<bcIx[1].size(); i++)
+   {
+    const Dim4Edge* edg( tri4->getEdge(bcIx[1][i]) );
+    // look through its embeddings in pentachora, find the tetrahedra which are boundary. Then we have to
+    // order them. How??
+
+   }
+  // for normalsDim4BdryFaces, run through bcIx[2]...
+//  normalsDim4BdryFaces.reserve( bcIx[2].size() );
+  for (unsigned long i=0; i<bcIx[2].size(); i++)
+   {
+    const Dim4Face* fac( tri4->getFace(bcIx[2][i]) );
+    // look through its embeddings in pentachora, the first and last boundary tet should appear in the first and
+    // last embedding, right??
+   }
+
+ }
+else
+ { // construct normalsDim3BdryEdges and normalsDim3BdryVertices
+//  if (normalsDim3BdryEdges.size()==0) return; // this routine has already been called, no need to call twice.
+
+ }
+}
+
 void NCellularData::buildFundGrpPres()
 {
  NGroupPresentation pres;
@@ -542,17 +593,19 @@ void NCellularData::buildFundGrpPres()
 
    // now for boundary dual 2-cells TODO
    // run through bcIx[1], for each edge call getEmbeddings(), this describes a disc and we need to crawl around the boundary.
-//   Dim4Tetrahedron* currTet (NULL); Dim4Pentachoron* currPen (NULL); Dim4Tetrahedron* tet (NULL); unsigned long currPenFace;
    Dim4Edge* edg(NULL);
    for (unsigned long i=0; i<bcIx[1].size(); i++)
     {
      edg = tri4->getEdge( bcIx[1][i] );
-     std::vector<Dim4EdgeEmbedding>::const_iterator embit;
-     for (embit = edg->getEmbeddings().begin(); embit != edg->getEmbeddings().end(); embit++)
-      { // step 1: determine if embit contains a boundary simplex -- ie two of (*embit)'s [2,3,4] vertices being on
-        //         the boundary, if not ignore it. Ben might solve this problem for me...
+     // okay, now we should look through edg->getEmbeddings() until we find an embedding with getVertices[0,1,?,?] representing a boundary tetrahedron, 
+     //  this will be our initial tetrahedron that we build off of
+     
 
-      }
+     // once we've found that, on pick a face, call getEmbeddings() and take the first and last, build a cyclic list...
+     // we know we're at the end when we've found the first tetrahedron
+
+
+
     }
    // end boundary dual 2-cells
 
