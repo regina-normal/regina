@@ -352,6 +352,9 @@ class NTetrahedron : public ShareableObject, public NMarkedElement {
          * Returns the edge in the triangulation skeleton
          * corresponding to the given edge of this tetrahedron.
          *
+         * See NEdge::edgeNumber and NEdge::edgeVertex for
+         * the conventions of how edges are numbered within a tetrahedron.
+         *
          * \pre This tetrahedron belongs to a triangulation whose skeletal
          * information has already been calculated.
          *

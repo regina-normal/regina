@@ -306,6 +306,9 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * Returns the edge in the 4-manifold triangulation skeleton
          * corresponding to the given edge of this pentachoron.
          *
+         * See Dim4Edge::edgeNumber and Dim4Edge::edgeVertex for
+         * the conventions of how edges are numbered within a pentachoron.
+         *
          * \pre This pentachoron belongs to a 4-manifold triangulation whose
          * skeletal information has already been calculated.
          *
@@ -321,6 +324,9 @@ class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
          * corresponding to the given face of this pentachoron.
          * Note that this is a piece of the 2-skeleton (as opposed to a
          * \e facet, which is a piece of the 3-skeleton).
+         *
+         * See Dim4Edge::faceNumber and Dim4Edge::faceVertex for
+         * the conventions of how faces are numbered within a pentachoron.
          *
          * \pre This pentachoron belongs to a 4-manifold triangulation whose
          * skeletal information has already been calculated.
