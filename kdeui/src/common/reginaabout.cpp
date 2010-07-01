@@ -106,6 +106,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
         I18N_NOOP("Red Hat / Fedora porting assistance"));
     addCredit("Nathan Dunfield",
         I18N_NOOP("Helpful discussions"));
+    addCredit("Matthias Goerner",
+        I18N_NOOP("Code contributions"));
     addCredit("William Jaco",
         I18N_NOOP("Supervision and many long discussions"));
     addCredit("David Letscher",
@@ -114,18 +116,26 @@ ReginaAbout::ReginaAbout(const char* internalName) :
         I18N_NOOP("Red Hat / Fedora porting assistance"));
     addCredit("Hyam Rubinstein",
         I18N_NOOP("Supervision and many long discussions"));
+    addCredit("Jonathan Shewchuk",
+        I18N_NOOP("Useful discussions on vertex enumeration"));
     addCredit("Jeff Weeks",
         I18N_NOOP("Use of the SnapPea kernel and helpful discussions"));
     addCredit("The American Institute of Mathematics",
-        I18N_NOOP("Support for development (2000)"));
+        I18N_NOOP("Support for development"));
     addCredit("The Australian Research Council",
-        I18N_NOOP("Hardware support"));
+        I18N_NOOP("Support for development (DP1094516, DPTODO) "
+            "and hardware (DPTODO)"));
+    addCredit("The Institute for the Physics and Mathematics of the
+            Universe, Tokyo",
+        I18N_NOOP("Hospitality and support"));
     addCredit("Oklahoma State University, USA",
-        I18N_NOOP("Support for development (2000-2001)"));
+        I18N_NOOP("Support for development"));
     addCredit("RMIT University, Australia",
-        I18N_NOOP("Support for development (2004-2006 and ongoing)"));
+        I18N_NOOP("Support for development"));
     addCredit("The University of Melbourne, Australia",
-        I18N_NOOP("Support for development (2002-2003 and ongoing)"));
+        I18N_NOOP("Support for development and hardware"));
+    addCredit("The University of Queensland, Australia",
+        I18N_NOOP("Continuing support for development"));
     addCredit("The University of Victoria, Canada",
         I18N_NOOP("Hospitality and support"));
     addCredit("The Victorian Partnership for Advanced Computing",
