@@ -49,9 +49,9 @@ NTriangulation* readSnapPea(const char* filename) {
     in.getline(name, 1000);
     if (in.fail() || in.eof())
         return 0;
-    if ((len = strlen(name)) > 0 && name[len - 1] == '\r')
-        name[len - 1] = 0;
-    if (strcmp(name, "% Triangulation") && strcmp(name, "% triangulation"))
+    // Allow junk on the same line following the triangulation marker.
+    if (strncmp(name, "% Triangulation", 15) &&
+            strncmp(name, "% triangulation", 15))
         return 0;
 
     // Read in the manifold name.
