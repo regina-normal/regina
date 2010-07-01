@@ -26,12 +26,12 @@
 
 /* end stub */
 
-/*! \file ntriangulationcreator.h
- *  \brief Allows the creation of 3-manifold triangulations.
+/*! \file dim4triangulationcreator.h
+ *  \brief Allows the creation of 4-manifold triangulations.
  */
 
-#ifndef __NTRIANGULATIONCREATOR_H
-#define __NTRIANGULATIONCREATOR_H
+#ifndef __DIM4TRICREATOR_H
+#define __DIM4TRICREATOR_H
 
 #include "../packetcreator.h"
 
@@ -41,9 +41,9 @@ class QLineEdit;
 class QWidgetStack;
 
 /**
- * An interface for creating 3-manifold triangulations.
+ * An interface for creating 4-manifold triangulations.
  */
-class NTriangulationCreator : public PacketCreator {
+class Dim4TriangulationCreator : public PacketCreator {
     private:
         /**
          * Internal components
@@ -55,21 +55,13 @@ class NTriangulationCreator : public PacketCreator {
         /**
          * Details for specific triangulation types
          */
-        QLineEdit* lstParams;
-        QLineEdit* lensParams;
-        QLineEdit* loopLen;
-        QCheckBox* loopTwisted;
-        QLineEdit* augParams;
-        QLineEdit* sfsParams;
-        QLineEdit* dehydrationString;
-        QLineEdit* splittingSignature;
         QComboBox* exampleWhich;
 
     public:
         /**
          * Constructor.
          */
-        NTriangulationCreator();
+        Dim4TriangulationCreator();
 
         /**
          * PacketCreator overrides.

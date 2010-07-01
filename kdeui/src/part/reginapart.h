@@ -262,6 +262,7 @@ class ReginaPart : public KParts::ReadWritePart {
         void newScript();
         void newText();
         void newTriangulation();
+        void newDim4Triangulation();
 
         /**
          * Packet import routines.

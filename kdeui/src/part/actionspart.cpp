@@ -173,20 +173,42 @@ void ReginaPart::setupActions() {
     treePacketEditActions.append(act);
 
     // New packets:
-    act = new KAction(i18n("New &Angle Structure Solutions"), "packet_angles",
-        ALT+Key_A, this, SLOT(newAngleStructures()), actionCollection(),
-        "tree_angles");
-    act->setToolTip(i18n("New angle structure solutions"));
-    act->setWhatsThis(i18n("Create a new list of vertex angle structures "
-        "for a triangulation."));
-    treeGeneralEditActions.append(act);
-
     act = new KAction(i18n("New &Container"), "packet_container", ALT+Key_C,
         this, SLOT(newContainer()), actionCollection(), "tree_container");
     act->setToolTip(i18n("New container"));
     act->setWhatsThis(i18n("Create a new container packet.  Containers "
         "are used to help keep the packet tree organised &ndash; "
         "they serve no purpose other than to store child packets."));
+    treeGeneralEditActions.append(act);
+
+    act = new KAction(i18n("New 3-D &Triangulation"), "packet_triangulation",
+        ALT+Key_T, this, SLOT(newTriangulation()), actionCollection(),
+        "tree_triangulation");
+    act->setToolTip(i18n("New 3-manifold triangulation"));
+    act->setWhatsThis(i18n("Create a new 3-manifold triangulation."));
+    treeGeneralEditActions.append(act);
+
+    act = new KAction(i18n("New &4-D Triangulation"), "packet_dim4tri",
+        ALT+Key_4, this, SLOT(newDim4Triangulation()), actionCollection(),
+        "tree_dim4tri");
+    act->setToolTip(i18n("New 4-manifold triangulation"));
+    act->setWhatsThis(i18n("Create a new 4-manifold triangulation."));
+    treeGeneralEditActions.append(act);
+
+    act = new KAction(i18n("New &Normal Surface List"), "packet_surfaces",
+        ALT+Key_N, this, SLOT(newNormalSurfaces()), actionCollection(),
+        "tree_surfaces");
+    act->setToolTip(i18n("New normal surface list"));
+    act->setWhatsThis(i18n("Create a new list of vertex normal surfaces "
+        "for a triangulation."));
+    treeGeneralEditActions.append(act);
+
+    act = new KAction(i18n("New &Angle Structure Solutions"), "packet_angles",
+        ALT+Key_A, this, SLOT(newAngleStructures()), actionCollection(),
+        "tree_angles");
+    act->setToolTip(i18n("New angle structure solutions"));
+    act->setWhatsThis(i18n("Create a new list of vertex angle structures "
+        "for a triangulation."));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("New &Filter"), "packet_filter", ALT+Key_F,
@@ -197,12 +219,11 @@ void ReginaPart::setupActions() {
         "display only surfaces of particular interest."));
     treeGeneralEditActions.append(act);
 
-    act = new KAction(i18n("New &Normal Surface List"), "packet_surfaces",
-        ALT+Key_N, this, SLOT(newNormalSurfaces()), actionCollection(),
-        "tree_surfaces");
-    act->setToolTip(i18n("New normal surface list"));
-    act->setWhatsThis(i18n("Create a new list of vertex normal surfaces "
-        "for a triangulation."));
+    act = new KAction(i18n("New Te&xt"), "packet_text", ALT+Key_X,
+        this, SLOT(newText()), actionCollection(), "tree_text");
+    act->setToolTip(i18n("New text packet"));
+    act->setWhatsThis(i18n("Create a new piece of text to store within "
+        "the packet tree."));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("New &PDF Document"), "packet_pdf", ALT+Key_P,
@@ -217,20 +238,6 @@ void ReginaPart::setupActions() {
     act->setToolTip(i18n("New script packet"));
     act->setWhatsThis(i18n("Create a new Python script that can work "
         "directly with this data file."));
-    treeGeneralEditActions.append(act);
-
-    act = new KAction(i18n("New Te&xt"), "packet_text", ALT+Key_X,
-        this, SLOT(newText()), actionCollection(), "tree_text");
-    act->setToolTip(i18n("New text packet"));
-    act->setWhatsThis(i18n("Create a new piece of text to store within "
-        "the packet tree."));
-    treeGeneralEditActions.append(act);
-
-    act = new KAction(i18n("New &Triangulation"), "packet_triangulation",
-        ALT+Key_T, this, SLOT(newTriangulation()), actionCollection(),
-        "tree_triangulation");
-    act->setToolTip(i18n("New triangulation"));
-    act->setWhatsThis(i18n("Create a new 3-manifold triangulation."));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("Form &Census"), "view_text", 0,

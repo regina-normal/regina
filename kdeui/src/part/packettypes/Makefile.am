@@ -13,6 +13,7 @@ INCLUDES = @ENGINE_INCLUDES@ $(all_includes) -I$(top_srcdir)/kdeui/src/common
 noinst_LTLIBRARIES = libpackettypes.la
 
 noinst_HEADERS = \
+	dim4tricreator.h \
 	eltmovedialog.h \
 	gaprunner.h \
 	nanglestructurecreator.h \
@@ -49,6 +50,7 @@ noinst_HEADERS = \
 	snappeacomponents.h
 
 libpackettypes_la_SOURCES = \
+	dim4tricreator.cpp \
 	eltmovedialog.cpp \
 	gaprunner.cpp \
 	nanglestructurecreator.cpp \

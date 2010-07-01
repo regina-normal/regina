@@ -31,14 +31,15 @@
     <Action name="edit_paste"/>
   </Menu>
   <Menu name="tree" noMerge="1"><text>&amp;Packet Tree</text>
-    <Action name="tree_angles"/>
     <Action name="tree_container"/>
-    <Action name="tree_filter"/>
+    <Action name="tree_triangulation"/>
+    <Action name="tree_dim4tri"/>
     <Action name="tree_surfaces"/>
+    <Action name="tree_angles"/>
+    <Action name="tree_filter"/>
+    <Action name="tree_text"/>
     <Action name="tree_pdf"/>
     <Action name="tree_script"/>
-    <Action name="tree_text"/>
-    <Action name="tree_triangulation"/>
     <Separator/>
     <Action name="tree_census"/>
     <Separator/>
@@ -92,13 +93,14 @@
 </ToolBar>
 <ToolBar name="packetNew" noMerge="1">
   <text>New Packet Toolbar</text>
-  <Action name="tree_angles"/>
   <Action name="tree_container"/>
-  <Action name="tree_filter"/>
+  <Action name="tree_triangulation"/>
+  <Action name="tree_dim4tri"/>
   <Action name="tree_surfaces"/>
+  <Action name="tree_angles"/>
+  <Action name="tree_filter"/>
+  <Action name="tree_text"/>
   <Action name="tree_pdf"/>
   <Action name="tree_script"/>
-  <Action name="tree_text"/>
-  <Action name="tree_triangulation"/>
 </ToolBar>
 </kpartgui>
