@@ -85,6 +85,8 @@ QPixmap PacketManager::iconSmall(NPacket* packet, bool allowLock) {
         ans = SmallIcon("packet_text", ReginaPart::factoryInstance());
     else if (packet->getPacketType() == NTriangulation::packetType)
         ans = SmallIcon("packet_triangulation", ReginaPart::factoryInstance());
+    else if (packet->getPacketType() == Dim4Triangulation::packetType)
+        ans = SmallIcon("packet_dim4tri", ReginaPart::factoryInstance());
     else
         return QPixmap();
 
@@ -118,6 +120,8 @@ QPixmap PacketManager::iconBar(NPacket* packet, bool allowLock) {
         ans = BarIcon("packet_text", ReginaPart::factoryInstance());
     else if (packet->getPacketType() == NTriangulation::packetType)
         ans = BarIcon("packet_triangulation", ReginaPart::factoryInstance());
+    else if (packet->getPacketType() == Dim4Triangulation::packetType)
+        ans = BarIcon("packet_dim4tri", ReginaPart::factoryInstance());
     else
         return QPixmap();
 
