@@ -135,6 +135,9 @@ Version 4.6.1  [ (under development) ]
         Class NVertexEmbedding:
             - New routine getVertices(), which facilitates a consistent
               orientation for the three remaining vertices in each tetrahedron.
+        Routine readSnapPea():
+            - Allows additional text on the first line following the
+              "% Triangulation" marker (thanks to Matthias Goerner).
     USER INTERFACE:
         - There is now an option to enable or disable diagnostic
           messages from the SnapPea kernel.
