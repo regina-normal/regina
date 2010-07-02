@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file ntrigluings.h
- *  \brief Provides a face gluing editor for triangulations.
+ *  \brief Provides a face gluing editor for 3-manifold triangulations.
  */
 
 #ifndef __NTRIGLUINGS_H
@@ -47,7 +47,7 @@ namespace regina {
 };
 
 /**
- * A triangulation page for editing face gluings.
+ * A 3-manifold triangulation page for editing face gluings.
  */
 class NTriGluingsUI : public QObject, public PacketEditorTab {
     Q_OBJECT

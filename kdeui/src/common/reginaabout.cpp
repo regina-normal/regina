@@ -95,12 +95,11 @@ ReginaAbout::ReginaAbout(const char* internalName) :
 
     // Authors:
     addAuthor("Ben Burton", 0, "bab@debian.org");
+    addAuthor("Ryan Budney", 0, "rybu@uvic.ca");
 
     // Credits:
     addCredit("Bernard Blackham",
         I18N_NOOP("Help with cache optimisation"));
-    addCredit("Ryan Budney",
-        I18N_NOOP("Code contributions and continual all-round assistance"));
     addCredit("Marc Culler",
         I18N_NOOP("Helpful discussions"));
     addCredit("Dominique Devriese",
@@ -126,8 +125,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
     addCredit("The Australian Research Council",
         I18N_NOOP("Support for development (DP1094516, DPTODO) "
             "and hardware (DPTODO)"));
-    addCredit("The Institute for the Physics and Mathematics of the
-            Universe, Tokyo",
+    addCredit("The Institute for the Physics and Mathematics of the "
+            "Universe, Tokyo",
         I18N_NOOP("Hospitality and support"));
     addCredit("Oklahoma State University, USA",
         I18N_NOOP("Support for development"));

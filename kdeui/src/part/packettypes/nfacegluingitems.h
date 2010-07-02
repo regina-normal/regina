@@ -27,7 +27,8 @@
 /* end stub */
 
 /*! \file nfacegluingitems.h
- *  \brief Provides table items for editing triangulation face gluings.
+ *  \brief Provides table items for editing 3-manifold triangulation
+ *  face gluings.
  */
 
 #ifndef __NFACEGLUINGITEMS_H

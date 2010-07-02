@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file ntriangulationcreator.h
- *  \brief Allows the creation of triangulations.
+ *  \brief Allows the creation of 3-manifold triangulations.
  */
 
 #ifndef __NTRIANGULATIONCREATOR_H
@@ -41,7 +41,7 @@ class QLineEdit;
 class QWidgetStack;
 
 /**
- * An interface for creating triangulations.
+ * An interface for creating 3-manifold triangulations.
  */
 class NTriangulationCreator : public PacketCreator {
     private:

@@ -112,7 +112,7 @@ class ReginaPrefGeneral : public QVBox {
 };
 
 /**
- * The page of the Regina configuration dialog for triangulation
+ * The page of the Regina configuration dialog for 3-manifold triangulation
  * preferences.
  */
 class ReginaPrefTri : public QVBox {

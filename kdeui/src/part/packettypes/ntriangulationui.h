@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file ntriangulationui.h
- *  \brief Provides an interface for viewing triangulations.
+ *  \brief Provides an interface for viewing 3-manifold triangulations.
  */
 
 #ifndef __NTRIANGULATIONUI_H
@@ -49,7 +49,7 @@ namespace regina {
 };
 
 /**
- * A packet interface for viewing triangulations.
+ * A packet interface for viewing 3-manifold triangulations.
  */
 class NTriangulationUI : public PacketTabbedUI {
     Q_OBJECT
@@ -86,7 +86,7 @@ class NTriangulationUI : public PacketTabbedUI {
 };
 
 /**
- * A header for the triangulation viewer.
+ * A header for the 3-manifold triangulation viewer.
  */
 class NTriHeaderUI : public PacketViewerTab {
     private:
