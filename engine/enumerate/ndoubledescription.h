@@ -133,12 +133,17 @@ class NDoubleDescription {
          * total will be increased gradually by this same number.  Note that
          * NProgress::setFinished() will \e not be called, since
          * whoever called this routine may need to do further processing.
+         * @param initialRows specifies how many initial rows of \a subspace
+         * are to be processed in the precise order in which they appear.
+         * The remaining rows will be sorted using the LexComp inner class
+         * before they are processed.
          */
         template <class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
             const NRay& rayBase, const NMatrixInt& subspace,
             const NEnumConstraintList* constraints,
-            NProgressNumber* progress = 0);
+            NProgressNumber* progress = 0,
+            unsigned initialRows = 0);
 
     private:
         /**
@@ -369,7 +374,7 @@ class NDoubleDescription {
         static void enumerateUsingBitmask(OutputIterator results,
             const NRay& rayBase, const NMatrixInt& subspace,
             const NEnumConstraintList* constraints,
-            NProgressNumber* progress);
+            NProgressNumber* progress, unsigned initialRows);
 
         /**
          * A part of the full double description algorithm that

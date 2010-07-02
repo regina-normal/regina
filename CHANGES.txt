@@ -41,6 +41,9 @@ Version 4.6.1  [ (under development) ]
             - Improved the speed of adjacency testing by using an
               NTrieSet instead of a linear search through all vertices.
               See the NNormalSurfaceList notes below for further information.
+            - Method enumerateExtremalRays() now takes an optional argument
+              initialRows, allowing the user to force certain hyperplanes
+              to be processed first.
         Class NExampleTriangulation:
             - Renamed seifertWeber() to weberSeifert(), for consistency with
               the original paper.  The old routine is now deprecated, but has

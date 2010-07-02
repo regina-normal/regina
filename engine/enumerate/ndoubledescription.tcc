@@ -193,7 +193,8 @@ void NDoubleDescription::RaySpec<BitmaskType>::recover(
 template <class OutputIterator>
 void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
         const NRay& rayBase, const NMatrixInt& subspace,
-        const NEnumConstraintList* constraints, NProgressNumber* progress) {
+        const NEnumConstraintList* constraints,
+        NProgressNumber* progress, unsigned initialRows) {
     unsigned nFacets = subspace.columns();
 
     // If the space has dimension zero, return no results.
@@ -207,42 +208,42 @@ void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
         enumerateUsingBitmask<NBitmask1<unsigned> >(results,
-            rayBase, subspace, constraints, progress);
+            rayBase, subspace, constraints, progress, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<NBitmask1<unsigned long> >(results,
-            rayBase, subspace, constraints, progress);
+            rayBase, subspace, constraints, progress, initialRows);
 #ifdef HAVE_LONG_LONG
     else if (nFacets <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<NBitmask1<unsigned long long> >(results,
-            rayBase, subspace, constraints, progress);
+            rayBase, subspace, constraints, progress, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<NBitmask2<unsigned long long, unsigned> >(results,
-            rayBase, subspace, constraints, progress);
+            rayBase, subspace, constraints, progress, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<NBitmask2<unsigned long long, unsigned long> >(
-            results, rayBase, subspace, constraints, progress);
+            results, rayBase, subspace, constraints, progress, initialRows);
     else if (nFacets <= 16 * sizeof(unsigned long long))
         enumerateUsingBitmask<NBitmask2<unsigned long long> >(results,
-            rayBase, subspace, constraints, progress);
+            rayBase, subspace, constraints, progress, initialRows);
 #else
     else if (nFacets <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<NBitmask2<unsigned long, unsigned> >(results,
-            rayBase, subspace, constraints, progress);
+            rayBase, subspace, constraints, progress, initialRows);
     else if (nFacets <= 16 * sizeof(unsigned long))
         enumerateUsingBitmask<NBitmask2<unsigned long> >(results,
-            rayBase, subspace, constraints, progress);
+            rayBase, subspace, constraints, progress, initialRows);
 #endif
     else
         enumerateUsingBitmask<NBitmask>(results,
-            rayBase, subspace, constraints, progress);
+            rayBase, subspace, constraints, progress, initialRows);
 }
 
 template <class BitmaskType, class OutputIterator>
 void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         const NRay& rayBase, const NMatrixInt& subspace,
         const NEnumConstraintList* constraints,
-        NProgressNumber* progress) {
+        NProgressNumber* progress, unsigned initialRows) {
     typedef typename std::iterator_traits<OutputIterator>::value_type
         RayClassPtr;
 
@@ -284,7 +285,8 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
     for (i = 0; i < nEqns; ++i)
         hyperplanes[i] = i;
 
-    std::sort(hyperplanes, hyperplanes + nEqns, LexComp(subspace));
+    std::sort(hyperplanes + initialRows, hyperplanes + nEqns,
+        LexComp(subspace));
 
     // Create the two vector lists with which we will work.
     // Fill the first with the initial set of rays.
