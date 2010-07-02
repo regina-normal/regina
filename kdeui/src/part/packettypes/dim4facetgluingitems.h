@@ -26,34 +26,34 @@
 
 /* end stub */
 
-/*! \file nfacegluingitems.h
- *  \brief Provides table items for editing 3-manifold triangulation
- *  face gluings.
+/*! \file dim4facetgluingitems.h
+ *  \brief Provides table items for editing 4-manifold triangulation
+ *  facet gluings.
  */
 
-#ifndef __NFACEGLUINGITEMS_H
-#define __NFACEGLUINGITEMS_H
+#ifndef __DIM4FACETGLUINGITEMS_H
+#define __DIM4FACETGLUINGITEMS_H
 
-#include "maths/nperm4.h"
+#include "maths/nperm5.h"
 
 #include "reginaprefset.h"
 
 #include <qtable.h>
 
 /**
- * A table item for tetrahedron names.
+ * A table item for pentachoron names.
  */
-class TetNameItem : public QTableItem {
+class PentNameItem : public QTableItem {
     private:
         QString name;
-            /**< The current tetrahedron name. */
+            /**< The current pentachoron name. */
 
     public:
         /**
          * Constructor.
          */
-        TetNameItem(QTable* table, unsigned long tetNum,
-                const QString& tetName);
+        PentNameItem(QTable* table, unsigned long pentNum,
+                const QString& pentName);
 
         /**
          * Query properties.
@@ -61,10 +61,10 @@ class TetNameItem : public QTableItem {
         const QString& getName() const;
 
         /**
-         * Notify the table that this tetrahedron's number is about to
+         * Notify the table that this pentachoron's number is about to
          * change.  The table cell will be updated accordingly.
          */
-        void tetNumToChange(long newTetNum);
+        void pentNumToChange(long newPentNum);
 
         /**
          * QTableItem overrides.
@@ -75,16 +75,16 @@ class TetNameItem : public QTableItem {
 };
 
 /**
- * A table item for an individual face gluing.
+ * A table item for an individual facet gluing.
  */
-class FaceGluingItem : public QObject, public QTableItem {
+class FacetGluingItem : public QObject, public QTableItem {
     Q_OBJECT
 
     private:
-        long adjTet;
-            /**< The adjacent tetrahedron, or -1 if this is a boundary face. */
-        regina::NPerm4 adjPerm;
-            /**< The adjacent tetrahedron gluing. */
+        long adjPent;
+            /**< The adjacent pentachoron, or -1 if this is a boundary facet. */
+        regina::NPerm5 adjPerm;
+            /**< The adjacent pentachoron gluing. */
 
         const ReginaPrefSet::TriEditMode& editMode;
             /**< Determines the style of cell editor that is created. */
@@ -93,26 +93,26 @@ class FaceGluingItem : public QObject, public QTableItem {
             /**< Are we currently displaying an error message? */
     public:
         /**
-         * Constructors.  The first constructor is for a boundary face,
-         * the second for a face that is glued elsewhere.
+         * Constructors.  The first constructor is for a boundary facet,
+         * the second for a facet that is glued elsewhere.
          */
-        FaceGluingItem(QTable* table,
+        FacetGluingItem(QTable* table,
             const ReginaPrefSet::TriEditMode& useEditMode);
-        FaceGluingItem(QTable* table,
-            const ReginaPrefSet::TriEditMode& useEditMode, int myFace,
-            unsigned long destTet, const regina::NPerm4& gluingPerm);
+        FacetGluingItem(QTable* table,
+            const ReginaPrefSet::TriEditMode& useEditMode, int myFacet,
+            unsigned long destPent, const regina::NPerm5& gluingPerm);
 
         /**
          * Query properties.
          */
         bool isBoundary() const;
-        long adjacentTetrahedron() const;
-        int myFace() const;
-        int adjacentFace() const;
-        const regina::NPerm4& adjacentGluing() const;
+        long adjacentPentachoron() const;
+        int myFacet() const;
+        int adjacentFacet() const;
+        const regina::NPerm5& adjacentGluing() const;
 
         /**
-         * Change the destination for this face gluing.  Related face
+         * Change the destination for this facet gluing.  Related facet
          * gluings will also be updated if necessary.
          *
          * It is assumed that the given destination is valid.
@@ -121,22 +121,22 @@ class FaceGluingItem : public QObject, public QTableItem {
          * cell will be repainted by default, but this can be suppressed
          * by passing \c false as the final boolean parameter.
          *
-         * This routine can handle both boundary faces and real face
+         * This routine can handle both boundary facets and real facet
          * gluings.
          */
-        void setDestination(long newDestTet,
-            const regina::NPerm4& newGluingPerm,
+        void setDestination(long newDestPent,
+            const regina::NPerm5& newGluingPerm,
             bool shouldRepaintThisTableCell = true);
 
         /**
          * Find the table entry corresponding to the partner of this
-         * face, if any.
+         * facet, if any.
          */
-        FaceGluingItem* getPartner();
+        FacetGluingItem* getPartner();
 
         /**
-         * Break any existing face pairing involving this tetrahedron
-         * face.
+         * Break any existing facet pairing involving this pentachoron
+         * facet.
          *
          * Note that the table cell for the partner will repainted, but
          * this table cell will not (under the assumption that this
@@ -145,16 +145,16 @@ class FaceGluingItem : public QObject, public QTableItem {
         void unjoin();
 
         /**
-         * Called when one or more tetrahedron numbers are about to
-         * change.  This can happen for instance when tetrahedra are
+         * Called when one or more pentachoron numbers are about to
+         * change.  This can happen for instance when pentachora are
          * removed from the table.
          *
-         * A map for converting old tetrahedron numbers to new
-         * is passed.  The adjacent tetrahedron number registered for
-         * this face will be modified if necessary and the table cell
+         * A map for converting old pentachoron numbers to new
+         * is passed.  The adjacent pentachoron number registered for
+         * this facet will be modified if necessary and the table cell
          * updated accordingly.
          */
-        void tetNumsToChange(const long newTetNums[]);
+        void pentNumsToChange(const long newPentNums[]);
 
         /**
          * QTableItem overrides.
@@ -163,17 +163,17 @@ class FaceGluingItem : public QObject, public QTableItem {
         virtual void setContentFromEditor(QWidget* editor);
 
         /**
-         * Determine whether the given destination tetrahedron and face
+         * Determine whether the given destination pentachoron and facet
          * string are valid.  If so, a null string is returned; if not,
          * an appropriate error message is returned.
          *
          * If the given permutation pointer is not null, the resulting
          * gluing permutation will be returned in this variable.
          */
-        static QString isFaceStringValid(unsigned long nTets,
-            unsigned long srcTet, int srcFace,
-            unsigned long destTet, const QString& destFace,
-            regina::NPerm4* gluing);
+        static QString isFacetStringValid(unsigned long nPents,
+            unsigned long srcPent, int srcFacet,
+            unsigned long destPent, const QString& destFacet,
+            regina::NPerm5* gluing);
 
     signals:
         /**
@@ -182,28 +182,29 @@ class FaceGluingItem : public QObject, public QTableItem {
          * interaction.
          *
          * Note that generally one change will imply others (e.g., if
-         * face A is glued to face B then face B will as a result be glued
-         * to face A).  In such cases, this signal will be emitted only
-         * for the face that was explicitly changed by the user.
+         * facet A is glued to facet B then facet B will as a result be glued
+         * to facet A).  In such cases, this signal will be emitted only
+         * for the facet that was explicitly changed by the user.
          */
         void destinationChanged();
 
     private:
         /**
          * Return a short string describing the destination of a
-         * face gluing.  This routine handles both boundary and
-         * non-boundary faces.
+         * facet gluing.  This routine handles both boundary and
+         * non-boundary facets.
          */
-        static QString destString(int srcFace, int destTet,
-            const regina::NPerm4& gluing);
+        static QString destString(int srcFacet, int destPent,
+            const regina::NPerm5& gluing);
 
         /**
-         * Convert a face string (e.g., "130") to a face permutation.
+         * Convert a facet string (e.g., "1420") to a facet permutation.
          *
-         * The given face string must be valid; otherwise the results
+         * The given facet string must be valid; otherwise the results
          * could be unpredictable (and indeed a crash could result).
          */
-        static regina::NPerm4 faceStringToPerm(int srcFace, const QString& str);
+        static regina::NPerm5 facetStringToPerm(int srcFacet,
+            const QString& str);
 
         /**
          * Display the given error to the user if no error is already
@@ -212,27 +213,27 @@ class FaceGluingItem : public QObject, public QTableItem {
         void showError(const QString& message);
 };
 
-inline const QString& TetNameItem::getName() const {
+inline const QString& PentNameItem::getName() const {
     return name;
 }
 
-inline bool FaceGluingItem::isBoundary() const {
-    return (adjTet < 0);
+inline bool FacetGluingItem::isBoundary() const {
+    return (adjPent < 0);
 }
 
-inline long FaceGluingItem::adjacentTetrahedron() const {
-    return adjTet;
+inline long FacetGluingItem::adjacentPentachoron() const {
+    return adjPent;
 }
 
-inline int FaceGluingItem::myFace() const {
-    return 4 - col();
+inline int FacetGluingItem::myFacet() const {
+    return 5 - col();
 }
 
-inline int FaceGluingItem::adjacentFace() const {
-    return (adjTet < 0 ? -1 : adjPerm[myFace()]);
+inline int FacetGluingItem::adjacentFacet() const {
+    return (adjPent < 0 ? -1 : adjPerm[myFacet()]);
 }
 
-inline const regina::NPerm4& FaceGluingItem::adjacentGluing()
+inline const regina::NPerm5& FacetGluingItem::adjacentGluing()
         const {
     return adjPerm;
 }

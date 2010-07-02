@@ -141,13 +141,19 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         BarIcon("regina", KIcon::SizeMedium));
     generalPrefs = new ReginaPrefGeneral(frame);
 
-    frame = addVBoxPage(i18n("Triangulation"), i18n("Triangulation Options"),
+    frame = addVBoxPage(i18n("3-Manifolds"),
+        i18n("3-Manifold Triangulation Options"),
         BarIcon("packet_triangulation", KIcon::SizeMedium));
     triPrefs = new ReginaPrefTri(frame);
 
     frame = addVBoxPage(i18n("Surfaces"), i18n("Normal Surface Options"),
         BarIcon("packet_surfaces", KIcon::SizeMedium));
     surfacePrefs = new ReginaPrefSurfaces(frame);
+
+    frame = addVBoxPage(i18n("4-Manifolds"),
+        i18n("4-Manifold Triangulation Options"),
+        BarIcon("packet_dim4tri", KIcon::SizeMedium));
+    dim4Prefs = new ReginaPrefDim4(frame);
 
     frame = addVBoxPage(i18n("PDF"), i18n("PDF Options"),
         BarIcon("packet_pdf", KIcon::SizeMedium));
@@ -243,6 +249,15 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     surfacePrefs->editCompatThreshold->setText(
         QString::number(prefSet.surfacesCompatThreshold));
+
+    switch (prefSet.dim4InitialTab) {
+        case ReginaPrefSet::Dim4Skeleton:
+            dim4Prefs->comboInitialTab->setCurrentItem(1); break;
+        case ReginaPrefSet::Dim4Algebra:
+            dim4Prefs->comboInitialTab->setCurrentItem(2); break;
+        default:
+            dim4Prefs->comboInitialTab->setCurrentItem(0); break;
+    }
 
     pdfPrefs->cbEmbed->setChecked(prefSet.pdfEmbed);
     pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
@@ -570,6 +585,15 @@ void ReginaPreferences::slotApply() {
             QString::number(prefSet.surfacesCompatThreshold));
     }
 
+    switch (dim4Prefs->comboInitialTab->currentItem()) {
+        case 1:
+            prefSet.dim4InitialTab = ReginaPrefSet::Dim4Skeleton; break;
+        case 2:
+            prefSet.dim4InitialTab = ReginaPrefSet::Dim4Algebra; break;
+        default:
+            prefSet.dim4InitialTab = ReginaPrefSet::Dim4Gluings; break;
+    }
+
     prefSet.pdfEmbed = pdfPrefs->cbEmbed->isChecked();
 
     // Don't be too fussy about what they put in this field, since the
@@ -858,6 +882,30 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
         "in the compatibility viewer.</qt>");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(editCompatThreshold, msg);
+
+    // Add some space at the end.
+    setStretchFactor(new QWidget(this), 1);
+}
+
+ReginaPrefDim4::ReginaPrefDim4(QWidget* parent) : QVBox(parent) {
+    setSpacing(5);
+
+    // WARNING: Note that any change of order in the combo boxes must be
+    // reflected in the ReginaPreferences methods as well.
+
+    // Set up the initial tab.
+    QHBox* box = new QHBox(this);
+    box->setSpacing(5);
+
+    QLabel* label = new QLabel(i18n("Default top-level tab:"), box);
+    comboInitialTab = new KComboBox(box);
+    comboInitialTab->insertItem(i18n("Gluings"));
+    comboInitialTab->insertItem(i18n("Skeleton"));
+    comboInitialTab->insertItem(i18n("Algebra"));
+    QString msg = i18n("Specifies which tab should be initially visible "
+        "when a new 4-manifold triangulation viewer/editor is opened.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(comboInitialTab, msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);

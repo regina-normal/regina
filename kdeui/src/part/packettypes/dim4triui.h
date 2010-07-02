@@ -26,49 +26,45 @@
 
 /* end stub */
 
-/*! \file ntriangulationui.h
- *  \brief Provides an interface for viewing 3-manifold triangulations.
+/*! \file dim4triui.h
+ *  \brief Provides an interface for viewing 4-manifold triangulations.
  */
 
-#ifndef __NTRIANGULATIONUI_H
-#define __NTRIANGULATIONUI_H
+#ifndef __DIM4TRIUI_H
+#define __DIM4TRIUI_H
 
 #include "../packettabui.h"
 
 class KToolBar;
-class NTriAlgebraUI;
-class NTriGluingsUI;
-class NTriSkeletonUI;
-class NTriSurfacesUI;
-class NTriSnapPeaUI;
+class Dim4TriAlgebraUI;
+class Dim4TriGluingsUI;
+class Dim4TriSkeletonUI;
 class QLabel;
 class ReginaPrefSet;
 
 namespace regina {
-    class NTriangulation;
+    class Dim4Triangulation;
 };
 
 /**
- * A packet interface for viewing 3-manifold triangulations.
+ * A packet interface for viewing 4-manifold triangulations.
  */
-class NTriangulationUI : public PacketTabbedUI {
+class Dim4TriangulationUI : public PacketTabbedUI {
     Q_OBJECT
 
     private:
         /**
          * Internal components
          */
-        NTriGluingsUI* gluings;
-        NTriSkeletonUI* skeleton;
-        NTriAlgebraUI* algebra;
-        NTriSurfacesUI* surfaces;
-        NTriSnapPeaUI* snapPea;
+        Dim4TriGluingsUI* gluings;
+        Dim4TriSkeletonUI* skeleton;
+        Dim4TriAlgebraUI* algebra;
 
     public:
         /**
          * Constructor.
          */
-        NTriangulationUI(regina::NTriangulation* packet,
+        Dim4TriangulationUI(regina::Dim4Triangulation* packet,
             PacketPane* newEnclosingPane);
 
         /**
@@ -86,14 +82,14 @@ class NTriangulationUI : public PacketTabbedUI {
 };
 
 /**
- * A header for the 3-manifold triangulation viewer.
+ * A header for the 4-manifold triangulation viewer.
  */
-class NTriHeaderUI : public PacketViewerTab {
+class Dim4TriHeaderUI : public PacketViewerTab {
     private:
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Dim4Triangulation* tri;
 
         /**
          * Internal components
@@ -106,7 +102,7 @@ class NTriHeaderUI : public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriHeaderUI(regina::NTriangulation* packet,
+        Dim4TriHeaderUI(regina::Dim4Triangulation* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
@@ -123,7 +119,7 @@ class NTriHeaderUI : public PacketViewerTab {
         void editingElsewhere();
 };
 
-inline KToolBar* NTriHeaderUI::getToolBar() {
+inline KToolBar* Dim4TriHeaderUI::getToolBar() {
     return bar;
 }
 

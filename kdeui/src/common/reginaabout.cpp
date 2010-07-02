@@ -125,8 +125,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
     addCredit("The Australian Research Council",
         I18N_NOOP("Support for development (DP1094516, DPTODO) "
             "and hardware (DPTODO)"));
-    addCredit("The Institute for the Physics and Mathematics of the
-            Universe, Tokyo",
+    addCredit("The Institute for the Physics and Mathematics of the "
+            "Universe, Tokyo",
         I18N_NOOP("Hospitality and support"));
     addCredit("Oklahoma State University, USA",
         I18N_NOOP("Support for development"));

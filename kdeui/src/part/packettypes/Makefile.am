@@ -13,7 +13,11 @@ INCLUDES = @ENGINE_INCLUDES@ $(all_includes) -I$(top_srcdir)/kdeui/src/common
 noinst_LTLIBRARIES = libpackettypes.la
 
 noinst_HEADERS = \
+	dim4facetgluingdialog.h \
+	dim4facetgluingitems.h \
 	dim4tricreator.h \
+	dim4trigluings.h \
+	dim4triui.h \
 	eltmovedialog.h \
 	gaprunner.h \
 	nanglestructurecreator.h \
@@ -50,7 +54,11 @@ noinst_HEADERS = \
 	snappeacomponents.h
 
 libpackettypes_la_SOURCES = \
+	dim4facetgluingdialog.cpp \
+	dim4facetgluingitems.cpp \
 	dim4tricreator.cpp \
+	dim4trigluings.cpp \
+	dim4triui.cpp \
 	eltmovedialog.cpp \
 	gaprunner.cpp \
 	nanglestructurecreator.cpp \

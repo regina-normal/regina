@@ -26,12 +26,12 @@
 
 /* end stub */
 
-/*! \file ntrigluings.h
- *  \brief Provides a face gluing editor for 3-manifold triangulations.
+/*! \file dim4trigluings.h
+ *  \brief Provides a facet gluing editor for 4-manifold triangulations.
  */
 
-#ifndef __NTRIGLUINGS_H
-#define __NTRIGLUINGS_H
+#ifndef __DIM4TRIGLUINGS_H
+#define __DIM4TRIGLUINGS_H
 
 #include "../packettabui.h"
 #include "reginaprefset.h"
@@ -43,32 +43,32 @@ class QTable;
 
 namespace regina {
     class NPacket;
-    class NTriangulation;
+    class Dim4Triangulation;
 };
 
 /**
- * A 3-manifold triangulation page for editing face gluings.
+ * A 4-manifold triangulation page for editing facet gluings.
  */
-class NTriGluingsUI : public QObject, public PacketEditorTab {
+class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Dim4Triangulation* tri;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QTable* faceTable;
+        QTable* facetTable;
 
         /**
          * Gluing actions
          */
-        KAction* actAddTet;
-        KAction* actRemoveTet;
+        KAction* actAddPent;
+        KAction* actRemovePent;
         KAction* actSimplify;
         KActionCollection* triActions;
         QPtrList<KAction> triActionList;
@@ -78,16 +78,15 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * Preferences
          */
         ReginaPrefSet::TriEditMode editMode;
-        ReginaFilePrefList censusFiles;
 
     public:
         /**
          * Constructor and destructor.
          */
-        NTriGluingsUI(regina::NTriangulation* packet,
+        Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
                 PacketTabbedUI* useParentUI,
                 const ReginaPrefSet& initialPrefs, bool readWrite);
-        ~NTriGluingsUI();
+        ~Dim4TriGluingsUI();
 
         /**
          * Fill the given toolbar with triangulation actions.
@@ -117,22 +116,13 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Gluing edit actions.
          */
-        void addTet();
-        void removeSelectedTets();
+        void addPent();
+        void removeSelectedPents();
 
         /**
          * Triangulation actions.
          */
         void simplify();
-        void barycentricSubdivide();
-        void idealToFinite();
-        void finiteToIdeal();
-        void elementaryMove();
-        void doubleCover();
-        void splitIntoComponents();
-        void connectedSumDecomposition();
-        void makeZeroEfficient();
-        void censusLookup();
 
         /**
          * Update the states of internal components.
@@ -145,9 +135,8 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void notifyGluingsChanged();
 };
 
-inline void NTriGluingsUI::updatePreferences(const ReginaPrefSet& newPrefs) {
+inline void Dim4TriGluingsUI::updatePreferences(const ReginaPrefSet& newPrefs) {
     editMode = newPrefs.triEditMode;
-    censusFiles = newPrefs.censusFiles;
 }
 
 #endif

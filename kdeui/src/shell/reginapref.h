@@ -46,6 +46,7 @@ class QLineEdit;
 class QPushButton;
 class ReginaMain;
 class ReginaPrefCensus;
+class ReginaPrefDim4;
 class ReginaPrefGeneral;
 class ReginaPrefPDF;
 class ReginaPrefPython;
@@ -71,6 +72,7 @@ class ReginaPreferences : public KDialogBase {
         ReginaPrefGeneral* generalPrefs;
         ReginaPrefTri* triPrefs;
         ReginaPrefSurfaces* surfacePrefs;
+        ReginaPrefDim4* dim4Prefs;
         ReginaPrefPDF* pdfPrefs;
         ReginaPrefCensus* censusPrefs;
         ReginaPrefPython* pythonPrefs;
@@ -112,7 +114,7 @@ class ReginaPrefGeneral : public QVBox {
 };
 
 /**
- * The page of the Regina configuration dialog for triangulation
+ * The page of the Regina configuration dialog for 3-manifold triangulation
  * preferences.
  */
 class ReginaPrefTri : public QVBox {
@@ -149,6 +151,22 @@ class ReginaPrefSurfaces : public QVBox {
 
     public:
         ReginaPrefSurfaces(QWidget* parent = 0);
+
+    friend class ReginaPreferences;
+};
+
+/**
+ * The page of the Regina configuration dialog for 4-manifold triangulation
+ * preferences.
+ */
+class ReginaPrefDim4 : public QVBox {
+    Q_OBJECT
+
+    private:
+        QComboBox* comboInitialTab;
+
+    public:
+        ReginaPrefDim4(QWidget* parent = 0);
 
     friend class ReginaPreferences;
 };

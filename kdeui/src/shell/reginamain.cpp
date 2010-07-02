@@ -480,6 +480,15 @@ void ReginaMain::addRecentFile() {
 
 void ReginaMain::readOptions(KConfig* config) {
     // Read in new preferences.
+    config->setGroup("Dim4");
+    QString str = config->readEntry("InitialTab");
+    if (str == "Dim4Skeleton")
+        globalPrefs.dim4InitialTab = ReginaPrefSet::Dim4Skeleton;
+    else if (str == "Dim4Algebra")
+        globalPrefs.dim4InitialTab = ReginaPrefSet::Dim4Algebra;
+    else
+        globalPrefs.dim4InitialTab = ReginaPrefSet::Dim4Gluings; /* default */
+
     config->setGroup("Display");
     globalPrefs.autoDock = config->readBoolEntry("PacketDocking", true);
     globalPrefs.displayIcon = config->readBoolEntry("DisplayIcon", true);
@@ -545,7 +554,7 @@ void ReginaMain::readOptions(KConfig* config) {
     globalPrefs.surfacesCreationCoords = config->readNumEntry(
         "CreationCoordinates", regina::NNormalSurfaceList::STANDARD);
 
-    QString str = config->readEntry("InitialCompat");
+    str = config->readEntry("InitialCompat");
     if (str == "Global")
         globalPrefs.surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
     else
@@ -619,6 +628,16 @@ void ReginaMain::saveOptions() {
     KConfig* config = KGlobal::config();
 
     // Save the current set of preferences.
+    config->setGroup("Dim4");
+    switch (globalPrefs.dim4InitialTab) {
+        case ReginaPrefSet::Dim4Skeleton:
+            config->writeEntry("InitialTab", "Dim4Skeleton"); break;
+        case ReginaPrefSet::Dim4Algebra:
+            config->writeEntry("InitialTab", "Dim4Algebra"); break;
+        default:
+            config->writeEntry("InitialTab", "Dim4Gluings"); break;
+    }
+
     config->setGroup("Display");
     config->writeEntry("PacketDocking", globalPrefs.autoDock);
     config->writeEntry("DisplayIcon", globalPrefs.displayIcon);

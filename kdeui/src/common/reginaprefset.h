@@ -213,16 +213,20 @@ struct ReginaPrefSet {
     enum TriEditMode { DirectEdit, Dialog };
         /**< Possible edit modes for triangulation gluings. */
     enum TriTab { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
-        /**< Available top-level tabs in a triangulation viewer/editor. */
+        /**< Available top-level tabs in a 3-manifold triangulation
+             viewer/editor. */
     enum TriSkeletonTab { SkelComp, FacePairingGraph };
-        /**< Available tabs in a triangulation skeleton viewer. */
+        /**< Available tabs in a 3-manifold triangulation skeleton viewer. */
     enum TriAlgebraTab { Homology, FundGroup, TuraevViro, CellularInfo };
-        /**< Available tabs in a triangulation algebra viewer. */
+        /**< Available tabs in a 3-manifold triangulation algebra viewer. */
     enum SurfacesTab { Summary, Coordinates, Matching, Compatibility };
         /**< Available top-level tabs in a normal surface list viewer. */
     enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
         /**< Possible compatibility matrices that can be displayed for a
              normal surface list. */
+    enum Dim4Tab { Dim4Gluings, Dim4Skeleton, Dim4Algebra };
+        /**< Available top-level tabs in a 4-manifold triangulation
+             viewer/editor. */
 
     bool autoDock;
         /**< Do we automatically dock new packet
@@ -231,6 +235,9 @@ struct ReginaPrefSet {
         /**< Should filenames be given an automatic extension? */
     ReginaFilePrefList censusFiles;
         /**< The list of data files to use for census lookups. */
+    Dim4Tab dim4InitialTab;
+        /**< The initially visible top-level tab for a new 4-manifold
+             triangulation viewer/editor. */
     bool displayIcon;
         /**< Should we display the pretty Regina icon? */
     bool displayTagsInTree;
@@ -284,17 +291,17 @@ struct ReginaPrefSet {
              is neato.  This need not include a directory (in which case
              the search path will be used). */
     TriTab triInitialTab;
-        /**< The initially visible top-level tab for a new triangulation
-             viewer/editor. */
+        /**< The initially visible top-level tab for a new 3-manifold
+             triangulation viewer/editor. */
     TriSkeletonTab triInitialSkeletonTab;
-        /**< The initially visible tab for a new triangulation skeleton
-             viewer. */
+        /**< The initially visible tab for a new 3-manifold triangulation
+             skeleton viewer. */
     TriAlgebraTab triInitialAlgebraTab;
-        /**< The initially visible tab for a new triangulation algebra
-             viewer. */
+        /**< The initially visible tab for a new 3-manifold triangulation
+             algebra viewer. */
     unsigned triSurfacePropsThreshold;
         /**< The maximum number of tetrahedra for which surface-related
-             properties of triangulations will be automatically
+             properties of 3-manifold triangulations will be automatically
              calculated. */
 
     /**
