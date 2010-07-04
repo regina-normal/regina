@@ -515,8 +515,7 @@ void Dim4Triangulation::calculateBoundary() const {
     Dim4BoundaryComponent* label;
     TetrahedronIterator it;
     Dim4Tetrahedron *loopTet;
-    Dim4Tetrahedron** stack = new Dim4Tetrahedron*[nBdry];
-    unsigned stackSize = 0;
+    std::queue<Dim4Tetrahedron*> queue;
     Dim4Pentachoron *pent, *adjPent;
     int facet, adjFacet;
     Dim4Vertex* vertex;
@@ -540,16 +539,20 @@ void Dim4Triangulation::calculateBoundary() const {
 
         label->boundary_ = new NTriangulation();
 
-        // Run a depth-first search from this boundary tetrahedron to
+        // Run a breadth-first search from this boundary tetrahedron to
         // completely enumerate all tetrahedra in this boundary component.
+        //
+        // Because we use a first-in-first-out queue, we know that
+        // tetrahedra are added to the boundary triangulation in the
+        // same order as they are added to the list label->tetrahedra_.
         loopTet->boundaryComponent_ = label;
         label->tetrahedra_.push_back(loopTet);
 
-        stack[0] = loopTet;
-        stackSize = 1;
+        queue.push(loopTet);
 
-        while (stackSize > 0) {
-            tet = stack[--stackSize];
+        while (! queue.empty()) {
+            tet = queue.front();
+            queue.pop();
             pent = tet->emb_[0].getPentachoron();
             facet = tet->emb_[0].getTetrahedron();
 
@@ -559,14 +562,8 @@ void Dim4Triangulation::calculateBoundary() const {
             for (i = 0; i < 5; ++i)
                 if (i != facet) {
                     vertex = pent->vertex_[i];
-                    if (vertex->boundaryComponent_ != label) {
-                        // Note that a vertex in an invalid
-                        // triangulation might end up in more than one
-                        // boundary component.  Push it into all of the
-                        // relevant boundary components' lists.
+                    if (vertex->boundaryComponent_ != label)
                         vertex->boundaryComponent_ = label;
-                        label->vertices_.push_back(vertex);
-                    }
                 }
 
             for (i = 0; i < 5; ++i) {
@@ -577,12 +574,8 @@ void Dim4Triangulation::calculateBoundary() const {
                         continue;
 
                     edge = pent->edge_[Dim4Edge::edgeNumber[i][j]];
-                    if (edge->boundaryComponent_ != label) {
-                        // Likewise, an edge in an invalid triangulation
-                        // might end up in more than one boundary component.
+                    if (edge->boundaryComponent_ != label)
                         edge->boundaryComponent_ = label;
-                        label->edges_.push_back(edge);
-                    }
                 }
             }
 
@@ -595,10 +588,8 @@ void Dim4Triangulation::calculateBoundary() const {
                 // Examine the face opposite vertices (i, facet).  This is
                 // the face opposite the edge joining vertices (i, facet).
                 face = pent->face_[Dim4Edge::edgeNumber[i][facet]];
-                if (! face->boundaryComponent_) {
+                if (! face->boundaryComponent_)
                     face->boundaryComponent_ = label;
-                    label->faces_.push_back(face);
-                }
 
                 // Okay, we can be clever about this.  The current
                 // boundary tetrahedron is one end of the face link; the
@@ -655,16 +646,43 @@ void Dim4Triangulation::calculateBoundary() const {
                     }
                 }
 
-                // Push the adjacent tetrahedron onto the stack for
+                // Push the adjacent tetrahedron onto the queue for
                 // processing.
                 if (! adjTet->boundaryComponent_) {
                     adjTet->boundaryComponent_ = label;
                     label->tetrahedra_.push_back(adjTet);
-                    stack[stackSize++] = adjTet;
+                    queue.push(adjTet);
                 }
             }
 
             label->boundary_->addTetrahedron(bdryTetAll[tet->markedIndex()]);
+        }
+
+        // This boundary 3-manifold triangulation is complete.
+
+        // Now run through the vertices, edges and faces of the
+        // 3-manifold triangulation and insert the corresponding 4-D
+        // objects into the boundary component lists in the *same* order.
+        for (NTriangulation::FaceIterator it =
+                label->boundary_->getFaces().begin();
+                it != label->boundary_->getFaces().end(); ++it) {
+            const NFaceEmbedding& emb = (*it)->getEmbedding(0);
+            tet = label->tetrahedra_[emb.getTetrahedron()->markedIndex()];
+            label->faces_.push_back(tet->getFace(emb.getFace()));
+        }
+        for (NTriangulation::EdgeIterator it =
+                label->boundary_->getEdges().begin();
+                it != label->boundary_->getEdges().end(); ++it) {
+            const NEdgeEmbedding& emb = (*it)->getEmbedding(0);
+            tet = label->tetrahedra_[emb.getTetrahedron()->markedIndex()];
+            label->edges_.push_back(tet->getEdge(emb.getEdge()));
+        }
+        for (NTriangulation::VertexIterator it =
+                label->boundary_->getVertices().begin();
+                it != label->boundary_->getVertices().end(); ++it) {
+            const NVertexEmbedding& emb = (*it)->getEmbedding(0);
+            tet = label->tetrahedra_[emb.getTetrahedron()->markedIndex()];
+            label->vertices_.push_back(tet->getVertex(emb.getVertex()));
         }
     }
 

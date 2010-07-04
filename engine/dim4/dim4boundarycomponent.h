@@ -133,12 +133,17 @@ class Dim4BoundaryComponent : public ShareableObject, public NMarkedElement {
         /**
          * Returns the requested tetrahedron in this boundary component.
          *
+         * The index of a Dim4Tetrahedron in the boundary component need
+         * not be the index of the same tetrahedron in the entire
+         * 4-manifold triangulation.  However, if this boundary component
+         * is built from one or more tetrahedra (i.e., it is not ideal),
+         * then the index of each Dim4Tetrahedron in this boundary component
+         * matches the index of the corresponding NTetrahedron in the
+         * 3-manifold triangulation returned by getTriangulation().
+         *
          * @param index the index of the requested tetrahedron in the boundary
          * component.  This should be between 0 and getNumberOfTetrahedra()-1
          * inclusive.
-         * Note that the index of a tetrahedron in the boundary component need
-         * not be the index of the same tetrahedron in the entire
-         * triangulation.
          * @return the requested tetrahedron.
          */
         Dim4Tetrahedron* getTetrahedron(unsigned long index) const;
@@ -146,12 +151,17 @@ class Dim4BoundaryComponent : public ShareableObject, public NMarkedElement {
         /**
          * Returns the requested face in this boundary component.
          *
+         * The index of a Dim4Face in the boundary component need
+         * not be the index of the same face in the entire
+         * 4-manifold triangulation.  However, if this boundary component
+         * is built from one or more tetrahedra (i.e., it is not ideal),
+         * then the index of each Dim4Face in this boundary component
+         * matches the index of the corresponding NFace in the
+         * 3-manifold triangulation returned by getTriangulation().
+         *
          * @param index the index of the requested face in the boundary
          * component.  This should be between 0 and getNumberOfFaces()-1
          * inclusive.
-         * Note that the index of a face in the boundary component need
-         * not be the index of the same face in the entire
-         * triangulation.
          * @return the requested face.
          */
         Dim4Face* getFace(unsigned long index) const;
@@ -159,12 +169,17 @@ class Dim4BoundaryComponent : public ShareableObject, public NMarkedElement {
         /**
          * Returns the requested edge in this boundary component.
          *
+         * The index of a Dim4Edge in the boundary component need
+         * not be the index of the same edge in the entire
+         * 4-manifold triangulation.  However, if this boundary component
+         * is built from one or more tetrahedra (i.e., it is not ideal),
+         * then the index of each Dim4Edge in this boundary component
+         * matches the index of the corresponding NEdge in the
+         * 3-manifold triangulation returned by getTriangulation().
+         *
          * @param index the index of the requested edge in the boundary
          * component.  This should be between 0 and getNumberOfEdges()-1
          * inclusive.
-         * Note that the index of a edge in the boundary component need
-         * not be the index of the same edge in the entire
-         * triangulation.
          * @return the requested edge.
          */
         Dim4Edge* getEdge(unsigned long index) const;
@@ -172,12 +187,17 @@ class Dim4BoundaryComponent : public ShareableObject, public NMarkedElement {
         /**
          * Returns the requested vertex in this boundary component.
          *
+         * The index of a Dim4Vertex in the boundary component need
+         * not be the index of the same vertex in the entire
+         * 4-manifold triangulation.  However, if this boundary component
+         * is built from one or more tetrahedra (i.e., it is not ideal),
+         * then the index of each Dim4Vertex in this boundary component
+         * matches the index of the corresponding NVertex in the
+         * 3-manifold triangulation returned by getTriangulation().
+         *
          * @param index the index of the requested vertex in the boundary
          * component.  This should be between 0 and getNumberOfVertices()-1
          * inclusive.
-         * Note that the index of a vertex in the boundary component need
-         * not be the index of the same vertex in the entire
-         * triangulation.
          * @return the requested vertex.
          */
         Dim4Vertex* getVertex(unsigned long index) const;
@@ -201,6 +221,9 @@ class Dim4BoundaryComponent : public ShareableObject, public NMarkedElement {
          * (which happens with ideal vertices and also some invalid vertices),
          * then this routine returns the triangulation of the corresponding
          * vertex link.  See Dim4Vertex::getLink() for details.
+         *
+         * It is guaranteed that the full skeleton of this 3-manifold
+         * triangulation will have been generated already.
          *
          * @return the triangulation of this boundary component.
          */
