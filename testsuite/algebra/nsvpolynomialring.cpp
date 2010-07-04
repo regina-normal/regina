@@ -45,9 +45,7 @@ class NSVPolynomialRingTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp() {
-		NLargeInteger a(NLargeInteger::zero);
-		}
+        void setUp() {}
         void tearDown() {}
 
 	void additive_struc_test() {
