@@ -54,7 +54,8 @@ namespace regina {
  *
  * Reading down the diagonal, the final Smith normal form will have a
  * series of non-negative, non-decreasing invariant factors followed by
- * zeroes.
+ * zeroes.  "Invariant factor" refers to the convention that the <i>i</i>th
+ * term divides the (<i>i</i>+1)th term, and so they are unique.
  *
  * The algorithm used is due to Hafner and McCurley (1991).
  * It does not use modular arithmetic to control the intermediate
@@ -204,6 +205,9 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement);
  * By a "zero column" here we simply mean "zero for every row in \a
  * rowList".  Likewise, by "first non-zero entry" we mean "first row in
  * \a rowList with a non-zero entry".
+ *
+ * In a pinch, you can also use this routine to compute the inverse of an
+ * invertible square matrix.
  *
  * \pre Both \a R and \a Ri are square matrices with side length M.columns(),
  * and these matrices are inverses of each other.
