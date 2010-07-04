@@ -94,8 +94,10 @@ class NLargeInteger {
         bool infinite;
             /**< Does this NLargeInteger represent infinity? */
 
-	    /**< Used for generation of random NLargeIntegers. */
-	static gmp_randstate_t state;
+        static gmp_randstate_t randState;
+            /**< Used for generation of random NLargeIntegers. */
+        static bool randInitialised;
+            /**< Have we yet initialised randState? */
 
     public:
         /**
@@ -714,26 +716,47 @@ class NLargeInteger {
          */
         int legendre(const NLargeInteger& p) const;
 
-	/**
-	 *  Call this at least once before requesting random NLargeIntegers.
-	 */
-	void seedRandomGenerator();
+        /**
+         * Generate a pseudo-random NLargeInteger that is uniformly
+         * distributed in the interval [0,*this)
+         *
+         * \warning None of the pseudo-random number routines in NLargeInteger
+         * are thread-safe.  If you wish to use them in a multithreaded
+         * environment, you should use your own mutexes to ensure the
+         * safety of the static data that these routines use.
+         *
+         * @return a pseudo-random NLargeInteger.
+         */
+        NLargeInteger randomBoundedByThis();
 
-	/**
-	 *  Generate a pseudo-random NLargeInteger that is uniformly distributed in the interval [0,*this)
-	 */
-	NLargeInteger randomBoundedByThis();
+        /**
+         * Generate a pseudo-random NLargeInteger that is uniformly
+         * distributed in the interval [0,2^n).
+         *
+         * \warning None of the pseudo-random number routines in NLargeInteger
+         * are thread-safe.  If you wish to use them in a multithreaded
+         * environment, you should use your own mutexes to ensure the
+         * safety of the static data that these routines use.
+         *
+         * @param n the maximum number of bits in the pseudo-random integer.
+         * @return a pseudo-random NLargeInteger.
+         */
+        static NLargeInteger randomBinary(unsigned long n);
 
-	/**
-	 *  Generate a pseudo-random NLargeInteger that is uniformly distributed in the interval [0,2^n). 
-	 */
-	static NLargeInteger randomBinary(unsigned long n);
-
-	/**
-	 *  Generate a pseudo-random NLargeInteger that is distributed in the interval [0,2^n),
-	 * This NLargeInteger tends to have long strings of 0's and 1's in its binary expansion.
-	 */
-	static NLargeInteger randomCornerBinary(unsigned long n);
+        /**
+         * Generate a pseudo-random NLargeInteger that is distributed in the
+         * interval [0,2^n), with a tendency to have long strings of 0s
+         * and 1s in its binary expansion.
+         *
+         * \warning None of the pseudo-random number routines in NLargeInteger
+         * are thread-safe.  If you wish to use them in a multithreaded
+         * environment, you should use your own mutexes to ensure the
+         * safety of the static data that these routines use.
+         *
+         * @param n the maximum number of bits in the pseudo-random integer.
+         * @return a pseudo-random NLargeInteger.
+         */
+        static NLargeInteger randomCornerBinary(unsigned long n);
 
     private:
         /**

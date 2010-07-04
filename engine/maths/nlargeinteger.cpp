@@ -34,7 +34,8 @@ namespace regina {
 const NLargeInteger NLargeInteger::zero;
 const NLargeInteger NLargeInteger::one(1);
 const NLargeInteger NLargeInteger::infinity(true, true);
-gmp_randstate_t NLargeInteger::state;
+gmp_randstate_t NLargeInteger::randState;
+bool NLargeInteger::randInitialised = false;
 
 std::string NLargeInteger::stringValue(int base) const {
     if (infinite)
@@ -170,30 +171,38 @@ NLargeInteger NLargeInteger::divisionAlg(const NLargeInteger& divisor,
     return quotient;
 }
 
-void NLargeInteger::seedRandomGenerator()
-{ gmp_randinit_default(state); }
+NLargeInteger NLargeInteger::randomBoundedByThis() {
+    if (! randInitialised) {
+        gmp_randinit_default(state);
+        randInitialised = true;
+    }
 
-NLargeInteger NLargeInteger::randomBoundedByThis()
-{
- NLargeInteger retval;
- mpz_urandomm( retval.data, state, data );
- return retval;
+    NLargeInteger retval;
+    mpz_urandomm(retval.data, state, data);
+    return retval;
 }
 
-NLargeInteger NLargeInteger::randomBinary(unsigned long n)
-{
- NLargeInteger retval;
- mpz_urandomb( retval.data, state, n );
- return retval;
+NLargeInteger NLargeInteger::randomBinary(unsigned long n) {
+    if (! randInitialised) {
+        gmp_randinit_default(state);
+        randInitialised = true;
+    }
+
+    NLargeInteger retval;
+    mpz_urandomb(retval.data, state, n);
+    return retval;
 }
 
-NLargeInteger NLargeInteger::randomCornerBinary(unsigned long n)
-{
- NLargeInteger retval;
- mpz_rrandomb( retval.data, state, n );
- return retval;
-}
+NLargeInteger NLargeInteger::randomCornerBinary(unsigned long n) {
+    if (! randInitialised) {
+        gmp_randinit_default(state);
+        randInitialised = true;
+    }
 
+    NLargeInteger retval;
+    mpz_rrandomb(retval.data, state, n);
+    return retval;
+}
 
 } // namespace regina
 
