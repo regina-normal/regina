@@ -173,34 +173,34 @@ NLargeInteger NLargeInteger::divisionAlg(const NLargeInteger& divisor,
 
 NLargeInteger NLargeInteger::randomBoundedByThis() {
     if (! randInitialised) {
-        gmp_randinit_default(state);
+        gmp_randinit_default(randState);
         randInitialised = true;
     }
 
     NLargeInteger retval;
-    mpz_urandomm(retval.data, state, data);
+    mpz_urandomm(retval.data, randState, data);
     return retval;
 }
 
 NLargeInteger NLargeInteger::randomBinary(unsigned long n) {
     if (! randInitialised) {
-        gmp_randinit_default(state);
+        gmp_randinit_default(randState);
         randInitialised = true;
     }
 
     NLargeInteger retval;
-    mpz_urandomb(retval.data, state, n);
+    mpz_urandomb(retval.data, randState, n);
     return retval;
 }
 
 NLargeInteger NLargeInteger::randomCornerBinary(unsigned long n) {
     if (! randInitialised) {
-        gmp_randinit_default(state);
+        gmp_randinit_default(randState);
         randInitialised = true;
     }
 
     NLargeInteger retval;
-    mpz_rrandomb(retval.data, state, n);
+    mpz_rrandomb(retval.data, randState, n);
     return retval;
 }
 
