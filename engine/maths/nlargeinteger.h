@@ -726,16 +726,14 @@ class NLargeInteger {
 
 	/**
 	 *  Generate a pseudo-random NLargeInteger that is uniformly distributed in the interval [0,2^n). 
-	 * Ignores *this.
 	 */
-	NLargeInteger randomBinary(unsigned long n);
+	static NLargeInteger randomBinary(unsigned long n);
 
 	/**
 	 *  Generate a pseudo-random NLargeInteger that is distributed in the interval [0,2^n),
-	 * This NLargeInteger tends to have long strings of 0's and 1's in its binary expansion. 
-	 * Ignores *this.
+	 * This NLargeInteger tends to have long strings of 0's and 1's in its binary expansion.
 	 */
-	NLargeInteger randomCornerBinary(unsigned long n);
+	static NLargeInteger randomCornerBinary(unsigned long n);
 
     private:
         /**
