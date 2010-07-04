@@ -142,7 +142,7 @@ class NCellularDataTest : public CppUnit::TestFixture {
 	}
 
         void lensspacehomotopyclassification_tests() {
-         NLargeInteger maxP(22); maxP.seedRandomGenerator();
+         NLargeInteger maxP(22); 
          // produce some random lens spaces, compute intersection form and check it is [\pm r^2 q/p] \in Q/Z
          // p will be anywhere from 2 to 19, q will be chosen to be coprime, how? just choose randomly 0 < q < p, 
          // until you find something coprime, I suppose. 

@@ -47,7 +47,6 @@ class NSVPolynomialRingTest : public CppUnit::TestFixture {
     public:
         void setUp() {
 		NLargeInteger a(NLargeInteger::zero);
-		a.seedRandomGenerator();		
 		}
         void tearDown() {}
 
