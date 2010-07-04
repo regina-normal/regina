@@ -94,6 +94,11 @@ class NLargeInteger {
         bool infinite;
             /**< Does this NLargeInteger represent infinity? */
 
+        static gmp_randstate_t randState;
+            /**< Used for generation of random NLargeIntegers. */
+        static bool randInitialised;
+            /**< Have we yet initialised randState? */
+
     public:
         /**
          * Initialises this integer to zero.
@@ -710,6 +715,48 @@ class NLargeInteger {
          * @author Ryan Budney
          */
         int legendre(const NLargeInteger& p) const;
+
+        /**
+         * Generate a pseudo-random NLargeInteger that is uniformly
+         * distributed in the interval [0,*this)
+         *
+         * \warning None of the pseudo-random number routines in NLargeInteger
+         * are thread-safe.  If you wish to use them in a multithreaded
+         * environment, you should use your own mutexes to ensure the
+         * safety of the static data that these routines use.
+         *
+         * @return a pseudo-random NLargeInteger.
+         */
+        NLargeInteger randomBoundedByThis();
+
+        /**
+         * Generate a pseudo-random NLargeInteger that is uniformly
+         * distributed in the interval [0,2^n).
+         *
+         * \warning None of the pseudo-random number routines in NLargeInteger
+         * are thread-safe.  If you wish to use them in a multithreaded
+         * environment, you should use your own mutexes to ensure the
+         * safety of the static data that these routines use.
+         *
+         * @param n the maximum number of bits in the pseudo-random integer.
+         * @return a pseudo-random NLargeInteger.
+         */
+        static NLargeInteger randomBinary(unsigned long n);
+
+        /**
+         * Generate a pseudo-random NLargeInteger that is distributed in the
+         * interval [0,2^n), with a tendency to have long strings of 0s
+         * and 1s in its binary expansion.
+         *
+         * \warning None of the pseudo-random number routines in NLargeInteger
+         * are thread-safe.  If you wish to use them in a multithreaded
+         * environment, you should use your own mutexes to ensure the
+         * safety of the static data that these routines use.
+         *
+         * @param n the maximum number of bits in the pseudo-random integer.
+         * @return a pseudo-random NLargeInteger.
+         */
+        static NLargeInteger randomCornerBinary(unsigned long n);
 
     private:
         /**
