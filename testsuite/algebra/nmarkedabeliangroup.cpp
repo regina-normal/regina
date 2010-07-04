@@ -39,6 +39,7 @@
 #include "algebra/nmarkedabeliangroup.h"
 
 #include "testsuite/utilities/testutilities.h"
+#include "testsuite/testparams.h"
 
 using regina::NTriangulation;
 using regina::NExampleTriangulation;
@@ -368,6 +369,8 @@ class NMarkedAbelianGroupTest : public CppUnit::TestFixture {
 		}
 
 	void hom_detailed_tests() { // writeTextShort, evalCC, evalSNF, inverseHom, operator*, isIdentity, writeReducedMatrix
+		if (! detailedTests())
+			return;
 		const regina::NHomMarkedAbelianGroup* test1(NULL);
 		for (unsigned long i=0; i<cdList.size(); i++)
 		 {

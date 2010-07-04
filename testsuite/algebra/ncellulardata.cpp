@@ -42,6 +42,7 @@
 #include "algebra/nmarkedabeliangroup.h"
 
 #include "testsuite/utilities/testutilities.h"
+#include "testsuite/testparams.h"
 
 using regina::NLargeInteger;
 using regina::NTriangulation;
@@ -125,6 +126,8 @@ class NCellularDataTest : public CppUnit::TestFixture {
 	}
 
 	void coordinate_isomorphisms_tests() { 
+		if (! detailedTests())
+			return;
 		for (unsigned long i=0; i<cdList.size(); i++)
 		 if (!cdList[i]->coordinateIsomorphismsVerified()) CPPUNIT_FAIL("Coordinate isomorphisms error.");
 	}
