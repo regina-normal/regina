@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <set>
 #include <vector>
 #include "algebra/nabeliangroup.h"
 #include "manifold/nhandlebody.h"
@@ -140,7 +141,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
 
     std::vector<NTetrahedron*> tets;
     std::vector<NPerm4> roles;
-    stdhash::hash_set<NTetrahedron*, HashPointer> usedTets;
+    std::set<NTetrahedron*> usedTets;
 
     tets.push_back(tet);
     roles.push_back(useVertexRoles);

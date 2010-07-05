@@ -40,12 +40,11 @@
 #define __XMLUTILS_H
 #endif
 
+#include <map>
 #include <string>
 #include <sstream>
 #include <libxml/parser.h>
 #include "utilities/nbooleans.h"
-#include "utilities/hashmap.h"
-#include "utilities/hashutils.h"
 
 namespace regina {
 
@@ -66,29 +65,34 @@ namespace xml {
 class XMLParser;
 
 /**
- * Represents a hashed map from property names to property values.
+ * Represents a map from property names to property values.
  *
  * \ifacespython Not present.
  */
-class XMLPropertyDict : public stdhash::hash_map<std::string,
-        std::string, HashString> {
+class XMLPropertyDict : private std::map<std::string, std::string> {
     public:
         /**
-         * Create a new hashed map.
+         * Create a new map.
          */
         XMLPropertyDict();
 
         /**
          * Return a value for the given key, even if the key does not
-         * exist in the hashed map.
+         * exist in the map.
          *
          * @param key the key to look up.
          * @param defaultVal the value to return if the key does not exist.
          * @return the value associated with the given key, or parameter
-         * \a default if the key does not exist in the hashed map.
+         * \a default if the key does not exist in the map.
          */
         const std::string& lookup(const std::string& key,
             const std::string& defaultVal = std::string()) const;
+
+        using std::map<std::string, std::string>::const_iterator;
+        using std::map<std::string, std::string>::begin;
+        using std::map<std::string, std::string>::end;
+        using std::map<std::string, std::string>::find;
+        using std::map<std::string, std::string>::operator [];
 };
 
 /**
@@ -126,7 +130,7 @@ class XMLParserCallback {
          * Called when an element's opening tag is encountered.
          *
          * @param n the name of the tag.
-         * @param p a hashed dictionary of all the properties of the tag.
+         * @param p a dictionary of all the properties of the tag.
          */
         virtual void start_element(const std::string& n,
             const regina::xml::XMLPropertyDict& p);

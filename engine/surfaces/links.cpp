@@ -28,6 +28,7 @@
 
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
+#include <set>
 
 #define NO_EDGES std::make_pair(static_cast<NEdge*>(0), static_cast<NEdge*>(0))
 
@@ -69,7 +70,7 @@ const NVertex* NNormalSurfaceVector::isVertexLink(NTriangulation* triang)
                     return 0;
 
     // Now examine the triangle to see if we link only a single vertex.
-    stdhash::hash_set<NVertex*, HashPointer> notAns;
+    std::set<NVertex*> notAns;
         /**< We will ignore notAns once ans != 0. */
     NVertex* ans = 0;
     NLargeInteger ansMult;
@@ -139,7 +140,7 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
 
     // Run through the quadrilateral discs and work out if there are any
     // valid candidates.
-    stdhash::hash_set<NEdge*, HashPointer> notAns;
+    std::set<NEdge*> notAns;
         /**< We will ignore notAns once ans != 0. */
     bool foundQuads = false;
     const NEdge* ans[2];

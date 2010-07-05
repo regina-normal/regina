@@ -145,6 +145,10 @@ Version 4.6.1  [ (under development) ]
         Class NVertexEmbedding:
             - New routine getVertices(), which facilitates a consistent
               orientation for the three remaining vertices in each tetrahedron.
+        Class XMLPropertyDict:
+            - The interface for this class is now much more restricted.
+              The class now derives from std::map instead of stdhash::hash_map,
+              and it allows access to only a few inherited members of std::map.
         Routine metricalSmithNormalForm():
             - New alternative Smith normal form routine that is better for
               working with extremely large matrices.  Thanks to Ryan Budney.
