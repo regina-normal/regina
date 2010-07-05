@@ -26,8 +26,10 @@
 
 /* end stub */
 
+#include <algorithm>
 #include <cmath>
 #include <sstream>
+#include <vector>
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
@@ -68,6 +70,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(zeroEfficiency);
     CPPUNIT_TEST(turaevViro);
     CPPUNIT_TEST(doubleCover);
+    CPPUNIT_TEST(idealToFinite);
     CPPUNIT_TEST(dehydration);
     CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(reordering);
@@ -1920,6 +1923,124 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Cusped solid genus 2 torus");
             verifyDoubleCover(pinchedSolidTorus, "Pinched solid torus");
             verifyDoubleCover(pinchedSolidKB, "Pinched solid Klein bottle");
+        }
+
+        void verifyIdealToFinite(const NTriangulation& tri,
+                const char* triName) {
+            NTriangulation finite(tri);
+            finite.idealToFinite();
+
+            // Are there any ideal vertices remaining?
+            if (finite.isIdeal()) {
+                std::ostringstream msg;
+                msg << triName << ": idealToFinite() leaves ideal vertices.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Are there any invalid vertices remaining?
+            for (NTriangulation::VertexIterator vit =
+                    finite.getVertices().begin(); vit !=
+                    finite.getVertices().end(); ++vit)
+                if ((*vit)->isBoundary() && ! (*vit)->isStandard()) {
+                    std::ostringstream msg;
+                    msg << triName << ": idealToFinite() leaves "
+                        "invalid vertices .";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+            // Make sure the invalid edges are left alone.
+            unsigned oldInvEdges = 0, newInvEdges = 0;
+            NTriangulation::EdgeIterator eit;
+            for (eit = tri.getEdges().begin();
+                    eit != tri.getEdges().end(); ++eit)
+                if (! (*eit)->isValid())
+                    ++oldInvEdges;
+            for (eit = finite.getEdges().begin();
+                    eit != finite.getEdges().end(); ++eit)
+                if (! (*eit)->isValid())
+                    ++newInvEdges;
+            if (oldInvEdges != newInvEdges) {
+                std::ostringstream msg;
+                msg << triName << ": idealToFinite() changes "
+                    "invalid edges .";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Make sure we don't change the number of boundary components.
+            if (tri.getNumberOfBoundaryComponents() !=
+                    finite.getNumberOfBoundaryComponents()) {
+                std::ostringstream msg;
+                msg << triName << ": idealToFinite() changes "
+                    "the number of boundary components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // In the case of a valid triangulation, ensure that the
+            // boundary components are topologically unchanged.
+            if (tri.isValid()) {
+                typedef std::pair<long, bool> BCSpec;
+                NTriangulation::BoundaryComponentIterator bcit;
+
+                std::vector<BCSpec> bcOld;
+                for (bcit = tri.getBoundaryComponents().begin();
+                        bcit != tri.getBoundaryComponents().end(); ++bcit)
+                    bcOld.push_back(BCSpec((*bcit)->getEulerCharacteristic(),
+                        (*bcit)->isOrientable()));
+                std::sort(bcOld.begin(), bcOld.end());
+
+                std::vector<BCSpec> bcNew;
+                for (bcit = finite.getBoundaryComponents().begin();
+                        bcit != finite.getBoundaryComponents().end(); ++bcit)
+                    bcNew.push_back(BCSpec((*bcit)->getEulerCharacteristic(),
+                        (*bcit)->isOrientable()));
+                std::sort(bcNew.begin(), bcNew.end());
+
+                if (bcOld != bcNew) {
+                    std::ostringstream msg;
+                    msg << triName << ": idealToFinite() changes "
+                        "the topology of one or more boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void idealToFinite() {
+            verifyIdealToFinite(empty, "Empty triangulation");
+            verifyIdealToFinite(singleTet, "Single tetrahedron");
+            verifyIdealToFinite(singleTet_bary,
+                "Single tetrahedron subdivided");
+            verifyIdealToFinite(s3, "S^3");
+            verifyIdealToFinite(s2xs1, "S^2 x S^1");
+            verifyIdealToFinite(rp3, "RP^3");
+            verifyIdealToFinite(lens3_1, "L(3,1)");
+            verifyIdealToFinite(lens8_3, "L(8,3)");
+            verifyIdealToFinite(lens8_3_large, "Large L(8,3)");
+            verifyIdealToFinite(lens7_1_loop, "Layered loop L(7,1)");
+            verifyIdealToFinite(rp3rp3, "RP^3 # RP^3");
+            verifyIdealToFinite(q32xz3, "S^3 / Q_32 x Z_3");
+            verifyIdealToFinite(q28, "S^3 / Q_28");
+            verifyIdealToFinite(weberSeifert, "Weber-Seifert");
+            verifyIdealToFinite(lens100_1, "L(100,1)");
+            verifyIdealToFinite(ball_large, "4-tetrahedron ball");
+            verifyIdealToFinite(ball_large_pillows,
+                "4-tetrahedron pillow ball");
+            verifyIdealToFinite(ball_large_snapped,
+                "3-tetrahedron snapped ball");
+            verifyIdealToFinite(lst3_4_7, "LST(3,4,7)");
+            verifyIdealToFinite(figure8, "Figure eight knot complement");
+            verifyIdealToFinite(fig8_bary,
+                "Figure eight knot complement subdivided");
+            verifyIdealToFinite(rp2xs1, "RP^2 x S^1");
+            verifyIdealToFinite(solidKB, "Solid Klein bottle");
+            verifyIdealToFinite(gieseking, "Gieseking manifold");
+            verifyIdealToFinite(invalidEdges,
+                "Triangulation with invalid edges");
+            verifyIdealToFinite(twoProjPlaneCusps,
+                "Triangulation with RP^2 cusps");
+            verifyIdealToFinite(cuspedGenusTwoTorus,
+                "Cusped solid genus 2 torus");
+            verifyIdealToFinite(pinchedSolidTorus, "Pinched solid torus");
+            verifyIdealToFinite(pinchedSolidKB, "Pinched solid Klein bottle");
         }
 
         void verifyDehydration(const NTriangulation& tri, const char* name) {
