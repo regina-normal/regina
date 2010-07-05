@@ -153,6 +153,9 @@ Version 4.6.1  [ (under development) ]
             - Compressed logs (using gzip or bzip2) are now supported.
               Requires the perl module IO::Uncompress::AnyUncompress.
     TEST SUITE:
+        - Some slower but more detailed tests are now optional, and are
+          disabled by default.  To switch these tests on, set the
+          environment variable REGINA_DETAILED_TESTS to any non-empty value.
         - New tests for file I/O using both modern XML and legacy binary
           file formats.
         - More detailed tests for bitmask operations.

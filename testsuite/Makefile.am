@@ -24,7 +24,7 @@ TESTS = regtestsuite
 
 check_PROGRAMS = regtestsuite
 
-regtestsuite_SOURCES = runalltests.cpp
+regtestsuite_SOURCES = runalltests.cpp testparams.cpp
 regtestsuite_LDADD = \
   angle/libangle.a \
   census/libcensus.a \
@@ -36,6 +36,8 @@ regtestsuite_LDADD = \
   utilities/libutilities.a \
   @LIB_ENGINE@ \
   @TESTSUITE_LIBS@
+
+noinst_HEADERS = testparams.h
 
 EXTRA_DIST = README.txt
 
