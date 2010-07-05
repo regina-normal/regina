@@ -110,6 +110,9 @@ class NTriangulation;
  * - \b 3-cells: the non-boundary, non-ideal vertices.begin() through
  *               vertices.end().
  *
+ * \deprecated This class will be removed in Regina 5.0.  A new and more
+ * flexible class called NCellularData will take its place.
+ *
  * \testpart
  *
  * \todo \optlong longer term, add cohomology w/coeffs, then once Hom, Ext, Tor, and \otimes
