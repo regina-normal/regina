@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <algorithm>
+#include <set>
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -96,7 +97,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     // Find the unwanted tetrahedra.
     NTetrahedron* oldTet[3];
     NPerm4 oldVertexPerm[3];
-    stdhash::hash_set<NTetrahedron*, HashPointer> oldTets;
+    std::set<NTetrahedron*> oldTets;
     int oldPos = 0;
     for (std::deque<NEdgeEmbedding>::const_iterator it = embs.begin();
             it != embs.end(); it++) {
@@ -349,7 +350,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
 
     // Find the unwanted tetrahedra.
     NTetrahedron* oldTet[4];
-    stdhash::hash_set<NTetrahedron*, HashPointer> oldTets;
+    std::set<NTetrahedron*> oldTets;
     int oldPos = 0;
     for (std::deque<NEdgeEmbedding>::const_iterator it = embs.begin();
             it != embs.end(); it++) {

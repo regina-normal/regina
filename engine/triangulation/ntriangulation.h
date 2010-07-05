@@ -1334,6 +1334,11 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Note that the edge and vertex pointers returned will become
          * invalid once the triangulation has changed.
          *
+         * \deprecated In Regina 5.0, this routine will be changed to
+         * use std::set instead of stdhash::hash_set.  This is part of
+         * the broader plan to remove any need for the non-standard
+         * hash_set and hash_map.
+         *
          * \ifacespython Not present.
          *
          * @param edgeSet the set to be emptied and into which the edges
@@ -1360,6 +1365,11 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * Note that the edge pointers returned will become
          * invalid once the triangulation has changed.
          *
+         * \deprecated In Regina 5.0, this routine will be changed to
+         * use std::set instead of stdhash::hash_set.  This is part of
+         * the broader plan to remove any need for the non-standard
+         * hash_set and hash_map.
+         *
          * \ifacespython Not present.
          *
          * @param edgeSet the set to be emptied and into which the edges
@@ -1379,6 +1389,11 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * Note that the face pointers returned will become invalid once
          * the triangulation has changed.
+         *
+         * \deprecated In Regina 5.0, this routine will be changed to
+         * use std::set instead of stdhash::hash_set.  This is part of
+         * the broader plan to remove any need for the non-standard
+         * hash_set and hash_map.
          *
          * \ifacespython Not present.
          *

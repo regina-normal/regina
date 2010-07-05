@@ -27,13 +27,12 @@
 /* end stub */
 
 #include <iterator>
+#include <map>
 #include <sstream>
 #include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
 #include "maths/numbertheory.h"
 #include "utilities/boostutils.h"
-#include "utilities/hashmap.h"
-#include "utilities/hashutils.h"
 #include "utilities/stlutils.h"
 
 namespace regina {
@@ -276,8 +275,8 @@ bool NGroupPresentation::intelligentSimplify() {
 
     // Run through and look for substitutions we can make.
     // This currently isn't magnificently optimised.
-    stdhash::hash_map<unsigned long, long> exponents;
-    stdhash::hash_map<unsigned long, long>::iterator expIt;
+    std::map<unsigned long, long> exponents;
+    std::map<unsigned long, long>::iterator expIt;
     NGroupExpression* expansion;
     unsigned long gen1, gen2, genRemove;
     long exp1a, exp1b, exp2a, exp2b;

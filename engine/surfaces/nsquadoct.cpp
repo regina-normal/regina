@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <deque>
+#include <set>
 #include "enumerate/nenumconstraint.h"
 #include "surfaces/nsquadoct.h"
 #include "surfaces/nsanstandard.h"
@@ -152,7 +153,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
 
     // Run through the vertices and work out the triangular coordinates
     // about each vertex in turn.
-    stdhash::hash_set<NEdge*, HashPointer> usedEdges[2];
+    std::set<NEdge*> usedEdges[2];
         // usedEdges[i] contains the edges for which we have already
         // examined end i.
     NLargeInteger min;

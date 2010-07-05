@@ -26,12 +26,11 @@
 
 /* end stub */
 
+#include <set>
 #include <sstream>
 #include "engine.h"
 #include "packet/npacket.h"
 #include "packet/npacketlistener.h"
-#include "utilities/hashset.h"
-#include "utilities/hashutils.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -544,7 +543,7 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
         tree[1] = 0;
     }
 
-    stdhash::hash_set<std::string, HashString> labels;
+    std::set<std::string> labels;
 
     int whichTree;
     NPacket* p;
