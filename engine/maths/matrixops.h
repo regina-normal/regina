@@ -116,6 +116,54 @@ void smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
 
 /**
+ * An alternative Smith normal form algorithm that also returns change of
+ * basis matrices.  This routine may be preferable for extremely large
+ * matrices.  This is a variant of Hafner-McCurley and Havas-Holt-Rees's
+ * description of pivoting methods.
+ *
+ * The only input argument is \a matrix.  The four remaining arguments
+ * (the change of basis matrices), if passed, will be refilled, though they
+ * must be constructed with the correct dimensions as seen in the preconditions
+ * below.  All five arguments are used to return information as follows.
+ *
+ * Let \a M be the initial value of \a matrix, and let \a S be the Smith
+ * normal form of \a M.  After this routine exits:
+ *
+ * - The argument \a matrix will contain the Smith normal form \a S;
+ * - <tt>colSpaceBasis * M * rowSpaceBasis = S</tt>;
+ * - <tt>colSpaceBasisInv * S * rowSpaceBasisInv = M</tt>;
+ * - <tt>colSpaceBasis * colSpaceBasisInv</tt> and
+ *   <tt>rowSpaceBasis * rowSpaceBasisInv</tt> are both identity matrices.
+ *
+ * Thus, one obtains the Smith normal form the original matrix by multiplying
+ * on the left by ColSpaceBasis and on the right by RowSpaceBasis.
+ *
+ * \pre The matrices \a rowSpaceBasis and \a rowSpaceBasisInv, if passed,
+ *  must be square with side length matrix.columns().
+ * \pre The matrices \a colSpaceBasis and \a colSpaceBasisInv, if passed,
+ *  must be square, with side length matrix.rows().
+ *
+ * \testpart
+ *
+ * @param matrix the original matrix to put into Smith Normal Form (this
+ * need not be square).  When the algorithm terminates, this matrix \e is
+ * in its Smith Normal Form.
+ * @param rowSpaceBasis used to return a change of basis matrix (see
+ * above for details).  This is optional; you may pass a null pointer instead.
+ * @param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
+ * This is optional; you may pass a null pointer instead.
+ * @param colSpaceBasis used to return a change of basis matrix (see
+ * above for details).  This is optional; you may pass a null pointer instead.
+ * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
+ * This is optional; you may pass a null pointer instead.
+ *
+ * \author Ryan Budney
+ */
+void metricalSmithNormalForm(NMatrixInt& matrix,
+        NMatrixInt *rowSpaceBasis=0, NMatrixInt *rowSpaceBasisInv=0,
+        NMatrixInt *colSpaceBasis=0, NMatrixInt *colSpaceBasisInv=0);
+
+/**
  * Find a basis for the row space of the given matrix.
  *
  * This routine will rearrange the rows of the given matrix so that the
@@ -258,6 +306,32 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  */
 std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
         const std::vector<NLargeInteger>& sublattice);
+
+/**
+ * Given an automorphism of the group <tt>Z_p1 + Z_p2 + ... + Z_pn</tt>,
+ * this procedure computes the inverse automorphism.
+ *
+ * The input is an n-by-n matrix \a A which represents a lift of the
+ * automorphism to just some n-by-n matrix.  Specifically, you have a little
+ * commutative diagram with <tt>Z^n --A--> Z^n</tt> covering the automorphism
+ * of <tt>Z_p1 + Z_p2 + ... + Z_pn</tt>, where the maps down are the direct
+ * sum of the standard quotients <tt>Z --> Z_pi</tt>.  So if you want this
+ * procedure to give you meaningful output, \a A must be a lift of a genuine
+ * automorphism of <tt>Z_p1 + ... + Z_pn</tt>.
+ *
+ * \pre The list p1, p2, ..., pn is a list of invariant factors,
+ * which means that p1|p2, ..., p{n-1}|pn.
+ *
+ * @param input the n-by-n matrix \a A, which must be a lift of a genuine
+ * automorphism as described above.
+ * @param invF the list p1, p2, ..., pn.
+ * @return the inverse automorphism, also described as an n-by-n matrix
+ * as per the discussion above.
+ *
+ * \author Ryan Budney
+ */
+std::auto_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
+    const std::vector<NLargeInteger> &invF);
 
 /*@}*/
 

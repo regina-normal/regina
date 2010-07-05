@@ -35,12 +35,13 @@ using namespace boost::python;
 using regina::NHomMarkedAbelianGroup;
 using regina::NMarkedAbelianGroup;
 using regina::NMatrixInt;
+using regina::NLargeInteger;
 
 namespace {
-    unsigned (NMarkedAbelianGroup::*getTorsionRank_large)(
+    unsigned long (NMarkedAbelianGroup::*getTorsionRank_large)(
         const regina::NLargeInteger&) const =
         &NMarkedAbelianGroup::getTorsionRank;
-    unsigned (NMarkedAbelianGroup::*getTorsionRank_long)(unsigned long)
+    unsigned long (NMarkedAbelianGroup::*getTorsionRank_long)(unsigned long)
         const = &NMarkedAbelianGroup::getTorsionRank;
 
     boost::python::list getFreeRep_list(
@@ -121,6 +122,12 @@ namespace {
     void writeReducedMatrix_stdout(const NHomMarkedAbelianGroup& h) {
         h.writeReducedMatrix(std::cout);
     }
+
+    std::auto_ptr<NHomMarkedAbelianGroup> multiplyHom(
+            const NHomMarkedAbelianGroup& h1,
+            const NHomMarkedAbelianGroup& h2) {
+        return h1 * h2;
+    }
 }
 
 void addNMarkedAbelianGroup() {
@@ -128,17 +135,29 @@ void addNMarkedAbelianGroup() {
             std::auto_ptr<NMarkedAbelianGroup>, boost::noncopyable>(
             "NMarkedAbelianGroup", init<const NMatrixInt&, const NMatrixInt&>())
         .def(init<const NMarkedAbelianGroup&>())
+        .def(init<const NMatrixInt&, const NMatrixInt&, const NLargeInteger&>())
+        .def(init<unsigned long, const NLargeInteger&>())
+        .def("isChainComplex", &NMarkedAbelianGroup::isChainComplex)
         .def("getRank", &NMarkedAbelianGroup::getRank)
         .def("getTorsionRank", getTorsionRank_large)
         .def("getTorsionRank", getTorsionRank_long)
+        .def("minNumberOfGenerators",
+            &NMarkedAbelianGroup::minNumberOfGenerators)
         .def("getNumberOfInvariantFactors",
             &NMarkedAbelianGroup::getNumberOfInvariantFactors)
         .def("getInvariantFactor", &NMarkedAbelianGroup::getInvariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
+        .def("isIsomorphicTo", &NMarkedAbelianGroup::isIsomorphicTo)
+        .def("equalTo", &NMarkedAbelianGroup::equalTo)
+        // TODO: ccRep, ccRep, cycleProjection, cycleProjection
+        // TODO: isCycle, boundaryMap, isBoundary, writeAsBoundary
+        // TODO: snfRep, cycleGen
         .def("getFreeRep", getFreeRep_list)
         .def("getTorsionRep", getTorsionRep_list)
         .def("getSNFIsoRep", getSNFIsoRep_list_list)
+        .def("getRankCC", &NMarkedAbelianGroup::getRankCC)
+        .def("minNumberCycleGens", &NMarkedAbelianGroup::minNumberCycleGens)
         .def("getMRB", &NMarkedAbelianGroup::getMRB,
             return_internal_reference<>())
         .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
@@ -162,6 +181,8 @@ void addNMarkedAbelianGroup() {
             return_internal_reference<>())
         .def("getN", &NMarkedAbelianGroup::getN,
             return_internal_reference<>())
+        .def("coefficients", &NMarkedAbelianGroup::coefficients,
+            return_value_policy<return_by_value>())
         .def(self == self)
     ;
 
@@ -171,9 +192,13 @@ void addNMarkedAbelianGroup() {
             init<const NMarkedAbelianGroup&, const NMarkedAbelianGroup&,
                 const NMatrixInt&>())
         .def(init<const NHomMarkedAbelianGroup&>())
+        .def("isChainMap", &NHomMarkedAbelianGroup::isChainMap)
+        .def("isCycleMap", &NHomMarkedAbelianGroup::isCycleMap)
         .def("isEpic", &NHomMarkedAbelianGroup::isEpic)
         .def("isMonic", &NHomMarkedAbelianGroup::isMonic)
         .def("isIso", &NHomMarkedAbelianGroup::isIso)
+        .def("isIsomorphism", &NHomMarkedAbelianGroup::isIsomorphism)
+        .def("isIdentity", &NHomMarkedAbelianGroup::isIdentity)
         .def("isZero", &NHomMarkedAbelianGroup::isZero)
         .def("getKernel", &NHomMarkedAbelianGroup::getKernel,
             return_internal_reference<>())
@@ -190,6 +215,9 @@ void addNMarkedAbelianGroup() {
         .def("getReducedMatrix", &NHomMarkedAbelianGroup::getReducedMatrix,
             return_internal_reference<>())
         .def("writeReducedMatrix", writeReducedMatrix_stdout)
+        // TODO: evalCC, evalSNF
+        .def("inverseHom", &NHomMarkedAbelianGroup::inverseHom)
+        .def("__mul__", multiplyHom)
     ;
 }
 

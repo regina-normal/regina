@@ -57,6 +57,10 @@ Version 4.6.1  [ (under development) ]
         Class NLargeInteger:
             - New routines randomBoundedByThis(), randomBinary() and
               randomCornerBinary() for pseudo-random number generation.
+        Class NMarkedAbelianGroup, NHomMarkedAbelianGroup:
+            - Both of these classes have much richer interfaces than before,
+              and some old routines have now been deprecated.  See the class
+              documentation for full details.  Thanks to Ryan Budney.
         Class NNormalSurface:
             - New routines isCompressingDisc() and isIncompressible() for
               testing incompressibility.
@@ -141,9 +145,14 @@ Version 4.6.1  [ (under development) ]
         Class NVertexEmbedding:
             - New routine getVertices(), which facilitates a consistent
               orientation for the three remaining vertices in each tetrahedron.
+        Routine metricalSmithNormalForm():
+            - New alternative Smith normal form routine that is better for
+              working with extremely large matrices.  Thanks to Ryan Budney.
         Routine readSnapPea():
             - Allows additional text on the first line following the
               "% Triangulation" marker (thanks to Matthias Goerner).
+        Routine torsionAutInverse():
+            - New routine for inverting automorphisms, thanks to Ryan Budney.
     USER INTERFACE:
         - There is now an option to enable or disable diagnostic
           messages from the SnapPea kernel.

@@ -6,7 +6,7 @@ Group: Z + Z_6
 Free generators:
 0: [ -1 0 0 0 1 ]
 Torsion generators:
-0: [ 1 1 -1 0 -1 ]
+0: [ 3 -1 -1 0 -1 ]
 
 ------------------------
 New marked abelian group
@@ -17,7 +17,7 @@ Free generators:
 0: [ -1 0 0 1 0 ]
 1: [ -1 0 0 0 1 ]
 Torsion generators:
-0: [ 1 -1 0 0 0 ]
+0: [ -1 1 0 0 0 ]
 1: [ -3 0 1 1 1 ]
 
 ----------------
@@ -55,10 +55,10 @@ Miscellaneous vector representations
 ------------------------------------
 
 [ ]
-[ 6 0 ]
-[ 6 2 ]
-[ 6 4 ]
-[ 6 0 ]
+[ 0 6 ]
+[ 2 6 ]
+[ 4 6 ]
+[ 0 6 ]
 [ ]
-[ 4 2 1 1 ]
-[ 4 2 0 1 ]
+[ 1 1 4 2 ]
+[ 0 1 4 2 ]

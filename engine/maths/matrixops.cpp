@@ -153,6 +153,7 @@ void smithNormalForm(NMatrixInt& matrix) {
     }
 }
 
+
 void smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv) {
@@ -779,16 +780,391 @@ std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
                     b * tBasis->entry( i, rowNZlist[0]);
                 tBasis->entry(i,rowNZlist[0]) = tmp;
             }
-
             // now rowNZlist[1] entry is zero, remove it from the list.
             rowNZlist.erase( rowNZlist.begin()+1 );
         }
     }
-
-
     return tBasis;
 }
 
+// Lemma 1: [a b | c d] representing an element of End(Z_n x Z_{mn}) is in Aut(Z_n x Z_{mn}) 
+//          if and only if dA-bc is a unit of Z_{mn} for some lift A \in Z_{mn} of a \in Z_n
+//   
+//          You can get an explicit formula for the inverse, basically it boils down to a comparison
+//          with the Z_n^2 case, and the observation that Z_{mn} --> Z_n is surjective on units. 
+
+// The algorithm:
+//
+//  Step 1: reduce all entries mod p_i where i is the row index.
+//  Step 2: Consider the bottom row of A.  Consider a group of columns for which they all share the same p_i. 
+//   standard Gaussian elimination works to put zeros in all but one entry of this row.  
+//   err potential problem here -- consider the 1x1 case where the entry is a unit mod p_1
+//  Step 3: Now we are in the situation where in this row, any two non-zero entries have distinct p_i's,
+//          where now i is the column index. 
+//          Let them be in columns i and n respectively.  Let l_1a_{ni} + l_2a_{nn} = gcd(a_{ni},a_{nn})=g, 
+//          consider matrix [ v_n l_1 | -v_i l_2 ] where v_n = a_{nn}/g and v_i=a_{ni}/g.  This is a valid
+//          column operation by Lemma 1 and some congruence munching. Apply, this reduces this bottom row. 
+//            to the point where it has only one non-zero entry and it is a unit mod the relevant p_i, 
+//          so we can multiply by its inverse
+//  Step 4: repeat inductively to square submatrix above and to the left of the nn entry.  This results
+//          in an upper diagonal matrix.  Reapply step 1 gives all 1's down diagonal.
+//  Step 5: row ops to convert to identity.  
+// *Step 6: keep track of all the corresponding matrices, put together to assemble inverse. Notice it's all
+//          standard Gaussian elimination, just done in a funny order and with some modular arithmatic
+//          stuffed in there. 
+std::auto_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
+        const std::vector<NLargeInteger> &invF) {
+    // inductive step begins right away. Start at bottom row.
+    NMatrixInt workMat( input );
+    NMatrixInt colOps( input.rows(), input.columns() );
+    colOps.makeIdentity();
+
+    unsigned long wRow = input.rows();
+    while (wRow > 0)
+    {
+        wRow--;
+        // step 1 modular reduction on the current row. And find last non-zero entry in this row
+        //                 up to wRow column
+        NLargeInteger R; // divisionAlg needs a remainder so we give it one, although we discard it.
+        unsigned long pivCol=0; 
+        for (unsigned long i=0; i<=wRow; i++)
+        {
+            workMat.entry(wRow, i).divisionAlg(invF[wRow], R);
+            workMat.entry(wRow, i) = R;
+            if (R!=0) pivCol=i;
+        } // now pivCol is the last non-zero entry in the 0..wRow square submatrix 
+
+        // Step 2: transpose pivCol and column wRow
+        if (wRow != pivCol) for (unsigned long i=0; i<workMat.rows(); i++)
+        {
+            workMat.entry(i, wRow).swap(workMat.entry(i, pivCol));
+            colOps.entry(i, wRow).swap(colOps.entry(i, pivCol));
+        }
+        pivCol = wRow;
+
+        // Step 3 Gauss eliminate whatever can be done. Start at rightmost column (pivCol) and work to the left
+        //  comment: it's amazing how many flavours gaussian elimination comes in and
+        //           everything it does.  aaah!
+        unsigned long wCol = pivCol;
+        while (wCol > 0)
+        {
+            wCol--;
+            NLargeInteger g, l1, l2;
+            g = workMat.entry( wRow, wCol ).gcdWithCoeffs( workMat.entry(wRow, pivCol), l1, l2 );
+            NLargeInteger u1, u2;
+            u1 = workMat.entry(wRow, wCol).divExact(g); u2 = workMat.entry(wRow, pivCol).divExact(g); 
+            // u1 l1 + u2 l2 = 1
+            // [ u2 l1 | -u1 l2 ] is column op matrix for wCol and pivCol
+            for (unsigned long i=0; i<workMat.rows(); i++)
+            {
+                // wCol -> u2 wCol - u1 pivCol, pivCol -> l1 wCol + l2 pivCol
+                NLargeInteger W(workMat.entry(i, wCol)), P(workMat.entry(i, pivCol));
+                workMat.entry(i, wCol) = u2*W - u1*P; workMat.entry(i, pivCol) = l1*W + l2*P;
+                W = colOps.entry(i, wCol); P = colOps.entry(i, pivCol);
+                colOps.entry(i, wCol) = u2*W - u1*P; colOps.entry(i, pivCol) = l1*W + l2*P; 
+            }
+        }
+        // now workMat.entry(wRow, pivCol) is a unit mod invF[pivCol], so find its inverse
+        NLargeInteger g, a1, a2;
+        g= workMat.entry( wRow, pivCol ).gcdWithCoeffs( invF[pivCol], a1, a2 );
+        // so a1 represents this multiplicative inverse so multiply this column by it. 
+        for (unsigned long i=0; i<workMat.rows(); i++)
+        {
+            colOps.entry( i, pivCol ) *= a1;
+            workMat.entry( i, pivCol ) *= a1;
+        }
+
+        // step 4 mod reduce the only entry left, recurse back to step 1 on the next row up. 
+        workMat.entry(wRow, pivCol).divisionAlg(invF[wRow], R); 
+        workMat.entry(wRow, pivCol) = R;
+        // so we should have 1's down the diagonal now as long as I haven't screwed up.
+    }
+
+    NMatrixInt rowOps( input.rows(), input.columns() );
+    rowOps.makeIdentity();
+
+    // step 5 upper triang -> identity.  Use row i to kill i-th entry of row j.
+    for (unsigned long i=1; i<workMat.columns(); i++) for (unsigned long j=0; j<i; j++)
+    {
+        NLargeInteger X(workMat.entry(j, i)); // now subtract X times row i from row j in both
+        // workMat and retval. I guess we could eventually
+        // avoid the ops on workMat since it won't affect
+        // the return value but for debugging purposes we'll 
+        // keep it for now.
+        for (unsigned long k=0; k<workMat.columns(); k++)
+        { 
+            rowOps.entry(j, k) -= X*rowOps.entry(i, k);
+            workMat.entry(j, k) -= X*workMat.entry(i, k);
+        }
+    }
+
+    NMatrixInt* retval = new NMatrixInt( input.rows(), input.columns() );
+    for (unsigned long i=0; i<colOps.rows(); i++) for (unsigned long j=0; j<rowOps.columns(); j++)
+    {
+        for (unsigned long k=0; k<colOps.columns(); k++) retval->entry(i,j) += colOps.entry(i,k)*rowOps.entry(k,j);
+        retval->entry(i,j) %= invF[i];
+        if (retval->entry(i,j) < 0) retval->entry(i,j) += invF[i];
+    }
+
+    // done
+    return std::auto_ptr<NMatrixInt>(retval);
+}
+
+
+bool metricFindPivot(const unsigned long &currStage, const NMatrixInt &matrix, 
+        unsigned long &pr, unsigned long &pc,
+        const std::vector<NLargeInteger> &rowNorm,
+        const std::vector<NLargeInteger> &colNorm, 
+        const std::vector<NLargeInteger> &rowGCD) {
+    bool pivotFound = false;
+    // find the smallest positive rowGCD
+    NLargeInteger SProwGCD(NLargeInteger::zero);
+
+    for (unsigned long i=currStage; i<matrix.rows(); i++)
+        if (rowGCD[i] != 0) {
+            if (SProwGCD == 0) SProwGCD = rowGCD[i].abs();
+            else if (SProwGCD > rowGCD[i].abs()) SProwGCD = rowGCD[i].abs();
+        }
+
+    for (unsigned long i=currStage; i<matrix.rows(); i++)
+        if (rowGCD[i].abs() == SProwGCD)
+            for (unsigned long j=currStage; j<matrix.columns(); j++)
+            {
+                if (matrix.entry(i,j) == 0)
+                    continue;
+                if (pivotFound == false) { pivotFound = true; pr = i; pc = j; }
+                else
+                {
+                    // okay, so now we have a previous potential pivot and this one.  Have to choose which one we 
+                    // prefer. 1st step, is the magnitude smaller? 
+                    if ( matrix.entry(i,j).abs() < matrix.entry(pr,pc).abs() ) { pr = i; pc = j; }
+                    else // if not, maybe they're the same magnitude...
+                        if ( matrix.entry(i,j).abs() == matrix.entry(pr,pc).abs() )
+                        { // if magnitude == 1 we use the relative weight comparison. 
+                            if ( matrix.entry(i,j).abs() == 1 )
+                            {
+                                if ( (rowNorm[i] - matrix.entry(i,j).abs())*(colNorm[j] - matrix.entry(i,j).abs()) < 
+                                        (rowNorm[pr] - matrix.entry(pr,pc).abs())*(colNorm[pc] - matrix.entry(pr,pc).abs()) )
+                                { pr = i; pc = j; }
+                            } 
+                            else // if magnitude > 1 we use the rowNorm comparison. if rows the same? use colNorm...
+                            {
+                                if ( i == pr )
+                                { if ( colNorm[j] < colNorm[pc] ) { pr = i; pc =j; } }
+                                else
+                                { if ( rowNorm[i] < rowNorm[pr] ) { pr = i; pc = j; } }
+                            }
+                        }
+                }
+            } 
+
+    return pivotFound;
+}
+
+// switch rows i and j in matrix.  Keep track of change-of-basis matrix and metrics
+void metricSwitchRows(const unsigned long &currStage, const unsigned long &i, const unsigned long &j, 
+        NMatrixInt &matrix, NMatrixInt *colBasis, NMatrixInt *colBasisInv, 
+        std::vector<NLargeInteger> &rowNorm, std::vector<NLargeInteger> &rowGCD)
+{
+    rowNorm[i].swap(rowNorm[j]); rowGCD[i].swap(rowGCD[j]);
+    if (colBasis) colBasis->swapRows(i, j); 
+    if (colBasisInv) colBasisInv->swapColumns(i, j);
+    for (unsigned long k=currStage; k<matrix.columns(); k++)
+        matrix.entry(i, k).swap(matrix.entry(j,k));
+}
+
+// switch columns i and j in matrix.  Keep track of change-of-basis matrix and metrics
+void metricSwitchCols(const unsigned long &currStage, const unsigned long &i, const unsigned long &j, 
+        NMatrixInt &matrix, NMatrixInt *rowBasis, NMatrixInt *rowBasisInv, 
+        std::vector<NLargeInteger> &colNorm)
+{
+    colNorm[i].swap(colNorm[j]); 
+    if (rowBasis) rowBasis->swapColumns(i, j); 
+    if (rowBasisInv) rowBasisInv->swapRows(i, j);
+    for (unsigned long k=currStage; k<matrix.rows(); k++)
+        matrix.entry(k, i).swap(matrix.entry(k, j));
+}
+
+// columns operation using 2x2-matrix [a b|c d] on columns i, j resp.
+void metricColOp(const unsigned long &currStage, const unsigned long &i, const unsigned long &j, 
+        NMatrixInt &matrix, 
+        const NLargeInteger a, const NLargeInteger b, const NLargeInteger c, const NLargeInteger d, 
+        NMatrixInt *rowBasis, NMatrixInt *rowBasisInv, 
+        std::vector<NLargeInteger> &rowNorm, std::vector<NLargeInteger> &colNorm)
+{
+    NLargeInteger t1, t2;
+    // smart rowMetric recomputation and transformation
+    colNorm[i] = NLargeInteger::zero; colNorm[j] = NLargeInteger::zero;
+    for (unsigned long k=currStage; k<matrix.rows(); k++)
+    {
+        t1 = a*matrix.entry(k, i) + c*matrix.entry(k, j);
+        t2 = b*matrix.entry(k, i) + d*matrix.entry(k, j);
+        rowNorm[k] += t1.abs() + t2.abs() - matrix.entry(k,i).abs() - matrix.entry(k,j).abs();
+        matrix.entry(k, i) = t1;    matrix.entry(k, j) = t2; 
+        colNorm[i] += t1.abs();    colNorm[j] += t2.abs();
+    } // now modify rowBasis and rowBasisInv
+    if (rowBasis) for (unsigned long k=0; k<matrix.columns(); k++)
+    {
+        // apply same column op to rowBasis
+        t1 = a*rowBasis->entry(k, i) + c*rowBasis->entry(k, j);
+        t2 = b*rowBasis->entry(k, i) + d*rowBasis->entry(k, j);
+        rowBasis->entry(k, i) = t1;  rowBasis->entry(k, j) = t2;
+    }
+    if (rowBasisInv) for (unsigned long k=0; k<matrix.columns(); k++)
+    {  // apply inverse row op to rowBasisInv
+        t1 = d*rowBasisInv->entry(i, k) - b*rowBasisInv->entry(j, k);
+        t2 = -c*rowBasisInv->entry(i, k) + a*rowBasisInv->entry(j, k);
+        rowBasisInv->entry(i, k) = t1; rowBasisInv->entry(j, k) = t2;
+    }
+}
+
+// row operation using 2x2-matrix [a b|c d] on rows i, j resp.
+void metricRowOp(const unsigned long &currStage, const unsigned long &i, const unsigned long &j, 
+        NMatrixInt &matrix, 
+        const NLargeInteger a, const NLargeInteger b, const NLargeInteger c, const NLargeInteger d, 
+        NMatrixInt *colBasis, NMatrixInt *colBasisInv, 
+        std::vector<NLargeInteger> &rowNorm, std::vector<NLargeInteger> &colNorm,
+        std::vector<NLargeInteger> &rowGCD)
+{
+    NLargeInteger t1, t2;
+    // smart norm recomputation and transformation
+    rowNorm[i] = NLargeInteger::zero; rowNorm[j] = NLargeInteger::zero;
+    rowGCD[i] = NLargeInteger::zero;  rowGCD[j] = NLargeInteger::zero;
+    for (unsigned long k=currStage; k<matrix.columns(); k++)
+    {
+        t1 = a*matrix.entry(i, k) + b*matrix.entry(j, k);
+        t2 = c*matrix.entry(i, k) + d*matrix.entry(j, k);
+        colNorm[k] += t1.abs() + t2.abs() - matrix.entry(i, k).abs() - matrix.entry(j, k).abs();
+        matrix.entry(i, k) = t1;    matrix.entry(j, k) = t2; 
+        rowNorm[i] += t1.abs();    rowNorm[j] += t2.abs();
+        rowGCD[i] = rowGCD[i].gcd(t1);  rowGCD[j] = rowGCD[j].gcd(t2);
+    } // now modify colBasis and colBasisInv
+    if (colBasis) for (unsigned long k=0; k<matrix.rows(); k++)
+    {
+        // apply same row op to colBasis
+        t1 = a*colBasis->entry(i, k) + b*colBasis->entry(j, k);
+        t2 = c*colBasis->entry(i, k) + d*colBasis->entry(j, k);
+        colBasis->entry(i, k) = t1;  colBasis->entry(j, k) = t2;
+    }
+    if (colBasisInv) for (unsigned long k=0; k<matrix.rows(); k++)
+    {
+        // apply inverse column op to colBasisInv
+        t1 =  d*colBasisInv->entry(k, i) - c*colBasisInv->entry(k, j);
+        t2 = -b*colBasisInv->entry(k, i) + a*colBasisInv->entry(k, j);
+        colBasisInv->entry(k, i) = t1; colBasisInv->entry(k, j) = t2;
+    }
+}
+
+/**
+ *  This routine converts mxn matrix "matrix" into its Smith Normal Form.
+ * It assumes rowSpaceBasis and rowSpaceBasisInv are pointers to NMatrixInts, 
+ * if alloceted, having dimension mxm, and colSpaceBasis and colSpaceBasisInv
+ * has dimensions nxn.  These matrices record the row and columns operations
+ * used to convert between "matrix" and its Smith Normal Form.  Specifically, 
+ * if orig_matrix is "matrix" before metricalSmithNormalForm is called, and
+ * after_matrix is "matrix" after metricalSmithNormalForm is called, then
+ * we have the relations:
+ *
+ *    (*colSpaceBasis) * orig_matrix * (*rowSpaceBasis) == after_matrix
+ *
+ *    (*colSpaceBasisInv) * after_matrix * (*rowSpaceBasisInv) == orig_matrix
+ *
+ *  If any of rowSpaceBasis, colSpaceBasis or rowSpaceBasisInv or colSpaceBasisInv
+ * are not allocated, this algotithm does not bother to compute them (and is
+ * correspondingly faster. 
+ *
+ *  This routine uses a first-order technique to intelligently choose the
+ * pivot when computing the Smith Normal Form, attempting to keep the matrix
+ * sparse and its norm small throughout the reduction process.  The technique
+ * is loosely based on the papers: 
+ *
+ *  Havas, Holt, Rees. Recognizing badly Presented Z-modules. Linear Algebra
+ * and its Applications. 192:137--163 (1993). 
+ *
+ *  Markowitz. The elimination form of the inverse and its application to linear
+ * programming. Management Sci. 3:255--269 (1957).
+ */
+void metricalSmithNormalForm(NMatrixInt& matrix,
+        NMatrixInt *rowSpaceBasis, NMatrixInt *rowSpaceBasisInv,
+        NMatrixInt *colSpaceBasis, NMatrixInt *colSpaceBasisInv) {
+    if (rowSpaceBasis) rowSpaceBasis->makeIdentity();    
+    if (rowSpaceBasisInv) rowSpaceBasisInv->makeIdentity();
+    if (colSpaceBasis) colSpaceBasis->makeIdentity();    
+    if (colSpaceBasisInv) colSpaceBasisInv->makeIdentity();
+    // set up metrics. 
+    std::vector<NLargeInteger> rowNorm(matrix.rows(), NLargeInteger::zero);
+    std::vector<NLargeInteger> colNorm(matrix.columns(), NLargeInteger::zero);
+    std::vector<NLargeInteger> rowGCD(matrix.rows(), NLargeInteger::zero);
+    for (unsigned long i=0; i<matrix.rows(); i++) for (unsigned long j=0; j<matrix.columns(); j++)
+    { rowNorm[i] += matrix.entry(i,j).abs();
+        colNorm[j] += matrix.entry(i,j).abs();
+        rowGCD[i]  = rowGCD[i].gcd(matrix.entry(i,j)); }
+
+        unsigned long currStage = 0;
+        unsigned long i, j;
+        while (metricFindPivot(currStage, matrix, i, j, rowNorm, colNorm, rowGCD))
+        { // entry i,j is now the pivot, so we move it to currStage, currStage.
+            if (i != currStage) metricSwitchRows(currStage, currStage, i, matrix, colSpaceBasis, colSpaceBasisInv, 
+                    rowNorm, rowGCD);
+            if (j != currStage) metricSwitchCols(currStage, currStage, j, matrix, rowSpaceBasis, rowSpaceBasisInv, 
+                    colNorm);
+            NLargeInteger g, u, v;
+rowMuckerLoop: // we come back here if the column operations later on mess up row currStage
+            // first we do the col ops, eliminating entries to the right of currStage, currStage
+            for (j=currStage+1; j<matrix.columns(); j++) if (matrix.entry(currStage, j) != 0)
+            {
+                g = matrix.entry(currStage, currStage).gcdWithCoeffs(matrix.entry(currStage, j), u, v);
+                metricColOp(currStage, currStage, j, matrix, 
+                        u, -matrix.entry(currStage,j).divExact(g), v, matrix.entry(currStage, currStage).divExact(g), 
+                        rowSpaceBasis, rowSpaceBasisInv, rowNorm, colNorm);
+            }
+            // then the row ops, eliminating entries below currStage, currStage
+            for (i=currStage+1; i<matrix.rows(); i++) if (matrix.entry(i, currStage) != 0)
+            {
+                g = matrix.entry(currStage, currStage).gcdWithCoeffs(matrix.entry(i, currStage), u, v);
+                metricRowOp(currStage, currStage, i, matrix, 
+                        u, v, -matrix.entry(i,currStage).divExact(g), matrix.entry(currStage,currStage).divExact(g), 
+                        colSpaceBasis, colSpaceBasisInv, rowNorm, colNorm, rowGCD);
+            }
+            // scan row currStage, if it isn't zero, goto rowMuckerLoop
+            for (j=currStage+1; j<matrix.columns(); j++) if (matrix.entry(currStage, j) != 0) goto rowMuckerLoop;
+            // ensure matrix.entry(currStage, currStage) is positive
+            if (matrix.entry(currStage, currStage)<0)
+            { // we'll make it a column operation
+                for (i=currStage; i<matrix.rows(); i++) matrix.entry(i, currStage).negate();
+                if (rowSpaceBasis) for (i=0; i<matrix.columns(); i++)
+                    rowSpaceBasis->entry( i, currStage ).negate();
+                if (rowSpaceBasisInv) for (i=0; i<matrix.columns(); i++)
+                    rowSpaceBasisInv->entry( currStage, i ).negate();
+            }
+            // run through rows currStage+1 to bottom, check if divisible by matrix.entry(cs,cs). 
+            //  if not, record row and gcd( matrix.entry(cs,cs), rowGCD[this row],  pick the row with 
+            //  the lowest of these gcds...
+            unsigned long rowT=currStage;
+            NLargeInteger bestGCD(matrix.entry(currStage, currStage).abs());       
+            for (i=currStage+1; i<matrix.rows(); i++)       
+            {
+                g = matrix.entry(currStage, currStage).gcd(rowGCD[i]).abs();
+                if ( g < bestGCD )
+                { rowT = i; bestGCD = g; }
+            }
+            if ( rowT > currStage )
+            {
+                metricRowOp(currStage, currStage, rowT, matrix, NLargeInteger::one, NLargeInteger::one, 
+                        NLargeInteger::zero, NLargeInteger::one, colSpaceBasis, colSpaceBasisInv, 
+                        rowNorm, colNorm, rowGCD);
+                goto rowMuckerLoop;
+            }
+            // done
+            currStage++;
+        }
+        // no pivot found -- ie the matrix down and to the right of currStage is zero.
+        // so we're done.
+}
+
+
 
 } // namespace regina
+
+
 
