@@ -30,24 +30,30 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
+#include "dim4/dim4boundarycomponent.h"
 #include "dim4/dim4exampletriangulation.h"
 #include "dim4/dim4isomorphism.h"
+#include "dim4/dim4tetrahedron.h"
 #include "dim4/dim4triangulation.h"
 #include "manifold/nmanifold.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/nexampletriangulation.h"
+#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/dim4/testdim4.h"
 
+using regina::Dim4BoundaryComponent;
 using regina::Dim4ExampleTriangulation;
 using regina::Dim4Isomorphism;
 using regina::Dim4Pentachoron;
+using regina::Dim4Tetrahedron;
 using regina::Dim4Triangulation;
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NPerm5;
 using regina::NStandardTriangulation;
+using regina::NTetrahedron;
 using regina::NTriangulation;
 
 class Dim4TriangulationTest : public CppUnit::TestFixture {
@@ -58,6 +64,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(boundary);
     CPPUNIT_TEST(boundaryComponents);
+    CPPUNIT_TEST(boundaryInclusions);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(eulerCharacteristic);
     CPPUNIT_TEST(homologyH1);
@@ -630,6 +637,50 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBoundaryCount(pillow_threeCycle, 1);
             verifyBoundaryTri(pillow_threeCycle, 0, "L(3,1)");
             verifyBoundaryCount(pillow_fourCycle, 0);
+        }
+
+        void verifyBoundaryInclusions(const Dim4Triangulation& tri) {
+            Dim4BoundaryComponent* bc;
+            const NTetrahedron *tet3, *adj3;
+            Dim4Tetrahedron *tet4, *adj4;
+
+            int n = tri.getNumberOfBoundaryComponents();
+            int count;
+            int i, j;
+            int face;
+            for (i = 0; i < n; ++i) {
+                bc = tri.getBoundaryComponent(i);
+                if (bc->isIdeal())
+                    continue;
+
+                count = bc->getNumberOfTetrahedra();
+                for (j = 0; j < count; ++j) {
+                    tet4 = bc->getTetrahedron(j);
+                    tet3 = bc->getTriangulation()->getTetrahedron(j);
+                    for (face = 0; face < 4; ++face) {
+                        adj3 = tet3->adjacentTetrahedron(face);
+                        if (adj3) {
+                            adj4 = bc->getTetrahedron(adj3->markedIndex());
+                            if (tet4->getFace(face) !=
+                                    adj4->getFace(tet3->adjacentFace(face))) {
+                                std::ostringstream msg;
+                                msg << "Boundary tetrahedron adjacency "
+                                    "test failed for " << tri.getPacketLabel()
+                                    << ", BC #" << i << ", tet #" << j
+                                    << ", face #" << face << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void boundaryInclusions() {
+            verifyBoundaryInclusions(ball_singlePent);
+            verifyBoundaryInclusions(ball_foldedPent);
+            verifyBoundaryInclusions(ball_singleConeS3);
+            verifyBoundaryInclusions(ball_layerAndFold);
         }
 
         void verifyLinkCount(const Dim4Triangulation& tri, unsigned nVert) {
