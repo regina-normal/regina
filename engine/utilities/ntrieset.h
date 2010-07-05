@@ -128,7 +128,7 @@ class NTrieSet {
          *
          * This routine asks the following question:  In this collection
          * of sets, is there any superset of the argument \a subset
-         * \emph other than \a exc1 or \a exc2?  Here the sets \a exc1 and
+         * \e other than \a exc1 or \a exc2?  Here the sets \a exc1 and
          * \a exc2 are explicitly excluded from our search.  Supersets
          * need not be \e proper supersets (so if an exact copy of
          * \a subset is found in the tree then this will suffice).
@@ -147,7 +147,7 @@ class NTrieSet {
          * collection for a (non-strict) superset of this argument.
          * \param exc1 the first set in the collection to be excluded
          * from this search.
-         * \param exc1 the second set in the collection to be excluded
+         * \param exc2 the second set in the collection to be excluded
          * from this search.
          * \param universeSize the number of elements in the underlying
          * universe (and therefore the lowest possible level in the
