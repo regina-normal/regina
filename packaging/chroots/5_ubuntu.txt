@@ -40,24 +40,24 @@ Guest configuration
 - Bootstrap the system:
 
   (for amd64:)
-  debian# debootstrap gutsy /srv/chroot/ubuntu/gutsy-amd64
-          http://ftp.iinet.net.au/linux/ubuntu/
+  debian# debootstrap lucid /srv/chroot/ubuntu/lucid-amd64
+          http://mirror.aarnet.edu.au/pub/ubuntu/archive/
 
   (for i386:)
-  debian# debootstrap --arch i386 gutsy /srv/chroot/ubuntu/gutsy-i386
-          http://ftp.iinet.net.au/linux/ubuntu/
+  debian# debootstrap --arch i386 lucid /srv/chroot/ubuntu/lucid-i386
+          http://mirror.aarnet.edu.au/pub/ubuntu/archive/
 
 - Create guest home directory:
 
-  debian# mkdir /srv/chroot/ubuntu/gutsy-amd64/home/bab
-  debian# chown bab.bab /srv/chroot/ubuntu/gutsy-amd64/home/bab
+  debian# mkdir /srv/chroot/ubuntu/lucid-amd64/home/bab
+  debian# chown bab.bab /srv/chroot/ubuntu/lucid-amd64/home/bab
 
 - Add a schroot entry:
 
-  [gutsy-amd64]
+  [lucid-amd64]
   type=directory
-  description=Ubuntu gutsy (amd64)
-  location=/srv/chroot/ubuntu/gutsy-amd64
+  description=Ubuntu lucid (amd64)
+  location=/srv/chroot/ubuntu/lucid-amd64
   priority=3
   users=bab
   root-users=root
@@ -65,61 +65,66 @@ Guest configuration
   run-exec-scripts=true
 
   (for amd64 chroots:)
-  aliases=gutsy
+  aliases=lucid
 
   (for i386 chroots:)
   personality=linux32
 
 - Add universe to /etc/apt/sources.list in the guest system:
 
-  deb http://ftp.iinet.net.au/linux/ubuntu gutsy main universe
+  deb http://mirror.aarnet.edu.au/linux/ubuntu/archive/ lucid main universe
 
-  debian# schroot -c gutsy aptitude update
+  debian# schroot -c lucid aptitude update
+
+- Avoid problems with services in chroots:
+
+  debian# schroot -c lucid -- dpkg-divert --local --rename --add /sbin/initctl
+  debian# schroot -c lucid -- ln -s /bin/true /sbin/initctl
 
 - Install base system:
 
-  debian# schroot -c gutsy aptitude install
+  debian# schroot -c lucid aptitude install
           ubuntu-desktop language-pack-en vim xnest xserver-xephyr zsh
 
 - Purge packages that cause problems in chroots:
 
   (to avoid problems copying the host /etc/resolv.conf:)
-  debian# schroot -c gutsy aptitude purge resolvconf
+  debian# schroot -c lucid aptitude purge resolvconf
 
   (to avoid problems in the guest /var/lib/dpkg/statoverride:)
-  debian# schroot -c gutsy aptitude purge postfix
+  debian# schroot -c lucid aptitude purge postfix bsd-mailx
 
 - Install packages necessary for building regina:
 
-  debian# schroot -c gutsy aptitude install
+  debian# schroot -c lucid aptitude install
           build-essential devscripts fakeroot lintian automake1.9 debhelper
           doxygen kdelibs4-dev libboost-python-dev libcppunit-dev libgmp3-dev
           libmpich1.0-dev libpopt-dev libxml2-dev zlib1g-dev
-  debian# schroot -c gutsy aptitude clean
+  debian# schroot -c lucid aptitude clean
 
 - Install other packages useful for running and testing regina:
 
-  debian# schroot -c gutsy aptitude install
+  debian# schroot -c lucid aptitude install
           graphviz kpdf khelpcenter kig konqueror       (on <= hardy)
-  debian# schroot -c gutsy aptitude install
+  debian# schroot -c lucid aptitude install
           graphviz okular khelpcenter kig konqueror     (on >= intrepid)
-  debian# schroot -c gutsy aptitude clean
+  debian# schroot -c lucid aptitude clean
 
 - Have another shot at purging problematic packages, in case they've returned:
 
-  debian# schroot -c gutsy aptitude purge resolvconf postfix
+  debian# schroot -c lucid aptitude purge resolvconf postfix bsd-mailx
 
 - If disk space is becoming a problem, get rid of openoffice:
 
-  debian# schroot -c gutsy aptitude purge `aptitude search '~iopenoffice' |
+  debian# schroot -c lucid aptitude purge `aptitude search '~iopenoffice' |
                            sed -e 's/^....//' | cut -f1 -d' '`
-  debian# schroot -c gutsy aptitude purge
-  debian# schroot -c gutsy aptitude install
-  debian# schroot -c gutsy aptitude clean
+  debian# schroot -c lucid aptitude purge
+  debian# schroot -c lucid aptitude install
+  debian# schroot -c lucid aptitude clean
 
 - Allow user to administer the system:
 
-  debian# schroot -c gutsy visudo
+  debian# schroot -c lucid visudo
 
   bab ALL=(ALL) ALL
 
