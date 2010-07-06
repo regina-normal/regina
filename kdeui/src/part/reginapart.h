@@ -307,6 +307,11 @@ class ReginaPart : public KParts::ReadWritePart {
         bool closeAllPanes();
 
         /**
+         * Tests whether there is some open pane with uncommitted changes.
+         */
+        bool hasUncommittedChanges();
+
+        /**
          * Update the global preferences.  Note that this routine emits
          * a preferencesChanged() signal.
          */

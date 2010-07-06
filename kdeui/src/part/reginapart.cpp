@@ -236,6 +236,17 @@ bool ReginaPart::saveFile() {
     if (! isReadWrite())
         return false;
 
+    // Does the user have some work that still needs to be committed?
+    if (hasUncommittedChanges())
+        if (KMessageBox::warningContinueCancel(widget(), i18n("<qt>You have "
+                "not yet committed your changes for one or more packets.  "
+                "<b>These changes will not be saved to file.</b>  You can "
+                "find a commit button in the bottom-left corner of each "
+                "packet window.<p>"
+                "Do you wish to save now without these changes?</qt>"),
+                QString::null, KStdGuiItem::save()) != KMessageBox::Continue)
+            return false;
+
     if (regina::writeXMLFile(
             static_cast<const char*>(QFile::encodeName(m_file)), packetTree))
         return true;
@@ -444,6 +455,14 @@ bool ReginaPart::closeAllPanes() {
             return false;
 
     return true;
+}
+
+bool ReginaPart::hasUncommittedChanges() {
+    for (PacketPane* p = allPanes.first(); p; p = allPanes.next())
+        if (p->isDirty())
+            return true;
+
+    return false;
 }
 
 void ReginaPart::updatePreferences(const ReginaPrefSet& newPrefs) {
