@@ -34,6 +34,10 @@ Host mandriva system configuration
 
 - Boot the host mandriva system and ensure that urpmi is installed.
 
+- Ensure that the host mandriva system has the correct filesystem label:
+
+  debian# e2label /dev/sda12 /mdvhost
+
 - Create a /chroot directory in which the guest mandriva systems will be
   mounted.
 

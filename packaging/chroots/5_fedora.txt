@@ -43,7 +43,7 @@ Host debian system configuration (debian lenny)
 
   (from /etc/fstab:)
   LABEL=/fedora /srv/chroot/fedora ext3 defaults,errors=remount-ro 0 0
-  LABEL=/ /srv/chroot/fchost ext3 defaults,errors=remount-ro 0 0
+  LABEL=/fchost /srv/chroot/fchost ext3 defaults,errors=remount-ro 0 0
 
 - Create a new fstab file /etc/schroot/mount-fedora, which consists of
   the standard /etc/schroot/mount-defaults plus the following extra line:
@@ -73,9 +73,16 @@ Host debian system configuration (debian lenny)
 Host fedora system configuration
 --------------------------------
 
-- After installing the host fedora system, run the SELinux Administration
-  tool and make SELinux disabled by default.  Otherwise schroot can mess
-  with the SELinux file labellings and render the host system unbootable.
+- After installing the host fedora system, make SELinux disabled by default.
+  Otherwise schroot can mess with the SELinux file labellings and render the
+  host system unbootable.
+
+  (from /etc/selinux/config:)
+  SELINUX=disabled
+
+- Ensure that the host fedora system has the correct filesystem label:
+
+  debian# e2label /dev/sda10 /fchost
 
 - Chroot into the host fedora system and ensure that mock is installed:
 
@@ -99,10 +106,20 @@ Guest fedora system configuration
 
 - Comment out the updates repository from this config file:
 
-  (from /etc/mock/fedora-7-x86_64.cfg:)
+  (from /etc/mock/fedora-13-x86_64.cfg:)
   # [updates-released]
   # name=updates
   # mirrorlist=...
+  # ...
+
+- If necessary, point the base repository to a desirable mirror:
+
+  (from /etc/mock/fedora-13-x86_64.cfg:)
+  [fedora]
+  ...
+  # mirrorlist=...
+  baseurl=http://mirror.aarnet.edu.au/pub/fedora/linux/releases/13/Everything/x86_64/os/
+  ...
 
 - Set up a base graphical system:
 
