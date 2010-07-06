@@ -99,7 +99,7 @@ Guest mandriva system configuration
 
   mdvhost# urpmi.addmedia --interactive --distrib
            --urpmi-root /chroot/2009.1-x86_64
-           ftp://ftp.iinet.net.au/pub/MandrivaLinux/official/2009.1/x86_64
+           http://mirror.aarnet.edu.au/pub/mandriva/2010.0/x86_64
 
   The --interactive option asks you to approve each source.  Only
   approve the release sources (main, contrib, etc).  Do not approve the
