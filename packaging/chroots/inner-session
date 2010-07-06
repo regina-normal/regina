@@ -60,6 +60,14 @@ case "$os" in
 		distro=Jaunty
 		gnome=1
 		;;
+	Ubuntu\ 9.10* )
+		distro=Karmic
+		gnome=1
+		;;
+	Ubuntu\ 10.04* )
+		distro=Lucid
+		gnome=1
+		;;
 	Debian\ GNU/Linux\ 5.0\ * )
 		distro=Lenny
 		;;
@@ -92,7 +100,13 @@ case "$os" in
 		distro="Fedora 10"
 		;;
 	Fedora\ release\ 11\ * )
-		distro="Fedora 10"
+		distro="Fedora 11"
+		;;
+	Fedora\ release\ 12\ * )
+		distro="Fedora 12"
+		;;
+	Fedora\ release\ 13\ * )
+		distro="Fedora 13"
 		;;
 	?Welcome\ to\ openSUSE\ 11.0\ * )
 		distro="SuSE 11.0"
