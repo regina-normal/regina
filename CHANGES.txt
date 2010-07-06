@@ -171,6 +171,7 @@ Version 4.6.1  [ (under development) ]
     USER INTERFACE:
         - There is now an option to enable or disable diagnostic
           messages from the SnapPea kernel.
+        - Warn users if they try to save without committing their changes first.
     UTILITIES:
         tricensus-mpi-status:
             - Now finishes with a running total of all triangulations found.
