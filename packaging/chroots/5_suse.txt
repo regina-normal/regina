@@ -49,7 +49,10 @@ Guest suse system configuration
     Moreover, when the new SuSE system is first booted, reconfigure
     the online update applet to *not* start automatically.
 
-- Fire up YaST to install the necessary software, which includes:
+- Fire up YaST to install the necessary software.  This may involve
+  reconfiguring the mirror:
+
+  http://mirror.aarnet.edu.au/pub/opensuse/opensuse/distribution/...
 
   + Packages needed for building regina:
 
@@ -60,7 +63,10 @@ Guest suse system configuration
   + Packages needed for running regina, and for supporting the chroot:
 
     graphviz kdebase3 kdeedu3 kdegraphics3-pdf susehelp zsh
-    xorg-x11-server-extra
+    xorg-x11-server-extra                                   (SuSE <= 11.1)
+
+    graphviz kdebase3 kig okular susehelp zsh
+    xorg-x11-server-extra                                   (SuSE >= 11.2)
 
   + On SuSE 10.2 (and presumably earlier), there is no need for a separate
     xorg-x11-server-extra package, and the libcppunit packages are just
