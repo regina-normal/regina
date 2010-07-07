@@ -113,6 +113,10 @@ class NBoundaryComponent : public ShareableObject, public NMarkedElement {
         /**
          * Returns the requested face in this boundary component.
          *
+         * For an ideal boundary component (which consists of a single
+         * vertex), there are no real faces in the boundary component
+         * and this routine cannot be used.
+         *
          * @param index the index of the requested face in the boundary
          * component.  This should be between 0 and getNumberOfFaces()-1
          * inclusive.
@@ -125,6 +129,10 @@ class NBoundaryComponent : public ShareableObject, public NMarkedElement {
 
         /**
          * Returns the requested edge in this boundary component.
+         *
+         * For an ideal boundary component (which consists of a single
+         * vertex), there are no real edges in the boundary component
+         * and this routine cannot be used.
          *
          * @param index the index of the requested edge in the boundary
          * component.  This should be between 0 and getNumberOfEdges()-1
