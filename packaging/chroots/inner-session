@@ -114,6 +114,12 @@ case "$os" in
 	Welcome\ to\ openSUSE\ 11.1\ * )
 		distro="SuSE 11.1"
 		;;
+	Welcome\ to\ openSUSE\ 11.2\ * )
+		distro="SuSE 11.2"
+		;;
+	Welcome\ to\ openSUSE\ 11.3\ * )
+		distro="SuSE 11.3"
+		;;
 	* )
 		distro=Unknown
 		;;
