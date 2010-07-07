@@ -141,7 +141,7 @@ class Dim4BoundaryComponent : public ShareableObject, public NMarkedElement {
          * matches the index of the corresponding NTetrahedron in the
          * 3-manifold triangulation returned by getTriangulation().
          *
-         * For an ideal boundary components (which consist of a single
+         * For an ideal boundary component (which consists of a single
          * vertex), there are no real tetrahedra in the boundary component
          * and this routine cannot be used.
          *
@@ -163,7 +163,7 @@ class Dim4BoundaryComponent : public ShareableObject, public NMarkedElement {
          * matches the index of the corresponding NFace in the
          * 3-manifold triangulation returned by getTriangulation().
          *
-         * For an ideal boundary components (which consist of a single
+         * For an ideal boundary component (which consists of a single
          * vertex), there are no real faces in the boundary component
          * and this routine cannot be used.
          *
@@ -185,7 +185,7 @@ class Dim4BoundaryComponent : public ShareableObject, public NMarkedElement {
          * matches the index of the corresponding NEdge in the
          * 3-manifold triangulation returned by getTriangulation().
          *
-         * For an ideal boundary components (which consist of a single
+         * For an ideal boundary component (which consists of a single
          * vertex), there are no real edges in the boundary component
          * and this routine cannot be used.
          *
