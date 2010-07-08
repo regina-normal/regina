@@ -1221,7 +1221,7 @@ NTriangulation* NNormalSurface::crush() const {
     NTriangulation* ans = new NTriangulation(*triangulation);
     unsigned long nTet = ans->getNumberOfTetrahedra();
     if (nTet == 0)
-        return new NTriangulation();
+        return ans;
 
     // Work out which tetrahedra contain which quad types.
     int* quads = new int[nTet];
@@ -1290,7 +1290,7 @@ NTriangulation* NNormalSurface::crush() const {
     // Delete unwanted tetrahedra.
     for (whichTet = nTet - 1; whichTet >= 0; whichTet--)
         if (quads[whichTet] >= 0)
-            ans->removeTetrahedronAt(whichTet);
+            delete ans->removeTetrahedronAt(whichTet);
 
     delete[] quads;
     return ans;

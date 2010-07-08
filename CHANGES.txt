@@ -70,6 +70,8 @@ Version 4.6.1  [ (under development) ]
               being preserved (for the time being) for backward compatibility.
         Class NGlobalDirs:
             - New routine data() to return the internal data directory.
+        Class NGroupPresentation:
+            - Fixed a memory leak in intelligentSimplify().
         Class NIsomorphism:
             - New routine applyInPlace() to directly modify a triangulation.
             - Routine apply() now copies tetrahedron descriptions as
@@ -80,6 +82,7 @@ Version 4.6.1  [ (under development) ]
         Class NNormalSurface:
             - New routines isCompressingDisc() and isIncompressible() for
               testing incompressibility.
+            - Fixed a memory leak in crush().
         Class NNormalSurfaceList:
             - Sped up enumeration (again), this time by using a
               trie-like structure for adjacency testing.  For the

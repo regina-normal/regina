@@ -467,6 +467,7 @@ bool NGroupPresentation::intelligentSimplify() {
     }
 
     // Done!
+    delete[] genMap;
     return changed;
 }
 
