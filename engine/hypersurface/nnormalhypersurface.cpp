@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <algorithm>
+#include "dim4/dim4edge.h"
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurface.h"
 #include "utilities/xmlutils.h"
@@ -143,6 +144,36 @@ bool NNormalHypersurface::sameSurface(const NNormalHypersurface& other) const {
         for (i = 0; i < 10; ++i)
             if (getPrismCoord(p, i) != other.getPrismCoord(p, i))
                 return false;
+    }
+
+    return true;
+}
+
+bool NNormalHypersurface::locallyCompatible(const NNormalHypersurface& other)
+        const {
+    unsigned long nPent = triangulation_->getNumberOfPentachora();
+
+    int type;
+    int found, prism[2];
+    int i, j;
+    for (unsigned long pent = 0; pent < nPent; ++pent) {
+        // Find all prism types that appear in this pentachoron.
+        found = 0;
+        for (type = 0; type < 10; ++type)
+            if (getPrismCoord(pent, type) > 0 ||
+                    other.getPrismCoord(pent, type) > 0) {
+                if (found == 2)
+                    return false;
+                prism[found++] = type;
+            }
+
+        // If we do use two prisms, ensure they are compatible.
+        if (found == 2)
+            for (i = 0; i < 2; ++i)
+                for (j = 0; j < 2; ++j)
+                    if (Dim4Edge::edgeVertex[prism[0]][i] ==
+                            Dim4Edge::edgeVertex[prism[1]][j])
+                        return false;
     }
 
     return true;

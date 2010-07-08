@@ -72,6 +72,7 @@ void addNNormalHypersurface() {
         .def("triangulate", &NNormalHypersurface::triangulate,
             return_value_policy<manage_new_object>())
         .def("sameSurface", &NNormalHypersurface::sameSurface)
+        .def("locallyCompatible", &NNormalHypersurface::locallyCompatible)
     ;
 }
 

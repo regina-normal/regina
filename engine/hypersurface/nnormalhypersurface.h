@@ -583,6 +583,38 @@ class NNormalHypersurface : public ShareableObject {
         bool sameSurface(const NNormalHypersurface& other) const;
 
         /**
+         * Determines whether this and the given hypersurface are locally
+         * compatible.  Local compatibility means that, within each individual
+         * pentachoron of the triangulation, it is possible to arrange the
+         * normal discs of both hypersurfaces so that none intersect.
+         *
+         * This is a local constraint, not a global constraint.  That is,
+         * we do not insist that we can avoid intersections within all
+         * pentachora \e simultaneously.
+         *
+         * Local compatibility can be formulated in terms of normal piece
+         * types.  Two normal hypersurfaces are locally compatible if
+         * and only if they together use at most two prism piece types per
+         * pentachoron; moreover, if there \e are two prism piece types within
+         * a single pentachoron then these prism types are non-intersecting.
+         *
+         * If one of the two hypersurfaces breaks the local compatibility
+         * constraints on its own (for instance, it contains two conflicting
+         * prism types within the same pentachoron), then this
+         * routine will return \c false regardless of what the other
+         * hypersurface contains.
+         *
+         * \pre Both this and the given normal hypersurface live within the
+         * same 4-manifold triangulation.
+         *
+         * @param other the other hypersurface to test for local compatibility
+         * with this hypersurface.
+         * @return \c true if the two hypersurfaces are locally compatible, or
+         * \c false if they are not.
+         */
+        bool locallyCompatible(const NNormalHypersurface& other) const;
+
+        /**
          * Gives read-only access to the raw vector that sits beneath this
          * normal hypersurface.
          *
