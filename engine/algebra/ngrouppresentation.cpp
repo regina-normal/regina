@@ -587,6 +587,22 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
         }
 }
 
+std::string NGroupPresentation::stringPresentation() const {
+	std::string retval;
+	retval.append("< ");
+        if (nGenerators == 1) retval.append("g0");
+        else if (nGenerators == 2) retval.append("g0, g1");
+        else { retval.append("g0 .. g"); std::stringstream num; num<<(nGenerators - 1); retval.append(num.str()); }
+        retval.append(" | ");
+        std::stringstream temp;
+        if (!relations.empty()) for (RelIteratorConst it = relations.begin(); it != relations.end(); it++) {
+            if (it != relations.begin()) temp<<", ";
+            (*it)->writeTextShort(temp); }
+        retval.append(temp.str());
+        retval.append(" >");
+	return retval;
+}
+
 std::auto_ptr<NAbelianGroup> NGroupPresentation::unMarkedAbelianization() const
 {
  // create presentation matrices to pass to NAbelianGroup(M, N)

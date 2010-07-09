@@ -588,6 +588,13 @@ class NGroupPresentation : public ShareableObject {
          */
         std::auto_ptr<NMarkedAbelianGroup> markedAbelianization() const;
 
+	/**
+	 * Writes a single string description of the group presentation. No endlines!
+	 *
+	 * @return a std::string describing the presentation, < generators | relators >
+	 */
+	std::string stringPresentation() const;
+
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
 };

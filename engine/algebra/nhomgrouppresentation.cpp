@@ -57,17 +57,36 @@ NGroupExpression NHomGroupPresentation::operator[](const NGroupExpression &arg)
 
 void NHomGroupPresentation::writeTextShort(std::ostream& out) const
 {
-std::cout<<"map_pres[";
+ std::cout<<"map[";
  for (unsigned long i=0; i<domain.getNumberOfGenerators(); i++)
   { if (i!=0) out<<", "; out<<"g"<<i<<" --> "; std::cout.flush(); map[i].writeTextShort( out );  }
-std::cout<<"]";
-std::cout.flush();
+ out<<"]";
 }
 
 void NHomGroupPresentation::writeTextLong(std::ostream& out) const
 {
+ out<<"Domain "<<domain.stringPresentation()<<" "; 
  writeTextShort(out);
+ out<<" "<<range.stringPresentation()<<" Range.";
 }
+
+// return true if and only if a modification to either domain, range or the presentation is made.
+bool NHomGroupPresentation::intelligentSimplify()
+{
+bool changed(false); // default
+
+// step 1: simplify presentation of range. 
+//         the strategy is to completely mimic NGroupPresentation::intelligentSimplify(), and change the map accordingly
+
+// step 2: simplify presentation of domain. 
+//         the strategy is to completely mimic NGroupPresentation::intelligentSimplify(), and change the map accordingly
+
+// step 3: simplify map.
+//         try something?? hmm... need to think about this some more.
+
+return changed;
+}
+
 
 } // namespace regina
 

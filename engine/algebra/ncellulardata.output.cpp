@@ -39,8 +39,6 @@
 
 namespace regina {
 
-
-
 void NCellularData::writeTextShort(std::ostream& out) const 
 {
 bool written=false;
@@ -87,7 +85,8 @@ bool written=false;
 	 if (written) out<<" ";
 	 git->first.writeTextShort(out);
 	 out<<" is ";
-	 git->second->writeTextShort(out);
+         out<<git->second->stringPresentation();
+//	 git->second->writeTextShort(out);
 	 written = true;
 	}
  std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator hit;
