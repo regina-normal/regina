@@ -76,7 +76,7 @@ void setupIndices(const Dim4Triangulation* tri,
     for (Dim4Triangulation::FaceIterator fit = tri->getFaces().begin();
             fit != tri->getFaces().end(); fit++) {
 	nicIx[2].push_back( tri->faceIndex(*fit) );
-        if ((*fit)->isBoundary()) bcIx[2].push_back( tri->faceIndex(*fit) );
+        if ((*fit)->isBoundary()) { bcIx[2].push_back( tri->faceIndex(*fit) ); }
 	 else
 	  { dcIx[2].push_back( tri->faceIndex(*fit) );
             rIx[2].push_back( tri->faceIndex(*fit) );
@@ -815,7 +815,7 @@ void fillMixedHomologyCC(const Dim4Triangulation* tri,
 	 pen = tri->getPentachoron( nicIx[D][j/10] ); NPerm5 edginc( pen->getEdgeMapping( j%10 ) );
 	 for (unsigned long i=2; i<5; i++) // boundary facets have 3 parts dual to edges in tets, 3 dual to faces in pen
 	  { 
-	   tet = pen->getTetrahedron( edginc[i] ); NPerm5 tetinc( pen->getTetrahedronMapping( edginc[i] ) ); // tet index wrong?
+	   tet = pen->getTetrahedron( edginc[i] ); NPerm5 tetinc( pen->getTetrahedronMapping( edginc[i] ) ); 
 	   NPerm5 edgtetinc( tet->getEdgeMapping( // how edg sits in tet
 		NEdge::edgeNumber[tetinc.preImageOf(edginc[0])][tetinc.preImageOf(edginc[1])] ) );
 	   // part dual to an edge in tet.
@@ -1395,7 +1395,6 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
         smCM(5), dmCM(5), smbCM(4), dmbCM(4), srmCM(5), drmCM(5) // chain maps
 //        normalsDim4BdryFaces(0),  normalsDim4BdryEdges(0), normalsDim3BdryEdges(0), normalsDim3BdryVertices(0) // orientations
 {
-
    setupIndices( tri4, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 			numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells, 
 			numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, numDualBdryCells );
@@ -1406,7 +1405,7 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
    fillDualHomologyCC( tri4, numDualCells, dcIx, dCC );
 
    fillMixedHomologyCC( tri4, numMixCells, numNonIdealCells, numIdealCells, icIx, nicIx, mCC );
- 
+
    fillBoundaryHomologyCC( tri4, numStandardBdryCells, numIdealCells, numNonIdealBdryCells, bcIx, icIx, sbCC );
 
    fillRelativeHomologyCC( tri4, numRelativeCells, rIx, srCC );
@@ -1420,9 +1419,9 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
                     nicIx, icIx, dcIx, bcIx, rIx, 
                     sbiCM, smCM, dmCM, strCM, schCM );
 
-//   buildFundGrpPres(); // TODO erase. this is just for tests.
+   buildExtraNormalData();
+   buildMaximalTree(); 
 
-   // probably need to updatefillChainMaps once the CC's are updated
 }
 
 // constructor for 3-manifold triangulations
@@ -1459,9 +1458,8 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
                     sbiCM, smCM, dmCM, strCM, schCM );
    // standard face boundaries
 
-//   buildFundGrpPres(); // TODO erase. this is just for tests.
-
-   // probably need to updatefillChainMaps once the CC's are updated
+   buildExtraNormalData();
+   buildMaximalTree(); 
 }
 
 

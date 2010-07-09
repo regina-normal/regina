@@ -57,8 +57,11 @@ NGroupExpression NHomGroupPresentation::operator[](const NGroupExpression &arg)
 
 void NHomGroupPresentation::writeTextShort(std::ostream& out) const
 {
+std::cout<<"map_pres[";
  for (unsigned long i=0; i<domain.getNumberOfGenerators(); i++)
-  { if (i!=0) out<<" "; out<<"g_i --> "; map[i].writeTextShort( out );  }
+  { if (i!=0) out<<", "; out<<"g"<<i<<" --> "; std::cout.flush(); map[i].writeTextShort( out );  }
+std::cout<<"]";
+std::cout.flush();
 }
 
 void NHomGroupPresentation::writeTextLong(std::ostream& out) const

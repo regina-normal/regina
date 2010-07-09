@@ -81,6 +81,26 @@ bool written=false;
 	 fmit->second->writeTextShort(out);
 	 written = true;
 	}
+ std::map< GroupPresLocator, NGroupPresentation* >::const_iterator git;
+ for (git = groupPresentations.begin(); git != groupPresentations.end(); git++)
+ 	{
+	 if (written) out<<" ";
+	 git->first.writeTextShort(out);
+	 out<<" is ";
+	 git->second->writeTextShort(out);
+	 written = true;
+	}
+ std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator hit;
+ for (hit = homGroupPresentations.begin(); hit != homGroupPresentations.end(); hit++)
+ 	{
+	 if (written) out<<" ";
+	 hit->first.writeTextShort(out);
+	 out<<" is ";
+	 hit->second->writeTextShort(out);
+	 written = true;
+	}
+
+
 }
 
 void NCellularData::writeTextLong(std::ostream& out) const
@@ -140,6 +160,23 @@ else {
 	 fmit->second->writeTextShort(out);
 	 out<<", ";
 	}
+ std::map< GroupPresLocator, NGroupPresentation* >::const_iterator git;
+ for (git = groupPresentations.begin(); git != groupPresentations.end(); git++)
+ 	{
+	 out<<" ";
+	 git->first.writeTextShort(out);
+	 out<<" is ";
+	 git->second->writeTextLong(out);
+	}
+ std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator hit;
+ for (hit = homGroupPresentations.begin(); hit != homGroupPresentations.end(); hit++)
+ 	{
+	 out<<" ";
+	 hit->first.writeTextShort(out);
+	 out<<" is ";
+	 hit->second->writeTextLong(out);
+	}
+
  out<<" Euler Char == "<<eulerChar();
  out<<" Poincare Polynomial == "<<poincarePolynomial();
 }

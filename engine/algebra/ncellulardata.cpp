@@ -796,7 +796,45 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
  return NULL;
 }
 
+const NGroupPresentation* NCellularData::groupPresentation( const GroupPresLocator &g_desc ) const
+{
+ reloop_loop:
 
+ // various bail triggers
+ if ( (g_desc.sub_man==ideal_boundary) &&    (g_desc.component_index >= numIdealBdryComps) ) return NULL;
+ if ( (g_desc.sub_man==standard_boundary) && (g_desc.component_index >= numStdBdryComps) )   return NULL;
+
+ std::map< GroupPresLocator, NGroupPresentation* >::const_iterator p;
+ p = groupPresentations.find(g_desc);
+ if (p != groupPresentations.end()) return (p->second);
+ else 
+  { 
+   buildFundGrpPres(); // ensure it's computed, and look it up.
+   goto reloop_loop;
+  }
+ // return NULL if an invalid request
+ return NULL;
+}
+
+const NHomGroupPresentation* NCellularData::homGroupPresentation( const HomGroupPresLocator &h_desc ) const
+{
+ reloop_loop:
+ std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator p;
+
+ // various bail triggers
+ if ( (h_desc.inclusion_sub_man==ideal_boundary) &&    (h_desc.subman_component_index >= numIdealBdryComps) ) return NULL;
+ if ( (h_desc.inclusion_sub_man==standard_boundary) && (h_desc.subman_component_index >= numStdBdryComps) )   return NULL;
+
+ p = homGroupPresentations.find(h_desc);
+ if (p != homGroupPresentations.end()) return (p->second);
+ else 
+  { 
+   buildFundGrpPres(); // ensure it's computed, and look it up.
+   goto reloop_loop;
+  }
+ // return NULL if an invalid request
+ return NULL;
+}
 
 } // namespace regina
 

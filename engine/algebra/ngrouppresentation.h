@@ -40,6 +40,9 @@
 #include <vector>
 #include "utilities/memutils.h"
 #include "shareableobject.h"
+#include "utilities/ptrutils.h"
+#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/nabeliangroup.h"
 
 namespace regina {
 
@@ -146,6 +149,7 @@ struct NGroupExpressionTerm {
      * @return the term read from the given file.
      */
     static NGroupExpressionTerm readFromFile(NFile& in);
+
 };
 
 /**
@@ -568,6 +572,21 @@ class NGroupPresentation : public ShareableObject {
          * 0 if problems arose.
          */
         static NGroupPresentation* readFromFile(NFile& in);
+
+        /**
+         * Computes the abelianization of this group. 
+         * @return a pointer to the abelianization. 
+         */
+        std::auto_ptr<NAbelianGroup> unMarkedAbelianization() const;
+
+        /**
+         * Computes the abelianization of this group. 
+         * The coordinates in the chain complex correspond
+         * to the generators and relators for this group. 
+         *
+         * @return a pointer to the abelianization. 
+         */
+        std::auto_ptr<NMarkedAbelianGroup> markedAbelianization() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;

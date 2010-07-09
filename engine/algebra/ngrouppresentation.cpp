@@ -587,5 +587,35 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
         }
 }
 
+std::auto_ptr<NAbelianGroup> NGroupPresentation::unMarkedAbelianization() const
+{
+ // create presentation matrices to pass to NAbelianGroup(M, N)
+ NMatrixInt M(1, getNumberOfGenerators() ); // zero matrix
+ NMatrixInt N(getNumberOfGenerators(), getNumberOfRelations() ); // presentation matrix
+ // run through rels, increment N entries appropriately
+ for (unsigned long j=0; j<getNumberOfRelations(); j++)
+  {
+   NGroupExpression Rj ( getRelation(j) );
+   for (unsigned long i=0; i<Rj.getNumberOfTerms(); i++)
+     N.entry( Rj.getGenerator(i), j ) += Rj.getExponent(i);
+  }
+ return std::auto_ptr<NAbelianGroup>(new NAbelianGroup(M,N));
+}
+
+std::auto_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianization() const
+{
+ // create presentation matrices to pass to NMarkedAbelianGroup(M, N)
+ NMatrixInt M(1, getNumberOfGenerators() ); // zero matrix
+ NMatrixInt N(getNumberOfGenerators(), getNumberOfRelations() ); // presentation matrix
+ // run through rels, increment N entries appropriately
+ for (unsigned long j=0; j<getNumberOfRelations(); j++)
+  {
+   NGroupExpression Rj ( getRelation(j) );
+   for (unsigned long i=0; i<Rj.getNumberOfTerms(); i++)
+     N.entry( Rj.getGenerator(i), j ) += Rj.getExponent(i);
+  }
+ return std::auto_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
+}
+
 } // namespace regina
 

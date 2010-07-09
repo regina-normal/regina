@@ -294,7 +294,22 @@ public:
         void writeTextLong(std::ostream& out) const;
  };
 
- enum submanifold_type { whole_manifold, standard_boundary, ideal_boundary };
+ /**
+  * Enum for specifying characteristic parts of the manifold. 
+  */
+ enum submanifold_type { 
+  /**
+   * The entire manifold is specified. 
+   */
+  whole_manifold, 
+  /**
+   * The non-ideal part of the boundary is specified.
+   */
+  standard_boundary, 
+  /**
+   * The ideal part of the boundary is specified.
+   */
+  ideal_boundary };
 
  /**
   * NCellularData::groupPresentation requires a groupPresentationLocator as
@@ -469,7 +484,7 @@ private:
    std::set< unsigned long > maxTreeStd, maxTreeStB, maxTreeIdB, maxTreeSttIdB; // 1-cells in maximal tree
 
    struct dim4BoundaryFaceInclusion
-    { Dim4Tetrahedron* firsttet, secondtet;
+    { Dim4Tetrahedron *firsttet, *secondtet;
       unsigned long firstfacnum, secondfacnum; };
 
    struct dim4BoundaryEdgeInclusion
@@ -477,8 +492,13 @@ private:
       std::vector< unsigned long > edgenum; 
       std::vector< NPerm4 > edginc; };
 
+   struct dim4BoundaryVertexInclusion
+    { std::vector< Dim4Tetrahedron* > tet;
+      std::vector< unsigned long > vrtnum; 
+      std::vector< NPerm4 > vrtinc; };
+
    struct dim3BoundaryEdgeInclusion
-    { NFace* firstfac, secondfac;
+    { NFace *firstfac, *secondfac;
       unsigned long firstedgnum, secondedgnum; };
 
    struct dim3BoundaryVertexInclusion
@@ -487,7 +507,13 @@ private:
       std::vector< NPerm3 > vrtinc; };
 
     /**
-     * Normal orientations for cells Regina does not naturally give normal orientations to. 
+     * Normal orientations for cells Regina does not naturally give normal orientations to. We will have
+     * to build this by hand.  For a dim4Triangulation we need to build the boundary NTriangulation class
+     * Ben suggests iterating through the dim4Boundary components, appending them into an NTriangulation
+     * using dim4BoundaryComponent::getTriangulation and NTriangulation::insertTriangulation.  Building
+     * up the NTriangulation -> Dim4Triangulation indices using dim4BoundaryComponent::getEdge getFace, etc,
+     * maps.  Then we can build the classes below.  For 3-manifold and boundary 2-manifold triangulations
+     * we'll likely have to build these by hands.  The edges shouldn't be bad, the vertices might take work.
      *
      * normalsDim4BdryFaces is a vector that assigns to the i-th boundary face [tri4->getFace(bcIx[2][i])]
      *  the two boundary tetrahedra that contain it and the face number of the face in the tetrahedron. 
@@ -496,65 +522,99 @@ private:
      *  the circle of tetrahedra incident to that edge, with edginc[2] and edginc[3] forming the normal orientation
      *  in agreement with the indexing of tet. 
      *
+     * normalsDim4BdryVertices is a vector that assigns to the i-th boundary vertex [tri4->getVertex(bcIx[0][i])]
+     *  the sphere of tetrahedra incident to that vertex, with vrtinc[1], vrtinc[2], vrtinc[3] forming a normal
+     *  orientation.
+     *
      * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face [tri3->getEdge(bcIx[1][i])]
-     *  the two boundary faces that contain it and the edge number of the edge in the NFace. 
+     *  the two boundary faces that contain it and the edge number of the edge in the NFace.  TODO
      *
      * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex [tri3->getVertex(bcIx[0][i])]
      *  the circle of faces incident to that vertex, with vrtinc[1] and vrtinc[2] forming the normal orientation
-     *  in agreement with the indexing of face. 
+     *  in agreement with the indexing of face.  TODO
      */
    std::vector< dim4BoundaryFaceInclusion > normalsDim4BdryFaces;
    std::vector< dim4BoundaryEdgeInclusion > normalsDim4BdryEdges;  
+   std::vector< dim4BoundaryVertexInclusion > normalsDim4BdryVertices;
    std::vector< dim3BoundaryEdgeInclusion > normalsDim3BdryEdges;
    std::vector< dim3BoundaryVertexInclusion > normalsDim3BdryVertices; 
 
-    /**
-     *  Routine returns true if and only if tet is represents an edge in the maximal tree for the dual 1-skeleton of the triangulation.
-     *  Any tetrahedron from the triangulation can potentially represent an edge. Corresponds to maxTreeStd
-     */
-    bool inMaximalTree(const Dim4Tetrahedron* tet);
+   /**
+    * Keeps track of numbers of standard and ideal boundary components. Eventually used to initialize
+    * length of stdBdryPi1Gen and idBdryPi1Gen lengths. These are initialized in buildMaximalTree()
+    */
+   unsigned long numStdBdryComps, numIdealBdryComps;
 
     /**
-     *  Routine returns true if and only if fac is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
+     * Given a co-dimension 1 object in the standard boundary of the triangulation, you'd sometimes
+     *  like to know which boundary component it belongs to. This stores those indices in a vector. 
+     *  Input is the bcIx[n-2] index. Initialized in buildMaximalTree()
+     */
+   std::vector< unsigned long > stdBdryCompIndexCD1;
+    /**
+     * Given a co-dimension 1 object in the standard boundary of the triangulation, you'd sometimes
+     *  like to know which boundary component it belongs to. This stores those indices in a vector. 
+     *  Input is the icIx[n-2] index. Initialized in buildMaximalTree()
+     */
+   std::vector< unsigned long > idBdryCompIndexCD1; 
+   /**
+    * Given the i-th std boundary component, the j-th generator of pi1 of this
+    *  component is represented by bcIx[n-2][ stdBdryPi1Gen[i][j] ] Initialized in buildMaximalTree()
+    */
+   std::vector< std::vector< unsigned long > > stdBdryPi1Gen;
+   /**
+    * Given ideal boundary component i, the j-th generator of pi1 of this
+    *  component is represented by icIx[n-2][ stdBdryPi1Gen[i][j] ] Initialized in buildMaximalTree()
+    */
+   std::vector< std::vector< unsigned long > > idBdryPi1Gen;
+
+    /**
+     * Routine returns true if and only if tet is represents an edge in the maximal tree for the dual 1-skeleton of the triangulation.
+     *  Any tetrahedron from the triangulation can potentially represent an edge. Corresponds to maxTreeStd
+     */
+    bool inMaximalTree(const Dim4Tetrahedron* tet) const;
+
+    /**
+     * Routine returns true if and only if fac is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
      *  Only boundary faces can represent edges in the dual 1-skeleton. Corresponds to maxTreeStB
      */
-    bool inMaximalTree(const Dim4Face* fac);
+    bool inMaximalTree(const Dim4Face* fac) const;
 
     /**
      *  Routine returns true if and only if pair (tet, num) represents is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
      *  This refers to the part of the dual 1-skeleton in the ideal boundary, represented by ideal ends of tetrahedra. Corresponds to maxTreeIdB
      */
-    bool inMaximalTree(const Dim4Tetrahedron* tet, unsigned long num);
+    bool inMaximalTree(const Dim4Tetrahedron* tet, unsigned long num) const;
 
     /**
      *  Routine returns true if and only if pair (pen, num) is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
      *  Paths from pentachora barycentres to ideal boundary barycentres. Represented by ideal ends of pentachora. Corresponds to maxTreeSttIdB
      */
-    bool inMaximalTree(const Dim4Pentachoron* pen, unsigned long num);
+    bool inMaximalTree(const Dim4Pentachoron* pen, unsigned long num) const;
 
     /**
      *  Routine returns true if and only if tet is represents an edge in the maximal tree for the dual 1-skeleton of the triangulation.
      *  Any face from the triangulation can potentially represent an edge. Corresponds to maxTreeStd
      */
-    bool inMaximalTree(const NFace* fac);
+    bool inMaximalTree(const NFace* fac) const;
 
     /**
      *  Routine returns true if and only if fac is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
      *  Only boundary edges can represent edges in the dual 1-skeleton. Corresponds to maxTreeStB
      */
-    bool inMaximalTree(const NEdge* edg);
+    bool inMaximalTree(const NEdge* edg) const;
 
     /**
      *  Routine returns true if and only if pair (fac, num) represents is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
      *  This refers to the part of the dual 1-skeleton in the ideal boundary, represented by ideal ends of faces. Corresponds to maxTreeIdB
      */
-    bool inMaximalTree(const NFace* fac, unsigned long num);
+    bool inMaximalTree(const NFace* fac, unsigned long num) const;
 
     /**
      *  Routine returns true if and only if pair (tet, num) is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
      *  Paths from tetrahedra barycentres to ideal boundary barycentres. Represented by ideal ends of tetrahedra. Corresponds to maxTreeSttIdB
      */
-    bool inMaximalTree(const NTetrahedron* tet, unsigned long num);
+    bool inMaximalTree(const NTetrahedron* tet, unsigned long num) const;
     
    /**
     * internal routine to build the maximal tree in the dual 1-skeleton, suitable for computing
@@ -563,16 +623,15 @@ private:
    void buildMaximalTree();
 
    /**
-    *  Builds the internal data structures for the presentations of the fundamental groups of the manifold, 
-    *   standard boundary and ideal boundary components.
-    */
-   void buildFundGrpPres();
-
-   /**
     *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges normalsDim3BdryEdges normalsDim3BdryVertices
     * for homology and fundamental group computations. 
     */
    void buildExtraNormalData();
+
+   /**
+    *  Internal routine to construct the fundamental group presentation for the ambient manifold.
+    */
+   void buildFundGrpPres() const;
 
 public:
 
@@ -628,6 +687,11 @@ public:
      *  specified by hcs.
      */
     unsigned long cellCount(homology_coordinate_system hcs, unsigned dimension) const;
+
+    /**
+     *  The number of path-components of a given submanifold type. 
+     */
+    unsigned long components( submanifold_type ctype ) const; 
    
     /**
      * The Euler characteristic of the manifold, computed from
@@ -826,7 +890,7 @@ public:
      *  Describes the homomorphisms from the fundamental group of the boundary components to the
      *  fundamental group of the manifold's components. This routine uses the dual cellular
      *  coordinates, constructing a maximal forest in the dual 1-skeleton which restricts to 
-     *  maximal forests in the boundary and ideal boundary components. TODO
+     *  maximal forests in the boundary and ideal boundary components. 
      */
     const NHomGroupPresentation* homGroupPresentation( const HomGroupPresLocator &h_desc ) const;
 };
@@ -934,6 +998,8 @@ inline NCellularData::~NCellularData() {
  std::map< GroupLocator, NMarkedAbelianGroup* >::iterator mabi;
  std::map< HomLocator, NHomMarkedAbelianGroup* >::iterator hmabi;
  std::map< FormLocator, NBilinearForm* >::iterator fi;
+ std::map< GroupPresLocator, NGroupPresentation* >::iterator gi;
+ std::map< HomGroupPresLocator, NHomGroupPresentation* >::iterator hi;
  for (abi = abelianGroups.begin(); abi != abelianGroups.end(); abi++)
 	delete abi->second;
  for (mabi = markedAbelianGroups.begin(); mabi != markedAbelianGroups.end(); mabi++)
@@ -942,6 +1008,10 @@ inline NCellularData::~NCellularData() {
 	delete hmabi->second;
  for (fi = bilinearForms.begin(); fi != bilinearForms.end(); fi++)
 	delete fi->second;
+ for (gi = groupPresentations.begin(); gi != groupPresentations.end(); gi++) 
+        delete gi->second;
+ for (hi = homGroupPresentations.begin(); hi != homGroupPresentations.end(); hi++)
+        delete hi->second; 
 
  // iterate through sCC, sbCC, srCC,  dCC, dbCC, drCC,  mCC, mbCC, mrCC and deallocate
  for (unsigned long i=0; i<sCC.size(); i++)   if (sCC[i])  delete sCC[i];
@@ -1043,22 +1113,10 @@ inline NCellularData::HomLocator::HomLocator(const HomLocator &cloneMe) :
   domain( cloneMe.domain ), range( cloneMe.range ) {}
 
 inline void NCellularData::HomLocator::writeTextShort(std::ostream& out) const
-{
-out<<"map[";
-domain.writeTextShort(out);
-out<<"-->";
-range.writeTextShort(out);
-out<<"]";
-}
+{ out<<"map["; domain.writeTextShort(out); out<<"-->"; range.writeTextShort(out); out<<"]"; }
 
 inline void NCellularData::HomLocator::writeTextLong(std::ostream& out) const
-{
-out<<"map[";
-domain.writeTextShort(out);
-out<<"-->";
-range.writeTextShort(out);
-out<<"]";
-}
+{ out<<"map["; domain.writeTextShort(out); out<<"-->"; range.writeTextShort(out); out<<"]"; }
 
 inline NCellularData::FormLocator::FormLocator( form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain) :
  ldomain( newLdomain ), rdomain( newRdomain ), ft(FT)  {}
@@ -1080,7 +1138,7 @@ inline NCellularData::GroupPresLocator::GroupPresLocator( const GroupPresLocator
  sub_man( cloneMe.sub_man ), component_index( cloneMe.component_index ) {}
 
 inline bool NCellularData::GroupPresLocator::operator<(const GroupPresLocator &rhs) const
- { if ( sub_man < rhs.sub_man ) return true; if ( sub_man > rhs.sub_man ) return false;
+ { if ( sub_man < rhs.sub_man ) return true;                 if ( sub_man > rhs.sub_man ) return false;
    if ( component_index < rhs.component_index ) return true; if ( component_index > rhs.component_index ) return false;
    return false;
  }
@@ -1095,11 +1153,16 @@ inline bool NCellularData::GroupPresLocator::operator!=(const GroupPresLocator &
     else return false;
  }
 
-inline void NCellularData::GroupPresLocator::writeTextShort(std::ostream&) const
-{} // TODO
+inline void NCellularData::GroupPresLocator::writeTextShort(std::ostream& out) const
+{
+ if (sub_man == standard_boundary) out<<"Standard boundary "<<component_index<<" component Pi1.";
+ else  if (sub_man == ideal_boundary) out<<"Ideal boundary "<<component_index<<" component Pi1.";
+ else  if (sub_man == whole_manifold) out<<"Whole manifold Pi1.";
+ else out<<"Unknown type.";
+} 
 
-inline void NCellularData::GroupPresLocator::writeTextLong(std::ostream&) const
-{} // TODO
+inline void NCellularData::GroupPresLocator::writeTextLong(std::ostream& out) const
+{ writeTextShort(out); } 
 
 // homGroupPresLocator
 inline NCellularData::HomGroupPresLocator::HomGroupPresLocator( submanifold_type ST, unsigned long CI ) :
@@ -1109,8 +1172,10 @@ inline NCellularData::HomGroupPresLocator::HomGroupPresLocator( const HomGroupPr
  inclusion_sub_man( cloneMe.inclusion_sub_man ), subman_component_index( cloneMe.subman_component_index ) {}
 
 inline bool NCellularData::HomGroupPresLocator::operator<(const HomGroupPresLocator &rhs) const
- { if ( inclusion_sub_man < rhs.inclusion_sub_man ) return true; if ( inclusion_sub_man > rhs.inclusion_sub_man ) return false;
-   if ( subman_component_index < rhs.subman_component_index ) return true; if ( subman_component_index > rhs.subman_component_index ) return true;
+ { if ( inclusion_sub_man < rhs.inclusion_sub_man ) return true; 
+   if ( inclusion_sub_man > rhs.inclusion_sub_man ) return false;
+   if ( subman_component_index < rhs.subman_component_index ) return true; 
+   if ( subman_component_index > rhs.subman_component_index ) return false;
    return false;
  }
 
@@ -1124,11 +1189,22 @@ inline bool NCellularData::HomGroupPresLocator::operator!=(const HomGroupPresLoc
    return true; else return false;
  }
 
-inline void NCellularData::HomGroupPresLocator::writeTextShort(std::ostream&) const
-{} // TODO
+inline void NCellularData::HomGroupPresLocator::writeTextShort(std::ostream& out) const
+{
+ if (inclusion_sub_man == ideal_boundary) out<<"Ideal component "<<subman_component_index<<" Pi1 inclusion.";
+ else if (inclusion_sub_man == standard_boundary) out<<"Standard component "<<subman_component_index<<" Pi1 inclusion.";
+ else out<<"Unknown type.";
+} 
 
-inline void NCellularData::HomGroupPresLocator::writeTextLong(std::ostream&) const
-{} // TODO
+inline void NCellularData::HomGroupPresLocator::writeTextLong(std::ostream& out) const
+{ writeTextShort(out); } 
+
+inline unsigned long NCellularData::components( submanifold_type ctype ) const
+{
+ if (ctype == whole_manifold) return 1;
+ if (ctype == standard_boundary) return stdBdryPi1Gen.size();
+ if (ctype == ideal_boundary) return idBdryPi1Gen.size();
+} 
 
 } // namespace regina
 

@@ -254,7 +254,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
  }
 
  // boundary relative 3-cells
- D = 3;
+ D = 3; // error in here
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
   {
    tet = tri->getTetrahedron(rIx[D][j]);
@@ -270,7 +270,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
        NPerm5 P( tet->getFaceMapping(i) );
        I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->faceIndex( tet->getFace(i) )) 
 	- bcIx[D-1].begin();
-       schCM[D]->entry(I, j) += P.sign();
+       schCM[D-1]->entry(I, j) += P.sign();
       }
     }
   }
@@ -296,6 +296,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
       }
     }
   }
+
 }
 
 void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long numRelativeCells[5], 
