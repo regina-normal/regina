@@ -236,6 +236,7 @@ NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
         back_inserter(relations), FuncNewCopyPtr<NGroupExpression>());
 }
 
+
 bool NGroupPresentation::intelligentSimplify() {
     unsigned long oldNGenerators = nGenerators;
     bool changed = false; // Has anything changed at all?
@@ -590,12 +591,13 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
 std::string NGroupPresentation::stringPresentation() const {
 	std::string retval;
 	retval.append("< ");
-        if (nGenerators == 1) retval.append("g0");
+        if (nGenerators == 0) retval.append("");
+        else if (nGenerators == 1) retval.append("g0");
         else if (nGenerators == 2) retval.append("g0, g1");
         else { retval.append("g0 .. g"); std::stringstream num; num<<(nGenerators - 1); retval.append(num.str()); }
         retval.append(" | ");
         std::stringstream temp;
-        if (!relations.empty()) for (RelIteratorConst it = relations.begin(); it != relations.end(); it++) {
+        if (relations.empty()) retval.append(""); else for (RelIteratorConst it = relations.begin(); it != relations.end(); it++) {
             if (it != relations.begin()) temp<<", ";
             (*it)->writeTextShort(temp); }
         retval.append(temp.str());
@@ -632,6 +634,249 @@ std::auto_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianization() co
   }
  return std::auto_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
 }
+
+//  okay, so we have *this word, and that_word.  We want to walk through both and see to what extend we can use that_word to reduce
+//  *this word.  Everything with a score >= 0, i.e. not increasing the length, we will record in the sub_list.  The score will 
+//  simply be the difference between the length of the common chain between *this word and that_word, minus the length of the remaining
+//  word in that_word, *unless* all of that_word is used, in which case we have to do a computation to see if additional simplifications
+//  happen.
+//
+// so if that_word is longer than this_word, the new word can have at best length: length(that_word) - length(this_word).  So if
+// length(that_word) > 2*length(this_word) there's no point in attempting a substitution as any substitution would increase length. 
+void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression &that_word, std::set< NWordSubstitutionData > &sub_list ) const
+{
+ // first thing first, let's rewrite *this and that_word as a sequence of monomials, ie gi^+-1.  Might as well store as vectors. 
+ unsigned long this_length ( wordLength() );
+ unsigned long that_length ( that_word.wordLength() );
+ if ( 2*this_length < that_length ) return; // if that_length is more than twice the size of this_length, don't bother 
+ if ( that_length == 0 ) return; // empty relator, don't bother!
+ std::vector< NGroupExpressionTerm > this_word( 0 );
+ std::vector< NGroupExpressionTerm > reducer( 0 ); // we'll splay-out *this and that_word so that it's easier to search for
+ 		  			           // commonalities.
+ this_word.reserve( this_length ); reducer.reserve( that_length );
+ std::list<NGroupExpressionTerm>::const_iterator it; 
+
+ for (it = terms.begin(); it!=terms.end(); it++)
+  { for (unsigned long i=0; i<abs((*it).exponent); i++)
+     this_word.push_back( NGroupExpressionTerm( (*it).generator, ((*it).exponent>0) ? 1 : -1 ) );  }
+ for (it = that_word.terms.begin(); it!=that_word.terms.end(); it++)
+  { for (unsigned long i=0; i<abs((*it).exponent); i++)
+     reducer.push_back( NGroupExpressionTerm( (*it).generator, ((*it).exponent>0) ? 1 : -1 ) );    }
+ std::vector< NGroupExpressionTerm > inv_reducer( that_length );
+ for (unsigned long i=0; i<reducer.size(); i++) inv_reducer[that_length-(i+1)] = reducer[i].inverse(); 
+
+ // okay, let's look for cyclic subwords of reducer in this_word.  The loop will go from the beginning to the end of this_word, 
+ //  for each position in this_word we look for commonality with some part of reducer, and we follow it along (cyclically) to 
+ //  see how far it goes.  Once we find the end, we record it. 
+ for (unsigned long i=0; i<this_length; i++) for (unsigned long j=0; j<that_length; j++)
+  { // start point for comparison is this_word[i] and reducer[j]
+    unsigned long comp_length = 0; 
+    // check to seeif this_word[(i+comp_length) % this_word.size()] == reducer[(j+comp_length) % comp_length], if so, increment...
+    while ( (this_word[(i+comp_length) % this_length] == reducer[(j+comp_length) % that_length]) && 
+            (comp_length < that_length) && (comp_length < this_length) ) comp_length++;  
+    // okay, we've found a subword of reducer of length comp_length that agrees with a subword of this_word of the same length. 
+    // now we need to measure how successful a substitution it might be.
+    NWordSubstitutionData subData;
+    subData.invertB=false; subData.sub_length=comp_length; subData.start_sub_at=i; subData.start_from=j;
+    if (comp_length == that_length)	
+	{ // special case, we record this regardless but its score is special.
+          // assemble the word with reducer removed, *reduce* the word any further if possible, check the length. 
+	  subData.score = that_length;
+	  // increment subData.score for every consecutive mutually-inverse pair this_word[i-a] this_word[i+comp_length+a]
+          //  a=1,2,... up until (this_length-that_length)/2
+          unsigned long a=1; 
+	  while ( (this_word[( (i+this_length)-a )%this_length].inverse()==this_word[( (i+comp_length)+(a-1) )%this_length]) &&
+		  (2*a+that_length <= this_length ) ) { a++; subData.score++; }
+	  sub_list.insert(subData);
+	}
+    else if (2*comp_length >= that_length) // only bother if we're using at least half of the relator
+        { // so we'll record this but its score is relatively easy to compute
+          subData.score = 2*comp_length - that_length;
+	  sub_list.insert(subData);
+        }
+    // now lets look for inv_reducer substitutions. 
+    comp_length = 0; 
+    // check to seeif this_word[(i+comp_length) % this_word.size()] == inv_reducer[(j+comp_length) % comp_length], if so, increment...
+    while ( (this_word[(i+comp_length) % this_length] == inv_reducer[(j+comp_length) % that_length]) && 
+            (comp_length < that_length) && (comp_length < this_length) ) comp_length++;  
+    // okay, we've found a subword of reducer of length comp_length that agrees with a subword of this_word of the same length. 
+    // now we need to measure how successful a substitution it might be.
+    subData.invertB=true; subData.sub_length=comp_length; 
+    if (comp_length == that_length)	
+	{ // special case, we record this regardless but its score is special.
+          // assemble the word with reducer removed, *reduce* the word any further if possible, check the length. 
+	  subData.score = that_length;
+	  // increment subData.score for every consecutive mutually-inverse pair this_word[i-a] this_word[i+comp_length+a]
+          //  a=1,2,... up until (this_length-that_length)/2
+          unsigned long a=1; 
+	  while ( (this_word[( (i+this_length)-a )%this_length].inverse()==this_word[( (i+comp_length)+(a-1) )%this_length]) &&
+		  (2*a+that_length <= this_length ) ) { a++; subData.score++; }
+	  sub_list.insert(subData);
+	}
+    else if (2*comp_length >= that_length) // only bother if we're using at least half of the relator
+        { // so we'll record this but its score is relatively easy to compute
+          subData.score = 2*comp_length - that_length;
+	  sub_list.insert(subData);
+        }
+  }
+}
+
+void NGroupExpression::applySubstitution( const NGroupExpression &that_word, const NWordSubstitutionData &sub_data )
+{
+ // okay, so let's do a quick cut-and-replace, reduce the word and hand it back. 
+ unsigned long this_length ( wordLength() );
+ unsigned long that_length ( that_word.wordLength() );
+ std::vector< NGroupExpressionTerm > this_word( 0 );
+ std::vector< NGroupExpressionTerm > reducer( 0 ); // we'll splay-out *this and that_word so that it's easier to search for
+ 		  			           // commonalities.
+ this_word.reserve( this_length ); reducer.reserve( that_length );
+ std::list<NGroupExpressionTerm>::const_iterator it; 
+ // start the splaying of terms
+ for (it = terms.begin(); it!=terms.end(); it++)
+  { for (unsigned long i=0; i<abs((*it).exponent); i++)
+     this_word.push_back( NGroupExpressionTerm( (*it).generator, ((*it).exponent>0) ? 1 : -1 ) );  }
+  // and that_word
+ for (it = that_word.terms.begin(); it!=that_word.terms.end(); it++)
+  { for (unsigned long i=0; i<abs((*it).exponent); i++)
+     reducer.push_back( NGroupExpressionTerm( (*it).generator, ((*it).exponent>0) ? 1 : -1 ) );    }
+ // done splaying, produce inv_reducer
+ std::vector< NGroupExpressionTerm > inv_reducer( that_length );
+ for (unsigned long i=0; i<that_length; i++) inv_reducer[that_length-(i+1)] = reducer[i].inverse(); 
+ // done with inv_reducer, erase terms
+ terms.clear();
+
+ // *this word is some conjugate of AB and the relator is some conjugate of AC. We are performing the substitution
+ // A=C^{-1}, thus we need to produce the word C^{-1}B. Put in C^{-1} first..
+ for (unsigned long i=0; i<(that_length - sub_data.sub_length); i++)
+  terms.push_back( sub_data.invertB ?     reducer[(that_length - sub_data.start_from + i) % that_length] : 
+                                      inv_reducer[(that_length - sub_data.start_from + i) % that_length] );
+ // iterate through remainder of this_word, starting from sub_data.start_sub_at + sub_length, ie fill in B 
+ for (unsigned long i=0; i<(this_length - sub_data.sub_length); i++)
+  terms.push_back( this_word[(sub_data.start_sub_at + sub_data.sub_length + i) % this_length] );
+
+ // done
+ simplify();
+}
+
+bool compare_length( const NGroupExpression* first, const NGroupExpression* second ) 
+ {  return ( first->wordLength() < second->wordLength() ); }
+
+void NGroupPresentation::dehnAlgorithm()
+{
+ // let's start with the shortest relators first, and see to what extent we can use them to simplify the other relators.  To do this we'll
+ // need a temporary relator table, sorted on the length of the relators. 
+
+ std::list< NGroupExpression* > relatorList; 
+ for (unsigned long i=0; i<relations.size(); i++) relatorList.push_back( relations[i] );
+ relations.resize(0); // we'll rebuild the relations later. 
+
+ bool we_value_iteration(true);
+
+ while (we_value_iteration)
+  { // 1) Sort. 
+    // 2) deallocate and remove any trivial relators 
+    // 3) apply shorter relators to longer ones, possibly triggering we_value_iteration
+    // TODO: new 4) if we_value_iteration still false, see if we can kill generators
+    //              this is the form of a shortest word with a generator appearing only once.
+    // 5) return to (1) if we_value_iteration
+
+   we_value_iteration = false; // set this back to true if we ever make a successful substitution. 
+   relatorList.sort( compare_length ); // (1)
+
+   // start (2) deletion of 0-length relators
+   std::list< NGroupExpression* >::iterator it;
+   it = relatorList.begin();  
+   while ( it != relatorList.end() )
+    {
+      if ( (*it)->wordLength() == 0 )
+       {
+        delete (*it);
+        it = relatorList.erase(it);
+       }
+      else break;
+    }
+   // end (2) deletion of 0-length relators
+
+   // start (3) - apply shorter relators to longer.
+   for (it = relatorList.begin(); it != relatorList.end(); it++)
+    {
+     if ( (*it)->wordLength() > 0 ) // don't bother if this is a trivial word.
+      {
+       std::list< NGroupExpression* >::iterator tit; // target of it manipulations. 
+       tit = it; tit++;
+       while (tit != relatorList.end())
+ 	{// attempt to apply *it to *tit
+          std::set< NGroupExpression::NWordSubstitutionData > sub_list; 
+          (*tit)->dehnAlgorithmSubMetric( *(*it), sub_list );
+          // for now let's just choose the first suggested substitution, provided it exists
+          // and has a score of at least one. 
+          if (sub_list.size() != 0) if ( (*sub_list.begin()).score > 0 )
+	    {
+             (*tit)->applySubstitution( *(*it), *sub_list.begin() );
+             we_value_iteration = true;
+	    }
+	  tit++;
+	}
+      }
+    }
+   // end (3) - application of shorter to longer relators.
+  } // (5) loop
+ // TODO new 4 -- look for generator killing relations.  If found, loop back into 1-2-3-5 loop ?  this would allow for the
+ //       removal of much of the code below and make everything pleasantly recursive.
+
+ // okay, so now we've reduced the relatorList.  Let's (1) remove (generator, length 1 relator) pairs. 
+ //           (2) rebuild relations. 
+ std::set< unsigned long > lenOneRels; 
+ std::list< NGroupExpression* >::iterator it; 
+
+ for (it = relatorList.begin(); it != relatorList.end(); it++)
+  if ( (*it)->wordLength() == 1 ) lenOneRels.insert( (*it)->getGenerator(0) );  
+ // now we can build up a mapping of where the current generators get sent to.  
+ // make it a std::vector, I suppose.  This will suffice for a looped substitute call. 
+
+ nGenerators -= lenOneRels.size();
+ std::vector< unsigned long > genReductionMapping( nGenerators );
+ std::set< unsigned long >::iterator sit( lenOneRels.begin() );
+ unsigned long delta=0;
+ 
+ for (unsigned long i=0; i<genReductionMapping.size(); i++)
+  {// for this routine we consider i + delta to be the generator we're `pointing' to. 
+   // the problem is if i + delta points to some element in relatorList.   So we start
+   // off with delta = 0 and sit = relatorList.begin().  If ever i+delta points to sit, 
+   // we increment delta and sit (provided sit != relatorList.end()). 
+   small_loop:
+   if (sit == lenOneRels.end())
+    { // i+delta is past all the lenOneRels
+      genReductionMapping[i] = i + delta; 
+    }
+   else
+    { // not at end, check if i+delta points to *sit, if so increment and repeat
+      if ( (*sit) == i + delta ) { delta++; sit++; goto small_loop; }
+      else { genReductionMapping[i] = i + delta; }      
+    }
+  }
+ // so now we run through relatorList and perform substitutions gen genReductionMapping[i] --> i for all i. 
+ it = relatorList.begin(); 
+
+ small_loop2:   // erase length one relators. 
+ if ( it!= relatorList.end() ) if ( (*it)->wordLength() == 1 ) { delete (*it); it = relatorList.erase(it); goto small_loop2; }
+ for (it = relatorList.begin(); it != relatorList.end(); it++)
+  { // all possible substitutions
+   for (unsigned long i=0; i<genReductionMapping.size(); i++)
+    {
+    NGroupExpression gi; gi.addTermFirst( i, 1 );
+    (*it)->substitute( genReductionMapping[i],gi ); 
+    } 
+  }
+ // okay, now let's replace relations with relatorList
+
+ relations.reserve( relatorList.size() );
+ for (it = relatorList.begin(); it != relatorList.end(); it++) 
+  { relations.push_back( (*it) ); }
+ // done
+}
+
+
 
 } // namespace regina
 

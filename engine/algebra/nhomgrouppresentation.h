@@ -85,7 +85,7 @@ class NHomGroupPresentation : public ShareableObject {
          * Destroys the group presentation.
          * All relations that are stored will be deallocated.
          */
-        virtual ~NHomGroupPresentation();
+        ~NHomGroupPresentation();
 
         /**
 	 * Evaluate the homomorphism at an element.
@@ -100,8 +100,8 @@ class NHomGroupPresentation : public ShareableObject {
          */
         bool intelligentSimplify();
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 };
 
 /*@}*/

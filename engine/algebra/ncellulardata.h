@@ -618,13 +618,13 @@ private:
     
    /**
     * internal routine to build the maximal tree in the dual 1-skeleton, suitable for computing
-    *  pi1 information about the manifold. 
+    *  pi1 information about the manifold. Called after buildExtraNormalData() and before buildFundGrpPres()
     */
    void buildMaximalTree();
 
    /**
     *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges normalsDim3BdryEdges normalsDim3BdryVertices
-    * for homology and fundamental group computations. 
+    * for homology and fundamental group computations.  Called before buildMaximalTree()
     */
    void buildExtraNormalData();
 
@@ -915,8 +915,6 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         mbiCM(g.mbiCM.size()), mtrCM(g.mtrCM.size()), mchCM(g.mchCM.size()), 
         smCM(g.smCM.size()),   dmCM(g.dmCM.size()),   smbCM(g.smbCM.size()), 
         dmbCM(g.dmbCM.size()), srmCM(g.srmCM.size()), drmCM(g.drmCM.size())
- // extra normal data, uninitialized
-//    normalsDim4BdryFaces(0),  normalsDim4BdryEdges(0), normalsDim3BdryEdges(0), normalsDim3BdryVertices(0) 
 {
 // copy abelianGroups, markedAbelianGroups, homMarkedAbelianGroups, bilinearForms, groupPresentations, 
 //      homGroupPresentations...
@@ -988,7 +986,11 @@ for (unsigned long i=0; i<smbCM.size(); i++)    smbCM[i] =  clonePtr(g.smbCM[i])
 for (unsigned long i=0; i<dmbCM.size(); i++)    dmbCM[i] =  clonePtr(g.dmbCM[i]);
 for (unsigned long i=0; i<srmCM.size(); i++)    srmCM[i] =  clonePtr(g.srmCM[i]);
 for (unsigned long i=0; i<drmCM.size(); i++)    drmCM[i] =  clonePtr(g.drmCM[i]);
+
+// maximal tree, extraNormalData
+buildExtraNormalData(); buildMaximalTree();
 }
+
 
 // destructor
 inline NCellularData::~NCellularData() {
@@ -1074,7 +1076,6 @@ inline long int NCellularData::signature() const
 }
 
 // GroupLocator and HomLocator
-
 inline NCellularData::GroupLocator::GroupLocator(unsigned long newDim, variance_type newVar,
 	 homology_coordinate_system useHcs, unsigned long useCof) :
  dim(newDim), var(newVar), hcs(useHcs), cof(useCof) {}
