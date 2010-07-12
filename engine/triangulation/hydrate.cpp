@@ -31,12 +31,14 @@
 #include "triangulation/ntriangulation.h"
 
 /**
- * Determine the integer value represented by the given letter.
+ * Determine the integer value represented by the given letter
+ * in a dehydration string.
  */
 #define VAL(x) ((x) - 'a')
 
 /**
- * Determine the letter that represents the given integer value.
+ * Determine the letter that represents the given integer value
+ * in a dehydration string.
  */
 #define LETTER(x) (char((x) + 'a'))
 
