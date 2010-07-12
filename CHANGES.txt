@@ -70,8 +70,14 @@ Version 4.6.1  [ (under development) ]
               being preserved (for the time being) for backward compatibility.
         Class NGlobalDirs:
             - New routine data() to return the internal data directory.
+	Class NGroupExpression:
+	    - New routine wordLength()
+	    - New struct NWordSubstitutionData for implementing small cancellation theory.
+	    - New routine dehnAlgorithmSubMetric and applySubstitution for small cancellation theory.
+	    - New routine 
         Class NGroupPresentation:
-            - Fixed a memory leak in intelligentSimplify().
+            - Fixed a memory leak in intelligentSimplify()
+	    - New routine dehnAlgorithm() implements small cancellation theory. 
         Class NIsomorphism:
             - New routine applyInPlace() to directly modify a triangulation.
             - Routine apply() now copies tetrahedron descriptions as
