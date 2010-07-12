@@ -72,9 +72,11 @@ Version 4.6.1  [ (under development) ]
             - New routine data() to return the internal data directory.
 	Class NGroupExpression:
 	    - New routine wordLength()
-	    - New struct NWordSubstitutionData for implementing small cancellation theory.
-	    - New routine dehnAlgorithmSubMetric and applySubstitution for small cancellation theory.
-	    - New routine 
+	    - New struct NWordSubstitutionData for implementing small cancellation
+		 theory.
+	    - New routine dehnAlgorithmSubMetric and applySubstitution for small 
+		cancellation theory.
+	    - New routine invert() 
         Class NGroupPresentation:
             - Fixed a memory leak in intelligentSimplify()
 	    - New routine dehnAlgorithm() implements small cancellation theory. 
