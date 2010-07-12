@@ -37,6 +37,8 @@ using regina::Dim4Triangulation;
 namespace {
     regina::Dim4Pentachoron* (Dim4Triangulation::*getPentachoron_non_const)(
         unsigned long) = &Dim4Triangulation::getPentachoron;
+    std::string (Dim4Triangulation::*isoSig_void)() const =
+        &Dim4Triangulation::isoSig;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         Dim4Triangulation::simplifyToLocalMinimum, 0, 1);
@@ -215,7 +217,11 @@ void addDim4Triangulation() {
         .def("collapseEdge", &Dim4Triangulation::collapseEdge,
             OL_collapseEdge())
         .def("insertTriangulation", &Dim4Triangulation::insertTriangulation)
+        .def("isoSig", isoSig_void)
+        .def("fromIsoSig", &Dim4Triangulation::fromIsoSig,
+            return_value_policy<manage_new_object>())
         .def("dumpConstruction", &Dim4Triangulation::dumpConstruction)
+        .staticmethod("fromIsoSig")
     ;
 
     s.attr("packetType") = Dim4Triangulation::packetType;

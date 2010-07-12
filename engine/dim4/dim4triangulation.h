@@ -1290,6 +1290,56 @@ class Dim4Triangulation : public NPacket {
          */
         void insertTriangulation(const Dim4Triangulation& source);
         /**
+         * Constructs the isomorphism signature for this triangulation.
+         *
+         * An <i>isomorphism signature</i> is a compact text representation of
+         * a triangulation.  Unlike dehydrations for 3-manifold triangulations,
+         * an isomorphism signature uniquely determines a triangulation up
+         * to combinatorial isomorphism.  That is, two 4-manifold
+         * triangulations are combinatorially isomorphic if and only if
+         * their isomorphism signatures are the same.
+         *
+         * The isomorphism signature is constructed entirely of
+         * printable characters, and has length proportional to
+         * <tt>n log n</tt>, where \a n is the number of pentachora.
+         *
+         * Isomorphism signatures are more general than dehydrations:
+         * they can be used with any triangulation (including closed, ideal,
+         * bounded, invalid and/or disconnected triangulations, as well
+         * as triangulations with large numbers of pentachora).
+         *
+         * The time required to construct the isomorphism signature of a
+         * triangulation is <tt>O(n^2 log^2 n)</tt>.
+         *
+         * The routine fromIsoSig() can be used to recover a
+         * triangulation from an isomorphism signature.  The triangulation
+         * recovered might not be identical to the original, but it will be
+         * combinatorially isomorphic.
+         *
+         * @return the isomorphism signature of this triangulation.
+         */
+        std::string isoSig() const;
+        /**
+         * Recovers a full triangulation from an isomorphism signature.
+         * See isoSig() for more information on isomorphism signatures.
+         *
+         * The triangulation that is returned will be newly created.
+         *
+         * Calling isoSig() followed by fromIsoSig() is not guaranteed to
+         * produce an identical triangulation to the original, but it
+         * \e is guaranteed to produce a combinatorially isomorphic
+         * triangulation.
+         *
+         * @param signature the isomorphism signature of the
+         * triangulation to construct.  Note that, unlike dehydration
+         * strings for 3-manifold triangulations, case is important for
+         * isomorphism signatures.
+         * @return a newly allocated triangulation if the reconstruction was
+         * successful, or null if the given string was not a valid
+         * isomorphism signature.
+         */
+        static Dim4Triangulation* fromIsoSig(const std::string& signature);
+        /**
          * Inserts into this triangulation a set of pentachora and their
          * gluings as described by the given integer arrays.
          *
@@ -1512,6 +1562,22 @@ class Dim4Triangulation : public NPacket {
          */
         static bool compatiblePents(
                 Dim4Pentachoron* src, Dim4Pentachoron* dest, NPerm5 p);
+
+        /**
+         * Internal to isoSig().
+         *
+         * Constructs a candidate isomorphism signature for a single
+         * component of this triangulation.  This candidate signature
+         * assumes that the given pentachoron with the given labelling
+         * of its vertices becomes pentachoron zero with vertices 0,1,2,3,4
+         * under the "canonical isomorphism".
+         *
+         * @param pent the index of some pentachoron in this triangulation.
+         * @param vertices some ordering of the five vertices of the
+         * given pentachoron.
+         * @return the candidate isomorphism signature.
+         */
+        std::string isoSig(unsigned pent, const NPerm5& vertices) const;
 
     friend class regina::NXMLDim4TriangulationReader;
 };

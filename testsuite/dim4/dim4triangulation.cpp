@@ -70,6 +70,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(makeCanonical);
+    CPPUNIT_TEST(isomorphismSignature);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1030,6 +1031,85 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyMakeCanonical(pillow_twoCycle);
             verifyMakeCanonical(pillow_threeCycle);
             verifyMakeCanonical(pillow_fourCycle);
+        }
+
+        void verifyIsoSig(const Dim4Triangulation& tri) {
+            std::string sig = tri.isoSig();
+
+            if (sig.empty()) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Cannot create isomorphism signature.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            Dim4Triangulation* rebuild = Dim4Triangulation::fromIsoSig(sig);
+            if (! rebuild) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Cannot reconstruct from isomorphism signature \""
+                    << sig << "\".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! rebuild->isIsomorphicTo(tri).get()) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Reconstruction from \"" << sig
+                    << "\" is not isomorphic to the original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete rebuild;
+
+            if (tri.getNumberOfPentachora() == 0)
+                return;
+
+            std::string otherSig;
+            for (unsigned i = 0; i < 10; ++i) {
+                Dim4Isomorphism* iso = Dim4Isomorphism::random(
+                    tri.getNumberOfPentachora());
+                Dim4Triangulation* other = iso->apply(&tri);
+
+                otherSig = other->isoSig();
+                if (otherSig != sig) {
+                    std::ostringstream msg;
+                    msg << tri.getPacketLabel()
+                        << ": Random isomorphism gives different signature: "
+                        << otherSig << " != " << sig << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete other;
+                delete iso;
+            }
+        }
+
+        void isomorphismSignature() {
+            verifyIsoSig(empty);
+            verifyIsoSig(s4_id);
+            verifyIsoSig(s4_doubleConeS3);
+            verifyIsoSig(s3xs1);
+            verifyIsoSig(rp4);
+            verifyIsoSig(s3xs1Twisted);
+            verifyIsoSig(ball_singlePent);
+            verifyIsoSig(ball_foldedPent);
+            verifyIsoSig(ball_singleConeS3);
+            verifyIsoSig(ball_layerAndFold);
+            verifyIsoSig(idealPoincareProduct);
+            verifyIsoSig(mixedPoincareProduct);
+            verifyIsoSig(idealFigEightProduct);
+            verifyIsoSig(mixedFigEightProduct);
+            verifyIsoSig(pillow_twoCycle);
+            verifyIsoSig(pillow_threeCycle);
+            verifyIsoSig(pillow_fourCycle);
+
+            Dim4Triangulation t;
+            t.insertTriangulation(rp4);
+            t.insertTriangulation(ball_layerAndFold);
+            t.setPacketLabel("Connected sum with two terms");
+            verifyIsoSig(t);
+            t.insertTriangulation(idealPoincareProduct);
+            t.setPacketLabel("Connected sum with three terms");
+            verifyIsoSig(t);
         }
 };
 
