@@ -165,7 +165,7 @@ Version 4.6.1  [ (under development) ]
             - New static routine rehydrate() to rehydrate a new triangulation
               from a Callahan-Hildebrand-Weeks dehydration string.  This is a
               more convenient version of insertRehydration().
-            - New routine isomorphismSignature() for detecting and hashing
+            - New routines isoSig() and fromIsoSig() for detecting and hashing
               combinatorial isomorphism classes of triangulations.
         Class NTrieSet:
             - A new class for storing and querying a large number of sets,

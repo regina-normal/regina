@@ -69,7 +69,17 @@ namespace {
      */
     inline bool SVALID(char c) {
         return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-            c == '+' || c == '-');
+            (c >= '0' && c <= '9') || c == '+' || c == '-');
+    }
+
+    /**
+     * Does the given string contain at least nChars characters?
+     */
+    inline bool SHASCHARS(const char* s, unsigned nChars) {
+        for ( ; nChars > 0; --nChars)
+            if (! *s)
+                return false;
+        return true;
     }
 
     /**
@@ -85,14 +95,14 @@ namespace {
     }
 
     /**
-     * Read the integer at the given position in the string.
-     * Assumes there are at least nChars characters available from
-     * position index onwards.
+     * Read the integer at the beginning of the given string.
+     * Assumes the string has length >= nChars.
      */
-    unsigned SREAD(const std::string& s, unsigned index, unsigned nChars) {
+    unsigned SREAD(const char* s, unsigned nChars) {
         unsigned ans = 0;
         for (unsigned i = 0; i < nChars; ++i)
-            ans += (SVAL(s[index + i]) << (6 * i));
+            ans += (SVAL(s[i]) << (6 * i));
+        return ans;
     }
 
     /**
@@ -110,9 +120,19 @@ namespace {
             ans |= (trits[2] << 4);
         s += SCHAR(ans);
     }
+
+    /**
+     * Reads three trits (0, 1 or 2) from the given character.
+     */
+    void SREADTRITS(char c, char* result) {
+        unsigned val = SVAL(c);
+        result[0] = val & 3;
+        result[1] = (val >> 2) & 3;
+        result[2] = (val >> 4) & 3;
+    }
 }
 
-std::string NTriangulation::isomorphismSignature() const {
+std::string NTriangulation::isoSig() const {
     if (tetrahedra.empty()) {
         char c[2];
         c[0] = SCHAR(0);
@@ -134,8 +154,7 @@ std::string NTriangulation::isomorphismSignature() const {
 
         for (tet = 0; tet < (*it)->getNumberOfTetrahedra(); ++tet)
             for (perm = 0; perm < 24; ++perm) {
-                curr = isomorphismSignature(
-                    (*it)->getTetrahedron(tet)->markedIndex(),
+                curr = isoSig((*it)->getTetrahedron(tet)->markedIndex(),
                     NPerm4::orderedS4[perm]);
                 if ((tet == 0 && perm == 0) || (curr < comp[i]))
                     comp[i].swap(curr);
@@ -153,8 +172,7 @@ std::string NTriangulation::isomorphismSignature() const {
     return ans;
 }
 
-std::string NTriangulation::isomorphismSignature(
-        unsigned tet, const NPerm4& vertices) const {
+std::string NTriangulation::isoSig(unsigned tet, const NPerm4& vertices) const {
     // Only process the component that tet belongs to.
 
     // ---------------------------------------------------------------------
@@ -323,6 +341,164 @@ std::string NTriangulation::isomorphismSignature(
     delete[] joinGluing;
 
     return ans;
+}
+
+NTriangulation* NTriangulation::fromIsoSig(const std::string& sig) {
+    std::auto_ptr<NTriangulation> ans(new NTriangulation());
+
+    const char* c = sig.c_str();
+
+    // Initial check for invalid characters.
+    const char* d;
+    for (d = c; *d; ++d)
+        if (! SVALID(*d))
+            return 0;
+
+    unsigned i, j;
+    unsigned nTet, nChars;
+    while (*c) {
+        // Read one component at a time.
+        nTet = SVAL(*c++);
+        if (nTet < 63)
+            nChars = 1;
+        else {
+            if (! *c)
+                return 0;
+            nChars = SVAL(*c++);
+            if (! SHASCHARS(c, nChars))
+                return 0;
+            nTet = SREAD(c, nChars);
+            c += nChars;
+        }
+
+        if (nTet == 0) {
+            // Empty component.
+            continue;
+        }
+
+        // Non-empty component; keep going.
+        char* faceAction = new char[4 * nTet + 2];
+        unsigned nFaces = 0;
+        unsigned facePos = 0;
+        unsigned nJoins = 0;
+
+        for ( ; nFaces < 4 * nTet; facePos += 3) {
+            if (! *c) {
+                delete[] faceAction;
+                return 0;
+            }
+            SREADTRITS(*c++, faceAction + facePos);
+            for (i = 0; i < 3; ++i) {
+                // If we're already finished, make sure the leftover trits
+                // are zero.
+                if (nFaces == 4 * nTet) {
+                    if (faceAction[facePos + i] != 0) {
+                        delete[] faceAction;
+                        return 0;
+                    }
+                    continue;
+                }
+
+                if (faceAction[facePos + i] == 0)
+                    ++nFaces;
+                else if (faceAction[facePos + i] == 1)
+                    nFaces += 2;
+                else if (faceAction[facePos + i] == 2) {
+                    nFaces += 2;
+                    ++nJoins;
+                } else {
+                    delete[] faceAction;
+                    return 0;
+                }
+                if (nFaces > 4 * nTet) {
+                    delete[] faceAction;
+                    return 0;
+                }
+            }
+        }
+
+        unsigned* joinDest = new unsigned[nJoins + 1];
+        for (i = 0; i < nJoins; ++i) {
+            if (! SHASCHARS(c, nChars)) {
+                delete[] faceAction;
+                delete[] joinDest;
+                return 0;
+            }
+
+            joinDest[i] = SREAD(c, nChars);
+            c += nChars;
+        }
+
+        unsigned* joinGluing = new unsigned[nJoins + 1];
+        for (i = 0; i < nJoins; ++i) {
+            if (! SHASCHARS(c, 1)) {
+                delete[] faceAction;
+                delete[] joinDest;
+                delete[] joinGluing;
+                return 0;
+            }
+
+            joinGluing[i] = SREAD(c, 1);
+            ++c;
+
+            if (joinGluing[i] >= 24) {
+                delete[] faceAction;
+                delete[] joinDest;
+                delete[] joinGluing;
+                return 0;
+            }
+        }
+
+        // End of component!
+        NTetrahedron** tet = new NTetrahedron*[nTet];
+        for (i = 0; i < nTet; ++i)
+            tet[i] = new NTetrahedron();
+
+        facePos = 0;
+        unsigned nextUnused = 1;
+        unsigned joinPos = 0;
+        for (i = 0; i < nTet; ++i)
+            for (j = 0; j < 4; ++j) {
+                // Already glued from the other side:
+                if (tet[i]->adjacentTetrahedron(j))
+                    continue;
+
+                if (faceAction[facePos] == 0) {
+                    // Boundary face.
+                } else if (faceAction[facePos] == 1) {
+                    // Join to new tetrahedron.
+                    tet[i]->joinTo(j, tet[nextUnused++], NPerm4());
+                } else {
+                    // Join to existing tetrahedron.
+                    if (joinDest[joinPos] >= nextUnused ||
+                            tet[joinDest[joinPos]]->adjacentTetrahedron(
+                            NPerm4::orderedS4[joinGluing[joinPos]][j])) {
+                        delete[] faceAction;
+                        delete[] joinDest;
+                        delete[] joinGluing;
+                        for (int k = 0; k < nTet; ++k)
+                            delete tet[k];
+                        delete[] tet;
+                        return 0;
+                    }
+                    tet[i]->joinTo(j, tet[joinDest[joinPos]],
+                        NPerm4::orderedS4[joinGluing[joinPos]]);
+                    ++joinPos;
+                }
+
+                ++facePos;
+            }
+
+        for (i = 0; i < nTet; ++i)
+            ans->addTetrahedron(tet[i]);
+
+        delete[] faceAction;
+        delete[] joinDest;
+        delete[] joinGluing;
+        delete[] tet;
+    }
+
+    return ans.release();
 }
 
 } // namespace regina

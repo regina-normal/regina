@@ -72,6 +72,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(idealToFinite);
     CPPUNIT_TEST(dehydration);
+    CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
@@ -2109,6 +2110,89 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Cusped solid genus 2 torus");
             verifyNoDehydration(pinchedSolidTorus, "Pinched solid torus");
             verifyNoDehydration(pinchedSolidKB, "Pinched solid Klein bottle");
+        }
+
+        void verifyIsoSig(const NTriangulation& tri, const char* name) {
+            std::string sig = tri.isoSig();
+
+            if (sig.empty()) {
+                std::ostringstream msg;
+                msg << name << ": Cannot create isomorphism signature.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NTriangulation* rebuild = NTriangulation::fromIsoSig(sig);
+            if (! rebuild) {
+                std::ostringstream msg;
+                msg << name << ": Cannot reconstruct from isomorphism "
+                    "signature \"" << sig << "\".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! rebuild->isIsomorphicTo(tri).get()) {
+                std::ostringstream msg;
+                msg << name << ": Reconstruction from \"" << sig
+                    << "\" is not isomorphic to the original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete rebuild;
+
+            if (tri.getNumberOfTetrahedra() == 0)
+                return;
+
+            std::string otherSig;
+            for (unsigned i = 0; i < 10; ++i) {
+                NIsomorphism* iso = NIsomorphism::random(
+                    tri.getNumberOfTetrahedra());
+                NTriangulation* other = iso->apply(&tri);
+
+                otherSig = other->isoSig();
+                if (otherSig != sig) {
+                    std::ostringstream msg;
+                    msg << name << ": Random isomorphism gives different "
+                        "signature: " << otherSig << " != " << sig << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete other;
+                delete iso;
+            }
+        }
+
+        void isomorphismSignature() {
+            verifyIsoSig(empty, "Empty triangulation");
+            verifyIsoSig(singleTet, "Single tetrahedron");
+            verifyIsoSig(s3, "S^3");
+            verifyIsoSig(s2xs1, "S^2 x S^1");
+            verifyIsoSig(rp3, "RP^3");
+            verifyIsoSig(lens3_1, "L(3,1)");
+            verifyIsoSig(lens8_3, "L(8,3)");
+            verifyIsoSig(lens8_3_large, "Large L(8,3)");
+            verifyIsoSig(lens7_1_loop, "Layered loop L(7,1)");
+            verifyIsoSig(rp3rp3, "RP^3 # RP^3");
+            verifyIsoSig(q32xz3, "S^3 / Q_32 x Z_3");
+            verifyIsoSig(q28, "S^3 / Q_28");
+            verifyIsoSig(weberSeifert, "Weber-Seifert");
+            verifyIsoSig(lens100_1, "L(100,1)");
+            verifyIsoSig(ball_large, "4-tetrahedron ball");
+            verifyIsoSig(ball_large_pillows, "4-tetrahedron pillow ball");
+            verifyIsoSig(ball_large_snapped, "4-tetrahedron snapped ball");
+            verifyIsoSig(lst3_4_7, "LST(3,4,7)");
+            verifyIsoSig(figure8, "Figure eight knot complement");
+            verifyIsoSig(rp2xs1, "RP^2 x S^1");
+            verifyIsoSig(solidKB, "Solid Klein bottle");
+            verifyIsoSig(gieseking, "Gieseking manifold");
+            verifyIsoSig(invalidEdges, "Triangulation with invalid edges");
+            verifyIsoSig(twoProjPlaneCusps, "Triangulation with RP^2 cusps");
+            verifyIsoSig(cuspedGenusTwoTorus, "Cusped solid genus 2 torus");
+            verifyIsoSig(pinchedSolidTorus, "Pinched solid torus");
+            verifyIsoSig(pinchedSolidKB, "Pinched solid Klein bottle");
+
+            NTriangulation t;
+            t.insertTriangulation(lens8_3);
+            t.insertTriangulation(ball_large_pillows);
+            verifyIsoSig(t, "L(8,3) U B^3");
+            t.insertTriangulation(cuspedGenusTwoTorus);
+            verifyIsoSig(t, "L(8,3) U B^3 U (cusped genus 2 torus)");
         }
 
         void verifySimplification(const NTriangulation& tri,
