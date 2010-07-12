@@ -2574,6 +2574,35 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          */
         std::string dehydrate() const;
         /**
+         * Constructs the isomorphism signature for this triangulation.
+         *
+         * An <i>isomorphism signature</i> is a compact text representation
+         * of a triangulation.  Unlike dehydrations, an isomorphism signature
+         * uniquely determines a triangulation up to combinatorial isomorphism.
+         * That is, two triangulations are combinatorially isomorphic if
+         * and only if their isomorphism signatures are the same.
+         *
+         * The isomorphism signature is constructed entirely of
+         * printable characters, and has length proportional to
+         * <tt>n log n</tt>, where \a n is the number of tetrahedra.
+         *
+         * Isomorphism signatures are more general than dehydrations:
+         * they can be used with any triangulation (including closed, ideal,
+         * bounded, invalid and/or disconnected triangulations, as well
+         * as triangulations with large numbers of tetrahedra).
+         *
+         * The time required to construct the isomorphism signature of a
+         * triangulation is <tt>O(n^2 log^2 n)</tt>.
+         *
+         * The routine fromIsomorphismSignature() can be used to recover a
+         * triangulation from an isomorphism signature.  The triangulation
+         * recovered might not be identical to the original, but it will be
+         * combinatorially isomorphic.
+         *
+         * @return the isomorphism signature of this triangulation.
+         */
+        std::string isomorphismSignature() const;
+        /**
          * Inserts into this triangulation a set of tetrahedra and their
          * gluings as described by the given integer arrays.
          *
@@ -2847,6 +2876,23 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          */
         static bool compatibleTets(NTetrahedron* src, NTetrahedron* dest,
                 NPerm4 p);
+
+        /**
+         * Internal to isomorphismSignature().
+         *
+         * Constructs a candidate isomorphism signature for a single
+         * component of this triangulation.  This candidate signature
+         * assumes that the given tetrahedron with the given labelling
+         * of its vertices becomes tetrahedron zero with vertices 0,1,2,3
+         * under the "canonical isomorphism".
+         *
+         * @param tet the index of some tetrahedron in this triangulation.
+         * @param vertices some ordering of the four vertices of the
+         * given tetrahedron.
+         * @return the candidate isomorphism signature.
+         */
+        std::string isomorphismSignature(unsigned tet, const NPerm4& vertices)
+            const;
 
         /**
          * Calculates all properties that can be deduced from an

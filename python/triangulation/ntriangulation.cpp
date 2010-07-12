@@ -41,6 +41,8 @@ namespace {
         &NTriangulation::twoZeroMove;
     bool (NTriangulation::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
         &NTriangulation::twoZeroMove;
+    std::string (NTriangulation::*isomorphismSignature_void)() const =
+        &NTriangulation::isomorphismSignature;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         NTriangulation::simplifyToLocalMinimum, 0, 1);
@@ -278,9 +280,13 @@ void addNTriangulation() {
         .def("insertTriangulation", &NTriangulation::insertTriangulation)
         .def("insertRehydration", &NTriangulation::insertRehydration)
         .def("dehydrate", &NTriangulation::dehydrate)
+        .def("rehydrate", &NTriangulation::rehydrate,
+            return_value_policy<manage_new_object>())
+        .def("isomorphismSignature", isomorphismSignature_void)
         .def("dumpConstruction", &NTriangulation::dumpConstruction)
         .def("enterTextTriangulation", enterTextTriangulation_stdio,
             return_value_policy<manage_new_object>())
+        .staticmethod("rehydrate")
         .staticmethod("enterTextTriangulation")
     ;
 
