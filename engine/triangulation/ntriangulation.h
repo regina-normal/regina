@@ -2575,7 +2575,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * 1999.
          *
          * @param dehydration a dehydrated representation of the
-         * triangulation to insert.  Case is irrelevant; all letters
+         * triangulation to construct.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
          * @return a newly allocated triangulation if the rehydration was
          * successful, or null if the given string could not be rehydrated.
@@ -2646,14 +2646,33 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * The time required to construct the isomorphism signature of a
          * triangulation is <tt>O(n^2 log^2 n)</tt>.
          *
-         * The routine fromIsomorphismSignature() can be used to recover a
+         * The routine fromIsoSig() can be used to recover a
          * triangulation from an isomorphism signature.  The triangulation
          * recovered might not be identical to the original, but it will be
          * combinatorially isomorphic.
          *
          * @return the isomorphism signature of this triangulation.
          */
-        std::string isomorphismSignature() const;
+        std::string isoSig() const;
+        /**
+         * Recovers a full triangulation from an isomorphism signature.
+         * See isoSig() for more information on isomorphism signatures.
+         *
+         * The triangulation that is returned will be newly created.
+         *
+         * Calling isoSig() followed by fromIsoSig() is not guaranteed to
+         * produce an identical triangulation to the original, but it
+         * \e is guaranteed to produce a combinatorially isomorphic
+         * triangulation.
+         *
+         * @param signature the isomorphism signature of the
+         * triangulation to construct.  Note that, unlike dehydration
+         * strings, case is important for isomorphism signatures.
+         * @return a newly allocated triangulation if the reconstruction was
+         * successful, or null if the given string was not a valid
+         * isomorphism signature.
+         */
+        static NTriangulation* fromIsoSig(const std::string& signature);
         /**
          * Inserts into this triangulation a set of tetrahedra and their
          * gluings as described by the given integer arrays.
@@ -2940,7 +2959,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
                 NPerm4 p);
 
         /**
-         * Internal to isomorphismSignature().
+         * Internal to isoSig().
          *
          * Constructs a candidate isomorphism signature for a single
          * component of this triangulation.  This candidate signature
@@ -2953,8 +2972,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * given tetrahedron.
          * @return the candidate isomorphism signature.
          */
-        std::string isomorphismSignature(unsigned tet, const NPerm4& vertices)
-            const;
+        std::string isoSig(unsigned tet, const NPerm4& vertices) const;
 
         /**
          * Calculates all properties that can be deduced from an
