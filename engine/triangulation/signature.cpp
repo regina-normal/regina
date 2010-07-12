@@ -330,7 +330,7 @@ std::string NTriangulation::isoSig(unsigned tet, const NPerm4& vertices) const {
     for (i = 0; i < joinPos; ++i)
         SAPPEND(ans, joinDest[i], nChars);
     for (i = 0; i < joinPos; ++i)
-        SAPPEND(ans, joinGluing[i], 1);
+        SAPPEND(ans, joinGluing[i], 1); // One char is enough since 4! < 64.
 
     // Done!
     delete[] image;
