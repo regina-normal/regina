@@ -770,6 +770,64 @@ void NGroupExpression::applySubstitution( const NGroupExpression &that_word, con
 bool compare_length( const NGroupExpression* first, const NGroupExpression* second ) 
  {  return ( first->wordLength() < second->wordLength() ); }
 
+// assumes expVec initialized to the number of generators in the group, and entries zero.
+void build_exponent_vec( const std::list< NGroupExpressionTerm > & word, std::vector<unsigned long> &expVec ) 
+{
+ std::list<NGroupExpressionTerm>::const_iterator tit;
+ for ( tit = word.begin(); tit != word.end(); tit++) 
+     expVec[ (*tit).generator ] += abs( (*tit).exponent );
+}
+
+// gives a string that describes the substitution
+std::string substitutionString( const NGroupExpression &word, const NGroupExpression::NWordSubstitutionData &subData )
+{
+ std::string retval;
+ // cut subData into bits, assemble what we're cutting out and what we're pasting in. 
+ unsigned long word_length ( word.wordLength() );
+ std::vector< NGroupExpressionTerm > reducer( 0 ); 
+ reducer.reserve( word_length );
+ std::list<NGroupExpressionTerm>::const_iterator it; 
+  // splay word
+ for (it = word.getTerms().begin(); it!=word.getTerms().end(); it++)
+  { for (unsigned long i=0; i<abs((*it).exponent); i++)
+     reducer.push_back( NGroupExpressionTerm( (*it).generator, ((*it).exponent>0) ? 1 : -1 ) );    }
+ // done splaying, produce inv_reducer
+ std::vector< NGroupExpressionTerm > inv_reducer( word_length );
+ for (unsigned long i=0; i<word_length; i++) inv_reducer[word_length-(i+1)] = reducer[i].inverse(); 
+ NGroupExpression del_word, rep_word; // produce word to delete, and word to replace with.
+
+ for (unsigned long i=0; i<(word_length - subData.sub_length); i++)
+  rep_word.addTermLast( subData.invertB ?     reducer[(word_length - subData.start_from + i) % word_length] : 
+                                          inv_reducer[(word_length - subData.start_from + i) % word_length] );
+ for (unsigned long i=0; i<subData.sub_length; i++)
+  del_word.addTermLast( subData.invertB ? inv_reducer[(subData.start_from + i) % word_length] : 
+					      reducer[(subData.start_from + i) % word_length] );
+ rep_word.simplify(); del_word.simplify();
+ retval = del_word.stringOutput()+" -> "+rep_word.stringOutput();
+ return retval;
+}
+
+std::string NGroupExpression::stringOutput() const
+{
+ std::stringstream out; 
+ writeTextShort(out); 
+ return out.str();
+}
+
+void NGroupExpression::addTermsLast( const NGroupExpression& word)
+{
+std::list< NGroupExpressionTerm >::const_iterator it; 
+for (it = word.terms.begin(); it != word.terms.end(); it++)
+ addTermLast( *it );
+}
+
+void NGroupExpression::addTermsFirst( const NGroupExpression& word)
+{ // traverse word's terms in reverse order.
+std::list< NGroupExpressionTerm >::const_reverse_iterator it; 
+for (it = word.terms.rbegin(); it != word.terms.rend(); it++)
+ addTermFirst( *it );
+}
+
 void NGroupPresentation::dehnAlgorithm()
 {
  // let's start with the shortest relators first, and see to what extent we can use them to simplify the other relators.  To do this we'll
@@ -790,9 +848,8 @@ void NGroupPresentation::dehnAlgorithm()
  while (we_value_iteration)
   { // 1) Sort. 
     // 2) deallocate and remove any trivial relators 
-    // 3) apply shorter relators to longer ones, possibly triggering we_value_iteration
-    // TODO: new 4) Build a list of relators that can be used to reduce generators.  Apply the shortest
-    //              of them, possibly triggering we_value_iteratiorn
+    // 3) apply shorter relators to longer ones to reduce length of relators, possibly triggering we_value_iteration
+    // 4) use relators to kill generators. 
     // 5) return to (1) if we_value_iteration
 
    we_value_iteration = false; // set this back to true if we ever make a successful substitution. 
@@ -800,15 +857,8 @@ void NGroupPresentation::dehnAlgorithm()
 
    // start (2) deletion of 0-length relators
    it = relatorList.begin();  
-   while ( it != relatorList.end() )
-    {
-      if ( (*it)->wordLength() == 0 )
-       {
-        delete (*it);
-        it = relatorList.erase(it);
-       }
-      else break;
-    }
+   while ( it != relatorList.end() )  { if ( (*it)->wordLength() == 0 )
+       { delete (*it); it = relatorList.erase(it); }  else break; }
    // end (2) deletion of 0-length relators
 
    // start (3) - apply shorter relators to longer.
@@ -832,35 +882,28 @@ void NGroupPresentation::dehnAlgorithm()
 	  tit++;
 	}
       }
-    }
-   // end (3) - application of shorter to longer relators.
+    } // end (3) - application of shorter to longer relators.
 
   // (4) Build and sort a list (by length) of generator-killing relations. So we need to:
-  //     (a) Find a list of valid generating-killing relators
-  //     (b) Sort them by length
-  //     (c) Apply all possible length 1 and length 2 relators
-  //     (d) If any length 3 relators, apply a single one then loop back to (1)
-  //     (e) Keep a running list of generators we've killed and their substitutions in terms of the new generators. 
-
-  // we start (4)(a) Store this as a vector, one for each generator? gi --> word(i), etc.
-  //     we build it by sorting relatorList, walking from shortest-to-longest relators,   
-  //     if one of them is usable append to relatorSubstitutionTable, appropriately update
-  //     the other entries of relatorSubstitutionTable as we go. gi --> e is a killed generator. 
+  //     (a) Find generator-killing relators
+  //     (b) Apply all possible length 1 and length 2 relators
+  //     (c) If any length 3 relators, apply a single one then loop back to (1)
+  //     (d) Keep a running list of generators we've killed and their substitutions in terms of the new generators. 
 
   relatorList.sort( compare_length ); 
 
   // okay, lets start walking through relatorList. Terminate either when we hit the end or a length >=3 relator. 
   //  If we can use the relator *it, do. And record in substitutionTable.
+  // begin (4)
   for (it = relatorList.begin(); it!=relatorList.end(); it++)
    {  
+    bool word_length_3_trigger(false);
     unsigned long WL ( (*it)->wordLength() );
     // build a table expressing number of times each generator is used in *it. 
     std::vector< unsigned long > genUsage( nGenerators );   
-    std::list<NGroupExpressionTerm>::iterator tit;
-    for ( tit = (*it)->getTerms().begin(); tit != (*it)->getTerms().end(); tit++) 
-     genUsage[ (*tit).generator ] += abs( (*tit).exponent );
+    build_exponent_vec( (*it)->getTerms(), genUsage );
 
-    // okay, so for each genUsage[blah] == 1 we look to see if that is a usable substitution. 
+    std::list<NGroupExpressionTerm>::iterator tit;
     for (unsigned long i=0; i<genUsage.size(); i++) if (genUsage[i] == 1)
      { // have we found a substitution for generator i ?
        if ( ( substitutionTable[i].getNumberOfTerms() == 1 ) && ( substitutionTable[i].getGenerator(0) == i ) )
@@ -868,28 +911,37 @@ void NGroupPresentation::dehnAlgorithm()
 	  // genUsage[i] with the inverse of the remaining word in *both* substitutionTable and relatorList
 	  // find where genUsage[i] occurs. 
           bool inv(true); 
-          NGroupExpression complement;  
+          bool before_flag(true); // true if we have not yet encountered generator 
+          NGroupExpression prefix, complement; 
           for ( tit = (*it)->getTerms().begin(); ( tit != (*it)->getTerms().end() ); tit++)
            { // skip the term whose generator is the i-th, record whether or not it appears as an inverse...
-	     if ( (*tit).generator == i ) inv = ((*tit).exponent != 1); 
-             else complement.addTermLast( (*tit) );
+	     if ( (*tit).generator == i ) { inv = ((*tit).exponent != 1); before_flag=false; } 
+             else 
+              { if (before_flag) prefix.addTermLast( (*tit) );
+                else complement.addTermLast( (*tit) ); }
            } 
+	  complement.addTermsLast(prefix);
+
           if (!inv) complement.invert();
 	  // so we sub gi --> complement, in both substitutionTable and relatorList
           for (unsigned long j=0; j<substitutionTable.size(); j++)
 	    substitutionTable[j].substitute( i, complement );
-	  for (it = relatorList.begin(); it != relatorList.end(); it++)
-	     (*it)->substitute( i, complement );
+	  for (std::list< NGroupExpression* >::iterator pit = relatorList.begin(); pit != relatorList.end(); pit++)
+	     { // aha! using it in a nested way!!
+	     (*pit)->substitute( i, complement ); // except this
+	     }
 	  we_value_iteration = true;
+	  if (WL>3) word_length_3_trigger=true;
+
   	  goto found_a_generator_killer;
         }
-     }
+     } // end (4)
 
     found_a_generator_killer:
-    if (WL>2) break; 
-   }
+    if (word_length_3_trigger) break; 
+   } // end (4)
 
-  } // (5) loop
+  } // end of main_while_loop
  
  // We need to remove the generators that have been killed or expressed
  // in terms of other generators.  We have to similarly re-index the 
@@ -914,6 +966,7 @@ void NGroupPresentation::dehnAlgorithm()
      indx++;
     }
   }
+
  // now let's run through relatorList and substitute genReductionMapping[i] -> i
  for (it = relatorList.begin(); it != relatorList.end(); it++)
   {
@@ -937,8 +990,8 @@ void NGroupPresentation::dehnAlgorithm()
  relations.reserve( relatorList.size() );
  for (it = relatorList.begin(); it != relatorList.end(); it++) 
   { relations.push_back( (*it) ); }
- // done
-}
+
+}// end dehnAlgorithm()
 
 
 

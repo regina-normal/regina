@@ -335,6 +335,15 @@ class NGroupExpression : public ShareableObject {
          */
         void addTermLast(unsigned long generator, long exponent);
 
+	/**
+	 * Multiplies *this on the right by word. 
+	 */
+	void addTermsLast( const NGroupExpression& word);
+	/**
+	 * Multiplies *this on the left by word. 
+	 */
+	void addTermsFirst( const NGroupExpression& word);
+
         /**
          * Returns a newly created expression that is the inverse of
          * this expression.  The terms will be reversed and the
@@ -490,6 +499,14 @@ class NGroupExpression : public ShareableObject {
          * 0 if problems arose.
          */
         static NGroupExpression* readFromFile(NFile& in);
+
+        /**
+         * The text representation will be of the form
+         * <tt>g2^4 g13^-5 g4</tt>.
+	 *
+	 * @return a std::string representation of the word.
+         */
+	std::string stringOutput() const;
 
         /**
          * The text representation will be of the form
@@ -667,6 +684,12 @@ class NGroupPresentation : public ShareableObject {
 	 */
 	void dehnAlgorithm();
 
+	/**
+	 *  The sum of the wordLength()s of the relators.  Used as a coarse measure of the complexity
+	 * of the presentation.
+	 */
+	unsigned long relatorLength() const;
+
         /**
          * Computes the abelianization of this group. 
          * @return a pointer to the abelianization. 
@@ -823,6 +846,15 @@ inline void NGroupPresentation::writeTextShort(std::ostream& out) const {
     out << "Group presentation: " << nGenerators << " generators, "
         << relations.size() << " relations";
 }
+
+inline unsigned long NGroupPresentation::relatorLength() const
+{
+unsigned long retval(0);
+for (unsigned long i=0; i<relations.size(); i++)
+ retval += relations[i]->wordLength();
+return retval;
+}
+
 
 } // namespace regina
 
