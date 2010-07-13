@@ -225,6 +225,14 @@ Version 4.6.1  [ (under development) ]
             - torsionLinkingFormIsHyperbolic returns whether or not the 3-manifold
               has a hyperbolic torsion linking form. Will likely change implementation
               before 5.0 is ready.
+	Class NSVPolynomialRing:
+            - This is a single-variable polynomial ring with NLargeInteger coefficients. 
+ 	      It has standard operations, like multiplication, addition, etc. 
+        Class NBinaryS4:
+	    - There is a standard embedding of the symmetric group on n letters into 
+              SO_{n-1}, this is the lift of the symmetric group on 4 letters to the group 
+              spin(3), the spinor group aka the 3-sphere thought of as the group of 
+              unit quaternions. 
 
     USER INTERFACE:
         - There is now an option to enable or disable diagnostic
