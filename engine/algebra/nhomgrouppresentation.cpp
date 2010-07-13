@@ -39,7 +39,7 @@
 
 namespace regina {
 
-NGroupExpression NHomGroupPresentation::operator[](const NGroupExpression &arg)
+NGroupExpression NHomGroupPresentation::evaluate(const NGroupExpression &arg) const
  { // evaluate at arg
    NGroupExpression retval(arg); // start with arg, then we use substitute to evaluate.
    // lets increment the generator numbers in retval to be larger than the largest generator used in range, N.
@@ -49,42 +49,90 @@ NGroupExpression NHomGroupPresentation::operator[](const NGroupExpression &arg)
    // then we apply substitute appropriately.
    for (unsigned long i=0; i<map.size(); i++)
     { // map states where domain i-th generator is sent to in range, so we replace gen N+i by map[i]
-      retval.substitute( N+i, map[i] );
+      retval.substitute( N+i, *map[i] );
     }
  
    return retval; 
  }
 
+NHomGroupPresentation NHomGroupPresentation::operator*(const NHomGroupPresentation &arg) const
+{
+std::vector< NGroupExpression > vals( domain.getNumberOfGenerators() );
+for (unsigned long i=0; i<vals.size(); i++)
+ {
+ NGroupExpression gi; gi.addTermLast( i, 1 );
+ vals[i].addTermsLast(evaluate(arg.evaluate(gi)));
+ }
+return NHomGroupPresentation( domain, arg.range, vals );
+}
+
+std::string NHomGroupPresentation::stringOutput() const
+{
+std::string retval; 
+retval.append("Domain "); 
+retval.append(domain.stringOutput());
+retval.append(" map[");
+ for (unsigned long i=0; i<domain.getNumberOfGenerators(); i++)
+  { if (i!=0) retval.append(", "); retval.append("g"); 
+    std::stringstream num; num<<i; retval.append( num.str() );
+    retval.append(" --> "); retval.append(map[i]->stringOutput()); 
+  }
+ retval.append("] Range ");
+ retval.append(range.stringOutput());
+return retval;
+}
+
+
 void NHomGroupPresentation::writeTextShort(std::ostream& out) const
 {
  std::cout<<"map[";
  for (unsigned long i=0; i<domain.getNumberOfGenerators(); i++)
-  { if (i!=0) out<<", "; out<<"g"<<i<<" --> "; std::cout.flush(); map[i].writeTextShort( out );  }
+  { if (i!=0) out<<", "; out<<"g"<<i<<" --> "; std::cout.flush(); map[i]->writeTextShort( out );  }
  out<<"]";
 }
 
 void NHomGroupPresentation::writeTextLong(std::ostream& out) const
 {
- out<<"Domain "<<domain.stringPresentation()<<" "; 
+ out<<"Domain "<<domain.stringOutput()<<" "; 
  writeTextShort(out);
- out<<" "<<range.stringPresentation()<<" Range.";
+ out<<" "<<range.stringOutput()<<" Range.";
 }
 
 // return true if and only if a modification to either domain, range or the presentation is made.
-bool NHomGroupPresentation::intelligentSimplify()
+void NHomGroupPresentation::dehnAlgorithm()
 {
-bool changed(false); // default
+ // step 1: simplify presentation of range. 
+ //         the strategy is to completely mimic NGroupPresentation::intelligentSimplify(), and change the map accordingly
+ regina::NHomGroupPresentation* rangeMap(NULL);
+ range.dehnAlgorithm(rangeMap);
+ // step 2: simplify presentation of domain. 
+ //         the strategy is to completely mimic NGroupPresentation::intelligentSimplify(), and change the map accordingly
+ regina::NHomGroupPresentation* domainMap(NULL);
+ domain.dehnAlgorithm(domainMap);
 
-// step 1: simplify presentation of range. 
-//         the strategy is to completely mimic NGroupPresentation::intelligentSimplify(), and change the map accordingly
+ // step 3: find a hacky inverse to domainMap
+ //         by the way domainMap is constructed we know each gi comes from some gk, so look them up. 
+ std::vector< unsigned long > invDomainMap( domain.getNumberOfGenerators() );
+ for (unsigned long i=0; i<invDomainMap.size(); i++)
+  {
+   // if map[i] == "gk" then invDomainMap[k] = gi. 
+   if (domainMap->evaluate(i).getNumberOfTerms()==1) if (domainMap->evaluate(i).getExponent(0)==1)
+     invDomainMap[ domainMap->evaluate(i).getGenerator(0) ] = i;
+  } 
 
-// step 2: simplify presentation of domain. 
-//         the strategy is to completely mimic NGroupPresentation::intelligentSimplify(), and change the map accordingly
+ // step 4: compute rangeMap*(*this)*domainMap.inverse()
+ //         and replace "map" appropriately. 
+ std::vector< NGroupExpression > newMap( domain.getNumberOfGenerators() );
+ for (unsigned long i=0; i<newMap.size(); i++)
+  newMap[i].addTermsLast( rangeMap->evaluate( *map[ invDomainMap[i] ] ) );
 
-// step 3: simplify map.
-//         try something?? hmm... need to think about this some more.
+ for (unsigned long i=0; i<map.size(); i++) delete map[i];
+ map.resize( newMap.size() );
+ for (unsigned long i=0; i<map.size(); i++) map[i] = new NGroupExpression(newMap[i]);
 
-return changed;
+ // step 5: done, clean-up
+ delete rangeMap;
+ delete domainMap;
 }
 
 

@@ -43,10 +43,12 @@
 #include "utilities/ptrutils.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "algebra/nabeliangroup.h"
+//#include "algebra/nhomgrouppresentation.h"
 
 namespace regina {
 
 class NFile;
+class NHomGroupPresentation; 
 
 /**
  * \weakgroup algebra
@@ -680,9 +682,12 @@ class NGroupPresentation : public ShareableObject {
 	 *  Reduces this presentation using the Dehn algorithm for hyperbolic groups, i.e. small cancellation
 	 * theory.   This means we look to see if part of one relator can be used to simplify others.  If so, 
 	 * make the substitution and simplify.  We continue until no more presentation-shortening substitutions 
-	 * are available. 
+	 * are available.  We follow that by killing any available generators using words where generators
+         * appear a single time. 
+         *
+         * @param must be a null pointer, the algorithm initializes the pointer and reductionMap.
 	 */
-	void dehnAlgorithm();
+	void dehnAlgorithm(NHomGroupPresentation*& reductionMap);
 
 	/**
 	 *  The sum of the wordLength()s of the relators.  Used as a coarse measure of the complexity
@@ -710,7 +715,7 @@ class NGroupPresentation : public ShareableObject {
 	 *
 	 * @return a std::string describing the presentation, < generators | relators >
 	 */
-	std::string stringPresentation() const;
+	std::string stringOutput() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;

@@ -30,6 +30,7 @@
 #include <map>
 #include <sstream>
 #include "algebra/ngrouppresentation.h"
+#include "algebra/nhomgrouppresentation.h"
 #include "file/nfile.h"
 #include "maths/numbertheory.h"
 #include "utilities/boostutils.h"
@@ -596,7 +597,7 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
         }
 }
 
-std::string NGroupPresentation::stringPresentation() const {
+std::string NGroupPresentation::stringOutput() const {
 	std::string retval;
 	retval.append("< ");
         if (nGenerators == 0) retval.append("");
@@ -828,10 +829,14 @@ for (it = word.terms.rbegin(); it != word.terms.rend(); it++)
  addTermFirst( *it );
 }
 
-void NGroupPresentation::dehnAlgorithm()
+void NGroupPresentation::dehnAlgorithm(NHomGroupPresentation*& reductionMap)
 {
- // let's start with the shortest relators first, and see to what extent we can use them to simplify the other relators.  To do this we'll
- // need a temporary relator table, sorted on the length of the relators. 
+ // start by taking a copy of *this group, for the eventual construction of reductionMap
+ NGroupPresentation oldGroup( *this );
+
+ // let's start with the shortest relators first, and see to what extent we can use them to 
+ // simplify the other relators.  To do this we'll need a temporary relator table, sorted 
+ // on the length of the relators. 
  std::list< NGroupExpression* >::iterator it;
  std::list< NGroupExpression* > relatorList; 
  for (unsigned long i=0; i<relations.size(); i++) relatorList.push_back( relations[i] );
@@ -961,35 +966,29 @@ void NGroupPresentation::dehnAlgorithm()
   {
    if ( substitutionTable[i].getNumberOfTerms() == 1 ) 
    if ( substitutionTable[i].getGenerator(0) == i )
-    {
-     genReductionMapping[ indx ] = i;
-     indx++;
-    }
+    { genReductionMapping[ indx ] = i;
+      indx++; }
   }
 
  // now let's run through relatorList and substitute genReductionMapping[i] -> i
  for (it = relatorList.begin(); it != relatorList.end(); it++)
-  {
    for (unsigned long i=0; i<nGenerators; i++)
-    {
-     NGroupExpression gi; gi.addTermFirst( i, 1 );
-     (*it)->substitute( genReductionMapping[i], gi );
-    } 
-  }  
+    { NGroupExpression gi; gi.addTermFirst( i, 1 );
+      (*it)->substitute( genReductionMapping[i], gi ); } 
  // and might as well do substitutionTable, too. 
  for (unsigned long j=0; j<substitutionTable.size(); j++)
-  {
    for (unsigned long i=0; i<nGenerators; i++)
-    {
-     NGroupExpression gi; gi.addTermFirst( i, 1 );
-     substitutionTable[j].substitute( genReductionMapping[i], gi );
-    } 
-  }
+    { NGroupExpression gi; gi.addTermFirst( i, 1 );
+      substitutionTable[j].substitute( genReductionMapping[i], gi ); } 
 
  // okay, now let's replace relations with relatorList
  relations.reserve( relatorList.size() );
  for (it = relatorList.begin(); it != relatorList.end(); it++) 
   { relations.push_back( (*it) ); }
+  
+ NGroupPresentation newGroup( *this );
+ reductionMap = new NHomGroupPresentation( oldGroup, newGroup, substitutionTable );
+ // now we can initialize reductionMap 
 
 }// end dehnAlgorithm()
 
