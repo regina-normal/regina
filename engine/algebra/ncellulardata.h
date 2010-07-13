@@ -70,6 +70,7 @@ class Dim4Triangulation;
  * - the maps between coordinate systems, Bocksteins, boundary inclusion, etc. 
  * - the bilinear forms coming from Poincare Duality: H_i \otimes H_j --> H_{i+j-n}
  *   and torsion linking \tau H_i \otimes \tau H_{n-i-1} --> Q/Z 
+ * - fundamental groups of the manifold, natural submanifolds and maps between them.
  *
  * This class mostly takes a "least effort" approach to all computations. It only computes 
  * what is neccessary for your requests.  It also keeps a record of all previous computations 
@@ -79,30 +80,29 @@ class Dim4Triangulation;
  * initialization, but this is relatively quick.  
  *
  * @pre - Assumes input triangulation is valid. 
+ * @pre - Fundamental group routines assume the triangulation that's passed to the constructor
+ *        is path-connected.
  *
  * \testpart
  *
  * \todo 1) natural bilinear forms on a manifold, spin structures.
- *       2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
+ * \todo 2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
  *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first.
  *        double check torsion linking form behaves properly.
- *       3) New coordinate systems to implement:
+ * \todo  3) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
  *        cup products.  (current efforts here)
- *        cell counts DONE
  *        chain complex initialization TODO
  *        chain maps TODO
  *        PD / intersection forms TODO
- *        TODO need to set up local orientations for dual boundary coordinates, for the barycentres
+ * \todo  4) need to set up local orientations for dual boundary coordinates, for the barycentres
  *        of all standard boundary simplices.  We'll put something in setupIndices for this.
- *       4) Detailed fundamental group presentations and maps bdry -> M, etc.  First we need to implement 
- *          a) Put in all relators.  
- *          b) push out pi_1 computations for all the boundary components, interior manifold, and inclusion maps.
- *          c) finish intelligentSimplify in nhomgrouppresentation.h
- *       5) Detailed search for possible memory leaks.
- *       6) add some images into documentation.
+ *        Currently done for Dim4Triangulations, but not for NTriangulations. 
+ * \todo  5) Detailed fundamental group presentations and maps bdry -> M, etc.  Almost done! 
+ * \todo  6) Detailed search for possible memory leaks.
+ * \todo  7) add some images into documentation.
  * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
  *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
