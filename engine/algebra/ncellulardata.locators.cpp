@@ -169,7 +169,7 @@ NCellularData::HomGroupPresLocator::HomGroupPresLocator( submanifold_type ST, un
 NCellularData::HomGroupPresLocator::HomGroupPresLocator( const HomGroupPresLocator &cloneMe ) :
  inclusion_sub_man( cloneMe.inclusion_sub_man ), subman_component_index( cloneMe.subman_component_index ) {}
 
-inline bool NCellularData::HomGroupPresLocator::operator<(const HomGroupPresLocator &rhs) const
+bool NCellularData::HomGroupPresLocator::operator<(const HomGroupPresLocator &rhs) const
  { if ( inclusion_sub_man < rhs.inclusion_sub_man ) return true; 
    if ( inclusion_sub_man > rhs.inclusion_sub_man ) return false;
    if ( subman_component_index < rhs.subman_component_index ) return true; 

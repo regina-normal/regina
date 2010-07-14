@@ -829,6 +829,9 @@ for (it = word.terms.rbegin(); it != word.terms.rend(); it++)
  addTermFirst( *it );
 }
 
+// TODO: recognise commutators and use that to our advantage. 
+//       recognise other advantageous small words ??
+//       random walks using score==0 substitutions??
 void NGroupPresentation::dehnAlgorithm(NHomGroupPresentation*& reductionMap)
 {
  // start by taking a copy of *this group, for the eventual construction of reductionMap

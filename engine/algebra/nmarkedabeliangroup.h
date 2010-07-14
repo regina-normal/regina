@@ -169,6 +169,9 @@ class NMarkedAbelianGroup : public ShareableObject {
         NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N, const NLargeInteger &pcoeff);
 
 	/**
+         * Determines whether or not the defining maps for this group actually give a chain
+         * complex. Helpful for debugging. 
+         *
 	 * @return true if and only if M*N == 0 where M and N are the definining matrices.
 	 */
 	bool isChainComplex() const;
