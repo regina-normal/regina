@@ -527,7 +527,7 @@ private:
      *  orientation.
      *
      * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face [tri3->getEdge(bcIx[1][i])]
-     *  the two boundary faces that contain it and the edge number of the edge in the NFace.  TODO
+     *  the two boundary faces that contain it and the edge number of the edge in the NFace.  
      *
      * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex [tri3->getVertex(bcIx[0][i])]
      *  the circle of faces incident to that vertex, with vrtinc[1] and vrtinc[2] forming the normal orientation
@@ -1075,137 +1075,6 @@ inline long int NCellularData::signature() const
  return b->signature();
 }
 
-// GroupLocator and HomLocator
-inline NCellularData::GroupLocator::GroupLocator(unsigned long newDim, variance_type newVar,
-	 homology_coordinate_system useHcs, unsigned long useCof) :
- dim(newDim), var(newVar), hcs(useHcs), cof(useCof) {}
-
-inline NCellularData::GroupLocator::GroupLocator(const GroupLocator &cloneMe) : 
- dim(cloneMe.dim), var(cloneMe.var), hcs(cloneMe.hcs), cof(cloneMe.cof) {}
-
-inline void NCellularData::GroupLocator::writeTextShort(std::ostream& out) const
-{
-if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
-if ( (hcs == DUAL_coord) || (hcs == DUAL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) ) out<<"(dual)"; else 
-if ( (hcs == MIX_coord) || (hcs == MIX_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(mix)"; 
-out<<"H"<<( var==coVariant ? "_" : "^" )<<dim;
-if ( (hcs == STD_BDRY_coord) || (hcs == DUAL_BDRY_coord) || (hcs == MIX_BDRY_coord) ) out<<"(bM;"; else 
-if ( (hcs == STD_REL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(M,bM;";
-else out<<"(M;";
-if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
-}
-
-inline void NCellularData::GroupLocator::writeTextLong(std::ostream& out) const
-{ // at present this is the same as writeTextShort
-if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
-if ( (hcs == DUAL_coord) || (hcs == DUAL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) ) out<<"(dual)"; else 
-if ( (hcs == MIX_coord) || (hcs == MIX_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(mix)"; 
-out<<"H"<<( var==coVariant ? "_" : "^" )<<dim;
-if ( (hcs == STD_BDRY_coord) || (hcs == DUAL_BDRY_coord) || (hcs == MIX_BDRY_coord) ) out<<"(bM;"; else 
-if ( (hcs == STD_REL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(M,bM;";
-else out<<"(M;";
-if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
-}
-
-inline NCellularData::HomLocator::HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange) : 
-  domain( newDomain ), range( newRange ) {}
-
-inline NCellularData::HomLocator::HomLocator(const HomLocator &cloneMe) :
-  domain( cloneMe.domain ), range( cloneMe.range ) {}
-
-inline void NCellularData::HomLocator::writeTextShort(std::ostream& out) const
-{ out<<"map["; domain.writeTextShort(out); out<<"-->"; range.writeTextShort(out); out<<"]"; }
-
-inline void NCellularData::HomLocator::writeTextLong(std::ostream& out) const
-{ out<<"map["; domain.writeTextShort(out); out<<"-->"; range.writeTextShort(out); out<<"]"; }
-
-inline NCellularData::FormLocator::FormLocator( form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain) :
- ldomain( newLdomain ), rdomain( newRdomain ), ft(FT)  {}
-
-inline NCellularData::FormLocator::FormLocator( const FormLocator &cloneMe ) :
- ldomain( cloneMe.ldomain ), rdomain( cloneMe.rdomain ), ft(cloneMe.ft)  {}
-
-inline void NCellularData::FormLocator::writeTextShort(std::ostream&) const
-{} // TODO
-
-inline void NCellularData::FormLocator::writeTextLong(std::ostream&) const
-{} // TODO
-
-// groupPresLocator
-inline NCellularData::GroupPresLocator::GroupPresLocator( submanifold_type ST, unsigned long CI ) :
- sub_man( ST ), component_index( CI ) {}
-
-inline NCellularData::GroupPresLocator::GroupPresLocator( const GroupPresLocator &cloneMe ) :
- sub_man( cloneMe.sub_man ), component_index( cloneMe.component_index ) {}
-
-inline bool NCellularData::GroupPresLocator::operator<(const GroupPresLocator &rhs) const
- { if ( sub_man < rhs.sub_man ) return true;                 if ( sub_man > rhs.sub_man ) return false;
-   if ( component_index < rhs.component_index ) return true; if ( component_index > rhs.component_index ) return false;
-   return false;
- }
-
-inline bool NCellularData::GroupPresLocator::operator==(const GroupPresLocator &rhs) const
- { if ( (sub_man == rhs.sub_man) && (component_index == rhs.component_index) ) return true;
-    else return false;
- }
-
-inline bool NCellularData::GroupPresLocator::operator!=(const GroupPresLocator &rhs) const
- { if ( (sub_man != rhs.sub_man) || (component_index != rhs.component_index) ) return true;
-    else return false;
- }
-
-inline void NCellularData::GroupPresLocator::writeTextShort(std::ostream& out) const
-{
- if (sub_man == standard_boundary) out<<"Standard boundary "<<component_index<<" component Pi1.";
- else  if (sub_man == ideal_boundary) out<<"Ideal boundary "<<component_index<<" component Pi1.";
- else  if (sub_man == whole_manifold) out<<"Whole manifold Pi1.";
- else out<<"Unknown type.";
-} 
-
-inline void NCellularData::GroupPresLocator::writeTextLong(std::ostream& out) const
-{ writeTextShort(out); } 
-
-// homGroupPresLocator
-inline NCellularData::HomGroupPresLocator::HomGroupPresLocator( submanifold_type ST, unsigned long CI ) :
- inclusion_sub_man( ST ), subman_component_index( CI ) {}
-
-inline NCellularData::HomGroupPresLocator::HomGroupPresLocator( const HomGroupPresLocator &cloneMe ) :
- inclusion_sub_man( cloneMe.inclusion_sub_man ), subman_component_index( cloneMe.subman_component_index ) {}
-
-inline bool NCellularData::HomGroupPresLocator::operator<(const HomGroupPresLocator &rhs) const
- { if ( inclusion_sub_man < rhs.inclusion_sub_man ) return true; 
-   if ( inclusion_sub_man > rhs.inclusion_sub_man ) return false;
-   if ( subman_component_index < rhs.subman_component_index ) return true; 
-   if ( subman_component_index > rhs.subman_component_index ) return false;
-   return false;
- }
-
-inline bool NCellularData::HomGroupPresLocator::operator==(const HomGroupPresLocator &rhs) const
- { if ( (inclusion_sub_man == rhs.inclusion_sub_man) && (subman_component_index == rhs.subman_component_index) ) 
-   return true; else return false;
- }
-
-inline bool NCellularData::HomGroupPresLocator::operator!=(const HomGroupPresLocator &rhs) const
- { if ( (inclusion_sub_man != rhs.inclusion_sub_man) || (subman_component_index != rhs.subman_component_index) ) 
-   return true; else return false;
- }
-
-inline void NCellularData::HomGroupPresLocator::writeTextShort(std::ostream& out) const
-{
- if (inclusion_sub_man == ideal_boundary) out<<"Ideal component "<<subman_component_index<<" Pi1 inclusion.";
- else if (inclusion_sub_man == standard_boundary) out<<"Standard component "<<subman_component_index<<" Pi1 inclusion.";
- else out<<"Unknown type.";
-} 
-
-inline void NCellularData::HomGroupPresLocator::writeTextLong(std::ostream& out) const
-{ writeTextShort(out); } 
-
-inline unsigned long NCellularData::components( submanifold_type ctype ) const
-{
- if (ctype == whole_manifold) return 1;
- if (ctype == standard_boundary) return stdBdryPi1Gen.size();
- if (ctype == ideal_boundary) return idBdryPi1Gen.size();
-} 
 
 } // namespace regina
 

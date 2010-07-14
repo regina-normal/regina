@@ -742,8 +742,6 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
       NHomMarkedAbelianGroup f( lproj * (*sc_sb) * (sc_mc->inverseHom()) * (*dc_mc) * rinc ); // dual -> std_rel_bdry
       FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
 
-//if ( !bilinearForm(prim)->rdomain().equalTo(f.getRange()) ) std::cout<<"NOT COMPOSABLE ERROR!!";
-
       bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(f) ); 
       std::map< FormLocator, NBilinearForm* > *mbfptr =             
        const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);

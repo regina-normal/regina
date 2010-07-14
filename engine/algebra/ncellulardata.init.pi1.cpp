@@ -239,6 +239,38 @@ void NCellularData::buildExtraNormalData()
  } // end tri4 
  else
  { // tri3 construct normalsDim3BdryEdges and normalsDim3BdryVertices TODO
+  normalsDim3BdryEdges.resize( bcIx[1].size() );
+  // okay, so for every bcIx[1] we find the corresponding boundary edge, and the boundary NFaces that include it
+  // struct dim3BoundaryEdgeInclusion
+  //  { NFace *firstfac, *secondfac;
+  //    unsigned long firstedgnum, secondedgnum; };
+  // so we request bcIx[1]'s embeddings, find the first and last face in that list
+  for (unsigned long i=0; i<bcIx[1].size(); i++)
+   {
+    const NEdge* edg( tri3->getEdge( bcIx[1][i] ) );    const NEdgeEmbedding emb1( edg->getEmbedding(0) );
+    const NTetrahedron* tet1( emb1.getTetrahedron() );  NFace* fac1 ( tet1->getFace( emb1.getVertices()[3] ) );
+    normalsDim3BdryEdges[i].firstfac = fac1;
+    normalsDim3BdryEdges[i].firstedgnum = fac1->getEmbedding(0).getVertices().preImageOf( emb1.getVertices()[2] );
+
+    const NEdgeEmbedding emb2( edg->getEmbedding( edg->getNumberOfEmbeddings() - 1 ) );
+    const NTetrahedron* tet2( emb1.getTetrahedron() );  NFace* fac2 ( tet2->getFace( emb2.getVertices()[2] ) );
+    normalsDim3BdryEdges[i].secondfac = fac2;
+    normalsDim3BdryEdges[i].secondedgnum = fac2->getEmbedding(0).getVertices().preImageOf( emb2.getVertices()[3] );
+   }
+  // now for the boundary vertices.
+  normalsDim4BdryVertices.resize( bcIx[0].size() );
+  // similarly, for every bcIx[0] find the boundary NFace's that include it and their data, as described in the structure below.
+  // struct dim3BoundaryVertexInclusion
+  //  { std::vector< NFace* > face;
+  //    std::vector< unsigned long > vrtnum; 
+  //    std::vector< NPerm3 > vrtinc; };
+  for (unsigned long i=0; i<bcIx[0].size(); i++)
+   {
+    const NVertex* vrt( tri3->getVertex(bcIx[0][i]) );
+    const std::vector< NVertexEmbedding > vrtEmbs(vrt->getEmbeddings());
+    // TODO 
+   }
+
  } // end tri3
 
  // figure out number of standard vs. ideal boundary components, also compute a vector which describes
