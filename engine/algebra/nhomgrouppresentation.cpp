@@ -99,16 +99,17 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
 }
 
 // return true if and only if a modification to either domain, range or the presentation is made.
-void NHomGroupPresentation::dehnAlgorithm()
+bool NHomGroupPresentation::intelligentSimplify()
 {
+ bool didSomething(false);
  // step 1: simplify presentation of range. 
  //         the strategy is to completely mimic NGroupPresentation::intelligentSimplify(), and change the map accordingly
  regina::NHomGroupPresentation* rangeMap(NULL);
- range.dehnAlgorithm(rangeMap);
+ didSomething = range.intelligentSimplify(rangeMap);
  // step 2: simplify presentation of domain. 
  //         the strategy is to completely mimic NGroupPresentation::intelligentSimplify(), and change the map accordingly
  regina::NHomGroupPresentation* domainMap(NULL);
- domain.dehnAlgorithm(domainMap);
+ didSomething = didSomething || domain.intelligentSimplify(domainMap);
 
  // step 3: find a hacky inverse to domainMap
  //         by the way domainMap is constructed we know each gi comes from some gk, so look them up. 
@@ -133,6 +134,7 @@ void NHomGroupPresentation::dehnAlgorithm()
  // step 5: done, clean-up
  delete rangeMap;
  delete domainMap;
+ return didSomething;
 }
 
 

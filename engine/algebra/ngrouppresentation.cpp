@@ -245,240 +245,13 @@ NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
         back_inserter(relations), FuncNewCopyPtr<NGroupExpression>());
 }
 
-
+// this is a wrapper for the "real" intelligentSimplify() routine, 
+//  one that throws out the map that it produces. 
 bool NGroupPresentation::intelligentSimplify() {
-    unsigned long oldNGenerators = nGenerators;
-    bool changed = false; // Has anything changed at all?
-    bool removed = false; // Have we deleted any relations?
-
-    // Store the relations in a temporary linked list for fast insertion
-    // and removal.  We'll put the ones we kept back into the original
-    // array at the end.
-    std::list<NGroupExpression*> tmpRels;
-    NGroupExpression* rel;
-    for (RelIterator it = relations.begin(); it != relations.end(); it++) {
-        rel = *it;
-        // Do an initial simplification on each relation as we go.
-        if (rel->simplify(true))
-            changed = true;
-        if (rel->getNumberOfTerms() == 0) {
-            delete rel;
-            changed = true;
-            removed = true;
-        } else
-            tmpRels.push_back(rel);
-    }
-
-    // At this point all relations are simplified and none are empty.
-    // Throughout the remainder of this routine we will attempt to
-    // preserve this state of affairs.
-    TmpRelIterator it, it2, it3;
-    TermIterator tit;
-
-    // Make a table of generators that have been removed.
-    // A value in the array will be set to -1 when the corresponding
-    // generator is removed.
-    unsigned long gen;
-    long* genMap = new long[nGenerators];
-    for (gen = 0; gen < nGenerators; gen++)
-        genMap[gen] = gen;
-
-    // Run through and look for substitutions we can make.
-    // This currently isn't magnificently optimised.
-    std::map<unsigned long, long> exponents;
-    std::map<unsigned long, long>::iterator expIt;
-    NGroupExpression* expansion;
-    unsigned long gen1, gen2, genRemove;
-    long exp1a, exp1b, exp2a, exp2b;
-
-    bool doMoreSubsts = true;
-    while (doMoreSubsts) {
-        doMoreSubsts = false;
-
-        // Look for generator substitution.
-        it = tmpRels.begin();
-        while (it != tmpRels.end()) {
-            // Can we pull a single variable out of this relation?
-            rel = *it;
-            // How many times does each generator appear in this relation?
-            for (tit = rel->getTerms().begin();
-                    tit != rel->getTerms().end(); tit++) {
-                // Find this generator, or insert it with exponent 0 if
-                // it's not already present.
-                expIt = exponents.insert(
-                    std::make_pair((*tit).generator, 0)).first;
-                if ((*tit).exponent < 0)
-                    (*expIt).second -= (*tit).exponent;
-                else
-                    (*expIt).second += (*tit).exponent;
-            }
-            // Did any generator appear precisely once?
-            expIt = find_if(exponents.begin(), exponents.end(),
-                regina::stl::compose1(bind2nd(std::equal_to<long>(), 1),
-                regina::stl::select2nd<std::pair<unsigned long, long> >()));
-            if (expIt == exponents.end()) {
-                // Can't use this relation.  Move on.
-                exponents.clear();
-                it++;
-                continue;
-            }
-            gen = (*expIt).first;
-            exponents.clear();
-
-            // We are going to replace generator gen.
-            // Build up the expansion.
-            expansion = new NGroupExpression();
-            for (tit = rel->getTerms().begin(); (*tit).generator != gen; tit++)
-                expansion->addTermFirst((*tit).inverse());
-            for (tit = --(rel->getTerms().end());
-                    (*tit).generator != gen; tit--)
-                expansion->addTermLast((*tit).inverse());
-            // Check if we need to invert it.
-            if ((*tit).exponent == -1) {
-                rel = expansion;
-                expansion = expansion->inverse();
-                delete rel;
-            }
-            // Do the substitution.
-            it2 = tmpRels.begin();
-            while (it2 != tmpRels.end())
-                if (it2 != it) {
-                    (*it2)->substitute(gen, *expansion, true);
-                    if ((*it2)->getNumberOfTerms() == 0) {
-                        delete *it2;
-                        it2 = tmpRels.erase(it2);
-                    } else
-                        it2++;
-                } else
-                    it2++;
-
-            // Note that we are removing a generator.
-            genMap[gen] = -1;
-            nGenerators--;
-
-            // Remove the now useless relation and tidy up.
-            delete expansion;
-            delete *it;
-            it = tmpRels.erase(it);
-            changed = true;
-            removed = true;
-            doMoreSubsts = true;
-        }
-
-        // Look for pairs of two-generator relations that imply gi == gj^k.
-        // As soon as we find such a pair we perform the substitution
-        // and break from the loop.
-        for (it = tmpRels.begin();
-                it != tmpRels.end() && (! doMoreSubsts); it++) {
-            if ((*it)->getNumberOfTerms() != 2)
-                continue;
-            gen1 = (*it)->getGenerator(0);
-            gen2 = (*it)->getGenerator(1);
-            if (gen1 == gen2)
-                continue;
-            exp1a = (*it)->getExponent(0);
-            exp2a = (*it)->getExponent(1);
-
-            for (it2 = regina::boost::next(it); it2 != tmpRels.end(); it2++) {
-                if ((*it2)->getNumberOfTerms() != 2)
-                    continue;
-                if (gen1 == (*it2)->getGenerator(0) &&
-                        gen2 == (*it2)->getGenerator(1)) {
-                    exp1b = (*it2)->getExponent(0);
-                    exp2b = (*it2)->getExponent(1);
-                } else if (gen1 == (*it2)->getGenerator(1) &&
-                        gen2 == (*it2)->getGenerator(0)) {
-                    exp1b = (*it2)->getExponent(1);
-                    exp2b = (*it2)->getExponent(0);
-                } else
-                    continue;
-
-                // We have two relations of the form
-                // (x^a y^b == 1), (x^c y^d == 1).
-                NGroupExpression expansion;
-                if (exp1b == exp1a + 1) {
-                    genRemove = gen1;
-                    expansion.addTermLast(gen2, exp2a - exp2b);
-                } else if (exp1b == exp1a - 1) {
-                    genRemove = gen1;
-                    expansion.addTermLast(gen2, -exp2a + exp2b);
-                } else if (exp1b == -exp1a + 1) {
-                    genRemove = gen1;
-                    expansion.addTermLast(gen2, -exp2a - exp2b);
-                } else if (exp1b == -exp1a - 1) {
-                    genRemove = gen1;
-                    expansion.addTermLast(gen2, exp2a + exp2b);
-                } else if (exp2b == exp2a + 1) {
-                    genRemove = gen2;
-                    expansion.addTermLast(gen1, exp1a - exp1b);
-                } else if (exp2b == exp2a - 1) {
-                    genRemove = gen2;
-                    expansion.addTermLast(gen1, -exp1a + exp1b);
-                } else if (exp2b == -exp2a + 1) {
-                    genRemove = gen2;
-                    expansion.addTermLast(gen1, -exp1a - exp1b);
-                } else if (exp2b == -exp2a - 1) {
-                    genRemove = gen2;
-                    expansion.addTermLast(gen1, exp1a + exp1b);
-                } else
-                    continue;
-
-                // We can now substitute out genRemove.
-                it3 = tmpRels.begin();
-                while (it3 != tmpRels.end())
-                    if (it3 != it2) {
-                        (*it3)->substitute(genRemove, expansion, true);
-                        if ((*it3)->getNumberOfTerms() == 0) {
-                            delete *it3;
-                            it3 = tmpRels.erase(it3);
-                        } else
-                            it3++;
-                    } else
-                        it3++;
-
-                // Note that we are removing a generator.
-                genMap[genRemove] = -1;
-                nGenerators--;
-
-                // Remove the now useless relation, tidy up and break
-                // from the loops.
-                delete *it2;
-                tmpRels.erase(it2);
-                changed = true;
-                removed = true;
-                doMoreSubsts = true;
-                break;
-            }
-        }
-
-        // TODO: Look for duplicate relations.
-    }
-
-    // Renumber the generators if necessary so we go from 0 to
-    // nGenerators with no gaps.
-    if (nGenerators < oldNGenerators) {
-        // Rebuild the generator mapping table.
-        unsigned long newGen = 0;
-        for (gen = 0; gen < oldNGenerators; gen++)
-            if (genMap[gen] >= 0)
-                genMap[gen] = newGen++;
-
-        // Now run through the relations and renumber the generators.
-        for (it = tmpRels.begin(); it != tmpRels.end(); it++)
-            for (tit = (*it)->getTerms().begin();
-                    tit != (*it)->getTerms().end(); tit++)
-                (*tit).generator = genMap[(*tit).generator];
-    }
-
-    // Refill the original array if necessary.
-    if (removed) {
-        relations.clear();
-        relations.insert(relations.end(), tmpRels.begin(), tmpRels.end());
-    }
-
-    // Done!
-    delete[] genMap;
-    return changed;
+ NHomGroupPresentation* map(NULL);
+ bool changed( intelligentSimplify(map) );
+ delete map;
+ return changed;
 }
 
 std::string NGroupPresentation::recogniseGroup() const {
@@ -832,8 +605,9 @@ for (it = word.terms.rbegin(); it != word.terms.rend(); it++)
 // TODO: recognise commutators and use that to our advantage. 
 //       recognise other advantageous small words ??
 //       random walks using score==0 substitutions??
-void NGroupPresentation::dehnAlgorithm(NHomGroupPresentation*& reductionMap)
+bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMap)
 {
+ bool didSomething(false);
  // start by taking a copy of *this group, for the eventual construction of reductionMap
  NGroupPresentation oldGroup( *this );
 
@@ -886,6 +660,7 @@ void NGroupPresentation::dehnAlgorithm(NHomGroupPresentation*& reductionMap)
 	    {
              (*tit)->applySubstitution( *(*it), *sub_list.begin() );
              we_value_iteration = true;
+             didSomething = true;
 	    }
 	  tit++;
 	}
@@ -939,6 +714,7 @@ void NGroupPresentation::dehnAlgorithm(NHomGroupPresentation*& reductionMap)
 	     (*pit)->substitute( i, complement ); // except this
 	     }
 	  we_value_iteration = true;
+          didSomething = true;
 	  if (WL>3) word_length_3_trigger=true;
 
   	  goto found_a_generator_killer;
@@ -992,7 +768,7 @@ void NGroupPresentation::dehnAlgorithm(NHomGroupPresentation*& reductionMap)
  NGroupPresentation newGroup( *this );
  reductionMap = new NHomGroupPresentation( oldGroup, newGroup, substitutionTable );
  // now we can initialize reductionMap 
-
+ return didSomething;
 }// end dehnAlgorithm()
 
 

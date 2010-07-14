@@ -64,6 +64,20 @@ Version 5.0  [ (under development) ]
               SO_{n-1}, this is the lift of the symmetric group on 4 letters to the group 
               spin(3), the spinor group aka the 3-sphere thought of as the group of 
               unit quaternions. 
+	Class NGroupExpression:
+	    - New routine wordLength()
+	    - New struct NWordSubstitutionData for implementing small cancellation
+		 theory.
+	    - New routine dehnAlgorithmSubMetric and applySubstitution for small 
+		cancellation theory.
+	    - New routine invert() 
+	    - New routine addTermsFirst() and addTermsLast()
+        Class NGroupPresentation:
+            - Completely new intelligentSimplify() routine that uses Dehn's
+              small cancellation theory. Also a variant that returns the map 
+              from the original presentation to the reduced one.
+	    - New routine relatorLength() returns the sum of the wordLength()s of 
+	      all relations in the presentation.
 
     UTILITIES:
         tricensus, tricensus-mpi:
@@ -120,19 +134,8 @@ Version 4.6.1  [ (under development) ]
               being preserved (for the time being) for backward compatibility.
         Class NGlobalDirs:
             - New routine data() to return the internal data directory.
-	Class NGroupExpression:
-	    - New routine wordLength()
-	    - New struct NWordSubstitutionData for implementing small cancellation
-		 theory.
-	    - New routine dehnAlgorithmSubMetric and applySubstitution for small 
-		cancellation theory.
-	    - New routine invert() 
-	    - New routine addTermsFirst() and addTermsLast()
         Class NGroupPresentation:
             - Fixed a memory leak in intelligentSimplify()
-	    - New routine dehnAlgorithm() implements small cancellation theory. 
-	    - New routine relatorLength() returns the sum of the wordLength()s of 
-	      all relations in the presentation.
         Class NIsomorphism:
             - New routine applyInPlace() to directly modify a triangulation.
             - Routine apply() now copies tetrahedron descriptions as

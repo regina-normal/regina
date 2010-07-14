@@ -608,18 +608,25 @@ class NGroupPresentation : public ShareableObject {
         const NGroupExpression& getRelation(unsigned long index) const;
 
         /**
-         * Attempts to simplify the group presentation as intelligently
-         * as possible without further input.
-         *
-         * As with the NTriangulation routine of the same name, this
-         * routine is not as intelligent as it makes out to be.
-         * In fact, currently it does almost nothing.
-         *
-         * \todo \featurelong Make this simplification more effective.
+         * See intelligentSimplify(NHomGroupPresentation*&)
          *
          * @return \c true if and only if the group presentation was changed.
          */
         bool intelligentSimplify();
+	/**
+	 * Reduces this presentation using the Dehn algorithm for hyperbolic groups, i.e. small cancellation
+	 * theory.   This means we look to see if part of one relator can be used to simplify others.  If so, 
+	 * make the substitution and simplify.  We continue until no more presentation-shortening substitutions 
+	 * are available.  We follow that by killing any available generators using words where generators
+         * appear a single time. 
+         *
+         * @param must be a null pointer, the algorithm initializes the pointer and reductionMap. This means
+         *  the user is responsible for de-allocating reductionMap whenever they're done with it. 
+         *
+         * @return \c true if and only if the presentation was changed. 
+	 */
+	bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
+
 
         /**
          * Attempts to recognise the group corresponding to this
@@ -677,17 +684,6 @@ class NGroupPresentation : public ShareableObject {
          * 0 if problems arose.
          */
         static NGroupPresentation* readFromFile(NFile& in);
-
-	/**
-	 *  Reduces this presentation using the Dehn algorithm for hyperbolic groups, i.e. small cancellation
-	 * theory.   This means we look to see if part of one relator can be used to simplify others.  If so, 
-	 * make the substitution and simplify.  We continue until no more presentation-shortening substitutions 
-	 * are available.  We follow that by killing any available generators using words where generators
-         * appear a single time. 
-         *
-         * @param must be a null pointer, the algorithm initializes the pointer and reductionMap.
-	 */
-	void dehnAlgorithm(NHomGroupPresentation*& reductionMap);
 
 	/**
 	 *  The sum of the wordLength()s of the relators.  Used as a coarse measure of the complexity

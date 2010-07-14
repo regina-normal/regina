@@ -117,9 +117,10 @@ class NHomGroupPresentation : public ShareableObject {
          *                                      2) the presentation of the range
          *                                      3) the description of the map
 	 * Uses Dehn's algorithm / "small cancellation theory". 
+         *
          *  @return true if the presentations or map have changed.
          */
-        void dehnAlgorithm();
+        bool intelligentSimplify();
 
         /**
          * Writes the map as a string. 
