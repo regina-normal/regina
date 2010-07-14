@@ -145,8 +145,10 @@ inline NHomGroupPresentation::~NHomGroupPresentation()
 
 inline const NGroupPresentation& NHomGroupPresentation::getDomain() const
 { return domain; }
+
 inline const NGroupPresentation& NHomGroupPresentation::getRange() const
 { return range; }
+
 inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i) const
 { return (*(map[i])); }
 

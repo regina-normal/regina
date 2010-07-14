@@ -113,7 +113,7 @@ void NHomGroupPresentation::dehnAlgorithm()
  // step 3: find a hacky inverse to domainMap
  //         by the way domainMap is constructed we know each gi comes from some gk, so look them up. 
  std::vector< unsigned long > invDomainMap( domain.getNumberOfGenerators() );
- for (unsigned long i=0; i<invDomainMap.size(); i++)
+ for (unsigned long i=0; i<domainMap->getDomain().getNumberOfGenerators(); i++)
   {
    // if map[i] == "gk" then invDomainMap[k] = gi. 
    if (domainMap->evaluate(i).getNumberOfTerms()==1) if (domainMap->evaluate(i).getExponent(0)==1)
