@@ -45,6 +45,8 @@ namespace {
         &NGroupExpression::addTermLast;
     NGroupExpressionTerm& (NGroupExpression::*getTerm_non_const)(
         unsigned long) = &NGroupExpression::getTerm;
+    bool (NGroupPresentation::*intelligentSimplify_void)(void) =
+        &NGroupPresentation::intelligentSimplify;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplify,
         NGroupExpression::simplify, 0, 1);
@@ -113,7 +115,7 @@ void addNGroupPresentation() {
         .def("getNumberOfRelations", &NGroupPresentation::getNumberOfRelations)
         .def("getRelation", &NGroupPresentation::getRelation,
             return_internal_reference<>())
-        .def("intelligentSimplify", &NGroupPresentation::intelligentSimplify)
+        .def("intelligentSimplify", intelligentSimplify_void)
         .def("recogniseGroup", &NGroupPresentation::recogniseGroup)
     ;
 }

@@ -526,8 +526,6 @@ class NGroupExpression : public ShareableObject {
  * If there are \a g generators, they will be numbered 0, 1, ..., <i>g</i>-1.
  *
  * \testpart
- *
- * \todo \optlong The simplification routines really need work!
  */
 class NGroupPresentation : public ShareableObject {
     protected:
@@ -624,6 +622,9 @@ class NGroupPresentation : public ShareableObject {
          *  the user is responsible for de-allocating reductionMap whenever they're done with it. 
          *
          * @return \c true if and only if the presentation was changed. 
+         * 
+         * \todo \optlong This routine could use some small tweaks -- recognition of utility of  
+         *   some score==0 moves, such as commutators, for example. 
 	 */
 	bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
 
