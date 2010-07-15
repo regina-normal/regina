@@ -102,17 +102,21 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
 bool NHomGroupPresentation::intelligentSimplify()
 {
  bool didSomething(false);
+
  // step 1: simplify presentation of range. 
  //         the strategy is to completely mimic NGroupPresentation::intelligentSimplify(), and change the map accordingly
  regina::NHomGroupPresentation* rangeMap(NULL);
  didSomething = range.intelligentSimplify(rangeMap);
+
  // step 2: simplify presentation of domain. 
  //         the strategy is to completely mimic NGroupPresentation::intelligentSimplify(), and change the map accordingly
  regina::NHomGroupPresentation* domainMap(NULL);
- didSomething = didSomething || domain.intelligentSimplify(domainMap);
+ bool temp(domain.intelligentSimplify(domainMap));
+ didSomething = didSomething || temp; // doesn't call intelligentSimplify if didSomething==true?
 
  // step 3: find a hacky inverse to domainMap
  //         by the way domainMap is constructed we know each gi comes from some gk, so look them up. 
+
  std::vector< unsigned long > invDomainMap( domain.getNumberOfGenerators() );
  for (unsigned long i=0; i<domainMap->getDomain().getNumberOfGenerators(); i++)
   {

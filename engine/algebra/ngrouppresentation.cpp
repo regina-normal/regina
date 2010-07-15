@@ -245,15 +245,6 @@ NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
         back_inserter(relations), FuncNewCopyPtr<NGroupExpression>());
 }
 
-// this is a wrapper for the "real" intelligentSimplify() routine, 
-//  one that throws out the map that it produces. 
-bool NGroupPresentation::intelligentSimplify() {
- NHomGroupPresentation* map(NULL);
- bool changed( intelligentSimplify(map) );
- delete map;
- return changed;
-}
-
 std::string NGroupPresentation::recogniseGroup() const {
     std::ostringstream out;
     unsigned long nRels = relations.size();
@@ -601,6 +592,16 @@ std::list< NGroupExpressionTerm >::const_reverse_iterator it;
 for (it = word.terms.rbegin(); it != word.terms.rend(); it++)
  addTermFirst( *it );
 }
+
+// this is a wrapper for the "real" intelligentSimplify() routine, 
+//  one that throws out the map that it produces. 
+bool NGroupPresentation::intelligentSimplify() {
+ NHomGroupPresentation* reductionMap(NULL);
+ bool changed( intelligentSimplify(reductionMap) );
+ delete reductionMap;
+ return changed;
+}
+
 
 // TODO: recognise commutators and use that to our advantage. 
 //       recognise other advantageous small words ??
