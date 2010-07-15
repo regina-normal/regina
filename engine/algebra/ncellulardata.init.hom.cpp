@@ -193,12 +193,12 @@ void fillStandardToRelativeHomCM( unsigned aDim, // dimension of the triangulati
         std::vector< NMatrixInt* > &strCM)
 {
  for (unsigned d=0; d<aDim+1; d++) strCM[d] = new NMatrixInt( numRelativeCells[d], numStandardCells[d] );
-
  unsigned long I;
  for (unsigned long d=0; d<aDim+1; d++) for (unsigned j=0; j<numNonIdealCells[d]; j++)
+  if (binary_search( rIx[d].begin(), rIx[d].end(), nicIx[d][j] ) ) 
   {
    I = lower_bound( rIx[d].begin(), rIx[d].end(), nicIx[d][j] ) - rIx[d].begin();
-   if ( I != rIx[d].size() ) strCM[d]->entry( I, j ) = 1;
+   strCM[d]->entry( I, j ) = 1; 
   }
 }
 
@@ -219,16 +219,16 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
   {	
    edg = tri->getEdge(rIx[D][j]);
    for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
-    {   // endpt i is ideal, find index
-     I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+    {  
+     I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*tri->edgeIndex(edg)+i ) - icIx[D-1].begin();
      schCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
-    } 
+    }  
    else if (edg->getVertex(i)->isBoundary())
     {
      I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->vertexIndex( edg->getVertex(i) ) )
       - bcIx[D-1].begin();
      schCM[D-1]->entry(I, j) += ( i == 0 ? -1 : 1 );
-    }
+    } 
   }
 
  // boundary relative 2-cells
@@ -240,7 +240,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
     { 
      if (fac->getVertex(i)->isIdeal())
       { // ideal ends of faces	
-       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*tri->faceIndex(fac)+i ) - icIx[D-1].begin();
        schCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
       } // standard face boundaries
      if (fac->getEdge(i)->isBoundary())
@@ -262,7 +262,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
     { 
      if (tet->getVertex(i)->isIdeal())
       { // ideal ends of faces	
-       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*tri->tetrahedronIndex(tet)+i ) - icIx[D-1].begin();
        schCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
       } // standard face boundaries
      if (tet->getFace(i)->isBoundary())
@@ -284,7 +284,7 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,  const unsigned long n
     { 
      if (pen->getVertex(i)->isIdeal())
       { // ideal ends of faces	
-       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*tri->pentachoronIndex(pen)+i ) - icIx[D-1].begin();
        schCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
       } // standard face boundaries
      if (pen->getTetrahedron(i)->isBoundary())
@@ -317,7 +317,7 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
    edg = tri->getEdge(rIx[D][j]);
    for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
     {   // endpt i is ideal, find index
-     I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+     I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*tri->edgeIndex(edg)+i ) - icIx[D-1].begin();
      schCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
     } 
    else if (edg->getVertex(i)->isBoundary())
@@ -337,7 +337,7 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
     { 
      if (fac->getVertex(i)->isIdeal())
       { // ideal ends of faces	
-       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*tri->faceIndex(fac)+i ) - icIx[D-1].begin();
        schCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
       } // standard face boundaries
      if (fac->getEdge(i)->isBoundary())
@@ -359,7 +359,7 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
     { 
      if (tet->getVertex(i)->isIdeal())
       { // ideal ends of tetrahedra
-       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*tri->tetrahedronIndex(tet)+i ) - icIx[D-1].begin();
        schCM[D-1]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
       } 
      if ( tet->getFace(i)->isBoundary() ) // standard face boundaries

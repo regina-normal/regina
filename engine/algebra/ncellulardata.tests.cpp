@@ -100,11 +100,11 @@ for (unsigned long i=1; i<dmCM.size(); i++) if (dmCM[i] && dmCM[i-1] && mCC[i] &
  }
 // verify srCC[i]*strCM[i] == strCM[i-1]*sCC[i]
 for (unsigned long i=1; i<strCM.size(); i++) if (strCM[i] && strCM[i-1] && sCC[i] && srCC[i])
- {
+ { // srCC 
   if ( (srCC[i]->columns() != strCM[i]->rows()) || (strCM[i-1]->columns() != sCC[i]->rows()) ) return false;
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*srCC[i])*(*strCM[i]);
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*strCM[i-1])*(*sCC[i]);
-  if ( (*prod1) != (*prod2) ) return false; 
+  if ( (*prod1) != (*prod2) ) return false;
  }
 // verify sCC[i]*sbiCM[i] == sbiCM[i-1]*sbCC[i]
 for (unsigned long i=1; i<sbiCM.size(); i++) if (sbiCM[i] && sbiCM[i-1] && sCC[i] && sbCC[i])
@@ -121,7 +121,7 @@ for (unsigned long i=1; i<schCM.size(); i++) if (schCM[i] && schCM[i-1] && srCC[
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*sbCC[i])*(*schCM[i]);
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*schCM[i-1])*(*srCC[i+1]);
   for (unsigned long j=0; j<prod1->rows(); j++) for (unsigned long k=0; k<prod1->columns(); k++)
-	if (prod1->entry(j,k) + prod2->entry(j,k) != 0) return false;
+	if (prod1->entry(j,k) + prod2->entry(j,k) != 0) return false; 
  }
 return true;
 }
@@ -224,7 +224,7 @@ return true;
 }
 
 bool NCellularData::intersectionFormsVerified() const
-{ // TODO
+{ 
 bool retval=true;
 unsigned long aDim = 3;
 unsigned long coeff = 0;

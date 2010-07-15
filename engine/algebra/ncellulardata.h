@@ -424,15 +424,15 @@ private:
     std::vector< std::vector<unsigned long> > nicIx, icIx, dcIx, bcIx, rIx;
 
     /** 
-     * chain complexes for:
+     * chain complexes, indexed by dimension for:
      *
      *   standard simplicial homology
-     *  sCC  - standard cellular homology of the manifold
-     *  sbCC - standard boundary cellular homology 
-     *  srCC  - standard relative cellular homology
+     *  sCC  - standard cellular homology of the manifold, indexed by nicIx then icIx
+     *  sbCC - standard boundary cellular homology,        indexed by bcIx  then icIx
+     *  srCC  - standard relative cellular homology        indexed by rIx
      *
      *   dual cellular homology
-     *  dCC  - dual cellular homology                         
+     *  dCC  - dual cellular homology                      indexed by dcIx 
      *  dbCC - dual boundary cellular homology              TODO
      *  drCC - dual relative cellular homology              TODO
      *
@@ -447,27 +447,27 @@ private:
      * Chain maps: 
      * 
      *   standard: 
-     * sbiCM  -  sbCC -> sCC      std coords, boundary inclusion             
-     * strCM  -  sCC  -> srCC     std coords, relative projection       
-     * schCM  -  srCC -> sbCC     std coords, connecting hom 
+     * sbiCM[i]  :  sbCC[i]   -> sCC[i]      std coords, boundary inclusion             
+     * strCM[i]  :  sCC[i]    -> srCC[i]     std coords, relative projection       
+     * schCM[i]  :  srCC[i+1] -> sbCC[i]     std coords, connecting hom 
      *
      *     dual:
-     * dbiCM  -  dbCC -> dCC      dual coords, boundary inclusion     TODO & TESTS
-     * dtrCM  -  dCC  -> drCC     dual coords, relative projection    TODO & TESTS
-     * dchCM  -  drCC -> dbCC     dual coords, connecting hom         TODO & TESTS
+     * dbiCM[i]  :  dbCC[i]   -> dCC[i]      dual coords, boundary inclusion     TODO & TESTS
+     * dtrCM[i]  :  dCC[i]    -> drCC[i]     dual coords, relative projection    TODO & TESTS
+     * dchCM[i]  :  drCC[i+1] -> dbCC[i]     dual coords, connecting hom         TODO & TESTS
      * 
      *    mixed:
-     * mbiCM  -  mbCC -> mCC      mixed coords, boundary inclusion    TODO & TESTS
-     * mtrCM  -  mCC  -> mrCC     mixed coords, relative projection   TODO & TESTS
-     * mchCM  -  mrCC -> mbCC     mixed coords, connecting hom        TODO & TESTS
+     * mbiCM[i]  :  mbCC[i]   -> mCC[i]      mixed coords, boundary inclusion    TODO & TESTS
+     * mtrCM[i]  :  mCC[i]    -> mrCC[i]     mixed coords, relative projection   TODO & TESTS
+     * mchCM[i]  :  mrCC[i+1] -> mbCC[i]     mixed coords, connecting hom        TODO & TESTS
      *
-     *   inter-coordinate maps:
-     * smCM   -   sCC -> mCC       standard to mixed
-     * dmCM   -   dCC -> mCC       dual to mixed
-     * smbCM  -  sbCC -> mbCC      standard to mixed,   boundary map  TODO & TESTS
-     * dmbCM  -  dbCC -> mbCC      dual to mixed,       boundary map  TODO & TESTS
-     * srmCM  -  srCC -> mrCC      standard to mixed,   relative map  TODO & TESTS      
-     * drmCM  -  drCC -> mrCC      dual to mixed,       relative map  TODO & TESTS 
+     *   inter-coordinate maps, all dimension-preserving:
+     * smCM   :   sCC -> mCC       standard to mixed
+     * dmCM   :   dCC -> mCC       dual to mixed
+     * smbCM  :  sbCC -> mbCC      standard to mixed,   boundary map  TODO & TESTS
+     * dmbCM  :  dbCC -> mbCC      dual to mixed,       boundary map  TODO & TESTS
+     * srmCM  :  srCC -> mrCC      standard to mixed,   relative map  TODO & TESTS      
+     * drmCM  :  drCC -> mrCC      dual to mixed,       relative map  TODO & TESTS 
      */
     std::vector< NMatrixInt* > sbiCM, strCM, schCM,   dbiCM, dtrCM, dchCM,   mbiCM, mtrCM, mchCM,  
  			       smCM, dmCM,            smbCM, dmbCM,          srmCM, drmCM;
