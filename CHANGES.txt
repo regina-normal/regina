@@ -15,22 +15,22 @@ Version 5.0  [ (under development) ]
         Class NPerm5:
             - New class describing permutations of five elements, which
               we need in order to describe 4-manifold triangulations.
-	Class NCellularData:
-	    - This is a catch-all class used for any detailed computations
-	      related to the topology of a 3 or 4-manifold triangulation. 
-	      So it accepts NTriangulation and Dim4Triangulation as input, 
-	      and computes various things.  Moreover, the class takes a 
-	      as much of a least-energy approach to computation as it can. 
-	      So if you've computed something once, calling for it again 
-	      results in a look-up, not a recomputation.  Similarly, some
+        Class NCellularData:
+            - This is a catch-all class used for any detailed computations
+              related to the topology of a 3 or 4-manifold triangulation. 
+              So it accepts NTriangulation and Dim4Triangulation as input, 
+              and computes various things.  Moreover, the class takes a 
+              as much of a least-energy approach to computation as it can. 
+              So if you've computed something once, calling for it again 
+              results in a look-up, not a recomputation.  Similarly, some
               computations depend on other computations that are looked up
-	      if available. 
+              if available. 
             - The class has several routines. writeTextShort and writeTextLong
-	      describe everything that has been computed.  These routines do
-	      not call for any new computations. 
-	    - cellCount returns the number of cells in various dimensions for
-	      the implemented coordinate systems. 
-	    - components returns the number of path-components of various types
+              describe everything that has been computed.  These routines do
+              not call for any new computations. 
+            - cellCount returns the number of cells in various dimensions for
+              the implemented coordinate systems. 
+            - components returns the number of path-components of various types
               in the manifold, standard boundary or ideal boundary. 
             - eulerChar() returns the Euler characteristic of the underlying
               manifold. 
@@ -38,16 +38,16 @@ Version 5.0  [ (under development) ]
             - unMarkedGroup is the generic function for requesting unmarked group
               data from the manifold.  This is of interest when you're interested
               in say the isomorphism class of a (co)homology group something related 
-	      to the manifold, it's boundary, relative boundary, etc. 
+              to the manifold, it's boundary, relative boundary, etc. 
             - markedGroup is the same as unMarkedGroup, except the group comes 
               equipped with data that allows you to specify coordinates on the 
               triangulated manifold. 
-	    - homGroup allows for requesting maps between markedGroups, such as 
+            - homGroup allows for requesting maps between markedGroups, such as 
               the LES maps, coordinate-change maps, Bocksteins, Poincare duality
               maps. 
             - bilinearForm intersection forms, torsion linking forms, homology
               cohomology pairings, etc. 
-	    - groupPresentation, fundamental groups, boundary component fundamnetal
+            - groupPresentation, fundamental groups, boundary component fundamnetal
               groups, etc. 
             - homGroupPresentation, maps of (ideal) boundary components to the 
               ambient manifold. 
@@ -56,28 +56,29 @@ Version 5.0  [ (under development) ]
             - torsionLinkingFormIsHyperbolic returns whether or not the 3-manifold
               has a hyperbolic torsion linking form. Will likely change implementation
               before 5.0 is ready.
-	Class NSVPolynomialRing:
-            - This is a single-variable polynomial ring with NLargeInteger coefficients. 
- 	      It has standard operations, like multiplication, addition, etc. 
+        Class NSVPolynomialRing:
+            - This is a single-variable polynomial ring with NLargeInteger
+              coefficients.  It has standard operations, like multiplication,
+              addition, etc.
         Class NBinaryS4:
-	    - There is a standard embedding of the symmetric group on n letters into 
-              SO_{n-1}, this is the lift of the symmetric group on 4 letters to the group 
-              spin(3), the spinor group aka the 3-sphere thought of as the group of 
-              unit quaternions. 
-	Class NGroupExpression:
-	    - New routine wordLength()
-	    - New struct NWordSubstitutionData for implementing small cancellation
-		 theory.
-	    - New routine dehnAlgorithmSubMetric and applySubstitution for small 
-		cancellation theory.
-	    - New routine invert() 
-	    - New routine addTermsFirst() and addTermsLast()
+            - There is a standard embedding of the symmetric group on n letters
+              into SO_{n-1}, this is the lift of the symmetric group on
+              4 letters to the group spin(3), the spinor group aka the
+              3-sphere thought of as the group of unit quaternions.
+        Class NGroupExpression:
+            - New routine wordLength()
+            - New struct NWordSubstitutionData for implementing small
+              cancellation theory.
+            - New routine dehnAlgorithmSubMetric and applySubstitution for
+              small cancellation theory.
+            - New routine invert() 
+            - New routine addTermsFirst() and addTermsLast()
         Class NGroupPresentation:
             - Completely new intelligentSimplify() routine that uses Dehn's
               small cancellation theory. Also a variant that returns the map 
               from the original presentation to the reduced one.
-	    - New routine relatorLength() returns the sum of the wordLength()s of 
-	      all relations in the presentation.
+            - New routine relatorLength() returns the sum of the wordLength()s
+              of all relations in the presentation.
 
     UTILITIES:
         tricensus, tricensus-mpi:
