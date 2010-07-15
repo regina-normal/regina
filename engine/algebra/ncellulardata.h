@@ -85,7 +85,7 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo 1) natural bilinear forms on a manifold, spin structures.
+ * \todo 1) natural bilinear forms on a manifold, spin structures. See (3), (4)
  * \todo 2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
  *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first.
@@ -97,19 +97,19 @@ class Dim4Triangulation;
  *        chain complex initialization TODO
  *        chain maps TODO
  *        PD / intersection forms TODO
+ *        To minimize memory usage we should consider having homs, bilinear forms, etc, 
+ *        not store their initialization data, keep that in the NCellularData stack.  Similarly, 
+ *        move all chain complexes onto the stack. 
+ *        Alexander modules. 
  * \todo  4) need to set up local orientations for dual boundary coordinates, for the barycentres
  *        of all standard boundary simplices.  We'll put something in setupIndices for this.
  *        Currently done for Dim4Triangulations, but not for NTriangulations. 
- * \todo  5) Detailed search for possible memory leaks.
  * \todo  6) add some manifolds with non-ideal boundary to the test suite. 
- * \todo \optlong To minimize memory usage we should consider having homs, bilinear forms, etc, 
- *        not store their initialization data, keep that in the NCellularData stack.  Similarly, 
- *        move all chain complexes onto the stack. 
+ * \todo  7) At present the maximal tree algorithm limits the fundamental group routine 
+ *        to connected manifolds.  When there's time it would be good to generalize the algorithm 
+ *        to disconnected manifolds.  This is an easy fix with getComponents.
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
  *       long exact sequence associated to a change-of-coefficient map.
- * \todo \optlong At present the maximal tree algorithm limits the fundamental group routine 
- *       to connected manifolds.  When there's time it would be good to generalize the algorithm 
- *       to disconnected manifolds. 
  *
  * Guide to ncellulardata.*.cpp files:
  *
