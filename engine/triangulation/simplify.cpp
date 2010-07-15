@@ -842,7 +842,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
 
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
-    removeTetrahedron(t);
+    delete removeTetrahedron(t);
     return true;
 }
 
