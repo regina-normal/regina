@@ -266,6 +266,7 @@ const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator &h_desc)
      std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
       const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> (&homMarkedAbelianGroups);
      hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
+     delete CM;
      return hmgptr;
     }
  }
