@@ -107,6 +107,9 @@ class Dim4Triangulation;
  *        move all chain complexes onto the stack. 
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
  *       long exact sequence associated to a change-of-coefficient map.
+ * \todo \optlong At present the maximal tree algorithm limits the fundamental group routine 
+ *       to connected manifolds.  When there's time it would be good to generalize the algorithm 
+ *       to disconnected manifolds. 
  *
  * Guide to ncellulardata.*.cpp files:
  *
@@ -209,10 +212,13 @@ public:
 	unsigned long cof;
 
 	/**
-	 *  Constructor.
+	 *  Initialization constructor.
 	 */
 	GroupLocator(unsigned long newDim, variance_type newVar, homology_coordinate_system useHcs, 
 			unsigned long useCof);
+	/**
+	 *  Copy constructor.
+	 */
         GroupLocator(const GroupLocator &cloneMe);
 
 	bool operator<(const GroupLocator &rhs) const;
@@ -231,9 +237,12 @@ public:
 	GroupLocator range;
 
 	/**
-	 *  Constructor.
+	 *  Initialization constructor.
 	 */
 	HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange);
+	/**
+	 *  Copy constructor.
+	 */
 	HomLocator(const HomLocator &cloneMe);
 
 	bool operator<(const HomLocator &rhs) const;
@@ -278,9 +287,12 @@ public:
         form_type ft;
 
 	/**
-	 *  Constructor.
+	 *  Initialization constructor.
 	 */
 	FormLocator(form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain);
+	/**
+	 *  Copy constructor.
+	 */
 	FormLocator(const FormLocator &cloneMe);
 
 	bool operator<(const FormLocator &rhs) const;
@@ -317,9 +329,12 @@ public:
    unsigned long component_index; // which component of the submanifold
 
    /**
-    *  Constructor.
+    *  Initialization constructor.
     */
    GroupPresLocator( submanifold_type ST, unsigned long CI );
+   /**
+    *  Copy constructor.
+    */
    GroupPresLocator( const GroupPresLocator &cloneMe );
    
    bool operator<(const GroupPresLocator &rhs) const;
@@ -339,9 +354,12 @@ public:
    unsigned long subman_component_index; // which component of the submanifold
 
    /**
-    *  Constructor.
+    *  Initialization constructor.
     */
    HomGroupPresLocator( submanifold_type ST, unsigned long CI );
+   /**
+    *  Copy constructor.
+    */
    HomGroupPresLocator( const HomGroupPresLocator &cloneMe );
    
    bool operator<(const HomGroupPresLocator &rhs) const;
