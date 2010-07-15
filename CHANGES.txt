@@ -143,6 +143,7 @@ Version 4.6.1  [ (under development) ]
               more convenient version of insertRehydration().
             - New routines isoSig() and fromIsoSig() for detecting and hashing
               combinatorial isomorphism classes of triangulations.
+            - Fixed a memory leak in shellBoundary().
         Class NTrieSet:
             - A new class for storing and querying a large number of sets,
               where the elements of these sets are taken from a small universe.
