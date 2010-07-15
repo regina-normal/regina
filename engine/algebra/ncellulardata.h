@@ -100,22 +100,19 @@ class Dim4Triangulation;
  * \todo  4) need to set up local orientations for dual boundary coordinates, for the barycentres
  *        of all standard boundary simplices.  We'll put something in setupIndices for this.
  *        Currently done for Dim4Triangulations, but not for NTriangulations. 
- * \todo  5) Detailed fundamental group presentations and maps bdry -> M, etc.  Almost done! 
- * \todo  6) Detailed search for possible memory leaks.
- * \todo  7) add some images into documentation.
- * \todo \optlong If cellulardata expands to include things that do not require the standard/dual/mixed
- *       chain complexes, then also shift them off into a chain complex pile that is not precomputed.
+ * \todo  5) Detailed search for possible memory leaks.
+ * \todo  6) add some manifolds with non-ideal boundary to the test suite. 
+ * \todo \optlong To minimize memory usage we should consider having homs, bilinear forms, etc, 
+ *        not store their initialization data, keep that in the NCellularData stack.  Similarly, 
+ *        move all chain complexes onto the stack. 
  * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
  *       long exact sequence associated to a change-of-coefficient map.
- * \todo \optlong To minimize memory usage maybe we should consider initializing homs and bilinear forms
- *       using pointers to pre-existing NMarkedAbelianGroups, that way they won't have to be duplicated
- *       and since we already control initialization/destruction via NCellularData, can avoid any pointer
- *       troubles.
  *
  * Guide to ncellulardata.*.cpp files:
  *
  *       ncellulardata.cpp - contains only the core routines NCellularData::unMarkedGroup, NCellularData::markedGroup, 
  *                           NCellularData::homGroup, NCellularData::poincarePolynomial, NCellularData::bilinearForm.
+ *                           NCellularData::groupPresentation, NCellularData::homGroupPresentation. 
  *
  *       ncellulardata.init.pi1.cpp - contains initialization routines for the fundamental groups and maps between them.
  *
