@@ -85,7 +85,7 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo 1) natural bilinear forms on a manifold, spin structures. See (3), (4)
+ * \todo 1) Complete collection of homology natural bilinear forms on a manifold, spin structures. See (3), (4)
  * \todo 2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
  *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first.
@@ -198,6 +198,57 @@ public:
   * for coHomology
   */
   contraVariant };
+
+ /**
+  *  NCellularData stores chain complexes internally in a stack. The Chain Complex Locator allows
+  * unique identification of a chain complex when passing requests to NCellularData::chainComplex
+  */
+ struct ChainComplexLocator {
+        unsigned long dim; 
+        homology_coordinate_system hcs;	
+
+	/**
+	 *  Initialization constructor.
+	 */
+	ChainComplexLocator(unsigned long newDim, homology_coordinate_system useHcs);
+
+	/**
+	 *  Copy constructor.
+	 */
+        ChainComplexLocator(const ChainComplexLocator &cloneMe);
+
+	bool operator<(const ChainComplexLocator &rhs) const;
+        bool operator==(const ChainComplexLocator &rhs) const;
+        bool operator!=(const ChainComplexLocator &rhs) const;
+       
+        void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+ };
+
+ /**
+  *  NCellularData stores chain maps internally in a stack. The Chain Map Locator allows
+  * unique identification of a chain maps when passing requests to NCellularData::chainMap
+  */
+ struct ChainMapLocator { 
+        ChainComplexLocator domain, range; 
+
+	/**
+	 *  Initialization constructor.
+	 */
+	ChainMapLocator(const ChainComplexLocator &Domain, const ChainComplexLocator &Range);
+
+	/**
+	 *  Copy constructor.
+	 */
+        ChainMapLocator(const ChainMapLocator &cloneMe);
+
+	bool operator<(const ChainMapLocator &rhs) const;
+        bool operator==(const ChainMapLocator &rhs) const;
+        bool operator!=(const ChainMapLocator &rhs) const;
+       
+        void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+ };
 
  /**
   * NCellularData has several routines that require GroupLocator objects as arguments: unmarkedGroup, markedGroup, 
@@ -380,11 +431,15 @@ private:
     Dim4Triangulation* tri4;
     NTriangulation* tri3;
 
-    // for abelian group computations
+    // for chain complexes
+    //std::map< ChainComplexLocator, NMatrixInt* > ?? NMatrixRing??
+    // for maps of chain complexes
+    // std::map< ChainMapLocator, NMatrixInt* ?? TODO void* ?? 
+    // for abelian groups
     std::map< GroupLocator, NAbelianGroup* > abelianGroups;
-    // for marked abelian group computations
+    // for marked abelian groups
     std::map< GroupLocator, NMarkedAbelianGroup* > markedAbelianGroups;
-    // for homomorphisms of marked abelian group computations
+    // for homomorphisms of marked abelian group
     std::map< HomLocator, NHomMarkedAbelianGroup* > homMarkedAbelianGroups;
     // for bilinear forms
     std::map< FormLocator, NBilinearForm* > bilinearForms;

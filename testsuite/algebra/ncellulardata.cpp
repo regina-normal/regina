@@ -34,6 +34,7 @@
 
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
+#include "dim4/dim4triangulation.h"
 
 #include "manifold/nlensspace.h"
 
@@ -46,6 +47,7 @@
 
 using regina::NLargeInteger;
 using regina::NTriangulation;
+using regina::Dim4Triangulation;
 using regina::NExampleTriangulation;
 using regina::NMarkedAbelianGroup;
 using regina::NHomMarkedAbelianGroup;
@@ -57,16 +59,29 @@ using regina::NLensSpace;
 class NCellularDataTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NCellularDataTest);
 
-    CPPUNIT_TEST(basic_tests);
-    CPPUNIT_TEST(coordinate_isomorphisms_tests); 
-    CPPUNIT_TEST(homology_LES_tests);
+    // Poincare Polynomial, Euler Characteristic
+    CPPUNIT_TEST(basic_tests); 
+    // verify chain complexes are really chain complexes.
+    CPPUNIT_TEST(chain_complex_tests); 
+    // verify chain maps are really maps of chain complexes.
+    CPPUNIT_TEST(chain_maps_tests); 
+    // maps between standard, dual and mixed
+    CPPUNIT_TEST(coordinate_isomorphisms_tests);  
+    // homology long exact sequence
+    CPPUNIT_TEST(homology_LES_tests); 
+    // poincare duality
     CPPUNIT_TEST(poincare_duality_tests); 
-    CPPUNIT_TEST(intersectionform_tests);
-    CPPUNIT_TEST(lensspacehomotopyclassification_tests);
+    // intersection forms
+    CPPUNIT_TEST(intersectionform_tests); 
+    // check lens space classification, torsion linking form
+    CPPUNIT_TEST(lensspacehomotopyclassification_tests); 
 
     CPPUNIT_TEST_SUITE_END();
 
     void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
+            dest.insertTriangulation(*source);
+            delete source; }
+    void copyAndDelete(Dim4Triangulation& dest, Dim4Triangulation* source) {
             dest.insertTriangulation(*source);
             delete source; }
 
@@ -77,7 +92,10 @@ class NCellularDataTest : public CppUnit::TestFixture {
        NTriangulation weberSeifert;
        NTriangulation s1s1s1, comp1;
 
-       std::vector< NCellularData* > cdList;
+       Dim4Triangulation pen, knot1, knot2, knot3, knot4, cp2, PDSxI;
+
+       std::vector< NCellularData* > m3List; // NCellularData of 3-manifolds
+       std::vector< NCellularData* > m4List; // NCellularData of 4-manifolds
        std::vector< std::string > polyList;
 
     public:
@@ -95,16 +113,30 @@ class NCellularDataTest : public CppUnit::TestFixture {
 	  s1s1s1.insertRehydration("gepaadcefeffnkkanax");
 	  comp1.insertRehydration("jgofiaaaceedfhiiifkxkfnbtxe");
 
-	  cdList.resize(17);
-	  cdList[0] = new NCellularData( m2_1 );	  cdList[1] = new NCellularData( m2_2 );
-	  cdList[2] = new NCellularData( m3_9 );	  cdList[3] = new NCellularData( m4_52 );
-	  cdList[4] = new NCellularData( m4_1_2 );	  cdList[5] = new NCellularData( m4_4_2 );
-	  cdList[6] = new NCellularData( n1_1 );	  cdList[7] = new NCellularData( n2_1 );
-	  cdList[8] = new NCellularData( n2_1_2 );	  cdList[9] = new NCellularData( n4_14 );
-	  cdList[10] = new NCellularData( n4_9_2 );	  cdList[11] = new NCellularData( n4_1_2_1 );
-	  cdList[12] = new NCellularData( closedHypOr );  cdList[13] = new NCellularData( closedHypNor );
-	  cdList[14] = new NCellularData( weberSeifert ); cdList[15] = new NCellularData( s1s1s1 );
-	  cdList[16] = new NCellularData( comp1 );
+          copyAndDelete(pen,   Dim4Triangulation::fromIsoSig("baa"));
+          copyAndDelete(PDSxI, Dim4Triangulation::fromIsoSig("cHkbbbRb3asb")); // Poincare dodecahedral space x interval
+          copyAndDelete(knot1, Dim4Triangulation::fromIsoSig("cMkabbb+aAa3blb")); // simplest 2-knot 2-pentachoron
+          copyAndDelete(knot2, Dim4Triangulation::fromIsoSig("eLMQcaccddcd1aaa2a4aaa1aca"));  // 4-pentachoron knot
+          copyAndDelete(knot3, Dim4Triangulation::fromIsoSig("eLAQcbbbdddd0baa0bhahaDaDa"));  // another 
+          copyAndDelete(knot4, Dim4Triangulation::fromIsoSig("gLLAQQccddeffeffaayaNaNaPbzb0aPbIaxa")); // 6-pentachoron knot
+          copyAndDelete(cp2,   Dim4Triangulation::fromIsoSig("eAMMcaabccdd+aoa+aAaqbyaca")); // CP^2
+
+	  m3List.resize(17);
+	  m3List[0] = new NCellularData( m2_1 );	  m3List[1] = new NCellularData( m2_2 );
+	  m3List[2] = new NCellularData( m3_9 );	  m3List[3] = new NCellularData( m4_52 );
+	  m3List[4] = new NCellularData( m4_1_2 );	  m3List[5] = new NCellularData( m4_4_2 );
+	  m3List[6] = new NCellularData( n1_1 );	  m3List[7] = new NCellularData( n2_1 );
+	  m3List[8] = new NCellularData( n2_1_2 );	  m3List[9] = new NCellularData( n4_14 );
+	  m3List[10] = new NCellularData( n4_9_2 );	  m3List[11] = new NCellularData( n4_1_2_1 );
+	  m3List[12] = new NCellularData( closedHypOr );  m3List[13] = new NCellularData( closedHypNor );
+	  m3List[14] = new NCellularData( weberSeifert ); m3List[15] = new NCellularData( s1s1s1 );
+	  m3List[16] = new NCellularData( comp1 );
+
+          m4List.resize(7);
+          m4List[0] = new NCellularData( pen );         m4List[1] = new NCellularData( PDSxI );
+          m4List[2] = new NCellularData( knot1 );       m4List[3] = new NCellularData( knot2 );
+          m4List[4] = new NCellularData( knot3 );       m4List[5] = new NCellularData( knot4 );
+          m4List[6] = new NCellularData( cp2 ); 
 
 	  polyList.resize(17);
 	  polyList[0] = "1+t";       polyList[1] = "1+t";        polyList[2] = "1+t";    polyList[3] = "1+t";
@@ -115,33 +147,57 @@ class NCellularDataTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
-	 for (unsigned long i=0; i<cdList.size(); i++) delete cdList[i];
+	 for (unsigned long i=0; i<m3List.size(); i++) delete m3List[i];
+         for (unsigned long i=0; i<m4List.size(); i++) delete m4List[i];
 	}
 
 	void basic_tests() {  // euler char, poincare poly, cell counts
-		for (unsigned long i=0; i<cdList.size(); i++)
-		 if (cdList[i]->eulerChar() != 0) CPPUNIT_FAIL("Euler characteristic error.");
-		for (unsigned long i=0; i<cdList.size(); i++)
-	         if (cdList[i]->poincarePolynomial().toString() != polyList[i]) CPPUNIT_FAIL("Poincare polynomial error.");
+		for (unsigned long i=0; i<m3List.size(); i++)
+		 if (m3List[i]->eulerChar() != 0) CPPUNIT_FAIL("Euler characteristic error.");
+		for (unsigned long i=0; i<m3List.size(); i++)
+	         if (m3List[i]->poincarePolynomial().toString() != polyList[i]) CPPUNIT_FAIL("Poincare polynomial error.");
 	}
 
+        void chain_complex_tests() {	
+        	for (unsigned long i=0; i<m3List.size(); i++)
+                 if (!m3List[i]->chainComplexesVerified()) CPPUNIT_FAIL("Chain complex error (3).");
+         	for (unsigned long i=0; i<m4List.size(); i++)
+                 if (!m4List[i]->chainComplexesVerified()) CPPUNIT_FAIL("Chain complex error (4).");
+       } 
+
+        void chain_maps_tests() {        	
+                for (unsigned long i=0; i<m3List.size(); i++)
+                 if (!m3List[i]->chainMapsVerified()) CPPUNIT_FAIL("Chain map error (3).");
+                for (unsigned long i=0; i<m4List.size(); i++)
+                 if (!m4List[i]->chainMapsVerified()) CPPUNIT_FAIL("Chain map error (4).");
+        }
+
 	void coordinate_isomorphisms_tests() { 
-		if (! detailedTests())
-			return;
-		for (unsigned long i=0; i<cdList.size(); i++)
-		 if (!cdList[i]->coordinateIsomorphismsVerified()) CPPUNIT_FAIL("Coordinate isomorphisms error.");
+		if (! detailedTests()) // this is Ben's magic speed-up flag true iff
+			return;        // REGINA_DETAILED_TESTS initialized and non-empty
+		for (unsigned long i=0; i<m3List.size(); i++)
+		 if (!m3List[i]->coordinateIsomorphismsVerified()) CPPUNIT_FAIL("Coordinate isomorphisms error (3).");
+		for (unsigned long i=0; i<m4List.size(); i++)
+		 if (!m4List[i]->coordinateIsomorphismsVerified()) CPPUNIT_FAIL("Coordinate isomorphisms error (4).");
+
 	}
 	void homology_LES_tests() { 
-		for (unsigned long i=0; i<cdList.size(); i++)
-		 if (!cdList[i]->homologyLESVerified()) CPPUNIT_FAIL("Homology LES error.");
+		for (unsigned long i=0; i<m3List.size(); i++)
+		 if (!m3List[i]->homologyLESVerified()) CPPUNIT_FAIL("Homology LES error (3).");
+		for (unsigned long i=0; i<m4List.size(); i++)
+		 if (!m4List[i]->homologyLESVerified()) CPPUNIT_FAIL("Homology LES error (4).");
 	}
 	void poincare_duality_tests() { 
-		for (unsigned long i=0; i<cdList.size(); i++)
-		 if (!cdList[i]->poincareDualityVerified()) CPPUNIT_FAIL("Poincare Duality error.");
+		for (unsigned long i=0; i<m3List.size(); i++)
+		 if (!m3List[i]->poincareDualityVerified()) CPPUNIT_FAIL("Poincare Duality error (3).");
+		for (unsigned long i=0; i<m4List.size(); i++)
+		 if (!m4List[i]->poincareDualityVerified()) CPPUNIT_FAIL("Poincare Duality error (4).");
 	}
 	void intersectionform_tests() {
-		for (unsigned long i=0; i<cdList.size(); i++)
-		 if (!cdList[i]->intersectionFormsVerified()) CPPUNIT_FAIL("Intersection forms misbehaving.");
+		for (unsigned long i=0; i<m3List.size(); i++)
+		 if (!m3List[i]->intersectionFormsVerified()) CPPUNIT_FAIL("Intersection forms misbehaving (3).");
+		for (unsigned long i=0; i<m4List.size(); i++)
+		 if (!m4List[i]->intersectionFormsVerified()) CPPUNIT_FAIL("Intersection forms misbehaving (4).");
 	}
 
         void lensspacehomotopyclassification_tests() {

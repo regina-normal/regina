@@ -835,6 +835,14 @@ const NHomGroupPresentation* NCellularData::homGroupPresentation( const HomGroup
  return NULL;
 }
 
+unsigned long NCellularData::components( submanifold_type ctype ) const
+{
+ if (ctype == whole_manifold) return 1;
+ if (ctype == standard_boundary) return stdBdryPi1Gen.size();
+ if (ctype == ideal_boundary) return idBdryPi1Gen.size();
+} 
+
+
 } // namespace regina
 
 

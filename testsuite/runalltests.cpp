@@ -145,7 +145,6 @@ bool runAllTests() {
     addConnectedSumDecomp(runner);
     addThreeSphere(runner);
     addNIsomorphism(runner);
-//    addNHomologicalData(runner); // we'll be phasing NHomologicalData out 
 
     // 4-manifold triangulations:
     addDim4Triangulation(runner);

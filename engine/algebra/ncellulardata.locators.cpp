@@ -30,49 +30,69 @@
 
 namespace regina {
 
-bool NCellularData::GroupLocator::operator<(const GroupLocator &rhs) const
+//chain complex stuff
+NCellularData::ChainComplexLocator::ChainComplexLocator(unsigned long newDim, homology_coordinate_system useHcs)
+{ dim = newDim; hcs = useHcs; }
+
+NCellularData::ChainComplexLocator::ChainComplexLocator(const ChainComplexLocator &cloneMe)
+{ dim = cloneMe.dim; hcs = cloneMe.hcs; }
+
+bool NCellularData::ChainComplexLocator::operator<(const ChainComplexLocator &rhs) const
 {
-if (var < rhs.var) return true; if (var > rhs.var) return false;
-if (dim < rhs.dim) return true; if (dim > rhs.dim) return false;
-if (cof < rhs.cof) return true; if (cof > rhs.cof) return false;
-if (hcs < rhs.hcs) return true; if (hcs > rhs.hcs) return false;
-return false;
+ if (dim < rhs.dim) return true; if (dim > rhs.dim) return false; 
+ if (hcs < rhs.hcs) return true; if (hcs > rhs.hcs) return false; 
+ return false; 
 }
 
-bool NCellularData::GroupLocator::operator==(const GroupLocator &rhs) const
-{ return ( (var==rhs.var) && (dim == rhs.dim) && (cof == rhs.cof) && (hcs == rhs.hcs) ); }
-
-bool NCellularData::GroupLocator::operator!=(const GroupLocator &rhs) const
-{ return ( (var!=rhs.var) || (dim != rhs.dim) || (cof != rhs.cof) || (hcs != rhs.hcs) ); }
-
-bool NCellularData::HomLocator::operator<(const HomLocator &rhs) const
+bool NCellularData::ChainComplexLocator::operator==(const ChainComplexLocator &rhs) const
 {
-if ( domain < rhs.domain ) return true; if ( rhs.domain < domain ) return false; 
-if ( range < rhs.range ) return true; if ( rhs.range < range ) return false;
-return false;
+ return ( (dim == rhs.dim) && (hcs == rhs.hcs) ); 
 }
 
-bool NCellularData::HomLocator::operator==(const HomLocator &rhs) const
-{ return ( (domain==rhs.domain) && (range == rhs.range) ); }
-
-bool NCellularData::HomLocator::operator!=(const HomLocator &rhs) const
-{ return ( (domain!=rhs.domain) || (range != rhs.range) ); }
-
-bool NCellularData::FormLocator::operator<(const FormLocator &rhs) const
+bool NCellularData::ChainComplexLocator::operator!=(const ChainComplexLocator &rhs) const
 {
-if ( ft < rhs.ft ) return true;           if ( rhs.ft < ft ) return false;
-if ( ldomain < rhs.ldomain ) return true; if ( rhs.ldomain < ldomain ) return false; 
-if ( rdomain < rhs.rdomain ) return true; if ( rhs.rdomain < rdomain ) return false;
-return false;
+ return ( (dim != rhs.dim) || (hcs != rhs.hcs) );
+}
+    
+void NCellularData::ChainComplexLocator::writeTextShort(std::ostream& out) const
+{ // TODO
 }
 
-bool NCellularData::FormLocator::operator==(const FormLocator &rhs) const
-{ return ( (ft == rhs.ft) && (ldomain==rhs.ldomain) && (rdomain == rhs.rdomain) ); }
+void NCellularData::ChainComplexLocator::writeTextLong(std::ostream& out) const
+{ // TODO
+}
 
-bool NCellularData::FormLocator::operator!=(const FormLocator &rhs) const
-{ return ( (ft != rhs.ft) || (ldomain!=rhs.ldomain) || (rdomain != rhs.rdomain) ); }
+// chain map stuff
+NCellularData::ChainMapLocator::ChainMapLocator(const ChainComplexLocator &Domain, 
+                                                const ChainComplexLocator &Range) :
+ domain(Domain), range(Range) {}
 
-// GroupLocator and HomLocator
+NCellularData::ChainMapLocator::ChainMapLocator(const ChainMapLocator &cloneMe) :
+ domain(cloneMe.domain), range(cloneMe.range) {}
+
+bool NCellularData::ChainMapLocator::operator<(const ChainMapLocator &rhs) const
+{
+ if (domain < rhs.domain) return true; if (domain != rhs.domain) return false; 
+ if (range < rhs.range) return true;   if (range != rhs.range) return false; 
+ return false; 
+}
+
+bool NCellularData::ChainMapLocator::operator==(const ChainMapLocator &rhs) const
+{ return ( (domain==rhs.domain) && (range==rhs.range) ); }
+
+bool NCellularData::ChainMapLocator::operator!=(const ChainMapLocator &rhs) const
+{ return ( (domain!=rhs.domain) || (range!=rhs.range) ); }
+    
+void NCellularData::ChainMapLocator::writeTextShort(std::ostream& out) const
+{ //TODO
+}
+
+void NCellularData::ChainMapLocator::writeTextLong(std::ostream& out) const
+{ //TODO
+}  
+
+
+// groupLocator
 NCellularData::GroupLocator::GroupLocator(unsigned long newDim, variance_type newVar,
 	 homology_coordinate_system useHcs, unsigned long useCof) :
  dim(newDim), var(newVar), hcs(useHcs), cof(useCof) {}
@@ -104,6 +124,22 @@ else out<<"(M;";
 if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
 }
 
+bool NCellularData::GroupLocator::operator<(const GroupLocator &rhs) const
+{
+if (var < rhs.var) return true; if (var > rhs.var) return false;
+if (dim < rhs.dim) return true; if (dim > rhs.dim) return false;
+if (cof < rhs.cof) return true; if (cof > rhs.cof) return false;
+if (hcs < rhs.hcs) return true; if (hcs > rhs.hcs) return false;
+return false;
+}
+
+bool NCellularData::GroupLocator::operator==(const GroupLocator &rhs) const
+{ return ( (var==rhs.var) && (dim == rhs.dim) && (cof == rhs.cof) && (hcs == rhs.hcs) ); }
+
+bool NCellularData::GroupLocator::operator!=(const GroupLocator &rhs) const
+{ return ( (var!=rhs.var) || (dim != rhs.dim) || (cof != rhs.cof) || (hcs != rhs.hcs) ); }
+
+// homLocator
 NCellularData::HomLocator::HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange) : 
   domain( newDomain ), range( newRange ) {}
 
@@ -115,6 +151,34 @@ void NCellularData::HomLocator::writeTextShort(std::ostream& out) const
 
 void NCellularData::HomLocator::writeTextLong(std::ostream& out) const
 { out<<"map["; domain.writeTextShort(out); out<<"-->"; range.writeTextShort(out); out<<"]"; }
+
+bool NCellularData::HomLocator::operator<(const HomLocator &rhs) const
+{
+if ( domain < rhs.domain ) return true; if ( rhs.domain < domain ) return false; 
+if ( range < rhs.range ) return true; if ( rhs.range < range ) return false;
+return false;
+}
+
+bool NCellularData::HomLocator::operator==(const HomLocator &rhs) const
+{ return ( (domain==rhs.domain) && (range == rhs.range) ); }
+
+bool NCellularData::HomLocator::operator!=(const HomLocator &rhs) const
+{ return ( (domain!=rhs.domain) || (range != rhs.range) ); }
+
+// formLocator
+bool NCellularData::FormLocator::operator<(const FormLocator &rhs) const
+{
+if ( ft < rhs.ft ) return true;           if ( rhs.ft < ft ) return false;
+if ( ldomain < rhs.ldomain ) return true; if ( rhs.ldomain < ldomain ) return false; 
+if ( rdomain < rhs.rdomain ) return true; if ( rhs.rdomain < rdomain ) return false;
+return false;
+}
+
+bool NCellularData::FormLocator::operator==(const FormLocator &rhs) const
+{ return ( (ft == rhs.ft) && (ldomain==rhs.ldomain) && (rdomain == rhs.rdomain) ); }
+
+bool NCellularData::FormLocator::operator!=(const FormLocator &rhs) const
+{ return ( (ft != rhs.ft) || (ldomain!=rhs.ldomain) || (rdomain != rhs.rdomain) ); }
 
 NCellularData::FormLocator::FormLocator( form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain) :
  ldomain( newLdomain ), rdomain( newRdomain ), ft(FT)  {}
@@ -196,13 +260,6 @@ void NCellularData::HomGroupPresLocator::writeTextShort(std::ostream& out) const
 
 void NCellularData::HomGroupPresLocator::writeTextLong(std::ostream& out) const
 { writeTextShort(out); } 
-
-unsigned long NCellularData::components( submanifold_type ctype ) const
-{
- if (ctype == whole_manifold) return 1;
- if (ctype == standard_boundary) return stdBdryPi1Gen.size();
- if (ctype == ideal_boundary) return idBdryPi1Gen.size();
-} 
 
 
 } // namespace regina
