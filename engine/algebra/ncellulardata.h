@@ -1,4 +1,3 @@
-
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
@@ -117,14 +116,20 @@ class Dim4Triangulation;
  *                           NCellularData::homGroup, NCellularData::poincarePolynomial, NCellularData::bilinearForm.
  *                           NCellularData::groupPresentation, NCellularData::homGroupPresentation. 
  *
- *       ncellulardata.init.pi1.cpp - contains initialization routines for the fundamental groups and maps between them.
+ *       ncellulardata.init.indexing.cpp - contains the NCellularData::NCellularData(NTriangulation / Dim4Triangulation)
+ *                                         constructor, and the routines that set up the internal indices like icIx, etc.
  *
- *       ncellulardata.init.cc.cpp - contains all the setupIndices() routines, as well as all the chain complex
- *                           initialization routines.
+ *       ncellulardata.init.cc.cpp - contains the chain complex initialization routines.
  *
  *       ncellulardata.init.hom.cpp - contains the chain map initialization routines. 
  *
- *       ncellulardata.locators.cpp - contains the FormLocator, GroupLocator and HomLocator classes.
+ *       ncellulardata.init.pi1.cpp - contains initialization routines for the fundamental groups presentations 
+ *                                    and maps between them.
+ *
+ *       ncellulardata.locators.cpp - contains the ***Locator classes for the internal maps that store the various
+ *                                    computations in NCellularData. 
+ *
+ *       ncellulardata.lookups.cpp  - contains reverse lookups for the cell indices such as icIx, etc. 
  *
  *       ncellulardata.output.cpp - contains the writeTextShort routines.
  *
@@ -796,9 +801,9 @@ private:
    /**
     *  Internal routines to set up chain complexes. 
     */
-   void fillStandardHomologyCC();
-   void fillDualHomologyCC();
-   void fillMixedHomologyCC();
+   void fillStandardHomologyCC();   void fillDualHomologyCC();   void fillMixedHomologyCC();
+   void fillBoundaryHomologyCC(); // void fillBoundaryDualHomologyCC()  // void fillBoundaryMixedHomologyCC() // TODO
+   void fillRelativeHomologyCC(); // void fillRelativeDualHomologyCC()  // void fillRelativeMixedHomologyCC() // TODO
 
    /**
     *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges normalsDim3BdryEdges normalsDim3BdryVertices

@@ -41,217 +41,6 @@
 
 namespace regina {
 
-// only used in the NCellularData constructor
-void setupIndices(const Dim4Triangulation* tri,   
- std::vector< std::vector<unsigned long> > &nicIx,  std::vector< std::vector<unsigned long> > &icIx, 
- std::vector< std::vector<unsigned long> > &dcIx,   std::vector< std::vector<unsigned long> > &bcIx,
- std::vector< std::vector<unsigned long> > &rIx,  
- unsigned long numStandardCells[5],    unsigned long numDualCells[5], 
- unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4], 
- unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 
- unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5], 
- unsigned long numDualRelCells[5],     unsigned long numMixRelCells[5],   
- unsigned long numMixBdryCells[4],     unsigned long numDualBdryCells[4])
-{
-    // nicIx[0]  interior or boundary,  bcIx[0] boundary,  dcIx[4] interior vertices. 
-    for (Dim4Triangulation::VertexIterator vit = tri->getVertices().begin();
-            vit != tri->getVertices().end(); vit++) if ( !(*vit)->isIdeal() ) {
-        nicIx[0].push_back( tri->vertexIndex(*vit) );
-        if ((*vit)->isBoundary()) bcIx[0].push_back( tri->vertexIndex(*vit) ); else
-	 { dcIx[4].push_back( tri->vertexIndex(*vit) );
-           rIx[0].push_back( tri->vertexIndex(*vit) ); }
-    } 
-    // nicIx[1] all,  icIx[0] ideal ends, dcIx[3] nonboundary, bcIx[1] boundary
-    for (Dim4Triangulation::EdgeIterator eit = tri->getEdges().begin();
-            eit != tri->getEdges().end(); eit++) {
-        nicIx[1].push_back( tri->edgeIndex(*eit) );
-        if ((*eit)->isBoundary()) bcIx[1].push_back( tri->edgeIndex(*eit) );
-	 else 
-	  { dcIx[3].push_back( tri->edgeIndex(*eit) );
-            rIx[1].push_back( tri->edgeIndex(*eit) );
-            for (unsigned i=0;i<2;i++) if ((*eit)->getVertex(i)->isIdeal()) 
-             icIx[0].push_back(2*tri->edgeIndex(*eit)+i); }
-    }
-    // nicIx[2] all, icIx[1] ideal ends, dcIx[2] nonboundary, bcIx[2] boundary
-    for (Dim4Triangulation::FaceIterator fit = tri->getFaces().begin();
-            fit != tri->getFaces().end(); fit++) {
-	nicIx[2].push_back( tri->faceIndex(*fit) );
-        if ((*fit)->isBoundary()) { bcIx[2].push_back( tri->faceIndex(*fit) ); }
-	 else
-	  { dcIx[2].push_back( tri->faceIndex(*fit) );
-            rIx[2].push_back( tri->faceIndex(*fit) );
-            for (unsigned i=0;i<3;i++) if ((*fit)->getVertex(i)->isIdeal()) 
-             icIx[1].push_back(3*tri->faceIndex(*fit)+i); }
-    }
-   for (Dim4Triangulation::TetrahedronIterator tit = tri->getTetrahedra().begin();
-            tit != tri->getTetrahedra().end(); tit++) {
-        nicIx[3].push_back( tri->tetrahedronIndex(*tit) );
-        if ((*tit)->isBoundary()) bcIx[3].push_back( tri->tetrahedronIndex(*tit) );
-	 else
- 	  { dcIx[1].push_back( tri->tetrahedronIndex(*tit) );
-            rIx[3].push_back( tri->tetrahedronIndex(*tit) );
-            for (unsigned i=0;i<4;i++) if ((*tit)->getVertex(i)->isIdeal()) 
-             icIx[2].push_back(4*tri->tetrahedronIndex(*tit)+i); }
-    }
-    for (Dim4Triangulation::PentachoronIterator pit = tri->getPentachora().begin();
-            pit != tri->getPentachora().end(); pit++) {
-	nicIx[4].push_back( tri->pentachoronIndex(*pit) );
-	dcIx[0].push_back( tri->pentachoronIndex(*pit) );
-        rIx[4].push_back( tri->pentachoronIndex(*pit) );
-        for (unsigned i=0;i<5;i++) if ((*pit)->getVertex(i)->isIdeal()) 
-            icIx[3].push_back(5*tri->pentachoronIndex(*pit)+i);
-    }
-
-    // standard CW-decomposition (0..4)-cells / triangulation + ideal cells.
-    for (unsigned i=0; i<4; i++) numStandardCells[i] = nicIx[i].size() + icIx[i].size();
-    numStandardCells[4] = nicIx[4].size();
-    // dual (0..4)-cells : a dual k-cell for every n-k-cell in triangulation
-    for (unsigned i=0; i<5; i++) numDualCells[i] = dcIx[i].size();
-    // relative (0..4)-cells : non-boundary cells from triangulation
-    for (unsigned i=0; i<5; i++) numRelativeCells[i] = rIx[i].size();
-    // boundary (0..3)-cells: boundary triangulation + ideal cells
-    for (unsigned i=0; i<4; i++) numStandardBdryCells[i] = bcIx[i].size() + icIx[i].size();
-    // ideal and non-ideal cells: cells from std cw-decomposition that aren't ideal
-    for (unsigned i=0; i<5; i++) numNonIdealCells[i] = nicIx[i].size();
-    // cells from std cw-decomposition that are ideal
-    for (unsigned i=0; i<4; i++) numIdealCells[i] = icIx[i].size();
-    // boundary cells from std cw-decomposition that are not ideal
-    for (unsigned i=0; i<4; i++) numNonIdealBdryCells[i] = bcIx[i].size();
-
-    // this mixed decomposition is the proper cell decomposition induced by the barycentric
-    // subdivision, so all previous internal/boundary standard cells contribute barycentres
-    numMixCells[0] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + numNonIdealCells[3] +
-	             numNonIdealCells[4] + numIdealCells[0]; 
-    numMixCells[1] = 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*numNonIdealCells[3] + 
-		     5*numNonIdealCells[4] + numIdealCells[1];
-    numMixCells[2] = 3*numNonIdealCells[2] + 6*numNonIdealCells[3] + 10*numNonIdealCells[4] +
-		     numIdealCells[2];
-    numMixCells[3] = 4*numNonIdealCells[3] + 10*numNonIdealCells[4] + numIdealCells[3];
-    numMixCells[4] = 5*numNonIdealCells[4];
-
-    // number of relative dual cells, these are dual to the standard CW-decomposition
-    for (unsigned i=0; i<5; i++) numDualRelCells[i] = numStandardCells[4-i];
-
-    // number of mixed relative cells -- each non-boundary (relative) cell gets multiplied appropriately..
-    numMixRelCells[0] = numRelativeCells[0] + numRelativeCells[1] + numRelativeCells[2] + numRelativeCells[3] +
-	                numRelativeCells[4]; 
-    numMixRelCells[1] = 2*numRelativeCells[1] + 3*numRelativeCells[2] + 4*numRelativeCells[3] + 
-		        5*numRelativeCells[4];
-    numMixRelCells[2] = 3*numRelativeCells[2] + 6*numRelativeCells[3] + 10*numRelativeCells[4];
-    numMixRelCells[3] = 4*numRelativeCells[3] + 10*numRelativeCells[4];
-    numMixRelCells[4] = 5*numRelativeCells[4];
-
-    // number of mixed boundary cells
-    numMixBdryCells[0] = numStandardBdryCells[0] + numStandardBdryCells[1] + numStandardBdryCells[2] + numStandardBdryCells[3];
-    numMixBdryCells[1] = 2*numStandardBdryCells[1] + 3*numStandardBdryCells[2] + 4*numStandardBdryCells[3];
-    numMixBdryCells[2] = 3*numStandardBdryCells[2] + 4*numStandardBdryCells[3];
-    numMixBdryCells[3] = 4*numStandardBdryCells[3];
-
-    // number of boundary dual cells -- dual to std boundary cells
-    for (unsigned i=0; i<4; i++) numDualBdryCells[i] = numStandardBdryCells[3-i];
-}  
-
-
-// only used in the NCellularData constructor
-void setupIndices(const NTriangulation* tri,   
- std::vector< std::vector<unsigned long> > &nicIx,  std::vector< std::vector<unsigned long> > &icIx, 
- std::vector< std::vector<unsigned long> > &dcIx,   std::vector< std::vector<unsigned long> > &bcIx, 
- std::vector< std::vector<unsigned long> > &rIx, 
- unsigned long numStandardCells[5],    unsigned long numDualCells[5], 
- unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4], 
- unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 
- unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5], 
- unsigned long numDualRelCells[5],     unsigned long numMixRelCells[5],  
- unsigned long numMixBdryCells[4],     unsigned long numDualBdryCells[4])
-{
-    // nicIx[0]  interior or boundary,  bcIx[0] boundary,  dcIx[3] interior vertices. 
-    for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
-            vit != tri->getVertices().end(); vit++) if ( !(*vit)->isIdeal() ) {
-        nicIx[0].push_back( tri->vertexIndex(*vit) );
-        if ((*vit)->isBoundary()) bcIx[0].push_back( tri->vertexIndex(*vit) ); else
-	 { dcIx[3].push_back( tri->vertexIndex(*vit) );
-            rIx[0].push_back( tri->vertexIndex(*vit) ); }
-    } 
-    // nicIx[1] all,  icIx[0] ideal ends, dcIx[2] nonboundary, bcIx[1] boundary
-    for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
-            eit != tri->getEdges().end(); eit++) {
-        nicIx[1].push_back( tri->edgeIndex(*eit) );
-        if ((*eit)->isBoundary()) bcIx[1].push_back( tri->edgeIndex(*eit) );
-	 else 
-	  { dcIx[2].push_back( tri->edgeIndex(*eit) );
-	     rIx[1].push_back( tri->edgeIndex(*eit) );
-            for (unsigned i=0;i<2;i++) if ((*eit)->getVertex(i)->isIdeal()) 
-             icIx[0].push_back(2*tri->edgeIndex(*eit)+i); }
-    }
-    // nicIx[2] all, icIx[1] ideal ends, dcIx[1] nonboundary, bcIx[2] boundary
-    for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-            fit != tri->getFaces().end(); fit++) {
-	nicIx[2].push_back( tri->faceIndex(*fit) );
-        if ((*fit)->isBoundary()) bcIx[2].push_back( tri->faceIndex(*fit) );
-	 else
-	  { dcIx[1].push_back( tri->faceIndex(*fit) );
-             rIx[2].push_back( tri->faceIndex(*fit) );
-            for (unsigned i=0;i<3;i++) if ((*fit)->getVertex(i)->isIdeal()) 
-             icIx[1].push_back(3*tri->faceIndex(*fit)+i); }
-    }
-   // nicIx[3], icIx[2] ideal ends, dcIx[0] all
-   for (NTriangulation::TetrahedronIterator tit = tri->getTetrahedra().begin();
-            tit != tri->getTetrahedra().end(); tit++) {
-        nicIx[3].push_back( tri->tetrahedronIndex(*tit) );
-        dcIx[0].push_back( tri->tetrahedronIndex(*tit) );
-         rIx[3].push_back( tri->tetrahedronIndex(*tit) );
-        for (unsigned i=0;i<4;i++) if ((*tit)->getVertex(i)->isIdeal()) 
-             icIx[2].push_back(4*tri->tetrahedronIndex(*tit)+i); 
-    }
-
-    // standard (0..3)-cells:
-    for (unsigned i=0; i<3; i++) numStandardCells[i] = nicIx[i].size() + icIx[i].size();
-    numStandardCells[3] = nicIx[3].size();
-    numStandardCells[4] = 0;
-    // dual (0..3)-cells:
-    for (unsigned i=0; i<4; i++) numDualCells[i] = dcIx[i].size();
-    for (unsigned i=0; i<4; i++) numRelativeCells[i] = rIx[i].size();
-    numDualCells[4] = 0; numRelativeCells[4] = 0;
-    // boundary (0..3)-cells:
-    for (unsigned i=0; i<3; i++) numStandardBdryCells[i] = bcIx[i].size() + icIx[i].size();
-    numStandardBdryCells[3] = 0;
-    // ideal and non-ideal cells:
-    for (unsigned i=0; i<4; i++) numNonIdealCells[i] = nicIx[i].size();
-    numNonIdealCells[4] = 0;
-    for (unsigned i=0; i<3; i++) numIdealCells[i] = icIx[i].size();
-    numIdealCells[3] = 0;
-    for (unsigned long i=0; i<3; i++) numNonIdealBdryCells[i] = bcIx[i].size();
-    numNonIdealBdryCells[3] = 0;
-
-    // this mixed decomposition is the proper cell decomposition induced by the barycentric
-    // subdivision, so all previous internal/boundary standard cells contribute barycentres
-    numMixCells[0] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + numNonIdealCells[3] +
-		     numIdealCells[0]; 
-    numMixCells[1] = 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*numNonIdealCells[3] + 
-		     numIdealCells[1];
-    numMixCells[2] = 3*numNonIdealCells[2] + 6*numNonIdealCells[3] + numIdealCells[2];
-    numMixCells[3] = 4*numNonIdealCells[3];
-    numMixCells[4] = 0;
-
-    // number of relative dual cells, these are dual to the standard CW-decomposition
-    for (unsigned i=0; i<4; i++) numDualRelCells[i] = numStandardCells[3-i];
-
-    // number of mixed relative cells -- each non-boundary (relative) cell gets multiplied appropriately..
-    numMixRelCells[0] = numRelativeCells[0] + numRelativeCells[1] + numRelativeCells[2] + numRelativeCells[3]; 
-    numMixRelCells[1] = 2*numRelativeCells[1] + 3*numRelativeCells[2] + 4*numRelativeCells[3];
-    numMixRelCells[2] = 3*numRelativeCells[2] + 6*numRelativeCells[3];
-    numMixRelCells[3] = 4*numRelativeCells[3];
-
-    // number of mixed boundary cells
-    numMixBdryCells[0] = numStandardBdryCells[0] + numStandardBdryCells[1] + numStandardBdryCells[2];
-    numMixBdryCells[1] = 2*numStandardBdryCells[1] + 3*numStandardBdryCells[2];
-    numMixBdryCells[2] = 3*numStandardBdryCells[2];
-
-    // number of boundary dual cells -- dual to std boundary cells
-    for (unsigned i=0; i<3; i++) numDualBdryCells[i] = numStandardBdryCells[2-i];
-}  
-
-
 //ccCollectionType::const_iterator ccmi;
 //for (ccmi = g.genCC.begin(); ccmi != g.genCC.end(); ccmi++)
 // genCC.insert( std::pair< ChainComplexLocator, ccMapType* >(ccmi->first, clonePtr(ccmi->second) ) );
@@ -1335,14 +1124,15 @@ void NCellularData::fillMixedHomologyCC()
     genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
         (ChainComplexLocator(D, MIX_coord), CC ) );
   } // tri3 != NULL
-}
+} // fillMixedHomologyCC()
 
-void fillBoundaryHomologyCC(const Dim4Triangulation* tri, 
-	const unsigned long numStandardBdryCells[4],  const unsigned long numIdealCells[4], 
-	const unsigned long numNonIdealBdryCells[4],
-	const std::vector< std::vector< unsigned long > > &bcIx, const std::vector< std::vector< unsigned long > > &icIx, 
-	std::vector< NMatrixInt* > &sbCC)
+void NCellularData::fillBoundaryHomologyCC()
 {
+ ccMapType* CC(NULL); // pointer to an NSparseGrid< coverFacetData > 
+ NGroupExpression wordle; // temp
+
+ if (tri4!=NULL)
+  {
     // initialize chain complex matrices.
     for (unsigned i=1; i<4; i++) // sbCC[i]
         sbCC[i] = new NMatrixInt(numStandardBdryCells[i-1], numStandardBdryCells[i]);
@@ -1354,102 +1144,127 @@ void fillBoundaryHomologyCC(const Dim4Triangulation* tri,
     unsigned long I;
 
     // now we fill them out, first sbCC.  sbCC[0] is zero, 
+    CC = new ccMapType(2);
     unsigned long D=1; // sbCC[D]
     for (unsigned long j=0; j<numNonIdealBdryCells[D]; j++) // sbCC[D]->entry( *,j )
 	{ // endpts getEdge(nicIx[D][j]) ideal?
-	edg = tri->getEdge(bcIx[D][j]);
+	edg = tri4->getEdge(bcIx[D][j]);
 	for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
 	 {   // endpt i is ideal, find index
-          I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+          I = icIxLookup( edg, i );
 	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData(numNonIdealBdryCells[D-1] + I , 1, wordle ) );
 	 } 
 	else // endpt i is not ideal
 	 {
-          I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->vertexIndex( edg->getVertex(i) ) )
-	      - bcIx[D-1].begin();
+          I = bcIxLookup( edg->getVertex(i) );
 	  sbCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, ( i == 0 ? -1 : 1 ), wordle ) );
 	 }
 	}
     for (unsigned long j=0; j<numIdealCells[D]; j++) // sbCC[D]->entry( *, numNonIdealCells[D] + j )
         { // icIx[D][j]/(D+2) face icIx[D][j] % (D+2) vertex
-	fac = tri->getFace(icIx[D][j]/(D+2));
+	fac = tri4->getFace(icIx[D][j]/(D+2));
 	for (unsigned long i=1; i<D+2; i++)
 	 {
           NPerm5 P( fac->getEdgeMapping( (icIx[D][j] + i) % (D+2) ) );
-	  unsigned long iX( (D+1)*tri->edgeIndex( fac->getEdge( (icIx[D][j] + i) % (D+2) ) ) // of corresp ideal 0-cell
-			            + ( P.preImageOf(icIx[D][j] % (D+2)) ) );
-	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+	  I = icIxLookup( fac->getEdge( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
 	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I,  numNonIdealBdryCells[D] + j) -= P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( numNonIdealBdryCells[D] + j, i ),
+                        coverFacetData( numNonIdealBdryCells[D-1] + I, -P.sign(), wordle ) );
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_BDRY_coord), CC ) );
 
+    CC = new ccMapType(2);
     D = 2; // sbCC[2]
     for (unsigned long j=0; j<numNonIdealBdryCells[D]; j++) // sbCC[D]->entry( *,j )
 	{
-	fac = tri->getFace(bcIx[D][j]);
+	fac = tri4->getFace(bcIx[D][j]);
 	for (unsigned long i=0; i < D+1; i++) 
 	 { 
-	  if (fac->getVertex(i)->isIdeal())
+	  if (fac->getVertex(i)->isIdeal()) // technically for a valid triangulation this never happens
 	   { // ideal ends of faces	
-            I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), (D+1)*j+i ) - bcIx[D-1].begin();
+            I = icIxLookup( fac, i );
 	    sbCC[D]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+            // TODO fill wordle
+            CC->setEntry( NMultiIndex( j, i ),
+                          coverFacetData( numNonIdealBdryCells[D-1] + I, 1, wordle ) );
 	   } // standard face boundaries
 	  NPerm5 P( fac->getEdgeMapping(i) );
-          I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->edgeIndex( fac->getEdge(i) )) 
-		- bcIx[D-1].begin();
+          I = bcIxLookup( fac->getEdge(i) );
 	  sbCC[D]->entry(I, j) += P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, P.sign(), wordle ) );
 	 }
 	}
    for (unsigned long j=0; j<numIdealCells[D]; j++) // sbCC[D]->entry( *, j+numNonIdealCells[D-1] )
         { // icIx[D][j]/(D+2) tetrahedron icIx[1][j] % (D+2) vertex
-	tet = tri->getTetrahedron(icIx[D][j]/(D+2));
+	tet = tri4->getTetrahedron(icIx[D][j]/(D+2));
 	for (unsigned long i=1; i < D+2; i++)
 	 {
           NPerm5 P( tet->getFaceMapping( (icIx[D][j] + i) % (D+2)) );
-	  unsigned long iX( (D+1)*tri->faceIndex( tet->getFace( (icIx[D][j] + i) % (D+2) ) ) // of corresp ideal 0-cell
-			            + ( P.preImageOf(icIx[D][j] % (D+2)) ) );
-	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+	  I = icIxLookup( tet->getFace( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
 	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I,  numNonIdealBdryCells[D] + j) -= P.sign(); 
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( numNonIdealBdryCells[D] + j, i ),
+                        coverFacetData( numNonIdealBdryCells[D-1] + I, -P.sign(), wordle ) );
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_BDRY_coord), CC ) );
 
+    CC = new ccMapType(2);
     D = 3; // sbCC[3]
     for (unsigned long j=0; j<numNonIdealBdryCells[D]; j++) // sbCC[D]->entry( *,j )
 	{
-	tet = tri->getTetrahedron(bcIx[D][j]);
+	tet = tri4->getTetrahedron(bcIx[D][j]);
 	for (unsigned long i=0; i < D+1; i++) 
 	 { 
 	  if (tet->getVertex(i)->isIdeal())
 	   { // ideal ends of faces	
-            I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+            I = icIxLookup( tet, i );
 	    sbCC[D]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+            // TODO fill wordle
+            CC->setEntry( NMultiIndex( j, i ),
+                          coverFacetData( numNonIdealBdryCells[D-1] + I, 1, wordle ) );
 	   } // standard face boundaries
 	  NPerm5 P( tet->getFaceMapping(i) );
-          I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->faceIndex( tet->getFace(i) )) 
-		- bcIx[D-1].begin();
+          I = bcIxLookup( tet->getFace(i) );
 	  sbCC[D]->entry(I, j) += P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, P.sign(), wordle ) );
 	 }
 	}
     for (unsigned long j=0; j<numIdealCells[D]; j++) // sbCC[D]->entry( *, j+numNonIdealCells[D-1] )
         { // icIx[D][j]/(D+2) pentachoron icIx[1][j] % (D+2) vertex
-	pen = tri->getPentachoron(icIx[D][j]/(D+2));
+	pen = tri4->getPentachoron(icIx[D][j]/(D+2));
 	for (unsigned long i=1; i < D+2; i++)
 	 {
           NPerm5 P( pen->getTetrahedronMapping( (icIx[D][j] + i) % (D+2)) );
-	  unsigned long iX( (D+1)*tri->tetrahedronIndex( pen->getTetrahedron( (icIx[D][j] + i) % (D+2) ) ) 
-			            + ( P.preImageOf(icIx[D][j] % (D+2)) )     );
-	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+	  I = icIxLookup( pen->getTetrahedron( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
 	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I,  numNonIdealBdryCells[D] + j) -= P.sign(); 
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( numNonIdealBdryCells[D] + j, i ),
+                        coverFacetData( numNonIdealBdryCells[D-1] + I, -P.sign(), wordle ) );
 	 }
 	}
-}
-
-void fillBoundaryHomologyCC(const NTriangulation* tri, 
-	const unsigned long numStandardBdryCells[4],  const unsigned long numIdealCells[4],
-        const unsigned long numNonIdealBdryCells[4],  
-	const std::vector< std::vector< unsigned long > > &bcIx, const std::vector< std::vector< unsigned long > > &icIx, 
-	std::vector< NMatrixInt* > &sbCC)
-{
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_BDRY_coord), CC ) );
+  }
+ else // tri3 != NULL
+  {
     // initialize chain complex matrices.
     for (unsigned i=1; i<3; i++) // sbCC[i]
         sbCC[i] = new NMatrixInt(numStandardBdryCells[i-1], numStandardBdryCells[i]);
@@ -1461,65 +1276,207 @@ void fillBoundaryHomologyCC(const NTriangulation* tri,
     unsigned long I;
     
     // now we fill them out, first sbCC.  sbCC[0] is zero, 
+    CC = new ccMapType(2);
     unsigned long D=1; // sbCC[D]
     for (unsigned long j=0; j<numNonIdealBdryCells[D]; j++) // sbCC[D]->entry( *,j )
 	{ // endpts getEdge(bcIx[D][j]) ideal?
-	edg = tri->getEdge(bcIx[D][j]);
+	edg = tri3->getEdge(bcIx[D][j]);
 	for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
 	 {   // endpt i is ideal, find index
-          I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+          I = icIxLookup( edg, i );
 	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( numNonIdealBdryCells[D-1] + I, 1, wordle ) );
 	 } 
 	else // endpt i is not ideal
 	 {
-          I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->vertexIndex( edg->getVertex(i) ) )
-	      - bcIx[D-1].begin();
+          I = bcIxLookup( edg->getVertex(i) );
 	  sbCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, ( i == 0 ? -1 : 1 ), wordle ) );
 	 }
 	}
     for (unsigned long j=0; j<numIdealCells[D]; j++) // sbCC[D]->entry( *, numNonIdealBdryCells[D] + j )
         { // icIx[D][j]/(D+2) face icIx[D][j] % (D+2) vertex
-	fac = tri->getFace(icIx[D][j]/(D+2));
+	fac = tri3->getFace(icIx[D][j]/(D+2));
 	for (unsigned long i=1; i<D+2; i++)
 	 {
           NPerm4 P( fac->getEdgeMapping( (icIx[D][j] + i) % (D+2) ) );
-	  unsigned long iX( (D+1)*tri->edgeIndex( fac->getEdge( (icIx[D][j] + i) % (D+2) ) ) // of corresp ideal 0-cell
-			            + ( P.preImageOf(icIx[D][j] % (D+2)) ) );
-	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+	  I = icIxLookup( fac->getEdge( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
 	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I,  numNonIdealBdryCells[D] + j) -= P.sign();
-	 }
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( numNonIdealBdryCells[D] + j, i ),
+                        coverFacetData( numNonIdealBdryCells[D-1] + I, -P.sign(), wordle ) );
+         }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_BDRY_coord), CC ) );
 
+    CC = new ccMapType(2);
     D = 2; // sbCC[2]
     for (unsigned long j=0; j<numNonIdealBdryCells[D]; j++) // sbCC[D]->entry( *,j )
 	{
-	fac = tri->getFace(bcIx[D][j]);
+	fac = tri3->getFace(bcIx[D][j]);
 	for (unsigned long i=0; i < D+1; i++) 
 	 { 
 	  if (fac->getVertex(i)->isIdeal())
 	   { // ideal ends of faces	
-            I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
+            I = icIxLookup( fac, i );
 	    sbCC[D]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
+            // TODO fill wordle
+            CC->setEntry( NMultiIndex( j, i ),
+                          coverFacetData( numNonIdealBdryCells[D-1] + I, 1, wordle ) );
 	   } // standard face boundaries
 	  NPerm4 P( fac->getEdgeMapping(i) );
-          I = lower_bound( bcIx[D-1].begin(), bcIx[D-1].end(), tri->edgeIndex( fac->getEdge(i) )) 
-		- bcIx[D-1].begin();
+          I = bcIxLookup( fac->getEdge(i) );
 	  sbCC[D]->entry(I, j) += P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, P.sign(), wordle ) );
 	 }
 	}
    for (unsigned long j=0; j<numIdealCells[D]; j++) // sbCC[D]->entry( *, j+numNonIdealBdryCells[D-1] )
         { // icIx[D][j]/(D+2) tetrahedron icIx[1][j] % (D+2) vertex
-	tet = tri->getTetrahedron(icIx[D][j]/(D+2));
+	tet = tri3->getTetrahedron(icIx[D][j]/(D+2));
 	for (unsigned long i=1; i < D+2; i++)
 	 {
           NPerm4 P( tet->getFaceMapping( (icIx[D][j] + i) % (D+2)) );
-	  unsigned long iX( (D+1)*tri->faceIndex( tet->getFace( (icIx[D][j] + i) % (D+2) ) ) // of corresp ideal 0-cell
-			            + ( P.preImageOf(icIx[D][j] % (D+2)) ) );
-	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+	  I = icIxLookup( tet->getFace( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
 	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I,  numNonIdealBdryCells[D] + j) -= P.sign(); 
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( numNonIdealBdryCells[D] + j, i ),
+                        coverFacetData( numNonIdealBdryCells[D-1] + I, -P.sign(), wordle ) );
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_BDRY_coord), CC ) );
+  } // end tri3 != NULL
+} // fillBoundaryHomologyCC()
+
+
+void NCellularData::fillRelativeHomologyCC()
+{
+  if (tri4 != NULL)
+   {
+    // initialize chain complex matrices.
+    for (unsigned i=1; i<5; i++) // srCC[i] defined for i == 0, ..., 5
+	srCC[i] = new NMatrixInt(numRelativeCells[i-1], numRelativeCells[i]);
+    srCC[0] = new NMatrixInt(1, numRelativeCells[0]);
+    srCC[5] = new NMatrixInt(numRelativeCells[4], 1);
+
+    // various useful pointers, index holders.
+    const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
+    unsigned long I;
+    
+    // now we fill them out, first srCC.  srCC[0] is zero, 
+    unsigned long D=1; // srCC[D]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
+	{ // endpts getEdge(rIx[D][j]) ideal?
+	edg = tri4->getEdge(rIx[D][j]);
+	for (unsigned long i=0; i<D+1; i++) if ( (!edg->getVertex(i)->isIdeal()) && (!edg->getVertex(i)->isBoundary()) )
+	 {
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri4->vertexIndex( edg->getVertex(i) ) )
+	      - rIx[D-1].begin();
+	  srCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
+	 }
+	}
+
+    D = 2; // srCC[2]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
+	{
+	fac = tri4->getFace(rIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) if (!fac->getEdge(i)->isBoundary())
+	 { 
+	  NPerm5 P( fac->getEdgeMapping(i) );
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri4->edgeIndex( fac->getEdge(i) )) 
+		- rIx[D-1].begin();
+	  srCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+
+    D = 3; // srCC[3]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
+	{
+	tet = tri4->getTetrahedron(rIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) if (!tet->getFace(i)->isBoundary())
+	 { 
+	  NPerm5 P( tet->getFaceMapping(i) );
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri4->faceIndex( tet->getFace(i) )) 
+		- rIx[D-1].begin();
+	  srCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+
+    D = 4; // srCC[4]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
+	{
+	pen = tri4->getPentachoron(rIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) if (!pen->getTetrahedron(i)->isBoundary())
+	 { 
+	  NPerm5 P( pen->getTetrahedronMapping(i) );
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri4->tetrahedronIndex( pen->getTetrahedron(i) )) 
+		- rIx[D-1].begin();
+	  srCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+  }
+  else // tri3 != NULL
+  {
+    // initialize chain complex matrices.
+    for (unsigned i=1; i<4; i++) // srCC[i] defined for i == 0, ..., 5
+	srCC[i] = new NMatrixInt(numRelativeCells[i-1], numRelativeCells[i]);
+    srCC[0] = new NMatrixInt(1, numRelativeCells[0]);
+    srCC[4] = new NMatrixInt(numRelativeCells[3], 1);
+
+    // various useful pointers, index holders.
+    const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL);
+    unsigned long I;
+    
+    // now we fill them out, first srCC.  srCC[0] is zero, 
+    unsigned long D=1; // srCC[D]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
+	{ // endpts getEdge(rIx[D][j]) ideal?
+	edg = tri3->getEdge(rIx[D][j]);
+	for (unsigned long i=0; i<D+1; i++) if ( (!edg->getVertex(i)->isIdeal()) && (!edg->getVertex(i)->isBoundary()) )
+	 {
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri3->vertexIndex( edg->getVertex(i) ) )
+	      - rIx[D-1].begin();
+	  srCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
+	 }
+	}
+
+    D = 2; // srCC[2]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
+	{
+	fac = tri3->getFace(rIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) if (!fac->getEdge(i)->isBoundary())
+	 { 
+	  NPerm4 P( fac->getEdgeMapping(i) );
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri3->edgeIndex( fac->getEdge(i) )) 
+		- rIx[D-1].begin();
+	  srCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+
+    D = 3; // srCC[3]
+    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
+	{
+	tet = tri3->getTetrahedron(rIx[D][j]);
+	for (unsigned long i=0; i < D+1; i++) if (!tet->getFace(i)->isBoundary())
+	 { 
+	  NPerm4 P( tet->getFaceMapping(i) );
+          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri3->faceIndex( tet->getFace(i) )) 
+		- rIx[D-1].begin();
+	  srCC[D]->entry(I, j) += P.sign();
+	 }
+	}
+  } // tri3 != NULL
 }
+
 
 // TODO -- incomplete!
 void fillDualBoundaryHomologyCC(const Dim4Triangulation* tri,  // fills dbCC
@@ -1575,206 +1532,6 @@ void fillDualBoundaryHomologyCC(const Dim4Triangulation* tri,  // fills dbCC
 //	      dCC[D]->entry( i, J ) += ( ( (fac->getEmbedding(1).getTetrahedron() == tet) && 
 //				       (fac->getEmbedding(1).getFace() == j) ) ? +1 : -1 );
 // end new
-
-void fillRelativeHomologyCC(const Dim4Triangulation* tri, 
-	const unsigned long numRelativeCells[5], const std::vector< std::vector< unsigned long > > &rIx, 
-	std::vector< NMatrixInt* > &srCC)
-{
-    // initialize chain complex matrices.
-    for (unsigned i=1; i<5; i++) // srCC[i] defined for i == 0, ..., 5
-	srCC[i] = new NMatrixInt(numRelativeCells[i-1], numRelativeCells[i]);
-    srCC[0] = new NMatrixInt(1, numRelativeCells[0]);
-    srCC[5] = new NMatrixInt(numRelativeCells[4], 1);
-
-    // various useful pointers, index holders.
-    const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
-    unsigned long I;
-    
-    // now we fill them out, first srCC.  srCC[0] is zero, 
-    unsigned long D=1; // srCC[D]
-    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
-	{ // endpts getEdge(rIx[D][j]) ideal?
-	edg = tri->getEdge(rIx[D][j]);
-	for (unsigned long i=0; i<D+1; i++) if ( (!edg->getVertex(i)->isIdeal()) && (!edg->getVertex(i)->isBoundary()) )
-	 {
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->vertexIndex( edg->getVertex(i) ) )
-	      - rIx[D-1].begin();
-	  srCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
-	 }
-	}
-
-    D = 2; // srCC[2]
-    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
-	{
-	fac = tri->getFace(rIx[D][j]);
-	for (unsigned long i=0; i < D+1; i++) if (!fac->getEdge(i)->isBoundary())
-	 { 
-	  NPerm5 P( fac->getEdgeMapping(i) );
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->edgeIndex( fac->getEdge(i) )) 
-		- rIx[D-1].begin();
-	  srCC[D]->entry(I, j) += P.sign();
-	 }
-	}
-
-    D = 3; // srCC[3]
-    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
-	{
-	tet = tri->getTetrahedron(rIx[D][j]);
-	for (unsigned long i=0; i < D+1; i++) if (!tet->getFace(i)->isBoundary())
-	 { 
-	  NPerm5 P( tet->getFaceMapping(i) );
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->faceIndex( tet->getFace(i) )) 
-		- rIx[D-1].begin();
-	  srCC[D]->entry(I, j) += P.sign();
-	 }
-	}
-
-    D = 4; // srCC[4]
-    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
-	{
-	pen = tri->getPentachoron(rIx[D][j]);
-	for (unsigned long i=0; i < D+1; i++) if (!pen->getTetrahedron(i)->isBoundary())
-	 { 
-	  NPerm5 P( pen->getTetrahedronMapping(i) );
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->tetrahedronIndex( pen->getTetrahedron(i) )) 
-		- rIx[D-1].begin();
-	  srCC[D]->entry(I, j) += P.sign();
-	 }
-	}
-}
-
-void fillRelativeHomologyCC(const NTriangulation* tri, 
-	const unsigned long numRelativeCells[5], const std::vector< std::vector< unsigned long > > &rIx, 
-	std::vector< NMatrixInt* > &srCC)
-{
-    // initialize chain complex matrices.
-    for (unsigned i=1; i<4; i++) // srCC[i] defined for i == 0, ..., 5
-	srCC[i] = new NMatrixInt(numRelativeCells[i-1], numRelativeCells[i]);
-    srCC[0] = new NMatrixInt(1, numRelativeCells[0]);
-    srCC[4] = new NMatrixInt(numRelativeCells[3], 1);
-
-    // various useful pointers, index holders.
-    const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL);
-    unsigned long I;
-    
-    // now we fill them out, first srCC.  srCC[0] is zero, 
-    unsigned long D=1; // srCC[D]
-    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
-	{ // endpts getEdge(rIx[D][j]) ideal?
-	edg = tri->getEdge(rIx[D][j]);
-	for (unsigned long i=0; i<D+1; i++) if ( (!edg->getVertex(i)->isIdeal()) && (!edg->getVertex(i)->isBoundary()) )
-	 {
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->vertexIndex( edg->getVertex(i) ) )
-	      - rIx[D-1].begin();
-	  srCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
-	 }
-	}
-
-    D = 2; // srCC[2]
-    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
-	{
-	fac = tri->getFace(rIx[D][j]);
-	for (unsigned long i=0; i < D+1; i++) if (!fac->getEdge(i)->isBoundary())
-	 { 
-	  NPerm4 P( fac->getEdgeMapping(i) );
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->edgeIndex( fac->getEdge(i) )) 
-		- rIx[D-1].begin();
-	  srCC[D]->entry(I, j) += P.sign();
-	 }
-	}
-
-    D = 3; // srCC[3]
-    for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
-	{
-	tet = tri->getTetrahedron(rIx[D][j]);
-	for (unsigned long i=0; i < D+1; i++) if (!tet->getFace(i)->isBoundary())
-	 { 
-	  NPerm4 P( tet->getFaceMapping(i) );
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri->faceIndex( tet->getFace(i) )) 
-		- rIx[D-1].begin();
-	  srCC[D]->entry(I, j) += P.sign();
-	 }
-	}
-}
-
-// required forward declaration
-void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4, 
-                    unsigned long numStandardCells[5],    unsigned long numDualCells[5],     unsigned long numMixCells[5], 
-                    unsigned long numStandardBdryCells[4],unsigned long numNonIdealCells[5], unsigned long numIdealCells[4], 
-                    unsigned long numNonIdealBdryCells[4],unsigned long numRelativeCells[5], unsigned long numDualRelCells[5], 
-                    unsigned long numMixRelCells[5],      unsigned long numMixBdryCells[4],  unsigned long numDualBdryCells[4], 
-                    std::vector< std::vector<unsigned long> > &nicIx, std::vector< std::vector<unsigned long> > &icIx, 
-                    std::vector< std::vector<unsigned long> > &dcIx,  std::vector< std::vector<unsigned long> > &bcIx, 
-                    std::vector< std::vector<unsigned long> > &rIx, 
-                    std::vector< NMatrixInt* > &sbiCM, std::vector< NMatrixInt* > &smCM, 
-                    std::vector< NMatrixInt* > &dmCM,  std::vector< NMatrixInt* > &strCM, 
-                    std::vector< NMatrixInt* > &schCM );
-
-
-// constructor for 4-manifold triangulations
-NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
-        tri4(new Dim4Triangulation(input)), tri3(0), 
-	nicIx(5), icIx(4), dcIx(5), bcIx(4), rIx(5), // indexing cells 
-	sCC(6), sbCC(5), srCC(6),   dCC(6), dbCC(5), drCC(6),   mCC(6), mbCC(5), mrCC(6), // chain complexes 
-	sbiCM(4), strCM(5), schCM(4),   dbiCM(4), dtrCM(5), dchCM(4),   mbiCM(4), mtrCM(5), mchCM(4), 
-        smCM(5), dmCM(5), smbCM(4), dmbCM(4), srmCM(5), drmCM(5) // chain maps
-//        normalsDim4BdryFaces(0),  normalsDim4BdryEdges(0), normalsDim3BdryEdges(0), normalsDim3BdryVertices(0) // orientations
-{
-   setupIndices( tri4, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
-			numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells, 
-			numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, numDualBdryCells );
-   buildExtraNormalData();
-   buildMaximalTree(); 
-   // TODO: split routines below into ones that use genCC, and ones derived from it. 
-   //       the derived types will not be computed here.         
-   fillStandardHomologyCC();   fillDualHomologyCC(); fillMixedHomologyCC();
-
-   fillBoundaryHomologyCC( tri4, numStandardBdryCells, numIdealCells, numNonIdealBdryCells, bcIx, icIx, sbCC );
-
-   fillRelativeHomologyCC( tri4, numRelativeCells, rIx, srCC );
-
-   // todo fillMixedBdryHomology, fillDualBdryHomology, fillMixRelBdryHomology, fillDualRelBdryHomology
-
-   fillChainMaps( tri3, tri4, numStandardCells, numDualCells, numMixCells, numStandardBdryCells, 
-                                  numNonIdealCells, numIdealCells, numNonIdealBdryCells, 
-	                          numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, 
-		                  numDualBdryCells, 
-                    nicIx, icIx, dcIx, bcIx, rIx, 
-                    sbiCM, smCM, dmCM, strCM, schCM );
-}
-
-// constructor for 3-manifold triangulations
-NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
-        tri4(0), tri3(new NTriangulation(input)), 
-	nicIx(4), icIx(3), dcIx(4), bcIx(3), rIx(4), // indexing cells 
-	sCC(5), sbCC(4), srCC(5),   dCC(5), dbCC(4), drCC(5),   mCC(5), mbCC(4), mrCC(5), // chain complexes 
-	sbiCM(3), strCM(4), schCM(3),   dbiCM(3), dtrCM(4), dchCM(3),   mbiCM(3), mtrCM(4), mchCM(3), 
-        smCM(4), dmCM(4), smbCM(3), dmbCM(3), srmCM(4), drmCM(4) // chain maps
-//        normalsDim4BdryFaces(0),  normalsDim4BdryEdges(0), normalsDim3BdryEdges(0), normalsDim3BdryVertices(0) // orientations
-{
-
-   setupIndices( tri3, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
-		 numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells,
-		 numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, numDualBdryCells );
-   buildExtraNormalData();
-   buildMaximalTree(); 
-
-   fillStandardHomologyCC();   fillDualHomologyCC();    fillMixedHomologyCC();
-
-   fillBoundaryHomologyCC( tri3, numStandardBdryCells, numIdealCells, numNonIdealBdryCells, bcIx, icIx, sbCC );
-
-   fillRelativeHomologyCC( tri3, numRelativeCells, rIx, srCC );
-   // todo fillMixedBdryHomology, fillDualBdryHomology, fillMixRelBdryHomology, fillDualRelBdryHomology
-
-   fillChainMaps( tri3, tri4, numStandardCells, numDualCells, numMixCells, numStandardBdryCells, 
-                                  numNonIdealCells, numIdealCells, numNonIdealBdryCells, 
-	                          numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, 
-		                  numDualBdryCells, 
-                    nicIx, icIx, dcIx, bcIx, rIx, 
-                    sbiCM, smCM, dmCM, strCM, schCM );
-   // standard face boundaries
-
-}
 
 
 
