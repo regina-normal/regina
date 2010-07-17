@@ -164,6 +164,11 @@ class NSparseGridRing : public NSparseGrid<T> {
 
         NSparseGridRing(const NSparseGridRing & cloneMe);
 
+        /**
+         * Overloaded for a val == T::zero safety check.
+         */
+        void setEntry( const NMultiIndex &I, const T &val );
+
 	/**
 	 * Increment an entry.  This will allocate the entry if it
          * is not already allocated, and deallocate if after incrementation
@@ -282,12 +287,11 @@ const std::map< NMultiIndex, T* > & NSparseGrid<T>::getGrid() const
 template <class T>
 inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, const T &val )
 {
-// determine if multi-index I is in grid, if so replace by val
- if (val == 0) return;
+ // determine if multi-index I is in grid, if so replace by val
  typename std::map< NMultiIndex, T* >::iterator p;
  p = grid.find( I );
  if ( p != grid.end() ) {(*(p->second)) = val;}
-// if not, insert
+ // if not, insert
  else { grid[I] = new T(val); }
 }
 
@@ -336,6 +340,19 @@ template <class T>
 inline NSparseGridRing<T>::NSparseGridRing(const NSparseGridRing & cloneMe) : 
  NSparseGrid<T>(cloneMe)
 {}
+
+template <class T>
+inline void NSparseGridRing<T>::setEntry( const NMultiIndex &I, const T &val )
+{
+ // determine if multi-index I is in grid, if so replace by val
+ if (val == T::zero) return;
+ typename std::map< NMultiIndex, T* >::iterator p;
+ p = this->grid.find( I );
+ if ( p != this->grid.end() ) {(*(p->second)) = val;}
+ // if not, insert
+ else { this->grid[I] = new T(val); }
+}
+
 
 
 } // namespace regina
