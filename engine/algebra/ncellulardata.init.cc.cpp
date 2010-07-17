@@ -645,7 +645,7 @@ void NCellularData::fillDualHomologyCC()
 	  for (unsigned long j=0; j < 4; j++) {
 	    fac = tet->getFace(j); if (!fac->isBoundary())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri4->faceIndex( fac ) ) - dcIx[D].begin();
+	      J = dcIxLookup( fac );
 	      pen = tet->getEmbedding(1).getPentachoron(); // our ambient pentachoron
 	      // the natural inclusions of our tetrahedron and face into the ambient pentachoron
 	      NPerm5 tetinc( tet->getEmbedding(1).getVertices() );
@@ -669,7 +669,7 @@ void NCellularData::fillDualHomologyCC()
 	  for (unsigned long j=0; j < 3; j++) {
 	    edg = fac->getEdge(j); if (!edg->isBoundary())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri4->edgeIndex( edg ) ) - dcIx[D].begin();
+	      J = dcIxLookup( edg );
 	      pen = fac->getEmbedding(0).getPentachoron(); // our ambient pentachoron
 	      // the natural inclusions of our face and edge into the ambient pentachoron
 	      NPerm5 facinc( fac->getEmbedding(0).getVertices() );
@@ -695,7 +695,7 @@ void NCellularData::fillDualHomologyCC()
 	  for (unsigned long j=0; j < 2; j++) {
 	    vrt = edg->getVertex(j); if (!vrt->isBoundary() && !vrt->isIdeal())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri4->vertexIndex( vrt ) ) - dcIx[D].begin();
+	      J = dcIxLookup(vrt);
 	      pen = edg->getEmbedding(0).getPentachoron(); // our ambient pentachoron
 	      // sign...
 	      NPerm5 edginc( edg->getEmbedding(0).getVertices() );
@@ -731,7 +731,7 @@ void NCellularData::fillDualHomologyCC()
 	     {
               signed long sig(( ( (fac->getEmbedding(1).getTetrahedron() == tet) && 
 				       (fac->getEmbedding(1).getFace() == j) ) ? +1 : -1 ));
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri3->faceIndex( fac ) ) - dcIx[D].begin();
+	      J = dcIxLookup( fac );
 	      dCC[D]->entry( i, J ) += sig;
              // TODO fill wordle
              CC->setEntry( NMultiIndex( J, 4*i+j ),  
@@ -749,7 +749,7 @@ void NCellularData::fillDualHomologyCC()
 	  for (unsigned long j=0; j < 3; j++) {
 	    edg = fac->getEdge(j); if (!edg->isBoundary())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri3->edgeIndex( edg ) ) - dcIx[D].begin();
+	      J = dcIxLookup(edg);
 	      tet = fac->getEmbedding(1).getTetrahedron(); // our ambient tetrahedron
 	      // the natural inclusions of our tetrahedron and face into the ambient tetrahedron
 	      NPerm4 facinc( fac->getEmbedding(1).getVertices() );
@@ -773,7 +773,7 @@ void NCellularData::fillDualHomologyCC()
 	  for (unsigned long j=0; j < 2; j++) {
 	    vrt = edg->getVertex(j); if (!vrt->isBoundary() && !vrt->isIdeal())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri3->vertexIndex( vrt ) ) - dcIx[D].begin();
+	      J = dcIxLookup( vrt );
 	      tet = edg->getEmbedding(0).getTetrahedron(); // our ambient tetrahedron
 	      // sign...
 	      NPerm4 edginc( edg->getEmbedding(0).getVertices() );
@@ -815,14 +815,14 @@ void NCellularData::fillDualHomologyCC()
  * and [] objects via their dual cellular orientations, with <> beating [] when they compete. 
  * if unlabelled by [] or <> we choose orientations using dim4Tetrahedron::getEdgeMapping
  */
-void fillMixedHomologyCC(const Dim4Triangulation* tri, 
-     const unsigned long numMixCells[5], const unsigned long numNonIdealCells[5], 
-     const unsigned long numIdealCells[4], 
-     const std::vector< std::vector< unsigned long > > &icIx, 
-     const std::vector< std::vector< unsigned long > > &nicIx, 
-     std::vector< NMatrixInt* > &mCC)
+void NCellularData::fillMixedHomologyCC()
 {    
- for (unsigned i=1; i<5; i++) // mCC[i]
+ ccMapType* CC(NULL); // pointer to an NSparseGrid< coverFacetData > 
+ NGroupExpression wordle; // temp
+
+ if (tri4!=NULL)
+  {
+   for (unsigned i=1; i<5; i++) // mCC[i]
         mCC[i] = new NMatrixInt(numMixCells[i-1], numMixCells[i]);
     mCC[0] = new NMatrixInt(1, numMixCells[0]);
     mCC[5] = new NMatrixInt(numMixCells[4], 1);
@@ -837,212 +837,304 @@ void fillMixedHomologyCC(const Dim4Triangulation* tri,
    unsigned long ri5 = ri4 + numNonIdealCells[4];
    unsigned long ci1 = 2*numNonIdealCells[1];      unsigned long ci2 = ci1 + 3*numNonIdealCells[2]; 
    unsigned long ci3 = ci2 + 4*numNonIdealCells[3];unsigned long ci4 = ci3 + 5*numNonIdealCells[4];
-   unsigned long D = 1; // outer loop the column parameter. We start with mCC[1]
 
+   unsigned long D = 1; // outer loop the column parameter. We start with mCC[1]
+   CC = new ccMapType(2);
    for (unsigned long j=0; j<2*numNonIdealCells[1]; j++)
 	{ // j % 2  mCC[D]->entry( *, j )
-	 edg = tri->getEdge(nicIx[1][j/2]); vrt = edg->getVertex( j%2 );
+	 edg = tri4->getEdge(nicIx[1][j/2]); vrt = edg->getVertex( j%2 );
 	 if (vrt->isIdeal())
-	  { I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
-            mCC[D]->entry( ri5 + I, j ) += 1; }
+	  { 
+            I = icIxLookup( edg, j%2 );
+            mCC[D]->entry( ri5 + I, j ) += 1; 
+
+            // TODO fill wordle
+            CC->setEntry( NMultiIndex( j, 0 ),  
+                          coverFacetData( ri5 + I, 1, wordle ) );
+          }
          else
-          { I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri->vertexIndex( vrt ) ) - nicIx[D-1].begin();
-	    mCC[D]->entry( I, j ) += ( (j%2)==0 ? -1 : 1 ); }  
+          { 
+            I = nicIxLookup( vrt );
+	    mCC[D]->entry( I, j ) += ( (j%2)==0 ? -1 : 1 ); 
+            // TODO fill wordle
+            CC->setEntry( NMultiIndex( j, 0 ),  
+                          coverFacetData( I, ( (j%2)==0 ? -1 : 1 ), wordle ) ); 
+          }  
          mCC[D]->entry( ri1 + (j/2), j ) += ( (j%2)==0 ? 1 : -1); // vertex on the edge
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( j, 1 ),  
+                       coverFacetData( ri1 + (j/2), ( (j%2)==0 ? 1 : -1 ), wordle ) ); 
 	}
 
    for (unsigned long j=0; j<3*numNonIdealCells[2]; j++)
 	{ // j % 3  mCC[D]->entry( *, ci1+j )
-	 fac = tri->getFace(nicIx[2][j/3]); edg = fac->getEdge( j%3 );
-	 I = lower_bound( nicIx[D].begin(), nicIx[D].end(), tri->edgeIndex( edg ) ) - nicIx[D].begin();
+	 fac = tri4->getFace(nicIx[2][j/3]); edg = fac->getEdge( j%3 );
+	 I = nicIxLookup( edg );
 	 mCC[D]->entry( ri1 + I, ci1 + j ) += 1;
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( ci1 + j, 0 ),  
+                       coverFacetData( ri1 + I, 1, wordle ) ); 
 	 mCC[D]->entry( ri2 + (j/3), ci1 + j ) -= 1; 
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( ci1 + j, 1 ),  
+                       coverFacetData( ri2 + (j/3), -1, wordle ) ); 
 	}
 
    for (unsigned long j=0; j<4*numNonIdealCells[3]; j++)
 	{ // j % 4  mCC[D]->entry( *, ci2+j )
-	 tet = tri->getTetrahedron(nicIx[3][j/4]); fac = tet->getFace( j%4 );
-	 I = lower_bound( nicIx[D+1].begin(), nicIx[D+1].end(), tri->faceIndex( fac ) ) - nicIx[D+1].begin();
+	 tet = tri4->getTetrahedron(nicIx[3][j/4]); fac = tet->getFace( j%4 );
+	 I = nicIxLookup( fac );
 	 mCC[D]->entry( ri2 + I, ci2 + j ) += 1;
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( ci2 + j, 0 ),  
+                       coverFacetData( ri2 + I, 1, wordle ) ); 
 	 mCC[D]->entry( ri3 + (j/4), ci2 + j ) -= 1;
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( ci2 + j, 1 ),  
+                       coverFacetData( ri3 + (j/4), -1, wordle ) ); 
 	}
 
    for (unsigned long j=0; j<5*numNonIdealCells[4]; j++) 
 	{ // j % 5  mCC[D]->entry( *, ci3+j )            
-	 pen = tri->getPentachoron(nicIx[4][j/5]); tet = pen->getTetrahedron( j%5 );
+	 pen = tri4->getPentachoron(nicIx[4][j/5]); tet = pen->getTetrahedron( j%5 );
 	 int sig( (tet->getEmbedding(0).getPentachoron() == pen) &&
 		  (tet->getEmbedding(0).getTetrahedron() == (j%5)) ? 1 : -1 ); 
-	 I = lower_bound( nicIx[D+2].begin(), nicIx[D+2].end(), tri->tetrahedronIndex( tet ) ) - nicIx[D+2].begin();
+	 I = nicIxLookup( tet );
 	 mCC[D]->entry( ri3 + I, ci3 + j ) += sig;
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( ci3 + j, 0 ),  
+                       coverFacetData( ri3 + I, sig, wordle ) ); 
 	 mCC[D]->entry( ri4 + (j/5), ci3 + j ) -= sig;	
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( ci3 + j, 1 ),  
+                       coverFacetData( ri4 + (j/5), -sig, wordle ) ); 
 	}
 
    for (unsigned long j=0; j<numIdealCells[D]; j++)
 	{ // j%3    mCC[D]->entry( *, ci4+j )
-	 fac = tri->getFace( icIx[D][j]/(D+2) );
+	 fac = tri4->getFace( icIx[D][j]/(D+2) );
 	 for (unsigned long i=1; i<(D+2); i++)
 	  {          
 	  NPerm5 P( fac->getEdgeMapping( (icIx[D][j] + i) % (D+2) ) );
-	  unsigned long iX( (D+1)*tri->edgeIndex( fac->getEdge( (icIx[D][j] + i) % (D+2) ) ) // of corresp ideal 0-cell
-			            + ( P.preImageOf(icIx[D][j] % (D+2)) ) );
-	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+	  I = icIxLookup( fac->getEdge( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
 	  mCC[D]->entry( ri5 + I, ci4 + j ) -= P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( ci4 + j, i ),  
+                        coverFacetData( ri5 + I, -P.sign(), wordle ) ); 
 	  }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, MIX_coord), CC ) );
 
    ri1 = ci1; ri2 = ci2; ri3 = ci3; ri4 = ci4;
    ci1 = 3*numNonIdealCells[2]; ci2 = ci1 + 6*numNonIdealCells[3]; ci3 = ci2 + 10*numNonIdealCells[4];
+   CC = new ccMapType(2);
    D = 2; // mCC[2]
    for (unsigned long j=0; j<3*numNonIdealCells[2]; j++) // 4 boundary facets, 5 if vrt ideal
 	{ // j%3,  mCC[D]->entry( *, j )
-	 fac = tri->getFace(nicIx[2][j/3]); vrt = fac->getVertex( j%3 ); 
+	 fac = tri4->getFace(nicIx[2][j/3]); vrt = fac->getVertex( j%3 ); 
          for (unsigned i=1; i<3; i++)
 	  {
 	   edg = fac->getEdge( (j+i)%3 ); NPerm5 edginc = fac->getEdgeMapping( (j+i)%3 );
-	   I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri->edgeIndex( edg ) ) - nicIx[D-1].begin();
+	   I = nicIxLookup( edg );
 	   mCC[D]->entry( 2*I + ( edginc.sign()==1 ? 2-i : i-1 ), j ) += edginc.sign();
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, i%3 ),  
+                         coverFacetData( 2*I + ( edginc.sign()==1 ? 2-i : i-1 ), edginc.sign(), wordle ) ); 
+
            mCC[D]->entry( ri1 + 3*(j/3)+( (j+i)%3 ), j ) += ( i==1 ? 1 : -1 );
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, 3+(i%3) ),  
+                         coverFacetData( ri1 + 3*(j/3)+( (j+i)%3 ), ( i==1 ? 1 : -1 ), wordle ) ); 
 	  }
 	 if (vrt->isIdeal()) 
 	  {
-	   I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
+	   I = icIxLookup( fac, j%3 );
 	   mCC[D]->entry( ri4 + I, j ) += 1 ;
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, 0 ),  
+                         coverFacetData( ri4 + I, 1, wordle ) ); 
 	  }
 	}
 
    for (unsigned long j=0; j<6*numNonIdealCells[3]; j++)  // 6 facets in a tetrahedron
 	{ // j%6,  mCC[D]->entry( *, ci1+j )
-	 tet = tri->getTetrahedron(nicIx[3][j/6]);   
+	 tet = tri4->getTetrahedron(nicIx[3][j/6]);   
 	 NPerm5 edginc = tet->getEdgeMapping( j%6 ); 
 
 	for (unsigned long i=0; i<2; i++)
 	 {
           fac = tet->getFace( edginc[i+2] ); NPerm5 facinc = tet->getFaceMapping( edginc[i+2] );
-	  I = lower_bound( nicIx[D].begin(), nicIx[D].end(), tri->faceIndex( fac ) ) - nicIx[D].begin();
+	  I = nicIxLookup( fac );
           mCC[D]->entry( ri1 + 3*I + (facinc.preImageOf(edginc[3-i])), ci1 + j ) += 
 		( i == 0 ? 1 : -1 ); // face part
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( ci1 + j, i%2 ),  
+                        coverFacetData( ri1 + 3*I + (facinc.preImageOf(edginc[3-i])), ( i == 0 ? 1 : -1 ), wordle ) ); 
 	  mCC[D]->entry( ri2 + 4*(j/6)+edginc[i+2], ci1 + j ) += ( i == 0 ? 1 : -1 ); // tet part
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( ci1 + j, 2+(i%2) ),  
+                        coverFacetData( ri2 + 4*(j/6)+edginc[i+2], ( i == 0 ? 1 : -1 ), wordle ) ); 
 	 }
 	}
 
    for (unsigned long j=0; j<10*numNonIdealCells[4]; j++) // dual to faces of pentachoron
 	{ // j%10, mCC[D]->entry( *, ci2+j )
-	 pen = tri->getPentachoron(nicIx[4][j/10]); NPerm5 facinc = pen->getFaceMapping( j%10 );
+	 pen = tri4->getPentachoron(nicIx[4][j/10]); NPerm5 facinc = pen->getFaceMapping( j%10 );
 	 for (unsigned long i=0; i<2; i++)
 	  {
 	   tet = pen->getTetrahedron( facinc[i+3] ); NPerm5 tetinc = pen->getTetrahedronMapping( facinc[i+3] );
-	   I = lower_bound( nicIx[D+1].begin(), nicIx[D+1].end(), tri->tetrahedronIndex( tet ) ) - nicIx[D+1].begin();
+	   I = nicIxLookup( tet );
 	   mCC[D]->entry( ri2 + 4*I + tetinc.preImageOf(facinc[4-i]), ci2 + j ) += 
 		(i == 0 ? 1 : -1 ); // tet part
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( ci2 + j, i%2 ),  
+                         coverFacetData( ri2 + 4*I + tetinc.preImageOf(facinc[4-i]), ( i == 0 ? 1 : -1 ), wordle ) ); 
 	   int sig( (tet->getEmbedding(0).getPentachoron() == pen) &&
 		    (tet->getEmbedding(0).getTetrahedron() == facinc[i+3]) ? 1 : -1);
 	   mCC[D]->entry( ri3 + 5*(j/10) + facinc[i+3], ci2 + j ) += sig*(i == 0 ? 1 : -1); // pen part
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( ci2 + j, 2+(i%2) ),  
+                         coverFacetData( ri3 + 5*(j/10) + facinc[i+3], sig*(i == 0 ? 1 : -1), wordle ) ); 
 	  }
 	}
 
    for (unsigned long j=0; j<numIdealCells[2]; j++)
 	{ // j$3,  mCC[D]->entry( *, ci3+j )
-	 tet = tri->getTetrahedron( icIx[D][j]/(D+2) );
+	 tet = tri4->getTetrahedron( icIx[D][j]/(D+2) );
 	 for (unsigned long i=1; i<D+2; i++)
 	  {
            NPerm5 facinc( tet->getFaceMapping( (icIx[D][j] + i) % (D+2)) );
-	   unsigned long iX( (D+1)*tri->faceIndex( tet->getFace( (icIx[D][j] + i) % (D+2) ) ) 
-			            + ( facinc.preImageOf(icIx[D][j] % (D+2)) ) );
-	   I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+	   I = icIxLookup( tet->getFace( (icIx[D][j] + i) % (D+2) ), facinc.preImageOf(icIx[D][j] % (D+2)) );
 	   mCC[D]->entry( ri4 + I, ci3 + j ) -= facinc.sign();
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( ci3 + j, i ),  
+                         coverFacetData( ri4 + I, -facinc.sign(), wordle ) ); 
 	  }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, MIX_coord), CC ) );
 
    ri1 = ci1; ri2 = ci2; ri3 = ci3;
    ci1 = 4*numNonIdealCells[3]; ci2 = ci1 + 10*numNonIdealCells[4];
+   CC = new ccMapType(2);
    D = 3; // mCC[3]
    for (unsigned long j=0; j<4*numNonIdealCells[3]; j++)
 	{ // j%4, mCC[D]->entry( *, j )
-	 tet = tri->getTetrahedron( nicIx[D][j/4] ); vrt = tet->getVertex( j%4 );
+	 tet = tri4->getTetrahedron( nicIx[D][j/4] ); vrt = tet->getVertex( j%4 );
 	 for (unsigned long i=1; i<4; i++) // boundary facets corresponding to face j+i&4 and edge j%4, (j+1)%4.
 	  {
 	   fac = tet->getFace( (j+i)%4 ); NPerm5 facinc = tet->getFaceMapping( (j+i)%4 );  // tet index wrong?
-	   I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri->faceIndex( fac ) ) - nicIx[D-1].begin();
+	   I = nicIxLookup( fac );
 	   mCC[D]->entry( 3*I + facinc.preImageOf(j%4), j ) += facinc.sign(); // face
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, i%4 ),  
+                         coverFacetData( 3*I + facinc.preImageOf(j%4), facinc.sign(), wordle ) ); 
            NPerm5 edginc = tet->getEdgeMapping( NEdge::edgeNumber[ j%4 ][ (j+i)%4 ] );
 	   mCC[D]->entry( ri1 + 6*(j/4) + NEdge::edgeNumber[ j%4 ][ (j+i)%4 ], j) += 
 	     (edginc[1] == (j%4) ? 1 : -1) * edginc.sign(); // edge
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, 4+(i%4) ),  coverFacetData( ri1 + 6*(j/4) + NEdge::edgeNumber[ j%4 ][ (j+i)%4 ], 
+                         (edginc[1] == (j%4) ? 1 : -1) * edginc.sign(), wordle ) ); 
 	  }
 	 if (vrt->isIdeal())
 	  {
-	   I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
+	   I = icIxLookup( tet, j%4 );
 	   mCC[D]->entry( ri3 + I, j ) += 1 ;
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, 0 ),  
+                         coverFacetData( ri3 + I, 1, wordle ) ); 
 	  }
 	}
 
    for (unsigned long j=0; j<10*numNonIdealCells[4]; j++) 
 	{ // j%10, mCC[D]->entry( *, ci1 + j )
-	 pen = tri->getPentachoron( nicIx[D][j/10] ); NPerm5 edginc( pen->getEdgeMapping( j%10 ) );
+	 pen = tri4->getPentachoron( nicIx[D][j/10] ); NPerm5 edginc( pen->getEdgeMapping( j%10 ) );
 	 for (unsigned long i=2; i<5; i++) // boundary facets have 3 parts dual to edges in tets, 3 dual to faces in pen
 	  { 
 	   tet = pen->getTetrahedron( edginc[i] ); NPerm5 tetinc( pen->getTetrahedronMapping( edginc[i] ) ); 
 	   NPerm5 edgtetinc( tet->getEdgeMapping( // how edg sits in tet
 		NEdge::edgeNumber[tetinc.preImageOf(edginc[0])][tetinc.preImageOf(edginc[1])] ) );
 	   // part dual to an edge in tet.
-	   I = lower_bound( nicIx[D].begin(), nicIx[D].end(), tri->tetrahedronIndex( tet ) ) - nicIx[D].begin();
+	   I = nicIxLookup( tet );
 	   mCC[D]->entry( ri1 + 6*I + NEdge::edgeNumber[tetinc.preImageOf(edginc[0])][tetinc.preImageOf(edginc[1])], 
 		ci1 + j ) -= ( (tetinc*edgtetinc).inverse()*edginc).sign(); 
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( ci1 + j, i%5 ),  coverFacetData( 
+                ri1 + 6*I + NEdge::edgeNumber[tetinc.preImageOf(edginc[0])][tetinc.preImageOf(edginc[1])], 
+                -( (tetinc*edgtetinc).inverse()*edginc).sign(), wordle ) ); 
 	   // part dual to a face in pen
 	   NPerm5 facinc( pen->getFaceMapping( Dim4Face::faceNumber[edginc[0]][edginc[1]][edginc[i]] ) );
 	   NPerm5 delta( edginc.inverse()*facinc*NPerm5( 2, facinc.preImageOf(edginc[i]) ) );
 	   delta = delta * NPerm5(0, delta[0]);
 	   mCC[D]->entry( ri2 + 10*(j/10) + Dim4Face::faceNumber[edginc[0]][edginc[1]][edginc[i]], ci1 + j ) 
 		+= delta.sign(); // tetinc.inverse()*edginc sends 0,1 into 0,1,2 and
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( ci1+j, 5+(i%5) ), coverFacetData( ri2 + 10*(j/10) + 
+                Dim4Face::faceNumber[edginc[0]][edginc[1]][edginc[i]], delta.sign(), wordle ) ); 
 	  } 
 	}
 
-   for (unsigned long j=0; j<numIdealCells[3]; j++)
+   for (unsigned long j=0; j<numIdealCells[D]; j++)
 	{ // j%3, mCC[D]->entry( *, ci2 + j )
-	pen = tri->getPentachoron(icIx[D][j]/(D+2));
+	pen = tri4->getPentachoron(icIx[D][j]/(D+2));
 	for (unsigned long i=1; i < D+2; i++)
 	 {
           NPerm5 P( pen->getTetrahedronMapping( (icIx[D][j] + i) % (D+2)) );
-	  unsigned long iX( (D+1)*tri->tetrahedronIndex( pen->getTetrahedron( (icIx[D][j] + i) % (D+2) ) ) 
-			            + ( P.preImageOf(icIx[D][j] % (D+2)) )     );
-	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+	  I = icIxLookup( pen->getTetrahedron( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
 	  mCC[D]->entry(ri3 + I,  ci2 + j) -= P.sign(); 
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( ci2 + j, i), 
+                        coverFacetData( ri3 + I, -P.sign(), wordle ) ); 
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, MIX_coord), CC ) );
 
    ri1 = ci1; ri2 = ci2;
+   CC = new ccMapType(2);
    D = 4; // mCC[4]
    for (unsigned long j=0; j<5*numNonIdealCells[4]; j++)
 	{ // j%5, mCC[D]->entry( *, j )
-	  pen = tri->getPentachoron( nicIx[D][j/5] ); vrt = pen->getVertex( j%5 );
+	  pen = tri4->getPentachoron( nicIx[D][j/5] ); vrt = pen->getVertex( j%5 );
 	  for (unsigned long i=1; i<5; i++) 
 	   {
 	    // standard boundary part opposite tet (j+i)%5 in facet j%5 of pen j/5
 	    tet = pen->getTetrahedron( (j+i)%5 ); NPerm5 tetinc( pen->getTetrahedronMapping( (j+i)%5 ) );
-	    I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri->tetrahedronIndex( tet ) ) - nicIx[D-1].begin();
+	    I = nicIxLookup( tet );
 	    mCC[D]->entry( 4*I + tetinc.preImageOf( j%5 ), j ) += tetinc.sign();
+            // TODO fill wordle
+            CC->setEntry( NMultiIndex( j, i%5 ), 
+                          coverFacetData( 4*I + tetinc.preImageOf( j%5 ), tetinc.sign(), wordle ) ); 
 	    // part dual to edges 0,i
 	    edg = pen->getEdge( Dim4Edge::edgeNumber[j%5][(i+j)%5] );
 	    NPerm5 edginc( pen->getEdgeMapping( Dim4Edge::edgeNumber[j%5][(i+j)%5] ) );
 	    mCC[D]->entry( ri1 + 10*(j/5) + Dim4Edge::edgeNumber[j%5][(i+j)%5], j ) += 
 		( (edginc[1] == (j%5)) ? 1 : -1)*edginc.sign(); 
+            // TODO fill wordle
+            CC->setEntry( NMultiIndex( j, 5+(i%5) ), 
+                          coverFacetData( ri1 + 10*(j/5) + Dim4Edge::edgeNumber[j%5][(i+j)%5], 
+                          ( (edginc[1] == (j%5)) ? 1 : -1)*edginc.sign(), wordle ) ); 
 	   }
 	  // potentially ideal boundary part
 	  if (vrt->isIdeal()) 
 		{
-		 I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
+		 I = icIxLookup( pen, j%5 );
 		 mCC[D]->entry( ri2 + I, j ) += 1;
+                 // TODO fill wordle
+                 CC->setEntry( NMultiIndex( j, 0 ), 
+                               coverFacetData( ri2 + I, 1, wordle ) ); 
 	 	}
 	}   
-}
-
-
-void fillMixedHomologyCC(const NTriangulation* tri, 
-     const unsigned long numMixCells[5], const unsigned long numNonIdealCells[5], 
-     const unsigned long numIdealCells[4], 
-     const std::vector< std::vector< unsigned long > > &icIx, 
-     const std::vector< std::vector< unsigned long > > &nicIx, 
-     std::vector< NMatrixInt* > &mCC)
-{    
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, MIX_coord), CC ) );
+ }
+  else // tri3 != NULL
+ {    
  for (unsigned i=1; i<4; i++) // mCC[i]
         mCC[i] = new NMatrixInt(numMixCells[i-1], numMixCells[i]);
     mCC[0] = new NMatrixInt(1, numMixCells[0]);
@@ -1056,124 +1148,193 @@ void fillMixedHomologyCC(const NTriangulation* tri,
    unsigned long ri3 = ri2 + numNonIdealCells[2];  unsigned long ri4 = ri3 + numNonIdealCells[3];
    unsigned long ci1 = 2*numNonIdealCells[1];      unsigned long ci2 = ci1 + 3*numNonIdealCells[2]; 
    unsigned long ci3 = ci2 + 4*numNonIdealCells[3];
-   unsigned long D = 1; // outer loop the column parameter. We start with mCC[1]
 
+   CC = new ccMapType(2);
+   unsigned long D = 1; // outer loop the column parameter. We start with mCC[1]
    for (unsigned long j=0; j<2*numNonIdealCells[1]; j++)
 	{ // j % 2  mCC[D]->entry( *, j )
-	 edg = tri->getEdge(nicIx[1][j/2]); vrt = edg->getVertex( j%2 );
+	 edg = tri3->getEdge(nicIx[1][j/2]); vrt = edg->getVertex( j%2 );
 	 if (vrt->isIdeal())
-	  { I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
-            mCC[D]->entry( ri4 + I, j ) += 1; }
+	  { 
+            I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
+            mCC[D]->entry( ri4 + I, j ) += 1; 
+            // TODO fill wordle
+            CC->setEntry( NMultiIndex( j, 0 ),
+                          coverFacetData( ri4 + I, 1, wordle ) );
+          }
          else
-          { I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri->vertexIndex( vrt ) ) - nicIx[D-1].begin();
-	    mCC[D]->entry( I, j ) += ( (j%2)==0 ? -1 : 1 ); }  
-         mCC[D]->entry( ri1 + (j/2), j ) += ( (j%2)==0 ? 1 : -1); // vertex on the edge
-	}
+          { 
+            I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri3->vertexIndex( vrt ) ) - nicIx[D-1].begin();
+	    mCC[D]->entry( I, j ) += ( (j%2)==0 ? -1 : 1 ); 
+            // TODO fill wordle
+            CC->setEntry( NMultiIndex( j, 0 ),
+                          coverFacetData( I, ( (j%2)==0 ? -1 : 1 ), wordle ) );
+          }
+            mCC[D]->entry( ri1 + (j/2), j ) += ( (j%2)==0 ? 1 : -1); // vertex on the edge
+            // TODO fill wordle
+            CC->setEntry( NMultiIndex( j, 1 ),
+                          coverFacetData( ri1 + (j/2), ( (j%2)==0 ? 1 : -1 ), wordle ) );
+  	}
 
    for (unsigned long j=0; j<3*numNonIdealCells[2]; j++)
 	{ // j % 3  mCC[D]->entry( *, ci1+j )
-	 fac = tri->getFace(nicIx[2][j/3]); edg = fac->getEdge( j%3 );
-	 I = lower_bound( nicIx[D].begin(), nicIx[D].end(), tri->edgeIndex( edg ) ) - nicIx[D].begin();
+	 fac = tri3->getFace(nicIx[2][j/3]); edg = fac->getEdge( j%3 );
+	 I = lower_bound( nicIx[D].begin(), nicIx[D].end(), tri3->edgeIndex( edg ) ) - nicIx[D].begin();
 
 	 mCC[D]->entry( ri1 + I, ci1 + j ) += 1;
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( ci1 + j, 0 ),
+                       coverFacetData( ri1 + I, 1, wordle ) );
 	 mCC[D]->entry( ri2 + (j/3), ci1 + j ) -= 1; 
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( ci1 + j, 1 ),
+                       coverFacetData( ri2 + (j/3), -1, wordle ) );
 	}
 
    for (unsigned long j=0; j<4*numNonIdealCells[3]; j++)
 	{ // j % 4  mCC[D]->entry( *, ci2+j )
-	 tet = tri->getTetrahedron(nicIx[3][j/4]); fac = tet->getFace( j%4 );
+	 tet = tri3->getTetrahedron(nicIx[3][j/4]); fac = tet->getFace( j%4 );
 	 int sig( (fac->getEmbedding(0).getTetrahedron() == tet) &&
 		  (fac->getEmbedding(0).getFace() == (j%4)) ? 1 : -1 ); 
-	 I = lower_bound( nicIx[D+1].begin(), nicIx[D+1].end(), tri->faceIndex( fac ) ) - nicIx[D+1].begin();
+	 I = lower_bound( nicIx[D+1].begin(), nicIx[D+1].end(), tri3->faceIndex( fac ) ) - nicIx[D+1].begin();
 
 	 mCC[D]->entry( ri2 + I, ci2 + j ) += sig;
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( ci2 + j, 0 ),
+                       coverFacetData( ri2 + I, sig, wordle ) );
 	 mCC[D]->entry( ri3 + (j/4), ci2 + j ) -= sig;
+         // TODO fill wordle
+         CC->setEntry( NMultiIndex( ci2 + j, 1 ),
+                       coverFacetData( ri3 + (j/4), -sig, wordle ) );
 	}
 
    for (unsigned long j=0; j<numIdealCells[D]; j++)
 	{ // j%3    mCC[D]->entry( *, ci4+j )
-	 fac = tri->getFace( icIx[D][j]/(D+2) );
+	 fac = tri3->getFace( icIx[D][j]/(D+2) );
 	 for (unsigned long i=1; i<(D+2); i++)
 	  {          
 	  NPerm4 P( fac->getEdgeMapping( (icIx[D][j] + i) % (D+2) ) );
-	  unsigned long iX( (D+1)*tri->edgeIndex( fac->getEdge( (icIx[D][j] + i) % (D+2) ) ) // of corresp ideal 0-cell
+	  unsigned long iX( (D+1)*tri3->edgeIndex( fac->getEdge( (icIx[D][j] + i) % (D+2) ) ) // of corresp ideal 0-cell
 			            + ( P.preImageOf(icIx[D][j] % (D+2)) ) );
 	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
 	  mCC[D]->entry( ri4 + I, ci3 + j ) -= P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( ci3 + j, i ),
+                        coverFacetData( ri4 + I, -P.sign(), wordle ) );
 	  }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, MIX_coord), CC ) );
 
    ri1 = ci1; ri2 = ci2; ri3 = ci3; 
    ci1 = 3*numNonIdealCells[2]; ci2 = ci1 + 6*numNonIdealCells[3]; 
+   CC = new ccMapType(2);
    D = 2; // mCC[2]
    for (unsigned long j=0; j<3*numNonIdealCells[2]; j++) // 4 boundary facets, 5 if vrt ideal
 	{ // j%3,  mCC[D]->entry( *, j )
-	 fac = tri->getFace(nicIx[2][j/3]); vrt = fac->getVertex( j%3 ); 
+	 fac = tri3->getFace(nicIx[2][j/3]); vrt = fac->getVertex( j%3 ); 
          for (unsigned i=1; i<3; i++)
 	  {
 	   edg = fac->getEdge( (j+i)%3 ); NPerm4 edginc = fac->getEdgeMapping( (j+i)%3 );
-	   I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri->edgeIndex( edg ) ) - nicIx[D-1].begin();
-
+	   I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri3->edgeIndex( edg ) ) - nicIx[D-1].begin();
 	   mCC[D]->entry( 2*I + ( edginc.sign()==1 ? 2-i : i-1 ), j ) += edginc.sign();
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, (i%3) ),
+                         coverFacetData( 2*I + ( edginc.sign()==1 ? 2-i : i-1 ), edginc.sign(), wordle ) );
+
            mCC[D]->entry( ri1 + 3*(j/3)+( (j+i)%3 ), j ) += ( i==1 ? 1 : -1 );
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, 3+(i%3) ),
+                         coverFacetData( ri1 + 3*(j/3)+( (j+i)%3 ), ( i==1 ? 1 : -1 ), wordle ) );
 	  }
 	 if (vrt->isIdeal()) 
 	  {
 	   I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
 	   mCC[D]->entry( ri3 + I, j ) += 1 ;
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, 0 ),
+                         coverFacetData( ri3 + I, 1, wordle ) );
 	  }
 	}
 
    for (unsigned long j=0; j<6*numNonIdealCells[3]; j++)  // 6 facets in a tetrahedron
 	{ // j%6,  mCC[D]->entry( *, ci1+j )
-	 tet = tri->getTetrahedron(nicIx[3][j/6]); NPerm4 edginc = tet->getEdgeMapping( j%6 ); 
+	 tet = tri3->getTetrahedron(nicIx[3][j/6]); NPerm4 edginc = tet->getEdgeMapping( j%6 ); 
 	for (unsigned long i=0; i<2; i++)
 	 {
           fac = tet->getFace( edginc[i+2] ); NPerm4 facinc = tet->getFaceMapping( edginc[i+2] );
 	  int sig( (fac->getEmbedding(0).getTetrahedron() == tet) &&
 		   (fac->getEmbedding(0).getFace() == edginc[i+2]) ? 1 : -1 );
-          I = lower_bound( nicIx[D].begin(), nicIx[D].end(), tri->faceIndex( fac ) ) - nicIx[D].begin(); 
+          I = lower_bound( nicIx[D].begin(), nicIx[D].end(), tri3->faceIndex( fac ) ) - nicIx[D].begin(); 
 
           mCC[D]->entry( ri1 + 3*I + (facinc.preImageOf(edginc[3-i])), ci1 + j ) += 
 	               ( i == 0 ? 1 : -1 ); // face part
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( ci1 + j, (i%2) ),
+                        coverFacetData( ri1 + 3*I + (facinc.preImageOf(edginc[3-i])), ( i == 0 ? 1 : -1 ), wordle ) );
 	  mCC[D]->entry( ri2 + 4*(j/6)+edginc[i+2], ci1 + j ) += sig*( i == 0 ? 1 : -1 ); // tet part
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( ci1 + j, 2+(i%2) ),
+                        coverFacetData( ri2 + 4*(j/6)+edginc[i+2], sig*( i == 0 ? 1 : -1 ), wordle ) );
 	 }
 	}
 
    for (unsigned long j=0; j<numIdealCells[2]; j++)
 	{ // j$3,  mCC[D]->entry( *, ci3+j )
-	 tet = tri->getTetrahedron( icIx[D][j]/(D+2) );
+	 tet = tri3->getTetrahedron( icIx[D][j]/(D+2) );
 	 for (unsigned long i=1; i<D+2; i++)
 	  {
            NPerm4 facinc( tet->getFaceMapping( (icIx[D][j] + i) % (D+2)) );
-	   unsigned long iX( (D+1)*tri->faceIndex( tet->getFace( (icIx[D][j] + i) % (D+2) ) ) 
+	   unsigned long iX( (D+1)*tri3->faceIndex( tet->getFace( (icIx[D][j] + i) % (D+2) ) ) 
 			            + ( facinc.preImageOf(icIx[D][j] % (D+2)) ) );
 	   I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
 	   mCC[D]->entry( ri3 + I, ci2 + j ) -= facinc.sign();
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( ci2 + j, i ),
+                         coverFacetData( ri3 + I, -facinc.sign(), wordle ) );
 	  }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, MIX_coord), CC ) );
 
    ri1 = ci1; ri2 = ci2; 
+   CC = new ccMapType(2);
    D = 3; // mCC[3]
    for (unsigned long j=0; j<4*numNonIdealCells[3]; j++)
 	{ // j%4, mCC[D]->entry( *, j )
-	 tet = tri->getTetrahedron( nicIx[D][j/4] ); vrt = tet->getVertex( j%4 );
+	 tet = tri3->getTetrahedron( nicIx[D][j/4] ); vrt = tet->getVertex( j%4 );
 	 for (unsigned long i=1; i<4; i++) // boundary facets corresponding to face j+i&4 and edge j%4, (j+1)%4.
 	  {
 	   fac = tet->getFace( (j+i)%4 ); NPerm4 facinc = tet->getFaceMapping( (j+i)%4 );  
-	   I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri->faceIndex( fac ) ) - nicIx[D-1].begin();
+	   I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri3->faceIndex( fac ) ) - nicIx[D-1].begin();
 	   mCC[D]->entry( 3*I + facinc.preImageOf(j%4), j ) += facinc.sign(); // face
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, (i%4) ),
+                         coverFacetData( 3*I + facinc.preImageOf(j%4), facinc.sign(), wordle ) );
 
            NPerm4 edginc = tet->getEdgeMapping( NEdge::edgeNumber[ j%4 ][ (j+i)%4 ] );
 	   mCC[D]->entry( ri1 + 6*(j/4) + NEdge::edgeNumber[ j%4 ][ (j+i)%4 ], j) += 
 	     (edginc[1] == (j%4) ? 1 : -1) * edginc.sign(); // edge
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, 4+(i%4) ),  
+                         coverFacetData( ri1 + 6*(j/4) + NEdge::edgeNumber[ j%4 ][ (j+i)%4 ], 
+                         (edginc[1] == (j%4) ? 1 : -1) * edginc.sign(), wordle ) );
 	  }
 	 if (vrt->isIdeal())
 	  {
 	   I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
 	   mCC[D]->entry( ri2 + I, j ) += 1 ;
+           // TODO fill wordle
+           CC->setEntry( NMultiIndex( j, 0 ),
+                         coverFacetData( ri2 + I, 1, wordle ) );
 	  }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, MIX_coord), CC ) );
+  } // tri3 != NULL
 }
 
 void fillBoundaryHomologyCC(const Dim4Triangulation* tri, 
@@ -1566,9 +1727,7 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
    buildMaximalTree(); 
    // TODO: split routines below into ones that use genCC, and ones derived from it. 
    //       the derived types will not be computed here.         
-   fillStandardHomologyCC();   fillDualHomologyCC();
-
-   fillMixedHomologyCC( tri4, numMixCells, numNonIdealCells, numIdealCells, icIx, nicIx, mCC );
+   fillStandardHomologyCC();   fillDualHomologyCC(); fillMixedHomologyCC();
 
    fillBoundaryHomologyCC( tri4, numStandardBdryCells, numIdealCells, numNonIdealBdryCells, bcIx, icIx, sbCC );
 
@@ -1600,9 +1759,7 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
    buildExtraNormalData();
    buildMaximalTree(); 
 
-   fillStandardHomologyCC();   fillDualHomologyCC();
-
-   fillMixedHomologyCC( tri3, numMixCells, numNonIdealCells, numIdealCells, icIx, nicIx, mCC );
+   fillStandardHomologyCC();   fillDualHomologyCC();    fillMixedHomologyCC();
 
    fillBoundaryHomologyCC( tri3, numStandardBdryCells, numIdealCells, numNonIdealBdryCells, bcIx, icIx, sbCC );
 

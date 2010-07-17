@@ -798,6 +798,7 @@ private:
     */
    void fillStandardHomologyCC();
    void fillDualHomologyCC();
+   void fillMixedHomologyCC();
 
    /**
     *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges normalsDim3BdryEdges normalsDim3BdryVertices
