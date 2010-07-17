@@ -599,9 +599,15 @@ void NCellularData::fillStandardHomologyCC()
  * the parity of e^{-1}\circ f \circ (transposition n-j+1, face number of E in F) as a permutation
  * of the set {n-j+1, n-j+2, ..., n}
  */
-void fillDualHomologyCC(const Dim4Triangulation* tri, const unsigned long numDualCells[5], 
-	const std::vector< std::vector< unsigned long > > &dcIx, std::vector< NMatrixInt* > &dCC)
+void NCellularData::fillDualHomologyCC()
+//const Dim4Triangulation* tri, const unsigned long numDualCells[5], 
+//	const std::vector< std::vector< unsigned long > > &dcIx, std::vector< NMatrixInt* > &dCC)
 {
+ ccMapType* CC(NULL); // pointer to an NSparseGrid< coverFacetData > 
+ NGroupExpression wordle; // temp
+
+ if (tri4 != NULL)
+ {
     for (unsigned i=1; i<5; i++) // dCC[i]
         dCC[i] = new NMatrixInt(numDualCells[i-1], numDualCells[i]);
     dCC[0] = new NMatrixInt(1, numDualCells[0]);
@@ -612,25 +618,34 @@ void fillDualHomologyCC(const Dim4Triangulation* tri, const unsigned long numDua
 	const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
     unsigned long J;
 
+    CC = new ccMapType(2);
     unsigned long D = 1; // outer loop the row parameter. We start with dCC[1]
     for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
-	{ pen = tri->getPentachoron( dcIx[D-1][i] );
+	{ pen = tri4->getPentachoron( dcIx[D-1][i] );
 	  for (unsigned long j=0; j < 5; j++) {
 	    tet = pen->getTetrahedron(j);  if (!tet->isBoundary())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->tetrahedronIndex( tet ) ) - dcIx[D].begin();
-	      dCC[D]->entry( i, J ) += ( ( (tet->getEmbedding(1).getPentachoron() == pen) && 
-				           (tet->getEmbedding(1).getTetrahedron() == j) ) ? +1 : -1 );
+	      J = dcIxLookup( tet );
+              int sig( ( (tet->getEmbedding(1).getPentachoron() == pen) && 
+ 	                 (tet->getEmbedding(1).getTetrahedron() == j) ) ? +1 : -1 );
+	      dCC[D]->entry( i, J ) += sig;
+              // TODO fill wordle
+              CC->setEntry( NMultiIndex( J, 5*i+j ),  
+                            coverFacetData( i, sig, wordle ) );
 	     } }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, DUAL_coord), CC ) );
 
+    CC = new ccMapType(2);
     D = 2; // dCC[2]
     for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
-	{ tet = tri->getTetrahedron( dcIx[D-1][i] );
+	{ tet = tri4->getTetrahedron( dcIx[D-1][i] );
 	  for (unsigned long j=0; j < 4; j++) {
 	    fac = tet->getFace(j); if (!fac->isBoundary())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->faceIndex( fac ) ) - dcIx[D].begin();
+	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri4->faceIndex( fac ) ) - dcIx[D].begin();
 	      pen = tet->getEmbedding(1).getPentachoron(); // our ambient pentachoron
 	      // the natural inclusions of our tetrahedron and face into the ambient pentachoron
 	      NPerm5 tetinc( tet->getEmbedding(1).getVertices() );
@@ -638,16 +653,23 @@ void fillDualHomologyCC(const Dim4Triangulation* tri, const unsigned long numDua
 		Dim4Face::faceNumber[tetinc[(j<=0) ? 1 : 0]][tetinc[(j<=1)? 2 : 1]][tetinc[(j<=2)? 3 : 2]] 
 						) );
 	      dCC[D]->entry( i, J ) += ( tetinc[4]==facinc[4] ? 1 : -1 );
+              // TODO fill wordle
+              CC->setEntry( NMultiIndex( J, 4*i+j ),   
+                            coverFacetData( i, ( tetinc[4]==facinc[4] ? 1 : -1 ), wordle ) );
 	     } }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, DUAL_coord), CC ) );
 
+    CC = new ccMapType(2);
     D = 3; // dCC[3]
     for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
-	{ fac = tri->getFace( dcIx[D-1][i] );
+	{ fac = tri4->getFace( dcIx[D-1][i] );
 	  for (unsigned long j=0; j < 3; j++) {
 	    edg = fac->getEdge(j); if (!edg->isBoundary())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->edgeIndex( edg ) ) - dcIx[D].begin();
+	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri4->edgeIndex( edg ) ) - dcIx[D].begin();
 	      pen = fac->getEmbedding(0).getPentachoron(); // our ambient pentachoron
 	      // the natural inclusions of our face and edge into the ambient pentachoron
 	      NPerm5 facinc( fac->getEmbedding(0).getVertices() );
@@ -657,29 +679,40 @@ void fillDualHomologyCC(const Dim4Triangulation* tri, const unsigned long numDua
 	      NPerm5 delta( edginc.inverse()*facinc*NPerm5(2, j) ); // we consider this as a permutation of {2,3,4}
               delta = delta * NPerm5( 0, delta[0] ); // kill permutation of {0,1} part of delta
 	      dCC[D]->entry( i, J ) += delta.sign();
+              // TODO fill wordle
+              CC->setEntry( NMultiIndex( J, 3*i+j ),  
+                            coverFacetData( i, delta.sign(), wordle ) );
 	     } }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, DUAL_coord), CC ) );
 
+    CC = new ccMapType(2);
     D = 4; // dCC[4]
     for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
-	{ edg = tri->getEdge( dcIx[D-1][i] );
+	{ edg = tri4->getEdge( dcIx[D-1][i] );
 	  for (unsigned long j=0; j < 2; j++) {
 	    vrt = edg->getVertex(j); if (!vrt->isBoundary() && !vrt->isIdeal())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->vertexIndex( vrt ) ) - dcIx[D].begin();
+	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri4->vertexIndex( vrt ) ) - dcIx[D].begin();
 	      pen = edg->getEmbedding(0).getPentachoron(); // our ambient pentachoron
 	      // sign...
 	      NPerm5 edginc( edg->getEmbedding(0).getVertices() );
 	      NPerm5 vrtinc( pen->getVertexMapping( edginc[j] ) );
 	      NPerm5 delta( vrtinc.inverse()*edginc*NPerm5(1, j) );
 	      dCC[D]->entry( i, J ) += delta.sign();
+              // TODO fill wordle
+              CC->setEntry( NMultiIndex( J, 4*i+j ),  
+                            coverFacetData( i, delta.sign(), wordle ) );
 	     } }
 	}
-}
-
-void fillDualHomologyCC(const NTriangulation* tri, const unsigned long numDualCells[5], 
-	const std::vector< std::vector< unsigned long > > &dcIx, std::vector< NMatrixInt* > &dCC)
-{
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, DUAL_coord), CC ) );
+ }
+ else // tri3 != NULL
+ {
     for (unsigned i=1; i<4; i++) // dCC[i]
         dCC[i] = new NMatrixInt(numDualCells[i-1], numDualCells[i]);
     dCC[0] = new NMatrixInt(1, numDualCells[0]);
@@ -689,25 +722,34 @@ void fillDualHomologyCC(const NTriangulation* tri, const unsigned long numDualCe
     const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long J;
 
+    CC = new ccMapType(2);
     unsigned long D = 1; // outer loop the row parameter. We start with dCC[1]
     for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
-	{ tet = tri->getTetrahedron( dcIx[D-1][i] );
+	{ tet = tri3->getTetrahedron( dcIx[D-1][i] );
 	  for (unsigned long j=0; j < 4; j++) {
 	    fac = tet->getFace(j);  if (!fac->isBoundary())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->faceIndex( fac ) ) - dcIx[D].begin();
-	      dCC[D]->entry( i, J ) += ( ( (fac->getEmbedding(1).getTetrahedron() == tet) && 
-				       (fac->getEmbedding(1).getFace() == j) ) ? +1 : -1 );
+              signed long sig(( ( (fac->getEmbedding(1).getTetrahedron() == tet) && 
+				       (fac->getEmbedding(1).getFace() == j) ) ? +1 : -1 ));
+	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri3->faceIndex( fac ) ) - dcIx[D].begin();
+	      dCC[D]->entry( i, J ) += sig;
+             // TODO fill wordle
+             CC->setEntry( NMultiIndex( J, 4*i+j ),  
+                            coverFacetData( i, sig, wordle ) );
 	     } }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, DUAL_coord), CC ) );
 
+    CC = new ccMapType(2);
     D = 2; // dCC[2]
     for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
-	{ fac = tri->getFace( dcIx[D-1][i] );
+	{ fac = tri3->getFace( dcIx[D-1][i] );
 	  for (unsigned long j=0; j < 3; j++) {
 	    edg = fac->getEdge(j); if (!edg->isBoundary())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->edgeIndex( edg ) ) - dcIx[D].begin();
+	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri3->edgeIndex( edg ) ) - dcIx[D].begin();
 	      tet = fac->getEmbedding(1).getTetrahedron(); // our ambient tetrahedron
 	      // the natural inclusions of our tetrahedron and face into the ambient tetrahedron
 	      NPerm4 facinc( fac->getEmbedding(1).getVertices() );
@@ -715,24 +757,38 @@ void fillDualHomologyCC(const NTriangulation* tri, const unsigned long numDualCe
 		NEdge::edgeNumber[facinc[(j<=0) ? 1 : 0]][facinc[(j<=1)? 2 : 1]] 
 						) );
 	      dCC[D]->entry( i, J ) += ( facinc[3]==edginc[3] ? 1 : -1 );
+             // TODO fill wordle
+             CC->setEntry( NMultiIndex( J, 3*i+j ),  
+                            coverFacetData( i, ( facinc[3]==edginc[3] ? 1 : -1 ), wordle ) );
 	     } }
 	}
- 
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, DUAL_coord), CC ) );
+
+    CC = new ccMapType(2);
     D = 3; // dCC[3]
     for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
-	{ edg = tri->getEdge( dcIx[D-1][i] );
+	{ edg = tri3->getEdge( dcIx[D-1][i] );
 	  for (unsigned long j=0; j < 2; j++) {
 	    vrt = edg->getVertex(j); if (!vrt->isBoundary() && !vrt->isIdeal())
 	     {
-	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri->vertexIndex( vrt ) ) - dcIx[D].begin();
+	      J = lower_bound( dcIx[D].begin(), dcIx[D].end(), tri3->vertexIndex( vrt ) ) - dcIx[D].begin();
 	      tet = edg->getEmbedding(0).getTetrahedron(); // our ambient tetrahedron
 	      // sign...
 	      NPerm4 edginc( edg->getEmbedding(0).getVertices() );
 	      NPerm4 vrtinc( tet->getVertexMapping( edginc[j] ) );
 	      NPerm4 delta( vrtinc.inverse()*edginc*NPerm4(1, j) );
 	      dCC[D]->entry( i, J ) += delta.sign();
+              // TODO fill wordle
+              CC->setEntry( NMultiIndex( J, 2*i+j ),  
+                            coverFacetData( i, delta.sign(), wordle ) );
 	     } }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, DUAL_coord), CC ) );
+ } // end tri3!=NULL
 }
 
 
@@ -1510,9 +1566,7 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
    buildMaximalTree(); 
    // TODO: split routines below into ones that use genCC, and ones derived from it. 
    //       the derived types will not be computed here.         
-   fillStandardHomologyCC();
-
-   fillDualHomologyCC( tri4, numDualCells, dcIx, dCC );
+   fillStandardHomologyCC();   fillDualHomologyCC();
 
    fillMixedHomologyCC( tri4, numMixCells, numNonIdealCells, numIdealCells, icIx, nicIx, mCC );
 
@@ -1546,9 +1600,7 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
    buildExtraNormalData();
    buildMaximalTree(); 
 
-   fillStandardHomologyCC();
-
-   fillDualHomologyCC( tri3, numDualCells, dcIx, dCC );
+   fillStandardHomologyCC();   fillDualHomologyCC();
 
    fillMixedHomologyCC( tri3, numMixCells, numNonIdealCells, numIdealCells, icIx, nicIx, mCC );
 

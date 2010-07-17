@@ -797,6 +797,7 @@ private:
     *  Internal routines to set up chain complexes. 
     */
    void fillStandardHomologyCC();
+   void fillDualHomologyCC();
 
    /**
     *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges normalsDim3BdryEdges normalsDim3BdryVertices
