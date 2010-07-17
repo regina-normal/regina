@@ -204,7 +204,7 @@ public:
   * unique identification of a chain complex when passing requests to NCellularData::chainComplex
   */
  struct ChainComplexLocator {
-        unsigned long dim; 
+        signed long dim; 
         homology_coordinate_system hcs;	
 
 	/**
@@ -552,9 +552,15 @@ private:
      */
     std::vector< NMatrixInt* > sCC, sbCC, srCC, dCC, dbCC, drCC, mCC, mbCC, mrCC;
 
-    // our new generic types for holding all chain complex data
-    typedef NSparseGrid< coverFacetData > ccMapType;
+    // our new generic types for holding all chain complex data 
+    // this will be a 2x2 grid 1st coordinate the cell index and 
+    //  2nd coordinate the indices of the incident faces.
+    public:
+    typedef NSparseGrid< coverFacetData > ccMapType; 
+    // there is a ccMapType for every chain complex (9 coordinate systems, 
+    //  all dimensions)
     typedef std::map< ChainComplexLocator, ccMapType* > ccCollectionType;
+    private:
     // the "master" chain complex for the manifold. 
     ccCollectionType genCC;  
 
@@ -738,6 +744,61 @@ private:
    void buildMaximalTree();
 
    /**
+    *  During initialization many revere-lookups are needed.  We proved them in one place.
+    * See cellulardata.lookups.cpp for implementations.
+    */ 
+   unsigned long nicIxLookup(const NVertex* vrt) const;
+   unsigned long nicIxLookup(const NEdge* edg) const;
+   unsigned long nicIxLookup(const NFace* fac) const;
+   unsigned long nicIxLookup(const NTetrahedron* tet) const;
+   unsigned long nicIxLookup(const Dim4Vertex* vrt) const;
+   unsigned long nicIxLookup(const Dim4Edge* edg) const;
+   unsigned long nicIxLookup(const Dim4Face* fac) const;
+   unsigned long nicIxLookup(const Dim4Tetrahedron* tet) const;
+   unsigned long nicIxLookup(const Dim4Pentachoron* pen) const;
+
+   unsigned long icIxLookup(const NEdge* edg, unsigned long i) const;
+   unsigned long icIxLookup(const NFace* fac, unsigned long i) const;
+   unsigned long icIxLookup(const NTetrahedron* tet, unsigned long i) const;
+   unsigned long icIxLookup(const Dim4Edge* edg, unsigned long i) const;
+   unsigned long icIxLookup(const Dim4Face* fac, unsigned long i) const;
+   unsigned long icIxLookup(const Dim4Tetrahedron* tet, unsigned long i) const;
+   unsigned long icIxLookup(const Dim4Pentachoron* edg, unsigned long i) const;
+
+   unsigned long dcIxLookup(const NTetrahedron* tet) const; 
+   unsigned long dcIxLookup(const NFace* fac) const; 
+   unsigned long dcIxLookup(const NEdge* edg) const; 
+   unsigned long dcIxLookup(const NVertex* vrt) const; 
+   unsigned long dcIxLookup(const Dim4Pentachoron* pen) const; 
+   unsigned long dcIxLookup(const Dim4Tetrahedron* tet) const; 
+   unsigned long dcIxLookup(const Dim4Face* fac) const; 
+   unsigned long dcIxLookup(const Dim4Edge* edg) const; 
+   unsigned long dcIxLookup(const Dim4Vertex* vrt) const; 
+
+   unsigned long bcIxLookup(const NVertex* vrt) const; 
+   unsigned long bcIxLookup(const NEdge* edg) const; 
+   unsigned long bcIxLookup(const NFace* fac) const; 
+   unsigned long bcIxLookup(const Dim4Vertex* vrt) const;
+   unsigned long bcIxLookup(const Dim4Edge* edg) const;
+   unsigned long bcIxLookup(const Dim4Face* fac) const;
+   unsigned long bcIxLookup(const Dim4Tetrahedron* tet) const;
+
+   unsigned long rIxLookup(const NVertex* vrt) const;
+   unsigned long rIxLookup(const NEdge* edg) const;
+   unsigned long rIxLookup(const NFace* fac) const;
+   unsigned long rIxLookup(const NTetrahedron* tet) const;
+   unsigned long rIxLookup(const Dim4Vertex* vrt) const;
+   unsigned long rIxLookup(const Dim4Edge* edg) const;
+   unsigned long rIxLookup(const Dim4Face* fac) const;
+   unsigned long rIxLookup(const Dim4Tetrahedron* tet) const;
+   unsigned long rIxLookup(const Dim4Pentachoron* pen) const;
+
+   /**
+    *  Internal routines to set up chain complexes. 
+    */
+   void fillStandardHomologyCC();
+
+   /**
     *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges normalsDim3BdryEdges normalsDim3BdryVertices
     * for homology and fundamental group computations.  Called before buildMaximalTree()
     */
@@ -795,13 +856,11 @@ public:
     void writeTextLong(std::ostream& out) const;
 
     /**
-     * @param hcs specifies the cell complex.
-     * @param dimension the dimension of the cells in question; this must
-     *  be 0, 1, 2, 3 or 4. An out-of-bounds request returns zero.
+     * @param coord_system specifies the cell complex and dimension. 
      * @return the number of cells of the given dimension in the cell complex
-     *  specified by hcs.
+     *  specified by coord_system.
      */
-    unsigned long cellCount(homology_coordinate_system hcs, unsigned dimension) const;
+    unsigned long cellCount( const ChainComplexLocator &coord_system) const;
 
     /**
      *  The number of path-components of a given submanifold type. 
@@ -1043,19 +1102,15 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
 {
 // copy all the pre-computed data. 
 
-//    typedef NSparseGrid< coverFacetData > ccMapType; TODO
-//    typedef std::map< ChainComplexLocator, ccMapType* > ccCollectionType;
-    // the "master" chain complex for the manifold. 
+// the "master" chain complex for the manifold. 
 ccCollectionType::const_iterator ccmi;
-//    ccCollectionType genCC;  
 for (ccmi = g.genCC.begin(); ccmi != g.genCC.end(); ccmi++)
  genCC.insert( std::pair< ChainComplexLocator, ccMapType* >(ccmi->first, clonePtr(ccmi->second) ) );
-
- // chain complexes
+ // integer chain complexes
 std::map< ChainComplexLocator, NMatrixInt* >::const_iterator ci;
 for (ci = g.integerChainComplexes.begin(); ci != g.integerChainComplexes.end(); ci++) integerChainComplexes.insert( 
  std::pair< ChainComplexLocator, NMatrixInt* >( ci->first, clonePtr(ci->second) ) );
- // chain maps
+ // integer chain maps
 std::map< ChainMapLocator, NMatrixInt* >::const_iterator mi;
 for (mi = g.integerChainMaps.begin(); mi != g.integerChainMaps.end(); mi++) integerChainMaps.insert( 
  std::pair< ChainMapLocator, NMatrixInt* >( mi->first, clonePtr(mi->second) ) );
@@ -1138,6 +1193,11 @@ buildExtraNormalData(); buildMaximalTree();
 inline NCellularData::~NCellularData() {
  if (tri4) delete tri4; if (tri3) delete tri3; 
  // iterate through all the stored data and delete
+
+ // master chain complex
+ ccCollectionType::const_iterator ccmi;
+ for (ccmi = genCC.begin(); ccmi != genCC.end(); ccmi++)
+  delete ccmi->second; 
  // integer chain complexes.
  std::map< ChainComplexLocator, NMatrixInt* >::const_iterator ci;
  for (ci = integerChainComplexes.begin(); ci != integerChainComplexes.end(); ci++) 

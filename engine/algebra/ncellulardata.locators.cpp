@@ -53,13 +53,24 @@ bool NCellularData::ChainComplexLocator::operator!=(const ChainComplexLocator &r
 {
  return ( (dim != rhs.dim) || (hcs != rhs.hcs) );
 }
-    
+ 
 void NCellularData::ChainComplexLocator::writeTextShort(std::ostream& out) const
-{ // TODO
+{
+ if (hcs == STD_coord) out<<"Simplicial ";
+ if (hcs == STD_BDRY_coord) out<<"Simplicial boundary ";
+ if (hcs == STD_REL_BDRY_coord) out<<"Simplicial rel boundary ";
+ if (hcs == DUAL_coord) out<<"Dual ";
+ if (hcs == DUAL_BDRY_coord) out<<"Dual boundary ";
+ if (hcs == DUAL_REL_BDRY_coord) out<<"Dual rel boundary ";
+ if (hcs == MIX_coord) out<<"Mixed ";
+ if (hcs == MIX_BDRY_coord) out<<"Mixed boundary ";
+ if (hcs == MIX_REL_BDRY_coord) out<<"Mixed rel boundary ";
+ out<<"dimension "<<dim;
 }
 
 void NCellularData::ChainComplexLocator::writeTextLong(std::ostream& out) const
-{ // TODO
+{ 
+ writeTextShort(out);
 }
 
 // chain map stuff
@@ -271,7 +282,7 @@ NCellularData::coverFacetData::coverFacetData( unsigned long cellN, signed long 
 NCellularData::coverFacetData::coverFacetData( const coverFacetData& cloneMe )
 {
  cellNo = cloneMe.cellNo;
- sig = cloneMe.sig; 
+ sig = cloneMe.sig;
  trans.addTermsLast( cloneMe.trans );
 }
 
@@ -283,8 +294,11 @@ bool NCellularData::coverFacetData::operator=(const coverFacetData &rhs)
 }
 
 std::string NCellularData::coverFacetData::stringValue() const
-{ // TODO
- std::string retval;
+{ // TODO - update once words implemented...
+ std::string retval ( (sig==1) ? std::string("+") : std::string("-") );
+ std::stringstream num;
+ num << cellNo; 
+ retval.append( num.str() );
  return retval;
 }
 

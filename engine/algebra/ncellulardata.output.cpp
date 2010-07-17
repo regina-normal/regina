@@ -99,10 +99,10 @@ bool written=false;
 //	 hit->second->writeTextShort(out);
 	 written = true;
 	}
-
-
 }
 
+// TODO go through this again using coordinate systems as the index, not markedAbelianGroups, 
+//  etc
 void NCellularData::writeTextLong(std::ostream& out) const
 {
 // list basics of manifold -- dimension, boundary types, orientable, etc.
