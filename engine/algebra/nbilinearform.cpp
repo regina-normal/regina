@@ -38,12 +38,12 @@
 namespace regina {
 
 NBilinearForm::NBilinearForm(const NMarkedAbelianGroup &ldomain, const NMarkedAbelianGroup &rdomain,
-			     const NMarkedAbelianGroup &range,   const NSparseGrid< NLargeInteger > &pairing) : 
+			     const NMarkedAbelianGroup &range,   const NSparseGridRing< NLargeInteger > &pairing) : 
 ShareableObject(), reducedPairing(NULL), unreducedPairing(NULL), lDomain(ldomain), rDomain(rdomain), Range(range)
 {
- unreducedPairing = new NSparseGrid< NLargeInteger > (pairing);
+ unreducedPairing = new NSparseGridRing< NLargeInteger > (pairing);
  // now we construct the reducedPairing
- reducedPairing = new NSparseGrid< NLargeInteger > (3);
+ reducedPairing = new NSparseGridRing< NLargeInteger > (3);
 
  for (unsigned long i=0; i<ldomain.minNumberOfGenerators(); i++)
   { std::vector< NLargeInteger > lv(ldomain.ccRep(i));
@@ -226,7 +226,7 @@ return true;
 NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
 {
 // we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
-NSparseGrid< NLargeInteger > newPairing(3);
+NSparseGridRing< NLargeInteger > newPairing(3);
 // 0th index is lDomain SNF coord, 1st index rDomain SNF coord, 3rd index Range SNF coord
 std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
 
@@ -249,7 +249,7 @@ return NBilinearForm( f.getDomain(), rDomain, Range, newPairing );
 NBilinearForm NBilinearForm::rCompose(const NHomMarkedAbelianGroup &f) const
 {
 // we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
-NSparseGrid< NLargeInteger > newPairing(3);
+NSparseGridRing< NLargeInteger > newPairing(3);
 std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
 
 for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
@@ -268,7 +268,7 @@ return NBilinearForm( lDomain, f.getDomain(), Range, newPairing );
 
 NBilinearForm NBilinearForm::postCompose(const NHomMarkedAbelianGroup &f) const
 {
-NSparseGrid< NLargeInteger > newPairing(3);
+NSparseGridRing< NLargeInteger > newPairing(3);
 
 std::map< NMultiIndex, NLargeInteger* >::const_iterator J;
 
@@ -575,7 +575,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
 	        // sparse implementation in nbilinearform -- if this is a problem it should eventually
 	        // be given a proper going-over as the slow-down is only due to inefficient coding
 	        // on my part (Budney) -- it's fast enough for my purposes so I'll stop mucking with it.
-                const NSparseGrid< NLargeInteger >* presMap( intP.reducedSparseGrid() );
+                const NSparseGridRing< NLargeInteger >* presMap( intP.reducedSparseGrid() );
 		const NLargeInteger* nliP( presMap->getEntry( NMultiIndex( it1->second[j].second, it1->second[k].second, 0 ) ) );
 		if (nliP) linkingFormPD[i]->entry(j,k) = NRational( *nliP, DenOm );
                 }

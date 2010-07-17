@@ -64,9 +64,9 @@ class NSparseGridTest : public CppUnit::TestFixture {
 	};
 
 	void sparsegrid_test() {
-	 regina::NSparseGrid< regina::NLargeInteger > g(3); regina::NMultiIndex gi(3);
-	 regina::NSparseGrid< regina::NLargeInteger > m(2); regina::NMultiIndex mi(2);
-	 regina::NSparseGrid< regina::NLargeInteger > v(1); regina::NMultiIndex vi(1);
+	 regina::NSparseGridRing< regina::NLargeInteger > g(3); regina::NMultiIndex gi(3);
+	 regina::NSparseGridRing< regina::NLargeInteger > m(2); regina::NMultiIndex mi(2);
+	 regina::NSparseGridRing< regina::NLargeInteger > v(1); regina::NMultiIndex vi(1);
 
 	 std::stringstream voutss;
 	 for (unsigned i=0; i<6; i++)

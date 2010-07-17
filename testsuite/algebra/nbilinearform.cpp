@@ -50,7 +50,7 @@ using regina::NHomMarkedAbelianGroup;
 using regina::NCellularData;
 using regina::NMatrixInt;
 using regina::NBilinearForm;
-using regina::NSparseGrid;
+using regina::NSparseGridRing;
 
 class NBilinearFormTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NBilinearFormTest);
@@ -94,7 +94,7 @@ class NBilinearFormTest : public CppUnit::TestFixture {
 	  NMarkedAbelianGroup ldom( dim, NLargeInteger::zero );
 	  NMarkedAbelianGroup rdom( dim, NLargeInteger::zero );
 	  NMarkedAbelianGroup zed( 1, NLargeInteger::zero );
-	  NSparseGrid< NLargeInteger > pairing(3);
+	  NSparseGridRing< NLargeInteger > pairing(3);
           for (unsigned long i=0; i<dim; i++)
            {
             regina::NMultiIndex I(3);

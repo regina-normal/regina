@@ -76,11 +76,11 @@ class NBilinearForm : public ShareableObject {
 	/**
 	 * Stores the pairing in SNF coordinates for all 3 groups. 
 	 */
-	NSparseGrid< NLargeInteger > *reducedPairing; 
+	NSparseGridRing< NLargeInteger > *reducedPairing; 
 	/**
 	 * The defining pairing.
 	 */
-        NSparseGrid< NLargeInteger > *unreducedPairing;
+        NSparseGridRing< NLargeInteger > *unreducedPairing;
 
 	/**
 	 * record of ldomain, rdomain and range
@@ -95,7 +95,7 @@ class NBilinearForm : public ShareableObject {
          * rank of the chain complex for range. 
          */
         NBilinearForm(const NMarkedAbelianGroup &ldomain, const NMarkedAbelianGroup &rdomain, 
-		      const NMarkedAbelianGroup &range,   const NSparseGrid< NLargeInteger > &pairing);
+		      const NMarkedAbelianGroup &range,   const NSparseGridRing< NLargeInteger > &pairing);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -139,9 +139,9 @@ class NBilinearForm : public ShareableObject {
         const std::map< NMultiIndex, NLargeInteger* > & reducedMap() const;
 
 	/**
-	 * reducedPairing access as an NSparseGrid
+	 * reducedPairing access as an NSparseGridRing
 	 */
-        const NSparseGrid< NLargeInteger >* reducedSparseGrid() const;
+        const NSparseGridRing< NLargeInteger >* reducedSparseGrid() const;
  
 	/**
 	 * If this is a symmetric bilinear form, we can ask for its signature.  This
@@ -292,7 +292,7 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< 
 
 /*@}*/
 
-inline const NSparseGrid< NLargeInteger >* NBilinearForm::reducedSparseGrid() const
+inline const NSparseGridRing< NLargeInteger >* NBilinearForm::reducedSparseGrid() const
 { return reducedPairing; }
 inline const NMarkedAbelianGroup& NBilinearForm::ldomain() const
 { return lDomain; }

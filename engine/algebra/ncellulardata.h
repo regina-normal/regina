@@ -421,6 +421,45 @@ public:
    void writeTextLong(std::ostream& out) const;
  };
 
+ /**
+  * For the purpose of various homological computations we need data on how  
+  * k-cells are incident to (k-1)-cells.  This struct is used to encode that
+  * data at the level of the universal cover of the manifold. 
+  */
+ struct coverFacetData {
+  /**
+   * This call is incident to cell number cellNo, taken from the chain complex
+   * indexing. 
+   */
+  unsigned long cellNo;
+  /**
+   * sig=+1 or -1 depending on whether or not the boundary orientation matches 
+   * or not. 
+   */ 
+  signed long sig; 
+  /**
+   * The path from the basepoint of this cell to cell numbered cellNo is a closed 
+   * loop, therefore generates an element of pi1 of the fundamental group of the
+   * manifold.  This is one such representative. 
+   */
+  NGroupExpression trans;
+   /**
+    * Constructor.
+    */
+  coverFacetData( unsigned long cellN, signed long Sig, const NGroupExpression& word );
+   /**
+    * Copy constructor.
+    */
+  coverFacetData( const coverFacetData& cloneMe );
+   /**
+    * Assignment operator.
+    */
+   bool operator=(const coverFacetData &rhs);
+   /**
+    * Output operator.
+    */
+   std::string stringValue() const;
+ };
 
 private:
     /**
@@ -431,10 +470,10 @@ private:
     Dim4Triangulation* tri4;
     NTriangulation* tri3;
 
-    // for chain complexes
-    //std::map< ChainComplexLocator, NMatrixInt* > ?? NMatrixRing??
-    // for maps of chain complexes
-    // std::map< ChainMapLocator, NMatrixInt* ?? TODO void* ?? 
+    // for integer chain complexes
+    std::map< ChainComplexLocator, NMatrixInt* > integerChainComplexes; 
+    // for maps of integer chain complexes
+    std::map< ChainMapLocator, NMatrixInt* > integerChainMaps;
     // for abelian groups
     std::map< GroupLocator, NAbelianGroup* > abelianGroups;
     // for marked abelian groups
@@ -512,6 +551,12 @@ private:
      *  mrCC - dual relative cellular homology              TODO
      */
     std::vector< NMatrixInt* > sCC, sbCC, srCC, dCC, dbCC, drCC, mCC, mbCC, mrCC;
+
+    // our new generic types for holding all chain complex data
+    typedef NSparseGrid< coverFacetData > ccMapType;
+    typedef std::map< ChainComplexLocator, ccMapType* > ccCollectionType;
+    // the "master" chain complex for the manifold. 
+    ccCollectionType genCC;  
 
     /** 
      * Chain maps: 
@@ -859,6 +904,16 @@ public:
     bool intersectionFormsVerified() const;
 
     /**
+     * Computes a chain complex or retrieves it from the precomputed pile.
+     */
+    const NMatrixInt* integerChainComplex( const ChainComplexLocator &c_desc ) const;
+
+    /**
+     * Computes a map of chain complexes or retrieves it from the precomputed pile.
+     */
+    const NMatrixInt* integerChainMap( const ChainMapLocator &m_desc ) const;
+
+    /**
      * Computes an NAbelianGroup or retrieves it from the precomputed pile. 
      */
     const NAbelianGroup* unmarkedGroup( const GroupLocator &g_desc) const;
@@ -986,8 +1041,25 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         smCM(g.smCM.size()),   dmCM(g.dmCM.size()),   smbCM(g.smbCM.size()), 
         dmbCM(g.dmbCM.size()), srmCM(g.srmCM.size()), drmCM(g.drmCM.size())
 {
-// copy abelianGroups, markedAbelianGroups, homMarkedAbelianGroups, bilinearForms, groupPresentations, 
-//      homGroupPresentations...
+// copy all the pre-computed data. 
+
+//    typedef NSparseGrid< coverFacetData > ccMapType; TODO
+//    typedef std::map< ChainComplexLocator, ccMapType* > ccCollectionType;
+    // the "master" chain complex for the manifold. 
+ccCollectionType::const_iterator ccmi;
+//    ccCollectionType genCC;  
+for (ccmi = g.genCC.begin(); ccmi != g.genCC.end(); ccmi++)
+ genCC.insert( std::pair< ChainComplexLocator, ccMapType* >(ccmi->first, clonePtr(ccmi->second) ) );
+
+ // chain complexes
+std::map< ChainComplexLocator, NMatrixInt* >::const_iterator ci;
+for (ci = g.integerChainComplexes.begin(); ci != g.integerChainComplexes.end(); ci++) integerChainComplexes.insert( 
+ std::pair< ChainComplexLocator, NMatrixInt* >( ci->first, clonePtr(ci->second) ) );
+ // chain maps
+std::map< ChainMapLocator, NMatrixInt* >::const_iterator mi;
+for (mi = g.integerChainMaps.begin(); mi != g.integerChainMaps.end(); mi++) integerChainMaps.insert( 
+ std::pair< ChainMapLocator, NMatrixInt* >( mi->first, clonePtr(mi->second) ) );
+ // abelianGroups
 std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
 for (abi = g.abelianGroups.begin(); abi != g.abelianGroups.end(); abi++) abelianGroups.insert( 
  std::pair< GroupLocator, NAbelianGroup* >( abi->first, clonePtr(abi->second) ) );
@@ -1065,23 +1137,37 @@ buildExtraNormalData(); buildMaximalTree();
 // destructor
 inline NCellularData::~NCellularData() {
  if (tri4) delete tri4; if (tri3) delete tri3; 
- // iterate through abelianGroups, markedAbelianGroups, homMarkedAbelianGroups and deallocate
+ // iterate through all the stored data and delete
+ // integer chain complexes.
+ std::map< ChainComplexLocator, NMatrixInt* >::const_iterator ci;
+ for (ci = integerChainComplexes.begin(); ci != integerChainComplexes.end(); ci++) 
+  delete ci->second;
+ // integer chain maps
+ std::map< ChainMapLocator, NMatrixInt* >::const_iterator mi;
+ for (mi = integerChainMaps.begin(); mi != integerChainMaps.end(); mi++) 
+  delete mi->second;
+ // abelian groups
  std::map< GroupLocator, NAbelianGroup* >::iterator abi;
- std::map< GroupLocator, NMarkedAbelianGroup* >::iterator mabi;
- std::map< HomLocator, NHomMarkedAbelianGroup* >::iterator hmabi;
- std::map< FormLocator, NBilinearForm* >::iterator fi;
- std::map< GroupPresLocator, NGroupPresentation* >::iterator gi;
- std::map< HomGroupPresLocator, NHomGroupPresentation* >::iterator hi;
  for (abi = abelianGroups.begin(); abi != abelianGroups.end(); abi++)
 	delete abi->second;
+ // marked abelian groups
+ std::map< GroupLocator, NMarkedAbelianGroup* >::iterator mabi;
  for (mabi = markedAbelianGroups.begin(); mabi != markedAbelianGroups.end(); mabi++)
 	delete mabi->second;
+ // hom marked abelian groups
+ std::map< HomLocator, NHomMarkedAbelianGroup* >::iterator hmabi;
  for (hmabi = homMarkedAbelianGroups.begin(); hmabi != homMarkedAbelianGroups.end(); hmabi++)
-	delete hmabi->second;
+	delete hmabi->second; 
+ // bilinear forms
+ std::map< FormLocator, NBilinearForm* >::iterator fi;
  for (fi = bilinearForms.begin(); fi != bilinearForms.end(); fi++)
 	delete fi->second;
+ // group presentations
+ std::map< GroupPresLocator, NGroupPresentation* >::iterator gi;
  for (gi = groupPresentations.begin(); gi != groupPresentations.end(); gi++) 
         delete gi->second;
+ // homomorphisms of group presentations
+ std::map< HomGroupPresLocator, NHomGroupPresentation* >::iterator hi;
  for (hi = homGroupPresentations.begin(); hi != homGroupPresentations.end(); hi++)
         delete hi->second; 
 
@@ -1116,34 +1202,6 @@ inline NCellularData::~NCellularData() {
  for (unsigned long i=0; i<drmCM.size(); i++) if (drmCM[i]) delete drmCM[i];
 }
 
-inline unsigned long NCellularData::cellCount(homology_coordinate_system hcs, unsigned dimension) const
-{
-if ( (dimension > 4) && tri4 ) return 0; 
-if ( (dimension > 3) && tri3 ) return 0; // out of bounds check
-if (hcs == STD_coord) return numStandardCells[dimension]; 
-if (hcs == DUAL_coord) return numDualCells[dimension]; 
-if (hcs == MIX_coord) return numMixCells[dimension];
-if (hcs == MIX_REL_BDRY_coord) return numMixRelCells[dimension]; 
-if (hcs == STD_REL_BDRY_coord) return numRelativeCells[dimension]; 
-if (hcs == DUAL_REL_BDRY_coord) return numDualRelCells[dimension]; 
-if ( (dimension > 3) && tri4 ) return 0;
-if ( (dimension > 2) && tri3 ) return 0;
-if (hcs == STD_BDRY_coord) return numStandardBdryCells[dimension]; 
-if (hcs == MIX_BDRY_coord) return numMixBdryCells[dimension]; 
-if (hcs == DUAL_BDRY_coord) return numDualBdryCells[dimension]; 
-return 0; // only get here if hcs out of bounds!
-}
-
-inline long int NCellularData::eulerChar() const
-{ return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3]+numDualCells[4]; }
-
-inline long int NCellularData::signature() const
-{
- if (tri3) return 0; if (!tri4->isOrientable()) return 0;
- const NBilinearForm* b = bilinearForm( 
-       FormLocator( intersectionForm, GroupLocator(2, coVariant, DUAL_coord, 0), GroupLocator(2, coVariant, DUAL_coord, 0) ) );
- return b->signature();
-}
 
 
 } // namespace regina

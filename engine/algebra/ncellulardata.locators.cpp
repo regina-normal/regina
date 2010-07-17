@@ -261,6 +261,33 @@ void NCellularData::HomGroupPresLocator::writeTextShort(std::ostream& out) const
 void NCellularData::HomGroupPresLocator::writeTextLong(std::ostream& out) const
 { writeTextShort(out); } 
 
+NCellularData::coverFacetData::coverFacetData( unsigned long cellN, signed long Sig, const NGroupExpression& word )
+{  
+ cellNo = cellN; 
+ sig = Sig; 
+ trans.addTermsLast(word);
+}
+
+NCellularData::coverFacetData::coverFacetData( const coverFacetData& cloneMe )
+{
+ cellNo = cloneMe.cellNo;
+ sig = cloneMe.sig; 
+ trans.addTermsLast( cloneMe.trans );
+}
+
+bool NCellularData::coverFacetData::operator=(const coverFacetData &rhs)
+{
+ cellNo = rhs.cellNo;
+ sig = rhs.sig; 
+ trans.addTermsLast( rhs.trans );
+}
+
+std::string NCellularData::coverFacetData::stringValue() const
+{ // TODO
+ std::string retval;
+ return retval;
+}
+
 
 } // namespace regina
 

@@ -73,15 +73,19 @@ class NMultiIndex {
 
 /**
  * An object for storing an arbitrary n_1xn_2x...xn_k array of data from 
- * a templated class T sparsely.  T is required to be a ring type -- must have
- * addition and a ::zero element at present as this is an object intended for
- * linear algebra applications.
+ * a templated class T sparsely.  
+ *
+ * The class T requires the following: 
+ *
+ *  1) A copy constructor. 
+ *  2) An assignment "=" operator. 
+ *  3) An output operation std::string T::stringValue()
  *
  * @author Ryan Budney
  */
 template <class T>
 class NSparseGrid {
-    private:
+    protected:
 	/**
 	 * Dimension of the grid -- this is the dimension of the multi-index. 
 	 */
@@ -134,17 +138,38 @@ class NSparseGrid {
 	 */
         const T* getEntry( const NMultiIndex & I ) const;
 
+        /**
+	 * Lists all elements in the grid.
+	 */
+        void writeTextShort(std::ostream& out) const;
+};
+
+/**
+ * An object for storing an arbitrary n_1xn_2x...xn_k array of data from 
+ * a templated class T sparsely.  
+ *
+ * Beyond the requirements of NSparseGrid, the class T is required to be
+ *  of "ring type," meaning: 
+ *
+ *  1) T::zero exists. 
+ *  2) T::operator+= exists. 
+ *
+ * @author Ryan Budney
+ */
+template <class T>
+class NSparseGridRing : public NSparseGrid<T> {
+        public:
+
+        NSparseGridRing(unsigned long dim);
+
+        NSparseGridRing(const NSparseGridRing & cloneMe);
+
 	/**
 	 * Increment an entry.  This will allocate the entry if it
          * is not already allocated, and deallocate if after incrementation
          * it becomes zero. 
 	 */
 	void incEntry( const NMultiIndex & I, const T & val );
-
-        /**
-	 * Lists all elements in the grid.
-	 */
-        virtual void writeTextShort(std::ostream& out) const;
 };
 
 /*@}*/
@@ -267,19 +292,6 @@ inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, const T &val )
 }
 
 template <class T>
-inline void NSparseGrid<T>::incEntry( const NMultiIndex & I, const T & val )
-{
- if (val == 0) return;
- typename std::map< NMultiIndex, T* >::iterator p;
- p = grid.find( I );
- if ( p != grid.end() ) 
-  { (*(p->second)) += val;
-    if ( (*(p->second)) == 0) { delete p->second; grid.erase(p); }
-  }
- else grid[I] = new T(val);
-}
-
-template <class T>
 inline const T* NSparseGrid<T>::getEntry( const NMultiIndex &I ) const
 {
  typename std::map< NMultiIndex, T* >::const_iterator p;
@@ -297,10 +309,34 @@ inline void NSparseGrid<T>::writeTextShort(std::ostream& out) const
    if (i!=grid.begin()) out<<", ";
    out<<"[";
    out<<"(";   i->first.writeTextShort(out); out<<"), ";
-   out<< (*(i->second));
+   out<<(i->second)->stringValue();
    out<<"]";
   }
 }
+
+// NSparseGridRing
+template <class T> 
+inline void NSparseGridRing<T>::incEntry( const NMultiIndex & I, const T & val )
+{
+ if (val == 0) return;
+ typename std::map< NMultiIndex, T* >::iterator p;
+ p = this->grid.find( I );
+ if ( p != this->grid.end() ) 
+  { (*(p->second)) += val;
+    if ( (*(p->second)) == T::zero) { delete p->second; this->grid.erase(p); }
+  }
+ else this->grid[I] = new T(val);
+}
+
+template <class T>
+inline NSparseGridRing<T>::NSparseGridRing(unsigned long dim) : NSparseGrid<T>(dim)
+{}
+
+template <class T>
+inline NSparseGridRing<T>::NSparseGridRing(const NSparseGridRing & cloneMe) : 
+ NSparseGrid<T>(cloneMe)
+{}
+
 
 } // namespace regina
 

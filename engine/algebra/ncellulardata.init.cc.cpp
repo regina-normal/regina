@@ -1398,7 +1398,10 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
    setupIndices( tri4, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 			numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells, 
 			numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, numDualBdryCells );
-        
+   buildExtraNormalData();
+   buildMaximalTree(); 
+   // TODO: split routines below into ones that use genCC, and ones derived from it. 
+   //       the derived types will not be computed here.         
    fillStandardHomologyCC( tri4, numStandardCells, numNonIdealCells, numIdealCells, 
 			nicIx, icIx, sCC);
 
@@ -1418,10 +1421,6 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
 		                  numDualBdryCells, 
                     nicIx, icIx, dcIx, bcIx, rIx, 
                     sbiCM, smCM, dmCM, strCM, schCM );
-
-   buildExtraNormalData();
-   buildMaximalTree(); 
-
 }
 
 // constructor for 3-manifold triangulations
@@ -1437,6 +1436,8 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
    setupIndices( tri3, nicIx, icIx, dcIx, bcIx, rIx, numStandardCells, numDualCells, numMixCells, 
 		 numStandardBdryCells, numNonIdealCells, numIdealCells, numNonIdealBdryCells,
 		 numRelativeCells, numDualRelCells, numMixRelCells, numMixBdryCells, numDualBdryCells );
+   buildExtraNormalData();
+   buildMaximalTree(); 
 
    fillStandardHomologyCC( tri3, numStandardCells, numNonIdealCells, numIdealCells, 
 			nicIx, icIx, sCC);
@@ -1458,8 +1459,6 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
                     sbiCM, smCM, dmCM, strCM, schCM );
    // standard face boundaries
 
-   buildExtraNormalData();
-   buildMaximalTree(); 
 }
 
 

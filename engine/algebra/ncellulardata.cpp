@@ -329,7 +329,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
    const NMarkedAbelianGroup* rDom( markedGroup(f_desc.rdomain) );
    NMarkedAbelianGroup rAng( 1, f_desc.rdomain.cof );
 
-   NSparseGrid< NLargeInteger > intM(3); 
+   NSparseGridRing< NLargeInteger > intM(3); 
    NMultiIndex x(3); 
 
    for (unsigned long i=0; i<lDom->getRankCC(); i++)
@@ -357,7 +357,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
    const NMarkedAbelianGroup* rDom( markedGroup(f_desc.rdomain) );
    const NMarkedAbelianGroup* rAng( markedGroup( GroupLocator( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim,
 					coVariant, MIX_coord, f_desc.ldomain.cof ) ) );
-   NSparseGrid< NLargeInteger > intM(3); 
+   NSparseGridRing< NLargeInteger > intM(3); 
    
    if (aDim == 3) // aDim==3  
     {
@@ -605,7 +605,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
     if ( !ldomain.isTrivial() && !rdomain.isTrivial() ) N=ld->getInvariantFactor( ld->getNumberOfInvariantFactors()-1 ).gcd(
 							rd->getInvariantFactor( rd->getNumberOfInvariantFactors()-1 ) );
     NMarkedAbelianGroup range( 1, N ); // Z_N with triv pres 0 --> Z --N--> Z --> Z_N --> 0
-    NSparseGrid< NLargeInteger > intM(3); 
+    NSparseGridRing< NLargeInteger > intM(3); 
 
     // step 2: dimension-specific constructions
     if (aDim == 3)
@@ -841,6 +841,78 @@ unsigned long NCellularData::components( submanifold_type ctype ) const
  if (ctype == standard_boundary) return stdBdryPi1Gen.size();
  if (ctype == ideal_boundary) return idBdryPi1Gen.size();
 } 
+
+unsigned long NCellularData::cellCount(homology_coordinate_system hcs, unsigned dimension) const
+{
+if ( (dimension > 4) && tri4 ) return 0; 
+if ( (dimension > 3) && tri3 ) return 0; // out of bounds check
+if (hcs == STD_coord) return numStandardCells[dimension]; 
+if (hcs == DUAL_coord) return numDualCells[dimension]; 
+if (hcs == MIX_coord) return numMixCells[dimension];
+if (hcs == MIX_REL_BDRY_coord) return numMixRelCells[dimension]; 
+if (hcs == STD_REL_BDRY_coord) return numRelativeCells[dimension]; 
+if (hcs == DUAL_REL_BDRY_coord) return numDualRelCells[dimension]; 
+if ( (dimension > 3) && tri4 ) return 0;
+if ( (dimension > 2) && tri3 ) return 0;
+if (hcs == STD_BDRY_coord) return numStandardBdryCells[dimension]; 
+if (hcs == MIX_BDRY_coord) return numMixBdryCells[dimension]; 
+if (hcs == DUAL_BDRY_coord) return numDualBdryCells[dimension]; 
+return 0; // only get here if hcs out of bounds!
+}
+
+long int NCellularData::eulerChar() const
+{ return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3]+numDualCells[4]; }
+
+long int NCellularData::signature() const
+{
+ if (tri3) return 0; if (!tri4->isOrientable()) return 0;
+ const NBilinearForm* b = bilinearForm( 
+       FormLocator( intersectionForm, GroupLocator(2, coVariant, DUAL_coord, 0), GroupLocator(2, coVariant, DUAL_coord, 0) ) );
+ return b->signature();
+}
+
+
+const NMatrixInt* NCellularData::integerChainComplex( const ChainComplexLocator &c_desc ) const
+{
+ reloop_loop:
+ std::map< ChainComplexLocator, NMatrixInt* >::const_iterator p;
+ // various bail triggers
+
+ p = integerChainComplexes.find(c_desc);
+ if (p != integerChainComplexes.end()) return (p->second);
+ else 
+  { 
+   // do something! TODO
+   // std::vector< NMatrixInt* > sCC, sbCC, srCC, dCC, dbCC, drCC, mCC, mbCC, mrCC;
+   // what we'll do is rewrite all the routines in ncellulardata.init.cc.cpp to ones which
+   // produce vectors of vectors of structs { incident to which cells, sign, lift in to \tilde M, ie elt of pi1(M) }
+   //  so data[i][j] indicates add the data describing how the j-th facet of the i-th cell in the chain complex. 
+   //                      oh.  We should store this as an NSparseGridRing! 
+   // struct facetData { unsigned long cellNo; signed long sig; NGroupExpression translate; }
+   goto reloop_loop;
+  }
+ // return NULL if an invalid request
+ return NULL;
+}
+
+const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc ) const
+{
+ reloop_loop:
+ std::map< ChainMapLocator, NMatrixInt* >::const_iterator p;
+ // various bail triggers
+ p = integerChainMaps.find(m_desc);
+ if (p != integerChainMaps.end()) return (p->second);
+ else 
+  { 
+   // do something! TODO
+   // std::vector< NMatrixInt* > sbiCM, strCM, schCM,   dbiCM, dtrCM, dchCM,   mbiCM, mtrCM, mchCM,  
+   //			       smCM, dmCM,            smbCM, dmbCM,          srmCM, drmCM;
+
+   goto reloop_loop;
+  }
+ // return NULL if an invalid request
+ return NULL;
+}
 
 
 } // namespace regina
