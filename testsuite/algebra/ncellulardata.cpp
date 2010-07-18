@@ -61,6 +61,8 @@ class NCellularDataTest : public CppUnit::TestFixture {
 
     // Poincare Polynomial, Euler Characteristic
     CPPUNIT_TEST(basic_tests); 
+    // Comparisons between NTriangulation, Dim4Triangulation and NCellularData H1 computations
+    CPPUNIT_TEST(absolute_h1_comparisons);
     // verify chain complexes are really chain complexes.
     CPPUNIT_TEST(chain_complex_tests); 
     // verify chain maps are really maps of chain complexes.
@@ -86,57 +88,39 @@ class NCellularDataTest : public CppUnit::TestFixture {
             delete source; }
 
     private:
-       NTriangulation m2_1, m2_2, m3_9, m4_52, m4_1_2, m4_4_2;
-       NTriangulation n1_1, n2_1, n2_1_2, n4_14, n4_9_2, n4_1_2_1;
-       NTriangulation closedHypOr, closedHypNor;
-       NTriangulation weberSeifert;
-       NTriangulation s1s1s1, comp1;
-
-       Dim4Triangulation pen, knot1, knot2, knot3, knot4, cp2, PDSxI;
-
+       std::vector< NTriangulation* > t3List;
+       std::vector< Dim4Triangulation* > t4List;
        std::vector< NCellularData* > m3List; // NCellularData of 3-manifolds
        std::vector< NCellularData* > m4List; // NCellularData of 4-manifolds
        std::vector< std::string > polyList;
 
     public:
         void setUp() {     
+          t3List.resize(17); for (unsigned long i=0; i<t3List.size(); i++) t3List[i] = new NTriangulation();          
 	  // todo: once we have dim4Triangulation dehydration strings we can add some 4-dimensional triangulations.
-          m2_1.insertRehydration("cabbbbaei");          m2_2.insertRehydration("cabbbbapt");
-          m3_9.insertRehydration("dagacccfwkn");        m4_52.insertRehydration("ebdbcdddaqhie");
-          m4_1_2.insertRehydration("eahbcdddhsssj");    m4_4_2.insertRehydration("ebdbcdddddddx");
-          n1_1.insertRehydration("baaaade");            n2_1.insertRehydration("cabbbbabw");
-          n2_1_2.insertRehydration("cabbbbcdw");        n4_14.insertRehydration("eahdccddakfhq");
-          n4_9_2.insertRehydration("ebdbcdddcemre");    n4_1_2_1.insertRehydration("eahbcdddjxxxj");
-          copyAndDelete(closedHypOr,            NExampleTriangulation::smallClosedOrblHyperbolic());
-          copyAndDelete(closedHypNor,           NExampleTriangulation::smallClosedNonOrblHyperbolic());
-          copyAndDelete(weberSeifert,           NExampleTriangulation::weberSeifert());
-	  s1s1s1.insertRehydration("gepaadcefeffnkkanax");
-	  comp1.insertRehydration("jgofiaaaceedfhiiifkxkfnbtxe");
+          t3List[0]->insertRehydration("cabbbbaei");     t3List[1]->insertRehydration("cabbbbapt");
+          t3List[2]->insertRehydration("dagacccfwkn");   t3List[3]->insertRehydration("ebdbcdddaqhie");
+          t3List[4]->insertRehydration("eahbcdddhsssj"); t3List[5]->insertRehydration("ebdbcdddddddx");
+          t3List[6]->insertRehydration("baaaade");       t3List[7]->insertRehydration("cabbbbabw");
+          t3List[8]->insertRehydration("cabbbbcdw");     t3List[9]->insertRehydration("eahdccddakfhq");
+          t3List[10]->insertRehydration("ebdbcdddcemre");t3List[11]->insertRehydration("eahbcdddjxxxj");
+          copyAndDelete(*t3List[12],     NExampleTriangulation::smallClosedOrblHyperbolic());
+          copyAndDelete(*t3List[13],     NExampleTriangulation::smallClosedNonOrblHyperbolic());
+          copyAndDelete(*t3List[14],     NExampleTriangulation::weberSeifert());
+	  t3List[15]->insertRehydration("gepaadcefeffnkkanax");
+	  t3List[16]->insertRehydration("jgofiaaaceedfhiiifkxkfnbtxe");
 
-          copyAndDelete(pen,   Dim4Triangulation::fromIsoSig("baa"));
-          copyAndDelete(PDSxI, Dim4Triangulation::fromIsoSig("cHkbbbRb3asb")); // Poincare dodecahedral space x interval
-          copyAndDelete(knot1, Dim4Triangulation::fromIsoSig("cMkabbb+aAa3blb")); // simplest 2-knot 2-pentachoron
-          copyAndDelete(knot2, Dim4Triangulation::fromIsoSig("eLMQcaccddcd1aaa2a4aaa1aca"));  // 4-pentachoron knot
-          copyAndDelete(knot3, Dim4Triangulation::fromIsoSig("eLAQcbbbdddd0baa0bhahaDaDa"));  // another 
-          copyAndDelete(knot4, Dim4Triangulation::fromIsoSig("gLLAQQccddeffeffaayaNaNaPbzb0aPbIaxa")); // 6-pentachoron knot
-          copyAndDelete(cp2,   Dim4Triangulation::fromIsoSig("eAMMcaabccdd+aoa+aAaqbyaca")); // CP^2
+          t4List.resize(7); for (unsigned long i=0; i<t4List.size(); i++) t4List[i] = new Dim4Triangulation();
+          copyAndDelete(*t4List[0], Dim4Triangulation::fromIsoSig("baa")); // single pentachoron
+          copyAndDelete(*t4List[1], Dim4Triangulation::fromIsoSig("cHkbbbRb3asb")); // Poincare dodecahedral space x interval
+          copyAndDelete(*t4List[2], Dim4Triangulation::fromIsoSig("cMkabbb+aAa3blb")); // simplest 2-knot 2-pentachoron
+          copyAndDelete(*t4List[3], Dim4Triangulation::fromIsoSig("eLMQcaccddcd1aaa2a4aaa1aca"));  // 4-pentachoron knot
+          copyAndDelete(*t4List[4], Dim4Triangulation::fromIsoSig("eLAQcbbbdddd0baa0bhahaDaDa"));  // another 
+          copyAndDelete(*t4List[5], Dim4Triangulation::fromIsoSig("gLLAQQccddeffeffaayaNaNaPbzb0aPbIaxa")); // 6-pentachoron knot
+          copyAndDelete(*t4List[6], Dim4Triangulation::fromIsoSig("eAMMcaabccdd+aoa+aAaqbyaca")); // CP^2
 
-	  m3List.resize(17);
-	  m3List[0] = new NCellularData( m2_1 );	  m3List[1] = new NCellularData( m2_2 );
-	  m3List[2] = new NCellularData( m3_9 );	  m3List[3] = new NCellularData( m4_52 );
-	  m3List[4] = new NCellularData( m4_1_2 );	  m3List[5] = new NCellularData( m4_4_2 );
-	  m3List[6] = new NCellularData( n1_1 );	  m3List[7] = new NCellularData( n2_1 );
-	  m3List[8] = new NCellularData( n2_1_2 );	  m3List[9] = new NCellularData( n4_14 );
-	  m3List[10] = new NCellularData( n4_9_2 );	  m3List[11] = new NCellularData( n4_1_2_1 );
-	  m3List[12] = new NCellularData( closedHypOr );  m3List[13] = new NCellularData( closedHypNor );
-	  m3List[14] = new NCellularData( weberSeifert ); m3List[15] = new NCellularData( s1s1s1 );
-	  m3List[16] = new NCellularData( comp1 );
-
-          m4List.resize(7);
-          m4List[0] = new NCellularData( pen );         m4List[1] = new NCellularData( PDSxI );
-          m4List[2] = new NCellularData( knot1 );       m4List[3] = new NCellularData( knot2 );
-          m4List[4] = new NCellularData( knot3 );       m4List[5] = new NCellularData( knot4 );
-          m4List[6] = new NCellularData( cp2 ); 
+	  m3List.resize( t3List.size() ); for (unsigned long i=0; i<m3List.size(); i++) m3List[i]=new NCellularData(*t3List[i]);
+          m4List.resize( t4List.size() ); for (unsigned long i=0; i<m4List.size(); i++) m4List[i]=new NCellularData(*t4List[i]);          
 
 	  polyList.resize(17);
 	  polyList[0] = "1+t";       polyList[1] = "1+t";        polyList[2] = "1+t";    polyList[3] = "1+t";
@@ -147,6 +131,8 @@ class NCellularDataTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+	 for (unsigned long i=0; i<t3List.size(); i++) delete t3List[i];
+         for (unsigned long i=0; i<t4List.size(); i++) delete t4List[i];
 	 for (unsigned long i=0; i<m3List.size(); i++) delete m3List[i];
          for (unsigned long i=0; i<m4List.size(); i++) delete m4List[i];
 	}
@@ -157,6 +143,31 @@ class NCellularDataTest : public CppUnit::TestFixture {
 		for (unsigned long i=0; i<m3List.size(); i++)
 	         if (m3List[i]->poincarePolynomial().toString() != polyList[i]) CPPUNIT_FAIL("Poincare polynomial error.");
 	}
+
+        void absolute_h1_comparisons() {
+                for (unsigned long i=0; i<m3List.size(); i++)
+                {
+                 std::stringstream str1; t3List[i]->getHomologyH1().writeTextShort(str1); std::string S1( str1.str() );  
+                 NCellularData::GroupLocator h1s( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 );
+                 std::stringstream str2; m3List[i]->markedGroup( h1s )->writeTextShort(str2); std::string S2( str2.str() );
+                 NCellularData::GroupLocator h2s( 1, NCellularData::coVariant, NCellularData::DUAL_coord, 0 );
+                 std::stringstream str3; m3List[i]->markedGroup( h2s )->writeTextShort(str3); std::string S3( str3.str() );
+                 NCellularData::GroupLocator h3s( 1, NCellularData::coVariant, NCellularData::MIX_coord, 0 );
+                 std::stringstream str4; m3List[i]->markedGroup( h3s )->writeTextShort(str4); std::string S4( str4.str() );
+                 if ( (S1!=S2) || (S2!=S3) || (S3!=S4) ) CPPUNIT_FAIL("4-Way H1 comparison failed (3). "+S1+" "+S2+" "+S3+" "+S4);
+               }
+                for (unsigned long i=0; i<m4List.size(); i++)
+                {
+                 std::stringstream str1; t4List[i]->getHomologyH1().writeTextShort(str1); std::string S1( str1.str() );  
+                 NCellularData::GroupLocator h1s( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 );
+                 std::stringstream str2; m4List[i]->markedGroup( h1s )->writeTextShort(str2); std::string S2( str2.str() );
+                 NCellularData::GroupLocator h2s( 1, NCellularData::coVariant, NCellularData::DUAL_coord, 0 );
+                 std::stringstream str3; m4List[i]->markedGroup( h2s )->writeTextShort(str3); std::string S3( str3.str() );
+                 NCellularData::GroupLocator h3s( 1, NCellularData::coVariant, NCellularData::MIX_coord, 0 );
+                 std::stringstream str4; m4List[i]->markedGroup( h3s )->writeTextShort(str4); std::string S4( str4.str() );
+                 if ( (S1!=S2) || (S2!=S3) || (S3!=S4) ) CPPUNIT_FAIL("4-Way H1 comparison failed (4). "+S1+" "+S2+" "+S3+" "+S4);
+                }
+        }
 
         void chain_complex_tests() {	
         	for (unsigned long i=0; i<m3List.size(); i++)

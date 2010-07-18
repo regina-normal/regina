@@ -31,19 +31,40 @@
 namespace regina {
 
 
-void fillStandardToMixedHomCM( unsigned aDim, // dimension of the triangulation
-        const unsigned long numStandardCells[5],                 const unsigned long numMixCells[5], 
-	const unsigned long numIdealCells[4],                    const unsigned long numNonIdealCells[5],
-        std::vector< NMatrixInt* > &smCM)
+void NCellularData::fillStandardToMixedHomCM()
 {
- for (unsigned d=0; d<aDim+1; d++) smCM[d] = new NMatrixInt( numMixCells[d], numStandardCells[d] );
+ unsigned long aDim( (tri4!=NULL) ? 4 : 3 );
+ ccMapType* CM(NULL); // pointer to an NSparseGrid< coverFacetData > 
+ NGroupExpression wordle; // temp
+
+ for (unsigned d=0; d<=aDim; d++) smCM[d] = new NMatrixInt( numMixCells[d], numStandardCells[d] ); // TODO: erase
  long int delta[aDim]; for (unsigned long d=0; d<aDim; d++) delta[d] = numMixCells[d] - numIdealCells[d] - numNonIdealCells[d];
 
- for (unsigned long d=0; d<aDim+1; d++) for (unsigned long j=0; j<smCM[d]->columns(); j++)
+ for (unsigned long d=0; d<=aDim; d++) 
+  {
+   CM = new ccMapType(2);
+   for (unsigned long j=0; j<numStandardCells[d]; j++)
     { // each standard d-dimensional simplex divided into d+1 bits.
-     if (j < numNonIdealCells[d]) for (unsigned long i=0; i<d+1; i++) smCM[d]->entry( (d+1)*j + i, j ) = 1; 
-     else smCM[d]->entry( delta[d] + j, j ) = 1;
-    }
+     if (j < numNonIdealCells[d]) 
+       for (unsigned long i=0; i<=d; i++)
+        {
+         smCM[d]->entry( (d+1)*j + i, j ) = 1; 
+         // TODO fill wordle
+         CM->setEntry( NMultiIndex( j, i ),
+                       coverFacetData( (d+1)*j + i, 1, wordle ) );
+        }
+     else 
+        {
+        smCM[d]->entry( delta[d] + j, j ) = 1;
+        // TODO fill wordle
+        CM->setEntry( NMultiIndex( j, 0 ),
+                      coverFacetData( delta[d] + j, 1, wordle ) );
+        }
+    } // j for loop
+   // submit CC
+   genCM.insert( std::pair< ChainMapLocator, ccMapType* >
+    (ChainMapLocator(ChainComplexLocator(d,STD_coord), ChainComplexLocator(d,MIX_coord)), CM ) );
+  } // d for loop
 }
 
 void fillDualToMixedHomCM( const Dim4Triangulation* tri, const unsigned long numDualCells[5], 
@@ -466,8 +487,6 @@ void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4,
 {
  if (tri4)
   {
-   fillStandardToMixedHomCM( 4, numStandardCells, numMixCells, numIdealCells, numNonIdealCells, smCM );
-
    fillDualToMixedHomCM( tri4, numDualCells, numMixCells, numNonIdealCells, dcIx, dmCM );
 
    fillStandardToRelativeHomCM( 4, numStandardCells, numRelativeCells, numNonIdealCells, nicIx, rIx, strCM );
@@ -480,8 +499,6 @@ void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4,
   }
  if (tri3)
   {
-   fillStandardToMixedHomCM( 3, numStandardCells, numMixCells, numIdealCells, numNonIdealCells, smCM );
-
    fillDualToMixedHomCM( tri3, numDualCells, numMixCells, numNonIdealCells, dcIx, dmCM );
 
    fillStandardToRelativeHomCM( 3, numStandardCells, numRelativeCells, numNonIdealCells, nicIx, rIx, strCM );

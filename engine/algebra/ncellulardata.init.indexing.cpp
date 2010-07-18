@@ -270,7 +270,6 @@ void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4,
 NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
         tri4(new Dim4Triangulation(input)), tri3(0), 
 	nicIx(5), icIx(4), dcIx(5), bcIx(4), rIx(5), // indexing cells 
-	sCC(6), sbCC(5), srCC(6),   dCC(6), dbCC(5), drCC(6),   mCC(6), mbCC(5), mrCC(6), // chain complexes 
 	sbiCM(4), strCM(5), schCM(4),   dbiCM(4), dtrCM(5), dchCM(4),   mbiCM(4), mtrCM(5), mchCM(4), 
         smCM(5), dmCM(5), smbCM(4), dmbCM(4), srmCM(5), drmCM(5) // chain maps
 //        normalsDim4BdryFaces(0),  normalsDim4BdryEdges(0), normalsDim3BdryEdges(0), normalsDim3BdryVertices(0) // orientations
@@ -283,6 +282,8 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
    // the 9 core chain complexes for genCC
    fillStandardHomologyCC();   fillDualHomologyCC();      fillMixedHomologyCC();
    fillBoundaryHomologyCC();   fillRelativeHomologyCC();
+   // maps of chain complexes.
+   fillStandardToMixedHomCM(); // more to do...
 
    // todo fillMixedBdryHomology, fillDualBdryHomology, fillMixRelBdryHomology, fillDualRelBdryHomology
    fillChainMaps( tri3, tri4, numStandardCells, numDualCells, numMixCells, numStandardBdryCells, 
@@ -297,7 +298,6 @@ NCellularData::NCellularData(const Dim4Triangulation& input): ShareableObject(),
 NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
         tri4(0), tri3(new NTriangulation(input)), 
 	nicIx(4), icIx(3), dcIx(4), bcIx(3), rIx(4), // indexing cells 
-	sCC(5), sbCC(4), srCC(5),   dCC(5), dbCC(4), drCC(5),   mCC(5), mbCC(4), mrCC(5), // chain complexes 
 	sbiCM(3), strCM(4), schCM(3),   dbiCM(3), dtrCM(4), dchCM(3),   mbiCM(3), mtrCM(4), mchCM(3), 
         smCM(4), dmCM(4), smbCM(3), dmbCM(3), srmCM(4), drmCM(4) // chain maps
 //        normalsDim4BdryFaces(0),  normalsDim4BdryEdges(0), normalsDim3BdryEdges(0), normalsDim3BdryVertices(0) // orientations
@@ -312,6 +312,8 @@ NCellularData::NCellularData(const NTriangulation& input): ShareableObject(),
    fillStandardHomologyCC();   fillDualHomologyCC();      fillMixedHomologyCC();
    fillBoundaryHomologyCC();   fillRelativeHomologyCC();
    // todo fillMixedBdryHomology, fillDualBdryHomology, fillMixRelBdryHomology, fillDualRelBdryHomology
+   // chain maps
+   fillStandardToMixedHomCM(); // more to do...
 
    fillChainMaps( tri3, tri4, numStandardCells, numDualCells, numMixCells, numStandardBdryCells, 
                                   numNonIdealCells, numIdealCells, numNonIdealBdryCells, 

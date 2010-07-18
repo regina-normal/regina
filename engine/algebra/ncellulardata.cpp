@@ -66,87 +66,119 @@ void correctRelOrMat( NMatrixInt &CM, unsigned long domdim, const NTriangulation
 
 const NAbelianGroup* NCellularData::unmarkedGroup( const GroupLocator &g_desc) const
 {
-std::map< GroupLocator, NAbelianGroup* >::const_iterator p;
-p = abelianGroups.find(g_desc);
-if (p != abelianGroups.end()) return (p->second);
-// okay, so now we know there's no group matching g_desc in markedAbelianGroups, so we make one.
-NAbelianGroup* gptr;
+ unsigned long aDim = ( (tri4 != NULL) ? 4 : 3 );
+ unsigned long topDim = ( (g_desc.hcs==STD_BDRY_coord) || (g_desc.hcs==DUAL_BDRY_coord) || (g_desc.hcs==MIX_BDRY_coord) ) ?
+                        aDim-1 : aDim; // the highest dimensional cell for this cell complex.
+ std::map< GroupLocator, NAbelianGroup* >::const_iterator p;
+ p = abelianGroups.find(g_desc);
+ if (p != abelianGroups.end()) return (p->second);
+ // we know there's no group matching g_desc in markedAbelianGroups. 
+ // so is the request out-of-bounds? 
 
-std::vector< NMatrixInt* > CC; // choose the right chain complex
-if (g_desc.hcs == DUAL_coord) CC = dCC; else if (g_desc.hcs == STD_coord) CC = sCC; else
-if (g_desc.hcs == MIX_coord) CC = mCC; else if (g_desc.hcs == STD_BDRY_coord) CC = sbCC; else
-if (g_desc.hcs == STD_REL_BDRY_coord) CC = srCC;
+ if (g_desc.dim > topDim) return NULL;
+ // chain complex of the form A -- ccN --> B -- ccM --> C, compute ccN and ccM
+ const NMatrixInt* ccN = integerChainComplex( ChainComplexLocator( g_desc.dim+1, g_desc.hcs ) );
+ const NMatrixInt* ccM = integerChainComplex( ChainComplexLocator( g_desc.dim, g_desc.hcs ) );
+ const NMatrixInt* tempMat(NULL);
+ if ( g_desc.dim == 0 ) // integerChainComplex does not bother computing these zero matrices
+  {
+   tempMat = new NMatrixInt( 0, cellCount( ChainComplexLocator( 0, g_desc.hcs) ) );
+   ccM = tempMat;
+  }
+ if ( g_desc.dim == topDim )
+  {
+   tempMat = new NMatrixInt( cellCount( ChainComplexLocator( topDim, g_desc.hcs ) ), 0 );
+   ccN = tempMat;
+  } 
+ // let's construct the group, this will be it, eventually.
+ NAbelianGroup* mgptr(NULL);
 
-if (g_desc.var == coVariant) // homology requested
- {
-  if (g_desc.cof == 0) gptr = new NAbelianGroup( *CC[g_desc.dim], *CC[g_desc.dim+1] );
-   else gptr = new NAbelianGroup( *CC[g_desc.dim], *CC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
+ if (g_desc.var == coVariant) // homology requested
+  {
+   if (g_desc.cof == 0) mgptr = new NAbelianGroup( *ccM, *ccN );
+    else mgptr = new NAbelianGroup( *ccM, *ccN, NLargeInteger(g_desc.cof) );
 
-  std::map< GroupLocator, NAbelianGroup* > *abgptr = 
+   std::map< GroupLocator, NAbelianGroup* > *mabgptr =  
+ 	const_cast< std::map< GroupLocator, NAbelianGroup* > *> (&abelianGroups);
+   mabgptr->insert(std::pair<GroupLocator,NAbelianGroup*>(g_desc,mgptr)); 
+  }
+ else // cohomology requested
+  { 
+   NMatrixInt ccMt( ccN->columns(), ccN->rows() );
+   for (unsigned long i=0; i<ccMt.rows(); i++) for (unsigned long j=0; j<ccMt.columns(); j++)
+    ccMt.entry(i,j) = ccN->entry(j,i);
+   NMatrixInt ccNt( ccM->columns(), ccM->rows() );
+   for (unsigned long i=0; i<ccNt.rows(); i++) for (unsigned long j=0; j<ccNt.columns(); j++)
+    ccNt.entry(i,j) = ccM->entry(j,i);
+   if (g_desc.cof == 0) mgptr = new NAbelianGroup( ccMt, ccNt );
+    else mgptr = new NAbelianGroup( ccMt, ccNt, NLargeInteger(g_desc.cof) ); 
+
+   std::map< GroupLocator, NAbelianGroup* > *mabgptr = 
 	const_cast< std::map< GroupLocator, NAbelianGroup* > *> (&abelianGroups);
-  abgptr->insert(std::pair<GroupLocator,NAbelianGroup*>( g_desc, gptr ) ); 
-  return gptr;
- }
-else // cohomology requested
- { 
-  NMatrixInt dCCN( CC[g_desc.dim]->columns(),   CC[g_desc.dim]->rows() );
-  for (unsigned long i=0; i<dCCN.rows(); i++) for (unsigned long j=0; j<dCCN.columns(); j++)
-   dCCN.entry(i,j) = CC[g_desc.dim]->entry(j,i);
-  NMatrixInt dCCM( CC[g_desc.dim+1]->columns(), CC[g_desc.dim+1]->rows() );
-  for (unsigned long i=0; i<dCCM.rows(); i++) for (unsigned long j=0; j<dCCM.columns(); j++)
-   dCCM.entry(i,j) = CC[g_desc.dim+1]->entry(j,i);
-  if (g_desc.cof == 0) gptr = new NAbelianGroup( dCCM, dCCN );
-   else gptr = new NAbelianGroup( dCCM, dCCN, NLargeInteger(g_desc.cof) );
-  std::map< GroupLocator, NAbelianGroup* > *abgptr = 
-	const_cast< std::map< GroupLocator, NAbelianGroup* > *> (&abelianGroups);
-  abgptr->insert(std::pair<GroupLocator,NAbelianGroup*>(g_desc,gptr)); 
-  return gptr;
- }
-
-return NULL;
+   mabgptr->insert(std::pair<GroupLocator,NAbelianGroup*>(g_desc,mgptr)); 
+  }
+ // clean up
+ if (tempMat != NULL) delete tempMat; 
+ return mgptr;
 }
 
 // todo add an aDim and ensure request is with dimension bounds
 const NMarkedAbelianGroup* NCellularData::markedGroup( const GroupLocator &g_desc) const
 {
-std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator p;
-p = markedAbelianGroups.find(g_desc);
-if (p != markedAbelianGroups.end()) return (p->second);
-// okay, so now we know there's no group matching g_desc in markedAbelianGroups, so we make one.
-NMarkedAbelianGroup* mgptr;
+ unsigned long aDim = ( (tri4 != NULL) ? 4 : 3 );
+ unsigned long topDim = ( (g_desc.hcs==STD_BDRY_coord) || (g_desc.hcs==DUAL_BDRY_coord) || (g_desc.hcs==MIX_BDRY_coord) ) ?
+                        aDim-1 : aDim; // the highest dimensional cell for this cell complex.
+ std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator p;
+ p = markedAbelianGroups.find(g_desc);
+ if (p != markedAbelianGroups.end()) return (p->second);
+ // we know there's no group matching g_desc in markedAbelianGroups. 
+ // so is the request out-of-bounds? 
 
-std::vector< NMatrixInt* > CC; // choose the right chain complex
-if (g_desc.hcs == DUAL_coord) CC = dCC; else if (g_desc.hcs == STD_coord) CC = sCC; else
-if (g_desc.hcs == MIX_coord) CC = mCC; else if (g_desc.hcs == STD_BDRY_coord) CC = sbCC; else
-if (g_desc.hcs == STD_REL_BDRY_coord) CC = srCC;
+ if (g_desc.dim > topDim) return NULL;
+ // chain complex of the form A -- ccN --> B -- ccM --> C, compute ccN and ccM
+ const NMatrixInt* ccN = integerChainComplex( ChainComplexLocator( g_desc.dim+1, g_desc.hcs ) );
+ const NMatrixInt* ccM = integerChainComplex( ChainComplexLocator( g_desc.dim, g_desc.hcs ) );
+ const NMatrixInt* tempMat(NULL);
+ if ( g_desc.dim == 0 ) // integerChainComplex does not bother computing these zero matrices
+  {
+   tempMat = new NMatrixInt( 0, cellCount( ChainComplexLocator( 0, g_desc.hcs) ) );
+   ccM = tempMat;
+  }
+ if ( g_desc.dim == topDim )
+  {
+   tempMat = new NMatrixInt( cellCount( ChainComplexLocator( topDim, g_desc.hcs ) ), 0 );
+   ccN = tempMat;
+  } 
+ // let's construct the group, this will be it, eventually.
+ NMarkedAbelianGroup* mgptr(NULL);
 
-if (g_desc.var == coVariant) // homology requested
- {
-  if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *CC[g_desc.dim], *CC[g_desc.dim+1] );
-   else mgptr = new NMarkedAbelianGroup( *CC[g_desc.dim], *CC[g_desc.dim+1], NLargeInteger(g_desc.cof) );
+ if (g_desc.var == coVariant) // homology requested
+  {
+   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *ccM, *ccN );
+    else mgptr = new NMarkedAbelianGroup( *ccM, *ccN, NLargeInteger(g_desc.cof) );
 
-  std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
+   std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr =  
+ 	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
+   mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
+  }
+ else // cohomology requested
+  { 
+   NMatrixInt ccMt( ccN->columns(), ccN->rows() );
+   for (unsigned long i=0; i<ccMt.rows(); i++) for (unsigned long j=0; j<ccMt.columns(); j++)
+    ccMt.entry(i,j) = ccN->entry(j,i);
+   NMatrixInt ccNt( ccM->columns(), ccM->rows() );
+   for (unsigned long i=0; i<ccNt.rows(); i++) for (unsigned long j=0; j<ccNt.columns(); j++)
+    ccNt.entry(i,j) = ccM->entry(j,i);
+   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( ccMt, ccNt );
+    else mgptr = new NMarkedAbelianGroup( ccMt, ccNt, NLargeInteger(g_desc.cof) ); 
+
+   std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
 	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
-  mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
-  return mgptr;
- }
-else // cohomology requested
- { 
-  NMatrixInt dCCN( CC[g_desc.dim]->columns(),   CC[g_desc.dim]->rows() );
-  for (unsigned long i=0; i<dCCN.rows(); i++) for (unsigned long j=0; j<dCCN.columns(); j++)
-   dCCN.entry(i,j) = CC[g_desc.dim]->entry(j,i);
-  NMatrixInt dCCM( CC[g_desc.dim+1]->columns(), CC[g_desc.dim+1]->rows() );
-  for (unsigned long i=0; i<dCCM.rows(); i++) for (unsigned long j=0; j<dCCM.columns(); j++)
-   dCCM.entry(i,j) = CC[g_desc.dim+1]->entry(j,i);
-  if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( dCCM, dCCN );
-   else mgptr = new NMarkedAbelianGroup( dCCM, dCCN, NLargeInteger(g_desc.cof) );
-  std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
-	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> (&markedAbelianGroups);
-  mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
-  return mgptr;
- }
-
-return NULL;
+   mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
+  }
+ // clean up
+ if (tempMat != NULL) delete tempMat; 
+ return mgptr;
 }
 
 // TODO: coefficient LES maps like Bockstein
@@ -204,7 +236,7 @@ const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator &h_desc)
    }
    else
     { // \partial M <-- M
-      if ( (h_desc.domain.hcs == STD_coord) && (h_desc.range.hcs == STD_BDRY_coord) &&
+     if ( (h_desc.domain.hcs == STD_coord) && (h_desc.range.hcs == STD_BDRY_coord) &&
            (h_desc.domain.dim == h_desc.range.dim) && (h_desc.range.dim < aDim) )
        {	 
          CM = new NMatrixInt( sbiCM[h_desc.domain.dim]->columns(), sbiCM[h_desc.domain.dim]->rows() );
@@ -255,11 +287,13 @@ const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator &h_desc)
  }
 
  NHomMarkedAbelianGroup* hmgptr(NULL);
+
  if ( CM ) // we found the requested map, now make sure we have the domain and range, then we're happy.
  {
    //  ensure we have domain and range
    const NMarkedAbelianGroup* dom = markedGroup( h_desc.domain );
    const NMarkedAbelianGroup* ran = markedGroup( h_desc.range );
+
    if ( dom && ran )
     {
      hmgptr = new NHomMarkedAbelianGroup( *dom, *ran, *CM );

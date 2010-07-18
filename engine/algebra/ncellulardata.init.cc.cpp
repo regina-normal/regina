@@ -40,17 +40,6 @@
 #include <sstream>
 
 namespace regina {
-
-//ccCollectionType::const_iterator ccmi;
-//for (ccmi = g.genCC.begin(); ccmi != g.genCC.end(); ccmi++)
-// genCC.insert( std::pair< ChainComplexLocator, ccMapType* >(ccmi->first, clonePtr(ccmi->second) ) );
-
-//  if (g_desc.cof == 0) gptr = new NAbelianGroup( dCCM, dCCN );
-//   else gptr = new NAbelianGroup( dCCM, dCCN, NLargeInteger(g_desc.cof) );
-/// std::map< GroupLocator, NAbelianGroup* > *abgptr = 
-//	const_cast< std::map< GroupLocator, NAbelianGroup* > *> (&abelianGroups);
-//  abgptr->insert(std::pair<GroupLocator,NAbelianGroup*>(g_desc,gptr)); 
-//    typedef NSparseGrid< coverFacetData > ccMapType;
  
 // routine fills out genCC for the ChainComplexLocator == STD_coord, all dimensions
 void NCellularData::fillStandardHomologyCC()
@@ -59,12 +48,6 @@ void NCellularData::fillStandardHomologyCC()
   {
     ccMapType* CC(NULL); // pointer to an NSparseGrid< coverFacetData > 
     NGroupExpression wordle; // temp
-
-    // initialize chain complex matrices.
-    for (unsigned i=1; i<5; i++) // sCC[i] defined for i == 0, ..., 5
-	sCC[i] = new NMatrixInt(numStandardCells[i-1], numStandardCells[i]);
-    sCC[0] = new NMatrixInt(1, numStandardCells[0]);
-    sCC[5] = new NMatrixInt(numStandardCells[4], 1);
 
     // various useful pointers, index holders.
     const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
@@ -80,8 +63,6 @@ void NCellularData::fillStandardHomologyCC()
 	for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
 	 {   // endpt i is ideal, find index
           I = icIxLookup( edg, i ) + numNonIdealCells[D-1]; 
-	  sCC[D]->entry(I, j) += 1;
-
           CC->setEntry( NMultiIndex( j, i ),  
                         coverFacetData( I, 1, wordle ) );
           // TODO compute wordle!
@@ -89,8 +70,6 @@ void NCellularData::fillStandardHomologyCC()
 	else // endpt i is not ideal
 	 {
           I = nicIxLookup(edg->getVertex(i));
-	  sCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
-
           CC->setEntry( NMultiIndex( j, i ),  
                         coverFacetData( I, (i==0? -1:1), wordle ) );
           // TODO compute wordle!
@@ -103,8 +82,6 @@ void NCellularData::fillStandardHomologyCC()
 	 {
           NPerm5 P( fac->getEdgeMapping( (icIx[D][j] + i) % (D+2) ) );
 	  I = icIxLookup( fac->getEdge( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  sCC[D]->entry(numNonIdealCells[D-1] + I,  numNonIdealCells[D] + j) -= P.sign();
-
           CC->setEntry( NMultiIndex( numNonIdealCells[D] + j, i ),  
                         coverFacetData( numNonIdealCells[D-1] + I, -P.sign(), wordle ) );
           // TODO: compute wordle!
@@ -125,15 +102,11 @@ void NCellularData::fillStandardHomologyCC()
 	  if (fac->getVertex(i)->isIdeal())
 	   { // ideal ends of faces	
             I = icIxLookup( fac, i ) + numNonIdealCells[D-1];
-	    sCC[D]->entry( I, j) += 1;
-
             CC->setEntry( NMultiIndex(j, i+D+1), coverFacetData( I,  1, wordle ) );
             // TODO: compute wordle!
 	   } // standard face boundaries
 	  NPerm5 P( fac->getEdgeMapping(i) );
           I = nicIxLookup( fac->getEdge(i) );
-	  sCC[D]->entry(I, j) += P.sign();
-
           CC->setEntry( NMultiIndex(j, i),  
                         coverFacetData( I, P.sign(), wordle ) );
           // TODO: compute wordle!
@@ -146,8 +119,6 @@ void NCellularData::fillStandardHomologyCC()
 	 {
           NPerm5 P( tet->getFaceMapping( (icIx[D][j] + i) % (D+2)) );
 	  I = icIxLookup( tet->getFace( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  sCC[D]->entry(numNonIdealCells[D-1] + I,  numNonIdealCells[D] + j) -= P.sign(); 
-
           CC->setEntry( NMultiIndex( numNonIdealCells[D] + j, i ),  
                         coverFacetData( numNonIdealCells[D-1] + I, -P.sign(), wordle ) );
           // TODO: compute wordle!
@@ -168,16 +139,12 @@ void NCellularData::fillStandardHomologyCC()
 	  if (tet->getVertex(i)->isIdeal())
 	   { // ideal ends of faces	
             I = icIxLookup( tet, i );
-	    sCC[D]->entry(numNonIdealCells[D-1] + I, j) += 1;
-
             CC->setEntry( NMultiIndex( j, i + D + 1 ),  
                           coverFacetData( numNonIdealCells[D-1] + I, 1, wordle ) );
             // TODO: compute wordle!
 	   } // standard face boundaries
 	  NPerm5 P( tet->getFaceMapping(i) );
           I = nicIxLookup( tet->getFace(i) );
-	  sCC[D]->entry(I, j) += P.sign();
-
           CC->setEntry( NMultiIndex( j, i ),  
                         coverFacetData( I, P.sign(), wordle ) );
           // TODO: compute wordle!
@@ -190,8 +157,6 @@ void NCellularData::fillStandardHomologyCC()
 	 {
           NPerm5 P( pen->getTetrahedronMapping( (icIx[D][j] + i) % (D+2)) );
 	  I = icIxLookup( pen->getTetrahedron( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  sCC[D]->entry(numNonIdealCells[D-1] + I,  numNonIdealCells[D] + j) -= P.sign(); 
-
           CC->setEntry( NMultiIndex( numNonIdealCells[D] + j, i ),  
                         coverFacetData( numNonIdealCells[D-1] + I, -P.sign(), wordle ) );
           // TODO: compute wordle!
@@ -212,8 +177,6 @@ void NCellularData::fillStandardHomologyCC()
 	  if (pen->getVertex(i)->isIdeal())
 	   { // ideal ends of faces	
             I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), (D+1)*j+i ) - icIx[D-1].begin();
-	    sCC[D]->entry(numNonIdealCells[D-1] + I, j) += 1;
-
             CC->setEntry( NMultiIndex( j, i + D + 1 ),  
                           coverFacetData( numNonIdealCells[D-1] + I, 1, wordle ) );
             // TODO: compute wordle!
@@ -221,8 +184,6 @@ void NCellularData::fillStandardHomologyCC()
 	  NPerm5 P( pen->getTetrahedronMapping(i) );
           I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri4->tetrahedronIndex( pen->getTetrahedron(i) )) 
 		- nicIx[D-1].begin();
-	  sCC[D]->entry(I, j) += P.sign();
-
           CC->setEntry( NMultiIndex( j, i ),  
                         coverFacetData( I, P.sign(), wordle ) );
           // TODO: compute wordle!
@@ -236,12 +197,6 @@ void NCellularData::fillStandardHomologyCC()
   {
     ccMapType* CC(NULL); // pointer to an NSparseGrid< coverFacetData > 
     NGroupExpression wordle; // temp
-
-    // initialize chain complex matrices.
-    for (unsigned i=1; i<4; i++) // sCC[i] defined for i == 0, ..., 5
-	sCC[i] = new NMatrixInt(numStandardCells[i-1], numStandardCells[i]);
-    sCC[0] = new NMatrixInt(1, numStandardCells[0]);
-    sCC[4] = new NMatrixInt(numStandardCells[3], 1);
 
     // various useful pointers, index holders.
     const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
@@ -257,8 +212,6 @@ void NCellularData::fillStandardHomologyCC()
 	for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
 	 {   // endpt i is ideal, find index
           I = icIxLookup( edg, i );
-	  sCC[D]->entry(numNonIdealCells[D-1] + I, j) += 1;
-
           CC->setEntry( NMultiIndex( j, i ),  
                         coverFacetData( numNonIdealCells[D-1] + I, 1, wordle ) );
           // TODO compute wordle!
@@ -266,8 +219,6 @@ void NCellularData::fillStandardHomologyCC()
 	else // endpt i is not ideal
 	 {
           I = nicIxLookup(  edg->getVertex(i) );
-	  sCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
-
           CC->setEntry( NMultiIndex( j, i ),  
                         coverFacetData( I, (i==0 ? -1:1), wordle ) );
           // TODO compute wordle!
@@ -280,9 +231,6 @@ void NCellularData::fillStandardHomologyCC()
 	 {
           NPerm4 P( fac->getEdgeMapping( (icIx[D][j] + i) % (D+2) ) );
 	  I = icIxLookup( fac->getEdge( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-
-	  sCC[D]->entry(numNonIdealCells[D-1] + I,  numNonIdealCells[D] + j) -= P.sign();
-
           CC->setEntry( NMultiIndex( numNonIdealCells[D] + j, i ),  
                         coverFacetData( numNonIdealCells[D-1] + I, -P.sign(), wordle ) );
           // TODO compute wordle!
@@ -303,16 +251,12 @@ void NCellularData::fillStandardHomologyCC()
 	  if (fac->getVertex(i)->isIdeal())
 	   { // ideal ends of faces	
             I = icIxLookup( fac, i );
-	    sCC[D]->entry(numNonIdealCells[D-1] + I, j) += 1;
-
             CC->setEntry( NMultiIndex( j, i + D + 1 ),  
                           coverFacetData( numNonIdealCells[D-1] + I, 1, wordle ) );
             // TODO compute wordle!
 	   } // standard face boundaries
 	  NPerm4 P( fac->getEdgeMapping(i) );
           I = nicIxLookup( fac->getEdge(i) );
-	  sCC[D]->entry(I, j) += P.sign();
-
           CC->setEntry( NMultiIndex( j, i ),  
                         coverFacetData( I, P.sign(), wordle ) );
           // TODO compute wordle!
@@ -325,9 +269,7 @@ void NCellularData::fillStandardHomologyCC()
 	 {
           NPerm4 P( tet->getFaceMapping( (icIx[D][j] + i) % (D+2)) );
 	  I = icIxLookup( tet->getFace( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  sCC[D]->entry(numNonIdealCells[D-1] + I,  numNonIdealCells[D] + j) -= P.sign(); 
-
-          CC->setEntry( NMultiIndex( j, i ),  
+          CC->setEntry( NMultiIndex( numNonIdealCells[D] + j, i ),  
                         coverFacetData( numNonIdealCells[D-1] + I, -P.sign(), wordle ) );
           // TODO compute wordle!
 	 }
@@ -347,16 +289,12 @@ void NCellularData::fillStandardHomologyCC()
 	  if (tet->getVertex(i)->isIdeal())
 	   { // ideal ends of faces	
             I = icIxLookup( tet, i );
-	    sCC[D]->entry(numNonIdealCells[D-1] + I, j) += 1;
-
             CC->setEntry( NMultiIndex( j, i + D + 1 ),  
                           coverFacetData( numNonIdealCells[D-1] + I, 1, wordle ) );
             // TODO compute wordle!
 	   } // standard face boundaries
 	  NPerm4 P( tet->getFaceMapping(i) );
           I = nicIxLookup( tet->getFace(i) );
-	  sCC[D]->entry(I, j) += P.sign();
-
           CC->setEntry( NMultiIndex( j, i ),  
                         coverFacetData( I, P.sign(), wordle ) );
           // TODO compute wordle!
@@ -397,11 +335,6 @@ void NCellularData::fillDualHomologyCC()
 
  if (tri4 != NULL)
  {
-    for (unsigned i=1; i<5; i++) // dCC[i]
-        dCC[i] = new NMatrixInt(numDualCells[i-1], numDualCells[i]);
-    dCC[0] = new NMatrixInt(1, numDualCells[0]);
-    dCC[5] = new NMatrixInt(numDualCells[4], 1);
-
     // various useful pointers, index holders.
     const Dim4Vertex* vrt(NULL);  const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); 
 	const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
@@ -417,7 +350,6 @@ void NCellularData::fillDualHomologyCC()
 	      J = dcIxLookup( tet );
               int sig( ( (tet->getEmbedding(1).getPentachoron() == pen) && 
  	                 (tet->getEmbedding(1).getTetrahedron() == j) ) ? +1 : -1 );
-	      dCC[D]->entry( i, J ) += sig;
               // TODO fill wordle
               CC->setEntry( NMultiIndex( J, 5*i+j ),  
                             coverFacetData( i, sig, wordle ) );
@@ -441,7 +373,6 @@ void NCellularData::fillDualHomologyCC()
 	      NPerm5 facinc( pen->getFaceMapping( 
 		Dim4Face::faceNumber[tetinc[(j<=0) ? 1 : 0]][tetinc[(j<=1)? 2 : 1]][tetinc[(j<=2)? 3 : 2]] 
 						) );
-	      dCC[D]->entry( i, J ) += ( tetinc[4]==facinc[4] ? 1 : -1 );
               // TODO fill wordle
               CC->setEntry( NMultiIndex( J, 4*i+j ),   
                             coverFacetData( i, ( tetinc[4]==facinc[4] ? 1 : -1 ), wordle ) );
@@ -467,7 +398,6 @@ void NCellularData::fillDualHomologyCC()
 						) );
 	      NPerm5 delta( edginc.inverse()*facinc*NPerm5(2, j) ); // we consider this as a permutation of {2,3,4}
               delta = delta * NPerm5( 0, delta[0] ); // kill permutation of {0,1} part of delta
-	      dCC[D]->entry( i, J ) += delta.sign();
               // TODO fill wordle
               CC->setEntry( NMultiIndex( J, 3*i+j ),  
                             coverFacetData( i, delta.sign(), wordle ) );
@@ -490,7 +420,6 @@ void NCellularData::fillDualHomologyCC()
 	      NPerm5 edginc( edg->getEmbedding(0).getVertices() );
 	      NPerm5 vrtinc( pen->getVertexMapping( edginc[j] ) );
 	      NPerm5 delta( vrtinc.inverse()*edginc*NPerm5(1, j) );
-	      dCC[D]->entry( i, J ) += delta.sign();
               // TODO fill wordle
               CC->setEntry( NMultiIndex( J, 4*i+j ),  
                             coverFacetData( i, delta.sign(), wordle ) );
@@ -502,11 +431,6 @@ void NCellularData::fillDualHomologyCC()
  }
  else // tri3 != NULL
  {
-    for (unsigned i=1; i<4; i++) // dCC[i]
-        dCC[i] = new NMatrixInt(numDualCells[i-1], numDualCells[i]);
-    dCC[0] = new NMatrixInt(1, numDualCells[0]);
-    dCC[4] = new NMatrixInt(numDualCells[3], 1);
-
     // various useful pointers, index holders.
     const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long J;
@@ -521,9 +445,8 @@ void NCellularData::fillDualHomologyCC()
               signed long sig(( ( (fac->getEmbedding(1).getTetrahedron() == tet) && 
 				       (fac->getEmbedding(1).getFace() == j) ) ? +1 : -1 ));
 	      J = dcIxLookup( fac );
-	      dCC[D]->entry( i, J ) += sig;
-             // TODO fill wordle
-             CC->setEntry( NMultiIndex( J, 4*i+j ),  
+              // TODO fill wordle
+              CC->setEntry( NMultiIndex( J, 4*i+j ),  
                             coverFacetData( i, sig, wordle ) );
 	     } }
 	}
@@ -545,9 +468,8 @@ void NCellularData::fillDualHomologyCC()
 	      NPerm4 edginc( tet->getEdgeMapping( 
 		NEdge::edgeNumber[facinc[(j<=0) ? 1 : 0]][facinc[(j<=1)? 2 : 1]] 
 						) );
-	      dCC[D]->entry( i, J ) += ( facinc[3]==edginc[3] ? 1 : -1 );
-             // TODO fill wordle
-             CC->setEntry( NMultiIndex( J, 3*i+j ),  
+              // TODO fill wordle
+              CC->setEntry( NMultiIndex( J, 3*i+j ),  
                             coverFacetData( i, ( facinc[3]==edginc[3] ? 1 : -1 ), wordle ) );
 	     } }
 	}
@@ -568,7 +490,6 @@ void NCellularData::fillDualHomologyCC()
 	      NPerm4 edginc( edg->getEmbedding(0).getVertices() );
 	      NPerm4 vrtinc( tet->getVertexMapping( edginc[j] ) );
 	      NPerm4 delta( vrtinc.inverse()*edginc*NPerm4(1, j) );
-	      dCC[D]->entry( i, J ) += delta.sign();
               // TODO fill wordle
               CC->setEntry( NMultiIndex( J, 2*i+j ),  
                             coverFacetData( i, delta.sign(), wordle ) );
@@ -611,11 +532,6 @@ void NCellularData::fillMixedHomologyCC()
 
  if (tri4!=NULL)
   {
-   for (unsigned i=1; i<5; i++) // mCC[i]
-        mCC[i] = new NMatrixInt(numMixCells[i-1], numMixCells[i]);
-    mCC[0] = new NMatrixInt(1, numMixCells[0]);
-    mCC[5] = new NMatrixInt(numMixCells[4], 1);
-
    // various useful pointers, index holders.
     const Dim4Vertex* vrt(NULL);  const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); 
 	const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
@@ -635,8 +551,6 @@ void NCellularData::fillMixedHomologyCC()
 	 if (vrt->isIdeal())
 	  { 
             I = icIxLookup( edg, j%2 );
-            mCC[D]->entry( ri5 + I, j ) += 1; 
-
             // TODO fill wordle
             CC->setEntry( NMultiIndex( j, 0 ),  
                           coverFacetData( ri5 + I, 1, wordle ) );
@@ -644,12 +558,10 @@ void NCellularData::fillMixedHomologyCC()
          else
           { 
             I = nicIxLookup( vrt );
-	    mCC[D]->entry( I, j ) += ( (j%2)==0 ? -1 : 1 ); 
             // TODO fill wordle
             CC->setEntry( NMultiIndex( j, 0 ),  
                           coverFacetData( I, ( (j%2)==0 ? -1 : 1 ), wordle ) ); 
           }  
-         mCC[D]->entry( ri1 + (j/2), j ) += ( (j%2)==0 ? 1 : -1); // vertex on the edge
          // TODO fill wordle
          CC->setEntry( NMultiIndex( j, 1 ),  
                        coverFacetData( ri1 + (j/2), ( (j%2)==0 ? 1 : -1 ), wordle ) ); 
@@ -659,11 +571,9 @@ void NCellularData::fillMixedHomologyCC()
 	{ // j % 3  mCC[D]->entry( *, ci1+j )
 	 fac = tri4->getFace(nicIx[2][j/3]); edg = fac->getEdge( j%3 );
 	 I = nicIxLookup( edg );
-	 mCC[D]->entry( ri1 + I, ci1 + j ) += 1;
          // TODO fill wordle
          CC->setEntry( NMultiIndex( ci1 + j, 0 ),  
                        coverFacetData( ri1 + I, 1, wordle ) ); 
-	 mCC[D]->entry( ri2 + (j/3), ci1 + j ) -= 1; 
          // TODO fill wordle
          CC->setEntry( NMultiIndex( ci1 + j, 1 ),  
                        coverFacetData( ri2 + (j/3), -1, wordle ) ); 
@@ -673,11 +583,9 @@ void NCellularData::fillMixedHomologyCC()
 	{ // j % 4  mCC[D]->entry( *, ci2+j )
 	 tet = tri4->getTetrahedron(nicIx[3][j/4]); fac = tet->getFace( j%4 );
 	 I = nicIxLookup( fac );
-	 mCC[D]->entry( ri2 + I, ci2 + j ) += 1;
          // TODO fill wordle
          CC->setEntry( NMultiIndex( ci2 + j, 0 ),  
                        coverFacetData( ri2 + I, 1, wordle ) ); 
-	 mCC[D]->entry( ri3 + (j/4), ci2 + j ) -= 1;
          // TODO fill wordle
          CC->setEntry( NMultiIndex( ci2 + j, 1 ),  
                        coverFacetData( ri3 + (j/4), -1, wordle ) ); 
@@ -689,11 +597,9 @@ void NCellularData::fillMixedHomologyCC()
 	 int sig( (tet->getEmbedding(0).getPentachoron() == pen) &&
 		  (tet->getEmbedding(0).getTetrahedron() == (j%5)) ? 1 : -1 ); 
 	 I = nicIxLookup( tet );
-	 mCC[D]->entry( ri3 + I, ci3 + j ) += sig;
          // TODO fill wordle
          CC->setEntry( NMultiIndex( ci3 + j, 0 ),  
                        coverFacetData( ri3 + I, sig, wordle ) ); 
-	 mCC[D]->entry( ri4 + (j/5), ci3 + j ) -= sig;	
          // TODO fill wordle
          CC->setEntry( NMultiIndex( ci3 + j, 1 ),  
                        coverFacetData( ri4 + (j/5), -sig, wordle ) ); 
@@ -706,7 +612,6 @@ void NCellularData::fillMixedHomologyCC()
 	  {          
 	  NPerm5 P( fac->getEdgeMapping( (icIx[D][j] + i) % (D+2) ) );
 	  I = icIxLookup( fac->getEdge( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  mCC[D]->entry( ri5 + I, ci4 + j ) -= P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( ci4 + j, i ),  
                         coverFacetData( ri5 + I, -P.sign(), wordle ) ); 
@@ -727,12 +632,10 @@ void NCellularData::fillMixedHomologyCC()
 	  {
 	   edg = fac->getEdge( (j+i)%3 ); NPerm5 edginc = fac->getEdgeMapping( (j+i)%3 );
 	   I = nicIxLookup( edg );
-	   mCC[D]->entry( 2*I + ( edginc.sign()==1 ? 2-i : i-1 ), j ) += edginc.sign();
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, i%3 ),  
                          coverFacetData( 2*I + ( edginc.sign()==1 ? 2-i : i-1 ), edginc.sign(), wordle ) ); 
 
-           mCC[D]->entry( ri1 + 3*(j/3)+( (j+i)%3 ), j ) += ( i==1 ? 1 : -1 );
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, 3+(i%3) ),  
                          coverFacetData( ri1 + 3*(j/3)+( (j+i)%3 ), ( i==1 ? 1 : -1 ), wordle ) ); 
@@ -740,7 +643,6 @@ void NCellularData::fillMixedHomologyCC()
 	 if (vrt->isIdeal()) 
 	  {
 	   I = icIxLookup( fac, j%3 );
-	   mCC[D]->entry( ri4 + I, j ) += 1 ;
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, 0 ),  
                          coverFacetData( ri4 + I, 1, wordle ) ); 
@@ -756,12 +658,9 @@ void NCellularData::fillMixedHomologyCC()
 	 {
           fac = tet->getFace( edginc[i+2] ); NPerm5 facinc = tet->getFaceMapping( edginc[i+2] );
 	  I = nicIxLookup( fac );
-          mCC[D]->entry( ri1 + 3*I + (facinc.preImageOf(edginc[3-i])), ci1 + j ) += 
-		( i == 0 ? 1 : -1 ); // face part
           // TODO fill wordle
           CC->setEntry( NMultiIndex( ci1 + j, i%2 ),  
                         coverFacetData( ri1 + 3*I + (facinc.preImageOf(edginc[3-i])), ( i == 0 ? 1 : -1 ), wordle ) ); 
-	  mCC[D]->entry( ri2 + 4*(j/6)+edginc[i+2], ci1 + j ) += ( i == 0 ? 1 : -1 ); // tet part
           // TODO fill wordle
           CC->setEntry( NMultiIndex( ci1 + j, 2+(i%2) ),  
                         coverFacetData( ri2 + 4*(j/6)+edginc[i+2], ( i == 0 ? 1 : -1 ), wordle ) ); 
@@ -775,14 +674,11 @@ void NCellularData::fillMixedHomologyCC()
 	  {
 	   tet = pen->getTetrahedron( facinc[i+3] ); NPerm5 tetinc = pen->getTetrahedronMapping( facinc[i+3] );
 	   I = nicIxLookup( tet );
-	   mCC[D]->entry( ri2 + 4*I + tetinc.preImageOf(facinc[4-i]), ci2 + j ) += 
-		(i == 0 ? 1 : -1 ); // tet part
            // TODO fill wordle
            CC->setEntry( NMultiIndex( ci2 + j, i%2 ),  
                          coverFacetData( ri2 + 4*I + tetinc.preImageOf(facinc[4-i]), ( i == 0 ? 1 : -1 ), wordle ) ); 
 	   int sig( (tet->getEmbedding(0).getPentachoron() == pen) &&
 		    (tet->getEmbedding(0).getTetrahedron() == facinc[i+3]) ? 1 : -1);
-	   mCC[D]->entry( ri3 + 5*(j/10) + facinc[i+3], ci2 + j ) += sig*(i == 0 ? 1 : -1); // pen part
            // TODO fill wordle
            CC->setEntry( NMultiIndex( ci2 + j, 2+(i%2) ),  
                          coverFacetData( ri3 + 5*(j/10) + facinc[i+3], sig*(i == 0 ? 1 : -1), wordle ) ); 
@@ -796,7 +692,6 @@ void NCellularData::fillMixedHomologyCC()
 	  {
            NPerm5 facinc( tet->getFaceMapping( (icIx[D][j] + i) % (D+2)) );
 	   I = icIxLookup( tet->getFace( (icIx[D][j] + i) % (D+2) ), facinc.preImageOf(icIx[D][j] % (D+2)) );
-	   mCC[D]->entry( ri4 + I, ci3 + j ) -= facinc.sign();
            // TODO fill wordle
            CC->setEntry( NMultiIndex( ci3 + j, i ),  
                          coverFacetData( ri4 + I, -facinc.sign(), wordle ) ); 
@@ -817,13 +712,10 @@ void NCellularData::fillMixedHomologyCC()
 	  {
 	   fac = tet->getFace( (j+i)%4 ); NPerm5 facinc = tet->getFaceMapping( (j+i)%4 );  // tet index wrong?
 	   I = nicIxLookup( fac );
-	   mCC[D]->entry( 3*I + facinc.preImageOf(j%4), j ) += facinc.sign(); // face
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, i%4 ),  
                          coverFacetData( 3*I + facinc.preImageOf(j%4), facinc.sign(), wordle ) ); 
            NPerm5 edginc = tet->getEdgeMapping( NEdge::edgeNumber[ j%4 ][ (j+i)%4 ] );
-	   mCC[D]->entry( ri1 + 6*(j/4) + NEdge::edgeNumber[ j%4 ][ (j+i)%4 ], j) += 
-	     (edginc[1] == (j%4) ? 1 : -1) * edginc.sign(); // edge
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, 4+(i%4) ),  coverFacetData( ri1 + 6*(j/4) + NEdge::edgeNumber[ j%4 ][ (j+i)%4 ], 
                          (edginc[1] == (j%4) ? 1 : -1) * edginc.sign(), wordle ) ); 
@@ -831,7 +723,6 @@ void NCellularData::fillMixedHomologyCC()
 	 if (vrt->isIdeal())
 	  {
 	   I = icIxLookup( tet, j%4 );
-	   mCC[D]->entry( ri3 + I, j ) += 1 ;
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, 0 ),  
                          coverFacetData( ri3 + I, 1, wordle ) ); 
@@ -848,8 +739,6 @@ void NCellularData::fillMixedHomologyCC()
 		NEdge::edgeNumber[tetinc.preImageOf(edginc[0])][tetinc.preImageOf(edginc[1])] ) );
 	   // part dual to an edge in tet.
 	   I = nicIxLookup( tet );
-	   mCC[D]->entry( ri1 + 6*I + NEdge::edgeNumber[tetinc.preImageOf(edginc[0])][tetinc.preImageOf(edginc[1])], 
-		ci1 + j ) -= ( (tetinc*edgtetinc).inverse()*edginc).sign(); 
            // TODO fill wordle
            CC->setEntry( NMultiIndex( ci1 + j, i%5 ),  coverFacetData( 
                 ri1 + 6*I + NEdge::edgeNumber[tetinc.preImageOf(edginc[0])][tetinc.preImageOf(edginc[1])], 
@@ -858,8 +747,6 @@ void NCellularData::fillMixedHomologyCC()
 	   NPerm5 facinc( pen->getFaceMapping( Dim4Face::faceNumber[edginc[0]][edginc[1]][edginc[i]] ) );
 	   NPerm5 delta( edginc.inverse()*facinc*NPerm5( 2, facinc.preImageOf(edginc[i]) ) );
 	   delta = delta * NPerm5(0, delta[0]);
-	   mCC[D]->entry( ri2 + 10*(j/10) + Dim4Face::faceNumber[edginc[0]][edginc[1]][edginc[i]], ci1 + j ) 
-		+= delta.sign(); // tetinc.inverse()*edginc sends 0,1 into 0,1,2 and
            // TODO fill wordle
            CC->setEntry( NMultiIndex( ci1+j, 5+(i%5) ), coverFacetData( ri2 + 10*(j/10) + 
                 Dim4Face::faceNumber[edginc[0]][edginc[1]][edginc[i]], delta.sign(), wordle ) ); 
@@ -873,7 +760,6 @@ void NCellularData::fillMixedHomologyCC()
 	 {
           NPerm5 P( pen->getTetrahedronMapping( (icIx[D][j] + i) % (D+2)) );
 	  I = icIxLookup( pen->getTetrahedron( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  mCC[D]->entry(ri3 + I,  ci2 + j) -= P.sign(); 
           // TODO fill wordle
           CC->setEntry( NMultiIndex( ci2 + j, i), 
                         coverFacetData( ri3 + I, -P.sign(), wordle ) ); 
@@ -894,15 +780,12 @@ void NCellularData::fillMixedHomologyCC()
 	    // standard boundary part opposite tet (j+i)%5 in facet j%5 of pen j/5
 	    tet = pen->getTetrahedron( (j+i)%5 ); NPerm5 tetinc( pen->getTetrahedronMapping( (j+i)%5 ) );
 	    I = nicIxLookup( tet );
-	    mCC[D]->entry( 4*I + tetinc.preImageOf( j%5 ), j ) += tetinc.sign();
             // TODO fill wordle
             CC->setEntry( NMultiIndex( j, i%5 ), 
                           coverFacetData( 4*I + tetinc.preImageOf( j%5 ), tetinc.sign(), wordle ) ); 
 	    // part dual to edges 0,i
 	    edg = pen->getEdge( Dim4Edge::edgeNumber[j%5][(i+j)%5] );
 	    NPerm5 edginc( pen->getEdgeMapping( Dim4Edge::edgeNumber[j%5][(i+j)%5] ) );
-	    mCC[D]->entry( ri1 + 10*(j/5) + Dim4Edge::edgeNumber[j%5][(i+j)%5], j ) += 
-		( (edginc[1] == (j%5)) ? 1 : -1)*edginc.sign(); 
             // TODO fill wordle
             CC->setEntry( NMultiIndex( j, 5+(i%5) ), 
                           coverFacetData( ri1 + 10*(j/5) + Dim4Edge::edgeNumber[j%5][(i+j)%5], 
@@ -912,7 +795,6 @@ void NCellularData::fillMixedHomologyCC()
 	  if (vrt->isIdeal()) 
 		{
 		 I = icIxLookup( pen, j%5 );
-		 mCC[D]->entry( ri2 + I, j ) += 1;
                  // TODO fill wordle
                  CC->setEntry( NMultiIndex( j, 0 ), 
                                coverFacetData( ri2 + I, 1, wordle ) ); 
@@ -924,11 +806,6 @@ void NCellularData::fillMixedHomologyCC()
  }
   else // tri3 != NULL
  {    
- for (unsigned i=1; i<4; i++) // mCC[i]
-        mCC[i] = new NMatrixInt(numMixCells[i-1], numMixCells[i]);
-    mCC[0] = new NMatrixInt(1, numMixCells[0]);
-    mCC[4] = new NMatrixInt(numMixCells[3], 1);
-
    // various useful pointers, index holders.
     const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long I;
@@ -946,7 +823,6 @@ void NCellularData::fillMixedHomologyCC()
 	 if (vrt->isIdeal())
 	  { 
             I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
-            mCC[D]->entry( ri4 + I, j ) += 1; 
             // TODO fill wordle
             CC->setEntry( NMultiIndex( j, 0 ),
                           coverFacetData( ri4 + I, 1, wordle ) );
@@ -954,12 +830,10 @@ void NCellularData::fillMixedHomologyCC()
          else
           { 
             I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri3->vertexIndex( vrt ) ) - nicIx[D-1].begin();
-	    mCC[D]->entry( I, j ) += ( (j%2)==0 ? -1 : 1 ); 
             // TODO fill wordle
             CC->setEntry( NMultiIndex( j, 0 ),
                           coverFacetData( I, ( (j%2)==0 ? -1 : 1 ), wordle ) );
           }
-            mCC[D]->entry( ri1 + (j/2), j ) += ( (j%2)==0 ? 1 : -1); // vertex on the edge
             // TODO fill wordle
             CC->setEntry( NMultiIndex( j, 1 ),
                           coverFacetData( ri1 + (j/2), ( (j%2)==0 ? 1 : -1 ), wordle ) );
@@ -970,11 +844,9 @@ void NCellularData::fillMixedHomologyCC()
 	 fac = tri3->getFace(nicIx[2][j/3]); edg = fac->getEdge( j%3 );
 	 I = lower_bound( nicIx[D].begin(), nicIx[D].end(), tri3->edgeIndex( edg ) ) - nicIx[D].begin();
 
-	 mCC[D]->entry( ri1 + I, ci1 + j ) += 1;
          // TODO fill wordle
          CC->setEntry( NMultiIndex( ci1 + j, 0 ),
                        coverFacetData( ri1 + I, 1, wordle ) );
-	 mCC[D]->entry( ri2 + (j/3), ci1 + j ) -= 1; 
          // TODO fill wordle
          CC->setEntry( NMultiIndex( ci1 + j, 1 ),
                        coverFacetData( ri2 + (j/3), -1, wordle ) );
@@ -987,11 +859,9 @@ void NCellularData::fillMixedHomologyCC()
 		  (fac->getEmbedding(0).getFace() == (j%4)) ? 1 : -1 ); 
 	 I = lower_bound( nicIx[D+1].begin(), nicIx[D+1].end(), tri3->faceIndex( fac ) ) - nicIx[D+1].begin();
 
-	 mCC[D]->entry( ri2 + I, ci2 + j ) += sig;
          // TODO fill wordle
          CC->setEntry( NMultiIndex( ci2 + j, 0 ),
                        coverFacetData( ri2 + I, sig, wordle ) );
-	 mCC[D]->entry( ri3 + (j/4), ci2 + j ) -= sig;
          // TODO fill wordle
          CC->setEntry( NMultiIndex( ci2 + j, 1 ),
                        coverFacetData( ri3 + (j/4), -sig, wordle ) );
@@ -1006,7 +876,6 @@ void NCellularData::fillMixedHomologyCC()
 	  unsigned long iX( (D+1)*tri3->edgeIndex( fac->getEdge( (icIx[D][j] + i) % (D+2) ) ) // of corresp ideal 0-cell
 			            + ( P.preImageOf(icIx[D][j] % (D+2)) ) );
 	  I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
-	  mCC[D]->entry( ri4 + I, ci3 + j ) -= P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( ci3 + j, i ),
                         coverFacetData( ri4 + I, -P.sign(), wordle ) );
@@ -1027,12 +896,10 @@ void NCellularData::fillMixedHomologyCC()
 	  {
 	   edg = fac->getEdge( (j+i)%3 ); NPerm4 edginc = fac->getEdgeMapping( (j+i)%3 );
 	   I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri3->edgeIndex( edg ) ) - nicIx[D-1].begin();
-	   mCC[D]->entry( 2*I + ( edginc.sign()==1 ? 2-i : i-1 ), j ) += edginc.sign();
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, (i%3) ),
                          coverFacetData( 2*I + ( edginc.sign()==1 ? 2-i : i-1 ), edginc.sign(), wordle ) );
 
-           mCC[D]->entry( ri1 + 3*(j/3)+( (j+i)%3 ), j ) += ( i==1 ? 1 : -1 );
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, 3+(i%3) ),
                          coverFacetData( ri1 + 3*(j/3)+( (j+i)%3 ), ( i==1 ? 1 : -1 ), wordle ) );
@@ -1040,7 +907,6 @@ void NCellularData::fillMixedHomologyCC()
 	 if (vrt->isIdeal()) 
 	  {
 	   I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
-	   mCC[D]->entry( ri3 + I, j ) += 1 ;
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, 0 ),
                          coverFacetData( ri3 + I, 1, wordle ) );
@@ -1057,12 +923,9 @@ void NCellularData::fillMixedHomologyCC()
 		   (fac->getEmbedding(0).getFace() == edginc[i+2]) ? 1 : -1 );
           I = lower_bound( nicIx[D].begin(), nicIx[D].end(), tri3->faceIndex( fac ) ) - nicIx[D].begin(); 
 
-          mCC[D]->entry( ri1 + 3*I + (facinc.preImageOf(edginc[3-i])), ci1 + j ) += 
-	               ( i == 0 ? 1 : -1 ); // face part
           // TODO fill wordle
           CC->setEntry( NMultiIndex( ci1 + j, (i%2) ),
                         coverFacetData( ri1 + 3*I + (facinc.preImageOf(edginc[3-i])), ( i == 0 ? 1 : -1 ), wordle ) );
-	  mCC[D]->entry( ri2 + 4*(j/6)+edginc[i+2], ci1 + j ) += sig*( i == 0 ? 1 : -1 ); // tet part
           // TODO fill wordle
           CC->setEntry( NMultiIndex( ci1 + j, 2+(i%2) ),
                         coverFacetData( ri2 + 4*(j/6)+edginc[i+2], sig*( i == 0 ? 1 : -1 ), wordle ) );
@@ -1078,7 +941,6 @@ void NCellularData::fillMixedHomologyCC()
 	   unsigned long iX( (D+1)*tri3->faceIndex( tet->getFace( (icIx[D][j] + i) % (D+2) ) ) 
 			            + ( facinc.preImageOf(icIx[D][j] % (D+2)) ) );
 	   I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
-	   mCC[D]->entry( ri3 + I, ci2 + j ) -= facinc.sign();
            // TODO fill wordle
            CC->setEntry( NMultiIndex( ci2 + j, i ),
                          coverFacetData( ri3 + I, -facinc.sign(), wordle ) );
@@ -1098,14 +960,11 @@ void NCellularData::fillMixedHomologyCC()
 	  {
 	   fac = tet->getFace( (j+i)%4 ); NPerm4 facinc = tet->getFaceMapping( (j+i)%4 );  
 	   I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri3->faceIndex( fac ) ) - nicIx[D-1].begin();
-	   mCC[D]->entry( 3*I + facinc.preImageOf(j%4), j ) += facinc.sign(); // face
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, (i%4) ),
                          coverFacetData( 3*I + facinc.preImageOf(j%4), facinc.sign(), wordle ) );
 
            NPerm4 edginc = tet->getEdgeMapping( NEdge::edgeNumber[ j%4 ][ (j+i)%4 ] );
-	   mCC[D]->entry( ri1 + 6*(j/4) + NEdge::edgeNumber[ j%4 ][ (j+i)%4 ], j) += 
-	     (edginc[1] == (j%4) ? 1 : -1) * edginc.sign(); // edge
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, 4+(i%4) ),  
                          coverFacetData( ri1 + 6*(j/4) + NEdge::edgeNumber[ j%4 ][ (j+i)%4 ], 
@@ -1114,7 +973,6 @@ void NCellularData::fillMixedHomologyCC()
 	 if (vrt->isIdeal())
 	  {
 	   I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), j ) - icIx[D-1].begin();
-	   mCC[D]->entry( ri2 + I, j ) += 1 ;
            // TODO fill wordle
            CC->setEntry( NMultiIndex( j, 0 ),
                          coverFacetData( ri2 + I, 1, wordle ) );
@@ -1133,12 +991,6 @@ void NCellularData::fillBoundaryHomologyCC()
 
  if (tri4!=NULL)
   {
-    // initialize chain complex matrices.
-    for (unsigned i=1; i<4; i++) // sbCC[i]
-        sbCC[i] = new NMatrixInt(numStandardBdryCells[i-1], numStandardBdryCells[i]);
-    sbCC[0] = new NMatrixInt(1, numStandardBdryCells[0]);
-    sbCC[4] = new NMatrixInt(numStandardBdryCells[3], 1);
-
     // various useful pointers, index holders.
     const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
     unsigned long I;
@@ -1152,7 +1004,6 @@ void NCellularData::fillBoundaryHomologyCC()
 	for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
 	 {   // endpt i is ideal, find index
           I = icIxLookup( edg, i );
-	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData(numNonIdealBdryCells[D-1] + I , 1, wordle ) );
@@ -1160,7 +1011,6 @@ void NCellularData::fillBoundaryHomologyCC()
 	else // endpt i is not ideal
 	 {
           I = bcIxLookup( edg->getVertex(i) );
-	  sbCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, ( i == 0 ? -1 : 1 ), wordle ) );
@@ -1173,7 +1023,6 @@ void NCellularData::fillBoundaryHomologyCC()
 	 {
           NPerm5 P( fac->getEdgeMapping( (icIx[D][j] + i) % (D+2) ) );
 	  I = icIxLookup( fac->getEdge( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I,  numNonIdealBdryCells[D] + j) -= P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( numNonIdealBdryCells[D] + j, i ),
                         coverFacetData( numNonIdealBdryCells[D-1] + I, -P.sign(), wordle ) );
@@ -1193,14 +1042,12 @@ void NCellularData::fillBoundaryHomologyCC()
 	  if (fac->getVertex(i)->isIdeal()) // technically for a valid triangulation this never happens
 	   { // ideal ends of faces	
             I = icIxLookup( fac, i );
-	    sbCC[D]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
             // TODO fill wordle
             CC->setEntry( NMultiIndex( j, i ),
                           coverFacetData( numNonIdealBdryCells[D-1] + I, 1, wordle ) );
 	   } // standard face boundaries
 	  NPerm5 P( fac->getEdgeMapping(i) );
           I = bcIxLookup( fac->getEdge(i) );
-	  sbCC[D]->entry(I, j) += P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, P.sign(), wordle ) );
@@ -1213,7 +1060,6 @@ void NCellularData::fillBoundaryHomologyCC()
 	 {
           NPerm5 P( tet->getFaceMapping( (icIx[D][j] + i) % (D+2)) );
 	  I = icIxLookup( tet->getFace( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I,  numNonIdealBdryCells[D] + j) -= P.sign(); 
           // TODO fill wordle
           CC->setEntry( NMultiIndex( numNonIdealBdryCells[D] + j, i ),
                         coverFacetData( numNonIdealBdryCells[D-1] + I, -P.sign(), wordle ) );
@@ -1233,14 +1079,12 @@ void NCellularData::fillBoundaryHomologyCC()
 	  if (tet->getVertex(i)->isIdeal())
 	   { // ideal ends of faces	
             I = icIxLookup( tet, i );
-	    sbCC[D]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
             // TODO fill wordle
             CC->setEntry( NMultiIndex( j, i ),
                           coverFacetData( numNonIdealBdryCells[D-1] + I, 1, wordle ) );
 	   } // standard face boundaries
 	  NPerm5 P( tet->getFaceMapping(i) );
           I = bcIxLookup( tet->getFace(i) );
-	  sbCC[D]->entry(I, j) += P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, P.sign(), wordle ) );
@@ -1253,7 +1097,6 @@ void NCellularData::fillBoundaryHomologyCC()
 	 {
           NPerm5 P( pen->getTetrahedronMapping( (icIx[D][j] + i) % (D+2)) );
 	  I = icIxLookup( pen->getTetrahedron( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I,  numNonIdealBdryCells[D] + j) -= P.sign(); 
           // TODO fill wordle
           CC->setEntry( NMultiIndex( numNonIdealBdryCells[D] + j, i ),
                         coverFacetData( numNonIdealBdryCells[D-1] + I, -P.sign(), wordle ) );
@@ -1265,12 +1108,6 @@ void NCellularData::fillBoundaryHomologyCC()
   }
  else // tri3 != NULL
   {
-    // initialize chain complex matrices.
-    for (unsigned i=1; i<3; i++) // sbCC[i]
-        sbCC[i] = new NMatrixInt(numStandardBdryCells[i-1], numStandardBdryCells[i]);
-    sbCC[0] = new NMatrixInt(1, numStandardBdryCells[0]);
-    sbCC[3] = new NMatrixInt(numStandardBdryCells[2], 1);
-
     // various useful pointers, index holders.
     const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long I;
@@ -1284,7 +1121,6 @@ void NCellularData::fillBoundaryHomologyCC()
 	for (unsigned long i=0; i<D+1; i++) if (edg->getVertex(i)->isIdeal())
 	 {   // endpt i is ideal, find index
           I = icIxLookup( edg, i );
-	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( numNonIdealBdryCells[D-1] + I, 1, wordle ) );
@@ -1292,7 +1128,6 @@ void NCellularData::fillBoundaryHomologyCC()
 	else // endpt i is not ideal
 	 {
           I = bcIxLookup( edg->getVertex(i) );
-	  sbCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, ( i == 0 ? -1 : 1 ), wordle ) );
@@ -1305,7 +1140,6 @@ void NCellularData::fillBoundaryHomologyCC()
 	 {
           NPerm4 P( fac->getEdgeMapping( (icIx[D][j] + i) % (D+2) ) );
 	  I = icIxLookup( fac->getEdge( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I,  numNonIdealBdryCells[D] + j) -= P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( numNonIdealBdryCells[D] + j, i ),
                         coverFacetData( numNonIdealBdryCells[D-1] + I, -P.sign(), wordle ) );
@@ -1325,14 +1159,12 @@ void NCellularData::fillBoundaryHomologyCC()
 	  if (fac->getVertex(i)->isIdeal())
 	   { // ideal ends of faces	
             I = icIxLookup( fac, i );
-	    sbCC[D]->entry(numNonIdealBdryCells[D-1] + I, j) += 1;
             // TODO fill wordle
             CC->setEntry( NMultiIndex( j, i ),
                           coverFacetData( numNonIdealBdryCells[D-1] + I, 1, wordle ) );
 	   } // standard face boundaries
 	  NPerm4 P( fac->getEdgeMapping(i) );
           I = bcIxLookup( fac->getEdge(i) );
-	  sbCC[D]->entry(I, j) += P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, P.sign(), wordle ) );
@@ -1345,7 +1177,6 @@ void NCellularData::fillBoundaryHomologyCC()
 	 {
           NPerm4 P( tet->getFaceMapping( (icIx[D][j] + i) % (D+2)) );
 	  I = icIxLookup( tet->getFace( (icIx[D][j] + i) % (D+2) ), P.preImageOf(icIx[D][j] % (D+2)) );
-	  sbCC[D]->entry(numNonIdealBdryCells[D-1] + I,  numNonIdealBdryCells[D] + j) -= P.sign(); 
           // TODO fill wordle
           CC->setEntry( NMultiIndex( numNonIdealBdryCells[D] + j, i ),
                         coverFacetData( numNonIdealBdryCells[D-1] + I, -P.sign(), wordle ) );
@@ -1365,12 +1196,6 @@ void NCellularData::fillRelativeHomologyCC()
 
   if (tri4 != NULL)
    {
-    // initialize chain complex matrices.
-    for (unsigned i=1; i<5; i++) // srCC[i] defined for i == 0, ..., 5
-	srCC[i] = new NMatrixInt(numRelativeCells[i-1], numRelativeCells[i]);
-    srCC[0] = new NMatrixInt(1, numRelativeCells[0]);
-    srCC[5] = new NMatrixInt(numRelativeCells[4], 1);
-
     // various useful pointers, index holders.
     const Dim4Edge* edg(NULL);  const Dim4Face* fac(NULL); const Dim4Tetrahedron* tet(NULL); const Dim4Pentachoron* pen(NULL);
     unsigned long I;
@@ -1384,7 +1209,6 @@ void NCellularData::fillRelativeHomologyCC()
 	for (unsigned long i=0; i<D+1; i++) if ( (!edg->getVertex(i)->isIdeal()) && (!edg->getVertex(i)->isBoundary()) )
 	 {
           I = rIxLookup( edg->getVertex(i) );
-	  srCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, ( i == 0 ? -1 : 1 ), wordle ) );
@@ -1403,7 +1227,6 @@ void NCellularData::fillRelativeHomologyCC()
 	 { 
 	  NPerm5 P( fac->getEdgeMapping(i) );
           I = rIxLookup( fac->getEdge(i) );
-	  srCC[D]->entry(I, j) += P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, P.sign(), wordle ) );
@@ -1422,7 +1245,6 @@ void NCellularData::fillRelativeHomologyCC()
 	 { 
 	  NPerm5 P( tet->getFaceMapping(i) );
           I = rIxLookup( tet->getFace(i) );
-	  srCC[D]->entry(I, j) += P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, P.sign(), wordle ) );
@@ -1441,7 +1263,6 @@ void NCellularData::fillRelativeHomologyCC()
 	 { 
 	  NPerm5 P( pen->getTetrahedronMapping(i) );
           I = rIxLookup( pen->getTetrahedron(i) );
-	  srCC[D]->entry(I, j) += P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, P.sign(), wordle ) );
@@ -1453,12 +1274,6 @@ void NCellularData::fillRelativeHomologyCC()
   }
   else // tri3 != NULL
   {
-    // initialize chain complex matrices.
-    for (unsigned i=1; i<4; i++) // srCC[i] defined for i == 0, ..., 5
-	srCC[i] = new NMatrixInt(numRelativeCells[i-1], numRelativeCells[i]);
-    srCC[0] = new NMatrixInt(1, numRelativeCells[0]);
-    srCC[4] = new NMatrixInt(numRelativeCells[3], 1);
-
     // various useful pointers, index holders.
     const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL);
     unsigned long I;
@@ -1472,7 +1287,6 @@ void NCellularData::fillRelativeHomologyCC()
 	for (unsigned long i=0; i<D+1; i++) if ( (!edg->getVertex(i)->isIdeal()) && (!edg->getVertex(i)->isBoundary()) )
 	 {
           I = rIxLookup( edg->getVertex(i) );
-	  srCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, ( i == 0 ? -1 : 1 ), wordle ) );
@@ -1491,7 +1305,6 @@ void NCellularData::fillRelativeHomologyCC()
 	 { 
 	  NPerm4 P( fac->getEdgeMapping(i) );
           I = rIxLookup( fac->getEdge(i) );
-	  srCC[D]->entry(I, j) += P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, P.sign(), wordle ) );
@@ -1510,7 +1323,6 @@ void NCellularData::fillRelativeHomologyCC()
 	 { 
 	  NPerm4 P( tet->getFaceMapping(i) );
           I = rIxLookup( tet->getFace(i) );
-	  srCC[D]->entry(I, j) += P.sign();
           // TODO fill wordle
           CC->setEntry( NMultiIndex( j, i ),
                         coverFacetData( I, P.sign(), wordle ) );
@@ -1524,6 +1336,7 @@ void NCellularData::fillRelativeHomologyCC()
 
 
 // TODO -- incomplete!
+/*
 void fillBoundaryDualHomologyCC(const Dim4Triangulation* tri,  // fills dbCC
 	const unsigned long numDualBdryCells[4],  const unsigned long numIdealCells[4], 
 	const unsigned long numNonIdealBdryCells[4],
@@ -1570,6 +1383,7 @@ void fillBoundaryDualHomologyCC(const Dim4Triangulation* tri,  // fills dbCC
     D = 3; // dbCC[D]
 
 }
+*/
 // also todo fillMixedBoundaryHomologyCC     mbCC
 //           fillDualRelBoundaryHomologyCC   drCC
 //           fillMixedRelBoundaryHomologyCC  mrCC

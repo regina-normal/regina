@@ -286,11 +286,12 @@ NCellularData::coverFacetData::coverFacetData( const coverFacetData& cloneMe )
  trans.addTermsLast( cloneMe.trans );
 }
 
-bool NCellularData::coverFacetData::operator=(const coverFacetData &rhs)
+NCellularData::coverFacetData NCellularData::coverFacetData::operator=(const coverFacetData &rhs)
 {
  cellNo = rhs.cellNo;
  sig = rhs.sig; 
  trans.addTermsLast( rhs.trans );
+ return (*this);
 }
 
 std::string NCellularData::coverFacetData::stringValue() const

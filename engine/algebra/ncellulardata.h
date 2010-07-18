@@ -92,23 +92,22 @@ class Dim4Triangulation;
  * \todo  3) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
- *        cup products.  (current efforts here)
- *        chain complex initialization TODO
- *        chain maps TODO
- *        PD / intersection forms TODO
- *        To minimize memory usage we should consider having homs, bilinear forms, etc, 
- *        not store their initialization data, keep that in the NCellularData stack.  Similarly, 
- *        move all chain complexes onto the stack. 
+ *        cup products. Chain complex initialization TODO. chain maps TODO.  PD / intersection forms TODO
+ *        Note, current "mixed" chain complex does not subdivide ideal boundary.  Is this an issue? 
+ * \todo  4) To minimize memory usage we should consider having homs, bilinear forms, etc, 
+ *        not store their initialization data, instead trusting it to the NCellularData stack.  
  *        Alexander modules. 
- * \todo  4) need to set up local orientations for dual boundary coordinates, for the barycentres
+ * \todo  5) need to set up local orientations for dual boundary coordinates, for the barycentres
  *        of all standard boundary simplices.  We'll put something in setupIndices for this.
  *        Currently done for Dim4Triangulations, but not for NTriangulations. 
- * \todo  6) add some manifolds with non-ideal boundary to the test suite. 
- * \todo  7) At present the maximal tree algorithm limits the fundamental group routine 
+ * \todo  6) At present the maximal tree algorithm limits the fundamental group routine 
  *        to connected manifolds.  When there's time it would be good to generalize the algorithm 
  *        to disconnected manifolds.  This is an easy fix with getComponents.
- * \todo \optlong Now we have change-of-coefficients maps, so later we should add Bocksteins and the
- *       long exact sequence associated to a change-of-coefficient map.
+ * \todo  7) Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
+ *        clear what all the computations mean. 
+ * \todo  8) Add consistency tests for homology computations between NCellularData and the triangulation
+ *        classes. 
+ * \todo \optlong We should add Bocksteins and the long exact sequence associated to a change-of-coefficient map.
  *
  * Guide to ncellulardata.*.cpp files:
  *
@@ -146,32 +145,36 @@ public:
   * to the compact manifold such that the ideally-triangulated manifold is a dense subspace and such that its cells are
   * the intersection of these cells to that subspace. See NCellularData::unmarkedGroup, NCellularData::markedGroup, 
   * NCellularData::homGroup, NCellularData::bilinearForm, NCellularData::GroupLocator, NCellularData::HomLocator for usage.  
+  *
+  * See also the valid_coordinate_systems vector, to iterate through implemented coordinate systems.
   */
  enum homology_coordinate_system { 
+ first_coord,
  /**
   * Is the most natural CW-decomposition of a semi-simplicially (ideal) triangulated manifold. The top-dimensional cells are
   * the tetrahedra (of a 3-manifold) or the pentachora (of a 4-manifold). Dual to DUAL_REL_BDRY_coord.
   */
-  STD_coord, 
+  STD_coord = first_coord, // indexed by nicIx then icIx 
  /**
   * Is the dual polyhedral decomposition to this CW-decomposition. The top-dimensional cells correspond to the interior
   * vertices of the triangulation. Dual to STD_REL_BDRY_coord.
   */
-  DUAL_coord, 
+  DUAL_coord, // indexed by dcIx
  /**
   * Is essentially the CW-decomposition of the barycentric subdivision of the triangulation. For every k-cell in the
   * original triangulation there's k+1 associated k-cells in this triangulation. 
   */
-  MIX_coord, 
+  MIX_coord, // see docs for indexing
  /**
   * This is the standard cell decomposition (which is always a triangulation) of the boundary. So this consists of two
   * natural parts -- the part from the standard boundary, and the ideal boundary. Dual to DUAL_BDRY_coord
   */
-  STD_BDRY_coord, 
+  STD_BDRY_coord, // indexed by bcIx then icIx
  /**
   * This is the same as STD_coord except the boundary cells are thrown away. Dual to DUAL_coord
   */
-  STD_REL_BDRY_coord,              
+  STD_REL_BDRY_coord,  // indexed by rIx      
+  last_implemented_coord, 
   /**
   * This is the barycentric subdivision of STD_BDRY_coord. TODO (incomplete)
   */
@@ -207,6 +210,8 @@ public:
  /**
   *  NCellularData stores chain complexes internally in a stack. The Chain Complex Locator allows
   * unique identification of a chain complex when passing requests to NCellularData::chainComplex
+  * Chain complexes are stored where dim indicates the dimension of the cells in the domain of
+  * the map. 
   */
  struct ChainComplexLocator {
         signed long dim; 
@@ -459,7 +464,7 @@ public:
    /**
     * Assignment operator.
     */
-   bool operator=(const coverFacetData &rhs);
+   coverFacetData operator=(const coverFacetData &rhs);
    /**
     * Output operator.
     */
@@ -537,37 +542,19 @@ private:
      **/
     std::vector< std::vector<unsigned long> > nicIx, icIx, dcIx, bcIx, rIx;
 
-    /** 
-     * chain complexes, indexed by dimension for:
-     *
-     *   standard simplicial homology
-     *  sCC  - standard cellular homology of the manifold, indexed by nicIx then icIx
-     *  sbCC - standard boundary cellular homology,        indexed by bcIx  then icIx
-     *  srCC  - standard relative cellular homology        indexed by rIx
-     *
-     *   dual cellular homology
-     *  dCC  - dual cellular homology                      indexed by dcIx 
-     *  dbCC - dual boundary cellular homology              TODO
-     *  drCC - dual relative cellular homology              TODO
-     *
-     *   mixed cellular homology 
-     *  mCC  - mixed cellular homology
-     *  mbCC - mixed boundary cellular homology             TODO
-     *  mrCC - dual relative cellular homology              TODO
-     */
-    std::vector< NMatrixInt* > sCC, sbCC, srCC, dCC, dbCC, drCC, mCC, mbCC, mrCC;
-
-    // our new generic types for holding all chain complex data 
+    // generic type for holding chain complex data 
     // this will be a 2x2 grid 1st coordinate the cell index and 
     //  2nd coordinate the indices of the incident faces.
     public:
     typedef NSparseGrid< coverFacetData > ccMapType; 
-    // there is a ccMapType for every chain complex (9 coordinate systems, 
+    // there is a ccMapType for chain complexes (9 coordinate systems, 
     //  all dimensions)
     typedef std::map< ChainComplexLocator, ccMapType* > ccCollectionType;
     private:
     // the "master" chain complex for the manifold. 
     ccCollectionType genCC;  
+    typedef std::map< ChainMapLocator, ccMapType* > cmCollectionType;
+    cmCollectionType genCM;
 
     /** 
      * Chain maps: 
@@ -804,6 +791,10 @@ private:
    void fillStandardHomologyCC();   void fillDualHomologyCC();   void fillMixedHomologyCC();
    void fillBoundaryHomologyCC(); // void fillBoundaryDualHomologyCC()  // void fillBoundaryMixedHomologyCC() // TODO
    void fillRelativeHomologyCC(); // void fillRelativeDualHomologyCC()  // void fillRelativeMixedHomologyCC() // TODO
+   /**
+    * Internal routines to set up chain maps. 
+    */
+   void fillStandardToMixedHomCM(); // void fillDualToMixedHomCM(); 
 
    /**
     *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges normalsDim3BdryEdges normalsDim3BdryVertices
@@ -1096,10 +1087,6 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         tri4(clonePtr(g.tri4)), tri3(clonePtr(g.tri3)), 
  // chain complex indexing
 	nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), rIx(g.rIx), 
- // chain complexes
-	sCC(g.sCC.size()), sbCC(g.sbCC.size()), srCC(g.srCC.size()), 
-        dCC(g.dCC.size()), dbCC(g.dbCC.size()), drCC(g.drCC.size()), 
-        mCC(g.mCC.size()), mbCC(g.mbCC.size()), mrCC(g.mrCC.size()),  
  // chain maps 
 	sbiCM(g.sbiCM.size()), strCM(g.strCM.size()), schCM(g.schCM.size()), 
         dbiCM(g.dbiCM.size()), dtrCM(g.dtrCM.size()), dchCM(g.dchCM.size()), 
@@ -1108,11 +1095,14 @@ inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         dmbCM(g.dmbCM.size()), srmCM(g.srmCM.size()), drmCM(g.drmCM.size())
 {
 // copy all the pre-computed data. 
-
-// the "master" chain complex for the manifold. 
+// the "master" chain complex collection for the manifold. 
 ccCollectionType::const_iterator ccmi;
 for (ccmi = g.genCC.begin(); ccmi != g.genCC.end(); ccmi++)
  genCC.insert( std::pair< ChainComplexLocator, ccMapType* >(ccmi->first, clonePtr(ccmi->second) ) );
+// the "master" chain map collection for the manifold. 
+cmCollectionType::const_iterator cmi;
+for (cmi = g.genCM.begin(); cmi != g.genCM.end(); cmi++)
+ genCM.insert( std::pair< ChainMapLocator, ccMapType* >(cmi->first, clonePtr(cmi->second) ) );
  // integer chain complexes
 std::map< ChainComplexLocator, NMatrixInt* >::const_iterator ci;
 for (ci = g.integerChainComplexes.begin(); ci != g.integerChainComplexes.end(); ci++) integerChainComplexes.insert( 
@@ -1163,17 +1153,6 @@ for (unsigned long i=0; i<5; i++) numMixRelCells[i] = g.numMixRelCells[i];
 for (unsigned long i=0; i<4; i++) numMixBdryCells[i] = g.numMixBdryCells[i];
 for (unsigned long i=0; i<4; i++) numDualBdryCells[i] = g.numDualBdryCells[i];
 
-// the chain complexes
-for (unsigned long i=0; i<sCC.size(); i++)       sCC[i]  = clonePtr(g.sCC[i]);
-for (unsigned long i=0; i<sbCC.size(); i++)      sbCC[i] = clonePtr(g.sbCC[i]);
-for (unsigned long i=0; i<srCC.size(); i++)      srCC[i] = clonePtr(g.srCC[i]);
-for (unsigned long i=0; i<dCC.size(); i++)       dCC[i]  = clonePtr(g.dCC[i]);
-for (unsigned long i=0; i<dbCC.size(); i++)      dbCC[i] = clonePtr(g.dbCC[i]);
-for (unsigned long i=0; i<drCC.size(); i++)      drCC[i] = clonePtr(g.drCC[i]);
-for (unsigned long i=0; i<mCC.size(); i++)       mCC[i]  = clonePtr(g.mCC[i]);
-for (unsigned long i=0; i<mbCC.size(); i++)      mbCC[i] = clonePtr(g.mbCC[i]);
-for (unsigned long i=0; i<mrCC.size(); i++)      mrCC[i] = clonePtr(g.mrCC[i]);
-
 // chain maps
 for (unsigned long i=0; i<sbiCM.size(); i++)    sbiCM[i] =  clonePtr(g.sbiCM[i]);
 for (unsigned long i=0; i<strCM.size(); i++)    strCM[i] =  clonePtr(g.strCM[i]);
@@ -1204,7 +1183,11 @@ inline NCellularData::~NCellularData() {
  // master chain complex
  ccCollectionType::const_iterator ccmi;
  for (ccmi = genCC.begin(); ccmi != genCC.end(); ccmi++)
-  delete ccmi->second; 
+  delete ccmi->second;
+ // master chain map collection
+ cmCollectionType::const_iterator cmi;
+ for (cmi = genCM.begin(); cmi != genCM.end(); cmi++)
+  delete cmi->second;
  // integer chain complexes.
  std::map< ChainComplexLocator, NMatrixInt* >::const_iterator ci;
  for (ci = integerChainComplexes.begin(); ci != integerChainComplexes.end(); ci++) 
@@ -1238,17 +1221,6 @@ inline NCellularData::~NCellularData() {
  for (hi = homGroupPresentations.begin(); hi != homGroupPresentations.end(); hi++)
         delete hi->second; 
 
- // iterate through sCC, sbCC, srCC,  dCC, dbCC, drCC,  mCC, mbCC, mrCC and deallocate
- for (unsigned long i=0; i<sCC.size(); i++)   if (sCC[i])  delete sCC[i];
- for (unsigned long i=0; i<sbCC.size(); i++)  if (sbCC[i]) delete sbCC[i];
- for (unsigned long i=0; i<srCC.size(); i++)  if (srCC[i]) delete srCC[i];
- for (unsigned long i=0; i<dCC.size(); i++)   if (dCC[i])  delete dCC[i];
- for (unsigned long i=0; i<dbCC.size(); i++)  if (dbCC[i]) delete dbCC[i];
- for (unsigned long i=0; i<drCC.size(); i++)  if (drCC[i]) delete drCC[i];
- for (unsigned long i=0; i<mCC.size(); i++)   if (mCC[i])  delete mCC[i];
- for (unsigned long i=0; i<mbCC.size(); i++)  if (mbCC[i]) delete mbCC[i];
- for (unsigned long i=0; i<mrCC.size(); i++)  if (mrCC[i]) delete mrCC[i];
-
  // iterate through sbiCM, strCM, schCM,  dbiCM, dtrCM, dchCM,  
  //                 mbiCM, mtrCM, mchCM,  smCM, dmCM, smbCM, 
  //                 dmbCM, srmCM, drmCM and deallocate
@@ -1268,7 +1240,6 @@ inline NCellularData::~NCellularData() {
  for (unsigned long i=0; i<srmCM.size(); i++) if (srmCM[i]) delete srmCM[i];
  for (unsigned long i=0; i<drmCM.size(); i++) if (drmCM[i]) delete drmCM[i];
 }
-
 
 
 } // namespace regina
