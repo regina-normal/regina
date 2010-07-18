@@ -1360,6 +1360,9 @@ void NCellularData::fillBoundaryHomologyCC()
 
 void NCellularData::fillRelativeHomologyCC()
 {
+ ccMapType* CC(NULL); // pointer to an NSparseGrid< coverFacetData > 
+ NGroupExpression wordle; // temp
+
   if (tri4 != NULL)
    {
     // initialize chain complex matrices.
@@ -1373,56 +1376,80 @@ void NCellularData::fillRelativeHomologyCC()
     unsigned long I;
     
     // now we fill them out, first srCC.  srCC[0] is zero, 
+    CC = new ccMapType(2);
     unsigned long D=1; // srCC[D]
     for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
 	{ // endpts getEdge(rIx[D][j]) ideal?
 	edg = tri4->getEdge(rIx[D][j]);
 	for (unsigned long i=0; i<D+1; i++) if ( (!edg->getVertex(i)->isIdeal()) && (!edg->getVertex(i)->isBoundary()) )
 	 {
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri4->vertexIndex( edg->getVertex(i) ) )
-	      - rIx[D-1].begin();
+          I = rIxLookup( edg->getVertex(i) );
 	  srCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, ( i == 0 ? -1 : 1 ), wordle ) );
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_REL_BDRY_coord), CC ) );
 
     D = 2; // srCC[2]
+    CC = new ccMapType(2);
     for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
 	{
 	fac = tri4->getFace(rIx[D][j]);
 	for (unsigned long i=0; i < D+1; i++) if (!fac->getEdge(i)->isBoundary())
 	 { 
 	  NPerm5 P( fac->getEdgeMapping(i) );
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri4->edgeIndex( fac->getEdge(i) )) 
-		- rIx[D-1].begin();
+          I = rIxLookup( fac->getEdge(i) );
 	  srCC[D]->entry(I, j) += P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, P.sign(), wordle ) );
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_REL_BDRY_coord), CC ) );
 
     D = 3; // srCC[3]
+    CC = new ccMapType(2);
     for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
 	{
 	tet = tri4->getTetrahedron(rIx[D][j]);
 	for (unsigned long i=0; i < D+1; i++) if (!tet->getFace(i)->isBoundary())
 	 { 
 	  NPerm5 P( tet->getFaceMapping(i) );
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri4->faceIndex( tet->getFace(i) )) 
-		- rIx[D-1].begin();
+          I = rIxLookup( tet->getFace(i) );
 	  srCC[D]->entry(I, j) += P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, P.sign(), wordle ) );
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_REL_BDRY_coord), CC ) );
 
     D = 4; // srCC[4]
+    CC = new ccMapType(2);
     for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
 	{
 	pen = tri4->getPentachoron(rIx[D][j]);
 	for (unsigned long i=0; i < D+1; i++) if (!pen->getTetrahedron(i)->isBoundary())
 	 { 
 	  NPerm5 P( pen->getTetrahedronMapping(i) );
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri4->tetrahedronIndex( pen->getTetrahedron(i) )) 
-		- rIx[D-1].begin();
+          I = rIxLookup( pen->getTetrahedron(i) );
 	  srCC[D]->entry(I, j) += P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, P.sign(), wordle ) );
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_REL_BDRY_coord), CC ) );
   }
   else // tri3 != NULL
   {
@@ -1437,49 +1464,67 @@ void NCellularData::fillRelativeHomologyCC()
     unsigned long I;
     
     // now we fill them out, first srCC.  srCC[0] is zero, 
+    CC = new ccMapType(2);
     unsigned long D=1; // srCC[D]
     for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
 	{ // endpts getEdge(rIx[D][j]) ideal?
 	edg = tri3->getEdge(rIx[D][j]);
 	for (unsigned long i=0; i<D+1; i++) if ( (!edg->getVertex(i)->isIdeal()) && (!edg->getVertex(i)->isBoundary()) )
 	 {
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri3->vertexIndex( edg->getVertex(i) ) )
-	      - rIx[D-1].begin();
+          I = rIxLookup( edg->getVertex(i) );
 	  srCC[D]->entry(I, j) += ( i == 0 ? -1 : 1 );
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, ( i == 0 ? -1 : 1 ), wordle ) );
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_REL_BDRY_coord), CC ) );
 
     D = 2; // srCC[2]
+    CC = new ccMapType(2);
     for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
 	{
 	fac = tri3->getFace(rIx[D][j]);
 	for (unsigned long i=0; i < D+1; i++) if (!fac->getEdge(i)->isBoundary())
 	 { 
 	  NPerm4 P( fac->getEdgeMapping(i) );
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri3->edgeIndex( fac->getEdge(i) )) 
-		- rIx[D-1].begin();
+          I = rIxLookup( fac->getEdge(i) );
 	  srCC[D]->entry(I, j) += P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, P.sign(), wordle ) );
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_REL_BDRY_coord), CC ) );
 
     D = 3; // srCC[3]
+    CC = new ccMapType(2);
     for (unsigned long j=0; j<numRelativeCells[D]; j++) // srCC[D]->entry( *,j )
 	{
 	tet = tri3->getTetrahedron(rIx[D][j]);
 	for (unsigned long i=0; i < D+1; i++) if (!tet->getFace(i)->isBoundary())
 	 { 
 	  NPerm4 P( tet->getFaceMapping(i) );
-          I = lower_bound( rIx[D-1].begin(), rIx[D-1].end(), tri3->faceIndex( tet->getFace(i) )) 
-		- rIx[D-1].begin();
+          I = rIxLookup( tet->getFace(i) );
 	  srCC[D]->entry(I, j) += P.sign();
+          // TODO fill wordle
+          CC->setEntry( NMultiIndex( j, i ),
+                        coverFacetData( I, P.sign(), wordle ) );
 	 }
 	}
+    // submit CC
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
+        (ChainComplexLocator(D, STD_REL_BDRY_coord), CC ) );
   } // tri3 != NULL
 }
 
 
 // TODO -- incomplete!
-void fillDualBoundaryHomologyCC(const Dim4Triangulation* tri,  // fills dbCC
+void fillBoundaryDualHomologyCC(const Dim4Triangulation* tri,  // fills dbCC
 	const unsigned long numDualBdryCells[4],  const unsigned long numIdealCells[4], 
 	const unsigned long numNonIdealBdryCells[4],
 	const std::vector< std::vector< unsigned long > > &bcIx, const std::vector< std::vector< unsigned long > > &icIx, 

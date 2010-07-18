@@ -122,7 +122,7 @@ unsigned long NCellularData::rIxLookup(const Dim4Edge* edg) const
 unsigned long NCellularData::rIxLookup(const Dim4Face* fac) const
 { return lower_bound( rIx[2].begin(), rIx[2].end(), tri4->faceIndex(fac) ) - rIx[2].begin(); }
 unsigned long NCellularData::rIxLookup(const Dim4Tetrahedron* tet) const
-{ return lower_bound( rIx[3].begin(), rIx[4].end(), tri4->tetrahedronIndex(tet) ) - rIx[3].begin(); }
+{ return lower_bound( rIx[3].begin(), rIx[3].end(), tri4->tetrahedronIndex(tet) ) - rIx[3].begin(); }
 unsigned long NCellularData::rIxLookup(const Dim4Pentachoron* pen) const
 { return lower_bound( rIx[4].begin(), rIx[4].end(), tri4->pentachoronIndex(pen) ) - rIx[4].begin(); }
 
