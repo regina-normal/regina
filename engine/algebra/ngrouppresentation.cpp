@@ -367,11 +367,13 @@ std::string NGroupPresentation::stringOutput() const {
         if (nGenerators == 0) retval.append("");
         else if (nGenerators == 1) retval.append("g0");
         else if (nGenerators == 2) retval.append("g0, g1");
-        else { retval.append("g0 .. g"); std::stringstream num; num<<(nGenerators - 1); retval.append(num.str()); }
+        else { retval.append("g0 .. g"); std::stringstream num;
+                 num<<(nGenerators - 1); retval.append(num.str()); }
         retval.append(" | ");
         std::stringstream temp;
         if (relations.empty()) retval.append(""); 
-	else for (RelIteratorConst it = relations.begin(); it != relations.end(); it++) {
+	else for (RelIteratorConst it = relations.begin(); 
+                it != relations.end(); it++) {
             if (it != relations.begin()) temp<<", ";
             (*it)->writeTextShort(temp); }
         retval.append(temp.str());
@@ -405,12 +407,14 @@ std::string NGroupPresentation::TeXOutput() const {
         if (nGenerators == 0) retval.append("\\cdot");
         else if (nGenerators == 1) retval.append("g_0");
         else if (nGenerators == 2) retval.append("g_0, g_1");
-        else { retval.append("g0, \\cdots, g"); std::stringstream num; num<<(nGenerators - 1); 
+        else { retval.append("g0, \\cdots, g"); 
+        std::stringstream num; num<<(nGenerators - 1); 
         retval.append(num.str()); }
         retval.append(" | ");
         // std::stringstream temp;
         if (relations.empty()) retval.append("\\cdot"); 
-	else for (RelIteratorConst it = relations.begin(); it != relations.end(); it++) {
+	else for (RelIteratorConst it = relations.begin(); 
+                it != relations.end(); it++) {
             if (it != relations.begin()) retval.append(", ");
             retval.append( (*it)->TeXOutput() ); }
         retval.append(" \\rangle");
@@ -422,7 +426,7 @@ std::auto_ptr<NAbelianGroup> NGroupPresentation::unMarkedAbelianization() const
 {
  // create presentation matrices to pass to NAbelianGroup(M, N)
  NMatrixInt M(1, getNumberOfGenerators() ); // zero matrix
- NMatrixInt N(getNumberOfGenerators(), getNumberOfRelations() ); // presentation matrix
+ NMatrixInt N(getNumberOfGenerators(), getNumberOfRelations() ); 
  // run through rels, increment N entries appropriately
  for (unsigned long j=0; j<getNumberOfRelations(); j++)
   {
@@ -437,7 +441,7 @@ std::auto_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianization() co
 {
  // create presentation matrices to pass to NMarkedAbelianGroup(M, N)
  NMatrixInt M(1, getNumberOfGenerators() ); // zero matrix
- NMatrixInt N(getNumberOfGenerators(), getNumberOfRelations() ); // presentation matrix
+ NMatrixInt N(getNumberOfGenerators(), getNumberOfRelations() ); 
  // run through rels, increment N entries appropriately
  for (unsigned long j=0; j<getNumberOfRelations(); j++)
   {
@@ -448,85 +452,117 @@ std::auto_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianization() co
  return std::auto_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
 }
 
-//  okay, so we have *this word, and that_word.  We want to walk through both and see to what extend we can use that_word to reduce
-//  *this word.  Everything with a score >= 0, i.e. not increasing the length, we will record in the sub_list.  The score will 
-//  simply be the difference between the length of the common chain between *this word and that_word, minus the length of the remaining
-//  word in that_word, *unless* all of that_word is used, in which case we have to do a computation to see if additional simplifications
+//  okay, so we have *this word, and that_word.  We want to walk through
+//  both and see to what extend we can use that_word to reduce
+//  *this word.  Everything with a score >= 0, i.e. not increasing 
+// the length, we will record in the sub_list.  The score will 
+//  simply be the difference between the length of the common chain
+//  between *this word and that_word, minus the length of the remaining
+//  word in that_word, *unless* all of that_word is used, in which case
+//  we have to do a computation to see if additional simplifications
 //  happen.
 //
-// so if that_word is longer than this_word, the new word can have at best length: length(that_word) - length(this_word).  So if
-// length(that_word) > 2*length(this_word) there's no point in attempting a substitution as any substitution would increase length. 
-void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression &that_word, std::set< NWordSubstitutionData > &sub_list ) const
+// so if that_word is longer than this_word, the new word can have at 
+// best length: length(that_word) - length(this_word).  So if
+// length(that_word) > 2*length(this_word) there's no point in 
+// attempting a substitution as any substitution would increase length. 
+void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression 
+        &that_word, std::set< NWordSubstitutionData > &sub_list ) const
 {
- // first thing first, let's rewrite *this and that_word as a sequence of monomials, ie gi^+-1.  Might as well store as vectors. 
+ // first thing first, let's rewrite *this and that_word as a sequence of 
+ // monomials, ie gi^+-1.  Might as well store as vectors. 
  unsigned long this_length ( wordLength() );
  unsigned long that_length ( that_word.wordLength() );
- if ( 2*this_length < that_length ) return; // if that_length is more than twice the size of this_length, don't bother 
+ if ( 2*this_length < that_length ) return; // if that_length is more 
+   // than twice the size of this_length, don't bother 
  if ( that_length == 0 ) return; // empty relator, don't bother!
  std::vector< NGroupExpressionTerm > this_word( 0 );
- std::vector< NGroupExpressionTerm > reducer( 0 ); // we'll splay-out *this and that_word so that it's easier to search for
- 		  			           // commonalities.
+ std::vector< NGroupExpressionTerm > reducer( 0 ); // we'll splay-out 
+  //*this and that_word so that it's easier to search for commonalities.
  this_word.reserve( this_length ); reducer.reserve( that_length );
  std::list<NGroupExpressionTerm>::const_iterator it; 
 
  for (it = terms.begin(); it!=terms.end(); it++)
   { for (unsigned long i=0; i<abs((*it).exponent); i++)
-     this_word.push_back( NGroupExpressionTerm( (*it).generator, ((*it).exponent>0) ? 1 : -1 ) );  }
+     this_word.push_back( NGroupExpressionTerm( (*it).generator, 
+        ((*it).exponent>0) ? 1 : -1 ) );  }
  for (it = that_word.terms.begin(); it!=that_word.terms.end(); it++)
   { for (unsigned long i=0; i<abs((*it).exponent); i++)
-     reducer.push_back( NGroupExpressionTerm( (*it).generator, ((*it).exponent>0) ? 1 : -1 ) );    }
+     reducer.push_back( NGroupExpressionTerm( (*it).generator, 
+        ((*it).exponent>0) ? 1 : -1 ) );    }
  std::vector< NGroupExpressionTerm > inv_reducer( that_length );
- for (unsigned long i=0; i<reducer.size(); i++) inv_reducer[that_length-(i+1)] = reducer[i].inverse(); 
+ for (unsigned long i=0; i<reducer.size(); i++) 
+        inv_reducer[that_length-(i+1)] = reducer[i].inverse(); 
 
- // okay, let's look for cyclic subwords of reducer in this_word.  The loop will go from the beginning to the end of this_word, 
- //  for each position in this_word we look for commonality with some part of reducer, and we follow it along (cyclically) to 
+ // okay, let's look for cyclic subwords of reducer in this_word.  
+ // The loop will go from the beginning to the end of this_word, 
+ //  for each position in this_word we look for commonality with 
+ //  some part of reducer, and we follow it along (cyclically) to 
  //  see how far it goes.  Once we find the end, we record it. 
- for (unsigned long i=0; i<this_length; i++) for (unsigned long j=0; j<that_length; j++)
+ for (unsigned long i=0; i<this_length; i++) 
+        for (unsigned long j=0; j<that_length; j++)
   { // start point for comparison is this_word[i] and reducer[j]
     unsigned long comp_length = 0; 
-    // check to seeif this_word[(i+comp_length) % this_word.size()] == reducer[(j+comp_length) % comp_length], if so, increment...
-    while ( (this_word[(i+comp_length) % this_length] == reducer[(j+comp_length) % that_length]) && 
-            (comp_length < that_length) && (comp_length < this_length) ) comp_length++;  
-    // okay, we've found a subword of reducer of length comp_length that agrees with a subword of this_word of the same length. 
+    // check to seeif this_word[(i+comp_length) % this_word.size()] == 
+    //  reducer[(j+comp_length) % comp_length], if so, increment...
+    while ( (this_word[(i+comp_length) % this_length] == 
+                reducer[(j+comp_length) % that_length]) && 
+            (comp_length < that_length) && (comp_length < this_length) ) 
+                comp_length++;  
+    // okay, we've found a subword of reducer of length comp_length that
+    //  agrees with a subword of this_word of the same length. 
     // now we need to measure how successful a substitution it might be.
     NWordSubstitutionData subData;
-    subData.invertB=false; subData.sub_length=comp_length; subData.start_sub_at=i; subData.start_from=j;
+    subData.invertB=false; subData.sub_length=comp_length;
+         subData.start_sub_at=i; subData.start_from=j;
     if (comp_length == that_length)	
 	{ // special case, we record this regardless but its score is special.
-          // assemble the word with reducer removed, *reduce* the word any further if possible, check the length. 
+          // assemble the word with reducer removed, *reduce* the word any 
+          // further if possible, check the length. 
 	  subData.score = that_length;
-	  // increment subData.score for every consecutive mutually-inverse pair this_word[i-a] this_word[i+comp_length+a]
+	  // increment subData.score for every consecutive mutually-inverse
+          //  pair this_word[i-a] this_word[i+comp_length+a]
           //  a=1,2,... up until (this_length-that_length)/2
           unsigned long a=1; 
-	  while ( (this_word[( (i+this_length)-a )%this_length].inverse()==this_word[( (i+comp_length)+(a-1) )%this_length]) &&
+	  while ( (this_word[( (i+this_length)-a )%this_length].inverse()==
+                  this_word[( (i+comp_length)+(a-1) )%this_length]) &&
 		  (2*a+that_length <= this_length ) ) { a++; subData.score++; }
 	  sub_list.insert(subData);
 	}
-    else if (2*comp_length >= that_length) // only bother if we're using at least half of the relator
+    else if (2*comp_length >= that_length) // only bother if we're using 
+        //  at least half of the relator
         { // so we'll record this but its score is relatively easy to compute
           subData.score = 2*comp_length - that_length;
 	  sub_list.insert(subData);
         }
     // now lets look for inv_reducer substitutions. 
     comp_length = 0; 
-    // check to seeif this_word[(i+comp_length) % this_word.size()] == inv_reducer[(j+comp_length) % comp_length], if so, increment...
-    while ( (this_word[(i+comp_length) % this_length] == inv_reducer[(j+comp_length) % that_length]) && 
-            (comp_length < that_length) && (comp_length < this_length) ) comp_length++;  
-    // okay, we've found a subword of reducer of length comp_length that agrees with a subword of this_word of the same length. 
+    // check to seeif this_word[(i+comp_length) % this_word.size()] == 
+    //  inv_reducer[(j+comp_length) % comp_length], if so, increment...
+    while ( (this_word[(i+comp_length) % this_length] == 
+                 inv_reducer[(j+comp_length) % that_length]) && 
+            (comp_length < that_length) && (comp_length < this_length) ) 
+                comp_length++;  
+    // okay, we've found a subword of reducer of length comp_length 
+    // that agrees with a subword of this_word of the same length. 
     // now we need to measure how successful a substitution it might be.
     subData.invertB=true; subData.sub_length=comp_length; 
     if (comp_length == that_length)	
 	{ // special case, we record this regardless but its score is special.
-          // assemble the word with reducer removed, *reduce* the word any further if possible, check the length. 
+          // assemble the word with reducer removed, *reduce* the word any 
+          //  further if possible, check the length. 
 	  subData.score = that_length;
-	  // increment subData.score for every consecutive mutually-inverse pair this_word[i-a] this_word[i+comp_length+a]
+	  // increment subData.score for every consecutive mutually-inverse 
+          //  pair this_word[i-a] this_word[i+comp_length+a]
           //  a=1,2,... up until (this_length-that_length)/2
           unsigned long a=1; 
-	  while ( (this_word[( (i+this_length)-a )%this_length].inverse()==this_word[( (i+comp_length)+(a-1) )%this_length]) &&
+	  while ( (this_word[( (i+this_length)-a )%this_length].inverse()==
+                this_word[( (i+comp_length)+(a-1) )%this_length]) &&
 		  (2*a+that_length <= this_length ) ) { a++; subData.score++; }
 	  sub_list.insert(subData);
 	}
-    else if (2*comp_length >= that_length) // only bother if we're using at least half of the relator
+    else if (2*comp_length >= that_length) // only bother if we're using at 
+        //  least half of the relator
         { // so we'll record this but its score is relatively easy to compute
           subData.score = 2*comp_length - that_length;
 	  sub_list.insert(subData);
@@ -534,48 +570,58 @@ void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression &that_word
   }
 }
 
-void NGroupExpression::applySubstitution( const NGroupExpression &that_word, const NWordSubstitutionData &sub_data )
+void NGroupExpression::applySubstitution( const NGroupExpression &that_word, 
+                        const NWordSubstitutionData &sub_data )
 {
  // okay, so let's do a quick cut-and-replace, reduce the word and hand it back. 
  unsigned long this_length ( wordLength() );
  unsigned long that_length ( that_word.wordLength() );
  std::vector< NGroupExpressionTerm > this_word( 0 );
- std::vector< NGroupExpressionTerm > reducer( 0 ); // we'll splay-out *this and that_word so that it's easier to search for
- 		  			           // commonalities.
+ std::vector< NGroupExpressionTerm > reducer( 0 ); // we'll splay-out *this and 
+  // that_word so that it's easier to search for commonalities.
  this_word.reserve( this_length ); reducer.reserve( that_length );
  std::list<NGroupExpressionTerm>::const_iterator it; 
  // start the splaying of terms
  for (it = terms.begin(); it!=terms.end(); it++)
   { for (unsigned long i=0; i<abs((*it).exponent); i++)
-     this_word.push_back( NGroupExpressionTerm( (*it).generator, ((*it).exponent>0) ? 1 : -1 ) );  }
+     this_word.push_back( NGroupExpressionTerm( (*it).generator, 
+                ((*it).exponent>0) ? 1 : -1 ) );  }
   // and that_word
  for (it = that_word.terms.begin(); it!=that_word.terms.end(); it++)
   { for (unsigned long i=0; i<abs((*it).exponent); i++)
-     reducer.push_back( NGroupExpressionTerm( (*it).generator, ((*it).exponent>0) ? 1 : -1 ) );    }
+     reducer.push_back( NGroupExpressionTerm( (*it).generator, 
+         ((*it).exponent>0) ? 1 : -1 ) );    }
  // done splaying, produce inv_reducer
  std::vector< NGroupExpressionTerm > inv_reducer( that_length );
- for (unsigned long i=0; i<that_length; i++) inv_reducer[that_length-(i+1)] = reducer[i].inverse(); 
+ for (unsigned long i=0; i<that_length; i++) inv_reducer[that_length-(i+1)] = 
+         reducer[i].inverse(); 
  // done with inv_reducer, erase terms
  terms.clear();
 
- // *this word is some conjugate of AB and the relator is some conjugate of AC. We are performing the substitution
+ // *this word is some conjugate of AB and the relator is some conjugate of AC.
+  //  We are performing the substitution
  // A=C^{-1}, thus we need to produce the word C^{-1}B. Put in C^{-1} first..
  for (unsigned long i=0; i<(that_length - sub_data.sub_length); i++)
-  terms.push_back( sub_data.invertB ?     reducer[(that_length - sub_data.start_from + i) % that_length] : 
-                                      inv_reducer[(that_length - sub_data.start_from + i) % that_length] );
- // iterate through remainder of this_word, starting from sub_data.start_sub_at + sub_length, ie fill in B 
+  terms.push_back( sub_data.invertB ?     
+        reducer[(that_length - sub_data.start_from + i) % that_length] : 
+    inv_reducer[(that_length - sub_data.start_from + i) % that_length] );
+ // iterate through remainder of this_word, starting from 
+ //     sub_data.start_sub_at + sub_length, ie fill in B 
  for (unsigned long i=0; i<(this_length - sub_data.sub_length); i++)
-  terms.push_back( this_word[(sub_data.start_sub_at + sub_data.sub_length + i) % this_length] );
-
+  terms.push_back( this_word[(sub_data.start_sub_at + sub_data.sub_length + i) %
+         this_length] );
  // done
  simplify();
 }
 
-bool compare_length( const NGroupExpression* first, const NGroupExpression* second ) 
+bool compare_length( const NGroupExpression* first, 
+         const NGroupExpression* second ) 
  {  return ( first->wordLength() < second->wordLength() ); }
 
-// assumes expVec initialized to the number of generators in the group, and entries zero.
-void build_exponent_vec( const std::list< NGroupExpressionTerm > & word, std::vector<unsigned long> &expVec ) 
+// assumes expVec initialized to the number of generators in the group, 
+//  and entries zero.
+void build_exponent_vec( const std::list< NGroupExpressionTerm > & word, 
+                          std::vector<unsigned long> &expVec ) 
 {
  std::list<NGroupExpressionTerm>::const_iterator tit;
  for ( tit = word.begin(); tit != word.end(); tit++) 
@@ -583,10 +629,12 @@ void build_exponent_vec( const std::list< NGroupExpressionTerm > & word, std::ve
 }
 
 // gives a string that describes the substitution
-std::string substitutionString( const NGroupExpression &word, const NGroupExpression::NWordSubstitutionData &subData )
+std::string substitutionString( const NGroupExpression &word, 
+                const NGroupExpression::NWordSubstitutionData &subData )
 {
  std::string retval;
- // cut subData into bits, assemble what we're cutting out and what we're pasting in. 
+ // cut subData into bits, assemble what we're cutting 
+ //  out and what we're pasting in. 
  unsigned long word_length ( word.wordLength() );
  std::vector< NGroupExpressionTerm > reducer( 0 ); 
  reducer.reserve( word_length );
@@ -594,18 +642,23 @@ std::string substitutionString( const NGroupExpression &word, const NGroupExpres
   // splay word
  for (it = word.getTerms().begin(); it!=word.getTerms().end(); it++)
   { for (unsigned long i=0; i<abs((*it).exponent); i++)
-     reducer.push_back( NGroupExpressionTerm( (*it).generator, ((*it).exponent>0) ? 1 : -1 ) );    }
+     reducer.push_back( NGroupExpressionTerm( (*it).generator, 
+                      ((*it).exponent>0) ? 1 : -1 ) );    }
  // done splaying, produce inv_reducer
  std::vector< NGroupExpressionTerm > inv_reducer( word_length );
- for (unsigned long i=0; i<word_length; i++) inv_reducer[word_length-(i+1)] = reducer[i].inverse(); 
- NGroupExpression del_word, rep_word; // produce word to delete, and word to replace with.
+ for (unsigned long i=0; i<word_length; i++) inv_reducer[word_length-(i+1)] = 
+                reducer[i].inverse(); 
+ NGroupExpression del_word, rep_word; 
+        // produce word to delete, and word to replace with.
 
  for (unsigned long i=0; i<(word_length - subData.sub_length); i++)
-  rep_word.addTermLast( subData.invertB ?     reducer[(word_length - subData.start_from + i) % word_length] : 
-                                          inv_reducer[(word_length - subData.start_from + i) % word_length] );
+  rep_word.addTermLast( subData.invertB ?     
+        reducer[(word_length - subData.start_from + i) % word_length] : 
+    inv_reducer[(word_length - subData.start_from + i) % word_length] );
  for (unsigned long i=0; i<subData.sub_length; i++)
-  del_word.addTermLast( subData.invertB ? inv_reducer[(subData.start_from + i) % word_length] : 
-					      reducer[(subData.start_from + i) % word_length] );
+  del_word.addTermLast( subData.invertB ? 
+        inv_reducer[(subData.start_from + i) % word_length] : 
+            reducer[(subData.start_from + i) % word_length] );
  rep_word.simplify(); del_word.simplify();
  retval = del_word.stringOutput()+" -> "+rep_word.stringOutput();
  return retval;
@@ -642,9 +695,12 @@ bool NGroupPresentation::intelligentSimplify() {
 }
 
 
-// TODO: recognise commutators and use that to our advantage. 
+// TODO: 1) recognise commutators and use that to our advantage. 
 //       recognise other advantageous small words ??
 //       random walks using score==0 substitutions??
+//       recognise utility of some Nielsen transforms, ie
+//       2) basic automorphisms of the free group, x_1 --> x_1, ...
+//             x_i --> x_ix_j, ..., x_n --> x_n, etc. 
 bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMap)
 {
  bool didSomething(false);
