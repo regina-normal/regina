@@ -68,9 +68,20 @@ return true;
 }
 
 bool NCellularData::chainMapsVerified() const
-{
+{ // temporary fix TODO replace once new chain maps are up and running
+unsigned long aDim( (tri4!=NULL) ? 4 : 3 );
+std::vector< const NMatrixInt* > mCC(5), sCC(5), dCC(5), srCC(5), sbCC(5);
+for (unsigned long i=0; i<aDim; i++)
+ {
+  mCC[i] = integerChainComplex( ChainComplexLocator(i, MIX_coord) );
+  sCC[i] = integerChainComplex( ChainComplexLocator(i, STD_coord) );
+  dCC[i] = integerChainComplex( ChainComplexLocator(i, DUAL_coord) );
+  srCC[i] = integerChainComplex( ChainComplexLocator(i, STD_REL_BDRY_coord) );
+  sbCC[i] = integerChainComplex( ChainComplexLocator(i, STD_BDRY_coord) );
+ }
+
 // verify mCC[i]*smCM[i] == smCM[i-1]*sCC[i]
-/*for (unsigned long i=1; i<smCM.size(); i++) if (smCM[i] && smCM[i-1] && mCC[i] && sCC[i])
+for (unsigned long i=1; i<smCM.size(); i++) if (smCM[i] && smCM[i-1] && mCC[i] && sCC[i])
  {
   if ( (mCC[i]->columns() != smCM[i]->rows()) || (smCM[i-1]->columns() != sCC[i]->rows()) ) return false;
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*smCM[i]);
@@ -109,7 +120,7 @@ for (unsigned long i=1; i<schCM.size(); i++) if (schCM[i] && schCM[i-1] && srCC[
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*schCM[i-1])*(*srCC[i+1]);
   for (unsigned long j=0; j<prod1->rows(); j++) for (unsigned long k=0; k<prod1->columns(); k++)
 	if (prod1->entry(j,k) + prod2->entry(j,k) != 0) return false; 
- }*/ // TODO! fix this...
+ } // TODO! fix this...
 return true;
 }
 

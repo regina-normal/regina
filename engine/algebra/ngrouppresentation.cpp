@@ -825,7 +825,7 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
   //     the free group that fix all but one generator, which maps as
   //     g_i --> g_i g_j^k for some j \neq i, and any k, similarly
   //     g_i --> g_j^k g_i.  To pull this off I think I'll have to separate
-  //     a killTable from the substitutionTable....
+  //     a killTable from the substitutionTable.... TODO
 
   } // end of main_while_loop (6)
  
