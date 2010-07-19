@@ -512,6 +512,14 @@ class NGroupExpression : public ShareableObject {
 
         /**
          * The text representation will be of the form
+         * <tt>g_2^4 g_{13}^{-5} g_4</tt>, i.e. suitable for TeX.
+	 *
+	 * @return a std::string representation of the word.
+         */
+	std::string TeXOutput() const;
+
+        /**
+         * The text representation will be of the form
          * <tt>g2^4 g13^-5 g4</tt>.
          */
         virtual void writeTextShort(std::ostream& out) const;
@@ -628,7 +636,6 @@ class NGroupPresentation : public ShareableObject {
 	 */
 	bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
 
-
         /**
          * Attempts to recognise the group corresponding to this
          * presentation.  This routine is much more likely to be
@@ -713,6 +720,19 @@ class NGroupPresentation : public ShareableObject {
 	 * @return a std::string describing the presentation, < generators | relators >
 	 */
 	std::string stringOutput() const;
+
+	/**
+	 * Writes a single string description of the group presentation. No endlines. 
+         * In TeX 
+	 *
+	 * @return a std::string describing the presentation, < generators | relators >
+	 */
+	std::string TeXOutput() const;
+
+        /**
+         * Assignment operator.
+         */
+        void operator=(const NGroupPresentation& copyMe);
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;

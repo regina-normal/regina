@@ -915,9 +915,6 @@ const NMatrixInt* NCellularData::integerChainComplex( const ChainComplexLocator 
  if (p != integerChainComplexes.end()) return (p->second);
  else 
   { 
-   // consider the extremal cases for which genCC stores no data
-   if ( (c_desc.dim == 0) || (c_desc.dim == (tri4 ? 4 : 3) ) ) {}
-   // Look up the appropriate chain complex in genCC
    ccCollectionType::const_iterator q;
    q = genCC.find(c_desc); 
    if (q == genCC.end()) return NULL; // invalid request
@@ -942,21 +939,39 @@ const NMatrixInt* NCellularData::integerChainComplex( const ChainComplexLocator 
  return NULL;
 }
 
-// TODO
+// currently it's returning NULL for a STD_coord -> MIX_coord map which it shouldn't do...
+// TODO fix!
 const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc ) const
 {
- reloop_loop:
  std::map< ChainMapLocator, NMatrixInt* >::const_iterator p;
  // various bail triggers
  p = integerChainMaps.find(m_desc);
  if (p != integerChainMaps.end()) return (p->second);
  else 
   { 
-   // TODO more or less copy integerChainComplexes
-
-   goto reloop_loop;
+   // Look up the appropriate chain complex in genCC
+   cmCollectionType::const_iterator q;
+   q = genCM.find(m_desc); 
+    if (q == genCM.end()) return NULL; // invalid request
+   // q->second is our NSparseGrid< coverFacetData > ccMapType; 
+   NCellularData::ccMapType thisCM( *q->second ); 
+   // build matrix. 
+   NMatrixInt* buildMat( NULL ); 
+   buildMat = new NMatrixInt( cellCount(m_desc.domain), cellCount(m_desc.range) );
+   // build entries
+   std::map< NMultiIndex, coverFacetData* >::const_iterator ci;
+   for (ci = thisCM.getGrid().begin(); ci!=thisCM.getGrid().end(); ci++)
+    {
+     buildMat->entry( ci->second->cellNo,  ci->first.entry(0) ) += ci->second->sig;
+    }
+   // insert
+   std::map< ChainMapLocator, NMatrixInt* > *Mptr = 
+       const_cast< std::map< ChainMapLocator, NMatrixInt* > *> (&integerChainMaps);
+      Mptr->insert( std::pair< ChainMapLocator, NMatrixInt* > ( m_desc, buildMat ) );
+   return buildMat; 
   }
  // return NULL if an invalid request
+
  return NULL;
 }
 

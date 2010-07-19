@@ -96,11 +96,13 @@ class NCellularDataTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {     
-          t3List.resize(17); for (unsigned long i=0; i<t3List.size(); i++) t3List[i] = new NTriangulation();          
+          unsigned long numTests3( detailedTests() ? 17 : 6 ); 
+          t3List.resize(numTests3); for (unsigned long i=0; i<t3List.size(); i++) t3List[i] = new NTriangulation();          
 	  // todo: once we have dim4Triangulation dehydration strings we can add some 4-dimensional triangulations.
           t3List[0]->insertRehydration("cabbbbaei");     t3List[1]->insertRehydration("cabbbbapt");
           t3List[2]->insertRehydration("dagacccfwkn");   t3List[3]->insertRehydration("ebdbcdddaqhie");
           t3List[4]->insertRehydration("eahbcdddhsssj"); t3List[5]->insertRehydration("ebdbcdddddddx");
+          if (detailedTests()) {
           t3List[6]->insertRehydration("baaaade");       t3List[7]->insertRehydration("cabbbbabw");
           t3List[8]->insertRehydration("cabbbbcdw");     t3List[9]->insertRehydration("eahdccddakfhq");
           t3List[10]->insertRehydration("ebdbcdddcemre");t3List[11]->insertRehydration("eahbcdddjxxxj");
@@ -108,18 +110,20 @@ class NCellularDataTest : public CppUnit::TestFixture {
           copyAndDelete(*t3List[13],     NExampleTriangulation::smallClosedNonOrblHyperbolic());
           copyAndDelete(*t3List[14],     NExampleTriangulation::weberSeifert());
 	  t3List[15]->insertRehydration("gepaadcefeffnkkanax");
-	  t3List[16]->insertRehydration("jgofiaaaceedfhiiifkxkfnbtxe");
+	  t3List[16]->insertRehydration("jgofiaaaceedfhiiifkxkfnbtxe"); }
 
-          t4List.resize(7); for (unsigned long i=0; i<t4List.size(); i++) t4List[i] = new Dim4Triangulation();
+          unsigned long numTests4( detailedTests() ? 7 : 4);
+          t4List.resize(numTests4); for (unsigned long i=0; i<t4List.size(); i++) t4List[i] = new Dim4Triangulation();
           copyAndDelete(*t4List[0], Dim4Triangulation::fromIsoSig("baa")); // single pentachoron
           copyAndDelete(*t4List[1], Dim4Triangulation::fromIsoSig("cHkbbbRb3asb")); // Poincare dodecahedral space x interval
           copyAndDelete(*t4List[2], Dim4Triangulation::fromIsoSig("cMkabbb+aAa3blb")); // simplest 2-knot 2-pentachoron
           copyAndDelete(*t4List[3], Dim4Triangulation::fromIsoSig("eLMQcaccddcd1aaa2a4aaa1aca"));  // 4-pentachoron knot
+          if (detailedTests()) {
           copyAndDelete(*t4List[4], Dim4Triangulation::fromIsoSig("eLAQcbbbdddd0baa0bhahaDaDa"));  // another 
           copyAndDelete(*t4List[5], Dim4Triangulation::fromIsoSig("gLLAQQccddeffeffaayaNaNaPbzb0aPbIaxa")); // 6-pentachoron knot
-          copyAndDelete(*t4List[6], Dim4Triangulation::fromIsoSig("eAMMcaabccdd+aoa+aAaqbyaca")); // CP^2
+          copyAndDelete(*t4List[6], Dim4Triangulation::fromIsoSig("eAMMcaabccdd+aoa+aAaqbyaca")); } // CP2
 
-	  m3List.resize( t3List.size() ); for (unsigned long i=0; i<m3List.size(); i++) m3List[i]=new NCellularData(*t3List[i]);
+          m3List.resize( t3List.size() ); for (unsigned long i=0; i<m3List.size(); i++) m3List[i]=new NCellularData(*t3List[i]);
           m4List.resize( t4List.size() ); for (unsigned long i=0; i<m4List.size(); i++) m4List[i]=new NCellularData(*t4List[i]);          
 
 	  polyList.resize(17);

@@ -379,6 +379,45 @@ std::string NGroupPresentation::stringOutput() const {
 	return retval;
 }
 
+std::string NGroupExpression::TeXOutput() const {
+    std::string retval;
+    if (terms.empty())
+        retval.append("e");
+    else {
+       std::list<NGroupExpressionTerm>::const_iterator i;
+        for (i = terms.begin(); i!=terms.end(); i++)
+         {
+          std::stringstream genss; genss<<(*i).generator;
+          std::stringstream expss; expss<<(*i).exponent; 
+          retval.append("g_{"); retval.append(genss.str());
+          retval.append("}"); 
+          if ( (*i).exponent != 1 ) {
+           retval.append("^{"); retval.append(expss.str());
+           retval.append("}"); }
+         }
+    }
+    return retval;
+}
+
+std::string NGroupPresentation::TeXOutput() const {
+	std::string retval;
+	retval.append("\\langle ");
+        if (nGenerators == 0) retval.append("\\cdot");
+        else if (nGenerators == 1) retval.append("g_0");
+        else if (nGenerators == 2) retval.append("g_0, g_1");
+        else { retval.append("g0, \\cdots, g"); std::stringstream num; num<<(nGenerators - 1); 
+        retval.append(num.str()); }
+        retval.append(" | ");
+        // std::stringstream temp;
+        if (relations.empty()) retval.append("\\cdot"); 
+	else for (RelIteratorConst it = relations.begin(); it != relations.end(); it++) {
+            if (it != relations.begin()) retval.append(", ");
+            retval.append( (*it)->TeXOutput() ); }
+        retval.append(" \\rangle");
+	return retval;
+}
+
+
 std::auto_ptr<NAbelianGroup> NGroupPresentation::unMarkedAbelianization() const
 {
  // create presentation matrices to pass to NAbelianGroup(M, N)
@@ -772,6 +811,14 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
  return didSomething;
 }// end dehnAlgorithm()
 
+void NGroupPresentation::operator=(const NGroupPresentation& copyMe)
+{
+ nGenerators = copyMe.nGenerators; 
+ for (unsigned long i=0; i<relations.size(); i++) delete relations[i];
+ relations.resize(copyMe.relations.size());
+ for (unsigned long i=0; i<relations.size(); i++)
+  relations[i] = new NGroupExpression( *copyMe.relations[i] );
+}
 
 
 } // namespace regina

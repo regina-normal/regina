@@ -230,6 +230,10 @@ public:
 	bool operator<(const ChainComplexLocator &rhs) const;
         bool operator==(const ChainComplexLocator &rhs) const;
         bool operator!=(const ChainComplexLocator &rhs) const;
+        /**
+         * Returns true if chain complex is of a boundary type. 
+         */
+        bool boundaryType() const; 
        
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

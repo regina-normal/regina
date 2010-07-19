@@ -36,7 +36,6 @@ void NCellularData::fillStandardToMixedHomCM()
  unsigned long aDim( (tri4!=NULL) ? 4 : 3 );
  ccMapType* CM(NULL); // pointer to an NSparseGrid< coverFacetData > 
  NGroupExpression wordle; // temp
-
  for (unsigned d=0; d<=aDim; d++) smCM[d] = new NMatrixInt( numMixCells[d], numStandardCells[d] ); // TODO: erase
  long int delta[aDim]; for (unsigned long d=0; d<aDim; d++) delta[d] = numMixCells[d] - numIdealCells[d] - numNonIdealCells[d];
 
@@ -61,6 +60,7 @@ void NCellularData::fillStandardToMixedHomCM()
                       coverFacetData( delta[d] + j, 1, wordle ) );
         }
     } // j for loop
+
    // submit CC
    genCM.insert( std::pair< ChainMapLocator, ccMapType* >
     (ChainMapLocator(ChainComplexLocator(d,STD_coord), ChainComplexLocator(d,MIX_coord)), CM ) );
