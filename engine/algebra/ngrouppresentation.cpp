@@ -727,8 +727,9 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
   { // 1) Sort. 
     // 2) deallocate and remove any trivial relators 
     // 3) apply shorter relators to longer ones to reduce length of relators, possibly triggering we_value_iteration
-    // 4) use relators to kill generators. 
-    // 5) return to (1) if we_value_iteration
+    // 4) use relators to kill generators
+    // 5) Look for convienient Nielsen transforms. TODO
+    // 6) return to (1) if we_value_iteration
 
    we_value_iteration = false; // set this back to true if we ever make a successful substitution. 
    relatorList.sort( compare_length ); // (1)
@@ -820,8 +821,13 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
     found_a_generator_killer:
     if (word_length_3_trigger) break; 
    } // end (4)
+  // (5) look for convienient Nielsen moves. These are automorphisms of the
+  //     the free group that fix all but one generator, which maps as
+  //     g_i --> g_i g_j^k for some j \neq i, and any k, similarly
+  //     g_i --> g_j^k g_i.  To pull this off I think I'll have to separate
+  //     a killTable from the substitutionTable....
 
-  } // end of main_while_loop
+  } // end of main_while_loop (6)
  
  // We need to remove the generators that have been killed or expressed
  // in terms of other generators.  We have to similarly re-index the 
