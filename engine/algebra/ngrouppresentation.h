@@ -404,17 +404,20 @@ class NGroupExpression : public ShareableObject {
             const NGroupExpression& expansion, bool cyclic = false);
 
 	/**
-	 * Given two words, A and B, one wants to know how one can make substitutions into A using
-	 *  variants of the word B.  This structure holds that data.  For example, if:
+	 * Given two words, A and B, one wants to know how one can make 
+         *  substitutions into A using variants of the word B.  This 
+         *  structure holds that data.  For example, if:
 	 *
 	 *  A == a^5b^2abababa^4b^1  and  B == bababa^-1
 	 *    == aaaaabbabababaaaab  
-	 * start_sub_at == 6, start_from == 0, sub_length == 5 makes sense, this singles out the subword
-	 *       aaaaab[babab]abaaaab. Since it would reduce the length by four, the score is 4.
+	 * start_sub_at == 6, start_from == 0, sub_length == 5 makes sense, 
+         *  this singles out the subword aaaaab[babab]abaaaab. Since it would 
+         *  reduce the length by four, the score is 4.
 	 * 
-	 * Similarly, if    A == baba^4b^1a^5b^2aba == babaaaabaaaaabbaba  and    B == baba^-1ba
-	 *  start_sub_at == 14, start_from == 5, sub_length == 5 makes sense, and is a cyclic variation 
-	 *  on the above substitution, so the score is also 4. 
+	 * Similarly, if    A == baba^4b^1a^5b^2aba == babaaaabaaaaabbaba 
+         *   and    B == baba^-1ba start_sub_at == 14, start_from == 5, 
+         *   sub_length == 5 makes sense, and is a cyclic variation 
+	 *   on the above substitution, so the score is also 4. 
 	 */
 	struct NWordSubstitutionData {
 		unsigned long start_sub_at; // where in A do we start?
@@ -426,41 +429,56 @@ class NGroupExpression : public ShareableObject {
 	 	// we set up the ordering so that highest score objects are at begin()
 		bool operator<( const NWordSubstitutionData &other ) const
 		{
-			if (score < other.score) return false;           if (score > other.score) return true; 
-			if (sub_length < other.sub_length) return false; if (sub_length > other.sub_length) return true;
-			if ( (invertB == true)  && (other.invertB == false) ) return false; 
-			if ( (invertB == false) && (other.invertB == true)  ) return true;
-			if (start_from < other.start_from) return false;     if (start_from > other.start_from) return true;
-			if (start_sub_at < other.start_sub_at) return false; if (start_sub_at > other.start_sub_at) return true;
+			if (score < other.score) return false;           
+                        if (score > other.score) return true; 
+			if (sub_length < other.sub_length) return false;
+                        if (sub_length > other.sub_length) return true;
+			if ( (invertB == true)  && (other.invertB == false) ) 
+                                return false; 
+			if ( (invertB == false) && (other.invertB == true)  ) 
+                                return true;
+			if (start_from < other.start_from) return false;     
+                        if (start_from > other.start_from) return true;
+			if (start_sub_at < other.start_sub_at) return false; 
+                        if (start_sub_at > other.start_sub_at) return true;
 			return false;
 		}
 		void writeTextShort(std::ostream& out) const
 		{
-			out<<"Target position "<<start_sub_at<<" length of substitution "<<sub_length<<
-			(invertB ? " inverse reducer position " : " reducer position ")<<start_from<<" score "<<score;
+			out<<"Target position "<<start_sub_at<<
+                        " length of substitution "<<sub_length<<(invertB ?
+                         " inverse reducer position " : " reducer position ")
+                        <<start_from<<" score "<<score;
 		}
 	};
 	/**
-	 *  This is the core of the Dehn algorithm for hyperbolic groups.  Given two words, *this and
- 	 *  that_word, this routine searches for subwords of that_word (in the cyclic sense), and 
-	 *  builds a table of substitutions one can make from that_word into *this.  The table is
-	 *  refined so that one knows the "value" of each substitution -- the extent to which the 	
-	 *  substitution would shorten the word *this.   This is to allow for intelligent choices of
+	 *  This is the core of the Dehn algorithm for hyperbolic groups.       
+         *  Given two words, *this and that_word, this routine searches for 
+         *  subwords of that_word (in the cyclic sense), and builds a table 
+         *  of substitutions one can make from that_word into *this.  The 
+         *  table is refined so that one knows the "value" of each 
+         *  substitution -- the extent to which the substitution would shorten
+         *  the word *this.   This is to allow for intelligent choices of
 	 *  substitutions by whichever algorithms call this one.  
 	 *
-	 *  This algorithm assumes that *this and that_word are cyclically reduced words.  If you feed
-	 *  it non-cyclically reduced words it will give you suggestions although they will not be 
-	 *  as strong as if the words were cyclically reduced.  It also only adds to sub_list, so
-	 *  for best results pass it an empty sub-list.
+	 *  This algorithm assumes that *this and that_word are cyclically      
+         *  reduced words.  If you feed it non-cyclically reduced words it 
+         *  will give you suggestions although they will not be as strong
+         *  as if the words were cyclically reduced.  It also only adds 
+         *  to sub_list, so for best results pass it an empty sub-list.
 	 */
-	void dehnAlgorithmSubMetric( const NGroupExpression &that_word, std::set< NWordSubstitutionData > &sub_list ) const;
+	void dehnAlgorithmSubMetric( const NGroupExpression &that_word, 
+               std::set< NWordSubstitutionData > &sub_list ) const;
 
 	/**  
-	 *  Given a word *this and that_word, apply the substitution specified by sub_data to *this. 
-	 * See dehnAlgorithm() and struct NWordSubstitutionData.  In particular sub_data needs to be a 
-	 * valid substitution, usually it will be generated by dehnAlgorithmSubMetric.  
+	 *  Given a word *this and that_word, apply the substitution specified
+         *  by sub_data to *this. See dehnAlgorithm() and struct 
+         *  NWordSubstitutionData.  In particular sub_data needs to be a 
+	 *  valid substitution, usually it will be generated by 
+         *  dehnAlgorithmSubMetric.  
 	 */
-	void applySubstitution( const NGroupExpression &that_word, const NWordSubstitutionData &sub_data );
+	void applySubstitution( const NGroupExpression &that_word, const 
+             NWordSubstitutionData &sub_data );
 
         /**
          * Writes a chunk of XML containing this expression.
@@ -620,19 +638,23 @@ class NGroupPresentation : public ShareableObject {
          */
         bool intelligentSimplify();
 	/**
-	 * Reduces this presentation using the Dehn algorithm for hyperbolic groups, i.e. small cancellation
-	 * theory.   This means we look to see if part of one relator can be used to simplify others.  If so, 
-	 * make the substitution and simplify.  We continue until no more presentation-shortening substitutions 
-	 * are available.  We follow that by killing any available generators using words where generators
+	 * Reduces this presentation using the Dehn algorithm for hyperbolic 
+         * groups, i.e. small cancellation theory.   This means we look to see 
+         * if part of one relator can be used to simplify others.  If so, 
+	 * make the substitution and simplify.  We continue until no more 
+         * presentation-shortening substitutions are available.  We follow that
+         *  by killing any available generators using words where generators
          * appear a single time. 
          *
-         * @param must be a null pointer, the algorithm initializes the pointer and reductionMap. This means
-         *  the user is responsible for de-allocating reductionMap whenever they're done with it. 
+         * @param must be a null pointer, the algorithm initializes the pointer
+         *  and reductionMap. This means the user is responsible for 
+         *  de-allocating reductionMap whenever they're done with it. 
          *
          * @return \c true if and only if the presentation was changed. 
          * 
-         * \todo \optlong This routine could use some small tweaks -- recognition of utility of  
-         *   some score==0 moves, such as commutators, for example. 
+         * \todo \optlong This routine could use some small tweaks -- 
+         *   recognition of utility of some score==0 moves, such as 
+         *   commutators, for example. 
 	 */
 	bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
 
