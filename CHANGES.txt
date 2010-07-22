@@ -45,6 +45,8 @@ Version 4.6.1  [ (under development) ]
               initialRows, allowing the user to force certain hyperplanes
               to be processed first.
         Class NExampleTriangulation:
+            - New routine bingsHouse() returning the dual triangulation to
+              Bing's house with two rooms.
             - Renamed seifertWeber() to weberSeifert(), for consistency with
               the original paper.  The old routine is now deprecated, but has
               being preserved (for the time being) for backward compatibility.

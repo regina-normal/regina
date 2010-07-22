@@ -38,6 +38,8 @@ void addNExampleTriangulation() {
     class_<NExampleTriangulation>("NExampleTriangulation", no_init)
         .def("threeSphere", &NExampleTriangulation::threeSphere,
             return_value_policy<manage_new_object>())
+        .def("bingsHouse", &NExampleTriangulation::bingsHouse,
+            return_value_policy<manage_new_object>())
         .def("s2xs1", &NExampleTriangulation::s2xs1,
             return_value_policy<manage_new_object>())
         .def("rp2xs1", &NExampleTriangulation::rp2xs1,
@@ -77,6 +79,7 @@ void addNExampleTriangulation() {
             &NExampleTriangulation::cuspedGenusTwoTorus,
             return_value_policy<manage_new_object>())
         .staticmethod("threeSphere")
+        .staticmethod("bingsHouse")
         .staticmethod("s2xs1")
         .staticmethod("rp2xs1")
         .staticmethod("rp3rp3")

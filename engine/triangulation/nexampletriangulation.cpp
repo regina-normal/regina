@@ -125,6 +125,22 @@ NTriangulation* NExampleTriangulation::threeSphere() {
     return ans;
 }
 
+NTriangulation* NExampleTriangulation::bingsHouse() {
+    NTriangulation* ans = new NTriangulation();
+    ans->setPacketLabel("Bing's house with two rooms");
+
+    NTetrahedron* r = new NTetrahedron();
+    NTetrahedron* s = new NTetrahedron();
+    r->joinTo(0, r, NPerm4(0, 1));
+    s->joinTo(0, s, NPerm4(0, 1));
+    r->joinTo(3, s, NPerm4(3, 1, 0, 2));
+    s->joinTo(3, r, NPerm4(3, 1, 0, 2));
+    ans->addTetrahedron(r);
+    ans->addTetrahedron(s);
+
+    return ans;
+}
+
 NTriangulation* NExampleTriangulation::s2xs1() {
     NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel("S2 x S1");

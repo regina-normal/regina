@@ -74,6 +74,15 @@ class NExampleTriangulation {
         static NTriangulation* threeSphere();
 
         /**
+         * Returns the two-tetrahedron triangulation of the 3-sphere
+         * that is dual to Bing's house with two rooms.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NTriangulation* bingsHouse();
+
+        /**
          * Returns a two-tetrahedron triangulation of the product space
          * <tt>S^2 x S^1</tt>.
          *
