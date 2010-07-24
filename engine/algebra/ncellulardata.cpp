@@ -975,7 +975,36 @@ const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc 
 
 const NMatrixRing< NSVPolynomialRing >* NCellularData::alexanderChainComplex( const ChainComplexLocator &a_desc ) const
 {
- 
+ std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing>* >::const_iterator p;
+ ChainComplexLocator range_desc(a_desc); range_desc.dim--;
+ // various bail triggers
+ p = alexanderChainComplexes.find(a_desc);
+ if (p != alexanderChainComplexes.end()) return (p->second);
+ else 
+  { 
+   ccCollectionType::const_iterator q;
+   q = genCC.find(a_desc); 
+   if (q == genCC.end()) return NULL; // invalid request
+   // q->second is our NSparseGrid< coverFacetData > ccMapType; 
+   NCellularData::ccMapType thisCC( *q->second ); 
+   // build matrix. 
+   NMatrixRing<NSVPolynomialRing>* buildMat( NULL ); 
+   buildMat = new NMatrixRing<NSVPolynomialRing>( cellCount(range_desc), cellCount(a_desc) );
+   // build entries
+   std::map< NMultiIndex, coverFacetData* >::const_iterator ci;
+   for (ci = thisCC.getGrid().begin(); ci!=thisCC.getGrid().end(); ci++)
+    {
+     // figure out exponent... 
+//     buildMat->entry( ci->second->cellNo,  ci->first.entry(0) ) += 
+//      NSVPolynomialRing( NLargeInteger(ci->second->sig), ? ); // fix this TODO
+    }
+   // insert
+   std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing>* > *Mptr = 
+       const_cast< std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing>* > *> (&alexanderChainComplexes);
+      Mptr->insert( std::pair< ChainComplexLocator, NMatrixRing<NSVPolynomialRing>* > ( a_desc, buildMat ) );
+   return buildMat; 
+  }
+ // return NULL if an invalid request
  return NULL;
 }
 
