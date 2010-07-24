@@ -973,7 +973,7 @@ const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc 
  return NULL;
 }
 
-const NMatrixRing< NSVPolynomialRing >* NCellularData::alexanderCC( const ChainComplexLocator &a_desc ) const
+const NMatrixRing< NSVPolynomialRing >* NCellularData::alexanderChainComplex( const ChainComplexLocator &a_desc ) const
 {
  
  return NULL;

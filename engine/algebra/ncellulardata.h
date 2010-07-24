@@ -116,14 +116,14 @@ class Dim4Triangulation;
  *                           NCellularData::bilinearForm
  *                           NCellularData::groupPresentation
  *                           NCellularData::homGroupPresentation. 
- *                           NCellularData::alexanderCC
+ *                           NCellularData::alexanderChainComplex
  *
  *       ncellulardata.init.indexing.cpp - contains the NCellularData::NCellularData(NTriangulation / Dim4Triangulation)
  *                                         constructor, and the routines that set up the internal indices like icIx, etc.
  *
- *       ncellulardata.init.cc.cpp - contains the chain complex initialization routines.
+ *       ncellulardata.init.cc.cpp - contains the homology chain complex initialization routines.
  *
- *       ncellulardata.init.hom.cpp - contains the chain map initialization routines. 
+ *       ncellulardata.init.hom.cpp - contains the homology chain map initialization routines. 
  *
  *       ncellulardata.init.pi1.cpp - contains initialization routines for the fundamental groups presentations 
  *                                    and maps between them.
@@ -1068,7 +1068,7 @@ public:
      * make sense -- i.e. if the 1st Betti number of the manifold is not 1. Presently only the
      * C_2 -> C_1 -> C_0 part of the complex is defined, in dual coordinates, for 4-manifolds.
      */
-    const NMatrixRing< NSVPolynomialRing >* alexanderCC( const ChainComplexLocator &a_desc ) const;
+    const NMatrixRing< NSVPolynomialRing >* alexanderChainComplex( const ChainComplexLocator &a_desc ) const;
 };
 
 
