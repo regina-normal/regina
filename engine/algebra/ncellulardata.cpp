@@ -939,8 +939,6 @@ const NMatrixInt* NCellularData::integerChainComplex( const ChainComplexLocator 
  return NULL;
 }
 
-// currently it's returning NULL for a STD_coord -> MIX_coord map which it shouldn't do...
-// TODO fix!
 const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc ) const
 {
  std::map< ChainMapLocator, NMatrixInt* >::const_iterator p;

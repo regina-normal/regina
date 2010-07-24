@@ -78,9 +78,7 @@ class Dim4Triangulation;
  * this rule is that all integer coefficient chain complexes and maps are computed on 
  * initialization, but this is relatively quick.  
  *
- * @pre - Assumes input triangulation is valid. 
- * @pre - Fundamental group routines assume the triangulation that's passed to the constructor
- *        is path-connected.
+ * @pre - Assumes input triangulation is valid and path-connected.
  *
  * \testpart
  *
@@ -100,20 +98,25 @@ class Dim4Triangulation;
  * \todo  5) need to set up local orientations for dual boundary coordinates, for the barycentres
  *        of all standard boundary simplices.  We'll put something in setupIndices for this.
  *        Currently done for Dim4Triangulations, but not for NTriangulations. 
- * \todo  6) At present the maximal tree algorithm limits the fundamental group routine 
- *        to connected manifolds.  When there's time it would be good to generalize the algorithm 
- *        to disconnected manifolds.  This is an easy fix with getComponents.
+ * \todo  6) We'll also eventually need maximal trees in the standard 1-skeleton, to implement
+ *        Farber-Levine pairings. 
  * \todo  7) Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
  *        clear what all the computations mean. 
- * \todo  8) Add consistency tests for homology computations between NCellularData and the triangulation
- *        classes. 
  * \todo \optlong We should add Bocksteins and the long exact sequence associated to a change-of-coefficient map.
  *
  * Guide to ncellulardata.*.cpp files:
  *
- *       ncellulardata.cpp - contains only the core routines NCellularData::unMarkedGroup, NCellularData::markedGroup, 
- *                           NCellularData::homGroup, NCellularData::poincarePolynomial, NCellularData::bilinearForm.
- *                           NCellularData::groupPresentation, NCellularData::homGroupPresentation. 
+ *       ncellulardata.cpp - contains only the core routines to call for information stored on internal stacks. 
+ *                           NCellularData::integerChainComplex
+ *                           NCellularData::integerChainMap
+ *                           NCellularData::unMarkedGroup 
+ *                           NCellularData::markedGroup
+ *                           NCellularData::homGroup 
+ *                           NCellularData::poincarePolynomial 
+ *                           NCellularData::bilinearForm
+ *                           NCellularData::groupPresentation
+ *                           NCellularData::homGroupPresentation. 
+ *                           NCellularData::alexanderCC
  *
  *       ncellulardata.init.indexing.cpp - contains the NCellularData::NCellularData(NTriangulation / Dim4Triangulation)
  *                                         constructor, and the routines that set up the internal indices like icIx, etc.
