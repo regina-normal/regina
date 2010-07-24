@@ -500,6 +500,8 @@ private:
     std::map< GroupPresLocator, NGroupPresentation* > groupPresentations;
     // for homomorphisms of group presentations
     std::map< HomGroupPresLocator, NHomGroupPresentation* > homGroupPresentations;
+    // for alexander module chain complexes
+    std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing >* > alexanderChainComplexes;
 
     /** 
      * numStandardCells = number of cells in the standard CW decomposition in dimensions: 0, 1, 2, 3, (4).
@@ -1057,6 +1059,13 @@ public:
      *  maximal forests in the boundary and ideal boundary components. 
      */
     const NHomGroupPresentation* homGroupPresentation( const HomGroupPresLocator &h_desc ) const;
+
+    /**
+     *  Chain complex for the Alexander module of the manifold.  Returns NULL if this does not
+     * make sense -- i.e. if the 1st Betti number of the manifold is not 1. Presently only the
+     * C_2 -> C_1 -> C_0 part of the complex is defined, in dual coordinates, for 4-manifolds.
+     */
+    const NMatrixRing< NSVPolynomialRing >* alexanderCC( const ChainComplexLocator &a_desc ) const;
 };
 
 
@@ -1119,6 +1128,11 @@ std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator hpi;
 for (hpi = g.homGroupPresentations.begin(); hpi != g.homGroupPresentations.end(); hpi++) 
  homGroupPresentations.insert( std::pair< HomGroupPresLocator, NHomGroupPresentation* >(hpi->first,
   clonePtr(hpi->second) ) );
+ // alexanderChainComplexes
+std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing >* >::const_iterator amci;
+for (amci = g.alexanderChainComplexes.begin(); amci != g.alexanderChainComplexes.end(); amci++)
+ alexanderChainComplexes.insert( std::pair< ChainComplexLocator, NMatrixRing< NSVPolynomialRing >* >
+  (amci->first, clonePtr(amci->second) ) );
 
 // numStandardCells[5], numDualCells[5], numMixCells[5], numStandardBdryCells[4], 
 //               numNonIdealCells[5], numIdealCells[4];
@@ -1202,6 +1216,10 @@ inline NCellularData::~NCellularData() {
  std::map< HomGroupPresLocator, NHomGroupPresentation* >::iterator hi;
  for (hi = homGroupPresentations.begin(); hi != homGroupPresentations.end(); hi++)
         delete hi->second; 
+ // alexanderChainComplexes
+ std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing >* >::iterator amci;
+ for (amci = alexanderChainComplexes.begin(); amci != alexanderChainComplexes.end(); amci++)
+  delete amci->second;
 
  // iterate through sbiCM, strCM, schCM,  dbiCM, dtrCM, dchCM,  
  //                 mbiCM, mtrCM, mchCM,  smCM, dmCM, smbCM, 
