@@ -56,6 +56,8 @@ using regina::NBilinearForm;
 using regina::NMatrixInt;
 using regina::NLensSpace;
 
+// export REGINA_DETAILED_TESTS=yes
+// to enable detailed (slow!) tests.
 class NCellularDataTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NCellularDataTest);
 

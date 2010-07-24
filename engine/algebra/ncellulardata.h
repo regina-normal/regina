@@ -687,58 +687,21 @@ private:
 
     /**
      * Routine returns true if and only if tet is represents an edge in the maximal tree for the dual 1-skeleton of the triangulation.
-     *  Any tetrahedron from the triangulation can potentially represent an edge. Corresponds to maxTreeStd
+     *  Any tetrahedron from the triangulation can potentially represent an edge. Corresponds to maxTreeStd, maxTreeStB, 
+     *  maxTreeIdB, and MaxTreeSttIdB respectively.
      */
     bool inMaximalTree(const Dim4Tetrahedron* tet) const;
-
-    /**
-     * Routine returns true if and only if fac is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
-     *  Only boundary faces can represent edges in the dual 1-skeleton. Corresponds to maxTreeStB
-     */
     bool inMaximalTree(const Dim4Face* fac) const;
-
-    /**
-     *  Routine returns true if and only if pair (tet, num) represents is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
-     *  This refers to the part of the dual 1-skeleton in the ideal boundary, represented by ideal ends of tetrahedra. Corresponds to maxTreeIdB
-     */
     bool inMaximalTree(const Dim4Tetrahedron* tet, unsigned long num) const;
-
-    /**
-     *  Routine returns true if and only if pair (pen, num) is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
-     *  Paths from pentachora barycentres to ideal boundary barycentres. Represented by ideal ends of pentachora. Corresponds to maxTreeSttIdB
-     */
     bool inMaximalTree(const Dim4Pentachoron* pen, unsigned long num) const;
-
     /**
-     *  Routine returns true if and only if tet is represents an edge in the maximal tree for the dual 1-skeleton of the triangulation.
-     *  Any face from the triangulation can potentially represent an edge. Corresponds to maxTreeStd
+     * Same routines for 3-dimensional triangulations.
      */
     bool inMaximalTree(const NFace* fac) const;
-
-    /**
-     *  Routine returns true if and only if fac is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
-     *  Only boundary edges can represent edges in the dual 1-skeleton. Corresponds to maxTreeStB
-     */
     bool inMaximalTree(const NEdge* edg) const;
-
-    /**
-     *  Routine returns true if and only if pair (fac, num) represents is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
-     *  This refers to the part of the dual 1-skeleton in the ideal boundary, represented by ideal ends of faces. Corresponds to maxTreeIdB
-     */
     bool inMaximalTree(const NFace* fac, unsigned long num) const;
-
-    /**
-     *  Routine returns true if and only if pair (tet, num) is an edge in the maximal tree for the dual 1-skeleton of the triangulation.
-     *  Paths from tetrahedra barycentres to ideal boundary barycentres. Represented by ideal ends of tetrahedra. Corresponds to maxTreeSttIdB
-     */
     bool inMaximalTree(const NTetrahedron* tet, unsigned long num) const;
     
-   /**
-    * internal routine to build the maximal tree in the dual 1-skeleton, suitable for computing
-    *  pi1 information about the manifold. Called after buildExtraNormalData() and before buildFundGrpPres()
-    */
-   void buildMaximalTree();
-
    /**
     *  During initialization many revere-lookups are needed.  We proved them in one place.
     * See cellulardata.lookups.cpp for implementations.
@@ -789,6 +752,15 @@ private:
    unsigned long rIxLookup(const Dim4Tetrahedron* tet) const;
    unsigned long rIxLookup(const Dim4Pentachoron* pen) const;
 
+   unsigned long pi1Lookup(const Dim4Tetrahedron* tet) const;
+   unsigned long pi1Lookup(const Dim4Face* fac) const;
+   unsigned long pi1Lookup(const Dim4Tetrahedron* tet, unsigned long num) const;
+   unsigned long pi1Lookup(const Dim4Pentachoron* pen, unsigned long num) const;
+   unsigned long pi1Lookup(const NFace* fac) const;
+   unsigned long pi1Lookup(const NEdge* edg) const;
+   unsigned long pi1Lookup(const NFace* fac, unsigned long num) const;
+   unsigned long pi1Lookup(const NTetrahedron* tet, unsigned long num) const;
+
    /**
     *  Internal routines to set up chain complexes. 
     */
@@ -799,6 +771,12 @@ private:
     * Internal routines to set up chain maps. 
     */
    void fillStandardToMixedHomCM(); // void fillDualToMixedHomCM(); 
+
+   /**
+    * internal routine to build the maximal tree in the dual 1-skeleton, suitable for computing
+    *  pi1 information about the manifold. Called after buildExtraNormalData() and before buildFundGrpPres()
+    */
+   void buildMaximalTree();
 
    /**
     *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges normalsDim3BdryEdges normalsDim3BdryVertices

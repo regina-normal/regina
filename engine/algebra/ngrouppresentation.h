@@ -247,6 +247,12 @@ class NGroupExpression : public ShareableObject {
          * @return the length of the word. 
          */
 	unsigned long wordLength() const;
+
+        /**
+         * Erases this word. Turns it into the identity element.
+         */
+        void erase();
+
         /**
          * Returns the term at the given index in this expression.
          * Index 0 represents the first term, index 1
@@ -853,6 +859,11 @@ inline void NGroupExpression::addTermLast(const NGroupExpressionTerm& term) {
 inline void NGroupExpression::addTermLast(unsigned long generator,
         long exponent) {
     terms.push_back(NGroupExpressionTerm(generator, exponent));
+}
+
+inline void NGroupExpression::erase()
+{
+        terms.resize(0);
 }
 
 // Inline functions for NGroupPresentation

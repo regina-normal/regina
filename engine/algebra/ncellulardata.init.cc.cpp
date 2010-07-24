@@ -332,7 +332,7 @@ void NCellularData::fillDualHomologyCC()
 {
  ccMapType* CC(NULL); // pointer to an NSparseGrid< coverFacetData > 
  NGroupExpression wordle; // temp
-
+ unsigned long delta( numNonIdealBdryCells[2] - maxTreeStB.size() + numIdealCells[2] - maxTreeIdB.size() );
  if (tri4 != NULL)
  {
     // various useful pointers, index holders.
@@ -342,42 +342,38 @@ void NCellularData::fillDualHomologyCC()
 
     CC = new ccMapType(2);
     unsigned long D = 1; // outer loop the row parameter. We start with dCC[1]
-    for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
-	{ pen = tri4->getPentachoron( dcIx[D-1][i] );
-	  for (unsigned long j=0; j < 5; j++) {
-	    tet = pen->getTetrahedron(j);  if (!tet->isBoundary())
-	     {
-	      J = dcIxLookup( tet );
-              int sig( ( (tet->getEmbedding(1).getPentachoron() == pen) && 
- 	                 (tet->getEmbedding(1).getTetrahedron() == j) ) ? +1 : -1 );
-              // TODO fill wordle
-              CC->setEntry( NMultiIndex( J, 5*i+j ),  
-                            coverFacetData( i, sig, wordle ) );
-	     } }
-	}
+    for (unsigned long j=0; j<numDualCells[D]; j++) // dCC[D]->entry( *, j )
+       {
+        tet = tri4->getTetrahedron( dcIx[D][j] );
+        for (unsigned long i=0; i<2; i++)
+           {
+            pen = tet->getEmbedding(i).getPentachoron();
+            CC->setEntry( NMultiIndex( j, i ), coverFacetData( dcIxLookup(pen), (i==0) ? -1 : 1, wordle ) );
+            if  (!inMaximalTree(tet))  wordle.addTermFirst( NGroupExpressionTerm( pi1Lookup(tet), 1 ) );
+           }
+        wordle.erase();
+       }
     // submit CC
-    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
-        (ChainComplexLocator(D, DUAL_coord), CC ) );
+    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >(ChainComplexLocator(D, DUAL_coord), CC ) );
 
     CC = new ccMapType(2);
     D = 2; // dCC[2]
-    for (unsigned long i=0; i<numDualCells[D-1]; i++) // dCC[D]->entry( i, * )
-	{ tet = tri4->getTetrahedron( dcIx[D-1][i] );
-	  for (unsigned long j=0; j < 4; j++) {
-	    fac = tet->getFace(j); if (!fac->isBoundary())
-	     {
-	      J = dcIxLookup( fac );
-	      pen = tet->getEmbedding(1).getPentachoron(); // our ambient pentachoron
-	      // the natural inclusions of our tetrahedron and face into the ambient pentachoron
-	      NPerm5 tetinc( tet->getEmbedding(1).getVertices() );
-	      NPerm5 facinc( pen->getFaceMapping( 
-		Dim4Face::faceNumber[tetinc[(j<=0) ? 1 : 0]][tetinc[(j<=1)? 2 : 1]][tetinc[(j<=2)? 3 : 2]] 
-						) );
-              // TODO fill wordle
-              CC->setEntry( NMultiIndex( J, 4*i+j ),   
-                            coverFacetData( i, ( tetinc[4]==facinc[4] ? 1 : -1 ), wordle ) );
-	     } }
-	}
+    for (unsigned long j=0; j<numDualCells[D]; j++) // dCC[D]->entry( *, j )
+       {
+        fac = tri4->getFace( dcIx[D][j] );
+        for (unsigned long i=0; i<fac->getNumberOfEmbeddings(); i++)
+           {
+            pen = fac->getEmbedding(i).getPentachoron();
+            NPerm5 facinc( fac->getEmbedding(i).getVertices() );
+            tet = pen->getTetrahedron( facinc[4] );
+            signed long sig( ((tet->getEmbedding(1).getPentachoron() == pen) &&
+                              (tet->getEmbedding(1).getTetrahedron() == facinc[4] )) ? 1 : -1 );
+            if ( (!inMaximalTree(tet)) && (sig==-1) ) wordle.addTermFirst( NGroupExpressionTerm( pi1Lookup(tet), -1 ) );
+            CC->setEntry( NMultiIndex( j, i ), coverFacetData( dcIxLookup(tet), sig, wordle ) );
+            if ( (!inMaximalTree(tet)) && (sig==1) ) wordle.addTermFirst( NGroupExpressionTerm( pi1Lookup(tet), 1 ) );
+           }
+        wordle.erase();
+       }
     // submit CC
     genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
         (ChainComplexLocator(D, DUAL_coord), CC ) );

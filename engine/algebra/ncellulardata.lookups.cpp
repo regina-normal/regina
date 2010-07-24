@@ -126,4 +126,38 @@ unsigned long NCellularData::rIxLookup(const Dim4Tetrahedron* tet) const
 unsigned long NCellularData::rIxLookup(const Dim4Pentachoron* pen) const
 { return lower_bound( rIx[4].begin(), rIx[4].end(), tri4->pentachoronIndex(pen) ) - rIx[4].begin(); }
 
+// counts number of elements in thelist less than obj, defined in ncellulardata.init.pi1.cpp
+unsigned long num_less_than(const std::set<unsigned long> &thelist, const unsigned long &obj); // forward ref
+
+unsigned long NCellularData::pi1Lookup(const Dim4Face* fac) const // standard boundary
+{ unsigned long I = bcIxLookup( fac );
+  return I - num_less_than( maxTreeStB, I ); }
+unsigned long NCellularData::pi1Lookup(const Dim4Tetrahedron* tet, unsigned long num) const // ideal boundary
+{ unsigned long I = icIxLookup( tet, num );
+  return (numNonIdealBdryCells[2] - maxTreeStB.size()) + I - num_less_than( maxTreeIdB, I ); } 
+unsigned long NCellularData::pi1Lookup(const Dim4Tetrahedron* tet) const // standard 1-cells in interior
+{ unsigned long I = nicIxLookup( tet );
+  return (numNonIdealBdryCells[2] - maxTreeStB.size()) + (numIdealCells[2] - maxTreeIdB.size())  + 
+         (I - num_less_than( maxTreeStd, I )); }
+unsigned long NCellularData::pi1Lookup(const Dim4Pentachoron* pen, unsigned long num) const // ideal boundary connectors
+{ unsigned long I = icIxLookup( pen, num );
+  return (numNonIdealBdryCells[2] - maxTreeStB.size()) + (numIdealCells[2] - maxTreeIdB.size())  + 
+         (numNonIdealCells[3] - maxTreeStd.size()) + (I - num_less_than(maxTreeSttIdB, I )); }
+
+unsigned long NCellularData::pi1Lookup(const NEdge* edg) const
+{ unsigned long I = bcIxLookup( edg );
+  return I - num_less_than( maxTreeStB, I ); }
+unsigned long NCellularData::pi1Lookup(const NFace* fac, unsigned long num) const
+{ unsigned long I = icIxLookup( fac, num );
+  return (numNonIdealBdryCells[2] - maxTreeStB.size()) + I - num_less_than( maxTreeIdB, I ); } 
+unsigned long NCellularData::pi1Lookup(const NFace* fac) const
+{ unsigned long I = nicIxLookup( fac );
+  return (numNonIdealBdryCells[2] - maxTreeStB.size()) + (numIdealCells[2] - maxTreeIdB.size())  + 
+         (I - num_less_than( maxTreeStd, I )); }
+unsigned long NCellularData::pi1Lookup(const NTetrahedron* tet, unsigned long num) const
+{ unsigned long I = icIxLookup( tet, num );
+  return (numNonIdealBdryCells[2] - maxTreeStB.size()) + (numIdealCells[2] - maxTreeIdB.size())  + 
+         (numNonIdealCells[3] - maxTreeStd.size()) + (I - num_less_than(maxTreeSttIdB, I )); }
+
+
 } // regina namespace
