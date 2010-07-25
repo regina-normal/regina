@@ -655,10 +655,10 @@ private:
      *  the circle of faces incident to that vertex, with vrtinc[1] and vrtinc[2] forming the normal orientation
      *  in agreement with the indexing of face.  TODO
      */
-   std::vector< dim4BoundaryFaceInclusion > normalsDim4BdryFaces;
-   std::vector< dim4BoundaryEdgeInclusion > normalsDim4BdryEdges;  
+   std::vector< dim4BoundaryFaceInclusion >   normalsDim4BdryFaces;
+   std::vector< dim4BoundaryEdgeInclusion >   normalsDim4BdryEdges;  
    std::vector< dim4BoundaryVertexInclusion > normalsDim4BdryVertices;
-   std::vector< dim3BoundaryEdgeInclusion > normalsDim3BdryEdges;
+   std::vector< dim3BoundaryEdgeInclusion >   normalsDim3BdryEdges;
    std::vector< dim3BoundaryVertexInclusion > normalsDim3BdryVertices; 
 
    /**

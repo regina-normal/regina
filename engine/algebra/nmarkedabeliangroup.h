@@ -54,11 +54,7 @@ class NHomMarkedAbelianGroup;
  *
  * This class is initialized with a chain complex.  The chain complex is given
  * in terms of two integer matrices \a M and \a N such that M*N=0. The abelian
- * group is the kernel of \a M mod the image of \a N.
- *
- * In other words, we are computing the homology of the chain complex
- * <tt>Z^a --N--> Z^b --M--> Z^c</tt>
- * where a=N.columns(), M.columns()=b=N.rows(), and c=M.rows().  An additional
+ * group is the kernel of \a M mod the image of \a N.  An additional
  * constructor allows one to take the homology with coefficients in an arbitrary
  * cyclic group. 
  *
@@ -139,15 +135,16 @@ class NMarkedAbelianGroup : public ShareableObject {
     public:
 
         /**
-         * Creates a marked abelian group from a chain complex. This constructo
+         * Creates a marked abelian group from a chain complex. This constructor
 	 * assumes you're interested in homology with integer coefficents of the chain
-	 * complex.  See the class notes for details.
+	 * complex.  Returns a marked abelian group given by the quotient of the 
+         * kernel of M mod the image of N.
          *
          * \pre M.columns() = N.rows().
          * \pre The product M*N = 0.
          *
-         * @param M the `right' matrix in chain complex
-         * @param N `left' matrix in chain complex
+         * @param M is the matrix that one takes the kernel of when computing homology.
+         * @param N is the matrix one takes the image of when computing homology.
          */
         NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
 
@@ -160,8 +157,8 @@ class NMarkedAbelianGroup : public ShareableObject {
          * \pre M.columns() = N.rows().
          * \pre The product M*N = 0.
          *
-         * @param M the `right' matrix in chain complex
-         * @param N `left' matrix in chain complex
+         * @param M is the matrix that one takes the kernel of when computing homology.
+         * @param N is the matrix one takes the image of when computing homology.
 	 * @param pcoeff specifies the coefficient ring, Z_pcoeff. We require pcoeff \geq 0.
  	 *     if you know beforehand that pcoeff==0, it's more efficient to use the previous
 	 *     constructor.

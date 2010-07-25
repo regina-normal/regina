@@ -942,7 +942,6 @@ const NMatrixInt* NCellularData::integerChainComplex( const ChainComplexLocator 
 const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc ) const
 {
  std::map< ChainMapLocator, NMatrixInt* >::const_iterator p;
- // various bail triggers
  p = integerChainMaps.find(m_desc);
  if (p != integerChainMaps.end()) return (p->second);
  else 
@@ -955,7 +954,7 @@ const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc 
    NCellularData::ccMapType thisCM( *q->second ); 
    // build matrix. 
    NMatrixInt* buildMat( NULL ); 
-   buildMat = new NMatrixInt( cellCount(m_desc.domain), cellCount(m_desc.range) );
+   buildMat = new NMatrixInt( cellCount(m_desc.range), cellCount(m_desc.domain) );
    // build entries
    std::map< NMultiIndex, coverFacetData* >::const_iterator ci;
    for (ci = thisCM.getGrid().begin(); ci!=thisCM.getGrid().end(); ci++)
@@ -969,43 +968,64 @@ const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc 
    return buildMat; 
   }
  // return NULL if an invalid request
-
  return NULL;
 }
 
+unsigned long num_less_than(const std::set<unsigned long> &thelist, const unsigned long &obj); // forward dec.
+
 const NMatrixRing< NSVPolynomialRing >* NCellularData::alexanderChainComplex( const ChainComplexLocator &a_desc ) const
-{
+{ 
  std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing>* >::const_iterator p;
  ChainComplexLocator range_desc(a_desc); range_desc.dim--;
- // various bail triggers
  p = alexanderChainComplexes.find(a_desc);
  if (p != alexanderChainComplexes.end()) return (p->second);
- else 
-  { 
+
+ // build a list of the dual 1-cells indexed by dcIx[1] that are in the maximal tree, currently indexed by nicIx[dim-1]
+ std::set< unsigned long > maxTreedcIx; // dcIx index vs. nicIx[dim-1] indices of max tree maxTreeStd
+ for (std::set<unsigned long>::const_iterator i=maxTreeStd.begin(); i!=maxTreeStd.end(); i++)
+  {
+   if (tri3) if (!tri3->getFace( nicIx[2][*i] )->isBoundary()) maxTreedcIx.insert( dcIxLookup( tri3->getFace( nicIx[2][*i] ) ) );
+   if (tri4) if (!tri4->getTetrahedron( nicIx[3][*i] )->isBoundary()) maxTreedcIx.insert( dcIxLookup( tri4->getTetrahedron( nicIx[3][*i] ) ) );
+  }
    ccCollectionType::const_iterator q;
    q = genCC.find(a_desc); 
    if (q == genCC.end()) return NULL; // invalid request
-   // q->second is our NSparseGrid< coverFacetData > ccMapType; 
-   NCellularData::ccMapType thisCC( *q->second ); 
-   // build matrix. 
+   if (a_desc.hcs != DUAL_coord) return NULL; // currently only implemented for dual coordinates.
+   if (a_desc.dim > 2) return NULL; // and only dimensions 1->0, 2->1
+   NCellularData::ccMapType thisCC( *q->second ); // typedef NSparseGrid< coverFacetData > ccMapType; cellNo, sig, trans
+   // pi1
+   const NGroupPresentation* pi1( groupPresentation( GroupPresLocator( whole_manifold, 0 ) ) );
+   std::auto_ptr<NMarkedAbelianGroup> pi1Ab( pi1->markedAbelianization() );
+   // build matrix, dimensions -- special case of 1-cells, since we're using max tree....
    NMatrixRing<NSVPolynomialRing>* buildMat( NULL ); 
-   buildMat = new NMatrixRing<NSVPolynomialRing>( cellCount(range_desc), cellCount(a_desc) );
+   unsigned long ranDim; unsigned long domDim; 
+   if (a_desc.dim==1) { ranDim = 1;  domDim = cellCount(a_desc) - maxTreedcIx.size(); }
+   if (a_desc.dim==2) { ranDim = cellCount(range_desc) - maxTreedcIx.size(); domDim = cellCount(a_desc); }
+   buildMat = new NMatrixRing<NSVPolynomialRing>( ranDim, domDim );
+
    // build entries
    std::map< NMultiIndex, coverFacetData* >::const_iterator ci;
    for (ci = thisCC.getGrid().begin(); ci!=thisCC.getGrid().end(); ci++)
     {
-     // figure out exponent... 
-//     buildMat->entry( ci->second->cellNo,  ci->first.entry(0) ) += 
-//      NSVPolynomialRing( NLargeInteger(ci->second->sig), ? ); // fix this TODO
+     std::vector<NLargeInteger> ccI( pi1->getNumberOfGenerators() );  // to put into pi1Ab
+     for (unsigned long i=0; i<ci->second->trans.getNumberOfTerms(); i++)
+      ccI[ci->second->trans.getTerm(i).generator] += ci->second->trans.getTerm(i).exponent;
+     signed long levelOfCell ( pi1Ab->snfRep(ccI)[pi1Ab->getNumberOfInvariantFactors()].longValue() );
+     // level of cell is the index i, for the covering space trans t^i
+     unsigned long cR, cC;  // error here -- ci->first.entry(0) is in dcIx coordinates, maxTreeStd in nicIx
+     // so we need to chuck the 1-cell if it is not in the dual 1-skeleton, and if it *is* in maxTreeStd
+     if (a_desc.dim==1) { if ( maxTreedcIx.find( ci->first.entry(0) ) != maxTreedcIx.end() ) continue;
+                          cR=0; cC=ci->first.entry(0) - num_less_than(maxTreedcIx, ci->first.entry(0)); }
+     if (a_desc.dim==2) { if ( maxTreedcIx.find( ci->second->cellNo ) != maxTreedcIx.end() ) continue; 
+                          cR=ci->second->cellNo - num_less_than(maxTreedcIx, ci->second->cellNo); cC = ci->first.entry(0); }
+     buildMat->entry( cR,  cC ) += 
+      NSVPolynomialRing( NLargeInteger(ci->second->sig), levelOfCell ); 
     }
    // insert
    std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing>* > *Mptr = 
        const_cast< std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing>* > *> (&alexanderChainComplexes);
       Mptr->insert( std::pair< ChainComplexLocator, NMatrixRing<NSVPolynomialRing>* > ( a_desc, buildMat ) );
    return buildMat; 
-  }
- // return NULL if an invalid request
- return NULL;
 }
 
 
