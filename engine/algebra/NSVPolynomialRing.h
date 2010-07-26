@@ -300,14 +300,14 @@ for (p = cof.begin(); p != cof.end(); p++)
     retval += ( pos ? "+" : "-" );
     if (mag != 1) retval += mag.stringValue();
     retval += "t";
-    if (exp != 1) retval += "^" + ss.str();
+    if (exp != 1) retval += "^{" + ss.str() + "}";
    }
   else
    { // p == cof.begin()
-    if (!pos) retval += "-";
+    if ((!pos) && (mag!=0)) retval += "-";
     if ((exp==0) || (mag != 1)) retval += mag.stringValue();
     if (exp > 0) retval += "t";
-    if (exp > 1) retval += "^" + ss.str();
+    if (exp > 1) retval += "^{" + ss.str() + "}";
     }
  }
 return retval;
