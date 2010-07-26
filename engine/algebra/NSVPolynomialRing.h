@@ -286,30 +286,23 @@ inline std::string NSVPolynomialRing::toString() const
 // run through cof, assemble into string
 std::string retval; std::stringstream ss;
 std::map< signed long, NLargeInteger* >::const_iterator p;
-if (cof.size() == 0) retval = "0"; else
+bool outputSomething = false; // keep track of whether or not we've output anything
 for (p = cof.begin(); p != cof.end(); p++)
  {
-  NLargeInteger mag( p->second->abs() );
-  bool pos( ((*p->second) > 0) ? true : false );
-  unsigned long exp( p->first );
-
+  NLargeInteger mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  signed long exp( p->first );
   ss.str("");  ss<<p->first;
-  // ensure sensible output, eg:  5 - t + 3t^2 + t^3, etc...
-  if (p != cof.begin())
-   {
-    retval += ( pos ? "+" : "-" );
-    if (mag != 1) retval += mag.stringValue();
-    retval += "t";
-    if (exp != 1) retval += "^{" + ss.str() + "}";
+  // ensure sensible output, eg:  t^(-5) + 5 - t + 3t^2 + t^3 - t^(12), etc...
+  if (mag != 0) // don't output 0t^n
+   { 
+   if (outputSomething) retval += ( pos ? "+" : "-" ); else if (!pos) retval += "-";
+   outputSomething = true;
+   if ( (exp==0) || (mag != 1) ) retval += mag.stringValue();
+   if (exp == 1) retval += "t"; else 
+   if ( (exp<0) || (exp>9) ) retval += "t^(" + ss.str() + ")"; else
+    if (exp != 0) retval += "t^" + ss.str();
    }
-  else
-   { // p == cof.begin()
-    if ((!pos) && (mag!=0)) retval += "-";
-    if ((exp==0) || (mag != 1)) retval += mag.stringValue();
-    if (exp > 0) retval += "t";
-    if (exp > 1) retval += "^{" + ss.str() + "}";
-    }
  }
+if (outputSomething == false) retval = "0";
 return retval;
 }
 
@@ -324,30 +317,23 @@ inline std::string NSVPolynomialRing::toTeX() const
 // run through cof, assemble into string
 std::string retval; std::stringstream ss;
 std::map< signed long, NLargeInteger* >::const_iterator p;
-if (cof.size() == 0) retval = "0"; else
+bool outputSomething = false; // keep track of whether or not we've output anything
 for (p = cof.begin(); p != cof.end(); p++)
  {
-  NLargeInteger mag( p->second->abs() );
-  bool pos( ((*p->second) > 0) ? true : false );
-  signed long exp( p->first );
-
+  NLargeInteger mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  signed long exp( p->first );
   ss.str("");  ss<<p->first;
-  // ensure sensible output, eg:  5 - t + 3t^2 + t^3, etc...
-  if (p != cof.begin())
-   {
-    retval += ( pos ? "+" : "-" );
-    if (mag != 1) retval += mag.stringValue();
-    retval += "t";
-    if (exp != 1) retval += "^\\{" + ss.str() + "\\}";
+  // ensure sensible output, eg:  t^{-5} + 5 - t + 3t^2 + t^3 - t^{12}, etc...
+  if (mag != 0) // don't output 0t^n
+   { 
+   if (outputSomething) retval += ( pos ? "+" : "-" ); else if (!pos) retval += "-";
+   outputSomething = true;
+   if ( (exp==0) || (mag != 1) ) retval += mag.stringValue();
+   if (exp == 1) retval += "t"; else 
+   if ( (exp<0) || (exp>9) ) retval += "t^{" + ss.str() + "}"; else
+    if (exp != 0) retval += "t^" + ss.str();
    }
-  else
-   { // p == cof.begin()
-    if (!pos) retval += "-";
-    if ((exp==0) || (mag != 1)) retval += mag.stringValue();
-    if (exp > 0) retval += "t";
-    if (exp > 1) retval += "^\\{" + ss.str() + "\\}";
-    }
  }
+if (outputSomething == false) retval = "0";
 return retval;
 }
 
