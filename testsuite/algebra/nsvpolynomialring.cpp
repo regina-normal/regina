@@ -52,15 +52,14 @@ class NSVPolynomialRingTest : public CppUnit::TestFixture {
 	  for (unsigned long k=0; k<20; k++)
 	   {
 	   regina::NSVPolynomialRing p1, p2, p3;
-	   regina::NLargeInteger X;
 	   for (unsigned long i=0; i<10; i++)
 	    {
-		p1 += NSVPolynomialRing( X.randomBinary(7), 3*i );
-		p2 += NSVPolynomialRing( X.randomBinary(4), 4*i );
-		p3 += NSVPolynomialRing( X.randomBinary(3), 5*i );
+		p1 += NSVPolynomialRing( NLargeInteger::randomBinary(7), 3*i );
+		p2 += NSVPolynomialRing( NLargeInteger::randomBinary(4), 4*i );
+		p3 += NSVPolynomialRing( NLargeInteger::randomBinary(3), 5*i );
 	    }
 	   if ( (p1+p2)+p3 != p1+(p2+p3) ) CPPUNIT_FAIL("Addition not associative.");
-	   if ( p1 + NSVPolynomialRing::zero != p1 ) CPPUNIT_FAIL("Zero does not exist.");
+	   if ( p1 + NSVPolynomialRing::zero != p1 ) CPPUNIT_FAIL("Zero does not exist (1).");
 	   if ( NSVPolynomialRing::zero + p1 != p1 ) CPPUNIT_FAIL("Zero does not exist (2).");
 	   if ( (p1 - p1) != NSVPolynomialRing::zero ) CPPUNIT_FAIL("No additive inverse.");
 	   if ( p1 + p2 != p2 + p1 ) CPPUNIT_FAIL("Addition not commutative.");
@@ -71,15 +70,14 @@ class NSVPolynomialRingTest : public CppUnit::TestFixture {
 	  for (unsigned long k=0; k<20; k++)
 	   {
 	   regina::NSVPolynomialRing p1, p2, p3;
-	   regina::NLargeInteger X;
 	   for (unsigned long i=0; i<10; i++)
 	    {
-		p1 += NSVPolynomialRing( X.randomBinary(7), 3*i );
-		p2 += NSVPolynomialRing( X.randomBinary(4), 4*i );
-		p3 += NSVPolynomialRing( X.randomBinary(3), 5*i );
+		p1 += NSVPolynomialRing( NLargeInteger::randomBinary(7), 3*i );
+		p2 += NSVPolynomialRing( NLargeInteger::randomBinary(4), 4*i );
+		p3 += NSVPolynomialRing( NLargeInteger::randomBinary(3), 5*i );
 	    }
 	   if ( (p1*p2)*p3 != p1*(p2*p3) ) CPPUNIT_FAIL("Addition not associative.");
-	   if ( p1 * NSVPolynomialRing::one != p1 ) CPPUNIT_FAIL("One does not exist.");
+	   if ( p1 * NSVPolynomialRing::one != p1 ) CPPUNIT_FAIL("One does not exist (1).");
 	   if ( NSVPolynomialRing::one * p1 != p1 ) CPPUNIT_FAIL("One does not exist (2).");
 	   if ( p1 * p2 != p2 * p1 ) CPPUNIT_FAIL("Multiplication not commutative.");
 	   }
@@ -89,14 +87,13 @@ class NSVPolynomialRingTest : public CppUnit::TestFixture {
 	  for (unsigned long k=0; k<20; k++)
 	   {
 	   regina::NSVPolynomialRing p1, p2, p3;
-	   regina::NLargeInteger X;
 	   for (unsigned long i=0; i<10; i++)
 	    {
-		p1 += NSVPolynomialRing( X.randomBinary(7), 3*i );
-		p2 += NSVPolynomialRing( X.randomBinary(4), 4*i );
-		p3 += NSVPolynomialRing( X.randomBinary(3), 5*i );
+		p1 += NSVPolynomialRing( NLargeInteger::randomBinary(7), 3*i );
+		p2 += NSVPolynomialRing( NLargeInteger::randomBinary(4), 4*i );
+		p3 += NSVPolynomialRing( NLargeInteger::randomBinary(3), 5*i );
 	    }
-	   if ( (p1+p2)*p3 != (p1*p3) + (p2*p3) ) CPPUNIT_FAIL("Multiplication and addition do not distribute.");
+	   if ( (p1+p2)*p3 != (p1*p3) + (p2*p3) ) CPPUNIT_FAIL("Multiplication and addition do not distribute (1).");
 	   if ( p1*(p2+p3) != (p1*p2) + (p1*p3) ) CPPUNIT_FAIL("Multiplication and addition do not distribute (2).");
 	   }
 	 // distrib

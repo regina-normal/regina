@@ -244,6 +244,80 @@ long int NSVPolynomialRing::descartesNo() const
 return retval;
 }
 
+/**
+ * Creates a polynomial of the form t^{n-m}+...+t^{n-dm}
+ */
+NSVPolynomialRing::NSVPolynomialRing( signed long n, signed long m, unsigned long d )
+{
+std::map< signed long, NLargeInteger*>::iterator i = cof.begin();
+signed long exp=n;
+for (unsigned long j=0; j<d; j++)
+ {
+  exp -= m;
+  NLargeInteger* P(new NLargeInteger(NLargeInteger::one));
+  i = cof.insert( i, std::pair<signed long, NLargeInteger*> (exp, P) );
+ }
+}
+
+std::string NSVPolynomialRing::toString() const
+{
+// run through cof, assemble into string
+std::string retval; std::stringstream ss;
+std::map< signed long, NLargeInteger* >::const_iterator p;
+bool outputSomething = false; // keep track of whether or not we've output anything
+for (p = cof.begin(); p != cof.end(); p++)
+ {
+  NLargeInteger mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  signed long exp( p->first );
+  ss.str("");  ss<<p->first;
+  // ensure sensible output, eg:  t^(-5) + 5 - t + 3t^2 + t^3 - t^(12), etc...
+  if (mag != 0) // don't output 0t^n
+   { 
+   if (outputSomething) retval += ( pos ? "+" : "-" ); else if (!pos) retval += "-";
+   outputSomething = true;
+   if ( (exp==0) || (mag != 1) ) retval += mag.stringValue();
+   if (exp == 1) retval += "t"; else 
+   if ( (exp<0) || (exp>9) ) retval += "t^(" + ss.str() + ")"; else
+    if (exp != 0) retval += "t^" + ss.str();
+   }
+ }
+if (outputSomething == false) retval = "0";
+return retval;
+}
+
+void NSVPolynomialRing::writeTextShort(std::ostream& out) const
+{ out<<toString(); }
+
+std::ostream& NSVPolynomialRing::writeTeX(std::ostream &out) const
+{ out<<toTeX(); return out; }
+
+std::string NSVPolynomialRing::toTeX() const
+{
+// run through cof, assemble into string
+std::string retval; std::stringstream ss;
+std::map< signed long, NLargeInteger* >::const_iterator p;
+bool outputSomething = false; // keep track of whether or not we've output anything
+for (p = cof.begin(); p != cof.end(); p++)
+ {
+  NLargeInteger mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  signed long exp( p->first );
+  ss.str("");  ss<<p->first;
+  // ensure sensible output, eg:  t^{-5} + 5 - t + 3t^2 + t^3 - t^{12}, etc...
+  if (mag != 0) // don't output 0t^n
+   { 
+   if (outputSomething) retval += ( pos ? "+" : "-" ); else if (!pos) retval += "-";
+   outputSomething = true;
+   if ( (exp==0) || (mag != 1) ) retval += mag.stringValue();
+   if (exp == 1) retval += "t"; else 
+   if ( (exp<0) || (exp>9) ) retval += "t^{" + ss.str() + "}"; else
+    if (exp != 0) retval += "t^" + ss.str();
+   }
+ }
+if (outputSomething == false) retval = "0";
+return retval;
+}
+
+std::ostream& operator << (std::ostream& out, const NSVPolynomialRing& p)
+{ p.writeTextShort(out); return out; }
+
 
 } // namespace regina
 

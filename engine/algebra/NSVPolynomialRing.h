@@ -37,6 +37,7 @@
 
 #include <sstream>
 #include <map>
+#include <cstdlib>
 
 #include "maths/nlargeinteger.h"
 #include "utilities/ptrutils.h"
@@ -55,10 +56,11 @@ namespace regina {
  * \testpart
  *
  * \todo allow for rational coefficients. Template ring.
- * \todo Allow for Laurent polynomials.
  *
  * @author Ryan Budney
  */
+// TODO: fix!  routines like isZero() rely on the zero element having only one representation 
+//        with cof the empty map. 
 class NSVPolynomialRing {
     public:
 	static const NSVPolynomialRing zero;
@@ -80,9 +82,14 @@ class NSVPolynomialRing {
         NSVPolynomialRing(const NLargeInteger &a, signed long k);
 
         /**
-         * Creates an element of the polynomial ring, of the form "a" 
+         * Creates a constant polynomial of the form "a" 
          */
         NSVPolynomialRing(signed long a);
+
+        /**
+         * Creates a polynomial of the form t^{n-m}+...+t^{n-dm}
+         */
+        NSVPolynomialRing( signed long n, signed long m, unsigned long d );
 
 	/**
 	 * Destructor.
@@ -163,6 +170,16 @@ class NSVPolynomialRing {
          * This is the number of + roots - number of - roots, provided all real.
          */
 	long int descartesNo() const;
+
+        /**
+         * The width is the difference between the exponents of the largest and smallest degree non-zero terms.  
+         */
+        unsigned long width() const;
+
+        /**
+         * The degree returns the exponent of the term whose exponent has the maximum absolute value.  
+         */
+        signed long degree() const;
 
         /**
          * Returns a string representation of this polynomial.
@@ -276,69 +293,27 @@ return true;
 }
 
 inline bool NSVPolynomialRing::isZero() const
+{ return (cof.size() == 0); }
+
+inline unsigned long NSVPolynomialRing::width() const
 {
-if (cof.size() != 0) return false;
-return true;
+// find the first and last elements of the list "cof", return difference of exponents.
+std::map<signed long, NLargeInteger*>::const_iterator i(cof.begin());
+std::map<signed long, NLargeInteger*>::const_reverse_iterator j(cof.rbegin());
+return ( (*j).first - (*i).first );
 }
 
-inline std::string NSVPolynomialRing::toString() const
+//unsigned long abs( signed long a )
+//{ return ( (a>0) ? a : -a ); }
+
+inline signed long NSVPolynomialRing::degree() const
 {
-// run through cof, assemble into string
-std::string retval; std::stringstream ss;
-std::map< signed long, NLargeInteger* >::const_iterator p;
-bool outputSomething = false; // keep track of whether or not we've output anything
-for (p = cof.begin(); p != cof.end(); p++)
- {
-  NLargeInteger mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  signed long exp( p->first );
-  ss.str("");  ss<<p->first;
-  // ensure sensible output, eg:  t^(-5) + 5 - t + 3t^2 + t^3 - t^(12), etc...
-  if (mag != 0) // don't output 0t^n
-   { 
-   if (outputSomething) retval += ( pos ? "+" : "-" ); else if (!pos) retval += "-";
-   outputSomething = true;
-   if ( (exp==0) || (mag != 1) ) retval += mag.stringValue();
-   if (exp == 1) retval += "t"; else 
-   if ( (exp<0) || (exp>9) ) retval += "t^(" + ss.str() + ")"; else
-    if (exp != 0) retval += "t^" + ss.str();
-   }
- }
-if (outputSomething == false) retval = "0";
-return retval;
+// find first and last elements of the list "cof", return max of abs of exponents.
+std::map<signed long, NLargeInteger*>::const_iterator i(cof.begin());
+std::map<signed long, NLargeInteger*>::const_reverse_iterator j(cof.rbegin());
+return ( ( abs((*j).first) > abs((*i).first) ) ? (*j).first : (*i).first );
 }
 
-inline void NSVPolynomialRing::writeTextShort(std::ostream& out) const
-{ out<<toString(); }
-
-inline std::ostream& NSVPolynomialRing::writeTeX(std::ostream &out) const
-{ out<<toTeX(); return out; }
-
-inline std::string NSVPolynomialRing::toTeX() const
-{
-// run through cof, assemble into string
-std::string retval; std::stringstream ss;
-std::map< signed long, NLargeInteger* >::const_iterator p;
-bool outputSomething = false; // keep track of whether or not we've output anything
-for (p = cof.begin(); p != cof.end(); p++)
- {
-  NLargeInteger mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  signed long exp( p->first );
-  ss.str("");  ss<<p->first;
-  // ensure sensible output, eg:  t^{-5} + 5 - t + 3t^2 + t^3 - t^{12}, etc...
-  if (mag != 0) // don't output 0t^n
-   { 
-   if (outputSomething) retval += ( pos ? "+" : "-" ); else if (!pos) retval += "-";
-   outputSomething = true;
-   if ( (exp==0) || (mag != 1) ) retval += mag.stringValue();
-   if (exp == 1) retval += "t"; else 
-   if ( (exp<0) || (exp>9) ) retval += "t^{" + ss.str() + "}"; else
-    if (exp != 0) retval += "t^" + ss.str();
-   }
- }
-if (outputSomething == false) retval = "0";
-return retval;
-}
-
-inline std::ostream& operator << (std::ostream& out, const NSVPolynomialRing& p)
-{ p.writeTextShort(out); return out; }
 
 } // namespace regina
 

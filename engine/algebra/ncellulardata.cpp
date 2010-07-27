@@ -1028,6 +1028,25 @@ const NMatrixRing< NSVPolynomialRing >* NCellularData::alexanderChainComplex( co
    return buildMat; 
 }
 
+std::auto_ptr< NMatrixRing< NSVPolynomialRing > > NCellularData::alexanderPresMat() const
+{
+ const NMatrixRing<NSVPolynomialRing>* M( alexanderChainComplex( ChainComplexLocator(1, NCellularData::DUAL_coord) ) );
+ const NMatrixRing<NSVPolynomialRing>* N( alexanderChainComplex( ChainComplexLocator(2, NCellularData::DUAL_coord) ) );
+ NMatrixRing<NSVPolynomialRing> workM(*M);  NMatrixRing<NSVPolynomialRing> rowOpMat(M->columns(), M->columns());
+ NMatrixRing<NSVPolynomialRing> workN(*N);  NMatrixRing<NSVPolynomialRing> rowOpInvMat(M->columns(), M->columns());
+ rowOpMat.makeIdentity(); rowOpInvMat.makeIdentity();
+ // the single row of M consists of elements of the form t^n-1 for n an integer.  In particular entries
+ // can be zero although there must be one non-zero entry.  Column reducing this matrix amounts to the GCD algorithm
+ // on the exponents -- for example consider [ t^n - 1,  t^m - 1 ] with n>m>1, then let n = dm+r with 0 <= r < m
+ // t^n - 1 = (t^{n-m}+...+t^{n-dm})(t^m-1) + t^r-1
+
+ // to get t^n - 1 call NSVPolynomialRing(NLargeInteger::one, n) - NSVPolynomialRing(1)
+ //        t^{n-m}+...+t^{n-dm} call NSVPolynomialRing(n,m,d)
+
+
+ std::auto_ptr< NMatrixRing< NSVPolynomialRing > > retval( new NMatrixRing< NSVPolynomialRing >(N->rows()-1,N->columns()) );
+ return retval;
+}
 
 } // namespace regina
 

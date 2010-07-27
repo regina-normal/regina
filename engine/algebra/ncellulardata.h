@@ -1069,6 +1069,12 @@ public:
      * C_2 -> C_1 -> C_0 part of the complex is defined, in dual coordinates, for 4-manifolds.
      */
     const NMatrixRing< NSVPolynomialRing >* alexanderChainComplex( const ChainComplexLocator &a_desc ) const;
+
+    /**
+     *  Computes the presentation matrix for the 1-dimensional Alexander module. 
+     *  Returns null if rank H1 != 1. 
+     */
+    std::auto_ptr< NMatrixRing< NSVPolynomialRing > > alexanderPresMat() const;
 };
 
 
