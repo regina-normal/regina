@@ -1039,9 +1039,23 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing > > NCellularData::alexanderPresMa
  // can be zero although there must be one non-zero entry.  Column reducing this matrix amounts to the GCD algorithm
  // on the exponents -- for example consider [ t^n - 1,  t^m - 1 ] with n>m>1, then let n = dm+r with 0 <= r < m
  // t^n - 1 = (t^{n-m}+...+t^{n-dm})(t^m-1) + t^r-1
-
  // to get t^n - 1 call NSVPolynomialRing(NLargeInteger::one, n) - NSVPolynomialRing(1)
  //        t^{n-m}+...+t^{n-dm} call NSVPolynomialRing(n,m,d)
+ // from t^n - 1  n == getDegree()
+ unsigned long pivotCol(0);
+ find_small_degree:  // look for smallest non-zero degree elt, set index of column to pivotCol
+ 
+
+ bool nonZeroFlag(false);
+ for (unsigned long i=0; i<M->columns(); i++)
+  if ( (workM.entry(0,i).degree() != 0) && (i!=pivotCol) ) // use pivotCol to reduce i
+  {
+
+   // if entry (0,i) nonzero set nonZeroFlag
+  }
+ if (nonZeroFlag) goto find_small_degree;
+ // okay, all entries except pivotCol are killed, so pivotCol in workM must be t^{\pm}-1. 
+
 
 
  std::auto_ptr< NMatrixRing< NSVPolynomialRing > > retval( new NMatrixRing< NSVPolynomialRing >(N->rows()-1,N->columns()) );
