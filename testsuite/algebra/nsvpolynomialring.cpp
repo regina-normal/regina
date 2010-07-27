@@ -42,6 +42,7 @@ class NSVPolynomialRingTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(multiplicative_struc_test);
     CPPUNIT_TEST(ring_struc_test);
     CPPUNIT_TEST(degree_and_width_test);
+    CPPUNIT_TEST(bogus_terms);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -113,6 +114,36 @@ class NSVPolynomialRingTest : public CppUnit::TestFixture {
            if (p1.width()+p2.width() != (p1*p2).width() ) CPPUNIT_FAIL("Width under multiplication error. "+
                                                 p1.toString()+"*"+p2.toString()+" and "+(p1*p2).toString());
            }
+          }
+       void bogus_terms() {
+	  for (unsigned long k=0; k<20; k++)
+	   {
+	   regina::NSVPolynomialRing p1, p2, p3;
+	   for (unsigned long i=0; i<10; i++)
+	    {
+		p1 += NSVPolynomialRing( NLargeInteger::randomBinary(7)-64, 3*i );
+		p2 += NSVPolynomialRing( NLargeInteger::randomBinary(4)-8, 4*((signed long)i-5) );
+		p3 += NSVPolynomialRing( NLargeInteger::randomBinary(3)-4, 5*i );
+	    }
+           if (p1.toString(false) != p1.toString(true)) CPPUNIT_FAIL("Bogus zero init.");
+           if (p2.toString(false) != p2.toString(true)) CPPUNIT_FAIL("Bogus zero init.");
+           if (p3.toString(false) != p3.toString(true)) CPPUNIT_FAIL("Bogus zero init.");
+           if ((p1*p2).toString(false) != (p1*p2).toString(true)) CPPUNIT_FAIL("Bogus zero *.");
+           if ((p2*p3).toString(false) != (p2*p3).toString(true)) CPPUNIT_FAIL("Bogus zero *.");
+           if ((p3*p1).toString(false) != (p3*p1).toString(true)) CPPUNIT_FAIL("Bogus zero *.");
+           if ((p1+p2).toString(false) != (p1+p2).toString(true)) CPPUNIT_FAIL("Bogus zero +.");
+           if ((p2+p3).toString(false) != (p2+p3).toString(true)) CPPUNIT_FAIL("Bogus zero +.");
+           if ((p3+p1).toString(false) != (p3+p1).toString(true)) CPPUNIT_FAIL("Bogus zero +.");
+           if ((p1-p2).toString(false) != (p1-p2).toString(true)) CPPUNIT_FAIL("Bogus zero -.");
+           if ((p2-p3).toString(false) != (p2-p3).toString(true)) CPPUNIT_FAIL("Bogus zero -.");
+           if ((p3-p1).toString(false) != (p3-p1).toString(true)) CPPUNIT_FAIL("Bogus zero -.");
+           p1 += p2; p2 += p3; 
+           if (p1.toString(false) != p1.toString(true)) CPPUNIT_FAIL("Bogus zero +=.");
+           if (p2.toString(false) != p2.toString(true)) CPPUNIT_FAIL("Bogus zero +=.");
+           p1 -= p2; p2 -= p3; 
+           if (p1.toString(false) != p1.toString(true)) CPPUNIT_FAIL("Bogus zero -=.");
+           if (p2.toString(false) != p2.toString(true)) CPPUNIT_FAIL("Bogus zero -=.");
+	   }
           }
 };
 

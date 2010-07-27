@@ -162,51 +162,41 @@ return retval;
 }
 
 NSVPolynomialRing& NSVPolynomialRing::operator -=(const NSVPolynomialRing& q)
-{ // todo: redo with insert w/iterator
+{ // todo: redo using insert w/iterator
 std::map< signed long, NLargeInteger* >::iterator i;
 std::map< signed long, NLargeInteger* >::const_iterator j;
 i = cof.begin(); j = q.cof.begin();
 while ( (i != cof.end()) || (j != q.cof.end()) )
- { if (i == cof.end())
-   { // only j relevant
-     cof.insert( std::pair< signed long, NLargeInteger* >(j->first, new NLargeInteger(-(*j->second) ) ) );
-     j++; }
-  else if (j == q.cof.end())
-   { i++; }
-  else
-   {if ( i->first < j->first )
-     { i++; }
-    else if ( i->first > j->first )
-     { cof.insert( std::pair< signed long, NLargeInteger* >(j->first, new NLargeInteger(-(*j->second) ) ) );
-       j++; }
-    else
-     { (*i->second) -= (*j->second); i++; j++; } 
-   }
+ { if (i == cof.end()) { cof.insert( std::pair< signed long, NLargeInteger* >(j->first, new NLargeInteger(-(*j->second) ) ) ); j++; }
+   else if (j == q.cof.end()) i++;  
+   else if ( i->first < j->first ) i++;
+   else if ( i->first > j->first ) { cof.insert( std::pair< signed long, NLargeInteger* >(j->first, new NLargeInteger(-(*j->second) ) ) ); j++; }
+   else
+     { (*i->second) -= (*j->second); 
+       if (*i->second == NLargeInteger::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
+         { delete i->second; cof.erase(i++); j++; } 
+       else { i++; j++; }
+     }
  }
 return (*this);
 }
 
 NSVPolynomialRing& NSVPolynomialRing::operator +=(const NSVPolynomialRing& q)
-{ // todo: redo with insert w/iterator
+{ // todo: redo using insert w/iterator
 std::map< signed long, NLargeInteger* >::iterator i;
 std::map< signed long, NLargeInteger* >::const_iterator j;
 i = cof.begin(); j = q.cof.begin();
 while ( (i != cof.end()) || (j != q.cof.end()) )
- { if (i == cof.end())
-   { // only j relevant
-     cof.insert( std::pair< signed long, NLargeInteger* >(j->first, new NLargeInteger( (*j->second) ) ) );
-     j++; }
-  else if (j == q.cof.end())
-   { i++; }
-  else
-   {if ( i->first < j->first )
-     { i++; }
-    else if ( i->first > j->first )
-     { cof.insert( std::pair< signed long, NLargeInteger* >(j->first, new NLargeInteger( (*j->second) ) ) );
-       j++; }
-    else
-     { (*i->second) += (*j->second); i++; j++; } 
-   }
+ { if (i == cof.end()) { cof.insert( std::pair< signed long, NLargeInteger* >(j->first, new NLargeInteger( (*j->second) ) ) ); j++; }
+   else if (j == q.cof.end()) i++; 
+   else if ( i->first < j->first ) i++; 
+   else if ( i->first > j->first ) { cof.insert( std::pair< signed long, NLargeInteger* >(j->first, new NLargeInteger( (*j->second) ) ) ); j++; }
+   else
+     { (*i->second) += (*j->second); 
+       if (*i->second == NLargeInteger::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
+         { delete i->second; cof.erase(i++); j++; } 
+       else { i++; j++; }
+     }
  }
 return (*this);
 }
@@ -259,7 +249,7 @@ for (unsigned long j=0; j<d; j++)
  }
 }
 
-std::string NSVPolynomialRing::toString() const
+std::string NSVPolynomialRing::toString(bool suppressZero) const
 {
 // run through cof, assemble into string
 std::string retval; std::stringstream ss;
@@ -270,7 +260,7 @@ for (p = cof.begin(); p != cof.end(); p++)
   NLargeInteger mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  signed long exp( p->first );
   ss.str("");  ss<<p->first;
   // ensure sensible output, eg:  t^(-5) + 5 - t + 3t^2 + t^3 - t^(12), etc...
-  if (mag != 0) // don't output 0t^n
+  if ( (mag != 0) || (suppressZero==false) ) // don't output 0t^n
    { 
    if (outputSomething) retval += ( pos ? "+" : "-" ); else if (!pos) retval += "-";
    outputSomething = true;

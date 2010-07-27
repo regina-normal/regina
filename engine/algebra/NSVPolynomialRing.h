@@ -184,8 +184,11 @@ class NSVPolynomialRing {
         /**
          * Returns a string representation of this polynomial.
 	 * <tt>a + bt + ct^2 + ... </tt>
+         *
+         * suppressZero is a debugging flag. Set to false to check for any
+         *  0t^n terms.
          */
-        std::string toString() const;
+        std::string toString(bool suppressZero=true) const;
 
 	/**
          * Stream version of toString()
