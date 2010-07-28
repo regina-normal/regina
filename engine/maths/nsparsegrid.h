@@ -68,7 +68,7 @@ class NMultiIndex {
   bool operator!=(const NMultiIndex &q) const;
   NMultiIndex& operator=(const NMultiIndex &q);
   bool operator<(const NMultiIndex &q) const;
-  virtual void writeTextShort(std::ostream& out) const;
+  void writeTextShort(std::ostream& out) const;
 };
 
 /**

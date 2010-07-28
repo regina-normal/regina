@@ -51,7 +51,13 @@ namespace regina {
 
 /**
  * This is a class for dealing with elements of a single-variable polynomial ring, 
- * implemented sparsely.
+ * implemented sparsely.  The template class must be of a "ring" type, meaning
+ * T must contain:
+ *  1) A copy constructor. 
+ *  2) An assignment "=" operator. 
+ *  3) An output operation std::string T::stringValue()
+ *  4) Operations +, -, +=, -=, ==, <, abs()
+ *  5) T::zero and T::one exists 
  *
  * \testpart
  *
@@ -59,16 +65,15 @@ namespace regina {
  *
  * @author Ryan Budney
  */
-// TODO: fix!  routines like isZero() rely on the zero element having only one representation 
-//        with cof the empty map. 
+template <class T>
 class NSVPolynomialRing {
     public:
-	static const NSVPolynomialRing zero;
-        static const NSVPolynomialRing one;
-        static const NSVPolynomialRing pvar;
+	static const NSVPolynomialRing<T> zero;
+        static const NSVPolynomialRing<T> one;
+        static const NSVPolynomialRing<T> pvar;
     private:
        // sparse storage of coefficients
-       std::map< signed long, NLargeInteger* > cof;
+       std::map< signed long, T* > cof;
 
     public:
         /**
@@ -79,7 +84,7 @@ class NSVPolynomialRing {
         /**
          * Creates an element of the polynomial ring, of the form at^k 
          */
-        NSVPolynomialRing(const NLargeInteger &a, signed long k);
+        NSVPolynomialRing(const T &a, signed long k);
 
         /**
          * Creates a constant polynomial of the form "a" 
@@ -107,56 +112,56 @@ class NSVPolynomialRing {
          *
          * @param cloneMe the permutation to clone.
          */
-        NSVPolynomialRing(const NSVPolynomialRing& cloneMe);
+        NSVPolynomialRing(const NSVPolynomialRing<T>& cloneMe);
 
         /**
          * Sets this polynomial to the given polynomial.
          */
-        NSVPolynomialRing& operator = (const NSVPolynomialRing& cloneMe);
+        NSVPolynomialRing<T>& operator = (const NSVPolynomialRing<T>& cloneMe);
 
         /**
 	 * Set a coefficient.
          */
-        void setCoefficient (signed long i, const NLargeInteger& c);
+        void setCoefficient (signed long i, const T& c);
 
         /**
 	 * Returns the product of two polynomials.
          */
-        NSVPolynomialRing operator * (const NSVPolynomialRing& q) const;
+        NSVPolynomialRing<T> operator * (const NSVPolynomialRing<T>& q) const;
 
         /**
 	 * Scalar multiplication of a polynomial.
          */
-        friend NSVPolynomialRing operator * (const NLargeInteger &k, const NSVPolynomialRing& q);
+        friend NSVPolynomialRing<T> operator * (const T &k, const NSVPolynomialRing<T>& q);
 
 	/**
 	 * Returns the sum of two polynomials.
 	 */
-	NSVPolynomialRing operator + (const NSVPolynomialRing& q) const;
+	NSVPolynomialRing<T> operator + (const NSVPolynomialRing<T>& q) const;
 
 	/**
 	 * Returns the difference of two polynomials.
 	 */
-	NSVPolynomialRing operator - (const NSVPolynomialRing& q) const;
+	NSVPolynomialRing<T> operator - (const NSVPolynomialRing<T>& q) const;
 
-	NSVPolynomialRing& operator -=(const NSVPolynomialRing& q);
-	NSVPolynomialRing& operator +=(const NSVPolynomialRing& q);
-	NSVPolynomialRing operator -() const;
+	NSVPolynomialRing<T>& operator -=(const NSVPolynomialRing<T>& q);
+	NSVPolynomialRing<T>& operator +=(const NSVPolynomialRing<T>& q);
+	NSVPolynomialRing<T> operator -() const;
 
         /**
 	 * Returns the the coefficient of t^i for this polynomial.
          */
-        const NLargeInteger& operator[](signed long i) const;
+        const T& operator[](signed long i) const;
 
         /**
          * Determines if two polynomials are equal.
          */
-        bool operator == (const NSVPolynomialRing& other) const;
+        bool operator == (const NSVPolynomialRing<T>& other) const;
 
         /**
 	 * Determines if two polynomials are not equal.
          */
-        bool operator != (const NSVPolynomialRing& other) const;
+        bool operator != (const NSVPolynomialRing<T>& other) const;
 
         /**
          * Determines if this polynomial is equal to the multiplicative identity
@@ -172,7 +177,7 @@ class NSVPolynomialRing {
 
 	/**
 	 * Returns the number of sign changes in coefficients of the polynomial P(t) - number of sign changes of P(-t) 
-         * This is the number of + roots - number of - roots, provided all real.
+         * This is the number of + roots - number of - roots, provided all real. 
          */
 	long int descartesNo() const;
 
@@ -198,7 +203,7 @@ class NSVPolynomialRing {
 	/**
          * Stream version of toString()
          */
-        virtual void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
 	/**
 	 * Returns TeX string formatting of toString()
@@ -209,11 +214,6 @@ class NSVPolynomialRing {
          * string version of writeTeX.
 	 */
         std::string toTeX() const;
-
-        /**
-         * stream-friendly output
-         */
-        friend std::ostream& operator << (std::ostream& out, const NSVPolynomialRing& p);
 };
 
 /*@}*/
@@ -221,63 +221,69 @@ class NSVPolynomialRing {
 // Inline functions for NSVPolynomialRing
 
 // zero element -- nothing to do
-inline NSVPolynomialRing::NSVPolynomialRing() {}
+template <class T>
+inline NSVPolynomialRing<T>::NSVPolynomialRing() {}
 
 // monomial constructor
-inline NSVPolynomialRing::NSVPolynomialRing(const NLargeInteger &a, signed long k)
-{ if (a != 0) cof.insert(std::pair<signed long, NLargeInteger*>( k, new NLargeInteger(a) ) ); }
+template <class T>
+inline NSVPolynomialRing<T>::NSVPolynomialRing(const T &a, signed long k)
+{ if (a != 0) cof.insert(std::pair<signed long, T*>( k, new T(a) ) ); }
 
-inline NSVPolynomialRing::NSVPolynomialRing(signed long a)
-{ if (a != 0) cof.insert(std::pair<signed long, NLargeInteger*>( 0, new NLargeInteger(a) ) ); }
+template <class T>
+inline NSVPolynomialRing<T>::NSVPolynomialRing(signed long a)
+{ if (a != 0) cof.insert(std::pair<signed long, T*>( 0, new T(a) ) ); }
 
 // destructor
-inline NSVPolynomialRing::~NSVPolynomialRing()
+template <class T>
+inline NSVPolynomialRing<T>::~NSVPolynomialRing()
 {
-std::map< signed long, NLargeInteger* >::iterator ci;
-for (ci = cof.begin(); ci != cof.end(); ci++)
+ typename std::map< signed long, T* >::iterator ci;
+ for (ci = cof.begin(); ci != cof.end(); ci++)
 	delete ci->second;
 }
 
 // copy constructor
-inline NSVPolynomialRing::NSVPolynomialRing(const NSVPolynomialRing& cloneMe)
+template <class T>
+inline NSVPolynomialRing<T>::NSVPolynomialRing(const NSVPolynomialRing<T>& cloneMe)
 {
-std::map< signed long, NLargeInteger* >::const_iterator ci;
-for (ci = cloneMe.cof.begin(); ci != cloneMe.cof.end(); ci++) cof.insert( 
- std::pair< signed long, NLargeInteger* >( ci->first, clonePtr(ci->second) ) );
+ typename std::map< signed long, T* >::const_iterator ci;
+ for (ci = cloneMe.cof.begin(); ci != cloneMe.cof.end(); ci++) cof.insert( 
+  std::pair< signed long, T* >( ci->first, clonePtr(ci->second) ) );
 }
 
 // assignment
-inline NSVPolynomialRing& NSVPolynomialRing::operator = (const NSVPolynomialRing& cloneMe)
+template <class T>
+inline NSVPolynomialRing<T>& NSVPolynomialRing<T>::operator = (const NSVPolynomialRing<T>& cloneMe)
 {
-// deallocate everything
-std::map< signed long, NLargeInteger* >::iterator ci;
-for (ci = cof.begin(); ci != cof.end(); ci++)
+ // deallocate everything
+ typename std::map< signed long, T* >::iterator ci;
+ for (ci = cof.begin(); ci != cof.end(); ci++) 
 	delete ci->second;
-cof.clear();
-
-// copy everything
-ci = cof.begin();
-std::map< signed long, NLargeInteger* >::const_iterator Ci;
-for (Ci = cloneMe.cof.begin(); Ci != cloneMe.cof.end(); Ci++)
-	ci = cof.insert(ci, std::pair< signed long, NLargeInteger* >( Ci->first, clonePtr(Ci->second) ));
-
-return (*this);
+ cof.clear();
+ // copy everything
+ ci = cof.begin();
+ typename std::map< signed long, T* >::const_iterator Ci;
+ for (Ci = cloneMe.cof.begin(); Ci != cloneMe.cof.end(); Ci++)
+	ci = cof.insert(ci, std::pair< signed long, T* >( Ci->first, clonePtr(Ci->second) ));
+ return (*this);
 }
 
-inline const NLargeInteger& NSVPolynomialRing::operator[](signed long i) const
+template <class T>
+inline const T& NSVPolynomialRing<T>::operator[](signed long i) const
 {
-// is t^i in cof?  if so return coefficient, if not, return 0.
- std::map< signed long, NLargeInteger* >::const_iterator p;
+ // is t^i in cof?  if so return coefficient, if not, return 0.
+ typename std::map< signed long, T* >::const_iterator p;
  p = cof.find(i);
  if (p != cof.end()) return (*p->second);
- else return NLargeInteger::zero;
+ else return T::zero;
 }
 
-inline bool NSVPolynomialRing::operator == (const NSVPolynomialRing& other) const
+template <class T>
+inline bool NSVPolynomialRing<T>::operator == (const NSVPolynomialRing<T>& other) const
 {
-// verify equal...
+ // verify equal...
  if (cof.size() != other.cof.size()) return false;
- std::map< signed long, NLargeInteger* >::const_iterator p1, p2;
+ typename std::map< signed long, T* >::const_iterator p1, p2;
  p1 = cof.begin(); p2 = other.cof.begin();
  while (p1 != cof.end() )
   {
@@ -288,41 +294,350 @@ inline bool NSVPolynomialRing::operator == (const NSVPolynomialRing& other) cons
  return true;
 }
 
-inline bool NSVPolynomialRing::operator != (const NSVPolynomialRing& other) const
+template <class T>
+inline bool NSVPolynomialRing<T>::operator != (const NSVPolynomialRing<T>& other) const
 { return ( !((*this)==other) ); }
 
-inline bool NSVPolynomialRing::isIdentity() const
+template <class T>
+inline bool NSVPolynomialRing<T>::isIdentity() const
 {
-// check only nonzero coeff is t^0 with coeff 1.
-if (cof.size() != 1) return false;
-if (cof.begin()->first != 0) return false;
-if (*(cof.begin()->second) != NLargeInteger::one) return false;
-return true;
+ // check only nonzero coeff is t^0 with coeff 1.
+ if (cof.size() != 1) return false;
+ if (cof.begin()->first != 0) return false;
+ if (*(cof.begin()->second) != T::one) return false;
+ return true;
 }
 
-inline bool NSVPolynomialRing::isZero() const
+template <class T>
+inline bool NSVPolynomialRing<T>::isZero() const
 { return cof.empty(); }
 
-inline unsigned long NSVPolynomialRing::width() const
+template <class T>
+inline unsigned long NSVPolynomialRing<T>::width() const
 {
-// find the first and last elements of the list "cof", return difference of exponents.
-if (cof.empty()) return 0;
-std::map<signed long, NLargeInteger*>::const_iterator i(cof.begin());
-std::map<signed long, NLargeInteger*>::const_reverse_iterator j(cof.rbegin());
-return ( (*j).first - (*i).first );
+ // find the first and last elements of the list "cof", return difference of exponents.
+ if (cof.empty()) return 0;
+ typename std::map<signed long, T*>::const_iterator i(cof.begin());
+ typename std::map<signed long, T*>::const_reverse_iterator j(cof.rbegin());
+ return ( (*j).first - (*i).first );
 }
 
-//unsigned long abs( signed long a )
-//{ return ( (a>0) ? a : -a ); }
-
-inline signed long NSVPolynomialRing::degree() const
+template <class T>
+inline signed long NSVPolynomialRing<T>::degree() const
 {
-// find first and last elements of the list "cof", return max of abs of exponents.
-if (cof.empty()) return 0;
-std::map<signed long, NLargeInteger*>::const_iterator i(cof.begin());
-std::map<signed long, NLargeInteger*>::const_reverse_iterator j(cof.rbegin());
-return ( ( abs((*j).first) > abs((*i).first) ) ? (*j).first : (*i).first );
+ // find first and last elements of the list "cof", return max of abs of exponents.
+ if (cof.empty()) return 0;
+ typename std::map<signed long, T*>::const_iterator i(cof.begin());
+ typename std::map<signed long, T*>::const_reverse_iterator j(cof.rbegin());
+ return ( ( abs((*j).first) > abs((*i).first) ) ? (*j).first : (*i).first );
 }
+
+template <class T>
+inline NSVPolynomialRing<T> operator * (const T &k, const NSVPolynomialRing<T>& q)
+{
+ NSVPolynomialRing<T> retval;
+ if (k != 0)
+  {
+  retval = q;
+  typename std::map< signed long, T* >::iterator ci;
+  for (ci = retval.cof.begin(); ci != retval.cof.end(); ci++)
+	(*ci->second) *= k;
+  }
+ return retval;
+}
+
+template <class T>
+inline std::ostream& operator << (std::ostream& out, const NSVPolynomialRing<T>& p)
+{ p.writeTextShort(out); return out; }
+
+template <class T>
+const NSVPolynomialRing<T> NSVPolynomialRing<T>::zero;
+
+template <class T>
+const NSVPolynomialRing<T> NSVPolynomialRing<T>::one(  T::one, 0 );
+
+template <class T>
+const NSVPolynomialRing<T> NSVPolynomialRing<T>::pvar( T::one, 1 );
+
+template <class T>
+inline void NSVPolynomialRing<T>::setCoefficient (signed long i, const T & c) 
+{ // redo using insert
+T* P(new T(c));
+std::pair< typename std::map< signed long, T* >::iterator, bool > res = 
+ cof.insert(std::pair< signed long, T* >( i, P ) );
+if (res.second == false) { (*res.first->second) = (*P); delete P; }
+}
+
+template <class T>
+inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator * (const NSVPolynomialRing<T>& q) const
+{
+// There's a faster way to do polynomial multiplication using the FFT. See
+// http://www.cs.iastate.edu/~cs577/handouts/polymultiply.pdf
+// Fateman 2005 indicates nobody has implemented such algorithms in any major package, and that
+//  the asymptotic advantage only appears for extremely large polynomials, a problem being that
+//  roots of unity are required so they seem to think arbitrary precision complex numbers are
+//  required, which is slow.  Can we avoid this using exact arithmetic? 
+typename std::map< signed long, T* >::const_iterator I, J;
+NSVPolynomialRing<T> retval;
+
+for (I = cof.begin(); I!=cof.end(); I++) for (J=q.cof.begin(); J!=q.cof.end(); J++)
+ {
+   // lets multiply *I->second and *J->second
+   T* P(new NLargeInteger( (*I->second)*(*J->second) ) );
+   std::pair< typename std::map< signed long, T* >::iterator, bool > res = 
+    retval.cof.insert( std::pair< signed long, T* > (
+    I->first+J->first, P ) );
+   if (res.second == false) { (*res.first->second) += (*P); delete P; }
+ }
+
+//  now run through find zero coefficients and deallocate.
+typename std::map< signed long, T* >::iterator K;
+for (K = retval.cof.begin(); K!=retval.cof.end(); K++)
+ if ( (*K->second) == T::zero )
+  {
+   delete K->second;
+   retval.cof.erase(K);
+  }
+
+return retval;
+}
+
+template <class T>
+inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator + (const NSVPolynomialRing<T>& q) const
+{
+NSVPolynomialRing<T> retval;
+// two iterators, one for this->cof, one for q.cof, start at beginning for both, 
+// smallest we add, if only one then that's okay. We increment smallest, repeat...
+typename std::map< signed long, T* >::const_iterator i,j;
+i = cof.begin(); j = q.cof.begin();
+while ( (i != cof.end()) || (j != q.cof.end()) )
+ {
+  if (i == cof.end())
+   { // only j relevant
+     retval.cof.insert( std::pair< signed long, T* >(j->first, new T(*j->second) ) );
+     j++; }
+  else if (j == q.cof.end())
+   { // only i relevant
+     retval.cof.insert( std::pair< signed long, T* >(i->first, new T(*i->second) ) );
+     i++; }
+  else
+   {if ( i->first < j->first )
+     { retval.cof.insert( std::pair< signed long, T* >(i->first, new T(*i->second) ) );
+       i++; }
+    else if ( i->first > j->first )
+     { retval.cof.insert( std::pair< signed long, T* >(j->first, new T(*j->second) ) );
+       j++; }
+    else
+     { T* temp(new T( (*i->second) + (*j->second) ) );
+       if ( (*temp) != T::zero )
+       retval.cof.insert( std::pair< signed long, T* >(i->first, temp ) );
+	else delete temp;
+       i++; j++; } 
+   }
+ }
+
+return retval;
+}
+
+template <class T>
+inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator - (const NSVPolynomialRing<T>& q) const
+{
+NSVPolynomialRing<T> retval;
+// two iterators, one for this->cof, one for q.cof, start at beginning for both, 
+// smallest we add, if only one then that's okay. We increment smallest, repeat...
+typename std::map< signed long, T* >::const_iterator i,j;
+i = cof.begin(); j = q.cof.begin();
+while ( (i != cof.end()) || (j != q.cof.end()) )
+ {
+  if (i == cof.end())
+   { // only j relevant
+     retval.cof.insert( std::pair< signed long, T* >(j->first, new T(-(*j->second) ) ) );
+     j++; }
+  else if (j == q.cof.end())
+   { // only i relevant
+     retval.cof.insert( std::pair< signed long, T* >(i->first, new T(*i->second) ) );
+     i++; }
+  else
+   {if ( i->first < j->first )
+     { retval.cof.insert( std::pair< signed long, T* >(i->first, new T(*i->second) ) );
+       i++; }
+    else if ( i->first > j->first )
+     { retval.cof.insert( std::pair< signed long, T* >(j->first, new T(-(*j->second) ) ) );
+       j++; }
+    else
+     { T* temp(new NLargeInteger( (*i->second) - (*j->second) ) );
+       if ( (*temp) != T::zero )
+       retval.cof.insert( std::pair< signed long, T* >(i->first, temp ) );
+	else delete temp;
+       i++; j++; } 
+   }
+ }
+return retval;
+}
+
+template <class T>
+inline NSVPolynomialRing<T>& NSVPolynomialRing<T>::operator -=(const NSVPolynomialRing<T>& q)
+{ // todo: redo using insert w/iterator
+typename std::map< signed long, T* >::iterator i;
+typename std::map< signed long, T* >::const_iterator j;
+i = cof.begin(); j = q.cof.begin();
+while ( (i != cof.end()) || (j != q.cof.end()) )
+ { if (i == cof.end()) { cof.insert( std::pair< signed long, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
+   else if (j == q.cof.end()) i++;  
+   else if ( i->first < j->first ) i++;
+   else if ( i->first > j->first ) { cof.insert( std::pair< signed long, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
+   else
+     { (*i->second) -= (*j->second); 
+       if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
+         { delete i->second; cof.erase(i++); j++; } 
+       else { i++; j++; }
+     }
+ }
+return (*this);
+}
+
+template <class T>
+inline NSVPolynomialRing<T>& NSVPolynomialRing<T>::operator +=(const NSVPolynomialRing<T>& q)
+{ // todo: redo using insert w/iterator
+typename std::map< signed long, T* >::iterator i;
+typename std::map< signed long, T* >::const_iterator j;
+i = cof.begin(); j = q.cof.begin();
+while ( (i != cof.end()) || (j != q.cof.end()) )
+ { if (i == cof.end()) { cof.insert( std::pair< signed long, T* >(j->first, new T( (*j->second) ) ) ); j++; }
+   else if (j == q.cof.end()) i++; 
+   else if ( i->first < j->first ) i++; 
+   else if ( i->first > j->first ) { cof.insert( std::pair< signed long, T* >(j->first, new T( (*j->second) ) ) ); j++; }
+   else
+     { (*i->second) += (*j->second); 
+       if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
+         { delete i->second; cof.erase(i++); j++; } 
+       else { i++; j++; }
+     }
+ }
+return (*this);
+}
+
+template <class T>
+inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator -() const
+{
+NSVPolynomialRing<T> retval(*this);
+typename std::map< signed long, T* >::iterator i;
+for (i = retval.cof.begin(); i!=retval.cof.end(); i++)
+ i->second->negate();
+return retval;
+}
+
+
+template <class T>
+inline long int NSVPolynomialRing<T>::descartesNo() const
+{
+ long int retval = 0;
+ bool signP(false), signN(false); // keeps track of signs L to R for P(t) and P(-t) respectively.
+ typename std::map< signed long, T* >::const_iterator i;
+
+ for (i = cof.begin(); i!=cof.end(); i++)
+  {
+   bool NsignP = ( (*i->second) > 0 ? true : false );
+   bool NsignN = NsignP; if ( i->first % 2 == 1 ) NsignN = !NsignN; 
+
+   if (i != cof.begin()) // compare
+    {
+     if (signP != NsignP) retval++;
+     if (signN != NsignN) retval--;
+    }
+   signP = NsignP; signN = NsignN;
+  }
+
+return retval;
+}
+
+  /**
+   * Creates a polynomial of the form:
+   *
+   *  t^{m-n}+...+t^{m-dn} if d>0,           -t^m-t^{m+n}-...-t^{m-(d+1)n} if d<0
+   *
+   *  these polynomials are useful for situations where one can divide two integer polynomials, ie
+   *  if n=dm+r with 0<=r<|m|, then t^m-1 = (NSVPolynomialRing(n,m,d))*(t^n-1) + (t^r-1)
+   */
+template <class T>
+inline NSVPolynomialRing<T>::NSVPolynomialRing( signed long n, signed long m, signed long d )
+{
+typename std::map< signed long, T*>::iterator i = cof.begin();
+signed long exp=m;
+if (d>0) for (unsigned long j=0; j<d; j++)
+ {
+  exp -= n;
+  T* P(new T(T::one));
+  i = cof.insert( i, std::pair<signed long, T*> (exp, P) );
+ }
+else for (unsigned long j=0; j<abs(d); j++)
+ {
+  T* P(new T(-T::one));
+  i = cof.insert( i, std::pair<signed long, T*> (exp, P) );
+  exp += n;
+ }
+}
+
+template <class T>
+inline std::string NSVPolynomialRing<T>::toString(bool suppressZero) const
+{
+// run through cof, assemble into string
+std::string retval; std::stringstream ss;
+typename std::map< signed long, T* >::const_iterator p;
+bool outputSomething = false; // keep track of whether or not we've output anything
+for (p = cof.begin(); p != cof.end(); p++)
+ {
+  T mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  signed long exp( p->first );
+  ss.str("");  ss<<p->first;
+  // ensure sensible output, eg:  t^(-5) + 5 - t + 3t^2 + t^3 - t^(12), etc...
+  if ( (mag != 0) || (suppressZero==false) ) // don't output 0t^n
+   { 
+   if (outputSomething) retval += ( pos ? "+" : "-" ); else if (!pos) retval += "-";
+   outputSomething = true;
+   if ( (exp==0) || (mag != 1) ) retval += mag.stringValue();
+   if (exp == 1) retval += "t"; else 
+   if ( (exp<0) || (exp>9) ) retval += "t^(" + ss.str() + ")"; else
+    if (exp != 0) retval += "t^" + ss.str();
+   }
+ }
+if (outputSomething == false) retval = "0";
+return retval;
+}
+
+template <class T>
+inline void NSVPolynomialRing<T>::writeTextShort(std::ostream& out) const
+{ out<<toString(); }
+
+template <class T>
+inline std::ostream& NSVPolynomialRing<T>::writeTeX(std::ostream &out) const
+{ out<<toTeX(); return out; }
+
+template <class T>
+inline std::string NSVPolynomialRing<T>::toTeX() const
+{
+// run through cof, assemble into string
+std::string retval; std::stringstream ss;
+typename std::map< signed long, T* >::const_iterator p;
+bool outputSomething = false; // keep track of whether or not we've output anything
+for (p = cof.begin(); p != cof.end(); p++)
+ {
+  T mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  signed long exp( p->first );
+  ss.str("");  ss<<p->first;
+  // ensure sensible output, eg:  t^{-5} + 5 - t + 3t^2 + t^3 - t^{12}, etc...
+  if (mag != 0) // don't output 0t^n
+   { 
+   if (outputSomething) retval += ( pos ? "+" : "-" ); else if (!pos) retval += "-";
+   outputSomething = true;
+   if ( (exp==0) || (mag != 1) ) retval += mag.stringValue();
+   if (exp == 1) retval += "t"; else 
+   if ( (exp<0) || (exp>9) ) retval += "t^{" + ss.str() + "}"; else
+    if (exp != 0) retval += "t^" + ss.str();
+   }
+ }
+if (outputSomething == false) retval = "0";
+return retval;
+}
+
 
 
 } // namespace regina

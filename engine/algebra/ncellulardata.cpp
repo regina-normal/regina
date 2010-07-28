@@ -303,12 +303,12 @@ const NHomMarkedAbelianGroup* NCellularData::homGroup( const HomLocator &h_desc)
 return NULL;
 }
 
-NSVPolynomialRing NCellularData::poincarePolynomial() const
+NSVPolynomialRing< NLargeInteger > NCellularData::poincarePolynomial() const
 {
-NSVPolynomialRing retval;
+NSVPolynomialRing< NLargeInteger > retval;
 unsigned long aDim( tri3 ? 3 : 4 );
 for (unsigned long i=0; i<=aDim; i++) retval += 
- NSVPolynomialRing( NLargeInteger( unmarkedGroup( GroupLocator(i, coVariant, DUAL_coord, 0))->getRank() ), i );
+ NSVPolynomialRing< NLargeInteger >( NLargeInteger( unmarkedGroup( GroupLocator(i, coVariant, DUAL_coord, 0))->getRank() ), i );
 return retval;
 }
 
@@ -966,9 +966,9 @@ const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc 
 
 unsigned long num_less_than(const std::set<unsigned long> &thelist, const unsigned long &obj); // forward dec.
 
-const NMatrixRing< NSVPolynomialRing >* NCellularData::alexanderChainComplex( const ChainComplexLocator &a_desc ) const
+const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* NCellularData::alexanderChainComplex( const ChainComplexLocator &a_desc ) const
 { 
- std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing>* >::const_iterator p;
+ std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing< NLargeInteger > >* >::const_iterator p;
  ChainComplexLocator range_desc(a_desc); range_desc.dim--;
  p = alexanderChainComplexes.find(a_desc);
  if (p != alexanderChainComplexes.end()) return (p->second);
@@ -990,11 +990,11 @@ const NMatrixRing< NSVPolynomialRing >* NCellularData::alexanderChainComplex( co
    const NGroupPresentation* pi1( groupPresentation( GroupPresLocator( whole_manifold, 0 ) ) );
    std::auto_ptr<NMarkedAbelianGroup> pi1Ab( pi1->markedAbelianization() );
    // build matrix, dimensions -- special case of 1-cells, since we're using max tree....
-   NMatrixRing<NSVPolynomialRing>* buildMat( NULL ); 
+   NMatrixRing<NSVPolynomialRing< NLargeInteger > >* buildMat( NULL ); 
    unsigned long ranDim; unsigned long domDim; 
    if (a_desc.dim==1) { ranDim = 1;  domDim = cellCount(a_desc) - maxTreedcIx.size(); }
    if (a_desc.dim==2) { ranDim = cellCount(range_desc) - maxTreedcIx.size(); domDim = cellCount(a_desc); }
-   buildMat = new NMatrixRing<NSVPolynomialRing>( ranDim, domDim );
+   buildMat = new NMatrixRing<NSVPolynomialRing< NLargeInteger > >( ranDim, domDim );
 
    // build entries
    std::map< NMultiIndex, coverFacetData* >::const_iterator ci;
@@ -1012,12 +1012,12 @@ const NMatrixRing< NSVPolynomialRing >* NCellularData::alexanderChainComplex( co
      if (a_desc.dim==2) { if ( maxTreedcIx.find( ci->second->cellNo ) != maxTreedcIx.end() ) continue; 
                           cR=ci->second->cellNo - num_less_than(maxTreedcIx, ci->second->cellNo); cC = ci->first.entry(0); }
      buildMat->entry( cR,  cC ) += 
-      NSVPolynomialRing( NLargeInteger(ci->second->sig), levelOfCell ); 
+      NSVPolynomialRing< NLargeInteger >( NLargeInteger(ci->second->sig), levelOfCell ); 
     }
    // insert
-   std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing>* > *Mptr = 
-       const_cast< std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing>* > *> (&alexanderChainComplexes);
-      Mptr->insert( std::pair< ChainComplexLocator, NMatrixRing<NSVPolynomialRing>* > ( a_desc, buildMat ) );
+   std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > *Mptr = 
+       const_cast< std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > *> (&alexanderChainComplexes);
+      Mptr->insert( std::pair< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > ( a_desc, buildMat ) );
    return buildMat; 
 }
 
@@ -1030,12 +1030,12 @@ void signedLongDivAlg( signed long n, signed long m, signed long &d, signed long
  d = m/n; r = m-d*n; if (r<0) { r += abs(n); d += ( (n>0) ? -1 : 1 ); } 
 }
 
-std::auto_ptr< NMatrixRing< NSVPolynomialRing > > NCellularData::alexanderPresMat() const
+std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData::alexanderPresentationMatrix() const
 {
- const NMatrixRing<NSVPolynomialRing>* M( alexanderChainComplex( ChainComplexLocator(1, NCellularData::DUAL_coord) ) );
- const NMatrixRing<NSVPolynomialRing>* N( alexanderChainComplex( ChainComplexLocator(2, NCellularData::DUAL_coord) ) );
- NMatrixRing<NSVPolynomialRing> workM(*M);  NMatrixRing<NSVPolynomialRing> rowOpMat(M->columns(), M->columns());
- NMatrixRing<NSVPolynomialRing> workN(*N);  NMatrixRing<NSVPolynomialRing> rowOpInvMat(M->columns(), M->columns());
+ const NMatrixRing<NSVPolynomialRing< NLargeInteger > >* M( alexanderChainComplex( ChainComplexLocator(1, NCellularData::DUAL_coord) ) );
+ const NMatrixRing<NSVPolynomialRing< NLargeInteger > >* N( alexanderChainComplex( ChainComplexLocator(2, NCellularData::DUAL_coord) ) );
+ NMatrixRing<NSVPolynomialRing< NLargeInteger > > workM(*M);  NMatrixRing<NSVPolynomialRing< NLargeInteger > > rowOpMat(M->columns(), M->columns());
+ NMatrixRing<NSVPolynomialRing< NLargeInteger > > workN(*N);  NMatrixRing<NSVPolynomialRing< NLargeInteger > > rowOpInvMat(M->columns(), M->columns());
 
  rowOpMat.makeIdentity(); rowOpInvMat.makeIdentity();
  // the single row of M consists of elements of the form t^n-1 for n an integer.  In particular entries
@@ -1056,9 +1056,9 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing > > NCellularData::alexanderPresMa
    // so we compute the division alg on the two degrees, and use that to subtract a multiple of one from the other
    signed long d, r; 
    signedLongDivAlg( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d, r);
-   // t^m-1 = NSVPolynomialRing(n,m,d)*(t^n-1) + t^r-1  
-   NSVPolynomialRing Fac( NSVPolynomialRing( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d) );
-   workM.entry(0,i) = NSVPolynomialRing( NLargeInteger::one, r ) - NSVPolynomialRing::one;
+   // t^m-1 = NSVPolynomialRing< NLargeInteger >(n,m,d)*(t^n-1) + t^r-1  
+   NSVPolynomialRing< NLargeInteger > Fac( NSVPolynomialRing< NLargeInteger >( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d) );
+   workM.entry(0,i) = NSVPolynomialRing< NLargeInteger >( NLargeInteger::one, r ) - NSVPolynomialRing< NLargeInteger >::one;
    // now do corresponding row op on workN, ie subtract NSVP(n,m,d) of the pivot row from the ith row
    workN.addRow( i, pivotCol, Fac );
    // if entry (0,i) nonzero after reduction, set nonZeroFlag
@@ -1066,7 +1066,7 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing > > NCellularData::alexanderPresMa
   }
  if (nonZeroFlag) goto find_small_degree;
  // okay, all entries except pivotCol are killed, so pivotCol in workM must be t^{\pm}-1. 
- std::auto_ptr< NMatrixRing< NSVPolynomialRing > > retval( new NMatrixRing< NSVPolynomialRing >(N->rows()-1,N->columns()) );
+ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > retval( new NMatrixRing< NSVPolynomialRing< NLargeInteger > >(N->rows()-1,N->columns()) );
  for (unsigned long i=0; i<retval->rows(); i++) for (unsigned long j=0; j<retval->columns(); j++)
   retval->entry( i, j ) = workN.entry( (i<pivotCol) ? i : i+1, j ); 
  // todo: correct if this is the empty matrix

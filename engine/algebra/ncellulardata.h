@@ -504,7 +504,7 @@ private:
     // for homomorphisms of group presentations
     std::map< HomGroupPresLocator, NHomGroupPresentation* > homGroupPresentations;
     // for alexander module chain complexes
-    std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing >* > alexanderChainComplexes;
+    std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing< NLargeInteger > >* > alexanderChainComplexes;
 
     /** 
      * numStandardCells = number of cells in the standard CW decomposition in dimensions: 0, 1, 2, 3, (4).
@@ -878,7 +878,7 @@ public:
      * Computes the Poincare polynomial -- this is the polynomial such that the 
      * coefficient of t^i is the rank of the i-th homology group of the manifold. 
      */
-    NSVPolynomialRing poincarePolynomial() const;
+    NSVPolynomialRing< NLargeInteger > poincarePolynomial() const;
 
     /**
      *  If this is a 4-manifold, this routine returns the signature of the H_2 intersection form.
@@ -1068,13 +1068,18 @@ public:
      * make sense -- i.e. if the 1st Betti number of the manifold is not 1. Presently only the
      * C_2 -> C_1 -> C_0 part of the complex is defined, in dual coordinates, for 4-manifolds.
      */
-    const NMatrixRing< NSVPolynomialRing >* alexanderChainComplex( const ChainComplexLocator &a_desc ) const;
+    const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* alexanderChainComplex( const ChainComplexLocator &a_desc ) const;
 
     /**
      *  Computes the presentation matrix for the 1-dimensional Alexander module. 
      *  Returns null if rank H1 != 1. 
      */
-    std::auto_ptr< NMatrixRing< NSVPolynomialRing > > alexanderPresMat() const;
+    std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > alexanderPresentationMatrix() const;
+
+    /**
+     *  Computes the H1 Alexander ideal. Tries to reduce it as much as possible.
+     */
+    std::auto_ptr< std::set< NSVPolynomialRing< NLargeInteger > > > alexanderIdeal() const;
 };
 
 
@@ -1138,9 +1143,9 @@ for (hpi = g.homGroupPresentations.begin(); hpi != g.homGroupPresentations.end()
  homGroupPresentations.insert( std::pair< HomGroupPresLocator, NHomGroupPresentation* >(hpi->first,
   clonePtr(hpi->second) ) );
  // alexanderChainComplexes
-std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing >* >::const_iterator amci;
+std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing< NLargeInteger > >* >::const_iterator amci;
 for (amci = g.alexanderChainComplexes.begin(); amci != g.alexanderChainComplexes.end(); amci++)
- alexanderChainComplexes.insert( std::pair< ChainComplexLocator, NMatrixRing< NSVPolynomialRing >* >
+ alexanderChainComplexes.insert( std::pair< ChainComplexLocator, NMatrixRing< NSVPolynomialRing< NLargeInteger > >* >
   (amci->first, clonePtr(amci->second) ) );
 
 // numStandardCells[5], numDualCells[5], numMixCells[5], numStandardBdryCells[4], 
@@ -1226,7 +1231,7 @@ inline NCellularData::~NCellularData() {
  for (hi = homGroupPresentations.begin(); hi != homGroupPresentations.end(); hi++)
         delete hi->second; 
  // alexanderChainComplexes
- std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing >* >::iterator amci;
+ std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing< NLargeInteger > >* >::iterator amci;
  for (amci = alexanderChainComplexes.begin(); amci != alexanderChainComplexes.end(); amci++)
   delete amci->second;
 
