@@ -234,18 +234,29 @@ long int NSVPolynomialRing::descartesNo() const
 return retval;
 }
 
-/**
- * Creates a polynomial of the form t^{n-m}+...+t^{n-dm}
- */
-NSVPolynomialRing::NSVPolynomialRing( signed long n, signed long m, unsigned long d )
+  /**
+   * Creates a polynomial of the form:
+   *
+   *  t^{m-n}+...+t^{m-dn} if d>0,           -t^m-t^{m+n}-...-t^{m-(d+1)n} if d<0
+   *
+   *  these polynomials are useful for situations where one can divide two integer polynomials, ie
+   *  if n=dm+r with 0<=r<|m|, then t^m-1 = (NSVPolynomialRing(n,m,d))*(t^n-1) + (t^r-1)
+   */
+NSVPolynomialRing::NSVPolynomialRing( signed long n, signed long m, signed long d )
 {
 std::map< signed long, NLargeInteger*>::iterator i = cof.begin();
-signed long exp=n;
-for (unsigned long j=0; j<d; j++)
+signed long exp=m;
+if (d>0) for (unsigned long j=0; j<d; j++)
  {
-  exp -= m;
+  exp -= n;
   NLargeInteger* P(new NLargeInteger(NLargeInteger::one));
   i = cof.insert( i, std::pair<signed long, NLargeInteger*> (exp, P) );
+ }
+else for (unsigned long j=0; j<abs(d); j++)
+ {
+  NLargeInteger* P(new NLargeInteger(-NLargeInteger::one));
+  i = cof.insert( i, std::pair<signed long, NLargeInteger*> (exp, P) );
+  exp += n;
  }
 }
 

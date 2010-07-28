@@ -87,9 +87,14 @@ class NSVPolynomialRing {
         NSVPolynomialRing(signed long a);
 
         /**
-         * Creates a polynomial of the form t^{n-m}+...+t^{n-dm}
+         * Creates a polynomial of the form:
+         *
+         *  t^{m-n}+...+t^{m-dn} if d>0,           -t^m-t^{m+n}-...-t^{m-(d+1)n} if d<0
+         *
+         *  these polynomials are useful for situations where one can divide two integer polynomials, ie
+         *  if n=dm+r with 0<=r<|m|, then t^m-1 = (NSVPolynomialRing(n,m,d))*(t^n-1) + (t^r-1)
          */
-        NSVPolynomialRing( signed long n, signed long m, unsigned long d );
+        NSVPolynomialRing( signed long n, signed long m, signed long d );
 
 	/**
 	 * Destructor.
@@ -296,11 +301,12 @@ return true;
 }
 
 inline bool NSVPolynomialRing::isZero() const
-{ return (cof.size() == 0); }
+{ return cof.empty(); }
 
 inline unsigned long NSVPolynomialRing::width() const
 {
 // find the first and last elements of the list "cof", return difference of exponents.
+if (cof.empty()) return 0;
 std::map<signed long, NLargeInteger*>::const_iterator i(cof.begin());
 std::map<signed long, NLargeInteger*>::const_reverse_iterator j(cof.rbegin());
 return ( (*j).first - (*i).first );
@@ -312,6 +318,7 @@ return ( (*j).first - (*i).first );
 inline signed long NSVPolynomialRing::degree() const
 {
 // find first and last elements of the list "cof", return max of abs of exponents.
+if (cof.empty()) return 0;
 std::map<signed long, NLargeInteger*>::const_iterator i(cof.begin());
 std::map<signed long, NLargeInteger*>::const_reverse_iterator j(cof.rbegin());
 return ( ( abs((*j).first) > abs((*i).first) ) ? (*j).first : (*i).first );

@@ -40,16 +40,9 @@
 namespace regina {
 
 
-/*void dumpMatrix( const NMatrixRing<NLargeInteger> &mat )
-{
-for (unsigned long j=0; j<mat.rows(); j++)
- {
- std::cout<<"[";
- for (unsigned long i=0; i<mat.columns(); i++)
-  std::cout<<mat.entry(j,i)<<" ";
- std::cout<<"]\n";
- }
-}*/
+template <class T> void dumpMatrix( const regina::NMatrixRing<T> &mat )
+{for (unsigned long j=0; j<mat.rows(); j++) { std::cout<<"["; for (unsigned long i=0; i<mat.columns(); i++)
+  std::cout<<mat.entry(j,i)<<" "; std::cout<<"]\n"; } }
 
 /*
 template <class T>
@@ -1028,37 +1021,55 @@ const NMatrixRing< NSVPolynomialRing >* NCellularData::alexanderChainComplex( co
    return buildMat; 
 }
 
+/*
+ *  Given integers n != 0 and m, this routine computes d and r so that
+ *   m = dn + r with 0 <= r < |n|
+ */
+void signedLongDivAlg( signed long n, signed long m, signed long &d, signed long &r )
+{
+ d = m/n; r = m-d*n; if (r<0) { r += abs(n); d += ( (n>0) ? -1 : 1 ); } 
+}
+
 std::auto_ptr< NMatrixRing< NSVPolynomialRing > > NCellularData::alexanderPresMat() const
 {
  const NMatrixRing<NSVPolynomialRing>* M( alexanderChainComplex( ChainComplexLocator(1, NCellularData::DUAL_coord) ) );
  const NMatrixRing<NSVPolynomialRing>* N( alexanderChainComplex( ChainComplexLocator(2, NCellularData::DUAL_coord) ) );
  NMatrixRing<NSVPolynomialRing> workM(*M);  NMatrixRing<NSVPolynomialRing> rowOpMat(M->columns(), M->columns());
  NMatrixRing<NSVPolynomialRing> workN(*N);  NMatrixRing<NSVPolynomialRing> rowOpInvMat(M->columns(), M->columns());
+
  rowOpMat.makeIdentity(); rowOpInvMat.makeIdentity();
  // the single row of M consists of elements of the form t^n-1 for n an integer.  In particular entries
  // can be zero although there must be one non-zero entry.  Column reducing this matrix amounts to the GCD algorithm
- // on the exponents -- for example consider [ t^n - 1,  t^m - 1 ] with n>m>1, then let n = dm+r with 0 <= r < m
- // t^n - 1 = (t^{n-m}+...+t^{n-dm})(t^m-1) + t^r-1
- // to get t^n - 1 call NSVPolynomialRing(NLargeInteger::one, n) - NSVPolynomialRing(1)
- //        t^{n-m}+...+t^{n-dm} call NSVPolynomialRing(n,m,d)
- // from t^n - 1  n == getDegree()
- unsigned long pivotCol(0);
+ // on the exponents.
+ unsigned long pivotCol;
+ signed long smallestNZdeg;
  find_small_degree:  // look for smallest non-zero degree elt, set index of column to pivotCol
- 
+ pivotCol=0; smallestNZdeg=0;
+ for (unsigned long i=0; i<workM.columns();i++)
+  { if ( (workM.entry(0,i).degree() != 0) && (( abs(workM.entry(0,i).degree()) < abs(smallestNZdeg)) || (smallestNZdeg==0) ) )
+    {     pivotCol = i;  smallestNZdeg = workM.entry(0,i).degree(); } } 
 
  bool nonZeroFlag(false);
  for (unsigned long i=0; i<M->columns(); i++)
   if ( (workM.entry(0,i).degree() != 0) && (i!=pivotCol) ) // use pivotCol to reduce i
   {
-
-   // if entry (0,i) nonzero set nonZeroFlag
+   // so we compute the division alg on the two degrees, and use that to subtract a multiple of one from the other
+   signed long d, r; 
+   signedLongDivAlg( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d, r);
+   // t^m-1 = NSVPolynomialRing(n,m,d)*(t^n-1) + t^r-1  
+   NSVPolynomialRing Fac( NSVPolynomialRing( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d) );
+   workM.entry(0,i) = NSVPolynomialRing( NLargeInteger::one, r ) - NSVPolynomialRing::one;
+   // now do corresponding row op on workN, ie subtract NSVP(n,m,d) of the pivot row from the ith row
+   workN.addRow( i, pivotCol, Fac );
+   // if entry (0,i) nonzero after reduction, set nonZeroFlag
+   if (!workM.entry(0,i).isZero()) nonZeroFlag = true;
   }
  if (nonZeroFlag) goto find_small_degree;
  // okay, all entries except pivotCol are killed, so pivotCol in workM must be t^{\pm}-1. 
-
-
-
  std::auto_ptr< NMatrixRing< NSVPolynomialRing > > retval( new NMatrixRing< NSVPolynomialRing >(N->rows()-1,N->columns()) );
+ for (unsigned long i=0; i<retval->rows(); i++) for (unsigned long j=0; j<retval->columns(); j++)
+  retval->entry( i, j ) = workN.entry( (i<pivotCol) ? i : i+1, j ); 
+ // todo: correct if this is the empty matrix
  return retval;
 }
 
