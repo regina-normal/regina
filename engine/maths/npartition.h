@@ -104,15 +104,15 @@ inline NPartition NPartition::operator++()
  //   (a) find first one from RHS with a zero to the right. Move it right. 
  //       if not the *last* entry, append the appropriate number of consecutive 1's.
  if (afterEnd) return (*this);
-
  unsigned long numOnesWithoutZerosToRight=0; // count this from right to left. 
  signed long indx;
  for (indx=setSize-1; (indx>=0) && ((indx==setSize-1)? true : !(part.get(indx) && !part.get(indx+1)) ); indx--) 
-  { if ((indx<setSize-1)&&(part.get(indx+1))) { part.set(indx+1, false); numOnesWithoutZerosToRight++; } }
+  { if ((indx<setSize-1)&&(part.get(indx+1))) { part.set(indx+1, false); }
+    if (part.get(indx)) numOnesWithoutZerosToRight++; }
  // can terminate with indx==-1 or at first index of a 1 with a 0 to right
  if (indx != -1)
   {
-   part.set(indx, false); part.set(indx+1,true);
+   part.set(indx, false);  part.set(indx+1,true);
    for (unsigned long i=0; i<numOnesWithoutZerosToRight; i++) part.set(indx+2+i, true); 
   }
  else
