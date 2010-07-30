@@ -1083,12 +1083,17 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::
 {
  std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > aPM(alexanderPresentationMatrix());
  std::list< NSVPolynomialRing< NLargeInteger > > alexIdeal;
- // in general aPM might be wider than it is tall, so we have to keep track of how many columns to erase
- unsigned long colToErase = aPM->columns() - aPM->rows();
- // so we need to choose numbers 0 <= a1 < ... < ak <=aPM.columns() to erase, then take the determinant of that submatrix. 
- // let's use NPartition to iterate through all such. 
- NPartition skipCols( aPM->columns(), colToErase );
- while ( !skipCols.atEnd() )
+ // det() does not deal with degenerate matrices properly so let's nip that in the bud. 
+ if (aPM->rows()==0) alexIdeal.push_back( NSVPolynomialRing< NLargeInteger >::one );
+ else if (aPM->columns()==0) alexIdeal.push_back( NSVPolynomialRing< NLargeInteger >::zero );
+ else
+  {
+  // in general aPM might be wider than it is tall, so we have to keep track of how many columns to erase
+  unsigned long colToErase = aPM->columns() - aPM->rows();
+  // so we need to choose numbers 0 <= a1 < ... < ak <=aPM.columns() to erase, then take the determinant of that submatrix. 
+  // let's use NPartition to iterate through all such. 
+  NPartition skipCols( aPM->columns(), colToErase );
+  while ( !skipCols.atEnd() )
    {
     NMatrixRing< NSVPolynomialRing< NLargeInteger > > sqSubMat( aPM->rows(), aPM->rows() );
     unsigned long delta=0;
@@ -1100,7 +1105,7 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::
     alexIdeal.push_back( sqSubMat.det() );
     ++skipCols; // next!
    }
-
+  }
  // consider reducing the ideal before returning it.
 
  return std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >(new std::list< NSVPolynomialRing< NLargeInteger > >(alexIdeal));
