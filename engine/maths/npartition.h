@@ -52,19 +52,20 @@ namespace regina {
  * You can use it to iterate through all subsets of this set, or all
  * subsets of a fixed size. 
  */
+// TODO allow 0-size subsets, initialize all-size subsets another way.
 class NPartition {
         NBitmask part;
         unsigned long setSize;
         unsigned long subSetSize;
         bool beforeStart, afterEnd; 
+        bool fixedSize;
 public:
         /**
          * Constructor. Ambient set size will be SetSize, subsets of cardinality
-         * SubSetSize to be iterated through. Setting SubSetSize to 0 is interpreted
-         * as a request for all subsets. 
-         * Initial partition to be {0,1,...,SubSetSize-1}
+         * SubSetSize to be iterated through (*). Setting fixedSubsetSize to false
+         * will cause iterators to go through all subsets, starting at SubSetSize
          */
-        NPartition(unsigned long SetSize, unsigned long SubSetSize);
+        NPartition(unsigned long SetSize, unsigned long SubSetSize=0, bool fixedSubsetSize=true);
         /**
          * Copy constructor. 
          */        
@@ -92,12 +93,12 @@ public:
 };
 
 
-inline NPartition::NPartition(unsigned long SetSize, unsigned long SubSetSize) : part(SetSize), 
-  setSize(SetSize), subSetSize(SubSetSize), beforeStart(false), afterEnd(false)
+inline NPartition::NPartition(unsigned long SetSize, unsigned long SubSetSize, bool fixedSubsetSize) : part(SetSize), 
+  setSize(SetSize), subSetSize(SubSetSize), beforeStart(false), afterEnd(false), fixedSize(fixedSubsetSize)
 {  for (unsigned long i=0; i<subSetSize; i++) part.set(i, true); }
 
 inline NPartition::NPartition(const NPartition& copyMe) : part(copyMe.part), setSize(copyMe.setSize), 
- subSetSize(copyMe.subSetSize), beforeStart(copyMe.beforeStart), afterEnd(copyMe.afterEnd) {}
+ subSetSize(copyMe.subSetSize), beforeStart(copyMe.beforeStart), afterEnd(copyMe.afterEnd), fixedSize(copyMe.fixedSize) {}
 
 inline NPartition NPartition::operator++()
 {
@@ -119,7 +120,7 @@ inline NPartition NPartition::operator++()
   {
    //   (c) if you can't find such a 1 in (b), done with this set size. 
    //   *(d) move up to next set size *if* all set sizes requested...
-   if (subSetSize==0) 
+   if (!fixedSize) 
     { 
       if (numOnesWithoutZerosToRight == setSize) afterEnd = true;
       else 
@@ -127,8 +128,8 @@ inline NPartition NPartition::operator++()
         part.reset(); 
         for (unsigned long i=0; i<numOnesWithoutZerosToRight+1; i++) part.set(i, true); 
        }
-    }
-   else afterEnd=true;      
+    } 
+   else afterEnd=true;   // fixed set size    
   }
  return (*this);
 }
