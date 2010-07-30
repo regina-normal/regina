@@ -86,7 +86,7 @@ class Dim4Triangulation;
  * \todo  2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
  *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first.
- *        double check torsion linking form behaves properly.
+ *        double check torsion linking form behaves properly. NPartition
  * \todo  3) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M

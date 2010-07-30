@@ -1086,14 +1086,25 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::
  // in general aPM might be wider than it is tall, so we have to keep track of how many columns to erase
  unsigned long colToErase = aPM->columns() - aPM->rows();
  // so we need to choose numbers 0 <= a1 < ... < ak <=aPM.columns() to erase, then take the determinant of that submatrix. 
- bool remain_looping=true;
- std::vector< unsigned long > A(colToErase);
- for (unsigned long k=0; k<A.size(); k++) A[k]=k;
- while (remain_looping) // check we haven't gone too far...
+ // let's use NPartition to iterate through all such. 
+ if (colToErase==0) alexIdeal.push_back(aPM->det());
+ else
   {
-
-  // increment A, if gone too far remain_looping=false
+  NPartition skipCols( aPM->columns(), colToErase );
+  while ( !skipCols.atEnd() )
+   {
+    NMatrixRing< NSVPolynomialRing< NLargeInteger > > sqSubMat( aPM->rows(), aPM->rows() );
+    unsigned long delta=0;
+    for (unsigned long j=0; j<sqSubMat.columns(); j++)
+     {
+      while (skipCols.partition().get(j+delta)) delta++;     
+      for (unsigned long i=0; i<sqSubMat.rows(); i++) sqSubMat.entry(i,j) = aPM->entry( i, j+delta );
+     }
+    alexIdeal.push_back( sqSubMat.det() );
+    ++skipCols; // next!
+   }
   }
+
  // consider reducing the ideal before returning it.
 
  return std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >(new std::list< NSVPolynomialRing< NLargeInteger > >(alexIdeal));
