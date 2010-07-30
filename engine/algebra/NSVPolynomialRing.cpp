@@ -27,9 +27,45 @@
 /* end stub */
 
 #include "algebra/NSVPolynomialRing.h"
+#include "maths/nrational.h"
+#include <list>
 
 namespace regina {
 
+/**
+ *  Given a finitely-generated ideal in Z[t^\pm 1] this routine reduces
+ * the ideal as much as possible.  We subtract multiples of one generator
+ * from another in an attempt to make the width of the generators as 
+ * short as possible. 
+ */
+void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
+{
+// TODO
+// Simple reduction move:
+//   Or maybe the priority should be to not increase any word's length
+//    beyond the current max word length, otherwise try to decrease 
+//    magnitude of leading terms.
+
+//  Step 1: remove zeros. 
+//  Step 2: normalize list so that first non-zero term is t^0, and positive.
+//  Step 3: sort list by increasing width, and among common width by size 
+//          of leading term. (which one?) maybe which one could reduce the
+//          other the most.
+//  Step 4: use shortest width terms to diminish leading-terms of longer
+//          width terms. 
+//  If nothing eventful in step 4, end cycle. 
+
+}
+
+/**
+ *  Given two polynomials with rational coefficients p and q, find d and r such that
+ *  p = dq + r with 0 <= degree(r) < degree(q)
+ */
+void euclideanAlgorithm( const NSVPolynomialRing< NRational > &p, const NSVPolynomialRing< NRational > &q, 
+                         NSVPolynomialRing< NRational > &d, NSVPolynomialRing< NRational > &r )
+{
+// TODO
+}
 
 
 } // namespace regina

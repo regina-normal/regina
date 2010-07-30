@@ -213,7 +213,7 @@ class NSVPolynomialRing {
 	/**
          * string version of writeTeX.
 	 */
-        std::string toTeX() const;
+        std::string texString() const;
 };
 
 /*@}*/
@@ -610,10 +610,10 @@ inline void NSVPolynomialRing<T>::writeTextShort(std::ostream& out) const
 
 template <class T>
 inline std::ostream& NSVPolynomialRing<T>::writeTeX(std::ostream &out) const
-{ out<<toTeX(); return out; }
+{ out<<texString(); return out; }
 
 template <class T>
-inline std::string NSVPolynomialRing<T>::toTeX() const
+inline std::string NSVPolynomialRing<T>::texString() const
 {
 // run through cof, assemble into string
 std::string retval; std::stringstream ss;

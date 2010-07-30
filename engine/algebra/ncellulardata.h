@@ -82,8 +82,8 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo 1) Complete collection of homology natural bilinear forms on a manifold, spin structures. See (3), (4)
- * \todo 2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
+ * \todo  1) Complete collection of homology natural bilinear forms on a manifold, spin structures. See (3), (4)
+ * \todo  2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
  *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first.
  *        double check torsion linking form behaves properly.
@@ -94,11 +94,10 @@ class Dim4Triangulation;
  *        Note, current "mixed" chain complex does not subdivide ideal boundary.  Is this an issue? 
  * \todo  4) To minimize memory usage we should consider having homs, bilinear forms, etc, 
  *        not store their initialization data, instead trusting it to the NCellularData stack.  
- *        Alexander modules. 
  * \todo  5) need to set up local orientations for dual boundary coordinates, for the barycentres
  *        of all standard boundary simplices.  We'll put something in setupIndices for this.
  *        Currently done for Dim4Triangulations, but not for NTriangulations. 
- * \todo  6) We'll also eventually need maximal trees in the standard 1-skeleton, to implement
+ * \todo  6) We'll also eventually need maximal trees in the standard and mixed 1-skeleton, to implement
  *        Farber-Levine pairings. 
  * \todo  7) Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
  *        clear what all the computations mean. 
@@ -1079,7 +1078,7 @@ public:
     /**
      *  Computes the H1 Alexander ideal. Tries to reduce it as much as possible.
      */
-    std::auto_ptr< std::set< NSVPolynomialRing< NLargeInteger > > > alexanderIdeal() const;
+    std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > alexanderIdeal() const;
 };
 
 

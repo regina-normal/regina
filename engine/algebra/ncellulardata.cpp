@@ -29,6 +29,7 @@
 #include "maths/matrixops.h"
 #include "maths/nprimes.h"
 #include "algebra/ncellulardata.h"
+#include "maths/npartition.h"
 
 #include <map>
 #include <list>
@@ -40,9 +41,10 @@
 namespace regina {
 
 
-template <class T> void dumpMatrix( const regina::NMatrixRing<T> &mat )
+/*template <class T> void dumpMatrix( const regina::NMatrixRing<T> &mat )
 {for (unsigned long j=0; j<mat.rows(); j++) { std::cout<<"["; for (unsigned long i=0; i<mat.columns(); i++)
   std::cout<<mat.entry(j,i)<<" "; std::cout<<"]\n"; } }
+*/
 
 /*
 template <class T>
@@ -1071,6 +1073,30 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData
   retval->entry( i, j ) = workN.entry( (i<pivotCol) ? i : i+1, j ); 
  // todo: correct if this is the empty matrix
  return retval;
+}
+
+
+
+
+// compute the Alexander ideal of the Alexander module. 
+std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::alexanderIdeal() const
+{
+ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > aPM(alexanderPresentationMatrix());
+ std::list< NSVPolynomialRing< NLargeInteger > > alexIdeal;
+ // in general aPM might be wider than it is tall, so we have to keep track of how many columns to erase
+ unsigned long colToErase = aPM->columns() - aPM->rows();
+ // so we need to choose numbers 0 <= a1 < ... < ak <=aPM.columns() to erase, then take the determinant of that submatrix. 
+ bool remain_looping=true;
+ std::vector< unsigned long > A(colToErase);
+ for (unsigned long k=0; k<A.size(); k++) A[k]=k;
+ while (remain_looping) // check we haven't gone too far...
+  {
+
+  // increment A, if gone too far remain_looping=false
+  }
+ // consider reducing the ideal before returning it.
+
+ return std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >(new std::list< NSVPolynomialRing< NLargeInteger > >(alexIdeal));
 }
 
 } // namespace regina
