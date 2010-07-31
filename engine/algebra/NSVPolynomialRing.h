@@ -204,11 +204,11 @@ class NSVPolynomialRing {
          */
         T PU_leadTerm() const;
         /**
-         *  Returns the highest-degree term.
+         *  Returns the lowest-degree (most negative degree) term.
          */
         std::pair<signed long, T> firstTerm() const;
         /**
-         *  Returns the lowest-degree term.
+         *  Returns the highest-degree (most positive degree) term.
          */
         std::pair<signed long, T> lastTerm() const;
 

@@ -37,19 +37,46 @@ namespace regina {
  */
 bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NSVPolynomialRing< NLargeInteger > &second)
 {
-if (first.PU_degree() < second.PU_degree()) return true; if (first.PU_degree() > second.PU_degree()) return false;
+ if (first.lastTerm().first<second.lastTerm().first) return true; if (first.lastTerm().first>second.lastTerm().first) return false;
+ if (first.PU_degree() < second.PU_degree()) return true; if (first.PU_degree() > second.PU_degree()) return false;
+ 
+ const std::map< signed long, NLargeInteger* > fTerms(first.allTerms()); const std::map< signed long, NLargeInteger* > sTerms(second.allTerms());
+ std::map< signed long, NLargeInteger* >::const_iterator fI(fTerms.begin()); 
+ std::map< signed long, NLargeInteger* >::const_iterator sI(sTerms.begin()); 
+ while ( (fI != fTerms.end()) || (sI != sTerms.end()) )
+  {
+   if (fI->first < sI->first) return true;  if (fI->first > sI->first) return false;
+   if ( *(fI->second) < *(sI->second) ) return true;  if ( *(fI->second) > *(sI->second) ) return false;
+   fI++; sI++;
+  }
+ // iterate and check how they compare...
+ return true;
+}
 
-const std::map< signed long, NLargeInteger* > fTerms(first.allTerms()); const std::map< signed long, NLargeInteger* > sTerms(second.allTerms());
-std::map< signed long, NLargeInteger* >::const_iterator fI(fTerms.begin()); 
-std::map< signed long, NLargeInteger* >::const_iterator sI(sTerms.begin()); 
-while ( (fI != fTerms.end()) || (sI != sTerms.end()) )
- {
-  if (fI->first < sI->first) return true;  if (fI->first > sI->first) return false;
-  if ( *(fI->second) < *(sI->second) ) return true;  if ( *(fI->second) > *(sI->second) ) return false;
-  fI++; sI++;
- }
-// iterate and check how they compare...
-return true;
+/**
+ *  Algorithm assumes all terms of m and n are of non-negative degree. Attempts to write m as q*n + r
+ *  for r a polynomial whose terms are all non-negative degree, and keeping r as small as possible. 
+ *  Assumes q and r passed as 0. 
+ */
+void partial_divisionAlg( const NSVPolynomialRing< NLargeInteger > &m, const NSVPolynomialRing < NLargeInteger > &n, 
+                          NSVPolynomialRing< NLargeInteger > &q, NSVPolynomialRing< NLargeInteger > &r )
+{
+ // make sure we're not wasting our time
+ if ( m.isZero() || n.isZero() ) return; 
+ if ( (m.firstTerm().first!=0) || (n.firstTerm().first!=0) || (m.lastTerm().first < n.lastTerm().first) ) return; 
+ r = m; 
+ // look at the lead term of r, and the lead term of N, see if one divides the other, r := r - at^k N appropriately, 
+ // q += at^k, repeat until lead terms do not divide exactly, or until otherwise run out of terms! So this will be a 
+ // do () while () loop. 
+ NLargeInteger D; NLargeInteger R; 
+ do
+  {
+   D = r.lastTerm().second.divisionAlg( n.lastTerm().second, R );
+   signed long expDiff = r.lastTerm().first - n.lastTerm().first; 
+   r -= n*NSVPolynomialRing<NLargeInteger>( D, expDiff );
+   q += NSVPolynomialRing<NLargeInteger>( D, expDiff );
+  }
+ while ( (R == 0) && (r.isZero() ? false : (r.lastTerm().first >= n.lastTerm().first ) ) );
 }
 
 /**
@@ -60,38 +87,46 @@ return true;
  */
 void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
 {
-//  Step 1: normalize list so that first non-zero term is t^0, and positive. Erase 0 entries.
-std::list< NSVPolynomialRing< NLargeInteger > >::iterator i;
-for (i=ideal.begin(); i!=ideal.end(); i++)
- {
-  while (i->isZero()) i=ideal.erase(i);  if (i==ideal.end()) break;
-  std::pair< signed long, NLargeInteger > LT( i->firstTerm() );
-  NSVPolynomialRing< NLargeInteger > opTerm( (LT.second>0) ? NLargeInteger::one : -NLargeInteger::one, -LT.first );
-  (*i) = (*i)*opTerm;
- }
+ reloop_loop: 
 
-//  Step 2: sort and remove duplicates
-ideal.sort(ideal_comparison);
-ideal.unique();
+ //  Step 1: normalize list so that first non-zero term is t^0, and positive. Erase 0 entries.
+ std::list< NSVPolynomialRing< NLargeInteger > >::iterator i;
+ for (i=ideal.begin(); i!=ideal.end(); i++)
+  {
+   while (i->isZero()) i=ideal.erase(i);  if (i==ideal.end()) break;
+   std::pair< signed long, NLargeInteger > LT( i->firstTerm() );
+   NSVPolynomialRing< NLargeInteger > opTerm( (LT.second>0) ? NLargeInteger::one : -NLargeInteger::one, -LT.first );
+   (*i) = (*i)*opTerm;
+  }
 
-// TODO at present everything below is hypothetical
-//  Step 3: sort list by increasing width, and among common width by size 
-//          of leading term. (which one?) maybe which one could reduce the
-//          other the most.
-//  Step 4: use shortest width terms to diminish leading-terms of longer
-//          width terms. 
-//  If nothing eventful in step 4, end cycle. 
+ //  Step 2: sort and remove duplicates
+ ideal.sort(ideal_comparison);
+ ideal.unique();
 
-}
+ // Step 3: any elementary reductions that are possible. 
+ std::list< NSVPolynomialRing< NLargeInteger > >::iterator j;
+ bool didSomething = false; 
+ for (i=ideal.begin(); i!=ideal.end(); i++)
+  {
+   j=i; j++; 
+   for ( ; j!=ideal.end(); j++)
+    {
+     NSVPolynomialRing< NLargeInteger > q, r; 
+     partial_divisionAlg( *j, *i, q, r );
+     if (!q.isZero()) didSomething=true;
+     (*j) = r;
+    }
+   if (didSomething) goto reloop_loop; // keep things clean
+  }
+  
+ // TODO at present everything below is hypothetical
+ //  Step 3: sort list by increasing width, and among common width by size 
+ //          of leading term. (which one?) maybe which one could reduce the
+ //          other the most.
+ //  Step 4: use shortest width terms to diminish leading-terms of longer
+ //          width terms. 
+ //  If nothing eventful in step 4, end cycle. 
 
-/**
- *  Given two polynomials with rational coefficients p and q, find d and r such that
- *  p = dq + r with 0 <= degree(r) < degree(q)
- */
-void euclideanAlgorithm( const NSVPolynomialRing< NRational > &p, const NSVPolynomialRing< NRational > &q, 
-                         NSVPolynomialRing< NRational > &d, NSVPolynomialRing< NRational > &r )
-{
-// TODO
 }
 
 
