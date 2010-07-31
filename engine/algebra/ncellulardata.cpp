@@ -1107,6 +1107,7 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::
    }
   }
  // consider reducing the ideal before returning it.
+ reduceIdeal(alexIdeal);
 
  return std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >(new std::list< NSVPolynomialRing< NLargeInteger > >(alexIdeal));
 }

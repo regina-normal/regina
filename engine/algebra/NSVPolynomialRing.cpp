@@ -33,6 +33,26 @@
 namespace regina {
 
 /**
+ *  Comparison function for sorting ideals in NSVPolynomialRing< NLargeInteger >
+ */
+bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NSVPolynomialRing< NLargeInteger > &second)
+{
+if (first.PU_degree() < second.PU_degree()) return true; if (first.PU_degree() > second.PU_degree()) return false;
+
+const std::map< signed long, NLargeInteger* > fTerms(first.allTerms()); const std::map< signed long, NLargeInteger* > sTerms(second.allTerms());
+std::map< signed long, NLargeInteger* >::const_iterator fI(fTerms.begin()); 
+std::map< signed long, NLargeInteger* >::const_iterator sI(sTerms.begin()); 
+while ( (fI != fTerms.end()) || (sI != sTerms.end()) )
+ {
+  if (fI->first < sI->first) return true;  if (fI->first > sI->first) return false;
+  if ( *(fI->second) < *(sI->second) ) return true;  if ( *(fI->second) > *(sI->second) ) return false;
+  fI++; sI++;
+ }
+// iterate and check how they compare...
+return true;
+}
+
+/**
  *  Given a finitely-generated ideal in Z[t^\pm 1] this routine reduces
  * the ideal as much as possible.  We subtract multiples of one generator
  * from another in an attempt to make the width of the generators as 
@@ -40,14 +60,21 @@ namespace regina {
  */
 void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
 {
-// TODO
-// Simple reduction move:
-//   Or maybe the priority should be to not increase any word's length
-//    beyond the current max word length, otherwise try to decrease 
-//    magnitude of leading terms.
+//  Step 1: normalize list so that first non-zero term is t^0, and positive. Erase 0 entries.
+std::list< NSVPolynomialRing< NLargeInteger > >::iterator i;
+for (i=ideal.begin(); i!=ideal.end(); i++)
+ {
+  while (i->isZero()) i=ideal.erase(i);  if (i==ideal.end()) break;
+  std::pair< signed long, NLargeInteger > LT( i->firstTerm() );
+  NSVPolynomialRing< NLargeInteger > opTerm( (LT.second>0) ? NLargeInteger::one : -NLargeInteger::one, -LT.first );
+  (*i) = (*i)*opTerm;
+ }
 
-//  Step 1: remove zeros. 
-//  Step 2: normalize list so that first non-zero term is t^0, and positive.
+//  Step 2: sort and remove duplicates
+ideal.sort(ideal_comparison);
+ideal.unique();
+
+// TODO at present everything below is hypothetical
 //  Step 3: sort list by increasing width, and among common width by size 
 //          of leading term. (which one?) maybe which one could reduce the
 //          other the most.

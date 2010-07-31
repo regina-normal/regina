@@ -38,6 +38,7 @@
 #include <sstream>
 #include <map>
 #include <cstdlib>
+#include <list>
 
 #include "maths/nlargeinteger.h"
 #include "utilities/ptrutils.h"
@@ -192,6 +193,31 @@ class NSVPolynomialRing {
         signed long degree() const;
 
         /**
+         * Returns the degree in the sense of Pauer-Unterkircher, the number of non-zero terms in the
+         * polynomial.
+         */
+        unsigned long PU_degree() const;
+
+        /**
+         *  Returns the leading term of the Pauer-Unterkircher sense, the coefficient of the highest-degree
+         * term.
+         */
+        T PU_leadTerm() const;
+        /**
+         *  Returns the highest-degree term.
+         */
+        std::pair<signed long, T> firstTerm() const;
+        /**
+         *  Returns the lowest-degree term.
+         */
+        std::pair<signed long, T> lastTerm() const;
+
+        /**
+         * All terms of the polynomial
+         */
+        const std::map< signed long, T* >& allTerms() const;
+
+        /**
          * Returns a string representation of this polynomial.
 	 * <tt>a + bt + ct^2 + ... </tt>
          *
@@ -215,6 +241,11 @@ class NSVPolynomialRing {
 	 */
         std::string texString() const;
 };
+
+// forward declaration
+void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal );
+
+
 
 /*@}*/
 
@@ -267,6 +298,11 @@ inline NSVPolynomialRing<T>& NSVPolynomialRing<T>::operator = (const NSVPolynomi
 	ci = cof.insert(ci, std::pair< signed long, T* >( Ci->first, clonePtr(Ci->second) ));
  return (*this);
 }
+
+template <class T>
+inline const std::map< signed long, T* >& NSVPolynomialRing<T>::allTerms() const
+{ return cof; }
+
 
 template <class T>
 inline const T& NSVPolynomialRing<T>::operator[](signed long i) const
@@ -331,6 +367,26 @@ inline signed long NSVPolynomialRing<T>::degree() const
  typename std::map<signed long, T*>::const_reverse_iterator j(cof.rbegin());
  return ( ( abs((*j).first) > abs((*i).first) ) ? (*j).first : (*i).first );
 }
+
+template <class T>
+inline unsigned long NSVPolynomialRing<T>::PU_degree() const
+{ return cof.size(); }
+
+template <class T>
+inline T NSVPolynomialRing<T>::PU_leadTerm() const
+{ typename std::map<signed long, T*>::const_reverse_iterator j(cof.rbegin()); 
+  return ( *(j->second) ); }
+
+template <class T>
+inline std::pair<signed long, T> NSVPolynomialRing<T>::firstTerm() const
+{ typename std::map<signed long, T*>::const_iterator j(cof.begin()); 
+  return ( std::pair< signed long, T >(j->first, *(j->second) ) ); }
+
+template <class T>
+inline std::pair< signed long, T> NSVPolynomialRing<T>::lastTerm() const
+{ typename std::map<signed long, T*>::const_reverse_iterator j(cof.rbegin()); 
+  return ( std::pair< signed long, T >(j->first, *(j->second) ) ); }
+
 
 template <class T>
 inline NSVPolynomialRing<T> operator * (const T &k, const NSVPolynomialRing<T>& q)
