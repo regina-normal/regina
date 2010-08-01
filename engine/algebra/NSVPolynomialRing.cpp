@@ -118,15 +118,6 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
     }
    if (didSomething) goto reloop_loop; // keep things clean
   }
-  
- // TODO at present everything below is hypothetical
- //  Step 3: sort list by increasing width, and among common width by size 
- //          of leading term. (which one?) maybe which one could reduce the
- //          other the most.
- //  Step 4: use shortest width terms to diminish leading-terms of longer
- //          width terms. 
- //  If nothing eventful in step 4, end cycle. 
-
 }
 
 

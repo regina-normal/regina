@@ -59,6 +59,7 @@ namespace regina {
  *  3) An output operation std::string T::stringValue()
  *  4) Operations +, -, +=, -=, ==, <, abs()
  *  5) T::zero and T::one exists 
+ *  6) Present implementation also assumes the ring is without zero divisors.
  *
  * \testpart
  *
@@ -88,7 +89,8 @@ class NSVPolynomialRing {
         NSVPolynomialRing(const T &a, signed long k);
 
         /**
-         * Creates a constant polynomial of the form "a" 
+         * Creates a constant polynomial of the form "a", needed to allow for
+         * expressions like p==0 where p is an NSVPolynomialRing object.
          */
         NSVPolynomialRing(signed long a);
 
@@ -242,10 +244,9 @@ class NSVPolynomialRing {
         std::string texString() const;
 };
 
-// forward declaration
+// forward declarations
 void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal );
-
-
+bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NSVPolynomialRing< NLargeInteger > &second);
 
 /*@}*/
 
@@ -258,8 +259,9 @@ inline NSVPolynomialRing<T>::NSVPolynomialRing() {}
 // monomial constructor
 template <class T>
 inline NSVPolynomialRing<T>::NSVPolynomialRing(const T &a, signed long k)
-{ if (a != 0) cof.insert(std::pair<signed long, T*>( k, new T(a) ) ); }
+{ if (a != T::zero) cof.insert(std::pair<signed long, T*>( k, new T(a) ) ); }
 
+// cast signed longs.
 template <class T>
 inline NSVPolynomialRing<T>::NSVPolynomialRing(signed long a)
 { if (a != 0) cof.insert(std::pair<signed long, T*>( 0, new T(a) ) ); }
@@ -271,6 +273,7 @@ inline NSVPolynomialRing<T>::~NSVPolynomialRing()
  typename std::map< signed long, T* >::iterator ci;
  for (ci = cof.begin(); ci != cof.end(); ci++)
 	delete ci->second;
+ cof.clear();
 }
 
 // copy constructor
@@ -392,12 +395,11 @@ template <class T>
 inline NSVPolynomialRing<T> operator * (const T &k, const NSVPolynomialRing<T>& q)
 {
  NSVPolynomialRing<T> retval;
- if (k != 0)
+ if (k != T::zero)
   {
-  retval = q;
   typename std::map< signed long, T* >::iterator ci;
-  for (ci = retval.cof.begin(); ci != retval.cof.end(); ci++)
-	(*ci->second) *= k;
+  for (ci = q.cof.begin(); ci != q.cof.end(); ci++)
+	retval.cof.insert( std::pair< signed long, T* >( ci->first, new T*( (*ci->second)*k ) ) );
   }
  return retval;
 }
@@ -417,56 +419,57 @@ const NSVPolynomialRing<T> NSVPolynomialRing<T>::pvar( T::one, 1 );
 
 template <class T>
 inline void NSVPolynomialRing<T>::setCoefficient (signed long i, const T & c) 
-{ // redo using insert
-T* P(new T(c));
-std::pair< typename std::map< signed long, T* >::iterator, bool > res = 
- cof.insert(std::pair< signed long, T* >( i, P ) );
-if (res.second == false) { (*res.first->second) = (*P); delete P; }
+{
+ if (c==T::zero)
+  {
+   typename std::map< signed long, T* >::iterator it(cof.find(i)); // look for t^i
+   if (it != cof.end()) cof.erase(it); return;
+  }
+ T* P(new T(c));
+ std::pair< typename std::map< signed long, T* >::iterator, bool > res = 
+  cof.insert(std::pair< signed long, T* >( i, P ) );
+ if (res.second == false) { (*res.first->second) = (*P); delete P; }
 }
 
 template <class T>
 inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator * (const NSVPolynomialRing<T>& q) const
 {
-// There's a faster way to do polynomial multiplication using the FFT. See
-// http://www.cs.iastate.edu/~cs577/handouts/polymultiply.pdf
-// Fateman 2005 indicates nobody has implemented such algorithms in any major package, and that
-//  the asymptotic advantage only appears for extremely large polynomials, a problem being that
-//  roots of unity are required so they seem to think arbitrary precision complex numbers are
-//  required, which is slow.  Can we avoid this using exact arithmetic? 
-typename std::map< signed long, T* >::const_iterator I, J;
-NSVPolynomialRing<T> retval;
+ // There's a faster way to do polynomial multiplication using the FFT. See
+ // http://www.cs.iastate.edu/~cs577/handouts/polymultiply.pdf
+ // Fateman 2005 indicates nobody has implemented such algorithms in any major package, and that
+ //  the asymptotic advantage only appears for extremely large polynomials, a problem being that
+ //  roots of unity are required so they seem to think arbitrary precision complex numbers are
+ //  required, which is slow.  Can we avoid this using exact arithmetic? 
+ typename std::map< signed long, T* >::const_iterator I, J;
+ NSVPolynomialRing<T> retval;
 
-for (I = cof.begin(); I!=cof.end(); I++) for (J=q.cof.begin(); J!=q.cof.end(); J++)
- {
+ for (I = cof.begin(); I!=cof.end(); I++) for (J=q.cof.begin(); J!=q.cof.end(); J++)
+  {
    // lets multiply *I->second and *J->second
    T* P(new NLargeInteger( (*I->second)*(*J->second) ) );
    std::pair< typename std::map< signed long, T* >::iterator, bool > res = 
     retval.cof.insert( std::pair< signed long, T* > (
     I->first+J->first, P ) );
    if (res.second == false) { (*res.first->second) += (*P); delete P; }
- }
-
-//  now run through find zero coefficients and deallocate.
-typename std::map< signed long, T* >::iterator K;
-for (K = retval.cof.begin(); K!=retval.cof.end(); K++)
- if ( (*K->second) == T::zero )
-  {
-   delete K->second;
-   retval.cof.erase(K);
   }
 
-return retval;
+ //  now run through find zero coefficients and deallocate.
+ typename std::map< signed long, T* >::iterator K;
+ for (K = retval.cof.begin(); K!=retval.cof.end(); K++)
+   while ( (*K->second) == NLargeInteger::zero ) { delete K->second; retval.cof.erase(K++);  
+                                                   if (K==retval.cof.end()) continue; }
+ return retval;
 }
 
 template <class T>
 inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator + (const NSVPolynomialRing<T>& q) const
 {
-NSVPolynomialRing<T> retval;
-// two iterators, one for this->cof, one for q.cof, start at beginning for both, 
-// smallest we add, if only one then that's okay. We increment smallest, repeat...
-typename std::map< signed long, T* >::const_iterator i,j;
-i = cof.begin(); j = q.cof.begin();
-while ( (i != cof.end()) || (j != q.cof.end()) )
+ NSVPolynomialRing<T> retval;
+ // two iterators, one for this->cof, one for q.cof, start at beginning for both, 
+ // smallest we add, if only one then that's okay. We increment smallest, repeat...
+ typename std::map< signed long, T* >::const_iterator i,j;
+ i = cof.begin(); j = q.cof.begin();
+ while ( (i != cof.end()) || (j != q.cof.end()) )
  {
   if (i == cof.end())
    { // only j relevant
@@ -491,19 +494,18 @@ while ( (i != cof.end()) || (j != q.cof.end()) )
        i++; j++; } 
    }
  }
-
-return retval;
+ return retval;
 }
 
 template <class T>
 inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator - (const NSVPolynomialRing<T>& q) const
 {
-NSVPolynomialRing<T> retval;
-// two iterators, one for this->cof, one for q.cof, start at beginning for both, 
-// smallest we add, if only one then that's okay. We increment smallest, repeat...
-typename std::map< signed long, T* >::const_iterator i,j;
-i = cof.begin(); j = q.cof.begin();
-while ( (i != cof.end()) || (j != q.cof.end()) )
+ NSVPolynomialRing<T> retval;
+ // two iterators, one for this->cof, one for q.cof, start at beginning for both, 
+ // smallest we add, if only one then that's okay. We increment smallest, repeat...
+ typename std::map< signed long, T* >::const_iterator i,j;
+ i = cof.begin(); j = q.cof.begin();
+ while ( (i != cof.end()) || (j != q.cof.end()) )
  {
   if (i == cof.end())
    { // only j relevant
@@ -528,59 +530,59 @@ while ( (i != cof.end()) || (j != q.cof.end()) )
        i++; j++; } 
    }
  }
-return retval;
+ return retval;
 }
 
 template <class T>
 inline NSVPolynomialRing<T>& NSVPolynomialRing<T>::operator -=(const NSVPolynomialRing<T>& q)
 { // todo: redo using insert w/iterator
-typename std::map< signed long, T* >::iterator i;
-typename std::map< signed long, T* >::const_iterator j;
-i = cof.begin(); j = q.cof.begin();
-while ( (i != cof.end()) || (j != q.cof.end()) )
- { if (i == cof.end()) { cof.insert( std::pair< signed long, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
-   else if (j == q.cof.end()) i++;  
-   else if ( i->first < j->first ) i++;
-   else if ( i->first > j->first ) { cof.insert( std::pair< signed long, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
-   else
-     { (*i->second) -= (*j->second); 
-       if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
-         { delete i->second; cof.erase(i++); j++; } 
-       else { i++; j++; }
-     }
- }
-return (*this);
+ typename std::map< signed long, T* >::iterator i;
+ typename std::map< signed long, T* >::const_iterator j;
+ i = cof.begin(); j = q.cof.begin();
+ while ( (i != cof.end()) || (j != q.cof.end()) )
+  { if (i == cof.end()) { cof.insert( std::pair< signed long, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
+    else if (j == q.cof.end()) i++;  
+    else if ( i->first < j->first ) i++;
+    else if ( i->first > j->first ) { cof.insert( std::pair< signed long, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
+    else
+      { (*i->second) -= (*j->second); 
+        if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
+          { delete i->second; cof.erase(i++); j++; } 
+        else { i++; j++; }
+      }
+  }
+ return (*this);
 }
 
 template <class T>
 inline NSVPolynomialRing<T>& NSVPolynomialRing<T>::operator +=(const NSVPolynomialRing<T>& q)
 { // todo: redo using insert w/iterator
-typename std::map< signed long, T* >::iterator i;
-typename std::map< signed long, T* >::const_iterator j;
-i = cof.begin(); j = q.cof.begin();
-while ( (i != cof.end()) || (j != q.cof.end()) )
- { if (i == cof.end()) { cof.insert( std::pair< signed long, T* >(j->first, new T( (*j->second) ) ) ); j++; }
-   else if (j == q.cof.end()) i++; 
-   else if ( i->first < j->first ) i++; 
-   else if ( i->first > j->first ) { cof.insert( std::pair< signed long, T* >(j->first, new T( (*j->second) ) ) ); j++; }
-   else
-     { (*i->second) += (*j->second); 
-       if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
-         { delete i->second; cof.erase(i++); j++; } 
-       else { i++; j++; }
-     }
- }
-return (*this);
+ typename std::map< signed long, T* >::iterator i;
+ typename std::map< signed long, T* >::const_iterator j;
+ i = cof.begin(); j = q.cof.begin();
+ while ( (i != cof.end()) || (j != q.cof.end()) )
+  { if (i == cof.end()) { cof.insert( std::pair< signed long, T* >(j->first, new T( (*j->second) ) ) ); j++; }
+    else if (j == q.cof.end()) i++; 
+    else if ( i->first < j->first ) i++; 
+    else if ( i->first > j->first ) { cof.insert( std::pair< signed long, T* >(j->first, new T( (*j->second) ) ) ); j++; }
+    else
+      { (*i->second) += (*j->second); 
+        if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
+          { delete i->second; cof.erase(i++); j++; } 
+        else { i++; j++; }
+      }
+  }
+ return (*this);
 }
 
 template <class T>
 inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator -() const
 {
-NSVPolynomialRing<T> retval(*this);
-typename std::map< signed long, T* >::iterator i;
-for (i = retval.cof.begin(); i!=retval.cof.end(); i++)
- i->second->negate();
-return retval;
+ NSVPolynomialRing<T> retval(*this);
+ typename std::map< signed long, T* >::iterator i;
+ for (i = retval.cof.begin(); i!=retval.cof.end(); i++)
+  i->second->negate();
+ return retval;
 }
 
 
@@ -603,7 +605,6 @@ inline long int NSVPolynomialRing<T>::descartesNo() const
     }
    signP = NsignP; signN = NsignN;
   }
-
 return retval;
 }
 

@@ -41,7 +41,8 @@
 namespace regina {
 
 
-/*template <class T> void dumpMatrix( const regina::NMatrixRing<T> &mat )
+/*
+template <class T> void dumpMatrix( const regina::NMatrixRing<T> &mat )
 {for (unsigned long j=0; j<mat.rows(); j++) { std::cout<<"["; for (unsigned long i=0; i<mat.columns(); i++)
   std::cout<<mat.entry(j,i)<<" "; std::cout<<"]\n"; } }
 */
@@ -1071,12 +1072,8 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData
  std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > retval( new NMatrixRing< NSVPolynomialRing< NLargeInteger > >(N->rows()-1,N->columns()) );
  for (unsigned long i=0; i<retval->rows(); i++) for (unsigned long j=0; j<retval->columns(); j++)
   retval->entry( i, j ) = workN.entry( (i<pivotCol) ? i : i+1, j ); 
- // todo: correct if this is the empty matrix
  return retval;
 }
-
-
-
 
 // compute the Alexander ideal of the Alexander module. 
 std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::alexanderIdeal() const
