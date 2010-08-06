@@ -34,8 +34,6 @@ namespace regina {
 
 /**
  *  Comparison function for sorting ideals in NSVPolynomialRing< NLargeInteger >
- * TODO: make more useful. We'll want to check to see if first | second, 
- *       or second|first, first.  Then I the order... hmm, dunno....
  */
 bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NSVPolynomialRing< NLargeInteger > &second)
 {
@@ -84,6 +82,38 @@ void partial_divisionAlg( const NSVPolynomialRing< NLargeInteger > &m, const NSV
    q += NSVPolynomialRing<NLargeInteger>( D, expDiff );
   }
  while ( (R == 0) && (r.isZero() ? false : (r.width() >= n.width() ) ) );
+}
+
+/**
+ * Given an element elt of NSVPolynomialRing, this algorithm checks to see if it reduces to 0 by taking remainders
+ * via division by elements of ideal.  So ideal is Groebner exactly when this algorithm checks to see if elt
+ * is in the ideal. 
+ */
+bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal, const NSVPolynomialRing< NLargeInteger > &elt )
+{
+ NSVPolynomialRing<NLargeInteger> Elt(elt);
+ // for every element of ideal smaller than elt, apply division alg on left and right.  If elt reduces to
+ // zero, done.  If over an entire cycle nothing happens, return false. 
+ bool didSomething;
+ std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator i;
+ do 
+  {
+   didSomething = false; 
+   for (i=ideal.begin(); i != ideal.end(); i++)
+    {
+     NSVPolynomialRing< NLargeInteger > q, r; 
+     if ( i->width() <= Elt.width() ) partial_divisionAlg( Elt, *i, q, r );
+     if ( r != Elt ) { Elt = r; didSomething = true; }
+    }
+   for (i=ideal.begin(); i != ideal.end(); i++)
+    {
+     NSVPolynomialRing< NLargeInteger > q, r; 
+     if ( i->width() <= Elt.width() ) partial_divisionAlg( Elt, *i, q, r, true );
+     if ( r != Elt ) { Elt = r; didSomething = true; }
+    }
+  }
+ while ( (didSomething) && (!Elt.isZero()) );
+ return Elt.isZero();
 }
 
 /**
@@ -216,20 +246,13 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
  *  Determines whether or not idealA is a subideal of idealB. Assumes you've run idealA through reduceIdeal() first, 
  * i.e. idealA() is a Groebner basis. 
  */
-bool isSubIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &idealA,  const std::list< NSVPolynomialRing< NLargeInteger > > &idealB )
+bool isSubIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &idealA,  
+                 const std::list< NSVPolynomialRing< NLargeInteger > > &idealB )
 {
- // find the GCDs of the leading terms of idealA and the linear combination that realizes the GCD. 
- // store this as a ?map? of <unsigned long, comb > where unsigned long is the max degree of elts from idealA, and
- // comb is the appropriate length vector<NLargeInteger> indicating the linear combination.
-
  // for every element of idealB, we reduce as much as possible using elements of idealA, see if we get to zero or not...
  std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator j;
- for (j=idealB.begin(); j != idealB.end(); j++)
-  {
-   // TODO hmm... need to think over more examples first.
-  }
-
- return false;
+ for (j=idealA.begin(); j != idealA.end(); j++) if (!reduceByIdeal( idealB, *j ) ) return false;
+ return true;
 }
 
 
