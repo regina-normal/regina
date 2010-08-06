@@ -247,6 +247,10 @@ class NSVPolynomialRing {
 // forward declarations
 void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal );
 bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NSVPolynomialRing< NLargeInteger > &second);
+bool isSubIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &idealA,  const std::list< NSVPolynomialRing< NLargeInteger > > &idealB );
+void partial_divisionAlg( const NSVPolynomialRing< NLargeInteger > &m, const NSVPolynomialRing < NLargeInteger > &n, 
+                          NSVPolynomialRing< NLargeInteger > &q, NSVPolynomialRing< NLargeInteger > &r, 
+                          bool fromLeft=false );
 
 /*@}*/
 
