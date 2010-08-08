@@ -135,7 +135,8 @@ class NSVPolynomialRing {
         /**
 	 * Scalar multiplication of a polynomial.
          */
-        friend NSVPolynomialRing<T> operator * (const T &k, const NSVPolynomialRing<T>& q);
+        template <class F>
+        friend NSVPolynomialRing<F> operator * (const F &k, const NSVPolynomialRing<F>& q);
 
 	/**
 	 * Returns the sum of two polynomials.
@@ -244,13 +245,32 @@ class NSVPolynomialRing {
         std::string texString() const;
 };
 
-// forward declarations
-void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal );
+/**
+ * Produces a Groebner basis for the ideal.  Set laurentPoly=false to work in Z[t] rather than Z[t^\pm]
+ */
+void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly=true );
+/**
+ * Given an element elt of NSVPolynomialRing, this algorithm checks to see if it reduces to 0 by taking remainders
+ * via division by elements of ideal.   laurentPoly allows one to assume in Laurent polynomial ring. Set it to false
+ * if you want to be in Z[t]. 
+ */
+bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal, NSVPolynomialRing< NLargeInteger > &elt,
+                    bool laurentPoly=true );
+/**
+ *  Some kind of ordering < on ideals.  Useful? 
+ */
 bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NSVPolynomialRing< NLargeInteger > &second);
+/**
+ *  Check if idealA is contained in idealB. Assumes you've run them through reduceIdeal -- that they have 
+ * their Groebner basis. 
+ */
 bool isSubIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &idealA,  const std::list< NSVPolynomialRing< NLargeInteger > > &idealB );
-void partial_divisionAlg( const NSVPolynomialRing< NLargeInteger > &m, const NSVPolynomialRing < NLargeInteger > &n, 
-                          NSVPolynomialRing< NLargeInteger > &q, NSVPolynomialRing< NLargeInteger > &r, 
-                          bool fromLeft=false );
+
+/**
+ *  Checks to see if elements of the ideal can be expressed in terms of others, if so erases them. 
+ */
+void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &ideal );
+
 
 /*@}*/
 
@@ -403,7 +423,7 @@ inline NSVPolynomialRing<T> operator * (const T &k, const NSVPolynomialRing<T>& 
   {
   typename std::map< signed long, T* >::iterator ci;
   for (ci = q.cof.begin(); ci != q.cof.end(); ci++)
-	retval.cof.insert( std::pair< signed long, T* >( ci->first, new T*( (*ci->second)*k ) ) );
+	retval.cof.insert( std::pair< signed long, T* >( ci->first, new T( (*ci->second)*k ) ) );
   }
  return retval;
 }
@@ -555,6 +575,7 @@ inline NSVPolynomialRing<T>& NSVPolynomialRing<T>::operator -=(const NSVPolynomi
         else { i++; j++; }
       }
   }
+
  return (*this);
 }
 

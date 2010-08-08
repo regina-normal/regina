@@ -52,7 +52,6 @@ namespace regina {
  * You can use it to iterate through all subsets of this set, or all
  * subsets of a fixed size. 
  */
-// TODO allow 0-size subsets, initialize all-size subsets another way.
 class NPartition {
         NBitmask part;
         unsigned long setSize;
@@ -85,7 +84,11 @@ public:
         /**
          * Request the current partition.
          */
-        const NBitmask& partition() const;        
+        const NBitmask& partition() const;    
+        /**
+         * A vector description of the partition. 
+         */    
+        std::vector< unsigned long > vectorDesc() const;
         /**
          * Text output in form of a NBitMask
          */
@@ -95,7 +98,9 @@ public:
 
 inline NPartition::NPartition(unsigned long SetSize, unsigned long SubSetSize, bool fixedSubsetSize) : part(SetSize), 
   setSize(SetSize), subSetSize(SubSetSize), beforeStart(false), afterEnd(false), fixedSize(fixedSubsetSize)
-{  for (unsigned long i=0; i<subSetSize; i++) part.set(i, true); }
+{  for (unsigned long i=0; i<subSetSize; i++) part.set(i, true); 
+   if (SubSetSize > SetSize) afterEnd=true;
+}
 
 inline NPartition::NPartition(const NPartition& copyMe) : part(copyMe.part), setSize(copyMe.setSize), 
  subSetSize(copyMe.subSetSize), beforeStart(copyMe.beforeStart), afterEnd(copyMe.afterEnd), fixedSize(copyMe.fixedSize) {}
@@ -151,6 +156,13 @@ inline std::string NPartition::textString() const
  return ss.str();
 }
 
+inline std::vector< unsigned long > NPartition::vectorDesc() const
+{
+ std::vector< unsigned long > retval;
+ for (unsigned long i=0; i<setSize; i++)
+  if (part.get(i)) retval.push_back(i);
+ return retval;  
+}
 
 /*@}*/
 
