@@ -55,9 +55,11 @@ std::cout<<"> "; std::cout.flush();
  */
 bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NSVPolynomialRing< NLargeInteger > &second)
 {
- if (first.lastTerm().first<second.lastTerm().first) return true; if (first.lastTerm().first>second.lastTerm().first) return false;
  if (first.PU_degree() < second.PU_degree()) return true; if (first.PU_degree() > second.PU_degree()) return false;
- if (first.lastTerm().second.abs()<second.lastTerm().second.abs()) return true; if (first.lastTerm().second.abs()>second.lastTerm().second.abs()) return true; 
+ if (first.width() < second.width()) return true; if (first.width() > second.width()) return false; 
+
+ if (first.lastTerm().first<second.lastTerm().first) return true; if (first.lastTerm().first>second.lastTerm().first) return false;
+ if (first.lastTerm().second.abs()<second.lastTerm().second.abs()) return true; if (first.lastTerm().second.abs()>second.lastTerm().second.abs()) return false; 
 
  const std::map< signed long, NLargeInteger* > fTerms(first.allTerms()); const std::map< signed long, NLargeInteger* > sTerms(second.allTerms());
  std::map< signed long, NLargeInteger* >::const_iterator fI(fTerms.begin()); 
@@ -194,10 +196,10 @@ void reduceIdealSortStep( std::list< NSVPolynomialRing< NLargeInteger > > &ideal
 void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
 {
  std::list< NSVPolynomialRing< NLargeInteger > >::iterator i;
+ ideal.reverse();
  i = ideal.begin(); 
  while (i!=ideal.end())
   { // check to see if *i can be reduced by testId = ideal \ *i
-    // TODO use j to iterate backwards from top to bottom of list
    std::list< NSVPolynomialRing< NLargeInteger > > testId; 
    std::list< NSVPolynomialRing< NLargeInteger > >::iterator j;
    for (j=ideal.begin(); j!=ideal.end(); j++) if (j!=i)
@@ -206,6 +208,7 @@ void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &idea
    if (reduceByIdeal( testId, testP ) ) ideal.erase(i++); 
     else i++;
   }
+ ideal.reverse();
 }
 
 /**
@@ -218,6 +221,7 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
  // Step 1: normalize list so that first non-zero term is t^0, and positive. Erase 0 entries.
  reduceIdealSortStep(ideal); // TODO: correct if laurentPoly false
  // Step 2: remove redundant elements -- walk through list and see if expressable in terms of others.
+
  elementaryReductions(ideal); 
  reloop_loop: // will have some goto calls that return here.
  bool didSomething(false); 
@@ -269,6 +273,7 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
    ++subSet2;
   }
  if (didSomething) goto reloop_loop;
+
  reduceIdealSortStep(ideal);
  elementaryReductions(ideal);
 }
