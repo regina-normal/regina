@@ -144,7 +144,7 @@ return true;
      *  orientation.
      *
      * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face [tri3->getEdge(bcIx[1][i])]
-     *  the two boundary faces that contain it and the edge number of the edge in the NFace.  TODO
+     *  the two boundary faces that contain it and the edge number of the edge in the NFace.  
      *
      * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex [tri3->getVertex(bcIx[0][i])]
      *  the circle of faces incident to that vertex, with vrtinc[1] and vrtinc[2] forming the normal orientation

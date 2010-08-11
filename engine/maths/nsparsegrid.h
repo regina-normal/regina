@@ -71,6 +71,7 @@ class NMultiIndex {
   ~NMultiIndex();
   T & operator[](const unsigned long &index);
   const T & entry(const unsigned long &index) const;
+  unsigned long dim() const;
   bool operator==(const NMultiIndex &q) const;
   bool operator!=(const NMultiIndex &q) const;
   NMultiIndex& operator=(const NMultiIndex &q);
@@ -214,6 +215,10 @@ inline T& NMultiIndex<T>::operator[](const unsigned long &index)
 template< class T >
 inline const T& NMultiIndex<T>::entry(const unsigned long &index) const
 { return data[index]; }
+
+template< class T >
+inline unsigned long NMultiIndex<T>::dim() const
+{ return data.size(); }
 
 template< class T >
 inline bool NMultiIndex<T>::operator==(const NMultiIndex<T> &q) const
