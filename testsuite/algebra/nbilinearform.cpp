@@ -97,7 +97,7 @@ class NBilinearFormTest : public CppUnit::TestFixture {
 	  NSparseGridRing< NLargeInteger > pairing(3);
           for (unsigned long i=0; i<dim; i++)
            {
-            regina::NMultiIndex I(3);
+            regina::NMultiIndex< unsigned long > I(3);
 	    I[0]=i; I[1]=i; I[2]=0;
 	    pairing.incEntry( I, NLargeInteger::one );
            }

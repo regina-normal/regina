@@ -128,15 +128,15 @@ class NBilinearForm : public ShareableObject {
 	/**
 	 * Access to the unreducedPairing map.
 	 */
-        const std::map< NMultiIndex, NLargeInteger* > & unreducedMap() const;
+        const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & unreducedMap() const;
 
 	/**
 	 * Access to the reducedPairing map.  So if you wanted to iterate through the
          * values of the bilinear form evaluated on the generators of the homology of
-         * ldomain and rdomain, you'd construct an iterator to a std::map< NMultiIndex, NLargeInteger* > 
+         * ldomain and rdomain, you'd construct an iterator to a std::map< NMultiIndex< unsigned long >, NLargeInteger* > 
          * type and iterate through reducedMap(). 
 	 */
-        const std::map< NMultiIndex, NLargeInteger* > & reducedMap() const;
+        const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & reducedMap() const;
 
 	/**
 	 * reducedPairing access as an NSparseGridRing

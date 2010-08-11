@@ -360,7 +360,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
    NMarkedAbelianGroup rAng( 1, f_desc.rdomain.cof );
 
    NSparseGridRing< NLargeInteger > intM(3); 
-   NMultiIndex x(3); 
+   NMultiIndex< unsigned long > x(3); 
 
    for (unsigned long i=0; i<lDom->getRankCC(); i++)
     { x[0] = i; x[1] = i; x[2] = 0;
@@ -403,7 +403,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	    { // intM[ J, i, 2*numNonIdealCells[2] + 3*i+j ] += whatever
 	      // for orientation we need to compare normal orientation of these edges to product normal orientations
              unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri3->edgeIndex( edg ) ) - dcIx[2].begin() );
-	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j;
+	     NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j;
 	     // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge in the face, so we apply
 	     // facinc to that, then get the corresp edge number
 	     NPerm4 facinc( fac->getEmbedding(1).getVertices() );
@@ -424,7 +424,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          const NEdge* edg( tri3->getEdge( rIx[1][i] ) ); 
          const NTetrahedron* tet( edg->getEmbedding(0).getTetrahedron() );
          unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[1][i] ) - dcIx[2].begin() );
-         NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + i;
+         NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + i;
          NPerm4 edginc( edg->getEmbedding(0).getVertices() );
          intM.setEntry( x, edginc.sign()*tet->orientation() ); 
         }
@@ -435,7 +435,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          const NFace* fac( tri3->getFace( rIx[2][i] ) ); 
          const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
          unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), rIx[2][i] ) - dcIx[1].begin() );
-         NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
+         NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
          NPerm4 facinc( fac->getEmbedding(0).getVertices() );
          intM.setEntry( x, facinc.sign()*tet->orientation() ); 
         }
@@ -457,7 +457,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
          NPerm5 facinc( fac->getEmbedding(0).getVertices() );
          unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[2][i] ) - dcIx[2].begin() );
-         NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
+         NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
          intM.setEntry( x, facinc.sign() * pen->orientation() );
         }
      if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 3) )// (dual)H_1 x (std_rel_bdry)H_3 --> H_0
@@ -467,7 +467,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          const Dim4Pentachoron* pen( tet->getEmbedding(0).getPentachoron() );
          NPerm5 tetinc( tet->getEmbedding(0).getVertices() );
          unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), rIx[3][i] ) - dcIx[1].begin() );
-         NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + i;
+         NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + i;
          intM.setEntry( x, tetinc.sign() * pen->orientation() );
         }
      if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 1) )// (dual)H_3 x (std_rel_bdry)H_1 --> H_0
@@ -477,7 +477,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          const Dim4Pentachoron* pen( edg->getEmbedding(0).getPentachoron() );
          NPerm5 edginc( edg->getEmbedding(0).getVertices() );
          unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), rIx[1][i] ) - dcIx[3].begin() );
-         NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + i;
+         NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + numNonIdealCells[2] + i;
          intM.setEntry( x, edginc.sign() * pen->orientation() );
         }
 
@@ -493,7 +493,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	    { // intM[ J, i, 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*i+j ] += whatever
 	      // for orientation we need to compare normal orientation of intersection to product normal orientations
              unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri4->faceIndex( fac ) ) - dcIx[2].begin() );
-	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*rIx[3][i] + j;
+	     NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*rIx[3][i] + j;
 	     NPerm5 facinc( pen->getFaceMapping( Dim4Face::faceNumber[tetinc[(j+1)%4]][tetinc[(j+2)%4]][tetinc[(j+3)%4]] ) ); 
              // adjust for coherent oriented normal fibres
 	     if (facinc.sign() != pen->orientation()) facinc=facinc*NPerm5(0,1);
@@ -518,7 +518,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	    { // intM[ J, i, 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*i+j ] += whatever
 	      // for orientation we need to compare normal orientation of intersection to product normal orientations
              unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), tri4->edgeIndex( edg ) ) - dcIx[3].begin() );
-	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j; 
+	     NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j; 
 	     NPerm5 edginc( pen->getEdgeMapping( Dim4Edge::edgeNumber[facinc[(j+1)%3]][facinc[(j+2)%3]] ) ); 
 	     // adjust for coherent oriented normal fibres
 	     if (facinc.sign() != pen->orientation()) facinc = facinc*NPerm5(3,4);
@@ -544,7 +544,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	    { // intM[ J, i, 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*i+j ] += whatever
 	      // for orientation we need to compare normal orientation of intersection to product normal orientations
              unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), tri4->edgeIndex( edg ) ) - dcIx[3].begin() );
-	     NMultiIndex x(3); x[0] = J; x[1] = i; x[2] = 3*numNonIdealCells[2] + 6*i + j;
+	     NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; x[2] = 3*numNonIdealCells[2] + 6*i + j;
 	     NPerm5 edgintet( tet->getEdgeMapping( j ) ); // [0,1] --> verts in tet, 4->4. 
              NPerm5 ordual2cell( tetinc * edgintet ); // [0,1] --> verts in pen, 4->tet in pen
 	     NPerm5 edginc( pen->getEdgeMapping( Dim4Edge::edgeNumber[ordual2cell[0]][ordual2cell[1]] ) );
@@ -661,7 +661,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
            // rescale sum, check if relevant, append to intM if so...
            sum *= (N / rd->getInvariantFactor(j));
            sum %= N; if (sum < NLargeInteger::zero) sum += N;
-           NMultiIndex x(3); x[0] = i; x[1] = j; x[2] = 0; 
+           NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
            if (sum != NLargeInteger::zero) intM.setEntry( x, sum );
 	  }
          }
@@ -689,7 +689,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
            // rescale sum, check if relevant, append to intM if so...
            sum *= (N / rd->getInvariantFactor(j));
            sum %= N; if (sum < NLargeInteger::zero) sum += N;
-           NMultiIndex x(3); x[0] = i; x[1] = j; x[2] = 0; 
+           NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
            if (sum != NLargeInteger::zero) intM.setEntry( x, sum );
 	  }
      } 
@@ -715,7 +715,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
            // rescale sum, check if relevant, append to intM if so...
            sum *= (N / rd->getInvariantFactor(j));
            sum %= N; if (sum < NLargeInteger::zero) sum += N;
-           NMultiIndex x(3); x[0] = i; x[1] = j; x[2] = 0; 
+           NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
            if (sum != NLargeInteger::zero) intM.setEntry( x, sum );	  }
     } 
 
@@ -920,7 +920,7 @@ const NMatrixInt* NCellularData::integerChainComplex( const ChainComplexLocator 
    NMatrixInt* buildMat( NULL ); 
    buildMat = new NMatrixInt( cellCount(range_desc), cellCount(c_desc) );
    // build entries
-   std::map< NMultiIndex, coverFacetData* >::const_iterator ci;
+   std::map< NMultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
    for (ci = thisCC.getGrid().begin(); ci!=thisCC.getGrid().end(); ci++)
     {
      buildMat->entry( ci->second->cellNo,  ci->first.entry(0) ) += ci->second->sig;
@@ -952,7 +952,7 @@ const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc 
    NMatrixInt* buildMat( NULL ); 
    buildMat = new NMatrixInt( cellCount(m_desc.range), cellCount(m_desc.domain) );
    // build entries
-   std::map< NMultiIndex, coverFacetData* >::const_iterator ci;
+   std::map< NMultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
    for (ci = thisCM.getGrid().begin(); ci!=thisCM.getGrid().end(); ci++)
     {
      buildMat->entry( ci->second->cellNo,  ci->first.entry(0) ) += ci->second->sig;
@@ -1000,7 +1000,7 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* NCellularData::alexande
    buildMat = new NMatrixRing<NSVPolynomialRing< NLargeInteger > >( ranDim, domDim );
 
    // build entries
-   std::map< NMultiIndex, coverFacetData* >::const_iterator ci;
+   std::map< NMultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
    for (ci = thisCC.getGrid().begin(); ci!=thisCC.getGrid().end(); ci++)
     {
      std::vector<NLargeInteger> ccI( pi1->getNumberOfGenerators() );  // to put into pi1Ab

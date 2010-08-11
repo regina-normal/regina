@@ -50,9 +50,9 @@ class NSparseGridTest : public CppUnit::TestFixture {
         }
 
 	void multiindex_test() {
-	 regina::NMultiIndex i(3);
+	 regina::NMultiIndex< unsigned long > i(3);
          i[0]=1; i[1]=5; i[2]=3;
-         regina::NMultiIndex j(i);
+         regina::NMultiIndex< unsigned long > j(i);
          if (i!=j) CPPUNIT_FAIL("Copy constructor error.");
          if (!(i==j)) CPPUNIT_FAIL("Copy constructor error (2).");
 	 j[2]--;
@@ -64,9 +64,9 @@ class NSparseGridTest : public CppUnit::TestFixture {
 	};
 
 	void sparsegrid_test() {
-	 regina::NSparseGridRing< regina::NLargeInteger > g(3); regina::NMultiIndex gi(3);
-	 regina::NSparseGridRing< regina::NLargeInteger > m(2); regina::NMultiIndex mi(2);
-	 regina::NSparseGridRing< regina::NLargeInteger > v(1); regina::NMultiIndex vi(1);
+	 regina::NSparseGridRing< regina::NLargeInteger > g(3); regina::NMultiIndex< unsigned long > gi(3);
+	 regina::NSparseGridRing< regina::NLargeInteger > m(2); regina::NMultiIndex< unsigned long > mi(2);
+	 regina::NSparseGridRing< regina::NLargeInteger > v(1); regina::NMultiIndex< unsigned long > vi(1);
 
 	 std::stringstream voutss;
 	 for (unsigned i=0; i<6; i++)

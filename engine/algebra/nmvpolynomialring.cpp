@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "algebra/NSVPolynomialRing.h"
+#include "algebra/nmvpolynomialring.h"
 #include "maths/nrational.h"
 #include "maths/nmatrixint.h"
 #include "maths/matrixops.h"
@@ -37,34 +37,10 @@
 
 namespace regina {
 
-/*
-void dumpIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
-{
-std::cout<<"< ";
-std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator I;
-for (I=ideal.begin(); I!=ideal.end(); I++)
- {
-  if (I!=ideal.begin()) std::cout<<", ";
-  std::cout<<*I; 
- }
-std::cout<<"> "; std::cout.flush();
-}
-
-template <class T>
-void dumpVector( const std::vector<T> &vec )
-{
-std::cout<<" <";
-for (unsigned long j=0; j<vec.size(); j++)
- {  if (j != 0) std::cout<<", ";
-    std::cout<<vec[j]; }
-std::cout<<"> "; std::cout.flush();
-}
-*/
-
 /**
- *  Comparison function for sorting ideals in NSVPolynomialRing< NLargeInteger >
+ *  Comparison function for sorting ideals in NMVPolynomialRing< NLargeInteger >
  */
-bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NSVPolynomialRing< NLargeInteger > &second)
+bool MV_ideal_comparison( const NMVPolynomialRing< NLargeInteger > &first, const NMVPolynomialRing< NLargeInteger > &second)
 {
  if (first.PU_degree() < second.PU_degree()) return true; if (first.PU_degree() > second.PU_degree()) return false;
  if (first.width() < second.width()) return true; if (first.width() > second.width()) return false; 
@@ -85,36 +61,7 @@ bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NS
  return true;
 }
 
-
-/**
- *  Computes the GCD of elements in input, output is a vector such that the sum
- *  over i, input[i]*outputG[i] == GCD.  We assume output is initialized to the size
- *  of input.  Sum over i, input[i]*outputN[i] == 0 (for a non-trivial outputN)
- *  Assumes input.size()>=1. If input.size()==1, outputN will be zero. 
- */
-NLargeInteger gcd(const std::vector< NLargeInteger > &input,
- std::vector< NLargeInteger > &outputG,  std::vector< NLargeInteger > &outputN )
-{
- if (input.size()==1) { outputG[0]=NLargeInteger::one; return input[0]; }
- NMatrixInt X(1, input.size() );
- for (unsigned long i=0; i<X.columns(); i++) X.entry(0,i) = input[i];
- NMatrixInt R(input.size(), input.size());
- metricalSmithNormalForm( X, &R, NULL, NULL, NULL );
- for (unsigned long i=0; i<R.rows(); i++) outputG[i] = R.entry(i,0);
- // find the "smallest" between column 1 and the last column of R. 
- NLargeInteger colMetricS, colMetricC; unsigned long smallCol = 1;
- for (unsigned long j=1; j<R.columns(); j++)
-  {
-   colMetricC = NLargeInteger::zero; 
-   for (unsigned long i=0; i<R.rows(); i++) colMetricC += R.entry(i,j)*R.entry(i,j); 
-   if (j==1) colMetricS = colMetricC; 
-   else if (colMetricC < colMetricS) { colMetricS = colMetricC; smallCol = j; } 
-  }
- for (unsigned long i=0; i<R.rows(); i++) outputN[i] = R.entry(i, smallCol);
- return X.entry(0,0);
-}
-
-bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal, NSVPolynomialRing< NLargeInteger > &elt, 
+bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, NMVPolynomialRing< NLargeInteger > &elt, 
                     bool laurentPoly )
 {
  if (elt.isZero()) return true; 
@@ -125,8 +72,8 @@ bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal
  { 
    didSomething=false;
    // build a vector consisting of elements of ideal with width <= width of Elt
-   std::vector< NSVPolynomialRing< NLargeInteger > > indxId;
-   std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator i;
+   std::vector< NMVPolynomialRing< NLargeInteger > > indxId;
+   std::list< NMVPolynomialRing< NLargeInteger > >::const_iterator i;
    for (i=ideal.begin(); i!=ideal.end(); i++)
     if (i->width() <= elt.width()) indxId.push_back(*i);
    // if indxId empty, we're done.. 
@@ -146,7 +93,7 @@ bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal
      NLargeInteger q( elt.lastTerm().second.divExact(G) );
      signed long topD( elt.lastTerm().first );
     for (unsigned long i=0; i<gcdV.size(); i++)
-      elt -= NSVPolynomialRing< NLargeInteger >( q*gcdV[i], topD-indxId[i].lastTerm().first )*indxId[i];
+      elt -= NMVPolynomialRing< NLargeInteger >( q*gcdV[i], topD-indxId[i].lastTerm().first )*indxId[i];
     }
 
    if ((!didSomething) && laurentPoly) // if no right-reductions worked ,try left-reductions
@@ -162,7 +109,7 @@ bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal
        NLargeInteger q( elt.firstTerm().second.divExact(G) );
        signed long topD( elt.firstTerm().first );
        for (unsigned long i=0; i<gcdV.size(); i++)
-        elt -= NSVPolynomialRing< NLargeInteger >( q*gcdV[i], topD-indxId[i].firstTerm().first )*indxId[i];
+        elt -= NMVPolynomialRing< NLargeInteger >( q*gcdV[i], topD-indxId[i].firstTerm().first )*indxId[i];
       }
     }
  }
@@ -175,36 +122,36 @@ bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal
  * Removes zeros, normalizes so 0th term is first non-zero term and 
  * positive. Sorts, removes duplicates.
  */
-void reduceIdealSortStep( std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
+void reduceIdealSortStep( std::list< NMVPolynomialRing< NLargeInteger > > &ideal )
 {
- std::list< NSVPolynomialRing< NLargeInteger > >::iterator i;
+ std::list< NMVPolynomialRing< NLargeInteger > >::iterator i;
  for (i=ideal.begin(); i!=ideal.end(); i++)
   {
    while (i->isZero()) i=ideal.erase(i);  if (i==ideal.end()) break;
    std::pair< signed long, NLargeInteger > LT( i->firstTerm() );
-   NSVPolynomialRing< NLargeInteger > opTerm( (LT.second>0) ? NLargeInteger::one : -NLargeInteger::one, -LT.first );
+   NMVPolynomialRing< NLargeInteger > opTerm( (LT.second>0) ? NLargeInteger::one : -NLargeInteger::one, -LT.first );
    (*i) = (*i)*opTerm;
   }
 
  // sort and remove duplicates
- ideal.sort(ideal_comparison);
+ ideal.sort(MV_ideal_comparison);
  ideal.unique();
 }
 
 
 // run through elements of idea, see if they can be killed by the others, if so, do so!
-void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
+void elementaryReductions( std::list< NMVPolynomialRing< NLargeInteger > > &ideal )
 {
- std::list< NSVPolynomialRing< NLargeInteger > >::iterator i;
+ std::list< NMVPolynomialRing< NLargeInteger > >::iterator i;
  ideal.reverse();
  i = ideal.begin(); 
  while (i!=ideal.end())
   { // check to see if *i can be reduced by testId = ideal \ *i
-   std::list< NSVPolynomialRing< NLargeInteger > > testId; 
-   std::list< NSVPolynomialRing< NLargeInteger > >::iterator j;
+   std::list< NMVPolynomialRing< NLargeInteger > > testId; 
+   std::list< NMVPolynomialRing< NLargeInteger > >::iterator j;
    for (j=ideal.begin(); j!=ideal.end(); j++) if (j!=i)
     testId.push_back( *j );
-   NSVPolynomialRing< NLargeInteger > testP( *i );
+   NMVPolynomialRing< NLargeInteger > testP( *i );
    if (reduceByIdeal( testId, testP ) ) ideal.erase(i++); 
     else i++;
   }
@@ -216,7 +163,7 @@ void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &idea
  * into a Groebner basis for the ideal.  This is specifically for 
  * Laurent polynomial rings. 
  */
-void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly )
+void reduceIdeal( std::list< NMVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly )
 { 
  // Step 1: normalize list so that first non-zero term is t^0, and positive. Erase 0 entries.
  reduceIdealSortStep(ideal); // TODO: correct if laurentPoly false
@@ -227,8 +174,8 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
  bool didSomething(false); 
 
  // Step 2: cast the ideal to a vector
- std::vector< NSVPolynomialRing< NLargeInteger > > vecIdeal; 
- std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator i; 
+ std::vector< NMVPolynomialRing< NLargeInteger > > vecIdeal; 
+ std::list< NMVPolynomialRing< NLargeInteger > >::const_iterator i; 
  for (i=ideal.begin(); i!=ideal.end(); i++) vecIdeal.push_back(*i);
 
  // Step 3: right GCDs
@@ -244,9 +191,9 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
        if (vecIdeal[subsetV[j]].lastTerm().first > maxExp) maxExp = vecIdeal[subsetV[j]].lastTerm().first; }
    std::vector< NLargeInteger > gcdV(subsetV.size()), killV(subsetV.size());
    gcd( leadV, gcdV, killV );
-   NSVPolynomialRing< NLargeInteger > combo;
+   NMVPolynomialRing< NLargeInteger > combo;
    for (unsigned long j=0; j<gcdV.size(); j++)
-    combo += NSVPolynomialRing< NLargeInteger >(gcdV[j],maxExp - vecIdeal[subsetV[j]].lastTerm().first)*vecIdeal[subsetV[j]];
+    combo += NMVPolynomialRing< NLargeInteger >(gcdV[j],maxExp - vecIdeal[subsetV[j]].lastTerm().first)*vecIdeal[subsetV[j]];
    if (!reduceByIdeal( ideal, combo ) ) { ideal.push_back(combo); vecIdeal.push_back(combo); didSomething = true; }
    ++subSet;
   }
@@ -266,9 +213,9 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
        if (vecIdeal[subsetV[j]].firstTerm().first < minExp) minExp = vecIdeal[subsetV[j]].firstTerm().first; }
    std::vector< NLargeInteger > gcdV(subsetV.size()), killV(subsetV.size());
    gcd( leadV, gcdV, killV );
-   NSVPolynomialRing< NLargeInteger > combo;
+   NMVPolynomialRing< NLargeInteger > combo;
    for (unsigned long j=0; j<gcdV.size(); j++)
-    combo += NSVPolynomialRing< NLargeInteger >(gcdV[j],minExp - vecIdeal[subsetV[j]].firstTerm().first)*vecIdeal[subsetV[j]];
+    combo += NMVPolynomialRing< NLargeInteger >(gcdV[j],minExp - vecIdeal[subsetV[j]].firstTerm().first)*vecIdeal[subsetV[j]];
    if (!reduceByIdeal( ideal, combo ) ) { ideal.push_back(combo); vecIdeal.push_back(combo); didSomething = true; }
    ++subSet2;
   }
@@ -279,13 +226,13 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
 }
 
 
-bool isSubIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &idealA,  
-                 const std::list< NSVPolynomialRing< NLargeInteger > > &idealB )
+bool isSubIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &idealA,  
+                 const std::list< NMVPolynomialRing< NLargeInteger > > &idealB )
 {
  // for every element of idealB, we reduce as much as possible using elements of idealA, see if we get to zero or not...
- std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator j;
+ std::list< NMVPolynomialRing< NLargeInteger > >::const_iterator j;
  for (j=idealA.begin(); j != idealA.end(); j++) 
-   { NSVPolynomialRing< NLargeInteger > temp(*j); if (!reduceByIdeal( idealB, temp ) ) return false; }
+   { NMVPolynomialRing< NLargeInteger > temp(*j); if (!reduceByIdeal( idealB, temp ) ) return false; }
  return true;
 }
 

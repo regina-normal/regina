@@ -51,19 +51,26 @@ namespace regina {
  */
 
 /**
- * An object for describing elements in a n_1 x n_2 x ... x n_k grid.
+ * An object for describing elements in a n_1 x n_2 x ... x n_k grid. i.e. 
+ * NMultiIndex describes a k-tuple in the class T. 
+ *
+ * T needs to satisfy: 
+ *
+ *  1) Has a constructor, assignment = 
+ *  2) Has an < operator, << operator, inequality !=
  */
+template <class T>
 class NMultiIndex {
  private:
-  std::vector< unsigned long > data;
+  std::vector< T > data;
  public: 
   NMultiIndex(unsigned long dim); // k == dim of multi-index
-  NMultiIndex(unsigned long i1, unsigned long i2); // build a pair i1, i2
-  NMultiIndex(unsigned long i1, unsigned long i2, unsigned long i3); // build a triple i1, i2, i3
+  NMultiIndex(const T& i1, const T& i2); // build a pair i1, i2
+  NMultiIndex(const T& i1, const T& i2, const T& i3); // build a triple i1, i2, i3
   NMultiIndex(const NMultiIndex &cloneMe);
   ~NMultiIndex();
-  unsigned long & operator[](const unsigned long &index);
-  const unsigned long & entry(const unsigned long &index) const;
+  T & operator[](const unsigned long &index);
+  const T & entry(const unsigned long &index) const;
   bool operator==(const NMultiIndex &q) const;
   bool operator!=(const NMultiIndex &q) const;
   NMultiIndex& operator=(const NMultiIndex &q);
@@ -94,7 +101,7 @@ class NSparseGrid {
 	/**
 	 * Internal storage of the grid. 
 	 */
-	std::map< NMultiIndex, T* > grid;
+	std::map< NMultiIndex< unsigned long >, T* > grid;
 
     public:
         /**
@@ -123,20 +130,20 @@ class NSparseGrid {
 	/**
 	 * Access to the grid map. 
 	 */
-	const std::map< NMultiIndex, T* > & getGrid() const;
+	const std::map< NMultiIndex< unsigned long >, T* > & getGrid() const;
 
 	/**
 	 * sets the entry corresponding to index I to a pointer
          * to a T type equal to val. If already allocated it
          * copies val to the currently allocated T in the grid. 
          */
-	void setEntry( const NMultiIndex & I, const T & val );
+	void setEntry( const NMultiIndex< unsigned long > & I, const T & val );
 
 	/**
          *  Gives the entry corresponding to index I, the null
          * pointer if it is not allocated.
 	 */
-        const T* getEntry( const NMultiIndex & I ) const;
+        const T* getEntry( const NMultiIndex< unsigned long > & I ) const;
 
         /**
 	 * Lists all elements in the grid.
@@ -167,62 +174,72 @@ class NSparseGridRing : public NSparseGrid<T> {
         /**
          * Overloaded for a val == T::zero safety check.
          */
-        void setEntry( const NMultiIndex &I, const T &val );
+        void setEntry( const NMultiIndex< unsigned long > &I, const T &val );
 
 	/**
 	 * Increment an entry.  This will allocate the entry if it
          * is not already allocated, and deallocate if after incrementation
          * it becomes zero. 
 	 */
-	void incEntry( const NMultiIndex & I, const T & val );
+	void incEntry( const NMultiIndex< unsigned long > & I, const T & val );
 };
 
 /*@}*/
 
 // Inline functions for NMultiIndex
 
-inline NMultiIndex::NMultiIndex(unsigned long dim)
+template< class T >
+inline NMultiIndex<T>::NMultiIndex(unsigned long dim)
 { data.resize(dim, 0); }
 
-inline NMultiIndex::NMultiIndex(unsigned long i1, unsigned long i2)
+template< class T >
+inline NMultiIndex<T>::NMultiIndex(const T& i1, const T& i2)
 { data.resize(2, 0); data[0]=i1; data[1]=i2; }
 
-inline NMultiIndex::NMultiIndex(unsigned long i1, unsigned long i2, unsigned long i3)
+template< class T >
+inline NMultiIndex<T>::NMultiIndex(const T& i1, const T& i2, const T& i3)
 { data.resize(3, 0); data[0]=i1; data[1]=i2; data[2]=i3; }
 
-inline NMultiIndex::NMultiIndex(const NMultiIndex &cloneMe)
+template< class T >
+inline NMultiIndex<T>::NMultiIndex(const NMultiIndex<T> &cloneMe)
 { data = cloneMe.data; }
 
-inline NMultiIndex::~NMultiIndex()
-{}
+template< class T >
+inline NMultiIndex<T>::~NMultiIndex() {}
 
-inline unsigned long & NMultiIndex::operator[](const unsigned long &index)
+template< class T >
+inline T& NMultiIndex<T>::operator[](const unsigned long &index)
 { return data[index]; }
 
-inline const unsigned long & NMultiIndex::entry(const unsigned long &index) const
+template< class T >
+inline const T& NMultiIndex<T>::entry(const unsigned long &index) const
 { return data[index]; }
 
-inline bool NMultiIndex::operator==(const NMultiIndex &q) const
+template< class T >
+inline bool NMultiIndex<T>::operator==(const NMultiIndex<T> &q) const
 { 
-if (data.size() != q.data.size() ) return false;
-for (unsigned long i=0; i<data.size(); i++) if (data[i] != q.data[i]) return false;
-return true;
+ if (data.size() != q.data.size() ) return false;
+ for (unsigned long i=0; i<data.size(); i++) if (data[i] != q.data[i]) return false;
+ return true;
 }
 
-inline bool NMultiIndex::operator!=(const NMultiIndex &q) const
+template< class T >
+inline bool NMultiIndex<T>::operator!=(const NMultiIndex<T> &q) const
 { 
-if (data.size() != q.data.size()) return true;
-for (unsigned long i=0; i<data.size(); i++) if (data[i] != q.data[i]) return true;
-return false;
+ if (data.size() != q.data.size()) return true;
+ for (unsigned long i=0; i<data.size(); i++) if (data[i] != q.data[i]) return true;
+ return false;
 }
 
-inline NMultiIndex& NMultiIndex::operator=(const NMultiIndex &q)
+template< class T >
+inline NMultiIndex<T>& NMultiIndex<T>::operator=(const NMultiIndex<T> &q)
 { 
-data=q.data; 
-return (*this); 
+ data=q.data; 
+ return (*this); 
 }
 
-inline bool NMultiIndex::operator<(const NMultiIndex &q) const
+template< class T >
+inline bool NMultiIndex<T>::operator<(const NMultiIndex<T> &q) const
 { 
  for (unsigned long i=0; i<data.size(); i++) 
   {
@@ -232,7 +249,8 @@ inline bool NMultiIndex::operator<(const NMultiIndex &q) const
  return false;
 }
 
-inline void NMultiIndex::writeTextShort(std::ostream& out) const
+template< class T >
+inline void NMultiIndex<T>::writeTextShort(std::ostream& out) const
 {
 for (unsigned long i=0; i<data.size(); i++)
  {
@@ -250,16 +268,16 @@ inline NSparseGrid<T>::NSparseGrid(unsigned long dim)
 template <class T>
 inline NSparseGrid<T>::NSparseGrid(const NSparseGrid & cloneMe)
 {
- typename std::map< NMultiIndex, T* >::const_iterator i;
+ typename std::map< NMultiIndex< unsigned long >, T* >::const_iterator i;
  for (i = cloneMe.grid.begin(); i != cloneMe.grid.end(); i++)
-  grid.insert( std::pair< NMultiIndex, T* >( i->first, clonePtr(i->second) ) );
+  grid.insert( std::pair< NMultiIndex< unsigned long >, T* >( i->first, clonePtr(i->second) ) );
  gridim = cloneMe.gridim;
 }
 
 template <class T>
 inline NSparseGrid<T>::~NSparseGrid()
 {
- typename std::map< NMultiIndex, T* >::iterator i;
+ typename std::map< NMultiIndex< unsigned long >, T* >::iterator i;
  for (i = grid.begin(); i != grid.end(); i++)
   delete(i->second);
  grid.clear();
@@ -269,26 +287,26 @@ template <class T>
 inline NSparseGrid<T>& NSparseGrid<T>::operator = (const NSparseGrid& cloneMe)
 {
  // delete old grid
- typename std::map< NMultiIndex, T* >::iterator i;
+ typename std::map< NMultiIndex< unsigned long >, T* >::iterator i;
  for (i = grid.begin(); i != grid.end(); i++)
    delete(i->second); 
  grid.clear();  
  // copy cloneMe
  for (i = cloneMe.grid.begin(); i != cloneMe.grid.end(); i++)
-  grid.insert( std::pair< NMultiIndex, T* >( i->first, clonePtr(i->second) ) );
+  grid.insert( std::pair< NMultiIndex< unsigned long >, T* >( i->first, clonePtr(i->second) ) );
  gridim = cloneMe.gridim;
  return (*this);
 }
 
 template <class T>
-const std::map< NMultiIndex, T* > & NSparseGrid<T>::getGrid() const
+const std::map< NMultiIndex< unsigned long >, T* > & NSparseGrid<T>::getGrid() const
 { return grid; }
 
 template <class T>
-inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, const T &val )
+inline void NSparseGrid<T>::setEntry( const NMultiIndex< unsigned long > &I, const T &val )
 {
  // determine if multi-index I is in grid, if so replace by val
- typename std::map< NMultiIndex, T* >::iterator p;
+ typename std::map< NMultiIndex< unsigned long >, T* >::iterator p;
  p = grid.find( I );
  if ( p != grid.end() ) {(*(p->second)) = val;}
  // if not, insert
@@ -296,9 +314,9 @@ inline void NSparseGrid<T>::setEntry( const NMultiIndex &I, const T &val )
 }
 
 template <class T>
-inline const T* NSparseGrid<T>::getEntry( const NMultiIndex &I ) const
+inline const T* NSparseGrid<T>::getEntry( const NMultiIndex< unsigned long > &I ) const
 {
- typename std::map< NMultiIndex, T* >::const_iterator p;
+ typename std::map< NMultiIndex< unsigned long >, T* >::const_iterator p;
  p = grid.find( I );
  if ( p != grid.end() ) return (p->second);
  else return NULL;
@@ -307,7 +325,7 @@ inline const T* NSparseGrid<T>::getEntry( const NMultiIndex &I ) const
 template <class T>
 inline void NSparseGrid<T>::writeTextShort(std::ostream& out) const
 {
- typename std::map< NMultiIndex, T* >::const_iterator i;
+ typename std::map< NMultiIndex< unsigned long >, T* >::const_iterator i;
  for (i = grid.begin(); i != grid.end(); i++)
   {
    if (i!=grid.begin()) out<<", ";
@@ -320,10 +338,10 @@ inline void NSparseGrid<T>::writeTextShort(std::ostream& out) const
 
 // NSparseGridRing
 template <class T> 
-inline void NSparseGridRing<T>::incEntry( const NMultiIndex & I, const T & val )
+inline void NSparseGridRing<T>::incEntry( const NMultiIndex< unsigned long > & I, const T & val )
 {
  if (val == 0) return;
- typename std::map< NMultiIndex, T* >::iterator p;
+ typename std::map< NMultiIndex< unsigned long >, T* >::iterator p;
  p = this->grid.find( I );
  if ( p != this->grid.end() ) 
   { (*(p->second)) += val;
@@ -342,11 +360,11 @@ inline NSparseGridRing<T>::NSparseGridRing(const NSparseGridRing & cloneMe) :
 {}
 
 template <class T>
-inline void NSparseGridRing<T>::setEntry( const NMultiIndex &I, const T &val )
+inline void NSparseGridRing<T>::setEntry( const NMultiIndex< unsigned long > &I, const T &val )
 {
  // determine if multi-index I is in grid, if so replace by val
  if (val == T::zero) return;
- typename std::map< NMultiIndex, T* >::iterator p;
+ typename std::map< NMultiIndex< unsigned long >, T* >::iterator p;
  p = this->grid.find( I );
  if ( p != this->grid.end() ) {(*(p->second)) = val;}
  // if not, insert

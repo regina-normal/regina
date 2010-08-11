@@ -49,14 +49,14 @@ void NCellularData::fillStandardToMixedHomCM()
         {
          smCM[d]->entry( (d+1)*j + i, j ) = 1; 
          // TODO fill wordle
-         CM->setEntry( NMultiIndex( j, i ),
+         CM->setEntry( NMultiIndex< unsigned long >( j, i ),
                        coverFacetData( (d+1)*j + i, 1, wordle ) );
         }
      else 
         {
         smCM[d]->entry( delta[d] + j, j ) = 1;
         // TODO fill wordle
-        CM->setEntry( NMultiIndex( j, 0 ),
+        CM->setEntry( NMultiIndex< unsigned long >( j, 0 ),
                       coverFacetData( delta[d] + j, 1, wordle ) );
         }
     } // j for loop
