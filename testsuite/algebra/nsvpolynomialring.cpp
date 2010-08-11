@@ -78,7 +78,7 @@ class NSVPolynomialRingTest : public CppUnit::TestFixture {
 		p2 += NSVPolynomialRing< regina::NLargeInteger >( NLargeInteger::randomBinary(4)-8, 4*((signed long)i-5) );
 		p3 += NSVPolynomialRing< regina::NLargeInteger >( NLargeInteger::randomBinary(3)-4, 5*i );
 	    }
-	   if ( (p1*p2)*p3 != p1*(p2*p3) ) CPPUNIT_FAIL("Addition not associative.");
+	   if ( (p1*p2)*p3 != p1*(p2*p3) ) CPPUNIT_FAIL("Multiplication not associative.");
 	   if ( p1 * NSVPolynomialRing< regina::NLargeInteger >::one != p1 ) CPPUNIT_FAIL("One does not exist (1).");
 	   if ( NSVPolynomialRing< regina::NLargeInteger >::one * p1 != p1 ) CPPUNIT_FAIL("One does not exist (2).");
 	   if ( p1 * p2 != p2 * p1 ) CPPUNIT_FAIL("Multiplication not commutative.");

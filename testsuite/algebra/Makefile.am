@@ -12,7 +12,7 @@ INCLUDES = -I$(top_srcdir) @ENGINE_INCLUDES@
 
 check_LIBRARIES = libalgebra.a
 
-libalgebra_a_SOURCES = nbinarya5.cpp nbinarys4.cpp nmarkedabeliangroup.cpp nbilinearform.cpp nsvpolynomialring.cpp ncellulardata.cpp
+libalgebra_a_SOURCES = nbinarya5.cpp nbinarys4.cpp nmarkedabeliangroup.cpp nbilinearform.cpp nsvpolynomialring.cpp ncellulardata.cpp nmvpolynomialring.cpp
 
 noinst_HEADERS = testalgebra.h
 

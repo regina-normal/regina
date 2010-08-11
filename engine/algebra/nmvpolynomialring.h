@@ -53,9 +53,10 @@ namespace regina {
  */
 
 /**
- * This is a class for dealing with elements of a single-variable polynomial ring, 
- * implemented sparsely.  The template class must be of a "ring" type, meaning
- * T must contain:
+ * This is a class for dealing with elements of a multi-variable polynomial ring, 
+ * implemented sparsely.  
+ *
+ * @pre The template class must be of a "ring" type, meaning T must contain:
  *  1) A copy constructor. 
  *  2) An assignment "=" operator. 
  *  3) An output operation std::string T::stringValue()
@@ -65,7 +66,7 @@ namespace regina {
  *
  * \testpart
  *
- * \todo allow for rational coefficients. Template ring.
+ * \todo Groebner basis.
  *
  * @author Ryan Budney
  */
@@ -377,7 +378,7 @@ inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator * (const NMVPolynomia
    // lets multiply *I->second and *J->second
    T* P(new NLargeInteger( (*I->second)*(*J->second) ) );
    NMultiIndex< signed long > sumIdx( I->first );
-   for (unsigned long i=0; i<I->dim(); i++)
+   for (unsigned long i=0; i<I->first.dim(); i++)
     sumIdx[i] += J->first.entry(i);
    std::pair< typename std::map< NMultiIndex< signed long >, T* >::iterator, bool > res = 
     retval.cof.insert( std::pair< NMultiIndex< signed long >, T* > (
@@ -415,7 +416,7 @@ inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator + (const NMVPolynomia
    {if ( i->first < j->first )
      { retval.cof.insert( std::pair< NMultiIndex< signed long >, T* >(i->first, new T(*i->second) ) );
        i++; }
-    else if ( i->first > j->first )
+    else if ( i->first != j->first )
      { retval.cof.insert( std::pair< NMultiIndex< signed long >, T* >(j->first, new T(*j->second) ) );
        j++; }
     else
@@ -451,7 +452,7 @@ inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator - (const NMVPolynomia
    {if ( i->first < j->first )
      { retval.cof.insert( std::pair< NMultiIndex< signed long >, T* >(i->first, new T(*i->second) ) );
        i++; }
-    else if ( i->first > j->first )
+    else if ( i->first != j->first )
      { retval.cof.insert( std::pair< NMultiIndex< signed long >, T* >(j->first, new T(-(*j->second) ) ) );
        j++; }
     else
@@ -475,7 +476,7 @@ inline NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator -=(const NMVPolynomi
   { if (i == cof.end()) { cof.insert( std::pair< NMultiIndex< signed long >, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
     else if (j == q.cof.end()) i++;  
     else if ( i->first < j->first ) i++;
-    else if ( i->first > j->first ) 
+    else if ( i->first != j->first ) 
       { cof.insert( std::pair< NMultiIndex< signed long >, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
     else
       { (*i->second) -= (*j->second); 
@@ -498,7 +499,7 @@ inline NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator +=(const NMVPolynomi
   { if (i == cof.end()) { cof.insert( std::pair< NMultiIndex< signed long >, T* >(j->first, new T( (*j->second) ) ) ); j++; }
     else if (j == q.cof.end()) i++; 
     else if ( i->first < j->first ) i++; 
-    else if ( i->first > j->first ) 
+    else if ( i->first != j->first ) 
       { cof.insert( std::pair< NMultiIndex< signed long >, T* >(j->first, new T( (*j->second) ) ) ); j++; }
     else
       { (*i->second) += (*j->second); 
@@ -536,17 +537,19 @@ for (p = cof.begin(); p != cof.end(); p++)
    { 
    if (outputSomething) ss<<( pos ? "+" : "-" ); else if (!pos) ss<<"-";
    outputSomething = true;
-   if (mag != 1) retval += mag.stringValue();
+   if (mag != 1) ss<<mag.stringValue();
    // okay let's output t_a^bt_c^d blah blah... depending on what exp is. 
    for (unsigned long i=0; i<exp.dim(); i++) if (exp.entry(i) != 0) // t_k^0 erase...
     {
      ss<<"t_";
-     if (i>9) ss<<"("; ss<<i; if (i>9) ss<<")"; ss<<"^";
+     if (i>9) ss<<"("; ss<<i; if (i>9) ss<<")"; 
+     if (exp.entry(i) != 1) ss<<"^";
      if ( (exp.entry(i)>9) || (exp.entry(i)<0) ) ss<<"(";
-     ss<<exp.entry(i); 
+     if (exp.entry(i) != 1) ss<<exp.entry(i); 
      if ( (exp.entry(i)>9) || (exp.entry(i)<0) ) ss<<")";
     }
    }
+  retval.append(ss.str());
  }
 if (outputSomething == false) retval = "0";
 return retval;
@@ -576,17 +579,19 @@ for (p = cof.begin(); p != cof.end(); p++)
    { 
    if (outputSomething) ss<<( pos ? "+" : "-" ); else if (!pos) ss<<"-";
    outputSomething = true;
-   if (mag != 1) retval += mag.stringValue();
+   if (mag != 1) ss<<mag.stringValue();
    // okay let's output t_a^bt_c^d blah blah... depending on what exp is. 
    for (unsigned long i=0; i<exp.dim(); i++) if (exp.entry(i) != 0) // t_k^0 erase...
     {
      ss<<"t_";
-     if (i>9) ss<<"("; ss<<i; if (i>9) ss<<")"; ss<<"^";
+     if (i>9) ss<<"("; ss<<i; if (i>9) ss<<")"; 
+     if (exp.entry(i) != 1) ss<<"^";
      if ( (exp.entry(i)>9) || (exp.entry(i)<0) ) ss<<"(";
-     ss<<exp.entry(i); 
+     if (exp.entry(i) != 1) ss<<exp.entry(i); 
      if ( (exp.entry(i)>9) || (exp.entry(i)<0) ) ss<<")";
     }
    }
+  retval.append(ss.str());
  }
 if (outputSomething == false) retval = "0";
 return retval;
