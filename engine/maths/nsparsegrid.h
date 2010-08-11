@@ -51,31 +51,71 @@ namespace regina {
  */
 
 /**
- * An object for describing elements in a n_1 x n_2 x ... x n_k grid. i.e. 
- * NMultiIndex describes a k-tuple in the class T. 
+ * An object that describes an arbitrary k-tuple of elements of a class T.
  *
- * T needs to satisfy: 
+ * @pre - The class T must have a constructor, assignment operator=, a linear
+ *        order <, an inequality != and an output operator <<, and an ability
+ *        to cast ints. 
  *
- *  1) Has a constructor, assignment = 
- *  2) Has an < operator, << operator, inequality !=
+ * \testpart
+ *
  */
 template <class T>
 class NMultiIndex {
  private:
   std::vector< T > data;
  public: 
+ /**
+  *  Construct a k-tuple, initialized to be zero.
+  */
   NMultiIndex(unsigned long dim); // k == dim of multi-index
+ /**
+  *  Construct a 2-tuple, initialized to be (i1, i2)
+  */
   NMultiIndex(const T& i1, const T& i2); // build a pair i1, i2
+ /**
+  *  Construct a 3-tuple, initialized to be (i1, i2, i3)
+  */
   NMultiIndex(const T& i1, const T& i2, const T& i3); // build a triple i1, i2, i3
+ /**
+  *  Copy constructor.
+  */
   NMultiIndex(const NMultiIndex &cloneMe);
+ /**
+  *  destructor.
+  */
   ~NMultiIndex();
+ /**
+  *  Return a reference to the i-th element from the k-tuple.
+  */
   T & operator[](const unsigned long &index);
+ /**
+  *  Return a const reference to the i-th element from the k-tuple. 
+  */
   const T & entry(const unsigned long &index) const;
+ /**
+  *  Return the dimension of the k-tuple, ie, k.
+  */
   unsigned long dim() const;
+ /**
+  *  Equality operator.
+  */
   bool operator==(const NMultiIndex &q) const;
+ /**
+  *  Inequality operator.
+  */
   bool operator!=(const NMultiIndex &q) const;
+ /**
+  *  Assignment operator.
+  */
   NMultiIndex& operator=(const NMultiIndex &q);
+ /**
+  *  Lexicographic ordering on k-tuples.
+  */
   bool operator<(const NMultiIndex &q) const;
+ /**
+  *  Output the k-tuple in format: 5,4,21,3,7
+  */
   void writeTextShort(std::ostream& out) const;
 };
 
@@ -259,7 +299,7 @@ inline void NMultiIndex<T>::writeTextShort(std::ostream& out) const
 {
 for (unsigned long i=0; i<data.size(); i++)
  {
- if (i!=0) out<<", ";
+ if (i!=0) out<<",";
  out<<data[i];
  }
 }

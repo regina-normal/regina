@@ -40,6 +40,7 @@ namespace regina {
 /**
  *  Comparison function for sorting ideals in NMVPolynomialRing< NLargeInteger >
  */
+/*
 bool MV_ideal_comparison( const NMVPolynomialRing< NLargeInteger > &first, const NMVPolynomialRing< NLargeInteger > &second)
 {
  if (first.PU_degree() < second.PU_degree()) return true; if (first.PU_degree() > second.PU_degree()) return false;
@@ -60,7 +61,9 @@ bool MV_ideal_comparison( const NMVPolynomialRing< NLargeInteger > &first, const
  // iterate and check how they compare...
  return true;
 }
+*/
 
+/*
 bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, NMVPolynomialRing< NLargeInteger > &elt, 
                     bool laurentPoly )
 {
@@ -117,11 +120,14 @@ bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal
 
  return elt.isZero();
 }
+*/
+
 
 /**
  * Removes zeros, normalizes so 0th term is first non-zero term and 
  * positive. Sorts, removes duplicates.
  */
+/*
 void reduceIdealSortStep( std::list< NMVPolynomialRing< NLargeInteger > > &ideal )
 {
  std::list< NMVPolynomialRing< NLargeInteger > >::iterator i;
@@ -137,9 +143,10 @@ void reduceIdealSortStep( std::list< NMVPolynomialRing< NLargeInteger > > &ideal
  ideal.sort(MV_ideal_comparison);
  ideal.unique();
 }
-
+*/
 
 // run through elements of idea, see if they can be killed by the others, if so, do so!
+/*
 void elementaryReductions( std::list< NMVPolynomialRing< NLargeInteger > > &ideal )
 {
  std::list< NMVPolynomialRing< NLargeInteger > >::iterator i;
@@ -157,12 +164,14 @@ void elementaryReductions( std::list< NMVPolynomialRing< NLargeInteger > > &idea
   }
  ideal.reverse();
 }
+*/
 
 /**
  *  Given a finitely-generated ideal in Z[t^\pm 1] this turns the ideal
  * into a Groebner basis for the ideal.  This is specifically for 
  * Laurent polynomial rings. 
  */
+/*
 void reduceIdeal( std::list< NMVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly )
 { 
  // Step 1: normalize list so that first non-zero term is t^0, and positive. Erase 0 entries.
@@ -224,8 +233,9 @@ void reduceIdeal( std::list< NMVPolynomialRing< NLargeInteger > > &ideal, bool l
  reduceIdealSortStep(ideal);
  elementaryReductions(ideal);
 }
+*/
 
-
+/*
 bool isSubIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &idealA,  
                  const std::list< NMVPolynomialRing< NLargeInteger > > &idealB )
 {
@@ -235,7 +245,7 @@ bool isSubIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &idealA,
    { NMVPolynomialRing< NLargeInteger > temp(*j); if (!reduceByIdeal( idealB, temp ) ) return false; }
  return true;
 }
-
+*/
 
 } // namespace regina
 
