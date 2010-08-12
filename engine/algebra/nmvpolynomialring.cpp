@@ -38,31 +38,32 @@
 namespace regina {
 
 /**
- *  Comparison function for sorting ideals in NMVPolynomialRing< NLargeInteger >
+ *  Comparison function for polynomials in NMVPolynomialRing< NLargeInteger >
  */
-/*
-bool MV_ideal_comparison( const NMVPolynomialRing< NLargeInteger > &first, const NMVPolynomialRing< NLargeInteger > &second)
+bool MV_polynomial_comparison( const NMVPolynomialRing< NLargeInteger > &first, const NMVPolynomialRing< NLargeInteger > &second)
 {
- if (first.PU_degree() < second.PU_degree()) return true; if (first.PU_degree() > second.PU_degree()) return false;
- if (first.width() < second.width()) return true; if (first.width() > second.width()) return false; 
+ // first, number of non-zero terms.
+ if (first.degree() < second.degree()) return true; if (first.degree() > second.degree()) return false;
 
- if (first.lastTerm().first<second.lastTerm().first) return true; if (first.lastTerm().first>second.lastTerm().first) return false;
- if (first.lastTerm().second.abs()<second.lastTerm().second.abs()) return true; if (first.lastTerm().second.abs()>second.lastTerm().second.abs()) return false; 
+ // perhaps add a sort on the dimension of the Newton polytope
 
- const std::map< signed long, NLargeInteger* > fTerms(first.allTerms()); const std::map< signed long, NLargeInteger* > sTerms(second.allTerms());
- std::map< signed long, NLargeInteger* >::const_iterator fI(fTerms.begin()); 
- std::map< signed long, NLargeInteger* >::const_iterator sI(sTerms.begin()); 
+ // other things to sort on: ?vertices on the boundary? (expensive?), volume? 
+ const std::map< NPolynomialIndex< signed long >, NLargeInteger* > fTerms(first.allTerms()); 
+ const std::map< NPolynomialIndex< signed long >, NLargeInteger* > sTerms(second.allTerms());
+ std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator fI(fTerms.begin()); 
+ std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator sI(sTerms.begin()); 
  while ( (fI != fTerms.end()) || (sI != sTerms.end()) )
   {
-   if (fI->first < sI->first) return true;  if (fI->first > sI->first) return false;
+   if (fI->first < sI->first) return true;  if (fI->first != sI->first) return false;
    if ( *(fI->second) < *(sI->second) ) return true;  if ( *(fI->second) > *(sI->second) ) return false;
    fI++; sI++;
   }
  // iterate and check how they compare...
  return true;
 }
-*/
 
+
+// TODO this will be the remainder / division algorithm. 
 /*
 bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, NMVPolynomialRing< NLargeInteger > &elt, 
                     bool laurentPoly )

@@ -62,7 +62,7 @@ namespace regina {
  */
 template <class T>
 class NMultiIndex {
- private:
+ protected:
   std::vector< T > data;
  public: 
  /**
@@ -117,6 +117,40 @@ class NMultiIndex {
   *  Output the k-tuple in format: 5,4,21,3,7
   */
   void writeTextShort(std::ostream& out) const;
+};
+
+/**
+ * Indexing the terms of a multi-variable polynomial. 
+ * only differs from NMultiIndex in the way operator<
+ * is implemented. Given two k-tuples [a1,...,ak] and
+ * [b1,...,bk] the a k-tuple is less than the b k-tuple
+ * if and only if either |a1|+...+|ak| < |b1|+...+|bk|
+ * or they're equal and [a1,...,ak] is lexicographically
+ * less than [b1,...,bk]
+ */
+template <class T>
+class NPolynomialIndex : public NMultiIndex<T> {
+ public:
+ /** 
+  * Constructor
+  */
+  NPolynomialIndex(unsigned long dim); // k == dim of multi-index
+ /**
+  *  Construct a 2-tuple, initialized to be (i1, i2)
+  */
+  NPolynomialIndex(const T& i1, const T& i2); // build a pair i1, i2
+ /**
+  *  Construct a 3-tuple, initialized to be (i1, i2, i3)
+  */
+  NPolynomialIndex(const T& i1, const T& i2, const T& i3); // build a triple i1, i2, i3
+ /**
+  *  Copy constructor.
+  */
+  NPolynomialIndex(const NPolynomialIndex &cloneMe);
+ /**
+  *  |i1|+|i2|+...+|ik| lexico order.
+  */
+  bool operator<(const NPolynomialIndex &q) const;
 };
 
 /**
@@ -302,6 +336,35 @@ for (unsigned long i=0; i<data.size(); i++)
  if (i!=0) out<<",";
  out<<data[i];
  }
+}
+
+// NPolynomialIndex
+
+template< class T >
+inline NPolynomialIndex<T>::NPolynomialIndex(unsigned long dim) : NMultiIndex<T>(dim) {}
+
+template< class T >
+inline NPolynomialIndex<T>::NPolynomialIndex(const T& i1, const T& i2) : NMultiIndex<T>(i1,i2) {}
+
+template< class T >
+inline NPolynomialIndex<T>::NPolynomialIndex(const T& i1, const T& i2, const T& i3) : NMultiIndex<T>(i1,i2.i3) {}
+
+template< class T >
+inline NPolynomialIndex<T>::NPolynomialIndex(const NPolynomialIndex<T> &cloneMe) : NMultiIndex<T>(cloneMe) {}
+
+template< class T >
+inline bool NPolynomialIndex<T>::operator<(const NPolynomialIndex<T> &q) const
+{ 
+ T sum1(0); T sum2(0); 
+ for (unsigned long i=0; i<this->data.size(); i++)
+  { sum1 += abs(this->data[i]); sum2 += abs(q.data[i]); }
+ if (sum1 < sum2) return true; if (sum2 > sum1) return false; 
+ for (unsigned long i=0; i<this->data.size(); i++) 
+  {
+   if (this->data[i]<q.data[i]) return true;
+   else if (this->data[i]>q.data[i]) return false;
+  }
+ return false;
 }
 
 // Inline functions for NSparseGrid

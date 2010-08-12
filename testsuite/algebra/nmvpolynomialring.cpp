@@ -35,7 +35,7 @@
 
 using regina::NLargeInteger;
 using regina::NMVPolynomialRing;
-using regina::NMultiIndex;
+using regina::NPolynomialIndex;
 
 class NMVPolynomialRingTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NMVPolynomialRingTest);
@@ -58,7 +58,7 @@ class NMVPolynomialRingTest : public CppUnit::TestFixture {
 	   NMVPolynomialRing< NLargeInteger > p1, p2, p3;
 	   for (unsigned long i=0; i<10; i++)
 	    {
-                NMultiIndex< signed long > I(2); 
+                NPolynomialIndex< signed long > I(2); 
                  I[0] = NLargeInteger::randomBinary(4).longValue() - 8;
                  I[1] = NLargeInteger::randomBinary(4).longValue() - 8;
 		p1 += NMVPolynomialRing< NLargeInteger >( NLargeInteger::randomBinary(7)-64, I );
@@ -83,7 +83,7 @@ class NMVPolynomialRingTest : public CppUnit::TestFixture {
 	   NMVPolynomialRing< NLargeInteger > p1, p2, p3;
 	   for (unsigned long i=0; i<10; i++)
 	    {
-                NMultiIndex< signed long > I(2); 
+                NPolynomialIndex< signed long > I(2); 
                  I[0] = NLargeInteger::randomBinary(4).longValue() - 8;
                  I[1] = NLargeInteger::randomBinary(4).longValue() - 8;
 		p1 += NMVPolynomialRing< NLargeInteger >( NLargeInteger::randomBinary(7)-64, I );
@@ -95,7 +95,7 @@ class NMVPolynomialRingTest : public CppUnit::TestFixture {
 		p3 += NMVPolynomialRing< NLargeInteger >( NLargeInteger::randomBinary(3)-4, I );
 	    }
 	   if ( (p1*p2)*p3 != p1*(p2*p3) ) CPPUNIT_FAIL("Multiplication not associative.");
-           NMVPolynomialRing< NLargeInteger > mvOne ( NLargeInteger::one, NMultiIndex< signed long >(0,0) ); 
+           NMVPolynomialRing< NLargeInteger > mvOne ( NLargeInteger::one, NPolynomialIndex< signed long >(0,0) ); 
 	   if ( p1 * mvOne != p1 ) CPPUNIT_FAIL("One does not exist (1).");
 	   if ( mvOne * p1 != p1 ) CPPUNIT_FAIL("One does not exist (2).");
 	   if ( p1 * p2 != p2 * p1 ) CPPUNIT_FAIL("Multiplication not commutative.");
@@ -108,7 +108,7 @@ class NMVPolynomialRingTest : public CppUnit::TestFixture {
 	   NMVPolynomialRing< NLargeInteger > p1, p2, p3;
 	   for (unsigned long i=0; i<10; i++)
 	    {
-                NMultiIndex< signed long > I(2); 
+                NPolynomialIndex< signed long > I(2); 
                  I[0] = NLargeInteger::randomBinary(4).longValue() - 8;
                  I[1] = NLargeInteger::randomBinary(4).longValue() - 8;
 		p1 += NMVPolynomialRing< NLargeInteger >( NLargeInteger::randomBinary(7)-64, I );
