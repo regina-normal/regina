@@ -248,6 +248,9 @@ class NSVPolynomialRing {
 
 /**
  * Produces a Groebner basis for the ideal.  Set laurentPoly=false to work in Z[t] rather than Z[t^\pm]
+ * Implements Groebner basis algorithms adapted for Laurent polynomial rings from Pauer and Unterkircher
+ * Groebner Basis for Ideals in Laurent Polynomial Rings and their Application to Systems of Difference
+ * Equations.  AAECC 9, 271--291 (1999). 
  */
 void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly=true );
 /**

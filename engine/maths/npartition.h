@@ -39,6 +39,7 @@
 #include <sstream>
 
 #include "utilities/nbitmask.h"
+#include <ostream>
 
 namespace regina {
 
@@ -74,6 +75,10 @@ public:
          */
         NPartition operator++();
         /**
+         *  Reset the partition, as in the constructor with the same arguments.
+         */
+        void reset(unsigned long SetSize, unsigned long SubSetSize=0, bool fixedSubsetSize=true);
+        /**
          * Has iteration passed the end of the list?
          */
         bool atEnd();
@@ -82,9 +87,21 @@ public:
          */
         bool atStart();
         /**
-         * Request the current partition.
+         * Request the current partition's NBitmask representation.
          */
         const NBitmask& partition() const;    
+        /**
+         * What is the order of set?
+         */
+        unsigned long sSize() const;
+        /**
+         * What is the order of the subsets we're iterating through? 
+         */
+        unsigned long ssSize() const;
+        /**
+         * A linear order on partitions -- the lexicographic order. 
+         */
+        bool operator<(const NPartition &that) const;
         /**
          * A vector description of the partition. 
          */    
@@ -93,12 +110,24 @@ public:
          * Text output in form of a NBitMask
          */
         std::string textString() const;
+        /**
+         * Text output in form of a NBitMask
+         */
+        friend std::ostream& operator<<(std::ostream& output, const NPartition& out);
 };
 
 
 inline NPartition::NPartition(unsigned long SetSize, unsigned long SubSetSize, bool fixedSubsetSize) : part(SetSize), 
   setSize(SetSize), subSetSize(SubSetSize), beforeStart(false), afterEnd(false), fixedSize(fixedSubsetSize)
 {  for (unsigned long i=0; i<subSetSize; i++) part.set(i, true); 
+   if (SubSetSize > SetSize) afterEnd=true;
+}
+
+inline void NPartition::reset(unsigned long SetSize, unsigned long SubSetSize, bool fixedSubsetSize) 
+{
+ setSize = SetSize; subSetSize = SubSetSize;  beforeStart = false; afterEnd = false; 
+ fixedSize = fixedSubsetSize;
+ for (unsigned long i=0; i<setSize; i++) part.set(i, (i<subSetSize) ? true : false); 
    if (SubSetSize > SetSize) afterEnd=true;
 }
 
@@ -130,6 +159,7 @@ inline NPartition NPartition::operator++()
       if (numOnesWithoutZerosToRight == setSize) afterEnd = true;
       else 
        {
+        subSetSize++;
         part.reset(); 
         for (unsigned long i=0; i<numOnesWithoutZerosToRight+1; i++) part.set(i, true); 
        }
@@ -146,7 +176,15 @@ inline bool NPartition::atStart()
 { return beforeStart; }
 
 inline const NBitmask& NPartition::partition() const
-{ return part; }        
+{ return part; }      
+ 
+inline bool NPartition::operator<(const NPartition &that) const
+{ // 0 < 1 lexico order.
+ for (unsigned long i=0; i<setSize; i++)
+  { if ( (!part.get(i)) && (that.part.get(i)) ) return true; 
+    if ( (part.get(i))  && (!that.part.get(i)) ) return false; }
+ return false;
+}
 
 inline std::string NPartition::textString() const
 {
@@ -155,6 +193,15 @@ inline std::string NPartition::textString() const
   ss<<( part.get(i) ? "1" : "0" );
  return ss.str();
 }
+
+inline unsigned long NPartition::sSize() const
+{ return setSize; }      
+
+inline unsigned long NPartition::ssSize() const
+{ return subSetSize; }      
+
+inline std::ostream& operator<<(std::ostream& output, const NPartition& out)
+ { output<<out.textString(); return output; }
 
 inline std::vector< unsigned long > NPartition::vectorDesc() const
 {

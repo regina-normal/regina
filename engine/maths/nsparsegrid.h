@@ -126,7 +126,8 @@ class NMultiIndex {
  * [b1,...,bk] the a k-tuple is less than the b k-tuple
  * if and only if either |a1|+...+|ak| < |b1|+...+|bk|
  * or they're equal and [a1,...,ak] is lexicographically
- * less than [b1,...,bk]
+ * less than [b1,...,bk]. See NMultiIndex class documentation
+ * for most class details.
  */
 template <class T>
 class NPolynomialIndex : public NMultiIndex<T> {

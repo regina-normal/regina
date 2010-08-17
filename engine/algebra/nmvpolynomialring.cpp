@@ -34,6 +34,7 @@
 
 #include <list>
 #include <vector>
+#include <algorithm>
 
 namespace regina {
 
@@ -45,7 +46,8 @@ bool MV_polynomial_comparison( const NMVPolynomialRing< NLargeInteger > &first, 
  // first, number of non-zero terms.
  if (first.degree() < second.degree()) return true; if (first.degree() > second.degree()) return false;
 
- // perhaps add a sort on the dimension of the Newton polytope
+ // perhaps add a sort on the size of the bounding diamond. Diameter than lexico on side lengths in decreasing
+ // order??  TODO
 
  // other things to sort on: ?vertices on the boundary? (expensive?), volume? 
  const std::map< NPolynomialIndex< signed long >, NLargeInteger* > fTerms(first.allTerms()); 
@@ -62,11 +64,56 @@ bool MV_polynomial_comparison( const NMVPolynomialRing< NLargeInteger > &first, 
  return true;
 }
 
+/**
+ * Given a polynomial in n variables, compute the maximum of \pm x1 + ... + \pm xn for all possible \pm
+ * signs, indexed by NPartitions of n-element sets.   
+ */
+void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly, 
+                           std::map< NPartition, signed long > &boundDiamond )
+{
+ if (poly.degree() == 0) return; boundDiamond.clear();
+ std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator I(poly.allTerms().begin());
+ unsigned long DIM(I->first.dim());
+ NPartition P( DIM, 0, false );
+ // initialize using first term of poly
+ while (!P.atEnd())
+  {
+   signed long sum(0); 
+   for (unsigned long i=0; i<DIM; i++)
+    { sum += ( P.partition().get(i) ? -I->first.entry(i) : I->first.entry(i)); }
+   boundDiamond.insert( std::pair< NPartition, signed long >(P, sum) );
+   ++P;
+  }
+ // now go through the rest of poly.
+ I++;
+ while (I!=poly.allTerms().end())
+  {
+   P.reset( DIM, 0, false );
+   while (!P.atEnd())
+    {
+     signed long sum(0); 
+     for (unsigned long i=0; i<DIM; i++) // error, should be taking ? max ? min ? something, not sum
+      { sum += ( P.partition().get(i) ? -I->first.entry(i) : I->first.entry(i)); }
+     boundDiamond[P] = std::max( sum, boundDiamond[P] );
+     ++P;
+    }
+   I++; // advance
+  }
+}  
+
+/**
+ * Given a multi-variable polynomial, multiply it appropriately by \pm 1 t^I so that its terms
+ * are as small as possible in the taxicab metric (i1,...,in) --> |i1| + ... + |in|
+ */
+void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
+{
+}
 
 // TODO this will be the remainder / division algorithm. 
+// To implement this we need to know which elements from the ideal can be translated to be inside the bounding
+// diamong for elt. 
 /*
-bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, NMVPolynomialRing< NLargeInteger > &elt, 
-                    bool laurentPoly )
+bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, NMVPolynomialRing< NLargeInteger > &elt )
 {
  if (elt.isZero()) return true; 
  if (ideal.size()==0) return false;
@@ -75,7 +122,8 @@ bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal
  do 
  { 
    didSomething=false;
-   // build a vector consisting of elements of ideal with width <= width of Elt
+   // build a vector consisting of elements of ideal with ?? in dimension 1
+   // it's a simple width constraint. Here...more subtle... TODO
    std::vector< NMVPolynomialRing< NLargeInteger > > indxId;
    std::list< NMVPolynomialRing< NLargeInteger > >::const_iterator i;
    for (i=ideal.begin(); i!=ideal.end(); i++)
@@ -122,7 +170,6 @@ bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal
  return elt.isZero();
 }
 */
-
 
 /**
  * Removes zeros, normalizes so 0th term is first non-zero term and 
@@ -171,6 +218,10 @@ void elementaryReductions( std::list< NMVPolynomialRing< NLargeInteger > > &idea
  *  Given a finitely-generated ideal in Z[t^\pm 1] this turns the ideal
  * into a Groebner basis for the ideal.  This is specifically for 
  * Laurent polynomial rings. 
+ *
+ * Implements Groebner basis algorithms adapted for Laurent polynomial rings from Pauer and Unterkircher
+ * Groebner Basis for Ideals in Laurent Polynomial Rings and their Application to Systems of Difference
+ * Equations.  AAECC 9, 271--291 (1999). 
  */
 /*
 void reduceIdeal( std::list< NMVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly )

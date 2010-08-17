@@ -44,6 +44,7 @@
 #include "maths/nlargeinteger.h"
 #include "algebra/NSVPolynomialRing.h"
 #include "utilities/ptrutils.h"
+#include "maths/npartition.h"
 
 namespace regina {
 
@@ -66,7 +67,8 @@ namespace regina {
  *
  * \testpart
  *
- * \todo Groebner basis.
+ * \todo Test variations of the Groebner basis algorithm: ones with more vs. less
+ *   clean-up routines, see how they compare speed-wise. 
  *
  * @author Ryan Budney
  */
@@ -176,7 +178,7 @@ class NMVPolynomialRing {
         signed long degree() const;
         /**
          * Returns the dimension of the Newton polytope. 
-         * Zero polynomial will have dimension -1. 
+         * Zero polynomial will have dimension -1.  TODO
          */
         signed long dimNewton() const;
 
@@ -203,6 +205,13 @@ class NMVPolynomialRing {
 	 */
         std::string texString() const;
 };
+
+/**
+ * Given a polynomial in n variables, compute the maximum of \pm x1 + ... + \pm xn for all possible \pm
+ * signs, indexed by NPartitions of n-element sets.   
+ */
+void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly, 
+                           std::map< NPartition, signed long > &boundDiamond );
 
 /**
  * Produces a Groebner basis for the ideal.  Set laurentPoly=false to work in Z[t] rather than Z[t^\pm]
