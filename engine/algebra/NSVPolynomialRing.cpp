@@ -216,7 +216,6 @@ void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &idea
  */
 void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly )
 { 
-//std::cout<<"A"; std::cout.flush();
  // Step 1: normalize list so that first non-zero term is t^0, and positive. Erase 0 entries.
  reduceIdealSortStep(ideal); // TODO: correct if laurentPoly false
  // Step 2: remove redundant elements -- walk through list and see if expressable in terms of others.
@@ -230,35 +229,22 @@ std::stringstream udSS;
  // Step 2a: if ideal is getting out-of-hand large, try to reduce it. 
  if ( (ideal.size()>10) && (didSomething)) { reduceIdealSortStep(ideal); elementaryReductions(ideal); }
  didSomething=false;
-//std::cout<<"B"; std::cout.flush();
 
  // Step 2b: cast the ideal to a vector
  std::vector< NSVPolynomialRing< NLargeInteger > > vecIdeal; 
 // std::set< NLargeInteger > allGCDs, commonGCDs;  unsigned long width=0; 
  std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator i; 
- for (i=ideal.begin(); i!=ideal.end(); i++) 
-  {// TODO: let's keep track of all possible GCDs created among the last terms. First 
-   //       among all polys (allGCDs), then among all polys of a common width (commonGCDs).  If a poly produces
-   //       nothing new, do not include it.
-// TODO GAA!!! I'm using gcdV, not killV!!
-   vecIdeal.push_back(*i);
-  }
-//std::cout<<" "<<vecIdeal.size()<<" ";
-//std::cout<<"C"; std::cout.flush();
+ for (i=ideal.begin(); i!=ideal.end(); i++) vecIdeal.push_back(*i);
 
  // Step 3: right GCDs -- ouch, easily get 2^32 length loop here. Can we optimise this? Perhaps for
  //         polynomials of a given width only use reps where we can produce interesting GCDs...
+
+ // TODO if the ideal size is "huge", perhaps consider doing a preliminary reduction involving only the
+ //      first half of the ideal to see if that doesn't help.  So we'll have a "big" flag, and a 
+ //      topend reduction a bottom end reduction, etc...
  NPartition subSet( ideal.size(), 2, false );
  while (!subSet.atEnd())
   {
-/*if ( (ideal.size()>10) ) 
- { 
-   std::string oldString(udSS.str()); udSS.str(""); 
-   udSS<<subSet.ssSize()<<" of "<<subSet.sSize(); 
-   if (oldString!=udSS.str()) { for (unsigned long i=0;i<oldString.length(); i++) std::cout<<"\b"; 
-   std::cout<<udSS.str(); std::cout.flush(); } 
- }*/
-
    std::vector< unsigned long > subsetV(subSet.vectorDesc());
    // make vector of right-leading coeffs, compute GCD
    std::vector< NLargeInteger > leadV(subsetV.size());
@@ -274,7 +260,6 @@ std::stringstream udSS;
    if (!reduceByIdeal( ideal, combo ) ) { ideal.push_back(combo); vecIdeal.push_back(combo); didSomething = true; }
    ++subSet;
   }
-//std::cout<<"D"; std::cout.flush();
 
  if ( (!laurentPoly) && didSomething ) goto reloop_loop; 
  if ( (!laurentPoly) && (!didSomething) ) { reduceIdealSortStep(ideal); elementaryReductions(ideal); return; }
@@ -284,13 +269,6 @@ std::stringstream udSS;
  NPartition subSet2( ideal.size(), 2, false );
  while (!subSet2.atEnd())
   {
-/*if ( (ideal.size()>10) ) 
- { 
-  std::string oldString(udSS.str()); udSS.str(""); 
-  udSS<<subSet2.ssSize()<<" of "<<subSet2.sSize(); 
-  if (oldString!=udSS.str()) { for (unsigned long i=0;i<oldString.length(); i++) std::cout<<"\b"; 
-  std::cout<<udSS.str(); std::cout.flush(); } 
- }*/
    std::vector< unsigned long > subsetV(subSet2.vectorDesc());
    // make vector of right-leading coeffs, compute GCD
    std::vector< NLargeInteger > leadV(subsetV.size());
@@ -306,15 +284,10 @@ std::stringstream udSS;
    if (!reduceByIdeal( ideal, combo ) ) { ideal.push_back(combo); vecIdeal.push_back(combo); didSomething = true; }
    ++subSet2;
   }
-//std::cout<<"E"; std::cout.flush();
-
  if (didSomething) goto reloop_loop;
-//std::cout<<"F"; std::cout.flush();
 
  reduceIdealSortStep(ideal);
  elementaryReductions(ideal);
-//std::cout<<"G"; std::cout.flush();
-
 }
 
 
