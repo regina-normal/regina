@@ -216,24 +216,35 @@ void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &idea
  */
 void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly )
 { 
+//std::cout<<"A"; std::cout.flush();
  // Step 1: normalize list so that first non-zero term is t^0, and positive. Erase 0 entries.
  reduceIdealSortStep(ideal); // TODO: correct if laurentPoly false
  // Step 2: remove redundant elements -- walk through list and see if expressable in terms of others.
  elementaryReductions(ideal); 
  bool didSomething=false; 
 
-//std::stringstream udSS;
+std::stringstream udSS;
 
  reloop_loop: // will have some goto calls that return here.
 
  // Step 2a: if ideal is getting out-of-hand large, try to reduce it. 
  if ( (ideal.size()>10) && (didSomething)) { reduceIdealSortStep(ideal); elementaryReductions(ideal); }
  didSomething=false;
+//std::cout<<"B"; std::cout.flush();
 
  // Step 2b: cast the ideal to a vector
  std::vector< NSVPolynomialRing< NLargeInteger > > vecIdeal; 
+// std::set< NLargeInteger > allGCDs, commonGCDs;  unsigned long width=0; 
  std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator i; 
- for (i=ideal.begin(); i!=ideal.end(); i++) vecIdeal.push_back(*i);
+ for (i=ideal.begin(); i!=ideal.end(); i++) 
+  {// TODO: let's keep track of all possible GCDs created among the last terms. First 
+   //       among all polys (allGCDs), then among all polys of a common width (commonGCDs).  If a poly produces
+   //       nothing new, do not include it.
+// TODO GAA!!! I'm using gcdV, not killV!!
+   vecIdeal.push_back(*i);
+  }
+//std::cout<<" "<<vecIdeal.size()<<" ";
+//std::cout<<"C"; std::cout.flush();
 
  // Step 3: right GCDs -- ouch, easily get 2^32 length loop here. Can we optimise this? Perhaps for
  //         polynomials of a given width only use reps where we can produce interesting GCDs...
@@ -248,7 +259,6 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
    std::cout<<udSS.str(); std::cout.flush(); } 
  }*/
 
-
    std::vector< unsigned long > subsetV(subSet.vectorDesc());
    // make vector of right-leading coeffs, compute GCD
    std::vector< NLargeInteger > leadV(subsetV.size());
@@ -259,11 +269,12 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
    std::vector< NLargeInteger > gcdV(subsetV.size()), killV(subsetV.size());
    gcd( leadV, gcdV, killV );
    NSVPolynomialRing< NLargeInteger > combo;
-   for (unsigned long j=0; j<gcdV.size(); j++)
-    combo += NSVPolynomialRing< NLargeInteger >(gcdV[j],maxExp - vecIdeal[subsetV[j]].lastTerm().first)*vecIdeal[subsetV[j]];
+   for (unsigned long j=0; j<killV.size(); j++)
+    combo += NSVPolynomialRing< NLargeInteger >(killV[j],maxExp - vecIdeal[subsetV[j]].lastTerm().first)*vecIdeal[subsetV[j]];
    if (!reduceByIdeal( ideal, combo ) ) { ideal.push_back(combo); vecIdeal.push_back(combo); didSomething = true; }
    ++subSet;
   }
+//std::cout<<"D"; std::cout.flush();
 
  if ( (!laurentPoly) && didSomething ) goto reloop_loop; 
  if ( (!laurentPoly) && (!didSomething) ) { reduceIdealSortStep(ideal); elementaryReductions(ideal); return; }
@@ -290,16 +301,20 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
    std::vector< NLargeInteger > gcdV(subsetV.size()), killV(subsetV.size());
    gcd( leadV, gcdV, killV );
    NSVPolynomialRing< NLargeInteger > combo;
-   for (unsigned long j=0; j<gcdV.size(); j++)
-    combo += NSVPolynomialRing< NLargeInteger >(gcdV[j],minExp - vecIdeal[subsetV[j]].firstTerm().first)*vecIdeal[subsetV[j]];
+   for (unsigned long j=0; j<killV.size(); j++)
+    combo += NSVPolynomialRing< NLargeInteger >(killV[j],minExp - vecIdeal[subsetV[j]].firstTerm().first)*vecIdeal[subsetV[j]];
    if (!reduceByIdeal( ideal, combo ) ) { ideal.push_back(combo); vecIdeal.push_back(combo); didSomething = true; }
    ++subSet2;
   }
+//std::cout<<"E"; std::cout.flush();
 
  if (didSomething) goto reloop_loop;
+//std::cout<<"F"; std::cout.flush();
 
  reduceIdealSortStep(ideal);
  elementaryReductions(ideal);
+//std::cout<<"G"; std::cout.flush();
+
 }
 
 
