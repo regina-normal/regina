@@ -222,26 +222,53 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
  elementaryReductions(ideal); 
  bool didSomething=false; 
 
-std::stringstream udSS;
-
  reloop_loop: // will have some goto calls that return here.
+ std::list< NSVPolynomialRing< NLargeInteger > >::iterator i; 
+ std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator ci; 
 
  // Step 2a: if ideal is getting out-of-hand large, try to reduce it. 
- if ( (ideal.size()>10) && (didSomething)) { reduceIdealSortStep(ideal); elementaryReductions(ideal); }
+ //if ( (ideal.size()>10) && (didSomething)) { reduceIdealSortStep(ideal); elementaryReductions(ideal); }
  didSomething=false;
 
- // Step 2b: cast the ideal to a vector
+ // Step 2b: if the ideal size is still "huge", break the ideal into two similar-sized ideals, perform reductions on
+ //          them, and amalgamate
+ if (ideal.size() > 10) // threshold for choosing to breaking things up
+  {
+   static const unsigned long bitSize(8); // break ideal into subideals with at most bitSize generators.
+   unsigned long numBlocks( ideal.size() / bitSize );
+   std::vector< std::list< NSVPolynomialRing< NLargeInteger > > > subIdeal(numBlocks);
+   unsigned long j=0, k=0;
+   for (ci=ideal.begin(); ci!=ideal.end(); ci++)
+    {
+     subIdeal[k].push_back( *ci );     
+     j++; if ( (j % bitSize == 0) && (k+1 < numBlocks) ) k++;
+    }
+   ideal.clear();
+
+   for (j=1; j<subIdeal.size(); j++)
+    {
+     reduceIdeal( subIdeal[0], laurentPoly ); i = subIdeal[j].begin();
+     while (i != subIdeal[j].end())
+      { if (reduceByIdeal( subIdeal[0], *i ) ) subIdeal[j].erase(i++); else i++; }
+     reduceIdeal( subIdeal[j], laurentPoly ); i = subIdeal[0].begin();
+     while (i != subIdeal[0].end())
+      { if (reduceByIdeal( subIdeal[j], *i ) ) subIdeal[0].erase(i++); else i++; }
+     // put ideal 0 and j together in 0
+     for (i=subIdeal[j].begin(); i!=subIdeal[j].end(); i++)
+      subIdeal[0].push_back(*i);
+     subIdeal[j].clear();
+     reduceIdealSortStep( subIdeal[0] ); elementaryReductions( subIdeal[0] );   
+    }
+   for (i=subIdeal[0].begin(); i!=subIdeal[0].end(); i++)
+    ideal.push_back(*i);
+   }
+ 
+ // Step 3: cast the ideal to a vector
  std::vector< NSVPolynomialRing< NLargeInteger > > vecIdeal; 
-// std::set< NLargeInteger > allGCDs, commonGCDs;  unsigned long width=0; 
- std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator i; 
  for (i=ideal.begin(); i!=ideal.end(); i++) vecIdeal.push_back(*i);
 
- // Step 3: right GCDs -- ouch, easily get 2^32 length loop here. Can we optimise this? Perhaps for
+ // Step 4: right GCDs -- ouch, easily get 2^32 length loop here. Can we optimise this? Perhaps for
  //         polynomials of a given width only use reps where we can produce interesting GCDs...
-
- // TODO if the ideal size is "huge", perhaps consider doing a preliminary reduction involving only the
- //      first half of the ideal to see if that doesn't help.  So we'll have a "big" flag, and a 
- //      topend reduction a bottom end reduction, etc...
  NPartition subSet( ideal.size(), 2, false );
  while (!subSet.atEnd())
   {
@@ -263,8 +290,8 @@ std::stringstream udSS;
 
  if ( (!laurentPoly) && didSomething ) goto reloop_loop; 
  if ( (!laurentPoly) && (!didSomething) ) { reduceIdealSortStep(ideal); elementaryReductions(ideal); return; }
- // Step 4: left GCDs
- if ( (ideal.size()>10) && (didSomething)) { reduceIdealSortStep(ideal); elementaryReductions(ideal); }
+ // Step 5: left GCDs
+ //if ( (ideal.size()>10) && (didSomething)) { reduceIdealSortStep(ideal); elementaryReductions(ideal); }
 
  NPartition subSet2( ideal.size(), 2, false );
  while (!subSet2.atEnd())
