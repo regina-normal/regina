@@ -149,6 +149,10 @@ class NPolynomialIndex : public NMultiIndex<T> {
   */
   NPolynomialIndex(const NPolynomialIndex &cloneMe);
  /**
+  * Negate the indices.
+  */
+  NPolynomialIndex operator-() const;
+ /**
   *  |i1|+|i2|+...+|ik| lexico order.
   */
   bool operator<(const NPolynomialIndex &q) const;
@@ -352,6 +356,15 @@ inline NPolynomialIndex<T>::NPolynomialIndex(const T& i1, const T& i2, const T& 
 
 template< class T >
 inline NPolynomialIndex<T>::NPolynomialIndex(const NPolynomialIndex<T> &cloneMe) : NMultiIndex<T>(cloneMe) {}
+
+template< class T >
+inline NPolynomialIndex<T> NPolynomialIndex<T>::operator-() const
+{
+ NPolynomialIndex<T> retval(this->data.size());
+ for (unsigned long i=0; i<retval.data.size(); i++)
+  retval.data[i] = -this->data[i];
+ return retval;
+}
 
 template< class T >
 inline bool NPolynomialIndex<T>::operator<(const NPolynomialIndex<T> &q) const

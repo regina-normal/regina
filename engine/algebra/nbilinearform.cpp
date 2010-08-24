@@ -91,7 +91,7 @@ const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & NBilinearForm::
 std::vector<NLargeInteger> NBilinearForm::evalCC(std::vector<NLargeInteger> &lcc, std::vector<NLargeInteger> &rcc) const
 {
  std::vector<NLargeInteger> retval(Range.getRankCC(), NLargeInteger::zero);
- static std::vector<NLargeInteger> nullVec(0);
+ static const std::vector<NLargeInteger> nullVec(0);
  if ( (lcc.size() != lDomain.getRankCC()) || (rcc.size() != rDomain.getRankCC()) ) return nullVec;
  // good to go.
 

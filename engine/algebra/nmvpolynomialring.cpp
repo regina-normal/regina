@@ -105,8 +105,30 @@ void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly,
  * Given a multi-variable polynomial, multiply it appropriately by \pm 1 t^I so that its terms
  * are as small as possible in the taxicab metric (i1,...,in) --> |i1| + ... + |in|
  */
+// We'll iterate to find R and delta
+// Step (1) set R to max{|x|, x index in the support of the polynomial}. Set delta to 0. 
+// Step (2) check to see which of the 2n faces of |x|=R the polynomial's support touches
+//          similarly for |x|=R-1
+// Step (3) if polynomial touches one face of |x|=R, but does not touch opposite face of
+//          |x|=R or |x|=R-1, shift polynomial towards that opp face. 
+// Step (4) Repeat (3) until can't do it anymore
+// Step (5) if support of polynomial doesn't touch any face, decrease R by one. 
+// Step (6) Loop to (2) if (5) did something, otherwise quit.   
+
 void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
 {
+ // let's get rid of the silly cases
+ if (poly.degree() == 0) return; 
+ if (poly.degree() == 1) { poly = poly*NMVPolynomialRing< NLargeInteger >(NLargeInteger::one, -poly.allTerms().begin()->first);
+                          return; }
+ //okay, we're past the trivial cases. let's figure out the radius of this polynomial. 
+ unsigned long dim( poly.allTerms().begin()->first.dim() );
+ std::vector< signed long > delta( dim, 0 );
+ unsigned long R(0); 
+ std::vector< bool > touchBdry( 2*dim, false ); // entry [2*i + j] rep whether or not there is element on (top/bot (j)) of i-th bdry face 
+ std::vector< bool > besideBdry( 2*dim, false ); 
+ 
+
 }
 
 // TODO this will be the remainder / division algorithm. 
