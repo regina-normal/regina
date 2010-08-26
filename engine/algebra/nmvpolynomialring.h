@@ -393,12 +393,9 @@ inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator * (const NMVPolynomia
   {
    // lets multiply *I->second and *J->second
    T* P(new NLargeInteger( (*I->second)*(*J->second) ) );
-   NPolynomialIndex< signed long > sumIdx( I->first );
-   for (unsigned long i=0; i<I->first.dim(); i++)
-    sumIdx[i] += J->first.entry(i);
    std::pair< typename std::map< NPolynomialIndex< signed long >, T* >::iterator, bool > res = 
     retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* > (
-    sumIdx, P ) );
+    I->first + J->first, P ) );
    if (res.second == false) { (*res.first->second) += (*P); delete P; }
   }
 

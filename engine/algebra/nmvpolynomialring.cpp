@@ -111,9 +111,7 @@ void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly,
 //          similarly for |x|=R-1
 // Step (3) if polynomial touches one face of |x|=R, but does not touch opposite face of
 //          |x|=R or |x|=R-1, shift polynomial towards that opp face. 
-// Step (4) Repeat (3) until can't do it anymore
-// Step (5) if support of polynomial doesn't touch any face, decrease R by one. 
-// Step (6) Loop to (2) if (5) did something, otherwise quit.   
+// Step (3') Repeat (3) until can't do it anymore
 
 void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
 {
@@ -121,12 +119,53 @@ void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
  if (poly.degree() == 0) return; 
  if (poly.degree() == 1) { poly = poly*NMVPolynomialRing< NLargeInteger >(NLargeInteger::one, -poly.allTerms().begin()->first);
                           return; }
+ std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator ci;
  //okay, we're past the trivial cases. let's figure out the radius of this polynomial. 
  unsigned long dim( poly.allTerms().begin()->first.dim() );
- std::vector< signed long > delta( dim, 0 );
+ dim = poly.allTerms().begin()->first.dim();
+ // Step 1: let's find R  add up abs of last term of polynomial
  unsigned long R(0); 
+ for (unsigned long i=0; i<dim; i++) R += abs(poly.allTerms().rbegin()->first.entry(i));
+
+ // Step 2: support hits which faces? Possible loop-back point.
+ std::vector< signed long > delta( dim, 0 );
+ find_bdry_faces: // loop to here if we need to re-determine which boundary faces the support touches
  std::vector< bool > touchBdry( 2*dim, false ); // entry [2*i + j] rep whether or not there is element on (top/bot (j)) of i-th bdry face 
  std::vector< bool > besideBdry( 2*dim, false ); 
+ for (ci=poly.allTerms().begin(); ci!=poly.allTerms().end(); ci++)
+  {
+   unsigned long tR(0); 
+   for (unsigned long i=0; i<dim; i++) tR+=abs(ci->first.entry(i)-delta[i]);
+   if (tR==R) for (unsigned long i=0; i<dim; i++) 
+    {
+     if (ci->first.entry(i)-delta[i]>=0) touchBdry[2*i]=true; 
+     if (ci->first.entry(i)-delta[i]<=0) touchBdry[2*i+1]=true;
+    } else
+   if (tR+1==R) for (unsigned long i=0; i<dim; i++) 
+    {
+     if (ci->first.entry(i)-delta[i]>=0) besideBdry[2*i]=true; 
+     if (ci->first.entry(i)-delta[i]<=0) besideBdry[2*i+1]=true;
+    }
+  }
+
+ // Step 3: Find pair of opp faces where you're touching outside of one and not the inside of the other.
+ //         if so, shift, reduce R and loop back to find_bdry_faces, if not continue.
+ for (unsigned long i=0; i<dim; i++)
+  {
+   if (touchBdry[2*i]  && !touchBdry[2*i+1] && !besideBdry[2*i+1])
+    {// touches the + side not the - side
+        delta[i]--; R-=1;
+        goto find_bdry_faces;
+    }
+   if (!touchBdry[2*i] && touchBdry[2*i+1] && !besideBdry[2*i])
+    {// touches the - side, not the + side
+        delta[i]++;  R-=1;
+        goto find_bdry_faces;
+    }
+  } // TODO perhaps we should add a normalization convention to push polynomial to the + side of the box?
+    // ie favour 1+x instead of x^{-1}+1
+
+ // Step 4:  modify polynomial appropriately. TODO
  
 
 }

@@ -128,6 +128,8 @@ class NMultiIndex {
  * or they're equal and [a1,...,ak] is lexicographically
  * less than [b1,...,bk]. See NMultiIndex class documentation
  * for most class details.
+ *
+ * class T must possess an operator+, operator+=
  */
 template <class T>
 class NPolynomialIndex : public NMultiIndex<T> {
@@ -151,7 +153,11 @@ class NPolynomialIndex : public NMultiIndex<T> {
  /**
   * Negate the indices.
   */
-  NPolynomialIndex operator-() const;
+  NPolynomialIndex<T> operator-() const;
+ /**
+  * Add two multi-indices. Addition of vectors.
+  */
+  NPolynomialIndex<T> operator+(const NPolynomialIndex &R) const;
  /**
   *  |i1|+|i2|+...+|ik| lexico order.
   */
@@ -363,6 +369,15 @@ inline NPolynomialIndex<T> NPolynomialIndex<T>::operator-() const
  NPolynomialIndex<T> retval(this->data.size());
  for (unsigned long i=0; i<retval.data.size(); i++)
   retval.data[i] = -this->data[i];
+ return retval;
+}
+
+template< class T >
+inline NPolynomialIndex<T> NPolynomialIndex<T>::operator+(const NPolynomialIndex &R) const
+{
+ NPolynomialIndex<T> retval(this->data.size());
+ for (unsigned long i=0; i<retval.data.size(); i++)
+  retval.data[i] = this->data[i] + R.data[i];
  return retval;
 }
 
