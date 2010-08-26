@@ -165,9 +165,11 @@ void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
   } // TODO perhaps we should add a normalization convention to push polynomial to the + side of the box?
     // ie favour 1+x instead of x^{-1}+1
 
- // Step 4:  modify polynomial appropriately. TODO
- 
-
+ // Step 4:  modify polynomial appropriately. 
+ NPolynomialIndex Delta(dim); 
+ for (unsigned long i=0; i<dim; i++) Delta[i] = -delta[i];
+ NMVPolynomialRing< NLargeInteger > trans( NLargeInteger::one, Delta );
+ poly = poly * trans; 
 }
 
 // TODO this will be the remainder / division algorithm. 
