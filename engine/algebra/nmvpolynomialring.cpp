@@ -166,7 +166,7 @@ void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
     // ie favour 1+x instead of x^{-1}+1
 
  // Step 4:  modify polynomial appropriately. 
- NPolynomialIndex Delta(dim); 
+ NPolynomialIndex< signed long > Delta(dim); 
  for (unsigned long i=0; i<dim; i++) Delta[i] = -delta[i];
  NMVPolynomialRing< NLargeInteger > trans( NLargeInteger::one, Delta );
  poly = poly * trans; 
