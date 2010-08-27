@@ -42,7 +42,7 @@
 
 #include "maths/nsparsegrid.h"
 #include "maths/nlargeinteger.h"
-#include "algebra/NSVPolynomialRing.h"
+#include "algebra/nsvpolynomialring.h"
 #include "utilities/ptrutils.h"
 #include "maths/npartition.h"
 

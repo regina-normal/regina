@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file algebra/NSVPolynomialRing.h
+/*! \file algebra/nsvpolynomialring.h
  *  \brief A single variable polynomial ring object, implemented sparsely.
  */
 

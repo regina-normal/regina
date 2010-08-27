@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "algebra/NSVPolynomialRing.h"
+#include "algebra/nsvpolynomialring.h"
 #include "maths/nrational.h"
 #include "maths/nmatrixint.h"
 #include "maths/matrixops.h"

@@ -41,7 +41,7 @@
 #include "shareableobject.h"
 #include "maths/nlargeinteger.h"
 #include "algebra/nmarkedabeliangroup.h"
-#include "algebra/NSVPolynomialRing.h"
+#include "algebra/nsvpolynomialring.h"
 #include "maths/nrational.h" // eventually I should get rid of this
 #include "maths/nlargeinteger.h"
 #include "maths/nprimes.h"
