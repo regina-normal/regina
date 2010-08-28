@@ -67,7 +67,7 @@ bool MV_polynomial_comparison( const NMVPolynomialRing< NLargeInteger > &first, 
 /**
  * Given a polynomial in n variables, compute the maximum of \pm x1 + ... + \pm xn for all possible \pm
  * signs, indexed by NPartitions of n-element sets.   
- */
+ */ // TODO this is presently antiquated.  Delete unless there's a purpose for it.
 void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly, 
                            std::map< NPartition, signed long > &boundDiamond )
 {
@@ -105,14 +105,6 @@ void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly,
  * Given a multi-variable polynomial, multiply it appropriately by \pm 1 t^I so that its terms
  * are as small as possible in the taxicab metric (i1,...,in) --> |i1| + ... + |in|
  */
-// We'll iterate to find R and delta
-// Step (1) set R to max{|x|, x index in the support of the polynomial}. Set delta to 0. 
-// Step (2) check to see which of the 2n faces of |x|=R the polynomial's support touches
-//          similarly for |x|=R-1
-// Step (3) if polynomial touches one face of |x|=R, but does not touch opposite face of
-//          |x|=R or |x|=R-1, shift polynomial towards that opp face. 
-// Step (3') Repeat (3) until can't do it anymore
-
 void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
 {
  // let's get rid of the silly cases
@@ -152,18 +144,22 @@ void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
  //         if so, shift, reduce R and loop back to find_bdry_faces, if not continue.
  for (unsigned long i=0; i<dim; i++)
   {
-   if (touchBdry[2*i]  && !touchBdry[2*i+1] && !besideBdry[2*i+1])
+   if (touchBdry[2*i]  && !touchBdry[2*i+1] && !besideBdry[2*i+1]) // touch + side, not beside - side
     {// touches the + side not the - side
-        delta[i]--; R-=1;
+        delta[i]++; R--;
         goto find_bdry_faces;
-    }
-   if (!touchBdry[2*i] && touchBdry[2*i+1] && !besideBdry[2*i])
+    } else
+   if (!touchBdry[2*i] && touchBdry[2*i+1] && !besideBdry[2*i]) // touch - side, not beside + side
     {// touches the - side, not the + side
-        delta[i]++;  R-=1;
+        delta[i]--;  R--;
         goto find_bdry_faces;
+    } else
+   if (!touchBdry[2*i]) // do not touch + side
+    {
+        delta[i]++; // normalize to the + side if possible, i.e. 
+        goto find_bdry_faces; // favour 1 + x over x^{-1} + 1
     }
-  } // TODO perhaps we should add a normalization convention to push polynomial to the + side of the box?
-    // ie favour 1+x instead of x^{-1}+1
+  } 
 
  // Step 4:  modify polynomial appropriately. 
  NPolynomialIndex< signed long > Delta(dim); 

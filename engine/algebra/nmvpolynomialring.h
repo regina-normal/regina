@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file algebra/NMVPolynomialRing.h
+/*! \file algebra/nmvpolynomialring.h
  *  \brief A multi-variable polynomial ring object, implemented sparsely.
  */
 
@@ -210,8 +210,14 @@ class NMVPolynomialRing {
  * Given a polynomial in n variables, compute the maximum of \pm x1 + ... + \pm xn for all possible \pm
  * signs, indexed by NPartitions of n-element sets.   
  */
-void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly, 
-                           std::map< NPartition, signed long > &boundDiamond );
+//void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly, 
+//                           std::map< NPartition, signed long > &boundDiamond );
+
+/**
+ * Given a multi-variable polynomial, multiply it appropriately by \pm 1 t^I so that its terms
+ * are as small as possible in the taxicab metric (i1,...,in) --> |i1| + ... + |in|
+ */
+void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly );
 
 /**
  * Produces a Groebner basis for the ideal.  Set laurentPoly=false to work in Z[t] rather than Z[t^\pm]
