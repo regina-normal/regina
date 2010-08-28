@@ -146,21 +146,21 @@ class NPolynomialIndex : public NMultiIndex<T> {
   *  Construct a 3-tuple, initialized to be (i1, i2, i3)
   */
   NPolynomialIndex(const T& i1, const T& i2, const T& i3); // build a triple i1, i2, i3
- /**
-  *  Copy constructor.
-  */
+  /**
+   *  Copy constructor.
+   */
   NPolynomialIndex(const NPolynomialIndex &cloneMe);
- /**
-  * Negate the indices.
-  */
+  /**
+   * Return the negation the indices.
+   */
   NPolynomialIndex<T> operator-() const;
- /**
-  * Add two multi-indices. Addition of vectors.
-  */
+  /**
+   * Add two multi-indices. Addition of vectors.
+   */
   NPolynomialIndex<T> operator+(const NPolynomialIndex &R) const;
- /**
-  *  |i1|+|i2|+...+|ik| lexico order.
-  */
+  /**
+   *  |i1|+|i2|+...+|ik| lexico order.
+   */
   bool operator<(const NPolynomialIndex &q) const;
 };
 

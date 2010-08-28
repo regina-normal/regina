@@ -146,6 +146,10 @@ class NMVPolynomialRing {
 	 * Negate this polynomial.
 	 */
 	NMVPolynomialRing<T> operator -() const;
+	/**
+	 * Multiply this polynomial by a scalar.
+	 */
+	NMVPolynomialRing<T>& operator *=(const T& q);
 
         /**
 	 * Returns the the coefficient of t^i for this polynomial.
@@ -216,8 +220,11 @@ class NMVPolynomialRing {
 /**
  * Given a multi-variable polynomial, multiply it appropriately by \pm 1 t^I so that its terms
  * are as small as possible in the taxicab metric (i1,...,in) --> |i1| + ... + |in|
+ *
+ * Given a polynomial like x^5-x^4 the bias is towards presenting it as
+ * 1-x, but setting plusBias=false would give you x^{-1}-1
  */
-void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly );
+void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, bool plusBias=true );
 
 /**
  * Produces a Groebner basis for the ideal.  Set laurentPoly=false to work in Z[t] rather than Z[t^\pm]
@@ -361,6 +368,24 @@ inline NMVPolynomialRing<T> operator * (const T &k, const NMVPolynomialRing<T>& 
   }
  return retval;
 }
+
+template <class T>
+inline	NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator *=(const T& q)
+{
+ typename std::map< NPolynomialIndex< signed long >, T* >::iterator ci;
+ if (q == T::zero) // deallocate everything
+  {
+   for (ci = cof.begin(); ci != cof.end(); ci++) 
+  	  delete ci->second;
+   cof.clear();
+  } 
+ else for (ci=cof.begin(); ci!=cof.end(); ci++)
+    {
+     (*ci->second) *= q;
+    }     
+ return (*this);
+}
+
 
 template <class T>
 inline std::ostream& operator << (std::ostream& out, const NMVPolynomialRing<T>& p)

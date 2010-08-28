@@ -105,7 +105,7 @@ void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly,
  * Given a multi-variable polynomial, multiply it appropriately by \pm 1 t^I so that its terms
  * are as small as possible in the taxicab metric (i1,...,in) --> |i1| + ... + |in|
  */
-void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
+void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, bool &plusBias )
 {
  // let's get rid of the silly cases
  if (poly.degree() == 0) return; 
@@ -154,9 +154,14 @@ void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
         delta[i]--;  R--;
         goto find_bdry_faces;
     } else
-   if (!touchBdry[2*i]) // do not touch + side
+   if ( plusBias && !touchBdry[2*i]) // does not touch + side and we don't like that
     {
         delta[i]++; // normalize to the + side if possible, i.e. 
+        goto find_bdry_faces; // favour 1 + x over x^{-1} + 1
+    } else
+   if ( !plusBias && !touchBdry[2*i+1]) // does not touch the - side and we don't like that
+    {
+        delta[i]--; // normalize to the + side if possible, i.e. 
         goto find_bdry_faces; // favour 1 + x over x^{-1} + 1
     }
   } 
@@ -165,22 +170,26 @@ void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly )
  NPolynomialIndex< signed long > Delta(dim); 
  for (unsigned long i=0; i<dim; i++) Delta[i] = -delta[i];
  NMVPolynomialRing< NLargeInteger > trans( NLargeInteger::one, Delta );
- poly = poly * trans; 
+ poly = poly * trans;
+
+ // Step 5: ensure the smallest coefficient is positive
+ if (*poly.allTerms().begin()->second < 0) poly*=(-NLargeInteger::one);
 }
 
 // TODO this will be the remainder / division algorithm. 
 // To implement this we need to know which elements from the ideal can be translated to be inside the bounding
 // diamong for elt. 
-/*
 bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, NMVPolynomialRing< NLargeInteger > &elt )
 {
  if (elt.isZero()) return true; 
  if (ideal.size()==0) return false;
+ recentreNormalize( elt, false ); // normalize, shift to left-side
 
  bool didSomething;
  do 
  { 
    didSomething=false;
+/*
    // build a vector consisting of elements of ideal with ?? in dimension 1
    // it's a simple width constraint. Here...more subtle... TODO
    std::vector< NMVPolynomialRing< NLargeInteger > > indxId;
@@ -223,12 +232,13 @@ bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal
         elt -= NMVPolynomialRing< NLargeInteger >( q*gcdV[i], topD-indxId[i].firstTerm().first )*indxId[i];
       }
     }
+*/
  }
  while ( (didSomething) && (!elt.isZero()) );
+ recentreNormalize( elt, true ); // normalize, shift to right side for presentation purposes
 
  return elt.isZero();
 }
-*/
 
 /**
  * Removes zeros, normalizes so 0th term is first non-zero term and 
