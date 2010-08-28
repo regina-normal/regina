@@ -95,7 +95,7 @@ class NMVPolynomialRing {
 	/**
 	 * Destructor.
  	 */
-	virtual ~NMVPolynomialRing();
+	~NMVPolynomialRing();
 
         /**
          * Creates a polynomial that is a clone of the given

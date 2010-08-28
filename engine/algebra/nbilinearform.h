@@ -230,13 +230,13 @@ class NBilinearForm : public ShareableObject {
          * todo! maybe talk about nullity, symmetry, l/rdomain, range, etc.
          * various invariants if they make sense, etc.
          */
-        virtual void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
         /**
          * todo! maybe talk about nullity, symmetry, l/rdomain, range, etc.
          * various invariants if they make sense, etc.
          */
-        virtual void writeTextLong(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
 };
 

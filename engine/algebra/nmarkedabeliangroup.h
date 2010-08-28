@@ -197,7 +197,7 @@ class NMarkedAbelianGroup : public ShareableObject {
         /**
          * Destroys the group.
          */
-        virtual ~NMarkedAbelianGroup();
+        ~NMarkedAbelianGroup();
 
         /**
          * Returns the rank of the group.
@@ -312,7 +312,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @param out the stream to write to.
          */
-        virtual void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
         /**
          * Returns the requested free generator in the original chain
@@ -695,7 +695,7 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         /**
          * Destructor.
          */
-        virtual ~NHomMarkedAbelianGroup();
+        ~NHomMarkedAbelianGroup();
 
 	/**
 	 * Given two NHomMarkedAbelianGroups, you have two diagrams:
@@ -782,14 +782,14 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          *
          * @param out the stream to write to.
          */
-        virtual void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
         /**
          * A more detailed text representation of the homomorphism.
          *
          * @param out the stream to write to.
          */
-	virtual void writeTextLong(std::ostream& out) const;
+	void writeTextLong(std::ostream& out) const;
 
         /**
          * Returns the domain of this homomorphism.
