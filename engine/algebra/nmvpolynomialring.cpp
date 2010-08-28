@@ -105,7 +105,7 @@ void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly,
  * Given a multi-variable polynomial, multiply it appropriately by \pm 1 t^I so that its terms
  * are as small as possible in the taxicab metric (i1,...,in) --> |i1| + ... + |in|
  */
-void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, bool &plusBias )
+void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, bool plusBias )
 {
  // let's get rid of the silly cases
  if (poly.degree() == 0) return; 

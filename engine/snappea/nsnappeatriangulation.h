@@ -36,6 +36,7 @@
 #endif
 
 #include "shareableobject.h"
+#include "utilities/nthread.h"
 
 // Forward declaration of SnapPea structures.
 struct Triangulation;
@@ -116,6 +117,8 @@ class NSnapPeaTriangulation : public ShareableObject {
         static bool kernelMessages;
             /**< Should the SnapPea kernel write diagnostic messages to
                  standard output? */
+        static NMutex m_Snap;
+            /**< Protect kernelMessages with a mutex */
 
     public:
         /**
@@ -353,10 +356,12 @@ inline bool NSnapPeaTriangulation::kernelMessagesEnabled() {
 }
 
 inline void NSnapPeaTriangulation::enableKernelMessages(bool enabled) {
+    NMutex::MutexLock ml(NSnapPeaTriangulation::m_Snap);
     kernelMessages = enabled;
 }
 
 inline void NSnapPeaTriangulation::disableKernelMessages() {
+    NMutex::MutexLock ml(NSnapPeaTriangulation::m_Snap);
     kernelMessages = false;
 }
 

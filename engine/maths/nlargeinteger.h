@@ -38,6 +38,7 @@
 #include <gmp.h>
 #include <iostream>
 #include <string>
+#include "utilities/nthread.h"
 
 /**
  * \hideinitializer
@@ -98,6 +99,8 @@ class NLargeInteger {
             /**< Used for generation of random NLargeIntegers. */
         static bool randInitialised;
             /**< Have we yet initialised randState? */
+        static NMutex m_GMP;
+            /**< Mutex to protect the GMP random state data. */
 
     public:
         /**

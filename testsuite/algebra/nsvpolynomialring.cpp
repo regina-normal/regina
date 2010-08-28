@@ -28,7 +28,7 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "algebra/NSVPolynomialRing.h"
+#include "algebra/nsvpolynomialring.h"
 #include "maths/nlargeinteger.h"
 #include "testsuite/utilities/testutilities.h"
 

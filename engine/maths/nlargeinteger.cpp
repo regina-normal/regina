@@ -31,11 +31,15 @@
 
 namespace regina {
 
+// initialize const static data
 const NLargeInteger NLargeInteger::zero;
 const NLargeInteger NLargeInteger::one(1);
 const NLargeInteger NLargeInteger::infinity(true, true);
+
+// initialize non-constant static data
 gmp_randstate_t NLargeInteger::randState;
 bool NLargeInteger::randInitialised = false;
+NMutex NLargeInteger::m_GMP;
 
 std::string NLargeInteger::stringValue(int base) const {
     if (infinite)
@@ -172,6 +176,7 @@ NLargeInteger NLargeInteger::divisionAlg(const NLargeInteger& divisor,
 }
 
 NLargeInteger NLargeInteger::randomBoundedByThis() {
+    NMutex::MutexLock ml(NLargeInteger::m_GMP);
     if (! randInitialised) {
         gmp_randinit_default(randState);
         randInitialised = true;
@@ -183,6 +188,7 @@ NLargeInteger NLargeInteger::randomBoundedByThis() {
 }
 
 NLargeInteger NLargeInteger::randomBinary(unsigned long n) {
+    NMutex::MutexLock ml(NLargeInteger::m_GMP);
     if (! randInitialised) {
         gmp_randinit_default(randState);
         randInitialised = true;
@@ -194,6 +200,7 @@ NLargeInteger NLargeInteger::randomBinary(unsigned long n) {
 }
 
 NLargeInteger NLargeInteger::randomCornerBinary(unsigned long n) {
+    NMutex::MutexLock ml(NLargeInteger::m_GMP);
     if (! randInitialised) {
         gmp_randinit_default(randState);
         randInitialised = true;

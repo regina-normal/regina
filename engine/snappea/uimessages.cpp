@@ -31,8 +31,11 @@
 
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/SnapPea.h"
+#include "utilities/nthread.h"
 
+// initialize static data
 bool regina::NSnapPeaTriangulation::kernelMessages = false;
+regina::NMutex regina::NSnapPeaTriangulation::m_Snap;
 
 /**
  * Supply bare-bones UI messaging functions for the SnapPea kernel to use.
