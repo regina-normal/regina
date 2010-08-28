@@ -44,7 +44,9 @@ void writeResUsage(std::ostream& out) {
     unsigned long utime, stime, vsize;
 
     int dtmp;
-    static char stmp[256];
+    // Note to Ben, previously stmp was a static char stmp[256]. Why static?
+    // I'm erasing the static.  No affect on test suite.  --Ryan
+    char stmp[256];
     unsigned long lutmp;
     long ldtmp;
 
