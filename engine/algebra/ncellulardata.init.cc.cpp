@@ -36,9 +36,6 @@
 #include <list>
 #include <cmath>
 
-#include <iostream>
-#include <sstream>
-
 namespace regina {
  
 // routine fills out genCC for the ChainComplexLocator == STD_coord, all dimensions

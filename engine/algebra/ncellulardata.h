@@ -101,8 +101,9 @@ class Dim4Triangulation;
  *        Farber-Levine pairings. 
  * \todo  7) Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
  *        clear what all the computations mean. 
- * \todo  8) Make all of the Regina engine POSIX pthread safe.  Seems like it isn't right now but beyond
- *        the random routines in NLargeInteger it's not clear what could be problematic. 
+ * \todo  8) Make all of the Regina engine POSIX pthread safe.  Make a thread-pool version of the test suite. 
+ *        Right now NCellularData, probably some aspect of the Alexander Ideal construction process is the 
+ *        main culprit. 
  * \todo \optlong We should add Bocksteins and the long exact sequence associated to a change-of-coefficient map.
  *
  * Guide to ncellulardata.*.cpp files:

@@ -26,11 +26,7 @@
 /* end stub */
 
 #include "algebra/ncellulardata.h"
-
 #include <map>
-
-#include <iostream>
-#include <sstream>
 
 namespace regina {
 

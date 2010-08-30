@@ -36,9 +36,6 @@
 #include <list>
 #include <cmath>
 
-#include <iostream>
-#include <sstream>
-
 namespace regina {
 
 // only used in the NCellularData constructor

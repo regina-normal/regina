@@ -35,9 +35,6 @@
 #include <list>
 #include <cmath>
 
-#include <iostream>
-#include <sstream>
-
 namespace regina {
 
 

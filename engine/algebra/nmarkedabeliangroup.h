@@ -876,22 +876,6 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         void writeReducedMatrix(std::ostream& out) const;
 };
 
-/**
-  *  The bilinear form class is designed to hold homomorphisms from the tensor product of
-  *  two marked abelian groups to a marked abelian group.  This object allows for the computation
-  *  of the Kawauchi-Kojima invariants of the torsion linking form of 3-manifolds, and the
-  *  signature of a 4-manifold. 
-  */
-/*
-class NBilinearForm : public ShareableObject {
-    private:
-	NMarkedAbelianGroup lDomain, rDomain, Range;
-        // data type which holds the pairing needs to be a 3-dimensional array of NLargeIntegers or maybe just
-        // long ints, and we can have the reduced pairing.  Should we even store the original pairing? 
-    public:
-};
-*/
-
 /*@}*/
 
 // Inline functions for NMarkedAbelianGroup
@@ -963,7 +947,6 @@ inline const NMatrixInt& NMarkedAbelianGroup::getN() const {
 inline const NLargeInteger& NMarkedAbelianGroup::coefficients() const {
 	return coeff;
 }
-
 
 // Inline functions for NHomMarkedAbelianGroup
 
