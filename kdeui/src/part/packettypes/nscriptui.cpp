@@ -412,7 +412,7 @@ void NScriptUI::compile() {
     ReginaPart* part = enclosingPane->getPart();
     if (part->getPythonManager().compileScript(ui, &part->getPreferences(),
             editInterface->text() + "\n\n") == 0) {
-        #ifdef HAVE_BOOST_PYTHON
+        #ifdef BOOST_PYTHON_FOUND
         KMessageBox::information(ui,
             i18n("The script compiles successfully."), i18n("Success"));
         #endif

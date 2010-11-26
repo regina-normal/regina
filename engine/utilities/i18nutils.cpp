@@ -37,7 +37,7 @@ namespace i18n {
 
 bool Locale::initialised = false;
 
-#ifdef HAVE_ICONV
+#ifdef ICONV_FOUND
 const iconv_t IConvStreamBuffer::cdNone((iconv_t)(-1));
 #endif
 
@@ -58,7 +58,7 @@ IConvStreamBuffer* IConvStreamBuffer::open(std::ostream& dest,
 
     sink = &dest;
 
-#ifdef HAVE_ICONV
+#ifdef ICONV_FOUND
     cd = iconv_open(destCode, srcCode);
     if (cd == cdNone) {
         if (errno != EINVAL)
@@ -79,7 +79,7 @@ IConvStreamBuffer* IConvStreamBuffer::open(std::ostream& dest,
 IConvStreamBuffer* IConvStreamBuffer::close() throw() {
     sync();
 
-#ifdef HAVE_ICONV
+#ifdef ICONV_FOUND
     if (cd == cdNone) {
         // We're passing data through untranslated; nothing more to do.
         return this;
@@ -108,7 +108,7 @@ IConvStreamBuffer::int_type IConvStreamBuffer::overflow(
         pbump(1);
     }
 
-#ifdef HAVE_ICONV
+#ifdef ICONV_FOUND
     // Do we know how to translate between encodings?  If not, just
     // send the data straight through to the destination stream.
     if (cd == cdNone) {

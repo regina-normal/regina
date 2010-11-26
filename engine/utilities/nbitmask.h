@@ -1243,10 +1243,10 @@ struct InternalBitmaskLen64<true> {
 
 template <>
 struct InternalBitmaskLen64<false> {
-#if HAVE_LONG_LONG
+#if LONG_LONG_FOUND
     // The C standard guarantees that sizeof(long long) >= 8.
     // However, the C++ standard does not require long long to exist at
-    // all (hence the HAVE_LONG_LONG test).
+    // all (hence the LONG_LONG_FOUND test).
     typedef NBitmask1<unsigned long long> Type;
 #else
     // The standard guarantees that sizeof(long) >= 4.

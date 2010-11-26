@@ -66,7 +66,7 @@ void PythonManager::openPythonReference(QWidget* parent) {
             "<tt>%1/</tt>.</qt>").arg(docDir));
 }
 
-#ifdef HAVE_BOOST_PYTHON
+#ifdef BOOST_PYTHON_FOUND
 
 #include "python/pythonconsole.h"
 

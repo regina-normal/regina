@@ -221,7 +221,7 @@ class BitManipulator<T, 4> : public GenericBitManipulator<T, 4> {
 
 // Support 64-bit processing natively if we can; otherwise we will fall
 // back to the generic two-lots-of-32-bit implementation.
-#if defined(HAVE_NUMERIC_64)
+#if defined(NUMERIC_64_FOUND)
 template <typename T>
 class BitManipulator<T, 8> : public GenericBitManipulator<T, 8> {
     public:
@@ -244,7 +244,7 @@ class BitManipulator<T, 8> : public GenericBitManipulator<T, 8> {
                 ((x & T(0xFFFFFFFF00000000)) >> 32);
         }
 };
-#elif defined(HAVE_NUMERIC_64_LL)
+#elif defined(NUMERIC_64_LL_FOUND)
 template <typename T>
 class BitManipulator<T, 8> : public GenericBitManipulator<T, 8> {
     public:
