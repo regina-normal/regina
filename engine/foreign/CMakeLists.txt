@@ -7,6 +7,5 @@ set ( FILES csvsurfacelist dehydration orb pdf snappea )
 foreach ( SOURCE_FILE ${FILES} )
   set ( SOURCES ${SOURCES} foreign/${SOURCE_FILE})
 endforeach(SOURCE_FILE)
-
-# Set the variable in the parent directory
-set( FOREIGN_SOURCES ${SOURCES} PARENT_SCOPE)
+set(SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES csvsurfacelist.h dehydration.h orb.h pdf.h snappea.h DESTINATION ${INCLUDEDIR}/foreign)

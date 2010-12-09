@@ -9,4 +9,5 @@ foreach ( SOURCE_FILE ${FILES} )
 endforeach(SOURCE_FILE)
 
 # Set the variable in the parent directory
-set( SUBCOMPLEX_SOURCES ${SOURCES} PARENT_SCOPE)
+set( SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES naugtrisolidtorus.h nblockedsfs.h nblockedsfsloop.h nblockedsfspair.h nblockedsfstriple.h nl31pillow.h nlayeredchain.h nlayeredchainpair.h nlayeredlensspace.h nlayeredloop.h nlayeredsolidtorus.h nlayeredsurfacebundle.h nlayering.h npillowtwosphere.h npluggedtorusbundle.h nplugtrisolidtorus.h nsatannulus.h nsatblock.h nsatblockstarter.h nsatblocktypes.h nsatregion.h nsnappeacensustri.h nsnappedball.h nsnappedtwosphere.h nspiralsolidtorus.h nstandardtri.h ntrisolidtorus.h ntrivialtri.h ntxicore.h DESTINATION ${INCLUDEDIR}/subcomplex)

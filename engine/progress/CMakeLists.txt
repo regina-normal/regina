@@ -9,4 +9,5 @@ foreach ( SOURCE_FILE ${FILES} )
 endforeach(SOURCE_FILE)
 
 # Set the variable in the parent directory
-set( PROGRESS_SOURCES ${SOURCES} PARENT_SCOPE)
+set( SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES nprogress.h nprogressmanager.h nprogresstypes.h DESTINATION ${INCLUDEDIR}/progress)

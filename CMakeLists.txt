@@ -5,9 +5,9 @@ set (PACKAGE_NAME regina)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # Modules needed for IOS check and function existence
-include( CheckCXXSourceCompiles)
-include( CheckFunctionExists)
-
+include( CheckCXXSourceCompiles )
+include( CheckFunctionExists )
+include( ExtraDist )
 # Version
 set (PACKAGE_VERSION 4.6.1)
 
@@ -23,12 +23,11 @@ set (PACKAGE_BUGREPORT "regina-user@lists.sourceforge.net")
 
 # Useful directories
 
-set (PREFIX /usr)
-set (DATADIR ${PREFIX}/share)
-set (PKGDATADIR ${DATADIR}/regina)
-set (LIBDIR ${PREFIX}/lib)
-set (PKGLIBDIR ${LIBDIR}/regina)
-
+set (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
+set (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
+set (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib)
+set (PKGLIBDIR ${LIBDIR}/${PACKAGE_NAME})
+set (INCLUDEDIR include/${PACKAGE_NAME})
 
 # Determine if std::ios::nocreate is valid
 check_cxx_source_compiles("
@@ -64,6 +63,11 @@ find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIR})
 find_package(ICONV REQUIRED)
 
+find_package(Threads REQUIRED)
+if(NOT CMAKE_USE_PTHREADS_INIT)
+  message(FATAL "Regina requires pthread support")
+endif(NOT CMAKE_USE_PTHREADS_INIT)
+
 # Not a package per se, but finds right header file
 # and right namespace
 find_package(HashSet)
@@ -78,6 +82,8 @@ find_package(HashSet)
 #find_package(JPEG)
 
 
+set(ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
+set(ENGINE_LIBRARY regina-engine)
 
 # Configure file
 configure_file (
@@ -86,3 +92,4 @@ configure_file (
 )
 set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wno-deprecated)
 add_subdirectory(engine)
+add_subdirectory(utils)

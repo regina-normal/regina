@@ -9,4 +9,5 @@ foreach ( SOURCE_FILE ${FILES} )
 endforeach(SOURCE_FILE)
 
 # Set the variable in the parent directory
-set( SNAPPEA_SOURCES ${SOURCES} PARENT_SCOPE)
+set( ${SOURCES} PARENT_SCOPE)
+install(FILES nsnappeatriangulation.h DESTINATION ${INCLUDEDIR}/snappea)

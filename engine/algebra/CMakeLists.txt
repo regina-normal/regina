@@ -7,6 +7,6 @@ set ( FILES nabeliangroup ngrouppresentation nmarkedabeliangroup nxmlalgebraread
 foreach ( SOURCE_FILE ${FILES} )
   set ( SOURCES ${SOURCES} algebra/${SOURCE_FILE})
 endforeach(SOURCE_FILE)
+set(SOURCES ${SOURCES} PARENT_SCOPE)
 
-# Set the variable in the parent directory
-set( ALGEBRA_SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES nabeliangroup.h ngrouppresentation.h nmarkedabeliangroup.h nxmlalgebrareader.h DESTINATION ${INCLUDEDIR}/algebra)

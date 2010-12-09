@@ -9,4 +9,5 @@ foreach ( SOURCE_FILE ${FILES} )
 endforeach(SOURCE_FILE)
 
 # Set the variable in the parent directory
-set( SURFACES_SOURCES ${SOURCES} PARENT_SCOPE)
+set( SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES filterregistry.h flavourregistry.h ndisc.h ndisctype.h nnormalsurface.h nnormalsurfacelist.h normalspec.tcc nprism.h nsanstandard.h nsmirrored.h nsquad.h nsquadoct.h nsstandard.h nsurfacefilter.h nsurfaceset.h nsurfacesubset.h nxmlfilterreader.h nxmlsurfacereader.h sfcombination.h sfproperties.h DESTINATION ${INCLUDEDIR}/surfaces)

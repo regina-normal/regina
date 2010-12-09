@@ -7,6 +7,5 @@ set ( FILES ngraphloop ngraphpair ngraphtriple nhandlebody nlensspace nmanifold 
 foreach ( SOURCE_FILE ${FILES} )
   set ( SOURCES ${SOURCES} manifold/${SOURCE_FILE})
 endforeach(SOURCE_FILE)
-
-# Set the variable in the parent directory
-set( MANIFOLD_SOURCES ${SOURCES} PARENT_SCOPE)
+set(SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES ngraphloop.h ngraphpair.h ngraphtriple.h nhandlebody.h nlensspace.h nmanifold.h notation.h nsfs.h nsfsaltset.h nsimplesurfacebundle.h nsnappeacensusmfd.h ntorusbundle.h DESTINATION ${INCLUDEDIR}/manifold)

@@ -9,4 +9,5 @@ foreach ( SOURCE_FILE ${FILES} )
 endforeach(SOURCE_FILE)
 
 # Set the variable in the parent directory
-set( SPLIT_SOURCES ${SOURCES} PARENT_SCOPE)
+set( SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES nsigcensus.h nsigisomorphism.h nsignature.h DESTINATION ${INCLUDEDIR}/split)

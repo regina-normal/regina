@@ -9,4 +9,5 @@ foreach ( SOURCE_FILE ${FILES} )
 endforeach(SOURCE_FILE)
 
 # Set the variable in the parent directory
-set( FILE_SOURCES ${SOURCES} PARENT_SCOPE)
+set(SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES ncontainer.h npacket.h npacketlistener.h npdf.h nscript.h ntext.h nxmlpacketreader.h nxmlpacketreaders.h packetregistry.h DESTINATION ${INCLUDEDIR}/packet)

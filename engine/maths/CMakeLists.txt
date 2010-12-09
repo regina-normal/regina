@@ -7,6 +7,5 @@ set ( FILES approx matrixops nfastray nlargeinteger nmatrix2 nperm3 nperm4 nprim
 foreach ( SOURCE_FILE ${FILES} )
   set ( SOURCES ${SOURCES} maths/${SOURCE_FILE})
 endforeach(SOURCE_FILE)
-
-# Set the variable in the parent directory
-set( MATHS_SOURCES ${SOURCES} PARENT_SCOPE)
+set(SOURCES ${SOURCES} PARENT_SCOPE)
+install( FILES approx.h matrixops.h nfastray.h nfastvector.h nlargeinteger.h nmatrix.h nmatrix2.h nmatrixint.h nperm3.h nperm4.h nprimes.h nrational.h nray.h numbertheory.h nvector.h nvectordense.h nvectormatrix.h nvectorunit.h DESTINATION ${INCLUDEDIR}/maths)

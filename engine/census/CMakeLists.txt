@@ -7,6 +7,5 @@ set ( FILES closedprimemin compact ncensus nfacepairing ngluingperms ngluingperm
 foreach ( SOURCE_FILE ${FILES} )
   set ( SOURCES ${SOURCES} census/${SOURCE_FILE})
 endforeach(SOURCE_FILE)
-
-# Set the variable in the parent directory
-set( CENSUS_SOURCES ${SOURCES} PARENT_SCOPE)
+set(SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES ncensus.h nfacepairing.h ngluingperms.h ngluingpermsearcher.h DESTINATION ${INCLUDEDIR}/census)

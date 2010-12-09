@@ -9,4 +9,5 @@ foreach ( SOURCE_FILE ${FILES} )
 endforeach(SOURCE_FILE)
 
 # Set the variable in the parent directory
-set( TRIANGULATION_SOURCES ${SOURCES} PARENT_SCOPE)
+set( SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES nboundarycomponent.h ncomponent.h nedge.h nexampletriangulation.h nface.h nfacepair.h nhomologicaldata.h nisomorphism.h nperm.h npermit.h ntetface.h ntetrahedron.h ntriangulation.h nvertex.h nxmltrireader.h DESTINATION ${INCLUDEDIR}/triangulation)

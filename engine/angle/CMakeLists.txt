@@ -7,6 +7,5 @@ set ( FILES nanglestructure nanglestructurelist nxmlanglestructreader )
 foreach ( SOURCE_FILE ${FILES} )
   set ( SOURCES ${SOURCES} angle/${SOURCE_FILE})
 endforeach(SOURCE_FILE)
-
-# Set the variable in the parent directory
-set( ANGLE_SOURCES ${SOURCES} PARENT_SCOPE)
+set(SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES nanglestructure.h nanglestructurelist.h nxmlanglestructreader.h DESTINATION ${INCLUDEDIR}/angle)

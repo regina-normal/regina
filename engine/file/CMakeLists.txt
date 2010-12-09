@@ -7,6 +7,5 @@ set ( FILES nfile nfileinfo nglobaldirs nresources nxmlcallback nxmlfile)
 foreach ( SOURCE_FILE ${FILES} )
   set ( SOURCES ${SOURCES} file/${SOURCE_FILE})
 endforeach(SOURCE_FILE)
-
-# Set the variable in the parent directory
-set( FILE_SOURCES ${SOURCES} PARENT_SCOPE)
+set(SOURCES ${SOURCES} PARENT_SCOPE)
+install(FILES  nfile.h nfileinfo.h nfilepropertyreader.h nglobaldirs.h nresources.h nxmlcallback.h nxmlelementreader.h nxmlfile.h DESTINATION ${INCLUDEDIR}/file)
