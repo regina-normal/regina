@@ -25,6 +25,7 @@ add_definitions(-DREGINA_PYLIBDIR=\"${PKGLIBDIR}/python\")
 include_directories(${CMAKE_SOURCE_DIR}/engine)
 include_directories(${CMAKE_BINARY_DIR}/engine)
 add_library("regina-engine" SHARED ${SOURCES} )
+add_library("regina-engine_static" STATIC ${SOURCES} )
 target_link_libraries(regina-engine xml2 gmp m z pthread)
 
 set( HEADERS ${HEADERS} docs.h engine.h shareableobject.h )
