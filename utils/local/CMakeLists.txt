@@ -5,7 +5,8 @@ set(UTILS censuscat dehydrate edgelinks equiv identify manifolds normal normal_c
 foreach(UTIL ${UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
   add_executable(${UTIL} ${SOURCE_FILE})
-  target_link_libraries(${UTIL} ${ENGINE_LIBRARY})
+  include_directories(${POPT_INCLUDE_DIR})
+  target_link_libraries(${UTIL} ${ENGINE_LIBRARY} popt)
 endforeach(UTIL)
 
 if(MPI_FOUND)
