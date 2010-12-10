@@ -73,13 +73,24 @@ endif(NOT CMAKE_USE_PTHREADS_INIT)
 find_package(HashSet)
 
 # Optionals
-#find_package(Boost COMPONENTS python)
-#find_package(PythonLibs)
-#find_package(PythonInterp)
+find_package(MPI)
+
+if(ENABLE_PYTHON)
+  find_package(Boost COMPONENTS python REQUIRED)
+  find_package(PythonLibs REQUIRED)
+  find_package(PythonInterp REQUIRED)
+else(ENABLE_PYTHON)
+  if(DISABLE_PYTHON)
+  else(DISABLE_PYTHON)
+    find_package(Boost COMPONENTS python)
+    find_package(PythonLibs)
+    find_package(PythonInterp)
+  endif(DISABLE_PYTHON)
+endif(ENABLE_PYTHON)
+
+#find_package(JPEG)
 #find_package(KDE4)
 #find_package(Qt4)
-#find_package(MPI)
-#find_package(JPEG)
 
 
 set(ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
@@ -93,3 +104,7 @@ configure_file (
 set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wno-deprecated)
 add_subdirectory(engine)
 add_subdirectory(utils)
+if(Boost_FOUND AND Boost_python_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+  add_subdirectory(pylib)  
+  add_subdirectory(python)  
+endif(Boost_FOUND AND Boost_python_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
