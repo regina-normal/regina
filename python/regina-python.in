@@ -160,11 +160,11 @@ if ($interactive and not $script) {
 
 # --- Check that the current options are reasonable. ---
 
-my $prefix = "@prefix@";
-my $exec_prefix = "@exec_prefix@";
-my $datadir = "@datadir@";
-my $libdir = "@libdir@";
-my $package = "@PACKAGE@";
+my $prefix = "@CMAKE_INSTALL_PREFIX@";
+my $exec_prefix = "@CMAKE_INSTALL_PREFIX@";
+my $datadir = "@DATADIR@";
+my $libdir = "@LIBDIR@";
+my $package = "@PACKAGE_NAME@";
 
 if (! $regina_home) {
     my $prog_dir = dirname($prog_name);
@@ -175,7 +175,7 @@ if (! $regina_home) {
         # Setting $regina_home is interesting, because we want things
         # from both the builddir and the srcdir.  Use both.
         my $builddir = "$prog_dir/..";
-        my $srcdir = "@top_srcdir@";
+        my $srcdir = "@CMAKE_BINARY_DIR@";
         $srcdir =~ /^\// or $srcdir = "$prog_dir/$srcdir";
 
         &setReginaHome($builddir, $srcdir);
