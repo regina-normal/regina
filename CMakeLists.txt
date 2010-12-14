@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
-project (Regina)
+project (regina)
 set (PACKAGE_NAME regina)
+set (PACKAGE_PRETTY_NAME Regina)
 # Look here for Find___.cmake modules
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
@@ -10,7 +11,7 @@ include( CheckFunctionExists )
 include( ExtraDist )
 # Version
 set (PACKAGE_VERSION 4.6.1)
-
+set (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_STRING}")
 # Extract major/minor version
 # Note: The PACKAGE_VERSION_MAJOR "output" is discarded, since it matches the
 # whole string
@@ -95,6 +96,7 @@ endif(ENABLE_PYTHON)
 
 set(ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 set(ENGINE_LIBRARY regina-engine)
+set(ENGINE_LIBRARY_STATIC regina-engine_static)
 
 # Configure file
 configure_file (
@@ -104,7 +106,9 @@ configure_file (
 set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wno-deprecated)
 add_subdirectory(engine)
 add_subdirectory(utils)
-if(Boost_FOUND AND Boost_python_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+
+if(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   add_subdirectory(pylib)  
   add_subdirectory(python)  
-endif(Boost_FOUND AND Boost_python_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+  message(STATUS "Python bindings enabled")
+endif(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
