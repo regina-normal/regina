@@ -6,7 +6,7 @@ set(UTILS distinguish_mpi equiv_mpi normal_compare_mpi normal_mpi tricensus_freq
 foreach(UTIL ${UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
   add_executable(${UTIL} ${SOURCE_FILE})
-  target_link_libraries(${UTIL} ${ENGINE_LIBRARY} ${MPI_LIBRARY} ${MPI_LIBRARIES})
+  target_link_libraries(${UTIL} ${ENGINE_LIBRARY} ${MPI_LIBRARY} ${MPI_LIBRARIES} ${POPT_LIBRARY})
 endforeach(UTIL)
 
 

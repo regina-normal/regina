@@ -6,7 +6,7 @@ set(UTILS tricensus-mpi)
 foreach(UTIL ${UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
   add_executable(${UTIL} ${SOURCE_FILE})
-  target_link_libraries(${UTIL} ${ENGINE_LIBRARY} ${MPI_LIBRARY} ${MPI_LIBRARIES})
+  target_link_libraries(${UTIL} ${ENGINE_LIBRARY} ${MPI_LIBRARY} ${MPI_LIBRARIES} ${POPT_LIBRARY})
 endforeach(UTIL)
 
 
