@@ -168,7 +168,7 @@ my $package = "@PACKAGE_NAME@";
 
 if (! $regina_home) {
     my $prog_dir = dirname($prog_name);
-    if ( -f "$prog_dir/regina.la" and -f "$prog_dir/../config.log") {
+    if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt") {
         &info("I: Running from the source tree.\n");
         $from_source = 1;
 
@@ -198,7 +198,7 @@ if (! $python_cmd) {
 }
 
 if (! $python_lib_dir) {
-    &setPythonLibDir($from_source ? "$regina_home/python/.libs" :
+    &setPythonLibDir($from_source ? "$regina_home/python/" :
         "$libdir/$package/python");
 }
 
@@ -260,10 +260,10 @@ if ($nolibs) {
 if ($from_source) {
     # Since we're running from the source tree, we need to ensure that
     # the calculation engine library can be found.
-    &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/.libs");
+    &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/");
 
     # MacOS users will need DYLD_LIBRARY_PATH also.
-    &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/.libs");
+    &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/");
 }
 
 my @fullCommandLine = ( $python_cmd );
