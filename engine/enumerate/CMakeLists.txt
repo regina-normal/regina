@@ -1,11 +1,11 @@
 # enumerate
 
 # Files to compile
-set ( FILES nenumconstraint ndoubledescription ndoubledescriptor)
+SET ( FILES nenumconstraint ndoubledescription ndoubledescriptor)
 
 # Prepend folder name
-foreach ( SOURCE_FILE ${FILES} )
-  set ( SOURCES ${SOURCES} enumerate/${SOURCE_FILE})
-endforeach(SOURCE_FILE)
-set(SOURCES ${SOURCES} PARENT_SCOPE)
-install(FILES nenumconstraint.h ndoubledescription.h ndoubledescription.tcc ndoubledescriptor.h ndoubledescriptor.tcc DESTINATION ${INCLUDEDIR}/enumerate)
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} enumerate/${SOURCE_FILE})
+ENDFOREACH(SOURCE_FILE)
+SET(SOURCES ${SOURCES} PARENT_SCOPE)
+INSTALL(FILES nenumconstraint.h ndoubledescription.h ndoubledescription.tcc ndoubledescriptor.h ndoubledescriptor.tcc DESTINATION ${INCLUDEDIR}/enumerate)

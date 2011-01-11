@@ -1,10 +1,10 @@
 # file 
 
 # Files to compile
-set ( FILES nfileinfo nglobaldirs nxmlfile pyfile)
+SET ( FILES nfileinfo nglobaldirs nxmlfile pyfile)
 
 # Prepend folder name
-foreach ( SOURCE_FILE ${FILES} )
-  set ( SOURCES ${SOURCES} file/${SOURCE_FILE})
-endforeach(SOURCE_FILE)
-set(SOURCES ${SOURCES} PARENT_SCOPE)
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} file/${SOURCE_FILE})
+ENDFOREACH(SOURCE_FILE)
+SET(SOURCES ${SOURCES} PARENT_SCOPE)

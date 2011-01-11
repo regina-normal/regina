@@ -1,6 +1,6 @@
 
-set(pylibdir ${PKGDATADIR}/pylib)
+SET(pylibdir ${PKGDATADIR}/pylib)
 
-set(pylib_files README.txt loadCensus.py packetType.py)
-extra_dist(FILES ${pylib_files} DESTINATION ${pylibdir})
+SET(pylib_files README.txt loadCensus.py packetType.py)
+EXTRA_DIST(FILES ${pylib_files} DESTINATION ${pylibdir})
 

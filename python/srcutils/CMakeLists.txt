@@ -1,1 +1,1 @@
-extra_dist(FILES README.txt props)
+EXTRA_DIST(FILES README.txt props)

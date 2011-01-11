@@ -1,12 +1,12 @@
 # split 
 
 # Files to compile
-set ( FILES nsignature pysplit)
+SET ( FILES nsignature pysplit)
 
 # Prepend folder name
-foreach ( SOURCE_FILE ${FILES} )
-  set ( SOURCES ${SOURCES} split/${SOURCE_FILE})
-endforeach(SOURCE_FILE)
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} split/${SOURCE_FILE})
+ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
-set( SOURCES ${SOURCES} PARENT_SCOPE)
+SET( SOURCES ${SOURCES} PARENT_SCOPE)

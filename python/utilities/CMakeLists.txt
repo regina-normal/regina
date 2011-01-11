@@ -1,12 +1,12 @@
 # utilities
 
 # Files to compile
-set ( FILES i18nutils nbooleans osutils pyutilities)
+SET ( FILES i18nutils nbooleans osutils pyutilities)
 
 # Prepend folder name
-foreach ( SOURCE_FILE ${FILES} )
-  set ( SOURCES ${SOURCES} utilities/${SOURCE_FILE})
-endforeach(SOURCE_FILE)
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} utilities/${SOURCE_FILE})
+ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
-set( SOURCES ${SOURCES} PARENT_SCOPE)
+SET( SOURCES ${SOURCES} PARENT_SCOPE)

@@ -1,11 +1,11 @@
 # census
 
 # Files to compile
-set ( FILES closedprimemin compact ncensus nfacepairing ngluingperms ngluingpermsearcher)
+SET ( FILES closedprimemin compact ncensus nfacepairing ngluingperms ngluingpermsearcher)
 
 # Prepend folder name
-foreach ( SOURCE_FILE ${FILES} )
-  set ( SOURCES ${SOURCES} census/${SOURCE_FILE})
-endforeach(SOURCE_FILE)
-set(SOURCES ${SOURCES} PARENT_SCOPE)
-install(FILES ncensus.h nfacepairing.h ngluingperms.h ngluingpermsearcher.h DESTINATION ${INCLUDEDIR}/census)
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} census/${SOURCE_FILE})
+ENDFOREACH(SOURCE_FILE)
+SET(SOURCES ${SOURCES} PARENT_SCOPE)
+INSTALL(FILES ncensus.h nfacepairing.h ngluingperms.h ngluingpermsearcher.h DESTINATION ${INCLUDEDIR}/census)

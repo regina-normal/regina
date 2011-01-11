@@ -1,12 +1,12 @@
 # triangulation 
 
 # Files to compile
-set ( FILES nboundarycomponent ncomponent nedge nexampletriangulation nface nfacepair nhomologicaldata nisomorphism ntetface ntetrahedron ntriangulation nvertex pytriangulation)
+SET ( FILES nboundarycomponent ncomponent nedge nexampletriangulation nface nfacepair nhomologicaldata nisomorphism ntetface ntetrahedron ntriangulation nvertex pytriangulation)
 
 # Prepend folder name
-foreach ( SOURCE_FILE ${FILES} )
-  set ( SOURCES ${SOURCES} triangulation/${SOURCE_FILE})
-endforeach(SOURCE_FILE)
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} triangulation/${SOURCE_FILE})
+ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
-set( SOURCES ${SOURCES} PARENT_SCOPE)
+SET( SOURCES ${SOURCES} PARENT_SCOPE)

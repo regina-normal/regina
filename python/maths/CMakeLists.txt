@@ -1,10 +1,10 @@
 # maths 
 
 # Files to compile
-set ( FILES matrixops nlargeinteger nmatrixint nmatrix2 nperm3 nperm4 nprimes nrational numbertheory pymaths)
+SET ( FILES matrixops nlargeinteger nmatrixint nmatrix2 nperm3 nperm4 nprimes nrational numbertheory pymaths)
 
 # Prepend folder name
-foreach ( SOURCE_FILE ${FILES} )
-  set ( SOURCES ${SOURCES} maths/${SOURCE_FILE})
-endforeach(SOURCE_FILE)
-set(SOURCES ${SOURCES} PARENT_SCOPE)
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} maths/${SOURCE_FILE})
+ENDFOREACH(SOURCE_FILE)
+SET(SOURCES ${SOURCES} PARENT_SCOPE)

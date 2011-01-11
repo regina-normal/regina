@@ -1,19 +1,19 @@
 # snappea 
 
 # Files to compile
-set ( FILES nsnappeatriangulation uimessages)
+SET ( FILES nsnappeatriangulation uimessages)
 
 
 # Prepend folder name
-foreach ( SOURCE_FILE ${FILES} )
-  set ( SOURCES ${SOURCES} snappea/${SOURCE_FILE})
-endforeach(SOURCE_FILE)
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} snappea/${SOURCE_FILE})
+ENDFOREACH(SOURCE_FILE)
 
-add_subdirectory(kernel)
+ADD_SUBDIRECTORY(kernel)
 
 
 # Set the variable in the parent directory
-set(SOURCES ${SOURCES} PARENT_SCOPE)
+SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
-install(FILES nsnappeatriangulation.h DESTINATION ${INCLUDEDIR}/snappea)
+INSTALL(FILES nsnappeatriangulation.h DESTINATION ${INCLUDEDIR}/snappea)
 
