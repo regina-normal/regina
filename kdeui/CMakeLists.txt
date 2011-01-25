@@ -1,0 +1,3 @@
+
+INCLUDE(KDE4Defaults)
+ADD_SUBDIRECTORY(src)
