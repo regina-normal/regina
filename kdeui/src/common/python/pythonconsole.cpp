@@ -48,20 +48,22 @@
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kmessagebox.h>
-#include <kpopupmenu.h>
 #include <kstatusbar.h>
 #include <ktextedit.h>
 #include <qfile.h>
-#include <qhbox.h>
 #include <qlabel.h>
 #include <qtextcodec.h>
 #include <qtextstream.h>
-#include <qvbox.h>
 #include <qwhatsthis.h>
+
+#include <QHBoxLayout>
+#include <QMenu>
+#include <QVBoxLayout>
 
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         const ReginaPrefSet* initialPrefs) :
-        KMainWindow(parent, "PythonConsole#"), manager(useManager) {
+        //KMainWindow(parent, "PythonConsole#"), manager(useManager) {
+        KMainWindow(parent), manager(useManager) {
     // Initialise preferences.
     if (initialPrefs)
         prefs = *initialPrefs;
@@ -71,44 +73,53 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         resize(500, 400);
 
     // Set up the main widgets.
-    QVBox* box = new QVBox(this);
-
-    session = new KTextEdit(box);
-    session->setTextFormat(Qt::LogText);
-    session->setWordWrap(prefs.pythonWordWrap ? QTextEdit::WidgetWidth :
-        QTextEdit::NoWrap);
+    QWidget* box = new QWidget(this);
+    QVBoxLayout* layout = new QVBoxLayout;
+    session = new KTextEdit();
+    session->setReadOnly(true);
+    session->setWordWrapMode(prefs.pythonWordWrap ? QTextOption::WordWrap :
+        QTextOption::NoWrap);
     session->setAutoFormatting(QTextEdit::AutoNone);
     session->setFont(KGlobalSettings::fixedFont());
-    session->setFocusPolicy(QWidget::NoFocus);
-    QWhatsThis::add(session, i18n("This area stores a history of the entire "
+    session->setFocusPolicy(Qt::NoFocus);
+    session->setWhatsThis( i18n("This area stores a history of the entire "
         "Python session, including commands that have been typed and the "
         "output they have produced."));
-    box->setStretchFactor(session, 1);
+    layout->addWidget(session);
+    layout->setStretchFactor(session, 1);
+    box->setLayout(layout);
 
-    QHBox* inputArea = new QHBox(box);
-    QWhatsThis::add(inputArea, i18n("Type your Python commands into "
+    QWidget* inputArea = new QWidget(box);
+    QHBoxLayout *inputAreaLayout = new QHBoxLayout;
+    
+    inputArea->setWhatsThis( i18n("Type your Python commands into "
         "this box."));
-    prompt = new QLabel(inputArea);
+    prompt = new QLabel();
     prompt->setFont(KGlobalSettings::fixedFont());
+    inputAreaLayout->addWidget(prompt);
 
-    input = new CommandEdit(inputArea);
+    input = new CommandEdit();
     input->setFont(KGlobalSettings::fixedFont());
     input->setSpacesPerTab(prefs.pythonSpacesPerTab);
     input->setFocus();
     connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
-
+    inputAreaLayout->addWidget(input);
+    inputArea->setLayout(inputAreaLayout);
     setCentralWidget(box);
     box->show();
 
     // Set up the actions.
     // Don't use XML files since we don't know whether we're in the shell or
     // the part.
-    KPopupMenu* menuConsole = new KPopupMenu(this);
-    KPopupMenu* menuEdit = new KPopupMenu(this);
-    KPopupMenu* menuHelp = new KPopupMenu(this);
+    QMenu* menuConsole = new QMenu(this);
+    QMenu* menuEdit = new QMenu(this);
+    QMenu* menuHelp = new QMenu(this);
 
-    KAction* act = new KAction(i18n("&Save Session"), "filesave", CTRL+Key_S,
+    //KAction* act = new KAction(i18n("&Save Session"), "filesave", CTRL+Key_S,
+    //    this, SLOT(saveLog()), actionCollection(), "console_save");
+    KAction* act = new KAction(KIcon("filesave",i18n("&Save Session"), 
         this, SLOT(saveLog()), actionCollection(), "console_save");
+    act->setShortcut(tr("Ctrl+s"));
     act->setToolTip(i18n("Save session history"));
     act->setWhatsThis(i18n("Save the entire history of this Python session "
         "into a text file."));
@@ -437,4 +448,4 @@ void PythonConsole::ErrorStream::processOutput(const std::string& data) {
         console_->addError(data.c_str());
 }
 
-#include "pythonconsole.moc"
+// #include "pythonconsole.moc"

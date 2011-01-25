@@ -34,7 +34,7 @@
 #define __REGINAPREFSET_H
 
 #include <qmutex.h>
-#include <qvaluevector.h>
+#include <qvector.h>
 
 /**
  * A structure holding a single filename which may or may not be active
@@ -56,14 +56,14 @@ struct ReginaFilePref {
      * Return the filename in an 8-bit encoding suitable for passing to
      * low-level file I/O routines.
      */
-    QCString encodeFilename() const;
+    QByteArray encodeFilename() const;
 };
 
 /**
  * A structure holding a list of filenames each of which may or may not
  * be active.
  */
-typedef QValueVector<ReginaFilePref> ReginaFilePrefList;
+typedef QVector<ReginaFilePref> ReginaFilePrefList;
 
 /**
  * Describes the many possible ways in which ReginaPrefSet::triGraphvizExec
