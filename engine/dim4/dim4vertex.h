@@ -242,15 +242,24 @@ class Dim4Vertex : public ShareableObject, public NMarkedElement {
          * Let \a i lie between 0 and getDegree()-1 inclusive, let
          * \a pent represent <tt>getEmbedding(i).getPentachoron()</tt>,
          * and let \a v represent <tt>getEmbedding(i).getVertex()</tt>.
-         * Then <tt>getLink()->getTetrahedron(i)</tt> corresponds to 
-         * <tt>pent->getTetrahedron(v)</tt>. Moreover, the correspondence
-         * from the vertices of <tt>getLink()->getTetrahedron(i)</tt> 
-         * to the vertices of <tt>pent->getTetrahedron(v)</tt> is given by
-         * the map <tt>getEmbedding(i).getVertices().inverse()*
-         * pent->getTetrahedronMapping(v)</tt>.  This is an <tt>NPerm5</tt>
-         * object, sending 4 to 0, and sending 0123 (the vertices of the
-         * tetrahedron in the domain) to 1234 (the vertices of the tetrahedron
-         * in the range). 
+         * Then <tt>getLink()->getTetrahedron(i)</tt> is the tetrahedron
+         * in the vertex link that "slices off" vertex \a v from
+         * pentachoron \a pent.  In other words,
+         * <tt>getLink()->getTetrahedron(i)</tt> in the vertex link
+         * corresponds to <tt>pent->getTetrahedron(v)</tt> in the
+         * surrounding 4-manifold triangulation.
+         *
+         * The vertices of each tetrahedron in the vertex link are
+         * numbered as follows.  Following the discussion above,
+         * suppose that <tt>getLink()->getTetrahedron(i)</tt>
+         * corresponds to <tt>pent->getTetrahedron(v)</tt>.
+         * The correspondence from the vertices of
+         * <tt>getLink()->getTetrahedron(i)</tt> to the vertices of
+         * <tt>pent->getTetrahedron(v)</tt> is given by the map
+         * <tt>pent->getTetrahedronMapping(v)</tt>.
+         * This is an <tt>NPerm5</tt> object, sending 4 to \a v, and sending
+         * the vertices of the tetrahedron in the domain (0123) to
+         * the vertices of the tetrahedron in the range (01234 excluding \a v).
          *
          * @return the link of this vertex.
          */
