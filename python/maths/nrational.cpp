@@ -56,6 +56,7 @@ void addNRational() {
         .def(init<long>())
         .def(init<const NLargeInteger&, const NLargeInteger&>())
         .def(init<long, unsigned long>())
+        .def("swap", &NRational::swap)
         .def("getNumerator", &NRational::getNumerator)
         .def("getDenominator", &NRational::getDenominator)
         .def(self * self)

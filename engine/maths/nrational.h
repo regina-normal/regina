@@ -189,6 +189,13 @@ class NRational {
          * @return a reference to this rational with its new value.
          */
         NRational& operator = (long value);
+        /**
+         * Swaps the values of this and the given rational.
+         *
+         * @param other the rational whose value will be swapped with
+         * this.
+         */
+        void swap(NRational& other);
 
         /**
          * Returns the numerator of this rational.
@@ -482,6 +489,11 @@ inline NRational& NRational::operator = (long value) {
     flavour = f_normal;
     mpq_set_si(data, value, 1);
     return *this;
+}
+
+inline void NRational::swap(NRational& other) {
+    std::swap(flavour, other.flavour);
+    mpq_swap(data, other.data);
 }
 
 inline void NRational::negate() {
