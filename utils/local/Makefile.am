@@ -13,7 +13,7 @@ SUBDIRS = @REGINA_BUILD_MPI@
 INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@ @UTILS_LIBS@
 
-noinst_PROGRAMS = censuscat dehydrate distinguish edgelinks equiv identify manifolds normal normal-compare pluggedibundles reduce trisort volume
+noinst_PROGRAMS = censuscat dehydrate distinguish edgelinks equiv identify manifolds normal normal-compare pluggedibundles reduce sig-freq trisort volume
 
 censuscat_SOURCES = censuscat.cpp
 dehydrate_SOURCES = dehydrate.cpp
@@ -26,6 +26,7 @@ normal_SOURCES = normal.cpp
 normal_compare_SOURCES = normal-compare.cpp
 pluggedibundles_SOURCES = pluggedibundles.cpp
 reduce_SOURCES = reduce.cpp
+sig_freq_SOURCES = sig-freq.cpp
 trisort_SOURCES = trisort.cpp
 volume_SOURCES = volume.cpp
 

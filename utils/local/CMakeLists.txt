@@ -1,7 +1,7 @@
 
 include_directories(${ENGINE_INCLUDES})
 
-set(UTILS censuscat dehydrate edgelinks equiv identify manifolds normal normal_compare pluggedibundles reduce trisort volume)
+set(UTILS censuscat dehydrate edgelinks equiv identify manifolds normal normal_compare pluggedibundles reduce sig-freq trisort volume)
 foreach(UTIL ${UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
   add_executable(${UTIL} ${SOURCE_FILE})
