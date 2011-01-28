@@ -36,7 +36,6 @@
 #endif
 
 #include "shareableobject.h"
-#include "utilities/nthread.h"
 
 // Forward declaration of SnapPea structures.
 struct Triangulation;
@@ -117,8 +116,6 @@ class NSnapPeaTriangulation : public ShareableObject {
         static bool kernelMessages;
             /**< Should the SnapPea kernel write diagnostic messages to
                  standard output? */
-        static NMutex m_Snap;
-            /**< Protect kernelMessages with a mutex */
 
     public:
         /**
@@ -281,6 +278,8 @@ class NSnapPeaTriangulation : public ShareableObject {
          * By default such diagnostic messages are disabled.  To enable
          * them, call enableKernelMessages().
          *
+         * This routine (which interacts with static data) is thread-safe.
+         *
          * @return \c true if and only if diagonstic messages are enabled.
          */
         static bool kernelMessagesEnabled();
@@ -290,6 +289,8 @@ class NSnapPeaTriangulation : public ShareableObject {
          * diagnostic messages to standard output.
          *
          * By default such diagnostic messages are disabled.
+         *
+         * This routine (which interacts with static data) is thread-safe.
          *
          * @param enabled \c true if diagnostic messages should be
          * enabled, or \c false otherwise.
@@ -304,6 +305,8 @@ class NSnapPeaTriangulation : public ShareableObject {
          * enableKernelMessages(false).
          *
          * Note that diagnostic messages are already disabled by default.
+         *
+         * This routine (which interacts with static data) is thread-safe.
          */
         static void disableKernelMessages();
 
@@ -349,20 +352,6 @@ inline bool NSnapPeaTriangulation::isNull() const {
 
 inline void NSnapPeaTriangulation::dump() const {
     saveAsSnapPea("");
-}
-
-inline bool NSnapPeaTriangulation::kernelMessagesEnabled() {
-    return kernelMessages;
-}
-
-inline void NSnapPeaTriangulation::enableKernelMessages(bool enabled) {
-    NMutex::MutexLock ml(NSnapPeaTriangulation::m_Snap);
-    kernelMessages = enabled;
-}
-
-inline void NSnapPeaTriangulation::disableKernelMessages() {
-    NMutex::MutexLock ml(NSnapPeaTriangulation::m_Snap);
-    kernelMessages = false;
 }
 
 } // namespace regina
