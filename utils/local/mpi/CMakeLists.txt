@@ -1,7 +1,7 @@
 
 set(CMAKE_CXX_COMPILER ${MPI_COMPILER})
 include_directories(${ENGINE_INCLUDES} ${MPI_INCLUDE_PATH})
-set(UTILS distinguish_mpi equiv_mpi normal_compare_mpi normal_mpi tricensus_freq_mpi tricensus_normal_mpi)
+set(UTILS distinguish_mpi equiv_mpi normal_compare_mpi normal_mpi sig_normal_mpi tricensus_freq_mpi tricensus_normal_mpi)
 
 foreach(UTIL ${UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
