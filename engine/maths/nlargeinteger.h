@@ -849,9 +849,8 @@ inline NLargeInteger& NLargeInteger::operator =(const std::string& value) {
     return *this;
 }
 inline void NLargeInteger::swap(NLargeInteger& other) {
-    NLargeInteger tmp(other);
-    other = *this;
-    *this = tmp;
+    std::swap(infinite, other.infinite);
+    mpz_swap(data, other.data);
 }
 
 inline bool NLargeInteger::operator ==(const NLargeInteger& compareTo) const {
