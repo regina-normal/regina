@@ -214,6 +214,11 @@ class NBitmask {
 
         /**
          * Sets all bits of this bitmask to \c false.
+         *
+         * \warning The length of this bitmask must already have been
+         * initialised.  In particular, if the default constructor was
+         * used, you must call the one-argument reset(unsigned) before you
+         * can use this routine.
          */
         void reset();
 
@@ -228,6 +233,21 @@ class NBitmask {
          * must be at least one.
          */
         void reset(unsigned length);
+
+        /**
+         * Sets this bitmask to a copy of the given bitmask.
+         *
+         * \warning The length of this bitmask must already have been
+         * initialised.  In particular, if the default constructor was
+         * used, you must still call reset(unsigned) before you can
+         * assign a value with this routine.
+         *
+         * \pre This and the given bitmask have the same length.
+         *
+         * @param other the bitmask to clone.
+         * @return a reference to this bitmask.
+         */
+        NBitmask& operator = (const NBitmask& other);
 
         /**
          * Leaves the first \a numBits bits of this bitmask intact, but
@@ -395,12 +415,6 @@ class NBitmask {
          */
         bool atMostOneBit() const;
 
-    private:
-        /**
-         * Disable the assignment operator by making it private.
-         */
-        NBitmask& operator = (const NBitmask&);
-
     friend std::ostream& operator << (std::ostream& out, const NBitmask& mask);
 };
 
@@ -490,6 +504,17 @@ class NBitmask1 {
          */
         inline void reset(unsigned) {
             mask = 0;
+        }
+
+        /**
+         * Sets this bitmask to a copy of the given bitmask.
+         *
+         * @param other the bitmask to clone.
+         * @return a reference to this bitmask.
+         */
+        NBitmask1<T>& operator = (const NBitmask1<T>& other) {
+            mask = other.mask;
+            return *this;
         }
 
         /**
@@ -749,12 +774,6 @@ class NBitmask1 {
             return BitManipulator<T>::bits(mask) <= 1;
         }
 
-    private:
-        /**
-         * Disable the assignment operator by making it private.
-         */
-        NBitmask1<T>& operator = (const NBitmask1<T>&);
-
     template <typename X>
     friend std::ostream& operator << (std::ostream& out,
         const NBitmask1<X>& mask);
@@ -834,7 +853,7 @@ class NBitmask2 {
          *
          * @param cloneMe the bitmask to clone.
          */
-        inline NBitmask2(const NBitmask2<T>& cloneMe) :
+        inline NBitmask2(const NBitmask2<T, U>& cloneMe) :
                 low(cloneMe.low), high(cloneMe.high) {
         }
 
@@ -855,6 +874,18 @@ class NBitmask2 {
         inline void reset(unsigned) {
             low = 0;
             high = 0;
+        }
+
+        /**
+         * Sets this bitmask to a copy of the given bitmask.
+         *
+         * @param other the bitmask to clone.
+         * @return a reference to this bitmask.
+         */
+        NBitmask2<T, U>& operator = (const NBitmask2<T, U>& other) {
+            low = other.low;
+            high = other.high;
+            return *this;
         }
 
         /**
@@ -1159,12 +1190,6 @@ class NBitmask2 {
                 BitManipulator<U>::bits(high)) <= 1;
         }
 
-    private:
-        /**
-         * Disable the assignment operator by making it private.
-         */
-        NBitmask2<T, U>& operator = (const NBitmask2<T, U>&);
-
     template <typename X, typename Y>
     friend std::ostream& operator << (std::ostream& out,
         const NBitmask2<X, Y>& mask);
@@ -1347,6 +1372,11 @@ inline void NBitmask::reset(unsigned length) {
     mask = new Piece[pieces];
 
     std::fill(mask, mask + pieces, 0);
+}
+
+inline NBitmask& NBitmask::operator = (const NBitmask& other) {
+    std::copy(other.mask, other.mask + pieces, mask);
+    return *this;
 }
 
 inline void NBitmask::truncate(unsigned numBits) {

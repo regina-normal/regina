@@ -22,7 +22,7 @@ Version 4.6.1  [ (under development) ]
             - Routine addRank() now takes a signed integer, so that you
               can subtract from the rank as well as add to it.
         Class NBitmask, NBitmask1, NBitmask2:
-            - New operators ^= (XOR) and -= (set difference).
+            - New operators ^= (XOR), -= (set difference) and = (assignment).
             - New routine truncate(), which truncates a bitmask to a given
               number of bits by setting all subsequent bits to zero.
             - New routines firstBit() and lastBit(), which return the
