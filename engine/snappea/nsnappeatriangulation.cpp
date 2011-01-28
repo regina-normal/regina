@@ -33,8 +33,16 @@
 #include "snappea/kernel/triangulation.h"
 #include "snappea/kernel/unix_file_io.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/nthread.h"
 
 namespace regina {
+
+namespace {
+    /**
+     * A mutex to protect kernelMessages.
+     */
+    static NMutex snapMutex;
+}
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
         ShareableObject() {
@@ -161,6 +169,21 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     free(data.name);
 
     return ans;
+}
+
+bool NSnapPeaTriangulation::kernelMessagesEnabled() {
+    NMutex::MutexLock ml(snapMutex);
+    return kernelMessages;
+}
+
+void NSnapPeaTriangulation::enableKernelMessages(bool enabled) {
+    NMutex::MutexLock ml(snapMutex);
+    kernelMessages = enabled;
+}
+
+void NSnapPeaTriangulation::disableKernelMessages() {
+    NMutex::MutexLock ml(snapMutex);
+    kernelMessages = false;
 }
 
 } // namespace regina
