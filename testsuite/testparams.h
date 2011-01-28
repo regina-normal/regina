@@ -37,7 +37,7 @@ void checkTestParams();
  * significantly slower) suite of tests?
  *
  * This is true if and only if the environment variable
- * REGINA_DETAILED_TESTS is defined.
+ * REGINA_DETAILED_TESTS is defined and non-empty.
  *
  * The routine checkTestParams() must be called before this routine is used.
  */

@@ -44,7 +44,7 @@ void writeResUsage(std::ostream& out) {
     unsigned long utime, stime, vsize;
 
     int dtmp;
-    static char stmp[256];
+    char stmp[256];
     unsigned long lutmp;
     long ldtmp;
 
