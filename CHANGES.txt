@@ -61,6 +61,7 @@ Version 4.6.1  [ (under development) ]
         Class NLargeInteger:
             - New routines randomBoundedByThis(), randomBinary() and
               randomCornerBinary() for pseudo-random number generation.
+            - Faster (GMP-native) implementation of swap().
         Class NMarkedAbelianGroup, NHomMarkedAbelianGroup:
             - Both of these classes have much richer interfaces than before,
               and some old routines have now been deprecated.  See the class
@@ -112,6 +113,8 @@ Version 4.6.1  [ (under development) ]
               fromPermCode2() work with second-generation codes instead.
             - The XML data file format continues to use first-generation
               permutation codes (for backward compatibility).
+        Class NRational:
+            - New STL-compatible routine swap().
         Class NScript:
             - Fixed a bug that lost script variables when reading ancient
               binary files (created before Regina 3.0, around mid-2002).
