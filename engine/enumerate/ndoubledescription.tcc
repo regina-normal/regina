@@ -311,6 +311,10 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         }
     }
 
+#if 0
+    std::cout << "Initial size: " << list[0].size() << std::endl;
+#endif
+
     // Intersect the hyperplanes one at a time.
     // At any point we should have the latest results in
     // list[workingList], with the other list empty.
@@ -329,6 +333,10 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
             ++used;
 
         workingList = 1 - workingList;
+#if 0
+        std::cout << "Intermediate size: " << list[workingList].size()
+            << std::endl;
+#endif
 
         if (progress) {
             progress->incCompleted();
