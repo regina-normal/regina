@@ -81,6 +81,8 @@ Version 5.0  [ (under development) ]
               of all relations in the presentation.
 
     UTILITIES:
+        regmerge:
+            - New utility for merging several data files.
         tricensus, tricensus-mpi:
             - Can now run a census of 4-manifold triangulations (rather than
               3-manifold triangulations) by passing the argument -4 / --dim4.
