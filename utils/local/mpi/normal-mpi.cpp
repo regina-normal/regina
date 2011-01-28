@@ -70,7 +70,6 @@
 #define DAY_SEC (24 * HOUR_SEC)
 
 // MPI constraints:
-#define MAX_SLAVES 100
 #define MAX_FILENAME 250
 
 using namespace regina;
@@ -440,10 +439,6 @@ int main(int argc, char* argv[]) {
         if (size <= 1) {
             fprintf(stderr, "ERROR: At least two processors are required "
                 "(one controller and one slave).\n");
-            retVal = 1;
-        } else if (size > MAX_SLAVES + 1) {
-            fprintf(stderr, "ERROR: At most %d slaves are supported.\n",
-                MAX_SLAVES);
             retVal = 1;
         } else {
             nSlaves = size - 1;
