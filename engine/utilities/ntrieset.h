@@ -60,11 +60,10 @@ namespace regina {
  * linear in \a n).  You can insert the same set into the trie multiple times
  * and the trie will record the number of times that it occurs.
  *
- * Currently the only searching operations is hasExtraSuperset(),
- * which is the precise operation needed for adjacency testing in
- * the double description method.  This operation is slow, but still
+ * Currently the only searching operations are hasSubset() and
+ * hasExtraSuperset().  These operations are slow, but still
  * much faster than searching through a linear list; see the
- * hasExtraSuperset() documentation for details.
+ * hasSubset() and hasExtraSuperset() documentation for details.
  *
  * The implementation of this data structure uses a binary tree with
  * depth levels 0,...,\a n, where each node at level \a i represents a
@@ -123,7 +122,31 @@ class NTrieSet {
         void insert(const T& entry);
 
         /**
-         * Performs the particular subset search required by the double
+         * Determines whether this collection of sets contains any subset
+         * of the argument \a superset.
+         * Subsets need not be \e proper subsets (so if an exact copy of
+         * \a superset is found in the tree then this will suffice).
+         *
+         * This routine has a slow running time, which in
+         * pathological cases can grow to either <tt>2^n</tt>
+         * (where \a n is the bitmask length) or the number of sets
+         * stored in this collection, whichever is smaller.  However,
+         * for "typical" searches in the context of normal surface
+         * enumeration, the running time is often significantly faster.
+         *
+         * \param superset the object of the query: we are searching this
+         * collection for a (non-strict) subset of this argument.
+         * \param universeSize the number of elements in the underlying
+         * universe (and therefore the lowest possible level in the
+         * search tree).  Note that this is always less than or equal to
+         * the number of bits that the underlying bitmask type \a T
+         * can support.
+         * \return \c true if a subset was found, or \c false otherwise.
+         */
+        bool hasSubset(const T& superset, unsigned universeSize) const;
+
+        /**
+         * Performs the particular superset search required by the double
          * description method.
          *
          * This routine asks the following question:  In this collection
@@ -154,6 +177,8 @@ class NTrieSet {
          * search tree).  Note that this is always less than or equal to
          * the number of bits that the underlying bitmask type \a T
          * can support.
+         * \return \c true if a superset with the required properties
+         * was found, or \c false otherwise.
          */
         bool hasExtraSuperset(const T& subset, const T& exc1, const T& exc2,
             unsigned universeSize) const;
@@ -197,6 +222,43 @@ void NTrieSet<T>::insert(const T& entry) {
         }
         ++node->descendants_;
     }
+}
+
+template <typename T>
+bool NTrieSet<T>::hasSubset(const T& superset, unsigned universeSize) const {
+    const NTrieSet<T>** node = new const NTrieSet<T>*[universeSize + 2];
+
+    int level = 0;
+    node[0] = this;
+    while (level >= 0) {
+        if (! node[level]) {
+            // We ran out of siblings at this level.  Move up.
+            --level;
+            // Move to the next sibling at this (higher) level.
+            if (level > 0 && node[level] == node[level - 1]->child_[1])
+                node[level] = node[level - 1]->child_[0];
+            else if (level >= 0)
+                node[level] = 0;
+            continue;
+        }
+
+        // Process the node at the current level.
+        if (level >= universeSize) {
+            // Our subtree is now a subset of the given superset.
+            delete[] node;
+            return true;
+        }
+
+        // Descend further into the tree.
+        if ((! superset.get(level)) || (! node[level]->child_[1]))
+            node[level + 1] = node[level]->child_[0];
+        else
+            node[level + 1] = node[level]->child_[1];
+        ++level;
+    }
+
+    delete[] node;
+    return false;
 }
 
 template <typename T>
