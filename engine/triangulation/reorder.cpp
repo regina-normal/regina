@@ -36,60 +36,11 @@
 
 namespace regina {
 
+namespace { // Begin anonymous namespace
+
 void reorder_fatal_error(const char* msg) {
-    std::cout << msg << std::endl;
+    std::cerr << "ERROR: " << msg << std::endl;
     std::exit(1);
-}
-
-bool NTriangulation::isOriented() const {
-    TetrahedronIterator it;
-
-    if(!isOrientable())
-        return false;
-
-    for(it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
-        if( (*it) -> tetOrientation != 1)
-            return false;
-
-    return true;
-}
-
-void NTriangulation::orient() {
-    NIsomorphism flip_tets_iso(getNumberOfTetrahedra());
-
-    TetrahedronIterator it;
-    int t;
-    for (t = 0, it = tetrahedra.begin(); it != tetrahedra.end(); ++it, ++t) {
-        flip_tets_iso.tetImage(t) = t;
-        if ((*it)->tetOrientation == 1 ||
-                ! (*it)->getComponent()->isOrientable())
-            flip_tets_iso.facePerm(t) = NPerm4(); // Identity
-        else
-            flip_tets_iso.facePerm(t) = NPerm4(2,3);
-    }
-
-    flip_tets_iso.applyInPlace(this);
-}
-
-bool NTriangulation::isOrdered() const {
-    TetrahedronIterator it;
-
-    for(it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
-        for(int face = 0; face < 4; face++)
-
-            if((*it)->tetrahedra[face]) {
-                NPerm4 perm = (*it) -> tetrahedronPerm[face];
-
-                // check that the permuation is order preserving on the face
-                int last = -1;
-                for(int k = 0; k < 4; ++k)
-                    if( k != face ) {
-                        if(perm[k] < last)
-                            return false;
-                        last = perm[k];
-                    }
-            }
-    return true;
 }
 
 // Given is a tetrahedron with an ordering inducing edge orientations.
@@ -318,33 +269,90 @@ NIsomorphism* ordering_iso(const NTriangulation &trig, bool force_oriented)
     return NULL;
 }
 
-NTriangulation* NTriangulation::order(bool force_oriented) const
+} // End anonymous namespace
+
+bool NTriangulation::isOriented() const {
+    TetrahedronIterator it;
+
+    // Calling isOrientable() will force a skeletal calculation if this
+    // has not been done already.
+    if(!isOrientable())
+        return false;
+
+    for(it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
+        if( (*it) -> tetOrientation != 1)
+            return false;
+
+    return true;
+}
+
+void NTriangulation::orient() {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+
+    NIsomorphism flip_tets_iso(getNumberOfTetrahedra());
+
+    TetrahedronIterator it;
+    int t;
+    for (t = 0, it = tetrahedra.begin(); it != tetrahedra.end(); ++it, ++t) {
+        flip_tets_iso.tetImage(t) = t;
+        if ((*it)->tetOrientation == 1 ||
+                ! (*it)->getComponent()->isOrientable())
+            flip_tets_iso.facePerm(t) = NPerm4(); // Identity
+        else
+            flip_tets_iso.facePerm(t) = NPerm4(2,3);
+    }
+
+    flip_tets_iso.applyInPlace(this);
+}
+
+bool NTriangulation::isOrdered() const {
+    TetrahedronIterator it;
+
+    for(it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
+        for(int face = 0; face < 4; face++)
+
+            if((*it)->tetrahedra[face]) {
+                NPerm4 perm = (*it) -> tetrahedronPerm[face];
+
+                // check that the permuation is order preserving on the face
+                int last = -1;
+                for(int k = 0; k < 4; ++k)
+                    if( k != face ) {
+                        if(perm[k] < last)
+                            return false;
+                        last = perm[k];
+                    }
+            }
+    return true;
+}
+
+bool NTriangulation::order(bool force_oriented)
 {
     if(!calculatedSkeleton)
         calculateSkeleton();
 
     if(force_oriented && !isOrientable())
-        return NULL;
+        return false;
 
     // find the isomorphism to order (and orient) the triangulation
 
     NIsomorphism* iso = ordering_iso(*this, force_oriented);
-    if(!iso) return NULL;
+    if(!iso) return false;
 
     // apply the isomorphism
 
-    NTriangulation* trig = iso -> apply(this);
+    iso -> applyInPlace(this);
     delete iso;
 
     // consistency check
 
-    if(!trig->isOrdered())
+    if(! isOrdered())
         reorder_fatal_error("NTriangulation::order returned unordered triangulation in reorder.cpp");
-    if(force_oriented && !trig->isOriented())
+    if(force_oriented && ! isOriented())
         reorder_fatal_error("NTriangulation::order returned unoriented triangulation in reorder.cpp");
 
-    return trig;
+    return true;
 }
-
 
 }
