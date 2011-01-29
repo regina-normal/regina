@@ -158,7 +158,7 @@ for (unsigned long i=0; i<aDim; i++) //  H^i (\partial M) <-- H^i M <-- H^i(M,\p
   HomLocator firstMapLoc( leftG, middleG );
   const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
   const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
-  if (!(secondMap*firstMap).isZero()) flag=1;
+  if (!(secondMap*firstMap)->isZero()) flag=1;
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) flag = 2; 
   if ( (i==0) && (var==coVariant) ) if (!secondMap.isEpic()) flag = 3;  // rightmost term in LES, covariant case
   if ( (i==0) && (var==contraVariant) ) if (!firstMap.isMonic()) flag = 4; // leftmost in LES, contravariant case
@@ -174,7 +174,7 @@ for (unsigned long i=1; i<=aDim; i++) //  H^i(M,\partial M) <-- H^{i-1} \partial
   HomLocator firstMapLoc( leftG, middleG );
   const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
   const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
-  if (!(secondMap*firstMap).isZero()) flag=5;
+  if (!(secondMap*firstMap)->isZero()) flag=5;
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) flag=6;
  } 
 
@@ -188,7 +188,7 @@ for (unsigned long i=1; i<=aDim; i++) //  H^i M <-- H^i(M, \partial M) <-- H^{i-
   HomLocator firstMapLoc( leftG, middleG );
   const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
   const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
-  if (!(secondMap*firstMap).isZero()) flag=7;
+  if (!(secondMap*firstMap)->isZero()) flag=7;
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) flag=8;
   if ( (i == aDim) && (var == coVariant) ) if (!firstMap.isMonic()) flag=9; // leftmost term in LES, coVariant case
   if ( (i == aDim) && (var == contraVariant) ) if (!secondMap.isEpic()) flag=10; // rightmost term, contravariant case

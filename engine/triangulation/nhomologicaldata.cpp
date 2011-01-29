@@ -2073,8 +2073,8 @@ if (p==0)
 
  NMarkedAbelianGroup freeGens( k*k, NLargeInteger::zero );
  NMatrixInt h2pairing( numDualCells[1], k*k );
- NHomMarkedAbelianGroup MtD1( dualToMixedHom(1).inverseHom() );
- NHomMarkedAbelianGroup DtS2( standardToMixedHom(2).inverseHom()*dualToMixedHom(2) );
+ NHomMarkedAbelianGroup MtD1( *dualToMixedHom(1).inverseHom() );
+ NHomMarkedAbelianGroup DtS2( *((*standardToMixedHom(2).inverseHom())*dualToMixedHom(2)) );
 
  for (unsigned long i=0; i<k; i++) for (unsigned long j=0; j<k; j++)
   { // a(i) in CC coords is dualHomology(2).getFreeRep(i)
@@ -2138,10 +2138,10 @@ if (p==0)
 					regina::NLargeInteger(p)); //
 
   NHomMarkedAbelianGroup DtM1(h1modpD, h1modpM, dualToMixedHom(1).getDefiningMatrix()); // req
-  NHomMarkedAbelianGroup MtD1(DtM1.inverseHom()); // need
+  NHomMarkedAbelianGroup MtD1(*DtM1.inverseHom()); // need
   NHomMarkedAbelianGroup StM2(h2modpS, h2modpM, standardToMixedHom(2).getDefiningMatrix()); // req
   NHomMarkedAbelianGroup DtM2(h2modpD, h2modpM, dualToMixedHom(2).getDefiningMatrix()); // req
-  NHomMarkedAbelianGroup DtS2( StM2.inverseHom() * DtM2 ); // need
+  NHomMarkedAbelianGroup DtS2(*((*StM2.inverseHom()) * DtM2)); // need
 
   unsigned long k=h2modpD.minNumberOfGenerators();
   if ((p>2) && (!tri->isOrientable())) return NMarkedAbelianGroup( 0, NLargeInteger::zero );
@@ -2207,7 +2207,7 @@ if (p == 0)
  {
  for (unsigned long i=0; i<4; i++) if (!dualToMixedHom(i).isIsomorphism()) return false;
  for (unsigned long i=0; i<4; i++) if (!standardToMixedHom(i).isIsomorphism()) return false;
- if (! (dualToMixedHom(1).inverseHom()*standardToMixedHom(1)*fastDualToStandardH1()).isIdentity() ) return false;
+ if (! ((*dualToMixedHom(1).inverseHom()) * *(standardToMixedHom(1)*fastDualToStandardH1()))->isIdentity() ) return false;
  }
 else
  {

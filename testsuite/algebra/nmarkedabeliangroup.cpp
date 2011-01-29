@@ -378,11 +378,11 @@ class NMarkedAbelianGroupTest : public CppUnit::TestFixture {
 		  NCellularData::GroupLocator gb( 1, NCellularData::coVariant, NCellularData::MIX_coord, 0 );
 		  NCellularData::HomLocator hom( ga, gb );
 		  test1 = cdList[i]->homGroup( hom );
-		  NHomMarkedAbelianGroup test2( test1->inverseHom() );
-		  NHomMarkedAbelianGroup test3( (*test1)*test2 );
-		  NHomMarkedAbelianGroup test4( test2*(*test1) );
-		  if (!test3.isIdentity()) CPPUNIT_FAIL("right inverse error.");
-		  if (!test4.isIdentity()) CPPUNIT_FAIL("left inverse error.");
+		  std::auto_ptr<NHomMarkedAbelianGroup> test2( test1->inverseHom() );
+		  std::auto_ptr<NHomMarkedAbelianGroup> test3( (*test1)*(*test2) );
+		  std::auto_ptr<NHomMarkedAbelianGroup> test4( (*test2)*(*test1) );
+		  if (!test3->isIdentity()) CPPUNIT_FAIL("right inverse error.");
+		  if (!test4->isIdentity()) CPPUNIT_FAIL("left inverse error.");
 	  	 }
 		for (unsigned long i=0; i<cdList.size(); i++)
 		 {
@@ -390,11 +390,11 @@ class NMarkedAbelianGroupTest : public CppUnit::TestFixture {
 		  NCellularData::GroupLocator gb( 1, NCellularData::coVariant, NCellularData::MIX_coord, 10 );
 		  NCellularData::HomLocator hom( ga, gb );
 		  test1 = cdList[i]->homGroup( hom );
-		  NHomMarkedAbelianGroup test2( test1->inverseHom() );
-		  NHomMarkedAbelianGroup test3( (*test1)*test2 );
-		  NHomMarkedAbelianGroup test4( test2*(*test1) );
-		  if (!test3.isIdentity()) CPPUNIT_FAIL("right inverse error (2).");
-		  if (!test4.isIdentity()) CPPUNIT_FAIL("left inverse error (2).");
+		  std::auto_ptr<NHomMarkedAbelianGroup> test2( test1->inverseHom() );
+		  std::auto_ptr<NHomMarkedAbelianGroup> test3( (*test1)*(*test2) );
+		  std::auto_ptr<NHomMarkedAbelianGroup> test4( (*test2)*(*test1) );
+		  if (!test3->isIdentity()) CPPUNIT_FAIL("right inverse error (2).");
+		  if (!test4->isIdentity()) CPPUNIT_FAIL("left inverse error (2).");
 	  	 }
 		// evalCC and evalSNF tests...
 		// first test: check for a commutative diagram with the homomorphism in CC and SNF coordinates.

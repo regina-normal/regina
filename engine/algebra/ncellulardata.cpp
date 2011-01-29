@@ -580,9 +580,9 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
       const NHomMarkedAbelianGroup* sc_sb(homGroup( HomLocator( sc, sb ) ) );
       const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
       const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
-      NHomMarkedAbelianGroup f( (*sc_sb) * (sc_mc->inverseHom()) * (*dc_mc) );
+      std::auto_ptr<NHomMarkedAbelianGroup> f( (*sc_sb) * *(*(sc_mc->inverseHom()) * (*dc_mc)) );
       FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
-      bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(f) );
+      bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(*f) );
       std::map< FormLocator, NBilinearForm* > *mbfptr = 
        const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
       mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
@@ -598,9 +598,9 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
       GroupLocator sc( f_desc.rdomain.dim, coVariant, STD_coord,          f_desc.rdomain.cof );
       const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
       const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
-      NHomMarkedAbelianGroup f( (dc_mc->inverseHom()) * (*sc_mc) );
+      std::auto_ptr<NHomMarkedAbelianGroup> f( (*dc_mc->inverseHom()) * (*sc_mc) );
       FormLocator prim(f_desc); prim.ldomain.hcs = DUAL_coord;
-      bfptr = new NBilinearForm( bilinearForm(prim)->lCompose(f) );
+      bfptr = new NBilinearForm( bilinearForm(prim)->lCompose(*f) );
       std::map< FormLocator, NBilinearForm* > *mbfptr = 
        const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
       mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
@@ -767,10 +767,11 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	}
       NHomMarkedAbelianGroup lproj( sc_sb->getRange(), ltrivG, lMap );
 
-      NHomMarkedAbelianGroup f( lproj * (*sc_sb) * (sc_mc->inverseHom()) * (*dc_mc) * rinc ); // dual -> std_rel_bdry
+      std::auto_ptr<NHomMarkedAbelianGroup> f(
+        lproj * *((*sc_sb) * *((*sc_mc->inverseHom()) * *((*dc_mc) * rinc )))); // dual -> std_rel_bdry
       FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
 
-      bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(f) ); 
+      bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(*f) ); 
       std::map< FormLocator, NBilinearForm* > *mbfptr =             
        const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
       mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
@@ -789,9 +790,9 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
       const NHomMarkedAbelianGroup* sc_sb(homGroup( HomLocator( sc, sb ) ) ); // STD --> STD_REL_BDRY
       const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
       const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
-      NHomMarkedAbelianGroup fl( (sc_mc->inverseHom())*(*dc_mc) ); // DUAL -> STD
+      std::auto_ptr<NHomMarkedAbelianGroup> fl( (*sc_mc->inverseHom())*(*dc_mc) ); // DUAL -> STD
       FormLocator prim(f_desc); prim.ldomain.hcs = DUAL_coord; prim.rdomain.hcs = STD_REL_BDRY_coord;
-      bfptr = new NBilinearForm( bilinearForm(prim)->lCompose(fl).rCompose(*sc_sb) ); 
+      bfptr = new NBilinearForm( bilinearForm(prim)->lCompose(*fl).rCompose(*sc_sb) ); 
       std::map< FormLocator, NBilinearForm* > *mbfptr = 
        const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
       mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );

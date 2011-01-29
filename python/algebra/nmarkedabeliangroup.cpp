@@ -35,6 +35,7 @@ using namespace boost::python;
 using regina::NHomMarkedAbelianGroup;
 using regina::NMarkedAbelianGroup;
 using regina::NMatrixInt;
+using regina::NLargeInteger;
 
 namespace {
     unsigned long (NMarkedAbelianGroup::*getTorsionRank_large)(
@@ -69,7 +70,7 @@ namespace {
         return ans;
     }
 
-    boost::python::list snfRep_list_list(
+    boost::python::list getSNFIsoRep_list_list(
             const NMarkedAbelianGroup& g, boost::python::list element) {
         unsigned long needLen = g.getM().columns();
 
@@ -107,7 +108,7 @@ namespace {
             x_large();
         }
 
-        std::vector<regina::NLargeInteger> rep = g.snfRep(eltVector);
+        std::vector<regina::NLargeInteger> rep = g.getSNFIsoRep(eltVector);
 
         boost::python::list ans;
         for (std::vector<regina::NLargeInteger>::const_iterator
@@ -121,6 +122,12 @@ namespace {
     void writeReducedMatrix_stdout(const NHomMarkedAbelianGroup& h) {
         h.writeReducedMatrix(std::cout);
     }
+
+    std::auto_ptr<NHomMarkedAbelianGroup> multiplyHom(
+            const NHomMarkedAbelianGroup& h1,
+            const NHomMarkedAbelianGroup& h2) {
+        return h1 * h2;
+    }
 }
 
 void addNMarkedAbelianGroup() {
@@ -128,34 +135,55 @@ void addNMarkedAbelianGroup() {
             std::auto_ptr<NMarkedAbelianGroup>, boost::noncopyable>(
             "NMarkedAbelianGroup", init<const NMatrixInt&, const NMatrixInt&>())
         .def(init<const NMarkedAbelianGroup&>())
+        .def(init<const NMatrixInt&, const NMatrixInt&, const NLargeInteger&>())
+        .def(init<unsigned long, const NLargeInteger&>())
         .def("isChainComplex", &NMarkedAbelianGroup::isChainComplex)
         .def("getRank", &NMarkedAbelianGroup::getRank)
         .def("getTorsionRank", getTorsionRank_large)
         .def("getTorsionRank", getTorsionRank_long)
+        .def("minNumberOfGenerators",
+            &NMarkedAbelianGroup::minNumberOfGenerators)
         .def("getNumberOfInvariantFactors",
             &NMarkedAbelianGroup::getNumberOfInvariantFactors)
-        .def("minNumberOfGenerators", &NMarkedAbelianGroup::minNumberOfGenerators)
         .def("getInvariantFactor", &NMarkedAbelianGroup::getInvariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
+        .def("isIsomorphicTo", &NMarkedAbelianGroup::isIsomorphicTo)
+        .def("equalTo", &NMarkedAbelianGroup::equalTo)
+        // TODO: ccRep, ccRep, cycleProjection, cycleProjection
+        // TODO: isCycle, boundaryMap, isBoundary, writeAsBoundary
+        // TODO: snfRep, cycleGen
         .def("getFreeRep", getFreeRep_list)
         .def("getTorsionRep", getTorsionRep_list)
-        .def("isCycle", &NMarkedAbelianGroup::isCycle)       
-        .def("isBoundary", &NMarkedAbelianGroup::isBoundary)
+        .def("getSNFIsoRep", getSNFIsoRep_list_list)
         .def("getRankCC", &NMarkedAbelianGroup::getRankCC)
         .def("minNumberCycleGens", &NMarkedAbelianGroup::minNumberCycleGens)
-        .def("coefficients", &NMarkedAbelianGroup::coefficients, 
-	    return_internal_reference<>())
-//        .def("writeAsBoundary", writeAsBoundary_list_list
-//        .def("boundaryMap", boundaryMap_list_list)            these should probably be implemented 
-//        .def("ccRep", getCCRep_list_list)                     intelligently, someday...
-        .def("snfRep", snfRep_list_list)
+        .def("getMRB", &NMarkedAbelianGroup::getMRB,
+            return_internal_reference<>())
+        .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
+            return_internal_reference<>())
+        .def("getMCB", &NMarkedAbelianGroup::getMCB,
+            return_internal_reference<>())
+        .def("getMCBi", &NMarkedAbelianGroup::getMCBi,
+            return_internal_reference<>())
+        .def("getNRB", &NMarkedAbelianGroup::getNRB,
+            return_internal_reference<>())
+        .def("getNRBi", &NMarkedAbelianGroup::getNRBi,
+            return_internal_reference<>())
+        .def("getNCB", &NMarkedAbelianGroup::getNCB,
+            return_internal_reference<>())
+        .def("getNCBi", &NMarkedAbelianGroup::getNCBi,
+            return_internal_reference<>())
+        .def("getRankM", &NMarkedAbelianGroup::getRankM)
+        .def("getFreeLoc", &NMarkedAbelianGroup::getFreeLoc)
+        .def("getTorsionLoc", &NMarkedAbelianGroup::getTorsionLoc)
         .def("getM", &NMarkedAbelianGroup::getM,
             return_internal_reference<>())
         .def("getN", &NMarkedAbelianGroup::getN,
             return_internal_reference<>())
-        .def("isIsomorphicTo", &NMarkedAbelianGroup::isIsomorphicTo)
-        .def("equalTo", &NMarkedAbelianGroup::equalTo)
+        .def("coefficients", &NMarkedAbelianGroup::coefficients,
+            return_value_policy<return_by_value>())
+        .def(self == self)
     ;
 
     class_<NHomMarkedAbelianGroup, bases<regina::ShareableObject>,
@@ -166,10 +194,11 @@ void addNMarkedAbelianGroup() {
         .def(init<const NHomMarkedAbelianGroup&>())
         .def("isChainMap", &NHomMarkedAbelianGroup::isChainMap)
         .def("isCycleMap", &NHomMarkedAbelianGroup::isCycleMap)
-        .def("isIdentity", &NHomMarkedAbelianGroup::isIdentity)
         .def("isEpic", &NHomMarkedAbelianGroup::isEpic)
         .def("isMonic", &NHomMarkedAbelianGroup::isMonic)
+        .def("isIso", &NHomMarkedAbelianGroup::isIso)
         .def("isIsomorphism", &NHomMarkedAbelianGroup::isIsomorphism)
+        .def("isIdentity", &NHomMarkedAbelianGroup::isIdentity)
         .def("isZero", &NHomMarkedAbelianGroup::isZero)
         .def("getKernel", &NHomMarkedAbelianGroup::getKernel,
             return_internal_reference<>())
@@ -185,8 +214,10 @@ void addNMarkedAbelianGroup() {
             return_internal_reference<>())
         .def("getReducedMatrix", &NHomMarkedAbelianGroup::getReducedMatrix,
             return_internal_reference<>())
-//        .def("inverseHom", &NHomMarkedAbelianGroup::inverseHom)      // python isn't happy with this.
         .def("writeReducedMatrix", writeReducedMatrix_stdout)
+        // TODO: evalCC, evalSNF
+        .def("inverseHom", &NHomMarkedAbelianGroup::inverseHom)
+        .def("__mul__", multiplyHom)
     ;
 }
 
