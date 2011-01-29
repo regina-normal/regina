@@ -1048,12 +1048,19 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         bool isOriented() const;
 
         /**
-         * Determines if this triangulation is ordered.
+         * Determines if this triangulation is ordered; that is, if
+         * tetrahedron vertices are labelled so that all gluing
+         * permutations are order-preserving on the faces.
+         * Equivalently, this tests whether the edges of the triangulation
+         * can all be oriented such that they induce a consistent ordering
+         * on the vertices of each tetrahedron.
+         *
+         * Triangulations are not ordered by default, and indeed some
+         * cannot be ordered at all.  The routine order() will attempt
+         * to relabel tetrahedron vertices to give an ordered triangulation.
          *
          * @return \c true if and only if all gluing permutations are
-         * order preserving on the faces. Equivalently whether all edges
-         * of the triangulation are oriented such that they induce a 
-         * consistent ordering on each tetrahedron.
+         * order preserving on the faces.
          *
          * @author Matthias Goerner
          */
@@ -1948,27 +1955,34 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         void orient();
 
         /**
-         * Returns an ordered triangulation.
+         * Relabels tetrahedron vertices in this triangulation to give
+         * an ordered triangulation, if possible.
          *
-         * Specifically, all face gluings (when restricted to the face) are 
-         * order preserving. In other words, all edges of the triangulation are
-         * oriented in such a fashion that they are consistent with the 
-         * ordering of each tetrahedron.
+         * To be an ordered triangulation, all face gluings (when restricted
+         * to the face) must be order preserving. In other words, it must
+         * be possible to orient all edges of the triangulation in such a
+         * fashion that they are consistent with the ordering of the vertices
+         * in each tetrahedron.
          *
-         * The method backtracks through all possible edge orientations until a
-         * a consistent one has been found.
+         * If it is possible to order this triangulation, the vertices
+         * of each tetrahedron will be relabelled accordingly and this
+         * routine will return \c true.  Otherwise, this routine will
+         * return \c false and the triangulation will not be changed.
          *
-         * @param force_oriented. If \c true, the triangulation returned will
-         * be oriented and ordered, and NULL will be returned if the 
-         * triangulation cannot be oriented and ordered at the same time.
+         * \warning This routine may be slow, since it backtracks
+         * through all possible edge orientations until a consistent one
+         * has been found.
          *
-         * @return If the triangulation can be ordered by relabeling vertices
-         * of the tetrahedra, return the resulting triangulation. Otherwise,
-         * return NULL.
+         * @param forceOriented \c true if the triangulation must be
+         * both ordered and \e oriented, in which case this routine will
+         * return \c false if the triangulation cannot be oriented and
+         * ordered at the same time.  See orient() for further details.
+         * @return \c true if the triangulation has been successfully ordered
+         * as described above, or \c false if not.
          *
          * @author Matthias Goerner
          */
-        NTriangulation* order(bool force_oriented = false) const;
+        bool order(bool forceOriented = false);
 
         /*@}*/
         /**
