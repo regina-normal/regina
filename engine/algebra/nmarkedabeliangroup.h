@@ -146,13 +146,18 @@ class NMarkedAbelianGroup : public ShareableObject {
         /**
          * Creates a marked abelian group from a chain complex. This constructor
          * assumes you're interested in homology with integer coefficents of
-         * the chain complex.  See the class notes for details.
+         * the chain complex.  Creates a marked abelian group given by
+         * the quotient of the kernel of \a M modulo the image of \a N.
+         *
+         * See the class notes for further details.
          *
          * \pre M.columns() = N.rows().
          * \pre The product M*N = 0.
          *
-         * @param M the `right' matrix in the chain complex
-         * @param N the `left' matrix in the chain complex
+         * @param M the `right' matrix in the chain complex; that is,
+         * the matrix that one takes the kernel of when computing homology.
+         * @param N the `left' matrix in the chain complex; that is, the
+         * matrix that one takes the image of when computing homology.
          */
         NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
 
@@ -163,8 +168,10 @@ class NMarkedAbelianGroup : public ShareableObject {
          * \pre M.columns() = N.rows().
          * \pre The product M*N = 0.
          *
-         * @param M the `right' matrix in the chain complex
-         * @param N the `left' matrix in the chain complex
+         * @param M the `right' matrix in the chain complex; that is,
+         * the matrix that one takes the kernel of when computing homology.
+         * @param N the `left' matrix in the chain complex; that is, the
+         * matrix that one takes the image of when computing homology.
          * @param pcoeff specifies the coefficient ring, Z_pcoeff. We require
          * \a pcoeff >= 0.  If you know beforehand that \a pcoeff=0, it's
          * more efficient to use the previous constructor.
@@ -194,8 +201,10 @@ class NMarkedAbelianGroup : public ShareableObject {
         NMarkedAbelianGroup(const NMarkedAbelianGroup& cloneMe);
 
         /**
-         * Determines whether this is a chain complex.  Specifically,
-         * this routine returns \c true if and only if
+         * Determines whether or not the defining maps for this group
+         * actually give a chain complex.  This is helpful for debugging.
+         *
+         * Specifically, this routine returns \c true if and only if
          * M*N = 0 where M and N are the definining matrices.
          *
          * @return \c true if and only if M*N = 0.
@@ -205,7 +214,7 @@ class NMarkedAbelianGroup : public ShareableObject {
         /**
          * Destroys the group.
          */
-        virtual ~NMarkedAbelianGroup();
+        ~NMarkedAbelianGroup();
 
         /**
          * Returns the rank of the group.
@@ -337,7 +346,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * @param out the stream to write to.
          */
-        virtual void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
         /**
          * Returns the requested free generator in the original chain
@@ -959,7 +968,7 @@ class NHomMarkedAbelianGroup : public ShareableObject {
         /**
          * Destructor.
          */
-        virtual ~NHomMarkedAbelianGroup();
+        ~NHomMarkedAbelianGroup();
 
         /**
          * Determines whether this and the given homomorphism together
@@ -1067,14 +1076,14 @@ class NHomMarkedAbelianGroup : public ShareableObject {
          *
          * @param out the stream to write to.
          */
-        virtual void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
         /**
          * A more detailed text representation of the homomorphism.
          *
          * @param out the stream to write to.
          */
-        virtual void writeTextLong(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
         /**
          * Returns the domain of this homomorphism.
@@ -1327,7 +1336,6 @@ inline const NMatrixInt& NMarkedAbelianGroup::getN() const {
 inline const NLargeInteger& NMarkedAbelianGroup::coefficients() const {
     return coeff;
 }
-
 
 // Inline functions for NHomMarkedAbelianGroup
 
