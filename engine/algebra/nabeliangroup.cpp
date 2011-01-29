@@ -265,5 +265,80 @@ NAbelianGroup* NAbelianGroup::readFromFile(NFile& in) {
     return ans;
 }
 
+// ---N--> CC --M-->  ie: M*N = 0.
+NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N) {
+    rank = N.rows();
+    NMatrixInt tempN(N);
+    metricalSmithNormalForm(tempN);
+    unsigned long lim =
+        (tempN.rows() < tempN.columns() ? tempN.rows() : tempN.columns() );
+    std::multiset<NLargeInteger> torsion;
+    for (unsigned long i=0; i<lim; i++) {
+        if (tempN.entry(i,i) != 0) {
+            rank--;
+            if (tempN.entry(i,i) > 1)
+                torsion.insert(tempN.entry(i,i));
+        }
+    }
+    addTorsionElements(torsion);
+
+    NMatrixInt tempM(M);
+    metricalSmithNormalForm(tempM);
+    lim = (tempM.rows() < tempM.columns() ? tempM.rows() : tempM.columns());
+    for (unsigned long i=0; i<lim; ++i) {
+        if (tempM.entry(i,i) != 0)
+            rank --;
+    }
+}
+
+NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
+        const NLargeInteger &p) {
+    NLargeInteger cof(p.abs());
+    rank = N.rows();
+
+    NMatrixInt tempN(N);
+    metricalSmithNormalForm(tempN);
+    unsigned long lim =
+        (tempN.rows() < tempN.columns() ? tempN.rows() : tempN.columns() );
+    std::multiset<NLargeInteger> torsion;
+
+    if (cof == 0) {
+        for (unsigned long i=0; i<lim; i++)
+            if (tempN.entry(i,i) != 0) {
+                rank--;
+                if (tempN.entry(i,i) > 1)
+                    torsion.insert(tempN.entry(i,i));
+            }
+    } else {
+        for (unsigned long i=0; i<lim; i++)
+            if (tempN.entry(i,i) !=0) {
+                rank--;
+                NLargeInteger g( tempN.entry(i,i).gcd(cof) );
+                if (g > 1)
+                    torsion.insert(g);
+            }
+    }
+
+    NMatrixInt tempM(M);
+    metricalSmithNormalForm(tempM);
+    lim = (tempM.rows() < tempM.columns() ? tempM.rows() : tempM.columns() );
+    for (unsigned long i=0; i<lim; i++) {
+        if (tempM.entry(i,i) != 0) {
+            rank--;
+            if (cof != 0) {
+                NLargeInteger g( tempM.entry(i,i).gcd(cof) );
+                if (g>1)
+                    torsion.insert(g);
+            }
+        }
+    }
+    if (cof != 0) {
+        for (unsigned long i=0; i<rank; i++)
+            torsion.insert(cof);
+        rank = 0;
+    }
+    addTorsionElements(torsion);
+}
+
 } // namespace regina
 
