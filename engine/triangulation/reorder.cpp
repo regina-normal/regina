@@ -40,8 +40,8 @@ void reorder_fatal_error(const char* msg) {
     std::cout << msg << std::endl;
     std::exit(1);
 }
-    
-bool NTriangulation::isOriented() const { 
+
+bool NTriangulation::isOriented() const {
     TetrahedronIterator it;
 
     if(!isOrientable())
@@ -54,22 +54,21 @@ bool NTriangulation::isOriented() const {
     return true;
 }
 
-NTriangulation* NTriangulation::orient() const {
-
-    if(!isOrientable())
-        return NULL;
-
+void NTriangulation::orient() {
     NIsomorphism flip_tets_iso(getNumberOfTetrahedra());
 
     TetrahedronIterator it;
     int t;
     for (t = 0, it = tetrahedra.begin(); it != tetrahedra.end(); ++it, ++t) {
         flip_tets_iso.tetImage(t) = t;
-        flip_tets_iso.facePerm(t) = 
-            ((*it)->tetOrientation == +1) ? NPerm4(0,1,2,3) : NPerm4(0,1,3,2);
+        if ((*it)->tetOrientation == 1 ||
+                ! (*it)->getComponent()->isOrientable())
+            flip_tets_iso.facePerm(t) = NPerm4(); // Identity
+        else
+            flip_tets_iso.facePerm(t) = NPerm4(2,3);
     }
-    
-    return flip_tets_iso.apply(this);
+
+    flip_tets_iso.applyInPlace(this);
 }
 
 bool NTriangulation::isOrdered() const {
@@ -78,7 +77,7 @@ bool NTriangulation::isOrdered() const {
     for(it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
         for(int face = 0; face < 4; face++)
 
-            if((*it)->tetrahedra[face]) {                
+            if((*it)->tetrahedra[face]) {
                 NPerm4 perm = (*it) -> tetrahedronPerm[face];
 
                 // check that the permuation is order preserving on the face
@@ -94,7 +93,7 @@ bool NTriangulation::isOrdered() const {
 }
 
 // Given is a tetrahedron with an ordering inducing edge orientations.
-// edge_orientations_on_tet[i] == -1 means that we intend to flip the 
+// edge_orientations_on_tet[i] == -1 means that we intend to flip the
 // edge orientation of the i-th edge of the tetrahedron.
 // perm_from_edges returns the permutation that needs to be applied to the
 // tetrahedron to achieve this.
@@ -120,7 +119,7 @@ NPerm4 perm_from_edges(const int edge_orientations_on_tet[6]) {
     return NPerm4(p[0],p[1],p[2],p[3]);
 }
 
-// edge_orientations[i] is the edge orientation of the i-th edge in 
+// edge_orientations[i] is the edge orientation of the i-th edge in
 //                                     the triangulation
 // edge_orientations_tet[i] is the edge orientation of the i-th edge of
 //                                     the tetrahedron
@@ -147,7 +146,7 @@ void edge_orientations_on_tet(const NTriangulation &trig,
         if(perm[0] > perm[1])
             orientation = - orientation;
         edge_orientations_tet[i] = orientation;
-    }    
+    }
 }
 
 // edge_orientations_tet are as above
@@ -172,7 +171,7 @@ inline bool check_consistency_on_face(const int edge_orientations_tet[6],
     return true;
 }
 
-// edge_orientations[i] == 0 means that the edge_orientation has not been 
+// edge_orientations[i] == 0 means that the edge_orientation has not been
 // assigned yet, so ignore it for testing
 
 // checks that the edge_orientations give an ordering of the triangulation
@@ -192,7 +191,7 @@ bool check_consistency_on_tet(const NTriangulation &trig,
 
     if(!check_consistency_on_face(edge_orientations_tet,1,2,3))
         return false;
-    if(!check_consistency_on_face(edge_orientations_tet,0,2,3)) 
+    if(!check_consistency_on_face(edge_orientations_tet,0,2,3))
         return false;
     if(!check_consistency_on_face(edge_orientations_tet,0,1,3))
         return false;
@@ -200,7 +199,7 @@ bool check_consistency_on_tet(const NTriangulation &trig,
         return false;
 
     // if we do not need to check for consistent orientation, we are done:
-    
+
     if(!force_oriented)
         return true;
 
@@ -209,23 +208,23 @@ bool check_consistency_on_tet(const NTriangulation &trig,
     for(int i = 0; i < 6; i++)
         if(edge_orientations_tet[i] == 0)
             return true;
-    
+
     // check for valid orientation
 
     NPerm4 p = perm_from_edges(edge_orientations_tet);
     if(p.sign() * tet->orientation() == -1)
         return false;
-    
+
     return true;
 }
 
 // checks that the edge orientations give a valid ordering of the triangulation
 
-bool check_consistency_around_edge(const NTriangulation &trig, 
-                                   const std::vector<int> &edge_orientations, 
+bool check_consistency_around_edge(const NTriangulation &trig,
+                                   const std::vector<int> &edge_orientations,
                                    int edge_index,
-                                   bool force_oriented) 
-{    
+                                   bool force_oriented)
+{
     typedef std::deque<NEdgeEmbedding> NEmbed;
     typedef NEmbed::const_iterator NEmbedIterator;
 
@@ -234,29 +233,29 @@ bool check_consistency_around_edge(const NTriangulation &trig,
     NEmbedIterator   it;
 
     // iterate through all tetrahedra around an edge
-    
+
     for(it = edge_embeddings.begin(); it != edge_embeddings.end(); ++it)
         if(!check_consistency_on_tet(trig, edge_orientations,
                                      it->getTetrahedron(), force_oriented))
             return false;
-    
+
     return true;
 }
 
 // construct isomorphism from edge orientations
 
-NIsomorphism* iso_from_edges(const NTriangulation &trig, 
+NIsomorphism* iso_from_edges(const NTriangulation &trig,
                              const std::vector<int> & edge_orientations,
                              bool force_oriented) {
-    
+
     NIsomorphism* iso = new NIsomorphism(trig.getNumberOfTetrahedra());
-    
+
     // iterate through all tetrahedra
 
     for(unsigned i = 0; i < trig.getNumberOfTetrahedra(); i++) {
-    
+
         // consistency check
-    
+
         if(!check_consistency_on_tet(trig,
                                      edge_orientations,
                                      trig.getTetrahedron(i),
@@ -278,9 +277,9 @@ NIsomorphism* iso_from_edges(const NTriangulation &trig,
     }
     return iso;
 }
-    
+
 // Find edge orientations (through back tracking) such that they induce a valid
-// ordering on each tetrahedron (and if force_oriented also a consistent 
+// ordering on each tetrahedron (and if force_oriented also a consistent
 // orientation on each tetrahedron).
 // If the function succeeds the isomorphism turning the triangulation into an
 // ordered triangulation is returned.
@@ -301,14 +300,14 @@ NIsomorphism* ordering_iso(const NTriangulation &trig, bool force_oriented)
         if(edge_orientations[i] == 0) {
             edge_orientations[i] = +1;
             if(check_consistency_around_edge(trig,edge_orientations,
-                                             i,force_oriented)) 
+                                             i,force_oriented))
                 ++i;
         }
         else
             if(edge_orientations[i] == +1) {
                 edge_orientations[i] = -1;
                 if(check_consistency_around_edge(trig,edge_orientations,
-                                                 i,force_oriented)) 
+                                                 i,force_oriented))
                     ++i;
             }
             else {

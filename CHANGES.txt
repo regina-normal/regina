@@ -237,6 +237,8 @@ Version 4.6.1  [ (under development) ]
               more convenient version of insertRehydration().
             - New routines isoSig() and fromIsoSig() for detecting and hashing
               combinatorial isomorphism classes of triangulations.
+            - New routines isOriented() and orient() to relabel tetrahedron
+              vertices for consistent orientation.  Thanks to Matthias Goerner.
             - Fixed a memory leak in shellBoundary().
         Class NTrieSet:
             - A new class for storing and querying a large number of sets,
