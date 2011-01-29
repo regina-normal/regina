@@ -96,6 +96,44 @@ namespace {
 
         return regina::preImageOfLattice(m, lVector);
     }
+
+    std::auto_ptr<NMatrixInt> torsionAutInverse_list(const NMatrixInt& m,
+            boost::python::list l) {
+        if (boost::python::len(l) != m.rows()) {
+            PyErr_SetString(PyExc_IndexError,
+                "The vector invF does not contain the expected number "
+                "of elements.");
+            boost::python::throw_error_already_set();
+        }
+
+        std::vector<regina::NLargeInteger> lVector;
+
+        for (unsigned long i = 0; i < m.rows(); ++i) {
+            // Accept any type that we know how to convert to a large integer.
+            extract<regina::NLargeInteger&> x_large(l[i]);
+            if (x_large.check()) {
+                lVector.push_back(x_large());
+                continue;
+            }
+
+            extract<long> x_long(l[i]);
+            if (x_long.check()) {
+                lVector.push_back(x_long());
+                continue;
+            }
+
+            extract<const char*> x_str(l[i]);
+            if (x_str.check()) {
+                lVector.push_back(x_str());
+                continue;
+            }
+
+            // Throw an exception.
+            x_large();
+        }
+
+        return regina::torsionAutInverse(m, lVector);
+    }
 }
 
 void addMatrixOps() {
@@ -106,6 +144,6 @@ void addMatrixOps() {
     def("rowBasisAndOrthComp", regina::rowBasisAndOrthComp);
     def("columnEchelonForm", columnEchelonForm_list);
     def("preImageOfLattice", preImageOfLattice_list);
-    // TODO: torsionAutInverse_list
+    def("torsionAutInverse", torsionAutInverse_list);
 }
 
