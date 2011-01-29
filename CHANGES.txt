@@ -149,6 +149,10 @@ Version 4.6.1  [ (under development) ]
             - New routines randomBoundedByThis(), randomBinary() and
               randomCornerBinary() for pseudo-random number generation.
             - Faster (GMP-native) implementation of swap().
+        Class NMarkedAbelianGroup, NHomMarkedAbelianGroup:
+            - Both of these classes have much richer interfaces than before,
+              and some old routines have now been deprecated.  See the class
+              documentation for full details.  Thanks to Ryan Budney.
         Class NNormalSurface:
             - New routines isCompressingDisc() and isIncompressible() for
               testing incompressibility.
