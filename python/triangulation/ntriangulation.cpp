@@ -254,8 +254,7 @@ void addNTriangulation() {
         .def("collapseEdge", &NTriangulation::collapseEdge, OL_collapseEdge())
         .def("reorderTetrahedraBFS", &NTriangulation::reorderTetrahedraBFS,
             OL_reorderTetrahedraBFS())
-        .def("orient", &NTriangulation::orient, 
-            return_value_policy<manage_new_object>())
+        .def("orient", &NTriangulation::orient)
         .def("order", &NTriangulation::order,
              OL_order(args("force_oriented"))[
                  return_value_policy<manage_new_object>()])

@@ -1028,11 +1028,23 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         bool isOrientable() const;
 
         /**
-         * Determines if this triangulation is oriented.
+         * Determines if this triangulation is oriented; that is, if
+         * tetrahedron vertices are labelled in a way that preserves
+         * orientation across adjacent faces.  Specifically, this
+         * routine returns \c true if and only if every gluing permutation
+         * has negative sign.
          *
-         * @return \c true if and only if all tetrahedra are oriented 
+         * Note that \e orientable triangulations are not always \e oriented
+         * by default.  You can call orient() if you need the tetrahedra
+         * to be oriented consistently as described above.
+         *
+         * A non-orientable triangulation can never be oriented.
+         *
+         * @return \c true if and only if all tetrahedra are oriented
          * consistently.
-         */         
+         *
+         * @author Matthias Goerner
+         */
         bool isOriented() const;
 
         /**
@@ -1042,6 +1054,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * order preserving on the faces. Equivalently whether all edges
          * of the triangulation are oriented such that they induce a 
          * consistent ordering on each tetrahedron.
+         *
+         * @author Matthias Goerner
          */
         bool isOrdered() const;
 
@@ -1915,16 +1929,23 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         void reorderTetrahedraBFS(bool reverse = false);
 
         /**
-         * Returns a triangulation with all tetrahedra oriented consistently.
+         * Relabels tetrahedron vertices in this triangulation so that
+         * all tetrahedra are oriented consistently, if possible.
          *
-         * Specifically, it will flip vertices 2 and 3 of each tetrahedron with
-         * negative orientation.
+         * This routine works by flipping vertices 2 and 3 of each
+         * tetrahedron with negative orientation.  The result will be a
+         * triangulation where the tetrahedron vertices are labelled in
+         * a way that preserves orientation across adjacent faces.
+         * In particular, every gluing permutation will have negative sign.
          *
-         * @return If all components are orientable, returns a oriented
-         * triangulation, otherwise, returns \c NULL.
+         * If this triangulation includes both orientable and
+         * non-orientable components, the orientable components will be
+         * oriented as described above and the non-orientable
+         * components will be left untouched.
+         *
+         * @author Matthias Goerner
          */
-
-        NTriangulation* orient() const;
+        void orient();
 
         /**
          * Returns an ordered triangulation.
@@ -1944,6 +1965,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return If the triangulation can be ordered by relabeling vertices
          * of the tetrahedra, return the resulting triangulation. Otherwise,
          * return NULL.
+         *
+         * @author Matthias Goerner
          */
         NTriangulation* order(bool force_oriented = false) const;
 
@@ -2808,6 +2831,22 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         virtual void clearAllProperties();
 
         /**
+         * Checks that the permutations on face gluings are valid and
+         * that adjacent face gluings match.  That is, if face \a A of
+         * tetrahedron \a X is glued to face \a B of tetrahedron \a Y,
+         * then face \a B of tetrahedron \a Y is also glued to face \a A
+         * of tetrahedron \a X using the inverse permutation.
+         *
+         * If any of these tests fail, this routine writes a message to
+         * standard error and marks this triangulations as invalid.
+         * Any such failure indicates a likely programming error, since
+         * adjacent face gluings should always match if the NTetrahedron
+         * gluing routines have been used correctly.
+         *
+         * @author Matthias Goerner
+         */
+        void checkPermutations() const;
+        /**
          * Recalculates vertices, edges, faces, components and
          * boundary components, as well as various other skeletal
          * properties such as validity and vertex links.
@@ -2816,16 +2855,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \pre All skeletal lists are empty.
          */
         void calculateSkeleton() const;
-        /**
-         * Checks that the permutations on face gluings are valid and
-         * that adjacent face gluings match, i.e. if face A of tet X is glued
-         * to face B of tet Y, then face B of tet Y is also glued to face A of
-         * tet X using the inverse permutation.
-         *
-         * \warning This should only be called from within
-         * calculateSkeleton().
-         */
-        void checkPermutations() const;
         /**
          * Calculates the triangulation components and associated
          * properties.
