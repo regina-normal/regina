@@ -322,6 +322,8 @@ std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
  * \pre The list p1, p2, ..., pn is a list of invariant factors,
  * which means that p1|p2, ..., p{n-1}|pn.
  *
+ * \ifacespython The argument \a invF should be supplied as a python list.
+ *
  * @param input the n-by-n matrix \a A, which must be a lift of a genuine
  * automorphism as described above.
  * @param invF the list p1, p2, ..., pn.
