@@ -30,6 +30,8 @@
 #include "maths/nrational.h"
 #include "triangulation/ntriangulation.h"
 
+#include <iostream>
+
 namespace regina {
 
 void NTriangulation::calculateSkeleton() const {
@@ -37,6 +39,9 @@ void NTriangulation::calculateSkeleton() const {
     valid = true;
     orientable = true;
     standard = true;
+
+    checkPermutations();
+        // Sets valid to false
 
     calculateComponents();
         // Sets components, orientable, NComponent.orientable,
@@ -57,6 +62,42 @@ void NTriangulation::calculateSkeleton() const {
         //     boundaryComponents, NVertex.boundaryComponent
 
     calculatedSkeleton = true;
+}
+
+void NTriangulation::checkPermutations() const {
+    TetrahedronIterator it;
+
+    for(it = tetrahedra.begin(); it != tetrahedra.end(); it++)
+        for(int face = 0; face < 4; face++) {
+            
+            NTetrahedron * adjacent = (*it) -> adjacentTetrahedron(face);
+            
+            if(adjacent) {
+                NPerm4 perm = (*it) -> adjacentGluing(face);
+
+                NPerm4 adj_perm = adjacent -> adjacentGluing(perm[face]);
+
+                if(!(perm*adj_perm).isIdentity())
+                {
+                    valid = false;
+
+                    // This printing statement is temporary code 
+                    // to be removed once enough people have tested it
+                    std::cout << "permutations of adjacent faces do not match"
+                              << " in skeleton.cpp" << std::endl;
+                }
+
+                if((*it) != adjacent -> adjacentTetrahedron(perm[face]))
+                {
+                    valid = false;
+
+                    // This printing statement is temporary code 
+                    // to be removed once enough people have tested it
+                    std::cout << "adjacency relations do not match"
+                              << " in skeleton.cpp" << std::endl;
+                }
+            }   
+        }
 }
 
 void NTriangulation::calculateComponents() const {

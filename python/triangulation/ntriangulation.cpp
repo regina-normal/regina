@@ -66,6 +66,8 @@ namespace {
         NTriangulation::collapseEdge, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_reorderTetrahedraBFS,
         NTriangulation::reorderTetrahedraBFS, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_order,
+        NTriangulation::order, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
         NTriangulation::splitIntoComponents, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_connectedSumDecomposition,
@@ -216,6 +218,8 @@ void addNTriangulation() {
         .def("hasBoundaryFaces", &NTriangulation::hasBoundaryFaces)
         .def("isClosed", &NTriangulation::isClosed)
         .def("isOrientable", &NTriangulation::isOrientable)
+        .def("isOrdered", &NTriangulation::isOrdered)
+        .def("isOriented", &NTriangulation::isOriented)
         .def("isConnected", &NTriangulation::isConnected)
         .def("getFundamentalGroup", &NTriangulation::getFundamentalGroup,
             return_internal_reference<>())
@@ -250,6 +254,11 @@ void addNTriangulation() {
         .def("collapseEdge", &NTriangulation::collapseEdge, OL_collapseEdge())
         .def("reorderTetrahedraBFS", &NTriangulation::reorderTetrahedraBFS,
             OL_reorderTetrahedraBFS())
+        .def("orient", &NTriangulation::orient, 
+            return_value_policy<manage_new_object>())
+        .def("order", &NTriangulation::order,
+             OL_order(args("force_oriented"))[
+                 return_value_policy<manage_new_object>()])
         .def("splitIntoComponents", &NTriangulation::splitIntoComponents,
             OL_splitIntoComponents())
         .def("connectedSumDecomposition",
