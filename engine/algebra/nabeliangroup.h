@@ -92,8 +92,12 @@ class NAbelianGroup : public ShareableObject {
          * \pre M.columns() = N.rows().
          * \pre The product M*N = 0.
          *
-         * @param M the `right' matrix in the chain complex.
-         * @param N the `left' matrix in the chain complex.
+         * @param M the `right' matrix in the chain complex; that is,
+         * the matrix that one takes the kernel of when computing homology.
+         * @param N the `left' matrix in the chain complex; that is, the
+         * matrix that one takes the image of when computing homology.
+         *
+         * @author Ryan Budney
          */
         NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
         /**
@@ -103,12 +107,16 @@ class NAbelianGroup : public ShareableObject {
          * \pre M.columns() = N.rows().
          * \pre The product M*N = 0.
          *
-         * @param M the `right' matrix in the chain complex.
-         * @param N the `left' matrix in the chain complex.
+         * @param M the `right' matrix in the chain complex; that is,
+         * the matrix that one takes the kernel of when computing homology.
+         * @param N the `left' matrix in the chain complex; that is, the
+         * matrix that one takes the image of when computing homology.
          * @param p the modulus, which may be any NLargeInteger.
-         * Zero is interpreted as a request for integer coefficent,
+         * Zero is interpreted as a request for integer coefficents,
          * which will give the same result as the
          * NAbelianGroup(const NMatrixInt&, const NMatrixInt&) constructor.
+         *
+         * @author Ryan Budney
          */
         NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
             const NLargeInteger &p);

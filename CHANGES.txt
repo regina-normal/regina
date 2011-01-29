@@ -108,6 +108,8 @@ Version 4.6.1  [ (under development) ]
         Class NAbelianGroup:
             - Routine addRank() now takes a signed integer, so that you
               can subtract from the rank as well as add to it.
+            - Two new constructors to compute the homology of a chain complex
+              with integer or mod-p coefficients.  Thanks to Ryan Budney.
         Class NBitmask, NBitmask1, NBitmask2:
             - New operators ^= (XOR), -= (set difference) and = (assignment).
             - New routine truncate(), which truncates a bitmask to a given

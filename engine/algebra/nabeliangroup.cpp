@@ -266,7 +266,6 @@ NAbelianGroup* NAbelianGroup::readFromFile(NFile& in) {
 }
 
 // ---N--> CC --M-->  ie: M*N = 0.
-// TODO: Proofread both of these.
 NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N) {
     rank = N.rows();
     NMatrixInt tempN(N);
