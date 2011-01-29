@@ -218,8 +218,8 @@ void addNTriangulation() {
         .def("hasBoundaryFaces", &NTriangulation::hasBoundaryFaces)
         .def("isClosed", &NTriangulation::isClosed)
         .def("isOrientable", &NTriangulation::isOrientable)
-        .def("isOrdered", &NTriangulation::isOrdered)
         .def("isOriented", &NTriangulation::isOriented)
+        .def("isOrdered", &NTriangulation::isOrdered)
         .def("isConnected", &NTriangulation::isConnected)
         .def("getFundamentalGroup", &NTriangulation::getFundamentalGroup,
             return_internal_reference<>())
@@ -255,9 +255,7 @@ void addNTriangulation() {
         .def("reorderTetrahedraBFS", &NTriangulation::reorderTetrahedraBFS,
             OL_reorderTetrahedraBFS())
         .def("orient", &NTriangulation::orient)
-        .def("order", &NTriangulation::order,
-             OL_order(args("force_oriented"))[
-                 return_value_policy<manage_new_object>()])
+        .def("order", &NTriangulation::order, OL_order(args("force_oriented")))
         .def("splitIntoComponents", &NTriangulation::splitIntoComponents,
             OL_splitIntoComponents())
         .def("connectedSumDecomposition",
