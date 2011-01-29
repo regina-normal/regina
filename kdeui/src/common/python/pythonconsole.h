@@ -37,7 +37,7 @@
 #include "pythonoutputstream.h"
 #include "../reginaprefset.h"
 
-#include <kmainwindow.h>
+#include <kxmlguiwindow.h>
 
 class CommandEdit;
 class KTextEdit;
@@ -52,7 +52,7 @@ class QLabel;
  * Objects of this class are generally not created directly; instead
  * PacketManager::launchPythonConsole() should be used.
  */
-class PythonConsole : public KMainWindow {
+class PythonConsole : public KXmlGuiWindow {
     Q_OBJECT
 
     private:
