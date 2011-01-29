@@ -116,13 +116,14 @@ void smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
 
 /**
- * A Smith normal form algorithm that also returns change of basis matrices.
- * This is a variant of Hafner-McCurley and Havas-Holt-Rees's description
- * of pivoting methods. 
+ * An alternative Smith normal form algorithm that also returns change of
+ * basis matrices.  This routine may be preferable for extremely large
+ * matrices.  This is a variant of Hafner-McCurley and Havas-Holt-Rees's
+ * description of pivoting methods.
  *
  * The only input argument is \a matrix.  The four remaining arguments
- * (the change of basis matrices), if passed, will be refilled, though they must be
- * constructed with the correct dimensions as seen in the preconditions
+ * (the change of basis matrices), if passed, will be refilled, though they
+ * must be constructed with the correct dimensions as seen in the preconditions
  * below.  All five arguments are used to return information as follows.
  *
  * Let \a M be the initial value of \a matrix, and let \a S be the Smith
@@ -148,13 +149,13 @@ void smithNormalForm(NMatrixInt& matrix,
  * need not be square).  When the algorithm terminates, this matrix \e is
  * in its Smith Normal Form.
  * @param rowSpaceBasis used to return a change of basis matrix (see
- * above for details). Optional -- can pass null.
+ * above for details).  This is optional; you may pass a null pointer instead.
  * @param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
- *  Optional -- can pass null.
+ * This is optional; you may pass a null pointer instead.
  * @param colSpaceBasis used to return a change of basis matrix (see
- * above for details). Optional -- can pass null.
- * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis, 
- *  optional -- can pass null.
+ * above for details).  This is optional; you may pass a null pointer instead.
+ * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
+ * This is optional; you may pass a null pointer instead.
  *
  * \author Ryan Budney
  */
@@ -307,22 +308,30 @@ std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
         const std::vector<NLargeInteger>& sublattice);
 
 /**
- * Given an automorphism of the group Z_p1 + Z_p2 + ... + Z_pn, this procedure computes
- * the inverse automorphism.  At present this routine is only called when constructing the
- * inverse of an NHomMarkedAbelianGroup that is known to be invertible. 
+ * Given an automorphism of the group <tt>Z_p1 + Z_p2 + ... + Z_pn</tt>,
+ * this procedure computes the inverse automorphism.
  *
- * @param input is an nxn-matrix which represents a lift of the automorphism to just some
- *        nxn matrix.  Specifically, you have a little commutative diagram with Z^n --A-->Z^n
- *        covering the automorphism of Z_p1 + Z_p2 + ... + Z_pn, where the maps down are 
- *        the direct sum of the standard quotients Z --> Z_pi.  So if you want this procedure
- *        to give you meaningful output, A must be a lift of a genuine automorphism of
- *        Z_p1 + ... + Z_pn. 
- * @param invF is the list p1, p2, ..., pn, we assume they are invariant factors so p1|p2, 
- *        ... pn-1 | pn. 
+ * The input is an n-by-n matrix \a A which represents a lift of the
+ * automorphism to just some n-by-n matrix.  Specifically, you have a little
+ * commutative diagram with <tt>Z^n --A--> Z^n</tt> covering the automorphism
+ * of <tt>Z_p1 + Z_p2 + ... + Z_pn</tt>, where the maps down are the direct
+ * sum of the standard quotients <tt>Z --> Z_pi</tt>.  So if you want this
+ * procedure to give you meaningful output, \a A must be a lift of a genuine
+ * automorphism of <tt>Z_p1 + ... + Z_pn</tt>.
+ *
+ * \pre The list p1, p2, ..., pn is a list of invariant factors,
+ * which means that p1|p2, ..., p{n-1}|pn.
+ *
+ * @param input the n-by-n matrix \a A, which must be a lift of a genuine
+ * automorphism as described above.
+ * @param invF the list p1, p2, ..., pn.
+ * @return the inverse automorphism, also described as an n-by-n matrix
+ * as per the discussion above.
  *
  * \author Ryan Budney
  */
-NMatrixInt torsionAutInverse(const NMatrixInt& input, const std::vector<NLargeInteger> &invF);
+std::auto_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
+    const std::vector<NLargeInteger> &invF);
 
 /*@}*/
 

@@ -39,6 +39,7 @@ class MatrixOpsTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(smithNormalForm);
     CPPUNIT_TEST(smithNormalFormBasis);
+    CPPUNIT_TEST(metricalSmithNormalForm);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -283,6 +284,64 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             checkSNFBasis(red43, "redundant 4x3 example");
             checkSNFBasis(dup34, "duplicated 3x4 example");
             checkSNFBasis(dup43, "duplicated 4x3 example");
+        }
+
+        static void checkMetricalSNF(const NMatrixInt& m, const char* name) {
+            // Assume here that the one-argument smithNormalForm() is known to
+            // be working.
+            //
+            // What we do here is examine the change of basis matrices and
+            // verify that they behave as advertised.
+
+            // Get the SNF result from the one-argument routine.
+            NMatrixInt snf(m);
+            regina::smithNormalForm(snf);
+
+            // Do it now with the five-argument routine, to collect
+            // change of basis matrices.
+            NMatrixInt snfBasis(m);
+            NMatrixInt R(m.columns(), m.columns());
+            NMatrixInt C(m.rows(), m.rows());
+            NMatrixInt invR(R);
+            NMatrixInt invC(C);
+
+            regina::metricalSmithNormalForm(snfBasis, &R, &invR, &C, &invC);
+
+            if (! (R * invR)->isIdentity()) {
+                CPPUNIT_FAIL(std::string("In metricalSmithNormalForm(") +
+                    name + "), rowSpaceBasis and rowSpaceBasisInv are "
+                    "not inverses.");
+            }
+
+            if (! (C * invC)->isIdentity()) {
+                CPPUNIT_FAIL(std::string("In metricalSmithNormalForm(") +
+                    name + "), colSpaceBasis and colSpaceBasisInv are "
+                    "not inverses.");
+            }
+
+            if (*(C * *(m * R)) != snfBasis) {
+                CPPUNIT_FAIL(std::string("In metricalSmithNormalForm(") +
+                    name + "), colSpaceBasis and rowSpaceBasis do not "
+                    "satisfy the required relationship.");
+            }
+
+            if (*(invC * *(snfBasis * invR)) != m) {
+                CPPUNIT_FAIL(std::string("In metricalSmithNormalForm(") +
+                    name + "), colSpaceBasisInv and rowSpaceBasisInv do "
+                    "not satisfy the required relationship.");
+            }
+        }
+
+        void metricalSmithNormalForm() {
+            checkMetricalSNF(zero34, "zero 3x4 example");
+            checkMetricalSNF(zero43, "zero 4x3 example");
+            checkMetricalSNF(identity3, "identity 3x3 example");
+            checkMetricalSNF(square3, "simple 3x3 example");
+            checkMetricalSNF(rect34, "simple 3x4 example");
+            checkMetricalSNF(rect43, "simple 4x3 example");
+            checkMetricalSNF(red43, "redundant 4x3 example");
+            checkMetricalSNF(dup34, "duplicated 3x4 example");
+            checkMetricalSNF(dup43, "duplicated 4x3 example");
         }
 };
 
