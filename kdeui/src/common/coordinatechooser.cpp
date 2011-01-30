@@ -38,7 +38,7 @@
 using regina::NNormalSurfaceList;
 
 void CoordinateChooser::insertSystem(int coordSystem) {
-    insertItem(Coordinates::name(coordSystem));
+    insertItem(coordSystem,Coordinates::name(coordSystem));
     systems.push_back(coordSystem);
 }
 
@@ -70,10 +70,11 @@ void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
 }
 
 void CoordinateChooser::setCurrentSystem(int newSystem) {
-    std::vector<int>::const_iterator it =
-        std::find(systems.begin(), systems.end(), newSystem);
-
-    if (it != systems.end())
-        setCurrentItem(it - systems.begin());
+    setCurrentIndex(newSystem);
+//    std::vector<int>::const_iterator it =
+//        std::find(systems.begin(), systems.end(), newSystem);
+//
+//    if (it != systems.end())
+//        setCurrentItem(it - systems.begin());
 }
 

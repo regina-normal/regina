@@ -75,11 +75,11 @@ class CoordinateChooser : public KComboBox {
 };
 
 inline CoordinateChooser::CoordinateChooser(QWidget* parent,
-        const char* name) : KComboBox(parent, name) {
+        const char* name) : KComboBox(parent) {
 }
 
 inline int CoordinateChooser::getCurrentSystem() {
-    return systems[currentItem()];
+    return systems[currentIndex()];
 }
 
 #endif
