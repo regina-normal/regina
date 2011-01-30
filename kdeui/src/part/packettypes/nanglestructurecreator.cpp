@@ -38,6 +38,29 @@
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qcheckbox.h>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qwhatsthis.h>
+
+NAngleStructureCreator::NAngleStructureCreator() {
+    // Set up the basic layout.
+    ui = new QWidget();
+    QBoxLayout* layout = new QVBoxLayout(ui);
+
+    tautOnly = new QCheckBox(i18n("Taut structures only"), ui);
+    tautOnly->setChecked(false);
+    QWhatsThis::add(tautOnly, i18n("If you check this box, only "
+        "taut structures will be enumerated (that is, angle structures "
+        "in which every angle is 0 or Pi).  "
+        "This is typically much faster than a full enumeration of all "
+        "vertex angle structures."));
+    layout->addWidget(tautOnly);
+}
+
+QWidget* NAngleStructureCreator::getInterface() {
+    return ui;
+}
 
 regina::NPacket* NAngleStructureCreator::createPacket(
         regina::NPacket* parentPacket, QWidget* parentWidget) {
@@ -53,7 +76,8 @@ regina::NPacket* NAngleStructureCreator::createPacket(
         i18n("Enumerating vertex angle structures..."), parentWidget);
 
     regina::NAngleStructureList* ans = regina::NAngleStructureList::enumerate(
-            dynamic_cast<regina::NTriangulation*>(parentPacket), &manager);
+            dynamic_cast<regina::NTriangulation*>(parentPacket),
+            tautOnly->isChecked(), &manager);
 
     if (dlg.run())
         return ans;
