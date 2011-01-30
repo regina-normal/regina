@@ -137,11 +137,11 @@ void NAngleStructureUI::refresh() {
         statStr = i18n("%1 vertex angle structures\n").arg(nStructs);
 
     statStr.append(i18n("Span includes: "));
-    if (structures->allowsStrict())
+    if (structures->spansStrict())
         statStr.append(i18n("Strict, "));
     else
         statStr.append(i18n("NO Strict, "));
-    if (structures->allowsTaut())
+    if (structures->spansTaut())
         statStr.append(i18n("Taut"));
     else
         statStr.append(i18n("NO Taut"));

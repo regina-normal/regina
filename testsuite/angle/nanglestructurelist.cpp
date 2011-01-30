@@ -105,7 +105,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 msg << "support strict angle structures.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    list->allowsStrict() == allowStrict);
+                    list->spansStrict() == allowStrict);
             }
             {
                 std::ostringstream msg;
@@ -116,7 +116,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 msg << "support taut angle structures.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    list->allowsTaut() == allowTaut);
+                    list->spansTaut() == allowTaut);
             }
         }
 
