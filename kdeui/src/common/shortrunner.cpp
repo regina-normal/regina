@@ -59,4 +59,3 @@ void ShortRunner::collectOutput(KProcess*, char* buffer, int buflen) {
     output += QString::fromLatin1(buffer, buflen);
 }
 
-#include "shortrunner.moc"

@@ -77,4 +77,3 @@ void CoordinateChooser::setCurrentSystem(int newSystem) {
         setCurrentItem(it - systems.begin());
 }
 
-#include "coordinatechooser.moc"
