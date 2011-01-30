@@ -61,7 +61,7 @@ class NXMLAngleStructureReader;
  * multiply by <i>pi</i>.
  *
  * The reason for using this obfuscated representation is so we can
- * be lazy and use the NVertexEnumerator vertex solution routines to
+ * use the NDoubleDescription vertex enumeration routines to
  * calculate vertex angle structures.
  *
  * If there are \a t tetrahedra in the underlying triangulation, there

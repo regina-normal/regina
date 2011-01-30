@@ -75,11 +75,11 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
         std::vector<NAngleStructure*> structures;
             /**< Contains the angle structures stored in this packet. */
 
-        mutable NProperty<bool> doesAllowStrict;
+        mutable NProperty<bool> doesSpanStrict;
             /**< Does the convex span of this list include a strict
              *   angle structure? */
-        mutable NProperty<bool> doesAllowTaut;
-            /**< Does the convex span of this list include a taut structure? */
+        mutable NProperty<bool> doesSpanTaut;
+            /**< Does this list include a taut structure? */
 
     public:
         /**
@@ -121,14 +121,44 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          * @return \c true if and only if a strict angle structure can
          * be produced.
          */
-        bool allowsStrict() const;
+        bool spansStrict() const;
         /**
-         * Determines whether any convex combination of the angle
-         * structures in this list is a taut structure.
+         * Determines whether any angle structure in this list is a
+         * taut structure.  Because taut structures always appear as
+         * vertices of the angle structure solution space, this routine
+         * is equivalent to testing whether any convex combination of
+         * the angle structures in this list is a taut structure.
+         *
          * See NAngleStructure::isTaut() for details on taut
          * structures.
          *
          * @return \c true if and only if a taut structure can be produced.
+         */
+        bool spansTaut() const;
+
+        /**
+         * Determines whether any convex combination of the angle
+         * structures in this list is a strict angle structure.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Users should switch to the identical routine
+         * spansStrict() instead.
+         *
+         * @return \c true if and only if a strict angle structure can
+         * be produced.
+         */
+        bool allowsStrict() const;
+
+        /**
+         * Determines whether any angle structure in this list is a
+         * taut structure.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Users should switch to the identical routine
+         * spansTaut() instead.
+         *
+         * @return \c true if and only if a taut angle structure can
+         * be produced.
          */
         bool allowsTaut() const;
 
@@ -192,12 +222,12 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          * Calculate whether the convex span of this list includes a
          * strict angle structure.
          */
-        void calculateAllowStrict() const;
+        void calculateSpanStrict() const;
         /**
          * Calculate whether the convex span of this list includes a
          * taut structure.
          */
-        void calculateAllowTaut() const;
+        void calculateSpanTaut() const;
 
         /**
          * An output iterator used to insert angle structures into an
@@ -352,16 +382,24 @@ inline const NAngleStructure* NAngleStructureList::getStructure(
     return structures[index];
 }
 
+inline bool NAngleStructureList::spansStrict() const {
+    if (! doesSpanStrict.known())
+        calculateSpanStrict();
+    return doesSpanStrict.value();
+}
+
+inline bool NAngleStructureList::spansTaut() const {
+    if (! doesSpanTaut.known())
+        calculateSpanTaut();
+    return doesSpanTaut.value();
+}
+
 inline bool NAngleStructureList::allowsStrict() const {
-    if (! doesAllowStrict.known())
-        calculateAllowStrict();
-    return doesAllowStrict.value();
+    return spansStrict();
 }
 
 inline bool NAngleStructureList::allowsTaut() const {
-    if (! doesAllowTaut.known())
-        calculateAllowTaut();
-    return doesAllowTaut.value();
+    return spansTaut();
 }
 
 inline bool NAngleStructureList::dependsOnParent() const {

@@ -110,6 +110,10 @@ Version 4.6.1  [ (under development) ]
               can subtract from the rank as well as add to it.
             - Two new constructors to compute the homology of a chain complex
               with integer or mod-p coefficients.  Thanks to Ryan Budney.
+        Class NAngleStructureList:
+            - Renamed allowsStrict() and allowsTaut() to spansStrict() and
+              spansTaut().  The old routines are now deprecated but have been
+              preserved (for now) for backward compatibility.
         Class NBitmask, NBitmask1, NBitmask2:
             - New operators ^= (XOR), -= (set difference) and = (assignment).
             - New routine truncate(), which truncates a bitmask to a given

@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-allowtaut">
+<refentry id="data-spantaut">
  <refmeta>
-  <refentrytitle>allowtaut</refentrytitle>
+  <refentrytitle>spantaut</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>allowtaut</refname>
-  <refpurpose>Deprecated; see &xml-spantaut;</refpurpose>
+  <refname>spantaut</refname>
+  <refpurpose>Does an angle structure list span a taut structure?</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-allowtaut ::=</synopsis>
+spantaut ::=</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -45,24 +45,26 @@ allowtaut ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   This element has been renamed to &xml-spantaut;.  The old name
-   &xml-allowtaut; has been kept for backward compatibility, but any
-   new code that writes data files should use &xml-spantaut; instead.
-  </para>
-  <para>
-   An &xml-allowtaut; element stores whether or not any convex
-   combination of the angle structures in the parent
+   A &xml-spantaut; element stores whether or not any
+   angle structure in the parent list is a taut angle structure.
+   Because taut structures always appear as vertices of the angle
+   structure solution space, this is equivalent to knowing whether any
+   convex combination of the angle structures in the parent
    list is a taut angle structure.
   </para>
   <para>
    A <firstterm>taut</firstterm> angle structure contains only angles
    0 and &pi;.
   </para>
+  <para>
+   This element is identical to the old (and now deprecated) element
+   &xml-allowtaut;.
+  </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>allowtaut</sgmltag>:
+    The following elements contain <sgmltag>spantaut</sgmltag>:
     <simplelist type="inline">
      <member>&xml-packet-anglestructurelist;</member>
     </simplelist>.
@@ -72,7 +74,7 @@ allowtaut ::=</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    Element <sgmltag>allowtaut</sgmltag> has no children.
+    Element <sgmltag>spantaut</sgmltag> has no children.
    </para>
   </refsect2>
  </refsect1>
