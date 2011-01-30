@@ -36,26 +36,28 @@
 #include <qdatetime.h>
 #include <qfile.h>
 
-const QString ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
+#include <KLocalizedString>
 
-const QString ReginaAbout::regCopyright(
-    "Copyright (c) 1999-2009, Ben Burton");
+const QByteArray ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
+
+const KLocalizedString ReginaAbout::regCopyright(
+    ki18n("Copyright (c) 1999-2009, Ben Burton"));
 
 const QString ReginaAbout::regDataExt(".rga");
 
-const QString ReginaAbout::regDescription(
-    I18N_NOOP("A normal surface theory calculator"));
+const KLocalizedString ReginaAbout::regDescription(
+    ki18n("A normal surface theory calculator"));
 
-const QString ReginaAbout::regName(I18N_NOOP("Regina"));
+const QByteArray ReginaAbout::regName(I18N_NOOP("Regina"));
 
-const QString ReginaAbout::regReleased(
-    I18N_NOOP("Released ") + QDate(2009, 5, 16).toString(Qt::TextDate));
+const KLocalizedString ReginaAbout::regReleased(
+    ki18n("Released %1").subs(QDate(2009, 5, 16).toString(Qt::TextDate)));
 
-const QString ReginaAbout::regVersion(PACKAGE_VERSION);
+const QByteArray ReginaAbout::regVersion(PACKAGE_VERSION);
 
-const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
+const QByteArray ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
-const char* ReginaAbout::regLicense =
+const KLocalizedString ReginaAbout::regLicense( ki18n( 
     "Copyright (c) 1999-2009, Ben Burton\n\n"
     "This program is distributed under the terms of the GPL v2.\n\n"
     "CITATION:\n\n"
@@ -85,63 +87,63 @@ const char* ReginaAbout::regLicense =
     "Orb for use in importing and exporting files in Orb / Casson format.\n"
     "Orb is based on SnapPea (see above) with additional code written by\n"
     "Damian Heard, who has also given permission for his code to be\n"
-    "distributed under the terms of the GNU General Public License.\n";
+    "distributed under the terms of the GNU General Public License.\n"));
 
 ReginaAbout::ReginaAbout(const char* internalName) :
-        KAboutData(internalName, regName, regVersion,
+        KAboutData(internalName, regName, ki18n(""),regVersion,
         regDescription, License_Custom, regCopyright,
         regReleased, regWebsite, regBugAddress) {
     setLicenseText(regLicense);
 
     // Authors:
-    addAuthor("Ben Burton", 0, "bab@debian.org");
-    addAuthor("Ryan Budney", 0, "rybu@uvic.ca");
+    addAuthor(ki18n("Ben Burton"), ki18n(""), "bab@debian.org","");
+    addAuthor(ki18n("Ryan Budney"), ki18n(""), "rybu@uvic.ca","");
 
     // Credits:
-    addCredit("Bernard Blackham",
-        I18N_NOOP("Help with cache optimisation"));
-    addCredit("Marc Culler",
-        I18N_NOOP("Helpful discussions"));
-    addCredit("Dominique Devriese",
-        I18N_NOOP("Red Hat / Fedora porting assistance"));
-    addCredit("Nathan Dunfield",
-        I18N_NOOP("Helpful discussions"));
-    addCredit("Matthias Goerner",
-        I18N_NOOP("Code contributions"));
-    addCredit("William Jaco",
-        I18N_NOOP("Supervision and many long discussions"));
-    addCredit("David Letscher",
-        I18N_NOOP("Code contributions and technical advice"));
-    addCredit("Craig Macintyre",
-        I18N_NOOP("Red Hat / Fedora porting assistance"));
-    addCredit("Hyam Rubinstein",
-        I18N_NOOP("Supervision and many long discussions"));
-    addCredit("Jonathan Shewchuk",
-        I18N_NOOP("Useful discussions on vertex enumeration"));
-    addCredit("Jeff Weeks",
-        I18N_NOOP("Use of the SnapPea kernel and helpful discussions"));
-    addCredit("The American Institute of Mathematics",
-        I18N_NOOP("Support for development"));
-    addCredit("The Australian Research Council",
-        I18N_NOOP("Support for development (DP1094516, DPTODO) "
-            "and hardware (DPTODO)"));
-    addCredit("The Institute for the Physics and Mathematics of the "
-            "Universe, Tokyo",
-        I18N_NOOP("Hospitality and support"));
-    addCredit("Oklahoma State University, USA",
-        I18N_NOOP("Support for development"));
-    addCredit("RMIT University, Australia",
-        I18N_NOOP("Support for development"));
-    addCredit("The University of Melbourne, Australia",
-        I18N_NOOP("Support for development and hardware"));
-    addCredit("The University of Queensland, Australia",
-        I18N_NOOP("Continuing support for development"));
-    addCredit("The University of Victoria, Canada",
-        I18N_NOOP("Hospitality and support"));
-    addCredit("The Victorian Partnership for Advanced Computing",
-        I18N_NOOP("Financial support and much-needed CPU cycles"));
-    addCredit("Debian GNU/Linux",
-        I18N_NOOP("An exceptional working environment"),
+    addCredit(ki18n("Bernard Blackham"),
+        ki18n("Help with cache optimisation"),"","");
+    addCredit(ki18n("Marc Culler"),
+        ki18n("Helpful discussions"),"","");
+    addCredit(ki18n("Dominique Devriese"),
+        ki18n("Red Hat / Fedora porting assistance"),"","");
+    addCredit(ki18n("Nathan Dunfield"),
+        ki18n("Helpful discussions"),"","");
+    addCredit(ki18n("Matthias Goerner"),
+        ki18n("Code contributions"),"","");
+    addCredit(ki18n("William Jaco"),
+        ki18n("Supervision and many long discussions"),"","");
+    addCredit(ki18n("David Letscher"),
+        ki18n("Code contributions and technical advice"),"","");
+    addCredit(ki18n("Craig Macintyre"),
+        ki18n("Red Hat / Fedora porting assistance"),"","");
+    addCredit(ki18n("Hyam Rubinstein"),
+        ki18n("Supervision and many long discussions"),"","");
+    addCredit(ki18n("Jonathan Shewchuk"),
+        ki18n("Useful discussions on vertex enumeration"),"","");
+    addCredit(ki18n("Jeff Weeks"),
+        ki18n("Use of the SnapPea kernel and helpful discussions"),"","");
+    addCredit(ki18n("The American Institute of Mathematics"),
+        ki18n("Support for development"),"","");
+    addCredit(ki18n("The Australian Research Council"),
+        ki18n("Support for development (DP1094516, DPTODO) "
+            "and hardware (DPTODO)"),"","");
+    addCredit(ki18n("The Institute for the Physics and Mathematics of the "
+            "Universe, Tokyo"),
+        ki18n("Hospitality and support"),"","");
+    addCredit(ki18n("Oklahoma State University, USA"),
+        ki18n("Support for development"),"","");
+    addCredit(ki18n("RMIT University, Australia"),
+        ki18n("Support for development"),"","");
+    addCredit(ki18n("The University of Melbourne, Australia"),
+        ki18n("Support for development and hardware"),"","");
+    addCredit(ki18n("The University of Queensland, Australia"),
+        ki18n("Continuing support for development"),"","");
+    addCredit(ki18n("The University of Victoria, Canada"),
+        ki18n("Hospitality and support"),"","");
+    addCredit(ki18n("The Victorian Partnership for Advanced Computing"),
+        ki18n("Financial support and much-needed CPU cycles"),"","");
+    addCredit(ki18n("Debian GNU/Linux"),
+        ki18n("An exceptional working environment"),"",
         "http://www.debian.org/");
 }
 

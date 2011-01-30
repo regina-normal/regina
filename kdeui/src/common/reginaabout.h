@@ -42,24 +42,24 @@
  */
 class ReginaAbout : public KAboutData {
     public:
-        static const QString regBugAddress;
+        static const QByteArray regBugAddress;
             /**< The email address to which bug reports should be sent. */
-        static const QString regCopyright;
+        static const KLocalizedString regCopyright;
             /**< The application's copyright notice. */
         static const QString regDataExt;
             /**< The default Regina data file extension.  This includes
                 the period. */
-        static const QString regDescription;
+        static const KLocalizedString regDescription;
             /**< A brief description of the application. */
-        static const QString regName;
+        static const QByteArray regName;
             /**< The human-readable application name. */
-        static const QString regReleased;
+        static const KLocalizedString regReleased;
             /**< A message describing the current application release date. */
-        static const QString regVersion;
+        static const QByteArray regVersion;
             /**< The version number of the current application release. */
-        static const QString regWebsite;
+        static const QByteArray regWebsite;
             /**< The home website of the application. */
-        static const char* regLicense;
+        static const KLocalizedString regLicense;
             /**< The licensing agreement for the application. */
 
         ReginaAbout(const char* internalName);
