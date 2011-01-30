@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-struct;*,
+packet ::= (&xml-angleparams;?, &xml-struct;*,
             &xml-spanstrict;?, &xml-allowstrict;?,
             &xml-spantaut;?, &xml-allowtaut;?,
             &xml-tag;*, &xml-packet;*)</synopsis>
@@ -56,6 +56,14 @@ packet ::= (&xml-struct;*,
    elements.
   </para>
   <para>
+   The parameters of the angle structure enumeration that created this
+   list are stored in the child &xml-angleparams; element.  &regina;
+   versions 4.6 and earlier did not write this &xml-angleparams; element
+   (since there were no parameters to select).  If the &xml-angleparams;
+   element is missing then all parameters are assumed to take on their
+   default values as described in the &xml-angleparams; documentation.
+  </para>
+  <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
    described in the general &xml-packet; element documentation.
   </para>
@@ -79,6 +87,7 @@ packet ::= (&xml-struct;*,
     <simplelist type="inline">
      <member>&xml-allowstrict;</member>
      <member>&xml-allowtaut;</member>
+     <member>&xml-angleparams;</member>
      <member>&xml-packet;</member>
      <member>&xml-spanstrict;</member>
      <member>&xml-spantaut;</member>
