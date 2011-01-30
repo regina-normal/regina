@@ -306,7 +306,7 @@ class NMarkedAbelianGroup : public ShareableObject {
          *
          * \deprecated This routine will be removed in a future version
          * of Regina.  Users should switch to the less ambiguously named
-         * routine isIsomorphicto() instead.
+         * routine isIsomorphicTo() instead.
          *
          * @param other the group with which this should be compared.
          * @return \c true if and only if the two groups are isomorphic.
