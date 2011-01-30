@@ -70,7 +70,7 @@ namespace {
         return ans;
     }
 
-    boost::python::list getSNFIsoRep_list_list(
+    boost::python::list snfRep_list_list(
             const NMarkedAbelianGroup& g, boost::python::list element) {
         unsigned long needLen = g.getM().columns();
 
@@ -108,7 +108,7 @@ namespace {
             x_large();
         }
 
-        std::vector<regina::NLargeInteger> rep = g.getSNFIsoRep(eltVector);
+        std::vector<regina::NLargeInteger> rep = g.snfRep(eltVector);
 
         boost::python::list ans;
         for (std::vector<regina::NLargeInteger>::const_iterator
@@ -152,10 +152,11 @@ void addNMarkedAbelianGroup() {
         .def("equalTo", &NMarkedAbelianGroup::equalTo)
         // TODO: ccRep, ccRep, cycleProjection, cycleProjection
         // TODO: isCycle, boundaryMap, isBoundary, writeAsBoundary
-        // TODO: snfRep, cycleGen
+        // TODO: cycleGen
         .def("getFreeRep", getFreeRep_list)
         .def("getTorsionRep", getTorsionRep_list)
-        .def("getSNFIsoRep", getSNFIsoRep_list_list)
+        .def("getSNFIsoRep", snfRep_list_list)
+        .def("snfRep", snfRep_list_list)
         .def("getRankCC", &NMarkedAbelianGroup::getRankCC)
         .def("minNumberCycleGens", &NMarkedAbelianGroup::minNumberCycleGens)
         .def("getMRB", &NMarkedAbelianGroup::getMRB,
