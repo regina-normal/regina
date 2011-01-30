@@ -35,14 +35,29 @@
 
 #include "../packetcreator.h"
 
+class QCheckBox;
+
 /**
  * An interface for creating angle structure lists.
  */
 class NAngleStructureCreator : public PacketCreator {
+    private:
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QCheckBox* tautOnly;
+
     public:
+        /**
+         * Constructor.
+         */
+        NAngleStructureCreator();
+
         /**
          * PacketCreator overrides.
          */
+        QWidget* getInterface();
         regina::NPacket* createPacket(regina::NPacket* parentPacket,
             QWidget* parentWidget);
 };
