@@ -40,8 +40,12 @@ namespace {
         return NAngleStructureList::enumerate(owner);
     }
     NAngleStructureList* enumerate_2(regina::NTriangulation* owner,
-            regina::NProgressManager* manager) {
-        return NAngleStructureList::enumerate(owner, manager);
+            bool tautOnly) {
+        return NAngleStructureList::enumerate(owner, tautOnly);
+    }
+    NAngleStructureList* enumerate_3(regina::NTriangulation* owner,
+            bool tautOnly, regina::NProgressManager* manager) {
+        return NAngleStructureList::enumerate(owner, tautOnly, manager);
     }
 }
 
@@ -62,6 +66,8 @@ void addNAngleStructureList() {
         .def("enumerate", enumerate_1,
             return_value_policy<reference_existing_object>())
         .def("enumerate", enumerate_2,
+            return_value_policy<reference_existing_object>())
+        .def("enumerate", enumerate_3,
             return_value_policy<reference_existing_object>())
         .staticmethod("enumerate")
     ;
