@@ -89,12 +89,18 @@ NXMLElementReader* NXMLAngleStructureListReader::startContentSubElement(
     bool b;
     if (subTagName == "struct")
         return new NXMLAngleStructureReader(tri);
-    else if (subTagName == "allowstrict") {
+    else if (subTagName == "spanstrict") {
         if (valueOf(props.lookup("value"), b))
-            list->doesAllowStrict = b;
+            list->doesSpanStrict = b;
+    } else if (subTagName == "spantaut") {
+        if (valueOf(props.lookup("value"), b))
+            list->doesSpanTaut = b;
+    } else if (subTagName == "allowstrict") {
+        if (valueOf(props.lookup("value"), b))
+            list->doesSpanStrict = b;
     } else if (subTagName == "allowtaut") {
         if (valueOf(props.lookup("value"), b))
-            list->doesAllowTaut = b;
+            list->doesSpanTaut = b;
     }
     return new NXMLElementReader();
 }
