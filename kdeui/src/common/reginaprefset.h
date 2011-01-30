@@ -35,6 +35,7 @@
 
 #include <qmutex.h>
 #include <qvector.h>
+#include <QString>
 
 /**
  * A structure holding a single filename which may or may not be active

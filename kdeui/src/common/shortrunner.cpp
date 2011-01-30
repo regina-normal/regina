@@ -34,21 +34,27 @@ QString ShortRunner::run(bool mergeStderr) {
         this, SLOT(collectOutput(KProcess*, char*, int)));
 
     // Start the child process running.
-    KProcess::Communication comm = (mergeStderr ?
-        KProcess::Communication(KProcess::Stdout | KProcess::MergedStderr) :
-        KProcess::Stdout);
-    if (! proc.start(KProcess::DontCare, comm))
+    KProcess::OutputChannelMode comm = (mergeStderr ?
+        KProcess::MergedChannels  :
+        KProcess::OnlyStdoutChannel);
+    proc.setOutputChannelMode(comm);
+    if (! proc.startDetached())
         return QString::null;
 
     // Wait for it to finish, within a reasonable time limit.
-    if (proc.wait(timeout)) {
+    if (proc.waitForFinished(timeout)) {
         // All good.
         QMutexLocker lock(&outputMutex);
         return output;
     } else {
         // Timed out.
-        if (! proc.kill())
-            proc.kill(SIGKILL);
+
+        proc.terminate();
+        // TODO Old code would attempt to terminate (SIGQUIT)
+        // but if the program didn't respond it'd kill (SIGKILL)
+        // This I guess is equivalent ?
+        proc.waitForFinished(500);
+        proc.kill();
         reachedTimeout = true;
         return QString::null;
     }
