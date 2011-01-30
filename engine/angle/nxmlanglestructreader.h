@@ -132,7 +132,7 @@ inline NAngleStructure* NXMLAngleStructureReader::getStructure() {
 // Inline functions for NXMLAngleStructureListReader
 
 inline NXMLAngleStructureListReader::NXMLAngleStructureListReader(
-        NTriangulation* newTri) : list(new NAngleStructureList()),
+        NTriangulation* newTri) : list(new NAngleStructureList(false)),
         tri(newTri) {
 }
 
