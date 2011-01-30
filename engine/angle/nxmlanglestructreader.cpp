@@ -87,9 +87,12 @@ NXMLElementReader* NXMLAngleStructureListReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     bool b;
-    if (subTagName == "struct")
+    if (subTagName == "angleparams") {
+        if (valueOf(props.lookup("tautonly"), b))
+            list->tautOnly_ = b;
+    } else if (subTagName == "struct") {
         return new NXMLAngleStructureReader(tri);
-    else if (subTagName == "spanstrict") {
+    } else if (subTagName == "spanstrict") {
         if (valueOf(props.lookup("value"), b))
             list->doesSpanStrict = b;
     } else if (subTagName == "spantaut") {

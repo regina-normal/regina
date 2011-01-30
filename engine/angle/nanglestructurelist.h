@@ -74,12 +74,20 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
     private:
         std::vector<NAngleStructure*> structures;
             /**< Contains the angle structures stored in this packet. */
+        bool tautOnly_;
+            /**< Stores whether we are only interested in taut structures.
+                 This is an option selected by the user before enumeration
+                 takes place. */
 
         mutable NProperty<bool> doesSpanStrict;
             /**< Does the convex span of this list include a strict
-             *   angle structure? */
+                 angle structure?
+                 This is determined by looking at the output angle structues
+                 after enumeration has taken place. */
         mutable NProperty<bool> doesSpanTaut;
-            /**< Does this list include a taut structure? */
+            /**< Does this list include a taut structure?
+                 This is determined by looking at the output angle structues
+                 after enumeration has taken place. */
 
     public:
         /**
@@ -94,6 +102,16 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          * @return the corresponding triangulation.
          */
         NTriangulation* getTriangulation() const;
+
+        /**
+         * Returns whether this list was produced by enumerating taut angle
+         * structures only.
+         *
+         * @param \c true if this list was produced by enumerating
+         * taut angle structures only, or \c false if the enumeration
+         * procedure allowed for any angle structures.
+         */
+        bool isTautOnly() const;
 
         /**
          * Returns the number of angle structures stored in this list.
@@ -167,6 +185,10 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          * A list containing all vertices of the angle structure solution
          * space will be returned.
          *
+         * The option is offered to find only taut structures (which are
+         * considerably faster to enumerate) instead of enumerating all
+         * vertex angle structures.  See the \a tautOnly argument below.
+         *
          * The angle structure list that is created will be inserted as the
          * last child of the given triangulation.  This triangulation \b must
          * remain the parent of this angle structure list, and must not
@@ -185,6 +207,9 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          *
          * @param owner the triangulation for which the vertex
          * angle structures will be enumerated.
+         * @param tautOnly \c true if only taut structures are to be
+         * enuemrated, or \c false if we should enumerate all vertices
+         * of the angle structure solution space; this defaults to \c false.
          * @param manager a progress manager through which progress will
          * be reported, or 0 if no progress reporting is required.  If
          * non-zero, \a manager must point to a progress manager for
@@ -196,7 +221,7 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          * returns 0 (and no angle structure list is created).
          */
         static NAngleStructureList* enumerate(NTriangulation* owner,
-            NProgressManager* manager = 0);
+            bool tautOnly = false, NProgressManager* manager = 0);
 
         virtual int getPacketType() const;
         virtual std::string getPacketTypeName() const;
@@ -209,10 +234,15 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
 
     protected:
         /**
-         * Creates a new angle structure list performing no
-         * initialisation whatsoever other than property initialisation.
+         * Creates a new empty angle structure list.
+         * All properties are marked as unknown.
+         *
+         * @param tautOnly \c true if only taut structures are to be
+         * enuemrated (when the time comes for enumeration to be performed),
+         * or \c false if we should enumerate all vertices of the angle
+         * structure solution space.
          */
-        NAngleStructureList();
+        NAngleStructureList(bool tautOnly);
 
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
@@ -373,6 +403,10 @@ inline NAngleStructureList::~NAngleStructureList() {
         FuncDelete<NAngleStructure>());
 }
 
+inline bool NAngleStructureList::isTautOnly() const {
+    return tautOnly_;
+}
+
 inline unsigned long NAngleStructureList::getNumberOfStructures() const {
     return structures.size();
 }
@@ -406,7 +440,8 @@ inline bool NAngleStructureList::dependsOnParent() const {
     return true;
 }
 
-inline NAngleStructureList::NAngleStructureList() {
+inline NAngleStructureList::NAngleStructureList(bool tautOnly) :
+        tautOnly_(tautOnly) {
 }
 
 inline NAngleStructureList::StructureInserter::StructureInserter() : list(0),

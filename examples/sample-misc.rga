@@ -701,8 +701,8 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
   <struct len="7"> 2 1 5 1 6 1 <flags value="6"/></struct>
   <struct len="7"> 2 2 3 1 4 1 6 2 <flags value="4"/></struct>
   <struct len="7"> 0 1 1 1 5 2 6 2 <flags value="4"/></struct>
-  <allowstrict value="T"/>
-  <allowtaut value="T"/>
+  <spanstrict value="T"/>
+  <spantaut value="T"/>
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (Triangulation) -->
 <packet label="Layered Solid Torus"

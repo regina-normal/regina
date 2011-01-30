@@ -94,11 +94,25 @@ void* NAngleStructureList::Enumerator::run(void*) {
     if (progress)
         progress->incCompleted();
 
+    // Form the taut constraints, if we need them.
+    NEnumConstraintList* constraints = 0;
+    if (list->tautOnly_) {
+        constraints = new NEnumConstraintList(triang->getNumberOfTetrahedra());
+
+        unsigned base = 0;
+        for (unsigned c = 0; c < constraints->size(); ++c) {
+            (*constraints)[c].insert((*constraints)[c].end(), base++);
+            (*constraints)[c].insert((*constraints)[c].end(), base++);
+            (*constraints)[c].insert((*constraints)[c].end(), base++);
+        }
+    }
+
     // Find the angle structures.
     NDoubleDescription::enumerateExtremalRays(StructureInserter(*list, triang),
-        NAngleStructureVector(nCoords), eqns, 0, progress);
+        NAngleStructureVector(nCoords), eqns, constraints, progress);
 
     // All done!
+    delete constraints;
     triang->insertChildLast(list);
 
     if (progress) {
@@ -110,8 +124,8 @@ void* NAngleStructureList::Enumerator::run(void*) {
 }
 
 NAngleStructureList* NAngleStructureList::enumerate(NTriangulation* owner,
-        NProgressManager* manager) {
-    NAngleStructureList* ans = new NAngleStructureList();
+        bool tautOnly, NProgressManager* manager) {
+    NAngleStructureList* ans = new NAngleStructureList(tautOnly);
     Enumerator* e = new Enumerator(ans, owner, manager);
 
     if (manager) {
@@ -135,6 +149,7 @@ void NAngleStructureList::writeTextShort(std::ostream& o) const {
     o << structures.size() << " vertex angle structure";
     if (structures.size() != 1)
         o << 's';
+    o << " (" << (tautOnly_ ? "taut only" : "no restrictions")  << ')';
 }
 
 void NAngleStructureList::writeTextLong(std::ostream& o) const {
@@ -173,7 +188,8 @@ void NAngleStructureList::writePacket(NFile& out) const {
 
 NAngleStructureList* NAngleStructureList::readPacket(NFile& in,
         NPacket* parent) {
-    NAngleStructureList* ans = new NAngleStructureList();
+    NAngleStructureList* ans = new NAngleStructureList(false
+        /* old-style files did not allow for taut only */);
 
     unsigned long nStructures = in.readULong();
     for (unsigned long i=0; i<nStructures; i++)
@@ -188,6 +204,9 @@ NAngleStructureList* NAngleStructureList::readPacket(NFile& in,
 
 void NAngleStructureList::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
+
+    // Write the enumeration parameters.
+    out << "  <angleparams tautonly=\"" << (tautOnly_ ? 'T' : 'F') << "\"/>\n";
 
     // Write the individual structures.
     for (StructureIteratorConst it = structures.begin();
@@ -205,7 +224,7 @@ void NAngleStructureList::writeXMLPacketData(std::ostream& out) const {
 
 NPacket* NAngleStructureList::internalClonePacket(NPacket* /* parent */)
         const {
-    NAngleStructureList* ans = new NAngleStructureList();
+    NAngleStructureList* ans = new NAngleStructureList(tautOnly_);
     transform(structures.begin(), structures.end(),
         back_inserter(ans->structures), FuncNewClonePtr<NAngleStructure>());
 
