@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>allowstrict</refname>
-  <refpurpose>Does an angle structure list span a strict structure?</refpurpose>
+  <refpurpose>Deprecated; see &xml-spanstrict;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -44,6 +44,11 @@ allowstrict ::=</synopsis>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element has been renamed to &xml-spanstrict;.  The old name
+   &xml-allowstrict; has been kept for backward compatibility, but any
+   new code that writes data files should use &xml-spanstrict; instead.
+  </para>
   <para>
    An &xml-allowstrict; element stores whether or not any convex
    combination of the angle structures in the parent

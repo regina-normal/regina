@@ -39,6 +39,8 @@
 <!ENTITY data-realbdry-surface SYSTEM "data-realbdry-surface.docbook">
 <!ENTITY data-reginadata SYSTEM "data-reginadata.docbook">
 <!ENTITY data-reln SYSTEM "data-reln.docbook">
+<!ENTITY data-spanstrict SYSTEM "data-spanstrict.docbook">
+<!ENTITY data-spantaut SYSTEM "data-spantaut.docbook">
 <!ENTITY data-splitsfce SYSTEM "data-splitsfce.docbook">
 <!ENTITY data-struct SYSTEM "data-struct.docbook">
 <!ENTITY data-surface SYSTEM "data-surface.docbook">
@@ -127,6 +129,10 @@
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
 <!ENTITY xml-reln
  '<link linkend="data-reln"><sgmltag>reln</sgmltag></link>'>
+<!ENTITY xml-spanstrict
+ '<link linkend="data-spanstrict"><sgmltag>spanstrict</sgmltag></link>'>
+<!ENTITY xml-spantaut
+ '<link linkend="data-spantaut"><sgmltag>spantaut</sgmltag></link>'>
 <!ENTITY xml-splitsfce
  '<link linkend="data-splitsfce"><sgmltag>splitsfce</sgmltag></link>'>
 <!ENTITY xml-struct

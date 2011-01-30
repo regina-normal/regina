@@ -63,6 +63,8 @@
  &data-realbdry-surface;
  &data-reginadata;
  &data-reln;
+ &data-spanstrict;
+ &data-spantaut;
  &data-splitsfce;
  &data-struct;
  &data-surface;

@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-allowtaut">
+<refentry id="data-spanstrict">
  <refmeta>
-  <refentrytitle>allowtaut</refentrytitle>
+  <refentrytitle>spanstrict</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>allowtaut</refname>
-  <refpurpose>Deprecated; see &xml-spantaut;</refpurpose>
+  <refname>spanstrict</refname>
+  <refpurpose>Does an angle structure list span a strict structure?</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-allowtaut ::=</synopsis>
+spanstrict ::=</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -45,24 +45,23 @@ allowtaut ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   This element has been renamed to &xml-spantaut;.  The old name
-   &xml-allowtaut; has been kept for backward compatibility, but any
-   new code that writes data files should use &xml-spantaut; instead.
-  </para>
-  <para>
-   An &xml-allowtaut; element stores whether or not any convex
+   A &xml-spanstrict; element stores whether or not any convex
    combination of the angle structures in the parent
-   list is a taut angle structure.
+   list is a strict angle structure.
   </para>
   <para>
-   A <firstterm>taut</firstterm> angle structure contains only angles
-   0 and &pi;.
+   A <firstterm>strict</firstterm> angle structure has all angles
+   strictly between (not including) 0 and &pi;.
+  </para>
+  <para>
+   This element is identical to the old (and now deprecated) element
+   &xml-allowstrict;.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>allowtaut</sgmltag>:
+    The following elements contain <sgmltag>spanstrict</sgmltag>:
     <simplelist type="inline">
      <member>&xml-packet-anglestructurelist;</member>
     </simplelist>.
@@ -72,7 +71,7 @@ allowtaut ::=</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    Element <sgmltag>allowtaut</sgmltag> has no children.
+    Element <sgmltag>spanstrict</sgmltag> has no children.
    </para>
   </refsect2>
  </refsect1>
@@ -85,7 +84,7 @@ allowtaut ::=</synopsis>
     <listitem>
      <para>
       Either <literal>T</literal> or <literal>F</literal>, according to
-      whether the parent list does or does not span a taut angle structure.
+      whether the parent list does or does not span a strict angle structure.
      </para>
     </listitem>
    </varlistentry>
