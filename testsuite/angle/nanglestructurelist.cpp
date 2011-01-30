@@ -47,6 +47,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(gieseking);
     CPPUNIT_TEST(figure8);
     CPPUNIT_TEST(loopC2);
+    CPPUNIT_TEST(tautOnly);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -198,6 +199,75 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             testSize(list, "the untwisted layered loop C(2)", 0, false, false);
 
             delete list;
+        }
+
+        void verifyTautOnly(NTriangulation* t, const char* name) {
+            NAngleStructureList* all = NAngleStructureList::enumerate(t, false);
+            NAngleStructureList* taut = NAngleStructureList::enumerate(t, true);
+
+            if (all->isTautOnly()) {
+                std::ostringstream msg;
+                msg << "Non-taut-only enumeration on " << name
+                    << " produced a list marked as taut-only.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! taut->isTautOnly()) {
+                std::ostringstream msg;
+                msg << "Taut-only enumeration on " << name
+                    << " produced a list marked as non-taut-only.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            unsigned nAll = 0, nTaut = 0;
+            unsigned i;
+
+            for (i = 0; i < all->getNumberOfStructures(); ++i)
+                if (all->getStructure(i)->isTaut())
+                    ++nAll;
+
+            for (i = 0; i < taut->getNumberOfStructures(); ++i)
+                if (taut->getStructure(i)->isTaut())
+                    ++nTaut;
+                else {
+                    std::ostringstream msg;
+                    msg << "Taut-only enumeration on " << name
+                        << " produced a non-taut angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+            if (nAll != nTaut) {
+                std::ostringstream msg;
+                msg << "Taut counts mismatched for taut-only vs "
+                    "all-structures enumeration on " << name <<
+                    " (" << nTaut << " vs " << nAll << ")";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            delete all;
+            delete taut;
+        }
+
+        void verifyTautOnly(const char* dehydration) {
+            NTriangulation* t = NTriangulation::rehydrate(dehydration);
+            if (t->getNumberOfTetrahedra() == 0) {
+                std::ostringstream msg;
+                msg << "Failed to rehydrate " << dehydration << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            verifyTautOnly(t, dehydration);
+
+            delete t;
+        }
+
+        void tautOnly() {
+            verifyTautOnly("baaaade"); // m000
+            verifyTautOnly("dadbcccaqrb"); // m010
+            verifyTautOnly("hbnajbcdeefgghvfeevho"); // v1000
+            verifyTautOnly("hepacdefegfggcurmsktu"); // y500
+
+            verifyTautOnly(&triEmpty, "the empty triangulation");
+            verifyTautOnly(&triOneTet, "a standalone tetrahedron");
         }
 };
 
