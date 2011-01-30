@@ -55,6 +55,8 @@ void addNAngleStructureList() {
             &NAngleStructureList::getNumberOfStructures)
         .def("getStructure", &NAngleStructureList::getStructure,
             return_internal_reference<>())
+        .def("spansStrict", &NAngleStructureList::spansStrict)
+        .def("spansTaut", &NAngleStructureList::spansTaut)
         .def("allowsStrict", &NAngleStructureList::allowsStrict)
         .def("allowsTaut", &NAngleStructureList::allowsTaut)
         .def("enumerate", enumerate_1,
