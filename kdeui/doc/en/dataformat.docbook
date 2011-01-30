@@ -29,6 +29,7 @@
  &data-abeliangroup;
  &data-allowstrict;
  &data-allowtaut;
+ &data-angleparams;
  &data-compact-filter;
  &data-compact-surface;
  &data-connected;
