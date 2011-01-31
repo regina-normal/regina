@@ -129,22 +129,33 @@ void NAngleStructureUI::refresh() {
 
     // Update the general statistics.
     unsigned long nStructs = structures->getNumberOfStructures();
-    if (nStructs == 0)
-        statStr = i18n("No vertex angle structures\n");
-    else if (nStructs == 1)
-        statStr = i18n("1 vertex angle structure\n");
-    else
-        statStr = i18n("%1 vertex angle structures\n").arg(nStructs);
+    if (structures->isTautOnly()) {
+        if (nStructs == 0)
+            statStr = i18n("No taut structures\n");
+        else if (nStructs == 1)
+            statStr = i18n("1 taut structure\n");
+        else
+            statStr = i18n("%1 taut structures\n").arg(nStructs);
 
-    statStr.append(i18n("Span includes: "));
-    if (structures->spansStrict())
-        statStr.append(i18n("Strict, "));
-    else
-        statStr.append(i18n("NO Strict, "));
-    if (structures->spansTaut())
-        statStr.append(i18n("Taut"));
-    else
-        statStr.append(i18n("NO Taut"));
+        statStr.append(i18n("Enumerated taut structures only"));
+    } else {
+        if (nStructs == 0)
+            statStr = i18n("No vertex angle structures\n");
+        else if (nStructs == 1)
+            statStr = i18n("1 vertex angle structure\n");
+        else
+            statStr = i18n("%1 vertex angle structures\n").arg(nStructs);
+
+        statStr.append(i18n("Span includes: "));
+        if (structures->spansStrict())
+            statStr.append(i18n("Strict, "));
+        else
+            statStr.append(i18n("NO Strict, "));
+        if (structures->spansTaut())
+            statStr.append(i18n("Taut"));
+        else
+            statStr.append(i18n("NO Taut"));
+    }
 
     stats->setText(statStr);
 
