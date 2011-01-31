@@ -90,14 +90,14 @@ const KLocalizedString ReginaAbout::regLicense( ki18n(
     "distributed under the terms of the GNU General Public License.\n"));
 
 ReginaAbout::ReginaAbout(const char* internalName) :
-        KAboutData(internalName, regName, ki18n(""),regVersion,
+        KAboutData(internalName, regName, ki18n(regName),regVersion,
         regDescription, License_Custom, regCopyright,
         regReleased, regWebsite, regBugAddress) {
     setLicenseText(regLicense);
 
     // Authors:
-    addAuthor(ki18n("Ben Burton"), ki18n(""), "bab@debian.org","");
-    addAuthor(ki18n("Ryan Budney"), ki18n(""), "rybu@uvic.ca","");
+    addAuthor(ki18n("Ben Burton"), KLocalizedString(), "bab@debian.org","");
+    addAuthor(ki18n("Ryan Budney"), KLocalizedString(), "rybu@uvic.ca","");
 
     // Credits:
     addCredit(ki18n("Bernard Blackham"),
