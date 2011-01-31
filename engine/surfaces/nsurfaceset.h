@@ -88,6 +88,14 @@ class NSurfaceSet {
          */
         virtual bool allowsAlmostNormal() const = 0;
         /**
+         * Determines if the flavour of coordinate system being used
+         * allows for spun normal surfaces.
+         *
+         * @return \c true if and only if spun normal surface are
+         * supported.
+         */
+        virtual bool allowsSpun() const = 0;
+        /**
          * Returns whether this set is known to contain only embedded normal
          * surfaces.
          *

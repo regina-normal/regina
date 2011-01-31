@@ -228,8 +228,9 @@ class NXMLNormalSurfaceReader;
  *   <tt>class(const NVector<NLargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
- *   <li>Virtual functions <tt>NVector<NLargeInteger>* clone() const</tt> and
- *   <tt>bool allowsAlmostNormal() const</tt> must be declared but not
+ *   <li>Virtual functions <tt>NVector<NLargeInteger>* clone() const</tt>,
+ *   <tt>bool allowsAlmostNormal() const</tt> and
+ *   <tt>bool allowsSpun() const </tt> must be declared but not
  *   implemented.  The registry utilities will take care of their
  *   implementations.</li>
  *   <li>All abstract functions must be implemented.</li>

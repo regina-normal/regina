@@ -41,7 +41,7 @@
  *
  *    For each such flavour there should be a line of the form:
  *
- *        REGISTER_FLAVOUR(id_name, class, name, almost_normal, pre_test)
+ *        REGISTER_FLAVOUR(id_name, class, name, almost_normal, spun, pre_test)
  *
  *    where:
  *        id_name = the constant int member of NNormalSurfaceList that
@@ -51,6 +51,8 @@
  *        name = the string (English) name of the new flavour.
  *        almost_normal = true if this coordinate system allows almost
  *            normal surfaces or false otherwise.
+ *        spun = true if this coordinate system allows spun normal surfaces
+ *            or false otherwise.
  *        pre_test = test to be performed before enumerating surfaces;
  *            if this test returns false, it will be assumed there are
  *            no surfaces at all and thus no enumeration will be performed.
@@ -81,13 +83,13 @@
     #include "surfaces/nsquadoct.h"
 #else
     REGISTER_FLAVOUR(STANDARD, NNormalSurfaceVectorStandard,
-        "Standard normal (tri-quad)", false, true)
+        "Standard normal (tri-quad)", false, false, true)
     REGISTER_FLAVOUR(AN_STANDARD, NNormalSurfaceVectorANStandard,
-        "Standard almost normal (tri-quad-oct)", true, true)
+        "Standard almost normal (tri-quad-oct)", true, false, true)
     REGISTER_FLAVOUR(QUAD, NNormalSurfaceVectorQuad,
-        "Quad normal", false, true)
+        "Quad normal", false, true, true)
     REGISTER_FLAVOUR(AN_QUAD_OCT, NNormalSurfaceVectorQuadOct,
-        "Quad-oct almost normal", true, true)
+        "Quad-oct almost normal", true, true, true)
 #endif
 
 /*! \file surfaces/flavourregistry.h
