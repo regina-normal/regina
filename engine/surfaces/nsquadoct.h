@@ -79,6 +79,7 @@ class NNormalSurfaceVectorQuadOct : public NNormalSurfaceVectorMirrored {
         virtual NNormalSurfaceVector* makeMirror(NTriangulation* triang) const;
 
         virtual bool allowsAlmostNormal() const;
+        virtual bool allowsSpun() const;
         virtual const NVertex* isVertexLink(NTriangulation* triang) const;
 
         virtual NVector<NLargeInteger>* clone() const;

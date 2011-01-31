@@ -78,6 +78,7 @@ class NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
         NNormalSurfaceVectorStandard(const NVector<NLargeInteger>& cloneMe);
 
         virtual bool allowsAlmostNormal() const;
+        virtual bool allowsSpun() const;
 
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
             int vertex, NTriangulation* triang) const;
