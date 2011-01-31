@@ -561,7 +561,7 @@ void NNormalSurface::writeToFile(NFile& out) const {
     out.writeAllPropertiesFooter();
 }
 
-#define REGISTER_FLAVOUR(id_name, class, n, a, t) \
+#define REGISTER_FLAVOUR(id_name, class, n, a, s, t) \
     if (flavour == NNormalSurfaceList::id_name) \
         vector = new class(vecLen); \
     else

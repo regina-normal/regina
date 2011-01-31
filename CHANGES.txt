@@ -91,6 +91,8 @@ Version 4.6.1  [ (under development) ]
               filterForDisjointPairs().
             - New routine filterForPotentiallyIncompressible() to assist with
               bulk incompressibility testing; see arXiv:0909.4625 for details.
+            - New routine allowsSpun() to easily identify coordinate systems
+              that support spun normal surfaces.
         Class NPacket:
             - In the python interface, makeOrphan() now returns the packet
               itself and the ownership becomes the responsibility of whoever
@@ -136,6 +138,9 @@ Version 4.6.1  [ (under development) ]
               census manifolds/triangulations, not just the smallest few.
         Class NSnapPeaTriangulation:
             - Kernel messages are now disabled by default.
+        Class NSurfaceSet, NSurfaceSubset:
+            - New routine allowsSpun() to easily identify coordinate systems
+              that support spun normal surfaces.
         Class NTetrahedron:
             - New routine getVertexMapping(), which facilitates a
               consistent orientation around the given vertex for the
