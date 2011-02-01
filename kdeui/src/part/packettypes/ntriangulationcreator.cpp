@@ -74,7 +74,8 @@ namespace {
      * triangulation combo box.
      */
     enum {
-        EXAMPLE_S3,
+        EXAMPLE_S3_ONETET,
+        EXAMPLE_S3_BING,
         EXAMPLE_RP3RP3,
         EXAMPLE_FIGURE8,
         EXAMPLE_GIESEKING,
@@ -269,7 +270,8 @@ NTriangulationCreator::NTriangulationCreator() {
         "here to help you experiment and see how Regina works.</qt>");
     QWhatsThis::add(new QLabel(i18n("Example:"), hArea), expln);
     exampleWhich = new KComboBox(hArea);
-    exampleWhich->insertItem(i18n("3-sphere"));
+    exampleWhich->insertItem(i18n("3-sphere (1 tetrahedron)"));
+    exampleWhich->insertItem(i18n("3-sphere (dual to Bing's house)"));
     exampleWhich->insertItem(i18n("Connected sum RP3 # RP3"));
     exampleWhich->insertItem(i18n("Figure eight knot complement"));
     exampleWhich->insertItem(i18n("Gieseking manifold"));
@@ -569,8 +571,10 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         return ans;
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentItem()) {
-            case EXAMPLE_S3:
+            case EXAMPLE_S3_ONETET:
                 return NExampleTriangulation::threeSphere();
+            case EXAMPLE_S3_BING:
+                return NExampleTriangulation::bingsHouse();
             case EXAMPLE_RP3RP3:
                 return NExampleTriangulation::rp3rp3();
             case EXAMPLE_FIGURE8:
