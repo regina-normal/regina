@@ -182,6 +182,20 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     triActionList.append(new KActionSeparator());
 
+    KAction* actOrient = new KAction(i18n( "&Orient"), "orient",
+        0 /* shortcut */, this, SLOT(orient()), triActions,
+        "tri_orient");
+    actOrient->setToolTip(i18n(
+        "Relabel vertices of tetrahedra for consistent orientation"));
+    actOrient->setEnabled(readWrite);
+    actOrient->setWhatsThis(i18n("<qt>Relabel the vertices of each tetrahedron "
+        "so that all tetrahedra are oriented consistently, i.e., "
+        "so that orientation is preserved across adjacent faces.<p>"
+        "If this triangulation includes both orientable and non-orientable "
+        "components, only the orientable components will be relabelled.</qt>"));
+    enableWhenWritable.append(actOrient);
+    triActionList.append(actOrient);
+
     KAction* actBarycentricSubdivide = new KAction(i18n(
         "&Barycentric Subdivision"), "barycentric",
         0 /* shortcut */, this, SLOT(barycentricSubdivide()), triActions,
@@ -521,6 +535,31 @@ void NTriGluingsUI::simplify() {
             "The triangulation could not be simplified.  "
             "This does not mean that the triangulation is minimal; it "
             "simply means that I could not find a way of reducing it."));
+}
+
+void NTriGluingsUI::orient() {
+    if (tri->isOriented()) {
+        KMessageBox::information(ui, i18n(
+            "This triangulation is already oriented."));
+        return;
+    }
+
+    bool hasOr = false;
+    NTriangulation::ComponentIterator cit;
+    for (cit = tri->getComponents().begin(); cit != tri->getComponents().end();
+            ++cit)
+        if ((*cit)->isOrientable()) {
+            hasOr = true;
+            break;
+        }
+    if (! hasOr) {
+        KMessageBox::sorry(ui, i18n(
+            "This triangulation has no orientable components, "
+            "and therefore cannot be oriented."));
+        return;
+    }
+
+    tri->orient();
 }
 
 void NTriGluingsUI::barycentricSubdivide() {
