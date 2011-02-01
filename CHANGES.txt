@@ -281,6 +281,8 @@ Version 4.6.1  [ (under development) ]
         - There is now an option to enable or disable diagnostic
           messages from the SnapPea kernel.
         - Warn users if they try to save without committing their changes first.
+        - Only display counts that are relevant in the normal surface summary
+          pane (e.g., no spun normal surface count for a closed triangulation).
     UTILITIES:
         tricensus-mpi-status:
             - Now finishes with a running total of all triangulations found.

@@ -29,6 +29,7 @@
 // Regina core includes:
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
+#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "nsurfacesummaryui.h"
@@ -232,50 +233,72 @@ void NSurfaceSummaryUI::refresh() {
         tableClosed->show();
     }
 
-    tableBounded->clear();
-    while (tableBounded->columns() > 1)
-        tableBounded->removeColumn(tableBounded->columns() - 1);
+    if (surfaces->getTriangulation()->hasBoundaryFaces()) {
+        tableBounded->clear();
+        while (tableBounded->columns() > 1)
+            tableBounded->removeColumn(tableBounded->columns() - 1);
 
-    if (bounded == 0) {
-        totBounded->setText(i18n("No bounded surfaces."));
-        tableBounded->hide();
-    } else {
-        if (bounded == 1)
-            totBounded->setText(i18n("1 bounded surface, breakdown below:"));
-        else
-            totBounded->setText(i18n("%1 bounded surfaces, breakdown below:").
-                arg(bounded));
+        if (bounded == 0) {
+            totBounded->setText(i18n("No bounded surfaces."));
+            tableBounded->hide();
+        } else {
+            if (bounded == 1)
+                totBounded->setText(i18n(
+                    "1 bounded surface, breakdown below:"));
+            else
+                totBounded->setText(i18n(
+                    "%1 bounded surfaces, breakdown below:").arg(bounded));
 
-        for (typeIt = allTypesBounded.begin(); typeIt != allTypesBounded.end();
-                ++typeIt) {
-            col = tableBounded->addColumn(
-                tableHeader(typeIt->first, typeIt->second));
-            tableBounded->setColumnAlignment(col, Qt::AlignRight);
-        }
-        for (ECIt = allECsBounded.begin(); ECIt != allECsBounded.end();
-                ++ECIt) {
-            row = new QListViewItem(tableBounded);
-            row->setText(0, i18n("Euler = %1").arg(ECIt->stringValue()));
-            for (typeIt = allTypesBounded.begin(), col = 1;
-                    typeIt != allTypesBounded.end(); ++typeIt, ++col) {
-                countIt = countBounded[typeIt->first][typeIt->second].
-                    find(*ECIt);
-                if (countIt !=
-                        countBounded[typeIt->first][typeIt->second].end())
-                    row->setText(col, QString::number(countIt->second));
+            for (typeIt = allTypesBounded.begin();
+                    typeIt != allTypesBounded.end(); ++typeIt) {
+                col = tableBounded->addColumn(
+                    tableHeader(typeIt->first, typeIt->second));
+                tableBounded->setColumnAlignment(col, Qt::AlignRight);
             }
-        }
+            for (ECIt = allECsBounded.begin(); ECIt != allECsBounded.end();
+                    ++ECIt) {
+                row = new QListViewItem(tableBounded);
+                row->setText(0, i18n("Euler = %1").arg(ECIt->stringValue()));
+                for (typeIt = allTypesBounded.begin(), col = 1;
+                        typeIt != allTypesBounded.end(); ++typeIt, ++col) {
+                    countIt = countBounded[typeIt->first][typeIt->second].
+                        find(*ECIt);
+                    if (countIt !=
+                            countBounded[typeIt->first][typeIt->second].end())
+                        row->setText(col, QString::number(countIt->second));
+                }
+            }
 
-        tableBounded->show();
+            tableBounded->show();
+        }
+        totBounded->show();
+    } else {
+        // No boundary faces, so no possibility of bounded surfaces.
+        totBounded->hide();
+        tableBounded->hide();
     }
 
-    if (spun == 0) {
-        totSpun->setText(i18n("No non-compact (spun) surfaces."));
+    // Spun normal surfaces are possible only if the triangulation has an
+    // ideal vertex, or if there is an invalid boundary vertex (in which
+    // case all bets are off so we just give the user everything and let them
+    // deal with it).
+    // Furthermore, spun normal surfaces are only possible in certain
+    // coordinate systems.
+    if ((surfaces->getTriangulation()->isIdeal() ||
+            ! surfaces->getTriangulation()->isValid()) &&
+            (surfaces->allowsSpun())) {
+        if (spun == 0) {
+            totSpun->setText(i18n("No non-compact (spun) surfaces."));
+        } else {
+            if (spun == 1)
+                totSpun->setText(i18n("1 non-compact (spun) surface."));
+            else
+                totSpun->setText(i18n("%1 non-compact (spun) surfaces.").arg(spun));
+        }
     } else {
-        if (spun == 1)
-            totSpun->setText(i18n("1 non-compact (spun) surface."));
-        else
-            totSpun->setText(i18n("%1 non-compact (spun) surfaces.").arg(spun));
+        // The triangulation is not ideal and/or the coordinate system
+        // does not support spun normal surfaces.
+        totSpun->hide();
     }
 }
 
