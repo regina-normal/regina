@@ -124,6 +124,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * Triangulation actions.
          */
         void simplify();
+        void orient();
         void barycentricSubdivide();
         void idealToFinite();
         void finiteToIdeal();
