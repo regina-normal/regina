@@ -120,7 +120,7 @@ long totTri;
 long nSolns;
 bool serr = false, qerr = false;
 
-#define MAX_FREQ 1000
+#define MAX_FREQ 100000
 long long sfreq[MAX_FREQ];
 long long qfreq[MAX_FREQ];
 
