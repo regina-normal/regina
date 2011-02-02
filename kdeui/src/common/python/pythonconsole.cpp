@@ -118,47 +118,65 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     QMenu* menuEdit = new QMenu(this);
     QMenu* menuHelp = new QMenu(this);
 
-    //KAction* act = new KAction(i18n("&Save Session"), "filesave", CTRL+Key_S,
-    //    this, SLOT(saveLog()), actionCollection(), "console_save");
-    KAction* act = new KAction(KIcon("filesave"),i18n("&Save Session"), 
-        this ); // SLOT(saveLog()),  actionCollection(), "console_save");
+    KAction* act = actionCollection()->addAction("console_save");
+    act->setText(i18n("&Save Session"));
+    act->setIcon(KIcon("filesave"));
     act->setShortcut(tr("Ctrl+s"));
     act->setToolTip(i18n("Save session history"));
     act->setWhatsThis(i18n("Save the entire history of this Python session "
         "into a text file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(saveLog()));
     menuConsole->addAction(act);
 
 
-    act = new KAction( KIcon("fileclose"),i18n("&Close"), this);
-        //SLOT(close())  , actionCollection(), "console_close");
+    act = actionCollection()->addAction("console_close");
+    act->setText(i18n("&Close"));
+    act->setIcon(KIcon("fileclose"));
     act->setShortcut(tr("Ctrl+d"));
     act->setToolTip(i18n("Close Python console"));
+    connect(act, SIGNAL(triggered()), this, SLOT(close()));
     menuConsole->insertSeparator(act);
     menuConsole->addAction(act);
 
-    KAction* actCopy = KStandardAction::copy(this, SLOT(copy()), actionCollection());
+    KAction* actCopy = actionCollection()->addAction(
+        KStandardAction::Copy,
+        this,
+        SLOT(copy()) );
     actCopy->setEnabled(false);
     connect(session, SIGNAL(copyAvailable(bool)), actCopy,
         SLOT(setEnabled(bool)));
     menuEdit->addAction(actCopy);
 
-   menuEdit->addAction( KStandardAction::selectAll(session, SLOT(selectAll()), actionCollection()) );
+    act = actionCollection()->addAction(
+        KStandardAction::SelectAll,
+        this,
+        SLOT(selectAll()) );
 
-    act = new KAction(KIcon("contents"),i18n("&Scripting Overview"), this);
+    menuEdit->addAction(act);
+
+    act = actionCollection()->addAction("help_scripting");
+    act->setText(i18n("&Scripting Overview"));
+    act->setIcon(KIcon("contents"));
     act->setShortcut(tr("F1"));
     act->setToolTip(i18n("Read Python scripting overview"));
     act->setWhatsThis(i18n("Open the <i>Python Scripting</i> section of the "
         "users' handbook."));
+    connect(act, SIGNAL(triggered()), this, SLOT(scriptingOverview()) );
     menuHelp->addAction(act);
 
-    act = new KAction(KIcon("python_console"),i18n("&Python Reference"), this); 
+    act = actionCollection()->addAction("help_engine");
+    act->setText(i18n("&Python Reference"));
+    act->setIcon(KIcon("python_console"));
     act->setToolTip(i18n("Read detailed Python scripting reference"));
     act->setWhatsThis(i18n("Open the detailed reference of classes, methods "
         "and routines that Regina makes available to Python scripts."));
+    connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
     menuHelp->addAction(act);
 
-    act = KStandardAction::whatsThis(this, SLOT(whatsThis()),
-        actionCollection());
+    act = actionCollection()->addAction(
+        KStandardAction::WhatsThis,
+        this,
+        SLOT(whatsThis()) );
     menuHelp->insertSeparator(act);
     menuHelp->addAction(act);
     
