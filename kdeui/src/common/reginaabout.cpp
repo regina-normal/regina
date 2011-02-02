@@ -41,7 +41,7 @@
 const QByteArray ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
 
 const KLocalizedString ReginaAbout::regCopyright(
-    ki18n("Copyright (c) 1999-2009, Ben Burton"));
+    ki18n("Copyright (c) 1999-2011, Ben Burton, Ryan Budney and others"));
 
 const QString ReginaAbout::regDataExt(".rga");
 
@@ -58,7 +58,7 @@ const QByteArray ReginaAbout::regVersion(PACKAGE_VERSION);
 const QByteArray ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
 const KLocalizedString ReginaAbout::regLicense( ki18n( 
-    "Copyright (c) 1999-2009, Ben Burton\n\n"
+    "Copyright (c) 1999-2011, Ben Burton, Ryan Budney and others\n\n"
     "This program is distributed under the terms of the GPL v2.\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
@@ -116,6 +116,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
         ki18n("Code contributions and technical advice"),"","");
     addCredit(ki18n("Craig Macintyre"),
         ki18n("Red Hat / Fedora porting assistance"),"","");
+    addCredit(ki18n("William Pettersson"),
+        ki18n("Port to KDE4 and CMake"),"","");
     addCredit(ki18n("Hyam Rubinstein"),
         ki18n("Supervision and many long discussions"),"","");
     addCredit(ki18n("Jonathan Shewchuk"),
