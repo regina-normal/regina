@@ -161,7 +161,7 @@ void NTriHeaderUI::refresh() {
 
     if (tri->isOrientable()) {
         if (tri->isOriented())
-            msg += i18n("orientable & oriented, ");
+            msg += i18n("orientable and oriented, ");
         else
             msg += i18n("orientable, ");
     } else
