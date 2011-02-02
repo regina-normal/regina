@@ -70,7 +70,7 @@ int main() {
         if (feof(stdin))
             break;
 
-        NTriangulation* t = regina::NTriangulation::fromIsoSig(input);
+        regina::NTriangulation* tri = regina::NTriangulation::fromIsoSig(input);
         regina::NNormalSurfaceList* s;
 
         s = regina::NNormalSurfaceList::enumerate(tri,
@@ -83,7 +83,7 @@ int main() {
         ++qfreq[s->getNumberOfSurfaces()];
         delete s;
 
-        delete t;
+        delete tri;
     }
 
     std::ofstream qout("qfreq");
