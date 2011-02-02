@@ -147,8 +147,10 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     // Set up the composition viewer.
     msg = i18n("<qt>Displays (i) the precise name of the triangulation "
         "and/or underlying 3-manifold if these can be recognised "
-        "immediately, (ii) the Callahan-Hildebrand-Weeks dehydration "
-        "string if the triangulation supports it, and (iii) the details "
+        "immediately, (ii) the isomorphism signature from which the "
+        "triangulation can be reconstructed, "
+        "(iii) the Callahan-Hildebrand-Weeks dehydration "
+        "string if the triangulation supports it, and (iv) the details "
         "of any standard combinatorial structures found within the "
         "triangulation.<p>"
         "You can right-click on any line of text to copy it to the "
@@ -206,6 +208,9 @@ void NTriCompositionUI::refresh() {
             addTopLevelSection(i18n("3-manifold not recognised"));
     } else
         addTopLevelSection(i18n("Triangulation not recognised"));
+
+    // Add the isomorphism signature.
+    addTopLevelSection(i18n("Isomorphism signature: ") + tri->isoSig().c_str());
 
     // Offer a dehydration string if we have one.
     std::string dehydration = tri->dehydrate();
