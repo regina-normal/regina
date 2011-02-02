@@ -277,7 +277,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actSplitIntoComponents);
 
     KAction* actConnectedSumDecomposition = new KAction(i18n(
-        "C&onnected Sum Decomposition"), "math_sum",
+        "Co&nnected Sum Decomposition"), "math_sum",
         0 /* shortcut */, this, SLOT(connectedSumDecomposition()), triActions,
         "tri_connected_sum_decomposition");
     actConnectedSumDecomposition->setToolTip(i18n(
@@ -309,7 +309,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     triActionList.append(new KActionSeparator());
 
-    KAction* actCensusLookup = new KAction(i18n("Ce&nsus Lookup"), "find",
+    KAction* actCensusLookup = new KAction(i18n("Census &Lookup"), "find",
         0 /* shortcut */, this, SLOT(censusLookup()), triActions,
         "tri_census_lookup");
     actCensusLookup->setToolTip(i18n(
