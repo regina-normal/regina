@@ -151,15 +151,23 @@ void NTriHeaderUI::refresh() {
     if (tri->isClosed())
         msg += i18n("Closed, ");
     else {
-        if (tri->isIdeal())
-            msg += i18n("Ideal, ");
-        if (tri->hasBoundaryFaces())
-            msg += i18n("Real Bdry, ");
+        if (tri->isIdeal() && tri->hasBoundaryFaces())
+            msg += i18n("Ideal & real bdry, ");
+        else if (tri->isIdeal())
+            msg += i18n("Ideal bdry, ");
+        else if (tri->hasBoundaryFaces())
+            msg += i18n("Real bdry, ");
     }
 
-    msg += (tri->isOrientable() ? i18n("Orientable, ") :
-        i18n("Non-orientable, "));
-    msg += (tri->isConnected() ? i18n("Connected") : i18n("Disconnected"));
+    if (tri->isOrientable()) {
+        if (tri->isOriented())
+            msg += i18n("orientable & oriented, ");
+        else
+            msg += i18n("orientable, ");
+    } else
+        msg += i18n("non-orientable, ");
+
+    msg += (tri->isConnected() ? i18n("connected") : i18n("disconnected"));
 
     header->setText(msg);
 }
