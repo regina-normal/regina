@@ -64,6 +64,7 @@ namespace {
         TRI_LAYERED_SOLID_TORUS,
         TRI_LAYERED_LOOP,
         TRI_AUG_TRI_SOLID_TORUS,
+        TRI_ISOSIG,
         TRI_DEHYDRATION,
         TRI_SPLITTING_SURFACE,
         TRI_EXAMPLE
@@ -103,6 +104,7 @@ namespace {
         "(?:[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+))*"
         "[^0-9\\-]*$");
     QRegExp reSFSParamPair("(-?\\d+)[^0-9\\-]+(-?\\d+)");
+    QRegExp reIsoSig("^([A-Za-z0-9+-]+)$");
     QRegExp reDehydration("^([A-Za-z]+)$");
     QRegExp reSignature("^([\\(\\)\\.,;:\\|\\-A-Za-z]+)$");
 }
@@ -227,6 +229,18 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea->setStretchFactor(augParams, 1);
     details->addWidget(hArea, TRI_AUG_TRI_SOLID_TORUS);
 
+    type->insertItem(i18n("From isomorphism signature"));
+    hArea = new QHBox();
+    hArea->setSpacing(5);
+    expln = i18n("<qt>The isomorphism signature "
+        "from which the new triangulation will be created.  An example "
+        "isomorphism signature is <i>bkaagj</i>.</qt>");
+    QWhatsThis::add(new QLabel(i18n("Isomorphism signature:"), hArea), expln);
+    isoSig = new KLineEdit(hArea);
+    isoSig->setValidator(new QRegExpValidator(reIsoSig, hArea));
+    QWhatsThis::add(isoSig, expln);
+    hArea->setStretchFactor(isoSig, 1);
+    details->addWidget(hArea, TRI_ISOSIG);
 
     type->insertItem(i18n("From dehydration"));
     hArea = new QHBox();
@@ -518,6 +532,22 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         NTriangulation* ans = new NTriangulation();
         ans->insertAugTriSolidTorus(a1, b1, a2, b2, a3, b3);
         return ans;
+    } else if (typeId == TRI_ISOSIG) {
+        if (! reIsoSig.exactMatch(isoSig->text())) {
+            KMessageBox::error(parentWidget, i18n("<qt>The isomorphism "
+                "signature must be a sequence of symbols, which may include "
+                "letters, digits, plus and/or minus but nothing else.  "
+                "An example isomorphism signature is <i>bkaagj</i>.</qt>"));
+            return 0;
+        }
+
+        NTriangulation* ans = NTriangulation::fromIsoSig(
+            reIsoSig.cap(1).ascii());
+        if (ans)
+            return ans;
+        KMessageBox::error(parentWidget, i18n("<qt>The given "
+            "isomorphism signature was not valid.</qt>"));
+        return 0;
     } else if (typeId == TRI_DEHYDRATION) {
         if (! reDehydration.exactMatch(dehydrationString->text())) {
             KMessageBox::error(parentWidget, i18n("<qt>The dehydration "
