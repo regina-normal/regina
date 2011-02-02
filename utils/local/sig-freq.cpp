@@ -56,7 +56,7 @@
 
 #define MAXLEN 1000
 
-#define MAX_FREQ 10000
+#define MAX_FREQ 100000
 long long sfreq[MAX_FREQ];
 long long qfreq[MAX_FREQ];
 
