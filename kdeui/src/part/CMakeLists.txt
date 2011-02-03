@@ -4,6 +4,9 @@ SET ( SOURCES actionspart exports exttabctl flatbutton gridlistview imports newp
 
 ADD_SUBDIRECTORY(foreign)
 ADD_SUBDIRECTORY(packettypes)
+
+SET(MOC_HEADERS ${MOC_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/exttabctl.h ${CMAKE_CURRENT_SOURCE_DIR}/flatbutton.h)
+
 AUTOMOC4_MOC_HEADERS(reginapart ${MOC_HEADERS})
 KDE4_ADD_LIBRARY(reginapart ${COMMON_SOURCES} ${SOURCES})
 

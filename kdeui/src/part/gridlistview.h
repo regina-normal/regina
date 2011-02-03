@@ -34,84 +34,86 @@
 #ifndef __GRIDLISTVIEWITEM_H
 #define __GRIDLISTVIEWITEM_H
 
-#include <klistview.h>
+#include <KListWidget>
 
-class QListView;
+#include <QtGui/QListWidget>
+
+//class QListWidget;
 
 /**
  * Provides support for list views in which individual items are surrounded
  * by grid lines.  To create such a list view, all that is necessary is
  * to fill the list view with items derived from GridListViewItem.
  */
-class GridListViewItem : public KListViewItem {
+class GridListViewItem : public QListWidgetItem {
     public:
         /**
          * Constructors.
          */
-        GridListViewItem(QListView* parent);
-        GridListViewItem(QListViewItem* parent);
-        GridListViewItem(QListView* parent, QListViewItem* after);
-        GridListViewItem(QListViewItem* parent, QListViewItem* after);
-        GridListViewItem(QListView* parent, QString,
+        GridListViewItem(QListWidget* parent);
+        GridListViewItem(QListWidgetItem* parent);
+        GridListViewItem(QListWidget* parent, QListWidgetItem* after);
+        GridListViewItem(QListWidgetItem* parent, QListWidgetItem* after);
+        GridListViewItem(QListWidget* parent, QString,
             QString = QString::null, QString = QString::null,
             QString = QString::null, QString = QString::null,
             QString = QString::null, QString = QString::null,
             QString = QString::null);
-        GridListViewItem(QListViewItem* parent, QString,
+        GridListViewItem(QListWidgetItem* parent, QString,
             QString = QString::null, QString = QString::null,
             QString = QString::null, QString = QString::null,
             QString = QString::null, QString = QString::null,
             QString = QString::null);
-        GridListViewItem(QListView* parent, QListViewItem* after, QString,
+        GridListViewItem(QListWidget* parent, QListWidgetItem* after, QString,
             QString = QString::null, QString = QString::null,
             QString = QString::null, QString = QString::null,
             QString = QString::null, QString = QString::null,
             QString = QString::null);
-        GridListViewItem(QListViewItem* parent, QListViewItem* after, QString,
+        GridListViewItem(QListWidgetItem* parent, QListWidgetItem* after, QString,
             QString = QString::null, QString = QString::null,
             QString = QString::null, QString = QString::null,
             QString = QString::null, QString = QString::null,
             QString = QString::null);
 
         /**
-         * QListViewItem overrides.
+         * QListWidgetItem overrides.
          */
-        int width(const QFontMetrics& fm, const QListView* lv, int c) const;
+        int width(const QFontMetrics& fm, const QListWidget* lv, int c) const;
         void paintCell(QPainter* p, const QColorGroup& cg, int column,
             int width, int align);
 };
 
-inline GridListViewItem::GridListViewItem(QListView* parent) :
-        KListViewItem(parent) {
+inline GridListViewItem::GridListViewItem(QListWidget* parent) :
+        QListWidgetItem( *parent, QListWidgetItem::Type) {
 }
-inline GridListViewItem::GridListViewItem(QListViewItem* parent) :
-        KListViewItem(parent) {
+inline GridListViewItem::GridListViewItem(QListWidgetItem* parent) :
+        QListWidgetItem( *parent) {
 }
-inline GridListViewItem::GridListViewItem(QListView* parent,
-        QListViewItem* after) : KListViewItem(parent, after) {
+inline GridListViewItem::GridListViewItem(QListWidget* parent,
+        QListWidgetItem* after) : QListWidgetItem(parent, after) {
 }
-inline GridListViewItem::GridListViewItem(QListViewItem* parent,
-        QListViewItem* after) : KListViewItem(parent, after) {
+inline GridListViewItem::GridListViewItem(QListWidgetItem* parent,
+        QListWidgetItem* after) : QListWidgetItem(parent, after) {
 }
-inline GridListViewItem::GridListViewItem(QListView* parent, QString s1,
+inline GridListViewItem::GridListViewItem(QListWidget* parent, QString s1,
         QString s2, QString s3, QString s4, QString s5, QString s6,
         QString s7, QString s8) :
-        KListViewItem(parent, s1, s2, s3, s4, s5, s6, s7, s8) {
+        QListWidgetItem(parent, s1, s2, s3, s4, s5, s6, s7, s8) {
 }
-inline GridListViewItem::GridListViewItem(QListViewItem* parent, QString s1,
+inline GridListViewItem::GridListViewItem(QListWidgetItem* parent, QString s1,
         QString s2, QString s3, QString s4, QString s5, QString s6,
         QString s7, QString s8) :
-        KListViewItem(parent, s1, s2, s3, s4, s5, s6, s7, s8) {
+        QListWidgetItem(parent, s1, s2, s3, s4, s5, s6, s7, s8) {
 }
-inline GridListViewItem::GridListViewItem(QListView* parent,
-        QListViewItem* after, QString s1, QString s2, QString s3, QString s4,
+inline GridListViewItem::GridListViewItem(QListWidget* parent,
+        QListWidgetItem* after, QString s1, QString s2, QString s3, QString s4,
         QString s5, QString s6, QString s7, QString s8) :
-        KListViewItem(parent, after, s1, s2, s3, s4, s5, s6, s7, s8) {
+        QListWidgetItem(parent, after, s1, s2, s3, s4, s5, s6, s7, s8) {
 }
-inline GridListViewItem::GridListViewItem(QListViewItem* parent,
-        QListViewItem* after, QString s1, QString s2, QString s3, QString s4,
+inline GridListViewItem::GridListViewItem(QListWidgetItem* parent,
+        QListWidgetItem* after, QString s1, QString s2, QString s3, QString s4,
         QString s5, QString s6, QString s7, QString s8) :
-        KListViewItem(parent, after, s1, s2, s3, s4, s5, s6, s7, s8) {
+        QListWidgetItem(parent, after, s1, s2, s3, s4, s5, s6, s7, s8) {
 }
 
 #endif

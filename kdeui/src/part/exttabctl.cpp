@@ -30,4 +30,3 @@
 
 /* Nothing to do; all of the routines are inline. */
 
-#include "exttabctl.moc"

@@ -61,16 +61,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <qpainter.h>
 #include <qstyle.h>
 
+#include <QtGui/QStyleOption>
+#include <QtGui/QWidget>
+#include <QtCore/QRect>
+
 void FlatToolButton::drawButton(QPainter* p) {
     bool sunken = isDown();
 
     // Draw the rectangular border.
-    style().drawPrimitive(QStyle::PE_ButtonTool, p,
-        QRect(0, 0, width(), height()), colorGroup(),
-        sunken ? QStyle::Style_Down : QStyle::Style_Default);
+    QStyleOption buttonOption;
+    buttonOption.initFrom(this);
+//    QRect *rect = new QRect(0, 0, width(), height()); 
+    buttonOption.state = sunken ? QStyle::State_Sunken : QStyle::State_None;
+    style()->drawPrimitive(QStyle::PE_PanelButtonTool, &buttonOption, p ); 
     if (sunken)
-        p->translate(style().pixelMetric(QStyle::PM_ButtonShiftHorizontal),
-            style().pixelMetric(QStyle::PM_ButtonShiftVertical));
+        p->translate(style()->pixelMetric(QStyle::PM_ButtonShiftHorizontal),
+            style()->pixelMetric(QStyle::PM_ButtonShiftVertical));
     QRect br(1, 1, width() - 2, height() - 2);
 
     // Draw the internal pixmap.
@@ -82,4 +88,3 @@ void FlatToolButton::drawButton(QPainter* p) {
     }
 }
 
-#include "flatbutton.moc"

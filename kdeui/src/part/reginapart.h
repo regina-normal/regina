@@ -37,7 +37,10 @@
 #include "reginaprefset.h"
 
 #include <kparts/part.h>
-#include <qptrlist.h>
+
+#include <KAction>
+
+#include <QLinkedList>
 
 namespace regina {
     class NPacket;
@@ -78,7 +81,7 @@ class ReginaPart : public KParts::ReadWritePart {
         /**
          * Packet panes
          */
-        QPtrList<PacketPane> allPanes;
+        QLinkedList<PacketPane> allPanes;
         PacketPane* dockedPane;
 
         /**
@@ -95,9 +98,9 @@ class ReginaPart : public KParts::ReadWritePart {
         KAction* actPaste;
         KAction* actUndo;
         KAction* actRedo;
-        QPtrList<KAction> treePacketViewActions;
-        QPtrList<KAction> treePacketEditActions;
-        QPtrList<KAction> treeGeneralEditActions;
+        QLinkedList<KAction *> treePacketViewActions;
+        QLinkedList<KAction *> treePacketEditActions;
+        QLinkedList<KAction *> treeGeneralEditActions;
 
     public:
         /**

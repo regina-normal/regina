@@ -33,7 +33,7 @@
 #ifndef __EXTTABCTL_H
 #define __EXTTABCTL_H
 
-#include <ktabctl.h>
+#include <QtGui/QTabWidget>
 
 /**
  * An extension to the KDE tabbed control.
@@ -43,7 +43,7 @@
  * functionality is only available through the protected method
  * showTab().
  */
-class ExtTabCtl : public KTabCtl {
+class ExtTabCtl : public QTabWidget {
     Q_OBJECT
 
     public:
@@ -59,13 +59,13 @@ class ExtTabCtl : public KTabCtl {
 };
 
 inline ExtTabCtl::ExtTabCtl(QWidget* parent, const char* name) :
-        KTabCtl(parent, name) {
+        QTabWidget(parent) {
     // Grr, KTabCtl should do this itself.
-    setFocusProxy(tabs);
+    // setFocusProxy(tabs);
 }
 
 inline void ExtTabCtl::setCurrentTab(int tabIndex) {
-    showTab(tabIndex);
+    setCurrentIndex(tabIndex);
 }
 
 #endif
