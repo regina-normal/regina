@@ -26,19 +26,19 @@
 
 /* end stub */
 
-void addForeignCSVSurfaceList();
-void addForeignDehydration();
-void addForeignIsoSig();
-void addForeignOrb();
-void addForeignPDF();
-void addForeignSnapPea();
+#include "foreign/isosig.h"
+#include "packet/ncontainer.h"
+#include <boost/python.hpp>
 
-void addForeign() {
-    addForeignCSVSurfaceList();
-    addForeignDehydration();
-    addForeignIsoSig();
-    addForeignOrb();
-    addForeignPDF();
-    addForeignSnapPea();
+using namespace boost::python;
+
+namespace {
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_readIsoSigList,
+        regina::readIsoSigList, 1, 5);
+}
+
+void addForeignIsoSig() {
+    def("readIsoSigList", regina::readIsoSigList,
+        OL_readIsoSigList()[return_value_policy<manage_new_object>()]);
 }
 

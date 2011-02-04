@@ -184,6 +184,9 @@ Version 4.6.1  [ (under development) ]
         Routine metricalSmithNormalForm():
             - New alternative Smith normal form routine that is better for
               working with extremely large matrices.  Thanks to Ryan Budney.
+        Routine readIsoSigList():
+            - New routine that reads a text file filled with isomorphism
+              signatures and returns a container filled with triangulations.
         Routine readSnapPea():
             - Allows additional text on the first line following the
               "% Triangulation" marker (thanks to Matthias Goerner).
