@@ -79,6 +79,9 @@ Version 5.0  [ (under development) ]
               from the original presentation to the reduced one.
             - New routine relatorLength() returns the sum of the wordLength()s
               of all relations in the presentation.
+        Routine readIsoSigList():
+            - Now supports 4-manifold triangulations as well as
+              3-manifold triangulations.
 
     UTILITIES:
         regmerge:
@@ -271,6 +274,9 @@ Version 4.6.1  [ (under development) ]
         Routine metricalSmithNormalForm():
             - New alternative Smith normal form routine that is better for
               working with extremely large matrices.  Thanks to Ryan Budney.
+        Routine readIsoSigList():
+            - New routine that reads a text file filled with isomorphism
+              signatures and returns a container filled with triangulations.
         Routine readSnapPea():
             - Allows additional text on the first line following the
               "% Triangulation" marker (thanks to Matthias Goerner).
