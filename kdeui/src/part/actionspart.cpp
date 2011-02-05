@@ -347,7 +347,7 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig3()) );
     treeGeneralEditActions.append(act);
 
-    act = actionCollection()->addAction("dehydrated");
+    act = actionCollection()->addAction("import_dehydrated");
     act->setText(i18n("&Dehydrated Triangulation List"));
     act->setIcon(KIcon("dehydrated"));
     act->setToolTip(i18n("Import a dehydrated triangulation list"));
