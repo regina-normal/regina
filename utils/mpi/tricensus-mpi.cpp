@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "mpi.h"
+
 #include <cctype>
 #include <ctime>
 #include <fstream>
@@ -42,7 +44,6 @@
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "triangulation/ntriangulation.h"
-#include "mpi.h"
 
 // Write messages tailored to the working dimension.
 #define WORD_face (dim4 ? "facet" : "face")
@@ -136,6 +137,7 @@ int whichPurge = 0;
 int dim4 = 0;
 long depth = 0;
 int dryRun = 0;
+int sigs = 0;
 
 // Filenames read from the command line.
 std::string outputStub;
@@ -161,6 +163,9 @@ long totTri;
 
 // Slave-specific globals.
 long nSolns;
+std::string sigFile;
+std::ofstream sigStream;
+bool sigStreamErr;
 
 /**
  * Generic helper routine.
@@ -173,6 +178,7 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
     int argNor = 0;
     int argFinite = 0;
     int argIdeal = 0;
+    int argSigs = 0;
     poptOption opts[] = {
         { "orientable", 'o', POPT_ARG_NONE, &argOr, 0,
             "Must be orientable.", 0 },
@@ -193,6 +199,9 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
         { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
             "Run a census of 4-manifold triangulations, "
             "not 3-manifold triangulations.", 0 },
+        { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
+            "Write isomorphism signatures only, not full Regina data files.",
+            0 },
         { "depth", 'D', POPT_ARG_LONG, &depth, 0,
             "Split each face pairing into subsearches at the given depth.",
             "<depth>" },
@@ -569,15 +578,13 @@ int mainController() {
         }
     }
 
-    // Kill off any slaves that aren't working, since there are no more
-    // tasks.
-    for (slave = 1; slave <= nSlaves; slave++)
-        if (slaveTask[slave].pairing < 0)
-            ctrlStopSlave(slave);
-
-    // Wait for everyone else to finish their tasks, and stop them also.
+    // Wait for everyone else to finish their tasks.
     while (nRunningSlaves > 0)
-        ctrlStopSlave(ctrlWaitForSlave(true));
+        ctrlWaitForSlave(true);
+
+    // Stop all the slaves and finish!
+    for (slave = 1; slave <= nSlaves; slave++)
+        ctrlStopSlave(slave);
 
     delete[] slaveTask;
 
@@ -618,13 +625,25 @@ void slaveFoundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
 
         if (ok) {
             // Put it in the census!
-            regina::NPacket* dest = static_cast<regina::NPacket*>(container);
+            if (sigs) {
+                if (! nSolns) {
+                    sigStream.open(sigFile.c_str());
+                    if (! sigStream)
+                        sigStreamErr = true;
+                }
+                if (! sigStreamErr)
+                    sigStream << tri->isoSig() << std::endl;
+                delete tri;
+            } else {
+                regina::NPacket* dest =
+                    static_cast<regina::NPacket*>(container);
 
-            std::ostringstream out;
-            out << "Item " << (nSolns + 1);
-            tri->setPacketLabel(dest->makeUniqueLabel(out.str()));
+                std::ostringstream out;
+                out << "Item " << (nSolns + 1);
+                tri->setPacketLabel(out.str());
 
-            dest->insertChildLast(tri);
+                dest->insertChildLast(tri);
+            }
             nSolns++;
         } else {
             // The fish that John West reject.
@@ -817,8 +836,12 @@ void slaveProcessPartialSearch() {
         TAG_REQUEST_SUBSEARCH, MPI_COMM_WORLD, &status);
 
     // Construct the subsearch.
-    regina::NContainer* dest = new regina::NContainer();
-    dest->setPacketLabel("Triangulations");
+    regina::NPacket* parent = 0;
+    regina::NPacket* dest = 0;
+    if (! sigs) {
+        dest = new regina::NContainer();
+        dest->setPacketLabel("Triangulations");
+    }
 
     typename CensusType::GluingPermSearcher* search;
     {
@@ -833,9 +856,14 @@ void slaveProcessPartialSearch() {
         return;
     }
 
-    // Prepare a packet tree to wrap around the search.
-    regina::NPacket* parent = slaveSkeletonTree<CensusType>(search, searchRep);
-    parent->insertChildLast(dest);
+    // Prepare a packet tree (or output file) to wrap around the search.
+    if (sigs) {
+        slaveMakeTaskFilename(sigFile, ".sig");
+        sigStreamErr = false;
+    } else {
+        parent = slaveSkeletonTree<CensusType>(search, searchRep);
+        parent->insertChildLast(dest);
+    }
 
     // Run the partial census.
     nSolns = 0;
@@ -845,19 +873,28 @@ void slaveProcessPartialSearch() {
     if (nSolns > 0) {
         // Write the completed census to file.
         // Use a unique filename for each task.
-        std::string outFile;
-        slaveMakeTaskFilename(outFile, ".rga");
+        if (sigs) {
+            sigStream.close();
+            if (sigStreamErr)
+                slaveBail("Signature file could not be written.");
+            else
+                slaveSendResult(nSolns);
+        } else {
+            std::string outFile;
+            slaveMakeTaskFilename(outFile, ".rga");
 
-        if (regina::writeXMLFile(outFile.c_str(), parent))
-            slaveSendResult(nSolns);
-        else
-            slaveBail("Output file could not be written.");
+            if (regina::writeXMLFile(outFile.c_str(), parent))
+                slaveSendResult(nSolns);
+            else
+                slaveBail("Output file could not be written.");
+        }
     } else {
         // No triangulations.  Just inform the controller.
         slaveSendResult(0);
     }
 
     delete parent;
+    delete const_cast<typename CensusType::Pairing*>(search->getFacePairing());
     delete search;
     delete[] searchRep;
 }
@@ -902,10 +939,17 @@ void slaveProcessPairing() {
     }
 
     // Run the partial census.
-    regina::NPacket* parent = slaveSkeletonTree<CensusType>(pairing);
-    regina::NContainer* dest = new regina::NContainer();
-    dest->setPacketLabel("Triangulations");
-    parent->insertChildLast(dest);
+    NPacket* parent = 0;
+    NPacket* dest = 0;
+    if (sigs) {
+        slaveMakeTaskFilename(sigFile, ".sig");
+        sigStreamErr = false;
+    } else {
+        parent = slaveSkeletonTree<CensusType>(pairing);
+        dest = new regina::NContainer();
+        dest->setPacketLabel("Triangulations");
+        parent->insertChildLast(dest);
+    }
 
     nSolns = 0;
     if (! dryRun)
@@ -915,19 +959,28 @@ void slaveProcessPairing() {
     if (nSolns > 0) {
         // Write the completed census to file.
         // Use a unique filename for each task.
-        std::string outFile;
-        slaveMakeTaskFilename(outFile, ".rga");
+        if (sigs) {
+            sigStream.close();
+            if (sigStreamErr)
+                slaveBail("Signature file could not be written.");
+            else
+                slaveSendResult(nSolns);
+        } else {
+            std::string outFile;
+            slaveMakeTaskFilename(outFile, ".rga");
 
-        if (regina::writeXMLFile(outFile.c_str(), parent))
-            slaveSendResult(nSolns);
-        else
-            slaveBail("Output file could not be written.");
+            if (regina::writeXMLFile(outFile.c_str(), parent))
+                slaveSendResult(nSolns);
+            else
+                slaveBail("Output file could not be written.");
+        }
     } else {
         // No triangulations.  Just inform the controller.
         slaveSendResult(0);
     }
 
     delete parent;
+    delete pairing;
     delete[] pairingRep;
 }
 

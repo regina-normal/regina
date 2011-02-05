@@ -290,6 +290,9 @@ Version 4.6.1  [ (under development) ]
         - Only display counts that are relevant in the normal surface summary
           pane (e.g., no spun normal surface count for a closed triangulation).
     UTILITIES:
+        tricensus, tricensus-mpi:
+            - New option -s to output lists of isomorphism signatures instead
+              of the much larger Regina data files.
         tricensus-mpi-status:
             - Now finishes with a running total of all triangulations found.
             - Compressed logs (using gzip or bzip2) are now supported.
