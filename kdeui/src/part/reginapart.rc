@@ -8,6 +8,8 @@
       <Action name="import_regina"/>
       <Action name="import_snappea"/>
       <Action name="import_orb"/>
+      <Action name="import_isosig3"/>
+      <Action name="import_isosig4"/>
       <Action name="import_dehydrated"/>
       <Action name="import_pdf"/>
       <Action name="import_python"/>

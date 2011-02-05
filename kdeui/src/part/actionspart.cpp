@@ -269,6 +269,26 @@ void ReginaPart::setupActions() {
         "triangulation in this packet tree."));
     treeGeneralEditActions.append(act);
 
+    act = new KAction(i18n("&Isomorphism Signature List (3-D)"), "signature", 0,
+        this, SLOT(importIsoSig3()), actionCollection(), "import_isosig3");
+    act->setToolTip(i18n("Import an isomorphism signature list "
+        "for 3-manifold triangulations"));
+    act->setWhatsThis(i18n("Import an external text file containing "
+        "isomorphism signatures for 3-manifold triangulations.  "
+        "For each isomorphism signature, "
+        "a new 3-manifold triangulation will be created in this packet tree."));
+    treeGeneralEditActions.append(act);
+
+    act = new KAction(i18n("&Isomorphism Signature List (4-D)"), "signature", 0,
+        this, SLOT(importIsoSig4()), actionCollection(), "import_isosig4");
+    act->setToolTip(i18n("Import an isomorphism signature list "
+        "for 4-manifold triangulations"));
+    act->setWhatsThis(i18n("Import an external text file containing "
+        "isomorphism signatures for 4-manifold triangulations.  "
+        "For each isomorphism signature, "
+        "a new 4-manifold triangulation will be created in this packet tree."));
+    treeGeneralEditActions.append(act);
+
     act = new KAction(i18n("&Dehydrated Triangulation List"), "dehydrated", 0,
         this, SLOT(importDehydration()), actionCollection(),
         "import_dehydrated");
