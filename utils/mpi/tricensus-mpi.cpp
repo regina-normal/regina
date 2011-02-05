@@ -104,7 +104,6 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
     int argNor = 0;
     int argFinite = 0;
     int argIdeal = 0;
-    int argSigs = 0;
     poptOption opts[] = {
         { "orientable", 'o', POPT_ARG_NONE, &argOr, 0,
             "Must be orientable.", 0 },
@@ -799,7 +798,7 @@ void slaveProcessPartialSearch() {
     }
 
     delete parent;
-    delete const_cast<NFacePairing*>(search->getFacePairing());
+    delete const_cast<regina::NFacePairing*>(search->getFacePairing());
     delete search;
     delete[] searchRep;
 }
@@ -835,8 +834,8 @@ void slaveProcessPairing() {
     }
 
     // Run the partial census.
-    NPacket* parent = 0;
-    NPacket* dest = 0;
+    regina::NPacket* parent = 0;
+    regina::NPacket* dest = 0;
     if (sigs) {
         slaveMakeTaskFilename(sigFile, ".sig");
         sigStreamErr = false;
