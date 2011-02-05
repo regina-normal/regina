@@ -1,6 +1,6 @@
 # Engine
 
-SET ( FILES csvsurfacehandler dehydrationhandler exportdialog importdialog orbhandler pdfhandler pythonhandler reginahandler snappeahandler sourcehandler )
+SET ( FILES csvsurfacehandler dehydrationhandler exportdialog importdialog isosighandler orbhandler pdfhandler pythonhandler reginahandler snappeahandler sourcehandler )
 
 FOREACH( FILE ${FILES} )
   SET( SOURCES ${SOURCES} foreign/${FILE})
