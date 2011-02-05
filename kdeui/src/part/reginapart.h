@@ -270,6 +270,7 @@ class ReginaPart : public KParts::ReadWritePart {
          * Packet import routines.
          */
         void importDehydration();
+        void importIsoSig3();
         void importPDF();
         void importPython();
         void importRegina();

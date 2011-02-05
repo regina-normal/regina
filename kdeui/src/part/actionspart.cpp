@@ -335,6 +335,18 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(importOrb()) );
     treeGeneralEditActions.append(act);
 
+    act = actionCollection()->addAction("import_isosig3");
+    act->setText(i18n("&Isomorphism Signature List"));
+    act->setIcon(KIcon("signature"));
+    act->setToolTip(i18n("Import an isomorphism signature list "
+        "for 3-manifold triangulations"));
+    act->setWhatsThis(i18n("Import an external text file containing "
+        "isomorphism signatures for 3-manifold triangulations.  "
+        "For each isomorphism signature, "
+        "a new 3-manifold triangulation will be created in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig3()) );
+    treeGeneralEditActions.append(act);
+
     act = actionCollection()->addAction("dehydrated");
     act->setText(i18n("&Dehydrated Triangulation List"));
     act->setIcon(KIcon("dehydrated"));
