@@ -17,6 +17,7 @@ noinst_HEADERS = \
 	dehydrationhandler.h \
 	exportdialog.h \
 	importdialog.h \
+	isosighandler.h \
 	orbhandler.h \
 	packetexporter.h \
 	packetimporter.h \
@@ -31,6 +32,7 @@ libforeign_la_SOURCES = \
 	dehydrationhandler.cpp \
 	exportdialog.cpp \
 	importdialog.cpp \
+	isosighandler.cpp \
 	orbhandler.cpp \
 	pdfhandler.cpp \
 	pythonhandler.cpp \

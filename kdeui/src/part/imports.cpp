@@ -32,6 +32,7 @@
 #include "reginapart.h"
 #include "foreign/dehydrationhandler.h"
 #include "foreign/importdialog.h"
+#include "foreign/isosighandler.h"
 #include "foreign/orbhandler.h"
 #include "foreign/pdfhandler.h"
 #include "foreign/pythonhandler.h"
@@ -47,6 +48,11 @@
 void ReginaPart::importDehydration() {
     importFile(DehydrationHandler::instance, 0, i18n(FILTER_ALL),
         i18n("Import Dehydrated Triangulation List"));
+}
+
+void ReginaPart::importIsoSig3() {
+    importFile(IsoSigHandler::instance3, 0, i18n(FILTER_ALL),
+        i18n("Import Isomorphism Signature List"));
 }
 
 void ReginaPart::importPDF() {
