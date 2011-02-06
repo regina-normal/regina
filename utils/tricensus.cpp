@@ -33,13 +33,21 @@
 #include <popt.h>
 #include <unistd.h>
 #include "census/dim4census.h"
+#include "census/dim4facetpairing.h"
+#include "census/dim4gluingpermsearcher.h"
 #include "census/ncensus.h"
+#include "census/nfacepairing.h"
+#include "census/ngluingpermsearcher.h"
+#include "dim4/dim4triangulation.h"
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "progress/nprogressmanager.h"
+#include "progress/nprogresstypes.h"
+#include "triangulation/ntriangulation.h"
 
 #define WORD_face (dim4 ? "facet" : "face")
+#define WORD_Face (dim4 ? "Facet" : "Face")
 #define WORD_faces (dim4 ? "facets" : "faces")
 #define WORD_tetrahedra (dim4 ? "pentachora" : "tetrahedra")
 #define WORD_tetrahedron (dim4 ? "pentachoron" : "tetrahedron")
@@ -60,16 +68,146 @@ int minimalPrime = 0;
 int minimalPrimeP2 = 0;
 int dim4 = 0;
 int usePairs = 0;
+int sigs = 0;
+int whichPurge = 0;
+int genPairs = 0;
+std::string outFile;
 
 // Variables used for a dump of face pairings.
 std::auto_ptr<std::ostream> dumpStream;
 unsigned long totPairings = 0;
 
+// Variables used for output.
+long long nSolns;
+regina::NProgressMessage* progress = 0;
+std::ofstream sigStream;
+
+// Forward declarations:
+template <class CensusType>
+void foundGluingPerms(const typename CensusType::GluingPermSearcher*, void*);
+
+template <class CensusType>
+int runCensus();
+
+// Differences between censuses of 3-manifolds vs 4-manifolds:
+struct Dim3Params {
+    typedef regina::NFacePairing Pairing;
+    typedef regina::NFacePairingIsoList PairingIsoList;
+    typedef regina::NGluingPermSearcher GluingPermSearcher;
+    typedef regina::NTriangulation Triangulation;
+
+    inline static void findAllPerms(const Pairing* p,
+            const PairingIsoList* autos, bool orientableOnly,
+            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
+        GluingPermSearcher::findAllPerms(p, autos,
+            orientableOnly, finiteOnly, whichPurge,
+            foundGluingPerms<Dim3Params>, dest);
+    }
+
+    inline static bool mightBeMinimal(Triangulation* tri) {
+        return regina::NCensus::mightBeMinimal(tri, 0);
+    }
+
+    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
+        return s->getFacePairing();
+    }
+};
+
+struct Dim4Params {
+    typedef regina::Dim4FacetPairing Pairing;
+    typedef regina::Dim4FacetPairingIsoList PairingIsoList;
+    typedef regina::Dim4GluingPermSearcher GluingPermSearcher;
+    typedef regina::Dim4Triangulation Triangulation;
+
+    inline static void findAllPerms(const Pairing* p,
+            const PairingIsoList* autos, bool orientableOnly,
+            bool finiteOnly, int /* whichPurge */, regina::NPacket* dest) {
+        GluingPermSearcher::findAllPerms(p, autos,
+            orientableOnly, finiteOnly,
+            foundGluingPerms<Dim4Params>, dest);
+    }
+
+    inline static bool mightBeMinimal(Triangulation*) {
+        return true;
+    }
+
+    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
+        return s->getFacetPairing();
+    }
+};
+
+/**
+ * What to do with each complete triangulation that is generated.
+ */
+template <class CensusType>
+void foundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
+        void* container) {
+    if (perms) {
+        typename CensusType::Triangulation* tri = perms->triangulate();
+
+        bool ok = true;
+        if (! tri->isValid())
+            ok = false;
+        else if ((! finiteness.hasFalse()) && tri->isIdeal())
+            ok = false;
+        else if ((! finiteness.hasTrue()) && (! tri->isIdeal()))
+            ok = false;
+        else if ((! orientability.hasTrue()) && tri->isOrientable())
+            ok = false;
+        else if ((minimal || minimalPrime || minimalPrimeP2) &&
+                ! CensusType::mightBeMinimal(tri))
+            ok = false;
+
+        if (ok) {
+            // Put it in the census!
+            if (sigs) {
+                sigStream << tri->isoSig() << std::endl;
+                delete tri;
+            } else {
+                regina::NPacket* dest =
+                    static_cast<regina::NPacket*>(container);
+
+                std::ostringstream out;
+                out << "Item " << (nSolns + 1);
+                tri->setPacketLabel(out.str());
+
+                dest->insertChildLast(tri);
+            }
+            nSolns++;
+        } else {
+            // The fish that John West reject.
+            delete tri;
+        }
+    }
+}
+
+/**
+ * What to do with each face/facet pairing that is generated.
+ */
+template <class CensusType>
+void foundFacePairing(const typename CensusType::Pairing* pairing,
+        const typename CensusType::PairingIsoList* autos, void* container) {
+    if (pairing) {
+        if (progress)
+            progress->setMessage(pairing->toString());
+
+        CensusType::findAllPerms(pairing, autos,
+            ! orientability.hasFalse(), ! finiteness.hasFalse(),
+            whichPurge, static_cast<regina::NPacket*>(container));
+    } else {
+        if (progress) {
+            progress->setMessage("Finished.");
+            progress->setFinished();
+        }
+    }
+}
+
 /**
  * Dump the given face/facet pairing to dumpStream.
  */
-template <class Pairing, class PairingIsoList>
-void dumpPairing(const Pairing* pair, const PairingIsoList*, void*) {
+template <class CensusType>
+void dumpPairing(const typename CensusType::Pairing* pair,
+        const typename CensusType::PairingIsoList*, void*) {
     if (pair) {
         if (dumpStream.get())
             (*dumpStream) << (*pair).toTextRep() << std::endl;
@@ -138,6 +276,10 @@ regina::NText* parameterPacket() {
     return desc;
 }
 
+/**
+ * Parse the command-line arguments and then farm out to runCensus(),
+ * which does the real work.
+ */
 int main(int argc, const char* argv[]) {
     // Set up the command-line arguments.
     int argBdry = 0;
@@ -146,7 +288,6 @@ int main(int argc, const char* argv[]) {
     int argNor = 0;
     int argFinite = 0;
     int argIdeal = 0;
-    int genPairs = 0;
     poptOption opts[] = {
         { "tetrahedra", 't', POPT_ARG_LONG, &nTet, 0,
             "Number of tetrahedra.", "<tetrahedra>" },
@@ -174,6 +315,9 @@ int main(int argc, const char* argv[]) {
             "Run a census of 4-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
             "pentachora, and --bdryfaces counts boundary facets.", 0 },
+        { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
+            "Write isomorphism signatures only, not full Regina data files.",
+            0 },
         { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
             "Only generate face pairings, not triangulations.", 0 },
         { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
@@ -195,7 +339,6 @@ int main(int argc, const char* argv[]) {
         return 1;
     }
 
-    std::string outFile;
     const char** otherOpts = poptGetArgs(optCon);
     if (otherOpts && otherOpts[0]) {
         outFile = otherOpts[0];
@@ -221,6 +364,9 @@ int main(int argc, const char* argv[]) {
         broken = true;
     } else if (genPairs && (minimal || minimalPrime || minimalPrimeP2)) {
         std::cerr << "Minimality options cannot be used with -p/--genpairs.\n";
+        broken = true;
+    } else if (genPairs && sigs) {
+        std::cerr << "Signature output cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (dim4 && (minimal || minimalPrime || minimalPrimeP2)) {
         std::cerr << "Minimality options cannot be used with -4/--dim4.\n";
@@ -314,6 +460,15 @@ int main(int argc, const char* argv[]) {
     orientability = regina::NBoolSet(! argNor, ! argOr);
     boundary = regina::NBoolSet(! argNoBdry, ! argBdry);
 
+    // And off we go!
+    return (dim4 ? runCensus<Dim4Params>() : runCensus<Dim3Params>());
+}
+
+/**
+ * The main census generation routine.
+ */
+template <class CensusType>
+int runCensus() {
     // Are we only dumping face pairings?
     if (genPairs) {
         if (! outFile.empty()) {
@@ -324,39 +479,44 @@ int main(int argc, const char* argv[]) {
             }
         }
 
-        if (dim4) {
-            regina::Dim4FacetPairing::findAllPairings(nTet, boundary,
-                nBdryFaces, dumpPairing<regina::Dim4FacetPairing,
-                regina::Dim4FacetPairingIsoList>, 0, false);
-            std::cerr << "Total facet pairings: " << totPairings << std::endl;
-        } else {
-            regina::NFacePairing::findAllPairings(nTet, boundary,
-                nBdryFaces, dumpPairing<regina::NFacePairing,
-                regina::NFacePairingIsoList>, 0, false);
-            std::cerr << "Total face pairings: " << totPairings << std::endl;
-        }
+        CensusType::Pairing::findAllPairings(nTet, boundary,
+            nBdryFaces, dumpPairing<CensusType>, 0, false);
+        std::cerr << "Total " << WORD_face << " pairings: "
+            << totPairings << std::endl;
         return 0;
     }
 
     // We're actually generating triangulations.
+    nSolns = 0;
 
-    // Build the packet tree.
-    regina::NContainer parent;
-    if (usePairs)
-        parent.setPacketLabel("Partial command-line census");
-    else
-        parent.setPacketLabel("Command-line census");
+    // Prepare the packet tree (or signature file) for output.
+    regina::NPacket* parent = 0;
+    regina::NPacket* census = 0;
+    regina::NPacket* desc = 0;
+    if (sigs) {
+        sigStream.open(outFile.c_str());
+        if (! sigStream) {
+            std::cerr << "Signature file " << outFile
+                << " could not be written.\n";
+            return 1;
+        }
+    } else {
+        parent = new regina::NContainer();
+        if (usePairs)
+            parent->setPacketLabel("Partial command-line census");
+        else
+            parent->setPacketLabel("Command-line census");
 
-    regina::NText* desc = parameterPacket();
+        desc = parameterPacket();
 
-    regina::NContainer* census = new regina::NContainer();
-    census->setPacketLabel("Triangulations");
+        census = new regina::NContainer();
+        census->setPacketLabel("Triangulations");
 
-    parent.insertChildLast(desc);
-    parent.insertChildLast(census);
+        parent->insertChildLast(desc);
+        parent->insertChildLast(census);
+    }
 
     // Start the census running.
-    int whichPurge;
     if (minimalPrimeP2)
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME |
             regina::NCensus::PURGE_P2_REDUCIBLE;
@@ -364,74 +524,39 @@ int main(int argc, const char* argv[]) {
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME;
     else if (minimal)
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL;
-    else
-        whichPurge = 0;
 
     if (usePairs) {
         // Only use the face pairings read from standard input.
-        std::string pairingList;
-        if (dim4) {
-            std::cout << "Trying facet pairings..." << std::endl;
-            pairingList = "Facet pairings:\n\n";
-        } else {
-            std::cout << "Trying face pairings..." << std::endl;
-            pairingList = "Face pairings:\n\n";
-        }
+        std::cout << "Trying " << WORD_face << " pairings..." << std::endl;
+        std::string pairingList = WORD_Face;
+        pairingList += " pairings:\n\n";
 
         std::string pairingRep;
         while (true) {
             std::getline(std::cin, pairingRep);
 
             if (pairingRep.length() > 0) {
-                if (dim4) {
-                    regina::Dim4FacetPairing* pairing =
-                        regina::Dim4FacetPairing::fromTextRep(pairingRep);
-                    if (! pairing) {
-                        std::cerr << "Invalid facet pairing: " << pairingRep
-                            << std::endl;
-                        pairingList += "INVALID: ";
-                        pairingList += pairingRep;
-                        pairingList += '\n';
-                    } else if (! pairing->isCanonical()) {
-                        std::cerr << "Non-canonical facet pairing: "
-                            << pairingRep << std::endl;
-                        pairingList += "NON-CANONICAL: ";
-                        pairingList += pairingRep;
-                        pairingList += '\n';
-                    } else {
-                        std::cout << pairing->toString() << std::endl;
-                        regina::Dim4Census::formPartialCensus(pairing, census,
-                            finiteness, orientability, 0, 0);
-
-                        pairingList += pairing->toString();
-                        pairingList += '\n';
-                    }
+                typename CensusType::Pairing* pairing =
+                    CensusType::Pairing::fromTextRep(pairingRep);
+                if (! pairing) {
+                    std::cerr << "Invalid " << WORD_face << " pairing: "
+                        << pairingRep << std::endl;
+                    pairingList += "INVALID: ";
+                    pairingList += pairingRep;
+                    pairingList += '\n';
+                } else if (! pairing->isCanonical()) {
+                    std::cerr << "Non-canonical " << WORD_face
+                        << " pairing: " << pairingRep << std::endl;
+                    pairingList += "NON-CANONICAL: ";
+                    pairingList += pairingRep;
+                    pairingList += '\n';
                 } else {
-                    regina::NFacePairing* pairing =
-                        regina::NFacePairing::fromTextRep(pairingRep);
-                    if (! pairing) {
-                        std::cerr << "Invalid face pairing: " << pairingRep
-                            << std::endl;
-                        pairingList += "INVALID: ";
-                        pairingList += pairingRep;
-                        pairingList += '\n';
-                    } else if (! pairing->isCanonical()) {
-                        std::cerr << "Non-canonical face pairing: "
-                            << pairingRep << std::endl;
-                        pairingList += "NON-CANONICAL: ";
-                        pairingList += pairingRep;
-                        pairingList += '\n';
-                    } else {
-                        std::cout << pairing->toString() << std::endl;
-                        regina::NCensus::formPartialCensus(pairing, census,
-                            finiteness, orientability, whichPurge,
-                            ((minimal || minimalPrime || minimalPrimeP2) ?
-                            regina::NCensus::mightBeMinimal : 0), 0);
-
-                        pairingList += pairing->toString();
-                        pairingList += '\n';
-                    }
+                    std::cout << pairing->toString() << std::endl;
+                    foundFacePairing<CensusType>(pairing, 0, census);
+                    pairingList += pairing->toString();
+                    pairingList += '\n';
                 }
+                delete pairing;
             }
 
             if (std::cin.eof())
@@ -439,10 +564,12 @@ int main(int argc, const char* argv[]) {
         }
 
         // Store the face pairings used with the census.
-        regina::NText* pairingPacket = new regina::NText(pairingList);
-        pairingPacket->setPacketLabel(
-            dim4 ? "Facet Pairings" : "Face Pairings");
-        parent.insertChildAfter(pairingPacket, desc);
+        if (! sigs) {
+            regina::NText* pairingPacket = new regina::NText(pairingList);
+            pairingPacket->setPacketLabel(
+                dim4 ? "Facet Pairings" : "Face Pairings");
+            parent->insertChildAfter(pairingPacket, desc);
+        }
     } else {
         // An ordinary all-face-pairings census.
         std::cout << "Progress reports are periodic." << std::endl;
@@ -450,14 +577,12 @@ int main(int argc, const char* argv[]) {
             << " pairings used will be reported." << std::endl;
 
         regina::NProgressManager manager;
-        if (dim4)
-            regina::Dim4Census::formCensus(census, nTet, finiteness,
-                orientability, boundary, nBdryFaces, 0, 0, &manager);
-        else
-            regina::NCensus::formCensus(census, nTet, finiteness,
-                orientability, boundary, nBdryFaces, whichPurge,
-                ((minimal || minimalPrime || minimalPrimeP2) ?
-                regina::NCensus::mightBeMinimal : 0), 0, &manager);
+        progress = new regina::NProgressMessage(
+            "Starting census generation...");
+        manager.setProgress(progress);
+
+        CensusType::Pairing::findAllPairings(nTet, boundary, nBdryFaces,
+            foundFacePairing<CensusType>, census /* dest */, true);
 
         // Output progress and wait for the census to finish.
         while (! manager.isStarted())
@@ -473,13 +598,17 @@ int main(int argc, const char* argv[]) {
     }
 
     // Write the completed census to file.
-    if (! regina::writeXMLFile(outFile.c_str(), &parent)) {
-        std::cerr << "Output file " << outFile << " could not be written.\n";
-        return 1;
+    if (sigs) {
+        sigStream.close();
+    } else {
+        if (! regina::writeXMLFile(outFile.c_str(), parent)) {
+            std::cerr << "Output file " << outFile
+                << " could not be written.\n";
+            return 1;
+        }
     }
 
-    std::cout << "Total triangulations: " << census->getNumberOfChildren()
-        << std::endl;
+    std::cout << "Total triangulations: " << nSolns << std::endl;
     return 0;
 }
 
