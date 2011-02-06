@@ -33,10 +33,14 @@
 #include <popt.h>
 #include <unistd.h>
 #include "census/ncensus.h"
+#include "census/nfacepairing.h"
+#include "census/ngluingpermsearcher.h"
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "progress/nprogressmanager.h"
+#include "progress/nprogresstypes.h"
+#include "triangulation/ntriangulation.h"
 
 // Constants.
 const long MAXTET = 15;
@@ -52,10 +56,81 @@ int minimal = 0;
 int minimalPrime = 0;
 int minimalPrimeP2 = 0;
 int usePairs = 0;
+int sigs = 0;
+int whichPurge = 0;
 
 // Variables used for a dump of face pairings.
 std::auto_ptr<std::ostream> dumpStream;
 unsigned long totPairings = 0;
+
+// Variables used for output.
+long long nSolns;
+regina::NProgressMessage* progress = 0;
+std::ofstream sigStream;
+
+/**
+ * What to do with each complete triangulation that is generated.
+ */
+void foundGluingPerms(const regina::NGluingPermSearcher* perms,
+        void* container) {
+    if (perms) {
+        regina::NTriangulation* tri = perms->triangulate();
+
+        bool ok = true;
+        if (! tri->isValid())
+            ok = false;
+        else if ((! finiteness.hasFalse()) && tri->isIdeal())
+            ok = false;
+        else if ((! finiteness.hasTrue()) && (! tri->isIdeal()))
+            ok = false;
+        else if ((! orientability.hasTrue()) && tri->isOrientable())
+            ok = false;
+        else if ((minimal || minimalPrime || minimalPrimeP2) &&
+                ! regina::NCensus::mightBeMinimal(tri))
+            ok = false;
+
+        if (ok) {
+            // Put it in the census!
+            if (sigs) {
+                sigStream << tri->isoSig() << std::endl;
+                delete tri;
+            } else {
+                regina::NPacket* dest =
+                    static_cast<regina::NPacket*>(container);
+
+                std::ostringstream out;
+                out << "Item " << (nSolns + 1);
+                tri->setPacketLabel(out.str());
+
+                dest->insertChildLast(tri);
+            }
+            nSolns++;
+        } else {
+            // The fish that John West reject.
+            delete tri;
+        }
+    }
+}
+
+/**
+ * What to do with each face pairing that is generated.
+ */
+void foundFacePairing(const regina::NFacePairing* pairing,
+        const regina::NFacePairingIsoList* autos, void* container) {
+    if (pairing) {
+        if (progress)
+            progress->setMessage(pairing->toString());
+
+        regina::NGluingPermSearcher::findAllPerms(pairing, autos,
+            ! orientability.hasFalse(), ! finiteness.hasFalse(),
+            whichPurge, foundGluingPerms, container);
+    } else {
+        if (progress) {
+            progress->setMessage("Finished.");
+            progress->setFinished();
+        }
+    }
+}
 
 /**
  * Dump the given face pairing to dumpStream.
@@ -155,6 +230,9 @@ int main(int argc, const char* argv[]) {
             "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", 0 },
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
             "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", 0 },
+        { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
+            "Write isomorphism signatures only, not full Regina data files.",
+            0 },
         { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
             "Only generate face pairings, not triangulations.", 0 },
         { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
@@ -202,6 +280,9 @@ int main(int argc, const char* argv[]) {
         broken = true;
     } else if (genPairs && (minimal || minimalPrime || minimalPrimeP2)) {
         std::cerr << "Minimality options cannot be used with -p/--genpairs.\n";
+        broken = true;
+    } else if (genPairs && sigs) {
+        std::cerr << "Signature output cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (usePairs && nTet) {
         std::cerr << "Tetrahedron options cannot be used with -P/--usepairs.\n";
@@ -298,24 +379,36 @@ int main(int argc, const char* argv[]) {
     }
 
     // We're actually generating triangulations.
+    nSolns = 0;
 
-    // Build the packet tree.
-    regina::NContainer parent;
-    if (usePairs)
-        parent.setPacketLabel("Partial command-line census");
-    else
-        parent.setPacketLabel("Command-line census");
+    // Prepare the packet tree (or signature file) for output.
+    regina::NPacket* parent = 0;
+    regina::NPacket* census = 0;
+    regina::NPacket* desc = 0;
+    if (sigs) {
+        sigStream.open(outFile.c_str());
+        if (! sigStream) {
+            std::cerr << "Signature file " << outFile
+                << " could not be written.\n";
+            return 1;
+        }
+    } else {
+        parent = new regina::NContainer();
+        if (usePairs)
+            parent->setPacketLabel("Partial command-line census");
+        else
+            parent->setPacketLabel("Command-line census");
 
-    regina::NText* desc = parameterPacket();
+        desc = parameterPacket();
 
-    regina::NContainer* census = new regina::NContainer();
-    census->setPacketLabel("Triangulations");
+        census = new regina::NContainer();
+        census->setPacketLabel("Triangulations");
 
-    parent.insertChildLast(desc);
-    parent.insertChildLast(census);
+        parent->insertChildLast(desc);
+        parent->insertChildLast(census);
+    }
 
     // Start the census running.
-    int whichPurge;
     if (minimalPrimeP2)
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME |
             regina::NCensus::PURGE_P2_REDUCIBLE;
@@ -323,8 +416,6 @@ int main(int argc, const char* argv[]) {
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME;
     else if (minimal)
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL;
-    else
-        whichPurge = 0;
 
     if (usePairs) {
         // Only use the face pairings read from standard input.
@@ -352,14 +443,11 @@ int main(int argc, const char* argv[]) {
                     pairingList += '\n';
                 } else {
                     std::cout << pairing->toString() << std::endl;
-                    regina::NCensus::formPartialCensus(pairing, census,
-                        finiteness, orientability, whichPurge,
-                        ((minimal || minimalPrime || minimalPrimeP2) ?
-                        regina::NCensus::mightBeMinimal : 0), 0);
-
+                    foundFacePairing(pairing, 0, census);
                     pairingList += pairing->toString();
                     pairingList += '\n';
                 }
+                delete pairing;
             }
 
             if (std::cin.eof())
@@ -367,9 +455,11 @@ int main(int argc, const char* argv[]) {
         }
 
         // Store the face pairings used with the census.
-        regina::NText* pairingPacket = new regina::NText(pairingList);
-        pairingPacket->setPacketLabel("Face Pairings");
-        parent.insertChildAfter(pairingPacket, desc);
+        if (! sigs) {
+            regina::NText* pairingPacket = new regina::NText(pairingList);
+            pairingPacket->setPacketLabel("Face Pairings");
+            parent->insertChildAfter(pairingPacket, desc);
+        }
     } else {
         // An ordinary all-face-pairings census.
         std::cout << "Progress reports are periodic." << std::endl;
@@ -377,10 +467,13 @@ int main(int argc, const char* argv[]) {
             << std::endl;
 
         regina::NProgressManager manager;
-        regina::NCensus::formCensus(census, nTet, finiteness,
-            orientability, boundary, nBdryFaces, whichPurge,
-            ((minimal || minimalPrime || minimalPrimeP2) ?
-            regina::NCensus::mightBeMinimal : 0), 0, &manager);
+        progress = new regina::NProgressMessage(
+            "Starting census generation...");
+        manager.setProgress(progress);
+
+        regina::NFacePairing::findAllPairings(
+            nTet, boundary, nBdryFaces,
+            foundFacePairing, census /* dest */, true);
 
         // Output progress and wait for the census to finish.
         while (! manager.isStarted())
@@ -396,13 +489,17 @@ int main(int argc, const char* argv[]) {
     }
 
     // Write the completed census to file.
-    if (! regina::writeXMLFile(outFile.c_str(), &parent)) {
-        std::cerr << "Output file " << outFile << " could not be written.\n";
-        return 1;
+    if (sigs) {
+        sigStream.close();
+    } else {
+        if (! regina::writeXMLFile(outFile.c_str(), parent)) {
+            std::cerr << "Output file " << outFile
+                << " could not be written.\n";
+            return 1;
+        }
     }
 
-    std::cout << "Total triangulations: " << census->getNumberOfChildren()
-        << std::endl;
+    std::cout << "Total triangulations: " << nSolns << std::endl;
     return 0;
 }
 
