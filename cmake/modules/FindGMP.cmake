@@ -1,19 +1,23 @@
-# TODO Insert GPL licence bits
+# Try to find the GMP librairies
+#  GMP_FOUND - system has GMP lib
+#  GMP_INCLUDE_DIR - the GMP include directory
+#  GMP_LIBRARIES - Libraries needed to use GMP
 
-FIND_PATH(GMP_INCLUDE_DIR gmp.h "/usr/include" "/usr/local/include")
+# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-FIND_LIBRARY(GMP_LIBRARY NAMES gmp PATH "/usr/lib" "/usr/local/lib")
 
-IF(GMP_INCLUDE_DIR AND GMP_LIBRARY)
-  SET(GMP_FOUND TRUE)
-ENDIF(GMP_INCLUDE_DIR AND GMP_LIBRARY)
+if (GMP_INCLUDE_DIR AND GMP_LIBRARIES)
+  # Already in cache, be silent
+  set(GMP_FIND_QUIETLY TRUE)
+endif (GMP_INCLUDE_DIR AND GMP_LIBRARIES)
 
-IF(GMP_FOUND)
-  IF (NOT GMP_FIND_QUIETLY)
-    MESSAGE(STATUS "Found gmp: ${GMP_LIBRARY}")
-  ENDIF (NOT GMP_FIND_QUIETLY)
-ELSE (GMP_FOUND)
-  IF (GMP_FIND_REQUIRED)
-    MESSAGE(FATAL_ERROR "Could not find gmp")
-  ENDIF (GMP_FIND_REQUIRED)
-ENDIF(GMP_FOUND)
+find_path(GMP_INCLUDE_DIR NAMES gmp.h )
+find_library(GMP_LIBRARIES NAMES gmp libgmp)
+
+include(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(GMP DEFAULT_MSG GMP_INCLUDE_DIR GMP_LIBRARIES)
+
+mark_as_advanced(GMP_INCLUDE_DIR GMP_LIBRARIES)
