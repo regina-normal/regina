@@ -39,9 +39,12 @@
 #include "regina-config.h"
 #include <iostream>
 #ifdef ICONV_FOUND
+#ifdef ICONV_H
+#include ICONV_H
+#else
 #include <iconv.h>
 #endif
-
+#endif
 namespace regina {
 
 /**

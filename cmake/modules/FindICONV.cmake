@@ -4,7 +4,7 @@ include (CheckFunctionExists)
 include (CheckCXXSourceCompiles)
 FIND_PATH(ICONV_INCLUDE_DIR NAMES iconv.h)
 
-FIND_LIBRARY(ICONV_LIBRARY NAMES iconv)
+FIND_LIBRARY(ICONV_LIBRARY NAMES iconv libiconv)
 
 IF(NOT ICONV_LIBRARY)
   CHECK_FUNCTION_EXISTS (iconv ICONV_FOUND)
