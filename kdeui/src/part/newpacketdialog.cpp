@@ -31,10 +31,10 @@
 #include "packetcreator.h"
 #include "packetfilter.h"
 
+#include <khbox.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qframe.h>
-#include <qhbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
@@ -46,12 +46,16 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         regina::NPacket* packetTree, regina::NPacket* defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle,
         const QString& suggestedLabel) :
-        KDialogBase(Plain, dialogTitle, Ok|Cancel, Ok, parent),
+        KDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
         creator(newCreator), tree(packetTree), newPacket(0) {
-    QFrame* page = plainPage();
+    setCaption(dialogTitle);
+    setButtons(KDialog::Ok|KDialog::Cancel);
+
+    QWidget* page = new QWidget(this);
+    setMainWidget(page);
     QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
 
-    QHBox* parentStrip = new QHBox(page);
+    KHBox* parentStrip = new KHBox(page);
     parentStrip->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(parentStrip);
     QString expln = i18n("Specifies where in the packet tree the new "
@@ -62,7 +66,7 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     QWhatsThis::add(chooser, expln);
     parentStrip->setStretchFactor(chooser, 1);
 
-    QHBox* labelStrip = new QHBox(page);
+    KHBox* labelStrip = new KHBox(page);
     labelStrip->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(labelStrip);
     expln = i18n("The label that will be assigned to the new packet.");
@@ -120,10 +124,10 @@ void NewPacketDialog::slotOk() {
         KMessageBox::error(this, i18n("The packet label cannot be empty."));
         return;
     }
-    if (tree->findPacketLabel(useLabel)) {
+    if (tree->findPacketLabel(useLabel.toStdString())) {
         KMessageBox::error(this, i18n(
             "There is already a packet labelled %1.").arg(useLabel));
-        label->setText(tree->makeUniqueLabel(useLabel));
+        label->setText(QString::fromStdString(tree->makeUniqueLabel(useLabel.toStdString())));
         return;
     }
 
@@ -134,12 +138,12 @@ void NewPacketDialog::slotOk() {
         return;
 
     // Fix the new packet.
-    newPacket->setPacketLabel(useLabel);
+    newPacket->setPacketLabel(useLabel.toStdString());
     if (! newPacket->getTreeParent())
         parentPacket->insertChildLast(newPacket);
 
     // And we're done!
-    KDialogBase::slotOk();
+    KDialog::okClicked();
 }
 
-#include "newpacketdialog.moc"
+#include "moc_newpacketdialog.cpp"
