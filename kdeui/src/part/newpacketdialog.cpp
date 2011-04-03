@@ -124,10 +124,13 @@ void NewPacketDialog::slotOk() {
         KMessageBox::error(this, i18n("The packet label cannot be empty."));
         return;
     }
-    if (tree->findPacketLabel(useLabel.toStdString())) {
+    if (tree->findPacketLabel(std::string(useLabel.toLatin1().data()))) {
         KMessageBox::error(this, i18n(
             "There is already a packet labelled %1.").arg(useLabel));
-        label->setText(QString::fromStdString(tree->makeUniqueLabel(useLabel.toStdString())));
+        label->setText(QString::fromAscii(
+              tree->makeUniqueLabel(
+                  std::string(useLabel.toLatin1().data())
+                  ).c_str()));
         return;
     }
 
@@ -138,7 +141,7 @@ void NewPacketDialog::slotOk() {
         return;
 
     // Fix the new packet.
-    newPacket->setPacketLabel(useLabel.toStdString());
+    newPacket->setPacketLabel(std::string(useLabel.toLatin1().data()));
     if (! newPacket->getTreeParent())
         parentPacket->insertChildLast(newPacket);
 
