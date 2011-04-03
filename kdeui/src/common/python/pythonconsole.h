@@ -37,6 +37,7 @@
 #include "pythonoutputstream.h"
 #include "../reginaprefset.h"
 
+#include <packet/npacket.h>
 #include <kxmlguiwindow.h>
 
 class CommandEdit;
