@@ -96,9 +96,9 @@ void ReginaPart::importFile(const PacketImporter& importer,
         if (result.fileNames.empty() || result.fileNames.front().isEmpty())
             return;
         newTree = importer.import(result.fileNames.front(),
-            QTextCodec::codecForName(result.encoding), widget());
+            QTextCodec::codecForName(result.encoding.toAscii()), widget());
     } else {
-        QString file = KFileDialog::getOpenFileName(QString::null,
+        QString file = KFileDialog::getOpenFileName(KUrl(),
             fileFilter, widget(), dialogTitle);
         if (file.isEmpty())
             return;

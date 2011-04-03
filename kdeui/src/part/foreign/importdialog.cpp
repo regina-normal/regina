@@ -46,9 +46,13 @@
 ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
         regina::NPacket* packetTree, regina::NPacket* defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle) :
-        KDialogBase(Plain, dialogTitle, Ok|Cancel, Ok, parent),
+        KDialogBase(parent), // dialogTitle, Ok|Cancel, Ok, parent),
         tree(packetTree), newTree(importedData) {
-    QFrame* page = plainPage();
+
+    setCaption(dialogTitle);
+    setButtons(KDialog::Ok | KDialog::Cancel);
+    QFrame* page = new QWidget(this);
+    setMainWidget(page);
     QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
 
     QHBox* parentStrip = new QHBox(page);
