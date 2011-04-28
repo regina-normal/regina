@@ -32,19 +32,22 @@
 #include <qpainter.h>
 #include <qstyle.h>
 
-int GridListViewItem::width(const QFontMetrics& fm, const QListView* lv, int c)
+#include <QtGui/QListWidget>
+#include <QtGui/QListWidgetItem>
+
+int GridListViewItem::width(const QFontMetrics& fm, const QListWidget* lv, int c)
         const {
     /**
      * Add a bit of space so items aren't pressed right against the
      * grid.
      */
-    return KListViewItem::width(fm, lv, c) + 2;
+    return QListView::width(fm, lv, c) + 2;
 }
 
 void GridListViewItem::paintCell(QPainter* p, const QColorGroup& cg,
         int column, int width, int align) {
     // Do the standard painting.
-    KListViewItem::paintCell(p, cg, column, width, align);
+    QListWidgetItem::paintCell(p, cg, column, width, align);
 
     // Draw a box around the cell.
 #if QT_VERSION < 0x030200

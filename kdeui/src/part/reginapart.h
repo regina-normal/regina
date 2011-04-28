@@ -47,7 +47,7 @@ namespace regina {
 };
 
 class KAboutData;
-class KInstance;
+class KComponentData;
 class PacketCreator;
 class PacketExporter;
 class PacketFilter;
@@ -121,7 +121,7 @@ class ReginaPart : public KParts::ReadWritePart {
          * Basic KPart operations.
          */
         static KAboutData *createAboutData();
-        static KInstance* factoryInstance();
+        static KComponentData* factoryInstance();
 
         /**
          * View the given packet.

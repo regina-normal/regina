@@ -50,7 +50,7 @@
 #include <kprocess.h>
 #include <krun.h>
 #include <kstandarddirs.h>
-#include <ktempfile.h>
+#include <KTemporaryFile>
 #include <kurl.h>
 
 #define PDF_MIMETYPE "application/pdf"
@@ -114,11 +114,13 @@ void NPDFUI::refresh() {
         setDirty(false);
         return;
     }
+    temp.open();
     if (! regina::writePDF(
             static_cast<const char*>(QFile::encodeName(temp.name())), *pdf)) {
         showError(i18n("An error occurred whilst writing the PDF "
             "data to the temporary file %1.").arg(temp.name()));
         setDirty(false);
+        temp.close();
         return;
     }
 

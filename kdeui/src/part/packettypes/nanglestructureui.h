@@ -104,7 +104,7 @@ class AngleHeaderToolTip : public QToolTip {
         /**
          * Constructor.
          */
-        AngleHeaderToolTip(QHeader *header, QToolTipGroup *group = 0);
+        //AngleHeaderToolTip(QHeader *header, QToolTipGroup *group = 0);
 
     protected:
         /**

@@ -51,30 +51,30 @@ class GridListViewItem : public QListWidgetItem {
          * Constructors.
          */
         GridListViewItem(QListWidget* parent);
-        GridListViewItem(QListWidgetItem* parent);
-        GridListViewItem(QListWidget* parent, QListWidgetItem* after);
-        GridListViewItem(QListWidgetItem* parent, QListWidgetItem* after);
-        GridListViewItem(QListWidget* parent, QString,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null);
-        GridListViewItem(QListWidgetItem* parent, QString,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null);
-        GridListViewItem(QListWidget* parent, QListWidgetItem* after, QString,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null);
-        GridListViewItem(QListWidgetItem* parent, QListWidgetItem* after, QString,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null, QString = QString::null,
-            QString = QString::null);
-
+//        GridListViewItem(QListWidgetItem* parent);
+//        GridListViewItem(QListWidget* parent, QListWidgetItem* after);
+//        GridListViewItem(QListWidgetItem* parent, QListWidgetItem* after);
+//        GridListViewItem(QListWidget* parent, QString,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null);
+//        GridListViewItem(QListWidgetItem* parent, QString,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null);
+//        GridListViewItem(QListWidget* parent, QListWidgetItem* after, QString,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null);
+//        GridListViewItem(QListWidgetItem* parent, QListWidgetItem* after, QString,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null, QString = QString::null,
+//            QString = QString::null);
+//
         /**
          * QListWidgetItem overrides.
          */
@@ -84,36 +84,36 @@ class GridListViewItem : public QListWidgetItem {
 };
 
 inline GridListViewItem::GridListViewItem(QListWidget* parent) :
-        QListWidgetItem( *parent, QListWidgetItem::Type) {
+        QListWidgetItem( parent, 0) {
 }
-inline GridListViewItem::GridListViewItem(QListWidgetItem* parent) :
-        QListWidgetItem( *parent) {
-}
-inline GridListViewItem::GridListViewItem(QListWidget* parent,
-        QListWidgetItem* after) : QListWidgetItem(parent, after) {
-}
-inline GridListViewItem::GridListViewItem(QListWidgetItem* parent,
-        QListWidgetItem* after) : QListWidgetItem(parent, after) {
-}
-inline GridListViewItem::GridListViewItem(QListWidget* parent, QString s1,
-        QString s2, QString s3, QString s4, QString s5, QString s6,
-        QString s7, QString s8) :
-        QListWidgetItem(parent, s1, s2, s3, s4, s5, s6, s7, s8) {
-}
-inline GridListViewItem::GridListViewItem(QListWidgetItem* parent, QString s1,
-        QString s2, QString s3, QString s4, QString s5, QString s6,
-        QString s7, QString s8) :
-        QListWidgetItem(parent, s1, s2, s3, s4, s5, s6, s7, s8) {
-}
-inline GridListViewItem::GridListViewItem(QListWidget* parent,
-        QListWidgetItem* after, QString s1, QString s2, QString s3, QString s4,
-        QString s5, QString s6, QString s7, QString s8) :
-        QListWidgetItem(parent, after, s1, s2, s3, s4, s5, s6, s7, s8) {
-}
-inline GridListViewItem::GridListViewItem(QListWidgetItem* parent,
-        QListWidgetItem* after, QString s1, QString s2, QString s3, QString s4,
-        QString s5, QString s6, QString s7, QString s8) :
-        QListWidgetItem(parent, after, s1, s2, s3, s4, s5, s6, s7, s8) {
-}
+//inline GridListViewItem::GridListViewItem(QListWidgetItem* parent) :
+//        QListWidgetItem( *parent) {
+//}
+//inline GridListViewItem::GridListViewItem(QListWidget* parent,
+//        QListWidgetItem* after) : QListWidgetItem(parent, after) {
+//}
+//inline GridListViewItem::GridListViewItem(QListWidgetItem* parent,
+//        QListWidgetItem* after) : QListWidgetItem(parent, after) {
+//}
+//inline GridListViewItem::GridListViewItem(QListWidget* parent, QString s1,
+//        QString s2, QString s3, QString s4, QString s5, QString s6,
+//        QString s7, QString s8) :
+//        QListWidgetItem(parent, s1, s2, s3, s4, s5, s6, s7, s8) {
+//}
+//inline GridListViewItem::GridListViewItem(QListWidgetItem* parent, QString s1,
+//        QString s2, QString s3, QString s4, QString s5, QString s6,
+//        QString s7, QString s8) :
+//        QListWidgetItem(parent, s1, s2, s3, s4, s5, s6, s7, s8) {
+//}
+//inline GridListViewItem::GridListViewItem(QListWidget* parent,
+//        QListWidgetItem* after, QString s1, QString s2, QString s3, QString s4,
+//        QString s5, QString s6, QString s7, QString s8) :
+//        QListWidgetItem(parent, after, s1, s2, s3, s4, s5, s6, s7, s8) {
+//}
+//inline GridListViewItem::GridListViewItem(QListWidgetItem* parent,
+//        QListWidgetItem* after, QString s1, QString s2, QString s3, QString s4,
+//        QString s5, QString s6, QString s7, QString s8) :
+//        QListWidgetItem(parent, after, s1, s2, s3, s4, s5, s6, s7, s8) {
+//}
 
 #endif

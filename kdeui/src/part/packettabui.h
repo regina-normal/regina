@@ -44,7 +44,7 @@ class PacketTabbedViewerTab;
 class PacketViewerTab;
 class QBoxLayout;
 class QString;
-class QIconSet;
+//class QIconSet;
 
 /**
  * A packet interface consisting of several tabbed pages.

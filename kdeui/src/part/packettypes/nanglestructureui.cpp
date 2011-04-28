@@ -184,9 +184,9 @@ void NAngleStructureUI::columnResized(int section, int, int newSize) {
     currentlyAutoResizing = false;
 }
 
-AngleHeaderToolTip::AngleHeaderToolTip(QHeader *header,
-        QToolTipGroup *group) : QToolTip(header, group) {
-}
+//AngleHeaderToolTip::AngleHeaderToolTip(QHeader *header,
+//        QToolTipGroup *group) : QToolTip(header, group) {
+//}
 
 void AngleHeaderToolTip::maybeTip(const QPoint& p) {
     QHeader *header = dynamic_cast<QHeader*>(parentWidget());
@@ -200,8 +200,7 @@ void AngleHeaderToolTip::maybeTip(const QPoint& p) {
     else
         tipString = i18n("Tetrahedron %1, edges %2").arg((section - 1) / 3).
             arg(regina::vertexSplitString[(section - 1) % 3]);
-
-    tip(header->sectionRect(section), tipString);
+    header->sectionRect(section)->setToolTip(tipString);
 }
 
 #include "nanglestructureui.moc"

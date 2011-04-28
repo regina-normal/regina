@@ -42,14 +42,14 @@ using regina::NPacket;
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         QWidget* parent, const char* name) :
-        KComboBox(parent, name), subtree(newSubtree), filter(0),
+        KComboBox(parent), subtree(newSubtree), filter(0),
         onAutoUpdate(false), isUpdating(false) {
     fill(false, 0);
 }
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         PacketFilter* newFilter, QWidget* parent, const char* name) :
-        KComboBox(parent, name), subtree(newSubtree), filter(newFilter),
+        KComboBox(parent), subtree(newSubtree), filter(newFilter),
         onAutoUpdate(false), isUpdating(false) {
     fill(false, 0);
 }
@@ -57,7 +57,7 @@ PacketChooser::PacketChooser(regina::NPacket* newSubtree,
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         PacketFilter* newFilter, bool allowNone,
         regina::NPacket* initialSelection, QWidget* parent, const char* name) :
-        KComboBox(parent, name), subtree(newSubtree), filter(newFilter),
+        KComboBox(parent), subtree(newSubtree), filter(newFilter),
         onAutoUpdate(false), isUpdating(false) {
     fill(allowNone, initialSelection);
 }
@@ -115,13 +115,13 @@ void PacketChooser::packetToBeDestroyed(regina::NPacket* toDestroy) {
         packets.erase(it);
         if (destroyIndex == currentIndex) {
             // We know count() > 0 since currentItem() exists.
-            setCurrentItem(0);
+            setCurrentIndex(0);
 
             // If the item to destroy *is* 0, this should just fall through
             // to whatever's next when we remove it from the chooser.
         } else if (destroyIndex < currentIndex) {
             // The selected item has moved up the list.
-            setCurrentItem(currentIndex - 1);
+            setCurrentIndex(currentIndex - 1);
         }
 
         removeItem(destroyIndex);
@@ -169,7 +169,7 @@ void PacketChooser::fill(bool allowNone, NPacket* select) {
         packets.push_back(0);
 
         if (select == 0)
-            setCurrentItem(0);
+            setCurrentIndex(0);
     }
 
     // Insert the regular packets.
@@ -182,7 +182,7 @@ void PacketChooser::fill(bool allowNone, NPacket* select) {
             if (onAutoUpdate)
                 p->listen(this);
             if (p == select)
-                setCurrentItem(count() - 1);
+                setCurrentIndex(count() - 1);
         }
         p = p->nextTreePacket();
     }
@@ -222,4 +222,4 @@ bool PacketChooser::verify() {
     return true;
 }
 
-#include "packetchooser.moc"
+#include "moc_packetchooser.cpp"

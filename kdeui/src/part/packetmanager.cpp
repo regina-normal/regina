@@ -51,7 +51,7 @@
 #include <klocale.h>
 #include <ktexteditor/document.h>
 #include <ktexteditor/editorchooser.h>
-#include <kuserprofile.h>
+//#include <kuserprofile.h>
 
 using namespace regina;
 
@@ -63,28 +63,29 @@ QPixmap PacketManager::iconSmall(NPacket* packet, bool allowLock) {
     QPixmap ans;
 
     if (packet->getPacketType() == NAngleStructureList::packetType)
-        ans = SmallIcon("packet_angles", ReginaPart::factoryInstance());
+        ans = SmallIcon("packet_angles", 0, KIconLoader::DefaultState);
+        //ans = SmallIcon("packet_angles", ReginaPart::factoryInstance());
     else if (packet->getPacketType() == NContainer::packetType)
-        ans = SmallIcon("packet_container", ReginaPart::factoryInstance());
+        ans = SmallIcon("packet_container", 0, KIconLoader::DefaultState);
     else if (packet->getPacketType() == NPDF::packetType)
-        ans = SmallIcon("packet_pdf", ReginaPart::factoryInstance());
+        ans = SmallIcon("packet_pdf", 0, KIconLoader::DefaultState);
     else if (packet->getPacketType() == NSurfaceFilter::packetType) {
         if (((NSurfaceFilter*)packet)->getFilterID() ==
                 NSurfaceFilterCombination::filterID)
-            ans = SmallIcon("filter_comb", ReginaPart::factoryInstance());
+            ans = SmallIcon("filter_comb", 0, KIconLoader::DefaultState);
         else if (((NSurfaceFilter*)packet)->getFilterID() ==
                 NSurfaceFilterProperties::filterID)
-            ans = SmallIcon("filter_prop", ReginaPart::factoryInstance());
+            ans = SmallIcon("filter_prop", 0, KIconLoader::DefaultState);
         else
-            ans = SmallIcon("packet_filter", ReginaPart::factoryInstance());
+            ans = SmallIcon("packet_filter", 0, KIconLoader::DefaultState);
     } else if (packet->getPacketType() == NScript::packetType)
-        ans = SmallIcon("packet_script", ReginaPart::factoryInstance());
+        ans = SmallIcon("packet_script", 0, KIconLoader::DefaultState);
     else if (packet->getPacketType() == NNormalSurfaceList::packetType)
-        ans = SmallIcon("packet_surfaces", ReginaPart::factoryInstance());
+        ans = SmallIcon("packet_surfaces", 0, KIconLoader::DefaultState);
     else if (packet->getPacketType() == NText::packetType)
-        ans = SmallIcon("packet_text", ReginaPart::factoryInstance());
+        ans = SmallIcon("packet_text", 0, KIconLoader::DefaultState);
     else if (packet->getPacketType() == NTriangulation::packetType)
-        ans = SmallIcon("packet_triangulation", ReginaPart::factoryInstance());
+        ans = SmallIcon("packet_triangulation", 0, KIconLoader::DefaultState);
     else
         return QPixmap();
 
@@ -98,26 +99,26 @@ QPixmap PacketManager::iconBar(NPacket* packet, bool allowLock) {
     QPixmap ans;
 
     if (packet->getPacketType() == NAngleStructureList::packetType)
-        ans = BarIcon("packet_angles", ReginaPart::factoryInstance());
+        ans = BarIcon("packet_angles", 0, KIconLoader::DefaultState);
     else if (packet->getPacketType() == NContainer::packetType)
-        ans = BarIcon("packet_container", ReginaPart::factoryInstance());
+        ans = BarIcon("packet_container", 0, KIconLoader::DefaultState);
     else if (packet->getPacketType() == NSurfaceFilter::packetType) {
         if (((NSurfaceFilter*)packet)->getFilterID() ==
                 NSurfaceFilterCombination::filterID)
-            ans = BarIcon("filter_comb", ReginaPart::factoryInstance());
+            ans = BarIcon("filter_comb", 0, KIconLoader::DefaultState);
         else if (((NSurfaceFilter*)packet)->getFilterID() ==
                 NSurfaceFilterProperties::filterID)
-            ans = BarIcon("filter_prop", ReginaPart::factoryInstance());
+            ans = BarIcon("filter_prop", 0, KIconLoader::DefaultState);
         else
-            ans = BarIcon("packet_filter", ReginaPart::factoryInstance());
+            ans = BarIcon("packet_filter", 0, KIconLoader::DefaultState);
     } else if (packet->getPacketType() == NScript::packetType)
-        ans = BarIcon("packet_script", ReginaPart::factoryInstance());
+        ans = BarIcon("packet_script", 0, KIconLoader::DefaultState);
     else if (packet->getPacketType() == NNormalSurfaceList::packetType)
-        ans = BarIcon("packet_surfaces", ReginaPart::factoryInstance());
+        ans = BarIcon("packet_surfaces", 0, KIconLoader::DefaultState);
     else if (packet->getPacketType() == NText::packetType)
-        ans = BarIcon("packet_text", ReginaPart::factoryInstance());
+        ans = BarIcon("packet_text", 0, KIconLoader::DefaultState);
     else if (packet->getPacketType() == NTriangulation::packetType)
-        ans = BarIcon("packet_triangulation", ReginaPart::factoryInstance());
+        ans = BarIcon("packet_triangulation", 0, KIconLoader::DefaultState);
     else
         return QPixmap();
 
@@ -141,7 +142,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NPDF::packetType)
         return new NPDFUI(dynamic_cast<NPDF*>(packet), enclosingPane);
     if (packet->getPacketType() == NScript::packetType) {
-        KTextEditor::Document* doc = createDocument();
+        KTextEditor::Document* doc = createDocument(enclosingPane);
         if (doc)
             return new NScriptUI(dynamic_cast<NScript*>(packet),
                 enclosingPane, doc);
@@ -164,7 +165,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
         return new DefaultPacketUI(packet, enclosingPane);
     }
     if (packet->getPacketType() == NText::packetType) {
-        KTextEditor::Document* doc = createDocument();
+        KTextEditor::Document* doc = createDocument(enclosingPane);
         if (doc)
             return new NTextUI(dynamic_cast<NText*>(packet),
                 enclosingPane, doc);
@@ -180,32 +181,40 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
 }
 
 void PacketManager::initLock() {
-    KIconLoader* loader = ReginaPart::factoryInstance()->iconLoader();
+    KIconLoader* loader = KIconLoader::global();
 
-    KIconTheme* theme = loader->theme();
-    QString lockName = (theme ? theme->lockOverlay() : "lockoverlay");
+    // TODO: Work out if this is needed.
+    //KIconTheme* theme = loader->theme();
+    //QString lockName = (theme ? theme->lockOverlay() : "lockoverlay");
+    QString lockName = "lockoverlay"; 
 
     // Try the theme icon, then lock_overlay (KDE >= 3.5), then
     // lockoverlay (KDE <= 3.4).  This should sort out distributions
     // with buggy default themes (cough, Fedora, SuSE, cough).
-    lockSmall = loader->loadIcon(lockName, KIcon::Small, 0,
-        KIcon::DefaultState, 0L, true /* null if not found */);
+    lockSmall = loader->loadIcon(lockName, KIconLoader::Small, 0,
+        KIconLoader::DefaultState, QStringList(), 
+        0L, true /* null if not found */);
     if (lockSmall.isNull()) {
-        lockSmall = loader->loadIcon("lock_overlay", KIcon::Small, 0,
-            KIcon::DefaultState, 0L, true /* null if not found */);
+        lockSmall = loader->loadIcon("lock_overlay", KIconLoader::Small, 0,
+            KIconLoader::DefaultState, QStringList(),
+            0L, true /* null if not found */);
         if (lockSmall.isNull())
-            lockSmall = loader->loadIcon("lockoverlay", KIcon::Small, 0,
-                KIcon::DefaultState, 0L, true /* null if not found */);
+            lockSmall = loader->loadIcon("lockoverlay", KIconLoader::Small, 0,
+                KIconLoader::DefaultState, QStringList(),
+                0L, true /* null if not found */);
     }
 
-    lockBar = loader->loadIcon(lockName, KIcon::Toolbar, 0,
-        KIcon::DefaultState, 0L, true /* null if not found */);
+    lockBar = loader->loadIcon(lockName, KIconLoader::Toolbar, 0,
+        KIconLoader::DefaultState, QStringList(), 
+        0L, true /* null if not found */);
     if (lockBar.isNull()) {
-        lockBar = loader->loadIcon("lock_overlay", KIcon::Toolbar, 0,
-            KIcon::DefaultState, 0L, true /* null if not found */);
+        lockBar = loader->loadIcon("lock_overlay", KIconLoader::Toolbar, 0,
+            KIconLoader::DefaultState, QStringList(),
+            0L, true /* null if not found */);
         if (lockBar.isNull())
-            lockBar = loader->loadIcon("lockoverlay", KIcon::Toolbar, 0,
-                KIcon::DefaultState, 0L, true /* null if not found */);
+            lockBar = loader->loadIcon("lockoverlay", KIconLoader::Toolbar, 0,
+                KIconLoader::DefaultState, QStringList(), 
+                0L, true /* null if not found */);
     }
 
     lockInitialised = true;
@@ -235,7 +244,8 @@ bool PacketManager::overlayLock(QPixmap& icon, QImage& lock) {
     return false;
 }
 
-KTextEditor::Document* PacketManager::createDocument() {
-    return KTextEditor::EditorChooser::createDocument();
+KTextEditor::Document* PacketManager::createDocument(QObject* parent) {
+    KTextEditor::Editor* editor = KTextEditor::EditorChooser::editor();
+    return editor->createDocument(parent);
 }
 

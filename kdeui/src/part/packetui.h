@@ -35,8 +35,9 @@
 
 #include "packet/npacketlistener.h"
 
-#include <qptrlist.h>
-#include <qvbox.h>
+#include <QLinkedList>
+#include <kvbox.h>
+#include <khbox.h>
 
 class KAction;
 class KActionMenu;
@@ -58,7 +59,7 @@ namespace regina {
 /**
  * A packet header, containing an appropriate icon and text title.
  */
-class PacketHeader : public QHBox {
+class PacketHeader : public KHBox {
     Q_OBJECT
 
     private:
@@ -157,7 +158,7 @@ class PacketUI {
          * The default implementation of this routine simply returns an
          * empty list.
          */
-        virtual const QPtrList<KAction>& getPacketTypeActions();
+        virtual const QLinkedList<KAction>& getPacketTypeActions();
 
         /**
          * Return the label of the menu that should contain the actions
@@ -230,7 +231,7 @@ class PacketUI {
         /**
          * An empty action list.
          */
-        static QPtrList<KAction> noActions;
+        static QLinkedList<KAction> noActions;
 };
 
 /**
@@ -304,7 +305,7 @@ class DefaultPacketUI : public ErrorPacketUI {
  * Packet panes may be either docked within the main ReginaPart widget
  * or may be floating freely in their own frames.
  */
-class PacketPane : public QVBox, public regina::NPacketListener {
+class PacketPane : public KVBox, public regina::NPacketListener {
     Q_OBJECT
 
     public:
@@ -633,7 +634,7 @@ inline KTextEditor::Document* PacketUI::getTextComponent() {
     return 0;
 }
 
-inline const QPtrList<KAction>& PacketUI::getPacketTypeActions() {
+inline const QLinkedList<KAction>& PacketUI::getPacketTypeActions() {
     return noActions;
 }
 

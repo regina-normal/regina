@@ -121,7 +121,7 @@ class PacketManager {
         /**
          * Create a new KTextEditor::Document through a KTrader query.
          */
-        static KTextEditor::Document* createDocument();
+        static KTextEditor::Document* createDocument(QObject* parent);
 };
 
 inline bool PacketManager::overlayLockSmall(QPixmap& icon) {
