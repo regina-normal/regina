@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <cerrno>
+#include <cstddef>
 #include <cstring>
 #include <langinfo.h>
 #include <locale.h>
