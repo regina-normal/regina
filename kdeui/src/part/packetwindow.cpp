@@ -36,6 +36,8 @@
 #include <kmenubar.h>
 #include <kstdaction.h>
 
+#include <QLinkedList>
+
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         KMainWindow(parent, "Packet#",
         WType_TopLevel | WDestructiveClose | WStyle_ContextHelp),
@@ -63,7 +65,7 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
 
     createGUI("packetwindow.rc", false);
 
-    QPtrList<KAction> typeActions;
+    QLinkedList<KAction> typeActions;
     typeActions.append(newPane->getPacketTypeMenu());
     plugActionList("packet_type_menu", typeActions);
 

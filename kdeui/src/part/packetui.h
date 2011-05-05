@@ -35,9 +35,11 @@
 
 #include "packet/npacketlistener.h"
 
+#include <QCustomEvent>
 #include <QLinkedList>
-#include <kvbox.h>
+#include <kactionmenu.h>
 #include <khbox.h>
+#include <kvbox.h>
 
 class KAction;
 class KActionMenu;
@@ -158,7 +160,7 @@ class PacketUI {
          * The default implementation of this routine simply returns an
          * empty list.
          */
-        virtual const QLinkedList<KAction>& getPacketTypeActions();
+        virtual const QLinkedList<KAction*>& getPacketTypeActions();
 
         /**
          * Return the label of the menu that should contain the actions
@@ -231,7 +233,7 @@ class PacketUI {
         /**
          * An empty action list.
          */
-        static QLinkedList<KAction> noActions;
+        static QLinkedList<KAction*> noActions;
 };
 
 /**
@@ -347,7 +349,6 @@ class PacketPane : public KVBox, public regina::NPacketListener {
         KAction* actRefresh;
         KAction* actDockUndock;
         KAction* actClose;
-        KAction* actSeparator;
         KActionMenu* packetTypeMenu;
 
         /**
@@ -634,7 +635,7 @@ inline KTextEditor::Document* PacketUI::getTextComponent() {
     return 0;
 }
 
-inline const QLinkedList<KAction>& PacketUI::getPacketTypeActions() {
+inline const QLinkedList<KAction*>& PacketUI::getPacketTypeActions() {
     return noActions;
 }
 

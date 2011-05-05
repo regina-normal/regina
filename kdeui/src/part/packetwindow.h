@@ -34,7 +34,6 @@
 #define __PACKETWINDOW_H
 
 #include <kmainwindow.h>
-#include <qptrlist.h>
 
 class KAction;
 class PacketPane;
