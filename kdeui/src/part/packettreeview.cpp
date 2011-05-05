@@ -129,9 +129,10 @@ void PacketTreeItem::refreshSubtree() {
             item = (PacketTreeItem*)child(itemCounter++);
             p = p->getNextTreeSibling();
         } else {
+            int otherCounter;
             // They both exist but they don't match up.  Hmmm.
             // Do we have a node for this packet later in the tree?
-            for (int otherCounter = itemCounter; otherCounter < childCount();
+            for (otherCounter = itemCounter; otherCounter < childCount();
                     otherCounter++) {
                 other = (PacketTreeItem*)child(otherCounter);
                 if (((PacketTreeItem*)other)->getPacket() == p) {
@@ -156,7 +157,7 @@ void PacketTreeItem::refreshSubtree() {
                     break;
                 }
             }
-            if (! other) {
+            if (otherCounter == childCount() ) {
                 // We couldn't find a node for this packet anywhere.
                 // Insert a new one.
                 if (prev)
