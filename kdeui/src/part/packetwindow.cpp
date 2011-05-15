@@ -32,29 +32,33 @@
 #include "reginapart.h"
 
 #include <kaction.h>
+#include <kactioncollection.h>
 #include <klocale.h>
 #include <kmenubar.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 
 #include <QLinkedList>
 
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
-        KMainWindow(parent, "Packet#",
-        WType_TopLevel | WDestructiveClose | WStyle_ContextHelp),
+        KXmlGuiWindow(parent, 
+        Qt::Window | Qt::WindowContextHelpButtonHint),
         heldPane(newPane) {
     // Resize ourselves nicely.
     if (! initialGeometrySet())
         resize(400, 400);
-
-    // Set up our actions.
-    setInstance(ReginaPart::factoryInstance());
+    
+    // Set destructive close
+    setAttribute(Qt::WA_DeleteOnClose);
+    
+    // Set up our actions. TODO: Do we need this? Don't think so.
+    //setInstance(ReginaPart::factoryInstance());
 
     if (newPane->hasTextComponent()) {
-        KAction* cut = KStdAction::cut(0, 0, actionCollection());
-        KAction* copy = KStdAction::copy(0, 0, actionCollection());
-        KAction* paste = KStdAction::paste(0, 0, actionCollection());
-        KAction* undo = KStdAction::undo(0, 0, actionCollection());
-        KAction* redo = KStdAction::redo(0, 0, actionCollection());
+        KAction* cut = KStandardAction::cut(0, 0, actionCollection());
+        KAction* copy = KStandardAction::copy(0, 0, actionCollection());
+        KAction* paste = KStandardAction::paste(0, 0, actionCollection());
+        KAction* undo = KStandardAction::undo(0, 0, actionCollection());
+        KAction* redo = KStandardAction::redo(0, 0, actionCollection());
 
         newPane->registerEditOperation(cut, PacketPane::editCut);
         newPane->registerEditOperation(copy, PacketPane::editCopy);
@@ -63,9 +67,9 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         newPane->registerEditOperation(redo, PacketPane::editRedo);
     }
 
-    createGUI("packetwindow.rc", false);
+    createGUI("packetwindow.rc");
 
-    QLinkedList<KAction> typeActions;
+    QList<QAction*> typeActions;
     typeActions.append(newPane->getPacketTypeMenu());
     plugActionList("packet_type_menu", typeActions);
 
@@ -79,4 +83,4 @@ bool PacketWindow::queryClose() {
     return heldPane->queryClose();
 }
 
-#include "packetwindow.moc"
+#include "moc_packetwindow.cpp"

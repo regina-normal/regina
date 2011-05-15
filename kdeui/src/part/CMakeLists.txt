@@ -5,7 +5,7 @@ SET ( SOURCES actionspart exports exttabctl flatbutton imports newpacketdialog n
 ADD_SUBDIRECTORY(foreign)
 ADD_SUBDIRECTORY(packettypes)
 
-SET(MOC_HEADERS ${MOC_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/packettreeview.h ${CMAKE_CURRENT_SOURCE_DIR}/exttabctl.h ${CMAKE_CURRENT_SOURCE_DIR}/flatbutton.h ${CMAKE_CURRENT_SOURCE_DIR}/newpacketdialog.h ${CMAKE_CURRENT_SOURCE_DIR}/packetchooser.h$ ${CMAKE_CURRENT_SOURCE_DIR}/packettabui.h ${CMAKE_CURRENT_SOURCE_DIR}/packetui.h)
+SET(MOC_HEADERS ${MOC_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/packettreeview.h ${CMAKE_CURRENT_SOURCE_DIR}/exttabctl.h ${CMAKE_CURRENT_SOURCE_DIR}/flatbutton.h ${CMAKE_CURRENT_SOURCE_DIR}/newpacketdialog.h ${CMAKE_CURRENT_SOURCE_DIR}/packetchooser.h$ ${CMAKE_CURRENT_SOURCE_DIR}/packettabui.h ${CMAKE_CURRENT_SOURCE_DIR}/packetui.h ${CMAKE_CURRENT_SOURCE_DIR}/packetwindow.h ${CMAKE_CURRENT_SOURCE_DIR}/patiencedialog.h ${CMAKE_CURRENT_SOURCE_DIR}/progressdialogs.h)
 
 AUTOMOC4_MOC_HEADERS(reginapart ${MOC_HEADERS})
 KDE4_ADD_LIBRARY(reginapart ${COMMON_SOURCES} ${SOURCES})

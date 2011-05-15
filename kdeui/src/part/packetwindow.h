@@ -33,7 +33,7 @@
 #ifndef __PACKETWINDOW_H
 #define __PACKETWINDOW_H
 
-#include <kmainwindow.h>
+#include <kxmlguiwindow.h>
 
 class KAction;
 class PacketPane;
@@ -44,7 +44,7 @@ class PacketPane;
  * Objects of this class should not be created directly.  Instead
  * PacketPane::floatPane() should be used.
  */
-class PacketWindow : public KMainWindow {
+class PacketWindow : public KXmlGuiWindow {
     Q_OBJECT
 
     private:

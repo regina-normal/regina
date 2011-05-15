@@ -34,7 +34,7 @@
 #ifndef __PATIENCEDIALOG_H
 #define __PATIENCEDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class KInstance;
 
@@ -42,7 +42,7 @@ class KInstance;
  * A non-modal dialog warning the user that they might have to wait a
  * bit for the current operation to finish.
  */
-class PatienceDialog : public KDialogBase {
+class PatienceDialog : public KDialog {
     Q_OBJECT
 
     public:
