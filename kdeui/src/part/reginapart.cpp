@@ -43,27 +43,29 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qsplitter.h>
-#include <qvbox.h>
+#include <QTreeView>
+#include <QTreeWidget>
 #include <qwhatsthis.h>
 #include <kaction.h>
 #include <kfiledialog.h>
 #include <kiconloader.h>
 #include <kinputdialog.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kmainwindow.h>
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
 #include <kparts/genericfactory.h>
+#include <kvbox.h>
 
 typedef KParts::GenericFactory<ReginaPart> ReginaPartFactory;
 K_EXPORT_COMPONENT_FACTORY(libreginapart, ReginaPartFactory);
 
 ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
         QObject *parent, const char *name, const QStringList& /*args*/) :
-        KParts::ReadWritePart(parent, name), packetTree(0),
+        KParts::ReadWritePart(parent), packetTree(0),
         dockedPane(0) {
     // Get the instance.
-    setInstance(factoryInstance());
+    //setInstance(factoryInstance());
 
     // Set up our widgets and actions.
     setXMLFile("reginapart.rc");
@@ -83,9 +85,10 @@ ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
 
 ReginaPart::~ReginaPart() {
     // Make an emergency closure of any remaining packet panes.
-    QPtrList<PacketPane> panes = allPanes;
-    for (PacketPane* p = panes.first(); p; p = panes.next())
-        delete p;
+    QLinkedList<PacketPane*> panes = allPanes;
+    QLinkedList<PacketPane*>::iterator i;
+    for (i=panes.begin() ; i!=panes.end(); i++)
+        delete *i;
 
     // Delete the visual tree before the underlying packets so that
     // we don't get a flood of change events.
@@ -98,9 +101,10 @@ ReginaPart::~ReginaPart() {
 
 void ReginaPart::setReadWrite(bool rw) {
     // Update each packet pane.
-    QPtrList<PacketPane> panes = allPanes;
-    for (PacketPane* p = panes.first(); p; p = panes.next())
-        p->setReadWrite(rw);
+    QLinkedList<PacketPane*> panes = allPanes;
+    QLinkedList<PacketPane*>::iterator i;
+    for (i=panes.begin() ; i!=panes.end(); i++)
+        (*i)->setReadWrite(rw);
 
     // Update status for edit actions.
     updateTreeEditActions();
@@ -121,21 +125,21 @@ bool ReginaPart::closeURL() {
     if (! closeAllPanes())
         return false;
     consoles.closeAllConsoles();
-    return ReadWritePart::closeURL();
+    return ReadWritePart::closeUrl();
 }
 
 KAboutData* ReginaPart::createAboutData() {
     return new ReginaAbout("reginapart");
 }
 
-KInstance* ReginaPart::factoryInstance() {
-    return ReginaPartFactory::instance();
+KComponentData ReginaPart::factoryInstance() {
+    return ReginaPartFactory::componentData();
 }
 
 void ReginaPart::ensureVisibleInTree(regina::NPacket* packet) {
-    QListViewItem* item = treeView->find(packet);
+    PacketTreeItem* item = treeView->find(packet);
     if (item)
-        treeView->ensureItemVisible(item);
+        treeView->scrollToItem(item);
 }
 
 void ReginaPart::view(PacketPane* newPane) {
@@ -169,7 +173,7 @@ void ReginaPart::dock(PacketPane* newPane) {
     newPane->reparent(dockArea, QPoint(0, 0));
     dockedPane = newPane;
 
-    QPtrList<KAction> typeActions;
+    QList<QAction*> typeActions;
     typeActions.append(newPane->getPacketTypeMenu());
     plugActionList("packet_type_menu", typeActions);
 
@@ -187,7 +191,7 @@ void ReginaPart::dock(PacketPane* newPane) {
 }
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
-    allPanes.removeRef(closingPane);
+    allPanes.removeAll(closingPane);
 }
 
 void ReginaPart::hasUndocked(PacketPane* undockedPane) {
@@ -219,8 +223,8 @@ bool ReginaPart::openFile() {
     if (packetTree) {
         treeView->fill(packetTree);
         // Expand the first level.
-        if (treeView->firstChild()->firstChild())
-            treeView->ensureItemVisible(treeView->firstChild()->firstChild());
+        if (treeView->child(0)->child(0))
+            treeView->scrollToItem(treeView->child(0)->child(0));
         return true;
     } else {
         KMessageBox::error(widget(), i18n(
@@ -511,7 +515,7 @@ void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
 
     // Set up the packet tree viewer.
     QWidget* treeBox = new QWidget(splitter);
-    QBoxLayout* treeLayout = new QVBoxLayout(treeBox);
+    QBoxLayout* treeLayout = new KVBoxLayout(treeBox);
     treeBox->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
         QSizePolicy::MinimumExpanding, 1, 1));
     splitter->setResizeMode(treeBox, QSplitter::KeepSize);
@@ -541,7 +545,7 @@ void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
     treeLayout->addStrut(reginaIcon->pixmap()->width());
 
     // Set up the docking area.
-    dockArea = new QVBox(splitter);
+    dockArea = new KVBox(splitter);
     dockArea->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
         QSizePolicy::MinimumExpanding, 5, 5));
 
@@ -598,4 +602,4 @@ regina::NPacket* ReginaPart::checkSubtreeSelected() {
     return 0;
 }
 
-#include "reginapart.moc"
+#include "moc_reginapart.cpp"

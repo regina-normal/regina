@@ -81,7 +81,7 @@ class ReginaPart : public KParts::ReadWritePart {
         /**
          * Packet panes
          */
-        QLinkedList<PacketPane> allPanes;
+        QLinkedList<PacketPane*> allPanes;
         PacketPane* dockedPane;
 
         /**
@@ -121,7 +121,7 @@ class ReginaPart : public KParts::ReadWritePart {
          * Basic KPart operations.
          */
         static KAboutData *createAboutData();
-        static KComponentData* factoryInstance();
+        static KComponentData factoryInstance();
 
         /**
          * View the given packet.
