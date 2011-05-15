@@ -26,6 +26,10 @@
 
 /* end stub */
 
+// We need to see Python.h first to avoid a "portability fix" in pyport.h
+// that breaks boost.python on MacOSX.
+#include "Python.h"
+
 #include "maths/nperm5.h"
 #include "../globalarray.h"
 #include <boost/python.hpp>
