@@ -141,7 +141,7 @@ for ac_dir in `echo "$ac_x_includes" | sed s/include/lib${kdelibsuff}/` \
     ; \
 do
 dnl Don't even attempt the hair of trying to link an X program!
-  for ac_extension in a so sl; do
+  for ac_extension in a so sl dylib la dll; do
     if test -r $ac_dir/lib${x_direct_test_library}.$ac_extension; then
       ac_x_libraries=$ac_dir
       break 2
