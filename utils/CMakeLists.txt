@@ -16,7 +16,6 @@ endforeach(UTIL)
 if(MPI_FOUND)
   add_subdirectory(mpi)
 endif(MPI_FOUND)
-add_subdirectory(local)
 
 extra_dist(FILES README.txt)
 
