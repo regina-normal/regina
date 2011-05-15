@@ -35,8 +35,17 @@ Index: libtool.m4.ext
  # AC_PROVIDE_IFELSE(MACRO-NAME, IF-PROVIDED, IF-NOT-PROVIDED)
 Index: kde.m4.ext
 ===================================================================
---- kde.m4.ext	(revision 3877)
+--- kde.m4.ext	(revision 5149)
 +++ kde.m4.ext	(working copy)
+@@ -141,7 +141,7 @@
+     ; \
+ do
+ dnl Don't even attempt the hair of trying to link an X program!
+-  for ac_extension in a so sl; do
++  for ac_extension in a so sl dylib la dll; do
+     if test -r $ac_dir/lib${x_direct_test_library}.$ac_extension; then
+       ac_x_libraries=$ac_dir
+       break 2
 @@ -3308,7 +3308,7 @@
  # Search path for a program which passes the given test.
  # Ulrich Drepper <drepper@cygnus.com>, 1996.

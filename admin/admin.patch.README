@@ -25,3 +25,11 @@ reasons for these changes are outlined below.
   are not actually needed during regina's build process.
 
   Patched 1 September 2008.
+
+- Including .dylib as a valid library extension in kde.m4.ext:
+
+  On MacOSX 10.6, the initial configuration failed because the X libraries
+  could not be found.  This was because a configure macro hard-coded the list
+  of possible library extensions but omitted .dylib (which is used in MacOSX).
+
+  Patched 16 May 2011.
