@@ -8,7 +8,6 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 # Modules needed for IOS check and function existence
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
-INCLUDE( ExtraDist )
 # Version
 SET (PACKAGE_VERSION 4.6.1)
 SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_STRING}")
