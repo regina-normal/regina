@@ -43,3 +43,5 @@ SET( EXTRA_DIST README.txt checkdocs regina-engine-config.in ${MANS} )
 INSTALL(FILES ${HEADERS} DESTINATION ${INCLUDEDIR})
 INSTALL(TARGETS regina-engine LIBRARY DESTINATION lib)
 
+# Miscellaneous extras:
+ADD_SUBDIRECTORY("doxygen")
