@@ -1,1 +1,0 @@
-EXTRA_DIST(FILES README.txt props)

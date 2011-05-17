@@ -32,8 +32,6 @@ IF(WIN32 AND NOT CYGWIN)
 ENDIF(WIN32 AND NOT CYGWIN)
 TARGET_LINK_LIBRARIES(regina ${ENGINE_LIBRARY} ${Boost_PYTHON_LIBRARY} ${PYTHON_LIBRARIES})
 
-EXTRA_DIST(README.txt TODO.txt regina-python.in)
-
 # regina-python script
 CONFIGURE_FILE (
   "${PROJECT_SOURCE_DIR}/python/regina-python.in"

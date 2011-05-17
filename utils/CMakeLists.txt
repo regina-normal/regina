@@ -17,7 +17,5 @@ if(MPI_FOUND)
   add_subdirectory(mpi)
 endif(MPI_FOUND)
 
-extra_dist(FILES README.txt)
-
 install(PROGRAMS tricensus-manager DESTINATION bin)
 install(TARGETS regconcat regconvert regfiledump regfiletype sigcensus tricensus trisetcmp DESTINATION bin)

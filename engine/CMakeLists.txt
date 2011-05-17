@@ -37,7 +37,6 @@ TARGET_LINK_LIBRARIES(regina-engine_static ${LIBXML2_LIBRARIES} ${GMP_LIBRARIES}
 
 SET( HEADERS ${HEADERS} docs.h engine.h shareableobject.h )
 SET( MANS ${MANS} regina-engine-config.1 )
-SET( EXTRA_DIST README.txt checkdocs regina-engine-config.in ${MANS} )
 
 
 INSTALL(FILES ${HEADERS} DESTINATION ${INCLUDEDIR})
