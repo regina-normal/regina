@@ -5,8 +5,4 @@ CONFIGURE_FILE(
   @ONLY
 )
 
-#ADD_TEST(
-#  NAME python-test
-#  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/python/testsuite
-#  COMMAND ./testall
-#)
+ADD_TEST(python-test ./testall)
