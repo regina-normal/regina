@@ -19,6 +19,10 @@ IF(ICONV_FOUND)
   IF (NOT ICONV_FIND_QUIETLY)
     MESSAGE(STATUS "Found iconv")
   ENDIF (NOT ICONV_FIND_QUIETLY)
+
+  IF (NOT ICONV_LIBRARY)
+    SET (ICONV_LIBRARY "")
+  ENDIF (NOT ICONV_LIBRARY)
   
   check_cxx_source_compiles("
   #include <iconv.h>  
