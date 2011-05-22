@@ -34,21 +34,6 @@ SET (MANDIR ${DATADIR}/man)
 SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 SET (ENGINE_LIBRARY regina-engine)
 
-# Determine if std::ios::nocreate is valid
-CHECK_CXX_SOURCE_COMPILES("
-#include <ios>
-int main(){static const int input = (std::ios::nocreate);
-return 0;}
-"
-IOS_NOCREATE )
-
-# Set appropriate flag
-IF (IOS_NOCREATE)
-  SET ( __USE_IOS_NOCREATE 1 )
-ELSE (IOS_NOCREATE)
-  SET ( __USE_IOS_NOCREATE 0 )
-ENDIF (IOS_NOCREATE)
-
 # 64 bit integer checks
 CHECK_CXX_SOURCE_COMPILES("long long x; signed long long y ; unsigned long long z;"
   LONG_LONG_FOUND )
