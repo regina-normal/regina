@@ -35,13 +35,23 @@ SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 SET (ENGINE_LIBRARY regina-engine)
 
 # 64 bit integer checks
-CHECK_CXX_SOURCE_COMPILES("long long x; signed long long y ; unsigned long long z;"
+CHECK_CXX_SOURCE_COMPILES("
+  long long x;
+  signed long long y;
+  unsigned long long z;
+  int main() { return 0; }"
   LONG_LONG_FOUND )
 
-IF(LONGLONG_FOUND)
-  CHECK_CXX_SOURCE_COMPILES("0xFFFFFFFFFFFFFFFF;" NUMERIC_64_FOUND)
-  CHECK_CXX_SOURCE_COMPILES("0xFFFFFFFFFFFFFFFFLL;" NUMERIC_64_LL_FOUND)
-ENDIF(LONGLONG_FOUND)
+IF(LONG_LONG_FOUND)
+  CHECK_CXX_SOURCE_COMPILES("
+    unsigned long long x = 0xFFFFFFFFFFFFFFFF;
+	int main() { return 0; }"
+    NUMERIC_64_FOUND)
+  CHECK_CXX_SOURCE_COMPILES("
+    unsigned long long x = 0xFFFFFFFFFFFFFFFFLL;
+	int main() { return 0; }"
+    NUMERIC_64_LL_FOUND)
+ENDIF(LONG_LONG_FOUND)
   
 
 # Dependencies
