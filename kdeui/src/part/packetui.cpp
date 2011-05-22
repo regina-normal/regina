@@ -672,7 +672,7 @@ void PacketPane::updateUndoActions() {
     }
 }
 
-void PacketPane::customEvent(QCustomEvent* evt) {
+void PacketPane::customEvent(QEvent* evt) {
     switch (evt->type()) {
         case EVT_PANE_SET_READONLY:
             setReadWrite(false); break;

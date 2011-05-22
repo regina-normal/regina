@@ -35,7 +35,6 @@
 
 #include "packet/npacketlistener.h"
 
-#include <QCustomEvent>
 #include <QLinkedList>
 #include <kactionmenu.h>
 #include <khbox.h>
@@ -621,7 +620,7 @@ class PacketPane : public KVBox, public regina::NPacketListener {
         /**
          * Allow GUI updates from within a non-GUI thread.
          */
-        void customEvent(QCustomEvent* evt);
+        void customEvent(QEvent* evt);
 };
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
