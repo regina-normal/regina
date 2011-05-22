@@ -1269,7 +1269,7 @@ struct InternalBitmaskLen64<true> {
 
 template <>
 struct InternalBitmaskLen64<false> {
-#if LONG_LONG_FOUND
+#ifdef LONG_LONG_FOUND
     // The C standard guarantees that sizeof(long long) >= 8.
     // However, the C++ standard does not require long long to exist at
     // all (hence the LONG_LONG_FOUND test).
