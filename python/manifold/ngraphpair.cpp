@@ -26,14 +26,9 @@
 
 /* end stub */
 
-#include "regina-config.h"
 #include "manifold/ngraphpair.h"
 #include "manifold/nsfs.h"
 #include <boost/python.hpp>
-
-#ifdef BOOST_MAKE_CONSTRUCTOR_HACK
-#include <boost/python/make_constructor.hpp>
-#endif
 
 using namespace boost::python;
 using regina::NGraphPair;

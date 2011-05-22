@@ -38,7 +38,6 @@
 #endif
 
 #include "regina-core.h"
-#include "regina-config.h"
 
 #include <cstring>
 #include <fstream>
@@ -231,11 +230,7 @@ inline NLocalFileResource::~NLocalFileResource() {
 }
 
 inline std::ios::openmode NLocalFileResource::sysModeRead() {
-    #if __USE_IOS_NOCREATE
-    return std::ios::in | std::ios::binary | std::ios::nocreate;
-    #else
     return std::ios::in | std::ios::binary;
-    #endif
 }
 
 inline std::ios::openmode NLocalFileResource::sysModeWrite() {
