@@ -53,15 +53,15 @@ PatienceDialog::PatienceDialog(const QString& message, KInstance* instance,
 
     QWidget* page = new QWidget(this);
     setMainWidget(page);
-    QHBoxLayout* layout = new QHBoxLayout(page, 0, spacingHint());
+    QHBoxLayout* layout = new QHBoxLayout(page); //, 0, spacingHint());
 
     QLabel* clock = new QLabel(page);
     clock->setPixmap(UserIcon("patience"));
     clock->setAlignment(Qt::AlignHCenter);
-    layout->add(clock);
+    layout->addWidget(clock);
 
     QLabel* msg = new QLabel(message, page);
-    layout->add(msg);
+    layout->addWidget(msg);
     layout->setStretchFactor(msg, 1);
 }
 

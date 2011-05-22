@@ -71,7 +71,7 @@ QLinkedList<KAction*> PacketUI::noActions;
 PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent,
         const char* name) : KHBox(parent), packet(pkt) {
     icon = new QLabel(this);
-    icon->setIcon(PacketManager::iconBar(packet, true));
+    icon->setWindowIcon(PacketManager::iconBar(packet, true)); // TODO: Is this meant to be a window icon?
 
     title = new QLabel(packet->getFullName().c_str(), this);
     title->setAlignment(Qt::AlignCenter);
@@ -169,15 +169,15 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
 
     header = new PacketHeader(newPacket, headerBox);
     headerBox->setStretchFactor(header, 1);
-    QWhatsThis::add(header, i18n("This shows the label of the packet "
+    header->setWhatsThis(i18n("This shows the label of the packet "
         "being viewed, as well as its packet type."));
 
     dockUndockBtn = new FlatToolButton(headerBox);
-    dockUndockBtn->setToggleButton(true);
+    // dockUndockBtn->setToggleButton(true); // TODO: Find replacement
     dockUndockBtn->setIcon(BarIcon("attach", 0, KIconLoader::DefaultState));
-    dockUndockBtn->setTextLabel(i18n("Dock or undock this packet viewer"));
-    dockUndockBtn->setOn(true);
-    QWhatsThis::add(dockUndockBtn, i18n("Dock or undock this packet viewer.  "
+    dockUndockBtn->setText(i18n("Dock or undock this packet viewer")); // TODO: Check this is correct (label?)
+    if ( ! dockUndockBtn->isChecked() ) dockUndockBtn->toggle(); // TODO: A neater way of doing this?
+    dockUndockBtn->setWhatsThis(i18n("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
@@ -186,7 +186,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     mainUI = PacketManager::createUI(newPacket, this);
     QWidget* mainUIWidget = mainUI->getInterface();
     if (mainUIWidget->parent() != this) {
-        mainUIWidget->reparent(this, QPoint(0, 0));
+        mainUIWidget->setParent(this); // TODO: Is this needed
         mainUIWidget->show();
     }
     setStretchFactor(mainUIWidget, 1);
@@ -452,9 +452,9 @@ void PacketPane::childWasAdded(regina::NPacket* packet, regina::NPacket*) {
     // Watch out though.  We may not be in the GUI thread.
     // Better do it all through Qt events.
     if (packet->isPacketEditable() != readWrite)
-        QApplication::postEvent(this, new QCustomEvent(
-            readWrite ? EVT_PANE_SET_READONLY : EVT_PANE_SET_READWRITE));
-    QApplication::postEvent(this, new QCustomEvent(EVT_REFRESH_HEADER));
+        QApplication::postEvent(this, new QEvent(
+            readWrite ? (QEvent::Type)EVT_PANE_SET_READONLY : (QEvent::Type)EVT_PANE_SET_READWRITE));
+    QApplication::postEvent(this, new QEvent((QEvent::Type)EVT_REFRESH_HEADER));
 }
 
 void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
@@ -618,7 +618,7 @@ void PacketPane::dockPane() {
     delete frame;
     frame = 0;
 
-    dockUndockBtn->setOn(true);
+    if ( ! dockUndockBtn->isChecked() ) dockUndockBtn->toggle(); // TODO: A neater way of doing this?
     actDockUndock->setText(i18n("Un&dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
@@ -634,7 +634,7 @@ void PacketPane::floatPane() {
     frame = new PacketWindow(this);
     part->hasUndocked(this);
 
-    dockUndockBtn->setOn(false);
+    if ( dockUndockBtn->isChecked() ) dockUndockBtn->toggle(); // TODO: A neater way of doing this?
     actDockUndock->setText(i18n("&Dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
