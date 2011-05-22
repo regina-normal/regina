@@ -216,6 +216,10 @@ Version 4.6.1  [ (under development) ]
         - New tests for file I/O using both modern XML and legacy binary
           file formats.
         - More detailed tests for bitmask operations.
+    BUILD ENVIRONMENT:
+        - Dropped support for ancient hacks like std::ios::no_create and
+          the boost.python make_constructor hack.
+        - Iconv is now mandatory, not optional.
 
 Version 4.6  [ 16 May, 2009 ]
 
