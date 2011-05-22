@@ -60,10 +60,19 @@ my $regina_home = '';
 my $runscript_py = '';
 my $from_source = 0;
 my $python_lib_dir = '';
-my $python_cmd = '';
 my @python_libs;
 my $script = '';
 my @script_args;
+
+# In the absence of any user-specified options, use the python
+# command that corresponds to the original build environment.
+
+my $python_cmd = "@PYTHON_EXECUTABLE@";
+if (not -e $python_cmd) {
+    &warn("W: The python command used during the build was: $python_cmd.\n");
+    &warn("W: This command does not appear to be available now in the runtime environment.\n");
+    $python_cmd = '';
+}
 
 # --- Extract variables from the configuration file.
 
