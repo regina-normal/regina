@@ -410,7 +410,7 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
     else if (nFacets <= 8 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
             NBitmask1<unsigned long> >(owner, reducedList);
-#ifdef HAVE_LONG_LONG
+#ifdef LONG_LONG_FOUND
     else if (nFacets <= 8 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
             NBitmask1<unsigned long long> >(owner, reducedList);
