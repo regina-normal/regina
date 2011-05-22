@@ -10,7 +10,7 @@ INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
 # Version
 SET (PACKAGE_VERSION 4.6.1)
-SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_STRING}")
+SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
 # Extract major/minor version
 # Note: The PACKAGE_VERSION_MAJOR "output" is discarded, since it matches the
