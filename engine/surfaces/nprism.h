@@ -37,6 +37,7 @@
 #endif
 
 #include <iostream>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -58,7 +59,7 @@ class NNormalSurface;
  * \pre This class should only be used with \a embedded
  * normal surfaces.
  */
-struct NPrismSpec {
+struct REGINA_API NPrismSpec {
     unsigned long tetIndex;
         /**< The index in the triangulation of the tetrahedron
              containing the prism. */
@@ -114,7 +115,8 @@ struct NPrismSpec {
  * @param spec the prism specifier to write.
  * @return a reference to \a out.
  */
-std::ostream& operator << (std::ostream& out, const NPrismSpec& spec);
+REGINA_API std::ostream& operator << (std::ostream& out,
+    const NPrismSpec& spec);
 
 /**
  * Represents the set of prisms defined by slicing along all the quads
@@ -129,7 +131,7 @@ std::ostream& operator << (std::ostream& out, const NPrismSpec& spec);
  *
  * \warning This class doesn't really do much as yet.
  */
-class NPrismSetSurface {
+class REGINA_API NPrismSetSurface {
     private:
         signed char* quadType;
             /**< A list of which types of normal quad are contained in which

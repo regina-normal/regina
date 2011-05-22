@@ -35,6 +35,7 @@
 #define __NVECTORMATRIX_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nvector.h"
 #include "maths/nvectordense.h"
 #include "maths/nmatrix.h"
@@ -50,7 +51,7 @@ namespace regina {
  * An exception thrown when a matrix row or column vector is modified.
  * See the NVectorMatrix class notes for why this should never happen.
  */
-class NVectorMatrix_Illegal_Modification {
+class REGINA_API NVectorMatrix_Illegal_Modification {
 };
 
 /**

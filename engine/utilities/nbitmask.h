@@ -38,6 +38,7 @@
 #include <algorithm>
 #include <iostream>
 
+#include "regina-core.h"
 #include "regina-config.h"
 #include "utilities/bitmanip.h"
 
@@ -80,7 +81,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NBitmask {
+class REGINA_API NBitmask {
     private:
         typedef unsigned Piece;
             /**< The types of the machine-native pieces into which this
@@ -433,7 +434,7 @@ class NBitmask {
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
  */
-std::ostream& operator << (std::ostream& out, const NBitmask& mask);
+REGINA_API std::ostream& operator << (std::ostream& out, const NBitmask& mask);
 
 /**
  * A small but extremely fast bitmask class that can store up to

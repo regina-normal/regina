@@ -37,6 +37,7 @@
 
 #include <pthread.h>
 #include <sched.h>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -66,7 +67,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NMutex {
+class REGINA_API NMutex {
     private:
         pthread_mutex_t mutex;
             /**< The C mutex used by internal function calls. */
@@ -180,7 +181,7 @@ typedef pthread_t NThreadID;
  *
  * \ifacespython Not present.
  */
-class NThread {
+class REGINA_API NThread {
     public:
         /**
          * Destroys this thread.

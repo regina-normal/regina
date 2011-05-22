@@ -39,6 +39,7 @@
 #include <algorithm>
 #include <iterator>
 #include <vector>
+#include "regina-core.h"
 #include "packet/npacket.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nsurfaceset.h"
@@ -80,7 +81,7 @@ class NXMLNormalSurfaceListReader;
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
  */
-class NNormalSurfaceList : public NPacket, public NSurfaceSet {
+class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
     public:
         static const int packetType;
 
@@ -955,8 +956,8 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
  * constants in NNormalSurfaceList.
  * @return a new zero vector of the correct class and length.
  */
-NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
-    int flavour);
+REGINA_API NNormalSurfaceVector* makeZeroVector(
+        const NTriangulation* triangulation, int flavour);
 /**
  * Creates a new set of normal surface matching equations for the
  * given triangulation using the given flavour of coordinate system.
@@ -974,7 +975,7 @@ NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
  * constants in NNormalSurfaceList.
  * @return a newly allocated set of matching equations.
  */
-NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
+REGINA_API NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
     int flavour);
 
 /*@}*/

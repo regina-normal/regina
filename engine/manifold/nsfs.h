@@ -36,6 +36,7 @@
 #endif
 
 #include <list>
+#include "regina-core.h"
 #include "nmanifold.h"
 
 namespace regina {
@@ -70,7 +71,7 @@ class NLensSpace;
  *
  * \testpart
  */
-struct NSFSFibre {
+struct REGINA_API NSFSFibre {
     long alpha;
         /**< The first parameter of this (<i>alpha</i>, <i>beta</i>) fibre.
              Note that this is the index of the exceptional fibre.
@@ -135,7 +136,7 @@ struct NSFSFibre {
  * @param f the fibre to write.
  * @return the output stream \a out.
  */
-std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
+REGINA_API std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
 
 /**
  * Represents a general Seifert fibred space, which may be orientable or
@@ -190,7 +191,7 @@ std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
  * \todo \featurelong Implement triangulation construction and homology
  * calculation for more Seifert fibred spaces.
  */
-class NSFSpace : public NManifold {
+class REGINA_API NSFSpace : public NManifold {
     public:
         /**
          * Lists the six classes \c o1, \c o2, \c n1, \c n2, \c n3, \c n4

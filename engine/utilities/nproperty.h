@@ -35,6 +35,7 @@
 #define __NPROPERTY_H
 #endif
 
+#include "regina-core.h"
 #include "utilities/boostutils.h"
 
 namespace regina {
@@ -188,7 +189,7 @@ class StoreManagedPtr {
  *
  * \ifacespython Not present.
  */
-class NPropertyBase {
+class REGINA_API NPropertyBase {
     public:
         /**
          * Virtual destructor.

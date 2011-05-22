@@ -35,6 +35,7 @@
 #define __NXMLPACKETREADER_H
 #endif
 
+#include "regina-core.h"
 #include "file/nxmlelementreader.h"
 
 namespace regina {
@@ -72,7 +73,7 @@ class NPacket;
  *
  * \ifacespython Not present.
  */
-class NXMLPacketReader : public NXMLElementReader {
+class REGINA_API NXMLPacketReader : public NXMLElementReader {
     private:
         std::string childLabel;
             /**< The packet label to give the child packet currently

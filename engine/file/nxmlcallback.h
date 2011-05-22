@@ -37,6 +37,7 @@
 
 #include <iostream>
 #include <stack>
+#include "regina-core.h"
 #include "file/nxmlelementreader.h"
 
 namespace regina {
@@ -54,7 +55,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NXMLCallback : public regina::xml::XMLParserCallback {
+class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
     public:
         static const int WAITING;
             /**< Signifies that the top-level XML element has not yet been

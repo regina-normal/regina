@@ -36,6 +36,7 @@
 #define __NLISTONCALL_H
 #endif
 
+#include "regina-core.h"
 #include "utilities/boostutils.h"
 #include <list>
 

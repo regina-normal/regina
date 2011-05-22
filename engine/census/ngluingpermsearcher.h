@@ -36,6 +36,7 @@
 #define __NGLUINGPERMSEARCHER_H
 #endif
 
+#include "regina-core.h"
 #include "census/ngluingperms.h"
 
 /**
@@ -111,7 +112,7 @@ typedef void (*UseGluingPerms)(const NGluingPermSearcher*, void*);
  *
  * \ifacespython Not present.
  */
-class NGluingPermSearcher : public NGluingPerms {
+class REGINA_API NGluingPermSearcher : public NGluingPerms {
     public:
         static const char dataTag_;
             /**< A character used to identify this class when reading
@@ -576,7 +577,7 @@ class NGluingPermSearcher : public NGluingPerms {
  *
  * \ifacespython Not present.
  */
-class NCompactSearcher : public NGluingPermSearcher {
+class REGINA_API NCompactSearcher : public NGluingPermSearcher {
     protected:
         static const char VLINK_CLOSED;
             /**< Signifies that a vertex link has been closed off (i.e.,
@@ -1316,7 +1317,7 @@ class NCompactSearcher : public NGluingPermSearcher {
  *
  * \ifacespython Not present.
  */
-class NClosedPrimeMinSearcher : public NCompactSearcher {
+class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
     private:
         static const unsigned EDGE_CHAIN_END;
             /**< Represents the end of a one-ended chain in a face

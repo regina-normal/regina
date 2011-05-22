@@ -36,6 +36,7 @@
 #endif
 
 #include <iostream>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -63,7 +64,7 @@ class ShareableObject;
  * \warning You should \b never cast down from NSurfaceSet; instead you
  * should always call getShareableObject() and cast down from there.
  */
-class NSurfaceSet {
+class REGINA_API NSurfaceSet {
     public:
         /**
          * Default destructor that does nothing.

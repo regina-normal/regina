@@ -32,6 +32,7 @@
 #endif
 
 #include <iostream>
+#include "regina-core.h"
 
 /*! \file maths/nmatrix2.h
  *  \brief Deals with 2x2 integer matrices.
@@ -53,7 +54,7 @@ namespace regina {
  * This class only contains four long integers, and so it may be considered
  * small enough to pass about by value.
  */
-class NMatrix2 {
+class REGINA_API NMatrix2 {
     private:
         long data[2][2];
             /**< The four entries in this matrix, indexed by row and
@@ -292,7 +293,7 @@ class NMatrix2 {
  * @param mat the matrix to write.
  * @return a reference to \a out.
  */
-std::ostream& operator << (std::ostream& out, const NMatrix2& mat);
+REGINA_API std::ostream& operator << (std::ostream& out, const NMatrix2& mat);
 
 /**
  * Determines whether the first given matrix is more aesthetically
@@ -306,7 +307,7 @@ std::ostream& operator << (std::ostream& out, const NMatrix2& mat);
  * or \c false if either the matrices are equal or \a m2 is more
  * pleasing than \a m1.
  */
-bool simpler(const NMatrix2& m1, const NMatrix2& m2);
+REGINA_API bool simpler(const NMatrix2& m1, const NMatrix2& m2);
 
 /**
  * Determines whether the first given pair of matrices is more aesthetically
@@ -325,7 +326,7 @@ bool simpler(const NMatrix2& m1, const NMatrix2& m2);
  * the second pair, or \c false if either the ordered pairs are equal or
  * the second pair is more pleasing than the first.
  */
-bool simpler(const NMatrix2& pair1first, const NMatrix2& pair1second,
+REGINA_API bool simpler(const NMatrix2& pair1first, const NMatrix2& pair1second,
         const NMatrix2& pair2first, const NMatrix2& pair2second);
 
 /*@}*/

@@ -36,6 +36,7 @@
 #define __NBLOCKEDSFSLOOP_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nmatrix2.h"
 #include "subcomplex/nstandardtri.h"
 
@@ -97,7 +98,7 @@ class NSatRegion;
  * The optional NStandardTriangulation routine getManifold() is
  * implemented for this class, but getHomologyH1() is not.
  */
-class NBlockedSFSLoop : public NStandardTriangulation {
+class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
     private:
         NSatRegion* region_;
             /**< The saturated region whose two torus boundaries are joined. */

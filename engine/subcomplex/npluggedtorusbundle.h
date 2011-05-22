@@ -36,6 +36,7 @@
 #define __NPLUGGEDTORUSBUNDLE_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nmatrix2.h"
 #include "subcomplex/nstandardtri.h"
 
@@ -111,7 +112,7 @@ class NTxICore;
  * The optional NStandardTriangulation routine getManifold() is
  * implemented for this class, but getHomologyH1() is not.
  */
-class NPluggedTorusBundle : public NStandardTriangulation {
+class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
     private:
         const NTxICore& bundle_;
             /**< The thin I-bundle that appears within this triangulation.

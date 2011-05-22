@@ -37,6 +37,7 @@
 
 #include <vector>
 #include <memory>
+#include "regina-core.h"
 #include "maths/nmatrixint.h"
 #include "utilities/ptrutils.h"
 
@@ -82,7 +83,7 @@ class NHomMarkedAbelianGroup;
  * \todo Testsuite additions: isBoundary(), boundaryMap(), writeAsBdry(),
  * cycleGen().
  */
-class NMarkedAbelianGroup : public ShareableObject {
+class REGINA_API NMarkedAbelianGroup : public ShareableObject {
     private:
         /** Internal original M */
         NMatrixInt OM; // copy of initializing M
@@ -887,7 +888,7 @@ class NMarkedAbelianGroup : public ShareableObject {
  *
  * @author Ryan Budney
  */
-class NHomMarkedAbelianGroup : public ShareableObject {
+class REGINA_API NHomMarkedAbelianGroup : public ShareableObject {
     private:
         /** internal rep of domain of the homomorphism */
         NMarkedAbelianGroup domain;

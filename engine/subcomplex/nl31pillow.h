@@ -35,6 +35,7 @@
 #define __NL31PILLOW_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nstandardtri.h"
 
 namespace regina {
@@ -61,7 +62,7 @@ class NTetrahedron;
  *
  * \testpart
  */
-class NL31Pillow : public NStandardTriangulation {
+class REGINA_API NL31Pillow : public NStandardTriangulation {
     private:
         NTetrahedron* tet[2];
             /**< The two tetrahedra in the triangular pillow. */

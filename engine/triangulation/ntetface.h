@@ -36,6 +36,8 @@
 #define __NTETFACE_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 /**
@@ -62,7 +64,7 @@ namespace regina {
  * as tetrahedron \a n, face 1, and the before-the-start value will be
  * represented as tetrahedron -1, face 3.
  */
-struct NTetFace {
+struct REGINA_API NTetFace {
     int tet;
         /**< The tetrahedron referred to.  Tetrahedron numbering begins
          *   at 0. */

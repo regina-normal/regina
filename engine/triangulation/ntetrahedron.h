@@ -35,6 +35,7 @@
 #define __NTETRAHEDRON_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nperm4.h"
 #include "utilities/nmarkedvector.h"
@@ -67,7 +68,7 @@ class NComponent;
  * will ensure that skeletal information and other properties of the
  * triangulation are recalculated when necessary.
  */
-class NTetrahedron : public ShareableObject, public NMarkedElement {
+class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
     private:
         NTetrahedron* tetrahedra[4];
             /**< Stores the tetrahedra glued to each face of this

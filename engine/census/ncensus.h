@@ -36,6 +36,7 @@
 #define __NCENSUS_H
 #endif
 
+#include "regina-core.h"
 #include "census/nfacepairing.h"
 #include "utilities/nbooleans.h"
 
@@ -69,7 +70,7 @@ typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
  *
  * \testpart
  */
-class NCensus {
+class REGINA_API NCensus {
     public:
         static const int PURGE_NON_MINIMAL;
             /**< Indicates that non-minimal triangulations may be ignored. */

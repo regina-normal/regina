@@ -36,6 +36,7 @@
 #endif
 
 #include <iostream>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -64,7 +65,7 @@ namespace regina {
  * Note that this class tracks disc \a types, not discs themselves.
  * To track individual normal discs, see the NDiscSpec class instead.
  */
-struct NDiscType {
+struct REGINA_API NDiscType {
     static const NDiscType NONE;
         /**< Represents a "null" disc type.  Here the \a type member is
              negative, to distinguish it from "meaningful" disc types
@@ -147,7 +148,7 @@ struct NDiscType {
  * @param type the disc type to write.
  * @return a reference to the given output stream.
  */
-std::ostream& operator << (std::ostream& out, const NDiscType& type);
+REGINA_API std::ostream& operator << (std::ostream& out, const NDiscType& type);
 
 /*@}*/
 

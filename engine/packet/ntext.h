@@ -35,6 +35,7 @@
 #define __NTEXT_H
 #endif
 
+#include "regina-core.h"
 #include "packet/npacket.h"
 
 namespace regina {
@@ -49,7 +50,7 @@ class NXMLPacketReader;
 /**
  * A packet representing a text string.
  */
-class NText : public NPacket {
+class REGINA_API NText : public NPacket {
     private:
         std::string text;
             /**< The text string stored in this packet. */

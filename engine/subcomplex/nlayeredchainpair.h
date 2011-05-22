@@ -35,6 +35,7 @@
 #define __NLAYEREDCHAINPAIR_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nlayeredchain.h"
 
 namespace regina {
@@ -74,7 +75,7 @@ class NComponent;
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class NLayeredChainPair : public NStandardTriangulation {
+class REGINA_API NLayeredChainPair : public NStandardTriangulation {
     private:
         NLayeredChain* chain[2];
             /**< The two layered chains that make up this pair. */

@@ -35,6 +35,7 @@
 #define __NXMLALGEBRAREADER_H
 #endif
 
+#include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "file/nxmlelementreader.h"
@@ -53,7 +54,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NXMLAbelianGroupReader : public NXMLElementReader {
+class REGINA_API NXMLAbelianGroupReader : public NXMLElementReader {
     private:
         NAbelianGroup* group;
             /**< The abelian group currently being read. */
@@ -85,7 +86,7 @@ class NXMLAbelianGroupReader : public NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class NXMLGroupPresentationReader : public NXMLElementReader {
+class REGINA_API NXMLGroupPresentationReader : public NXMLElementReader {
     private:
         NGroupPresentation* group;
             /**< The group presentation currently being read. */

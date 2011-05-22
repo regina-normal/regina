@@ -36,6 +36,7 @@
 #endif
 
 #include <vector>
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "surfaces/nsurfaceset.h"
 
@@ -60,7 +61,7 @@ class NSurfaceFilter;
  * \pre As long as this subset is in use, the surface set upon which this
  * subset is based will never be deleted.
  */
-class NSurfaceSubset : public ShareableObject, public NSurfaceSet {
+class REGINA_API NSurfaceSubset : public ShareableObject, public NSurfaceSet {
     private:
         std::vector<NNormalSurface*> surfaces;
             /**< Contains the surfaces contained in this subset.

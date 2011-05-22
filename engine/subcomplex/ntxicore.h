@@ -36,6 +36,7 @@
 #define __NTXICORE_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nmatrix2.h"
 #include "triangulation/ntriangulation.h"
 
@@ -72,7 +73,7 @@ namespace regina {
  * class without reason).  This triangulation can be accessed through the
  * core() routine.
  */
-class NTxICore : public ShareableObject {
+class REGINA_API NTxICore : public ShareableObject {
     protected:
         NTriangulation core_;
             /**< A full copy of the <tt>T x I</tt> triangulation that is
@@ -341,7 +342,7 @@ class NTxICore : public ShareableObject {
  *
  * \image html diag92.png
  */
-class NTxIDiagonalCore : public NTxICore {
+class REGINA_API NTxIDiagonalCore : public NTxICore {
     private:
         unsigned long size_;
             /**< The number of tetrahedra in this <tt>T x I</tt>
@@ -411,7 +412,7 @@ class NTxIDiagonalCore : public NTxICore {
  *
  * \image html parallel.png
  */
-class NTxIParallelCore : public NTxICore {
+class REGINA_API NTxIParallelCore : public NTxICore {
     public:
         /**
          * Creates a new copy of this <tt>T x I</tt> triangulation.

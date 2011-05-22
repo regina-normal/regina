@@ -35,6 +35,7 @@
 #define __NTRISOLIDTORUS_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nperm4.h"
 #include "subcomplex/nstandardtri.h"
 
@@ -81,7 +82,7 @@ class NTetrahedron;
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class NTriSolidTorus : public NStandardTriangulation {
+class REGINA_API NTriSolidTorus : public NStandardTriangulation {
     private:
         NTetrahedron* tet[3];
             /**< The tetrahedra that make up this solid torus. */

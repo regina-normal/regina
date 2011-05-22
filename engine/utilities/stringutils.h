@@ -36,6 +36,7 @@
 #endif
 
 #include <string>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -59,7 +60,7 @@ class NTriBool;
  * @param str the C++ string to duplicate.
  * @return the new duplicate C string.
  */
-char* duplicate(const std::string& str);
+REGINA_API char* duplicate(const std::string& str);
 
 /**
  * Determines whether the given C++ string begins with the given prefix.
@@ -70,7 +71,7 @@ char* duplicate(const std::string& str);
  * @param prefix the prefix whose presence we are testing for.
  * @return \c true if and only if \a str begins with \a prefix.
  */
-bool startsWith(const std::string& str, const std::string& prefix);
+REGINA_API bool startsWith(const std::string& str, const std::string& prefix);
 
 /**
  * Strips all whitespace from the beginning and end of the given C++ string.
@@ -87,7 +88,7 @@ bool startsWith(const std::string& str, const std::string& prefix);
  * @param str the string to be stripped.
  * @return the resulting stripped string.
  */
-std::string stripWhitespace(const std::string& str);
+REGINA_API std::string stripWhitespace(const std::string& str);
 
 /**
  * Converts the entire given string to an integer and reports whether
@@ -105,7 +106,7 @@ std::string stripWhitespace(const std::string& str);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-bool valueOf(const std::string& str, int& dest);
+REGINA_API bool valueOf(const std::string& str, int& dest);
 /**
  * Converts the entire given string to an unsigned integer and reports
  * whether this conversion was successful.
@@ -122,7 +123,7 @@ bool valueOf(const std::string& str, int& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-bool valueOf(const std::string& str, unsigned& dest);
+REGINA_API bool valueOf(const std::string& str, unsigned& dest);
 /**
  * Converts the entire given string to a long integer and reports whether
  * this conversion was successful.
@@ -139,7 +140,7 @@ bool valueOf(const std::string& str, unsigned& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-bool valueOf(const std::string& str, long& dest);
+REGINA_API bool valueOf(const std::string& str, long& dest);
 /**
  * Converts the entire given string to an unsigned long integer and reports
  * whether this conversion was successful.
@@ -157,7 +158,7 @@ bool valueOf(const std::string& str, long& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-bool valueOf(const std::string& str, unsigned long& dest);
+REGINA_API bool valueOf(const std::string& str, unsigned long& dest);
 /**
  * Converts the entire given string to an arbitrary precision integer and
  * reports whether this conversion was successful.
@@ -175,7 +176,7 @@ bool valueOf(const std::string& str, unsigned long& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-bool valueOf(const std::string& str, NLargeInteger& dest);
+REGINA_API bool valueOf(const std::string& str, NLargeInteger& dest);
 /**
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.
@@ -192,7 +193,7 @@ bool valueOf(const std::string& str, NLargeInteger& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-bool valueOf(const std::string& str, double& dest);
+REGINA_API bool valueOf(const std::string& str, double& dest);
 /**
  * Converts the entire given string to a boolean and reports whether
  * this conversion was successful.
@@ -209,7 +210,7 @@ bool valueOf(const std::string& str, double& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-bool valueOf(const std::string& str, bool& dest);
+REGINA_API bool valueOf(const std::string& str, bool& dest);
 /**
  * Converts the entire given string to a three-way boolean (true, false or
  * unknown) and reports whether this conversion was successful.
@@ -228,7 +229,7 @@ bool valueOf(const std::string& str, bool& dest);
  * @param dest the variable in which to store the resulting set of booleans.
  * @return \c true if the conversion was successful or \c false otherwise.
  */
-bool valueOf(const std::string& str, NTriBool& dest);
+REGINA_API bool valueOf(const std::string& str, NTriBool& dest);
 /**
  * Converts the entire given string to a set of booleans and reports whether
  * this conversion was successful.
@@ -244,7 +245,7 @@ bool valueOf(const std::string& str, NTriBool& dest);
  * @param dest the variable in which to store the resulting set of booleans.
  * @return \c true if the conversion was successful or \c false otherwise.
  */
-bool valueOf(const std::string& str, NBoolSet& dest);
+REGINA_API bool valueOf(const std::string& str, NBoolSet& dest);
 
 /**
  * Decomposes the given string into tokens.

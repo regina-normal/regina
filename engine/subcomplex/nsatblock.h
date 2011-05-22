@@ -36,6 +36,7 @@
 #define __NSATBLOCK_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "subcomplex/nsatannulus.h"
 #include <set>
@@ -107,7 +108,7 @@ class NTriangulation;
  * triangulation-specific information stored in the subclass.  See the
  * transform() documentation for further details.
  */
-class NSatBlock : public ShareableObject {
+class REGINA_API NSatBlock : public ShareableObject {
     public:
         typedef std::set<NTetrahedron*> TetList;
             /**< The data structure used to store a list of tetrahedra

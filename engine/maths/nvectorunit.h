@@ -35,6 +35,7 @@
 #define __NVECTORUNIT_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nvector.h"
 #include "maths/nvectordense.h"
 
@@ -49,7 +50,7 @@ namespace regina {
  * An exception thrown when a unit vector is modified.  See the
  * NVectorUnit class notes for why this should never happen.
  */
-class NVectorUnit_Illegal_Modification {
+class REGINA_API NVectorUnit_Illegal_Modification {
 };
 
 /**

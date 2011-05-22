@@ -38,6 +38,7 @@
 #include <map>
 #include <utility>
 #include <vector>
+#include "regina-core.h"
 #include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
 
@@ -54,7 +55,7 @@ class NXMLPacketReader;
  * A packet representing a script that can be run.
  * Accessor methods for a script work a line at a time.
  */
-class NScript : public NPacket, public NFilePropertyReader {
+class REGINA_API NScript : public NPacket, public NFilePropertyReader {
     private:
         std::vector<std::string> lines;
             /**< An array storing the lines of this script; none of

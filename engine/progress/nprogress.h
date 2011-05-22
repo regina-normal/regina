@@ -37,6 +37,7 @@
 #endif
 
 #include <ctime>
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "utilities/nthread.h"
 
@@ -86,7 +87,7 @@ namespace regina {
  * progress must set the \a changed flag to \c true, and all public
  * subclass query functions must set the \a changed flag to \c false.
  */
-class NProgress : public ShareableObject, protected NMutex {
+class REGINA_API NProgress : public ShareableObject, protected NMutex {
     protected:
         mutable bool changed;
             /**< Has the state of progress changed since the last query? */
@@ -293,7 +294,7 @@ class NProgress : public ShareableObject, protected NMutex {
  * \ifacespython Not present; all progress classes communicate with
  * external interfaces through the NProgress interface.
  */
-class NProgressFinished : public NProgress {
+class REGINA_API NProgressFinished : public NProgress {
     public:
         /**
          * Creates a new finished progress report.

@@ -35,6 +35,7 @@
 #define __NLAYEREDLENSSPACE_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/nstandardtri.h"
 
@@ -60,7 +61,7 @@ namespace regina {
  *
  * \testpart
  */
-class NLayeredLensSpace : public NStandardTriangulation {
+class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
     private:
         NLayeredSolidTorus* torus;
             /**< The layered solid torus that forms the basis of this

@@ -36,6 +36,7 @@
 #endif
 
 #include <string>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -80,7 +81,7 @@ namespace regina {
  *
  * \testfull
  */
-class NPerm4 {
+class REGINA_API NPerm4 {
     public:
         /**
          * Contains all possible permutations of four elements.
@@ -582,7 +583,8 @@ class NPerm4 {
  * @param p the permutation to write.
  * @return a reference to \a out.
  */
-inline std::ostream& operator << (std::ostream& out, const NPerm4& p) {
+inline REGINA_API std::ostream& operator << (std::ostream& out,
+        const NPerm4& p) {
     return (out << p.toString());
 }
 
@@ -718,7 +720,7 @@ extern const unsigned* allPermsS2Inv;
  * @return the permutation representing the canonical ordering of
  * vertices in the given face.
  */
-NPerm4 faceOrdering(int face);
+REGINA_API NPerm4 faceOrdering(int face);
 
 /**
  * Returns a permutation mapping (0,1) to the vertices of the
@@ -739,7 +741,7 @@ NPerm4 faceOrdering(int face);
  * @return the permutation representing the canonical ordering of
  * vertices in the given edge.
  */
-NPerm4 edgeOrdering(int edge);
+REGINA_API NPerm4 edgeOrdering(int edge);
 
 /**
  * Returns a string representation of the permutation mapping
@@ -757,7 +759,7 @@ NPerm4 edgeOrdering(int edge);
  * @return a string representing the
  * canonical ordering of vertices in the given face.
  */
-std::string faceDescription(int face);
+REGINA_API std::string faceDescription(int face);
 
 /**
  * Returns a string representation of the given permutation with only
@@ -770,7 +772,7 @@ std::string faceDescription(int face);
  * @param facePerm the permutation to represent.
  * @return a restricted string representation of the given permutation.
  */
-std::string faceDescription(const NPerm4& facePerm);
+REGINA_API std::string faceDescription(const NPerm4& facePerm);
 
 /**
  * Returns a string representation of the permutation mapping
@@ -788,7 +790,7 @@ std::string faceDescription(const NPerm4& facePerm);
  * @return a string representing the canonical ordering of
  * vertices in the given edge.
  */
-std::string edgeDescription(int edge);
+REGINA_API std::string edgeDescription(int edge);
 
 /**
  * Returns a string representation of the given permutation with only
@@ -801,7 +803,7 @@ std::string edgeDescription(int edge);
  * @param edgePerm the permutation to represent.
  * @return a restricted string representation of the given permutation.
  */
-std::string edgeDescription(const NPerm4& edgePerm);
+REGINA_API std::string edgeDescription(const NPerm4& edgePerm);
 
 /*@}*/
 

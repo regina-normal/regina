@@ -37,6 +37,7 @@
  *  matrix; use this to show the rank of the matching equations.
  */
 
+#include "regina-core.h"
 #include "maths/nmatrixint.h"
 #include <vector>
 
@@ -65,7 +66,7 @@ namespace regina {
  *
  * @param matrix the matrix to transform.
  */
-void smithNormalForm(NMatrixInt& matrix);
+REGINA_API void smithNormalForm(NMatrixInt& matrix);
 
 /**
  * A Smith normal form algorithm that also returns change of basis matrices.
@@ -111,7 +112,7 @@ void smithNormalForm(NMatrixInt& matrix);
  *
  * \author Ryan Budney
  */
-void smithNormalForm(NMatrixInt& matrix,
+REGINA_API void smithNormalForm(NMatrixInt& matrix,
         NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
         NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
 
@@ -159,7 +160,7 @@ void smithNormalForm(NMatrixInt& matrix,
  *
  * \author Ryan Budney
  */
-void metricalSmithNormalForm(NMatrixInt& matrix,
+REGINA_API void metricalSmithNormalForm(NMatrixInt& matrix,
         NMatrixInt *rowSpaceBasis=0, NMatrixInt *rowSpaceBasisInv=0,
         NMatrixInt *colSpaceBasis=0, NMatrixInt *colSpaceBasisInv=0);
 
@@ -179,7 +180,7 @@ void metricalSmithNormalForm(NMatrixInt& matrix,
  * @param matrix the matrix to examine and rearrange.
  * @return the rank of the given matrix.
  */
-unsigned rowBasis(NMatrixInt& matrix);
+REGINA_API unsigned rowBasis(NMatrixInt& matrix);
 
 /**
  * Finds a basis for the row space of the given matrix, as well as an
@@ -216,7 +217,8 @@ unsigned rowBasis(NMatrixInt& matrix);
  * "incremental" basis for the orthogonal complement of \a input.
  * @return the rank of the given matrix \a input.
  */
-unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement);
+REGINA_API unsigned rowBasisAndOrthComp(NMatrixInt& input,
+    NMatrixInt& complement);
 
 /**
  * Transforms a given matrix into column echelon form with respect to a
@@ -272,7 +274,7 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement);
  *
  * \author Ryan Budney
  */
-void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
+REGINA_API void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
         const std::vector<unsigned> &rowList);
 
 /**
@@ -304,7 +306,7 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  *
  * \author Ryan Budney
  */
-std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
+REGINA_API std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
         const std::vector<NLargeInteger>& sublattice);
 
 /**
@@ -332,7 +334,7 @@ std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
  *
  * \author Ryan Budney
  */
-std::auto_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
+REGINA_API std::auto_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
     const std::vector<NLargeInteger> &invF);
 
 /*@}*/

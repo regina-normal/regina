@@ -36,6 +36,7 @@
 #endif
 
 #include <vector>
+#include "regina-core.h"
 #include "triangulation/ntetrahedron.h"
 
 namespace regina {
@@ -53,7 +54,7 @@ class NBoundaryComponent;
  * Details how a vertex in the skeleton forms part of an individual
  * tetrahedron.
  */
-class NVertexEmbedding {
+class REGINA_API NVertexEmbedding {
     private:
         NTetrahedron* tetrahedron;
             /**< The tetrahedron in which this vertex is contained. */
@@ -131,7 +132,7 @@ class NVertexEmbedding {
  *
  * \testpart
  */
-class NVertex : public ShareableObject, public NMarkedElement {
+class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
     public:
         static const int SPHERE;
             /**< Specifies a vertex link that is a sphere. */

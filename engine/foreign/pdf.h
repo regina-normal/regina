@@ -35,6 +35,8 @@
 #define __PDF_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 class NPDF;
@@ -63,7 +65,7 @@ class NPDF;
  * @param filename the filename of the PDF document to read.
  * @return a new PDF packet containing the PDF document, or 0 on error.
  */
-NPDF* readPDF(const char *filename);
+REGINA_API NPDF* readPDF(const char *filename);
 
 /**
  * Writes the given PDF document to the given file.
@@ -83,7 +85,7 @@ NPDF* readPDF(const char *filename);
  * @param pdf the PDF packet to write to the given file.
  * @return \c true if the export was successful, or \c false otherwise.
  */
-bool writePDF(const char* filename, const NPDF& pdf);
+REGINA_API bool writePDF(const char* filename, const NPDF& pdf);
 
 /*@}*/
 

@@ -37,6 +37,7 @@
 #endif
 
 #include <iostream>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -92,7 +93,7 @@ namespace regina {
  *
  * @param out the output stream to which usage information will be written.
  */
-void writeResUsage(std::ostream& out);
+REGINA_API void writeResUsage(std::ostream& out);
 
 } // namespace regina
 

@@ -36,6 +36,7 @@
 #endif
 
 #include <string>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -69,7 +70,7 @@ class NTriangulation;
  *
  * @author Ryan Budney, also with code from Damien Heard
  */
-NTriangulation* readOrb(const char *filename);
+REGINA_API NTriangulation* readOrb(const char *filename);
 
 /*@}*/
 

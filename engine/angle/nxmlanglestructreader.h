@@ -35,6 +35,7 @@
 #define __NXMLANGLESTRUCTREADER_H
 #endif
 
+#include "regina-core.h"
 #include "packet/nxmlpacketreader.h"
 #include "angle/nanglestructurelist.h"
 
@@ -50,7 +51,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NXMLAngleStructureReader : public NXMLElementReader {
+class REGINA_API NXMLAngleStructureReader : public NXMLElementReader {
     private:
         NAngleStructure* angles;
             /**< The angle structure currently being read. */
@@ -92,7 +93,7 @@ class NXMLAngleStructureReader : public NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class NXMLAngleStructureListReader : public NXMLPacketReader {
+class REGINA_API NXMLAngleStructureListReader : public NXMLPacketReader {
     private:
         NAngleStructureList* list;
             /**< The angle structure list currently being read. */

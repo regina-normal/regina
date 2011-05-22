@@ -36,6 +36,7 @@
 #endif
 
 #include <string>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -59,7 +60,7 @@ namespace regina {
  * support more interesting scenarios, such as running out of the source
  * tree or moving ready-made "application bundles" around the system.
  */
-class NGlobalDirs {
+class REGINA_API NGlobalDirs {
     public:
         /**
          * Returns Regina's primary home directory on the system.  This

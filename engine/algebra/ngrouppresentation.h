@@ -38,6 +38,7 @@
 #include <algorithm>
 #include <list>
 #include <vector>
+#include "regina-core.h"
 #include "utilities/memutils.h"
 #include "shareableobject.h"
 #include "utilities/ptrutils.h"
@@ -58,7 +59,7 @@ class NHomGroupPresentation;
 /**
  * Represents a power of a generator in a group presentation.
  */
-struct NGroupExpressionTerm {
+struct REGINA_API NGroupExpressionTerm {
     unsigned long generator;
         /**< The number that identifies the generator in this term. */
     long exponent;
@@ -166,7 +167,8 @@ struct NGroupExpressionTerm {
  * @param term the term to write.
  * @return a reference to the given output stream.
  */
-std::ostream& operator << (std::ostream& out, const NGroupExpressionTerm& term);
+REGINA_API std::ostream& operator << (std::ostream& out,
+    const NGroupExpressionTerm& term);
 
 /**
  * Represents an expression involving generators from a group presentation
@@ -178,7 +180,7 @@ std::ostream& operator << (std::ostream& out, const NGroupExpressionTerm& term);
  * three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that
  * order.
  */
-class NGroupExpression : public ShareableObject {
+class REGINA_API NGroupExpression : public ShareableObject {
     private:
         std::list<NGroupExpressionTerm> terms;
             /** The terms that make up this expression. */
@@ -559,7 +561,7 @@ class NGroupExpression : public ShareableObject {
  *
  * \testpart
  */
-class NGroupPresentation : public ShareableObject {
+class REGINA_API NGroupPresentation : public ShareableObject {
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */

@@ -36,6 +36,7 @@
 #define __I18NUTILS_H
 #endif
 
+#include "regina-core.h"
 #include "regina-config.h"
 #include <iostream>
 #ifdef HAVE_ICONV
@@ -62,7 +63,7 @@ namespace i18n {
  * These routines use ::setlocale() to determine the current locale,
  * which means they respect environment variables such as LANG and LC_ALL.
  */
-class Locale {
+class REGINA_API Locale {
     private:
         static bool initialised;
             /**< Have we determined the current locale yet?  This is
@@ -102,7 +103,7 @@ class Locale {
  * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
  * General Public License.
  */
-class IConvStreamBuffer : public std::streambuf {
+class REGINA_API IConvStreamBuffer : public std::streambuf {
     private:
         std::ostream* sink;
             /**< The destination output stream, or 0 if it has not yet
@@ -225,7 +226,7 @@ class IConvStreamBuffer : public std::streambuf {
  * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
  * General Public License.
  */
-class IConvStream : public std::ostream {
+class REGINA_API IConvStream : public std::ostream {
     private:
         IConvStreamBuffer buf;
             /**< The IConvStreamBuffer that does all the actual work. */

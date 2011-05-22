@@ -35,6 +35,7 @@
 #define __NHOMOLOGICALDATA_H
 #endif
 
+#include "regina-core.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/nrational.h"
 #include "triangulation/ntriangulation.h"
@@ -125,7 +126,7 @@ class NTriangulation;
  *
  * @author Ryan Budney
  */
-class NHomologicalData : public ShareableObject {
+class REGINA_API NHomologicalData : public ShareableObject {
 private:
     /**
      * Stored pointer to a valid triangulation. All routines use this

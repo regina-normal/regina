@@ -36,6 +36,7 @@
 #endif
 
 #include <vector>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -70,7 +71,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NMarkedElement {
+class REGINA_API NMarkedElement {
     private:
         long marking;
             /**< The index in the NMarkedVector at which this object is

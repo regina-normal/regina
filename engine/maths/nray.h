@@ -36,6 +36,7 @@
 #define __NRAY_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nlargeinteger.h"
 #include "maths/nvectordense.h"
 
@@ -63,7 +64,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NRay : public NVectorDense<NLargeInteger> {
+class REGINA_API NRay : public NVectorDense<NLargeInteger> {
     public:
         /**
          * Creates a new ray all of whose coordinates are initialised to zero.
@@ -127,7 +128,7 @@ class NRay : public NVectorDense<NLargeInteger> {
  * @return a newly allocated ray representing the intersection of
  * \a hyperplane with the hyperplane joining \a a and \a b.
  */
-NRay* intersect(const NRay& pos, const NRay& neg,
+REGINA_API NRay* intersect(const NRay& pos, const NRay& neg,
     const NVector<NLargeInteger>& hyperplane);
 
 /*@}*/

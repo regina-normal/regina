@@ -37,7 +37,8 @@
 #define __NRESOURCES_H
 #endif
 
-#include <regina-config.h>
+#include "regina-core.h"
+#include "regina-config.h"
 
 #include <cstring>
 #include <fstream>
@@ -58,7 +59,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NRandomAccessResource {
+class REGINA_API NRandomAccessResource {
     public:
         /**
          * Specifies the current state of a resource.
@@ -155,7 +156,7 @@ class NRandomAccessResource {
  *
  * \ifacespython Not present.
  */
-class NLocalFileResource : public NRandomAccessResource {
+class REGINA_API NLocalFileResource : public NRandomAccessResource {
     private:
         std::ifstream infile;
             /**< The file that is being read from. */

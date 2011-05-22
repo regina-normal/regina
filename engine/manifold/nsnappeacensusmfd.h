@@ -35,6 +35,7 @@
 #define __NSNAPPEACENSUSMFD_H
 #endif
 
+#include "regina-core.h"
 #include "nmanifold.h"
 
 namespace regina {
@@ -70,7 +71,7 @@ namespace regina {
  *
  * \testpart
  */
-class NSnapPeaCensusManifold : public NManifold {
+class REGINA_API NSnapPeaCensusManifold : public NManifold {
     public:
         static const char SEC_5;
             /**< Represents the collection of manifolds formed from five or

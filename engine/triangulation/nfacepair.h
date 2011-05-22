@@ -35,6 +35,8 @@
 #define __NFACEPAIR_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 /**
@@ -60,7 +62,7 @@ namespace regina {
  * The before-the-start and past-the-end values are internally
  * represented as (0,0) and (3,3) respectively.
  */
-class NFacePair {
+class REGINA_API NFacePair {
     private:
         unsigned first;
             /**< The smaller of the two faces in this pair. */
