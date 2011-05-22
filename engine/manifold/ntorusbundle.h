@@ -35,6 +35,7 @@
 #define __NTORUSBUNDLE_H
 #endif
 
+#include "regina-core.h"
 #include "manifold/nmanifold.h"
 #include "maths/nmatrix2.h"
 
@@ -71,7 +72,7 @@ namespace regina {
  * \todo \feature Implement the == operator for finding conjugate and
  * inverse matrices.
  */
-class NTorusBundle : public NManifold {
+class REGINA_API NTorusBundle : public NManifold {
     private:
         NMatrix2 monodromy;
             /**< The monodromy describing how the two torus boundaries

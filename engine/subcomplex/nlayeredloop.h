@@ -35,6 +35,7 @@
 #define __NLAYEREDLOOP_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nstandardtri.h"
 
 namespace regina {
@@ -76,7 +77,7 @@ class NEdge;
  *
  * \testpart
  */
-class NLayeredLoop : public NStandardTriangulation {
+class REGINA_API NLayeredLoop : public NStandardTriangulation {
     private:
         unsigned long length;
             /**< The length of this layered loop. */

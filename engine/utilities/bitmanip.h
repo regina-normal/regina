@@ -36,6 +36,7 @@
 #define __BITMANIP_H
 #endif
 
+#include "regina-core.h"
 #include "regina-config.h"
 
 namespace regina {

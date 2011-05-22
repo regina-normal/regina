@@ -36,6 +36,7 @@
 #define __NSIGISOMORPHISM_H
 #endif
 
+#include "regina-core.h"
 #include "split/nsignature.h"
 
 namespace regina {
@@ -68,7 +69,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NSigPartialIsomorphism {
+class REGINA_API NSigPartialIsomorphism {
     private:
         unsigned nLabels;
             /**< The number of symbols whose images are defined. */

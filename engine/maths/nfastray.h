@@ -36,6 +36,7 @@
 #define __NFASTRAY_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nfastvector.h"
 #include "maths/nlargeinteger.h"
 
@@ -63,7 +64,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NFastRay : public NFastVector<NLargeInteger> {
+class REGINA_API NFastRay : public NFastVector<NLargeInteger> {
     public:
         /**
          * Creates a new ray all of whose coordinates are initialised to zero.

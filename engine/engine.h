@@ -36,6 +36,8 @@
 #define __ENGINE_H
 #endif
 
+#include "regina-core.h"
+
 /**
  * Contains the entire Regina calculation engine.
  *
@@ -56,7 +58,7 @@ namespace regina {
  *
  * @return the version of this calculation engine.
  */
-const char* getVersionString();
+REGINA_API const char* getVersionString();
 
 /**
  * Returns the major version number of this calculation engine.
@@ -64,7 +66,7 @@ const char* getVersionString();
  *
  * @return the major version number of this calculation engine.
  */
-int getVersionMajor();
+REGINA_API int getVersionMajor();
 
 /**
  * Returns the minor version number of this calculation engine.
@@ -72,7 +74,7 @@ int getVersionMajor();
  *
  * @return the minor version number of this calculation engine.
  */
-int getVersionMinor();
+REGINA_API int getVersionMinor();
 
 /**
  * Did the given version of Regina consistently use UTF-8 in its data
@@ -100,7 +102,7 @@ int getVersionMinor();
  * \c false if the given version is an older version that did not pay
  * attention to character encodings.
  */
-bool versionUsesUTF8(const char* version);
+REGINA_API bool versionUsesUTF8(const char* version);
 
 /**
  * Tests to see if an interface can successfully communicate with the
@@ -113,7 +115,7 @@ bool versionUsesUTF8(const char* version);
  * @param value any integer; this same integer will be returned.
  * @return the same integer that was passed as \a value.
  */
-int testEngine(int value);
+REGINA_API int testEngine(int value);
 
 /*@}*/
 

@@ -36,6 +36,8 @@
 #define __NEXAMPLETRIANGULATION_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 class NTriangulation;
@@ -58,7 +60,7 @@ class NTriangulation;
  * scratch.  It is up to the caller of each routine to destroy the
  * triangulation that is returned.
  */
-class NExampleTriangulation {
+class REGINA_API NExampleTriangulation {
     public:
         /**
          * \name Closed Triangulations

@@ -39,6 +39,7 @@
 #include <memory>
 #include <vector>
 
+#include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "file/nfilepropertyreader.h"
@@ -104,7 +105,7 @@ class NXMLTriangulationReader;
  * subcomplex to a normal surface.
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
  */
-class NTriangulation : public NPacket, public NFilePropertyReader {
+class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
     public:
         static const int packetType;
 

@@ -37,6 +37,7 @@
 
 #include <iostream>
 #include <memory>
+#include "regina-core.h"
 
 namespace regina {
 

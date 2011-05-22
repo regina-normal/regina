@@ -21,6 +21,7 @@ ADD_SUBDIRECTORY("surfaces")
 ADD_SUBDIRECTORY("triangulation")
 ADD_SUBDIRECTORY("utilities")
 
+ADD_DEFINITIONS(-DREGINA_DLL_EXPORTS=1)
 ADD_DEFINITIONS(-DREGINA_DATADIR=\"${PKGDATADIR}\")
 ADD_DEFINITIONS(-DREGINA_PYLIBDIR=\"${PKGLIBDIR}/python\")
 IF(ICONV_INCLUDE_DIR)
@@ -34,7 +35,7 @@ ADD_LIBRARY("regina-engine" SHARED ${SOURCES} )
 SET(ENGINE_LINK_LIBRARIES ${LIBXML2_LIBRARIES} ${GMP_LIBRARIES} ${ZLIB_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 TARGET_LINK_LIBRARIES(regina-engine ${ENGINE_LINK_LIBRARIES} ${ICONV_LIBRARY})
 
-SET( HEADERS ${HEADERS} docs.h engine.h shareableobject.h )
+SET( HEADERS ${HEADERS} docs.h engine.h regina-core.h shareableobject.h )
 SET( MANS ${MANS} regina-engine-config.1 )
 
 # Build space-separated flag lists for regine-engine-config:

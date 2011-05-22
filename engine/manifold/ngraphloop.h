@@ -36,6 +36,7 @@
 #define __NGRAPHLOOP_H
 #endif
 
+#include "regina-core.h"
 #include "manifold/nmanifold.h"
 #include "maths/nmatrix2.h"
 
@@ -84,7 +85,7 @@ class NSFSpace;
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class NGraphLoop : public NManifold {
+class REGINA_API NGraphLoop : public NManifold {
     private:
         NSFSpace* sfs_;
             /**< The bounded Seifert fibred space that is joined to itself. */

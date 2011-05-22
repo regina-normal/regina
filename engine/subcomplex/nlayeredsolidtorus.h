@@ -35,6 +35,7 @@
 #define __NLAYEREDSOLIDTORUS_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nstandardtri.h"
 
 namespace regina {
@@ -61,7 +62,7 @@ class NTriangulation;
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class NLayeredSolidTorus : public NStandardTriangulation {
+class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
     private:
         unsigned long nTetrahedra;
             /**< The number of tetrahedra in this torus. */

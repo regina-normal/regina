@@ -62,6 +62,7 @@
 #endif
 
 #include <functional>
+#include "regina-core.h"
 
 namespace regina {
 

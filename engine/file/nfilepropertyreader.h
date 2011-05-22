@@ -40,6 +40,8 @@
 #define __NFILEPROPERTYREADER_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 class NFile;
@@ -68,7 +70,7 @@ class NFile;
  *
  * \ifacespython Not present.
  */
-class NFilePropertyReader {
+class REGINA_API NFilePropertyReader {
     public:
         /**
          * Default destructor that does nothing.

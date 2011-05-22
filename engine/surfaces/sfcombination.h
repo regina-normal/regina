@@ -36,6 +36,7 @@
 #define __SFCOMBINATION_H
 #endif
 
+#include "regina-core.h"
 #include "surfaces/nsurfacefilter.h"
 
 namespace regina {
@@ -56,7 +57,7 @@ namespace regina {
  * accepted if this is an \a and filter and rejected if this is an \a or
  * filter.
  */
-class NSurfaceFilterCombination : public NSurfaceFilter {
+class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
     public:
         static const int filterID;
 

@@ -35,6 +35,7 @@
  *  \brief Deals with matrices of arbitrary precision integers.
  */
 
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nlargeinteger.h"
 #include "maths/nmatrix.h"
@@ -58,7 +59,8 @@ namespace regina {
  * Exceptions are noted in the documentation for each individual member
  * function.
  */
-class NMatrixInt : public NMatrixRing<NLargeInteger>, public ShareableObject {
+class REGINA_API NMatrixInt :
+        public NMatrixRing<NLargeInteger>, public ShareableObject {
     public:
         /**
          * Creates a new matrix of the given size.

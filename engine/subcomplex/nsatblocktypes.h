@@ -36,6 +36,7 @@
 #define __NSATBLOCKTYPES_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nsatblock.h"
 
 namespace regina {
@@ -64,7 +65,7 @@ class NLayeredSolidTorus;
  * a degenerate (1,1,2) layered solid torus.  Note that the weight 2 edge
  * is the boundary edge of the Mobius strip.
  */
-class NSatMobius : public NSatBlock {
+class REGINA_API NSatMobius : public NSatBlock {
     private:
         int position_;
             /**< Describes how the Mobius band is attached to the
@@ -149,7 +150,7 @@ class NSatMobius : public NSatBlock {
  * see the NSatAnnulus class notes for details on precisely what
  * vertical, horizontal and diagonal mean.
  */
-class NSatLST : public NSatBlock {
+class REGINA_API NSatLST : public NSatBlock {
     private:
         NLayeredSolidTorus* lst_;
             /**< Contains details of the layered solid torus that this
@@ -250,7 +251,7 @@ class NSatLST : public NSatBlock {
  * of "horizontal" and the NTriSolidTorus class notes for further
  * details regarding "major" and "minor".
  */
-class NSatTriPrism : public NSatBlock {
+class REGINA_API NSatTriPrism : public NSatBlock {
     private:
         bool major_;
             /**< Is this prism of major type or of minor type? */
@@ -354,7 +355,7 @@ class NSatTriPrism : public NSatBlock {
  * triangulations) this cube cannot be split vertically into two
  * triangular prisms.
  */
-class NSatCube : public NSatBlock {
+class REGINA_API NSatCube : public NSatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
@@ -430,7 +431,7 @@ class NSatCube : public NSatBlock {
  * prisms that are joined together, or equivalently the number of
  * saturated annuli on the boundary.
  */
-class NSatReflectorStrip : public NSatBlock {
+class REGINA_API NSatReflectorStrip : public NSatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
@@ -519,7 +520,7 @@ class NSatReflectorStrip : public NSatBlock {
  * each annulus (with the fibres pinched together between the two
  * horizontal edges).
  */
-class NSatLayering : public NSatBlock {
+class REGINA_API NSatLayering : public NSatBlock {
     private:
         bool overHorizontal_;
             /**< Do we layer over the horizontal annulus edge, or the

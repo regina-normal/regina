@@ -37,6 +37,7 @@
 #endif
 
 #include <utility>
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "file/nfilepropertyreader.h"
 #include "maths/nperm4.h"
@@ -247,7 +248,7 @@ class NXMLNormalSurfaceReader;
  *
  * \ifacespython Not present.
  */
-class NNormalSurfaceVector : public NRay {
+class REGINA_API NNormalSurfaceVector : public NRay {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -561,7 +562,8 @@ class NNormalSurfaceVector : public NRay {
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
  */
-class NNormalSurface : public ShareableObject, public NFilePropertyReader {
+class REGINA_API NNormalSurface :
+        public ShareableObject, public NFilePropertyReader {
     protected:
         NNormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever

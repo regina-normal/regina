@@ -36,6 +36,7 @@
 #endif
 
 #include <iostream>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -139,8 +140,8 @@ enum SurfaceExportFields {
  * be included in the export.
  * @return \c true if the export was successful, or \c false otherwise.
  */
-bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
-    int additionalFields = surfaceExportAll);
+REGINA_API bool writeCSVStandard(const char* filename,
+    NNormalSurfaceList& surfaces, int additionalFields = surfaceExportAll);
 
 /**
  * Exports the given list of normal surfaces as a plain text CSV
@@ -179,8 +180,8 @@ bool writeCSVStandard(const char* filename, NNormalSurfaceList& surfaces,
  * be included in the export.
  * @return \c true if the export was successful, or \c false otherwise.
  */
-bool writeCSVEdgeWeight(const char* filename, NNormalSurfaceList& surfaces,
-    int additionalFields = surfaceExportAll);
+REGINA_API bool writeCSVEdgeWeight(const char* filename,
+    NNormalSurfaceList& surfaces, int additionalFields = surfaceExportAll);
 
 /*@}*/
 

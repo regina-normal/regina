@@ -36,6 +36,7 @@
 #define __NSFSALTSET_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nmatrix2.h"
 
 namespace regina {
@@ -98,7 +99,7 @@ class NSFSpace;
  *
  * \ifacespython Not present.
  */
-class NSFSAltSet {
+class REGINA_API NSFSAltSet {
     private:
         unsigned size_;
             /**< The number of alternative spaces in this set. */

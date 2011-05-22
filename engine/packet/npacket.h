@@ -40,6 +40,7 @@
 #include <memory>
 #include <set>
 
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "utilities/boostutils.h"
 
@@ -87,7 +88,7 @@ class NXMLPacketReader;
  * \todo \feature Provide automatic name selection/specification upon
  * child packet insertion.
  */
-class NPacket : public ShareableObject {
+class REGINA_API NPacket : public ShareableObject {
     public:
         /**
          * Contains the integer ID for this packet.

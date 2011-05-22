@@ -36,6 +36,7 @@
 #define __NSNAPPEDTWOSPHERE_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nsnappedball.h"
 
 namespace regina {
@@ -63,7 +64,7 @@ class NSnappedBall;
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
  */
-class NSnappedTwoSphere : public ShareableObject {
+class REGINA_API NSnappedTwoSphere : public ShareableObject {
     private:
         NSnappedBall* ball[2];
             /**< The two snapped 3-balls whose equators are joined. */

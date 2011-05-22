@@ -36,6 +36,7 @@
 #define __NPROGRESSMANAGER_H
 #endif
 
+#include "regina-core.h"
 #include "progress/nprogress.h"
 
 namespace regina {
@@ -86,7 +87,7 @@ namespace regina {
  *   it has no guarantee that the reading thread is not still reading
  *   progress reports from them.
  */
-class NProgressManager : public ShareableObject {
+class REGINA_API NProgressManager : public ShareableObject {
     private:
         NProgress* progress;
             /**< The progress report object that we are managing. */

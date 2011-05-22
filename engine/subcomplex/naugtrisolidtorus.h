@@ -36,6 +36,7 @@
 #define __NAUGTRISOLIDTORUS_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 
@@ -82,7 +83,7 @@ class NComponent;
  *
  * \testpart
  */
-class NAugTriSolidTorus : public NStandardTriangulation {
+class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
     public:
         static const int CHAIN_NONE;
             /**< Indicates that this augmented triangular solid torus

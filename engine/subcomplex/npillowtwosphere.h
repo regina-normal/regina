@@ -36,6 +36,7 @@
 #define __NPILLOWTWOSPHERE_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nperm4.h"
 
@@ -64,7 +65,7 @@ class NTriangulation;
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
  */
-class NPillowTwoSphere : public ShareableObject {
+class REGINA_API NPillowTwoSphere : public ShareableObject {
     private:
         NFace* face[2];
             /**< The two faces whose edges are joined. */

@@ -35,6 +35,7 @@
 #define __NSQUAD_H
 #endif
 
+#include "regina-core.h"
 #include "surfaces/nsmirrored.h"
 
 namespace regina {
@@ -59,7 +60,8 @@ class NMatrixInt;
  *
  * \ifacespython Not present.
  */
-class NNormalSurfaceVectorQuad : public NNormalSurfaceVectorMirrored {
+class REGINA_API NNormalSurfaceVectorQuad :
+        public NNormalSurfaceVectorMirrored {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to

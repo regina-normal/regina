@@ -36,6 +36,7 @@
 #define __NBLOCKEDSFSPAIR_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nmatrix2.h"
 #include "subcomplex/nstandardtri.h"
 
@@ -92,7 +93,7 @@ class NSatRegion;
  *
  * \testpart
  */
-class NBlockedSFSPair : public NStandardTriangulation {
+class REGINA_API NBlockedSFSPair : public NStandardTriangulation {
     private:
         NSatRegion* region_[2];
             /**< The two saturated regions whose boundaries are joined. */

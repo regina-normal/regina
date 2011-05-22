@@ -36,6 +36,7 @@
 #define __NBLOCKEDSFS_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nstandardtri.h"
 
 namespace regina {
@@ -65,7 +66,7 @@ class NSatRegion;
  *
  * \testpart
  */
-class NBlockedSFS : public NStandardTriangulation {
+class REGINA_API NBlockedSFS : public NStandardTriangulation {
     private:
         NSatRegion* region_;
             /**< The single saturated region that describes this entire

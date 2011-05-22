@@ -30,6 +30,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include "regina-core.h"
 #include "regina-config.h"
 #include "enumerate/nenumconstraint.h"
 #include "maths/matrixops.h"

@@ -36,6 +36,7 @@
 #define __NPLUGTRISOLIDTORUS_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
 
@@ -91,7 +92,7 @@ class NComponent;
  *
  * \testpart
  */
-class NPlugTriSolidTorus : public NStandardTriangulation {
+class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
     public:
         static const int CHAIN_NONE;
             /**< Indicates an annulus on the triangular solid torus

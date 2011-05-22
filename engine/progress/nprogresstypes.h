@@ -35,6 +35,7 @@
 #define __NPROGRESSTYPES_H
 #endif
 
+#include "regina-core.h"
 #include "progress/nprogress.h"
 
 namespace regina {
@@ -51,7 +52,7 @@ namespace regina {
  * \ifacespython Not present; all progress classes communicate with
  * external interfaces through the NProgress interface.
  */
-class NProgressMessage : public NProgress {
+class REGINA_API NProgressMessage : public NProgress {
     private:
         std::string message;
             /**< The current state of progress. */
@@ -104,7 +105,7 @@ class NProgressMessage : public NProgress {
  * A simple structure used for passing around a numeric state of
  * progress.
  */
-struct NProgressStateNumeric {
+struct REGINA_API NProgressStateNumeric {
     long completed;
         /**< The number of items that have already been completed. */
     long outOf;
@@ -129,7 +130,7 @@ struct NProgressStateNumeric {
  * \ifacespython Not present; all progress classes communicate with
  * external interfaces through the NProgress interface.
  */
-class NProgressNumber : public NProgress {
+class REGINA_API NProgressNumber : public NProgress {
     private:
         long completed;
             /**< The number of items completed. */

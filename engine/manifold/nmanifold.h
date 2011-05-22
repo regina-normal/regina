@@ -35,6 +35,7 @@
 #define __NMANIFOLD_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 
 namespace regina {
@@ -60,7 +61,7 @@ class NTriangulation;
  *
  * \testpart
  */
-class NManifold : public ShareableObject {
+class REGINA_API NManifold : public ShareableObject {
     public:
         /**
          * A destructor that does nothing.

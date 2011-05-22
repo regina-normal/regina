@@ -35,6 +35,7 @@
 #define __NLAYEREDCHAIN_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nperm4.h"
 #include "subcomplex/nstandardtri.h"
 
@@ -83,7 +84,7 @@ class NTetrahedron;
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class NLayeredChain : public NStandardTriangulation {
+class REGINA_API NLayeredChain : public NStandardTriangulation {
     private:
         NTetrahedron* bottom;
             /**< The bottom tetrahedron of this layered chain. */

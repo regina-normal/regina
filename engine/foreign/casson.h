@@ -14,6 +14,8 @@
 #ifndef CASSON_H
 #define CASSON_H
 
+#include "regina-core.h"
+
 #define LN(ch)   (ch=='u') ? 0 : ((ch=='v') ? 1 : ((ch=='w') ? 2 : 3))
 
 const int vertex_at_faces[4][4] =
@@ -26,13 +28,13 @@ typedef struct CassonFormat CassonFormat;
 typedef struct EdgeInfo EdgeInfo;
 typedef struct TetEdgeInfo TetEdgeInfo;
 
-struct CassonFormat
+struct REGINA_LOCAL CassonFormat
 {
         int             num_tet;
         EdgeInfo        *head;
 };
 
-struct EdgeInfo
+struct REGINA_LOCAL EdgeInfo
 {
         int             index,
                         singular_index;
@@ -43,7 +45,7 @@ struct EdgeInfo
                         *next;
 };
 
-struct TetEdgeInfo
+struct REGINA_LOCAL TetEdgeInfo
 {
         int             tet_index,f1,f2;
         TetEdgeInfo     *prev,

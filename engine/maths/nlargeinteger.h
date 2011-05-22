@@ -38,6 +38,7 @@
 #include <gmp.h>
 #include <iostream>
 #include <string>
+#include "regina-core.h"
 
 /**
  * \hideinitializer
@@ -80,7 +81,7 @@ namespace regina {
  *
  * \testpart
  */
-class NLargeInteger {
+class REGINA_API NLargeInteger {
     public:
         static const NLargeInteger zero;
             /**< Globally available zero. */
@@ -770,7 +771,8 @@ class NLargeInteger {
  * @param large the integer to write.
  * @return a reference to \a out.
  */
-std::ostream& operator << (std::ostream& out, const NLargeInteger& large);
+REGINA_API std::ostream& operator << (std::ostream& out,
+    const NLargeInteger& large);
 
 /*@}*/
 

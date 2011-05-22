@@ -36,6 +36,8 @@
 #define __MEMUTILS_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 /**

@@ -36,6 +36,7 @@
 #endif
 
 #include <deque>
+#include "regina-core.h"
 #include "triangulation/ntetrahedron.h"
 
 namespace regina {
@@ -102,7 +103,7 @@ extern const int edgeEnd[6];
  * Details how an edge in the skeleton forms part of an individual
  * tetrahedron.
  */
-class NEdgeEmbedding {
+class REGINA_API NEdgeEmbedding {
     private:
         NTetrahedron* tetrahedron;
             /**< The tetrahedron in which this edge is contained. */
@@ -177,7 +178,7 @@ class NEdgeEmbedding {
  * Edges are highly temporary; once a triangulation changes, all its
  * edge objects will be deleted and new ones will be created.
  */
-class NEdge : public ShareableObject, public NMarkedElement {
+class REGINA_API NEdge : public ShareableObject, public NMarkedElement {
     public:
         /**
          * A table that maps vertices of a tetrahedron to edge numbers.

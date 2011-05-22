@@ -37,6 +37,7 @@
 #endif
 
 #include <set>
+#include "regina-core.h"
 #include "maths/nlargeinteger.h"
 #include "surfaces/nsurfacefilter.h"
 #include "utilities/nbooleans.h"
@@ -59,7 +60,7 @@ namespace regina {
  * cannot be determined.  Then the surface will be accepted solely on the
  * basis of whether or not it is compact.
  */
-class NSurfaceFilterProperties : public NSurfaceFilter {
+class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
     public:
         static const int filterID;
 

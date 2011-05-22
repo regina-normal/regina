@@ -35,6 +35,7 @@
 #define __NTRIVIALTRI_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nstandardtri.h"
 
 namespace regina {
@@ -53,7 +54,7 @@ namespace regina {
  *
  * \testpart
  */
-class NTrivialTri : public NStandardTriangulation {
+class REGINA_API NTrivialTri : public NStandardTriangulation {
     public:
         /**
          * Represents the two-tetrahedron four-vertex triangulation of

@@ -37,6 +37,7 @@
 #endif
 
 #include <string>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -67,7 +68,7 @@ class NPacket;
  * @return \c true if and only if the packet subtree was successfully
  * written.
  */
-bool writeXMLFile(const char* fileName, NPacket* subtree,
+REGINA_API bool writeXMLFile(const char* fileName, NPacket* subtree,
     bool compressed = true);
 
 /**
@@ -86,7 +87,7 @@ bool writeXMLFile(const char* fileName, NPacket* subtree,
  * @return the packet tree read from file, or 0 if problems were
  * encountered or the file could not be opened.
  */
-NPacket* readXMLFile(const char* fileName);
+REGINA_API NPacket* readXMLFile(const char* fileName);
 
 /**
  * Reads a packet tree from a file whose format is unknown.  The file
@@ -107,7 +108,7 @@ NPacket* readXMLFile(const char* fileName);
  * @return the packet tree read from file, or 0 if problems were
  * encountered or the file could not be opened.
  */
-NPacket* readFileMagic(const std::string& fileName);
+REGINA_API NPacket* readFileMagic(const std::string& fileName);
 
 /*@}*/
 

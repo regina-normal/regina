@@ -35,6 +35,7 @@
 #define __NLENSSPACE_H
 #endif
 
+#include "regina-core.h"
 #include "nmanifold.h"
 
 namespace regina {
@@ -59,7 +60,7 @@ namespace regina {
  *
  * \testpart
  */
-class NLensSpace : public NManifold {
+class REGINA_API NLensSpace : public NManifold {
     private:
         unsigned long p;
             /**< The first parameter of the lens space. */

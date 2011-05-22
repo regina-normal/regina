@@ -35,6 +35,7 @@
 #define __NFACE_H
 #endif
 
+#include "regina-core.h"
 #include "triangulation/ntetrahedron.h"
 
 namespace regina {
@@ -51,7 +52,7 @@ class NBoundaryComponent;
  * Details how a face in the skeleton forms part of an individual
  * tetrahedron.
  */
-class NFaceEmbedding {
+class REGINA_API NFaceEmbedding {
     private:
         NTetrahedron* tetrahedron;
             /**< The tetrahedron in which this face is contained. */
@@ -107,7 +108,7 @@ class NFaceEmbedding {
  * Faces are highly temporary; once a triangulation changes, all its
  * face objects will be deleted and new ones will be created.
  */
-class NFace : public ShareableObject, public NMarkedElement {
+class REGINA_API NFace : public ShareableObject, public NMarkedElement {
     public:
         static const int TRIANGLE;
             /**< Specifies a face with no identified vertices or edges. */

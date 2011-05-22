@@ -35,6 +35,7 @@
 #define __NSPIRALSOLIDTORUS_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nperm4.h"
 #include "subcomplex/nstandardtri.h"
 
@@ -86,7 +87,7 @@ class NTriangulation;
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class NSpiralSolidTorus : public NStandardTriangulation {
+class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
     private:
         unsigned long nTet;
             /**< The number of tetrahedra in this spiralled solid torus. */
