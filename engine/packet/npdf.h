@@ -37,6 +37,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include "regina-core.h"
 #include "packet/npacket.h"
 
 namespace regina {
@@ -54,7 +55,7 @@ class NXMLPacketReader;
  * This packet may or may not contain a PDF document at any given time.
  * This state can be changed by calling reset().
  */
-class NPDF : public NPacket {
+class REGINA_API NPDF : public NPacket {
     public:
         /**
          * Describes how a PDF packet should claim ownership of a block

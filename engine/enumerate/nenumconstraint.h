@@ -37,6 +37,7 @@
 
 #include <set>
 #include <vector>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -81,7 +82,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NEnumConstraintList : public std::vector<std::set<unsigned> > {
+class REGINA_API NEnumConstraintList : public std::vector<std::set<unsigned> > {
     public:
         /**
          * Creates an empty list of constraints.

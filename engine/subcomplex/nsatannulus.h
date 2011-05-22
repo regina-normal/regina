@@ -35,6 +35,7 @@
 #define __NSATANNULUS_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nperm4.h"
 
 namespace regina {
@@ -118,7 +119,7 @@ class NTriangulation;
  * so for instance the second face vertex roles for the saturated annulus
  * \a a can be modified by calling <tt>a.setRoles(1, newRoles)</tt>.
  */
-struct NSatAnnulus {
+struct REGINA_API NSatAnnulus {
     NTetrahedron* tet[2];
         /**< Describes which tetrahedra provide the first and second
              faces.  See the class notes for details. */

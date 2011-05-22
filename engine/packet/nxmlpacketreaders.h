@@ -35,6 +35,7 @@
 #define __NXMLPACKETREADERS_H
 #endif
 
+#include "regina-core.h"
 #include "packet/nxmlpacketreader.h"
 #include "packet/ncontainer.h"
 #include "packet/npdf.h"
@@ -53,7 +54,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NXMLContainerReader : public NXMLPacketReader {
+class REGINA_API NXMLContainerReader : public NXMLPacketReader {
     private:
         NContainer* container;
             /**< The container currently being read. */
@@ -72,7 +73,7 @@ class NXMLContainerReader : public NXMLPacketReader {
  *
  * \ifacespython Not present.
  */
-class NXMLPDFReader : public NXMLPacketReader {
+class REGINA_API NXMLPDFReader : public NXMLPacketReader {
     private:
         NPDF* pdf;
             /**< The PDF packet currently being read. */
@@ -96,7 +97,7 @@ class NXMLPDFReader : public NXMLPacketReader {
  *
  * \ifacespython Not present.
  */
-class NXMLScriptReader : public NXMLPacketReader {
+class REGINA_API NXMLScriptReader : public NXMLPacketReader {
     private:
         NScript* script;
             /**< The script currently being read. */
@@ -120,7 +121,7 @@ class NXMLScriptReader : public NXMLPacketReader {
  *
  * \ifacespython Not present.
  */
-class NXMLTextReader : public NXMLPacketReader {
+class REGINA_API NXMLTextReader : public NXMLPacketReader {
     private:
         NText* text;
             /**< The text packet currently being read. */

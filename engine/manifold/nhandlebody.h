@@ -35,6 +35,7 @@
 #define __NHANDLEBODY_H
 #endif
 
+#include "regina-core.h"
 #include "nmanifold.h"
 
 namespace regina {
@@ -50,7 +51,7 @@ namespace regina {
  * All optional NManifold routines except for NManifold::construct() are
  * implemented for this class.
  */
-class NHandlebody : public NManifold {
+class REGINA_API NHandlebody : public NManifold {
     private:
         unsigned long nHandles;
             /**< The number of handles. */

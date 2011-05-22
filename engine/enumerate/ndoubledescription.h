@@ -36,6 +36,7 @@
 #define __NDOUBLEDESCRIPTION_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nfastray.h"
 #include "maths/nmatrixint.h"
 #include <iterator>
@@ -67,7 +68,7 @@ class NProgressNumber;
  *
  * \testpart
  */
-class NDoubleDescription {
+class REGINA_API NDoubleDescription {
     public:
         /**
          * Determines the extremal rays of the intersection of the

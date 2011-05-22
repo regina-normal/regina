@@ -35,6 +35,8 @@
 #define __DEHYDRATION_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 class NContainer;
@@ -87,7 +89,7 @@ class NContainer;
  * @return a new container as described above, or 0 if an I/O error occurred
  * whilst reading the given file.
  */
-NContainer* readDehydrationList(const char *filename,
+REGINA_API NContainer* readDehydrationList(const char *filename,
     unsigned colDehydrations = 0, int colLabels = -1,
     unsigned long ignoreLines = 0);
 

@@ -36,6 +36,7 @@
 #endif
 
 #include <string>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -71,7 +72,7 @@ class NTriangulation;
  * @return a new triangulation containing the data read from the SnapPea
  * file, or 0 on error.
  */
-NTriangulation* readSnapPea(const char *filename);
+REGINA_API NTriangulation* readSnapPea(const char *filename);
 
 /**
  * Writes the given triangulation to the given file in SnapPea format.
@@ -92,7 +93,7 @@ NTriangulation* readSnapPea(const char *filename);
  * @param tri the triangulation to write to the SnapPea file.
  * @return \c true if the export was successful, or \c false otherwise.
  */
-bool writeSnapPea(const char* filename, NTriangulation& tri);
+REGINA_API bool writeSnapPea(const char* filename, NTriangulation& tri);
 
 /**
  * Returns a token derived from the given string.
@@ -102,7 +103,7 @@ bool writeSnapPea(const char* filename, NTriangulation& tri);
  * @param str the string on which to base the token.
  * @return the corresponding token.
  */
-std::string stringToToken(const char* str);
+REGINA_API std::string stringToToken(const char* str);
 
 /**
  * Returns a token derived from the given string.
@@ -112,7 +113,7 @@ std::string stringToToken(const char* str);
  * @param str the string on which to base the token.
  * @return the corresponding token.
  */
-std::string stringToToken(const std::string& str);
+REGINA_API std::string stringToToken(const std::string& str);
 
 /*@}*/
 

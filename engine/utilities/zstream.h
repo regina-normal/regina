@@ -37,6 +37,7 @@
 
 #include <iostream>
 #include <zlib.h>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -55,7 +56,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class ZBuffer : public std::streambuf {
+class REGINA_API ZBuffer : public std::streambuf {
     public:
         static const int zEOF;
             /**< The end-of-file marker used with this stream buffer. */
@@ -191,7 +192,7 @@ class ZBuffer : public std::streambuf {
  *
  * \ifacespython Not present.
  */
-class CompressionBuffer : public ZBuffer {
+class REGINA_API CompressionBuffer : public ZBuffer {
     public:
         /**
          * Creates a new compression stream buffer.
@@ -236,7 +237,7 @@ class CompressionBuffer : public ZBuffer {
  *
  * \ifacespython Not present.
  */
-class DecompressionBuffer : public ZBuffer {
+class REGINA_API DecompressionBuffer : public ZBuffer {
     public:
         /**
          * Creates a new decompression stream buffer.
@@ -279,7 +280,7 @@ class DecompressionBuffer : public ZBuffer {
  *
  * \ifacespython Not present.
  */
-class CompressionStream : public std::ostream {
+class REGINA_API CompressionStream : public std::ostream {
     private:
         CompressionBuffer buf;
             /**< The underlying compression buffer. */
@@ -333,7 +334,7 @@ class CompressionStream : public std::ostream {
  *
  * \ifacespython Not present.
  */
-class DecompressionStream : public std::istream {
+class REGINA_API DecompressionStream : public std::istream {
     private:
         DecompressionBuffer buf;
             /**< The underlying decompression buffer. */

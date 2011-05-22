@@ -40,6 +40,7 @@
 #define __NFILE_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "file/nresources.h"
 #include "maths/nlargeinteger.h"
@@ -96,7 +97,7 @@ class NPacket;
  * @return the packet tree read from file, or \c null if problems
  * were encountered or the file could not be opened.
  */
-NPacket* readFromFile(const char* fileName);
+REGINA_API NPacket* readFromFile(const char* fileName);
 
 /**
  * Writes the given packet tree to the given old-style binary file doing
@@ -119,7 +120,7 @@ NPacket* readFromFile(const char* fileName);
  * @return \c true if and only if the packet tree was successfully
  * written.
  */
-bool writeToFile(const char* fileName, NPacket* packet);
+REGINA_API bool writeToFile(const char* fileName, NPacket* packet);
 
 /**
  * Represents an old-style binary file containing a packet tree.
@@ -133,7 +134,7 @@ bool writeToFile(const char* fileName, NPacket* packet);
  *
  * \ifacespython Not present.
  */
-class NFile : public ShareableObject {
+class REGINA_API NFile : public ShareableObject {
     protected:
         int majorVersion;
             /**< Major version number of the engine that wrote this file. */

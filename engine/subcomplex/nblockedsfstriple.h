@@ -36,6 +36,7 @@
 #define __NBLOCKEDSFSTRIPLE_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nmatrix2.h"
 #include "subcomplex/nstandardtri.h"
 
@@ -130,7 +131,7 @@ class NSatRegion;
  *
  * \testpart
  */
-class NBlockedSFSTriple : public NStandardTriangulation {
+class REGINA_API NBlockedSFSTriple : public NStandardTriangulation {
     private:
         NSatRegion* end_[2];
             /**< The two end regions, i.e., the saturated regions with

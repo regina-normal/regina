@@ -35,6 +35,7 @@
 #define __NXMLTRIREADER_H
 #endif
 
+#include "regina-core.h"
 #include "packet/nxmlpacketreader.h"
 #include "triangulation/ntriangulation.h"
 
@@ -50,7 +51,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NXMLTriangulationReader : public NXMLPacketReader {
+class REGINA_API NXMLTriangulationReader : public NXMLPacketReader {
     private:
         NTriangulation* tri;
             /**< The triangulation currently being read. */

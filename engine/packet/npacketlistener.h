@@ -36,6 +36,7 @@
 #endif
 
 #include <set>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -81,7 +82,7 @@ class NPacket;
  *
  * \ifacespython Not present.
  */
-class NPacketListener {
+class REGINA_API NPacketListener {
     private:
         std::set<NPacket*> packets;
             /**< The set of packets upon which this object is currently

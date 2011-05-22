@@ -36,6 +36,7 @@
 #endif
 
 #include <string>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -63,7 +64,7 @@ namespace regina {
  *
  * \testfull
  */
-class NPerm3 {
+class REGINA_API NPerm3 {
     public:
         /**
          * Contains all possible permutations of three elements.
@@ -360,7 +361,8 @@ class NPerm3 {
  * @param p the permutation to write.
  * @return a reference to \a out.
  */
-inline std::ostream& operator << (std::ostream& out, const NPerm3& p) {
+inline REGINA_API std::ostream& operator << (std::ostream& out,
+        const NPerm3& p) {
     return (out << p.toString());
 }
 

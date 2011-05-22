@@ -35,6 +35,7 @@
 #define __NSURFACEFILTER_H
 #endif
 
+#include "regina-core.h"
 #include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
 
@@ -76,7 +77,7 @@ class NXMLFilterReader;
  *
  * \todo \feature Implement property \a lastAppliedTo.
  */
-class NSurfaceFilter : public NPacket, public NFilePropertyReader {
+class REGINA_API NSurfaceFilter : public NPacket, public NFilePropertyReader {
     public:
         /**
          * Contains the integer ID for this type of surface filter.

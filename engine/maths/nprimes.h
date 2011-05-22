@@ -35,6 +35,7 @@
  *  \brief Support for finding primes and factorising integers.
  */
 
+#include "regina-core.h"
 #include "maths/nlargeinteger.h"
 #include <vector>
 
@@ -77,7 +78,7 @@ namespace regina {
  *
  * @author Ryan Budney, B.B.
  */
-class NPrimes {
+class REGINA_API NPrimes {
     private:
         static const unsigned long numPrimeSeeds;
             /**< The size of the hard-coded list of seed primes. */

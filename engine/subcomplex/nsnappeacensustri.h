@@ -35,6 +35,7 @@
 #define __NSNAPPEACENSUSTRI_H
 #endif
 
+#include "regina-core.h"
 #include "nstandardtri.h"
 
 namespace regina {
@@ -71,7 +72,7 @@ namespace regina {
  *
  * \testpart
  */
-class NSnapPeaCensusTri: public NStandardTriangulation {
+class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
     public:
         static const char SEC_5;
             /**< Represents the collection of triangulations formed from five

@@ -35,6 +35,7 @@
 #define __NSIMPLESURFACEBUNDLE_H
 #endif
 
+#include "regina-core.h"
 #include "nmanifold.h"
 
 namespace regina {
@@ -53,7 +54,7 @@ namespace regina {
  *
  * \testpart
  */
-class NSimpleSurfaceBundle : public NManifold {
+class REGINA_API NSimpleSurfaceBundle : public NManifold {
     public:
         /**
          * Represents the orientable 2-sphere bundle over the circle.

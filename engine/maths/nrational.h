@@ -35,6 +35,7 @@
  *  \brief Deals with artibrary precision rational numbers.
  */
 
+#include "regina-core.h"
 #include "maths/nlargeinteger.h"
 
 namespace regina {
@@ -65,7 +66,7 @@ namespace regina {
  *
  * \testpart
  */
-class NRational {
+class REGINA_API NRational {
     public:
         static const NRational zero;
             /**< Globally available zero. */
@@ -448,7 +449,7 @@ class NRational {
  * @param rat the rational to write.
  * @return a reference to \a out.
  */
-std::ostream& operator << (std::ostream& out, const NRational& rat);
+REGINA_API std::ostream& operator << (std::ostream& out, const NRational& rat);
 
 /*@}*/
 

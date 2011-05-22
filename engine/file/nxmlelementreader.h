@@ -35,6 +35,7 @@
 #define __NXMLELEMENTREADER_H
 #endif
 
+#include "regina-core.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -81,7 +82,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NXMLElementReader {
+class REGINA_API NXMLElementReader {
     public:
         /**
          * Creates a new element reader.
@@ -194,7 +195,7 @@ class NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class NXMLCharsReader : public NXMLElementReader {
+class REGINA_API NXMLCharsReader : public NXMLElementReader {
     private:
         std::string readChars;
             /**< The characters stored in this XML element. */

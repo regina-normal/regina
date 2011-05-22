@@ -36,6 +36,7 @@
 #endif
 
 #include <memory>
+#include "regina-core.h"
 #include "maths/nmatrix2.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
@@ -75,7 +76,7 @@ class NTxICore;
  *
  * \testpart
  */
-class NLayeredTorusBundle : public NStandardTriangulation {
+class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
     private:
         const NTxICore& core_;
             /**< The core <tt>T x I</tt> triangulation whose boundaries

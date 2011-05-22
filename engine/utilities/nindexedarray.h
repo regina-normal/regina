@@ -37,6 +37,7 @@
 
 #include <iostream>
 #include <vector>
+#include "regina-core.h"
 #include "utilities/hashmap.h"
 #include "utilities/hashutils.h"
 

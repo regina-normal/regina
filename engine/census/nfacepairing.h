@@ -38,6 +38,7 @@
 
 #include <iostream>
 #include <list>
+#include "regina-core.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nthread.h"
 #include "triangulation/nisomorphism.h"
@@ -97,7 +98,7 @@ typedef void (*UseFacePairing)(const NFacePairing*, const NFacePairingIsoList*,
  *
  * \testpart
  */
-class NFacePairing : public NThread {
+class REGINA_API NFacePairing : public NThread {
     private:
         unsigned nTetrahedra;
             /**< The number of tetrahedra under consideration. */

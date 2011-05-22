@@ -35,6 +35,7 @@
 #define __NPERMIT_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nperm4.h"
 
 namespace regina {
@@ -54,7 +55,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NPermItS4 {
+class REGINA_API NPermItS4 {
     private:
         int permIndex;
 

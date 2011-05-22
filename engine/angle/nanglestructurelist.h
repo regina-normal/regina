@@ -39,6 +39,7 @@
 #include <algorithm>
 #include <iterator>
 #include <vector>
+#include "regina-core.h"
 #include "angle/nanglestructure.h"
 #include "packet/npacket.h"
 #include "utilities/memutils.h"
@@ -67,7 +68,8 @@ class NXMLAngleStructureListReader;
  *
  * \testpart
  */
-class NAngleStructureList : public NPacket, public NFilePropertyReader {
+class REGINA_API NAngleStructureList :
+        public NPacket, public NFilePropertyReader {
     public:
         static const int packetType;
 

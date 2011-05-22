@@ -35,6 +35,7 @@
 #define __NSNAPPEDBALL_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/nedge.h"
 
@@ -55,7 +56,7 @@ class NTetrahedron;
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class NSnappedBall : public NStandardTriangulation {
+class REGINA_API NSnappedBall : public NStandardTriangulation {
     private:
         NTetrahedron* tet;
             /**< The tetrahedron that forms the snapped ball. */

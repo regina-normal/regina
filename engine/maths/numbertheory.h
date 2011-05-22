@@ -36,6 +36,7 @@
  */
 
 #include <list>
+#include "regina-core.h"
 #include "maths/nlargeinteger.h"
 
 namespace regina {
@@ -59,7 +60,7 @@ namespace regina {
  * @param k the number to reduce modulo \a modBase.
  * @param modBase the modular base in which to work.
  */
-long reducedMod(long k, long modBase);
+REGINA_API long reducedMod(long k, long modBase);
 
 /**
  * Calculates the greatest common divisor of two signed integers.
@@ -74,7 +75,7 @@ long reducedMod(long k, long modBase);
  * @param b the other integer with which to work.
  * @return the greatest common divisor of \a a and \a b.
  */
-long gcd(long a, long b);
+REGINA_API long gcd(long a, long b);
 
 /**
  * Calculates the greatest common divisor of two given integers and finds the
@@ -105,7 +106,7 @@ long gcd(long a, long b);
  * placed.
  * @return the greatest common divisor of \a a and \a b.
  */
-long gcdWithCoeffs(long a, long b, long& u, long& v);
+REGINA_API long gcdWithCoeffs(long a, long b, long& u, long& v);
 
 /**
  * Calculates the lowest common multiple of two signed integers.
@@ -121,7 +122,7 @@ long gcdWithCoeffs(long a, long b, long& u, long& v);
  * @param b the other integer with which to work.
  * @return the lowest common multiple of \a a and \a b.
  */
-long lcm(long a, long b);
+REGINA_API long lcm(long a, long b);
 
 /**
  * Calculates the multiplicative inverse of one integer modulo another.
@@ -136,7 +137,7 @@ long lcm(long a, long b);
  * @param k the number whose multiplicative inverse should be found.
  * @return the inverse \a v for which <tt>k * v == 1 (mod n)</tt>.
  */
-unsigned long modularInverse(unsigned long n, unsigned long k);
+REGINA_API unsigned long modularInverse(unsigned long n, unsigned long k);
 
 /**
  * Calculates the prime factorisation of the given integer.
@@ -164,7 +165,7 @@ unsigned long modularInverse(unsigned long n, unsigned long k);
  * @param n the integer to factorise.
  * @param factors the list into which prime factors will be inserted.
  */
-void factorise(unsigned long n, std::list<unsigned long>& factors);
+REGINA_API void factorise(unsigned long n, std::list<unsigned long>& factors);
 
 /**
  * Determines all primes up to and including the given upper bound.
@@ -184,7 +185,8 @@ void factorise(unsigned long n, std::list<unsigned long>& factors);
  * @param roof the upper bound up to which primes will be found.
  * @param primes the list into which the primes will be inserted.
  */
-void primesUpTo(const NLargeInteger& roof, std::list<NLargeInteger>& primes);
+REGINA_API void primesUpTo(const NLargeInteger& roof,
+    std::list<NLargeInteger>& primes);
 
 /*@}*/
 

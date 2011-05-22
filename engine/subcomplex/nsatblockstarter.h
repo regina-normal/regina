@@ -36,6 +36,7 @@
 #define __NSATBLOCKSTARTER_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nsatblock.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/nlistoncall.h"
@@ -70,7 +71,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NSatBlockStarter : regina::boost::noncopyable {
+class REGINA_API NSatBlockStarter : regina::boost::noncopyable {
     private:
         NTriangulation triangulation_;
             /**< The triangulation of the saturated block. */
@@ -134,7 +135,7 @@ class NSatBlockStarter : regina::boost::noncopyable {
  *
  * \ifacespython Not present.
  */
-class NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
+class REGINA_API NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
     public:
         /**
          * An iterator over the starter blocks in this list.  This operates
@@ -214,7 +215,7 @@ class NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
  *
  * \ifacespython Not present.
  */
-class NSatBlockStarterSearcher {
+class REGINA_API NSatBlockStarterSearcher {
     protected:
         NSatBlock::TetList usedTets;
             /**< Keeps track of which tetrahedra have used by the

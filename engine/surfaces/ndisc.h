@@ -37,6 +37,7 @@
 #endif
 
 #include <cassert>
+#include "regina-core.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 
@@ -71,7 +72,7 @@ namespace regina {
  * \pre This class should only be used with \a embedded
  * normal surfaces.
  */
-struct NDiscSpec {
+struct REGINA_API NDiscSpec {
     unsigned long tetIndex;
         /**< The index in the triangulation of the tetrahedron
              containing the disc. */
@@ -135,7 +136,7 @@ struct NDiscSpec {
  * @param spec the disc specifier to write.
  * @return a reference to \a out.
  */
-std::ostream& operator << (std::ostream& out, const NDiscSpec& spec);
+REGINA_API std::ostream& operator << (std::ostream& out, const NDiscSpec& spec);
 
 /**
  * Determines whether or not normal discs of the given type are
@@ -150,7 +151,7 @@ std::ostream& operator << (std::ostream& out, const NDiscSpec& spec);
  * numbered away from the given vertex, or \c false if they are
  * numbered towards the given vertex.
  */
-bool numberDiscsAwayFromVertex(int discType, int vertex);
+REGINA_API bool numberDiscsAwayFromVertex(int discType, int vertex);
 
 /**
  * Determines whether or not the natural boundary orientation of a normal
@@ -169,8 +170,8 @@ bool numberDiscsAwayFromVertex(int discType, int vertex);
  * @param edgeEnd the end vertex of the edge to which the normal arc is
  * parallel.
  */
-bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
-        int edgeEnd);
+REGINA_API bool discOrientationFollowsEdge(int discType, int vertex,
+        int edgeStart, int edgeEnd);
 
 /**
  * Represents a set of normal discs inside a single tetrahedron.
@@ -190,7 +191,7 @@ bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
  * of normal discs of a given type does not fit into an <tt>unsigned
  * long</tt>.  See how this affects NDiscSetTetData also.
  */
-class NDiscSetTet {
+class REGINA_API NDiscSetTet {
     protected:
         unsigned long internalNDiscs[10];
             /**< The number of discs of each type. */
@@ -457,7 +458,7 @@ class NDiscSetTetData : public NDiscSetTet {
  * \pre This class should only be used with \a embedded
  * normal surfaces.
  */
-class NDiscSetSurface {
+class REGINA_API NDiscSetSurface {
     protected:
         NDiscSetTet** discSets;
             /**< The disc sets corresponding to each tetrahedron. */
@@ -642,7 +643,7 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
  * \pre The number of normal discs of a particular type
  * in a particular tetrahedron can be represented by a long integer.
  */
-class NDiscSpecIterator {
+class REGINA_API NDiscSpecIterator {
     protected:
         const NDiscSetSurface* internalDiscSet;
             /**< The disc set through which we are iterating. */

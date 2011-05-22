@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "regina-core.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/nsstandard.h"
 #include "surfaces/nsquad.h"
@@ -47,7 +48,7 @@ namespace regina {
  * non-triangular disc types (e.g., the quadrilateral coordinates of
  * Tollefson).
  */
-struct NNormalSurfaceList::NormalSpec {
+struct REGINA_API NNormalSurfaceList::NormalSpec {
     /**
      * The underlying class for vectors in standard form.
      */
@@ -130,7 +131,7 @@ struct NNormalSurfaceList::NormalSpec {
  * non-triangular disc types (e.g., quad-oct coordinates for almost
  * normal surfaces).
  */
-struct NNormalSurfaceList::AlmostNormalSpec {
+struct REGINA_API NNormalSurfaceList::AlmostNormalSpec {
     /**
      * The underlying class for vectors in standard form.
      */

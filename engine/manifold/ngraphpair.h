@@ -36,6 +36,7 @@
 #define __NGRAPHPAIR_H
 #endif
 
+#include "regina-core.h"
 #include "manifold/nmanifold.h"
 #include "maths/nmatrix2.h"
 
@@ -86,7 +87,7 @@ class NSFSpace;
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class NGraphPair : public NManifold {
+class REGINA_API NGraphPair : public NManifold {
     private:
         NSFSpace* sfs_[2];
             /**< The two bounded Seifert fibred spaces that are joined

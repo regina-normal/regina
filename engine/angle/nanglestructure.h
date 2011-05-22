@@ -35,6 +35,7 @@
 #define __NANGLESTRUCTURE_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "file/nfilepropertyreader.h"
 #include "maths/nrational.h"
@@ -77,7 +78,7 @@ class NXMLAngleStructureReader;
  *
  * \ifacespython Not present.
  */
-class NAngleStructureVector : public NRay {
+class REGINA_API NAngleStructureVector : public NRay {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -103,7 +104,8 @@ class NAngleStructureVector : public NRay {
  *
  * \testpart
  */
-class NAngleStructure : public ShareableObject, public NFilePropertyReader {
+class REGINA_API NAngleStructure :
+        public ShareableObject, public NFilePropertyReader {
     private:
         NAngleStructureVector* vector;
             /**< Stores (indirectly) the individual angles in this angle

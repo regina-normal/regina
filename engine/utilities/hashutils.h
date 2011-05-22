@@ -40,11 +40,11 @@
 #define __HASHUTILS_H
 #endif
 
-#include <regina-config.h>
+#include "regina-core.h"
+#include "regina-config.h"
+#include "utilities/hashset.h"
 
 #include <string>
-
-#include "utilities/hashset.h"
 
 /*! \namespace stdhash
  *  \brief The namespace containing <tt>hash_set</tt>, <tt>hash_map</tt>
@@ -85,7 +85,7 @@ namespace regina {
  * is deprecated, since these classes are not part of the C++ standard.
  * This material is scheduled to be removed from Regina in version 5.0.
  */
-struct HashPointer {
+struct REGINA_API HashPointer {
     /**
      * Returns a hash value for the given pointer.  See the general
      * class notes for further details.
@@ -109,7 +109,7 @@ struct HashPointer {
  * is deprecated, since these classes are not part of the C++ standard.
  * This material is scheduled to be removed from Regina in version 5.0.
  */
-struct HashString {
+struct REGINA_API HashString {
     private:
         static stdhash::hash<const char*> hashFcn;
             /**< The real hash function used to perform calculations. */

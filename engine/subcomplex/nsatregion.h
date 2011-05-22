@@ -36,6 +36,7 @@
 #define __NSATREGION_H
 #endif
 
+#include "regina-core.h"
 #include "subcomplex/nsatblock.h"
 #include <vector>
 
@@ -80,7 +81,7 @@ namespace regina {
  * \ifacespython The data members \a block, \a refVert and \a refHoriz
  * are read-only.
  */
-struct NSatBlockSpec {
+struct REGINA_API NSatBlockSpec {
     NSatBlock* block;
         /**< Details of the saturated block structure. */
     bool refVert;
@@ -161,7 +162,7 @@ struct NSatBlockSpec {
  * with annuli grouped and oriented according to the region boundaries (as
  * opposed to individual block boundaries).
  */
-class NSatRegion : public ShareableObject {
+class REGINA_API NSatRegion : public ShareableObject {
     private:
         typedef std::vector<NSatBlockSpec> BlockSet;
             /**< The data structure used to store the list of

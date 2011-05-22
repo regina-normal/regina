@@ -36,6 +36,7 @@
 #endif
 
 #include <list>
+#include "regina-core.h"
 #include "split/nsignature.h"
 #include "split/nsigisomorphism.h"
 
@@ -102,7 +103,7 @@ typedef void (*UseSignature)(const NSignature&, const NSigIsoList&, void *);
  * function \a use which will be called upon each signature found.
  * @return the total number of non-equivalent signatures that were found.
  */
-unsigned long formSigCensus(unsigned order, UseSignature use,
+REGINA_API unsigned long formSigCensus(unsigned order, UseSignature use,
     void* useArgs = 0);
 
 /**
@@ -112,7 +113,7 @@ unsigned long formSigCensus(unsigned order, UseSignature use,
  *
  * \ifacespython Not present.
  */
-class NSigCensus {
+class REGINA_API NSigCensus {
     private:
         NSignature sig;
             /**< The signature being constructed. */

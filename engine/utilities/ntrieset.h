@@ -35,6 +35,7 @@
 #define __NTRIESET_H
 #endif
 
+#include "regina-core.h"
 #include "utilities/nbitmask.h"
 
 namespace regina {

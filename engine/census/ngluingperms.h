@@ -36,6 +36,7 @@
 #define __NGLUINGPERMS_H
 #endif
 
+#include "regina-core.h"
 #include "census/nfacepairing.h"
 
 namespace regina {
@@ -66,7 +67,7 @@ class NTriangulation;
  *
  * \ifacespython Not present.
  */
-class NGluingPerms {
+class REGINA_API NGluingPerms {
     protected:
         const NFacePairing* pairing;
             /**< The face pairing that this permutation set complements.

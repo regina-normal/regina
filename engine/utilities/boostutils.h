@@ -68,6 +68,8 @@
 #define __BOOSTUTILS_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 /**
@@ -275,7 +277,7 @@ inline T next(T it) {
  * @author This class was taken and modified from the Boost C++ libraries
  * (<tt>http://www.boost.org/</tt>).
  */
-class noncopyable {
+class REGINA_API noncopyable {
     protected:
         /**
          * A constructor which does nothing.

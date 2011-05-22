@@ -44,6 +44,7 @@
 #include <string>
 #include <sstream>
 #include <libxml/parser.h>
+#include "regina-core.h"
 #include "utilities/nbooleans.h"
 
 namespace regina {
@@ -69,7 +70,7 @@ class XMLParser;
  *
  * \ifacespython Not present.
  */
-class XMLPropertyDict : private std::map<std::string, std::string> {
+class REGINA_API XMLPropertyDict : private std::map<std::string, std::string> {
     public:
         /**
          * Create a new map.
@@ -109,7 +110,7 @@ class XMLPropertyDict : private std::map<std::string, std::string> {
  * @author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
  */
-class XMLParserCallback {
+class REGINA_API XMLParserCallback {
     public:
         /**
          * Default destructor that does nothing.
@@ -194,7 +195,7 @@ class XMLParserCallback {
  * @author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
  */
-class XMLParser {
+class REGINA_API XMLParser {
     private:
         XMLParserCallback& _parser_callback;
             /**< Provides the callback routines to use with this parser. */
@@ -295,7 +296,7 @@ class XMLParser {
  * @return the converted string with special characters replaced by
  * XML entities.
  */
-std::string xmlEncodeSpecialChars(const std::string& original);
+REGINA_API std::string xmlEncodeSpecialChars(const std::string& original);
 
 /**
  * Returns the given string encoded so it is suitable for use inside an
@@ -309,7 +310,7 @@ std::string xmlEncodeSpecialChars(const std::string& original);
  * changed.
  * @return the string converted to be usable inside an XML comment.
  */
-std::string xmlEncodeComment(const std::string& comment);
+REGINA_API std::string xmlEncodeComment(const std::string& comment);
 
 /**
  * Returns an XML tag with a single property containing the given value.

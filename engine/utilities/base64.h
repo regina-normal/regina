@@ -56,6 +56,8 @@
 #define __BASE64_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 /**
@@ -77,7 +79,7 @@ namespace regina {
  * library.  The original was written by Simon Josefsson and licensed
  * under the GPL version 2 or later.  See the base64.h notes for details.
  */
-inline size_t base64Length(size_t bytes) {
+inline REGINA_API size_t base64Length(size_t bytes) {
     return (((bytes + 2) / 3) * 4);
 }
 
@@ -100,7 +102,7 @@ inline size_t base64Length(size_t bytes) {
  * library.  The original was written by Simon Josefsson and licensed
  * under the GPL version 2 or later.  See the base64.h notes for details.
  */
-bool isBase64(char ch);
+REGINA_API bool isBase64(char ch);
 
 /**
  * Encodes the given sequence of raw bytes in base64, and writes the
@@ -129,7 +131,8 @@ bool isBase64(char ch);
  * library.  The original was written by Simon Josefsson and licensed
  * under the GPL version 2 or later.  See the base64.h notes for details.
  */
-void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
+REGINA_API void base64Encode(const char* in, size_t inlen, char* out,
+    size_t outlen);
 
 /**
  * Encodes the given sequence of raw bytes in base64, and passes back a
@@ -154,7 +157,7 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
  * library.  The original was written by Simon Josefsson and licensed
  * under the GPL version 2 or later.  See the base64.h notes for details.
  */
-size_t base64Encode(const char* in, size_t inlen, char** out);
+REGINA_API size_t base64Encode(const char* in, size_t inlen, char** out);
 
 /**
  * Decodes the given sequence of base64 characters, and writes the
@@ -189,7 +192,8 @@ size_t base64Encode(const char* in, size_t inlen, char** out);
  * library.  The original was written by Simon Josefsson and licensed
  * under the GPL version 2 or later.  See the base64.h notes for details.
  */
-bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
+REGINA_API bool base64Decode(const char* in, size_t inlen, char* out,
+    size_t* outlen);
 
 /**
  * Decodes the given sequence of base64 characters, and passes back a
@@ -228,7 +232,8 @@ bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
  * library.  The original was written by Simon Josefsson and licensed
  * under the GPL version 2 or later.  See the base64.h notes for details.
  */
-bool base64Decode(const char* in, size_t inlen, char** out, size_t* outlen);
+REGINA_API bool base64Decode(const char* in, size_t inlen, char** out,
+    size_t* outlen);
 
 /*@}*/
 

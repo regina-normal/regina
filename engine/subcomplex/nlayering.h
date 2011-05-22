@@ -35,6 +35,7 @@
 #define __NLAYERING_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nmatrix2.h"
 #include "maths/nperm4.h"
 #include "utilities/boostutils.h"
@@ -105,7 +106,7 @@ class NTetrahedron;
  * how many additional tetrahedra have been layered upon this pair of faces
  * according to the rules above.
  */
-class NLayering : public boost::noncopyable {
+class REGINA_API NLayering : public boost::noncopyable {
     private:
         unsigned long size;
             /**< The number of tetrahedra that have been layered. */

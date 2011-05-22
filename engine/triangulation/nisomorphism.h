@@ -35,6 +35,7 @@
 #define __NISOMORPHISM_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nperm4.h"
 #include "triangulation/ntetface.h"
@@ -82,7 +83,7 @@ class NTriangulation;
  *
  * \todo \feature Composition of isomorphisms.
  */
-class NIsomorphism : public ShareableObject {
+class REGINA_API NIsomorphism : public ShareableObject {
     protected:
         unsigned nTetrahedra;
             /**< The number of tetrahedra in the source triangulation. */
@@ -318,7 +319,7 @@ class NIsomorphism : public ShareableObject {
  *
  * \ifacespython Not present.
  */
-class NIsomorphismDirect : public NIsomorphism {
+class REGINA_API NIsomorphismDirect : public NIsomorphism {
     public:
         /**
          * Creates a new isomorphism with no initialisation.

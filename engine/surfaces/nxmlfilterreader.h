@@ -35,6 +35,7 @@
 #define __NXMLFILTERREADER_H
 #endif
 
+#include "regina-core.h"
 #include "packet/nxmlpacketreader.h"
 #include "surfaces/nsurfacefilter.h"
 
@@ -61,7 +62,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NXMLFilterReader : public NXMLElementReader {
+class REGINA_API NXMLFilterReader : public NXMLElementReader {
     public:
         /**
          * Creates a new filter element reader.
@@ -95,7 +96,7 @@ class NXMLFilterReader : public NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class NXMLFilterPacketReader : public NXMLPacketReader {
+class REGINA_API NXMLFilterPacketReader : public NXMLPacketReader {
     private:
         NSurfaceFilter* filter;
             /**< The surface filter currently being read. */

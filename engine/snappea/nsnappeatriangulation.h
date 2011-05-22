@@ -35,6 +35,7 @@
 #define __NSNAPPEATRIANGULATION_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 
 // Forward declaration of SnapPea structures.
@@ -73,7 +74,7 @@ class NTriangulation;
  *
  * \testpart
  */
-class NSnapPeaTriangulation : public ShareableObject {
+class REGINA_API NSnapPeaTriangulation : public ShareableObject {
     public:
         /**
          * Describes the different types of solution that can be found when

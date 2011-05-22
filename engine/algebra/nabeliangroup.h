@@ -36,6 +36,7 @@
 #endif
 
 #include <set>
+#include "regina-core.h"
 #include "maths/nlargeinteger.h"
 #include "shareableobject.h"
 
@@ -67,7 +68,7 @@ class NMatrixInt;
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
  */
-class NAbelianGroup : public ShareableObject {
+class REGINA_API NAbelianGroup : public ShareableObject {
     protected:
         unsigned rank;
             /**< The rank of the group (the number of Z components). */

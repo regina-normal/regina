@@ -35,6 +35,7 @@
 #define __NFILEINFO_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 
 namespace regina {
@@ -51,7 +52,7 @@ namespace regina {
  * Routine identify() can be used to determine this information for a
  * given file.
  */
-class NFileInfo : public ShareableObject {
+class REGINA_API NFileInfo : public ShareableObject {
     public:
         static const int TYPE_BINARY;
             /**< Represents an old-style binary data file. */

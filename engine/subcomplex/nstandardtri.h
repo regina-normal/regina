@@ -35,6 +35,7 @@
 #define __NSTANDARDTRI_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 
 namespace regina {
@@ -68,7 +69,7 @@ class NTriangulation;
  *
  * \testpart
  */
-class NStandardTriangulation : public ShareableObject {
+class REGINA_API NStandardTriangulation : public ShareableObject {
     public:
         /**
          * A destructor that does nothing.

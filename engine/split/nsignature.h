@@ -35,6 +35,7 @@
 #define __NSIGNATURE_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 
 namespace regina {
@@ -87,7 +88,7 @@ class NTriangulation;
  * <i>Minimal triangulations and normal surfaces</i>, Burton, PhD thesis,
  * available from the Regina website.
  */
-class NSignature : public ShareableObject {
+class REGINA_API NSignature : public ShareableObject {
     private:
         unsigned order;
             /**< The number of quads in this splitting surface. */

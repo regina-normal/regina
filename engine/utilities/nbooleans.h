@@ -36,6 +36,7 @@
 #endif
 
 #include <iostream>
+#include "regina-core.h"
 
 namespace regina {
 
@@ -48,7 +49,7 @@ namespace regina {
  * A three-way extension of the boolean type.
  * Three-way booleans can be true, false or unknown.
  */
-class NTriBool {
+class REGINA_API NTriBool {
     private:
         enum Code { codeTrue = 1, codeFalse = -1, codeUnknown = 0 };
             /**< Internal codes for the three possible values. */
@@ -357,13 +358,13 @@ class NTriBool {
  * @param set the three-way boolean to write.
  * @return a reference to \a out.
  */
-std::ostream& operator << (std::ostream& out, const NTriBool& set);
+REGINA_API std::ostream& operator << (std::ostream& out, const NTriBool& set);
 
 /**
  * An exception thrown when an illegal integer conversion is attempted
  * with NTriBool.
  */
-class NTriBool_Illegal_Integer_Conversion {
+class REGINA_API NTriBool_Illegal_Integer_Conversion {
 };
 
 /**
@@ -371,7 +372,7 @@ class NTriBool_Illegal_Integer_Conversion {
  * NBoolSet objects are small enough to pass about by value instead of
  * by reference.
  */
-class NBoolSet {
+class REGINA_API NBoolSet {
     private:
         unsigned char elements;
             /**< The first two bits of this character represent whether
@@ -658,7 +659,7 @@ class NBoolSet {
  * @param set the boolean set to write.
  * @return a reference to \a out.
  */
-std::ostream& operator << (std::ostream& out, const NBoolSet& set);
+REGINA_API std::ostream& operator << (std::ostream& out, const NBoolSet& set);
 
 /*@}*/
 

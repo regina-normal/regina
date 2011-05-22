@@ -36,6 +36,7 @@
 #define __NCONTAINER_H
 #endif
 
+#include "regina-core.h"
 #include "packet/npacket.h"
 
 namespace regina {
@@ -51,7 +52,7 @@ class NXMLPacketReader;
  * A packet that simply contains other packets.  Such
  * a packet contains no real data.
  */
-class NContainer : public NPacket {
+class REGINA_API NContainer : public NPacket {
     public:
         static const int packetType;
 

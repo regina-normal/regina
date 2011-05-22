@@ -36,6 +36,7 @@
 #define __NGRAPHTRIPLE_H
 #endif
 
+#include "regina-core.h"
 #include "manifold/nmanifold.h"
 #include "maths/nmatrix2.h"
 
@@ -136,7 +137,7 @@ class NSFSpace;
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class NGraphTriple : public NManifold {
+class REGINA_API NGraphTriple : public NManifold {
     private:
         NSFSpace* end_[2];
             /**< The two end spaces, i.e., the Seifert fibred spaces
