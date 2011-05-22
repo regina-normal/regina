@@ -88,6 +88,10 @@
 #endif
 #define REGINA_LOCAL REGINA_HELPER_DLL_LOCAL
 
+#else // doxygen
+  // If doxygen is reading this, just make these macros go away.
+  #define REGINA_API
+  #define REGINA_LOCAL
 #endif // doxygen
 
 #endif
