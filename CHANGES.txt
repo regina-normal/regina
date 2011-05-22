@@ -69,6 +69,9 @@ Version 4.6.1  [ (under development) ]
             - New routine applyInPlace() to directly modify a triangulation.
             - Routine apply() now copies tetrahedron descriptions as
               well as gluings (and so does the new routine applyInPlace()).
+        Class NLayeredSurfaceBundle:
+            - In isLayeredTorusBundle(), extend the search for possible
+              cores to 11 and 12 tetrahedra.
         Class NLargeInteger:
             - New routines randomBoundedByThis(), randomBinary() and
               randomCornerBinary() for pseudo-random number generation.
