@@ -35,6 +35,7 @@
 #define __NXMLHYPERSURFACEREADER_H
 #endif
 
+#include "regina-core.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "packet/nxmlpacketreader.h"
 
@@ -51,7 +52,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NXMLNormalHypersurfaceReader : public NXMLElementReader {
+class REGINA_API NXMLNormalHypersurfaceReader : public NXMLElementReader {
     private:
         NNormalHypersurface* surface_;
             /**< The normal hypersurface currently being read. */
@@ -99,7 +100,7 @@ class NXMLNormalHypersurfaceReader : public NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class NXMLNormalHypersurfaceListReader : public NXMLPacketReader {
+class REGINA_API NXMLNormalHypersurfaceListReader : public NXMLPacketReader {
     private:
         NNormalHypersurfaceList* list_;
             /**< The normal hypersurface list currently being read. */

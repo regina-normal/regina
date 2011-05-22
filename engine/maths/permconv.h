@@ -35,6 +35,7 @@
 #define __PERMCONV_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nperm3.h"
 #include "maths/nperm4.h"
 #include "maths/nperm5.h"
@@ -55,7 +56,7 @@ namespace regina {
  * @return the permutation \a p expressed as a permutation of five
  * elements, not four.
  */
-NPerm5 perm4to5(const NPerm4& p);
+REGINA_API NPerm5 perm4to5(const NPerm4& p);
 
 /**
  * Expresses the given 5-element permutation as a 4-element permutation.
@@ -69,7 +70,7 @@ NPerm5 perm4to5(const NPerm4& p);
  * @return the permutation \a p expressed as a permutation of four
  * elements, not five.
  */
-NPerm4 perm5to4(const NPerm5& p);
+REGINA_API NPerm4 perm5to4(const NPerm5& p);
 
 /*@}*/
 

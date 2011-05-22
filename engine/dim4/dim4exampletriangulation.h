@@ -36,6 +36,8 @@
 #define __DIM4EXAMPLETRIANGULATION_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 class Dim4Triangulation;
@@ -65,7 +67,7 @@ class NTriangulation;
  * scratch.  It is up to the caller of each routine to destroy the
  * triangulation that is returned.
  */
-class Dim4ExampleTriangulation {
+class REGINA_API Dim4ExampleTriangulation {
     public:
         /**
          * \name Closed Triangulations

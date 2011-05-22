@@ -41,6 +41,7 @@
 #include <cstdlib>
 #include <list>
 
+#include "regina-core.h"
 #include "maths/nlargeinteger.h"
 #include "utilities/ptrutils.h"
 
@@ -252,28 +253,28 @@ class NSVPolynomialRing {
  * Groebner Basis for Ideals in Laurent Polynomial Rings and their Application to Systems of Difference
  * Equations.  AAECC 9, 271--291 (1999). 
  */
-void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly=true );
+REGINA_API void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly=true );
 /**
  * Given an element elt of NSVPolynomialRing, this algorithm checks to see if it reduces to 0 by taking remainders
  * via division by elements of ideal.   laurentPoly allows one to assume in Laurent polynomial ring. Set it to false
  * if you want to be in Z[t]. 
  */
-bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal, NSVPolynomialRing< NLargeInteger > &elt,
+REGINA_API bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal, NSVPolynomialRing< NLargeInteger > &elt,
                     bool laurentPoly=true );
 /**
  *  Some kind of ordering < on ideals.  Useful? 
  */
-bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NSVPolynomialRing< NLargeInteger > &second);
+REGINA_API bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first, const NSVPolynomialRing< NLargeInteger > &second);
 /**
  *  Check if idealA is contained in idealB. Assumes you've run them through reduceIdeal -- that they have 
  * their Groebner basis. 
  */
-bool isSubIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &idealA,  const std::list< NSVPolynomialRing< NLargeInteger > > &idealB );
+REGINA_API bool isSubIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &idealA,  const std::list< NSVPolynomialRing< NLargeInteger > > &idealB );
 
 /**
  *  Checks to see if elements of the ideal can be expressed in terms of others, if so erases them. 
  */
-void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &ideal );
+REGINA_API void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &ideal );
 
 /**
  *  Computes the GCD of elements in input, output is a vector such that the sum
@@ -281,7 +282,7 @@ void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &idea
  *  of input.  Sum over i, input[i]*outputN[i] == 0 (for a non-trivial outputN)
  *  Assumes input.size()>=1. If input.size()==1, outputN will be zero. 
  */
-NLargeInteger gcd( const std::vector< NLargeInteger > &input,
+REGINA_API NLargeInteger gcd( const std::vector< NLargeInteger > &input,
  std::vector< NLargeInteger > &outputG, std::vector< NLargeInteger > &outputN );
 
 /*@}*/

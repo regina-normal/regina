@@ -36,6 +36,7 @@
 #define __DIM4CENSUS_H
 #endif
 
+#include "regina-core.h"
 #include "census/dim4facetpairing.h"
 #include "utilities/nbooleans.h"
 
@@ -59,7 +60,7 @@ class NProgressMessage;
  *
  * \testpart
  */
-class Dim4Census {
+class REGINA_API Dim4Census {
     public:
         /**
          * A routine used to determine whether a particular 4-manifold

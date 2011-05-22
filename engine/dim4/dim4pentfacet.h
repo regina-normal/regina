@@ -36,6 +36,8 @@
 #define __DIM4PENTFACET_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 /**
@@ -62,7 +64,7 @@ namespace regina {
  * as pentachoron \a n, facet 1, and the before-the-start value will be
  * represented as pentachoron -1, facet 4.
  */
-struct Dim4PentFacet {
+struct REGINA_API Dim4PentFacet {
     int pent;
         /**< The pentachoron referred to.  Pentachoron numbering begins at 0. */
     int facet;

@@ -35,6 +35,7 @@
 #define __DIM4ISOMORPHISM_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "dim4/dim4pentfacet.h"
 #include "maths/nperm5.h"
@@ -78,7 +79,7 @@ class Dim4Triangulation;
  * Note that in all cases triangulation U may contain more pentachora
  * than triangulation T.
  */
-class Dim4Isomorphism : public ShareableObject {
+class REGINA_API Dim4Isomorphism : public ShareableObject {
     protected:
         unsigned nPentachora_;
             /**< The number of pentachora in the source triangulation. */

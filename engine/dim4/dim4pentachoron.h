@@ -35,6 +35,7 @@
 #define __DIM4PENTACHORON_H
 #endif
 
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nperm5.h"
 #include "utilities/nmarkedvector.h"
@@ -76,7 +77,8 @@ class Dim4Component;
  * of the five tetrahedra that forms the boundary of a pentachoron (hence
  * the name \e facet).
  */
-class Dim4Pentachoron : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Pentachoron :
+        public ShareableObject, public NMarkedElement {
     private:
         Dim4Pentachoron* adj_[5];
             /**< Stores the adjacent pentachora glued to each facet of this

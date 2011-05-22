@@ -36,6 +36,7 @@
 #endif
 
 #include <vector>
+#include "regina-core.h"
 #include "dim4/dim4pentachoron.h"
 
 namespace regina {
@@ -52,7 +53,7 @@ class Dim4BoundaryComponent;
  * Details how an edge in the skeleton of a 4-manifold triangulation forms
  * part of an individual pentachoron.
  */
-class Dim4EdgeEmbedding {
+class REGINA_API Dim4EdgeEmbedding {
     private:
         Dim4Pentachoron* pent_;
             /**< The pentachoron in which this edge is contained. */
@@ -127,7 +128,7 @@ class Dim4EdgeEmbedding {
  * Edges are highly temporary; once a triangulation changes, all its
  * edge objects will be deleted and new ones will be created.
  */
-class Dim4Edge : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
     public:
         /**
          * A table that maps vertices of a pentachoron to edge numbers.

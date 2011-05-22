@@ -40,6 +40,7 @@
 #endif
 
 #include <string>
+#include "regina-core.h"
 #include "maths/nperm5.h"
 
 //#include <iostream>
@@ -57,7 +58,7 @@ namespace regina {
  *
  * @author Ryan Budney
  */
-class NBinaryA5 {
+class REGINA_API NBinaryA5 {
     private:
         /**
          * The internal code representing this permutation. At present this
@@ -302,7 +303,8 @@ class NBinaryA5 {
  * @param p the permutation to write.
  * @return a reference to \a out.
  */
-inline std::ostream& operator << (std::ostream& out, const NBinaryA5& p) {
+inline REGINA_API std::ostream& operator << (std::ostream& out,
+        const NBinaryA5& p) {
     return (out << p.toString());
 }
 

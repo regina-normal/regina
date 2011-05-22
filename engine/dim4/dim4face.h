@@ -36,6 +36,7 @@
 #endif
 
 #include <deque>
+#include "regina-core.h"
 #include "dim4/dim4pentachoron.h"
 
 namespace regina {
@@ -52,7 +53,7 @@ class Dim4BoundaryComponent;
  * Details how a face in the skeleton of a 4-manifold triangulation forms
  * part of an individual pentachoron.
  */
-class Dim4FaceEmbedding {
+class REGINA_API Dim4FaceEmbedding {
     private:
         Dim4Pentachoron* pent_;
             /**< The pentachoron in which this face is contained. */
@@ -125,7 +126,7 @@ class Dim4FaceEmbedding {
  * Faces are highly temporary; once a triangulation changes, all its
  * face objects will be deleted and new ones will be created.
  */
-class Dim4Face : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Face : public ShareableObject, public NMarkedElement {
     public:
         /**
          * A table that maps vertices of a pentachoron to face numbers.

@@ -36,6 +36,7 @@
 #define __DIM4GLUINGPERMSEARCHER_H
 #endif
 
+#include "regina-core.h"
 #include "census/dim4gluingperms.h"
 #include "maths/nperm3.h"
 
@@ -98,7 +99,7 @@ typedef void (*UseDim4GluingPerms)(const Dim4GluingPermSearcher*, void*);
  *
  * \ifacespython Not present.
  */
-class Dim4GluingPermSearcher : public Dim4GluingPerms {
+class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
     protected:
         static const int edgeLinkNextFacet[10][5];
             /**< Maintains an ordering of the three pentachoron facets

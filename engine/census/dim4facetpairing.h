@@ -38,6 +38,7 @@
 
 #include <iostream>
 #include <list>
+#include "regina-core.h"
 #include "dim4/dim4isomorphism.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nthread.h"
@@ -97,7 +98,7 @@ typedef void (*UseDim4FacetPairing)(const Dim4FacetPairing*,
  * \todo Make both Dim4FacetPairing and NFacePairing derive from a
  * parent template class.
  */
-class Dim4FacetPairing : public NThread {
+class REGINA_API Dim4FacetPairing : public NThread {
     private:
         unsigned nPentachora_;
             /**< The number of pentachora under consideration. */

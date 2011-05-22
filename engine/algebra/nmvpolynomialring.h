@@ -40,6 +40,7 @@
 #include <cstdlib>
 #include <list>
 
+#include "regina-core.h"
 #include "maths/nsparsegrid.h"
 #include "maths/nlargeinteger.h"
 #include "algebra/nsvpolynomialring.h"
@@ -224,33 +225,33 @@ class NMVPolynomialRing {
  * Given a polynomial like x^5-x^4 the bias is towards presenting it as
  * 1-x, but setting plusBias=false would give you x^{-1}-1
  */
-void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, bool plusBias=true );
+REGINA_API void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, bool plusBias=true );
 
 /**
  * Produces a Groebner basis for the ideal.  Set laurentPoly=false to work in Z[t] rather than Z[t^\pm]
  */ // TODO
-void reduceIdeal( std::list< NMVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly=true );
+REGINA_API void reduceIdeal( std::list< NMVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly=true );
 /**
  * Given an element elt of NMVPolynomialRing, this algorithm checks to see if it reduces to 0 by taking remainders
  * via division by elements of ideal.   laurentPoly allows one to assume in Laurent polynomial ring. Set it to false
  * if you want to be in Z[t]. 
  */ // TODO
-bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, NMVPolynomialRing< NLargeInteger > &elt,
+REGINA_API bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, NMVPolynomialRing< NLargeInteger > &elt,
                     bool laurentPoly=true );
 /**
  *  Some kind of ordering < on ideals.  Useful? 
  */
-bool MV_polynomial_comparison( const NMVPolynomialRing< NLargeInteger > &first, const NMVPolynomialRing< NLargeInteger > &second);
+REGINA_API bool MV_polynomial_comparison( const NMVPolynomialRing< NLargeInteger > &first, const NMVPolynomialRing< NLargeInteger > &second);
 /**
  *  Check if idealA is contained in idealB. Assumes you've run them through reduceIdeal -- that they have 
  * their Groebner basis. 
  */ // TODO
-bool isSubIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &idealA,  const std::list< NMVPolynomialRing< NLargeInteger > > &idealB );
+REGINA_API bool isSubIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &idealA,  const std::list< NMVPolynomialRing< NLargeInteger > > &idealB );
 
 /** // TODO
  *  Checks to see if elements of the ideal can be expressed in terms of others, if so erases them. 
  */
-void elementaryReductions( std::list< NMVPolynomialRing< NLargeInteger > > &ideal );
+REGINA_API void elementaryReductions( std::list< NMVPolynomialRing< NLargeInteger > > &ideal );
 
 
 /*@}*/

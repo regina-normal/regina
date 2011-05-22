@@ -34,6 +34,7 @@
 #define __NCELLULARDATA_H
 #endif
 
+#include "regina-core.h"
 #include "triangulation/ntriangulation.h"
 #include "dim4/dim4triangulation.h"
 
@@ -141,7 +142,7 @@ class Dim4Triangulation;
  *
  * @author Ryan Budney
  */
-class NCellularData : public ShareableObject {
+class REGINA_API NCellularData : public ShareableObject {
 public:
 
  /**

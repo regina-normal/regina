@@ -36,6 +36,7 @@
 #define __DIM4TETRAHEDRON_H
 #endif
 
+#include "regina-core.h"
 #include "dim4/dim4pentachoron.h"
 
 namespace regina {
@@ -52,7 +53,7 @@ class Dim4BoundaryComponent;
  * Details how a tetrahedron in the 3-skeleton of a 4-manifold triangulation
  * forms part of an individual pentachoron.
  */
-class Dim4TetrahedronEmbedding {
+class REGINA_API Dim4TetrahedronEmbedding {
     private:
         Dim4Pentachoron* pent_;
             /**< The pentachoron in which this tetrahedron is contained. */
@@ -126,7 +127,8 @@ class Dim4TetrahedronEmbedding {
  * Tetrahedra are highly temporary; once a triangulation changes, all its
  * tetrahedron objects will be deleted and new ones will be created.
  */
-class Dim4Tetrahedron : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Tetrahedron :
+        public ShareableObject, public NMarkedElement {
     public:
         /**
          * An array that maps tetrahedron numbers within a pentachoron

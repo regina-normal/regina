@@ -36,6 +36,7 @@
 #define __NHSSTANDARD_H
 #endif
 
+#include "regina-core.h"
 #include "hypersurface/nnormalhypersurface.h"
 
 namespace regina {
@@ -61,7 +62,8 @@ class NMatrixInt;
  *
  * \ifacespython Not present.
  */
-class NNormalHypersurfaceVectorStandard : public NNormalHypersurfaceVector {
+class REGINA_API NNormalHypersurfaceVectorStandard :
+        public NNormalHypersurfaceVector {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to

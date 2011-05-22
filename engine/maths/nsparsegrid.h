@@ -41,6 +41,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include "regina-core.h"
 #include "utilities/ptrutils.h"
 
 namespace regina {

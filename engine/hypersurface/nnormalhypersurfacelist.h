@@ -40,6 +40,7 @@
 #include <iostream>
 #include <iterator>
 #include <vector>
+#include "regina-core.h"
 #include "hypersurface/nnormalhypersurface.h"
 #include "packet/npacket.h"
 #include "utilities/memutils.h"
@@ -71,7 +72,7 @@ class NXMLPacketReader;
  *
  * Normal hypersurface lists should be created using the routine enumerate().
  */
-class NNormalHypersurfaceList : public NPacket {
+class REGINA_API NNormalHypersurfaceList : public NPacket {
     public:
         static const int packetType;
 
@@ -401,7 +402,7 @@ class NNormalHypersurfaceList : public NPacket {
  * constants in NNormalHypersurfaceList.
  * @return a new zero vector of the correct class and length.
  */
-NNormalHypersurfaceVector* makeZeroVector(
+REGINA_API NNormalHypersurfaceVector* makeZeroVector(
     const Dim4Triangulation* triangulation, int flavour);
 /**
  * Creates a new set of normal hypersurface matching equations for the
@@ -420,7 +421,7 @@ NNormalHypersurfaceVector* makeZeroVector(
  * constants in NNormalHypersurfaceList.
  * @return a newly allocated set of matching equations.
  */
-NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
+REGINA_API NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
     int flavour);
 
 /*@}*/

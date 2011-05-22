@@ -37,6 +37,7 @@
 #endif
 
 //#include <string>
+#include "regina-core.h"
 #include "maths/nsparsegrid.h"
 #include "shareableobject.h"
 #include "maths/nlargeinteger.h"
@@ -71,7 +72,7 @@ namespace regina {
  *
  * @author Ryan Budney
  */
-class NBilinearForm : public ShareableObject {
+class REGINA_API NBilinearForm : public ShareableObject {
     private:
 	/**
 	 * Stores the pairing in SNF coordinates for all 3 groups. 
@@ -268,7 +269,7 @@ class NBilinearForm : public ShareableObject {
  * The routine also outputs linkingFormPD, which is the restriction of the torsion linking form to the subgroups of A
  * divisible by all the prime factors of the order of A. 
  */
-void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
+REGINA_API void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
 	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, // almost same except this counts
         std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,// this lists 
         std::vector<unsigned long> &ttVec, 
@@ -279,7 +280,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
  * Function takes as input the output of computeTorsionLinkingFormInvariants, and returns various text
  * human-readable strings that interpret the result.
  */
-void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec,
+REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec,
         const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
         const std::vector<unsigned long> &ttVec, 
         const std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
@@ -292,13 +293,13 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< 
 
 /*@}*/
 
-inline const NSparseGridRing< NLargeInteger >* NBilinearForm::reducedSparseGrid() const
+inline REGINA_API const NSparseGridRing< NLargeInteger >* NBilinearForm::reducedSparseGrid() const
 { return reducedPairing; }
-inline const NMarkedAbelianGroup& NBilinearForm::ldomain() const
+inline REGINA_API const NMarkedAbelianGroup& NBilinearForm::ldomain() const
 { return lDomain; }
-inline const NMarkedAbelianGroup& NBilinearForm::rdomain() const
+inline REGINA_API const NMarkedAbelianGroup& NBilinearForm::rdomain() const
 { return rDomain; }
-inline const NMarkedAbelianGroup& NBilinearForm::range() const
+inline REGINA_API const NMarkedAbelianGroup& NBilinearForm::range() const
 { return Range; }
 
 

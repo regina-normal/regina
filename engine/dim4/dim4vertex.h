@@ -36,6 +36,7 @@
 #endif
 
 #include <vector>
+#include "regina-core.h"
 #include "dim4/dim4pentachoron.h"
 
 namespace regina {
@@ -53,7 +54,7 @@ class NTriangulation;
  * Details how a vertex in the skeleton of a 4-manifold triangulation forms
  * part of an individual pentachoron.
  */
-class Dim4VertexEmbedding {
+class REGINA_API Dim4VertexEmbedding {
     private:
         Dim4Pentachoron* pent_;
             /**< The pentachoron in which this vertex is contained. */
@@ -128,7 +129,7 @@ class Dim4VertexEmbedding {
  * Vertices are highly temporary; once a triangulation changes, all its
  * vertex objects will be deleted and new ones will be created.
  */
-class Dim4Vertex : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Vertex : public ShareableObject, public NMarkedElement {
     private:
         std::vector<Dim4VertexEmbedding> emb_;
             /**< A list of descriptors telling how this vertex forms a part of

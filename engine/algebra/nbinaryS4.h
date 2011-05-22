@@ -40,6 +40,7 @@
 #endif
 
 #include <string>
+#include "regina-core.h"
 #include "maths/nperm4.h"
 //#include "maths/nperm5.h"
 
@@ -58,7 +59,7 @@ namespace regina {
  *
  * @author Ryan Budney
  */
-class NBinaryS4 {
+class REGINA_API NBinaryS4 {
     private:
         /**
          * The internal code representing this permutation. At present the first
@@ -298,7 +299,8 @@ class NBinaryS4 {
  * @param p the permutation to write.
  * @return a reference to \a out.
  */
-inline std::ostream& operator << (std::ostream& out, const NBinaryS4& p) {
+inline REGINA_API std::ostream& operator << (std::ostream& out,
+        const NBinaryS4& p) {
     return (out << p.toString());
 }
 

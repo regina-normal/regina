@@ -37,6 +37,7 @@
 #endif
 
 #include <utility>
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nperm5.h"
 #include "maths/nray.h"
@@ -111,7 +112,7 @@ class NXMLNormalHypersurfaceReader;
  *
  * \ifacespython Not present.
  */
-class NNormalHypersurfaceVector : public NRay {
+class REGINA_API NNormalHypersurfaceVector : public NRay {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -306,7 +307,7 @@ class NNormalHypersurfaceVector : public NRay {
  * are allowed; in these cases, the corresponding coordinate lookup routines
  * will return NLargeInteger::infinity where appropriate.
  */
-class NNormalHypersurface : public ShareableObject {
+class REGINA_API NNormalHypersurface : public ShareableObject {
     protected:
         NNormalHypersurfaceVector* vector_;
             /**< Contains the coordinates of the normal hypersurface in

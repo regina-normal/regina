@@ -38,6 +38,7 @@
 
 #include <sstream>
 
+#include "regina-core.h"
 #include "utilities/nbitmask.h"
 #include <ostream>
 
@@ -53,7 +54,7 @@ namespace regina {
  * You can use it to iterate through all subsets of this set, or all
  * subsets of a fixed size. 
  */
-class NPartition {
+class REGINA_API NPartition {
         NBitmask part;
         unsigned long setSize;
         unsigned long subSetSize;

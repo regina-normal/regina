@@ -38,6 +38,7 @@
 #include <algorithm>
 #include <list>
 #include <vector>
+#include "regina-core.h"
 #include "utilities/memutils.h"
 #include "algebra/ngrouppresentation.h"
 #include "shareableobject.h"
@@ -60,7 +61,7 @@ class NGroupPresentation;
  * \todo add routine to attempt to verify validity of homomorphism. Will need to add a routine to
  *       NGroupPresentation to attempt to solve word problem.
  */
-class NHomGroupPresentation : public ShareableObject {
+class REGINA_API NHomGroupPresentation : public ShareableObject {
     private:
 	NGroupPresentation domain, range; 
 	std::vector< NGroupExpression* > map;

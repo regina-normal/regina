@@ -36,6 +36,7 @@
  */
 
 #include <vector>
+#include "regina-core.h"
 #include "dim4/dim4vertex.h"
 
 namespace regina {
@@ -78,7 +79,8 @@ class NTriangulation;
  * changes, all its boundary component objects will be deleted and new
  * ones will be created.
  */
-class Dim4BoundaryComponent : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4BoundaryComponent :
+        public ShareableObject, public NMarkedElement {
     private:
         std::vector<Dim4Tetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the component. */

@@ -36,6 +36,7 @@
 #define __DIM4GLUINGPERMS_H
 #endif
 
+#include "regina-core.h"
 #include "census/dim4facetpairing.h"
 #include "maths/permconv.h"
 
@@ -67,7 +68,7 @@ class Dim4Triangulation;
  *
  * \ifacespython Not present.
  */
-class Dim4GluingPerms {
+class REGINA_API Dim4GluingPerms {
     protected:
         const Dim4FacetPairing* pairing_;
             /**< The facet pairing that this permutation set complements.

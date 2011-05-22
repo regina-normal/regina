@@ -38,6 +38,7 @@
 #include <list>
 #include <memory>
 #include <vector>
+#include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "dim4/dim4pentachoron.h"
@@ -88,7 +89,7 @@ class NXMLPacketReader;
  * properties will be recalculated when necessary.  It is not necessary
  * to call this function when adding or removing pentachora.
  */
-class Dim4Triangulation : public NPacket {
+class REGINA_API Dim4Triangulation : public NPacket {
     public:
         static const int packetType;
 

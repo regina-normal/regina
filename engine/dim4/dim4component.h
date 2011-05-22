@@ -36,6 +36,7 @@
  */
 
 #include <vector>
+#include "regina-core.h"
 #include "shareableobject.h"
 #include "utilities/nmarkedvector.h"
 
@@ -58,7 +59,7 @@ class Dim4BoundaryComponent;
  * Components are highly temporary; once a triangulation changes, all
  * its component objects will be deleted and new ones will be created.
  */
-class Dim4Component : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
     private:
         std::vector<Dim4Pentachoron*> pentachora_;
             /**< List of pentachora in the component. */

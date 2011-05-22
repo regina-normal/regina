@@ -36,6 +36,7 @@
 #define __NHSMIRRORED_H
 #endif
 
+#include "regina-core.h"
 #include "hypersurface/nnormalhypersurface.h"
 
 namespace regina {
@@ -77,7 +78,8 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NNormalHypersurfaceVectorMirrored : public NNormalHypersurfaceVector {
+class REGINA_API NNormalHypersurfaceVectorMirrored :
+        public NNormalHypersurfaceVector {
     private:
         NNormalHypersurfaceVector* mirror_;
             /**< The mirror vector. */

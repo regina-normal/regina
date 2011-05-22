@@ -35,6 +35,7 @@
 #define __NXMLDIM4TRIREADER_H
 #endif
 
+#include "regina-core.h"
 #include "packet/nxmlpacketreader.h"
 #include "dim4/dim4triangulation.h"
 
@@ -50,7 +51,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NXMLDim4TriangulationReader : public NXMLPacketReader {
+class REGINA_API NXMLDim4TriangulationReader : public NXMLPacketReader {
     private:
         Dim4Triangulation* tri_;
             /**< The triangulation currently being read. */
