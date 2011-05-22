@@ -78,13 +78,7 @@ void FlatToolButton::drawButton(QPainter* p) {
         p->translate(style()->pixelMetric(QStyle::PM_ButtonShiftHorizontal),
             style()->pixelMetric(QStyle::PM_ButtonShiftVertical));
     QRect br(1, 1, width() - 2, height() - 2);
-
-    // Draw the internal pixmap.
-    if (pixmap() && !pixmap()->isNull()) {
-        int dx = (br.width() - pixmap()->width()) / 2;
-        int dy = (br.height() - pixmap()->height()) / 2;
-
-        p->drawPixmap(br.x() + dx, br.y() + dy, *pixmap());
-    }
+    QSize sz = iconSize();
+    setIconSize(sz-QSize(2,2));
 }
 

@@ -50,8 +50,11 @@ class REvent : public QEvent {
          */
         PacketTreeItem* item;
 
+        QEvent::Type type;
+
 
     public:
+        REvent(QEvent::Type, PacketTreeItem*);
         PacketTreeItem* getItem();
 
 };
@@ -59,6 +62,10 @@ class REvent : public QEvent {
 
 inline PacketTreeItem* REvent::getItem() {
     return item;
+}
+
+inline REvent::REvent(QEvent::Type newType, PacketTreeItem* data) : QEvent(newType) {
+  item = data;
 }
 
 #endif

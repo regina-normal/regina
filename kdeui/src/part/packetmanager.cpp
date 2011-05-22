@@ -193,28 +193,28 @@ void PacketManager::initLock() {
     // with buggy default themes (cough, Fedora, SuSE, cough).
     lockSmall = loader->loadIcon(lockName, KIconLoader::Small, 0,
         KIconLoader::DefaultState, QStringList(), 
-        0L, true /* null if not found */);
+        0L, true /* null if not found */).toImage();
     if (lockSmall.isNull()) {
         lockSmall = loader->loadIcon("lock_overlay", KIconLoader::Small, 0,
             KIconLoader::DefaultState, QStringList(),
-            0L, true /* null if not found */);
+            0L, true /* null if not found */).toImage();
         if (lockSmall.isNull())
             lockSmall = loader->loadIcon("lockoverlay", KIconLoader::Small, 0,
                 KIconLoader::DefaultState, QStringList(),
-                0L, true /* null if not found */);
+                0L, true /* null if not found */).toImage();
     }
 
     lockBar = loader->loadIcon(lockName, KIconLoader::Toolbar, 0,
         KIconLoader::DefaultState, QStringList(), 
-        0L, true /* null if not found */);
+        0L, true /* null if not found */).toImage();
     if (lockBar.isNull()) {
         lockBar = loader->loadIcon("lock_overlay", KIconLoader::Toolbar, 0,
             KIconLoader::DefaultState, QStringList(),
-            0L, true /* null if not found */);
+            0L, true /* null if not found */).toImage();
         if (lockBar.isNull())
             lockBar = loader->loadIcon("lockoverlay", KIconLoader::Toolbar, 0,
                 KIconLoader::DefaultState, QStringList(), 
-                0L, true /* null if not found */);
+                0L, true /* null if not found */).toImage();
     }
 
     lockInitialised = true;
@@ -228,7 +228,7 @@ bool PacketManager::overlayLock(QPixmap& icon, QImage& lock) {
     if (icon.isNull() || lock.isNull())
         return false;
 
-    QImage iconImg = icon.convertToImage();
+    QImage iconImg = icon.toImage();
     if (iconImg.isNull())
         return false;
 

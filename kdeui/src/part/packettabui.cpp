@@ -85,7 +85,7 @@ void PacketTabbedUI::addTab(PacketViewerTab* viewer, const QString& label) {
     else
         viewer->queuedAction = PacketViewerTab::Refresh;
 
-    viewer->getInterface()->reparent(tabs, QPoint(0, 0));
+    viewer->getInterface()->setParent(tabs); // TODO: Is this needed?
     tabs->addTab(viewer->getInterface(), label);
 }
 
@@ -98,7 +98,7 @@ void PacketTabbedUI::addTab(PacketEditorTab* editor, const QString& label) {
     editorTab = editor;
     viewerTabs.push_back(0);
 
-    editor->getInterface()->reparent(tabs, QPoint(0, 0));
+    editor->getInterface()->setParent(tabs); // TODO: Is this needed?
     tabs->addTab(editor->getInterface(), label);
 }
 
@@ -108,7 +108,7 @@ void PacketTabbedUI::addHeader(PacketViewerTab* viewer) {
 
     // Add the header.
     header = viewer;
-    viewer->getInterface()->reparent(ui, QPoint(0, 0));
+    viewer->getInterface()->setParent(ui); // TODO: Is this needed?
     layout->insertWidget(0, viewer->getInterface(), 0);
 }
 
@@ -260,13 +260,13 @@ PacketTabbedViewerTab::~PacketTabbedViewerTab() {
 void PacketTabbedViewerTab::addTab(PacketViewerTab* viewer,
         const QString& label) {
     viewerTabs.push_back(viewer);
-    viewer->getInterface()->reparent(tabs, QPoint(0, 0));
+    viewer->getInterface()->setParent(tabs); // TODO: Is this needed?
     tabs->addTab(viewer->getInterface(), label);
 }
 
 void PacketTabbedViewerTab::addHeader(PacketViewerTab* viewer) {
     header = viewer;
-    viewer->getInterface()->reparent(ui, QPoint(0, 0));
+    viewer->getInterface()->setParent(ui); // TODO: Is this needed?
     layout->insertWidget(0, viewer->getInterface(), 0);
 }
 

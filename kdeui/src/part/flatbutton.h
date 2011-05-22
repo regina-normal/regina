@@ -63,7 +63,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __FLATBUTTON_H
 #define __FLATBUTTON_H
 
-#include <qtoolbutton.h>
+#include <QToolButton>
 
 /**
  * A toolbar button with a neat thin border.

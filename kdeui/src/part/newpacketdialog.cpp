@@ -53,32 +53,34 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
 
     QWidget* page = new QWidget(this);
     setMainWidget(page);
-    QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
+    QVBoxLayout* layout = new QVBoxLayout(page);//, 0, spacingHint());
 
     KHBox* parentStrip = new KHBox(page);
     parentStrip->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(parentStrip);
     QString expln = i18n("Specifies where in the packet tree the new "
         "packet will be placed.");
-    QWhatsThis::add(new QLabel(i18n("Create beneath:"), parentStrip), expln);
+    QLabel* createBeneath = new QLabel(i18n("Create beneath:"),parentStrip);
+    createBeneath->setWhatsThis(expln);
     chooser = new PacketChooser(tree, useFilter, false, defaultParent,
         parentStrip);
-    QWhatsThis::add(chooser, expln);
+    chooser->setWhatsThis(expln);
     parentStrip->setStretchFactor(chooser, 1);
 
     KHBox* labelStrip = new KHBox(page);
     labelStrip->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(labelStrip);
     expln = i18n("The label that will be assigned to the new packet.");
-    QWhatsThis::add(new QLabel(i18n("Label:"), labelStrip), expln);
+    QLabel* newlabel = new QLabel(i18n("Label:"),labelStrip);
+    newlabel->setWhatsThis(expln);
     label = new QLineEdit(
-        tree->makeUniqueLabel(suggestedLabel.ascii()).c_str(), labelStrip);
-    QWhatsThis::add(label, expln);
+        tree->makeUniqueLabel(suggestedLabel.toLatin1().constData()).c_str(), labelStrip);
+    label->setWhatsThis(expln);
     labelStrip->setStretchFactor(label, 1);
 
     QWidget* mainUI = creator->getInterface();
     if (mainUI) {
-        mainUI->reparent(page, QPoint(0, 0));
+        mainUI->setParent(page); //TODO: correct replacement of reparent?
         layout->addWidget(mainUI);
         layout->setStretchFactor(mainUI, 1);
     } else {
@@ -119,7 +121,7 @@ void NewPacketDialog::slotOk() {
     }
 
     // Check the label.
-    QString useLabel = label->text().stripWhiteSpace();
+    QString useLabel = label->text().simplified();
     if (useLabel.isEmpty()) {
         KMessageBox::error(this, i18n("The packet label cannot be empty."));
         return;

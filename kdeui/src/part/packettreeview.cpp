@@ -228,7 +228,7 @@ void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
 
 void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
     // Be careful.  We might not be in the GUI thread.
-    QApplication::postEvent(tree, new QCustomEvent(
+    QApplication::postEvent(tree, new REvent(
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), this));
 }
 
@@ -299,10 +299,10 @@ void PacketTreeView::packetView(QTreeWidgetItem* packet) {
 void PacketTreeView::refresh(NPacket* topPacket) {
     if (invisibleRootItem()->childCount() != 1)
         fill(topPacket);
-    else if (((PacketTreeItem*)child(0))->getPacket() != topPacket)
+    else if (((PacketTreeItem*)invisibleRootItem()->child(0))->getPacket() != topPacket)
         fill(topPacket);
     else
-        ((PacketTreeItem*)child(0))->refreshSubtree();
+        ((PacketTreeItem*)invisibleRootItem()->child(0))->refreshSubtree();
 }
 // TODO: Subclass QEvent for this custom event.
 void PacketTreeView::customEvent(QEvent* evt) {

@@ -37,6 +37,7 @@
 #include <algorithm>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <KUrl>
 
 using regina::NPacket;
 
@@ -71,7 +72,7 @@ NPacket* PacketChooser::selectedPacket() {
     if (count() == 0)
         return 0;
     else
-        return packets[currentItem()];
+        return packets[cursorPosition()];
 }
 
 void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
@@ -96,8 +97,8 @@ void PacketChooser::packetWasRenamed(regina::NPacket* renamed) {
     if (it != packets.end()) {
         // This may trigger a refreshContents(), but that's okay since
         // we're at the end of the routine.
-        changeItem(PacketManager::iconSmall(renamed, false),
-            renamed->getPacketLabel().c_str(), it - packets.begin());
+        changeUrl(it - packets.begin(),PacketManager::iconSmall(renamed, false),
+            KUrl(renamed->getPacketLabel().c_str()));
     }
 }
 
@@ -110,7 +111,7 @@ void PacketChooser::packetToBeDestroyed(regina::NPacket* toDestroy) {
         // Make sure the call to removeItem() comes last since it could
         // trigger a refreshContents().
         long destroyIndex = it - packets.begin();
-        long currentIndex = currentItem();
+        long currentIndex = cursorPosition();
 
         packets.erase(it);
         if (destroyIndex == currentIndex) {
@@ -165,7 +166,7 @@ void PacketChooser::refreshContents() {
 void PacketChooser::fill(bool allowNone, NPacket* select) {
     // Insert the None entry if appropriate.
     if (allowNone) {
-        insertItem(i18n("<None>"));
+        addItem(i18n("<None>"));
         packets.push_back(0);
 
         if (select == 0)
@@ -176,7 +177,7 @@ void PacketChooser::fill(bool allowNone, NPacket* select) {
     regina::NPacket* p = subtree;
     while (p && subtree->isGrandparentOf(p)) {
         if ((! filter) || (filter->accept(p))) {
-            insertItem(PacketManager::iconSmall(p, false),
+            addItem(PacketManager::iconSmall(p, false),
                 p->getPacketLabel().c_str());
             packets.push_back(p);
             if (onAutoUpdate)
