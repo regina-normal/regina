@@ -33,7 +33,6 @@ SET (MANDIR ${DATADIR}/man)
 
 SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 SET (ENGINE_LIBRARY regina-engine)
-SET (ENGINE_LIBRARY_STATIC regina-engine_static)
 
 # Determine if std::ios::nocreate is valid
 CHECK_CXX_SOURCE_COMPILES("
