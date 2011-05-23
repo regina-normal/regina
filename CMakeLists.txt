@@ -34,6 +34,16 @@ SET (MANDIR ${DATADIR}/man)
 SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 SET (ENGINE_LIBRARY regina-engine)
 
+# Use rpath since KDE4 apps like to install into non-standard directories.
+if (APPLE)
+  set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
+else (APPLE)
+  set(CMAKE_INSTALL_RPATH ${LIBDIR} )
+  set(CMAKE_SKIP_BUILD_RPATH FALSE)
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif (APPLE)
+
 # 64 bit integer checks
 CHECK_CXX_SOURCE_COMPILES("
   long long x;
