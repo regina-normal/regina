@@ -134,6 +134,11 @@ ELSE(DISABLE_KDEUI)
   FIND_PACKAGE(JPEG REQUIRED) # TODO: Why is this here?
   FIND_PACKAGE(KDE4 REQUIRED)
   FIND_PACKAGE(Qt4 REQUIRED)
+
+  # Some versions of the KDE4 macros disable exception handling.
+  # We need exceptions in regina, so put them back.
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
   ADD_SUBDIRECTORY(kdeui)
   MESSAGE(STATUS "KDE user interface enabled")
 ENDIF(DISABLE_KDEUI)
