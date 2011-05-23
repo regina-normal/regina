@@ -4,9 +4,6 @@
 /* Define to 1 if you have the <hash_set> header file. */
 #cmakedefine HAVE_HASH_SET
 
-/* Define if you have the iconv() function. */
-#cmakedefine ICONV_FOUND
-
 /* Define to 1 if both signed and unsigned long long types are available. */
 #cmakedefine LONG_LONG_FOUND
 

@@ -39,9 +39,7 @@
 #include "regina-core.h"
 #include "regina-config.h"
 #include <iostream>
-#ifdef ICONV_FOUND
 #include <iconv.h>
-#endif
 
 namespace regina {
 
@@ -110,7 +108,6 @@ class REGINA_API IConvStreamBuffer : public std::streambuf {
                  been initialised. */
         char preBuffer[16];
             /**< The internal pre-conversion character buffer. */
-#ifdef ICONV_FOUND
         char postBuffer[64];
             /**< The internal post-conversion character buffer.
                  Allow characters to blow out to four times their size. */
@@ -121,7 +118,6 @@ class REGINA_API IConvStreamBuffer : public std::streambuf {
         static const iconv_t cdNone;
             /**< Signifies that no iconv conversion descriptor is
                  currently active. */
-#endif
 
     public:
         /**
@@ -262,15 +258,9 @@ inline Locale::Locale() {
 
 // Inline functions for IConvStreamBuffer
 
-#ifdef ICONV_FOUND
 inline IConvStreamBuffer::IConvStreamBuffer() :
         sink(0), cd(cdNone) {
 }
-#else
-inline IConvStreamBuffer::IConvStreamBuffer() :
-        sink(0) {
-}
-#endif
 
 inline IConvStreamBuffer::~IConvStreamBuffer() {
     close();

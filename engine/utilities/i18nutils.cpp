@@ -38,9 +38,7 @@ namespace i18n {
 
 bool Locale::initialised = false;
 
-#ifdef ICONV_FOUND
 const iconv_t IConvStreamBuffer::cdNone((iconv_t)(-1));
-#endif
 
 const char* Locale::codeset() {
     if (! initialised) {
@@ -59,7 +57,6 @@ IConvStreamBuffer* IConvStreamBuffer::open(std::ostream& dest,
 
     sink = &dest;
 
-#ifdef ICONV_FOUND
     cd = iconv_open(destCode, srcCode);
     if (cd == cdNone) {
         if (errno != EINVAL)
@@ -68,7 +65,6 @@ IConvStreamBuffer* IConvStreamBuffer::open(std::ostream& dest,
         // The given encodings are not supported.
         // This is fine; we'll just pass data through to sink untranslated.
     }
-#endif
 
     // When we give the buffer to std::streambuf, leave space for an
     // extra overflow character; this will make the implementation of
@@ -80,7 +76,6 @@ IConvStreamBuffer* IConvStreamBuffer::open(std::ostream& dest,
 IConvStreamBuffer* IConvStreamBuffer::close() throw() {
     sync();
 
-#ifdef ICONV_FOUND
     if (cd == cdNone) {
         // We're passing data through untranslated; nothing more to do.
         return this;
@@ -92,9 +87,6 @@ IConvStreamBuffer* IConvStreamBuffer::close() throw() {
         return this;
     } else
         return 0;
-#else
-    return this;
-#endif
 }
 
 IConvStreamBuffer::int_type IConvStreamBuffer::overflow(
@@ -109,7 +101,6 @@ IConvStreamBuffer::int_type IConvStreamBuffer::overflow(
         pbump(1);
     }
 
-#ifdef ICONV_FOUND
     // Do we know how to translate between encodings?  If not, just
     // send the data straight through to the destination stream.
     if (cd == cdNone) {
@@ -189,18 +180,6 @@ IConvStreamBuffer::int_type IConvStreamBuffer::overflow(
 
     // We can never reach this point, but keep the compiler happy.
     return 0;
-#else
-    // We're building without iconv support.
-    // Just send everything straight through to sink.
-    ptrdiff_t n = pptr() - preBuffer;
-    sink->write(preBuffer, n);
-    pbump(-n);
-
-    if (sink->fail())
-        return traits_type::eof();
-    else
-        return 0;
-#endif
 }
 
 int IConvStreamBuffer::sync() {
