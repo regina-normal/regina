@@ -77,19 +77,6 @@ FIND_PACKAGE(HashSet)
 FIND_PACKAGE(MPI)
 FIND_PACKAGE(Doxygen)
 
-IF(ENABLE_PYTHON)
-  FIND_PACKAGE(Boost COMPONENTS python REQUIRED)
-  FIND_PACKAGE(PythonLibs REQUIRED)
-  FIND_PACKAGE(PythonInterp REQUIRED)
-ELSE(ENABLE_PYTHON)
-  IF(DISABLE_PYTHON)
-  ELSE(DISABLE_PYTHON)
-    FIND_PACKAGE(Boost COMPONENTS python)
-    FIND_PACKAGE(PythonLibs)
-    FIND_PACKAGE(PythonInterp)
-  ENDIF(DISABLE_PYTHON)
-ENDIF(ENABLE_PYTHON)
-
 # Test suite
 ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
 
@@ -98,16 +85,33 @@ CONFIGURE_FILE (
   "${PROJECT_SOURCE_DIR}/engine/regina-config.h.in"
   "${PROJECT_BINARY_DIR}/engine/regina-config.h"
 )
+# TODO: Get rid of this, eventually.
 SET (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wno-deprecated)
+
+# Core directories
 ADD_SUBDIRECTORY(engine)
 ADD_SUBDIRECTORY(utils)
 
+# Python support
+IF(NOT DISABLE_PYTHON)
+  FIND_PACKAGE(Boost COMPONENTS python)
+  FIND_PACKAGE(PythonLibs)
+  FIND_PACKAGE(PythonInterp)
+ENDIF(NOT DISABLE_PYTHON)
+
 IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+  # We can support python.
   ADD_SUBDIRECTORY(pylib)  
   ADD_SUBDIRECTORY(python)  
   MESSAGE(STATUS "Python bindings enabled")
 ELSE(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
-  MESSAGE(WARNING "Python bindings disabled")
+  # We cannot support python.
+  IF(ENABLE_PYTHON)
+    MESSAGE(FATAL
+	  "Python bindings unavailable; try again without ENABLE_PYTHON")
+  ELSE(ENABLE_PYTHON)
+    MESSAGE(WARNING "Python bindings disabled")
+  ENDIF(ENABLE_PYTHON)
 ENDIF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
 
 # TODO: Make this option show up in cmake -i.
@@ -117,7 +121,7 @@ ELSE(DISABLE_KDEUI)
   # TODO: KDE flags do bad things.
   # On debian lenny: fails to build (-fno-exceptions)
   # On MacOSX: test suite crashes
-  FIND_PACKAGE(JPEG REQUIRED)
+  FIND_PACKAGE(JPEG REQUIRED) # TODO: Why is this here?
   FIND_PACKAGE(KDE4 REQUIRED)
   FIND_PACKAGE(Qt4 REQUIRED)
   ADD_SUBDIRECTORY(kdeui)
