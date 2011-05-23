@@ -128,10 +128,6 @@ ENDIF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
 IF(DISABLE_KDEUI)
   MESSAGE(WARNING "KDE user interface disabled")
 ELSE(DISABLE_KDEUI)
-  # TODO: KDE flags do bad things.
-  # On debian lenny: fails to build (-fno-exceptions)
-  # On MacOSX: test suite crashes
-  FIND_PACKAGE(JPEG REQUIRED) # TODO: Why is this here?
   FIND_PACKAGE(KDE4 REQUIRED)
   FIND_PACKAGE(Qt4 REQUIRED)
 
