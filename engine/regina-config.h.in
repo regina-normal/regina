@@ -4,6 +4,12 @@
 /* Define to 1 if you have the <hash_set> header file. */
 #cmakedefine HAVE_HASH_SET
 
+/* Namespace for class hash_set<...>. */
+#define __HASH_NAMESPACE @__HASH_NAMESPACE@
+
+/* Define to 1 if namespace std cannot be aliased. */
+#cmakedefine __NO_NAMESPACE_ALIASES
+
 /* Define to 1 if both signed and unsigned long long types are available. */
 #cmakedefine LONG_LONG_FOUND
 
@@ -30,10 +36,4 @@
 
 /* Minor version number of the package. */
 #define PACKAGE_VERSION_MINOR @PACKAGE_VERSION_MINOR@
-
-/* Namespace for class hash_set<...>. */
-#define __HASH_NAMESPACE @__HASH_NAMESPACE@
-
-/* Define to 1 if namespace std cannot be aliased. */
-#cmakedefine __NO_NAMESPACE_ALIASES
 
