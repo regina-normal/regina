@@ -96,7 +96,7 @@ CONFIGURE_FILE (
   "${PROJECT_BINARY_DIR}/engine/regina-config.h"
 )
 # TODO: Get rid of this, eventually.
-SET (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wno-deprecated)
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated")
 
 # Core directories
 ADD_SUBDIRECTORY(engine)
