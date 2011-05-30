@@ -50,7 +50,7 @@ class ExtTabCtl : public QTabWidget {
         /**
          * Constructor and destructor.
          */
-        ExtTabCtl(QWidget* parent = 0, const char* name = 0);
+        ExtTabCtl(QWidget* parent = 0);
 
         /**
          * Change the current tab to the tab at the given index.
@@ -58,7 +58,7 @@ class ExtTabCtl : public QTabWidget {
         void setCurrentTab(int tabIndex);
 };
 
-inline ExtTabCtl::ExtTabCtl(QWidget* parent, const char* name) :
+inline ExtTabCtl::ExtTabCtl(QWidget* parent) :
         QTabWidget(parent) {
     // Grr, KTabCtl should do this itself.
     // setFocusProxy(tabs);

@@ -248,8 +248,8 @@ void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
     getPart()->setModified(true);
 }
 
-PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent,
-        const char* name) : QTreeWidget(parent), part(newPart) {
+PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent) 
+          : QTreeWidget(parent), part(newPart) {
     //addColumn(QString::null); TODO: Do we need this?
     setRootIsDecorated(true);
     //setSorting(-1); QTreeWidgets sort by insertion by default

@@ -163,8 +163,7 @@ class PacketTreeView : public QTreeWidget {
          * Creates an empty tree.  This tree must be initialised using
          * fill().
          */
-        PacketTreeView(ReginaPart* newPart, QWidget* parent = 0,
-            const char* name = 0);
+        PacketTreeView(ReginaPart* newPart, QWidget* parent = 0);
 
         /**
          * Returns the currently selected packet, or 0 if no packet is

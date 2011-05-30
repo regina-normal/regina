@@ -61,15 +61,15 @@
 using regina::NPacket;
 
 namespace {
-    int RIGHT_ALIGN_SEPARATOR_ID = 137;
+    // int RIGHT_ALIGN_SEPARATOR_ID = 137;
         /**< Random integer that shouldn't clash with any other toolbar
              item ID. */
 }
 
 QLinkedList<KAction*> PacketUI::noActions;
 
-PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent,
-        const char* name) : KHBox(parent), packet(pkt) {
+PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent) 
+        : KHBox(parent), packet(pkt) {
     icon = new QLabel(this);
     icon->setWindowIcon(PacketManager::iconBar(packet, true)); // TODO: Is this meant to be a window icon?
 
@@ -121,7 +121,7 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
 }
 
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
-        QWidget* parent, const char* name) : KVBox(parent),
+        QWidget* parent) : KVBox(parent),
         part(newPart), frame(0), dirty(false), dirtinessBroken(false),
         emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
         extCut(0), extCopy(0), extPaste(0), extUndo(0), extRedo(0) {

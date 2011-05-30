@@ -79,8 +79,7 @@ class PacketHeader : public KHBox {
         /**
          * Constructor.
          */
-        PacketHeader(regina::NPacket* pkt, QWidget* parent = 0,
-            const char* name = 0);
+        PacketHeader(regina::NPacket* pkt, QWidget* parent = 0);
 
     public slots:
         /**
@@ -368,7 +367,7 @@ class PacketPane : public KVBox, public regina::NPacketListener {
          * by way of the PacketManager class.
          */
         PacketPane(ReginaPart* newPart, regina::NPacket* newPacket,
-            QWidget* parent = 0, const char* name = 0);
+            QWidget* parent = 0);
         ~PacketPane();
 
         /**
