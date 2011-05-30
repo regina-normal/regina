@@ -35,7 +35,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qframe.h>
-#include <qhbox.h>
+#include <QHBoxLayout>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qwhatsthis.h>
@@ -45,20 +45,25 @@
 ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
         regina::NPacket* defaultSelection, PacketFilter* useFilter,
         const QString& dialogTitle) :
-        KDialogBase(Plain, dialogTitle, Ok|Cancel, Ok, parent),
+        KDialog(parent),
         tree(packetTree), chosenPacket(0) {
-    QFrame* page = plainPage();
-    QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
+    setCaption(dialogTitle);
+    setButtons(KDialog::Ok|KDialog::Cancel);
 
-    QHBox* chosenStrip = new QHBox(page);
-    chosenStrip->setSpacing(HORIZONTAL_SPACING);
+    QWidget* page = new QWidget(this);
+    setMainWidget(page);
+    QVBoxLayout* layout = new QVBoxLayout(page);
+
+    QWidget* chosenStrip = new QWidget(page);
+    QHBoxLayout* hbox = new QHBoxLayout;
+    hbox->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(chosenStrip);
     new QLabel(i18n("Data to export:"), chosenStrip);
     chooser = new PacketChooser(tree, useFilter, false, defaultSelection,
         chosenStrip);
-    chosenStrip->setStretchFactor(chooser, 1);
-    QWhatsThis::add(chosenStrip,
-        i18n("Select the piece of data that you wish to export."));
+    hbox->setStretchFactor(chooser, 1);
+    chosenStrip->setLayout(hbox);
+    chosenStrip->setWhatsThis(i18n("Select the piece of data that you wish to export."));
 
     layout->addStretch(1);
 }
@@ -89,7 +94,7 @@ void ExportDialog::slotOk() {
     }
 
     // We're done!
-    KDialogBase::slotOk();
+    KDialog::okClicked();
 }
 
-#include "exportdialog.moc"
+#include "moc_exportdialog.cpp"
