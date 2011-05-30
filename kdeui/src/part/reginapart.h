@@ -106,8 +106,8 @@ class ReginaPart : public KParts::ReadWritePart {
         /**
          * Constructors and destructors.
          */
-        ReginaPart(QWidget *parentWidget, const char *widgetName,
-            QObject *parent, const char *name, const QStringList &args);
+        ReginaPart(QWidget *parentWidget, QObject *parent, 
+              const QStringList &args);
         virtual ~ReginaPart();
 
         /**
@@ -331,7 +331,7 @@ class ReginaPart : public KParts::ReadWritePart {
         /**
          * Initial setup.
          */
-        void setupWidgets(QWidget* parentWidget, const char* widgetName);
+        void setupWidgets(QWidget* parentWidget);
         void setupActions();
         void initPacketTree();
 
