@@ -46,6 +46,7 @@
  * Thanks to Ryan Budney for providing these Orb / Casson filters.
  */
 class OrbHandler : public PacketImporter {
+    using PacketImporter::import;
     public:
         /**
          * A globally available instance of this class.

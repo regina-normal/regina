@@ -43,6 +43,7 @@
  * available object DehydrationHandler::instance should always be used.
  */
 class DehydrationHandler : public PacketImporter {
+    using PacketImporter::import;
     public:
         /**
          * A globally available instance of this class.

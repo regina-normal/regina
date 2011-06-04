@@ -43,6 +43,7 @@
  * available object IsoSigHandler::instance3 should always be used.
  */
 class IsoSigHandler : public PacketImporter {
+    using PacketImporter::import;
     private:
         /**
          * Which dimension of triangulations do our isomorphism

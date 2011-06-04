@@ -44,6 +44,8 @@
  * available object PDFHandler::instance should always be used.
  */
 class PDFHandler : public PacketImporter, public PacketExporter {
+    using PacketExporter::exportData;
+    using PacketImporter::import;
     public:
         /**
          * A globally available instance of this class.

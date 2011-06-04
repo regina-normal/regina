@@ -41,6 +41,8 @@
  * other Regina data files.
  */
 class ReginaHandler : public PacketImporter, public PacketExporter {
+    using PacketExporter::exportData;
+    using PacketImporter::import;
     private:
         bool compressed;
             /**< Should exported data files be compressed? */
