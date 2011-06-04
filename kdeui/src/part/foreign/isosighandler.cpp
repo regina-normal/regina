@@ -75,7 +75,7 @@ regina::NPacket* IsoSigHandler::import(const QString& fileName,
     }
 
     // All worked out okay.
-    ans->setPacketLabel(i18n("Imported Triangulations").ascii());
+    ans->setPacketLabel(i18n("Imported Triangulations").toLatin1().data());
     return ans;
 }
 

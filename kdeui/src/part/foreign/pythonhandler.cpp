@@ -55,7 +55,7 @@ regina::NPacket* PythonHandler::import(const QString& fileName,
 regina::NPacket* PythonHandler::import(const QString& fileName,
         QTextCodec* encoding, QWidget* parentWidget) const {
     QFile f(fileName);
-    if (! f.open(IO_ReadOnly)) {
+    if (! f.open(QIODevice::ReadOnly)) {
         KMessageBox::error(parentWidget, i18n(
             "The import file %1 could not be read.").arg(fileName));
         return 0;
@@ -65,10 +65,10 @@ regina::NPacket* PythonHandler::import(const QString& fileName,
     if (encoding)
         in.setCodec(encoding);
     else
-        in.setEncoding(QTextStream::UnicodeUTF8);
+        in.setAutoDetectUnicode(true);
 
     regina::NScript* ans = new regina::NScript();
-    ans->setPacketLabel(i18n("Imported Script").ascii());
+    ans->setPacketLabel(i18n("Imported Script").toLatin1().data());
 
     // Read in the script.
     bool readingMetadata = true;
@@ -79,27 +79,27 @@ regina::NPacket* PythonHandler::import(const QString& fileName,
     while (! line.isNull()) {
         if (readingMetadata && line.startsWith("###")) {
             // This is a line of metadata.  Perhaps.
-            metadata = line.mid(3).stripWhiteSpace();
+            metadata = line.mid(3).trimmed();
             if (metadata.isEmpty()) {
                 // An empty metadata line.
             } else if (metadata.startsWith(scriptMarker)) {
                 // The script label.
                 metadata = metadata.mid(scriptMarker.length()).
-                    stripWhiteSpace();
+                    trimmed();
                 if (! metadata.isEmpty())
-                    ans->setPacketLabel(metadata);
+                    ans->setPacketLabel(metadata.toLatin1().data());
             } else if (metadata.startsWith(varMarker)) {
                 // A script variable.
-                metadata = metadata.mid(varMarker.length()).stripWhiteSpace();
-                pos = metadata.find(':');
+                metadata = metadata.mid(varMarker.length()).trimmed();
+                pos = metadata.indexOf(':');
                 if (pos >= 0) {
                     ans->addVariable(
-                        metadata.left(pos).stripWhiteSpace(),
-                        metadata.mid(pos + 1).stripWhiteSpace());
+                        metadata.left(pos).trimmed().toLatin1().data(),
+                        metadata.mid(pos + 1).trimmed().toLatin1().data());
                 } else {
                     // Hmm, it wasn't a script variable after all.
                     readingMetadata = false;
-                    ans->addLast(line);
+                    ans->addLast(line.toLatin1().data());
                 }
             } else if (metadata == endMetadataMarker) {
                 // It's the end of the metadata.
@@ -107,12 +107,12 @@ regina::NPacket* PythonHandler::import(const QString& fileName,
             } else {
                 // It's not metadata at all.
                 readingMetadata = false;
-                ans->addLast(line);
+                ans->addLast(line.toLatin1().data());
             }
         } else {
             // We're out of the metadata.
             readingMetadata = false;
-            ans->addLast(line);
+            ans->addLast(line.toLatin1().data());
         }
 
         line = in.readLine();
@@ -135,7 +135,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     regina::NScript* script = dynamic_cast<regina::NScript*>(data);
 
     QFile f(fileName);
-    if (! f.open(IO_WriteOnly)) {
+    if (! f.open(QIODevice::WriteOnly)) {
         KMessageBox::error(parentWidget, i18n(
             "The export file %1 could not be written to.").arg(fileName));
         return false;
@@ -145,11 +145,11 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     if (encoding)
         out.setCodec(encoding);
     else
-        out.setEncoding(QTextStream::UnicodeUTF8);
+        out.setAutoDetectUnicode(true);
 
     // Write the name of the script.
     out << "### " << scriptMarker << ' ';
-    out << QString(script->getPacketLabel());
+    out << QString(script->getPacketLabel().c_str());
     endl(out);
     out << "###";
     endl(out);
@@ -157,8 +157,8 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     // Output the value of each variable.
     unsigned long i;
     for (i = 0; i < script->getNumberOfVariables(); i++) {
-        out << "### " << varMarker << QString(script->getVariableName(i))
-            << ": " << QString(script->getVariableValue(i));
+        out << "### " << varMarker << QString(script->getVariableName(i).c_str())
+            << ": " << QString(script->getVariableValue(i).c_str());
         endl(out);
     }
 
@@ -168,7 +168,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     endl(out);
 
     for (i = 0; i < script->getNumberOfLines(); i++) {
-        out << QString(script->getLine(i));
+        out << QString(script->getLine(i).c_str());
         endl(out);
     }
 

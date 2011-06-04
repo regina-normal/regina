@@ -53,7 +53,7 @@ bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
     regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
 
     QFile f(fileName);
-    if (! f.open(IO_WriteOnly)) {
+    if (! f.open(QIODevice::WriteOnly)) {
         KMessageBox::error(parentWidget, i18n(
             "This triangulation could not be exported.  The target "
             "file %1 could not be opened for writing.").arg(fileName));
@@ -64,9 +64,9 @@ bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
     if (encoding)
         out.setCodec(encoding);
     else
-        out.setEncoding(QTextStream::UnicodeUTF8);
+        out.setAutoDetectUnicode(true);
 
-    out << tri->dumpConstruction();
+    out << tri->dumpConstruction().c_str();
     return true;
 }
 
