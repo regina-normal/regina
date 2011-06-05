@@ -39,7 +39,7 @@
 
 const IsoSigHandler IsoSigHandler::instance3(3);
 
-regina::NPacket* IsoSigHandler::import(const QString& fileName,
+regina::NPacket* IsoSigHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
     QString explnSuffix = i18n("<p>The file should be a plain text file "
         "containing one %1-manifold triangulation isomorphism signature "

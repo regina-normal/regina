@@ -66,22 +66,22 @@ class PacketImporter {
          * Sensible packet labels must be assigned to all packets in the
          * imported tree.
          */
-        virtual regina::NPacket* import(const QString& fileName,
+        virtual regina::NPacket* importData(const QString& fileName,
             QWidget* parentWidget) const = 0;
 
         /**
          * Import a packet tree from the given file using the given
          * character encoding.
          *
-         * This routine is identical to the simpler import() above, except
+         * This routine is identical to the simpler importData() above, except
          * that the encoding of the given file is explicitly specified
          * (and might not be the default UTF-8).  If the given encoding
          * is null, the routine should assume a default of UTF-8.
          *
          * The default implementation simply ignores the encoding and
-         * calls the simpler import() above.
+         * calls the simpler importData() above.
          */
-        virtual regina::NPacket* import(const QString& fileName,
+        virtual regina::NPacket* importData(const QString& fileName,
             QTextCodec* encoding, QWidget* parentWidget) const;
 
         /**
@@ -89,9 +89,9 @@ class PacketImporter {
          * when selecting a file to import?
          *
          * If this routine returns \c true, the user will be offered a
-         * choice of encoding and the three-argument import() will be
+         * choice of encoding and the three-argument importData() will be
          * called.  Otherwise the user will not be offered a choice, and
-         * the two-argument import() will be called instead.
+         * the two-argument importData() will be called instead.
          *
          * The default implementation returns \c false.
          */
@@ -101,9 +101,9 @@ class PacketImporter {
 inline PacketImporter::~PacketImporter() {
 }
 
-inline regina::NPacket* PacketImporter::import(const QString& fileName,
+inline regina::NPacket* PacketImporter::importData(const QString& fileName,
         QTextCodec*, QWidget* parentWidget) const {
-    return import(fileName, parentWidget);
+    return importData(fileName, parentWidget);
 }
 
 inline bool PacketImporter::offerImportEncoding() const {

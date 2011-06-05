@@ -43,7 +43,7 @@
  * available object IsoSigHandler::instance3 should always be used.
  */
 class IsoSigHandler : public PacketImporter {
-    using PacketImporter::import;
+    using PacketImporter::importData;
     private:
         /**
          * Which dimension of triangulations do our isomorphism
@@ -64,7 +64,7 @@ class IsoSigHandler : public PacketImporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::NPacket* import(const QString& fileName,
+        virtual regina::NPacket* importData(const QString& fileName,
             QWidget* parentWidget) const;
 
     private:

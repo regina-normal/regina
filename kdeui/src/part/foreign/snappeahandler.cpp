@@ -38,7 +38,7 @@
 
 const SnapPeaHandler SnapPeaHandler::instance;
 
-regina::NPacket* SnapPeaHandler::import(const QString& fileName,
+regina::NPacket* SnapPeaHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
     regina::NPacket* ans = regina::readSnapPea(
         static_cast<const char*>(QFile::encodeName(fileName)));

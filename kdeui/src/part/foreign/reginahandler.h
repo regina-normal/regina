@@ -42,7 +42,7 @@
  */
 class ReginaHandler : public PacketImporter, public PacketExporter {
     using PacketExporter::exportData;
-    using PacketImporter::import;
+    using PacketImporter::importData;
     private:
         bool compressed;
             /**< Should exported data files be compressed? */
@@ -56,7 +56,7 @@ class ReginaHandler : public PacketImporter, public PacketExporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::NPacket* import(const QString& fileName,
+        virtual regina::NPacket* importData(const QString& fileName,
             QWidget* parentWidget) const;
 
         /**

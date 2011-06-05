@@ -38,7 +38,7 @@
 
 const PDFHandler PDFHandler::instance;
 
-regina::NPacket* PDFHandler::import(const QString& fileName,
+regina::NPacket* PDFHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
     regina::NPacket* ans = regina::readPDF(
         static_cast<const char*>(QFile::encodeName(fileName)));

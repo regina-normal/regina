@@ -39,7 +39,7 @@
 
 const DehydrationHandler DehydrationHandler::instance;
 
-regina::NPacket* DehydrationHandler::import(const QString& fileName,
+regina::NPacket* DehydrationHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
     QString explnSuffix = i18n("<p>The file should be a plain text file "
         "containing one dehydration string per line.  "

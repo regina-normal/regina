@@ -47,12 +47,12 @@ namespace {
 
 const PythonHandler PythonHandler::instance;
 
-regina::NPacket* PythonHandler::import(const QString& fileName,
+regina::NPacket* PythonHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
-    return import(fileName, 0, parentWidget);
+    return importData(fileName, 0, parentWidget);
 }
 
-regina::NPacket* PythonHandler::import(const QString& fileName,
+regina::NPacket* PythonHandler::importData(const QString& fileName,
         QTextCodec* encoding, QWidget* parentWidget) const {
     QFile f(fileName);
     if (! f.open(QIODevice::ReadOnly)) {
