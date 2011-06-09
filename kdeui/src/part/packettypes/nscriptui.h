@@ -65,7 +65,7 @@ class NScriptUI : public QObject, public PacketUI {
         /**
          * Internal components
          */
-        QVBox* ui;
+        QWidget* ui;
         QTable* varTable;
         KTextEditor::Document* document;
         KTextEditor::EditInterface* editInterface;

@@ -33,12 +33,13 @@
 #ifndef __NCONTAINERUI_H
 #define __NCONTAINERUI_H
 
+#include <KVBox>
+
 #include "packet/npacketlistener.h"
 
 #include "../packetui.h"
 
 class QLabel;
-class QVBox;
 
 namespace regina {
     class NContainer;
@@ -60,7 +61,7 @@ class NContainerUI : public PacketReadOnlyUI, public regina::NPacketListener {
         /**
          * Internal components
          */
-        QVBox* interface;
+        KVBox* interface;
         QLabel* children;
         QLabel* descendants;
 
