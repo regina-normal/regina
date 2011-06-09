@@ -33,7 +33,8 @@
 #ifndef __GAPRUNNER_H
 #define __GAPRUNNER_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
+#include <KProcess>
 #include <map>
 #include <memory>
 
@@ -49,7 +50,7 @@ namespace regina {
  * A dialog that handles communications with GAP in order to simplify a
  * group presentation.
  */
-class GAPRunner : public KDialogBase {
+class GAPRunner : public KDialog {
     Q_OBJECT
 
     private:
@@ -61,7 +62,7 @@ class GAPRunner : public KDialogBase {
         /**
          * The running GAP process:
          */
-        KProcIO* proc;
+        KProcess* proc;
         QString currOutput;
         QString partialLine;
         int stage;
