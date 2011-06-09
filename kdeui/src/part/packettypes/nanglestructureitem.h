@@ -33,9 +33,11 @@
 #ifndef __NANGLESTRUCTUREITEM_H
 #define __NANGLESTRUCTUREITEM_H
 
+#include <QTableWidget>
+
 #include "maths/nrational.h"
 
-#include "../gridlistview.h"
+//#include "../gridlistview.h"
 
 namespace regina {
     class NAngleStructure;
@@ -45,7 +47,7 @@ namespace regina {
 /**
  * A list view item describing a single angle structure.
  */
-class NAngleStructureItem : public GridListViewItem {
+class NAngleStructureItem : public QTableWidget {
     private:
         /**
          * The underlying angle structure.
@@ -57,7 +59,7 @@ class NAngleStructureItem : public GridListViewItem {
         /**
          * Constructor.
          */
-        NAngleStructureItem(QListView* parent,
+        NAngleStructureItem(QTableWidget* parent,
             const regina::NAngleStructure* newStructure,
             const regina::NTriangulation* fromTri);
 

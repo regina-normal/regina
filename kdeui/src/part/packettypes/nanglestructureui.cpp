@@ -36,11 +36,10 @@
 #include "nanglestructureui.h"
 
 #include <klocale.h>
-#include <qheader.h>
+#include <KVBox>
 #include <qlabel.h>
-#include <qlistview.h>
-#include <qvbox.h>
-#include <qwhatsthis.h>
+#include <QHelpEvent>
+#include <QHeaderView>
 
 #define DEFAULT_ANGLE_COLUMN_WIDTH 40
 #define ANGLE_STATS_PADDING 5
@@ -51,7 +50,7 @@ using regina::NPacket;
 NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         PacketPane* enclosingPane) : PacketReadOnlyUI(enclosingPane),
         structures(packet), currentlyAutoResizing(false) {
-    ui = new QVBox();
+    ui = new KVBox();
 
     // Set up the statistics label.
     QWidget* statsUpper = new QWidget(ui);
@@ -59,7 +58,7 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
 
     stats = new QLabel(ui);
     stats->setAlignment(Qt::AlignCenter);
-    QWhatsThis::add(stats, i18n("<qt>Displays various statistics about this "
+    stats->setWhatsThis(i18n("<qt>Displays various statistics about this "
         "angle structure list, including whether the underlying triangulation "
         "supports any strict and/or taut angle structures.  A <i>strict</i> "
         "angle structure has all of its angles strictly between 0 and Pi, "
@@ -74,11 +73,11 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
     statsLower->setMinimumHeight(ANGLE_STATS_PADDING);
 
     // Set up the table of angles.
-    table = new KListView(ui);
-    table->setAllColumnsShowFocus(true);
-    table->setSelectionMode(QListView::NoSelection);
+    table = new QTableWidget(ui);
+    //table->setAllColumnsShowFocus(true);
+    table->setSelectionMode(QTableView::NoSelection);
     ui->setStretchFactor(table, 1);
-    QWhatsThis::add(table, i18n("<qt>Displays the vertex angle structures "
+    table->setWhatsThis(i18n("<qt>Displays the vertex angle structures "
         "in this list.<p>"
         "Each row represents a single angle structure, and "
         "each entry in the table is an internal dihedral angle assigned to "
@@ -86,24 +85,29 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         "For details of which tetrahedron edges each column represents, hover "
         "the mouse over the column header (or refer to the users' "
         "handbook).</qt>"));
-
-    table->addColumn(i18n("Type"), DEFAULT_ANGLE_COLUMN_WIDTH);
+    QStringList columnHeaders;
+    columnHeaders << i18n("Type");
 
     unsigned long nTets = packet->getTriangulation()->getNumberOfTetrahedra();
     unsigned long i, j;
     for (i = 0; i < nTets; i++)
-        for (j = 0; j < 3; j++)
-            table->addColumn(QString::number(i) + ": " +
+        for (j = 0; j < 3; j++) 
+            columnHeaders << (QString::number(i) + ": " + 
                 regina::vertexSplitString[j]);
 
+    table->setHorizontalHeaderLabels(columnHeaders);
     refresh();
 
+    table->resizeColumnsToContents();
     // Final tidying up for the table now that it is full of data.
-    for (int i = 0; i < table->columns(); i++)
-        table->adjustColumn(i);
-    headerTips = new AngleHeaderToolTip(table->header());
-    connect(table->header(), SIGNAL(sizeChange(int, int, int)),
-        this, SLOT(columnResized(int, int, int)));
+    //for (int i = 0; i < table->columns(); i++)
+    //    table->adjustColumn(i);
+    headerTips = new AngleHeaderToolTip(table->horizontalHeader());
+    table->viewport()->installEventFilter(headerTips);
+
+    // TODO: Shouldn't be needed in Qt4, verify.
+    //connect(table->horizontalHeader(), SIGNAL(sizeChange(int, int, int)),
+    //    this, SLOT(columnResized(int, int, int)));
 
     ui->setFocusProxy(table);
 }
@@ -172,36 +176,42 @@ void NAngleStructureUI::refresh() {
     setDirty(false);
 }
 
-void NAngleStructureUI::columnResized(int section, int, int newSize) {
-    if (currentlyAutoResizing || section == 0)
-        return;
-
-    // An angle column has been resized.
-    // Resize all angle columns.
-    currentlyAutoResizing = true;
-    for (int i = 1; i < table->columns(); i++)
-        table->setColumnWidth(i, newSize);
-    currentlyAutoResizing = false;
-}
-
-//AngleHeaderToolTip::AngleHeaderToolTip(QHeader *header,
-//        QToolTipGroup *group) : QToolTip(header, group) {
+//void NAngleStructureUI::columnResized(int section, int, int newSize) {
+//    if (currentlyAutoResizing || section == 0)
+//        return;
+//
+//    // An angle column has been resized.
+//    // Resize all angle columns.
+//    currentlyAutoResizing = true;
+//    for (int i = 1; i < table->columns(); i++)
+//        table->setColumnWidth(i, newSize);
+//    currentlyAutoResizing = false;
 //}
 
-void AngleHeaderToolTip::maybeTip(const QPoint& p) {
-    QHeader *header = dynamic_cast<QHeader*>(parentWidget());
-    int section = header->sectionAt(p.x());
-    if (section < 0)
-        return;
-
-    QString tipString;
-    if (section == 0)
-        tipString = i18n("Taut or strict?");
-    else
-        tipString = i18n("Tetrahedron %1, edges %2").arg((section - 1) / 3).
-            arg(regina::vertexSplitString[(section - 1) % 3]);
-    header->sectionRect(section)->setToolTip(tipString);
+AngleHeaderToolTip::AngleHeaderToolTip(QHeaderView *headerView) : 
+    header(headerView) {
 }
 
-#include "nanglestructureui.moc"
+bool AngleHeaderToolTip::eventFilter(QObject *obj, QEvent *event) {
+    if ( event->type() == QEvent::ToolTip ) {
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
+        QPoint p = helpEvent->pos();
+        int section = header->logicalIndexAt(p);
+        if (section < 0)
+            return false;
+
+        QString tipString;
+        if (section == 0)
+            tipString = i18n("Taut or strict?");
+        else
+            tipString = i18n("Tetrahedron %1, edges %2").arg((section - 1) / 3).
+                arg(regina::vertexSplitString[(section - 1) % 3]);
+
+        QToolTip::showText(helpEvent->globalPos(),tipString);
+        return true;
+    }
+    return false;
+}
+
+#include "moc_nanglestructureui.cpp"
 

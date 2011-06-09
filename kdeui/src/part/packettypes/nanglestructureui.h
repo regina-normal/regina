@@ -36,12 +36,12 @@
 #include "../packetui.h"
 
 #include <qtooltip.h>
+#include <QTableWidget>
 
 class AngleHeaderToolTip;
 class QHeader;
 class QLabel;
-class QListView;
-class QVBox;
+
 
 namespace regina {
     class NAngleStructureList;
@@ -63,9 +63,9 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
         /**
          * Internal components
          */
-        QVBox* ui;
+        KVBox* ui;
         QLabel* stats;
-        QListView* table;
+        QTableWidget* table;
         AngleHeaderToolTip* headerTips;
 
         /**
@@ -89,28 +89,34 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
         QString getPacketMenuText() const;
         void refresh();
 
-    public slots:
-        /**
-         * Provides auto-resizing of columns.
-         */
-        void columnResized(int section, int oldSize, int newSize);
+        
+//    public slots:
+//        /**
+//         * Provides auto-resizing of columns.
+//         */
+//        void columnResized(int section, int oldSize, int newSize);
 };
 
 /**
  * A utility class for displaying tooltips for table headers.
  */
-class AngleHeaderToolTip : public QToolTip {
+class AngleHeaderToolTip : public QObject {
     public:
         /**
          * Constructor.
          */
-        //AngleHeaderToolTip(QHeader *header, QToolTipGroup *group = 0);
+        AngleHeaderToolTip(QHeaderView *header);
 
     protected:
         /**
-         * QToolTip overrides.
+         * Event filter
          */
-        void maybeTip(const QPoint& p);
+        bool eventFilter(QObject *obj, QEvent *event);
+
+        /**
+         * The header displaying the tool tips
+         */
+        QHeaderView *header;
 };
 
 #endif

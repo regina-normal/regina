@@ -34,16 +34,16 @@
 #include "nanglestructureitem.h"
 
 #include <klocale.h>
-#include <klistview.h>
 #include <qpainter.h>
 #include <qstyle.h>
+#include <qtreewidget.h>
 
 using regina::NAngleStructure;
 
-NAngleStructureItem::NAngleStructureItem(QListView* parent,
+NAngleStructureItem::NAngleStructureItem(QTableWidget* parent,
         const regina::NAngleStructure* newStructure,
         const regina::NTriangulation* fromTri) :
-        GridListViewItem(parent), structure(newStructure),
+        QTableWidget(parent), structure(newStructure),
         coordCols(3 * fromTri->getNumberOfTetrahedra()) {
 }
 
