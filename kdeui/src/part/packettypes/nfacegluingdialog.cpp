@@ -53,13 +53,14 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
         long useMyTet, int useMyFace,
         long initAdjTet, const QString& initAdjFace,
         FaceGluingItem* useTableItem) :
-        KDialogBase(Plain, i18n("Edit Face Gluing"), Ok|Cancel, Ok, parent),
+        KDialog(parent), //(Plain, i18n("Edit Face Gluing"), Ok|Cancel, Ok, parent),
         tableItem(useTableItem), nTets(useNTets), myTet(useMyTet),
         myFace(useMyFace) {
-    QFrame* page = plainPage();
-    QGridLayout* layout = new QGridLayout(page, 3, 3, spacingHint());
+    QWidget* page = new QWidget(this);
+    setMainWidget(page);
+    QGridLayout* layout = new QGridLayout(page);//, 3, 3, spacingHint());
 
-    QWhatsThis::add(page, i18n("This dialog allows you to specify the other "
+    page->setWhatsThis(i18n("This dialog allows you to specify the other "
         "tetrahedron face with which this face should be identified (or "
         "whether this face should simply be left as a boundary face)."));
 
@@ -74,13 +75,13 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
 
     QLabel* label;
     label = new QLabel(QString::number(myTet), page);
-    QWhatsThis::add(label, i18n("<qt>Shows the tetrahedron number "
+    label->setWhatsThis(i18n("<qt>Shows the tetrahedron number "
         "corresponding to this tetrahedron face.<p>"
         "This face will be identified with a face of the adjacent "
         "tetrahedron as specified in the drop-down list below.</qt>"));
     layout->addWidget(label, 1, 1, Qt::AlignCenter);
     label = new QLabel(regina::NFace::ordering[myFace].trunc3().c_str(), page);
-    QWhatsThis::add(label, i18n("<qt>Shows the three vertices that form this "
+    label->setWhatsThis(i18n("<qt>Shows the three vertices that form this "
         "tetrahedron face (each tetrahedron has vertices 0, 1, 2 and 3).<p>"
         "These three vertices will be identified with the three "
         "vertices of the adjacent tetrahedron as specified in the text area "
@@ -88,11 +89,11 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
     layout->addWidget(label, 1, 2, Qt::AlignCenter);
 
     tetrahedron = new KComboBox(page);
-    tetrahedron->insertItem(i18n("Bdry"));
+    tetrahedron->insertItem(tetrahedron->count(),i18n("Bdry"));
     for (unsigned long i = 0; i < nTets; i++)
-        tetrahedron->insertItem(QString::number(i));
-    tetrahedron->setCurrentItem(initAdjTet < 0 ? 0 : initAdjTet + 1);
-    QWhatsThis::add(tetrahedron, i18n("<qt>Specify which tetrahedron this "
+        tetrahedron->insertItem(tetrahedron->count(),QString::number(i));
+    tetrahedron->setCurrentIndex(initAdjTet < 0 ? 0 : initAdjTet + 1);
+    tetrahedron->setWhatsThis(i18n("<qt>Specify which tetrahedron this "
         "face should be joined to, or <i>Bdry</i> if this face should "
         "be left as a boundary face.<p>"
         "Only the adjacent tetrahedron number is required &ndash; the precise "
@@ -103,7 +104,7 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
     perm = new KLineEdit(initAdjFace, page);
     perm->setValidator(new QRegExpValidator(reTetFace, page));
     perm->setMaxLength(3);
-    QWhatsThis::add(perm, i18n("Specify precisely how this tetrahedron face "
+    perm->setWhatsThis(i18n("Specify precisely how this tetrahedron face "
         "is to be identified with a face of the adjacent tetrahedron.<p>"
         "The face of the adjacent tetrahedron should be described in this box "
         "by its three vertices (each between 0 and 3 inclusive).  These "
@@ -120,7 +121,7 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
 }
 
 long NFaceGluingDialog::getAdjTet() const {
-    return ((long)tetrahedron->currentItem()) - 1;
+    return ((long)tetrahedron->currentIndex()) - 1;
 }
 
 QString NFaceGluingDialog::getAdjFace() const {
@@ -128,13 +129,13 @@ QString NFaceGluingDialog::getAdjFace() const {
 }
 
 void NFaceGluingDialog::clearFaceIfNoTetrahedron() {
-    if (tetrahedron->currentItem() == 0)
+    if (tetrahedron->currentIndex() == 0)
         perm->clear();
 }
 
 void NFaceGluingDialog::slotOk() {
     // Check that everything looks alright.
-    long newAdjTet = ((long)(tetrahedron->currentItem())) - 1;
+    long newAdjTet = ((long)(tetrahedron->currentIndex())) - 1;
     QString newAdjFace = perm->text();
     regina::NPerm4 newAdjPerm;
 
@@ -150,18 +151,19 @@ void NFaceGluingDialog::slotOk() {
 
     // Make the gluing!
     tableItem->setDestination(newAdjTet, newAdjPerm);
-    KDialogBase::slotOk();
+    KDialog::okClicked();
 }
 
 NFaceGluingButton::NFaceGluingButton(unsigned long useNTets,
         long useMyTet, int useMyFace,
         long initAdjTet, const QString& initAdjFace,
         FaceGluingItem* useTableItem) :
-        QPushButton(useTableItem->table()->viewport()),
+        QPushButton(useTableItem->tableWidget()->viewport()),
         tableItem(useTableItem), nTets(useNTets), myTet(useMyTet),
         myFace(useMyFace), adjTet(initAdjTet), adjFace(initAdjFace) {
     setFlat(true);
-    QToolTip::add(this, i18n("Press to edit the gluing for this face"));
+
+    this->setToolTip(i18n("Press to edit the gluing for this face")); 
 
     if (initAdjTet >= 0)
         setText(QString("%1 (%2)").arg(initAdjTet).arg(initAdjFace));
@@ -175,4 +177,4 @@ void NFaceGluingButton::spawnDialog() {
     dlg.exec();
 }
 
-#include "nfacegluingdialog.moc"
+#include "moc_nfacegluingdialog.cpp"

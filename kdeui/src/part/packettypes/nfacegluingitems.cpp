@@ -38,7 +38,6 @@
 #include <kmessagebox.h>
 #include <qpushbutton.h>
 #include <qregexp.h>
-#include <qtable.h>
 #include <qvalidator.h>
 
 using regina::NFace;
@@ -60,7 +59,7 @@ namespace {
     QRegExp reFace("^[0-3][0-3][0-3]$");
 }
 
-TetNameItem::TetNameItem(QTable* table, unsigned long tetNum,
+TetNameItem::TetNameItem(QTableWidget* table, unsigned long tetNum,
         const QString& tetName) : QTableItem(table, OnTyping), name(tetName) {
     setReplaceable(false);
 
@@ -318,4 +317,4 @@ void FaceGluingItem::showError(const QString& message) {
     }
 }
 
-#include "nfacegluingitems.moc"
+#include "moc_nfacegluingitems.cpp"

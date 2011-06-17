@@ -38,12 +38,12 @@
 
 #include "reginaprefset.h"
 
-#include <qtable.h>
+#include <QTableWidget>
 
 /**
  * A table item for tetrahedron names.
  */
-class TetNameItem : public QTableItem {
+class TetNameItem : public QTableWidget {
     private:
         QString name;
             /**< The current tetrahedron name. */
@@ -52,7 +52,7 @@ class TetNameItem : public QTableItem {
         /**
          * Constructor.
          */
-        TetNameItem(QTable* table, unsigned long tetNum,
+        TetNameItem(QTableWidget* table, unsigned long tetNum,
                 const QString& tetName);
 
         /**
@@ -67,7 +67,7 @@ class TetNameItem : public QTableItem {
         void tetNumToChange(long newTetNum);
 
         /**
-         * QTableItem overrides.
+         * QTableWidget overrides.
          */
         int alignment() const;
         virtual QWidget* createEditor() const;
@@ -77,7 +77,7 @@ class TetNameItem : public QTableItem {
 /**
  * A table item for an individual face gluing.
  */
-class FaceGluingItem : public QObject, public QTableItem {
+class FaceGluingItem : public QObject, public QTableWidgetItem {
     Q_OBJECT
 
     private:
@@ -96,9 +96,9 @@ class FaceGluingItem : public QObject, public QTableItem {
          * Constructors.  The first constructor is for a boundary face,
          * the second for a face that is glued elsewhere.
          */
-        FaceGluingItem(QTable* table,
+        FaceGluingItem(QTableWidget* table,
             const ReginaPrefSet::TriEditMode& useEditMode);
-        FaceGluingItem(QTable* table,
+        FaceGluingItem(QTableWidget* table,
             const ReginaPrefSet::TriEditMode& useEditMode, int myFace,
             unsigned long destTet, const regina::NPerm4& gluingPerm);
 
@@ -157,7 +157,7 @@ class FaceGluingItem : public QObject, public QTableItem {
         void tetNumsToChange(const long newTetNums[]);
 
         /**
-         * QTableItem overrides.
+         * QTableWidget overrides.
          */
         virtual QWidget* createEditor() const;
         virtual void setContentFromEditor(QWidget* editor);
@@ -225,7 +225,7 @@ inline long FaceGluingItem::adjacentTetrahedron() const {
 }
 
 inline int FaceGluingItem::myFace() const {
-    return 4 - col();
+    return 4 - column();
 }
 
 inline int FaceGluingItem::adjacentFace() const {

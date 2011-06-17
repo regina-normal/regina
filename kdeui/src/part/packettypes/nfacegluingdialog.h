@@ -33,7 +33,8 @@
 #ifndef __NFACEGLUINGDIALOG_H
 #define __NFACEGLUINGDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
+#include <kcombobox.h>
 #include <qpushbutton.h>
 
 class FaceGluingItem;
@@ -43,7 +44,7 @@ class QLineEdit;
 /**
  * A dialog used to edit a single tetrahedron face gluing.
  */
-class NFaceGluingDialog : public KDialogBase {
+class NFaceGluingDialog : public KDialog {
     Q_OBJECT
 
     private:
@@ -55,7 +56,7 @@ class NFaceGluingDialog : public KDialogBase {
         /**
          * Internal components:
          */
-        QComboBox* tetrahedron;
+        KComboBox* tetrahedron;
         QLineEdit* perm;
 
         /**
