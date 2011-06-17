@@ -59,9 +59,9 @@ namespace {
     QRegExp reFace("^[0-3][0-3][0-3]$");
 }
 
-TetNameItem::TetNameItem(QTableWidget* table, unsigned long tetNum,
-        const QString& tetName) : QTableItem(table, OnTyping), name(tetName) {
-    setReplaceable(false);
+TetNameItem::TetNameItem(unsigned long tetNum,
+        const QString& tetName) : QTableWidgetItem(), name(tetName) {
+    //setReplaceable(false);
 
     if (tetName.isEmpty())
         setText(QString::number(tetNum));
@@ -75,22 +75,23 @@ void TetNameItem::tetNumToChange(long newTetNum) {
     else
         setText(QString::number(newTetNum) + " (" + name + ')');
 
-    table()->updateCell(row(), col());
+    //tableWidget()->updateCell(row(), column()); // TODO: Can't find
+    //replacement, is one needed?
 }
 
 int TetNameItem::alignment() const {
-    return AlignLeft;
+    return Qt::AlignLeft;
 }
 
 QWidget* TetNameItem::createEditor() const {
-    QLineEdit* editor = new QLineEdit(name, table()->viewport());
+    QLineEdit* editor = new QLineEdit(name, tableWidget()->viewport());
     editor->setFrame(false);
     editor->selectAll();
     return editor;
 }
 
 void TetNameItem::setContentFromEditor(QWidget* editor) {
-    name = dynamic_cast<QLineEdit*>(editor)->text().stripWhiteSpace();
+    name = dynamic_cast<QLineEdit*>(editor)->text().trimmed();
 
     if (name.isEmpty())
         setText(QString::number(row()));
@@ -98,27 +99,27 @@ void TetNameItem::setContentFromEditor(QWidget* editor) {
         setText(QString::number(row()) + " (" + name + ')');
 }
 
-FaceGluingItem::FaceGluingItem(QTable* table,
+FaceGluingItem::FaceGluingItem(QTableWidget* table,
         const ReginaPrefSet::TriEditMode& useEditMode) :
-        QTableItem(table, OnTyping), adjTet(-1), editMode(useEditMode),
+        QTableWidgetItem(), adjTet(-1), editMode(useEditMode),
         error(false) {
-    setReplaceable(false);
+    //setReplaceable(false); TODO
     connect(this, SIGNAL(destinationChanged()), table, SLOT(doValueChanged()));
 }
 
-FaceGluingItem::FaceGluingItem(QTable* table,
+FaceGluingItem::FaceGluingItem(QTableWidget* table,
         const ReginaPrefSet::TriEditMode& useEditMode, int myFace,
         unsigned long destTet, const regina::NPerm4& gluingPerm) :
-        QTableItem(table, OnTyping), adjTet(destTet), adjPerm(gluingPerm),
+        QTableWidgetItem(), adjTet(destTet), adjPerm(gluingPerm),
         editMode(useEditMode), error(false) {
-    setReplaceable(false);
+    //setReplaceable(false); TODO
     setText(destString(myFace, destTet, gluingPerm));
     connect(this, SIGNAL(destinationChanged()), table, SLOT(doValueChanged()));
 }
 
 QWidget* FaceGluingItem::createEditor() const {
     if (editMode == ReginaPrefSet::DirectEdit) {
-        KLineEdit* editor = new KLineEdit(table()->viewport());
+        KLineEdit* editor = new KLineEdit(tableWidget()->viewport());
         editor->setFrame(false);
         editor->setValidator(new QRegExpValidator(reFaceGluing, editor));
         editor->setText(destString(myFace(), adjTet, adjPerm));
@@ -126,7 +127,7 @@ QWidget* FaceGluingItem::createEditor() const {
 
         return editor;
     } else {
-        return new NFaceGluingButton(table()->numRows(),
+        return new NFaceGluingButton(tableWidget()->rowCount(),
             row(), myFace(), adjTet,
             (adjPerm * NFace::ordering[myFace()]).trunc3().c_str(),
             const_cast<FaceGluingItem*>(this));
@@ -134,7 +135,7 @@ QWidget* FaceGluingItem::createEditor() const {
 }
 
 void FaceGluingItem::setDestination(long newAdjTet,
-        const regina::NPerm4& newAdjPerm, bool shouldRepaintThisTableCell) {
+        const regina::NPerm4& newAdjPerm) { // , bool shouldRepaintThisTableCell) {
     // Have we even made a change?
     if (adjTet < 0 && newAdjTet < 0)
         return;
@@ -146,7 +147,7 @@ void FaceGluingItem::setDestination(long newAdjTet,
     if (newAdjTet < 0)
         newPartner = 0;
     else
-        newPartner = dynamic_cast<FaceGluingItem*>(table()->item(
+        newPartner = dynamic_cast<FaceGluingItem*>(tableWidget()->item(
             newAdjTet, 4 - newAdjPerm[myFace()]));
 
     // Does this new adjacent face already have a partner?
@@ -167,11 +168,11 @@ void FaceGluingItem::setDestination(long newAdjTet,
         newPartner->adjPerm = adjPerm.inverse();
         newPartner->setText(destString(newPartner->myFace(),
             newPartner->adjTet, newPartner->adjPerm));
-        table()->updateCell(newPartner->row(), newPartner->col());
+        //tableWidget()->updateCell(newPartner->row(), newPartner->column()); TODO
     }
-
-    if (shouldRepaintThisTableCell)
-        table()->updateCell(row(), col());
+    // TODO
+    //if (shouldRepaintThisTableCell)
+    //    tableWidget()->updateCell(row(), column());
 
     emit destinationChanged();
 }
@@ -180,7 +181,7 @@ FaceGluingItem* FaceGluingItem::getPartner() {
     if (adjTet < 0)
         return 0;
     else
-        return dynamic_cast<FaceGluingItem*>(table()->item(
+        return dynamic_cast<FaceGluingItem*>(tableWidget()->item(
             adjTet, 4 - adjPerm[myFace()]));
 }
 
@@ -189,7 +190,7 @@ void FaceGluingItem::unjoin() {
         FaceGluingItem* partner = getPartner();
         partner->adjTet = -1;
         partner->setText(QString::null);
-        table()->updateCell(partner->row(), partner->col());
+        //tableWidget()->updateCell(partner->row(), partner->column()); TODO
 
         adjTet = -1;
         setText(QString::null);
@@ -200,7 +201,7 @@ void FaceGluingItem::tetNumsToChange(const long newTetNums[]) {
     if (adjTet >= 0) {
         adjTet = newTetNums[adjTet];
         setText(destString(myFace(), adjTet, adjPerm));
-        table()->updateCell(row(), col());
+        // tableWidget()->updateCell(row(), column()); TODO
     }
 }
 
@@ -211,7 +212,7 @@ void FaceGluingItem::setContentFromEditor(QWidget* editor) {
 
     if (editor->inherits("QLineEdit")) {
         QString text = dynamic_cast<QLineEdit*>(editor)->text().
-            stripWhiteSpace();
+            trimmed();
 
         if (text.isEmpty()) {
             // Boundary face.
@@ -232,14 +233,14 @@ void FaceGluingItem::setContentFromEditor(QWidget* editor) {
 
             // Check explicitly for a negative tetrahedron number
             // since isFaceStringValid() takes an unsigned integer.
-            if (newAdjTet < 0 || newAdjTet >= table()->numRows()) {
+            if (newAdjTet < 0 || newAdjTet >= tableWidget()->rowCount()) {
                 showError(i18n("There is no tetrahedron number %1.").
                     arg(newAdjTet));
                 return;
             }
 
             // Do we have a valid gluing?
-            QString err = isFaceStringValid(table()->numRows(),
+            QString err = isFaceStringValid(tableWidget()->rowCount(),
                 row(), myFace(), newAdjTet, tetFace, &newAdjPerm);
             if (! err.isNull()) {
                 showError(err);
@@ -253,7 +254,7 @@ void FaceGluingItem::setContentFromEditor(QWidget* editor) {
     }
 
     // Make the change.
-    setDestination(newAdjTet, newAdjPerm, false);
+    setDestination(newAdjTet, newAdjPerm);
 }
 
 QString FaceGluingItem::isFaceStringValid(unsigned long nTets,
@@ -301,7 +302,7 @@ regina::NPerm4 FaceGluingItem::faceStringToPerm(int srcFace,
     destVertex[3] = 6; // This will be adjusted in a moment.
     for (int i = 0; i < 3; i++) {
         // Use latin1() here because we are converting characters, not strings.
-        destVertex[i] = str[i].latin1() - '0';
+        destVertex[i] = str[i].toLatin1() - '0';
         destVertex[3] -= destVertex[i];
     }
 
@@ -312,7 +313,7 @@ regina::NPerm4 FaceGluingItem::faceStringToPerm(int srcFace,
 void FaceGluingItem::showError(const QString& message) {
     if (! error) {
         error = true;
-        KMessageBox::error(table(), message);
+        KMessageBox::error(tableWidget(), message);
         error = false;
     }
 }

@@ -43,7 +43,7 @@
 /**
  * A table item for tetrahedron names.
  */
-class TetNameItem : public QTableWidget {
+class TetNameItem : public QTableWidgetItem {
     private:
         QString name;
             /**< The current tetrahedron name. */
@@ -52,8 +52,7 @@ class TetNameItem : public QTableWidget {
         /**
          * Constructor.
          */
-        TetNameItem(QTableWidget* table, unsigned long tetNum,
-                const QString& tetName);
+        TetNameItem(unsigned long tetNum, const QString& tetName);
 
         /**
          * Query properties.
@@ -125,8 +124,8 @@ class FaceGluingItem : public QObject, public QTableWidgetItem {
          * gluings.
          */
         void setDestination(long newDestTet,
-            const regina::NPerm4& newGluingPerm,
-            bool shouldRepaintThisTableCell = true);
+            const regina::NPerm4& newGluingPerm);
+            //bool shouldRepaintThisTableCell = true);
 
         /**
          * Find the table entry corresponding to the partner of this
