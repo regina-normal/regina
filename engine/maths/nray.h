@@ -81,8 +81,10 @@ class REGINA_API NRay : public NVectorDense<NLargeInteger> {
 
         virtual NVector<NLargeInteger>* clone() const;
 
-        virtual void negate();
+        virtual void operator = (const NVector<regina::NLargeInteger>& cloneMe); 
 
+        virtual void negate();
+        
         /**
          * Scales this vector down by the greatest common divisor of all
          * its elements.  The resulting vector will be the smallest
@@ -145,6 +147,11 @@ inline NRay::NRay(const NVector<NLargeInteger>& cloneMe) :
 inline NVector<NLargeInteger>* NRay::clone() const {
     return new NRay(*this);
 }
+        
+inline void NRay::operator = (const NVector<regina::NLargeInteger>& cloneMe) {
+    NVectorDense<NLargeInteger>::operator=(cloneMe);
+}
+
 
 inline void NRay::negate() {
     // Slightly more efficient than the default implementation.

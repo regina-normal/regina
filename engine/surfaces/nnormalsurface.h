@@ -264,6 +264,8 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         NNormalSurfaceVector(const NVector<NLargeInteger>& cloneMe);
 
+
+        virtual void operator = (const NVector<NLargeInteger>& cloneMe);
         /**
          * Determines if the specific underlying coordinate system
          * allows for almost normal surfaces, that is, allows for
@@ -1399,6 +1401,10 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(unsigned length) :
 }
 inline NNormalSurfaceVector::NNormalSurfaceVector(
         const NVector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
+}
+
+inline void NNormalSurfaceVector::operator = (const NVector<NLargeInteger>& cloneMe) {
+    NRay::operator=(cloneMe);
 }
 
 // Inline functions for NNormalSurface
