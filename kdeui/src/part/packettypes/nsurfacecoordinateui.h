@@ -92,7 +92,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         KAction* actCutAlong;
         KAction* actCrush;
         KActionCollection* surfaceActions;
-        QPtrList<KAction> surfaceActionList;
+        QLinkedList<KAction*> surfaceActionList;
 
         /**
          * Internal status
@@ -113,7 +113,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        const QPtrList<KAction>& getPacketTypeActions();
+        const QLinkedList<KAction*>& getPacketTypeActions();
         void commit();
         void refresh();
         void setReadWrite(bool readWrite);
@@ -168,7 +168,7 @@ class SurfaceHeaderToolTip : public QToolTip {
          * Constructor.
          */
         SurfaceHeaderToolTip(regina::NNormalSurfaceList* useSurfaces,
-            int useCoordSystem, QHeader* header, QToolTipGroup* group = 0);
+            int useCoordSystem, QHeader* header);
 
     protected:
         /**

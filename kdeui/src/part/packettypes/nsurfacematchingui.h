@@ -111,7 +111,7 @@ class MatchingHeaderToolTip : public QToolTip {
          * Constructor.
          */
         MatchingHeaderToolTip(regina::NTriangulation* useTri,
-            int useCoordSystem, QHeader* header, QToolTipGroup* group = 0);
+            int useCoordSystem, QHeader* header);
 
     protected:
         /**
