@@ -38,7 +38,7 @@
 class KAction;
 class KActionCollection;
 class QSplitter;
-class QTable;
+class QTableWidget;
 
 namespace KTextEditor {
     class EditInterface;
@@ -66,7 +66,7 @@ class NScriptUI : public QObject, public PacketUI {
          * Internal components
          */
         QWidget* ui;
-        QTable* varTable;
+        QTableWidget* varTable;
         KTextEditor::Document* document;
         KTextEditor::EditInterface* editInterface;
         KTextEditor::View* view;
@@ -77,7 +77,7 @@ class NScriptUI : public QObject, public PacketUI {
         KAction* actAdd;
         KAction* actRemove;
         KActionCollection* scriptActions;
-        QLinkedList<KAction> scriptActionList;
+        QLinkedList<KAction*> scriptActionList;
 
     public:
         /**
