@@ -297,9 +297,9 @@ void NScriptUI::refresh() {
     unsigned long nVars = script->getNumberOfVariables();
     varTable->setRowCount(nVars);
     for (unsigned long i = 0; i < nVars; i++) {
-        varTable->setItem(i, 0, new ScriptVarNameItem(varTable,
+        varTable->setItem(i, 0, new ScriptVarNameItem(
             script->getVariableName(i).c_str()));
-        varTable->setItem(i, 1, new ScriptVarValueItem(varTable,
+        varTable->setItem(i, 1, new ScriptVarValueItem(
             script->getTreeMatriarch(), script->getVariableValue(i).c_str()));
     }
 
@@ -368,8 +368,8 @@ void NScriptUI::addVariable() {
 
     // Add the new variable.
     //varTable->insertRows(rows); TODO: Don't think this is needed, test.
-    varTable->setItem(rows, 0, new ScriptVarNameItem(varTable, varName));
-    varTable->setItem(rows, 1, new ScriptVarValueItem(varTable,
+    varTable->setItem(rows, 0, new ScriptVarNameItem(varName));
+    varTable->setItem(rows, 1, new ScriptVarValueItem(
         script->getTreeMatriarch(), (regina::NPacket*)0));
 
     // Done!

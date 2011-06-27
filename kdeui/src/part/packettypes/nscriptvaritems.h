@@ -53,7 +53,7 @@ class ScriptVarNameItem : public QTableWidgetItem {
         /**
          * Constructor.
          */
-        ScriptVarNameItem(QTableWidget* table, const QString& name);
+        ScriptVarNameItem(const QString& name);
 
         /**
          * QTableWidgetItem overrides.
@@ -94,9 +94,9 @@ class ScriptVarValueItem : public QTableWidgetItem, public regina::NPacketListen
         /**
          * Constructor.
          */
-        ScriptVarValueItem(QTableWidget* table, regina::NPacket* treeMatriarch,
+        ScriptVarValueItem(regina::NPacket* treeMatriarch,
             regina::NPacket* selectedPacket);
-        ScriptVarValueItem(QTableWidget* table, regina::NPacket* treeMatriarch,
+        ScriptVarValueItem(regina::NPacket* treeMatriarch,
             const QString& packetLabel);
 
         /**

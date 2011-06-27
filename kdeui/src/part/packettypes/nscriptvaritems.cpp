@@ -38,7 +38,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qregexp.h>
-#include <qtable.h>
+#include <QTableWidget>
 #include <qvalidator.h>
 
 using regina::NPacket;
@@ -47,13 +47,14 @@ namespace {
     QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
 }
 
-ScriptVarNameItem::ScriptVarNameItem(QTable* table, const QString& name) :
-        QTableItem(table, OnTyping, name), error(false) {
-    setReplaceable(false);
+ScriptVarNameItem::ScriptVarNameItem(const QString& name) :
+        QTableWidgetItem(), error(false) {
+    setText(name);
+    //setReplaceable(false); TODO
 }
 
 QWidget* ScriptVarNameItem::createEditor() const {
-    KLineEdit* editor = new KLineEdit(text(), table()->viewport());
+    KLineEdit* editor = new KLineEdit(text(), tableWidget()->viewport());
     editor->setFrame(false);
     editor->setValidator(new QRegExpValidator(rePythonIdentifier, editor));
     editor->selectAll();
@@ -61,7 +62,7 @@ QWidget* ScriptVarNameItem::createEditor() const {
 }
 
 void ScriptVarNameItem::setContentFromEditor(QWidget* editor) {
-    QString name = dynamic_cast<QLineEdit*>(editor)->text().stripWhiteSpace();
+    QString name = dynamic_cast<QLineEdit*>(editor)->text().trimmed();
 
     if (name.isEmpty()) {
         showError(i18n("Variable names cannot be empty."));
@@ -97,48 +98,48 @@ void ScriptVarNameItem::setContentFromEditor(QWidget* editor) {
 void ScriptVarNameItem::showError(const QString& message) {
     if (! error) {
         error = true;
-        KMessageBox::error(table(), message);
+        KMessageBox::error(tableWidget(), message);
         error = false;
     }
 }
 
 bool ScriptVarNameItem::nameUsedElsewhere(const QString& name) {
-    int rows = table()->numRows();
+    int rows = tableWidget()->rowCount();
     for (int i = 0; i < rows; i++) {
         if (i == row())
             continue;
-        if (table()->text(i, 0) == name)
+        if (tableWidget()->itemAt(i, 0)->text() == name)
             return true;
     }
     return false;
 }
 
-ScriptVarValueItem::ScriptVarValueItem(QTable* table, NPacket* treeMatriarch,
-        NPacket* selectedPacket) : QTableItem(table, WhenCurrent),
+ScriptVarValueItem::ScriptVarValueItem(NPacket* treeMatriarch,
+        NPacket* selectedPacket) : QTableWidgetItem(),
         packet(selectedPacket), matriarch(treeMatriarch) {
     if (packet)
         packet->listen(this);
 
     updateData();
-    setReplaceable(false);
+    //setReplaceable(false); TODO
 }
 
-ScriptVarValueItem::ScriptVarValueItem(QTable* table, NPacket* treeMatriarch,
-        const QString& packetLabel) : QTableItem(table, WhenCurrent),
+ScriptVarValueItem::ScriptVarValueItem(NPacket* treeMatriarch,
+        const QString& packetLabel) : QTableWidgetItem(),
         matriarch(treeMatriarch) {
-    packet = treeMatriarch->findPacketLabel(packetLabel.ascii());
+    packet = treeMatriarch->findPacketLabel(packetLabel.toLatin1().data());
     if (packet)
         packet->listen(this);
 
     updateData();
-    setReplaceable(false);
+    //setReplaceable(false); TODO
 }
 
 QWidget* ScriptVarValueItem::createEditor() const {
     PacketChooser* editor = new PacketChooser(matriarch, 0, true, packet,
-        table()->viewport());
+        tableWidget()->viewport());
     editor->setAutoUpdate(true);
-    QObject::connect(editor, SIGNAL(activated(int)), table(),
+    QObject::connect(editor, SIGNAL(activated(int)), tableWidget(),
         SLOT(doValueChanged()));
     return editor;
 }
@@ -161,7 +162,7 @@ void ScriptVarValueItem::setContentFromEditor(QWidget* editor) {
 void ScriptVarValueItem::packetWasRenamed(NPacket* p) {
     if (p == packet) {
         updateData();
-        table()->updateCell(row(), col());
+        //tableWidget()->updateCell(row(), col()); TODO
     }
 }
 
@@ -170,17 +171,17 @@ void ScriptVarValueItem::packetToBeDestroyed(NPacket* p) {
         packet->unlisten(this);
         packet = 0;
         updateData();
-        table()->updateCell(row(), col());
+        //table()->updateCell(row(), col()); TODO
     }
 }
 
 void ScriptVarValueItem::updateData() {
     if (packet && ! packet->getPacketLabel().empty()) {
         setText(packet->getPacketLabel().c_str());
-        setPixmap(QPixmap(PacketManager::iconSmall(packet, false)));
+        setIcon(QPixmap(PacketManager::iconSmall(packet, false)));
     } else {
         setText("<None>");
-        setPixmap(QPixmap());
+        setIcon(QPixmap());
     }
 }
 
