@@ -33,7 +33,8 @@
 #ifndef __NSURFACECOORDINATEITEM_H
 #define __NSURFACECOORDINATEITEM_H
 
-#include "../gridlistview.h"
+//#include "../gridlistview.h"
+#include <QListWidgetItem>
 
 namespace regina {
     class NNormalSurface;
@@ -43,7 +44,7 @@ namespace regina {
 /**
  * A list view item describing a single normal surface.
  */
-class NSurfaceCoordinateItem : public GridListViewItem {
+class NSurfaceCoordinateItem : public QListWidgetItem {
     public:
         /**
          * Constants representing the possible colours in which table
@@ -68,7 +69,7 @@ class NSurfaceCoordinateItem : public GridListViewItem {
         /**
          * Constructor.
          */
-        NSurfaceCoordinateItem(QListView* parent,
+        NSurfaceCoordinateItem(QListWidget* parent,
             regina::NNormalSurfaceList* fromSurfaces,
             unsigned long newSurfaceIndex, QString& newName,
             int useCoordSystem);
@@ -89,13 +90,15 @@ class NSurfaceCoordinateItem : public GridListViewItem {
         static QString propertyColDesc(int whichCol, bool embeddedOnly,
             bool almostNormal);
 
+        void updateColour(int column);
         /**
          * QListItem overrides.
          */
         QString text(int column) const;
         void setText(int column, const QString& str);
-        void paintCell(QPainter* p, const QColorGroup& cg, int column,
-            int width, int align);
+        //void paintCell(QPainter* p, const QColorGroup& cg, int column,
+        //    int width, int align);
+
 };
 
 inline const regina::NNormalSurface* NSurfaceCoordinateItem::getSurface() {

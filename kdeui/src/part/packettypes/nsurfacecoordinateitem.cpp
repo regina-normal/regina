@@ -37,13 +37,13 @@
 #include "nsurfacecoordinateitem.h"
 
 #include <klocale.h>
-#include <qpainter.h>
+#include <Qt>
 #include <qstyle.h>
 
-NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
+NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListWidget* parent,
         regina::NNormalSurfaceList* fromSurfaces,
         unsigned long newSurfaceIndex, QString& newName, int useCoordSystem) :
-        GridListViewItem(parent),
+        QListWidgetItem(parent),
         surface(fromSurfaces->getSurface(newSurfaceIndex)),
         name(newName),
         surfaceIndex(newSurfaceIndex),
@@ -131,7 +131,8 @@ QString NSurfaceCoordinateItem::propertyColDesc(int whichCol,
 void NSurfaceCoordinateItem::setText(int column, const QString& str) {
     if (column == 1)
         name = str;
-    KListViewItem::setText(column, str);
+    //QListWidgetItem::setText(column, str); TODO : check
+    QListWidgetItem::setText(str); 
 }
 
 QString NSurfaceCoordinateItem::text(int column) const {
@@ -226,7 +227,7 @@ QString NSurfaceCoordinateItem::text(int column) const {
                             return i18n("K%1: %2 (%3 octs)").
                                 arg(oct.tetIndex).
                                 arg(regina::vertexSplitString[oct.type]).
-                                arg(tot.stringValue());
+                                arg(tot.stringValue().c_str());
                         }
                     }
                 }
@@ -301,7 +302,7 @@ QString NSurfaceCoordinateItem::text(int column) const {
                                 arg(regina::vertexSplitString[oct.type]);
                         } else {
                             return i18n("%1 octs at K%2: %3").
-                                arg(tot.stringValue()).
+                                arg(tot.stringValue().c_str()).
                                 arg(oct.tetIndex).
                                 arg(regina::vertexSplitString[oct.type]);
                         }
@@ -324,6 +325,7 @@ QString NSurfaceCoordinateItem::text(int column) const {
     return i18n("Unknown");
 }
 
+/*
 void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,
         int column, int width, int align) {
      // Paint the cell in the correct colour.
@@ -340,7 +342,17 @@ void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,
              altCg.setColor(QColorGroup::Text, darkRed);
          GridListViewItem::paintCell(p, altCg, column, width, align);
      }
+} */
+
+void NSurfaceCoordinateItem::updateColour(int column) {
+    switch (getColour(column)) {
+        case Red: setForeground(Qt::red) ; break ;
+        case Yellow: setForeground(Qt::yellow) ; break;
+        case Green: setForeground(Qt::green) ; break;
+        default : break; 
+    }
 }
+
 
 NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
         int column) {
