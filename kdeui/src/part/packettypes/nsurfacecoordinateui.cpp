@@ -73,8 +73,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     uiLayout->addSpacing(5);
 
     QBoxLayout* hdrLayout = new QHBoxLayout();
-    QWidget* hdrWidget = new QWidget(ui);
-    hdrWidget->setLayout(hdrLayout);
+    uiLayout->addLayout(hdrLayout);
     hdrLayout->setSpacing(5);
     hdrLayout->addSpacing(5);
 
