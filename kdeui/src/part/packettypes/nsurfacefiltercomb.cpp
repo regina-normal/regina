@@ -33,14 +33,13 @@
 #include "nsurfacefiltercomb.h"
 #include "../packetmanager.h"
 
-#include <klistview.h>
 #include <klocale.h>
 #include <qbuttongroup.h>
-#include <qheader.h>
+#include <QHeaderView>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qradiobutton.h>
-#include <qwhatsthis.h>
+#include <QTreeWidget>
 
 namespace {
     const int ID_AND = 0;
@@ -60,26 +59,28 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     layout->addStretch(1);
 
     // Set up the boolean type options.
-    QBoxLayout* typeLayout = new QHBoxLayout(layout);
+    QBoxLayout* typeLayout = new QHBoxLayout();
+    layout->addLayout(typeLayout);
     typeLayout->addStretch(1);
 
     QLabel* label = new QLabel(i18n("Combine using:"), ui);
-    QWhatsThis::add(label, i18n("Specifies whether this combination "
+    label->setWhatsThis(i18n("Specifies whether this combination "
         "filter will use boolean AND or boolean OR to combine its "
         "children."));
     typeLayout->addWidget(label);
     typeLayout->addSpacing(10);
 
-    QBoxLayout* typeOptionLayout = new QVBoxLayout(typeLayout);
+    QBoxLayout* typeOptionLayout = new QVBoxLayout();
+    typeLayout->addLayout(typeOptionLayout);
     typeAnd = new QRadioButton(i18n("AND"), ui);
     typeAnd->setEnabled(readWrite);
-    QWhatsThis::add(typeAnd, i18n("Combine the children of this filter "
+    typeAnd->setWhatsThis(i18n("Combine the children of this filter "
         "using boolean AND.  A surface will pass this filter only when "
         "it passes every one of the child filters."));
     typeOptionLayout->addWidget(typeAnd);
     typeOr = new QRadioButton(i18n("OR"), ui);
     typeOr->setEnabled(readWrite);
-    QWhatsThis::add(typeOr, i18n("Combine the children of this filter "
+    typeOr->setWhatsThis(i18n("Combine the children of this filter "
         "using boolean OR.  A surface will pass this filter only when "
         "it passes at least one of the child filters."));
     typeOptionLayout->addWidget(typeOr);
@@ -87,9 +88,9 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     typeLayout->addStretch(1);
 
     boolType = new QButtonGroup();
-    boolType->insert(typeAnd, ID_AND);
-    boolType->insert(typeOr, ID_OR);
-    boolType->setButton(filter->getUsesAnd() ? ID_AND : ID_OR);
+    boolType->addButton(typeAnd, ID_AND);
+    boolType->addButton(typeOr, ID_OR);
+    boolType->button(filter->getUsesAnd() ? ID_AND : ID_OR)->setChecked(true);
 
     layout->addStretch(1);
 
@@ -99,25 +100,27 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     ui->setFocusProxy(typeAnd);
 
     // Set up the list of child filters.
-    QBoxLayout* wideChildLayout = new QHBoxLayout(layout);
+    QBoxLayout* wideChildLayout = new QHBoxLayout();
+    layout->addLayout(wideChildLayout);
     layout->setStretchFactor(wideChildLayout, 3);
 
     wideChildLayout->addStretch(1);
 
-    QVBoxLayout* childLayout = new QVBoxLayout(wideChildLayout);
+    QVBoxLayout* childLayout = new QVBoxLayout();
+    wideChildLayout->addLayout(wideChildLayout);
     wideChildLayout->setStretchFactor(childLayout, 2);
 
     label = new QLabel(i18n("Filters to be combined\n"
         "(i.e., all filters immediately beneath this in the tree):"), ui);
     childLayout->addWidget(label);
 
-    children = new KListView(ui);
+    children = new QTreeWidget(ui);
     children->header()->hide();
-    children->addColumn(QString::null);
-    children->setSorting(-1);
-    children->setSelectionMode(QListView::NoSelection);
+    //children->addColumn(QString::null);
+    //children->setSorting(-1); TODO
+    children->setSelectionMode(QAbstractItemView::NoSelection);
     refreshChildList();
-    childLayout->addWidget(children, 1);
+    childLayout->addWidget(children, 1, Qt::AlignLeft);
 
     QString msg = i18n("<qt>Shows the child filters that this combination "
         "filter will combine, i.e., all of the filters immediately beneath "
@@ -127,8 +130,8 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
         "to remove a filter from this list, you need to move it elsewhere "
         "in the packet tree (see the <i>Packet Tree / Move</i> menu for "
         "how to do this).");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(children, msg);
+    label->setWhatsThis(msg);
+    children->setWhatsThis(msg);
 
     wideChildLayout->addStretch(1);
 
@@ -166,12 +169,12 @@ QString NSurfaceFilterCombUI::getPacketMenuText() const {
 }
 
 void NSurfaceFilterCombUI::commit() {
-    filter->setUsesAnd(boolType->selectedId() == ID_AND ? true : false);
+    filter->setUsesAnd(boolType->checkedId() == ID_AND ? true : false);
     setDirty(false);
 }
 
 void NSurfaceFilterCombUI::refresh() {
-    boolType->setButton(filter->getUsesAnd() ? ID_AND : ID_OR);
+    boolType->button(filter->getUsesAnd() ? ID_AND : ID_OR)->setChecked(true);
     setDirty(false);
 }
 
@@ -210,12 +213,13 @@ void NSurfaceFilterCombUI::refreshChildList() {
 
     // Add the items in reverse order since the QListViewItem
     // constructor puts new items at the front.
-    KListViewItem* item;
+    QTreeWidgetItem* item;
     for (regina::NPacket* p = filter->getLastTreeChild(); p;
             p = p->getPrevTreeSibling())
         if (p->getPacketType() == regina::NSurfaceFilter::packetType) {
-            item = new KListViewItem(children, p->getPacketLabel().c_str());
-            item->setPixmap(0, PacketManager::iconSmall(p, false));
+            item = new QTreeWidgetItem(children);
+            item->setText(0, p->getPacketLabel().c_str());
+            item->setIcon(0, PacketManager::iconSmall(p, false));
 
             // Listen for renaming events.  We won't ever call
             // unlisten() - it's a lot of hassle for a minor issue, and
@@ -224,4 +228,4 @@ void NSurfaceFilterCombUI::refreshChildList() {
         }
 }
 
-#include "nsurfacefiltercomb.moc"
+#include "moc_nsurfacefiltercomb.cpp"
