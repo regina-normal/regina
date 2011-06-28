@@ -63,7 +63,7 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
     uiLayout->addSpacing(5);
 
     QBoxLayout* hdrLayout = new QHBoxLayout();
-    QWidget* hdrWidget = new QWidget;
+    QWidget* hdrWidget = new QWidget(ui);
     uiLayout->addWidget(hdrWidget);
     hdrWidget->setLayout(hdrLayout);
     hdrLayout->setSpacing(5);

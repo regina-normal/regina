@@ -40,10 +40,10 @@
 #include <Qt>
 #include <qstyle.h>
 
-NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListWidget* parent,
+NSurfaceCoordinateItem::NSurfaceCoordinateItem(QTreeWidget* parent,
         regina::NNormalSurfaceList* fromSurfaces,
         unsigned long newSurfaceIndex, QString& newName, int useCoordSystem) :
-        QListWidgetItem(parent),
+        QTreeWidgetItem(parent),
         surface(fromSurfaces->getSurface(newSurfaceIndex)),
         name(newName),
         surfaceIndex(newSurfaceIndex),
@@ -132,7 +132,7 @@ void NSurfaceCoordinateItem::setText(int column, const QString& str) {
     if (column == 1)
         name = str;
     //QListWidgetItem::setText(column, str); TODO : check
-    QListWidgetItem::setText(str); 
+    QTreeWidgetItem::setText(column,str); 
 }
 
 QString NSurfaceCoordinateItem::text(int column) const {
@@ -346,9 +346,9 @@ void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,
 
 void NSurfaceCoordinateItem::updateColour(int column) {
     switch (getColour(column)) {
-        case Red: setForeground(Qt::red) ; break ;
-        case Yellow: setForeground(Qt::yellow) ; break;
-        case Green: setForeground(Qt::green) ; break;
+        case Red: setForeground(column,Qt::red) ; break ;
+        case Yellow: setForeground(column,Qt::yellow) ; break;
+        case Green: setForeground(column,Qt::green) ; break;
         default : break; 
     }
 }

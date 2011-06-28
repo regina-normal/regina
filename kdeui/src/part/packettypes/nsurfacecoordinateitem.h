@@ -34,7 +34,7 @@
 #define __NSURFACECOORDINATEITEM_H
 
 //#include "../gridlistview.h"
-#include <QListWidgetItem>
+#include <QTreeWidgetItem>
 
 namespace regina {
     class NNormalSurface;
@@ -44,7 +44,7 @@ namespace regina {
 /**
  * A list view item describing a single normal surface.
  */
-class NSurfaceCoordinateItem : public QListWidgetItem {
+class NSurfaceCoordinateItem : public QTreeWidgetItem {
     public:
         /**
          * Constants representing the possible colours in which table
@@ -69,7 +69,7 @@ class NSurfaceCoordinateItem : public QListWidgetItem {
         /**
          * Constructor.
          */
-        NSurfaceCoordinateItem(QListWidget* parent,
+        NSurfaceCoordinateItem(QTreeWidget* parent,
             regina::NNormalSurfaceList* fromSurfaces,
             unsigned long newSurfaceIndex, QString& newName,
             int useCoordSystem);

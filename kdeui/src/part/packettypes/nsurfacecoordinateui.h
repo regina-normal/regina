@@ -45,9 +45,9 @@ class KAction;
 class KActionCollection;
 class PacketChooser;
 class QBoxLayout;
-class QHeader;
-class QListView;
-class QListViewItem;
+class QHeaderView;
+class QTreeWidget;
+class QTreeWidgetItem;
 class SurfaceHeaderToolTip;
 
 namespace regina {
@@ -82,7 +82,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         QBoxLayout* uiLayout;
         CoordinateChooser* coords;
         PacketChooser* filter;
-        std::auto_ptr<QListView> table;
+        std::auto_ptr<QTreeWidget> table;
         std::auto_ptr<SurfaceHeaderToolTip> headerTips;
         QString tableWhatsThis;
 
@@ -155,11 +155,12 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
 /**
  * A utility class for displaying tooltips for table headers.
  */
-class SurfaceHeaderToolTip : public QToolTip {
+class SurfaceHeaderToolTip : public QObject {
     private:
         /**
          * Surface information
          */
+        QHeaderView *header;
         regina::NNormalSurfaceList* surfaces;
         int coordSystem;
 
@@ -168,13 +169,13 @@ class SurfaceHeaderToolTip : public QToolTip {
          * Constructor.
          */
         SurfaceHeaderToolTip(regina::NNormalSurfaceList* useSurfaces,
-            int useCoordSystem, QHeader* header);
+            int useCoordSystem, QHeaderView* header);
 
     protected:
         /**
-         * QToolTip overrides.
+         * Event filter 
          */
-        void maybeTip(const QPoint& p);
+        bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif

@@ -40,15 +40,17 @@
 #include "../packetfilter.h"
 #include "../reginapart.h"
 
-#include <kaction.h>
-#include <klistview.h>
+#include <KActionCollection>
+#include <KComponentData>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <qheader.h>
+#include <QHeaderView>
+#include <QHelpEvent>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qstyle.h>
-#include <qwhatsthis.h>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
 
 #define DEFAULT_COORDINATE_COLUMN_WIDTH 40
 
@@ -70,7 +72,9 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     uiLayout = new QVBoxLayout(ui);
     uiLayout->addSpacing(5);
 
-    QBoxLayout* hdrLayout = new QHBoxLayout(uiLayout);
+    QBoxLayout* hdrLayout = new QHBoxLayout();
+    QWidget* hdrWidget = new QWidget(ui);
+    hdrWidget->setLayout(hdrLayout);
     hdrLayout->setSpacing(5);
     hdrLayout->addSpacing(5);
 
@@ -84,8 +88,8 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     hdrLayout->addWidget(coords);
     QString msg = i18n("Allows you to view these normal surfaces in a "
         "different coordinate system.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(coords, msg);
+    label->setWhatsThis(msg);
+    coords->setWhatsThis(msg);
 
     hdrLayout->addStretch(1);
 
@@ -102,8 +106,8 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "To use this feature you need a separate surface filter.  You "
         "can create new surface filters through the <i>Packet Tree</i> "
         "menu.</qt>");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(filter, msg);
+    label->setWhatsThis(msg);
+    filter->setWhatsThis(msg);
 
     hdrLayout->addSpacing(5);
     uiLayout->addSpacing(5);
@@ -121,14 +125,10 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "to the users' handbook).</qt>");
 
     // Set up the surface list actions.
-    surfaceActions = new KActionCollection(0, 0, 0,
-        ReginaPart::factoryInstance());
-    surfaceActionList.setAutoDelete(true);
+    surfaceActions = new KActionCollection(0, ReginaPart::factoryInstance());
 
-    actCutAlong = new KAction(i18n("Cu&t Along Surface"),
-        QString::null /* pixmap */,
-        0 /* shortcut */, this, SLOT(cutAlong()), surfaceActions,
-        "surface_cutalong");
+    actCutAlong = surfaceActions->addAction("surface_cutalong");
+    actCutAlong->setText(i18n("Cu&t Along Surface"));
     actCutAlong->setToolTip(i18n("Cut the triangulation along the "
         "selected surface"));
     actCutAlong->setEnabled(false);
@@ -141,11 +141,11 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "because the new surface boundaries are created from real "
         "boundary faces, the resulting number of tetrahedra might be very "
         "large.</qt>"));
+    connect(actCutAlong, SIGNAL(triggered), this, SLOT(cutAlong()));
     surfaceActionList.append(actCutAlong);
 
-    actCrush = new KAction(i18n("Crus&h Surface"), QString::null /* pixmap */,
-        0 /* shortcut */, this, SLOT(crush()), surfaceActions,
-        "surface_crush");
+    actCrush = surfaceActions->addAction("surface_crush");
+    actCrush->setText("Crus&h Surface");
     actCrush->setToolTip(i18n("Crush the selected surface to a point"));
     actCrush->setEnabled(false);
     actCrush->setWhatsThis(i18n("<qt>Crushes the selected surface to a point "
@@ -158,6 +158,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "the surface and shrinking the resulting boundary/boundaries "
         "to points.</qt>"));
     surfaceActionList.append(actCrush);
+    connect(actCrush, SIGNAL(triggered()), this, SLOT(crush()));
 
     // Tidy up.
     refresh();
@@ -172,7 +173,7 @@ NSurfaceCoordinateUI::~NSurfaceCoordinateUI() {
     delete surfaceActions;
 }
 
-const QPtrList<KAction>& NSurfaceCoordinateUI::getPacketTypeActions() {
+const QLinkedList<KAction*>& NSurfaceCoordinateUI::getPacketTypeActions() {
     return surfaceActionList;
 }
 
@@ -187,7 +188,7 @@ QWidget* NSurfaceCoordinateUI::getInterface() {
 void NSurfaceCoordinateUI::commit() {
     for (unsigned long i = 0; i < surfaces->getNumberOfSurfaces(); i++)
         const_cast<regina::NNormalSurface*>(surfaces->getSurface(i))->
-            setName(newName[i].ascii());
+            setName(newName[i].toLatin1().data());
 
     setDirty(false);
 }
@@ -209,36 +210,37 @@ void NSurfaceCoordinateUI::refreshLocal() {
     table.reset(0);
 
     // Set up the new table.
-    table.reset(new KListView(ui));
+    table.reset(new QTreeWidget(ui));
     table->setAllColumnsShowFocus(true);
-    table->setSorting(-1);
-    table->setSelectionMode(QListView::Single);
-    table->setDefaultRenameAction(QListView::Accept);
-    QWhatsThis::add(table.get(), tableWhatsThis);
+    table->setSortingEnabled(false);
+    table->setSelectionMode(QAbstractItemView::SingleSelection);
+    //table->setDefaultRenameAction(QListView::Accept); TODO
+    table.get()->setWhatsThis(tableWhatsThis);
     uiLayout->addWidget(table.get(), 1);
 
     // Add table columns.
     int coordSystem = coords->getCurrentSystem();
-    regina::NTriangulation* tri = surfaces->getTriangulation();
+    //regina::NTriangulation* tri = surfaces->getTriangulation();
 
-    bool embeddedOnly = surfaces->isEmbeddedOnly();
-    bool almostNormal = surfaces->allowsAlmostNormal();
-    int propCols = NSurfaceCoordinateItem::propertyColCount(embeddedOnly,
-        almostNormal);
-    long coordCols = Coordinates::numColumns(coordSystem, tri);
+    //bool embeddedOnly = surfaces->isEmbeddedOnly();
+    //bool almostNormal = surfaces->allowsAlmostNormal();
+    //int propCols = NSurfaceCoordinateItem::propertyColCount(embeddedOnly,
+    //    almostNormal);
+    //long coordCols = Coordinates::numColumns(coordSystem, tri);
 
     long i;
+    /* TODO Not needed?
     for (i = 0; i < propCols; i++)
         table->addColumn(NSurfaceCoordinateItem::propertyColName(i,
             embeddedOnly, almostNormal), DEFAULT_COORDINATE_COLUMN_WIDTH);
     for (i = 0; i < coordCols; i++)
         table->addColumn(Coordinates::columnName(coordSystem, i, tri),
             DEFAULT_COORDINATE_COLUMN_WIDTH);
-
+    */
     headerTips.reset(new SurfaceHeaderToolTip(surfaces, coordSystem,
         table->header()));
-    connect(table->header(), SIGNAL(sizeChange(int, int, int)),
-        this, SLOT(columnResized(int, int, int)));
+    //connect(table->header(), SIGNAL(sizeChange(int, int, int)),
+    //    this, SLOT(columnResized(int, int, int)));
 
     // Insert surfaces into the table.
     const regina::NNormalSurface* s;
@@ -247,11 +249,11 @@ void NSurfaceCoordinateUI::refreshLocal() {
         if (appliedFilter && ! appliedFilter->accept(*s))
             continue;
         (new NSurfaceCoordinateItem(table.get(), surfaces, i, newName[i],
-            coordSystem))->setRenameEnabled(1, isReadWrite);
+            coordSystem)); //->setRenameEnabled(1, isReadWrite);
     }
 
-    for (i = 0; i < table->columns(); i++)
-        table->adjustColumn(i);
+    //for (i = 0; i < table->columns(); i++)
+    //    table->adjustColumn(i);
 
     // Hook up the cut and crush actions to the new table.
     actCutAlong->setEnabled(false);
@@ -280,11 +282,16 @@ void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
     isReadWrite = readWrite;
 
     if (table.get()) {
-        for (QListViewItem* item = table->firstChild(); item;
-                item = item->nextSibling())
-            item->setRenameEnabled(1, readWrite);
+        for ( int i=0; i < table->invisibleRootItem()->childCount() ; i++) {
+            QTreeWidgetItem* item = table->invisibleRootItem()->child(i);
+            Qt::ItemFlags flags = item->flags();
+            if (readWrite)
+                flags = flags | Qt::ItemIsEditable;
+            else 
+                flags = flags & (~Qt::ItemIsEditable);
+            item->setFlags(flags);
+        }
     }
-
     updateActionStates();
 }
 
@@ -295,12 +302,13 @@ void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
 }
 
 void NSurfaceCoordinateUI::cutAlong() {
-    QListViewItem* item = table->selectedItem();
-    if (! item) {
+    QList<QTreeWidgetItem*> items = table->selectedItems();
+    if ( items.count() == 0) {
         KMessageBox::error(ui,
             i18n("No normal surface is currently selected to cut along."));
         return;
     }
+    QTreeWidgetItem* item = items[0];
 
     const regina::NNormalSurface* toCutAlong =
         dynamic_cast<NSurfaceCoordinateItem*>(item)->getSurface();
@@ -315,19 +323,21 @@ void NSurfaceCoordinateUI::cutAlong() {
     regina::NTriangulation* ans = toCutAlong->cutAlong();
     ans->intelligentSimplify();
     ans->setPacketLabel(surfaces->makeUniqueLabel(i18n("Cut-open %1").arg(
-        surfaces->getTriangulation()->getPacketLabel().c_str()).ascii()));
+        surfaces->getTriangulation()->getPacketLabel().c_str())
+          .toLatin1().data()));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getPart()->packetView(ans, true);
 }
 
 void NSurfaceCoordinateUI::crush() {
-    QListViewItem* item = table->selectedItem();
-    if (! item) {
+    QList<QTreeWidgetItem*> items = table->selectedItems();
+    if ( items.count() == 0) {
         KMessageBox::error(ui,
             i18n("No normal surface is currently selected to crush."));
         return;
     }
+    QTreeWidgetItem* item = items[0];
 
     const regina::NNormalSurface* toCrush =
         dynamic_cast<NSurfaceCoordinateItem*>(item)->getSurface();
@@ -340,7 +350,8 @@ void NSurfaceCoordinateUI::crush() {
     // Go ahead and crush it.
     regina::NTriangulation* ans = toCrush->crush();
     ans->setPacketLabel(surfaces->makeUniqueLabel(i18n("Crushed %1").arg(
-        surfaces->getTriangulation()->getPacketLabel().c_str()).ascii()));
+        surfaces->getTriangulation()->getPacketLabel().c_str())
+          .toLatin1().data()));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getPart()->packetView(ans, true);
@@ -348,7 +359,7 @@ void NSurfaceCoordinateUI::crush() {
 
 void NSurfaceCoordinateUI::updateActionStates() {
     bool canCrushOrCut = isReadWrite && table.get() &&
-        table->selectedItem() != 0 && (! surfaces->allowsAlmostNormal())
+        table->selectedItems().count() != 0 && (! surfaces->allowsAlmostNormal())
         && surfaces->isEmbeddedOnly();
 
     actCutAlong->setEnabled(canCrushOrCut);
@@ -364,8 +375,8 @@ void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
     // A coordinate column has been resized.
     // Resize all coordinate columns.
     currentlyResizing = true;
-    for (long i = nNonCoordSections; i < table->columns(); i++)
-        table->setColumnWidth(i, newSize);
+    //for (long i = nNonCoordSections; i < table->columnCount(); i++)
+    //    table->setColumnWidth(i, newSize);
     currentlyResizing = false;
 }
 
@@ -375,27 +386,32 @@ void NSurfaceCoordinateUI::notifySurfaceRenamed() {
 
 SurfaceHeaderToolTip::SurfaceHeaderToolTip(
         regina::NNormalSurfaceList* useSurfaces, int useCoordSystem,
-        QHeader* header, QToolTipGroup* group) : QToolTip(header, group),
-        surfaces(useSurfaces), coordSystem(useCoordSystem) {
+        QHeaderView* header) : header(header), surfaces(useSurfaces),
+    coordSystem(useCoordSystem) {
 }
 
-void SurfaceHeaderToolTip::maybeTip(const QPoint& p) {
-    QHeader *header = dynamic_cast<QHeader*>(parentWidget());
-    int section = header->sectionAt(p.x());
-    if (section < 0)
-        return;
+bool SurfaceHeaderToolTip::eventFilter(QObject *obj, QEvent *event) {
+    if ( event->type() == QEvent::ToolTip) {
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
+        QPoint p = helpEvent->pos();
+        int section = header->logicalIndexAt(p.x());
+        if (section < 0)
+            return false;
 
-    int propertyCols = NSurfaceCoordinateItem::propertyColCount(
-        surfaces->isEmbeddedOnly(), surfaces->allowsAlmostNormal());
-
-    QString tipString;
-    if (section < propertyCols)
-        tipString = NSurfaceCoordinateItem::propertyColDesc(section,
+        int propertyCols = NSurfaceCoordinateItem::propertyColCount(
             surfaces->isEmbeddedOnly(), surfaces->allowsAlmostNormal());
-    else
-        tipString = Coordinates::columnDesc(coordSystem,
-            section - propertyCols, surfaces->getTriangulation());
-    tip(header->sectionRect(section), tipString);
+
+        QString tipString;
+        if (section < propertyCols)
+            tipString = NSurfaceCoordinateItem::propertyColDesc(section,
+                surfaces->isEmbeddedOnly(), surfaces->allowsAlmostNormal());
+        else
+            tipString = Coordinates::columnDesc(coordSystem,
+                section - propertyCols, surfaces->getTriangulation());
+        QToolTip::showText(helpEvent->globalPos(), tipString);
+        return true;
+    }
+    return false;
 }
 
-#include "nsurfacecoordinateui.moc"
+#include "moc_nsurfacecoordinateui.cpp"
