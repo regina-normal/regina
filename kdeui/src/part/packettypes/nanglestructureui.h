@@ -90,11 +90,11 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
         void refresh();
 
         
-//    public slots:
-//        /**
-//         * Provides auto-resizing of columns.
-//         */
-//        void columnResized(int section, int oldSize, int newSize);
+    public slots:
+        /**
+         * Provides auto-resizing of columns.
+         */
+        void columnResized(int section, int oldSize, int newSize);
 };
 
 /**

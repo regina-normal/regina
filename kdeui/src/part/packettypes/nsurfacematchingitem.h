@@ -34,7 +34,7 @@
 #ifndef __NSURFACEMATCHINGITEM_H
 #define __NSURFACEMATCHINGITEM_H
 
-#include "../gridlistview.h"
+#include <QTableWidgetItem>
 
 namespace regina {
     class NMatrixInt;
@@ -43,7 +43,7 @@ namespace regina {
 /**
  * A list view item describing a single normal surface matching equation.
  */
-class NSurfaceMatchingItem : public GridListViewItem {
+class NSurfaceMatchingItem : public QTableWidgetItem {
     private:
         /**
          * The underlying matching equation.
@@ -55,18 +55,19 @@ class NSurfaceMatchingItem : public GridListViewItem {
         /**
          * Constructor.
          */
-        NSurfaceMatchingItem(QListView* parent,
+        NSurfaceMatchingItem(QTableWidget* parent,
             const regina::NMatrixInt* newEqns, unsigned long newWhichEqn);
 
         /**
-         * QListItem overrides.
+         * QTableWidgetItem overrides.
          */
         QString text(int column) const;
 };
 
-inline NSurfaceMatchingItem::NSurfaceMatchingItem(QListView* parent,
+inline NSurfaceMatchingItem::NSurfaceMatchingItem(QTableWidget* parent,
         const regina::NMatrixInt* newEqns, unsigned long newWhichEqn) :
-        GridListViewItem(parent), eqns(newEqns), whichEqn(newWhichEqn) {
+        QTableWidgetItem(), eqns(newEqns), whichEqn(newWhichEqn) {
+        parent->setItem(parent->rowCount(),0,this);
 }
 
 #endif

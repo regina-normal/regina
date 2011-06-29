@@ -38,14 +38,15 @@
 #include <memory>
 #include <qtooltip.h>
 
-class QHeader;
-class QListView;
+class QHeaderView;
+class QTableWidget;
 class MatchingHeaderToolTip;
 
 namespace regina {
     class NMatrixInt;
     class NNormalSurfaceList;
     class NPacket;
+    class NTriangulation;
 };
 
 /**
@@ -65,7 +66,7 @@ class NSurfaceMatchingUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QListView* table;
+        QTableWidget* table;
         MatchingHeaderToolTip* headerTips;
 
         /**
@@ -98,11 +99,12 @@ class NSurfaceMatchingUI : public QObject, public PacketViewerTab {
 /**
  * A utility clsas for displaying tooltips for table headers.
  */
-class MatchingHeaderToolTip : public QToolTip {
+class MatchingHeaderToolTip : public QObject {
     private:
         /**
          * Matching equation information
          */
+        QHeaderView* header;
         regina::NTriangulation* tri;
         int coordSystem;
 
@@ -111,13 +113,13 @@ class MatchingHeaderToolTip : public QToolTip {
          * Constructor.
          */
         MatchingHeaderToolTip(regina::NTriangulation* useTri,
-            int useCoordSystem, QHeader* header);
+            int useCoordSystem, QHeaderView* header);
 
     protected:
         /**
          * QToolTip overrides.
          */
-        void maybeTip(const QPoint& p);
+        bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif

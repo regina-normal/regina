@@ -46,8 +46,8 @@ class KActionCollection;
 class PacketChooser;
 class QBoxLayout;
 class QHeaderView;
-class QTreeWidget;
-class QTreeWidgetItem;
+class QTableWidget;
+class QTableWidgetItem;
 class SurfaceHeaderToolTip;
 
 namespace regina {
@@ -82,7 +82,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         QBoxLayout* uiLayout;
         CoordinateChooser* coords;
         PacketChooser* filter;
-        std::auto_ptr<QTreeWidget> table;
+        std::auto_ptr<QTableWidget> table;
         std::auto_ptr<SurfaceHeaderToolTip> headerTips;
         QString tableWhatsThis;
 

@@ -39,7 +39,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qradiobutton.h>
-#include <QTreeWidget>
+#include <QTableWidget>
 
 namespace {
     const int ID_AND = 0;
@@ -114,8 +114,8 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
         "(i.e., all filters immediately beneath this in the tree):"), ui);
     childLayout->addWidget(label);
 
-    children = new QTreeWidget(ui);
-    children->header()->hide();
+    children = new QTableWidget(ui);
+    children->horizontalHeader()->hide();
     //children->addColumn(QString::null);
     //children->setSorting(-1); TODO
     children->setSelectionMode(QAbstractItemView::NoSelection);
@@ -213,13 +213,14 @@ void NSurfaceFilterCombUI::refreshChildList() {
 
     // Add the items in reverse order since the QListViewItem
     // constructor puts new items at the front.
-    QTreeWidgetItem* item;
-    for (regina::NPacket* p = filter->getLastTreeChild(); p;
-            p = p->getPrevTreeSibling())
+    QTableWidgetItem* item;
+    for (regina::NPacket* p = filter->getFirstTreeChild(); p;
+            p = p->getNextTreeSibling())
         if (p->getPacketType() == regina::NSurfaceFilter::packetType) {
-            item = new QTreeWidgetItem(children);
-            item->setText(0, p->getPacketLabel().c_str());
-            item->setIcon(0, PacketManager::iconSmall(p, false));
+            item = new QTableWidgetItem();
+            children->setItem(children->rowCount(),0,item);
+            item->setText(p->getPacketLabel().c_str());
+            item->setIcon(PacketManager::iconSmall(p, false));
 
             // Listen for renaming events.  We won't ever call
             // unlisten() - it's a lot of hassle for a minor issue, and

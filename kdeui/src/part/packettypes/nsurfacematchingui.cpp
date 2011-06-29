@@ -35,10 +35,10 @@
 #include "nsurfacematchingitem.h"
 #include "nsurfacematchingui.h"
 
-#include <klistview.h>
 #include <klocale.h>
-#include <qheader.h>
-#include <qwhatsthis.h>
+#include <QHeaderView>
+#include <QHelpEvent>
+#include <QTableWidget>
 
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
@@ -48,11 +48,11 @@ using regina::NPacket;
 NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces(packet), currentlyAutoResizing(false) {
-    table = new KListView();
-    table->setAllColumnsShowFocus(true);
-    table->setSorting(-1);
-    table->setSelectionMode(QListView::NoSelection);
-    QWhatsThis::add(table, i18n("<qt>Displays the normal surface matching "
+    table = new QTableWidget();
+    //table->setAllColumnsShowFocus(true);
+    //table->setSorting(-1);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setWhatsThis(i18n("<qt>Displays the normal surface matching "
         "equations that were used in the vertex enumeration when this "
         "list was originally created.<p>"
         "Each row represents a single equation.  Each equation involves "
@@ -67,8 +67,9 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
     // matching equations.
 
     headerTips = new MatchingHeaderToolTip(surfaces->getTriangulation(),
-        surfaces->getFlavour(), table->header());
-    connect(table->header(), SIGNAL(sizeChange(int, int, int)),
+        surfaces->getFlavour(), table->horizontalHeader());
+    table->viewport()->installEventFilter(headerTips);
+    connect(table->horizontalHeader(), SIGNAL(sizeChange(int, int, int)),
         this, SLOT(columnResized(int, int, int)));
 
     ui = table;
@@ -92,14 +93,14 @@ void NSurfaceMatchingUI::refresh() {
 
     // Don't bother regenerating the columns after the first refresh;
     // these will never change.
-    if (table->columns() == 0) {
+    if (table->columnCount() == 0) {
         int flavour = surfaces->getFlavour();
         regina::NTriangulation* tri = surfaces->getTriangulation();
+        QStringList headers;
         for (unsigned long i = 0; i < eqns->columns(); i++) {
-            table->addColumn(Coordinates::columnName(flavour, i, tri),
-                DEFAULT_MATCHING_COLUMN_WIDTH);
-            table->adjustColumn(i);
+            headers << Coordinates::columnName(flavour, i, tri) ;
         }
+        table->setHorizontalHeaderLabels(headers);
     }
 
     // Refill the table (back to front since we're using a QListView).
@@ -118,25 +119,29 @@ void NSurfaceMatchingUI::columnResized(int, int, int newSize) {
     // A column has been resized.
     // Resize all columns.
     currentlyAutoResizing = true;
-    for (int i = 0; i < table->columns(); i++)
+    for (int i = 0; i < table->columnCount(); i++)
         table->setColumnWidth(i, newSize);
     currentlyAutoResizing = false;
 }
 
 MatchingHeaderToolTip::MatchingHeaderToolTip(regina::NTriangulation* useTri,
-        int useCoordSystem, QHeader *header, QToolTipGroup *group) :
-        QToolTip(header, group), tri(useTri), coordSystem(useCoordSystem) {
+        int useCoordSystem, QHeaderView *header) :
+        header(header), tri(useTri), coordSystem(useCoordSystem) {
 }
 
-void MatchingHeaderToolTip::maybeTip(const QPoint& p) {
-    QHeader *header = dynamic_cast<QHeader*>(parentWidget());
-    int section = header->sectionAt(p.x());
-    if (section < 0)
-        return;
-
-    tip(header->sectionRect(section), Coordinates::columnDesc(coordSystem,
-        section, tri));
+bool MatchingHeaderToolTip::eventFilter(QObject *obj, QEvent *event) {
+    if ( event->type() == QEvent::ToolTip) {
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
+        QPoint p = helpEvent->pos();
+        int section = header->logicalIndexAt(p.x());
+        if (section < 0)
+            return false;
+        QToolTip::showText(helpEvent->globalPos(), 
+            Coordinates::columnDesc(coordSystem, section, tri));
+        return true;
+    }
+    return false;
 }
 
-#include "nsurfacematchingui.moc"
+#include "moc_nsurfacematchingui.cpp"
 

@@ -40,10 +40,9 @@
 #include <Qt>
 #include <qstyle.h>
 
-NSurfaceCoordinateItem::NSurfaceCoordinateItem(QTreeWidget* parent,
+NSurfaceCoordinateItem::NSurfaceCoordinateItem(QTableWidget* parent,
         regina::NNormalSurfaceList* fromSurfaces,
         unsigned long newSurfaceIndex, QString& newName, int useCoordSystem) :
-        QTreeWidgetItem(parent),
         surface(fromSurfaces->getSurface(newSurfaceIndex)),
         name(newName),
         surfaceIndex(newSurfaceIndex),
@@ -51,6 +50,7 @@ NSurfaceCoordinateItem::NSurfaceCoordinateItem(QTreeWidget* parent,
         coordSystem(useCoordSystem),
         coordCols(Coordinates::numColumns(useCoordSystem,
             fromSurfaces->getTriangulation())) {
+        parent->setItem(parent->rowCount(),0,this);
 }
 
 unsigned NSurfaceCoordinateItem::propertyColCount(bool embeddedOnly,
@@ -131,8 +131,7 @@ QString NSurfaceCoordinateItem::propertyColDesc(int whichCol,
 void NSurfaceCoordinateItem::setText(int column, const QString& str) {
     if (column == 1)
         name = str;
-    //QListWidgetItem::setText(column, str); TODO : check
-    QTreeWidgetItem::setText(column,str); 
+    QTableWidgetItem::setText(str); 
 }
 
 QString NSurfaceCoordinateItem::text(int column) const {
@@ -346,9 +345,9 @@ void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,
 
 void NSurfaceCoordinateItem::updateColour(int column) {
     switch (getColour(column)) {
-        case Red: setForeground(column,Qt::red) ; break ;
-        case Yellow: setForeground(column,Qt::yellow) ; break;
-        case Green: setForeground(column,Qt::green) ; break;
+        case Red: setForeground(Qt::red) ; break ;
+        case Yellow: setForeground(Qt::yellow) ; break;
+        case Green: setForeground(Qt::green) ; break;
         default : break; 
     }
 }

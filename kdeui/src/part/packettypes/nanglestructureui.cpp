@@ -100,14 +100,14 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
 
     table->resizeColumnsToContents();
     // Final tidying up for the table now that it is full of data.
-    //for (int i = 0; i < table->columns(); i++)
+    //for (int i = 0; i < table->columnCount(); i++)
     //    table->adjustColumn(i);
     headerTips = new AngleHeaderToolTip(table->horizontalHeader());
     table->viewport()->installEventFilter(headerTips);
 
-    // TODO: Shouldn't be needed in Qt4, verify.
-    //connect(table->horizontalHeader(), SIGNAL(sizeChange(int, int, int)),
-    //    this, SLOT(columnResized(int, int, int)));
+    // TODO: Is this needed in Qt4?
+    connect(table->horizontalHeader(), SIGNAL(sizeChange(int, int, int)),
+        this, SLOT(columnResized(int, int, int)));
 
     ui->setFocusProxy(table);
 }
@@ -176,17 +176,17 @@ void NAngleStructureUI::refresh() {
     setDirty(false);
 }
 
-//void NAngleStructureUI::columnResized(int section, int, int newSize) {
-//    if (currentlyAutoResizing || section == 0)
-//        return;
-//
-//    // An angle column has been resized.
-//    // Resize all angle columns.
-//    currentlyAutoResizing = true;
-//    for (int i = 1; i < table->columns(); i++)
-//        table->setColumnWidth(i, newSize);
-//    currentlyAutoResizing = false;
-//}
+void NAngleStructureUI::columnResized(int section, int, int newSize) {
+    if (currentlyAutoResizing || section == 0)
+        return;
+
+    // An angle column has been resized.
+    // Resize all angle columns.
+    currentlyAutoResizing = true;
+    for (int i = 1; i < table->columnCount(); i++)
+        table->setColumnWidth(i, newSize);
+    currentlyAutoResizing = false;
+}
 
 AngleHeaderToolTip::AngleHeaderToolTip(QHeaderView *headerView) : 
     header(headerView) {
