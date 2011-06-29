@@ -39,7 +39,7 @@
 class NTriFundGroupUI;
 class QLabel;
 class QLineEdit;
-class QListView;
+class QTreeWidget;
 class QPushButton;
 
 namespace regina {
@@ -125,7 +125,7 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
         QLabel* fundName;
         QLabel* fundGens;
         QLabel* fundRelCount;
-        QListView* fundRels;
+        QTreeWidget* fundRels;
         QPushButton* btnGAP;
 
         /**
@@ -186,7 +186,7 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
         QLabel* paramsLabel;
         QLineEdit* params;
         QPushButton* calculate;
-        QListView* invariants;
+        QTreeWidget* invariants;
 
     public:
         /**
