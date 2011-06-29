@@ -34,6 +34,7 @@
 #include "nsurfacefiltercreator.h"
 #include "../reginapart.h"
 
+#include <KComponentData>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <qbuttongroup.h>
@@ -49,14 +50,15 @@ namespace {
 
 NSurfaceFilterCreator::NSurfaceFilterCreator() {
     ui = new QWidget();
-    QGridLayout* layout = new QGridLayout(ui, 2, 2, 5);
-    layout->setColStretch(1, 1);
+    QGridLayout* layout = new QGridLayout(ui);//, 2, 2, 5);
+    layout->setMargin(5);
+    layout->setColumnStretch(1, 1);
 
     QLabel* pic;
     QString msg;
 
     pic = new QLabel(ui);
-    pic->setPixmap(SmallIcon("filter_prop", ReginaPart::factoryInstance()));
+    pic->setPixmap(SmallIcon("filter_prop"));
     layout->addWidget(pic, 0, 0, Qt::AlignRight);
 
     QRadioButton* props = new QRadioButton(
@@ -65,11 +67,11 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
 
     msg = i18n("Create a filter that examines properties of normal surfaces, "
         "such as orientability, boundary and Euler characteristic.");
-    QWhatsThis::add(pic, msg);
-    QWhatsThis::add(props, msg);
+    pic->setWhatsThis(msg);
+    props->setWhatsThis(msg);
 
     pic = new QLabel(ui);
-    pic->setPixmap(SmallIcon("filter_comb", ReginaPart::factoryInstance()));
+    pic->setPixmap(SmallIcon("filter_comb"));
     layout->addWidget(pic, 1, 0, Qt::AlignRight);
 
     QRadioButton* comb = new QRadioButton(
@@ -78,13 +80,13 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
 
     msg = i18n("Create a filter that combines other filters using boolean "
         "AND or OR.");
-    QWhatsThis::add(pic, msg);
-    QWhatsThis::add(comb, msg);
+    pic->setWhatsThis(msg);
+    comb->setWhatsThis(msg);
 
     group = new QButtonGroup();
-    group->insert(props, ID_PROPS);
-    group->insert(comb, ID_COMB);
-    group->setButton(ID_PROPS);
+    group->addButton(props, ID_PROPS);
+    group->addButton(comb, ID_COMB);
+    group->button(ID_PROPS)->setChecked(true);
 }
 
 NSurfaceFilterCreator::~NSurfaceFilterCreator() {
@@ -97,7 +99,7 @@ QWidget* NSurfaceFilterCreator::getInterface() {
 
 regina::NPacket* NSurfaceFilterCreator::createPacket(regina::NPacket*,
         QWidget*) {
-    if (group->selectedId() == ID_COMB)
+    if (group->checkedId() == ID_COMB)
         return new regina::NSurfaceFilterCombination();
     else
         return new regina::NSurfaceFilterProperties();
