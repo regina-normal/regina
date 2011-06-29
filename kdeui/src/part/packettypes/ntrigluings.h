@@ -71,8 +71,8 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         KAction* actRemoveTet;
         KAction* actSimplify;
         KActionCollection* triActions;
-        QPtrList<KAction> triActionList;
-        QPtrList<KAction> enableWhenWritable;
+        QLinkedList<KAction*> triActionList;
+        QLinkedList<KAction*> enableWhenWritable;
 
         /**
          * Preferences
@@ -108,7 +108,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        const QPtrList<KAction>& getPacketTypeActions();
+        const QLinkedList<KAction*>& getPacketTypeActions();
         void commit();
         void refresh();
         void setReadWrite(bool readWrite);

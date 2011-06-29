@@ -42,8 +42,7 @@
 #include <klocale.h>
 #include <ktoolbar.h>
 #include <qlabel.h>
-#include <qvbox.h>
-#include <qwhatsthis.h>
+#include <QVBoxLayout>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -95,7 +94,7 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     }
 }
 
-const QPtrList<KAction>& NTriangulationUI::getPacketTypeActions() {
+const QLinkedList<KAction*>& NTriangulationUI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 
@@ -114,16 +113,18 @@ void NTriangulationUI::updatePreferences(const ReginaPrefSet& newPrefs) {
 NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
-    ui = new QVBox();
+    ui = new QWidget();
+    QBoxLayout* uiLayout = new QVBoxLayout();
+    ui->setLayout(uiLayout);
 
-    bar = new KToolBar(ui, "triangulationActionBar", false, false);
-    bar->setFullSize(true);
-    bar->setIconText(KToolBar::IconTextRight);
+    bar = new KToolBar(ui, false, false);
+    //bar->setFullSize(true); TODO
+    bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     header = new QLabel(ui);
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
-    QWhatsThis::add(header, i18n("Displays a few basic properties of the "
+    header->setWhatsThis(i18n("Displays a few basic properties of the "
         "triangulation, such as boundary and orientability."));
 }
 
@@ -176,4 +177,4 @@ void NTriHeaderUI::editingElsewhere() {
     header->setText(i18n("Editing..."));
 }
 
-#include "ntriangulationui.moc"
+#include "moc_ntriangulationui.cpp"
