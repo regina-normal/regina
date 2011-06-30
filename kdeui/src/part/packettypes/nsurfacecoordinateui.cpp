@@ -140,7 +140,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "because the new surface boundaries are created from real "
         "boundary faces, the resulting number of tetrahedra might be very "
         "large.</qt>"));
-    connect(actCutAlong, SIGNAL(triggered), this, SLOT(cutAlong()));
+    connect(actCutAlong, SIGNAL(triggered()), this, SLOT(cutAlong()));
     surfaceActionList.append(actCutAlong);
 
     actCrush = surfaceActions->addAction("surface_crush");
