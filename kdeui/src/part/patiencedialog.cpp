@@ -35,8 +35,8 @@
 #include <qlayout.h>
 
 PatienceDialog* PatienceDialog::warn(const QString& message,
-        KInstance* instance, QWidget* parent) {
-    PatienceDialog* dlg = new PatienceDialog(message, instance, parent);
+        QWidget* parent) {
+    PatienceDialog* dlg = new PatienceDialog(message, parent);
     dlg->show();
 
     KApplication::kApplication()->processEvents();
@@ -44,8 +44,8 @@ PatienceDialog* PatienceDialog::warn(const QString& message,
     return dlg;
 }
 
-PatienceDialog::PatienceDialog(const QString& message, KInstance* instance,
-        QWidget* parent, const char* name) :
+PatienceDialog::PatienceDialog(const QString& message,
+        QWidget* parent) :
         KDialog(parent) {
     setCaption(i18n("Please Wait"));
     setModal(0);
