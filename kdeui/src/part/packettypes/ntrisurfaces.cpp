@@ -63,11 +63,13 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout(layout, 4, 7, 5);
-    grid->setColStretch(0, 1);
-    grid->setColSpacing(2, 5); // Horizontal gap
-    grid->setColSpacing(4, 5); // Horizontal gap
-    grid->setColStretch(6, 1);
+    QGridLayout* grid = new QGridLayout();//, 4, 7, 5);
+    layout->addLayout(grid);
+    grid->setSpacing(5);
+    grid->setColumnStretch(0, 1);
+    grid->setColumnMinimumWidth(2, 5); // Horizontal gap
+    grid->setColumnMinimumWidth(4, 5); // Horizontal gap
+    grid->setColumnStretch(6, 1);
 
     QString msg;
 
@@ -79,8 +81,8 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         "A <i>0-efficient triangulation</i> is one whose only normal "
         "spheres or discs are vertex linking, and which has no 2-sphere "
         "boundary components.</qt>");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(zeroEff, msg);
+    label->setWhatsThis(msg);
+    zeroEff->setWhatsThis(msg);
 
     label = new QLabel(i18n("Splitting surface?"), ui);
     grid->addWidget(label, 1, 1);
@@ -90,29 +92,28 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         "A <i>splitting surface</i> is a normal surface containing precisely "
         "one quadrilateral per tetrahedron and no other normal (or "
         "almost normal) discs.</qt>");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(splitting, msg);
+    label->setWhatsThis(msg);
+    splitting->setWhatsThis(msg);
 
     label = new QLabel(i18n("3-sphere?"), ui);
     grid->addWidget(label, 2, 1);
     threeSphere = new QLabel(ui);
     grid->addWidget(threeSphere, 2, 3);
     msg = i18n("Is this a triangulation of the 3-sphere?");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(threeSphere, msg);
+    label->setWhatsThis(msg);
+    threeSphere->setWhatsThis(msg);
 
     label = new QLabel(i18n("3-ball?"), ui);
     grid->addWidget(label, 3, 1);
     threeBall= new QLabel(ui);
     grid->addWidget(threeBall, 3, 3);
     msg = i18n("Is this a triangulation of the 3-dimensional ball?");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(threeBall, msg);
+    label->setWhatsThis(msg);
+    threeBall->setWhatsThis(msg);
 
-    btnZeroEff = new QPushButton(SmallIconSet("run", 0,
-        ReginaPart::factoryInstance()), i18n("Calculate"), ui);
-    QToolTip::add(btnZeroEff, i18n("Calculate 0-efficiency"));
-    QWhatsThis::add(btnZeroEff, i18n("<qt>Calculate whether this "
+    btnZeroEff = new QPushButton(KIcon("run"), i18n("Calculate"), ui);
+    btnZeroEff->setToolTip(i18n("Calculate 0-efficiency"));
+    btnZeroEff->setWhatsThis(i18n("<qt>Calculate whether this "
         "triangulation is 0-efficient.<p>"
         "<b>Warning:</b> This calculation can be quite slow for larger "
         "triangulations (which is why 0-efficiency is not always "
@@ -120,11 +121,10 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnZeroEff, 0, 5);
     connect(btnZeroEff, SIGNAL(clicked()), this, SLOT(calculateZeroEff()));
 
-    btnSplitting = new QPushButton(SmallIconSet("run", 0,
-        ReginaPart::factoryInstance()), i18n("Calculate"), ui);
-    QToolTip::add(btnSplitting, i18n("Calculate existence of a splitting "
+    btnSplitting = new QPushButton(KIcon("run"), i18n("Calculate"), ui);
+    btnSplitting->setToolTip(i18n("Calculate existence of a splitting "
         "surface"));
-    QWhatsThis::add(btnSplitting, i18n("<qt>Calculate whether this "
+    btnSplitting->setWhatsThis(i18n("<qt>Calculate whether this "
         "triangulation contains a splitting surface.<p>"
         "<b>Warning:</b> This calculation can be quite slow for larger "
         "triangulations (which is why the existence of a splitting "
@@ -132,10 +132,9 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnSplitting, 1, 5);
     connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
 
-    btnThreeSphere = new QPushButton(SmallIconSet("run", 0,
-        ReginaPart::factoryInstance()), i18n("Calculate"), ui);
-    QToolTip::add(btnThreeSphere, i18n("Calculate whether this is a 3-sphere"));
-    QWhatsThis::add(btnThreeSphere, i18n("<qt>Calculate whether this "
+    btnThreeSphere = new QPushButton(KIcon("run"), i18n("Calculate"), ui);
+    btnThreeSphere->setToolTip(i18n("Calculate whether this is a 3-sphere"));
+    btnThreeSphere->setWhatsThis(i18n("<qt>Calculate whether this "
         "is a triangulation of a 3-sphere.<p>"
         "<b>Warning:</b> This calculation is occasionally quite slow for "
         "larger triangulations (which is why 3-sphere recognition is not "
@@ -144,11 +143,10 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     connect(btnThreeSphere, SIGNAL(clicked()), this,
         SLOT(calculateThreeSphere()));
 
-    btnThreeBall = new QPushButton(SmallIconSet("run", 0,
-        ReginaPart::factoryInstance()), i18n("Calculate"), ui);
-    QToolTip::add(btnThreeBall,
+    btnThreeBall = new QPushButton(KIcon("run"), i18n("Calculate"), ui);
+    btnThreeBall->setToolTip(
         i18n("Calculate whether this is a 3-dimensional ball"));
-    QWhatsThis::add(btnThreeBall, i18n("<qt>Calculate whether this "
+    btnThreeBall->setWhatsThis(i18n("<qt>Calculate whether this "
         "is a triangulation of a 3-dimensional ball.<p>"
         "<b>Warning:</b> This calculation is occasionally quite slow for "
         "larger triangulations (which is why 3-ball recognition is not "
@@ -173,15 +171,19 @@ void NTriSurfacesUI::refresh() {
             tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
         if (tri->isZeroEfficient()) {
             zeroEff->setText(i18n("True"));
-            zeroEff->setPaletteForegroundColor(Qt::darkGreen);
+            QPalette pal = zeroEff->palette();
+            pal.setColor(zeroEff->foregroundRole(), Qt::darkGreen);
+            zeroEff->setPalette(pal);
         } else {
             zeroEff->setText(i18n("False"));
-            zeroEff->setPaletteForegroundColor(Qt::darkRed);
+            QPalette pal = zeroEff->palette();
+            pal.setColor(zeroEff->foregroundRole(), Qt::darkRed);
+            zeroEff->setPalette(pal);
         }
         btnZeroEff->setEnabled(false);
     } else {
         zeroEff->setText(i18n("Unknown"));
-        zeroEff->unsetPalette();
+        zeroEff->setPalette(QPalette());
         btnZeroEff->setEnabled(true);
     }
 
@@ -189,15 +191,19 @@ void NTriSurfacesUI::refresh() {
             tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
         if (tri->hasSplittingSurface()) {
             splitting->setText(i18n("True"));
-            splitting->setPaletteForegroundColor(Qt::darkGreen);
+            QPalette pal = splitting->palette();
+            pal.setColor(splitting->foregroundRole(), Qt::darkGreen);
+            splitting->setPalette(pal);
         } else {
             splitting->setText(i18n("False"));
-            splitting->setPaletteForegroundColor(Qt::darkRed);
+            QPalette pal = splitting->palette();
+            pal.setColor(splitting->foregroundRole(), Qt::darkRed);
+            splitting->setPalette(pal);
         }
         btnSplitting->setEnabled(false);
     } else {
         splitting->setText(i18n("Unknown"));
-        splitting->unsetPalette();
+        splitting->setPalette(QPalette());
         btnSplitting->setEnabled(true);
     }
 
@@ -206,15 +212,19 @@ void NTriSurfacesUI::refresh() {
             <= autoCalcThreshold) {
         if (tri->isThreeSphere()) {
             threeSphere->setText(i18n("True"));
-            threeSphere->setPaletteForegroundColor(Qt::darkGreen);
+            QPalette pal = threeSphere->palette();
+            pal.setColor(threeSphere->foregroundRole(), Qt::darkGreen);
+            threeSphere->setPalette(pal);
         } else {
             threeSphere->setText(i18n("False"));
-            threeSphere->setPaletteForegroundColor(Qt::darkRed);
+            QPalette pal = threeSphere->palette();
+            pal.setColor(threeSphere->foregroundRole(), Qt::darkRed);
+            threeSphere->setPalette(pal);
         }
         btnThreeSphere->setEnabled(false);
     } else {
         threeSphere->setText(i18n("Unknown"));
-        threeSphere->unsetPalette();
+        threeSphere->setPalette(QPalette());
         btnThreeSphere->setEnabled(true);
     }
 
@@ -224,15 +234,19 @@ void NTriSurfacesUI::refresh() {
             <= autoCalcThreshold) {
         if (tri->isBall()) {
             threeBall->setText(i18n("True"));
-            threeBall->setPaletteForegroundColor(Qt::darkGreen);
+            QPalette pal = threeBall->palette();
+            pal.setColor(threeBall->foregroundRole(), Qt::darkGreen);
+            threeBall->setPalette(pal);
         } else {
             threeBall->setText(i18n("False"));
-            threeBall->setPaletteForegroundColor(Qt::darkRed);
+            QPalette pal = threeBall->palette();
+            pal.setColor(threeBall->foregroundRole(), Qt::darkRed);
+            threeBall->setPalette(pal);
         }
         btnThreeBall->setEnabled(false);
     } else {
         threeBall->setText(i18n("Unknown"));
-        threeBall->unsetPalette();
+        threeBall->setPalette(QPalette());
         btnThreeBall->setEnabled(true);
     }
 }
@@ -240,13 +254,13 @@ void NTriSurfacesUI::refresh() {
 void NTriSurfacesUI::editingElsewhere() {
     QString msg(i18n("Editing..."));
     zeroEff->setText(msg);
-    zeroEff->unsetPalette();
+    zeroEff->setPalette(QPalette());
     splitting->setText(msg);
-    splitting->unsetPalette();
+    splitting->setPalette(QPalette());
     threeSphere->setText(msg);
-    threeSphere->unsetPalette();
+    threeSphere->setPalette(QPalette());
     threeBall->setText(msg);
-    threeBall->unsetPalette();
+    threeBall->setPalette(QPalette());
 
     btnZeroEff->setEnabled(false);
     btnSplitting->setEnabled(false);
@@ -258,8 +272,7 @@ void NTriSurfacesUI::calculateZeroEff() {
     PatienceDialog* dlg = PatienceDialog::warn(i18n(
         "Deciding whether a triangulation is 0-efficient\n"
         "can be quite slow for larger triangulations.\n\n"
-        "Please be patient."),
-        enclosingPane->getPart()->instance(), ui);
+        "Please be patient."), ui);
     tri->isZeroEfficient();
     delete dlg;
 
@@ -270,8 +283,7 @@ void NTriSurfacesUI::calculateSplitting() {
     PatienceDialog* dlg = PatienceDialog::warn(i18n(
         "Deciding whether a splitting surface exists can\n"
         "be quite slow for larger triangulations.\n\n"
-        "Please be patient."),
-        enclosingPane->getPart()->instance(), ui);
+        "Please be patient."), ui);
     tri->hasSplittingSurface();
     delete dlg;
 
@@ -282,8 +294,7 @@ void NTriSurfacesUI::calculateThreeSphere() {
     PatienceDialog* dlg = PatienceDialog::warn(i18n(
         "3-sphere recognition can be quite slow\n"
         "for larger triangulations.\n\n"
-        "Please be patient."),
-        enclosingPane->getPart()->instance(), ui);
+        "Please be patient."), ui);
     tri->isThreeSphere();
     delete dlg;
 
@@ -294,12 +305,11 @@ void NTriSurfacesUI::calculateThreeBall() {
     PatienceDialog* dlg = PatienceDialog::warn(i18n(
         "3-ball recognition can be quite slow\n"
         "for larger triangulations.\n\n"
-        "Please be patient."),
-        enclosingPane->getPart()->instance(), ui);
+        "Please be patient."), ui);
     tri->isBall();
     delete dlg;
 
     refresh();
 }
 
-#include "ntrisurfaces.moc"
+#include "moc_ntrisurfaces.cpp"

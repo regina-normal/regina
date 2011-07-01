@@ -70,7 +70,7 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     nullLayout->setMargin(5);
     nullLayout->setSpacing(0);
 
-    unavailable = new NoSnapPea(reginaTri, allowClosed, dataNull, 0, true);
+    unavailable = new NoSnapPea(reginaTri, allowClosed, dataNull, true);
     unavailable->setAlignment(Qt::AlignCenter);
     nullLayout->addWidget(unavailable);
 

@@ -31,12 +31,10 @@
 #include "skeletonwindow.h"
 #include "../packetui.h"
 
-#include <klistview.h>
 #include <klocale.h>
 #include <qlayout.h>
 #include <qpainter.h>
 #include <qstyle.h>
-#include <qwhatsthis.h>
 
 using regina::NBoundaryComponent;
 using regina::NComponent;
@@ -45,22 +43,24 @@ using regina::NFace;
 using regina::NVertex;
 
 SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
-        SkeletalObject viewObjectType) : KDialogBase(Plain,
-        QString::null, Close, Close, packetUI->getInterface(), 0, false),
-        objectType(viewObjectType) {
+        SkeletalObject viewObjectType) : 
+        KDialog(packetUI->getInterface()), objectType(viewObjectType) {
+
+    setButtons(KDialog::Close);
     tri = dynamic_cast<regina::NTriangulation*>(packetUI->getPacket());
 
-    QFrame* page = plainPage();
+    QWidget* page = new QWidget();
+    setMainWidget(page);
     QBoxLayout* layout = new QVBoxLayout(page);
 
-    table = new KListView(page);
-    table->addColumn(columnLabel(objectType, 0));
-    table->addColumn(columnLabel(objectType, 1));
-    table->addColumn(columnLabel(objectType, 2));
-    table->addColumn(columnLabel(objectType, 3));
-    table->setSelectionMode(QListView::NoSelection);
-    table->setSorting(-1);
-    QWhatsThis::add(table, overview(objectType));
+    table = new QTreeWidget(page);
+    QStringList headers;
+    headers << columnLabel(objectType, 0) << columnLabel(objectType, 1)
+        << columnLabel(objectType, 2) << columnLabel(objectType, 3);
+    table->setHeaderLabels(headers);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
+    //table->setSorting(-1);
+    table->setToolTip(overview(objectType));
     layout->addWidget(table);
 
     refresh();
@@ -119,7 +119,7 @@ void SkeletonWindow::packetWasRenamed(regina::NPacket*) {
 }
 
 void SkeletonWindow::packetToBeDestroyed(regina::NPacket*) {
-    slotClose();
+    slotButtonClicked(KDialog::Close);
 }
 
 QString SkeletonWindow::typeLabel(SkeletalObject type) {
@@ -218,31 +218,31 @@ QString SkeletonWindow::overview(SkeletalObject type) {
     return QString::null;
 }
 
-VertexItem::VertexItem(QListView* parent,
+VertexItem::VertexItem(QTreeWidget* parent,
                 regina::NTriangulation* useTri, unsigned long useItemIndex) :
         SkeletalItem(parent, useTri, useItemIndex),
         item(useTri->getVertex(useItemIndex)) {
 }
 
-EdgeItem::EdgeItem(QListView* parent,
+EdgeItem::EdgeItem(QTreeWidget* parent,
                 regina::NTriangulation* useTri, unsigned long useItemIndex) :
         SkeletalItem(parent, useTri, useItemIndex),
         item(useTri->getEdge(useItemIndex)) {
 }
 
-FaceItem::FaceItem(QListView* parent,
+FaceItem::FaceItem(QTreeWidget* parent,
                 regina::NTriangulation* useTri, unsigned long useItemIndex) :
         SkeletalItem(parent, useTri, useItemIndex),
         item(useTri->getFace(useItemIndex)) {
 }
 
-ComponentItem::ComponentItem(QListView* parent,
+ComponentItem::ComponentItem(QTreeWidget* parent,
                 regina::NTriangulation* useTri, unsigned long useItemIndex) :
         SkeletalItem(parent, useTri, useItemIndex),
         item(useTri->getComponent(useItemIndex)) {
 }
 
-BoundaryComponentItem::BoundaryComponentItem(QListView* parent,
+BoundaryComponentItem::BoundaryComponentItem(QTreeWidget* parent,
                 regina::NTriangulation* useTri, unsigned long useItemIndex) :
         SkeletalItem(parent, useTri, useItemIndex),
         item(useTri->getBoundaryComponent(useItemIndex)) {
@@ -401,4 +401,4 @@ QString BoundaryComponentItem::text(int column) const {
     return QString::null;
 }
 
-#include "skeletonwindow.moc"
+#include "moc_skeletonwindow.cpp"
