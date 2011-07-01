@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "maths/numbertheory.h"
 #include <boost/python.hpp>
+#include "maths/numbertheory.h"
 
 using namespace boost::python;
 

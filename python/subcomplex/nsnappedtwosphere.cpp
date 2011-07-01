@@ -26,11 +26,11 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "subcomplex/nsnappedball.h"
 #include "subcomplex/nsnappedtwosphere.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NSnappedTwoSphere;

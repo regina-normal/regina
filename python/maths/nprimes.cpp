@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "maths/nprimes.h"
 #include <boost/python.hpp>
+#include "maths/nprimes.h"
 
 using namespace boost::python;
 using regina::NLargeInteger;

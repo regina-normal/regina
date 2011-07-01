@@ -26,10 +26,10 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/ntxicore.h"
 #include "triangulation/nisomorphism.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NLayeredTorusBundle;

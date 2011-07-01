@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "subcomplex/nlayeredlensspace.h"
 #include "triangulation/ncomponent.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NLayeredLensSpace;

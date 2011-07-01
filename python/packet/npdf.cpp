@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "packet/npdf.h"
 #include <boost/python.hpp>
+#include "packet/npdf.h"
 
 using namespace boost::python;
 using regina::NPDF;

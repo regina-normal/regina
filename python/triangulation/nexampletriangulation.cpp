@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NExampleTriangulation;

@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "file/nfileinfo.h"
 #include <boost/python.hpp>
+#include "file/nfileinfo.h"
 
 using namespace boost::python;
 using regina::NFileInfo;

@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "surfaces/sfproperties.h"
 #include <boost/python.hpp>
+#include "surfaces/sfproperties.h"
 
 using namespace boost::python;
 using regina::NSurfaceFilterProperties;

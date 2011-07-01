@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "utilities/nbooleans.h"
 #include <boost/python.hpp>
+#include "utilities/nbooleans.h"
 
 using namespace boost::python;
 using regina::NBoolSet;
