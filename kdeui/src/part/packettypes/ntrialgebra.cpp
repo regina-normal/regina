@@ -902,4 +902,3 @@ void NTriCellularInfoUI::editingElsewhere() {
     EmbeddingComments->setText(msg);
 }
 
-#include "moc_ntrialgebra.cpp"

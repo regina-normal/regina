@@ -1103,4 +1103,3 @@ void NTriCompositionUI::detailsCopy() {
         QClipboard::Clipboard);
 }
 
-#include "moc_ntricomposition.cpp"

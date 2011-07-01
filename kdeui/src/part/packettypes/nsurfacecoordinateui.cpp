@@ -417,4 +417,3 @@ bool SurfaceHeaderToolTip::eventFilter(QObject *obj, QEvent *event) {
     return false;
 }
 
-#include "moc_nsurfacecoordinateui.cpp"

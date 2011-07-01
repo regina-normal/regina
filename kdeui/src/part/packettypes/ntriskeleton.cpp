@@ -512,4 +512,3 @@ void NTriFaceGraphUI::showError(const QString& msg) {
     stack->setCurrentWidget(layerError);
 }
 
-#include "moc_ntriskeleton.cpp"

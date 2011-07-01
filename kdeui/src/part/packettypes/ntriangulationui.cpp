@@ -177,4 +177,3 @@ void NTriHeaderUI::editingElsewhere() {
     header->setText(i18n("Editing..."));
 }
 
-#include "moc_ntriangulationui.cpp"

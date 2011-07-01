@@ -320,5 +320,4 @@ void NSurfaceSummaryUI::refresh() {
     }
 }
 
-#include "moc_nsurfacesummaryui.cpp"
 

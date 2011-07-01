@@ -942,4 +942,3 @@ void NTriGluingsUI::notifyGluingsChanged() {
     setDirty(true);
 }
 
-#include "moc_ntrigluings.cpp"

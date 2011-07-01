@@ -288,4 +288,3 @@ void NSurfaceCompatibilityUI::calculate() {
         refresh();
 }
 
-#include "moc_nsurfacecompatui.cpp"

@@ -252,4 +252,3 @@ QString NTriSnapPeaUI::solutionTypeExplanation(int solnType) {
     }
 }
 
-#include "moc_ntrisnappea.cpp"

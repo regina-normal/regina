@@ -135,4 +135,3 @@ void NSurfaceHeaderUI::refresh() {
         Coordinates::name(surfaces->getFlavour(), false)));
 }
 
-#include "moc_nnormalsurfaceui.cpp"

@@ -316,4 +316,3 @@ void NPDFUI::processExited(KProcess* oldProc) {
     }
 }
 
-#include "moc_npdfui.cpp"

@@ -374,5 +374,4 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
     update();
 }
 
-#include "moc_ncompatcanvas.cpp"
 

@@ -177,4 +177,3 @@ void NFaceGluingButton::spawnDialog() {
     dlg.exec();
 }
 
-#include "moc_nfacegluingdialog.cpp"

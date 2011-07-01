@@ -78,4 +78,3 @@ void NoSnapPea::refresh(bool allowClosed) {
     setText(msg);
 }
 
-#include "moc_snappeacomponents.cpp"

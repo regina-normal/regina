@@ -401,4 +401,3 @@ QString BoundaryComponentItem::text(int column) const {
     return QString::null;
 }
 
-#include "moc_skeletonwindow.cpp"

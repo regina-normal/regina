@@ -386,4 +386,3 @@ void EltMoveDialog::fillWithMoves() {
         }
 }
 
-#include "moc_eltmovedialog.cpp"

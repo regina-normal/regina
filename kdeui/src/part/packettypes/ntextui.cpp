@@ -131,4 +131,3 @@ void NTextUI::notifyTextChanged() {
     setDirty(true);
 }
 
-#include "moc_ntextui.cpp"

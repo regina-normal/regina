@@ -478,4 +478,3 @@ void NScriptUI::setPythonMode() {
         } 
 }
 
-#include "moc_nscriptui.cpp"

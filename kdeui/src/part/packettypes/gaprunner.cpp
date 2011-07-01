@@ -497,4 +497,3 @@ void GAPRunner::processExited() {
     }
 }
 
-#include "moc_gaprunner.cpp"

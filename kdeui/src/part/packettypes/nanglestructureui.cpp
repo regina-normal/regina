@@ -213,5 +213,4 @@ bool AngleHeaderToolTip::eventFilter(QObject *obj, QEvent *event) {
     return false;
 }
 
-#include "moc_nanglestructureui.cpp"
 

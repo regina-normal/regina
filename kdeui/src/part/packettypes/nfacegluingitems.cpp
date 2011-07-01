@@ -318,4 +318,3 @@ void FaceGluingItem::showError(const QString& message) {
     }
 }
 
-#include "moc_nfacegluingitems.cpp"

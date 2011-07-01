@@ -229,4 +229,3 @@ void NSurfaceFilterCombUI::refreshChildList() {
         }
 }
 
-#include "moc_nsurfacefiltercomb.cpp"

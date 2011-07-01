@@ -331,4 +331,3 @@ void NSurfaceFilterPropUI::refreshECList() {
     enableDisableEuler();
 }
 
-#include "moc_nsurfacefilterprop.cpp"

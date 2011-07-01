@@ -312,4 +312,3 @@ void NTriSurfacesUI::calculateThreeBall() {
     refresh();
 }
 
-#include "moc_ntrisurfaces.cpp"
