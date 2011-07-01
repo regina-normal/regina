@@ -97,4 +97,3 @@ void ExportDialog::slotOk() {
     KDialog::okClicked();
 }
 
-#include "moc_exportdialog.cpp"

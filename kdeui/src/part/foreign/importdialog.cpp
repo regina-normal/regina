@@ -135,4 +135,3 @@ void ImportDialog::slotOk() {
     KDialog::okClicked();
 }
 
-#include "moc_importdialog.cpp"
