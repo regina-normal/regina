@@ -88,7 +88,8 @@ const NSatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which,
 
     // Given the precondition, we should never reach this point.
     // TODO: Return junk.
-    return NSatAnnulus();
+    // Avoiding temporary reference warning
+    return *(new NSatAnnulus());
 }
 
 void NSatRegion::boundaryAnnulus(unsigned long which,
