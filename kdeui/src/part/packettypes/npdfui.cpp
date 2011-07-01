@@ -152,7 +152,7 @@ void NPDFUI::refresh() {
         // If we actually found ourselves a viewer, load the PDF.
         if (viewer) {
             if (viewer->openUrl(KUrl(temp.fileName())))
-                stack->setCurrentIndex(stack->indexOf((viewer->widget())));
+                stack->setCurrentWidget((viewer->widget()));
             else
                 showError(i18n("An error occurred whilst re-reading the PDF "
                     "data from the temporary file %1.").arg(temp.fileName()));
@@ -181,7 +181,7 @@ void NPDFUI::refresh() {
         viewer = 0;
 
         // Just to be sure...
-        stack->setCurrentIndex(stack->indexOf(layerInfo));
+        stack->setCurrentWidget(layerInfo);
     }
 
     if (externalViewer.isEmpty()) {
@@ -264,12 +264,12 @@ QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
 
 void NPDFUI::showInfo(const QString& msg) {
     msgInfo->setText(msg);
-    stack->setCurrentIndex(stack->indexOf(layerInfo));
+    stack->setCurrentWidget(layerInfo);
 }
 
 void NPDFUI::showError(const QString& msg) {
     msgError->setText(msg);
-    stack->setCurrentIndex(stack->indexOf(layerError));
+    stack->setCurrentWidget(layerError);
 }
 
 void NPDFUI::abandonProcess() {

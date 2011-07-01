@@ -234,10 +234,10 @@ void NSurfaceCompatibilityUI::refresh() {
         "surfaces will be hashed out.</qt>"));
 
     if (chooseMatrix->currentIndex() == 0) {
-        stack->setCurrentIndex(stack->indexOf((layerLocal)));
+        stack->setCurrentWidget(layerLocal);
         matrixLocal->fillLocal(*surfaces);
     } else {
-        stack->setCurrentIndex(stack->indexOf((layerGlobal)));
+        stack->setCurrentWidget(layerGlobal);
         matrixGlobal->fillGlobal(*surfaces);
     }
 
@@ -273,10 +273,10 @@ void NSurfaceCompatibilityUI::changeLayer(int index) {
         return;
 
     if (index == 0) {
-        stack->setCurrentIndex(stack->indexOf((layerLocal)));
+        stack->setCurrentWidget(layerLocal);
         matrixLocal->fillLocal(*surfaces);
     } else {
-        stack->setCurrentIndex(stack->indexOf((layerGlobal)));
+        stack->setCurrentWidget(layerGlobal);
         matrixGlobal->fillGlobal(*surfaces);
     }
 }
