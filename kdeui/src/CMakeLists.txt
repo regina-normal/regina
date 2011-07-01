@@ -8,7 +8,7 @@ INCLUDE(${QT_USE_FILE})
 
 # Common files, creates a variable holding the list of common source files
 ADD_SUBDIRECTORY(common)
-
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/common ${CMAKE_CURRENT_SOURCE_DIR}/part)
 ADD_SUBDIRECTORY(part)
 #ADD_SUBDIRECTORY(shell)
 
