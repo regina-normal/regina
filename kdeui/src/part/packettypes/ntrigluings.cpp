@@ -40,17 +40,17 @@
 #include "../patiencedialog.h"
 #include "../reginapart.h"
 
-#include <kaction.h>
+#include <KActionCollection>
 #include <kapplication.h>
 #include <klocale.h>
-#include <ktoolbar.h>
 #include <kmessagebox.h>
-#include <kprogress.h>
+#include <kprogressdialog.h>
+#include <ktoolbar.h>
 #include <memory>
 #include <qfileinfo.h>
+#include <QHeaderView>
 #include <qlabel.h>
-#include <qtable.h>
-#include <qwhatsthis.h>
+#include <QTableWidget>
 #include <set>
 
 using regina::NPacket;
@@ -80,9 +80,16 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         editMode(initPrefs.triEditMode), censusFiles(initPrefs.censusFiles) {
     // Set up the table of face gluings.
 
-    faceTable = new QTable(0, 5, 0);
-    faceTable->setReadOnly(! readWrite);
-    QWhatsThis::add(faceTable, i18n("<qt>A table specifying which tetrahedron "
+    faceTable = new QTableWidget(0, 5, 0);
+    
+    // TODO: Do we want this bit here?
+    if( readWrite)
+        faceTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    else
+        faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+
+    faceTable->setWhatsThis(i18n("<qt>A table specifying which tetrahedron "
         "faces are identified with which others.<p>"
         "Tetrahedra are numbered upwards from 0, and the four vertices of "
         "each tetrahedron are numbered 0, 1, 2 and 3.  Each row of the table "
@@ -96,22 +103,17 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "To change these identifications, simply type your own gluings into "
         "the table.</qt>"));
 
-    QHeader* hdr = faceTable->verticalHeader();
-    hdr->hide();
-    faceTable->setLeftMargin(0);
+    QStringList header;
+    header << i18n("Tetrahedron") << i18n("Face 012") << i18n("Face 013");
+    header << i18n("Face 023") << i18n("Face 123");
 
-    hdr = faceTable->horizontalHeader();
-    hdr->setLabel(0, i18n("Tetrahedron"));
-    hdr->setLabel(1, i18n("Face 012"));
-    hdr->setLabel(2, i18n("Face 013"));
-    hdr->setLabel(3, i18n("Face 023"));
-    hdr->setLabel(4, i18n("Face 123"));
+    faceTable->setHorizontalHeaderLabels(header);
 
-    faceTable->setColumnStretchable(0, true);
-    faceTable->setColumnStretchable(1, true);
-    faceTable->setColumnStretchable(2, true);
-    faceTable->setColumnStretchable(3, true);
-    faceTable->setColumnStretchable(4, true);
+    //faceTable->setColumnStretchable(0, true);
+    //faceTable->setColumnStretchable(1, true);
+    //faceTable->setColumnStretchable(2, true);
+    //faceTable->setColumnStretchable(3, true);
+    //faceTable->setColumnStretchable(4, true);
 
     connect(faceTable, SIGNAL(valueChanged(int, int)),
         this, SLOT(notifyGluingsChanged()));
@@ -120,35 +122,40 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     // Set up the triangulation actions.
 
-    triActions = new KActionCollection(0, 0, 0, ReginaPart::factoryInstance());
-    triActionList.setAutoDelete(true);
+    triActions = new KActionCollection(0, ReginaPart::factoryInstance());
+    //triActionList.setAutoDelete(true);
 
-    actAddTet = new KAction(i18n("&Add Tet"), "insert_table_row",
-        0 /* shortcut */, this, SLOT(addTet()), triActions,
-        "tri_add_tet");
+    actAddTet = triActions->addAction("tri_add_tet");
+    actAddTet->setText(i18n("&Add Tet"));
+    actAddTet->setIcon(KIcon("insert_table_row"));
+
     actAddTet->setToolTip(i18n("Add a new tetrahedron"));
     actAddTet->setEnabled(readWrite);
     actAddTet->setWhatsThis(i18n("Add a new tetrahedron to this "
         "triangulation."));
     enableWhenWritable.append(actAddTet);
     triActionList.append(actAddTet);
+    connect(actAddTet, SIGNAL(triggered()), this, SLOT(addTet()));
 
-    actRemoveTet = new KAction(i18n("&Remove Tet"), "delete_table_row",
-        0 /* shortcut */, this, SLOT(removeSelectedTets()), triActions,
-        "tri_remove_tet");
+    actRemoveTet = triActions->addAction("tri_remove_tet");
+    actRemoveTet->setText(i18n("&Remove Tet"));
+    actRemoveTet->setIcon(KIcon("delete_table_row"));
     actRemoveTet->setToolTip(i18n("Remove the currently selected tetrahedra"));
     actRemoveTet->setEnabled(false);
     actRemoveTet->setWhatsThis(i18n("Remove the currently selected "
         "tetrahedra from this triangulation."));
+    connect(actRemoveTet, SIGNAL(triggered()), this, SLOT(removeSelectedTets()));
     connect(faceTable, SIGNAL(selectionChanged()), this,
         SLOT(updateRemoveState()));
     triActionList.append(actRemoveTet);
 
-    triActionList.append(new KActionSeparator());
 
-    actSimplify = new KAction(i18n("&Simplify"), "wizard",
-        0 /* shortcut */, this, SLOT(simplify()), triActions,
-        "tri_simplify");
+    //triActionList.append((new KAction())->setSeparator(true));
+
+    actSimplify = triActions->addAction("tri_simplify");
+    actSimplify->setText(i18n("&Simplify"));
+    actSimplify->setIcon(KIcon("wizard"));
+
     actSimplify->setToolTip(i18n(
         "Simplify the triangulation as far as possible"));
     actSimplify->setEnabled(readWrite);
@@ -161,13 +168,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "means that sometimes only a small reduction can be obtained.  See "
         "the <i>Make 0-Efficient</i> routine for a slower but more powerful "
         "reduction."));
+    connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
     enableWhenWritable.append(actSimplify);
     triActionList.append(actSimplify);
 
-    KAction* actEltMove = new KAction(i18n(
-        "&Elementary Move..."),
-        0 /* shortcut */, this, SLOT(elementaryMove()), triActions,
-        "tri_elementary_move");
+
+    KAction* actEltMove = triActions->addAction("tri_elementary_move");
+    actEltMove->setText(i18n("&Elementary Move..."));
     actEltMove->setToolTip(i18n(
         "Select an elementary move with which to modify the triangulation"));
     actEltMove->setEnabled(readWrite);
@@ -179,12 +186,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "elementary move to apply.</qt>"));
     enableWhenWritable.append(actEltMove);
     triActionList.append(actEltMove);
+    connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
-    triActionList.append(new KActionSeparator());
+    //triActionList.append((new KAction())->setSeparator(true));
 
-    KAction* actOrient = new KAction(i18n( "&Orient"), "orient",
-        0 /* shortcut */, this, SLOT(orient()), triActions,
-        "tri_orient");
+    KAction* actOrient = triActions->addAction("tri_orient");
+    actOrient->setText(i18n("&Orient"));
+    actOrient->setIcon(KIcon("orient"));
     actOrient->setToolTip(i18n(
         "Relabel vertices of tetrahedra for consistent orientation"));
     actOrient->setEnabled(readWrite);
@@ -195,11 +203,12 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "components, only the orientable components will be relabelled.</qt>"));
     enableWhenWritable.append(actOrient);
     triActionList.append(actOrient);
+    connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
-    KAction* actBarycentricSubdivide = new KAction(i18n(
-        "&Barycentric Subdivision"), "barycentric",
-        0 /* shortcut */, this, SLOT(barycentricSubdivide()), triActions,
+    KAction* actBarycentricSubdivide = triActions->addAction(
         "tri_barycentric_subdivide");
+    actBarycentricSubdivide->setText(i18n("&Barycentric Subdivision"));
+    actBarycentricSubdivide->setIcon(KIcon("barycentric"));
     actBarycentricSubdivide->setToolTip(i18n(
         "Perform a barycentric subdivision"));
     actBarycentricSubdivide->setEnabled(readWrite);
@@ -210,10 +219,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "24 smaller tetrahedra."));
     enableWhenWritable.append(actBarycentricSubdivide);
     triActionList.append(actBarycentricSubdivide);
+    connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
+        SLOT(barycentricSubdivide()));
 
-    KAction* actIdealToFinite = new KAction(i18n("&Truncate Ideal Vertices"),
-        "finite", 0 /* shortcut */, this, SLOT(idealToFinite()), triActions,
-        "tri_ideal_to_finite");
+    KAction* actIdealToFinite = triActions->addAction("tri_ideal_to_finite");
+    actIdealToFinite->setText(i18n("&Truncate Ideal Vertices"));
+    actIdealToFinite->setIcon(KIcon("finite"));
+      
     actIdealToFinite->setToolTip(i18n(
         "Truncate any ideal vertices"));
     actIdealToFinite->setEnabled(readWrite);
@@ -227,10 +239,11 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "This action was previously called <i>Ideal to Finite</i>."));
     enableWhenWritable.append(actIdealToFinite);
     triActionList.append(actIdealToFinite);
+    connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
-    KAction* actFiniteToIdeal = new KAction(i18n("Make &Ideal"), "cone",
-        0 /* shortcut */, this, SLOT(finiteToIdeal()), triActions,
-        "tri_finite_to_ideal");
+    KAction* actFiniteToIdeal = triActions->addAction("tri_finite_to_ideal");
+    actFiniteToIdeal->setText(i18n("Make &Ideal"));
+    actFiniteToIdeal->setIcon(KIcon("cone"));
     actFiniteToIdeal->setToolTip(i18n(
         "Convert real boundary components into ideal vertices"));
     actFiniteToIdeal->setEnabled(readWrite);
@@ -244,10 +257,11 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "real boundary components, this operation will have no effect."));
     enableWhenWritable.append(actFiniteToIdeal);
     triActionList.append(actFiniteToIdeal);
-
-    KAction* actDoubleCover = new KAction(i18n( "&Double Cover"), "doublecover",
-        0 /* shortcut */, this, SLOT(doubleCover()), triActions,
-        "tri_double_cover");
+    connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
+    
+    KAction* actDoubleCover = triActions->addAction("tri_double_cover");
+    actDoubleCover->setText(i18n("&Double Cover"));
+    actDoubleCover->setIcon(KIcon("doublecover"));
     actDoubleCover->setToolTip(i18n(
         "Convert the triangulation to its orientable double cover"));
     actDoubleCover->setEnabled(readWrite);
@@ -258,13 +272,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "duplicated, resulting in a disconnected triangulation."));
     enableWhenWritable.append(actDoubleCover);
     triActionList.append(actDoubleCover);
+    connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
-    triActionList.append(new KActionSeparator());
+    //triActionList.append((new KAction())->setSeparator(true));
 
-    KAction* actSplitIntoComponents = new KAction(i18n(
-        "E&xtract Components"),
-        0 /* shortcut */, this, SLOT(splitIntoComponents()), triActions,
+    KAction* actSplitIntoComponents = triActions->addAction(
         "tri_split_into_components");
+    actSplitIntoComponents->setText(i18n("E&xtract Components"));
     actSplitIntoComponents->setToolTip(i18n(
         "Form a new triangulation for each disconnected component"));
     actSplitIntoComponents->setWhatsThis(i18n("<qt>Split a disconnected "
@@ -275,11 +289,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "If this triangulation is already connected, this operation will "
         "do nothing.</qt>"));
     triActionList.append(actSplitIntoComponents);
+    connect(actSplitIntoComponents, SIGNAL(triggered()), this,
+        SLOT(splitIntoComponents()));
 
-    KAction* actConnectedSumDecomposition = new KAction(i18n(
-        "Co&nnected Sum Decomposition"), "math_sum",
-        0 /* shortcut */, this, SLOT(connectedSumDecomposition()), triActions,
+    KAction* actConnectedSumDecomposition = triActions->addAction(
         "tri_connected_sum_decomposition");
+    actConnectedSumDecomposition->setText(i18n("Co&nnected Sum Decomposition"));
+    actConnectedSumDecomposition->setIcon(KIcon("math_sum"));
     actConnectedSumDecomposition->setToolTip(i18n(
         "Split into a connected sum of prime 3-manifolds"));
     actConnectedSumDecomposition->setWhatsThis(i18n("Break this "
@@ -288,11 +304,11 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "summands will be added as new triangulations beneath it in "
         "the packet tree."));
     triActionList.append(actConnectedSumDecomposition);
+    connect(actConnectedSumDecomposition, SIGNAL(triggered()), this, 
+        SLOT(connectedSumDecomposition()));
 
-    KAction* actZeroEff = new KAction(i18n(
-        "Make &0-Efficient"),
-        0 /* shortcut */, this, SLOT(makeZeroEfficient()), triActions,
-        "tri_make_zero_efficient");
+    KAction* actZeroEff = triActions->addAction( "tri_make_zero_efficient");
+    actZeroEff->setText(i18n("Make &0-Efficient"));
     actZeroEff->setToolTip(i18n(
         "Convert this into a 0-efficient triangulation if possible"));
     actZeroEff->setEnabled(readWrite);
@@ -306,12 +322,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "if this is the case.</qt>"));
     enableWhenWritable.append(actZeroEff);
     triActionList.append(actZeroEff);
+    connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
 
-    triActionList.append(new KActionSeparator());
+    //triActionList.append((new KAction())->setSeparator(true));
 
-    KAction* actCensusLookup = new KAction(i18n("Census &Lookup"), "find",
-        0 /* shortcut */, this, SLOT(censusLookup()), triActions,
-        "tri_census_lookup");
+    KAction* actCensusLookup = triActions->addAction("tri_census_lookup");
+    actCensusLookup->setText(i18n("Census &Lookup"));
+    actCensusLookup->setIcon(KIcon("find"));
     actCensusLookup->setToolTip(i18n(
         "Search for this triangulation in the configured list of censuses"));
     actCensusLookup->setWhatsThis(i18n("Attempt to locate this "
@@ -320,6 +337,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "The list of censuses that are searched can be customised through "
         "Regina's settings."));
     triActionList.append(actCensusLookup);
+    connect(actCensusLookup, SIGNAL(triggered()), this, SLOT(censusLookup()));
 
     // Tidy up.
 
@@ -332,15 +350,15 @@ NTriGluingsUI::~NTriGluingsUI() {
     delete triActions;
 }
 
-const QPtrList<KAction>& NTriGluingsUI::getPacketTypeActions() {
+const QLinkedList<KAction*>& NTriGluingsUI::getPacketTypeActions() {
     return triActionList;
 }
 
 void NTriGluingsUI::fillToolBar(KToolBar* bar) {
-    actAddTet->plug(bar);
-    actRemoveTet->plug(bar);
-    bar->insertLineSeparator();
-    actSimplify->plug(bar);
+    bar->addAction(actAddTet);
+    bar->addAction(actRemoveTet);
+    bar->addSeparator();
+    bar->addAction(actSimplify);
 }
 
 regina::NPacket* NTriGluingsUI::getPacket() {
@@ -354,7 +372,7 @@ QWidget* NTriGluingsUI::getInterface() {
 void NTriGluingsUI::commit() {
     tri->removeAllTetrahedra();
 
-    long nRows = faceTable->numRows();
+    long nRows = faceTable->rowCount();
     if (nRows > 0) {
         regina::NTetrahedron** tets = new regina::NTetrahedron*[nRows];
         FaceGluingItem* item;
@@ -365,7 +383,7 @@ void NTriGluingsUI::commit() {
         for (tetNum = 0; tetNum < nRows; tetNum++)
             tets[tetNum] = new regina::NTetrahedron(
                 dynamic_cast<TetNameItem*>(faceTable->item(tetNum, 0))->
-                getName().ascii());
+                getName().toLatin1().data());
 
         // Glue the tetrahedra together.
         for (tetNum = 0; tetNum < nRows; tetNum++)
@@ -398,7 +416,7 @@ void NTriGluingsUI::commit() {
 
 void NTriGluingsUI::refresh() {
     unsigned long nTets = tri->getNumberOfTetrahedra();
-    faceTable->setNumRows(nTets);
+    //faceTable->setNumRows(nTets);
 
     unsigned long tetNum;
     unsigned face;
@@ -406,7 +424,7 @@ void NTriGluingsUI::refresh() {
     regina::NTetrahedron* adj;
     for (tetNum = 0; tetNum < nTets; tetNum++) {
         tet = tri->getTetrahedron(tetNum);
-        faceTable->setItem(tetNum, 0, new TetNameItem(faceTable,
+        faceTable->setItem(tetNum, 0, new TetNameItem(
             tetNum, tet->getDescription().c_str()));
         for (face = 0; face < 4; face++) {
             adj = tet->adjacentTetrahedron(face);
@@ -424,20 +442,25 @@ void NTriGluingsUI::refresh() {
 }
 
 void NTriGluingsUI::setReadWrite(bool readWrite) {
-    faceTable->setReadOnly(! readWrite);
+    // TODO: Do we want this bit here?
+    if( readWrite)
+        faceTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    else
+        faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    for (KAction* act = enableWhenWritable.first(); act;
-            act = enableWhenWritable.next())
-        act->setEnabled(readWrite);
+    QLinkedListIterator<KAction*> it(enableWhenWritable);
+    while(it.hasNext()) {
+      (it.next())->setEnabled(readWrite);
+    }
 
     updateRemoveState();
 }
 
 void NTriGluingsUI::addTet() {
-    long newRow = faceTable->numRows();
+    long newRow = faceTable->rowCount();
 
-    faceTable->setNumRows(newRow + 1);
-    faceTable->setItem(newRow, 0, new TetNameItem(faceTable, newRow, ""));
+    //faceTable->setNumRows(newRow + 1);
+    faceTable->setItem(newRow, 0, new TetNameItem(newRow, ""));
     for (int face = 0; face < 4; face++)
         faceTable->setItem(newRow, 4 - face, new FaceGluingItem(
             faceTable, editMode));
@@ -449,14 +472,14 @@ void NTriGluingsUI::removeSelectedTets() {
     // Gather together all the tetrahedra to be deleted.
     std::set<int> rows;
 
-    int nSel = faceTable->numSelections();
-    QTableSelection sel;
-    int i, j;
-    for (i = 0; i < nSel; i++) {
-        sel = faceTable->selection(i);
-        if (sel.isActive())
-            for (j = sel.topRow(); j <= sel.bottomRow(); j++)
-                rows.insert(j);
+    QList<QTableWidgetItem*> sel = faceTable->selectedItems();
+    int i;
+    for (i = 0; i < sel.count(); i++) {
+        rows.insert(sel[i]->row());
+        //sel = faceTable->selection(i);
+        //if (sel.isActive())
+        //    for (j = sel.topRow(); j <= sel.bottomRow(); j++)
+        //        rows.insert(j);
     }
 
     // Has anything been selected at all?
@@ -490,7 +513,7 @@ void NTriGluingsUI::removeSelectedTets() {
             dynamic_cast<FaceGluingItem*>(faceTable->item(*it, i))->unjoin();
 
     // Adjust other tetrahedron numbers.
-    int nRows = faceTable->numRows();
+    int nRows = faceTable->rowCount();
     long* newTetNums = new long[nRows];
 
     it = rows.begin();
@@ -515,12 +538,9 @@ void NTriGluingsUI::removeSelectedTets() {
     delete[] newTetNums;
 
     // And finally remove the tetrahedra.
-    QMemArray<int> arr(rows.size());
     i = 0;
-    for (it = rows.begin(); it != rows.end(); it++)
-        arr[i++] = *it;
-
-    faceTable->removeRows(arr);
+    for (it = rows.end(); it != rows.begin(); it--)
+        faceTable->removeRow(*it);
 
     // Done!
     setDirty(true);
@@ -661,8 +681,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
         std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(i18n(
             "Connected sum decomposition can be quite\n"
             "slow for larger triangulations.\n\n"
-            "Please be patient."),
-            enclosingPane->getPart()->instance(), ui));
+            "Please be patient."), ui));
 
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
@@ -722,8 +741,7 @@ void NTriGluingsUI::makeZeroEfficient() {
     std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(i18n(
         "0-efficiency reduction can be quite\n"
         "slow for larger triangulations.\n\n"
-        "Please be patient."),
-        enclosingPane->getPart()->instance(), ui));
+        "Please be patient."), ui));
 
     // If it's possible that the triangulation but not the number of
     // tetrahedra is changed, remember the original.
@@ -816,19 +834,20 @@ void NTriGluingsUI::censusLookup() {
 
     // Run through each census file.
     KProgressDialog* progress =
-        new KProgressDialog(ui, 0, i18n("Census Lookup"),
+        new KProgressDialog(ui, i18n("Census Lookup"),
         i18n("Initialising"));
-    progress->progressBar()->setTotalSteps(censusFiles.size() + 1);
+    progress->progressBar()->setMinimum(0);
+    progress->progressBar()->setMaximum(censusFiles.size() + 1);
     progress->show();
     KApplication::kApplication()->processEvents();
 
-    QValueVector<CensusHit> results;
+    QVector<CensusHit> results;
     QString searched = i18n("The following censuses were searched:");
     NPacket* census;
     NPacket* p;
     for (ReginaFilePrefList::const_iterator it = censusFiles.begin();
             it != censusFiles.end(); it++) {
-        progress->progressBar()->advance(1);
+        progress->progressBar()->setValue(progress->progressBar()->value()+1);
         KApplication::kApplication()->processEvents();
 
         // Check for cancellation.
@@ -843,7 +862,7 @@ void NTriGluingsUI::censusLookup() {
             continue;
 
         // Process this census file.
-        progress->setLabel(i18n("Searching %1...").arg((*it).filename));
+        progress->setLabelText(i18n("Searching %1...").arg((*it).filename));
         KApplication::kApplication()->processEvents();
 
         census = regina::readFileMagic(
@@ -867,7 +886,7 @@ void NTriGluingsUI::censusLookup() {
         searched = searched + '\n' + (*it).filename;
     }
 
-    progress->progressBar()->advance(1);
+    progress->progressBar()->setValue(progress->progressBar()->value()+1);
     delete progress;
     KApplication::kApplication()->processEvents();
 
@@ -882,7 +901,7 @@ void NTriGluingsUI::censusLookup() {
         QString detailsText = i18n("Identified by census lookup:");
         QString detailsHTML = i18n("<qt>The triangulation was identified:");
         QString censusName;
-        for (QValueVector<CensusHit>::const_iterator it = results.begin();
+        for (QVector<CensusHit>::const_iterator it = results.begin();
                 it != results.end(); it++) {
             censusName = QFileInfo((*it).censusFile).fileName();
             detailsHTML += i18n("<p>Name: %1<br>Census: %2").
@@ -899,19 +918,22 @@ void NTriGluingsUI::censusLookup() {
 
         // If we're in read-write mode, store the hits as a text packet
         // also.
-        if (! faceTable->isReadOnly()) {
-            regina::NText* text = new regina::NText(detailsText.ascii());
+        // TODO : QTableWidgets don't have a readWrite property.
+        
+        //if (! faceTable->isReadOnly()) {
+            regina::NText* text = 
+              new regina::NText(detailsText.toLatin1().data());
             text->setPacketLabel(tri->makeUniqueLabel(
                 "ID: " + tri->getPacketLabel()));
             tri->insertChildLast(text);
-        }
+        //}
     }
 }
 
 void NTriGluingsUI::updateRemoveState() {
     // Are we read-write?
     if (actAddTet->isEnabled())
-        actRemoveTet->setEnabled(faceTable->numSelections() > 0);
+        actRemoveTet->setEnabled(faceTable->selectedItems().count() > 0);
     else
         actRemoveTet->setEnabled(false);
 }
@@ -920,4 +942,4 @@ void NTriGluingsUI::notifyGluingsChanged() {
     setDirty(true);
 }
 
-#include "ntrigluings.moc"
+#include "moc_ntrigluings.cpp"

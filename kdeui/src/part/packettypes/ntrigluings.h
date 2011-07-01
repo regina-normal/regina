@@ -39,7 +39,7 @@
 class KAction;
 class KActionCollection;
 class KToolBar;
-class QTable;
+class QTableWidget;
 
 namespace regina {
     class NPacket;
@@ -62,7 +62,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * Internal components
          */
         QWidget* ui;
-        QTable* faceTable;
+        QTableWidget* faceTable;
 
         /**
          * Gluing actions
