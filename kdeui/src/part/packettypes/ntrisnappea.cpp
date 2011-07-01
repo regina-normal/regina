@@ -39,8 +39,7 @@
 #include <klocale.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qwhatsthis.h>
-#include <qwidgetstack.h>
+#include <QStackedWidget>
 
 using regina::NPacket;
 using regina::NSnapPeaTriangulation;
@@ -62,13 +61,14 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
 
     layout->addStretch(1);
 
-    data = new QWidgetStack(ui);
+    data = new QStackedWidget(ui);
 
     // Data for a null SnapPea triangulation:
 
     dataNull = new QWidget(data);
-    QBoxLayout* nullLayout = new QVBoxLayout(dataNull, 5 /* margin */,
-        0 /* spacing */);
+    QBoxLayout* nullLayout = new QVBoxLayout(dataNull);
+    nullLayout->setMargin(5);
+    nullLayout->setSpacing(0);
 
     unavailable = new NoSnapPea(reginaTri, allowClosed, dataNull, 0, true);
     unavailable->setAlignment(Qt::AlignCenter);
@@ -77,13 +77,16 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     // Data for a non-null SnapPea triangulation:
 
     dataValid = new QWidget(data);
-    QGridLayout* validGrid = new QGridLayout(dataValid, 2 /* rows */, 5, 5);
-    validGrid->setColStretch(0, 1);
-    validGrid->setColSpacing(2, 5); // Horizontal gap
-    validGrid->setColStretch(4, 1);
+    QGridLayout* validGrid = new QGridLayout(dataValid);
+    validGrid->setSpacing(5);
+    validGrid->setColumnMinimumWidth(0, 1);
+    validGrid->setColumnStretch(2, 5); // Horizontal gap
+    validGrid->setColumnMinimumWidth(4, 1);
 
     QString msg;
-    int align = Qt::AlignTop | Qt::AlignAuto | Qt::ExpandTabs;
+    Qt::Alignment align = Qt::AlignTop;// | Qt::AlignAuto | Qt::ExpandTabs;
+    // TODO: AlignAuto definitely gone, AlignLeft is actually AlignAuto
+    // but ExpandTabs .. can't find a replacement.
 
     solutionTypeLabel = new QLabel(i18n("Solution type:"), dataValid);
     solutionTypeLabel->setAlignment(align);
@@ -93,8 +96,8 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     validGrid->addWidget(solutionType, 0, 3);
     solutionTypeExplnBase = i18n("The type of solution that was found "
         "when solving for a complete hyperbolic structure.");
-    QWhatsThis::add(solutionTypeLabel, solutionTypeExplnBase);
-    QWhatsThis::add(solutionType, solutionTypeExplnBase);
+    solutionTypeLabel->setWhatsThis(solutionTypeExplnBase);
+    solutionType->setWhatsThis(solutionTypeExplnBase);
 
     label = new QLabel(i18n("Volume:"), dataValid);
     label->setAlignment(align);
@@ -104,8 +107,8 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     validGrid->addWidget(volume, 1, 3);
     msg = i18n("The volume of the underlying 3-manifold.  The estimated "
         "number of decimal places of accuracy is also shown.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(volume, msg);
+    label->setWhatsThis(msg);
+    volume->setWhatsThis(msg);
 
     // Finish off.
 
@@ -133,18 +136,18 @@ void NTriSnapPeaUI::refresh() {
     snappeaTri = new NSnapPeaTriangulation(*reginaTri, allowClosed);
 
     if (snappeaTri->isNull()) {
-        data->raiseWidget(dataNull);
+        data->setCurrentWidget(dataNull);
         unavailable->refresh(allowClosed);
     } else {
-        data->raiseWidget(dataValid);
+        data->setCurrentWidget(dataValid);
 
         solutionType->setText(solutionTypeString(snappeaTri->solutionType()));
         solutionType->setEnabled(true);
 
         QString expln = i18n("%1  %2").arg(solutionTypeExplnBase)
             .arg(solutionTypeExplanation(snappeaTri->solutionType()));
-        QWhatsThis::add(solutionTypeLabel, expln);
-        QWhatsThis::add(solutionType, expln);
+        solutionTypeLabel->setWhatsThis(expln);
+        solutionType->setWhatsThis(expln);
 
         int places;
         double ans = snappeaTri->volume(places);
@@ -181,14 +184,14 @@ void NTriSnapPeaUI::refresh() {
 }
 
 void NTriSnapPeaUI::editingElsewhere() {
-    data->raiseWidget(dataValid);
+    data->setCurrentWidget(dataValid);
 
     QString msg(i18n("Editing..."));
 
     solutionType->setText(msg);
     solutionType->setEnabled(false);
-    QWhatsThis::add(solutionTypeLabel, solutionTypeExplnBase);
-    QWhatsThis::add(solutionType, solutionTypeExplnBase);
+    solutionTypeLabel->setWhatsThis(solutionTypeExplnBase);
+    solutionType->setWhatsThis(solutionTypeExplnBase);
 
     volume->setText(msg);
     volume->setEnabled(false);
@@ -249,4 +252,4 @@ QString NTriSnapPeaUI::solutionTypeExplanation(int solnType) {
     }
 }
 
-#include "ntrisnappea.moc"
+#include "moc_ntrisnappea.cpp"
