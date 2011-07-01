@@ -36,12 +36,10 @@
 
 #include "packet/npacketlistener.h"
 
-#include "../gridlistview.h"
-
-#include <kdialogbase.h>
+#include <KDialog>
+#include <QTreeWidgetItem>
 
 class PacketUI;
-class QListView;
 
 namespace regina {
     class NBoundaryComponent;
@@ -59,7 +57,7 @@ namespace regina {
  * Skeleton windows automatically listen for changes on the underlying
  * triangulation and update themselves when necessary.
  */
-class SkeletonWindow : public KDialogBase, public regina::NPacketListener {
+class SkeletonWindow : public KDialog, public regina::NPacketListener {
     Q_OBJECT
 
     public:
@@ -79,7 +77,7 @@ class SkeletonWindow : public KDialogBase, public regina::NPacketListener {
         /**
          * Internal components
          */
-        QListView* table;
+        QTreeWidget* table;
 
     public:
         /**
@@ -114,7 +112,7 @@ class SkeletonWindow : public KDialogBase, public regina::NPacketListener {
  * not used on its own, but is instead subclassed for each type of
  * skeletal item.
  */
-class SkeletalItem : public GridListViewItem {
+class SkeletalItem : public QTreeWidgetItem {
     protected:
         /**
          * Properties of the underlying skeletal object.
@@ -126,7 +124,7 @@ class SkeletalItem : public GridListViewItem {
         /**
          * Constructor.
          */
-        SkeletalItem(QListView* parent, regina::NTriangulation* useTri,
+        SkeletalItem(QTreeWidget* parent, regina::NTriangulation* useTri,
             unsigned long useItemIndex);
 
     protected:
@@ -150,11 +148,11 @@ class VertexItem : public SkeletalItem {
         /**
          * Constructor.
          */
-        VertexItem(QListView* parent, regina::NTriangulation* useTri,
+        VertexItem(QTreeWidget* parent, regina::NTriangulation* useTri,
             unsigned long useItemIndex);
 
         /**
-         * QListViewItem overrides.
+         * QTreeWidgetItem overrides.
          */
         QString text(int column) const;
 };
@@ -173,11 +171,11 @@ class EdgeItem : public SkeletalItem {
         /**
          * Constructor.
          */
-        EdgeItem(QListView* parent, regina::NTriangulation* useTri,
+        EdgeItem(QTreeWidget* parent, regina::NTriangulation* useTri,
             unsigned long useItemIndex);
 
         /**
-         * QListViewItem overrides.
+         * QTreeWidgetItem overrides.
          */
         QString text(int column) const;
 };
@@ -196,11 +194,11 @@ class FaceItem : public SkeletalItem {
         /**
          * Constructor.
          */
-        FaceItem(QListView* parent, regina::NTriangulation* useTri,
+        FaceItem(QTreeWidget* parent, regina::NTriangulation* useTri,
             unsigned long useItemIndex);
 
         /**
-         * QListViewItem overrides.
+         * QTreeWidgetItem overrides.
          */
         QString text(int column) const;
 };
@@ -219,11 +217,11 @@ class ComponentItem : public SkeletalItem {
         /**
          * Constructor.
          */
-        ComponentItem(QListView* parent, regina::NTriangulation* useTri,
+        ComponentItem(QTreeWidget* parent, regina::NTriangulation* useTri,
             unsigned long useItemIndex);
 
         /**
-         * QListViewItem overrides.
+         * QTreeWidgetItem overrides.
          */
         QString text(int column) const;
 };
@@ -242,18 +240,18 @@ class BoundaryComponentItem : public SkeletalItem {
         /**
          * Constructor.
          */
-        BoundaryComponentItem(QListView* parent, regina::NTriangulation* useTri,
+        BoundaryComponentItem(QTreeWidget* parent, regina::NTriangulation* useTri,
             unsigned long useItemIndex);
 
         /**
-         * QListViewItem overrides.
+         * QTreeWidgetItem overrides.
          */
         QString text(int column) const;
 };
 
-inline SkeletalItem::SkeletalItem(QListView* parent,
+inline SkeletalItem::SkeletalItem(QTreeWidget* parent,
         regina::NTriangulation* useTri, unsigned long useItemIndex) :
-        GridListViewItem(parent), tri(useTri), itemIndex(useItemIndex) {
+        QTreeWidgetItem(parent), tri(useTri), itemIndex(useItemIndex) {
 }
 
 inline QString& SkeletalItem::appendToList(QString& list,

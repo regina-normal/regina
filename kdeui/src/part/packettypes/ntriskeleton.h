@@ -36,10 +36,10 @@
 #include "reginaprefset.h"
 #include "../packettabui.h"
 #include "../reginapart.h"
+#include "skeletonwindow.h"
 
 
 class NTriFaceGraphUI;
-class SkeletonWindow;
 
 class QScrollArea;
 class QStackedWidget;
@@ -98,7 +98,7 @@ class NTriSkelCompUI : public QObject, public PacketViewerTab {
         /**
          * Skeleton viewers
          */
-        QLinkedList<SkeletonWindow> viewers;
+        QLinkedList<SkeletonWindow*> viewers;
 
     public:
         /**
