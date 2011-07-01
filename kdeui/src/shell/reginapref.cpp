@@ -69,7 +69,7 @@ namespace {
     /**
      * A list view item for a single ReginaFilePref.
      */
-    class ReginaFilePrefItem : public KListViewItem {
+    class ReginaFilePrefItem : public QTreeWidgetItem {
         private:
             /**
              * Pixmaps that will be loaded when we first need them.
@@ -90,7 +90,7 @@ namespace {
              */
             ReginaFilePrefItem(QListView* parent,
                     const ReginaFilePref& newData) :
-                    KListViewItem(parent, parent->lastItem()), data(newData) {
+                    QTreeWidgetItem(parent, parent->lastItem()), data(newData) {
             }
 
             const ReginaFilePref& getData() const {
@@ -916,12 +916,12 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
     setStretchFactor(box, 1);
 
     // Set up the list view.
-    listFiles = new KListView(box);
+    listFiles = new QTreeWidget(box);
     box->setStretchFactor(listFiles, 1);
     listFiles->header()->hide();
     listFiles->addColumn(QString::null);
     listFiles->setSorting(-1);
-    listFiles->setSelectionModeExt(KListView::Extended);
+    listFiles->setSelectionModeExt(QTreeWidget::Extended);
     listFiles->setItemsMovable(true);
     QString msg = i18n("The list of census files to be searched "
         "when asked to locate an arbitrary triangulation in all available "
@@ -1144,12 +1144,12 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
     setStretchFactor(box, 1);
 
     // Set up the list view.
-    listFiles = new KListView(box);
+    listFiles = new QTreeWidget(box);
     box->setStretchFactor(listFiles, 1);
     listFiles->header()->hide();
     listFiles->addColumn(QString::null);
     listFiles->setSorting(-1);
-    listFiles->setSelectionModeExt(KListView::Extended);
+    listFiles->setSelectionModeExt(QTreeWidget::Extended);
     listFiles->setItemsMovable(true);
     msg = i18n("The list of Python libraries to be "
         "loaded at the beginning of each new Python session.  Note that "
@@ -1347,4 +1347,3 @@ void ReginaEditorChooser::slotOk() {
     KDialogBase::slotOk();
 }
 
-#include "reginapref.moc"

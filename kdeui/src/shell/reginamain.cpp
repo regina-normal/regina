@@ -787,4 +787,3 @@ void ReginaMain::embedPart() {
     }
 }
 
-#include "reginamain.moc"

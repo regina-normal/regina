@@ -33,9 +33,12 @@
 #ifndef __EXAMPLESACTION_H
 #define __EXAMPLESACTION_H
 
-#include <kactionclasses.h>
+#include <kselectaction.h>
 #include <qstringlist.h>
-#include <qvaluevector.h>
+#include <qvector.h>
+
+class KMenu;
+class KUrl;
 
 /**
  * An action offering a selection of sample data files that can be
@@ -52,12 +55,12 @@ class ExamplesAction : public KSelectAction {
         /**
          * GUI components
          */
-        KPopupMenu* popup_;
+        KMenu* popup_;
 
         /**
          * Sample data files
          */
-        QValueVector<QString> urls_;
+        QVector<QString> urls_;
         QStringList descs_;
 
     public:
@@ -66,7 +69,7 @@ class ExamplesAction : public KSelectAction {
          * to urlSelected(const KURL&).
          */
         ExamplesAction(const QObject* receiver, const char* slot,
-            QObject* parent, const char* name = 0);
+            QObject* parent);
         virtual ~ExamplesAction();
 
         /**
@@ -79,13 +82,13 @@ class ExamplesAction : public KSelectAction {
         /**
          * KAction overrides.
          */
-        virtual int plug(QWidget *widget, int index = -1);
+        //virtual int plug(QWidget *widget, int index = -1);
 
     signals:
         /**
          * Emitted when a sample data file is selected for opening.
          */
-        void urlSelected(const KURL& url);
+        void urlSelected(const KUrl& url);
 
     protected slots:
         /**

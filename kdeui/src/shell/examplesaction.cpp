@@ -36,24 +36,24 @@
 #include "examplesaction.h"
 
 #include <kapplication.h>
+#include <kauthorized.h>
 #include <klocale.h>
-#include <kpopupmenu.h>
+#include <kmenu.h>
 #include <ktoolbar.h>
-#include <ktoolbarbutton.h>
 #include <kurl.h>
 #include <qfile.h>
-#include <qwhatsthis.h>
+#include <qtoolbutton.h>
 
 ExamplesAction::ExamplesAction(const QObject* receiver, const char* slot,
-        QObject* parent, const char* name) :
-        KSelectAction(i18n("Open E&xample"), "bookmark", 0, parent, name) {
-    popup_ = new KPopupMenu;
+        QObject* parent) :
+        KSelectAction(KIcon("bookmark"),i18n("Open E&xample"), parent) {
+    popup_ = new KMenu;
 
     connect(popup_, SIGNAL(aboutToShow()),
         this, SLOT(menuAboutToShow()));
-    connect(popup_, SIGNAL(activated(int)),
+    connect(popup_, SIGNAL(actionTriggered(int)),
         this, SLOT(exampleActivated(int)));
-    connect(this, SIGNAL(activated(int)),
+    connect(this, SIGNAL(actionTriggered(int)),
         this, SLOT(exampleActivated(int)));
 
     setMenuAccelsEnabled(false);
@@ -64,7 +64,7 @@ ExamplesAction::ExamplesAction(const QObject* receiver, const char* slot,
         "3-manifold triangulations are also provided."));
 
     if (receiver)
-        connect(this, SIGNAL(urlSelected(const KURL&)), receiver, slot);
+        connect(this, SIGNAL(urlSelected(const KUrl&)), receiver, slot);
 }
 
 ExamplesAction::~ExamplesAction() {
@@ -80,41 +80,46 @@ void ExamplesAction::addURL(const QString& fileName, const QString& text) {
     setItems(descs_);
 }
 
+// TODO : This is disabled. I've updated it for Qt4/KDE4
+// and it seems like the changes to plug are no longer required
+/*
 int ExamplesAction::plug(QWidget *widget, int index) {
-    if (kapp && ! kapp->authorizeKAction(name()))
+  // KAuthorized seems to replace the old KApplication
+    if (kapp && ! KAuthorized::authorizeKAction(this->objectName()))
         return -1;
 
     if ( widget->inherits("KToolBar")) {
         KToolBar *bar = (KToolBar*)widget;
-        int id_ = KAction::getToolButtonID();
+//        int id_ = KAction::getToolButtonID();
 
-        KInstance* instance;
-        if (m_parentCollection)
-            instance = m_parentCollection->instance();
-        else
-            instance = KGlobal::instance();
+//        KInstance* instance;
+//        if (m_parentCollection)
+//            instance = m_parentCollection->instance();
+//        else
+//            instance = KGlobal::instance();
 
-        bar->insertButton(icon(), id_, SIGNAL(clicked()), this,
-            SLOT(slotClicked()), isEnabled(), plainText(), index, instance);
-        addContainer(bar, id_);
+        bar->addAction(icon(),text(), this, SLOT(slotClicked()));
+//        bar->insertButton(icon(), id_, SIGNAL(clicked()), this,
+//            SLOT(slotClicked()), isEnabled(), plainText(), index, instance);
+//        addContainer(bar, id_);
         connect(bar, SIGNAL(destroyed()), this, SLOT(slotDestroyed()));
-        bar->setDelayedPopup(id_, popup_, true);
+//        bar->setDelayedPopup(id_, popup_, true);
 
-        if (! whatsThis().isEmpty())
-            QWhatsThis::add(bar->getButton(id_), whatsThisWithIcon());
+//        if (! whatsThis().isEmpty())
+//            bar->getButton(id_)->setWhatsThis(whatsThis());
 
         return containerCount() - 1;
     }
 
     return KSelectAction::plug(widget, index);
-}
+}*/
 
 void ExamplesAction::exampleActivated(int id) {
     // Clear the check box that has just been added.
     setItems(descs_);
 
     // And open the URL.
-    emit urlSelected(KURL(urls_[id]));
+    emit urlSelected(KUrl(urls_[id]));
 }
 
 void ExamplesAction::menuAboutToShow() {
@@ -123,16 +128,16 @@ void ExamplesAction::menuAboutToShow() {
     int index = 0;
     QStringList::Iterator it = descs_.begin();
     for ( ; it != descs_.end(); ++it, ++index)
-        popup_->insertItem(*it, index);
+        popup_->addAction(descs_[index]);
 }
 
 void ExamplesAction::slotClicked() {
-    KAction::slotActivated();
+    KAction::trigger();
 }
 
 void ExamplesAction::slotActivated() {
-    emit activated(currentItem());
-    emit activated(currentText());
+  // TODO: Why twice? The original code emitted it twice too.
+    emit actionTriggered(this);
+    emit actionTriggered(this);
 }
 
-#include "examplesaction.moc"
