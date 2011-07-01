@@ -83,4 +83,3 @@ bool PacketWindow::queryClose() {
     return heldPane->queryClose();
 }
 
-#include "moc_packetwindow.cpp"

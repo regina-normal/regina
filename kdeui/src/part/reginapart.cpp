@@ -615,4 +615,3 @@ regina::NPacket* ReginaPart::checkSubtreeSelected() {
     return 0;
 }
 
-#include "moc_reginapart.cpp"

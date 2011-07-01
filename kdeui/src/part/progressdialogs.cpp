@@ -89,4 +89,3 @@ bool ProgressDialogNumeric::run() {
     return (! progress->isCancelled());
 }
 
-#include "moc_progressdialogs.cpp"

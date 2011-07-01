@@ -324,4 +324,3 @@ void PacketTabbedViewerTab::notifyTabSelected(int newTab) {
     visibleViewer->queuedAction = PacketViewerTab::None;
 }
 
-#include "moc_packettabui.cpp"

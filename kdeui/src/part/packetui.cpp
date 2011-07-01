@@ -685,4 +685,3 @@ void PacketPane::customEvent(QEvent* evt) {
     }
 }
 
-#include "moc_packetui.cpp"

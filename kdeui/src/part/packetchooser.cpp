@@ -223,4 +223,3 @@ bool PacketChooser::verify() {
     return true;
 }
 
-#include "moc_packetchooser.cpp"

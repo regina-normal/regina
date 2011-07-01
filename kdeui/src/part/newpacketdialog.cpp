@@ -151,4 +151,3 @@ void NewPacketDialog::slotOk() {
     KDialog::okClicked();
 }
 
-#include "moc_newpacketdialog.cpp"

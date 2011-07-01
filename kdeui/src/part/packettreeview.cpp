@@ -323,4 +323,3 @@ void PacketTreeView::customEvent(QEvent* evt) {
     }
 }
 
-#include "moc_packettreeview.cpp"

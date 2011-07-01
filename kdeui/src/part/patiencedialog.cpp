@@ -65,4 +65,3 @@ PatienceDialog::PatienceDialog(const QString& message,
     layout->setStretchFactor(msg, 1);
 }
 
-#include "moc_patiencedialog.cpp"
