@@ -71,9 +71,9 @@ class ReginaMain : public KParts::MainWindow,
         PythonManager consoles;
             /**< The set of all currently open consoles not linked to a
                  specific part. */
-        KUrl lastURL;
-            /**< The URL that was last contained in this window.
-                 This data member is only set when the URL is finally
+        KUrl lastUrl;
+            /**< The Url that was last contained in this window.
+                 This data member is only set when the Url is finally
                  closed in the underlying part. */
         static unsigned objectNumber;
             /**< The unique positive integer to be assigned to the next
@@ -166,19 +166,19 @@ class ReginaMain : public KParts::MainWindow,
         void newPython();
 
         /**
-         * Open the given URL in this window, or in a new top-level
+         * Open the given Url in this window, or in a new top-level
          * window if this window already contains an open document.
          */
-        bool openURL(const KUrl& url);
+        bool openUrl(const KUrl& url);
 
         /**
-         * Open the given URL in this window, or in a new top-level
+         * Open the given Url in this window, or in a new top-level
          * window if this window already contains an open document.
          */
-        bool openURL(const QString& url);
+        bool openUrl(const QString& url);
 
         /**
-         * Open the given example file in a manner similar to openURL().
+         * Open the given example file in a manner similar to openUrl().
          */
         bool openExample(const KUrl& url);
 
@@ -223,7 +223,7 @@ class ReginaMain : public KParts::MainWindow,
         void newToolbarConfig();
 
         /**
-         * Add the current working URL to the recent file list for every
+         * Add the current working Url to the recent file list for every
          * top-level window (including this one) and save the file list to
          * the global configuration.
          */
