@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     if (QTextCodec* codec = QTextCodec::codecForName("UTF-8"))
         QTextCodec::setCodecForCStrings(codec);
     KCmdLineOptions options;
-    options.add("+[URL]", ki18n("Document to open."), 0);
+    options.add("+[Url]", ki18n("Document to open."), 0);
 
     ReginaAbout about("regina");
 
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
             for (int i = 0; i < args->count(); i++) {
                 ReginaMain *widget = new ReginaMain;
                 widget->show();
-                widget->openURL(args->url(i));
+                widget->openUrl(args->url(i));
             }
         }
         args->clear();

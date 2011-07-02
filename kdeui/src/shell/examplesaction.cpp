@@ -71,7 +71,7 @@ ExamplesAction::~ExamplesAction() {
     delete popup_;
 }
 
-void ExamplesAction::addURL(const QString& fileName, const QString& text) {
+void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
     urls_.append(QString("file:%1/%2")
         .arg(QFile::decodeName(regina::NGlobalDirs::examples().c_str()))
         .arg(fileName));
@@ -118,7 +118,7 @@ void ExamplesAction::exampleActivated(int id) {
     // Clear the check box that has just been added.
     setItems(descs_);
 
-    // And open the URL.
+    // And open the Url.
     emit urlSelected(KUrl(urls_[id]));
 }
 

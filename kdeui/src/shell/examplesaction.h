@@ -66,7 +66,7 @@ class ExamplesAction : public KSelectAction {
     public:
         /**
          * Constructor and destructor.  The given slot is to be connected
-         * to urlSelected(const KURL&).
+         * to urlSelected(const KUrl&).
          */
         ExamplesAction(const QObject* receiver, const char* slot,
             QObject* parent);
@@ -77,7 +77,7 @@ class ExamplesAction : public KSelectAction {
          *
          * The filename should be relative to the Regina examples directory.
          */
-        void addURL(const QString& fileName, const QString& description);
+        void addUrl(const QString& fileName, const QString& description);
 
         /**
          * KAction overrides.
