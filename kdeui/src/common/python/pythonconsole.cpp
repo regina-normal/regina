@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "Python.h"
 #include "regina-config.h"
 #include "file/nglobaldirs.h"
 #include "packet/npacket.h"

@@ -1,5 +1,5 @@
 SET(SOURCES examplesaction.cpp main.cpp reginamain.cpp reginapref.cpp)
-AUTOMOC4_MOC_HEADERS(regina-kde examplesaction.h reginamain.h reginapref.h)
+AUTOMOC4_MOC_HEADERS(regina-kde ${MOC_HEADERS} examplesaction.h reginamain.h reginapref.h ../part/reginapart.h)
 KDE4_ADD_EXECUTABLE(regina-kde ${COMMON_SOURCES} ${SOURCES})
-
-TARGET_LINK_LIBRARIES(regina-kde ${ENGINE_LIBRARY})
+SET(LINK_LIBS ${LINK_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KTEXTEDITOR_LIBS} reginapart)
+TARGET_LINK_LIBRARIES(regina-kde ${LINK_LIBS})

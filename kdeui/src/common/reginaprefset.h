@@ -34,7 +34,7 @@
 #define __REGINAPREFSET_H
 
 #include <qmutex.h>
-#include <qvector.h>
+#include <QLinkedList>
 #include <QString>
 
 /**
@@ -64,7 +64,7 @@ struct ReginaFilePref {
  * A structure holding a list of filenames each of which may or may not
  * be active.
  */
-typedef QVector<ReginaFilePref> ReginaFilePrefList;
+typedef QLinkedList<ReginaFilePref> ReginaFilePrefList;
 
 /**
  * Describes the many possible ways in which ReginaPrefSet::triGraphvizExec

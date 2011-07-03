@@ -776,7 +776,7 @@ void ReginaMain::saveOptions() {
         KMainWindow* otherMain = it.next();
         if (otherMain != this)
             if (otherMain->metaObject()->className() == 
-                    ReginaMain::metaObject()->className()) 
+                    ReginaMain::staticMetaObject.className()) 
                 dynamic_cast<ReginaMain*>(otherMain)->readOptions(config);
     }
 }

@@ -36,7 +36,7 @@
 #include "reginaprefset.h"
 
 #include <kvbox.h>
-#include <kdialog.h>
+#include <kpagedialog.h>
 
 class CoordinateChooser;
 class QCheckBox;
@@ -61,7 +61,7 @@ namespace KTextEditor {
 /**
  * The Regina configuration dialog.
  */
-class ReginaPreferences : public KDialog {
+class ReginaPreferences : public KPageDialog {
     Q_OBJECT
 
     private:

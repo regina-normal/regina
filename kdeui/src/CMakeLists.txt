@@ -6,6 +6,7 @@ INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/kdeui/src/common")
 ADD_DEFINITIONS( ${KDE4_DEFINITIONS} )
 INCLUDE(${QT_USE_FILE})
 
+SET(LINK_LIBS ${ENGINE_LIBRARY})
 # Common files, creates a variable holding the list of common source files
 ADD_SUBDIRECTORY(common)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/common ${CMAKE_CURRENT_SOURCE_DIR}/part)

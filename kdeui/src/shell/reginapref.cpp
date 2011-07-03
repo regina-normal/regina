@@ -41,23 +41,23 @@
 #include <kconfig.h>
 #include <kfiledialog.h>
 #include <kglobal.h>
+#include <KHBox>
 #include <kiconloader.h>
 #include <klineedit.h>
-#include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <ktexteditor/editorchooser.h>
 #include <ktip.h>
+#include <KVBox>
 #include <qcheckbox.h>
 #include <qfile.h>
-#include <qheader.h>
+#include <QHeaderView>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <QTreeWidget>
 #include <qvalidator.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
 
 /**
  * Note that QTextEdit does not seem to support word wrap in LogText
@@ -88,9 +88,9 @@ namespace {
              * item to the end of the list (which requires traversing
              * the entire list).
              */
-            ReginaFilePrefItem(QListView* parent,
+            ReginaFilePrefItem(QTreeWidget* parent,
                     const ReginaFilePref& newData) :
-                    QTreeWidgetItem(parent, parent->lastItem()), data(newData) {
+                    QTreeWidgetItem(parent), data(newData) {
             }
 
             const ReginaFilePref& getData() const {
@@ -102,7 +102,7 @@ namespace {
                     return false;
 
                 data.active = true;
-                repaint();
+                // repaint(); TODO
                 return true;
             }
 
@@ -111,7 +111,7 @@ namespace {
                     return false;
 
                 data.active = false;
-                repaint();
+                // repaint(); TODO 
                 return true;
             }
 
@@ -133,36 +133,54 @@ namespace {
 }
 
 ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
-        KDialogBase(IconList, i18n("Regina Preferences"),
-        Help|Ok|Apply|Cancel, Ok), mainWindow(parent),
+        KPageDialog(), mainWindow(parent),
         prefSet(mainWindow->getPreferences()) {
+    setFaceType(KPageDialog::List);
+    setCaption(i18n("Regina Preferences"));
+    setButtons(KDialog::Help | KDialog::Ok | KDialog::Apply | KDialog::Cancel);
+    setDefaultButton(KDialog::Ok);
     // Construct the individual preferences pages.
-    QVBox* frame = addVBoxPage(i18n("General"), i18n("General Options"),
-        BarIcon("regina", KIcon::SizeMedium));
+    KVBox* frame = new KVBox();
+    KPageWidgetItem *item = addPage(frame, i18n("General"));
+    item->setHeader(i18n("General Options"));
+    item->setIcon(KIcon(BarIcon("regina")));
+
     generalPrefs = new ReginaPrefGeneral(frame);
 
-    frame = addVBoxPage(i18n("Triangulation"), i18n("Triangulation Options"),
-        BarIcon("packet_triangulation", KIcon::SizeMedium));
+    frame = new KVBox();
+    item = addPage(frame, i18n("Triangulation"));
+    item->setHeader(i18n("Triangulation Options"));
+    item->setIcon(KIcon(BarIcon("packet_triangulation")));
     triPrefs = new ReginaPrefTri(frame);
 
-    frame = addVBoxPage(i18n("Surfaces"), i18n("Normal Surface Options"),
-        BarIcon("packet_surfaces", KIcon::SizeMedium));
+    frame = new KVBox();
+    item = addPage(frame, i18n("Surfaces"));
+    item->setHeader(i18n("Normal Surface Options"));
+    item->setIcon(KIcon(BarIcon("packet_surfaces")));
     surfacePrefs = new ReginaPrefSurfaces(frame);
 
-    frame = addVBoxPage(i18n("PDF"), i18n("PDF Options"),
-        BarIcon("packet_pdf", KIcon::SizeMedium));
+    frame = new KVBox();
+    item = addPage(frame, i18n("PDF"));
+    item->setHeader(i18n("PDF Options"));
+    item->setIcon(KIcon(BarIcon("packet_PDF")));
     pdfPrefs = new ReginaPrefPDF(frame);
 
-    frame = addVBoxPage(i18n("Census"), i18n("Census Options"),
-        BarIcon("view_text", KIcon::SizeMedium));
+    frame = new KVBox();
+    item = addPage(frame, i18n("Census"));
+    item->setHeader(i18n("Census Options"));
+    item->setIcon(KIcon(BarIcon("view_text")));
     censusPrefs = new ReginaPrefCensus(frame);
 
-    frame = addVBoxPage(i18n("Python"), i18n("Python Options"),
-        BarIcon("openterm", KIcon::SizeMedium));
+    frame = new KVBox();
+    item = addPage(frame, i18n("Python"));
+    item->setHeader(i18n("Python Options"));
+    item->setIcon(KIcon(BarIcon("openterm")));
     pythonPrefs = new ReginaPrefPython(frame);
 
-    frame = addVBoxPage(i18n("SnapPea"), i18n("SnapPea Options"),
-        BarIcon("snappea", KIcon::SizeMedium));
+    frame = new KVBox();
+    item = addPage(frame, i18n("SnapPea"));
+    item->setHeader(i18n("SnapPea Options"));
+    item->setIcon(KIcon(BarIcon("snappea")));
     snapPeaPrefs = new ReginaPrefSnapPea(frame);
 
     // Read the current preferences from the main window.
@@ -175,42 +193,42 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     generalPrefs->cbTipOfDay->setChecked(
         KConfigGroup(KGlobal::config(), "TipOfDay").
-        readBoolEntry("RunOnStart", true));
+        readEntry("RunOnStart", true));
 
-    triPrefs->comboEditMode->setCurrentItem(
+    triPrefs->comboEditMode->setCurrentIndex(
         prefSet.triEditMode == ReginaPrefSet::DirectEdit ? 0 : 1);
 
     switch (prefSet.triInitialTab) {
         case ReginaPrefSet::Skeleton:
-            triPrefs->comboInitialTab->setCurrentItem(1); break;
+            triPrefs->comboInitialTab->setCurrentIndex(1); break;
         case ReginaPrefSet::Algebra:
-            triPrefs->comboInitialTab->setCurrentItem(2); break;
+            triPrefs->comboInitialTab->setCurrentIndex(2); break;
         case ReginaPrefSet::Composition:
-            triPrefs->comboInitialTab->setCurrentItem(3); break;
+            triPrefs->comboInitialTab->setCurrentIndex(3); break;
         case ReginaPrefSet::Surfaces:
-            triPrefs->comboInitialTab->setCurrentItem(4); break;
+            triPrefs->comboInitialTab->setCurrentIndex(4); break;
         case ReginaPrefSet::SnapPea:
-            triPrefs->comboInitialTab->setCurrentItem(5); break;
+            triPrefs->comboInitialTab->setCurrentIndex(5); break;
         default:
-            triPrefs->comboInitialTab->setCurrentItem(0); break;
+            triPrefs->comboInitialTab->setCurrentIndex(0); break;
     }
 
     switch (prefSet.triInitialSkeletonTab) {
         case ReginaPrefSet::FacePairingGraph:
-            triPrefs->comboInitialSkeletonTab->setCurrentItem(1); break;
+            triPrefs->comboInitialSkeletonTab->setCurrentIndex(1); break;
         default:
-            triPrefs->comboInitialSkeletonTab->setCurrentItem(0); break;
+            triPrefs->comboInitialSkeletonTab->setCurrentIndex(0); break;
     }
 
     switch (prefSet.triInitialAlgebraTab) {
         case ReginaPrefSet::FundGroup:
-            triPrefs->comboInitialAlgebraTab->setCurrentItem(1); break;
+            triPrefs->comboInitialAlgebraTab->setCurrentIndex(1); break;
         case ReginaPrefSet::TuraevViro:
-            triPrefs->comboInitialAlgebraTab->setCurrentItem(2); break;
+            triPrefs->comboInitialAlgebraTab->setCurrentIndex(2); break;
         case ReginaPrefSet::CellularInfo:
-            triPrefs->comboInitialAlgebraTab->setCurrentItem(3); break;
+            triPrefs->comboInitialAlgebraTab->setCurrentIndex(3); break;
         default:
-            triPrefs->comboInitialAlgebraTab->setCurrentItem(0); break;
+            triPrefs->comboInitialAlgebraTab->setCurrentIndex(0); break;
     }
 
     triPrefs->editSurfacePropsThreshold->setText(
@@ -225,20 +243,20 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     switch (prefSet.surfacesInitialTab) {
         case ReginaPrefSet::Coordinates:
-            surfacePrefs->comboInitialTab->setCurrentItem(1); break;
+            surfacePrefs->comboInitialTab->setCurrentIndex(1); break;
         case ReginaPrefSet::Matching:
-            surfacePrefs->comboInitialTab->setCurrentItem(2); break;
+            surfacePrefs->comboInitialTab->setCurrentIndex(2); break;
         case ReginaPrefSet::Compatibility:
-            surfacePrefs->comboInitialTab->setCurrentItem(3); break;
+            surfacePrefs->comboInitialTab->setCurrentIndex(3); break;
         default:
-            surfacePrefs->comboInitialTab->setCurrentItem(0); break;
+            surfacePrefs->comboInitialTab->setCurrentIndex(0); break;
     }
 
     switch (prefSet.surfacesInitialCompat) {
         case ReginaPrefSet::GlobalCompat:
-            surfacePrefs->comboInitialCompat->setCurrentItem(1); break;
+            surfacePrefs->comboInitialCompat->setCurrentIndex(1); break;
         default:
-            surfacePrefs->comboInitialCompat->setCurrentItem(0); break;
+            surfacePrefs->comboInitialCompat->setCurrentIndex(0); break;
     }
 
     surfacePrefs->editCompatThreshold->setText(
@@ -274,7 +292,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
 int ReginaPreferences::exec() {
     // Apply changes if OK was pressed.
-    int ret = KDialogBase::exec();
+    int ret = KDialog::exec();
     if (ret)
         slotApply();
     return ret;
@@ -303,10 +321,10 @@ void ReginaPreferences::slotApply() {
             QString::number(prefSet.treeJumpSize));
     }
 
-    prefSet.triEditMode = (triPrefs->comboEditMode->currentItem() == 0 ?
+    prefSet.triEditMode = (triPrefs->comboEditMode->currentIndex() == 0 ?
         ReginaPrefSet::DirectEdit : ReginaPrefSet::Dialog);
 
-    switch (triPrefs->comboInitialTab->currentItem()) {
+    switch (triPrefs->comboInitialTab->currentIndex()) {
         case 1:
             prefSet.triInitialTab = ReginaPrefSet::Skeleton; break;
         case 2:
@@ -321,7 +339,7 @@ void ReginaPreferences::slotApply() {
             prefSet.triInitialTab = ReginaPrefSet::Gluings; break;
     }
 
-    switch (triPrefs->comboInitialSkeletonTab->currentItem()) {
+    switch (triPrefs->comboInitialSkeletonTab->currentIndex()) {
         case 1:
             prefSet.triInitialSkeletonTab =
                 ReginaPrefSet::FacePairingGraph; break;
@@ -329,7 +347,7 @@ void ReginaPreferences::slotApply() {
             prefSet.triInitialSkeletonTab = ReginaPrefSet::SkelComp; break;
     }
 
-    switch (triPrefs->comboInitialAlgebraTab->currentItem()) {
+    switch (triPrefs->comboInitialAlgebraTab->currentIndex()) {
         case 1:
             prefSet.triInitialAlgebraTab = ReginaPrefSet::FundGroup; break;
         case 2:
@@ -352,7 +370,7 @@ void ReginaPreferences::slotApply() {
             QString::number(prefSet.triSurfacePropsThreshold));
     }
 
-    strVal = triPrefs->editGAPExec->text().stripWhiteSpace();
+    strVal = triPrefs->editGAPExec->text().trimmed();
     if (strVal.isEmpty()) {
         // No no no.
         triPrefs->editGAPExec->setText(prefSet.triGAPExec);
@@ -360,7 +378,7 @@ void ReginaPreferences::slotApply() {
         // Don't run any checks, since this is the default.
         // GAP might not be installed.
         prefSet.triGAPExec = strVal;
-    } else if (strVal.find('/') >= 0) {
+    } else if (strVal.indexOf('/') >= 0) {
         // We've specified our own executable with a full path.
         // Let's be anal about it.
         QFileInfo info(strVal);
@@ -374,7 +392,7 @@ void ReginaPreferences::slotApply() {
             triPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else {
             // Looking fine.  Make it absolute.
-            prefSet.triGAPExec = info.absFilePath();
+            prefSet.triGAPExec = info.absoluteFilePath();
             triPrefs->editGAPExec->setText(prefSet.triGAPExec);
         }
     } else {
@@ -394,7 +412,7 @@ void ReginaPreferences::slotApply() {
         prefSet.triGAPExec = strVal;
     }
 
-    strVal = triPrefs->editGraphvizExec->text().stripWhiteSpace();
+    strVal = triPrefs->editGraphvizExec->text().trimmed();
     if (strVal.isEmpty()) {
         // No no no.
         // Disallow the change.
@@ -454,22 +472,22 @@ void ReginaPreferences::slotApply() {
                     "The directories in the default search path are "
                     "listed below.<p>%2</qt>").arg(strVal).arg(tail),
                     KStandardDirs::systemPaths(),
-                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+                    title, KStandardGuiItem::save(), KStandardGuiItem::dontSave());
             else if (gvStatus == GraphvizStatus::notExist)
                 action = KMessageBox::warningYesNo(this, i18n(
                     "<qt>The Graphviz executable \"%1\" does not exist.<p>"
                     "%2</qt>").arg(strVal).arg(tail),
-                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+                    title, KStandardGuiItem::save(), KStandardGuiItem::dontSave());
             else if (gvStatus == GraphvizStatus::notExecutable)
                 action = KMessageBox::warningYesNo(this, i18n(
                     "<qt>The Graphviz executable \"%1\" is not actually "
                     "an executable file.<p>%2</qt>").arg(strVal).arg(tail),
-                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+                    title, KStandardGuiItem::save(), KStandardGuiItem::dontSave());
             else if (gvStatus == GraphvizStatus::notStartable)
                 action = KMessageBox::warningYesNo(this, i18n(
                     "<qt>The Graphviz executable \"%1\" cannot be started."
                     "<p>%2</qt>").arg(strVal).arg(tail),
-                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+                    title, KStandardGuiItem::save(), KStandardGuiItem::dontSave());
             else if (gvStatus == GraphvizStatus::unsupported)
                 action = KMessageBox::warningYesNo(this, i18n(
                     "<qt>I cannot determine the "
@@ -485,7 +503,7 @@ void ReginaPreferences::slotApply() {
                     "please notify the Regina authors at <i>%2</i>.<p>"
                     "Are you sure you wish to save your new Graphviz "
                     "setting?</qt>").arg(strVal).arg(PACKAGE_BUGREPORT),
-                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+                    title, KStandardGuiItem::save(), KStandardGuiItem::dontSave());
             else if (gvStatus == GraphvizStatus::version1NotDot)
                 action = KMessageBox::warningYesNo(this, i18n(
                     "<qt>You appear to be running "
@@ -502,7 +520,7 @@ void ReginaPreferences::slotApply() {
                     "information.<p>"
                     "Are you sure you wish to save your new Graphviz "
                     "setting?</qt>"),
-                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+                    title, KStandardGuiItem::save(), KStandardGuiItem::dontSave());
             else
                 action = KMessageBox::warningYesNo(this, i18n(
                     "<qt>The status of the Graphviz installation on "
@@ -510,7 +528,7 @@ void ReginaPreferences::slotApply() {
                     "This is very unusual, and the author would be "
                     "grateful if you could file a bug report at "
                     "<i>%1</i>.<p>%2</qt>").arg(PACKAGE_BUGREPORT).arg(tail),
-                    title, KStdGuiItem::save(), KStdGuiItem::dontSave());
+                    title, KStandardGuiItem::save(), KStandardGuiItem::dontSave());
 
             if (action == KMessageBox::Yes)
                 prefSet.triGraphvizExec = strVal;
@@ -526,7 +544,7 @@ void ReginaPreferences::slotApply() {
     else
         KMessageBox::saveDontShowAgainContinue("warnOnNonEmbedded");
 
-    switch (surfacePrefs->comboInitialTab->currentItem()) {
+    switch (surfacePrefs->comboInitialTab->currentIndex()) {
         case 1:
             prefSet.surfacesInitialTab = ReginaPrefSet::Coordinates; break;
         case 2:
@@ -537,7 +555,7 @@ void ReginaPreferences::slotApply() {
             prefSet.surfacesInitialTab = ReginaPrefSet::Summary; break;
     }
 
-    switch (surfacePrefs->comboInitialCompat->currentItem()) {
+    switch (surfacePrefs->comboInitialCompat->currentIndex()) {
         case 1:
             prefSet.surfacesInitialCompat = ReginaPrefSet::GlobalCompat; break;
         default:
@@ -574,7 +592,7 @@ void ReginaPreferences::slotApply() {
 
     // Don't be too fussy about what they put in this field, since the
     // PDF viewer tries hard to find a suitable executable regardless.
-    strVal = pdfPrefs->editExternalViewer->text().stripWhiteSpace();
+    strVal = pdfPrefs->editExternalViewer->text().trimmed();
     prefSet.pdfExternalViewer = strVal;
 
     // pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
@@ -582,10 +600,11 @@ void ReginaPreferences::slotApply() {
     prefSet.pdfAutoClose = pdfPrefs->cbAutoClose->isChecked();
 
     prefSet.censusFiles.clear();
-    for (QListViewItem* item = censusPrefs->listFiles->firstChild();
-            item; item = item->nextSibling())
+    for (int i=0; i < censusPrefs->listFiles->topLevelItemCount();i++) {
+        QTreeWidgetItem* item = censusPrefs->listFiles->topLevelItem(i);
         prefSet.censusFiles.push_back(
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
+    }
 
     prefSet.pythonAutoIndent = pythonPrefs->cbAutoIndent->isChecked();
     uintVal = pythonPrefs->editSpacesPerTab->text().toUInt(&ok);
@@ -600,10 +619,11 @@ void ReginaPreferences::slotApply() {
     // prefSet.pythonWordWrap = pythonPrefs->cbWordWrap->isChecked();
 
     prefSet.pythonLibraries.clear();
-    for (QListViewItem* item = pythonPrefs->listFiles->firstChild();
-            item; item = item->nextSibling())
+    for (int i=0; i < pythonPrefs->listFiles->topLevelItemCount();i++) {
+        QTreeWidgetItem* item = pythonPrefs->listFiles->topLevelItem(i);
         prefSet.pythonLibraries.push_back(
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
+    }
 
     prefSet.snapPeaClosed = snapPeaPrefs->cbClosed->isChecked();
     regina::NSnapPeaTriangulation::enableKernelMessages(
@@ -614,27 +634,27 @@ void ReginaPreferences::slotApply() {
     mainWindow->saveOptions();
 }
 
-ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QVBox(parent) {
+ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : KVBox(parent) {
     cbAutoFileExtension = new QCheckBox(i18n("Automatic file extension"), this);
-    QWhatsThis::add(cbAutoFileExtension, i18n("Append the default extension "
+    cbAutoFileExtension->setWhatsThis(i18n("Append the default extension "
         "to filenames when saving if no extension is already given."));
 
     cbAutoDock = new QCheckBox(i18n("Automatic packet docking"), this);
-    QWhatsThis::add(cbAutoDock, i18n("Try to dock new packet viewers into "
+    cbAutoDock->setWhatsThis(i18n("Try to dock new packet viewers into "
         "the main window instead of opening them in new windows."));
 
     cbDisplayIcon = new QCheckBox(i18n("Display large icon"), this);
-    QWhatsThis::add(cbDisplayIcon, i18n("Display the large Regina icon "
+    cbDisplayIcon->setWhatsThis(i18n("Display the large Regina icon "
         "beneath the packet tree."));
 
     cbDisplayTagsInTree = new QCheckBox(i18n("Display tags in packet tree"),
         this);
     cbDisplayTagsInTree->setEnabled(false);
-    QWhatsThis::add(cbDisplayTagsInTree, i18n("Show full details of any "
+    cbDisplayTagsInTree->setWhatsThis(i18n("Show full details of any "
         "packet tags directly within the packet tree."));
 
     // Set up the tree jump size.
-    QHBox* box = new QHBox(this);
+    KHBox* box = new KHBox(this);
     box->setSpacing(5);
 
     QLabel* label = new QLabel(i18n("Packet tree jump size:"), box);
@@ -646,83 +666,83 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QVBox(parent) {
     editTreeJumpSize->setValidator(val);
     QString msg = i18n("The number of steps that a packet moves when Jump Up "
         "or Jump Down is selected.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(editTreeJumpSize, msg);
+    label->setWhatsThis(msg);
+    editTreeJumpSize->setWhatsThis(msg);
 
     // More options.
     cbTipOfDay = new QCheckBox(i18n("Show tip of the day"), this);
-    QWhatsThis::add(cbTipOfDay, i18n("Show a tip of the day each time "
+    cbTipOfDay->setWhatsThis(i18n("Show a tip of the day each time "
         "Regina is started."));
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);
 }
 
-ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
+ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
     setSpacing(5);
 
     // WARNING: Note that any change of order in the combo boxes must be
     // reflected in the ReginaPreferences methods as well.
 
     // Set up the edit mode.
-    QHBox* box = new QHBox(this);
+    KHBox* box = new KHBox(this);
     box->setSpacing(5);
 
     QLabel* label = new QLabel(i18n("Edit mode:"), box);
     comboEditMode = new KComboBox(box);
-    comboEditMode->insertItem(SmallIcon("editclear"), i18n("Direct edit"));
-    comboEditMode->insertItem(SmallIcon("view_text"), i18n("Pop-up dialog"));
+    comboEditMode->addItem(SmallIcon("editclear"), i18n("Direct edit"));
+    comboEditMode->addItem(SmallIcon("view_text"), i18n("Pop-up dialog"));
     QString msg = i18n("Specifies the way in which face gluings are edited.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(comboEditMode, msg);
+    label->setWhatsThis(msg);
+    comboEditMode->setWhatsThis(msg);
 
     // Set up the initial tab.
-    box = new QHBox(this);
+    box = new KHBox(this);
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default top-level tab:"), box);
     comboInitialTab = new KComboBox(box);
-    comboInitialTab->insertItem(i18n("Gluings"));
-    comboInitialTab->insertItem(i18n("Skeleton"));
-    comboInitialTab->insertItem(i18n("Algebra"));
-    comboInitialTab->insertItem(i18n("Composition"));
-    comboInitialTab->insertItem(i18n("Surfaces"));
-    comboInitialTab->insertItem(i18n("SnapPea"));
+    comboInitialTab->addItem(i18n("Gluings"));
+    comboInitialTab->addItem(i18n("Skeleton"));
+    comboInitialTab->addItem(i18n("Algebra"));
+    comboInitialTab->addItem(i18n("Composition"));
+    comboInitialTab->addItem(i18n("Surfaces"));
+    comboInitialTab->addItem(i18n("SnapPea"));
     msg = i18n("Specifies which tab should be initially visible "
         "when a new triangulation viewer/editor is opened.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(comboInitialTab, msg);
+    label->setWhatsThis(msg);
+    comboInitialTab->setWhatsThis(msg);
 
     // Set up the initial skeleton tab.
-    box = new QHBox(this);
+    box = new KHBox(this);
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default skeleton tab:"), box);
     comboInitialSkeletonTab = new KComboBox(box);
-    comboInitialSkeletonTab->insertItem(i18n("Skeletal Components"));
-    comboInitialSkeletonTab->insertItem(i18n("Face Pairing Graph"));
+    comboInitialSkeletonTab->addItem(i18n("Skeletal Components"));
+    comboInitialSkeletonTab->addItem(i18n("Face Pairing Graph"));
     msg = i18n("Specifies which tab should be initially visible "
         "when a new triangulation skeleton viewer is opened.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(comboInitialSkeletonTab, msg);
+    label->setWhatsThis(msg);
+    comboInitialSkeletonTab->setWhatsThis(msg);
 
     // Set up the initial algebra tab.
-    box = new QHBox(this);
+    box = new KHBox(this);
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default algebra tab:"), box);
     comboInitialAlgebraTab = new KComboBox(box);
-    comboInitialAlgebraTab->insertItem(i18n("Homology"));
-    comboInitialAlgebraTab->insertItem(i18n("Fundamental Group"));
-    comboInitialAlgebraTab->insertItem(i18n("Turaev-Viro"));
-    comboInitialAlgebraTab->insertItem(i18n("Cellular Info"));
+    comboInitialAlgebraTab->addItem(i18n("Homology"));
+    comboInitialAlgebraTab->addItem(i18n("Fundamental Group"));
+    comboInitialAlgebraTab->addItem(i18n("Turaev-Viro"));
+    comboInitialAlgebraTab->addItem(i18n("Cellular Info"));
     msg = i18n("Specifies which tab should be initially visible "
         "when a new triangulation algebra viewer is opened.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(comboInitialAlgebraTab, msg);
+    label->setWhatsThis(msg);
+    comboInitialAlgebraTab->setWhatsThis(msg);
 
     // Set up the surface properties threshold.
-    box = new QHBox(this);
+    box = new KHBox(this);
     box->setSpacing(5);
 
     label = new QLabel(i18n("Surface calculation threshold:"), box);
@@ -733,11 +753,11 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
          999 /* ridiculously high */, box));
     msg = i18n("The maximum number of tetrahedra for which normal "
         "surface properties will be calculated automatically.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(editSurfacePropsThreshold, msg);
+    label->setWhatsThis(msg);
+    editSurfacePropsThreshold->setWhatsThis(msg);
 
     // Set up the GAP executable.
-    box = new QHBox(this);
+    box = new KHBox(this);
     box->setSpacing(5);
 
     label = new QLabel(i18n("GAP executable:"), box);
@@ -752,11 +772,11 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
         "There is no trouble if GAP is not installed; this just means that "
         "Regina will have to do its own (much less effective) group "
         "simplifications.</qt>");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(editGAPExec, msg);
+    label->setWhatsThis(msg);
+    editGAPExec->setWhatsThis(msg);
 
     // Set up the Graphviz executable.
-    box = new QHBox(this);
+    box = new KHBox(this);
     box->setSpacing(5);
 
     label = new QLabel(i18n("Graphviz executable:"), box);
@@ -774,21 +794,21 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
         "of triangulations.<p>"
         "For more information on Graphviz, see "
         "<i>http://www.graphviz.org/</i>.</qt>");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(editGraphvizExec, msg);
+    label->setWhatsThis(msg);
+    editGraphvizExec->setWhatsThis(msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);
 }
 
-ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
+ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : KVBox(parent) {
     setSpacing(5);
 
     // WARNING: Note that any change of order in the combo boxes must be
     // reflected in the ReginaPreferences methods as well.
 
     // Set up the default creation coordinate system.
-    QHBox* box = new QHBox(this);
+    KHBox* box = new KHBox(this);
     box->setSpacing(5);
 
     QLabel* label = new QLabel(i18n("Default coordinate system:"), box);
@@ -796,40 +816,40 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
     chooserCreationCoords->insertAllCreators();
     QString msg = i18n("The default coordinate system for creating new normal "
         "surface lists.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(chooserCreationCoords, msg);
+    label->setWhatsThis(msg);
+    chooserCreationCoords->setWhatsThis(msg);
 
     cbWarnOnNonEmbedded = new QCheckBox(i18n("Warn before generating "
         "non-embedded surfaces"), this);
-    QWhatsThis::add(cbWarnOnNonEmbedded, i18n("<qt>When creating a new "
+    cbWarnOnNonEmbedded->setWhatsThis(i18n("<qt>When creating a new "
         "normal surface list, should Regina ask for confirmation before "
         "enumerating immersed and/or singular surfaces?  This warning "
         "will be issued whenever the <i>Embedded surfaces only</i> box "
         "is not checked in the dialog for a new normal surface list.</qt>"));
 
     // Set up the initial tab.
-    box = new QHBox(this);
+    box = new KHBox(this);
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default top-level tab:"), box);
     comboInitialTab = new KComboBox(box);
-    comboInitialTab->insertItem(i18n("Summary"));
-    comboInitialTab->insertItem(i18n("Surface Coordinates"));
-    comboInitialTab->insertItem(i18n("Matching Equations"));
-    comboInitialTab->insertItem(i18n("Compatibility"));
+    comboInitialTab->addItem(i18n("Summary"));
+    comboInitialTab->addItem(i18n("Surface Coordinates"));
+    comboInitialTab->addItem(i18n("Matching Equations"));
+    comboInitialTab->addItem(i18n("Compatibility"));
     msg = i18n("Specifies which tab should be initially visible "
         "when a new normal surface list viewer is opened.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(comboInitialTab, msg);
+    label->setWhatsThis(msg);
+    comboInitialTab->setWhatsThis(msg);
 
     // Set up the initial compatibility matrix.
-    box = new QHBox(this);
+    box = new KHBox(this);
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default compatibility matrix:"), box);
     comboInitialCompat = new KComboBox(box);
-    comboInitialCompat->insertItem(i18n("Local (quads and octagons)"));
-    comboInitialCompat->insertItem(i18n("Global (disjoint surfaces)"));
+    comboInitialCompat->addItem(i18n("Local (quads and octagons)"));
+    comboInitialCompat->addItem(i18n("Global (disjoint surfaces)"));
     msg = i18n("<qt>Specifies which compatibility matrix should be initially "
         "displayed when the user opens the <i>Compatibility</i> tab.<p>"
         "The <i>local</i> matrix tests whether two surfaces "
@@ -838,11 +858,11 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
         "The <i>global</i> matrix tests whether two surfaces can "
         "simultaneously avoid intersections in <i>all</i> tetrahedra, "
         "i.e., whether the two surfaces can be made disjoint.</qt>");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(comboInitialCompat, msg);
+    label->setWhatsThis(msg);
+    comboInitialCompat->setWhatsThis(msg);
 
     // Set up the compatibility matrix threshold.
-    box = new QHBox(this);
+    box = new KHBox(this);
     box->setSpacing(5);
 
     label = new QLabel(i18n("Compatibility matrix threshold:"), box);
@@ -856,22 +876,22 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
         "matrices will be calculated automatically.  For larger lists, "
         "you can always press the <i>Calculate</i> button by hand "
         "in the compatibility viewer.</qt>");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(editCompatThreshold, msg);
+    label->setWhatsThis(msg);
+    editCompatThreshold->setWhatsThis(msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);
 }
 
-ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QVBox(parent) {
+ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : KVBox(parent) {
     // Set up the embedded checkbox.
     cbEmbed = new QCheckBox(i18n("Use embedded viewer if possible"), this);
-    QWhatsThis::add(cbEmbed, i18n("If possible, view PDF packets using "
+    cbEmbed->setWhatsThis(i18n("If possible, view PDF packets using "
         "a viewer that can embed directly into Regina's main window, "
         "such as KPDF or KGhostView."));
 
     // Set up the external viewer.
-    QHBox* box = new QHBox(this);
+    KHBox* box = new KHBox(this);
     box->setSpacing(5);
 
     QLabel* label = new QLabel(i18n("External PDF viewer:"), box);
@@ -888,12 +908,12 @@ ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QVBox(parent) {
         "requested an <i>embedded</i> viewer in the checkbox above (and if an "
         "embedded viewer is available), then this option will not be "
         "used.</qt>");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(editExternalViewer, msg);
+    label->setWhatsThis(msg);
+    editExternalViewer->setWhatsThis(msg);
 
     cbAutoClose = new QCheckBox(
         i18n("Automatically close external viewers"), this);
-    QWhatsThis::add(cbAutoClose, i18n("When using an external PDF viewer "
+    cbAutoClose->setWhatsThis(i18n("When using an external PDF viewer "
         "(such as <tt>kpdf</tt> or <tt>xpdf</tt>), "
         "close it automatically when Regina's packet viewer is closed.  "
         "Likewise, close and reopen the external viewer whenever Regina's "
@@ -906,12 +926,12 @@ ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QVBox(parent) {
     setStretchFactor(new QWidget(this), 1);
 }
 
-ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
+ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : KVBox(parent) {
     // Set up the active file count.
     activeCount = new QLabel(this);
 
     // Prepare the main area.
-    QHBox* box = new QHBox(this);
+    KHBox* box = new KHBox(this);
     box->setSpacing(5);
     setStretchFactor(box, 1);
 
@@ -919,56 +939,56 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
     listFiles = new QTreeWidget(box);
     box->setStretchFactor(listFiles, 1);
     listFiles->header()->hide();
-    listFiles->addColumn(QString::null);
-    listFiles->setSorting(-1);
-    listFiles->setSelectionModeExt(QTreeWidget::Extended);
-    listFiles->setItemsMovable(true);
+    //listFiles->addColumn(QString::null);
+    //listFiles->setSorting(-1);
+    listFiles->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    //listFiles->setItemsMovable(true);
     QString msg = i18n("The list of census files to be searched "
         "when asked to locate an arbitrary triangulation in all available "
         "censuses.  Note that census files in this list may be deactivated, "
         "which means that they will not be searched during a census lookup.");
-    QWhatsThis::add(listFiles, msg);
-    QWhatsThis::add(activeCount, msg);
+    listFiles->setWhatsThis(msg);
+    activeCount->setWhatsThis(msg);
     connect(listFiles, SIGNAL(selectionChanged()), this, SLOT(updateButtons()));
 
     // Set up the button panel.
-    QVBox* vBox = new QVBox(box);
+    KVBox* vBox = new KVBox(box);
     vBox->setSpacing(5);
 
-    QPushButton* btnAdd = new QPushButton(SmallIconSet("insert_table_row"),
+    QPushButton* btnAdd = new QPushButton(KIcon("insert_table_row"),
         i18n("Add..."), vBox);
     // btnAdd->setFlat(true);
     connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
-    QToolTip::add(btnAdd, i18n("Add a new census file"));
-    QWhatsThis::add(btnAdd, i18n("Add a new census file.  "
+    btnAdd->setToolTip(i18n("Add a new census file"));
+    btnAdd->setWhatsThis(i18n("Add a new census file.  "
         "This list contains the census files that are searched when asked "
         "to locate an arbitrary triangulation in all available censuses."));
 
-    btnRemove = new QPushButton(SmallIconSet("delete_table_row"),
+    btnRemove = new QPushButton(KIcon("delete_table_row"),
         i18n("Remove"), vBox);
     // btnRemove->setFlat(true);
     connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
-    QToolTip::add(btnRemove, i18n("Remove selected census file(s)"));
-    QWhatsThis::add(btnRemove, i18n("Remove the selected census file(s).  "
+    btnRemove->setToolTip(i18n("Remove selected census file(s)"));
+    btnRemove->setWhatsThis(i18n("Remove the selected census file(s).  "
         "This list contains the census files that are searched when asked "
         "to locate an arbitrary triangulation in all available censuses."));
 
-    btnActivate = new QPushButton(SmallIconSet("ok"),
+    btnActivate = new QPushButton(KIcon("ok"),
         i18n("Activate"), vBox);
     // btnActivate->setFlat(true);
     connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
-    QToolTip::add(btnActivate, i18n("Activate selected census file(s)"));
-    QWhatsThis::add(btnActivate, i18n("Activate the selected census "
+    btnActivate->setToolTip(i18n("Activate selected census file(s)"));
+    btnActivate->setWhatsThis(i18n("Activate the selected census "
         "file(s).  When asked to locate an arbitrary triangulation in all "
         "available censuses, only the activated census files in this list "
         "are searched."));
 
-    btnDeactivate = new QPushButton(SmallIconSet("no"),
+    btnDeactivate = new QPushButton(KIcon("no"),
         i18n("Deactivate"), vBox);
     // btnDeactivate->setFlat(true);
     connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
-    QToolTip::add(btnDeactivate, i18n("Deactivate selected census file(s)"));
-    QWhatsThis::add(btnDeactivate, i18n("Deactivate the selected census "
+    btnDeactivate->setToolTip(i18n("Deactivate selected census file(s)"));
+    btnDeactivate->setWhatsThis(i18n("Deactivate the selected census "
         "file(s).  When asked to locate an arbitrary triangulation in all "
         "available censuses, only the activated census files in this list "
         "are searched."));
@@ -978,8 +998,8 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
     QPushButton* btnDefaults = new QPushButton(i18n("Defaults"), vBox);
     // btnDefaults->setFlat(true);
     connect(btnDefaults, SIGNAL(clicked()), this, SLOT(restoreDefaults()));
-    QToolTip::add(btnDefaults, i18n("Restore default list of census files"));
-    QWhatsThis::add(btnDefaults, i18n("Restore the default list of "
+    btnDefaults->setToolTip(i18n("Restore default list of census files"));
+    btnDefaults->setWhatsThis(i18n("Restore the default list of "
         "census files."));
 
     updateButtons();
@@ -987,10 +1007,11 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
 
 void ReginaPrefCensus::updateActiveCount() {
     long count = 0;
-    for (QListViewItem* item = listFiles->firstChild(); item;
-            item = item->nextSibling())
+    for (int i = 0; i < listFiles->topLevelItemCount(); i++) {
+        QTreeWidgetItem* item = listFiles->topLevelItem(i);
         if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().active)
             count++;
+    }
 
     if (count == 0)
         activeCount->setText(i18n("No active census data files"));
@@ -1008,7 +1029,7 @@ void ReginaPrefCensus::updateButtons() {
 }
 
 void ReginaPrefCensus::add() {
-    QStringList files = KFileDialog::getOpenFileNames(QString::null,
+    QStringList files = KFileDialog::getOpenFileNames(KUrl(),
         FILTER_REGINA, this, i18n("Add Census File(s)"));
     if (! files.isEmpty()) {
         for (QStringList::const_iterator it = files.begin();
@@ -1044,28 +1065,28 @@ void ReginaPrefCensus::add() {
 }
 
 void ReginaPrefCensus::remove() {
-    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No files have been selected to remove."));
     else {
-        for (QListViewItem* item = selection.first(); item;
-                item = selection.next())
-            delete item;
+        while(! selection.isEmpty())
+            delete (selection.takeLast());
         updateActiveCount();
     }
 }
 
 void ReginaPrefCensus::activate() {
-    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No files have been selected to activate."));
     else {
         bool done = false;
-        for (QListViewItem* item = selection.first(); item;
-                item = selection.next())
-            done |= dynamic_cast<ReginaFilePrefItem*>(item)->activateFile();
+        QListIterator<QTreeWidgetItem*> it(selection);
+        while(it.hasNext())
+            done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
+              activateFile();
         if (done)
             updateActiveCount();
         else
@@ -1075,15 +1096,16 @@ void ReginaPrefCensus::activate() {
 }
 
 void ReginaPrefCensus::deactivate() {
-    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No files have been selected to deactivate."));
     else {
         bool done = false;
-        for (QListViewItem* item = selection.first(); item;
-                item = selection.next())
-            done |= dynamic_cast<ReginaFilePrefItem*>(item)->deactivateFile();
+        QListIterator<QTreeWidgetItem*> it(selection);
+        while(it.hasNext())
+            done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
+              deactivateFile();
         if (done)
             updateActiveCount();
         else
@@ -1103,21 +1125,21 @@ void ReginaPrefCensus::restoreDefaults() {
     updateActiveCount();
 }
 
-ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
+ReginaPrefPython::ReginaPrefPython(QWidget* parent) : KVBox(parent) {
     // Set up the checkboxes.
     cbAutoIndent = new QCheckBox(i18n("Auto-indent"), this);
-    QWhatsThis::add(cbAutoIndent, i18n("Should command lines in a Python "
+    cbAutoIndent->setWhatsThis(i18n("Should command lines in a Python "
         "console be automatically indented?"));
 
     // cbWordWrap = new QCheckBox(i18n("Word wrap"), this);
-    // QWhatsThis::add(cbWordWrap, i18n("Should Python consoles be word "
+    // cbWordWrap->setWhatsThis(i18n("Should Python consoles be word "
     //     "wrapped?"));
 
     // Add some space.
     (new QWidget(this))->setMinimumHeight(5);
 
     // Set up the number of spaces per tab.
-    QHBox* box = new QHBox(this);
+    KHBox* box = new KHBox(this);
     box->setSpacing(5);
 
     QLabel* label = new QLabel(i18n("Spaces per tab:"), box);
@@ -1129,8 +1151,8 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
     editSpacesPerTab->setValidator(val);
     QString msg = i18n("The number of spaces to insert into the "
         "command line when TAB is pressed.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(editSpacesPerTab, msg);
+    label->setWhatsThis(msg);
+    editSpacesPerTab->setWhatsThis(msg);
 
     // Add some more space.
     (new QWidget(this))->setMinimumHeight(5);
@@ -1139,7 +1161,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
     activeCount = new QLabel(this);
 
     // Prepare the main area.
-    box = new QHBox(this);
+    box = new KHBox(this);
     box->setSpacing(5);
     setStretchFactor(box, 1);
 
@@ -1147,55 +1169,55 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
     listFiles = new QTreeWidget(box);
     box->setStretchFactor(listFiles, 1);
     listFiles->header()->hide();
-    listFiles->addColumn(QString::null);
-    listFiles->setSorting(-1);
-    listFiles->setSelectionModeExt(QTreeWidget::Extended);
-    listFiles->setItemsMovable(true);
+    //listFiles->addColumn(QString::null);
+    //listFiles->setSorting(-1);
+    listFiles->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    //listFiles->setItemsMovable(true);
     msg = i18n("The list of Python libraries to be "
         "loaded at the beginning of each new Python session.  Note that "
         "libraries in this list may be deactivated, "
         "which means that they will not be loaded.");
-    QWhatsThis::add(listFiles, msg);
-    QWhatsThis::add(activeCount, msg);
+    listFiles->setWhatsThis(msg);
+    activeCount->setWhatsThis(msg);
     connect(listFiles, SIGNAL(selectionChanged()), this, SLOT(updateButtons()));
 
     // Set up the button panel.
-    QVBox* vBox = new QVBox(box);
+    KVBox* vBox = new KVBox(box);
     vBox->setSpacing(5);
 
-    QPushButton* btnAdd = new QPushButton(SmallIconSet("insert_table_row"),
+    QPushButton* btnAdd = new QPushButton(KIcon("insert_table_row"),
         i18n("Add..."), vBox);
     // btnAdd->setFlat(true);
     connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
-    QToolTip::add(btnAdd, i18n("Add a new Python library"));
-    QWhatsThis::add(btnAdd, i18n("Add a new Python library.  "
+    btnAdd->setToolTip(i18n("Add a new Python library"));
+    btnAdd->setWhatsThis(i18n("Add a new Python library.  "
         "This list contains the Python libraries to be loaded at "
         "the beginning of each new Python session."));
 
-    btnRemove = new QPushButton(SmallIconSet("delete_table_row"),
+    btnRemove = new QPushButton(KIcon("delete_table_row"),
         i18n("Remove"), vBox);
     // btnRemove->setFlat(true);
     connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
-    QToolTip::add(btnRemove, i18n("Remove selected Python libraries"));
-    QWhatsThis::add(btnRemove, i18n("Remove the selected Python libraries.  "
+    btnRemove->setToolTip(i18n("Remove selected Python libraries"));
+    btnRemove->setWhatsThis(i18n("Remove the selected Python libraries.  "
         "This list contains the Python libraries to be loaded at "
         "the beginning of each new Python session."));
 
-    btnActivate = new QPushButton(SmallIconSet("ok"),
+    btnActivate = new QPushButton(KIcon("ok"),
         i18n("Activate"), vBox);
     // btnActivate->setFlat(true);
     connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
-    QToolTip::add(btnActivate, i18n("Activate selected Python libraries"));
-    QWhatsThis::add(btnActivate, i18n("Activate the selected Python "
+    btnActivate->setToolTip(i18n("Activate selected Python libraries"));
+    btnActivate->setWhatsThis(i18n("Activate the selected Python "
         "libraries.  When a new Python session is started, only the active "
         "libraries in this list will be loaded."));
 
-    btnDeactivate = new QPushButton(SmallIconSet("no"),
+    btnDeactivate = new QPushButton(KIcon("no"),
         i18n("Deactivate"), vBox);
     // btnDeactivate->setFlat(true);
     connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
-    QToolTip::add(btnDeactivate, i18n("Deactivate selected Python libraries"));
-    QWhatsThis::add(btnDeactivate, i18n("Deactivate the selected Python "
+    btnDeactivate->setToolTip(i18n("Deactivate selected Python libraries"));
+    btnDeactivate->setWhatsThis(i18n("Deactivate the selected Python "
         "libraries.  When a new Python session is started, only the active "
         "libraries in this list will be loaded."));
 
@@ -1206,10 +1228,11 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
 
 void ReginaPrefPython::updateActiveCount() {
     long count = 0;
-    for (QListViewItem* item = listFiles->firstChild(); item;
-            item = item->nextSibling())
+    for(int i=0; i < listFiles->topLevelItemCount() ; i++) {
+        QTreeWidgetItem *item = listFiles->topLevelItem(i);
         if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().active)
             count++;
+    }
 
     if (count == 0)
         activeCount->setText(i18n("No active Python libraries"));
@@ -1239,28 +1262,28 @@ void ReginaPrefPython::add() {
 }
 
 void ReginaPrefPython::remove() {
-    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No libraries have been selected to remove."));
     else {
-        for (QListViewItem* item = selection.first(); item;
-                item = selection.next())
-            delete item;
+        while (! selection.isEmpty()) 
+          delete (selection.takeFirst());
         updateActiveCount();
     }
 }
 
 void ReginaPrefPython::activate() {
-    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No libraries have been selected to activate."));
     else {
         bool done = false;
-        for (QListViewItem* item = selection.first(); item;
-                item = selection.next())
-            done |= dynamic_cast<ReginaFilePrefItem*>(item)->activateFile();
+        QListIterator<QTreeWidgetItem*> it(selection);
+        while(it.hasNext())
+            done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
+              activateFile();
         if (done)
             updateActiveCount();
         else
@@ -1270,15 +1293,16 @@ void ReginaPrefPython::activate() {
 }
 
 void ReginaPrefPython::deactivate() {
-    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No libraries have been selected to deactivate."));
     else {
         bool done = false;
-        for (QListViewItem* item = selection.first(); item;
-                item = selection.next())
-            done |= dynamic_cast<ReginaFilePrefItem*>(item)->deactivateFile();
+        QListIterator<QTreeWidgetItem*> it(selection);
+        while(it.hasNext())
+            done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
+              deactivateFile();
         if (done)
             updateActiveCount();
         else
@@ -1288,9 +1312,9 @@ void ReginaPrefPython::deactivate() {
     }
 }
 
-ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QVBox(parent) {
+ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : KVBox(parent) {
     cbMessages = new QCheckBox(i18n("Diagnostic messages"), this);
-    QWhatsThis::add(cbMessages, i18n("<qt>Should the SnapPea kernel write "
+    cbMessages->setWhatsThis(i18n("<qt>Should the SnapPea kernel write "
         "diagnostic messages to the console?<p>"
         "These diagnostic messages are emitted by the SnapPea kernel "
         "embedded within Regina (not from Regina itself).  If you do not "
@@ -1303,7 +1327,7 @@ ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QVBox(parent) {
         "not see these messages at all.</qt>"));
 
     cbClosed = new QCheckBox(i18n("Allow closed triangulations"), this);
-    QWhatsThis::add(cbClosed, i18n("<qt>Allow the SnapPea kernel to work with "
+    cbClosed->setWhatsThis(i18n("<qt>Allow the SnapPea kernel to work with "
         "closed triangulations.  By default it is only allowed to work with "
         "ideal triangulations.<p>"
         "<b>Warning:</b> SnapPea is primarily designed to work with ideal "
@@ -1312,13 +1336,13 @@ ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QVBox(parent) {
         "and crash Regina completely.  You might lose unsaved work "
         "as a result.</qt>"));
 
-    QHBox* box = new QHBox(this);
+    KHBox* box = new KHBox(this);
     box->setSpacing(5);
     QLabel* label;
 
     box->setStretchFactor(label = new QLabel(i18n(
         "<qt><b>Warning:</b></qt>"), box), 0);
-    label->setAlignment(Qt::AlignAuto | AlignTop);
+    label->setAlignment(Qt::AlignTop);
 
     box->setStretchFactor(new QLabel(i18n(
         "<qt>SnapPea is primarily designed "
@@ -1332,18 +1356,23 @@ ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QVBox(parent) {
 }
 
 ReginaEditorChooser::ReginaEditorChooser(QWidget* /* ignored */) :
-        KDialogBase(KDialogBase::Plain, i18n("Choose Text Editor Component"),
-        Ok | Cancel, Cancel) {
-    QBoxLayout* layout = new QVBoxLayout(plainPage());
-    layout->setAutoAdd(true);
+        KDialog() {
+    setCaption(i18n("Choose Text Editor Component"));
+    setButtons(KDialog::Ok | KDialog::Cancel);
+    setDefaultButton(KDialog::Cancel);
+    // TODO: Not sure if the below is needed?
+    //QWidget *page = new QWidget(this);
+    //setMainWidget(page);
+    //QBoxLayout* layout = new KVBoxLayout(page);
+    //layout->setAutoAdd(true);
 
-    chooser = new KTextEditor::EditorChooser(plainPage());
+    chooser = new KTextEditor::EditorChooser(this);
     setMainWidget(chooser);
     chooser->readAppSetting();
 }
 
 void ReginaEditorChooser::slotOk() {
     chooser->writeAppSetting();
-    KDialogBase::slotOk();
+    QDialog::accept();
 }
 
