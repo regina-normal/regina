@@ -785,7 +785,7 @@ void ReginaMain::saveOptions() {
 KParts::ReadWritePart* ReginaMain::newTopologyPart() {
     ReginaPart* ans = 0;
 
-    KPluginFactory* libFactory = KPluginLoader("libreginapart").factory();
+    KPluginFactory* libFactory = KPluginLoader("reginapart").factory();
     if (libFactory)
         ans = libFactory->create<ReginaPart>(this);
 
