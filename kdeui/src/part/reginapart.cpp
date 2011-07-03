@@ -58,7 +58,7 @@
 #include <kvbox.h>
 
 typedef KParts::GenericFactory<ReginaPart> ReginaPartFactory;
-K_EXPORT_COMPONENT_FACTORY(libreginapart, ReginaPartFactory);
+K_EXPORT_COMPONENT_FACTORY(reginapart, ReginaPartFactory);
 
 ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
         const QStringList& /*args*/) :
