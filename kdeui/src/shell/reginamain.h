@@ -87,7 +87,7 @@ class ReginaMain : public KParts::MainWindow,
             /**< The menu of recently opened files. */
         ExamplesAction* fileOpenExample;
             /**< The menu of available example files. */
-        KToggleAction* showToolbar;
+        // KToggleAction* showToolbar;
             /**< Action to show/hide the toolbar. */
         // KToggleAction* showStatusbar;
             /**< Action to show/hide the status bar. */
@@ -208,7 +208,7 @@ class ReginaMain : public KParts::MainWindow,
          * Implementation of actions.
          */
         void fileOpen();
-        void optionsShowToolbar();
+        // void optionsShowToolbar();
         // void optionsShowStatusbar();
         void optionsConfigureKeys();
         void optionsConfigureToolbars();

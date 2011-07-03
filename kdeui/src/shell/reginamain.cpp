@@ -40,6 +40,7 @@
 #include <QDrag>
 #include <QVBoxLayout>
 #include <kaction.h>
+#include <kactioncollection.h>
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -55,6 +56,7 @@
 #include <kparts/event.h>
 #include <kparts/partmanager.h>
 #include <krecentfilesaction.h>
+#include <kshortcutsdialog.h>
 #include <kstdaccel.h>
 #include <kstdaction.h>
 #include <ktexteditor/document.h>
@@ -62,6 +64,7 @@
 #include <ktexteditor/view.h>
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
+#include <ktoolinvocation.h>
 #include <ktip.h>
 #include <kurl.h>
 
@@ -289,6 +292,7 @@ void ReginaMain::fileOpen() {
         openUrl(url);
 }
 
+/*
 void ReginaMain::optionsShowToolbar() {
     QListIterator<KToolBar*> bar(toolBars());
     if (showToolbar->isChecked())
@@ -298,6 +302,7 @@ void ReginaMain::optionsShowToolbar() {
         while (bar.hasNext() )
             bar.next()->hide();
 }
+*/
 
 /*
 void ReginaMain::optionsShowStatusbar() {
@@ -309,14 +314,14 @@ void ReginaMain::optionsShowStatusbar() {
 */
 
 void ReginaMain::optionsConfigureKeys() {
-    KKeyDialog::configure(actionCollection());
+    KShortcutsDialog::configure(actionCollection());
 }
 
 void ReginaMain::optionsConfigureToolbars() {
-    saveMainWindowSettings(KGlobal::config(),
-        QString::fromLatin1("MainWindow"));
+    saveMainWindowSettings(KConfigGroup(KGlobal::config(),
+        QString::fromLatin1("MainWindow")));
 
-    KEditToolbar dlg(factory());
+    KEditToolBar dlg(factory());
     connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
     dlg.exec();
 }
@@ -336,7 +341,7 @@ void ReginaMain::helpTipOfDay() {
 }
 
 void ReginaMain::helpTrouble() {
-    KApplication::kApplication()->invokeHelp("troubleshooting");
+    KToolInvocation::invokeHelp("troubleshooting");
 }
 
 void ReginaMain::helpNoHelp() {
@@ -373,77 +378,97 @@ void ReginaMain::newToolbarConfig() {
     createGUI(currentPart);
     */
 
-    applyMainWindowSettings(KGlobal::config(),
-        QString::fromLatin1("MainWindow"));
+    applyMainWindowSettings(KConfigGroup(KGlobal::config(),
+        QString::fromLatin1("MainWindow")));
 }
 
 void ReginaMain::setupActions() {
     KAction* act;
 
     // File actions:
-    act = new KAction(i18n("&New Topology Data"), "filenew", CTRL+Key_N, this,
-        SLOT(newTopology()), actionCollection(), "new_topology");
+    act = actionCollection()->addAction("new_topology");
+    act->setText(i18n("&New Topology Data"));
+    act->setIcon(KIcon("filenew"));
+    act->setShortcut(tr("Ctrl+n"));
     act->setWhatsThis(i18n("Create a new topology data file.  This is "
         "the standard type of data file used by Regina."));
-
-    act = new KAction(i18n("New &Python Library"), "filenew", 0, this,
-        SLOT(newPython()), actionCollection(), "new_python");
+    connect(act, SIGNAL(triggered()), this, SLOT(newTopology()));
+    
+    act = actionCollection()->addAction("new_python");
+    act->setText(i18n("New &Python Library"));
+    act->setIcon(KIcon("filenew"));
     act->setWhatsThis(i18n("Create a new Python library.  This is "
         "a Python file that can be loaded when a script is run or a "
         "new Python session is started."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newPython()));
 
-    KStdAction::open(this, SLOT(fileOpen()), actionCollection());
-    fileOpenRecent = KStdAction::openRecent(this, SLOT(openUrl(const KUrl&)),
-        actionCollection());
+    KStandardAction::open(this, SLOT(fileOpen()), actionCollection());
+    fileOpenRecent = KStandardAction::openRecent(this, 
+        SLOT(openUrl(const KUrl&)), actionCollection());
     fileOpenExample = new ExamplesAction(this, SLOT(openExample(const KUrl&)),
-        actionCollection(), "file_open_example");
+        actionCollection());
     fillExamples();
-    KStdAction::close(this, SLOT(close()), actionCollection());
-    KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
+    KStandardAction::close(this, SLOT(close()), actionCollection());
+    KStandardAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
 
     // Toolbar and status bar:
-    showToolbar = KStdAction::showToolbar(this,
-        SLOT(optionsShowToolbar()), actionCollection());
+    //showToolbar = KStandardAction::showToolbar(this,
+    //    SLOT(optionsShowToolbar()), actionCollection());
+    setStandardToolBarMenuEnabled(true);
+    
     /*
-    showStatusbar = KStdAction::showStatusbar(this,
+    showStatusbar = KStandardAction::showStatusbar(this,
         SLOT(optionsShowStatusbar()), actionCollection());
     */
 
     // Preferences:
-    act = new KAction(i18n("Choose Text &Editor..."), "configure", 0,
-        this, SLOT(optionsConfigureEditor()), actionCollection(),
-        "configure_editor");
-    KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
+    act = actionCollection()->addAction("configure_editor");
+    act->setText(i18n("Choose Text &Editor..."));
+    act->setIcon(KIcon("configure"));
+    connect(act, SIGNAL(triggered()), this, SLOT(optionsConfigureEditor()));
+    KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()),
         actionCollection());
-    KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
+    KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
         actionCollection());
-    KStdAction::preferences(this, SLOT(optionsPreferences()),
+    KStandardAction::preferences(this, SLOT(optionsPreferences()),
         actionCollection());
 
     // Tools:
-    actPython = new KAction(i18n("&Python Console"), "python_console",
-        ALT+Key_Y, this, SLOT(pythonConsole()), actionCollection(),
-        "python_console");
+    actPython = actionCollection()->addAction("python_console");
+    actPython->setText(i18n("&Python Console"));
+    actPython->setIcon(KIcon("python_console"));
+    actPython->setShortcut(tr("Alt+y"));
     actPython->setWhatsThis(i18n("Open a new Python console.  You can "
         "use a Python console to interact directly with Regina's "
         "mathematical engine."));
+    connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
 
     // Help:
-    act = new KAction(i18n("&Python Reference"), "python_console", 0, this,
-        SLOT(pythonReference()), actionCollection(), "help_engine");
+    act = actionCollection()->addAction("help_engine");
+    act->setText(i18n("&Python Reference"));
+    act->setIcon(KIcon("python_console"));
     act->setWhatsThis(i18n("Open the detailed documentation for Regina's "
         "mathematical engine.  This describes the classes, methods and "
         "routines that Regina makes available to Python scripts.<p>"
         "See the <i>Python Scripting</i> chapter of the user's handbook "
         "for more information (the handbook is "
         "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
+    connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
 
-    new KAction(i18n("&Tip of the Day"), "idea", 0, this,
-        SLOT(helpTipOfDay()), actionCollection(), "help_tipofday");
-    new KAction(i18n("Tr&oubleshooting"), "messagebox_warning", 0, this,
-        SLOT(helpTrouble()), actionCollection(), "help_trouble");
-    new KAction(i18n("Handbook won't open?"), "", 0, this,
-        SLOT(helpNoHelp()), actionCollection(), "help_nohelp");
+    act = actionCollection()->addAction("help_tipofday");
+    act->setText(i18n("&Tip of the Day"));
+    act->setIcon(KIcon("idea"));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpTipOfDay()));
+    
+    act = actionCollection()->addAction("help_trouble");
+    act->setText(i18n("Tr&oubleshooting"));
+    act->setIcon(KIcon("messagebox_warning"));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
+   
+    act = actionCollection()->addAction("help_nohelp");
+    act->setText(i18n("Handbook won't open?"));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
+    
 
     // All done!  Build the GUI.
     createGUI(0);
@@ -490,8 +515,8 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
         false);
 
     configGroup = new KConfigGroup(config, "Census");
-    QStringList censusStrings = configGroup->readListEntry("Files", 
-        ReginaPrefSet::defaultCensusFiles());
+    QStringList censusStrings = configGroup->readEntry("Files", 
+        QStringList());
     if (censusStrings.empty())
         globalPrefs.censusFiles = ReginaPrefSet::defaultCensusFiles();
     else {
