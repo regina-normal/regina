@@ -774,18 +774,18 @@ void ReginaMain::saveOptions() {
     QListIterator<KMainWindow*> it(memberList());
     while(it.hasNext()) {
         KMainWindow* otherMain = it.next();
-        if (otherMain != this)
-            if (otherMain->metaObject()->className() == 
-                    ReginaMain::staticMetaObject.className()) 
-                dynamic_cast<ReginaMain*>(otherMain)->readOptions(config);
+        if (otherMain != this) {
+            ReginaMain* regina = qobject_cast<ReginaMain*>(otherMain);
+            if (regina) 
+                regina->readOptions(config);
+        }
     }
 }
 
 KParts::ReadWritePart* ReginaMain::newTopologyPart() {
     ReginaPart* ans = 0;
 
-    KPluginLoader loader("libreginapart");
-    KPluginFactory* libFactory = loader.factory();
+    KPluginFactory* libFactory = KPluginLoader("libreginapart").factory();
     if (libFactory)
         ans = libFactory->create<ReginaPart>(this);
 
