@@ -788,6 +788,7 @@ KParts::ReadWritePart* ReginaMain::newTopologyPart() {
     KPluginFactory* libFactory = KPluginLoader("reginapart").factory();
     if (libFactory)
         ans = (ReginaPart *)libFactory->create(this,"ReginaPart");
+        // ans = libFactory->create<ReginaPart>(this);
 
     if (! ans)
         KMessageBox::error(this, i18n(
