@@ -455,10 +455,7 @@ void ReginaMain::setupActions() {
         "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
     connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
 
-    act = actionCollection()->addAction("help_tipofday");
-    act->setText(i18n("&Tip of the Day"));
-    act->setIcon(KIcon("idea"));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpTipOfDay()));
+    KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()), actionCollection());
     
     act = actionCollection()->addAction("help_trouble");
     act->setText(i18n("Tr&oubleshooting"));
