@@ -111,7 +111,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     threeBall->setWhatsThis(msg);
 
-    btnZeroEff = new QPushButton(KIcon("run"), i18n("Calculate"), ui);
+    btnZeroEff = new QPushButton(KIcon("system-run"), i18n("Calculate"), ui);
     btnZeroEff->setToolTip(i18n("Calculate 0-efficiency"));
     btnZeroEff->setWhatsThis(i18n("<qt>Calculate whether this "
         "triangulation is 0-efficient.<p>"
@@ -121,7 +121,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnZeroEff, 0, 5);
     connect(btnZeroEff, SIGNAL(clicked()), this, SLOT(calculateZeroEff()));
 
-    btnSplitting = new QPushButton(KIcon("run"), i18n("Calculate"), ui);
+    btnSplitting = new QPushButton(KIcon("system-run"), i18n("Calculate"), ui);
     btnSplitting->setToolTip(i18n("Calculate existence of a splitting "
         "surface"));
     btnSplitting->setWhatsThis(i18n("<qt>Calculate whether this "
@@ -132,7 +132,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnSplitting, 1, 5);
     connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
 
-    btnThreeSphere = new QPushButton(KIcon("run"), i18n("Calculate"), ui);
+    btnThreeSphere = new QPushButton(KIcon("system-run"), i18n("Calculate"), ui);
     btnThreeSphere->setToolTip(i18n("Calculate whether this is a 3-sphere"));
     btnThreeSphere->setWhatsThis(i18n("<qt>Calculate whether this "
         "is a triangulation of a 3-sphere.<p>"
@@ -143,7 +143,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     connect(btnThreeSphere, SIGNAL(clicked()), this,
         SLOT(calculateThreeSphere()));
 
-    btnThreeBall = new QPushButton(KIcon("run"), i18n("Calculate"), ui);
+    btnThreeBall = new QPushButton(KIcon("system-run"), i18n("Calculate"), ui);
     btnThreeBall->setToolTip(
         i18n("Calculate whether this is a 3-dimensional ball"));
     btnThreeBall->setWhatsThis(i18n("<qt>Calculate whether this "

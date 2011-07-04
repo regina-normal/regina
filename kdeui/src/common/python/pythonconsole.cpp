@@ -121,7 +121,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     KAction* act = actionCollection()->addAction("console_save");
     act->setText(i18n("&Save Session"));
-    act->setIcon(KIcon("filesave"));
+    act->setIcon(KIcon("document-save"));
     act->setShortcut(tr("Ctrl+s"));
     act->setToolTip(i18n("Save session history"));
     act->setWhatsThis(i18n("Save the entire history of this Python session "
@@ -132,7 +132,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = actionCollection()->addAction("console_close");
     act->setText(i18n("&Close"));
-    act->setIcon(KIcon("fileclose"));
+    act->setIcon(KIcon("window-close"));
     act->setShortcut(tr("Ctrl+d"));
     act->setToolTip(i18n("Close Python console"));
     connect(act, SIGNAL(triggered()), this, SLOT(close()));
@@ -157,7 +157,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = actionCollection()->addAction("help_scripting");
     act->setText(i18n("&Scripting Overview"));
-    act->setIcon(KIcon("contents"));
+    act->setIcon(KIcon("help-contents"));
     act->setShortcut(tr("F1"));
     act->setToolTip(i18n("Read Python scripting overview"));
     act->setWhatsThis(i18n("Open the <i>Python Scripting</i> section of the "

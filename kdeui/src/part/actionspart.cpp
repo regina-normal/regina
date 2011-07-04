@@ -57,7 +57,7 @@ void ReginaPart::setupActions() {
     // Basic packet actions:
     act = actionCollection()->addAction("tree_view");
     act->setText(i18n("&View/Edit"));
-    act->setIcon(KIcon("viewmag"));
+    act->setIcon(KIcon("zoom-original"));
     act->setShortcut(tr("Ctrl+v"));
     act->setToolTip(i18n("View or edit the selected packet"));
     act->setWhatsThis(i18n("View or edit the packet currently selected "
@@ -67,7 +67,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("tree_rename");
     act->setText(i18n("&Rename"));
-    act->setIcon(KIcon("editclear"));
+    act->setIcon(KIcon("edit-clear"));
     act->setShortcut(tr("Ctrl+r"));
     act->setToolTip(i18n("Rename the selected packet"));
     act->setWhatsThis(i18n("Rename the packet currently selected "
@@ -77,7 +77,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("tree_delete");
     act->setText(i18n("&Delete"));
-    act->setIcon(KIcon("editdelete"));
+    act->setIcon(KIcon("edit-delete"));
     act->setShortcut(tr("Delete"));
     act->setToolTip(i18n("Delete the selected packet"));
     act->setWhatsThis(i18n("Delete the packet currently selected "
@@ -87,7 +87,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("tree_refresh");
     act->setText(i18n("Refres&h Subtree"));
-    act->setIcon(KIcon("reload"));
+    act->setIcon(KIcon("view-refresh"));
     act->setShortcut(tr("F5"));
     act->setToolTip(i18n("Refresh the subtree beneath the selected packet"));
     act->setWhatsThis(i18n("Refresh the packet "
@@ -102,7 +102,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("tree_clone");
     act->setText(i18n("C&lone Packet"));
-    act->setIcon(KIcon("editcopy"));
+    act->setIcon(KIcon("edit-copy"));
     act->setShortcut(tr("Ctrl+l"));
     act->setToolTip(i18n("Clone the selected packet only"));
     act->setWhatsThis(i18n("Clone the packet currently selected in "
@@ -123,7 +123,7 @@ void ReginaPart::setupActions() {
     // Tree reorganisation:
     act = actionCollection()->addAction("nav_shallow");
     act->setText(i18n("&Higher Level"));
-    act->setIcon(KIcon("1leftarrow"));
+    act->setIcon(KIcon("arrow-left"));
     act->setShortcut(tr("Ctrl+Left"));
     act->setToolTip(i18n("Move packet to a higher (shallower) level "
         "in the tree"));
@@ -136,7 +136,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("nav_deep");
     act->setText(i18n("&Lower Level"));
-    act->setIcon(KIcon("1rightarrow"));
+    act->setIcon(KIcon("arrow-right"));
     act->setShortcut(tr("Ctrl+Right"));
     act->setToolTip(i18n("Move packet to a lower (deeper) level in the tree"));
     act->setWhatsThis(i18n("Move the currently selected packet "
@@ -148,7 +148,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("nav_up");
     act->setText(i18n("&Up"));
-    act->setIcon(KIcon("1uparrow"));
+    act->setIcon(KIcon("arrow-up"));
     act->setShortcut(tr("Ctrl+Up"));
     act->setToolTip(i18n("Move packet up through its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
@@ -159,7 +159,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("nav_down");
     act->setText(i18n("&Down"));
-    act->setIcon(KIcon("1downarrow"));
+    act->setIcon(KIcon("arrow-down"));
     act->setShortcut(tr("Ctrl+Down"));
     act->setToolTip(i18n("Move packet down through its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
@@ -170,7 +170,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("nav_pageup");
     act->setText(i18n("Jump U&p"));
-    act->setIcon(KIcon("2uparrow"));
+    act->setIcon(KIcon("arrow-up-double"));
     act->setShortcut(tr("Ctrl+PageUp"));
     act->setToolTip(i18n("Jump packet up through its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
@@ -181,7 +181,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("nav_pagedown");
     act->setText(i18n("Jump Do&wn"));
-    act->setIcon(KIcon("2downarrow"));
+    act->setIcon(KIcon("arrow-down-double"));
     act->setShortcut(tr("Ctrl+PageDown"));
     act->setToolTip(i18n("Jump packet down through its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
@@ -192,7 +192,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("nav_top");
     act->setText(i18n("&Top"));
-    act->setIcon(KIcon("top"));
+    act->setIcon(KIcon("go-top"));
     act->setShortcut(tr("Ctrl+Home"));
     act->setToolTip(i18n("Move packet above all its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
@@ -204,7 +204,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("nav_bottom");
     act->setText(i18n("&Bottom"));
-    act->setIcon(KIcon("bottom"));
+    act->setIcon(KIcon("go-bottom"));
     act->setShortcut(tr("Ctrl+End"));
     act->setToolTip(i18n("Move packet below all its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
@@ -300,7 +300,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("tree_census");
     act->setText(i18n("Form &Census"));
-    act->setIcon(KIcon("view_text"));
+    act->setIcon(KIcon("fileview-text"));
     act->setToolTip(i18n("Form a new census of triangulations"));
     act->setWhatsThis(i18n("Create a new census of 3-manifold "
         "triangulations according to some set of census constraints."));

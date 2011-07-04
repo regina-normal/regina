@@ -388,7 +388,7 @@ void ReginaMain::setupActions() {
     // File actions:
     act = actionCollection()->addAction("new_topology");
     act->setText(i18n("&New Topology Data"));
-    act->setIcon(KIcon("filenew"));
+    act->setIcon(KIcon("document-new"));
     act->setShortcut(tr("Ctrl+n"));
     act->setWhatsThis(i18n("Create a new topology data file.  This is "
         "the standard type of data file used by Regina."));
@@ -396,7 +396,7 @@ void ReginaMain::setupActions() {
     
     act = actionCollection()->addAction("new_python");
     act->setText(i18n("New &Python Library"));
-    act->setIcon(KIcon("filenew"));
+    act->setIcon(KIcon("document-new"));
     act->setWhatsThis(i18n("Create a new Python library.  This is "
         "a Python file that can be loaded when a script is run or a "
         "new Python session is started."));
@@ -462,7 +462,7 @@ void ReginaMain::setupActions() {
     
     act = actionCollection()->addAction("help_trouble");
     act->setText(i18n("Tr&oubleshooting"));
-    act->setIcon(KIcon("messagebox_warning"));
+    act->setIcon(KIcon("dialog-warning"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
    
     act = actionCollection()->addAction("help_nohelp");

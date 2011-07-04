@@ -92,7 +92,7 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
 
     hdrLayout->addStretch(1);
 
-    btnCalculate = new QPushButton(KIcon("run"), i18n("Calculate"), ui);
+    btnCalculate = new QPushButton(KIcon("system-run"), i18n("Calculate"), ui);
     btnCalculate->setToolTip(i18n("Calculate compatibility matrices"));
     btnCalculate->setWhatsThis(i18n("<qt>Calculate and display the "
         "full compatibility matrices.<p>"
@@ -116,7 +116,7 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
         layerNone->setLayout(noneLayout);
 
         QPixmap iconPic = KIconLoader::global()->
-            loadIcon("messagebox_info", KIconLoader::NoGroup, 
+            loadIcon("dialog-information", KIconLoader::NoGroup, 
             KIconLoader::SizeMedium, KIconLoader::DefaultState, 
             QStringList(), 0L, true /* may be null */);
         if (iconPic.isNull())

@@ -78,10 +78,10 @@ NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
     stack = new QStackedWidget(ui);
 
     // Information layer.
-    layerInfo = messageLayer(msgInfo, "messagebox_info");
+    layerInfo = messageLayer(msgInfo, "dialog-information");
 
     // Error layer.
-    layerError = messageLayer(msgError, "messagebox_critical");
+    layerError = messageLayer(msgError, "dialog-error");
 
     // Finish off.
     baseLayout->addWidget(stack);

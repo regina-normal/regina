@@ -190,7 +190,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     KAction* actCompile = scriptActions->addAction("script_compile");;
     actCompile->setText(i18n("&Compile"));
-    actCompile->setIcon(KIcon("compfile"));
+    actCompile->setIcon(KIcon("run-build-file"));
     actCompile->setToolTip(i18n("Compile the Python script"));
     actCompile->setWhatsThis(i18n("Test whether this Python script "
         "actually compiles.  Any errors will be shown in a separate "
@@ -201,7 +201,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     KAction* actRun = scriptActions->addAction("script_run");;
     actRun->setText(i18n("&Run"));
-    actRun->setIcon(KIcon("run"));
+    actRun->setIcon(KIcon("system-run"));
     actRun->setToolTip(i18n("Execute the Python script"));
     actRun->setWhatsThis(i18n("Execute this Python script.  The "
         "script will be run in a separate Python console."));

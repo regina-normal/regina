@@ -168,7 +168,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     frame = new KVBox();
     item = addPage(frame, i18n("Census"));
     item->setHeader(i18n("Census Options"));
-    item->setIcon(KIcon(BarIcon("view_text")));
+    item->setIcon(KIcon(BarIcon("fileview-text")));
     censusPrefs = new ReginaPrefCensus(frame);
 
     frame = new KVBox();
@@ -690,8 +690,8 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
 
     QLabel* label = new QLabel(i18n("Edit mode:"), box);
     comboEditMode = new KComboBox(box);
-    comboEditMode->addItem(SmallIcon("editclear"), i18n("Direct edit"));
-    comboEditMode->addItem(SmallIcon("view_text"), i18n("Pop-up dialog"));
+    comboEditMode->addItem(SmallIcon("edit-clear"), i18n("Direct edit"));
+    comboEditMode->addItem(SmallIcon("fileview-text"), i18n("Pop-up dialog"));
     QString msg = i18n("Specifies the way in which face gluings are edited.");
     label->setWhatsThis(msg);
     comboEditMode->setWhatsThis(msg);

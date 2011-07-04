@@ -328,7 +328,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     KAction* actCensusLookup = triActions->addAction("tri_census_lookup");
     actCensusLookup->setText(i18n("Census &Lookup"));
-    actCensusLookup->setIcon(KIcon("find"));
+    actCensusLookup->setIcon(KIcon("edit-find"));
     actCensusLookup->setToolTip(i18n(
         "Search for this triangulation in the configured list of censuses"));
     actCensusLookup->setWhatsThis(i18n("Attempt to locate this "

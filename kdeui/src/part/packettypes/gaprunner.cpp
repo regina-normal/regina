@@ -88,7 +88,7 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
     resize(300, 100);
     setCaption(i18n("Running GAP..."));
 
-    setButtonGuiItem(KDialog::Cancel,KGuiItem(i18n("Kill GAP"), "stop",
+    setButtonGuiItem(KDialog::Cancel,KGuiItem(i18n("Kill GAP"), "process-stop",
         i18n("Kill the running GAP process"),
         i18n("Kill the running GAP process.  This will cancel the "
             "group simplification.")));
@@ -105,7 +105,7 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         "between Regina and GAP.</qt>"));
 
     QLabel* icon = new QLabel(page);
-    icon->setPixmap(DesktopIcon("run", 32, KIconLoader::DefaultState));
+    icon->setPixmap(DesktopIcon("system-run", 32, KIconLoader::DefaultState));
     layout->addWidget(icon, 0);
 
     layout->addSpacing(10);

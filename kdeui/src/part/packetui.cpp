@@ -132,7 +132,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     // might want to modify them.
     actCommit = part->actionCollection()->addAction("packet_editor_commit");
     actCommit->setText(i18n("Co&mmit"));
-    actCommit->setIcon(KIcon("button_ok"));
+    actCommit->setIcon(KIcon("dialog-ok"));
     actCommit->setEnabled(false);
     actCommit->setToolTip(i18n("Commit changes to this packet"));
     actCommit->setWhatsThis(i18n("Commit any changes you have made inside "
@@ -141,7 +141,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     connect(actCommit,SIGNAL(triggered()),this,SLOT(commit()));
     actRefresh = part->actionCollection()->addAction("packet_editor_refresh");
     actRefresh->setText(i18n("&Refresh"));
-    actRefresh->setIcon(KIcon("reload"));
+    actRefresh->setIcon(KIcon("view-refresh"));
     actRefresh->setToolTip(i18n("Discard any changes and refresh this "
         "packet viewer"));
     actRefresh->setWhatsThis(i18n("Refresh this viewer to show the most "
@@ -158,7 +158,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     connect(actDockUndock,SIGNAL(triggered()),this, SLOT(floatPane()));
     actClose = part->actionCollection()->addAction("packet_editor_close");
     actClose->setText(i18n("&Close"));
-    actClose->setIcon(KIcon("fileclose"));
+    actClose->setIcon(KIcon("window-close"));
     actClose->setToolTip(i18n("Close this packet viewer"));
     actClose->setWhatsThis(i18n("Close this packet viewer.  Any changes "
         "that have not been committed will be discarded."));
@@ -258,7 +258,7 @@ void PacketPane::setDirty(bool newDirty) {
 
     actCommit->setEnabled(dirty);
     actRefresh->setText(dirty ? i18n("&Discard") : i18n("&Refresh"));
-    actRefresh->setIcon(dirty ? KIcon("button_cancel") : KIcon("reload"));
+    actRefresh->setIcon(dirty ? KIcon("dialog-cancel") : KIcon("view-refresh"));
 }
 
 void PacketPane::setDirtinessBroken() {
@@ -267,7 +267,7 @@ void PacketPane::setDirtinessBroken() {
 
     actCommit->setEnabled(dirty);
     actRefresh->setText(dirty ? i18n("&Discard / Refresh") : i18n("&Refresh"));
-    actRefresh->setIcon(KIcon("reload"));
+    actRefresh->setIcon(KIcon("view-refresh"));
 }
 
 bool PacketPane::setReadWrite(bool allowReadWrite) {
