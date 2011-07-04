@@ -145,7 +145,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     KAction* actCopy = actionCollection()->addAction(
         KStandardAction::Copy,
-        this,
+        session,
         SLOT(copy()) );
     actCopy->setEnabled(false);
     connect(session, SIGNAL(copyAvailable(bool)), actCopy,
@@ -154,7 +154,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = actionCollection()->addAction(
         KStandardAction::SelectAll,
-        this,
+        session,
         SLOT(selectAll()) );
 
     menuEdit->addAction(act);
