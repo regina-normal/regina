@@ -19,6 +19,9 @@
 /* Define to 1 if 64-bit integer literals are available using the LL suffix */
 #cmakedefine NUMERIC_64_LL_FOUND
 
+/* Define to 1 if Boost.Python is available. */
+#cmakedefine BOOST_PYTHON_FOUND
+
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
 #define ICONV_CONST @ICONV_CONST@
 
