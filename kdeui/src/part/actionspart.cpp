@@ -300,7 +300,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("tree_census");
     act->setText(i18n("Form &Census"));
-    act->setIcon(KIcon("fileview-text"));
+    act->setIcon(KIcon("view-list-text"));
     act->setToolTip(i18n("Form a new census of triangulations"));
     act->setWhatsThis(i18n("Create a new census of 3-manifold "
         "triangulations according to some set of census constraints."));

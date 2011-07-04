@@ -143,44 +143,44 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     KVBox* frame = new KVBox();
     KPageWidgetItem *item = addPage(frame, i18n("General"));
     item->setHeader(i18n("General Options"));
-    item->setIcon(KIcon(BarIcon("regina")));
+    item->setIcon(KIcon("regina"));
 
     generalPrefs = new ReginaPrefGeneral(frame);
 
     frame = new KVBox();
     item = addPage(frame, i18n("Triangulation"));
     item->setHeader(i18n("Triangulation Options"));
-    item->setIcon(KIcon(BarIcon("packet_triangulation")));
+    item->setIcon(KIcon("packet_triangulation"));
     triPrefs = new ReginaPrefTri(frame);
 
     frame = new KVBox();
     item = addPage(frame, i18n("Surfaces"));
     item->setHeader(i18n("Normal Surface Options"));
-    item->setIcon(KIcon(BarIcon("packet_surfaces")));
+    item->setIcon(KIcon("packet_surfaces"));
     surfacePrefs = new ReginaPrefSurfaces(frame);
 
     frame = new KVBox();
     item = addPage(frame, i18n("PDF"));
     item->setHeader(i18n("PDF Options"));
-    item->setIcon(KIcon(BarIcon("packet_PDF")));
+    item->setIcon(KIcon("packet_pdf"));
     pdfPrefs = new ReginaPrefPDF(frame);
 
     frame = new KVBox();
     item = addPage(frame, i18n("Census"));
     item->setHeader(i18n("Census Options"));
-    item->setIcon(KIcon(BarIcon("fileview-text")));
+    item->setIcon(KIcon("view-list-text"));
     censusPrefs = new ReginaPrefCensus(frame);
 
     frame = new KVBox();
     item = addPage(frame, i18n("Python"));
     item->setHeader(i18n("Python Options"));
-    item->setIcon(KIcon(BarIcon("openterm")));
+    item->setIcon(KIcon("python_console"));
     pythonPrefs = new ReginaPrefPython(frame);
 
     frame = new KVBox();
     item = addPage(frame, i18n("SnapPea"));
     item->setHeader(i18n("SnapPea Options"));
-    item->setIcon(KIcon(BarIcon("snappea")));
+    item->setIcon(KIcon("snappea"));
     snapPeaPrefs = new ReginaPrefSnapPea(frame);
 
     // Read the current preferences from the main window.
@@ -691,7 +691,7 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
     QLabel* label = new QLabel(i18n("Edit mode:"), box);
     comboEditMode = new KComboBox(box);
     comboEditMode->addItem(SmallIcon("edit-clear"), i18n("Direct edit"));
-    comboEditMode->addItem(SmallIcon("fileview-text"), i18n("Pop-up dialog"));
+    comboEditMode->addItem(SmallIcon("view-list-text"), i18n("Pop-up dialog"));
     QString msg = i18n("Specifies the way in which face gluings are edited.");
     label->setWhatsThis(msg);
     comboEditMode->setWhatsThis(msg);
