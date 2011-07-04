@@ -90,11 +90,6 @@ FIND_PACKAGE(Doxygen)
 # Test suite
 ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
 
-# Configure file
-CONFIGURE_FILE (
-  "${PROJECT_SOURCE_DIR}/engine/regina-config.h.in"
-  "${PROJECT_BINARY_DIR}/engine/regina-config.h"
-)
 # TODO: Get rid of this, eventually.
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated")
 
@@ -113,6 +108,7 @@ IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   # We can support python.
   ADD_SUBDIRECTORY(pylib)  
   ADD_SUBDIRECTORY(python)  
+  SET(BOOST_PYTHON_FOUND TRUE)
   MESSAGE(STATUS "Python bindings enabled")
 ELSE(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   # We cannot support python.
@@ -154,3 +150,9 @@ ADD_SUBDIRECTORY(docs)
 ADD_SUBDIRECTORY(examples)
 ADD_SUBDIRECTORY(icons)
 ADD_SUBDIRECTORY(scripts)
+
+# Configure file
+CONFIGURE_FILE (
+  "${PROJECT_SOURCE_DIR}/engine/regina-config.h.in"
+  "${PROJECT_BINARY_DIR}/engine/regina-config.h"
+)
