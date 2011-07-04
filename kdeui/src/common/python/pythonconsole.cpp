@@ -74,7 +74,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     // Resize ourselves nicely.
     if (! initialGeometrySet())
-        resize(500, 400);
+        resize(600, 500);
 
     // Set up the main widgets.
     QWidget* box = new QWidget(this);
@@ -91,10 +91,10 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         "output they have produced."));
     layout->addWidget(session);
     layout->setStretchFactor(session, 1);
-    box->setLayout(layout);
 
     QWidget* inputArea = new QWidget(box);
     QHBoxLayout *inputAreaLayout = new QHBoxLayout;
+    inputAreaLayout->setContentsMargins(0, 0, 0, 0);
     
     inputArea->setWhatsThis( i18n("Type your Python commands into "
         "this box."));
@@ -108,8 +108,12 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     input->setFocus();
     connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
     inputAreaLayout->addWidget(input);
+    inputAreaLayout->setStretchFactor(input, 1);
     inputArea->setLayout(inputAreaLayout);
+    layout->addWidget(inputArea);
+
     setCentralWidget(box);
+    box->setLayout(layout);
     box->show();
 
     // Set up the actions.
@@ -175,9 +179,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     menuHelp->addAction(act);
 
     act = actionCollection()->addAction(
-        KStandardAction::WhatsThis,
-        this,
-        SLOT(whatsThis()) );
+        KStandardAction::WhatsThis, this, SLOT(contextHelpActivated()) );
     menuHelp->insertSeparator(act);
     menuHelp->addAction(act);
     
@@ -390,6 +392,10 @@ void PythonConsole::scriptingOverview() {
 
 void PythonConsole::pythonReference() {
     PythonManager::openPythonReference(this);
+}
+
+void PythonConsole::contextHelpActivated() {
+    QWhatsThis::enterWhatsThisMode();
 }
 
 void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {

@@ -157,6 +157,11 @@ class PythonConsole : public KXmlGuiWindow {
          */
         void updatePreferences(const ReginaPrefSet& newPrefs);
 
+        /**
+         * Help -> What's this has been acctivated.
+         */
+        void contextHelpActivated();
+
     private:
         /**
          * Encode special characters so that the given text can be

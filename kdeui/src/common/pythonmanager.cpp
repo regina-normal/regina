@@ -177,7 +177,7 @@ namespace {
         KMessageBox::sorry(parent, i18n("<qt>Python scripting has been "
             "disabled in your particular build of Regina.  This is probably "
             "because no usable boost.python installation could be found.<p>"
-            "Watch the output of <b>./configure</b> at compile time "
+            "Watch the output of <b>cmake</b> at compile time "
             "for a more detailed explanation of why this has happened.  "
             "Please write to <tt>%1</tt> if you would like further "
             "assistance.</qt>").arg(PACKAGE_BUGREPORT));
