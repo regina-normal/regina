@@ -782,10 +782,15 @@ void ReginaMain::saveOptions() {
 KParts::ReadWritePart* ReginaMain::newTopologyPart() {
     ReginaPart* ans = 0;
 
+    /**
+     * As a first iteration for the KDE4 port, let's just link directly
+     * with the part and create a new class instance directly.
     KPluginFactory* libFactory = KPluginLoader("reginapart").factory();
     if (libFactory)
         ans = (ReginaPart *)libFactory->create(this,"ReginaPart");
         // ans = libFactory->create<ReginaPart>(this);
+     */
+    ans = new ReginaPart(this, this, QStringList());
 
     if (! ans)
         KMessageBox::error(this, i18n(
