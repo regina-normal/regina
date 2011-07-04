@@ -34,10 +34,8 @@
 #define __EXAMPLESACTION_H
 
 #include <kselectaction.h>
-#include <qstringlist.h>
-#include <qvector.h>
+#include <qmap.h>
 
-class KMenu;
 class KUrl;
 
 /**
@@ -53,23 +51,15 @@ class ExamplesAction : public KSelectAction {
 
     private:
         /**
-         * GUI components
-         */
-        KMenu* popup_;
-
-        /**
          * Sample data files
          */
-        QVector<QString> urls_;
-        QStringList descs_;
+        QMap<QAction*, KUrl> urls_;
 
     public:
         /**
-         * Constructor and destructor.  The given slot is to be connected
-         * to urlSelected(const KUrl&).
+         * Constructor and destructor.
          */
-        ExamplesAction(const QObject* receiver, const char* slot,
-            QObject* parent);
+        ExamplesAction(QObject* parent);
         virtual ~ExamplesAction();
 
         /**
@@ -78,11 +68,6 @@ class ExamplesAction : public KSelectAction {
          * The filename should be relative to the Regina examples directory.
          */
         void addUrl(const QString& fileName, const QString& description);
-
-        /**
-         * KAction overrides.
-         */
-        //virtual int plug(QWidget *widget, int index = -1);
 
     signals:
         /**
@@ -94,15 +79,7 @@ class ExamplesAction : public KSelectAction {
         /**
          * All activation events lead here.
          */
-        void exampleActivated(int index);
-
-        /**
-         * Internal slots for keeping the various GUI containers up-to-date
-         * and following their individual events.
-         */
-        void menuAboutToShow();
-        void slotClicked();
-        virtual void slotActivated();
+        void exampleActivated(QAction*);
 };
 
 #endif

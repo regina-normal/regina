@@ -35,8 +35,6 @@
 
 #include "examplesaction.h"
 
-#include <kapplication.h>
-#include <kauthorized.h>
 #include <klocale.h>
 #include <kmenu.h>
 #include <ktoolbar.h>
@@ -44,100 +42,37 @@
 #include <qfile.h>
 #include <qtoolbutton.h>
 
-ExamplesAction::ExamplesAction(const QObject* receiver, const char* slot,
-        QObject* parent) :
-        KSelectAction(KIcon("bookmark"),i18n("Open E&xample"), parent) {
-    popup_ = new KMenu;
-
-    connect(popup_, SIGNAL(aboutToShow()),
-        this, SLOT(menuAboutToShow()));
-    connect(popup_, SIGNAL(actionTriggered(int)),
-        this, SLOT(exampleActivated(int)));
-    connect(this, SIGNAL(actionTriggered(int)),
-        this, SLOT(exampleActivated(int)));
-
+ExamplesAction::ExamplesAction(QObject* parent) :
+        KSelectAction(KIcon("bookmarks"),i18n("Open E&xample"), parent) {
+    delete menu();
+    setMenu(new KMenu());
+    setToolBarMode(KSelectAction::MenuMode);
+    connect(this, SIGNAL(triggered(QAction*)),
+        SLOT(exampleActivated(QAction*)));
     setMenuAccelsEnabled(false);
+    setEnabled(true);
 
     setWhatsThis(i18n("Open one of the example data files that "
         "ships with Regina.  These examples are useful starting points "
         "for discovering what Regina can do.  Several censuses of "
         "3-manifold triangulations are also provided."));
-
-    if (receiver)
-        connect(this, SIGNAL(urlSelected(const KUrl&)), receiver, slot);
 }
 
 ExamplesAction::~ExamplesAction() {
-    delete popup_;
 }
 
 void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
-    urls_.append(QString("file:%1/%2")
+
+    QAction* action = new QAction(text, selectableActionGroup());
+
+    menu()->insertAction(0 /* insert last */, action);
+    urls_.insert(action, KUrl(QString("file:%1/%2")
         .arg(QFile::decodeName(regina::NGlobalDirs::examples().c_str()))
-        .arg(fileName));
-    descs_.append(text);
-
-    setItems(descs_);
+        .arg(fileName)));
 }
 
-// TODO : This is disabled. I've updated it for Qt4/KDE4
-// and it seems like the changes to plug are no longer required
-/*
-int ExamplesAction::plug(QWidget *widget, int index) {
-  // KAuthorized seems to replace the old KApplication
-    if (kapp && ! KAuthorized::authorizeKAction(this->objectName()))
-        return -1;
-
-    if ( widget->inherits("KToolBar")) {
-        KToolBar *bar = (KToolBar*)widget;
-//        int id_ = KAction::getToolButtonID();
-
-//        KInstance* instance;
-//        if (m_parentCollection)
-//            instance = m_parentCollection->instance();
-//        else
-//            instance = KGlobal::instance();
-
-        bar->addAction(icon(),text(), this, SLOT(slotClicked()));
-//        bar->insertButton(icon(), id_, SIGNAL(clicked()), this,
-//            SLOT(slotClicked()), isEnabled(), plainText(), index, instance);
-//        addContainer(bar, id_);
-        connect(bar, SIGNAL(destroyed()), this, SLOT(slotDestroyed()));
-//        bar->setDelayedPopup(id_, popup_, true);
-
-//        if (! whatsThis().isEmpty())
-//            bar->getButton(id_)->setWhatsThis(whatsThis());
-
-        return containerCount() - 1;
-    }
-
-    return KSelectAction::plug(widget, index);
-}*/
-
-void ExamplesAction::exampleActivated(int id) {
-    // Clear the check box that has just been added.
-    setItems(descs_);
-
-    // And open the Url.
-    emit urlSelected(KUrl(urls_[id]));
-}
-
-void ExamplesAction::menuAboutToShow() {
-    popup_->clear();
-
-    int index = 0;
-    QStringList::Iterator it = descs_.begin();
-    for ( ; it != descs_.end(); ++it, ++index)
-        popup_->addAction(descs_[index]);
-}
-
-void ExamplesAction::slotClicked() {
-    KAction::trigger();
-}
-
-void ExamplesAction::slotActivated() {
-  // TODO: Why twice? The original code emitted it twice too.
-    emit actionTriggered(this);
-    emit actionTriggered(this);
+void ExamplesAction::exampleActivated(QAction* action) {
+    // Open the Url.
+    emit urlSelected(urls_[action]);
 }
 

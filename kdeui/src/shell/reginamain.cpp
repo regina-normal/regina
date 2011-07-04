@@ -405,9 +405,13 @@ void ReginaMain::setupActions() {
     KStandardAction::open(this, SLOT(fileOpen()), actionCollection());
     fileOpenRecent = KStandardAction::openRecent(this, 
         SLOT(openUrl(const KUrl&)), actionCollection());
-    fileOpenExample = new ExamplesAction(this, SLOT(openExample(const KUrl&)),
-        actionCollection());
+
+    fileOpenExample = new ExamplesAction(this);
     fillExamples();
+    connect(fileOpenExample, SIGNAL(urlSelected(const KUrl&)),
+        this, SLOT(openExample(const KUrl&)));
+    actionCollection()->addAction("file_open_example", fileOpenExample);
+
     KStandardAction::close(this, SLOT(close()), actionCollection());
     KStandardAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
 
