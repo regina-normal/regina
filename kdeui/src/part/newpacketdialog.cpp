@@ -86,6 +86,8 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     } else {
         layout->addStretch(1);
     }
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 NewPacketDialog::~NewPacketDialog() {
