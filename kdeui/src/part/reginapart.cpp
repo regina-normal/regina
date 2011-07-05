@@ -339,6 +339,13 @@ void ReginaPart::packetDelete() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
+    if (! packet->getTreeParent()) {
+        KMessageBox::sorry(widget(), i18n(
+            "The root of the packet tree cannot be deleted.  You may "
+            "delete any other packet (along with all of its children) "
+            "except for this one."));
+        return;
+    }
 
     if (KMessageBox::warningContinueCancel(widget(), i18n(
             "You are about to delete the packet %1 and all its children.  "
