@@ -71,8 +71,8 @@ PacketChooser::~PacketChooser() {
 NPacket* PacketChooser::selectedPacket() {
     if (count() == 0)
         return 0;
-    else
-        return packets[cursorPosition()];
+    int curr = currentIndex();
+    return (curr < 0 ? 0 : packets[curr]);
 }
 
 void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
@@ -111,18 +111,18 @@ void PacketChooser::packetToBeDestroyed(regina::NPacket* toDestroy) {
         // Make sure the call to removeItem() comes last since it could
         // trigger a refreshContents().
         long destroyIndex = it - packets.begin();
-        long currentIndex = cursorPosition();
+        long currIndex = currentIndex();
 
         packets.erase(it);
-        if (destroyIndex == currentIndex) {
+        if (destroyIndex == currIndex) {
             // We know count() > 0 since currentItem() exists.
             setCurrentIndex(0);
 
             // If the item to destroy *is* 0, this should just fall through
             // to whatever's next when we remove it from the chooser.
-        } else if (destroyIndex < currentIndex) {
+        } else if (destroyIndex < currIndex) {
             // The selected item has moved up the list.
-            setCurrentIndex(currentIndex - 1);
+            setCurrentIndex(currIndex - 1);
         }
 
         removeItem(destroyIndex);
