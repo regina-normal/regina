@@ -50,9 +50,6 @@ class REvent : public QEvent {
          */
         PacketTreeItem* item;
 
-        QEvent::Type type;
-
-
     public:
         REvent(QEvent::Type, PacketTreeItem*);
         PacketTreeItem* getItem();
