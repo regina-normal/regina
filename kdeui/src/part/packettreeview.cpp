@@ -255,8 +255,8 @@ PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent)
     //setSorting(-1); QTreeWidgets sort by insertion by default
     header()->hide();
 
-    connect(this, SIGNAL(executed(QListViewItem*)), this,
-        SLOT(packetView(QListViewItem*)));
+    connect(this, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
+        SLOT(packetView(QTreeWidgetItem*)));
 }
 
 void PacketTreeView::fill(NPacket* topPacket) {
@@ -269,22 +269,22 @@ PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
         return 0;
 
     // Start at the root of the tree and work down.
+    // Note that the invisible root item might not be a PacketTreeItem,
+    // and we should not try to cast it as such.
+    QTreeWidgetItem* root = invisibleRootItem();
+
+    int itemCount = 0;
+    PacketTreeItem* item;
     regina::NPacket* current;
-    int itemCount=0;
-    PacketTreeItem* root = dynamic_cast<PacketTreeItem*>(invisibleRootItem());
-    PacketTreeItem* item = dynamic_cast<PacketTreeItem*>( root->child(itemCount++));
     while (itemCount < root->childCount()) {
+        item = dynamic_cast<PacketTreeItem*>(root->child(itemCount++));
         current = item->getPacket();
 
         if (current == packet)
             return item;
         if (current && current->isGrandparentOf(packet)) {
             root = item;
-            itemCount=0;
-            item = dynamic_cast<PacketTreeItem*>(root->child(itemCount++));
-        }
-        else {
-            item = dynamic_cast<PacketTreeItem*>(root->child(itemCount++));
+            itemCount = 0;
         }
     }
 
