@@ -290,11 +290,19 @@ void ReginaPart::fileSaveAs() {
     saveAs(file);
 }
 
-void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree) {
+void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree,
+        bool selectInTree) {
     view(new PacketPane(this, packet));
 
-    if (makeVisibleInTree)
-        ensureVisibleInTree(packet);
+    if (makeVisibleInTree || selectInTree) {
+        PacketTreeItem* item = treeView->find(packet);
+        if (item) {
+            if (makeVisibleInTree)
+                treeView->scrollToItem(item);
+            if (selectInTree)
+                treeView->setCurrentItem(item);
+        }
+    }
 }
 
 void ReginaPart::packetView() {

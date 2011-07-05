@@ -125,7 +125,8 @@ class ReginaPart : public KParts::ReadWritePart {
         /**
          * View the given packet.
          */
-        void packetView(regina::NPacket*, bool makeVisibleInTree = true);
+        void packetView(regina::NPacket*, bool makeVisibleInTree = true,
+            bool selectInTree = false);
 
         /**
          * Ensure that the given packet is visible in the packet tree.
