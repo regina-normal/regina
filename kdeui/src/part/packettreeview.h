@@ -221,6 +221,8 @@ inline ReginaPart* PacketTreeItem::getPart() {
 }
 
 inline regina::NPacket* PacketTreeView::selectedPacket() {
+    if (selectedItems().isEmpty())
+        return 0;
     QTreeWidgetItem* item = selectedItems().first();
     return (item ? dynamic_cast<PacketTreeItem*>(item)->getPacket() : 0);
 }
