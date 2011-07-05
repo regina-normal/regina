@@ -684,7 +684,7 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
 
     QLabel* label = new QLabel(i18n("Edit mode:"), box);
     comboEditMode = new KComboBox(box);
-    comboEditMode->addItem(SmallIcon("edit-clear"), i18n("Direct edit"));
+    comboEditMode->addItem(SmallIcon("edit-rename"), i18n("Direct edit"));
     comboEditMode->addItem(SmallIcon("view-list-text"), i18n("Pop-up dialog"));
     QString msg = i18n("Specifies the way in which face gluings are edited.");
     label->setWhatsThis(msg);

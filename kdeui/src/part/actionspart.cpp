@@ -67,7 +67,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("tree_rename");
     act->setText(i18n("&Rename"));
-    act->setIcon(KIcon("edit-clear"));
+    act->setIcon(KIcon("edit-rename"));
     act->setShortcut(tr("Ctrl+r"));
     act->setToolTip(i18n("Rename the selected packet"));
     act->setWhatsThis(i18n("Rename the packet currently selected "
