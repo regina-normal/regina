@@ -150,7 +150,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     connect(actRefresh,SIGNAL(triggered()), this, SLOT(refresh()));
     actDockUndock = part->actionCollection()->addAction("packet_editor_dock");
     actDockUndock->setText(i18n("Un&dock"));
-    actDockUndock->setIcon(KIcon("attach"));
+    actDockUndock->setIcon(KIcon("mail-attachment"));
     actDockUndock->setToolTip(i18n("Dock / undock this packet viewer"));
     actDockUndock->setWhatsThis(i18n("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
@@ -174,7 +174,8 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
 
     dockUndockBtn = new FlatToolButton(headerBox);
     // dockUndockBtn->setToggleButton(true); // TODO: Find replacement
-    dockUndockBtn->setIcon(BarIcon("attach", 0, KIconLoader::DefaultState));
+    dockUndockBtn->setIcon(BarIcon("mail-attachment", 0,
+        KIconLoader::DefaultState));
     dockUndockBtn->setText(i18n("Dock or undock this packet viewer")); // TODO: Check this is correct (label?)
     if ( ! dockUndockBtn->isChecked() ) dockUndockBtn->toggle(); // TODO: A neater way of doing this?
     dockUndockBtn->setWhatsThis(i18n("Dock or undock this packet viewer.  "
