@@ -272,6 +272,8 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     moveTypes->addButton(useCloseBook, ID_CLOSEBOOK);
     moveTypes->addButton(useShellBdry, ID_SHELLBDRY);
     moveTypes->addButton(useCollapseEdge, ID_COLLAPSEEDGE);
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 EltMoveDialog::~EltMoveDialog() {
@@ -310,9 +312,6 @@ void EltMoveDialog::slotOk() {
             i18n("No elementary move has been selected."));
         return;
     }
-
-    // And we're done!
-    KDialog::okClicked();
 }
 
 void EltMoveDialog::fillWithMoves() {

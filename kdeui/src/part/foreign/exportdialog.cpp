@@ -66,6 +66,8 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
     chosenStrip->setWhatsThis(i18n("Select the piece of data that you wish to export."));
 
     layout->addStretch(1);
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 bool ExportDialog::validate() {
@@ -92,8 +94,5 @@ void ExportDialog::slotOk() {
             arg(chosenPacket->getPacketLabel().c_str()));
         return;
     }
-
-    // We're done!
-    KDialog::okClicked();
 }
 

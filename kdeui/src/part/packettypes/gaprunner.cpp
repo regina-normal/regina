@@ -131,12 +131,15 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         status->setText(i18n("Starting GAP..."));
     else
         error(i18n("GAP could not be started."));
+
+    connect(this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()));
 }
 
 GAPRunner::~GAPRunner() {
     delete proc;
 }
 
+// TODO: Check that this all works right.
 void GAPRunner::slotCancel() {
     if (! cancelled) {
         cancelled = true;

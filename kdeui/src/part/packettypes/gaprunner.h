@@ -102,7 +102,7 @@ class GAPRunner : public KDialog {
 
     protected slots:
         /**
-         * KDialogBase overrides.
+         * Cancel has been pressed.
          */
         virtual void slotCancel();
 

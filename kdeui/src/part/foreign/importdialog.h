@@ -94,7 +94,7 @@ class ImportDialog : public KDialog {
 
     protected slots:
         /**
-         * KDialogBase overrides.
+         * Ok has been clicked.
          */
         virtual void slotOk();
 };

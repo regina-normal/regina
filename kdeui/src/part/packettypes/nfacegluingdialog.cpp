@@ -118,6 +118,7 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
 
     connect(tetrahedron, SIGNAL(activated(int)),
         this, SLOT(clearFaceIfNoTetrahedron()));
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 long NFaceGluingDialog::getAdjTet() const {
@@ -151,7 +152,6 @@ void NFaceGluingDialog::slotOk() {
 
     // Make the gluing!
     tableItem->setDestination(newAdjTet, newAdjPerm);
-    KDialog::okClicked();
 }
 
 NFaceGluingButton::NFaceGluingButton(unsigned long useNTets,

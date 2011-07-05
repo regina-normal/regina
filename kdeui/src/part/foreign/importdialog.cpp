@@ -82,6 +82,8 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
         "is imported."));
 
     layout->addStretch(1);
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 bool ImportDialog::validate() {
@@ -130,8 +132,5 @@ void ImportDialog::slotOk() {
     newTree->setPacketLabel(useLabelStr);
     newTree->makeUniqueLabels(tree);
     parentPacket->insertChildLast(newTree);
-
-    // And we're done!
-    KDialog::okClicked();
 }
 
