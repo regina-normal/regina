@@ -121,6 +121,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     ui = faceTable;
 
     // Set up the triangulation actions.
+    KAction* sep;
 
     triActions = new KActionCollection(0, ReginaPart::factoryInstance());
     //triActionList.setAutoDelete(true);
@@ -149,8 +150,9 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         SLOT(updateRemoveState()));
     triActionList.append(actRemoveTet);
 
-
-    //triActionList.append((new KAction())->setSeparator(true));
+    sep = new KAction(triActions);
+    sep->setSeparator(true);
+    triActionList.append(sep);
 
     actSimplify = triActions->addAction("tri_simplify");
     actSimplify->setText(i18n("&Simplify"));
@@ -172,7 +174,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     enableWhenWritable.append(actSimplify);
     triActionList.append(actSimplify);
 
-
     KAction* actEltMove = triActions->addAction("tri_elementary_move");
     actEltMove->setText(i18n("&Elementary Move..."));
     actEltMove->setToolTip(i18n(
@@ -188,7 +189,9 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
-    //triActionList.append((new KAction())->setSeparator(true));
+    sep = new KAction(triActions);
+    sep->setSeparator(true);
+    triActionList.append(sep);
 
     KAction* actOrient = triActions->addAction("tri_orient");
     actOrient->setText(i18n("&Orient"));
@@ -274,7 +277,9 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
-    //triActionList.append((new KAction())->setSeparator(true));
+    sep = new KAction(triActions);
+    sep->setSeparator(true);
+    triActionList.append(sep);
 
     KAction* actSplitIntoComponents = triActions->addAction(
         "tri_split_into_components");
@@ -324,7 +329,9 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actZeroEff);
     connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
 
-    //triActionList.append((new KAction())->setSeparator(true));
+    sep = new KAction(triActions);
+    sep->setSeparator(true);
+    triActionList.append(sep);
 
     KAction* actCensusLookup = triActions->addAction("tri_census_lookup");
     actCensusLookup->setText(i18n("Census &Lookup"));
@@ -346,7 +353,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
 NTriGluingsUI::~NTriGluingsUI() {
     // Make sure the actions, including separators, are all deleted.
-    triActionList.clear();
     delete triActions;
 }
 
