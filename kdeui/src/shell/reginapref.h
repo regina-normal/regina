@@ -35,7 +35,6 @@
 
 #include "reginaprefset.h"
 
-#include <kvbox.h>
 #include <kpagedialog.h>
 
 class CoordinateChooser;
@@ -95,7 +94,7 @@ class ReginaPreferences : public KPageDialog {
 /**
  * The page of the Regina configuration dialog for general preferences.
  */
-class ReginaPrefGeneral : public KVBox {
+class ReginaPrefGeneral : public QWidget {
     Q_OBJECT
 
     private:
@@ -115,7 +114,7 @@ class ReginaPrefGeneral : public KVBox {
  * The page of the Regina configuration dialog for 3-manifold triangulation
  * preferences.
  */
-class ReginaPrefTri : public KVBox {
+class ReginaPrefTri : public QWidget {
     Q_OBJECT
 
     private:
@@ -137,7 +136,7 @@ class ReginaPrefTri : public KVBox {
  * The page of the Regina configuration dialog for normal surface
  * preferences.
  */
-class ReginaPrefSurfaces : public KVBox {
+class ReginaPrefSurfaces : public QWidget {
     Q_OBJECT
 
     private:
@@ -157,7 +156,7 @@ class ReginaPrefSurfaces : public KVBox {
  * The page of the Regina configuration dialog for PDF viewing
  * preferences.
  */
-class ReginaPrefPDF : public KVBox {
+class ReginaPrefPDF : public QWidget {
     Q_OBJECT
 
     private:
@@ -174,7 +173,7 @@ class ReginaPrefPDF : public KVBox {
 /**
  * The page of the Regina configuration dialog for census preferences.
  */
-class ReginaPrefCensus : public KVBox {
+class ReginaPrefCensus : public QWidget {
     Q_OBJECT
 
     private:
@@ -203,7 +202,7 @@ class ReginaPrefCensus : public KVBox {
 /**
  * The page of the Regina configuration dialog for Python preferences.
  */
-class ReginaPrefPython : public KVBox {
+class ReginaPrefPython : public QWidget {
     Q_OBJECT
 
     private:
@@ -236,7 +235,7 @@ class ReginaPrefPython : public KVBox {
  * The page of the Regina configuration dialog that controls interaction
  * with the SnapPea kernel.
  */
-class ReginaPrefSnapPea : public KVBox {
+class ReginaPrefSnapPea : public QWidget {
     Q_OBJECT
 
     private:

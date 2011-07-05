@@ -139,49 +139,51 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     setCaption(i18n("Regina Preferences"));
     setButtons(KDialog::Help | KDialog::Ok | KDialog::Apply | KDialog::Cancel);
     setDefaultButton(KDialog::Ok);
+
     // Construct the individual preferences pages.
-    KVBox* frame = new KVBox();
-    KPageWidgetItem *item = addPage(frame, i18n("General"));
+    KPageWidgetItem* item;
+
+    generalPrefs = new ReginaPrefGeneral(this);
+    item = new KPageWidgetItem(generalPrefs, i18n("General"));
     item->setHeader(i18n("General Options"));
     item->setIcon(KIcon("regina"));
+    addPage(item);
 
-    generalPrefs = new ReginaPrefGeneral(frame);
-
-    frame = new KVBox();
-    item = addPage(frame, i18n("Triangulation"));
+    triPrefs = new ReginaPrefTri(this);
+    item = new KPageWidgetItem(triPrefs, i18n("Triangulation"));
     item->setHeader(i18n("Triangulation Options"));
     item->setIcon(KIcon("packet_triangulation"));
-    triPrefs = new ReginaPrefTri(frame);
+    addPage(item);
 
-    frame = new KVBox();
-    item = addPage(frame, i18n("Surfaces"));
+    surfacePrefs = new ReginaPrefSurfaces(this);
+    item = new KPageWidgetItem(surfacePrefs, i18n("Surfaces"));
     item->setHeader(i18n("Normal Surface Options"));
     item->setIcon(KIcon("packet_surfaces"));
-    surfacePrefs = new ReginaPrefSurfaces(frame);
+    addPage(item);
 
-    frame = new KVBox();
-    item = addPage(frame, i18n("PDF"));
+    pdfPrefs = new ReginaPrefPDF(this);
+    item = new KPageWidgetItem(pdfPrefs, i18n("PDF"));
     item->setHeader(i18n("PDF Options"));
     item->setIcon(KIcon("packet_pdf"));
-    pdfPrefs = new ReginaPrefPDF(frame);
+    addPage(item);
 
-    frame = new KVBox();
-    item = addPage(frame, i18n("Census"));
+    censusPrefs = new ReginaPrefCensus(this);
+    item = new KPageWidgetItem(censusPrefs, i18n("Census"));
     item->setHeader(i18n("Census Options"));
     item->setIcon(KIcon("view-list-text"));
-    censusPrefs = new ReginaPrefCensus(frame);
+    addPage(item);
 
-    frame = new KVBox();
-    item = addPage(frame, i18n("Python"));
+    pythonPrefs = new ReginaPrefPython(this);
+    item = new KPageWidgetItem(pythonPrefs, i18n("Python"));
     item->setHeader(i18n("Python Options"));
     item->setIcon(KIcon("python_console"));
-    pythonPrefs = new ReginaPrefPython(frame);
+    addPage(item);
 
-    frame = new KVBox();
-    item = addPage(frame, i18n("SnapPea"));
+    snapPeaPrefs = new ReginaPrefSnapPea(this);
+    item = new KPageWidgetItem(snapPeaPrefs, i18n("SnapPea"));
     item->setHeader(i18n("SnapPea Options"));
     item->setIcon(KIcon("snappea"));
-    snapPeaPrefs = new ReginaPrefSnapPea(frame);
+    addPage(item);
 
     // Read the current preferences from the main window.
     generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
@@ -286,6 +288,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
 
     // Finish off.
+    connect(this, SIGNAL(applyClicked()), this, SLOT(slotApply()));
     setHelp("options", "regina");
 }
 
@@ -632,23 +635,27 @@ void ReginaPreferences::slotApply() {
     mainWindow->saveOptions();
 }
 
-ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : KVBox(parent) {
-    cbAutoFileExtension = new QCheckBox(i18n("Automatic file extension"), this);
+ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
+    QBoxLayout* layout = new QVBoxLayout(this);
+
+    cbAutoFileExtension = new QCheckBox(i18n("Automatic file extension"));
     cbAutoFileExtension->setWhatsThis(i18n("Append the default extension "
         "to filenames when saving if no extension is already given."));
+    layout->addWidget(cbAutoFileExtension);
 
-    cbAutoDock = new QCheckBox(i18n("Automatic packet docking"), this);
+    cbAutoDock = new QCheckBox(i18n("Automatic packet docking"));
     cbAutoDock->setWhatsThis(i18n("Try to dock new packet viewers into "
         "the main window instead of opening them in new windows."));
+    layout->addWidget(cbAutoDock);
 
-    cbDisplayTagsInTree = new QCheckBox(i18n("Display tags in packet tree"),
-        this);
+    cbDisplayTagsInTree = new QCheckBox(i18n("Display tags in packet tree"));
     cbDisplayTagsInTree->setEnabled(false);
     cbDisplayTagsInTree->setWhatsThis(i18n("Show full details of any "
         "packet tags directly within the packet tree."));
+    layout->addWidget(cbDisplayTagsInTree);
 
     // Set up the tree jump size.
-    KHBox* box = new KHBox(this);
+    KHBox* box = new KHBox();
     box->setSpacing(5);
 
     QLabel* label = new QLabel(i18n("Packet tree jump size:"), box);
@@ -662,24 +669,30 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : KVBox(parent) {
         "or Jump Down is selected.");
     label->setWhatsThis(msg);
     editTreeJumpSize->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // More options.
-    cbTipOfDay = new QCheckBox(i18n("Show tip of the day"), this);
+    cbTipOfDay = new QCheckBox(i18n("Show tip of the day"));
     cbTipOfDay->setWhatsThis(i18n("Show a tip of the day each time "
         "Regina is started."));
+    layout->addWidget(cbTipOfDay);
 
     // Add some space at the end.
-    setStretchFactor(new QWidget(this), 1);
+    QWidget* stretch = new QWidget(this);
+    layout->addWidget(stretch);
+    layout->setStretchFactor(stretch, 1);
+
+    setLayout(layout);
 }
 
-ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
-    setSpacing(5);
+ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
+    QBoxLayout* layout = new QVBoxLayout(this);
 
     // WARNING: Note that any change of order in the combo boxes must be
     // reflected in the ReginaPreferences methods as well.
 
     // Set up the edit mode.
-    KHBox* box = new KHBox(this);
+    KHBox* box = new KHBox();
     box->setSpacing(5);
 
     QLabel* label = new QLabel(i18n("Edit mode:"), box);
@@ -689,9 +702,10 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
     QString msg = i18n("Specifies the way in which face gluings are edited.");
     label->setWhatsThis(msg);
     comboEditMode->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // Set up the initial tab.
-    box = new KHBox(this);
+    box = new KHBox();
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default top-level tab:"), box);
@@ -706,9 +720,10 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
         "when a new triangulation viewer/editor is opened.");
     label->setWhatsThis(msg);
     comboInitialTab->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // Set up the initial skeleton tab.
-    box = new KHBox(this);
+    box = new KHBox();
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default skeleton tab:"), box);
@@ -719,9 +734,10 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
         "when a new triangulation skeleton viewer is opened.");
     label->setWhatsThis(msg);
     comboInitialSkeletonTab->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // Set up the initial algebra tab.
-    box = new KHBox(this);
+    box = new KHBox();
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default algebra tab:"), box);
@@ -734,9 +750,10 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
         "when a new triangulation algebra viewer is opened.");
     label->setWhatsThis(msg);
     comboInitialAlgebraTab->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // Set up the surface properties threshold.
-    box = new KHBox(this);
+    box = new KHBox();
     box->setSpacing(5);
 
     label = new QLabel(i18n("Surface calculation threshold:"), box);
@@ -749,9 +766,10 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
         "surface properties will be calculated automatically.");
     label->setWhatsThis(msg);
     editSurfacePropsThreshold->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // Set up the GAP executable.
-    box = new KHBox(this);
+    box = new KHBox();
     box->setSpacing(5);
 
     label = new QLabel(i18n("GAP executable:"), box);
@@ -768,9 +786,10 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
         "simplifications.</qt>");
     label->setWhatsThis(msg);
     editGAPExec->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // Set up the Graphviz executable.
-    box = new KHBox(this);
+    box = new KHBox();
     box->setSpacing(5);
 
     label = new QLabel(i18n("Graphviz executable:"), box);
@@ -790,19 +809,24 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : KVBox(parent) {
         "<i>http://www.graphviz.org/</i>.</qt>");
     label->setWhatsThis(msg);
     editGraphvizExec->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // Add some space at the end.
-    setStretchFactor(new QWidget(this), 1);
+    QWidget* stretch = new QWidget(this);
+    layout->addWidget(stretch);
+    layout->setStretchFactor(stretch, 1);
+
+    setLayout(layout);
 }
 
-ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : KVBox(parent) {
-    setSpacing(5);
+ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
+    QBoxLayout* layout = new QVBoxLayout(this);
 
     // WARNING: Note that any change of order in the combo boxes must be
     // reflected in the ReginaPreferences methods as well.
 
     // Set up the default creation coordinate system.
-    KHBox* box = new KHBox(this);
+    KHBox* box = new KHBox();
     box->setSpacing(5);
 
     QLabel* label = new QLabel(i18n("Default coordinate system:"), box);
@@ -812,17 +836,19 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : KVBox(parent) {
         "surface lists.");
     label->setWhatsThis(msg);
     chooserCreationCoords->setWhatsThis(msg);
+    layout->addWidget(box);
 
     cbWarnOnNonEmbedded = new QCheckBox(i18n("Warn before generating "
-        "non-embedded surfaces"), this);
+        "non-embedded surfaces"));
     cbWarnOnNonEmbedded->setWhatsThis(i18n("<qt>When creating a new "
         "normal surface list, should Regina ask for confirmation before "
         "enumerating immersed and/or singular surfaces?  This warning "
         "will be issued whenever the <i>Embedded surfaces only</i> box "
         "is not checked in the dialog for a new normal surface list.</qt>"));
+    layout->addWidget(cbWarnOnNonEmbedded);
 
     // Set up the initial tab.
-    box = new KHBox(this);
+    box = new KHBox();
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default top-level tab:"), box);
@@ -835,9 +861,10 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : KVBox(parent) {
         "when a new normal surface list viewer is opened.");
     label->setWhatsThis(msg);
     comboInitialTab->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // Set up the initial compatibility matrix.
-    box = new KHBox(this);
+    box = new KHBox();
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default compatibility matrix:"), box);
@@ -854,9 +881,10 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : KVBox(parent) {
         "i.e., whether the two surfaces can be made disjoint.</qt>");
     label->setWhatsThis(msg);
     comboInitialCompat->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // Set up the compatibility matrix threshold.
-    box = new KHBox(this);
+    box = new KHBox();
     box->setSpacing(5);
 
     label = new QLabel(i18n("Compatibility matrix threshold:"), box);
@@ -872,20 +900,28 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : KVBox(parent) {
         "in the compatibility viewer.</qt>");
     label->setWhatsThis(msg);
     editCompatThreshold->setWhatsThis(msg);
+    layout->addWidget(box);
 
     // Add some space at the end.
-    setStretchFactor(new QWidget(this), 1);
+    QWidget* stretch = new QWidget(this);
+    layout->addWidget(stretch);
+    layout->setStretchFactor(stretch, 1);
+
+    setLayout(layout);
 }
 
-ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : KVBox(parent) {
+ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QWidget(parent) {
+    QBoxLayout* layout = new QVBoxLayout(this);
+
     // Set up the embedded checkbox.
-    cbEmbed = new QCheckBox(i18n("Use embedded viewer if possible"), this);
+    cbEmbed = new QCheckBox(i18n("Use embedded viewer if possible"));
     cbEmbed->setWhatsThis(i18n("If possible, view PDF packets using "
         "a viewer that can embed directly into Regina's main window, "
         "such as KPDF or KGhostView."));
+    layout->addWidget(cbEmbed);
 
     // Set up the external viewer.
-    KHBox* box = new KHBox(this);
+    KHBox* box = new KHBox();
     box->setSpacing(5);
 
     QLabel* label = new QLabel(i18n("External PDF viewer:"), box);
@@ -904,9 +940,9 @@ ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : KVBox(parent) {
         "used.</qt>");
     label->setWhatsThis(msg);
     editExternalViewer->setWhatsThis(msg);
+    layout->addWidget(box);
 
-    cbAutoClose = new QCheckBox(
-        i18n("Automatically close external viewers"), this);
+    cbAutoClose = new QCheckBox(i18n("Automatically close external viewers"));
     cbAutoClose->setWhatsThis(i18n("When using an external PDF viewer "
         "(such as <tt>kpdf</tt> or <tt>xpdf</tt>), "
         "close it automatically when Regina's packet viewer is closed.  "
@@ -915,19 +951,27 @@ ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : KVBox(parent) {
         "If you do not select this option, Regina will never close any "
         "external PDF viewers on its own; instead this task will be left "
         "up to the user.</qt>"));
+    layout->addWidget(cbAutoClose);
 
     // Add some space at the end.
-    setStretchFactor(new QWidget(this), 1);
+    QWidget* stretch = new QWidget(this);
+    layout->addWidget(stretch);
+    layout->setStretchFactor(stretch, 1);
+
+    setLayout(layout);
 }
 
-ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : KVBox(parent) {
+ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
+    QBoxLayout* layout = new QVBoxLayout(this);
+
     // Set up the active file count.
-    activeCount = new QLabel(this);
+    activeCount = new QLabel();
+    layout->addWidget(activeCount);
 
     // Prepare the main area.
-    KHBox* box = new KHBox(this);
+    KHBox* box = new KHBox();
     box->setSpacing(5);
-    setStretchFactor(box, 1);
+    layout->setStretchFactor(box, 1);
 
     // Set up the list view.
     listFiles = new QTreeWidget(box);
@@ -987,7 +1031,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : KVBox(parent) {
         "available censuses, only the activated census files in this list "
         "are searched."));
 
-    setStretchFactor(new QWidget(vBox), 1);
+    vBox->setStretchFactor(new QWidget(vBox), 1);
 
     QPushButton* btnDefaults = new QPushButton(i18n("Defaults"), vBox);
     // btnDefaults->setFlat(true);
@@ -995,6 +1039,8 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : KVBox(parent) {
     btnDefaults->setToolTip(i18n("Restore default list of census files"));
     btnDefaults->setWhatsThis(i18n("Restore the default list of "
         "census files."));
+
+    layout->addWidget(box);
 
     updateButtons();
 }
@@ -1119,21 +1165,21 @@ void ReginaPrefCensus::restoreDefaults() {
     updateActiveCount();
 }
 
-ReginaPrefPython::ReginaPrefPython(QWidget* parent) : KVBox(parent) {
+ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
+    QBoxLayout* layout = new QVBoxLayout(this);
+
     // Set up the checkboxes.
-    cbAutoIndent = new QCheckBox(i18n("Auto-indent"), this);
+    cbAutoIndent = new QCheckBox(i18n("Auto-indent"));
     cbAutoIndent->setWhatsThis(i18n("Should command lines in a Python "
         "console be automatically indented?"));
+    layout->addWidget(cbAutoIndent);
 
     // cbWordWrap = new QCheckBox(i18n("Word wrap"), this);
     // cbWordWrap->setWhatsThis(i18n("Should Python consoles be word "
     //     "wrapped?"));
 
-    // Add some space.
-    (new QWidget(this))->setMinimumHeight(5);
-
     // Set up the number of spaces per tab.
-    KHBox* box = new KHBox(this);
+    KHBox* box = new KHBox();
     box->setSpacing(5);
 
     QLabel* label = new QLabel(i18n("Spaces per tab:"), box);
@@ -1147,17 +1193,21 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : KVBox(parent) {
         "command line when TAB is pressed.");
     label->setWhatsThis(msg);
     editSpacesPerTab->setWhatsThis(msg);
+    layout->addWidget(box);
 
-    // Add some more space.
-    (new QWidget(this))->setMinimumHeight(5);
+    // Add a small gap.
+    QWidget* space = new QWidget(this);
+    space->setMinimumHeight(5);
+    layout->addWidget(space);
 
     // Set up the active file count.
-    activeCount = new QLabel(this);
+    activeCount = new QLabel();
+    layout->addWidget(activeCount);
 
     // Prepare the main area.
-    box = new KHBox(this);
+    box = new KHBox();
     box->setSpacing(5);
-    setStretchFactor(box, 1);
+    layout->setStretchFactor(box, 1);
 
     // Set up the list view.
     listFiles = new QTreeWidget(box);
@@ -1215,7 +1265,8 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : KVBox(parent) {
         "libraries.  When a new Python session is started, only the active "
         "libraries in this list will be loaded."));
 
-    setStretchFactor(new QWidget(vBox), 1);
+    vBox->setStretchFactor(new QWidget(vBox), 1);
+    layout->addWidget(box);
 
     updateButtons();
 }
@@ -1306,8 +1357,10 @@ void ReginaPrefPython::deactivate() {
     }
 }
 
-ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : KVBox(parent) {
-    cbMessages = new QCheckBox(i18n("Diagnostic messages"), this);
+ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QWidget(parent) {
+    QBoxLayout* layout = new QVBoxLayout(this);
+
+    cbMessages = new QCheckBox(i18n("Diagnostic messages"));
     cbMessages->setWhatsThis(i18n("<qt>Should the SnapPea kernel write "
         "diagnostic messages to the console?<p>"
         "These diagnostic messages are emitted by the SnapPea kernel "
@@ -1319,8 +1372,9 @@ ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : KVBox(parent) {
         "same console from which you started Regina.  "
         "If you start Regina from a menu (such as the KDE menu), you will "
         "not see these messages at all.</qt>"));
+    layout->addWidget(cbMessages);
 
-    cbClosed = new QCheckBox(i18n("Allow closed triangulations"), this);
+    cbClosed = new QCheckBox(i18n("Allow closed triangulations"));
     cbClosed->setWhatsThis(i18n("<qt>Allow the SnapPea kernel to work with "
         "closed triangulations.  By default it is only allowed to work with "
         "ideal triangulations.<p>"
@@ -1329,8 +1383,9 @@ ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : KVBox(parent) {
         "occasionally cause the SnapPea kernel to raise a fatal error "
         "and crash Regina completely.  You might lose unsaved work "
         "as a result.</qt>"));
+    layout->addWidget(cbClosed);
 
-    KHBox* box = new KHBox(this);
+    KHBox* box = new KHBox();
     box->setSpacing(5);
     QLabel* label;
 
@@ -1338,22 +1393,29 @@ ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : KVBox(parent) {
         "<qt><b>Warning:</b></qt>"), box), 0);
     label->setAlignment(Qt::AlignTop);
 
-    box->setStretchFactor(new QLabel(i18n(
+    QLabel* snapPeaWarning = new QLabel(i18n(
         "<qt>SnapPea is primarily designed "
         "to work with ideal triangulations only!  Allowing it to work "
         "with closed triangulations may occasionally cause the "
         "SnapPea kernel to raise a fatal error, and you may lose "
-        "unsaved work as a result.</qt>"), box), 1);
+        "unsaved work as a result.</qt>"), box);
+    snapPeaWarning->setWordWrap(true);
+    box->setStretchFactor(snapPeaWarning, 1);
+    layout->addWidget(box);
 
     // Add some space at the end.
-    setStretchFactor(new QWidget(this), 1);
+    QWidget* stretch = new QWidget(this);
+    layout->addWidget(stretch);
+    layout->setStretchFactor(stretch, 1);
+
+    setLayout(layout);
 }
 
 ReginaEditorChooser::ReginaEditorChooser(QWidget* /* ignored */) :
         KDialog() {
     setCaption(i18n("Choose Text Editor Component"));
     setButtons(KDialog::Ok | KDialog::Cancel);
-    setDefaultButton(KDialog::Cancel);
+    setDefaultButton(KDialog::Ok);
     // TODO: Not sure if the below is needed?
     //QWidget *page = new QWidget(this);
     //setMainWidget(page);
@@ -1363,10 +1425,11 @@ ReginaEditorChooser::ReginaEditorChooser(QWidget* /* ignored */) :
     chooser = new KTextEditor::EditorChooser(this);
     setMainWidget(chooser);
     chooser->readAppSetting();
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 void ReginaEditorChooser::slotOk() {
     chooser->writeAppSetting();
-    QDialog::accept();
 }
 
