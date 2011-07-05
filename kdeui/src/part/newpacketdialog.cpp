@@ -148,8 +148,5 @@ void NewPacketDialog::slotOk() {
     newPacket->setPacketLabel(std::string(useLabel.toLatin1().data()));
     if (! newPacket->getTreeParent())
         parentPacket->insertChildLast(newPacket);
-
-    // And we're done!
-    KDialog::okClicked();
 }
 
