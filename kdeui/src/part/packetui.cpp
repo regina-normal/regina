@@ -204,6 +204,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
 
     // Set up the packet type menu.
     packetTypeMenu = new KActionMenu(this); // TODO: Check correct parent
+    packetTypeMenu->setText(mainUI->getPacketMenuText());
 
     const QLinkedList<KAction*>& packetTypeActions(mainUI->getPacketTypeActions());
     if (! packetTypeActions.isEmpty()) {
