@@ -94,8 +94,17 @@ void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
         treeView->selectedPacket(), parentFilter, dialogTitle, suggestedLabel);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* newPacket = dlg.createdPacket();
-        if (newPacket)
+        if (newPacket) {
+            // The packet tree event listener might not refresh the tree
+            // immediately to recognise the new child.
+            // Force this now.
+            PacketTreeItem* item = treeView->find(newPacket->getTreeParent());
+            if (item)
+                item->refreshSubtree();
+
+            // Open a UI for the new packet.
             packetView(newPacket, true);
+        }
     }
 }
 
