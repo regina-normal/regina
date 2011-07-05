@@ -127,7 +127,6 @@ ReginaPrefSet::ReginaPrefSet() :
         autoDock(true),
         autoFileExtension(true),
         censusFiles(defaultCensusFiles()),
-        displayIcon(true),
         displayTagsInTree(false),
         pdfAutoClose(true),
         pdfEmbed(true),

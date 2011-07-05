@@ -233,8 +233,6 @@ struct ReginaPrefSet {
         /**< Should filenames be given an automatic extension? */
     ReginaFilePrefList censusFiles;
         /**< The list of data files to use for census lookups. */
-    bool displayIcon;
-        /**< Should we display the pretty Regina icon? */
     bool displayTagsInTree;
         /**< Should we display packet tags in the visual tree? */
     bool pdfAutoClose;

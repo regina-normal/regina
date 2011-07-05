@@ -511,7 +511,6 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
     // Read in new preferences.
     KConfigGroup* configGroup = new KConfigGroup(config,"Display");
     globalPrefs.autoDock = configGroup->readEntry("PacketDocking", true);
-    globalPrefs.displayIcon = configGroup->readEntry("DisplayIcon", true);
     globalPrefs.displayTagsInTree = configGroup->readEntry("DisplayTagsInTree",
         false);
 
@@ -652,7 +651,6 @@ void ReginaMain::saveOptions() {
 
     // Save the current set of preferences.
     configGroup->writeEntry("PacketDocking", globalPrefs.autoDock);
-    configGroup->writeEntry("DisplayIcon", globalPrefs.displayIcon);
     configGroup->writeEntry("DisplayTagsInTree", globalPrefs.displayTagsInTree);
     configGroup->sync();
 

@@ -479,11 +479,6 @@ void ReginaPart::updatePreferences(const ReginaPrefSet& newPrefs) {
     prefs = newPrefs;
 
     // Act immediately upon this new set of preferences where required.
-    if (prefs.displayIcon)
-        reginaIcon->show();
-    else
-        reginaIcon->hide();
-
     emit preferencesChanged(prefs);
     consoles.updatePreferences(prefs);
 }
@@ -541,19 +536,8 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
     connect(treeView, SIGNAL(selectionChanged()), this,
         SLOT(updateTreePacketActions()));
 
-    reginaIcon = new QLabel(treeBox);
-    reginaIcon->setPixmap(UserIcon("reginatrans"));
-    QPalette palette;
-    palette.setBrush(reginaIcon->backgroundRole(),QBrush(UserIcon("stars")));
-    reginaIcon->setPalette(palette);
-    reginaIcon->setAlignment(Qt::AlignHCenter);
-    reginaIcon->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    treeLayout->addWidget(reginaIcon);
-    reginaIcon->hide();
-
-    // Make sure the tree area doesn't shrink too far, even when the
-    // icon isn't there to prop it out.
-    treeLayout->addStrut(reginaIcon->pixmap()->width());
+    // Make sure the tree area doesn't shrink too far.
+    treeLayout->addStrut(150);
 
     // Set up the docking area.
     dockArea = new KVBox(splitter);

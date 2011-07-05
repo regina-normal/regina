@@ -186,7 +186,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     // Read the current preferences from the main window.
     generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
     generalPrefs->cbAutoFileExtension->setChecked(prefSet.autoFileExtension);
-    generalPrefs->cbDisplayIcon->setChecked(prefSet.displayIcon);
     generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
@@ -306,7 +305,6 @@ void ReginaPreferences::slotApply() {
 
     prefSet.autoDock = generalPrefs->cbAutoDock->isChecked();
     prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
-    prefSet.displayIcon = generalPrefs->cbDisplayIcon->isChecked();
     prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
     KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
 
@@ -642,10 +640,6 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : KVBox(parent) {
     cbAutoDock = new QCheckBox(i18n("Automatic packet docking"), this);
     cbAutoDock->setWhatsThis(i18n("Try to dock new packet viewers into "
         "the main window instead of opening them in new windows."));
-
-    cbDisplayIcon = new QCheckBox(i18n("Display large icon"), this);
-    cbDisplayIcon->setWhatsThis(i18n("Display the large Regina icon "
-        "beneath the packet tree."));
 
     cbDisplayTagsInTree = new QCheckBox(i18n("Display tags in packet tree"),
         this);

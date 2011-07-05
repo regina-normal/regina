@@ -74,7 +74,6 @@ class ReginaPart : public KParts::ReadWritePart {
          * Components
          */
         PacketTreeView* treeView;
-        QLabel* reginaIcon;
         QWidget* dockArea;
         PythonManager consoles;
 
