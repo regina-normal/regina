@@ -81,8 +81,9 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     QWidget* mainUI = creator->getInterface();
     if (mainUI) {
         mainUI->setParent(page); //TODO: correct replacement of reparent?
-        layout->addWidget(mainUI);
-        layout->setStretchFactor(mainUI, 1);
+        // The outer layout already provides padding.
+        mainUI->layout()->setContentsMargins(0, 0, 0, 0);
+        layout->addWidget(mainUI, 1);
     } else {
         layout->addStretch(1);
     }
