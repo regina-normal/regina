@@ -500,9 +500,8 @@ void ReginaPart::updatePreferences(const ReginaPrefSet& newPrefs) {
 }
 
 void ReginaPart::updateTreePacketActions() {
+    bool enable = ! treeView->selectedItems().isEmpty(); 
 
-    bool enable = (treeView->selectedItems().isEmpty()); 
-    // TODO: Was checking selectedItem() != 0, reason?
     QLinkedList<KAction *>::iterator it;
     for (it = treePacketViewActions.begin(); 
             it != treePacketViewActions.end(); it++)
@@ -549,7 +548,7 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
         "Packets within a data file are arranged in a tree structure, "
         "so that each packet may contain one or more child packets.</qt>"));
     treeLayout->addWidget(treeView, 1);
-    connect(treeView, SIGNAL(selectionChanged()), this,
+    connect(treeView, SIGNAL(itemSelectionChanged()), this,
         SLOT(updateTreePacketActions()));
 
     // Make sure the tree area doesn't shrink too far.
