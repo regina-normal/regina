@@ -231,7 +231,7 @@ void NHomologicalData::computeChainComplexes() {
 
     chainComplexesComputed = true;
 
-    B0.reset(new NMatrixInt(1, numDualCells[0]));
+    B0_.reset(new NMatrixInt(1, numDualCells[0]));
     B1.reset(new NMatrixInt(numDualCells[0], numDualCells[1]));
     B2.reset(new NMatrixInt(numDualCells[1], numDualCells[2]));
     B3.reset(new NMatrixInt(numDualCells[2], numDualCells[3]));
@@ -902,7 +902,7 @@ const NMarkedAbelianGroup& NHomologicalData::boundaryHomology(unsigned q) {
 const NMarkedAbelianGroup& NHomologicalData::dualHomology(unsigned q) {
     computeChainComplexes();
     if (q==0) {
-        if (!dmHomology0.get()) dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
+        if (!dmHomology0.get()) dmHomology0.reset(new NMarkedAbelianGroup(*B0_,*B1));
         return *dmHomology0;
     } else if (q==1) {
         if (!dmHomology1.get()) dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
@@ -985,7 +985,7 @@ const NHomMarkedAbelianGroup& NHomologicalData::dualToMixedHom(unsigned q)
   computeBaryCC();
   computeChainComplexes();
   if (q==0) {
-        if (!dmHomology0.get()) dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
+        if (!dmHomology0.get()) dmHomology0.reset(new NMarkedAbelianGroup(*B0_,*B1));
         if (!mH0.get()) mH0.reset(new NMarkedAbelianGroup(*M0,*M1));
         if (!DMHom0.get()) DMHom0.reset(new NHomMarkedAbelianGroup( *dmHomology0, *mH0, *BM0 ) );
 	return *DMHom0; 

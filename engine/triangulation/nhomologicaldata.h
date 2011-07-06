@@ -239,7 +239,7 @@ private:
     std::auto_ptr<NMatrixInt> A4;
 
     /** 0-th term in chain complex for dual cellular homology */
-    std::auto_ptr<NMatrixInt> B0;
+    std::auto_ptr<NMatrixInt> B0_; // B0 is #defined in some system headers :/
     /** 1st term in chain complex for dual cellular homology */
     std::auto_ptr<NMatrixInt> B1;
     /** 2nd term in chain complex for dual cellular homology */
@@ -802,7 +802,7 @@ inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
 
         chainComplexesComputed(g.chainComplexesComputed),
         A0(clonePtr(g.A0)), A1(clonePtr(g.A1)), A2(clonePtr(g.A2)),
-        A3(clonePtr(g.A3)), A4(clonePtr(g.A4)), B0(clonePtr(g.B0)), 
+        A3(clonePtr(g.A3)), A4(clonePtr(g.A4)), B0_(clonePtr(g.B0_)), 
         B1(clonePtr(g.B1)), B2(clonePtr(g.B2)), B3(clonePtr(g.B3)), B4(clonePtr(g.B4)),
         Bd0(clonePtr(g.Bd0)), Bd1(clonePtr(g.Bd1)), Bd2(clonePtr(g.Bd2)), Bd3(clonePtr(g.Bd3)),
         B0Incl(clonePtr(g.B0Incl)), B1Incl(clonePtr(g.B1Incl)), B2Incl(clonePtr(g.B2Incl)),
