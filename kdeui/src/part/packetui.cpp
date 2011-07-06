@@ -173,11 +173,10 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         "being viewed, as well as its packet type."));
 
     dockUndockBtn = new FlatToolButton(headerBox);
-    // dockUndockBtn->setToggleButton(true); // TODO: Find replacement
-    dockUndockBtn->setIcon(BarIcon("mail-attachment", 0,
-        KIconLoader::DefaultState));
-    dockUndockBtn->setText(i18n("Dock or undock this packet viewer")); // TODO: Check this is correct (label?)
-    if ( ! dockUndockBtn->isChecked() ) dockUndockBtn->toggle(); // TODO: A neater way of doing this?
+    dockUndockBtn->setCheckable(true);
+    dockUndockBtn->setIcon(KIcon("mail-attachment"));
+    dockUndockBtn->setText(i18n("Dock or undock this packet viewer"));
+    dockUndockBtn->setChecked(true);
     dockUndockBtn->setWhatsThis(i18n("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
@@ -194,14 +193,12 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     setFocusProxy(mainUIWidget);
 
     // Set up the footer buttons and other actions.
-    KToolBar* footer = new KToolBar(this, false, false);
-    //footer->setFullSize(true); TODO: find replacement, if there is one?
-    //footer->setIconText(KToolBar::IconTextRight); TODO: find replacement
+    KToolBar* footer = new KToolBar(this, false, true);
+    footer->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     footer->addAction(actCommit);
     footer->addAction(actRefresh);
+    footer->addSeparator();
     footer->addAction(actClose);
-    // footer->insertSeparator(2, RIGHT_ALIGN_SEPARATOR_ID);
-    // footer->alignItemRight(RIGHT_ALIGN_SEPARATOR_ID);
 
     // Set up the packet type menu.
     packetTypeMenu = new KActionMenu(this); // TODO: Check correct parent
