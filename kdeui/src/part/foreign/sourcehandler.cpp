@@ -35,6 +35,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qfile.h>
+#include <qtextcodec.h>
 #include <qtextstream.h>
 
 const SourceHandler SourceHandler::instance;

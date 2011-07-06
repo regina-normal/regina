@@ -73,8 +73,8 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     expln = i18n("The label that will be assigned to the new packet.");
     QLabel* newlabel = new QLabel(i18n("Label:"),labelStrip);
     newlabel->setWhatsThis(expln);
-    label = new QLineEdit(
-        tree->makeUniqueLabel(suggestedLabel.toLatin1().constData()).c_str(), labelStrip);
+    label = new QLineEdit(tree->makeUniqueLabel(
+        suggestedLabel.toAscii().constData()).c_str(), labelStrip);
     label->setWhatsThis(expln);
     labelStrip->setStretchFactor(label, 1);
 
@@ -129,13 +129,12 @@ void NewPacketDialog::slotOk() {
         KMessageBox::error(this, i18n("The packet label cannot be empty."));
         return;
     }
-    if (tree->findPacketLabel(std::string(useLabel.toLatin1().data()))) {
+    if (tree->findPacketLabel(std::string(useLabel.toAscii().constData()))) {
         KMessageBox::error(this, i18n(
             "There is already a packet labelled %1.").arg(useLabel));
         label->setText(QString::fromAscii(
               tree->makeUniqueLabel(
-                  std::string(useLabel.toLatin1().data())
-                  ).c_str()));
+                  std::string(useLabel.toAscii().constData())).c_str()));
         return;
     }
 
@@ -146,7 +145,7 @@ void NewPacketDialog::slotOk() {
         return;
 
     // Fix the new packet.
-    newPacket->setPacketLabel(std::string(useLabel.toLatin1().data()));
+    newPacket->setPacketLabel(std::string(useLabel.toAscii().constData()));
     if (! newPacket->getTreeParent())
         parentPacket->insertChildLast(newPacket);
 }

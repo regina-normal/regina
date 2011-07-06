@@ -389,7 +389,7 @@ void NTriGluingsUI::commit() {
         for (tetNum = 0; tetNum < nRows; tetNum++)
             tets[tetNum] = new regina::NTetrahedron(
                 dynamic_cast<TetNameItem*>(faceTable->item(tetNum, 0))->
-                getName().toLatin1().data());
+                getName().toAscii().constData());
 
         // Glue the tetrahedra together.
         for (tetNum = 0; tetNum < nRows; tetNum++)
@@ -928,7 +928,7 @@ void NTriGluingsUI::censusLookup() {
         
         //if (! faceTable->isReadOnly()) {
             regina::NText* text = 
-              new regina::NText(detailsText.toLatin1().data());
+              new regina::NText(detailsText.toAscii().constData());
             text->setPacketLabel(tri->makeUniqueLabel(
                 "ID: " + tri->getPacketLabel()));
             tri->insertChildLast(text);

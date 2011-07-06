@@ -68,7 +68,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
         in.setCodec(QTextCodec::codecForName("UTF-8"));
 
     regina::NScript* ans = new regina::NScript();
-    ans->setPacketLabel(i18n("Imported Script").toLatin1().data());
+    ans->setPacketLabel(i18n("Imported Script").toAscii().constData());
 
     // Read in the script.
     bool readingMetadata = true;
@@ -87,19 +87,19 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
                 metadata = metadata.mid(scriptMarker.length()).
                     trimmed();
                 if (! metadata.isEmpty())
-                    ans->setPacketLabel(metadata.toLatin1().data());
+                    ans->setPacketLabel(metadata.toAscii().constData());
             } else if (metadata.startsWith(varMarker)) {
                 // A script variable.
                 metadata = metadata.mid(varMarker.length()).trimmed();
                 pos = metadata.indexOf(':');
                 if (pos >= 0) {
                     ans->addVariable(
-                        metadata.left(pos).trimmed().toLatin1().data(),
-                        metadata.mid(pos + 1).trimmed().toLatin1().data());
+                        metadata.left(pos).trimmed().toAscii().constData(),
+                        metadata.mid(pos + 1).trimmed().toAscii().constData());
                 } else {
                     // Hmm, it wasn't a script variable after all.
                     readingMetadata = false;
-                    ans->addLast(line.toLatin1().data());
+                    ans->addLast(line.toAscii().constData());
                 }
             } else if (metadata == endMetadataMarker) {
                 // It's the end of the metadata.
@@ -107,12 +107,12 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
             } else {
                 // It's not metadata at all.
                 readingMetadata = false;
-                ans->addLast(line.toLatin1().data());
+                ans->addLast(line.toAscii().constData());
             }
         } else {
             // We're out of the metadata.
             readingMetadata = false;
-            ans->addLast(line.toLatin1().data());
+            ans->addLast(line.toAscii().constData());
         }
 
         line = in.readLine();

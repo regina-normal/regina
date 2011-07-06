@@ -301,7 +301,8 @@ regina::NPerm4 FaceGluingItem::faceStringToPerm(int srcFace,
 
     destVertex[3] = 6; // This will be adjusted in a moment.
     for (int i = 0; i < 3; i++) {
-        // Use latin1() here because we are converting characters, not strings.
+        // Use toLatin1() here because we are converting characters,
+        // not strings.
         destVertex[i] = str[i].toLatin1() - '0';
         destVertex[3] -= destVertex[i];
     }

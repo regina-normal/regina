@@ -275,7 +275,7 @@ void NScriptUI::commit() {
     unsigned nLines = document->lines();
     for (unsigned i = 0; i < nLines; i++) {
         QString s = document->line(i);
-        script->addLast(s.isNull() ? "" : s.toLatin1().data());
+        script->addLast(s.isNull() ? "" : s.toAscii().constData());
     }
 
     // Update the variables.
@@ -285,7 +285,8 @@ void NScriptUI::commit() {
     for (unsigned i = 0; i < nVars; i++) {
         value = dynamic_cast<ScriptVarValueItem*>(varTable->item(i, 1))->
             getPacket();
-        script->addVariable(varTable->itemAt(i, 0)->text().toLatin1().data(),
+        script->addVariable(
+            varTable->itemAt(i, 0)->text().toAscii().constData(),
             value ? value->getPacketLabel() : std::string());
     }
 

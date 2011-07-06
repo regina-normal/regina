@@ -38,6 +38,7 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <qfileinfo.h>
+#include <qtextcodec.h>
 #include <qtextstream.h>
 
 namespace {

@@ -225,7 +225,7 @@ void NSurfaceFilterPropUI::commit() {
             QStringList list = ecText.split(reECSeps);
             for (QStringList::Iterator it = list.begin(); it != list.end();
                     it++)
-                filter->addEC((*it).toLatin1().data());
+                filter->addEC((*it).toAscii().constData());
 
             // Refill the text box so that it looks nice.
             refreshECList();

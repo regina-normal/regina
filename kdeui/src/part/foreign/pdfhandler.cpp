@@ -45,7 +45,7 @@ regina::NPacket* PDFHandler::importData(const QString& fileName,
     if (! ans)
         KMessageBox::error(parentWidget, i18n(
             "The PDF document %1 could not be read.").arg(fileName));
-    ans->setPacketLabel(i18n("PDF document").toLatin1().data());
+    ans->setPacketLabel(i18n("PDF document").toAscii().constData());
     return ans;
 }
 

@@ -159,8 +159,8 @@ void GAPRunner::slotCancel() {
 }
 
 void GAPRunner::sendInput(const QString& input) {
-    std::cout << GAP_PROMPT << input.toLatin1().data() << std::endl;
-    proc->write(input.toLatin1().data());
+    std::cout << GAP_PROMPT << input.toAscii().constData() << std::endl;
+    proc->write(input.toAscii().constData());
 }
 
 bool GAPRunner::appearsValid(const QString& output) {
@@ -195,7 +195,7 @@ bool GAPRunner::appearsValid(const QString& output) {
 void GAPRunner::processOutput(const QString& output) {
     // Note that validity testing has already been done by this stage.
     QString use = output.trimmed();
-    std::cout << use.toLatin1().data() << std::endl;
+    std::cout << use.toAscii().constData() << std::endl;
 
     unsigned long count;
     bool ok;
@@ -475,7 +475,7 @@ void GAPRunner::readReady() {
             // Make sure it looks valid, just in case what we're running
             // isn't GAP at all.
             if (! appearsValid(currOutput)) {
-                std::cout << currOutput.toLatin1().data() << std::endl;
+                std::cout << currOutput.toAscii().constData() << std::endl;
                 error(i18n("GAP produced the following unexpected "
                     "output:<p><tt>%1</tt>").arg(escape(currOutput)));
             }

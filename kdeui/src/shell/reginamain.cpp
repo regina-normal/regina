@@ -528,7 +528,7 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
                 it != censusStrings.end(); it++) {
             if ((*it).isEmpty())
                 continue;
-            switch ((*it)[0].toLatin1()) {
+            switch ((*it)[0].toAscii()) {
                 case '+':
                     // Active file.
                     globalPrefs.censusFiles.push_back(ReginaFilePref(

@@ -585,7 +585,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
 
         NTriangulation* ans = NTriangulation::fromIsoSig(
-            reIsoSig.cap(1).toLatin1().data());
+            reIsoSig.cap(1).toAscii().constData());
         if (ans)
             return ans;
         KMessageBox::error(parentWidget, i18n("<qt>The given "
@@ -604,7 +604,8 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
 
         NTriangulation* ans = new NTriangulation();
-        if (! ans->insertRehydration(reDehydration.cap(1).toLatin1().data())) {
+        if (! ans->insertRehydration(
+                reDehydration.cap(1).toAscii().constData())) {
             delete ans;
             KMessageBox::error(parentWidget, i18n("<qt>The given "
                 "dehydration string was not valid.<p>"
@@ -630,7 +631,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
 
         regina::NSignature* sig = regina::NSignature::parse(
-            reSignature.cap(1).toLatin1().data());
+            reSignature.cap(1).toAscii().constData());
         if (! sig) {
             KMessageBox::error(parentWidget, i18n("<qt>The given "
                 "splitting surface signature was not valid.<p>"

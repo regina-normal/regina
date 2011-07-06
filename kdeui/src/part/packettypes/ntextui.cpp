@@ -91,7 +91,7 @@ QString NTextUI::getPacketMenuText() const {
 }
 
 void NTextUI::commit() {
-    text->setText(document->text().toLatin1().data());
+    text->setText(document->text().toAscii().constData());
     setDirty(false);
 }
 

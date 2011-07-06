@@ -116,7 +116,7 @@ void ImportDialog::slotOk() {
 
     // Check the label.
     QString useLabel = label->text().trimmed();
-    const char* useLabelStr = useLabel.toLatin1().constData();
+    const char* useLabelStr = useLabel.toAscii().constData();
     if (useLabel.isEmpty()) {
         KMessageBox::error(this, i18n("The packet label cannot be empty."));
         return;

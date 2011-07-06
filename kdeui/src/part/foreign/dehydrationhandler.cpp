@@ -78,7 +78,8 @@ regina::NPacket* DehydrationHandler::importData(const QString& fileName,
     }
 
     // All worked out okay.
-    ans->setPacketLabel(i18n("Rehydrated Triangulations").toLatin1().data());
+    ans->setPacketLabel(i18n("Rehydrated Triangulations").
+        toAscii().constData());
     return ans;
 }
 

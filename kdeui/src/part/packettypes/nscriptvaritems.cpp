@@ -127,7 +127,7 @@ ScriptVarValueItem::ScriptVarValueItem(NPacket* treeMatriarch,
 ScriptVarValueItem::ScriptVarValueItem(NPacket* treeMatriarch,
         const QString& packetLabel) : QTableWidgetItem(),
         matriarch(treeMatriarch) {
-    packet = treeMatriarch->findPacketLabel(packetLabel.toLatin1().data());
+    packet = treeMatriarch->findPacketLabel(packetLabel.toAscii().constData());
     if (packet)
         packet->listen(this);
 

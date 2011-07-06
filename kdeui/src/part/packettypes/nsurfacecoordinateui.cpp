@@ -187,7 +187,7 @@ QWidget* NSurfaceCoordinateUI::getInterface() {
 void NSurfaceCoordinateUI::commit() {
     for (unsigned long i = 0; i < surfaces->getNumberOfSurfaces(); i++)
         const_cast<regina::NNormalSurface*>(surfaces->getSurface(i))->
-            setName(newName[i].toLatin1().data());
+            setName(newName[i].toAscii().constData());
 
     setDirty(false);
 }
@@ -327,7 +327,7 @@ void NSurfaceCoordinateUI::cutAlong() {
     ans->intelligentSimplify();
     ans->setPacketLabel(surfaces->makeUniqueLabel(i18n("Cut-open %1").arg(
         surfaces->getTriangulation()->getPacketLabel().c_str())
-          .toLatin1().data()));
+          .toAscii().constData()));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getPart()->packetView(ans, true);
@@ -354,7 +354,7 @@ void NSurfaceCoordinateUI::crush() {
     regina::NTriangulation* ans = toCrush->crush();
     ans->setPacketLabel(surfaces->makeUniqueLabel(i18n("Crushed %1").arg(
         surfaces->getTriangulation()->getPacketLabel().c_str())
-          .toLatin1().data()));
+          .toAscii().constData()));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getPart()->packetView(ans, true);

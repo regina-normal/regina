@@ -328,13 +328,14 @@ void ReginaPart::packetRename() {
             return;
 
         // Has this label already been used?
-        if (packetTree->findPacketLabel(newLabel.toLatin1().data())) {
+        if (packetTree->findPacketLabel(newLabel.toAscii().constData())) {
             KMessageBox::error(widget(), i18n(
                 "Another packet is already using this label."));
-            suggest = packetTree->makeUniqueLabel(newLabel.toLatin1().data()).c_str();
+            suggest = packetTree->makeUniqueLabel(
+                newLabel.toAscii().constData()).c_str();
         } else {
             // It's a unique label; we can rename it!
-            packet->setPacketLabel(newLabel.toLatin1().data());
+            packet->setPacketLabel(newLabel.toAscii().constData());
             return;
         }
     }
@@ -573,7 +574,7 @@ void ReginaPart::initPacketTree() {
     if (packetTree)
         delete packetTree;
     packetTree = new regina::NContainer();
-    packetTree->setPacketLabel(i18n("Container").toLatin1().data());
+    packetTree->setPacketLabel(i18n("Container").toAscii().constData());
 
     // Update the visual representation.
     treeView->fill(packetTree);
