@@ -32,6 +32,7 @@
 // UI includes:
 #include "snappeacomponents.h"
 
+#include <climits>
 #include <klocale.h>
 
 NoSnapPea::NoSnapPea(regina::NTriangulation* useTri, bool allowClosed,
