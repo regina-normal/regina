@@ -90,14 +90,5 @@
   <Action name="tree_text"/>
   <Action name="tree_script"/>
   <Action name="tree_pdf"/>
-  <Separator/>
-  <Action name="nav_shallow"/>
-  <Action name="nav_deep"/>
-  <Action name="nav_up"/>
-  <Action name="nav_pageup"/>
-  <Action name="nav_top"/>
-  <Action name="nav_down"/>
-  <Action name="nav_pagedown"/>
-  <Action name="nav_bottom"/>
 </ToolBar>
 </kpartgui>
