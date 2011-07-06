@@ -77,10 +77,9 @@
 <ToolBar name="packetTree" iconText="IconOnly" noMerge="1">
   <text>Packet Tree Toolbar</text>
   <Action name="tree_view"/>
+  <Action name="tree_refresh"/>
   <Action name="tree_rename"/>
   <Action name="tree_delete"/>
-  <Separator/>
-  <Action name="tree_refresh"/>
   <Separator/>
   <Action name="tree_container"/>
   <Action name="tree_triangulation"/>
