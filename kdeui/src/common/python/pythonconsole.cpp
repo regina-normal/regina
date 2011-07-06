@@ -210,25 +210,26 @@ PythonConsole::~PythonConsole() {
 }
 
 void PythonConsole::addInput(const QString& input) {
-    session->append("<b>" + encode(input) + "</b>");
     session->moveCursor(QTextCursor::End);
+    session->insertHtml("<b>" + encode(input) + "</b><br>");
     KApplication::kApplication()->processEvents();
 }
 
 void PythonConsole::addOutput(const QString& output) {
     // Since empty output has no tags we need to be explicitly sure that
     // blank lines are still written.
-    if (output.isEmpty())
-        session->append("<br>");
-    else
-        session->append(encode(output));
     session->moveCursor(QTextCursor::End);
+    if (output.isEmpty())
+        session->insertHtml("<br>");
+    else
+        session->insertHtml(encode(output) + "<br>");
     KApplication::kApplication()->processEvents();
 }
 
 void PythonConsole::addError(const QString& output) {
-    session->append("<font color=\"dark red\">" + encode(output) + "</font>");
     session->moveCursor(QTextCursor::End);
+    session->insertHtml("<font color=\"dark red\">" + encode(output) +
+        "</font><br>");
     KApplication::kApplication()->processEvents();
 }
 
@@ -410,7 +411,8 @@ QString PythonConsole::encode(const QString& plaintext) {
     QString ans(plaintext);
     return ans.replace('&', "&amp;").
         replace('>', "&gt;").
-        replace('<', "&lt;");
+        replace('<', "&lt;").
+        replace(' ', "&nbsp;");
 }
 
 QString PythonConsole::initialIndent(const QString& line) {
@@ -438,7 +440,7 @@ void PythonConsole::processCommand() {
 
     // Do the actual processing (which could take some time).
     KApplication::kApplication()->processEvents();
-    bool done = interpreter->executeLine(cmd.toAscii().data());
+    bool done = interpreter->executeLine(cmd.toAscii().constData());
 
     // Finish the output.
     output->flush();
