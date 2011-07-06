@@ -171,7 +171,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("nav_pageup");
     act->setText(i18n("Jump U&p"));
     act->setIcon(KIcon("arrow-up-double"));
-    act->setShortcut(tr("Ctrl+PageUp"));
+    act->setShortcut(tr("Ctrl+Shift+Up"));
     act->setToolTip(i18n("Jump packet up through its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
         "several steps up in the packet tree.  The packet will keep the "
@@ -182,7 +182,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("nav_pagedown");
     act->setText(i18n("Jump Do&wn"));
     act->setIcon(KIcon("arrow-down-double"));
-    act->setShortcut(tr("Ctrl+PageDown"));
+    act->setShortcut(tr("Ctrl+Shift+Down"));
     act->setToolTip(i18n("Jump packet down through its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
         "several steps down in the packet tree.  The packet will keep the "
