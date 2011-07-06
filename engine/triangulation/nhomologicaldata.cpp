@@ -222,7 +222,7 @@ void NHomologicalData::computeChainComplexes() {
     chainComplexesComputed = true;
 
     // need to convert this so that it does not use tri
-    B0.reset(new NMatrixInt(1, numDualCells[0]));
+    B0_.reset(new NMatrixInt(1, numDualCells[0]));
     B1.reset(new NMatrixInt(numDualCells[0], numDualCells[1]));
     B2.reset(new NMatrixInt(numDualCells[1], numDualCells[2]));
     B3.reset(new NMatrixInt(numDualCells[2], numDualCells[3]));
@@ -965,7 +965,7 @@ const NMarkedAbelianGroup& NHomologicalData::getDualHomology(unsigned q) {
     if (q==0) {
         if (!dmHomology0.get()) {
             computeChainComplexes();
-            dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
+            dmHomology0.reset(new NMarkedAbelianGroup(*B0_,*B1));
         }
         return *dmHomology0;
     } else if (q==1) {
@@ -1016,7 +1016,7 @@ void NHomologicalData::computeBHomology() {
 void NHomologicalData::computeDHomology() {
     computeChainComplexes();
     if (!dmHomology0.get())
-        dmHomology0.reset(new NMarkedAbelianGroup(*B0,*B1));
+        dmHomology0.reset(new NMarkedAbelianGroup(*B0_,*B1));
     if (!dmHomology1.get())
         dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
     if (!dmHomology2.get())
