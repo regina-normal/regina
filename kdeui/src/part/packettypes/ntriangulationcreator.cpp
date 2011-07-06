@@ -145,7 +145,7 @@ NTriangulationCreator::NTriangulationCreator() {
     expln = i18n("<qt>The (p,q) parameters of the new "
         "lens space.  These integers must be relatively prime.  Example "
         "parameters are <i>8,3</i>.</qt>");
-    label = new QLabel(i18n("Parameters (p,q):"));
+    label = new QLabel(i18n("<qt>Parameters (<i>p</i>,<i>q</i>):</qt>"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     lensParams = new KLineEdit();
@@ -177,7 +177,9 @@ NTriangulationCreator::NTriangulationCreator() {
         "acceptable.<p>"
         "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
         "representing the Poincar&eacute; homology sphere.</qt>");
-    label = new QLabel(i18n("Parameters (a1,b1) ... (an,bn):"));
+    label = new QLabel(i18n("<qt>Parameters "
+        "(<i>a</i><sub>1</sub>,<i>b</i><sub>1</sub>) "
+        "... (<i>a<sub>n</sub></i>,<i>b<sub>n</sub></i>):</qt>"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     sfsParams = new KLineEdit();
@@ -195,7 +197,8 @@ NTriangulationCreator::NTriangulationCreator() {
         "layered solid torus.  These must be relatively prime non-negative "
         "integers, and two of them must add to give the third.  Example "
         "parameters are <i>3,4,7</i>.</qt>");
-    label = new QLabel(i18n("Parameters (a,b,c):"));
+    label = new QLabel(i18n("<qt>Parameters "
+        "(<i>a</i>,<i>b</i>,<i>c</i>):</qt>"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     lstParams = new KLineEdit();
@@ -240,7 +243,10 @@ NTriangulationCreator::NTriangulationCreator() {
         "in each pair must be relatively prime, and both "
         "positive and negative integers are allowed.<p>"
         "Example parameters are <i>(2,1) (3,-2) (5,-4)</i>.</qt>");
-    label = new QLabel(i18n("Parameters (a1,b1) (a2,b2) (a3,b3):"));
+    label = new QLabel(i18n("<qt>Parameters "
+        "(<i>a</i><sub>1</sub>,<i>b</i><sub>1</sub>) "
+        "(<i>a</i><sub>2</sub>,<i>b</i><sub>2</sub>) "
+        "(<i>a</i><sub>3</sub>,<i>b</i><sub>3</sub>):</qt>"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     augParams = new KLineEdit();
