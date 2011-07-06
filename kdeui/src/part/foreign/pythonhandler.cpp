@@ -65,7 +65,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
     if (encoding)
         in.setCodec(encoding);
     else
-        in.setAutoDetectUnicode(true);
+        in.setCodec(QTextCodec::codecForName("UTF-8"));
 
     regina::NScript* ans = new regina::NScript();
     ans->setPacketLabel(i18n("Imported Script").toLatin1().data());
@@ -145,7 +145,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     if (encoding)
         out.setCodec(encoding);
     else
-        out.setAutoDetectUnicode(true);
+        out.setCodec(QTextCodec::codecForName("UTF-8"));
 
     // Write the name of the script.
     out << "### " << scriptMarker << ' ';

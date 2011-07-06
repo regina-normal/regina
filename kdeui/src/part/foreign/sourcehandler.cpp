@@ -64,7 +64,7 @@ bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
     if (encoding)
         out.setCodec(encoding);
     else
-        out.setAutoDetectUnicode(true);
+        out.setCodec(QTextCodec::codecForName("UTF-8"));
 
     out << tri->dumpConstruction().c_str();
     return true;

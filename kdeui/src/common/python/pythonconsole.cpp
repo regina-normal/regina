@@ -378,7 +378,7 @@ void PythonConsole::saveLog() {
                     result.encoding.toAscii()))
                 out.setCodec(encoding);
             else
-                out.setCodec("UTF-8");
+                out.setCodec(QTextCodec::codecForName("UTF-8"));
 
             out << session->toPlainText();
             endl(out);
