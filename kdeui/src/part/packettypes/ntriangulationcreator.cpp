@@ -142,14 +142,16 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea = new QWidget();
     QHBoxLayout* hLayout = new QHBoxLayout();
     hArea->setLayout(hLayout);
-    hLayout->setSpacing(5);
     expln = i18n("<qt>The (p,q) parameters of the new "
         "lens space.  These integers must be relatively prime.  Example "
         "parameters are <i>8,3</i>.</qt>");
-    (new QLabel(i18n("Parameters (p,q):"), hArea))->setWhatsThis(expln);
-    lensParams = new KLineEdit(hArea);
+    label = new QLabel(i18n("Parameters (p,q):"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    lensParams = new KLineEdit();
     lensParams->setValidator(new QRegExpValidator(reLensParams, hArea));
     lensParams->setWhatsThis(expln);
+    hLayout->addWidget(lensParams);
     hLayout->setStretchFactor(lensParams, 1);
     details->addWidget(hArea);//, TRI_LAYERED_LENS_SPACE);
 
@@ -157,7 +159,6 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hArea->setLayout(hLayout);
-    hLayout->setSpacing(5);
     expln = i18n("<qt>The parameters "
         "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
         "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) ... "
@@ -176,11 +177,13 @@ NTriangulationCreator::NTriangulationCreator() {
         "acceptable.<p>"
         "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
         "representing the Poincar&eacute; homology sphere.</qt>");
-    (new QLabel(i18n("Parameters (a1,b1) ... (an,bn):"),
-        hArea))->setWhatsThis(expln);
-    sfsParams = new KLineEdit(hArea);
+    label = new QLabel(i18n("Parameters (a1,b1) ... (an,bn):"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    sfsParams = new KLineEdit();
     sfsParams->setValidator(new QRegExpValidator(reSFSAllParams, hArea));
     sfsParams->setWhatsThis(expln);
+    hLayout->addWidget(sfsParams);
     hLayout->setStretchFactor(sfsParams, 1);
     details->addWidget(hArea);//, TRI_SFS_SPHERE);
 
@@ -188,15 +191,17 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hArea->setLayout(hLayout);
-    hLayout->setSpacing(5);
     expln = i18n("<qt>The three parameters of the new "
         "layered solid torus.  These must be relatively prime non-negative "
         "integers, and two of them must add to give the third.  Example "
         "parameters are <i>3,4,7</i>.</qt>");
-    (new QLabel(i18n("Parameters (a,b,c):"), hArea))->setWhatsThis(expln);
-    lstParams = new KLineEdit(hArea);
+    label = new QLabel(i18n("Parameters (a,b,c):"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    lstParams = new KLineEdit();
     lstParams->setValidator(new QRegExpValidator(reLSTParams, hArea));
     lstParams->setWhatsThis(expln);
+    hLayout->addWidget(lstParams);
     hLayout->setStretchFactor(lstParams, 1);
     details->addWidget(hArea);//, TRI_LAYERED_SOLID_TORUS);
 
@@ -204,19 +209,22 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hArea->setLayout(hLayout);
-    hLayout->setSpacing(5);
     expln = i18n("The number of tetrahedra in the new layered loop.");
-    (new QLabel(i18n("Length:"), hArea))->setWhatsThis(expln);
-    loopLen = new KLineEdit(hArea);
+    label = new QLabel(i18n("Length:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    loopLen = new KLineEdit();
     QIntValidator* val = new QIntValidator(hArea);
     val->setBottom(1);
     loopLen->setValidator(val);
     loopLen->setWhatsThis(expln);
+    hLayout->addWidget(loopLen);
     hLayout->setStretchFactor(loopLen, 1);
-    loopTwisted = new QCheckBox(i18n("Twisted"), hArea);
+    loopTwisted = new QCheckBox(i18n("Twisted"));
     loopTwisted->setChecked(true);
     loopTwisted->setWhatsThis(i18n("Specifies whether or not the "
         "new layered loop is twisted."));
+    hLayout->addWidget(loopTwisted);
     details->addWidget(hArea);//, TRI_LAYERED_LOOP);
 
     type->insertItem(TRI_AUG_TRI_SOLID_TORUS,
@@ -224,7 +232,6 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hArea->setLayout(hLayout);
-    hLayout->setSpacing(5);
     expln = i18n("<qt>The six parameters "
         "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
         "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
@@ -233,11 +240,13 @@ NTriangulationCreator::NTriangulationCreator() {
         "in each pair must be relatively prime, and both "
         "positive and negative integers are allowed.<p>"
         "Example parameters are <i>(2,1) (3,-2) (5,-4)</i>.</qt>");
-    (new QLabel(i18n("Parameters (a1,b1) (a2,b2) (a3,b3):"),
-        hArea))->setWhatsThis(expln);
-    augParams = new KLineEdit(hArea);
+    label = new QLabel(i18n("Parameters (a1,b1) (a2,b2) (a3,b3):"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    augParams = new KLineEdit();
     augParams->setValidator(new QRegExpValidator(reSFS3Params, hArea));
     augParams->setWhatsThis(expln);
+    hLayout->addWidget(augParams);
     hLayout->setStretchFactor(augParams, 1);
     details->addWidget(hArea);//, TRI_AUG_TRI_SOLID_TORUS);
 
@@ -245,14 +254,16 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hArea->setLayout(hLayout);
-    hLayout->setSpacing(5);
     expln = i18n("<qt>The isomorphism signature "
         "from which the new triangulation will be created.  An example "
         "isomorphism signature is <i>bkaagj</i>.</qt>");
-    (new QLabel(i18n("Isomorphism signature:"), hArea))->setWhatsThis(expln);
-    isoSig = new KLineEdit(hArea);
+    label = new QLabel(i18n("Isomorphism signature:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    isoSig = new KLineEdit();
     isoSig->setValidator(new QRegExpValidator(reIsoSig, hArea));
     isoSig->setWhatsThis(expln);
+    hLayout->addWidget(isoSig);
     hLayout->setStretchFactor(isoSig, 1);
     details->addWidget(hArea);//, TRI_ISOSIG);
 
@@ -260,7 +271,6 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hArea->setLayout(hLayout);
-    hLayout->setSpacing(5);
     expln = i18n("<qt>The dehydration string "
         "from which the new triangulation will be created.  An example "
         "dehydration string is <i>baaaade</i>.<p>"
@@ -268,10 +278,13 @@ NTriangulationCreator::NTriangulationCreator() {
         "<i>A census of cusped hyperbolic 3-manifolds</i>, "
         "Callahan, Hildebrand and Weeks, published in "
         "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>");
-    (new QLabel(i18n("Dehydration string:"), hArea))->setWhatsThis(expln);
+    label = new QLabel(i18n("Dehydration string:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
     dehydrationString = new KLineEdit(hArea);
     dehydrationString->setValidator(new QRegExpValidator(reDehydration, hArea));
     dehydrationString->setWhatsThis(expln);
+    hLayout->addWidget(dehydrationString);
     hLayout->setStretchFactor(dehydrationString, 1);
     details->addWidget(hArea);//, TRI_DEHYDRATION);
 
@@ -279,17 +292,19 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hArea->setLayout(hLayout);
-    hLayout->setSpacing(5);
     expln = i18n("<qt>The signature of the "
         "splitting surface from which the new triangulation will be "
         "created.  An example signature is <i>(abb)(ac)(c)</i>.<p>"
         "Splitting surface signatures are described in detail in "
         "<i>Minimal triangulations and normal surfaces</i>, "
         "Burton, PhD thesis, available from the Regina website.</qt>");
-    (new QLabel(i18n("Signature:"), hArea))->setWhatsThis(expln);
+    label = new QLabel(i18n("Signature:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
     splittingSignature = new KLineEdit(hArea);
     splittingSignature->setValidator(new QRegExpValidator(reSignature, hArea));
     splittingSignature->setWhatsThis(expln);
+    hLayout->addWidget(splittingSignature);
     hLayout->setStretchFactor(splittingSignature, 1);
     details->addWidget(hArea);//, TRI_SPLITTING_SURFACE);
 
@@ -302,31 +317,34 @@ NTriangulationCreator::NTriangulationCreator() {
         "create.<p>"
         "A selection of ready-made 3-manifold triangulations is offered "
         "here to help you experiment and see how Regina works.</qt>");
-    (new QLabel(i18n("Example:"), hArea))->setWhatsThis(expln);
+    label = new QLabel(i18n("Example:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
     exampleWhich = new QComboBox(hArea);
-    exampleWhich->insertItem(0,i18n("3-sphere (1 tetrahedron)"));
-    exampleWhich->insertItem(1,i18n("3-sphere (dual to Bing's house)"));
-    exampleWhich->insertItem(2,i18n("Connected sum RP3 # RP3"));
-    exampleWhich->insertItem(3,i18n("Figure eight knot complement"));
-    exampleWhich->insertItem(4,i18n("Gieseking manifold"));
-    exampleWhich->insertItem(5,i18n("Lens space L(8,3)"));
-    exampleWhich->insertItem(6,i18n("Poincaré homology sphere"));
-    exampleWhich->insertItem(7,i18n("Product RP2 x S1"));
-    exampleWhich->insertItem(8,i18n("Product S2 x S1"));
-    exampleWhich->insertItem(9,i18n("Solid Klein bottle"));
-    exampleWhich->insertItem(10,i18n("Weber-Seifert dodecahedral space"));
-    exampleWhich->insertItem(11,i18n("Whitehead link complement"));
+    exampleWhich->insertItem(0, i18n("3-sphere (1 tetrahedron)"));
+    exampleWhich->insertItem(1, i18n("3-sphere (dual to Bing's house)"));
+    exampleWhich->insertItem(2, i18n("Connected sum RP3 # RP3"));
+    exampleWhich->insertItem(3, i18n("Figure eight knot complement"));
+    exampleWhich->insertItem(4, i18n("Gieseking manifold"));
+    exampleWhich->insertItem(5, i18n("Lens space L(8,3)"));
+    exampleWhich->insertItem(6, i18n("Poincaré homology sphere"));
+    exampleWhich->insertItem(7, i18n("Product RP2 x S1"));
+    exampleWhich->insertItem(8, i18n("Product S2 x S1"));
+    exampleWhich->insertItem(9, i18n("Solid Klein bottle"));
+    exampleWhich->insertItem(10, i18n("Weber-Seifert dodecahedral space"));
+    exampleWhich->insertItem(11, i18n("Whitehead link complement"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
+    hLayout->addWidget(exampleWhich);
     hLayout->setStretchFactor(exampleWhich,1);
     details->addWidget(hArea);//, TRI_EXAMPLE);
 
     // Tidy up.
     type->setCurrentIndex(0);
-    details->setCurrentWidget((int)0);
+    details->setCurrentIndex((int)0);
 
     QObject::connect(type, SIGNAL(activated(int)), details,
-        SLOT(setCurrentWidget(int)));
+        SLOT(setCurrentIndex(int)));
 }
 
 QWidget* NTriangulationCreator::getInterface() {
