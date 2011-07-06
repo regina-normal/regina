@@ -157,7 +157,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actSimplify = triActions->addAction("tri_simplify");
     actSimplify->setText(i18n("&Simplify"));
     actSimplify->setIcon(KIcon("tools-wizard"));
-
     actSimplify->setToolTip(i18n(
         "Simplify the triangulation as far as possible"));
     actSimplify->setEnabled(readWrite);

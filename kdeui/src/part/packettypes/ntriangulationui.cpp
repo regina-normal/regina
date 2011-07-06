@@ -117,15 +117,16 @@ NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
     QBoxLayout* uiLayout = new QVBoxLayout();
     ui->setLayout(uiLayout);
 
-    bar = new KToolBar(ui, false, false);
-    //bar->setFullSize(true); TODO
+    bar = new KToolBar(ui, false, true);
     bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    uiLayout->addWidget(bar);
 
-    header = new QLabel(ui);
+    header = new QLabel();
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
     header->setWhatsThis(i18n("Displays a few basic properties of the "
         "triangulation, such as boundary and orientability."));
+    uiLayout->addWidget(header);
 }
 
 regina::NPacket* NTriHeaderUI::getPacket() {
