@@ -303,7 +303,7 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
     QBoxLayout* btnArea = new QHBoxLayout();
     layout->addLayout(btnArea);
     btnArea->addStretch(1);
-    btnGAP = new QPushButton(KIcon("wizard"),
+    btnGAP = new QPushButton(KIcon("tools-wizard"),
         i18n("Simplify using GAP"), ui);
     btnGAP->setToolTip(i18n("Simplify the group presentation using "
         "GAP (Groups, Algorithms and Programming)"));
