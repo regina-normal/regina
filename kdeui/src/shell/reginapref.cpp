@@ -121,9 +121,9 @@ namespace {
 
             const QPixmap* pixmap(int) const {
                 // if (! activePixmap)
-                //     activePixmap = new QPixmap(SmallIcon("ok"));
+                //     activePixmap = new QPixmap(SmallIcon("dialog-ok"));
                 if (! inactivePixmap)
-                    inactivePixmap = new QPixmap(SmallIcon("no"));
+                    inactivePixmap = new QPixmap(SmallIcon("dialog-cancel"));
                 return (data.active ? activePixmap : inactivePixmap);
             }
     };
@@ -999,7 +999,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
         "This list contains the census files that are searched when asked "
         "to locate an arbitrary triangulation in all available censuses."));
 
-    btnActivate = new QPushButton(KIcon("ok"),
+    btnActivate = new QPushButton(KIcon("dialog-ok"),
         i18n("Activate"), vBox);
     // btnActivate->setFlat(true);
     connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
@@ -1009,7 +1009,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
         "available censuses, only the activated census files in this list "
         "are searched."));
 
-    btnDeactivate = new QPushButton(KIcon("no"),
+    btnDeactivate = new QPushButton(KIcon("dialog-cancel"),
         i18n("Deactivate"), vBox);
     // btnDeactivate->setFlat(true);
     connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
@@ -1235,7 +1235,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
         "This list contains the Python libraries to be loaded at "
         "the beginning of each new Python session."));
 
-    btnActivate = new QPushButton(KIcon("ok"),
+    btnActivate = new QPushButton(KIcon("dialog-ok"),
         i18n("Activate"), vBox);
     // btnActivate->setFlat(true);
     connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
@@ -1244,7 +1244,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
         "libraries.  When a new Python session is started, only the active "
         "libraries in this list will be loaded."));
 
-    btnDeactivate = new QPushButton(KIcon("no"),
+    btnDeactivate = new QPushButton(KIcon("dialog-cancel"),
         i18n("Deactivate"), vBox);
     // btnDeactivate->setFlat(true);
     connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
