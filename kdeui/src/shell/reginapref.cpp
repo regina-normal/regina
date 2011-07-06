@@ -678,10 +678,7 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     layout->addWidget(cbTipOfDay);
 
     // Add some space at the end.
-    QWidget* stretch = new QWidget(this);
-    layout->addWidget(stretch);
-    layout->setStretchFactor(stretch, 1);
-
+    layout->addStretch(1);
     setLayout(layout);
 }
 
@@ -812,10 +809,7 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     layout->addWidget(box);
 
     // Add some space at the end.
-    QWidget* stretch = new QWidget(this);
-    layout->addWidget(stretch);
-    layout->setStretchFactor(stretch, 1);
-
+    layout->addStretch(1);
     setLayout(layout);
 }
 
@@ -903,10 +897,7 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
     layout->addWidget(box);
 
     // Add some space at the end.
-    QWidget* stretch = new QWidget(this);
-    layout->addWidget(stretch);
-    layout->setStretchFactor(stretch, 1);
-
+    layout->addStretch(1);
     setLayout(layout);
 }
 
@@ -954,10 +945,7 @@ ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QWidget(parent) {
     layout->addWidget(cbAutoClose);
 
     // Add some space at the end.
-    QWidget* stretch = new QWidget(this);
-    layout->addWidget(stretch);
-    layout->setStretchFactor(stretch, 1);
-
+    layout->addStretch(1);
     setLayout(layout);
 }
 
@@ -1404,10 +1392,7 @@ ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QWidget(parent) {
     layout->addWidget(box);
 
     // Add some space at the end.
-    QWidget* stretch = new QWidget(this);
-    layout->addWidget(stretch);
-    layout->setStretchFactor(stretch, 1);
-
+    layout->addStretch(1);
     setLayout(layout);
 }
 
