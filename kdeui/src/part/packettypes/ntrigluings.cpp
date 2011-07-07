@@ -128,7 +128,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     actAddTet = triActions->addAction("tri_add_tet");
     actAddTet->setText(i18n("&Add Tet"));
-    actAddTet->setIcon(KIcon("insert_table_row"));
+    actAddTet->setIcon(KIcon("edit-table-insert-row-below"));
 
     actAddTet->setToolTip(i18n("Add a new tetrahedron"));
     actAddTet->setEnabled(readWrite);
@@ -140,7 +140,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     actRemoveTet = triActions->addAction("tri_remove_tet");
     actRemoveTet->setText(i18n("&Remove Tet"));
-    actRemoveTet->setIcon(KIcon("delete_table_row"));
+    actRemoveTet->setIcon(KIcon("edit-table-delete-row"));
     actRemoveTet->setToolTip(i18n("Remove the currently selected tetrahedra"));
     actRemoveTet->setEnabled(false);
     actRemoveTet->setWhatsThis(i18n("Remove the currently selected "

@@ -154,7 +154,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     actAdd = scriptActions->addAction("script_add_var");
     actAdd->setText(i18n("&Add Var"));
-    actAdd->setIcon(KIcon("insert_table_row"));
+    actAdd->setIcon(KIcon("edit-table-insert-row-below"));
     actAdd->setToolTip(i18n("Add a new script variable"));
     actAdd->setEnabled(readWrite);
     actAdd->setWhatsThis(i18n("Add a new variable to this script.<p>"
@@ -167,7 +167,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     actRemove = scriptActions->addAction("script_remove_var");
     actRemove->setText(i18n("Re&move Var"));
-    actRemove->setIcon(KIcon("delete_table_row"));
+    actRemove->setIcon(KIcon("edit-table-delete-row"));
     actRemove->setToolTip(i18n(
         "Remove the currently selected script variable(s)"));
     actRemove->setEnabled(false);

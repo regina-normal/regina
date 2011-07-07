@@ -981,7 +981,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
     KVBox* vBox = new KVBox(box);
     vBox->setSpacing(5);
 
-    QPushButton* btnAdd = new QPushButton(KIcon("insert_table_row"),
+    QPushButton* btnAdd = new QPushButton(KIcon("edit-table-insert-row-below"),
         i18n("Add..."), vBox);
     // btnAdd->setFlat(true);
     connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
@@ -990,7 +990,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
         "This list contains the census files that are searched when asked "
         "to locate an arbitrary triangulation in all available censuses."));
 
-    btnRemove = new QPushButton(KIcon("delete_table_row"),
+    btnRemove = new QPushButton(KIcon("edit-table-delete-row"),
         i18n("Remove"), vBox);
     // btnRemove->setFlat(true);
     connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
@@ -1217,7 +1217,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
     KVBox* vBox = new KVBox(box);
     vBox->setSpacing(5);
 
-    QPushButton* btnAdd = new QPushButton(KIcon("insert_table_row"),
+    QPushButton* btnAdd = new QPushButton(KIcon("edit-table-insert-row-below"),
         i18n("Add..."), vBox);
     // btnAdd->setFlat(true);
     connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
@@ -1226,7 +1226,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
         "This list contains the Python libraries to be loaded at "
         "the beginning of each new Python session."));
 
-    btnRemove = new QPushButton(KIcon("delete_table_row"),
+    btnRemove = new QPushButton(KIcon("edit-table-delete-row"),
         i18n("Remove"), vBox);
     // btnRemove->setFlat(true);
     connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
