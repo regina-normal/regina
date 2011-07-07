@@ -72,10 +72,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // --- Action Toolbar ---
 
-    KToolBar* actionBar = new KToolBar(ui, false, false);
-    // actionBar->setFullSize(true); TODO: Not needed I think
-    
-    //actionBar->setIconText(KToolBar::IconTextRight);
+    KToolBar* actionBar = new KToolBar(ui, false, true);
     actionBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     // --- Variable Table ---
