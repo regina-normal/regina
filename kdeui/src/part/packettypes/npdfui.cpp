@@ -201,6 +201,7 @@ void NPDFUI::refresh() {
         proc = new KProcess(this);
         proc->setShellCommand(cmd);
 
+        // TODO: Broken signal (changed with KDE4).
         connect(proc, SIGNAL(finished()),
             this, SLOT(processExited(KProcess*)));
         
