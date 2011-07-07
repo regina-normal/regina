@@ -115,6 +115,7 @@ NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
         tri(packet) {
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout();
+    uiLayout->setContentsMargins(0, 0, 0, 0);
     ui->setLayout(uiLayout);
 
     bar = new KToolBar(ui, false, true);

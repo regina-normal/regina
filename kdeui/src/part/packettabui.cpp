@@ -39,6 +39,7 @@ PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane) :
         PacketUI(enclosingPane), editorTab(0), header(0), visibleViewer(0) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     tabs = new ExtTabCtl(ui);
     layout->addWidget(tabs, 1);
