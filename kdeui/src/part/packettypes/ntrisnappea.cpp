@@ -65,7 +65,7 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
 
     // Data for a null SnapPea triangulation:
 
-    dataNull = new QWidget(data);
+    dataNull = new QWidget();
     QBoxLayout* nullLayout = new QVBoxLayout(dataNull);
     nullLayout->setMargin(5);
     nullLayout->setSpacing(0);
@@ -73,10 +73,11 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     unavailable = new NoSnapPea(reginaTri, allowClosed, dataNull, true);
     unavailable->setAlignment(Qt::AlignCenter);
     nullLayout->addWidget(unavailable);
+    data->addWidget(dataNull);
 
     // Data for a non-null SnapPea triangulation:
 
-    dataValid = new QWidget(data);
+    dataValid = new QWidget();
     QGridLayout* validGrid = new QGridLayout(dataValid);
     validGrid->setSpacing(5);
     validGrid->setColumnMinimumWidth(0, 1);
@@ -109,6 +110,8 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
         "number of decimal places of accuracy is also shown.");
     label->setWhatsThis(msg);
     volume->setWhatsThis(msg);
+
+    data->addWidget(dataValid);
 
     // Finish off.
 

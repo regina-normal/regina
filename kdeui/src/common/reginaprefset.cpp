@@ -172,10 +172,10 @@ QString ReginaPrefSet::pdfDefaultViewer() {
             return app;
     #endif
 
-    // Try KDE applications (kpdf, okular).
-    if (! (app = KStandardDirs::findExe("kpdf")).isNull())
-        return app;
+    // Try KDE applications (okular, kpdf).
     if (! (app = KStandardDirs::findExe("okular")).isNull())
+        return app;
+    if (! (app = KStandardDirs::findExe("kpdf")).isNull())
         return app;
 
     // Try GNOME applications (evince).

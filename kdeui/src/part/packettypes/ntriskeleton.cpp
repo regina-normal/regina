@@ -279,16 +279,16 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
     msgError->setText(i18n("<qt>Initialising...</qt>"));
 
     // Graph layer.
-    layerGraph = new QScrollArea(stack);
+    layerGraph = new QScrollArea();
     graph = new QLabel(layerGraph);
     graph->setAlignment(Qt::AlignCenter);
     layerGraph->setWidget(graph);
-
     layerGraph->setWhatsThis(i18n("<qt>The <i>face pairing graph</i> "
         "of a triangulation describes which tetrahedron faces are "
         "identified with which.<p>Each vertex of the graph represents "
         "a tetrahedron, and each edge represents a pair of tetrahedron "
         "faces that are joined together.</qt>"));
+    stack->addWidget(layerGraph);
 
     // Finish off.
     baseLayout->addWidget(stack);
@@ -473,7 +473,7 @@ void NTriFaceGraphUI::editingElsewhere() {
 
 QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
         const char* iconName) {
-    QWidget* layer = new QWidget(stack);
+    QWidget* layer = new QWidget();
     QBoxLayout* layout = new QHBoxLayout(layer);
     layout->setMargin(5);
     layout->setSpacing(5);
@@ -494,10 +494,12 @@ QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
     layout->addSpacing(10);
 
     text = new QLabel(i18n("<qt>Initialising...</qt>"), layer);
+    text->setWordWrap(true);
     layout->addWidget(text);
     layout->setStretchFactor(text, 4);
 
     layout->addStretch(1);
+    stack->addWidget(layer);
 
     return layer;
 }

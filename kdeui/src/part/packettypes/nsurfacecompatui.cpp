@@ -108,7 +108,7 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
 
     stack = new QStackedWidget(ui);
     {
-        layerNone = new QWidget(stack);
+        layerNone = new QWidget();
         QBoxLayout* noneLayout = new QHBoxLayout();;
         noneLayout->setMargin(5);
         noneLayout->setSpacing(5);
@@ -205,7 +205,7 @@ void NSurfaceCompatibilityUI::refresh() {
     matrixLocal = new NCompatCanvas(surfaces->getNumberOfSurfaces());
     matrixGlobal = new NCompatCanvas(surfaces->getNumberOfSurfaces());
 
-    layerLocal = new QGraphicsView(matrixLocal, stack);
+    layerLocal = new QGraphicsView(matrixLocal);
     stack->addWidget(layerLocal);
     layerLocal->setWhatsThis(i18n("<qt>This is the local "
         "compatibility matrix.  Surfaces are numbered from 0 to <i>N</i>-1, "
@@ -218,8 +218,9 @@ void NSurfaceCompatibilityUI::refresh() {
         "intersections in <i>all</i> tetrahedra simultaneously (i.e., "
         "whether two surfaces can be made disjoint).  For this, see "
         "the global compatibility matrix instead.</qt>"));
+    stack->addWidget(layerLocal);
 
-    layerGlobal = new QGraphicsView(matrixGlobal, stack);
+    layerGlobal = new QGraphicsView(matrixGlobal);
     stack->addWidget(layerGlobal);
     layerGlobal->setWhatsThis(i18n("<qt>This is the global "
         "compatibility matrix.  Surfaces are numbered from 0 to <i>N</i>-1, "
@@ -232,6 +233,7 @@ void NSurfaceCompatibilityUI::refresh() {
         "are non-compact (e.g., spun normal surfaces), empty, or "
         "disconnected.  The rows and columns corresponding to any such "
         "surfaces will be hashed out.</qt>"));
+    stack->addWidget(layerGlobal);
 
     if (chooseMatrix->currentIndex() == 0) {
         stack->setCurrentWidget(layerLocal);

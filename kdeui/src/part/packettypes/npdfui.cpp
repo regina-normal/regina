@@ -135,7 +135,7 @@ void NPDFUI::refresh() {
             // We don't yet have an embedded PDF viewer.
             viewer = KMimeTypeTrader::
                 createPartInstanceFromQuery<KParts::ReadOnlyPart>(
-                PDF_MIMETYPE, stack, stack);
+                PDF_MIMETYPE, 0, this);
 
             if (viewer) {
                 viewer->setProgressInfoEnabled(false);
@@ -151,6 +151,7 @@ void NPDFUI::refresh() {
 
         // If we actually found ourselves a viewer, load the PDF.
         if (viewer) {
+            stack->addWidget(viewer->widget());
             if (viewer->openUrl(KUrl(temp.fileName())))
                 stack->setCurrentWidget((viewer->widget()));
             else
@@ -168,9 +169,9 @@ void NPDFUI::refresh() {
         showInfo(i18n("<qt>No embedded PDF viewer could be found on "
             "your system.  Falling back to an external viewer instead.<p>"
             "If you would like PDFs to appear directly inside "
-            "Regina's main window, you could try installing either "
-            "<i>kpdf</i> or <i>kghostview</i> (both part of the "
-            "<i>kdegraphics</i> package shipped with KDE 3.x).</qt>"));
+            "Regina's main window, you could try installing "
+            "<i>okular</i> (which is part of the "
+            "<i>kdegraphics</i> package shipped with KDE 4.x).</qt>"));
     else
         showInfo(i18n("<qt>Using an external PDF viewer as "
             "requested.<p>To change this preference, you can "
@@ -233,7 +234,7 @@ void NPDFUI::updatePreferences(const ReginaPrefSet& newPrefs) {
 }
 
 QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
-    QWidget* layer = new QWidget(stack);
+    QWidget* layer = new QWidget();
     QBoxLayout* layout = new QHBoxLayout(layer);
     layout->setMargin(5);
     layout->setSpacing(5);
@@ -254,10 +255,12 @@ QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
     layout->addSpacing(10);
 
     text = new QLabel(i18n("<qt>Initialising...</qt>"), layer);
+    text->setWordWrap(true);
     layout->addWidget(text);
     layout->setStretchFactor(text, 4);
 
     layout->addStretch(1);
+    stack->addWidget(layer);
 
     return layer;
 }

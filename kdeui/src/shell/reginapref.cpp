@@ -919,7 +919,7 @@ ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QWidget(parent) {
     editExternalViewer = new KLineEdit(box);
     QString msg = i18n("<qt>The command used to view PDF packets if we are "
         "forced to use an external application.  Examples might include "
-        "<tt>kpdf</tt>, <tt>evince</tt> or <tt>xpdf</tt>.<p>"
+        "<tt>okular</tt>, <tt>evince</tt> or <tt>xpdf</tt>.<p>"
         "You may include optional command-line arguments here.  The PDF "
         "filename will be added to the end of the argument list, and the "
         "entire command will be passed to a shell for execution.<p>"
@@ -935,7 +935,7 @@ ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QWidget(parent) {
 
     cbAutoClose = new QCheckBox(i18n("Automatically close external viewers"));
     cbAutoClose->setWhatsThis(i18n("When using an external PDF viewer "
-        "(such as <tt>kpdf</tt> or <tt>xpdf</tt>), "
+        "(such as <tt>okular</tt> or <tt>xpdf</tt>), "
         "close it automatically when Regina's packet viewer is closed.  "
         "Likewise, close and reopen the external viewer whenever Regina's "
         "packet viewer is refreshed.<p>"
@@ -975,7 +975,8 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
         "which means that they will not be searched during a census lookup.");
     listFiles->setWhatsThis(msg);
     activeCount->setWhatsThis(msg);
-    connect(listFiles, SIGNAL(selectionChanged()), this, SLOT(updateButtons()));
+    connect(listFiles, SIGNAL(itemSelectionChanged()),
+        this, SLOT(updateButtons()));
 
     // Set up the button panel.
     KVBox* vBox = new KVBox(box);
@@ -1211,7 +1212,8 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
         "which means that they will not be loaded.");
     listFiles->setWhatsThis(msg);
     activeCount->setWhatsThis(msg);
-    connect(listFiles, SIGNAL(selectionChanged()), this, SLOT(updateButtons()));
+    connect(listFiles, SIGNAL(itemSelectionChanged()),
+        this, SLOT(updateButtons()));
 
     // Set up the button panel.
     KVBox* vBox = new KVBox(box);
