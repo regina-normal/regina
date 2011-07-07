@@ -421,7 +421,7 @@ void NTriGluingsUI::commit() {
 
 void NTriGluingsUI::refresh() {
     unsigned long nTets = tri->getNumberOfTetrahedra();
-    //faceTable->setNumRows(nTets);
+    faceTable->setRowCount(nTets);
 
     unsigned long tetNum;
     unsigned face;
@@ -464,7 +464,7 @@ void NTriGluingsUI::setReadWrite(bool readWrite) {
 void NTriGluingsUI::addTet() {
     long newRow = faceTable->rowCount();
 
-    //faceTable->setNumRows(newRow + 1);
+    faceTable->setRowCount(newRow + 1);
     faceTable->setItem(newRow, 0, new TetNameItem(newRow, ""));
     for (int face = 0; face < 4; face++)
         faceTable->setItem(newRow, 4 - face, new FaceGluingItem(

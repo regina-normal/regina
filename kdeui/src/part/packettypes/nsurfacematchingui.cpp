@@ -94,6 +94,9 @@ void NSurfaceMatchingUI::refresh() {
     // Don't bother regenerating the columns after the first refresh;
     // these will never change.
     if (table->columnCount() == 0) {
+        table->setColumnCount(eqns->columns());
+        table->setRowCount(eqns->rows());
+
         int flavour = surfaces->getFlavour();
         regina::NTriangulation* tri = surfaces->getTriangulation();
         QStringList headers;
@@ -106,7 +109,7 @@ void NSurfaceMatchingUI::refresh() {
     // Refill the table (back to front since we're using a QListView).
     table->clear();
     for (long i = eqns->rows() - 1; i >= 0; i--)
-        new NSurfaceMatchingItem(table, eqns.get(), i);
+        new NSurfaceMatchingItem(table, eqns.get(), i); // TODO: Fix
 
     // Tidy up.
     setDirty(false);
