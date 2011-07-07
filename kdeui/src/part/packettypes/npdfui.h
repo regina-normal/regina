@@ -72,7 +72,6 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         /**
          * Internal components
          */
-        QWidget* ui;
         QStackedWidget* stack;
         QWidget* layerInfo;
         QWidget* layerError;

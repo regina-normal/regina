@@ -73,9 +73,7 @@ NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
     embed = prefs.pdfEmbed;
     externalViewer = prefs.pdfExternalViewer.trimmed();
 
-    ui = new QWidget();
-    QBoxLayout* baseLayout = new QVBoxLayout(ui);
-    stack = new QStackedWidget(ui);
+    stack = new QStackedWidget();
 
     // Information layer.
     layerInfo = messageLayer(msgInfo, "dialog-information");
@@ -84,7 +82,6 @@ NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
     layerError = messageLayer(msgError, "dialog-error");
 
     // Finish off.
-    baseLayout->addWidget(stack);
     refresh();
 
     connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
@@ -101,7 +98,7 @@ NPacket* NPDFUI::getPacket() {
 }
 
 QWidget* NPDFUI::getInterface() {
-    return ui;
+    return stack;
 }
 
 QString NPDFUI::getPacketMenuText() const {
