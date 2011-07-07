@@ -38,13 +38,12 @@
 
 #include <vector>
 
-class ExtTabCtl;
 class PacketEditorTab;
 class PacketTabbedViewerTab;
 class PacketViewerTab;
 class QBoxLayout;
 class QString;
-//class QIconSet;
+class QTabWidget;
 
 /**
  * A packet interface consisting of several tabbed pages.
@@ -94,7 +93,7 @@ class PacketTabbedUI : public QObject, public PacketUI {
          */
         QWidget* ui;
         QBoxLayout* layout;
-        ExtTabCtl* tabs;
+        QTabWidget* tabs;
 
     public:
         /**
@@ -305,7 +304,7 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
          */
         QWidget* ui;
         QBoxLayout* layout;
-        ExtTabCtl* tabs;
+        QTabWidget* tabs;
 
     public:
         /**
