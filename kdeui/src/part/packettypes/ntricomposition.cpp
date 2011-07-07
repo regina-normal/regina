@@ -179,6 +179,7 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     detailsMenu->addAction(i18n("&Copy to Clipboard"),this,
         SLOT(detailsCopy()));
     connect(details,
+        // TODO: broken signal
         SIGNAL(contextMenuRequested(QTreeWidgetItem*, const QPoint&, int)),
         this, SLOT(detailsPopup(QTreeWidgetItem*, const QPoint&, int)));
 }
