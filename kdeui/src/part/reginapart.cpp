@@ -54,18 +54,11 @@
 #include <kmainwindow.h>
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
-#include <kparts/genericfactory.h>
 #include <kvbox.h>
-
-typedef KParts::GenericFactory<ReginaPart> ReginaPartFactory;
-K_EXPORT_COMPONENT_FACTORY(reginapart, ReginaPartFactory);
 
 ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
         const QStringList& /*args*/) :
         KParts::ReadWritePart(parent), packetTree(0), dockedPane(0) {
-    // Get the instance.
-    //setInstance(factoryInstance());
-
     // Set up our widgets and actions.
     setXMLFile("reginapart.rc");
     setupWidgets(parentWidget);
@@ -125,14 +118,6 @@ bool ReginaPart::closeURL() {
         return false;
     consoles.closeAllConsoles();
     return ReadWritePart::closeUrl();
-}
-
-KAboutData* ReginaPart::createAboutData() {
-    return new ReginaAbout("reginapart");
-}
-
-KComponentData ReginaPart::factoryInstance() {
-    return ReginaPartFactory::componentData();
 }
 
 void ReginaPart::ensureVisibleInTree(regina::NPacket* packet) {

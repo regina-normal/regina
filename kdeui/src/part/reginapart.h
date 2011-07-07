@@ -117,12 +117,6 @@ class ReginaPart : public KParts::ReadWritePart {
         virtual bool closeURL();
 
         /**
-         * Basic KPart operations.
-         */
-        static KAboutData *createAboutData();
-        static KComponentData factoryInstance();
-
-        /**
          * View the given packet.
          */
         void packetView(regina::NPacket*, bool makeVisibleInTree = true,

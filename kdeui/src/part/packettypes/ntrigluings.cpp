@@ -123,7 +123,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     // Set up the triangulation actions.
     KAction* sep;
 
-    triActions = new KActionCollection(0, ReginaPart::factoryInstance());
+    triActions = new KActionCollection((QObject*)0);
     //triActionList.setAutoDelete(true);
 
     actAddTet = triActions->addAction("tri_add_tet");

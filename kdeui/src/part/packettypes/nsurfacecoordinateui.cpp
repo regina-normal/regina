@@ -124,7 +124,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "to the users' handbook).</qt>");
 
     // Set up the surface list actions.
-    surfaceActions = new KActionCollection(0, ReginaPart::factoryInstance());
+    surfaceActions = new KActionCollection((QObject*)0);
 
     actCutAlong = surfaceActions->addAction("surface_cutalong");
     actCutAlong->setText(i18n("Cu&t Along Surface"));

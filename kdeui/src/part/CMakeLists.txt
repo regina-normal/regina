@@ -14,4 +14,3 @@ SET(MOC_HEADERS ${MOC_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/packettreeview.h ${CM
 SET( MOC_HEADERS ${MOC_HEADERS} PARENT_SCOPE )
 
 install(FILES reginapart.rc packetwindow.rc DESTINATION ${DATA_INSTALL_DIR}/regina)
-# install(FILES reginapart.desktop DESTINATION ${SERVICES_INSTALL_DIR})

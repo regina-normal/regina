@@ -50,9 +50,7 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     // Set destructive close
     setAttribute(Qt::WA_DeleteOnClose);
     
-    // Set up our actions. TODO: Do we need this? Don't think so.
-    //setInstance(ReginaPart::factoryInstance());
-
+    // Set up our actions.
     if (newPane->hasTextComponent()) {
         KAction* cut = KStandardAction::cut(0, 0, actionCollection());
         KAction* copy = KStandardAction::copy(0, 0, actionCollection());

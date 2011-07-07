@@ -1,2 +1,1 @@
 KDE4_INSTALL_ICONS(${DATA_INSTALL_DIR}/regina/icons)
-KDE4_INSTALL_ICONS(${DATA_INSTALL_DIR}/reginapart/icons)

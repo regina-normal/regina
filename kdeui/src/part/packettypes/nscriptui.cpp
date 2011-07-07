@@ -147,7 +147,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // --- Script Actions ---
 
-    scriptActions = new KActionCollection(0, ReginaPart::factoryInstance());
+    scriptActions = new KActionCollection((QObject*)0);
     
     // scriptActionList.setAutoDelete(true); TODO: This is manual now
     // for pointers.
