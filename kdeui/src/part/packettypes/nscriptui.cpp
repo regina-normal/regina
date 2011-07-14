@@ -43,13 +43,13 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <ktexteditor/configinterface.h>
 #include <ktexteditor/document.h>
 //#include <ktexteditor/editinterface.h>
 //#include <ktexteditor/highlightinginterface.h>
 //#include <ktexteditor/undointerface.h>
 #include <ktexteditor/view.h>
 //#include <ktexteditor/viewcursorinterface.h>
-//#include <ktexteditor/wordwrapinterface.h>
 #include <ktoolbar.h>
 #include <KVBox>
 #include <qsplitter.h>
@@ -124,7 +124,12 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // Prepare the components.
     document->setReadWrite(readWrite);
-    //KTextEditor::wordWrapInterface(document)->setWordWrap(false);
+
+    KTextEditor::ConfigInterface *iface =
+        qobject_cast<KTextEditor::ConfigInterface*>(view);
+    if (iface)
+        iface->setConfigValue("dynamic-word-wrap", false);
+
     setPythonMode();
 
     pol = QSizePolicy(QSizePolicy::MinimumExpanding,
@@ -210,13 +215,9 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // Resize the components within the splitter so that the editor has most
     // of the space.
-    QList<int> sizes = splitter->sizes();
-    int totalSize = sizes[0] + sizes[1];
-    sizes[0] = totalSize * SCRIPT_TABLE_WEIGHT / SCRIPT_TOTAL_WEIGHT;
-    if (sizes[0] < varTable->minimumHeight())
-        sizes[0] = varTable->minimumHeight();
-    sizes[1] = totalSize - sizes[0];
-    splitter->setSizes(sizes);
+    // TODO: This does not seem to work.. :/
+    splitter->setStretchFactor(0, SCRIPT_TABLE_WEIGHT);
+    splitter->setStretchFactor(1, SCRIPT_EDITOR_WEIGHT);
 
     // Fill the components with data.
     refresh();
