@@ -82,8 +82,8 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
             break;
     }
     table->setRootIsDecorated(false);
+    table->setAlternatingRowColors(true);
     table->setSelectionMode(QAbstractItemView::NoSelection);
-    //table->setSorting(-1);
     table->setToolTip(overview(objectType)); // TODO
     layout->addWidget(table);
 
