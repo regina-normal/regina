@@ -35,6 +35,7 @@
 #include <cstring>
 #include <sstream>
 #include <klocale.h>
+#include <ktexteditor/configinterface.h>
 #include <ktexteditor/document.h>
 #include <ktexteditor/view.h>
 
@@ -51,10 +52,11 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
         enclosingPane->setDirtinessBroken();
 
     document->setReadWrite(enclosingPane->isReadWrite());
-    // KTextEditor::wordWrapInterface(document)->setWordWrap(true); TODO
-    // KTextEditor::ConfigInterface *iface =
-    // qobject_cast<KTextEditor::ConfigInterface*>(document);
-    // iface->setConfigValue("dynamic-word-wrap",true);
+
+    KTextEditor::ConfigInterface *iface =
+        qobject_cast<KTextEditor::ConfigInterface*>(view);
+    if (iface)
+        iface->setConfigValue("dynamic-word-wrap",true);
 
     refresh();
 
