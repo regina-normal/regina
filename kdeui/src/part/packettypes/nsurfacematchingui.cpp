@@ -38,8 +38,6 @@
 #include <QHeaderView>
 #include <QTreeView>
 
-// TODO: Fix default width.
-
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
 using regina::NNormalSurfaceList;
@@ -97,7 +95,7 @@ QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
 
 NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
-        currentlyAutoResizing(false) {
+        currentlyAutoResizing(false), everRefreshed(false) {
     model = new MatchingModel(packet);
 
     table = new QTreeView();
@@ -148,8 +146,13 @@ void NSurfaceMatchingUI::refresh() {
     // Regenerate the equations.
     model->rebuild();
 
+    // Resize if we haven't done this before.
+    if (! everRefreshed)
+        table->header()->resizeSections(QHeaderView::ResizeToContents);
+
     // Tidy up.
     setDirty(false);
+    everRefreshed = true;
 }
 
 void NSurfaceMatchingUI::columnResized(int, int, int newSize) {

@@ -107,6 +107,7 @@ class NSurfaceMatchingUI : public QObject, public PacketViewerTab {
          * Status of any ongoing actions.
          */
         bool currentlyAutoResizing;
+        bool everRefreshed;
 
     public:
         /**
