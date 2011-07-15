@@ -53,17 +53,12 @@
 using regina::NNormalSurfaceList;
 using regina::NPacket;
 
-/* TODO: Edits
-void NSurfaceCoordinateItem::setText(int column, const QString& str) {
-    if (column == 1)
-        name = str;
-    QTableWidgetItem::setText(str); 
-}
-*/
+// TODO: Selected lines are invisible, sigh.
 
 SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces) :
         surfaces_(surfaces),
-        coordSystem_(surfaces->getFlavour()) {
+        coordSystem_(surfaces->getFlavour()),
+        localName(0) {
     nFiltered = surfaces_->getNumberOfSurfaces();
     if (nFiltered == 0)
         realIndex = 0;
@@ -72,6 +67,8 @@ SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces) :
         for (unsigned i = 0; i < nFiltered; ++i)
             realIndex[i] = i;
     }
+
+    refreshNames();
 }
 
 void SurfaceModel::rebuild(int coordSystem) {
@@ -99,6 +96,24 @@ void SurfaceModel::rebuild(int coordSystem, regina::NSurfaceFilter* filter) {
     endResetModel();
 }
 
+void SurfaceModel::refreshNames() {
+    delete[] localName;
+
+    if (surfaces_->getNumberOfSurfaces() == 0)
+        localName = 0;
+    else {
+        localName = new QString[surfaces_->getNumberOfSurfaces()];
+        for (unsigned i = 0; i < surfaces_->getNumberOfSurfaces(); ++i)
+            localName[i] = surfaces_->getSurface(i)->getName().c_str();
+    }
+}
+
+void SurfaceModel::commitNames() {
+    for (unsigned i = 0; i < surfaces_->getNumberOfSurfaces(); ++i)
+        const_cast<regina::NNormalSurface*>(surfaces_->getSurface(i))->
+            setName(localName[i].toAscii().constData());
+}
+
 QModelIndex SurfaceModel::index(int row, int column,
         const QModelIndex& parent) const {
     return createIndex(row, column,
@@ -124,7 +139,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         if (index.column() == 0)
             return i18n("%1.").arg(surfaceIndex);
         else if (index.column() == 1)
-            return QVariant(); // TODO: return name;
+            return localName[surfaceIndex];
         else if (index.column() == 2) {
             if (! s->isCompact())
                 return QVariant();
@@ -218,6 +233,11 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             else
                 return ans.stringValue().c_str();
         }
+    } else if (role == Qt::EditRole) {
+        if (index.column() == 1)
+            return localName[surfaceIndex];
+        else
+            return QVariant();
     } else if (role == Qt::ToolTipRole) {
         int propertyCols = propertyColCount();
 
@@ -305,6 +325,23 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 }
 
+Qt::ItemFlags SurfaceModel::flags(const QModelIndex& index) const {
+    if (index.column() == 1)
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
+        int role) {
+    if (index.column() == 1 && role == Qt::EditRole) {
+        localName[realIndex[index.row()]] = value.toString();
+        emit dataChanged(index, index);
+        return true;
+    } else
+        return false;
+}
+
 unsigned SurfaceModel::propertyColCount() const {
     return (surfaces_->isEmbeddedOnly() ? 8 : 6) +
         (surfaces_->allowsAlmostNormal() ? 1 : 0);
@@ -381,14 +418,8 @@ QString SurfaceModel::propertyColDesc(int whichCol) const {
 NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0),
-        newName(0), isReadWrite(readWrite), currentlyResizing(false) {
-    // Prepare the array of modified surface names.
-
-    if (surfaces->getNumberOfSurfaces() > 0)
-        newName = new QString[surfaces->getNumberOfSurfaces()];
-
+        isReadWrite(readWrite), currentlyResizing(false) {
     // Set up the UI.
-
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
     uiLayout->setContentsMargins(0, 0, 0, 0);
@@ -428,17 +459,15 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     label->setWhatsThis(msg);
     filter->setWhatsThis(msg);
 
-    // TODO: Required? uiLayout->addSpacing(5);
-
     // Set up the coordinate table.
     model = new SurfaceModel(surfaces);
 
     table = new QTreeView();
+    table->setItemsExpandable(false);
     table->setRootIsDecorated(false);
     table->setAlternatingRowColors(true);
     table->header()->setStretchLastSection(false);
     table->setSelectionMode(QTreeView::SingleSelection);
-    //table->setDefaultRenameAction(QListView::Accept); TODO: Edits
     table->setWhatsThis(i18n("Displays details of the individual normal "
         "surfaces in this list.<p>"
         "Each row represents a single normal (or almost normal) surface.  "
@@ -500,18 +529,14 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     connect(table->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateActionStates()));
-    // TODO: Edits: broken connection
-    connect(table, SIGNAL(itemRenamed(QListViewItem*, int,
-        const QString&)), this, SLOT(notifySurfaceRenamed()));
+    connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+        this, SLOT(notifySurfaceRenamed()));
 
     // Tidy up.
     refresh();
 }
 
 NSurfaceCoordinateUI::~NSurfaceCoordinateUI() {
-    if (newName)
-        delete[] newName;
-
     // Make sure the actions, including separators, are all deleted.
     surfaceActionList.clear();
     delete surfaceActions;
@@ -532,10 +557,7 @@ QWidget* NSurfaceCoordinateUI::getInterface() {
 }
 
 void NSurfaceCoordinateUI::commit() {
-    for (unsigned long i = 0; i < surfaces->getNumberOfSurfaces(); i++)
-        const_cast<regina::NNormalSurface*>(surfaces->getSurface(i))->
-            setName(newName[i].toAscii().constData());
-
+    model->commitNames();
     setDirty(false);
 }
 
@@ -570,8 +592,7 @@ void NSurfaceCoordinateUI::refreshLocal() {
 
 void NSurfaceCoordinateUI::refresh() {
     // Refresh the surface names from the underlying packet.
-    for (unsigned long i = 0; i < surfaces->getNumberOfSurfaces(); i++)
-        newName[i] = surfaces->getSurface(i)->getName().c_str();
+    model->refreshNames();
 
     // Refresh the table of surfaces.
     refreshLocal();
@@ -580,23 +601,9 @@ void NSurfaceCoordinateUI::refresh() {
 }
 
 void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
-    // TODO: Edits!
     isReadWrite = readWrite;
 
-/* TODO
-    QList<QTableWidgetItem*> children = table->findItems("",
-        Qt::MatchWrap|Qt::MatchRecursive);
-    for ( int i=0; i < children.count() ; i++) {
-        QTableWidgetItem* item = children[i];
-        Qt::ItemFlags flags = item->flags();
-        if (readWrite)
-            flags = flags | Qt::ItemIsEditable;
-        else 
-            flags = flags & (~Qt::ItemIsEditable);
-        item->setFlags(flags);
-    }
-*/
-
+    // TODO: pass new readWrite status to the model (-> item flags)
     updateActionStates();
 }
 
@@ -689,7 +696,6 @@ void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
 }
 
 void NSurfaceCoordinateUI::notifySurfaceRenamed() {
-    // TODO: Does it work?
     setDirty(true);
 }
 

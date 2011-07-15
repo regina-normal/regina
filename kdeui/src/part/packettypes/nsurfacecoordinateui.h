@@ -68,6 +68,11 @@ class SurfaceModel : public QAbstractItemModel {
         unsigned* realIndex;
         unsigned nFiltered;
 
+        /**
+         * Local modifications
+         */
+        QString* localName;
+
     public:
         /**
          * Constructor and destructor.
@@ -88,7 +93,13 @@ class SurfaceModel : public QAbstractItemModel {
         void rebuild(int coordSystem_, regina::NSurfaceFilter* filter);
 
         /**
-         * Overrides for describing data in the model.
+         * Loading and saving local data from/to the packet.
+         */
+        void refreshNames();
+        void commitNames();
+
+        /**
+         * Overrides for describing and editing data in the model.
          */
         QModelIndex index(int row, int column,
                 const QModelIndex& parent) const;
@@ -98,6 +109,8 @@ class SurfaceModel : public QAbstractItemModel {
         QVariant data(const QModelIndex& index, int role) const;
         QVariant headerData(int section, Qt::Orientation orientation,
             int role) const;
+        Qt::ItemFlags flags(const QModelIndex& index) const;
+        bool setData(const QModelIndex& index, const QVariant& value, int role);
 
         /**
          * Information on the property (non-coordinate) columns.
@@ -121,11 +134,6 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         SurfaceModel* model;
         regina::NNormalSurfaceList* surfaces;
         regina::NSurfaceFilter* appliedFilter;
-
-        /**
-         * Local modifications
-         */
-        QString* newName;
 
         /**
          * Internal components
@@ -203,6 +211,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
 
 inline SurfaceModel::~SurfaceModel() {
     delete[] realIndex;
+    delete[] localName;
 }
 
 inline regina::NNormalSurfaceList* SurfaceModel::surfaces() const {
