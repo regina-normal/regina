@@ -73,7 +73,7 @@ QVariant MatchingModel::data(const QModelIndex& index, int role) const {
         return Coordinates::columnDesc(surfaces_->getFlavour(), index.column(),
             surfaces_->getTriangulation());
     else if (role == Qt::TextAlignmentRole)
-        return Qt::AlignCenter;
+        return Qt::AlignRight;
     else
         return QVariant();
 }
