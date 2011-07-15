@@ -32,25 +32,75 @@
 
 // UI includes:
 #include "coordinates.h"
-#include "nsurfacematchingitem.h"
 #include "nsurfacematchingui.h"
 
 #include <klocale.h>
 #include <QHeaderView>
-#include <QHelpEvent>
-#include <QTableWidget>
+#include <QTreeView>
 
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
+
+// TODO: Alignment of table cells?
+// TODO: Make it clear visually where the table ends
 
 using regina::NNormalSurfaceList;
 using regina::NPacket;
 
+void MatchingModel::rebuild() {
+    beginResetModel();
+    eqns_.reset(surfaces_->recreateMatchingEquations());
+    endResetModel();
+}
+
+int MatchingModel::rowCount(const QModelIndex& parent) const {
+    return (eqns_.get() ? eqns_->rows() : 0);
+}
+
+int MatchingModel::columnCount(const QModelIndex& parent) const {
+    return (eqns_.get() ? eqns_->columns() : 0);
+}
+
+QVariant MatchingModel::data(const QModelIndex& index, int role) const {
+    if (! eqns_.get())
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        regina::NLargeInteger ans = eqns_->entry(index.row(), index.column());
+        if (ans == 0)
+            return QVariant();
+        else
+            return ans.stringValue().c_str();
+    } else if (role == Qt::ToolTipRole)
+        return Coordinates::columnDesc(surfaces_->getFlavour(), index.column(),
+            surfaces_->getTriangulation());
+    else
+        return QVariant();
+}
+
+QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
+        int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole)
+        return Coordinates::columnName(surfaces_->getFlavour(), section,
+            surfaces_->getTriangulation());
+    else if (role == Qt::ToolTipRole)
+        return Coordinates::columnDesc(surfaces_->getFlavour(), section,
+            surfaces_->getTriangulation());
+    else
+        return QVariant();
+}
+
 NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
-        surfaces(packet), currentlyAutoResizing(false) {
-    table = new QTableWidget();
-    //table->setAllColumnsShowFocus(true);
-    //table->setSorting(-1);
+        currentlyAutoResizing(false) {
+    model = new MatchingModel(packet);
+
+    table = new QTreeView();
+    table->setRootIsDecorated(false);
+    table->setAlternatingRowColors(true);
+    table->header()->setStretchLastSection(false);
     table->setSelectionMode(QAbstractItemView::NoSelection);
     table->setWhatsThis(i18n("<qt>Displays the normal surface matching "
         "equations that were used in the vertex enumeration when this "
@@ -62,25 +112,23 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
         "in each linear combination.<p>"
         "For details of what each coordinate represents, hover the mouse "
         "over the column header (or refer to the users' handbook).</qt>"));
+    table->setModel(model);
 
     // Don't bother creating columns until we first create a set of
     // matching equations.
 
-    headerTips = new MatchingHeaderToolTip(surfaces->getTriangulation(),
-        surfaces->getFlavour(), table->horizontalHeader());
-    table->viewport()->installEventFilter(headerTips);
-    connect(table->horizontalHeader(), SIGNAL(sizeChange(int, int, int)),
+    connect(table->header(), SIGNAL(sectionResized(int, int, int)),
         this, SLOT(columnResized(int, int, int)));
 
     ui = table;
 }
 
 NSurfaceMatchingUI::~NSurfaceMatchingUI() {
-    delete headerTips;
+    delete model;
 }
 
 regina::NPacket* NSurfaceMatchingUI::getPacket() {
-    return surfaces;
+    return model->surfaces();
 }
 
 QWidget* NSurfaceMatchingUI::getInterface() {
@@ -89,27 +137,7 @@ QWidget* NSurfaceMatchingUI::getInterface() {
 
 void NSurfaceMatchingUI::refresh() {
     // Regenerate the equations.
-    eqns.reset(surfaces->recreateMatchingEquations());
-
-    // Don't bother regenerating the columns after the first refresh;
-    // these will never change.
-    if (table->columnCount() == 0) {
-        table->setColumnCount(eqns->columns());
-        table->setRowCount(eqns->rows());
-
-        int flavour = surfaces->getFlavour();
-        regina::NTriangulation* tri = surfaces->getTriangulation();
-        QStringList headers;
-        for (unsigned long i = 0; i < eqns->columns(); i++) {
-            headers << Coordinates::columnName(flavour, i, tri) ;
-        }
-        table->setHorizontalHeaderLabels(headers);
-    }
-
-    // Refill the table (back to front since we're using a QListView).
-    table->clear();
-    for (long i = eqns->rows() - 1; i >= 0; i--)
-        new NSurfaceMatchingItem(table, eqns.get(), i); // TODO: Fix
+    model->rebuild();
 
     // Tidy up.
     setDirty(false);
@@ -122,28 +150,8 @@ void NSurfaceMatchingUI::columnResized(int, int, int newSize) {
     // A column has been resized.
     // Resize all columns.
     currentlyAutoResizing = true;
-    for (int i = 0; i < table->columnCount(); i++)
+    for (int i = 0; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyAutoResizing = false;
 }
-
-MatchingHeaderToolTip::MatchingHeaderToolTip(regina::NTriangulation* useTri,
-        int useCoordSystem, QHeaderView *header) :
-        header(header), tri(useTri), coordSystem(useCoordSystem) {
-}
-
-bool MatchingHeaderToolTip::eventFilter(QObject *obj, QEvent *event) {
-    if ( event->type() == QEvent::ToolTip) {
-        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
-        QPoint p = helpEvent->pos();
-        int section = header->logicalIndexAt(p.x());
-        if (section < 0)
-            return false;
-        QToolTip::showText(helpEvent->globalPos(), 
-            Coordinates::columnDesc(coordSystem, section, tri));
-        return true;
-    }
-    return false;
-}
-
 

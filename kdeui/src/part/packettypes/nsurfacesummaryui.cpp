@@ -104,8 +104,8 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "for closed compact surfaces (i.e., closed surfaces with "
         "finitely many discs).<p>"
         "Each entry in this table counts the number of "
-        "bounded surfaces with a particular orientability, 1/2-sidedness and "
-        "Euler characteristic.</qt>"));
+        "bounded surfaces with a particular orientability, "
+        "1-or-2-sidedness and Euler characteristic.</qt>"));
     paneLayout->addWidget(tableClosed, Qt::AlignLeft);
 
     totBounded = new QLabel();
@@ -124,8 +124,8 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "count for surfaces with real boundary (i.e., bounded surfaces with "
         "finitely many discs).<p>"
         "Each entry in this table counts the number of "
-        "bounded surfaces with a particular orientability, 1/2-sidedness and "
-        "Euler characteristic.</qt>"));
+        "bounded surfaces with a particular orientability, "
+        "1-or-2-sidedness and Euler characteristic.</qt>"));
     // TODO tableBounded->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
     paneLayout->addWidget(tableBounded, Qt::AlignLeft);
 
