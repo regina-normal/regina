@@ -246,7 +246,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else
             return QVariant();
     } else if (role == Qt::TextAlignmentRole)
-        return Qt::AlignRight;
+        return Qt::AlignRight; // TODO: Depend on column.
     else
         return QVariant();
 }
