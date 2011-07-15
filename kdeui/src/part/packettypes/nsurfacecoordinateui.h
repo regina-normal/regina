@@ -34,26 +34,69 @@
 #define __NSURFACECOODINATEUI_H
 
 #include "packet/npacketlistener.h"
+#include "surfaces/nnormalsurfacelist.h"
 
 #include "../packettabui.h"
+#include "coordinates.h"
 
-#include <memory>
-#include <qtooltip.h>
+#include <QAbstractItemModel>
 
 class CoordinateChooser;
 class KAction;
 class KActionCollection;
 class PacketChooser;
-class QBoxLayout;
-class QHeaderView;
-class QTableWidget;
-class QTableWidgetItem;
-class SurfaceHeaderToolTip;
+class QTreeView;
 
 namespace regina {
     class NPacket;
     class NNormalSurfaceList;
     class NSurfaceFilter;
+};
+
+class SurfaceModel : public QAbstractItemModel {
+    protected:
+        /**
+         * Details of the normal surfaces being displayed
+         */
+        regina::NNormalSurfaceList* surfaces_;
+        int coordSystem_;
+
+    public:
+        /**
+         * Constructor.
+         */
+        SurfaceModel(regina::NNormalSurfaceList* surfaces);
+
+        /**
+         * Data retrieval.
+         */
+        regina::NNormalSurfaceList* surfaces() const;
+
+        /**
+         * Rebuild the model from scratch.
+         */
+        void rebuild(int coordSystem_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        QModelIndex index(int row, int column,
+                const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Static information on the property columns.
+         */
+        static unsigned propertyColCount(bool embeddedOnly, bool almostNormal);
+        static QString propertyColName(int whichCol, bool embeddedOnly,
+            bool almostNormal);
+        static QString propertyColDesc(int whichCol, bool embeddedOnly,
+            bool almostNormal);
 };
 
 /**
@@ -67,6 +110,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Packet details
          */
+        SurfaceModel* model;
         regina::NNormalSurfaceList* surfaces;
         regina::NSurfaceFilter* appliedFilter;
 
@@ -79,12 +123,9 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          * Internal components
          */
         QWidget* ui;
-        QBoxLayout* uiLayout;
         CoordinateChooser* coords;
         PacketChooser* filter;
-        std::auto_ptr<QTableWidget> table;
-        std::auto_ptr<SurfaceHeaderToolTip> headerTips;
-        QString tableWhatsThis;
+        QTreeView* table;
 
         /**
          * Surface list actions
@@ -152,30 +193,18 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         void notifySurfaceRenamed();
 };
 
-/**
- * A utility class for displaying tooltips for table headers.
- */
-class SurfaceHeaderToolTip : public QObject {
-    private:
-        /**
-         * Surface information
-         */
-        QHeaderView *header;
-        regina::NNormalSurfaceList* surfaces;
-        int coordSystem;
+inline SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces) :
+        surfaces_(surfaces),
+        coordSystem_(surfaces->getFlavour()) {
+}
 
-    public:
-        /**
-         * Constructor.
-         */
-        SurfaceHeaderToolTip(regina::NNormalSurfaceList* useSurfaces,
-            int useCoordSystem, QHeaderView* header);
+inline regina::NNormalSurfaceList* SurfaceModel::surfaces() const {
+    return surfaces_;
+}
 
-    protected:
-        /**
-         * Event filter 
-         */
-        bool eventFilter(QObject *obj, QEvent *event);
-};
+inline QModelIndex SurfaceModel::parent(const QModelIndex& index) const {
+    // All items are top-level.
+    return QModelIndex();
+}
 
 #endif
