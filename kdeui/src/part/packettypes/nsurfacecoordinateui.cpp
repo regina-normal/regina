@@ -53,7 +53,7 @@
 using regina::NNormalSurfaceList;
 using regina::NPacket;
 
-/* TODO
+/* TODO: Edits
 void NSurfaceCoordinateItem::setText(int column, const QString& str) {
     if (column == 1)
         name = str;
@@ -84,7 +84,7 @@ int SurfaceModel::columnCount(const QModelIndex& parent) const {
 }
 
 QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
-    // TODO: surfaceIndex
+    // TODO: Filter: surfaceIndex
     unsigned surfaceIndex = index.row();
 
     if (role == Qt::DisplayRole) {
@@ -246,7 +246,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else
             return QVariant();
     } else if (role == Qt::TextAlignmentRole)
-        return Qt::AlignRight; // TODO: Depend on column.
+        return Qt::AlignRight; // TODO: Make alignment depend on column.
     else
         return QVariant();
 }
@@ -535,7 +535,7 @@ void NSurfaceCoordinateUI::refreshLocal() {
     model->rebuild(coords->getCurrentSystem());
 
     // Insert surfaces into the table.
-    // TODO: FILTER!!!!!
+    // TODO: Filter!!!!!
     /*
     const regina::NNormalSurface* s;
     for (i = surfaces->getNumberOfSurfaces() - 1; i >= 0; i--) {
@@ -547,9 +547,7 @@ void NSurfaceCoordinateUI::refreshLocal() {
     }
     */
 
-    // TODO: Resize all columns to fit.
-
-    // TODO: NEcessary?
+    // TODO: Actions: Necessary?
     // actCutAlong->setEnabled(false);
     // actCrush->setEnabled(false);
 }
@@ -566,6 +564,7 @@ void NSurfaceCoordinateUI::refresh() {
 }
 
 void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
+    // TODO: Edits!
     isReadWrite = readWrite;
 
 /* TODO
@@ -592,7 +591,7 @@ void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
 }
 
 void NSurfaceCoordinateUI::cutAlong() {
-/* TODO
+/* TODO: Action!
     QList<QTableWidgetItem*> items = table->selectedItems();
     if ( items.count() == 0) {
         KMessageBox::error(ui,
@@ -623,7 +622,7 @@ void NSurfaceCoordinateUI::cutAlong() {
 }
 
 void NSurfaceCoordinateUI::crush() {
-    /* TODO
+    /* TODO: Action!
     QList<QTableWidgetItem*> items = table->selectedItems();
     if ( items.count() == 0) {
         KMessageBox::error(ui,
@@ -652,6 +651,7 @@ void NSurfaceCoordinateUI::crush() {
 }
 
 void NSurfaceCoordinateUI::updateActionStates() {
+    // TODO: It doesn't work.
     bool canCrushOrCut = isReadWrite &&
         table->selectionModel()->hasSelection() &&
         (! surfaces->allowsAlmostNormal()) && surfaces->isEmbeddedOnly();
@@ -659,8 +659,6 @@ void NSurfaceCoordinateUI::updateActionStates() {
     actCutAlong->setEnabled(canCrushOrCut);
     actCrush->setEnabled(canCrushOrCut);
 }
-
-// TODO: Above here.
 
 void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
     int nNonCoordSections =
@@ -678,6 +676,7 @@ void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
 }
 
 void NSurfaceCoordinateUI::notifySurfaceRenamed() {
+    // TODO: Does it work?
     setDirty(true);
 }
 
