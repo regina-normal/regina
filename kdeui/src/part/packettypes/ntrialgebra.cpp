@@ -34,7 +34,6 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
-// #include "../gridlistview.h"
 #include "gaprunner.h"
 #include "ntrialgebra.h"
 

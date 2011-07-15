@@ -37,8 +37,6 @@
 
 #include "maths/nrational.h"
 
-//#include "../gridlistview.h"
-
 namespace regina {
     class NAngleStructure;
     class NTriangulation;

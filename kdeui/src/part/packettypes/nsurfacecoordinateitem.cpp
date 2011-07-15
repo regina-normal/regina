@@ -324,7 +324,7 @@ QString NSurfaceCoordinateItem::text(int column) const {
     return i18n("Unknown");
 }
 
-/*
+/* TODO
 void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,
         int column, int width, int align) {
      // Paint the cell in the correct colour.
@@ -343,6 +343,7 @@ void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,
      }
 } */
 
+// TODO: Paint in colours correctly
 void NSurfaceCoordinateItem::updateColour(int column) {
     switch (getColour(column)) {
         case Red: setForeground(Qt::red) ; break ;

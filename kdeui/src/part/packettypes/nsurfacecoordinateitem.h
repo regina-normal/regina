@@ -33,7 +33,6 @@
 #ifndef __NSURFACECOORDINATEITEM_H
 #define __NSURFACECOORDINATEITEM_H
 
-//#include "../gridlistview.h"
 #include <QTableWidgetItem>
 
 namespace regina {
