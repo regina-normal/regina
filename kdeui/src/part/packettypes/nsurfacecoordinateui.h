@@ -61,21 +61,31 @@ class SurfaceModel : public QAbstractItemModel {
         regina::NNormalSurfaceList* surfaces_;
         int coordSystem_;
 
+        /**
+         * A mapping from table indices to surface indices, for use with
+         * filtered lists.
+         */
+        unsigned* realIndex;
+        unsigned nFiltered;
+
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
         SurfaceModel(regina::NNormalSurfaceList* surfaces);
+        ~SurfaceModel();
 
         /**
          * Data retrieval.
          */
         regina::NNormalSurfaceList* surfaces() const;
+        int coordSystem() const;
 
         /**
          * Rebuild the model from scratch.
          */
         void rebuild(int coordSystem_);
+        void rebuild(int coordSystem_, regina::NSurfaceFilter* filter);
 
         /**
          * Overrides for describing data in the model.
@@ -193,13 +203,16 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         void notifySurfaceRenamed();
 };
 
-inline SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces) :
-        surfaces_(surfaces),
-        coordSystem_(surfaces->getFlavour()) {
+inline SurfaceModel::~SurfaceModel() {
+    delete[] realIndex;
 }
 
 inline regina::NNormalSurfaceList* SurfaceModel::surfaces() const {
     return surfaces_;
+}
+
+inline int SurfaceModel::coordSystem() const {
+    return coordSystem_;
 }
 
 inline QModelIndex SurfaceModel::parent(const QModelIndex& index) const {

@@ -61,9 +61,41 @@ void NSurfaceCoordinateItem::setText(int column, const QString& str) {
 }
 */
 
+SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces) :
+        surfaces_(surfaces),
+        coordSystem_(surfaces->getFlavour()) {
+    nFiltered = surfaces_->getNumberOfSurfaces();
+    if (nFiltered == 0)
+        realIndex = 0;
+    else {
+        realIndex = new unsigned[nFiltered];
+        for (unsigned i = 0; i < nFiltered; ++i)
+            realIndex[i] = i;
+    }
+}
+
 void SurfaceModel::rebuild(int coordSystem) {
     beginResetModel();
     coordSystem_ = coordSystem;
+    endResetModel();
+}
+
+void SurfaceModel::rebuild(int coordSystem, regina::NSurfaceFilter* filter) {
+    beginResetModel();
+
+    coordSystem_ = coordSystem;
+
+    delete[] realIndex;
+    nFiltered = 0;
+    if (surfaces_->getNumberOfSurfaces() == 0)
+        realIndex = 0;
+    else {
+        realIndex = new unsigned[surfaces_->getNumberOfSurfaces()];
+        for (unsigned i = 0; i < surfaces_->getNumberOfSurfaces(); ++i)
+            if ((! filter) || filter->accept(*surfaces_->getSurface(i)))
+                realIndex[nFiltered++] = i;
+    }
+
     endResetModel();
 }
 
@@ -74,7 +106,7 @@ QModelIndex SurfaceModel::index(int row, int column,
 }
 
 int SurfaceModel::rowCount(const QModelIndex& parent) const {
-    return surfaces_->getNumberOfSurfaces();
+    return nFiltered;
 }
 
 int SurfaceModel::columnCount(const QModelIndex& parent) const {
@@ -84,8 +116,7 @@ int SurfaceModel::columnCount(const QModelIndex& parent) const {
 }
 
 QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
-    // TODO: Filter: surfaceIndex
-    unsigned surfaceIndex = index.row();
+    unsigned surfaceIndex = realIndex[index.row()];
 
     if (role == Qt::DisplayRole) {
         const regina::NNormalSurface* s = surfaces_->getSurface(surfaceIndex);
@@ -370,15 +401,14 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
 
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
+    uiLayout->setContentsMargins(0, 0, 0, 0);
     uiLayout->addSpacing(5);
 
     QBoxLayout* hdrLayout = new QHBoxLayout();
     uiLayout->addLayout(hdrLayout);
-    hdrLayout->setSpacing(5);
-    hdrLayout->addSpacing(5);
 
     // Set up the coordinate selector.
-    QLabel* label = new QLabel(i18n("Display coordinates:"), ui);
+    QLabel* label = new QLabel(i18n("Display coordinates:"));
     hdrLayout->addWidget(label);
     coords = new CoordinateChooser(ui);
     coords->insertAllViewers(surfaces);
@@ -393,7 +423,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     hdrLayout->addStretch(1);
 
     // Set up the filter selector.
-    label = new QLabel(i18n("Apply filter:"), ui);
+    label = new QLabel(i18n("Apply filter:"));
     hdrLayout->addWidget(label);
     filter = new PacketChooser(surfaces->getTreeMatriarch(),
         new SingleTypeFilter<regina::NSurfaceFilter>(), true, 0, ui);
@@ -408,8 +438,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     label->setWhatsThis(msg);
     filter->setWhatsThis(msg);
 
-    hdrLayout->addSpacing(5);
-    uiLayout->addSpacing(5);
+    // TODO: Required? uiLayout->addSpacing(5);
 
     // Set up the coordinate table.
     model = new SurfaceModel(surfaces);
@@ -419,7 +448,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     table->setAlternatingRowColors(true);
     table->header()->setStretchLastSection(false);
     table->setSelectionMode(QTreeView::SingleSelection);
-    //table->setDefaultRenameAction(QListView::Accept); TODO
+    //table->setDefaultRenameAction(QListView::Accept); TODO: Edits
     table->setWhatsThis(i18n("Displays details of the individual normal "
         "surfaces in this list.<p>"
         "Each row represents a single normal (or almost normal) surface.  "
@@ -478,8 +507,10 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     surfaceActionList.append(actCrush);
     connect(actCrush, SIGNAL(triggered()), this, SLOT(crush()));
 
-    connect(table, SIGNAL(selectionChanged()),
+    connect(table->selectionModel(),
+        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateActionStates()));
+    // TODO: Edits: broken connection
     connect(table, SIGNAL(itemRenamed(QListViewItem*, int,
         const QString&)), this, SLOT(notifySurfaceRenamed()));
 
@@ -522,7 +553,9 @@ void NSurfaceCoordinateUI::refreshLocal() {
     // Update the current filter.
     filter->refreshContents();
 
+    bool filterChanged = false;
     if (filter->selectedPacket() != appliedFilter) {
+        filterChanged = true;
         if (appliedFilter)
             appliedFilter->unlisten(this);
         appliedFilter = dynamic_cast<regina::NSurfaceFilter*>(
@@ -532,24 +565,17 @@ void NSurfaceCoordinateUI::refreshLocal() {
     }
 
     // Rebuild the underlying data model.
-    model->rebuild(coords->getCurrentSystem());
+    int selectedSystem = coords->getCurrentSystem();
+    bool coordsChanged = (model->coordSystem() != selectedSystem);
+    if (filterChanged)
+        model->rebuild(selectedSystem, appliedFilter);
+    else
+        model->rebuild(selectedSystem); // Faster if the filter is the same.
 
-    // Insert surfaces into the table.
-    // TODO: Filter!!!!!
-    /*
-    const regina::NNormalSurface* s;
-    for (i = surfaces->getNumberOfSurfaces() - 1; i >= 0; i--) {
-        s = surfaces->getSurface(i);
-        if (appliedFilter && ! appliedFilter->accept(*s))
-            continue;
-        (new NSurfaceCoordinateItem(table.get(), surfaces, i, newName[i],
-            coordSystem)); //->setRenameEnabled(1, isReadWrite);
-    }
-    */
-
-    // TODO: Actions: Necessary?
-    // actCutAlong->setEnabled(false);
-    // actCrush->setEnabled(false);
+    // Tidy up.
+    updateActionStates();
+    if (coordsChanged)
+        table->header()->resizeSections(QHeaderView::ResizeToContents);
 }
 
 void NSurfaceCoordinateUI::refresh() {
@@ -651,7 +677,6 @@ void NSurfaceCoordinateUI::crush() {
 }
 
 void NSurfaceCoordinateUI::updateActionStates() {
-    // TODO: It doesn't work.
     bool canCrushOrCut = isReadWrite &&
         table->selectionModel()->hasSelection() &&
         (! surfaces->allowsAlmostNormal()) && surfaces->isEmbeddedOnly();
