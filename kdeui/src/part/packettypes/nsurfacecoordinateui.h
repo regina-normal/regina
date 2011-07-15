@@ -100,13 +100,11 @@ class SurfaceModel : public QAbstractItemModel {
             int role) const;
 
         /**
-         * Static information on the property columns.
+         * Information on the property (non-coordinate) columns.
          */
-        static unsigned propertyColCount(bool embeddedOnly, bool almostNormal);
-        static QString propertyColName(int whichCol, bool embeddedOnly,
-            bool almostNormal);
-        static QString propertyColDesc(int whichCol, bool embeddedOnly,
-            bool almostNormal);
+        unsigned propertyColCount() const;
+        QString propertyColName(int whichCol) const;
+        QString propertyColDesc(int whichCol) const;
 };
 
 /**

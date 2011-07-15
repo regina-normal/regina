@@ -110,8 +110,7 @@ int SurfaceModel::rowCount(const QModelIndex& parent) const {
 }
 
 int SurfaceModel::columnCount(const QModelIndex& parent) const {
-    return propertyColCount(surfaces_->isEmbeddedOnly(),
-            surfaces_->allowsAlmostNormal()) +
+    return propertyColCount() +
         Coordinates::numColumns(coordSystem_, surfaces_->getTriangulation());
 }
 
@@ -213,20 +212,17 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else {
             // The default case:
             regina::NLargeInteger ans = Coordinates::getCoordinate(coordSystem_,
-                *s, index.column() - propertyColCount(
-                surfaces_->isEmbeddedOnly(), surfaces_->allowsAlmostNormal()));
+                *s, index.column() - propertyColCount());
             if (ans == (long)0)
                 return QVariant();
             else
                 return ans.stringValue().c_str();
         }
     } else if (role == Qt::ToolTipRole) {
-        int propertyCols = propertyColCount(surfaces_->isEmbeddedOnly(),
-            surfaces_->allowsAlmostNormal());
+        int propertyCols = propertyColCount();
 
         if (index.column() < propertyCols)
-            return propertyColDesc(index.column(), surfaces_->isEmbeddedOnly(),
-                surfaces_->allowsAlmostNormal());
+            return propertyColDesc(index.column());
         else
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, surfaces_->getTriangulation());
@@ -288,22 +284,18 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 
     if (role == Qt::DisplayRole) {
-        int propCols = propertyColCount(surfaces_->isEmbeddedOnly(),
-            surfaces_->allowsAlmostNormal());
+        int propCols = propertyColCount();
 
         if (section < propCols)
-            return propertyColName(section, surfaces_->isEmbeddedOnly(),
-                surfaces_->allowsAlmostNormal());
+            return propertyColName(section);
         else
             return Coordinates::columnName(coordSystem_, section - propCols,
                 surfaces_->getTriangulation());
     } else if (role == Qt::ToolTipRole) {
-        int propertyCols = propertyColCount(surfaces_->isEmbeddedOnly(),
-            surfaces_->allowsAlmostNormal());
+        int propertyCols = propertyColCount();
 
         if (section < propertyCols)
-            return propertyColDesc(section, surfaces_->isEmbeddedOnly(),
-                surfaces_->allowsAlmostNormal());
+            return propertyColDesc(section);
         else
             return Coordinates::columnDesc(coordSystem_, section - propertyCols,
                 surfaces_->getTriangulation());
@@ -313,14 +305,13 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 }
 
-unsigned SurfaceModel::propertyColCount(bool embeddedOnly,
-        bool almostNormal) {
-    return (embeddedOnly ? 8 : 6) + (almostNormal ? 1 : 0);
+unsigned SurfaceModel::propertyColCount() const {
+    return (surfaces_->isEmbeddedOnly() ? 8 : 6) +
+        (surfaces_->allowsAlmostNormal() ? 1 : 0);
 }
 
-QString SurfaceModel::propertyColName(int whichCol,
-        bool embeddedOnly, bool almostNormal) {
-    if (embeddedOnly) {
+QString SurfaceModel::propertyColName(int whichCol) const {
+    if (surfaces_->isEmbeddedOnly()) {
         switch (whichCol) {
             case 0 : return QString(); // Surface number
             case 1 : return i18n("Name");
@@ -331,7 +322,7 @@ QString SurfaceModel::propertyColName(int whichCol,
             case 6 : return i18n("Link");
             case 7 : return i18n("Type");
         }
-        if (whichCol == 8 && almostNormal)
+        if (whichCol == 8 && surfaces_->allowsAlmostNormal())
             return i18n("Octagon");
     } else {
         switch (whichCol) {
@@ -342,16 +333,15 @@ QString SurfaceModel::propertyColName(int whichCol,
             case 4 : return i18n("Link");
             case 5 : return i18n("Type");
         }
-        if (whichCol == 6 && almostNormal)
+        if (whichCol == 6 && surfaces_->allowsAlmostNormal())
             return i18n("Octagon");
     }
 
     return i18n("Unknown");
 }
 
-QString SurfaceModel::propertyColDesc(int whichCol,
-        bool embeddedOnly, bool almostNormal) {
-    if (embeddedOnly) {
+QString SurfaceModel::propertyColDesc(int whichCol) const {
+    if (surfaces_->isEmbeddedOnly()) {
         switch (whichCol) {
             case 0: return i18n("The index of this surface within the "
                 "overall list (surfaces are numbered 0,1,2,...)");
@@ -365,7 +355,7 @@ QString SurfaceModel::propertyColDesc(int whichCol,
                 "the link of a particular subcomplex?");
             case 7: return i18n("Other interesting properties");
         }
-        if (whichCol == 8 && almostNormal)
+        if (whichCol == 8 && surfaces_->allowsAlmostNormal())
             return i18n("The coordinate position containing the octagonal "
                 "disc type, and the number of discs of that type");
     } else {
@@ -380,7 +370,7 @@ QString SurfaceModel::propertyColDesc(int whichCol,
                 "the link of a particular subcomplex?");
             case 5: return i18n("Other interesting properties");
         }
-        if (whichCol == 6 && almostNormal)
+        if (whichCol == 6 && surfaces_->allowsAlmostNormal())
             return i18n("The coordinate position containing the octagonal "
                 "disc type, and the number of discs of that type");
     }
@@ -686,9 +676,7 @@ void NSurfaceCoordinateUI::updateActionStates() {
 }
 
 void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
-    int nNonCoordSections =
-        SurfaceModel::propertyColCount(surfaces->isEmbeddedOnly(),
-        surfaces->allowsAlmostNormal());
+    int nNonCoordSections = model->propertyColCount();
     if (currentlyResizing || section < nNonCoordSections)
         return;
 
