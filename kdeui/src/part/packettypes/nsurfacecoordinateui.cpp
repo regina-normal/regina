@@ -199,6 +199,52 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         else
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, surfaces_->getTriangulation());
+    } else if (role == Qt::ForegroundRole) {
+        const regina::NNormalSurface* s = surfaces_->getSurface(surfaceIndex);
+        regina::NTriBool triBool;
+
+        if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
+            if (! s->isCompact())
+                return QVariant();
+
+            triBool = s->isOrientable();
+            if (triBool.isTrue())
+                return Qt::darkGreen;
+            else if (triBool.isFalse())
+                return Qt::darkRed;
+            else
+                return Qt::darkYellow;
+        } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
+            if (! s->isCompact())
+                return QVariant();
+
+            triBool = s->isTwoSided();
+            if (triBool.isTrue())
+                return Qt::darkGreen;
+            else if (triBool.isFalse())
+                return Qt::darkRed;
+            else
+                return Qt::darkYellow;
+        } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
+                ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
+            if (! s->isCompact())
+                return Qt::darkYellow;
+            else if (s->hasRealBoundary())
+                return Qt::darkRed;
+            else
+                return Qt::darkGreen;
+        } else if (surfaces_->allowsAlmostNormal() &&
+                ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
+                ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
+            regina::NDiscType oct = s->getOctPosition();
+            if (oct != regina::NDiscType::NONE) {
+                if (s->getOctCoord(oct.tetIndex, oct.type) > 1)
+                    return Qt::darkRed;
+                else
+                    return Qt::darkGreen;
+            }
+        } else
+            return QVariant();
     } else if (role == Qt::TextAlignmentRole)
         return Qt::AlignRight;
     else
@@ -634,74 +680,4 @@ void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
 void NSurfaceCoordinateUI::notifySurfaceRenamed() {
     setDirty(true);
 }
-
-
-/* TODO: Colours
-NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
-        int column) {
-    if (surfaces->isEmbeddedOnly()) {
-        regina::NTriBool triBool;
-        switch (column) {
-            case 3:
-                if (! surface->isCompact())
-                    return Plain;
-
-                triBool = surface->isOrientable();
-                if (triBool.isTrue())
-                    return Qt::darkGreen;
-                else if (triBool.isFalse())
-                    return Qt::darkRed;
-                else
-                    return Qt::darkYellow;
-            case 4:
-                if (! surface->isCompact())
-                    return Plain;
-
-                triBool = surface->isTwoSided();
-                if (triBool.isTrue())
-                    return Qt::darkGreen;
-                else if (triBool.isFalse())
-                    return Qt::darkRed;
-                else
-                    return Qt::darkYellow;
-            case 5:
-                if (! surface->isCompact())
-                    return Qt::darkYellow;
-                else if (surface->hasRealBoundary())
-                    return Qt::darkRed;
-                else
-                    return Qt::darkGreen;
-        }
-        if (column == 8 && surfaces->allowsAlmostNormal()) {
-            regina::NDiscType oct = surface->getOctPosition();
-            if (oct != regina::NDiscType::NONE) {
-                if (surface->getOctCoord(oct.tetIndex, oct.type) > 1)
-                    return Qt::darkRed;
-                else
-                    return Qt::darkGreen;
-            }
-        }
-    } else {
-        switch (column) {
-            case 3:
-                if (! surface->isCompact())
-                    return Qt::darkYellow;
-                else if (surface->hasRealBoundary())
-                    return Qt::darkRed;
-                else
-                    return Qt::darkGreen;
-        }
-        if (column == 6 && surfaces->allowsAlmostNormal()) {
-            regina::NDiscType oct = surface->getOctPosition();
-            if (oct != regina::NDiscType::NONE) {
-                if (surface->getOctCoord(oct.tetIndex, oct.type) > 1)
-                    return Qt::darkRed;
-                else
-                    return Qt::darkGreen;
-            }
-        }
-    }
-    return Plain;
-}
-*/
 
