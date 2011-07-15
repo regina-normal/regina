@@ -41,7 +41,6 @@
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
 // TODO: Alignment of table cells?
-// TODO: Make it clear visually where the table ends
 
 using regina::NNormalSurfaceList;
 using regina::NPacket;
@@ -112,6 +111,12 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
         "in each linear combination.<p>"
         "For details of what each coordinate represents, hover the mouse "
         "over the column header (or refer to the users' handbook).</qt>"));
+    // Add grid lines:
+    table->setStyleSheet("QTreeView::item { "
+                            "border: 1px solid #d9d9d9; "
+                            "border-top-color: transparent;"
+                            "border-left-color: transparent;"
+                         "}");
     table->setModel(model);
 
     // Don't bother creating columns until we first create a set of
