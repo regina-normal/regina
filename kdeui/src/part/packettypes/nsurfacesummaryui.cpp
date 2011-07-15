@@ -106,7 +106,7 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "Each entry in this table counts the number of "
         "bounded surfaces with a particular orientability, 1/2-sidedness and "
         "Euler characteristic.</qt>"));
-    paneLayout->addWidget(tableClosed);
+    paneLayout->addWidget(tableClosed, Qt::AlignLeft);
 
     totBounded = new QLabel();
     totBounded->setWhatsThis(i18n("Counts the total number of compact "
@@ -126,7 +126,8 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "Each entry in this table counts the number of "
         "bounded surfaces with a particular orientability, 1/2-sidedness and "
         "Euler characteristic.</qt>"));
-    paneLayout->addWidget(tableBounded);
+    // TODO tableBounded->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    paneLayout->addWidget(tableBounded, Qt::AlignLeft);
 
     totSpun = new QLabel();
     totSpun->setWhatsThis(i18n("Counts the total number of non-compact "
