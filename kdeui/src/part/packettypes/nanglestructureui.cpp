@@ -157,6 +157,7 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
     model = new AngleModel(packet);
 
     table = new QTreeView();
+    table->setItemsExpandable(false);
     table->setRootIsDecorated(false);
     table->setAlternatingRowColors(true);
     table->header()->setStretchLastSection(false);

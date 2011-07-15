@@ -99,6 +99,7 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
     model = new MatchingModel(packet);
 
     table = new QTreeView();
+    table->setItemsExpandable(false);
     table->setRootIsDecorated(false);
     table->setAlternatingRowColors(true);
     table->header()->setStretchLastSection(false);
