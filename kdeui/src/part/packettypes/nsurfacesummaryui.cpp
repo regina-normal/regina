@@ -37,8 +37,9 @@
 #include <klocale.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <QHeaderView>
 #include <QScrollArea>
-#include <QTableWidget>
+#include <QTreeWidget>
 #include <map>
 
 namespace {
@@ -82,22 +83,22 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
     pane->setLayout(paneLayout);
     scroller->setWidget(pane);
 
-    paneLayout->setMargin(5);
-    paneLayout->setSpacing(5);
-
-    tot = new QLabel(pane);
+    tot = new QLabel();
     tot->setWhatsThis(i18n("Counts the total number of surfaces "
         "in this list."));
+    paneLayout->addWidget(tot);
 
-    totClosed = new QLabel(pane);
+    totClosed = new QLabel();
     totClosed->setWhatsThis(i18n("Counts the total number of closed compact "
         "surfaces in this list (i.e., closed surfaces with finitely many "
         "discs)."));
+    paneLayout->addWidget(totClosed);
 
-    tableClosed = new QTableWidget(pane);
-    //tableClosed->setItemsMovable(false); TODO
-    //tableClosed->addColumn(QString());
-    //tableClosed->setSorting(-1);
+    tableClosed = new QTreeWidget();
+    tableClosed->setRootIsDecorated(false);
+    tableClosed->setAlternatingRowColors(false);
+    tableClosed->header()->setStretchLastSection(false);
+    tableClosed->header()->setResizeMode(QHeaderView::ResizeToContents);
     tableClosed->setSelectionMode(QAbstractItemView::NoSelection);
     tableClosed->setWhatsThis(i18n("<qt>Breaks down the total count "
         "for closed compact surfaces (i.e., closed surfaces with "
@@ -105,16 +106,19 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "Each entry in this table counts the number of "
         "bounded surfaces with a particular orientability, 1/2-sidedness and "
         "Euler characteristic.</qt>"));
+    paneLayout->addWidget(tableClosed);
 
-    totBounded = new QLabel(pane);
+    totBounded = new QLabel();
     totBounded->setWhatsThis(i18n("Counts the total number of compact "
         "surfaces in this list with real boundary (i.e., bounded surfaces with "
         "finitely many discs)."));
+    paneLayout->addWidget(totBounded);
 
-    tableBounded = new QTableWidget(pane);
-    //tableBounded->setItemsMovable(false);
-    //tableBounded->addColumn(QString());
-    //tableBounded->setSorting(-1); TODO
+    tableBounded = new QTreeWidget();
+    tableBounded->setRootIsDecorated(false);
+    tableBounded->setAlternatingRowColors(false);
+    tableBounded->header()->setStretchLastSection(false);
+    tableBounded->header()->setResizeMode(QHeaderView::ResizeToContents);
     tableBounded->setSelectionMode(QAbstractItemView::NoSelection);
     tableBounded->setWhatsThis(i18n("<qt>Breaks down the total "
         "count for surfaces with real boundary (i.e., bounded surfaces with "
@@ -122,13 +126,15 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "Each entry in this table counts the number of "
         "bounded surfaces with a particular orientability, 1/2-sidedness and "
         "Euler characteristic.</qt>"));
+    paneLayout->addWidget(tableBounded);
 
-    totSpun = new QLabel(pane);
+    totSpun = new QLabel();
     totSpun->setWhatsThis(i18n("Counts the total number of non-compact "
         "surfaces in this list (i.e., surfaces with infinitely many discs)."));
+    paneLayout->addWidget(totSpun);
 
     // Add some space at the end.
-    paneLayout->setStretchFactor(new QWidget(pane), 1);
+    paneLayout->addStretch(1);
 }
 
 NSurfaceSummaryUI::~NSurfaceSummaryUI() {
@@ -195,12 +201,10 @@ void NSurfaceSummaryUI::refresh() {
     std::set<std::pair<int, int> >::const_iterator typeIt;
     std::set<regina::NLargeInteger>::const_iterator ECIt;
     std::map<regina::NLargeInteger, unsigned long>::const_iterator countIt;
-    QTableWidgetItem* row;
+    QTreeWidgetItem *row, *header;
     int col;
 
     tableClosed->clear();
-    while (tableClosed->columnCount() > 1)
-        tableClosed->removeColumn(tableClosed->columnCount() - 1);
 
     if (closed == 0) {
         totClosed->setText(i18n("No closed surfaces."));
@@ -212,31 +216,32 @@ void NSurfaceSummaryUI::refresh() {
             totClosed->setText(i18n("%1 closed surfaces, breakdown below:").
                 arg(closed));
 
-/*        for (typeIt = allTypesClosed.begin(); typeIt != allTypesClosed.end();
-                ++typeIt) {
-            col = tableClosed->addColumn(
-                tableHeader(typeIt->first, typeIt->second));
-            tableClosed->setColumnAlignment(col, Qt::AlignRight);
-        } */ // TODO Check if needed.
-        for (ECIt = allECsClosed.begin(); ECIt != allECsClosed.end(); ++ECIt) {
-            int rowIndex = tableClosed->rowCount();
-            row = new QTableWidgetItem();
-            tableClosed->setItem(rowIndex,0,row);
-            row->setText(i18n("Euler = %1").arg(ECIt->stringValue().c_str()));
-            row->setTextAlignment(Qt::AlignRight);
+        tableClosed->setColumnCount(allTypesClosed.size() + 1);
+        header = new QTreeWidgetItem();
+        for (i = 1, typeIt = allTypesClosed.begin();
+                typeIt != allTypesClosed.end(); ++i, ++typeIt) {
+            header->setText(i, tableHeader(typeIt->first, typeIt->second));
+            header->setTextAlignment(i, Qt::AlignRight);
+        }
+        tableClosed->setHeaderItem(header);
+
+        for (i = 1, ECIt = allECsClosed.begin();
+                ECIt != allECsClosed.end(); ++i, ++ECIt) {
+            row = new QTreeWidgetItem();
+            row->setText(0, i18n("Euler = %1").
+                arg(ECIt->stringValue().c_str()));
+            row->setTextAlignment(0, Qt::AlignLeft);
             for (typeIt = allTypesClosed.begin(), col = 1;
                     typeIt != allTypesClosed.end(); ++typeIt, ++col) {
                 countIt = countClosed[typeIt->first][typeIt->second].
                     find(*ECIt);
                 if (countIt !=
-                        countClosed[typeIt->first][typeIt->second].end())
-                {
-                    row = new QTableWidgetItem();
-                    tableClosed->setItem(rowIndex,col,row);
-                    row->setText(QString::number(countIt->second));
-                    row->setTextAlignment(Qt::AlignRight);
+                        countClosed[typeIt->first][typeIt->second].end()) {
+                    row->setText(col, QString::number(countIt->second));
+                    row->setTextAlignment(col, Qt::AlignRight);
                 }
             }
+            tableClosed->addTopLevelItem(row);
         }
 
         tableClosed->show();
@@ -244,8 +249,6 @@ void NSurfaceSummaryUI::refresh() {
 
     if (surfaces->getTriangulation()->hasBoundaryFaces()) {
         tableBounded->clear();
-        while (tableBounded->columnCount() > 1)
-            tableBounded->removeColumn(tableBounded->columnCount() - 1);
 
         if (bounded == 0) {
             totBounded->setText(i18n("No bounded surfaces."));
@@ -258,33 +261,32 @@ void NSurfaceSummaryUI::refresh() {
                 totBounded->setText(i18n(
                     "%1 bounded surfaces, breakdown below:").arg(bounded));
 
-/*            for (typeIt = allTypesBounded.begin();
-                    typeIt != allTypesBounded.end(); ++typeIt) {
-                col = tableBounded->addColumn(
-                    tableHeader(typeIt->first, typeIt->second));
-                tableBounded->setColumnAlignment(col, Qt::AlignRight);
-            } */ // TODO Don't need this I think
-            for (ECIt = allECsBounded.begin(); ECIt != allECsBounded.end();
-                    ++ECIt) {
-                int rowIndex = tableBounded->rowCount();
-                row = new QTableWidgetItem();
-                tableBounded->setItem(rowIndex, 0, row);
-                row->setText(i18n("Euler = %1").
+            tableBounded->setColumnCount(allTypesBounded.size() + 1);
+            header = new QTreeWidgetItem();
+            for (i = 1, typeIt = allTypesBounded.begin();
+                    typeIt != allTypesBounded.end(); ++i, ++typeIt) {
+                header->setText(i, tableHeader(typeIt->first, typeIt->second));
+                header->setTextAlignment(i, Qt::AlignRight);
+            }
+            tableBounded->setHeaderItem(header);
+
+            for (i = 0, ECIt = allECsBounded.begin();
+                    ECIt != allECsBounded.end(); ++i, ++ECIt) {
+                row = new QTreeWidgetItem();
+                row->setText(0, i18n("Euler = %1").
                     arg(ECIt->stringValue().c_str()));
-                row->setTextAlignment(Qt::AlignRight);
+                row->setTextAlignment(0, Qt::AlignLeft);
                 for (typeIt = allTypesBounded.begin(), col = 1;
                         typeIt != allTypesBounded.end(); ++typeIt, ++col) {
                     countIt = countBounded[typeIt->first][typeIt->second].
                         find(*ECIt);
                     if (countIt !=
-                            countBounded[typeIt->first][typeIt->second].end())
-                    {
-                        row = new QTableWidgetItem();
-                        tableBounded->setItem(rowIndex, col, row);
-                        row->setText(QString::number(countIt->second));
-                        row->setTextAlignment(Qt::AlignRight);
+                            countBounded[typeIt->first][typeIt->second].end()) {
+                        row->setText(col, QString::number(countIt->second));
+                        row->setTextAlignment(col, Qt::AlignRight);
                     }
                 }
+                tableBounded->addTopLevelItem(row);
             }
 
             tableBounded->show();
