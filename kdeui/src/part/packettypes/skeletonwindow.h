@@ -219,10 +219,7 @@ inline SkeletalModel::SkeletalModel(QObject* parent,
 
 inline QModelIndex SkeletalModel::index(int row, int column,
         const QModelIndex& parent) const {
-    if (parent.isValid())
-        return QModelIndex();
-    else
-        return createIndex(row, column, 4 * row + column);
+    return createIndex(row, column, 4 * row + column);
 }
 
 inline QModelIndex SkeletalModel::parent(const QModelIndex&) const {
