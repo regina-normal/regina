@@ -38,9 +38,9 @@
 #include <QHeaderView>
 #include <QTreeView>
 
-#define DEFAULT_MATCHING_COLUMN_WIDTH 40
+// TODO: Fix default width.
 
-// TODO: Alignment of table cells?
+#define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
 using regina::NNormalSurfaceList;
 using regina::NPacket;
@@ -72,6 +72,8 @@ QVariant MatchingModel::data(const QModelIndex& index, int role) const {
     } else if (role == Qt::ToolTipRole)
         return Coordinates::columnDesc(surfaces_->getFlavour(), index.column(),
             surfaces_->getTriangulation());
+    else if (role == Qt::TextAlignmentRole)
+        return Qt::AlignCenter;
     else
         return QVariant();
 }
@@ -87,6 +89,8 @@ QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
     else if (role == Qt::ToolTipRole)
         return Coordinates::columnDesc(surfaces_->getFlavour(), section,
             surfaces_->getTriangulation());
+    else if (role == Qt::TextAlignmentRole)
+        return Qt::AlignCenter;
     else
         return QVariant();
 }
