@@ -292,9 +292,27 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             }
         } else
             return QVariant();
-    } else if (role == Qt::TextAlignmentRole)
-        return Qt::AlignRight; // TODO: Make alignment depend on column.
-    else
+    } else if (role == Qt::TextAlignmentRole) {
+        if (index.column() == 1)
+            return Qt::AlignLeft; // Name
+        else if (surfaces_->isEmbeddedOnly() && index.column() == 3)
+            return Qt::AlignLeft; // Orientable
+        else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
+                ((! surfaces_->isEmbeddedOnly()) && index.column() == 3))
+            return Qt::AlignLeft; // Boundary
+        else if ((surfaces_->isEmbeddedOnly() && index.column() == 6) ||
+                ((! surfaces_->isEmbeddedOnly()) && index.column() == 4))
+            return Qt::AlignLeft; // Vertex / edge link
+        else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||
+                ((! surfaces_->isEmbeddedOnly()) && index.column() == 5))
+            return Qt::AlignLeft; // Splitting / central
+        else if (surfaces_->allowsAlmostNormal() &&
+                ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
+                ((! surfaces_->isEmbeddedOnly()) && index.column() == 6)))
+            return Qt::AlignLeft; // Octahedron
+        else
+            return Qt::AlignRight; // All other fields are numbers.
+    } else
         return QVariant();
 }
 
@@ -614,17 +632,14 @@ void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
 }
 
 void NSurfaceCoordinateUI::cutAlong() {
-/* TODO: Action!
-    QList<QTableWidgetItem*> items = table->selectedItems();
-    if ( items.count() == 0) {
+    if (table->selectionModel()->selectedIndexes().empty()) {
         KMessageBox::error(ui,
             i18n("No normal surface is currently selected to cut along."));
         return;
     }
-    QTableWidgetItem* item = items[0];
 
     const regina::NNormalSurface* toCutAlong =
-        dynamic_cast<NSurfaceCoordinateItem*>(item)->getSurface();
+        model->surface(table->selectionModel()->selectedIndexes().front());
     if (! toCutAlong->isCompact()) {
         KMessageBox::error(ui, i18n("The selected surface is non-compact "
             "and so cannot be cut along."));
@@ -641,21 +656,17 @@ void NSurfaceCoordinateUI::cutAlong() {
     surfaces->insertChildLast(ans);
 
     enclosingPane->getPart()->packetView(ans, true);
-*/
 }
 
 void NSurfaceCoordinateUI::crush() {
-    /* TODO: Action!
-    QList<QTableWidgetItem*> items = table->selectedItems();
-    if ( items.count() == 0) {
+    if (table->selectionModel()->selectedIndexes().empty()) {
         KMessageBox::error(ui,
             i18n("No normal surface is currently selected to crush."));
         return;
     }
-    QTableWidgetItem* item = items[0];
 
     const regina::NNormalSurface* toCrush =
-        dynamic_cast<NSurfaceCoordinateItem*>(item)->getSurface();
+        model->surface(table->selectionModel()->selectedIndexes().front());
     if (! toCrush->isCompact()) {
         KMessageBox::error(ui, i18n("The selected surface is non-compact "
             "and so cannot be crushed."));
@@ -670,7 +681,6 @@ void NSurfaceCoordinateUI::crush() {
     surfaces->insertChildLast(ans);
 
     enclosingPane->getPart()->packetView(ans, true);
-*/
 }
 
 void NSurfaceCoordinateUI::updateActionStates() {
