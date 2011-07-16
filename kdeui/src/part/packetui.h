@@ -44,6 +44,7 @@ class KAction;
 class KActionMenu;
 class KMainWindow;
 class PacketPane;
+class PacketWindow;
 class QLabel;
 class QToolButton;
 class ReginaPart;
@@ -323,7 +324,7 @@ class PacketPane : public KVBox, public regina::NPacketListener {
          * External components
          */
         ReginaPart* part;
-        KMainWindow* frame;
+        PacketWindow* frame;
 
         /**
          * Internal components
