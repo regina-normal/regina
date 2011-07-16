@@ -646,8 +646,8 @@ void PacketPane::floatPane() {
 
 void PacketPane::updateClipboardActions() {
     KTextEditor::Document* edit = mainUI->getTextComponent();
-    KTextEditor::View* view = edit->activeView();
     if (edit) {
+        KTextEditor::View* view = edit->activeView();
         if (extCut)
             extCut->setEnabled(view->selection() && edit->isReadWrite());
         if (extCopy)
