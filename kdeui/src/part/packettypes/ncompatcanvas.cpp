@@ -62,8 +62,8 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     // Work out how much vertical and horizontal space we will need for
     // text.  Assume here that (nSurfaces-1) is the largest number we
     // will need to draw.
-    QGraphicsSimpleTextItem* t = new QGraphicsSimpleTextItem(QString::number(nSurfaces - 1));
-    addItem(t);
+    QGraphicsSimpleTextItem* t = new QGraphicsSimpleTextItem(
+        QString::number(nSurfaces - 1));
     unsigned textWidth = t->boundingRect().width();
     unsigned textHeight = t->boundingRect().height();
     delete t;
@@ -91,7 +91,8 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
             bottomMargin = OUTER_MARGIN;
     }
 
-    setSceneRect(0,0,gridX + gridSize + rightMargin, gridY + gridSize + bottomMargin);
+    setSceneRect(0, 0, gridX + gridSize + rightMargin,
+        gridY + gridSize + bottomMargin);
 
     // Draw a bounding box.
     QGraphicsRectItem* box = new QGraphicsRectItem(
@@ -110,11 +111,7 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     pos = gridX + halfCell;
     QGraphicsSimpleTextItem* prev = new QGraphicsSimpleTextItem(" 0 ");
     addItem(prev);
-    
-    // TODO: No longer needed ?
-    //prev->setTextFlags(Qt::AlignHCenter | Qt::AlignTop); 
-   
-    prev->setPos(pos, TOP_MARGIN);
+    prev->setPos(pos - prev->boundingRect().width() / 2, TOP_MARGIN);
     prev->show();
 
     QGraphicsLineItem* tick = new QGraphicsLineItem();
@@ -127,10 +124,7 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     QGraphicsSimpleTextItem* last = new QGraphicsSimpleTextItem(
         QString(" %1 ").arg(nSurfaces - 1));
     addItem(last);
-    
-    // TODO: No longer needed ?
-    //last->setTextFlags(Qt::AlignHCenter | Qt::AlignTop);
-    last->setPos(pos, TOP_MARGIN);
+    last->setPos(pos - last->boundingRect().width() / 2, TOP_MARGIN);
     if (last->collidesWithItem(prev)) {
         delete last;
         last = 0;
@@ -149,8 +143,7 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
             pos = gridX + halfCell + cellSize * i;
             t = new QGraphicsSimpleTextItem(QString(" %1 ").arg(i));
             addItem(t);
-            //t->setTextFlags(Qt::AlignHCenter | Qt::AlignTop);
-            t->setPos(pos, TOP_MARGIN);
+            t->setPos(pos - t->boundingRect().width() / 2, TOP_MARGIN);
             if (t->collidesWithItem(prev) || t->collidesWithItem(last))
                 delete t;
             else {
@@ -170,8 +163,8 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     pos = gridY + halfCell;
     prev = new QGraphicsSimpleTextItem(" 0 ");
     addItem(prev);
-    //prev->setTextFlags(Qt::AlignRight | Qt::AlignVCenter);
-    prev->setPos(LEFT_MARGIN + textWidth, pos);
+    prev->setPos(LEFT_MARGIN + textWidth - prev->boundingRect().width(),
+        pos - prev->boundingRect().height() / 2);
     prev->show();
 
     tick = new QGraphicsLineItem();
@@ -183,8 +176,8 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     pos = gridY + halfCell + cellSize * (nSurfaces - 1);
     last = new QGraphicsSimpleTextItem(QString(" %1 ").arg(nSurfaces - 1));
     addItem(last);
-    //last->setTextFlags(Qt::AlignRight | Qt::AlignVCenter);
-    last->setPos(LEFT_MARGIN + textWidth, pos);
+    last->setPos(LEFT_MARGIN + textWidth - last->boundingRect().width(),
+        pos - last->boundingRect().height() / 2);
     if (last->collidesWithItem(prev)) {
         delete last;
         last = 0;
@@ -203,8 +196,8 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
             pos = gridY + halfCell + cellSize * i;
             t = new QGraphicsSimpleTextItem(QString(" %1 ").arg(i));
             addItem(t);
-            //t->setTextFlags(Qt::AlignRight | Qt::AlignVCenter);
-            t->setPos(LEFT_MARGIN + textWidth, pos);
+            t->setPos(LEFT_MARGIN + textWidth - t->boundingRect().width(),
+                pos - t->boundingRect().height() / 2);
             if (t->collidesWithItem(prev) || t->collidesWithItem(last))
                 delete t;
             else {
