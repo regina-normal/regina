@@ -281,6 +281,20 @@ void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree,
 
     if (makeVisibleInTree || selectInTree) {
         PacketTreeItem* item = treeView->find(packet);
+        if (! item) {
+            // We cannot find the item in the tree.
+            // Perhaps this is because the packet was just created and
+            // the tree has not been refreshed yet?
+            // Force a refresh now and try again.
+            if (packet->getTreeParent()) {
+                PacketTreeItem* parent =
+                    treeView->find(packet->getTreeParent());
+                if (parent) {
+                    parent->refreshSubtree();
+                    item = treeView->find(packet);
+                }
+            }
+        }
         if (item) {
             if (makeVisibleInTree)
                 treeView->scrollToItem(item);

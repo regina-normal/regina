@@ -95,14 +95,6 @@ void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* newPacket = dlg.createdPacket();
         if (newPacket) {
-            // The packet tree event listener might not refresh the tree
-            // immediately to recognise the new child.
-            // Force this now.
-            // TODO: Is there a way around this?
-            PacketTreeItem* item = treeView->find(newPacket->getTreeParent());
-            if (item)
-                item->refreshSubtree();
-
             // Open a UI for the new packet, and select it in the tree.
             packetView(newPacket, true, true);
         }

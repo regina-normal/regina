@@ -655,7 +655,7 @@ void NSurfaceCoordinateUI::cutAlong() {
           .toAscii().constData()));
     surfaces->insertChildLast(ans);
 
-    enclosingPane->getPart()->packetView(ans, true);
+    enclosingPane->getPart()->packetView(ans, true, true);
 }
 
 void NSurfaceCoordinateUI::crush() {
@@ -680,7 +680,7 @@ void NSurfaceCoordinateUI::crush() {
           .toAscii().constData()));
     surfaces->insertChildLast(ans);
 
-    enclosingPane->getPart()->packetView(ans, true);
+    enclosingPane->getPart()->packetView(ans, true, true);
 }
 
 void NSurfaceCoordinateUI::updateActionStates() {
