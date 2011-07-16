@@ -59,6 +59,8 @@ namespace regina {
 
 /**
  * A packet header, containing an appropriate icon and text title.
+ *
+ * We derive from KHBox so we can use Qt frames.
  */
 class PacketHeader : public KHBox {
     Q_OBJECT

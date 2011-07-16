@@ -71,7 +71,8 @@ QLinkedList<KAction*> PacketUI::noActions;
 PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent) 
         : KHBox(parent), packet(pkt) {
     icon = new QLabel(this);
-    icon->setWindowIcon(PacketManager::iconBar(packet, true)); // TODO: Is this meant to be a window icon?
+    icon->setPixmap(PacketManager::iconSmall(packet, true));
+    icon->setMargin(2); // Leave *some* space, however tiny.
 
     title = new QLabel(packet->getFullName().c_str(), this);
     title->setAlignment(Qt::AlignCenter);
@@ -83,7 +84,7 @@ PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent)
 
 void PacketHeader::refresh() {
     title->setText(packet->getFullName().c_str());
-    icon->setPixmap(PacketManager::iconBar(packet, true));
+    icon->setPixmap(PacketManager::iconSmall(packet, true));
 }
 
 ErrorPacketUI::ErrorPacketUI(regina::NPacket* newPacket,
