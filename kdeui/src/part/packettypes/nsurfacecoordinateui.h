@@ -73,11 +73,16 @@ class SurfaceModel : public QAbstractItemModel {
          */
         QString* localName;
 
+        /**
+         * Internal status
+         */
+        bool isReadWrite;
+
     public:
         /**
          * Constructor and destructor.
          */
-        SurfaceModel(regina::NNormalSurfaceList* surfaces);
+        SurfaceModel(regina::NNormalSurfaceList* surfaces, bool readWrite);
         ~SurfaceModel();
 
         /**
@@ -98,6 +103,11 @@ class SurfaceModel : public QAbstractItemModel {
          */
         void refreshNames();
         void commitNames();
+
+        /**
+         * Updating read/write status.
+         */
+        void setReadWrite(bool readWrite);
 
         /**
          * Overrides for describing and editing data in the model.

@@ -53,12 +53,12 @@
 using regina::NNormalSurfaceList;
 using regina::NPacket;
 
-// TODO: Selected lines are invisible, sigh.
-
-SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces) :
+SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces,
+        bool readWrite) :
         surfaces_(surfaces),
         coordSystem_(surfaces->getFlavour()),
-        localName(0) {
+        localName(0),
+        isReadWrite(readWrite) {
     nFiltered = surfaces_->getNumberOfSurfaces();
     if (nFiltered == 0)
         realIndex = 0;
@@ -112,6 +112,17 @@ void SurfaceModel::commitNames() {
     for (unsigned i = 0; i < surfaces_->getNumberOfSurfaces(); ++i)
         const_cast<regina::NNormalSurface*>(surfaces_->getSurface(i))->
             setName(localName[i].toAscii().constData());
+}
+
+void SurfaceModel::setReadWrite(bool readWrite) {
+    if (readWrite == isReadWrite)
+        return;
+
+    // Presumably a model reset is too severe, but I'm not sure what's
+    // actually necessary so let's just be safe.
+    beginResetModel();
+    readWrite = isReadWrite;
+    endResetModel();
 }
 
 QModelIndex SurfaceModel::index(int row, int column,
@@ -344,7 +355,7 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
 }
 
 Qt::ItemFlags SurfaceModel::flags(const QModelIndex& index) const {
-    if (index.column() == 1)
+    if (index.column() == 1 && isReadWrite)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -478,7 +489,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     filter->setWhatsThis(msg);
 
     // Set up the coordinate table.
-    model = new SurfaceModel(surfaces);
+    model = new SurfaceModel(surfaces, readWrite);
 
     table = new QTreeView();
     table->setItemsExpandable(false);
@@ -496,7 +507,10 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "represents, hover the mouse over the column header (or refer "
         "to the users' handbook).</qt>"));
     // Add grid lines:
-    table->setStyleSheet("QTreeView::item { "
+    table->setStyleSheet("QTreeView::item:selected { "
+                            "background-color: royalblue; " // TODO: Avoid this!
+                         "} "
+                         "QTreeView::item { "
                             "border: 1px solid #d9d9d9; "
                             "border-top-color: transparent; "
                             "border-left-color: transparent; "
@@ -621,7 +635,7 @@ void NSurfaceCoordinateUI::refresh() {
 void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
     isReadWrite = readWrite;
 
-    // TODO: pass new readWrite status to the model (-> item flags)
+    model->setReadWrite(readWrite);
     updateActionStates();
 }
 
