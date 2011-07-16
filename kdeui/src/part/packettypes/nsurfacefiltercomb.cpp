@@ -101,14 +101,12 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
 
     // Set up the list of child filters.
     QBoxLayout* wideChildLayout = new QHBoxLayout();
-    layout->addLayout(wideChildLayout);
-    layout->setStretchFactor(wideChildLayout, 3);
+    layout->addLayout(wideChildLayout, 3);
 
     wideChildLayout->addStretch(1);
 
     QVBoxLayout* childLayout = new QVBoxLayout();
-    wideChildLayout->addLayout(wideChildLayout);
-    wideChildLayout->setStretchFactor(childLayout, 2);
+    wideChildLayout->addLayout(childLayout, 2);
 
     label = new QLabel(i18n("Filters to be combined\n"
         "(i.e., all filters immediately beneath this in the tree):"), ui);
