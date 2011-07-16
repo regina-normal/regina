@@ -55,6 +55,7 @@ NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem) {
     layout->addWidget(coordAreaWidget);
 
     QBoxLayout* coordArea = new QHBoxLayout(coordAreaWidget);
+    coordArea->setContentsMargins(0, 0, 0, 0);
     coordArea->setSpacing(5);
     QString expln = i18n("Specifies the coordinate system in which the "
         "vertex normal surfaces will be enumerated.");
@@ -66,8 +67,6 @@ NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem) {
     coords->setCurrentSystem(defaultCoordSystem);
     coords->setWhatsThis(expln);
     coordArea->addWidget(coords, 1);
-
-    layout->addSpacing(5);
 
     embedded = new QCheckBox(i18n("Embedded surfaces only"), ui);
     embedded->setChecked(true);
