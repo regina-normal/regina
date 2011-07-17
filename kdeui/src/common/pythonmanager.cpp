@@ -55,10 +55,21 @@ void PythonManager::openPythonReference(QWidget* parent) {
         QFile::decodeName(regina::NGlobalDirs::engineDocs().c_str());
     QString index = docDir + "/modules.html";
 
-    if (QFileInfo(index).exists())
-        new KRun("file:" + index, 0, true /* local file */,
-            false /* progress info */);
-    else
+    if (QFileInfo(index).exists()) {
+        // If we're on a mac, just use the default Mac browser.
+        #ifdef __APPLE__
+        if (! KRun::runCommand(QString("open \"%1\"").arg(index),
+                parent /* TODO: should be top-level widget */))
+        #else
+        if (! KRun::runUrl("file:" + index, "text/html",
+                parent /* TODO: should be top-level widget */,
+                false /* temp file */, false /* run executables */))
+        #endif
+            KMessageBox::sorry(parent, i18n("<qt>The Python reference could "
+                "not be opened from within KDE.  "
+                "Please try pointing your web browser to "
+                "<tt>%1/modules.html</tt>.</qt>").arg(docDir));
+    } else
         KMessageBox::sorry(parent, i18n("<qt>The Python reference could "
             "not be found.  Perhaps it is not installed?<p>"
             "The Python reference (i.e., the API documentation for the "
