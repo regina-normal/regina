@@ -68,7 +68,7 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
         KTextEditor::undoInterface(document)->clearUndo();
     */
 
-    connect(document, SIGNAL(textChanged()),
+    connect(document, SIGNAL(textChanged(KTextEditor::Document*)),
         this, SLOT(notifyTextChanged()));
 }
 

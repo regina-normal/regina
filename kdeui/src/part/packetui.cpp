@@ -227,7 +227,8 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     if (edit) {
         // Listening on selectionChanged() will tell us when selections are
         // made and unmade.
-        connect(edit, SIGNAL(selectionChanged()),
+        connect(edit->activeView(),
+            SIGNAL(selectionChanged(KTextEditor::View*)),
             this, SLOT(updateClipboardActions()));
         // Also watch when the clipboard becomes available.
         connect(KApplication::kApplication()->clipboard(),
@@ -235,6 +236,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         // Finally we call updateClipboardActions() ourselves when the
         // part's read-write status changes.
 
+        // TODO: Get undo/redo working...
         // Do a similar thing for the undo/redo actions.
         connect(edit, SIGNAL(undoChanged()),
             this, SLOT(updateUndoActions()));
