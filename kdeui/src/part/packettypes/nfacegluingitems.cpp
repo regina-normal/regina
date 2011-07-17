@@ -30,7 +30,6 @@
 #include "triangulation/nface.h"
 
 // UI includes:
-#include "nfacegluingdialog.h"
 #include "nfacegluingitems.h"
 
 #include <klineedit.h>
@@ -99,39 +98,28 @@ void TetNameItem::setContentFromEditor(QWidget* editor) {
         setText(QString::number(row()) + " (" + name + ')');
 }
 
-FaceGluingItem::FaceGluingItem(QTableWidget* table,
-        const ReginaPrefSet::TriEditMode& useEditMode) :
-        QTableWidgetItem(), adjTet(-1), editMode(useEditMode),
-        error(false) {
+FaceGluingItem::FaceGluingItem(QTableWidget* table) :
+        QTableWidgetItem(), adjTet(-1), error(false) {
     //setReplaceable(false); TODO
     connect(this, SIGNAL(destinationChanged()), table, SLOT(doValueChanged()));
 }
 
-FaceGluingItem::FaceGluingItem(QTableWidget* table,
-        const ReginaPrefSet::TriEditMode& useEditMode, int myFace,
+FaceGluingItem::FaceGluingItem(QTableWidget* table, int myFace,
         unsigned long destTet, const regina::NPerm4& gluingPerm) :
-        QTableWidgetItem(), adjTet(destTet), adjPerm(gluingPerm),
-        editMode(useEditMode), error(false) {
+        QTableWidgetItem(), adjTet(destTet), adjPerm(gluingPerm), error(false) {
     //setReplaceable(false); TODO
     setText(destString(myFace, destTet, gluingPerm));
     connect(this, SIGNAL(destinationChanged()), table, SLOT(doValueChanged()));
 }
 
 QWidget* FaceGluingItem::createEditor() const {
-    if (editMode == ReginaPrefSet::DirectEdit) {
-        KLineEdit* editor = new KLineEdit(tableWidget()->viewport());
-        editor->setFrame(false);
-        editor->setValidator(new QRegExpValidator(reFaceGluing, editor));
-        editor->setText(destString(myFace(), adjTet, adjPerm));
-        editor->selectAll();
+    KLineEdit* editor = new KLineEdit(tableWidget()->viewport());
+    editor->setFrame(false);
+    editor->setValidator(new QRegExpValidator(reFaceGluing, editor));
+    editor->setText(destString(myFace(), adjTet, adjPerm));
+    editor->selectAll();
 
-        return editor;
-    } else {
-        return new NFaceGluingButton(tableWidget()->rowCount(),
-            row(), myFace(), adjTet,
-            (adjPerm * NFace::ordering[myFace()]).trunc3().c_str(),
-            const_cast<FaceGluingItem*>(this));
-    }
+    return editor;
 }
 
 void FaceGluingItem::setDestination(long newAdjTet,

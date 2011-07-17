@@ -77,13 +77,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI,
         const ReginaPrefSet& initPrefs, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet),
-        editMode(initPrefs.triEditMode), censusFiles(initPrefs.censusFiles) {
+        censusFiles(initPrefs.censusFiles) {
     // Set up the table of face gluings.
 
     faceTable = new QTableWidget(0, 5, 0);
     
     // TODO: Do we want this bit here?
-    if( readWrite)
+    if (readWrite)
         faceTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
     else
         faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -435,11 +435,11 @@ void NTriGluingsUI::refresh() {
             adj = tet->adjacentTetrahedron(face);
             if (adj)
                 faceTable->setItem(tetNum, 4 - face, new FaceGluingItem(
-                    faceTable, editMode, face, tri->tetrahedronIndex(adj),
+                    faceTable, face, tri->tetrahedronIndex(adj),
                     tet->adjacentGluing(face)));
             else
                 faceTable->setItem(tetNum, 4 - face,
-                    new FaceGluingItem(faceTable, editMode));
+                    new FaceGluingItem(faceTable));
         }
     }
 
@@ -467,8 +467,7 @@ void NTriGluingsUI::addTet() {
     faceTable->setRowCount(newRow + 1);
     faceTable->setItem(newRow, 0, new TetNameItem(newRow, ""));
     for (int face = 0; face < 4; face++)
-        faceTable->setItem(newRow, 4 - face, new FaceGluingItem(
-            faceTable, editMode));
+        faceTable->setItem(newRow, 4 - face, new FaceGluingItem(faceTable));
 
     setDirty(true);
 }

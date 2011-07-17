@@ -77,7 +77,6 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Preferences
          */
-        ReginaPrefSet::TriEditMode editMode;
         ReginaFilePrefList censusFiles;
 
     public:
@@ -147,7 +146,6 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
 };
 
 inline void NTriGluingsUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    editMode = newPrefs.triEditMode;
     censusFiles = newPrefs.censusFiles;
 }
 

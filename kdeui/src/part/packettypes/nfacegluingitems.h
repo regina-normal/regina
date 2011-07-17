@@ -85,9 +85,6 @@ class FaceGluingItem : public QObject, public QTableWidgetItem {
         regina::NPerm4 adjPerm;
             /**< The adjacent tetrahedron gluing. */
 
-        const ReginaPrefSet::TriEditMode& editMode;
-            /**< Determines the style of cell editor that is created. */
-
         bool error;
             /**< Are we currently displaying an error message? */
     public:
@@ -95,11 +92,9 @@ class FaceGluingItem : public QObject, public QTableWidgetItem {
          * Constructors.  The first constructor is for a boundary face,
          * the second for a face that is glued elsewhere.
          */
-        FaceGluingItem(QTableWidget* table,
-            const ReginaPrefSet::TriEditMode& useEditMode);
-        FaceGluingItem(QTableWidget* table,
-            const ReginaPrefSet::TriEditMode& useEditMode, int myFace,
-            unsigned long destTet, const regina::NPerm4& gluingPerm);
+        FaceGluingItem(QTableWidget* table);
+        FaceGluingItem(QTableWidget* table, int myFace, unsigned long destTet,
+            const regina::NPerm4& gluingPerm);
 
         /**
          * Query properties.
