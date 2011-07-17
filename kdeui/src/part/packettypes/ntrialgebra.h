@@ -39,6 +39,7 @@
 class NTriFundGroupUI;
 class QLabel;
 class QLineEdit;
+class QListWidget;
 class QTreeWidget;
 class QPushButton;
 
@@ -125,7 +126,7 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
         QLabel* fundName;
         QLabel* fundGens;
         QLabel* fundRelCount;
-        QTreeWidget* fundRels;
+        QListWidget* fundRels;
         QPushButton* btnGAP;
 
         /**

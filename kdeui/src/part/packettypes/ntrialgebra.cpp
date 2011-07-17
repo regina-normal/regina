@@ -46,6 +46,7 @@
 #include <QHeaderView>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qlistwidget.h>
 #include <qpainter.h>
 #include <qpushbutton.h>
 #include <qregexp.h>
@@ -169,7 +170,7 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     QLabel* label;
     QString msg;
 
-    label = new QLabel(i18n("H1(M)"), ui);
+    label = new QLabel(i18n("H1(M)"));
     homologyGrid->addWidget(label, 1, 1);
     H1 = new QLabel(ui);
     homologyGrid->addWidget(H1, 1, 2);
@@ -177,7 +178,7 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     H1->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H1(M, Bdry M)"), ui);
+    label = new QLabel(i18n("H1(M, Bdry M)"));
     homologyGrid->addWidget(label, 2, 1);
     H1Rel = new QLabel(ui);
     homologyGrid->addWidget(H1Rel, 2, 2);
@@ -186,7 +187,7 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     H1Rel->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H1(Bdry M)"), ui);
+    label = new QLabel(i18n("H1(Bdry M)"));
     homologyGrid->addWidget(label, 3, 1);
     H1Bdry = new QLabel(ui);
     homologyGrid->addWidget(H1Bdry, 3, 2);
@@ -195,7 +196,7 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     H1Bdry->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H2(M)"), ui);
+    label = new QLabel(i18n("H2(M)"));
     homologyGrid->addWidget(label, 4, 1);
     H2 = new QLabel(ui);
     homologyGrid->addWidget(H2, 4, 2);
@@ -203,7 +204,7 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     H2->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H2(M ; Z_2)"), ui);
+    label = new QLabel(i18n("H2(M ; Z_2)"));
     homologyGrid->addWidget(label, 5, 1);
     H2Z2 = new QLabel(ui);
     homologyGrid->addWidget(H2Z2, 5, 2);
@@ -259,13 +260,11 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI, const QString& useGAPExec) :
         PacketViewerTab(useParentUI), tri(packet), GAPExec(useGAPExec) {
     ui = new QWidget();
-    QBoxLayout* layout = new QVBoxLayout(ui);//, 5, 0);
-    layout->setMargin(5);
-    layout->setSpacing(0);
+    QBoxLayout* layout = new QVBoxLayout(ui);
 
     layout->addStretch(1);
 
-    fundName = new QLabel(ui);
+    fundName = new QLabel();
     fundName->setAlignment(Qt::AlignCenter);
     fundName->setWhatsThis(i18n("The common name of the fundamental "
         "group of this triangulation, if it can be recognised.  Note that "
@@ -273,23 +272,18 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
         "is too complicated then the group might still not be recognised."));
     layout->addWidget(fundName);
 
-    layout->addSpacing(5);
-
     QBoxLayout* wideFundPresArea = new QHBoxLayout();
     layout->addLayout(wideFundPresArea);
     wideFundPresArea->addStretch(1);
 
     QBoxLayout* fundPresArea = new QVBoxLayout();
     wideFundPresArea->addLayout(fundPresArea);
-    fundGens = new QLabel(ui);
+    fundGens = new QLabel();
     fundPresArea->addWidget(fundGens);
-    fundRelCount = new QLabel(ui);
+    fundRelCount = new QLabel();
     fundPresArea->addWidget(fundRelCount);
-    fundRels = new QTreeWidget(ui);
-    fundRels->header()->hide();
-    //fundRels->addColumn(QString::null);
-    //fundRels->setSorting(-1); TODO
-    //fundRels->setSelectionMode(QTreeWidget::NoSelection);
+    fundRels = new QListWidget();
+    fundRels->setSelectionMode(QListWidget::NoSelection);
     fundPresArea->addWidget(fundRels, 1);
 
     ui->setWhatsThis(i18n("A full set of generators and relations forming "
@@ -297,13 +291,12 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
 
     wideFundPresArea->addStretch(1);
     layout->addStretch(1);
-    layout->addSpacing(5);
 
     QBoxLayout* btnArea = new QHBoxLayout();
     layout->addLayout(btnArea);
     btnArea->addStretch(1);
     btnGAP = new QPushButton(KIcon("tools-wizard"),
-        i18n("Simplify using GAP"), ui);
+        i18n("Simplify using GAP"));
     btnGAP->setToolTip(i18n("Simplify the group presentation using "
         "GAP (Groups, Algorithms and Programming)"));
     btnGAP->setWhatsThis(i18n("<qt>Simplify the presentation of the "
@@ -358,15 +351,10 @@ void NTriFundGroupUI::refresh() {
         }
         fundRelCount->show();
 
-        // Add the relations in reverse order since the QTreeWidgetItem
-        // constructor puts new items at the front.
-        // TODO: no longer reversed I think?
         fundRels->clear();
-        for (long i = nRels - 1; i >= 0; i--)
-            {
-            QTreeWidgetItem *item = new QTreeWidgetItem(fundRels);
-            item->setText(0,QString("1 = ") + pres.getRelation(i).toString().c_str());
-        }
+        for (long i = 0; i < nRels; ++i)
+            new QListWidgetItem(QString("1 = ") +
+                pres.getRelation(i).toString().c_str(), fundRels);
 
         btnGAP->setEnabled(true);
     } else {
@@ -480,7 +468,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
         "Note that only small values of <i>r</i> "
         "should be used, since the time required to calculate the invariant "
         "grows exponentially with <i>r</i>.</qt>");
-    paramsLabel = new QLabel(i18n("Parameters (r, root):"), ui);
+    paramsLabel = new QLabel(i18n("Parameters (r, root):"));
     paramsLabel->setWhatsThis(expln);
     paramsArea->addWidget(paramsLabel);
 
@@ -490,7 +478,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     connect(params, SIGNAL(returnPressed()), this, SLOT(calculateInvariant()));
     paramsArea->addWidget(params);
 
-    calculate = new QPushButton(KIcon("exec"), i18n("Calculate"), ui);
+    calculate = new QPushButton(KIcon("exec"), i18n("Calculate"));
     // calculate->setFlat(true);
     calculate->setToolTip(i18n("Calculate the Turaev-Viro invariant with "
         "these parameters"));
