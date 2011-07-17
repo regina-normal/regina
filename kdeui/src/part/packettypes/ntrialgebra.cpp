@@ -170,7 +170,7 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     QLabel* label;
     QString msg;
 
-    label = new QLabel(i18n("H1(M)"));
+    label = new QLabel(i18n("H1(M):"));
     homologyGrid->addWidget(label, 1, 1);
     H1 = new QLabel(ui);
     homologyGrid->addWidget(H1, 1, 2);
@@ -178,7 +178,7 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     H1->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H1(M, Bdry M)"));
+    label = new QLabel(i18n("H1(M, %1M):").arg(QChar(0x2202 /* bdry */)));
     homologyGrid->addWidget(label, 2, 1);
     H1Rel = new QLabel(ui);
     homologyGrid->addWidget(H1Rel, 2, 2);
@@ -187,7 +187,7 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     H1Rel->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H1(Bdry M)"));
+    label = new QLabel(i18n("H1(%1M):").arg(QChar(0x2202 /* bdry */)));
     homologyGrid->addWidget(label, 3, 1);
     H1Bdry = new QLabel(ui);
     homologyGrid->addWidget(H1Bdry, 3, 2);
@@ -196,7 +196,7 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     H1Bdry->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H2(M)"));
+    label = new QLabel(i18n("H2(M):"));
     homologyGrid->addWidget(label, 4, 1);
     H2 = new QLabel(ui);
     homologyGrid->addWidget(H2, 4, 2);
@@ -204,7 +204,9 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     H2->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H2(M ; Z_2)"));
+    label = new QLabel(i18n("H2(M ; Z_2):"));
+    //label = new QLabel(i18n("H2(M ; %1%2):").arg(QChar(0x2124 /* Z */)).
+    //    arg(QChar(0x2082 /* sub 2 */)));
     homologyGrid->addWidget(label, 5, 1);
     H2Z2 = new QLabel(ui);
     homologyGrid->addWidget(H2Z2, 5, 2);
