@@ -80,9 +80,9 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     dataValid = new QWidget();
     QGridLayout* validGrid = new QGridLayout(dataValid);
     validGrid->setSpacing(5);
-    validGrid->setColumnMinimumWidth(0, 1);
-    validGrid->setColumnStretch(2, 5); // Horizontal gap
-    validGrid->setColumnMinimumWidth(4, 1);
+    validGrid->setColumnStretch(0, 1);
+    validGrid->setColumnMinimumWidth(2, 5); // Horizontal gap
+    validGrid->setColumnStretch(4, 1);
 
     QString msg;
     Qt::Alignment align = Qt::AlignTop;// | Qt::AlignAuto | Qt::ExpandTabs;
