@@ -29,39 +29,26 @@
 #include "shortrunner.h"
 
 QString ShortRunner::run(bool mergeStderr) {
-    // Prepare to receive standard output.
-    connect(&proc, SIGNAL(receivedStdout(KProcess*, char*, int)),
-        this, SLOT(collectOutput(KProcess*, char*, int)));
-
     // Start the child process running.
-    KProcess::OutputChannelMode comm = (mergeStderr ?
-        KProcess::MergedChannels  :
-        KProcess::OnlyStdoutChannel);
-    proc.setOutputChannelMode(comm);
-    if (! proc.startDetached())
-        return QString::null;
+    proc.setOutputChannelMode(mergeStderr ?
+        KProcess::MergedChannels : KProcess::OnlyStdoutChannel);
+    // Since we need to collect output, we must use start() and not
+    // startDetached().
+    proc.start();
 
     // Wait for it to finish, within a reasonable time limit.
-    if (proc.waitForFinished(timeout)) {
+    if (proc.waitForFinished(timeout * 1000)) {
         // All good.
-        QMutexLocker lock(&outputMutex);
-        return output;
+        return proc.readAll();
     } else {
         // Timed out.
-
+        // Attempt to terminate (SIGQUIT) ...
         proc.terminate();
-        // TODO Old code would attempt to terminate (SIGQUIT)
-        // but if the program didn't respond it'd kill (SIGKILL)
-        // This I guess is equivalent ?
+        // ... and if the program doesn't respond then kill it (SIGKILL).
         proc.waitForFinished(500);
         proc.kill();
         reachedTimeout = true;
         return QString::null;
     }
-}
-
-void ShortRunner::collectOutput(KProcess*, char* buffer, int buflen) {
-    QMutexLocker lock(&outputMutex);
-    output += QString::fromLatin1(buffer, buflen);
 }
 

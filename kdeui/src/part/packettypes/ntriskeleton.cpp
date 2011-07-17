@@ -394,8 +394,14 @@ void NTriFaceGraphUI::refresh() {
         return;
     }
 
-    KTemporaryFile tmpDot;//(locateLocal("tmp", "fpg-"), ".dot");
+    KTemporaryFile tmpDot;
     tmpDot.setSuffix(".dot");
+    if (! tmpDot.open()) {
+        showError(i18n("<qt>The temporary DOT file <i>%1</i> "
+            "could not be created.</qt>").arg(tmpDot.fileName()));
+        tmpDot.remove();
+        return;
+    }
     tmpDot.close();
 
     std::ofstream outDot(
@@ -412,8 +418,14 @@ void NTriFaceGraphUI::refresh() {
     outDot.close();
     delete pairing;
 
-    KTemporaryFile tmpPng;//(locateLocal("tmp", "fpg-"), ".png");
+    KTemporaryFile tmpPng;
     tmpPng.setSuffix(".png");
+    if (! tmpPng.open()) {
+        showError(i18n("<qt>The temporary PNG file <i>%1</i> "
+            "could not be created.</qt>").arg(tmpPng.fileName()));
+        tmpDot.remove();
+        return;
+    }
     tmpPng.close();
 
     KProcess graphviz;
@@ -461,6 +473,7 @@ void NTriFaceGraphUI::refresh() {
     }
 
     graph->setPixmap(png);
+    graph->resize(graph->sizeHint());
 
     tmpDot.remove();
     tmpPng.remove();
