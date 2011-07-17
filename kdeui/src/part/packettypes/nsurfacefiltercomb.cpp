@@ -142,7 +142,7 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     // Final tidying up.
     // Connect to one of the radio buttons, not the button group, so that
     // we only get notified when a real change occurs.
-    connect(typeAnd, SIGNAL(stateChanged(int)),
+    connect(typeAnd, SIGNAL(toggled(bool)),
         this, SLOT(notifyBoolTypeChanged()));
     filter->listen(this);
 }
