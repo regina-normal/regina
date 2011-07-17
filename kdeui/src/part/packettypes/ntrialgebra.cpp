@@ -480,7 +480,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     connect(params, SIGNAL(returnPressed()), this, SLOT(calculateInvariant()));
     paramsArea->addWidget(params);
 
-    calculate = new QPushButton(KIcon("exec"), i18n("Calculate"));
+    calculate = new QPushButton(KIcon("system-run"), i18n("Calculate"));
     // calculate->setFlat(true);
     calculate->setToolTip(i18n("Calculate the Turaev-Viro invariant with "
         "these parameters"));
