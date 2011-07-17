@@ -84,17 +84,13 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
 
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
-    layout->addSpacing(5);
 
     // Set up the isomorphism tester.
     QBoxLayout* wideIsoArea = new QHBoxLayout();
     layout->addLayout(wideIsoArea);
-    wideIsoArea->setSpacing(5);
-    wideIsoArea->addSpacing(5);
 
     QBoxLayout* leftIsoArea = new QVBoxLayout();
     wideIsoArea->addLayout(leftIsoArea);
-    leftIsoArea->setSpacing(0);
     wideIsoArea->setStretchFactor(leftIsoArea, 1);
 
     QString msg = i18n("<qt>Compare this with another triangulation to "
@@ -112,7 +108,6 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
 
     QBoxLayout* isoSelectArea = new QHBoxLayout();
     leftIsoArea->addLayout(isoSelectArea);
-    isoSelectArea->setSpacing(5);
     label = new QLabel(i18n("Compare with T ="), ui);
     label->setWhatsThis(msg);
     isoSelectArea->addWidget(label);
@@ -137,16 +132,11 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
         "displayed in a separate window."));
     connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
     wideIsoArea->addWidget(isoView);
-    wideIsoArea->addSpacing(5);
 
     // Add a central divider.
-    layout->addSpacing(5);
-
     QFrame* divider = new QFrame(ui);
     divider->setFrameStyle(QFrame::HLine | QFrame::Sunken);
     layout->addWidget(divider);
-
-    layout->addSpacing(5);
 
     // Set up the composition viewer.
     msg = i18n("<qt>Displays (i) the precise name of the triangulation "
@@ -167,9 +157,8 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     layout->addWidget(label);
 
     details = new QTreeWidget(ui);
-    details->header()->hide();
-    //details->addColumn(QString::null);
-    //details->setSorting(-1);
+    details->setHeaderHidden(true);
+    details->setAlternatingRowColors(true);
     details->setSelectionMode(QAbstractItemView::SingleSelection);
     details->setWhatsThis(msg);
     layout->addWidget(details, 1);
