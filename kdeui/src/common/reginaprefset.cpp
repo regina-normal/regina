@@ -80,7 +80,7 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
     }
 
     // We need a full requery.
-    if (userExec.contains("/")) {
+    if (! userExec.contains("/")) {
         // Hunt on the search path.
         fullExec = KStandardDirs::findExe(userExec);
         if (fullExec.isNull())
@@ -113,9 +113,9 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
         if (userExec.endsWith("dot", Qt::CaseInsensitive))
             return version1;
         return version1NotDot;
-    } else if (output.contains("version 0.") )
+    } else if (output.contains("version 0."))
         return unsupported;
-    else if (output.contains("version") ) {
+    else if (output.contains("version")) {
         // Assume any other version is >= 2.x.
         return version2;
     } else {
