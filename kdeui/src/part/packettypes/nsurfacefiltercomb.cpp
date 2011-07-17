@@ -35,11 +35,10 @@
 
 #include <klocale.h>
 #include <qbuttongroup.h>
-#include <QHeaderView>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qlistwidget.h>
 #include <qradiobutton.h>
-#include <QTableWidget>
 
 namespace {
     const int ID_AND = 0;
@@ -112,13 +111,11 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
         "(i.e., all filters immediately beneath this in the tree):"), ui);
     childLayout->addWidget(label);
 
-    children = new QTableWidget(ui);
-    children->horizontalHeader()->hide();
-    //children->addColumn(QString::null);
-    //children->setSorting(-1); TODO
+    children = new QListWidget(ui);
+    // children->setAlternatingRowColors(false); // False is the default.
     children->setSelectionMode(QAbstractItemView::NoSelection);
     refreshChildList();
-    childLayout->addWidget(children, 1, Qt::AlignLeft);
+    childLayout->addWidget(children, 1);
 
     QString msg = i18n("<qt>Shows the child filters that this combination "
         "filter will combine, i.e., all of the filters immediately beneath "
@@ -211,14 +208,11 @@ void NSurfaceFilterCombUI::refreshChildList() {
 
     // Add the items in reverse order since the QListViewItem
     // constructor puts new items at the front.
-    QTableWidgetItem* item;
     for (regina::NPacket* p = filter->getFirstTreeChild(); p;
             p = p->getNextTreeSibling())
         if (p->getPacketType() == regina::NSurfaceFilter::packetType) {
-            item = new QTableWidgetItem();
-            children->setItem(children->rowCount(),0,item);
-            item->setText(p->getPacketLabel().c_str());
-            item->setIcon(PacketManager::iconSmall(p, false));
+            new QListWidgetItem(PacketManager::iconSmall(p, false),
+                p->getPacketLabel().c_str(), children);
 
             // Listen for renaming events.  We won't ever call
             // unlisten() - it's a lot of hassle for a minor issue, and

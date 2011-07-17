@@ -38,7 +38,7 @@
 #include "../packetui.h"
 
 class QButtonGroup;
-class QTableWidget;
+class QListWidget;
 class QRadioButton;
 
 namespace regina {
@@ -66,7 +66,7 @@ class NSurfaceFilterCombUI : public QObject, public PacketUI,
         QButtonGroup* boolType;
         QRadioButton* typeAnd;
         QRadioButton* typeOr;
-        QTableWidget* children;
+        QListWidget* children;
 
     public:
         /**
