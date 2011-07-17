@@ -280,6 +280,7 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
 
     // Graph layer.
     layerGraph = new QScrollArea();
+    layerGraph->setStyleSheet("background-color:transparent;");
     graph = new QLabel(layerGraph);
     graph->setAlignment(Qt::AlignCenter);
     layerGraph->setWidget(graph);
