@@ -100,6 +100,7 @@ class GluingsModel : public QAbstractItemModel {
          * Gluing edit actions.
          */
         void addTet();
+        void removeTet(int first, int last);
 
     private:
         /**

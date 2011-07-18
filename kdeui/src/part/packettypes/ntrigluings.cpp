@@ -160,6 +160,68 @@ void GluingsModel::addTet() {
     endInsertRows();
 }
 
+void GluingsModel::removeTet(int first, int last) {
+    beginResetModel();
+
+    if (first == 0 && last == nTet - 1) {
+        delete[] name;
+        delete[] adjTet;
+        delete[] adjPerm;
+
+        name = 0;
+        adjTet = 0;
+        adjPerm = 0;
+
+        nTet = 0;
+
+        endResetModel();
+        return;
+    }
+
+    // Adjust other tetrahedron numbers.
+    int nCut = last - first + 1;
+
+    QString* newName = new QString[nTet - nCut];
+    int* newTet = new int[4 * (nTet - nCut)];
+    regina::NPerm4* newPerm = new regina::NPerm4[4 * (nTet - nCut)];
+
+    int row, face, i;
+    for (row = 0; row < first; ++row) {
+        newName[row] = name[row];
+        for (face = 0; face < 4; ++face) {
+            newTet[4 * row + face] = adjTet[4 * row + face];
+            newPerm[4 * row + face] = adjPerm[4 * row + face];
+        }
+    }
+
+    for (row = first; row < nTet - nCut; ++row) {
+        newName[row] = name[row + nCut];
+        for (face = 0; face < 4; ++face) {
+            newTet[4 * row + face] = adjTet[4 * (row + nCut) + face];
+            newPerm[4 * row + face] = adjPerm[4 * (row + nCut) + face];
+        }
+    }
+
+    for (i = 0; i < 4 * (nTet - nCut); ++i)
+        if (newTet[i] >= first && newTet[i] <= last)
+            newTet[i] = -1;
+        else if (newTet[i] > last)
+            newTet[i] -= nCut;
+
+    delete[] name;
+    delete[] adjTet;
+    delete[] adjPerm;
+
+    name = newName;
+    adjTet = newTet;
+    adjPerm = newPerm;
+
+    nTet -= nCut;
+
+    // Done!
+    endResetModel();
+}
+
 void GluingsModel::commitData(regina::NTriangulation* tri) {
     tri->removeAllTetrahedra();
 
@@ -771,91 +833,42 @@ void NTriGluingsUI::addTet() {
 }
 
 void NTriGluingsUI::removeSelectedTets() {
-    // TODO
-    /*
     // Gather together all the tetrahedra to be deleted.
-    std::set<int> rows;
-
-    QList<QTableWidgetItem*> sel = faceTable->selectedItems();
-    int i;
-    for (i = 0; i < sel.count(); i++) {
-        rows.insert(sel[i]->row());
-        //sel = faceTable->selection(i);
-        //if (sel.isActive())
-        //    for (j = sel.topRow(); j <= sel.bottomRow(); j++)
-        //        rows.insert(j);
-    }
-
-    // Has anything been selected at all?
-    if (rows.empty()) {
+    QModelIndexList sel = faceTable->selectionModel()->selectedIndexes();
+    if (sel.empty()) {
         KMessageBox::error(ui, i18n(
             "No tetrahedra are currently selected for removal."));
         return;
     }
 
+    // Selections are contiguous.
+    int first, last;
+    first = last = sel.front().row();
+
+    int row, i;
+    for (i = 1; i < sel.count(); ++i) {
+        row = sel[i].row();
+        if (row < first)
+            first = row;
+        if (row > last)
+            last = row;
+    }
+
     // Notify the user that tetrahedra will be removed.
     QString message;
-    if (rows.size() == 1)
-        message = i18n("Tetrahedron %1 will be removed.  Are you sure?").
-            arg(*rows.begin());
-    else if (rows.size() == 2)
-        message = i18n("Tetrahedra %1 and %2 will be removed.  Are you sure?").
-            arg(*rows.begin()).arg(*rows.rbegin());
+    if (first == last)
+        message = i18n("1 tetrahedron (number %1) will be removed.  "
+            "Are you sure?").arg(first);
     else
-        message = i18n("%1 tetrahedra from %2 to %3 will be removed.  "
-            "Are you sure?").arg(rows.size()).arg(*rows.begin()).
-            arg(*rows.rbegin());
+        message = i18n("%1 tetrahedra (numbers %2 to %3) will be removed.  "
+            "Are you sure?").arg(last - first + 1).arg(first).arg(last);
 
     if (KMessageBox::warningContinueCancel(ui, message) == KMessageBox::Cancel)
         return;
 
     // Off we go!
-    // Start by breaking any existing gluings with the doomed tetrahedra.
-    std::set<int>::const_iterator it;
-    for (it = rows.begin(); it != rows.end(); it++)
-        for (i = 1; i < 5; i++)
-            dynamic_cast<FaceGluingItem*>(faceTable->item(*it, i))->unjoin();
-
-    // Adjust other tetrahedron numbers.
-    int nRows = faceTable->rowCount();
-    long* newTetNums = new long[nRows];
-
-    it = rows.begin();
-    int oldRow = 0;
-    int newRow = 0;
-    while (oldRow < nRows) {
-        if (it != rows.end() && oldRow == *it) {
-            newTetNums[oldRow++] = -1;
-            it++;
-        } else
-            newTetNums[oldRow++] = newRow++;
-    }
-
-    for (oldRow = 0; oldRow < nRows; oldRow++) {
-        dynamic_cast<TetNameItem*>(faceTable->item(oldRow, 0))->
-            tetNumToChange(newTetNums[oldRow]);
-        for (i = 1; i < 5; i++)
-            dynamic_cast<FaceGluingItem*>(faceTable->item(oldRow, i))->
-                tetNumsToChange(newTetNums);
-    }
-
-    delete[] newTetNums;
-
-    // And finally remove the tetrahedra.
-    i = 0;
-    for (it = rows.end(); it != rows.begin(); it--)
-        faceTable->removeRow(*it);
-
-    // Done!
+    model->removeTet(first, last);
     setDirty(true);
-
-    void FaceGluingItem::tetNumsToChange(const long newTetNums[]) {
-        if (adjTet >= 0) {
-            adjTet = newTetNums[adjTet];
-            setText(destString(myFace(), adjTet, adjPerm));
-        }
-    }
-    */
 }
 
 void NTriGluingsUI::simplify() {
