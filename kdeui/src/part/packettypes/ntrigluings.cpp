@@ -447,6 +447,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     // Set up the table of face gluings.
     model = new GluingsModel(readWrite);
     faceTable = new QTableView();
+    faceTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     faceTable->setModel(model);
     
     if (readWrite)
