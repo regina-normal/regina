@@ -190,7 +190,7 @@ void PacketTreeItem::refreshSubtree() {
 
 void PacketTreeItem::refreshLabel() {
     if (packet) {
-        QString newLabel = packet->getPacketLabel().c_str(); // TODO: is packetLabel ever UTF8 or similar?
+        QString newLabel = packet->getPacketLabel().c_str();
         if (packet->hasTags())
             newLabel += " (+)";
         if (text(0) != newLabel)
@@ -250,9 +250,7 @@ void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
 
 PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent) 
           : QTreeWidget(parent), part(newPart) {
-    //addColumn(QString::null); TODO: Do we need this?
     setRootIsDecorated(true);
-    //setSorting(-1); QTreeWidgets sort by insertion by default
     header()->hide();
 
     connect(this, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
