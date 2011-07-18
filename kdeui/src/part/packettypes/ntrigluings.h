@@ -61,7 +61,7 @@ class GluingsModel : public QAbstractItemModel {
         /**
          * Internal status
          */
-        bool isReadWrite;
+        bool isReadWrite_;
 
     public:
         /**
@@ -69,6 +69,12 @@ class GluingsModel : public QAbstractItemModel {
          */
         GluingsModel(bool readWrite);
         ~GluingsModel();
+
+        /**
+         * Read-write state.
+         */
+        bool isReadWrite() const;
+        void setReadWrite(bool readWrite);
 
         /**
          * Loading and saving local data from/to the packet.
@@ -234,6 +240,20 @@ inline GluingsModel::~GluingsModel() {
     delete[] name;
     delete[] adjTet;
     delete[] adjPerm;
+}
+
+inline bool GluingsModel::isReadWrite() const {
+    return isReadWrite_;
+}
+
+inline void GluingsModel::setReadWrite(bool readWrite) {
+    if (isReadWrite_ != readWrite) {
+        // Edit flags will all change.
+        // A full model reset is probably too severe, but.. *shrug*
+        beginResetModel();
+        isReadWrite_ = readWrite;
+        endResetModel();
+    }
 }
 
 inline QModelIndex GluingsModel::parent(const QModelIndex& index) const {

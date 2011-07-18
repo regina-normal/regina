@@ -90,7 +90,7 @@ namespace {
 }
 
 GluingsModel::GluingsModel(bool readWrite) :
-        nTet(0), name(0), adjTet(0), adjPerm(0), isReadWrite(readWrite) {
+        nTet(0), name(0), adjTet(0), adjPerm(0), isReadWrite_(readWrite) {
 }
 
 void GluingsModel::refreshData(regina::NTriangulation* tri) {
@@ -258,7 +258,7 @@ QVariant GluingsModel::headerData(int section, Qt::Orientation orientation,
 }
 
 Qt::ItemFlags GluingsModel::flags(const QModelIndex& index) const {
-    if (isReadWrite)
+    if (isReadWrite_)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -508,8 +508,9 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actRemoveTet->setWhatsThis(i18n("Remove the currently selected "
         "tetrahedra from this triangulation."));
     connect(actRemoveTet, SIGNAL(triggered()), this, SLOT(removeSelectedTets()));
-    connect(faceTable, SIGNAL(itemSelectionChanged()), this,
-        SLOT(updateRemoveState()));
+    connect(faceTable->selectionModel(),
+        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+        this, SLOT(updateRemoveState()));
     triActionList.append(actRemoveTet);
 
     sep = new KAction(triActions);
@@ -749,6 +750,8 @@ void NTriGluingsUI::refresh() {
 }
 
 void NTriGluingsUI::setReadWrite(bool readWrite) {
+    model->setReadWrite(readWrite);
+
     if (readWrite)
         faceTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
     else
@@ -844,18 +847,15 @@ void NTriGluingsUI::removeSelectedTets() {
 
     // Done!
     setDirty(true);
+
+    void FaceGluingItem::tetNumsToChange(const long newTetNums[]) {
+        if (adjTet >= 0) {
+            adjTet = newTetNums[adjTet];
+            setText(destString(myFace(), adjTet, adjPerm));
+        }
+    }
     */
 }
-
-/* TODO
-void FaceGluingItem::tetNumsToChange(const long newTetNums[]) {
-    if (adjTet >= 0) {
-        adjTet = newTetNums[adjTet];
-        setText(destString(myFace(), adjTet, adjPerm));
-        // tableWidget()->updateCell(row(), column()); TODO
-    }
-}
-*/
 
 void NTriGluingsUI::simplify() {
     if (! enclosingPane->commitToModify())
@@ -1229,27 +1229,22 @@ void NTriGluingsUI::censusLookup() {
 
         // If we're in read-write mode, store the hits as a text packet
         // also.
-        // TODO : QTableWidgets don't have a readWrite property.
-        
-        //if (! faceTable->isReadOnly()) {
+        if (model->isReadWrite()) {
             regina::NText* text = 
               new regina::NText(detailsText.toAscii().constData());
             text->setPacketLabel(tri->makeUniqueLabel(
                 "ID: " + tri->getPacketLabel()));
             tri->insertChildLast(text);
-        //}
+        }
     }
 }
 
 void NTriGluingsUI::updateRemoveState() {
-    // Are we read-write?
-    // TODO: Fix for table
-    /*
-    if (actAddTet->isEnabled())
-        actRemoveTet->setEnabled(faceTable->selectedItems().count() > 0);
+    if (model->isReadWrite())
+        actRemoveTet->setEnabled(
+            ! faceTable->selectionModel()->selectedIndexes().empty());
     else
         actRemoveTet->setEnabled(false);
-    */
 }
 
 void NTriGluingsUI::notifyDataChanged() {
