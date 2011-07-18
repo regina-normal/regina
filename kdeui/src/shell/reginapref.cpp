@@ -55,8 +55,8 @@
 #include <QHeaderView>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qlistwidget.h>
 #include <qpushbutton.h>
-#include <QTreeWidget>
 #include <qvalidator.h>
 
 /**
@@ -69,17 +69,8 @@ namespace {
     /**
      * A list view item for a single ReginaFilePref.
      */
-    class ReginaFilePrefItem : public QTreeWidgetItem {
+    class ReginaFilePrefItem : public QListWidgetItem {
         private:
-            /**
-             * Pixmaps that will be loaded when we first need them.
-             * Strictly speaking we have a memory leak here, since these
-             * pixmaps are never destroyed.  However, there's only ever
-             * two of them.
-             */
-            static QPixmap* activePixmap;
-            static QPixmap* inactivePixmap;
-
             ReginaFilePref data;
 
         public:
@@ -88,9 +79,11 @@ namespace {
              * item to the end of the list (which requires traversing
              * the entire list).
              */
-            ReginaFilePrefItem(QTreeWidget* parent,
+            ReginaFilePrefItem(QListWidget* parent,
                     const ReginaFilePref& newData) :
-                    QTreeWidgetItem(parent), data(newData) {
+                    QListWidgetItem(pixmapFor(newData),
+                        newData.filename, parent),
+                    data(newData) {
             }
 
             const ReginaFilePref& getData() const {
@@ -102,7 +95,7 @@ namespace {
                     return false;
 
                 data.active = true;
-                // repaint(); TODO
+                setIcon(SmallIcon("dialog-ok"));
                 return true;
             }
 
@@ -111,25 +104,15 @@ namespace {
                     return false;
 
                 data.active = false;
-                // repaint(); TODO 
+                setIcon(SmallIcon("dialog-cancel"));
                 return true;
             }
 
-            QString text(int) const {
-                return data.filename;
-            }
-
-            const QPixmap* pixmap(int) const {
-                // if (! activePixmap)
-                //     activePixmap = new QPixmap(SmallIcon("dialog-ok"));
-                if (! inactivePixmap)
-                    inactivePixmap = new QPixmap(SmallIcon("dialog-cancel"));
-                return (data.active ? activePixmap : inactivePixmap);
+            static QPixmap pixmapFor(const ReginaFilePref& data) {
+                return (data.active ?
+                    SmallIcon("dialog-ok") : SmallIcon("dialog-cancel"));
             }
     };
-
-    QPixmap* ReginaFilePrefItem::activePixmap = 0;
-    QPixmap* ReginaFilePrefItem::inactivePixmap = 0;
 }
 
 ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
@@ -601,8 +584,8 @@ void ReginaPreferences::slotApply() {
     prefSet.pdfAutoClose = pdfPrefs->cbAutoClose->isChecked();
 
     prefSet.censusFiles.clear();
-    for (int i=0; i < censusPrefs->listFiles->topLevelItemCount();i++) {
-        QTreeWidgetItem* item = censusPrefs->listFiles->topLevelItem(i);
+    for (int i=0; i < censusPrefs->listFiles->count();i++) {
+        QListWidgetItem* item = censusPrefs->listFiles->item(i);
         prefSet.censusFiles.push_back(
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
     }
@@ -620,8 +603,8 @@ void ReginaPreferences::slotApply() {
     // prefSet.pythonWordWrap = pythonPrefs->cbWordWrap->isChecked();
 
     prefSet.pythonLibraries.clear();
-    for (int i=0; i < pythonPrefs->listFiles->topLevelItemCount();i++) {
-        QTreeWidgetItem* item = pythonPrefs->listFiles->topLevelItem(i);
+    for (int i=0; i < pythonPrefs->listFiles->count();i++) {
+        QListWidgetItem* item = pythonPrefs->listFiles->item(i);
         prefSet.pythonLibraries.push_back(
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
     }
@@ -962,13 +945,9 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
     layout->setStretchFactor(box, 1);
 
     // Set up the list view.
-    listFiles = new QTreeWidget(box);
+    listFiles = new QListWidget(box);
     box->setStretchFactor(listFiles, 1);
-    listFiles->header()->hide();
-    //listFiles->addColumn(QString::null);
-    //listFiles->setSorting(-1);
     listFiles->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    //listFiles->setItemsMovable(true);
     QString msg = i18n("The list of census files to be searched "
         "when asked to locate an arbitrary triangulation in all available "
         "censuses.  Note that census files in this list may be deactivated, "
@@ -1036,8 +1015,8 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
 
 void ReginaPrefCensus::updateActiveCount() {
     long count = 0;
-    for (int i = 0; i < listFiles->topLevelItemCount(); i++) {
-        QTreeWidgetItem* item = listFiles->topLevelItem(i);
+    for (int i = 0; i < listFiles->count(); i++) {
+        QListWidgetItem* item = listFiles->item(i);
         if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().active)
             count++;
     }
@@ -1094,7 +1073,7 @@ void ReginaPrefCensus::add() {
 }
 
 void ReginaPrefCensus::remove() {
-    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
+    QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No files have been selected to remove."));
@@ -1106,13 +1085,13 @@ void ReginaPrefCensus::remove() {
 }
 
 void ReginaPrefCensus::activate() {
-    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
+    QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No files have been selected to activate."));
     else {
         bool done = false;
-        QListIterator<QTreeWidgetItem*> it(selection);
+        QListIterator<QListWidgetItem*> it(selection);
         while(it.hasNext())
             done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
               activateFile();
@@ -1125,13 +1104,13 @@ void ReginaPrefCensus::activate() {
 }
 
 void ReginaPrefCensus::deactivate() {
-    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
+    QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No files have been selected to deactivate."));
     else {
         bool done = false;
-        QListIterator<QTreeWidgetItem*> it(selection);
+        QListIterator<QListWidgetItem*> it(selection);
         while(it.hasNext())
             done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
               deactivateFile();
@@ -1199,13 +1178,9 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
     layout->setStretchFactor(box, 1);
 
     // Set up the list view.
-    listFiles = new QTreeWidget(box);
+    listFiles = new QListWidget(box);
     box->setStretchFactor(listFiles, 1);
-    listFiles->header()->hide();
-    //listFiles->addColumn(QString::null);
-    //listFiles->setSorting(-1);
     listFiles->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    //listFiles->setItemsMovable(true);
     msg = i18n("The list of Python libraries to be "
         "loaded at the beginning of each new Python session.  Note that "
         "libraries in this list may be deactivated, "
@@ -1263,8 +1238,8 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
 
 void ReginaPrefPython::updateActiveCount() {
     long count = 0;
-    for(int i=0; i < listFiles->topLevelItemCount() ; i++) {
-        QTreeWidgetItem *item = listFiles->topLevelItem(i);
+    for(int i=0; i < listFiles->count() ; i++) {
+        QListWidgetItem *item = listFiles->item(i);
         if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().active)
             count++;
     }
@@ -1297,7 +1272,7 @@ void ReginaPrefPython::add() {
 }
 
 void ReginaPrefPython::remove() {
-    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
+    QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No libraries have been selected to remove."));
@@ -1309,13 +1284,13 @@ void ReginaPrefPython::remove() {
 }
 
 void ReginaPrefPython::activate() {
-    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
+    QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No libraries have been selected to activate."));
     else {
         bool done = false;
-        QListIterator<QTreeWidgetItem*> it(selection);
+        QListIterator<QListWidgetItem*> it(selection);
         while(it.hasNext())
             done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
               activateFile();
@@ -1328,13 +1303,13 @@ void ReginaPrefPython::activate() {
 }
 
 void ReginaPrefPython::deactivate() {
-    QList<QTreeWidgetItem*> selection = listFiles->selectedItems();
+    QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
         KMessageBox::error(this,
             i18n("No libraries have been selected to deactivate."));
     else {
         bool done = false;
-        QListIterator<QTreeWidgetItem*> it(selection);
+        QListIterator<QListWidgetItem*> it(selection);
         while(it.hasNext())
             done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
               deactivateFile();

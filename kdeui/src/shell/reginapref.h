@@ -42,8 +42,8 @@ class QCheckBox;
 class QComboBox;
 class QLabel;
 class QLineEdit;
+class QListWidget;
 class QPushButton;
-class QTreeWidget;
 class ReginaMain;
 class ReginaPrefCensus;
 class ReginaPrefGeneral;
@@ -178,7 +178,7 @@ class ReginaPrefCensus : public QWidget {
 
     private:
         QLabel* activeCount;
-        QTreeWidget* listFiles;
+        QListWidget* listFiles;
         QPushButton* btnRemove;
         QPushButton* btnActivate;
         QPushButton* btnDeactivate;
@@ -211,7 +211,7 @@ class ReginaPrefPython : public QWidget {
         QLineEdit* editSpacesPerTab;
 
         QLabel* activeCount;
-        QTreeWidget* listFiles;
+        QListWidget* listFiles;
         QPushButton* btnRemove;
         QPushButton* btnActivate;
         QPushButton* btnDeactivate;
