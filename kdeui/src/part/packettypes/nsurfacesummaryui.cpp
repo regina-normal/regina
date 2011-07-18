@@ -76,7 +76,7 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
     QScrollArea* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
-    scroller->setStyleSheet("background-color:transparent;");
+    // TODO scroller->setStyleSheet("background-color:transparent;");
     ui = scroller;
 
     pane = new QWidget(scroller);
