@@ -58,6 +58,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     setButtons(KDialog::Ok|KDialog::Cancel);
 
     QWidget* ui = new QWidget(this);
+    setMainWidget(ui);
     QGridLayout* layout = new QGridLayout(ui);
       //, 10, 2, 0 /* margin */, spacingHint());
 
