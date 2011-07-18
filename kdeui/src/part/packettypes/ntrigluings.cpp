@@ -108,6 +108,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     header << i18n("Face 023") << i18n("Face 123");
 
     faceTable->setHorizontalHeaderLabels(header);
+    faceTable->verticalHeader()->hide();
 
     //faceTable->setColumnStretchable(0, true);
     //faceTable->setColumnStretchable(1, true);
@@ -115,7 +116,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     //faceTable->setColumnStretchable(3, true);
     //faceTable->setColumnStretchable(4, true);
 
-    connect(faceTable, SIGNAL(valueChanged(int, int)),
+    connect(faceTable, SIGNAL(cellChanged(int, int)),
         this, SLOT(notifyGluingsChanged()));
 
     ui = faceTable;
@@ -146,7 +147,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actRemoveTet->setWhatsThis(i18n("Remove the currently selected "
         "tetrahedra from this triangulation."));
     connect(actRemoveTet, SIGNAL(triggered()), this, SLOT(removeSelectedTets()));
-    connect(faceTable, SIGNAL(selectionChanged()), this,
+    connect(faceTable, SIGNAL(itemSelectionChanged()), this,
         SLOT(updateRemoveState()));
     triActionList.append(actRemoveTet);
 

@@ -101,6 +101,7 @@ void TetNameItem::setContentFromEditor(QWidget* editor) {
 FaceGluingItem::FaceGluingItem(QTableWidget* table) :
         QTableWidgetItem(), adjTet(-1), error(false) {
     //setReplaceable(false); TODO
+    // TODO: Broken slot
     connect(this, SIGNAL(destinationChanged()), table, SLOT(doValueChanged()));
 }
 
@@ -109,6 +110,7 @@ FaceGluingItem::FaceGluingItem(QTableWidget* table, int myFace,
         QTableWidgetItem(), adjTet(destTet), adjPerm(gluingPerm), error(false) {
     //setReplaceable(false); TODO
     setText(destString(myFace, destTet, gluingPerm));
+    // TODO: Broken slot
     connect(this, SIGNAL(destinationChanged()), table, SLOT(doValueChanged()));
 }
 
