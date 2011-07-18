@@ -90,6 +90,11 @@ class GluingsModel : public QAbstractItemModel {
         Qt::ItemFlags flags(const QModelIndex& index) const;
         bool setData(const QModelIndex& index, const QVariant& value, int role);
 
+        /**
+         * Gluing edit actions.
+         */
+        void addTet();
+
     private:
         /**
          * Determine whether the given destination tetrahedron and face

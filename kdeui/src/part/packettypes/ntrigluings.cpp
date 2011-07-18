@@ -133,6 +133,33 @@ void GluingsModel::refreshData(regina::NTriangulation* tri) {
     endResetModel();
 }
 
+void GluingsModel::addTet() {
+    beginInsertRows(QModelIndex(), nTet, nTet);
+
+    QString* newName = new QString[nTet + 1];
+    int* newTet = new int[4 * (nTet + 1)];
+    regina::NPerm4* newPerm = new regina::NPerm4[4 * (nTet + 1)];
+
+    std::copy(name, name + nTet, newName);
+    std::copy(adjTet, adjTet + 4 * nTet, newTet);
+    std::copy(adjPerm, adjPerm + 4 * nTet, newPerm);
+
+    for (int face = 0; face < 4; ++face)
+        newTet[4 * nTet + face] = -1;
+
+    delete[] name;
+    delete[] adjTet;
+    delete[] adjPerm;
+
+    name = newName;
+    adjTet = newTet;
+    adjPerm = newPerm;
+
+    ++nTet;
+
+    endInsertRows();
+}
+
 void GluingsModel::commitData(regina::NTriangulation* tri) {
     tri->removeAllTetrahedra();
 
@@ -385,7 +412,7 @@ QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
 }
 
 void GluingsModel::showError(const QString& message) {
-    KMessageBox::error(0 /* TODO: view */, message);
+    KMessageBox::error(0 /* TODO: should be the view */, message);
 }
 
 QString GluingsModel::destString(int srcFace, int destTet,
@@ -422,7 +449,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     faceTable = new QTableView();
     faceTable->setModel(model);
     
-    // TODO: Do we want this bit here?
     if (readWrite)
         faceTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
     else
@@ -451,7 +477,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     //faceTable->setColumnStretchable(3, true);
     //faceTable->setColumnStretchable(4, true);
 
-    // TODO: Do we need to hook this up to more signals?
     connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
         this, SLOT(notifyDataChanged()));
 
@@ -724,32 +749,21 @@ void NTriGluingsUI::refresh() {
 }
 
 void NTriGluingsUI::setReadWrite(bool readWrite) {
-    // TODO: Do we want this bit here?
-    if( readWrite)
+    if (readWrite)
         faceTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
     else
         faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     QLinkedListIterator<KAction*> it(enableWhenWritable);
-    while(it.hasNext()) {
-      (it.next())->setEnabled(readWrite);
-    }
+    while (it.hasNext())
+        (it.next())->setEnabled(readWrite);
 
     updateRemoveState();
 }
 
 void NTriGluingsUI::addTet() {
-    // TODO
-    /*
-    long newRow = faceTable->rowCount();
-
-    faceTable->setRowCount(newRow + 1);
-    faceTable->setItem(newRow, 0, new TetNameItem(newRow, ""));
-    for (int face = 0; face < 4; face++)
-        faceTable->setItem(newRow, 4 - face, new FaceGluingItem(faceTable));
-
+    model->addTet();
     setDirty(true);
-    */
 }
 
 void NTriGluingsUI::removeSelectedTets() {
