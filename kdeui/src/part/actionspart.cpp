@@ -318,7 +318,7 @@ void ReginaPart::setupActions() {
     treeGeneralEditActions.append(act);
 
     act = actionCollection()->addAction("import_snappea");
-    act->setText(i18n("&SNapPea Triangulation"));
+    act->setText(i18n("&SnapPea Triangulation"));
     act->setIcon(KIcon("snappea"));
     act->setToolTip(i18n("Import a SnapPea triangulation"));
     act->setWhatsThis(i18n("Import an external SnapPea file as a new "
@@ -337,7 +337,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("import_isosig3");
     act->setText(i18n("&Isomorphism Signature List"));
-    act->setIcon(KIcon("signature"));
+    act->setIcon(KIcon("document-sign"));
     act->setToolTip(i18n("Import an isomorphism signature list "
         "for 3-manifold triangulations"));
     act->setWhatsThis(i18n("Import an external text file containing "
@@ -403,7 +403,7 @@ void ReginaPart::setupActions() {
 
     act = actionCollection()->addAction("export_source");
     act->setText(i18n("&C++ Source"));
-    act->setIcon(KIcon("source_cpp"));
+    act->setIcon(KIcon("text-x-c++src"));
     act->setToolTip(i18n("Export a triangulation as C++ source"));
     act->setWhatsThis(i18n("Export a triangulation from this packet tree "
         "to a C++ source file.<p>"
