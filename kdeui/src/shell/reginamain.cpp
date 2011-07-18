@@ -798,8 +798,8 @@ KParts::ReadWritePart* ReginaMain::newTopologyPart() {
         connect(this, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
             ans, SLOT(updatePreferences(const ReginaPrefSet&)));
 
-        disconnect(actPython, SIGNAL(activated()), this, SLOT(pythonConsole()));
-        connect(actPython, SIGNAL(activated()), ans, SLOT(pythonConsole()));
+        disconnect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
+        connect(actPython, SIGNAL(triggered()), ans, SLOT(pythonConsole()));
 
         // Perform initial setup on the part.
         emit preferencesChanged(globalPrefs);
