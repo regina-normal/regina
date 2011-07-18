@@ -30,12 +30,12 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
+#include "triangulation/nface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "eltmovedialog.h"
-#include "nfacegluingitems.h"
 #include "ntrigluings.h"
 #include "../patiencedialog.h"
 #include "../reginapart.h"
@@ -50,6 +50,7 @@
 #include <qfileinfo.h>
 #include <QHeaderView>
 #include <qlabel.h>
+#include <qregexp.h>
 #include <QTableWidget>
 #include <set>
 
@@ -71,6 +72,344 @@ namespace {
                 triName(newTriName), censusFile(newCensusFile) {
         }
     };
+
+    /**
+     * Represents a destination for a single face gluing.
+     */
+    QRegExp reFaceGluing(
+        "^\\s*"
+        "(\\d+)"
+        "(?:\\s*\\(\\s*|\\s+)"
+        "([0-3][0-3][0-3])"
+        "\\s*\\)?\\s*$");
+
+    /**
+     * Represents a single tetrahedron face.
+     */
+    QRegExp reFace("^[0-3][0-3][0-3]$");
+}
+
+GluingsModel::GluingsModel(bool readWrite) :
+        nTet(0), name(0), adjTet(0), adjPerm(0), isReadWrite(readWrite) {
+}
+
+void GluingsModel::refreshData(regina::NTriangulation* tri) {
+    beginResetModel();
+
+    delete[] name;
+    delete[] adjTet;
+    delete[] adjPerm;
+
+    nTet = tri->getNumberOfTetrahedra();
+    if (nTet == 0) {
+        name = 0;
+        adjTet = 0;
+        adjPerm = 0;
+
+        endResetModel();
+        return;
+    }
+
+    name = new QString[nTet];
+    adjTet = new int[4 * nTet];
+    adjPerm = new regina::NPerm4[4 * nTet];
+
+    int tetNum, face;
+    regina::NTetrahedron* tet;
+    regina::NTetrahedron* adj;
+    for (tetNum = 0; tetNum < nTet; tetNum++) {
+        tet = tri->getTetrahedron(tetNum);
+        name[tetNum] = tet->getDescription().c_str();
+        for (face = 0; face < 4; face++) {
+            adj = tet->adjacentTetrahedron(face);
+            if (adj) {
+                adjTet[tetNum * 4 + face] = tri->tetrahedronIndex(adj);
+                adjPerm[tetNum * 4 + face] = tet->adjacentGluing(face);
+            } else
+                adjTet[tetNum * 4 + face] = -1;
+        }
+    }
+
+    endResetModel();
+}
+
+void GluingsModel::commitData(regina::NTriangulation* tri) {
+    tri->removeAllTetrahedra();
+
+    if (nTet == 0)
+        return;
+
+    regina::NTetrahedron** tets = new regina::NTetrahedron*[nTet];
+    int tetNum, adjTetNum;
+    int face, adjFace;
+
+    // Create the tetrahedra.
+    for (tetNum = 0; tetNum < nTet; tetNum++)
+        tets[tetNum] = new regina::NTetrahedron(
+            name[tetNum].toAscii().constData());
+
+    // Glue the tetrahedra together.
+    for (tetNum = 0; tetNum < nTet; tetNum++)
+        for (face = 0; face < 4; face++) {
+            adjTetNum = adjTet[4 * tetNum + face];
+            if (adjTetNum < tetNum) // includes adjTetNum == -1
+                continue;
+            adjFace = adjPerm[4 * tetNum + face][face];
+            if (adjTetNum == tetNum && adjFace < face)
+                continue;
+
+            // It's a forward gluing.
+            tets[tetNum]->joinTo(face, tets[adjTetNum],
+                adjPerm[4 * tetNum + face]);
+        }
+
+    // Add the tetrahedra to the triangulation.
+    for (tetNum = 0; tetNum < nTet; tetNum++)
+        tri->addTetrahedron(tets[tetNum]);
+
+    // Tidy up.
+    delete[] tets;
+}
+
+QModelIndex GluingsModel::index(int row, int column,
+        const QModelIndex& parent) const {
+    return createIndex(row, column, quint32(5 * row + column));
+}
+
+int GluingsModel::rowCount(const QModelIndex& parent) const {
+    return nTet;
+}
+
+int GluingsModel::columnCount(const QModelIndex& parent) const {
+    return 5;
+}
+
+QVariant GluingsModel::data(const QModelIndex& index, int role) const {
+    int tet = index.row();
+    if (role == Qt::DisplayRole) {
+        // Tetrahedron name?
+        if (index.column() == 0)
+            return (name[tet].isEmpty() ? QString::number(tet) :
+                (QString::number(tet) + " (" + name[tet] + ')'));
+
+        // Face gluing?
+        int face = 4 - index.column();
+        if (face >= 0)
+            return destString(face, adjTet[4 * tet + face],
+                adjPerm[4 * tet + face]);
+        return QVariant();
+    } else if (role == Qt::EditRole) {
+        // Tetrahedron name?
+        if (index.column() == 0)
+            return name[tet];
+
+        // Face gluing?
+        int face = 4 - index.column();
+        if (face >= 0)
+            return destString(face, adjTet[4 * tet + face],
+                adjPerm[4 * tet + face]);
+        return QVariant();
+    } else
+        return QVariant();
+}
+
+QVariant GluingsModel::headerData(int section, Qt::Orientation orientation,
+        int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    switch (section) {
+        case 0: return i18n("Tetrahedron");
+        case 1: return i18n("Face 012");
+        case 2: return i18n("Face 013");
+        case 3: return i18n("Face 023");
+        case 4: return i18n("Face 123");
+    }
+    return QVariant();
+}
+
+Qt::ItemFlags GluingsModel::flags(const QModelIndex& index) const {
+    if (isReadWrite)
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
+        int role) {
+    int tet = index.row();
+    if (index.column() == 0) {
+        QString newName = value.toString().trimmed();
+        if (newName == name[tet])
+            return false;
+
+        name[tet] = newName;
+        emit dataChanged(index, index);
+        return true;
+    }
+
+    int face = 4 - index.column();
+    if (face < 0)
+        return false;
+
+    int newAdjTet;
+    regina::NPerm4 newAdjPerm;
+
+    // Find the proposed new gluing.
+    QString text = value.toString().trimmed();
+
+    if (text.isEmpty()) {
+        // Boundary face.
+        newAdjTet = -1;
+    } else if (! reFaceGluing.exactMatch(text)) {
+        // Bad string.
+        showError(i18n("<qt>The face gluing should be entered in the "
+            "form: <i>tet (face)</i>.  An example is <i>5 (032)</i>, "
+            "which represents face 032 of tetrahedron 5.<p>"
+            "For a method of entering face gluings that is slower but "
+            "easier to understand, you can switch to pop-up dialog "
+            "mode in the triangulation preferences.</qt>"));
+        return false;
+    } else {
+        // Real face.
+        newAdjTet = reFaceGluing.cap(1).toInt();
+        QString tetFace = reFaceGluing.cap(2);
+
+        // Check explicitly for a negative tetrahedron number
+        // since isFaceStringValid() takes an unsigned integer.
+        if (newAdjTet < 0 || newAdjTet >= nTet) {
+            showError(i18n("There is no tetrahedron number %1.").
+                arg(newAdjTet));
+            return false;
+        }
+
+        // Do we have a valid gluing?
+        QString err = isFaceStringValid(tet, face, newAdjTet, tetFace,
+            &newAdjPerm);
+        if (! err.isNull()) {
+            showError(err);
+            return false;
+        }
+    }
+
+    // Yes, looks valid.
+    int oldAdjTet = adjTet[4 * tet + face];
+    regina::NPerm4 oldAdjPerm = adjPerm[4 * tet + face];
+    int oldAdjFace = oldAdjPerm[face];
+
+    // Have we even made a change?
+    if (oldAdjTet < 0 && newAdjTet < 0)
+        return false;
+    if (oldAdjTet == newAdjTet && oldAdjPerm == newAdjPerm)
+        return false;
+
+    // Yes!  Go ahead and make the change.
+
+    // First unglue from the old partner if it exists.
+    if (oldAdjTet >= 0) {
+        adjTet[4 * oldAdjTet + oldAdjFace] = -1;
+
+        QModelIndex oldAdjIndex = this->index(oldAdjTet, 4 - oldAdjFace,
+            QModelIndex());
+        emit dataChanged(oldAdjIndex, oldAdjIndex);
+    }
+
+    // Are we making the face boundary?
+    if (newAdjTet < 0) {
+        adjTet[4 * tet + face] = -1;
+
+        emit dataChanged(index, index);
+        return true;
+    }
+
+    // We are gluing the face to a new partner.
+    int newAdjFace = newAdjPerm[face];
+
+    // Does this new partner already have its own partner?
+    if (adjTet[4 * newAdjTet + newAdjFace] >= 0) {
+        // Yes.. better unglue it.
+        int extraTet = adjTet[4 * newAdjTet + newAdjFace];
+        int extraFace = adjPerm[4 * newAdjTet + newAdjFace][newAdjFace];
+
+        adjTet[4 * extraTet + extraFace] = -1;
+
+        QModelIndex extraIndex = this->index(extraTet, 4 - extraFace,
+            QModelIndex());
+        emit dataChanged(extraIndex, extraIndex);
+    }
+
+    // Glue the two faces together.
+    adjTet[4 * tet + face] = newAdjTet;
+    adjTet[4 * newAdjTet + newAdjFace] = tet;
+
+    adjPerm[4 * tet + face] = newAdjPerm;
+    adjPerm[4 * newAdjTet + newAdjFace] = newAdjPerm.inverse();
+
+    emit dataChanged(index, index);
+
+    QModelIndex newAdjIndex = this->index(newAdjTet, 4 - newAdjFace,
+        QModelIndex());
+    emit dataChanged(newAdjIndex, newAdjIndex);
+
+    return true;
+}
+
+QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
+        unsigned long destTet, const QString& destFace,
+        regina::NPerm4* gluing) {
+    if (destTet >= nTet)
+        return i18n("There is no tetrahedron number %1.").arg(destTet);
+
+    if (! reFace.exactMatch(destFace))
+        return i18n("<qt>%1 is not a valid tetrahedron face.  A tetrahedron "
+            "face must be described by a sequence of three vertices, each "
+            "between 0 and 3 inclusive.  An example is <i>032</i>.</qt>").
+            arg(destFace);
+
+    if (destFace[0] == destFace[1] || destFace[1] == destFace[2] ||
+            destFace[2] == destFace[0])
+        return i18n("%1 is not a valid tetrahedron face.  The three vertices "
+            "forming the face must be distinct.").arg(destFace);
+
+    regina::NPerm4 foundGluing = faceStringToPerm(srcFace, destFace);
+    if (srcTet == destTet && foundGluing[srcFace] == srcFace)
+        return i18n("A face cannot be glued to itself.");
+
+    // It's valid!
+    if (gluing)
+        *gluing = foundGluing;
+
+    return QString::null;
+}
+
+void GluingsModel::showError(const QString& message) {
+    KMessageBox::error(0 /* TODO: view */, message);
+}
+
+QString GluingsModel::destString(int srcFace, int destTet,
+        const regina::NPerm4& gluing) {
+    if (destTet < 0)
+        return "";
+    else
+        return QString::number(destTet) + " (" +
+            (gluing * regina::NFace::ordering[srcFace]).trunc3().c_str() + ')';
+}
+
+regina::NPerm4 GluingsModel::faceStringToPerm(int srcFace, const QString& str) {
+    int destVertex[4];
+
+    destVertex[3] = 6; // This will be adjusted in a moment.
+    for (int i = 0; i < 3; i++) {
+        // Use toLatin1() here because we are converting characters,
+        // not strings.
+        destVertex[i] = str[i].toLatin1() - '0';
+        destVertex[3] -= destVertex[i];
+    }
+
+    return regina::NPerm4(destVertex[0], destVertex[1], destVertex[2],
+        destVertex[3]) * regina::NFace::ordering[srcFace].inverse();
 }
 
 NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
@@ -79,8 +418,9 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         PacketEditorTab(useParentUI), tri(packet),
         censusFiles(initPrefs.censusFiles) {
     // Set up the table of face gluings.
-
-    faceTable = new QTableWidget(0, 5, 0);
+    model = new GluingsModel(readWrite);
+    faceTable = new QTableView();
+    faceTable->setModel(model);
     
     // TODO: Do we want this bit here?
     if (readWrite)
@@ -103,11 +443,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "To change these identifications, simply type your own gluings into "
         "the table.</qt>"));
 
-    QStringList header;
-    header << i18n("Tetrahedron") << i18n("Face 012") << i18n("Face 013");
-    header << i18n("Face 023") << i18n("Face 123");
-
-    faceTable->setHorizontalHeaderLabels(header);
     faceTable->verticalHeader()->hide();
 
     //faceTable->setColumnStretchable(0, true);
@@ -116,8 +451,9 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     //faceTable->setColumnStretchable(3, true);
     //faceTable->setColumnStretchable(4, true);
 
-    connect(faceTable, SIGNAL(cellChanged(int, int)),
-        this, SLOT(notifyGluingsChanged()));
+    // TODO: Do we need to hook this up to more signals?
+    connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+        this, SLOT(notifyDataChanged()));
 
     ui = faceTable;
 
@@ -354,6 +690,8 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 NTriGluingsUI::~NTriGluingsUI() {
     // Make sure the actions, including separators, are all deleted.
     delete triActions;
+
+    delete model;
 }
 
 const QLinkedList<KAction*>& NTriGluingsUI::getPacketTypeActions() {
@@ -376,74 +714,12 @@ QWidget* NTriGluingsUI::getInterface() {
 }
 
 void NTriGluingsUI::commit() {
-    tri->removeAllTetrahedra();
-
-    long nRows = faceTable->rowCount();
-    if (nRows > 0) {
-        regina::NTetrahedron** tets = new regina::NTetrahedron*[nRows];
-        FaceGluingItem* item;
-        long tetNum, adjTetNum;
-        int face, adjFace;
-
-        // Create the tetrahedra.
-        for (tetNum = 0; tetNum < nRows; tetNum++)
-            tets[tetNum] = new regina::NTetrahedron(
-                dynamic_cast<TetNameItem*>(faceTable->item(tetNum, 0))->
-                getName().toAscii().constData());
-
-        // Glue the tetrahedra together.
-        for (tetNum = 0; tetNum < nRows; tetNum++)
-            for (face = 0; face < 4; face++) {
-                item = dynamic_cast<FaceGluingItem*>(faceTable->item(tetNum,
-                    4 - face));
-
-                adjTetNum = item->adjacentTetrahedron();
-                if (adjTetNum < tetNum)
-                    continue;
-                adjFace = item->adjacentFace();
-                if (adjTetNum == tetNum && adjFace < face)
-                    continue;
-
-                // It's a forward gluing.
-                tets[tetNum]->joinTo(face, tets[adjTetNum],
-                    item->adjacentGluing());
-            }
-
-        // Add the tetrahedra to the triangulation.
-        for (tetNum = 0; tetNum < nRows; tetNum++)
-            tri->addTetrahedron(tets[tetNum]);
-
-        // Tidy up.
-        delete[] tets;
-    }
-
+    model->commitData(tri);
     setDirty(false);
 }
 
 void NTriGluingsUI::refresh() {
-    unsigned long nTets = tri->getNumberOfTetrahedra();
-    faceTable->setRowCount(nTets);
-
-    unsigned long tetNum;
-    unsigned face;
-    regina::NTetrahedron* tet;
-    regina::NTetrahedron* adj;
-    for (tetNum = 0; tetNum < nTets; tetNum++) {
-        tet = tri->getTetrahedron(tetNum);
-        faceTable->setItem(tetNum, 0, new TetNameItem(
-            tetNum, tet->getDescription().c_str()));
-        for (face = 0; face < 4; face++) {
-            adj = tet->adjacentTetrahedron(face);
-            if (adj)
-                faceTable->setItem(tetNum, 4 - face, new FaceGluingItem(
-                    faceTable, face, tri->tetrahedronIndex(adj),
-                    tet->adjacentGluing(face)));
-            else
-                faceTable->setItem(tetNum, 4 - face,
-                    new FaceGluingItem(faceTable));
-        }
-    }
-
+    model->refreshData(tri);
     setDirty(false);
 }
 
@@ -463,6 +739,8 @@ void NTriGluingsUI::setReadWrite(bool readWrite) {
 }
 
 void NTriGluingsUI::addTet() {
+    // TODO
+    /*
     long newRow = faceTable->rowCount();
 
     faceTable->setRowCount(newRow + 1);
@@ -471,9 +749,12 @@ void NTriGluingsUI::addTet() {
         faceTable->setItem(newRow, 4 - face, new FaceGluingItem(faceTable));
 
     setDirty(true);
+    */
 }
 
 void NTriGluingsUI::removeSelectedTets() {
+    // TODO
+    /*
     // Gather together all the tetrahedra to be deleted.
     std::set<int> rows;
 
@@ -549,7 +830,18 @@ void NTriGluingsUI::removeSelectedTets() {
 
     // Done!
     setDirty(true);
+    */
 }
+
+/* TODO
+void FaceGluingItem::tetNumsToChange(const long newTetNums[]) {
+    if (adjTet >= 0) {
+        adjTet = newTetNums[adjTet];
+        setText(destString(myFace(), adjTet, adjPerm));
+        // tableWidget()->updateCell(row(), column()); TODO
+    }
+}
+*/
 
 void NTriGluingsUI::simplify() {
     if (! enclosingPane->commitToModify())
@@ -937,13 +1229,16 @@ void NTriGluingsUI::censusLookup() {
 
 void NTriGluingsUI::updateRemoveState() {
     // Are we read-write?
+    // TODO: Fix for table
+    /*
     if (actAddTet->isEnabled())
         actRemoveTet->setEnabled(faceTable->selectedItems().count() > 0);
     else
         actRemoveTet->setEnabled(false);
+    */
 }
 
-void NTriGluingsUI::notifyGluingsChanged() {
+void NTriGluingsUI::notifyDataChanged() {
     setDirty(true);
 }
 

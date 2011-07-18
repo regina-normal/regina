@@ -36,14 +36,93 @@
 #include "../packettabui.h"
 #include "reginaprefset.h"
 
+#include <QAbstractItemModel>
+
 class KAction;
 class KActionCollection;
 class KToolBar;
-class QTableWidget;
+class QTableView;
 
 namespace regina {
     class NPacket;
     class NTriangulation;
+};
+
+class GluingsModel : public QAbstractItemModel {
+    protected:
+        /**
+         * Details of the working (non-committed) triangulation
+         */
+        int nTet;
+        QString* name;
+        int* adjTet;
+        regina::NPerm4* adjPerm;
+
+        /**
+         * Internal status
+         */
+        bool isReadWrite;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        GluingsModel(bool readWrite);
+        ~GluingsModel();
+
+        /**
+         * Loading and saving local data from/to the packet.
+         */
+        void refreshData(regina::NTriangulation* tri);
+        void commitData(regina::NTriangulation* tri);
+
+        /**
+         * Overrides for describing and editing data in the model.
+         */
+        QModelIndex index(int row, int column,
+                const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+        Qt::ItemFlags flags(const QModelIndex& index) const;
+        bool setData(const QModelIndex& index, const QVariant& value, int role);
+
+    private:
+        /**
+         * Determine whether the given destination tetrahedron and face
+         * string are valid.  If so, a null string is returned; if not,
+         * an appropriate error message is returned.
+         *
+         * If the given permutation pointer is not null, the resulting
+         * gluing permutation will be returned in this variable.
+         */
+        QString isFaceStringValid(unsigned long srcTet, int srcFace,
+            unsigned long destTet, const QString& destFace,
+            regina::NPerm4* gluing);
+
+        /**
+         * Return a short string describing the destination of a
+         * face gluing.  This routine handles both boundary and
+         * non-boundary faces.
+         */
+        static QString destString(int srcFace, int destTet,
+            const regina::NPerm4& gluing);
+
+        /**
+         * Convert a face string (e.g., "130") to a face permutation.
+         *
+         * The given face string must be valid; otherwise the results
+         * could be unpredictable (and indeed a crash could result).
+         */
+        static regina::NPerm4 faceStringToPerm(int srcFace, const QString& str);
+
+        /**
+         * Display the given error to the user.
+         */
+        void showError(const QString& message);
 };
 
 /**
@@ -62,7 +141,8 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * Internal components
          */
         QWidget* ui;
-        QTableWidget* faceTable;
+        QTableView* faceTable;
+        GluingsModel* model;
 
         /**
          * Gluing actions
@@ -142,8 +222,19 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Notify us of the fact that an edit has been made.
          */
-        void notifyGluingsChanged();
+        void notifyDataChanged();
 };
+
+inline GluingsModel::~GluingsModel() {
+    delete[] name;
+    delete[] adjTet;
+    delete[] adjPerm;
+}
+
+inline QModelIndex GluingsModel::parent(const QModelIndex& index) const {
+    // All items are top-level.
+    return QModelIndex();
+}
 
 inline void NTriGluingsUI::updatePreferences(const ReginaPrefSet& newPrefs) {
     censusFiles = newPrefs.censusFiles;
