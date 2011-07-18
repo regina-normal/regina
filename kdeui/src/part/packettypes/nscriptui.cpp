@@ -52,6 +52,7 @@
 //#include <ktexteditor/viewcursorinterface.h>
 #include <ktoolbar.h>
 #include <KVBox>
+#include <qheaderview.h>
 #include <qsplitter.h>
 #include <QTableWidget>
 #include <set>
@@ -84,12 +85,12 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     if (! readWrite )
         varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
+    varTable->verticalHeader()->hide();
+    // varTable->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
 
     // TODO: If needed, uncomment below
     //varTable->setContentsMargins(varTable->contentsMargins()->setLeft(0));
     //
-    //QHeader* hdr = varTable->verticalHeader();
-    //hdr->hide();
     //varTable->setLeftMargin(0);
 
     QStringList hdr;
