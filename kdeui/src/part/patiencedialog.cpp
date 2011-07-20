@@ -53,7 +53,7 @@ PatienceDialog::PatienceDialog(const QString& message,
 
     QWidget* page = new QWidget(this);
     setMainWidget(page);
-    QHBoxLayout* layout = new QHBoxLayout(page); //, 0, spacingHint());
+    QHBoxLayout* layout = new QHBoxLayout(page);
 
     QLabel* clock = new QLabel(page);
     clock->setPixmap(UserIcon("patience"));
