@@ -595,9 +595,6 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
     globalPrefs.treeJumpSize = configGroup->readEntry("JumpSize", 10);
 
     configGroup = new KConfigGroup(config, "Triangulation");
-    globalPrefs.triEditMode = (
-        configGroup->readEntry("EditMode") == "Dialog" ?
-        ReginaPrefSet::Dialog : ReginaPrefSet::DirectEdit /* default */);
 
     str = configGroup->readEntry("InitialTab");
     if (str == "Skeleton")

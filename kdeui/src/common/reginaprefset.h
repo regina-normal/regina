@@ -211,8 +211,6 @@ struct ReginaPrefSet {
 
     // The preferences themselves:
 
-    enum TriEditMode { DirectEdit, Dialog };
-        /**< Possible edit modes for triangulation gluings. */
     enum TriTab { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
         /**< Available top-level tabs in a 3-manifold triangulation
              viewer/editor. */
@@ -273,8 +271,6 @@ struct ReginaPrefSet {
     unsigned treeJumpSize;
         /**< The number of steps corresponding to a jump up or down in
              the packet tree. */
-    TriEditMode triEditMode;
-        /**< The default mode for editing triangulations. */
     QString triGAPExec;
         /**< The executable for starting GAP.  This need not include a
              directory (in which case the search path will be used). */

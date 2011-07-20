@@ -118,7 +118,6 @@ class ReginaPrefTri : public QWidget {
     Q_OBJECT
 
     private:
-        QComboBox* comboEditMode;
         QComboBox* comboInitialTab;
         QComboBox* comboInitialSkeletonTab;
         QComboBox* comboInitialAlgebraTab;

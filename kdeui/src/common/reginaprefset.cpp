@@ -140,7 +140,6 @@ ReginaPrefSet::ReginaPrefSet() :
         surfacesInitialCompat(LocalCompat),
         surfacesInitialTab(Summary),
         treeJumpSize(10),
-        triEditMode(DirectEdit),
         triGAPExec(defaultGAPExec),
         triGraphvizExec(defaultGraphvizExec),
         triInitialTab(Gluings),

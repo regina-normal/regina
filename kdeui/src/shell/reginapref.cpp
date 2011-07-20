@@ -179,9 +179,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         KConfigGroup(KGlobal::config(), "TipOfDay").
         readEntry("RunOnStart", true));
 
-    triPrefs->comboEditMode->setCurrentIndex(
-        prefSet.triEditMode == ReginaPrefSet::DirectEdit ? 0 : 1);
-
     switch (prefSet.triInitialTab) {
         case ReginaPrefSet::Skeleton:
             triPrefs->comboInitialTab->setCurrentIndex(1); break;
@@ -304,9 +301,6 @@ void ReginaPreferences::slotApply() {
         generalPrefs->editTreeJumpSize->setText(
             QString::number(prefSet.treeJumpSize));
     }
-
-    prefSet.triEditMode = (triPrefs->comboEditMode->currentIndex() == 0 ?
-        ReginaPrefSet::DirectEdit : ReginaPrefSet::Dialog);
 
     switch (triPrefs->comboInitialTab->currentIndex()) {
         case 1:
@@ -671,21 +665,8 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     // WARNING: Note that any change of order in the combo boxes must be
     // reflected in the ReginaPreferences methods as well.
 
-    // Set up the edit mode.
-    KHBox* box = new KHBox();
-    box->setSpacing(5);
-
-    QLabel* label = new QLabel(i18n("Edit mode:"), box);
-    comboEditMode = new KComboBox(box);
-    comboEditMode->addItem(SmallIcon("edit-rename"), i18n("Direct edit"));
-    comboEditMode->addItem(SmallIcon("view-list-text"), i18n("Pop-up dialog"));
-    QString msg = i18n("Specifies the way in which face gluings are edited.");
-    label->setWhatsThis(msg);
-    comboEditMode->setWhatsThis(msg);
-    layout->addWidget(box);
-
     // Set up the initial tab.
-    box = new KHBox();
+    KHBox* box = new KHBox();
     box->setSpacing(5);
 
     label = new QLabel(i18n("Default top-level tab:"), box);
