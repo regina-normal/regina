@@ -718,9 +718,6 @@ void ReginaMain::saveOptions() {
     configGroup->sync();
 
     configGroup = new KConfigGroup(config, "Triangulation");
-    configGroup->writeEntry("EditMode",
-        globalPrefs.triEditMode == ReginaPrefSet::DirectEdit ?
-        "DirectEdit" : "Dialog");
 
     switch (globalPrefs.triInitialTab) {
         case ReginaPrefSet::Skeleton:

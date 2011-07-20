@@ -669,7 +669,7 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     KHBox* box = new KHBox();
     box->setSpacing(5);
 
-    label = new QLabel(i18n("Default top-level tab:"), box);
+    QLabel* label = new QLabel(i18n("Default top-level tab:"), box);
     comboInitialTab = new KComboBox(box);
     comboInitialTab->addItem(i18n("Gluings"));
     comboInitialTab->addItem(i18n("Skeleton"));
@@ -677,7 +677,7 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     comboInitialTab->addItem(i18n("Composition"));
     comboInitialTab->addItem(i18n("Surfaces"));
     comboInitialTab->addItem(i18n("SnapPea"));
-    msg = i18n("Specifies which tab should be initially visible "
+    QString msg = i18n("Specifies which tab should be initially visible "
         "when a new triangulation viewer/editor is opened.");
     label->setWhatsThis(msg);
     comboInitialTab->setWhatsThis(msg);
