@@ -337,17 +337,17 @@ void PacketPane::registerEditOperation(KAction* act, EditOperation op) {
         switch (op) {
             case editCut :
                 act->setEnabled(view->selection() && edit->isReadWrite());
-                connect(act, SIGNAL(activated()),
+                connect(act, SIGNAL(triggered()),
                     edit->views().first(), SLOT(cut()));
                 break;
             case editCopy :
                 act->setEnabled(view->selection());
-                connect(act, SIGNAL(activated()),
+                connect(act, SIGNAL(triggered()),
                     edit->views().first(), SLOT(copy()));
                 break;
             case editPaste :
                 act->setEnabled(CLIPBOARD_HAS_TEXT && edit->isReadWrite());
-                connect(act, SIGNAL(activated()),
+                connect(act, SIGNAL(triggered()),
                     edit->views().first(), SLOT(paste()));
                 break;
             case editUndo :
@@ -356,13 +356,13 @@ void PacketPane::registerEditOperation(KAction* act, EditOperation op) {
                 //act->setEnabled(KTextEditor::undoInterface(edit)->undoCount()
                 //    && edit->isReadWrite());
                 act->setEnabled(edit->isReadWrite());
-                connect(act, SIGNAL(activated()), edit, SLOT(undo()));
+                connect(act, SIGNAL(triggered()), edit, SLOT(undo()));
                 break;
             case editRedo :
                 //act->setEnabled(KTextEditor::undoInterface(edit)->redoCount()
                 //    && edit->isReadWrite());
                 act->setEnabled(edit->isReadWrite());
-                connect(act, SIGNAL(activated()), edit, SLOT(redo()));
+                connect(act, SIGNAL(triggered()), edit, SLOT(redo()));
                 break;
         }
     }
@@ -388,22 +388,22 @@ void PacketPane::deregisterEditOperation(KAction* act, EditOperation op) {
 
     switch (op) {
         case editCut :
-            disconnect(act, SIGNAL(activated()),
+            disconnect(act, SIGNAL(triggered()),
                 edit->views().first(), SLOT(cut()));
             break;
         case editCopy :
-            disconnect(act, SIGNAL(activated()),
+            disconnect(act, SIGNAL(triggered()),
                 edit->views().first(), SLOT(copy()));
             break;
         case editPaste :
-            disconnect(act, SIGNAL(activated()),
+            disconnect(act, SIGNAL(triggered()),
                 edit->views().first(), SLOT(paste()));
             break;
         case editUndo :
-            disconnect(act, SIGNAL(activated()), edit, SLOT(undo()));
+            disconnect(act, SIGNAL(triggered()), edit, SLOT(undo()));
             break;
         case editRedo :
-            disconnect(act, SIGNAL(activated()), edit, SLOT(redo()));
+            disconnect(act, SIGNAL(triggered()), edit, SLOT(redo()));
             break;
     }
 }
@@ -626,8 +626,8 @@ void PacketPane::dockPane() {
     actDockUndock->setText(i18n("Un&dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
-    disconnect(actDockUndock, SIGNAL(activated()), this, SLOT(dockPane()));
-    connect(actDockUndock, SIGNAL(activated()), this, SLOT(floatPane()));
+    disconnect(actDockUndock, SIGNAL(triggered()), this, SLOT(dockPane()));
+    connect(actDockUndock, SIGNAL(triggered()), this, SLOT(floatPane()));
 }
 
 void PacketPane::floatPane() {
@@ -642,8 +642,8 @@ void PacketPane::floatPane() {
     actDockUndock->setText(i18n("&Dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
-    disconnect(actDockUndock, SIGNAL(activated()), this, SLOT(floatPane()));
-    connect(actDockUndock, SIGNAL(activated()), this, SLOT(dockPane()));
+    disconnect(actDockUndock, SIGNAL(triggered()), this, SLOT(floatPane()));
+    connect(actDockUndock, SIGNAL(triggered()), this, SLOT(dockPane()));
 
     frame->show();
 }
