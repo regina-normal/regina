@@ -172,7 +172,12 @@
    <holder>&copyrightholder;</holder>
   </copyright>
 
-  <legalnotice>&underGPL;</legalnotice>
+  <legalnotice>
+   <para>
+    This program is licensed under the terms of the
+    <link linkend="licenses-gpl">GNU General Public License</link>.
+   </para>
+  </legalnotice>
 
   <date>2011-07-18</date>
   <releaseinfo>4.7</releaseinfo>
