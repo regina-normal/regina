@@ -84,46 +84,22 @@ namespace {
             double value_;
 
         public:
-            TuraevViroItem(QTreeWidget* parent, unsigned long r,
-                    unsigned long root, double value) :
-                    QTreeWidgetItem(parent),r_(r), root_(root),
-                    value_(value) {
+            TuraevViroItem(unsigned long r, unsigned long root, double value) :
+                    QTreeWidgetItem(), r_(r), root_(root), value_(value) {
+                setText(0, QString::number(r_));
+                setText(1, QString::number(root_));
+                setText(2, QString::number(value_));
+
+                for (int i = 0; i < 3; ++i)
+                    setTextAlignment(i, Qt::AlignRight);
             }
 
-            bool matches(unsigned long r, unsigned long root) {
-                return (r_ == r && root_ == root);
-            }
-
-            QString text(int col) const {
-                if (col == 0)
-                    return QString::number(r_);
-                else if (col == 1)
-                    return QString::number(root_);
-                else
-                    return QString::number(value_);
-            }
-
-            int compare(QTreeWidgetItem* i, int col, bool) const {
-                TuraevViroItem* other = dynamic_cast<TuraevViroItem*>(i);
-                if (col == 0) {
-                    if (r_ < other->r_) return -1;
-                    if (r_ > other->r_) return 1;
-                    // If they're equal, fall back to column 1.
-                    if (root_ < other->root_) return -1;
-                    if (root_ > other->root_) return 1;
-                    return 0;
-                } else if (col == 1) {
-                    if (root_ < other->root_) return -1;
-                    if (root_ > other->root_) return 1;
-                    // If they're equal, fall back to column 0.
-                    if (r_ < other->r_) return -1;
-                    if (r_ > other->r_) return 1;
-                    return 0;
-                } else {
-                    if (value_ < other->value_) return -1;
-                    if (value_ > other->value_) return 1;
-                    return 0;
-                }
+            int compare(const TuraevViroItem* other) const {
+                if (r_ < other->r_) return -1;
+                if (r_ > other->r_) return 1;
+                if (root_ < other->root_) return -1;
+                if (root_ > other->root_) return 1;
+                return 0;
             }
     };
 }
@@ -501,20 +477,25 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     invArea->addStretch(1);
 
     invariants = new QTreeWidget(ui);
-    QStringList header;
-    header << i18n("r") << i18n("root") << i18n("value");
-    invariants->setHeaderLabels(header);
+    invariants->setRootIsDecorated(false);
+    invariants->setAlternatingRowColors(true);
+    invariants->header()->setStretchLastSection(false);
+    invariants->header()->setResizeMode(QHeaderView::ResizeToContents);
     invariants->setSelectionMode(QAbstractItemView::NoSelection);
-    //invariants->setSorting(0); TODO
-    //invariants->setColumnAlignment(0, Qt::AlignLeft);
-    //invariants->setColumnAlignment(1, Qt::AlignLeft);
-    //invariants->setColumnAlignment(2, Qt::AlignLeft);
-    //invariants->setResizeMode(QTreeWidget::AllColumns);
     invariants->setWhatsThis(i18n("A list of all Turaev-Viro invariants "
         "that have been calculated so far for this triangulation.  To "
         "calculate a new invariant, enter the (r, root) parameters into the "
         "text box above and press <i>Calculate</i>."));
     invArea->addWidget(invariants, 1);
+
+    invariants->setColumnCount(3);
+    QTreeWidgetItem* header = new QTreeWidgetItem();
+    header->setText(0, i18n("r"));
+    header->setText(1, i18n("root"));
+    header->setText(2, i18n("value"));
+    for (int i = 0; i < 3; ++i)
+        header->setTextAlignment(i, Qt::AlignCenter);
+    invariants->setHeaderItem(header);
 
     invArea->addStretch(1);
 }
@@ -534,11 +515,13 @@ void NTriTuraevViroUI::refresh() {
 
     invariants->clear();
 
+    // Since TuraevViroSet is a sorted data type,
+    // these items will automatically be inserted in the right order.
     const NTriangulation::TuraevViroSet& invs(tri->allCalculatedTuraevViro());
     for (NTriangulation::TuraevViroSet::const_iterator it = invs.begin();
             it != invs.end(); it++)
-        new TuraevViroItem(invariants, (*it).first.first,
-            (*it).first.second, (*it).second);
+        invariants->addTopLevelItem(new TuraevViroItem(
+            (*it).first.first, (*it).first.second, (*it).second));
 }
 
 void NTriTuraevViroUI::editingElsewhere() {
@@ -615,19 +598,25 @@ void NTriTuraevViroUI::calculateInvariant() {
             return;
 
     // Calculate the invariant!
-    // Don't forget to check for duplicate list items.
     double value = tri->turaevViro(r, root);
+    TuraevViroItem* item = new TuraevViroItem(r, root, value);
 
-    for (int i = 0; 
-            i < invariants->invisibleRootItem()->childCount(); i++) {
-        QTreeWidgetItem* item = invariants->invisibleRootItem()->child(i);
-        if (dynamic_cast<TuraevViroItem*>(item)->matches(r, root)) {
-            delete item;
-            break;
+    // Insert the invariant in the right place in the table, and delete
+    // any previous invariant with the same parameters if it exists.
+    TuraevViroItem* curr;
+    int cmp;
+    for (int i = 0; i < invariants->invisibleRootItem()->childCount(); i++) {
+        curr = dynamic_cast<TuraevViroItem*>(
+            invariants->invisibleRootItem()->child(i));
+        cmp = item->compare(curr);
+        if (cmp <= 0) {
+            if (cmp == 0)
+                delete curr;
+            invariants->insertTopLevelItem(i, item);
+            return;
         }
     }
-
-    new TuraevViroItem(invariants, r, root, value);
+    invariants->addTopLevelItem(item);
 }
 
 //////////////////////////////////////////////////////////////////////////////
