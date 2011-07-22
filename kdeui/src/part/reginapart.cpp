@@ -533,6 +533,8 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
     // Set up the packet tree viewer.
     // splitter->setResizeMode(treeView, QSplitter::KeepSize); //TODO: Check if
     // needed
+    // TODO: setHeaderHidden(true); -- is this the default?
+    // TODO: selection mode: is single selection the default?
     treeView = new PacketTreeView(this, splitter);
     treeView->setWhatsThis( i18n("<qt>You are looking at the packet tree "
         "for this topology data file.<p>"
@@ -541,6 +543,7 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
         "lists, text items and so on.  "
         "Packets within a data file are arranged in a tree structure, "
         "so that each packet may contain one or more child packets.</qt>"));
+    // TODO: Check that this size policy makes sense.
     treeView->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
         QSizePolicy::MinimumExpanding));
     connect(treeView, SIGNAL(itemSelectionChanged()), this,
