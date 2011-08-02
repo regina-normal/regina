@@ -46,6 +46,7 @@ class NFace;
 class NEdge;
 class NVertex;
 class NComponent;
+class NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -61,12 +62,10 @@ class NComponent;
  * and deallocated by the NTriangulation object containing the
  * corresponding tetrahedra.
  *
- * Whenever the gluings of tetrahedra are altered, the external routine
- * responsible for changing the gluings (the routine that calls joinTo()
- * and unjoin()) <b>must</b> call NTriangulation::gluingsHaveChanged()
- * for the triangulation containing the tetrahedra concerned; this
- * will ensure that skeletal information and other properties of the
- * triangulation are recalculated when necessary.
+ * In Regina versions 4.6 and earlier, any user who called joinTo() or unjoin()
+ * was required to call NTriangulation::gluingsHaveChanged() afterwards.
+ * This is no longer necessary for Regina versions 4.90 and later, since
+ * triangulations are now notified of such changes automatically.
  */
 class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
     private:
@@ -121,6 +120,8 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         int tetOrientation;
             /**< The orientation of this tetrahedron in the triangulation.
                  This will either be 1 or -1. */
+        NTriangulation* tri;
+            /**< The triangulation to which this tetrahedron belongs. */
         NComponent* component;
             /**< The component to which this tetrahedron belongs in the
                  triangulation. */
@@ -277,8 +278,11 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * tetrahedron.  The other tetrahedron involved will be
          * automatically updated.
          *
-         * \warning Note that NTriangulation::gluingsHaveChanged() will
-         * have to be called after all joins and unjoins have been performed.
+         * Neither tetrahedron needs to belong to a triangulation (i.e.,
+         * you can join tetrahedra together before or after calling
+         * NTriangulation::addTetrahedron()).  However, if both
+         * tetrahedra do belong to a triangulation then it must be the
+         * \e same triangulation.
          *
          * \pre The given face of this tetrahedron is not currently glued to
          * anything.
@@ -306,9 +310,6 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * Unglues the given face of this tetrahedron from whatever is
          * joined to it.  The other tetrahedron involved (possibly this
          * one) will be automatically updated.
-         *
-         * \warning Note that NTriangulation::gluingsHaveChanged() will
-         * have to be called after all joins and unjoins have been performed.
          *
          * \pre The given face of this tetrahedron has some tetrahedron
          * (possibly this one) glued to it.

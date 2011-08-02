@@ -28,16 +28,18 @@
 
 #include <cassert>
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-NTetrahedron::NTetrahedron() {
+NTetrahedron::NTetrahedron() : tri(0) {
     int i;
     for (i=0; i<4; i++)
         tetrahedra[i] = 0;
 }
 
-NTetrahedron::NTetrahedron(const std::string& desc) : description(desc) {
+NTetrahedron::NTetrahedron(const std::string& desc) :
+        description(desc), tri(0) {
     int i;
     for (i=0; i<4; i++)
         tetrahedra[i] = 0;
@@ -63,6 +65,12 @@ NTetrahedron* NTetrahedron::unjoin(int myFace) {
     assert(you->tetrahedra[yourFace]);
     you->tetrahedra[yourFace] = 0;
     tetrahedra[myFace] = 0;
+
+    if (tri) {
+        tri->clearAllProperties();
+        tri->fireChangedEvent();
+    }
+
     return you;
 }
 
@@ -79,6 +87,14 @@ void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
     assert(! (you == this && yourFace == myFace));
     you->tetrahedra[yourFace] = this;
     you->tetrahedronPerm[yourFace] = gluing.inverse();
+
+    if (tri) {
+        tri->clearAllProperties();
+        tri->fireChangedEvent();
+    } else if (you->tri) {
+        you->tri->clearAllProperties();
+        you->tri->fireChangedEvent();
+    }
 }
 
 } // namespace regina

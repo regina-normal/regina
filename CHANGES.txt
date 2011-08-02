@@ -152,6 +152,9 @@ Version 4.90  [ (under development) ]
               the preconditions are met.  These can be circumvented by
               compiling with -DNDEBUG.
         Class NTriangulation:
+            - Removed gluingsHaveChanged().  The functionality it provided is
+              now automatic, and external routines that join or unjoin
+              tetrahedra do not need to notify the triangulation explicitly.
             - New routines hasCompressingDisc() and hasSimpleCompressingDisc()
               to search for compressing discs; see arXiv:0909.4625 for details.
             - The "legality conditions" on closeBook() are now simpler, since

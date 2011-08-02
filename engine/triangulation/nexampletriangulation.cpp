@@ -161,7 +161,6 @@ NTriangulation* NExampleTriangulation::rp2xs1() {
     NTetrahedron* t = ans->getTetrahedron(2);
     r->joinTo(1, t, NPerm4(2, 3, 0, 1));
     r->joinTo(3, t, NPerm4(2, 3, 0, 1));
-    ans->gluingsHaveChanged();
 
     return ans;
 }

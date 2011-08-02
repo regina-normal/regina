@@ -86,11 +86,10 @@ class NXMLTriangulationReader;
  * skeletal structure will be calculated.  The same is true of various
  * other triangulation properties.
  *
- * Whenever the gluings of tetrahedra have been altered, the routine
- * responsible for changing the gluings \b must call
- * NTriangulation::gluingsHaveChanged() to ensure that relevant
- * properties will be recalculated when necessary.  It is not necessary
- * to call this function when adding or removing tetrahedra.
+ * In Regina versions 4.6 and earlier, any user who altered the gluings
+ * of tetrahedra was required to call NTriangulation::gluingsHaveChanged()
+ * afterwards.  This is no longer necessary for Regina versions 4.90 and
+ * later, since triangulations are now notified of such changes automatically.
  *
  * \testpart
  *
@@ -345,8 +344,8 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * The new tetrahedron will be assigned a higher index in the
          * triangulation than all tetrahedra already present.
          *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
+         * \pre The given tetrahedron does not already belong to a
+         * different triangulation.
          *
          * \ifacespython Since this triangulation takes ownership
          * of the given tetrahedron, the python object containing the
@@ -360,9 +359,6 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * Removes the given tetrahedron from the triangulation.
          * All faces glued to this tetrahedron will be unglued.
          * The tetrahedron will \e not be deallocated.
-         *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
          *
          * \pre The given tetrahedron exists in the triangulation.
          *
@@ -379,9 +375,6 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * All faces glued to this tetrahedron will be unglued.
          * The tetrahedron will \e not be deallocated.
          *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
-         *
          * @param index specifies which tetrahedron to remove; this
          * should be between 0 and getNumberOfTetrahedra()-1 inclusive.
          * @return the removed tetrahedron.
@@ -390,21 +383,8 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Removes all tetrahedra from the triangulation.
          * All tetrahedra will be deallocated.
-         *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
          */
         void removeAllTetrahedra();
-        /**
-         * This \b must be called whenever the gluings of tetrahedra are
-         * changed!
-         * Clears appropriate properties and performs other
-         * necessary tasks.
-         * The responsibility of calling gluingsHaveChanged()
-         * falls upon the routine that alters the gluings (such as a
-         * component of a triangulation editor, or so on).
-         */
-        void gluingsHaveChanged();
 
         /*@}*/
         /**
@@ -2837,11 +2817,6 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * Clears any calculated properties and declares them all
          * unknown.  All dynamic memory used for storing known
          * properties is deallocated.
-         *
-         * In most cases this routine is called from gluingsHaveChanged(),
-         * which also fires a packet change event.  If you plan to call
-         * this routine, it is worth examining whether gluingsHaveChanged()
-         * is a more appropriate routine to call instead.
          */
         virtual void clearAllProperties();
 
@@ -3043,6 +3018,7 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
                 stdhash::hash_set<NTetrahedron*, HashPointer>&) const;
             /**< Internal to maximalForestInDualSkeleton(). */
 
+    friend class regina::NTetrahedron;
     friend class regina::NXMLTriangulationReader;
 };
 
@@ -3076,15 +3052,11 @@ inline unsigned long NTriangulation::getNumberOfTetrahedra() const {
 }
 
 inline NTetrahedron* NTriangulation::getTetrahedron(unsigned long index) {
-    if (! calculatedSkeleton)
-        calculateSkeleton();
     return tetrahedra[index];
 }
 
 inline const NTetrahedron* NTriangulation::getTetrahedron(unsigned long index)
         const {
-    if (! calculatedSkeleton)
-        calculateSkeleton();
     return tetrahedra[index];
 }
 
@@ -3100,14 +3072,18 @@ inline long NTriangulation::getTetrahedronIndex(const NTetrahedron* tet) const {
 
 inline void NTriangulation::addTetrahedron(NTetrahedron* t) {
     tetrahedra.push_back(t);
-    gluingsHaveChanged();
+    t->tri = this;
+    clearAllProperties();
+    fireChangedEvent();
 }
 
 inline NTetrahedron* NTriangulation::removeTetrahedronAt(unsigned long index) {
     NTetrahedron* ans = tetrahedra[index];
     ans->isolate();
     tetrahedra.erase(tetrahedra.begin() + index);
-    gluingsHaveChanged();
+    ans->tri = 0;
+    clearAllProperties();
+    fireChangedEvent();
     return ans;
 }
 
@@ -3115,16 +3091,14 @@ inline NTetrahedron* NTriangulation::removeTetrahedron(
         NTetrahedron* tet) {
     tet->isolate();
     tetrahedra.erase(tetrahedra.begin() + tetrahedronIndex(tet));
-    gluingsHaveChanged();
+    tet->tri = 0;
+    clearAllProperties();
+    fireChangedEvent();
     return tet;
 }
 
 inline void NTriangulation::removeAllTetrahedra() {
     deleteTetrahedra();
-    gluingsHaveChanged();
-}
-
-inline void NTriangulation::gluingsHaveChanged() {
     clearAllProperties();
     fireChangedEvent();
 }

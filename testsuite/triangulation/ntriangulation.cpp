@@ -2462,7 +2462,6 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // Glue the tetrahedron to itself to form a solid torus.
             t.getTetrahedron(0)->joinTo(0, t.getTetrahedron(0),
                 NPerm4(1, 2, 3, 0));
-            t.gluingsHaveChanged();
 
             verifyGroup(t.getHomologyH1(),
                 "H1(LST(1,2,3))", 1);
@@ -2472,7 +2471,6 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // Glue the remaining two faces in a non-orientable fashion.
             t.getTetrahedron(0)->joinTo(2, t.getTetrahedron(0),
                 NPerm4(1, 0, 3, 2));
-            t.gluingsHaveChanged();
 
             CPPUNIT_ASSERT_MESSAGE("A bad 1-tetrahedron triangulation "
                 "is valid.", ! t.isValid());

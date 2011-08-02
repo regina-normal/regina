@@ -207,8 +207,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
                     threeTwoVertices[oldPos].inverse());
     newTet[0]->joinTo(3, newTet[1], NPerm4());
 
-    // Tidy up.
-    gluingsHaveChanged();
+    // Done!.
     return true;
 }
 
@@ -333,8 +332,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
     newTet[1]->joinTo(2, newTet[2], internalPerm);
     newTet[2]->joinTo(2, newTet[0], internalPerm);
 
-    // Tidy up.
-    gluingsHaveChanged();
+    // Done!
     return true;
 }
 
@@ -379,8 +377,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     calculateSkeleton();
     threeTwoMove(oldTet[3]->getEdge(edge32), false, true);
 
-    // Tidy up.  Note that gluingsHaveChanged() was already called by
-    // twoThreeMove() and threeTwoMove().
+    // Done!
     return true;
 }
 
@@ -736,7 +733,6 @@ bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
     tet->unjoin(emb.getFace());
-    gluingsHaveChanged();
     return true;
 }
 
@@ -784,7 +780,6 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
     // Don't bother with a block since this is so simple.
 
     t0->joinTo(p0[3], t1, p1 * NPerm4(2, 3) * p0.inverse());
-    gluingsHaveChanged();
     return true;
 }
 

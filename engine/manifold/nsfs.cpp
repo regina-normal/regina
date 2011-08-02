@@ -801,7 +801,6 @@ NTriangulation* NSFSpace::construct() const {
     NSatAnnulus(a, NPerm4(1, 0, 3, 2), c, NPerm4(2, 3, 0, 1)).attachLST(ans,
         nextFibre.alpha, -(nextFibre.beta + b_ * nextFibre.alpha));
 
-    ans->gluingsHaveChanged();
     return ans;
 }
 

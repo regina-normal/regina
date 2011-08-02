@@ -450,7 +450,6 @@ NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
                 vertices[2], vertices[5], face, altFace));
         out << '\n';
     }
-    triang->gluingsHaveChanged();
 
     out << "Finished reading gluings.\n";
     out << "The triangulation has been successfully created.\n";
@@ -547,7 +546,6 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
         }
         tetPos++;
     }
-    gluingsHaveChanged();
 
     // Properties:
     if (X.fundamentalGroup.known())
@@ -603,8 +601,6 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
         }
         tetPos++;
     }
-
-    gluingsHaveChanged();
 }
 
 void NTriangulation::insertConstruction(unsigned long nTetrahedra,

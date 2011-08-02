@@ -73,8 +73,6 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             baseKB.insertTriangulation(base);
             baseKB.getTetrahedron(0)->joinTo(2,
                 baseKB.getTetrahedron(1), NPerm4(1, 2, 3, 0));
-
-            baseKB.gluingsHaveChanged();
         }
 
         void tearDown() {
@@ -308,7 +306,6 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 t.insertTriangulation(baseKB);
                 t.insertTriangulation(baseKB);
                 t.getTetrahedron(0)->joinTo(3, t.getTetrahedron(2), NPerm4());
-                t.gluingsHaveChanged();
 
                 verify20Edge(&t, 3, &baseKB, "bdry-cross-tet");
             }
@@ -426,7 +423,6 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 t.insertTriangulation(base);
                 NTetrahedron* tet = t.getTetrahedron(0);
                 tet->joinTo(2, tet, NPerm4(2, 3));
-                t.gluingsHaveChanged();
 
                 // Ugly hack to regenerate skeleton, see notes above.
                 t.getNumberOfEdges();
@@ -492,7 +488,6 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* top = orig.getTetrahedron(0);
                 orig.getTetrahedron(3)->joinTo(3, top, NPerm4(1,2,0,3));
                 orig.getTetrahedron(4)->joinTo(2, top, NPerm4(0,3,2,1));
-                orig.gluingsHaveChanged();
 
                 verify20EdgeInvalid(&orig, "boundary-diag");
             }

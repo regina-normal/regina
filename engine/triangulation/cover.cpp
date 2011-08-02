@@ -128,7 +128,9 @@ void NTriangulation::makeDoubleCover() {
 
     // Tidy up.
     delete[] upper;
-    gluingsHaveChanged();
+    clearAllProperties();
+
+    // The change event is fired on destruction of the ChangeEventBlock.
 }
 
 } // namespace regina
