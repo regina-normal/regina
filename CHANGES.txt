@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For a human-readable summary of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 4.7  [ (under development) ]
+Version 4.90  [ (under development) ]
 
     ENGINE:
         Typedef AcceptTriangulation:
