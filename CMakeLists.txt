@@ -9,7 +9,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
 # Version
-SET (PACKAGE_VERSION 4.7)
+SET (PACKAGE_VERSION 4.90)
 SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
 # Extract major/minor version
