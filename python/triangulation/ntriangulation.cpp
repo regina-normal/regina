@@ -167,6 +167,7 @@ void addNTriangulation() {
         .def("removeTetrahedronAt", &NTriangulation::removeTetrahedronAt,
             return_value_policy<manage_new_object>())
         .def("removeAllTetrahedra", &NTriangulation::removeAllTetrahedra)
+        .def("gluingsHaveChanged", &NTriangulation::gluingsHaveChanged)
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &NTriangulation::getNumberOfBoundaryComponents)

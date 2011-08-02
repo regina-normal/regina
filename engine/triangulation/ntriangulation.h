@@ -385,6 +385,16 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * All tetrahedra will be deallocated.
          */
         void removeAllTetrahedra();
+        /**
+         * This routine now does nothing, and should not be used.
+         *
+         * \deprecated In Regina versions 4.6 and earlier, this routine
+         * was used to manually notify the triangulation that the gluings
+         * of tetrahedra had changed.  In Regina 4.90 and later this
+         * notification is automatic.  This routine now does nothing at
+         * all, and can safely be removed from any existing code.
+         */
+        void gluingsHaveChanged();
 
         /*@}*/
         /**
@@ -3101,6 +3111,9 @@ inline void NTriangulation::removeAllTetrahedra() {
     deleteTetrahedra();
     clearAllProperties();
     fireChangedEvent();
+}
+
+inline void gluingsHaveChanged() {
 }
 
 inline unsigned long NTriangulation::getNumberOfBoundaryComponents() const {
