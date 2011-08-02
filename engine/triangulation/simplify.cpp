@@ -192,7 +192,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
 
     // Remove the old tetrahedra from the triangulation.
     for (oldPos = 0; oldPos < 3; oldPos++)
-        delete removeTetrahedron(oldTet[oldPos]);
+        removeTetrahedron(oldTet[oldPos]);
 
     // Insert the new tetrahedra into the triangulation.
     for (newPos = 0; newPos < 2; newPos++)
@@ -314,7 +314,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
 
     // Remove the old tetrahedra from the triangulation.
     for (oldPos = 0; oldPos < 2; oldPos++)
-        delete removeTetrahedron(oldTet[oldPos]);
+        removeTetrahedron(oldTet[oldPos]);
 
     // Insert the new tetrahedra into the triangulation.
     for (newPos = 0; newPos < 3; newPos++)
@@ -471,8 +471,8 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     }
 
     // Finally remove and dispose of the tetrahedra.
-    delete removeTetrahedron(tet[0]);
-    delete removeTetrahedron(tet[1]);
+    removeTetrahedron(tet[0]);
+    removeTetrahedron(tet[1]);
 
     // Tidy up.
     // Properties have already been cleared in removeTetrahedron().
@@ -554,8 +554,8 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     }
 
     // Finally remove and dispose of the tetrahedra.
-    delete removeTetrahedron(tet[0]);
-    delete removeTetrahedron(tet[1]);
+    removeTetrahedron(tet[0]);
+    removeTetrahedron(tet[1]);
 
     // Tidy up.
     // Properties have already been cleared in removeTetrahedron().
@@ -681,8 +681,8 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     }
 
     // Finally remove and dispose of the unwanted tetrahedra.
-    delete removeTetrahedron(oldTet);
-    delete removeTetrahedron(top);
+    removeTetrahedron(oldTet);
+    removeTetrahedron(top);
 
     // Tidy up.
     // Properties have already been cleared in removeTetrahedron().
@@ -837,7 +837,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
 
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
-    delete removeTetrahedron(t);
+    removeTetrahedron(t);
     return true;
 }
 
@@ -1085,7 +1085,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             top->joinTo(topPerm[p[0]], bot,
                 botPerm * NPerm4(p[0], p[1]) * topPerm.inverse());
 
-        delete removeTetrahedron(tet);
+        removeTetrahedron(tet);
     }
 
     return true;

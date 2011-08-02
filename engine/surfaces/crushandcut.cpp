@@ -1290,7 +1290,7 @@ NTriangulation* NNormalSurface::crush() const {
     // Delete unwanted tetrahedra.
     for (whichTet = nTet - 1; whichTet >= 0; whichTet--)
         if (quads[whichTet] >= 0)
-            delete ans->removeTetrahedronAt(whichTet);
+            ans->removeTetrahedronAt(whichTet);
 
     delete[] quads;
     return ans;

@@ -338,6 +338,23 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          */
         long getTetrahedronIndex(const NTetrahedron* tet) const;
         /**
+         * Creates a new tetrahedron and adds it to this triangulation.
+         * The new tetrahedron will have an empty description.
+         * All four faces of the new tetrahedron will be boundary faces.
+         *
+         * @return the new tetrahedron.
+         */
+        NTetrahedron* newTetrahedron();
+        /**
+         * Creates a new tetrahedron with the given description and adds
+         * it to this triangulation.
+         * All four faces of the new tetrahedron will be boundary faces.
+         *
+         * @param desc the description to assign to the new tetrahedron.
+         * @return the new tetrahedron.
+         */
+        NTetrahedron* newTetrahedron(const std::string& desc);
+        /**
          * Inserts the given tetrahedron into the triangulation.
          * No face gluings anywhere will be examined or altered.
          *
@@ -346,6 +363,10 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * \pre The given tetrahedron does not already belong to a
          * different triangulation.
+         *
+         * \deprecated Users should create tetrahedra by calling
+         * newTetrahedron() or newTetrahedron(const std::string&), which
+         * will add the tetrahedron to the triangulation automatically.
          *
          * \ifacespython Since this triangulation takes ownership
          * of the given tetrahedron, the python object containing the
@@ -358,14 +379,19 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Removes the given tetrahedron from the triangulation.
          * All faces glued to this tetrahedron will be unglued.
-         * The tetrahedron will \e not be deallocated.
+         * The tetrahedron will be deallocated.
          *
          * \pre The given tetrahedron exists in the triangulation.
+         *
+         * \warning This routine has changed behaviour as of Regina 4.90.
+         * In older versions of Regina, the tetrahedron was returned to
+         * the user.  As of Regina 4.90, the tetrahedron is now destroyed
+         * immediately.
          *
          * @param tet the tetrahedron to remove.
          * @return the removed tetrahedron.
          */
-        NTetrahedron* removeTetrahedron(NTetrahedron* tet);
+        void removeTetrahedron(NTetrahedron* tet);
         /**
          * Removes the tetrahedron with the given index number
          * from the triangulation.  Note that tetrahedron indexing may
@@ -373,13 +399,18 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * triangulation.
          *
          * All faces glued to this tetrahedron will be unglued.
-         * The tetrahedron will \e not be deallocated.
+         * The tetrahedron will be deallocated.
+         *
+         * \warning This routine has changed behaviour as of Regina 4.90.
+         * In older versions of Regina, the tetrahedron was returned to
+         * the user.  As of Regina 4.90, the tetrahedron is now destroyed
+         * immediately.
          *
          * @param index specifies which tetrahedron to remove; this
          * should be between 0 and getNumberOfTetrahedra()-1 inclusive.
          * @return the removed tetrahedron.
          */
-        NTetrahedron* removeTetrahedronAt(unsigned long index);
+        void removeTetrahedronAt(unsigned long index);
         /**
          * Removes all tetrahedra from the triangulation.
          * All tetrahedra will be deallocated.
@@ -3074,6 +3105,18 @@ inline long NTriangulation::tetrahedronIndex(const NTetrahedron* tet) const {
     return tet->markedIndex();
 }
 
+inline NTetrahedron* NTriangulation::newTetrahedron() {
+    NTetrahedron* tet = new NTetrahedron();
+    addTetrahedron(tet);
+    return tet;
+}
+
+inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
+    NTetrahedron* tet = new NTetrahedron(desc);
+    addTetrahedron(tet);
+    return tet;
+}
+
 inline long NTriangulation::getTetrahedronIndex(const NTetrahedron* tet) const {
     TetrahedronIterator pos =
         std::find(tetrahedra.begin(), tetrahedra.end(), tet);
@@ -3087,24 +3130,23 @@ inline void NTriangulation::addTetrahedron(NTetrahedron* t) {
     fireChangedEvent();
 }
 
-inline NTetrahedron* NTriangulation::removeTetrahedronAt(unsigned long index) {
+inline void NTriangulation::removeTetrahedronAt(unsigned long index) {
     NTetrahedron* ans = tetrahedra[index];
     ans->isolate();
     tetrahedra.erase(tetrahedra.begin() + index);
-    ans->tri = 0;
+    delete ans;
+
     clearAllProperties();
     fireChangedEvent();
-    return ans;
 }
 
-inline NTetrahedron* NTriangulation::removeTetrahedron(
-        NTetrahedron* tet) {
+inline void NTriangulation::removeTetrahedron(NTetrahedron* tet) {
     tet->isolate();
     tetrahedra.erase(tetrahedra.begin() + tetrahedronIndex(tet));
-    tet->tri = 0;
+    delete tet;
+
     clearAllProperties();
     fireChangedEvent();
-    return tet;
 }
 
 inline void NTriangulation::removeAllTetrahedra() {

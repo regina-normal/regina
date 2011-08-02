@@ -58,14 +58,41 @@ class NTriangulation;
  *
  * With each tetrahedron is stored various pieces of information
  * regarding the overall skeletal structure and component structure of
- * the triangulation.  This information will be allocated, calculated
+ * the triangulation.  This skeletal information will be allocated, calculated
  * and deallocated by the NTriangulation object containing the
  * corresponding tetrahedra.
  *
- * In Regina versions 4.6 and earlier, any user who called joinTo() or unjoin()
- * was required to call NTriangulation::gluingsHaveChanged() afterwards.
- * This is no longer necessary for Regina versions 4.90 and later, since
- * triangulations are now notified of such changes automatically.
+ * The management of tetrahedra has changed significantly as of Regina 4.90:
+ *
+ * - Users no longer need to call NTriangulation::gluingsHaveChanged()
+ * when gluing or ungluing tetrahedra.  This notification is now handled
+ * automatically, and NTriangulation::gluingsHaveChanged() now does nothing.
+ *
+ * - You should now create tetrahedra by calling
+ * NTriangulation::newTetrahedron() or
+ * NTriangulation::newTetrahedron(const std::string&), which will
+ * automatically add the tetrahedron to the triangulation.  You should
+ * not need to call NTriangulation::addTetrahedron() at all.
+ *
+ * - When you remove a tetrahedron using NTriangulation::removeTetrahedron()
+ * or NTriangulation::removeTetrahedronAt(), the tetrahedron will now be
+ * automatically destroyed.
+ *
+ * - The old way of adding tetrahedra (creating an NTetrahedron and then
+ * calling NTriangulation::addTetrahedron()) is deprecated, and will
+ * be removed completely in the near future.  In the meantime, you may
+ * find that tetrahedra are now added to a triangulation automatically (both
+ * NTriangulation::addTetrahedron() and NTetrahedron::joinTo() will
+ * aggressively try to add nearby tetrahedra that do not already belong to
+ * the current triangulation).  This is to avoid tetrahedra and
+ * triangulations being in an inconsistent state.  Any redundant calls
+ * to NTriangulation::addTetrahedron() (i.e., when the tetrahedron
+ * already belongs to the triangulation) are harmless, and will have no
+ * effect.
+ *
+ * These changes are designed to ensure that triangulations and
+ * tetrahedra are always in a consistent state, and to make it more
+ * difficult for users to inadvertently crash the program.
  */
 class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
     private:
@@ -130,11 +157,20 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         /**
          * Creates a new tetrahedron with empty description and no
          * faces joined to anything.
+         *
+         * \deprecated Users should now create new tetrahedra by calling
+         * NTriangulation::newTetrahedron().  For details, see the changes in
+         * tetrahedron management outlined in the NTetrahedron class notes.
          */
         NTetrahedron();
         /**
          * Creates a new tetrahedron with the given description and
          * no faces joined to anything.
+         *
+         * \deprecated Users should now create new tetrahedra by calling
+         * NTriangulation::newTetrahedron(const std::string&).  For details,
+         * see the changes in tetrahedron management outlined in the
+         * NTetrahedron class notes.
          *
          * @param desc the description to give the new tetrahedron.
          */
@@ -284,6 +320,8 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * tetrahedra do belong to a triangulation then it must be the
          * \e same triangulation.
          *
+         * \pre This and the given tetrahedron do not belong to
+         * different triangulations.
          * \pre The given face of this tetrahedron is not currently glued to
          * anything.
          * \pre The face of the other tetrahedron that will be glued to the

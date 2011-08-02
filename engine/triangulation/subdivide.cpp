@@ -231,8 +231,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     // Now remove the tetrahedra.
     // For each tetrahedron, remove it and delete it.
     for_each(tetList.begin(), tetList.end(),
-        regina::stl::compose1(FuncDelete<NTetrahedron>(),
-        std::bind1st(std::mem_fun(&NTriangulation::removeTetrahedron), this)));
+        std::bind1st(std::mem_fun(&NTriangulation::removeTetrahedron), this));
 
     return true;
 }
