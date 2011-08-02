@@ -3113,7 +3113,7 @@ inline void NTriangulation::removeAllTetrahedra() {
     fireChangedEvent();
 }
 
-inline void gluingsHaveChanged() {
+inline void NTriangulation::gluingsHaveChanged() {
 }
 
 inline unsigned long NTriangulation::getNumberOfBoundaryComponents() const {
