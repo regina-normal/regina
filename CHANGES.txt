@@ -145,16 +145,39 @@ Version 4.90  [ (under development) ]
             - New routine allowsSpun() to easily identify coordinate systems
               that support spun normal surfaces.
         Class NTetrahedron:
+            - Tetrahedra should now always belong to a triangulation, from
+              creation until destruction.  In particular:
+              + Tetrahedra should be created by calling
+                NTriangulation::newTetrahedron(), which will insert them
+                into a triangulation immediately.  There is no need to
+                call NTriangulation::addTetrahedron() any more.
+              + NTetrahedron::joinTo() now recursively adds adjacent
+                tetrahedra to the relevant triangulation (but if you use
+                NTriangulation::newTetrahedron() as described above then
+                this is fast and changes nothing).
+            - Users no longer need to call NTriangulation::gluingsHaveChanged()
+              after gluing or ungluing tetrahedron faces; this is now handled
+              automatically.
+            - The NTetrahedron constructors are now deprecated in favour
+              of NTriangulation::newTetrahedron(), as described above.
             - New routine getVertexMapping(), which facilitates a
               consistent orientation around the given vertex for the
               three remaining vertices in each tetrahedron.
             - Added assertions in joinTo() and unjoin() to ensure that
               the preconditions are met.  These can be circumvented by
               compiling with -DNDEBUG.
+            - Routines that need the triangulation skeleton (e.g., getVertex(),
+              getEdgeMapping(), orientation(), etc.) will now compute the
+              skeleton automatically if this has not already been done.
         Class NTriangulation:
-            - Removed gluingsHaveChanged().  The functionality it provided is
-              now automatic, and external routines that join or unjoin
-              tetrahedra do not need to notify the triangulation explicitly.
+            - Add new routines newTetrahedron() and
+              newTetrahedron(const std::string&).  This is now the
+              preferred way of creating tetrahedra (see the NTetrahedron
+              notes above).  The old addTetrahedron() is now deprecated.
+            - Users no longer need to call gluingsHaveChanged(), which
+              is likewise deprecated.  Again, see the NTetrahedron notes above.
+            - Routines removeTetrahedron() and removeTetrahedronAt() now
+              destroy the tetrahedron immediately and return nothing.
             - New routines hasCompressingDisc() and hasSimpleCompressingDisc()
               to search for compressing discs; see arXiv:0909.4625 for details.
             - The "legality conditions" on closeBook() are now simpler, since

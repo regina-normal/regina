@@ -86,10 +86,16 @@ class NXMLTriangulationReader;
  * skeletal structure will be calculated.  The same is true of various
  * other triangulation properties.
  *
- * In Regina versions 4.6 and earlier, any user who altered the gluings
- * of tetrahedra was required to call NTriangulation::gluingsHaveChanged()
- * afterwards.  This is no longer necessary for Regina versions 4.90 and
- * later, since triangulations are now notified of such changes automatically.
+ * The management of tetrahedra within a triangulation has become simpler and
+ * safer as of Regina 4.90.  In older versions (Regina 4.6 and earlier),
+ * users were required to create tetrahedra, individually add them to
+ * triangulations, and manually notify a triangulation whenever its tetrahedron
+ * gluings changed.  As of Regina 4.90, new tetrahedra are created using
+ * NTriangulation::newTetrahedron() which automatically places them within
+ * a triangulation, and all gluing changes are likewise communicated to the
+ * triangulation automatically.  These are part of a larger suite of changes
+ * (all designed to help the user avoid inconsistent states and accidental
+ * crashes); see the NTetrahedron class notes for further details.
  *
  * \testpart
  *
