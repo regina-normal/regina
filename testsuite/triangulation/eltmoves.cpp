@@ -153,13 +153,6 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* tet2 = t.newTetrahedron();
                 t.getTetrahedron(1)->joinTo(2, tet2, NPerm4());
 
-                // Force a recalculation of the skeleton, since
-                // NTetrahedron routines such as getEdge() are oblivious
-                // to the encompassing triangulation.  There has got to
-                // be a better way (TODO).  We do this several times
-                // here in this file.
-                t.getNumberOfEdges();
-
                 NEdge* e = tet->getEdge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-loop-tet is malformed.",
@@ -359,9 +352,6 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 p->joinTo(3, r, NPerm4());
                 q->joinTo(2, s, NPerm4());
 
-                // Ugly hack to regenerate skeleton, see notes above.
-                t.getNumberOfEdges();
-
                 NEdge* e = t.getTetrahedron(0)->getEdge(
                     NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
@@ -388,9 +378,6 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 p->joinTo(3, r, NPerm4(0, 1));
                 q->joinTo(2, s, NPerm4(0, 1));
 
-                // Ugly hack to regenerate skeleton, see notes above.
-                t.getNumberOfEdges();
-
                 NEdge* e = t.getTetrahedron(0)->getEdge(
                     NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
@@ -408,9 +395,6 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* tet = t.getTetrahedron(0);
                 tet->joinTo(2, tet, NPerm4(2, 3));
 
-                // Ugly hack to regenerate skeleton, see notes above.
-                t.getNumberOfEdges();
-
                 NEdge* e = tet->getEdge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-loop-boundary is malformed.",
@@ -424,9 +408,6 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // Two faces boundary, the other joined in a cross.
                 NTriangulation t;
                 t.insertTriangulation(baseKB);
-
-                // Ugly hack to regenerate skeleton, see notes above.
-                t.getNumberOfEdges();
 
                 NEdge* e = t.getTetrahedron(0)->
                     getEdge(NEdge::edgeNumber[0][1]);
