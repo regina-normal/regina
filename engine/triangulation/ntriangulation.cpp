@@ -95,6 +95,22 @@ void NTriangulation::addTetrahedron(NTetrahedron* t) {
     fireChangedEvent();
 }
 
+void NTriangulation::swapContents(NTriangulation& other) {
+    clearAllProperties();
+    other.clearAllProperties();
+
+    tetrahedra.swap(other.tetrahedra);
+
+    TetrahedronIterator it;
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
+        (*it)->tri = this;
+    for (it = other.tetrahedra.begin(); it != other.tetrahedra.end(); ++it)
+        (*it)->tri = &other;
+
+    fireChangedEvent();
+    other.fireChangedEvent();
+}
+
 void NTriangulation::clearAllProperties() {
     if (calculatedSkeleton) {
         deleteSkeleton();

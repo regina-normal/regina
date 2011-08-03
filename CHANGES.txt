@@ -80,6 +80,8 @@ Version 4.90  [ (under development) ]
             - Both of these classes have much richer interfaces than before,
               and some old routines have now been deprecated.  See the class
               documentation for full details.  Thanks to Ryan Budney.
+        Class NMarkedVector:
+            - Added swap() to swap the contents of two vectors.
         Class NNormalSurface:
             - New routines isCompressingDisc() and isIncompressible() for
               testing incompressibility.
@@ -198,6 +200,8 @@ Version 4.90  [ (under development) ]
             - New routines isOrdered() and order() to relabel tetrahedron
               vertices so that they are ordered consistently across adjacent
               faces.  Thanks again to Matthias Goerner.
+            - New routine swapContents() for swapping tetrahedra between
+              two triangulations.
             - Fixed a memory leak in shellBoundary().
         Class NTrieSet:
             - A new class for storing and querying a large number of sets,

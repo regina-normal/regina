@@ -433,6 +433,16 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          */
         void removeAllTetrahedra();
         /**
+         * Swaps the contents of this and the given triangulation.
+         * That is, all tetrahedra that belong to this triangulation
+         * will be moved to \a other, and all tetrahedra that belong to
+         * \a other will be moved to this triangulation.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        void swapContents(NTriangulation& other);
+        /**
          * This routine now does nothing, and should not be used.
          *
          * \deprecated In Regina versions 4.6 and earlier, this routine

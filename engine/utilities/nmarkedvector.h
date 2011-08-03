@@ -228,6 +228,15 @@ class NMarkedVector : private std::vector<T*> {
                 (*it)->marking -= (first - last);
             return std::vector<T*>::erase(first, last);
         }
+
+        /**
+         * Swaps the contents of this and the given vector.
+         *
+         * @param other the vector whose contents are to be swapped with this.
+         */
+        inline void swap(NMarkedVector<T>& other) {
+            std::vector<T*>::swap(other);
+        }
 };
 
 /*@}*/
