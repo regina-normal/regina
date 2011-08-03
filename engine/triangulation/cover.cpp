@@ -124,7 +124,7 @@ void NTriangulation::makeDoubleCover() {
 
     // Add the new tetrahedra to the triangulation.
     for (i = 0; i < sheetSize; i++)
-        tetrahedra.push_back(upper[i]);
+        addTetrahedron(upper[i]);
 
     // Tidy up.
     delete[] upper;

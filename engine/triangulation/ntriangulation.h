@@ -362,11 +362,21 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * triangulation than all tetrahedra already present.
          *
          * \pre The given tetrahedron does not already belong to a
-         * different triangulation.
+         * different triangulation (though already belonging to \e this
+         * triangulation is perfectly fine).
          *
          * \deprecated Users should create tetrahedra by calling
          * newTetrahedron() or newTetrahedron(const std::string&), which
          * will add the tetrahedron to the triangulation automatically.
+         *
+         * \warning As of Regina 4.90, this routine will also add any
+         * neighbouring tetrahedra that do not yet belong to a
+         * triangulation; moreover, this addition is recursive.  This is done
+         * to ensure that, whenever one tetrahedron belongs to a
+         * triangulation, everything that it is joined to (directly or
+         * indirectly) also belongs to that same triangulation.
+         * See the NTetrahedron class notes for further details on how
+         * tetrahedron management has changed in Regina 4.90 and above.
          *
          * \ifacespython Since this triangulation takes ownership
          * of the given tetrahedron, the python object containing the
@@ -3107,13 +3117,23 @@ inline long NTriangulation::tetrahedronIndex(const NTetrahedron* tet) const {
 
 inline NTetrahedron* NTriangulation::newTetrahedron() {
     NTetrahedron* tet = new NTetrahedron();
-    addTetrahedron(tet);
+
+    tet->tri = this;
+    tetrahedra.push_back(tet);
+    clearAllProperties();
+    fireChangedEvent();
+
     return tet;
 }
 
 inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
     NTetrahedron* tet = new NTetrahedron(desc);
-    addTetrahedron(tet);
+
+    tet->tri = this;
+    tetrahedra.push_back(tet);
+    clearAllProperties();
+    fireChangedEvent();
+
     return tet;
 }
 
@@ -3121,13 +3141,6 @@ inline long NTriangulation::getTetrahedronIndex(const NTetrahedron* tet) const {
     TetrahedronIterator pos =
         std::find(tetrahedra.begin(), tetrahedra.end(), tet);
     return (pos == tetrahedra.end() ? -1 : pos - tetrahedra.begin());
-}
-
-inline void NTriangulation::addTetrahedron(NTetrahedron* t) {
-    tetrahedra.push_back(t);
-    t->tri = this;
-    clearAllProperties();
-    fireChangedEvent();
 }
 
 inline void NTriangulation::removeTetrahedronAt(unsigned long index) {

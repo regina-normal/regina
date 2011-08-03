@@ -55,8 +55,7 @@ NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
 
     ChangeEventBlock block(this);
 
-    NTetrahedron* newTet = new NTetrahedron();
-    addTetrahedron(newTet);
+    NTetrahedron* newTet = newTetrahedron();
 
     newTet->joinTo(3, tet1, roles1);
     newTet->joinTo(2, tet2, roles2);
@@ -70,8 +69,7 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
 
     unsigned long cuts2 = cuts0 + cuts1;
 
-    NTetrahedron* newTet = new NTetrahedron();
-    addTetrahedron(newTet);
+    NTetrahedron* newTet = newTetrahedron();
 
     // Take care of the case that can be done with a single
     // tetrahedron.
@@ -156,15 +154,13 @@ void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
     NTetrahedron* curr;
     NTetrahedron* next;
 
-    base = new NTetrahedron();
-    addTetrahedron(base);
+    base = newTetrahedron();
     curr = base;
 
     for (unsigned long i = 1; i < length; i++) {
-        next = new NTetrahedron();
+        next = newTetrahedron();
         curr->joinTo(0, next, NPerm4(1, 0, 2, 3));
         curr->joinTo(3, next, NPerm4(0, 1, 3, 2));
-        addTetrahedron(next);
         curr = next;
     }
 
@@ -186,10 +182,8 @@ void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
 
     // Construct the core triangular solid torus.
     NTetrahedron* core[3];
-    for (i = 0; i < 3; i++) {
-        core[i] = new NTetrahedron();
-        addTetrahedron(core[i]);
-    }
+    for (i = 0; i < 3; i++)
+        core[i] = newTetrahedron();
     for (i = 0; i < 3; i++)
         core[i]->joinTo(0, core[(i + 1) % 3], NPerm4(3, 0, 1, 2));
 

@@ -33,15 +33,13 @@
 namespace regina {
 
 NTetrahedron::NTetrahedron() : tri(0) {
-    int i;
-    for (i=0; i<4; i++)
+    for (int i=0; i<4; i++)
         tetrahedra[i] = 0;
 }
 
 NTetrahedron::NTetrahedron(const std::string& desc) :
         description(desc), tri(0) {
-    int i;
-    for (i=0; i<4; i++)
+    for (int i=0; i<4; i++)
         tetrahedra[i] = 0;
 }
 
@@ -78,6 +76,16 @@ void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
     assert((! tetrahedra[myFace]) ||
         (tetrahedra[myFace] == you &&
             tetrahedronPerm[myFace] == gluing));
+
+    // TODO: Temporary measure while we transition from old-style to
+    // new-style tetrahedron management.
+    if (tri && ! you->tri)
+        tri->addTetrahedron(you);
+    else if (you->tri && ! tri)
+        you->tri->addTetrahedron(this);
+
+    assert(tri == you->tri);
+
     tetrahedra[myFace] = you;
     tetrahedronPerm[myFace] = gluing;
     int yourFace = gluing[myFace];
@@ -91,9 +99,6 @@ void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
     if (tri) {
         tri->clearAllProperties();
         tri->fireChangedEvent();
-    } else if (you->tri) {
-        you->tri->clearAllProperties();
-        you->tri->fireChangedEvent();
     }
 }
 

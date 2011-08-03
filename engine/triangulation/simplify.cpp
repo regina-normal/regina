@@ -1139,10 +1139,10 @@ void NTriangulation::reorderTetrahedraBFS(bool reverse) {
 
     if (reverse) {
         for (i = n; i > 0; )
-            addTetrahedron(ordered[--i]);
+            tetrahedra.push_back(ordered[--i]);
     } else {
         for (i = 0; i < n; )
-            addTetrahedron(ordered[i++]);
+            tetrahedra.push_back(ordered[i++]);
     }
 
     delete[] used;

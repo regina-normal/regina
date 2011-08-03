@@ -157,6 +157,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         /**
          * Creates a new tetrahedron with empty description and no
          * faces joined to anything.
+         * The new tetrahedron will not belong to any triangulation.
          *
          * \deprecated Users should now create new tetrahedra by calling
          * NTriangulation::newTetrahedron().  For details, see the changes in
@@ -166,6 +167,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         /**
          * Creates a new tetrahedron with the given description and
          * no faces joined to anything.
+         * The new tetrahedron will not belong to any triangulation.
          *
          * \deprecated Users should now create new tetrahedra by calling
          * NTriangulation::newTetrahedron(const std::string&).  For details,
@@ -328,6 +330,12 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * given face of this tetrahedron is not currently glued to anything.
          * \pre If the other tetrahedron involved is this tetrahedron, we are
          * not attempting to glue a face to itself.
+         *
+         * \warning If one tetrahedron belongs to a triangulation but
+         * the other does not, the missing tetrahedron (along with anything
+         * that it is joined to, directly or indirectly) will be automatically
+         * added to the triangulation.  This is new behaviour as of
+         * Regina 4.90; see the NTetrahedron class notes for details.
          *
          * @param myFace the face of this tetrahedron that will be glued
          * to the given other tetrahedron.  This

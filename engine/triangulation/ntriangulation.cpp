@@ -26,9 +26,11 @@
 
 /* end stub */
 
+#include <cassert>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <stack>
 
 #include "file/nfile.h"
 #include "triangulation/ntriangulation.h"
@@ -47,6 +49,51 @@
 #define PROPID_SPLITTINGSURFACE 202
 
 namespace regina {
+
+void NTriangulation::addTetrahedron(NTetrahedron* t) {
+    // Make this a no-op if the tetrahedron has already been added.
+    if (t->tri == this)
+        return;
+    assert(t->tri == 0);
+
+    ChangeEventBlock(this);
+
+    t->tri = this;
+    tetrahedra.push_back(t);
+
+    // Aggressively add neighbours of t (recursively).
+    // First check whether this is even necessary.
+    bool moreToAdd = false;
+    int i;
+    for (i = 0; i < 4; ++i)
+        if (t->adjacentTetrahedron(i) && ! t->adjacentTetrahedron(i)->tri) {
+            moreToAdd = true;
+            break;
+        }
+    if (moreToAdd) {
+        // Yep, it's necessary.. off we go.
+        std::stack<NTetrahedron*> toFollow;
+        toFollow.push(t);
+
+        NTetrahedron* next;
+        NTetrahedron* adj;
+        while (! toFollow.empty()) {
+            next = toFollow.top();
+            toFollow.pop();
+            for (i = 0; i < 4; ++i) {
+                adj = next->adjacentTetrahedron(i);
+                if (adj && ! adj->tri) {
+                    adj->tri = this;
+                    tetrahedra.push_back(adj);
+                    toFollow.push(adj);
+                }
+            }
+        }
+    }
+
+    clearAllProperties();
+    fireChangedEvent();
+}
 
 void NTriangulation::clearAllProperties() {
     if (calculatedSkeleton) {
@@ -235,15 +282,11 @@ void NTriangulation::writePacket(NFile& out) const {
 
 NTriangulation* NTriangulation::readPacket(NFile& in, NPacket* /* parent */) {
     NTriangulation* triang = new NTriangulation();
-    NTetrahedron* tet;
 
     // Create new tetrahedra.
     unsigned long nTet = in.readULong();
-    for (unsigned long i=0; i<nTet; i++) {
-        tet = new NTetrahedron();
-        tet->setDescription(in.readString());
-        triang->addTetrahedron(tet);
-    }
+    for (unsigned long i=0; i<nTet; i++)
+        triang->newTetrahedron(in.readString());
 
     // Read in the joins.
     long tetPos, altPos;
@@ -378,7 +421,7 @@ NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
     out << '\n';
 
     for (long i=0; i<nTet; i++)
-        triang->addTetrahedron(new NTetrahedron());
+        triang->newTetrahedron();
 
     // Read in the joins.
     long tetPos, altPos;
@@ -521,7 +564,7 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
 
     TetrahedronIterator it;
     for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++)
-        addTetrahedron(new NTetrahedron((*it)->getDescription()));
+        newTetrahedron((*it)->getDescription());
 
     // Make the gluings.
     long tetPos, adjPos;
@@ -576,7 +619,7 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
 
     TetrahedronIterator it;
     for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++)
-        addTetrahedron(new NTetrahedron((*it)->getDescription()));
+        newTetrahedron((*it)->getDescription());
 
     // Make the gluings.
     long tetPos, adjPos;
@@ -608,13 +651,15 @@ void NTriangulation::insertConstruction(unsigned long nTetrahedra,
     if (nTetrahedra == 0)
         return;
 
+    ChangeEventBlock(this);
+
     NTetrahedron** tet = new NTetrahedron*[nTetrahedra];
 
     unsigned i, j;
     NPerm4 p;
 
     for (i = 0; i < nTetrahedra; i++)
-        tet[i] = new NTetrahedron();
+        tet[i] = newTetrahedron();
 
     for (i = 0; i < nTetrahedra; i++)
         for (j = 0; j < 4; j++)
@@ -624,12 +669,6 @@ void NTriangulation::insertConstruction(unsigned long nTetrahedra,
                     gluings[i][j][2], gluings[i][j][3]);
                 tet[i]->joinTo(j, tet[adjacencies[i][j]], p);
             }
-
-    // It's not until here that we actually modify this triangulation.
-    ChangeEventBlock(this);
-
-    for (i = 0; i < nTetrahedra; i++)
-        addTetrahedron(tet[i]);
 
     delete[] tet;
 }
