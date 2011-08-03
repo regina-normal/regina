@@ -129,14 +129,12 @@ NTriangulation* NExampleTriangulation::bingsHouse() {
     NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel("Bing's house with two rooms");
 
-    NTetrahedron* r = new NTetrahedron();
-    NTetrahedron* s = new NTetrahedron();
+    NTetrahedron* r = ans->newTetrahedron();
+    NTetrahedron* s = ans->newTetrahedron();
     r->joinTo(0, r, NPerm4(0, 1));
     s->joinTo(0, s, NPerm4(0, 1));
     r->joinTo(3, s, NPerm4(3, 1, 0, 2));
     s->joinTo(3, r, NPerm4(3, 1, 0, 2));
-    ans->addTetrahedron(r);
-    ans->addTetrahedron(s);
 
     return ans;
 }
@@ -251,16 +249,13 @@ NTriangulation* NExampleTriangulation::solidKleinBottle() {
 
     // A three-tetrahedron solid Klein bottle is described in section
     // 3.5.1 of Benjamin Burton's PhD thesis.
-    NTetrahedron* r = new NTetrahedron();
-    NTetrahedron* s = new NTetrahedron();
-    NTetrahedron* t = new NTetrahedron();
+    NTetrahedron* r = ans->newTetrahedron();
+    NTetrahedron* s = ans->newTetrahedron();
+    NTetrahedron* t = ans->newTetrahedron();
     s->joinTo(0, r, NPerm4(0, 1, 2, 3));
     s->joinTo(3, r, NPerm4(3, 0, 1, 2));
     s->joinTo(1, t, NPerm4(3, 0, 1, 2));
     s->joinTo(2, t, NPerm4(0, 1, 2, 3));
-    ans->addTetrahedron(r);
-    ans->addTetrahedron(s);
-    ans->addTetrahedron(t);
 
     return ans;
 }
@@ -271,14 +266,12 @@ NTriangulation* NExampleTriangulation::figureEightKnotComplement() {
 
     // The two-tetrahedron figure eight knot complement is described at
     // the beginning of chapter 8 of Richard Rannard's PhD thesis.
-    NTetrahedron* r = new NTetrahedron();
-    NTetrahedron* s = new NTetrahedron();
+    NTetrahedron* r = ans->newTetrahedron();
+    NTetrahedron* s = ans->newTetrahedron();
     r->joinTo(0, s, NPerm4(1, 3, 0, 2));
     r->joinTo(1, s, NPerm4(2, 0, 3, 1));
     r->joinTo(2, s, NPerm4(0, 3, 2, 1));
     r->joinTo(3, s, NPerm4(2, 1, 0, 3));
-    ans->addTetrahedron(r);
-    ans->addTetrahedron(s);
 
     return ans;
 }
@@ -296,10 +289,9 @@ NTriangulation* NExampleTriangulation::gieseking() {
     NTriangulation* ans = new NTriangulation();
     ans->setPacketLabel("Gieseking manifold");
 
-    NTetrahedron* r = new NTetrahedron();
+    NTetrahedron* r = ans->newTetrahedron();
     r->joinTo(0, r, NPerm4(1, 2, 0, 3));
     r->joinTo(2, r, NPerm4(0, 2, 3, 1));
-    ans->addTetrahedron(r);
 
     return ans;
 }
@@ -310,19 +302,15 @@ NTriangulation* NExampleTriangulation::cuspedGenusTwoTorus() {
 
     // We create this by first constructing an ordinary solid genus two
     // torus and then converting the real boundary to an ideal vertex.
-    NTetrahedron* r = new NTetrahedron();
-    NTetrahedron* s = new NTetrahedron();
-    NTetrahedron* t = new NTetrahedron();
-    NTetrahedron* u = new NTetrahedron();
+    NTetrahedron* r = ans->newTetrahedron();
+    NTetrahedron* s = ans->newTetrahedron();
+    NTetrahedron* t = ans->newTetrahedron();
+    NTetrahedron* u = ans->newTetrahedron();
     r->joinTo(0, s, NPerm4());
     r->joinTo(1, t, NPerm4(1, 2, 3, 0));
     r->joinTo(2, u, NPerm4(1, 0, 3, 2));
     s->joinTo(3, t, NPerm4());
     t->joinTo(1, u, NPerm4());
-    ans->addTetrahedron(r);
-    ans->addTetrahedron(s);
-    ans->addTetrahedron(t);
-    ans->addTetrahedron(u);
     ans->finiteToIdeal();
 
     return ans;

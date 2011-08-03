@@ -397,7 +397,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             NTetrahedron* tet[5];
             int i;
             for (i = 0; i < 5; i++)
-                tet[i] = new NTetrahedron;
+                tet[i] = tri->newTetrahedron();
             tet[0]->joinTo(0, tet[4], NPerm4(1,0,2,3));
             tet[0]->joinTo(1, tet[3], NPerm4(0,2,3,1));
             tet[0]->joinTo(2, tet[1], NPerm4(0,1,3,2));
@@ -408,8 +408,6 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             tet[2]->joinTo(1, tet[4], NPerm4(0,2,3,1));
             tet[2]->joinTo(3, tet[3], NPerm4(3,1,2,0));
             tet[3]->joinTo(3, tet[4], NPerm4(0,1,2,3));
-            for (i = 0; i < 5; i++)
-                tri->addTetrahedron(tet[i]);
             delete verifyPrime(tri, "the Poincare homology sphere (plugged)",
                 "S3/P120");
 

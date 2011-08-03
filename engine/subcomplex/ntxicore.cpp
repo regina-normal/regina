@@ -63,7 +63,7 @@ NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
     unsigned i;
     NTetrahedron** t = new NTetrahedron*[size_];
     for (i = 0; i < size_; i++)
-        t[i] = new NTetrahedron;
+        t[i] = core_.newTetrahedron();
 
     // Glue together the pairs of triangles in the central surface.
     t[0]->joinTo(0, t[1], NPerm4(0, 2, 1, 3));
@@ -106,8 +106,6 @@ NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
             t[i]->joinTo(1, t[i + 1], NPerm4(1, 2));
     }
 
-    for (i = 0; i < size_; i++)
-        core_.addTetrahedron(t[i]);
     delete[] t;
 }
 
@@ -130,7 +128,7 @@ NTxIParallelCore::NTxIParallelCore() {
     unsigned i;
     NTetrahedron** t = new NTetrahedron*[6];
     for (i = 0; i < 6; i++)
-        t[i] = new NTetrahedron;
+        t[i] = core_.newTetrahedron();
 
     t[0]->joinTo(0, t[1], NPerm4(1, 2));
     t[4]->joinTo(0, t[5], NPerm4(1, 2));
@@ -143,8 +141,6 @@ NTxIParallelCore::NTxIParallelCore() {
     t[0]->joinTo(1, t[3], NPerm4(0, 3));
     t[4]->joinTo(1, t[2], NPerm4(0, 3));
 
-    for (i = 0; i < 6; i++)
-        core_.addTetrahedron(t[i]);
     delete[] t;
 }
 

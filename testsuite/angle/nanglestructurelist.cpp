@@ -79,7 +79,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             triLoopC2.insertLayeredLoop(2, false);
 
             // Other things must be done manually.
-            triOneTet.addTetrahedron(new NTetrahedron());
+            triOneTet.newTetrahedron();
         }
 
         void tearDown() {

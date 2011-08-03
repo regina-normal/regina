@@ -196,7 +196,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
         void setUp() {
             // Begin with trivial cases.
             // The empty triangulation needs no initialisation whatsoever.
-            singleTet.addTetrahedron(new NTetrahedron());
+            singleTet.newTetrahedron();
 
             // Some of our triangulations can be constructed automatically.
             s3.insertLayeredLensSpace(1, 0);
@@ -228,7 +228,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             copyAndDelete(cuspedGenusTwoTorus,
                 NExampleTriangulation::cuspedGenusTwoTorus());
 
-            singleTet_bary.addTetrahedron(new NTetrahedron());
+            singleTet_bary.newTetrahedron();
             singleTet_bary.barycentricSubdivision();
 
             copyAndDelete(fig8_bary,
@@ -243,67 +243,56 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             // A two-tetrahedron two-vertex L(3,1) is straightforward to
             // construct using a vertex of degree two.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
+            r = lens3_1.newTetrahedron();
+            s = lens3_1.newTetrahedron();
             r->joinTo(0, s, NPerm4(0, 2, 3, 1));
             r->joinTo(1, s, NPerm4());
             r->joinTo(2, s, NPerm4());
             r->joinTo(3, s, NPerm4());
-            lens3_1.addTetrahedron(r);
-            lens3_1.addTetrahedron(s);
 
             // For a triangulation with invalid edges, we simply fold
             // the faces of a tetrahedron together in pairs (as in a
             // 3-sphere triangulation) but apply a reflection to each fold.
-            r = new NTetrahedron();
+            r = invalidEdges.newTetrahedron();
             r->joinTo(0, r, NPerm4(1, 0, 3, 2));
             r->joinTo(2, r, NPerm4(1, 0, 3, 2));
-            invalidEdges.addTetrahedron(r);
 
             twoProjPlaneCusps.insertTriangulation(invalidEdges);
             twoProjPlaneCusps.barycentricSubdivision();
 
             // To construct a solid torus with a pinched longitude, we
             // identify two opposite faces of a square pyramid.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
+            r = pinchedSolidTorus.newTetrahedron();
+            s = pinchedSolidTorus.newTetrahedron();
             r->joinTo(3, s, NPerm4(0, 1, 2, 3));
             r->joinTo(2, s, NPerm4(0, 3, 1, 2));
-            pinchedSolidTorus.addTetrahedron(r);
-            pinchedSolidTorus.addTetrahedron(s);
 
             // The pinched solid Klein bottle is much the same, except
             // for a twist before the opposite faces are identified.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
+            r = pinchedSolidKB.newTetrahedron();
+            s = pinchedSolidKB.newTetrahedron();
             r->joinTo(3, s, NPerm4(0, 1, 2, 3));
             r->joinTo(2, s, NPerm4(0, 2, 1, 3));
-            pinchedSolidKB.addTetrahedron(r);
-            pinchedSolidKB.addTetrahedron(s);
 
             // This ball used to cause a crash once upon a time.
             // Throw it into the test suite for good measure.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
-            t = new NTetrahedron();
-            u = new NTetrahedron();
+            r = ball_large.newTetrahedron();
+            s = ball_large.newTetrahedron();
+            t = ball_large.newTetrahedron();
+            u = ball_large.newTetrahedron();
             r->joinTo(2, r, NPerm4(0,2));
             r->joinTo(1, s, NPerm4(2,0,1,3));
             s->joinTo(2, t, NPerm4());
             s->joinTo(1, t, NPerm4(2,0,1,3));
             t->joinTo(1, u, NPerm4(2,0,1,3));
             u->joinTo(2, u, NPerm4(1,2));
-            ball_large.addTetrahedron(r);
-            ball_large.addTetrahedron(s);
-            ball_large.addTetrahedron(t);
-            ball_large.addTetrahedron(u);
 
             // Make two triangular pillows, then join them together.
             // This crashed with 2-0 vertex moves once upon a time.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
-            t = new NTetrahedron();
-            u = new NTetrahedron();
+            r = ball_large_pillows.newTetrahedron();
+            s = ball_large_pillows.newTetrahedron();
+            t = ball_large_pillows.newTetrahedron();
+            u = ball_large_pillows.newTetrahedron();
             r->joinTo(0, s, NPerm4());
             r->joinTo(1, s, NPerm4());
             r->joinTo(2, s, NPerm4());
@@ -311,23 +300,16 @@ class NTriangulationTest : public CppUnit::TestFixture {
             t->joinTo(1, u, NPerm4());
             t->joinTo(2, u, NPerm4());
             r->joinTo(3, t, NPerm4());
-            ball_large_pillows.addTetrahedron(r);
-            ball_large_pillows.addTetrahedron(s);
-            ball_large_pillows.addTetrahedron(t);
-            ball_large_pillows.addTetrahedron(u);
 
             // Make three snapped balls and join them together.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
-            t = new NTetrahedron();
+            r = ball_large_snapped.newTetrahedron();
+            s = ball_large_snapped.newTetrahedron();
+            t = ball_large_snapped.newTetrahedron();
             r->joinTo(2, r, NPerm4(2, 3));
             s->joinTo(2, s, NPerm4(2, 3));
             t->joinTo(2, t, NPerm4(2, 1));
             r->joinTo(1, s, NPerm4());
             s->joinTo(0, t, NPerm4());
-            ball_large_snapped.addTetrahedron(r);
-            ball_large_snapped.addTetrahedron(s);
-            ball_large_snapped.addTetrahedron(t);
         }
 
         void tearDown() {
@@ -2280,19 +2262,15 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             // A triangulation with an invalid edge that simplifies
             // (where the invalid edge must not be simplified away):
-            tet[0] = new NTetrahedron();
-            tet[1] = new NTetrahedron();
-            tet[2] = new NTetrahedron();
-            tet[3] = new NTetrahedron();
+            tri = new NTriangulation();
+            tet[0] = tri->newTetrahedron();
+            tet[1] = tri->newTetrahedron();
+            tet[2] = tri->newTetrahedron();
+            tet[3] = tri->newTetrahedron();
             tet[0]->joinTo(3, tet[2], NPerm4());
             tet[0]->joinTo(2, tet[1], NPerm4(2, 3));
             tet[3]->joinTo(3, tet[2], NPerm4(2, 3));
             tet[3]->joinTo(2, tet[1], NPerm4(1, 0));
-            tri = new NTriangulation();
-            tri->addTetrahedron(tet[0]);
-            tri->addTetrahedron(tet[1]);
-            tri->addTetrahedron(tet[2]);
-            tri->addTetrahedron(tet[3]);
             if (tri->isValid())
                 CPPUNIT_FAIL("Custom invalid triangulation was not built "
                     "properly.");
@@ -2308,18 +2286,15 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             // A solid torus that once upon a time was incorrectly simplified
             // away to a ball.
-            tet[0] = new NTetrahedron();
-            tet[1] = new NTetrahedron();
-            tet[2] = new NTetrahedron();
+            tri = new NTriangulation();
+            tet[0] = tri->newTetrahedron();
+            tet[1] = tri->newTetrahedron();
+            tet[2] = tri->newTetrahedron();
             tet[2]->joinTo(3, tet[2], NPerm4(2, 3));
             tet[2]->joinTo(1, tet[1], NPerm4(0, 2, 3, 1));
             tet[2]->joinTo(0, tet[0], NPerm4(3, 0, 1, 2));
             tet[1]->joinTo(3, tet[0], NPerm4(0, 3, 1, 2));
             tet[1]->joinTo(1, tet[0], NPerm4());
-            tri = new NTriangulation();
-            tri->addTetrahedron(tet[0]);
-            tri->addTetrahedron(tet[1]);
-            tri->addTetrahedron(tet[2]);
             if (tri->getHomologyH1().toString() != "Z")
                 CPPUNIT_FAIL("Custom solid torus has incorrect H1.");
             tri->intelligentSimplify();
@@ -2449,7 +2424,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 ! t.hasTwoSphereBoundaryComponents());
 
             // Add a single tetrahedron.
-            t.addTetrahedron(new NTetrahedron());
+            t.newTetrahedron();
 
             CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is "
                 "0-efficient.", ! t.isZeroEfficient());

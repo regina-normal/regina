@@ -43,7 +43,7 @@ void NTriangulation::makeDoubleCover() {
     unsigned long i;
     TetrahedronIterator tit = tetrahedra.begin();
     for (i = 0; i < sheetSize; i++) {
-        upper[i] = new NTetrahedron((*tit)->getDescription());
+        upper[i] = newTetrahedron((*tit)->getDescription());
         tit++;
     }
 
@@ -121,10 +121,6 @@ void NTriangulation::makeDoubleCover() {
                 }
             }
         }
-
-    // Add the new tetrahedra to the triangulation.
-    for (i = 0; i < sheetSize; i++)
-        addTetrahedron(upper[i]);
 
     // Tidy up.
     delete[] upper;

@@ -147,80 +147,65 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             copyAndDelete(weberSeifert,
                 NExampleTriangulation::weberSeifert());
 
-            t = new NTetrahedron();
-            s = new NTetrahedron();
+            t = flatOr.newTetrahedron();
+            s = flatOr.newTetrahedron();
             t->joinTo(0, s, NPerm4(0,1,2,3));
             t->joinTo(1, s, NPerm4(0,1,2,3));
             t->joinTo(2, s, NPerm4(1,3,2,0));
             t->joinTo(3, s, NPerm4(1,2,0,3));
-            flatOr.addTetrahedron(t);
-            flatOr.addTetrahedron(s);
 
-            t = new NTetrahedron();
-            s = new NTetrahedron();
+            t = flatNor.newTetrahedron();
+            s = flatNor.newTetrahedron();
             t->joinTo(0, s, NPerm4(0,1,2,3));
             t->joinTo(1, s, NPerm4(2,1,0,3));
             t->joinTo(2, s, NPerm4(1,3,2,0));
             t->joinTo(3, s, NPerm4(2,1,0,3));
-            flatNor.addTetrahedron(t);
-            flatNor.addTetrahedron(s);
 
-            t = new NTetrahedron();
-            s = new NTetrahedron();
+            t = degenerateOr.newTetrahedron();
+            s = degenerateOr.newTetrahedron();
             t->joinTo(0, t, NPerm4(1,0,2,3));
             t->joinTo(2, s, NPerm4(1,2,0,3));
             t->joinTo(3, s, NPerm4(0,2,3,1));
             s->joinTo(2, s, NPerm4(1,2,3,0));
-            degenerateOr.addTetrahedron(t);
-            degenerateOr.addTetrahedron(s);
 
-            t = new NTetrahedron();
-            s = new NTetrahedron();
+            t = degenerateNor.newTetrahedron();
+            s = degenerateNor.newTetrahedron();
             t->joinTo(0, t, NPerm4(1,0,2,3));
             t->joinTo(2, s, NPerm4(1,2,0,3));
             t->joinTo(3, s, NPerm4(0,3,2,1));
             s->joinTo(2, s, NPerm4(0,2,3,1));
-            degenerateNor.addTetrahedron(t);
-            degenerateNor.addTetrahedron(s);
 
             lst123.insertLayeredSolidTorus(1, 2);
             m2_1_m2_1.insertRehydration("cabbbbaei");
             m2_1_m2_1.insertRehydration("cabbbbaei");
 
-            t = new NTetrahedron();
-            s = new NTetrahedron();
+            t = genusTwoTorusCusp.newTetrahedron();
+            s = genusTwoTorusCusp.newTetrahedron();
             t->joinTo(0, s, NPerm4(0,2,3,1));
             t->joinTo(1, s, NPerm4(2,1,3,0));
             t->joinTo(2, s, NPerm4(1,3,2,0));
             t->joinTo(3, s, NPerm4(2,0,1,3));
-            genusTwoTorusCusp.addTetrahedron(t);
-            genusTwoTorusCusp.addTetrahedron(s);
 
-            t = new NTetrahedron();
-            s = new NTetrahedron();
+            t = projPlaneCusps.newTetrahedron();
+            s = projPlaneCusps.newTetrahedron();
             t->joinTo(0, t, NPerm4(1,0,2,3));
             t->joinTo(2, s, NPerm4(1,2,0,3));
             t->joinTo(3, s, NPerm4(3,2,0,1));
             s->joinTo(2, s, NPerm4(0,2,3,1));
-            projPlaneCusps.addTetrahedron(t);
-            projPlaneCusps.addTetrahedron(s);
 
-            t = new NTetrahedron();
-            s = new NTetrahedron();
+            t = genusFourNonOrCusp.newTetrahedron();
+            s = genusFourNonOrCusp.newTetrahedron();
             t->joinTo(0, t, NPerm4(1,2,0,3));
             t->joinTo(2, s, NPerm4(1,2,0,3));
             t->joinTo(3, s, NPerm4(0,2,3,1));
             s->joinTo(2, s, NPerm4(0,2,3,1));
-            genusFourNonOrCusp.addTetrahedron(t);
-            genusFourNonOrCusp.addTetrahedron(s);
 
             cuspedTorus.insertLayeredSolidTorus(1, 2);
             cuspedTorus.finiteToIdeal();
 
-            t = new NTetrahedron();
+            t = edgeInvalid.newTetrahedron();
             t->joinTo(0, t, NPerm4(1,0,3,2));
             t->joinTo(2, t, NPerm4(1,0,3,2));
-            edgeInvalid.addTetrahedron(t);
         }
 
         void tearDown() {

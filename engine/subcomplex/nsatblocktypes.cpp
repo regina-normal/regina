@@ -464,15 +464,12 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
 }
 
 NSatTriPrism* NSatTriPrism::insertBlock(NTriangulation& tri, bool major) {
-    NTetrahedron* a = new NTetrahedron();
-    NTetrahedron* b = new NTetrahedron();
-    NTetrahedron* c = new NTetrahedron();
+    NTetrahedron* a = tri.newTetrahedron();
+    NTetrahedron* b = tri.newTetrahedron();
+    NTetrahedron* c = tri.newTetrahedron();
     a->joinTo(1, c, NPerm4(2, 0, 3, 1));
     b->joinTo(1, a, NPerm4(2, 0, 3, 1));
     c->joinTo(1, b, NPerm4(2, 0, 3, 1));
-    tri.addTetrahedron(a);
-    tri.addTetrahedron(b);
-    tri.addTetrahedron(c);
 
     NSatTriPrism* ans = new NSatTriPrism(major);
 
@@ -602,12 +599,12 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
 }
 
 NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
-    NTetrahedron* bdry0 = new NTetrahedron();
-    NTetrahedron* bdry1 = new NTetrahedron();
-    NTetrahedron* bdry2 = new NTetrahedron();
-    NTetrahedron* bdry3 = new NTetrahedron();
-    NTetrahedron* central0 = new NTetrahedron();
-    NTetrahedron* central1 = new NTetrahedron();
+    NTetrahedron* bdry0 = tri.newTetrahedron();
+    NTetrahedron* bdry1 = tri.newTetrahedron();
+    NTetrahedron* bdry2 = tri.newTetrahedron();
+    NTetrahedron* bdry3 = tri.newTetrahedron();
+    NTetrahedron* central0 = tri.newTetrahedron();
+    NTetrahedron* central1 = tri.newTetrahedron();
 
     const NPerm4 id;
     bdry0->joinTo(1, central0, id);
@@ -618,13 +615,6 @@ NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
     bdry2->joinTo(1, central1, NPerm4(0, 1));
     bdry3->joinTo(3, central0, NPerm4(0, 3, 1, 2));
     bdry3->joinTo(1, central1, NPerm4(1, 2));
-
-    tri.addTetrahedron(bdry0);
-    tri.addTetrahedron(bdry1);
-    tri.addTetrahedron(bdry2);
-    tri.addTetrahedron(bdry3);
-    tri.addTetrahedron(central0);
-    tri.addTetrahedron(central1);
 
     NSatCube* ans = new NSatCube();
 
@@ -843,9 +833,9 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
     NTetrahedron *prevRight = 0, *firstLeft = 0;
     for (unsigned i = 0; i < length; i++) {
         // Create the three tetrahedra behind boundary annulus #i.
-        upper = new NTetrahedron();
-        lower = new NTetrahedron();
-        middle = new NTetrahedron();
+        upper = tri.newTetrahedron();
+        lower = tri.newTetrahedron();
+        middle = tri.newTetrahedron();
 
         upper->joinTo(0, middle, NPerm4(2, 1, 3, 0));
         lower->joinTo(0, middle, NPerm4(0, 3, 1, 2));
@@ -858,10 +848,6 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
             upper->joinTo(2, prevRight, NPerm4(0, 1));
 
         prevRight = lower;
-
-        tri.addTetrahedron(upper);
-        tri.addTetrahedron(lower);
-        tri.addTetrahedron(middle);
 
         ans->annulus_[i].tet[0] = upper;
         ans->annulus_[i].tet[1] = lower;

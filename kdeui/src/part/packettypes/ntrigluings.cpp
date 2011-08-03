@@ -228,14 +228,15 @@ void GluingsModel::commitData(regina::NTriangulation* tri) {
     if (nTet == 0)
         return;
 
+    regina::NPacket::ChangeEventBlock block(tri);
+
     regina::NTetrahedron** tets = new regina::NTetrahedron*[nTet];
     int tetNum, adjTetNum;
     int face, adjFace;
 
     // Create the tetrahedra.
     for (tetNum = 0; tetNum < nTet; tetNum++)
-        tets[tetNum] = new regina::NTetrahedron(
-            name[tetNum].toAscii().constData());
+        tets[tetNum] = tri->newTetrahedron(name[tetNum].toAscii().constData());
 
     // Glue the tetrahedra together.
     for (tetNum = 0; tetNum < nTet; tetNum++)
@@ -251,10 +252,6 @@ void GluingsModel::commitData(regina::NTriangulation* tri) {
             tets[tetNum]->joinTo(face, tets[adjTetNum],
                 adjPerm[4 * tetNum + face]);
         }
-
-    // Add the tetrahedra to the triangulation.
-    for (tetNum = 0; tetNum < nTet; tetNum++)
-        tri->addTetrahedron(tets[tetNum]);
 
     // Tidy up.
     delete[] tets;

@@ -750,15 +750,12 @@ NTriangulation* NSFSpace::construct() const {
     NTetrahedron *a, *b, *c;
 
     // Begin with the first triangular solid torus.
-    a = new NTetrahedron();
-    b = new NTetrahedron();
-    c = new NTetrahedron();
+    a = ans->newTetrahedron();
+    b = ans->newTetrahedron();
+    c = ans->newTetrahedron();
     a->joinTo(1, b, NPerm4());
     b->joinTo(2, c, NPerm4());
     c->joinTo(3, a, NPerm4(1, 2, 3, 0));
-    ans->addTetrahedron(a);
-    ans->addTetrahedron(b);
-    ans->addTetrahedron(c);
 
     std::list<NSFSFibre>::const_iterator fit = fibres_.begin();
     NSatAnnulus(a, NPerm4(1, 0, 2, 3), b, NPerm4(1, 2, 0, 3)).
@@ -776,17 +773,14 @@ NTriangulation* NSFSpace::construct() const {
 
     NSFSFibre nextFibre = *fit++;
     while (fit != fibres_.end()) {
-        a = new NTetrahedron();
-        b = new NTetrahedron();
-        c = new NTetrahedron();
+        a = ans->newTetrahedron();
+        b = ans->newTetrahedron();
+        c = ans->newTetrahedron();
         a->joinTo(3, prevA, NPerm4(2, 3));
         b->joinTo(3, prevC, NPerm4(0, 2, 3, 1));
         a->joinTo(1, b, NPerm4());
         b->joinTo(2, c, NPerm4());
         c->joinTo(3, a, NPerm4(1, 2, 3, 0));
-        ans->addTetrahedron(a);
-        ans->addTetrahedron(b);
-        ans->addTetrahedron(c);
 
         NSatAnnulus(b, NPerm4(2, 1, 3, 0), c, NPerm4(2, 3, 1, 0)).
             attachLST(ans, nextFibre.alpha, nextFibre.beta);
