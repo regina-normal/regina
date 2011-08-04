@@ -375,6 +375,8 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
 
         /**
          * Returns the triangulation to which this tetrahedron belongs.
+         *
+         * @return the triangulation containing this tetrahedron.
          */
         NTriangulation* getTriangulation() const;
 
