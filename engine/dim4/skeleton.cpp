@@ -556,7 +556,8 @@ void Dim4Triangulation::calculateBoundary() const {
             pent = tet->emb_[0].getPentachoron();
             facet = tet->emb_[0].getTetrahedron();
 
-            bdryTetAll[tet->markedIndex()] = bdryTet = new NTetrahedron();
+            bdryTetAll[tet->markedIndex()] = bdryTet =
+                label->boundary_->newTetrahedron();
 
             // Run through the vertices and edges on this tetrahedron.
             for (i = 0; i < 5; ++i)
@@ -654,8 +655,6 @@ void Dim4Triangulation::calculateBoundary() const {
                     queue.push(adjTet);
                 }
             }
-
-            label->boundary_->addTetrahedron(bdryTetAll[tet->markedIndex()]);
         }
 
         // This boundary 3-manifold triangulation is complete.
@@ -691,19 +690,33 @@ void Dim4Triangulation::calculateBoundary() const {
 
 void Dim4Triangulation::calculateVertexLinks() const {
     long n = pentachora_.size();
+    if (n == 0)
+        return;
 
-    NTetrahedron** tet = new NTetrahedron*[5 * n]; // Pieces of vertex link.
-    long index = 0; // Index into the tet[] array.
+    // Construct the vertex linking tetrahedra, and insert them into each
+    // vertex link in the correct order as described by the
+    // Dim4Vertex::getLink() docs.
+    NTetrahedron** tet = new NTetrahedron*[5 * n];
 
-    for (index = 0; index < 5 * n; ++index)
-        tet[index] = new NTetrahedron();
+    Dim4Vertex* vertex;
+    VertexIterator vit;
+    std::vector<Dim4VertexEmbedding>::const_iterator embit;
+    for (vit = vertices_.begin(); vit != vertices_.end(); ++vit) {
+        vertex = *vit;
+        vertex->link_ = new NTriangulation();
+        for (embit = vertex->emb_.begin(); embit != vertex->emb_.end();
+                ++embit)
+            tet[5 * embit->getPentachoron()->markedIndex() + embit->getVertex()]
+                = vertex->link_->newTetrahedron();
+    }
 
+    // Now glue the tetrahedra together correctly.
     Dim4Pentachoron *pent, *adjPent;
     long pentIdx, adjPentIdx;
     int vertexIdx, adjVertexIdx;
     int exitFacet, adjFacet;
 
-    index = 0;
+    long index = 0; // Index into the tet[] array.
     for (pentIdx = 0; pentIdx < n; ++pentIdx) {
         pent = pentachora_[pentIdx];
         for (vertexIdx = 0; vertexIdx < 5; ++vertexIdx) {
@@ -739,25 +752,11 @@ void Dim4Triangulation::calculateVertexLinks() const {
         }
     }
 
-    // Have each vertex claim its own pieces of vertex link, and in the
-    // correct order as described by the Dim4Vertex::getLink() docs.
-    Dim4Vertex* vertex;
-    VertexIterator vit;
-    std::vector<Dim4VertexEmbedding>::const_iterator embit;
+    // Look at each vertex link and see what it says about this 4-manifold
+    // triangulation.
     for (vit = vertices_.begin(); vit != vertices_.end(); ++vit) {
         vertex = *vit;
 
-        // Build a 3-manifold triangulation out of all the little pieces of
-        // vertex link.
-        vertex->link_ = new NTriangulation();
-        for (embit = vertex->emb_.begin(); embit != vertex->emb_.end();
-                ++embit)
-            vertex->link_->addTetrahedron(tet[
-                5 * embit->getPentachoron()->markedIndex() +
-                embit->getVertex()]);
-
-        // Look at the vertex link and see what it says about this 4-manifold
-        // triangulation.
         if (vertex->link_->hasBoundaryFaces()) {
             // It's a 3-ball or nothing.
             if (! vertex->link_->isBall()) {

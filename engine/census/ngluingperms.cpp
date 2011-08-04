@@ -46,18 +46,17 @@ NTriangulation* NGluingPerms::triangulate() const {
 
     NTriangulation* ans = new NTriangulation;
     NTetrahedron** tet = new NTetrahedron*[nTet];
-    std::generate(tet, tet + nTet, FuncNew<NTetrahedron>());
 
     unsigned t, face;
+    for (t = 0; t < nTet; t++)
+        tet[t] = ans->newTetrahedron();
+
     for (t = 0; t < nTet; t++)
         for (face = 0; face < 4; face++)
             if ((! pairing->isUnmatched(t, face)) &&
                     (! tet[t]->adjacentTetrahedron(face)))
                 tet[t]->joinTo(face, tet[pairing->dest(t, face).tet],
                     gluingPerm(t, face));
-
-    for (t = 0; t < nTet; t++)
-        ans->addTetrahedron(tet[t]);
 
     delete[] tet;
     return ans;

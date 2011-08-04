@@ -35,6 +35,10 @@ using namespace boost::python;
 using regina::NTriangulation;
 
 namespace {
+    regina::NTetrahedron* (NTriangulation::*newTetrahedron_void)() =
+        &NTriangulation::newTetrahedron;
+    regina::NTetrahedron* (NTriangulation::*newTetrahedron_string)(
+        const std::string&) = &NTriangulation::newTetrahedron;
     regina::NTetrahedron* (NTriangulation::*getTetrahedron_non_const)(
         unsigned long) = &NTriangulation::getTetrahedron;
     bool (NTriangulation::*twoZeroMove_vertex)(regina::NVertex*, bool, bool) =
@@ -161,12 +165,16 @@ void addNTriangulation() {
             return_value_policy<reference_existing_object>())
         .def("tetrahedronIndex", &NTriangulation::tetrahedronIndex)
         .def("getTetrahedronIndex", &NTriangulation::getTetrahedronIndex)
+        .def("newTetrahedron", newTetrahedron_void,
+            return_value_policy<reference_existing_object>())
+        .def("newTetrahedron", newTetrahedron_string,
+            return_value_policy<reference_existing_object>())
         .def("addTetrahedron", addTetrahedron_own)
-        .def("removeTetrahedron", &NTriangulation::removeTetrahedron,
-            return_value_policy<manage_new_object>())
-        .def("removeTetrahedronAt", &NTriangulation::removeTetrahedronAt,
-            return_value_policy<manage_new_object>())
+        .def("removeTetrahedron", &NTriangulation::removeTetrahedron)
+        .def("removeTetrahedronAt", &NTriangulation::removeTetrahedronAt)
         .def("removeAllTetrahedra", &NTriangulation::removeAllTetrahedra)
+        .def("swapContents", &NTriangulation::swapContents)
+        .def("moveContentsTo", &NTriangulation::moveContentsTo)
         .def("gluingsHaveChanged", &NTriangulation::gluingsHaveChanged)
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",

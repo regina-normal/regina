@@ -120,10 +120,10 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     ChangeEventBlock block(this);
     int oldPos2, newPos, newPos2;
 
-    // Allocate the new tetrahedra.
+    // Create the new tetrahedra.
     NTetrahedron* newTet[2];
     for (newPos = 0; newPos < 2; newPos++)
-        newTet[newPos] = new NTetrahedron();
+        newTet[newPos] = newTetrahedron();
 
     // Find the gluings from (0,1,2) of the new tetrahedron faces
     // to the vertices of the old tetrahedra.
@@ -192,11 +192,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
 
     // Remove the old tetrahedra from the triangulation.
     for (oldPos = 0; oldPos < 3; oldPos++)
-        delete removeTetrahedron(oldTet[oldPos]);
-
-    // Insert the new tetrahedra into the triangulation.
-    for (newPos = 0; newPos < 2; newPos++)
-        addTetrahedron(newTet[newPos]);
+        removeTetrahedron(oldTet[oldPos]);
 
     // Glue the faces of the new tetrahedra.
     for (oldPos = 0; oldPos < 3; oldPos++)
@@ -207,8 +203,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
                     threeTwoVertices[oldPos].inverse());
     newTet[0]->joinTo(3, newTet[1], NPerm4());
 
-    // Tidy up.
-    gluingsHaveChanged();
+    // Done!.
     return true;
 }
 
@@ -246,7 +241,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
     // Allocate the new tetrahedra.
     NTetrahedron* newTet[3];
     for (newPos = 0; newPos < 3; newPos++)
-        newTet[newPos] = new NTetrahedron();
+        newTet[newPos] = newTetrahedron();
 
     // Find the gluings from (0,1,2) of the new tetrahedron faces
     // to the vertices of the old tetrahedra.
@@ -315,11 +310,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
 
     // Remove the old tetrahedra from the triangulation.
     for (oldPos = 0; oldPos < 2; oldPos++)
-        delete removeTetrahedron(oldTet[oldPos]);
-
-    // Insert the new tetrahedra into the triangulation.
-    for (newPos = 0; newPos < 3; newPos++)
-        addTetrahedron(newTet[newPos]);
+        removeTetrahedron(oldTet[oldPos]);
 
     // Glue the faces of the new tetrahedra.
     for (oldPos = 0; oldPos < 2; oldPos++)
@@ -333,8 +324,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
     newTet[1]->joinTo(2, newTet[2], internalPerm);
     newTet[2]->joinTo(2, newTet[0], internalPerm);
 
-    // Tidy up.
-    gluingsHaveChanged();
+    // Done!
     return true;
 }
 
@@ -379,8 +369,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     calculateSkeleton();
     threeTwoMove(oldTet[3]->getEdge(edge32), false, true);
 
-    // Tidy up.  Note that gluingsHaveChanged() was already called by
-    // twoThreeMove() and threeTwoMove().
+    // Done!
     return true;
 }
 
@@ -474,8 +463,8 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     }
 
     // Finally remove and dispose of the tetrahedra.
-    delete removeTetrahedron(tet[0]);
-    delete removeTetrahedron(tet[1]);
+    removeTetrahedron(tet[0]);
+    removeTetrahedron(tet[1]);
 
     // Tidy up.
     // Properties have already been cleared in removeTetrahedron().
@@ -557,8 +546,8 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     }
 
     // Finally remove and dispose of the tetrahedra.
-    delete removeTetrahedron(tet[0]);
-    delete removeTetrahedron(tet[1]);
+    removeTetrahedron(tet[0]);
+    removeTetrahedron(tet[1]);
 
     // Tidy up.
     // Properties have already been cleared in removeTetrahedron().
@@ -645,8 +634,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     }
 
     // Now make the new tetrahedron and glue it to itself.
-    NTetrahedron* newTet = new NTetrahedron();
-    addTetrahedron(newTet);
+    NTetrahedron* newTet = newTetrahedron();
     newTet->joinTo(2, newTet, NPerm4(2,3));
 
     // Glue the new tetrahedron into the remaining structure.
@@ -684,8 +672,8 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     }
 
     // Finally remove and dispose of the unwanted tetrahedra.
-    delete removeTetrahedron(oldTet);
-    delete removeTetrahedron(top);
+    removeTetrahedron(oldTet);
+    removeTetrahedron(top);
 
     // Tidy up.
     // Properties have already been cleared in removeTetrahedron().
@@ -736,7 +724,6 @@ bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
     tet->unjoin(emb.getFace());
-    gluingsHaveChanged();
     return true;
 }
 
@@ -784,7 +771,6 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
     // Don't bother with a block since this is so simple.
 
     t0->joinTo(p0[3], t1, p1 * NPerm4(2, 3) * p0.inverse());
-    gluingsHaveChanged();
     return true;
 }
 
@@ -842,7 +828,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
 
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
-    delete removeTetrahedron(t);
+    removeTetrahedron(t);
     return true;
 }
 
@@ -1090,7 +1076,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             top->joinTo(topPerm[p[0]], bot,
                 botPerm * NPerm4(p[0], p[1]) * topPerm.inverse());
 
-        delete removeTetrahedron(tet);
+        removeTetrahedron(tet);
     }
 
     return true;
@@ -1144,10 +1130,10 @@ void NTriangulation::reorderTetrahedraBFS(bool reverse) {
 
     if (reverse) {
         for (i = n; i > 0; )
-            addTetrahedron(ordered[--i]);
+            tetrahedra.push_back(ordered[--i]);
     } else {
         for (i = 0; i < n; )
-            addTetrahedron(ordered[i++]);
+            tetrahedra.push_back(ordered[i++]);
     }
 
     delete[] used;

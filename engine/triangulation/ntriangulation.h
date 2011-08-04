@@ -86,11 +86,16 @@ class NXMLTriangulationReader;
  * skeletal structure will be calculated.  The same is true of various
  * other triangulation properties.
  *
- * Whenever the gluings of tetrahedra have been altered, the routine
- * responsible for changing the gluings \b must call
- * NTriangulation::gluingsHaveChanged() to ensure that relevant
- * properties will be recalculated when necessary.  It is not necessary
- * to call this function when adding or removing tetrahedra.
+ * The management of tetrahedra within a triangulation has become simpler and
+ * safer as of Regina 4.90.  In older versions (Regina 4.6 and earlier),
+ * users were required to create tetrahedra, individually add them to
+ * triangulations, and manually notify a triangulation whenever its tetrahedron
+ * gluings changed.  As of Regina 4.90, new tetrahedra are created using
+ * NTriangulation::newTetrahedron() which automatically places them within
+ * a triangulation, and all gluing changes are likewise communicated to the
+ * triangulation automatically.  These are part of a larger suite of changes
+ * (all designed to help the user avoid inconsistent states and accidental
+ * crashes); see the NTetrahedron class notes for further details.
  *
  * \testpart
  *
@@ -339,14 +344,45 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          */
         long getTetrahedronIndex(const NTetrahedron* tet) const;
         /**
+         * Creates a new tetrahedron and adds it to this triangulation.
+         * The new tetrahedron will have an empty description.
+         * All four faces of the new tetrahedron will be boundary faces.
+         *
+         * @return the new tetrahedron.
+         */
+        NTetrahedron* newTetrahedron();
+        /**
+         * Creates a new tetrahedron with the given description and adds
+         * it to this triangulation.
+         * All four faces of the new tetrahedron will be boundary faces.
+         *
+         * @param desc the description to assign to the new tetrahedron.
+         * @return the new tetrahedron.
+         */
+        NTetrahedron* newTetrahedron(const std::string& desc);
+        /**
          * Inserts the given tetrahedron into the triangulation.
          * No face gluings anywhere will be examined or altered.
          *
          * The new tetrahedron will be assigned a higher index in the
          * triangulation than all tetrahedra already present.
          *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
+         * \pre The given tetrahedron does not already belong to a
+         * different triangulation (though already belonging to \e this
+         * triangulation is perfectly fine).
+         *
+         * \deprecated Users should create tetrahedra by calling
+         * newTetrahedron() or newTetrahedron(const std::string&), which
+         * will add the tetrahedron to the triangulation automatically.
+         *
+         * \warning As of Regina 4.90, this routine will also add any
+         * neighbouring tetrahedra that do not yet belong to a
+         * triangulation; moreover, this addition is recursive.  This is done
+         * to ensure that, whenever one tetrahedron belongs to a
+         * triangulation, everything that it is joined to (directly or
+         * indirectly) also belongs to that same triangulation.
+         * See the NTetrahedron class notes for further details on how
+         * tetrahedron management has changed in Regina 4.90 and above.
          *
          * \ifacespython Since this triangulation takes ownership
          * of the given tetrahedron, the python object containing the
@@ -359,17 +395,19 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
         /**
          * Removes the given tetrahedron from the triangulation.
          * All faces glued to this tetrahedron will be unglued.
-         * The tetrahedron will \e not be deallocated.
-         *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
+         * The tetrahedron will be deallocated.
          *
          * \pre The given tetrahedron exists in the triangulation.
+         *
+         * \warning This routine has changed behaviour as of Regina 4.90.
+         * In older versions of Regina, the tetrahedron was returned to
+         * the user.  As of Regina 4.90, the tetrahedron is now destroyed
+         * immediately.
          *
          * @param tet the tetrahedron to remove.
          * @return the removed tetrahedron.
          */
-        NTetrahedron* removeTetrahedron(NTetrahedron* tet);
+        void removeTetrahedron(NTetrahedron* tet);
         /**
          * Removes the tetrahedron with the given index number
          * from the triangulation.  Note that tetrahedron indexing may
@@ -377,32 +415,58 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * triangulation.
          *
          * All faces glued to this tetrahedron will be unglued.
-         * The tetrahedron will \e not be deallocated.
+         * The tetrahedron will be deallocated.
          *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
+         * \warning This routine has changed behaviour as of Regina 4.90.
+         * In older versions of Regina, the tetrahedron was returned to
+         * the user.  As of Regina 4.90, the tetrahedron is now destroyed
+         * immediately.
          *
          * @param index specifies which tetrahedron to remove; this
          * should be between 0 and getNumberOfTetrahedra()-1 inclusive.
          * @return the removed tetrahedron.
          */
-        NTetrahedron* removeTetrahedronAt(unsigned long index);
+        void removeTetrahedronAt(unsigned long index);
         /**
          * Removes all tetrahedra from the triangulation.
          * All tetrahedra will be deallocated.
-         *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
          */
         void removeAllTetrahedra();
         /**
-         * This \b must be called whenever the gluings of tetrahedra are
-         * changed!
-         * Clears appropriate properties and performs other
-         * necessary tasks.
-         * The responsibility of calling gluingsHaveChanged()
-         * falls upon the routine that alters the gluings (such as a
-         * component of a triangulation editor, or so on).
+         * Swaps the contents of this and the given triangulation.
+         * That is, all tetrahedra that belong to this triangulation
+         * will be moved to \a other, and all tetrahedra that belong to
+         * \a other will be moved to this triangulation.
+         *
+         * All NTetrahedron pointers or references will remain valid.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        void swapContents(NTriangulation& other);
+        /**
+         * Moves the contents of this triangulation into the given
+         * destination triangulation, without destroying any pre-existing
+         * contents.  That is, all tetrahedra that currently belong to
+         * \a dest will remain there, and all tetrahedra that belong to this
+         * triangulation will be moved across as additional
+         * tetrahedra in \a dest.
+         *
+         * All NTetrahedron pointers or references will remain valid.
+         * After this operation, this triangulation will be empty.
+         *
+         * @param dest the triangulation to which tetrahedra should be
+         * moved.
+         */
+        void moveContentsTo(NTriangulation& dest);
+        /**
+         * This routine now does nothing, and should not be used.
+         *
+         * \deprecated In Regina versions 4.6 and earlier, this routine
+         * was used to manually notify the triangulation that the gluings
+         * of tetrahedra had changed.  In Regina 4.90 and later this
+         * notification is automatic.  This routine now does nothing at
+         * all, and can safely be removed from any existing code.
          */
         void gluingsHaveChanged();
 
@@ -2837,11 +2901,6 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * Clears any calculated properties and declares them all
          * unknown.  All dynamic memory used for storing known
          * properties is deallocated.
-         *
-         * In most cases this routine is called from gluingsHaveChanged(),
-         * which also fires a packet change event.  If you plan to call
-         * this routine, it is worth examining whether gluingsHaveChanged()
-         * is a more appropriate routine to call instead.
          */
         virtual void clearAllProperties();
 
@@ -3043,6 +3102,7 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
                 stdhash::hash_set<NTetrahedron*, HashPointer>&) const;
             /**< Internal to maximalForestInDualSkeleton(). */
 
+    friend class regina::NTetrahedron;
     friend class regina::NXMLTriangulationReader;
 };
 
@@ -3076,20 +3136,38 @@ inline unsigned long NTriangulation::getNumberOfTetrahedra() const {
 }
 
 inline NTetrahedron* NTriangulation::getTetrahedron(unsigned long index) {
-    if (! calculatedSkeleton)
-        calculateSkeleton();
     return tetrahedra[index];
 }
 
 inline const NTetrahedron* NTriangulation::getTetrahedron(unsigned long index)
         const {
-    if (! calculatedSkeleton)
-        calculateSkeleton();
     return tetrahedra[index];
 }
 
 inline long NTriangulation::tetrahedronIndex(const NTetrahedron* tet) const {
     return tet->markedIndex();
+}
+
+inline NTetrahedron* NTriangulation::newTetrahedron() {
+    NTetrahedron* tet = new NTetrahedron();
+
+    tet->tri = this;
+    tetrahedra.push_back(tet);
+    clearAllProperties();
+    fireChangedEvent();
+
+    return tet;
+}
+
+inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
+    NTetrahedron* tet = new NTetrahedron(desc);
+
+    tet->tri = this;
+    tetrahedra.push_back(tet);
+    clearAllProperties();
+    fireChangedEvent();
+
+    return tet;
 }
 
 inline long NTriangulation::getTetrahedronIndex(const NTetrahedron* tet) const {
@@ -3098,35 +3176,32 @@ inline long NTriangulation::getTetrahedronIndex(const NTetrahedron* tet) const {
     return (pos == tetrahedra.end() ? -1 : pos - tetrahedra.begin());
 }
 
-inline void NTriangulation::addTetrahedron(NTetrahedron* t) {
-    tetrahedra.push_back(t);
-    gluingsHaveChanged();
-}
-
-inline NTetrahedron* NTriangulation::removeTetrahedronAt(unsigned long index) {
+inline void NTriangulation::removeTetrahedronAt(unsigned long index) {
     NTetrahedron* ans = tetrahedra[index];
     ans->isolate();
     tetrahedra.erase(tetrahedra.begin() + index);
-    gluingsHaveChanged();
-    return ans;
+    delete ans;
+
+    clearAllProperties();
+    fireChangedEvent();
 }
 
-inline NTetrahedron* NTriangulation::removeTetrahedron(
-        NTetrahedron* tet) {
+inline void NTriangulation::removeTetrahedron(NTetrahedron* tet) {
     tet->isolate();
     tetrahedra.erase(tetrahedra.begin() + tetrahedronIndex(tet));
-    gluingsHaveChanged();
-    return tet;
+    delete tet;
+
+    clearAllProperties();
+    fireChangedEvent();
 }
 
 inline void NTriangulation::removeAllTetrahedra() {
     deleteTetrahedra();
-    gluingsHaveChanged();
+    clearAllProperties();
+    fireChangedEvent();
 }
 
 inline void NTriangulation::gluingsHaveChanged() {
-    clearAllProperties();
-    fireChangedEvent();
 }
 
 inline unsigned long NTriangulation::getNumberOfBoundaryComponents() const {

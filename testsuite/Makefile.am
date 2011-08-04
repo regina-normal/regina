@@ -15,7 +15,6 @@ SUBDIRS = \
   angle \
   census \
   dim4 \
-  hypersurface \
   maths \
   snappea \
   subcomplex \
@@ -33,7 +32,6 @@ regtestsuite_LDADD = \
   angle/libangle.a \
   census/libcensus.a \
   dim4/libdim4.a \
-  hypersurface/libhypersurface.a \
   maths/libmaths.a \
   snappea/libsnappea.a \
   subcomplex/libsubcomplex.a \

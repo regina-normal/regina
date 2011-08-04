@@ -47,13 +47,19 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     if (! componentParent)
         componentParent = this;
 
-    // We clone the triangulation, create new empty component
-    // triangulations and then sort the tetrahedra into the new
-    // components.
+    // Create the new component triangulations.
+    // Note that the following line forces a skeletal recalculation.
+    unsigned long nComp = getNumberOfComponents();
 
+    // Initialise the component triangulations.
+    NTriangulation** newTris = new NTriangulation*[nComp];
+    unsigned long whichComp;
+    for (whichComp = 0; whichComp < nComp; ++whichComp)
+        newTris[whichComp] = new NTriangulation();
+
+    // Clone the tetrahedra, sorting them into the new components.
     unsigned long nTets = tetrahedra.size();
 
-    // Begin by cloning the triangulation.
     NTetrahedron** newTets = new NTetrahedron*[nTets];
     NTetrahedron *tet, *adjTet;
     unsigned long tetPos, adjPos;
@@ -61,9 +67,11 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     int face;
 
     for (tetPos = 0; tetPos < nTets; tetPos++)
-        newTets[tetPos] = new NTetrahedron(
-            tetrahedra[tetPos]->getDescription());
+        newTets[tetPos] =
+            newTris[componentIndex(tetrahedra[tetPos]->getComponent())]->
+            newTetrahedron(tetrahedra[tetPos]->getDescription());
 
+    // Clone the tetrahedron gluings also.
     for (tetPos = 0; tetPos < nTets; tetPos++) {
         tet = tetrahedra[tetPos];
         for (face = 0; face < 4; face++) {
@@ -78,16 +86,8 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
         }
     }
 
-    // Now create the new component triangulations.
-
-    // We will need a skeleton at this point -- use getNumberOfComponents()
-    // to force a skeletal recalculation if it has not already been done.
-    NTriangulation** newTris = new NTriangulation*[getNumberOfComponents()];
-    unsigned long whichComp = 0;
-
-    for (ComponentIterator it = components.begin(); it != components.end();
-            it++) {
-        newTris[whichComp] = new NTriangulation();
+    // Insert the component triangulations into the packet tree and clean up.
+    for (whichComp = 0; whichComp < nComp; ++whichComp) {
         componentParent->insertChildLast(newTris[whichComp]);
 
         if (setLabels) {
@@ -95,20 +95,8 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
             label << getPacketLabel() << " - Cmpt #" << (whichComp + 1);
             newTris[whichComp]->setPacketLabel(makeUniqueLabel(label.str()));
         }
-
-        whichComp++;
     }
 
-    // At this point whichComp == components.size().
-
-    // Sort the new tetrahedra into component triangulations.
-    // Note that component index lookup is faster than tetrahedron index
-    // lookup.
-    for (tetPos = 0; tetPos < nTets; tetPos++)
-        newTris[componentIndex(tetrahedra[tetPos]->getComponent())]->
-            addTetrahedron(newTets[tetPos]);
-
-    // And clean up.
     delete[] newTets;
     delete[] newTris;
 
@@ -562,7 +550,6 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         NTriangulation cut(use);
         cut.getTetrahedron(emb.getTetrahedron()->markedIndex())->unjoin(
             emb.getFace());
-        cut.gluingsHaveChanged();
 
         // If we don't see a new boundary component, the disc boundary is
         // non-separating in the manifold boundary and is therefore a
@@ -615,12 +602,11 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
 
         NTriangulation cut(use);
         cut.getTetrahedron((*tit)->markedIndex())->unjoin(upper);
-        NTetrahedron* tet = new NTetrahedron();
+        NTetrahedron* tet = cut.newTetrahedron();
         tet->joinTo(NEdge::edgeVertex[equator][0], tet, NPerm4(
             NEdge::edgeVertex[equator][0], NEdge::edgeVertex[equator][1]));
         tet->joinTo(upper, cut.getTetrahedron(adj->markedIndex()),
             (*tit)->adjacentGluing(upper));
-        cut.addTetrahedron(tet);
 
         // If we don't see a new boundary component, the disc boundary is
         // non-separating in the manifold boundary and is therefore a

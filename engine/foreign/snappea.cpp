@@ -84,11 +84,14 @@ NTriangulation* readSnapPea(const char* filename) {
     }
 
     // Create the new tetrahedra.
+    NTriangulation* triang = new NTriangulation();
+    triang->setPacketLabel(name);
+
     unsigned numTet;
     in >> numTet;
     NTetrahedron **tet = new NTetrahedron*[numTet];
     for (i=0; i<numTet; i++)
-        tet[i] = new NTetrahedron();
+        tet[i] = triang->newTetrahedron();
 
     int g[4];
     int p[4][4];
@@ -96,8 +99,7 @@ NTriangulation* readSnapPea(const char* filename) {
     for (i=0; i<numTet; i++) {
         // Test the state of the input stream.
         if (! in.good()) {
-            for (j=0; j<numTet; j++)
-                delete tet[j];
+            delete triang;
             delete[] tet;
             return 0;
         }
@@ -116,8 +118,7 @@ NTriangulation* readSnapPea(const char* filename) {
                     case '2': p[j][k] = 2; break;
                     case '3': p[j][k] = 3; break;
                     default:
-                        for (j=0; j<numTet; j++)
-                            delete tet[j];
+                        delete triang;
                         delete[] tet;
                         return 0;
                 }
@@ -137,11 +138,7 @@ NTriangulation* readSnapPea(const char* filename) {
             in >> tempStr;
     }
 
-    // Build the acutal triangulation.
-    NTriangulation* triang = new NTriangulation();
-    triang->setPacketLabel(name);
-    for (i=0; i<numTet; i++)
-        triang->addTetrahedron(tet[i]);
+    // All done!
     delete[] tet;
     return triang;
 }

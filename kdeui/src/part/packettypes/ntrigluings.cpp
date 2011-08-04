@@ -356,6 +356,8 @@ void NTriGluingsUI::commit() {
 
     long nRows = faceTable->numRows();
     if (nRows > 0) {
+        regina::NPacket::ChangeEventBlock block(tri);
+
         regina::NTetrahedron** tets = new regina::NTetrahedron*[nRows];
         FaceGluingItem* item;
         long tetNum, adjTetNum;
@@ -363,7 +365,7 @@ void NTriGluingsUI::commit() {
 
         // Create the tetrahedra.
         for (tetNum = 0; tetNum < nRows; tetNum++)
-            tets[tetNum] = new regina::NTetrahedron(
+            tets[tetNum] = tri->newTetrahedron(
                 dynamic_cast<TetNameItem*>(faceTable->item(tetNum, 0))->
                 getName().ascii());
 
@@ -384,10 +386,6 @@ void NTriGluingsUI::commit() {
                 tets[tetNum]->joinTo(face, tets[adjTetNum],
                     item->adjacentGluing());
             }
-
-        // Add the tetrahedra to the triangulation.
-        for (tetNum = 0; tetNum < nRows; tetNum++)
-            tri->addTetrahedron(tets[tetNum]);
 
         // Tidy up.
         delete[] tets;

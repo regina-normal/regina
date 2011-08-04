@@ -69,12 +69,13 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
     if (nTetrahedra == 0)
         return new NTriangulation();
 
+    NTriangulation* ans = new NTriangulation();
     NTetrahedron** tet = new NTetrahedron*[nTetrahedra];
     unsigned long t;
     int f;
 
     for (t = 0; t < nTetrahedra; t++)
-        tet[t] = new NTetrahedron();
+        tet[t] = ans->newTetrahedron();
 
     for (t = 0; t < nTetrahedra; t++)
         tet[mTetImage[t]]->setDescription(
@@ -101,9 +102,6 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
             }
     }
 
-    NTriangulation* ans = new NTriangulation();
-    for (t = 0; t < nTetrahedra; t++)
-        ans->addTetrahedron(tet[t]);
     return ans;
 }
 
@@ -114,12 +112,13 @@ void NIsomorphism::applyInPlace(NTriangulation* tri) const {
     if (nTetrahedra == 0)
         return;
 
+    NTriangulation staging;
     NTetrahedron** tet = new NTetrahedron*[nTetrahedra];
     unsigned long t;
     int f;
 
     for (t = 0; t < nTetrahedra; t++)
-        tet[t] = new NTetrahedron();
+        tet[t] = staging.newTetrahedron();
 
     for (t = 0; t < nTetrahedra; t++)
         tet[mTetImage[t]]->setDescription(
@@ -146,12 +145,9 @@ void NIsomorphism::applyInPlace(NTriangulation* tri) const {
             }
     }
 
-    // Don't do too many updates in quick succession, this can confuse
-    // the UI badly...
     NPacket::ChangeEventBlock block(tri);
     tri->removeAllTetrahedra();
-    for (t = 0; t < nTetrahedra; t++)
-        tri->addTetrahedron(tet[t]);
+    tri->swapContents(staging);
 }
 
 NIsomorphism* NIsomorphism::random(unsigned nTetrahedra) {

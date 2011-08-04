@@ -43,7 +43,7 @@ void NTriangulation::makeDoubleCover() {
     unsigned long i;
     TetrahedronIterator tit = tetrahedra.begin();
     for (i = 0; i < sheetSize; i++) {
-        upper[i] = new NTetrahedron((*tit)->getDescription());
+        upper[i] = newTetrahedron((*tit)->getDescription());
         tit++;
     }
 
@@ -122,13 +122,11 @@ void NTriangulation::makeDoubleCover() {
             }
         }
 
-    // Add the new tetrahedra to the triangulation.
-    for (i = 0; i < sheetSize; i++)
-        tetrahedra.push_back(upper[i]);
-
     // Tidy up.
     delete[] upper;
-    gluingsHaveChanged();
+    clearAllProperties();
+
+    // The change event is fired on destruction of the ChangeEventBlock.
 }
 
 } // namespace regina

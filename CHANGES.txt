@@ -170,6 +170,8 @@ Version 4.90  [ (under development) ]
             - Both of these classes have much richer interfaces than before,
               and some old routines have now been deprecated.  See the class
               documentation for full details.  Thanks to Ryan Budney.
+        Class NMarkedVector:
+            - Added swap() to swap the contents of two vectors.
         Class NNormalSurface:
             - New routines isCompressingDisc() and isIncompressible() for
               testing incompressibility.
@@ -235,13 +237,41 @@ Version 4.90  [ (under development) ]
             - New routine allowsSpun() to easily identify coordinate systems
               that support spun normal surfaces.
         Class NTetrahedron:
+            - Tetrahedra should now always belong to a triangulation, from
+              creation until destruction.  In particular:
+              + Tetrahedra should be created by calling
+                NTriangulation::newTetrahedron(), which will insert them
+                into a triangulation immediately.  There is no need to
+                call NTriangulation::addTetrahedron() any more.
+              + NTetrahedron::joinTo() now recursively adds adjacent
+                tetrahedra to the relevant triangulation (but if you use
+                NTriangulation::newTetrahedron() as described above then
+                this is fast and changes nothing).
+            - Users no longer need to call NTriangulation::gluingsHaveChanged()
+              after gluing or ungluing tetrahedron faces; this is now handled
+              automatically.
+            - The NTetrahedron constructors are now deprecated in favour
+              of NTriangulation::newTetrahedron(), as described above.
             - New routine getVertexMapping(), which facilitates a
               consistent orientation around the given vertex for the
               three remaining vertices in each tetrahedron.
             - Added assertions in joinTo() and unjoin() to ensure that
               the preconditions are met.  These can be circumvented by
               compiling with -DNDEBUG.
+            - Routines that need the triangulation skeleton (e.g., getVertex(),
+              getEdgeMapping(), orientation(), etc.) will now compute the
+              skeleton automatically if this has not already been done.
+            - New routine getTriangulation() to return the enclosing
+              triangulation.
         Class NTriangulation:
+            - Add new routines newTetrahedron() and
+              newTetrahedron(const std::string&).  This is now the
+              preferred way of creating tetrahedra (see the NTetrahedron
+              notes above).  The old addTetrahedron() is now deprecated.
+            - Users no longer need to call gluingsHaveChanged(), which
+              is likewise deprecated.  Again, see the NTetrahedron notes above.
+            - Routines removeTetrahedron() and removeTetrahedronAt() now
+              destroy the tetrahedron immediately and return nothing.
             - New routines hasCompressingDisc() and hasSimpleCompressingDisc()
               to search for compressing discs; see arXiv:0909.4625 for details.
             - The "legality conditions" on closeBook() are now simpler, since
@@ -262,6 +292,8 @@ Version 4.90  [ (under development) ]
             - New routines isOrdered() and order() to relabel tetrahedron
               vertices so that they are ordered consistently across adjacent
               faces.  Thanks again to Matthias Goerner.
+            - New routines swapContents() and moveContentsTo() for
+              moving tetrahedra between triangulations.
             - Fixed a memory leak in shellBoundary().
         Class NTrieSet:
             - A new class for storing and querying a large number of sets,

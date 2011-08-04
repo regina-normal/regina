@@ -142,8 +142,7 @@ namespace {
         if (err == NPerm4(1,0)) {
             // Reflect A,B.
             // This requires a layering.
-            NTetrahedron* tet = new NTetrahedron();
-            tri->addTetrahedron(tet);
+            NTetrahedron* tet = tri->newTetrahedron();
             tet->joinTo(1, oldd0, oldv0 * NPerm4(1,3));
             tet->joinTo(3, oldd1, oldv1);
 
@@ -156,8 +155,7 @@ namespace {
         if (err == NPerm4(2,3)) {
             // Reflect C,D.
             // This again requires a layering.
-            NTetrahedron* tet = new NTetrahedron();
-            tri->addTetrahedron(tet);
+            NTetrahedron* tet = tri->newTetrahedron();
             tet->joinTo(1, oldd0, oldv0 * NPerm4(1,3));
             tet->joinTo(3, oldd1, oldv1);
 
@@ -188,8 +186,7 @@ namespace {
         if (err == NPerm4(2,3,1,0)) {
             // Rotate the quadrilateral.
             // This requires a layering.
-            NTetrahedron* tet = new NTetrahedron();
-            tri->addTetrahedron(tet);
+            NTetrahedron* tet = tri->newTetrahedron();
             tet->joinTo(1, oldd0, oldv0 * NPerm4(1,3));
             tet->joinTo(3, oldd1, oldv1);
 
@@ -202,8 +199,7 @@ namespace {
         if (err == NPerm4(3,2,0,1)) {
             // Rotate the quadrilateral in the other direction.
             // This also requires a layering.
-            NTetrahedron* tet = new NTetrahedron();
-            tri->addTetrahedron(tet);
+            NTetrahedron* tet = tri->newTetrahedron();
             tet->joinTo(1, oldd0, oldv0 * NPerm4(1,3));
             tet->joinTo(3, oldd1, oldv1);
 
@@ -307,8 +303,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     ++pieceNumber) {
                 // Create a new tetrahedron for the final 3-manifold
                 // triangulation.
-                innerTet[0] = new NTetrahedron();
-                inner->addTetrahedron(innerTet[0]);
+                innerTet[0] = inner->newTetrahedron();
 
                 for (facet = 0; facet < 5; ++facet) {
                     if (facet == type)
@@ -356,14 +351,11 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     pieceNumber < getPrismCoord(pent, type).longValue();
                     ++pieceNumber) {
                 // Triangulate the normal prism with three tetrahedra.
-                innerTet[0] = new NTetrahedron();
-                innerTet[1] = new NTetrahedron();
-                innerTet[2] = new NTetrahedron();
+                innerTet[0] = inner->newTetrahedron();
+                innerTet[1] = inner->newTetrahedron();
+                innerTet[2] = inner->newTetrahedron();
                 innerTet[0]->joinTo(0, innerTet[1], NPerm4());
                 innerTet[2]->joinTo(1, innerTet[1], NPerm4());
-                inner->addTetrahedron(innerTet[0]);
-                inner->addTetrahedron(innerTet[1]);
-                inner->addTetrahedron(innerTet[2]);
 
                 // First pick off the triangles at the ends of the prism.
 

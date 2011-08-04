@@ -176,12 +176,6 @@ namespace {
             void joinTo(int face, Block* other);
 
             /**
-             * Inserts all of the inner tetrahedra for this block into
-             * the given triangulation.
-             */
-            void insertInto(NTriangulation* tri);
-
-            /**
              * Creates a new inner tetrahedron within this block.
              * It is assumed that this tetrahedron is to be used for
              * layering on the block boundary.  However, this layering
@@ -191,6 +185,11 @@ namespace {
              * This routine assumes that the innerTet_ array has enough
              * space for a new tetrahedron (which should be true if the
              * correct arguments were passed to the Block constructor).
+             *
+             * The new tetrahedron will be automatically added to the
+             * same triangulation as the previous tetrahedra in this block.
+             *
+             * \pre This block already contains at least one inner tetrahedron.
              */
             NTetrahedron* layeringTetrahedron();
 
@@ -211,9 +210,13 @@ namespace {
              * This constructor creates \a initialNumTet inner tetrahedra,
              * but also leaves enough extra room in the inner tetrahedron
              * array for up to \a maxLayerings layerings on the boundaries.
+             *
+             * All new inner tetrahedra created now and in subsequent
+             * layerings will be automatically inserted into the given
+             * triangulation.
              */
             Block(NTetrahedron* outerTet, unsigned initialNumTet,
-                unsigned maxLayerings);
+                unsigned maxLayerings, NTriangulation* insertInto);
     };
 
     /**
@@ -239,8 +242,12 @@ namespace {
              *
              * Equivalently, the block type describes which vertex of
              * the outer tetrahedron this triangular prism surrounds.
+             *
+             * All new inner tetrahedra will be automatically
+             * inserted into the given triangulation.
              */
-            TriPrism(NTetrahedron *outerTet, int type);
+            TriPrism(NTetrahedron *outerTet, int type,
+                NTriangulation* insertInto);
     };
 
     /**
@@ -263,8 +270,12 @@ namespace {
              * The given block type is an integer between 0 and 2
              * inclusive, describing which quadrilateral type in the
              * outer tetrahedron supplies the two ends of the prism.
+             *
+             * All new inner tetrahedra will be automatically
+             * inserted into the given triangulation.
              */
-            QuadPrism(NTetrahedron *outerTet, int type);
+            QuadPrism(NTetrahedron *outerTet, int type,
+                NTriangulation* insertInto);
     };
 
     /**
@@ -287,8 +298,12 @@ namespace {
              * The given block type is an integer between 0 and 5
              * inclusive, describing which edge of the outer tetrahedron
              * this half-tetrahedron does not meet at all.
+             *
+             * All new inner tetrahedra will be automatically
+             * inserted into the given triangulation.
              */
-            TruncHalfTet(NTetrahedron *outerTet, int type);
+            TruncHalfTet(NTetrahedron *outerTet, int type,
+                NTriangulation* insertInto);
     };
 
     /**
@@ -305,8 +320,11 @@ namespace {
             /**
              * Creates a new truncated tetrahedron within the given outer
              * tetrahedron.
+             *
+             * All new inner tetrahedra will be automatically
+             * inserted into the given triangulation.
              */
-            TruncTet(NTetrahedron *outerTet);
+            TruncTet(NTetrahedron *outerTet, NTriangulation* insertInto);
     };
 
     /**
@@ -541,8 +559,14 @@ namespace {
              * This contructor also creates the four small tetrahedra in
              * the vertex neighbourhoods, and glues them to the four
              * blocks closest to the outer tetrahedron vertices.
+             *
+             * All new inner tetrahedra (that is, the inner tetrahedra
+             * from the triangulated blocks and also the small
+             * tetrahedra in the vertex neighbourhoods) will be automatically
+             * inserted into the given triangulation.
              */
-            TetBlockSet(const NNormalSurface* s, unsigned long tetIndex);
+            TetBlockSet(const NNormalSurface* s, unsigned long tetIndex,
+                NTriangulation* insertInto);
 
             /**
              * Destroys all block and boundary structures within this outer
@@ -598,19 +622,6 @@ namespace {
              * See the data member \a vertexNbd_ for further details.
              */
             NTetrahedron* vertexNbd(int vertex);
-
-            /**
-             * Insert all of the triangulated blocks within this outer
-             * tetrahedron into the new triangulation.
-             *
-             * Specifically, for all blocks within this outer tetrahedron,
-             * all of the corresponding \e inner tetrahedra are inserted
-             * into the given triangulation.
-             *
-             * The small tetrahedra that make up the extra vertex
-             * neighbourhoods are inserted also.
-             */
-            void insertInto(NTriangulation* tri);
     };
 
     inline Block::~Block() {
@@ -626,13 +637,9 @@ namespace {
         bdry_[face]->joinTo(other->bdry_[outerTet_->adjacentFace(face)]);
     }
 
-    inline void Block::insertInto(NTriangulation* tri) {
-        for (unsigned i = 0; i < nInnerTet_; ++i)
-            tri->addTetrahedron(innerTet_[i]);
-    }
-
     inline NTetrahedron* Block::layeringTetrahedron() {
-        return (innerTet_[nInnerTet_++] = new NTetrahedron());
+        return (innerTet_[nInnerTet_++] =
+            innerTet_[0]->getTriangulation()->newTetrahedron());
     }
 
     inline void Block::attachVertexNbd(NTetrahedron* nbd, int vertex) {
@@ -641,18 +648,19 @@ namespace {
     }
 
     inline Block::Block(NTetrahedron *outerTet, unsigned initialNumTet,
-            unsigned maxLayerings) :
+            unsigned maxLayerings, NTriangulation* insertInto) :
             outerTet_(outerTet),
             innerTet_(new NTetrahedron*[initialNumTet + maxLayerings]),
             nInnerTet_(initialNumTet) {
         unsigned i;
         for (i = 0; i < nInnerTet_; ++i)
-            innerTet_[i] = new NTetrahedron();
+            innerTet_[i] = insertInto->newTetrahedron();
         std::fill(link_, link_ + 4, static_cast<NTetrahedron*>(0));
     }
 
-    TriPrism::TriPrism(NTetrahedron *outerTet, int type) :
-            Block(outerTet, 3, 3) {
+    TriPrism::TriPrism(NTetrahedron *outerTet, int type,
+            NTriangulation* insertInto) :
+            Block(outerTet, 3, 3, insertInto) {
         innerTet_[1]->joinTo(1, innerTet_[0], NPerm4());
         innerTet_[1]->joinTo(3, innerTet_[2], NPerm4());
 
@@ -687,8 +695,9 @@ namespace {
         linkVertices_[vertices[0]] = vertices * NPerm4(0, 1, 3, 2);
     }
 
-    QuadPrism::QuadPrism(NTetrahedron *outerTet, int type) :
-            Block(outerTet, 5, 4) {
+    QuadPrism::QuadPrism(NTetrahedron *outerTet, int type,
+            NTriangulation* insertInto) :
+            Block(outerTet, 5, 4, insertInto) {
         innerTet_[4]->joinTo(2, innerTet_[0], NPerm4());
         innerTet_[4]->joinTo(3, innerTet_[1], NPerm4());
         innerTet_[4]->joinTo(0, innerTet_[2], NPerm4());
@@ -731,8 +740,9 @@ namespace {
         bdry_[vertices[3]] = q;
     }
 
-    TruncHalfTet::TruncHalfTet(NTetrahedron *outerTet, int type) :
-            Block(outerTet, 8, 10) {
+    TruncHalfTet::TruncHalfTet(NTetrahedron *outerTet, int type,
+            NTriangulation* insertInto):
+            Block(outerTet, 8, 10, insertInto) {
         innerTet_[1]->joinTo(2, innerTet_[0], NPerm4());
         innerTet_[1]->joinTo(1, innerTet_[2], NPerm4());
         innerTet_[1]->joinTo(0, innerTet_[3], NPerm4());
@@ -794,8 +804,8 @@ namespace {
         linkVertices_[vertices[3]] = vertices * NPerm4(3, 1, 2, 0);
     }
 
-    TruncTet::TruncTet(NTetrahedron *outerTet) :
-            Block(outerTet, 11, 16) {
+    TruncTet::TruncTet(NTetrahedron *outerTet, NTriangulation* insertInto) :
+            Block(outerTet, 11, 16, insertInto) {
         innerTet_[0]->joinTo(2, innerTet_[4], NPerm4());
         innerTet_[1]->joinTo(3, innerTet_[7], NPerm4());
         innerTet_[2]->joinTo(0, innerTet_[6], NPerm4());
@@ -989,7 +999,8 @@ namespace {
         outerVertices_ = outerVertices_ * NPerm4(1, 2, 0, 3);
     }
 
-    TetBlockSet::TetBlockSet(const NNormalSurface* s, unsigned long tetIndex) {
+    TetBlockSet::TetBlockSet(const NNormalSurface* s, unsigned long tetIndex,
+            NTriangulation* insertInto) {
         unsigned long i, j;
         for (i = 0; i < 4; ++i)
             triCount_[i] = s->getTriangleCoord(tetIndex, i).longValue();
@@ -1021,30 +1032,30 @@ namespace {
             else {
                 triPrism_[i] = new Block*[triCount_[i]];
                 for (j = 0; j < triCount_[i]; ++j)
-                    triPrism_[i][j] = new TriPrism(tet, i);
+                    triPrism_[i][j] = new TriPrism(tet, i, insertInto);
             }
         }
 
         if (quadCount_ == 0) {
             quadPrism_ = 0;
             truncHalfTet_[0] = truncHalfTet_[1] = 0;
-            truncTet_ = new TruncTet(tet);
+            truncTet_ = new TruncTet(tet, insertInto);
         } else {
             if (quadCount_ > 1) {
                 quadPrism_ = new Block*[quadCount_ - 1];
                 for (j = 0; j < quadCount_ - 1; ++j)
-                    quadPrism_[j] = new QuadPrism(tet, quadType_);
+                    quadPrism_[j] = new QuadPrism(tet, quadType_, insertInto);
             } else
                 quadPrism_ = 0;
 
-            truncHalfTet_[0] = new TruncHalfTet(tet, 5 - quadType_);
-            truncHalfTet_[1] = new TruncHalfTet(tet, quadType_);
+            truncHalfTet_[0] = new TruncHalfTet(tet, 5 - quadType_, insertInto);
+            truncHalfTet_[1] = new TruncHalfTet(tet, quadType_, insertInto);
 
             truncTet_ = 0;
         }
 
         for (i = 0; i < 4; ++i) {
-            vertexNbd_[i] = new NTetrahedron();
+            vertexNbd_[i] = insertInto->newTetrahedron();
 
             if (triCount_[i] > 0)
                 triPrism_[i][0]->attachVertexNbd(vertexNbd_[i], i);
@@ -1128,28 +1139,6 @@ namespace {
     inline NTetrahedron* TetBlockSet::vertexNbd(int vertex) {
         return vertexNbd_[vertex];
     }
-
-    void TetBlockSet::insertInto(NTriangulation* tri) {
-        unsigned long i, j;
-        for (i = 0; i < 4; ++i)
-            if (triPrism_[i])
-                for (j = 0; j < triCount_[i]; ++j)
-                    triPrism_[i][j]->insertInto(tri);
-
-        if (quadCount_ == 0)
-            truncTet_->insertInto(tri);
-        else {
-            if (quadPrism_)
-                for (j = 0; j < quadCount_ - 1; ++j)
-                    quadPrism_[j]->insertInto(tri);
-
-            truncHalfTet_[0]->insertInto(tri);
-            truncHalfTet_[1]->insertInto(tri);
-        }
-
-        for (i = 0; i < 4; ++i)
-            tri->addTetrahedron(vertexNbd_[i]);
-    }
 }
 
 // ------------------------------------------------------------------------
@@ -1158,6 +1147,7 @@ namespace {
 
 NTriangulation* NNormalSurface::cutAlong() const {
     NTriangulation* ans = new NTriangulation();
+    NPacket::ChangeEventBlock eventBlock(ans);
 
     unsigned long nTet = getTriangulation()->getNumberOfTetrahedra();
     if (nTet == 0)
@@ -1166,7 +1156,7 @@ NTriangulation* NNormalSurface::cutAlong() const {
     unsigned long i;
     TetBlockSet** sets = new TetBlockSet*[nTet];
     for (i = 0; i < nTet; ++i)
-        sets[i] = new TetBlockSet(this, i);
+        sets[i] = new TetBlockSet(this, i, ans);
 
     NTriangulation::FaceIterator fit;
     NFace* f;
@@ -1204,10 +1194,9 @@ NTriangulation* NNormalSurface::cutAlong() const {
         sets[tet0]->hexBlock(face0)->joinTo(face0, sets[tet1]->hexBlock(face1));
     }
 
-    for (i = 0; i < nTet; ++i) {
-        sets[i]->insertInto(ans);
+    // All done!  Clean up.
+    for (i = 0; i < nTet; ++i)
         delete sets[i];
-    }
     delete[] sets;
 
     return ans;
@@ -1290,7 +1279,7 @@ NTriangulation* NNormalSurface::crush() const {
     // Delete unwanted tetrahedra.
     for (whichTet = nTet - 1; whichTet >= 0; whichTet--)
         if (quads[whichTet] >= 0)
-            delete ans->removeTetrahedronAt(whichTet);
+            ans->removeTetrahedronAt(whichTet);
 
     delete[] quads;
     return ans;
