@@ -87,7 +87,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             twisted5.insertLayeredLoop(5, true);
             untwisted5.insertLayeredLoop(5, false);
             aug.insertAugTriSolidTorus(3, -1, 5, -3, 2, -1);
-            ball.addTetrahedron(new NTetrahedron());
+            ball.newTetrahedron();
         }
 
         void tearDown() {
@@ -315,8 +315,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             }
 
             // Add a lone tetrahedron.
-            NTetrahedron* tet = new NTetrahedron();
-            t2.addTetrahedron(tet);
+            NTetrahedron* tet = t2.newTetrahedron();
             if (! t2.isContainedIn(t).get()) {
                 std::ostringstream msg;
                 msg << "Isolating a tetrahedron of " << name <<

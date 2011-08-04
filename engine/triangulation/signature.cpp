@@ -346,6 +346,8 @@ std::string NTriangulation::isoSig(unsigned tet, const NPerm4& vertices) const {
 NTriangulation* NTriangulation::fromIsoSig(const std::string& sig) {
     std::auto_ptr<NTriangulation> ans(new NTriangulation());
 
+    ChangeEventBlock block(ans.get());
+
     const char* c = sig.c_str();
 
     // Initial check for invalid characters.
@@ -452,7 +454,7 @@ NTriangulation* NTriangulation::fromIsoSig(const std::string& sig) {
         // End of component!
         NTetrahedron** tet = new NTetrahedron*[nTet];
         for (i = 0; i < nTet; ++i)
-            tet[i] = new NTetrahedron();
+            tet[i] = ans->newTetrahedron();
 
         facePos = 0;
         unsigned nextUnused = 1;
@@ -488,9 +490,6 @@ NTriangulation* NTriangulation::fromIsoSig(const std::string& sig) {
 
                 ++facePos;
             }
-
-        for (i = 0; i < nTet; ++i)
-            ans->addTetrahedron(tet[i]);
 
         delete[] faceAction;
         delete[] joinDest;

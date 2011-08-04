@@ -52,13 +52,14 @@ void NTriangulation::barycentricSubdivision() {
 
     ChangeEventBlock block(this);
 
+    NTriangulation staging;
     NTetrahedron** newTet = new NTetrahedron*[nOldTet * 24];
     NTetrahedron* oldTet;
     NPerm4 p;
     unsigned long tet;
     int face, edge, corner, other;
     for (tet=0; tet<24*nOldTet; tet++)
-        newTet[tet] = new NTetrahedron();
+        newTet[tet] = staging.newTetrahedron();
 
     // Do all of the internal gluings
     for (tet=0; tet<nOldTet; tet++) {
@@ -106,9 +107,7 @@ void NTriangulation::barycentricSubdivision() {
 
     // Delete the existing tetrahedra and put in the new ones.
     removeAllTetrahedra();
-    for (tet=0; tet<24*nOldTet; tet++)
-        addTetrahedron(newTet[tet]);
-
+    swapContents(staging);
     delete[] newTet;
 }
 
@@ -125,9 +124,10 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
 
     ChangeEventBlock block(this);
 
+    NTriangulation staging;
     NTetrahedron **newTet = new NTetrahedron*[32*numOldTet];
     for (i=0; i<32*numOldTet; i++)
-        newTet[i] = new NTetrahedron();
+        newTet[i] = staging.newTetrahedron();
 
     int tip[4];
     int interior[4];
@@ -210,10 +210,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     }
 
     removeAllTetrahedra();
-
-    for (i=0; i<32*numOldTet; i++)
-        addTetrahedron(newTet[i]);
-
+    swapContents(staging);
     calculateSkeleton();
 
     // Remove the tetrahedra that meet any of the non-standard or
@@ -231,10 +228,8 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     // Now remove the tetrahedra.
     // For each tetrahedron, remove it and delete it.
     for_each(tetList.begin(), tetList.end(),
-        regina::stl::compose1(FuncDelete<NTetrahedron>(),
-        std::bind1st(std::mem_fun(&NTriangulation::removeTetrahedron), this)));
+        std::bind1st(std::mem_fun(&NTriangulation::removeTetrahedron), this));
 
-    gluingsHaveChanged();
     return true;
 }
 
@@ -242,45 +237,34 @@ bool NTriangulation::finiteToIdeal() {
     if (! hasBoundaryFaces())
         return false;
 
-    // Get a list of all boundary faces.
-    std::vector<NFace*> boundaryFaces;
+    // Make a list of all boundary faces, indexed by face number,
+    // and create the corresponding new tetrahedra.
+    unsigned nFaces = getNumberOfFaces();
 
-    BoundaryComponentIterator bit;
-    unsigned long nFaces;
-    unsigned long i;
-    for (bit = boundaryComponents.begin(); bit != boundaryComponents.end();
-            bit++) {
-        nFaces = (*bit)->getNumberOfFaces();
-        for (i = 0; i < nFaces; i++)
-            boundaryFaces.push_back((*bit)->getFace(i));
-    }
-
-    // There should be at least one boundary face.  But just in case.
-    if (boundaryFaces.empty())
-        return false;
-
-    // Here's where we start changing things.
-    ChangeEventBlock block(this);
-
-    nFaces = boundaryFaces.size();
+    NTriangulation staging;
+    NTetrahedron** bdry = new NTetrahedron*[nFaces];
+    NPerm4* bdryPerm = new NPerm4[nFaces];
     NTetrahedron** newTet = new NTetrahedron*[nFaces];
 
-    // Create the new tetrahedra and join them to the boundary faces.
-    for (i = 0; i < nFaces; i++) {
-        newTet[i] = new NTetrahedron();
+    FaceIterator fit;
+    unsigned i;
+    for (i = 0, fit = faces.begin(); fit != faces.end(); ++i, ++fit) {
+        if (! (*fit)->isBoundary()) {
+            bdry[i] = newTet[i] = 0;
+            continue;
+        }
 
-        NFaceEmbedding emb = boundaryFaces[i]->getEmbedding(0);
-        newTet[i]->joinTo(3, emb.getTetrahedron(), emb.getVertices());
+        bdry[i] = (*fit)->getEmbedding(0).getTetrahedron();
+        bdryPerm[i] = (*fit)->getEmbedding(0).getVertices();
+        newTet[i] = staging.newTetrahedron();
     }
 
-    // Now join the new tetrahedra to each other.
+    // Glue the new tetrahedra to each other.
     NEdge* edge;
-    NTetrahedron* t1;
-    NTetrahedron* t2;
-    NPerm4 t1Face;
-    NPerm4 t2Face;
-    for (bit = boundaryComponents.begin(); bit != boundaryComponents.end();
-            bit++)
+    unsigned tetFace1, tetFace2;
+    NPerm4 t1Perm, t2Perm;
+    for (BoundaryComponentIterator bit = boundaryComponents.begin();
+            bit != boundaryComponents.end(); bit++)
         for (i = 0; i < (*bit)->getNumberOfEdges(); i++) {
             edge = (*bit)->getEdge(i);
 
@@ -289,24 +273,36 @@ bool NTriangulation::finiteToIdeal() {
             NEdgeEmbedding e1 = edge->getEmbeddings().front();
             NEdgeEmbedding e2 = edge->getEmbeddings().back();
 
-            t1 = e1.getTetrahedron()->adjacentTetrahedron(
-                e1.getVertices()[3]);
-            t2 = e2.getTetrahedron()->adjacentTetrahedron(
-                e2.getVertices()[2]);
+            tetFace1 = e1.getTetrahedron()->getFace(
+                e1.getVertices()[3])->markedIndex();
+            tetFace2 = e2.getTetrahedron()->getFace(
+                e2.getVertices()[2])->markedIndex();
 
-            t1Face = e1.getTetrahedron()->adjacentGluing(
-                e1.getVertices()[3]) * e1.getVertices();
-            t2Face = e2.getTetrahedron()->adjacentGluing(
-                e2.getVertices()[2]) * e2.getVertices() * NPerm4(2, 3);
+            t1Perm = bdryPerm[tetFace1].inverse() * e1.getVertices();
+            t2Perm = bdryPerm[tetFace2].inverse() * e2.getVertices() *
+                NPerm4(2, 3);
 
-            t1->joinTo(t1Face[2], t2, t2Face * t1Face.inverse());
+            newTet[tetFace1]->joinTo(t1Perm[2], newTet[tetFace2],
+                t2Perm * t1Perm.inverse());
         }
 
-    // Finally add the new tetrahedra into the triangulation.
-    for (i = 0; i < nFaces; i++)
-        addTetrahedron(newTet[i]);
+    // Now join the new tetrahedra to the boundary faces of the original
+    // triangulation.
 
+    // Set up a change block, since here we start changing the original
+    // triangulation.
+    ChangeEventBlock block(this);
+
+    staging.moveContentsTo(*this);
+
+    for (i = 0; i < nFaces; ++i)
+        if (newTet[i])
+            newTet[i]->joinTo(3, bdry[i], bdryPerm[i]);
+
+    // Clean up and return.
     delete[] newTet;
+    delete[] bdryPerm;
+    delete[] bdry;
     return true;
 }
 

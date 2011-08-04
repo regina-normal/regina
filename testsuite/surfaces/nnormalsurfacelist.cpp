@@ -180,7 +180,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NTetrahedron* t;
 
             // The one-tetrahedron ball has no face identifications at all.
-            oneTet.addTetrahedron(new NTetrahedron());
+            oneTet.newTetrahedron();
 
             // Use pre-coded triangulations where we can.
             copyAndDelete(figure8,
@@ -200,17 +200,14 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             // A 3-tetrahedron non-orientable twisted I-bundle over the
             // Klein bottle is described in Chapter 3 of Benjamin
             // Burton's PhD thesis.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
-            t = new NTetrahedron();
+            r = twistedKxI.newTetrahedron();
+            s = twistedKxI.newTetrahedron();
+            t = twistedKxI.newTetrahedron();
             r->joinTo(0, s, NPerm4(0, 1, 2, 3));
             r->joinTo(1, t, NPerm4(2, 1, 0, 3));
             r->joinTo(2, t, NPerm4(1, 3, 2, 0));
             s->joinTo(1, t, NPerm4(0, 3, 2, 1));
             s->joinTo(2, t, NPerm4(3, 1, 0, 2));
-            twistedKxI.addTetrahedron(r);
-            twistedKxI.addTetrahedron(s);
-            twistedKxI.addTetrahedron(t);
 
             // Build the 9-tetrahedron SFS from its dehydration string;
             // obscure but painless at least.

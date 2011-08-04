@@ -43,21 +43,18 @@ NTriangulation* NSimpleSurfaceBundle::construct() const {
         ans->insertLayeredLensSpace(0, 1);
     } else if (type == S2xS1_TWISTED) {
         // Taken from section 3.5.1 of Ben Burton's PhD thesis.
-        NTetrahedron* r = new NTetrahedron();
-        NTetrahedron* s = new NTetrahedron();
+        NTetrahedron* r = ans->newTetrahedron();
+        NTetrahedron* s = ans->newTetrahedron();
 
         r->joinTo(1, s, NPerm4());
         r->joinTo(3, s, NPerm4());
         r->joinTo(2, s, NPerm4(3, 2, 0, 1));
         s->joinTo(2, r, NPerm4(3, 2, 0, 1));
-
-        ans->addTetrahedron(r);
-        ans->addTetrahedron(s);
     } else if (type == RP2xS1) {
         // Taken from section 3.5.1 of Ben Burton's PhD thesis.
-        NTetrahedron* r = new NTetrahedron();
-        NTetrahedron* s = new NTetrahedron();
-        NTetrahedron* t = new NTetrahedron();
+        NTetrahedron* r = ans->newTetrahedron();
+        NTetrahedron* s = ans->newTetrahedron();
+        NTetrahedron* t = ans->newTetrahedron();
 
         s->joinTo(0, r, NPerm4(0, 1, 2, 3));
         s->joinTo(3, r, NPerm4(3, 0, 1, 2));
@@ -65,10 +62,6 @@ NTriangulation* NSimpleSurfaceBundle::construct() const {
         s->joinTo(2, t, NPerm4(0, 1, 2, 3));
         r->joinTo(1, t, NPerm4(2, 3, 0, 1));
         r->joinTo(3, t, NPerm4(2, 3, 0, 1));
-
-        ans->addTetrahedron(r);
-        ans->addTetrahedron(s);
-        ans->addTetrahedron(t);
     }
 
     return ans;

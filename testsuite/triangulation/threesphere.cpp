@@ -213,7 +213,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             NTetrahedron* tet[5];
             int i;
             for (i = 0; i < 5; i++)
-                tet[i] = new NTetrahedron;
+                tet[i] = tri->newTetrahedron();
             tet[0]->joinTo(0, tet[4], NPerm4(1,0,2,3));
             tet[0]->joinTo(1, tet[3], NPerm4(0,2,3,1));
             tet[0]->joinTo(2, tet[1], NPerm4(0,1,3,2));
@@ -224,8 +224,6 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             tet[2]->joinTo(1, tet[4], NPerm4(0,2,3,1));
             tet[2]->joinTo(3, tet[3], NPerm4(3,1,2,0));
             tet[3]->joinTo(3, tet[4], NPerm4(0,1,2,3));
-            for (i = 0; i < 5; i++)
-                tri->addTetrahedron(tet[i]);
             delete verifyNotThreeSphere(tri,
                 "Poincare homology sphere (plugged)");
 
@@ -245,13 +243,12 @@ class ThreeSphereTest : public CppUnit::TestFixture {
 
             // Let's make sure silly things like balls aren't picked up.
             tri = new NTriangulation();
-            tri->addTetrahedron(new NTetrahedron());
+            tri->newTetrahedron();
             delete verifyNotThreeSphere(tri, "Standalone tetrahedron");
 
             tri = new NTriangulation();
-            tet[0] = new NTetrahedron();
+            tet[0] = tri->newTetrahedron();
             tet[0]->joinTo(0, tet[0], NPerm4(3, 1, 2, 0));
-            tri->addTetrahedron(tet[0]);
             delete verifyNotThreeSphere(tri, "Snapped tetrahedron");
 
             tri = new NTriangulation();
@@ -354,42 +351,35 @@ class ThreeSphereTest : public CppUnit::TestFixture {
 
             // Balls:
             tri = new NTriangulation();
-            tri->addTetrahedron(new NTetrahedron());
+            tri->newTetrahedron();
             delete verifyThreeBall(tri, "Standalone tetrahedron");
 
             tri = new NTriangulation();
-            tet[0] = new NTetrahedron();
+            tet[0] = tri->newTetrahedron();
             tet[0]->joinTo(0, tet[0], NPerm4(3, 1, 2, 0));
-            tri->addTetrahedron(tet[0]);
             delete verifyThreeBall(tri, "Snapped tetrahedron");
 
             tri = new NTriangulation();
-            tet[0] = new NTetrahedron();
-            tet[1] = new NTetrahedron();
+            tet[0] = tri->newTetrahedron();
+            tet[1] = tri->newTetrahedron();
             tet[0]->joinTo(0, tet[1], NPerm4());
             tet[0]->joinTo(1, tet[1], NPerm4());
             tet[0]->joinTo(2, tet[1], NPerm4());
-            tri->addTetrahedron(tet[0]);
-            tri->addTetrahedron(tet[1]);
             delete verifyThreeBall(tri, "Triangular pillow");
 
             // This ball used to crash the simplification routines once
             // upon a time.  Throw it into the test suite for good measure.
             tri = new NTriangulation();
-            tet[0] = new NTetrahedron();
-            tet[1] = new NTetrahedron();
-            tet[2] = new NTetrahedron();
-            tet[3] = new NTetrahedron();
+            tet[0] = tri->newTetrahedron();
+            tet[1] = tri->newTetrahedron();
+            tet[2] = tri->newTetrahedron();
+            tet[3] = tri->newTetrahedron();
             tet[0]->joinTo(2, tet[0], NPerm4(0,2));
             tet[0]->joinTo(1, tet[1], NPerm4(2,0,1,3));
             tet[1]->joinTo(2, tet[2], NPerm4());
             tet[1]->joinTo(1, tet[2], NPerm4(2,0,1,3));
             tet[2]->joinTo(1, tet[3], NPerm4(2,0,1,3));
             tet[3]->joinTo(2, tet[3], NPerm4(1,2));
-            tri->addTetrahedron(tet[0]);
-            tri->addTetrahedron(tet[1]);
-            tri->addTetrahedron(tet[2]);
-            tri->addTetrahedron(tet[3]);
             delete verifyThreeBall(tri, "4-tetrahedron ball");
 
             // Non-balls:

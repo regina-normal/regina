@@ -83,7 +83,7 @@ NTriangulation *cassonToNTriangulation( CassonFormat *cf )
 
  NTetrahedron **tet = new NTetrahedron*[cf->num_tet]; // tet corresponds to tet_array in Orb
  for (i=0; i<cf->num_tet; i++)
-        tet[i]=new NTetrahedron();
+        tet[i]=triang->newTetrahedron();
  // now tet is a pointer to an array of NTetrahedrons,
  //  so for each tet[i] we need to run
  //   for (j=0; j<4; j++)
@@ -130,8 +130,6 @@ NTriangulation *cassonToNTriangulation( CassonFormat *cf )
         ei = ei->next;
         }
 
- for (i=0; i<cf->num_tet; i++)
-        triang->addTetrahedron(tet[i]);
  delete[] tet;
 
  return triang;

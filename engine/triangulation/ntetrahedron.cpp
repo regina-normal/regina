@@ -28,18 +28,18 @@
 
 #include <cassert>
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-NTetrahedron::NTetrahedron() {
-    int i;
-    for (i=0; i<4; i++)
+NTetrahedron::NTetrahedron() : tri(0) {
+    for (int i=0; i<4; i++)
         tetrahedra[i] = 0;
 }
 
-NTetrahedron::NTetrahedron(const std::string& desc) : description(desc) {
-    int i;
-    for (i=0; i<4; i++)
+NTetrahedron::NTetrahedron(const std::string& desc) :
+        description(desc), tri(0) {
+    for (int i=0; i<4; i++)
         tetrahedra[i] = 0;
 }
 
@@ -63,6 +63,12 @@ NTetrahedron* NTetrahedron::unjoin(int myFace) {
     assert(you->tetrahedra[yourFace]);
     you->tetrahedra[yourFace] = 0;
     tetrahedra[myFace] = 0;
+
+    if (tri) {
+        tri->clearAllProperties();
+        tri->fireChangedEvent();
+    }
+
     return you;
 }
 
@@ -70,6 +76,16 @@ void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
     assert((! tetrahedra[myFace]) ||
         (tetrahedra[myFace] == you &&
             tetrahedronPerm[myFace] == gluing));
+
+    // TODO: Temporary measure while we transition from old-style to
+    // new-style tetrahedron management.
+    if (tri && ! you->tri)
+        tri->addTetrahedron(you);
+    else if (you->tri && ! tri)
+        you->tri->addTetrahedron(this);
+
+    assert(tri == you->tri);
+
     tetrahedra[myFace] = you;
     tetrahedronPerm[myFace] = gluing;
     int yourFace = gluing[myFace];
@@ -79,6 +95,59 @@ void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
     assert(! (you == this && yourFace == myFace));
     you->tetrahedra[yourFace] = this;
     you->tetrahedronPerm[yourFace] = gluing.inverse();
+
+    if (tri) {
+        tri->clearAllProperties();
+        tri->fireChangedEvent();
+    }
+}
+
+NComponent* NTetrahedron::getComponent() const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return component;
+}
+
+NVertex* NTetrahedron::getVertex(int vertex) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return vertices[vertex];
+}
+
+NEdge* NTetrahedron::getEdge(int edge) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return edges[edge];
+}
+
+NFace* NTetrahedron::getFace(int face) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return faces[face];
+}
+
+NPerm4 NTetrahedron::getVertexMapping(int vertex) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return vertexMapping[vertex];
+}
+
+NPerm4 NTetrahedron::getEdgeMapping(int edge) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return edgeMapping[edge];
+}
+
+NPerm4 NTetrahedron::getFaceMapping(int face) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return faceMapping[face];
+}
+
+int NTetrahedron::orientation() const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return tetOrientation;
 }
 
 } // namespace regina

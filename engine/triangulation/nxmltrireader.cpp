@@ -112,7 +112,7 @@ namespace {
                 long nTets;
                 if (valueOf(props.lookup("ntet"), nTets))
                     for ( ; nTets > 0; nTets--)
-                        tri->addTetrahedron(new NTetrahedron());
+                        tri->newTetrahedron();
             }
 
             virtual NXMLElementReader* startSubElement(

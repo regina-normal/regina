@@ -730,7 +730,7 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
 
         currBdryFaces = NFacePair(curr->adjacentFace(currBdryFaces.lower()),
             curr->adjacentFace(currBdryFaces.upper())).complement();
-        delete ans->removeTetrahedron(curr);
+        ans->removeTetrahedron(curr);
         curr = next;
     }
 

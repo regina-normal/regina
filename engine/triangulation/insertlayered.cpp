@@ -55,13 +55,11 @@ NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
 
     ChangeEventBlock block(this);
 
-    NTetrahedron* newTet = new NTetrahedron();
-    addTetrahedron(newTet);
+    NTetrahedron* newTet = newTetrahedron();
 
     newTet->joinTo(3, tet1, roles1);
     newTet->joinTo(2, tet2, roles2);
 
-    gluingsHaveChanged();
     return newTet;
 }
 
@@ -71,8 +69,7 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
 
     unsigned long cuts2 = cuts0 + cuts1;
 
-    NTetrahedron* newTet = new NTetrahedron();
-    addTetrahedron(newTet);
+    NTetrahedron* newTet = newTetrahedron();
 
     // Take care of the case that can be done with a single
     // tetrahedron.
@@ -80,7 +77,6 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
         // Must be a 1-2-3 arrangement that can be done with a single
         // tetrahedron.
         newTet->joinTo(0, newTet, NPerm4(1,2,3,0));
-        gluingsHaveChanged();
         return newTet;
     }
 
@@ -90,7 +86,6 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
         NTetrahedron* base = insertLayeredSolidTorus(1, 2);
         base->joinTo(2, newTet, NPerm4(2,3,0,1));
         base->joinTo(3, newTet, NPerm4(2,3,0,1));
-        gluingsHaveChanged();
         return newTet;
     }
     if (cuts2 == 1) {
@@ -98,7 +93,6 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
         NTetrahedron* base = insertLayeredSolidTorus(1, 1);
         base->joinTo(2, newTet, NPerm4(0,2,1,3));
         base->joinTo(3, newTet, NPerm4(3,1,2,0));
-        gluingsHaveChanged();
         return newTet;
     }
 
@@ -114,7 +108,6 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
         base->joinTo(3, newTet, NPerm4(0,2,3,1));
     }
 
-    gluingsHaveChanged();
     return newTet;
 }
 
@@ -147,8 +140,6 @@ void NTriangulation::insertLayeredLensSpace(unsigned long p, unsigned long q) {
             chain->joinTo(3, chain, NPerm4(3, 0, 1, 2));
         }
     }
-
-    gluingsHaveChanged();
 }
 
 void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
@@ -163,15 +154,13 @@ void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
     NTetrahedron* curr;
     NTetrahedron* next;
 
-    base = new NTetrahedron();
-    addTetrahedron(base);
+    base = newTetrahedron();
     curr = base;
 
     for (unsigned long i = 1; i < length; i++) {
-        next = new NTetrahedron();
+        next = newTetrahedron();
         curr->joinTo(0, next, NPerm4(1, 0, 2, 3));
         curr->joinTo(3, next, NPerm4(0, 1, 3, 2));
-        addTetrahedron(next);
         curr = next;
     }
 
@@ -183,8 +172,6 @@ void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
         curr->joinTo(0, base, NPerm4(1, 0, 2, 3));
         curr->joinTo(3, base, NPerm4(0, 1, 3, 2));
     }
-
-    gluingsHaveChanged();
 }
 
 void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
@@ -195,10 +182,8 @@ void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
 
     // Construct the core triangular solid torus.
     NTetrahedron* core[3];
-    for (i = 0; i < 3; i++) {
-        core[i] = new NTetrahedron();
-        addTetrahedron(core[i]);
-    }
+    for (i = 0; i < 3; i++)
+        core[i] = newTetrahedron();
     for (i = 0; i < 3; i++)
         core[i]->joinTo(0, core[(i + 1) % 3], NPerm4(3, 0, 1, 2));
 
@@ -285,8 +270,6 @@ void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
             }
         }
     }
-
-    gluingsHaveChanged();
 }
 
 void NTriangulation::insertSFSOverSphere(long a1, long b1, long a2, long b2,

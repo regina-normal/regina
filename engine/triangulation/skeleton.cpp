@@ -182,7 +182,7 @@ void NTriangulation::calculateVertices() const {
     for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (vertex=0; vertex<4; vertex++)
-            if (! tet->getVertex(vertex)) {
+            if (! tet->vertices[vertex]) {
                 label = new NVertex(tet->component);
                 tet->component->vertices.push_back(label);
                 labelVertex(tet, vertex, label);
@@ -247,7 +247,7 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
                 else
                     adjOrientation = tet->tmpOrientation[vertex];
 
-                if (adjTet->getVertex(adjVertex)) {
+                if (adjTet->vertices[adjVertex]) {
                     if (adjTet->tmpOrientation[adjVertex] != adjOrientation)
                         label->linkOrientable = false;
                 } else {
@@ -283,7 +283,7 @@ void NTriangulation::calculateEdges() const {
     for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (edge=0; edge<6; edge++)
-            if (! tet->getEdge(edge)) {
+            if (! tet->edges[edge]) {
                 label = new NEdge(tet->component);
                 tet->component->edges.push_back(label);
                 labelEdge(tet, edge, label);
@@ -377,7 +377,7 @@ void NTriangulation::calculateFaces() const {
     for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (face=3; face>=0; face--)
-            if (! tet->getFace(face)) {
+            if (! tet->faces[face]) {
                 label = new NFace(tet->component);
                 tet->component->faces.push_back(label);
                 tet->faces[face] = label;
@@ -389,7 +389,7 @@ void NTriangulation::calculateFaces() const {
                     // Face is not on the boundary.
                     adjFace = tet->adjacentFace(face);
                     adjVertices = (tet->adjacentGluing(face))*
-                        (label->embeddings[0]->getVertices());
+                        tet->faceMapping[face];
                     adjTet->faces[adjFace] = label;
                     adjTet->faceMapping[adjFace] = adjVertices;
                     label->embeddings[1] = new NFaceEmbedding(adjTet, adjFace);
@@ -455,12 +455,12 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
         // Run through the edges and vertices on this face.
         emb = face->embeddings[0];
         tet = emb->getTetrahedron();
-        tetVertices = emb->getVertices();
         tetFace = emb->getFace();
+        tetVertices = tet->faceMapping[tetFace];
 
         // Run through the vertices.
         for (i=0; i<3; i++) {
-            vertex = tet->getVertex(tetVertices[i]);
+            vertex = tet->vertices[tetVertices[i]];
             if (vertex->boundaryComponent != label) {
                 // A vertex in an invalid triangulation might end up in
                 // more than one boundary component.  Push it into all
@@ -473,8 +473,8 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
         // Run through the edges.
         for (i=0; i<3; i++)
             for (j=i+1; j<3; j++) {
-                edge = tet->getEdge(NEdge::edgeNumber[tetVertices[i]]
-                    [tetVertices[j]]);
+                edge = tet->edges[NEdge::edgeNumber[tetVertices[i]]
+                    [tetVertices[j]]];
                 if (! (edge->boundaryComponent)) {
                     edge->boundaryComponent = label;
                     label->edges.push_back(edge);
@@ -492,11 +492,11 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
                     nextTet = nextTet->adjacentTetrahedron(nextFaceNumber);
                     nextFaceNumber = nextFacePerm[followFromFace];
                 }
-                nextFace = nextTet->getFace(nextFaceNumber);
+                nextFace = nextTet->faces[nextFaceNumber];
                 // Find the expected orientation of the next face.
                 yourOrientation =
-                    (nextTet->getFaceMapping(nextFaceNumber).inverse() *
-                    nextFacePerm * switchPerm * tet->getFaceMapping(tetFace))
+                    (nextTet->faceMapping[nextFaceNumber].inverse() *
+                    nextFacePerm * switchPerm * tet->faceMapping[tetFace])
                     .sign() == 1 ? -tet->tmpOrientation[tetFace] :
                     tet->tmpOrientation[tetFace];
                 if (nextFace->boundaryComponent) {
@@ -525,18 +525,30 @@ void NTriangulation::calculateVertexLinks() const {
 
     // Begin by calculating (2 v_int + v_bdry) for each vertex link.
     NEdge* e;
+    NVertex* end0;
+    NVertex* end1;
+    NTetrahedron* tet;
     for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++) {
         e = *eit;
+
+        // Try to compute e->getVertex(0) and e->getVertex(1), but
+        // without calling e->getVertex() which will recursively try to
+        // recompute the skeleton.
+        const NEdgeEmbedding& emb = e->getEmbeddings().front();
+        tet = emb.getTetrahedron();
+        end0 = tet->vertices[tet->edgeMapping[emb.getEdge()][0]];
+        end1 = tet->vertices[tet->edgeMapping[emb.getEdge()][1]];
+
         if (e->isBoundary()) {
             // Contribute to v_bdry.
-            e->getVertex(0)->linkEulerCharacteristic++;
+            end0->linkEulerCharacteristic++;
             if (e->valid)
-                e->getVertex(1)->linkEulerCharacteristic++;
+                end1->linkEulerCharacteristic++;
         } else {
             // Contribute to 2 v_int.
-            e->getVertex(0)->linkEulerCharacteristic += 2;
+            end0->linkEulerCharacteristic += 2;
             if (e->valid)
-                e->getVertex(1)->linkEulerCharacteristic += 2;
+                end1->linkEulerCharacteristic += 2;
         }
     }
 
