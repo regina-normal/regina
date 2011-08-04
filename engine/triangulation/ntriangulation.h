@@ -48,19 +48,21 @@
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
-#include "triangulation/ntetrahedron.h"
-#include "triangulation/nface.h"
-#include "triangulation/nedge.h"
-#include "triangulation/nvertex.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/nboundarycomponent.h"
 
 // The following headers are necessary so that std::auto_ptr can invoke
 // destructors where necessary.
 #include "triangulation/nisomorphism.h"
 
+// NOTE: More #includes follow after the class declarations.
+
 namespace regina {
 
+class NBoundaryComponent;
+class NComponent;
+class NEdge;
+class NFace;
+class NTetrahedron;
+class NVertex;
 class NGroupPresentation;
 class NIsomorphism;
 class NXMLPacketReader;
@@ -3108,6 +3110,16 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
 };
 
 /*@}*/
+
+} // namespace regina
+// Some more headers that are required for inline functions:
+#include "triangulation/ntetrahedron.h"
+#include "triangulation/nface.h"
+#include "triangulation/nedge.h"
+#include "triangulation/nvertex.h"
+#include "triangulation/ncomponent.h"
+#include "triangulation/nboundarycomponent.h"
+namespace regina {
 
 // Inline functions for NTriangulation
 

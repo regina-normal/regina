@@ -36,12 +36,18 @@
 #endif
 
 #include "regina-core.h"
-#include "triangulation/ntetrahedron.h"
+#include "shareableobject.h"
+#include "maths/nperm4.h"
+#include "utilities/nmarkedvector.h"
+// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
-class NComponent;
 class NBoundaryComponent;
+class NComponent;
+class NEdge;
+class NTetrahedron;
+class NVertex;
 
 /**
  * \weakgroup triangulation
@@ -334,6 +340,11 @@ class REGINA_API NFace : public ShareableObject, public NMarkedElement {
 };
 
 /*@}*/
+
+} // namespace regina
+// Some more headers that are required for inline functions:
+#include "triangulation/ntetrahedron.h"
+namespace regina {
 
 // Inline functions for NFace
 
