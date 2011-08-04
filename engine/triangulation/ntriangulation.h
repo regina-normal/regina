@@ -405,7 +405,6 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * immediately.
          *
          * @param tet the tetrahedron to remove.
-         * @return the removed tetrahedron.
          */
         void removeTetrahedron(NTetrahedron* tet);
         /**
@@ -424,7 +423,6 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @param index specifies which tetrahedron to remove; this
          * should be between 0 and getNumberOfTetrahedra()-1 inclusive.
-         * @return the removed tetrahedron.
          */
         void removeTetrahedronAt(unsigned long index);
         /**
@@ -2901,6 +2899,9 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * Clears any calculated properties and declares them all
          * unknown.  All dynamic memory used for storing known
          * properties is deallocated.
+         *
+         * In most cases this routine is followed immediately by firing
+         * a packet change event.
          */
         virtual void clearAllProperties();
 
