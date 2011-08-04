@@ -111,6 +111,27 @@ void NTriangulation::swapContents(NTriangulation& other) {
     other.fireChangedEvent();
 }
 
+void NTriangulation::moveContentsTo(NTriangulation& dest) {
+    clearAllProperties();
+    dest.clearAllProperties();
+
+    TetrahedronIterator it;
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); ++it) {
+        // This is an abuse of NMarkedVector, since for a brief moment
+        // each tetrahedron belongs to both vectors
+        // tetrahedra and dest.tetrahedra.
+        // However, the subsequent clear() operation does not touch the
+        // tetrahedron markings (indices), and so we end up with the
+        // correct result (i.e., the markings are correct for dest).
+        (*it)->tri = &dest;
+        dest.tetrahedra.push_back(*it);
+    }
+    tetrahedra.clear();
+
+    fireChangedEvent();
+    dest.fireChangedEvent();
+}
+
 void NTriangulation::clearAllProperties() {
     if (calculatedSkeleton) {
         deleteSkeleton();

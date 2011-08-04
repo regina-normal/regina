@@ -174,6 +174,7 @@ void addNTriangulation() {
         .def("removeTetrahedronAt", &NTriangulation::removeTetrahedronAt)
         .def("removeAllTetrahedra", &NTriangulation::removeAllTetrahedra)
         .def("swapContents", &NTriangulation::swapContents)
+        .def("moveContentsTo", &NTriangulation::moveContentsTo)
         .def("gluingsHaveChanged", &NTriangulation::gluingsHaveChanged)
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",

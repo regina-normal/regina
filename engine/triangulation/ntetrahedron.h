@@ -374,6 +374,11 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         void isolate();
 
         /**
+         * Returns the triangulation to which this tetrahedron belongs.
+         */
+        NTriangulation* getTriangulation() const;
+
+        /**
          * Returns the triangulation component to which this tetrahedron
          * belongs.
          *
@@ -652,6 +657,10 @@ inline NPerm4 NTetrahedron::adjacentGluing(int face) const {
 inline NPerm4 NTetrahedron::getAdjacentTetrahedronGluing(int face) const {
     // Deprecated!  Finally.
     return tetrahedronPerm[face];
+}
+
+inline NTriangulation* NTetrahedron::getTriangulation() const {
+    return tri;
 }
 
 inline void NTetrahedron::writeTextShort(std::ostream& out) const {

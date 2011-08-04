@@ -438,10 +438,27 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * will be moved to \a other, and all tetrahedra that belong to
          * \a other will be moved to this triangulation.
          *
+         * All NTetrahedron pointers or references will remain valid.
+         *
          * @param other the triangulation whose contents should be
          * swapped with this.
          */
         void swapContents(NTriangulation& other);
+        /**
+         * Moves the contents of this triangulation into the given
+         * destination triangulation, without destroying any pre-existing
+         * contents.  That is, all tetrahedra that currently belong to
+         * \a dest will remain there, and all tetrahedra that belong to this
+         * triangulation will be moved across as additional
+         * tetrahedra in \a dest.
+         *
+         * All NTetrahedron pointers or references will remain valid.
+         * After this operation, this triangulation will be empty.
+         *
+         * @param dest the triangulation to which tetrahedra should be
+         * moved.
+         */
+        void moveContentsTo(NTriangulation& dest);
         /**
          * This routine now does nothing, and should not be used.
          *

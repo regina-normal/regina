@@ -52,13 +52,14 @@ void NTriangulation::barycentricSubdivision() {
 
     ChangeEventBlock block(this);
 
+    NTriangulation staging;
     NTetrahedron** newTet = new NTetrahedron*[nOldTet * 24];
     NTetrahedron* oldTet;
     NPerm4 p;
     unsigned long tet;
     int face, edge, corner, other;
     for (tet=0; tet<24*nOldTet; tet++)
-        newTet[tet] = new NTetrahedron();
+        newTet[tet] = staging.newTetrahedron();
 
     // Do all of the internal gluings
     for (tet=0; tet<nOldTet; tet++) {
@@ -106,9 +107,7 @@ void NTriangulation::barycentricSubdivision() {
 
     // Delete the existing tetrahedra and put in the new ones.
     removeAllTetrahedra();
-    for (tet=0; tet<24*nOldTet; tet++)
-        addTetrahedron(newTet[tet]);
-
+    swapContents(staging);
     delete[] newTet;
 }
 
@@ -125,9 +124,10 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
 
     ChangeEventBlock block(this);
 
+    NTriangulation staging;
     NTetrahedron **newTet = new NTetrahedron*[32*numOldTet];
     for (i=0; i<32*numOldTet; i++)
-        newTet[i] = new NTetrahedron();
+        newTet[i] = staging.newTetrahedron();
 
     int tip[4];
     int interior[4];
@@ -210,10 +210,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     }
 
     removeAllTetrahedra();
-
-    for (i=0; i<32*numOldTet; i++)
-        addTetrahedron(newTet[i]);
-
+    swapContents(staging);
     calculateSkeleton();
 
     // Remove the tetrahedra that meet any of the non-standard or
@@ -244,6 +241,7 @@ bool NTriangulation::finiteToIdeal() {
     // and create the corresponding new tetrahedra.
     unsigned nFaces = getNumberOfFaces();
 
+    NTriangulation staging;
     NTetrahedron** bdry = new NTetrahedron*[nFaces];
     NPerm4* bdryPerm = new NPerm4[nFaces];
     NTetrahedron** newTet = new NTetrahedron*[nFaces];
@@ -258,7 +256,7 @@ bool NTriangulation::finiteToIdeal() {
 
         bdry[i] = (*fit)->getEmbedding(0).getTetrahedron();
         bdryPerm[i] = (*fit)->getEmbedding(0).getVertices();
-        newTet[i] = new NTetrahedron();
+        newTet[i] = staging.newTetrahedron();
     }
 
     // Glue the new tetrahedra to each other.
@@ -295,11 +293,11 @@ bool NTriangulation::finiteToIdeal() {
     // triangulation.
     ChangeEventBlock block(this);
 
+    staging.moveContentsTo(*this);
+
     for (i = 0; i < nFaces; ++i)
-        if (newTet[i]) {
+        if (newTet[i])
             newTet[i]->joinTo(3, bdry[i], bdryPerm[i]);
-            addTetrahedron(newTet[i]);
-        }
 
     // Clean up and return.
     delete[] newTet;

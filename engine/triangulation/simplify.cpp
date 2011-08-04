@@ -120,10 +120,10 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     ChangeEventBlock block(this);
     int oldPos2, newPos, newPos2;
 
-    // Allocate the new tetrahedra.
+    // Create the new tetrahedra.
     NTetrahedron* newTet[2];
     for (newPos = 0; newPos < 2; newPos++)
-        newTet[newPos] = new NTetrahedron();
+        newTet[newPos] = newTetrahedron();
 
     // Find the gluings from (0,1,2) of the new tetrahedron faces
     // to the vertices of the old tetrahedra.
@@ -194,10 +194,6 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     for (oldPos = 0; oldPos < 3; oldPos++)
         removeTetrahedron(oldTet[oldPos]);
 
-    // Insert the new tetrahedra into the triangulation.
-    for (newPos = 0; newPos < 2; newPos++)
-        addTetrahedron(newTet[newPos]);
-
     // Glue the faces of the new tetrahedra.
     for (oldPos = 0; oldPos < 3; oldPos++)
         for (newPos = 0; newPos < 2; newPos++)
@@ -245,7 +241,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
     // Allocate the new tetrahedra.
     NTetrahedron* newTet[3];
     for (newPos = 0; newPos < 3; newPos++)
-        newTet[newPos] = new NTetrahedron();
+        newTet[newPos] = newTetrahedron();
 
     // Find the gluings from (0,1,2) of the new tetrahedron faces
     // to the vertices of the old tetrahedra.
@@ -315,10 +311,6 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
     // Remove the old tetrahedra from the triangulation.
     for (oldPos = 0; oldPos < 2; oldPos++)
         removeTetrahedron(oldTet[oldPos]);
-
-    // Insert the new tetrahedra into the triangulation.
-    for (newPos = 0; newPos < 3; newPos++)
-        addTetrahedron(newTet[newPos]);
 
     // Glue the faces of the new tetrahedra.
     for (oldPos = 0; oldPos < 2; oldPos++)
@@ -642,8 +634,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     }
 
     // Now make the new tetrahedron and glue it to itself.
-    NTetrahedron* newTet = new NTetrahedron();
-    addTetrahedron(newTet);
+    NTetrahedron* newTet = newTetrahedron();
     newTet->joinTo(2, newTet, NPerm4(2,3));
 
     // Glue the new tetrahedron into the remaining structure.

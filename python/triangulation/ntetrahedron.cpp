@@ -31,6 +31,7 @@
 #include "triangulation/nedge.h"
 #include "triangulation/nface.h"
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 
@@ -59,6 +60,8 @@ void addNTetrahedron() {
         .def("unjoin", &NTetrahedron::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &NTetrahedron::isolate)
+        .def("getTriangulation", &NTetrahedron::getTriangulation,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &NTetrahedron::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NTetrahedron::getVertex,

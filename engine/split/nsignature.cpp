@@ -177,13 +177,14 @@ NTriangulation* NSignature::triangulate() const {
     //   bottom left -> top right: 0 -> 1
     //   bottom right -> top left: 2 -> 3
     NTetrahedron** tet = new NTetrahedron*[order];
-    std::generate(tet, tet + order, FuncNew<NTetrahedron>());
+    unsigned pos;
+    for (pos = 0; pos < order; pos++)
+        tet[pos] = tri->newTetrahedron();
 
     // Store the first occurrence of each symbol.
     unsigned* first = new unsigned[order];
     std::fill(first, first + order, sigLen);
 
-    unsigned pos;
     for (pos = 0; pos < sigLen; pos++)
         if (first[label[pos]] == sigLen)
             first[label[pos]] = pos;
@@ -206,10 +207,7 @@ NTriangulation* NSignature::triangulate() const {
             yourFacePerm * myFacePerm.inverse());
     }
 
-    // Insert the tetrahedra into the triangulation and clean up.
-    for (pos = 0; pos < order; pos++)
-        tri->addTetrahedron(tet[pos]);
-
+    // Clean up.
     delete[] first;
     delete[] tet;
     return tri;
