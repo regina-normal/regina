@@ -340,7 +340,8 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 cuspedTorus.isOrientable() &&
                 cuspedTorus.isIdeal() &&
                 cuspedTorus.isStandard() &&
-                (! cuspedTorus.hasBoundaryFaces()));
+                (! cuspedTorus.hasBoundaryFaces()) &&
+                cuspedTorus.getNumberOfTetrahedra() == 3);
             testIncompatible(cuspedTorus,
                 "A cusped solid torus with an additional finite vertex "
                 "should not be representable in SnapPea format.");

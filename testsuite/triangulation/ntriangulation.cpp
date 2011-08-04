@@ -71,6 +71,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(turaevViro);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(idealToFinite);
+    CPPUNIT_TEST(finiteToIdeal);
     CPPUNIT_TEST(dehydration);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(simplification);
@@ -2026,6 +2027,108 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyIdealToFinite(pinchedSolidKB, "Pinched solid Klein bottle");
         }
 
+        void verifyFiniteToIdeal(const NTriangulation& tri,
+                const char* triName) {
+            NTriangulation ideal(tri);
+            ideal.finiteToIdeal();
+
+            // Are there any boundary faces remaining?
+            if (ideal.hasBoundaryFaces()) {
+                std::ostringstream msg;
+                msg << triName << ": finiteToIdeal() leaves boundary faces.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Make sure the invalid edges are left alone.
+            unsigned oldInvEdges = 0, newInvEdges = 0;
+            NTriangulation::EdgeIterator eit;
+            for (eit = tri.getEdges().begin();
+                    eit != tri.getEdges().end(); ++eit)
+                if (! (*eit)->isValid())
+                    ++oldInvEdges;
+            for (eit = ideal.getEdges().begin();
+                    eit != ideal.getEdges().end(); ++eit)
+                if (! (*eit)->isValid())
+                    ++newInvEdges;
+            if (oldInvEdges != newInvEdges) {
+                std::ostringstream msg;
+                msg << triName << ": finiteToIdeal() changes "
+                    "invalid edges .";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // In the case of a valid triangulation, ensure that the
+            // boundary components are topologically unchanged, except
+            // for sphere which must vanish.
+            if (tri.isValid()) {
+                typedef std::pair<long, bool> BCSpec;
+                NTriangulation::BoundaryComponentIterator bcit;
+
+                std::vector<BCSpec> bcOld;
+                for (bcit = tri.getBoundaryComponents().begin();
+                        bcit != tri.getBoundaryComponents().end(); ++bcit)
+                    if ((*bcit)->getEulerCharacteristic() != 2)
+                        bcOld.push_back(
+                            BCSpec((*bcit)->getEulerCharacteristic(),
+                            (*bcit)->isOrientable()));
+                std::sort(bcOld.begin(), bcOld.end());
+
+                std::vector<BCSpec> bcNew;
+                for (bcit = ideal.getBoundaryComponents().begin();
+                        bcit != ideal.getBoundaryComponents().end(); ++bcit)
+                    bcNew.push_back(BCSpec((*bcit)->getEulerCharacteristic(),
+                        (*bcit)->isOrientable()));
+                std::sort(bcNew.begin(), bcNew.end());
+
+                if (bcOld != bcNew) {
+                    std::ostringstream msg;
+                    msg << triName << ": finiteToIdeal() changes "
+                        "the topology of one or more non-sphere "
+                        "boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void finiteToIdeal() {
+            verifyFiniteToIdeal(empty, "Empty triangulation");
+            verifyFiniteToIdeal(singleTet, "Single tetrahedron");
+            verifyFiniteToIdeal(singleTet_bary,
+                "Single tetrahedron subdivided");
+            verifyFiniteToIdeal(s3, "S^3");
+            verifyFiniteToIdeal(s2xs1, "S^2 x S^1");
+            verifyFiniteToIdeal(rp3, "RP^3");
+            verifyFiniteToIdeal(lens3_1, "L(3,1)");
+            verifyFiniteToIdeal(lens8_3, "L(8,3)");
+            verifyFiniteToIdeal(lens8_3_large, "Large L(8,3)");
+            verifyFiniteToIdeal(lens7_1_loop, "Layered loop L(7,1)");
+            verifyFiniteToIdeal(rp3rp3, "RP^3 # RP^3");
+            verifyFiniteToIdeal(q32xz3, "S^3 / Q_32 x Z_3");
+            verifyFiniteToIdeal(q28, "S^3 / Q_28");
+            verifyFiniteToIdeal(weberSeifert, "Weber-Seifert");
+            verifyFiniteToIdeal(lens100_1, "L(100,1)");
+            verifyFiniteToIdeal(ball_large, "4-tetrahedron ball");
+            verifyFiniteToIdeal(ball_large_pillows,
+                "4-tetrahedron pillow ball");
+            verifyFiniteToIdeal(ball_large_snapped,
+                "3-tetrahedron snapped ball");
+            verifyFiniteToIdeal(lst3_4_7, "LST(3,4,7)");
+            verifyFiniteToIdeal(figure8, "Figure eight knot complement");
+            verifyFiniteToIdeal(fig8_bary,
+                "Figure eight knot complement subdivided");
+            verifyFiniteToIdeal(rp2xs1, "RP^2 x S^1");
+            verifyFiniteToIdeal(solidKB, "Solid Klein bottle");
+            verifyFiniteToIdeal(gieseking, "Gieseking manifold");
+            verifyFiniteToIdeal(invalidEdges,
+                "Triangulation with invalid edges");
+            verifyFiniteToIdeal(twoProjPlaneCusps,
+                "Triangulation with RP^2 cusps");
+            verifyFiniteToIdeal(cuspedGenusTwoTorus,
+                "Cusped solid genus 2 torus");
+            verifyFiniteToIdeal(pinchedSolidTorus, "Pinched solid torus");
+            verifyFiniteToIdeal(pinchedSolidKB, "Pinched solid Klein bottle");
+        }
+
         void verifyDehydration(const NTriangulation& tri, const char* name) {
             std::string dehydrate = tri.dehydrate();
             if (dehydrate.empty()) {
@@ -2132,6 +2235,24 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << name << ": Random isomorphism gives different "
                         "signature: " << otherSig << " != " << sig << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete other;
+                delete iso;
+            }
+            for (unsigned i = 0; i < 10; ++i) {
+                NIsomorphism* iso = NIsomorphism::random(
+                    tri.getNumberOfTetrahedra());
+                NTriangulation* other = new NTriangulation(tri);
+                iso->applyInPlace(other);
+
+                otherSig = other->isoSig();
+                if (otherSig != sig) {
+                    std::ostringstream msg;
+                    msg << name << ": Random in-place isomorphism gives "
+                        "different signature: "
+                        << otherSig << " != " << sig << std::endl;
                     CPPUNIT_FAIL(msg.str());
                 }
 
