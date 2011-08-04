@@ -200,7 +200,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     // Create two new pentachora.
     Dim4Pentachoron* newPent[2];
     for (i = 0; i < 2; ++i)
-        newPent[i] = new Dim4Pentachoron();
+        newPent[i] = newPentachoron();
 
     // Find where their facets need to be glued.
     // Old pentachoron j, facet i <-> New pentachoron i, facet j.
@@ -254,9 +254,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
 
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 4; ++i)
-        delete removePentachoron(oldPent[i]);
-    for (i = 0; i < 2; ++i)
-        addPentachoron(newPent[i]);
+        removePentachoron(oldPent[i]);
 
     // All done!
     return true;
@@ -295,7 +293,7 @@ bool Dim4Triangulation::threeThreeMove(Dim4Face* f, bool check, bool perform) {
     // Create three new pentachora.
     Dim4Pentachoron* newPent[3];
     for (i = 0; i < 3; ++i)
-        newPent[i] = new Dim4Pentachoron();
+        newPent[i] = newPentachoron();
 
     // Find where their facets need to be glued.
     // Old pentachoron j, facet i <-> New pentachoron i, facet j.
@@ -351,9 +349,7 @@ bool Dim4Triangulation::threeThreeMove(Dim4Face* f, bool check, bool perform) {
 
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 3; ++i)
-        delete removePentachoron(oldPent[i]);
-    for (i = 0; i < 3; ++i)
-        addPentachoron(newPent[i]);
+        removePentachoron(oldPent[i]);
 
     // All done!
     return true;
@@ -389,7 +385,7 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
     // Create four new pentachora.
     Dim4Pentachoron* newPent[4];
     for (i = 0; i < 4; ++i)
-        newPent[i] = new Dim4Pentachoron();
+        newPent[i] = newPentachoron();
 
     // Find where their facets need to be glued.
     // Old pentachoron j, facet i <-> New pentachoron i, facet j.
@@ -448,9 +444,7 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
 
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 2; ++i)
-        delete removePentachoron(oldPent[i]);
-    for (i = 0; i < 4; ++i)
-        addPentachoron(newPent[i]);
+        removePentachoron(oldPent[i]);
 
     // All done!
     return true;
@@ -522,7 +516,6 @@ bool Dim4Triangulation::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
     pent->unjoin(emb.getTetrahedron());
-    gluingsHaveChanged();
     return true;
 }
 
@@ -989,7 +982,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             top->joinTo(topPerm[p[0]], bot,
                 botPerm * NPerm5(p[0], p[1]) * topPerm.inverse());
 
-        delete removePentachoron(pent);
+        removePentachoron(pent);
     }
 
     return true;

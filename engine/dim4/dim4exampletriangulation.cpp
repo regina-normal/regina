@@ -39,15 +39,13 @@ Dim4Triangulation* Dim4ExampleTriangulation::fourSphere() {
     Dim4Triangulation* ans = new Dim4Triangulation();
     ans->setPacketLabel("4-sphere");
 
-    Dim4Pentachoron* p = new Dim4Pentachoron();
-    Dim4Pentachoron* q = new Dim4Pentachoron();
+    Dim4Pentachoron* p = ans->newPentachoron();
+    Dim4Pentachoron* q = ans->newPentachoron();
     p->joinTo(0, q, NPerm5());
     p->joinTo(1, q, NPerm5());
     p->joinTo(2, q, NPerm5());
     p->joinTo(3, q, NPerm5());
     p->joinTo(4, q, NPerm5());
-    ans->addPentachoron(p);
-    ans->addPentachoron(q);
 
     return ans;
 }
@@ -57,10 +55,10 @@ Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
     ans->setPacketLabel("Real projective 4-space");
 
     // Thanks Ryan, you rock. :)
-    Dim4Pentachoron* p = new Dim4Pentachoron();
-    Dim4Pentachoron* q = new Dim4Pentachoron();
-    Dim4Pentachoron* r = new Dim4Pentachoron();
-    Dim4Pentachoron* s = new Dim4Pentachoron();
+    Dim4Pentachoron* p = ans->newPentachoron();
+    Dim4Pentachoron* q = ans->newPentachoron();
+    Dim4Pentachoron* r = ans->newPentachoron();
+    Dim4Pentachoron* s = ans->newPentachoron();
     p->joinTo(0, s, NPerm5(1,0,3,2,4));
     p->joinTo(1, s, NPerm5(1,0,3,2,4));
     p->joinTo(2, q, NPerm5());
@@ -71,10 +69,6 @@ Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
     q->joinTo(4, s, NPerm5());
     r->joinTo(2, s, NPerm5());
     r->joinTo(3, s, NPerm5());
-    ans->addPentachoron(p);
-    ans->addPentachoron(q);
-    ans->addPentachoron(r);
-    ans->addPentachoron(s);
 
     return ans;
 }
@@ -86,8 +80,8 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1() {
     Dim4Triangulation* ans = new Dim4Triangulation();
     ans->setPacketLabel("S3 x S1");
 
-    Dim4Pentachoron* p = new Dim4Pentachoron();
-    Dim4Pentachoron* q = new Dim4Pentachoron();
+    Dim4Pentachoron* p = ans->newPentachoron();
+    Dim4Pentachoron* q = ans->newPentachoron();
     p->joinTo(1, q, NPerm5());
     p->joinTo(2, q, NPerm5());
     p->joinTo(3, q, NPerm5());
@@ -98,8 +92,6 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1() {
     q->joinTo(0, p, NPerm5(4,0,1,2,3));
 
     // All done.
-    ans->addPentachoron(p);
-    ans->addPentachoron(q);
     return ans;
 }
 
@@ -110,8 +102,8 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1Twisted() {
     Dim4Triangulation* ans = new Dim4Triangulation();
     ans->setPacketLabel("S3 x~ S1");
 
-    Dim4Pentachoron* p = new Dim4Pentachoron();
-    Dim4Pentachoron* q = new Dim4Pentachoron();
+    Dim4Pentachoron* p = ans->newPentachoron();
+    Dim4Pentachoron* q = ans->newPentachoron();
     p->joinTo(1, q, NPerm5());
     p->joinTo(2, q, NPerm5());
     p->joinTo(3, q, NPerm5());
@@ -122,8 +114,6 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1Twisted() {
     q->joinTo(0, q, NPerm5(4,0,1,2,3));
 
     // All done.
-    ans->addPentachoron(p);
-    ans->addPentachoron(q);
     return ans;
 }
 
@@ -144,9 +134,11 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
     unsigned long adjIndex;
     const NTetrahedron *tet, *adjTet;
     NPerm4 map;
+
+    for (i = 0; i < 2 * n; ++i)
+        pent[i] = ans->newPentachoron();
+
     for (i = 0; i < n; ++i) {
-        pent[i] = new Dim4Pentachoron();
-        pent[i + n] = new Dim4Pentachoron();
         pent[i]->joinTo(4, pent[i + n], NPerm5());
 
         tet = base.getTetrahedron(i);
@@ -167,9 +159,6 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
             pent[i + n]->joinTo(face, pent[adjIndex + n], perm4to5(map));
         }
     }
-
-    for (i = 0; i < 2 * n; ++i)
-        ans->addPentachoron(pent[i]);
 
     delete[] pent;
     return ans;
@@ -193,7 +182,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
     const NTetrahedron *tet, *adjTet;
     NPerm4 map;
     for (i = 0; i < n; ++i) {
-        pent[i] = new Dim4Pentachoron();
+        pent[i] = ans->newPentachoron();
 
         tet = base.getTetrahedron(i);
         for (face = 0; face < 4; ++face) {
@@ -212,9 +201,6 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
             pent[i]->joinTo(face, pent[adjIndex], perm4to5(map));
         }
     }
-
-    for (i = 0; i < n; ++i)
-        ans->addPentachoron(pent[i]);
 
     delete[] pent;
     return ans;

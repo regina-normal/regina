@@ -175,6 +175,8 @@ void Dim4TriGluingsUI::commit() {
 
     long nRows = facetTable->numRows();
     if (nRows > 0) {
+        regina::NPacket::ChangeEventBlock block(tri);
+
         regina::Dim4Pentachoron** pents = new regina::Dim4Pentachoron*[nRows];
         FacetGluingItem* item;
         long pentNum, adjPentNum;
@@ -182,7 +184,7 @@ void Dim4TriGluingsUI::commit() {
 
         // Create the pentachora.
         for (pentNum = 0; pentNum < nRows; pentNum++)
-            pents[pentNum] = new regina::Dim4Pentachoron(
+            pents[pentNum] = tri->newPentachoron(
                 dynamic_cast<PentNameItem*>(facetTable->item(pentNum, 0))->
                 getName().ascii());
 
@@ -203,10 +205,6 @@ void Dim4TriGluingsUI::commit() {
                 pents[pentNum]->joinTo(facet, pents[adjPentNum],
                     item->adjacentGluing());
             }
-
-        // Add the pentachora to the triangulation.
-        for (pentNum = 0; pentNum < nRows; pentNum++)
-            tri->addPentachoron(pents[pentNum]);
 
         // Tidy up.
         delete[] pents;

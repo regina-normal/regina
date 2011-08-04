@@ -27,15 +27,17 @@
 /* end stub */
 
 #include "dim4/dim4pentachoron.h"
+#include "dim4/dim4triangulation.h"
 #include <algorithm>
 
 namespace regina {
 
-Dim4Pentachoron::Dim4Pentachoron() {
+Dim4Pentachoron::Dim4Pentachoron(Dim4Triangulation* tri) : tri_(tri) {
     std::fill(adj_, adj_ + 5, static_cast<Dim4Pentachoron*>(0));
 }
 
-Dim4Pentachoron::Dim4Pentachoron(const std::string& desc) : desc_(desc) {
+Dim4Pentachoron::Dim4Pentachoron(const std::string& desc,
+        Dim4Triangulation* tri) : desc_(desc), tri_(tri) {
     std::fill(adj_, adj_ + 5, static_cast<Dim4Pentachoron*>(0));
 }
 
@@ -52,6 +54,9 @@ void Dim4Pentachoron::joinTo(int myFacet, Dim4Pentachoron* you, NPerm5 gluing) {
     int yourFacet = gluing[myFacet];
     you->adj_[yourFacet] = this;
     you->adjPerm_[yourFacet] = gluing.inverse();
+
+    tri_->clearAllProperties();
+    tri_->fireChangedEvent();
 }
 
 Dim4Pentachoron* Dim4Pentachoron::unjoin(int myFacet) {
@@ -59,6 +64,10 @@ Dim4Pentachoron* Dim4Pentachoron::unjoin(int myFacet) {
     int yourFacet = adjPerm_[myFacet][myFacet];
     you->adj_[yourFacet] = 0;
     adj_[myFacet] = 0;
+
+    tri_->clearAllProperties();
+    tri_->fireChangedEvent();
+
     return you;
 }
 
@@ -66,6 +75,66 @@ void Dim4Pentachoron::isolate() {
     for (int i=0; i<5; ++i)
         if (adj_[i])
             unjoin(i);
+}
+
+Dim4Component* Dim4Pentachoron::getComponent() const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return component_;
+}
+
+Dim4Vertex* Dim4Pentachoron::getVertex(int vertex) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return vertex_[vertex];
+}
+
+Dim4Edge* Dim4Pentachoron::getEdge(int edge) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return edge_[edge];
+}
+
+Dim4Face* Dim4Pentachoron::getFace(int face) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return face_[face];
+}
+
+Dim4Tetrahedron* Dim4Pentachoron::getTetrahedron(int tet) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return tet_[tet];
+}
+
+NPerm5 Dim4Pentachoron::getVertexMapping(int vertex) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return vertexMapping_[vertex];
+}
+
+NPerm5 Dim4Pentachoron::getEdgeMapping(int edge) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return edgeMapping_[edge];
+}
+
+NPerm5 Dim4Pentachoron::getFaceMapping(int face) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return faceMapping_[face];
+}
+
+NPerm5 Dim4Pentachoron::getTetrahedronMapping(int tet) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return tetMapping_[tet];
+}
+
+int Dim4Pentachoron::orientation() const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return orientation_;
 }
 
 } // namespace regina

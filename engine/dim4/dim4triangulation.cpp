@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <cassert>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -34,6 +35,43 @@
 #include "utilities/xmlutils.h"
 
 namespace regina {
+
+void Dim4Triangulation::swapContents(Dim4Triangulation& other) {
+    clearAllProperties();
+    other.clearAllProperties();
+
+    pentachora_.swap(other.pentachora_);
+
+    PentachoronIterator it;
+    for (it = pentachora_.begin(); it != pentachora_.end(); ++it)
+        (*it)->tri_ = this;
+    for (it = other.pentachora_.begin(); it != other.pentachora_.end(); ++it)
+        (*it)->tri_ = &other;
+
+    fireChangedEvent();
+    other.fireChangedEvent();
+}
+
+void Dim4Triangulation::moveContentsTo(Dim4Triangulation& dest) {
+    clearAllProperties();
+    dest.clearAllProperties();
+
+    PentachoronIterator it;
+    for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
+        // This is an abuse of NMarkedVector, since for a brief moment
+        // each pentachoron belongs to both vectors
+        // pentachora_ and dest.pentachora_.
+        // However, the subsequent clear() operation does not touch the
+        // pentachoron markings (indices), and so we end up with the
+        // correct result (i.e., the markings are correct for dest).
+        (*it)->tri_ = &dest;
+        dest.pentachora_.push_back(*it);
+    }
+    pentachora_.clear();
+
+    fireChangedEvent();
+    dest.fireChangedEvent();
+}
 
 void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     if (! calculatedSkeleton_)
@@ -142,7 +180,7 @@ void Dim4Triangulation::insertTriangulation(const Dim4Triangulation& X) {
 
     PentachoronIterator it;
     for (it = X.pentachora_.begin(); it != X.pentachora_.end(); ++it)
-        addPentachoron(new Dim4Pentachoron((*it)->getDescription()));
+        newPentachoron((*it)->getDescription());
 
     // Make the gluings.
     long pentPos, adjPos;
@@ -167,8 +205,6 @@ void Dim4Triangulation::insertTriangulation(const Dim4Triangulation& X) {
         }
         ++pentPos;
     }
-
-    gluingsHaveChanged();
 }
 
 long Dim4Triangulation::getEulerCharManifold() const {
@@ -203,8 +239,10 @@ void Dim4Triangulation::insertConstruction(unsigned long nPentachora,
     unsigned i, j;
     NPerm5 p;
 
+    ChangeEventBlock(this);
+
     for (i = 0; i < nPentachora; ++i)
-        pent[i] = new Dim4Pentachoron();
+        pent[i] = newPentachoron();
 
     for (i = 0; i < nPentachora; ++i)
         for (j = 0; j < 5; ++j)
@@ -214,12 +252,6 @@ void Dim4Triangulation::insertConstruction(unsigned long nPentachora,
                     gluings[i][j][2], gluings[i][j][3], gluings[i][j][4]);
                 pent[i]->joinTo(j, pent[adjacencies[i][j]], p);
             }
-
-    // It's not until here that we actually modify this triangulation.
-    ChangeEventBlock(this);
-
-    for (i = 0; i < nPentachora; ++i)
-        addPentachoron(pent[i]);
 
     delete[] pent;
 }
@@ -367,7 +399,7 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
 
     PentachoronIterator it;
     for (it = X.pentachora_.begin(); it != X.pentachora_.end(); ++it)
-        addPentachoron(new Dim4Pentachoron((*it)->getDescription()));
+        newPentachoron((*it)->getDescription());
 
     // Make the gluings.
     long pentPos, adjPos;
@@ -392,7 +424,6 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
         }
         ++pentPos;
     }
-    gluingsHaveChanged();
 
     // Properties:
     if (X.fundGroup_.known())

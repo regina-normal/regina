@@ -42,6 +42,10 @@ void Dim4Triangulation::calculateSkeleton() const {
     valid_ = true;
     ideal_ = false;
 
+    // Set this now so that any pentachoron query routines do not try to
+    // recursively recompute the skeleton again.
+    calculatedSkeleton_ = true;
+
     // Get rid of the empty triangulation now, so that all the helper routines
     // can happily assume at least one pentachoron.
     if (pentachora_.empty())
@@ -106,8 +110,6 @@ void Dim4Triangulation::calculateSkeleton() const {
     // valid triangulations.
     if (! valid_)
         ideal_ = false;
-
-    calculatedSkeleton_ = true;
 }
 
 void Dim4Triangulation::calculateComponents() const {

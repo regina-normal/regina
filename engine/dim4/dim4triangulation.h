@@ -82,12 +82,6 @@ class NXMLPacketReader;
  * boundary components.  Whenever a change occurs with the triangulation,
  * these objects will all be deleted and a new skeletal structure will be
  * calculated.  The same is true of various other triangulation properties.
- *
- * Whenever the gluings of pentachora have been altered, the routine
- * responsible for changing the gluings \b must call
- * Dim4Triangulation::gluingsHaveChanged() to ensure that relevant
- * properties will be recalculated when necessary.  It is not necessary
- * to call this function when adding or removing pentachora.
  */
 class REGINA_API Dim4Triangulation : public NPacket {
     public:
@@ -260,36 +254,32 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         long pentachoronIndex(const Dim4Pentachoron* pent) const;
         /**
-         * Inserts the given pentachoron into the triangulation.
-         * No face gluings anywhere will be examined or altered.
+         * Creates a new pentachoron and adds it to this triangulation.
+         * The new pentachoron will have an empty description.
+         * All five facets of the new pentachoron will be boundary facets.
          *
-         * The new pentachoron will be assigned a higher index in the
-         * triangulation than all pentachora already present.
-         *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
-         *
-         * \ifacespython Since this triangulation takes ownership of the
-         * given pentachoron, the python object containing the given
-         * pentachoron becomes a null object and should no longer be used.
-         *
-         * @param pent the pentachoron to insert.
+         * @return the new pentachoron.
          */
-        void addPentachoron(Dim4Pentachoron* pent);
+        Dim4Pentachoron* newPentachoron();
+        /**
+         * Creates a new pentachoron with the given description and adds
+         * it to this triangulation.
+         * All five facets of the new pentachoron will be boundary facets.
+         *
+         * @param desc the description to assign to the new pentachoron.
+         * @return the new pentachoron.
+         */
+        Dim4Pentachoron* newPentachoron(const std::string& desc);
         /**
          * Removes the given pentachoron from the triangulation.
          * All faces glued to this pentachoron will be unglued.
-         * The pentachoron will \e not be deallocated.
-         *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
+         * The pentachoron will be deallocated.
          *
          * \pre The given pentachoron exists in the triangulation.
          *
          * @param pent the pentachoron to remove.
-         * @return the removed pentachoron.
          */
-        Dim4Pentachoron* removePentachoron(Dim4Pentachoron* pent);
+        void removePentachoron(Dim4Pentachoron* pent);
         /**
          * Removes the pentachoron with the given index number
          * from the triangulation.  Note that pentachoron indexing may
@@ -297,34 +287,44 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * triangulation.
          *
          * All faces glued to this pentachoron will be unglued.
-         * The pentachoron will \e not be deallocated.
-         *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
+         * The pentachoron will be deallocated.
          *
          * @param index specifies which pentachoron to remove; this
          * should be between 0 and getNumberOfPentachora()-1 inclusive.
-         * @return the removed pentachoron.
          */
-        Dim4Pentachoron* removePentachoronAt(unsigned long index);
+        void removePentachoronAt(unsigned long index);
         /**
          * Removes all pentachora from the triangulation.
          * All pentachora will be deallocated.
-         *
-         * There is no need to call gluingsHaveChanged() after calling
-         * this function.
          */
         void removeAllPentachora();
         /**
-         * This \b must be called whenever the gluings of pentachora are
-         * changed!  Clears appropriate properties and performs other
-         * necessary tasks.
+         * Swaps the contents of this and the given triangulation.
+         * That is, all pentachora that belong to this triangulation
+         * will be moved to \a other, and all pentachora that belong to
+         * \a other will be moved to this triangulation.
          *
-         * The responsibility of calling gluingsHaveChanged()
-         * falls upon the routine that alters the gluings (such as a
-         * component of a triangulation editor, or so on).
+         * All Dim4Pentachoron pointers or references will remain valid.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
          */
-        void gluingsHaveChanged();
+        void swapContents(Dim4Triangulation& other);
+        /**
+         * Moves the contents of this triangulation into the given
+         * destination triangulation, without destroying any pre-existing
+         * contents.  That is, all pentachora that currently belong to
+         * \a dest will remain there, and all pentachora that belong to this
+         * triangulation will be moved across as additional
+         * pentachora in \a dest.
+         *
+         * All Dim4Pentachoron pointers or references will remain valid.
+         * After this operation, this triangulation will be empty.
+         *
+         * @param dest the triangulation to which pentachora should be
+         * moved.
+         */
+        void moveContentsTo(Dim4Triangulation& dest);
 
         /*@}*/
         /**
@@ -1448,10 +1448,8 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * unknown.  All dynamic memory used for storing known
          * properties is deallocated.
          *
-         * In most cases this routine is called from gluingsHaveChanged(),
-         * which also fires a packet change event.  If you plan to call
-         * this routine, it is worth examining whether gluingsHaveChanged()
-         * is a more appropriate routine to call instead.
+         * In most cases this routine is followed immediately by firing
+         * a packet change event.
          */
         virtual void clearAllProperties();
 
@@ -1580,6 +1578,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         std::string isoSig(unsigned pent, const NPerm5& vertices) const;
 
+    friend class regina::Dim4Pentachoron;
     friend class regina::NXMLDim4TriangulationReader;
 };
 
@@ -1624,15 +1623,11 @@ inline const std::vector<Dim4Pentachoron*>& Dim4Triangulation::getPentachora()
 }
 
 inline Dim4Pentachoron* Dim4Triangulation::getPentachoron(unsigned long index) {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
     return pentachora_[index];
 }
 
 inline const Dim4Pentachoron* Dim4Triangulation::getPentachoron(
         unsigned long index) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
     return pentachora_[index];
 }
 
@@ -1641,34 +1636,48 @@ inline long Dim4Triangulation::pentachoronIndex(const Dim4Pentachoron* pent)
     return pent->markedIndex();
 }
 
-inline void Dim4Triangulation::addPentachoron(Dim4Pentachoron* pent) {
-    pentachora_.push_back(pent);
-    gluingsHaveChanged();
-}
+inline Dim4Pentachoron* Dim4Triangulation::newPentachoron() {
+    Dim4Pentachoron* pent = new Dim4Pentachoron(this);
 
-inline Dim4Pentachoron* Dim4Triangulation::removePentachoron(
-        Dim4Pentachoron* pent) {
-    pent->isolate();
-    pentachora_.erase(pentachora_.begin() + pentachoronIndex(pent));
-    gluingsHaveChanged();
+    pentachora_.push_back(pent);
+    clearAllProperties();
+    fireChangedEvent();
+
     return pent;
 }
 
-inline Dim4Pentachoron* Dim4Triangulation::removePentachoronAt(
-        unsigned long index) {
+inline Dim4Pentachoron* Dim4Triangulation::newPentachoron(
+        const std::string& desc) {
+    Dim4Pentachoron* pent = new Dim4Pentachoron(desc, this);
+
+    pentachora_.push_back(pent);
+    clearAllProperties();
+    fireChangedEvent();
+
+    return pent;
+}
+
+inline void Dim4Triangulation::removePentachoron(Dim4Pentachoron* pent) {
+    pent->isolate();
+    pentachora_.erase(pentachora_.begin() + pentachoronIndex(pent));
+    delete pent;
+
+    clearAllProperties();
+    fireChangedEvent();
+}
+
+inline void Dim4Triangulation::removePentachoronAt(unsigned long index) {
     Dim4Pentachoron* ans = pentachora_[index];
     ans->isolate();
     pentachora_.erase(pentachora_.begin() + index);
-    gluingsHaveChanged();
-    return ans;
+    delete ans;
+
+    clearAllProperties();
+    fireChangedEvent();
 }
 
 inline void Dim4Triangulation::removeAllPentachora() {
     deletePentachora();
-    gluingsHaveChanged();
-}
-
-inline void Dim4Triangulation::gluingsHaveChanged() {
     clearAllProperties();
     fireChangedEvent();
 }

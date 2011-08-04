@@ -60,12 +60,13 @@ Dim4Triangulation* Dim4Isomorphism::apply(
     if (nPentachora_ == 0)
         return new Dim4Triangulation();
 
+    Dim4Triangulation* ans = new Dim4Triangulation();
     Dim4Pentachoron** pent = new Dim4Pentachoron*[nPentachora_];
     unsigned long p;
     int f;
 
     for (p = 0; p < nPentachora_; ++p)
-        pent[p] = new Dim4Pentachoron();
+        pent[p] = ans->newPentachoron();
 
     for (p = 0; p < nPentachora_; ++p)
         pent[pentImage_[p]]->setDescription(
@@ -92,9 +93,6 @@ Dim4Triangulation* Dim4Isomorphism::apply(
             }
     }
 
-    Dim4Triangulation* ans = new Dim4Triangulation();
-    for (p = 0; p < nPentachora_; ++p)
-        ans->addPentachoron(pent[p]);
     return ans;
 }
 
@@ -105,12 +103,13 @@ void Dim4Isomorphism::applyInPlace(Dim4Triangulation* tri) const {
     if (nPentachora_ == 0)
         return;
 
+    Dim4Triangulation staging;
     Dim4Pentachoron** pent = new Dim4Pentachoron*[nPentachora_];
     unsigned long p;
     int f;
 
     for (p = 0; p < nPentachora_; ++p)
-        pent[p] = new Dim4Pentachoron();
+        pent[p] = staging.newPentachoron();
 
     for (p = 0; p < nPentachora_; ++p)
         pent[pentImage_[p]]->setDescription(
@@ -137,12 +136,9 @@ void Dim4Isomorphism::applyInPlace(Dim4Triangulation* tri) const {
             }
     }
 
-    // Don't do too many updates in quick succession, this can confuse
-    // the UI badly...
     NPacket::ChangeEventBlock block(tri);
     tri->removeAllPentachora();
-    for (p = 0; p < nPentachora_; ++p)
-        tri->addPentachoron(pent[p]);
+    tri->swapContents(staging);
 }
 
 Dim4Isomorphism::Dim4Isomorphism(const Dim4Isomorphism& cloneMe) :

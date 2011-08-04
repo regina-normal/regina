@@ -111,7 +111,7 @@ namespace {
                 long nPents;
                 if (valueOf(props.lookup("npent"), nPents))
                     for ( ; nPents > 0; --nPents)
-                        tri_->addPentachoron(new Dim4Pentachoron());
+                        tri_->newPentachoron();
             }
 
             virtual NXMLElementReader* startSubElement(

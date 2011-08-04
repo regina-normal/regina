@@ -35,6 +35,10 @@ using namespace boost::python;
 using regina::Dim4Triangulation;
 
 namespace {
+    regina::Dim4Pentachoron* (Dim4Triangulation::*newPentachoron_void)() =
+        &Dim4Triangulation::newPentachoron;
+    regina::Dim4Pentachoron* (Dim4Triangulation::*newPentachoron_string)(
+        const std::string&) = &Dim4Triangulation::newPentachoron;
     regina::Dim4Pentachoron* (Dim4Triangulation::*getPentachoron_non_const)(
         unsigned long) = &Dim4Triangulation::getPentachoron;
     std::string (Dim4Triangulation::*isoSig_void)() const =
@@ -54,12 +58,6 @@ namespace {
         Dim4Triangulation::shellBoundary, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
         Dim4Triangulation::collapseEdge, 1, 3);
-
-    void addPentachoron_own(Dim4Triangulation& tri,
-            std::auto_ptr<regina::Dim4Pentachoron> pent) {
-        tri.addPentachoron(pent.get());
-        pent.release();
-    }
 
     boost::python::list Dim4_getPentachora_list(Dim4Triangulation& t) {
         boost::python::list ans;
@@ -144,13 +142,15 @@ void addDim4Triangulation() {
         .def("getPentachoron", getPentachoron_non_const,
             return_value_policy<reference_existing_object>())
         .def("pentachoronIndex", &Dim4Triangulation::pentachoronIndex)
-        .def("addPentachoron", addPentachoron_own)
-        .def("removePentachoron", &Dim4Triangulation::removePentachoron,
-            return_value_policy<manage_new_object>())
-        .def("removePentachoronAt", &Dim4Triangulation::removePentachoronAt,
-            return_value_policy<manage_new_object>())
+        .def("newPentachoron", newPentachoron_void,
+            return_value_policy<reference_existing_object>())
+        .def("newPentachoron", newPentachoron_string,
+            return_value_policy<reference_existing_object>())
+        .def("removePentachoron", &Dim4Triangulation::removePentachoron)
+        .def("removePentachoronAt", &Dim4Triangulation::removePentachoronAt)
         .def("removeAllPentachora", &Dim4Triangulation::removeAllPentachora)
-        .def("gluingsHaveChanged", &Dim4Triangulation::gluingsHaveChanged)
+        .def("swapContents", &Dim4Triangulation::swapContents)
+        .def("moveContentsTo", &Dim4Triangulation::moveContentsTo)
         .def("getNumberOfComponents", &Dim4Triangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim4Triangulation::getNumberOfBoundaryComponents)

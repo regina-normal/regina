@@ -31,6 +31,7 @@
 #include "dim4/dim4face.h"
 #include "dim4/dim4pentachoron.h"
 #include "dim4/dim4tetrahedron.h"
+#include "dim4/dim4triangulation.h"
 #include "dim4/dim4vertex.h"
 #include <boost/python.hpp>
 
@@ -54,6 +55,8 @@ void addDim4Pentachoron() {
         .def("unjoin", &Dim4Pentachoron::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Dim4Pentachoron::isolate)
+        .def("getTriangulation", &Dim4Pentachoron::getTriangulation,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Pentachoron::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4Pentachoron::getVertex,

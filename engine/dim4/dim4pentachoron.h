@@ -47,6 +47,7 @@ class Dim4Face;
 class Dim4Edge;
 class Dim4Vertex;
 class Dim4Component;
+class Dim4Triangulation;
 
 /**
  * \weakgroup dim4
@@ -59,18 +60,20 @@ class Dim4Component;
  *
  * With each pentachoron is stored various pieces of information
  * regarding the overall skeletal structure and component structure of
- * the triangulation.  This information will be allocated, calculated
+ * the triangulation.  This skeletal information will be allocated, calculated
  * and deallocated by the Dim4Triangulation object containing the
  * corresponding pentachora.
  *
- * Whenever the gluings of pentachora are altered, the external routine
- * responsible for changing the gluings (the routine that calls joinTo()
- * and unjoin()) <b>must</b> call Dim4Triangulation::gluingsHaveChanged()
- * for the triangulation containing the pentachora concerned; this
- * will ensure that skeletal information and other properties of the
- * triangulation are recalculated when necessary.
+ * A pentachoron must always belong to a 4-manifold triangulation.  You can
+ * construct new pentachora using either Dim4Triangulation::newPentachoron()
+ * or Dim4Triangulation::newPentachoron(const std::string&); these
+ * routines will automatically add the new pentachora to the triangulation.
+ * You can destroy pentachora by calling Dim4Trianguation::removePentachoron(),
+ * Dim4Trianguation::removePentachoronAt() or
+ * Dim4Triangulation::removeAllPentachora(); these routines will
+ * automatically destroy the pentachora as they are removed.
  *
- * It is probably worth noting here the difference between a \e face and
+ * It is probably worth noting the difference between a \e face and
  * a \e facet.  For our purposes, a \e face is a simplex in the 2-skeleton
  * of a 4-manifold triangulation, whereas a \e facet is a simplex in the
  * 3-skeleton of a 4-manifold triangulation.  In particular, a facet is one
@@ -131,23 +134,13 @@ class REGINA_API Dim4Pentachoron :
         int orientation_;
             /**< The orientation of this pentachoron in the triangulation.
                  This will either be 1 or -1. */
+        Dim4Triangulation* tri_;
+            /**< The triangulation to which this pentachoron belongs. */
         Dim4Component* component_;
             /**< The component to which this pentachoron belongs in the
                  triangulation. */
 
     public:
-        /**
-         * Creates a new pentachoron with empty description and no
-         * facets joined to anything.
-         */
-        Dim4Pentachoron();
-        /**
-         * Creates a new pentachoron with the given description and
-         * no faces joined to anything.
-         *
-         * @param desc the description to give the new pentachoron.
-         */
-        Dim4Pentachoron(const std::string& desc);
         /**
          * Destroys this pentachoron.
          */
@@ -232,9 +225,8 @@ class REGINA_API Dim4Pentachoron :
          * Joins the given facet of this pentachoron to another pentachoron.
          * The other pentachoron involved will be automatically updated.
          *
-         * \warning Note that Dim4Triangulation::gluingsHaveChanged() will
-         * have to be called after all joins and unjoins have been performed.
-         *
+         * \pre This and the given pentachoron do not belong to
+         * different triangulations.
          * \pre The given facet of this pentachoron is not currently glued
          * to anything.
          * \pre The facet of the other pentachoron that will be glued to the
@@ -262,9 +254,6 @@ class REGINA_API Dim4Pentachoron :
          * joined to it.  The other pentachoron involved (possibly this
          * one) will be automatically updated.
          *
-         * \warning Note that Dim4Triangulation::gluingsHaveChanged() will
-         * have to be called after all joins and unjoins have been performed.
-         *
          * \pre The given facet of this pentachoron has some pentachoron
          * (possibly this one) glued to it.
          *
@@ -282,11 +271,15 @@ class REGINA_API Dim4Pentachoron :
         void isolate();
 
         /**
+         * Returns the triangulation to which this pentachoron belongs.
+         *
+         * @return the triangulation containing this pentachoron.
+         */
+        Dim4Triangulation* getTriangulation() const;
+
+        /**
          * Returns the 4-manifold triangulation component to which this
          * pentachoron belongs.
-         *
-         * \pre This pentachoron belongs to a 4-manifold triangulation whose
-         * skeletal information has already been calculated.
          *
          * @return the component containing this pentachoron.
          */
@@ -294,9 +287,6 @@ class REGINA_API Dim4Pentachoron :
         /**
          * Returns the vertex in the 4-manifold triangulation skeleton
          * corresponding to the given vertex of this pentachoron.
-         *
-         * \pre This pentachoron belongs to a 4-manifold triangulation whose
-         * skeletal information has already been calculated.
          *
          * @param vertex the vertex of this pentachoron to examine.
          * This should be between 0 and 4 inclusive.
@@ -310,9 +300,6 @@ class REGINA_API Dim4Pentachoron :
          *
          * See Dim4Edge::edgeNumber and Dim4Edge::edgeVertex for
          * the conventions of how edges are numbered within a pentachoron.
-         *
-         * \pre This pentachoron belongs to a 4-manifold triangulation whose
-         * skeletal information has already been calculated.
          *
          * @param edge the edge of this pentachoron to examine.
          * This should be between 0 and 9 inclusive.  Note that edge \c i
@@ -330,9 +317,6 @@ class REGINA_API Dim4Pentachoron :
          * See Dim4Edge::faceNumber and Dim4Edge::faceVertex for
          * the conventions of how faces are numbered within a pentachoron.
          *
-         * \pre This pentachoron belongs to a 4-manifold triangulation whose
-         * skeletal information has already been calculated.
-         *
          * @param face the face of this pentachoron to examine.
          * This should be between 0 and 9 inclusive.  Note that face \c i
          * lies opposite edge \c i.
@@ -345,9 +329,6 @@ class REGINA_API Dim4Pentachoron :
          * corresponding to the given facet of this pentachoron.
          * Note that this is a piece of the 3-skeleton (as opposed to a
          * \e face, which is a piece of the 2-skeleton).
-         *
-         * \pre This pentachoron belongs to a 4-manifold triangulation whose
-         * skeletal information has already been calculated.
          *
          * @param tet the tetrahedral facet of this pentachoron to examine.
          * This should be between 0 and 4 inclusive, where facet \c i
@@ -370,9 +351,6 @@ class REGINA_API Dim4Pentachoron :
          * Note that there are still arbitrary decisions to be made for
          * the images of (1,2,3,4), since there will always be 12 possible
          * mappings that yield the correct orientation.
-         *
-         * \pre This pentachoron belongs to a 4-manifold triangulation whose
-         * skeletal information has already been calculated.
          *
          * @param vertex the vertex of this pentachoron to examine.
          * This should be between 0 and 4 inclusive.
@@ -417,9 +395,6 @@ class REGINA_API Dim4Pentachoron :
          * Note that there are still arbitrary decisions to be made for
          * the images of (2,3,4), since there will always be three possible
          * mappings that yield the correct orientation.
-         *
-         * \pre This pentachoron belongs to a 4-manifold triangulation whose
-         * skeletal information has already been calculated.
          *
          * @param edge the edge of this pentachoron to examine.
          * This should be between 0 and 9 inclusive.
@@ -471,9 +446,6 @@ class REGINA_API Dim4Pentachoron :
          * (for internal faces this path is actually a cycle, and the
          * starting point is arbitrary).
          *
-         * \pre This pentachoron belongs to a 4-manifold triangulation whose
-         * skeletal information has already been calculated.
-         *
          * @param face the face of this pentachoron to examine.
          * This should be between 0 and 9 inclusive.
          * @return a mapping from vertices (0,1,2) of the requested face
@@ -507,9 +479,6 @@ class REGINA_API Dim4Pentachoron :
          * course that we pass the correct facet number in each case to
          * getTetrahedronMapping()).
          *
-         * \pre This pentachoron belongs to a 4-manifold triangulation whose
-         * skeletal information has already been calculated.
-         *
          * @param tet the tetrahedral facet of this pentachoron to examine.
          * This should be between 0 and 4 inclusive.
          * @return a mapping from vertices (0,1,2,3) of the requested
@@ -528,14 +497,28 @@ class REGINA_API Dim4Pentachoron :
          * In a non-orientable component, orientations are still +1 and
          * -1 but no further guarantees can be made.
          *
-         * \pre This pentachoron belongs to a 4-manifold triangulation whose
-         * skeletal information has already been calculated.
-         *
          * @return +1 or -1 according to the orientation of this pentachoron.
          */
         int orientation() const;
 
         void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * Creates a new pentachoron with empty description and no
+         * facets joined to anything.
+         *
+         * @param tri the triangulation to which the new pentachoron belongs.
+         */
+        Dim4Pentachoron(Dim4Triangulation* tri);
+        /**
+         * Creates a new pentachoron with the given description and
+         * no faces joined to anything.
+         *
+         * @param desc the description to give the new pentachoron.
+         * @param tri the triangulation to which the new pentachoron belongs.
+         */
+        Dim4Pentachoron(const std::string& desc, Dim4Triangulation* tri);
 
     friend class Dim4Triangulation;
         /**< Allow access to private members. */
@@ -568,44 +551,8 @@ inline int Dim4Pentachoron::adjacentFacet(int facet) const {
     return adjPerm_[facet][facet];
 }
 
-inline Dim4Component* Dim4Pentachoron::getComponent() const {
-    return component_;
-}
-
-inline Dim4Vertex* Dim4Pentachoron::getVertex(int vertex) const {
-    return vertex_[vertex];
-}
-
-inline Dim4Edge* Dim4Pentachoron::getEdge(int edge) const {
-    return edge_[edge];
-}
-
-inline Dim4Face* Dim4Pentachoron::getFace(int face) const {
-    return face_[face];
-}
-
-inline Dim4Tetrahedron* Dim4Pentachoron::getTetrahedron(int tet) const {
-    return tet_[tet];
-}
-
-inline NPerm5 Dim4Pentachoron::getVertexMapping(int vertex) const {
-    return vertexMapping_[vertex];
-}
-
-inline NPerm5 Dim4Pentachoron::getEdgeMapping(int edge) const {
-    return edgeMapping_[edge];
-}
-
-inline NPerm5 Dim4Pentachoron::getFaceMapping(int face) const {
-    return faceMapping_[face];
-}
-
-inline NPerm5 Dim4Pentachoron::getTetrahedronMapping(int tet) const {
-    return tetMapping_[tet];
-}
-
-inline int Dim4Pentachoron::orientation() const {
-    return orientation_;
+inline Dim4Triangulation* Dim4Pentachoron::getTriangulation() const {
+    return tri_;
 }
 
 inline void Dim4Pentachoron::writeTextShort(std::ostream& out) const {

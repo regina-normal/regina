@@ -47,18 +47,17 @@ Dim4Triangulation* Dim4GluingPerms::triangulate() const {
 
     Dim4Triangulation* ans = new Dim4Triangulation;
     Dim4Pentachoron** pent = new Dim4Pentachoron*[nPent];
-    std::generate(pent, pent + nPent, FuncNew<Dim4Pentachoron>());
 
     unsigned p, facet;
+    for (p = 0; p < nPent; ++p)
+        pent[p] = ans->newPentachoron();
+
     for (p = 0; p < nPent; ++p)
         for (facet = 0; facet < 5; ++facet)
             if ((! pairing_->isUnmatched(p, facet)) &&
                     (! pent[p]->adjacentPentachoron(facet)))
                 pent[p]->joinTo(facet, pent[pairing_->dest(p, facet).pent],
                     gluingPerm(p, facet));
-
-    for (p = 0; p < nPent; ++p)
-        ans->addPentachoron(pent[p]);
 
     delete[] pent;
     return ans;

@@ -590,7 +590,6 @@ NTriangulation* NNormalHypersurface::triangulate() const {
         delete tetData[tet];
     delete[] tetData;
 
-    inner->gluingsHaveChanged();
     inner->intelligentSimplify();
     return inner;
 }

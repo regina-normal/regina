@@ -348,6 +348,8 @@ std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices)
 Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
     std::auto_ptr<Dim4Triangulation> ans(new Dim4Triangulation());
 
+    ChangeEventBlock block(ans.get());
+
     const char* c = sig.c_str();
 
     // Initial check for invalid characters.
@@ -454,7 +456,7 @@ Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
         // End of component!
         Dim4Pentachoron** pent = new Dim4Pentachoron*[nPent];
         for (i = 0; i < nPent; ++i)
-            pent[i] = new Dim4Pentachoron();
+            pent[i] = ans->newPentachoron();
 
         facetPos = 0;
         unsigned nextUnused = 1;
@@ -490,9 +492,6 @@ Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
 
                 ++facetPos;
             }
-
-        for (i = 0; i < nPent; ++i)
-            ans->addPentachoron(pent[i]);
 
         delete[] facetAction;
         delete[] joinDest;

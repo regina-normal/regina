@@ -197,55 +197,46 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             // Build the rest manually.
             Dim4Pentachoron* p[2];
 
-            ball_singlePent.addPentachoron(new Dim4Pentachoron());
+            ball_singlePent.newPentachoron();
             ball_singlePent.setPacketLabel("D^4 (single pentachoron)");
 
-            p[0] = new Dim4Pentachoron();
+            p[0] = ball_foldedPent.newPentachoron();
             p[0]->joinTo(2, p[0], NPerm5(2, 4));
-            ball_foldedPent.addPentachoron(p[0]);
             ball_foldedPent.setPacketLabel("Folded pentachoron");
 
-            p[0] = new Dim4Pentachoron();
-            p[1] = new Dim4Pentachoron();
+            p[0] = ball_layerAndFold.newPentachoron();
+            p[1] = ball_layerAndFold.newPentachoron();
             p[0]->joinTo(0, p[1], NPerm5());
             p[0]->joinTo(1, p[1], NPerm5());
             p[0]->joinTo(2, p[1], NPerm5());
             p[0]->joinTo(3, p[0], NPerm5(3, 4));
-            ball_layerAndFold.addPentachoron(p[0]);
-            ball_layerAndFold.addPentachoron(p[1]);
             ball_layerAndFold.setPacketLabel("Layered and folded ball");
 
-            p[0] = new Dim4Pentachoron();
-            p[1] = new Dim4Pentachoron();
+            p[0] = pillow_twoCycle.newPentachoron();
+            p[1] = pillow_twoCycle.newPentachoron();
             p[0]->joinTo(0, p[1], NPerm5());
             p[0]->joinTo(1, p[1], NPerm5());
             p[0]->joinTo(2, p[1], NPerm5());
             p[0]->joinTo(3, p[1], NPerm5());
             p[0]->joinTo(4, p[1], NPerm5(1, 2));
-            pillow_twoCycle.addPentachoron(p[0]);
-            pillow_twoCycle.addPentachoron(p[1]);
             pillow_twoCycle.setPacketLabel("Invalid 2-cycle pillow");
 
-            p[0] = new Dim4Pentachoron();
-            p[1] = new Dim4Pentachoron();
+            p[0] = pillow_threeCycle.newPentachoron();
+            p[1] = pillow_threeCycle.newPentachoron();
             p[0]->joinTo(0, p[1], NPerm5());
             p[0]->joinTo(1, p[1], NPerm5());
             p[0]->joinTo(2, p[1], NPerm5());
             p[0]->joinTo(3, p[1], NPerm5());
             p[0]->joinTo(4, p[1], NPerm5(2, 0, 1, 3, 4));
-            pillow_threeCycle.addPentachoron(p[0]);
-            pillow_threeCycle.addPentachoron(p[1]);
             pillow_threeCycle.setPacketLabel("Invalid 3-cycle pillow");
 
-            p[0] = new Dim4Pentachoron();
-            p[1] = new Dim4Pentachoron();
+            p[0] = pillow_fourCycle.newPentachoron();
+            p[1] = pillow_fourCycle.newPentachoron();
             p[0]->joinTo(0, p[1], NPerm5());
             p[0]->joinTo(1, p[1], NPerm5());
             p[0]->joinTo(2, p[1], NPerm5());
             p[0]->joinTo(3, p[1], NPerm5());
             p[0]->joinTo(4, p[1], NPerm5(3, 2, 0, 1, 4));
-            pillow_fourCycle.addPentachoron(p[0]);
-            pillow_fourCycle.addPentachoron(p[1]);
             pillow_fourCycle.setPacketLabel("Invalid 4-cycle pillow");
         }
 
