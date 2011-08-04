@@ -41,13 +41,6 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "dim4/dim4pentachoron.h"
-#include "dim4/dim4tetrahedron.h"
-#include "dim4/dim4face.h"
-#include "dim4/dim4edge.h"
-#include "dim4/dim4vertex.h"
-#include "dim4/dim4component.h"
-#include "dim4/dim4boundarycomponent.h"
 #include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
@@ -56,8 +49,17 @@
 // destructors where necessary.
 #include "dim4/dim4isomorphism.h"
 
+// NOTE: More #includes follow after the class declarations.
+
 namespace regina {
 
+class Dim4BoundaryComponent;
+class Dim4Component;
+class Dim4Edge;
+class Dim4Face;
+class Dim4Pentachoron;
+class Dim4Tetrahedron;
+class Dim4Vertex;
 class NXMLDim4TriangulationReader;
 class NXMLPacketReader;
 
@@ -1583,6 +1585,17 @@ class REGINA_API Dim4Triangulation : public NPacket {
 };
 
 /*@}*/
+
+} // namespace regina
+// Some more headers that are required for inline functions:
+#include "dim4/dim4pentachoron.h"
+#include "dim4/dim4tetrahedron.h"
+#include "dim4/dim4face.h"
+#include "dim4/dim4edge.h"
+#include "dim4/dim4vertex.h"
+#include "dim4/dim4component.h"
+#include "dim4/dim4boundarycomponent.h"
+namespace regina {
 
 // Inline functions for Dim4Triangulation
 

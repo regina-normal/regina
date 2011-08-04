@@ -39,6 +39,7 @@
 #include "shareableobject.h"
 #include "maths/nperm4.h"
 #include "utilities/nmarkedvector.h"
+// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -621,6 +622,11 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
 
 /*@}*/
 
+} // namespace regina
+// Some more headers that are required for inline functions:
+#include "triangulation/ntriangulation.h"
+namespace regina {
+
 // Inline functions for NTetrahedron
 
 inline NTetrahedron::~NTetrahedron() {
@@ -663,6 +669,54 @@ inline NPerm4 NTetrahedron::getAdjacentTetrahedronGluing(int face) const {
 
 inline NTriangulation* NTetrahedron::getTriangulation() const {
     return tri;
+}
+
+inline NComponent* NTetrahedron::getComponent() const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return component;
+}
+
+inline NVertex* NTetrahedron::getVertex(int vertex) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return vertices[vertex];
+}
+
+inline NEdge* NTetrahedron::getEdge(int edge) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return edges[edge];
+}
+
+inline NFace* NTetrahedron::getFace(int face) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return faces[face];
+}
+
+inline NPerm4 NTetrahedron::getVertexMapping(int vertex) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return vertexMapping[vertex];
+}
+
+inline NPerm4 NTetrahedron::getEdgeMapping(int edge) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return edgeMapping[edge];
+}
+
+inline NPerm4 NTetrahedron::getFaceMapping(int face) const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return faceMapping[face];
+}
+
+inline int NTetrahedron::orientation() const {
+    if (! tri->calculatedSkeleton)
+        tri->calculateSkeleton();
+    return tetOrientation;
 }
 
 inline void NTetrahedron::writeTextShort(std::ostream& out) const {

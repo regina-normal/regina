@@ -39,6 +39,7 @@
 #include "shareableobject.h"
 #include "maths/nperm5.h"
 #include "utilities/nmarkedvector.h"
+// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -526,6 +527,11 @@ class REGINA_API Dim4Pentachoron :
 
 /*@}*/
 
+} // namespace regina
+// Some more headers that are required for inline functions:
+#include "dim4/dim4triangulation.h"
+namespace regina {
+
 // Inline functions for Dim4Pentachoron
 
 inline Dim4Pentachoron::~Dim4Pentachoron() {
@@ -553,6 +559,66 @@ inline int Dim4Pentachoron::adjacentFacet(int facet) const {
 
 inline Dim4Triangulation* Dim4Pentachoron::getTriangulation() const {
     return tri_;
+}
+
+inline Dim4Component* Dim4Pentachoron::getComponent() const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return component_;
+}
+
+inline Dim4Vertex* Dim4Pentachoron::getVertex(int vertex) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return vertex_[vertex];
+}
+
+inline Dim4Edge* Dim4Pentachoron::getEdge(int edge) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return edge_[edge];
+}
+
+inline Dim4Face* Dim4Pentachoron::getFace(int face) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return face_[face];
+}
+
+inline Dim4Tetrahedron* Dim4Pentachoron::getTetrahedron(int tet) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return tet_[tet];
+}
+
+inline NPerm5 Dim4Pentachoron::getVertexMapping(int vertex) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return vertexMapping_[vertex];
+}
+
+inline NPerm5 Dim4Pentachoron::getEdgeMapping(int edge) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return edgeMapping_[edge];
+}
+
+inline NPerm5 Dim4Pentachoron::getFaceMapping(int face) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return faceMapping_[face];
+}
+
+inline NPerm5 Dim4Pentachoron::getTetrahedronMapping(int tet) const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return tetMapping_[tet];
+}
+
+inline int Dim4Pentachoron::orientation() const {
+    if (! tri_->calculatedSkeleton_)
+        tri_->calculateSkeleton();
+    return orientation_;
 }
 
 inline void Dim4Pentachoron::writeTextShort(std::ostream& out) const {

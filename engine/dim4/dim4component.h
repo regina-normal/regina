@@ -42,12 +42,12 @@
 
 namespace regina {
 
+class Dim4BoundaryComponent;
+class Dim4Edge;
+class Dim4Face;
 class Dim4Pentachoron;
 class Dim4Tetrahedron;
-class Dim4Face;
-class Dim4Edge;
 class Dim4Vertex;
-class Dim4BoundaryComponent;
 
 /**
  * \weakgroup dim4

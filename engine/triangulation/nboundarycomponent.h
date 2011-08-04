@@ -37,13 +37,16 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "triangulation/nvertex.h"
+#include "shareableobject.h"
+#include "utilities/nmarkedvector.h"
+// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
-class NTetrahedron;
-class NFace;
 class NEdge;
+class NFace;
+class NTetrahedron;
+class NVertex;
 
 /**
  * \weakgroup triangulation
@@ -212,6 +215,11 @@ class REGINA_API NBoundaryComponent :
 };
 
 /*@}*/
+
+} // namespace regina
+// Some more headers that are required for inline functions:
+#include "triangulation/nvertex.h"
+namespace regina {
 
 // Inline functions for NBoundaryComponent
 

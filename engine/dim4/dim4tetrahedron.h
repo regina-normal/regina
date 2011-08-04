@@ -37,12 +37,19 @@
 #endif
 
 #include "regina-core.h"
-#include "dim4/dim4pentachoron.h"
+#include "shareableobject.h"
+#include "maths/nperm5.h"
+#include "utilities/nmarkedvector.h"
+// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
-class Dim4Component;
 class Dim4BoundaryComponent;
+class Dim4Component;
+class Dim4Edge;
+class Dim4Face;
+class Dim4Pentachoron;
+class Dim4Vertex;
 
 /**
  * \weakgroup dim4
@@ -337,6 +344,11 @@ class REGINA_API Dim4Tetrahedron :
 };
 
 /*@}*/
+
+} // namespace regina
+// Some more headers that are required for inline functions:
+#include "dim4/dim4pentachoron.h"
+namespace regina {
 
 // Inline functions for Dim4TetrahedronEmbedding
 
