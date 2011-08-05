@@ -50,9 +50,9 @@ void NTriangulation::barycentricSubdivision() {
     if (nOldTet == 0)
         return;
 
-    ChangeEventSpan span(this);
-
     NTriangulation staging;
+    ChangeEventSpan span1(&staging);
+
     NTetrahedron** newTet = new NTetrahedron*[nOldTet * 24];
     NTetrahedron* oldTet;
     NPerm4 p;
@@ -106,6 +106,7 @@ void NTriangulation::barycentricSubdivision() {
     }
 
     // Delete the existing tetrahedra and put in the new ones.
+    ChangeEventSpan span2(this);
     removeAllTetrahedra();
     swapContents(staging);
     delete[] newTet;
@@ -122,9 +123,9 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     if (! numOldTet)
         return false;
 
-    ChangeEventSpan span(this);
-
     NTriangulation staging;
+    ChangeEventSpan span1(&staging);
+
     NTetrahedron **newTet = new NTetrahedron*[32*numOldTet];
     for (i=0; i<32*numOldTet; i++)
         newTet[i] = staging.newTetrahedron();
@@ -209,6 +210,8 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
             }
     }
 
+    ChangeEventSpan span2(this);
+
     removeAllTetrahedra();
     swapContents(staging);
     calculateSkeleton();
@@ -245,6 +248,8 @@ bool NTriangulation::finiteToIdeal() {
     NTetrahedron** bdry = new NTetrahedron*[nFaces];
     NPerm4* bdryPerm = new NPerm4[nFaces];
     NTetrahedron** newTet = new NTetrahedron*[nFaces];
+
+    ChangeEventSpan span1(&staging);
 
     FaceIterator fit;
     unsigned i;
@@ -291,7 +296,7 @@ bool NTriangulation::finiteToIdeal() {
 
     // Set up a change block, since here we start changing the original
     // triangulation.
-    ChangeEventSpan span(this);
+    ChangeEventSpan span2(this);
 
     staging.moveContentsTo(*this);
 
