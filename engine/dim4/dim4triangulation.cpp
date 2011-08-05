@@ -464,13 +464,13 @@ void Dim4Triangulation::deleteSkeleton() {
     tetrahedra_.clear();
     components_.clear();
     boundaryComponents_.clear();
+
+    calculatedSkeleton_ = false;
 }
 
 void Dim4Triangulation::clearAllProperties() {
-    if (calculatedSkeleton_) {
+    if (calculatedSkeleton_)
         deleteSkeleton();
-        calculatedSkeleton_ = false;
-    }
 
     fundGroup_.clear();
     H1_.clear();

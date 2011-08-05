@@ -47,6 +47,10 @@ void NTriangulation::calculateSkeleton() const {
         // used correctly)
 #endif
 
+    // Set this now so that any tetrahedron query routines do not try to
+    // recursively recompute the skeleton again.
+    calculatedSkeleton = true;
+
     calculateComponents();
         // Sets components, orientable, NComponent.orientable,
         //     NTetrahedron.component
@@ -64,8 +68,6 @@ void NTriangulation::calculateSkeleton() const {
         // Sets valid, ideal, NVertex.link,
         //     NVertex.linkEulerCharacteristic, NComponent.ideal,
         //     boundaryComponents, NVertex.boundaryComponent
-
-    calculatedSkeleton = true;
 }
 
 void NTriangulation::checkPermutations() const {

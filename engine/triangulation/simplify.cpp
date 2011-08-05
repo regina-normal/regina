@@ -366,7 +366,6 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     int edge32 = embs[3].getEdge();
 
     twoThreeMove(face23, false, true);
-    calculateSkeleton();
     threeTwoMove(oldTet[3]->getEdge(edge32), false, true);
 
     // Done!
@@ -1060,25 +1059,33 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
-    std::deque<NEdgeEmbedding> embClones(embs);
+    unsigned degree = embs.size();
+    NTetrahedron** embTet = new NTetrahedron*[degree];
+    NPerm4* embVertices = new NPerm4[degree];
 
-    for (it = embClones.begin(); it != embClones.end(); it++) {
-        tet = (*it).getTetrahedron();
-        p = (*it).getVertices();
-
-        top = tet->adjacentTetrahedron(p[0]);
-        topPerm = tet->adjacentGluing(p[0]);
-        bot = tet->adjacentTetrahedron(p[1]);
-        botPerm = tet->adjacentGluing(p[1]);
-
-        tet->isolate();
-        if (top && bot)
-            top->joinTo(topPerm[p[0]], bot,
-                botPerm * NPerm4(p[0], p[1]) * topPerm.inverse());
-
-        removeTetrahedron(tet);
+    unsigned i;
+    for (i = 0, it = embs.begin(); it != embs.end(); ++i, ++it) {
+        embTet[i] = (*it).getTetrahedron();
+        embVertices[i] = (*it).getVertices();
     }
 
+    for (i = 0; i < degree; ++i) {
+        top = embTet[i]->adjacentTetrahedron(embVertices[i][0]);
+        topPerm = embTet[i]->adjacentGluing(embVertices[i][0]);
+        bot = embTet[i]->adjacentTetrahedron(embVertices[i][1]);
+        botPerm = embTet[i]->adjacentGluing(embVertices[i][1]);
+
+        embTet[i]->isolate();
+        if (top && bot)
+            top->joinTo(topPerm[embVertices[i][0]], bot,
+                botPerm * NPerm4(embVertices[i][0], embVertices[i][1]) *
+                topPerm.inverse());
+
+        removeTetrahedron(embTet[i]);
+    }
+
+    delete[] embVertices;
+    delete[] embTet;
     return true;
 }
 
