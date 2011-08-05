@@ -36,7 +36,7 @@ void NTriangulation::makeDoubleCover() {
     if (sheetSize == 0)
         return;
 
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     // Create a second sheet of tetrahedra.
     NTetrahedron** upper = new NTetrahedron*[sheetSize];
@@ -124,8 +124,6 @@ void NTriangulation::makeDoubleCover() {
 
     // Tidy up.
     delete[] upper;
-
-    // The change event is fired on destruction of the ChangeEventBlock.
 }
 
 } // namespace regina

@@ -37,11 +37,8 @@ namespace regina {
 bool Dim4Triangulation::intelligentSimplify() {
     bool changed;
 
-    // Don't automatically fire a change event - we don't know in
-    // advance if changes will be made or not.
-
-    { // Begin scope for change event block.
-        ChangeEventBlock block(this, false);
+    { // Begin scope for change event span.
+        ChangeEventSpan span(this);
 
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimum(true);
@@ -163,10 +160,8 @@ bool Dim4Triangulation::intelligentSimplify() {
             // Nothing more we can do here.
             break;
         }
-    } // End scope for change event block.
+    } // End scope for change event span.
 
-    if (changed)
-        fireChangedEvent();
     return changed;
 }
 
@@ -181,11 +176,8 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
     bool changed = false;   // Has anything changed ever (for return value)?
     bool changedNow = true; // Did we just change something (for loop control)?
 
-    // Don't automatically fire a change event - we don't know in
-    // advance if changes will be made or not.
-
-    { // Begin scope for change event block.
-        ChangeEventBlock block(this, false);
+    { // Begin scope for change event span.
+        ChangeEventSpan span(this);
 
         while (changedNow) {
             changedNow = false;
@@ -254,10 +246,8 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
                 }
             }
         }
-    } // End scope for change event block.
+    } // End scope for change event span.
 
-    if (changed)
-        fireChangedEvent();
     return changed;
 }
 

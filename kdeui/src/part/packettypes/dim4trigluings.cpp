@@ -175,7 +175,7 @@ void Dim4TriGluingsUI::commit() {
 
     long nRows = facetTable->numRows();
     if (nRows > 0) {
-        regina::NPacket::ChangeEventBlock block(tri);
+        regina::NPacket::ChangeEventSpan span(tri);
 
         regina::Dim4Pentachoron** pents = new regina::Dim4Pentachoron*[nRows];
         FacetGluingItem* item;

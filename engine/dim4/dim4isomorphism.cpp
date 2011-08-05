@@ -104,6 +104,7 @@ void Dim4Isomorphism::applyInPlace(Dim4Triangulation* tri) const {
         return;
 
     Dim4Triangulation staging;
+    NPacket::ChangeEventSpan span1(&staging);
     Dim4Pentachoron** pent = new Dim4Pentachoron*[nPentachora_];
     unsigned long p;
     int f;
@@ -136,7 +137,7 @@ void Dim4Isomorphism::applyInPlace(Dim4Triangulation* tri) const {
             }
     }
 
-    NPacket::ChangeEventBlock block(tri);
+    NPacket::ChangeEventSpan span2(tri);
     tri->removeAllPentachora();
     tri->swapContents(staging);
 }

@@ -50,7 +50,7 @@ void NTriangulation::barycentricSubdivision() {
     if (nOldTet == 0)
         return;
 
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     NTriangulation staging;
     NTetrahedron** newTet = new NTetrahedron*[nOldTet * 24];
@@ -122,7 +122,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     if (! numOldTet)
         return false;
 
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     NTriangulation staging;
     NTetrahedron **newTet = new NTetrahedron*[32*numOldTet];
@@ -291,7 +291,7 @@ bool NTriangulation::finiteToIdeal() {
 
     // Set up a change block, since here we start changing the original
     // triangulation.
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     staging.moveContentsTo(*this);
 

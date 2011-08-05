@@ -37,6 +37,9 @@
 namespace regina {
 
 void Dim4Triangulation::swapContents(Dim4Triangulation& other) {
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&other);
+
     clearAllProperties();
     other.clearAllProperties();
 
@@ -47,12 +50,12 @@ void Dim4Triangulation::swapContents(Dim4Triangulation& other) {
         (*it)->tri_ = this;
     for (it = other.pentachora_.begin(); it != other.pentachora_.end(); ++it)
         (*it)->tri_ = &other;
-
-    fireChangedEvent();
-    other.fireChangedEvent();
 }
 
 void Dim4Triangulation::moveContentsTo(Dim4Triangulation& dest) {
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&dest);
+
     clearAllProperties();
     dest.clearAllProperties();
 
@@ -68,9 +71,6 @@ void Dim4Triangulation::moveContentsTo(Dim4Triangulation& dest) {
         dest.pentachora_.push_back(*it);
     }
     pentachora_.clear();
-
-    fireChangedEvent();
-    dest.fireChangedEvent();
 }
 
 void Dim4Triangulation::writeTextLong(std::ostream& out) const {
@@ -174,7 +174,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
 }
 
 void Dim4Triangulation::insertTriangulation(const Dim4Triangulation& X) {
-    ChangeEventBlock(this);
+    ChangeEventSpan span(this);
 
     unsigned long nOrig = getNumberOfPentachora();
 
@@ -239,7 +239,7 @@ void Dim4Triangulation::insertConstruction(unsigned long nPentachora,
     unsigned i, j;
     NPerm5 p;
 
-    ChangeEventBlock(this);
+    ChangeEventSpan span(this);
 
     for (i = 0; i < nPentachora; ++i)
         pent[i] = newPentachoron();
@@ -393,7 +393,7 @@ void Dim4Triangulation::writeXMLPacketData(std::ostream& out) const {
 }
 
 void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
-    ChangeEventBlock(this);
+    ChangeEventSpan span(this);
 
     removeAllPentachora();
 

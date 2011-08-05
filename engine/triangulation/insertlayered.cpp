@@ -53,7 +53,7 @@ NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
     // roles1 and roles2 match up with vertices (0,1,2,3) of the new
     // tetrahedron.
 
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     NTetrahedron* newTet = newTetrahedron();
 
@@ -65,7 +65,7 @@ NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
 
 NTetrahedron* NTriangulation::insertLayeredSolidTorus(
         unsigned long cuts0, unsigned long cuts1) {
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     unsigned long cuts2 = cuts0 + cuts1;
 
@@ -112,7 +112,7 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
 }
 
 void NTriangulation::insertLayeredLensSpace(unsigned long p, unsigned long q) {
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     NTetrahedron* chain;
     if (p == 0) {
@@ -146,7 +146,7 @@ void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
     if (length == 0)
         return;
 
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     // Insert a layered chain of the given length.
     // We should probably split this out into a separate routine.
@@ -176,7 +176,7 @@ void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
 
 void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
         long a2, long b2, long a3, long b3) {
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     int i;
 

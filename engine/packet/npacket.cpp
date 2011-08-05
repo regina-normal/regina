@@ -56,8 +56,9 @@ NPacket::~NPacket() {
 }
 
 void NPacket::setPacketLabel(const std::string& newLabel) {
+    fireEvent(&NPacketListener::packetToBeRenamed);
     packetLabel = newLabel;
-    fireRenamedEvent();
+    fireEvent(&NPacketListener::packetWasRenamed);
 }
 
 bool NPacket::listen(NPacketListener* listener) {
@@ -84,6 +85,8 @@ NPacket* NPacket::getTreeMatriarch() const {
 }
 
 void NPacket::insertChildFirst(NPacket* child) {
+    fireEvent(&NPacketListener::childToBeAdded, child);
+
     child->treeParent = this;
     child->prevTreeSibling = 0;
     child->nextTreeSibling = firstTreeChild;
@@ -96,10 +99,12 @@ void NPacket::insertChildFirst(NPacket* child) {
         lastTreeChild = child;
     }
 
-    fireAddedEvent(child);
+    fireEvent(&NPacketListener::childWasAdded, child);
 }
 
 void NPacket::insertChildLast(NPacket* child) {
+    fireEvent(&NPacketListener::childToBeAdded, child);
+
     child->treeParent = this;
     child->prevTreeSibling = lastTreeChild;
     child->nextTreeSibling = 0;
@@ -112,10 +117,12 @@ void NPacket::insertChildLast(NPacket* child) {
         lastTreeChild = child;
     }
 
-    fireAddedEvent(child);
+    fireEvent(&NPacketListener::childWasAdded, child);
 }
 
 void NPacket::insertChildAfter(NPacket* newChild, NPacket* prevChild) {
+    fireEvent(&NPacketListener::childToBeAdded, newChild);
+
     if (prevChild == 0)
         insertChildFirst(newChild);
     else {
@@ -129,12 +136,16 @@ void NPacket::insertChildAfter(NPacket* newChild, NPacket* prevChild) {
             lastTreeChild = newChild;
     }
 
-    fireAddedEvent(newChild);
+    fireEvent(&NPacketListener::childWasAdded, newChild);
 }
 
 void NPacket::makeOrphan() {
     if (! treeParent)
         return;
+    NPacket* oldParent = treeParent;
+
+    oldParent->fireEvent(&NPacketListener::childToBeRemoved,
+        this, inDestructor);
 
     if (treeParent->firstTreeChild == this)
         treeParent->firstTreeChild = nextTreeSibling;
@@ -146,10 +157,10 @@ void NPacket::makeOrphan() {
     else
         nextTreeSibling->prevTreeSibling = prevTreeSibling;
 
-    NPacket* oldParent = treeParent;
     treeParent = 0;
 
-    oldParent->fireRemovedEvent(this);
+    oldParent->fireEvent(&NPacketListener::childWasRemoved,
+        this, inDestructor);
 }
 
 void NPacket::reparent(NPacket* newParent, bool first) {
@@ -167,6 +178,7 @@ void NPacket::moveUp(unsigned steps) {
         return;
 
     // This packet is not the first packet in the child list.
+    treeParent->fireEvent(&NPacketListener::childrenToBeReordered);
 
     NPacket* prev = prevTreeSibling;
     while (prev && steps) {
@@ -192,8 +204,7 @@ void NPacket::moveUp(unsigned steps) {
     else
         treeParent->firstTreeChild = this;
 
-    // Fire a packet event.
-    treeParent->fireReorderedEvent();
+    treeParent->fireEvent(&NPacketListener::childrenWereReordered);
 }
 
 void NPacket::moveDown(unsigned steps) {
@@ -201,6 +212,7 @@ void NPacket::moveDown(unsigned steps) {
         return;
 
     // This packet is not the last packet in the child list.
+    treeParent->fireEvent(&NPacketListener::childrenToBeReordered);
 
     NPacket* next = nextTreeSibling;
     while (next && steps) {
@@ -226,8 +238,7 @@ void NPacket::moveDown(unsigned steps) {
     else
         treeParent->lastTreeChild = this;
 
-    // Fire a packet event.
-    treeParent->fireReorderedEvent();
+    treeParent->fireEvent(&NPacketListener::childrenWereReordered);
 }
 
 void NPacket::moveToFirst() {
@@ -235,6 +246,7 @@ void NPacket::moveToFirst() {
         return;
 
     // This packet is not the first packet in the child list.
+    treeParent->fireEvent(&NPacketListener::childrenToBeReordered);
 
     // Pull us out of the tree.
     if (nextTreeSibling)
@@ -250,8 +262,7 @@ void NPacket::moveToFirst() {
     prevTreeSibling = 0;
     treeParent->firstTreeChild = this;
 
-    // Fire a packet event.
-    treeParent->fireReorderedEvent();
+    treeParent->fireEvent(&NPacketListener::childrenWereReordered);
 }
 
 void NPacket::moveToLast() {
@@ -259,6 +270,7 @@ void NPacket::moveToLast() {
         return;
 
     // This packet is not the last packet in the child list.
+    treeParent->fireEvent(&NPacketListener::childrenToBeReordered);
 
     // Pull us out of the tree.
     if (prevTreeSibling)
@@ -274,8 +286,7 @@ void NPacket::moveToLast() {
     nextTreeSibling = 0;
     treeParent->lastTreeChild = this;
 
-    // Fire a packet event.
-    treeParent->fireReorderedEvent();
+    treeParent->fireEvent(&NPacketListener::childrenWereReordered);
 }
 
 void NPacket::sortChildren() {
@@ -285,6 +296,7 @@ void NPacket::sortChildren() {
     NPacket* current;
     NPacket* largest;
 
+    treeParent->fireEvent(&NPacketListener::childrenToBeReordered);
     while (1) {
         // Put current at the beginning of the clump of yet-unsorted children.
         if (! endpoint)
@@ -325,13 +337,14 @@ void NPacket::sortChildren() {
             endpoint = largest;
     }
 
-    // Fire a packet event.
-    fireReorderedEvent();
+    treeParent->fireEvent(&NPacketListener::childrenWereReordered);
 }
 
 void NPacket::swapWithNextSibling() {
     if (! nextTreeSibling)
         return;
+
+    treeParent->fireEvent(&NPacketListener::childrenToBeReordered);
 
     if (prevTreeSibling)
         prevTreeSibling->nextTreeSibling = nextTreeSibling;
@@ -350,7 +363,7 @@ void NPacket::swapWithNextSibling() {
     prevTreeSibling = other;
     other->nextTreeSibling = this;
 
-    treeParent->fireReorderedEvent();
+    treeParent->fireEvent(&NPacketListener::childrenWereReordered);
 }
 
 NPacket* NPacket::nextTreePacket() {
@@ -571,31 +584,30 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
 }
 
 bool NPacket::addTag(const std::string& tag) {
+    fireEvent(&NPacketListener::packetToBeRenamed);
     if (! tags.get())
         tags.reset(new std::set<std::string>());
 
-    if (tags->insert(tag).second) {
-        fireRenamedEvent();
-        return true;
-    } else
-        return false;
+    bool ans = tags->insert(tag).second;
+    fireEvent(&NPacketListener::packetWasRenamed);
+    return ans;
 }
 
 bool NPacket::removeTag(const std::string& tag) {
     if (! tags.get())
         return false;
 
-    if (tags->erase(tag)) {
-        fireRenamedEvent();
-        return true;
-    } else
-        return false;
+    fireEvent(&NPacketListener::packetToBeRenamed);
+    bool ans = tags->erase(tag);
+    fireEvent(&NPacketListener::packetWasRenamed);
+    return ans;
 }
 
 void NPacket::removeAllTags() {
     if (tags.get() && ! tags->empty()) {
+        fireEvent(&NPacketListener::packetToBeRenamed);
         tags->clear();
-        fireRenamedEvent();
+        fireEvent(&NPacketListener::packetWasRenamed);
     }
 }
 
@@ -613,19 +625,29 @@ void NPacket::writeXMLFile(std::ostream& out) const {
     out << "</reginadata>\n";
 }
 
-void NPacket::fireChangedEvent() {
-    if (changeEventBlocks == 0 && listeners.get()) {
-        std::set<NPacketListener*>::const_iterator it = listeners->begin();
-        while (it != listeners->end())
-            (*it++)->packetWasChanged(this);
-    }
-}
-
-void NPacket::fireRenamedEvent() {
+void NPacket::fireEvent(void (NPacketListener::*event)(NPacket*)) {
     if (listeners.get()) {
         std::set<NPacketListener*>::const_iterator it = listeners->begin();
         while (it != listeners->end())
-            (*it++)->packetWasRenamed(this);
+            ((*it++)->*event)(this);
+    }
+}
+
+void NPacket::fireEvent(void (NPacketListener::*event)(NPacket*, NPacket*),
+        NPacket* arg2) {
+    if (listeners.get()) {
+        std::set<NPacketListener*>::const_iterator it = listeners->begin();
+        while (it != listeners->end())
+            ((*it++)->*event)(this, arg2);
+    }
+}
+
+void NPacket::fireEvent(void (NPacketListener::*event)(NPacket*,
+        NPacket*, bool), NPacket* arg2, bool arg3) {
+    if (listeners.get()) {
+        std::set<NPacketListener*>::const_iterator it = listeners->begin();
+        while (it != listeners->end())
+            ((*it++)->*event)(this, arg2, arg3);
     }
 }
 
@@ -643,30 +665,6 @@ void NPacket::fireDestructionEvent() {
 
             (*it)->packetToBeDestroyed(this);
         }
-    }
-}
-
-void NPacket::fireAddedEvent(NPacket* child) {
-    if (listeners.get()) {
-        std::set<NPacketListener*>::const_iterator it = listeners->begin();
-        while (it != listeners->end())
-            (*it++)->childWasAdded(this, child);
-    }
-}
-
-void NPacket::fireRemovedEvent(NPacket* child) {
-    if (listeners.get()) {
-        std::set<NPacketListener*>::const_iterator it = listeners->begin();
-        while (it != listeners->end())
-            (*it++)->childWasRemoved(this, child, inDestructor);
-    }
-}
-
-void NPacket::fireReorderedEvent() {
-    if (listeners.get()) {
-        std::set<NPacketListener*>::const_iterator it = listeners->begin();
-        while (it != listeners->end())
-            (*it++)->childrenWereReordered(this);
     }
 }
 

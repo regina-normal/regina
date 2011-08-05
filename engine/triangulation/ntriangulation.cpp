@@ -56,7 +56,7 @@ void NTriangulation::addTetrahedron(NTetrahedron* t) {
         return;
     assert(t->tri == 0);
 
-    ChangeEventBlock(this);
+    ChangeEventSpan span(this);
 
     t->tri = this;
     tetrahedra.push_back(t);
@@ -92,10 +92,12 @@ void NTriangulation::addTetrahedron(NTetrahedron* t) {
     }
 
     clearAllProperties();
-    fireChangedEvent();
 }
 
 void NTriangulation::swapContents(NTriangulation& other) {
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&other);
+
     clearAllProperties();
     other.clearAllProperties();
 
@@ -106,12 +108,12 @@ void NTriangulation::swapContents(NTriangulation& other) {
         (*it)->tri = this;
     for (it = other.tetrahedra.begin(); it != other.tetrahedra.end(); ++it)
         (*it)->tri = &other;
-
-    fireChangedEvent();
-    other.fireChangedEvent();
 }
 
 void NTriangulation::moveContentsTo(NTriangulation& dest) {
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&dest);
+
     clearAllProperties();
     dest.clearAllProperties();
 
@@ -127,9 +129,6 @@ void NTriangulation::moveContentsTo(NTriangulation& dest) {
         dest.tetrahedra.push_back(*it);
     }
     tetrahedra.clear();
-
-    fireChangedEvent();
-    dest.fireChangedEvent();
 }
 
 void NTriangulation::clearAllProperties() {
@@ -595,7 +594,7 @@ void NTriangulation::deleteSkeleton() {
 }
 
 void NTriangulation::cloneFrom(const NTriangulation& X) {
-    ChangeEventBlock(this);
+    ChangeEventSpan span(this);
 
     removeAllTetrahedra();
 
@@ -650,7 +649,7 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
 }
 
 void NTriangulation::insertTriangulation(const NTriangulation& X) {
-    ChangeEventBlock(this);
+    ChangeEventSpan span(this);
 
     unsigned long norig = getNumberOfTetrahedra();
 
@@ -688,7 +687,7 @@ void NTriangulation::insertConstruction(unsigned long nTetrahedra,
     if (nTetrahedra == 0)
         return;
 
-    ChangeEventBlock(this);
+    ChangeEventSpan span(this);
 
     NTetrahedron** tet = new NTetrahedron*[nTetrahedra];
 

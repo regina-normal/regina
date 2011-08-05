@@ -1650,49 +1650,47 @@ inline long Dim4Triangulation::pentachoronIndex(const Dim4Pentachoron* pent)
 }
 
 inline Dim4Pentachoron* Dim4Triangulation::newPentachoron() {
+    ChangeEventSpan span(this);
     Dim4Pentachoron* pent = new Dim4Pentachoron(this);
-
     pentachora_.push_back(pent);
     clearAllProperties();
-    fireChangedEvent();
-
     return pent;
 }
 
 inline Dim4Pentachoron* Dim4Triangulation::newPentachoron(
         const std::string& desc) {
+    ChangeEventSpan span(this);
     Dim4Pentachoron* pent = new Dim4Pentachoron(desc, this);
-
     pentachora_.push_back(pent);
     clearAllProperties();
-    fireChangedEvent();
-
     return pent;
 }
 
 inline void Dim4Triangulation::removePentachoron(Dim4Pentachoron* pent) {
+    ChangeEventSpan span(this);
+
     pent->isolate();
     pentachora_.erase(pentachora_.begin() + pentachoronIndex(pent));
     delete pent;
 
     clearAllProperties();
-    fireChangedEvent();
 }
 
 inline void Dim4Triangulation::removePentachoronAt(unsigned long index) {
+    ChangeEventSpan span(this);
+
     Dim4Pentachoron* ans = pentachora_[index];
     ans->isolate();
     pentachora_.erase(pentachora_.begin() + index);
     delete ans;
 
     clearAllProperties();
-    fireChangedEvent();
 }
 
 inline void Dim4Triangulation::removeAllPentachora() {
+    ChangeEventSpan span(this);
     deletePentachora();
     clearAllProperties();
-    fireChangedEvent();
 }
 
 inline unsigned long Dim4Triangulation::getNumberOfBoundaryComponents() const {

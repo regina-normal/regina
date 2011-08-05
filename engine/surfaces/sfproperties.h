@@ -249,28 +249,28 @@ inline NBoolSet NSurfaceFilterProperties::getRealBoundary() const {
 }
 
 inline void NSurfaceFilterProperties::addEC(const NLargeInteger& ec) {
+    ChangeEventSpan span(this);
     eulerCharacteristic.insert(ec);
-    fireChangedEvent();
 }
 inline void NSurfaceFilterProperties::removeEC(const NLargeInteger& ec) {
+    ChangeEventSpan span(this);
     eulerCharacteristic.erase(ec);
-    fireChangedEvent();
 }
 inline void NSurfaceFilterProperties::removeAllECs() {
+    ChangeEventSpan span(this);
     eulerCharacteristic.clear();
-    fireChangedEvent();
 }
 inline void NSurfaceFilterProperties::setOrientability(const NBoolSet& value) {
+    ChangeEventSpan span(this);
     orientability = value;
-    fireChangedEvent();
 }
 inline void NSurfaceFilterProperties::setCompactness(const NBoolSet& value) {
+    ChangeEventSpan span(this);
     compactness = value;
-    fireChangedEvent();
 }
 inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
+    ChangeEventSpan span(this);
     realBoundary = value;
-    fireChangedEvent();
 }
 
 inline void NSurfaceFilterProperties::writeFilter(NFile&) const {

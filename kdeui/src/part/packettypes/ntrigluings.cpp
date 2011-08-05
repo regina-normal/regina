@@ -356,7 +356,7 @@ void NTriGluingsUI::commit() {
 
     long nRows = faceTable->numRows();
     if (nRows > 0) {
-        regina::NPacket::ChangeEventBlock block(tri);
+        regina::NPacket::ChangeEventSpan span(tri);
 
         regina::NTetrahedron** tets = new regina::NTetrahedron*[nRows];
         FaceGluingItem* item;

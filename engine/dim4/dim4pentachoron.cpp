@@ -49,6 +49,8 @@ bool Dim4Pentachoron::hasBoundary() const {
 }
 
 void Dim4Pentachoron::joinTo(int myFacet, Dim4Pentachoron* you, NPerm5 gluing) {
+    NPacket::ChangeEventSpan span(tri_);
+
     adj_[myFacet] = you;
     adjPerm_[myFacet] = gluing;
     int yourFacet = gluing[myFacet];
@@ -56,17 +58,17 @@ void Dim4Pentachoron::joinTo(int myFacet, Dim4Pentachoron* you, NPerm5 gluing) {
     you->adjPerm_[yourFacet] = gluing.inverse();
 
     tri_->clearAllProperties();
-    tri_->fireChangedEvent();
 }
 
 Dim4Pentachoron* Dim4Pentachoron::unjoin(int myFacet) {
+    NPacket::ChangeEventSpan span(tri_);
+
     Dim4Pentachoron* you = adj_[myFacet];
     int yourFacet = adjPerm_[myFacet][myFacet];
     you->adj_[yourFacet] = 0;
     adj_[myFacet] = 0;
 
     tri_->clearAllProperties();
-    tri_->fireChangedEvent();
 
     return you;
 }

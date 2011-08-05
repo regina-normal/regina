@@ -35,6 +35,8 @@
 namespace regina {
 
 void NPDF::reset() {
+    ChangeEventSpan span(this);
+
     if (data_) {
         if (alloc_ == OWN_MALLOC)
             ::free(data_);
@@ -45,11 +47,11 @@ void NPDF::reset() {
     data_ = 0;
     size_ = 0;
     alloc_ = OWN_NEW;
-
-    fireChangedEvent();
 }
 
 void NPDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
+    ChangeEventSpan span(this);
+
     // Out with the old data.
     if (data_) {
         if (alloc_ == OWN_MALLOC)
@@ -74,8 +76,6 @@ void NPDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
         size_ = 0;
         alloc_ = OWN_NEW;
     }
-
-    fireChangedEvent();
 }
 
 void NPDF::writePacket(NFile&) const {

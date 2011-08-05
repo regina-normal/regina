@@ -348,7 +348,7 @@ std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices)
 Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
     std::auto_ptr<Dim4Triangulation> ans(new Dim4Triangulation());
 
-    ChangeEventBlock block(ans.get());
+    ChangeEventSpan span(ans.get());
 
     const char* c = sig.c_str();
 

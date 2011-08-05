@@ -195,7 +195,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     // Create two new pentachora.
     Dim4Pentachoron* newPent[2];
@@ -288,7 +288,7 @@ bool Dim4Triangulation::threeThreeMove(Dim4Face* f, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     // Create three new pentachora.
     Dim4Pentachoron* newPent[3];
@@ -380,7 +380,7 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
         return true;
 
     // Perform the move.
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     // Create four new pentachora.
     Dim4Pentachoron* newPent[4];
@@ -960,7 +960,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
     NPerm5 topPerm, botPerm;
     Dim4Pentachoron *top, *bot;
 
