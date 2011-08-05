@@ -124,7 +124,6 @@ void NTriangulation::makeDoubleCover() {
 
     // Tidy up.
     delete[] upper;
-    clearAllProperties();
 
     // The change event is fired on destruction of the ChangeEventBlock.
 }

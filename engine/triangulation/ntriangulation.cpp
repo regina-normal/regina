@@ -133,10 +133,8 @@ void NTriangulation::moveContentsTo(NTriangulation& dest) {
 }
 
 void NTriangulation::clearAllProperties() {
-    if (calculatedSkeleton) {
+    if (calculatedSkeleton)
         deleteSkeleton();
-        calculatedSkeleton = false;
-    }
 
     fundamentalGroup.clear();
     H1.clear();
@@ -592,6 +590,8 @@ void NTriangulation::deleteSkeleton() {
     faces.clear();
     components.clear();
     boundaryComponents.clear();
+
+    calculatedSkeleton = false;
 }
 
 void NTriangulation::cloneFrom(const NTriangulation& X) {
