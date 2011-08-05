@@ -346,7 +346,7 @@ std::string NTriangulation::isoSig(unsigned tet, const NPerm4& vertices) const {
 NTriangulation* NTriangulation::fromIsoSig(const std::string& sig) {
     std::auto_ptr<NTriangulation> ans(new NTriangulation());
 
-    ChangeEventBlock block(ans.get());
+    ChangeEventSpan span(ans.get());
 
     const char* c = sig.c_str();
 

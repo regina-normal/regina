@@ -145,7 +145,7 @@ void NIsomorphism::applyInPlace(NTriangulation* tri) const {
             }
     }
 
-    NPacket::ChangeEventBlock block(tri);
+    NPacket::ChangeEventSpan span(tri);
     tri->removeAllTetrahedra();
     tri->swapContents(staging);
 }

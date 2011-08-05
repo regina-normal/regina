@@ -57,15 +57,22 @@ class NPacket;
  * the packet will call the appropriate routine for all registered
  * packet listeners.
  *
- * Note that these events are mutually exclusive, i.e., any event will
- * cause at most one routine to be called for each listener.  For
- * instance, if a packet is renamed then packetWasRenamed() will be
- * called but packetWasChanged() will not.
+ * These events come in future/past pairs: packetToBeChanged() and
+ * packetWasChanged(), childToBeAdded() and childWasAdded(), and so on.
+ * These event pairs are mutually exclusive: any event will
+ * cause at most one pair of routines to be called for each listener.  For
+ * instance, if a packet is renamed then packetToBeRenamed() and
+ * packetWasRenamed() will be called but packetToBeChanged() and
+ * packetWasChanged() will not.
+ *
+ * As a special case, when a packet is destroyed there is only the future
+ * event packetToBeDestroyed() with no matching "past" event, since \e after
+ * the packet has been destroyed the set of listeners is no longer available.
  *
  * No guarantees are made as to the order in which the different packet
  * listeners are notified of an event.
  *
- * Note that when a listener is destroyed, it is automatically unregistered
+ * When a listener is destroyed, it is automatically unregistered
  * from any packets to which it is currently listening.  Similarly, when
  * a packet is destroyed all listeners are automatically unregistered.
  *
@@ -102,7 +109,19 @@ class REGINA_API NPacketListener {
         void unregisterFromAllPackets();
 
         /**
-         * Called when the contents of the packet have been changed.
+         * Called before the contents of the packet are to be changed.
+         * Once the contents are changed, packetWasChanged() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         */
+        virtual void packetToBeChanged(NPacket* packet);
+        /**
+         * Called after the contents of the packet have been changed.
+         * Before the contents are changed, packetToBeChanged() will be
+         * called also.
          *
          * The default implementation of this routine is to do nothing.
          *
@@ -110,7 +129,19 @@ class REGINA_API NPacketListener {
          */
         virtual void packetWasChanged(NPacket* packet);
         /**
-         * Called when the packet label or tags have been changed.
+         * Called before the packet label or tags are to be changed.
+         * Once the label or tags are changed, packetWasRenamed() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         */
+        virtual void packetToBeRenamed(NPacket* packet);
+        /**
+         * Called after the packet label or tags have been changed.
+         * Before the label or tags are changed, packetToBeRenamed() will be
+         * called also.
          *
          * The default implementation of this routine is to do nothing.
          *
@@ -118,8 +149,10 @@ class REGINA_API NPacketListener {
          */
         virtual void packetWasRenamed(NPacket* packet);
         /**
-         * Called when the packet is about to be destroyed.  Note that
-         * this event is called \e before the packet is destroyed, not after.
+         * Called before the packet is about to be destroyed.  Note that
+         * there is no matching function called \e after the
+         * packet is destroyed, since the set of listeners will no
+         * longer be available at that stage.
          *
          * When an entire packet subtree is to be destroyed, child packets
          * will notify their listeners of the impending destruction
@@ -139,8 +172,22 @@ class REGINA_API NPacketListener {
          */
         virtual void packetToBeDestroyed(NPacket* packet);
         /**
-         * Called when a child packet has been inserted directly beneath
+         * Called before a child packet is to be inserted directly beneath
          * the packet.
+         * Once the child is removed, childWasAdded() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         * @param child the child packet to be added.
+         */
+        virtual void childToBeAdded(NPacket* packet, NPacket* child);
+        /**
+         * Called after a child packet has been inserted directly beneath
+         * the packet.
+         * Before this child is added, childToBeAdded() will be
+         * called also.
          *
          * The default implementation of this routine is to do nothing.
          *
@@ -149,9 +196,34 @@ class REGINA_API NPacketListener {
          */
         virtual void childWasAdded(NPacket* packet, NPacket* child);
         /**
-         * Called when a child packet has been removed from directly beneath
+         * Called before a child packet is to be removed from directly beneath
          * the packet.  Note that the child packet may be about to be
          * destroyed (although this destruction will not have happened yet).
+         * Once the child is removed, childWasRemoved() will be
+         * called also.
+         *
+         * Note also that this packet (the parent) may have already
+         * entered its destructor (which removes and destroys all child
+         * packets as a matter of course).  In this situation it may be
+         * unsafe to query or update this packet, and so the third argument
+         * \a inParentDestructor is provided to indicate such a situation.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         * @param child the child packet to be removed.
+         * @param inParentDestructor set to \c true if the parent packet
+         * is in fact being destroyed, and the child was simply removed
+         * as part of the standard subtree destruction.
+         */
+        virtual void childToBeRemoved(NPacket* packet, NPacket* child,
+            bool inParentDestructor);
+        /**
+         * Called after a child packet has been removed from directly beneath
+         * the packet.  Note that the child packet may be about to be
+         * destroyed (although this destruction will not have happened yet).
+         * Before this child is removed, childToBeRemoved() will be
+         * called also.
          *
          * Note also that this packet (the parent) may have already
          * entered its destructor (which removes and destroys all child
@@ -170,8 +242,22 @@ class REGINA_API NPacketListener {
         virtual void childWasRemoved(NPacket* packet, NPacket* child,
             bool inParentDestructor);
         /**
-         * Called when the child packets directly beneath the packet
+         * Called before the child packets directly beneath the packet
+         * are to be reordered.
+         * Once the reordering is done, childrenWereReordered() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         */
+        virtual void childrenToBeReordered(NPacket* packet);
+
+        /**
+         * Called after the child packets directly beneath the packet
          * have been reordered.
+         * Before this reordering is done, childrenToBeReordered() will be
+         * called also.
          *
          * The default implementation of this routine is to do nothing.
          *
@@ -190,7 +276,13 @@ class REGINA_API NPacketListener {
 
 // Inline functions for NPacketListener
 
+inline void NPacketListener::packetToBeChanged(NPacket*) {
+}
+
 inline void NPacketListener::packetWasChanged(NPacket*) {
+}
+
+inline void NPacketListener::packetToBeRenamed(NPacket*) {
 }
 
 inline void NPacketListener::packetWasRenamed(NPacket*) {
@@ -199,10 +291,19 @@ inline void NPacketListener::packetWasRenamed(NPacket*) {
 inline void NPacketListener::packetToBeDestroyed(NPacket*) {
 }
 
+inline void NPacketListener::childToBeAdded(NPacket*, NPacket*) {
+}
+
 inline void NPacketListener::childWasAdded(NPacket*, NPacket*) {
 }
 
+inline void NPacketListener::childToBeRemoved(NPacket*, NPacket*, bool) {
+}
+
 inline void NPacketListener::childWasRemoved(NPacket*, NPacket*, bool) {
+}
+
+inline void NPacketListener::childrenToBeReordered(NPacket*) {
 }
 
 inline void NPacketListener::childrenWereReordered(NPacket*) {

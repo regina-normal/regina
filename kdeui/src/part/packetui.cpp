@@ -509,7 +509,7 @@ bool PacketPane::commit() {
         isCommitting = true;
 
         {
-            NPacket::ChangeEventBlock block(mainUI->getPacket());
+            NPacket::ChangeEventSpan span(mainUI->getPacket());
             mainUI->commit();
         }
 
@@ -574,7 +574,7 @@ bool PacketPane::tryCommit() {
             isCommitting = true;
 
             {
-                NPacket::ChangeEventBlock block(mainUI->getPacket());
+                NPacket::ChangeEventSpan span(mainUI->getPacket());
                 mainUI->commit();
             }
 

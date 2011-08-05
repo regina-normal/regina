@@ -1147,7 +1147,7 @@ namespace {
 
 NTriangulation* NNormalSurface::cutAlong() const {
     NTriangulation* ans = new NTriangulation();
-    NPacket::ChangeEventBlock eventBlock(ans);
+    NPacket::ChangeEventSpan span(ans);
 
     unsigned long nTet = getTriangulation()->getNumberOfTetrahedra();
     if (nTet == 0)

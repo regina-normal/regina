@@ -57,6 +57,10 @@ void NTetrahedron::isolate() {
 }
 
 NTetrahedron* NTetrahedron::unjoin(int myFace) {
+    // TODO: Make this a stack variable once we know that tri != 0 always.
+    std::auto_ptr<NPacket::ChangeEventSpan>
+        span(tri ? new NPacket::ChangeEventSpan(tri) : 0);
+
     NTetrahedron* you = tetrahedra[myFace];
     int yourFace = tetrahedronPerm[myFace][myFace];
     assert(you);
@@ -64,15 +68,18 @@ NTetrahedron* NTetrahedron::unjoin(int myFace) {
     you->tetrahedra[yourFace] = 0;
     tetrahedra[myFace] = 0;
 
-    if (tri) {
+    if (tri)
         tri->clearAllProperties();
-        tri->fireChangedEvent();
-    }
 
     return you;
 }
 
 void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
+    // TODO: Make this a stack variable once we know that tri != 0 always.
+    std::auto_ptr<NPacket::ChangeEventSpan>
+        span(tri ? new NPacket::ChangeEventSpan(tri) :
+        you->tri ? new NPacket::ChangeEventSpan(you->tri) : 0);
+
     assert((! tetrahedra[myFace]) ||
         (tetrahedra[myFace] == you &&
             tetrahedronPerm[myFace] == gluing));
@@ -96,10 +103,8 @@ void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
     you->tetrahedra[yourFace] = this;
     you->tetrahedronPerm[yourFace] = gluing.inverse();
 
-    if (tri) {
+    if (tri)
         tri->clearAllProperties();
-        tri->fireChangedEvent();
-    }
 }
 
 } // namespace regina
