@@ -65,6 +65,7 @@ Dim4Triangulation* Dim4Isomorphism::apply(
     unsigned long p;
     int f;
 
+    NPacket::ChangeEventSpan span(ans);
     for (p = 0; p < nPentachora_; ++p)
         pent[p] = ans->newPentachoron();
 

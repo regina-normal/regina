@@ -74,6 +74,7 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
     unsigned long t;
     int f;
 
+    NPacket::ChangeEventSpan span(ans);
     for (t = 0; t < nTetrahedra; t++)
         tet[t] = ans->newTetrahedron();
 
@@ -117,6 +118,7 @@ void NIsomorphism::applyInPlace(NTriangulation* tri) const {
     unsigned long t;
     int f;
 
+    NPacket::ChangeEventSpan span1(&staging);
     for (t = 0; t < nTetrahedra; t++)
         tet[t] = staging.newTetrahedron();
 
@@ -145,7 +147,7 @@ void NIsomorphism::applyInPlace(NTriangulation* tri) const {
             }
     }
 
-    NPacket::ChangeEventSpan span(tri);
+    NPacket::ChangeEventSpan span2(tri);
     tri->removeAllTetrahedra();
     tri->swapContents(staging);
 }
