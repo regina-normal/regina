@@ -3162,23 +3162,23 @@ inline long NTriangulation::tetrahedronIndex(const NTetrahedron* tet) const {
 }
 
 inline NTetrahedron* NTriangulation::newTetrahedron() {
-    NTetrahedron* tet = new NTetrahedron();
+    ChangeEventSpan span(this);
 
+    NTetrahedron* tet = new NTetrahedron();
     tet->tri = this;
     tetrahedra.push_back(tet);
     clearAllProperties();
-    fireChangedEvent();
 
     return tet;
 }
 
 inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
-    NTetrahedron* tet = new NTetrahedron(desc);
+    ChangeEventSpan span(this);
 
+    NTetrahedron* tet = new NTetrahedron(desc);
     tet->tri = this;
     tetrahedra.push_back(tet);
     clearAllProperties();
-    fireChangedEvent();
 
     return tet;
 }
@@ -3190,28 +3190,30 @@ inline long NTriangulation::getTetrahedronIndex(const NTetrahedron* tet) const {
 }
 
 inline void NTriangulation::removeTetrahedronAt(unsigned long index) {
+    ChangeEventSpan span(this);
+
     NTetrahedron* ans = tetrahedra[index];
     ans->isolate();
     tetrahedra.erase(tetrahedra.begin() + index);
     delete ans;
 
     clearAllProperties();
-    fireChangedEvent();
 }
 
 inline void NTriangulation::removeTetrahedron(NTetrahedron* tet) {
+    ChangeEventSpan span(this);
+
     tet->isolate();
     tetrahedra.erase(tetrahedra.begin() + tetrahedronIndex(tet));
     delete tet;
 
     clearAllProperties();
-    fireChangedEvent();
 }
 
 inline void NTriangulation::removeAllTetrahedra() {
+    ChangeEventSpan span(this);
     deleteTetrahedra();
     clearAllProperties();
-    fireChangedEvent();
 }
 
 inline void NTriangulation::gluingsHaveChanged() {

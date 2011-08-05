@@ -42,6 +42,7 @@
 
 #include "regina-core.h"
 #include "shareableobject.h"
+#include "packet/npacketlistener.h"
 #include "utilities/boostutils.h"
 
 namespace regina {
@@ -76,8 +77,8 @@ class NXMLPacketReader;
  *     <tt>static NXMLPacketReader* getXMLReader(NPacket* parent)</tt>
  *     must be declared and implemented.  See the notes for getXMLReader()
  *     for further details.</li>
- *   <li>Whenever the contents of the packet are changed, the protected
- *     routine fireChangedEvent() must be called to notify listeners of
+ *   <li>Whenever the contents of the packet are changed, a local
+ *     ChangeEventSpan must be declared on the stack to notify listeners of
  *     the change.</li>
  * </ul>
  *
@@ -124,8 +125,8 @@ class REGINA_API NPacket : public ShareableObject {
 
         std::auto_ptr<std::set<NPacketListener*> > listeners;
             /**< All objects listening for events on this packet. */
-        unsigned changeEventBlocks;
-            /**< The number of change event blocks currently registered.
+        unsigned changeEventSpans;
+            /**< The number of change event spans currently registered.
                  Change events will only be fired when this count is zero. */
 
         bool inDestructor;
@@ -1068,56 +1069,75 @@ class REGINA_API NPacket : public ShareableObject {
         #endif
 
         /**
-         * An object that temporarily blocks listeners from being
-         * notified of packet change events.  As long as this object
-         * is in existence, listeners will not be notified of any
-         * changes to this packet.
+         * An object that facilitates firing packetToBeChanged() and
+         * packetWasChanged() events.
          *
-         * It can sometimes be useful to temporarily block change events
-         * during large modifications that are likely to generate
-         * change events at inopportune times during processing.
+         * Objects of this type should be created on the stack before
+         * data within a packet is changed.  On creation, this object
+         * will fire a NPacketListener::packetToBeChanged() event to all
+         * registered listeners.  On destruction (i.e., when the object
+         * goes out of scope), it will fire a
+         * NPacketListener::packetWasChanged() event.
          *
-         * Note that change event blocks are cumulative, i.e., if
-         * several blocks are created then all of these blocks must be
-         * destroyed before listeners will be notified of change events
-         * again.
+         * It may be the case that several objects of this type all
+         * exist at the same time for the same packet.  In this case, only
+         * the outermost object will fire events; that is, only the first
+         * object to be constructed will fire
+         * NPacketListener::packetToBeChanged(), and only the last
+         * object to be destroyed will fire
+         * NPacketListener::packetWasChanged().  This is because the
+         * "inner" ChangeEventSpan objects earlier represent smaller events
+         * that are part of a larger suite of changes.
+         *
+         * If you are writing code that makes a large number of changes
+         * to a packet, it is highly recommended that you declare a
+         * ChangeEventSpan at the beginning of your code.  This will ensure
+         * that listeners only receive one pair of events for the
+         * entire change set, instead of many events representing each
+         * individual modification.
          */
-        class ChangeEventBlock : public regina::boost::noncopyable {
+        class ChangeEventSpan : public regina::boost::noncopyable {
             private:
-                NPacket* packet;
-                    /**< The packet for which change events are blocked. */
-                bool fireOnDestruction;
-                    /**< Should we fire a change event upon destruction? */
+                NPacket* packet_;
+                    /**< The packet for which change events are fired. */
 
             public:
                 /**
-                 * Creates a new change event block for the given
+                 * Creates a new change event object for the given
                  * packet.
                  *
-                 * As a convenience, passing \c true as the
-                 * parameter \a fireOnDestruction will cause a change
-                 * event to be fired for the given packet when this
-                 * block is destroyed.  Note that this change event will
-                 * still have no effect if other change event blocks
-                 * remain active.
+                 * If this is the only ChangeEventSpan currently in existence
+                 * for the given packet, this constructor will call
+                 * NPacketListener::packetToBeChanged() for all
+                 * registered listeners for the given packet.
                  *
-                 * @param packetToBlock the packet for which change
-                 * events will be blocked.
-                 * @param fireOnDestruction \c true if a change event
-                 * should be fired for the given packet when this block
-                 * is destroyed.
+                 * @param packet the packet whose data is about to change.
                  */
-                ChangeEventBlock(NPacket* packetToBlock,
-                    bool fireOnDestruction = true);
+                ChangeEventSpan(NPacket* packet);
 
                 /**
-                 * Destructor that removes the single change event block
-                 * that was created by this object.  In addition, a
-                 * change event will be fired if it was requested upon
-                 * construction.
+                 * Destroys this change event object.
+                 *
+                 * If this is the only ChangeEventSpan currently in existence
+                 * for the given packet, this destructor will call
+                 * NPacketListener::packetWasChanged() for all
+                 * registered listeners for the given packet.
                  */
-                ~ChangeEventBlock();
+                ~ChangeEventSpan();
         };
+
+        /**
+         * A deprecated typedef for ChangeEventSpan.
+         *
+         * \deprecated ChangeEventSpan is now the correct way to fire a
+         * "packet changed" event.  The class ChangeEventSpan is similar
+         * to the old ChangeEventBlock except that it fires both
+         * NPacketListener::packetToBeChanged() and
+         * NPacketListener::packetWasChanged() (on construction and
+         * destruction respectively), and the old boolean argument
+         * \a fireOnDestruction is gone (events are now fired always).
+         */
+        typedef ChangeEventSpan ChangeEventBlock;
 
     protected:
         /**
@@ -1136,26 +1156,6 @@ class REGINA_API NPacket : public ShareableObject {
          * @return the newly allocated packet.
          */
         virtual NPacket* internalClonePacket(NPacket* parent) const = 0;
-
-        /**
-         * Notifies all registered packet listeners that this packet has
-         * changed.  That is, the routine
-         * NPacketListener::packetWasChanged() will be called upon all
-         * registered listeners.
-         *
-         * If change events are currently blocked, this routine will do
-         * nothing at all.  You may wish to temporarily block change events
-         * during large modifications that are likely to call
-         * fireChangedEvents() at inopportune times during processing.
-         *
-         * Change events can be blocked by creating a local ChangeEventBlock
-         * object; the block will be removed when the object is
-         * destroyed (goes out of scope).  Note that these blocks are
-         * cumulative, i.e., if \e k blocks are created then all \e k
-         * blocks must be destroyed before fireChangeEvents() will notify
-         * listeners again.
-         */
-        void fireChangedEvent();
 
         /**
          * Writes a chunk of XML containing the subtree with this packet
@@ -1199,14 +1199,51 @@ class REGINA_API NPacket : public ShareableObject {
         void internalCloneDescendants(NPacket* parent) const;
 
         /**
-         * Calls NPacketListener::packetWasRenamed() for all registered
-         * packet listeners.
+         * Calls the given NPacketListener event for all registered
+         * packet listeners.  The first argument to the event function
+         * will be this packet.
          *
          * Calling this routine is better than iterating through listeners
          * manually, since it behaves correctly even if listeners unregister
          * themselves as they handle the event.
+         *
+         * @param event the member function of NPacketListener to be called
+         * for each listener.
          */
-        void fireRenamedEvent();
+        void fireEvent(void (NPacketListener::*event)(NPacket*));
+
+        /**
+         * Calls the given NPacketListener event for all registered
+         * packet listeners.  The first argument to the event function
+         * will be this packet.
+         *
+         * Calling this routine is better than iterating through listeners
+         * manually, since it behaves correctly even if listeners unregister
+         * themselves as they handle the event.
+         *
+         * @param event the member function of NPacketListener to be called
+         * for each listener.
+         * @param arg2 the second argument to pass to the event function.
+         */
+        void fireEvent(void (NPacketListener::*event)(NPacket*, NPacket*),
+            NPacket* arg2);
+
+        /**
+         * Calls the given NPacketListener event for all registered
+         * packet listeners.  The first argument to the event function
+         * will be this packet
+         *
+         * Calling this routine is better than iterating through listeners
+         * manually, since it behaves correctly even if listeners unregister
+         * themselves as they handle the event.
+         *
+         * @param event the member function of NPacketListener to be called
+         * for each listener.
+         * @param arg2 the second argument to pass to the event function.
+         * @param arg3 the third argument to pass to the event function.
+         */
+        void fireEvent(void (NPacketListener::*event)(NPacket*, NPacket*, bool),
+            NPacket* arg2, bool arg3);
 
         /**
          * Calls NPacketListener::packetToBeDestroyed() for all registered
@@ -1221,40 +1258,6 @@ class REGINA_API NPacket : public ShareableObject {
          * they handle the event.
          */
         void fireDestructionEvent();
-
-        /**
-         * Calls NPacketListener::childWasAdded() for all registered
-         * packet listeners.
-         *
-         * Calling this routine is better than iterating through listeners
-         * manually, since it behaves correctly even if listeners unregister
-         * themselves as they handle the event.
-         *
-         * @param the child packet that was added beneath this packet.
-         */
-        void fireAddedEvent(NPacket* child);
-
-        /**
-         * Calls NPacketListener::childWasRemoved() for all registered
-         * packet listeners.
-         *
-         * Calling this routine is better than iterating through listeners
-         * manually, since it behaves correctly even if listeners unregister
-         * themselves as they handle the event.
-         *
-         * @param the child packet that was removed from beneath this packet.
-         */
-        void fireRemovedEvent(NPacket* child);
-
-        /**
-         * Calls NPacketListener::childrenWereReordered() for all registered
-         * packet listeners.
-         *
-         * Calling this routine is better than iterating through listeners
-         * manually, since it behaves correctly even if listeners unregister
-         * themselves as they handle the event.
-         */
-        void fireReorderedEvent();
 };
 
 /*@}*/
@@ -1262,7 +1265,7 @@ class REGINA_API NPacket : public ShareableObject {
 // Inline functions for NPacket
 
 inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
-        prevTreeSibling(0), nextTreeSibling(0), changeEventBlocks(0),
+        prevTreeSibling(0), nextTreeSibling(0), changeEventSpans(0),
         inDestructor(false) {
     if (parent)
         parent->insertChildLast(this);
@@ -1333,17 +1336,19 @@ inline unsigned long NPacket::getNumberOfDescendants() const {
 inline void NPacket::writePacket(NFile&) const {
 }
 
-inline NPacket::ChangeEventBlock::ChangeEventBlock(
-        NPacket* packetToBlock, bool shouldFireOnDestruction) :
-        packet(packetToBlock), fireOnDestruction(shouldFireOnDestruction) {
-    packet->changeEventBlocks++;
+inline NPacket::ChangeEventSpan::ChangeEventSpan(NPacket* packet) :
+        packet_(packet) {
+    if (! packet_->changeEventSpans)
+        packet_->fireEvent(&NPacketListener::packetToBeChanged);
+        
+    packet_->changeEventSpans++;
 }
 
-inline NPacket::ChangeEventBlock::~ChangeEventBlock() {
-    if (packet->changeEventBlocks)
-        packet->changeEventBlocks--;
-    if (fireOnDestruction)
-        packet->fireChangedEvent();
+inline NPacket::ChangeEventSpan::~ChangeEventSpan() {
+    packet_->changeEventSpans--;
+
+    if (! packet_->changeEventSpans)
+        packet_->fireEvent(&NPacketListener::packetWasChanged);
 }
 
 } // namespace regina

@@ -103,6 +103,19 @@ Version 4.90  [ (under development) ]
               itself and the ownership becomes the responsibility of whoever
               takes this return value.  If nobody takes this return value
               then the packet and its descendants are automatically destroyed.
+            - ChangeEventBlock has been renamed to ChangeEventSpan, it
+              fires both packetToBeChanged() and packetWasChanged() (on
+              construction and destruction respectively), and the
+              optional boolean argument is gone (events are now fired always).
+              The old class name ChangeEventBlock remains as a
+              deprecated typedef for ChangeEventSpan.
+            - The protected routine fireChangedEvent() has been removed.  The
+              only way to fire a "packet changed" event now is to declare a
+              local ChangeEventSpan.
+        Class NPacketListener:
+            - All events (except for destruction) now come with both future
+              and past events: packetToBeChanged() and packetWasChanged(),
+              childToBeAdded() and childrenWereAdded(), and so on.
         Class NPerm:
             - Renamed to NPerm4.  The C++ header has also moved from
               triangulation/nperm.h to maths/nperm4.h .  Both the old

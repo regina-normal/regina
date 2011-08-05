@@ -105,7 +105,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
     }
 
     // Create the tetrahedra and start gluing.
-    ChangeEventBlock block(this);
+    ChangeEventSpan span(this);
 
     NTetrahedron** tet = new NTetrahedron*[nTet];
     for (i = 0; i < nTet; i++)

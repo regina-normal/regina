@@ -130,13 +130,13 @@ inline const std::string& NText::getText() const {
 }
 
 inline void NText::setText(const std::string& newText) {
+    ChangeEventSpan span(this);
     text = newText;
-    fireChangedEvent();
 }
 
 inline void NText::setText(const char* newText) {
+    ChangeEventSpan span(this);
     text = newText;
-    fireChangedEvent();
 }
 
 inline void NText::writeTextShort(std::ostream& o) const {

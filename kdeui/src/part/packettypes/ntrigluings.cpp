@@ -228,7 +228,7 @@ void GluingsModel::commitData(regina::NTriangulation* tri) {
     if (nTet == 0)
         return;
 
-    regina::NPacket::ChangeEventBlock block(tri);
+    regina::NPacket::ChangeEventSpan span(tri);
 
     regina::NTetrahedron** tets = new regina::NTetrahedron*[nTet];
     int tetNum, adjTetNum;
