@@ -87,8 +87,9 @@ const NSatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which,
             }
 
     // Given the precondition, we should never reach this point.
-    // TODO: Return junk.
-    // Avoiding temporary reference warning
+
+    // We need to return a reference, so to keep the compiler happy,
+    // create a memory leak.  Again, we should never actually reach this point.
     return *(new NSatAnnulus());
 }
 
