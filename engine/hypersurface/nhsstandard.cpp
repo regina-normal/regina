@@ -33,7 +33,6 @@
 #include "hypersurface/nhsstandard.h"
 #include "maths/nmatrixint.h"
 #include "maths/nrational.h"
-#include "maths/nvectorunit.h"
 #include "surfaces/nnormalsurface.h" // for vertexSplitDefn[][].
 
 namespace regina {
