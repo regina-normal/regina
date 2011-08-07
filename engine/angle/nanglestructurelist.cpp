@@ -30,7 +30,6 @@
 #include "enumerate/ndoubledescription.h"
 #include "file/nfile.h"
 #include "maths/nmatrixint.h"
-#include "maths/nvectorunit.h"
 #include "progress/nprogressmanager.h"
 #include "progress/nprogresstypes.h"
 #include "surfaces/nnormalsurface.h"
