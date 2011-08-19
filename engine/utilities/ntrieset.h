@@ -302,7 +302,7 @@ bool NTrieSet<T>::hasExtraSuperset(const T& subset,
         // Process the node at the current level.
         if (level > last) {
             // Our subtree is now a superset of the given subset.
-            int junk = (prefixOfExc1 == level ? 1 : 0) +
+            unsigned junk = (prefixOfExc1 == level ? 1 : 0) +
                 (prefixOfExc2 == level ? 1 : 0);
             if (node[level]->descendants_ > junk) {
                 delete[] node;
