@@ -323,8 +323,9 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             return Qt::AlignLeft; // Octahedron
         else
             return Qt::AlignRight; // All other fields are numbers.
-    } else
-        return QVariant();
+    }
+
+    return QVariant();
 }
 
 QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
