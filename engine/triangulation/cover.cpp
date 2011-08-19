@@ -41,18 +41,14 @@ void NTriangulation::makeDoubleCover() {
     // Create a second sheet of tetrahedra.
     NTetrahedron** upper = new NTetrahedron*[sheetSize];
     unsigned long i;
-    TetrahedronIterator tit = tetrahedra.begin();
-    for (i = 0; i < sheetSize; i++) {
-        upper[i] = newTetrahedron((*tit)->getDescription());
-        tit++;
-    }
+    for (i = 0; i < sheetSize; i++)
+        upper[i] = newTetrahedron(tetrahedra[i]->getDescription());
 
     // Reset each tetrahedron orientation.
-    tit = tetrahedra.begin();
+    TetrahedronIterator tit = tetrahedra.begin();
     for (i = 0; i < sheetSize; i++) {
-        (*tit)->tetOrientation = 0;
+        (*tit++)->tetOrientation = 0;
         upper[i]->tetOrientation = 0;
-        tit++;
     }
 
     // Run through the upper sheet and recreate the gluings as we
