@@ -261,14 +261,23 @@ bool NTriangulation::finiteToIdeal() {
 
         bdry[i] = (*fit)->getEmbedding(0).getTetrahedron();
         bdryPerm[i] = (*fit)->getEmbedding(0).getVertices();
-        newTet[i] = staging.newTetrahedron();
     }
+
+    // Add the new tetrahedra one boundary component at a time, so that
+    // the tetrahedron labels are compatible with previous versions of
+    // regina (<= 4.6).
+    BoundaryComponentIterator bit;
+    for (bit = boundaryComponents.begin();
+            bit != boundaryComponents.end(); bit++)
+        for (i = 0; i < (*bit)->getNumberOfFaces(); ++i)
+            newTet[(*bit)->getFace(i)->markedIndex()] =
+                staging.newTetrahedron();
 
     // Glue the new tetrahedra to each other.
     NEdge* edge;
     unsigned tetFace1, tetFace2;
     NPerm4 t1Perm, t2Perm;
-    for (BoundaryComponentIterator bit = boundaryComponents.begin();
+    for (bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++)
         for (i = 0; i < (*bit)->getNumberOfEdges(); i++) {
             edge = (*bit)->getEdge(i);
