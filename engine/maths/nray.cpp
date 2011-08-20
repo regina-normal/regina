@@ -32,11 +32,11 @@ namespace regina {
 
 void NRay::scaleDown() {
     NLargeInteger gcd; // Initialised to 0.
-    unsigned i;
-    for (i = 0; i < vectorSize; i++) {
-        if (elements[i].isInfinite() || elements[i] == zero)
+    NLargeInteger* e;
+    for (e = elements; e < end; ++e) {
+        if (e->isInfinite() || (*e) == zero)
             continue;
-        gcd = gcd.gcd(elements[i]);
+        gcd = gcd.gcd(*e);
         if (gcd < 0)
             gcd.negate();
         if (gcd == one)
@@ -44,26 +44,9 @@ void NRay::scaleDown() {
     }
     if (gcd == zero)
         return;
-    for (i = 0; i < vectorSize; i++)
-        if ((! elements[i].isInfinite()) && elements[i] != zero)
-            elements[i].divByExact(gcd);
-}
-
-NRay* intersect(const NRay& first, const NRay& second,
-        const NVector<NLargeInteger>& hyperplane) {
-    // Return (hyperplane * first) second - (hyperplane * second) first.
-    // Negate this if (hyperplane * first) is negative.
-
-    NLargeInteger firstCoeff(hyperplane * first);
-    NRay* ans = dynamic_cast<NRay*>(second.clone());
-    (*ans) *= firstCoeff;
-    (*ans).subtractCopies(first, hyperplane * second);
-    (*ans).scaleDown();
-
-    if (firstCoeff < NLargeInteger::zero)
-        (*ans).negate();
-
-    return ans;
+    for (e = elements; e < end; ++e)
+        if ((! e->isInfinite()) && (*e) != zero)
+            e->divByExact(gcd);
 }
 
 } // namespace regina

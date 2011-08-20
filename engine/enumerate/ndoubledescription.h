@@ -37,7 +37,7 @@
 #endif
 
 #include "regina-core.h"
-#include "maths/nfastray.h"
+#include "maths/nray.h"
 #include "maths/nmatrixint.h"
 #include <iterator>
 #include <vector>
@@ -73,9 +73,10 @@ class REGINA_API NDoubleDescription {
         /**
          * Determines the extremal rays of the intersection of the
          * <i>n</i>-dimensional non-negative orthant with the given linear
-         * subspace.  The resulting rays will be newly allocated and written
-         * to the given output iterator.  Their deallocation is the
-         * responsibility of whoever called this routine.
+         * subspace.  The resulting rays will be of the class \a RayClass,
+         * will be newly allocated, and will be written to the given output
+         * iterator.  Their deallocation is the responsibility of whoever
+         * called this routine.
          *
          * The non-negative orthant is an <i>n</i>-dimensional cone with
          * its vertex at the origin.  The extremal rays of this cone are
@@ -92,8 +93,7 @@ class REGINA_API NDoubleDescription {
          * The purpose of this routine is to compute the extremal rays of
          * the new cone formed by intersecting the original cone with this
          * linear subspace.  The resulting list of extremal rays will
-         * contain no duplicates or redundancies, and they are guaranteed to
-         * be of the same subclass of NRay as the argument \a rayBase.
+         * contain no duplicates or redundancies.
          *
          * Parameter \a constraints may contain a set of validity constraints,
          * in which case this routine will only return \e valid extremal
@@ -106,20 +106,12 @@ class REGINA_API NDoubleDescription {
          * A numeric progress watcher may be passed for progress reporting.
          * If so, this routine will poll for cancellation requests accordingly.
          *
-         * \pre The \a OutputIterator class must include a \a value_type
-         * typedef (which should be a pointer to some subclass of NRay).
-         * Note that this is \e not necessarily true of the standard
-         * library inserter classes (such as std::back_inserter).
+         * \pre The template argument RayClass is derived from NRay (or
+         * may possibly be NRay itself).
          *
          * @param results the output iterator to which the resulting extremal
-         * rays will be written; this must accept objects of type <tt>NRay*</tt>
-         * (or alternatively pointers to the same subclass of NRay as
-         * the argument \a rayBase).
-         * @param rayBase an arbitrary ray of the correct dimension.  The
-         * real purpose of this ray is to define the class used to return
-         * solutions; in particular, the output rays will be of the same
-         * subclass of \a NRay as \a rayBase.  The length of this ray
-         * \e must be the dimension of the space in which we are working.
+         * rays will be written; this must accept objects of type
+         * <tt>RayClass*</tt>.
          * @param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
@@ -139,10 +131,9 @@ class REGINA_API NDoubleDescription {
          * The remaining rows will be sorted using the LexComp inner class
          * before they are processed.
          */
-        template <class OutputIterator>
+        template <class RayClass, class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
-            const NRay& rayBase, const NMatrixInt& subspace,
-            const NEnumConstraintList* constraints,
+            const NMatrixInt& subspace, const NEnumConstraintList* constraints,
             NProgressNumber* progress = 0,
             unsigned initialRows = 0);
 
@@ -161,7 +152,7 @@ class REGINA_API NDoubleDescription {
          *   ray belongs to.
          *
          * The dot products are stored as coordinates of the
-         * superclass NFastRay.  Dot products are only stored
+         * superclass NRay.  Dot products are only stored
          * for hyperplanes that have not yet been intersected (thus
          * the vector length becomes smaller as the main algorithm progresses).
          * Dot products are stored in the order in which hyperplanes are
@@ -183,7 +174,7 @@ class REGINA_API NDoubleDescription {
          * bitmask types, such as NBitmask, NBitmask1 or NBitmask2.
          */
         template <class BitmaskType>
-        class RaySpec : private NFastRay {
+        class RaySpec : private NRay {
             private:
                 BitmaskType facets_;
                     /**< A bitmask listing which original facets this ray
@@ -371,10 +362,9 @@ class REGINA_API NDoubleDescription {
          * where \a f is the number of original facets in the given range.
          * \pre The given range of facets is not empty.
          */
-        template <class BitmaskType, class OutputIterator>
+        template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
-            const NRay& rayBase, const NMatrixInt& subspace,
-            const NEnumConstraintList* constraints,
+            const NMatrixInt& subspace, const NEnumConstraintList* constraints,
             NProgressNumber* progress, unsigned initialRows);
 
         /**
@@ -441,7 +431,7 @@ class REGINA_API NDoubleDescription {
 template <class BitmaskType>
 inline NDoubleDescription::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& trunc) :
-        NFastRay(trunc.size() - 1),
+        NRay(trunc.size() - 1),
         facets_(trunc.facets_) {
     std::copy(trunc.elements + 1, trunc.end, elements);
 }

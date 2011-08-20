@@ -134,13 +134,11 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
 
         // Form the matching equations and starting cone.
         NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
-        NNormalSurfaceVector* base = makeZeroVector(triang, list->flavour);
 
         // Find the normal surfaces.
-        NDoubleDescription::enumerateExtremalRays(SurfaceInserter(*list,
-            triang), *base, *eqns, constraints, progress);
+        enumerateExtremalRays(list->flavour,
+            SurfaceInserter(*list, triang), *eqns, constraints, progress);
 
-        delete base;
         delete eqns;
         delete constraints;
     }
@@ -154,6 +152,22 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
     }
 
     return 0;
+}
+
+#undef REGISTER_FLAVOUR
+#define REGISTER_FLAVOUR(id_name, class, n, an, s, t) \
+    case id_name: NDoubleDescription::enumerateExtremalRays<class>( \
+        results, subspace, constraints, progress); \
+        return true;
+
+bool NNormalSurfaceList::enumerateExtremalRays(int flavour,
+        const SurfaceInserter& results, const NMatrixInt& subspace,
+        const NEnumConstraintList* constraints, NProgressNumber* progress) {
+    switch(flavour) {
+        // Import cases from the flavour registry:
+        #include "surfaces/flavourregistry.h"
+    }
+    return false;
 }
 
 NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
@@ -184,13 +198,10 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
         NNormalSurfaceVectorStandard::makeEmbeddedConstraints(owner);
     NMatrixInt* eqns = makeMatchingEquations(owner,
         NNormalSurfaceList::STANDARD);
-    NNormalSurfaceVector* base = makeZeroVector(owner,
-        NNormalSurfaceList::STANDARD);
 
-    NDoubleDescription::enumerateExtremalRays(SurfaceInserter(*list, owner),
-        *base, *eqns, constraints);
+    NDoubleDescription::enumerateExtremalRays<NNormalSurfaceVectorStandard>(
+        SurfaceInserter(*list, owner), *eqns, constraints);
 
-    delete base;
     delete eqns;
     delete constraints;
 
@@ -209,13 +220,10 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
         NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(owner);
     NMatrixInt* eqns = makeMatchingEquations(owner,
         NNormalSurfaceList::AN_STANDARD);
-    NNormalSurfaceVector* base = makeZeroVector(owner,
-        NNormalSurfaceList::AN_STANDARD);
 
-    NDoubleDescription::enumerateExtremalRays(SurfaceInserter(*list, owner),
-        *base, *eqns, constraints);
+    NDoubleDescription::enumerateExtremalRays<NNormalSurfaceVectorANStandard>(
+        SurfaceInserter(*list, owner), *eqns, constraints);
 
-    delete base;
     delete eqns;
     delete constraints;
 

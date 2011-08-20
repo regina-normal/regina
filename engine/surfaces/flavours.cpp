@@ -35,7 +35,7 @@ namespace regina {
 // Bring in routines from the flavour registry.
 
 #define REGISTER_FLAVOUR(id_name, class, n, almost_normal, spun, t) \
-    NVector<NLargeInteger>* class::clone() const { \
+    NNormalSurfaceVector* class::clone() const { \
         return new class(*this); \
     } \
     bool class::allowsAlmostNormal() const { \

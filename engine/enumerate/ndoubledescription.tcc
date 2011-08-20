@@ -46,7 +46,7 @@ namespace regina {
 template <class BitmaskType>
 NDoubleDescription::RaySpec<BitmaskType>::RaySpec(unsigned axis,
         const NMatrixInt& subspace, const int* hypOrder) :
-        NFastRay(subspace.rows()),
+        NRay(subspace.rows()),
         facets_(subspace.columns()) {
     unsigned i;
 
@@ -62,7 +62,7 @@ template <class BitmaskType>
 NDoubleDescription::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& first,
         const RaySpec<BitmaskType>& second) :
-        NFastRay(second.size() - 1),
+        NRay(second.size() - 1),
         facets_(second.facets_) {
     for (unsigned i = 0; i < size(); ++i)
         elements[i] = second.elements[i + 1] * (*first.elements) -
@@ -191,10 +191,9 @@ void NDoubleDescription::RaySpec<BitmaskType>::recover(
     delete[] use;
 }
 
-template <class OutputIterator>
+template <class RayClass, class OutputIterator>
 void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
-        const NRay& rayBase, const NMatrixInt& subspace,
-        const NEnumConstraintList* constraints,
+        const NMatrixInt& subspace, const NEnumConstraintList* constraints,
         NProgressNumber* progress, unsigned initialRows) {
     unsigned nFacets = subspace.columns();
 
@@ -208,46 +207,45 @@ void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<NBitmask1<unsigned> >(results,
-            rayBase, subspace, constraints, progress, initialRows);
+        enumerateUsingBitmask<RayClass, NBitmask1<unsigned> >(results,
+            subspace, constraints, progress, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<NBitmask1<unsigned long> >(results,
-            rayBase, subspace, constraints, progress, initialRows);
+        enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
+            subspace, constraints, progress, initialRows);
 #ifdef LONG_LONG_FOUND
     else if (nFacets <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<NBitmask1<unsigned long long> >(results,
-            rayBase, subspace, constraints, progress, initialRows);
+        enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
+            subspace, constraints, progress, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<NBitmask2<unsigned long long, unsigned> >(results,
-            rayBase, subspace, constraints, progress, initialRows);
+        enumerateUsingBitmask<RayClass,
+            NBitmask2<unsigned long long, unsigned> >(results,
+            subspace, constraints, progress, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
-        enumerateUsingBitmask<NBitmask2<unsigned long long, unsigned long> >(
-            results, rayBase, subspace, constraints, progress, initialRows);
+        enumerateUsingBitmask<RayClass,
+            NBitmask2<unsigned long long, unsigned long> >(
+            results, subspace, constraints, progress, initialRows);
     else if (nFacets <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<NBitmask2<unsigned long long> >(results,
-            rayBase, subspace, constraints, progress, initialRows);
+        enumerateUsingBitmask<RayClass, NBitmask2<unsigned long long> >(results,
+            subspace, constraints, progress, initialRows);
 #else
     else if (nFacets <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<NBitmask2<unsigned long, unsigned> >(results,
-            rayBase, subspace, constraints, progress, initialRows);
+        enumerateUsingBitmask<RayClass,
+            NBitmask2<unsigned long, unsigned> >(results,
+            subspace, constraints, progress, initialRows);
     else if (nFacets <= 16 * sizeof(unsigned long))
-        enumerateUsingBitmask<NBitmask2<unsigned long> >(results,
-            rayBase, subspace, constraints, progress, initialRows);
+        enumerateUsingBitmask<RayClass, NBitmask2<unsigned long> >(results,
+            subspace, constraints, progress, initialRows);
 #endif
     else
-        enumerateUsingBitmask<NBitmask>(results,
-            rayBase, subspace, constraints, progress, initialRows);
+        enumerateUsingBitmask<RayClass, NBitmask>(results,
+            subspace, constraints, progress, initialRows);
 }
 
-template <class BitmaskType, class OutputIterator>
+template <class RayClass, class BitmaskType, class OutputIterator>
 void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
-        const NRay& rayBase, const NMatrixInt& subspace,
-        const NEnumConstraintList* constraints,
+        const NMatrixInt& subspace, const NEnumConstraintList* constraints,
         NProgressNumber* progress, unsigned initialRows) {
-    typedef typename std::iterator_traits<OutputIterator>::value_type
-        RayClassPtr;
-
     // Get the dimension of the entire space in which we are working.
     unsigned dim = subspace.columns();
 
@@ -258,9 +256,9 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         if (progress)
             progress->setOutOf(progress->getOutOf() + 1);
 
-        RayClassPtr ans;
+        RayClass* ans;
         for (unsigned i = 0; i < dim; ++i) {
-            ans = static_cast<RayClassPtr>(rayBase.clone());
+            ans = new RayClass(dim);
             ans->setElement(i, NLargeInteger::one);
             *results++ = ans;
         }
@@ -351,12 +349,10 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
     if (constraintsBegin)
         delete[] constraintsBegin;
 
-    // Use the first input ray as a factory for creating output rays of
-    // the correct class.
-    RayClassPtr ans;
+    RayClass* ans;
     for (typename RaySpecList::iterator it = list[workingList].begin();
             it != list[workingList].end(); ++it) {
-        ans = static_cast<RayClassPtr>(rayBase.clone());
+        ans = new RayClass(dim);
         (*it)->recover(*ans, subspace);
         *results++ = ans;
 

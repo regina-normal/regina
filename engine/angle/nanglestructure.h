@@ -93,8 +93,6 @@ class REGINA_API NAngleStructureVector : public NRay {
          * @param cloneMe the vector to clone.
          */
         NAngleStructureVector(const NVector<NLargeInteger>& cloneMe);
-
-        virtual NVector<NLargeInteger>* clone() const;
 };
 
 /**
@@ -266,10 +264,6 @@ inline NAngleStructureVector::NAngleStructureVector(unsigned length) :
 
 inline NAngleStructureVector::NAngleStructureVector(
         const NVector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
-}
-
-inline NVector<NLargeInteger>* NAngleStructureVector::clone() const {
-    return new NAngleStructureVector(*this);
 }
 
 // Inline functions for NAngleStructure
