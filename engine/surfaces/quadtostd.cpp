@@ -28,8 +28,8 @@
 
 #include "regina-config.h"
 #include "enumerate/ndoubledescription.h"
-#include "maths/nfastray.h"
 #include "maths/nmatrixint.h"
+#include "maths/nray.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/normalspec.tcc"
@@ -90,7 +90,7 @@ namespace {
      * solution sets, describing a single ray (which is typically a
      * vertex in some partial solution space).
      *
-     * This class derives from NFastRay, which stores the coordinates of
+     * This class derives from NRay, which stores the coordinates of
      * the ray itself in standard coordinates.  This RaySpec class also
      * stores a bitmask indicating which of these coordinates are set to zero.
      *
@@ -108,7 +108,7 @@ namespace {
      * bitmask types, such as NBitmask, NBitmask1 or NBitmask2.
      */
     template <class BitmaskType>
-    class RaySpec : private NFastRay {
+    class RaySpec : private NRay {
         private:
             BitmaskType facets_;
                 /**< A bitmask listing which coordinates of this ray are
@@ -122,7 +122,7 @@ namespace {
              * @param v the vector to clone.
              */
             RaySpec(const NNormalSurfaceVector* v) :
-                    NFastRay(v->size()), facets_(v->size()) {
+                    NRay(v->size()), facets_(v->size()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.
                 for (unsigned i = 0; i < v->size(); ++i)
@@ -145,7 +145,7 @@ namespace {
              */
             RaySpec(const NTriangulation* tri, unsigned whichLink,
                     unsigned coordsPerTet) :
-                    NFastRay(coordsPerTet * tri->getNumberOfTetrahedra()),
+                    NRay(coordsPerTet * tri->getNumberOfTetrahedra()),
                     facets_(coordsPerTet * tri->getNumberOfTetrahedra()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.
@@ -181,7 +181,7 @@ namespace {
              * to zero to form the intersecting hyperplane.
              */
             RaySpec(const RaySpec& pos, const RaySpec& neg, unsigned coord) :
-                    NFastRay(pos.size()), facets_(pos.facets_) {
+                    NRay(pos.size()), facets_(pos.facets_) {
                 facets_ &= neg.facets_;
 
                 // Note that we may need to re-enable some bits in \a facets_,
@@ -295,7 +295,7 @@ namespace {
                 return (elements[index] > zero ? 1 : -1);
             }
 
-            using NFastRay::scaleDown;
+            using NRay::scaleDown;
     };
 } // anonymous namespace
 
@@ -361,15 +361,11 @@ void NNormalSurfaceList::enumerateStandardViaReduced(
     NEnumConstraintList* constraints = Variant::ReducedVector::
         makeEmbeddedConstraints(owner);
     NMatrixInt* eqns = makeMatchingEquations(owner, Variant::reducedFlavour());
-    NNormalSurfaceVector* base = makeZeroVector(owner,
-        Variant::reducedFlavour());
 
     std::vector<NNormalSurfaceVector*> reducedVertices;
-    NDoubleDescription::enumerateExtremalRays(
-        VectorInserter(reducedVertices),
-        *base, *eqns, constraints, progress);
+    NDoubleDescription::enumerateExtremalRays<typename Variant::ReducedVector>(
+        VectorInserter(reducedVertices), *eqns, constraints, progress);
 
-    delete base;
     delete eqns;
     delete constraints;
 

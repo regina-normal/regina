@@ -32,6 +32,8 @@ Version 4.90  [ (under development) ]
             - Renamed allowsStrict() and allowsTaut() to spansStrict() and
               spansTaut().  The old routines are now deprecated but have been
               preserved (for now) for backward compatibility.
+        Class NAngleStructureVector:
+            - Removed clone().  Just use the copy constructor instead.
         Class NBitmask, NBitmask1, NBitmask2:
             - New operators ^= (XOR), -= (set difference) and = (assignment).
             - New routine truncate(), which truncates a bitmask to a given
@@ -49,6 +51,10 @@ Version 4.90  [ (under development) ]
               type and number are valid.  These can be circumvented by
               compiling with -DNDEBUG.
         Class NDoubleDescription:
+            - Method enumerateExtremalRays() no longer has the "base" argument
+              (which was used for cloning vectors); instead the method takes a
+              new template argument specifying a vector class, and new vectors
+              are created using the corresponding class constructors.
             - Improved the speed of adjacency testing by using an
               NTrieSet instead of a linear search through all vertices.
               See the NNormalSurfaceList notes below for further information.
@@ -61,6 +67,14 @@ Version 4.90  [ (under development) ]
             - Renamed seifertWeber() to weberSeifert(), for consistency with
               the original paper.  The old routine is now deprecated, but has
               being preserved (for the time being) for backward compatibility.
+        Class NFastRay:
+            - Merged into the NRay class; see the NRay and NVector changes for
+              details.  Because typedefs cannot be templated, there is no
+              legacy typedef; instead NFastRay has been removed completely.
+        Class NFastVector:
+            - Merged into the NVector class; see the NVector changes for
+              details.  Because typedefs cannot be templated, there is no
+              legacy typedef; instead NFastVector has been removed completely.
         Class NGlobalDirs:
             - New routine data() to return the internal data directory.
         Class NGroupPresentation:
@@ -98,6 +112,10 @@ Version 4.90  [ (under development) ]
               bulk incompressibility testing; see arXiv:0909.4625 for details.
             - New routine allowsSpun() to easily identify coordinate systems
               that support spun normal surfaces.
+        Class NNormalSurfaceVector:
+            - Due to the changes in the NVector hierarchy, clone() is
+              now introduced as a virtual function of NNormalSurfaceVector
+              (not NVector), and it now returns an NNormalSurfaceVector*.
         Class NPacket:
             - In the python interface, makeOrphan() now returns the packet
               itself and the ownership becomes the responsibility of whoever
@@ -146,6 +164,14 @@ Version 4.90  [ (under development) ]
               permutation codes (for backward compatibility).
         Class NRational:
             - New STL-compatible routine swap().
+        Class NRay:
+            - Like the vector hierarchy, NFastRay and NRay are now merged
+              into a single NRay class.  The result is that NRay is now
+              cleaner and faster, but methods are no longer virtual.
+              See the NVector class notes for full details of the changes
+              (including important changes in the parent NVector class).
+            - Removed the old intersect() function, which was based on
+              virtual methods.
         Class NScript:
             - Fixed a bug that lost script variables when reading ancient
               binary files (created before Regina 3.0, around mid-2002).
@@ -222,6 +248,19 @@ Version 4.90  [ (under development) ]
             - A new class for storing and querying a large number of sets,
               where the elements of these sets are taken from a small universe.
               The underlying data structure is essentially a trie of bitmasks.
+        Class NVector:
+            - Streamlined the vector hierarchy by merging NFastVector and
+              NVectorDense into a single NVector class, and removing NVectorUnit
+              and NVectorMatrix entirely.  The result is that NVector
+              is now cleaner and faster, but methods are no longer virtual.
+              See the NVector class notes for full details of the changes.
+            - Removed the old virtual clone() and makeLinComb() methods.
+        Class NVectorDense:
+            - Merged into the NVector class; see the NVector changes for
+              details.  Because typedefs cannot be templated, there is no
+              legacy typedef; instead NFastVector has been removed completely.
+        Class NVectorMatrix, NVectorUnit:
+            - Removed.  Use NVector instead.
         Class NVertexEmbedding:
             - New routine getVertices(), which facilitates a consistent
               orientation for the three remaining vertices in each tetrahedron.

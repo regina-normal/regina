@@ -27,8 +27,7 @@
 /* end stub */
 
 /*! \file maths/nray.h
- *  \brief Provides a slow but flexible class for rational rays rooted at
- *  the origin.
+ *  \brief Provides a fast class for rational rays rooted at the origin.
  */
 
 #ifndef __NRAY_H
@@ -38,7 +37,7 @@
 
 #include "regina-core.h"
 #include "maths/nlargeinteger.h"
-#include "maths/nvectordense.h"
+#include "maths/nvector.h"
 
 namespace regina {
 
@@ -48,23 +47,26 @@ namespace regina {
  */
 
 /**
- * A slow but flexible class storing a ray rooted at the origin whose
+ * A fast class for storing a ray rooted at the origin whose
  * coordinates are rational.  Such a ray is a half-line beginning at
  * the origin and is represented by an integer point that it passes through.
  * Positive scalar multiples of a ray are considered to represent the same ray.
  *
- * Like its parent class NVector, this ray class is slow (in
- * particular, many functions are virtual).  For a fast ray class better
- * suited to heavy computation, see NFastRay instead.
- * 
- * \warning Subclasses of NRay \b must override clone() to return a
- * ray of the correct subclass!  Otherwise the vectors returned by
- * vertex enumeration routines might be NRay objects instead of objects
- * of the appropriate derived class.
+ * This class is intended for serious computation, and as a result it
+ * has a streamlined implementation with no virtual methods.  It can be
+ * subclassed, but since there are no virtual methods, type information
+ * must generally be known at compile time.  Nevertheless, in many respects,
+ * different subclasses of NRay can happily interact with one another.
+ *
+ * \warning As of Regina 4.90, this class merges the old functionality
+ * of NFastRay and NRay from Regina 4.6.  Since functions are no longer
+ * virtual, the old clone() method and intersect() function are gone
+ * completely.  Instead you can just use the copy constructor and standard
+ * linear operators respectively.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NRay : public NVectorDense<NLargeInteger> {
+class REGINA_API NRay : public NVector<NLargeInteger> {
     public:
         /**
          * Creates a new ray all of whose coordinates are initialised to zero.
@@ -78,10 +80,6 @@ class REGINA_API NRay : public NVectorDense<NLargeInteger> {
          * @param cloneMe the ray to clone.
          */
         NRay(const NVector<NLargeInteger>& cloneMe);
-
-        virtual NVector<NLargeInteger>* clone() const;
-
-        virtual void negate();
 
         /**
          * Scales this vector down by the greatest common divisor of all
@@ -97,59 +95,27 @@ class REGINA_API NRay : public NVectorDense<NLargeInteger> {
          * infinity.
          */
         void scaleDown();
-};
 
-/**
- * Returns a newly allocated ray representing the intersection
- * of the hyperplane joining two given rays with the given additional
- * hyperplane.  The resulting ray will be in its smallest integral form.
- *
- * The given additional hyperplane must pass through the origin, and is
- * represented by a vector perpendicular to it.
- *
- * If the arguments \a pos and \a neg are on the positive and negative
- * sides of the hyperplane respectively (where positive and
- * negative sides are determined by the sign of the dot product of a
- * ray vector with the hyperplane representation vector), the resulting
- * ray is guaranteed to be a positive multiple of a convex combination of
- * the two original rays.
- *
- * The resulting ray is guaranteed to be of the same subclass of
- * NRay as argument \a neg.
- *
- * \pre The two given rays lie on opposite sides of the given additional
- * hyperplane; neither actually lies within the given additional hyperplane.
- *
- * \ifacespython Not present.
- *
- * @param pos one of the two given rays.
- * @param neg the other of the two given rays.
- * @param hyperplane a perpendicular to the given additional hyperplane.
- * @return a newly allocated ray representing the intersection of
- * \a hyperplane with the hyperplane joining \a a and \a b.
- */
-REGINA_API NRay* intersect(const NRay& pos, const NRay& neg,
-    const NVector<NLargeInteger>& hyperplane);
+        inline void negate();
+};
 
 /*@}*/
 
 // Inline functions for NRay
 
-inline NRay::NRay(unsigned length) : NVectorDense<NLargeInteger>(length, zero) {
+inline NRay::NRay(unsigned length) : NVector<NLargeInteger>(length) {
+    // Don't bother passing zero to the parent constructor, since the
+    // default NLargeInteger constructor already sets elements to zero.
 }
 
 inline NRay::NRay(const NVector<NLargeInteger>& cloneMe) :
-        NVectorDense<NLargeInteger>(cloneMe) {
-}
-
-inline NVector<NLargeInteger>* NRay::clone() const {
-    return new NRay(*this);
+        NVector<NLargeInteger>(cloneMe) {
 }
 
 inline void NRay::negate() {
     // Slightly more efficient than the default implementation.
-    for (unsigned i=0; i<vectorSize; i++)
-        elements[i].negate();
+    for (NLargeInteger* e = elements; e < end; ++e)
+        e->negate();
 }
 
 } // namespace regina
