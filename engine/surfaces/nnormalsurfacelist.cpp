@@ -56,7 +56,7 @@ const int NNormalSurfaceList::AN_STANDARD = 102;
 const int NNormalSurfaceList::EDGE_WEIGHT = 200;
 const int NNormalSurfaceList::FACE_ARCS = 201;
 
-#define REGISTER_FLAVOUR(id_name, class, n, a, s, t) \
+#define REGISTER_FLAVOUR(id_name, class, n, a, s) \
     case NNormalSurfaceList::id_name: \
         return class::makeZeroVector(triangulation);
 
@@ -70,7 +70,7 @@ NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, a, s, t) \
+#define REGISTER_FLAVOUR(id_name, class, n, a, s) \
     case NNormalSurfaceList::id_name: \
         return class::makeMatchingEquations(triangulation);
 
@@ -84,11 +84,9 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, cls, n, a, s, test) \
+#define REGISTER_FLAVOUR(id_name, cls, n, a, s) \
     case NNormalSurfaceList::id_name: \
-        if (! (test)) \
-            noSurfaces = true; \
-        else if (list->embedded) \
+        if (list->embedded) \
             constraints = cls::makeEmbeddedConstraints(triang); \
         break;
 
@@ -112,24 +110,11 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
     } else {
         // The catch-all double description method.
 
-        // Perform any pre-enumeration tests and fetch any necessary
-        // validity constraints.
+        // Fetch any necessary validity constraints.
         NEnumConstraintList* constraints = 0;
-        bool noSurfaces = false;
         switch(list->flavour) {
             // Import cases from the flavour registry.
             #include "surfaces/flavourregistry.h"
-        }
-
-        if (noSurfaces) {
-            // There are no normal surfaces at all.
-            triang->insertChildLast(list);
-
-            if (progress) {
-                progress->incCompleted();
-                progress->setFinished();
-            }
-            return 0;
         }
 
         // Form the matching equations and starting cone.
@@ -155,7 +140,7 @@ void* NNormalSurfaceList::Enumerator::run(void*) {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, an, s, t) \
+#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
     case id_name: NDoubleDescription::enumerateExtremalRays<class>( \
         results, subspace, constraints, progress); \
         return true;
@@ -237,7 +222,7 @@ NTriangulation* NNormalSurfaceList::getTriangulation() const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, almost_normal, s, t) \
+#define REGISTER_FLAVOUR(id_name, c, n, almost_normal, s) \
     case id_name: return almost_normal;
 
 bool NNormalSurfaceList::allowsAlmostNormal() const {
@@ -251,7 +236,7 @@ bool NNormalSurfaceList::allowsAlmostNormal() const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, a, spun, t) \
+#define REGISTER_FLAVOUR(id_name, c, n, a, spun) \
     case id_name: return spun;
 
 bool NNormalSurfaceList::allowsSpun() const {
@@ -265,7 +250,7 @@ bool NNormalSurfaceList::allowsSpun() const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, name, a, s, t) \
+#define REGISTER_FLAVOUR(id_name, c, name, a, s) \
     case id_name: o << name; break;
 
 void NNormalSurfaceList::writeTextShort(std::ostream& o) const {
@@ -288,7 +273,7 @@ void NNormalSurfaceList::writeTextShort(std::ostream& o) const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, name, a, s, t) \
+#define REGISTER_FLAVOUR(id_name, c, name, a, s) \
     case id_name: o << name << '\n'; break;
 
 void NNormalSurfaceList::writeTextLong(std::ostream& o) const {
@@ -327,7 +312,7 @@ void NNormalSurfaceList::writePacket(NFile& out) const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, name, a, s, t) \
+#define REGISTER_FLAVOUR(id_name, c, name, a, s) \
     case id_name: out << regina::xml::xmlEncodeSpecialChars(name); break;
 
 void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
@@ -355,7 +340,7 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, a, s, t) \
+#define REGISTER_FLAVOUR(id_name, c, n, a, s) \
     case id_name: break;
 
 NNormalSurfaceList* NNormalSurfaceList::readPacket(NFile& in,
