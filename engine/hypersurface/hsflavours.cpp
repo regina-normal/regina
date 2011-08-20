@@ -35,7 +35,7 @@ namespace regina {
 // Bring in routines from the flavour registry.
 
 #define REGISTER_HSFLAVOUR(id_name, class, n) \
-    NVector<NLargeInteger>* class::clone() const { \
+    NNormalHypersurfaceVector* class::clone() const { \
         return new class(*this); \
     }
 

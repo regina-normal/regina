@@ -107,8 +107,8 @@ void* NAngleStructureList::Enumerator::run(void*) {
     }
 
     // Find the angle structures.
-    NDoubleDescription::enumerateExtremalRays(StructureInserter(*list, triang),
-        NAngleStructureVector(nCoords), eqns, constraints, progress);
+    NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
+        StructureInserter(*list, triang), eqns, constraints, progress);
 
     // All done!
     delete constraints;

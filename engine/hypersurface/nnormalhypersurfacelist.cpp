@@ -92,13 +92,11 @@ void* NNormalHypersurfaceList::Enumerator::run(void*) {
 
     // Form the matching equations and starting cone.
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
-    NNormalHypersurfaceVector* base = makeZeroVector(triang_, list_->flavour_);
 
     // Find the normal hypersurfaces.
-    NDoubleDescription::enumerateExtremalRays(HypersurfaceInserter(*list_,
-        triang_), *base, *eqns, constraints, progress);
+    enumerateExtremalRays(list_->flavour_,
+        HypersurfaceInserter(*list_, triang_), *eqns, constraints, progress);
 
-    delete base;
     delete eqns;
     delete constraints;
 
@@ -111,6 +109,22 @@ void* NNormalHypersurfaceList::Enumerator::run(void*) {
     }
 
     return 0;
+}
+
+#undef REGISTER_HSFLAVOUR
+#define REGISTER_HSFLAVOUR(id_name, cls, n) \
+    case id_name: NDoubleDescription::enumerateExtremalRays<cls>( \
+        results, subspace, constraints, progress); \
+        return true;
+
+bool NNormalHypersurfaceList::enumerateExtremalRays(int flavour,
+        const HypersurfaceInserter& results, const NMatrixInt& subspace,
+        const NEnumConstraintList* constraints, NProgressNumber* progress) {
+    switch(flavour) {
+        // Import cases from the flavour registry:
+        #include "hypersurface/hsflavourregistry.h"
+    }
+    return false;
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(

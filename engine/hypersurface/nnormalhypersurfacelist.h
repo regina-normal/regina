@@ -349,6 +349,25 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
         NNormalHypersurfaceList(int flavour, bool embeddedOnly);
 
         /**
+         * Calls NDoubleDescription::enumerateExtremalRays() with the
+         * given arguments, and using the vector class that corresponds
+         * to the given coordinate flavour.
+         *
+         * All parameters not listed below are taken directly from
+         * NDoubleDescription::enumerateExtremalRays().
+         *
+         * @param flavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system constants
+         * in NNormalHypersurfaceList.
+         * @return \c true if NDoubleDescription::enumerateExtremalRays()
+         * was successfully called, or \c false if the given flavour
+         * does not correspond to a known coordinate system.
+         */
+        static bool enumerateExtremalRays(int flavour,
+            const HypersurfaceInserter& results, const NMatrixInt& subspace,
+            const NEnumConstraintList* constraints, NProgressNumber* progress);
+
+        /**
          * A thread class that actually performs the normal hypersurface
          * enumeration.
          */

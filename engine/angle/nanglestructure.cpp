@@ -42,7 +42,7 @@ const unsigned long NAngleStructure::flagCalculatedType = 4;
 
 NAngleStructure* NAngleStructure::clone() const {
     NAngleStructure* ans = new NAngleStructure(triangulation,
-        dynamic_cast<NAngleStructureVector*>(vector->clone()));
+        new NAngleStructureVector(*vector));
     ans->flags = flags;
     return ans;
 }

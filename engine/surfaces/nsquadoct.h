@@ -84,7 +84,7 @@ class REGINA_API NNormalSurfaceVectorQuadOct :
         virtual bool allowsSpun() const;
         virtual const NVertex* isVertexLink(NTriangulation* triang) const;
 
-        virtual NVector<NLargeInteger>* clone() const;
+        virtual NNormalSurfaceVector* clone() const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);

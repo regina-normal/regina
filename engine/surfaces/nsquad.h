@@ -86,7 +86,7 @@ class REGINA_API NNormalSurfaceVectorQuad :
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
             int octType, NTriangulation* triang) const;
 
-        virtual NVector<NLargeInteger>* clone() const;
+        virtual NNormalSurfaceVector* clone() const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);

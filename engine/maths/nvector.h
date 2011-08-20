@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file maths/nvector.h
- *  \brief Provides a slow but flexible mathematical vector template.
+ *  \brief Provides a fast and generic vector class.
  */
 
 #ifndef __NVECTOR_H
@@ -35,6 +35,7 @@
 #define __NVECTOR_H
 #endif
 
+#include <algorithm>
 #include <iostream>
 #include "regina-core.h"
 
@@ -45,27 +46,30 @@ namespace regina {
  * @{
  */
 
-template <class T>
-class NVector;
-
 /**
- * A slow but flexible vector class of elements from a given ring T.
+ * An optimised vector class of elements from a given ring T.
  * Various mathematical vector operations are available.
  *
- * This is a virtual base class for a variety of concrete
- * implementations, allowing for memory-efficient representations of
- * sparse, dense and other specialty vectors.  Different vector
- * subclasses based upon the same ring T can happily
- * interact with each other.
+ * This class is intended for serious computation, and as a result it has a
+ * streamlined implementation with no virtual methods.  It can be subclassed,
+ * but since there are no virtual methods, type information must generally
+ * be known at compile time.  Nevertheless, in many respects, different
+ * subclasses of NVector<T> can happily interact with one another.
  *
- * The side-effect of this flexibility is that this vector class is slow
- * (in particular, many functions are virtual).  For a fast vector class
- * better suited to heavy computation, see NFastVector instead.
+ * This class is written with bulky types in mind (such as
+ * arbitrary precision integers), and so creations and operations are kept
+ * to a minimum.
  *
- * This class and its subclasses are written with bulky types
- * in mind (such as arbitrary precision integers), so creations and
- * operations are kept to a minimum.
- *
+ * \warning As of Regina 4.90, this class merges the old functionality of
+ * NFastVector and the NVector hierarchy from Regina 4.6.  As a side-effect,
+ * the hierarchy has been compressed into just one class (NVectorUnit,
+ * NVectorMatrix and NVectorDense are gone), elements are always stored as
+ * dense vectors, and functions are no longer virtual (since the storage
+ * model is now fixed).  The virtual clone() method is gone completely
+ * (since there are no longer virtual functions you should use the copy
+ * constructor instead), and the old makeLinComb() method is also gone
+ * (just use operator *= and addCopies()).
+ * 
  * \pre Type T has a copy constructor.  That is,
  * if \c a and \c b are of type T, then \c a can be initialised to the value
  * of \c b using <tt>a(b)</tt>.
@@ -100,26 +104,61 @@ class NVector {
              *   some compilers don't like this.  It should never be
              *   modified! */
 
+    protected:
+        T* elements;
+            /**< The internal array containing all vector elements. */
+        T* end;
+            /**< A pointer just beyond the end of the internal array.
+                 The size of the vector can be computed as (end - elements). */
+
     public:
         /**
-         * Destroys the vector.
+         * Creates a new vector.
+         * Its elements will not be initialised.
+         *
+         * @param newVectorSize the number of elements in the new
+         * vector; this must be strictly positive.
          */
-        virtual ~NVector() {
+        inline NVector(unsigned newVectorSize) :
+                elements(new T[newVectorSize]), end(elements + newVectorSize) {
         }
         /**
-         * Makes a newly allocated clone of this vector.
-         * The clone will be of the same subclass of NVector as
-         * this vector.
+         * Creates a new vector and initialises every element to the
+         * given value.
          *
-         * @return a clone of this vector.
+         * @param newVectorSize the number of elements in the new
+         * vector; this must be strictly positive.
+         * @param initValue the value to assign to every element of the
+         * vector.
          */
-        virtual NVector<T>* clone() const = 0;
+        inline NVector(unsigned newVectorSize, const T& initValue) :
+                elements(new T[newVectorSize]), end(elements + newVectorSize) {
+            std::fill(elements, end, initValue);
+        }
+        /**
+         * Creates a new vector that is a clone of the given vector.
+         *
+         * @param cloneMe the vector to clone.
+         */
+        inline NVector(const NVector<T>& cloneMe) :
+                elements(new T[cloneMe.end - cloneMe.elements]),
+                end(elements + (cloneMe.end - cloneMe.elements)) {
+            std::copy(cloneMe.elements, cloneMe.end, elements);
+        }
+        /**
+         * Destroys this vector.
+         */
+        inline ~NVector() {
+            delete[] elements;
+        }
         /**
          * Returns the number of elements in the vector.
          *
          * @return the vector size.
          */
-        virtual unsigned size() const = 0;
+        inline unsigned size() const {
+            return end - elements;
+        }
         /**
          * Returns the element at the given index in the vector.
          * A constant reference to the element is returned; the element
@@ -130,7 +169,9 @@ class NVector {
          * @param index the vector index to examine.
          * @return the vector element at the given index.
          */
-        virtual const T& operator[](unsigned index) const = 0;
+        inline const T& operator[](unsigned index) const {
+            return elements[index];
+        }
         /**
          * Sets the element at the given index in the vector to the
          * given value.
@@ -141,12 +182,12 @@ class NVector {
          * @param value the new value to assign to the element.
          * @return the vector element at the given index.
          */
-        virtual void setElement(unsigned index, const T& value) = 0;
+        inline void setElement(unsigned index, const T& value) {
+            elements[index] = value;
+        }
 
         /**
          * Determines if this vector is equal to the given vector.
-         * The default implementation simply compares elements one at a
-         * time.
          *
          * \pre This and the given vector have the same size.
          * 
@@ -154,12 +195,8 @@ class NVector {
          * @return \c true if and only if the this and the given vector
          * are equal.
          */
-        virtual bool operator == (const NVector<T>& compare) const {
-            unsigned tot = size();
-            for (unsigned i=0; i<tot; i++)
-                if (! ((*this)[i] == compare[i]))
-                    return false;
-            return true;
+        inline bool operator == (const NVector<T>& compare) const {
+            return std::equal(elements, end, compare.elements);
         }
         /**
          * Sets this vector equal to the given vector.
@@ -169,7 +206,10 @@ class NVector {
          * @param cloneMe the vector whose value shall be assigned to this
          * vector.
          */
-        virtual void operator = (const NVector<T>& cloneMe) = 0;
+        inline NVector<T>& operator = (const NVector<T>& cloneMe) {
+            std::copy(cloneMe.elements, cloneMe.end, elements);
+            return *this;
+        }
         /**
          * Adds the given vector to this vector.
          *
@@ -177,7 +217,12 @@ class NVector {
          *
          * @param other the vector to add to this vector.
          */
-        virtual void operator += (const NVector<T>& other) = 0;
+        inline void operator += (const NVector<T>& other) {
+            T* e = elements;
+            const T* o = other.elements;
+            for ( ; e < end; ++e, ++o)
+                *e += *o;
+        }
         /**
          * Subtracts the given vector from this vector.
          *
@@ -185,69 +230,69 @@ class NVector {
          *
          * @param other the vector to subtract from this vector.
          */
-        virtual void operator -= (const NVector<T>& other) = 0;
+        inline void operator -= (const NVector<T>& other) {
+            T* e = elements;
+            const T* o = other.elements;
+            for ( ; e < end; ++e, ++o)
+                *e -= *o;
+        }
         /**
          * Multiplies this vector by the given scalar.
          *
          * @param factor the scalar with which this will be multiplied.
          */
-        virtual void operator *= (const T& factor) = 0;
+        inline void operator *= (const T& factor) {
+            if (factor == NVector<T>::one)
+                return;
+            for (T* e = elements; e < end; ++e)
+                *e *= factor;
+        }
         /**
          * Calculates the dot product of this vector and the given vector.
-         * The default implementation simply runs through the two
-         * vectors multiplying elements in pairs.
          *
          * \pre This and the given vector have the same size.
          *
          * @param other the vector with which this will be multiplied.
          * @return the dot product of this and the given vector.
          */
-        virtual T operator * (const NVector<T>& other) const {
-            T ans(0L);
-            unsigned tot = size();
-            T term;
-            for (unsigned i=0; i<tot; i++) {
-                term = (*this)[i];
-                term *= other[i];
-                ans += term;
-            }
+        inline T operator * (const NVector<T>& other) const {
+            T ans(zero);
+
+            const T* e = elements;
+            const T* o = other.elements;
+            for ( ; e < end; ++e, ++o)
+                ans += (*e) * (*o);
+
             return ans;
         }
         /**
          * Negates every element of this vector.
          */
-        virtual void negate() = 0;
+        inline void negate() {
+            for (T* e = elements; e < end; ++e)
+                *e = -*e;
+        }
         /**
          * Returns the norm of this vector.
          * This is the dot product of the vector with itself.
-         * The default implementation simply runs through the elements
-         * squaring each one in turn.
          *
          * @return the norm of this vector.
          */
-        virtual T norm() const {
-            T ans(0L);
-            unsigned tot = size();
-            T term;
-            for (unsigned i=0; i<tot; i++) {
-                term = (*this)[i];
-                term *= (*this)[i];
-                ans += term;
-            }
+        inline T norm() const {
+            T ans(zero);
+            for (const T* e = elements; e < end; ++e)
+                ans += (*e) * (*e);
             return ans;
         }
         /**
          * Returns the sum of all elements of this vector.
-         * The default implementation simply runs through the elements
-         * adding each one in turn.
          *
          * @return the sum of the elements of this vector.
          */
-        virtual T elementSum() const {
-            T ans(0L);
-            unsigned tot = size();
-            for (unsigned i=0; i<tot; i++)
-                ans += (*this)[i];
+        inline T elementSum() const {
+            T ans(zero);
+            for (const T* e = elements; e < end; ++e)
+                ans += *e;
             return ans;
         }
         /**
@@ -260,8 +305,22 @@ class NVector {
          * @param multiple the multiple of \a other to be added to this
          * vector.
          */
-        virtual void addCopies(const NVector<T>& other,
-                const T& multiple) = 0;
+        void addCopies(const NVector<T>& other, const T& multiple) {
+            if (multiple == NVector<T>::zero)
+                return;
+            if (multiple == NVector<T>::one) {
+                (*this) += other;
+                return;
+            }
+            if (multiple == NVector<T>::minusOne) {
+                (*this) -= other;
+                return;
+            }
+            T* e = elements;
+            const T* o = other.elements;
+            for ( ; e < end; ++e, ++o)
+                *e += *o * multiple;
+        }
         /**
          * Subtracts the given multiple of the given vector to this vector.
          *
@@ -272,29 +331,21 @@ class NVector {
          * @param multiple the multiple of \a other to be subtracted
          * from this vector.
          */
-        virtual void subtractCopies(const NVector<T>& other,
-                const T& multiple) = 0;
-        /**
-         * Returns a newly created vector that is a linear combination
-         * of this vector and another given vector.
-         * The vector returned will be
-         * <tt>myCoeff * this + yourCoeff * you</tt>.
-         *
-         * The new vector will initially be created by cloning this
-         * vector, which will thus determine its specific NVector
-         * subclass.
-         *
-         * @param myCoeff the coefficient of this vector in the linear
-         * combination.
-         * @param you the other vector to combine with this.
-         * @param yourCoeff the coefficient of \a you in the linear
-         * combination.
-         */
-        NVector<T>* makeLinComb(const T& myCoeff,
-                const NVector<T>& you, const T& yourCoeff) const {
-            NVector<T>* ans = clone();
-            ans *= myCoeff;
-            ans->addCopies(you, yourCoeff);
+        void subtractCopies(const NVector<T>& other, const T& multiple) {
+            if (multiple == NVector<T>::zero)
+                return;
+            if (multiple == NVector<T>::one) {
+                (*this) -= other;
+                return;
+            }
+            if (multiple == NVector<T>::minusOne) {
+                (*this) += other;
+                return;
+            }
+            T* e = elements;
+            const T* o = other.elements;
+            for ( ; e < end; ++e, ++o)
+                *e -= *o * multiple;
         }
 };
 

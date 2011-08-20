@@ -229,7 +229,7 @@ class NXMLNormalSurfaceReader;
  *   <tt>class(const NVector<NLargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
- *   <li>Virtual functions <tt>NVector<NLargeInteger>* clone() const</tt>,
+ *   <li>Virtual functions <tt>NNormalSurfaceVector* clone() const</tt>,
  *   <tt>bool allowsAlmostNormal() const</tt> and
  *   <tt>bool allowsSpun() const </tt> must be declared but not
  *   implemented.  The registry utilities will take care of their
@@ -263,6 +263,19 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param cloneMe the vector to clone.
          */
         NNormalSurfaceVector(const NVector<NLargeInteger>& cloneMe);
+
+        /**
+         * A virtual destructor.  This is required because here we introduce
+         * virtual functions into the NRay hierarchy.
+         */
+        virtual ~NNormalSurfaceVector();
+
+        /**
+         * Creates a newly allocated clone of this vector.
+         * The clone will be of the same subclass of NNormalSurfaceVector
+         * as this vector.
+         */
+        virtual NNormalSurfaceVector* clone() const = 0;
 
         /**
          * Determines if the specific underlying coordinate system
@@ -1399,6 +1412,8 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(unsigned length) :
 }
 inline NNormalSurfaceVector::NNormalSurfaceVector(
         const NVector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
+}
+inline NNormalSurfaceVector::~NNormalSurfaceVector() {
 }
 
 // Inline functions for NNormalSurface

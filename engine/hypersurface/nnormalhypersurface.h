@@ -99,7 +99,7 @@ class NXMLNormalHypersurfaceReader;
  *   <tt>class(const NVector<NLargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
- *   <li>The virtual function <tt>NVector<NLargeInteger>* clone() const</tt>
+ *   <li>The virtual function <tt>NNormalHypersurfaceVector* clone() const</tt>
  *   must be declared but not implemented.  The registry utilities will take
  *   care of its implementation.</li>
  *   <li>All abstract functions must be implemented.</li>
@@ -127,6 +127,19 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @param cloneMe the vector to clone.
          */
         NNormalHypersurfaceVector(const NVector<NLargeInteger>& cloneMe);
+
+        /**
+         * A virtual destructor.  This is required because here we
+         * introduce virtual functions into the NRay hierarchy.
+         */
+        virtual ~NNormalHypersurfaceVector();
+
+        /**
+         * Creates a newly allocated clone of this vector.
+         * The clone will be of the same subclass of NNormalHypersurfaceVector
+         * as this vector.
+         */
+        virtual NNormalHypersurfaceVector* clone() const = 0;
 
         /**
          * Determines if the normal hypersurface represented is compact (has
@@ -656,6 +669,8 @@ inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(unsigned length) :
 }
 inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(
         const NVector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
+}
+inline NNormalHypersurfaceVector::~NNormalHypersurfaceVector() {
 }
 
 // Inline functions for NNormalHypersurface

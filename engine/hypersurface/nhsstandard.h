@@ -87,7 +87,7 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
         virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
             Dim4Triangulation* triang) const;
 
-        virtual NVector<NLargeInteger>* clone() const;
+        virtual NNormalHypersurfaceVector* clone() const;
 
         static NNormalHypersurfaceVector* makeZeroVector(
             const Dim4Triangulation* triangulation);
