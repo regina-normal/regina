@@ -369,7 +369,10 @@ Version 4.90  [ (under development) ]
               "% Triangulation" marker (thanks to Matthias Goerner).
         Routine torsionAutInverse():
             - New routine for inverting automorphisms, thanks to Ryan Budney.
-
+        File surfaces/flavourregistry.h:
+            - The final "pre_test" argument (which is never used) has been
+              removed.  As a result, REGISTER_FLAVOUR now takes five arguments,
+              not six.
     USER INTERFACE:
         - There is now an option to enable or disable diagnostic
           messages from the SnapPea kernel.
