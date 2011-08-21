@@ -157,6 +157,10 @@ Version 4.90  [ (under development) ]
             - Renamed seifertWeber() to weberSeifert(), for consistency with
               the original paper.  The old routine is now deprecated, but has
               being preserved (for the time being) for backward compatibility.
+        Class NFacePairing:
+            - Fixed the human-readable output for boundary faces in toString().
+              Previously boundary faces were displayed as "n:0"; now they
+              are displayed as "bdry".
         Class NFastRay:
             - Merged into the NRay class; see the NRay and NVector changes for
               details.  Because typedefs cannot be templated, there is no
