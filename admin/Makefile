@@ -1,30 +1,15 @@
 ##
 ##  Regina - A Normal Surface Theory Calculator
-##  Makefile Template
+##  Auxiliary Makefile
 ##
-##  Process this file with automake in the top-level directory
-##  to produce Makefile.in.
+##  These tools should be used only by the core software maintainers.
+##  In fact, there are good arguments that they should not be used at all.
+##  Keeping them around though just in case.
 ##
 
-KDE_OPTIONS=noautodist
+srcdir = ..
 
-SUBDIRS = stubs
-
-EXTRA_DIST = \
-  README.txt RELEASE.txt \
-  admin.patch admin.patch.README \
-  acinclude.m4.top acx_mpi.m4.ext as-ac-expand.m4.ext cppunit.m4.ext \
-  iconv.m4.ext kde.m4.ext lib-ld.m4.ext lib-link.m4.ext lib-prefix.m4.ext \
-  libtool.m4.ext configure.ac.bot configure.ac.top \
-  Doxyfile.am Doxyfile.global Makefile.common am_edit \
-  bcheck.pl conf.change.pl config.guess config.pl config.sub \
-  cvs-clean.pl cvs.sh debianrules deps.am detect-autoconf.sh index2gloss \
-  install-sh ltmain.sh missing mkinstalldirs nmcheck oldinclude.m4.in \
-  ac_gen am_update distcheck insertstub mksums replacetabs
-
-## ----------------------- Custom targets ----------------------------
-
-.PHONY : stubs tabs
+all :
 
 stubs :
 	cd $(srcdir); ./insertstub stubs/engine \
