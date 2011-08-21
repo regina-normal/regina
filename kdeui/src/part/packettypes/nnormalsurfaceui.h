@@ -34,6 +34,7 @@
 #define __NNORMALSURFACEUI_H
 
 #include "../packettabui.h"
+#include <QLinkedList>
 
 class NSurfaceCompatibilityUI;
 class NSurfaceCoordinateUI;
@@ -67,7 +68,7 @@ class NNormalSurfaceUI : public PacketTabbedUI {
         /**
          * PacketUI overrides.
          */
-        const QPtrList<KAction>& getPacketTypeActions();
+        const QLinkedList<KAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 
     public slots:

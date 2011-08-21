@@ -26,10 +26,10 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "subcomplex/nl31pillow.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntetrahedron.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NL31Pillow;

@@ -35,13 +35,16 @@
 
 #include "packet/npacketlistener.h"
 
-#include <qptrlist.h>
-#include <qvbox.h>
+#include <QLinkedList>
+#include <kactionmenu.h>
+#include <khbox.h>
+#include <kvbox.h>
 
 class KAction;
 class KActionMenu;
 class KMainWindow;
 class PacketPane;
+class PacketWindow;
 class QLabel;
 class QToolButton;
 class ReginaPart;
@@ -57,8 +60,10 @@ namespace regina {
 
 /**
  * A packet header, containing an appropriate icon and text title.
+ *
+ * We derive from KHBox so we can use Qt frames.
  */
-class PacketHeader : public QHBox {
+class PacketHeader : public KHBox {
     Q_OBJECT
 
     private:
@@ -77,8 +82,7 @@ class PacketHeader : public QHBox {
         /**
          * Constructor.
          */
-        PacketHeader(regina::NPacket* pkt, QWidget* parent = 0,
-            const char* name = 0);
+        PacketHeader(regina::NPacket* pkt, QWidget* parent = 0);
 
     public slots:
         /**
@@ -157,7 +161,7 @@ class PacketUI {
          * The default implementation of this routine simply returns an
          * empty list.
          */
-        virtual const QPtrList<KAction>& getPacketTypeActions();
+        virtual const QLinkedList<KAction*>& getPacketTypeActions();
 
         /**
          * Return the label of the menu that should contain the actions
@@ -230,7 +234,7 @@ class PacketUI {
         /**
          * An empty action list.
          */
-        static QPtrList<KAction> noActions;
+        static QLinkedList<KAction*> noActions;
 };
 
 /**
@@ -304,7 +308,7 @@ class DefaultPacketUI : public ErrorPacketUI {
  * Packet panes may be either docked within the main ReginaPart widget
  * or may be floating freely in their own frames.
  */
-class PacketPane : public QVBox, public regina::NPacketListener {
+class PacketPane : public KVBox, public regina::NPacketListener {
     Q_OBJECT
 
     public:
@@ -320,7 +324,7 @@ class PacketPane : public QVBox, public regina::NPacketListener {
          * External components
          */
         ReginaPart* part;
-        KMainWindow* frame;
+        PacketWindow* frame;
 
         /**
          * Internal components
@@ -346,7 +350,6 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         KAction* actRefresh;
         KAction* actDockUndock;
         KAction* actClose;
-        KAction* actSeparator;
         KActionMenu* packetTypeMenu;
 
         /**
@@ -367,7 +370,7 @@ class PacketPane : public QVBox, public regina::NPacketListener {
          * by way of the PacketManager class.
          */
         PacketPane(ReginaPart* newPart, regina::NPacket* newPacket,
-            QWidget* parent = 0, const char* name = 0);
+            QWidget* parent = 0);
         ~PacketPane();
 
         /**
@@ -619,7 +622,7 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         /**
          * Allow GUI updates from within a non-GUI thread.
          */
-        void customEvent(QCustomEvent* evt);
+        void customEvent(QEvent* evt);
 };
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
@@ -633,7 +636,7 @@ inline KTextEditor::Document* PacketUI::getTextComponent() {
     return 0;
 }
 
-inline const QPtrList<KAction>& PacketUI::getPacketTypeActions() {
+inline const QLinkedList<KAction*>& PacketUI::getPacketTypeActions() {
     return noActions;
 }
 

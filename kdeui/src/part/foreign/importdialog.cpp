@@ -35,7 +35,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qframe.h>
-#include <qhbox.h>
+#include <QHBoxLayout>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
@@ -46,34 +46,44 @@
 ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
         regina::NPacket* packetTree, regina::NPacket* defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle) :
-        KDialogBase(Plain, dialogTitle, Ok|Cancel, Ok, parent),
+        KDialog(parent), // dialogTitle, Ok|Cancel, Ok, parent),
         tree(packetTree), newTree(importedData) {
-    QFrame* page = plainPage();
-    QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
 
-    QHBox* parentStrip = new QHBox(page);
-    parentStrip->setSpacing(HORIZONTAL_SPACING);
+    setCaption(dialogTitle);
+    setButtons(KDialog::Ok | KDialog::Cancel);
+    QWidget* page = new QWidget(this);
+    setMainWidget(page);
+    QVBoxLayout* layout = new QVBoxLayout(page);
+
+    QWidget* parentStrip = new QWidget(page);
+    QHBoxLayout* hbox = new QHBoxLayout;
+    hbox->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(parentStrip);
     new QLabel(i18n("Import beneath:"), parentStrip);
     chooser = new PacketChooser(tree, useFilter, false, defaultParent,
         parentStrip);
-    parentStrip->setStretchFactor(chooser, 1);
-    QWhatsThis::add(parentStrip, i18n("Select where in the packet tree "
+    hbox->setStretchFactor(chooser, 1);
+    parentStrip->setLayout(hbox);
+    parentStrip->setWhatsThis(i18n("Select where in the packet tree "
         "the new data should be imported.  The imported data will be "
         "made a new child of the selected packet."));
 
-    QHBox* labelStrip = new QHBox(page);
-    labelStrip->setSpacing(HORIZONTAL_SPACING);
+    QWidget* labelStrip = new QWidget(page);
+    QHBoxLayout* labelStripHBox = new QHBoxLayout;
+    labelStripHBox->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(labelStrip);
     new QLabel(i18n("Label:"), labelStrip);
     label = new QLineEdit(
         tree->makeUniqueLabel(newTree->getPacketLabel()).c_str(), labelStrip);
-    labelStrip->setStretchFactor(label, 1);
-    QWhatsThis::add(labelStrip, i18n("Select a packet label for the new "
+    labelStripHBox->setStretchFactor(label, 1);
+    labelStrip->setLayout(labelStripHBox);
+    labelStrip->setWhatsThis(i18n("Select a packet label for the new "
         "imported data.  This will become the label of the first packet that "
         "is imported."));
 
     layout->addStretch(1);
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 bool ImportDialog::validate() {
@@ -105,25 +115,22 @@ void ImportDialog::slotOk() {
     }
 
     // Check the label.
-    QString useLabel = label->text().stripWhiteSpace();
+    QString useLabel = label->text().trimmed();
+    const char* useLabelStr = useLabel.toAscii().constData();
     if (useLabel.isEmpty()) {
         KMessageBox::error(this, i18n("The packet label cannot be empty."));
         return;
     }
-    if (tree->findPacketLabel(useLabel)) {
+    if (tree->findPacketLabel(useLabelStr)) {
         KMessageBox::error(this, i18n(
             "There is already a packet labelled %1.").arg(useLabel));
-        label->setText(tree->makeUniqueLabel(useLabel));
+        label->setText(tree->makeUniqueLabel(useLabelStr).c_str());
         return;
     }
 
     // Insert the imported data into the packet tree.
-    newTree->setPacketLabel(useLabel);
+    newTree->setPacketLabel(useLabelStr);
     newTree->makeUniqueLabels(tree);
     parentPacket->insertChildLast(newTree);
-
-    // And we're done!
-    KDialogBase::slotOk();
 }
 
-#include "importdialog.moc"

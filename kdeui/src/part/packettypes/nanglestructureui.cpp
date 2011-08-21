@@ -32,15 +32,13 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
-#include "nanglestructureitem.h"
 #include "nanglestructureui.h"
 
 #include <klocale.h>
-#include <qheader.h>
-#include <qlabel.h>
-#include <qlistview.h>
-#include <qvbox.h>
-#include <qwhatsthis.h>
+#include <QLabel>
+#include <QHeaderView>
+#include <QTreeView>
+#include <QVBoxLayout>
 
 #define DEFAULT_ANGLE_COLUMN_WIDTH 40
 #define ANGLE_STATS_PADDING 5
@@ -48,18 +46,101 @@
 using regina::NAngleStructureList;
 using regina::NPacket;
 
+void AngleModel::rebuild() {
+    // We should be using beginResetModel() / ... / endResetModel(),
+    // but by the time we get here presumably it's too late and the model
+    // has already been altered.. :/
+    reset();
+}
+
+int AngleModel::rowCount(const QModelIndex& parent) const {
+    return structures_->getNumberOfStructures();
+}
+
+int AngleModel::columnCount(const QModelIndex& parent) const {
+    return nCoords + 1;
+}
+
+QVariant AngleModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        const regina::NAngleStructure* s =
+            structures_->getStructure(index.row());
+        if (index.column() == 0) {
+            if (s->isStrict())
+                return i18n("Strict");
+            else if (s->isTaut())
+                return i18n("Taut");
+            else
+                return QVariant();
+        } else {
+            regina::NRational angle = s->getAngle((index.column() - 1) / 3,
+                (index.column() - 1) % 3);
+            if (angle == 0)
+                return QVariant();
+
+            static const QString pi(i18n("Pi"));
+            if (angle == 1)
+                return pi;
+            else if (angle.getDenominator() == 1)
+                return QString(angle.getNumerator().stringValue().c_str()) +
+                    ' ' + pi;
+            else if (angle.getNumerator() == 1)
+                return pi + " / " +
+                    angle.getDenominator().stringValue().c_str();
+            else
+                return QString(angle.getNumerator().stringValue().c_str()) +
+                    ' ' + pi + " / " +
+                    angle.getDenominator().stringValue().c_str();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        if (index.column() == 0)
+            return i18n("Taut or strict?");
+        else
+            return i18n("Tetrahedron %1, edges %2").
+                arg((index.column() - 1) / 3).
+                arg(regina::vertexSplitString[(index.column() - 1) % 3]);
+    } else if (role == Qt::TextAlignmentRole)
+        return Qt::AlignRight;
+    else
+        return QVariant();
+}
+
+QVariant AngleModel::headerData(int section, Qt::Orientation orientation,
+        int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        if (section == 0)
+            return i18n("Type");
+        else
+            return QString::number((section - 1) / 3) + ": " + 
+                regina::vertexSplitString[(section - 1) % 3];
+    } else if (role == Qt::ToolTipRole) {
+        if (section == 0)
+            return i18n("Taut or strict?");
+        else
+            return i18n("Tetrahedron %1, edges %2").arg((section - 1) / 3).
+                arg(regina::vertexSplitString[(section - 1) % 3]);
+    } else if (role == Qt::TextAlignmentRole)
+        return Qt::AlignCenter;
+    else
+        return QVariant();
+}
+
 NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         PacketPane* enclosingPane) : PacketReadOnlyUI(enclosingPane),
-        structures(packet), currentlyAutoResizing(false) {
-    ui = new QVBox();
+        currentlyAutoResizing(false) {
+    ui = new QWidget();
+    QBoxLayout* layout = new QVBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+    ui->setLayout(layout);
 
     // Set up the statistics label.
-    QWidget* statsUpper = new QWidget(ui);
-    statsUpper->setMinimumHeight(ANGLE_STATS_PADDING);
-
+    layout->addSpacing(ANGLE_STATS_PADDING);
     stats = new QLabel(ui);
     stats->setAlignment(Qt::AlignCenter);
-    QWhatsThis::add(stats, i18n("<qt>Displays various statistics about this "
+    stats->setWhatsThis(i18n("<qt>Displays various statistics about this "
         "angle structure list, including whether the underlying triangulation "
         "supports any strict and/or taut angle structures.  A <i>strict</i> "
         "angle structure has all of its angles strictly between 0 and Pi, "
@@ -69,16 +150,19 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         "a strict angle structure even if none appear in the list below "
         "&ndash; the strict angle structure might only be found as a "
         "combination of several different vertex angle structures.</qt>"));
-
-    QWidget* statsLower = new QWidget(ui);
-    statsLower->setMinimumHeight(ANGLE_STATS_PADDING);
+    layout->addWidget(stats);
+    layout->addSpacing(ANGLE_STATS_PADDING);
 
     // Set up the table of angles.
-    table = new KListView(ui);
-    table->setAllColumnsShowFocus(true);
-    table->setSelectionMode(QListView::NoSelection);
-    ui->setStretchFactor(table, 1);
-    QWhatsThis::add(table, i18n("<qt>Displays the vertex angle structures "
+    model = new AngleModel(packet);
+
+    table = new QTreeView();
+    table->setItemsExpandable(false);
+    table->setRootIsDecorated(false);
+    table->setAlternatingRowColors(true);
+    table->header()->setStretchLastSection(false);
+    table->setSelectionMode(QTreeView::NoSelection);
+    table->setWhatsThis(i18n("<qt>Displays the vertex angle structures "
         "in this list.<p>"
         "Each row represents a single angle structure, and "
         "each entry in the table is an internal dihedral angle assigned to "
@@ -86,34 +170,32 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         "For details of which tetrahedron edges each column represents, hover "
         "the mouse over the column header (or refer to the users' "
         "handbook).</qt>"));
-
-    table->addColumn(i18n("Type"), DEFAULT_ANGLE_COLUMN_WIDTH);
-
-    unsigned long nTets = packet->getTriangulation()->getNumberOfTetrahedra();
-    unsigned long i, j;
-    for (i = 0; i < nTets; i++)
-        for (j = 0; j < 3; j++)
-            table->addColumn(QString::number(i) + ": " +
-                regina::vertexSplitString[j]);
+    // Add grid lines:
+    table->setStyleSheet("QTreeView::item { "
+                            "border: 1px solid #d9d9d9; "
+                            "border-top-color: transparent;"
+                            "border-left-color: transparent;"
+                         "}");
+    table->setModel(model);
+    layout->addWidget(table, 1);
 
     refresh();
 
-    // Final tidying up for the table now that it is full of data.
-    for (int i = 0; i < table->columns(); i++)
-        table->adjustColumn(i);
-    headerTips = new AngleHeaderToolTip(table->header());
-    connect(table->header(), SIGNAL(sizeChange(int, int, int)),
+    // Resize columns now that the table is full of data.
+    table->header()->resizeSections(QHeaderView::ResizeToContents);
+
+    connect(table->header(), SIGNAL(sectionResized(int, int, int)),
         this, SLOT(columnResized(int, int, int)));
 
     ui->setFocusProxy(table);
 }
 
 NAngleStructureUI::~NAngleStructureUI() {
-    delete headerTips;
+    delete model;
 }
 
 NPacket* NAngleStructureUI::getPacket() {
-    return structures;
+    return model->structures();
 }
 
 QWidget* NAngleStructureUI::getInterface() {
@@ -128,8 +210,8 @@ void NAngleStructureUI::refresh() {
     QString statStr;
 
     // Update the general statistics.
-    unsigned long nStructs = structures->getNumberOfStructures();
-    if (structures->isTautOnly()) {
+    unsigned long nStructs = model->structures()->getNumberOfStructures();
+    if (model->structures()->isTautOnly()) {
         if (nStructs == 0)
             statStr = i18n("No taut structures\n");
         else if (nStructs == 1)
@@ -147,11 +229,11 @@ void NAngleStructureUI::refresh() {
             statStr = i18n("%1 vertex angle structures\n").arg(nStructs);
 
         statStr.append(i18n("Span includes: "));
-        if (structures->spansStrict())
+        if (model->structures()->spansStrict())
             statStr.append(i18n("Strict, "));
         else
             statStr.append(i18n("NO Strict, "));
-        if (structures->spansTaut())
+        if (model->structures()->spansTaut())
             statStr.append(i18n("Taut"));
         else
             statStr.append(i18n("NO Taut"));
@@ -159,16 +241,10 @@ void NAngleStructureUI::refresh() {
 
     stats->setText(statStr);
 
-    // Empty the table.
-    table->clear();
+    // Rebuild the table.
+    model->rebuild();
 
-    // Update the table.
-    // Add the items in reverse order since the QListViewItem
-    // constructor puts new items at the front.
-    for (long i = nStructs - 1; i >= 0; i--)
-        new NAngleStructureItem(table, structures->getStructure(i),
-            structures->getTriangulation());
-
+    // Tidy up.
     setDirty(false);
 }
 
@@ -179,30 +255,8 @@ void NAngleStructureUI::columnResized(int section, int, int newSize) {
     // An angle column has been resized.
     // Resize all angle columns.
     currentlyAutoResizing = true;
-    for (int i = 1; i < table->columns(); i++)
+    for (int i = 1; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyAutoResizing = false;
 }
-
-AngleHeaderToolTip::AngleHeaderToolTip(QHeader *header,
-        QToolTipGroup *group) : QToolTip(header, group) {
-}
-
-void AngleHeaderToolTip::maybeTip(const QPoint& p) {
-    QHeader *header = dynamic_cast<QHeader*>(parentWidget());
-    int section = header->sectionAt(p.x());
-    if (section < 0)
-        return;
-
-    QString tipString;
-    if (section == 0)
-        tipString = i18n("Taut or strict?");
-    else
-        tipString = i18n("Tetrahedron %1, edges %2").arg((section - 1) / 3).
-            arg(regina::vertexSplitString[(section - 1) % 3]);
-
-    tip(header->sectionRect(section), tipString);
-}
-
-#include "nanglestructureui.moc"
 

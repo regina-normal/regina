@@ -35,7 +35,9 @@
 
 #include "packet/npacketlistener.h"
 
-#include <klistview.h>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QTreeWidgetItem>
+
 
 class PacketTreeView;
 class ReginaPart;
@@ -47,7 +49,7 @@ namespace regina {
 /**
  * A single item in a Regina packet tree.
  */
-class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
+class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
     private:
         /**
          * The underlying packet, or 0 if the underlying packet has
@@ -73,9 +75,9 @@ class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
          */
         PacketTreeItem(PacketTreeView* parent, regina::NPacket* realPacket);
         PacketTreeItem(PacketTreeItem* parent, regina::NPacket* realPacket);
-        PacketTreeItem(PacketTreeView* parent, QListViewItem* after,
+        PacketTreeItem(PacketTreeView* parent, QTreeWidgetItem* after,
                 regina::NPacket* realPacket);
-        PacketTreeItem(PacketTreeItem* parent, QListViewItem* after,
+        PacketTreeItem(PacketTreeItem* parent, QTreeWidgetItem* after,
                 regina::NPacket* realPacket);
 
         /**
@@ -149,7 +151,7 @@ class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
  *
  * This tree must be filled only with items of type PacketTreeItem.
  */
-class PacketTreeView : public KListView {
+class PacketTreeView : public QTreeWidget {
     Q_OBJECT
 
     private:
@@ -161,8 +163,7 @@ class PacketTreeView : public KListView {
          * Creates an empty tree.  This tree must be initialised using
          * fill().
          */
-        PacketTreeView(ReginaPart* newPart, QWidget* parent = 0,
-            const char* name = 0);
+        PacketTreeView(ReginaPart* newPart, QWidget* parent = 0);
 
         /**
          * Returns the currently selected packet, or 0 if no packet is
@@ -191,7 +192,7 @@ class PacketTreeView : public KListView {
         /**
          * View or edit the packet corresponding to the given list item.
          */
-        void packetView(QListViewItem* packet);
+        void packetView(QTreeWidgetItem* packet);
 
         /**
          * Updates this tree to match the given packet tree.  The final
@@ -208,7 +209,7 @@ class PacketTreeView : public KListView {
         /**
          * Allow GUI updates from within a non-GUI thread.
          */
-        void customEvent(QCustomEvent* evt);
+        void customEvent(QEvent* evt);
 };
 
 inline regina::NPacket* PacketTreeItem::getPacket() {
@@ -220,7 +221,9 @@ inline ReginaPart* PacketTreeItem::getPart() {
 }
 
 inline regina::NPacket* PacketTreeView::selectedPacket() {
-    QListViewItem* item = selectedItem();
+    if (selectedItems().isEmpty())
+        return 0;
+    QTreeWidgetItem* item = selectedItems().first();
     return (item ? dynamic_cast<PacketTreeItem*>(item)->getPacket() : 0);
 }
 

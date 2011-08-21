@@ -98,38 +98,16 @@ class PacketManager {
         static PacketUI* createUI(regina::NPacket* packet,
             PacketPane* enclosingPane);
 
-        /**
-         * Overlays a small read-only padlock onto the given icon.
-         *
-         * The routines overlayLockSmall() and overlayLockBar() are for
-         * small and toolbar sized icons respectively.
-         *
-         * Each of these routines returns \c true if the overlay was
-         * successful and \c false otherwise.  If the overlay was
-         * unsuccessful, the given icon will not be altered.
-         */
-        static bool overlayLockSmall(QPixmap& icon);
-        static bool overlayLockBar(QPixmap& icon);
-
     private:
         /**
-         * Support for overlaying a read-only lock onto an icon.
+         * More icon support.
          */
-        static void initLock();
-        static bool overlayLock(QPixmap& icon, QImage& lock);
+        static QString iconName(regina::NPacket* packet);
 
         /**
          * Create a new KTextEditor::Document through a KTrader query.
          */
-        static KTextEditor::Document* createDocument();
+        static KTextEditor::Document* createDocument(QObject* parent);
 };
-
-inline bool PacketManager::overlayLockSmall(QPixmap& icon) {
-    return overlayLock(icon, lockSmall);
-}
-
-inline bool PacketManager::overlayLockBar(QPixmap& icon) {
-    return overlayLock(icon, lockBar);
-}
 
 #endif

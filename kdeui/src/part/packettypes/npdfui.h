@@ -35,7 +35,8 @@
 
 #include "../packetui.h"
 
-#include <ktempfile.h>
+#include <KTemporaryFile>
+#include <QStackedWidget>
 
 class QWidgetStack;
 class KProcess;
@@ -66,13 +67,12 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         /**
          * Temporary PDF storage
          */
-        KTempFile temp;
+        KTemporaryFile temp;
 
         /**
          * Internal components
          */
-        QWidget* ui;
-        QWidgetStack* stack;
+        QStackedWidget* stack;
         QWidget* layerInfo;
         QWidget* layerError;
         QLabel* msgInfo;

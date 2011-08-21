@@ -60,10 +60,19 @@ my $regina_home = '';
 my $runscript_py = '';
 my $from_source = 0;
 my $python_lib_dir = '';
-my $python_cmd = '';
 my @python_libs;
 my $script = '';
 my @script_args;
+
+# In the absence of any user-specified options, use the python
+# command that corresponds to the original build environment.
+
+my $python_cmd = "@PYTHON_EXECUTABLE@";
+if (not -e $python_cmd) {
+    &warn("W: The python command used during the build was: $python_cmd.\n");
+    &warn("W: This command does not appear to be available now in the runtime environment.\n");
+    $python_cmd = '';
+}
 
 # --- Extract variables from the configuration file.
 
@@ -160,22 +169,22 @@ if ($interactive and not $script) {
 
 # --- Check that the current options are reasonable. ---
 
-my $prefix = "@prefix@";
-my $exec_prefix = "@exec_prefix@";
-my $datadir = "@datadir@";
-my $libdir = "@libdir@";
-my $package = "@PACKAGE@";
+my $prefix = "@CMAKE_INSTALL_PREFIX@";
+my $exec_prefix = "@CMAKE_INSTALL_PREFIX@";
+my $datadir = "@DATADIR@";
+my $libdir = "@LIBDIR@";
+my $package = "@PACKAGE_NAME@";
 
 if (! $regina_home) {
     my $prog_dir = dirname($prog_name);
-    if ( -f "$prog_dir/regina.la" and -f "$prog_dir/../config.log") {
+    if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt") {
         &info("I: Running from the source tree.\n");
         $from_source = 1;
 
         # Setting $regina_home is interesting, because we want things
         # from both the builddir and the srcdir.  Use both.
         my $builddir = "$prog_dir/..";
-        my $srcdir = "@top_srcdir@";
+        my $srcdir = "@CMAKE_BINARY_DIR@";
         $srcdir =~ /^\// or $srcdir = "$prog_dir/$srcdir";
 
         &setReginaHome($builddir, $srcdir);
@@ -198,7 +207,7 @@ if (! $python_cmd) {
 }
 
 if (! $python_lib_dir) {
-    &setPythonLibDir($from_source ? "$regina_home/python/.libs" :
+    &setPythonLibDir($from_source ? "$regina_home/python/" :
         "$libdir/$package/python");
 }
 
@@ -260,10 +269,10 @@ if ($nolibs) {
 if ($from_source) {
     # Since we're running from the source tree, we need to ensure that
     # the calculation engine library can be found.
-    &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/.libs");
+    &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/");
 
     # MacOS users will need DYLD_LIBRARY_PATH also.
-    &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/.libs");
+    &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/");
 }
 
 my @fullCommandLine = ( $python_cmd );

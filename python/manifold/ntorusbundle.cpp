@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "algebra/nabeliangroup.h"
 #include "manifold/ntorusbundle.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NMatrix2;

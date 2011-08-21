@@ -95,9 +95,9 @@ void ReginaPart::exportFile(const PacketExporter& exporter,
                 if ((! result.fileNames.empty()) &&
                         (! result.fileNames.front().isEmpty()))
                     exporter.exportData(data, result.fileNames.front(),
-                        QTextCodec::codecForName(result.encoding), widget());
+                        QTextCodec::codecForName(result.encoding.toAscii()), widget());
             } else {
-                QString file = KFileDialog::getSaveFileName(QString::null,
+                QString file = KFileDialog::getSaveFileName(KUrl(),
                     fileFilter, widget(), dialogTitle);
                 if (! file.isEmpty())
                     exporter.exportData(data, file, widget());

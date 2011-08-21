@@ -69,37 +69,25 @@
     <Action name="packet_census"/>
   </Menu>
 </MenuBar>
-<ToolBar name="mainToolBar" noMerge="1">
+<ToolBar name="mainToolBar" iconText="IconOnly" noMerge="1">
   <text>Main Toolbar</text>
   <Action name="file_save" group="file_operations"/>
   <Action name="file_close" group="file_operations"/>
 </ToolBar>
-<ToolBar name="packetTree" noMerge="1">
+<ToolBar name="packetTree" iconText="IconOnly" noMerge="1">
   <text>Packet Tree Toolbar</text>
   <Action name="tree_view"/>
+  <Action name="tree_refresh"/>
   <Action name="tree_rename"/>
   <Action name="tree_delete"/>
   <Separator/>
-  <Action name="tree_refresh"/>
-  <Separator/>
-  <Action name="nav_shallow"/>
-  <Action name="nav_deep"/>
-  <Action name="nav_up"/>
-  <Action name="nav_pageup"/>
-  <Action name="nav_top"/>
-  <Action name="nav_down"/>
-  <Action name="nav_pagedown"/>
-  <Action name="nav_bottom"/>
-</ToolBar>
-<ToolBar name="packetNew" noMerge="1">
-  <text>New Packet Toolbar</text>
-  <Action name="tree_angles"/>
   <Action name="tree_container"/>
-  <Action name="tree_filter"/>
-  <Action name="tree_surfaces"/>
-  <Action name="tree_pdf"/>
-  <Action name="tree_script"/>
-  <Action name="tree_text"/>
   <Action name="tree_triangulation"/>
+  <Action name="tree_surfaces"/>
+  <Action name="tree_angles"/>
+  <Action name="tree_filter"/>
+  <Action name="tree_text"/>
+  <Action name="tree_script"/>
+  <Action name="tree_pdf"/>
 </ToolBar>
 </kpartgui>

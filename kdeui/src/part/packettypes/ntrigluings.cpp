@@ -30,27 +30,28 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
+#include "triangulation/nface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "eltmovedialog.h"
-#include "nfacegluingitems.h"
 #include "ntrigluings.h"
 #include "../patiencedialog.h"
 #include "../reginapart.h"
 
-#include <kaction.h>
+#include <KActionCollection>
 #include <kapplication.h>
 #include <klocale.h>
-#include <ktoolbar.h>
 #include <kmessagebox.h>
-#include <kprogress.h>
+#include <kprogressdialog.h>
+#include <ktoolbar.h>
 #include <memory>
 #include <qfileinfo.h>
+#include <QHeaderView>
 #include <qlabel.h>
-#include <qtable.h>
-#include <qwhatsthis.h>
+#include <qregexp.h>
+#include <QTableWidget>
 #include <set>
 
 using regina::NPacket;
@@ -71,18 +72,450 @@ namespace {
                 triName(newTriName), censusFile(newCensusFile) {
         }
     };
+
+    /**
+     * Represents a destination for a single face gluing.
+     */
+    QRegExp reFaceGluing(
+        "^\\s*"
+        "(\\d+)"
+        "(?:\\s*\\(\\s*|\\s+)"
+        "([0-3][0-3][0-3])"
+        "\\s*\\)?\\s*$");
+
+    /**
+     * Represents a single tetrahedron face.
+     */
+    QRegExp reFace("^[0-3][0-3][0-3]$");
+}
+
+GluingsModel::GluingsModel(bool readWrite) :
+        nTet(0), name(0), adjTet(0), adjPerm(0), isReadWrite_(readWrite) {
+}
+
+void GluingsModel::refreshData(regina::NTriangulation* tri) {
+    beginResetModel();
+
+    delete[] name;
+    delete[] adjTet;
+    delete[] adjPerm;
+
+    nTet = tri->getNumberOfTetrahedra();
+    if (nTet == 0) {
+        name = 0;
+        adjTet = 0;
+        adjPerm = 0;
+
+        endResetModel();
+        return;
+    }
+
+    name = new QString[nTet];
+    adjTet = new int[4 * nTet];
+    adjPerm = new regina::NPerm4[4 * nTet];
+
+    int tetNum, face;
+    regina::NTetrahedron* tet;
+    regina::NTetrahedron* adj;
+    for (tetNum = 0; tetNum < nTet; tetNum++) {
+        tet = tri->getTetrahedron(tetNum);
+        name[tetNum] = tet->getDescription().c_str();
+        for (face = 0; face < 4; face++) {
+            adj = tet->adjacentTetrahedron(face);
+            if (adj) {
+                adjTet[tetNum * 4 + face] = tri->tetrahedronIndex(adj);
+                adjPerm[tetNum * 4 + face] = tet->adjacentGluing(face);
+            } else
+                adjTet[tetNum * 4 + face] = -1;
+        }
+    }
+
+    endResetModel();
+}
+
+void GluingsModel::addTet() {
+    beginInsertRows(QModelIndex(), nTet, nTet);
+
+    QString* newName = new QString[nTet + 1];
+    int* newTet = new int[4 * (nTet + 1)];
+    regina::NPerm4* newPerm = new regina::NPerm4[4 * (nTet + 1)];
+
+    std::copy(name, name + nTet, newName);
+    std::copy(adjTet, adjTet + 4 * nTet, newTet);
+    std::copy(adjPerm, adjPerm + 4 * nTet, newPerm);
+
+    for (int face = 0; face < 4; ++face)
+        newTet[4 * nTet + face] = -1;
+
+    delete[] name;
+    delete[] adjTet;
+    delete[] adjPerm;
+
+    name = newName;
+    adjTet = newTet;
+    adjPerm = newPerm;
+
+    ++nTet;
+
+    endInsertRows();
+}
+
+void GluingsModel::removeTet(int first, int last) {
+    beginResetModel();
+
+    if (first == 0 && last == nTet - 1) {
+        delete[] name;
+        delete[] adjTet;
+        delete[] adjPerm;
+
+        name = 0;
+        adjTet = 0;
+        adjPerm = 0;
+
+        nTet = 0;
+
+        endResetModel();
+        return;
+    }
+
+    // Adjust other tetrahedron numbers.
+    int nCut = last - first + 1;
+
+    QString* newName = new QString[nTet - nCut];
+    int* newTet = new int[4 * (nTet - nCut)];
+    regina::NPerm4* newPerm = new regina::NPerm4[4 * (nTet - nCut)];
+
+    int row, face, i;
+    for (row = 0; row < first; ++row) {
+        newName[row] = name[row];
+        for (face = 0; face < 4; ++face) {
+            newTet[4 * row + face] = adjTet[4 * row + face];
+            newPerm[4 * row + face] = adjPerm[4 * row + face];
+        }
+    }
+
+    for (row = first; row < nTet - nCut; ++row) {
+        newName[row] = name[row + nCut];
+        for (face = 0; face < 4; ++face) {
+            newTet[4 * row + face] = adjTet[4 * (row + nCut) + face];
+            newPerm[4 * row + face] = adjPerm[4 * (row + nCut) + face];
+        }
+    }
+
+    for (i = 0; i < 4 * (nTet - nCut); ++i)
+        if (newTet[i] >= first && newTet[i] <= last)
+            newTet[i] = -1;
+        else if (newTet[i] > last)
+            newTet[i] -= nCut;
+
+    delete[] name;
+    delete[] adjTet;
+    delete[] adjPerm;
+
+    name = newName;
+    adjTet = newTet;
+    adjPerm = newPerm;
+
+    nTet -= nCut;
+
+    // Done!
+    endResetModel();
+}
+
+void GluingsModel::commitData(regina::NTriangulation* tri) {
+    tri->removeAllTetrahedra();
+
+    if (nTet == 0)
+        return;
+
+    regina::NPacket::ChangeEventSpan span(tri);
+
+    regina::NTetrahedron** tets = new regina::NTetrahedron*[nTet];
+    int tetNum, adjTetNum;
+    int face, adjFace;
+
+    // Create the tetrahedra.
+    for (tetNum = 0; tetNum < nTet; tetNum++)
+        tets[tetNum] = tri->newTetrahedron(name[tetNum].toAscii().constData());
+
+    // Glue the tetrahedra together.
+    for (tetNum = 0; tetNum < nTet; tetNum++)
+        for (face = 0; face < 4; face++) {
+            adjTetNum = adjTet[4 * tetNum + face];
+            if (adjTetNum < tetNum) // includes adjTetNum == -1
+                continue;
+            adjFace = adjPerm[4 * tetNum + face][face];
+            if (adjTetNum == tetNum && adjFace < face)
+                continue;
+
+            // It's a forward gluing.
+            tets[tetNum]->joinTo(face, tets[adjTetNum],
+                adjPerm[4 * tetNum + face]);
+        }
+
+    // Tidy up.
+    delete[] tets;
+}
+
+QModelIndex GluingsModel::index(int row, int column,
+        const QModelIndex& parent) const {
+    return createIndex(row, column, quint32(5 * row + column));
+}
+
+int GluingsModel::rowCount(const QModelIndex& parent) const {
+    return nTet;
+}
+
+int GluingsModel::columnCount(const QModelIndex& parent) const {
+    return 5;
+}
+
+QVariant GluingsModel::data(const QModelIndex& index, int role) const {
+    int tet = index.row();
+    if (role == Qt::DisplayRole) {
+        // Tetrahedron name?
+        if (index.column() == 0)
+            return (name[tet].isEmpty() ? QString::number(tet) :
+                (QString::number(tet) + " (" + name[tet] + ')'));
+
+        // Face gluing?
+        int face = 4 - index.column();
+        if (face >= 0)
+            return destString(face, adjTet[4 * tet + face],
+                adjPerm[4 * tet + face]);
+        return QVariant();
+    } else if (role == Qt::EditRole) {
+        // Tetrahedron name?
+        if (index.column() == 0)
+            return name[tet];
+
+        // Face gluing?
+        int face = 4 - index.column();
+        if (face >= 0)
+            return destString(face, adjTet[4 * tet + face],
+                adjPerm[4 * tet + face]);
+        return QVariant();
+    } else
+        return QVariant();
+}
+
+QVariant GluingsModel::headerData(int section, Qt::Orientation orientation,
+        int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    switch (section) {
+        case 0: return i18n("Tetrahedron");
+        case 1: return i18n("Face 012");
+        case 2: return i18n("Face 013");
+        case 3: return i18n("Face 023");
+        case 4: return i18n("Face 123");
+    }
+    return QVariant();
+}
+
+Qt::ItemFlags GluingsModel::flags(const QModelIndex& index) const {
+    if (isReadWrite_)
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
+        int role) {
+    int tet = index.row();
+    if (index.column() == 0) {
+        QString newName = value.toString().trimmed();
+        if (newName == name[tet])
+            return false;
+
+        name[tet] = newName;
+        emit dataChanged(index, index);
+        return true;
+    }
+
+    int face = 4 - index.column();
+    if (face < 0)
+        return false;
+
+    int newAdjTet;
+    regina::NPerm4 newAdjPerm;
+
+    // Find the proposed new gluing.
+    QString text = value.toString().trimmed();
+
+    if (text.isEmpty()) {
+        // Boundary face.
+        newAdjTet = -1;
+    } else if (! reFaceGluing.exactMatch(text)) {
+        // Bad string.
+        showError(i18n("<qt>The face gluing should be entered in the "
+            "form: <i>tet (face)</i>.  An example is <i>5 (032)</i>, "
+            "which represents face 032 of tetrahedron 5.<p>"
+            "For a method of entering face gluings that is slower but "
+            "easier to understand, you can switch to pop-up dialog "
+            "mode in the triangulation preferences.</qt>"));
+        return false;
+    } else {
+        // Real face.
+        newAdjTet = reFaceGluing.cap(1).toInt();
+        QString tetFace = reFaceGluing.cap(2);
+
+        // Check explicitly for a negative tetrahedron number
+        // since isFaceStringValid() takes an unsigned integer.
+        if (newAdjTet < 0 || newAdjTet >= nTet) {
+            showError(i18n("There is no tetrahedron number %1.").
+                arg(newAdjTet));
+            return false;
+        }
+
+        // Do we have a valid gluing?
+        QString err = isFaceStringValid(tet, face, newAdjTet, tetFace,
+            &newAdjPerm);
+        if (! err.isNull()) {
+            showError(err);
+            return false;
+        }
+    }
+
+    // Yes, looks valid.
+    int oldAdjTet = adjTet[4 * tet + face];
+    regina::NPerm4 oldAdjPerm = adjPerm[4 * tet + face];
+    int oldAdjFace = oldAdjPerm[face];
+
+    // Have we even made a change?
+    if (oldAdjTet < 0 && newAdjTet < 0)
+        return false;
+    if (oldAdjTet == newAdjTet && oldAdjPerm == newAdjPerm)
+        return false;
+
+    // Yes!  Go ahead and make the change.
+
+    // First unglue from the old partner if it exists.
+    if (oldAdjTet >= 0) {
+        adjTet[4 * oldAdjTet + oldAdjFace] = -1;
+
+        QModelIndex oldAdjIndex = this->index(oldAdjTet, 4 - oldAdjFace,
+            QModelIndex());
+        emit dataChanged(oldAdjIndex, oldAdjIndex);
+    }
+
+    // Are we making the face boundary?
+    if (newAdjTet < 0) {
+        adjTet[4 * tet + face] = -1;
+
+        emit dataChanged(index, index);
+        return true;
+    }
+
+    // We are gluing the face to a new partner.
+    int newAdjFace = newAdjPerm[face];
+
+    // Does this new partner already have its own partner?
+    if (adjTet[4 * newAdjTet + newAdjFace] >= 0) {
+        // Yes.. better unglue it.
+        int extraTet = adjTet[4 * newAdjTet + newAdjFace];
+        int extraFace = adjPerm[4 * newAdjTet + newAdjFace][newAdjFace];
+
+        adjTet[4 * extraTet + extraFace] = -1;
+
+        QModelIndex extraIndex = this->index(extraTet, 4 - extraFace,
+            QModelIndex());
+        emit dataChanged(extraIndex, extraIndex);
+    }
+
+    // Glue the two faces together.
+    adjTet[4 * tet + face] = newAdjTet;
+    adjTet[4 * newAdjTet + newAdjFace] = tet;
+
+    adjPerm[4 * tet + face] = newAdjPerm;
+    adjPerm[4 * newAdjTet + newAdjFace] = newAdjPerm.inverse();
+
+    emit dataChanged(index, index);
+
+    QModelIndex newAdjIndex = this->index(newAdjTet, 4 - newAdjFace,
+        QModelIndex());
+    emit dataChanged(newAdjIndex, newAdjIndex);
+
+    return true;
+}
+
+QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
+        unsigned long destTet, const QString& destFace,
+        regina::NPerm4* gluing) {
+    if (destTet >= nTet)
+        return i18n("There is no tetrahedron number %1.").arg(destTet);
+
+    if (! reFace.exactMatch(destFace))
+        return i18n("<qt>%1 is not a valid tetrahedron face.  A tetrahedron "
+            "face must be described by a sequence of three vertices, each "
+            "between 0 and 3 inclusive.  An example is <i>032</i>.</qt>").
+            arg(destFace);
+
+    if (destFace[0] == destFace[1] || destFace[1] == destFace[2] ||
+            destFace[2] == destFace[0])
+        return i18n("%1 is not a valid tetrahedron face.  The three vertices "
+            "forming the face must be distinct.").arg(destFace);
+
+    regina::NPerm4 foundGluing = faceStringToPerm(srcFace, destFace);
+    if (srcTet == destTet && foundGluing[srcFace] == srcFace)
+        return i18n("A face cannot be glued to itself.");
+
+    // It's valid!
+    if (gluing)
+        *gluing = foundGluing;
+
+    return QString::null;
+}
+
+void GluingsModel::showError(const QString& message) {
+    KMessageBox::error(0 /* TODO: should be the view */, message);
+}
+
+QString GluingsModel::destString(int srcFace, int destTet,
+        const regina::NPerm4& gluing) {
+    if (destTet < 0)
+        return "";
+    else
+        return QString::number(destTet) + " (" +
+            (gluing * regina::NFace::ordering[srcFace]).trunc3().c_str() + ')';
+}
+
+regina::NPerm4 GluingsModel::faceStringToPerm(int srcFace, const QString& str) {
+    int destVertex[4];
+
+    destVertex[3] = 6; // This will be adjusted in a moment.
+    for (int i = 0; i < 3; i++) {
+        // Use toLatin1() here because we are converting characters,
+        // not strings.
+        destVertex[i] = str[i].toLatin1() - '0';
+        destVertex[3] -= destVertex[i];
+    }
+
+    return regina::NPerm4(destVertex[0], destVertex[1], destVertex[2],
+        destVertex[3]) * regina::NFace::ordering[srcFace].inverse();
 }
 
 NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI,
         const ReginaPrefSet& initPrefs, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet),
-        editMode(initPrefs.triEditMode), censusFiles(initPrefs.censusFiles) {
+        censusFiles(initPrefs.censusFiles) {
     // Set up the table of face gluings.
+    model = new GluingsModel(readWrite);
+    faceTable = new QTableView();
+    faceTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
+    faceTable->setModel(model);
+    
+    if (readWrite)
+        faceTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    else
+        faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    faceTable = new QTable(0, 5, 0);
-    faceTable->setReadOnly(! readWrite);
-    QWhatsThis::add(faceTable, i18n("<qt>A table specifying which tetrahedron "
+
+    faceTable->setWhatsThis(i18n("<qt>A table specifying which tetrahedron "
         "faces are identified with which others.<p>"
         "Tetrahedra are numbered upwards from 0, and the four vertices of "
         "each tetrahedron are numbered 0, 1, 2 and 3.  Each row of the table "
@@ -96,59 +529,57 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "To change these identifications, simply type your own gluings into "
         "the table.</qt>"));
 
-    QHeader* hdr = faceTable->verticalHeader();
-    hdr->hide();
-    faceTable->setLeftMargin(0);
+    faceTable->verticalHeader()->hide();
 
-    hdr = faceTable->horizontalHeader();
-    hdr->setLabel(0, i18n("Tetrahedron"));
-    hdr->setLabel(1, i18n("Face 012"));
-    hdr->setLabel(2, i18n("Face 013"));
-    hdr->setLabel(3, i18n("Face 023"));
-    hdr->setLabel(4, i18n("Face 123"));
+    //faceTable->setColumnStretchable(0, true);
+    //faceTable->setColumnStretchable(1, true);
+    //faceTable->setColumnStretchable(2, true);
+    //faceTable->setColumnStretchable(3, true);
+    //faceTable->setColumnStretchable(4, true);
 
-    faceTable->setColumnStretchable(0, true);
-    faceTable->setColumnStretchable(1, true);
-    faceTable->setColumnStretchable(2, true);
-    faceTable->setColumnStretchable(3, true);
-    faceTable->setColumnStretchable(4, true);
-
-    connect(faceTable, SIGNAL(valueChanged(int, int)),
-        this, SLOT(notifyGluingsChanged()));
+    connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+        this, SLOT(notifyDataChanged()));
 
     ui = faceTable;
 
     // Set up the triangulation actions.
+    KAction* sep;
 
-    triActions = new KActionCollection(0, 0, 0, ReginaPart::factoryInstance());
-    triActionList.setAutoDelete(true);
+    triActions = new KActionCollection((QObject*)0);
+    //triActionList.setAutoDelete(true);
 
-    actAddTet = new KAction(i18n("&Add Tet"), "insert_table_row",
-        0 /* shortcut */, this, SLOT(addTet()), triActions,
-        "tri_add_tet");
+    actAddTet = triActions->addAction("tri_add_tet");
+    actAddTet->setText(i18n("&Add Tet"));
+    actAddTet->setIcon(KIcon("edit-table-insert-row-below"));
+
     actAddTet->setToolTip(i18n("Add a new tetrahedron"));
     actAddTet->setEnabled(readWrite);
     actAddTet->setWhatsThis(i18n("Add a new tetrahedron to this "
         "triangulation."));
     enableWhenWritable.append(actAddTet);
     triActionList.append(actAddTet);
+    connect(actAddTet, SIGNAL(triggered()), this, SLOT(addTet()));
 
-    actRemoveTet = new KAction(i18n("&Remove Tet"), "delete_table_row",
-        0 /* shortcut */, this, SLOT(removeSelectedTets()), triActions,
-        "tri_remove_tet");
+    actRemoveTet = triActions->addAction("tri_remove_tet");
+    actRemoveTet->setText(i18n("&Remove Tet"));
+    actRemoveTet->setIcon(KIcon("edit-table-delete-row"));
     actRemoveTet->setToolTip(i18n("Remove the currently selected tetrahedra"));
     actRemoveTet->setEnabled(false);
     actRemoveTet->setWhatsThis(i18n("Remove the currently selected "
         "tetrahedra from this triangulation."));
-    connect(faceTable, SIGNAL(selectionChanged()), this,
-        SLOT(updateRemoveState()));
+    connect(actRemoveTet, SIGNAL(triggered()), this, SLOT(removeSelectedTets()));
+    connect(faceTable->selectionModel(),
+        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+        this, SLOT(updateRemoveState()));
     triActionList.append(actRemoveTet);
 
-    triActionList.append(new KActionSeparator());
+    sep = new KAction(triActions);
+    sep->setSeparator(true);
+    triActionList.append(sep);
 
-    actSimplify = new KAction(i18n("&Simplify"), "wizard",
-        0 /* shortcut */, this, SLOT(simplify()), triActions,
-        "tri_simplify");
+    actSimplify = triActions->addAction("tri_simplify");
+    actSimplify->setText(i18n("&Simplify"));
+    actSimplify->setIcon(KIcon("tools-wizard"));
     actSimplify->setToolTip(i18n(
         "Simplify the triangulation as far as possible"));
     actSimplify->setEnabled(readWrite);
@@ -161,13 +592,12 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "means that sometimes only a small reduction can be obtained.  See "
         "the <i>Make 0-Efficient</i> routine for a slower but more powerful "
         "reduction."));
+    connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
     enableWhenWritable.append(actSimplify);
     triActionList.append(actSimplify);
 
-    KAction* actEltMove = new KAction(i18n(
-        "&Elementary Move..."),
-        0 /* shortcut */, this, SLOT(elementaryMove()), triActions,
-        "tri_elementary_move");
+    KAction* actEltMove = triActions->addAction("tri_elementary_move");
+    actEltMove->setText(i18n("&Elementary Move..."));
     actEltMove->setToolTip(i18n(
         "Select an elementary move with which to modify the triangulation"));
     actEltMove->setEnabled(readWrite);
@@ -179,12 +609,15 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "elementary move to apply.</qt>"));
     enableWhenWritable.append(actEltMove);
     triActionList.append(actEltMove);
+    connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
-    triActionList.append(new KActionSeparator());
+    sep = new KAction(triActions);
+    sep->setSeparator(true);
+    triActionList.append(sep);
 
-    KAction* actOrient = new KAction(i18n( "&Orient"), "orient",
-        0 /* shortcut */, this, SLOT(orient()), triActions,
-        "tri_orient");
+    KAction* actOrient = triActions->addAction("tri_orient");
+    actOrient->setText(i18n("&Orient"));
+    actOrient->setIcon(KIcon("orient"));
     actOrient->setToolTip(i18n(
         "Relabel vertices of tetrahedra for consistent orientation"));
     actOrient->setEnabled(readWrite);
@@ -195,11 +628,12 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "components, only the orientable components will be relabelled.</qt>"));
     enableWhenWritable.append(actOrient);
     triActionList.append(actOrient);
+    connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
-    KAction* actBarycentricSubdivide = new KAction(i18n(
-        "&Barycentric Subdivision"), "barycentric",
-        0 /* shortcut */, this, SLOT(barycentricSubdivide()), triActions,
+    KAction* actBarycentricSubdivide = triActions->addAction(
         "tri_barycentric_subdivide");
+    actBarycentricSubdivide->setText(i18n("&Barycentric Subdivision"));
+    actBarycentricSubdivide->setIcon(KIcon("barycentric"));
     actBarycentricSubdivide->setToolTip(i18n(
         "Perform a barycentric subdivision"));
     actBarycentricSubdivide->setEnabled(readWrite);
@@ -210,10 +644,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "24 smaller tetrahedra."));
     enableWhenWritable.append(actBarycentricSubdivide);
     triActionList.append(actBarycentricSubdivide);
+    connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
+        SLOT(barycentricSubdivide()));
 
-    KAction* actIdealToFinite = new KAction(i18n("&Truncate Ideal Vertices"),
-        "finite", 0 /* shortcut */, this, SLOT(idealToFinite()), triActions,
-        "tri_ideal_to_finite");
+    KAction* actIdealToFinite = triActions->addAction("tri_ideal_to_finite");
+    actIdealToFinite->setText(i18n("&Truncate Ideal Vertices"));
+    actIdealToFinite->setIcon(KIcon("finite"));
+      
     actIdealToFinite->setToolTip(i18n(
         "Truncate any ideal vertices"));
     actIdealToFinite->setEnabled(readWrite);
@@ -227,10 +664,11 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "This action was previously called <i>Ideal to Finite</i>."));
     enableWhenWritable.append(actIdealToFinite);
     triActionList.append(actIdealToFinite);
+    connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
-    KAction* actFiniteToIdeal = new KAction(i18n("Make &Ideal"), "cone",
-        0 /* shortcut */, this, SLOT(finiteToIdeal()), triActions,
-        "tri_finite_to_ideal");
+    KAction* actFiniteToIdeal = triActions->addAction("tri_finite_to_ideal");
+    actFiniteToIdeal->setText(i18n("Make &Ideal"));
+    actFiniteToIdeal->setIcon(KIcon("cone"));
     actFiniteToIdeal->setToolTip(i18n(
         "Convert real boundary components into ideal vertices"));
     actFiniteToIdeal->setEnabled(readWrite);
@@ -244,10 +682,11 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "real boundary components, this operation will have no effect."));
     enableWhenWritable.append(actFiniteToIdeal);
     triActionList.append(actFiniteToIdeal);
-
-    KAction* actDoubleCover = new KAction(i18n( "&Double Cover"), "doublecover",
-        0 /* shortcut */, this, SLOT(doubleCover()), triActions,
-        "tri_double_cover");
+    connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
+    
+    KAction* actDoubleCover = triActions->addAction("tri_double_cover");
+    actDoubleCover->setText(i18n("&Double Cover"));
+    actDoubleCover->setIcon(KIcon("doublecover"));
     actDoubleCover->setToolTip(i18n(
         "Convert the triangulation to its orientable double cover"));
     actDoubleCover->setEnabled(readWrite);
@@ -258,13 +697,15 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "duplicated, resulting in a disconnected triangulation."));
     enableWhenWritable.append(actDoubleCover);
     triActionList.append(actDoubleCover);
+    connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
-    triActionList.append(new KActionSeparator());
+    sep = new KAction(triActions);
+    sep->setSeparator(true);
+    triActionList.append(sep);
 
-    KAction* actSplitIntoComponents = new KAction(i18n(
-        "E&xtract Components"),
-        0 /* shortcut */, this, SLOT(splitIntoComponents()), triActions,
+    KAction* actSplitIntoComponents = triActions->addAction(
         "tri_split_into_components");
+    actSplitIntoComponents->setText(i18n("E&xtract Components"));
     actSplitIntoComponents->setToolTip(i18n(
         "Form a new triangulation for each disconnected component"));
     actSplitIntoComponents->setWhatsThis(i18n("<qt>Split a disconnected "
@@ -275,11 +716,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "If this triangulation is already connected, this operation will "
         "do nothing.</qt>"));
     triActionList.append(actSplitIntoComponents);
+    connect(actSplitIntoComponents, SIGNAL(triggered()), this,
+        SLOT(splitIntoComponents()));
 
-    KAction* actConnectedSumDecomposition = new KAction(i18n(
-        "Co&nnected Sum Decomposition"), "math_sum",
-        0 /* shortcut */, this, SLOT(connectedSumDecomposition()), triActions,
+    KAction* actConnectedSumDecomposition = triActions->addAction(
         "tri_connected_sum_decomposition");
+    actConnectedSumDecomposition->setText(i18n("Co&nnected Sum Decomposition"));
+    actConnectedSumDecomposition->setIcon(KIcon("math_sum"));
     actConnectedSumDecomposition->setToolTip(i18n(
         "Split into a connected sum of prime 3-manifolds"));
     actConnectedSumDecomposition->setWhatsThis(i18n("Break this "
@@ -288,11 +731,11 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "summands will be added as new triangulations beneath it in "
         "the packet tree."));
     triActionList.append(actConnectedSumDecomposition);
+    connect(actConnectedSumDecomposition, SIGNAL(triggered()), this, 
+        SLOT(connectedSumDecomposition()));
 
-    KAction* actZeroEff = new KAction(i18n(
-        "Make &0-Efficient"),
-        0 /* shortcut */, this, SLOT(makeZeroEfficient()), triActions,
-        "tri_make_zero_efficient");
+    KAction* actZeroEff = triActions->addAction( "tri_make_zero_efficient");
+    actZeroEff->setText(i18n("Make &0-Efficient"));
     actZeroEff->setToolTip(i18n(
         "Convert this into a 0-efficient triangulation if possible"));
     actZeroEff->setEnabled(readWrite);
@@ -306,12 +749,15 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "if this is the case.</qt>"));
     enableWhenWritable.append(actZeroEff);
     triActionList.append(actZeroEff);
+    connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
 
-    triActionList.append(new KActionSeparator());
+    sep = new KAction(triActions);
+    sep->setSeparator(true);
+    triActionList.append(sep);
 
-    KAction* actCensusLookup = new KAction(i18n("Census &Lookup"), "find",
-        0 /* shortcut */, this, SLOT(censusLookup()), triActions,
-        "tri_census_lookup");
+    KAction* actCensusLookup = triActions->addAction("tri_census_lookup");
+    actCensusLookup->setText(i18n("Census &Lookup"));
+    actCensusLookup->setIcon(KIcon("edit-find"));
     actCensusLookup->setToolTip(i18n(
         "Search for this triangulation in the configured list of censuses"));
     actCensusLookup->setWhatsThis(i18n("Attempt to locate this "
@@ -320,6 +766,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "The list of censuses that are searched can be customised through "
         "Regina's settings."));
     triActionList.append(actCensusLookup);
+    connect(actCensusLookup, SIGNAL(triggered()), this, SLOT(censusLookup()));
 
     // Tidy up.
 
@@ -328,19 +775,20 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
 NTriGluingsUI::~NTriGluingsUI() {
     // Make sure the actions, including separators, are all deleted.
-    triActionList.clear();
     delete triActions;
+
+    delete model;
 }
 
-const QPtrList<KAction>& NTriGluingsUI::getPacketTypeActions() {
+const QLinkedList<KAction*>& NTriGluingsUI::getPacketTypeActions() {
     return triActionList;
 }
 
 void NTriGluingsUI::fillToolBar(KToolBar* bar) {
-    actAddTet->plug(bar);
-    actRemoveTet->plug(bar);
-    bar->insertLineSeparator();
-    actSimplify->plug(bar);
+    bar->addAction(actAddTet);
+    bar->addAction(actRemoveTet);
+    bar->addSeparator();
+    bar->addAction(actSimplify);
 }
 
 regina::NPacket* NTriGluingsUI::getPacket() {
@@ -352,175 +800,71 @@ QWidget* NTriGluingsUI::getInterface() {
 }
 
 void NTriGluingsUI::commit() {
-    tri->removeAllTetrahedra();
-
-    long nRows = faceTable->numRows();
-    if (nRows > 0) {
-        regina::NPacket::ChangeEventSpan span(tri);
-
-        regina::NTetrahedron** tets = new regina::NTetrahedron*[nRows];
-        FaceGluingItem* item;
-        long tetNum, adjTetNum;
-        int face, adjFace;
-
-        // Create the tetrahedra.
-        for (tetNum = 0; tetNum < nRows; tetNum++)
-            tets[tetNum] = tri->newTetrahedron(
-                dynamic_cast<TetNameItem*>(faceTable->item(tetNum, 0))->
-                getName().ascii());
-
-        // Glue the tetrahedra together.
-        for (tetNum = 0; tetNum < nRows; tetNum++)
-            for (face = 0; face < 4; face++) {
-                item = dynamic_cast<FaceGluingItem*>(faceTable->item(tetNum,
-                    4 - face));
-
-                adjTetNum = item->adjacentTetrahedron();
-                if (adjTetNum < tetNum)
-                    continue;
-                adjFace = item->adjacentFace();
-                if (adjTetNum == tetNum && adjFace < face)
-                    continue;
-
-                // It's a forward gluing.
-                tets[tetNum]->joinTo(face, tets[adjTetNum],
-                    item->adjacentGluing());
-            }
-
-        // Tidy up.
-        delete[] tets;
-    }
-
+    model->commitData(tri);
     setDirty(false);
 }
 
 void NTriGluingsUI::refresh() {
-    unsigned long nTets = tri->getNumberOfTetrahedra();
-    faceTable->setNumRows(nTets);
-
-    unsigned long tetNum;
-    unsigned face;
-    regina::NTetrahedron* tet;
-    regina::NTetrahedron* adj;
-    for (tetNum = 0; tetNum < nTets; tetNum++) {
-        tet = tri->getTetrahedron(tetNum);
-        faceTable->setItem(tetNum, 0, new TetNameItem(faceTable,
-            tetNum, tet->getDescription().c_str()));
-        for (face = 0; face < 4; face++) {
-            adj = tet->adjacentTetrahedron(face);
-            if (adj)
-                faceTable->setItem(tetNum, 4 - face, new FaceGluingItem(
-                    faceTable, editMode, face, tri->tetrahedronIndex(adj),
-                    tet->adjacentGluing(face)));
-            else
-                faceTable->setItem(tetNum, 4 - face,
-                    new FaceGluingItem(faceTable, editMode));
-        }
-    }
-
+    model->refreshData(tri);
     setDirty(false);
 }
 
 void NTriGluingsUI::setReadWrite(bool readWrite) {
-    faceTable->setReadOnly(! readWrite);
+    model->setReadWrite(readWrite);
 
-    for (KAction* act = enableWhenWritable.first(); act;
-            act = enableWhenWritable.next())
-        act->setEnabled(readWrite);
+    if (readWrite)
+        faceTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    else
+        faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    QLinkedListIterator<KAction*> it(enableWhenWritable);
+    while (it.hasNext())
+        (it.next())->setEnabled(readWrite);
 
     updateRemoveState();
 }
 
 void NTriGluingsUI::addTet() {
-    long newRow = faceTable->numRows();
-
-    faceTable->setNumRows(newRow + 1);
-    faceTable->setItem(newRow, 0, new TetNameItem(faceTable, newRow, ""));
-    for (int face = 0; face < 4; face++)
-        faceTable->setItem(newRow, 4 - face, new FaceGluingItem(
-            faceTable, editMode));
-
+    model->addTet();
     setDirty(true);
 }
 
 void NTriGluingsUI::removeSelectedTets() {
     // Gather together all the tetrahedra to be deleted.
-    std::set<int> rows;
-
-    int nSel = faceTable->numSelections();
-    QTableSelection sel;
-    int i, j;
-    for (i = 0; i < nSel; i++) {
-        sel = faceTable->selection(i);
-        if (sel.isActive())
-            for (j = sel.topRow(); j <= sel.bottomRow(); j++)
-                rows.insert(j);
-    }
-
-    // Has anything been selected at all?
-    if (rows.empty()) {
+    QModelIndexList sel = faceTable->selectionModel()->selectedIndexes();
+    if (sel.empty()) {
         KMessageBox::error(ui, i18n(
             "No tetrahedra are currently selected for removal."));
         return;
     }
 
+    // Selections are contiguous.
+    int first, last;
+    first = last = sel.front().row();
+
+    int row, i;
+    for (i = 1; i < sel.count(); ++i) {
+        row = sel[i].row();
+        if (row < first)
+            first = row;
+        if (row > last)
+            last = row;
+    }
+
     // Notify the user that tetrahedra will be removed.
     QString message;
-    if (rows.size() == 1)
-        message = i18n("Tetrahedron %1 will be removed.  Are you sure?").
-            arg(*rows.begin());
-    else if (rows.size() == 2)
-        message = i18n("Tetrahedra %1 and %2 will be removed.  Are you sure?").
-            arg(*rows.begin()).arg(*rows.rbegin());
+    if (first == last)
+        message = i18n("1 tetrahedron (number %1) will be removed.  "
+            "Are you sure?").arg(first);
     else
-        message = i18n("%1 tetrahedra from %2 to %3 will be removed.  "
-            "Are you sure?").arg(rows.size()).arg(*rows.begin()).
-            arg(*rows.rbegin());
+        message = i18n("%1 tetrahedra (numbers %2 to %3) will be removed.  "
+            "Are you sure?").arg(last - first + 1).arg(first).arg(last);
 
     if (KMessageBox::warningContinueCancel(ui, message) == KMessageBox::Cancel)
         return;
 
     // Off we go!
-    // Start by breaking any existing gluings with the doomed tetrahedra.
-    std::set<int>::const_iterator it;
-    for (it = rows.begin(); it != rows.end(); it++)
-        for (i = 1; i < 5; i++)
-            dynamic_cast<FaceGluingItem*>(faceTable->item(*it, i))->unjoin();
-
-    // Adjust other tetrahedron numbers.
-    int nRows = faceTable->numRows();
-    long* newTetNums = new long[nRows];
-
-    it = rows.begin();
-    int oldRow = 0;
-    int newRow = 0;
-    while (oldRow < nRows) {
-        if (it != rows.end() && oldRow == *it) {
-            newTetNums[oldRow++] = -1;
-            it++;
-        } else
-            newTetNums[oldRow++] = newRow++;
-    }
-
-    for (oldRow = 0; oldRow < nRows; oldRow++) {
-        dynamic_cast<TetNameItem*>(faceTable->item(oldRow, 0))->
-            tetNumToChange(newTetNums[oldRow]);
-        for (i = 1; i < 5; i++)
-            dynamic_cast<FaceGluingItem*>(faceTable->item(oldRow, i))->
-                tetNumsToChange(newTetNums);
-    }
-
-    delete[] newTetNums;
-
-    // And finally remove the tetrahedra.
-    QMemArray<int> arr(rows.size());
-    i = 0;
-    for (it = rows.begin(); it != rows.end(); it++)
-        arr[i++] = *it;
-
-    faceTable->removeRows(arr);
-
-    // Done!
+    model->removeTet(first, last);
     setDirty(true);
 }
 
@@ -659,8 +1003,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
         std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(i18n(
             "Connected sum decomposition can be quite\n"
             "slow for larger triangulations.\n\n"
-            "Please be patient."),
-            enclosingPane->getPart()->instance(), ui));
+            "Please be patient."), ui));
 
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
@@ -720,8 +1063,7 @@ void NTriGluingsUI::makeZeroEfficient() {
     std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(i18n(
         "0-efficiency reduction can be quite\n"
         "slow for larger triangulations.\n\n"
-        "Please be patient."),
-        enclosingPane->getPart()->instance(), ui));
+        "Please be patient."), ui));
 
     // If it's possible that the triangulation but not the number of
     // tetrahedra is changed, remember the original.
@@ -814,19 +1156,20 @@ void NTriGluingsUI::censusLookup() {
 
     // Run through each census file.
     KProgressDialog* progress =
-        new KProgressDialog(ui, 0, i18n("Census Lookup"),
+        new KProgressDialog(ui, i18n("Census Lookup"),
         i18n("Initialising"));
-    progress->progressBar()->setTotalSteps(censusFiles.size() + 1);
+    progress->progressBar()->setMinimum(0);
+    progress->progressBar()->setMaximum(censusFiles.size() + 1);
     progress->show();
     KApplication::kApplication()->processEvents();
 
-    QValueVector<CensusHit> results;
+    QVector<CensusHit> results;
     QString searched = i18n("The following censuses were searched:");
     NPacket* census;
     NPacket* p;
     for (ReginaFilePrefList::const_iterator it = censusFiles.begin();
             it != censusFiles.end(); it++) {
-        progress->progressBar()->advance(1);
+        progress->progressBar()->setValue(progress->progressBar()->value()+1);
         KApplication::kApplication()->processEvents();
 
         // Check for cancellation.
@@ -841,7 +1184,7 @@ void NTriGluingsUI::censusLookup() {
             continue;
 
         // Process this census file.
-        progress->setLabel(i18n("Searching %1...").arg((*it).filename));
+        progress->setLabelText(i18n("Searching %1...").arg((*it).filename));
         KApplication::kApplication()->processEvents();
 
         census = regina::readFileMagic(
@@ -865,7 +1208,7 @@ void NTriGluingsUI::censusLookup() {
         searched = searched + '\n' + (*it).filename;
     }
 
-    progress->progressBar()->advance(1);
+    progress->progressBar()->setValue(progress->progressBar()->value()+1);
     delete progress;
     KApplication::kApplication()->processEvents();
 
@@ -880,7 +1223,7 @@ void NTriGluingsUI::censusLookup() {
         QString detailsText = i18n("Identified by census lookup:");
         QString detailsHTML = i18n("<qt>The triangulation was identified:");
         QString censusName;
-        for (QValueVector<CensusHit>::const_iterator it = results.begin();
+        for (QVector<CensusHit>::const_iterator it = results.begin();
                 it != results.end(); it++) {
             censusName = QFileInfo((*it).censusFile).fileName();
             detailsHTML += i18n("<p>Name: %1<br>Census: %2").
@@ -897,8 +1240,9 @@ void NTriGluingsUI::censusLookup() {
 
         // If we're in read-write mode, store the hits as a text packet
         // also.
-        if (! faceTable->isReadOnly()) {
-            regina::NText* text = new regina::NText(detailsText.ascii());
+        if (model->isReadWrite()) {
+            regina::NText* text = 
+              new regina::NText(detailsText.toAscii().constData());
             text->setPacketLabel(tri->makeUniqueLabel(
                 "ID: " + tri->getPacketLabel()));
             tri->insertChildLast(text);
@@ -907,15 +1251,14 @@ void NTriGluingsUI::censusLookup() {
 }
 
 void NTriGluingsUI::updateRemoveState() {
-    // Are we read-write?
-    if (actAddTet->isEnabled())
-        actRemoveTet->setEnabled(faceTable->numSelections() > 0);
+    if (model->isReadWrite())
+        actRemoveTet->setEnabled(
+            ! faceTable->selectionModel()->selectedIndexes().empty());
     else
         actRemoveTet->setEnabled(false);
 }
 
-void NTriGluingsUI::notifyGluingsChanged() {
+void NTriGluingsUI::notifyDataChanged() {
     setDirty(true);
 }
 
-#include "ntrigluings.moc"

@@ -35,7 +35,7 @@
 
 #include "packet/npacketlistener.h"
 
-#include <qtable.h>
+#include <QTableWidget>
 
 namespace regina {
     class NPacket;
@@ -44,7 +44,7 @@ namespace regina {
 /**
  * A table item for script variable names.
  */
-class ScriptVarNameItem : public QTableItem {
+class ScriptVarNameItem : public QTableWidgetItem {
     private:
         bool error;
             /**< Are we currently displaying an error message? */
@@ -53,10 +53,10 @@ class ScriptVarNameItem : public QTableItem {
         /**
          * Constructor.
          */
-        ScriptVarNameItem(QTable* table, const QString& name);
+        ScriptVarNameItem(const QString& name);
 
         /**
-         * QTableItem overrides.
+         * QTableWidgetItem overrides.
          */
         virtual QWidget* createEditor() const;
         virtual void setContentFromEditor(QWidget* editor);
@@ -78,7 +78,7 @@ class ScriptVarNameItem : public QTableItem {
 /**
  * A table item for script variable values.
  */
-class ScriptVarValueItem : public QTableItem, public regina::NPacketListener {
+class ScriptVarValueItem : public QTableWidgetItem, public regina::NPacketListener {
     private:
         /**
          * The selected packet, if any.
@@ -94,9 +94,9 @@ class ScriptVarValueItem : public QTableItem, public regina::NPacketListener {
         /**
          * Constructor.
          */
-        ScriptVarValueItem(QTable* table, regina::NPacket* treeMatriarch,
+        ScriptVarValueItem(regina::NPacket* treeMatriarch,
             regina::NPacket* selectedPacket);
-        ScriptVarValueItem(QTable* table, regina::NPacket* treeMatriarch,
+        ScriptVarValueItem(regina::NPacket* treeMatriarch,
             const QString& packetLabel);
 
         /**
@@ -106,7 +106,7 @@ class ScriptVarValueItem : public QTableItem, public regina::NPacketListener {
         void setPacket(regina::NPacket* newPacket);
 
         /**
-         * QTableItem overrides.
+         * QTableWidgetItem overrides.
          */
         virtual QWidget* createEditor() const;
         virtual void setContentFromEditor(QWidget* editor);

@@ -31,12 +31,11 @@
 #include "skeletonwindow.h"
 #include "../packetui.h"
 
-#include <klistview.h>
 #include <klocale.h>
 #include <qlayout.h>
 #include <qpainter.h>
 #include <qstyle.h>
-#include <qwhatsthis.h>
+#include <QTreeView>
 
 using regina::NBoundaryComponent;
 using regina::NComponent;
@@ -44,64 +43,63 @@ using regina::NEdge;
 using regina::NFace;
 using regina::NVertex;
 
+namespace {
+    inline QString& appendToList(QString& list,
+            const QString& item) {
+        return (list.isEmpty() ? (list = item) :
+            (list.append(", ").append(item)));
+    }
+}
+
 SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
-        SkeletalObject viewObjectType) : KDialogBase(Plain,
-        QString::null, Close, Close, packetUI->getInterface(), 0, false),
-        objectType(viewObjectType) {
+        SkeletalObject viewObjectType) : 
+        KDialog(packetUI->getInterface()), objectType(viewObjectType) {
+    // TODO: Resize to something wide.
+
+    setButtons(KDialog::Close);
     tri = dynamic_cast<regina::NTriangulation*>(packetUI->getPacket());
 
-    QFrame* page = plainPage();
+    QWidget* page = new QWidget();
+    setMainWidget(page);
     QBoxLayout* layout = new QVBoxLayout(page);
 
-    table = new KListView(page);
-    table->addColumn(columnLabel(objectType, 0));
-    table->addColumn(columnLabel(objectType, 1));
-    table->addColumn(columnLabel(objectType, 2));
-    table->addColumn(columnLabel(objectType, 3));
-    table->setSelectionMode(QListView::NoSelection);
-    table->setSorting(-1);
-    QWhatsThis::add(table, overview(objectType));
+    table = new QTreeView(page);
+    switch (objectType) {
+        case Vertices:
+            table->setModel(new VertexModel(this, tri));
+            break;
+        case Edges:
+            table->setModel(new EdgeModel(this, tri));
+            break;
+        case Faces:
+            table->setModel(new FaceModel(this, tri));
+            break;
+        case Components:
+            table->setModel(new ComponentModel(this, tri));
+            break;
+        case BoundaryComponents:
+            table->setModel(new BoundaryComponentModel(this, tri));
+            break;
+    }
+    table->setRootIsDecorated(false);
+    table->setAlternatingRowColors(true);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setToolTip(overview(objectType)); // TODO
     layout->addWidget(table);
 
     refresh();
 }
 
 void SkeletonWindow::refresh() {
-    table->clear();
-
-    /**
-     * Add the items in reverse order so they come out correctly in the
-     * list view.  *sigh*
-     */
-    switch (objectType) {
-        case Vertices:
-            for (long i = tri->getNumberOfVertices() - 1; i >= 0; i--)
-                new VertexItem(table, tri, i);
-            break;
-        case Edges:
-            for (long i = tri->getNumberOfEdges() - 1; i >= 0; i--)
-                new EdgeItem(table, tri, i);
-            break;
-        case Faces:
-            for (long i = tri->getNumberOfFaces() - 1; i >= 0; i--)
-                new FaceItem(table, tri, i);
-            break;
-        case Components:
-            for (long i = tri->getNumberOfComponents() - 1; i >= 0; i--)
-                new ComponentItem(table, tri, i);
-            break;
-        case BoundaryComponents:
-            for (long i = tri->getNumberOfBoundaryComponents() - 1; i >= 0; i--)
-                new BoundaryComponentItem(table, tri, i);
-            break;
-    }
+    // TODO
+    // table->clear();
 
     updateCaption();
     tri->listen(this);
 }
 
 void SkeletonWindow::editingElsewhere() {
-    table->clear();
+    // table->clear(); // TODO
     setCaption(i18n("Editing... (") + tri->getPacketLabel().c_str() + ')');
 }
 
@@ -119,7 +117,7 @@ void SkeletonWindow::packetWasRenamed(regina::NPacket*) {
 }
 
 void SkeletonWindow::packetToBeDestroyed(regina::NPacket*) {
-    slotClose();
+    slotButtonClicked(KDialog::Close);
 }
 
 QString SkeletonWindow::typeLabel(SkeletalObject type) {
@@ -130,42 +128,6 @@ QString SkeletonWindow::typeLabel(SkeletalObject type) {
         case Components: return i18n("Components");
         case BoundaryComponents: return i18n("Boundary Components");
     }
-    return QString::null;
-}
-
-QString SkeletonWindow::columnLabel(SkeletalObject type, int column) {
-    switch (column) {
-        case 0:
-            switch (type) {
-                case Vertices: return i18n("Vertex #");
-                case Edges: return i18n("Edge #");
-                case Faces: return i18n("Face #");
-                case Components: return i18n("Cmpt #");
-                case BoundaryComponents: return i18n("Cmpt #");
-            }
-            return QString::null;
-        case 1:
-            return i18n("Type");
-        case 2:
-            switch (type) {
-                case Vertices:
-                case Edges:
-                case Faces: return i18n("Degree");
-                case Components:
-                case BoundaryComponents: return i18n("Size");
-            }
-            return QString::null;
-        case 3:
-            switch (type) {
-                case Vertices:
-                case Edges:
-                case Faces: return i18n("Tetrahedra (Tet vertices)");
-                case Components: return i18n("Tetrahedra");
-                case BoundaryComponents: return i18n("Faces / Vertex");
-            }
-            return QString::null;
-    }
-
     return QString::null;
 }
 
@@ -218,44 +180,26 @@ QString SkeletonWindow::overview(SkeletalObject type) {
     return QString::null;
 }
 
-VertexItem::VertexItem(QListView* parent,
-                regina::NTriangulation* useTri, unsigned long useItemIndex) :
-        SkeletalItem(parent, useTri, useItemIndex),
-        item(useTri->getVertex(useItemIndex)) {
+int VertexModel::rowCount(const QModelIndex& parent) const {
+    return (parent.isValid() ? 0 : tri->getNumberOfVertices());
 }
 
-EdgeItem::EdgeItem(QListView* parent,
-                regina::NTriangulation* useTri, unsigned long useItemIndex) :
-        SkeletalItem(parent, useTri, useItemIndex),
-        item(useTri->getEdge(useItemIndex)) {
+int VertexModel::columnCount(const QModelIndex& parent) const {
+    return 4;
 }
 
-FaceItem::FaceItem(QListView* parent,
-                regina::NTriangulation* useTri, unsigned long useItemIndex) :
-        SkeletalItem(parent, useTri, useItemIndex),
-        item(useTri->getFace(useItemIndex)) {
-}
+QVariant VertexModel::data(const QModelIndex& index, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
 
-ComponentItem::ComponentItem(QListView* parent,
-                regina::NTriangulation* useTri, unsigned long useItemIndex) :
-        SkeletalItem(parent, useTri, useItemIndex),
-        item(useTri->getComponent(useItemIndex)) {
-}
-
-BoundaryComponentItem::BoundaryComponentItem(QListView* parent,
-                regina::NTriangulation* useTri, unsigned long useItemIndex) :
-        SkeletalItem(parent, useTri, useItemIndex),
-        item(useTri->getBoundaryComponent(useItemIndex)) {
-}
-
-QString VertexItem::text(int column) const {
-    switch (column) {
+    NVertex* item = tri->getVertex(index.row());
+    switch (index.column()) {
         case 0:
-            return QString::number(itemIndex);
+            return index.row();
         case 1: {
             int link = item->getLink();
             if (link == NVertex::SPHERE)
-                return QString::null;
+                return QString();
             if (link == NVertex::DISC)
                 return i18n("Bdry");
             if (link == NVertex::TORUS)
@@ -272,10 +216,10 @@ QString VertexItem::text(int column) const {
             }
             if (link == NVertex::NON_STANDARD_BDRY)
                 return i18n("Non-std bdry");
-            return QString::null;
+            return QString();
         }
         case 2:
-            return QString::number(item->getNumberOfEmbeddings());
+            return static_cast<unsigned>(item->getNumberOfEmbeddings());
         case 3:
             QString ans;
             std::vector<regina::NVertexEmbedding>::const_iterator it;
@@ -286,22 +230,51 @@ QString VertexItem::text(int column) const {
                     arg((*it).getVertex()));
             return ans;
     }
-    return QString::null;
+    return QString();
 }
 
-QString EdgeItem::text(int column) const {
-    switch (column) {
+QVariant VertexModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (orientation == Qt::Horizontal) {
+        switch (section) {
+            case 0: return i18n("Vertex #");
+            case 1: return i18n("Type");
+            case 2: return i18n("Degree");
+            case 3: return i18n("Tetrahedra (Tet vertices)");
+            default: return QString();
+        }
+    } else
+        return QString();
+}
+
+int EdgeModel::rowCount(const QModelIndex& parent) const {
+    return (parent.isValid() ? 0 : tri->getNumberOfEdges());
+}
+
+int EdgeModel::columnCount(const QModelIndex& parent) const {
+    return 4;
+}
+
+QVariant EdgeModel::data(const QModelIndex& index, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    NEdge* item = tri->getEdge(index.row());
+    switch (index.column()) {
         case 0:
-            return QString::number(itemIndex);
+            return index.row();
         case 1:
             if (! item->isValid())
                 return i18n("INVALID");
             else if (item->isBoundary())
                 return i18n("Bdry");
             else
-                return QString::null;
+                return QString();
         case 2:
-            return QString::number(item->getNumberOfEmbeddings());
+            return static_cast<unsigned>(item->getNumberOfEmbeddings());
         case 3:
             QString ans;
             std::deque<regina::NEdgeEmbedding>::const_iterator it;
@@ -312,13 +285,42 @@ QString EdgeItem::text(int column) const {
                     arg((*it).getVertices().trunc2().c_str()));
             return ans;
     }
-    return QString::null;
+    return QString();
 }
 
-QString FaceItem::text(int column) const {
-    switch (column) {
+QVariant EdgeModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (orientation == Qt::Horizontal) {
+        switch (section) {
+            case 0: return i18n("Edge #");
+            case 1: return i18n("Type");
+            case 2: return i18n("Degree");
+            case 3: return i18n("Tetrahedra (Tet vertices)");
+            default: return QString();
+        }
+    } else
+        return QString();
+}
+
+int FaceModel::rowCount(const QModelIndex& parent) const {
+    return (parent.isValid() ? 0 : tri->getNumberOfFaces());
+}
+
+int FaceModel::columnCount(const QModelIndex& parent) const {
+    return 4;
+}
+
+QVariant FaceModel::data(const QModelIndex& index, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    NFace* item = tri->getFace(index.row());
+    switch (index.column()) {
         case 0:
-            return QString::number(itemIndex);
+            return index.row();
         case 1: {
             QString prefix;
             if (item->isBoundary())
@@ -344,7 +346,7 @@ QString FaceItem::text(int column) const {
             return prefix + i18n("UNKNOWN");
         }
         case 2:
-            return QString::number(item->getNumberOfEmbeddings());
+            return static_cast<unsigned>(item->getNumberOfEmbeddings());
         case 3:
             QString ans;
             for (unsigned i = 0; i < item->getNumberOfEmbeddings(); i++)
@@ -354,18 +356,47 @@ QString FaceItem::text(int column) const {
                     arg(item->getEmbedding(i).getVertices().trunc3().c_str()));
             return ans;
     }
-    return QString::null;
+    return QString();
 }
 
-QString ComponentItem::text(int column) const {
-    switch (column) {
+QVariant FaceModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (orientation == Qt::Horizontal) {
+        switch (section) {
+            case 0: return i18n("Face #");
+            case 1: return i18n("Type");
+            case 2: return i18n("Degree");
+            case 3: return i18n("Tetrahedra (Tet vertices)");
+            default: return QString();
+        }
+    } else
+        return QString();
+}
+
+int ComponentModel::rowCount(const QModelIndex& parent) const {
+    return (parent.isValid() ? 0 : tri->getNumberOfComponents());
+}
+
+int ComponentModel::columnCount(const QModelIndex& parent) const {
+    return 4;
+}
+
+QVariant ComponentModel::data(const QModelIndex& index, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    NComponent* item = tri->getComponent(index.row());
+    switch (index.column()) {
         case 0:
-            return QString::number(itemIndex);
+            return index.row();
         case 1:
             return (item->isIdeal() ? i18n("Ideal, ") : i18n("Real, ")) +
                 (item->isOrientable() ? i18n("Orbl") : i18n("Non-orbl"));
         case 2:
-            return QString::number(item->getNumberOfTetrahedra());
+            return static_cast<unsigned>(item->getNumberOfTetrahedra());
         case 3:
             QString ans;
             for (unsigned long i = 0; i < item->getNumberOfTetrahedra(); i++)
@@ -373,13 +404,43 @@ QString ComponentItem::text(int column) const {
                     item->getTetrahedron(i))));
             return ans;
     }
-    return QString::null;
+    return QString();
 }
 
-QString BoundaryComponentItem::text(int column) const {
-    switch (column) {
+QVariant ComponentModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (orientation == Qt::Horizontal) {
+        switch (section) {
+            case 0: return i18n("Cmpt #");
+            case 1: return i18n("Type");
+            case 2: return i18n("Size");
+            case 3: return i18n("Tetrahedra");
+            default: return QString();
+        }
+    } else
+        return QString();
+}
+
+int BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
+    return (parent.isValid() ? 0 : tri->getNumberOfBoundaryComponents());
+}
+
+int BoundaryComponentModel::columnCount(const QModelIndex& parent) const {
+    return 4;
+}
+
+QVariant BoundaryComponentModel::data(const QModelIndex& index,
+        int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    NBoundaryComponent* item = tri->getBoundaryComponent(index.row());
+    switch (index.column()) {
         case 0:
-            return QString::number(itemIndex);
+            return index.row();
         case 1:
             return (item->isIdeal() ? i18n("Ideal") : i18n("Real"));
         case 2:
@@ -398,7 +459,23 @@ QString BoundaryComponentItem::text(int column) const {
                 return i18n("Faces ") + ans;
             }
     }
-    return QString::null;
+    return QString();
 }
 
-#include "skeletonwindow.moc"
+QVariant BoundaryComponentModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (orientation == Qt::Horizontal) {
+        switch (section) {
+            case 0: return i18n("Cmpt #");
+            case 1: return i18n("Type");
+            case 2: return i18n("Size");
+            case 3: return i18n("Faces / Vertex");
+            default: return QString();
+        }
+    } else
+        return QString();
+}
+

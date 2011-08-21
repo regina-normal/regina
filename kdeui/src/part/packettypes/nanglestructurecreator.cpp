@@ -50,7 +50,7 @@ NAngleStructureCreator::NAngleStructureCreator() {
 
     tautOnly = new QCheckBox(i18n("Taut structures only"), ui);
     tautOnly->setChecked(false);
-    QWhatsThis::add(tautOnly, i18n("If you check this box, only "
+    tautOnly->setWhatsThis( i18n("If you check this box, only "
         "taut structures will be enumerated (that is, angle structures "
         "in which every angle is 0 or Pi).  "
         "This is typically much faster than a full enumeration of all "

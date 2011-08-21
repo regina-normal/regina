@@ -26,10 +26,10 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "algebra/ngrouppresentation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NTriangulation;

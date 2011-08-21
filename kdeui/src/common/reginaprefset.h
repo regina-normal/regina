@@ -34,7 +34,8 @@
 #define __REGINAPREFSET_H
 
 #include <qmutex.h>
-#include <qvaluevector.h>
+#include <QLinkedList>
+#include <QString>
 
 /**
  * A structure holding a single filename which may or may not be active
@@ -56,14 +57,14 @@ struct ReginaFilePref {
      * Return the filename in an 8-bit encoding suitable for passing to
      * low-level file I/O routines.
      */
-    QCString encodeFilename() const;
+    QByteArray encodeFilename() const;
 };
 
 /**
  * A structure holding a list of filenames each of which may or may not
  * be active.
  */
-typedef QValueVector<ReginaFilePref> ReginaFilePrefList;
+typedef QLinkedList<ReginaFilePref> ReginaFilePrefList;
 
 /**
  * Describes the many possible ways in which ReginaPrefSet::triGraphvizExec
@@ -210,8 +211,6 @@ struct ReginaPrefSet {
 
     // The preferences themselves:
 
-    enum TriEditMode { DirectEdit, Dialog };
-        /**< Possible edit modes for triangulation gluings. */
     enum TriTab { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
         /**< Available top-level tabs in a 3-manifold triangulation
              viewer/editor. */
@@ -232,8 +231,6 @@ struct ReginaPrefSet {
         /**< Should filenames be given an automatic extension? */
     ReginaFilePrefList censusFiles;
         /**< The list of data files to use for census lookups. */
-    bool displayIcon;
-        /**< Should we display the pretty Regina icon? */
     bool displayTagsInTree;
         /**< Should we display packet tags in the visual tree? */
     bool pdfAutoClose;
@@ -274,8 +271,6 @@ struct ReginaPrefSet {
     unsigned treeJumpSize;
         /**< The number of steps corresponding to a jump up or down in
              the packet tree. */
-    TriEditMode triEditMode;
-        /**< The default mode for editing triangulations. */
     QString triGAPExec;
         /**< The executable for starting GAP.  This need not include a
              directory (in which case the search path will be used). */

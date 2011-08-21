@@ -38,7 +38,7 @@
 class KAction;
 class KActionCollection;
 class QSplitter;
-class QTable;
+class QTableWidget;
 
 namespace KTextEditor {
     class EditInterface;
@@ -65,8 +65,8 @@ class NScriptUI : public QObject, public PacketUI {
         /**
          * Internal components
          */
-        QVBox* ui;
-        QTable* varTable;
+        QWidget* ui;
+        QTableWidget* varTable;
         KTextEditor::Document* document;
         KTextEditor::EditInterface* editInterface;
         KTextEditor::View* view;
@@ -77,7 +77,7 @@ class NScriptUI : public QObject, public PacketUI {
         KAction* actAdd;
         KAction* actRemove;
         KActionCollection* scriptActions;
-        QPtrList<KAction> scriptActionList;
+        QLinkedList<KAction*> scriptActionList;
 
     public:
         /**
@@ -93,7 +93,7 @@ class NScriptUI : public QObject, public PacketUI {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         KTextEditor::Document* getTextComponent();
-        const QPtrList<KAction>& getPacketTypeActions();
+        const QLinkedList<KAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
         void commit();
         void refresh();

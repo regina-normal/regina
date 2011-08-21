@@ -41,16 +41,17 @@
 #include <qlayout.h>
 #include <qmessagebox.h>
 #include <qpixmap.h>
-#include <qstylesheet.h>
-#include <qwidgetstack.h>
+#include <QTextDocument>
+#include <QStackedWidget>
 #include <kiconloader.h>
 #include <klocale.h>
-#include <kparts/componentfactory.h>
+#include <kmimetypetrader.h>
 #include <kparts/partmanager.h>
 #include <kprocess.h>
 #include <krun.h>
+#include <kshell.h>
 #include <kstandarddirs.h>
-#include <ktempfile.h>
+#include <KTemporaryFile>
 #include <kurl.h>
 
 #define PDF_MIMETYPE "application/pdf"
@@ -60,29 +61,27 @@ using regina::NPDF;
 
 NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), pdf(packet),
-        temp(locateLocal("tmp", "pdf-"), ".pdf"),
+        //temp(KStandardDirs::locateLocal("tmp", "pdf-")+ ".pdf"),
         viewer(0), proc(0), runPid(0) {
-    temp.setAutoDelete(true);
+    temp.setSuffix(".pdf");
+    //temp.setAutoDelete(true);
     temp.close();
 
     ReginaPart* part = enclosingPane->getPart();
     const ReginaPrefSet& prefs = part->getPreferences();
     autoClose = prefs.pdfAutoClose;
     embed = prefs.pdfEmbed;
-    externalViewer = prefs.pdfExternalViewer.stripWhiteSpace();
+    externalViewer = prefs.pdfExternalViewer.trimmed();
 
-    ui = new QWidget();
-    QBoxLayout* baseLayout = new QVBoxLayout(ui);
-    stack = new QWidgetStack(ui);
+    stack = new QStackedWidget();
 
     // Information layer.
-    layerInfo = messageLayer(msgInfo, "messagebox_info");
+    layerInfo = messageLayer(msgInfo, "dialog-information");
 
     // Error layer.
-    layerError = messageLayer(msgError, "messagebox_critical");
+    layerError = messageLayer(msgError, "dialog-error");
 
     // Finish off.
-    baseLayout->addWidget(stack);
     refresh();
 
     connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
@@ -99,7 +98,7 @@ NPacket* NPDFUI::getPacket() {
 }
 
 QWidget* NPDFUI::getInterface() {
-    return ui;
+    return stack;
 }
 
 QString NPDFUI::getPacketMenuText() const {
@@ -114,11 +113,13 @@ void NPDFUI::refresh() {
         setDirty(false);
         return;
     }
+    temp.open();
     if (! regina::writePDF(
-            static_cast<const char*>(QFile::encodeName(temp.name())), *pdf)) {
+            static_cast<const char*>(QFile::encodeName(temp.fileName())), *pdf)) {
         showError(i18n("An error occurred whilst writing the PDF "
-            "data to the temporary file %1.").arg(temp.name()));
+            "data to the temporary file %1.").arg(temp.fileName()));
         setDirty(false);
+        temp.close();
         return;
     }
 
@@ -129,9 +130,9 @@ void NPDFUI::refresh() {
     if (embed) {
         if (! viewer) {
             // We don't yet have an embedded PDF viewer.
-            viewer = KParts::ComponentFactory::
+            viewer = KMimeTypeTrader::
                 createPartInstanceFromQuery<KParts::ReadOnlyPart>(
-                PDF_MIMETYPE, QString::null, stack, 0, stack);
+                PDF_MIMETYPE, 0, this);
 
             if (viewer) {
                 viewer->setProgressInfoEnabled(false);
@@ -147,11 +148,12 @@ void NPDFUI::refresh() {
 
         // If we actually found ourselves a viewer, load the PDF.
         if (viewer) {
-            if (viewer->openURL(KURL::fromPathOrURL(temp.name())))
-                stack->raiseWidget(viewer->widget());
+            stack->addWidget(viewer->widget());
+            if (viewer->openUrl(KUrl(temp.fileName())))
+                stack->setCurrentWidget((viewer->widget()));
             else
                 showError(i18n("An error occurred whilst re-reading the PDF "
-                    "data from the temporary file %1.").arg(temp.name()));
+                    "data from the temporary file %1.").arg(temp.fileName()));
 
             setDirty(false);
             return;
@@ -164,9 +166,9 @@ void NPDFUI::refresh() {
         showInfo(i18n("<qt>No embedded PDF viewer could be found on "
             "your system.  Falling back to an external viewer instead.<p>"
             "If you would like PDFs to appear directly inside "
-            "Regina's main window, you could try installing either "
-            "<i>kpdf</i> or <i>kghostview</i> (both part of the "
-            "<i>kdegraphics</i> package shipped with KDE 3.x).</qt>"));
+            "Regina's main window, you could try installing "
+            "<i>okular</i> (which is part of the "
+            "<i>kdegraphics</i> package shipped with KDE 4.x).</qt>"));
     else
         showInfo(i18n("<qt>Using an external PDF viewer as "
             "requested.<p>To change this preference, you can "
@@ -177,12 +179,12 @@ void NPDFUI::refresh() {
         viewer = 0;
 
         // Just to be sure...
-        stack->raiseWidget(layerInfo);
+        stack->setCurrentWidget(layerInfo);
     }
 
     if (externalViewer.isEmpty()) {
         // Fall back to the KDE default for PDFs.
-        runPid = KRun::runURL(KURL::fromPathOrURL(temp.name()), PDF_MIMETYPE,
+        runPid = KRun::runUrl(KUrl(temp.fileName()), PDF_MIMETYPE,
                 false /* delete temp file on application exit */,
                 false /* do not allow KRun to "open" executables */);
         if (! runPid)
@@ -191,23 +193,23 @@ void NPDFUI::refresh() {
                 "Please specify your preferred PDF viewer under the "
                 "PDF options in Regina's settings.</qt>"));
     } else {
-        QString filename = temp.name();
-        KRun::shellQuote(filename);
-        cmd = externalViewer + ' ' + filename;
+        cmd = externalViewer + ' ' + KShell::quoteArg(temp.fileName());
 
         proc = new KProcess(this);
-        proc->setUseShell(true);
-        (*proc) << cmd;
+        proc->setShellCommand(cmd);
 
-        connect(proc, SIGNAL(processExited(KProcess*)),
+        // TODO: Broken signal (changed with KDE4).
+        connect(proc, SIGNAL(finished()),
             this, SLOT(processExited(KProcess*)));
-
-        if (! proc->start())
+        
+        proc->start();
+        if (!( (proc->state() == QProcess::Starting) ||
+               (proc->state() != QProcess::Running) ))
             showError(i18n("<qt>Regina was unable to open an external "
                 "PDF viewer.  The failed command was:<p>"
                 "<tt>%1</tt><p>"
                 "You can fix this by editing the PDF options in "
-                "Regina's settings.</qt>").arg(QStyleSheet::escape(cmd)));
+                "Regina's settings.</qt>").arg(Qt::escape(cmd)));
     }
 
     setDirty(false);
@@ -215,7 +217,7 @@ void NPDFUI::refresh() {
 
 void NPDFUI::updatePreferences(const ReginaPrefSet& newPrefs) {
     // Whitespace should already have been stripped by now, but just in case...
-    QString newExternalViewer = newPrefs.pdfExternalViewer.stripWhiteSpace();
+    QString newExternalViewer = newPrefs.pdfExternalViewer.trimmed();
 
     // Do we need to refresh afterwards?
     bool needRefresh = ((embed != newPrefs.pdfEmbed) ||
@@ -230,15 +232,16 @@ void NPDFUI::updatePreferences(const ReginaPrefSet& newPrefs) {
 }
 
 QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
-    QWidget* layer = new QWidget(stack);
-    QBoxLayout* layout = new QHBoxLayout(layer, 5 /* margin */,
-        5 /* spacing */);
+    QWidget* layer = new QWidget();
+    QBoxLayout* layout = new QHBoxLayout(layer);
+    layout->setMargin(5);
+    layout->setSpacing(5);
 
     layout->addStretch(1);
 
-    QPixmap iconPic = enclosingPane->getPart()->instance()->iconLoader()->
-        loadIcon(iconName, KIcon::NoGroup, KIcon::SizeMedium,
-        KIcon::DefaultState, 0, true /* may be null */);
+    QPixmap iconPic = KIconLoader::global()->loadIcon(iconName, 
+        KIconLoader::NoGroup, KIconLoader::SizeMedium,
+        KIconLoader::DefaultState, QStringList(), 0L, true /* may be null */);
     if (iconPic.isNull())
         iconPic = QMessageBox::standardIcon(QMessageBox::Critical);
 
@@ -250,22 +253,24 @@ QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
     layout->addSpacing(10);
 
     text = new QLabel(i18n("<qt>Initialising...</qt>"), layer);
+    text->setWordWrap(true);
     layout->addWidget(text);
     layout->setStretchFactor(text, 4);
 
     layout->addStretch(1);
+    stack->addWidget(layer);
 
     return layer;
 }
 
 void NPDFUI::showInfo(const QString& msg) {
     msgInfo->setText(msg);
-    stack->raiseWidget(layerInfo);
+    stack->setCurrentWidget(layerInfo);
 }
 
 void NPDFUI::showError(const QString& msg) {
     msgError->setText(msg);
-    stack->raiseWidget(layerError);
+    stack->setCurrentWidget(layerError);
 }
 
 void NPDFUI::abandonProcess() {
@@ -280,9 +285,17 @@ void NPDFUI::abandonProcess() {
         } else {
             // Cut the process free so it is not killed when the
             // KProcess is eventually destroyed.
-            proc->detach();
-            delete proc;
+            // TODO: Not implemented in KDE4 nor Qt4 
+            // http://bugreports.qt.nokia.com/browse/QTBUG-9328
+            //proc->detach();
+            //delete proc;
+            //proc = 0;
+            
+            // Re-using code from above until we can fix detach
+            KProcess* tmpProc = proc;
             proc = 0;
+            tmpProc->kill();
+            delete tmpProc;
         }
     } else if (runPid) {
         if (autoClose)
@@ -294,14 +307,13 @@ void NPDFUI::abandonProcess() {
 void NPDFUI::processExited(KProcess* oldProc) {
     // Did we try to start a viewer but couldn't?
     if (oldProc == proc) {
-        if (! (proc->normalExit() && proc->exitStatus() == 0))
+        if ((proc->state() == QProcess::NotRunning) && (proc->exitStatus() != QProcess::NormalExit))
             showError(i18n("<qt>Regina tried to open an external "
                 "PDF viewer but could not.  The failed command was:<p>"
                 "<tt>%1</tt><p>"
                 "You can fix this by editing the PDF options in "
-                "Regina's settings.</qt>").arg(QStyleSheet::escape(cmd)));
+                "Regina's settings.</qt>").arg(Qt::escape(cmd)));
         proc = 0;
     }
 }
 
-#include "npdfui.moc"

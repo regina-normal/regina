@@ -26,12 +26,12 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "algebra/nabeliangroup.h"
 #include "manifold/nmanifold.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntriangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NStandardTriangulation;

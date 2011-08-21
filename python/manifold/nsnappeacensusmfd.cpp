@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "manifold/nsnappeacensusmfd.h"
 #include <boost/python.hpp>
+#include "manifold/nsnappeacensusmfd.h"
 
 using namespace boost::python;
 using regina::NSnapPeaCensusManifold;

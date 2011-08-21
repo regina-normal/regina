@@ -38,7 +38,7 @@
 using regina::NNormalSurfaceList;
 
 void CoordinateChooser::insertSystem(int coordSystem) {
-    insertItem(Coordinates::name(coordSystem));
+    addItem(Coordinates::name(coordSystem));
     systems.push_back(coordSystem);
 }
 
@@ -74,7 +74,6 @@ void CoordinateChooser::setCurrentSystem(int newSystem) {
         std::find(systems.begin(), systems.end(), newSystem);
 
     if (it != systems.end())
-        setCurrentItem(it - systems.begin());
+        setCurrentIndex(it - systems.begin());
 }
 
-#include "coordinatechooser.moc"

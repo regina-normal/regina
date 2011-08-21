@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "triangulation/nhomologicaldata.h"
 #include <boost/python.hpp>
+#include "triangulation/nhomologicaldata.h"
 
 using namespace boost::python;
 using regina::NHomologicalData;

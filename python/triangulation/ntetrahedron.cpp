@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nface.h"
@@ -33,7 +34,6 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NTetrahedron;

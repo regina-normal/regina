@@ -39,7 +39,7 @@
 
 const DehydrationHandler DehydrationHandler::instance;
 
-regina::NPacket* DehydrationHandler::import(const QString& fileName,
+regina::NPacket* DehydrationHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
     QString explnSuffix = i18n("<p>The file should be a plain text file "
         "containing one dehydration string per line.  "
@@ -78,7 +78,8 @@ regina::NPacket* DehydrationHandler::import(const QString& fileName,
     }
 
     // All worked out okay.
-    ans->setPacketLabel(i18n("Rehydrated Triangulations").ascii());
+    ans->setPacketLabel(i18n("Rehydrated Triangulations").
+        toAscii().constData());
     return ans;
 }
 

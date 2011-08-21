@@ -33,19 +33,56 @@
 #ifndef __NSURFACEMATCHINGUI_H
 #define __NSURFACEMATCHINGUI_H
 
+#include "maths/nmatrixint.h"
 #include "../packettabui.h"
 
 #include <memory>
-#include <qtooltip.h>
+#include <qabstractitemmodel.h>
 
-class QHeader;
-class QListView;
-class MatchingHeaderToolTip;
+class QTreeView;
 
 namespace regina {
     class NMatrixInt;
     class NNormalSurfaceList;
     class NPacket;
+    class NTriangulation;
+};
+
+class MatchingModel : public QAbstractItemModel {
+    protected:
+        /**
+         * Details of the matching equations being displayed
+         */
+        std::auto_ptr<regina::NMatrixInt> eqns_;
+        regina::NNormalSurfaceList* surfaces_;
+
+    public:
+        /**
+         * Constructor.
+         */
+        MatchingModel(regina::NNormalSurfaceList* surfaces);
+
+        /**
+         * Data retrieval.
+         */
+        regina::NNormalSurfaceList* surfaces() const;
+
+        /**
+         * Rebuild the model from scratch.
+         */
+        void rebuild();
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        QModelIndex index(int row, int column,
+                const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
 };
 
 /**
@@ -56,22 +93,21 @@ class NSurfaceMatchingUI : public QObject, public PacketViewerTab {
 
     private:
         /**
-         * Packet details
+         * Matrix details
          */
-        regina::NNormalSurfaceList* surfaces;
-        std::auto_ptr<regina::NMatrixInt> eqns;
+        MatchingModel* model;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QListView* table;
-        MatchingHeaderToolTip* headerTips;
+        QTreeView* table;
 
         /**
          * Status of any ongoing actions.
          */
         bool currentlyAutoResizing;
+        bool everRefreshed;
 
     public:
         /**
@@ -88,36 +124,33 @@ class NSurfaceMatchingUI : public QObject, public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
 
-    public slots:
+    protected slots:
         /**
          * Provides auto-resizing of columns.
          */
         void columnResized(int section, int oldSize, int newSize);
 };
 
-/**
- * A utility clsas for displaying tooltips for table headers.
- */
-class MatchingHeaderToolTip : public QToolTip {
-    private:
-        /**
-         * Matching equation information
-         */
-        regina::NTriangulation* tri;
-        int coordSystem;
+inline MatchingModel::MatchingModel(regina::NNormalSurfaceList* surfaces) :
+        surfaces_(surfaces) {
+}
 
-    public:
-        /**
-         * Constructor.
-         */
-        MatchingHeaderToolTip(regina::NTriangulation* useTri,
-            int useCoordSystem, QHeader* header, QToolTipGroup* group = 0);
+inline regina::NNormalSurfaceList* MatchingModel::surfaces() const {
+    return surfaces_;
+}
 
-    protected:
-        /**
-         * QToolTip overrides.
-         */
-        void maybeTip(const QPoint& p);
-};
+inline QModelIndex MatchingModel::index(int row, int column,
+        const QModelIndex& parent) const {
+    if (eqns_.get())
+        return createIndex(row, column,
+            quint32(eqns_->columns() * row + column));
+    else
+        return createIndex(row, column, quint32(0));
+}
+
+inline QModelIndex MatchingModel::parent(const QModelIndex& index) const {
+    // All items are top-level.
+    return QModelIndex();
+}
 
 #endif

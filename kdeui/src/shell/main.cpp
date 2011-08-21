@@ -29,17 +29,11 @@
 #include "reginaabout.h"
 #include "reginamain.h"
 
-#include <dcopclient.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
 #include <ktip.h>
 #include <qtextcodec.h>
-
-static KCmdLineOptions options[] = {
-    { "+[URL]", I18N_NOOP("Document to open."), 0 },
-    { 0, 0, 0 }
-};
 
 int main(int argc, char **argv) {
     // Always talk to and from the calculation engine in UTF-8.
@@ -47,6 +41,8 @@ int main(int argc, char **argv) {
     // since some of the about data is stored as plain C strings.
     if (QTextCodec* codec = QTextCodec::codecForName("UTF-8"))
         QTextCodec::setCodecForCStrings(codec);
+    KCmdLineOptions options;
+    options.add("+[Url]", ki18n("Document to open."), 0);
 
     ReginaAbout about("regina");
 
@@ -55,10 +51,11 @@ int main(int argc, char **argv) {
     KApplication app;
 
     // Register ourselves as a dcop client.
-    app.dcopClient()->registerAs(app.name(), false);
+    //app.dcopClient()->registerAs(app.name(), false);
+    // TODO D-Bus
 
     // See if we are starting with session management.
-    if (app.isRestored()) {
+    if (app.isSessionRestored()) {
         int winNum = 1;
         while (KMainWindow::canBeRestored(winNum)) {
             if (KMainWindow::classNameOfToplevel(winNum) == "ReginaMain")
@@ -75,7 +72,7 @@ int main(int argc, char **argv) {
             for (int i = 0; i < args->count(); i++) {
                 ReginaMain *widget = new ReginaMain;
                 widget->show();
-                widget->openURL(args->url(i));
+                widget->openUrl(args->url(i));
             }
         }
         args->clear();

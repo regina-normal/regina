@@ -34,15 +34,14 @@
 #ifndef __PATIENCEDIALOG_H
 #define __PATIENCEDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
-class KInstance;
 
 /**
  * A non-modal dialog warning the user that they might have to wait a
  * bit for the current operation to finish.
  */
-class PatienceDialog : public KDialogBase {
+class PatienceDialog : public KDialog {
     Q_OBJECT
 
     public:
@@ -58,15 +57,15 @@ class PatienceDialog : public KDialogBase {
          * returned by this routine) needs to be destroyed.
          */
         static PatienceDialog* warn(const QString& message,
-            KInstance* instance, QWidget* parent = 0);
+            QWidget* parent = 0);
 
     private:
         /**
          * Creates a new non-modal dialog that warns the user with the
          * given message.
          */
-        PatienceDialog(const QString& message, KInstance* instance,
-                QWidget* parent, const char* name = 0);
+        PatienceDialog(const QString& message,
+                QWidget* parent);
 };
 
 #endif

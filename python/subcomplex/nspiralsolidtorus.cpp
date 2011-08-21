@@ -26,10 +26,10 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NSpiralSolidTorus;

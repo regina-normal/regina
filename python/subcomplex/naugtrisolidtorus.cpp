@@ -26,10 +26,10 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "manifold/nsfs.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "triangulation/ncomponent.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NAugTriSolidTorus;

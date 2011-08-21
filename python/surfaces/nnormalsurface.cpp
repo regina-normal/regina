@@ -26,10 +26,10 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NNormalSurface;

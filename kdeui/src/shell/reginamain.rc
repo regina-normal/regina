@@ -38,7 +38,7 @@
   </Menu>
 </MenuBar>
 
-<ToolBar name="mainToolBar" noMerge="1">
+<ToolBar name="mainToolBar" iconText="IconOnly" noMerge="1">
   <text>Main Toolbar</text>
   <Action name="new_topology"/>
   <Action name="file_open"/>

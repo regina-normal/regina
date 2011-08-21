@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "surfaces/nsurfacefilter.h"
 #include "surfaces/nsurfacesubset.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NSurfaceSubset;

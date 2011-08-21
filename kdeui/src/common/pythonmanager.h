@@ -36,7 +36,7 @@
 #define __PYTHONMANAGER_H
 
 #include <qstring.h>
-#include <qvaluelist.h>
+#include <qlinkedlist.h>
 #include <set>
 
 class PythonConsole;
@@ -65,7 +65,7 @@ struct PythonVariable {
     PythonVariable(const QString& newName, regina::NPacket* newValue);
 };
 
-typedef QValueList<PythonVariable> PythonVariableList;
+typedef QLinkedList<PythonVariable> PythonVariableList;
 
 /**
  * Provides simple management for python consoles.  Consoles launched

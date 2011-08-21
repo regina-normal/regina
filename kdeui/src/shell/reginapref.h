@@ -35,14 +35,14 @@
 
 #include "reginaprefset.h"
 
-#include <qvbox.h>
-#include <kdialogbase.h>
+#include <kpagedialog.h>
 
 class CoordinateChooser;
-class KListView;
 class QCheckBox;
 class QComboBox;
+class QLabel;
 class QLineEdit;
+class QListWidget;
 class QPushButton;
 class ReginaMain;
 class ReginaPrefCensus;
@@ -60,7 +60,7 @@ namespace KTextEditor {
 /**
  * The Regina configuration dialog.
  */
-class ReginaPreferences : public KDialogBase {
+class ReginaPreferences : public KPageDialog {
     Q_OBJECT
 
     private:
@@ -94,13 +94,12 @@ class ReginaPreferences : public KDialogBase {
 /**
  * The page of the Regina configuration dialog for general preferences.
  */
-class ReginaPrefGeneral : public QVBox {
+class ReginaPrefGeneral : public QWidget {
     Q_OBJECT
 
     private:
         QCheckBox* cbAutoDock;
         QCheckBox* cbAutoFileExtension;
-        QCheckBox* cbDisplayIcon;
         QCheckBox* cbDisplayTagsInTree;
         QLineEdit* editTreeJumpSize;
         QCheckBox* cbTipOfDay;
@@ -115,11 +114,10 @@ class ReginaPrefGeneral : public QVBox {
  * The page of the Regina configuration dialog for 3-manifold triangulation
  * preferences.
  */
-class ReginaPrefTri : public QVBox {
+class ReginaPrefTri : public QWidget {
     Q_OBJECT
 
     private:
-        QComboBox* comboEditMode;
         QComboBox* comboInitialTab;
         QComboBox* comboInitialSkeletonTab;
         QComboBox* comboInitialAlgebraTab;
@@ -137,7 +135,7 @@ class ReginaPrefTri : public QVBox {
  * The page of the Regina configuration dialog for normal surface
  * preferences.
  */
-class ReginaPrefSurfaces : public QVBox {
+class ReginaPrefSurfaces : public QWidget {
     Q_OBJECT
 
     private:
@@ -157,7 +155,7 @@ class ReginaPrefSurfaces : public QVBox {
  * The page of the Regina configuration dialog for PDF viewing
  * preferences.
  */
-class ReginaPrefPDF : public QVBox {
+class ReginaPrefPDF : public QWidget {
     Q_OBJECT
 
     private:
@@ -174,12 +172,12 @@ class ReginaPrefPDF : public QVBox {
 /**
  * The page of the Regina configuration dialog for census preferences.
  */
-class ReginaPrefCensus : public QVBox {
+class ReginaPrefCensus : public QWidget {
     Q_OBJECT
 
     private:
         QLabel* activeCount;
-        KListView* listFiles;
+        QListWidget* listFiles;
         QPushButton* btnRemove;
         QPushButton* btnActivate;
         QPushButton* btnDeactivate;
@@ -203,7 +201,7 @@ class ReginaPrefCensus : public QVBox {
 /**
  * The page of the Regina configuration dialog for Python preferences.
  */
-class ReginaPrefPython : public QVBox {
+class ReginaPrefPython : public QWidget {
     Q_OBJECT
 
     private:
@@ -212,7 +210,7 @@ class ReginaPrefPython : public QVBox {
         QLineEdit* editSpacesPerTab;
 
         QLabel* activeCount;
-        KListView* listFiles;
+        QListWidget* listFiles;
         QPushButton* btnRemove;
         QPushButton* btnActivate;
         QPushButton* btnDeactivate;
@@ -236,7 +234,7 @@ class ReginaPrefPython : public QVBox {
  * The page of the Regina configuration dialog that controls interaction
  * with the SnapPea kernel.
  */
-class ReginaPrefSnapPea : public QVBox {
+class ReginaPrefSnapPea : public QWidget {
     Q_OBJECT
 
     private:
@@ -254,7 +252,7 @@ class ReginaPrefSnapPea : public QVBox {
  *
  * Adapted from the KWrite sources, which are released under the LGPL.
  */
-class ReginaEditorChooser : public KDialogBase {
+class ReginaEditorChooser : public KDialog {
     Q_OBJECT
 
     private:

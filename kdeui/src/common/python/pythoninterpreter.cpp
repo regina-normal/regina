@@ -26,12 +26,13 @@
 
 /* end stub */
 
+// Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
+#include "pythoninterpreter.h"
+
 #include "regina-config.h"
 #include "file/nglobaldirs.h"
 #include "packet/npacket.h"
 
-// Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
-#include "pythoninterpreter.h"
 
 #include "pythonoutputstream.h"
 

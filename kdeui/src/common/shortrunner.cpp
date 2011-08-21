@@ -29,34 +29,26 @@
 #include "shortrunner.h"
 
 QString ShortRunner::run(bool mergeStderr) {
-    // Prepare to receive standard output.
-    connect(&proc, SIGNAL(receivedStdout(KProcess*, char*, int)),
-        this, SLOT(collectOutput(KProcess*, char*, int)));
-
     // Start the child process running.
-    KProcess::Communication comm = (mergeStderr ?
-        KProcess::Communication(KProcess::Stdout | KProcess::MergedStderr) :
-        KProcess::Stdout);
-    if (! proc.start(KProcess::DontCare, comm))
-        return QString::null;
+    proc.setOutputChannelMode(mergeStderr ?
+        KProcess::MergedChannels : KProcess::OnlyStdoutChannel);
+    // Since we need to collect output, we must use start() and not
+    // startDetached().
+    proc.start();
 
     // Wait for it to finish, within a reasonable time limit.
-    if (proc.wait(timeout)) {
+    if (proc.waitForFinished(timeout * 1000)) {
         // All good.
-        QMutexLocker lock(&outputMutex);
-        return output;
+        return proc.readAll();
     } else {
         // Timed out.
-        if (! proc.kill())
-            proc.kill(SIGKILL);
+        // Attempt to terminate (SIGQUIT) ...
+        proc.terminate();
+        // ... and if the program doesn't respond then kill it (SIGKILL).
+        proc.waitForFinished(500);
+        proc.kill();
         reachedTimeout = true;
         return QString::null;
     }
 }
 
-void ShortRunner::collectOutput(KProcess*, char* buffer, int buflen) {
-    QMutexLocker lock(&outputMutex);
-    output += QString::fromLatin1(buffer, buflen);
-}
-
-#include "shortrunner.moc"

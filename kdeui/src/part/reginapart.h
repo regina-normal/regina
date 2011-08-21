@@ -37,14 +37,17 @@
 #include "reginaprefset.h"
 
 #include <kparts/part.h>
-#include <qptrlist.h>
+
+#include <KAction>
+
+#include <QLinkedList>
 
 namespace regina {
     class NPacket;
 };
 
 class KAboutData;
-class KInstance;
+class KComponentData;
 class PacketCreator;
 class PacketExporter;
 class PacketFilter;
@@ -71,14 +74,13 @@ class ReginaPart : public KParts::ReadWritePart {
          * Components
          */
         PacketTreeView* treeView;
-        QLabel* reginaIcon;
         QWidget* dockArea;
         PythonManager consoles;
 
         /**
          * Packet panes
          */
-        QPtrList<PacketPane> allPanes;
+        QLinkedList<PacketPane*> allPanes;
         PacketPane* dockedPane;
 
         /**
@@ -95,16 +97,16 @@ class ReginaPart : public KParts::ReadWritePart {
         KAction* actPaste;
         KAction* actUndo;
         KAction* actRedo;
-        QPtrList<KAction> treePacketViewActions;
-        QPtrList<KAction> treePacketEditActions;
-        QPtrList<KAction> treeGeneralEditActions;
+        QLinkedList<KAction *> treePacketViewActions;
+        QLinkedList<KAction *> treePacketEditActions;
+        QLinkedList<KAction *> treeGeneralEditActions;
 
     public:
         /**
          * Constructors and destructors.
          */
-        ReginaPart(QWidget *parentWidget, const char *widgetName,
-            QObject *parent, const char *name, const QStringList &args);
+        ReginaPart(QWidget *parentWidget, QObject *parent, 
+              const QStringList &args);
         virtual ~ReginaPart();
 
         /**
@@ -115,15 +117,10 @@ class ReginaPart : public KParts::ReadWritePart {
         virtual bool closeURL();
 
         /**
-         * Basic KPart operations.
-         */
-        static KAboutData *createAboutData();
-        static KInstance* factoryInstance();
-
-        /**
          * View the given packet.
          */
-        void packetView(regina::NPacket*, bool makeVisibleInTree = true);
+        void packetView(regina::NPacket*, bool makeVisibleInTree = true,
+            bool selectInTree = false);
 
         /**
          * Ensure that the given packet is visible in the packet tree.
@@ -328,7 +325,7 @@ class ReginaPart : public KParts::ReadWritePart {
         /**
          * Initial setup.
          */
-        void setupWidgets(QWidget* parentWidget, const char* widgetName);
+        void setupWidgets(QWidget* parentWidget);
         void setupActions();
         void initPacketTree();
 

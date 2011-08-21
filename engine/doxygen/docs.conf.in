@@ -6,7 +6,7 @@
 
 PROJECT_NAME         = "Regina Calculation Engine"
 
-OUTPUT_DIRECTORY     = @top_builddir@/docs/engine
+OUTPUT_DIRECTORY     = @PROJECT_BINARY_DIR@/docs/engine
 
 DISABLE_INDEX        = NO
 EXTRACT_ALL          = NO
@@ -19,8 +19,8 @@ REPEAT_BRIEF         = YES
 ALWAYS_DETAILED_SEC  = YES
 
 FULL_PATH_NAMES      = YES
-STRIP_FROM_PATH      = @top_srcdir@/engine @top_srcdir@
-STRIP_FROM_INC_PATH  = @top_srcdir@/engine @top_srcdir@
+STRIP_FROM_PATH      = @PROJECT_SOURCE_DIR@/engine @PROJECT_SOURCE_DIR@
+STRIP_FROM_INC_PATH  = @PROJECT_SOURCE_DIR@/engine @PROJECT_SOURCE_DIR@
 
 CLASS_DIAGRAMS       = YES
 SOURCE_BROWSER       = NO
@@ -60,16 +60,16 @@ WARN_IF_UNDOCUMENTED = YES
 # Input related options:
 
 INPUT = \
-    @top_srcdir@/engine \
-    @top_srcdir@/python/globalarray.h
+    @PROJECT_SOURCE_DIR@/engine \
+    @PROJECT_SOURCE_DIR@/python/globalarray.h
 FILE_PATTERNS        = *.h
 RECURSIVE            = YES
 EXCLUDE = \
-    @top_srcdir@/engine/utilities/nmatrix2.h \
-    @top_srcdir@/engine/utilities/nmpi.h \
-    @top_srcdir@/engine/utilities/nrational.h \
-    @top_srcdir@/engine/foreign/casson.h \
-    @top_srcdir@/engine/snappea/kernel
+    @PROJECT_SOURCE_DIR@/engine/utilities/nmatrix2.h \
+    @PROJECT_SOURCE_DIR@/engine/utilities/nmpi.h \
+    @PROJECT_SOURCE_DIR@/engine/utilities/nrational.h \
+    @PROJECT_SOURCE_DIR@/engine/foreign/casson.h \
+    @PROJECT_SOURCE_DIR@/engine/snappea/kernel
 
 IMAGE_PATH           =
 
@@ -82,7 +82,7 @@ IGNORE_PREFIX        = N
 
 GENERATE_HTML        = YES
 HTML_OUTPUT          = .
-HTML_FOOTER          = @top_srcdir@/engine/doxygen/doc-footer.html
+HTML_FOOTER          = @PROJECT_SOURCE_DIR@/engine/doxygen/doc-footer.html
 HTML_ALIGN_MEMBERS   = YES
 GENERATE_HTMLHELP    = NO
 
@@ -104,7 +104,7 @@ ENABLE_PREPROCESSING = YES
 MACRO_EXPANSION      = NO
 
 SEARCH_INCLUDES      = YES
-INCLUDE_PATH         = @top_srcdir@/engine
+INCLUDE_PATH         = @PROJECT_SOURCE_DIR@/engine
 
 PREDEFINED           = __DOXYGEN
 

@@ -35,42 +35,45 @@
 #include "packettreeview.h"
 #include "reginapart.h"
 
+#include "revent.h"
+
 #include <qapplication.h>
 #include <qevent.h>
-#include <qheader.h>
+#include <QHeaderView>
+#include <QTreeWidget>
 #include <kdebug.h>
 #include <klocale.h>
 
 using regina::NPacket;
 
 PacketTreeItem::PacketTreeItem(PacketTreeView* parent, NPacket* realPacket) :
-        KListViewItem(parent), packet(realPacket), tree(parent) {
+        QTreeWidgetItem(parent), packet(realPacket), tree(parent) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
         NPacket* realPacket) :
-        KListViewItem(parent), packet(realPacket), tree(parent->tree) {
+        QTreeWidgetItem(parent), packet(realPacket), tree(parent->tree) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeView* parent,
-        QListViewItem* after, NPacket* realPacket) :
-        KListViewItem(parent, after), packet(realPacket),
+        QTreeWidgetItem* after, NPacket* realPacket) :
+        QTreeWidgetItem(parent, after), packet(realPacket),
         tree(parent) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
-        QListViewItem* after, NPacket* realPacket) :
-        KListViewItem(parent, after), packet(realPacket), tree(parent->tree) {
+        QTreeWidgetItem* after, NPacket* realPacket) :
+        QTreeWidgetItem(parent, after), packet(realPacket), tree(parent->tree) {
     init();
 }
 
 void PacketTreeItem::init() {
     packet->listen(this);
     refreshLabel();
-    setPixmap(0, PacketManager::iconSmall(packet, true));
+    setIcon(0, PacketManager::iconSmall(packet, true));
     isEditable = packet->isPacketEditable();
 }
 
@@ -90,12 +93,9 @@ void PacketTreeItem::refreshSubtree() {
     // Is this a stale node in the tree?
     if (! packet) {
         // Yes, it's a stale node.  Delete all of its children.
-        QListViewItem* item = firstChild();
-        QListViewItem* old;
-        while (item) {
-            old = item;
-            item = item->nextSibling();
-            delete old;
+        for(int i=0; i< childCount(); i++) {
+          QTreeWidgetItem* item = child(0);
+          delete item;
         }
         return;
     }
@@ -104,9 +104,10 @@ void PacketTreeItem::refreshSubtree() {
     // Run through the child packets and child nodes and ensure they
     // match up.
     NPacket* p = packet->getFirstTreeChild();
-    PacketTreeItem* item = (PacketTreeItem*)firstChild();
-    QListViewItem* prev = 0;
-    QListViewItem* other;
+    int itemCounter = 0;
+    PacketTreeItem* item = (PacketTreeItem*)child(itemCounter++);
+    QTreeWidgetItem* prev = 0;
+    QTreeWidgetItem* other;
     while (p) {
         if (! item) {
             // We've already run out of child nodes.  Add a new one.
@@ -125,24 +126,28 @@ void PacketTreeItem::refreshSubtree() {
 
             // Increment our variables.
             prev = item;
-            item = (PacketTreeItem*)(item->nextSibling());
+            item = (PacketTreeItem*)child(itemCounter++);
             p = p->getNextTreeSibling();
         } else {
+            int otherCounter;
             // They both exist but they don't match up.  Hmmm.
             // Do we have a node for this packet later in the tree?
-            for (other = item->nextSibling(); other;
-                    other = other->nextSibling())
+            for (otherCounter = itemCounter; otherCounter < childCount();
+                    otherCounter++) {
+                other = (PacketTreeItem*)child(otherCounter);
                 if (((PacketTreeItem*)other)->getPacket() == p) {
                     // We've found a node for this packet.
                     // Move it to the correct place.
-                    if (prev)
-                        other->moveItem(prev);
+                    insertChild(itemCounter-1,takeChild(otherCounter));
+                    /*if (prev) {
+                        insertChild(itemCounter-1,takeChild(otherCounter));
                     else {
+                        insertChild(0,takeChild(itemCounter-1));
                         // Hmm, it doesn't seem easy to move a list item
                         // to the beginning of its parent's child list.
-                        other->moveItem(firstChild());
-                        firstChild()->moveItem(other);
-                    }
+                        // other->moveItem(firstChild());
+                        // firstChild()->moveItem(other);
+                    }*/
                     ((PacketTreeItem*)other)->refreshSubtree();
 
                     // Increment our variables.
@@ -151,8 +156,8 @@ void PacketTreeItem::refreshSubtree() {
                     p = p->getNextTreeSibling();
                     break;
                 }
-
-            if (! other) {
+            }
+            if (otherCounter == childCount() ) {
                 // We couldn't find a node for this packet anywhere.
                 // Insert a new one.
                 if (prev)
@@ -169,16 +174,23 @@ void PacketTreeItem::refreshSubtree() {
     }
 
     // Were there any child nodes left over?
-    while (item) {
+    //
+    // Note that childCount() will decrease as we delete children (hopefully)
+    while (itemCounter < childCount()) {
+        other = (PacketTreeItem*)child(itemCounter);
+        delete other;
+    }
+
+    /*while (item) {
         other = item;
         item = (PacketTreeItem*)(item->nextSibling());
         delete other;
-    }
+    }*/
 }
 
 void PacketTreeItem::refreshLabel() {
     if (packet) {
-        QString newLabel = packet->getPacketLabel();
+        QString newLabel = packet->getPacketLabel().c_str();
         if (packet->hasTags())
             newLabel += " (+)";
         if (text(0) != newLabel)
@@ -191,7 +203,7 @@ void PacketTreeItem::updateEditable() {
     if (packet && packet->isPacketEditable() != isEditable) {
         // We need updating.
         isEditable = ! isEditable;
-        setPixmap(0, PacketManager::iconSmall(packet, true));
+        setIcon(0, PacketManager::iconSmall(packet, true));
     }
 }
 
@@ -216,7 +228,7 @@ void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
 
 void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
     // Be careful.  We might not be in the GUI thread.
-    QApplication::postEvent(tree, new QCustomEvent(
+    QApplication::postEvent(tree, new REvent(
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), this));
 }
 
@@ -236,15 +248,13 @@ void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
     getPart()->setModified(true);
 }
 
-PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent,
-        const char* name) : KListView(parent, name), part(newPart) {
-    addColumn(QString::null);
+PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent) 
+          : QTreeWidget(parent), part(newPart) {
     setRootIsDecorated(true);
-    setSorting(-1);
     header()->hide();
 
-    connect(this, SIGNAL(executed(QListViewItem*)), this,
-        SLOT(packetView(QListViewItem*)));
+    connect(this, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
+        SLOT(packetView(QTreeWidgetItem*)));
 }
 
 void PacketTreeView::fill(NPacket* topPacket) {
@@ -257,42 +267,49 @@ PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
         return 0;
 
     // Start at the root of the tree and work down.
+    // Note that the invisible root item might not be a PacketTreeItem,
+    // and we should not try to cast it as such.
+    QTreeWidgetItem* root = invisibleRootItem();
+
+    int itemCount = 0;
+    PacketTreeItem* item;
     regina::NPacket* current;
-    PacketTreeItem* item = dynamic_cast<PacketTreeItem*>(firstChild());
-    while (item) {
+    while (itemCount < root->childCount()) {
+        item = dynamic_cast<PacketTreeItem*>(root->child(itemCount++));
         current = item->getPacket();
 
         if (current == packet)
             return item;
-        else if (current && current->isGrandparentOf(packet))
-            item = dynamic_cast<PacketTreeItem*>(item->firstChild());
-        else
-            item = dynamic_cast<PacketTreeItem*>(item->nextSibling());
+        if (current && current->isGrandparentOf(packet)) {
+            root = item;
+            itemCount = 0;
+        }
     }
 
     return 0;
 }
 
-void PacketTreeView::packetView(QListViewItem* packet) {
+void PacketTreeView::packetView(QTreeWidgetItem* packet) {
     if (packet)
         part->packetView(dynamic_cast<PacketTreeItem*>(packet)->getPacket());
 }
 
 void PacketTreeView::refresh(NPacket* topPacket) {
-    if (childCount() != 1)
+    if (invisibleRootItem()->childCount() != 1)
         fill(topPacket);
-    else if (((PacketTreeItem*)firstChild())->getPacket() != topPacket)
+    else if (((PacketTreeItem*)invisibleRootItem()->child(0))->getPacket() != topPacket)
         fill(topPacket);
     else
-        ((PacketTreeItem*)firstChild())->refreshSubtree();
+        ((PacketTreeItem*)invisibleRootItem()->child(0))->refreshSubtree();
 }
-
-void PacketTreeView::customEvent(QCustomEvent* evt) {
+// TODO: Subclass QEvent for this custom event.
+void PacketTreeView::customEvent(QEvent* evt) {
     switch (evt->type()) {
         case EVT_TREE_CHILD_ADDED:
             {
+                REvent* revt = (REvent *)evt;
                 PacketTreeItem* item =
-                    static_cast<PacketTreeItem*>(evt->data());
+                    static_cast<PacketTreeItem*>(revt->getItem());
 
                 item->refreshSubtree();
                 item->updateEditable();
@@ -304,4 +321,3 @@ void PacketTreeView::customEvent(QCustomEvent* evt) {
     }
 }
 
-#include "packettreeview.moc"

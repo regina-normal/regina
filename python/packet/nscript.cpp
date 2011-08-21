@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "packet/nscript.h"
 #include <boost/python.hpp>
+#include "packet/nscript.h"
 
 using namespace boost::python;
 using regina::NScript;

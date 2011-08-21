@@ -33,7 +33,7 @@
 #ifndef __NCOMPATCANVAS_H
 #define __NCOMPATCANVAS_H
 
-#include <qcanvas.h>
+#include <QGraphicsScene>
 
 namespace regina {
     class NNormalSurfaceList;
@@ -43,7 +43,7 @@ namespace regina {
  * A canvas for displaying a compatibility matrix for a list of
  * normal surfaces.
  */
-class NCompatCanvas : public QCanvas {
+class NCompatCanvas : public QGraphicsScene {
     Q_OBJECT
 
     private:

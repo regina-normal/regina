@@ -74,7 +74,7 @@ class NTriangulationUI : public PacketTabbedUI {
         /**
          * PacketUI overrides.
          */
-        const QPtrList<KAction>& getPacketTypeActions();
+        const QLinkedList<KAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 
     public slots:

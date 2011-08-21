@@ -34,7 +34,7 @@
 #ifndef __PROGRESSDIALOGS_H
 #define __PROGRESSDIALOGS_H
 
-#include <kprogress.h>
+#include <kprogressdialog.h>
 
 namespace regina {
     class NProgressManager;

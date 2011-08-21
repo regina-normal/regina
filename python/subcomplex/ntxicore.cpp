@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "subcomplex/ntxicore.h"
 #include <boost/python.hpp>
+#include "subcomplex/ntxicore.h"
 
 using namespace boost::python;
 using regina::NTxICore;
