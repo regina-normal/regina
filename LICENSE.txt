@@ -45,6 +45,13 @@ Damian Heard, who has also given permission for his code to be distributed
 under the terms of the GNU General Public License.
 
 
+PYTHON ICONS:
+
+The python icons are based on applications-python.svg as shipped with the
+humanity-icon-theme package in Ubuntu 11.04.  The contents of this Ubuntu
+package are licensed under the GNU General Public License version 2.
+
+
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
