@@ -4,7 +4,6 @@ All locations are relative to the primary source directory.
 
 Program version:
     CHANGES.txt, HIGHLIGHTS.txt, kdeui/doc/regina/HIGHLIGHTS.txt (version, date)
-    admin/configure.ac.top (AC_INIT, AM_INIT_AUTOMAKE)
     CMakeLists.txt (PACKAGE_VERSION)
     kdeui/doc/regina/index.docbook (&regversion;, &regdate;, date, releaseinfo)
     kdeui/src/common/reginaabout.cpp (regReleased)
