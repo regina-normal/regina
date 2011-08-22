@@ -722,7 +722,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     KAction* actConnectedSumDecomposition = triActions->addAction(
         "tri_connected_sum_decomposition");
     actConnectedSumDecomposition->setText(i18n("Co&nnected Sum Decomposition"));
-    actConnectedSumDecomposition->setIcon(KIcon("math_sum"));
+    actConnectedSumDecomposition->setIcon(KIcon("connsum"));
     actConnectedSumDecomposition->setToolTip(i18n(
         "Split into a connected sum of prime 3-manifolds"));
     actConnectedSumDecomposition->setWhatsThis(i18n("Break this "
