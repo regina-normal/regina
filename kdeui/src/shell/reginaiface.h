@@ -44,7 +44,7 @@ class ReginaMainInterface {
     public Q_SLOTS:
         Q_SCRIPTABLE void newTopology();
         Q_SCRIPTABLE void newPython();
-        Q_SCRIPTABLE bool openURL(const QString& url);
+        Q_SCRIPTABLE bool openUrl(const QString& url);
         Q_SCRIPTABLE void pythonConsole();
         Q_SCRIPTABLE void close();
         Q_SCRIPTABLE void quit();

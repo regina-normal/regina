@@ -113,7 +113,7 @@ void ReginaPart::setModified(bool modified) {
     ReadWritePart::setModified(modified);
 }
 
-bool ReginaPart::closeURL() {
+bool ReginaPart::closeUrl() {
     if (! closeAllPanes())
         return false;
     consoles.closeAllConsoles();

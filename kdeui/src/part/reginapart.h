@@ -114,7 +114,7 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         virtual void setReadWrite(bool rw);
         virtual void setModified(bool modified);
-        virtual bool closeURL();
+        virtual bool closeUrl();
 
         /**
          * View the given packet.
