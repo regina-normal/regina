@@ -102,7 +102,12 @@ class NXMLNormalHypersurfaceReader;
  *   <li>The virtual function <tt>NNormalHypersurfaceVector* clone() const</tt>
  *   must be declared but not implemented.  The registry utilities will take
  *   care of its implementation.</li>
- *   <li>All abstract functions must be implemented.</li>
+ *   <li>All abstract functions must be implemented.
+ *   Note that coordinate functions such as getTetrahedronCoord() must return
+ *   the \e total number of pieces of the requested type; if your new
+ *   coordinate system adorns pieces with extra information (such as
+ *   orientation) then your implementation must compute the appropriate
+ *   sum.</li>
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const Dim4Triangulation*)</tt>,
  *   <tt>NMatrixInt* makeMatchingEquations(Dim4Triangulation*)</tt> and
@@ -379,6 +384,11 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
          * pentachoron and a vertex of that pentachoron that the
          * tetrahedron surrounds.
          *
+         * If you are using a coordinate system that adorns pieces with
+         * additional information (such as orientation), this routine
+         * returns the \e total number of tetrahedra in the given
+         * pentachoron of the given type.
+         *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested pieces reside;
          * this should be between 0 and
@@ -397,6 +407,11 @@ class REGINA_API NNormalHypersurface : public ShareableObject {
          * pentachoron and an edge of that pentachoron; prisms of this
          * type will then separate the given edge from the remaining three
          * pentachoron vertices.
+         *
+         * If you are using a coordinate system that adorns pieces with
+         * additional information (such as orientation), this routine
+         * returns the \e total number of prisms in the given
+         * pentachoron of the given type.
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prisms reside;

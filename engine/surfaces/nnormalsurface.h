@@ -234,7 +234,11 @@ class NXMLNormalSurfaceReader;
  *   <tt>bool allowsSpun() const </tt> must be declared but not
  *   implemented.  The registry utilities will take care of their
  *   implementations.</li>
- *   <li>All abstract functions must be implemented.</li>
+ *   <li>All abstract functions must be implemented.
+ *   Note that coordinate functions such as getTriangleCoord() must return the
+ *   \e total number of discs of the requested type; if your new coordinate
+ *   system adorns discs with extra information (such as orientation) then
+ *   your implementation must compute the appropriate sum.</li>
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const NTriangulation*)</tt>,
  *   <tt>NMatrixInt* makeMatchingEquations(NTriangulation*)</tt> and
@@ -657,6 +661,11 @@ class REGINA_API NNormalSurface :
          * tetrahedron and a vertex of that tetrahedron that the
          * triangle surrounds.
          *
+         * If you are using a coordinate system that adorns discs with
+         * additional information (such as orientation), this routine
+         * returns the \e total number of triangles in the given
+         * tetrahedron of the given type.
+         *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and
@@ -677,6 +686,11 @@ class REGINA_API NNormalSurface :
          * vertices.  See \a vertexSplit for more details on vertex
          * splittings.
          *
+         * If you are using a coordinate system that adorns discs with
+         * additional information (such as orientation), this routine
+         * returns the \e total number of quadrilaterals in the given
+         * tetrahedron of the given type.
+         *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
@@ -696,6 +710,11 @@ class REGINA_API NNormalSurface :
          * describes how the octagon partitions the tetrahedron
          * vertices.  See \a vertexSplit for more details on vertex
          * splittings.
+         *
+         * If you are using a coordinate system that adorns discs with
+         * additional information (such as orientation), this routine
+         * returns the \e total number of octagons in the given
+         * tetrahedron of the given type.
          *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested octagons reside;
