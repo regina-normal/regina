@@ -51,7 +51,6 @@
 #include <krun.h>
 #include <kshell.h>
 #include <kstandarddirs.h>
-#include <KTemporaryFile>
 #include <kurl.h>
 
 #define PDF_MIMETYPE "application/pdf"
@@ -61,11 +60,8 @@ using regina::NPDF;
 
 NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), pdf(packet),
-        //temp(KStandardDirs::locateLocal("tmp", "pdf-")+ ".pdf"),
         viewer(0), proc(0), runPid(0) {
     temp.setSuffix(".pdf");
-    //temp.setAutoDelete(true);
-    temp.close();
 
     ReginaPart* part = enclosingPane->getPart();
     const ReginaPrefSet& prefs = part->getPreferences();
@@ -114,8 +110,8 @@ void NPDFUI::refresh() {
         return;
     }
     temp.open();
-    if (! regina::writePDF(
-            static_cast<const char*>(QFile::encodeName(temp.fileName())), *pdf)) {
+    if (! regina::writePDF(static_cast<const char*>(
+            QFile::encodeName(temp.fileName())), *pdf)) {
         showError(i18n("An error occurred whilst writing the PDF "
             "data to the temporary file %1.").arg(temp.fileName()));
         setDirty(false);

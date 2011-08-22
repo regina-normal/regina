@@ -399,7 +399,6 @@ void NTriFaceGraphUI::refresh() {
     if (! tmpDot.open()) {
         showError(i18n("<qt>The temporary DOT file <i>%1</i> "
             "could not be created.</qt>").arg(tmpDot.fileName()));
-        tmpDot.remove();
         return;
     }
     tmpDot.close();
@@ -409,7 +408,6 @@ void NTriFaceGraphUI::refresh() {
     if (! outDot) {
         showError(i18n("<qt>The temporary DOT file <i>%1</i> "
             "could not be opened for writing.</qt>").arg(tmpDot.fileName()));
-        tmpDot.remove();
         return;
     }
 
@@ -423,7 +421,6 @@ void NTriFaceGraphUI::refresh() {
     if (! tmpPng.open()) {
         showError(i18n("<qt>The temporary PNG file <i>%1</i> "
             "could not be created.</qt>").arg(tmpPng.fileName()));
-        tmpDot.remove();
         return;
     }
     tmpPng.close();
@@ -437,16 +434,12 @@ void NTriFaceGraphUI::refresh() {
         if ( graphviz.error() == QProcess::FailedToStart ) {
             showError(i18n("<qt>The Graphviz executable <i>%1</i> "
                 "could not be started.</qt>").arg(useExec));
-            tmpDot.remove();
-            tmpPng.remove();
             return;
         }
         if ( false ) { // TODO: Doesn't have an equivalent in Qt4 ?
             showError(i18n("<qt>The Graphviz executable <i>%1</i> "
                 "did not exit normally.  It was killed with signal %2.</qt>").
                 arg(useExec));
-            tmpDot.remove();
-            tmpPng.remove();
             return;
         }
         if ( graphviz.error() == QProcess::Crashed) {
@@ -454,8 +447,6 @@ void NTriFaceGraphUI::refresh() {
                 "appears to have encountered an internal error.  "
                 "It finished with exit status %2.</qt>").
                 arg(useExec).arg(graphviz.exitStatus()));
-            tmpDot.remove();
-            tmpPng.remove();
             return;
         }
     }
@@ -467,16 +458,11 @@ void NTriFaceGraphUI::refresh() {
             "was <i>%1</i>.  If this is not correct, please change it "
             "in the Regina configuration (Triangulation section).</qt>").
             arg(useExec));
-        tmpDot.remove();
-        tmpPng.remove();
         return;
     }
 
     graph->setPixmap(png);
     graph->resize(graph->sizeHint());
-
-    tmpDot.remove();
-    tmpPng.remove();
 
     stack->setCurrentWidget(layerGraph);
 }
