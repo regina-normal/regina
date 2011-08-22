@@ -307,7 +307,7 @@ bool PacketPane::queryClose() {
                  "now and discard these changes?"));
         if (KMessageBox::warningContinueCancel(this, msg,
                 mainUI->getPacket()->getPacketLabel().c_str(),
-                KStandardGuiItem::close()) == KMessageBox::Cancel)
+                KStandardGuiItem::discard()) == KMessageBox::Cancel)
             return false;
     }
 
