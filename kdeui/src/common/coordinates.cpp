@@ -263,14 +263,19 @@ namespace Coordinates {
         } else if (coordSystem == NNormalSurfaceList::FACE_ARCS) {
             return surface.getFaceArcs(whichCoord / 3, whichCoord % 3);
         } else if (coordSystem == NNormalSurfaceList::ORIENTED) {
-            // Note that without an orientation argument, get__Coord
-            // will just get the appropriate coordinate.
-            if (whichCoord % 14 < 8)
+            QString orientation = "+";
+            unsigned long coord = whichCoord;
+            if (whichCoord % 2 == 1) {
+                coord--;
+                orientation = "-";
+            }
+            coord = coord / 2;
+            if (coord % 7 < 4)
                 return surface.getTriangleCoord(
-                    whichCoord / 14, whichCoord % 14);
+                    coord / 7, coord % 7);
             else
                 return surface.getQuadCoord(
-                    whichCoord / 14, (whichCoord % 14) - 8);
+                    coord / 7, (coord % 7) - 4);
         }
 
         return (long)0;

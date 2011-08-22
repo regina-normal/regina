@@ -120,12 +120,14 @@ inline NNormalSurfaceVectorOriented::NNormalSurfaceVectorOriented(
 }
 
 inline NLargeInteger NNormalSurfaceVectorOriented::getTriangleCoord(
-        unsigned long tetIndex, int vertex, NTriangulation*) const {
-    return (*this)[noOfCoords * tetIndex + vertex];
+        unsigned long tetIndex, int vertex, NTriangulation* tri) const {
+    return getTriangleCoord(tetIndex,vertex,tri, false)
+           + getTriangleCoord(tetIndex,vertex,tri, true);
 }
 inline NLargeInteger NNormalSurfaceVectorOriented::getQuadCoord(
-        unsigned long tetIndex, int quadType, NTriangulation*) const {
-    return (*this)[noOfCoords * tetIndex + indexOfQuads + quadType];
+        unsigned long tetIndex, int quadType, NTriangulation* tri) const {
+    return getQuadCoord(tetIndex,quadType,tri, false)
+           + getQuadCoord(tetIndex,quadType,tri, true);
 }
 
 inline NLargeInteger NNormalSurfaceVectorOriented::getTriangleCoord(

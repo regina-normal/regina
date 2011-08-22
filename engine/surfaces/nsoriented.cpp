@@ -91,7 +91,7 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
     unsigned long nCoords = noOfCoords * triangulation->getNumberOfTetrahedra();
     // Three equations per non-boundary face.
     // F_boundary + 2 F_internal = 4 T
-    long nEquations = 3 * (4 * long(triangulation->getNumberOfTetrahedra()) -
+    long nEquations = 6 * (4 * long(triangulation->getNumberOfTetrahedra()) -
         long(triangulation->getNumberOfFaces()));
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
@@ -113,19 +113,19 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
             for (i=0; i<3; i++) {
                 // Triangles:
                 ans->entry(row, noOfCoords*tet0 + 2*perm0[i]) += 1;
-                ans->entry(row, noOfCoords*tet0 + 2*perm0[i] + 1) += 1;
+                ans->entry(row+1, noOfCoords*tet0 + 2*perm0[i] + 1) += 1;
                 ans->entry(row, noOfCoords*tet1 + 2*perm1[i]) -= 1;
-                ans->entry(row, noOfCoords*tet1 + 2*perm1[i] - 1) -= 1;
+                ans->entry(row+1, noOfCoords*tet1 + 2*perm1[i] + 1) -= 1;
                 // Quads:
                 ans->entry(row, noOfCoords*tet0 + indexOfQuads +
                     2*vertexSplit[perm0[i]][perm0[3]]) += 1;
-                ans->entry(row, noOfCoords*tet0 + indexOfQuads +
+                ans->entry(row+1, noOfCoords*tet0 + indexOfQuads +
                     2*vertexSplit[perm0[i]][perm0[3]] + 1) += 1;
                 ans->entry(row, noOfCoords*tet1 + indexOfQuads +
                     2*vertexSplit[perm1[i]][perm1[3]]) -= 1;
-                ans->entry(row, noOfCoords*tet1 + indexOfQuads +
+                ans->entry(row+1, noOfCoords*tet1 + indexOfQuads +
                     2*vertexSplit[perm1[i]][perm1[3]] + 1) -= 1;
-                row++;
+                row+=2;
             }
         }
     }
