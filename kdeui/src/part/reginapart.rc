@@ -65,9 +65,6 @@
     <Action name="tree_refresh"/>
   </Menu>
   <ActionList name="packet_type_menu"/>
-  <Menu name="tools" noMerge="1"><text>T&amp;ools</text>
-    <Action name="packet_census"/>
-  </Menu>
 </MenuBar>
 <ToolBar name="mainToolBar" iconText="IconOnly" noMerge="1">
   <text>Main Toolbar</text>

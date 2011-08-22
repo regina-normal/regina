@@ -23,8 +23,6 @@
   </Menu>
   <Merge/>
   <Menu name="tools">
-    <Merge/>
-    <Separator/>
     <Action name="python_console" />
   </Menu>
   <Menu name="settings">
