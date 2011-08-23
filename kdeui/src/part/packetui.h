@@ -35,6 +35,7 @@
 
 #include "packet/npacketlistener.h"
 
+#include <qboxlayout.h>
 #include <QLinkedList>
 #include <kactionmenu.h>
 #include <khbox.h>
@@ -308,7 +309,7 @@ class DefaultPacketUI : public ErrorPacketUI {
  * Packet panes may be either docked within the main ReginaPart widget
  * or may be floating freely in their own frames.
  */
-class PacketPane : public KVBox, public regina::NPacketListener {
+class PacketPane : public QWidget, public regina::NPacketListener {
     Q_OBJECT
 
     public:

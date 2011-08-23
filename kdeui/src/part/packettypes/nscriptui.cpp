@@ -39,7 +39,6 @@
 #include <kaction.h>
 #include <KActionCollection>
 #include <KComponentData>
-#include <KHBox>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -51,10 +50,10 @@
 #include <ktexteditor/view.h>
 //#include <ktexteditor/viewcursorinterface.h>
 #include <ktoolbar.h>
-#include <KVBox>
+#include <qboxlayout.h>
 #include <qheaderview.h>
 #include <qsplitter.h>
-#include <QTableWidget>
+#include <qtablewidget.h>
 #include <set>
 
 #define SCRIPT_TABLE_WEIGHT 1
@@ -69,17 +68,21 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         PacketUI(enclosingPane), script(packet), document(doc) {
     bool readWrite = enclosingPane->isReadWrite();
 
-    ui = new KVBox(enclosingPane);
+    ui = new QWidget(enclosingPane);
+    QVBoxLayout* layout = new QVBoxLayout(ui);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     // --- Action Toolbar ---
 
     KToolBar* actionBar = new KToolBar(ui, false, true);
     actionBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    layout->addWidget(actionBar);
 
     // --- Variable Table ---
 
     // Prepare a splitter for the remaining components.
-    QSplitter* splitter = new QSplitter(Qt::Vertical, ui);
+    QSplitter* splitter = new QSplitter(Qt::Vertical);
+    layout->addWidget(splitter, 1);
 
     varTable = new QTableWidget(0, 2, splitter);
     if (! readWrite )

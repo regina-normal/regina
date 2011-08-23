@@ -72,7 +72,6 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     plugActionList("packet_type_menu", typeActions);
 
     // Set up the widgets.
-    newPane->setParent(this); // TODO: Is this needed?
     setCentralWidget(newPane);
     newPane->show();
 }

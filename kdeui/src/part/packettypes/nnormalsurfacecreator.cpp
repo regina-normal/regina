@@ -62,7 +62,7 @@ NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem) {
     QLabel* label = new QLabel(i18n("Coordinate system:"), ui);
     label->setWhatsThis(expln);
     coordArea->addWidget(label);
-    coords = new CoordinateChooser(ui);
+    coords = new CoordinateChooser();
     coords->insertAllCreators();
     coords->setCurrentSystem(defaultCoordSystem);
     coords->setWhatsThis(expln);

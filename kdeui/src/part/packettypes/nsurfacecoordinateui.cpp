@@ -461,7 +461,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     // Set up the coordinate selector.
     QLabel* label = new QLabel(i18n("Display coordinates:"));
     hdrLayout->addWidget(label);
-    coords = new CoordinateChooser(ui);
+    coords = new CoordinateChooser();
     coords->insertAllViewers(surfaces);
     coords->setCurrentSystem(surfaces->getFlavour());
     connect(coords, SIGNAL(activated(int)), this, SLOT(refreshLocal()));
