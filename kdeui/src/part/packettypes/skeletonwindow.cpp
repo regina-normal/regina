@@ -55,8 +55,6 @@ namespace {
 SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
         SkeletalObject viewObjectType) : 
         KDialog(packetUI->getInterface()), objectType(viewObjectType) {
-    // TODO: Resize to something wide.
-
     setButtons(KDialog::Close);
     tri = dynamic_cast<regina::NTriangulation*>(packetUI->getPacket());
 
