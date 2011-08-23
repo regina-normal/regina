@@ -57,7 +57,7 @@ void ReginaPart::setupActions() {
     // Basic packet actions:
     act = actionCollection()->addAction("tree_view");
     act->setText(i18n("&View/Edit"));
-    act->setIcon(KIcon("zoom-original"));
+    act->setIcon(KIcon("packet_view"));
     act->setShortcut(tr("Ctrl+v"));
     act->setToolTip(i18n("View or edit the selected packet"));
     act->setWhatsThis(i18n("View or edit the packet currently selected "

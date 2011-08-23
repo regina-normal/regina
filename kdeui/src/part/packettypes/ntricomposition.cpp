@@ -123,7 +123,7 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     isoResult->setWhatsThis(msg);
     leftIsoArea->addWidget(isoResult);
 
-    isoView = new QPushButton(KIcon("zoom-original"), i18n("Details..."), ui);
+    isoView = new QPushButton(KIcon("packet_view"), i18n("Details..."), ui);
     // isoView->setFlat(true);
     isoView->setToolTip(i18n("View details of isomorphism"));
     isoView->setWhatsThis(i18n("View the details of the isomorphism "
