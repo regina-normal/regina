@@ -253,6 +253,9 @@ PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent)
     setRootIsDecorated(true);
     header()->hide();
 
+    // Currently we use the platform default activation method (which is
+    // often double-click).  To make this single-click always, change
+    // itemActivated() to itemClicked().
     connect(this, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
         SLOT(packetView(QTreeWidgetItem*)));
 }
