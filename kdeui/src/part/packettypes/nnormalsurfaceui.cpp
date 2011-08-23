@@ -40,7 +40,6 @@
 #include "reginaprefset.h"
 
 #include <klocale.h>
-#include <KVBox>
 #include <qlabel.h>
 #include <qwhatsthis.h>
 

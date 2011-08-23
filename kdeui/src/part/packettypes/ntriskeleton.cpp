@@ -76,7 +76,7 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout();// , 3, 13, 5 /* spacing */);
+    QGridLayout* grid = new QGridLayout();
     layout->addLayout(grid);
     grid->setSpacing(5);
     grid->setColumnStretch(0, 1);
@@ -488,15 +488,13 @@ QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
 
     QLabel* icon = new QLabel(layer);
     icon->setPixmap(iconPic);
-    layout->addWidget(icon);
-    layout->setStretchFactor(icon, 0);
+    layout->addWidget(icon, 0);
 
     layout->addSpacing(10);
 
     text = new QLabel(i18n("<qt>Initialising...</qt>"), layer);
     text->setWordWrap(true);
-    layout->addWidget(text);
-    layout->setStretchFactor(text, 4);
+    layout->addWidget(text, 4);
 
     layout->addStretch(1);
     stack->addWidget(layer);

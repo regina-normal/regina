@@ -37,11 +37,11 @@
 #include "packetui.h"
 #include "reginapart.h"
 
+#include <qboxlayout.h>
 #include <qcolor.h>
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qlabel.h>
-#include <qlayout.h>
 #include <qsplitter.h>
 #include <QTreeView>
 #include <QTreeWidget>
@@ -154,6 +154,7 @@ void ReginaPart::dock(PacketPane* newPane) {
         dockedPane->floatPane();
 
     newPane->setParent(dockArea);
+    static_cast<QBoxLayout*>(dockArea->layout())->addWidget(newPane, 1);
     dockedPane = newPane;
 
     QList<QAction*> typeActions;
@@ -548,15 +549,19 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
     // TODO: treeLayout->addStrut(150);
 
     // Set up the docking area.
-    dockArea = new KVBox(splitter);
-    QSizePolicy qpol(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
+    dockArea = new QWidget(splitter);
+    QBoxLayout* dockLayout = new QVBoxLayout(dockArea);
+    dockLayout->setContentsMargins(0, 0, 0, 0);
+
+    QSizePolicy qpol(
+        QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     qpol.setHorizontalStretch(5);
     qpol.setVerticalStretch(5);
     dockArea->setSizePolicy(qpol);
 
     // Make sure the docking area gets some space even when there's
     // nothing in it.
-    dynamic_cast<QBoxLayout*>(dockArea->layout())->addStrut(100);
+    dockLayout->addStrut(100);
 
     // Make the splitter our main widget.
     setWidget(splitter);

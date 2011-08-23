@@ -243,15 +243,13 @@ QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
 
     QLabel* icon = new QLabel(layer);
     icon->setPixmap(iconPic);
-    layout->addWidget(icon);
-    layout->setStretchFactor(icon, 0);
+    layout->addWidget(icon, 0);
 
     layout->addSpacing(10);
 
     text = new QLabel(i18n("<qt>Initialising...</qt>"), layer);
     text->setWordWrap(true);
-    layout->addWidget(text);
-    layout->setStretchFactor(text, 4);
+    layout->addWidget(text, 4);
 
     layout->addStretch(1);
     stack->addWidget(layer);

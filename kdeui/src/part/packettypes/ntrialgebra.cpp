@@ -472,8 +472,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     paramsArea->addStretch(1);
 
     QBoxLayout* invArea = new QHBoxLayout();
-    layout->addLayout(invArea);
-    layout->setStretchFactor(invArea, 1);
+    layout->addLayout(invArea, 1);
     invArea->addStretch(1);
 
     invariants = new QTreeWidget(ui);

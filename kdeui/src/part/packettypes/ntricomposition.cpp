@@ -90,8 +90,7 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     layout->addLayout(wideIsoArea);
 
     QBoxLayout* leftIsoArea = new QVBoxLayout();
-    wideIsoArea->addLayout(leftIsoArea);
-    wideIsoArea->setStretchFactor(leftIsoArea, 1);
+    wideIsoArea->addLayout(leftIsoArea, 1);
 
     QString msg = i18n("<qt>Compare this with another triangulation to "
         "see whether the triangulations are isomorphic, or whether one is "
