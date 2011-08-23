@@ -68,7 +68,6 @@ ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
     initPacketTree();
 
     // Other tidying up.
-    dockChanged();
     setReadWrite(true);
     setModified(false);
     updateTreeEditActions();
@@ -154,7 +153,7 @@ void ReginaPart::dock(PacketPane* newPane) {
     if (! closeDockedPane())
         dockedPane->floatPane();
 
-    newPane->setParent(dockArea); // TODO: Is this needed
+    newPane->setParent(dockArea);
     dockedPane = newPane;
 
     QList<QAction*> typeActions;
@@ -170,8 +169,6 @@ void ReginaPart::dock(PacketPane* newPane) {
         newPane->registerEditOperation(actUndo, PacketPane::editUndo);
         newPane->registerEditOperation(actRedo, PacketPane::editRedo);
     }
-
-    dockChanged();
 }
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
@@ -191,8 +188,6 @@ void ReginaPart::hasUndocked(PacketPane* undockedPane) {
         unplugActionList("packet_type_menu");
         dockedPane = 0;
     }
-
-    dockChanged();
 }
 
 bool ReginaPart::openFile() {
@@ -575,11 +570,6 @@ void ReginaPart::initPacketTree() {
 
     // Update the visual representation.
     treeView->fill(packetTree);
-}
-
-void ReginaPart::dockChanged() {
-    // This was once useful, but since the packet type menus were
-    // rearranged this routine is no longer needed.
 }
 
 bool ReginaPart::checkReadWrite() {

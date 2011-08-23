@@ -330,11 +330,6 @@ class ReginaPart : public KParts::ReadWritePart {
         void initPacketTree();
 
         /**
-         * Called when the docked pane or its properties have changed.
-         */
-        void dockChanged();
-
-        /**
          * Verify that the part or its components are in an appropriate
          * state and display an error message otherwise.
          *
