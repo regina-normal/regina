@@ -51,6 +51,143 @@ namespace regina {
     class NVertex;
 };
 
+class SkeletalModel : public QAbstractItemModel {
+    protected:
+        /**
+         * The triangulation being displayed
+         */
+        regina::NTriangulation* tri;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        SkeletalModel(regina::NTriangulation* tri_);
+        virtual ~SkeletalModel();
+
+        /**
+         * Rebuild the model from scratch.
+         */
+        void rebuild();
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        QModelIndex index(int row, int column,
+            const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+};
+
+class VertexModel : public SkeletalModel {
+    public:
+        /**
+         * Constructor.
+         */
+        VertexModel(regina::NTriangulation* tri_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class EdgeModel : public SkeletalModel {
+    public:
+        /**
+         * Constructor.
+         */
+        EdgeModel(regina::NTriangulation* tri_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class FaceModel : public SkeletalModel {
+    public:
+        /**
+         * Constructor.
+         */
+        FaceModel(regina::NTriangulation* tri_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class ComponentModel : public SkeletalModel {
+    public:
+        /**
+         * Constructor.
+         */
+        ComponentModel(regina::NTriangulation* tri_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class BoundaryComponentModel : public SkeletalModel {
+    public:
+        /**
+         * Constructor.
+         */
+        BoundaryComponentModel(regina::NTriangulation* tri_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
 /**
  * A modeless dialog for viewing all skeletal objects of a particular
  * type in a triangulation.
@@ -73,6 +210,7 @@ class SkeletonWindow : public KDialog, public regina::NPacketListener {
          * Packet details
          */
         regina::NTriangulation* tri;
+        SkeletalModel* model;
         SkeletalObject objectType;
 
         /**
@@ -85,6 +223,7 @@ class SkeletonWindow : public KDialog, public regina::NPacketListener {
          * Constructor and destructor.
          */
         SkeletonWindow(PacketUI* parentUI, SkeletalObject viewObjectType);
+        ~SkeletonWindow();
 
         /**
          * Update the display.
@@ -103,123 +242,18 @@ class SkeletonWindow : public KDialog, public regina::NPacketListener {
         /**
          * Return information specific to different skeletal object types.
          */
-        static QString typeLabel(SkeletalObject type);
         static QString overview(SkeletalObject type);
 };
 
-class SkeletalModel : public QAbstractItemModel {
-    protected:
-        /**
-         * The triangulation being displayed
-         */
-        regina::NTriangulation* tri;
+inline SkeletalModel::SkeletalModel(regina::NTriangulation* tri_) : tri(tri_) {
+}
 
-    public:
-        /**
-         * Constructor.
-         */
-        SkeletalModel(QObject* parent, regina::NTriangulation* tri_);
-
-        /**
-         * Overrides for describing data in the model.
-         */
-        QModelIndex index(int row, int column,
-            const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-};
-
-class VertexModel : public SkeletalModel {
-    public:
-        /**
-         * Constructor.
-         */
-        VertexModel(QObject* parent, regina::NTriangulation* tri_);
-
-        /**
-         * Overrides for describing data in the model.
-         */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
-        QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
-};
-
-class EdgeModel : public SkeletalModel {
-    public:
-        /**
-         * Constructor.
-         */
-        EdgeModel(QObject* parent, regina::NTriangulation* tri_);
-
-        /**
-         * Overrides for describing data in the model.
-         */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
-        QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
-};
-
-class FaceModel : public SkeletalModel {
-    public:
-        /**
-         * Constructor.
-         */
-        FaceModel(QObject* parent, regina::NTriangulation* tri_);
-
-        /**
-         * Overrides for describing data in the model.
-         */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
-        QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
-};
-
-class ComponentModel : public SkeletalModel {
-    public:
-        /**
-         * Constructor.
-         */
-        ComponentModel(QObject* parent, regina::NTriangulation* tri_);
-
-        /**
-         * Overrides for describing data in the model.
-         */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
-        QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
-};
-
-class BoundaryComponentModel : public SkeletalModel {
-    public:
-        /**
-         * Constructor.
-         */
-        BoundaryComponentModel(QObject* parent, regina::NTriangulation* tri_);
-
-        /**
-         * Overrides for describing data in the model.
-         */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
-        QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
-};
-
-inline SkeletalModel::SkeletalModel(QObject* parent,
-        regina::NTriangulation* tri_) :
-        QAbstractItemModel(parent), tri(tri_) {}
+inline SkeletalModel::~SkeletalModel() {
+}
 
 inline QModelIndex SkeletalModel::index(int row, int column,
         const QModelIndex& parent) const {
-    return createIndex(row, column, 4 * row + column);
+    return createIndex(row, column, quint32(4 * row + column));
 }
 
 inline QModelIndex SkeletalModel::parent(const QModelIndex&) const {
@@ -227,21 +261,24 @@ inline QModelIndex SkeletalModel::parent(const QModelIndex&) const {
     return QModelIndex();
 }
 
-inline VertexModel::VertexModel(QObject* parent, regina::NTriangulation* tri_) :
-        SkeletalModel(parent, tri_) {}
+inline VertexModel::VertexModel(regina::NTriangulation* tri_) :
+        SkeletalModel(tri_) {}
 
-inline EdgeModel::EdgeModel(QObject* parent, regina::NTriangulation* tri_) :
-        SkeletalModel(parent, tri_) {}
+inline EdgeModel::EdgeModel(regina::NTriangulation* tri_) :
+        SkeletalModel(tri_) {}
 
-inline FaceModel::FaceModel(QObject* parent, regina::NTriangulation* tri_) :
-        SkeletalModel(parent, tri_) {}
+inline FaceModel::FaceModel(regina::NTriangulation* tri_) :
+        SkeletalModel(tri_) {}
 
-inline ComponentModel::ComponentModel(QObject* parent,
+inline ComponentModel::ComponentModel(regina::NTriangulation* tri_) :
+        SkeletalModel(tri_) {}
+
+inline BoundaryComponentModel::BoundaryComponentModel(
         regina::NTriangulation* tri_) :
-        SkeletalModel(parent, tri_) {}
+        SkeletalModel(tri_) {}
 
-inline BoundaryComponentModel::BoundaryComponentModel(QObject* parent,
-        regina::NTriangulation* tri_) :
-        SkeletalModel(parent, tri_) {}
+inline SkeletonWindow::~SkeletonWindow() {
+    delete model;
+}
 
 #endif
