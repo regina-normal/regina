@@ -32,6 +32,7 @@
 #include "../packetui.h"
 
 #include <klocale.h>
+#include <qheaderview.h>
 #include <qlayout.h>
 #include <qpainter.h>
 #include <qstyle.h>
@@ -98,6 +99,10 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
     layout->addWidget(table);
 
     refresh();
+
+    // Resize columns now that the table is full of data.
+    table->header()->resizeSections(QHeaderView::ResizeToContents);
+
     tri->listen(this);
 }
 
