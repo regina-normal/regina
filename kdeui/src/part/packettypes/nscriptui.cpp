@@ -58,7 +58,6 @@
 
 #define SCRIPT_TABLE_WEIGHT 1
 #define SCRIPT_EDITOR_WEIGHT 3
-#define SCRIPT_TOTAL_WEIGHT 4
 
 using regina::NPacket;
 using regina::NScript;
@@ -84,7 +83,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     QSplitter* splitter = new QSplitter(Qt::Vertical);
     layout->addWidget(splitter, 1);
 
-    varTable = new QTableWidget(0, 2, splitter);
+    varTable = new QTableWidget(0, 2);
     if (! readWrite )
         varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -103,20 +102,19 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     //varTable->setColumnStretchable(0, true);
     //varTable->setColumnStretchable(1, true);
 
-    QSizePolicy pol = QSizePolicy(QSizePolicy::Expanding,
-        QSizePolicy::Expanding);
-    pol.setHorizontalStretch(SCRIPT_TABLE_WEIGHT);
-    pol.setVerticalStretch(SCRIPT_TABLE_WEIGHT);
-    varTable->setSizePolicy(pol); 
-   
-    // TODO: Below seems unsupported.
-    //splitter->setResizeMode(varTable, QSplitter::Stretch);
     varTable->setWhatsThis(i18n("<qt>A list of variables that will be "
         "set before the script is run.  Each variable may refer to a "
         "single packet.<p>"
         "This allows your script to easily access the other packets in "
         "this data file.</qt>"));
 
+    QSizePolicy pol = QSizePolicy(QSizePolicy::Expanding,
+        QSizePolicy::Expanding);
+    pol.setHorizontalStretch(SCRIPT_TABLE_WEIGHT);
+    pol.setVerticalStretch(SCRIPT_TABLE_WEIGHT);
+    varTable->setSizePolicy(pol); 
+    splitter->addWidget(varTable);
+   
     // --- Text Editor ---
 
     // Create a view (which must be parented) before we do anything else.
@@ -136,17 +134,17 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     setPythonMode();
 
+    view->setFocus();
+    view->setWhatsThis(i18n("Type the Python script into this "
+        "area.  Any variables listed in the table above will be "
+        "set before the script is run."));
+
     pol = QSizePolicy(QSizePolicy::MinimumExpanding,
         QSizePolicy::MinimumExpanding);
     pol.setHorizontalStretch(SCRIPT_EDITOR_WEIGHT);
     pol.setVerticalStretch(SCRIPT_EDITOR_WEIGHT);
     view->setSizePolicy(pol); 
-    // TODO: Below seems unsupported.
-    //splitter->setResizeMode(view, QSplitter::Stretch);
-    view->setFocus();
-    view->setWhatsThis(i18n("Type the Python script into this "
-        "area.  Any variables listed in the table above will be "
-        "set before the script is run."));
+    splitter->addWidget(view);
 
     splitter->setTabOrder(view, varTable);
     ui->setFocusProxy(view);
@@ -220,8 +218,8 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     // Resize the components within the splitter so that the editor has most
     // of the space.
     // TODO: This does not seem to work.. :/
-    splitter->setStretchFactor(0, SCRIPT_TABLE_WEIGHT);
-    splitter->setStretchFactor(1, SCRIPT_EDITOR_WEIGHT);
+    //splitter->setStretchFactor(0, SCRIPT_TABLE_WEIGHT);
+    //splitter->setStretchFactor(1, SCRIPT_EDITOR_WEIGHT);
 
     // Fill the components with data.
     refresh();

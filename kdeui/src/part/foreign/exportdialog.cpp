@@ -40,8 +40,6 @@
 #include <qlayout.h>
 #include <qwhatsthis.h>
 
-#define HORIZONTAL_SPACING 10
-
 ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
         regina::NPacket* defaultSelection, PacketFilter* useFilter,
         const QString& dialogTitle) :
@@ -53,18 +51,18 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
     QWidget* page = new QWidget(this);
     setMainWidget(page);
     QVBoxLayout* layout = new QVBoxLayout(page);
+    layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
 
-    QWidget* chosenStrip = new QWidget(page);
-    QHBoxLayout* hbox = new QHBoxLayout;
-    hbox->setSpacing(HORIZONTAL_SPACING);
-    layout->addWidget(chosenStrip);
-    new QLabel(i18n("Data to export:"), chosenStrip);
-    chooser = new PacketChooser(tree, useFilter, false, defaultSelection,
-        chosenStrip);
-    hbox->setStretchFactor(chooser, 1);
-    chosenStrip->setLayout(hbox);
-    chosenStrip->setWhatsThis(i18n("Select the piece of data that you wish to export."));
+    QHBoxLayout* chosenStrip = new QHBoxLayout;
+    QLabel* label = new QLabel(i18n("Data to export:"));
+    chosenStrip->addWidget(label);
+    chooser = new PacketChooser(tree, useFilter, false, defaultSelection);
+    chosenStrip->addWidget(chooser, 1);
+    QString expln = i18n("Select the piece of data that you wish to export.");
+    label->setWhatsThis(expln);
+    chooser->setWhatsThis(expln);
 
+    layout->addLayout(chosenStrip);
     layout->addStretch(1);
 
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
