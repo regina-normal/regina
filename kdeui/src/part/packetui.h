@@ -35,11 +35,9 @@
 
 #include "packet/npacketlistener.h"
 
-#include <qboxlayout.h>
+#include <QFrame>
 #include <QLinkedList>
 #include <kactionmenu.h>
-#include <khbox.h>
-#include <kvbox.h>
 
 class KAction;
 class KActionMenu;
@@ -61,10 +59,8 @@ namespace regina {
 
 /**
  * A packet header, containing an appropriate icon and text title.
- *
- * We derive from KHBox so we can use Qt frames.
  */
-class PacketHeader : public KHBox {
+class PacketHeader : public QFrame {
     Q_OBJECT
 
     private:

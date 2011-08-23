@@ -54,7 +54,6 @@
 #include <kmainwindow.h>
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
-#include <kvbox.h>
 
 ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
         const QStringList& /*args*/) :

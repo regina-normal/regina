@@ -46,6 +46,7 @@
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
 #include <ktoolbar.h>
+#include <qboxlayout.h>
 #include <qclipboard.h>
 #include <qevent.h>
 #include <qlabel.h>
@@ -69,14 +70,18 @@ namespace {
 QLinkedList<KAction*> PacketUI::noActions;
 
 PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent) 
-        : KHBox(parent), packet(pkt) {
-    icon = new QLabel(this);
+        : QFrame(parent), packet(pkt) {
+    QBoxLayout* layout = new QHBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    icon = new QLabel();
     icon->setPixmap(PacketManager::iconSmall(packet, true));
     icon->setMargin(2); // Leave *some* space, however tiny.
+    layout->addWidget(icon);
 
-    title = new QLabel(packet->getFullName().c_str(), this);
+    title = new QLabel(packet->getFullName().c_str());
     title->setAlignment(Qt::AlignCenter);
-    setStretchFactor(title, 1);
+    layout->addWidget(title, 1);
 
     setFrameStyle(QFrame::Box | QFrame::Sunken);
     // setMidLineWidth(1);
