@@ -136,8 +136,6 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     ui = new QWidget();
 
     QGridLayout* homologyGrid = new QGridLayout(ui);//, 7, 4, 0, 5);
-    homologyGrid->setSpacing(5);
-    homologyGrid->setMargin(0);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(6, 1);
     homologyGrid->setColumnStretch(0, 1);
@@ -426,9 +424,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
-    QBoxLayout* layout = new QVBoxLayout(ui);// , 5, 5);
-    layout->setSpacing(5);
-    layout->setMargin(5);
+    QBoxLayout* layout = new QVBoxLayout(ui);
 
     QBoxLayout* paramsArea = new QHBoxLayout();
     layout->addLayout(paramsArea);
@@ -715,8 +711,6 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     scroller->setWidget(grid);
 
     QGridLayout* homologyGrid = new QGridLayout(grid);//, 11, 4, 0, 5);
-    homologyGrid->setMargin(0);
-    homologyGrid->setSpacing(5);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(11, 1);
     homologyGrid->setColumnStretch(0, 1);

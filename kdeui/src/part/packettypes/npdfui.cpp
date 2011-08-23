@@ -230,8 +230,6 @@ void NPDFUI::updatePreferences(const ReginaPrefSet& newPrefs) {
 QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
     QWidget* layer = new QWidget();
     QBoxLayout* layout = new QHBoxLayout(layer);
-    layout->setMargin(5);
-    layout->setSpacing(5);
 
     layout->addStretch(1);
 

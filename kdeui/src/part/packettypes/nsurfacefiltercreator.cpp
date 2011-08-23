@@ -51,7 +51,6 @@ namespace {
 NSurfaceFilterCreator::NSurfaceFilterCreator() {
     ui = new QWidget();
     QGridLayout* layout = new QGridLayout(ui);//, 2, 2, 5);
-    layout->setMargin(5);
     layout->setColumnStretch(1, 1);
 
     QLabel* pic;

@@ -67,8 +67,6 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
 
     dataNull = new QWidget();
     QBoxLayout* nullLayout = new QVBoxLayout(dataNull);
-    nullLayout->setMargin(5);
-    nullLayout->setSpacing(0);
 
     unavailable = new NoSnapPea(reginaTri, allowClosed, dataNull, true);
     unavailable->setAlignment(Qt::AlignCenter);
@@ -79,7 +77,6 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
 
     dataValid = new QWidget();
     QGridLayout* validGrid = new QGridLayout(dataValid);
-    validGrid->setSpacing(5);
     validGrid->setColumnStretch(0, 1);
     validGrid->setColumnMinimumWidth(2, 5); // Horizontal gap
     validGrid->setColumnStretch(4, 1);

@@ -78,7 +78,6 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
 
     QGridLayout* grid = new QGridLayout();
     layout->addLayout(grid);
-    grid->setSpacing(5);
     grid->setColumnStretch(0, 1);
     grid->setColumnMinimumWidth(2, 5);
     grid->setColumnMinimumWidth(4, 10);
@@ -475,8 +474,6 @@ QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
         const char* iconName) {
     QWidget* layer = new QWidget();
     QBoxLayout* layout = new QHBoxLayout(layer);
-    layout->setMargin(5);
-    layout->setSpacing(5);
 
     layout->addStretch(1);
 

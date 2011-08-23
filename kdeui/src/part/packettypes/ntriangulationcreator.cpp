@@ -318,7 +318,6 @@ NTriangulationCreator::NTriangulationCreator() {
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
     hArea->setLayout(hLayout);
-    hLayout->setSpacing(5);
     expln = i18n("<qt>Specifies which particular example triangulation to "
         "create.<p>"
         "A selection of ready-made 3-manifold triangulations is offered "
