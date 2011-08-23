@@ -1,9 +1,8 @@
-<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="reginamain" version="4.90">
+<?xml version="1.0" encoding="UTF-8"?>
+<gui name="reginamain" version="4.90">
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <Action name="new_topology"/>
-    <Action name="new_python"/>
     <DefineGroup name="new_merge"/>
     <Action name="file_open"/>
     <Action name="file_open_recent"/>
@@ -44,4 +43,4 @@
   <Separator/>
   <Action name="python_console"/>
 </ToolBar>
-</kpartgui>
+</gui>
