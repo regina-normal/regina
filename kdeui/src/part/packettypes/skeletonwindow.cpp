@@ -87,8 +87,9 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
     table->setItemsExpandable(false);
     table->setRootIsDecorated(false);
     table->setAlternatingRowColors(true);
+    table->header()->setStretchLastSection(false);
     table->setSelectionMode(QAbstractItemView::NoSelection);
-    table->setWhatsThis(overview(objectType)); // TODO
+    table->setWhatsThis(overview(objectType));
     // Add grid lines:
     table->setStyleSheet("QTreeView::item { "
                              "border: 1px solid #d9d9d9; "
@@ -109,6 +110,7 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
 void SkeletonWindow::refresh() {
     updateCaption();
     model->rebuild();
+    table->header()->resizeSections(QHeaderView::ResizeToContents);
 }
 
 void SkeletonWindow::editingElsewhere() {
