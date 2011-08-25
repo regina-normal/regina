@@ -50,10 +50,6 @@ int main(int argc, char **argv) {
     KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
 
-    // Register ourselves as a dcop client.
-    //app.dcopClient()->registerAs(app.name(), false);
-    // TODO D-Bus
-
     // See if we are starting with session management.
     if (app.isSessionRestored()) {
         int winNum = 1;
