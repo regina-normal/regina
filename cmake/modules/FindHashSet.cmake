@@ -1,3 +1,5 @@
+# Copyright (c) William Pettersson, 2011 
+# Licensed under the GNU General Public License, version 2 or later
 
 # Modules needed 
 include( CheckIncludeFileCXX)

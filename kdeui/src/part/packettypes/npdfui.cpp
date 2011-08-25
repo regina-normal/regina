@@ -51,7 +51,6 @@
 #include <krun.h>
 #include <kshell.h>
 #include <kstandarddirs.h>
-#include <KTemporaryFile>
 #include <kurl.h>
 
 #define PDF_MIMETYPE "application/pdf"
@@ -61,11 +60,8 @@ using regina::NPDF;
 
 NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), pdf(packet),
-        //temp(KStandardDirs::locateLocal("tmp", "pdf-")+ ".pdf"),
         viewer(0), proc(0), runPid(0) {
     temp.setSuffix(".pdf");
-    //temp.setAutoDelete(true);
-    temp.close();
 
     ReginaPart* part = enclosingPane->getPart();
     const ReginaPrefSet& prefs = part->getPreferences();
@@ -114,8 +110,8 @@ void NPDFUI::refresh() {
         return;
     }
     temp.open();
-    if (! regina::writePDF(
-            static_cast<const char*>(QFile::encodeName(temp.fileName())), *pdf)) {
+    if (! regina::writePDF(static_cast<const char*>(
+            QFile::encodeName(temp.fileName())), *pdf)) {
         showError(i18n("An error occurred whilst writing the PDF "
             "data to the temporary file %1.").arg(temp.fileName()));
         setDirty(false);
@@ -234,8 +230,6 @@ void NPDFUI::updatePreferences(const ReginaPrefSet& newPrefs) {
 QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
     QWidget* layer = new QWidget();
     QBoxLayout* layout = new QHBoxLayout(layer);
-    layout->setMargin(5);
-    layout->setSpacing(5);
 
     layout->addStretch(1);
 
@@ -247,15 +241,13 @@ QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
 
     QLabel* icon = new QLabel(layer);
     icon->setPixmap(iconPic);
-    layout->addWidget(icon);
-    layout->setStretchFactor(icon, 0);
+    layout->addWidget(icon, 0);
 
     layout->addSpacing(10);
 
     text = new QLabel(i18n("<qt>Initialising...</qt>"), layer);
     text->setWordWrap(true);
-    layout->addWidget(text);
-    layout->setStretchFactor(text, 4);
+    layout->addWidget(text, 4);
 
     layout->addStretch(1);
     stack->addWidget(layer);

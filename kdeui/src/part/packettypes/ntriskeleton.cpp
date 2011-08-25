@@ -76,9 +76,8 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout();// , 3, 13, 5 /* spacing */);
+    QGridLayout* grid = new QGridLayout();
     layout->addLayout(grid);
-    grid->setSpacing(5);
     grid->setColumnStretch(0, 1);
     grid->setColumnMinimumWidth(2, 5);
     grid->setColumnMinimumWidth(4, 10);
@@ -148,7 +147,7 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     nTets->setWhatsThis(msg);
 
-    btn = new QPushButton(KIcon("zoom-original"), i18n("View..."), ui);
+    btn = new QPushButton(KIcon("packet_view"), i18n("View..."), ui);
     // btn->setFlat(true);
     btn->setToolTip(i18n("View details of individual vertices"));
     btn->setWhatsThis(i18n("View details of this triangulation's "
@@ -156,7 +155,7 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
     grid->addWidget(btn, 0, 5);
 
-    btn = new QPushButton(KIcon("zoom-original"), i18n("View..."), ui);
+    btn = new QPushButton(KIcon("packet_view"), i18n("View..."), ui);
     btn->setToolTip(i18n("View details of individual edges"));
     btn->setWhatsThis(i18n("View details of this triangulation's "
         "individual edges in a separate window."));
@@ -164,7 +163,7 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     connect(btn, SIGNAL(clicked()), this, SLOT(viewEdges()));
     grid->addWidget(btn, 1, 5);
 
-    btn = new QPushButton(KIcon("zoom-original"), i18n("View..."), ui);
+    btn = new QPushButton(KIcon("packet_view"), i18n("View..."), ui);
     btn->setToolTip(i18n("View details of individual faces"));
     btn->setWhatsThis(i18n("View details of this triangulation's "
         "individual faces in a separate window."));
@@ -172,7 +171,7 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     connect(btn, SIGNAL(clicked()), this, SLOT(viewFaces()));
     grid->addWidget(btn, 2, 5);
 
-    btn = new QPushButton(KIcon("zoom-original"), i18n("View..."), ui);
+    btn = new QPushButton(KIcon("packet_view"), i18n("View..."), ui);
     btn->setToolTip(i18n("View details of individual components"));
     btn->setWhatsThis(i18n("View details of this triangulation's "
         "individual connected components in a separate window."));
@@ -180,7 +179,7 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     connect(btn, SIGNAL(clicked()), this, SLOT(viewComponents()));
     grid->addWidget(btn, 0, 11);
 
-    btn = new QPushButton(KIcon("zoom-original"), i18n("View..."), ui);
+    btn = new QPushButton(KIcon("packet_view"), i18n("View..."), ui);
     btn->setToolTip(i18n("View details of individual boundary components"));
     btn->setWhatsThis(i18n("View details of this triangulation's "
         "individual boundary components in a separate window.  Note that "
@@ -399,7 +398,6 @@ void NTriFaceGraphUI::refresh() {
     if (! tmpDot.open()) {
         showError(i18n("<qt>The temporary DOT file <i>%1</i> "
             "could not be created.</qt>").arg(tmpDot.fileName()));
-        tmpDot.remove();
         return;
     }
     tmpDot.close();
@@ -409,7 +407,6 @@ void NTriFaceGraphUI::refresh() {
     if (! outDot) {
         showError(i18n("<qt>The temporary DOT file <i>%1</i> "
             "could not be opened for writing.</qt>").arg(tmpDot.fileName()));
-        tmpDot.remove();
         return;
     }
 
@@ -423,7 +420,6 @@ void NTriFaceGraphUI::refresh() {
     if (! tmpPng.open()) {
         showError(i18n("<qt>The temporary PNG file <i>%1</i> "
             "could not be created.</qt>").arg(tmpPng.fileName()));
-        tmpDot.remove();
         return;
     }
     tmpPng.close();
@@ -437,16 +433,12 @@ void NTriFaceGraphUI::refresh() {
         if ( graphviz.error() == QProcess::FailedToStart ) {
             showError(i18n("<qt>The Graphviz executable <i>%1</i> "
                 "could not be started.</qt>").arg(useExec));
-            tmpDot.remove();
-            tmpPng.remove();
             return;
         }
         if ( false ) { // TODO: Doesn't have an equivalent in Qt4 ?
             showError(i18n("<qt>The Graphviz executable <i>%1</i> "
                 "did not exit normally.  It was killed with signal %2.</qt>").
                 arg(useExec));
-            tmpDot.remove();
-            tmpPng.remove();
             return;
         }
         if ( graphviz.error() == QProcess::Crashed) {
@@ -454,8 +446,6 @@ void NTriFaceGraphUI::refresh() {
                 "appears to have encountered an internal error.  "
                 "It finished with exit status %2.</qt>").
                 arg(useExec).arg(graphviz.exitStatus()));
-            tmpDot.remove();
-            tmpPng.remove();
             return;
         }
     }
@@ -467,16 +457,11 @@ void NTriFaceGraphUI::refresh() {
             "was <i>%1</i>.  If this is not correct, please change it "
             "in the Regina configuration (Triangulation section).</qt>").
             arg(useExec));
-        tmpDot.remove();
-        tmpPng.remove();
         return;
     }
 
     graph->setPixmap(png);
     graph->resize(graph->sizeHint());
-
-    tmpDot.remove();
-    tmpPng.remove();
 
     stack->setCurrentWidget(layerGraph);
 }
@@ -489,8 +474,6 @@ QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
         const char* iconName) {
     QWidget* layer = new QWidget();
     QBoxLayout* layout = new QHBoxLayout(layer);
-    layout->setMargin(5);
-    layout->setSpacing(5);
 
     layout->addStretch(1);
 
@@ -502,15 +485,13 @@ QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
 
     QLabel* icon = new QLabel(layer);
     icon->setPixmap(iconPic);
-    layout->addWidget(icon);
-    layout->setStretchFactor(icon, 0);
+    layout->addWidget(icon, 0);
 
     layout->addSpacing(10);
 
     text = new QLabel(i18n("<qt>Initialising...</qt>"), layer);
     text->setWordWrap(true);
-    layout->addWidget(text);
-    layout->setStretchFactor(text, 4);
+    layout->addWidget(text, 4);
 
     layout->addStretch(1);
     stack->addWidget(layer);

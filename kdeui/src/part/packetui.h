@@ -35,10 +35,9 @@
 
 #include "packet/npacketlistener.h"
 
+#include <QFrame>
 #include <QLinkedList>
 #include <kactionmenu.h>
-#include <khbox.h>
-#include <kvbox.h>
 
 class KAction;
 class KActionMenu;
@@ -60,10 +59,8 @@ namespace regina {
 
 /**
  * A packet header, containing an appropriate icon and text title.
- *
- * We derive from KHBox so we can use Qt frames.
  */
-class PacketHeader : public KHBox {
+class PacketHeader : public QFrame {
     Q_OBJECT
 
     private:
@@ -308,7 +305,7 @@ class DefaultPacketUI : public ErrorPacketUI {
  * Packet panes may be either docked within the main ReginaPart widget
  * or may be floating freely in their own frames.
  */
-class PacketPane : public KVBox, public regina::NPacketListener {
+class PacketPane : public QWidget, public regina::NPacketListener {
     Q_OBJECT
 
     public:

@@ -89,8 +89,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     session->setWhatsThis( i18n("This area stores a history of the entire "
         "Python session, including commands that have been typed and the "
         "output they have produced."));
-    layout->addWidget(session);
-    layout->setStretchFactor(session, 1);
+    layout->addWidget(session, 1);
 
     QWidget* inputArea = new QWidget(box);
     QHBoxLayout *inputAreaLayout = new QHBoxLayout;
@@ -107,8 +106,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     input->setSpacesPerTab(prefs.pythonSpacesPerTab);
     input->setFocus();
     connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
-    inputAreaLayout->addWidget(input);
-    inputAreaLayout->setStretchFactor(input, 1);
+    inputAreaLayout->addWidget(input, 1);
     inputArea->setLayout(inputAreaLayout);
     layout->addWidget(inputArea);
 

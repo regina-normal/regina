@@ -40,7 +40,7 @@
    <title>Description</title>
    &regabstract;
    <para>
-    This command starts the full &kde; user interface, and is the usual
+    This command starts the full graphical user interface, and is the usual
     way of starting &regina;.  Any files specified on the command-line
     will be opened on startup.
    </para>

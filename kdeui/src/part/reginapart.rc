@@ -1,5 +1,5 @@
-<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="reginapart" version="4.90">
+<?xml version="1.0" encoding="UTF-8"?>
+<gui name="reginapart" version="4.90">
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <Action name="file_save" group="save_merge"/>
@@ -65,9 +65,6 @@
     <Action name="tree_refresh"/>
   </Menu>
   <ActionList name="packet_type_menu"/>
-  <Menu name="tools" noMerge="1"><text>T&amp;ools</text>
-    <Action name="packet_census"/>
-  </Menu>
 </MenuBar>
 <ToolBar name="mainToolBar" iconText="IconOnly" noMerge="1">
   <text>Main Toolbar</text>
@@ -90,4 +87,4 @@
   <Action name="tree_script"/>
   <Action name="tree_pdf"/>
 </ToolBar>
-</kpartgui>
+</gui>

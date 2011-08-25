@@ -1,8 +1,6 @@
 
 include_directories(${ENGINE_INCLUDES})
 include_directories(${CMAKE_BINARY_DIR}/engine)
-
-find_package(POPT REQUIRED)
 include_directories(${POPT_INCLUDE_DIR})
 
 set(UTILS regconcat regconvert regfiledump regfiletype sigcensus tricensus trisetcmp)

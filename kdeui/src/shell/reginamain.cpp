@@ -174,18 +174,6 @@ void ReginaMain::newTopology() {
     embedPart();
 }
 
-void ReginaMain::newPython() {
-    if (currentPart) {
-        ReginaMain* top = new ReginaMain;
-        top->show();
-        top->newPython();
-        return;
-    }
-
-    currentPart = newTextEditorPart();
-    embedPart();
-}
-
 bool ReginaMain::openUrl(const KUrl& url) {
     // Do we already have a document open?
     if (currentPart) {
@@ -202,16 +190,9 @@ bool ReginaMain::openUrl(const KUrl& url) {
         }
     }
 
-    // Semi-intelligently try to work out what type of file we're
-    // trying to open.  We'll look first at the extension (since we assume
-    // no Regina mimetype is registered) and then look at the mimetype.
-    //
-    // Type codes:
-    //   'r' : Regina data file
-    //   'p' : Python library
-    //   0 : Unknown
-
-    char type = 0;
+    // As of Regina 4.90, we only support Regina data files.
+    // Python scripts should be opened in a real python editor, not Regina.
+    bool isReg = false;
     QString name;
 
     // Variable name will initially contain the mimetype name, but if
@@ -219,7 +200,7 @@ bool ReginaMain::openUrl(const KUrl& url) {
     // comment so we can display it to the user.
     if (url.fileName().right(ReginaAbout::regDataExt.length()).toLower() ==
             ReginaAbout::regDataExt)
-        type = 'r';
+        isReg = true;
     else {
         // Try to guess it from the mimetype.
         KMimeType::Ptr mimetype = KMimeType::findByUrl(url);
@@ -227,17 +208,13 @@ bool ReginaMain::openUrl(const KUrl& url) {
         if (name == "application/x-regina" || name == "text/xml" ||
                 name == "application/x-gzip" ||
                 name == "application/octet-stream")
-            type = 'r';
-        else if (name == "application/x-python" || name.startsWith("text/"))
-            type = 'p';
+            isReg = true;
         else
             name = mimetype->comment();
     }
 
-    if (type == 'r')
+    if (isReg)
         currentPart = newTopologyPart();
-    else if (type == 'p')
-        currentPart = newTextEditorPart();
     else
         KMessageBox::sorry(this, i18n(
             "I do not know how to open files of type %1.").arg(name));
@@ -394,14 +371,6 @@ void ReginaMain::setupActions() {
         "the standard type of data file used by Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(newTopology()));
     
-    act = actionCollection()->addAction("new_python");
-    act->setText(i18n("New &Python Library"));
-    act->setIcon(KIcon("document-new"));
-    act->setWhatsThis(i18n("Create a new Python library.  This is "
-        "a Python file that can be loaded when a script is run or a "
-        "new Python session is started."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newPython()));
-
     KStandardAction::open(this, SLOT(fileOpen()), actionCollection());
     fileOpenRecent = KStandardAction::openRecent(this, 
         SLOT(openUrl(const KUrl&)), actionCollection());
@@ -800,20 +769,6 @@ KParts::ReadWritePart* ReginaMain::newTopologyPart() {
     }
 
     // All done!
-    return ans;
-}
-
-KParts::ReadWritePart* ReginaMain::newTextEditorPart() {
-
-    //KTextEditor::Editor* ans = KTextEditor::EditorChooser::createEditor(
-    //    this, this);
-    KTextEditor::Editor* editor = KTextEditor::EditorChooser::editor();
-    KTextEditor::Document* ans = editor->createDocument(this);
-
-    if (! ans)
-        KMessageBox::error(this, i18n(
-            "An appropriate text editor component could not be found."));
-
     return ans;
 }
 

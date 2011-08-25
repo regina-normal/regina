@@ -114,7 +114,7 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         virtual void setReadWrite(bool rw);
         virtual void setModified(bool modified);
-        virtual bool closeURL();
+        virtual bool closeUrl();
 
         /**
          * View the given packet.
@@ -328,11 +328,6 @@ class ReginaPart : public KParts::ReadWritePart {
         void setupWidgets(QWidget* parentWidget);
         void setupActions();
         void initPacketTree();
-
-        /**
-         * Called when the docked pane or its properties have changed.
-         */
-        void dockChanged();
 
         /**
          * Verify that the part or its components are in an appropriate

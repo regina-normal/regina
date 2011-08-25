@@ -46,6 +46,7 @@
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
 #include <ktoolbar.h>
+#include <qboxlayout.h>
 #include <qclipboard.h>
 #include <qevent.h>
 #include <qlabel.h>
@@ -69,14 +70,18 @@ namespace {
 QLinkedList<KAction*> PacketUI::noActions;
 
 PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent) 
-        : KHBox(parent), packet(pkt) {
-    icon = new QLabel(this);
+        : QFrame(parent), packet(pkt) {
+    QBoxLayout* layout = new QHBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    icon = new QLabel();
     icon->setPixmap(PacketManager::iconSmall(packet, true));
     icon->setMargin(2); // Leave *some* space, however tiny.
+    layout->addWidget(icon);
 
-    title = new QLabel(packet->getFullName().c_str(), this);
+    title = new QLabel(packet->getFullName().c_str());
     title->setAlignment(Qt::AlignCenter);
-    setStretchFactor(title, 1);
+    layout->addWidget(title, 1);
 
     setFrameStyle(QFrame::Box | QFrame::Sunken);
     // setMidLineWidth(1);
@@ -122,10 +127,15 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
 }
 
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
-        QWidget* parent) : KVBox(parent),
+        QWidget* parent) : QWidget(parent),
         part(newPart), frame(0), dirty(false), dirtinessBroken(false),
         emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
         extCut(0), extCopy(0), extPaste(0), extUndo(0), extRedo(0) {
+    // Initialise a vertical layout with no padding or spacing.
+    QBoxLayout* layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
     // Should we allow both read and write?
     readWrite = part->isReadWrite() && newPacket->isPacketEditable();
 
@@ -166,14 +176,15 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     connect(actClose,SIGNAL(triggered()), this, SLOT(close()));
 
     // Set up the header and dock/undock button.
-    KHBox* headerBox = new KHBox(this);
+    QBoxLayout* headerBox = new QHBoxLayout();
+    headerBox->setSpacing(0);
 
-    header = new PacketHeader(newPacket, headerBox);
-    headerBox->setStretchFactor(header, 1);
+    header = new PacketHeader(newPacket);
     header->setWhatsThis(i18n("This shows the label of the packet "
         "being viewed, as well as its packet type."));
+    headerBox->addWidget(header, 1);
 
-    dockUndockBtn = new FlatToolButton(headerBox);
+    dockUndockBtn = new FlatToolButton();
     dockUndockBtn->setCheckable(true);
     dockUndockBtn->setIcon(KIcon("mail-attachment"));
     dockUndockBtn->setText(i18n("Dock or undock this packet viewer"));
@@ -181,25 +192,25 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     dockUndockBtn->setWhatsThis(i18n("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
+    headerBox->addWidget(dockUndockBtn);
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
+
+    layout->addLayout(headerBox);
 
     // Set up the main interface component.
     mainUI = PacketManager::createUI(newPacket, this);
     QWidget* mainUIWidget = mainUI->getInterface();
-    if (mainUIWidget->parent() != this) {
-        mainUIWidget->setParent(this); // TODO: Is this needed
-        mainUIWidget->show();
-    }
-    setStretchFactor(mainUIWidget, 1);
+    layout->addWidget(mainUIWidget, 1);
     setFocusProxy(mainUIWidget);
 
     // Set up the footer buttons and other actions.
-    KToolBar* footer = new KToolBar(this, false, true);
+    KToolBar* footer = new KToolBar(false, true);
     footer->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     footer->addAction(actCommit);
     footer->addAction(actRefresh);
     footer->addSeparator();
     footer->addAction(actClose);
+    layout->addWidget(footer);
 
     // Set up the packet type menu.
     packetTypeMenu = new KActionMenu(this); // TODO: Check correct parent
@@ -307,7 +318,7 @@ bool PacketPane::queryClose() {
                  "now and discard these changes?"));
         if (KMessageBox::warningContinueCancel(this, msg,
                 mainUI->getPacket()->getPacketLabel().c_str(),
-                KStandardGuiItem::close()) == KMessageBox::Cancel)
+                KStandardGuiItem::discard()) == KMessageBox::Cancel)
             return false;
     }
 

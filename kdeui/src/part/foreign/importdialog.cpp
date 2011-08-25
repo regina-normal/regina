@@ -41,45 +41,43 @@
 #include <qlineedit.h>
 #include <qwhatsthis.h>
 
-#define HORIZONTAL_SPACING 10
-
 ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
         regina::NPacket* packetTree, regina::NPacket* defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle) :
         KDialog(parent), // dialogTitle, Ok|Cancel, Ok, parent),
         tree(packetTree), newTree(importedData) {
-
     setCaption(dialogTitle);
     setButtons(KDialog::Ok | KDialog::Cancel);
+
     QWidget* page = new QWidget(this);
     setMainWidget(page);
     QVBoxLayout* layout = new QVBoxLayout(page);
+    layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
 
-    QWidget* parentStrip = new QWidget(page);
-    QHBoxLayout* hbox = new QHBoxLayout;
-    hbox->setSpacing(HORIZONTAL_SPACING);
-    layout->addWidget(parentStrip);
-    new QLabel(i18n("Import beneath:"), parentStrip);
-    chooser = new PacketChooser(tree, useFilter, false, defaultParent,
-        parentStrip);
-    hbox->setStretchFactor(chooser, 1);
-    parentStrip->setLayout(hbox);
-    parentStrip->setWhatsThis(i18n("Select where in the packet tree "
+    QHBoxLayout* parentStrip = new QHBoxLayout();
+    layout->addLayout(parentStrip);
+    QString expln = i18n("Select where in the packet tree "
         "the new data should be imported.  The imported data will be "
-        "made a new child of the selected packet."));
+        "made a new child of the selected packet.");
+    QLabel* l = new QLabel(i18n("Import beneath:"));
+    l->setWhatsThis(expln);
+    parentStrip->addWidget(l);
+    chooser = new PacketChooser(tree, useFilter, false, defaultParent);
+    chooser->setWhatsThis(expln);
+    parentStrip->addWidget(chooser, 1);
 
-    QWidget* labelStrip = new QWidget(page);
-    QHBoxLayout* labelStripHBox = new QHBoxLayout;
-    labelStripHBox->setSpacing(HORIZONTAL_SPACING);
-    layout->addWidget(labelStrip);
-    new QLabel(i18n("Label:"), labelStrip);
-    label = new QLineEdit(
-        tree->makeUniqueLabel(newTree->getPacketLabel()).c_str(), labelStrip);
-    labelStripHBox->setStretchFactor(label, 1);
-    labelStrip->setLayout(labelStripHBox);
-    labelStrip->setWhatsThis(i18n("Select a packet label for the new "
+    QHBoxLayout* labelStrip = new QHBoxLayout();
+    layout->addLayout(labelStrip);
+    expln = i18n("Select a packet label for the new "
         "imported data.  This will become the label of the first packet that "
-        "is imported."));
+        "is imported.");
+    l = new QLabel(i18n("Label:"));
+    l->setWhatsThis(expln);
+    labelStrip->addWidget(l);
+    label = new QLineEdit(
+        tree->makeUniqueLabel(newTree->getPacketLabel()).c_str());
+    label->setWhatsThis(expln);
+    labelStrip->addWidget(label, 1);
 
     layout->addStretch(1);
 

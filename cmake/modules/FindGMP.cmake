@@ -1,3 +1,5 @@
+# Taken from the KDE4 cmake modules directory. - Ben Burton, 22 August 2011.
+
 # Try to find the GMP librairies
 #  GMP_FOUND - system has GMP lib
 #  GMP_INCLUDE_DIR - the GMP include directory

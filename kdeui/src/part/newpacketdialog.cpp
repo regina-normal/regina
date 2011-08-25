@@ -31,16 +31,13 @@
 #include "packetcreator.h"
 #include "packetfilter.h"
 
-#include <khbox.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qboxlayout.h>
 #include <qframe.h>
 #include <qlabel.h>
-#include <qlayout.h>
 #include <qlineedit.h>
 #include <qwhatsthis.h>
-
-#define HORIZONTAL_SPACING 10
 
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         regina::NPacket* packetTree, regina::NPacket* defaultParent,
@@ -53,35 +50,35 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
 
     QWidget* page = new QWidget(this);
     setMainWidget(page);
-    QVBoxLayout* layout = new QVBoxLayout(page);//, 0, spacingHint());
+    QVBoxLayout* layout = new QVBoxLayout(page);
+    layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
 
-    KHBox* parentStrip = new KHBox(page);
-    parentStrip->setSpacing(HORIZONTAL_SPACING);
-    layout->addWidget(parentStrip);
+    QHBoxLayout* parentStrip = new QHBoxLayout();
+    layout->addLayout(parentStrip);
     QString expln = i18n("Specifies where in the packet tree the new "
         "packet will be placed.");
-    QLabel* createBeneath = new QLabel(i18n("Create beneath:"),parentStrip);
+    QLabel* createBeneath = new QLabel(i18n("Create beneath:"));
     createBeneath->setWhatsThis(expln);
-    chooser = new PacketChooser(tree, useFilter, false, defaultParent,
-        parentStrip);
+    parentStrip->addWidget(createBeneath);
+    chooser = new PacketChooser(tree, useFilter, false, defaultParent);
     chooser->setWhatsThis(expln);
-    parentStrip->setStretchFactor(chooser, 1);
+    parentStrip->addWidget(chooser, 1);
 
-    KHBox* labelStrip = new KHBox(page);
-    labelStrip->setSpacing(HORIZONTAL_SPACING);
-    layout->addWidget(labelStrip);
+    QHBoxLayout* labelStrip = new QHBoxLayout();
+    layout->addLayout(labelStrip);
     expln = i18n("The label that will be assigned to the new packet.");
-    QLabel* newlabel = new QLabel(i18n("Label:"),labelStrip);
+    QLabel* newlabel = new QLabel(i18n("Label:"));
     newlabel->setWhatsThis(expln);
+    labelStrip->addWidget(newlabel);
     label = new QLineEdit(tree->makeUniqueLabel(
-        suggestedLabel.toAscii().constData()).c_str(), labelStrip);
+        suggestedLabel.toAscii().constData()).c_str());
     label->setWhatsThis(expln);
-    labelStrip->setStretchFactor(label, 1);
+    labelStrip->addWidget(label, 1);
 
     QWidget* mainUI = creator->getInterface();
     if (mainUI) {
-        mainUI->setParent(page); //TODO: correct replacement of reparent?
-        // The outer layout already provides padding.
+        mainUI->setParent(page);
+        // The outer layouts already provide margins.
         mainUI->layout()->setContentsMargins(0, 0, 0, 0);
         layout->addWidget(mainUI, 1);
     } else {

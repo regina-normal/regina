@@ -65,7 +65,6 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     QGridLayout* grid = new QGridLayout();//, 4, 7, 5);
     layout->addLayout(grid);
-    grid->setSpacing(5);
     grid->setColumnStretch(0, 1);
     grid->setColumnMinimumWidth(2, 5); // Horizontal gap
     grid->setColumnMinimumWidth(4, 5); // Horizontal gap

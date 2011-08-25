@@ -39,7 +39,7 @@ FIND_PROGRAM(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
 IF(NOT GETTEXT_MSGFMT_EXECUTABLE)
         MESSAGE(
 "------
-                 NOTE: msgfmt not found. Translations will *not* be installed
+                 NOTE: msgfmt not found. Translations will *not* be installed.
 ------")
 ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
  

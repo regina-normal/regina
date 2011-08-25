@@ -60,12 +60,9 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
         requestedCalculation(false) {
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
-    uiLayout->addSpacing(5);
 
     QBoxLayout* hdrLayout = new QHBoxLayout();
     uiLayout->addLayout(hdrLayout);
-    hdrLayout->setSpacing(5);
-    hdrLayout->addSpacing(5);
 
     QLabel* label = new QLabel(i18n("Display matrix:"), ui);
     hdrLayout->addWidget(label);
@@ -103,15 +100,10 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
     hdrLayout->addWidget(btnCalculate);
     connect(btnCalculate, SIGNAL(clicked()), this, SLOT(calculate()));
 
-    hdrLayout->addSpacing(5);
-    uiLayout->addSpacing(5);
-
     stack = new QStackedWidget(ui);
     {
         layerNone = new QWidget();
         QBoxLayout* noneLayout = new QHBoxLayout();;
-        noneLayout->setMargin(5);
-        noneLayout->setSpacing(5);
         noneLayout->addStretch(1);
         layerNone->setLayout(noneLayout);
 
@@ -124,14 +116,12 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
 
         QLabel* icon = new QLabel(layerNone);
         icon->setPixmap(iconPic);
-        noneLayout->addWidget(icon);
-        noneLayout->setStretchFactor(icon, 0);
+        noneLayout->addWidget(icon, 0);
 
         noneLayout->addSpacing(10);
 
         msgNone = new QLabel(layerNone);
-        noneLayout->addWidget(msgNone);
-        noneLayout->setStretchFactor(msgNone, 4);
+        noneLayout->addWidget(msgNone, 4);
 
         noneLayout->addStretch(1);
         stack->addWidget(layerNone);

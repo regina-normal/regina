@@ -159,13 +159,6 @@ class ReginaMain : public KParts::MainWindow,
         void newTopology();
 
         /**
-         * Opens a new python library in this window, or in a new
-         * top-level window if this window already contains an open
-         * document.
-         */
-        void newPython();
-
-        /**
          * Open the given Url in this window, or in a new top-level
          * window if this window already contains an open document.
          */
@@ -247,12 +240,6 @@ class ReginaMain : public KParts::MainWindow,
          * be created, an error is displayed and 0 is returned.
          */
         KParts::ReadWritePart* newTopologyPart();
-
-        /**
-         * Creates a new text editor part.  If no appropriate part can
-         * be created, an error is displayed and 0 is returned.
-         */
-        KParts::ReadWritePart* newTextEditorPart();
 
         /**
          * Inserts \a currentPart into the main window and performs any

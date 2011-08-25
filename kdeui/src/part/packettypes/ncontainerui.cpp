@@ -33,36 +33,35 @@
 #include "ncontainerui.h"
 
 #include <klocale.h>
+#include <qboxlayout.h>
 #include <qlabel.h>
-#include <qlayout.h>
 
 using regina::NPacket;
 using regina::NContainer;
 
 NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), container(packet) {
-    interface = new KVBox();
-
-    interface->setStretchFactor(new QWidget(interface), 1);
+    interface = new QWidget();
+    QBoxLayout* layout = new QVBoxLayout(interface);
+    layout->addStretch(1);
 
     // Give the grid two extra stretchable columns on the outside.
-    QWidget* grid = new QWidget(interface);
-    QGridLayout* layout = new QGridLayout(grid); //, 2, 4, 5);
-    //interface->addLayout(layout);
-    layout->setColumnStretch(0, 1);
-    layout->setColumnStretch(3, 1);
+    QGridLayout* grid = new QGridLayout();
+    layout->addLayout(grid);
+    grid->setColumnStretch(0, 1);
+    grid->setColumnStretch(3, 1);
 
     QLabel* label;
     QString msg;
 
-    label = new QLabel(i18n("Immediate children:"), grid);
+    label = new QLabel(i18n("Immediate children:"));
     label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
-    layout->addWidget(label, 0, 1, Qt::AlignRight);
+    grid->addWidget(label, 0, 1, Qt::AlignRight);
 
-    children = new QLabel(grid);
+    children = new QLabel();
     children->setSizePolicy(
         QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
-    layout->addWidget(children, 0, 2, Qt::AlignRight);
+    grid->addWidget(children, 0, 2, Qt::AlignRight);
 
     msg = i18n("Shows the number of immediate children of this "
         "container, i.e., the number of child packets that have this "
@@ -70,14 +69,14 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
     label->setWhatsThis(msg);
     children->setWhatsThis(msg);
 
-    label = new QLabel(i18n("Total descendants:"), grid);
+    label = new QLabel(i18n("Total descendants:"));
     label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
-    layout->addWidget(label, 1, 1, Qt::AlignRight);
+    grid->addWidget(label, 1, 1, Qt::AlignRight);
 
-    descendants = new QLabel(grid);
+    descendants = new QLabel();
     descendants->setSizePolicy(
         QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
-    layout->addWidget(descendants, 1, 2, Qt::AlignRight);
+    grid->addWidget(descendants, 1, 2, Qt::AlignRight);
 
     msg = i18n("Shows the total number of descendants of this "
         "container, i.e., the number of children, grandchildren, "
@@ -85,7 +84,7 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
     label->setWhatsThis(msg);
     descendants->setWhatsThis(msg);
 
-    interface->setStretchFactor(new QWidget(interface), 1);
+    layout->addStretch(1);
 
     refresh();
 

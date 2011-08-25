@@ -37,11 +37,11 @@
 #include "packetui.h"
 #include "reginapart.h"
 
+#include <qboxlayout.h>
 #include <qcolor.h>
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qlabel.h>
-#include <qlayout.h>
 #include <qsplitter.h>
 #include <QTreeView>
 #include <QTreeWidget>
@@ -54,7 +54,6 @@
 #include <kmainwindow.h>
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
-#include <kvbox.h>
 
 ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
         const QStringList& /*args*/) :
@@ -68,7 +67,6 @@ ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
     initPacketTree();
 
     // Other tidying up.
-    dockChanged();
     setReadWrite(true);
     setModified(false);
     updateTreeEditActions();
@@ -113,7 +111,7 @@ void ReginaPart::setModified(bool modified) {
     ReadWritePart::setModified(modified);
 }
 
-bool ReginaPart::closeURL() {
+bool ReginaPart::closeUrl() {
     if (! closeAllPanes())
         return false;
     consoles.closeAllConsoles();
@@ -154,7 +152,8 @@ void ReginaPart::dock(PacketPane* newPane) {
     if (! closeDockedPane())
         dockedPane->floatPane();
 
-    newPane->setParent(dockArea); // TODO: Is this needed
+    newPane->setParent(dockArea);
+    static_cast<QBoxLayout*>(dockArea->layout())->addWidget(newPane, 1);
     dockedPane = newPane;
 
     QList<QAction*> typeActions;
@@ -170,8 +169,6 @@ void ReginaPart::dock(PacketPane* newPane) {
         newPane->registerEditOperation(actUndo, PacketPane::editUndo);
         newPane->registerEditOperation(actRedo, PacketPane::editRedo);
     }
-
-    dockChanged();
 }
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
@@ -191,8 +188,6 @@ void ReginaPart::hasUndocked(PacketPane* undockedPane) {
         unplugActionList("packet_type_menu");
         dockedPane = 0;
     }
-
-    dockChanged();
 }
 
 bool ReginaPart::openFile() {
@@ -553,15 +548,19 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
     // TODO: treeLayout->addStrut(150);
 
     // Set up the docking area.
-    dockArea = new KVBox(splitter);
-    QSizePolicy qpol(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
+    dockArea = new QWidget(splitter);
+    QBoxLayout* dockLayout = new QVBoxLayout(dockArea);
+    dockLayout->setContentsMargins(0, 0, 0, 0);
+
+    QSizePolicy qpol(
+        QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     qpol.setHorizontalStretch(5);
     qpol.setVerticalStretch(5);
     dockArea->setSizePolicy(qpol);
 
     // Make sure the docking area gets some space even when there's
     // nothing in it.
-    dynamic_cast<QBoxLayout*>(dockArea->layout())->addStrut(100);
+    dockLayout->addStrut(100);
 
     // Make the splitter our main widget.
     setWidget(splitter);
@@ -575,11 +574,6 @@ void ReginaPart::initPacketTree() {
 
     // Update the visual representation.
     treeView->fill(packetTree);
-}
-
-void ReginaPart::dockChanged() {
-    // This was once useful, but since the packet type menus were
-    // rearranged this routine is no longer needed.
 }
 
 bool ReginaPart::checkReadWrite() {

@@ -1,4 +1,5 @@
-# TODO Insert GPL licence bits
+# Copyright (c) William Pettersson, 2011 
+# Licensed under the GNU General Public License, version 2 or later
 find_path(POPT_INCLUDE_DIR popt.h PATHS /usr/include /usr/local/lib)
 find_library(POPT_LIBRARY popt PATHS /usr/lib /usr/local/lib)
 
@@ -13,6 +14,6 @@ IF(POPT_FOUND)
   ENDIF (NOT POPT_FIND_QUIETLY)
 ELSE (POPT_FOUND)
   IF (POPT_FIND_REQUIRED)
-    MESSAGE(FATAL_ERROR "Could not find popt")
+    MESSAGE(FATAL_ERROR "Could not find the popt library.")
   ENDIF (POPT_FIND_REQUIRED)
 ENDIF(POPT_FOUND)

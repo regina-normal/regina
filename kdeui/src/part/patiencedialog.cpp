@@ -61,7 +61,6 @@ PatienceDialog::PatienceDialog(const QString& message,
     layout->addWidget(clock);
 
     QLabel* msg = new QLabel(message, page);
-    layout->addWidget(msg);
-    layout->setStretchFactor(msg, 1);
+    layout->addWidget(msg, 1);
 }
 

@@ -1,5 +1,5 @@
-# TODO Insert GPL licence bits
-
+# Copyright (c) William Pettersson, 2011 
+# Licensed under the GNU General Public License, version 2 or later
 include (CheckFunctionExists)
 include (CheckCXXSourceCompiles)
 FIND_PATH(ICONV_INCLUDE_DIR NAMES iconv.h)

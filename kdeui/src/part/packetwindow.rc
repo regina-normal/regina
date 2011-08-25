@@ -1,6 +1,6 @@
-<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="packetwindow" version="4.90">
+<?xml version="1.0" encoding="UTF-8"?>
+<gui name="packetwindow" version="4.90">
 <MenuBar>
   <ActionList name="packet_type_menu"/>
 </MenuBar>
-</kpartgui>
+</gui>
