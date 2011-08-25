@@ -48,15 +48,12 @@ NLargeInteger NNormalSurfaceVectorOriented::getEdgeWeight(
 
     // Add up the triangles and quads meeting that edge.
     // Triangles:
-    NLargeInteger ans((*this)[noOfCoords * tetIndex + start]);
-    ans += (*this)[noOfCoords * tetIndex + start + 1]; // Inverse orientation
-    ans += (*this)[noOfCoords * tetIndex + end];
-    ans += (*this)[noOfCoords * tetIndex + end + 1]; // Inverse orientation
+    NLargeInteger ans(getTriangleCoord(tetIndex,start,triang));
+    ans += getTriangleCoord(tetIndex,end,triang);
     // Quads:
-    ans += (*this)[noOfCoords * tetIndex + indexOfQuads + vertexSplitMeeting[start][end][0]];
-    ans += (*this)[noOfCoords * tetIndex + indexOfQuads + vertexSplitMeeting[start][end][0] + 1];
-    ans += (*this)[noOfCoords * tetIndex + indexOfQuads + vertexSplitMeeting[start][end][1]];
-    ans += (*this)[noOfCoords * tetIndex + indexOfQuads + vertexSplitMeeting[start][end][1] + 1];
+    ans += getQuadCoord(tetIndex,vertexSplitMeeting[start][end][0],triang);
+    ans += getQuadCoord(tetIndex,vertexSplitMeeting[start][end][1],triang);
+
     return ans;
 }
 
@@ -71,11 +68,9 @@ NLargeInteger NNormalSurfaceVectorOriented::getFaceArcs(
 
     // Add up the triangles and quads meeting that face in the required arc.
     // Triangles:
-    NLargeInteger ans((*this)[noOfCoords * tetIndex + vertex]);
-    ans += (*this)[noOfCoords * tetIndex + vertex + 1];
+    NLargeInteger ans(getTriangleCoord(tetIndex,vertex,triang));
     // Quads:
-    ans += (*this)[noOfCoords * tetIndex + indexOfQuads + vertexSplit[vertex][backOfFace]];
-    ans += (*this)[noOfCoords * tetIndex + indexOfQuads + vertexSplit[vertex][backOfFace] + 1];
+    ans += getQuadCoord(tetIndex,vertexSplit[vertex][backOfFace],triang);
     return ans;
 }
 
