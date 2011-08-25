@@ -533,7 +533,6 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
     QSplitter* splitter = new QSplitter(parentWidget);
 
     // Set up the packet tree viewer.
-    // splitter->setResizeMode(treeView, QSplitter::KeepSize); //TODO: needed?
     treeView = new PacketTreeView(this, splitter);
     treeView->setWhatsThis( i18n("<qt>You are looking at the packet tree "
         "for this topology data file.<p>"
@@ -542,14 +541,15 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
         "lists, text items and so on.  "
         "Packets within a data file are arranged in a tree structure, "
         "so that each packet may contain one or more child packets.</qt>"));
-    // TODO: Check that this size policy makes sense.
-    treeView->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
-        QSizePolicy::MinimumExpanding));
+    treeView->setSizePolicy(QSizePolicy(
+        QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
+    // Leave the stretch factors at the default of zero.
     connect(treeView, SIGNAL(itemSelectionChanged()), this,
         SLOT(updateTreePacketActions()));
 
     // Make sure the tree area doesn't shrink too far.
-    // TODO: treeLayout->addStrut(150);
+    // Removed this for the KDE4 port, things seem fine without it.
+    // treeLayout->addStrut(150);
 
     // Set up the docking area.
     dockArea = new QWidget(splitter);
