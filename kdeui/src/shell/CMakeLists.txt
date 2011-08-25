@@ -8,15 +8,10 @@ KDE4_ADD_EXECUTABLE(regina-kde ${regina-kde_SRCS})
 SET(LINK_LIBS ${LINK_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KTEXTEDITOR_LIBS})
 TARGET_LINK_LIBRARIES(regina-kde ${LINK_LIBS})
 
-INSTALL(TARGETS regina-kde DESTINATION ${BIN_INSTALL_DIR})
+INSTALL(TARGETS regina-kde DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES reginamain.rc tips DESTINATION ${DATA_INSTALL_DIR}/regina)
-
-set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
-find_package(SharedMimeInfo)
-macro_log_feature(SHARED_MIME_INFO_FOUND "SMI" "SharedMimeInfo" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE "0.30" "SharedMimeInfo is required.")
-
 install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
 

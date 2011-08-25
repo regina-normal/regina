@@ -5,6 +5,9 @@ SET (PACKAGE_PRETTY_NAME Regina)
 # Look here for Find___.cmake modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
+# For pretty logging of optional features at the end of the cmake run:
+INCLUDE(MacroLogFeature)
+
 # Modules needed for IOS check and function existence
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
@@ -55,29 +58,60 @@ CHECK_CXX_SOURCE_COMPILES("
 IF(LONG_LONG_FOUND)
   CHECK_CXX_SOURCE_COMPILES("
     unsigned long long x = 0xFFFFFFFFFFFFFFFF;
-	int main() { return 0; }"
+    int main() { return 0; }"
     NUMERIC_64_FOUND)
   CHECK_CXX_SOURCE_COMPILES("
     unsigned long long x = 0xFFFFFFFFFFFFFFFFLL;
-	int main() { return 0; }"
+    int main() { return 0; }"
     NUMERIC_64_LL_FOUND)
 ENDIF(LONG_LONG_FOUND)
   
 
-# Dependencies
-FIND_PACKAGE(ZLIB REQUIRED)
+# Dependencies used by all components of Regina
+FIND_PACKAGE(ZLIB)
 INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
-FIND_PACKAGE(LibXml2 REQUIRED)
+MACRO_LOG_FEATURE(ZLIB_FOUND
+  "zlib"
+  "Essential: compression support"
+  "http://www.gzip.org/zlib/"
+  TRUE)
+
+FIND_PACKAGE(LibXml2)
 INCLUDE_DIRECTORIES(${LIBXML2_INCLUDE_DIR})
-FIND_PACKAGE(GMP REQUIRED)
+MACRO_LOG_FEATURE(LIBXML2_FOUND
+  "libxml2"
+  "Essential: XML support"
+  "ftp.gnome.org"
+  TRUE)
+
+FIND_PACKAGE(GMP)
 INCLUDE_DIRECTORIES(${GMP_INCLUDE_DIR})
-FIND_PACKAGE(ICONV REQUIRED)
+MACRO_LOG_FEATURE(GMP_FOUND
+  "GMP"
+  "Essential: large integer arithmetic support"
+  "http://gmplib.org/"
+  TRUE)
+
+FIND_PACKAGE(ICONV)
 INCLUDE_DIRECTORIES(${ICONV_INCLUDE_DIR})
+MACRO_LOG_FEATURE(ICONV_FOUND
+  "iconv"
+  "Essential: internationalisation support"
+  "http://www.gnu.org/s/libiconv/"
+  TRUE)
 
 FIND_PACKAGE(Threads REQUIRED)
 IF(NOT CMAKE_USE_PTHREADS_INIT)
-  MESSAGE(FATAL "Regina requires pthread support")
+  MESSAGE(FATAL_ERROR "Regina requires pthread support.")
 ENDIF(NOT CMAKE_USE_PTHREADS_INIT)
+
+# Dependencies used by only some components of Regina
+FIND_PACKAGE(POPT)
+MACRO_LOG_FEATURE(POPT_FOUND
+  "Popt"
+  "Essential: command-line option processing"
+  "http://rpm5.org/files/popt/"
+  TRUE)
 
 # Not a package per se, but finds right header file
 # and right namespace
@@ -85,7 +119,16 @@ FIND_PACKAGE(HashSet)
 
 # Optionals
 FIND_PACKAGE(MPI)
+MACRO_LOG_FEATURE(MPI_FOUND
+  "MPI"
+  "Build command-line tools for high-performance computing"
+  "http://www.open-mpi.org/")
+
 FIND_PACKAGE(Doxygen)
+MACRO_LOG_FEATURE(DOXYGEN_FOUND
+  "Doxygen"
+  "Generate C++/Python API docs"
+  "http://www.doxygen.org/")
 
 # Test suite
 ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
@@ -113,37 +156,71 @@ IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
 ELSE(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
   # We cannot support python.
   IF(ENABLE_PYTHON)
-    MESSAGE(FATAL
-	  "Python bindings unavailable; try again without ENABLE_PYTHON")
+    MESSAGE(FATAL_ERROR
+      "Python bindings unavailable; try again without ENABLE_PYTHON.")
   ELSE(ENABLE_PYTHON)
-    MESSAGE(WARNING "Python bindings disabled")
+    MESSAGE(WARNING "Could not find Boost.Python: Python bindings disabled.")
   ENDIF(ENABLE_PYTHON)
 ENDIF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
+MACRO_LOG_FEATURE(BOOST_PYTHON_FOUND
+  "Boost.Python"
+  "Build Python bindings for Regina"
+  "http://www.boost.org/")
 
 # TODO: Make this option show up in cmake -i.
 IF(DISABLE_KDEUI)
-  MESSAGE(WARNING "KDE user interface disabled")
+  MESSAGE(WARNING "User passed -DDISABLE_KDEUI=1: KDE user interface disabled.")
 ELSE(DISABLE_KDEUI)
-  FIND_PACKAGE(KDE4 REQUIRED)
-  FIND_PACKAGE(Qt4 REQUIRED)
+  set(KDE4_REQUIRED TRUE)
+  FIND_PACKAGE(KDE4)
 
-  # Some versions of the KDE4 macros disable exception handling.
-  # We need exceptions in regina, so put them back.
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+  IF(KDE4_FOUND)
+    FIND_PACKAGE(Qt4)
+    MACRO_LOG_FEATURE(QT4_FOUND
+      "Qt4"
+      "Required for Regina's graphical user interface"
+      "http://qt.nokia.com/"
+      TRUE)
 
-  ADD_SUBDIRECTORY(kdeui)
-  MESSAGE(STATUS "KDE user interface enabled")
+    # Some versions of the KDE4 macros disable exception handling.
+    # We need exceptions in regina, so put them back.
+    SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
+    set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
+    find_package(SharedMimeInfo)
+    MACRO_LOG_FEATURE(SHARED_MIME_INFO_FOUND
+      "SharedMimeInfo"
+      "Required for Regina's graphical user interface"
+      "http://freedesktop.org/wiki/Software/shared-mime-info"
+      TRUE "0.30")
+
+    # This must come after SharedMimeInfo is included, since the kdeui/
+    # makefiles use SharedMimeInfo macros.
+    ADD_SUBDIRECTORY(kdeui)
+    MESSAGE(STATUS "KDE user interface enabled")
+  ENDIF(KDE4_FOUND)
 ENDIF(DISABLE_KDEUI)
+MACRO_LOG_FEATURE(KDE4_FOUND
+  "KDE4"
+  "Required for Regina's graphical user interface"
+  "http://www.kde.org/"
+  KDE4_REQUIRED ""
+  "To disable the graphical user interface, run: cmake -DDISABLE_KDEUI=1")
 
 # Test suite, continued
 FIND_PATH(CPPUNIT_INCLUDE_DIR cppunit/Test.h)
 FIND_LIBRARY(CPPUNIT_LIBRARY NAMES cppunit)
 IF (CPPUNIT_INCLUDE_DIR AND CPPUNIT_LIBRARY)
+  SET(CPPUNIT_FOUND TRUE)
   MESSAGE(STATUS "Found CppUnit: ${CPPUNIT_LIBRARY}")
   ADD_SUBDIRECTORY(testsuite)
 ELSE (CPPUNIT_INCLUDE_DIR AND CPPUNIT_LIBRARY)
-  MESSAGE(WARNING "Could not find CppUnit: test suite disabled")
+  MESSAGE(WARNING "Could not find CppUnit: test suite disabled.")
 ENDIF (CPPUNIT_INCLUDE_DIR AND CPPUNIT_LIBRARY)
+MACRO_LOG_FEATURE(CPPUNIT_FOUND
+  "CppUnit"
+  "Build the full test suite for Regina"
+  "http://sourceforge.net/projects/cppunit/")
 
 # Miscellaneous subdirectories
 ADD_SUBDIRECTORY(docs)
@@ -156,3 +233,6 @@ CONFIGURE_FILE (
   "${PROJECT_SOURCE_DIR}/engine/regina-config.h.in"
   "${PROJECT_BINARY_DIR}/engine/regina-config.h"
 )
+
+MACRO_DISPLAY_FEATURE_LOG()
+
