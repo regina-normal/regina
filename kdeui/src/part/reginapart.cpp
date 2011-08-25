@@ -508,7 +508,6 @@ void ReginaPart::updateTreePacketActions() {
 }
 
 void ReginaPart::updateTreeEditActions() {
-
     bool enable = isReadWrite();
     QLinkedList<KAction *>::iterator it;
     for (it = treeGeneralEditActions.begin(); 
@@ -516,7 +515,6 @@ void ReginaPart::updateTreeEditActions() {
         (*it)->setEnabled(enable);
 
     enable = enable && (treeView->selectedItems().isEmpty());
-    // TODO: Was checking selectedItem() != 0, reason?
     for (it = treePacketEditActions.begin(); 
             it != treePacketEditActions.end(); it++)
         (*it)->setEnabled(enable);
@@ -526,10 +524,7 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
     QSplitter* splitter = new QSplitter(parentWidget);
 
     // Set up the packet tree viewer.
-    // splitter->setResizeMode(treeView, QSplitter::KeepSize); //TODO: Check if
-    // needed
-    // TODO: setHeaderHidden(true); -- is this the default?
-    // TODO: selection mode: is single selection the default?
+    // splitter->setResizeMode(treeView, QSplitter::KeepSize); //TODO: needed?
     treeView = new PacketTreeView(this, splitter);
     treeView->setWhatsThis( i18n("<qt>You are looking at the packet tree "
         "for this topology data file.<p>"

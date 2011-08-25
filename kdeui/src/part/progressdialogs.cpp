@@ -52,7 +52,8 @@ namespace {
 ProgressDialogNumeric::ProgressDialogNumeric(
         regina::NProgressManager* useManager, const QString& dialogTitle,
         const QString& displayText, QWidget* parent, const char* name) :
-        KProgressDialog(parent, dialogTitle, displayText, Qt::Dialog), //TODO: Do we want Qt::PopUp maybe
+        KProgressDialog(parent, dialogTitle, displayText,
+            Qt::Dialog | Qt::Popup),
         manager(useManager), progress(0) {
     setMinimumDuration(500);
     setWindowModality(Qt::WindowModal);
