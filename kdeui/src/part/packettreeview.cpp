@@ -33,9 +33,8 @@
 #include "eventids.h"
 #include "packetmanager.h"
 #include "packettreeview.h"
+#include "regevents.h"
 #include "reginapart.h"
-
-#include "revent.h"
 
 #include <qapplication.h>
 #include <qevent.h>
@@ -228,7 +227,7 @@ void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
 
 void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
     // Be careful.  We might not be in the GUI thread.
-    QApplication::postEvent(tree, new REvent(
+    QApplication::postEvent(tree, new PacketTreeItemEvent(
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), this));
 }
 
@@ -252,6 +251,8 @@ PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent)
           : QTreeWidget(parent), part(newPart) {
     setRootIsDecorated(true);
     header()->hide();
+    setAlternatingRowColors(false);
+    setSelectionMode(QAbstractItemView::SingleSelection);
 
     // Currently we use the platform default activation method (which is
     // often double-click).  To make this single-click always, change
@@ -300,19 +301,19 @@ void PacketTreeView::packetView(QTreeWidgetItem* packet) {
 void PacketTreeView::refresh(NPacket* topPacket) {
     if (invisibleRootItem()->childCount() != 1)
         fill(topPacket);
-    else if (((PacketTreeItem*)invisibleRootItem()->child(0))->getPacket() != topPacket)
+    else if (((PacketTreeItem*)invisibleRootItem()->child(0))->
+            getPacket() != topPacket)
         fill(topPacket);
     else
         ((PacketTreeItem*)invisibleRootItem()->child(0))->refreshSubtree();
 }
-// TODO: Subclass QEvent for this custom event.
+
 void PacketTreeView::customEvent(QEvent* evt) {
     switch (evt->type()) {
         case EVT_TREE_CHILD_ADDED:
             {
-                REvent* revt = (REvent *)evt;
-                PacketTreeItem* item =
-                    static_cast<PacketTreeItem*>(revt->getItem());
+                PacketTreeItem* item = static_cast<PacketTreeItemEvent*>(evt)->
+                    getItem();
 
                 item->refreshSubtree();
                 item->updateEditable();

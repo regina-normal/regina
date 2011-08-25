@@ -26,43 +26,33 @@
 
 /* end stub */
 
-/*! \file revent.h
- *  \brief Provides a required custom event.
+/*! \file regevents.h
+ *  \brief Provides customised Qt events for Regina.
  */
 
-#ifndef __REVENT_H
-#define __REVENT_H
+#ifndef __REGEVENTS_H
+#define __REGEVENTS_H
 
 #include <QEvent>
 
+class PacketTreeItem;
 
-class REvent;
-
-
-/**
- * A single item in a Regina packet tree.
- */
-class REvent : public QEvent {
+class PacketTreeItemEvent : public QEvent {
     private:
-
-        /**
-         * The packet item.
-         */
         PacketTreeItem* item;
 
     public:
-        REvent(QEvent::Type, PacketTreeItem*);
-        PacketTreeItem* getItem();
+        PacketTreeItemEvent(QEvent::Type, PacketTreeItem*);
+        PacketTreeItem* getItem() const;
 
 };
 
-
-inline PacketTreeItem* REvent::getItem() {
-    return item;
+inline PacketTreeItemEvent::PacketTreeItemEvent(QEvent::Type newType,
+        PacketTreeItem* data) : QEvent(newType), item(data) {
 }
 
-inline REvent::REvent(QEvent::Type newType, PacketTreeItem* data) : QEvent(newType) {
-  item = data;
+inline PacketTreeItem* PacketTreeItemEvent::getItem() const {
+    return item;
 }
 
 #endif
