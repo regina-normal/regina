@@ -54,6 +54,9 @@
 #include <kmainwindow.h>
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
+#include <kxmlguifactory.h>
+#include <ktexteditor/document.h>
+#include <ktexteditor/view.h>
 
 ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
         const QStringList& /*args*/) :
@@ -162,10 +165,15 @@ void ReginaPart::dock(PacketPane* newPane) {
 
     newPane->show();
 
-    if (newPane->hasTextComponent()) {
+    KTextEditor::Document* doc = newPane->getTextComponent();
+    if (doc) {
         newPane->registerEditOperation(actCut, PacketPane::editCut);
         newPane->registerEditOperation(actCopy, PacketPane::editCopy);
         newPane->registerEditOperation(actPaste, PacketPane::editPaste);
+
+        // Don't plug the full GUI; there's way too much stuff that we
+        // don't want (like Save and Save-As, for instance).
+        // factory()->addClient(doc->activeView());
     }
 }
 
@@ -174,7 +182,12 @@ void ReginaPart::isClosing(PacketPane* closingPane) {
 }
 
 void ReginaPart::hasUndocked(PacketPane* undockedPane) {
-    if (undockedPane->hasTextComponent()) {
+    KTextEditor::Document* doc = undockedPane->getTextComponent();
+    if (doc) {
+        // Don't plug the full GUI; there's way too much stuff that we
+        // don't want (like Save and Save-As, for instance).
+        // factory()->removeClient(doc->activeView());
+
         undockedPane->deregisterEditOperation(actCut, PacketPane::editCut);
         undockedPane->deregisterEditOperation(actCopy, PacketPane::editCopy);
         undockedPane->deregisterEditOperation(actPaste, PacketPane::editPaste);

@@ -371,7 +371,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Query components and actions.
          */
         regina::NPacket* getPacket();
-        bool hasTextComponent();
+        KTextEditor::Document* getTextComponent();
         KActionMenu* getPacketTypeMenu();
         ReginaPart* getPart();
 
@@ -656,7 +656,7 @@ inline ReginaPart* PacketPane::getPart() {
     return part;
 }
 
-inline bool PacketPane::hasTextComponent() {
+inline KTextEditor::Document* PacketPane::getTextComponent() {
     return mainUI->getTextComponent();
 }
 

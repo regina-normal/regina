@@ -51,7 +51,7 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     
     // Set up our actions.
-    if (newPane->hasTextComponent()) {
+    if (newPane->getTextComponent()) {
         KAction* cut = KStandardAction::cut(0, 0, actionCollection());
         KAction* copy = KStandardAction::copy(0, 0, actionCollection());
         KAction* paste = KStandardAction::paste(0, 0, actionCollection());
