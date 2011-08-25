@@ -168,6 +168,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         "this data file."));
     connect(actAdd, SIGNAL(triggered()), this, SLOT(addVariable()));
     actionBar->addAction(actAdd);
+    scriptActionList.append(actAdd);
 
     actRemove = scriptActions->addAction("script_remove_var");
     actRemove->setText(i18n("Re&move Var"));
@@ -186,6 +187,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     connect(varTable, SIGNAL(selectionChanged()), this,
         SLOT(updateRemoveState()));
     actionBar->addAction(actRemove);
+    scriptActionList.append(actRemove);
 
     KAction* actSep = scriptActions->addAction("script_separator");
     actSep->setSeparator(true);
@@ -217,7 +219,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // Resize the components within the splitter so that the editor has most
     // of the space.
-    // TODO: This does not seem to work.. :/
+    // TODO: This splitter portioning does not seem to work.. :/
     //splitter->setStretchFactor(0, SCRIPT_TABLE_WEIGHT);
     //splitter->setStretchFactor(1, SCRIPT_EDITOR_WEIGHT);
 
@@ -242,10 +244,9 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
 NScriptUI::~NScriptUI() {
     // Make sure the actions, including separators, are all deleted.
-    
-    scriptActionList.clear();
-    // Clean up.
     delete scriptActions;
+
+    // Clean up.
     delete document;
 }
 
