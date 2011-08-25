@@ -213,10 +213,10 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     layout->addWidget(footer);
 
     // Set up the packet type menu.
-    packetTypeMenu = new KActionMenu(this); // TODO: Check correct parent
-    packetTypeMenu->setText(mainUI->getPacketMenuText());
+    packetTypeMenu = new KActionMenu(mainUI->getPacketMenuText(), this);
 
-    const QLinkedList<KAction*>& packetTypeActions(mainUI->getPacketTypeActions());
+    const QLinkedList<KAction*>& packetTypeActions(
+        mainUI->getPacketTypeActions());
     if (! packetTypeActions.isEmpty()) {
         for (QLinkedListIterator<KAction*> it(packetTypeActions) ;
                 it.hasNext(); ) {
@@ -329,7 +329,6 @@ void PacketPane::registerEditOperation(KAction* act, EditOperation op) {
             act->setEnabled(false);
         return;
     }
-    // TODO: Is this needed at all? Can't see it doing anything.
     switch (op) {
         case editCut : extCut = act; break;
         case editCopy : extCopy = act; break;
