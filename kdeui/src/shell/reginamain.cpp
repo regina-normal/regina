@@ -417,7 +417,7 @@ void ReginaMain::setupActions() {
 
     // Help:
     act = actionCollection()->addAction("help_engine");
-    act->setText(i18n("&Python Reference"));
+    act->setText(i18n("&Python API Reference"));
     act->setIcon(KIcon("python_console"));
     act->setWhatsThis(i18n("Open the detailed documentation for Regina's "
         "mathematical engine.  This describes the classes, methods and "

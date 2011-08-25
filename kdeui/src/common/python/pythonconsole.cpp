@@ -168,7 +168,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     menuHelp->addAction(act);
 
     act = actionCollection()->addAction("help_engine");
-    act->setText(i18n("&Python Reference"));
+    act->setText(i18n("&Python API Reference"));
     act->setIcon(KIcon("python_console"));
     act->setToolTip(i18n("Read detailed Python scripting reference"));
     act->setWhatsThis(i18n("Open the detailed reference of classes, methods "
