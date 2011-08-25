@@ -37,7 +37,7 @@
  * Filename filter for all supported files.
  */
 #define FILTER_SUPPORTED \
-    "*.rga|Regina Data Files\n*.py|All Files"
+    "*.rga|Regina Data Files\n*|All Files"
 
 /**
  * Filename filter for Regina data files.
