@@ -58,6 +58,12 @@ class SkeletalModel : public QAbstractItemModel {
          */
         regina::NTriangulation* tri;
 
+        /**
+         * Is the model temporarily empty (e.g., when the triangulation
+         * is being edited)?
+         */
+        bool forceEmpty;
+
     public:
         /**
          * Constructor and destructor.
@@ -66,7 +72,13 @@ class SkeletalModel : public QAbstractItemModel {
         virtual ~SkeletalModel();
 
         /**
+         * Make the model temporarily empty.
+         */
+        void makeEmpty();
+
+        /**
          * Rebuild the model from scratch.
+         * If the model was temporarily emptied, it will be refilled.
          */
         void rebuild();
 
@@ -245,10 +257,23 @@ class SkeletonWindow : public KDialog, public regina::NPacketListener {
         static QString overview(SkeletalObject type);
 };
 
-inline SkeletalModel::SkeletalModel(regina::NTriangulation* tri_) : tri(tri_) {
+inline SkeletalModel::SkeletalModel(regina::NTriangulation* tri_) :
+        tri(tri_), forceEmpty(false) {
 }
 
 inline SkeletalModel::~SkeletalModel() {
+}
+
+inline void SkeletalModel::makeEmpty() {
+    beginResetModel();
+    forceEmpty = true;
+    endResetModel();
+}
+
+inline void SkeletalModel::rebuild() {
+    beginResetModel();
+    forceEmpty = false;
+    endResetModel();
 }
 
 inline QModelIndex SkeletalModel::index(int row, int column,

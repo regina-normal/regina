@@ -190,9 +190,6 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     grid->addWidget(btn, 1, 11);
 
     layout->addStretch(1);
-
-    //viewers.setAutoDelete(true); TODO: No longer supported, check
-    // we are deleting correctly.
 }
 
 regina::NPacket* NTriSkelCompUI::getPacket() {
@@ -230,6 +227,10 @@ void NTriSkelCompUI::editingElsewhere() {
 }
 
 void NTriSkelCompUI::viewVertices() {
+    // Because we pass this as parent to the new window, we are
+    // guaranteed that the window will be closed and deleted
+    // automatically if the packet pane is closed.
+    // Similarly for edges, faces, etc.
     SkeletonWindow* win = new SkeletonWindow(this, SkeletonWindow::Vertices);
     win->show();
     viewers.append(win);
