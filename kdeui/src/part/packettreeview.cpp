@@ -92,10 +92,8 @@ void PacketTreeItem::refreshSubtree() {
     // Is this a stale node in the tree?
     if (! packet) {
         // Yes, it's a stale node.  Delete all of its children.
-        for(int i=0; i< childCount(); i++) {
-          QTreeWidgetItem* item = child(0);
-          delete item;
-        }
+        while (childCount())
+            delete child(0);
         return;
     }
 
@@ -104,58 +102,47 @@ void PacketTreeItem::refreshSubtree() {
     // match up.
     NPacket* p = packet->getFirstTreeChild();
     int itemCounter = 0;
-    PacketTreeItem* item = (PacketTreeItem*)child(itemCounter++);
-    QTreeWidgetItem* prev = 0;
-    QTreeWidgetItem* other;
-    while (p) {
+    PacketTreeItem* item = static_cast<PacketTreeItem*>(child(itemCounter));
+    PacketTreeItem* prev = 0;
+    PacketTreeItem* other;
+    for ( ; p; ++itemCounter, p = p->getNextTreeSibling()) {
+        // INV: itemCounter is the current index of p and item.
         if (! item) {
             // We've already run out of child nodes.  Add a new one.
             if (prev)
                 prev = new PacketTreeItem(this, prev, p);
             else
                 prev = new PacketTreeItem(this, p);
-            ((PacketTreeItem*)prev)->fill();
+            prev->fill();
 
-            // Increment our variables.
             // Variables prev and item are already correct.
-            p = p->getNextTreeSibling();
         } else if (item->getPacket() == p) {
             // They match up.
             item->refreshSubtree();
 
-            // Increment our variables.
+            // Update our variables.
             prev = item;
-            item = (PacketTreeItem*)child(itemCounter++);
-            p = p->getNextTreeSibling();
+            item = static_cast<PacketTreeItem*>(child(itemCounter));
         } else {
             int otherCounter;
             // They both exist but they don't match up.  Hmmm.
             // Do we have a node for this packet later in the tree?
-            for (otherCounter = itemCounter; otherCounter < childCount();
-                    otherCounter++) {
-                other = (PacketTreeItem*)child(otherCounter);
-                if (((PacketTreeItem*)other)->getPacket() == p) {
+            for (otherCounter = itemCounter + 1; otherCounter < childCount();
+                    ++otherCounter) {
+                other = static_cast<PacketTreeItem*>(child(otherCounter));
+                if (other->getPacket() == p) {
                     // We've found a node for this packet.
                     // Move it to the correct place.
-                    insertChild(itemCounter-1,takeChild(otherCounter));
-                    /*if (prev) {
-                        insertChild(itemCounter-1,takeChild(otherCounter));
-                    else {
-                        insertChild(0,takeChild(itemCounter-1));
-                        // Hmm, it doesn't seem easy to move a list item
-                        // to the beginning of its parent's child list.
-                        // other->moveItem(firstChild());
-                        // firstChild()->moveItem(other);
-                    }*/
-                    ((PacketTreeItem*)other)->refreshSubtree();
+                    insertChild(itemCounter, takeChild(otherCounter));
+                    other->refreshSubtree();
 
-                    // Increment our variables.
+                    // Update our variables.
                     // Note that item is already correct.
                     prev = other;
-                    p = p->getNextTreeSibling();
                     break;
                 }
             }
+
             if (otherCounter == childCount() ) {
                 // We couldn't find a node for this packet anywhere.
                 // Insert a new one.
@@ -163,28 +150,17 @@ void PacketTreeItem::refreshSubtree() {
                     prev = new PacketTreeItem(this, prev, p);
                 else
                     prev = new PacketTreeItem(this, p);
-                ((PacketTreeItem*)prev)->fill();
+                prev->fill();
 
-                // Increment our variables.
-                // Note that prev and item are already correct.
-                p = p->getNextTreeSibling();
+                // Variables prev and item are already correct.
             }
         }
     }
 
     // Were there any child nodes left over?
-    //
-    // Note that childCount() will decrease as we delete children (hopefully)
-    while (itemCounter < childCount()) {
-        other = (PacketTreeItem*)child(itemCounter);
-        delete other;
-    }
-
-    /*while (item) {
-        other = item;
-        item = (PacketTreeItem*)(item->nextSibling());
-        delete other;
-    }*/
+    // Note that childCount() will decrease as we delete children here.
+    while (itemCounter < childCount())
+        delete child(itemCounter);
 }
 
 void PacketTreeItem::refreshLabel() {
