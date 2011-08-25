@@ -127,8 +127,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
     addCredit(ki18n("The American Institute of Mathematics"),
         ki18n("Support for development"),"","");
     addCredit(ki18n("The Australian Research Council"),
-        ki18n("Support for development (DP1094516, DPTODO) "
-            "and hardware (DPTODO)"),"","");
+        ki18n("Support for development and hardware "
+            "(DP0208490, DP1094516, DP110101104)"),"","");
     addCredit(ki18n("The Institute for the Physics and Mathematics of the "
             "Universe, Tokyo"),
         ki18n("Hospitality and support"),"","");
