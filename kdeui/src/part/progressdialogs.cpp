@@ -52,8 +52,8 @@ namespace {
 ProgressDialogNumeric::ProgressDialogNumeric(
         regina::NProgressManager* useManager, const QString& dialogTitle,
         const QString& displayText, QWidget* parent, const char* name) :
-        KProgressDialog(parent, dialogTitle, displayText,
-            Qt::Dialog | Qt::Popup),
+        KProgressDialog(parent, dialogTitle, displayText, Qt::Dialog),
+        /* Don't use Qt::Popup because the layout breaks under fink. */
         manager(useManager), progress(0) {
     setMinimumDuration(500);
     setWindowModality(Qt::WindowModal);
