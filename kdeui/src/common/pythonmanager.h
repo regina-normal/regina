@@ -160,7 +160,7 @@ class PythonManager {
          * Opens a new browser displaying the calculation engine
          * documentation.
          */
-        static void openPythonReference(QWidget* parent);
+        static void openPythonReference(QWidget* topLevelWindow);
 };
 
 inline PythonVariable::PythonVariable() : value(0) {
