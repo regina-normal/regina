@@ -116,17 +116,16 @@ void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
 }
 
 void ReginaMain::dropEvent(QDropEvent *event) {
-    // Accept a dropped Url.
+    // Accept a dropped URL (or URLs).
 
     // See if we can decode a URI.  If not, just ignore it.
     if (event->mimeData()->hasUrls()) {
         // We have a URI, so process it.
-        // TODO: what if many URIs are dropped? Open all?
-        QUrl url;
-        url = event->mimeData()->urls().first();
-
-        // Load in the file.
-        openUrl(url);
+        // Load in each file.
+        const QList<QUrl>& urls(event->mimeData()->urls());
+        for (QList<QUrl>::const_iterator it = urls.begin();
+                it != urls.end(); ++it)
+            openUrl(*it);
     }
 }
 
