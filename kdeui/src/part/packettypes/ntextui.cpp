@@ -60,14 +60,6 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
 
     refresh();
 
-    /*
-    if (strcmp(document->metaObject()->className(), "Vim::Document") == 0)
-        std::cerr << "Not flushing the undo list since this has strange "
-            "side-effects with the Vim component." << std::endl;
-    else
-        KTextEditor::undoInterface(document)->clearUndo();
-    */
-
     connect(document, SIGNAL(textChanged(KTextEditor::Document*)),
         this, SLOT(notifyTextChanged()));
 }

@@ -49,10 +49,6 @@ void ReginaPart::setupActions() {
     actCopy->setEnabled(false);
     actPaste = KStandardAction::paste(actionCollection());
     actPaste->setEnabled(false);
-    actUndo = KStandardAction::undo(0,0,actionCollection());
-    actUndo->setEnabled(false);
-    actRedo = KStandardAction::redo(0,0,actionCollection());
-    actRedo->setEnabled(false);
 
     // Basic packet actions:
     act = actionCollection()->addAction("tree_view");

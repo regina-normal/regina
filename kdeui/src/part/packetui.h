@@ -313,8 +313,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * The list of edit operations for which actions can be
          * registered and deregistered.
          */
-        enum EditOperation { editCut, editCopy, editPaste,
-            editUndo, editRedo };
+        enum EditOperation { editCut, editCopy, editPaste };
 
     private:
         /**
@@ -355,8 +354,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         KAction* extCut;
         KAction* extCopy;
         KAction* extPaste;
-        KAction* extUndo;
-        KAction* extRedo;
 
     public:
         /**
@@ -613,7 +610,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * actions.  These slots are for internal use.
          */
         void updateClipboardActions();
-        void updateUndoActions();
 
     protected:
         /**

@@ -55,14 +55,10 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         KAction* cut = KStandardAction::cut(0, 0, actionCollection());
         KAction* copy = KStandardAction::copy(0, 0, actionCollection());
         KAction* paste = KStandardAction::paste(0, 0, actionCollection());
-        KAction* undo = KStandardAction::undo(0, 0, actionCollection());
-        KAction* redo = KStandardAction::redo(0, 0, actionCollection());
 
         newPane->registerEditOperation(cut, PacketPane::editCut);
         newPane->registerEditOperation(copy, PacketPane::editCopy);
         newPane->registerEditOperation(paste, PacketPane::editPaste);
-        newPane->registerEditOperation(undo, PacketPane::editUndo);
-        newPane->registerEditOperation(redo, PacketPane::editRedo);
     }
 
     createGUI("packetwindow.rc");

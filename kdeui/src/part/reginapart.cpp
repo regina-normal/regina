@@ -166,8 +166,6 @@ void ReginaPart::dock(PacketPane* newPane) {
         newPane->registerEditOperation(actCut, PacketPane::editCut);
         newPane->registerEditOperation(actCopy, PacketPane::editCopy);
         newPane->registerEditOperation(actPaste, PacketPane::editPaste);
-        newPane->registerEditOperation(actUndo, PacketPane::editUndo);
-        newPane->registerEditOperation(actRedo, PacketPane::editRedo);
     }
 }
 
@@ -180,8 +178,6 @@ void ReginaPart::hasUndocked(PacketPane* undockedPane) {
         undockedPane->deregisterEditOperation(actCut, PacketPane::editCut);
         undockedPane->deregisterEditOperation(actCopy, PacketPane::editCopy);
         undockedPane->deregisterEditOperation(actPaste, PacketPane::editPaste);
-        undockedPane->deregisterEditOperation(actUndo, PacketPane::editUndo);
-        undockedPane->deregisterEditOperation(actRedo, PacketPane::editRedo);
     }
 
     if (dockedPane == undockedPane) {

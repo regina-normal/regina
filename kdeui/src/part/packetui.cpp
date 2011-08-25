@@ -130,7 +130,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent) : QWidget(parent),
         part(newPart), frame(0), dirty(false), dirtinessBroken(false),
         emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
-        extCut(0), extCopy(0), extPaste(0), extUndo(0), extRedo(0) {
+        extCut(0), extCopy(0), extPaste(0) {
     // Initialise a vertical layout with no padding or spacing.
     QBoxLayout* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -246,11 +246,6 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
             SIGNAL(dataChanged()), this, SLOT(updateClipboardActions()));
         // Finally we call updateClipboardActions() ourselves when the
         // part's read-write status changes.
-
-        // TODO: Get undo/redo working...
-        // Do a similar thing for the undo/redo actions.
-        connect(edit, SIGNAL(undoChanged()),
-            this, SLOT(updateUndoActions()));
     }
 }
 
@@ -296,7 +291,6 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
 
     mainUI->setReadWrite(allowReadWrite);
     updateClipboardActions();
-    updateUndoActions();
     if (dirtinessBroken) {
         // Update the UI according to the new value of readWrite.
         setDirtinessBroken();
@@ -340,8 +334,6 @@ void PacketPane::registerEditOperation(KAction* act, EditOperation op) {
         case editCut : extCut = act; break;
         case editCopy : extCopy = act; break;
         case editPaste : extPaste = act; break;
-        case editUndo : extUndo = act; break;
-        case editRedo : extRedo = act; break;
     }
 
     if (act) {
@@ -361,20 +353,6 @@ void PacketPane::registerEditOperation(KAction* act, EditOperation op) {
                 connect(act, SIGNAL(triggered()),
                     edit->views().first(), SLOT(paste()));
                 break;
-            case editUndo :
-                // TODO: KTextEditor does not support undoInterface at all any
-                // more, might need to convert it all to 
-                //act->setEnabled(KTextEditor::undoInterface(edit)->undoCount()
-                //    && edit->isReadWrite());
-                act->setEnabled(edit->isReadWrite());
-                connect(act, SIGNAL(triggered()), edit, SLOT(undo()));
-                break;
-            case editRedo :
-                //act->setEnabled(KTextEditor::undoInterface(edit)->redoCount()
-                //    && edit->isReadWrite());
-                act->setEnabled(edit->isReadWrite());
-                connect(act, SIGNAL(triggered()), edit, SLOT(redo()));
-                break;
         }
     }
 }
@@ -393,8 +371,6 @@ void PacketPane::deregisterEditOperation(KAction* act, EditOperation op) {
         case editCut : if (extCut == act) extCut = 0; break;
         case editCopy : if (extCopy == act) extCopy = 0; break;
         case editPaste : if (extPaste == act) extPaste = 0; break;
-        case editUndo : if (extUndo == act) extUndo = 0; break;
-        case editRedo : if (extRedo == act) extRedo = 0; break;
     }
 
     switch (op) {
@@ -409,12 +385,6 @@ void PacketPane::deregisterEditOperation(KAction* act, EditOperation op) {
         case editPaste :
             disconnect(act, SIGNAL(triggered()),
                 edit->views().first(), SLOT(paste()));
-            break;
-        case editUndo :
-            disconnect(act, SIGNAL(triggered()), edit, SLOT(undo()));
-            break;
-        case editRedo :
-            disconnect(act, SIGNAL(triggered()), edit, SLOT(redo()));
             break;
     }
 }
@@ -669,21 +639,6 @@ void PacketPane::updateClipboardActions() {
             extCopy->setEnabled(view->selection());
         if (extPaste)
             extPaste->setEnabled(CLIPBOARD_HAS_TEXT && edit->isReadWrite());
-    }
-}
-
-void PacketPane::updateUndoActions() {
-    KTextEditor::Document* edit = mainUI->getTextComponent();
-    if (edit) {
-        // TODO: Undo/redo interface
-        if (extUndo)
-            //extUndo->setEnabled(KTextEditor::undoInterface(edit)->undoCount()
-            //    && edit->isReadWrite());
-            extUndo->setEnabled(edit->isReadWrite());
-        if (extRedo)
-            //extRedo->setEnabled(KTextEditor::undoInterface(edit)->redoCount()
-            //    && edit->isReadWrite());
-            extRedo->setEnabled(edit->isReadWrite());
     }
 }
 

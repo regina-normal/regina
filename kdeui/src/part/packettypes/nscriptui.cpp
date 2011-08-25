@@ -46,7 +46,6 @@
 #include <ktexteditor/document.h>
 //#include <ktexteditor/editinterface.h>
 //#include <ktexteditor/highlightinginterface.h>
-//#include <ktexteditor/undointerface.h>
 #include <ktexteditor/view.h>
 //#include <ktexteditor/viewcursorinterface.h>
 #include <ktoolbar.h>
@@ -225,15 +224,6 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // Fill the components with data.
     refresh();
-
-    // Clear the undo stack.
-
-    // undoInterface has been removed.
-    /*if (strcmp(document->metaObject()->className(), "Vim::Document") == 0)
-        std::cerr << "Not flushing the undo list since this has strange "
-            "side-effects with the Vim component." << std::endl;
-    else
-        KTextEditor::undoInterface(document)->clearUndo();*/
 
     // Notify us of any changes.
     connect(varTable, SIGNAL(valueChanged(int, int)),
