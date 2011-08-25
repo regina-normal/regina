@@ -603,7 +603,7 @@ void PacketPane::dockPane() {
     delete frame;
     frame = 0;
 
-    if ( ! dockUndockBtn->isChecked() ) dockUndockBtn->toggle(); // TODO: A neater way of doing this?
+    dockUndockBtn->setChecked(true);
     actDockUndock->setText(i18n("Un&dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
@@ -619,7 +619,7 @@ void PacketPane::floatPane() {
     frame = new PacketWindow(this);
     part->hasUndocked(this);
 
-    if ( dockUndockBtn->isChecked() ) dockUndockBtn->toggle(); // TODO: A neater way of doing this?
+    dockUndockBtn->setChecked(false);
     actDockUndock->setText(i18n("&Dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
