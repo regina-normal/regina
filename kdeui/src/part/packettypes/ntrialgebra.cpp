@@ -704,7 +704,9 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QScrollArea* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
-    scroller->setStyleSheet("background-color:transparent;");
+    scroller->setStyleSheet("QScrollArea, .QWidget { "
+                                "background-color:transparent; "
+                            "}");
     ui = scroller;
 
     QWidget* grid = new QWidget(scroller->viewport());
