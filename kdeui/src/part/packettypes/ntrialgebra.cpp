@@ -704,6 +704,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QScrollArea* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
+    // Transparency must be applied to both the QScrollArea *and* some of its
+    // internal components (possibly the widget that holds the viewport?).
     scroller->setStyleSheet("QScrollArea, .QWidget { "
                                 "background-color:transparent; "
                             "}");
