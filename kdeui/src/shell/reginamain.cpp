@@ -518,7 +518,13 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
 
     configGroup = new KConfigGroup(config, "PDF");
     globalPrefs.pdfAutoClose = configGroup->readEntry("AutoClose", true);
+#ifdef __APPLE__
+    // On MacOSX, use an external viewer by default.
+    globalPrefs.pdfEmbed = configGroup->readEntry("Embed", false);
+#else
+    // On Linux, use an embedded viewer if we can.
     globalPrefs.pdfEmbed = configGroup->readEntry("Embed", true);
+#endif
     globalPrefs.pdfExternalViewer = configGroup->readEntry("ExternalViewer").
         trimmed();
     if (globalPrefs.pdfExternalViewer.isEmpty())
