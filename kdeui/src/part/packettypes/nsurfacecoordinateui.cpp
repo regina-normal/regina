@@ -509,7 +509,10 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "to the users' handbook).</qt>"));
     // Add grid lines:
     table->setStyleSheet("QTreeView::item:selected { "
-                            "background-color: royalblue; " // TODO: Avoid this!
+                            // TODO: Avoid this!
+                            "background: qlineargradient(x1: 0, y1: 0, "
+                                "x2: 0, y2: 1, stop: 0 #6ea1f1, "
+                                "stop: 1 #567dbc); "
                          "} "
                          "QTreeView::item { "
                             "border: 1px solid #d9d9d9; "
