@@ -66,6 +66,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     ui = new QWidget(enclosingPane);
     QVBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     // --- Action Toolbar ---
 
@@ -213,6 +214,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // Fill the components with data.
     refresh();
+    varTable->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
 
     // Notify us of any changes.
     connect(varTable, SIGNAL(itemChanged(QTableWidgetItem*)),
