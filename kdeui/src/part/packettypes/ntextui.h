@@ -61,7 +61,6 @@ class NTextUI : public QObject, public PacketUI {
          * Internal components
          */
         KTextEditor::Document* document;
-        KTextEditor::EditInterface* editInterface;
         KTextEditor::View* view;
 
     public:

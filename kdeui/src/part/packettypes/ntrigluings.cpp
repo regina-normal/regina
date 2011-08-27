@@ -51,7 +51,7 @@
 #include <QHeaderView>
 #include <qlabel.h>
 #include <qregexp.h>
-#include <QTableWidget>
+#include <QTableView>
 #include <set>
 
 using regina::NPacket;

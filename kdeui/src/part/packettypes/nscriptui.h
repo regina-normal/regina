@@ -68,7 +68,6 @@ class NScriptUI : public QObject, public PacketUI {
         QWidget* ui;
         QTableWidget* varTable;
         KTextEditor::Document* document;
-        KTextEditor::EditInterface* editInterface;
         KTextEditor::View* view;
 
         /**
