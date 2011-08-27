@@ -4,7 +4,7 @@
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
-Version: 4.6
+Version: 4.90
 Release: 1.%{_vendor}
 License: GPL
 # I wish there were a more sane group (like Applications/Mathematics).
@@ -144,6 +144,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/regina
 
 %changelog
+* Sat Sep 10 2011 Ben Burton <bab@debian.org> 4.90
+- New upstream release.
+- Ported from KDE3 to KDE4, and from autotools to cmake.
+
 * Sat May 16 2009 Ben Burton <bab@debian.org> 4.6
 - New upstream release.
 

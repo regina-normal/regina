@@ -51,7 +51,7 @@ const KLocalizedString ReginaAbout::regDescription(
 const QByteArray ReginaAbout::regName(I18N_NOOP("Regina"));
 
 const KLocalizedString ReginaAbout::regReleased(
-    ki18n("Released %1").subs(QDate(2009, 5, 16).toString(Qt::TextDate)));
+    ki18n("Released %1").subs(QDate(2011, 9, 10).toString(Qt::TextDate)));
 
 const QByteArray ReginaAbout::regVersion(PACKAGE_VERSION);
 
