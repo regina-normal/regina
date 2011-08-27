@@ -48,9 +48,6 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
     // Create a view (which must be parented) before we do anything else.
     // Otherwise the Vim component crashes.
     view = document->createView(enclosingPane);
-    if (strcmp(document->metaObject()->className(), "Vim::Document") == 0)
-        enclosingPane->setDirtinessBroken();
-
     document->setReadWrite(enclosingPane->isReadWrite());
 
     KTextEditor::ConfigInterface *iface =
