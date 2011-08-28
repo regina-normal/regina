@@ -112,7 +112,7 @@ void PacketTreeItem::refreshSubtree() {
             if (prev)
                 prev = new PacketTreeItem(this, prev, p);
             else
-                prev = new PacketTreeItem(this, p);
+                prev = new PacketTreeItem(this, 0, p);
             prev->fill();
 
             // Variables prev and item are already correct.
@@ -122,7 +122,7 @@ void PacketTreeItem::refreshSubtree() {
 
             // Update our variables.
             prev = item;
-            item = static_cast<PacketTreeItem*>(child(itemCounter));
+            item = static_cast<PacketTreeItem*>(child(itemCounter + 1));
         } else {
             int otherCounter;
             // They both exist but they don't match up.  Hmmm.
@@ -149,7 +149,7 @@ void PacketTreeItem::refreshSubtree() {
                 if (prev)
                     prev = new PacketTreeItem(this, prev, p);
                 else
-                    prev = new PacketTreeItem(this, p);
+                    prev = new PacketTreeItem(this, 0, p);
                 prev->fill();
 
                 // Variables prev and item are already correct.
