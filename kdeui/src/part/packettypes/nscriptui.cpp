@@ -242,12 +242,9 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     varTable->verticalHeader()->hide();
 
-    //varTable->setColumnStretchable(0, true);
-    //varTable->setColumnStretchable(1, true);
-
-    QStringList hdr;
-    hdr << i18n("Variable") << i18n("Value");
-    varTable->setHorizontalHeaderLabels(hdr);
+    varTable->setHorizontalHeaderLabels(
+        QStringList() << i18n("Variable") << i18n("Value"));
+    varTable->horizontalHeader()->setStretchLastSection(true);
 
     nameDelegate = new ScriptNameDelegate();
     valueDelegate = new ScriptValueDelegate(varTable,
@@ -354,7 +351,8 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // Fill the components with data.
     refresh();
-    varTable->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
+    // varTable->horizontalHeader()->resizeSections(
+    //     QHeaderView::ResizeToContents);
 
     // Notify us of any changes.
     connect(varTable, SIGNAL(itemChanged(QTableWidgetItem*)),
