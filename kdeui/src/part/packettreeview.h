@@ -69,6 +69,13 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
          */
         bool isEditable;
 
+        /**
+         * Since the KDE4 port, moving packets around the tree seems to
+         * result in branches being closed when they were once open.
+         * Manage this manually, sigh.
+         */
+        bool shouldBeExpanded_;
+
     public:
         /**
          * Constructors and destructors.
@@ -138,6 +145,12 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
         void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
             bool inParentDestructor);
         void childrenWereReordered(regina::NPacket* packet);
+
+        /**
+         * Manual management of expansion state.
+         */
+        bool shouldBeExpanded() const;
+        void markShouldBeExpanded(bool state);
 
     private:
         /**
@@ -210,6 +223,13 @@ class PacketTreeView : public QTreeWidget {
          * Allow GUI updates from within a non-GUI thread.
          */
         void customEvent(QEvent* evt);
+
+    private slots:
+        /**
+         * Manual management of expansion states.
+         */
+        void handleItemExpanded(QTreeWidgetItem* item);
+        void handleItemCollapsed(QTreeWidgetItem* item);
 };
 
 inline regina::NPacket* PacketTreeItem::getPacket() {
@@ -218,6 +238,14 @@ inline regina::NPacket* PacketTreeItem::getPacket() {
 
 inline ReginaPart* PacketTreeItem::getPart() {
     return tree->getPart();
+}
+
+inline bool PacketTreeItem::shouldBeExpanded() const {
+    return shouldBeExpanded_;
+}
+
+inline void PacketTreeItem::markShouldBeExpanded(bool state) {
+    shouldBeExpanded_ = state;
 }
 
 inline regina::NPacket* PacketTreeView::selectedPacket() {

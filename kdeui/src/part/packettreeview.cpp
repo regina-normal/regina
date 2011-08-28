@@ -46,26 +46,29 @@
 using regina::NPacket;
 
 PacketTreeItem::PacketTreeItem(PacketTreeView* parent, NPacket* realPacket) :
-        QTreeWidgetItem(parent), packet(realPacket), tree(parent) {
+        QTreeWidgetItem(parent), packet(realPacket), tree(parent),
+        shouldBeExpanded_(false) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
         NPacket* realPacket) :
-        QTreeWidgetItem(parent), packet(realPacket), tree(parent->tree) {
+        QTreeWidgetItem(parent), packet(realPacket), tree(parent->tree),
+        shouldBeExpanded_(false) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeView* parent,
         QTreeWidgetItem* after, NPacket* realPacket) :
         QTreeWidgetItem(parent, after), packet(realPacket),
-        tree(parent) {
+        tree(parent), shouldBeExpanded_(false) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
         QTreeWidgetItem* after, NPacket* realPacket) :
-        QTreeWidgetItem(parent, after), packet(realPacket), tree(parent->tree) {
+        QTreeWidgetItem(parent, after), packet(realPacket), tree(parent->tree),
+        shouldBeExpanded_(false) {
     init();
 }
 
@@ -115,6 +118,10 @@ void PacketTreeItem::refreshSubtree() {
                 prev = new PacketTreeItem(this, 0, p);
             prev->fill();
 
+            // Assume this has come from moving prev to a different
+            // place in the packet tree: always expand.
+            treeWidget()->expandItem(prev);
+
             // Variables prev and item are already correct.
         } else if (item->getPacket() == p) {
             // They match up.
@@ -135,6 +142,10 @@ void PacketTreeItem::refreshSubtree() {
                     // Move it to the correct place.
                     insertChild(itemCounter, takeChild(otherCounter));
                     other->refreshSubtree();
+                    if (other->shouldBeExpanded())
+                        treeWidget()->expandItem(other);
+                    else
+                        treeWidget()->collapseItem(other);
 
                     // Update our variables.
                     // Note that item is already correct.
@@ -151,6 +162,10 @@ void PacketTreeItem::refreshSubtree() {
                 else
                     prev = new PacketTreeItem(this, 0, p);
                 prev->fill();
+
+                // Assume this has come from moving prev to a different
+                // place in the packet tree: always expand.
+                treeWidget()->expandItem(prev);
 
                 // Variables prev and item are already correct.
             }
@@ -230,6 +245,11 @@ PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent)
     setAlternatingRowColors(false);
     setSelectionMode(QAbstractItemView::SingleSelection);
 
+    connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)),
+        this, SLOT(handleItemExpanded(QTreeWidgetItem*)));
+    connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem*)),
+        this, SLOT(handleItemCollapsed(QTreeWidgetItem*)));
+
     // Currently we use the platform default activation method (which is
     // often double-click).  To make this single-click always, change
     // itemActivated() to itemClicked().
@@ -299,5 +319,19 @@ void PacketTreeView::customEvent(QEvent* evt) {
         default:
             break;
     }
+}
+
+void PacketTreeView::handleItemExpanded(QTreeWidgetItem* item) {
+    PacketTreeItem* p = dynamic_cast<PacketTreeItem*>(item);
+    if (! p)
+        return;
+    p->markShouldBeExpanded(true);
+}
+
+void PacketTreeView::handleItemCollapsed(QTreeWidgetItem* item) {
+    PacketTreeItem* p = dynamic_cast<PacketTreeItem*>(item);
+    if (! p)
+        return;
+    p->markShouldBeExpanded(false);
 }
 
