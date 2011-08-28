@@ -43,7 +43,6 @@
 class KAction;
 class KActionCollection;
 class QSplitter;
-class QTableWidget;
 
 namespace KTextEditor {
     class EditInterface;
@@ -125,6 +124,24 @@ class ScriptValueDelegate : public QStyledItemDelegate {
 };
 
 /**
+ * Sigh.  We need to subclass QTableWidget in order to gain access to the
+ * protected function currentChanged(), which allows us to forcibly close
+ * any open editor and send changes back to the model.
+ */
+class ScriptVarTable : public QTableWidget {
+    public:
+        ScriptVarTable(int rows, int cols);
+
+        /**
+         * Forcibly close any open editor and commit changes to the
+         * internal model.  This is good to do before performing any
+         * global action on the user's current data (such as executing
+         * the script, or commiting changes to the calculation engine).
+         */
+        void endEdit();
+};
+
+/**
  * A packet interface for viewing script packets.
  */
 class NScriptUI : public QObject, public PacketUI {
@@ -140,7 +157,7 @@ class NScriptUI : public QObject, public PacketUI {
          * Internal components
          */
         QWidget* ui;
-        QTableWidget* varTable;
+        ScriptVarTable* varTable;
         QStyledItemDelegate* nameDelegate;
         QStyledItemDelegate* valueDelegate;
         KTextEditor::Document* document;
@@ -214,6 +231,16 @@ inline regina::NPacket* ScriptVarValueItem::getPacket() const {
 inline ScriptValueDelegate::ScriptValueDelegate(QTableWidget* table,
         regina::NPacket* treeMatriarch) :
         table_(table), matriarch_(treeMatriarch) {
+}
+
+inline ScriptVarTable::ScriptVarTable(int rows, int cols) :
+        QTableWidget(rows, cols) {
+}
+
+inline void ScriptVarTable::endEdit() {
+    // This will close any editor that might currently be open.
+    QModelIndex index(currentIndex());
+    currentChanged(index, index);
 }
 
 #endif

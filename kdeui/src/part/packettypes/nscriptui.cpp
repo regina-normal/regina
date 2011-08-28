@@ -229,7 +229,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     QSplitter* splitter = new QSplitter(Qt::Vertical);
     layout->addWidget(splitter, 1);
 
-    varTable = new QTableWidget(0, 2);
+    varTable = new ScriptVarTable(0, 2);
     varTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
 
     if (readWrite )
@@ -409,6 +409,9 @@ QString NScriptUI::getPacketMenuText() const {
 }
 
 void NScriptUI::commit() {
+    // Finish whatever edit was going on in the table.
+    varTable->endEdit();
+
     // Update the lines.
     script->removeAllLines();
     unsigned nLines = document->lines();
@@ -583,6 +586,9 @@ void NScriptUI::compile() {
 }
 
 void NScriptUI::execute() {
+    // Finish whatever edit was going on in the table.
+    varTable->endEdit();
+
     // Set up the variable list.
     PythonVariableList vars;
 
