@@ -48,6 +48,7 @@
 #include <ktoolbar.h>
 #include <qboxlayout.h>
 #include <qheaderview.h>
+#include <qlineedit.h>
 #include <qsplitter.h>
 #include <qtablewidget.h>
 #include <set>
@@ -57,6 +58,78 @@
 
 using regina::NPacket;
 using regina::NScript;
+
+namespace {
+    QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
+}
+
+QWidget* ScriptNameDelegate::createEditor(QWidget* parent,
+        const QStyleOptionViewItem&, const QModelIndex&) const {
+    QLineEdit* e = new QLineEdit(parent);
+    e->setValidator(new QRegExpValidator(rePythonIdentifier, e));
+    return e;
+}
+
+void ScriptNameDelegate::setEditorData(QWidget* editor,
+        const QModelIndex& index) const {
+    QString data = index.model()->data(index, Qt::EditRole).toString();
+
+    QLineEdit* e = static_cast<QLineEdit*>(editor);
+    e->setText(data);
+}
+
+void ScriptNameDelegate::setModelData(QWidget* editor,
+        QAbstractItemModel* model, const QModelIndex& index) const {
+    QLineEdit* e = static_cast<QLineEdit*>(editor);
+    QString data = e->text().trimmed();
+
+    if (data.isEmpty()) {
+        KMessageBox::error(e, i18n(
+            "Variable names cannot be empty."));
+        return;
+    }
+    if (! rePythonIdentifier.exactMatch(data)) {
+        KMessageBox::error(e, i18n(
+            "%1 is not a valid python variable name.").arg(data));
+
+        // Construct a better variable name.
+        data.replace(QRegExp("[^A-Za-z0-9_]"), "");
+        if (data.isEmpty())
+            return;
+        if (! rePythonIdentifier.exactMatch(data))
+            data.prepend('_');
+    }
+    if (nameUsedElsewhere(data, index.row(), model)) {
+        KMessageBox::error(e, i18n(
+            "Another variable is already using the name %1.").arg(data));
+
+        // Construct a unique variable name.
+        int which;
+        for (which = 0; nameUsedElsewhere(data + QString::number(which),
+                index.row(), model); which++)
+            ;
+        data.append(QString::number(which));
+    }
+
+    model->setData(index, data, Qt::EditRole);
+}
+
+void ScriptNameDelegate::updateEditorGeometry(QWidget* editor,
+        const QStyleOptionViewItem& option, const QModelIndex&) const {
+    editor->setGeometry(option.rect);
+}
+
+bool ScriptNameDelegate::nameUsedElsewhere(const QString& name, int currRow,
+        QAbstractItemModel* model) {
+    int rows = model->rowCount();
+    for (int i = 0; i < rows; i++) {
+        if (i == currRow)
+            continue;
+        if (model->data(model->index(i, 0)).toString() == name)
+            return true;
+    }
+    return false;
+}
 
 NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         KTextEditor::Document* doc) :
@@ -102,6 +175,10 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     QStringList hdr;
     hdr << i18n("Variable") << i18n("Value");
     varTable->setHorizontalHeaderLabels(hdr);
+
+    nameDelegate = new ScriptNameDelegate();
+    valueDelegate = 0; // TODO
+    varTable->setItemDelegateForColumn(0, nameDelegate);
 
     QSizePolicy pol = QSizePolicy(QSizePolicy::Expanding,
         QSizePolicy::Expanding);
@@ -228,6 +305,8 @@ NScriptUI::~NScriptUI() {
     delete scriptActions;
 
     // Clean up.
+    delete nameDelegate;
+    delete valueDelegate;
     delete document;
 }
 
@@ -280,7 +359,7 @@ void NScriptUI::refresh() {
     unsigned long nVars = script->getNumberOfVariables();
     varTable->setRowCount(nVars);
     for (unsigned long i = 0; i < nVars; i++) {
-        varTable->setItem(i, 0, new ScriptVarNameItem(
+        varTable->setItem(i, 0, new QTableWidgetItem(
             script->getVariableName(i).c_str()));
         varTable->setItem(i, 1, new ScriptVarValueItem(
             script->getTreeMatriarch(), script->getVariableValue(i).c_str()));
@@ -351,7 +430,7 @@ void NScriptUI::addVariable() {
 
     // Add the new variable.
     varTable->insertRow(rows);
-    ScriptVarNameItem* nameItem = new ScriptVarNameItem(varName);
+    QTableWidgetItem* nameItem = new QTableWidgetItem(varName);
     varTable->setItem(rows, 0, nameItem);
     varTable->setItem(rows, 1, new ScriptVarValueItem(
         script->getTreeMatriarch(), (regina::NPacket*)0));

@@ -42,40 +42,6 @@ namespace regina {
 }
 
 /**
- * A table item for script variable names.
- */
-class ScriptVarNameItem : public QTableWidgetItem {
-    private:
-        bool error;
-            /**< Are we currently displaying an error message? */
-
-    public:
-        /**
-         * Constructor.
-         */
-        ScriptVarNameItem(const QString& name);
-
-        /**
-         * QTableWidgetItem overrides.
-         */
-        virtual QWidget* createEditor() const;
-        virtual void setContentFromEditor(QWidget* editor);
-
-    private:
-        /**
-         * Display the given error to the user if no error is already
-         * being displayed.
-         */
-        void showError(const QString& message);
-
-        /**
-         * Is the given variable name already being used elsewhere in the
-         * table?
-         */
-        bool nameUsedElsewhere(const QString& name);
-};
-
-/**
  * A table item for script variable values.
  */
 class ScriptVarValueItem : public QTableWidgetItem, public regina::NPacketListener {

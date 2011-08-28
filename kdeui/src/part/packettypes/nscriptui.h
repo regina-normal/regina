@@ -35,6 +35,8 @@
 
 #include "../packetui.h"
 
+#include <qstyleditemdelegate.h>
+
 class KAction;
 class KActionCollection;
 class QSplitter;
@@ -48,6 +50,22 @@ namespace KTextEditor {
 namespace regina {
     class NPacket;
     class NScript;
+};
+
+class ScriptNameDelegate : public QStyledItemDelegate {
+    public:
+        virtual QWidget* createEditor(QWidget* parent,
+            const QStyleOptionViewItem& option, const QModelIndex& index) const;
+        virtual void setEditorData(QWidget* editor,
+            const QModelIndex& index) const;
+        virtual void setModelData(QWidget* editor,
+            QAbstractItemModel* model, const QModelIndex& index) const;
+        virtual void updateEditorGeometry(QWidget* editor,
+            const QStyleOptionViewItem& option, const QModelIndex& index) const;
+
+    private:
+        static bool nameUsedElsewhere(const QString& name, int currRow,
+            QAbstractItemModel* model);
 };
 
 /**
@@ -67,6 +85,8 @@ class NScriptUI : public QObject, public PacketUI {
          */
         QWidget* ui;
         QTableWidget* varTable;
+        QStyledItemDelegate* nameDelegate;
+        QStyledItemDelegate* valueDelegate;
         KTextEditor::Document* document;
         KTextEditor::View* view;
 
