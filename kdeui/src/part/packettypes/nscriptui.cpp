@@ -32,7 +32,8 @@
 
 // UI includes:
 #include "nscriptui.h"
-#include "nscriptvaritems.h"
+#include "../packetchooser.h"
+#include "../packetmanager.h"
 #include "../reginapart.h"
 
 #include <cstring>
@@ -61,6 +62,49 @@ using regina::NScript;
 
 namespace {
     QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
+}
+
+ScriptVarValueItem::ScriptVarValueItem(regina::NPacket* packet) :
+        packet_(packet) {
+    if (packet_)
+        packet_->listen(this);
+
+    updateData();
+}
+
+void ScriptVarValueItem::setPacket(regina::NPacket* p) {
+    if (packet_)
+        packet_->unlisten(this);
+
+    packet_ = p;
+
+    if (p)
+        p->listen(this);
+
+    updateData();
+}
+
+void ScriptVarValueItem::packetWasRenamed(regina::NPacket* p) {
+    if (p == packet_)
+        updateData();
+}
+
+void ScriptVarValueItem::packetToBeDestroyed(regina::NPacket* p) {
+    if (p == packet_) {
+        packet_->unlisten(this);
+        packet_ = 0;
+        updateData();
+    }
+}
+
+void ScriptVarValueItem::updateData() {
+    if (packet_ && ! packet_->getPacketLabel().empty()) {
+        setText(packet_->getPacketLabel().c_str());
+        setIcon(QPixmap(PacketManager::iconSmall(packet_, false)));
+    } else {
+        setText("<None>");
+        setIcon(QPixmap());
+    }
 }
 
 QWidget* ScriptNameDelegate::createEditor(QWidget* parent,
@@ -131,6 +175,34 @@ bool ScriptNameDelegate::nameUsedElsewhere(const QString& name, int currRow,
     return false;
 }
 
+QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
+        const QStyleOptionViewItem&, const QModelIndex&) const {
+    PacketChooser* e = new PacketChooser(matriarch_,
+        0 /* filter */, true /* allow "none" */,
+        0 /* initial selection */, parent);
+    e->setAutoUpdate(true);
+    return e;
+}
+
+void ScriptValueDelegate::setEditorData(QWidget* editor,
+        const QModelIndex& index) const {
+    PacketChooser* e = static_cast<PacketChooser*>(editor);
+    e->selectPacket(static_cast<ScriptVarValueItem*>(
+        table_->item(index.row(), index.column()))->getPacket());
+}
+
+void ScriptValueDelegate::setModelData(QWidget* editor,
+        QAbstractItemModel*, const QModelIndex& index) const {
+    PacketChooser* e = static_cast<PacketChooser*>(editor);
+    static_cast<ScriptVarValueItem*>(table_->item(
+        index.row(), index.column()))->setPacket(e->selectedPacket());
+}
+
+void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
+        const QStyleOptionViewItem& option, const QModelIndex&) const {
+    editor->setGeometry(option.rect);
+}
+
 NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         KTextEditor::Document* doc) :
         PacketUI(enclosingPane), script(packet), document(doc) {
@@ -177,8 +249,10 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     varTable->setHorizontalHeaderLabels(hdr);
 
     nameDelegate = new ScriptNameDelegate();
-    valueDelegate = 0; // TODO
+    valueDelegate = new ScriptValueDelegate(varTable,
+        packet->getTreeMatriarch());
     varTable->setItemDelegateForColumn(0, nameDelegate);
+    varTable->setItemDelegateForColumn(1, valueDelegate);
 
     QSizePolicy pol = QSizePolicy(QSizePolicy::Expanding,
         QSizePolicy::Expanding);
@@ -358,11 +432,13 @@ void NScriptUI::refresh() {
     // Refresh the variables.
     unsigned long nVars = script->getNumberOfVariables();
     varTable->setRowCount(nVars);
+
+    regina::NPacket* matriarch = script->getTreeMatriarch();
     for (unsigned long i = 0; i < nVars; i++) {
         varTable->setItem(i, 0, new QTableWidgetItem(
             script->getVariableName(i).c_str()));
         varTable->setItem(i, 1, new ScriptVarValueItem(
-            script->getTreeMatriarch(), script->getVariableValue(i).c_str()));
+            matriarch->findPacketLabel(script->getVariableValue(i).c_str())));
     }
 
     // A kate part needs to be in read-write mode before we can alter its
@@ -432,8 +508,7 @@ void NScriptUI::addVariable() {
     varTable->insertRow(rows);
     QTableWidgetItem* nameItem = new QTableWidgetItem(varName);
     varTable->setItem(rows, 0, nameItem);
-    varTable->setItem(rows, 1, new ScriptVarValueItem(
-        script->getTreeMatriarch(), (regina::NPacket*)0));
+    varTable->setItem(rows, 1, new ScriptVarValueItem(0));
     varTable->scrollToItem(nameItem);
 
     // Done!

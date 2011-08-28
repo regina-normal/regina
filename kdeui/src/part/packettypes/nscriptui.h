@@ -33,9 +33,12 @@
 #ifndef __NSCRIPTUI_H
 #define __NSCRIPTUI_H
 
+#include "packet/npacketlistener.h"
+
 #include "../packetui.h"
 
 #include <qstyleditemdelegate.h>
+#include <qtablewidget.h>
 
 class KAction;
 class KActionCollection;
@@ -52,6 +55,40 @@ namespace regina {
     class NScript;
 };
 
+class ScriptVarValueItem : public QTableWidgetItem,
+        public regina::NPacketListener {
+    private:
+        /**
+         * The currently selected packet, or 0 for none.
+         */
+        regina::NPacket* packet_;
+
+    public:
+        /**
+         * Constructor.
+         */
+        ScriptVarValueItem(regina::NPacket* packet);
+
+        /**
+         * Access the currently selected packet.
+         */
+        regina::NPacket* getPacket() const;
+        void setPacket(regina::NPacket* packet);
+
+        /**
+         * NPacketListener overrides.
+         */
+        virtual void packetWasRenamed(regina::NPacket* p);
+        virtual void packetToBeDestroyed(regina::NPacket* p);
+
+    private:
+        /**
+         * Update the text and pixmap according to the currently
+         * selected packet.
+         */
+        void updateData();
+};
+
 class ScriptNameDelegate : public QStyledItemDelegate {
     public:
         virtual QWidget* createEditor(QWidget* parent,
@@ -66,6 +103,25 @@ class ScriptNameDelegate : public QStyledItemDelegate {
     private:
         static bool nameUsedElsewhere(const QString& name, int currRow,
             QAbstractItemModel* model);
+};
+
+class ScriptValueDelegate : public QStyledItemDelegate {
+    private:
+        QTableWidget* table_;
+        regina::NPacket* matriarch_;
+
+    public:
+        ScriptValueDelegate(QTableWidget* table,
+            regina::NPacket* treeMatriatch);
+
+        virtual QWidget* createEditor(QWidget* parent,
+            const QStyleOptionViewItem& option, const QModelIndex& index) const;
+        virtual void setEditorData(QWidget* editor,
+            const QModelIndex& index) const;
+        virtual void setModelData(QWidget* editor,
+            QAbstractItemModel* model, const QModelIndex& index) const;
+        virtual void updateEditorGeometry(QWidget* editor,
+            const QStyleOptionViewItem& option, const QModelIndex& index) const;
 };
 
 /**
@@ -150,5 +206,14 @@ class NScriptUI : public QObject, public PacketUI {
          */
         void setPythonMode();
 };
+
+inline regina::NPacket* ScriptVarValueItem::getPacket() const {
+    return packet_;
+}
+
+inline ScriptValueDelegate::ScriptValueDelegate(QTableWidget* table,
+        regina::NPacket* treeMatriarch) :
+        table_(table), matriarch_(treeMatriarch) {
+}
 
 #endif
