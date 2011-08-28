@@ -194,8 +194,12 @@ void ScriptValueDelegate::setEditorData(QWidget* editor,
 void ScriptValueDelegate::setModelData(QWidget* editor,
         QAbstractItemModel*, const QModelIndex& index) const {
     PacketChooser* e = static_cast<PacketChooser*>(editor);
-    static_cast<ScriptVarValueItem*>(table_->item(
-        index.row(), index.column()))->setPacket(e->selectedPacket());
+    NPacket* p = e->selectedPacket();
+    ScriptVarValueItem* item = static_cast<ScriptVarValueItem*>(table_->item(
+        index.row(), index.column()));
+
+    if (item->getPacket() != p)
+        item->setPacket(p);
 }
 
 void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
