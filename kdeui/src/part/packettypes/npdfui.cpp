@@ -109,13 +109,19 @@ void NPDFUI::refresh() {
         setDirty(false);
         return;
     }
-    temp.open();
+    if (! temp.open()) {
+        showError(i18n("<qt>The temporary PDF file <i>%1</i> could not be "
+            "created.</qt>").arg(temp.fileName()));
+        setDirty(false);
+        return;
+    }
+    temp.close();
+
     if (! regina::writePDF(static_cast<const char*>(
             QFile::encodeName(temp.fileName())), *pdf)) {
         showError(i18n("An error occurred whilst writing the PDF "
-            "data to the temporary file %1.").arg(temp.fileName()));
+            "data to the temporary file <i>%1</i>.").arg(temp.fileName()));
         setDirty(false);
-        temp.close();
         return;
     }
 
@@ -149,7 +155,8 @@ void NPDFUI::refresh() {
                 stack->setCurrentWidget((viewer->widget()));
             else
                 showError(i18n("An error occurred whilst re-reading the PDF "
-                    "data from the temporary file %1.").arg(temp.fileName()));
+                    "data from the temporary file <i>%1</i>.")
+                    .arg(temp.fileName()));
 
             setDirty(false);
             return;
@@ -194,18 +201,32 @@ void NPDFUI::refresh() {
         proc = new KProcess(this);
         proc->setShellCommand(cmd);
 
-        // TODO: Broken signal (changed with KDE4).
-        connect(proc, SIGNAL(finished()),
-            this, SLOT(processExited(KProcess*)));
+        connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
+            this, SLOT(processExited(int, QProcess::ExitStatus)));
         
-        proc->start();
-        if (!( (proc->state() == QProcess::Starting) ||
-               (proc->state() != QProcess::Running) ))
-            showError(i18n("<qt>Regina was unable to open an external "
-                "PDF viewer.  The failed command was:<p>"
-                "<tt>%1</tt><p>"
-                "You can fix this by editing the PDF options in "
-                "Regina's settings.</qt>").arg(Qt::escape(cmd)));
+        if (autoClose) {
+            proc->start();
+            if (! proc->waitForStarted(10000 /* milliseconds */)) {
+                showError(i18n("<qt>Regina was unable to open an external "
+                    "PDF viewer.  The failed command was:<p>"
+                    "<tt>%1</tt><p>"
+                    "You can fix this by editing the PDF options in "
+                    "Regina's settings.</qt>").arg(Qt::escape(cmd)));
+                proc->kill();
+                delete proc;
+                proc = 0;
+            }
+        } else {
+            if (! proc->startDetached()) {
+                showError(i18n("<qt>Regina was unable to open an external "
+                    "PDF viewer.  The failed command was:<p>"
+                    "<tt>%1</tt><p>"
+                    "You can fix this by editing the PDF options in "
+                    "Regina's settings.</qt>").arg(Qt::escape(cmd)));
+                delete proc;
+                proc = 0;
+            }
+        }
     }
 
     setDirty(false);
@@ -267,6 +288,9 @@ void NPDFUI::showError(const QString& msg) {
 
 void NPDFUI::abandonProcess() {
     if (proc) {
+        // Don't flag an error when we kill then process.
+        disconnect(proc, 0, this, 0);
+
         if (autoClose) {
             // Set proc = 0 *before* we kill the process, so that the
             // exit signal is ignored.
@@ -275,19 +299,10 @@ void NPDFUI::abandonProcess() {
             tmpProc->kill();
             delete tmpProc;
         } else {
-            // Cut the process free so it is not killed when the
-            // KProcess is eventually destroyed.
-            // TODO: Not implemented in KDE4 nor Qt4 
-            // http://bugreports.qt.nokia.com/browse/QTBUG-9328
-            //proc->detach();
-            //delete proc;
-            //proc = 0;
-            
-            // Re-using code from above until we can fix detach
-            KProcess* tmpProc = proc;
+            // The process was already cut free when we called
+            // startDetached(); there is nothing more for us to do here.
+            delete proc;
             proc = 0;
-            tmpProc->kill();
-            delete tmpProc;
         }
     } else if (runPid) {
         if (autoClose)
@@ -296,16 +311,15 @@ void NPDFUI::abandonProcess() {
     }
 }
 
-void NPDFUI::processExited(KProcess* oldProc) {
+void NPDFUI::processExited(int exitCode, QProcess::ExitStatus exitStatus) {
     // Did we try to start a viewer but couldn't?
-    if (oldProc == proc) {
-        if ((proc->state() == QProcess::NotRunning) && (proc->exitStatus() != QProcess::NormalExit))
-            showError(i18n("<qt>Regina tried to open an external "
-                "PDF viewer but could not.  The failed command was:<p>"
-                "<tt>%1</tt><p>"
-                "You can fix this by editing the PDF options in "
-                "Regina's settings.</qt>").arg(Qt::escape(cmd)));
-        proc = 0;
-    }
+    if (! (exitStatus == QProcess::NormalExit && exitCode == 0))
+        showError(i18n("<qt>Regina tried to open an external "
+            "PDF viewer but could not.  The failed command was:<p>"
+            "<tt>%1</tt><p>"
+            "You can fix this by editing the PDF options in "
+            "Regina's settings.</qt>").arg(Qt::escape(cmd)));
+    delete proc;
+    proc = 0;
 }
 
