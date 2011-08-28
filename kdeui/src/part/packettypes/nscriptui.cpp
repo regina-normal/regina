@@ -54,9 +54,6 @@
 #include <qtablewidget.h>
 #include <set>
 
-#define SCRIPT_TABLE_WEIGHT 1
-#define SCRIPT_EDITOR_WEIGHT 3
-
 using regina::NPacket;
 using regina::NScript;
 
@@ -258,11 +255,6 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     varTable->setItemDelegateForColumn(0, nameDelegate);
     varTable->setItemDelegateForColumn(1, valueDelegate);
 
-    QSizePolicy pol = QSizePolicy(QSizePolicy::Expanding,
-        QSizePolicy::Expanding);
-    pol.setHorizontalStretch(SCRIPT_TABLE_WEIGHT);
-    pol.setVerticalStretch(SCRIPT_TABLE_WEIGHT);
-    varTable->setSizePolicy(pol); 
     splitter->addWidget(varTable);
    
     // --- Text Editor ---
@@ -286,11 +278,6 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         "area.  Any variables listed in the table above will be "
         "set before the script is run."));
 
-    pol = QSizePolicy(QSizePolicy::MinimumExpanding,
-        QSizePolicy::MinimumExpanding);
-    pol.setHorizontalStretch(SCRIPT_EDITOR_WEIGHT);
-    pol.setVerticalStretch(SCRIPT_EDITOR_WEIGHT);
-    view->setSizePolicy(pol); 
     splitter->addWidget(view);
 
     splitter->setTabOrder(view, varTable);
@@ -361,11 +348,9 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // --- Finalising ---
 
-    // Resize the components within the splitter so that the editor has most
-    // of the space.
-    // TODO: This splitter portioning does not seem to work.. :/
-    //splitter->setStretchFactor(0, SCRIPT_TABLE_WEIGHT);
-    //splitter->setStretchFactor(1, SCRIPT_EDITOR_WEIGHT);
+    // Make the editor get most of the space.
+    splitter->setStretchFactor(0 /* index */, 0 /* weight */);
+    splitter->setStretchFactor(1 /* index */, 1 /* weight */);
 
     // Fill the components with data.
     refresh();

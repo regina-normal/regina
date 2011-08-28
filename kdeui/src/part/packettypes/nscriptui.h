@@ -139,6 +139,12 @@ class ScriptVarTable : public QTableWidget {
          * the script, or commiting changes to the calculation engine).
          */
         void endEdit();
+
+        /**
+         * Reimplemented to request less space than a normal table,
+         * which gives the editor more room to breathe.
+         */
+        virtual QSize sizeHint() const;
 };
 
 /**
@@ -241,6 +247,11 @@ inline void ScriptVarTable::endEdit() {
     // This will close any editor that might currently be open.
     QModelIndex index(currentIndex());
     currentChanged(index, index);
+}
+
+inline QSize ScriptVarTable::sizeHint() const {
+    QSize s = QTableWidget::sizeHint();
+    return QSize(s.width(), s.height() / 3 * 2);
 }
 
 #endif
