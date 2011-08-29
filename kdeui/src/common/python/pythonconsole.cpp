@@ -132,6 +132,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     connect(act, SIGNAL(triggered()), this, SLOT(saveLog()));
     menuConsole->addAction(act);
 
+    menuConsole->addSeparator();
 
     act = actionCollection()->addAction("console_close");
     act->setText(i18n("&Close"));
@@ -139,20 +140,19 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     act->setShortcut(tr("Ctrl+d"));
     act->setToolTip(i18n("Close Python console"));
     connect(act, SIGNAL(triggered()), this, SLOT(close()));
-    menuConsole->insertSeparator(act);
     menuConsole->addAction(act);
 
-    KAction* actCopy = actionCollection()->addAction("edit_copy_session");
-    actCopy->setText(i18n("&Copy From Session"));
-    actCopy->setIcon(KIcon("edit-copy"));
-    actCopy->setShortcut(tr("Shift+Ctrl+c"));
-    actCopy->setToolTip(i18n(
+    act = actionCollection()->addAction("edit_copy_session");
+    act->setText(i18n("&Copy From Session"));
+    act->setIcon(KIcon("edit-copy"));
+    act->setShortcut(tr("Shift+Ctrl+c"));
+    act->setToolTip(i18n(
         "Copy selected text from the session log to the clipboard "));
-    connect(actCopy, SIGNAL(triggered()), session, SLOT(copy()));
-    actCopy->setEnabled(false);
-    connect(session, SIGNAL(copyAvailable(bool)), actCopy,
+    connect(act, SIGNAL(triggered()), session, SLOT(copy()));
+    act->setEnabled(false);
+    connect(session, SIGNAL(copyAvailable(bool)), act,
         SLOT(setEnabled(bool)));
-    menuEdit->addAction(actCopy);
+    menuEdit->addAction(act);
 
     act = actionCollection()->addAction("edit_select_all_session");
     act->setText(i18n("Select &All From Session"));
@@ -162,6 +162,54 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         "Selected all text in the session log"));
     connect(act, SIGNAL(triggered()), session, SLOT(selectAll()));
     menuEdit->addAction(act);
+
+    /*
+    menuEdit->addSeparator();
+
+    // TODO: Enable iff text is selected (current signal is wrong)
+    act = actionCollection()->addAction("edit_cut_input");
+    act->setText(i18n("Cut From Input"));
+    act->setIcon(KIcon("edit-cut"));
+    act->setShortcut(tr("Ctrl+x"));
+    act->setToolTip(i18n(
+        "Cut selected text from the input area to the clipboard "));
+    connect(act, SIGNAL(triggered()), input, SLOT(cut()));
+    act->setEnabled(false);
+    connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
+    menuEdit->addAction(act);
+
+    // TODO: Enable iff text is selected (current signal is wrong)
+    act = actionCollection()->addAction("edit_copy_input");
+    act->setText(i18n("Copy From Input"));
+    act->setIcon(KIcon("edit-copy"));
+    act->setShortcut(tr("Ctrl+c"));
+    act->setToolTip(i18n(
+        "Copy selected text from the input area to the clipboard "));
+    connect(act, SIGNAL(triggered()), input, SLOT(copy()));
+    act->setEnabled(false);
+    connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
+    menuEdit->addAction(act);
+
+    // TODO: Enable iff clipboard has text (current signal is wrong)
+    act = actionCollection()->addAction("edit_paste_input");
+    act->setText(i18n("Paste To Input"));
+    act->setIcon(KIcon("edit-paste"));
+    act->setShortcut(tr("Ctrl+v"));
+    act->setToolTip(i18n(
+        "Paste text from the clipboard into the input area"));
+    connect(act, SIGNAL(triggered()), input, SLOT(paste()));
+    act->setEnabled(false);
+    connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
+    menuEdit->addAction(act);
+
+    act = actionCollection()->addAction("edit_select_all_input");
+    act->setText(i18n("Select All From Input"));
+    act->setIcon(KIcon("edit-select-all"));
+    act->setShortcut(tr("Ctrl+a"));
+    act->setToolTip(i18n("Selected all text in the input area"));
+    connect(act, SIGNAL(triggered()), input, SLOT(selectAll()));
+    menuEdit->addAction(act);
+    */
 
     act = actionCollection()->addAction("help_scripting");
     act->setText(i18n("&Scripting Overview"));
@@ -182,9 +230,10 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
     menuHelp->addAction(act);
 
+    menuHelp->addSeparator();
+
     act = actionCollection()->addAction(
         KStandardAction::WhatsThis, this, SLOT(contextHelpActivated()) );
-    menuHelp->insertSeparator(act);
     menuHelp->addAction(act);
     
     menuConsole->setTitle(i18n("&Console"));
