@@ -195,3 +195,21 @@ visit the <i>File</i> menu, select <i>Export</i> and then
 in the dialog that appears, and press <i>OK</i>.
 </html>
 </tip>
+<tip category="Regina">
+<html>
+<p>
+Finding it hard to read embedded PDF documents?  If your Regina window
+is small and you are using the embedded PDF viewer, you
+might find that space is limited and the PDF shrinks to a very small size.
+<p>
+If you click inside the PDF, you will see Okular's own buttons
+and menu items.  You can zoom in and out, or create more space by hiding
+the side navigation panel (hit <b>F7</b> or see the <i>Settings</i> menu).
+<p>
+If you want the PDF in a window of its own, press the
+paper clip in the top-right corner to undock it.
+Alternatively, you can configure Regina to open all PDFs in a separate
+application: in Regina's <i>PDF Options</i> panel, uncheck
+<i>"Use embedded viewer if possible"</i>.
+</html>
+</tip>
