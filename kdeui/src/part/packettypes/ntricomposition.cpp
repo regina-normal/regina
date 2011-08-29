@@ -161,15 +161,6 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     details->setSelectionMode(QAbstractItemView::SingleSelection);
     details->setWhatsThis(msg);
     layout->addWidget(details, 1);
-
-    // Set up context menus.
-    detailsMenu = new QMenu(details);
-    detailsMenu->addAction(i18n("&Copy to Clipboard"),this,
-        SLOT(detailsCopy()));
-    connect(details,
-        // TODO: broken signal
-        SIGNAL(contextMenuRequested(QTreeWidgetItem*, const QPoint&, int)),
-        this, SLOT(detailsPopup(QTreeWidgetItem*, const QPoint&, int)));
 }
 
 regina::NPacket* NTriCompositionUI::getPacket() {
@@ -1079,16 +1070,10 @@ QString NTriCompositionUI::matrixString(const regina::NMatrix2& matrix) {
         arg(matrix[0][0]).arg(matrix[0][1]).arg(matrix[1][0]).arg(matrix[1][1]);
 }
 
-void NTriCompositionUI::detailsPopup(QTreeWidgetItem* item, const QPoint& pos,
-        int) {
-    if (item) {
-        detailsLastSelection = item->text(0);
-        detailsMenu->popup(pos);
-    }
-}
-
 void NTriCompositionUI::detailsCopy() {
-    QApplication::clipboard()->setText(detailsLastSelection,
-        QClipboard::Clipboard);
+    if (details->selectedItems().empty())
+        return;
+    QApplication::clipboard()->setText(
+        details->selectedItems().front()->text(0), QClipboard::Clipboard);
 }
 

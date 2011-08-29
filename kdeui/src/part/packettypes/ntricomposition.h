@@ -88,8 +88,6 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         QTreeWidget* details;
         QTreeWidgetItem* components;
         QTreeWidgetItem* lastComponent;
-        QMenu* detailsMenu;
-        QString detailsLastSelection;
 
     public:
         /**
@@ -160,7 +158,6 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         /**
          * Actions for the composition details list.
          */
-        void detailsPopup(QTreeWidgetItem* item, const QPoint& pos, int);
         void detailsCopy();
 };
 
