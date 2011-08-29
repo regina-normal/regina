@@ -167,13 +167,12 @@ void ReginaPart::dock(PacketPane* newPane) {
 
     KTextEditor::Document* doc = newPane->getTextComponent();
     if (doc) {
-        newPane->registerEditOperation(actCut, PacketPane::editCut);
-        newPane->registerEditOperation(actCopy, PacketPane::editCopy);
-        newPane->registerEditOperation(actPaste, PacketPane::editPaste);
+        newPane->registerEditOperations(doc->views().front(),
+            actCut, actCopy, actPaste);
 
         // Don't plug the full GUI; there's way too much stuff that we
         // don't want (like Save and Save-As, for instance).
-        // factory()->addClient(doc->activeView());
+        // factory()->addClient(doc->views().front());
     }
 }
 
@@ -181,17 +180,8 @@ void ReginaPart::isClosing(PacketPane* closingPane) {
     allPanes.removeAll(closingPane);
 }
 
-void ReginaPart::hasUndocked(PacketPane* undockedPane) {
-    KTextEditor::Document* doc = undockedPane->getTextComponent();
-    if (doc) {
-        // Don't plug the full GUI; there's way too much stuff that we
-        // don't want (like Save and Save-As, for instance).
-        // factory()->removeClient(doc->activeView());
-
-        undockedPane->deregisterEditOperation(actCut, PacketPane::editCut);
-        undockedPane->deregisterEditOperation(actCopy, PacketPane::editCopy);
-        undockedPane->deregisterEditOperation(actPaste, PacketPane::editPaste);
-    }
+void ReginaPart::aboutToUndock(PacketPane* undockedPane) {
+    undockedPane->deregisterEditOperations();
 
     if (dockedPane == undockedPane) {
         unplugActionList("packet_type_menu");
@@ -444,7 +434,7 @@ void ReginaPart::pythonConsole() {
 void ReginaPart::floatDockedPane() {
     // Delegate the entire procedure to PacketPane::floatPane().
     // Processing will return to this class when PacketPane calls
-    // ReginaPart::hasUndocked().
+    // ReginaPart::aboutToUndock().
     if (dockedPane)
         dockedPane->floatPane();
 }
@@ -461,7 +451,7 @@ bool ReginaPart::closeDockedPane() {
     // Close it.  Note that queryClose() has already done the
     // deregistration for us.
     PacketPane* closedPane = dockedPane;
-    hasUndocked(dockedPane);
+    aboutToUndock(dockedPane);
 
     // At this point dockedPane is already 0.
     delete closedPane;

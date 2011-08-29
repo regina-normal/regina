@@ -105,7 +105,7 @@ void NTextUI::refresh() {
             data.truncate(data.length() - 1);
 
         document->setText(data);
-        document->activeView()->setCursorPosition(KTextEditor::Cursor(0, 0));
+        document->views().front()->setCursorPosition(KTextEditor::Cursor(0, 0));
     }
 
     if (! wasReadWrite)

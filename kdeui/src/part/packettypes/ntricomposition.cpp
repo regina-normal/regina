@@ -1070,10 +1070,3 @@ QString NTriCompositionUI::matrixString(const regina::NMatrix2& matrix) {
         arg(matrix[0][0]).arg(matrix[0][1]).arg(matrix[1][0]).arg(matrix[1][1]);
 }
 
-void NTriCompositionUI::detailsCopy() {
-    if (details->selectedItems().empty())
-        return;
-    QApplication::clipboard()->setText(
-        details->selectedItems().front()->text(0), QClipboard::Clipboard);
-}
-

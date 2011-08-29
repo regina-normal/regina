@@ -36,6 +36,7 @@
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kstandardaction.h>
+#include <ktexteditor/document.h>
 
 #include <QLinkedList>
 
@@ -51,14 +52,12 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     
     // Set up our actions.
-    if (newPane->getTextComponent()) {
-        KAction* cut = KStandardAction::cut(0, 0, actionCollection());
-        KAction* copy = KStandardAction::copy(0, 0, actionCollection());
-        KAction* paste = KStandardAction::paste(0, 0, actionCollection());
-
-        newPane->registerEditOperation(cut, PacketPane::editCut);
-        newPane->registerEditOperation(copy, PacketPane::editCopy);
-        newPane->registerEditOperation(paste, PacketPane::editPaste);
+    KTextEditor::Document* doc = newPane->getTextComponent();
+    if (doc) {
+        newPane->registerEditOperations(doc->views().front(),
+            KStandardAction::cut(0, 0, actionCollection()),
+            KStandardAction::copy(0, 0, actionCollection()),
+            KStandardAction::paste(0, 0, actionCollection()));
     }
 
     createGUI("packetwindow.rc");

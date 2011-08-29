@@ -46,6 +46,7 @@ class PacketPane;
 class PacketWindow;
 class QLabel;
 class QToolButton;
+class QTreeWidget;
 class ReginaPart;
 
 namespace KTextEditor {
@@ -310,10 +311,10 @@ class PacketPane : public QWidget, public regina::NPacketListener {
 
     public:
         /**
-         * The list of edit operations for which actions can be
-         * registered and deregistered.
+         * The possible types of target for edit operations.
          */
-        enum EditOperation { editCut, editCopy, editPaste };
+        enum EditTarget { editNone = 0,
+            editKTextEditorView, editQTreeWidgetSingleSelection };
 
     private:
         /**
@@ -349,11 +350,13 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         KActionMenu* packetTypeMenu;
 
         /**
-         * Externally registered actions
+         * Externally registered edit actions and their sources
          */
-        KAction* extCut;
-        KAction* extCopy;
-        KAction* extPaste;
+        KAction* editCut;
+        KAction* editCopy;
+        KAction* editPaste;
+        QWidget* editTarget;
+        EditTarget editTargetType;
 
     public:
         /**
@@ -429,44 +432,30 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         bool queryClose();
 
         /**
-         * Registers or deregisters standard editor actions with the
-         * primary text component of this interface.  If this interface
-         * has no primary text component then these routines do nothing.
+         * Registers or deregisters standard editor actions with an
+         * internal component of this interface.
          *
          * Registered actions will be connected to appropriate edit
-         * operations in the text component, and will be enabled and disabled
-         * over time according to the current status of the packet pane
-         * and its primary text component.
+         * operations in the given component, and will be enabled and disabled
+         * over time according to the current status of the component and
+         * the enclosing packet pane.
          *
-         * When an action is deregistered, these relationships will be
-         * broken and the action will be left in a disabled state.
+         * When the actions are deregistered, these relationships will be
+         * broken and the actions will be left in a disabled state.
          *
-         * Only one action for each operation may be registered at a
-         * time.  Each registered action for an operation should be
-         * deregistered before a new action is registered in its place.
-         *
-         * The only exception to this rule is if a currently registered
-         * action is to be destroyed; in this case a new action (which
-         * may be a null pointer) may simply be registered over top of
-         * it, though this must be done before the action is destroyed
-         * or else a crash will occur.
+         * Only one set of editor actions may be registered at a time.
+         * Any attempt to register a new set of actions will
+         * automatically deregister any previously registered actions.
          *
          * When a packet pane is destroyed, it is not a requirement that
          * currently registered actions be deregistered beforehand,
          * though the final enabled/disabled status of any remaining
          * actions that are not deregistered is not guaranteed.
-         *
-         * Passing a null pointer to a registration routine will not
-         * register any new actions.  The only situation in which doing
-         * this might be useful is when an action is to be destroyed but is
-         * not being deregistered (see the earlier paragraph that
-         * describes this case).
-         *
-         * Passing a null pointer to a deregistration routine will have
-         * no effect whatsoever.
          */
-        void registerEditOperation(KAction* act, EditOperation op);
-        void deregisterEditOperation(KAction* act, EditOperation op);
+        void registerEditOperations(KTextEditor::View* component,
+            KAction* actCut, KAction* actCopy, KAction* actPaste);
+        void registerEditOperations(QTreeWidget* component, KAction* actCopy);
+        void deregisterEditOperations();
 
         /**
          * NPacketListener overrides.
@@ -616,6 +605,12 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Allow GUI updates from within a non-GUI thread.
          */
         void customEvent(QEvent* evt);
+
+    private slots:
+        /**
+         * Copy the selected line, if any, from the registered QTreeWidget.
+         */
+        void copyEditTreeWidgetLine();
 };
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :

@@ -153,12 +153,6 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         static QString edgeString(unsigned long tetIndex,
             const regina::NPerm4& roles, int startPreimage, int endPreimage);
         static QString matrixString(const regina::NMatrix2& matrix);
-
-    private slots:
-        /**
-         * Actions for the composition details list.
-         */
-        void detailsCopy();
 };
 
 #endif
