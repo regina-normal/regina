@@ -493,6 +493,13 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     invariants->setHeaderItem(header);
 
     invArea->addStretch(1);
+
+    QLabel* warning = new QLabel(i18n("<qt><b>Warning:</b> These are "
+        "floating point approximations only, with no guaranteed level "
+        "of accuracy.</qt>"));
+    warning->setWordWrap(true);
+    warning->setAlignment(Qt::AlignCenter);
+    layout->addWidget(warning);
 }
 
 regina::NPacket* NTriTuraevViroUI::getPacket() {
