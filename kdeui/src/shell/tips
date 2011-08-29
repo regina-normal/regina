@@ -180,9 +180,9 @@ The Callahan-Hildebrand-Weeks dehydration string for a triangulation (if
 it exists) is shown in the <i>Composition</i> tab of the triangulation
 viewer.
 <p>
-You can copy this dehydration string by right-clicking on the
-corresponding line of text in the composition tree, and then selecting
-<i>Copy to Clipboard</i> from the pop-up menu that appears.
+You can copy this dehydration string to the clipboard by selecting the
+corresponding line of text in the composition tab, and then
+selecting <i>Copy</i> from the <i>Edit</i> menu.
 </html>
 </tip>
 <tip category="Regina">
