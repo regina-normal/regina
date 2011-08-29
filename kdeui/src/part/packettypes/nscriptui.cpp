@@ -33,6 +33,7 @@
 // UI includes:
 #include "nscriptui.h"
 #include "../packetchooser.h"
+#include "../packeteditiface.h"
 #include "../packetmanager.h"
 #include "../reginapart.h"
 
@@ -275,6 +276,8 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         "area.  Any variables listed in the table above will be "
         "set before the script is run."));
 
+    editIface = new PacketEditTextEditor(view);
+
     splitter->addWidget(view);
 
     splitter->setTabOrder(view, varTable);
@@ -368,6 +371,7 @@ NScriptUI::~NScriptUI() {
     // Clean up.
     delete nameDelegate;
     delete valueDelegate;
+    delete editIface;
     delete document;
 }
 
@@ -377,14 +381,6 @@ NPacket* NScriptUI::getPacket() {
 
 QWidget* NScriptUI::getInterface() {
     return ui;
-}
-
-QWidget* NScriptUI::getEditComponent() {
-    return view;
-}
-
-PacketEdit::Target NScriptUI::getEditComponentType() {
-    return PacketEdit::editKTextEditorView;
 }
 
 const QLinkedList<KAction*>& NScriptUI::getPacketTypeActions() {

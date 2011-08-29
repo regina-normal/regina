@@ -26,73 +26,66 @@
 
 /* end stub */
 
-/*! \file ntextui.h
- *  \brief Provides an interface for viewing text packets.
- */
+// UI includes:
+#include "packeteditiface.h"
 
-#ifndef __NTEXTUI_H
-#define __NTEXTUI_H
+#include <qclipboard.h>
+#include <qtreewidget.h>
+#include <kapplication.h>
+#include <ktexteditor/document.h>
+#include <ktexteditor/view.h>
 
-#include "../packetui.h"
+PacketEditTextEditor::PacketEditTextEditor(KTextEditor::View* view) :
+        view_(view) {
+    connect(this, SIGNAL(sendCutToEditor()), view, SLOT(cut()));
+    connect(this, SIGNAL(sendCopyToEditor()), view, SLOT(copy()));
+    connect(this, SIGNAL(sendPasteToEditor()), view, SLOT(paste()));
 
-namespace KTextEditor {
-    class Document;
-    class EditInterface;
-    class View;
-};
-
-namespace regina {
-    class NPacket;
-    class NText;
-};
-
-/**
- * A packet interface for viewing text packets.
- */
-class NTextUI : public QObject, public PacketUI {
-    Q_OBJECT
-
-    private:
-        /**
-         * Packet details
-         */
-        regina::NText* text;
-
-        /**
-         * Internal components
-         */
-        KTextEditor::Document* document;
-        KTextEditor::View* view;
-        PacketEditIface* editIface;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        NTextUI(regina::NText* packet, PacketPane* newEnclosingPane,
-                KTextEditor::Document* doc);
-        ~NTextUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        PacketEditIface* getEditIface();
-        QString getPacketMenuText() const;
-        void commit();
-        void refresh();
-        void setReadWrite(bool readWrite);
-
-    public slots:
-        /**
-         * Called whenever the text in the interface changes.
-         */
-        void notifyTextChanged();
-};
-
-inline PacketEditIface* NTextUI::getEditIface() {
-    return editIface;
+    connect(view_, SIGNAL(selectionChanged(KTextEditor::View*)),
+        this, SLOT(fireStatesChanged()));
+    connect(KApplication::kApplication()->clipboard(), SIGNAL(dataChanged()),
+        this, SLOT(fireStatesChanged()));
 }
 
-#endif
+bool PacketEditTextEditor::cutEnabled() const {
+    return view_->selection() && view_->document()->isReadWrite();
+}
+
+bool PacketEditTextEditor::copyEnabled() const {
+    return view_->selection();
+}
+
+bool PacketEditTextEditor::pasteEnabled() const {
+    return (! (KApplication::kApplication()->clipboard()->text(
+        QClipboard::Clipboard).isNull())) &&
+        view_->document()->isReadWrite();
+}
+
+void PacketEditTextEditor::cut() {
+    emit sendCutToEditor();
+}
+
+void PacketEditTextEditor::copy() {
+    emit sendCopyToEditor();
+}
+
+void PacketEditTextEditor::paste() {
+    emit sendPasteToEditor();
+}
+
+PacketEditTreeWidgetSingleLine::PacketEditTreeWidgetSingleLine(
+        QTreeWidget* tree) : tree_(tree) {
+    connect(tree_, SIGNAL(itemSelectionChanged()), this,
+        SLOT(fireStatesChanged()));
+}
+
+bool PacketEditTreeWidgetSingleLine::copyEnabled() const {
+    return (! tree_->selectedItems().empty());
+}
+
+void PacketEditTreeWidgetSingleLine::copy() {
+    if (! tree_->selectedItems().empty())
+        QApplication::clipboard()->setText(
+            tree_->selectedItems().front()->text(0), QClipboard::Clipboard);
+}
+

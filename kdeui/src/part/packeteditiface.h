@@ -26,73 +26,108 @@
 
 /* end stub */
 
-/*! \file ntextui.h
- *  \brief Provides an interface for viewing text packets.
+/*! \file packeteditiface.h
+ *  \brief Provides a means by which packet interfaces can interact with
+ *  standard edit and clipboard actions.
  */
 
-#ifndef __NTEXTUI_H
-#define __NTEXTUI_H
+#ifndef __PACKETEDITIFACE_H
+#define __PACKETEDITIFACE_H
 
-#include "../packetui.h"
+#include <qobject.h>
+
+class QTreeWidget;
 
 namespace KTextEditor {
-    class Document;
-    class EditInterface;
     class View;
 };
 
-namespace regina {
-    class NPacket;
-    class NText;
+class PacketEditIface : public QObject {
+    Q_OBJECT
+
+    public:
+        virtual bool cutEnabled() const;
+        virtual bool copyEnabled() const;
+        virtual bool pasteEnabled() const;
+
+    signals:
+        void statesChanged();
+
+    public slots:
+        virtual void cut();
+        virtual void copy();
+        virtual void paste();
+
+    protected slots:
+        void fireStatesChanged();
 };
 
-/**
- * A packet interface for viewing text packets.
- */
-class NTextUI : public QObject, public PacketUI {
+class PacketEditTextEditor : public PacketEditIface {
     Q_OBJECT
 
     private:
-        /**
-         * Packet details
-         */
-        regina::NText* text;
-
-        /**
-         * Internal components
-         */
-        KTextEditor::Document* document;
-        KTextEditor::View* view;
-        PacketEditIface* editIface;
+        KTextEditor::View* view_;
 
     public:
-        /**
-         * Constructor and destructor.
-         */
-        NTextUI(regina::NText* packet, PacketPane* newEnclosingPane,
-                KTextEditor::Document* doc);
-        ~NTextUI();
+        PacketEditTextEditor(KTextEditor::View* view);
 
-        /**
-         * PacketUI overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        PacketEditIface* getEditIface();
-        QString getPacketMenuText() const;
-        void commit();
-        void refresh();
-        void setReadWrite(bool readWrite);
+        virtual bool cutEnabled() const;
+        virtual bool copyEnabled() const;
+        virtual bool pasteEnabled() const;
 
     public slots:
-        /**
-         * Called whenever the text in the interface changes.
-         */
-        void notifyTextChanged();
+        virtual void cut();
+        virtual void copy();
+        virtual void paste();
+
+    /**
+     * Hmm, seems we can't call cut/copy/paste directly on the text
+     * editor; instead we have to go via signals and slots.
+     */
+    signals:
+        void sendCutToEditor();
+        void sendCopyToEditor();
+        void sendPasteToEditor();
 };
 
-inline PacketEditIface* NTextUI::getEditIface() {
-    return editIface;
+class PacketEditTreeWidgetSingleLine : public PacketEditIface {
+    Q_OBJECT
+
+    private:
+        QTreeWidget* tree_;
+
+    public:
+        PacketEditTreeWidgetSingleLine(QTreeWidget* tree);
+
+        virtual bool copyEnabled() const;
+
+    public slots:
+        virtual void copy();
+};
+
+inline bool PacketEditIface::cutEnabled() const {
+    return false;
+}
+
+inline bool PacketEditIface::copyEnabled() const {
+    return false;
+}
+
+inline bool PacketEditIface::pasteEnabled() const {
+    return false;
+}
+
+inline void PacketEditIface::cut() {
+}
+
+inline void PacketEditIface::copy() {
+}
+
+inline void PacketEditIface::paste() {
+}
+
+inline void PacketEditIface::fireStatesChanged() {
+    emit statesChanged();
 }
 
 #endif

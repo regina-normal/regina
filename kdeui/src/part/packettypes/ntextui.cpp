@@ -30,6 +30,7 @@
 #include "packet/ntext.h"
 
 // UI includes:
+#include "../packeteditiface.h"
 #include "ntextui.h"
 
 #include <cstring>
@@ -55,6 +56,8 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
     if (iface)
         iface->setConfigValue("dynamic-word-wrap",true);
 
+    editIface = new PacketEditTextEditor(view);
+
     refresh();
 
     connect(document, SIGNAL(textChanged(KTextEditor::Document*)),
@@ -62,6 +65,7 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
 }
 
 NTextUI::~NTextUI() {
+    delete editIface;
     delete document;
 }
 
@@ -71,14 +75,6 @@ NPacket* NTextUI::getPacket() {
 
 QWidget* NTextUI::getInterface() {
     return view;
-}
-
-QWidget* NTextUI::getEditComponent() {
-    return view;
-}
-
-PacketEdit::Target NTextUI::getEditComponentType() {
-    return PacketEdit::editKTextEditorView;
 }
 
 QString NTextUI::getPacketMenuText() const {

@@ -45,6 +45,7 @@ class KActionCollection;
 class QSplitter;
 
 namespace KTextEditor {
+    class Document;
     class EditInterface;
     class View;
 };
@@ -168,6 +169,7 @@ class NScriptUI : public QObject, public PacketUI {
         QStyledItemDelegate* valueDelegate;
         KTextEditor::Document* document;
         KTextEditor::View* view;
+        PacketEditIface* editIface;
 
         /**
          * Script actions
@@ -190,8 +192,7 @@ class NScriptUI : public QObject, public PacketUI {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        virtual QWidget* getEditComponent();
-        virtual PacketEdit::Target getEditComponentType();
+        PacketEditIface* getEditIface();
         const QLinkedList<KAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
         void commit();
@@ -253,6 +254,10 @@ inline void ScriptVarTable::endEdit() {
 inline QSize ScriptVarTable::sizeHint() const {
     QSize s = QTableWidget::sizeHint();
     return QSize(s.width(), s.height() / 3 * 2);
+}
+
+inline PacketEditIface* NScriptUI::getEditIface() {
+    return editIface;
 }
 
 #endif

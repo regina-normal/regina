@@ -33,6 +33,7 @@
 // UI includes:
 #include "eventids.h"
 #include "flatbutton.h"
+#include "packeteditiface.h"
 #include "packetmanager.h"
 #include "packetui.h"
 #include "packetwindow.h"
@@ -47,26 +48,13 @@
 #include <kstdguiitem.h>
 #include <ktoolbar.h>
 #include <qboxlayout.h>
-#include <qclipboard.h>
 #include <qevent.h>
 #include <qlabel.h>
 #include <qlinkedlist.h>
 #include <qtreewidget.h>
 #include <qwhatsthis.h>
-#include <ktexteditor/document.h>
-#include <ktexteditor/view.h>
-
-#define CLIPBOARD_HAS_TEXT \
-    (! (KApplication::kApplication()->clipboard()-> \
-        text(QClipboard::Clipboard).isNull()) )
 
 using regina::NPacket;
-
-namespace {
-    // int RIGHT_ALIGN_SEPARATOR_ID = 137;
-        /**< Random integer that shouldn't clash with any other toolbar
-             item ID. */
-}
 
 QLinkedList<KAction*> PacketUI::noActions;
 
@@ -131,8 +119,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent) : QWidget(parent),
         part(newPart), frame(0), dirty(false), dirtinessBroken(false),
         emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
-        editCut(0), editCopy(0), editPaste(0),
-        editTarget(0), editTargetType(PacketEdit::editNone) {
+        editCut(0), editCopy(0), editPaste(0) {
     // Initialise a vertical layout with no padding or spacing.
     QBoxLayout* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -311,71 +298,54 @@ bool PacketPane::queryClose() {
 
 void PacketPane::registerEditOperations(KAction* actCut, KAction* actCopy,
         KAction* actPaste) {
-    if (editTargetType)
-        deregisterEditOperations();
-
-    editTargetType = mainUI->getEditComponentType();
-    if (editTargetType == PacketEdit::editNone)
-        return;
-    editTarget = mainUI->getEditComponent();
+    deregisterEditOperations();
 
     editCut = actCut;
     editCopy = actCopy;
     editPaste = actPaste;
 
-    updateClipboardActions();
+    PacketEditIface* iface = mainUI->getEditIface();
+    if (iface) {
+        connect(iface, SIGNAL(statesChanged()), this,
+            SLOT(updateClipboardActions()));
 
-    switch (editTargetType) {
-        case PacketEdit::editKTextEditorView:
-            connect(editCut, SIGNAL(triggered()), editTarget, SLOT(cut()));
-            connect(editCopy, SIGNAL(triggered()), editTarget, SLOT(copy()));
-            connect(editPaste, SIGNAL(triggered()), editTarget, SLOT(paste()));
-
-            connect(editTarget, SIGNAL(selectionChanged(KTextEditor::View*)),
-                this, SLOT(updateClipboardActions()));
-            connect(KApplication::kApplication()->clipboard(),
-                SIGNAL(dataChanged()), this, SLOT(updateClipboardActions()));
-
-            break;
-
-        case PacketEdit::editQTreeWidgetSingleSelection:
-            connect(editCopy, SIGNAL(triggered()), this,
-                SLOT(copyEditTreeWidgetLine()));
-
-            connect(editTarget, SIGNAL(itemSelectionChanged()), this,
-                SLOT(updateClipboardActions()));
-
-        case PacketEdit::editNone:
-            break;
+        if (editCut)
+            connect(editCut, SIGNAL(triggered()), iface, SLOT(cut()));
+        if (editCopy)
+            connect(editCopy, SIGNAL(triggered()), iface, SLOT(copy()));
+        if (editPaste)
+            connect(editPaste, SIGNAL(triggered()), iface, SLOT(paste()));
     }
+
+    updateClipboardActions();
 }
 
 void PacketPane::deregisterEditOperations() {
-    if (! editTarget)
-        return;
+    PacketEditIface* iface = mainUI->getEditIface();
+    if (iface) {
+        disconnect(iface, SIGNAL(statesChanged()), this,
+            SLOT(updateClipboardActions()));
 
-    disconnect(editTarget, 0, this, SLOT(updateClipboardActions()));
-    disconnect(KApplication::kApplication()->clipboard(),
-        SIGNAL(dataChanged()), this, SLOT(updateClipboardActions()));
+        if (editCut)
+            disconnect(editCut, SIGNAL(triggered()), iface, SLOT(cut()));
+        if (editCopy)
+            disconnect(editCopy, SIGNAL(triggered()), iface, SLOT(copy()));
+        if (editPaste)
+            disconnect(editPaste, SIGNAL(triggered()), iface, SLOT(paste()));
+    }
 
     if (editCut) {
-        disconnect(editCut, SIGNAL(triggered()), editTarget, 0);
         editCut->setEnabled(false);
         editCut = 0;
     }
     if (editCopy) {
-        disconnect(editCopy, SIGNAL(triggered()), editTarget, 0);
         editCopy->setEnabled(false);
         editCopy = 0;
     }
     if (editPaste) {
-        disconnect(editPaste, SIGNAL(triggered()), editTarget, 0);
         editPaste->setEnabled(false);
         editPaste = 0;
     }
-
-    editTarget = 0;
-    editTargetType = PacketEdit::editNone;
 }
 
 void PacketPane::packetWasChanged(regina::NPacket*) {
@@ -619,28 +589,14 @@ void PacketPane::floatPane() {
 }
 
 void PacketPane::updateClipboardActions() {
-    switch (editTargetType) {
-        case PacketEdit::editKTextEditorView:
-            {
-                KTextEditor::View* view =
-                    static_cast<KTextEditor::View*>(editTarget);
-                KTextEditor::Document* edit = view->document();
+    PacketEditIface* iface = mainUI->getEditIface();
 
-                editCut->setEnabled(view->selection() && edit->isReadWrite());
-                editCopy->setEnabled(view->selection());
-                editPaste->setEnabled(
-                    CLIPBOARD_HAS_TEXT && edit->isReadWrite());
-            }
-            break;
-
-        case PacketEdit::editQTreeWidgetSingleSelection:
-            editCopy->setEnabled(! static_cast<QTreeWidget*>(editTarget)->
-                selectedItems().empty());
-            break;
-
-        case PacketEdit::editNone:
-            break;
-    }
+    if (editCut)
+        editCut->setEnabled(iface ? iface->cutEnabled() : false);
+    if (editCopy)
+        editCopy->setEnabled(iface ? iface->copyEnabled() : false);
+    if (editPaste)
+        editPaste->setEnabled(iface ? iface->pasteEnabled() : false);
 }
 
 void PacketPane::customEvent(QEvent* evt) {
@@ -654,12 +610,5 @@ void PacketPane::customEvent(QEvent* evt) {
         default:
             break;
     }
-}
-
-void PacketPane::copyEditTreeWidgetLine() {
-    QTreeWidget* tree = static_cast<QTreeWidget*>(editTarget);
-    if (tree && ! tree->selectedItems().empty())
-        QApplication::clipboard()->setText(
-            tree->selectedItems().front()->text(0), QClipboard::Clipboard);
 }
 

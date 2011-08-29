@@ -42,6 +42,7 @@
 class KAction;
 class KActionMenu;
 class KMainWindow;
+class PacketEditIface;
 class PacketPane;
 class PacketWindow;
 class QLabel;
@@ -49,22 +50,8 @@ class QToolButton;
 class QTreeWidget;
 class ReginaPart;
 
-namespace KTextEditor {
-    class Document;
-    class View;
-}
-
 namespace regina {
     class NPacket;
-};
-
-/**
- * The possible types of target for registered edit operations.
- */
-namespace PacketEdit {
-    enum Target { editNone = 0,
-                  editKTextEditorView,
-                  editQTreeWidgetSingleSelection };
 };
 
 /**
@@ -150,18 +137,13 @@ class PacketUI {
         virtual QWidget* getInterface() = 0;
 
         /**
-         * Return details of the widget that handles standard clipboard
-         * operations.  Standard clipboard actions will always be managed via
-         * PacketPane::registerEditOperations(), and so this widget must be
-         * one of the types that PacketPane supports.  See the
-         * PacketEdit::Target enum for the full list.
+         * Return details of the interface's interaction with standard
+         * edit and clipboard operations.  This may be 0 if there is no
+         * such interaction.
          *
-         * If this interface does not support standard clipboard operations,
-         * these routines should return 0 and PacketPane::editNone respectively.
-         * The default implementations do exactly this.
+         * The default implementation simply returns 0.
          */
-        virtual QWidget* getEditComponent();
-        virtual PacketEdit::Target getEditComponentType();
+        virtual PacketEditIface* getEditIface();
 
         /**
          * Return a list of actions specific to the particular type of
@@ -361,8 +343,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         KAction* editCut;
         KAction* editCopy;
         KAction* editPaste;
-        QWidget* editTarget;
-        PacketEdit::Target editTargetType;
 
     public:
         /**
@@ -609,12 +589,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Allow GUI updates from within a non-GUI thread.
          */
         void customEvent(QEvent* evt);
-
-    private slots:
-        /**
-         * Copy the selected line, if any, from the registered QTreeWidget.
-         */
-        void copyEditTreeWidgetLine();
 };
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
@@ -624,12 +598,8 @@ inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
 inline PacketUI::~PacketUI() {
 }
 
-inline QWidget* PacketUI::getEditComponent() {
+inline PacketEditIface* PacketUI::getEditIface() {
     return 0;
-}
-
-inline PacketEdit::Target PacketUI::getEditComponentType() {
-    return PacketEdit::editNone;
 }
 
 inline const QLinkedList<KAction*>& PacketUI::getPacketTypeActions() {
