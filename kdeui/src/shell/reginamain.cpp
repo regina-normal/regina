@@ -471,6 +471,7 @@ void ReginaMain::setupActions() {
    
     act = actionCollection()->addAction("help_nohelp");
     act->setText(i18n("Handbook won't open?"));
+    act->setIcon(KIcon("dialog-cancel"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
     
     // All done!  Build the GUI.
