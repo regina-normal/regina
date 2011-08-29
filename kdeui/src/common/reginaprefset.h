@@ -37,6 +37,8 @@
 #include <QLinkedList>
 #include <QString>
 
+class QWidget;
+
 /**
  * A structure holding a single filename which may or may not be active
  * (such as a census file or a python library).
@@ -337,6 +339,12 @@ struct ReginaPrefSet {
      * file.
      */
     bool writePythonLibraries() const;
+
+    /**
+     * Opens the given section of the users' handbook in an appropriate
+     * manner.
+     */
+    void openHandbook(const char* section, QWidget* parentWidget);
 };
 
 inline GraphvizStatus::GraphvizStatus() : flag_(unknown.flag_) {

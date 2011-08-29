@@ -58,9 +58,7 @@
 #include <kparts/event.h>
 #include <kparts/partmanager.h>
 #include <krecentfilesaction.h>
-#include <krun.h>
 #include <kshortcutsdialog.h>
-#include <kstandarddirs.h>
 #include <kstdaccel.h>
 #include <kstdaction.h>
 #include <ktexteditor/document.h>
@@ -331,22 +329,7 @@ void ReginaMain::helpAboutApp() {
 }
 
 void ReginaMain::helpHandbook() {
-#ifdef __APPLE__
-    QString index = KStandardDirs::locate("html", "en/regina/index.html");
-    if (QFileInfo(index).exists()) {
-        // Just use the default Mac browser.
-        // Hmm.  Assume this command executes successfully, since on my
-        // fink it returns false even when it *does* execute successfully..!
-        KRun::runCommand(QString("open \"%1\"").arg(index), this);
-    } else
-        KMessageBox::sorry(this, i18n(
-            "<qt>The Regina handbook could "
-            "not be found.  Perhaps it is not installed?<p>"
-            "The handbook should be accessible as "
-            "<tt>%1/</tt>.</qt>").arg(index));
-#else
-    appHelpActivated();
-#endif
+    globalPrefs.openHandbook("index", this);
 }
 
 void ReginaMain::helpWhatsThis() {
@@ -358,24 +341,7 @@ void ReginaMain::helpTipOfDay() {
 }
 
 void ReginaMain::helpTrouble() {
-#ifdef __APPLE__
-    QString index = KStandardDirs::locate("html", "en/regina/index.html");
-    QString trouble = KStandardDirs::locate("html",
-        "en/regina/troubleshooting.html");
-    if (QFileInfo(trouble).exists()) {
-        // Just use the default Mac browser.
-        // Hmm.  Assume this command executes successfully, since on my
-        // fink it returns false even when it *does* execute successfully..!
-        KRun::runCommand(QString("open \"%1\"").arg(trouble), this);
-    } else
-        KMessageBox::sorry(this, i18n(
-            "<qt>The Regina handbook could "
-            "not be found.  Perhaps it is not installed?<p>"
-            "The handbook should be accessible as "
-            "<tt>%1/</tt>.</qt>").arg(index));
-#else
-    KToolInvocation::invokeHelp("troubleshooting");
-#endif
+    globalPrefs.openHandbook("troubleshooting", this);
 }
 
 void ReginaMain::helpNoHelp() {
