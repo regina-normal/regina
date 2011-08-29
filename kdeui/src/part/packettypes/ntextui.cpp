@@ -73,10 +73,6 @@ QWidget* NTextUI::getInterface() {
     return view;
 }
 
-KTextEditor::Document* NTextUI::getTextComponent() {
-    return document;
-}
-
 QWidget* NTextUI::getEditComponent() {
     return view;
 }

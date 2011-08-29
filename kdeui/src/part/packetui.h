@@ -150,16 +150,6 @@ class PacketUI {
         virtual QWidget* getInterface() = 0;
 
         /**
-         * Return the primary text component associated with this
-         * interface, or 0 if there is no primary text component.
-         * This routine should always return the same pointer throughout
-         * the life of this object.
-         *
-         * The default implementation of this routine simply returns 0.
-         */
-        virtual KTextEditor::Document* getTextComponent();
-
-        /**
          * Return details of the widget that handles standard clipboard
          * operations.  Standard clipboard actions will always be managed via
          * PacketPane::registerEditOperations(), and so this widget must be
@@ -169,9 +159,6 @@ class PacketUI {
          * If this interface does not support standard clipboard operations,
          * these routines should return 0 and PacketPane::editNone respectively.
          * The default implementations do exactly this.
-         *
-         * This routine should always return the same pointer throughout
-         * the life of this object.
          */
         virtual QWidget* getEditComponent();
         virtual PacketEdit::Target getEditComponentType();
@@ -393,7 +380,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Query components and actions.
          */
         regina::NPacket* getPacket();
-        KTextEditor::Document* getTextComponent();
         KActionMenu* getPacketTypeMenu();
         ReginaPart* getPart();
 
@@ -638,10 +624,6 @@ inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
 inline PacketUI::~PacketUI() {
 }
 
-inline KTextEditor::Document* PacketUI::getTextComponent() {
-    return 0;
-}
-
 inline QWidget* PacketUI::getEditComponent() {
     return 0;
 }
@@ -675,10 +657,6 @@ inline regina::NPacket* PacketPane::getPacket() {
 
 inline ReginaPart* PacketPane::getPart() {
     return part;
-}
-
-inline KTextEditor::Document* PacketPane::getTextComponent() {
-    return mainUI->getTextComponent();
 }
 
 inline bool PacketPane::isDirty() {

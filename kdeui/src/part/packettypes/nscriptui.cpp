@@ -379,10 +379,6 @@ QWidget* NScriptUI::getInterface() {
     return ui;
 }
 
-KTextEditor::Document* NScriptUI::getTextComponent() {
-    return document;
-}
-
 QWidget* NScriptUI::getEditComponent() {
     return view;
 }
