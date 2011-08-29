@@ -39,6 +39,8 @@
 
 #include <QDrag>
 #include <QVBoxLayout>
+#include <QWhatsThis>
+#include <kaboutapplicationdialog.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
@@ -56,7 +58,9 @@
 #include <kparts/event.h>
 #include <kparts/partmanager.h>
 #include <krecentfilesaction.h>
+#include <krun.h>
 #include <kshortcutsdialog.h>
+#include <kstandarddirs.h>
 #include <kstdaccel.h>
 #include <kstdaction.h>
 #include <ktexteditor/document.h>
@@ -71,7 +75,7 @@
 unsigned ReginaMain::objectNumber = 1;
 
 ReginaMain::ReginaMain() : KParts::MainWindow(),
-        currentPart(0) {
+        currentPart(0), aboutApp(0) {
 
     setAttribute(Qt::WA_DeleteOnClose);
     // Select a unique DCOP interface name.
@@ -85,6 +89,9 @@ ReginaMain::ReginaMain() : KParts::MainWindow(),
 
     // Accept drag and drop.
     setAcceptDrops(true);
+
+    // Don't use the standard Help menu; we'll provide our own.
+    setHelpMenuEnabled(false);
 
     // Set up our actions and status bar.
     setXMLFile("reginamain.rc");
@@ -101,6 +108,10 @@ ReginaMain::ReginaMain() : KParts::MainWindow(),
     manager = new KParts::PartManager(this);
     connect(manager, SIGNAL(activePartChanged(KParts::Part*)),
         this, SLOT(createGUI(KParts::Part*)));
+}
+
+ReginaMain::~ReginaMain() {
+    delete aboutApp;
 }
 
 void ReginaMain::setPreferences(const ReginaPrefSet& prefs) {
@@ -312,23 +323,67 @@ void ReginaMain::optionsPreferences() {
     dlg.exec();
 }
 
+void ReginaMain::helpAboutApp() {
+    if (! aboutApp)
+        aboutApp = new KAboutApplicationDialog(
+            KGlobal::mainComponent().aboutData(), this);
+    aboutApp->show();
+}
+
+void ReginaMain::helpHandbook() {
+#ifdef __APPLE__
+    QString index = KStandardDirs::locate("html", "en/regina/index.html");
+    if (QFileInfo(index).exists()) {
+        // Just use the default Mac browser.
+        // Hmm.  Assume this command executes successfully, since on my
+        // fink it returns false even when it *does* execute successfully..!
+        KRun::runCommand(QString("open \"%1\"").arg(index), this);
+    } else
+        KMessageBox::sorry(this, i18n(
+            "<qt>The Regina handbook could "
+            "not be found.  Perhaps it is not installed?<p>"
+            "The handbook should be accessible as "
+            "<tt>%1/</tt>.</qt>").arg(index));
+#else
+    appHelpActivated();
+#endif
+}
+
+void ReginaMain::helpWhatsThis() {
+    QWhatsThis::enterWhatsThisMode();
+}
+
 void ReginaMain::helpTipOfDay() {
     KTipDialog::showTip(this, QString::null, true);
 }
 
 void ReginaMain::helpTrouble() {
+#ifdef __APPLE__
+    QString index = KStandardDirs::locate("html", "en/regina/index.html");
+    QString trouble = KStandardDirs::locate("html",
+        "en/regina/troubleshooting.html");
+    if (QFileInfo(trouble).exists()) {
+        // Just use the default Mac browser.
+        // Hmm.  Assume this command executes successfully, since on my
+        // fink it returns false even when it *does* execute successfully..!
+        KRun::runCommand(QString("open \"%1\"").arg(trouble), this);
+    } else
+        KMessageBox::sorry(this, i18n(
+            "<qt>The Regina handbook could "
+            "not be found.  Perhaps it is not installed?<p>"
+            "The handbook should be accessible as "
+            "<tt>%1/</tt>.</qt>").arg(index));
+#else
     KToolInvocation::invokeHelp("troubleshooting");
+#endif
 }
 
 void ReginaMain::helpNoHelp() {
     KMessageBox::information(this,
         i18n("<qt>If you cannot view the Regina Handbook, it is probably "
-            "because you do not have the KDE3 Help Center installed.<p>"
+            "because you do not have the KDE Help Center installed.<p>"
             "Some users can fix this easily by installing the appropriate "
-            "package (such as <tt>khelpcenter</tt> or <tt>kdebase3</tt>).<p>"
-            "Some users cannot fix this problem, because their "
-            "GNU/Linux distribution has moved to KDE4 and no longer supports "
-            "KDE3.<p>"
+            "package (such as <tt>khelpcenter</tt> or <tt>kdebase4</tt>).<p>"
             "If all else fails, remember that you can always read the "
             "Regina Handbook online at "
             "<a href=\"http://regina.sourceforge.net/\">regina.sourceforge.net</a>.  "
@@ -416,6 +471,18 @@ void ReginaMain::setupActions() {
     connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
 
     // Help:
+    KStandardAction::aboutApp(this, SLOT(helpAboutApp()), actionCollection());
+
+    act = actionCollection()->addAction("help_handbook_custom");
+    act->setText(i18n("Regina &Handbook"));
+    act->setIcon(KIcon("help-contents"));
+    act->setShortcut(tr("F1"));
+    act->setWhatsThis(i18n("Open the Regina handbook.  This is the users' "
+        "guide for how to use Regina."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpHandbook()));
+
+    KStandardAction::whatsThis(this, SLOT(helpWhatsThis()), actionCollection());
+
     act = actionCollection()->addAction("help_engine");
     act->setText(i18n("&Python API Reference"));
     act->setIcon(KIcon("python_console"));
@@ -438,7 +505,6 @@ void ReginaMain::setupActions() {
     act->setText(i18n("Handbook won't open?"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
     
-
     // All done!  Build the GUI.
     createGUI(0);
 }

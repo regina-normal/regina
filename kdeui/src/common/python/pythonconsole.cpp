@@ -49,6 +49,8 @@
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kmessagebox.h>
+#include <krun.h>
+#include <kstandarddirs.h>
 #include <kstatusbar.h>
 #include <ktextedit.h>
 #include <qfile.h>
@@ -386,7 +388,23 @@ void PythonConsole::saveLog() {
 }
 
 void PythonConsole::scriptingOverview() {
+#ifdef __APPLE__
+    QString index = KStandardDirs::locate("html", "en/regina/index.html");
+    QString python = KStandardDirs::locate("html", "en/regina/python.html");
+    if (QFileInfo(python).exists()) {
+        // Just use the default Mac browser.
+        // Hmm.  Assume this command executes successfully, since on my
+        // fink it returns false even when it *does* execute successfully..!
+        KRun::runCommand(QString("open \"%1\"").arg(python), this);
+    } else
+        KMessageBox::sorry(this, i18n(
+            "<qt>The Regina handbook could "
+            "not be found.  Perhaps it is not installed?<p>"
+            "The handbook should be accessible as "
+            "<tt>%1/</tt>.</qt>").arg(index));
+#else
     KToolInvocation::invokeHelp("python", "regina");
+#endif
 }
 
 void PythonConsole::pythonReference() {

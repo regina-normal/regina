@@ -42,6 +42,7 @@
 
 class ExamplesAction;
 class KAction;
+class KDialog;
 class KRecentFilesAction;
 class KToggleAction;
 class KUrl;
@@ -98,6 +99,11 @@ class ReginaMain : public KParts::MainWindow,
          * Preferences
          */
         ReginaPrefSet globalPrefs;
+
+        /**
+         * About dialogs
+         */
+        KDialog* aboutApp;
 
     public:
         /**
@@ -207,6 +213,9 @@ class ReginaMain : public KParts::MainWindow,
         void optionsConfigureToolbars();
         void optionsConfigureEditor();
         void optionsPreferences();
+        void helpAboutApp();
+        void helpHandbook();
+        void helpWhatsThis();
         void helpTipOfDay();
         void helpTrouble();
         void helpNoHelp();
@@ -248,9 +257,6 @@ class ReginaMain : public KParts::MainWindow,
          */
         void embedPart();
 };
-
-inline ReginaMain::~ReginaMain() {
-}
 
 inline const ReginaPrefSet& ReginaMain::getPreferences() const {
     return globalPrefs;
