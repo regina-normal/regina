@@ -235,6 +235,8 @@ struct ReginaPrefSet {
         /**< The list of data files to use for census lookups. */
     bool displayTagsInTree;
         /**< Should we display packet tags in the visual tree? */
+    bool handbookInKHelpCenter;
+        /**< Should we open the users' handbook in the KDE help center? */
     bool pdfAutoClose;
         /**< Should we close external PDF viewers automatically (e.g.,
              when the packet is refreshed or closed)? */

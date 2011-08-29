@@ -38,6 +38,7 @@
 #include <kmessagebox.h>
 #include <krun.h>
 #include <kstandarddirs.h>
+#include <ktoolinvocation.h>
 #include <qdir.h>
 #include <qfile.h>
 #include <qfileinfo.h>
@@ -132,6 +133,7 @@ ReginaPrefSet::ReginaPrefSet() :
         autoFileExtension(true),
         censusFiles(defaultCensusFiles()),
         displayTagsInTree(false),
+        handbookInKHelpCenter(true),
         pdfAutoClose(true),
         pdfEmbed(true),
         pythonAutoIndent(true),
@@ -252,23 +254,33 @@ bool ReginaPrefSet::writePythonLibraries() const {
 }
 
 void ReginaPrefSet::openHandbook(const char* section, QWidget* parentWidget) {
-#ifdef __APPLE__
+    if (handbookInKHelpCenter) {
+        KToolInvocation::invokeHelp(section, "regina");
+        return;
+    }
+
     QString index = KStandardDirs::locate("html", "en/regina/index.html");
     QString page = KStandardDirs::locate("html",
         QString("en/regina/%1.html").arg(section));
     if (QFileInfo(page).exists()) {
-        // Just use the default Mac browser.
+        // If we're on a mac, just use the default Mac browser.
+#ifdef __APPLE__
         // Hmm.  Assume this command executes successfully, since on my
         // fink it returns false even when it *does* execute successfully..!
         KRun::runCommand(QString("open \"%1\"").arg(page), parentWidget);
+#else
+        if (! KRun::runUrl("file:" + page, "text/html", parentWidget,
+                false /* temp file */, false /* run executables */))
+            KMessageBox::sorry(parentWidget, i18n(
+                "<qt>The Regina handbook could not be opened.  "
+                "Please try pointing your web browser to "
+                "<tt>%1</tt>.</qt>").arg(page));
+#endif
     } else
         KMessageBox::sorry(parentWidget, i18n(
             "<qt>The Regina handbook could "
             "not be found.  Perhaps it is not installed?<p>"
             "The handbook should be accessible as "
             "<tt>%1/</tt>.</qt>").arg(index));
-#else
-    KToolInvocation::invokeHelp(section, "regina");
-#endif
 }
 

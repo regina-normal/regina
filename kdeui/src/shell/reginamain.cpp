@@ -66,7 +66,6 @@
 #include <ktexteditor/view.h>
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
-#include <ktoolinvocation.h>
 #include <ktip.h>
 #include <kurl.h>
 
@@ -346,10 +345,13 @@ void ReginaMain::helpTrouble() {
 
 void ReginaMain::helpNoHelp() {
     KMessageBox::information(this,
-        i18n("<qt>If you cannot view the Regina Handbook, it is probably "
+        i18n("<qt>If you cannot view the Regina Handbook, it is possibly "
             "because you do not have the KDE Help Center installed.<p>"
-            "Some users can fix this easily by installing the appropriate "
-            "package (such as <tt>khelpcenter</tt> or <tt>kdebase4</tt>).<p>"
+            "Try editing Regina's preferences: in the General Options "
+            "panel, uncheck the box "
+            "<i>\"Open handbook in KDE Help Center\"</i>.  "
+            "This will make the handbook open in your default web browser "
+            "instead.<p>"
             "If all else fails, remember that you can always read the "
             "Regina Handbook online at "
             "<a href=\"http://regina.sourceforge.net/\">regina.sourceforge.net</a>.  "
@@ -543,6 +545,10 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
         }
     }
 
+    configGroup = new KConfigGroup(config, "Doc");
+    globalPrefs.handbookInKHelpCenter = configGroup->readEntry(
+        "HandbookInKHelpCenter", false);
+
     configGroup = new KConfigGroup(config, "File");
     globalPrefs.autoFileExtension = configGroup->readEntry(
         "AutomaticExtension", true);
@@ -670,6 +676,10 @@ void ReginaMain::saveOptions() {
                 (*it).filename);
     configGroup->writeEntry("Files", censusStrings);
     configGroup->sync();
+
+    configGroup = new KConfigGroup(config, "Doc");
+    configGroup->writeEntry("HandbookInKHelpCenter",
+        globalPrefs.handbookInKHelpCenter);
 
     configGroup = new KConfigGroup(config, "File");
     configGroup->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);
