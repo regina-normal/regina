@@ -383,6 +383,14 @@ KTextEditor::Document* NScriptUI::getTextComponent() {
     return document;
 }
 
+QWidget* NScriptUI::getEditComponent() {
+    return view;
+}
+
+PacketEdit::Target NScriptUI::getEditComponentType() {
+    return PacketEdit::editKTextEditorView;
+}
+
 const QLinkedList<KAction*>& NScriptUI::getPacketTypeActions() {
     return scriptActionList;
 }

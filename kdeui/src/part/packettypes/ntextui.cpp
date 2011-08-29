@@ -77,6 +77,14 @@ KTextEditor::Document* NTextUI::getTextComponent() {
     return document;
 }
 
+QWidget* NTextUI::getEditComponent() {
+    return view;
+}
+
+PacketEdit::Target NTextUI::getEditComponentType() {
+    return PacketEdit::editKTextEditorView;
+}
+
 QString NTextUI::getPacketMenuText() const {
     return i18n("Te&xt");
 }

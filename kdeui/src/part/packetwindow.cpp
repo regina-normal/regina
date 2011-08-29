@@ -52,13 +52,10 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     
     // Set up our actions.
-    KTextEditor::Document* doc = newPane->getTextComponent();
-    if (doc) {
-        newPane->registerEditOperations(doc->views().front(),
-            KStandardAction::cut(0, 0, actionCollection()),
-            KStandardAction::copy(0, 0, actionCollection()),
-            KStandardAction::paste(0, 0, actionCollection()));
-    }
+    newPane->registerEditOperations(
+        KStandardAction::cut(0, 0, actionCollection()),
+        KStandardAction::copy(0, 0, actionCollection()),
+        KStandardAction::paste(0, 0, actionCollection()));
 
     createGUI("packetwindow.rc");
 

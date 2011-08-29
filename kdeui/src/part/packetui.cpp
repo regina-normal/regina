@@ -132,7 +132,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         part(newPart), frame(0), dirty(false), dirtinessBroken(false),
         emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
         editCut(0), editCopy(0), editPaste(0),
-        editTarget(0), editTargetType(editNone) {
+        editTarget(0), editTargetType(PacketEdit::editNone) {
     // Initialise a vertical layout with no padding or spacing.
     QBoxLayout* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -309,45 +309,45 @@ bool PacketPane::queryClose() {
     return true;
 }
 
-void PacketPane::registerEditOperations(KTextEditor::View* component,
-        KAction* actCut, KAction* actCopy, KAction* actPaste) {
+void PacketPane::registerEditOperations(KAction* actCut, KAction* actCopy,
+        KAction* actPaste) {
     if (editTargetType)
         deregisterEditOperations();
+
+    editTargetType = mainUI->getEditComponentType();
+    if (editTargetType == PacketEdit::editNone)
+        return;
+    editTarget = mainUI->getEditComponent();
 
     editCut = actCut;
     editCopy = actCopy;
     editPaste = actPaste;
-    editTarget = component;
-    editTargetType = editKTextEditorView;
 
     updateClipboardActions();
 
-    connect(editCut, SIGNAL(triggered()), component, SLOT(cut()));
-    connect(editCopy, SIGNAL(triggered()), component, SLOT(copy()));
-    connect(editPaste, SIGNAL(triggered()), component, SLOT(paste()));
+    switch (editTargetType) {
+        case PacketEdit::editKTextEditorView:
+            connect(editCut, SIGNAL(triggered()), editTarget, SLOT(cut()));
+            connect(editCopy, SIGNAL(triggered()), editTarget, SLOT(copy()));
+            connect(editPaste, SIGNAL(triggered()), editTarget, SLOT(paste()));
 
-    connect(component, SIGNAL(selectionChanged(KTextEditor::View*)),
-        this, SLOT(updateClipboardActions()));
-    connect(KApplication::kApplication()->clipboard(),
-        SIGNAL(dataChanged()), this, SLOT(updateClipboardActions()));
-}
+            connect(editTarget, SIGNAL(selectionChanged(KTextEditor::View*)),
+                this, SLOT(updateClipboardActions()));
+            connect(KApplication::kApplication()->clipboard(),
+                SIGNAL(dataChanged()), this, SLOT(updateClipboardActions()));
 
-void PacketPane::registerEditOperations(QTreeWidget* component,
-        KAction* actCopy) {
-    if (editTargetType)
-        deregisterEditOperations();
+            break;
 
-    editCopy = actCopy;
-    editTarget = component;
-    editTargetType = editQTreeWidgetSingleSelection;
+        case PacketEdit::editQTreeWidgetSingleSelection:
+            connect(editCopy, SIGNAL(triggered()), this,
+                SLOT(copyEditTreeWidgetLine()));
 
-    updateClipboardActions();
+            connect(editTarget, SIGNAL(itemSelectionChanged()), this,
+                SLOT(updateClipboardActions()));
 
-    connect(editCopy, SIGNAL(triggered()), this,
-        SLOT(copyEditTreeWidgetLine()));
-
-    connect(component, SIGNAL(itemSelectionChanged()), this,
-        SLOT(updateClipboardActions()));
+        case PacketEdit::editNone:
+            break;
+    }
 }
 
 void PacketPane::deregisterEditOperations() {
@@ -375,7 +375,7 @@ void PacketPane::deregisterEditOperations() {
     }
 
     editTarget = 0;
-    editTargetType = editNone;
+    editTargetType = PacketEdit::editNone;
 }
 
 void PacketPane::packetWasChanged(regina::NPacket*) {
@@ -620,7 +620,7 @@ void PacketPane::floatPane() {
 
 void PacketPane::updateClipboardActions() {
     switch (editTargetType) {
-        case editKTextEditorView:
+        case PacketEdit::editKTextEditorView:
             {
                 KTextEditor::View* view =
                     static_cast<KTextEditor::View*>(editTarget);
@@ -633,12 +633,12 @@ void PacketPane::updateClipboardActions() {
             }
             break;
 
-        case editQTreeWidgetSingleSelection:
+        case PacketEdit::editQTreeWidgetSingleSelection:
             editCopy->setEnabled(! static_cast<QTreeWidget*>(editTarget)->
                 selectedItems().empty());
             break;
 
-        case editNone:
+        case PacketEdit::editNone:
             break;
     }
 }

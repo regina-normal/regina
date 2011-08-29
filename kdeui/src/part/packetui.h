@@ -59,6 +59,15 @@ namespace regina {
 };
 
 /**
+ * The possible types of target for registered edit operations.
+ */
+namespace PacketEdit {
+    enum Target { editNone = 0,
+                  editKTextEditorView,
+                  editQTreeWidgetSingleSelection };
+};
+
+/**
  * A packet header, containing an appropriate icon and text title.
  */
 class PacketHeader : public QFrame {
@@ -149,6 +158,23 @@ class PacketUI {
          * The default implementation of this routine simply returns 0.
          */
         virtual KTextEditor::Document* getTextComponent();
+
+        /**
+         * Return details of the widget that handles standard clipboard
+         * operations.  Standard clipboard actions will always be managed via
+         * PacketPane::registerEditOperations(), and so this widget must be
+         * one of the types that PacketPane supports.  See the
+         * PacketEdit::Target enum for the full list.
+         *
+         * If this interface does not support standard clipboard operations,
+         * these routines should return 0 and PacketPane::editNone respectively.
+         * The default implementations do exactly this.
+         *
+         * This routine should always return the same pointer throughout
+         * the life of this object.
+         */
+        virtual QWidget* getEditComponent();
+        virtual PacketEdit::Target getEditComponentType();
 
         /**
          * Return a list of actions specific to the particular type of
@@ -309,13 +335,6 @@ class DefaultPacketUI : public ErrorPacketUI {
 class PacketPane : public QWidget, public regina::NPacketListener {
     Q_OBJECT
 
-    public:
-        /**
-         * The possible types of target for edit operations.
-         */
-        enum EditTarget { editNone = 0,
-            editKTextEditorView, editQTreeWidgetSingleSelection };
-
     private:
         /**
          * External components
@@ -356,7 +375,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         KAction* editCopy;
         KAction* editPaste;
         QWidget* editTarget;
-        EditTarget editTargetType;
+        PacketEdit::Target editTargetType;
 
     public:
         /**
@@ -432,13 +451,13 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         bool queryClose();
 
         /**
-         * Registers or deregisters standard editor actions with an
-         * internal component of this interface.
+         * Registers or deregisters standard editor actions to operate
+         * on this packet interface.
          *
          * Registered actions will be connected to appropriate edit
-         * operations in the given component, and will be enabled and disabled
-         * over time according to the current status of the component and
-         * the enclosing packet pane.
+         * operations in this interface, and will be enabled and disabled
+         * over time according to the current status of the internal UI
+         * components.
          *
          * When the actions are deregistered, these relationships will be
          * broken and the actions will be left in a disabled state.
@@ -452,9 +471,8 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * though the final enabled/disabled status of any remaining
          * actions that are not deregistered is not guaranteed.
          */
-        void registerEditOperations(KTextEditor::View* component,
-            KAction* actCut, KAction* actCopy, KAction* actPaste);
-        void registerEditOperations(QTreeWidget* component, KAction* actCopy);
+        void registerEditOperations(KAction* actCut, KAction* actCopy,
+            KAction* actPaste);
         void deregisterEditOperations();
 
         /**
@@ -622,6 +640,14 @@ inline PacketUI::~PacketUI() {
 
 inline KTextEditor::Document* PacketUI::getTextComponent() {
     return 0;
+}
+
+inline QWidget* PacketUI::getEditComponent() {
+    return 0;
+}
+
+inline PacketEdit::Target PacketUI::getEditComponentType() {
+    return PacketEdit::editNone;
 }
 
 inline const QLinkedList<KAction*>& PacketUI::getPacketTypeActions() {

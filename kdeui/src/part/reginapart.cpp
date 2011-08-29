@@ -165,15 +165,11 @@ void ReginaPart::dock(PacketPane* newPane) {
 
     newPane->show();
 
-    KTextEditor::Document* doc = newPane->getTextComponent();
-    if (doc) {
-        newPane->registerEditOperations(doc->views().front(),
-            actCut, actCopy, actPaste);
+    newPane->registerEditOperations(actCut, actCopy, actPaste);
 
-        // Don't plug the full GUI; there's way too much stuff that we
-        // don't want (like Save and Save-As, for instance).
-        // factory()->addClient(doc->views().front());
-    }
+    // Don't plug the full KTextEditor::View GUI; there's way too much stuff
+    // that we don't want (like Save and Save-As, for instance).
+    // factory()->addClient(doc->views().front());
 }
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
