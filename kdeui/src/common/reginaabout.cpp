@@ -41,12 +41,12 @@
 const QByteArray ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
 
 const KLocalizedString ReginaAbout::regCopyright(
-    ki18n("Copyright (c) 1999-2011, Ben Burton, Ryan Budney and others"));
+    ki18n("Copyright (c) 1999-2011, The Regina development team"));
 
 const QString ReginaAbout::regDataExt(".rga");
 
 const KLocalizedString ReginaAbout::regDescription(
-    ki18n("A normal surface theory calculator"));
+    ki18n("Software for 3-manifold topology and normal surface theory"));
 
 const QByteArray ReginaAbout::regName(I18N_NOOP("Regina"));
 
@@ -58,12 +58,16 @@ const QByteArray ReginaAbout::regVersion(PACKAGE_VERSION);
 const QByteArray ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
 const KLocalizedString ReginaAbout::regLicense( ki18n( 
-    "Copyright (c) 1999-2011, Ben Burton, Ryan Budney and others\n\n"
+    "Copyright (c) 1999-2011, The Regina development team\n\n"
     "This program is distributed under the terms of the GPL v2.\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
-    "you would any other paper that you use.  The introductory chapter of the\n"
-    "Regina handbook includes a suggested form of reference.\n\n"
+    "you would any other paper that you use.  A suggested form of "
+        "reference is:\n\n"
+    "  [BBP] Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,\n"
+    "  \"Regina: Software for 3-manifold topology and "
+        "normal surface theory\",\n"
+    "  http://regina.sourceforge.net/, 1999-2011.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"
@@ -96,8 +100,12 @@ ReginaAbout::ReginaAbout(const char* internalName) :
     setLicenseText(regLicense);
 
     // Authors:
-    addAuthor(ki18n("Ben Burton"), KLocalizedString(), "bab@debian.org","");
-    addAuthor(ki18n("Ryan Budney"), KLocalizedString(), "rybu@uvic.ca","");
+    addAuthor(ki18n("Benjamin Burton"), KLocalizedString(), "bab@debian.org",
+        "http://www.maths.uq.edu.au/~bab/");
+    addAuthor(ki18n("Ryan Budney"), KLocalizedString(), "rybu@uvic.ca",
+        "http://rybu.org/");
+    addAuthor(ki18n("William Pettersson"), KLocalizedString(),
+        "william.pettersson@gmail.com", "");
 
     // Credits:
     addCredit(ki18n("Bernard Blackham"),
@@ -116,8 +124,6 @@ ReginaAbout::ReginaAbout(const char* internalName) :
         ki18n("Code contributions and technical advice"),"","");
     addCredit(ki18n("Craig Macintyre"),
         ki18n("Red Hat / Fedora porting assistance"),"","");
-    addCredit(ki18n("William Pettersson"),
-        ki18n("Port to KDE4 and CMake"),"","");
     addCredit(ki18n("Hyam Rubinstein"),
         ki18n("Supervision and many long discussions"),"","");
     addCredit(ki18n("Jonathan Shewchuk"),

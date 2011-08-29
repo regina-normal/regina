@@ -34,6 +34,7 @@ SnapPea / Orb copyright:
     www/index.html
 
 Acknowledgements:
+    LICENSE.txt (suggested citation, author list)
     kdeui/doc/regina/credits.docbook
     kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
 
