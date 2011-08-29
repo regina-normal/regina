@@ -142,20 +142,25 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     menuConsole->insertSeparator(act);
     menuConsole->addAction(act);
 
-    KAction* actCopy = actionCollection()->addAction(
-        KStandardAction::Copy,
-        session,
-        SLOT(copy()) );
+    KAction* actCopy = actionCollection()->addAction("edit_copy_session");
+    actCopy->setText(i18n("&Copy From Session"));
+    actCopy->setIcon(KIcon("edit-copy"));
+    actCopy->setShortcut(tr("Shift+Ctrl+c"));
+    actCopy->setToolTip(i18n(
+        "Copy selected text from the session log to the clipboard "));
+    connect(actCopy, SIGNAL(triggered()), session, SLOT(copy()));
     actCopy->setEnabled(false);
     connect(session, SIGNAL(copyAvailable(bool)), actCopy,
         SLOT(setEnabled(bool)));
     menuEdit->addAction(actCopy);
 
-    act = actionCollection()->addAction(
-        KStandardAction::SelectAll,
-        session,
-        SLOT(selectAll()) );
-
+    act = actionCollection()->addAction("edit_select_all_session");
+    act->setText(i18n("Select &All From Session"));
+    act->setIcon(KIcon("edit-select-all"));
+    act->setShortcut(tr("Shift+Ctrl+a"));
+    act->setToolTip(i18n(
+        "Selected all text in the session log"));
+    connect(act, SIGNAL(triggered()), session, SLOT(selectAll()));
     menuEdit->addAction(act);
 
     act = actionCollection()->addAction("help_scripting");
