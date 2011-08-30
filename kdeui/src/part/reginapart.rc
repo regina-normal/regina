@@ -70,6 +70,10 @@
   <text>Main Toolbar</text>
   <Action name="file_save" group="file_operations"/>
   <Action name="file_close" group="file_operations"/>
+  <Separator/>
+  <Action name="edit_cut" group="edit_operations"/>
+  <Action name="edit_copy" group="edit_operations"/>
+  <Action name="edit_paste" group="edit_operations"/>
 </ToolBar>
 <ToolBar name="packetTree" iconText="IconOnly" noMerge="1">
   <text>Packet Tree Toolbar</text>

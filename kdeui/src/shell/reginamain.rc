@@ -43,6 +43,10 @@
   <text>Main Toolbar</text>
   <Action name="new_topology"/>
   <Action name="file_open"/>
+  <DefineGroup name="file_operations"/>
+  <Separator/>
+  <DefineGroup name="edit_operations"/>
+  <Separator/>
   <Merge/>
   <Separator/>
   <Action name="python_console"/>
