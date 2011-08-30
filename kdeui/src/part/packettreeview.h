@@ -151,6 +151,7 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
          */
         bool shouldBeExpanded() const;
         void markShouldBeExpanded(bool state);
+        void ensureExpanded();
 
     private:
         /**

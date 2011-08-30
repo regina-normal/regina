@@ -142,10 +142,7 @@ void PacketTreeItem::refreshSubtree() {
                     // Move it to the correct place.
                     insertChild(itemCounter, takeChild(otherCounter));
                     other->refreshSubtree();
-                    if (other->shouldBeExpanded())
-                        treeWidget()->expandItem(other);
-                    else
-                        treeWidget()->collapseItem(other);
+                    other->ensureExpanded();
 
                     // Update our variables.
                     // Note that item is already correct.
@@ -195,6 +192,15 @@ void PacketTreeItem::updateEditable() {
         isEditable = ! isEditable;
         setIcon(0, PacketManager::iconSmall(packet, true));
     }
+}
+
+void PacketTreeItem::ensureExpanded() {
+    if (shouldBeExpanded_) {
+        treeWidget()->expandItem(this);
+        for (int i = 0; i < childCount(); ++i)
+            static_cast<PacketTreeItem*>(child(i))->ensureExpanded();
+    } else
+        treeWidget()->collapseItem(this);
 }
 
 void PacketTreeItem::packetWasChanged(regina::NPacket*) {
