@@ -1340,7 +1340,8 @@
    <para>
     By default, the censuses that are searched include censuses of
     closed orientable and non-orientable 3-manifold triangulations
-    <xref linkend="bib-burton-nor8"/> <xref linkend="bib-burton-nor10"/>,
+    <xref linkend="bib-burton-nor8"/> <xref linkend="bib-burton-nor10"/>
+    <xref linkend="bib-burton-genus"/>,
     cusped and closed hyperbolic 3-manifold triangulations
     <xref linkend="bib-cuspedcensus"/> <xref linkend="bib-closedhypcensus"/>,
     and knot and link complements (tabulated by Joe Christy).

@@ -105,7 +105,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * Represents quadrilateral-octagon coordinates for octagonal
          * almost normal surfaces.  For details, see
          * "Quadrilateral-octagon coordinates for almost normal surfaces",
-         * Benjamin A. Burton, preprint, arXiv:0904.3041.
+         * Benjamin A. Burton, Experiment. Math. 19 (2010), 285-315.
          */
         static const int AN_QUAD_OCT;
 
@@ -223,14 +223,14 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * solutions in standard coordinates directly.  For details on
          * this procedure see "Converting between quadrilateral and
          * standard solution sets in normal surface theory",
-         * Benjamin A. Burton, preprint, arXiv:0901.2629.
+         * Benjamin A. Burton, Algebr. Geom. Topol. 9 (2009), 2121-2174.
          *
          * This routine allows the user to force a direct enumeration in
          * standard space, \e without going via quadrilateral space.
          * The algorithm used is the souped-up double description method
          * in standard coordinates as described in "Optimizing the
          * double description method for normal surface enumeration",
-         * Benjamin A. Burton, to appear in Math. Comp., arXiv:0808.4050.
+         * Benjamin A. Burton, Math. Comp. 79 (2010), 453-484.
          *
          * Users will generally not want to call this routine, since it
          * is often much slower than enumerate() and it gives precisely
@@ -305,7 +305,8 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * enumerating surfaces directly in standard tri-quad coordinates.
          * The underlying algorithm is described in detail in "Converting
          * between quadrilateral and standard solution sets in normal
-         * surface theory", Benjamin A. Burton, preprint, arXiv:0901.2629.
+         * surface theory", Benjamin A. Burton, Algebr. Geom. Topol. 9 (2009),
+         * 2121-2174.
          *
          * Typically users do not need to call this routine directly,
          * since the standard enumerate() routine will use it implicitly
@@ -394,7 +395,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * links are all spheres and/or discs.  The underlying algorithm
          * is described in detail in "Converting between quadrilateral and
          * standard solution sets in normal surface theory",
-         * Benjamin A. Burton, preprint, arXiv:0901.2629.
+         * Benjamin A. Burton, Algebr. Geom. Topol. 9 (2009), 2121-2174.
          *
          * It should be noted that this routine does \e not simply convert
          * vectors from one form to another; instead it converts a full
@@ -562,7 +563,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * bounded triangulations.  For more details on these tests
          * see "The Weber-Seifert dodecahedral space is non-Haken",
          * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
-         * preprint, arXiv:0909.4625.
+         * to appear in Trans. Amer. Math. Soc., arXiv:0909.4625.
          *
          * \pre The underlying 3-manifold triangulation is valid and closed.
          * In particular, it has no ideal vertices.
