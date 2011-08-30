@@ -103,20 +103,6 @@
   <date>2008</date>
  </biblioentry>
 
- <biblioentry id="bib-burton-dd">
-  <abbrev>Bur08b</abbrev>
-  <authorgroup><author>
-   <firstname>Benjamin</firstname>
-   <othername>A.</othername>
-   <surname>Burton</surname>
-  </author></authorgroup>
-  <title>Optimizing the double description method for normal surface
-   enumeration</title>
-  <edition>To appear in Math. Comp.</edition>
-  <issuenum>arXiv:0808.4050</issuenum>
-  <date>August 2008</date>
- </biblioentry>
-
  <biblioentry id="bib-burton-convert">
   <abbrev>Bur09a</abbrev>
   <authorgroup><author>
@@ -126,22 +112,58 @@
   </author></authorgroup>
   <title>Converting between quadrilateral and standard solution sets
    in normal surface theory</title>
-  <edition>Preprint</edition>
-  <issuenum>arXiv:0901.2629</issuenum>
-  <date>January 2009</date>
+  <edition>Algebr. Geom. Topol.</edition>
+  <volumenum>vol. 9</volumenum>
+  <issuenum>no. 4</issuenum>
+  <artpagenums>pp. 2121&ndash;2174</artpagenums>
+  <date>2009</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-dd">
+  <abbrev>Bur10a</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>Optimizing the double description method for normal surface
+   enumeration</title>
+  <edition>Math. Comp.</edition>
+  <volumenum>vol. 79</volumenum>
+  <issuenum>no. 269</issuenum>
+  <artpagenums>pp. 453&ndash;484</artpagenums>
+  <date>2010</date>
  </biblioentry>
 
  <biblioentry id="bib-burton-quadoct">
-  <abbrev>Bur09b</abbrev>
+  <abbrev>Bur10b</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
    <surname>Burton</surname>
   </author></authorgroup>
   <title>Quadrilateral-octagon coordinates for almost normal surfaces</title>
-  <edition>Preprint</edition>
-  <issuenum>arXiv:0904.3041</issuenum>
-  <date>April 2009</date>
+  <edition>Experiment. Math.</edition>
+  <volumenum>vol. 19</volumenum>
+  <issuenum>no. 3</issuenum>
+  <artpagenums>pp. 285&ndash;315</artpagenums>
+  <date>2010</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-genus">
+  <abbrev>Bur11</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>Detecting genus in vertex links for the fast enumeration of
+   3-manifold triangulations</title>
+  <edition>ISSAC 2011: Proceedings of the 36th International Symposium on
+   Symbolic and Algebraic Computation</edition>
+  <artpagenums>pp. 59&ndash;66</artpagenums>
+  <publishername>ACM</publishername>
+  <date>2011</date>
  </biblioentry>
 
  <biblioentry id="bib-cuspedcensus">

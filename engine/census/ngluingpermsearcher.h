@@ -569,7 +569,10 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
  * guaranteed to lead to bad edge or vertex links.  For details see
  * "Enumeration of non-orientable 3-manifolds using face-pairing graphs and
  * union-find", Benjamin A. Burton, Discrete Comput. Geom. 38 (2007), no. 3,
- * 527--571.
+ * 527--571; and "Detecting genus in vertex links for the fast enumeration
+ * of 3-manifold triangulations", Benjamin A. Burton, in "ISSAC 2011:
+ * Proceedings of the 36th International Symposium on Symbolic and
+ * Algebraic Computation", ACM, 2011, pp. 59-66.
  *
  * No additional unwanted triangulations will be produced by this search
  * (in contrast to other search classes, such as NClosedPrimeMinSearcher).

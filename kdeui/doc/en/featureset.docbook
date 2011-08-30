@@ -179,8 +179,9 @@
   </para>
   <para>
    Elements of the census algorithm
-   are described in <xref linkend="bib-burton-nor7"/> and
-   <xref linkend="bib-burton-nor10"/>.  The algorithm
+   are described in <xref linkend="bib-burton-nor7"/>,
+   <xref linkend="bib-burton-nor10"/> and
+   <xref linkend="bib-burton-genus"/>.  The algorithm
    contains significant optimisations for censuses of closed minimal
    &ppirr; triangulations &mdash; in particular, the face pairing graph results
    of <xref linkend="bib-burton-facegraphs"/> and
@@ -201,7 +202,7 @@
    In addition to forming new censuses, &regina; ships with a number of
    prepackaged censuses including closed 3-manifold triangulations
    <xref linkend="bib-burton-nor8"/>, <xref linkend="bib-burton-nor10"/>,
-   hyperbolic 3-manifolds
+   <xref linkend="bib-burton-genus"/>, hyperbolic 3-manifolds
    <xref linkend="bib-cuspedcensus"/>, <xref linkend="bib-closedhypcensus"/>,
    and knot and link complements (tabulated by Joe Christy).
    A census lookup facility for arbitrary triangulations is provided.
