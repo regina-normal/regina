@@ -179,6 +179,11 @@ bool PythonInterpreter::executeLine(const std::string& command) {
         return true;
     }
 
+    // Clear the error so it doesn't stay with the thread state and
+    // cause wacky syntax errors later on.  Such behaviour has been
+    // observed on macosx/fink.
+    PyErr_Clear();
+
     // Attempt to compile the command with final newline.
     cmdBuffer[fullCommand.length()] = '\n';
     cmdBuffer[fullCommand.length() + 1] = 0;
@@ -195,6 +200,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     }
 
     // Extract the full error details in case we wish to display them later.
+    // Note that PyErr_Fetch() has the side-effect of clearing the error also.
     PyObject *errType, *errValue, *errTrace;
     PyErr_Fetch(&errType, &errValue, &errTrace);
 
@@ -219,7 +225,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
         return false;
     }
 
-    PyObject* errStr2 = extractErrMsg();
+    PyObject* errStr2 = extractErrMsg(); // Also clears the error.
 
     // Compare the two compile errors.
     if (errStr1 && errStr2) {
