@@ -1366,7 +1366,7 @@ class REGINA_API NNormalSurface :
          * and J. Hyam Rubinstein, J. Differential Geom. 65 (2003),
          * no. 1, 61--168.  For a proof in quadrilateral-octagon coordinates,
          * see "Quadrilateral-octagon coordinates for almost normal surfaces",
-         * Benjamin A. Burton, preprint, arXiv:0904.3041.
+         * Benjamin A. Burton, Experiment. Math. 19 (2010), 285-315.
          *
          * Note that the surface that this routine returns (if any) depends
          * upon the triangulation, and so this surface must be destroyed
