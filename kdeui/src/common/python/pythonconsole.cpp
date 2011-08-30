@@ -500,9 +500,13 @@ void PythonConsole::processCommand() {
     error->flush();
 
     // Prepare for a new command.
-    if (prefs.pythonAutoIndent)
-        allowInput(done, initialIndent(cmd));
-    else
+    if (prefs.pythonAutoIndent) {
+        // Only use auto-indent if we are waiting on more text.
+        if (done)
+            allowInput(true);
+        else
+            allowInput(false, initialIndent(cmd));
+    } else
         allowInput(done);
 }
 
