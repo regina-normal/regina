@@ -389,11 +389,7 @@ void ReginaPart::clonePacket() {
 
     regina::NPacket* ans = packet->clone(false, false);
 
-    PacketTreeItem* item = treeView->find(ans);
-    if (item) {
-        treeView->setCurrentItem(item);
-        treeView->setItemHidden(item,false);
-    }
+    treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 
@@ -407,11 +403,7 @@ void ReginaPart::cloneSubtree() {
 
     regina::NPacket* ans = packet->clone(true, false);
 
-    PacketTreeItem* item = treeView->find(ans);
-    if (item) {
-        treeView->setCurrentItem(item);
-        treeView->setItemHidden(item,false);
-    }
+    treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 
