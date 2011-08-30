@@ -140,6 +140,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
         ki18n("Hospitality and support"),"","");
     addCredit(ki18n("Oklahoma State University, USA"),
         ki18n("Support for development"),"","");
+    addCredit(ki18n("Queensland Cyber Infrastructure Foundation"),
+        ki18n("High-performance computing support"),"","");
     addCredit(ki18n("RMIT University, Australia"),
         ki18n("Support for development"),"","");
     addCredit(ki18n("The University of Melbourne, Australia"),

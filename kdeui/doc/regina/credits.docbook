@@ -68,17 +68,16 @@
  <sect1 id="acknowledgements">
   <title>Acknowledgements</title>
   <para>
-   &regina; was written by &regauthorplain;.
-  </para>
-
-  <para>
-   Normal 1.0 was written by David Letscher,
-   who also provided excellent technical advice for this project.
+   The primary developers of &regina; are:
+   <itemizedlist>
+    <listitem><para>Benjamin Burton </para></listitem>
+    <listitem><para>Ryan Budney</para></listitem>
+    <listitem><para>William Pettersson</para></listitem>
+   </itemizedlist>
   </para>
 
   <para>Additional code contributed by:
    <itemizedlist>
-    <listitem><para>Ryan Budney</para></listitem>
     <listitem><para>Matthias Goerner</para></listitem>
     <listitem><para>David Letscher</para></listitem>
     <listitem><para>Jeff Weeks</para></listitem>
@@ -99,6 +98,7 @@
     <listitem><para>The Institute for the Physics and Mathematics of the
      Universe, Tokyo</para></listitem>
     <listitem><para>Oklahoma State University, USA</para></listitem>
+    <listitem><para>Queensland Cyber Infrastructure Foundation</para></listitem>
     <listitem><para>RMIT University, Australia</para></listitem>
     <listitem><para>The University of Melbourne, Australia</para></listitem>
     <listitem><para>The University of Queensland, Australia</para></listitem>
