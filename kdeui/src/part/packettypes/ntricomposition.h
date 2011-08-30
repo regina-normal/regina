@@ -40,6 +40,7 @@
 #include <memory>
 
 class PacketChooser;
+class PacketEditIface;
 class QMenu;
 class QPushButton;
 class QTreeWidget;
@@ -88,6 +89,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         QTreeWidget* details;
         QTreeWidgetItem* components;
         QTreeWidgetItem* lastComponent;
+        PacketEditIface* editIface;
 
     public:
         /**
@@ -95,12 +97,14 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
          */
         NTriCompositionUI(regina::NTriangulation* packet,
                 PacketTabbedUI* useParentUI);
+        ~NTriCompositionUI();
 
         /**
          * PacketViewerTab overrides.
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
+        PacketEditIface* getEditIface();
         void refresh();
         void editingElsewhere();
 
@@ -154,5 +158,9 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
             const regina::NPerm4& roles, int startPreimage, int endPreimage);
         static QString matrixString(const regina::NMatrix2& matrix);
 };
+
+inline PacketEditIface* NTriCompositionUI::getEditIface() {
+    return editIface;
+}
 
 #endif

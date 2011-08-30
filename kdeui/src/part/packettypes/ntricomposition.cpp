@@ -56,6 +56,7 @@
 // UI includes:
 #include "ntricomposition.h"
 #include "../packetchooser.h"
+#include "../packeteditiface.h"
 #include "../packetfilter.h"
 
 #include <kiconloader.h>
@@ -161,6 +162,12 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     details->setSelectionMode(QAbstractItemView::SingleSelection);
     details->setWhatsThis(msg);
     layout->addWidget(details, 1);
+
+    editIface = new PacketEditTreeWidgetSingleLine(details);
+}
+
+NTriCompositionUI::~NTriCompositionUI() {
+    delete editIface;
 }
 
 regina::NPacket* NTriCompositionUI::getPacket() {

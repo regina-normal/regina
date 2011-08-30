@@ -28,6 +28,7 @@
 
 // UI includes:
 #include "packeteditiface.h"
+#include "packettabui.h"
 
 #include <qclipboard.h>
 #include <qtreewidget.h>
@@ -87,5 +88,62 @@ void PacketEditTreeWidgetSingleLine::copy() {
     if (! tree_->selectedItems().empty())
         QApplication::clipboard()->setText(
             tree_->selectedItems().front()->text(0), QClipboard::Clipboard);
+}
+
+PacketEditTabbedUI::PacketEditTabbedUI(PacketTabbedUI* tabs) :
+        tabs_(tabs) {
+    connect(tabs_->tabs, SIGNAL(currentChanged(int)),
+        this, SLOT(tabChanged(int)));
+
+    currentTab_ = tabs_->currentInterface();
+
+    if (currentTab_->getEditIface())
+        connect(currentTab_->getEditIface(), SIGNAL(statesChanged()),
+            this, SLOT(fireStatesChanged()));
+}
+
+bool PacketEditTabbedUI::cutEnabled() const {
+    if (! (currentTab_ && currentTab_->getEditIface()))
+        return false;
+    return currentTab_->getEditIface()->cutEnabled();
+}
+
+bool PacketEditTabbedUI::copyEnabled() const {
+    if (! (currentTab_ && currentTab_->getEditIface()))
+        return false;
+    return currentTab_->getEditIface()->copyEnabled();
+}
+
+bool PacketEditTabbedUI::pasteEnabled() const {
+    if (! (currentTab_ && currentTab_->getEditIface()))
+        return false;
+    return currentTab_->getEditIface()->pasteEnabled();
+}
+
+void PacketEditTabbedUI::cut() {
+    if (currentTab_ && currentTab_->getEditIface())
+        currentTab_->getEditIface()->cut();
+}
+
+void PacketEditTabbedUI::copy() {
+    if (currentTab_ && currentTab_->getEditIface())
+        currentTab_->getEditIface()->copy();
+}
+
+void PacketEditTabbedUI::paste() {
+    if (currentTab_ && currentTab_->getEditIface())
+        currentTab_->getEditIface()->paste();
+}
+
+void PacketEditTabbedUI::tabChanged(int newTab) {
+    if (currentTab_->getEditIface())
+        disconnect(currentTab_->getEditIface(), SIGNAL(statesChanged()),
+            this, SLOT(fireStatesChanged()));
+
+    currentTab_ = tabs_->interfaceAtIndex(newTab);
+
+    if (currentTab_->getEditIface())
+        connect(currentTab_->getEditIface(), SIGNAL(statesChanged()),
+            this, SLOT(fireStatesChanged()));
 }
 

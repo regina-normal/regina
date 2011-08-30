@@ -37,6 +37,7 @@
 #include "ntriskeleton.h"
 #include "ntrisnappea.h"
 #include "ntrisurfaces.h"
+#include "../packeteditiface.h"
 #include "../reginapart.h"
 
 #include <klocale.h>
@@ -92,6 +93,12 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
         case ReginaPrefSet::SnapPea:
             setCurrentTab(5); break;
     }
+
+    editIface = new PacketEditTabbedUI(this);
+}
+
+NTriangulationUI::~NTriangulationUI() {
+    delete editIface;
 }
 
 const QLinkedList<KAction*>& NTriangulationUI::getPacketTypeActions() {

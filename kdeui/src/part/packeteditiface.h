@@ -36,6 +36,8 @@
 
 #include <qobject.h>
 
+class PacketUI;
+class PacketTabbedUI;
 class QTreeWidget;
 
 namespace KTextEditor {
@@ -103,6 +105,29 @@ class PacketEditTreeWidgetSingleLine : public PacketEditIface {
 
     public slots:
         virtual void copy();
+};
+
+class PacketEditTabbedUI : public PacketEditIface {
+    Q_OBJECT
+
+    private:
+        PacketTabbedUI* tabs_;
+        PacketUI* currentTab_;
+
+    public:
+        PacketEditTabbedUI(PacketTabbedUI* tabs);
+
+        virtual bool cutEnabled() const;
+        virtual bool copyEnabled() const;
+        virtual bool pasteEnabled() const;
+
+    public slots:
+        virtual void cut();
+        virtual void copy();
+        virtual void paste();
+
+    private slots:
+        void tabChanged(int newTab);
 };
 
 inline bool PacketEditIface::cutEnabled() const {

@@ -175,6 +175,20 @@ void PacketTabbedUI::refresh() {
     setDirty(false);
 }
 
+PacketUI* PacketTabbedUI::interfaceAtIndex(int tabIndex) {
+    if (viewerTabs[tabIndex])
+        return viewerTabs[tabIndex];
+    else
+        return editorTab;
+}
+
+PacketUI* PacketTabbedUI::currentInterface() {
+    if (visibleViewer)
+        return visibleViewer;
+    else
+        return editorTab;
+}
+
 void PacketTabbedUI::setReadWrite(bool readWrite) {
     if (editorTab)
         editorTab->setReadWrite(readWrite);
