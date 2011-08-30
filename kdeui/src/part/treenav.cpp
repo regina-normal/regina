@@ -70,7 +70,7 @@ void ReginaPart::moveShallow() {
 
     PacketTreeItem* item = treeView->find(packet);
     if (item) {
-        treeView->setItemSelected(item, true);
+        treeView->setCurrentItem(item);
         treeView->setItemHidden(item,false);
     }
 }
@@ -110,7 +110,7 @@ void ReginaPart::moveDeep() {
 
     PacketTreeItem* item = treeView->find(packet);
     if (item) {
-        treeView->setItemSelected(item, true);
+        treeView->setCurrentItem(item);
         treeView->setItemHidden(item,false);
     }
 }
