@@ -38,6 +38,7 @@
 #include "../part/reginapart.h"
 
 #include <QDrag>
+#include <QLabel>
 #include <QVBoxLayout>
 #include <QWhatsThis>
 #include <kaboutapplicationdialog.h>
@@ -71,7 +72,7 @@
 
 unsigned ReginaMain::objectNumber = 1;
 
-ReginaMain::ReginaMain() : KParts::MainWindow(),
+ReginaMain::ReginaMain(bool showAdvice) : KParts::MainWindow(),
         currentPart(0), aboutApp(0) {
 
     setAttribute(Qt::WA_DeleteOnClose);
@@ -105,6 +106,16 @@ ReginaMain::ReginaMain() : KParts::MainWindow(),
     manager = new KParts::PartManager(this);
     connect(manager, SIGNAL(activePartChanged(KParts::Part*)),
         this, SLOT(createGUI(KParts::Part*)));
+
+    if (showAdvice) {
+        // Until we actually have a part loaded, give the user something
+        // helpful to start with.
+        QLabel* advice = new QLabel(i18n("<qt>To start, try:<p>"
+            "File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
+            "Introductory Examples</qt>"));
+        advice->setAlignment(Qt::AlignCenter);
+        setCentralWidget(advice);
+    }
 }
 
 ReginaMain::~ReginaMain() {

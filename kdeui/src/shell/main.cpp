@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
         // No session; just start up normally.
         KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
         if (args->count() == 0) {
-            ReginaMain *widget = new ReginaMain;
+            ReginaMain *widget = new ReginaMain(true /* offer advice */);
             widget->show();
         } else {
             for (int i = 0; i < args->count(); i++) {

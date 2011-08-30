@@ -109,7 +109,7 @@ class ReginaMain : public KParts::MainWindow,
         /**
          * Constructors and destructors.
          */
-        ReginaMain();
+        ReginaMain(bool showAdvice = false);
         virtual ~ReginaMain();
 
         /**
