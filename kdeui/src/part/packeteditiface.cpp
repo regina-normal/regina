@@ -141,6 +141,7 @@ void PacketEditTabbedUI::tabChanged(int newTab) {
             this, SLOT(fireStatesChanged()));
 
     currentTab_ = tabs_->interfaceAtIndex(newTab);
+    fireStatesChanged();
 
     if (currentTab_->getEditIface())
         connect(currentTab_->getEditIface(), SIGNAL(statesChanged()),
