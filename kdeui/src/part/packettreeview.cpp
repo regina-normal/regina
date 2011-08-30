@@ -101,6 +101,12 @@ void PacketTreeItem::refreshSubtree() {
     }
 
     // No, we're looking at a real packet.
+
+    // Before we do anything else: this routine can mess up the current
+    // selection.  Remember it so we can restore it later.
+    regina::NPacket* selected = static_cast<PacketTreeView*>(treeWidget())
+        ->selectedPacket();
+
     // Run through the child packets and child nodes and ensure they
     // match up.
     NPacket* p = packet->getFirstTreeChild();
@@ -120,7 +126,8 @@ void PacketTreeItem::refreshSubtree() {
 
             // Assume this has come from moving prev to a different
             // place in the packet tree: always expand.
-            treeWidget()->expandItem(prev);
+            treeWidget()->expandItem(this); // make prev visible;
+            treeWidget()->expandItem(prev); // show prev's children.
 
             // Variables prev and item are already correct.
         } else if (item->getPacket() == p) {
@@ -162,7 +169,8 @@ void PacketTreeItem::refreshSubtree() {
 
                 // Assume this has come from moving prev to a different
                 // place in the packet tree: always expand.
-                treeWidget()->expandItem(prev);
+                treeWidget()->expandItem(this); // make prev visible;
+                treeWidget()->expandItem(prev); // show prev's children.
 
                 // Variables prev and item are already correct.
             }
@@ -173,6 +181,9 @@ void PacketTreeItem::refreshSubtree() {
     // Note that childCount() will decrease as we delete children here.
     while (itemCounter < childCount())
         delete child(itemCounter);
+
+    // Restore any selection we might have had before.
+    static_cast<PacketTreeView*>(treeWidget())->selectPacket(selected);
 }
 
 void PacketTreeItem::refreshLabel() {
@@ -293,6 +304,20 @@ PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
     }
 
     return 0;
+}
+
+void PacketTreeView::selectPacket(regina::NPacket* p) {
+    if (p == 0) {
+        if (! selectedItems().isEmpty())
+            clearSelection();
+        return;
+    }
+
+    PacketTreeItem* item = find(p);
+    if (item)
+        setCurrentItem(item);
+    else
+        clearSelection();
 }
 
 void PacketTreeView::packetView(QTreeWidgetItem* packet) {

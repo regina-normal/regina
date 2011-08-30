@@ -186,6 +186,13 @@ class PacketTreeView : public QTreeWidget {
         regina::NPacket* selectedPacket();
 
         /**
+         * Selects the given packet in the tree, or clears the selection
+         * if 0 is passed.  If the given packet cannot be found in the
+         * tree, the selection will be cleared (and nothing will break).
+         */
+        void selectPacket(regina::NPacket* p);
+
+        /**
          * Fills this tree with items corresponding to the given
          * packet tree.  Any existing items in this tree will be removed.
          */
