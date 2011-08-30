@@ -107,7 +107,7 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(clonePacket()) );
     treePacketEditActions.append(act);
 
-    act = actionCollection()->addAction("subtree_clone");
+    act = actionCollection()->addAction("tree_clone_subtree");
     act->setText(i18n("Clone Su&btree"));
     act->setToolTip(i18n("Clone the subtree beneath the selected packet"));
     act->setWhatsThis(i18n("Clone the packet currently selected in "
