@@ -138,7 +138,7 @@
 
 <book lang="&language;">
  <bookinfo>
-  <title>&regina; File Format Reference</title>
+  <title>&regina; &xml; File Format Reference</title>
 
   <authorgroup><author>
    <firstname>Benjamin</firstname>
@@ -155,7 +155,7 @@
 
   <legalnotice>
    <para>
-    Both &regina; and this reference are licensed under the terms of the
+    Both &regina; and this manual are licensed under the terms of the
     GNU General Public License.
     See the users' handbook for full license details.
    </para>
@@ -166,17 +166,13 @@
 
   <abstract>
    <para>
-    This reference details the file format used by &regina;
-    for its data files.
+    This manual details the &xml; file format used by &regina;
+    for its data files.  For information on &regina; itself, see
+    the users' handbook or visit the
+    <ulink url="http://regina.sourceforge.net/">&regina; website</ulink>.
    </para>
    <para>
-    &regina; is a software package for studying 3-manifold triangulations
-    and normal surfaces.  For information on &regina; itself, see
-    the users' handbook or visit
-    <ulink url="http://regina.sourceforge.net/"/>.
-   </para>
-   <para>
-    This reference is current as of &regdate; for &regina; &regversion;.
+    This manual is current as of &regdate; for &regina; &regversion;.
    </para>
   </abstract>
 

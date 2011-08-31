@@ -1,3 +1,5 @@
+kde4_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en)
+
 # Make an HTML version of the file format documentation.
 SET(WEB_SS ${KDE4_DATA_INSTALL_DIR}/ksgmltools2/customization/kde-web.xsl)
 ADD_CUSTOM_COMMAND(OUTPUT index.html
