@@ -189,8 +189,6 @@
    imports and exports</link></para></glossdef>
   <glossdef><para><link linkend="python-i18n">in
    &python;</link></para></glossdef>
-  <glossdef><para><link linkend="dataformat">in
-   &regina; data files</link></para></glossdef>
  </glossentry>
 
  <glossentry>

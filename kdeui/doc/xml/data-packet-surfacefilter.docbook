@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-filter-combination">
+<refentry id="data-packet-surfacefilter">
  <refmeta>
-  <refentrytitle>filter (combination)</refentrytitle>
+  <refentrytitle>packet (surface filter)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>filter (combination)</refname>
-  <refpurpose>A logical combination surface filter</refpurpose>
+  <refname>packet (surface filter)</refname>
+  <refpurpose>A surface filter packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,13 +24,14 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-filter ::= (&xml-op;)</synopsis>
+packet ::= (&xml-filter;,
+            &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
-      See the general &xml-filter; element documentation.
+      See the general &xml-packet; element documentation.
      </entry></row>
     </tbody>
    </tgroup>
@@ -40,26 +41,25 @@ filter ::= (&xml-op;)</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   A <link linkend="packet-filtercomb">combination filter</link> uses a
-   logical operation to combine other normal surface filters into a
-   single more complex surface filter.
+   A <emphasis>surface filter</emphasis> packet can be
+   used to filter normal surfaces from a large collection (such as a
+   normal surface list).
   </para>
   <para>
-   The filters being combined must be immediate children of the packet
-   representing this combination filter.  The logical operation used to
-   combine these child filters is described by the child &xml-op; element.
+   The details of the filter are stored in the child &xml-filter; element.
   </para>
   <para>
-   More information about surface filters can be found in the general
-   &xml-filter; element documentation.
+   The roles played by the child &xml-tag; and &xml-packet; elements are
+   described in the general &xml-packet; element documentation.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>filter</sgmltag>:
+    The following elements contain <sgmltag>packet</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-surfacefilter;</member>
+     <member>&xml-packet;</member>
+     <member>&xml-reginadata;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -67,10 +67,12 @@ filter ::= (&xml-op;)</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    The following elements occur in <sgmltag>filter</sgmltag> for a
-    combination filter:
+    The following elements occur in <sgmltag>packet</sgmltag> for
+    a surface filter packet:
     <simplelist type="inline">
-     <member>&xml-op;</member>
+     <member>&xml-filter;</member>
+     <member>&xml-packet;</member>
+     <member>&xml-tag;</member>
     </simplelist>.
    </para>
   </refsect2>

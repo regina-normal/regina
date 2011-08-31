@@ -360,6 +360,11 @@
    For users writing &python; scripts or for &cpp; programmers seeking to
    modify or extend the software, the full &api; for &regina;'s
    mathematical engine is also extensively documented.
+   You can access the &api; documentation by selecting
+   <menuchoice>
+    <guimenu>Help</guimenu>
+    <guimenuitem>Python API Reference</guimenuitem>
+   </menuchoice>.
   </para>
  </sect2>
 
@@ -371,9 +376,17 @@
    multiple triangulations, normal surface lists and other topological
    structures, along with supporting data such as text notes,
    &python; scripts and &pdf; documents.
-   The file format is well documented and is based on
+   The file format is based on
    compressed &xml;, an open and widely-supported text-based data
    format.  International characters are fully supported.
+  </para>
+  <para id="dataformat">
+   Again, this &xml; file format is extensively documented.
+   For details, select
+   <menuchoice>
+    <guimenu>Help</guimenu>
+    <guimenuitem>File Format Reference</guimenuitem>
+   </menuchoice>.
   </para>
  </sect2>
 </sect1>

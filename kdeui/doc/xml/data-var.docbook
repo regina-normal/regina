@@ -52,7 +52,7 @@ var ::=</synopsis>
    A &xml-var; element stores a single script variable.
   </para>
   <para>
-   <link linkend="packet-script">Script packets</link> may contain variables
+   Script packets may contain variables
    representing other packets in the same packet tree, allowing easy
    access to these other packets from within a script.
   </para>

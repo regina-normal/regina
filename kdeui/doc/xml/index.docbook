@@ -23,16 +23,6 @@
       <address>&regemail;</address>
      </affiliation>
     </author></authorgroup>">
-  <!ENTITY regabstract
-   "<para>
-     &regina; is a software package for studying 3-manifold triangulations
-     and normal surfaces.  Other key features include
-     angle structures, census enumeration, combinatorial
-     recognition of triangulations, and high-level tasks such as
-     3-sphere recognition and connected sum decomposition.
-     &regina; comes with a full graphical user interface, and also offers
-     &python; bindings and a low-level &cpp; programming interface.
-    </para>">
   <!ENTITY regwebsite
    "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
   <!ENTITY regdownloadsite
@@ -138,29 +128,9 @@
   <!ENTITY xml "<acronym>XML</acronym>">
   <!ENTITY xpdf "<application>Xpdf</application>">
 
-  <!ENTITY reginaabout SYSTEM "about.docbook">
-  <!ENTITY reginafeatureset SYSTEM "featureset.docbook">
-  <!ENTITY reginapacket SYSTEM "packet.docbook">
-  <!ENTITY reginatriangulations SYSTEM "triangulations.docbook">
-  <!ENTITY reginasurfaces SYSTEM "surfaces.docbook">
-  <!ENTITY reginaangles SYSTEM "angles.docbook">
-  <!ENTITY reginaforeign SYSTEM "foreign.docbook">
-  <!ENTITY reginapython SYSTEM "python.docbook">
-  <!ENTITY reginaoptions SYSTEM "options.docbook">
-  <!ENTITY reginacompiling SYSTEM "compiling.docbook">
-  <!ENTITY reginatrouble SYSTEM "trouble.docbook">
-  <!ENTITY reginaservices SYSTEM "services.docbook">
-  <!ENTITY reginacredits SYSTEM "credits.docbook">
-  <!ENTITY reginahighlights SYSTEM "HIGHLIGHTS.txt">
-  <!ENTITY reginaman SYSTEM "reginaman.docbook">
-  <!ENTITY reginautils SYSTEM "utils.docbook">
-  <!ENTITY bibliography SYSTEM "bibliography.docbook">
-  <!ENTITY taskindex SYSTEM "taskindex.docbook">
-  <!ENTITY sessiontriangulation SYSTEM "triangulation.session">
-  <!ENTITY sessiontree SYSTEM "tree.session">
-  <!ENTITY sessionprogress SYSTEM "progress.session">
-
-  <!ENTITY submani18n SYSTEM "submani18n.docbook">
+  <!ENTITY dataformat SYSTEM "dataformat.docbook">
+  <!ENTITY % dataformat-entities SYSTEM "dataformat.ent">
+  %dataformat-entities;
 
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
@@ -168,7 +138,7 @@
 
 <book lang="&language;">
  <bookinfo>
-  <title>The &regina; Handbook</title>
+  <title>&regina; File Format Reference</title>
 
   <authorgroup><author>
    <firstname>Benjamin</firstname>
@@ -185,8 +155,9 @@
 
   <legalnotice>
    <para>
-    Both &regina; and this handbook are licensed under the terms of the
-    <link linkend="licenses-gpl">GNU General Public License</link>.
+    Both &regina; and this reference are licensed under the terms of the
+    GNU General Public License.
+    See the users' handbook for full license details.
    </para>
   </legalnotice>
 
@@ -194,50 +165,28 @@
   <releaseinfo>4.90</releaseinfo>
 
   <abstract>
-   &regabstract;
    <para>
-    This handbook is current as of &regdate; for &regina; &regversion;.
+    This reference details the file format used by &regina;
+    for its data files.
+   </para>
+   <para>
+    &regina; is a software package for studying 3-manifold triangulations
+    and normal surfaces.  For information on &regina; itself, see
+    the users' handbook or visit
+    <ulink url="http://regina.sourceforge.net/"/>.
+   </para>
+   <para>
+    This reference is current as of &regdate; for &regina; &regversion;.
    </para>
   </abstract>
 
   <keywordset>
-   <keyword>KDE</keyword>
    <keyword>Regina</keyword>
-   <keyword>topology</keyword>
-   <keyword>3-manifolds</keyword>
-   <keyword>triangulations</keyword>
-   <keyword>normal surfaces</keyword>
-   <keyword>angle structures</keyword>
+   <keyword>XML</keyword>
+   <keyword>Data files</keyword>
   </keywordset>
  </bookinfo>
 
- <!-- Chapters -->
- &reginaabout;
- &reginapacket;
- &reginatriangulations;
- &reginasurfaces;
- &reginaangles;
- &reginaforeign;
- &reginapython;
- &reginaoptions;
- &reginacompiling;
- &reginatrouble;
- &reginaservices;
- &reginacredits;
-
- <!-- References -->
- &reginaman;
- &reginautils;
-
- <!-- Appendices -->
- <appendix id="history">
-  <title>Version History</title>
-  <programlisting>&reginahighlights;</programlisting>
- </appendix>
-
- <!-- Final Material -->
- &bibliography;
- &taskindex;
- &documentation.index;
+ &dataformat;
 </book>
 

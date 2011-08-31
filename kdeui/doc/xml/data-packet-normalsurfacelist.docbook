@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-packet-script">
+<refentry id="data-packet-normalsurfacelist">
  <refmeta>
-  <refentrytitle>packet (script)</refentrytitle>
+  <refentrytitle>packet (normal surface list)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (script)</refname>
-  <refpurpose>A script packet</refpurpose>
+  <refname>packet (normal surface list)</refname>
+  <refpurpose>A normal surface list packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-var;*, &xml-line;*,
+packet ::= (&xml-params;, &xml-surface;*,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -41,17 +41,21 @@ packet ::= (&xml-var;*, &xml-line;*,
  <refsect1>
   <title>Description</title>
   <para>
-   A <link linkend="packet-script">script packet</link> stores a
-   <link linkend="python">&python; script</link> offering direct
-   low-level access to the &regina; calculation engine.
+   A <emphasis>normal surface list</emphasis>
+   packet stores a list of normal surfaces in a particular
+   triangulation.  Generally this list will contain the vertex
+   surfaces whose convex span is the set of all normal surfaces in the
+   triangulation satisfying a particular set of constraints.
   </para>
   <para>
-   A script may contain variables representing other packets in the same
-   packet tree; these are described by the child &xml-var; elements.
+   The parent element of this normal surface list must be the
+   triangulation in which the normal surfaces lie.  The individual
+   normal surfaces in this list are contained in the child &xml-surface;
+   elements.
   </para>
   <para>
-   The &python; script itself is broken into individual lines; each line
-   is stored as an individual &xml-line; element.
+   The parameters of the normal surface enumeration that created this
+   list are stored in the child &xml-params; element.
   </para>
   <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
@@ -61,10 +65,10 @@ packet ::= (&xml-var;*, &xml-line;*,
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>packet</sgmltag>:
+    The following elements contain <sgmltag>packet</sgmltag> for
+    a normal surface list packet:
     <simplelist type="inline">
-     <member>&xml-packet;</member>
-     <member>&xml-reginadata;</member>
+     <member>&xml-packet-triangulation;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -73,12 +77,12 @@ packet ::= (&xml-var;*, &xml-line;*,
    <title>Children</title>
    <para>
     The following elements occur in <sgmltag>packet</sgmltag> for
-    a script packet:
+    a normal surface list packet:
     <simplelist type="inline">
-     <member>&xml-line;</member>
      <member>&xml-packet;</member>
+     <member>&xml-params;</member>
+     <member>&xml-surface;</member>
      <member>&xml-tag;</member>
-     <member>&xml-var;</member>
     </simplelist>.
    </para>
   </refsect2>

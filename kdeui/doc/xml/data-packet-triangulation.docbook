@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-packet-normalsurfacelist">
+<refentry id="data-packet-triangulation">
  <refmeta>
-  <refentrytitle>packet (normal surface list)</refentrytitle>
+  <refentrytitle>packet (triangulation)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (normal surface list)</refname>
-  <refpurpose>A normal surface list packet</refpurpose>
+  <refname>packet (triangulation)</refname>
+  <refpurpose>A triangulation packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,10 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-params;, &xml-surface;*,
+packet ::= (&xml-tetrahedra;,
+            &xml-fundgroup;?, &xml-H1;?, &xml-H1Bdry;?, &xml-H1Rel;?, &xml-H2;?,
+            &xml-splitsfce;?, &xml-zeroeff;?,
+            &xml-threesphere;?, &xml-threeball;?, &xml-turaevviro;*,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -41,21 +44,14 @@ packet ::= (&xml-params;, &xml-surface;*,
  <refsect1>
   <title>Description</title>
   <para>
-   A <link linkend="packet-surfacelist">normal surface list
-   packet</link> stores a list of normal surfaces in a particular
-   triangulation.  Generally this list will contain the vertex
-   surfaces whose convex span is the set of all normal surfaces in the
-   triangulation satisfying a particular set of constraints.
+   A <emphasis>triangulation</emphasis>
+   packet stores a 3-manifold triangulation.
   </para>
   <para>
-   The parent element of this normal surface list must be the
-   triangulation in which the normal surfaces lie.  The individual
-   normal surfaces in this list are contained in the child &xml-surface;
-   elements.
-  </para>
-  <para>
-   The parameters of the normal surface enumeration that created this
-   list are stored in the child &xml-params; element.
+   The tetrahedra forming this triangulation and their corresponding
+   face gluings are specified by the child &xml-tetrahedra; element.
+   Other optional child elements may store precalculated properties of
+   this triangulation.
   </para>
   <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
@@ -65,10 +61,10 @@ packet ::= (&xml-params;, &xml-surface;*,
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>packet</sgmltag> for
-    a normal surface list packet:
+    The following elements contain <sgmltag>packet</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-triangulation;</member>
+     <member>&xml-packet;</member>
+     <member>&xml-reginadata;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -77,12 +73,21 @@ packet ::= (&xml-params;, &xml-surface;*,
    <title>Children</title>
    <para>
     The following elements occur in <sgmltag>packet</sgmltag> for
-    a normal surface list packet:
+    a triangulation packet:
     <simplelist type="inline">
+     <member>&xml-fundgroup;</member>
+     <member>&xml-H1;</member>
+     <member>&xml-H1Bdry;</member>
+     <member>&xml-H1Rel;</member>
+     <member>&xml-H2;</member>
      <member>&xml-packet;</member>
-     <member>&xml-params;</member>
-     <member>&xml-surface;</member>
+     <member>&xml-splitsfce;</member>
      <member>&xml-tag;</member>
+     <member>&xml-tetrahedra;</member>
+     <member>&xml-threeball;</member>
+     <member>&xml-threesphere;</member>
+     <member>&xml-turaevviro;</member>
+     <member>&xml-zeroeff;</member>
     </simplelist>.
    </para>
   </refsect2>

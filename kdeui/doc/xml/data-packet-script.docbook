@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-packet-text">
+<refentry id="data-packet-script">
  <refmeta>
-  <refentrytitle>packet (text)</refentrytitle>
+  <refentrytitle>packet (script)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (text)</refname>
-  <refpurpose>A text packet</refpurpose>
+  <refname>packet (script)</refname>
+  <refpurpose>A script packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-text;,
+packet ::= (&xml-var;*, &xml-line;*,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -41,9 +41,16 @@ packet ::= (&xml-text;,
  <refsect1>
   <title>Description</title>
   <para>
-   A <link linkend="packet-text">text packet</link> simply stores an
-   arbitrary amount of text.  The text itself is contained in the
-   child &xml-text; element.
+   A <emphasis>script</emphasis> packet stores a &python; script offering direct
+   low-level access to the &regina; calculation engine.
+  </para>
+  <para>
+   A script may contain variables representing other packets in the same
+   packet tree; these are described by the child &xml-var; elements.
+  </para>
+  <para>
+   The &python; script itself is broken into individual lines; each line
+   is stored as an individual &xml-line; element.
   </para>
   <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
@@ -65,11 +72,12 @@ packet ::= (&xml-text;,
    <title>Children</title>
    <para>
     The following elements occur in <sgmltag>packet</sgmltag> for
-    a text packet:
+    a script packet:
     <simplelist type="inline">
+     <member>&xml-line;</member>
      <member>&xml-packet;</member>
      <member>&xml-tag;</member>
-     <member>&xml-text;</member>
+     <member>&xml-var;</member>
     </simplelist>.
    </para>
   </refsect2>

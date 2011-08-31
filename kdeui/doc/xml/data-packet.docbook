@@ -66,8 +66,7 @@ packet ::= (<replaceable>type-specific content</replaceable>,
    A &xml-packet; element represents a single packet in a &regina; data
    file.  A packet is a single data object, such as a triangulation, a
    text note or a &python; script.  A general discussion of packets and
-   their different types can be found in the chapter on
-   <link linkend="packet">working with packets</link>.
+   their different types can be found in the users' handbook.
   </para>
   <para>
    The precise &xml-packet; content model differs between packet types.

@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-packet-surfacefilter">
+<refentry id="data-packet-container">
  <refmeta>
-  <refentrytitle>packet (surface filter)</refentrytitle>
+  <refentrytitle>packet (container)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (surface filter)</refname>
-  <refpurpose>A surface filter packet</refpurpose>
+  <refname>packet (container)</refname>
+  <refpurpose>A container packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,8 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-filter;,
-            &xml-tag;*, &xml-packet;*)</synopsis>
+packet ::= (&xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -41,12 +40,9 @@ packet ::= (&xml-filter;,
  <refsect1>
   <title>Description</title>
   <para>
-   A <link linkend="packet-filter">surface filter packet</link> can be
-   used to filter normal surfaces from a large collection (such as a
-   <link linkend="packet-surfacelist">normal surface list</link>).
-  </para>
-  <para>
-   The details of the filter are stored in the child &xml-filter; element.
+   A <emphasis>container</emphasis> packet stores no
+   information of its own; it is merely used to hold child packets
+   and thus help organise the packet tree.
   </para>
   <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
@@ -68,9 +64,8 @@ packet ::= (&xml-filter;,
    <title>Children</title>
    <para>
     The following elements occur in <sgmltag>packet</sgmltag> for
-    a surface filter packet:
+    a container packet:
     <simplelist type="inline">
-     <member>&xml-filter;</member>
      <member>&xml-packet;</member>
      <member>&xml-tag;</member>
     </simplelist>.

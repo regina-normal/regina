@@ -59,7 +59,10 @@ turaevviro ::=</synopsis>
   <para>
    Each Turaev-Viro invariant corresponds to a particular set of initial
    data, as described in the paper of Turaev and Viro in which these
-   invariants appear <xref linkend="bib-turaevviro"/>.  In particular,
+   invariants appear (Turaev &amp; Viro,
+   <emphasis>State sum invariants of 3-manifolds and quantum
+   6j-symbols</emphasis>, Topology 31:4 (1992), pp.&nbsp;865&ndash;902).
+   In particular,
    Section 7 of this paper describes the initial data as determined
    by an integer <replaceable>r</replaceable>&nbsp;&gt;=&nbsp;3 and a root of
    unity <replaceable>q</replaceable><subscript>0</subscript>

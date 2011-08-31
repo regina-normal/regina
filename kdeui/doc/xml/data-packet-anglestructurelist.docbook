@@ -43,8 +43,8 @@ packet ::= (&xml-angleparams;?, &xml-struct;*,
  <refsect1>
   <title>Description</title>
   <para>
-   An <link linkend="packet-anglestructures">angle structure list
-   packet</link> stores a list of angle structures on a particular
+   An <emphasis>angle structure list</emphasis> packet
+   stores a list of angle structures on a particular
    triangulation.  Generally this list will contain the vertex
    structures whose convex span is the set of all angle structures on
    the triangulation.

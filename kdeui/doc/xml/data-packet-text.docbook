@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-packet-container">
+<refentry id="data-packet-text">
  <refmeta>
-  <refentrytitle>packet (container)</refentrytitle>
+  <refentrytitle>packet (text)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (container)</refname>
-  <refpurpose>A container packet</refpurpose>
+  <refname>packet (text)</refname>
+  <refpurpose>A text packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,8 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-tag;*, &xml-packet;*)</synopsis>
+packet ::= (&xml-text;,
+            &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -40,9 +41,9 @@ packet ::= (&xml-tag;*, &xml-packet;*)</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   A <link linkend="packet-container">container packet</link> stores no
-   information of its own; it is merely used to hold child packets
-   and thus help organise the packet tree.
+   A <emphasis>text</emphasis> packet simply stores an
+   arbitrary amount of text.  The text itself is contained in the
+   child &xml-text; element.
   </para>
   <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
@@ -64,10 +65,11 @@ packet ::= (&xml-tag;*, &xml-packet;*)</synopsis>
    <title>Children</title>
    <para>
     The following elements occur in <sgmltag>packet</sgmltag> for
-    a container packet:
+    a text packet:
     <simplelist type="inline">
      <member>&xml-packet;</member>
      <member>&xml-tag;</member>
+     <member>&xml-text;</member>
     </simplelist>.
    </para>
   </refsect2>

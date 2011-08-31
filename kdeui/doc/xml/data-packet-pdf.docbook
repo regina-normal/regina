@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-packet-triangulation">
+<refentry id="data-packet-pdf">
  <refmeta>
-  <refentrytitle>packet (triangulation)</refentrytitle>
+  <refentrytitle>packet (&pdf;)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (triangulation)</refname>
-  <refpurpose>A triangulation packet</refpurpose>
+  <refname>packet (&pdf;)</refname>
+  <refpurpose>A &pdf; packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,10 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-tetrahedra;,
-            &xml-fundgroup;?, &xml-H1;?, &xml-H1Bdry;?, &xml-H1Rel;?, &xml-H2;?,
-            &xml-splitsfce;?, &xml-zeroeff;?,
-            &xml-threesphere;?, &xml-threeball;?, &xml-turaevviro;*,
+packet ::= (&xml-pdf;,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -44,14 +41,9 @@ packet ::= (&xml-tetrahedra;,
  <refsect1>
   <title>Description</title>
   <para>
-   A <link linkend="packet-triangulation">triangulation packet</link>
-   stores a 3-manifold triangulation.
-  </para>
-  <para>
-   The tetrahedra forming this triangulation and their corresponding
-   face gluings are specified by the child &xml-tetrahedra; element.
-   Other optional child elements may store precalculated properties of
-   this triangulation.
+   A <emphasis>&pdf;</emphasis> packet stores a single
+   &pdf; document.  The document itself is encoded in a printable format
+   in the child &xml-pdf; element.
   </para>
   <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
@@ -73,21 +65,11 @@ packet ::= (&xml-tetrahedra;,
    <title>Children</title>
    <para>
     The following elements occur in <sgmltag>packet</sgmltag> for
-    a triangulation packet:
+    a &pdf; packet:
     <simplelist type="inline">
-     <member>&xml-fundgroup;</member>
-     <member>&xml-H1;</member>
-     <member>&xml-H1Bdry;</member>
-     <member>&xml-H1Rel;</member>
-     <member>&xml-H2;</member>
      <member>&xml-packet;</member>
-     <member>&xml-splitsfce;</member>
+     <member>&xml-pdf;</member>
      <member>&xml-tag;</member>
-     <member>&xml-tetrahedra;</member>
-     <member>&xml-threeball;</member>
-     <member>&xml-threesphere;</member>
-     <member>&xml-turaevviro;</member>
-     <member>&xml-zeroeff;</member>
     </simplelist>.
    </para>
   </refsect2>

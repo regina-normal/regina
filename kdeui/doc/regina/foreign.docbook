@@ -373,7 +373,7 @@
     that the exported data is a plain text file that can be viewed in an
     ordinary text editor.  If you are brave, you can even edit the
     &xml; yourself; see the <link linkend="dataformat">file format
-    reference</link> at the end of this manual.
+    reference</link> for details.
    </para>
    <para>
     Note that &regina; can happily load both compressed and uncompressed
