@@ -294,6 +294,18 @@ class REGINA_API NNormalSurfaceVector : public NRay {
         virtual bool allowsAlmostNormal() const = 0;
 
         /**
+         * Determines if the specific underlying coordinate system
+         * allows for spun normal surfaces; that is, surfaces with
+         * infinitely many triangles.
+         *
+         * Note that this has nothing to do with whether or not this
+         * specific surface \e contains infinitely many triangles.
+         *
+         * @return \c true if and only if spun normal surfaces are allowed.
+         */
+        virtual bool allowsSpun() const = 0;
+
+        /**
          * Determines if this normal surface has more than one
          * octagonal disc.  It may be assumed that at most one
          * octagonal disc \e type exists in this surface.  This routine will

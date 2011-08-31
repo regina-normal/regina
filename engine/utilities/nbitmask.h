@@ -260,7 +260,7 @@ class REGINA_API NBitmask {
          *
          * \pre \a numBits is at most the length of this bitmask.
          *
-         * @param the number of bits that will \e not be cleared.
+         * @param numBits the number of bits that will \e not be cleared.
          */
         void truncate(unsigned numBits);
 
@@ -526,7 +526,7 @@ class NBitmask1 {
          * This routine does not change the \e length of this bitmask
          * (as passed to the contructor or to reset()).
          *
-         * @param the number of bits that will \e not be cleared.
+         * @param numBits the number of bits that will \e not be cleared.
          */
         inline void truncate(unsigned numBits) {
             if (numBits < 8 * sizeof(T))
@@ -897,7 +897,7 @@ class NBitmask2 {
          * This routine does not change the \e length of this bitmask
          * (as passed to the contructor or to reset()).
          *
-         * @param the number of bits that will \e not be cleared.
+         * @param numBits the number of bits that will \e not be cleared.
          */
         inline void truncate(unsigned numBits) {
             if (numBits < 8 * sizeof(T)) {

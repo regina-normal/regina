@@ -40,58 +40,59 @@
  * @{
  */
 
-/**
- * Macros for defining which symbols should be exported in the
- * calculation engine shared library.
- *
- * All non-templated, non-static functions and classes that are part of
- * Regina's public interface \b must be declared with REGINA_API.
- * Otherwise things may (and in some environments will) break when external
- * applications try to use Regina with optimisations such as gcc's
- * -fvisibility=hidden.
- *
- * Classes and functions that are local to the current compilation unit
- * and should not be publicly exported may be declared with REGINA_LOCAL,
- * though this is optional.
- *
- * When building the Regina calculation engine shared library,
- * REGINA_DLL_EXPORTS must be defined (this ensures that API symbols are
- * marked for export).  When importing (using) this library,
- * REGINA_DLL_EXPORTS must not be defined (this ensures that API symbols
- * are marked for import instead).
- *
- * The macros below are modified from the instructions at
- * http://gcc.gnu.org/wiki/Visibility (retrieved on 22 May 2011).
- */
-#ifndef __DOXYGEN
-#if defined _WIN32 || defined __CYGWIN__
-  #define REGINA_HELPER_DLL_IMPORT __declspec(dllimport)
-  #define REGINA_HELPER_DLL_EXPORT __declspec(dllexport)
-  #define REGINA_HELPER_DLL_LOCAL
-#else
-  #if __GNUC__ >= 4
-    #define REGINA_HELPER_DLL_IMPORT __attribute__ ((visibility("default")))
-    #define REGINA_HELPER_DLL_EXPORT __attribute__ ((visibility("default")))
-    #define REGINA_HELPER_DLL_LOCAL  __attribute__ ((visibility("hidden")))
-  #else
-    #define REGINA_HELPER_DLL_IMPORT
-    #define REGINA_HELPER_DLL_EXPORT
-    #define REGINA_HELPER_DLL_LOCAL
-  #endif
-#endif
+#ifdef __DOXYGEN
+  // Fake definitions just for doxygen.
 
-// Assume that the library is always built as a shared library (not static).
-#ifdef REGINA_DLL_EXPORTS
-  #define REGINA_API REGINA_HELPER_DLL_EXPORT
-#else
-  #define REGINA_API REGINA_HELPER_DLL_IMPORT
-#endif
-#define REGINA_LOCAL REGINA_HELPER_DLL_LOCAL
-
-#else // doxygen
-  // If doxygen is reading this, just make these macros go away.
+  /**
+   * All non-templated, non-static functions and classes that are part of
+   * Regina's public interface \b must be declared with REGINA_API.
+   * Otherwise things may (and in some environments will) break when external
+   * applications try to use Regina with optimisations such as gcc's
+   * <tt>-fvisibility=hidden</tt>.
+   *
+   * Note:  When building the Regina calculation engine shared library,
+   * REGINA_DLL_EXPORTS must be defined (this ensures that API symbols are
+   * marked for export).  When importing (using) this library,
+   * REGINA_DLL_EXPORTS must \e not be defined (this ensures that API symbols
+   * are marked for import instead).
+   */
   #define REGINA_API
+
+  /**
+   * Classes and functions that are local to the current compilation unit
+   * and should not be publicly exported may be declared with REGINA_LOCAL.
+   * Use of this macro is optional.
+   */
   #define REGINA_LOCAL
+#else
+  // The real definitions go here.
+  // The macros below are modified from the instructions at
+  // http://gcc.gnu.org/wiki/Visibility (retrieved on 22 May 2011).
+  #if defined _WIN32 || defined __CYGWIN__
+    #define REGINA_HELPER_DLL_IMPORT __declspec(dllimport)
+    #define REGINA_HELPER_DLL_EXPORT __declspec(dllexport)
+    #define REGINA_HELPER_DLL_LOCAL
+  #else
+    #if __GNUC__ >= 4
+      #define REGINA_HELPER_DLL_IMPORT __attribute__ ((visibility("default")))
+      #define REGINA_HELPER_DLL_EXPORT __attribute__ ((visibility("default")))
+      #define REGINA_HELPER_DLL_LOCAL  __attribute__ ((visibility("hidden")))
+    #else
+      #define REGINA_HELPER_DLL_IMPORT
+      #define REGINA_HELPER_DLL_EXPORT
+      #define REGINA_HELPER_DLL_LOCAL
+    #endif
+  #endif
+
+  // Assume that the library is always built as a shared library (not static).
+  #ifdef REGINA_DLL_EXPORTS
+    #define REGINA_API REGINA_HELPER_DLL_EXPORT
+  #else
+    #define REGINA_API REGINA_HELPER_DLL_IMPORT
+  #endif
+  #define REGINA_LOCAL REGINA_HELPER_DLL_LOCAL
 #endif // doxygen
+
+/*@}*/
 
 #endif

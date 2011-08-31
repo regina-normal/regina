@@ -189,7 +189,7 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          *
          * @param rk the rank of the group as a Z_p-module.  That is, if the
          * group is <tt>n Z_p</tt>, then \a rk should be \a n.
-         * @param \a p describes the type of ring that we use to talk about
+         * @param p describes the type of ring that we use to talk about
          * the "free" module.
          */
         NMarkedAbelianGroup(unsigned long rk, const NLargeInteger &p);
@@ -427,7 +427,7 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
          *
-         * @param index specifies which standard basis vector from SNF
+         * @param SNFRep specifies which standard basis vector from SNF
          * coordinates; this must be between 0 and
          * minNumberOfGenerators()-1 inclusive.
          * @return a corresponding vector whose length is M.columns(),
@@ -481,7 +481,7 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          * complex whose kernel is the cycles.  In other words, this
          * routine returns <tt>M*CCrep</tt>.
          *
-         * @param ccelt a vector whose length is M.columns(),
+         * @param CCrep a vector whose length is M.columns(),
          * where \a M is one of the matrices that defines the chain
          * complex (see the class notes for details).
          * @return the differential, expressed as a vector of length M.rows().
