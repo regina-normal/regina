@@ -440,7 +440,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * and it is the responsibility of the caller of this routine to
          * destroy it after use.
          *
-         * The arguments \a use and \a useArgs are the smae as for the
+         * The arguments \a use and \a useArgs are the same as for the
          * NGluingPermSearcher constructor.
          *
          * \warning The data format is liable to change between Regina

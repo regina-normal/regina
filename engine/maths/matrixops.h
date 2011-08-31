@@ -310,9 +310,10 @@ REGINA_API std::auto_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
         const std::vector<NLargeInteger>& sublattice);
 
 /**
- * Given an automorphism of the group <tt>Z_p1 + Z_p2 + ... + Z_pn</tt>,
+ * Given an automorphism of an abelian group,
  * this procedure computes the inverse automorphism.
  *
+ * The abelian group is of the form <tt>Z_p1 + Z_p2 + ... + Z_pn</tt>.
  * The input is an n-by-n matrix \a A which represents a lift of the
  * automorphism to just some n-by-n matrix.  Specifically, you have a little
  * commutative diagram with <tt>Z^n --A--> Z^n</tt> covering the automorphism
