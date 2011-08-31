@@ -178,8 +178,8 @@ Version 4.90  [ 10 September, 2011 ] - First prerelease for version 5.0.
               virtual methods.
         Class NScript:
             - Fixed a bug that lost script variables when reading ancient
-              binary files (created before Regina 3.0, around mid-2002).
-              This bug only showed up on some compilers.
+              binary files (i.e., files created before Regina 3.0, around
+              mid-2002).  This bug only showed up on some compilers.
         Class NSnapPeaCensusManifold, NSnapPeaCensusTri:
             - Routines getHomologyH1() (for both classes) and construct()
               (for NSnapPeaCensusManifold) are now implemented for all SnapPea
