@@ -1,3 +1,0 @@
-Ben Burton <bab@debian.org>, with help from others.
-
-See the Regina handbook for full acknowledgements.
