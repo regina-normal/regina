@@ -72,7 +72,7 @@ class GenericBitManipulator {
          * Bits are indexed from 0 upwards, starting at the least
          * significant bit.
          *
-         * @param the integer of type \a T to examine.
+         * @param x the integer of type \a T to examine.
          * @return the position of the first \c true bit, or -1 if there
          * are no \c true bits.
          */
@@ -98,7 +98,7 @@ class GenericBitManipulator {
          * Bits are indexed from 0 upwards, starting at the least
          * significant bit.
          *
-         * @param the integer of type \a T to examine.
+         * @param x the integer of type \a T to examine.
          * @return the position of the last \c true bit, or -1 if there
          * are no \c true bits.
          */

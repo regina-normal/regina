@@ -109,7 +109,7 @@ class REGINA_API NAngleStructureList :
          * Returns whether this list was produced by enumerating taut angle
          * structures only.
          *
-         * @param \c true if this list was produced by enumerating
+         * @return \c true if this list was produced by enumerating
          * taut angle structures only, or \c false if the enumeration
          * procedure allowed for any angle structures.
          */
