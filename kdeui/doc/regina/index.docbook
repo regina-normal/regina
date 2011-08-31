@@ -25,9 +25,13 @@
     </author></authorgroup>">
   <!ENTITY regabstract
    "<para>
-     &regina; is a suite of mathematical software for 3-manifold
-     topologists.  It deals with the study of 3-manifold triangulations
-     and includes support for normal surfaces and angle structures.
+     &regina; is a software package for studying 3-manifold triangulations
+     and normal surfaces.  Other key features include
+     angle structures, census enumeration, combinatorial
+     recognition of triangulations, and high-level tasks such as
+     3-sphere recognition and connected sum decomposition.
+     &regina; comes with a full graphical user interface, and also offers
+     &python; bindings and a low-level &cpp; programming interface.
     </para>">
   <!ENTITY regwebsite
    "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
@@ -54,6 +58,7 @@
   <!ENTITY bn "<replaceable>b<subscript><replaceable>n</replaceable></subscript></replaceable>">
   <!ENTITY bibtex "<application>BibTeX</application>">
   <!ENTITY boost-python "<application>boost.python</application>">
+  <!ENTITY bzip2 "<application>bzip2</application>">
   <!ENTITY casson "<application>Casson</application>">
   <!ENTITY c "<application>C</application>">
   <!ENTITY ccpp "&c;/&cpp;">
@@ -71,9 +76,11 @@
   <!ENTITY graphviz "<application>Graphviz</application>">
   <!ENTITY graphvizurl "<ulink url='http://www.graphviz.org/'>&graphviz;</ulink>">
   <!ENTITY gui "<acronym>GUI</acronym>">
-  <!ENTITY java "<application>Java</application>">
+  <!ENTITY gzip "<application>gzip</application>">
   <!ENTITY hom1 "H<subscript>1</subscript>">
   <!ENTITY html "<acronym>HTML</acronym>">
+  <!ENTITY java "<application>Java</application>">
+  <!ENTITY jython "<application>Jython</application>">
   <!ENTITY kde3 "&kde;&nbsp;3">
   <!ENTITY kde4 "&kde;&nbsp;4">
   <!ENTITY kdegraphics "<productname>kdegraphics</productname>">
@@ -105,8 +112,10 @@
   <!ENTITY sfslong "Seifert fibred space">
   <!ENTITY snappea "<application>SnapPea</application>">
   <!ENTITY snappeaurl "<ulink
-   url='http://www.geometrygames.org/SnapPea/'>&snappea;</ulink>">
-  <!ENTITY snappeaurlraw "<ulink url='http://www.geometrygames.org/SnapPea/'/>">
+   url='http://www.math.uic.edu/t3m/SnapPy/'>&snappea;/&snappy;</ulink>">
+  <!ENTITY snappyurlraw "<ulink
+   url='http://www.math.uic.edu/t3m/SnapPy/'/>">
+  <!ENTITY snappy "<application>SnapPy</application>">
   <!ENTITY sourceforge "<productname>SourceForge</productname>">
   <!ENTITY sss "S<superscript>3</superscript>">
   <!ENTITY sysreq
@@ -193,8 +202,10 @@
    <keyword>KDE</keyword>
    <keyword>Regina</keyword>
    <keyword>topology</keyword>
-   <keyword>3-manifold</keyword>
+   <keyword>3-manifolds</keyword>
+   <keyword>triangulations</keyword>
    <keyword>normal surfaces</keyword>
+   <keyword>angle structures</keyword>
   </keywordset>
  </bookinfo>
 

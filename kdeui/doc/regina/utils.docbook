@@ -439,6 +439,7 @@
      <arg><option>-M, --minprime</option></arg>
      <arg><option>-N, --minprimep2</option></arg>
     </group>
+    <arg><option>-s, --sigs=</option></arg>
     <group>
      <arg><option>-p, --genpairs</option></arg>
      <arg><option>-P, --usepairs</option></arg>
@@ -483,13 +484,22 @@
     <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
     utilities, which can help coordinate these simultaneous processes.
    </para>
-   <warning><para>
-    A census with even a relatively small number of tetrahedra can
-    take an incredibly long time to run and chew up massive amounts of
-    memory.  It is recommended that you try very small censuses to begin
-    with (such as 3 or 4 tetrahedra) and work upwards to establish the
-    limits relative to your machine.
-   </para></warning>
+   <warning>
+    <para>
+     A census with even a relatively small number of tetrahedra can
+     take an incredibly long time to run and chew up massive amounts of
+     memory.  It is recommended that you try very small censuses to begin
+     with (such as 3 or 4 tetrahedra) and work upwards to establish the
+     limits relative to your machine.
+    </para>
+    <para>
+     For very large census runs, it is <emphasis>highly recommended</emphasis>
+     that you use the <option>--sigs</option> option, which will keep
+     the output file small and significantly reduce the memory footprint
+     of <command>tricensus</command> itself.  See the
+     <option>--sigs</option> documentation below for details.
+    </para>
+   </warning>
   </refsect1>
 
   <refsect1>
@@ -621,6 +631,36 @@
        be ignored.  What <emphasis>is</emphasis> guaranteed is that any
        triangulation that is minimal, prime, P2-irreducible and
        disc-irreducible will certainly be included in the census.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-s, --sigs=</option></term>
+     <listitem>
+      <para>
+       Instead of writing a full &regina; data file, just output a list
+       of isomorphism signatures.
+      </para>
+      <para>
+       The output file will be a plain text file.  Each line will be a
+       short string of letters, digits and punctuation that uniquely
+       encodes a 3-manifold triangulation (up to combinatorial isomorphism).
+       The full output file can be imported from within &regina; by
+       selecting
+       <menuchoice>
+        <guimenu>File</guimenu>
+        <guisubmenu>Import</guisubmenu>
+        <guimenuitem>Isomorphism Signature List</guimenuitem>
+       </menuchoice>.
+      </para>
+      <para>
+       This option is highly recommended for large census enumerations.
+       First, the output file will be considerably smaller.
+       More importantly, the memory footprint of
+       <command>tricensus</command> itself will also be much smaller:
+       triangulations can be written to the output file and forgotten
+       immediately, instead of being kept in memory to construct a final
+       &regina; data file.
       </para>
      </listitem>
     </varlistentry>
@@ -1134,6 +1174,7 @@
      <arg><option>-M, --minprime</option></arg>
      <arg><option>-N, --minprimep2</option></arg>
     </group>
+    <arg><option>-s, --sigs=</option></arg>
     <arg choice="req"><replaceable>pairs-file</replaceable></arg>
     <arg choice="req"><replaceable>output-file-prefix</replaceable></arg>
    </cmdsynopsis>
@@ -1236,6 +1277,12 @@
     command may be used to combine the many small output files
     into one large topology data file for easier handling.
    </para></tip>
+   <warning><para>
+    It is <emphasis>highly recommended</emphasis>
+    that you use the <option>--sigs</option> option.  This will keep
+    output files small, and will significantly reduce the memory footprint
+    of <command>tricensus-mpi</command> itself.
+   </para></warning>
   </refsect1>
 
   <refsect1 id="man-tricensus-mpi-modes">
@@ -1495,7 +1542,8 @@
     <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
     job, and writes a human-readable summary to standard output.
     It can be used for both jobs that have finished and jobs that are
-    still running.
+    still running, and it can happily read logs that have been
+    compressed using &gzip; or &bzip2;.
    </para>
    <para>
     The logs produced by <command>tricensus-mpi</command> are quite

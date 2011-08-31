@@ -2,10 +2,13 @@
  <title>Introduction</title>
 
  <para>
-  &regina; is a program for the study of 3-manifold topology.  In
-  particular it focuses upon normal surface theory and the combinatorial
-  structures of triangulations.  A full list of features is provided
-  <link linkend="featureset">later in this introduction</link>.
+  &regina; is a software package for 3-manifold topologists.
+  Its main strengths lie in normal surface theory and the combinatorial
+  structures of 3-manifold triangulations.  Beyond this, &regina;
+  can perform a range of other algebraic, geometric, topological and
+  combinatorial tasks; see the
+  <link linkend="featureset">full feature set</link>
+  later in this introduction.
  </para>
 
  <sect1 id="tutorial">
@@ -13,8 +16,8 @@
   <para>
    The best way to become familiar with &regina; is simply to play
    around with it.  &regina; ships with several example files, including
-   a number of censuses of 3-manifold triangulations.  Many of these example
-   files can be easily accessed through the
+   a number of censuses of 3-manifold triangulations.  Most of these examples
+   can be accessed through the
    <menuchoice>
     <guimenu>File</guimenu>
     <guimenuitem>Open Example</guimenuitem>
@@ -22,17 +25,24 @@
    menu when running &regina;.
   </para>
   <para>
-   The full set of examples is usually installed in the directory
-   <filename>/usr/share/regina/examples</filename> or
-   <filename>/usr/local/share/regina/examples</filename>,
-   though some distributions install them in a different location.
+   For an excellent starting point, try
+   <menuchoice>
+    <guimenu>File</guimenu>
+    <guisubmenu>Open Example</guisubmenu>
+    <guimenuitem>Introductory Examples</guimenuitem>
+   </menuchoice>,
+   which illustrates most of the structures that &regina; can work with.
+   The users' handbook (which you are reading now) also includes a number of
+   <link linkend="sessions">sample &python; sessions</link>
+   that illustrate how &regina;'s in-built &python; scripting can be used.
   </para>
   <para>
-   The example file <filename>sample-misc.rga</filename> is an excellent
-   starting point, since it illustrates most of the
-   structures that &regina; can work with.  Sample &python; sessions are
-   also included to illustrate how the in-built &python; scripting can
-   be used.
+   The graphical user interface offers extensive assistance
+   through tooltips and &quot;What's This?&quot; texts.
+   If you ever want to know what element of the user interface means
+   (such a button or a text field), just press
+   <keycombo action="simul">&Shift;<keycap>F1</keycap></keycombo>
+   and click on the thing you would like to know more about.
   </para>
   <para>
    As a final note, users are encouraged to write to &reguserlist; with
@@ -78,11 +88,15 @@
    uploaded to the web.
   </para>
   <para>
-   Since then &regina; has undergone several major structural changes.
+   Since then &regina; has undergone some major structural changes.
    In late 2003 the old &java; user interface was completely removed in
-   favour of a faster and cleaner native &cpp; user interface, written
-   using the excellent &kde; libraries, bringing us to the point
-   at which we are today.
+   favour of a faster and cleaner native &cpp; user interface (written
+   using the excellent &kde; libraries), and the scripting interface
+   switched from &jython; to standard &python; support.
+   In 2011 the user interface was ported from &kde3; to &kde4;, which brings
+   &regina; in line with modern &linux; desktop systems and offers a much
+   cleaner experience on &macosx;,
+   bringing us to the point at which we are today.
   </para>
  </sect1>
 
@@ -92,10 +106,9 @@
   <para>
    If you find &regina; useful in your research, please consider citing it
    as you would any other paper that you use.  A suggested reference
-   might be as follows.
+   is the following:
   </para>
   <blockquote><para>
-   [BBP]
    Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
    <emphasis>Regina: Software for 3-manifold topology and
     normal surface theory,</emphasis>
@@ -120,10 +133,10 @@
   <title>Who is Regina?</title>
 
   <para>
-   This normal surface theory calculator has been named after Regina
-   Grenfell (nee Basman) who once told me she was the most normal person
-   I knew.  She's studied mathematics, reads cool books, has a gorgeous
-   baby boy and likes running around rainforests in the dark.
+   This normal surface theory software has been named after Regina
+   Basman who once told me she was the most normal person
+   I knew.  She's studied mathematics, reads interesting books, has a gorgeous
+   child and likes running around rainforests in the dark.
   </para>
 
   <mediaobject>

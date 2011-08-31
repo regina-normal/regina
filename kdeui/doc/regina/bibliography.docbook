@@ -151,7 +151,7 @@
  </biblioentry>
 
  <biblioentry id="bib-burton-genus">
-  <abbrev>Bur11</abbrev>
+  <abbrev>Bur11a</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -164,6 +164,46 @@
   <artpagenums>pp. 59&ndash;66</artpagenums>
   <publishername>ACM</publishername>
   <date>2011</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-simps3">
+  <abbrev>Bur11b</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>The Pachner graph and the simplification of 3-sphere
+   triangulations</title>
+  <edition>SCG '11: Proceedings of the Twenty-Seventh Annual Symposium
+   on Computational Geometry</edition>
+  <artpagenums>pp. 153&ndash;162</artpagenums>
+  <publishername>ACM</publishername>
+  <date>2011</date>
+ </biblioentry>
+
+ <biblioentry id="bib-weber-seifert">
+  <abbrev>BRT09</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Benjamin</firstname>
+    <othername>A.</othername>
+    <surname>Burton</surname>
+   </author>
+   <author>
+    <firstname>J.</firstname>
+    <othername>Hyam</othername>
+    <surname>Rubinstein</surname>
+   </author>
+   <author>
+    <firstname>Stephan</firstname>
+    <surname>Tillmann</surname>
+   </author>
+  </authorgroup>
+  <title>The Weber-Seifert dodecahedral space is non-Haken</title>
+  <edition>To appear in Trans. Amer. Math. Soc.</edition>
+  <issuenum>arXiv:0909.4625</issuenum>
+  <date>September 2009</date>
  </biblioentry>
 
  <biblioentry id="bib-cuspedcensus">
@@ -263,6 +303,26 @@
   <issuenum>no. 4</issuenum>
   <artpagenums>pp. 261&ndash;274</artpagenums>
   <date>1994</date>
+ </biblioentry>
+
+ <biblioentry id="bib-jaco-oertel">
+  <abbrev>JO84</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>William</firstname>
+    <surname>Jaco</surname>
+   </author>
+   <author>
+    <firstname>Ulrich</firstname>
+    <surname>Oertel</surname>
+   </author>
+  </authorgroup>
+  <title>An algorithm to decide if a 3-manifold is a Haken manifold</title>
+  <edition>Topology</edition>
+  <volumenum>vol. 23</volumenum>
+  <issuenum>no. 2</issuenum>
+  <artpagenums>pp. 195&ndash;209</artpagenums>
+  <date>1984</date>
  </biblioentry>
 
  <biblioentry id="bib-0-efficiency">
