@@ -7,8 +7,15 @@ Regina - A Normal Surface Theory Calculator
     For a human-readable summary of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 4.90  [ (under development) ]
+Version 4.90  [ 10 September, 2011 ] - First prerelease for version 5.0.
 
+    OVERALL:
+        - The graphical user interface has been ported from KDE3 to KDE4.
+        - The build system has been ported from autotools to cmake.
+    DOCUMENTATION:
+        - The users' handbook has undergone a thorough overhaul.
+        - The data file format has been split out of the users' handbook
+          and placed in its own separate reference manual.
     ENGINE:
         Typedef AcceptTriangulation:
             - This global typedef has been deprecated.  Please use the
@@ -288,6 +295,9 @@ Version 4.90  [ (under development) ]
               removed.  As a result, REGISTER_FLAVOUR now takes five arguments,
               not six.
     USER INTERFACE:
+        - Ported from KDE3 to KDE4.. finally!
+        - A number of usability updates designed to help new users
+          better find their way around the software.
         - There is now an option to enable or disable diagnostic
           messages from the SnapPea kernel.
         - Warn users if they try to save without committing their changes first.
