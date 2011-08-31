@@ -1,14 +1,27 @@
 <?xml version="1.0"?>
-<reginadata engine="4.6">
+<reginadata engine="4.90">
 <packet label="Container"
 	type="Container" typeid="1"
 	parent="">
-<packet label="Sample Data File"
+<packet label="Read Me"
 	type="Text" typeid="2"
 	parent="Container">
-  <text>In this file you will find some sample packets that illustrate the objects with
-which Regina can work.</text>
-</packet> <!-- Sample Data File (Text) -->
+  <text>Welcome to Regina!
+
+A single Regina data file can store a range of objects, from 3-manifold triangulations and normal surfaces to Python scripts, PDF documents and text notes (such as the one you are reading now).
+
+These objects are called &quot;packets&quot;, and are arranged in a tree-like structure as you can see to the left.  To view or edit a packet, just click on the packet in the tree (on some platforms, such as MacOS, you should double-click instead).
+
+Have a play with the packets in this file to see what Regina can do.
+
+If you ever want to know what some element of the user interface means (such as a button or a text box), just press Shift-F1 and click on the thing that you want to know more about.  You can try this now with the tree on the left, or the buttons in the toolbar above.  If you ever forget the Shift-F1 shortcut, you can find it in the menu under Help -&gt; What's This?
+
+Any questions?  Just mail us at regina-user@lists.sourceforge.net (or if you prefer, mail the authors directly; see Help -&gt; About for our email addresses).
+
+Enjoy!
+
+- The Regina development team</text>
+</packet> <!-- Read Me (Text) -->
 <packet label="LaTeX Document"
 	type="PDF" typeid="10"
 	parent="Container">
@@ -696,6 +709,7 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 <packet label="Angle Structures"
 	type="Angle Structure List" typeid="9"
 	parent="Figure 8 Knot Complement">
+  <angleparams tautonly="F"/>
   <struct len="7"> 0 1 4 1 6 1 <flags value="6"/></struct>
   <struct len="7"> 1 1 3 1 6 1 <flags value="6"/></struct>
   <struct len="7"> 2 1 5 1 6 1 <flags value="6"/></struct>
