@@ -1,14 +1,6 @@
 #!/usr/bin/regina-python --nolibs
 #
-# Reads the given file and outputs a line for each triangulation.
-# Each line contains two alphabetical strings, encoding the face gluings
-# and the first homology group respectively.
-#
-# The face gluings are encoded using the Callahan-Hildebrand-Weeks
-# dehydration format.  The first homology group is encoded by a string
-# of letters, where a..z represent 0..25 and A..Z represent 26..51.
-# The first letter gives the rank of the group, and the remaining
-# letters give the invariant factors.
+# TODO: Document this.
 
 import sys
 
