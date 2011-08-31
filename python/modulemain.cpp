@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2009, Ben Burton                                   *
+ *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,7 +59,7 @@ namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
             "\nA Normal Surface Theory Calculator" +
-            "\nCopyright (c) 1999-2009, Ben Burton, Ryan Budney and others";
+            "\nCopyright (c) 1999-2011, Ben Burton, Ryan Budney and others";
     }
 
     void shareableWriteTextShort(const ShareableObject& obj) {
