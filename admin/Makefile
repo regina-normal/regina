@@ -11,18 +11,6 @@ srcdir = ..
 
 all :
 
-stubs :
-	cd $(srcdir); ./insertstub stubs/engine \
-		`find ../engine -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
-	cd $(srcdir); ./insertstub stubs/kdeui \
-		`find ../kdeui -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
-	cd $(srcdir); ./insertstub stubs/python \
-		`find ../python -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
-	cd $(srcdir); ./insertstub stubs/testsuite \
-		`find ../testsuite -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
-	cd $(srcdir); ./insertstub stubs/general \
-		`find ../icons/povray -name "*.pov"`
-
 tabs :
 	cd $(srcdir); ./replacetabs `find .. -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
 	cd $(srcdir); ./replacetabs `find .. -name "*.txt"`
