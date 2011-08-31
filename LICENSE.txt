@@ -1,13 +1,25 @@
 
-            Regina - A Normal Surface Theory Calculator
-                Copyright (c) 1999-2009, Ben Burton
+     Regina - Software for 3-manifold topology and normal surface theory
+            Copyright (c) 1999-2011, The Regina development team
 
 
 CITATION:
 
 If you find Regina useful in your research, please consider citing it as
-you would any other paper that you use.  The introductory chapter of the
-Regina handbook includes a suggested form of reference.
+you would any other paper that you use.  A suggested form of reference is:
+
+  [BBP] Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
+  "Regina: Software for 3-manifold topology and normal surface theory",
+  http://regina.sourceforge.net/, 1999-2011.
+
+
+AUTHORS:
+
+Benjamin Burton <bab@debian.org>
+Ryan Budney <rybu@uvic.ca>
+William Pettersson <william.pettersson@gmail.com>
+
+Many others have also contributed; see the Help->About box for details.
 
 
 COPYING AND MODIFICATION:
@@ -43,6 +55,20 @@ Orb for use in importing and exporting files in Orb / Casson format.
 Orb is based on SnapPea (see above) with additional code written by
 Damian Heard, who has also given permission for his code to be distributed
 under the terms of the GNU General Public License.
+
+
+PYTHON ICONS:
+
+The python icons are based on applications-python.svg as shipped with the
+humanity-icon-theme package in Ubuntu 11.04.  The contents of this Ubuntu
+package are licensed under the GNU General Public License version 2.
+
+
+OXYGEN ICONS:
+
+The packet-view icons have been modified from the Oxygen icon set for KDE4.
+The Oxygen icons are dual-licensed under the Creative Common
+Attribution-ShareAlike 3.0 License or the GNU Library General Public License.
 
 
 
