@@ -76,13 +76,17 @@ foreach my $file (@argFiles) {
         }
 
         print "CHANGE:\n-$line+$edit";
-        print "Accept? [y/n] ";
+        print "Accept? [Y/n] ";
         my $response = <STDIN>;
         $response =~ s/\s//g;
+		$response =~ tr/A-Z/a-z/;
+		$response eq '' and $response = 'y';
         while (not ($response eq 'y' or $response eq 'n')) {
-            print "Accept? [y/n] ";
+            print "Accept? [Y/n] ";
             $response = <STDIN>;
             $response =~ s/\s//g;
+			$response =~ tr/A-Z/a-z/;
+			$response eq '' and $response = 'y';
         }
 
         if ($response eq 'y') {
