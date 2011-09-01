@@ -561,13 +561,13 @@
      </imageobject>
     </inlinemediaobject>
    </para>
-   <warning><para>
+   <caution><para>
     If you have selected some packet in the tree but you have a different
     packet open for viewing or editing, it is the
     <emphasis>selected packet in the tree</emphasis> that will be
     deleted, not the packet that you are currently viewing.
     Be careful, since deleting a packet cannot be undone!
-   </para></warning>
+   </para></caution>
   </sect2>
 
   <sect2 id="packet-move">

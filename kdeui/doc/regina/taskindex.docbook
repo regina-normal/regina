@@ -681,6 +681,14 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>isomorphism signatures</primaryie>
+  <secondaryie><link linkend="tri-new-isosig">reconstructing
+   triangulations from isomorphism signatures</link></secondaryie>
+  <secondaryie><link linkend="tri-composition-composition">viewing
+   the isomorphism signature for a triangulation</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>isomorphism testing</primaryie>
   <secondaryie><link linkend="tri-composition-isomorphism">between
    individual triangulations</link></secondaryie>
@@ -1278,6 +1286,8 @@
    external files</link></secondaryie>
   <secondaryie><link linkend="tri-composition-isomorphism">isomorphism
    and subcomplex testing</link></secondaryie>
+  <secondaryie><link linkend="tri-new-isosig">isomorphism signature,
+   recreating from</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
   <secondaryie><link linkend="tri-cover">orientable double
    cover</link></secondaryie>

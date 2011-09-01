@@ -2,11 +2,26 @@
  <title>Triangulations</title>
 
  <para>
-  Most 3-manifolds in &regina; are represented by
-  <firstterm>triangulations</firstterm>.  A triangulation is a
-  particular representation of particular 3-manifold, consisting of a
-  set of tetrahedra and instructions on how (some of) the faces of these
-  tetrahedra are to be glued together in pairs.
+  3-manifolds in &regina; are typically represented by
+  <firstterm>triangulations</firstterm>.  A triangulation of a 3-manifold
+  consists of a set of tetrahedra and instructions on how some or all
+  of the faces of these tetrahedra should be glued together in pairs.
+ </para>
+ <para>
+  This is less strict than a true simplicial complex.
+  &regina; allows you to glue two faces of the same tetrahedron together,
+  or glue faces so that different edges of the same tetrahedron become
+  identified (and likewise for vertices).
+  In fact, the best triangulations for computation are often
+  <emphasis>one-vertex triangulations</emphasis>, where all vertices of
+  all tetrahedra become identified together.
+ </para>
+ <para>
+  The downside of this flexibility is that, if you are not careful,
+  your triangulation might not represent a 3-manifold at all.
+  If this happens, &regina; will
+  <link linkend="tri-basicprops">tell you about it</link> when you view
+  your triangulation.
  </para>
 
  <sect1 id="tri-creation">
@@ -21,8 +36,26 @@
      <guimenuitem>New Triangulation</guimenuitem>
     </menuchoice>
     menu item (or the corresponding toolbar button),
-    which will create a new triangulation from scratch.  At
-    this point, several choices are offered as described below.
+    which will create a new triangulation from scratch.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menu-newtri.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    In addition to the usual information, you are asked what
+    <emphasis>type</emphasis> of triangulation to create.
+    Here we talk through the various options.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newtri.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
 
    <sect3 id="tri-new-empty">
@@ -34,6 +67,13 @@
      in by hand, in which case you can create a new empty triangulation
      and then manually <link linkend="tri-editgluings">add tetrahedra
      and edit face gluings</link>.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-empty.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
    </sect3>
 
@@ -48,6 +88,13 @@
      (with exceptional case (0, 1) also allowed).
      These two parameters must be provided before the triangulation
      can be created.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-lens.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <para>
      A <firstterm>layered lens space</firstterm> is a lens space built
@@ -77,6 +124,13 @@
      <link linkend="tri-new-loop">layered loops</link> and
      <link linkend="tri-new-aug">augmented &trists;</link>,
      all of which are described elsewhere in this section.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-sfs.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <para>
      The parameters for the &sfslong; must be given as a sequence of pairs of
@@ -112,6 +166,13 @@
      can be created.
     </para>
     <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-lst.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
      A <firstterm>layered solid torus</firstterm> is a solid torus built
      by taking a one-tetrahedron solid torus and repeatedly adding
      layers.  A new layer is added by taking a new tetrahedron and
@@ -141,6 +202,13 @@
      must be provided before the triangulation can be created.  It must
      also be specified whether the layered loop should be twisted or
      untwisted.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-loop.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <para>
      A <firstterm>layered loop</firstterm> of length
@@ -177,6 +245,13 @@
      boundary.
     </para>
     <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-ast.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
      Details of the augmented &trist; construction can be found in
      Burton's PhD thesis <xref linkend="bib-burton-phd"/>, which is
      available from the &regwebsite;.
@@ -197,12 +272,54 @@
     </para>
    </sect3>
 
+   <sect3 id="tri-new-isosig">
+    <title>Isomorphism Signature</title>
+
+    <para>
+     This will reconstruct a triangulation from an isomorphism signature.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-isosig.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     An <firstterm>isomorphism signature</firstterm> is a compact sequence
+     of letters, digits and/or punctuation that identifies a
+     triangulation uniquely up to combinatorial isomorphism (i.e.,
+     relabelling tetrahedra and their vertices).  An example is
+     <literal>cPcbbbiht</literal> (which describes the figure eight knot
+     complement).  Isomorphism signatures are introduced in the paper
+     <xref linkend="bib-burton-simps3"/>.
+    </para>
+    <para>
+     The isomorphism signature for an existing triangulation can be viewed
+     through the <link linkend="tri-composition-composition">triangulation
+     composition</link> tab.
+    </para>
+    <caution><para>
+     Isomorphism signatures are <emphasis>case sensitive</emphasis>!
+     Be sure that you are entering upper-case and lower-case correctly
+     (or better, copy and paste the signature using the clipboard if you
+     can).
+    </para></caution>
+   </sect3>
+
    <sect3 id="tri-new-dehydration">
     <title>Dehydration</title>
 
     <para>
      This will create the triangulation obtained by rehydrating the
      given dehydration string.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-dehydration.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <para>
      A <firstterm>dehydration string</firstterm> is a set of letters such as
@@ -225,6 +342,13 @@
     <para>
      This will create the triangulation containing the given splitting
      surface.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-splitting.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <para>
      A <firstterm>splitting surface</firstterm> is a compact normal
@@ -264,6 +388,13 @@
      Simply select a 3-manifold from the list provided and the
      corresponding triangulation will be created for you.
     </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-example.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
    </sect3>
   </sect2>
 
@@ -271,8 +402,8 @@
    <title>Imported Triangulations</title>
 
    <para>
-    Triangulations can also be imported into &regina; from a variety of
-    foreign file formats.  Importing is done through the
+    Triangulations can also be imported into &regina; from other
+    programs, such as &snappeaurl; or &orburl;.  This is done through the
     <menuchoice>
      <guimenu>File</guimenu>
      <guisubmenu>Import</guisubmenu>
@@ -290,16 +421,9 @@
     satisfying a variety of different constraints.  The best way of
     doing this is through the command-line tool
     <link linkend="man-tricensus"><command>tricensus</command></link>.
-    For very long calculations, the tools
-    <link linkend="man-tricensus-manager"><command>tricensus-manager</command></link>
-    and/or
+    For very long calculations,
     <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
-    may be used to distribute the computation amongst a number of
-    different processors.
-   </para>
-   <para>
-    See the <link linkend="utils">separate references</link> for these
-    tools for further details.
+    may be used to distribute the computation across a cluster of machines.
    </para>
   </sect2>
  </sect1>
