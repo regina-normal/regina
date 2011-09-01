@@ -135,8 +135,4 @@ class GAPRunner : public KDialog {
         void processExited();
 };
 
-inline std::auto_ptr<regina::NGroupPresentation> GAPRunner::simplifiedGroup() {
-    return newGroup;
-}
-
 #endif

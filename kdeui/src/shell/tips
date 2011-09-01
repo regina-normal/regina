@@ -138,20 +138,6 @@ files and running long census calculations.  See the
 <tip category="Regina">
 <html>
 <p>
-There are two ways of editing the gluings between tetrahedron faces.
-<p>
-Impatient users can use <i>direct edit</i> mode, where you type a
-string such as <tt>1&nbsp;(201)</tt> directly into the table.
-New users might prefer <i>pop-up dialog</i> mode, where you double-click
-on a table cell to bring up a dialog box instead.
-<p>
-You can switch between modes through Regina's settings, by selecting
-<i>Triangulation Options</i> and looking for <i>Edit mode</i>.
-</html>
-</tip>
-<tip category="Regina">
-<html>
-<p>
 If you use Regina's python interface and you find yourself writing the same
 code over and over again, you can put this code in a <i>python library</i>.
 <p>
@@ -178,13 +164,25 @@ import your PDF document into the current Regina data file.
 <tip category="Regina">
 <html>
 <p>
+When you are using a text editor (e.g., when editing a text packet or a
+script packet), all of the usual editor shortcuts are available to you.
+<p>
+For instance, you can paste using
+<b>Ctrl-V</b> (or <b>&#8984;-V</b> on a mac),
+and you can undo using
+<b>Ctrl-Z</b> (or <b>&#8984;-Z</b> on a mac).
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
 The Callahan-Hildebrand-Weeks dehydration string for a triangulation (if
 it exists) is shown in the <i>Composition</i> tab of the triangulation
 viewer.
 <p>
-You can copy this dehydration string by right-clicking on the
-corresponding line of text in the composition tree, and then selecting
-<i>Copy to Clipboard</i> from the pop-up menu that appears.
+You can copy this dehydration string to the clipboard by selecting the
+corresponding line of text in the composition tab, and then
+selecting <i>Copy</i> from the <i>Edit</i> menu.
 </html>
 </tip>
 <tip category="Regina">
@@ -195,5 +193,23 @@ file.  Select the root of the subtree that you wish to export, then
 visit the <i>File</i> menu, select <i>Export</i> and then
 <i>Regina Data File</i>.  Make sure that the correct subtree is selected
 in the dialog that appears, and press <i>OK</i>.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+Finding it hard to read embedded PDF documents?  If your Regina window
+is small and you are using the embedded PDF viewer, you
+might find that space is limited and the PDF shrinks to a very small size.
+<p>
+If you click inside the PDF, you will see Okular's own buttons
+and menu items.  You can zoom in and out, or create more space by hiding
+the side navigation panel (hit <b>F7</b> or see the <i>Settings</i> menu).
+<p>
+If you want the PDF in a window of its own, press the
+paper clip in the top-right corner to undock it.
+Alternatively, you can configure Regina to open all PDFs in a separate
+application: in Regina's <i>PDF Options</i> panel, uncheck
+<i>"Use embedded viewer if possible"</i>.
 </html>
 </tip>

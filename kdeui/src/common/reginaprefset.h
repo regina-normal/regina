@@ -37,6 +37,8 @@
 #include <QLinkedList>
 #include <QString>
 
+class QWidget;
+
 /**
  * A structure holding a single filename which may or may not be active
  * (such as a census file or a python library).
@@ -233,6 +235,8 @@ struct ReginaPrefSet {
         /**< The list of data files to use for census lookups. */
     bool displayTagsInTree;
         /**< Should we display packet tags in the visual tree? */
+    bool handbookInKHelpCenter;
+        /**< Should we open the users' handbook in the KDE help center? */
     bool pdfAutoClose;
         /**< Should we close external PDF viewers automatically (e.g.,
              when the packet is refreshed or closed)? */
@@ -337,6 +341,12 @@ struct ReginaPrefSet {
      * file.
      */
     bool writePythonLibraries() const;
+
+    /**
+     * Opens the given section of the users' handbook in an appropriate
+     * manner.
+     */
+    void openHandbook(const char* section, QWidget* parentWidget);
 };
 
 inline GraphvizStatus::GraphvizStatus() : flag_(unknown.flag_) {

@@ -49,16 +49,12 @@ void ReginaPart::setupActions() {
     actCopy->setEnabled(false);
     actPaste = KStandardAction::paste(actionCollection());
     actPaste->setEnabled(false);
-    actUndo = KStandardAction::undo(0,0,actionCollection());
-    actUndo->setEnabled(false);
-    actRedo = KStandardAction::redo(0,0,actionCollection());
-    actRedo->setEnabled(false);
 
     // Basic packet actions:
     act = actionCollection()->addAction("tree_view");
     act->setText(i18n("&View/Edit"));
     act->setIcon(KIcon("packet_view"));
-    act->setShortcut(tr("Ctrl+v"));
+    act->setShortcut(tr("Alt+v"));
     act->setToolTip(i18n("View or edit the selected packet"));
     act->setWhatsThis(i18n("View or edit the packet currently selected "
         "in the tree."));
@@ -68,7 +64,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("tree_rename");
     act->setText(i18n("&Rename"));
     act->setIcon(KIcon("edit-rename"));
-    act->setShortcut(tr("Ctrl+r"));
+    act->setShortcut(tr("Alt+r"));
     act->setToolTip(i18n("Rename the selected packet"));
     act->setWhatsThis(i18n("Rename the packet currently selected "
         "in the tree."));
@@ -103,7 +99,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("tree_clone");
     act->setText(i18n("C&lone Packet"));
     act->setIcon(KIcon("edit-copy"));
-    act->setShortcut(tr("Ctrl+l"));
+    act->setShortcut(tr("Alt+l"));
     act->setToolTip(i18n("Clone the selected packet only"));
     act->setWhatsThis(i18n("Clone the packet currently selected in "
         "the tree.  The new clone will be placed alongside the original "
@@ -111,7 +107,7 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(clonePacket()) );
     treePacketEditActions.append(act);
 
-    act = actionCollection()->addAction("subtree_clone");
+    act = actionCollection()->addAction("tree_clone_subtree");
     act->setText(i18n("Clone Su&btree"));
     act->setToolTip(i18n("Clone the subtree beneath the selected packet"));
     act->setWhatsThis(i18n("Clone the packet currently selected in "
@@ -124,7 +120,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("nav_shallow");
     act->setText(i18n("&Higher Level"));
     act->setIcon(KIcon("arrow-left"));
-    act->setShortcut(tr("Ctrl+Left"));
+    act->setShortcut(tr("Alt+Left"));
     act->setToolTip(i18n("Move packet to a higher (shallower) level "
         "in the tree"));
     act->setWhatsThis(i18n("Move the currently selected packet "
@@ -137,7 +133,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("nav_deep");
     act->setText(i18n("&Lower Level"));
     act->setIcon(KIcon("arrow-right"));
-    act->setShortcut(tr("Ctrl+Right"));
+    act->setShortcut(tr("Alt+Right"));
     act->setToolTip(i18n("Move packet to a lower (deeper) level in the tree"));
     act->setWhatsThis(i18n("Move the currently selected packet "
         "one level lower (deeper) in the packet tree.  The packet will "
@@ -149,7 +145,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("nav_up");
     act->setText(i18n("&Up"));
     act->setIcon(KIcon("arrow-up"));
-    act->setShortcut(tr("Ctrl+Up"));
+    act->setShortcut(tr("Alt+Up"));
     act->setToolTip(i18n("Move packet up through its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
         "one step up in the packet tree.  The packet will keep the "
@@ -160,7 +156,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("nav_down");
     act->setText(i18n("&Down"));
     act->setIcon(KIcon("arrow-down"));
-    act->setShortcut(tr("Ctrl+Down"));
+    act->setShortcut(tr("Alt+Down"));
     act->setToolTip(i18n("Move packet down through its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
         "one step down in the packet tree.  The packet will keep the "
@@ -171,7 +167,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("nav_pageup");
     act->setText(i18n("Jump U&p"));
     act->setIcon(KIcon("arrow-up-double"));
-    act->setShortcut(tr("Ctrl+Shift+Up"));
+    act->setShortcut(tr("Alt+Shift+Up"));
     act->setToolTip(i18n("Jump packet up through its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
         "several steps up in the packet tree.  The packet will keep the "
@@ -182,7 +178,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("nav_pagedown");
     act->setText(i18n("Jump Do&wn"));
     act->setIcon(KIcon("arrow-down-double"));
-    act->setShortcut(tr("Ctrl+Shift+Down"));
+    act->setShortcut(tr("Alt+Shift+Down"));
     act->setToolTip(i18n("Jump packet down through its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
         "several steps down in the packet tree.  The packet will keep the "
@@ -193,7 +189,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("nav_top");
     act->setText(i18n("&Top"));
     act->setIcon(KIcon("go-top"));
-    act->setShortcut(tr("Ctrl+Home"));
+    act->setShortcut(tr("Alt+Home"));
     act->setToolTip(i18n("Move packet above all its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
         "up as far as possible amongst its siblings in the packet tree.  "
@@ -205,7 +201,7 @@ void ReginaPart::setupActions() {
     act = actionCollection()->addAction("nav_bottom");
     act->setText(i18n("&Bottom"));
     act->setIcon(KIcon("go-bottom"));
-    act->setShortcut(tr("Ctrl+End"));
+    act->setShortcut(tr("Alt+End"));
     act->setToolTip(i18n("Move packet below all its siblings"));
     act->setWhatsThis(i18n("Move the currently selected packet "
         "down as far as possible amongst its siblings in the packet tree.  "

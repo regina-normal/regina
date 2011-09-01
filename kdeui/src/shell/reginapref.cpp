@@ -172,10 +172,11 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
-
     generalPrefs->cbTipOfDay->setChecked(
         KConfigGroup(KGlobal::config(), "TipOfDay").
         readEntry("RunOnStart", true));
+    generalPrefs->cbHandbookInKHelpCenter->setChecked(
+        prefSet.handbookInKHelpCenter);
 
     switch (prefSet.triInitialTab) {
         case ReginaPrefSet::Skeleton:
@@ -288,6 +289,8 @@ void ReginaPreferences::slotApply() {
     prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
     prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
     KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
+    prefSet.handbookInKHelpCenter = generalPrefs->cbHandbookInKHelpCenter->
+        isChecked();
 
     uintVal = generalPrefs->editTreeJumpSize->text().toUInt(&ok);
     if (ok && uintVal > 0)
@@ -652,6 +655,16 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     cbTipOfDay->setWhatsThis(i18n("Show a tip of the day each time "
         "Regina is started."));
     layout->addWidget(cbTipOfDay);
+
+    cbHandbookInKHelpCenter = new QCheckBox(i18n("Open handbook "
+        "in KDE Help Center"));
+    cbHandbookInKHelpCenter->setWhatsThis(i18n("<qt>If checked, the users' "
+        "handbook will be opened within the KDE Help Center.  If unchecked, "
+        "Regina will try to open the users' handbook using your default "
+        "web browser.<p>"
+        "To open the users' handbook, select "
+        "<i>Help</i>-&gt;<i>Regina Handbook</i>.</qt>"));
+    layout->addWidget(cbHandbookInKHelpCenter);
 
     // Add some space at the end.
     layout->addStretch(1);

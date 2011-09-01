@@ -75,6 +75,24 @@ NPacket* PacketChooser::selectedPacket() {
     return (curr < 0 ? 0 : packets[curr]);
 }
 
+void PacketChooser::selectPacket(regina::NPacket* packet) {
+    int index = 0;
+    std::vector<regina::NPacket*>::const_iterator it = packets.begin();
+    while (it != packets.end()) {
+        if ((*it) == packet) {
+            setCurrentIndex(index);
+            return;
+        }
+        ++it;
+        ++index;
+    }
+
+    // Not found.
+    if (! packets.empty())
+        setCurrentIndex(0);
+    return;
+}
+
 void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
     if (onAutoUpdate == shouldAutoUpdate)
         return;

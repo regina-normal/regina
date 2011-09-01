@@ -36,6 +36,7 @@
 #include "../packetui.h"
 
 namespace KTextEditor {
+    class Document;
     class EditInterface;
     class View;
 };
@@ -61,8 +62,8 @@ class NTextUI : public QObject, public PacketUI {
          * Internal components
          */
         KTextEditor::Document* document;
-        KTextEditor::EditInterface* editInterface;
         KTextEditor::View* view;
+        PacketEditIface* editIface;
 
     public:
         /**
@@ -77,7 +78,7 @@ class NTextUI : public QObject, public PacketUI {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        KTextEditor::Document* getTextComponent();
+        PacketEditIface* getEditIface();
         QString getPacketMenuText() const;
         void commit();
         void refresh();
@@ -89,5 +90,9 @@ class NTextUI : public QObject, public PacketUI {
          */
         void notifyTextChanged();
 };
+
+inline PacketEditIface* NTextUI::getEditIface() {
+    return editIface;
+}
 
 #endif

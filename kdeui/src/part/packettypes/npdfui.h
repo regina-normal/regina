@@ -36,6 +36,7 @@
 #include "../packetui.h"
 
 #include <KTemporaryFile>
+#include <QProcess>
 #include <QStackedWidget>
 
 class QWidgetStack;
@@ -139,7 +140,7 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         /**
          * Process control for external PDF viewers.
          */
-        void processExited(KProcess* oldProc);
+        void processExited(int exitCode, QProcess::ExitStatus exitStatus);
 };
 
 #endif

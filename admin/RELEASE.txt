@@ -7,7 +7,7 @@ Program version:
     CMakeLists.txt (PACKAGE_VERSION)
     kdeui/doc/regina/index.docbook (&regversion;, &regdate;, date, releaseinfo)
     kdeui/src/common/reginaabout.cpp (regReleased)
-    kdeui/src/{shell,part}/*.rc (kpartgui version)
+    kdeui/src/{shell,part}/*.rc (gui version)
     packaging/debian/*/changelog (version, date)
     packaging/finkinfo/*.info.* (version, revision)
     packaging/rpmspec/*.spec (version, changelog)
@@ -34,6 +34,7 @@ SnapPea / Orb copyright:
     www/index.html
 
 Acknowledgements:
+    LICENSE.txt (suggested citation, author list)
     kdeui/doc/regina/credits.docbook
     kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
 
@@ -47,7 +48,7 @@ Don't forget:
     update \test... notes in API docs
     python bindings for new routines
     rebuild manpages
-    website, including updated news
+    website, including updated news and deprecation guide
     debian packages (include cvs.diff)
     fedora/mandriva/suse packages
     update tips for building on different platforms

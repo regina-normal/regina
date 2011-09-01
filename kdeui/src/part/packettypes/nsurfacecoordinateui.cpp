@@ -508,8 +508,15 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "represents, hover the mouse over the column header (or refer "
         "to the users' handbook).</qt>"));
     // Add grid lines:
+    // For some reason, when we set cell borders, the selection
+    // background changes to white (-> white on white, which is unreadable).
+    // So reluctantly we also break the native system style and explicitly
+    // set a background ourselves.  I would love a better way of dealing
+    // with this. :/
     table->setStyleSheet("QTreeView::item:selected { "
-                            "background-color: royalblue; " // TODO: Avoid this!
+                            "background: qlineargradient(x1: 0, y1: 0, "
+                                "x2: 0, y2: 1, stop: 0 #6ea1f1, "
+                                "stop: 1 #567dbc); "
                          "} "
                          "QTreeView::item { "
                             "border: 1px solid #d9d9d9; "

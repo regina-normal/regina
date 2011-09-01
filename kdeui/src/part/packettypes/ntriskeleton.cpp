@@ -190,9 +190,6 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     grid->addWidget(btn, 1, 11);
 
     layout->addStretch(1);
-
-    //viewers.setAutoDelete(true); TODO: No longer supported, check
-    // we are deleting correctly.
 }
 
 regina::NPacket* NTriSkelCompUI::getPacket() {
@@ -230,6 +227,10 @@ void NTriSkelCompUI::editingElsewhere() {
 }
 
 void NTriSkelCompUI::viewVertices() {
+    // Because we pass this as parent to the new window, we are
+    // guaranteed that the window will be closed and deleted
+    // automatically if the packet pane is closed.
+    // Similarly for edges, faces, etc.
     SkeletonWindow* win = new SkeletonWindow(this, SkeletonWindow::Vertices);
     win->show();
     viewers.append(win);
@@ -279,7 +280,11 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
 
     // Graph layer.
     layerGraph = new QScrollArea();
-    // TODO: layerGraph->setStyleSheet("background-color:transparent;");
+    // Don't set transparency: a border and lighter background looks
+    // kind of nice here.
+    // layerGraph->setStyleSheet("QScrollArea, .QWidget { "
+    //                             "background-color:transparent; "
+    //                         "}");
     graph = new QLabel(layerGraph);
     graph->setAlignment(Qt::AlignCenter);
     layerGraph->setWidget(graph);
@@ -435,19 +440,11 @@ void NTriFaceGraphUI::refresh() {
                 "could not be started.</qt>").arg(useExec));
             return;
         }
-        if ( false ) { // TODO: Doesn't have an equivalent in Qt4 ?
-            showError(i18n("<qt>The Graphviz executable <i>%1</i> "
-                "did not exit normally.  It was killed with signal %2.</qt>").
-                arg(useExec));
-            return;
-        }
-        if ( graphviz.error() == QProcess::Crashed) {
-            showError(i18n("<qt>The Graphviz executable <i>%1</i> "
-                "appears to have encountered an internal error.  "
-                "It finished with exit status %2.</qt>").
-                arg(useExec).arg(graphviz.exitStatus()));
-            return;
-        }
+        showError(i18n("<qt>The Graphviz executable <i>%1</i> "
+            "did not exit normally, and may have encountered an "
+            "internal error.  It finished with exit status %2.</qt>")
+            .arg(useExec).arg(graphviz.exitCode()));
+        return;
     }
 
     QPixmap png(tmpPng.fileName());

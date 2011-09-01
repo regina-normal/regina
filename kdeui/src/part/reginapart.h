@@ -95,8 +95,6 @@ class ReginaPart : public KParts::ReadWritePart {
         KAction* actCut;
         KAction* actCopy;
         KAction* actPaste;
-        KAction* actUndo;
-        KAction* actRedo;
         QLinkedList<KAction *> treePacketViewActions;
         QLinkedList<KAction *> treePacketEditActions;
         QLinkedList<KAction *> treeGeneralEditActions;
@@ -162,15 +160,15 @@ class ReginaPart : public KParts::ReadWritePart {
 
         /**
          * Adjusts the part's interface components to reflect the fact
-         * that a packet pane has left the docking area.
+         * that a packet pane is about to leave the docking area.
          *
-         * This must always be called when a packet pane is either closed
-         * or floated into its own window.
+         * This routine must always be called when a packet pane is
+         * either closed or floated into its own window.
          *
          * This routine will happily cope with the case in which the given
          * packet is in fact not currently docked.
          */
-        void hasUndocked(PacketPane* undockedPane);
+        void aboutToUndock(PacketPane* undockedPane);
 
         /**
          * Handles the deregistration of a packet pane from the list of

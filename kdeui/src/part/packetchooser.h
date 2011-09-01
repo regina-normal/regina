@@ -133,6 +133,18 @@ class PacketChooser : public KComboBox, public regina::NPacketListener {
         regina::NPacket* selectedPacket();
 
         /**
+         * Changes the selection to the given packet.
+         *
+         * If the given packet is not one of the options in this packet
+         * chooser, or if the given pointer is 0, then the first entry
+         * in the packet chooser will be selected (which is the "None"
+         * entry if "None" was enabled).
+         *
+         * The activated() signal will \e not be emitted.
+         */
+        void selectPacket(regina::NPacket* packet);
+
+        /**
          * Set whether this packet chooser should update itself
          * automatically in response to its packets being deleted or
          * renamed.  This feature is disabled by default.

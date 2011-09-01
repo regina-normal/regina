@@ -26,53 +26,33 @@
 
 /* end stub */
 
-#include "shortrunner.h"
+/*! \file regevents.h
+ *  \brief Provides customised Qt events for Regina.
+ */
 
-QString ShortRunner::run(bool mergeStderr) {
-    // Start the child process running.
-    proc.setOutputChannelMode(mergeStderr ?
-        KProcess::MergedChannels : KProcess::OnlyStdoutChannel);
-    connect(&proc, SIGNAL(started()), this, SLOT(processStarted()));
-    connect(&proc, SIGNAL(finished(int, QProcess::ExitStatus)),
-        this, SLOT(processFinished()));
+#ifndef __REGEVENTS_H
+#define __REGEVENTS_H
 
-    // Since we need to collect output, we must use start() and not
-    // startDetached().
-    proc.start();
+#include <QEvent>
 
-    // Wait for it to finish, within a reasonable time limit.
-    // Don't rely on the return value, since waitForFinished() can
-    // also return false if the program already finished before this call.
-    proc.waitForFinished(timeout * 1000);
-    {
-        QMutexLocker locker(&mutex);
-        if (finished) {
-            // All good.
-            return proc.readAll();
-        } else if (started)
-            reachedTimeout = true;
-    }
+class PacketTreeItem;
 
-    // Bzzt.
-    // Either we timed out or we never even started.  The member
-    // reachedTimeout that we set above allows us to tell the difference.
+class PacketTreeItemEvent : public QEvent {
+    private:
+        PacketTreeItem* item;
 
-    // Attempt to terminate (SIGQUIT) ...
-    proc.terminate();
-    // ... and if the program doesn't respond then kill it (SIGKILL).
-    proc.waitForFinished(500);
-    proc.kill();
+    public:
+        PacketTreeItemEvent(QEvent::Type, PacketTreeItem*);
+        PacketTreeItem* getItem() const;
 
-    return QString::null;
+};
+
+inline PacketTreeItemEvent::PacketTreeItemEvent(QEvent::Type newType,
+        PacketTreeItem* data) : QEvent(newType), item(data) {
 }
 
-void ShortRunner::processStarted() {
-    QMutexLocker locker(&mutex);
-    started = true;
+inline PacketTreeItem* PacketTreeItemEvent::getItem() const {
+    return item;
 }
 
-void ShortRunner::processFinished() {
-    QMutexLocker locker(&mutex);
-    finished = true;
-}
-
+#endif

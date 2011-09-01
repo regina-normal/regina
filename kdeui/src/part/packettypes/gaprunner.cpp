@@ -34,7 +34,6 @@
 #include <iostream>
 #include <kiconloader.h>
 #include <klocale.h>
-//#include <kprocio.h>
 #include <kstdguiitem.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -42,6 +41,8 @@
 #include <qstringlist.h>
 #include <qwhatsthis.h>
 #include <signal.h>
+
+#define MAX_GAP_READ_LINE 512
 
 enum { GAP_init,
        GAP_oldgens,
@@ -80,24 +81,24 @@ const char* GAP_PROMPT = "gap> ";
 
 GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         const regina::NGroupPresentation& useOrigGroup) :
-        KDialog(parent), //Plain, i18n("Running GAP..."), Cancel,
-        //(KDialogBase::ButtonCode)0 /* default btn */, parent,
-        //(const char*)0 /* name */, true),
+        KDialog(parent),
         proc(0), currOutput(""), partialLine(""), stage(GAP_init),
         cancelled(false), origGroup(useOrigGroup), newGroup(0) {
     resize(300, 100);
     setCaption(i18n("Running GAP..."));
-
-    setButtonGuiItem(KDialog::Cancel,KGuiItem(i18n("Kill GAP"), "process-stop",
-        i18n("Kill the running GAP process"),
+    setButtons(KDialog::Cancel);
+    setButtonGuiItem(KDialog::Cancel, KGuiItem(i18n("Kill GAP"),
+        "process-stop", i18n("Kill the running GAP process"),
         i18n("Kill the running GAP process.  This will cancel the "
             "group simplification.")));
+    setDefaultButton(KDialog::NoDefault);
+    setModal(true);
 
     QWidget* page = new QWidget(this);
     setMainWidget(page);
     QBoxLayout* layout = new QHBoxLayout(page);//, 5, 0);
 
-    page->setWhatsThis( i18n("<qt>When GAP (Groups, Algorithms and "
+    page->setWhatsThis(i18n("<qt>When GAP (Groups, Algorithms and "
         "Programming) is used to simplify a group, GAP is started as a "
         "separate process on your system.  Regina talks to GAP just as "
         "any other user would at the GAP command prompt.<p>"
@@ -118,18 +119,15 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
     proc = new KProcess();
     *proc << useExec << "-b" /* banner suppression */;
 
-    connect(proc, SIGNAL(finished()), this, // TODO: the signal finished() 
-        SLOT(processExited()));             // technically takes 
-                                            // QProcess::ProcessError as an
-                                            // argument, needed?
-                                            //
+    connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
+        this, SLOT(processExited()));
     connect(proc, SIGNAL(readyRead()), this, SLOT(readReady()));
-    proc->setOutputChannelMode(KProcess::MergedChannels); // TODO: Do we need std::out ?
+    proc->setOutputChannelMode(KProcess::MergedChannels);
+
+    status->setText(i18n("Starting GAP..."));
     proc->start();
 
-    if (proc->state() == QProcess::Running)
-        status->setText(i18n("Starting GAP..."));
-    else
+    if (! proc->waitForStarted(10000 /* milliseconds */))
         error(i18n("GAP could not be started."));
 
     connect(this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()));
@@ -139,7 +137,6 @@ GAPRunner::~GAPRunner() {
     delete proc;
 }
 
-// TODO: Check that this all works right.
 void GAPRunner::slotCancel() {
     if (! cancelled) {
         cancelled = true;
@@ -148,7 +145,7 @@ void GAPRunner::slotCancel() {
         // to Close.
         if (proc->state() == QProcess::Running)
             proc->kill();
-        //proc->enableReadSignals(false);
+        disconnect(proc, 0, this, 0);
 
         status->setText(i18n("Simplification cancelled."));
         setButtonGuiItem(KDialog::Cancel, KStandardGuiItem::close());
@@ -161,13 +158,12 @@ void GAPRunner::slotCancel() {
 void GAPRunner::sendInput(const QString& input) {
     std::cout << GAP_PROMPT << input.toAscii().constData() << std::endl;
     proc->write(input.toAscii().constData());
+    proc->write("\n");
 }
 
 bool GAPRunner::appearsValid(const QString& output) {
     QString use = output.trimmed();
 
-    // TODO: Are we checking the right things here (making sure that the 
-    // regular expression matches at position 0)?
     switch (stage) {
         case GAP_init:
             return (use.isEmpty() || reValInit.indexIn(use) == 0);
@@ -403,7 +399,7 @@ void GAPRunner::error(const QString& msg) {
     cancelled = true;
     if (proc->state() == QProcess::Running)
         proc->kill();
-    //proc->enableReadSignals(false);
+    disconnect(proc, 0, this, 0);
 
     setButtonGuiItem(KDialog::Cancel, KStandardGuiItem::close());
 
@@ -425,23 +421,19 @@ QString GAPRunner::escape(const QString& str) {
 
 void GAPRunner::readReady() {
     /**
-     * We must read partial lines; otherwise KProcIO can choke with an
-     * infinite stack of readReady() signals.
+     * Note that we could be reading partial lines as well as full lines.
      */
-    
-    // TODO: Will KProcess also choke? Could check proc->canReadLine() ?
-
-    const qint64 maxSize = 512; // Max number of bytes to read
-    char lineData[maxSize+1]; // +1 to allow for \n
+    char lineData[MAX_GAP_READ_LINE + 1]; // +1 to allow for \n
     bool partial;
     qint64 size;
-    while ((size = proc->readLine(lineData, maxSize)) >= 0) {
-        partial = (size == 0);
+    while ((size = proc->readLine(lineData, MAX_GAP_READ_LINE)) > 0) {
+        // Did we stop reading at a newline?
+        partial = (lineData[size - 1] != '\n');
 
-        // Even if we've cancelled, we have to read everything.
-        // Otherwise ackRead() can throw us into an infinite loop.
+        // Even if we've cancelled, just read everything until there's no more.
         if (cancelled)
             continue;
+
         QString line(lineData);
         if (partial) {
             // Only a partial line, though it might be our prompt.
@@ -482,7 +474,12 @@ void GAPRunner::readReady() {
         }
     }
 
-    //proc->ackRead(); TODO: As best I can see, this is no longer needed.
+    // All out of data to read.
+    // Let the user know if something broke.
+    if (size < 0) {
+        error(i18n("An unexpected error occurred whilst communicating "
+            "with GAP."));
+    }
 }
 
 void GAPRunner::processExited() {
@@ -498,5 +495,12 @@ void GAPRunner::processExited() {
         error(i18n("GAP exited unexpectedly before the simplification "
             "was finished."));
     }
+}
+
+std::auto_ptr<regina::NGroupPresentation> GAPRunner::simplifiedGroup() {
+    if (stage == GAP_done)
+        return newGroup;
+    else
+        return std::auto_ptr<regina::NGroupPresentation>(0);
 }
 

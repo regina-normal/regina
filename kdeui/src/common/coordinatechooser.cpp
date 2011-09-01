@@ -48,6 +48,7 @@ void CoordinateChooser::insertAllCreators() {
     insertSystem(NNormalSurfaceList::QUAD);
     insertSystem(NNormalSurfaceList::AN_QUAD_OCT);
     insertSystem(NNormalSurfaceList::ORIENTED);
+    insertSystem(NNormalSurfaceList::ORIENTED_QUAD);
 }
 
 void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
@@ -67,6 +68,8 @@ void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
     }
     if ( surfaces->getFlavour() == NNormalSurfaceList::ORIENTED)
         insertSystem(NNormalSurfaceList::ORIENTED);
+    if ( surfaces->getFlavour() == NNormalSurfaceList::ORIENTED_QUAD)
+        insertSystem(NNormalSurfaceList::ORIENTED_QUAD);
     insertSystem(NNormalSurfaceList::EDGE_WEIGHT);
     insertSystem(NNormalSurfaceList::FACE_ARCS);
 }

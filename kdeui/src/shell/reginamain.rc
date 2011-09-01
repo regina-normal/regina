@@ -28,8 +28,12 @@
     <Action name="configure_editor" />
   </Menu>
   <Menu name="help">
+    <Action name="help_about_app"/>
+    <Action name="help_handbook_custom"/>
+    <Action name="help_whats_this"/>
+    <Separator/>
     <Action name="help_engine"/>
-    <Action name="help_tipofday"/>
+    <Action name="help_show_tip"/>
     <Action name="help_trouble"/>
     <Action name="help_nohelp"/>
   </Menu>

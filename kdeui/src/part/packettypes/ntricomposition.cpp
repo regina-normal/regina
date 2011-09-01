@@ -56,6 +56,7 @@
 // UI includes:
 #include "ntricomposition.h"
 #include "../packetchooser.h"
+#include "../packeteditiface.h"
 #include "../packetfilter.h"
 
 #include <kiconloader.h>
@@ -162,14 +163,11 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     details->setWhatsThis(msg);
     layout->addWidget(details, 1);
 
-    // Set up context menus.
-    detailsMenu = new QMenu(details);
-    detailsMenu->addAction(i18n("&Copy to Clipboard"),this,
-        SLOT(detailsCopy()));
-    connect(details,
-        // TODO: broken signal
-        SIGNAL(contextMenuRequested(QTreeWidgetItem*, const QPoint&, int)),
-        this, SLOT(detailsPopup(QTreeWidgetItem*, const QPoint&, int)));
+    editIface = new PacketEditTreeWidgetSingleLine(details);
+}
+
+NTriCompositionUI::~NTriCompositionUI() {
+    delete editIface;
 }
 
 regina::NPacket* NTriCompositionUI::getPacket() {
@@ -1077,18 +1075,5 @@ QString NTriCompositionUI::edgeString(unsigned long tetIndex,
 QString NTriCompositionUI::matrixString(const regina::NMatrix2& matrix) {
     return QString("[ %1 %2 | %3 %4 ]").
         arg(matrix[0][0]).arg(matrix[0][1]).arg(matrix[1][0]).arg(matrix[1][1]);
-}
-
-void NTriCompositionUI::detailsPopup(QTreeWidgetItem* item, const QPoint& pos,
-        int) {
-    if (item) {
-        detailsLastSelection = item->text(0);
-        detailsMenu->popup(pos);
-    }
-}
-
-void NTriCompositionUI::detailsCopy() {
-    QApplication::clipboard()->setText(detailsLastSelection,
-        QClipboard::Clipboard);
 }
 

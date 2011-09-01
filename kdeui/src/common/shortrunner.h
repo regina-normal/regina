@@ -51,6 +51,10 @@ class ShortRunner : public QObject {
         KProcess proc;
         int timeout;
         bool reachedTimeout;
+        bool started;
+        bool finished;
+
+        QMutex mutex;
 
     public:
         ShortRunner(int timeoutSeconds = 2);
@@ -79,10 +83,15 @@ class ShortRunner : public QObject {
          * from run().
          */
         bool timedOut() const;
+
+    private slots:
+        void processStarted();
+        void processFinished();
 };
 
 inline ShortRunner::ShortRunner(int timeoutSeconds) :
-        timeout(timeoutSeconds), reachedTimeout(false) {
+        timeout(timeoutSeconds), reachedTimeout(false),
+        started(false), finished(false) {
 }
 
 inline ShortRunner& ShortRunner::operator << (const char* arg) {

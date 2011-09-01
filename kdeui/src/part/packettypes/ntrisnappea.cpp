@@ -82,15 +82,12 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     validGrid->setColumnStretch(4, 1);
 
     QString msg;
-    Qt::Alignment align = Qt::AlignTop;// | Qt::AlignAuto | Qt::ExpandTabs;
-    // TODO: AlignAuto definitely gone, AlignLeft is actually AlignAuto
-    // but ExpandTabs .. can't find a replacement.
 
     solutionTypeLabel = new QLabel(i18n("Solution type:"), dataValid);
-    solutionTypeLabel->setAlignment(align);
+    solutionTypeLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(solutionTypeLabel, 0, 1);
     solutionType = new QLabel(dataValid);
-    solutionType->setAlignment(align);
+    solutionType->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(solutionType, 0, 3);
     solutionTypeExplnBase = i18n("The type of solution that was found "
         "when solving for a complete hyperbolic structure.");
@@ -98,10 +95,10 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     solutionType->setWhatsThis(solutionTypeExplnBase);
 
     label = new QLabel(i18n("Volume:"), dataValid);
-    label->setAlignment(align);
+    label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(label, 1, 1);
     volume = new QLabel(dataValid);
-    volume->setAlignment(align);
+    volume->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(volume, 1, 3);
     msg = i18n("The volume of the underlying 3-manifold.  The estimated "
         "number of decimal places of accuracy is also shown.");

@@ -112,8 +112,8 @@ void SkeletonWindow::refresh() {
 }
 
 void SkeletonWindow::editingElsewhere() {
-    // table->clear(); // TODO
     setCaption(i18n("Editing... (") + tri->getPacketLabel().c_str() + ')');
+    model->makeEmpty();
 }
 
 void SkeletonWindow::updateCaption() {
@@ -192,15 +192,9 @@ QString SkeletonWindow::overview(SkeletalObject type) {
     return QString::null;
 }
 
-void SkeletalModel::rebuild() {
-    // Rebuild the table.
-    // We should really use beginResetModel() and endResetModel(), but
-    // by the time we get here it's presumably too late and the model
-    // has already been altered...
-    reset();
-}
-
 int VertexModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
     return (parent.isValid() ? 0 : tri->getNumberOfVertices());
 }
 
@@ -291,6 +285,8 @@ QString VertexModel::toolTipForCol(int column) {
 }
 
 int EdgeModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
     return (parent.isValid() ? 0 : tri->getNumberOfEdges());
 }
 
@@ -365,6 +361,8 @@ QString EdgeModel::toolTipForCol(int column) {
 }
 
 int FaceModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
     return (parent.isValid() ? 0 : tri->getNumberOfFaces());
 }
 
@@ -457,6 +455,8 @@ QString FaceModel::toolTipForCol(int column) {
 }
 
 int ComponentModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
     return (parent.isValid() ? 0 : tri->getNumberOfComponents());
 }
 
@@ -525,6 +525,8 @@ QString ComponentModel::toolTipForCol(int column) {
 }
 
 int BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
     return (parent.isValid() ? 0 : tri->getNumberOfBoundaryComponents());
 }
 

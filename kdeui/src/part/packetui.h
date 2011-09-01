@@ -42,16 +42,13 @@
 class KAction;
 class KActionMenu;
 class KMainWindow;
+class PacketEditIface;
 class PacketPane;
 class PacketWindow;
 class QLabel;
 class QToolButton;
+class QTreeWidget;
 class ReginaPart;
-
-namespace KTextEditor {
-    class Document;
-    class View;
-}
 
 namespace regina {
     class NPacket;
@@ -140,14 +137,13 @@ class PacketUI {
         virtual QWidget* getInterface() = 0;
 
         /**
-         * Return the primary text component associated with this
-         * interface, or 0 if there is no primary text component.
-         * This routine should always return the same pointer throughout
-         * the life of this object.
+         * Return details of the interface's interaction with standard
+         * edit and clipboard operations.  This may be 0 if there is no
+         * such interaction.
          *
-         * The default implementation of this routine simply returns 0.
+         * The default implementation simply returns 0.
          */
-        virtual KTextEditor::Document* getTextComponent();
+        virtual PacketEditIface* getEditIface();
 
         /**
          * Return a list of actions specific to the particular type of
@@ -308,14 +304,6 @@ class DefaultPacketUI : public ErrorPacketUI {
 class PacketPane : public QWidget, public regina::NPacketListener {
     Q_OBJECT
 
-    public:
-        /**
-         * The list of edit operations for which actions can be
-         * registered and deregistered.
-         */
-        enum EditOperation { editCut, editCopy, editPaste,
-            editUndo, editRedo };
-
     private:
         /**
          * External components
@@ -350,13 +338,11 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         KActionMenu* packetTypeMenu;
 
         /**
-         * Externally registered actions
+         * Externally registered edit actions and their sources
          */
-        KAction* extCut;
-        KAction* extCopy;
-        KAction* extPaste;
-        KAction* extUndo;
-        KAction* extRedo;
+        KAction* editCut;
+        KAction* editCopy;
+        KAction* editPaste;
 
     public:
         /**
@@ -374,7 +360,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Query components and actions.
          */
         regina::NPacket* getPacket();
-        bool hasTextComponent();
         KActionMenu* getPacketTypeMenu();
         ReginaPart* getPart();
 
@@ -432,44 +417,29 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         bool queryClose();
 
         /**
-         * Registers or deregisters standard editor actions with the
-         * primary text component of this interface.  If this interface
-         * has no primary text component then these routines do nothing.
+         * Registers or deregisters standard editor actions to operate
+         * on this packet interface.
          *
          * Registered actions will be connected to appropriate edit
-         * operations in the text component, and will be enabled and disabled
-         * over time according to the current status of the packet pane
-         * and its primary text component.
+         * operations in this interface, and will be enabled and disabled
+         * over time according to the current status of the internal UI
+         * components.
          *
-         * When an action is deregistered, these relationships will be
-         * broken and the action will be left in a disabled state.
+         * When the actions are deregistered, these relationships will be
+         * broken and the actions will be left in a disabled state.
          *
-         * Only one action for each operation may be registered at a
-         * time.  Each registered action for an operation should be
-         * deregistered before a new action is registered in its place.
-         *
-         * The only exception to this rule is if a currently registered
-         * action is to be destroyed; in this case a new action (which
-         * may be a null pointer) may simply be registered over top of
-         * it, though this must be done before the action is destroyed
-         * or else a crash will occur.
+         * Only one set of editor actions may be registered at a time.
+         * Any attempt to register a new set of actions will
+         * automatically deregister any previously registered actions.
          *
          * When a packet pane is destroyed, it is not a requirement that
          * currently registered actions be deregistered beforehand,
          * though the final enabled/disabled status of any remaining
          * actions that are not deregistered is not guaranteed.
-         *
-         * Passing a null pointer to a registration routine will not
-         * register any new actions.  The only situation in which doing
-         * this might be useful is when an action is to be destroyed but is
-         * not being deregistered (see the earlier paragraph that
-         * describes this case).
-         *
-         * Passing a null pointer to a deregistration routine will have
-         * no effect whatsoever.
          */
-        void registerEditOperation(KAction* act, EditOperation op);
-        void deregisterEditOperation(KAction* act, EditOperation op);
+        void registerEditOperations(KAction* actCut, KAction* actCopy,
+            KAction* actPaste);
+        void deregisterEditOperations();
 
         /**
          * NPacketListener overrides.
@@ -613,7 +583,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * actions.  These slots are for internal use.
          */
         void updateClipboardActions();
-        void updateUndoActions();
 
     protected:
         /**
@@ -629,7 +598,7 @@ inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
 inline PacketUI::~PacketUI() {
 }
 
-inline KTextEditor::Document* PacketUI::getTextComponent() {
+inline PacketEditIface* PacketUI::getEditIface() {
     return 0;
 }
 
@@ -658,10 +627,6 @@ inline regina::NPacket* PacketPane::getPacket() {
 
 inline ReginaPart* PacketPane::getPart() {
     return part;
-}
-
-inline bool PacketPane::hasTextComponent() {
-    return mainUI->getTextComponent();
 }
 
 inline bool PacketPane::isDirty() {

@@ -40,6 +40,7 @@
 #include <memory>
 
 class PacketChooser;
+class PacketEditIface;
 class QMenu;
 class QPushButton;
 class QTreeWidget;
@@ -88,8 +89,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         QTreeWidget* details;
         QTreeWidgetItem* components;
         QTreeWidgetItem* lastComponent;
-        QMenu* detailsMenu;
-        QString detailsLastSelection;
+        PacketEditIface* editIface;
 
     public:
         /**
@@ -97,12 +97,14 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
          */
         NTriCompositionUI(regina::NTriangulation* packet,
                 PacketTabbedUI* useParentUI);
+        ~NTriCompositionUI();
 
         /**
          * PacketViewerTab overrides.
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
+        PacketEditIface* getEditIface();
         void refresh();
         void editingElsewhere();
 
@@ -155,13 +157,10 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         static QString edgeString(unsigned long tetIndex,
             const regina::NPerm4& roles, int startPreimage, int endPreimage);
         static QString matrixString(const regina::NMatrix2& matrix);
-
-    private slots:
-        /**
-         * Actions for the composition details list.
-         */
-        void detailsPopup(QTreeWidgetItem* item, const QPoint& pos, int);
-        void detailsCopy();
 };
+
+inline PacketEditIface* NTriCompositionUI::getEditIface() {
+    return editIface;
+}
 
 #endif

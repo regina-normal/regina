@@ -44,9 +44,8 @@ PatienceDialog* PatienceDialog::warn(const QString& message,
     return dlg;
 }
 
-PatienceDialog::PatienceDialog(const QString& message,
-        QWidget* parent) :
-        KDialog(parent) {
+PatienceDialog::PatienceDialog(const QString& message, QWidget* parent) :
+        KDialog(parent, Qt::Dialog) {
     setCaption(i18n("Please Wait"));
     setModal(0);
     setButtons(None);

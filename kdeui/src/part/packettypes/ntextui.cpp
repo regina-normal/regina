@@ -30,6 +30,7 @@
 #include "packet/ntext.h"
 
 // UI includes:
+#include "../packeteditiface.h"
 #include "ntextui.h"
 
 #include <cstring>
@@ -48,9 +49,6 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
     // Create a view (which must be parented) before we do anything else.
     // Otherwise the Vim component crashes.
     view = document->createView(enclosingPane);
-    if (strcmp(document->metaObject()->className(), "Vim::Document") == 0)
-        enclosingPane->setDirtinessBroken();
-
     document->setReadWrite(enclosingPane->isReadWrite());
 
     KTextEditor::ConfigInterface *iface =
@@ -58,21 +56,16 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
     if (iface)
         iface->setConfigValue("dynamic-word-wrap",true);
 
-    refresh();
+    editIface = new PacketEditTextEditor(view);
 
-    /*
-    if (strcmp(document->metaObject()->className(), "Vim::Document") == 0)
-        std::cerr << "Not flushing the undo list since this has strange "
-            "side-effects with the Vim component." << std::endl;
-    else
-        KTextEditor::undoInterface(document)->clearUndo();
-    */
+    refresh();
 
     connect(document, SIGNAL(textChanged(KTextEditor::Document*)),
         this, SLOT(notifyTextChanged()));
 }
 
 NTextUI::~NTextUI() {
+    delete editIface;
     delete document;
 }
 
@@ -82,10 +75,6 @@ NPacket* NTextUI::getPacket() {
 
 QWidget* NTextUI::getInterface() {
     return view;
-}
-
-KTextEditor::Document* NTextUI::getTextComponent() {
-    return document;
 }
 
 QString NTextUI::getPacketMenuText() const {
@@ -116,7 +105,7 @@ void NTextUI::refresh() {
             data.truncate(data.length() - 1);
 
         document->setText(data);
-        document->activeView()->setCursorPosition(KTextEditor::Cursor(0, 0));
+        document->views().front()->setCursorPosition(KTextEditor::Cursor(0, 0));
     }
 
     if (! wasReadWrite)

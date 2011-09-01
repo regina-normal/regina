@@ -493,6 +493,13 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     invariants->setHeaderItem(header);
 
     invArea->addStretch(1);
+
+    QLabel* warning = new QLabel(i18n("<qt><b>Warning:</b> These are "
+        "floating point approximations only, with no guaranteed level "
+        "of accuracy.</qt>"));
+    warning->setWordWrap(true);
+    warning->setAlignment(Qt::AlignCenter);
+    layout->addWidget(warning);
 }
 
 regina::NPacket* NTriTuraevViroUI::getPacket() {
@@ -704,7 +711,11 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     QScrollArea* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
-    scroller->setStyleSheet("background-color:transparent;");
+    // Transparency must be applied to both the QScrollArea *and* some of its
+    // internal components (possibly the widget that holds the viewport?).
+    scroller->setStyleSheet("QScrollArea, .QWidget { "
+                                "background-color:transparent; "
+                            "}");
     ui = scroller;
 
     QWidget* grid = new QWidget(scroller->viewport());

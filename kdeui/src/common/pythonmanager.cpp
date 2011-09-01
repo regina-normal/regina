@@ -50,27 +50,29 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
     consoles.erase(console);
 }
 
-void PythonManager::openPythonReference(QWidget* parent) {
+void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     QString docDir =
         QFile::decodeName(regina::NGlobalDirs::engineDocs().c_str());
     QString index = docDir + "/modules.html";
 
     if (QFileInfo(index).exists()) {
         // If we're on a mac, just use the default Mac browser.
-        #ifdef __APPLE__
-        if (! KRun::runCommand(QString("open \"%1\"").arg(index),
-                parent /* TODO: should be top-level widget */))
-        #else
-        if (! KRun::runUrl("file:" + index, "text/html",
-                parent /* TODO: should be top-level widget */,
+#ifdef __APPLE__
+        // Hmm.  Assume this command executes successfully, since on my
+        // fink it returns false even when it *does* execute successfully..!
+        KRun::runCommand(QString("open \"%1\"").arg(index), topLevelWindow);
+#else
+        if (! KRun::runUrl("file:" + index, "text/html", topLevelWindow,
                 false /* temp file */, false /* run executables */))
-        #endif
-            KMessageBox::sorry(parent, i18n("<qt>The Python reference could "
+            KMessageBox::sorry(topLevelWindow, i18n(
+                "<qt>The Python reference could "
                 "not be opened from within KDE.  "
                 "Please try pointing your web browser to "
                 "<tt>%1/modules.html</tt>.</qt>").arg(docDir));
+#endif
     } else
-        KMessageBox::sorry(parent, i18n("<qt>The Python reference could "
+        KMessageBox::sorry(topLevelWindow, i18n(
+            "<qt>The Python reference could "
             "not be found.  Perhaps it is not installed?<p>"
             "The Python reference (i.e., the API documentation for the "
             "Regina calculation engine) should be installed in the directory "

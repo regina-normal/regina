@@ -76,7 +76,11 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
     QScrollArea* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
-    // TODO scroller->setStyleSheet("background-color:transparent;");
+    // Transparency must be applied to both the QScrollArea *and* some of its
+    // internal components (possibly the widget that holds the viewport?).
+    scroller->setStyleSheet("QScrollArea, .QWidget { "
+                                "background-color:transparent; "
+                            "}");
     ui = scroller;
 
     pane = new QWidget(scroller);
@@ -107,7 +111,7 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "Each entry in this table counts the number of "
         "bounded surfaces with a particular orientability, "
         "1-or-2-sidedness and Euler characteristic.</qt>"));
-    paneLayout->addWidget(tableClosed, Qt::AlignLeft);
+    paneLayout->addWidget(tableClosed, 3);
 
     totBounded = new QLabel();
     totBounded->setWhatsThis(i18n("Counts the total number of compact "
@@ -127,8 +131,7 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
         "Each entry in this table counts the number of "
         "bounded surfaces with a particular orientability, "
         "1-or-2-sidedness and Euler characteristic.</qt>"));
-    // TODO tableBounded->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
-    paneLayout->addWidget(tableBounded, Qt::AlignLeft);
+    paneLayout->addWidget(tableBounded, 3);
 
     totSpun = new QLabel();
     totSpun->setWhatsThis(i18n("Counts the total number of non-compact "

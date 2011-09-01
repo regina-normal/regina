@@ -39,6 +39,8 @@
 
 #include <QDrag>
 #include <QVBoxLayout>
+#include <QWhatsThis>
+#include <kaboutapplicationdialog.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
@@ -64,14 +66,13 @@
 #include <ktexteditor/view.h>
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
-#include <ktoolinvocation.h>
 #include <ktip.h>
 #include <kurl.h>
 
 unsigned ReginaMain::objectNumber = 1;
 
 ReginaMain::ReginaMain() : KParts::MainWindow(),
-        currentPart(0) {
+        currentPart(0), aboutApp(0) {
 
     setAttribute(Qt::WA_DeleteOnClose);
     // Select a unique DCOP interface name.
@@ -85,6 +86,9 @@ ReginaMain::ReginaMain() : KParts::MainWindow(),
 
     // Accept drag and drop.
     setAcceptDrops(true);
+
+    // Don't use the standard Help menu; we'll provide our own.
+    setHelpMenuEnabled(false);
 
     // Set up our actions and status bar.
     setXMLFile("reginamain.rc");
@@ -103,6 +107,10 @@ ReginaMain::ReginaMain() : KParts::MainWindow(),
         this, SLOT(createGUI(KParts::Part*)));
 }
 
+ReginaMain::~ReginaMain() {
+    delete aboutApp;
+}
+
 void ReginaMain::setPreferences(const ReginaPrefSet& prefs) {
     globalPrefs = prefs;
     emit preferencesChanged(globalPrefs);
@@ -116,17 +124,16 @@ void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
 }
 
 void ReginaMain::dropEvent(QDropEvent *event) {
-    // Accept a dropped Url.
+    // Accept a dropped URL (or URLs).
 
     // See if we can decode a URI.  If not, just ignore it.
     if (event->mimeData()->hasUrls()) {
         // We have a URI, so process it.
-        // TODO: what if many URIs are dropped? Open all?
-        QUrl url;
-        url = event->mimeData()->urls().first();
-
-        // Load in the file.
-        openUrl(url);
+        // Load in each file.
+        const QList<QUrl>& urls(event->mimeData()->urls());
+        for (QList<QUrl>::const_iterator it = urls.begin();
+                it != urls.end(); ++it)
+            openUrl(*it);
     }
 }
 
@@ -313,23 +320,38 @@ void ReginaMain::optionsPreferences() {
     dlg.exec();
 }
 
+void ReginaMain::helpAboutApp() {
+    if (! aboutApp)
+        aboutApp = new KAboutApplicationDialog(
+            KGlobal::mainComponent().aboutData(), this);
+    aboutApp->show();
+}
+
+void ReginaMain::helpHandbook() {
+    globalPrefs.openHandbook("index", this);
+}
+
+void ReginaMain::helpWhatsThis() {
+    QWhatsThis::enterWhatsThisMode();
+}
+
 void ReginaMain::helpTipOfDay() {
     KTipDialog::showTip(this, QString::null, true);
 }
 
 void ReginaMain::helpTrouble() {
-    KToolInvocation::invokeHelp("troubleshooting");
+    globalPrefs.openHandbook("troubleshooting", this);
 }
 
 void ReginaMain::helpNoHelp() {
     KMessageBox::information(this,
-        i18n("<qt>If you cannot view the Regina Handbook, it is probably "
-            "because you do not have the KDE3 Help Center installed.<p>"
-            "Some users can fix this easily by installing the appropriate "
-            "package (such as <tt>khelpcenter</tt> or <tt>kdebase3</tt>).<p>"
-            "Some users cannot fix this problem, because their "
-            "GNU/Linux distribution has moved to KDE4 and no longer supports "
-            "KDE3.<p>"
+        i18n("<qt>If you cannot view the Regina Handbook, it is possibly "
+            "because you do not have the KDE Help Center installed.<p>"
+            "Try editing Regina's preferences: in the General Options "
+            "panel, uncheck the box "
+            "<i>\"Open handbook in KDE Help Center\"</i>.  "
+            "This will make the handbook open in your default web browser "
+            "instead.<p>"
             "If all else fails, remember that you can always read the "
             "Regina Handbook online at "
             "<a href=\"http://regina.sourceforge.net/\">regina.sourceforge.net</a>.  "
@@ -417,8 +439,20 @@ void ReginaMain::setupActions() {
     connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
 
     // Help:
+    KStandardAction::aboutApp(this, SLOT(helpAboutApp()), actionCollection());
+
+    act = actionCollection()->addAction("help_handbook_custom");
+    act->setText(i18n("Regina &Handbook"));
+    act->setIcon(KIcon("help-contents"));
+    act->setShortcut(tr("F1"));
+    act->setWhatsThis(i18n("Open the Regina handbook.  This is the users' "
+        "guide for how to use Regina."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpHandbook()));
+
+    KStandardAction::whatsThis(this, SLOT(helpWhatsThis()), actionCollection());
+
     act = actionCollection()->addAction("help_engine");
-    act->setText(i18n("&Python Reference"));
+    act->setText(i18n("&Python API Reference"));
     act->setIcon(KIcon("python_console"));
     act->setWhatsThis(i18n("Open the detailed documentation for Regina's "
         "mathematical engine.  This describes the classes, methods and "
@@ -437,9 +471,9 @@ void ReginaMain::setupActions() {
    
     act = actionCollection()->addAction("help_nohelp");
     act->setText(i18n("Handbook won't open?"));
+    act->setIcon(KIcon("dialog-cancel"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
     
-
     // All done!  Build the GUI.
     createGUI(0);
 }
@@ -512,6 +546,10 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
         }
     }
 
+    configGroup = new KConfigGroup(config, "Doc");
+    globalPrefs.handbookInKHelpCenter = configGroup->readEntry(
+        "HandbookInKHelpCenter", false);
+
     configGroup = new KConfigGroup(config, "File");
     globalPrefs.autoFileExtension = configGroup->readEntry(
         "AutomaticExtension", true);
@@ -519,7 +557,13 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
 
     configGroup = new KConfigGroup(config, "PDF");
     globalPrefs.pdfAutoClose = configGroup->readEntry("AutoClose", true);
+#ifdef __APPLE__
+    // On MacOSX, use an external viewer by default.
+    globalPrefs.pdfEmbed = configGroup->readEntry("Embed", false);
+#else
+    // On Linux, use an embedded viewer if we can.
     globalPrefs.pdfEmbed = configGroup->readEntry("Embed", true);
+#endif
     globalPrefs.pdfExternalViewer = configGroup->readEntry("ExternalViewer").
         trimmed();
     if (globalPrefs.pdfExternalViewer.isEmpty())
@@ -633,6 +677,10 @@ void ReginaMain::saveOptions() {
                 (*it).filename);
     configGroup->writeEntry("Files", censusStrings);
     configGroup->sync();
+
+    configGroup = new KConfigGroup(config, "Doc");
+    configGroup->writeEntry("HandbookInKHelpCenter",
+        globalPrefs.handbookInKHelpCenter);
 
     configGroup = new KConfigGroup(config, "File");
     configGroup->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);

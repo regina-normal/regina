@@ -54,6 +54,9 @@
 #include <kmainwindow.h>
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
+#include <kxmlguifactory.h>
+#include <ktexteditor/document.h>
+#include <ktexteditor/view.h>
 
 ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
         const QStringList& /*args*/) :
@@ -162,27 +165,19 @@ void ReginaPart::dock(PacketPane* newPane) {
 
     newPane->show();
 
-    if (newPane->hasTextComponent()) {
-        newPane->registerEditOperation(actCut, PacketPane::editCut);
-        newPane->registerEditOperation(actCopy, PacketPane::editCopy);
-        newPane->registerEditOperation(actPaste, PacketPane::editPaste);
-        newPane->registerEditOperation(actUndo, PacketPane::editUndo);
-        newPane->registerEditOperation(actRedo, PacketPane::editRedo);
-    }
+    newPane->registerEditOperations(actCut, actCopy, actPaste);
+
+    // Don't plug the full KTextEditor::View GUI; there's way too much stuff
+    // that we don't want (like Save and Save-As, for instance).
+    // factory()->addClient(doc->views().front());
 }
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
     allPanes.removeAll(closingPane);
 }
 
-void ReginaPart::hasUndocked(PacketPane* undockedPane) {
-    if (undockedPane->hasTextComponent()) {
-        undockedPane->deregisterEditOperation(actCut, PacketPane::editCut);
-        undockedPane->deregisterEditOperation(actCopy, PacketPane::editCopy);
-        undockedPane->deregisterEditOperation(actPaste, PacketPane::editPaste);
-        undockedPane->deregisterEditOperation(actUndo, PacketPane::editUndo);
-        undockedPane->deregisterEditOperation(actRedo, PacketPane::editRedo);
-    }
+void ReginaPart::aboutToUndock(PacketPane* undockedPane) {
+    undockedPane->deregisterEditOperations();
 
     if (dockedPane == undockedPane) {
         unplugActionList("packet_type_menu");
@@ -394,11 +389,7 @@ void ReginaPart::clonePacket() {
 
     regina::NPacket* ans = packet->clone(false, false);
 
-    PacketTreeItem* item = treeView->find(ans);
-    if (item) {
-        treeView->setItemSelected(item, true);
-        treeView->setItemHidden(item,false);
-    }
+    treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 
@@ -412,11 +403,7 @@ void ReginaPart::cloneSubtree() {
 
     regina::NPacket* ans = packet->clone(true, false);
 
-    PacketTreeItem* item = treeView->find(ans);
-    if (item) {
-        treeView->setItemSelected(item, true);
-        treeView->setItemHidden(item,false);
-    }
+    treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 
@@ -435,7 +422,7 @@ void ReginaPart::pythonConsole() {
 void ReginaPart::floatDockedPane() {
     // Delegate the entire procedure to PacketPane::floatPane().
     // Processing will return to this class when PacketPane calls
-    // ReginaPart::hasUndocked().
+    // ReginaPart::aboutToUndock().
     if (dockedPane)
         dockedPane->floatPane();
 }
@@ -452,7 +439,7 @@ bool ReginaPart::closeDockedPane() {
     // Close it.  Note that queryClose() has already done the
     // deregistration for us.
     PacketPane* closedPane = dockedPane;
-    hasUndocked(dockedPane);
+    aboutToUndock(dockedPane);
 
     // At this point dockedPane is already 0.
     delete closedPane;
@@ -508,7 +495,6 @@ void ReginaPart::updateTreePacketActions() {
 }
 
 void ReginaPart::updateTreeEditActions() {
-
     bool enable = isReadWrite();
     QLinkedList<KAction *>::iterator it;
     for (it = treeGeneralEditActions.begin(); 
@@ -516,7 +502,6 @@ void ReginaPart::updateTreeEditActions() {
         (*it)->setEnabled(enable);
 
     enable = enable && (treeView->selectedItems().isEmpty());
-    // TODO: Was checking selectedItem() != 0, reason?
     for (it = treePacketEditActions.begin(); 
             it != treePacketEditActions.end(); it++)
         (*it)->setEnabled(enable);
@@ -526,10 +511,6 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
     QSplitter* splitter = new QSplitter(parentWidget);
 
     // Set up the packet tree viewer.
-    // splitter->setResizeMode(treeView, QSplitter::KeepSize); //TODO: Check if
-    // needed
-    // TODO: setHeaderHidden(true); -- is this the default?
-    // TODO: selection mode: is single selection the default?
     treeView = new PacketTreeView(this, splitter);
     treeView->setWhatsThis( i18n("<qt>You are looking at the packet tree "
         "for this topology data file.<p>"
@@ -538,14 +519,15 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
         "lists, text items and so on.  "
         "Packets within a data file are arranged in a tree structure, "
         "so that each packet may contain one or more child packets.</qt>"));
-    // TODO: Check that this size policy makes sense.
-    treeView->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
-        QSizePolicy::MinimumExpanding));
+    treeView->setSizePolicy(QSizePolicy(
+        QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
+    // Leave the stretch factors at the default of zero.
     connect(treeView, SIGNAL(itemSelectionChanged()), this,
         SLOT(updateTreePacketActions()));
 
     // Make sure the tree area doesn't shrink too far.
-    // TODO: treeLayout->addStrut(150);
+    // Removed this for the KDE4 port, things seem fine without it.
+    // treeLayout->addStrut(150);
 
     // Set up the docking area.
     dockArea = new QWidget(splitter);

@@ -51,7 +51,7 @@
 #include <QHeaderView>
 #include <qlabel.h>
 #include <qregexp.h>
-#include <QTableWidget>
+#include <QTableView>
 #include <set>
 
 using regina::NPacket;
@@ -471,7 +471,9 @@ QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
 }
 
 void GluingsModel::showError(const QString& message) {
-    KMessageBox::error(0 /* TODO: should be the view */, message);
+    // We should actually pass the view to KMessageBox, not 0, but we
+    // don't have access to any widget from here...
+    KMessageBox::error(0 /* should be the view? */, message);
 }
 
 QString GluingsModel::destString(int srcFace, int destTet,

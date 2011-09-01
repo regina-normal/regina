@@ -32,7 +32,9 @@
 
 // UI includes:
 #include "nscriptui.h"
-#include "nscriptvaritems.h"
+#include "../packetchooser.h"
+#include "../packeteditiface.h"
+#include "../packetmanager.h"
 #include "../reginapart.h"
 
 #include <cstring>
@@ -44,23 +46,164 @@
 #include <kmessagebox.h>
 #include <ktexteditor/configinterface.h>
 #include <ktexteditor/document.h>
-//#include <ktexteditor/editinterface.h>
-//#include <ktexteditor/highlightinginterface.h>
-//#include <ktexteditor/undointerface.h>
 #include <ktexteditor/view.h>
-//#include <ktexteditor/viewcursorinterface.h>
 #include <ktoolbar.h>
 #include <qboxlayout.h>
 #include <qheaderview.h>
+#include <qlineedit.h>
 #include <qsplitter.h>
 #include <qtablewidget.h>
 #include <set>
 
-#define SCRIPT_TABLE_WEIGHT 1
-#define SCRIPT_EDITOR_WEIGHT 3
-
 using regina::NPacket;
 using regina::NScript;
+
+namespace {
+    QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
+}
+
+ScriptVarValueItem::ScriptVarValueItem(regina::NPacket* packet) :
+        packet_(packet) {
+    if (packet_)
+        packet_->listen(this);
+
+    updateData();
+}
+
+void ScriptVarValueItem::setPacket(regina::NPacket* p) {
+    if (packet_)
+        packet_->unlisten(this);
+
+    packet_ = p;
+
+    if (p)
+        p->listen(this);
+
+    updateData();
+}
+
+void ScriptVarValueItem::packetWasRenamed(regina::NPacket* p) {
+    if (p == packet_)
+        updateData();
+}
+
+void ScriptVarValueItem::packetToBeDestroyed(regina::NPacket* p) {
+    if (p == packet_) {
+        packet_->unlisten(this);
+        packet_ = 0;
+        updateData();
+    }
+}
+
+void ScriptVarValueItem::updateData() {
+    if (packet_ && ! packet_->getPacketLabel().empty()) {
+        setText(packet_->getPacketLabel().c_str());
+        setIcon(QPixmap(PacketManager::iconSmall(packet_, false)));
+    } else {
+        setText("<None>");
+        setIcon(QPixmap());
+    }
+}
+
+QWidget* ScriptNameDelegate::createEditor(QWidget* parent,
+        const QStyleOptionViewItem&, const QModelIndex&) const {
+    QLineEdit* e = new QLineEdit(parent);
+    e->setValidator(new QRegExpValidator(rePythonIdentifier, e));
+    return e;
+}
+
+void ScriptNameDelegate::setEditorData(QWidget* editor,
+        const QModelIndex& index) const {
+    QString data = index.model()->data(index, Qt::EditRole).toString();
+
+    QLineEdit* e = static_cast<QLineEdit*>(editor);
+    e->setText(data);
+}
+
+void ScriptNameDelegate::setModelData(QWidget* editor,
+        QAbstractItemModel* model, const QModelIndex& index) const {
+    QLineEdit* e = static_cast<QLineEdit*>(editor);
+    QString data = e->text().trimmed();
+
+    if (data.isEmpty()) {
+        KMessageBox::error(e, i18n(
+            "Variable names cannot be empty."));
+        return;
+    }
+    if (! rePythonIdentifier.exactMatch(data)) {
+        KMessageBox::error(e, i18n(
+            "%1 is not a valid python variable name.").arg(data));
+
+        // Construct a better variable name.
+        data.replace(QRegExp("[^A-Za-z0-9_]"), "");
+        if (data.isEmpty())
+            return;
+        if (! rePythonIdentifier.exactMatch(data))
+            data.prepend('_');
+    }
+    if (nameUsedElsewhere(data, index.row(), model)) {
+        KMessageBox::error(e, i18n(
+            "Another variable is already using the name %1.").arg(data));
+
+        // Construct a unique variable name.
+        int which;
+        for (which = 0; nameUsedElsewhere(data + QString::number(which),
+                index.row(), model); which++)
+            ;
+        data.append(QString::number(which));
+    }
+
+    model->setData(index, data, Qt::EditRole);
+}
+
+void ScriptNameDelegate::updateEditorGeometry(QWidget* editor,
+        const QStyleOptionViewItem& option, const QModelIndex&) const {
+    editor->setGeometry(option.rect);
+}
+
+bool ScriptNameDelegate::nameUsedElsewhere(const QString& name, int currRow,
+        QAbstractItemModel* model) {
+    int rows = model->rowCount();
+    for (int i = 0; i < rows; i++) {
+        if (i == currRow)
+            continue;
+        if (model->data(model->index(i, 0)).toString() == name)
+            return true;
+    }
+    return false;
+}
+
+QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
+        const QStyleOptionViewItem&, const QModelIndex&) const {
+    PacketChooser* e = new PacketChooser(matriarch_,
+        0 /* filter */, true /* allow "none" */,
+        0 /* initial selection */, parent);
+    e->setAutoUpdate(true);
+    return e;
+}
+
+void ScriptValueDelegate::setEditorData(QWidget* editor,
+        const QModelIndex& index) const {
+    PacketChooser* e = static_cast<PacketChooser*>(editor);
+    e->selectPacket(static_cast<ScriptVarValueItem*>(
+        table_->item(index.row(), index.column()))->getPacket());
+}
+
+void ScriptValueDelegate::setModelData(QWidget* editor,
+        QAbstractItemModel*, const QModelIndex& index) const {
+    PacketChooser* e = static_cast<PacketChooser*>(editor);
+    NPacket* p = e->selectedPacket();
+    ScriptVarValueItem* item = static_cast<ScriptVarValueItem*>(table_->item(
+        index.row(), index.column()));
+
+    if (item->getPacket() != p)
+        item->setPacket(p);
+}
+
+void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
+        const QStyleOptionViewItem& option, const QModelIndex&) const {
+    editor->setGeometry(option.rect);
+}
 
 NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         KTextEditor::Document* doc) :
@@ -70,6 +213,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     ui = new QWidget(enclosingPane);
     QVBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     // --- Action Toolbar ---
 
@@ -83,24 +227,13 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     QSplitter* splitter = new QSplitter(Qt::Vertical);
     layout->addWidget(splitter, 1);
 
-    varTable = new QTableWidget(0, 2);
-    if (! readWrite )
+    varTable = new ScriptVarTable(0, 2);
+    varTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
+
+    if (readWrite )
+        varTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    else
         varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    varTable->verticalHeader()->hide();
-    // varTable->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
-
-    // TODO: If needed, uncomment below
-    //varTable->setContentsMargins(varTable->contentsMargins()->setLeft(0));
-    //
-    //varTable->setLeftMargin(0);
-
-    QStringList hdr;
-    hdr << i18n("Variable") << i18n("Value");
-    varTable->setHorizontalHeaderLabels(hdr);
-
-    //varTable->setColumnStretchable(0, true);
-    //varTable->setColumnStretchable(1, true);
 
     varTable->setWhatsThis(i18n("<qt>A list of variables that will be "
         "set before the script is run.  Each variable may refer to a "
@@ -108,11 +241,18 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         "This allows your script to easily access the other packets in "
         "this data file.</qt>"));
 
-    QSizePolicy pol = QSizePolicy(QSizePolicy::Expanding,
-        QSizePolicy::Expanding);
-    pol.setHorizontalStretch(SCRIPT_TABLE_WEIGHT);
-    pol.setVerticalStretch(SCRIPT_TABLE_WEIGHT);
-    varTable->setSizePolicy(pol); 
+    varTable->verticalHeader()->hide();
+
+    varTable->setHorizontalHeaderLabels(
+        QStringList() << i18n("Variable") << i18n("Value"));
+    varTable->horizontalHeader()->setStretchLastSection(true);
+
+    nameDelegate = new ScriptNameDelegate();
+    valueDelegate = new ScriptValueDelegate(varTable,
+        packet->getTreeMatriarch());
+    varTable->setItemDelegateForColumn(0, nameDelegate);
+    varTable->setItemDelegateForColumn(1, valueDelegate);
+
     splitter->addWidget(varTable);
    
     // --- Text Editor ---
@@ -120,9 +260,6 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     // Create a view (which must be parented) before we do anything else.
     // Otherwise the Vim component crashes.
     view = document->createView(splitter);
-    //editInterface = KTextEditor::editInterface(document);
-    if (strcmp(document->metaObject()->className(), "Vim::Document") == 0)
-        enclosingPane->setDirtinessBroken();
 
     // Prepare the components.
     document->setReadWrite(readWrite);
@@ -139,11 +276,8 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         "area.  Any variables listed in the table above will be "
         "set before the script is run."));
 
-    pol = QSizePolicy(QSizePolicy::MinimumExpanding,
-        QSizePolicy::MinimumExpanding);
-    pol.setHorizontalStretch(SCRIPT_EDITOR_WEIGHT);
-    pol.setVerticalStretch(SCRIPT_EDITOR_WEIGHT);
-    view->setSizePolicy(pol); 
+    editIface = new PacketEditTextEditor(view);
+
     splitter->addWidget(view);
 
     splitter->setTabOrder(view, varTable);
@@ -153,9 +287,6 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     scriptActions = new KActionCollection((QObject*)0);
     
-    // scriptActionList.setAutoDelete(true); TODO: This is manual now
-    // for pointers.
-
     actAdd = scriptActions->addAction("script_add_var");
     actAdd->setText(i18n("&Add Var"));
     actAdd->setIcon(KIcon("edit-table-insert-row-below"));
@@ -168,6 +299,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         "this data file."));
     connect(actAdd, SIGNAL(triggered()), this, SLOT(addVariable()));
     actionBar->addAction(actAdd);
+    scriptActionList.append(actAdd);
 
     actRemove = scriptActions->addAction("script_remove_var");
     actRemove->setText(i18n("Re&move Var"));
@@ -182,10 +314,11 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         "This allows your script to easily access the other packets in "
         "this data file."));
     connect(actRemove, SIGNAL(triggered()), this, 
-        SLOT(removeSelectedVariable()));
-    connect(varTable, SIGNAL(selectionChanged()), this,
+        SLOT(removeSelectedVariables()));
+    connect(varTable, SIGNAL(itemSelectionChanged()), this,
         SLOT(updateRemoveState()));
     actionBar->addAction(actRemove);
+    scriptActionList.append(actRemove);
 
     KAction* actSep = scriptActions->addAction("script_separator");
     actSep->setSeparator(true);
@@ -215,37 +348,30 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // --- Finalising ---
 
-    // Resize the components within the splitter so that the editor has most
-    // of the space.
-    // TODO: This does not seem to work.. :/
-    //splitter->setStretchFactor(0, SCRIPT_TABLE_WEIGHT);
-    //splitter->setStretchFactor(1, SCRIPT_EDITOR_WEIGHT);
+    // Make the editor get most of the space.
+    splitter->setStretchFactor(0 /* index */, 0 /* weight */);
+    splitter->setStretchFactor(1 /* index */, 1 /* weight */);
 
     // Fill the components with data.
     refresh();
-
-    // Clear the undo stack.
-
-    // undoInterface has been removed.
-    /*if (strcmp(document->metaObject()->className(), "Vim::Document") == 0)
-        std::cerr << "Not flushing the undo list since this has strange "
-            "side-effects with the Vim component." << std::endl;
-    else
-        KTextEditor::undoInterface(document)->clearUndo();*/
+    // varTable->horizontalHeader()->resizeSections(
+    //     QHeaderView::ResizeToContents);
 
     // Notify us of any changes.
-    connect(varTable, SIGNAL(valueChanged(int, int)),
+    connect(varTable, SIGNAL(itemChanged(QTableWidgetItem*)),
         this, SLOT(notifyScriptChanged()));
-    connect(document, SIGNAL(textChanged()),
+    connect(document, SIGNAL(textChanged(KTextEditor::Document*)),
         this, SLOT(notifyScriptChanged()));
 }
 
 NScriptUI::~NScriptUI() {
     // Make sure the actions, including separators, are all deleted.
-    
-    scriptActionList.clear();
-    // Clean up.
     delete scriptActions;
+
+    // Clean up.
+    delete nameDelegate;
+    delete valueDelegate;
+    delete editIface;
     delete document;
 }
 
@@ -257,10 +383,6 @@ QWidget* NScriptUI::getInterface() {
     return ui;
 }
 
-KTextEditor::Document* NScriptUI::getTextComponent() {
-    return document;
-}
-
 const QLinkedList<KAction*>& NScriptUI::getPacketTypeActions() {
     return scriptActionList;
 }
@@ -270,6 +392,9 @@ QString NScriptUI::getPacketMenuText() const {
 }
 
 void NScriptUI::commit() {
+    // Finish whatever edit was going on in the table.
+    varTable->endEdit();
+
     // Update the lines.
     script->removeAllLines();
     unsigned nLines = document->lines();
@@ -286,7 +411,7 @@ void NScriptUI::commit() {
         value = dynamic_cast<ScriptVarValueItem*>(varTable->item(i, 1))->
             getPacket();
         script->addVariable(
-            varTable->itemAt(i, 0)->text().toAscii().constData(),
+            varTable->item(i, 0)->text().toAscii().constData(),
             value ? value->getPacketLabel() : std::string());
     }
 
@@ -297,11 +422,13 @@ void NScriptUI::refresh() {
     // Refresh the variables.
     unsigned long nVars = script->getNumberOfVariables();
     varTable->setRowCount(nVars);
+
+    regina::NPacket* matriarch = script->getTreeMatriarch();
     for (unsigned long i = 0; i < nVars; i++) {
-        varTable->setItem(i, 0, new ScriptVarNameItem(
+        varTable->setItem(i, 0, new QTableWidgetItem(
             script->getVariableName(i).c_str()));
         varTable->setItem(i, 1, new ScriptVarValueItem(
-            script->getTreeMatriarch(), script->getVariableValue(i).c_str()));
+            matriarch->findPacketLabel(script->getVariableValue(i).c_str())));
     }
 
     // A kate part needs to be in read-write mode before we can alter its
@@ -339,11 +466,11 @@ void NScriptUI::refresh() {
 }
 
 void NScriptUI::setReadWrite(bool readWrite) {
-    if ( readWrite ) {
+    if (readWrite)
         varTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    } else {
+    else
         varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    }
+
     document->setReadWrite(readWrite);
     actAdd->setEnabled(readWrite);
     updateRemoveState();
@@ -360,7 +487,7 @@ void NScriptUI::addVariable() {
     while (true) {
         varName = QString("var") + QString::number(which);
         for (i = 0; i < rows; i++)
-            if (varTable->itemAt(i, 0)->text() == varName)
+            if (varTable->item(i, 0)->text() == varName)
                 break;
         if (i == rows)
             break;
@@ -368,10 +495,11 @@ void NScriptUI::addVariable() {
     }
 
     // Add the new variable.
-    //varTable->insertRows(rows); TODO: Don't think this is needed, test.
-    varTable->setItem(rows, 0, new ScriptVarNameItem(varName));
-    varTable->setItem(rows, 1, new ScriptVarValueItem(
-        script->getTreeMatriarch(), (regina::NPacket*)0));
+    varTable->insertRow(rows);
+    QTableWidgetItem* nameItem = new QTableWidgetItem(varName);
+    varTable->setItem(rows, 0, nameItem);
+    varTable->setItem(rows, 1, new ScriptVarValueItem(0));
+    varTable->scrollToItem(nameItem);
 
     // Done!
     setDirty(true);
@@ -381,46 +509,38 @@ void NScriptUI::removeSelectedVariables() {
     // Gather together all the rows to be deleted.
     std::set<int> rows;
 
-    QList<QTableWidgetItem*> sel = varTable->selectedItems() ;
-    int i;
-    for (i = 0; i < sel.count(); i++) {
-        rows.insert(sel[i]->row());
-        //sel = varTable->selection(i);
-        //if (sel.isActive())
-        //    for (j = sel.topRow(); j <= sel.bottomRow(); j++)
-        //        rows.insert(j);
-    }
-
-    // Has anything been selected at all?
-    if (rows.empty()) {
+    // Note that selections are contiguous.
+    if (varTable->selectedRanges().empty()) {
         KMessageBox::error(ui, i18n(
             "No variables are currently selected for removal."));
         return;
     }
+    QTableWidgetSelectionRange range = varTable->selectedRanges().front();
+    std::cerr << "REMOVING: " << range.topRow() << "--" <<
+        range.bottomRow() << std::endl;
 
     // Notify the user that variables will be removed.
     QString message;
-    if (rows.size() == 1)
+    if (range.bottomRow() == range.topRow())
         message = i18n("The variable %1 will be removed.  Are you sure?").
-            arg(varTable->itemAt(*rows.begin(), 0)->text());
-    else if (rows.size() == 2)
+            arg(varTable->item(range.topRow(), 0)->text());
+    else if (range.bottomRow() == range.topRow() + 1)
         message = i18n("The variables %1 and %2 will be removed.  "
-            "Are you sure?").arg(varTable->itemAt(*rows.begin(), 0)->text()).
-            arg(varTable->itemAt(*rows.rbegin(), 0)->text());
+            "Are you sure?").arg(varTable->item(range.topRow(), 0)->text()).
+            arg(varTable->item(range.bottomRow(), 0)->text());
     else
         message = i18n("%1 variables from %2 to %3 will be removed.  "
-            "Are you sure?").arg(rows.size()).
-            arg(varTable->itemAt(*rows.begin(), 0)->text()).
-            arg(varTable->itemAt(*rows.rbegin(), 0)->text());
+            "Are you sure?").arg(range.bottomRow() - range.topRow() + 1).
+            arg(varTable->item(range.topRow(), 0)->text()).
+            arg(varTable->item(range.bottomRow(), 0)->text());
 
     if (KMessageBox::warningContinueCancel(ui, message) ==
             KMessageBox::Cancel)
         return;
 
     // Remove the variables!
-    for (std::set<int>::const_iterator it = rows.end();
-            it != rows.begin(); it--)
-        varTable->removeRow(*it);
+    for (int i = range.bottomRow(); i >= range.topRow(); --i)
+        varTable->removeRow(i);
 
     setDirty(true);
 }
@@ -449,12 +569,15 @@ void NScriptUI::compile() {
 }
 
 void NScriptUI::execute() {
+    // Finish whatever edit was going on in the table.
+    varTable->endEdit();
+
     // Set up the variable list.
     PythonVariableList vars;
 
     unsigned nVars = varTable->rowCount();
     for (unsigned i = 0; i < nVars; i++)
-        vars.push_back(PythonVariable(varTable->itemAt(i, 0)->text(),
+        vars.push_back(PythonVariable(varTable->item(i, 0)->text(),
             dynamic_cast<ScriptVarValueItem*>(varTable->item(i, 1))->
                 getPacket()));
 

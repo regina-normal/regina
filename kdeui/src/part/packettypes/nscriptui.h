@@ -33,14 +33,19 @@
 #ifndef __NSCRIPTUI_H
 #define __NSCRIPTUI_H
 
+#include "packet/npacketlistener.h"
+
 #include "../packetui.h"
+
+#include <qstyleditemdelegate.h>
+#include <qtablewidget.h>
 
 class KAction;
 class KActionCollection;
 class QSplitter;
-class QTableWidget;
 
 namespace KTextEditor {
+    class Document;
     class EditInterface;
     class View;
 };
@@ -48,6 +53,99 @@ namespace KTextEditor {
 namespace regina {
     class NPacket;
     class NScript;
+};
+
+class ScriptVarValueItem : public QTableWidgetItem,
+        public regina::NPacketListener {
+    private:
+        /**
+         * The currently selected packet, or 0 for none.
+         */
+        regina::NPacket* packet_;
+
+    public:
+        /**
+         * Constructor.
+         */
+        ScriptVarValueItem(regina::NPacket* packet);
+
+        /**
+         * Access the currently selected packet.
+         */
+        regina::NPacket* getPacket() const;
+        void setPacket(regina::NPacket* packet);
+
+        /**
+         * NPacketListener overrides.
+         */
+        virtual void packetWasRenamed(regina::NPacket* p);
+        virtual void packetToBeDestroyed(regina::NPacket* p);
+
+    private:
+        /**
+         * Update the text and pixmap according to the currently
+         * selected packet.
+         */
+        void updateData();
+};
+
+class ScriptNameDelegate : public QStyledItemDelegate {
+    public:
+        virtual QWidget* createEditor(QWidget* parent,
+            const QStyleOptionViewItem& option, const QModelIndex& index) const;
+        virtual void setEditorData(QWidget* editor,
+            const QModelIndex& index) const;
+        virtual void setModelData(QWidget* editor,
+            QAbstractItemModel* model, const QModelIndex& index) const;
+        virtual void updateEditorGeometry(QWidget* editor,
+            const QStyleOptionViewItem& option, const QModelIndex& index) const;
+
+    private:
+        static bool nameUsedElsewhere(const QString& name, int currRow,
+            QAbstractItemModel* model);
+};
+
+class ScriptValueDelegate : public QStyledItemDelegate {
+    private:
+        QTableWidget* table_;
+        regina::NPacket* matriarch_;
+
+    public:
+        ScriptValueDelegate(QTableWidget* table,
+            regina::NPacket* treeMatriatch);
+
+        virtual QWidget* createEditor(QWidget* parent,
+            const QStyleOptionViewItem& option, const QModelIndex& index) const;
+        virtual void setEditorData(QWidget* editor,
+            const QModelIndex& index) const;
+        virtual void setModelData(QWidget* editor,
+            QAbstractItemModel* model, const QModelIndex& index) const;
+        virtual void updateEditorGeometry(QWidget* editor,
+            const QStyleOptionViewItem& option, const QModelIndex& index) const;
+};
+
+/**
+ * Sigh.  We need to subclass QTableWidget in order to gain access to the
+ * protected function currentChanged(), which allows us to forcibly close
+ * any open editor and send changes back to the model.
+ */
+class ScriptVarTable : public QTableWidget {
+    public:
+        ScriptVarTable(int rows, int cols);
+
+        /**
+         * Forcibly close any open editor and commit changes to the
+         * internal model.  This is good to do before performing any
+         * global action on the user's current data (such as executing
+         * the script, or commiting changes to the calculation engine).
+         */
+        void endEdit();
+
+        /**
+         * Reimplemented to request less space than a normal table,
+         * which gives the editor more room to breathe.
+         */
+        virtual QSize sizeHint() const;
 };
 
 /**
@@ -66,10 +164,12 @@ class NScriptUI : public QObject, public PacketUI {
          * Internal components
          */
         QWidget* ui;
-        QTableWidget* varTable;
+        ScriptVarTable* varTable;
+        QStyledItemDelegate* nameDelegate;
+        QStyledItemDelegate* valueDelegate;
         KTextEditor::Document* document;
-        KTextEditor::EditInterface* editInterface;
         KTextEditor::View* view;
+        PacketEditIface* editIface;
 
         /**
          * Script actions
@@ -92,7 +192,7 @@ class NScriptUI : public QObject, public PacketUI {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        KTextEditor::Document* getTextComponent();
+        PacketEditIface* getEditIface();
         const QLinkedList<KAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
         void commit();
@@ -131,5 +231,33 @@ class NScriptUI : public QObject, public PacketUI {
          */
         void setPythonMode();
 };
+
+inline regina::NPacket* ScriptVarValueItem::getPacket() const {
+    return packet_;
+}
+
+inline ScriptValueDelegate::ScriptValueDelegate(QTableWidget* table,
+        regina::NPacket* treeMatriarch) :
+        table_(table), matriarch_(treeMatriarch) {
+}
+
+inline ScriptVarTable::ScriptVarTable(int rows, int cols) :
+        QTableWidget(rows, cols) {
+}
+
+inline void ScriptVarTable::endEdit() {
+    // This will close any editor that might currently be open.
+    QModelIndex index(currentIndex());
+    currentChanged(index, index);
+}
+
+inline QSize ScriptVarTable::sizeHint() const {
+    QSize s = QTableWidget::sizeHint();
+    return QSize(s.width(), s.height() / 3 * 2);
+}
+
+inline PacketEditIface* NScriptUI::getEditIface() {
+    return editIface;
+}
 
 #endif
