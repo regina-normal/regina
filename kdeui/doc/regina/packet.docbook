@@ -418,6 +418,15 @@
     <guimenuitem>New&nbsp;...</guimenuitem> item in the
     <guimenu>Packet Tree</guimenu> menu, or by pressing the toolbar
     button with the corresponding packet icon.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menunew.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     For example, to create a new triangulation, either select
     <menuchoice>
      <guimenu>Packet Tree</guimenu>
@@ -427,13 +436,6 @@
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="icon-triangulation.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="newtriangulation.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -459,6 +461,13 @@
     You might also be asked for additional information according to which
     type of packet you are creating.
    </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newtriangulation.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
   </sect2>
 
   <sect2 id="packet-clone">
@@ -480,6 +489,13 @@
     currently selected, and the clone will be added adjacent to it
     in the tree.
     The top-level packet at the root of the tree cannot be cloned.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menuclone.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
     If you choose <guimenuitem>Clone Packet</guimenuitem>, only the
@@ -509,6 +525,13 @@
     you can give the selected packet a new label.
     Note that no two packets in the same data file may have the same label.
    </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menurename.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
    <tip><para>
     If you have selected some packet in the tree but you have a different
     packet open for viewing or editing, it is the
@@ -530,6 +553,13 @@
     whatever packet you have selected in the tree will be deleted.
     Note that all <emphasis>children</emphasis> of the selected packet
     will also be deleted, and their children and so on.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menudelete.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <warning><para>
     If you have selected some packet in the tree but you have a different
@@ -554,6 +584,13 @@
     operation is provided in case the user interface gets out of sync.
     If this does happen, please <link linkend="services">let us know</link>
     so that we can reproduce and hopefully fix the bug.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menurefresh.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
     Only the section of the tree beneath the selected packet will be
