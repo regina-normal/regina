@@ -605,6 +605,15 @@
     configured in &regina;'s <link linkend="options-general">general
     settings</link>.
    </para>
+   <tip><para>
+    All of the actions in the
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>Move</guimenuitem>
+    </menuchoice>
+    menu have keyboard shortcuts, allowing you to reorganise the
+    packet tree quickly using just the keyboard.
+   </para></tip>
   </sect2>
 
   <sect2 id="packet-refresh">
