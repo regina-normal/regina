@@ -6,6 +6,7 @@ Program version:
     CHANGES.txt, HIGHLIGHTS.txt, kdeui/doc/regina/HIGHLIGHTS.txt (version, date)
     CMakeLists.txt (PACKAGE_VERSION)
     kdeui/doc/regina/index.docbook (&regversion;, &regdate;, date, releaseinfo)
+    kdeui/doc/regina-xml/index.docbook (same as above)
     kdeui/src/common/reginaabout.cpp (regReleased)
     kdeui/src/{shell,part}/*.rc (gui version)
     packaging/debian/*/changelog (version, date)
