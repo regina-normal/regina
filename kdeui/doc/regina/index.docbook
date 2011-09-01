@@ -223,17 +223,17 @@
  &reginacompiling;
  &reginatrouble;
  &reginaservices;
- &reginacredits;
 
  <!-- References -->
  &reginaman;
  &reginautils;
 
- <!-- Appendices -->
+ <!-- Other Appendices -->
  <appendix id="history">
   <title>Version History</title>
   <programlisting>&reginahighlights;</programlisting>
  </appendix>
+ &reginacredits;
 
  <!-- Final Material -->
  &bibliography;

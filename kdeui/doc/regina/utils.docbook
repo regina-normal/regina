@@ -1,15 +1,13 @@
-<reference id="utils">
- <title>Specialised Utilities</title>
+<appendix id="utils">
+ <title>Command Line: Specialised Utilities</title>
 
- <partintro>
-  <para>
-   The main applications <command>regina-kde</command> and
-   <command>regina-python</command> are documented in the
-   <link linkend="manpages">previous reference chapter</link>.
-   This reference chapter documents the remaining specialised command-line
-   utilities that are provided with &regina;.
-  </para>
- </partintro>
+ <para>
+  The main applications <command>regina-kde</command> and
+  <command>regina-python</command> are documented in the
+  <link linkend="manpages">previous reference chapter</link>.
+  This reference chapter documents the remaining specialised command-line
+  utilities that are provided with &regina;.
+ </para>
 
  <!-- File Concatenator -->
 
@@ -1723,4 +1721,4 @@
    </para>
   </refsect1>
  </refentry>
-</reference>
+</appendix>

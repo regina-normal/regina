@@ -1,4 +1,4 @@
-<chapter id="credits">
+<appendix id="credits">
  <title>License and Acknowledgements</title>
 
  <sect1 id="licenses">
@@ -108,4 +108,4 @@
    </itemizedlist>
   </para>
  </sect1>
-</chapter>
+</appendix>

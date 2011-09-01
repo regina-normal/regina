@@ -1,19 +1,17 @@
-<reference id="manpages">
- <title>Main Applications</title>
+<appendix id="manpages">
+ <title>Command Line: Main Applications</title>
 
- <partintro>
-  <para>
-   This reference chapter documents the command-line options for
-   the two main applications provided with &regina;,
-   <command>regina-kde</command> and <command>regina-python</command>.
-  </para>
-  <para>
-   Several other specialised command-line utilities are provided
-   with &regina;.  For documentation on these,
-   see the later reference chapter on <link linkend="utils">specialised
-   utilities</link>.
-  </para>
- </partintro>
+ <para>
+  This reference chapter documents the command-line options for
+  the two main applications provided with &regina;,
+  <command>regina-kde</command> and <command>regina-python</command>.
+ </para>
+ <para>
+  Several other specialised command-line utilities are provided
+  with &regina;.  For documentation on these,
+  see the later reference chapter on <link linkend="utils">specialised
+  utilities</link>.
+ </para>
 
  <!-- KDE Startup Script -->
 
@@ -362,4 +360,4 @@
    </para>
   </refsect1>
  </refentry>
-</reference>
+</appendix>
