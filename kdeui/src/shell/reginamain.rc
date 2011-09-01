@@ -33,9 +33,12 @@
     <Action name="help_whats_this"/>
     <Separator/>
     <Action name="help_engine"/>
-    <Action name="help_show_tip"/>
+    <Action name="help_xmlref"/>
+    <Separator/>
     <Action name="help_trouble"/>
     <Action name="help_nohelp"/>
+    <Separator/>
+    <Action name="help_show_tip"/>
   </Menu>
 </MenuBar>
 

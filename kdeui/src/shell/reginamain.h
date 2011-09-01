@@ -215,6 +215,7 @@ class ReginaMain : public KParts::MainWindow,
         void optionsPreferences();
         void helpAboutApp();
         void helpHandbook();
+        void helpXMLRef();
         void helpWhatsThis();
         void helpTipOfDay();
         void helpTrouble();

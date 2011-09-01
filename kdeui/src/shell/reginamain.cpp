@@ -339,7 +339,11 @@ void ReginaMain::helpAboutApp() {
 }
 
 void ReginaMain::helpHandbook() {
-    globalPrefs.openHandbook("index", this);
+    globalPrefs.openHandbook("index", 0, this);
+}
+
+void ReginaMain::helpXMLRef() {
+    globalPrefs.openHandbook("index", "regina-xml", this);
 }
 
 void ReginaMain::helpWhatsThis() {
@@ -351,7 +355,7 @@ void ReginaMain::helpTipOfDay() {
 }
 
 void ReginaMain::helpTrouble() {
-    globalPrefs.openHandbook("troubleshooting", this);
+    globalPrefs.openHandbook("troubleshooting", 0, this);
 }
 
 void ReginaMain::helpNoHelp() {
@@ -456,8 +460,8 @@ void ReginaMain::setupActions() {
     act->setText(i18n("Regina &Handbook"));
     act->setIcon(KIcon("help-contents"));
     act->setShortcut(tr("F1"));
-    act->setWhatsThis(i18n("Open the Regina handbook.  This is the users' "
-        "guide for how to use Regina."));
+    act->setWhatsThis(i18n("Open the Regina handbook.  "
+        "This is the main users' guide for how to use Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpHandbook()));
 
     KStandardAction::whatsThis(this, SLOT(helpWhatsThis()), actionCollection());
@@ -472,6 +476,14 @@ void ReginaMain::setupActions() {
         "for more information (the handbook is "
         "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
     connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
+
+    act = actionCollection()->addAction("help_xmlref");
+    act->setText(i18n("&File Format Reference"));
+    act->setIcon(KIcon("application-xml"));
+    act->setWhatsThis(i18n("Open the file format reference manual.  "
+        "This give full details of the XML file format that Regina "
+        "uses to store its data files."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpXMLRef()));
 
     KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()), actionCollection());
     

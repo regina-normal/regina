@@ -253,15 +253,18 @@ bool ReginaPrefSet::writePythonLibraries() const {
     return true;
 }
 
-void ReginaPrefSet::openHandbook(const char* section, QWidget* parentWidget) {
+void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
+        QWidget* parentWidget) {
     if (handbookInKHelpCenter) {
-        KToolInvocation::invokeHelp(section, "regina");
+        KToolInvocation::invokeHelp(section, handbook);
         return;
     }
 
-    QString index = KStandardDirs::locate("html", "en/regina/index.html");
+    QString handbookName = (handbook ? handbook : "regina");
+    QString index = KStandardDirs::locate("html",
+        QString("en/%1/index.html").arg(handbookName));
     QString page = KStandardDirs::locate("html",
-        QString("en/regina/%1.html").arg(section));
+        QString("en/%1/%2.html").arg(handbookName).arg(section));
     if (QFileInfo(page).exists()) {
         // If we're on a mac, just use the default Mac browser.
 #ifdef __APPLE__
@@ -270,17 +273,32 @@ void ReginaPrefSet::openHandbook(const char* section, QWidget* parentWidget) {
         KRun::runCommand(QString("open \"%1\"").arg(page), parentWidget);
 #else
         if (! KRun::runUrl("file:" + page, "text/html", parentWidget,
-                false /* temp file */, false /* run executables */))
-            KMessageBox::sorry(parentWidget, i18n(
-                "<qt>The Regina handbook could not be opened.  "
-                "Please try pointing your web browser to "
-                "<tt>%1</tt>.</qt>").arg(page));
+                false /* temp file */, false /* run executables */)) {
+            if (handbook)
+                KMessageBox::sorry(parentWidget, i18n(
+                    "<qt>The requested handbook could not be opened.  "
+                    "Please try pointing your web browser to "
+                    "<tt>%1</tt>.</qt>").arg(page));
+            else
+                KMessageBox::sorry(parentWidget, i18n(
+                    "<qt>The Regina handbook could not be opened.  "
+                    "Please try pointing your web browser to "
+                    "<tt>%1</tt>.</qt>").arg(page));
+        }
 #endif
-    } else
-        KMessageBox::sorry(parentWidget, i18n(
-            "<qt>The Regina handbook could "
-            "not be found.  Perhaps it is not installed?<p>"
-            "The handbook should be accessible as "
-            "<tt>%1/</tt>.</qt>").arg(index));
+    } else {
+        if (handbook)
+            KMessageBox::sorry(parentWidget, i18n(
+                "<qt>The requested handbook could "
+                "not be found.  Perhaps it is not installed?<p>"
+                "The handbook should be accessible as "
+                "<tt>%1/</tt>.</qt>").arg(index));
+        else
+            KMessageBox::sorry(parentWidget, i18n(
+                "<qt>The Regina handbook could "
+                "not be found.  Perhaps it is not installed?<p>"
+                "The handbook should be accessible as "
+                "<tt>%1/</tt>.</qt>").arg(index));
+    }
 }
 

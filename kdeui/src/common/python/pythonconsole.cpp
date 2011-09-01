@@ -441,7 +441,7 @@ void PythonConsole::saveLog() {
 }
 
 void PythonConsole::scriptingOverview() {
-    prefs.openHandbook("python", this);
+    prefs.openHandbook("python", 0, this);
 }
 
 void PythonConsole::pythonReference() {

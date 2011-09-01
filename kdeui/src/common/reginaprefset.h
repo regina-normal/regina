@@ -343,10 +343,13 @@ struct ReginaPrefSet {
     bool writePythonLibraries() const;
 
     /**
-     * Opens the given section of the users' handbook in an appropriate
-     * manner.
+     * Opens the given section of an arbitrary handbook in an appropriate
+     * manner.  If the handbook is in fact the users' handbook then
+     * the argument \a handbook should be 0 (which enables specialised
+     * code for the users' handbook only).
      */
-    void openHandbook(const char* section, QWidget* parentWidget);
+    void openHandbook(const char* section, const char* handbook,
+        QWidget* parentWidget);
 };
 
 inline GraphvizStatus::GraphvizStatus() : flag_(unknown.flag_) {
