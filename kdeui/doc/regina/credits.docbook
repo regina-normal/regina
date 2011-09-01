@@ -70,8 +70,10 @@
   <para>
    The primary developers of &regina; are:
    <itemizedlist>
-    <listitem><para>Benjamin Burton </para></listitem>
-    <listitem><para>Ryan Budney</para></listitem>
+    <listitem><para>Benjamin Burton
+     <email>bab@debian.org</email></para></listitem>
+    <listitem><para>Ryan Budney
+     <email>rybu@uvic.ca</email></para></listitem>
     <listitem><para>William Pettersson</para></listitem>
    </itemizedlist>
   </para>

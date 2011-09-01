@@ -73,8 +73,7 @@
   <refsect1>
    <title>Author</title>
    <para>
-    &regina; was written by &regauthorplain; &regemail;
-    with help from others; see the documentation for full details.
+    &manpageack;
    </para>
   </refsect1>
  </refentry>
@@ -355,8 +354,7 @@
   <refsect1>
    <title>Author</title>
    <para>
-    &regina; was written by &regauthorplain; &regemail;
-    with help from others; see the documentation for full details.
+    &manpageack;
    </para>
   </refsect1>
  </refentry>

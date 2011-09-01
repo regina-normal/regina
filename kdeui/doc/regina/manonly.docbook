@@ -5,8 +5,6 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
   <!ENTITY regina "<application>Regina</application>">
 
-  <!ENTITY regauthorplain "Ben Burton">
-  <!ENTITY regemail "<email>bab@debian.org</email>">
   <!ENTITY regabstract
    "<para>
      &regina; is a topological calculator with a bent towards normal surface
@@ -16,6 +14,8 @@
   <!ENTITY regwebsite
    "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
   <!ENTITY regina-libs "<filename>~/.regina-libs</filename>">
+  <!ENTITY manpageack "Many people have been involved in the development
+   of &regina;; see the users' handbook for a full list of credits.">
 
   <!ENTITY bzip2 "<application>bzip2</application>">
   <!ENTITY gzip "<application>gzip</application>">

@@ -627,7 +627,9 @@ make[1]: Leaving directory `/home/bab/source/regina'
     </para></question>
     <answer>
      <para>
-      Please! - mail me at &regemail; and let me know.  Or even better,
+      Please! - mail the authors and let us know.  You are welcome to
+      write to us directly (our <link linkend="acknowledgements">email
+      addresses are here</link>).  Or even better,
       use the <link linkend="services">&sourceforge; services</link>
       such as the bug tracking system and mailing lists so that the
       problem you report is publicly archived.
@@ -635,8 +637,8 @@ make[1]: Leaving directory `/home/bab/source/regina'
      <para>
       This program is permanently in development.  There is a very
       long &todo; list, and chances are your problem is on it.  And
-      then again chances are it's not.  So please let me know so I
-      am sure to know what needs to be fixed/improved.
+      then again chances are it's not.  So please let us know so we
+      are sure to know what needs to be fixed/improved.
      </para>
     </answer>
    </qandaentry>
