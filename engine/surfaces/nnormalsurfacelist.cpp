@@ -54,6 +54,7 @@ const int NNormalSurfaceList::AN_LEGACY = 100;
 const int NNormalSurfaceList::AN_QUAD_OCT = 101;
 const int NNormalSurfaceList::AN_STANDARD = 102;
 const int NNormalSurfaceList::ORIENTED = 103;
+const int NNormalSurfaceList::ORIENTED_QUAD = 104;
 const int NNormalSurfaceList::EDGE_WEIGHT = 200;
 const int NNormalSurfaceList::FACE_ARCS = 201;
 

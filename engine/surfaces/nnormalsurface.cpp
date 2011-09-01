@@ -594,6 +594,18 @@ NNormalSurface* NNormalSurface::readFromFile(NFile& in, int flavour,
 
     return ans;
 }
+// Default implementations for oriented surfaces. Returns zero as any
+// coordinate system which supports orientation should override these.
+NLargeInteger NNormalSurfaceVector::getTriangleCoord(unsigned long tetIndex,
+            int vertex, NTriangulation* triang, bool orientation) const {
+    return NLargeInteger::zero;
+};
+
+NLargeInteger NNormalSurfaceVector::getQuadCoord(unsigned long tetIndex,
+            int quadType, NTriangulation* triang, bool orientation) const {
+    return NLargeInteger::zero;
+};
+
 
 // Tidy up.
 #undef REGISTER_FLAVOUR

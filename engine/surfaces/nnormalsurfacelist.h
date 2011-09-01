@@ -140,6 +140,11 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * transversely oriented normal surfaces.
          */
         static const int ORIENTED;
+        /**
+         * Represents quadrilateral coordinates for transversely oriented 
+         * normal surfaces.
+         */
+        static const int ORIENTED_QUAD;
 
     protected:
         std::vector<NNormalSurface*> surfaces;
