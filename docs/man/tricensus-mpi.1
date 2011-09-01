@@ -3,13 +3,13 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRICENSUS-MPI" "1" "12 May 2009" "" "Specialised Utilities"
+.TH "TRICENSUS-MPI" "1" "01 September 2011" "" "The Regina Handbook"
 
 .SH NAME
 tricensus-mpi \- Distribute a triangulation census amongst several machines using MPI
 .SH SYNOPSIS
 
-\fBtricensus-mpi\fR [ \fB-D, --depth=\fIlevels\fB\fR ] [ \fB-x, --dryrun\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR ] \fB\fIpairs-file\fB\fR \fB\fIoutput-file-prefix\fB\fR
+\fBtricensus-mpi\fR [ \fB-D, --depth=\fIlevels\fB\fR ] [ \fB-x, --dryrun\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR ] [ \fB-s, --sigs=\fR ] \fB\fIpairs-file\fB\fR \fB\fIoutput-file-prefix\fB\fR
 
 .SH "DESCRIPTION"
 .PP
@@ -103,6 +103,14 @@ Once the census is complete, the
 \fBregconcat\fR
 command may be used to combine the many small output files
 into one large topology data file for easier handling.
+.RE
+.sp
+.RS
+.B "Warning:"
+It is \fBhighly recommended\fR
+that you use the \fB--sigs\fR option.  This will keep
+output files small, and will significantly reduce the memory footprint
+of \fBtricensus-mpi\fR itself.
 .RE
 .SH "MODES OF OPERATION"
 .PP
@@ -254,12 +262,12 @@ The current state of processing can be watched in the controller log
 .nf
     example$ \fBtricensus-mpi-status 6-nor.log\fR
     Pairing 1: done, 0 found
-    \&...
+    ...
     Pairing 85: done, 0 found
     Pairing 86: done, 7 found
     Pairing 87: running
     Pairing 88: running
-    Census still running, last activity: Sun Mar 19 17:14:41 2006
+    Still running, 15 found, last activity: Wed Jun 10 05:57:34 2009
     example$
 .fi
 .PP
