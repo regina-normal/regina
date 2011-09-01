@@ -84,6 +84,7 @@
   <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
   <!ENTITY macosx "<productname>MacOS&nbsp;X</productname>">
+  <!ENTITY mobius "M&ouml;bius">
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">
   <!ENTITY okular "<application>Okular</application>">

@@ -63,10 +63,10 @@
 
     <para>
      This will create a new triangulation with no tetrahedra at all.
-     This option is best if you have a triangulation you wish to enter
-     in by hand, in which case you can create a new empty triangulation
+     This option is best if you wish to enter a triangulation by hand:
+     first create an empty triangulation, and then
      and then manually <link linkend="tri-editgluings">add tetrahedra
-     and edit face gluings</link>.
+     and edit the face gluings</link>.
     </para>
     <para>
      <inlinemediaobject>
@@ -81,13 +81,12 @@
     <title>Layered Lens Space</title>
 
     <para>
-     This will create a layered lens space with parameters
-     (<replaceable>p</replaceable>, <replaceable>q</replaceable>)
-     where both parameters are non-negative, coprime and
-     <replaceable>p</replaceable>&gt;<replaceable>q</replaceable>
-     (with exceptional case (0, 1) also allowed).
-     These two parameters must be provided before the triangulation
-     can be created.
+     This will create a layered lens space with the given parameters.
+     This is built by taking two <link linkend="tri-new-layered">layered
+     solid tori</link> and gluing them together along their torus boundaries.
+     Layered lens spaces were introduced by Jaco and Rubinstein
+     <xref linkend="bib-0-efficiency"/>,
+     <xref linkend="bib-layeredlensspaces"/> and others.
     </para>
     <para>
      <inlinemediaobject>
@@ -97,18 +96,13 @@
      </inlinemediaobject>
     </para>
     <para>
-     A <firstterm>layered lens space</firstterm> is a lens space built
-     by taking two layered solid tori with appropriate parameters
-     (<link linkend="tri-new-layered">described below</link>)
-     and gluing them together along their torus boundaries.
-    </para>
-    <para>
-     Layered lens spaces are discussed by Jaco and Rubinstein
-     <xref linkend="bib-0-efficiency"/>,
-     <xref linkend="bib-layeredlensspaces"/> and others,
-     and are described in detail in Burton's PhD thesis
-     <xref linkend="bib-burton-phd"/> which is available from the
-     &regwebsite;.
+     The parameters
+     (<replaceable>p</replaceable>, <replaceable>q</replaceable>)
+     must be non-negative and coprime, and must satisfy
+     <replaceable>p</replaceable>&gt;<replaceable>q</replaceable>
+     (although the exceptional case (0, 1) is also allowed).
+     The resulting 3-manifold will be the lens space
+     L(<replaceable>p</replaceable>,<replaceable>q</replaceable>).
     </para>
    </sect3>
 
@@ -118,12 +112,7 @@
     <para>
      This will create an orientable &sfslong; over the 2-sphere with any
      number of exceptional fibres.  &regina; will choose the simplest
-     construction that it knows based upon the given &sfslong; parameters.
-     Examples of constructions that are used include
-     <link linkend="tri-new-lens">layered lens spaces</link>,
-     <link linkend="tri-new-loop">layered loops</link> and
-     <link linkend="tri-new-aug">augmented &trists;</link>,
-     all of which are described elsewhere in this section.
+     construction that it can based upon the given parameters.
     </para>
     <para>
      <inlinemediaobject>
@@ -134,22 +123,23 @@
     </para>
     <para>
      The parameters for the &sfslong; must be given as a sequence of pairs of
-     integers (&a1;,&b1;) (&a2;,&b2;) ... (&an;,&bn;); an example might
-     be (2,-1)&nbsp;(3,4)&nbsp;(5,-4), which represents the &poincare;
-     homology sphere.  Each pair (&ai;,&bi;) represents
-     a single exceptional fibre.  The two integers in each pair must be
+     integers (&a1;,&b1;) (&a2;,&b2;) ... (&an;,&bn;), where each pair
+     (&ai;,&bi;) describes a single exceptional fibre.
+     An example is (2,-1)&nbsp;(3,4)&nbsp;(5,-4), which represents the
+     &poincare; homology sphere.
+     The two integers in each pair must be
      relatively prime, and none of &a1;, &a2;, ..., &an; may be zero.
     </para>
     <para>
-     Each pair of parameters (&ai;,&bi;)
-     does not need to be normalised, i.e., the parameters may be positive or
-     negative and &bi; may lie outside the range
-     [0,&ai;).  There is no separate twisting
+     Each pair (&ai;,&bi;)
+     does not need to be normalised; that is, the parameters may be positive or
+     negative, and &bi; may lie outside the range [0,&ai;).
+     There is no separate twisting
      parameter; each additional twist can be incorporated into the existing
      parameters by replacing some pair
-     (&ai;,&bi;) with the pair (&ai;,&ai;+&bi;).
-     Including pairs of the form (1,<replaceable>k</replaceable>) and even
-     (1,0) is acceptable (in which case a lens space may result).
+     (&ai;,&bi;) with (&ai;,&ai;+&bi;).
+     Pairs of the form (1,<replaceable>k</replaceable>) and even
+     (1,0) are acceptable.
     </para>
    </sect3>
 
@@ -157,13 +147,12 @@
     <title>Layered Solid Torus</title>
 
     <para>
-     This will create a new layered solid torus with parameters
-     (<replaceable>a</replaceable>, <replaceable>b</replaceable>,
-     <replaceable>c</replaceable>) where all three parameters are
-     non-negative, coprime and
-     <replaceable>a</replaceable>+<replaceable>b</replaceable>=<replaceable>c</replaceable>.
-     These three parameters must be provided before the triangulation
-     can be created.
+     This will create a layered solid torus with the given parameters.
+     This is a solid torus built from a two-triangle &mobius; band by
+     repeatedly adding new layers of tetrahedra onto the boundary.
+     Layered solid tori were introduced by Jaco and Rubinstein
+     <xref linkend="bib-0-efficiency"/>,
+     <xref linkend="bib-layeredlensspaces"/> and others.
     </para>
     <para>
      <inlinemediaobject>
@@ -173,24 +162,12 @@
      </inlinemediaobject>
     </para>
     <para>
-     A <firstterm>layered solid torus</firstterm> is a solid torus built
-     by taking a one-tetrahedron solid torus and repeatedly adding
-     layers.  A new layer is added by taking a new tetrahedron and
-     gluing two of its faces as a square onto the existing torus
-     boundary; the remaining two faces of the new tetrahedron then form
-     the new torus boundary.  Note that each new layer can be added in
-     three different ways (corresponding to the three different two-face
-     squares that can be chosen on the torus boundary).  The
-     parameters of the layered solid torus represent the ways in which
-     the different layers have been added.
-    </para>
-    <para>
-     Layered solid tori are discussed by Jaco and Rubinstein
-     <xref linkend="bib-0-efficiency"/>,
-     <xref linkend="bib-layeredlensspaces"/> and others,
-     and are described in detail in Burton's PhD thesis
-     <xref linkend="bib-burton-phd"/> which is available from the
-     &regwebsite;.
+     The three parameters
+     (<replaceable>a</replaceable>, <replaceable>b</replaceable>,
+     <replaceable>c</replaceable>) must be non-negative and coprime,
+     and one must be the sum of the other two.  These parameters
+     describe how many times the meridional disc of the solid torus
+     intersects the three edges on the boundary of the triangulation.
     </para>
    </sect3>
 
@@ -198,10 +175,14 @@
     <title>Layered Loop</title>
 
     <para>
-     This will create a layered loop of a given length.  This length
-     must be provided before the triangulation can be created.  It must
-     also be specified whether the layered loop should be twisted or
-     untwisted.
+     This will create a layered loop of the given length.
+     This involves layering <replaceable>n</replaceable> tetrahedra
+     one upon another to form a closed loop of tetrahedra (where
+     <replaceable>n</replaceable> is the given length).
+     If the <guilabel>Twisted</guilabel> box is checked, 
+     a 180-degree rotation will take place before the final layering
+     is performed.  Details of the construction can be found in
+     <xref linkend="bib-burton-phd"/>.
     </para>
     <para>
      <inlinemediaobject>
@@ -211,25 +192,12 @@
      </inlinemediaobject>
     </para>
     <para>
-     A <firstterm>layered loop</firstterm> of length
-     <replaceable>n</replaceable> is formed by layering
-     <replaceable>n</replaceable> tetrahedra one upon another to form a
-     closed loop of tetrahedra.
-     In a twisted layered loop, a 180 degree rotation takes place
-     before the final layering is performed.
-    </para>
-    <para>
-     Layered loops are described in detail in Burton's PhD thesis
-     <xref linkend="bib-burton-phd"/>, which is available from the
-     &regwebsite;.
-    </para>
-    <para>
-     Note that a twisted layered loop of length
-     <replaceable>n</replaceable> forms a one-vertex triangulation of
+     A twisted layered loop of length
+     <replaceable>n</replaceable> will form a one-vertex triangulation of
      the orbit manifold
-     &sss;/Q<subscript>4<replaceable>n</replaceable></subscript>, and an
-     untwisted layered loop of length <replaceable>n</replaceable> forms
-     a two-vertex triangulation of the lens space
+     &sss;/Q<subscript>4<replaceable>n</replaceable></subscript>.
+     An untwisted layered loop of length <replaceable>n</replaceable>
+     will form a two-vertex triangulation of the lens space
      L(<replaceable>n</replaceable>,1).
     </para>
    </sect3>
@@ -239,10 +207,11 @@
 
     <para>
      This will create an augmented &trist; with the given parameters.
-     An augmented &trist; is created by starting with
-     a core three-tetrahedron solid torus and attaching three
+     An augmented &trist; is created by building
+     a three-tetrahedron solid torus and then attaching three
      <link linkend="tri-new-layered">layered solid tori</link> to its
-     boundary.
+     boundary.  Details of the construction can be found in
+     <xref linkend="bib-burton-phd"/>.
     </para>
     <para>
      <inlinemediaobject>
@@ -252,23 +221,19 @@
      </inlinemediaobject>
     </para>
     <para>
-     Details of the augmented &trist; construction can be found in
-     Burton's PhD thesis <xref linkend="bib-burton-phd"/>, which is
-     available from the &regwebsite;.
     </para>
     <para>
-     Parameters for the augmented &trist; must be provided before the
-     construction can take place; these parameters must be given as three
-     pairs of integers (&a1;,&b1;) (&a2;,&b2;) (&a3;,&b3;).  These pairs
-     of integers describe the three layered solid tori that are attached
-     to the core as described above.  The two integers in each pair must be
+     You must provide six parameters, groups into three
+     pairs of integers (&a1;,&b1;) (&a2;,&b2;) (&a3;,&b3;).  Each pair
+     of integers describes one of the layered solid tori that is attached.
+     The two integers in each pair must be
      relatively prime, and both positive and negative integers are allowed.
     </para>
     <para>
-     Note that if none of &a1;, &a2; or &a3; are zero then an augmented
-     &trist; always produces a &sfslong; over the sphere with at most
-     three exceptional fibres.  Conversely, any &sfslong; with these
-     properties can be represented as an augmented &trist;.
+     If none of &a1;, &a2; or &a3; are zero, the resulting 3-manifold
+     will always be a &sfslong; over the sphere with at most
+     three exceptional fibres.  Conversely, any &sfslong; of this type
+     can be represented as an augmented &trist;.
     </para>
    </sect3>
 
@@ -291,7 +256,13 @@
      triangulation uniquely up to combinatorial isomorphism (i.e.,
      relabelling tetrahedra and their vertices).  An example is
      <literal>cPcbbbiht</literal> (which describes the figure eight knot
-     complement).  Isomorphism signatures are introduced in the paper
+     complement).
+    </para>
+    <para>
+     Stated precisely: every triangulation has a unique isomorphism signature,
+     and two triangulations have the same signature if and only if they
+     are isomorphic.
+     Isomorphism signatures are introduced in the paper
      <xref linkend="bib-burton-simps3"/>.
     </para>
     <para>
@@ -311,8 +282,7 @@
     <title>Dehydration</title>
 
     <para>
-     This will create the triangulation obtained by rehydrating the
-     given dehydration string.
+     This will rehydrate a triangulation from the given dehydration string.
     </para>
     <para>
      <inlinemediaobject>
@@ -322,15 +292,21 @@
      </inlinemediaobject>
     </para>
     <para>
-     A <firstterm>dehydration string</firstterm> is a set of letters such as
-     <literal>dadbcccaqhx</literal> containing enough information to
-     recreate the triangulation.  Dehydration strings appear in
+     A <firstterm>dehydration string</firstterm> is a sequence of letters
+     that contains enough information to reconstruct a triangulation
+     (though tetrahedra and their vertices might be relabelled).
+     An example is <literal>dadbcccaqhx</literal>
+     (which describes the &snappea; census triangulation
+     <literal>m025</literal>).
+     Dehydration strings appear in
      census papers such as the hyperbolic cusped census of
      Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
      in which the dehydration format is explicitly described.
     </para>
     <para>
-     The dehydration string for an existing triangulation can be viewed
+     Only some triangulations have dehydration strings.
+     The dehydration string (if it exists) for an existing triangulation
+     can be viewed
      through the <link linkend="tri-composition-composition">triangulation
      composition</link> tab.
     </para>
@@ -340,8 +316,7 @@
     <title>Splitting Surface</title>
 
     <para>
-     This will create the triangulation containing the given splitting
-     surface.
+     This will reconstruct a triangulation from a given splitting surface.
     </para>
     <para>
      <inlinemediaobject>
@@ -357,22 +332,19 @@
     </para>
     <para>
      A <firstterm>splitting surface signature</firstterm> is a string of
-     letters arranged into cycles that represent the quadrilateral
-     structure of a splitting surface.  From this string of letters the
-     splitting surface and then the enclosing triangulation can be
-     reconstructed.
+     letters arranged into cycles that describe how these quadrilaterals
+     are joined together.  From this signature, both the splitting surface and
+     the enclosing triangulation can be reconstructed.
     </para>
     <para>
-     When entering a splitting surface signature, any block of
-     punctuation will be assumed to separate cycles of letters.  All
+     When entering a splitting surface signature, any block of punctuation
+     can be used to separate cycles of letters.  All
      whitespace will be ignored.  Examples of valid signatures
      are <literal>(ab)(bC)(Ca)</literal> and <literal>AAb-bc-C</literal>.
     </para>
     <para>
      The precise format of splitting surface signatures is described
-     in Burton's PhD thesis
-     <xref linkend="bib-burton-phd"/>, which is available from the
-     &regwebsite;.
+     in <xref linkend="bib-burton-phd"/>.
     </para>
    </sect3>
 
@@ -381,12 +353,12 @@
 
     <para>
      The <guilabel>New Triangulation</guilabel> dialog includes a small
-     selection of ready-made example triangulations that can be created
-     on the fly; examples include the figure eight knot complement,
+     selection of ready-made example triangulations;
+     examples include the figure eight knot complement,
      the &poincare; homology sphere and the Weber-Seifert dodecahedral
      space, amongst others.
      Simply select a 3-manifold from the list provided and the
-     corresponding triangulation will be created for you.
+     corresponding triangulation will be built for you.
     </para>
     <para>
      <inlinemediaobject>
@@ -399,7 +371,7 @@
   </sect2>
 
   <sect2 id="tri-imported">
-   <title>Imported Triangulations</title>
+   <title>Importing Triangulations</title>
 
    <para>
     Triangulations can also be imported into &regina; from other
@@ -414,12 +386,12 @@
   </sect2>
 
   <sect2 id="tri-census-creation">
-   <title>Census Creation</title>
+   <title>Creating a Census</title>
 
    <para>
-    &regina; can form censuses of all 3-manifold triangulations
-    satisfying a variety of different constraints.  The best way of
-    doing this is through the command-line tool
+    &regina; can build a census of all 3-manifold triangulations
+    satisfying a variety of different constraints.  The best way to
+    do this is through the command-line tool
     <link linkend="man-tricensus"><command>tricensus</command></link>.
     For very long calculations,
     <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
@@ -701,9 +673,9 @@
         </para></glossdef>
        </glossentry>
        <glossentry>
-        <glossterm>Mobius band</glossterm>
+        <glossterm>&mobius; band</glossterm>
         <glossdef><para>
-         Two edges of the face are identified to form a Mobius band
+         Two edges of the face are identified to form a &mobius; band
          (causing all three vertices to be identified); the third edge
          remains distinct.
         </para></glossdef>
