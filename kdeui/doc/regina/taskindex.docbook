@@ -825,6 +825,12 @@
  </glossentry>
 
  <glossentry>
+  <glossterm><link linkend="packet-move">moving packets in the
+   packet tree</link></glossterm>
+  <glossdef><para>&nbsp;</para></glossdef>
+ </glossentry>
+
+ <glossentry>
   <glossterm>&mpi;</glossterm>
   <glosssee>parallel processing</glosssee>
  </glossentry>
@@ -938,6 +944,7 @@
   <glossdef><para><link linkend="options-general">display large
    icon</link></para></glossdef>
   <glossdef><para><link linkend="options-general">jump size</link></para></glossdef>
+  <glossdef><para><link linkend="packet-move">moving packets</link></para></glossdef>
   <glossdef><para><link linkend="packet-tree">overview</link></para></glossdef>
   <glossdef><para><link linkend="packet-refresh">refreshing a
    subtree</link></para></glossdef>
@@ -955,6 +962,8 @@
   <glossdef><para><link linkend="packet-new">creating new
    packets</link></para></glossdef>
   <glossdef><para><link linkend="packet-delete">deleting</link></para></glossdef>
+  <glossdef><para><link linkend="packet-move">moving within the
+   tree</link></para></glossdef>
   <glossdef><para><link linkend="packet-view">viewing and
    editing</link></para></glossdef>
  </glossentry>

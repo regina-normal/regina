@@ -54,6 +54,8 @@
      the <guimenuitem>Jump Up</guimenuitem> or
      <guimenuitem>Jump Down</guimenuitem> menu items are selected
      (or the corresponding toolbar buttons pressed).
+     See the notes on <link linkend="packet-move">moving packets around</link>
+     for details.
     </para></glossdef>
    </glossentry>
   </glosslist>

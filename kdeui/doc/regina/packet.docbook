@@ -570,6 +570,43 @@
    </para></warning>
   </sect2>
 
+  <sect2 id="packet-move">
+   <title>Moving Through the Tree</title>
+
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>Move</guimenuitem>
+    </menuchoice>
+    submenu allows you to reorganise your packet tree by moving packets
+    around.  Whenever a packet moves, all of its children (and their
+    children and so on) will move along with it.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menumove.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Selecting <guilabel>Higher Level</guilabel> or
+    <guilabel>Lower Level</guilabel> will move the selected packet to a
+    different parent (either shallower or deeper in the tree respectively).
+    The remaining options will keep the same parent, but will move the
+    selected packet up or down with respect to its &ldquo;siblings&rdquo;.
+    <guilabel>Up</guilabel> or <guilabel>Down</guilabel> will move the
+    packet by one step, and
+    <guilabel>Top</guilabel> or <guilabel>Bottom</guilabel> will make it
+    the first or last child respectively of its parent.
+    <guilabel>Jump Up</guilabel> or <guilabel>Jump Down</guilabel> will move
+    the packet several steps at a time; the precise number of steps can be
+    configured in &regina;'s <link linkend="options-general">general
+    settings</link>.
+   </para>
+  </sect2>
+
   <sect2 id="packet-refresh">
    <title>Refreshing Subtrees</title>
 
