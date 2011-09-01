@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <reginadata engine="4.90">
-<packet label="Container"
+<packet label="Sample Data File"
 	type="Container" typeid="1"
 	parent="">
 <packet label="Read Me"
 	type="Text" typeid="2"
-	parent="Container">
+	parent="Sample Data File">
   <text>Welcome to Regina!
 
 A single Regina data file can store a range of objects, from 3-manifold triangulations and normal surfaces to Python scripts, PDF documents and text notes (such as the one you are reading now).
@@ -24,7 +24,7 @@ Enjoy!
 </packet> <!-- Read Me (Text) -->
 <packet label="LaTeX Document"
 	type="PDF" typeid="10"
-	parent="Container">
+	parent="Sample Data File">
   <pdf encoding="base64">
 JVBERi0xLjMKJcfsj6IKNSAwIG9iago8PC9MZW5ndGggNiAwIFIvRmlsdGVyIC9GbGF0ZURlY29k
 ZT4+CnN0cmVhbQp4nL19W7Ndx3GeHxMkP+LoKRsqYXvuFz/ZKst2pZxYllBlpyQ9UMAhKRsAJZII
@@ -666,7 +666,7 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 </packet> <!-- LaTeX Document (PDF) -->
 <packet label="Triangulations"
 	type="Container" typeid="1"
-	parent="Container">
+	parent="Sample Data File">
 <packet label="Figure 8 Knot Complement"
 	type="Triangulation" typeid="3"
 	parent="Triangulations">
@@ -1105,9 +1105,12 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 </packet> <!-- Note (Text) -->
 </packet> <!-- RP2xS1 (Triangulation) -->
 </packet> <!-- Triangulations (Container) -->
+<packet label="Normal Surface Filters"
+	type="Container" typeid="1"
+	parent="Sample Data File">
 <packet label="Tori, Annuli and Discs"
 	type="Surface Filter" typeid="8"
-	parent="Container">
+	parent="Normal Surface Filters">
   <filter type="Combination filter" typeid="2">
     <op type="or"/>
   </filter>
@@ -1131,11 +1134,14 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
   </filter>
 </packet> <!-- Discs (Surface Filter) -->
 </packet> <!-- Tori, Annuli and Discs (Surface Filter) -->
-<packet label="Homology Summary"
+</packet> <!-- Normal Surface Filters (Container) -->
+<packet label="Python Script"
 	type="Script" typeid="7"
-	parent="Container">
+	parent="Sample Data File">
   <var name="tri" value="Triangulations"/>
-  <line></line>
+  <line># This Python script runs through all triangulations in this file and prints</line>
+  <line># the first homology of each.</line>
+  <line>#</line>
   <line># See the Regina handbook for more elaborate sample Python sessions.</line>
   <line></line>
   <line># Output the homology of each triangulation.</line>
@@ -1143,6 +1149,6 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
   <line>while t != None:</line>
   <line>	print t.getPacketLabel() + &quot;:&quot;, t.getHomologyH1()</line>
   <line>	t = t.getNextTreeSibling()</line>
-</packet> <!-- Homology Summary (Script) -->
-</packet> <!-- Container (Container) -->
+</packet> <!-- Python Script (Script) -->
+</packet> <!-- Sample Data File (Container) -->
 </reginadata>
