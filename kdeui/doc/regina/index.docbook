@@ -236,8 +236,8 @@
  &reginacredits;
 
  <!-- Final Material -->
- &bibliography;
  &taskindex;
+ &bibliography;
  &documentation.index;
 </book>
 
