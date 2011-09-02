@@ -399,64 +399,115 @@
   <title>Analysis</title>
 
   <para>
-   A variety of triangulation properties are available for calculation;
-   most of these can be viewed by clicking on the different tabs
-   available in the triangulation viewer.
+   &regina; offers a wealth of information about 3-manifold
+   triangulations, spread across the many different tabs in the
+   triangulation viewer.  Here we walk through the different properties
+   and invariants that &regina; can compute.
   </para>
 
   <sect2 id="tri-basicprops">
-   <title>Basic Properties</title>
+   <title>Validity, Orientability and Other Basic Properties</title>
 
    <para>
-    Above all of the tabs in the triangulation viewer are displayed some
-    basic properties of the triangulation as listed below.
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="triheader.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    At the top of each triangulation viewer is a banner listing some
+    basic properties of the triangulation (circled in red above).
+    The following words might appear:
    </para>
    <para>
     <glosslist>
-     <glossentry>
-      <glossterm>Empty</glossterm>
-      <glossdef><para>
-       Signifies that the triangulation contains no tetrahedra at all.
-      </para></glossdef>
-     </glossentry>
-     <glossentry id="tri-propvalid">
-      <glossterm>Invalid</glossterm>
-      <glossdef><para>
-       Signifies that the triangulation contains an invalid vertex
-       (a vertex whose link has boundary but is not a disc) or an
-       invalid edge (an edge glued to itself in reverse).
-      </para></glossdef>
-     </glossentry>
      <glossentry id="tri-propclosed">
-      <glossterm>Closed</glossterm>
+      <glossterm><guilabel>Closed</guilabel></glossterm>
       <glossdef><para>
        Signifies that the triangulation has no boundary faces and no
-       ideal vertices.  All vertex links must be 2-spheres.
+       ideal vertices.  In other words, the link of every vertex is a
+       2-sphere.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-propideal">
-      <glossterm>Ideal</glossterm>
-      <glossdef><para>
-       Signifies that the triangulation contains an ideal vertex (a
-       vertex whose link is closed but not a 2-sphere).
-      </para></glossdef>
+      <glossterm><guilabel>Ideal bdry</guilabel></glossterm>
+      <glossdef>
+       <para>
+        Signifies that at least one vertex of the triangulation is
+        <firstterm>ideal</firstterm>.  That is, the vertex link is
+        a closed surface but not a 2-sphere.
+       </para>
+       <para>
+        You can locate any ideal vertices using the
+        <link linkend="tri-skeleton-skelcomp">skeleton viewers</link>.
+       </para>
+      </glossdef>
      </glossentry>
      <glossentry id="tri-propbdry">
-      <glossterm>Real Bdry</glossterm>
+      <glossterm><guilabel>Real bdry</guilabel></glossterm>
       <glossdef><para>
-       Signifies that the triangulation contains a boundary face.
+       Signifies that the triangulation contains one or more boundary faces.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-proporient">
-      <glossterm>Orientable / Non-orientable</glossterm>
-      <glossdef><para>
-       Shows whether the triangulation is orientable.
-      </para></glossdef>
+      <glossterm><guilabel>Orientable</guilabel> /
+       <guilabel>non-orientable</guilabel> /
+       <guilabel>oriented</guilabel></glossterm>
+      <glossdef>
+       <para>
+        The words <guilabel>orientable</guilabel>
+        or <guilabel>non-orientable</guilabel> indicate
+        whether or not the triangulation represents an orientable
+        3-manifold.
+       </para>
+       <para>
+        If the words <guilabel>orientable and oriented</guilabel> appear,
+        this indicates that the vertex labels 0, 1, 2 and 3 on each
+        tetrahedron induce a consistent orientation for all tetrahedra
+        in the entire triangulation.
+       </para>
+       <para>
+        If you need a consistent orientation for all tetrahedra but you
+        only see <guilabel>orientable</guilabel> (not
+        <guilabel>orientable and oriented</guilabel>), you can fix this by
+        <link linkend="tri-orient">orienting your triangulation</link>.
+       </para>
+      </glossdef>
      </glossentry>
      <glossentry id="tri-propconn">
-      <glossterm>Connected / Disconnected</glossterm>
+      <glossterm><guilabel>Connected</guilabel> /
+       <guilabel>disconnected</guilabel></glossterm>
       <glossdef><para>
-       Shows whether the triangulation forms a single connected piece.
+       The words <guilabel>connected</guilabel>
+       or <guilabel>disconnected</guilabel> indicate
+       whether or not the triangulation forms a single connected piece.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-propvalid">
+      <glossterm><guilabel>Invalid triangulation</guilabel></glossterm>
+      <glossdef>
+       <para>
+        Signifies that the triangulation is &ldquo;broken&rdquo; to the
+        point where &regina; cannot do any serious work with it.
+        This can happen for one of two reasons:
+        (i)&nbsp;some vertex link is a surface with boundary
+        but not a disc; or
+        (ii)&nbsp;some edge is identified with itself in reverse.
+       </para>
+       <para>
+        You can locate the offending vertex or edge using the
+        <link linkend="tri-skeleton-skelcomp">skeleton viewers</link>.
+        If the triangulation is invalid, no other information will appear
+        in the banner.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Empty</guilabel></glossterm>
+      <glossdef><para>
+       Signifies that the triangulation contains no tetrahedra at all.
+       In this case, no other information will appear in the banner.
       </para></glossdef>
      </glossentry>
     </glosslist>
@@ -464,12 +515,16 @@
   </sect2>
 
   <sect2 id="tri-viewgluings">
-   <title>Face Gluings</title>
+   <title>Viewing Face Gluings</title>
 
    <para>
-    The <guilabel>Gluings</guilabel> tab in the triangulation
-    viewer shows how individual faces of individual
-    tetrahedra are glued to each other.  See the reference for
+    The <guilabel>Gluings</guilabel> tab gives a table showing how the various
+    tetrahedron faces are glued to each other in pairs.
+    Each row of this table represents a tetrahedron, and each column
+    represents one of the four tetrahedron faces.
+   </para>
+   <para>
+    See the reference for
     <link linkend="tri-editgluings">editing face gluings</link> for
     details on how this information is presented.
    </para>
@@ -1608,6 +1663,14 @@
       </para></glossdef>
      </glossentry>
     </glosslist>
+   </para>
+  </sect2>
+
+  <sect2 id="tri-orient">
+   <title>Orienting the Triangulation</title>
+
+   <para>
+    TODO: Write.
    </para>
   </sect2>
 

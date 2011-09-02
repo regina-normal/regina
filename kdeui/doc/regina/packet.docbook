@@ -124,16 +124,16 @@
     </inlinemediaobject>
    </para>
    <para>
-    For an example of how containers are used to organise a tree, take
-    a look at one of the census files by selecting
+    To see how containers can be used to organise a tree, take
+    a look at one of the census files: try
     <menuchoice>
      <guimenu>File</guimenu>
      <guisubmenu>Open Example</guisubmenu>
      <guimenuitem>Closed Non-Orientable Census</guimenuitem>
     </menuchoice>.
-    The packet tree for this census is shown below, where the
+    Part of the packet tree for this census is shown below (the
     container labelled <guilabel>6&nbsp;tetrahedra</guilabel> has been
-    opened for viewing.
+    opened for viewing).
    </para>
    <para>
     <inlinemediaobject>

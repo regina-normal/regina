@@ -898,6 +898,12 @@
    cover</link></primaryie>
  </indexentry>
 
+ <indexentry>
+  <primaryie>orienting tetrahedra</primaryie>
+  <secondaryie><link linkend="tri-proporient">testing for consistent
+   orientations</link></secondaryie>
+ </indexentry>
+
  </indexdiv><indexdiv><title>&mdash; P &mdash;</title>
 
  <indexentry>
@@ -1227,8 +1233,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-editgluings">tetrahedron face
-   gluings, editing</link></primaryie>
+  <primaryie>tetrahedra</primaryie>
+  <secondaryie><link linkend="tri-editgluings">face gluings,
+   editing</link></secondaryie>
+  <secondaryie><link linkend="tri-proporient">orientation, testing for
+   consistency</link></secondaryie>
  </indexentry>
 
  <indexentry>
