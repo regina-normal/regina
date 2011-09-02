@@ -907,6 +907,13 @@
      visual representation of the face pairing graph of the triangulation.
     </para>
     <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-fpg.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
      The <firstterm>face pairing graph</firstterm> is essentially the
      dual 1-skeleton of the triangulation&mdash;every
      vertex of the graph represents a tetrahedron, and every edge
@@ -1380,6 +1387,13 @@
     the <guilabel>Surfaces</guilabel> tab in the triangulation viewer.
    </para>
    <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-surfaces.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     For sufficiently large triangulations, some of these properties will
     not be calculated by default since the calculations could be quite
     slow.  If a property is listed as <literal>Unknown</literal>, press
@@ -1387,6 +1401,20 @@
     (and be prepared to wait).  Just how large is <quote>sufficiently
     large</quote> can be adjusted in the
     <link linkend="options-triangulation">triangulation options</link>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-s3-unknown.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-s3-known.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
     The available properties pertaining to normal surfaces are as follows.
