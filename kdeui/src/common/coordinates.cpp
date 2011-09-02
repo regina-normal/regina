@@ -314,7 +314,7 @@ namespace Coordinates {
                 orientation = false;
             }
             coord = coord / 2;
-            return surface.getQuadCoord(whichCoord / 3, coord % 3, orientation);
+            return surface.getQuadCoord(coord / 3, coord % 3, orientation);
         }
 
         return (long)0;
