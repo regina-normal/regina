@@ -518,15 +518,50 @@
    <title>Viewing Face Gluings</title>
 
    <para>
-    The <guilabel>Gluings</guilabel> tab gives a table showing how the various
+    The <guilabel>Gluings</guilabel> tab shows how the various
     tetrahedron faces are glued to each other in pairs.
-    Each row of this table represents a tetrahedron, and each column
-    represents one of the four tetrahedron faces.
+    The face gluings are presented in a table:
+    each row represents a tetrahedron, and the four columns on the right
+    represent the four faces of each tetrahedron.
+    Tetrahedra are numbered 0,1,2,..., and
+    the four vertices of each tetrahedron are numbered 0,1,2,3.
    </para>
    <para>
-    See the reference for
-    <link linkend="tri-editgluings">editing face gluings</link> for
-    details on how this information is presented.
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-viewgluings.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Each cell of this table represents a single face of a single
+    tetrahedron.  For instance, the cell circled in red
+    above represents face&nbsp;013 of tetrahedron&nbsp;7 (that is, the face
+    formed from vertices 0,1,3 of tetrahedron&nbsp;7).
+   </para>
+   <para>
+    The contents of the cell show how the face is glued.  In the example
+    above, the circled cell contains <literal>3&nbsp;(203)</literal>,
+    indicating that face&nbsp;013 of tetrahedron&nbsp;7 is glued to
+    face&nbsp;203 of tetrahedron&nbsp;3 using the affine map that
+    matches vertices 0,1,3 of tetrahedron&nbsp;7 with vertices
+    2,0,3 of tetrahedron&nbsp;3 respectively.
+    The same gluing can be seen from the opposite direction in the row
+    for tetrahedron&nbsp;3.
+   </para>
+   <para>
+    An empty cell indicates that a face is not glued to anything at all;
+    that is, the face forms part of the <emphasis>boundary</emphasis> of
+    the 3-manifold.  In the table above there are two boundary faces:
+    face&nbsp;123 of tetrahedron&nbsp;1, and face&nbsp;123 of
+    tetrahedron&nbsp;4.  In our example these join together to form the torus
+    boundary of the figure eight knot complement.
+   </para>
+   <para>
+    You can modify the triangulation by typing new face gluings directly
+    into this table.  See the section on
+    <link linkend="tri-editgluings">modifying triangulations</link> for
+    details.
    </para>
   </sect2>
 
@@ -549,6 +584,13 @@
      each ideal vertex is treated as an individual boundary component).
     </para>
     <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-skeleton.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
      In the <guilabel>Skeletal Components</guilabel> tab itself appears the
      total number of vertices, edges and so on.  Beside each count
      is a <guibutton>View</guibutton> button that brings up a table
@@ -558,6 +600,27 @@
 
     <sect4 id="tri-vertexedgeface">
      <title>Vertices, Edges and Faces</title>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="tri-vertices.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="tri-edges.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="tri-faces.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
      <para>
       The vertex table, the edge table and the face table all have similar
       structures.
@@ -602,6 +665,20 @@
      <title>Components and Boundary Components</title>
      <para>
       The component and boundary component tables are similarly structured.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="tri-comp.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="tri-bc.png"/>
+       </imageobject>
+      </inlinemediaobject>
      </para>
      <para>
       The first column individually numbers the components or
@@ -831,7 +908,7 @@
     </para>
     <para>
      The <firstterm>face pairing graph</firstterm> is essentially the
-     dual 1-skeleton of the triangulation &mdash; every
+     dual 1-skeleton of the triangulation&mdash;every
      vertex of the graph represents a tetrahedron, and every edge
      represents a pair of tetrahedron faces that are joined together.
      It follows that the face pairing graph of a closed triangulation is
@@ -880,13 +957,20 @@
      The <guilabel>Homology</guilabel> tab of the algebra viewer
      presents various homology groups of the triangulation.  These include
      H1(M) (the first homology group),
-     H1(M, Bdry M)
+     H1(M, &#x2202;M)
      (the relative first homology group with respect to the boundary),
-     H1(Bdry M) (the first homology group of the boundary),
+     H1(&#x2202;M) (the first homology group of the boundary),
      H2(M) (the second homology group) and
      H2(M ; Z<subscript>2</subscript>)
      (the second homology group with coefficients in
      Z<subscript>2</subscript>).
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-homology.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
    </sect3>
 
@@ -899,6 +983,13 @@
      relations.  The generators and relations will be passed through a
      fairly weak recognition routine, and if the group is recognised then
      its common name will be given as well.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-fundgroup.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <para>
      If you have &gaplongurl; installed on your system, you can use &gap;
@@ -978,6 +1069,13 @@
      Many thanks are due to Ryan Budney for implementing these features.
     </para>
     <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-cellular.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
      Like the other algebraic results, all information on the
      <guilabel>Cellular Information</guilabel> tab
      refers to the compact manifold that the triangulation represents.
@@ -1040,7 +1138,7 @@
        </para></glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>H1(Bdry M &mdash;&gt; M)</glossterm>
+       <glossterm>H1(&#x2202;M &mdash;&gt; M)</glossterm>
        <glossdef><para>
         Since the boundary is a submanifold of the original manifold,
         there is an induced map on the first homology group.  This
@@ -1251,23 +1349,18 @@
      Note that dehydration strings only exist for connected
      triangulations with no boundary faces and at most 25 tetrahedra.
      Furthermore, they implicitly describe a canonical ordering of the
-     triangulation tetrahedra and vertices &mdash; dehydrating and then
+     triangulation tetrahedra and vertices&mdash;dehydrating and then
      recreating a triangulation may not give you the same triangulation
      back, though it will certainly give you an <emphasis>isomorphic</emphasis>
      triangulation.
     </para>
-    <screenshot>
-     <screeninfo>Viewing the triangulation composition</screeninfo>
-     <mediaobject>
+    <para>
+     <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="composition.png"/>
+       <imagedata fileref="tri-composition.png"/>
       </imageobject>
-      <textobject>
-       <phrase>Viewing the triangulation composition</phrase>
-      </textobject>
-      <caption><para>Viewing the triangulation composition</para></caption>
-     </mediaobject>
-    </screenshot>
+     </inlinemediaobject>
+    </para>
     <tip><para>
      You can copy text from the composition box by right-clicking
      on a line of text and selecting
@@ -1357,6 +1450,13 @@
     available.  This information is presented in the
     <guilabel>&snappea;</guilabel> tab in the triangulation viewer.
    </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-snappea.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
    <sect3>
     <title>Triangulation Constraints</title>
     <para>
@@ -1374,8 +1474,8 @@
      least one reason why.
     </para>
     <para>
-     Note that you can bypass some of these restrictions &mdash;
-     by configuring &regina; appropriately you can allow some closed
+     Note that you can bypass some of these restrictions&mdash;by
+     configuring &regina; appropriately you can allow some closed
      triangulations to be passed.  See the
      <link linkend="options-snappea">&snappea; options</link>
      reference for details and relevant warnings.
@@ -1517,29 +1617,9 @@
     gluings between tetrahedron faces.
    </para>
    <para>
-    Tetrahedra are numbered beginning at 0; thus if a triangulation has
-    three tetrahedra they will be numbered 0, 1 and 2.  Tetrahedra can
+    Tetrahedra can
     be added and removed using the <guilabel>Add Tet</guilabel> and
     <guilabel>Remove Tet</guilabel> buttons above the gluing editor.
-   </para>
-   <para>
-    The gluing editor itself contains a grid of tetrahedron faces.  Each
-    row represents a tetrahedron in the triangulation and each column
-    represents one of the four tetrahedron faces.  Tetrahedron vertices
-    are numbered 0, 1, 2 and 3, and each tetrahedron face is identified
-    by the three vertices that it contains.
-   </para>
-   <para>
-    Each cell of this grid identifies to what the corresponding face is
-    glued.  If a cell is empty,
-    corresponding face is a boundary face and is glued to nothing at
-    all.  Otherwise it will contain a string like
-    <literal>5 (312)</literal>.  This means that the face for that cell is
-    glued to face 312 of tetrahedron 5.  In particular, if the cell in
-    question belongs to face 013 of tetrahedron 4, this means that
-    vertices 0, 1 and 3 of tetrahedron 4 are glued to vertices 3, 1 and
-    2 of tetrahedron 5 respectively.  Thus the cell contents describe
-    the precise gluing permutation.
    </para>
    <para>
     To change how the face is glued, click in the cell.
