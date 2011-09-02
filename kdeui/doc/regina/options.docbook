@@ -17,6 +17,14 @@
    The following options are available on the general options page.
   </para>
 
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="options-general.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+
   <glosslist>
    <glossentry>
     <glossterm>Automatic file extension</glossterm>
@@ -66,6 +74,14 @@
 
   <para>
    The following options are available on the triangulation page.
+  </para>
+
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="options-tri.png"/>
+    </imageobject>
+   </inlinemediaobject>
   </para>
 
   <glosslist>
@@ -188,6 +204,14 @@
    The following options are available on the normal surfaces page.
   </para>
 
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="options-surfaces.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+
   <glosslist>
    <glossentry>
     <glossterm>Default coordinate system</glossterm>
@@ -247,6 +271,14 @@
 
  <sect1 id="options-pdf">
   <title>&pdf; Options</title>
+
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="options-pdf.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
 
   <para>
    This page allows the user to configure how &regina; deals with &pdf;
@@ -356,6 +388,14 @@
   <title>Census Options</title>
 
   <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="options-census.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+
+  <para>
    The <link linkend="tri-censuslookup">census lookup facility</link>
    searches for the current triangulation within all available censuses.
    The census options page allows this list of available censuses to be
@@ -384,6 +424,14 @@
    The following options are available for fine-tuning the behaviour of
    &python; consoles.
   </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="options-python.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+
   <glosslist>
    <glossentry>
     <glossterm>Auto-indent</glossterm>
@@ -460,6 +508,14 @@
   </para>
   <para>
    The following options affect how the &snappea; kernel is used by &regina;.
+  </para>
+
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="options-snappea.png"/>
+    </imageobject>
+   </inlinemediaobject>
   </para>
 
   <glosslist>
