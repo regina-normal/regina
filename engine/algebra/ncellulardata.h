@@ -62,8 +62,8 @@ class Dim4Triangulation;
  */
 
 /**
- * Data type that deals with all the detailed homological information in a
- *  manifold.  This information includes:
+ * Data type that deals with information in a triangulated 3 or 4-manifold constructible 
+ *  from the triangulation and dual polyhedral decomposition, specifically:
  *
  * - the manifold's (and its boundary's) homology and cohomology computed in various coordinate 
  *    systems, with coefficients in an arbitrary cyclic group.
@@ -71,11 +71,12 @@ class Dim4Triangulation;
  * - the bilinear forms coming from Poincare Duality: H_i \otimes H_j --> H_{i+j-n}
  *   and torsion linking \tau H_i \otimes \tau H_{n-i-1} --> Q/Z 
  * - fundamental groups of the manifold, natural submanifolds and maps between them.
+ * - homology of covering spaces, Alexander polynomials, etc.
  *
  * This class mostly takes a "least effort" approach to all computations. It only computes 
- * what is neccessary for your requests.  It also keeps a record of all previous computations 
+ * what is neccessary for requests.  It also keeps a record of all previous computations 
  * you've made, we'll call it the `precomputed pile'. If a computation can be sped up by not 
- * recomputing some data, it'll try to take the shortcut.  At present the only exception to 
+ * recomputing some data, it will try to take the shortcut.  At present the only exception to 
  * this rule is that all integer coefficient chain complexes and maps are computed on 
  * initialization, but this is relatively quick.  
  *
@@ -91,15 +92,16 @@ class Dim4Triangulation;
  * \todo  3) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
- *        cup products. Chain complex initialization TODO. chain maps TODO.  PD / intersection forms TODO
+ *        cup products. Not complete: Chain complex initialization. chain maps.  PD / intersection forms
  *        Note, current "mixed" chain complex does not subdivide ideal boundary.  Is this an issue? 
  * \todo  4) To minimize memory usage we should consider having homs, bilinear forms, etc, 
  *        not store their initialization data, instead trusting it to the NCellularData stack.  
  * \todo  5) need to set up local orientations for dual boundary coordinates, for the barycentres
  *        of all standard boundary simplices.  We'll put something in setupIndices for this.
- *        Currently done for Dim4Triangulations, but not for NTriangulations. 
+ *        Currently done for Dim4Triangulations, but not for NTriangulations.  TODO nowish..
+ *        Test this by computing Alex polynomials of knot complements.
  * \todo  6) We'll also eventually need maximal trees in the standard and mixed 1-skeleton, to implement
- *        Farber-Levine pairings. 
+ *        Farber-Levine pairings and Poincare duality in covering spaces, in general. 
  * \todo  7) Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
  *        clear what all the computations mean. 
  * \todo  8) Make all of the Regina engine POSIX pthread safe.  Make a thread-pool version of the test suite. 
