@@ -163,6 +163,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         KAction* actAddTet;
         KAction* actRemoveTet;
         KAction* actSimplify;
+        KAction* actOrient;
         KActionCollection* triActions;
         QLinkedList<KAction*> triActionList;
         QLinkedList<KAction*> enableWhenWritable;
@@ -231,6 +232,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * Update the states of internal components.
          */
         void updateRemoveState();
+        void updateOrientState();
 
         /**
          * Notify us of the fact that an edit has been made.

@@ -617,7 +617,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     sep->setSeparator(true);
     triActionList.append(sep);
 
-    KAction* actOrient = triActions->addAction("tri_orient");
+    actOrient = triActions->addAction("tri_orient");
     actOrient->setText(i18n("&Orient"));
     actOrient->setIcon(KIcon("orient"));
     actOrient->setToolTip(i18n(
@@ -628,7 +628,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "so that orientation is preserved across adjacent faces.<p>"
         "If this triangulation includes both orientable and non-orientable "
         "components, only the orientable components will be relabelled.</qt>"));
-    enableWhenWritable.append(actOrient);
     triActionList.append(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
@@ -791,6 +790,7 @@ void NTriGluingsUI::fillToolBar(KToolBar* bar) {
     bar->addAction(actRemoveTet);
     bar->addSeparator();
     bar->addAction(actSimplify);
+    bar->addAction(actOrient);
 }
 
 regina::NPacket* NTriGluingsUI::getPacket() {
@@ -808,6 +808,7 @@ void NTriGluingsUI::commit() {
 
 void NTriGluingsUI::refresh() {
     model->refreshData(tri);
+    updateOrientState();
     setDirty(false);
 }
 
@@ -824,6 +825,7 @@ void NTriGluingsUI::setReadWrite(bool readWrite) {
         (it.next())->setEnabled(readWrite);
 
     updateRemoveState();
+    updateOrientState();
 }
 
 void NTriGluingsUI::addTet() {
@@ -1258,6 +1260,15 @@ void NTriGluingsUI::updateRemoveState() {
             ! faceTable->selectionModel()->selectedIndexes().empty());
     else
         actRemoveTet->setEnabled(false);
+}
+
+void NTriGluingsUI::updateOrientState() {
+    if (! model->isReadWrite())
+        actOrient->setEnabled(false);
+    else if (! tri->isOrientable())
+        actOrient->setEnabled(false);
+    else
+        actOrient->setEnabled(! tri->isOriented());
 }
 
 void NTriGluingsUI::notifyDataChanged() {
