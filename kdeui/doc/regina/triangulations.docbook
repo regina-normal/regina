@@ -515,7 +515,7 @@
   </sect2>
 
   <sect2 id="tri-viewgluings">
-   <title>Viewing Face Gluings</title>
+   <title>Viewing Tetrahedron Face Gluings</title>
 
    <para>
     The <guilabel>Gluings</guilabel> tab shows how the various
@@ -1637,7 +1637,7 @@
   </para>
 
   <sect2 id="tri-editgluings">
-   <title>Editing Face Gluings</title>
+   <title>Editing Tetrahedron Face Gluings</title>
 
    <para>
     When viewing a triangulation, the <guilabel>Gluings</guilabel> tab
