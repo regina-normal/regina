@@ -78,7 +78,7 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
                 ans->entry(row+1, noOfCoords * tetIndex + vertexSplit[perm[0]][perm[3]]+1)
                     -= 1;
             }
-            row++;
+            row+=2;
         }
     }
     return ans;
