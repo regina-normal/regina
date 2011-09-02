@@ -385,6 +385,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="packet-float">docking packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>documentation</primaryie>
   <secondaryie><link linkend="python-docs">&regina; objects, classes
    and methods</link></secondaryie>
@@ -563,6 +567,11 @@
  <indexentry>
   <primaryie>finite boundary</primaryie>
   <seeie>See: boundary</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="packet-float">floating packets
+   in separate windows</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -914,6 +923,10 @@
   <secondaryie><link linkend="packet-new">creating new
    packets</link></secondaryie>
   <secondaryie><link linkend="packet-delete">deleting</link></secondaryie>
+  <secondaryie><link linkend="packet-float">docking and
+   undocking</link></secondaryie>
+  <secondaryie><link linkend="packet-float">floating in separate
+   windows</link></secondaryie>
   <secondaryie><link linkend="packet-move">moving within the
    tree</link></secondaryie>
   <secondaryie><link linkend="packet-view">viewing and
@@ -924,6 +937,12 @@
   <primaryie>padlock</primaryie>
   <secondaryie><link linkend="packet-uneditable">in the packet
    tree</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>paper clip</primaryie>
+  <secondaryie><link linkend="packet-float">button in packet
+   viewers</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1328,6 +1347,10 @@
  </indexentry>
 
  </indexdiv><indexdiv><title>&mdash; U &mdash;</title>
+
+ <indexentry>
+  <primaryie><link linkend="packet-float">undocking packets</link></primaryie>
+ </indexentry>
 
  <indexentry id="idx-user-interface">
   <primaryie>user interface</primaryie>
