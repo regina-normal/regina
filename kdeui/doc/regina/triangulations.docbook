@@ -4,15 +4,15 @@
  <para>
   3-manifolds in &regina; are typically represented by
   <firstterm>triangulations</firstterm>.  A triangulation of a 3-manifold
-  consists of a set of tetrahedra and instructions on how some or all
+  consists of a set of tetrahedra with instructions on how some or all
   of the faces of these tetrahedra should be glued together in pairs.
  </para>
  <para>
-  This is less strict than a true simplicial complex.
-  &regina; allows you to glue two faces of the same tetrahedron together,
-  or glue faces so that different edges of the same tetrahedron become
+  Triangulations in &regina; are less strict than simplicial complexes:
+  you may glue two faces of the same tetrahedron together,
+  or you may glue faces so that different edges of the same tetrahedron become
   identified (and likewise for vertices).
-  In fact, the best triangulations for computation are often
+  Indeed, the best triangulations for computation are often
   <emphasis>one-vertex triangulations</emphasis>, where all vertices of
   all tetrahedra become identified together.
  </para>
@@ -20,8 +20,8 @@
   The downside of this flexibility is that, if you are not careful,
   your triangulation might not represent a 3-manifold at all.
   If this happens, &regina; will
-  <link linkend="tri-basicprops">tell you about it</link> when you view
-  your triangulation.
+  <link linkend="tri-basicprops">tell you about it</link> when you open
+  it to view.
  </para>
 
  <sect1 id="tri-creation">
@@ -47,8 +47,9 @@
    </para>
    <para>
     In addition to the usual information, you are asked what
-    <emphasis>type</emphasis> of triangulation to create.
-    Here we talk through the various options.
+    <emphasis>type</emphasis> of triangulation to create (see the
+    drop-down box below).
+    Here we walk through the various options.
    </para>
    <para>
     <inlinemediaobject>
@@ -63,9 +64,9 @@
 
     <para>
      This will create a new triangulation with no tetrahedra at all.
-     This option is best if you wish to enter a triangulation by hand:
+     This is best if you wish to enter a triangulation by hand:
      first create an empty triangulation, and then
-     and then manually <link linkend="tri-editgluings">add tetrahedra
+     manually <link linkend="tri-editgluings">add tetrahedra
      and edit the face gluings</link>.
     </para>
     <para>
@@ -82,7 +83,7 @@
 
     <para>
      This will create a layered lens space with the given parameters.
-     This is built by taking two <link linkend="tri-new-layered">layered
+     This involves building two <link linkend="tri-new-layered">layered
      solid tori</link> and gluing them together along their torus boundaries.
      Layered lens spaces were introduced by Jaco and Rubinstein
      <xref linkend="bib-0-efficiency"/>,
@@ -177,11 +178,13 @@
     <para>
      This will create a layered loop of the given length.
      This involves layering <replaceable>n</replaceable> tetrahedra
-     one upon another to form a closed loop of tetrahedra (where
-     <replaceable>n</replaceable> is the given length).
+     one upon another
+     (where <replaceable>n</replaceable> is the given length),
+     and then gluing the final tetrahedron back around to the first.
      If the <guilabel>Twisted</guilabel> box is checked, 
-     a 180-degree rotation will take place before the final layering
-     is performed.  Details of the construction can be found in
+     this final gluing will be done with a
+     a 180-degree rotation.
+     Full details of the construction can be found in
      <xref linkend="bib-burton-phd"/>.
     </para>
     <para>
@@ -193,11 +196,11 @@
     </para>
     <para>
      A twisted layered loop of length
-     <replaceable>n</replaceable> will form a one-vertex triangulation of
+     <replaceable>n</replaceable> forms a one-vertex triangulation of
      the orbit manifold
      &sss;/Q<subscript>4<replaceable>n</replaceable></subscript>.
      An untwisted layered loop of length <replaceable>n</replaceable>
-     will form a two-vertex triangulation of the lens space
+     forms a two-vertex triangulation of the lens space
      L(<replaceable>n</replaceable>,1).
     </para>
    </sect3>
@@ -223,15 +226,15 @@
     <para>
     </para>
     <para>
-     You must provide six parameters, groups into three
+     You must provide six parameters, grouped into three
      pairs of integers (&a1;,&b1;) (&a2;,&b2;) (&a3;,&b3;).  Each pair
      of integers describes one of the layered solid tori that is attached.
      The two integers in each pair must be
      relatively prime, and both positive and negative integers are allowed.
     </para>
     <para>
-     If none of &a1;, &a2; or &a3; are zero, the resulting 3-manifold
-     will always be a &sfslong; over the sphere with at most
+     If none of &a1;, &a2; or &a3; is zero, the resulting 3-manifold
+     will be a &sfslong; over the sphere with at most
      three exceptional fibres.  Conversely, any &sfslong; of this type
      can be represented as an augmented &trist;.
     </para>
@@ -242,6 +245,12 @@
 
     <para>
      This will reconstruct a triangulation from an isomorphism signature.
+     An <firstterm>isomorphism signature</firstterm> is a compact sequence
+     of letters, digits and/or punctuation that identifies a
+     triangulation uniquely up to combinatorial isomorphism (i.e.,
+     relabelling tetrahedra and their vertices).  An example is
+     <literal>cPcbbbiht</literal> (which describes the figure eight knot
+     complement).
     </para>
     <para>
      <inlinemediaobject>
@@ -249,14 +258,6 @@
        <imagedata fileref="newtri-isosig.png"/>
       </imageobject>
      </inlinemediaobject>
-    </para>
-    <para>
-     An <firstterm>isomorphism signature</firstterm> is a compact sequence
-     of letters, digits and/or punctuation that identifies a
-     triangulation uniquely up to combinatorial isomorphism (i.e.,
-     relabelling tetrahedra and their vertices).  An example is
-     <literal>cPcbbbiht</literal> (which describes the figure eight knot
-     complement).
     </para>
     <para>
      Stated precisely: every triangulation has a unique isomorphism signature,
@@ -283,15 +284,6 @@
 
     <para>
      This will rehydrate a triangulation from the given dehydration string.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="newtri-dehydration.png"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-    <para>
      A <firstterm>dehydration string</firstterm> is a sequence of letters
      that contains enough information to reconstruct a triangulation
      (though tetrahedra and their vertices might be relabelled).
@@ -302,6 +294,13 @@
      census papers such as the hyperbolic cusped census of
      Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
      in which the dehydration format is explicitly described.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-dehydration.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <para>
      Only some triangulations have dehydration strings.
@@ -316,7 +315,14 @@
     <title>Splitting Surface</title>
 
     <para>
-     This will reconstruct a triangulation from a given splitting surface.
+     This will reconstruct a triangulation from a splitting surface signature.
+     A <firstterm>splitting surface</firstterm> is a compact normal
+     surface consisting of precisely one quadrilateral per tetrahedron
+     and no other normal discs.
+     A <firstterm>splitting surface signature</firstterm> is a string of
+     letters arranged into cycles that describe how these quadrilaterals
+     are joined together.  From this signature, both the normal surface and
+     the enclosing triangulation can be reconstructed.
     </para>
     <para>
      <inlinemediaobject>
@@ -326,19 +332,8 @@
      </inlinemediaobject>
     </para>
     <para>
-     A <firstterm>splitting surface</firstterm> is a compact normal
-     surface consisting of precisely one quadrilateral per tetrahedron
-     and no other normal (or almost normal) discs.
-    </para>
-    <para>
-     A <firstterm>splitting surface signature</firstterm> is a string of
-     letters arranged into cycles that describe how these quadrilaterals
-     are joined together.  From this signature, both the splitting surface and
-     the enclosing triangulation can be reconstructed.
-    </para>
-    <para>
-     When entering a splitting surface signature, any block of punctuation
-     can be used to separate cycles of letters.  All
+     When entering a splitting surface signature, you may use
+     any block of punctuation to separate cycles of letters.  All
      whitespace will be ignored.  Examples of valid signatures
      are <literal>(ab)(bC)(Ca)</literal> and <literal>AAb-bc-C</literal>.
     </para>
@@ -352,12 +347,12 @@
     <title>Example Triangulation</title>
 
     <para>
-     The <guilabel>New Triangulation</guilabel> dialog includes a small
-     selection of ready-made example triangulations;
-     examples include the figure eight knot complement,
-     the &poincare; homology sphere and the Weber-Seifert dodecahedral
-     space, amongst others.
-     Simply select a 3-manifold from the list provided and the
+     &regina; also offers a small
+     selection of ready-made sample triangulations;
+     these include the figure eight knot complement,
+     the &poincare; homology sphere, the Weber-Seifert dodecahedral
+     space, and several others.
+     Simply select one from the list provided and the
      corresponding triangulation will be built for you.
     </para>
     <para>
@@ -374,7 +369,7 @@
    <title>Importing Triangulations</title>
 
    <para>
-    Triangulations can also be imported into &regina; from other
+    You can import triangulations into &regina; from other
     programs, such as &snappeaurl; or &orburl;.  This is done through the
     <menuchoice>
      <guimenu>File</guimenu>
