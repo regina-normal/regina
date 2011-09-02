@@ -53,7 +53,7 @@ namespace Coordinates {
             if (coordSystem == NNormalSurfaceList::ORIENTED)
                 return i18n("Transversely oriented normal (tri-quad)");
             if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD)
-                return i18n("Transversely oriented quad normal (quad)");
+                return i18n("Transversely oriented quad normal");
             return i18n("Unknown");
         } else {
             if (coordSystem == NNormalSurfaceList::STANDARD)
@@ -73,7 +73,7 @@ namespace Coordinates {
             if (coordSystem == NNormalSurfaceList::ORIENTED)
                 return i18n("transversely oriented normal (tri-quad)");
             if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD)
-                return i18n("transversely oriented quad normal (quad)");
+                return i18n("transversely oriented quad normal");
             return i18n("unknown");
         }
     }
@@ -101,8 +101,8 @@ namespace Coordinates {
             return tri->getNumberOfFaces() * 3;
         else if (coordSystem == NNormalSurfaceList::ORIENTED)
             return tri->getNumberOfTetrahedra() * 14;
-        else if (coordSystem == NNormalSurfaceList::ORIENTED)
-            return tri->getNumberOfTetrahedra() * 8;
+        else if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD)
+            return tri->getNumberOfTetrahedra() * 6;
         else
             return 0;
     }
