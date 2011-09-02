@@ -782,7 +782,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     HBdry->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H1(Bdry M -> M): "), grid);
+    label = new QLabel(i18n("H1(%1M -> M): ").arg(QChar(0x2202 /* bdry */)),
+        grid);
     homologyGrid->addWidget(label, 6, 1);
     BdryMap = new QLabel(grid);
     homologyGrid->addWidget(BdryMap, 6, 2);
