@@ -121,7 +121,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-compbdrycomp">boundary components, viewing
+  <primaryie><link linkend="tri-bdrycomponents">boundary components, viewing
    in a triangulation</link></primaryie>
  </indexentry>
 
@@ -261,7 +261,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-compbdrycomp">components, viewing
+  <primaryie><link linkend="tri-components">components, viewing
    in a triangulation</link></primaryie>
  </indexentry>
 
@@ -337,7 +337,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-vertextype">cusps, identifying
+  <primaryie><link linkend="tri-vertices">cusps, identifying
    in a triangulation</link></primaryie>
  </indexentry>
 
@@ -427,7 +427,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-vertexedgeface">edges, viewing
+  <primaryie><link linkend="tri-edges">edges, viewing
    in a triangulation</link></primaryie>
  </indexentry>
 
@@ -523,7 +523,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-vertexedgeface">faces, viewing
+  <primaryie><link linkend="tri-faces">faces, viewing
    in a triangulation</link></primaryie>
  </indexentry>
 
@@ -644,7 +644,7 @@
   <secondaryie><link linkend="tri-propideal">testing for</link></secondaryie>
   <secondaryie><link linkend="tri-subdivision">truncating / converting
    to real boundary</link></secondaryie>
-  <secondaryie><link linkend="tri-vertextype">viewing</link></secondaryie>
+  <secondaryie><link linkend="tri-vertices">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1267,7 +1267,7 @@
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-subdivision">barycentric
    subdivision</link></secondaryie>
-  <secondaryie><link linkend="tri-compbdrycomp">boundary components,
+  <secondaryie><link linkend="tri-bdrycomponents">boundary components,
    viewing</link></secondaryie>
   <secondaryie><link linkend="tri-extension">boundary,
    converting real to ideal</link></secondaryie>
@@ -1279,13 +1279,13 @@
    composition</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-component">component
    decomposition</link></secondaryie>
-  <secondaryie><link linkend="tri-compbdrycomp">components,
+  <secondaryie><link linkend="tri-components">components,
    viewing</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-connsum">connected
    sum decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-propconn">connectedness</link></secondaryie>
   <secondaryie><link linkend="tri-creation">creation</link></secondaryie>
-  <secondaryie><link linkend="tri-vertextype">cusps</link></secondaryie>
+  <secondaryie><link linkend="tri-vertices">cusps</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">dehydration
    string, rehydrating</link></secondaryie>
   <secondaryie><link linkend="tri-elementarymove">elementary
@@ -1296,7 +1296,7 @@
    external files</link></secondaryie>
   <secondaryie><link linkend="tri-skeleton-facegraph">face pairing
    graphs</link></secondaryie>
-  <secondaryie><link linkend="tri-facetype">faces,
+  <secondaryie><link linkend="tri-faces">faces,
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-fundgroup">fundamental
    group</link></secondaryie>
@@ -1384,7 +1384,7 @@
  </indexdiv><indexdiv><title>&mdash; V &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="tri-edgetype">valid edges,
+  <primaryie><link linkend="tri-edges">valid edges,
    testing for</link></primaryie>
  </indexentry>
 
@@ -1409,7 +1409,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-vertexedgeface">vertices, viewing
+  <primaryie><link linkend="tri-vertices">vertices, viewing
    in a triangulation</link></primaryie>
  </indexentry>
 

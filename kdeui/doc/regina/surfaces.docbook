@@ -441,7 +441,7 @@
        <para>
         Edge numbers and the tetrahedron edges/vertices to which they
         correspond can be seen in the skeleton section of the
-        <link linkend="tri-vertexedgeface">triangulation viewer</link>.
+        <link linkend="tri-edges">triangulation viewer</link>.
        </para>
        <para>
         Edge weight coordinates are simply offered as a different way of
@@ -468,7 +468,7 @@
        <para>
         Face numbers and the tetrahedron faces/vertices to which they
         correspond can be seen in the skeleton section of the
-        <link linkend="tri-vertexedgeface">triangulation viewer</link>.
+        <link linkend="tri-faces">triangulation viewer</link>.
        </para>
        <para>
         Like edge weight coordinates, face arc coordinates are offered as a
@@ -589,7 +589,7 @@
          <para>
           Vertex numbers and the tetrahedron vertices to which they
           correspond can be seen in the skeleton section of the
-          <link linkend="tri-vertexedgeface">triangulation viewer</link>.
+          <link linkend="tri-vertices">triangulation viewer</link>.
          </para></glossdef>
         </glossentry>
         <glossentry>
@@ -603,7 +603,7 @@
          <para>
           Edge numbers and the tetrahedron edges/vertices to which they
           correspond can be seen in the skeleton section of the
-          <link linkend="tri-vertexedgeface">triangulation viewer</link>.
+          <link linkend="tri-edges">triangulation viewer</link>.
          </para></glossdef>
         </glossentry>
        </glosslist>
