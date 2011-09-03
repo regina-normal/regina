@@ -1124,16 +1124,17 @@
    <sect3 id="tri-algebra-homology">
     <title>Homology Groups</title>
     <para>
-     The <guilabel>Homology</guilabel> tab of the algebra viewer
-     presents various homology groups of the triangulation.  These include
-     H1(M) (the first homology group),
-     H1(M, &#x2202;M)
-     (the relative first homology group with respect to the boundary),
-     H1(&#x2202;M) (the first homology group of the boundary),
-     H2(M) (the second homology group) and
-     H2(M ; Z<subscript>2</subscript>)
-     (the second homology group with coefficients in
-     Z<subscript>2</subscript>).
+     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Homology</guilabel>
+     tab presents several homology groups of the triangulation.
+     These include
+     <guilabel>H1(M)</guilabel> (the first homology group),
+     <guilabel>H1(M, &#x2202;M)</guilabel>
+      (the relative first homology group with respect to the boundary),
+     <guilabel>H1(&#x2202;M)</guilabel>
+      (the first homology group of the boundary),
+     <guilabel>H2(M)</guilabel> (the second homology group), and
+     <guilabel>H2(M ; Z_2)</guilabel> (the second homology group with
+      coefficients in Z<subscript>2</subscript>).
     </para>
     <para>
      <inlinemediaobject>
@@ -1147,8 +1148,8 @@
    <sect3 id="tri-algebra-fundgroup">
     <title>Fundamental Group</title>
     <para>
-     The <guilabel>Fund. Group</guilabel> tab of the algebra viewer
-     contains the fundamental group of the triangulation,
+     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Fund.&nbsp;Group</guilabel>
+     tab contains the fundamental group of the triangulation,
      presented as a set of generators and
      relations.  The generators and relations will be passed through a
      fairly weak recognition routine, and if the group is recognised then
@@ -1194,8 +1195,8 @@
    <sect3 id="tri-algebra-turaevviro">
     <title>Turaev-Viro Invariants</title>
     <para>
-     The <guilabel>Turaev-Viro</guilabel> tab of the algebra viewer
-     allows the calculation of arbitrary Turaev-Viro state sum invariants.
+     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Turaev-Viro</guilabel>
+     tab allows the calculation of arbitrary Turaev-Viro state sum invariants.
     </para>
     <para>
      Each Turaev-Viro invariant corresponds to a particular set of initial
@@ -1231,12 +1232,11 @@
    <sect3 id="tri-algebra-cellular">
     <title>Cellular Information</title>
     <para>
-     The <guilabel>Cellular Info</guilabel> tab of the algebra viewer
-     displays information on the standard and dual CW-decompositions,
+     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Cellular Info</guilabel>
+     tab displays information on the standard and dual CW-decompositions,
      a variety of homology groups and mappings, the
      Kawauchi-Kojima invariants of the torsion linking form, and
      comments on where the triangulation might be embeddable.
-     Many thanks are due to Ryan Budney for implementing these features.
     </para>
     <para>
      <inlinemediaobject>
