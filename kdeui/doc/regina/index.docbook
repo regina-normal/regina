@@ -114,6 +114,7 @@
   <!ENTITY sysreq
    "<ulink url='http://regina.sourceforge.net/source.html'>system
    requirements page</ulink>">
+  <!ENTITY tex "<application>TeX</application>">
   <!ENTITY theta "<replaceable>t</replaceable>">
   <!ENTITY todo "TODO">
   <!ENTITY trist "triangular solid torus">

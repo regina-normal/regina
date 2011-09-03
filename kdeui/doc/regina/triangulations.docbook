@@ -1104,37 +1104,44 @@
    <title>Algebraic Invariants</title>
 
    <para>
-    The <guilabel>Algebra</guilabel> tab in the triangulation viewer
-    contains a variety of smaller tabs describing different
+    The <guilabel>Algebra</guilabel> tab
+    holds several smaller tabs that describe different
     algebraic invariants of the triangulation.
    </para>
    <para>
-    Note that if the triangulation contains ideal vertices, the
-    algebraic properties will be calculated as if these vertices had
-    been truncated.  These truncated ideal vertices will also be
-    considered part of the boundary.
+    If the triangulation contains ideal vertices, these invariants
+    will be computed <emphasis>assuming the ideal vertices have
+    been truncated</emphasis>, leaving a small boundary component
+    where each ideal vertex used to be.
    </para>
-   <warning><para>
-    There is no guarantee that invalid edges (edges
-    glued to themselves in reverse) will be dealt with correctly.
+   <caution><para>
+    There is no guarantee that <link linkend="tri-edges">invalid edges</link>
+    (edges glued to themselves in reverse) will be handled correctly.
     In particular, the projective plane cusps they produce may be
     ignored.
-   </para></warning>
+   </para></caution>
 
    <sect3 id="tri-algebra-homology">
     <title>Homology Groups</title>
     <para>
      The <guilabel>Algebra</guilabel>&rarr;<guilabel>Homology</guilabel>
      tab presents several homology groups of the triangulation.
-     These include
-     <guilabel>H1(M)</guilabel> (the first homology group),
-     <guilabel>H1(M, &#x2202;M)</guilabel>
-      (the relative first homology group with respect to the boundary),
-     <guilabel>H1(&#x2202;M)</guilabel>
-      (the first homology group of the boundary),
-     <guilabel>H2(M)</guilabel> (the second homology group), and
-     <guilabel>H2(M ; Z_2)</guilabel> (the second homology group with
-      coefficients in Z<subscript>2</subscript>).
+     These include:
+     H1(M), (the first homology group);
+     H1(M,&nbsp;&#x2202;M),
+      the relative first homology group with respect to the boundary;
+     H1(&#x2202;M),
+      the first homology group of the boundary;
+     H2(M), the second homology group; and
+     H2(M&nbsp;;&nbsp;Z<subscript>2</subscript>), the second homology group
+      with coefficients in Z<subscript>2</subscript>.
+    </para>
+    <para>
+     All finite cyclic groups
+     Z<subscript><replaceable>k</replaceable></subscript>
+     will be written in the &ldquo;pidgin &tex;&rdquo; form
+     Z_<replaceable>k</replaceable>,
+     so that the order of each group is easier to read.
     </para>
     <para>
      <inlinemediaobject>
@@ -1149,11 +1156,16 @@
     <title>Fundamental Group</title>
     <para>
      The <guilabel>Algebra</guilabel>&rarr;<guilabel>Fund.&nbsp;Group</guilabel>
-     tab contains the fundamental group of the triangulation,
+     tab displays the fundamental group of the triangulation,
      presented as a set of generators and
-     relations.  The generators and relations will be passed through a
-     fairly weak recognition routine, and if the group is recognised then
-     its common name will be given as well.
+     relations.
+    </para>
+    <para>
+     &regina; will try to recognise the common name of this
+     group (though the recognition code is fairly na&iuml;ve).
+     If it can, the name will be displayed above
+     the generators and relations.  Otherwise the text
+     <guilabel>Not recognised</guilabel> will be displayed instead.
     </para>
     <para>
      <inlinemediaobject>
@@ -1164,32 +1176,28 @@
     </para>
     <para>
      If you have &gaplongurl; installed on your system, you can use &gap;
-     to simplify the fundamental group presentation.  &regina; does
-     perform some automatic simplifications of its own, but &gap;'s
-     simplification routines are far more powerful.
+     to simplify the group presentation.  &regina; does
+     try to simplify the presentation on its own, but &gap; will
+     typically do a better job.
     </para>
     <para>
-     To simplify the group presentation using &gap;,
+     To simplify the presentation using &gap;,
      press the <guibutton>Simplify using GAP</guibutton> button
-     beneath the fundamental group.  While &regina; is talking to &gap;, the
-     state of the conversation will be displayed in a separate dialog box.
+     at the bottom of the panel.
+     You can try this more than once if you like: sometimes
+     &gap; finds a better presentation when run a second or third time.
     </para>
     <para>
-     If you wish to see a full transcript of the conversation between
-     &regina; and &gap;, start &regina; from the command-line by running
-     <command>regina-kde</command>.  A full transcript of the
-     conversation will be written to the text console beneath the
-     <command>regina-kde</command> command.
-    </para>
-    <para>
-     If &regina; is having trouble starting &gap;, you can tell it where
-     to find &gap; in the
+     If &regina; is having trouble starting &gap;, you can tell it how
+     to start &gap; in the
      <link linkend="options-triangulation">triangulation options</link>.
     </para>
     <tip><para>
-     You can try to simplify using &gap; more than once.  Sometimes
-     &gap; gets a better presentation for the group when run a second or
-     third time.
+     If you wish to see a full transcript of the conversation between
+     &regina; and &gap;, start &regina; from the command-line by running
+     <command>regina-kde</command>.  The entire conversation
+     will be shown in the text console where you ran
+     <command>regina-kde</command> command.
     </para></tip>
    </sect3>
    <sect3 id="tri-algebra-turaevviro">
@@ -1256,7 +1264,7 @@
      Specific results on this tab include:
      <glosslist>
       <glossentry>
-       <glossterm>Cells</glossterm>
+       <glossterm><guilabel>Cells</guilabel></glossterm>
        <glossdef>
         <para>
          Lists the number of cells of each dimension for a standard
@@ -1273,7 +1281,7 @@
        </glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>Dual cells</glossterm>
+       <glossterm><guilabel>Dual cells</guilabel></glossterm>
        <glossdef><para>
          Lists the number of cells of each dimension in the
          dual CW-decomposition.  As before, this is a list of four
@@ -1282,14 +1290,14 @@
        </para></glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>Euler characteristic</glossterm>
+       <glossterm><guilabel>Euler characteristic</guilabel></glossterm>
        <glossdef><para>
         Gives the Euler characteristic of the manifold, as computed from
         the CW-decompositions.
        </para></glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>Homology groups</glossterm>
+       <glossterm><guilabel>Homology groups</guilabel></glossterm>
        <glossdef><para>
         Lists the homology groups of the manifold with coefficients in
         the integers.  The four groups
@@ -1299,7 +1307,7 @@
        </para></glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>Boundary homology groups</glossterm>
+       <glossterm><guilabel>Boundary homology groups</guilabel></glossterm>
        <glossdef><para>
         Lists the homology groups of the boundary of the manifold, again
         with coefficients in the integers.  The three groups
@@ -1308,7 +1316,7 @@
        </para></glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>H1(&#x2202;M &mdash;&gt; M)</glossterm>
+       <glossterm><guilabel>H1(&#x2202;M &mdash;&gt; M)</guilabel></glossterm>
        <glossdef><para>
         Since the boundary is a submanifold of the original manifold,
         there is an induced map on the first homology group.  This
@@ -1317,7 +1325,7 @@
        </para></glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>Torsion form rank vector</glossterm>
+       <glossterm><guilabel>Torsion form rank vector</guilabel></glossterm>
        <glossdef>
         <para>
          Given an oriented 3-manifold &varM;,
@@ -1364,7 +1372,7 @@
        </glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>Sigma vector</glossterm>
+       <glossterm><guilabel>Sigma vector</guilabel></glossterm>
        <glossdef>
         <para>
          This is the second of the three Kawauchi-Kojima invariants
@@ -1382,7 +1390,7 @@
        </glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>Legendre symbol vector</glossterm>
+       <glossterm><guilabel>Legendre symbol vector</guilabel></glossterm>
        <glossdef>
         <para>
          This is the third of the three Kawauchi-Kojima invariants of the
@@ -1399,7 +1407,7 @@
        </glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>Comments</glossterm>
+       <glossterm><guilabel>Comments</guilabel></glossterm>
        <glossdef>
         <para>
          This final entry in the
@@ -1764,6 +1772,13 @@
     available censuses.  Any matches will be reported and noted in a new
     text packet that will be created directly beneath the current
     triangulation.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menucensuslookup.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
     For a match to occur, the triangulation does not need to use the same
@@ -2197,6 +2212,13 @@
    <title>Component Decomposition</title>
 
    <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menucomponents.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     &regina; can work with disconnected triangulations as well as
     connected triangulations.  It may be desirable at times to break a
     large disconnected triangulation into smaller separate triangulations
@@ -2221,7 +2243,13 @@
 
   <sect2 id="tri-decomposition-connsum">
    <title>Connected Sum Decomposition</title>
-
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menuconnsum.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
    <para>
     For closed orientable connected 3-manifold triangulations,
     &regina; can in fact completely decompose the triangulation into a
