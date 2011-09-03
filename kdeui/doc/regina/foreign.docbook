@@ -162,6 +162,45 @@
    </programlisting>
   </sect2>
 
+  <sect2 id="import-isosiglist">
+   <title>Isomorphism Signature List</title>
+
+   <para>
+    TODO.
+   </para>
+   <para>
+    A list of dehydrated triangulation strings can be imported.
+    A <firstterm>dehydration string</firstterm> is a set of letters such as
+    <literal>dadbcccaqhx</literal> containing enough information to
+    recreate the triangulation.  Dehydration strings appear in
+    census papers such as the hyperbolic cusped census of
+    Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
+    in which the dehydration format is explicitly described.
+   </para>
+   <para>
+    The list should be stored in a plain text file with one triangulation
+    per line.  Each line may contain an arbitrary amount of data, but the
+    first word of each line should be the dehydrated triangulation
+    string.  A sample file is shown below.
+   </para>
+   <programlisting>
+    dafbcccaadl   N3,1   Z/3 + Z
+    dadcbccdjkd   N3,2   Z
+    dadbcccbbcv   N3,3   Z
+    dadbcccccdm   N3,4   Z
+    dadbcccaqhx   N3,5   Z/2 + Z/2 + Z
+   </programlisting>
+   <para>
+    When importing a dehydrated triangulation list, each individual
+    triangulation will be rehydrated and inserted beneath a common
+    container packet, which will then be inserted into the current
+    packet tree.  If you just wish to rehydrate a single triangulation
+    string (not many), it may be simpler to use the
+    <link linkend="tri-new-dehydration">New Triangulation</link> dialog
+    instead.
+   </para>
+  </sect2>
+
   <sect2 id="import-dehydrationlist">
    <title>Dehydrated Triangulation List</title>
 

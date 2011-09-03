@@ -224,8 +224,6 @@
      </inlinemediaobject>
     </para>
     <para>
-    </para>
-    <para>
      You must provide six parameters, grouped into three
      pairs of integers (&a1;,&b1;) (&a2;,&b2;) (&a3;,&b3;).  Each pair
      of integers describes one of the layered solid tori that is attached.
@@ -268,7 +266,7 @@
     </para>
     <para>
      The isomorphism signature for an existing triangulation can be viewed
-     through the <link linkend="tri-composition-composition">triangulation
+     through the <link linkend="tri-composition-isosig">triangulation
      composition</link> tab.
     </para>
     <caution><para>
@@ -306,7 +304,7 @@
      Only some triangulations have dehydration strings.
      The dehydration string (if it exists) for an existing triangulation
      can be viewed
-     through the <link linkend="tri-composition-composition">triangulation
+     through the <link linkend="tri-composition-dehydration">triangulation
      composition</link> tab.
     </para>
    </sect3>
@@ -1475,87 +1473,83 @@
   <sect2 id="tri-composition">
    <title>Combinatorial Composition</title>
    <para>
-    The <guilabel>Composition</guilabel> tab in the triangulation viewer
-    presents information regarding the combinatorial structure of the
-    triangulation.
+    The <guilabel>Composition</guilabel> tab
+    offers more detailed information about the combinatorial
+    structure of the triangulation.
    </para>
 
    <sect3 id="tri-composition-isomorphism">
-    <title>Isomorphism / Subcomplex Tests</title>
+    <title>Isomorphism / Subcomplex Testing</title>
     <para>
-     At the top of the composition tab is an area for performing
-     isomorphism and subcomplex tests.  A drop-down box is provided in
-     which a second triangulation <replaceable>T</replaceable> can be
-     selected.  Each time a new triangulation <replaceable>T</replaceable>
-     is chosen, an isomorphism / subcomplex test is performed.
+     The upper portion of the composition tab is for testing
+     combinatorial isomorphism, or testing whether one triangulation is a
+     subcomplex of another.  Simply select some other
+     triangulation <replaceable>T</replaceable> from the drop-down box
+     (indicated by the arrow in the diagram below).
     </para>
     <para>
-     Specifically, the program tests for any of the following
-     relationships:
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-iso.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <!--para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-iso-select.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para-->
+    <para>
+     Each time you select a different triangulation
+     <replaceable>T</replaceable> in the drop-down box,
+     &regina; will immediately test for any of the following relationships:
      <itemizedlist>
       <listitem><para>
-       this triangulation and <replaceable>T</replaceable> are isomorphic;
+       whether this triangulation and <replaceable>T</replaceable>
+       are isomorphic (i.e., identical up to a relabelling of tetrahedra
+       and their vertices);
       </para></listitem>
       <listitem><para>
-       this triangulation is isomorphic to a subcomplex of
-       <replaceable>T</replaceable>;
+       whether this triangulation is isomorphic to a subcomplex of
+       <replaceable>T</replaceable> (i.e., <replaceable>T</replaceable>
+       can be obtained from this triangulation by adding more tetrahedra
+       and/or gluing more faces together, again with a possible relabelling);
       </para></listitem>
       <listitem><para>
-       <replaceable>T</replaceable> is isomorphic to a subcomplex of
+       whether <replaceable>T</replaceable> is isomorphic to a subcomplex of
        this triangulation.
       </para></listitem>
      </itemizedlist>
-     The relationship (if any) is reported alongside the drop-down
-     box.  Furthermore, if a relationship does exist then the adjacent
-     <guibutton>Details</guibutton> button can be pressed to obtain a
-     precise mapping of tetrahedra and tetrahedron vertices
-     corresponding to this isomorphism.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-iso-result.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     The relationship, if any, will be reported immediately beneath
+     the drop-down box (as illustrated above).  If a relationship is found,
+     you can click on the <guibutton>Details</guibutton> button for
+     the precise relabelling (i.e., the mapping between tetrahedron
+     labels and between vertices in each tetrahedron).
     </para>
    </sect3>
 
    <sect3 id="tri-composition-composition">
-    <title>Triangulation Composition and Dehydration</title>
+    <title>High-Level Recognition, Building Blocks,
+     Isomorphism Signatures and Dehydrations</title>
     <para>
-     Forming the lower portion of the composition tab is a large region
-     in which further details of the triangulation composition and the
-     underlying 3-manifold are displayed.  Presented here is all the
-     information that &regina; can deduce simply by searching for
-     well-structured features within the triangulation that it can
-     recognise.  Some triangulations can be completely identified;
-     others (frequently poorly-structured non-minimal triangulations)
-     yield little or no useful information at all.
-    </para>
-    <para>
-     If the triangulation and/or its underlying 3-manifold can be
-     identified, these are reported.  In addition, the program
-     searches for a variety of standard subcomplexes within the
-     triangulation.  If any of these subcomplexes are found, these too
-     are reported along with precise details of where they occur.
-     Many of these subcomplexes are described in detail in Burton's PhD thesis
-     <xref linkend="bib-burton-phd"/>
-     and the papers <xref linkend="bib-burton-nor7"/> and
-     <xref linkend="bib-burton-satblocks"/>;
-     these descriptions can be quite laborious and will not be repeated here.
-    </para>
-    <para>
-     If it exists, the dehydration string for the triangulation is also
-     reported here.  Dehydration strings, described by
-     Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
-     allow complex triangulations to be represented by a simple strings
-     of letters.  &regina; can convert a dehydration string back into a
-     real triangulation, either by
-     <link linkend="tri-new-dehydration">creating a new triangulation</link>
-     or by <link linkend="import-dehydrationlist">importing a list of
-     dehydration strings</link>.
-    </para>
-    <para>
-     Note that dehydration strings only exist for connected
-     triangulations with no boundary faces and at most 25 tetrahedra.
-     Furthermore, they implicitly describe a canonical ordering of the
-     triangulation tetrahedra and vertices&mdash;dehydrating and then
-     recreating a triangulation may not give you the same triangulation
-     back, though it will certainly give you an <emphasis>isomorphic</emphasis>
-     triangulation.
+     In the lower portion of the composition tab is a large box
+     containing details on the combinatorial composition of the triangulation.
+     Here &regina; will search for well-structured features within the
+     triangulation, and deduce from them what it can.
+     Sometimes it can recognise the construction and completely identify
+     both the triangulation and the underlying 3-manifold; other times
+     it yields little or no useful information.
     </para>
     <para>
      <inlinemediaobject>
@@ -1564,13 +1558,137 @@
       </imageobject>
      </inlinemediaobject>
     </para>
-    <tip><para>
-     You can copy text from the composition box by right-clicking
-     on a line of text and selecting
-     <menuchoice><guimenuitem>Copy to Clipboard</guimenuitem></menuchoice>
-     from the pop-up menu that appears.  This is particularly useful for
-     copying dehydration strings.
-    </para></tip>
+    <para>
+     In this composition box you will find the following information:
+    </para>
+    <sect4 id="tri-composition-name">
+     <title>Recognising the Triangulation and the 3-Manifold</title>
+     <para>
+      &regina; knows about many infinite families of triangulations.
+      If your triangulation belongs to one of these families then
+      &regina; will detect this and report the results here.
+      &regina; is particularly good at recognising
+      well-structured triangulations of &sfslong;s and graph manifolds.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="tri-composition-name.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      If it does recognise your triangulation, &regina; will name the
+      3-manifold and also the triangulation itself.  See
+      <xref linkend="bib-burton-phd"/> and <xref linkend="bib-burton-nor7"/>
+      for details on the families of triangulations and what their names
+      and parameters mean.
+     </para>
+    </sect4>
+    <sect4 id="tri-composition-isosig">
+     <title>Isomorphism Signature</title>
+     <para>
+      An <firstterm>isomorphism signature</firstterm> is a compact sequence
+      of letters, digits and/or punctuation that identifies a
+      triangulation uniquely up to combinatorial isomorphism.
+      &regina; will report the isomorphism signature for your
+      triangulation here.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="tri-composition-isosig.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      Every triangulation has an isomorphism signature (even
+      disconnected triangulations or triangulations with boundary).
+      The main features of isomorphism signatures are that they are fast
+      to compute, and that two triangulations have the same signature
+      <emphasis>if and only if</emphasis> they are isomorphic.
+      See <xref linkend="bib-burton-simps3"/> for details.
+     </para>
+     <para>
+      To convert an isomorphism signature back into a triangulation,
+      you can either <link linkend="tri-new-isosig">create a new
+      triangulation</link> from a signature, or
+      <link linkend="import-isosiglist">import a list of
+      isomorphism signatures</link>.  Be aware that the resulting
+      triangulation might not use the same tetrahedron and vertex
+      labels as the original.
+     </para>
+     <para>
+      Isomorphism signatures are case-sensitive (i.e., upper-case and
+      lower-case matters).
+      To copy the isomorphism signature to the clipboard, simply select
+      the line in the box and choose
+      <menuchoice><guimenu>Edit</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
+     </para>
+    </sect4>
+    <sect4 id="tri-composition-dehydration">
+     <title>Dehydration</title>
+     <para>
+      Like isomorphism signatures, a <emphasis>dehydration string</emphasis>
+      is a short sequence of letters from which you can reconstruct
+      your triangulation.  Only some triangulations have dehydration
+      strings (they must be connected with no boundary faces and
+      &le;&nbsp;25 tetrahedra), and they are not unique up to isomorphism
+      (so relabelling tetrahedra might change the dehydration string).
+      If it exists, the dehydration string will be reported here.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="tri-composition-dehydration.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      Dehydration strings first appeared in early censuses of hyperbolic
+      3-manifolds.  See <xref linkend="bib-cuspedcensus"/> for details.
+     </para>
+     <para>
+      To convert a dehydration string back into a triangulation,
+      you can either <link linkend="tri-new-dehydration">create a new
+      triangulation</link> from its dehydration, or
+      <link linkend="import-dehydrationlist">import a list of
+      dehydration strings</link>.  Be aware that the resulting triangulation
+      might not use the same tetrahedron and vertex labels as the
+      original.
+     </para>
+     <para>
+      As with isomorphism signatures, you can copy a dehydration string
+      to the clipboard by selecting the line in the box and choosing
+      <menuchoice><guimenu>Edit</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
+     </para>
+    </sect4>
+    <sect4 id="tri-composition-blocks">
+     <title>Building Blocks</title>
+     <para>
+      The remainder of the composition box describes combinatorial
+      building blocks within the triangulation.
+      &regina; knows about several families of building blocks
+      (such as <link linkend="tri-new-layered">layered
+      solid tori</link>), and it will search for these within the
+      triangulation.
+      If it finds any building blocks that it
+      recognises then it will give details here, including any parameters
+      for the blocks and where they occur within the triangulation.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="tri-composition-blocks.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      See <xref linkend="bib-burton-phd"/>
+      and <xref linkend="bib-burton-nor7"/> for details on the various
+      families of building blocks that &regina; understands.
+     </para>
+    </sect4>
    </sect3>
   </sect2>
 

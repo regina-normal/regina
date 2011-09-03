@@ -371,7 +371,7 @@
    a list of dehydration strings</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">rehydrating from
    a dehydration string</link></secondaryie>
-  <secondaryie><link linkend="tri-composition-composition">viewing
+  <secondaryie><link linkend="tri-composition-dehydration">viewing
    the dehydration string for a triangulation</link></secondaryie>
  </indexentry>
 
@@ -691,9 +691,11 @@
 
  <indexentry>
   <primaryie>isomorphism signatures</primaryie>
+  <secondaryie><link linkend="import-isosiglist">importing
+   a list of isomorphism signatures</link></secondaryie>
   <secondaryie><link linkend="tri-new-isosig">reconstructing
    triangulations from isomorphism signatures</link></secondaryie>
-  <secondaryie><link linkend="tri-composition-composition">viewing
+  <secondaryie><link linkend="tri-composition-isosig">viewing
    the isomorphism signature for a triangulation</link></secondaryie>
  </indexentry>
 
@@ -730,8 +732,10 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-new-layered">layered solid torus,
-   creation</link></primaryie>
+  <primaryie>layered solid torus</primaryie>
+  <secondaryie><link linkend="tri-new-layered">creating</link></secondaryie>
+  <secondaryie><link linkend="tri-composition-blocks">locating within
+   a triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1013,6 +1017,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-composition-name">recognising
+   triangulations and 3-manifolds</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>rehydrating triangulations</primaryie>
   <seeie>See: dehydrated triangulations</seeie>
  </indexentry>
@@ -1179,7 +1188,7 @@
  <indexentry>
   <primaryie>standard subcomplexes</primaryie>
   <secondaryie><link linkend="tri-creation">creating</link></secondaryie>
-  <secondaryie><link linkend="tri-composition-composition">testing
+  <secondaryie><link linkend="tri-composition-blocks">testing
    for</link></secondaryie>
  </indexentry>
 
@@ -1190,7 +1199,7 @@
 
  <indexentry>
   <primaryie>subcomplex</primaryie>
-  <secondaryie><link linkend="tri-composition-composition">searching
+  <secondaryie><link linkend="tri-composition-blocks">searching
    for standard subcomplexes</link></secondaryie>
   <secondaryie><link linkend="tri-composition-isomorphism">testing
    between two triangulations</link></secondaryie>
