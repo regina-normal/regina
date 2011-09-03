@@ -303,12 +303,16 @@ void NTriFundGroupUI::refresh() {
             fundName->setText(i18n("Not recognised"));
 
         unsigned long nGens = pres.getNumberOfGenerators();
+        bool alphabetic = (nGens <= 26);
         if (nGens == 0)
             fundGens->setText(i18n("No generators"));
         else if (nGens == 1)
-            fundGens->setText(i18n("1 generator: g0"));
+            fundGens->setText(i18n("1 generator: a"));
         else if (nGens == 2)
-            fundGens->setText(i18n("2 generators: g0, g1"));
+            fundGens->setText(i18n("2 generators: a, b"));
+        else if (alphabetic)
+            fundGens->setText(i18n("%1 generators: a ... %2").
+                arg(nGens).arg(char('a' + nGens - 1)));
         else
             fundGens->setText(i18n("%1 generators: g0 ... g%2").
                 arg(nGens).arg(nGens - 1));
@@ -328,9 +332,36 @@ void NTriFundGroupUI::refresh() {
         fundRelCount->show();
 
         fundRels->clear();
-        for (long i = 0; i < nRels; ++i)
-            new QListWidgetItem(QString("1 = ") +
-                pres.getRelation(i).toString().c_str(), fundRels);
+        if (alphabetic) {
+            // Generators are a, b, ...
+            for (long i = 0; i < nRels; ++i) {
+                QString rel("1 =");
+                const std::list<regina::NGroupExpressionTerm>& terms(
+                    pres.getRelation(i).getTerms());
+                if (terms.empty())
+                    rel += " 1";
+                else {
+                    std::list<regina::NGroupExpressionTerm>::const_iterator it;
+                    for (it = terms.begin(); it != terms.end(); ++it) {
+                        rel += ' ';
+                        if (it->exponent == 0)
+                            rel += '1';
+                        else {
+                            rel += char('a' + it->generator);
+                            if (it->exponent != 1)
+                                rel += QString("^%1").arg(it->exponent);
+                        }
+                    }
+                }
+                new QListWidgetItem(rel, fundRels);
+            }
+        } else {
+            // Generators are g0, g1, ...
+            // This is the default text that comes from the calculation engine.
+            for (long i = 0; i < nRels; ++i)
+                new QListWidgetItem(QString("1 = ") +
+                    pres.getRelation(i).toString().c_str(), fundRels);
+        }
 
         btnGAP->setEnabled(true);
     } else {
