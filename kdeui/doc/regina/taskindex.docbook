@@ -630,9 +630,9 @@
 
  <indexentry>
   <primaryie>hyperbolic</primaryie>
-  <secondaryie><link linkend="tri-snappea-info">solution
+  <secondaryie><link linkend="tri-snappea">solution
    type</link></secondaryie>
-  <secondaryie><link linkend="tri-snappea-info">volume</link></secondaryie>
+  <secondaryie><link linkend="tri-snappea">volume</link></secondaryie>
  </indexentry>
 
  </indexdiv><indexdiv><title>&mdash; I &mdash;</title>
@@ -1311,7 +1311,7 @@
    group</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homology">homology
    groups</link></secondaryie>
-  <secondaryie><link linkend="tri-snappea-info">hyperbolic solution
+  <secondaryie><link linkend="tri-snappea">hyperbolic solution
    type</link></secondaryie>
   <secondaryie><link linkend="tri-extension">ideal vertices,
    creation</link></secondaryie>
@@ -1342,7 +1342,7 @@
   <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
    invariants</link></secondaryie>
   <secondaryie><link linkend="tri-propvalid">validity</link></secondaryie>
-  <secondaryie><link linkend="tri-snappea-info">volume</link></secondaryie>
+  <secondaryie><link linkend="tri-snappea">volume</link></secondaryie>
  </indexentry>
 
  <indexentry>

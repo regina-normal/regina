@@ -1693,10 +1693,10 @@
   </sect2>
 
   <sect2 id="tri-surfaceproperties">
-   <title>Properties of Normal Surfaces</title>
+   <title>Properties Involving Normal Surfaces</title>
 
    <para>
-    Certain properties of a triangulation are defined by the types of
+    Some properties of a triangulation are defined by the types of
     normal surfaces it contains.  These properties can be found under
     the <guilabel>Surfaces</guilabel> tab.
    </para>
@@ -1708,13 +1708,11 @@
     </inlinemediaobject>
    </para>
    <para>
-    For sufficiently large triangulations, some of these properties will
-    not be calculated by default since the calculations could be quite
-    slow.  If a property is listed as <literal>Unknown</literal>, press
+    For large triangulations, some of these properties are
+    not automatically calculated (since they might take exponential time).
+    If a property is listed as <literal>Unknown</literal>, press
     the corresponding <guibutton>Calculate</guibutton> button
-    (and be prepared to wait).  Just how large is <quote>sufficiently
-    large</quote> can be adjusted in the
-    <link linkend="options-triangulation">triangulation options</link>.
+    (and be prepared to wait):
    </para>
    <para>
     <inlinemediaobject>
@@ -1724,6 +1722,9 @@
     </inlinemediaobject>
    </para>
    <para>
+    The result will appear as soon as the calculation is done:
+   </para>
+   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="tri-s3-known.png"/>
@@ -1731,17 +1732,19 @@
     </inlinemediaobject>
    </para>
    <para>
-    The available properties pertaining to normal surfaces are as follows.
+    The following properties are listed on the
+    <guilabel>Surfaces</guilabel> tab.
    </para>
    <para>
     <glosslist>
      <glossentry id="tri-prop0eff">
       <glossterm><guilabel>Zero-Efficient</guilabel></glossterm>
       <glossdef><para>
-       Determines whether the triangulation is 0-efficient.  A
+       Indicates whether the triangulation is 0-efficient.  A
        triangulation is <firstterm>0-efficient</firstterm> if its only
        normal spheres and discs are vertex linking, and if it has no 2-sphere
        boundary components.
+       See <xref linkend="bib-0-efficiency"/> for details.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-propsplitting">
@@ -1751,29 +1754,36 @@
        surface.  A <firstterm>splitting surface</firstterm> is a compact
        normal surface consisting of precisely one quad per tetrahedron
        and no other normal (or almost normal) discs.
+       See <xref linkend="bib-burton-phd"/> for details.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-prop3sphere">
       <glossterm><guilabel>3-Sphere</guilabel></glossterm>
       <glossdef><para>
-       Determines whether this is in fact a triangulation
-       of the 3-sphere.  The 0-efficiency algorithms of Jaco and
-       Rubinstein <xref linkend="bib-0-efficiency"/> are used, which in
-       turn include components of Rubinstein's original 3-sphere recognition
-       algorithm <xref linkend="bib-rubin-3sphere1"/>,
-       <xref linkend="bib-rubin-3sphere2"/>.
+       Determines whether this is a triangulation
+       of the 3-sphere.  The 3-sphere recognition algorithm is
+       highly optimised, and incorporates techniques from
+       <xref linkend="bib-rubin-3sphere1"/>,
+       <xref linkend="bib-rubin-3sphere2"/>,
+       <xref linkend="bib-thinposition"/>,
+       <xref linkend="bib-0-efficiency"/> and
+       <xref linkend="bib-burton-quadoct"/>.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-prop3ball">
       <glossterm><guilabel>3-Ball</guilabel></glossterm>
       <glossdef><para>
        Determines whether this is a triangulation of the 3-dimensional ball.
-       This computation is based on the 3-sphere recognition algorithm,
-       as described above.
+       The algorithm is based on 3-sphere recognition as described above.
       </para></glossdef>
      </glossentry>
     </glosslist>
    </para>
+   <tip><para>
+    You can change the number of tetrahedra beyond which properties are
+    not computed automatically.  See &regina;'s
+    <link linkend="options-triangulation">triangulation options</link>.
+   </para></tip>
   </sect2>
 
   <sect2 id="tri-snappea">
@@ -1781,15 +1791,11 @@
 
    <para>
     &snappea; is an excellent piece of software written by Jeffrey Weeks
-    with a strong focus on hyperbolic 3-manifolds.  For further
-    information on &snappea;, please visit the &snappy; website at
-    &snappyurlraw;.
-   </para>
-   <para>
-    Since version &snappeaintro;, portions of the &snappea; kernel
-    have been built into &regina;.  As a result, more information about
-    the geometries of triangulations and their underlying 3-manifolds is
-    available.  This information is presented in the
+    with a strong focus on hyperbolic 3-manifolds; for more information,
+    see the &snappeaurl; website.
+    Portions of the &snappea; kernel are built into &regina;, which
+    allows &regina; to compute information about geometries on
+    triangulations.  The results are presented in the
     <guilabel>&snappea;</guilabel> tab.
    </para>
    <para>
@@ -1799,122 +1805,101 @@
      </imageobject>
     </inlinemediaobject>
    </para>
-   <sect3>
-    <title>Triangulation Constraints</title>
-    <para>
-     &snappea; calculations are not available for all
-     triangulations.  In fact, a triangulation must satisfy several
-     constraints before &regina; will even try to pass it to &snappea;
-     for processing.  This is a conservative decision on &regina;'s part,
-     and in no way reflects a bug in &snappea;'s code.
-    </para>
-    <para>
-     Amongst other constraints, a triangulation must have no boundary
-     faces and every vertex must have a torus or Klein bottle link.
-     If &snappea; calculations are not available, the
-     <guilabel>&snappea;</guilabel> tab will include a note giving at
-     least one reason why.
-    </para>
-    <para>
-     Note that you can bypass some of these restrictions&mdash;by
-     configuring &regina; appropriately you can allow some closed
-     triangulations to be passed.  See the
-     <link linkend="options-snappea">&snappea; options</link>
-     reference for details and relevant warnings.
-    </para>
-   </sect3>
-   <sect3 id="tri-snappea-info">
-    <title>Available Information</title>
-    <para>
-     When the <guilabel>&snappea;</guilabel> tab is selected, the
-     &snappea; kernel attempts to solve for a complete hyperbolic
-     structure.  The following results are then presented.
-     <glosslist>
-      <glossentry>
-       <glossterm><guilabel>Solution Type</guilabel></glossterm>
-       <glossdef><para>
-        This summarises the type of solution that was found.
-        Possible solution types are as follows.
-        <glosslist>
-         <glossentry>
-          <glossterm>Tetrahedra positively oriented</glossterm>
-          <glossdef><para>
-           All tetrahedra are either positively oriented or flat, though the
-           entire solution is not flat and no tetrahedra are degenerate.
-          </para></glossdef>
-         </glossentry>
-         <glossentry>
-          <glossterm>Contains negatively oriented tetrahedra</glossterm>
-          <glossdef><para>
-           The volume is positive, but some tetrahedra are negatively oriented.
-          </para></glossdef>
-         </glossentry>
-         <glossentry>
-          <glossterm>All tetrahedra flat</glossterm>
-          <glossdef><para>
-           All tetrahedra are flat, but none have shape 0, 1 or infinity.
-          </para></glossdef>
-         </glossentry>
-         <glossentry>
-          <glossterm>Contains degenerate tetrahedra</glossterm>
-          <glossdef><para>
-           At least one tetrahedron has shape 0, 1 or infinity.
-          </para></glossdef>
-         </glossentry>
-         <glossentry>
-          <glossterm>Unrecognised solution type</glossterm>
-          <glossdef><para>
-           The volume is zero or negative, but the solution is
-           neither flat nor degenerate.
-          </para></glossdef>
-         </glossentry>
-         <glossentry>
-          <glossterm>No solution found</glossterm>
-          <glossdef><para>
-           The gluing equations could not be solved.
-          </para></glossdef>
-         </glossentry>
-        </glosslist>
-       </para>
-       <para>
-        Note that the details above are available by selecting
-        <menuchoice>
-         <guimenu>Help</guimenu>
-         <guimenuitem>What's This?</guimenuitem>
-        </menuchoice>
-        from the menu and clicking on the particular solution type
-        being displayed.
-       </para></glossdef>
-      </glossentry>
-      <glossentry>
-       <glossterm><guilabel>Volume</guilabel></glossterm>
-       <glossdef><para>
-        This lists the volume of the underlying 3-manifold, along with the
-        estimated number of decimal places of accuracy.  Note that the
-        accuracy measure is an estimate only (based on the differences
-        between terms in Newton's method).
-       </para></glossdef>
-      </glossentry>
-     </glosslist>
-    </para>
-   </sect3>
+   <para>
+    &snappea; calculations are not available for all triangulations.
+    Amongst other constraints, your triangulation
+    must be connected with no boundary
+    faces, and every vertex must have a torus or Klein bottle link.
+    If your triangulation is unsuitable, the
+    <guilabel>&snappea;</guilabel> tab will give you at
+    least one reason why.
+   </para>
+   <para>
+    It is possible to bypass some of these constraints and
+    allow &snappea; to work with closed triangulations.
+    You do this <emphasis>at your own risk</emphasis>:
+    see &regina;'s <link linkend="options-snappea">&snappea; options</link>
+    for details and the necessary warnings.
+   </para>
+   <para>
+    When you open the <guilabel>&snappea;</guilabel> tab,
+    &regina; will ask &snappea; to solve for a complete hyperbolic
+    structure.  The following information is then presented:
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>Solution Type</guilabel></glossterm>
+      <glossdef><para>
+       This describes the type of solution that &snappea; found.
+       Possible types are:
+       <glosslist>
+        <glossentry>
+         <glossterm><guilabel>Tetrahedra positively
+          oriented</guilabel></glossterm>
+         <glossdef><para>
+          All tetrahedra are either positively oriented or flat, though the
+          entire solution is not flat and no tetrahedra are degenerate.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Contains negatively oriented
+          tetrahedra</guilabel></glossterm>
+         <glossdef><para>
+          The volume is positive, but some tetrahedra are negatively oriented.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>All tetrahedra flat</guilabel></glossterm>
+         <glossdef><para>
+          All tetrahedra are flat, but none have shape 0, 1 or infinity.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Contains degenerate
+          tetrahedra</guilabel></glossterm>
+         <glossdef><para>
+          At least one tetrahedron has shape 0, 1 or infinity.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Unrecognised solution type</guilabel></glossterm>
+         <glossdef><para>
+          The volume is zero or negative, but the solution is
+          neither flat nor degenerate.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>No solution found</guilabel></glossterm>
+         <glossdef><para>
+          The gluing equations could not be solved.
+         </para></glossdef>
+        </glossentry>
+       </glosslist>
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Volume</guilabel></glossterm>
+      <glossdef><para>
+       This gives the volume of the underlying 3-manifold, along with the
+       estimated number of decimal places of accuracy.
+       This accuracy measure is an <emphasis>estimate only</emphasis>
+       (based on the differences between terms in Newton's method).
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
   </sect2>
 
   <sect2 id="tri-censuslookup">
    <title>Census Lookup</title>
 
    <para>
-    &regina; ships with a number of prepackaged censuses of 3-manifold
+    &regina; ships with several prepackaged censuses of 3-manifold
     triangulations.
-    The
+    To search for your triangulation within these censuses, select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Census Lookup</guimenuitem>
-    </menuchoice>
-    menu item will search for the current triangulation within all of the
-    available censuses.  Any matches will be reported and noted in a new
-    text packet that will be created directly beneath the current
-    triangulation.
+    </menuchoice>.
    </para>
    <para>
     <inlinemediaobject>
@@ -1924,23 +1909,38 @@
     </inlinemediaobject>
    </para>
    <para>
-    For a match to occur, the triangulation does not need to use the same
-    tetrahedron and face numbers as in the census; any isomorphic copy will
-    suffice.
+    Your triangulation may use different tetrahedron and
+    vertex labels; &regina; will search for any isomorphic copy.
+    Any matches will be reported:
    </para>
    <para>
-    The list of censuses that will be searched can be configured in
-    the <link linkend="options-census">census options</link>.  All
-    triangulations within each of the configured census files will be examined.
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-census-found-box.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
-    By default, the censuses that are searched include censuses of
+    The matches will also be stored in a new text packet
+    beneath your triangulation:
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-census-found-text.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    By default, &regina; will search censuses of
     closed orientable and non-orientable 3-manifold triangulations
     <xref linkend="bib-burton-nor8"/> <xref linkend="bib-burton-nor10"/>
     <xref linkend="bib-burton-genus"/>,
     cusped and closed hyperbolic 3-manifold triangulations
     <xref linkend="bib-cuspedcensus"/> <xref linkend="bib-closedhypcensus"/>,
     and knot and link complements (tabulated by Joe Christy).
+    To add your own censuses to this list, visit &regina;'s
+    <link linkend="options-census">census options</link>.
    </para>
   </sect2>
  </sect1>
