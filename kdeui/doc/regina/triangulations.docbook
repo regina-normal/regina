@@ -1580,7 +1580,7 @@
    <para>
     Certain properties of a triangulation are defined by the types of
     normal surfaces it contains.  These properties can be found under
-    the <guilabel>Surfaces</guilabel> tab in the triangulation viewer.
+    the <guilabel>Surfaces</guilabel> tab.
    </para>
    <para>
     <inlinemediaobject>
@@ -1618,7 +1618,7 @@
    <para>
     <glosslist>
      <glossentry id="tri-prop0eff">
-      <glossterm>Zero-Efficient</glossterm>
+      <glossterm><guilabel>Zero-Efficient</guilabel></glossterm>
       <glossdef><para>
        Determines whether the triangulation is 0-efficient.  A
        triangulation is <firstterm>0-efficient</firstterm> if its only
@@ -1627,7 +1627,7 @@
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-propsplitting">
-      <glossterm>Splitting Surface</glossterm>
+      <glossterm><guilabel>Splitting Surface</guilabel></glossterm>
       <glossdef><para>
        Determines whether the triangulation has a splitting
        surface.  A <firstterm>splitting surface</firstterm> is a compact
@@ -1636,7 +1636,7 @@
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-prop3sphere">
-      <glossterm>3-Sphere</glossterm>
+      <glossterm><guilabel>3-Sphere</guilabel></glossterm>
       <glossdef><para>
        Determines whether this is in fact a triangulation
        of the 3-sphere.  The 0-efficiency algorithms of Jaco and
@@ -1647,7 +1647,7 @@
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-prop3ball">
-      <glossterm>3-Ball</glossterm>
+      <glossterm><guilabel>3-Ball</guilabel></glossterm>
       <glossdef><para>
        Determines whether this is a triangulation of the 3-dimensional ball.
        This computation is based on the 3-sphere recognition algorithm,
@@ -1672,7 +1672,7 @@
     have been built into &regina;.  As a result, more information about
     the geometries of triangulations and their underlying 3-manifolds is
     available.  This information is presented in the
-    <guilabel>&snappea;</guilabel> tab in the triangulation viewer.
+    <guilabel>&snappea;</guilabel> tab.
    </para>
    <para>
     <inlinemediaobject>
@@ -1713,7 +1713,7 @@
      structure.  The following results are then presented.
      <glosslist>
       <glossentry>
-       <glossterm>Solution Type</glossterm>
+       <glossterm><guilabel>Solution Type</guilabel></glossterm>
        <glossdef><para>
         This summarises the type of solution that was found.
         Possible solution types are as follows.
@@ -1769,7 +1769,7 @@
        </para></glossdef>
       </glossentry>
       <glossentry>
-       <glossterm>Volume</glossterm>
+       <glossterm><guilabel>Volume</guilabel></glossterm>
        <glossdef><para>
         This lists the volume of the underlying 3-manifold, along with the
         estimated number of decimal places of accuracy.  Note that the
