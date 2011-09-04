@@ -322,7 +322,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-crush">crushing a normal
+  <primaryie><link linkend="tri-cutcrush">crushing a normal
    surface</link></primaryie>
  </indexentry>
 
@@ -342,7 +342,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-cut">cutting along a normal
+  <primaryie><link linkend="tri-cutcrush">cutting along a normal
    surface</link></primaryie>
  </indexentry>
 
@@ -830,9 +830,9 @@
    systems, viewing in different systems</link></secondaryie>
   <secondaryie><link linkend="surfaces-summary">counting different types
    of surfaces</link></secondaryie>
-  <secondaryie><link linkend="surfaces-crush">crushing a
+  <secondaryie><link linkend="tri-cutcrush">crushing a
    surface</link></secondaryie>
-  <secondaryie><link linkend="surfaces-cut">cutting along a
+  <secondaryie><link linkend="tri-cutcrush">cutting along a
    surface</link></secondaryie>
   <secondaryie><link linkend="surfaces">definition</link></secondaryie>
   <secondaryie><link linkend="surfaces-proplink">edge links,

@@ -819,92 +819,10 @@
    components.  The available ways in which this can be done are as
    follows.
   </para>
-
-  <sect2 id="surfaces-crush">
-   <title>Crushing a Surface</title>
-   <para>
-    A normal surface can be crushed to a point in the underlying
-    triangulation by selecting the surface within the table
-    and invoking the
-    <menuchoice>
-     <guimenu>Normal Surfaces</guimenu>
-     <guimenuitem>Crush Surface</guimenuitem>
-    </menuchoice>
-    menu item.
-   </para>
-   <para>
-    The original triangulation will not be changed; a new triangulation
-    in which the selected surface has been crushed
-    will appear as a child packet of this surface list.
-   </para>
-   <para>
-    Note that crushing a normal surface might change the topology of the
-    underlying 3-manifold (beyond the simple act of slicing along the
-    surface) and in some cases might introduce ideal vertices
-    or even invalid edges.  For details see
-    <function><classname>NNormalSurface</classname>::crush()</function>
-    in the &regenginedocs;.
-   </para>
-   <para>
-    Why crush a surface if it can have such nasty side-effects?
-    The advantage is that, unlike the cutting operation described
-    below, crushing a surface can only ever <emphasis>reduce</emphasis>
-    the number of tetrahedra in a triangulation (the worst case is
-    where the surface only contains vertex links, whereupon the number
-    of tetrahedra will remain the same).
-   </para>
-   <para>
-    In general you should only crush a normal surface when there are
-    theoretical reasons to know that this is safe.  Examples of safe
-    scenarios can be found in Jaco and Rubinstein's paper on
-    0-efficiency <xref linkend="bib-0-efficiency"/>.
-   </para>
-  </sect2>
-  <sect2 id="surfaces-cut">
-   <title>Cutting Along a Surface</title>
-   <para>
-    Instead of crushing a surface to a point, one might wish to simply
-    slice along the surface and subdivide the resulting polyhedra into
-    tetrahedra to produce a new triangulation.
-   </para>
-   <para>
-    This has the advantage over crushing in that it will never change
-    the topology of the underlying 3-manifold beyond the act of simply
-    slicing along the surface.  It will also never introduce new ideal
-    vertices or invalid edges.
-   </para>
-   <para>
-    The disadvantage is that, after cutting along a surface,
-    the number of tetrahedra in the triangulation can potentially
-    skyrocket.  This has severe implications if you wish to do anything
-    computationally intensive with the resulting triangulation(s).
-   </para>
-   <para>
-    To cut along a normal surface, select the surface within the table
-    and invoke the
-    <menuchoice>
-     <guimenu>Normal Surfaces</guimenu>
-     <guimenuitem>Cut Along Surface</guimenuitem>
-    </menuchoice>
-    menu item.
-    As with crushing, the original triangulation will not be changed;
-    the resulting cut-open triangulation will be added to the packet
-    tree as a new child of this surface list.
-   </para>
-   <tip><para>
-    When crushing or cutting along a two-sided surface, it is possible
-    that you will end up with a disconnected triangulation.
-    The menu item
-    <menuchoice>
-     <guimenu>Triangulation</guimenu>
-     <guimenuitem>Extract Components</guimenuitem>
-    </menuchoice>
-    can be used to split this triangulation into its connected components.
-    See the section on
-    <link linkend="tri-decomposition-component">component decomposition</link>
-    for details.
-   </para></tip>
-  </sect2>
+  <para>
+   TODO: Link directly to <link linkend="tri-cutcrush">cutting and
+   crushing</link>.
+  </para>
  </sect1>
 
  <sect1 id="surfaces-filtering">

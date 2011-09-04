@@ -2464,53 +2464,74 @@
    <title>Cutting Along and Crushing Normal Surfaces</title>
 
    <para>
-    A triangulation can be modified by finding a normal surface within
-    it, and either cutting along that surface or crushing it to a point.
-    Each operation has its advantages and disadvantages:
+    If you have a normal surface in your triangulation, you can either cut
+    along your surface or crush it to a point.
+    <itemizedlist>
+     <listitem>
+      <para>
+       <emphasis>Cutting along</emphasis> a surface involves carefully
+       slicing along the surface and retriangulating the resulting
+       polyhedra, so that the original
+       surface becomes one or more real boundary components.
+      </para>
+      <para>
+       This has the advantages that it will never change the topology of the
+       3-manifold beyond the simple act of slicing along the surface,
+       and it will never introduce ideal vertices or invalid edges.
+      </para>
+      <para>
+       The main drawback is that it can
+       <emphasis>vastly</emphasis> increase the total number of tetrahedra.
+       This has severe implications if you need to do anything
+       computationally intensive with the resulting triangulation.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <emphasis>Crushing a surface</emphasis> is a potentially destructive
+       operation, but when used carefully can be extremely powerful.
+       The crushing operation is described by
+       Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>:
+       in essence, the surface is crushed to a point and any tetrahedron
+       that contains a quadrilateral disc is &ldquo;flattened away&rdquo;.
+      </para>
+      <para>
+       One key advantage of crushing is that it always
+       <emphasis>reduces</emphasis> the number of tetrahedra
+       (unless you crush vertex links, in which case the triangulation
+       stays the same).
+      </para>
+      <para>
+       The main disadvantage is that will typically change the topology
+       of your triangulation, sometimes dramatically.
+       For example, it can create ideal vertices, undo connected sums,
+       change the genus of boundary components, and delete entire summands.
+       In some cases it can even make your triangulation invalid
+       (for instance, edges might become identified with themselves in
+       reverse).
+      </para>
+      <para>
+       You should only crush a surface when you have theoretical
+       arguments that tell you exactly what might change and how to detect it.
+       Examples of such arguments appear in
+       <xref linkend="bib-0-efficiency"/>, where crushing is used to
+       great effect.
+      </para>
+     </listitem>
+    </itemizedlist>
    </para>
-   <itemizedlist>
-    <listitem><para>
-     Cutting along a surface will never change the topology of the
-     3-manifold beyond the simple act of slicing along the surface.
-     However, it has the potential to <emphasis>vastly</emphasis>
-     increase the number of tetrahedra in the triangulation.
-    </para></listitem>
-    <listitem>
-     <para>
-      Crushing a surface to a point will never increase the number of
-      tetrahedra (and generally will reduce it).  However, crushing can
-      introduce additional unexpected changes to the topology of the
-      3-manifold, and in some cases can introduce ideal vertices or
-      invalid edges.  For details see
-      <function><classname>NNormalSurface</classname>::crush()</function>
-      in the &regenginedocs;.
-     </para>
-     <para>
-      In general you should only crush a surface to
-      a point when there are theoretical reasons to know that this is
-      safe.  Examples of safe scenarios can be found in Jaco and
-      Rubinstein's paper on 0-efficiency <xref linkend="bib-0-efficiency"/>.
-     </para>
-    </listitem>
-   </itemizedlist>
    <para>
-    A normal surface can be cut along or crushed as follows.
-    Open a list of normal surfaces,
-    select the surface to operate upon, and invoke either the
+    To cut along or crush a normal surface: open the list of normal
+    surfaces, select your surface in the list, and then choose either
     <menuchoice>
      <guimenu>Normal Surfaces</guimenu>
      <guimenuitem>Cut Along Surface</guimenuitem>
     </menuchoice>
-    or the
+    or
     <menuchoice>
      <guimenu>Normal Surfaces</guimenu>
      <guimenuitem>Crush Surface</guimenuitem>
-    </menuchoice>
-    menu item (note that these menu items only appear when viewing a
-    normal surface list).
-    A new triangulation will be created in which the surface has been
-    cut along or crushed accordingly.
-    The original triangulation will not be changed.
+    </menuchoice>.
    </para>
    <para>
     <inlinemediaobject>
@@ -2519,6 +2540,25 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <para>
+    &regina; will create a new triangulation where the surface has been
+    cut along or crushed accordingly.  This new trianguation will appear
+    beneath the normal surfaces in the packet tree.
+    Your original triangulation will not be changed.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-cutcrush-results.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <tip><para>
+    When cutting along or crushing a normal surface, you might end up
+    with a disconnected triangulation.  You can
+    <link linkend="tri-decomposition-component">extract connected
+    components</link> to work with one at a time.
+   </para></tip>
   </sect2>
  </sect1>
 </chapter>
