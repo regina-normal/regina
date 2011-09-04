@@ -1889,6 +1889,97 @@
    </para>
   </sect2>
 
+  <sect2 id="tri-decomposition">
+   <title>Decomposition</title>
+   <para>
+    &regina; implements some high-level algorithms for decomposition a
+    3-manifold triangulation into &ldquo;atomic pieces&rdquo;.
+    These include the following:
+   </para>
+
+   <sect3 id="tri-decomposition-component">
+    <title>Component Decomposition</title>
+
+    <para>
+     If your triangulation is
+     <link linkend="tri-basicprops">disconnected</link>, you may wish to
+     break it into its connected components.  To do this, select
+     <menuchoice>
+      <guimenu>Triangulation</guimenu>
+      <guimenuitem>Extract Components</guimenuitem>
+     </menuchoice>.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="menucomponents.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     &regina; will create several new triangulations, one for each
+     connected component.  These will be added beneath the original in
+     the packet tree.  Your original (disconnected) triangulation will
+     remain unchanged.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-extract-components.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+
+   <sect3 id="tri-decomposition-connsum">
+    <title>Connected Sum Decomposition</title>
+    <para>
+     If your triangulation is <link linkend="tri-basicprops">closed,
+     orientable and connected</link>, &regina; can decompose it into a
+     connected sum of prime 3-manifolds (none of which are 3-spheres).
+     To do this, select
+     <menuchoice>
+      <guimenu>Triangulation</guimenu>
+      <guimenuitem>Connected Sum Decomposition</guimenuitem>
+     </menuchoice>.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="menuconnsum.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     Again, &regina; will create several new triangulations, one for
+     each prime summand.  These will be added beneath the original in
+     the packet tree, and your original triangulation will remain unchanged.
+     If your original triangulation is a 3-sphere then no prime summands
+     will be produced at all.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-connsum-results.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     Each of the new triangulations is guaranteed to be
+     <link linkend="tri-prop0eff">0-efficient</link> (i.e., they will
+     have no non-vertex-linking normal spheres).
+     The underlying algorithm is based on the 0-efficiency results
+     of Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>,
+     and uses <link linkend="tri-prop3sphere">3-sphere recognition</link>
+     to ensure that none of the summands are trivial.
+    </para>
+    <caution><para>
+     Connected sum decomposition can be very slow for larger
+     triangulations, since the underlying normal surface algorithms have
+     worst-case exponential running time.
+    </para></caution>
+   </sect3>
+  </sect2>
   <sect2 id="tri-censuslookup">
    <title>Census Lookup</title>
 
@@ -1956,6 +2047,13 @@
    being viewed, and will be performed upon this triangulation (and not
    whatever is selected in the visual packet tree).
   </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="menutri.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
 
   <sect2 id="tri-editgluings">
    <title>Editing Tetrahedron Face Gluings</title>
@@ -1976,9 +2074,7 @@
     over top of the old one in the format described above.  If you are
     in pop-up dialog mode, a button will appear; when this button is
     clicked a dialog will appear that allows a new gluing to be
-    selected.  The mode can be changed between direct edit and
-    pop-up dialog in the
-    <link linkend="options-triangulation">triangulation options</link>.
+    selected.
    </para>
    <para>
     Tetrahedra can be optionally named to help
@@ -2327,99 +2423,13 @@
     cut along or crushed accordingly.
     The original triangulation will not be changed.
    </para>
-  </sect2>
- </sect1>
-
- <sect1 id="tri-decomposition">
-  <title>Decomposition</title>
-
-  <para>
-   Recall the analysis of <link linkend="tri-composition">combinatorial
-   composition</link> described earlier.  This analysis simply involves
-   searching for well-structured features that &regina; can recognise
-   within a triangulation.  For triangulations without any particularly
-   nice structure, the combinatorial composition may give no information
-   at all (many non-minimal triangulations are like this).
-  </para>
-
-  <para>
-   Here we describe some more complete decomposition tools that are
-   available.  These decomposition tools are guaranteed to work on any
-   triangulation, regardless of whether it is minimal and/or
-   particularly well-structured.  The trade-off is that these
-   decomposition tools often make heavy use of normal surfaces and can
-   be quite slow for larger triangulations.
-  </para>
-
-  <sect2 id="tri-decomposition-component">
-   <title>Component Decomposition</title>
-
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menucomponents.png"/>
+      <imagedata fileref="tri-cutcrush.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
-   <para>
-    &regina; can work with disconnected triangulations as well as
-    connected triangulations.  It may be desirable at times to break a
-    large disconnected triangulation into smaller separate triangulations
-    for its individual components.  For this operation the
-    <menuchoice>
-     <guimenu>Triangulation</guimenu>
-     <guimenuitem>Extract Components</guimenuitem>
-    </menuchoice>
-    menu item can be used.
-   </para>
-   <para>
-    Each (connected) component triangulation will be inserted as a new
-    triangulation beneath the original in the packet tree.  The
-    original triangulation will remain unchanged.
-   </para>
-   <para>
-    Unlike most of the decomposition algorithms described in this
-    section, component decomposition is very fast and should perform
-    without problems for very large triangulations.
-   </para>
-  </sect2>
-
-  <sect2 id="tri-decomposition-connsum">
-   <title>Connected Sum Decomposition</title>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="menuconnsum.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    For closed orientable connected 3-manifold triangulations,
-    &regina; can in fact completely decompose the triangulation into a
-    connected sum of prime 3-manifolds.
-    The algorithm used is essentially the 0-efficiency algorithm of
-    Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>, which in turn
-    relies upon Rubinstein's 3-sphere recognition algorithm
-    <xref linkend="bib-rubin-3sphere1"/> <xref linkend="bib-rubin-3sphere2"/>.
-   </para>
-
-   <para>
-    This decomposition can be performed using the
-    <menuchoice>
-     <guimenu>Triangulation</guimenu>
-     <guimenuitem>Connected Sum Decomposition</guimenuitem>
-    </menuchoice>
-    menu item.  As before, a smaller prime triangulation for each
-    summand will be inserted beneath the original triangulation in
-    the packet tree, with the original triangulation remaining unchanged.
-    It is guaranteed that each of the smaller prime triangulations will
-    be 0-efficient (i.e., will have no non-vertex-linking normal spheres).
-   </para>
-
-   <warning><para>
-    This procedure involves an analysis of normal surfaces and can be
-    very slow for large triangulations.
-   </para></warning>
   </sect2>
  </sect1>
 </chapter>
