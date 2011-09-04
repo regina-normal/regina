@@ -139,7 +139,7 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
     layout->addLayout(ecBox, 4, 2);
 
     ecBox->addSpacing(5);
-    eulerExpln1 = new QLabel(i18n("Allowable Euler chars:"), ui);
+    eulerExpln1 = new QLabel(i18n("Allowable Euler characteristics:"), ui);
     ecBox->addWidget(eulerExpln1);
 
     eulerList = new KLineEdit(ui);
