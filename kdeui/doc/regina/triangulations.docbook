@@ -2100,8 +2100,44 @@
    </para>
   </sect2>
 
+  <sect2 id="tri-simplification">
+   <title>Automatic Simplification</title>
+
+   <para>
+    Currently a relatively straightforward routine is available for
+    simplifying a triangulation as far as possible without manual
+    intervention.  Selecting the
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Simplify</guimenuitem>
+    </menuchoice>
+    menu item will use <link linkend="tri-elementarymove">elementary
+    moves</link> to reduce the triangulation to a local minimum number
+    of tetrahedra.  Note that this is not guaranteed to produce
+    <emphasis>the</emphasis> minimum number of tetrahedra required.
+   </para>
+   <para>
+    As well as performing obvious reductions, this routine tries
+    random 4-4 moves as well as book opening and book closing moves if it
+    cannot reduce the triangulation directly.
+    It does not yet try increasing the size of the triangulation (such
+    as through 2-3 moves) to escape a local minimum well in which it
+    might be stuck; this is on the &todo; list.
+   </para>
+   <para>
+    For triangulations with boundary, this routine will also try to
+    make the number of boundary faces as small as possible (though again
+    there are not guarantees of achieving a global minimum).
+   </para>
+   <tip><para>
+    In cases where this faster simplification routine is ineffective,
+    the more powerful but slower <link linkend="tri-make0eff">0-efficiency
+    conversion</link> (described below) can be used.
+   </para></tip>
+  </sect2>
+
   <sect2 id="tri-elementarymove">
-   <title>Elementary Moves</title>
+   <title>Manual Simplification: Elementary Moves</title>
 
    <para>
     The
@@ -2206,129 +2242,6 @@
    </para>
   </sect2>
 
-  <sect2 id="tri-orient">
-   <title>Orienting the Triangulation</title>
-
-   <para>
-    TODO: Write.
-   </para>
-  </sect2>
-
-  <sect2 id="tri-subdivision">
-   <title>Global Subdivision</title>
-
-   <para>
-    A few routines are available for performing standard
-    subdivisions on triangulations.
-   </para>
-   <para>
-    The
-    <menuchoice>
-     <guimenu>Triangulation</guimenu>
-     <guimenuitem>Barycentric Subdivision</guimenuitem>
-    </menuchoice>
-    menu item will perform a barycentric subdivision on the
-    triangulation currently being viewed.
-    A <firstterm>barycentric subdivision</firstterm>
-    involves taking each tetrahedron, adding new vertices at the
-    centroid of the tetrahedron, the centroid of each face and the
-    midpoint of each edge and joining them with edges to split the
-    tetrahedron into 24 smaller tetrahedra.
-   </para>
-   <para>
-    The
-    <menuchoice>
-     <guimenu>Triangulation</guimenu>
-     <guimenuitem>Truncate Ideal Vertices</guimenuitem>
-    </menuchoice>
-    menu item will convert the triangulation currently being viewed to
-    a finite triangulation (one with no ideal vertices).  This is done by
-    subdividing each tetrahedron and then truncating at the ideal
-    vertices.  The resulting triangulation has each ideal or
-    non-standard vertex
-    converted to a real boundary component (one made from boundary faces
-    of tetrahedra).
-   </para>
-   <note><para>
-    The <guimenuitem>Truncate Ideal Vertices</guimenuitem> operation
-    was called <guimenuitem>Ideal to Finite</guimenuitem> in previous
-    versions of &regina;.  It was renamed to avoid confusion since
-    operations are now available in both ideal-to-finite and
-    finite-to-ideal directions.
-   </para></note>
-  </sect2>
-
-  <sect2 id="tri-simplification">
-   <title>Global Simplification</title>
-
-   <para>
-    Currently a relatively straightforward routine is available for
-    simplifying a triangulation as far as possible without manual
-    intervention.  Selecting the
-    <menuchoice>
-     <guimenu>Triangulation</guimenu>
-     <guimenuitem>Simplify</guimenuitem>
-    </menuchoice>
-    menu item will use <link linkend="tri-elementarymove">elementary
-    moves</link> to reduce the triangulation to a local minimum number
-    of tetrahedra.  Note that this is not guaranteed to produce
-    <emphasis>the</emphasis> minimum number of tetrahedra required.
-   </para>
-   <para>
-    As well as performing obvious reductions, this routine tries
-    random 4-4 moves as well as book opening and book closing moves if it
-    cannot reduce the triangulation directly.
-    It does not yet try increasing the size of the triangulation (such
-    as through 2-3 moves) to escape a local minimum well in which it
-    might be stuck; this is on the &todo; list.
-   </para>
-   <para>
-    For triangulations with boundary, this routine will also try to
-    make the number of boundary faces as small as possible (though again
-    there are not guarantees of achieving a global minimum).
-   </para>
-   <tip><para>
-    In cases where this faster simplification routine is ineffective,
-    the more powerful but slower <link linkend="tri-make0eff">0-efficiency
-    conversion</link> (described below) can be used.
-   </para></tip>
-  </sect2>
-
-  <sect2 id="tri-extension">
-   <title>Extensions</title>
-
-   <para>
-    Sometimes one wishes to extend a triangulation beyond its boundary,
-    such as thickening the boundary, stretching it or adding new
-    topological components.
-   </para>
-   <para>
-    The
-    <menuchoice>
-     <guimenu>Triangulation</guimenu>
-     <guimenuitem>Make Ideal</guimenuitem>
-    </menuchoice>
-    menu item performs one such task.  When this menu item is selected,
-    all real boundary components of the triangulation are converted into
-    ideal boundary components.
-   </para>
-   <para>
-    Specifically, each boundary component that is formed from two or
-    more boundary faces is converted into a single ideal vertex.  This
-    is done by gluing a tetrahedron to each boundary face, and then
-    gluing these tetrahedra together to mirror the ways in
-    which the boundary faces are joined.  The new vertices opposite
-    the boundary faces then become identified as a single ideal vertex.
-   </para>
-   <para>
-    One side-effect of this operation is that any spherical boundary
-    components become filled in with balls (since the new vertex
-    will have a spherical link, i.e., it will become an ordinary
-    internal vertex).  If the triangulation has no boundary faces (i.e.,
-    no real boundary components) then this operation does nothing.
-   </para>
-  </sect2>
-
   <sect2 id="tri-make0eff">
    <title>0-Efficiency</title>
 
@@ -2369,6 +2282,90 @@
     <link linkend="tri-simplification">global simplification</link>
     routine described above.
    </para></warning>
+  </sect2>
+
+  <sect2 id="tri-real-ideal">
+   <title>Switching Between Real and Ideal</title>
+
+   <para>
+    A few routines are available for performing standard
+    subdivisions on triangulations.
+   </para>
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Truncate Ideal Vertices</guimenuitem>
+    </menuchoice>
+    menu item will convert the triangulation currently being viewed to
+    a finite triangulation (one with no ideal vertices).  This is done by
+    subdividing each tetrahedron and then truncating at the ideal
+    vertices.  The resulting triangulation has each ideal or
+    non-standard vertex
+    converted to a real boundary component (one made from boundary faces
+    of tetrahedra).
+   </para>
+   <para>
+    Sometimes one wishes to extend a triangulation beyond its boundary,
+    such as thickening the boundary, stretching it or adding new
+    topological components.
+   </para>
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Make Ideal</guimenuitem>
+    </menuchoice>
+    menu item performs one such task.  When this menu item is selected,
+    all real boundary components of the triangulation are converted into
+    ideal boundary components.
+   </para>
+   <para>
+    Specifically, each boundary component that is formed from two or
+    more boundary faces is converted into a single ideal vertex.  This
+    is done by gluing a tetrahedron to each boundary face, and then
+    gluing these tetrahedra together to mirror the ways in
+    which the boundary faces are joined.  The new vertices opposite
+    the boundary faces then become identified as a single ideal vertex.
+   </para>
+   <para>
+    One side-effect of this operation is that any spherical boundary
+    components become filled in with balls (since the new vertex
+    will have a spherical link, i.e., it will become an ordinary
+    internal vertex).  If the triangulation has no boundary faces (i.e.,
+    no real boundary components) then this operation does nothing.
+   </para>
+  </sect2>
+
+  <sect2 id="tri-barycentric">
+   <title>Subdivision</title>
+
+   <para>
+    A few routines are available for performing standard
+    subdivisions on triangulations.
+   </para>
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Barycentric Subdivision</guimenuitem>
+    </menuchoice>
+    menu item will perform a barycentric subdivision on the
+    triangulation currently being viewed.
+    A <firstterm>barycentric subdivision</firstterm>
+    involves taking each tetrahedron, adding new vertices at the
+    centroid of the tetrahedron, the centroid of each face and the
+    midpoint of each edge and joining them with edges to split the
+    tetrahedron into 24 smaller tetrahedra.
+   </para>
+  </sect2>
+
+  <sect2 id="tri-orient">
+   <title>Orienting the Triangulation</title>
+
+   <para>
+    TODO: Write.
+   </para>
   </sect2>
 
   <sect2 id="tri-cover">

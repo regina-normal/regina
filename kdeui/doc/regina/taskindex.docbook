@@ -96,7 +96,7 @@
  </indexdiv><indexdiv><title>&mdash; B &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="tri-subdivision">barycentric
+  <primaryie><link linkend="tri-barycentric">barycentric
    subdivision</link></primaryie>
  </indexentry>
 
@@ -112,7 +112,7 @@
 
  <indexentry>
   <primaryie>boundary</primaryie>
-  <secondaryie><link linkend="tri-extension">extension from real to
+  <secondaryie><link linkend="tri-real-ideal">extension from real to
    ideal</link></secondaryie>
   <secondaryie><link linkend="surfaces-boundary">of a normal
    surface</link></secondaryie>
@@ -496,7 +496,7 @@
 
  <indexentry>
   <primaryie>extension</primaryie>
-  <secondaryie><link linkend="tri-extension">of a triangulation
+  <secondaryie><link linkend="tri-real-ideal">of a triangulation
    boundary</link></secondaryie>
  </indexentry>
 
@@ -639,10 +639,10 @@
 
  <indexentry>
   <primaryie>ideal vertices</primaryie>
-  <secondaryie><link linkend="tri-extension">creating from real boundary
+  <secondaryie><link linkend="tri-real-ideal">creating from real boundary
    components</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">testing for</link></secondaryie>
-  <secondaryie><link linkend="tri-subdivision">truncating / converting
+  <secondaryie><link linkend="tri-real-ideal">truncating / converting
    to real boundary</link></secondaryie>
   <secondaryie><link linkend="tri-vertices">viewing</link></secondaryie>
  </indexentry>
@@ -1208,7 +1208,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-subdivision">subdivision of
+  <primaryie><link linkend="tri-barycentric">subdivision of
    triangulations</link></primaryie>
  </indexentry>
 
@@ -1274,11 +1274,11 @@
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-prop3sphere">3-sphere
    recognition</link></secondaryie>
-  <secondaryie><link linkend="tri-subdivision">barycentric
+  <secondaryie><link linkend="tri-barycentric">barycentric
    subdivision</link></secondaryie>
   <secondaryie><link linkend="tri-bdrycomponents">boundary components,
    viewing</link></secondaryie>
-  <secondaryie><link linkend="tri-extension">boundary,
+  <secondaryie><link linkend="tri-real-ideal">boundary,
    converting real to ideal</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">boundary,
    testing for</link></secondaryie>
@@ -1313,11 +1313,11 @@
    groups</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">hyperbolic solution
    type</link></secondaryie>
-  <secondaryie><link linkend="tri-extension">ideal vertices,
+  <secondaryie><link linkend="tri-real-ideal">ideal vertices,
    creation</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">ideal vertices,
    testing for</link></secondaryie>
-  <secondaryie><link linkend="tri-subdivision">ideal vertices,
+  <secondaryie><link linkend="tri-real-ideal">ideal vertices,
    truncation</link></secondaryie>
   <secondaryie><link linkend="foreign-import">importing from
    external files</link></secondaryie>
@@ -1350,7 +1350,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-subdivision">truncation of ideal
+  <primaryie><link linkend="tri-real-ideal">truncation of ideal
    vertices</link></primaryie>
  </indexentry>
 
