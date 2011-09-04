@@ -2104,17 +2104,16 @@
    <title>Automatic Simplification</title>
 
    <para>
-    Currently a relatively straightforward routine is available for
-    simplifying a triangulation as far as possible without manual
-    intervention.  Selecting the
+    &regina; has a rich set of <link linkend="tri-elementarymove">fast and
+    effective moves</link> for simplifying
+    a triangulation without changing the underlying 3-manifold.
+    If you press the <guibutton>Simplify</guibutton> button (or select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Simplify</guimenuitem>
-    </menuchoice>
-    menu item will use <link linkend="tri-elementarymove">elementary
-    moves</link> to reduce the triangulation to a local minimum number
-    of tetrahedra.  Note that this is not guaranteed to produce
-    <emphasis>the</emphasis> minimum number of tetrahedra required.
+    </menuchoice>),
+    then &regina; will use a combination of these move to reduce the
+    triangulation to as few tetrahedra as it can.
    </para>
    <para>
     <inlinemediaobject>
@@ -2124,38 +2123,32 @@
     </inlinemediaobject>
    </para>
    <para>
-    As well as performing obvious reductions, this routine tries
-    random 4-4 moves as well as book opening and book closing moves if it
-    cannot reduce the triangulation directly.
-    It does not yet try increasing the size of the triangulation (such
-    as through 2-3 moves) to escape a local minimum well in which it
-    might be stuck; this is on the &todo; list.
+    There is <emphasis>no guarantee</emphasis> that this will produce a
+    minimal triangulation (i.e., one that uses as few tetrahedra as
+    possible): &regina; might get stuck at a local minimum from which it
+    cannot escape.
    </para>
    <para>
-    For triangulations with boundary, this routine will also try to
-    make the number of boundary faces as small as possible (though again
-    there are not guarantees of achieving a global minimum).
+    If your triangulation has boundary, this routine will also try to
+    make the number of boundary faces as small as it can (though again
+    there is no guarantee of reaching a global minimum).
    </para>
-   <tip><para>
-    In cases where this faster simplification routine is ineffective,
-    the more powerful but slower <link linkend="tri-make0eff">0-efficiency
-    conversion</link> (described below) can be used.
-   </para></tip>
   </sect2>
 
   <sect2 id="tri-elementarymove">
    <title>Manual Simplification: Elementary Moves</title>
 
    <para>
-    The
+    Instead of using automatic simplification, you may wish to modify
+    your triangulation one step at a time, where each step involves some
+    local modification to the triangulation that preserves the underlying
+    3-manifold&mdash;that is, an <firstterm>elementary move</firstterm>.
+    To do this, select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Elementary Move</guimenuitem>
     </menuchoice>
-    menu item will present a list of elementary moves that can be
-    performed upon the triangulation that is currently being viewed.
-    Note that since there are restrictions on when particular moves may
-    be performed, some elementary moves might not be available.
+   from the menu.
    </para>
    <para>
     <inlinemediaobject>
@@ -2165,6 +2158,12 @@
     </inlinemediaobject>
    </para>
    <para>
+    This will bring up a box containing all the elementary moves that
+    can be performed upon the triangulation.  There are many different
+    types of moves available, and this list may continue to grow with
+    future releases of &regina;.
+   </para>
+   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="tri-eltmovebox.png"/>
@@ -2172,91 +2171,93 @@
     </inlinemediaobject>
    </para>
    <para>
-    An elementary move will never change the topology of the
-    3-manifold.  The individual moves and their restrictions are
-    described in full detail in the <classname>NTriangulation</classname>
-    class notes in the &regenginedocs;,
-    and most are described with diagrams in Burton's PhD thesis
-    <xref linkend="bib-burton-phd"/> which is available from the
-    &regwebsite;.  A brief summary is provided below.
+    For each type of move, you will be offered a drop-down list of
+    locations at which the move can be performed.  If a move is disabled
+    (greyed out), this means there are no suitable locations at all.
+    Select the type of move and its location, and press
+    <guibutton>OK</guibutton> to perform the move.
+   </para>
+   <para>
+    We do not give full details of the move types here; see
+    <xref linkend="bib-burton-phd"/> or the
+    <classname>NTriangulation</classname> class notes in the &regenginedocs;
+    for full descriptions of the moves and restrictions on where they
+    can be performed.
+    A brief summary of move types is as follows.
    </para>
    <para>
     <glosslist>
      <glossentry>
       <glossterm><guilabel>3-2 Move</guilabel></glossterm>
       <glossdef><para>
-       A <firstterm>3-2 move</firstterm> about an edge of degree 3 involves
-       replacing the three tetrahedra joined at that edge
-       with two tetrahedra joined by a face.
+       Replaces three tetrahedra joined along a degree&nbsp;3 edge
+       with two tetrahedra joined along a face.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>2-3 Move</guilabel></glossterm>
       <glossdef><para>
-       A <firstterm>2-3 move</firstterm> about a non-boundary face involves
-       replacing the two tetrahedra joined at that face with three
-       tetrahedra joined by an edge.
+       Replaces two tetrahedra joined along a non-boundary face
+       with three tetrahedra joined along a degree&nbsp;3 edge.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>4-4 Move</guilabel></glossterm>
       <glossdef><para>
-       A <firstterm>4-4 move</firstterm> about an edge of degree 4 involves
-       replacing the four tetrahedra joined at that edge with four
-       tetrahedra joined along a different edge in a different position.
+       Replaces the four tetrahedra joined along a degree&nbsp;4 edge
+       with four tetrahedra joined along a <emphasis>different</emphasis>
+       degree&nbsp;4 edge in a different location.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>2-0 Move (Edge)</guilabel></glossterm>
       <glossdef><para>
-       A <firstterm>2-0 move</firstterm> about an edge of degree 2 involves
-       taking the two tetrahedra joined at that edge and squashing them flat.
+       Takes the two tetrahedra joined along a degree&nbsp;2 edge and
+       squashes them flat.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>2-0 Move (Vertex)</guilabel></glossterm>
       <glossdef><para>
-       A <firstterm>2-0 move</firstterm> about a vertex of degree 2 involves
-       taking the two tetrahedra joined at that vertex and squashing them flat.
+       Takes the two tetrahedra that meet at a degree&nbsp;2 vertex and
+       squashes them flat.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>2-1 Move</guilabel></glossterm>
       <glossdef><para>
-       A <firstterm>2-1 move</firstterm> about an edge of degree 1 involves
-       merging the tetrahedron containing that edge with one of the
-       tetrahedra joining it.
+       Merges the tetrahedron containing a degree&nbsp;1 edge with an
+       adjacent tetrahedron.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>Open Book</guilabel></glossterm>
       <glossdef><para>
-       A <firstterm>book opening move</firstterm> on a face that touches
-       the boundary involves ungluing that face to create two new boundary
-       faces and thus exposing the tetrahedra inside to the boundary.
+       Takes an internal face that meets the boundary and
+       &ldquo;unglues&rdquo; that face to create two new boundary
+       faces, exposing the tetrahedra inside to the boundary.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>Close Book</guilabel></glossterm>
       <glossdef><para>
-       A <firstterm>book closing move</firstterm> on a boundary edge
-       involves folding together the two boundary faces on either side.
-       The aim of this move is to simplify the boundary of the triangulation.
+       Folds together two adjacent boundary faces around a common
+       boundary edge, with the result of simplifying the boundary.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>Shell Boundary</guilabel></glossterm>
       <glossdef><para>
-       A <firstterm>boundary shelling move</firstterm> on a boundary
-       tetrahedron involves simply removing that tetrahedron.
+       Removes an &ldquo;unnecessary tetrahedron&rdquo; that meets the
+       boundary of the triangulation along one or more faces.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>Collapse Edge</guilabel></glossterm>
       <glossdef><para>
-       <firstterm>Collapsing an edge</firstterm> involves taking an edge
-       between two distinct vertices and collapsing that edge to a point.
-       Any tetrahedra containing that edge will be flattened into faces.
+       Takes an edge between two distinct vertices and collapses it to a point.
+       Any tetrahedra that contained the edge will be &ldquo;flattened
+       away&rdquo;.
       </para></glossdef>
      </glossentry>
     </glosslist>
