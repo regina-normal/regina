@@ -1965,7 +1965,9 @@
      </inlinemediaobject>
     </para>
     <para>
-     Each of the new triangulations is guaranteed to be
+     With two exceptions (RP<superscript>3</superscript> and
+     S<superscript>2</superscript>&times;S<superscript>1</superscript>),
+     each of the new triangulations is guaranteed to be
      <link linkend="tri-prop0eff">0-efficient</link> (i.e., they will
      have no non-vertex-linking normal spheres).
      The underlying algorithm is based on the 0-efficiency results
