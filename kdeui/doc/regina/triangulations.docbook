@@ -1908,6 +1908,7 @@
       <guimenu>Triangulation</guimenu>
       <guimenuitem>Extract Components</guimenuitem>
      </menuchoice>.
+     You must open the triangulation for viewing before you can do this.
     </para>
     <para>
      <inlinemediaobject>
@@ -1942,6 +1943,7 @@
       <guimenu>Triangulation</guimenu>
       <guimenuitem>Connected Sum Decomposition</guimenuitem>
      </menuchoice>.
+     You must open the triangulation for viewing before you can do this.
     </para>
     <para>
      <inlinemediaobject>
@@ -1993,6 +1995,7 @@
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Census Lookup</guimenuitem>
     </menuchoice>.
+     You must open the triangulation for viewing before you can do this.
    </para>
    <para>
     <inlinemediaobject>
@@ -2042,12 +2045,9 @@
   <title>Modification</title>
 
   <para>
-   Once a triangulation has been created, a variety of options are
-   available for modifying it.  Many of these modifications are found in
-   the <guimenu>Triangulation</guimenu> menu &ndash; note that these
-   menu items will only appear when a triangulation is currently
-   being viewed, and will be performed upon this triangulation (and not
-   whatever is selected in the visual packet tree).
+   There are many ways of modifying a 3-manifold triangulation.
+   Many of these can be found in the <guimenu>Triangulation</guimenu> menu,
+   which appears when you open a triangulation for viewing.
   </para>
   <para>
    <inlinemediaobject>
@@ -2056,34 +2056,47 @@
     </imageobject>
    </inlinemediaobject>
   </para>
+  <caution><para>
+   If you open one triangulation for viewing but then select another in
+   the packet tree, all modifications apply to the triangulation that
+   you have currently open for viewing.
+  </para></caution>
 
   <sect2 id="tri-editgluings">
    <title>Editing Tetrahedron Face Gluings</title>
 
    <para>
-    When viewing a triangulation, the <guilabel>Gluings</guilabel> tab
-    allows the user to add or remove tetrahedra and manually edit the
-    gluings between tetrahedron faces.
+    The simplest way to modify a triangulation is to open the
+    <guilabel>Gluings</guilabel> tab and edit the face gluings directly.
+    See the notes on <link linkend="tri-viewgluings">viewing tetrahedron
+    face gluings</link> for details on how to read the face gluings table.
    </para>
    <para>
-    Tetrahedra can
-    be added and removed using the <guilabel>Add Tet</guilabel> and
-    <guilabel>Remove Tet</guilabel> buttons above the gluing editor.
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-editgluings.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
-    To change how the face is glued, click in the cell.
-    If you are in direct edit mode, you can simply type a new gluing
-    over top of the old one in the format described above.  If you are
-    in pop-up dialog mode, a button will appear; when this button is
-    clicked a dialog will appear that allows a new gluing to be
-    selected.
+    You can add and remove tetrahedra using the
+    <guilabel>Add Tet</guilabel> and <guilabel>Remove Tet</guilabel>
+    buttons, and you can change the gluings by typing directly into the table.
+    If you want to remove a gluing (i.e., make a face part of the
+    triangulation boundary), just delete the contents of the cell.
    </para>
    <para>
-    Tetrahedra can be optionally named to help
-    keep track of their roles within a triangulation.  To change the
-    name of a tetrahedron, click on the cell containing the tetrahedron
-    number on the left hand side of the grid.  The new name can be
-    typed directly into the cell.
+    If you like, you can <emphasis>name</emphasis> tetrahedra to help
+    keep track of their roles within the triangulation.
+    Click on the cell in the leftmost column (containing the tetrahedron
+    number), and type a new name directly into the cell.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-editnames.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
 
@@ -2113,7 +2126,7 @@
    <para>
     <glosslist>
      <glossentry>
-      <glossterm>3-2 Move</glossterm>
+      <glossterm><guilabel>3-2 Move</guilabel></glossterm>
       <glossdef><para>
        A <firstterm>3-2 move</firstterm> about an edge of degree 3 involves
        replacing the three tetrahedra joined at that edge
@@ -2121,7 +2134,7 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
-      <glossterm>2-3 Move</glossterm>
+      <glossterm><guilabel>2-3 Move</guilabel></glossterm>
       <glossdef><para>
        A <firstterm>2-3 move</firstterm> about a non-boundary face involves
        replacing the two tetrahedra joined at that face with three
@@ -2129,7 +2142,7 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
-      <glossterm>4-4 Move</glossterm>
+      <glossterm><guilabel>4-4 Move</guilabel></glossterm>
       <glossdef><para>
        A <firstterm>4-4 move</firstterm> about an edge of degree 4 involves
        replacing the four tetrahedra joined at that edge with four
@@ -2137,21 +2150,21 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
-      <glossterm>2-0 Move (Edge)</glossterm>
+      <glossterm><guilabel>2-0 Move (Edge)</guilabel></glossterm>
       <glossdef><para>
        A <firstterm>2-0 move</firstterm> about an edge of degree 2 involves
        taking the two tetrahedra joined at that edge and squashing them flat.
       </para></glossdef>
      </glossentry>
      <glossentry>
-      <glossterm>2-0 Move (Vertex)</glossterm>
+      <glossterm><guilabel>2-0 Move (Vertex)</guilabel></glossterm>
       <glossdef><para>
        A <firstterm>2-0 move</firstterm> about a vertex of degree 2 involves
        taking the two tetrahedra joined at that vertex and squashing them flat.
       </para></glossdef>
      </glossentry>
      <glossentry>
-      <glossterm>2-1 Move</glossterm>
+      <glossterm><guilabel>2-1 Move</guilabel></glossterm>
       <glossdef><para>
        A <firstterm>2-1 move</firstterm> about an edge of degree 1 involves
        merging the tetrahedron containing that edge with one of the
@@ -2159,7 +2172,7 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
-      <glossterm>Open Book</glossterm>
+      <glossterm><guilabel>Open Book</guilabel></glossterm>
       <glossdef><para>
        A <firstterm>book opening move</firstterm> on a face that touches
        the boundary involves ungluing that face to create two new boundary
@@ -2167,7 +2180,7 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
-      <glossterm>Close Book</glossterm>
+      <glossterm><guilabel>Close Book</guilabel></glossterm>
       <glossdef><para>
        A <firstterm>book closing move</firstterm> on a boundary edge
        involves folding together the two boundary faces on either side.
@@ -2175,14 +2188,14 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
-      <glossterm>Shell Boundary</glossterm>
+      <glossterm><guilabel>Shell Boundary</guilabel></glossterm>
       <glossdef><para>
        A <firstterm>boundary shelling move</firstterm> on a boundary
        tetrahedron involves simply removing that tetrahedron.
       </para></glossdef>
      </glossentry>
      <glossentry>
-      <glossterm>Collapse Edge</glossterm>
+      <glossterm><guilabel>Collapse Edge</guilabel></glossterm>
       <glossdef><para>
        <firstterm>Collapsing an edge</firstterm> involves taking an edge
        between two distinct vertices and collapsing that edge to a point.
