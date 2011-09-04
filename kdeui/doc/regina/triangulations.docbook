@@ -654,7 +654,7 @@
             An example might be <literal>Cusp (orbl, genus 3)</literal>.
            </para></glossdef>
           </glossentry>
-          <glossentry>
+          <glossentry id="tri-vertices-nonstdbdry">
            <glossterm><guilabel>Non-std bdry</guilabel></glossterm>
            <glossdef><para>
             Appears when the vertex is a non-standard boundary vertex.
@@ -2112,8 +2112,12 @@
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Simplify</guimenuitem>
     </menuchoice>),
-    then &regina; will use a combination of these move to reduce the
+    then &regina; will use a combination of these moves to reduce the
     triangulation to as few tetrahedra as it can.
+    This is often very effective, but there is
+    <emphasis>no guarantee</emphasis> that this will produce the fewest
+    possible tetrahedra:
+    &regina; might get stuck at a local minimum from which it cannot escape.
    </para>
    <para>
     <inlinemediaobject>
@@ -2123,14 +2127,8 @@
     </inlinemediaobject>
    </para>
    <para>
-    There is <emphasis>no guarantee</emphasis> that this will produce a
-    minimal triangulation (i.e., one that uses as few tetrahedra as
-    possible): &regina; might get stuck at a local minimum from which it
-    cannot escape.
-   </para>
-   <para>
     If your triangulation has boundary, this routine will also try to
-    make the number of boundary faces as small as it can (though again
+    make the number of boundary faces as small as it can (but again
     there is no guarantee of reaching a global minimum).
    </para>
   </sect2>
@@ -2139,11 +2137,12 @@
    <title>Manual Simplification: Elementary Moves</title>
 
    <para>
-    Instead of using automatic simplification, you may wish to modify
-    your triangulation one step at a time, where each step involves some
-    local modification to the triangulation that preserves the underlying
-    3-manifold&mdash;that is, an <firstterm>elementary move</firstterm>.
-    To do this, select
+    Instead of using automatic simplification, you might wish to modify
+    your triangulation manually one step at a time.  You can do this
+    using <firstterm>elementary moves</firstterm>, which are small
+    local modifications
+    to the triangulation that preserve the underlying 3-manifold.
+    To perform an elementary move, select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Elementary Move</guimenuitem>
@@ -2159,7 +2158,7 @@
    </para>
    <para>
     This will bring up a box containing all the elementary moves that
-    can be performed upon the triangulation.  There are many different
+    can be performed upon your triangulation.  There are many different
     types of moves available, and this list may continue to grow with
     future releases of &regina;.
    </para>
@@ -2173,17 +2172,17 @@
    <para>
     For each type of move, you will be offered a drop-down list of
     locations at which the move can be performed.  If a move is disabled
-    (greyed out), this means there are no suitable locations at all.
+    (greyed out), this means there are no suitable locations in your
+    triangulation for that move type.
     Select the type of move and its location, and press
     <guibutton>OK</guibutton> to perform the move.
    </para>
    <para>
-    We do not give full details of the move types here; see
+    We do not give full details of the various moves here; see
     <xref linkend="bib-burton-phd"/> or the
     <classname>NTriangulation</classname> class notes in the &regenginedocs;
-    for full descriptions of the moves and restrictions on where they
-    can be performed.
-    A brief summary of move types is as follows.
+    for full descriptions of the moves and restrictions on their
+    possible locations.  A brief summary is as follows.
    </para>
    <para>
     <glosslist>
@@ -2197,29 +2196,29 @@
      <glossentry>
       <glossterm><guilabel>2-3 Move</guilabel></glossterm>
       <glossdef><para>
-       Replaces two tetrahedra joined along a non-boundary face
+       Replaces two tetrahedra joined along a face
        with three tetrahedra joined along a degree&nbsp;3 edge.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>4-4 Move</guilabel></glossterm>
       <glossdef><para>
-       Replaces the four tetrahedra joined along a degree&nbsp;4 edge
-       with four tetrahedra joined along a <emphasis>different</emphasis>
-       degree&nbsp;4 edge in a different location.
+       Replaces four tetrahedra joined along a degree&nbsp;4 edge
+       with four tetrahedra joined along a new
+       degree&nbsp;4 edge that points in a different direction.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>2-0 Move (Edge)</guilabel></glossterm>
       <glossdef><para>
-       Takes the two tetrahedra joined along a degree&nbsp;2 edge and
+       Takes two tetrahedra joined along a degree&nbsp;2 edge and
        squashes them flat.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>2-0 Move (Vertex)</guilabel></glossterm>
       <glossdef><para>
-       Takes the two tetrahedra that meet at a degree&nbsp;2 vertex and
+       Takes two tetrahedra that meet at a degree&nbsp;2 vertex and
        squashes them flat.
       </para></glossdef>
      </glossentry>
@@ -2233,9 +2232,9 @@
      <glossentry>
       <glossterm><guilabel>Open Book</guilabel></glossterm>
       <glossdef><para>
-       Takes an internal face that meets the boundary and
-       &ldquo;unglues&rdquo; that face to create two new boundary
-       faces, exposing the tetrahedra inside to the boundary.
+       Takes an internal face with two boundary edges and
+       &ldquo;unglues&rdquo; that face, creating two new boundary
+       faces and exposing the tetrahedra inside to the boundary.
       </para></glossdef>
      </glossentry>
      <glossentry>
@@ -2248,8 +2247,8 @@
      <glossentry>
       <glossterm><guilabel>Shell Boundary</guilabel></glossterm>
       <glossdef><para>
-       Removes an &ldquo;unnecessary tetrahedron&rdquo; that meets the
-       boundary of the triangulation along one or more faces.
+       Removes an &ldquo;unnecessary tetrahedron&rdquo; that sits along
+       the boundary of the triangulation.
       </para></glossdef>
      </glossentry>
      <glossentry>
@@ -2270,23 +2269,19 @@
    <para>
     A triangulation is <firstterm>0-efficient</firstterm> if its only
     normal spheres and discs are vertex linking, and if it has no 2-sphere
-    boundary components.  Jaco and Rubinstein
-    <xref linkend="bib-0-efficiency"/> prove that most minimal
-    triangulations of closed orientable irreducible 3-manifolds are
-    0-efficient, and in general it can be observed that 0-efficient
-    triangulations tend to use relatively small numbers of tetrahedra.
+    boundary components <xref linkend="bib-0-efficiency"/>.
+    0-efficient triangulations have significant theoretical and
+    practical advantages, and often use relatively few tetrahedra.
    </para>
    <para>
-    To convert a triangulation into a 0-efficient triangulation of the
-    same underlying 3-manifold, the
+    If your triangulation is
+    <link linkend="tri-basicprops">closed, orientable and connected</link>,
+    you can convert it into a 0-efficient triangulation of the same
+    3-manifold by selecting
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Make 0-Efficient</guimenuitem>
-    </menuchoice>
-    menu item can be used.  Note that, like the
-    <link linkend="tri-simplification">global simplification</link>
-    routine described above, there is no guarantee that the minimum
-    possible number of tetrahedra will be achieved.
+    </menuchoice>.
    </para>
    <para>
     <inlinemediaobject>
@@ -2296,43 +2291,55 @@
     </inlinemediaobject>
    </para>
    <para>
-    0-efficiency conversion is currently only available for closed
-    orientable triangulations.  Furthermore, if the triangulation
-    represents a composite 3-manifold then it is impossible to construct
-    a 0-efficient triangulation &ndash; in this case a full connected sum
-    decomposition will be inserted beneath this triangulation in the
-    packet tree.
+    If your triangulation represents a composite 3-manifold then it
+    cannot be made 0-efficient&mdash;in this case a full connected sum
+    decomposition will be inserted beneath your triangulation in the
+    packet tree, and your original triangulation will be left unchanged.
    </para>
-
-   <warning><para>
-    This procedure involves an analysis of normal surfaces and can be
-    very slow for large triangulations.  For a faster but perhaps less
-    effective simplification of triangulations, see the
-    <link linkend="tri-simplification">global simplification</link>
-    routine described above.
-   </para></warning>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-make0eff-connsum.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    There are also two exceptional prime manifolds that cannot be made
+    0-efficient: RP<superscript>3</superscript> and
+    S<superscript>2</superscript>&times;S<superscript>1</superscript>.
+    &regina; will notify you if your triangulation represents one of
+    these manifolds.
+   </para>
+   <caution><para>
+    The algorithm to make a triangulation 0-efficient
+    runs in worst-case exponential time.
+    If your triangulation is large, you should consider whether
+    <link linkend="tri-simplification">automatic simplification</link>
+    will suffice (which is much faster at reducing the number of
+    tetrahedra, but which does not guarantee a 0-efficient result).
+   </para></caution>
   </sect2>
 
   <sect2 id="tri-real-ideal">
    <title>Switching Between Real and Ideal</title>
 
    <para>
-    A few routines are available for performing standard
-    subdivisions on triangulations.
+    You can convert between <firstterm>real</firstterm> boundary
+    components (formed from boundary faces of tetrahedra) and
+    <firstterm>ideal</firstterm> boundary components (formed from
+    individual vertices with closed non-spherical vertex links).
    </para>
    <para>
-    The
+    If you have an ideal triangulation, you can select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Truncate Ideal Vertices</guimenuitem>
     </menuchoice>
-    menu item will convert the triangulation currently being viewed to
-    a finite triangulation (one with no ideal vertices).  This is done by
-    subdividing each tetrahedron and then truncating at the ideal
-    vertices.  The resulting triangulation has each ideal or
-    non-standard vertex
-    converted to a real boundary component (one made from boundary faces
-    of tetrahedra).
+    to convert your ideal vertices into real boundary components.
+    &regina; will subdivide the triangulation and slide off a small
+    neighbourhood of each ideal vertex.
+    Any <link linkend="tri-vertices-nonstdbdry">non-standard boundary
+    vertices</link> will be truncated also.
    </para>
    <para>
     <inlinemediaobject>
@@ -2341,20 +2348,19 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <tip><para>
+    Because of the subdivision, this operation will greatly
+    increase the number of tetrahedra.  After you truncate ideal
+    vertices, try
+    <link linkend="tri-simplification">simplifying your triangulation</link>.
+   </para></tip>
    <para>
-    Sometimes one wishes to extend a triangulation beyond its boundary,
-    such as thickening the boundary, stretching it or adding new
-    topological components.
-   </para>
-   <para>
-    The
+    Conversely: if your triangulation has real boundary components and you
+    wish to convert this into an ideal triangulation, select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Make Ideal</guimenuitem>
-    </menuchoice>
-    menu item performs one such task.  When this menu item is selected,
-    all real boundary components of the triangulation are converted into
-    ideal boundary components.
+    </menuchoice>.
    </para>
    <para>
     <inlinemediaobject>
@@ -2364,19 +2370,21 @@
     </inlinemediaobject>
    </para>
    <para>
-    Specifically, each boundary component that is formed from two or
-    more boundary faces is converted into a single ideal vertex.  This
-    is done by gluing a tetrahedron to each boundary face, and then
-    gluing these tetrahedra together to mirror the ways in
-    which the boundary faces are joined.  The new vertices opposite
-    the boundary faces then become identified as a single ideal vertex.
-   </para>
-   <para>
-    One side-effect of this operation is that any spherical boundary
-    components become filled in with balls (since the new vertex
-    will have a spherical link, i.e., it will become an ordinary
-    internal vertex).  If the triangulation has no boundary faces (i.e.,
-    no real boundary components) then this operation does nothing.
+    Each real boundary component will be &ldquo;coned&rdquo; using new
+    tetrahedra (one for each boundary face).  Your boundary components
+    will all become ideal, but there are some caveats:
+    <itemizedlist>
+     <listitem><para>
+      Your triangulation will contain ideal vertices, but also
+      standard <emphasis>internal vertices</emphasis> whose links are
+      spheres.  To get rid of these internal vertices, try
+      <link linkend="tri-simplification">simplifying your triangulation</link>.
+     </para></listitem>
+     <listitem><para>
+      Any <emphasis>spherical</emphasis> boundary components will
+      disappear entirely; that is, they will be filled in with balls.
+     </para></listitem>
+    </itemizedlist>
    </para>
   </sect2>
 
@@ -2384,22 +2392,16 @@
    <title>Subdivision</title>
 
    <para>
-    A few routines are available for performing standard
-    subdivisions on triangulations.
-   </para>
-   <para>
-    The
+    You can perform a barycentric subdivision on your triangulation by
+    selecting
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Barycentric Subdivision</guimenuitem>
-    </menuchoice>
-    menu item will perform a barycentric subdivision on the
-    triangulation currently being viewed.
-    A <firstterm>barycentric subdivision</firstterm>
-    involves taking each tetrahedron, adding new vertices at the
-    centroid of the tetrahedron, the centroid of each face and the
-    midpoint of each edge and joining them with edges to split the
-    tetrahedron into 24 smaller tetrahedra.
+    </menuchoice>.
+    This involves splitting each original tetrahedron into 24 smaller
+    tetrahedra, adding new vertices at the
+    centroid of each tetrahedron, the centroid of each face, and the
+    midpoint of each edge.
    </para>
    <para>
     <inlinemediaobject>
@@ -2414,7 +2416,16 @@
    <title>Orienting the Triangulation</title>
 
    <para>
-    TODO: Write.
+    If your triangulation is
+    <link linkend="tri-basicprops">orientable but not oriented</link>,
+    you may wish to reorder the vertices 0,1,2,3 of each tetrahedron so that
+    adjacent tetrahedra have consistent orientations.
+    To do this, press the <guibutton>Orient</guibutton> button (or select
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Orient</guimenuitem>
+    </menuchoice>
+    from the menu).
    </para>
    <para>
     <inlinemediaobject>
@@ -2429,14 +2440,12 @@
    <title>Double Cover</title>
 
    <para>
-    The
+    To convert a non-orientable triangulation into its orientable double cover,
+    select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Double Cover</guimenuitem>
-    </menuchoice>
-    menu item will convert a triangulation to a double cover.  Each
-    non-orientable component will be converted to an orientable double
-    cover, and each orientable component will simply be duplicated.
+    </menuchoice>.
    </para>
    <para>
     <inlinemediaobject>
@@ -2444,6 +2453,10 @@
       <imagedata fileref="tri-doublecover.png"/>
      </imageobject>
     </inlinemediaobject>
+   </para>
+   <para>
+    If your triangulation has any orientable components, they will
+    simply be duplicated.
    </para>
   </sect2>
 
