@@ -2117,6 +2117,13 @@
     <emphasis>the</emphasis> minimum number of tetrahedra required.
    </para>
    <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-simplify.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     As well as performing obvious reductions, this routine tries
     random 4-4 moves as well as book opening and book closing moves if it
     cannot reduce the triangulation directly.
@@ -2149,6 +2156,20 @@
     performed upon the triangulation that is currently being viewed.
     Note that since there are restrictions on when particular moves may
     be performed, some elementary moves might not be available.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-eltmove.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-eltmovebox.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
     An elementary move will never change the topology of the
@@ -2267,6 +2288,13 @@
     possible number of tetrahedra will be achieved.
    </para>
    <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-make0eff.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     0-efficiency conversion is currently only available for closed
     orientable triangulations.  Furthermore, if the triangulation
     represents a composite 3-manifold then it is impossible to construct
@@ -2306,6 +2334,13 @@
     of tetrahedra).
    </para>
    <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-truncate.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     Sometimes one wishes to extend a triangulation beyond its boundary,
     such as thickening the boundary, stretching it or adding new
     topological components.
@@ -2319,6 +2354,13 @@
     menu item performs one such task.  When this menu item is selected,
     all real boundary components of the triangulation are converted into
     ideal boundary components.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-makeideal.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
     Specifically, each boundary component that is formed from two or
@@ -2358,6 +2400,13 @@
     midpoint of each edge and joining them with edges to split the
     tetrahedron into 24 smaller tetrahedra.
    </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-barycentric.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
   </sect2>
 
   <sect2 id="tri-orient">
@@ -2365,6 +2414,13 @@
 
    <para>
     TODO: Write.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-orient.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
 
@@ -2380,6 +2436,13 @@
     menu item will convert a triangulation to a double cover.  Each
     non-orientable component will be converted to an orientable double
     cover, and each orientable component will simply be duplicated.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-doublecover.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
 
