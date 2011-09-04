@@ -2058,8 +2058,8 @@
   </para>
   <caution><para>
    If you open one triangulation for viewing but then select another in
-   the packet tree, all modifications apply to the triangulation that
-   you have currently open for viewing.
+   the packet tree, all modifications will apply to the triangulation that
+   you have open for viewing.
   </para></caution>
 
   <sect2 id="tri-editgluings">
@@ -2067,16 +2067,9 @@
 
    <para>
     The simplest way to modify a triangulation is to open the
-    <guilabel>Gluings</guilabel> tab and edit the face gluings directly.
+    <guilabel>Gluings</guilabel> tab and edit the face gluings table directly.
     See the notes on <link linkend="tri-viewgluings">viewing tetrahedron
-    face gluings</link> for details on how to read the face gluings table.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="tri-editgluings.png"/>
-     </imageobject>
-    </inlinemediaobject>
+    face gluings</link> for details on how to read the table.
    </para>
    <para>
     You can add and remove tetrahedra using the
@@ -2086,7 +2079,14 @@
     triangulation boundary), just delete the contents of the cell.
    </para>
    <para>
-    If you like, you can <emphasis>name</emphasis> tetrahedra to help
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-editgluings.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If you like, you can also <emphasis>name</emphasis> tetrahedra to help
     keep track of their roles within the triangulation.
     Click on the cell in the leftmost column (containing the tetrahedron
     number), and type a new name directly into the cell.
