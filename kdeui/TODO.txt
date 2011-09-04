@@ -42,3 +42,6 @@ Python:
     - Check to see whether user libraries are in fact text files
     - Allow compilation and running of open libraries
 
+Surfaces:
+    * Make the default packet label reflect the coordinate system
+      (e.g., "Quad Normal Surfaces")
