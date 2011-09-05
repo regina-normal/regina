@@ -242,6 +242,8 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 *s, index.column() - propertyColCount());
             if (ans == (long)0)
                 return QVariant();
+            else if (ans.isInfinite())
+                return QString(QChar(0x221e /* &infin; */));
             else
                 return ans.stringValue().c_str();
         }

@@ -121,6 +121,7 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
         noneLayout->addSpacing(10);
 
         msgNone = new QLabel(layerNone);
+        msgNone->setWordWrap(true);
         noneLayout->addWidget(msgNone, 4);
 
         noneLayout->addStretch(1);
@@ -244,7 +245,7 @@ void NSurfaceCompatibilityUI::setMessage(MessageIndex msg) {
                 "list contains a large number of surfaces.<p>"
                 "If you wish to compute these matrices (and if you have "
                 "enough time and memory), then please press the "
-                "<i>Calculate</qt> button above.</qt>"));
+                "<i>Calculate</i> button above.</qt>"));
             break;
 
         case NON_EMBEDDED:
