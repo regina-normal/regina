@@ -313,12 +313,12 @@ void NSurfaceSummaryUI::refresh() {
             ! surfaces->getTriangulation()->isValid()) &&
             (surfaces->allowsSpun())) {
         if (spun == 0) {
-            totSpun->setText(i18n("No non-compact (spun) surfaces."));
+            totSpun->setText(i18n("No spun (non-compact) surfaces."));
         } else {
             if (spun == 1)
-                totSpun->setText(i18n("1 non-compact (spun) surface."));
+                totSpun->setText(i18n("1 spun (non-compact) surface."));
             else
-                totSpun->setText(i18n("%1 non-compact (spun) surfaces.").arg(spun));
+                totSpun->setText(i18n("%1 spun (non-compact) surfaces.").arg(spun));
         }
     } else {
         // The triangulation is not ideal and/or the coordinate system
