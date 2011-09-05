@@ -161,9 +161,10 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
 
             triBool = s->isOrientable();
             if (triBool.isTrue())
-                return i18n("Orbl");
+                return QString(QChar(0x2713 /* tick */));
+                // return i18n("Yes");
             else if (triBool.isFalse())
-                return i18n("Non-orbl");
+                return i18n("Non-or.");
             else
                 return i18n("Unknown");
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
@@ -180,11 +181,11 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact())
-                return i18n("Infinite");
+                return i18n("Spun");
             else if (s->hasRealBoundary())
-                return i18n("Real Bdry");
+                return i18n("Real");
             else
-                return i18n("Closed");
+                return QString(QChar(0x2014 /* emdash */));
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 6) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 4)) {
             const regina::NVertex* v;
@@ -415,9 +416,10 @@ QString SurfaceModel::propertyColDesc(int whichCol) const {
             case 1: return i18n("Name (this has no special meaning and "
                 "can be edited)");
             case 2: return i18n("Euler characteristic");
-            case 3: return i18n("Orientability");
+            case 3: return i18n("Is this surface orientable?");
             case 4: return i18n("1-sided or 2-sided");
-            case 5: return i18n("Does this surface have boundary?");
+            case 5: return i18n("What kind of boundary does this "
+                "surface have?");
             case 6: return i18n("Has this surface been identified as "
                 "the link of a particular subcomplex?");
             case 7: return i18n("Other interesting properties");
@@ -432,7 +434,8 @@ QString SurfaceModel::propertyColDesc(int whichCol) const {
             case 1: return i18n("Name (this has no special meaning and "
                 "can be edited)");
             case 2: return i18n("Euler characteristic");
-            case 3: return i18n("Does this surface have boundary?");
+            case 3: return i18n("What kind of boundary does this "
+                "surface have?");
             case 4: return i18n("Has this surface been identified as "
                 "the link of a particular subcomplex?");
             case 5: return i18n("Other interesting properties");
