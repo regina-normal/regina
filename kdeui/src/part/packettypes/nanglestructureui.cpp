@@ -78,7 +78,7 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
             if (angle == 0)
                 return QVariant();
 
-            static const QString pi(i18n("Pi"));
+            static const QString pi(QChar(0x3c0));
             if (angle == 1)
                 return pi;
             else if (angle.getDenominator() == 1)
@@ -143,9 +143,9 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
     stats->setWhatsThis(i18n("<qt>Displays various statistics about this "
         "angle structure list, including whether the underlying triangulation "
         "supports any strict and/or taut angle structures.  A <i>strict</i> "
-        "angle structure has all of its angles strictly between 0 and Pi, "
+        "angle structure has all of its angles strictly between 0 and &pi;, "
         "whereas a <i>taut</i> angle structure has all of its angles equal "
-        "to either 0 or Pi.<p>"
+        "to either 0 or &pi;.<p>"
         "Note that this header might incidate that the triangulation supports "
         "a strict angle structure even if none appear in the list below "
         "&ndash; the strict angle structure might only be found as a "
