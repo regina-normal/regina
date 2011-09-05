@@ -45,3 +45,6 @@ Python:
 Surfaces:
     * Make the default packet label reflect the coordinate system
       (e.g., "Quad Normal Surfaces")
+
+Triangulations:
+    - Centre face pairing graphs, and/or match the background colour
