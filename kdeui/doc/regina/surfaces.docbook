@@ -713,6 +713,11 @@
       </glossentry>
      </glosslist>
     </para>
+    <tip><para>
+     If you grab and resize one of the coordinate columns, all of the
+     coordinate columns will be resized at once.  This is useful if you
+     wish to fit as many columns on the screen as possible.
+    </para></tip>
    </sect3>
   </sect2>
 
@@ -720,9 +725,9 @@
    <title>Original Matching Equations</title>
 
    <para>
-    The <guilabel>Matching Equations</guilabel> tab in the surface list
-    viewer contains a table of the individual matching equations that
-    were used to form this list.
+    The <guilabel>Matching Equations</guilabel> tab
+    shows a table with the individual matching equations that
+    were used when you enumerated this list.
    </para>
    <para>
     <inlinemediaobject>
@@ -732,37 +737,36 @@
     </inlinemediaobject>
    </para>
    <para>
-    The matching equations are presented in the coordinate system that
-    was used to originally create this surface list (see the
-    <link linkend="surfaces-creation">surface list creation reference</link>).
-    This coordinate system is displayed above all of the tabs in the
-    surface list viewer.
+    The matching equations will always use the same
+    coordinate system that you
+    <link linkend="surfaces-selectcoords">used during enumeration</link>.
+    Remember that this coordinate system is always displayed
+    <link linkend="surfaces-analysis">above all of the tabs</link>.
    </para>
    <para>
     Each row of this table represents an individual matching equation.
-    A matching equation involves setting a linear combination of surface
-    coordinates to zero; the coefficients of this linear combination are
-    shown in the individual table cells.  A description of what the individual
-    surface coordinates mean can be found in the
-    <link linkend="surfaces-coords-coords">individual surface
-    coordinates</link> section above.
+    Each equation is a homogeneous linear equation, and the coefficients
+    for each coordinate position are shown in the individual table cells.
+    See the
+    <link linkend="surfaces-coords-coords">coordinate viewer</link>
+    for details on how the coordinate columms are labelled.
    </para>
+   <tip><para>
+    Like the coordinate viewer,
+    if you grab and resize one of the columns then all columns
+    will be resized at once.  This is useful if you
+    wish to fit as much of the matrix on screen as possible.
+   </para></tip>
   </sect2>
 
   <sect2 id="surfaces-compat">
    <title>Compatibility Between Surfaces</title>
 
    <para>
-    The <guilabel>Compatibility</guilabel> tab in the surface list
-    viewer shows which pairs of surfaces are compatible with each other,
-    both locally and globally.  These concepts are defined as follows:
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="surfaces-compat-local.png"/>
-     </imageobject>
-    </inlinemediaobject>
+    The <guilabel>Compatibility</guilabel> tab
+    shows which pairs of surfaces are
+    <emphasis>locally</emphasis> and <emphasis>globally</emphasis>
+    compatible with each other.  This means:
    </para>
    <para>
     <glosslist>
@@ -799,35 +803,35 @@
     </glosslist>
    </para>
    <para>
-    The <guilabel>Compatibility</guilabel> tab contains two matrices, one for
-    local compatibility and one for global compatibility.  You can
-    switch between these two matrices by using the drop-down box labelled
-    <guilabel>Display matrix</guilabel>.
-   </para>
-   <para>
-    Each matrix has dimensions
-    <replaceable>S</replaceable>-by-<replaceable>S</replaceable>,
-    where <replaceable>S</replaceable> is the total number of surfaces
-    in the list.  Rows and columns are both numbered from 0 to
-    <replaceable>S</replaceable>-1 inclusive, and the
-    (<replaceable>x</replaceable>,<replaceable>y</replaceable>) cell of
-    the matrix is filled if and only if surfaces
-    <replaceable>x</replaceable> and <replaceable>y</replaceable> are
-    compatible.  Here we use same numbering scheme as in the first column of
-    the <link linkend="surfaces-coords">coordinate viewer</link>.
+    The <guilabel>Compatibility</guilabel> tab displays two matrices
+    (one at a time): one shows local compatibility and one shows
+    global compatibility.  You can
+    switch between them using the drop-down box indicated below.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="surfaces-compat.png"/>
+      <imagedata fileref="surfaces-compat-local.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
-    Note that the global compatibility test comes with some constraints.
-    Specifically, it cannot be run with surfaces that are empty, disconnected
-    or non-compact (such as spun normal surfaces).  For any such surfaces,
-    the corresponding rows and columns will be hashed out in the matrix
+    Each matrix has dimensions
+    <replaceable>S</replaceable>&nbsp;&times;&nbsp;<replaceable>S</replaceable>,
+    where <replaceable>S</replaceable> is the total number of surfaces
+    in the list.  Rows and columns are both numbered
+    0,...,<replaceable>S</replaceable>-1.
+    The cell at position
+    (<replaceable>x</replaceable>,<replaceable>y</replaceable>)
+    is filled if and only if the surfaces numbered
+    <replaceable>x</replaceable> and <replaceable>y</replaceable> are
+    compatible.  Recall that surfaces are numbered in the leftmost
+    column of the <link linkend="surfaces-coords">coordinate viewer</link>.
+   </para>
+   <para>
+    For some surfaces, &regina; cannot test global compatibility.
+    These include surfaces that are empty, disconnected, or spun.
+    In such cases the corresponding rows and columns will be hashed out,
     as illustrated below.
    </para>
    <para>
@@ -838,14 +842,20 @@
     </inlinemediaobject>
    </para>
    <para>
-    For very large lists of surfaces, the compatibility matrices will
-    not be generated automatically (since this could take a long time
-    and/or require a significant amount of memory).  In this case, you
-    can still compute the matrices by pressing the
-    <guilabel>Calculate</guilabel> button at the top of the tab.
-    The default threshold for automatic calculation is 100 surfaces,
+    If you have too many surfaces in your list, &regina; will not
+    generate these matrices automatically.
+    You can still compute them by pressing the
+    <guilabel>Calculate</guilabel> button (indicated below).
+    The default threshold for &ldquo;too many&rdquo; is 100 surfaces,
     though you can change this in the
-    <link linkend="options-surfaces">normal surface preferences</link>.
+    <link linkend="options-surfaces">normal surface options</link>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="surfaces-compat-compute.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
 
