@@ -33,6 +33,8 @@
 #ifndef __PACKETCREATOR_H
 #define __PACKETCREATOR_H
 
+#include <qstring.h>
+
 class QWidget;
 
 namespace regina {
@@ -65,6 +67,17 @@ class PacketCreator {
          * The default implementation of this routine returns 0.
          */
         virtual QWidget* getInterface();
+
+        /**
+         * If the parent packet plays a special role for this packet
+         * type, you may wish to customise the corresponding prompt
+         * and associated "what's this" text in the new packet dialog.
+         * If these routines return null strings, the default
+         * "Create beneath:" prompt and and corresponding help text will be
+         * used.
+         */
+        virtual QString parentPrompt();
+        virtual QString parentWhatsThis();
 
         /**
          * Create the packet according to the information entered by the
@@ -107,6 +120,14 @@ inline PacketCreator::~PacketCreator() {
 
 inline QWidget* PacketCreator::getInterface() {
     return 0;
+}
+
+inline QString PacketCreator::parentPrompt() {
+    return QString();
+}
+
+inline QString PacketCreator::parentWhatsThis() {
+    return QString();
 }
 
 #endif

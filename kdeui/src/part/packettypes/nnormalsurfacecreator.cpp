@@ -79,6 +79,14 @@ QWidget* NNormalSurfaceCreator::getInterface() {
     return ui;
 }
 
+QString NNormalSurfaceCreator::parentPrompt() {
+    return i18n("Triangulation:");
+}
+
+QString NNormalSurfaceCreator::parentWhatsThis() {
+    return i18n("The triangulation that will contain your normal surfaces.");
+}
+
 regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         QWidget* parentWidget) {
     if (parent->getPacketType() != regina::NTriangulation::packetType) {

@@ -55,9 +55,14 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
 
     QHBoxLayout* parentStrip = new QHBoxLayout();
     layout->addLayout(parentStrip);
-    QString expln = i18n("Specifies where in the packet tree the new "
-        "packet will be placed.");
-    QLabel* createBeneath = new QLabel(i18n("Create beneath:"));
+    QString parentPrompt = newCreator->parentPrompt();
+    if (parentPrompt.isNull())
+        parentPrompt = i18n("Create beneath:");
+    QString expln = newCreator->parentWhatsThis();
+    if (expln.isNull())
+        expln = i18n("Specifies where in the packet tree the new "
+            "packet will be placed.");
+    QLabel* createBeneath = new QLabel(parentPrompt);
     createBeneath->setWhatsThis(expln);
     parentStrip->addWidget(createBeneath);
     chooser = new PacketChooser(tree, useFilter, false, defaultParent);

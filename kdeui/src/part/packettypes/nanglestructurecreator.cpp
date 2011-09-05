@@ -62,6 +62,14 @@ QWidget* NAngleStructureCreator::getInterface() {
     return ui;
 }
 
+QString NAngleStructureCreator::parentPrompt() {
+    return i18n("Triangulation:");
+}
+
+QString NAngleStructureCreator::parentWhatsThis() {
+    return i18n("The triangulation that will contain your angle structures.");
+}
+
 regina::NPacket* NAngleStructureCreator::createPacket(
         regina::NPacket* parentPacket, QWidget* parentWidget) {
     if (parentPacket->getPacketType() != regina::NTriangulation::packetType) {
