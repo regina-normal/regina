@@ -236,7 +236,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-viewsurfaceprops">compactness of normal
+  <primaryie><link linkend="surfaces-boundary">compactness of normal
    surfaces</link></primaryie>
  </indexentry>
 
@@ -317,7 +317,7 @@
    particular coordinate system</link></secondaryie>
   <secondaryie><link linkend="surfaces-defstandard">explanation of
    different coordinate systems</link></secondaryie>
-  <secondaryie><link linkend="surfaces-viewsurfacecoords">viewing in a
+  <secondaryie><link linkend="surfaces-coords">viewing in a
    different coordinate system</link></secondaryie>
  </indexentry>
 
@@ -814,7 +814,7 @@
 
  <indexentry>
   <primaryie>normal surfaces</primaryie>
-  <secondaryie><link linkend="surfaces-viewsurfaceprops">basic
+  <secondaryie><link linkend="surfaces-coords-props">basic
    properties</link></secondaryie>
   <secondaryie><link linkend="surfaces-summary">breakdown of total
    counts by properties</link></secondaryie>
@@ -826,7 +826,7 @@
    systems, configuring default</link></secondaryie>
   <secondaryie><link linkend="surfaces-defstandard">coordinate
    systems, different systems explained</link></secondaryie>
-  <secondaryie><link linkend="surfaces-viewsurfacecoords">coordinate
+  <secondaryie><link linkend="surfaces-coords">coordinate
    systems, viewing in different systems</link></secondaryie>
   <secondaryie><link linkend="surfaces-summary">counting different types
    of surfaces</link></secondaryie>
@@ -847,7 +847,7 @@
    equations</link></secondaryie>
   <secondaryie><link linkend="surfaces-propname">naming
    surfaces in a list</link></secondaryie>
-  <secondaryie><link linkend="surfaces-viewsurfaceprops">numbering
+  <secondaryie><link linkend="surfaces-coords">numbering
    surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-propsplitting">splitting surfaces,
    recognising</link></secondaryie>
@@ -1176,7 +1176,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-viewsurfaceprops">spun normal
+  <primaryie><link linkend="surfaces-boundary">spun normal
    surfaces</link></primaryie>
  </indexentry>
 

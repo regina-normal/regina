@@ -510,7 +510,7 @@
     Euler characteristic and orientability (amongst others).  These
     additional fields mirror the properties that are displayed on
     screen when viewing a normal surface; see the notes on
-    <link linkend="surfaces-viewsurfaceprops">normal surface properties</link>
+    <link linkend="surfaces-coords-props">normal surface properties</link>
     for details.
    </para>
    <para>
