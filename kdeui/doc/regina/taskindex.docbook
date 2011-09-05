@@ -171,7 +171,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-propcentral">central surfaces,
+  <primaryie><link linkend="surfaces-proptype">central surfaces,
    recognising</link></primaryie>
  </indexentry>
 
@@ -317,7 +317,7 @@
    particular coordinate system</link></secondaryie>
   <secondaryie><link linkend="surfaces-defstandard">explanation of
    different coordinate systems</link></secondaryie>
-  <secondaryie><link linkend="surfaces-coords">viewing in a
+  <secondaryie><link linkend="surfaces-coords-coords">viewing in a
    different coordinate system</link></secondaryie>
  </indexentry>
 
@@ -806,7 +806,7 @@
  <indexentry>
   <primaryie>naming</primaryie>
   <secondaryie><link linkend="packet-rename">packets</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propname">surfaces in a
+  <secondaryie><link linkend="surfaces-coords">surfaces in a
    surface list</link></secondaryie>
   <secondaryie><link linkend="tri-editgluings">tetrahedra in a
    triangulation</link></secondaryie>
@@ -818,7 +818,7 @@
    properties</link></secondaryie>
   <secondaryie><link linkend="surfaces-summary">breakdown of total
    counts by properties</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propcentral">central
+  <secondaryie><link linkend="surfaces-proptype">central
    surfaces, recognising</link></secondaryie>
   <secondaryie><link linkend="surfaces-compat">compatibility
    matrices</link></secondaryie>
@@ -826,7 +826,7 @@
    systems, configuring default</link></secondaryie>
   <secondaryie><link linkend="surfaces-defstandard">coordinate
    systems, different systems explained</link></secondaryie>
-  <secondaryie><link linkend="surfaces-coords">coordinate
+  <secondaryie><link linkend="surfaces-coords-coords">coordinate
    systems, viewing in different systems</link></secondaryie>
   <secondaryie><link linkend="surfaces-summary">counting different types
    of surfaces</link></secondaryie>
@@ -845,11 +845,11 @@
    lists</link></secondaryie>
   <secondaryie><link linkend="surfaces-viewmatching">matching
    equations</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propname">naming
+  <secondaryie><link linkend="surfaces-coords">naming
    surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-coords">numbering
    surfaces in a list</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propsplitting">splitting surfaces,
+  <secondaryie><link linkend="surfaces-proptype">splitting surfaces,
    recognising</link></secondaryie>
   <secondaryie><link linkend="surfaces-proplink">vertex links,
    recognising</link></secondaryie>
@@ -1167,7 +1167,7 @@
   <primaryie>splitting surfaces</primaryie>
   <secondaryie><link linkend="man-sigcensus">census of splitting
    surface signatures</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propsplitting">recognising in a
+  <secondaryie><link linkend="surfaces-proptype">recognising in a
    surface list</link></secondaryie>
   <secondaryie><link linkend="tri-new-splitting">reconstructing a
    triangulation from</link></secondaryie>

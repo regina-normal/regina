@@ -70,6 +70,13 @@
    the triangulation on which the structures are to be placed.
   </para>
   <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="newangles.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
    Only <firstterm>vertex angle structures</firstterm> will be placed in
    the new list; all other angle structures can be formed as convex
    combinations of these vertex structures.
