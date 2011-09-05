@@ -967,10 +967,19 @@ const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc 
 
 unsigned long num_less_than(const std::set<unsigned long> &thelist, const unsigned long &obj); // forward dec.
 
+template <class T>
+void dumpVec(const std::vector<T> out)
+{
+for (unsigned long i=0; i<out.size(); i++)
+ std::cout<<out[i]<<" ";
+std::cout.flush();
+}
+
 const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* NCellularData::alexanderChainComplex( const ChainComplexLocator &a_desc ) const
 { 
  std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing< NLargeInteger > >* >::const_iterator p;
  ChainComplexLocator range_desc(a_desc); range_desc.dim--;
+
  p = alexanderChainComplexes.find(a_desc);
  if (p != alexanderChainComplexes.end()) return (p->second);
 
@@ -981,13 +990,13 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* NCellularData::alexande
    if (tri3) if (!tri3->getFace( nicIx[2][*i] )->isBoundary()) maxTreedcIx.insert( dcIxLookup( tri3->getFace( nicIx[2][*i] ) ) );
    if (tri4) if (!tri4->getTetrahedron( nicIx[3][*i] )->isBoundary()) maxTreedcIx.insert( dcIxLookup( tri4->getTetrahedron( nicIx[3][*i] ) ) );
   }
+
    ccCollectionType::const_iterator q;
    q = genCC.find(a_desc); 
    if (q == genCC.end()) return NULL; // invalid request
    if (a_desc.hcs != DUAL_coord) return NULL; // currently only implemented for dual coordinates.
    if (a_desc.dim > 2) return NULL; // and only dimensions 1->0, 2->1
-   NCellularData::ccMapType thisCC( *q->second ); // typedef NSparseGrid< coverFacetData > ccMapType; cellNo, sig, trans
-   // pi1
+   NCellularData::ccMapType thisCC( *q->second ); 
    const NGroupPresentation* pi1( groupPresentation( GroupPresLocator( whole_manifold, 0 ) ) );
    std::auto_ptr<NMarkedAbelianGroup> pi1Ab( pi1->markedAbelianization() );
    // build matrix, dimensions -- special case of 1-cells, since we're using max tree....
@@ -1002,20 +1011,23 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* NCellularData::alexande
    for (ci = thisCC.getGrid().begin(); ci!=thisCC.getGrid().end(); ci++)
     {
      std::vector<NLargeInteger> ccI( pi1->getNumberOfGenerators() );  // to put into pi1Ab
-     for (unsigned long i=0; i<ci->second->trans.getNumberOfTerms(); i++)
+    for (unsigned long i=0; i<ci->second->trans.getNumberOfTerms(); i++)
       ccI[ci->second->trans.getTerm(i).generator] += ci->second->trans.getTerm(i).exponent;
+
      signed long levelOfCell ( pi1Ab->snfRep(ccI)[pi1Ab->getNumberOfInvariantFactors()].longValue() );
      // level of cell is the index i, for the covering space trans t^i
-     unsigned long cR, cC;  // error here -- ci->first.entry(0) is in dcIx coordinates, maxTreeStd in nicIx
+     unsigned long cR, cC;  
      // so we need to chuck the 1-cell if it is not in the dual 1-skeleton, and if it *is* in maxTreeStd
      if (a_desc.dim==1) { if ( maxTreedcIx.find( ci->first.entry(0) ) != maxTreedcIx.end() ) continue;
                           cR=0; cC=ci->first.entry(0) - num_less_than(maxTreedcIx, ci->first.entry(0)); }
      if (a_desc.dim==2) { if ( maxTreedcIx.find( ci->second->cellNo ) != maxTreedcIx.end() ) continue; 
                           cR=ci->second->cellNo - num_less_than(maxTreedcIx, ci->second->cellNo); cC = ci->first.entry(0); }
+
      buildMat->entry( cR,  cC ) += 
       NSVPolynomialRing< NLargeInteger >( NLargeInteger(ci->second->sig), levelOfCell ); 
     }
    // insert
+
    std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > *Mptr = 
        const_cast< std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > *> (&alexanderChainComplexes);
       Mptr->insert( std::pair< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > ( a_desc, buildMat ) );
@@ -1046,6 +1058,7 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData
  signed long smallestNZdeg;
  find_small_degree:  // look for smallest non-zero degree elt, set index of column to pivotCol
  pivotCol=0; smallestNZdeg=0;
+
  for (unsigned long i=0; i<workM.columns();i++)
   { if ( (workM.entry(0,i).degree() != 0) && (( abs(workM.entry(0,i).degree()) < abs(smallestNZdeg)) || (smallestNZdeg==0) ) )
     {     pivotCol = i;  smallestNZdeg = workM.entry(0,i).degree(); } } 
@@ -1070,6 +1083,7 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData
  std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > retval( new NMatrixRing< NSVPolynomialRing< NLargeInteger > >(N->rows()-1,N->columns()) );
  for (unsigned long i=0; i<retval->rows(); i++) for (unsigned long j=0; j<retval->columns(); j++)
   retval->entry( i, j ) = workN.entry( (i<pivotCol) ? i : i+1, j ); 
+
  return retval;
 }
 
@@ -1085,7 +1099,8 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::
   {
   // in general aPM might be wider than it is tall, so we have to keep track of how many columns to erase
   unsigned long colToErase = aPM->columns() - aPM->rows();
-  // so we need to choose numbers 0 <= a1 < ... < ak <=aPM.columns() to erase, then take the determinant of that submatrix. 
+  // so we need to choose numbers 0 <= a1 < ... < ak <=aPM.columns() to erase, 
+  //  then take the determinant of that submatrix. 
   // let's use NPartition to iterate through all such. 
   NPartition skipCols( aPM->columns(), colToErase );
   while ( !skipCols.atEnd() )
@@ -1097,6 +1112,7 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::
       while (skipCols.partition().get(j+delta)) delta++;     
       for (unsigned long i=0; i<sqSubMat.rows(); i++) sqSubMat.entry(i,j) = aPM->entry( i, j+delta );
      }
+
     alexIdeal.push_back( sqSubMat.det() );
     ++skipCols; // next!
    }

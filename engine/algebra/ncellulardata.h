@@ -84,7 +84,7 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo  1) Complete collection of homology natural bilinear forms on a manifold, spin structures. See (3), (4)
+ * \todo  1) Complete collection of homology natural bilinear forms on a manifold, spin structures. 
  * \todo  2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
  *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first.
@@ -94,24 +94,26 @@ class Dim4Triangulation;
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
  *        cup products. Not complete: Chain complex initialization. chain maps.  PD / intersection forms
  *        Note, current "mixed" chain complex does not subdivide ideal boundary.  Is this an issue? 
+ *        Also, this is needed for (1) and (2).
  * \todo  4) To minimize memory usage we should consider having homs, bilinear forms, etc, 
- *        not store their initialization data, instead trusting it to the NCellularData stack.  
- * \todo  5) need to set up local orientations for dual boundary coordinates, for the barycentres
- *        of all standard boundary simplices.  We'll put something in setupIndices for this.
- *        Currently done for Dim4Triangulations, but not for NTriangulations.  TODO nowish..
- *        Test this by computing Alex polynomials of knot complements.
+ *        not store their initialization data, instead trusting it to the NCellularData stack.
+ *        This is a slow-but-ongoing process....  
+ * \todo  5) need to set up local orientations for dual boundary coordinates (DIM4 done, DIM3 debugging!), 
+ *        buildFundGrpPres() for 3-manifolds TODO, for 4-manifold DONE
+ *        need to do the boundary inclusion maps for pi1. Need to test, esp. alex polys. DIM3 seems buggy.
  * \todo  6) We'll also eventually need maximal trees in the standard and mixed 1-skeleton, to implement
  *        Farber-Levine pairings and Poincare duality in covering spaces, in general. 
  * \todo  7) Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
- *        clear what all the computations mean. 
- * \todo  8) Make all of the Regina engine POSIX pthread safe.  Make a thread-pool version of the test suite. 
- *        Right now NCellularData, probably some aspect of the Alexander Ideal construction process is the 
- *        main culprit. 
+ *        clear what all the computations mean.  It could use a general re-think.
+ * \todo  \optlong Make all of the Regina engine POSIX pthread safe.  Make a thread-pool version of the 
+ *        test suite. Right now NCellularData, probably some aspect of the Alexander Ideal construction 
+ *        process is the main culprit. 
  * \todo \optlong We should add Bocksteins and the long exact sequence associated to a change-of-coefficient map.
  *
  * Guide to ncellulardata.*.cpp files:
  *
- *       ncellulardata.cpp - contains only the core routines to call for information stored on internal stacks. 
+ *       ncellulardata.cpp - contains only the core routines to call for information stored on internal stacks, 
+ *                            or calls appropriate routines to generate such information.
  *                           NCellularData::integerChainComplex
  *                           NCellularData::integerChainMap
  *                           NCellularData::unMarkedGroup 
@@ -123,24 +125,32 @@ class Dim4Triangulation;
  *                           NCellularData::homGroupPresentation. 
  *                           NCellularData::alexanderChainComplex
  *
- *       ncellulardata.init.indexing.cpp - contains the NCellularData::NCellularData(NTriangulation / Dim4Triangulation)
- *                                         constructor, and the routines that set up the internal indices like icIx, etc.
+ *       ncellulardata.init.indexing.cpp 
+ *                         - contains the NCellularData::NCellularData(NTriangulation / Dim4Triangulation)
+ *                           constructor, and the routines that set up the internal indices like icIx, etc.
  *
- *       ncellulardata.init.cc.cpp - contains the homology chain complex initialization routines.
+ *       ncellulardata.init.cc.cpp 
+ *                         - contains the homology chain complex initialization routines.
  *
- *       ncellulardata.init.hom.cpp - contains the homology chain map initialization routines. 
+ *       ncellulardata.init.hom.cpp 
+ *                         - contains the homology chain map initialization routines. 
  *
- *       ncellulardata.init.pi1.cpp - contains initialization routines for the fundamental groups presentations 
- *                                    and maps between them.
+ *       ncellulardata.init.pi1.cpp 
+ *                         - contains initialization routines for the fundamental groups presentations 
+ *                           and maps between them.
  *
- *       ncellulardata.locators.cpp - contains the ***Locator classes for the internal maps that store the various
- *                                    computations in NCellularData. 
+ *       ncellulardata.locators.cpp 
+ *                         - contains the Locator classes for the internal maps that store the various
+ *                           computations in NCellularData. 
  *
- *       ncellulardata.lookups.cpp  - contains reverse lookups for the cell indices such as icIx, etc. 
+ *       ncellulardata.lookups.cpp  
+ *                         - contains reverse lookups for the cell indices such as icIx, etc. 
  *
- *       ncellulardata.output.cpp - contains the writeTextShort routines.
+ *       ncellulardata.output.cpp 
+ *                         - contains the writeTextShort and writeTextLong routines.
  *
- *       ncellulardata.tests.cpp - contains all the canned diagnostic tests. 
+ *       ncellulardata.tests.cpp 
+ *                         - contains all the canned diagnostic tests. 
  *
  * @author Ryan Budney
  */
@@ -626,7 +636,8 @@ private:
 
    struct dim3BoundaryEdgeInclusion
     { NFace *firstfac, *secondfac;
-      unsigned long firstedgnum, secondedgnum; };
+      unsigned long firstedgnum, secondedgnum; 
+      NPerm3 firstperm, secondperm; };
 
    struct dim3BoundaryVertexInclusion
     { std::vector< NFace* > face;
@@ -654,11 +665,13 @@ private:
      *  orientation.
      *
      * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face [tri3->getEdge(bcIx[1][i])]
-     *  the two boundary faces that contain it and the edge number of the edge in the NFace.  
+     *  the two boundary faces that contain it and the edge number of the edge in the NFace.  firstperm and
+     *  secondperm describe where the edge vertices 0, 1 get sent to in the face, with 2 going to the edge
+     *  number in the face. 
      *
      * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex [tri3->getVertex(bcIx[0][i])]
      *  the circle of faces incident to that vertex, with vrtinc[1] and vrtinc[2] forming the normal orientation
-     *  in agreement with the indexing of face.  TODO
+     *  in agreement with the indexing of face.  
      */
    std::vector< dim4BoundaryFaceInclusion >   normalsDim4BdryFaces;
    std::vector< dim4BoundaryEdgeInclusion >   normalsDim4BdryEdges;  

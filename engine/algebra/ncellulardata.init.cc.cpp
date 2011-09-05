@@ -35,7 +35,13 @@
 #include <map>
 #include <list>
 #include <cmath>
-
+/**
+ *  General comment: in the code you'll see lots of "TODO: compute wordle!" comments.
+ *   The wordle is the key information needed when one lifts the triangulation or CW
+ *   structure to the universal cover.  It keeps track of lifts.  At present this is
+ *   only implemented for parts of the skeleton and it is a slow on-going process to
+ *   fully implement it. 
+ */
 namespace regina {
  
 // routine fills out genCC for the ChainComplexLocator == STD_coord, all dimensions

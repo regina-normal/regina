@@ -48,6 +48,14 @@
  *  the various pi1's can be computed. 
  */
 
+// TODO: bug checking in 3-dimensional case is a priority
+//       current bug : alexander ideals clearly wrong for 3-dimensional knot complements
+//       likely problem: buildExtraNormalData and the buildFundGrpPres routines are most
+//       likely culprits, but the maximal forest alg could also be a problem. 
+// okay, pi1 for closed 3-manifolds seems okay. abelianization checks.
+//       pi1 for ideal boundary 3-manifolds... also seems fine.  
+//       pi1 for std bdry... segfaults! look into this. 
+
 namespace regina {
 
 
@@ -148,9 +156,9 @@ return true;
      *
      * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex [tri3->getVertex(bcIx[0][i])]
      *  the circle of faces incident to that vertex, with vrtinc[1] and vrtinc[2] forming the normal orientation
-     *  in agreement with the indexing of face. TODO
+     *  in agreement with the indexing of face. 
      *
-     * Warning, not yet NTriangulation safe.  TODO
+     * Warning, not yet NTriangulation safe.  TODO - in bug-testing phase. 
      * The data this creates is perhaps not copy-constructor safe, either.  
      */
 void NCellularData::buildExtraNormalData()
@@ -238,40 +246,120 @@ void NCellularData::buildExtraNormalData()
    }
  } // end tri4 
  else
- { // tri3 construct normalsDim3BdryEdges and normalsDim3BdryVertices TODO
+ { // tri3 construct normalsDim3BdryEdges
   normalsDim3BdryEdges.resize( bcIx[1].size() );
-  // okay, so for every bcIx[1] we find the corresponding boundary edge, and the boundary NFaces that include it
+  // std::vector< dim3BoundaryEdgeInclusion >   normalsDim3BdryEdges;
+  //
   // struct dim3BoundaryEdgeInclusion
   //  { NFace *firstfac, *secondfac;
   //    unsigned long firstedgnum, secondedgnum; };
-  // so we request bcIx[1]'s embeddings, find the first and last face in that list
+  //
+  // construct normalsDim3BdryEdges
+  // 
+  // The strategy here is to get every incident tetrahedron using the edg->getEmbedding
+  //  call, and since Regina has them cyclically ordered with a normal orientation already, 
+  //  take the first and last and the appropriate face of each.  Ok DONE. 
   for (unsigned long i=0; i<bcIx[1].size(); i++)
    {
-    const NEdge* edg( tri3->getEdge( bcIx[1][i] ) );    const NEdgeEmbedding emb1( edg->getEmbedding(0) );
-    const NTetrahedron* tet1( emb1.getTetrahedron() );  NFace* fac1 ( tet1->getFace( emb1.getVertices()[3] ) );
+    const NEdge* edg( tri3->getEdge( bcIx[1][i] ) );    
+    
+    const NEdgeEmbedding emb1( edg->getEmbeddings().front() );
+    NPerm4 edgPerm( emb1.getVertices() );        const NTetrahedron* tet1( emb1.getTetrahedron() );  
+    NFace* fac1 ( tet1->getFace( edgPerm[3] ) ); NPerm4 facPerm( fac1->getEmbedding(0).getVertices() );
     normalsDim3BdryEdges[i].firstfac = fac1;
-    normalsDim3BdryEdges[i].firstedgnum = fac1->getEmbedding(0).getVertices().preImageOf( emb1.getVertices()[2] );
+    normalsDim3BdryEdges[i].firstedgnum = facPerm.preImageOf( edgPerm[2] );
+    normalsDim3BdryEdges[i].firstperm = NPerm3( facPerm.preImageOf( edgPerm[0] ), 
+              facPerm.preImageOf( edgPerm[1] ), facPerm.preImageOf( edgPerm[2] ) );
 
-    const NEdgeEmbedding emb2( edg->getEmbedding( edg->getNumberOfEmbeddings() - 1 ) );
-    const NTetrahedron* tet2( emb1.getTetrahedron() );  NFace* fac2 ( tet2->getFace( emb2.getVertices()[2] ) );
+    const NEdgeEmbedding emb2( edg->getEmbeddings().back() );
+    edgPerm = emb2.getVertices();                 const NTetrahedron* tet2( emb2.getTetrahedron() );  
+    NFace* fac2 ( tet2->getFace( edgPerm[2] ) );  facPerm = fac2->getEmbedding(0).getVertices();
     normalsDim3BdryEdges[i].secondfac = fac2;
-    normalsDim3BdryEdges[i].secondedgnum = fac2->getEmbedding(0).getVertices().preImageOf( emb2.getVertices()[3] );
+    normalsDim3BdryEdges[i].secondedgnum = facPerm.preImageOf( edgPerm[3] );
+    normalsDim3BdryEdges[i].secondperm = NPerm3( facPerm.preImageOf( edgPerm[0] ), 
+               facPerm.preImageOf( edgPerm[1] ), facPerm.preImageOf( edgPerm[3] ) );
    }
-  // now for the boundary vertices.
-  normalsDim4BdryVertices.resize( bcIx[0].size() );
-  // similarly, for every bcIx[0] find the boundary NFace's that include it and their data, as described in the structure below.
+
   // struct dim3BoundaryVertexInclusion
   //  { std::vector< NFace* > face;
   //    std::vector< unsigned long > vrtnum; 
   //    std::vector< NPerm3 > vrtinc; };
+  //
+  //  std::vector< dim3BoundaryVertexInclusion > normalsDim3BdryVertices; 
+  //
+  // construct normalsDim3BdryVertices
+  // 
+  // The strategy is to walk around the faces in cyclic order, so for each one we hit the corresponding
+  //  edge, and have to call its edge embeddings, going to the opposite end of the edge embeddings... ah.. okay.
+  //  that's how we'll do it.  So we just have to get one incident edge to start the process off with. And
+  //  we can piggyback off the normalsDim3BdryEdges computation! Good.  
+
+  normalsDim3BdryVertices.resize( bcIx[0].size() );
   for (unsigned long i=0; i<bcIx[0].size(); i++)
    {
     const NVertex* vrt( tri3->getVertex(bcIx[0][i]) );
     const std::vector< NVertexEmbedding > vrtEmbs(vrt->getEmbeddings());
-    // TODO 
-   }
+    // walk through vrtEmbs until we find the first boundary face.
+    // for each embedding, look at the three faces that contain this vertex, and check
+    // if one of them is on the boundary. If it is, stop. 
+    bool foundBdryFac=false;   
+    unsigned long j, k;
+    for (j=0; j<vrtEmbs.size(); j++) 
+     {
+      for (k=1; k<4; k++)
+       {
+        if ( vrtEmbs[j].getTetrahedron()->getFace((vrtEmbs[j].getVertex()+k) % 4)->isBoundary() ) foundBdryFac=true;
+        if (foundBdryFac) break;
+       }
+      if (foundBdryFac) break;
+     } // this must return with foundBdryFac true, or else I've made a huge mistake.
+    if (!foundBdryFac) std::cout<<"Skeletal error in NCellularData::buildExtraNormalData.\n";
+    // okay now it's time to start building normalsDim3BdryVertices.  So we take the face, and choose
+    //  some orientation of it. 
+    normalsDim3BdryVertices[i].face.push_back( vrtEmbs[j].getTetrahedron()->getFace((vrtEmbs[j].getVertex()+k) % 4) );
+    normalsDim3BdryVertices[i].vrtnum.push_back( normalsDim3BdryVertices[i].face[0] -> getEmbedding(0).getVertices().preImageOf( vrtEmbs[j].getVertex() ) );
+    // 0 to vertex index in face, 1 and 2 to other vertices, any choice...
+    normalsDim3BdryVertices[i].vrtinc.push_back( NPerm3( normalsDim3BdryVertices[i].vrtnum[0], (normalsDim3BdryVertices[i].vrtnum[0]+1) % 3, (normalsDim3BdryVertices[i].vrtnum[0]+2) % 3) );
+    // find the next face in sequence, if not the 0-th face, append it to list.  
 
+    bool toNextFace=true;
+    while (toNextFace)
+     {
+        NFace *prevFace, *nextFace;
+        unsigned long prevVN, nextVN;
+        NPerm3 prevPerm, nextPerm;
+        prevFace = normalsDim3BdryVertices[i].face.back(); 
+        prevVN = normalsDim3BdryVertices[i].vrtnum.back(); 
+        prevPerm = normalsDim3BdryVertices[i].vrtinc.back();
+        NEdge *foldE = prevFace->getEdge(1); 
+        unsigned long foldEei( bcIxLookup( foldE ) );
+
+        if ( (normalsDim3BdryEdges[foldEei].firstfac == prevFace) && 
+             (normalsDim3BdryEdges[foldEei].firstedgnum == 1) )
+         {
+          nextFace = normalsDim3BdryEdges[foldEei].secondfac;
+          nextVN = normalsDim3BdryEdges[foldEei].secondedgnum;
+          nextPerm = normalsDim3BdryEdges[foldEei].secondperm;
+         }
+        else
+         {
+          nextFace = normalsDim3BdryEdges[foldEei].firstfac;
+          nextVN = normalsDim3BdryEdges[foldEei].firstedgnum;
+          nextPerm = normalsDim3BdryEdges[foldEei].firstperm;
+         }
+       // now check to see if nextFace is the 0-th face or not...
+       if ( (nextFace == normalsDim3BdryVertices[i].face[0]) && 
+            (nextVN == normalsDim3BdryVertices[i].vrtnum[0]) ) toNextFace=false;
+       else // record
+        {
+         normalsDim3BdryVertices[i].face.push_back(nextFace);
+         normalsDim3BdryVertices[i].vrtnum.push_back(nextVN);
+         normalsDim3BdryVertices[i].vrtinc.push_back(nextPerm);
+        }
+    }
+   }
  } // end tri3
+// TODO gah! currently a major memory leak... somewhere! 
 
  // figure out number of standard vs. ideal boundary components, also compute a vector which describes
  //  the map (boundary faces) --> (boundary components they belong to)
@@ -336,6 +424,7 @@ void NCellularData::buildExtraNormalData()
      }
    }
   }
+
 } // end buildExtraNormalData()
 
 /**
@@ -641,6 +730,8 @@ void NCellularData::buildMaximalTree()
   }
 }// end buildMaximalTree()
 
+
+
 void NCellularData::buildFundGrpPres() const
 {
  NGroupPresentation pres;
@@ -902,7 +993,251 @@ void NCellularData::buildFundGrpPres() const
 
   } // end tri4
  else
-  { // tri3 TODO
+  { // tri3 
+   // we sort the 1-cells by: standard boundary, ideal boundary, standard interior cells, edges to ideal boundary
+   // so wedge indexed by:     - maxTreeStB.size,  - maxTreeIdB.size(), - maxTreeStd.size(),  maxTreeSttIdB.size()
+   unsigned long delta0( numNonIdealBdryCells[1] - maxTreeStB.size() ); // dual edges transv to edges 
+   unsigned long delta1( delta0 + numIdealCells[1] - maxTreeIdB.size() );
+   unsigned long delta2( delta1 + numNonIdealCells[2] - maxTreeStd.size() );
+   unsigned long delta3( delta2 + numIdealCells[2] - maxTreeSttIdB.size() ); // connectors interior to bdry
+
+   pres.addGenerator( delta3 );// we've set the generators for the presentation.
+
+   // orig currTet                      currPen                tet                                              
+   NFace* currFac (NULL); NTetrahedron* currTet (NULL); NFace* fac (NULL); unsigned long currTetFace;
+
+   // okay, lets start finding relators. Relators dual faces. There are two types. 
+   //  1) Non-boundary. 
+   //  2) Boundary. 
+
+   for (NTriangulation::EdgeIterator edg = tri3->getEdges().begin(); edg!=tri3->getEdges().end(); edg++)
+    {
+     NGroupExpression relator; 
+
+     if ( !(*edg)->isBoundary() ) // non-boundary -- interior 2-cell
+      {
+       std::deque<NEdgeEmbedding>::const_iterator embit;
+       for (embit = (*edg)->getEmbeddings().begin();
+                    embit != (*edg)->getEmbeddings().end(); embit++)
+        { // now we have to determine whether or not the embedding coincides with the normal or of the tet.
+         currTet = (*embit).getTetrahedron();
+         currTetFace = (*embit).getVertices()[3]; 
+         fac = currTet->getFace(currTetFace);  
+         // and is the tet in the maximal tree?    
+         if (!inMaximalTree(fac)) 
+          {
+          // get index. 
+          unsigned long facind = delta1 + tri3->faceIndex( fac ) - num_less_than( maxTreeStd, tri3->faceIndex( fac ) );
+          if ( (fac -> getEmbedding(1).getTetrahedron() == currTet) && (fac -> getEmbedding(1).getFace() == currTetFace) )
+           relator.addTermFirst( facind, 1 ); else relator.addTermFirst( facind, -1 ); // oriented from emb 0 to emb 1
+          }
+        } 
+       NGroupExpression* relate ( new NGroupExpression(relator) );
+       pres.addRelation(relate);
+      }
+     else // boundary face -- cell half on std boundary, half in interior
+      {
+       unsigned long facind;
+       const NEdgeEmbedding edgemb = (*edg)->getEmbedding(0);
+       currTet = edgemb.getTetrahedron();
+       currTetFace = edgemb.getVertices()[3]; 
+       fac = currTet->getFace(currTetFace); // boundary tet we start with
+       unsigned long facedgnum = fac->getEmbedding(0).getVertices().preImageOf( edgemb.getVertices()[2] );
+       if (!fac->isBoundary()) std::cout<<"ERROR (unexpected face) "<<std::endl; 
+
+       if (!inMaximalTree(*edg))
+        {
+         // orientation? 
+         unsigned long I = lower_bound( bcIx[1].begin(), bcIx[1].end(), tri3->edgeIndex( *edg ) ) - bcIx[1].begin();
+         if ( (normalsDim3BdryEdges[I].secondfac == fac) && (normalsDim3BdryEdges[I].secondedgnum == facedgnum) )
+          relator.addTermFirst( I - num_less_than( maxTreeStB, I ),  1 );
+         else
+          relator.addTermFirst( I - num_less_than( maxTreeStB, I ), -1 );
+        }
+   
+       // main loop
+       for (std::deque<NEdgeEmbedding>::const_iterator embit=(*edg)->getEmbeddings().begin();
+            embit != (*edg)->getEmbeddings().end(); embit++)
+        { // now we have to determine whether or not the embedding coincides with the normal or of the tet.
+         currTet = (*embit).getTetrahedron();
+         currTetFace = (*embit).getVertices()[3]; 
+         fac = currTet->getFace(currTetFace);  
+         // and is the tet in the maximal tree?    
+         if (!inMaximalTree(fac)) 
+          {
+          // get index. 
+          facind = delta1 + tri3->faceIndex( fac ) - num_less_than( maxTreeStd, tri3->faceIndex( fac ) );
+          int sign;
+          if (embit == (*edg)->getEmbeddings().begin() )
+           { sign = -1; }
+          else
+           {
+            if ( (fac -> getEmbedding(0).getTetrahedron() == currTet) && (fac -> getEmbedding(0).getFace() == currTetFace) )
+             sign = -1; else sign = 1; 
+           }
+           relator.addTermFirst( facind, sign ); 
+          }
+        } 
+
+       // end pad
+       currTetFace= (*edg)->getEmbedding((*edg)->getNumberOfEmbeddings()-1).getVertices()[2];
+       fac = currTet->getFace(currTetFace);
+       if (!fac->isBoundary()) std::cout<<"ERROR (unexpected face) "<<std::endl;
+       if (!inMaximalTree(fac))
+        {
+         facind = delta1 + tri3->faceIndex( fac ) - num_less_than( maxTreeStd, tri3->faceIndex( fac ) );
+         relator.addTermFirst( facind, 1 ); // all 1-cells dual to boundary tets assumed oriented outwards
+        }
+
+       // finish
+       NGroupExpression* relate( new NGroupExpression(relator) );
+       pres.addRelation(relate);
+      }
+    }// that finishes interior cells dual to faces. 
+
+   // now for boundary dual 2-cells -- pure boundary relator.
+   // run through bcIx[0], for each edge call getEmbeddings(), this describes a disc and we need to crawl around the boundary.
+   NVertex* vrt(NULL);
+   for (unsigned long i=0; i<bcIx[0].size(); i++)
+    {
+     vrt = tri3->getVertex( bcIx[0][i] );
+     NGroupExpression relator; 
+     NGroupExpression brelator; unsigned long bcompidx(0);
+     // call normalsDim3BdryEdges[i] for bcIx[0][i] normal data.
+     for (unsigned long j=0; j<normalsDim3BdryVertices[i].face.size(); j++)
+      {
+       // tetrahedron normalsDim4BdryEdges[i].tet[j] edge normalsDim4BdryEdges[i].edgenum[j] and normalsDim4BdryEdges[i].edginc[j]
+       const NFace* fac( normalsDim3BdryVertices[i].face[j] );
+        // unsigned long edgnum ( normalsDim4BdryEdges[i].edgenum[j] );
+       NPerm3 vrtinc ( normalsDim3BdryVertices[i].vrtinc[j] );
+       // find the face that edginc[2] [3] comes out of
+       const NEdge* bedg (fac -> getEdge( vrtinc[2] ) ); 
+       if (!inMaximalTree(bedg))
+        {
+        // find this bfac's bcIx[2] index
+        unsigned long bedgidx ( lower_bound( bcIx[1].begin(), bcIx[1].end(), tri3->edgeIndex(bedg) ) - bcIx[1].begin() ); 
+        // what boundary component are we in? 
+        bcompidx = stdBdryCompIndexCD1[ bedgidx ] ;
+        unsigned long bgen = lower_bound( stdBdryPi1Gen[bcompidx].begin(), stdBdryPi1Gen[bcompidx].end(), 
+                              bedgidx ) - stdBdryPi1Gen[bcompidx].begin();
+
+        if ( ( normalsDim3BdryEdges[bedgidx].secondfac == fac ) && ( normalsDim3BdryEdges[bedgidx].secondedgnum == vrtinc[2] ) )
+	   {
+           relator.addTermFirst( bedgidx - num_less_than( maxTreeStB, bedgidx ), 1 );  // + or 
+           brelator.addTermFirst( bgen, 1 );	   
+	   }
+        else
+	   {
+           relator.addTermFirst( bedgidx - num_less_than( maxTreeStB, bedgidx ), -1);  // - or
+           brelator.addTermFirst( bgen, -1 );	   
+ 	   }
+        }
+      }
+      // finish
+      NGroupExpression* relate ( new NGroupExpression(relator) );
+      pres.addRelation(relate);   
+
+      NGroupExpression* brelate ( new NGroupExpression(brelator) );
+      stdBdryPi1[bcompidx].addRelation(brelate);
+    } // end boundary dual 2-cells
+
+   //  now for ideal dual 2-cells, dual to ideal 0-cells in ideal boundary, one for every icIx[0]
+   for (unsigned long i=0; i<icIx[0].size(); i++)
+    {
+     NGroupExpression relator, brelator; 
+     unsigned long bcompidx(0);
+
+     const NEdge* edg ( tri3->getEdge( icIx[0][i]/2 ) );
+     unsigned long idEdg ( icIx[0][i] % 2 );  // ideal edge number of fac
+     // lets acquire all the Dim4Pentachora incident to fac. 
+     for (unsigned long j=0; j<edg->getNumberOfEmbeddings(); j++)
+      {
+       const NTetrahedron* tet ( edg->getEmbedding(j).getTetrahedron() );
+       NPerm4 edgemb( edg->getEmbedding(j).getVertices() );
+       // idEdg of fac represents an ideal edge.  We want to find all the ideal incident tets and mark 
+       // them appropriately so we find fac's embeddings in pentachoral and look up the relevant ideal tets.  
+       // so we are going across the tetrahedron in pen whose vertices are marked by facemb[0][1][2] and [3]
+       // ie tetrahedron  labelled by facemb[4]. 
+       const NFace* fac ( tet->getFace( edgemb[3] ) );
+       NPerm4 facemb( tet->getFaceMapping( edgemb[3] ) );
+       // vertex idEdg of fac corresponds to tetemb^{-1} facemb[idEdg] of tet.  So let's see if it is in the 
+       // maximal tree icIx[2] stored as 4*tetindx + num
+       unsigned long I ( lower_bound( icIx[1].begin(), icIx[1].end(), 3*tri3->faceIndex(fac) + facemb.preImageOf( edgemb[idEdg] ) ) -icIx[1].begin() );
+       bcompidx = idBdryCompIndexCD1[ I ];
+       unsigned long J ( lower_bound( idBdryPi1Gen[bcompidx].begin(), idBdryPi1Gen[bcompidx].end(), I ) -
+ 				      idBdryPi1Gen[bcompidx].begin() );
+       if (!inMaximalTree( fac, facemb.preImageOf( edgemb[idEdg] ) ) ) 
+        {
+         // what's the sign? check to see if this tet embeds into the pentachoron with same normal orientation, or not.  
+         int sign (-1);
+         if ( ( fac->getEmbedding(1).getTetrahedron() == tet ) && 
+              ( fac->getEmbedding(1).getFace() == facemb[3] ) ) sign = 1;
+         // what's the generator?  
+         unsigned long gennum ( delta0 + I - num_less_than( maxTreeIdB, I ) ); // index of generator.
+         // assign to relator  
+         relator.addTermFirst( gennum, sign );
+         brelator.addTermFirst( J , sign );
+        }
+      }
+     NGroupExpression* relate ( new NGroupExpression(relator) );
+     pres.addRelation(relate);
+
+     NGroupExpression* brelate ( new NGroupExpression(brelator) );
+     idBdryPi1[bcompidx].addRelation(brelate);
+    }
+
+   //  now for ideal dual 2-cells, into the interior of the manifold, one for every icIx[1]
+   for (unsigned long i=0; i<icIx[1].size(); i++)
+    {
+     NGroupExpression relator; 
+     const NFace* fac ( tri3->getFace( icIx[1][i]/3 ) );
+     unsigned long idEdg ( icIx[1][i] % 3 );  // ideal end number of tet
+
+     // these relators have at most 4 terms depending on how many of the relevant edges are in the maximal
+     //  tree. A boundary term, two connect-to-boundary terms, and an interior tetrahedron term. 
+     //  orientations set by tet->getEmbedding()  
+     const NTetrahedron* tetL( fac->getEmbedding(0).getTetrahedron() );
+     NPerm4 facLinc( fac->getEmbedding(0).getVertices() );
+     unsigned long tetLnum( fac->getEmbedding(0).getFace() );
+
+     const NTetrahedron* tetR( fac->getEmbedding(1).getTetrahedron() );
+     NPerm4 facRinc( fac->getEmbedding(1).getVertices() );
+     unsigned long facRnum( fac->getEmbedding(1).getFace() );
+
+     // 1-cells in order.
+     // 1st boundary connector in maximal tree?
+     if (!inMaximalTree( tetL, facLinc[idEdg] ) )
+      { 
+       unsigned long I ( lower_bound( icIx[2].begin(), icIx[2].end(), 4*tri3->tetrahedronIndex( tetL ) + facLinc[idEdg] ) - icIx[2].begin() );
+       unsigned long indx( delta2 + I - num_less_than(maxTreeSttIdB, I ) );
+       relator.addTermFirst( indx, -1 );
+      }
+     // tet in maximal tree?
+     if (!inMaximalTree( fac ) )
+      {
+       unsigned long I ( lower_bound( nicIx[2].begin(), nicIx[2].end(), tri3->faceIndex( fac ) ) - nicIx[2].begin() );
+       unsigned long indx( delta1 + I - num_less_than(maxTreeStd, I ) );
+       relator.addTermFirst( indx, 1 );
+      }
+     // 2nd boundary connector in maximal tree?  
+     if (!inMaximalTree( tetR, facRinc[idEdg] ) )
+      {
+       unsigned long I ( lower_bound( icIx[2].begin(), icIx[2].end(), 4*tri3->tetrahedronIndex( tetR ) + facRinc[idEdg] ) - icIx[2].begin() );
+       unsigned long indx( delta2 + I - num_less_than(maxTreeSttIdB, I ) );
+      relator.addTermFirst( indx, 1 );
+      }
+     // boundary fac in maximal tree? 
+     if (!inMaximalTree( fac, idEdg ) )
+      {
+       unsigned long indx( delta0 + i - num_less_than(maxTreeIdB, i) );
+       relator.addTermFirst( indx, -1 );
+      }
+
+     NGroupExpression* relate ( new NGroupExpression(relator) );
+     pres.addRelation(relate);
+    }
+
+
 
   } // end tri3
 

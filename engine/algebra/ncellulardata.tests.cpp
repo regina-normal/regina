@@ -120,7 +120,7 @@ for (unsigned long i=1; i<schCM.size(); i++) if (schCM[i] && schCM[i-1] && srCC[
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*schCM[i-1])*(*srCC[i+1]);
   for (unsigned long j=0; j<prod1->rows(); j++) for (unsigned long k=0; k<prod1->columns(); k++)
 	if (prod1->entry(j,k) + prod2->entry(j,k) != 0) return false; 
- } // TODO! fix this...
+ } 
 return true;
 }
 
