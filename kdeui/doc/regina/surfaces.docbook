@@ -4,174 +4,225 @@
  <para>
   <inlinemediaobject>
    <imageobject>
-    <imagedata fileref="reginawhite.png" align="right"/>
+    <imagedata fileref="normaldiscs.png" align="right"/>
    </imageobject>
   </inlinemediaobject>
-  The primary motivation for originally writing &regina; was to create a
-  tool for calculating vertex normal surfaces within a triangulation.
+  A <firstterm>normal surface</firstterm> is a surface within a
+  3-manifold triangulation that meets each tetrahedron in a collection
+  of triangles and/or quadrilaterals, as illustrated to the right.
+  For a nice overview of normal surface theory, see
+  <xref linkend="bib-hass-knotnp"/>.
  </para>
  <para>
-  A <firstterm>normal surface</firstterm> inside a 3-manifold
-  triangulation is a surface composed entirely of normal discs.  A
-  <firstterm>normal disc</firstterm> is a properly embedded disc within
-  a single tetrahedron, and must be either a
-  triangle (whose boundary runs across three of the four tetrahedron faces)
-  or a quadrilateral (whose boundary runs across all four of the tetrahedron
-  faces).
+  &regina; typically works with embedded normal surfaces, but it also offers
+  basic support for immersed and singular surfaces.  In addition, it can
+  work with <firstterm>almost normal surfaces</firstterm>
+  (which are like normal surfaces but with an extra
+  &ldquo;exceptional disc&rdquo;)
+  and <firstterm>spun normal surfaces</firstterm> (with infinitely
+  many triangles spinning out towards the vertices).
  </para>
  <para>
-  The &regina; logo shown on this page illustrates all four possible
-  triangle types and one of the three possible
-  quadrilateral types within a tetrahedron.
+  For almost normal surfaces, &regina; uses the restricted definition
+  of Thompson <xref linkend="bib-thinposition"/>
+  where the exceptional piece is an octagon>.
+  &regina; does not currently support the more general definition
+  of Rubinstein <xref linkend="bib-rubin-3sphere1"/> where the exception
+  piece may be either an octagon or a tube.
  </para>
- <para>
-  &regina; will also calculate <firstterm>almost normal
-  surfaces</firstterm>, which have the same restrictions as normal
-  surfaces except that they must contain precisely one additional
-  octagonal disc.
-  The boundary of an octagonal disc runs across each tetrahedron face twice,
-  and there are three possible types of octagonal disc.
- </para>
- <note><para>
-  More general definitions of almost normal surfaces allow for an annular
-  piece instead of an octagonal disc.  &regina; works with the more
-  restrictive octagon-only definition as described by Thompson
-  <xref linkend="bib-thinposition"/> (which is much simpler
-  to deal with computationally).
- </para></note>
- <para>
-  Normal surfaces are represented as integer vectors indicating how many
-  discs of each type in each tetrahedron are used to make up the surface.
- </para>
- <para>
-  For a summary of enough normal surface theory to use this
-  program, see a reference such as
-  <xref linkend="bib-burton-convert"/> or <xref linkend="bib-hass-knotnp"/>.
- </para>
-
- <note>
-  <para>
-   A normal surface list in the packet tree must be a
-   child packet of the triangulation in which the surfaces are contained.
-  </para>
-  <para>
-   Furthermore, since each normal surface is stored as a vector relative
-   to the triangulation's tetrahedra, a triangulation cannot be modified
-   once it has a normal surface list as a child.  If you wish to edit
-   such a triangulation, try cloning the packet (excluding descendants so
-   the normal surfaces are not cloned as well) and edit the clone instead.
-  </para>
-  <para>
-   Triangulations containing normal surface lists are marked with a small
-   padlock in the packet tree to remind you that they cannot be edited.
-  </para>
- </note>
 
  <sect1 id="surfaces-creation">
-  <title>Creation</title>
+  <title>Enumerating Normal Surfaces</title>
 
   <para>
-   A new list of normal surfaces can be created through the
+   Normal surfaces are stored in lists, which typically represent all
+   vertex normal (or almost normal) surfaces within a triangulation
+   in some normal coordinate system.
+  </para>
+  <para>
+   A normal surface list must remain &ldquo;connected&rdquo; to the
+   corresponding triangulation.  It always lives immediately beneath the
+   triangulation in the packet tree, and the triangulation
+   <link linkend="packet-uneditable">cannot be modified</link>
+   unless all of its normal surface lists are deleted.
+   The triangulation will be marked with a small padlock to remind you
+   of this.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="surfaces-intree.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   To create a new normal surface list, select
    <menuchoice>
     <guimenu>Packet Tree</guimenu>
     <guimenuitem>New Normal Surface List</guimenuitem>
    </menuchoice>
-   menu item (or the corresponding toolbar button).
+   from the menu (or press the corresponding toolbar button).
   </para>
   <para>
-   Only <firstterm>vertex normal surfaces</firstterm> will be placed in
-   the new list; all other normal surfaces can be formed as convex
-   combinations of these vertex surfaces.
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="menu-newsurfaces.png"/>
+    </imageobject>
+   </inlinemediaobject>
   </para>
-  <warning>
-   <para>
-    For <emphasis>almost</emphasis> normal surfaces, older versions of
-    &regina; used to ignore any vertex surfaces with
-    more than one octagonal disc.
-    As of &regina;&nbsp;4.6, this behaviour has changed &mdash; now
-    &regina; will keep surfaces with more than one octagon, though it
-    still insists on at most one octagon <emphasis>type</emphasis>.
-    This is important if you wish to use vertex almost normal
-    surfaces as a basis for generating <emphasis>all</emphasis>
-    almost normal surfaces, as suggested above.
-   </para>
-   <para>
-    If you have a data file from &regina;&nbsp;4.5.1 or earlier,
-    then any vertex surfaces with more than one octagon will have already been
-    removed.  The only way to get them back is to re-run the almost normal
-    surface enumeration using &regina;&nbsp;4.6 or later.
-   </para>
-  </warning>
   <para>
-   Before the normal surface list is created, you will be asked for some
-   additional details as follows.
+   You will be offered the usual <link linkend="packet-new">new
+   packet</link> window, as shown below.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="newsurfaces.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   In addition to the <link linkend="packet-new">usual label option</link>,
+   there are important details that you must provide:
    <glosslist>
     <glossentry>
-     <glossterm>Create beneath</glossterm>
+     <glossterm><guilabel>Triangulation</guilabel></glossterm>
      <glossdef>
       <para>
-       Here you must select the triangulation that will contain the new
-       normal surfaces (this must be a triangulation already in
-       the packet tree).
+       This is the triangulation that will contain your normal surfaces.
+       The new normal surface list will appear as a child of this
+       triangulation in the packet tree.
       </para>
      </glossdef>
     </glossentry>
     <glossentry id="surfaces-selectcoords">
-     <glossterm>Coordinate system</glossterm>
+     <glossterm><guilabel>Coordinate system</guilabel></glossterm>
      <glossdef>
       <para>
-       Here you must select the coordinate system in which the vertex
-       normal surfaces will be enumerated.
-      </para>
-      <para>
-       Whether or not <emphasis>almost</emphasis>
-       normal surfaces are enumerated (in addition to
-       just normal surfaces) will depend upon this choice of coordinate system.
-       Currently almost normal surfaces are only enumerated when using
-       standard almost normal coordinates or quadrilateral-octagon coordinates.
-      </para>
-      <para>
-       Note that this coordinate system refers only to the initial
-       enumeration; you will
-       be able to view these normal surfaces in a variety of different
-       coordinate systems later on.
-      </para>
-      <para>
-       Note also that this choice of coordinate system will affect which
-       surfaces are produced.  For instance, quad normal
-       coordinates produce spun normal surfaces which standard normal
-       coordinates do not, and standard normal coordinates produce vertex
-       links which quad normal coordinates do not.
-      </para>
-      <para>
-       The available coordinate systems are described in detail
-       in the documentation for the
-       <link linkend="surfaces-defstandard">coordinates tab</link>.
-       If there is a particular coordinate system that you regularly
-       use, the default offering can be changed in the
-       <link linkend="options-surfaces">normal surface preferences</link>.
+       This is the coordinate system that &regina; will use to enumerate
+       normal surfaces.
+       If you have a favourite system that you use all the
+       time, you can change the default in &regina;'s
+       <link linkend="options-surfaces">normal surface options</link>.
+       The choices are:
+       <glosslist>
+        <glossentry>
+         <glossterm><guilabel>Standard normal (tri-quad)</guilabel></glossterm>
+         <glossdef>
+          <para>
+           This is the standard 7<replaceable>n</replaceable>-dimensional
+           coordinate system that typically appears in papers and textbooks
+           (where <replaceable>n</replaceable> is the number of tetrahedra).
+           Each tetrahedron contributes three triangle and four
+           quadrilateral coordinates.
+          </para>
+         </glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Standard almost normal
+          (tri-quad-oct)</guilabel></glossterm>
+         <glossdef>
+          <para>
+           This is a 10<replaceable>n</replaceable>-dimensional system,
+           obtained from standard normal coordinates by adding three
+           octagon coordinates per tetrahedron.
+          </para>
+          <para>
+           This system supports almost normal surfaces.
+          </para>
+         </glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Quad normal</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These are the 3<replaceable>n</replaceable>-dimensional
+           <firstterm>quadrilateral coordinates</firstterm>,
+           obtained from standard normal coordinates by simply ignoring all
+           triangles.  See <xref linkend="bib-quadspace"/> or
+           <xref linkend="bib-burton-convert"/> for details.
+          </para>
+          <para>
+           This system supports spun normal surfaces.
+          </para>
+         </glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Quad-oct almost normal</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These are the 6<replaceable>n</replaceable>-dimensional
+           <firstterm>quadrilateral-octagon coordinates</firstterm>,
+           likewise obtained from standard almost normal coordinates by
+           ignoring all triangles.  See <xref linkend="bib-burton-quadoct"/>
+           for details.
+          </para>
+          <para>
+           This system supports both almost normal surfaces
+           and spun normal surfaces.
+          </para>
+         </glossdef>
+        </glossentry>
+       </glosslist>
       </para>
      </glossdef>
     </glossentry>
     <glossentry id="surfaces-embeddedonly">
-     <glossterm>Embedded surfaces only</glossterm>
+     <glossterm><guilabel>Embedded surfaces only</guilabel></glossterm>
      <glossdef>
       <para>
-       Here you must specify whether the search should be restricted to
-       embedded surfaces only (this is the default and is all that is
-       considered in most of the published theory).
+       If this box is checked (the default), this indicates that you are
+       only interested in embedded surfaces.  This is consistent with most
+       of the normal surface literature.
       </para>
       <para>
-       Be aware that a search that is broadened to <emphasis>all</emphasis>
-       surfaces (embedded, immersed and singular) could well take much
-       longer to run than the corresponding embedded-only
-       search.  Enumeration of immersed and singular surfaces is only
-       supported for normal surfaces, not almost normal surfaces.
+       If unchecked, this indicates that you are interested not only in
+       embedded normal surfaces, but also <emphasis>immersed</emphasis>
+       and <emphasis>singular</emphasis> surfaces.
+       &regina; currently offers only very basic support for such
+       surfaces (it will not even tell you which are immersed and which are
+       singular); moreover, the enumeration of surfaces
+       will become <emphasis>much</emphasis> slower.
       </para>
      </glossdef>
     </glossentry>
    </glosslist>
   </para>
+  <para>
+   Once you are ready, click <guibutton>OK</guibutton> and &regina;
+   will enumerate all vertex normal surfaces in the chosen coordinate
+   system.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="surfaces-enumerating.png" align="right"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   Once this is done, &regina; will package the vertex normal surfaces
+   into a normal surface list and open it for you to view.
+  </para>
+  <para>
+   If you selected an <emphasis>almost normal</emphasis> coordinate
+   system, &regina; will enforce at most one octagon
+   <emphasis>type</emphasis> but it will not enforce precisely one
+   octagon <emphasis>disc</emphasis> (this makes it easier for users
+   to work with convex combinations of vertex almost normal surfaces).
+   As a result, you might see
+   surfaces with multiple octagons (but all of the same type),
+   or surfaces with no octagons at all.  The coordinate viewer makes it easy
+   <link linkend="surfaces-propoctagon">to spot which is which</link>.
+  </para>
+  <warning>
+   <para>
+    If you have a data file from &regina;&nbsp;4.5.1 or earlier,
+    it will not show almost normal surfaces with more than one octagon.
+    See the discussion on <link linkend="surfaces-deflegacyan">legacy
+    coordinates</link> for details.
+   </para>
+  </warning>
  </sect1>
 
  <sect1 id="surfaces-analysis">

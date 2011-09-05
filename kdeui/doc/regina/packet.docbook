@@ -482,7 +482,8 @@
     </inlinemediaobject>
    </para>
    <para>
-    Each time you create a new packet, you will be asked for some details:
+    Each time you create a new packet, you will be asked for some details
+    (as illustrated below):
     <glosslist>
      <glossentry>
       <glossterm><guilabel>Create beneath:</guilabel></glossterm>
