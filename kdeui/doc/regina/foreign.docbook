@@ -374,15 +374,16 @@
   <title>Exporting</title>
 
   <para>
-   An <firstterm>export</firstterm> means that data from the current
-   working packet tree is written to a foreign file format.  Generally
-   only some of the data from the current tree is exported (e.g., a
-   single packet or perhaps a subtree).  All exports are done through the
+   An <firstterm>export</firstterm> involves writing data from your
+   working packet tree into some foreign file format.
+   For most formats you can only export small pieces of your packet tree
+   at a time (such as individual triangulations).
+   All exports are done through the
    <menuchoice>
     <guimenu>File</guimenu>
     <guisubmenu>Export</guisubmenu>
    </menuchoice>
-   menu, with each item in this menu representing a different file format.
+   menu.
   </para>
   <para>
    <inlinemediaobject>
@@ -392,49 +393,31 @@
    </inlinemediaobject>
   </para>
   <para>
-   To export a single packet or a subtree, first select the appropriate file
-   format from the
+   When you select an action from the
    <menuchoice>
     <guimenu>File</guimenu>
     <guisubmenu>Export</guisubmenu>
    </menuchoice>
-   menu.  The following steps will then occur.
+   menu, &regina; will ask you which packet to export.
+   For most export formats &regina; will only export the selected packet,
+   but for some formats (such as
+   <link linkend="export-rga">&regina;'s own data format</link>)
+   it will export an entire packet subtree.
   </para>
-  <itemizedlist>
-   <listitem>
-    <para>
-     You will be asked which packet to export.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="export-snappea.png"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-    <para>
-     Whether you are exporting a single packet or an entire subtree
-     depends upon the chosen file format.  For example,
-     when exporting to a &snappea; triangulation file you use just a single
-     packet, whereas when exporting to a &regina; data file you write the
-     chosen packet along with all of its descendants.
-    </para>
-    <para>
-     The selection of packets to choose from may be restricted
-     according to the chosen export type.  For instance, when exporting
-     to a &snappea; triangulation file you may only choose from the
-     triangulation packets, and when exporting to a &python; file you
-     may only choose from the script packets.
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     You will be asked to choose a filename for the exported data.
-    </para>
-   </listitem>
-  </itemizedlist>
   <para>
-   &regina; is able to export data to the following file formats:
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="export-snappea.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   After selecting a packet, you will
+   be asked to choose a filename for your export.
+   &regina; will then save the exported data to that file.
+  </para>
+  <para>
+   &regina; can export data to the following file formats:
   </para>
 
   <sect2 id="export-rga">
@@ -442,41 +425,48 @@
 
    <para>
     This is &regina;'s native file format, in which data is saved as
-    compressed &xml;.  The advantage of exporting to a &regina; data
-    file is that you can choose to export only a subtree of the current
-    working file.  This is therefore a convenient way of extracting a
-    small portion of a larger data file.
+    compressed &xml;.
+    &regina; can export an entire packet subtree to this format:
+    just choose the root of of the subtree as the packet to export.
+    &regina; will export not just the packet you select, but all of the
+    packets beneath it in the tree.
    </para>
    <para>
-    The packet that is selected for export will become the root of the
-    new packet tree.  All of its descendants will be exported also.
-   </para>
-
-   <para>TODO: &regina; Data Files (Uncompressed)</para>
-
-   <para>
-    This export is identical to the
-    <link linkend="export-rga">&regina; data file</link> described
-    above, except that the &xml; output is not compressed.  This means
-    that the exported data is a plain text file that can be viewed in an
-    ordinary text editor.  If you are brave, you can even edit the
-    &xml; yourself; see the <link linkend="dataformat">file format
-    reference</link> for details.
+    This is a convenient way of extracting a small portion from
+    a larger data file.
    </para>
    <para>
-    Note that &regina; can happily load both compressed and uncompressed
-    &xml; data files.  That is, the exported data file can be opened in the
-    usual way through the
+    The packet that you select for export will become the top-level
+    packet in the new tree (i.e., &regina; will not add a new
+    <link linkend="packet-container">container</link>
+    to the top of the export data file).
+   </para>
+   <para>
+    There are two menu items for exporting to a &regina; data
+    file.  If you choose
     <menuchoice>
      <guimenu>File</guimenu>
-     <guimenuitem>Open</guimenuitem>
-    </menuchoice>
-    menu item.
+     <guisubmenu>Export</guisubmenu>
+     <guimenuitem>&regina; Data File</guimenuitem>
+    </menuchoice>,
+    the data will be exported as compressed &xml; (the standard
+    file format).  If you choose
+    <menuchoice>
+     <guimenu>File</guimenu>
+     <guisubmenu>Export</guisubmenu>
+     <guimenuitem>&regina; Data File (Uncompressed)</guimenuitem>
+    </menuchoice>,
+    the data will be saved as plain &xml; (which means you
+    can view the &xml; in your favourite text editor).
+    &regina; is capable of reading data files in either compressed or
+    uncompressed format.
    </para>
    <para>
-    Instead of using the export feature, an alternative
-    way of viewing the &xml; content of a native (compressed)
-    data file is to pipe it through <command>gunzip</command>:
+    If you simply want to view the raw &xml; content of an existing data
+    file, you do not need to go to the trouble of exporting
+    it in uncompressed format.
+    Instead you can just pipe the data file through
+    <command>gunzip</command>:
    </para>
 <screen>
     <prompt>example$</prompt> <userinput>cat file.rga | gunzip</userinput>
@@ -487,16 +477,17 @@
    <title>&snappea; Triangulations</title>
 
    <para>
-    This allows a single triangulation to be exported to &snappea;'s
-    native triangulation file format.  This is a plain text format,
-    described in more detail in the earlier section on
+    You can export a triangulation to &snappea;'s
+    native file format.  This is a plain text format,
+    described in more detail in the section on
     <link linkend="import-snappea">&snappea; imports</link>.
    </para>
    <para>
-    Note that a triangulation must satisfy certain constraints before it
-    can be exported as a &snappea; triangulation file.  For example, it
-    cannot be an <link linkend="tri-propvalid">invalid triangulation</link>,
+    Not every data file can be exported to &snappea; format.
+    For instance, the triangulation cannot be
+    <link linkend="tri-propvalid">invalid</link>,
     and it may not have any boundary faces.
+    &regina; will tell you if your triangulation cannot be exported.
    </para>
    <para>
     Any international characters in the exported &snappea; file will be
@@ -508,24 +499,23 @@
    <title>&cpp; Source Code</title>
 
    <para>
-    This allows a single triangulation to be exported as &cpp; source
-    code.  The exported source code uses classes and routines from
+    You can export a triangulation as &cpp; source code.
+    This &cpp; code will use classes and routines from
     &regina;'s calculation engine.  When run, this code will reconstruct
-    the original triangulation.
+    your triangulation.
    </para>
    <para>
-    Exporting as &cpp; is useful if you wish to hard-code a
-    triangulation in your own &cpp; code for further manipulation and/or
-    experimentation.  For further information, there is a separate
-    chapter on <link linkend="compiling">including the &regina;
-    calculation engine in your own code</link>.
+    Exporting to &cpp; can be useful if you wish to hard-code a
+    triangulation in your own &cpp; project.
+    See the separate chapter on
+    <link linkend="compiling">building &regina; into your own code</link>.
    </para>
    <para>
     If the triangulation includes any international characters (for
     instance, in the packet label or the tetrahedron names), these might
     appear as comments in the exported &cpp; code.  You can choose the
     text encoding that will be used for these characters (such as &utf8;
-    or &latin1;).  When you are selecting the file to export to, a
+    or &latin1;).  When you select the filename to export to, a
     drop-down list of encodings should appear in the dialog, as
     illustrated below.
    </para>
@@ -542,30 +532,27 @@
    <title>Spreadsheet-Readable (&csv;) Surface Lists</title>
 
    <para>
-    This allows a normal surface list to be exported as a plain-text
-    &csv; file (comma-separated values).  &csv; files can be easily
-    imported into spreadsheets and databases.
+    You can export a normal surface list to a plain-text
+    &csv; file (comma-separated values), which you can easily
+    import into a spreadsheet or database.
    </para>
    <para>
-    The &csv; file will begin with a header row, which will be followed
-    by one line for each surface in the list.  Surfaces will be listed
-    in standard coordinates (tri-quad coordinates for normal surfaces,
-    or tri-quad-oct coordinates for almost normal surfaces), and each
-    coordinate will be listed as a separate field in the &csv; file.
+    The &csv; file will begin with a header row, followed
+    by one line for each normal surface in the list.  Surfaces will be
+    exported in standard coordinates
+    (that is, <link linkend="surfaces-defstandard">tri-quad coordinates</link>
+    for normal surfaces, or
+    <link linkend="surfaces-defstandardan">tri-quad-oct coordinates</link>
+    for almost normal surfaces).
+    The fields in the &csv; file will mirror the columns that you see
+    in the <link linkend="surfaces-coords">normal surface
+    coordinate viewer</link>, and will include properties such as
+    Euler characteristic and orientability as well as the
+    surface coordinates themselves.
    </para>
    <para>
-    In addition to the raw coordinates, the &csv; file will include
-    several additional properties of the normal surfaces, such as
-    Euler characteristic and orientability (amongst others).  These
-    additional fields mirror the properties that are displayed on
-    screen when viewing a normal surface; see the notes on
-    <link linkend="surfaces-coords-props">normal surface properties</link>
-    for details.
-   </para>
-   <para>
-    If any of the surfaces have been given names that include
-    international characters, these will be encoded in &utf8;
-    in the exported &csv; file.
+    If any of the surfaces have names that include
+    international characters, these names will be exported in &utf8;.
    </para>
   </sect2>
 
@@ -573,8 +560,14 @@
    <title>&pdf; Documents</title>
 
    <para>
-    This allows a single &pdf; packet to be exported as an ordinary
-    &pdf; file.  You can then open this file in any regular &pdf; viewer.
+    You can export a &pdf; packet to an ordinary &pdf; document.
+   </para>
+   <para>
+    If you simply wish to view &pdf; packets in a different viewer,
+    you do not need to go to the trouble of exporting the
+    packet&mdash;instead you can configure &regina;'s
+    <link linkend="options-pdf">&pdf; options</link> to use your
+    favourite viewer by default.
    </para>
   </sect2>
 
@@ -582,17 +575,20 @@
    <title>&python; Scripts</title>
 
    <para>
-    This allows a single script packet to be exported as a regular &python;
-    script file.  A special comment block will be added to the beginning
-    of this script file describing the packet label and the script
-    variables.  This special comment block is described in more detail in the
-    earlier section on <link linkend="import-pyscript">&python; imports</link>.
+    You can export a <link linkend="python-script">script packet</link>
+    as a regular &python; file.
+    &regina; will add a special comment block to the top of the file,
+    describing the packet label and the script variables.
+    This special comment block allows you to import the script
+    seamlessly back into &regina;; see
+    <link linkend="import-pyscript">&python; imports</link> for details.
    </para>
    <para>
-    If the script contains any international characters, you may choose
-    how these will be encoded in the exported &python; script.  When you
-    select the file to export to, a drop-down list of encodings should
-    appear in the dialog, as illustrated in the &cpp; source section above.
+    If the script contains any international characters, you can
+    choose a text encoding to use (such as &utf8; or &latin1;).
+    A drop-down list of encodings should appear when you choose the
+    filename to export to, as illustrated in
+    <link linkend="export-cpp">&cpp; exports</link> above.
    </para>
   </sect2>
  </sect1>
