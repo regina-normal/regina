@@ -875,27 +875,28 @@
   <title>Using Filters</title>
 
   <para>
-   Sometimes you are faced with a very long list of surfaces from which
-   you wish to extract just the tori, or just the discs, or some other
-   subset of surfaces described by one or more simple constraints.
-   For tasks such as these, surface filters can be used.
+   Large triangulations often contain a great many
+   &ldquo;junk surfaces&rdquo;, and it is sometimes desirable to restrict
+   a long normal surface list to just those surfaces that satisfy
+   some simple constraints.
+   &regina; allows you to do this using <emphasis>surface filters</emphasis>.
   </para>
   <para>
-   A surface filter essentially represents some series of tests that can
-   be performed upon a surface.  Tests can include a variety of easily
-   calculable properties such as orientability and Euler characteristic.
-   At its most basic level, a surface filter is a device that either
-   accepts or rejects each surface that is passed through it.
+   You can create filters based on
+   <link linkend="surfaces-filterprop">simple tests</link>
+   (such as orientability, boundary or Euler characteristic), and you
+   can <link linkend="surfaces-filtercomb">combine filters</link>
+   into complex boolean expressions.
+   Each filter is stored as a separate packet in the packet tree.
   </para>
   <para>
-   To restrict a normal surface list according to some filter, open the
-   surface list <link linkend="surfaces-coords">coordinate
-   viewer</link> where the entire list of surfaces is displayed.
-   Above the table of coordinates is a drop-down box filled with the
-   available filters.  If a filter is selected from this
-   box then the surface list is restricted to include only those
-   surfaces that the selected filter accepts.  To remove the filter, select
-   the <guilabel>None</guilabel> option from this same drop-down box.
+   To apply a filter to a normal surface list, simply choose the filter
+   from the drop-down box above the
+   <link linkend="surfaces-coords">coordinate viewer</link>.
+   The table of surfaces will immediately shrink to include only
+   those surfaces that pass the selected filter.
+   To remove the filter, select <guilabel>None</guilabel> from the
+   drop-down box.
   </para>
   <para>
    <inlinemediaobject>
@@ -904,34 +905,57 @@
     </imageobject>
    </inlinemediaobject>
   </para>
+  <para>
+   Filtering a surface list only affects how you
+   <emphasis>view</emphasis> it: the underlying list is not changed.
+   Moreover, only the
+   <link linkend="surfaces-coords">coordinate viewer</link>
+   will be filtered&mdash;other tabs (such as the
+   <link linkend="surfaces-summary">summary tab</link> or
+   <link linkend="surfaces-compat">compatility matrices</link>)
+   will be unaffected.
+  </para>
 
-  <para>
-   Each surface filter is stored as a separate packet in the packet tree.
-   To create a new filter, select
-   <menuchoice>
-    <guimenu>Packet Tree</guimenu>
-    <guimenuitem>New Filter</guimenuitem>
-   </menuchoice>
-   from the menu (or press the corresponding toolbar button).
-   You can create a
-   <link linkend="surfaces-filterprop">property-based filter</link> or a
-   <link linkend="surfaces-filtercomb">combination filter</link>;
-   each of these is described below.
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="menu-newfilter.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
+  <sect2 id="surfaces-filtercreate">
+   <title>Creating Filters</title>
+
+   <para>
+    To create a new filter, select
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New Filter</guimenuitem>
+    </menuchoice>
+    from the menu (or press the corresponding toolbar button).
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menu-newfilter.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The <link linkend="packet-new">new packet window</link>
+    will ask what type of filter to create.
+    To <link linkend="surfaces-filterprop">filter by simple properties</link>
+    (such as orientability, boundary or Euler characteristic),
+    select <guilabel>Filter by properties</guilabel>.
+    To <link linkend="surfaces-filtercomb">combine several other filters</link>
+    into a boolean expression,
+    select <guilabel>Combination (AND/OR) filter</guilabel>.
+    Each type of filter is described in its own section below.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newfilter.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
   <sect2 id="surfaces-filterprop">
    <title>Filtering by Surface Properties</title>
 
-   <para>
-    A property-based filter allows surfaces to be restricted according
-    to a variety of easily calculable properties.
-   </para>
    <para>
     <inlinemediaobject>
      <imageobject>
