@@ -10,6 +10,11 @@
   <link linkend="man-regina-python"><command>regina-python</command></link>.
  </para>
  <para>
+  The user interface will stay in sync with any changes that you
+  make through a script, which means you can happily modify a
+  data file via scripts while you have it open.
+ </para>
+ <para>
   All scripts in &regina; use the &python; programming language
   (<ulink url="http://www.python.org/"/>).
  </para>
@@ -76,6 +81,12 @@
       </para></glossdef>
      </glossentry>
     </glosslist>
+   </para>
+   <para>
+    You are welcome to use these variables to change
+    packets in your data file (or even add, remove or rename packets):
+    the graphical user interface will always stay in sync with any changes
+    that you make via &python;.
    </para>
   </sect2>
   <sect2 id="python-cmdline">
@@ -151,6 +162,12 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <para>
+    Again, you are welcome to change packets in your data file via
+    scripts (or even add, remove or rename packets):
+    the graphical user interface will always stay in sync with any changes
+    that your scripts make.
+   </para>
   </sect2>
  </sect1>
 
@@ -159,13 +176,13 @@
   <para>
    All of &regina;'s objects, classes and methods belong to the
    module called <parameter>regina</parameter>.
-   For instance, you create a new triangulation by calling
-   <literal>regina.NTriangulation()</literal>, and you read a data file
+   For instance, you can create a new triangulation by calling
+   <literal>regina.NTriangulation()</literal>, and you can read a data file
    by calling <literal>regina.readFileMagic(filename)</literal>.
    Whenever &regina; gives you access to &python; (either through a
    <link linkend="python-gui">graphical console</link>,
-   a <link linkend="python-script">script packet</link> or the command-line
-   <link linkend="python-cmdline"><command>regina-python</command></link>),
+   a <link linkend="python-script">script packet</link> or a
+   <link linkend="python-cmdline">command-line session</link>),
    it will automatically import the <parameter>regina</parameter>
    module for you to use.
   </para>
@@ -175,13 +192,12 @@
     you can put it in a <firstterm>user library</firstterm>.
     &regina; will run all of the code in all of your user libraries
     at the beginning of every &python; session
-    (this includes graphical consoles, script packets
+    (including graphical consoles, script packets
     and <command>regina-python</command>).
     User libraries are just ordinary &python; files: you can maintain
     the current list of enabled libraries through
     &regina;'s <link linkend="python-libraries">&python; options</link>
-    (or you can maintain the list manually in the file
-    &regina-libs;, as described in the
+    (or if you prefer, through the file &regina-libs; as described in the
     <link linkend="man-regina-python"><command>regina-python</command></link>
     reference).
    </para>
@@ -191,8 +207,8 @@
    <title>Documentation</title>
    <para>
     &regina; includes a complete &api; reference for its calculation engine,
-    which describes in detail the objects, classes and methods made available
-    through &python;.  To read this documentation, select
+    which describes in detail the objects, classes and methods that
+    it makes available through &python;.  To read this documentation, select
     <menuchoice>
      <guimenu>Help</guimenu>
      <guimenuitem>Python &api; Reference</guimenuitem>
@@ -208,32 +224,30 @@
   <title>Caveats and Traps</title>
 
   <para>
-   &python; scripting offers direct access to the mathematical core of the
-   software, and as such requires a little care &ndash; in general
-   the user interface has no way of knowing what you are tinkering with.
-   Probably the easiest way to crash the program is to bring up
-   a &python; console and do something untoward.
-   Thus you should tread gently.
+   &python; scripting gives you direct access to &regina;'s
+   mathematical core, and as such requires some care.
+   Probably the easiest way to crash &regina; is to bring up
+   a &python; console and do something untoward (like gluing together
+   two tetrahedra that belong to different triangulations).
+   Please tread gently.
   </para>
   <para>
-   The following issues in particular are worth being aware of.
+   In particular, the following issues are worth noting:
   </para>
   <sect2>
    <title>Cooperating with the &gui;</title>
    <para>
     If you cannot edit a packet from within the GUI, there is generally
-    a reason for this.  For instance, a normal surface list will rely
-    upon its parent triangulation remaining fixed and so any
-    triangulation with child surface lists will be uneditable.
+    a reason for this.  For instance, a normal surface list needs its
+    parent triangulation to remain fixed, which means that any
+    triangulation with normal surface lists beneath it
+    will be <link linkend="packet-uneditable">uneditable</link>.
    </para>
    <para>
-    Therefore you should not use &python; as a
-    way to get around that barrier; instead you should respect that
-    barrier.  Perhaps you can <link linkend="packet-clone">clone the
-    packet</link> in question without cloning its subtree (<menuchoice>
-     <guimenu>Packet Tree</guimenu>
-     <guimenuitem>Clone Packet</guimenuitem>
-    </menuchoice>); the clone then should be editable.
+    You should not use &python; as a way to get around this barrier.
+    In the example above, you can work around the problem by
+    <link linkend="packet-clone">cloning the packet</link>
+    and editing the clone instead.
    </para>
   </sect2>
 
@@ -368,8 +382,8 @@ Triangulation with 2 tetrahedra.
   <sect2 id="python-i18n">
    <title>International Characters</title>
    <para>
-    As of version &utf8intro;, &regina; uses &utf8; consistently for
-    international characters throughout its calculation engine.  If you ever
+    &regina; uses &utf8; consistently for
+    international characters.  If you ever
     pass a string into one of &regina;'s functions, you must ensure that it
     is encoded in &utf8;; conversely, when a string is returned from a
     function you should assume it is encoded in &utf8;.
@@ -386,11 +400,11 @@ Triangulation with 2 tetrahedra.
     through to low-level &ccpp; file I/O routines without any changes or
     re-encoding.
    </para>
-   <tip><para>
+   <para>
     Users who only ever deal with plain &ascii; text do not need to
     worry about text encodings at all, since plain &ascii; is a subset
     of &utf8;.
-   </para></tip>
+   </para>
   </sect2>
  </sect1>
 
