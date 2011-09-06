@@ -937,13 +937,7 @@
    <para>
     The <link linkend="packet-new">new packet window</link>
     will ask what type of filter to create.
-    To <link linkend="surfaces-filterprop">filter by simple properties</link>
-    (such as orientability, boundary or Euler characteristic),
-    select <guilabel>Filter by properties</guilabel>.
-    To <link linkend="surfaces-filtercomb">combine several other filters</link>
-    into a boolean expression,
-    select <guilabel>Combination (AND/OR) filter</guilabel>.
-    Each type of filter is described in its own section below.
+    The different types of filter are described in their own sections below.
    </para>
    <para>
     <inlinemediaobject>
@@ -957,6 +951,11 @@
    <title>Filtering by Surface Properties</title>
 
    <para>
+    To filter by simple properties
+    (such as orientability, boundary or Euler characteristic),
+    create a new filter and select <guilabel>Filter by properties</guilabel>.
+   </para>
+   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="newfilter-prop.png"/>
@@ -964,46 +963,76 @@
     </inlinemediaobject>
    </para>
    <para>
-    To be accepted a surface must satisfy all of the restrictions listed
-    in the filter.  For instance, if a filter restricts by
-    orientability (allow orientable surfaces only), by compactness
-    (allow compact surfaces only) and also
-    by Euler characteristic (allow Euler characteristic 1 only), then
-    the filter will accept normal discs and nothing else.
+    Now you can open your new filter and select your constraints.
+    To pass through the filter, a surface must satisfy
+    <emphasis>all</emphasis> of the constraints that you set. 
+    In the example below, a surface will only pass if it is closed
+    (i.e., compact with no boundary) and has Euler characteristic
+    2, 1 or 0.  In other words, this filter selects spheres, projective
+    planes, tori and Klein bottles
+    (as well as other disconnected surfaces, but
+    vertex normal surfaces are never disconnected).
    </para>
    <para>
-    The properties by which surfaces can be restricted are as follows.
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="filter-prop.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The constraints you can set are:
     <variablelist>
      <varlistentry>
       <term><guilabel>Orientability</guilabel></term>
       <listitem><para>
-       This restriction can be used to only allow orientable surfaces
-       or only allow non-orientable surfaces.
+       Check this to allow only orientable surfaces,
+       or only non-orientable surfaces.
       </para></listitem>
      </varlistentry>
      <varlistentry>
       <term><guilabel>Compactness</guilabel></term>
       <listitem><para>
-       This restriction can be used to only allow compact surfaces
-       (i.e., surfaces with finitely many discs) or only allow
-       non-compact surfaces (e.g., spun normal surfaces).
+       Check this to allow only compact surfaces
+       (i.e., surfaces with finitely many discs), or only
+       spun surfaces (i.e., non-compact surfaces with infinitely many discs).
       </para></listitem>
      </varlistentry>
      <varlistentry>
       <term><guilabel>Boundary</guilabel></term>
-      <listitem><para>
-       This restriction can be used to only allow surfaces with real
-       boundary edges or only allow surfaces with no real boundary edges.
-       Note that spun normal surfaces, though they are not closed, do
-       not have real boundary edges.
-      </para></listitem>
+      <listitem>
+       <para>
+        Check this to allow only surfaces with real boundary,
+        or only surfaces with no real boundary.  Here
+        <firstterm>real boundary</firstterm> means that some discs
+        in the surface touch the boundary of the triangulation.
+       </para>
+       <para>
+        This constraint is independent of whether the surface is spun
+        (non-compact).  Typical spun normal surfaces do not have real
+        boundary, since they live in ideal triangulations with no
+        boundary faces.  However, if your triangulation has both ideal
+        vertices and boundary faces, then it is possible for
+        a spun normal surface to have real boundary also.
+       </para>
+      </listitem>
      </varlistentry>
      <varlistentry>
       <term><guilabel>Euler Characteristic</guilabel></term>
-      <listitem><para>
-       This restriction can be used to only allow surfaces whose Euler
-       characteristic belongs to a given list.
-      </para></listitem>
+      <listitem>
+       <para>
+        Check this to allow only surfaces with particular Euler
+        characteristics.  You can allow more than one Euler
+        characteristic; simply type them all into the box provided.
+       </para>
+       <para>
+        <inlinemediaobject>
+         <imageobject>
+          <imagedata fileref="filter-euler.png"/>
+         </imageobject>
+        </inlinemediaobject>
+       </para>
+      </listitem>
      </varlistentry>
     </variablelist>
    </para>
@@ -1013,10 +1042,9 @@
    <title>Combining Several Filters</title>
 
    <para>
-    A combination filter is a high-level filter that combines some
-    other group of filters using boolean <literal>AND</literal> or
-    <literal>OR</literal>.  The combination filter will combine all
-    packet filters found directly beneath it in the packet tree.
+    To combine several other filters
+    into a boolean expression, create a new filter and select
+    <guilabel>Combination (AND/OR) filter</guilabel>.
    </para>
    <para>
     <inlinemediaobject>
@@ -1026,30 +1054,39 @@
     </inlinemediaobject>
    </para>
    <para>
-    For instance, to create a filter that accepts either discs or tori,
-    you can create a <link linkend="surfaces-filterprop">property
-    filter</link> for discs and another property filter for tori.
-    These are both placed within the packet tree directly beneath
-    a boolean <literal>OR</literal> combination filter, as
-    illustrated in the following screenshot.
+    A combination filter is a high-level filter that combines all of the
+    filters <emphasis>immediately beneath it</emphasis> in the packet
+    tree.  If you open the combination filter, you can select whether
+    a packet must pass <emphasis>all</emphasis> of the packets beneath it
+    (<guilabel>AND</guilabel>),
+    or <emphasis>any</emphasis> of the packets beneath it
+    (<guilabel>OR</guilabel>).
+    You will also see a box listing
+    which &ldquo;child filters&rdquo; are being combined.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="filtercombeg.png"/>
+      <imagedata fileref="filtercomb.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
-    Note that a combination filter will only combine its immediate children.
-    Suppose for instance that a combination filter
-    <replaceable>C</replaceable> has child filters
-    <replaceable>P</replaceable> and <replaceable>Q</replaceable>,
-    and that <replaceable>Q</replaceable> in turn has child filters
-    <replaceable>X</replaceable> and <replaceable>Y</replaceable>,
-    as illustrated in the diagram below.
-    Then <replaceable>C</replaceable> forms a boolean combination of
-    <replaceable>P</replaceable> and <replaceable>Q</replaceable> only.
+    The child filters will often be
+    <link linkend="surfaces-filterprop">property-based filters</link>,
+    although they may be other combination filters if you need to build
+    up more complex boolean expressions.
+    A combination filter will only combine its
+    <emphasis>immediate</emphasis> children&mdash;not its
+    children's children and so on.
+    In the example below, the combination filter
+    <replaceable>C</replaceable> will only combine the children
+    <replaceable>P</replaceable> and <replaceable>Q</replaceable>.
+    In turn, <replaceable>Q</replaceable> will combine
+    <replaceable>X</replaceable> and <replaceable>Y</replaceable>;
+    the result (depending on how the filters are set) might look something like
+    &ldquo;<replaceable>P</replaceable> and
+    (<replaceable>X</replaceable> or <replaceable>Y</replaceable>)&rdquo;.
    </para>
    <para>
     <inlinemediaobject>
