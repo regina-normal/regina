@@ -1,7 +1,7 @@
 example$ regina-python
-Regina 4.1.3
-A Normal Surface Theory Calculator
-Copyright (c) 1999-2004, Ben Burton
+Regina 4.90
+Software for 3-manifold topology and normal surface theory
+Copyright (c) 1999-2011, The Regina development team
 >>> ################################
 ... #
 ... #  Sample Python Script
@@ -11,54 +11,55 @@ Copyright (c) 1999-2004, Ben Burton
 ... #  See the file "progress.session" for the results of running this script.
 ... #
 ... ################################
-...
+... 
 >>> import time
->>>
->>> # Create a new triangulation of the lens space L(49,12).
-... tri = regina.NTriangulation()
->>> tri.insertLayeredLensSpace(49,12)
+>>> 
+>>> # Create an 18-tetrahedron triangulation of a knot complement with real
+... # boundary faces (not an ideal vertex).  The knot is L106003 from the
+... # knot/link census.  We used Regina to truncate the ideal vertex, and
+... # then copied the isomorphism signature so that we can reconstruct the
+... # triangulation here.
+... sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
+>>> tri = regina.NTriangulation.fromIsoSig(sig)
 >>> print tri.getNumberOfTetrahedra(), 'tetrahedra'
-13 tetrahedra
->>>
->>> # Create a progress manager to use during the lengthy surface enumeration.
-... # This will be responsible for reporting the state of progress while the
-... # enumeration runs in the background.
+18 tetrahedra
+>>> 
+>>> # Create a progress manager to use during the normal surface enumeration.
+... # This will report the state of progress while the enumeration runs in
+... # the background.
 ... manager = regina.NProgressManager()
->>>
+>>> 
 >>> # Start the normal surface enumeration.
 ... # Because we are passing a progress manager to enumerate(), the
-... # enumeration will be started in the background and control will be
-... # returned immediately to the python console.
+... # enumeration will start in the background and control will return
+... # immediately to the python console.
 ... surfaces = regina.NNormalSurfaceList.enumerate(tri,
 ...     regina.NNormalSurfaceList.STANDARD, 1, manager)
->>>
+>>> 
 >>> # Wait for the surface enumeration to fully start up.
 ... while not manager.isStarted():
 ...     time.sleep(1)
-...
->>>
->>> # At this point the surface enumeration is now running.
-... # Output a progress report every second until it's finished.
+... 
+>>> 
+>>> # At this point the enumeration is up and running.
+... # Output a progress report every second until it finishes.
 ... prog = manager.getProgress()
 >>> while not manager.isFinished():
 ...     print 'Progress:', prog.getDescription()
 ...     time.sleep(1)
-...
-Progress: 4/81
-Progress: 60/81
-Progress: 68/81
-Progress: 73/81
-Progress: 74/81
-Progress: 74/81
-Progress: 77/81
->>>
+... 
+Progress: 17/21
+Progress: 17/21
+Progress: 19/21
+Progress: 19/21
+>>> 
 >>> # The surface enumeration is now complete.
 ... print surfaces.getNumberOfSurfaces(), 'normal surfaces'
-432 normal surfaces
->>>
+2319 normal surfaces
+>>> 
 >>> # Output the total time spent during the surface enumeration.
 ... print 'Total real time:', prog.getRealTime(), 'seconds'
-Total real time: 6 seconds
+Total real time: 5 seconds
 >>> print 'Total cpu time:', prog.totalCPUTime(), 'seconds'
-Total cpu time: 6 seconds
+Total cpu time: 4 seconds
 >>>
