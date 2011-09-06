@@ -442,7 +442,8 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             std::ostringstream msg;
             msg << triName << " should have a volume of zero, not "
-                << std::setprecision(showPrecision) << foundVol << '.';
+                << std::setprecision(showPrecision) << foundVol
+                << " (precision: " << usePrecision << ").";
 
             CPPUNIT_FAIL(msg.str());
         }
@@ -482,7 +483,8 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                     precision >= static_cast<int>(places));
             }
 
-            testZeroVolume(triName, foundVol, precision);
+            // Dumb down the precision to our given maximum.
+            testZeroVolume(triName, foundVol, places);
         }
 
         void flat() {
