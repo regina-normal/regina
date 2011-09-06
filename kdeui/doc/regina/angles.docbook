@@ -57,7 +57,7 @@
  </note>
 
  <sect1 id="angles-creation">
-  <title>Creation</title>
+  <title>Enumerating Angle Structures</title>
 
   <para>
    A new list of angle structures can be created through the
@@ -87,106 +87,89 @@
   <title>Analysis</title>
 
   <para>
-   Various properties of an angle structure list and its
-   individual angle structures can be seen
-   in the angle structure list viewer.
+   When you open an angle structure list for viewing, you will see a
+   table listing all of the angle structures in your list.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="angles-coords.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   Above this table is a header
+   displaying the total number of angle structures.
+   If you enumerated taut structures only, this will be reported
+   in the header also:
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="angles-tautheader.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   Otherwise the header will indicate whether
+   or not the convex span of these angle structures
+   contains any <link linkend="angles-propstrict">strict</link>
+   and/or <link linkend="angles-proptaut">taut</link> structures
+   (these terms are defined below).
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="angles-header.png"/>
+    </imageobject>
+   </inlinemediaobject>
   </para>
 
-  <sect2 id="angles-viewlistprops">
-   <title>List Properties</title>
-
-   <para>
-    Above the table of structures in the angle structure list viewer
-    are displayed some basic properties of the angle structure list.
-    These include:
-    <itemizedlist>
-     <listitem><para>
-      a count of the total number of vertex structures contained within;
-     </para></listitem>
-     <listitem><para>
-      whether or not the convex span of these vertex structures
-      contains any strict and/or taut angle structures.  See the
-      <link linkend="angles-viewstructureprops">individual
-      structure properties</link> section below for details on what these
-      terms mean.
-     </para></listitem>
-    </itemizedlist>
-   </para>
-  </sect2>
-
   <sect2 id="angles-viewstructurecoords">
-   <title>Individual Angle Structures</title>
+   <title>Details of Individual Angle Structures</title>
 
    <para>
-    The angle structure list viewer contains a table of the
-    individual angle structures that form this list.  Each
-    structure is presented as a vector of angles.
+    Each row of the main table represents a single angle structure
+    in your list.
    </para>
    <para>
-    Each row of this table represents a single angle structure.
-    The left few columns of the table contain various miscellaneous
-    structure properties, described in the <link
-    linkend="angles-viewstructureprops">individual structure
-    properties</link> section below.
-    The remaining columns contain the actual angles.
+    The leftmost column indicates the type of angle structure.
+    Possible values include:
+    <glosslist>
+     <glossentry id="angles-propstrict">
+      <glossterm><guilabel>Strict</guilabel></glossterm>
+      <glossdef><para>
+       Indicates a strict angle structure (all of its angles are
+       strictly between 0 and &pi;).
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="angles-proptaut">
+      <glossterm><guilabel>Taut</guilabel></glossterm>
+      <glossdef><para>
+       Indicates a taut angle structure (all of its angles are
+       equal to either 0 or &pi;).
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+    If an angle structure is neither strict nor taut, this cell will be
+    left empty.
    </para>
    <para>
-    The individual angle columns are labelled
-    <literal>0:01/23</literal>, <literal>0:02/13</literal>,
-    <literal>0:03/12</literal>, <literal>1:01/23</literal>,
-    <literal>1:02/13</literal>, <literal>1:03/12</literal>,
-    <literal>2:01/23</literal>, etc.  Coordinate
-    <literal><replaceable>t</replaceable>:<replaceable>ab</replaceable>/<replaceable>cd</replaceable></literal>
+    The remaining columns list the individual angles that are assigned
+    to edges in tetrahedra.
+    These columns are labelled
+    <guilabel>0:01/23</guilabel>, <guilabel>0:02/13</guilabel>,
+    <guilabel>0:03/12</guilabel>, <guilabel>1:01/23</guilabel>,
+    etc., where coordinate
+    <replaceable>t</replaceable>:<replaceable>ab</replaceable>/<replaceable>cd</replaceable>
     represents the angle assigned to the edge in tetrahedron
     <replaceable>t</replaceable> that joins tetrahedron vertices
     <replaceable>a</replaceable> and <replaceable>b</replaceable>, as
     well as the (opposite) edge that joins tetrahedron vertices
-    <replaceable>c</replaceable> and <replaceable>d</replaceable>
-    (<replaceable>a</replaceable>, <replaceable>b</replaceable>,
-    <replaceable>c</replaceable> and <replaceable>d</replaceable>
-    will always be 0, 1, 2 and 3 in some order).
-   </para>
-  </sect2>
-
-  <sect2 id="angles-viewstructureprops">
-   <title>Individual Structure Properties</title>
-
-   <para>
-    As described in the
-    <link linkend="angles-viewstructurecoords">individual angles</link>
-    section above, the angle structure list viewer contains a table of
-    every vertex structure contained in this list.
-   </para>
-   <para>
-    The left few columns of this table contain the following
-    angle structure properties.
-    <glosslist>
-     <glossentry>
-      <glossterm>Type</glossterm>
-      <glossdef><para>
-       If a structure is recognised as being of a particular type,
-       that type will be listed in this column.  At most one such type
-       will be displayed for any particular angle structure.
-       The following types are currently recognised.
-       <glosslist>
-        <glossentry id="angles-propstrict">
-         <glossterm>Strict</glossterm>
-         <glossdef><para>
-          Indicates a strict angle structure (none of its angles are
-          equal to 0 or &pi;).
-         </para></glossdef>
-        </glossentry>
-        <glossentry id="angles-proptaut">
-         <glossterm>Taut</glossterm>
-         <glossdef><para>
-          Indicates a taut angle structure (all of its angles are
-          equal to 0 or &pi;).
-         </para></glossdef>
-        </glossentry>
-       </glosslist>
-      </para></glossdef>
-     </glossentry>
-    </glosslist>
+    <replaceable>c</replaceable> and <replaceable>d</replaceable>.
+    Here 0&nbsp;&le;&nbsp;<replaceable>t</replaceable>&nbsp;&lt;&nbsp;<replaceable>n</replaceable>,
+    and <replaceable>a</replaceable>,<replaceable>b</replaceable>,<replaceable>c</replaceable>,<replaceable>d</replaceable>
+    are some permutation of 0,1,2,3.
    </para>
   </sect2>
  </sect1>

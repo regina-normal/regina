@@ -92,7 +92,6 @@
   <!ENTITY orbcasson "&orb; / &casson;">
   <!ENTITY orburl "<ulink url='http://www.ms.unimelb.edu.au/~snap/orb.html'>&orb;</ulink>">
   <!ENTITY pdf "<acronym>PDF</acronym>">
-  <!ENTITY pi "<literal>Pi</literal>">
   <!ENTITY poincare "Poincar&eacute;">
   <!ENTITY ppirr
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">
@@ -119,7 +118,7 @@
   <!ENTITY todo "TODO">
   <!ENTITY trist "triangular solid torus">
   <!ENTITY trists "triangular solid tori">
-  <!ENTITY twopi "<literal>2*Pi</literal>">
+  <!ENTITY twopi "<literal>2&pi;</literal>">
   <!ENTITY ubuntu "<productname>Ubuntu</productname>">
   <!ENTITY url "<acronym>URL</acronym>">
   <!ENTITY utf8 "<acronym>UTF-8</acronym>">
