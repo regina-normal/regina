@@ -381,7 +381,7 @@ TypeError: bad argument type for built-in operation
  <sect1 id="sessions">
   <title>Sample &python; Sessions</title>
   <para>
-   Reproduced below are a number of sample &python; sessions.
+   Several sample &python; sessions are reproduced below.
    Each session was started by running
    <userinput>regina-python</userinput>
    from the command line.
