@@ -111,11 +111,11 @@ namespace {
         }
         if (fields & surfaceExportBdry) {
             if (! s->isCompact())
-                out << "infinite";
+                out << "spun";
             else if (s->hasRealBoundary())
-                out << "real bdry";
+                out << "real";
             else
-                out << "closed";
+                out << "none";
             out << ',';
         }
         if (fields & surfaceExportLink) {
