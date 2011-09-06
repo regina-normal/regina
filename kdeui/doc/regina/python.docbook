@@ -1,114 +1,35 @@
 <chapter id="python">
  <title>&python; Scripting</title>
 
- <sect1 id="python-overview">
-  <title>Scripting Overview</title>
-  <para>
-   &regina; contains inbuilt scripting, which offers you fine control
-   over the underlying calculation engine and enables you to automate
-   large amounts of processing using the &python;
-   programming language.  Scripts can be written and run from within
-   &regina;, and a well-written script can relieve you of much work
-   that would otherwise have to be painstakingly done by hand
-   through the point-and-click interface.
-  </para>
+ <para>
+  &regina; contains inbuilt scripting, which offers you fine control
+  over &regina;'s mathematical engine and enables you to automate
+  large amounts of processing.
+  You can write and run scripts from
+  directly within &regina;, or you can use the separate command-line tool
+  <link linkend="man-regina-python"><command>regina-python</command></link>.
+ </para>
+ <para>
+  All scripts in &regina; use the &python; programming language
+  (<ulink url="http://www.python.org/"/>).
+ </para>
 
-  <sect2 id="python-python">
-   <title>Using &python;</title>
-   <para>
-    All scripts use the &python; scripting language
-    (<ulink url="http://www.python.org/"/>).
-    Within these scripts, &regina; objects, classes and methods can be
-    accessed directly as if they were &python; objects, classes and methods.
-   </para>
-   <para>
-    Each of these objects, classes and methods is available in the
-    module <parameter>regina</parameter>.  For instance, a new
-    triangulation can be created by calling
-    <literal>regina.NTriangulation()</literal> and a file can be
-    read by calling <literal>regina.readFileMagic(filename)</literal>.
-   </para>
-   <para>
-    Wherever &regina; gives you access to &python;, you may assume that the
-    <parameter>regina</parameter> module has been imported (thus giving you
-    access to everything contained within it).
-    You may also assume that all user libraries have been loaded, as
-    described below.
-   </para>
-   <tip>
-    <para>
-     If you have code that you find yourself writing again and again,
-     you can put it in a <firstterm>user library</firstterm>.  User
-     libraries are files containing &python; code (typically function
-     definitions) that is run at the beginning of every &python;
-     session, both within the &gui; and within the text-based
-     <link linkend="man-regina-python"><command>regina-python</command></link>.
-     The list of user libraries can be configured through the
-     <link linkend="python-libraries">&python; options</link> page, or can be
-     maintained by hand-editing the file &regina-libs; as described in the
-     <link linkend="man-regina-python"><command>regina-python</command></link>
-     reference.
-    </para>
-   </tip>
-  </sect2>
-
-  <sect2 id="python-docs">
-   <title>Documentation</title>
-   <para>
-    &regina; includes a complete reference for its calculation engine,
-    which describes in detail the objects, classes and methods made available
-    to &python; scripts.  This documentation is available through the
-    <menuchoice>
-     <guimenu>Help</guimenu>
-     <guimenuitem>Python Reference</guimenuitem>
-    </menuchoice>
-    menu item.
-   </para>
-   <para>
-    For those wishing to read this documentation from outside the
-    program, it is generally installed in
-    <filename>/usr/share/regina/engine-docs/</filename>
-    or <filename>/usr/local/share/regina/engine-docs/</filename>, although this
-    may differ with your distribution or installation.
-   </para>
-  </sect2>
- </sect1>
-
- <sect1 id="python-invoking">
+ <sect1 id="python-starting">
   <title>Starting a &python; Session</title>
   <para>
    There are several ways of starting a &python; session to work with
-   &regina;.
+   &regina;:
   </para>
 
-  <sect2>
-   <title>Command-Line Sessions</title>
-   <para>
-    You can run the command-line program
-    <link linkend="man-regina-python"><command>regina-python</command></link>
-    without using the graphical user interface at all.
-    This uses the standard &python; command-line interpreter and is
-    quite fast.
-    Since it is purely text based, it also supports the redirection of
-    input and output.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="regina-python.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-  </sect2>
-  <sect2>
+  <sect2 id="python-gui">
    <title>Graphical &python; Consoles</title>
    <para>
-    You can bring up a graphical &python; console through the
+    You can open a graphical &python; console by selecting
     <menuchoice>
      <guimenu>Tools</guimenu>
      <guimenuitem>Python Console</guimenuitem>
     </menuchoice>
-    menu item or the corresponding toolbar button.
+    from the menu (or by pressing the corresponding toolbar button).
    </para>
    <para>
     <inlinemediaobject>
@@ -118,10 +39,14 @@
     </inlinemediaobject>
    </para>
    <para>
-    The top-level packet of the current file (if any) will be assigned
-    to the special variable <varname>root</varname>.
-    The currently selected packet (if any) will be assigned to the
-    special variable <varname>selected</varname>.
+    A new console window will open as illustrated below,
+    with an input area down the bottom (see the red arrow) and a
+    full history of the session in the main part of the window.
+    You can save this history by selecting
+    <menuchoice>
+     <guimenu>Console</guimenu>
+     <guimenuitem>Save Session</guimenuitem>
+    </menuchoice>.
    </para>
    <para>
     <inlinemediaobject>
@@ -130,15 +55,55 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <para>
+    When you start the &python; session, &regina; will set some special
+    variables for you:
+    <glosslist>
+     <glossentry>
+      <glossterm><varname>root</varname></glossterm>
+      <glossdef><para>
+       If you have a data file open,
+       the variable <varname>root</varname> will refer to the packet
+       at the top of your packet tree.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><varname>selected</varname></glossterm>
+      <glossdef><para>
+       If you have a packet selected in the tree,
+       the variable <varname>selected</varname> will refer to this packet
+       (see the figure above for an example of this).
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+  </sect2>
+  <sect2 id="python-cmdline">
+   <title>Command-Line Sessions</title>
+   <para>
+    You can run the command-line program
+    <link linkend="man-regina-python"><command>regina-python</command></link>
+    without a graphical user interface at all.
+    This will use the standard &python; interpreter.
+    Since this is a text-based interface, you can also redirect
+    input and output in the usual way (using &lt; and &gt; in your
+    command shell).
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="regina-python.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
   </sect2>
   <sect2 id="python-script">
    <title>Script Packets</title>
    <para>
     You can create a new <link linkend="packet-script">script
-    packet</link>.  Script packets have the advantage that they
-    can work seamlessly with multiple packets in the
-    same file through the use of script variables.
-    Furthermore, script packets are saved with the data file for later reuse.
+    packet</link> in your data file.  Script packets allow you to save
+    &python; scripts along with your data, and they give your scripts
+    easy access to the packets inside your file.
    </para>
    <para>
     <inlinemediaobject>
@@ -148,10 +113,8 @@
     </inlinemediaobject>
    </para>
    <para>
-    The editor for script packets includes a table of variables that will be
-    set each time the script is run.  Buttons and menu options are
-    available for running the script or for simply testing whether
-    it compiles.
+    When you open a script packet, you will see your &python; code in the lower
+    part of the script editor, and a table of variables up the top.
    </para>
    <para>
     <inlinemediaobject>
@@ -161,9 +124,25 @@
     </inlinemediaobject>
    </para>
    <para>
-    Each time a script is run, a new graphical &python; console is opened.
-    The script is run within this console and the console is then
-    made available to the user for further interaction.
+    You can add your own variables to this table, and set them to arbitrary
+    packets within your data file.  &regina; will always set these variables
+    to the corresponding packets before running your script.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="script-var.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    At the top of the script editor you will find buttons to compile
+    and run your script.
+    Compiling is optional: it merely gives you a chance to spot
+    syntax errors as you go.
+    When you press <guibutton>Run</guibutton>, &regina; will run your
+    script in a new graphical &python; console.
+    The console will be left open in case you wish to experiment further.
    </para>
    <para>
     <inlinemediaobject>
@@ -175,8 +154,58 @@
   </sect2>
  </sect1>
 
+ <sect1 id="python-access">
+  <title>Accessing &regina; from &python;</title>
+  <para>
+   All of &regina;'s objects, classes and methods belong to the
+   module called <parameter>regina</parameter>.
+   For instance, you create a new triangulation by calling
+   <literal>regina.NTriangulation()</literal>, and you read a data file
+   by calling <literal>regina.readFileMagic(filename)</literal>.
+   Whenever &regina; gives you access to &python; (either through a
+   <link linkend="python-gui">graphical console</link>,
+   a <link linkend="python-script">script packet</link> or the command-line
+   <link linkend="python-cmdline"><command>regina-python</command></link>),
+   it will automatically import the <parameter>regina</parameter>
+   module for you to use.
+  </para>
+  <tip>
+   <para>
+    If you have code that you find yourself writing again and again,
+    you can put it in a <firstterm>user library</firstterm>.
+    &regina; will run all of the code in all of your user libraries
+    at the beginning of every &python; session
+    (this includes graphical consoles, script packets
+    and <command>regina-python</command>).
+    User libraries are just ordinary &python; files: you can maintain
+    the current list of enabled libraries through
+    &regina;'s <link linkend="python-libraries">&python; options</link>
+    (or you can maintain the list manually in the file
+    &regina-libs;, as described in the
+    <link linkend="man-regina-python"><command>regina-python</command></link>
+    reference).
+   </para>
+  </tip>
+
+  <sect2 id="python-docs">
+   <title>Documentation</title>
+   <para>
+    &regina; includes a complete &api; reference for its calculation engine,
+    which describes in detail the objects, classes and methods made available
+    through &python;.  To read this documentation, select
+    <menuchoice>
+     <guimenu>Help</guimenu>
+     <guimenuitem>Python &api; Reference</guimenuitem>
+    </menuchoice>
+    from the menu.  The &api; reference should open in your web browser
+    (where you can bookmark it if you like).
+    You can also read it online at &regenginedocsurlbase;.
+   </para>
+  </sect2>
+ </sect1>
+
  <sect1 id="python-caveats">
-  <title>Caveats</title>
+  <title>Caveats and Traps</title>
 
   <para>
    &python; scripting offers direct access to the mathematical core of the
@@ -189,7 +218,7 @@
   <para>
    The following issues in particular are worth being aware of.
   </para>
-  <sect2 id="python-gui">
+  <sect2>
    <title>Cooperating with the &gui;</title>
    <para>
     If you cannot edit a packet from within the GUI, there is generally

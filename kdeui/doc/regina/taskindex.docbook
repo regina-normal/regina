@@ -1059,7 +1059,7 @@
 
  <indexentry id="idx-scripting">
   <primaryie>scripting</primaryie>
-  <secondaryie><link linkend="python-python">accessing &regina; objects,
+  <secondaryie><link linkend="python-access">accessing &regina; objects,
    classes and methods</link></secondaryie>
   <secondaryie><link linkend="trouble-python-sigerror"><exceptionname>Boost.Python.ArgumentError</exceptionname>,
    resolving</link></secondaryie>
@@ -1076,7 +1076,7 @@
    &python; scripts</link></secondaryie>
   <secondaryie><link linkend="import-pyscript">importing
    &python; scripts</link></secondaryie>
-  <secondaryie><link linkend="python-invoking">invoking in the
+  <secondaryie><link linkend="python-starting">invoking in the
    &gui;</link></secondaryie>
   <secondaryie><link linkend="python-ownership">ownership of
    objects</link></secondaryie>

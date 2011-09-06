@@ -454,7 +454,7 @@
     every time a script packet is run and every time the program
     <link linkend="man-regina-python"><command>regina-python</command></link>
     is started.
-    See the <link linkend="python-overview">&python; scripting
+    See the <link linkend="python">&python; scripting
     overview</link> for general information regarding &python; sessions.
    </para>
    <para>
