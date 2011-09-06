@@ -232,12 +232,12 @@
    Please tread gently.
   </para>
   <para>
-   In particular, the following issues are worth noting:
+   In particular, you should note the following issues:
   </para>
   <sect2>
-   <title>Cooperating with the &gui;</title>
+   <title>Uneditable Packets</title>
    <para>
-    If you cannot edit a packet from within the GUI, there is generally
+    If you cannot edit a packet within &regina;, there is generally
     a reason for this.  For instance, a normal surface list needs its
     parent triangulation to remain fixed, which means that any
     triangulation with normal surface lists beneath it
@@ -245,166 +245,136 @@
    </para>
    <para>
     You should not use &python; as a way to get around this barrier.
-    In the example above, you can work around the problem by
+    Instead you can work around the problem by
     <link linkend="packet-clone">cloning the packet</link>
     and editing the clone instead.
    </para>
   </sect2>
 
+  <sect2 id="python-i18n">
+   <title>International and Special Characters</title>
+   <para>
+    If you use special characters (such as accented letters,
+    other international characters, exotic punctuation, mathematical
+    symbols and so on), you need to think about
+    <emphasis>text encodings</emphasis> when passing strings between
+    &python; and &regina;.
+   </para>
+   <para>
+    If you only ever deal with plain &ascii; text (plain English
+    letters, digits and basic punctuation), you do not need to
+    worry about text encodings at all (and you can stop reading this section).
+   </para>
+   <para>
+    &regina; uses &utf8; throughout for special characters.  If you ever
+    pass a string into one of &regina;'s functions, any special
+    characters must be encoded in &utf8;; conversely, when a string is
+    returned from a function you should assume that any special
+    characters are encoded in &utf8;.
+   </para>
+   <para>
+    &python;, on the other hand, does not use &utf8; strings by default.
+    See the
+    <ulink url="http://docs.python.org/howto/unicode.html">&python;
+    &utf8; HOWTO</ulink> for more information on how to work with
+    &utf8; strings in &python;.
+   </para>
+   <para>
+    As a single exception: for file <emphasis>names</emphasis>,
+    &regina; uses whatever encoding the operating system expects.
+    Any files names that you pass to &regina; will be sent
+    through to low-level &ccpp; I/O routines without any changes or
+    re-encoding.
+   </para>
+  </sect2>
+
   <sect2 id="python-ownership">
-   <title>Ownership Concerns</title>
+   <title>Ownership Issues and
+    <exceptionname>Boost.Python.ArgumentError</exceptionname> /
+    <exceptionname>TypeError</exceptionname></title>
 
    <para>
-    A small handful of routines have unusual ownership semantics, in
-    that one or more arguments to these routines transfer ownership of
-    themselves to some other object.  The most prominent examples are the
-    tree insertion routines
-    <function>NPacket.insertChildFirst()</function>,
-    <function>NPacket.insertChildLast()</function> and
-    <function>NPacket.insertChildAfter()</function>.
+    If you create a packet in &python;, it is &ldquo;owned&rdquo; by the
+    &python; interpreter, which means it will be destroyed when the &python;
+    interpreter closes.  However, if you insert this packet into the
+    tree using <function>NPacket.insertChildLast()</function>,
+    then the packet
+    becomes <emphasis>owned by the tree</emphasis>.  This means it
+    becomes part of your data file, and will survive even after you close
+    your &python; console.
    </para>
    <para>
-    As an example, suppose that <varname>p</varname> is a new
-    packet created within a &python; console.  In this case the console
-    itself owns <varname>p</varname>, and when the console is
-    destroyed <varname>p</varname> will be destroyed along with
-    it.  However, if <varname>p</varname> is inserted as a child
-    of some other packet using <literal>other.insertChildLast(p)</literal>,
-    ownership of <varname>p</varname> is transferred to its new
-    parent <varname>other</varname>.
-   </para>
-   <para>
-    Due to a constraint of &boost-python;, whenever ownership of an
-    object is transferred away from the &python; console, the old
-    reference to that object becomes no longer valid.  In the above example,
-    further attempts to use the object <varname>p</varname> will result
-    in an ugly &python; error.  Depending on your system configuration,
-    this might be either a <exceptionname>TypeError</exceptionname>
-    or a <exceptionname>Boost.Python.ArgumentError</exceptionname>.
-   </para>
-   <para>
-    Either way, in the example above the value of
-    <varname>p</varname> can be easily restored by calling
-    <literal>p = other.getLastTreeChild()</literal>.  After doing this,
-    the console now treats <varname>p</varname> as a reference to some
-    external object that it has no direct responsibility over (which is indeed
-    what you want, since <varname>other</varname> is now looking after it).
-   </para>
-   <para>
-    In practice the only cases in which this problem arises are with
-    the tree insertion routines listed above and one or two others
-    (such as <function>NGroupPresentation.addRelation()</function>).
-   </para>
-   <para>
-    An example of the <exceptionname>TypeError</exceptionname> described
-    above can be seen in the following extract from a &python; session.
+    Whenever the &python; interpreter <emphasis>loses ownership</emphasis>
+    of an object like this, the variable representing that object
+    becomes invalid.  Any attempt to access the variable will result in
+    an ugly &python; error: depending on your system, this is typically a
+    <exceptionname>Boost.Python.ArgumentError</exceptionname> or a
+    <exceptionname>TypeError</exceptionname>.
    </para>
    <programlisting>
-&gt;&gt;&gt; c = regina.NContainer()
-&gt;&gt;&gt; t = regina.NTriangulation()
-&gt;&gt;&gt; c.insertChildLast(t)
-&gt;&gt;&gt; print c
-Container
-&gt;&gt;&gt; print t
-
-Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 1, in ?
-TypeError: bad argument type for built-in operation
-&gt;&gt;&gt; t = c.getLastTreeChild()
-&gt;&gt;&gt; print t
+&gt;&gt;&gt; p = regina.NTriangulation()
+&gt;&gt;&gt; print p
 Triangulation with 0 tetrahedra.
-&gt;&gt;&gt;
-</programlisting>
-   <para>
-    The following example shows the same set of commands run on a system
-    that issues a <exceptionname>Boost.Python.ArgumentError</exceptionname>
-    instead.
-   </para>
-<programlisting>
-&gt;&gt;&gt; c = regina.NContainer()
-&gt;&gt;&gt; t = regina.NTriangulation()
-&gt;&gt;&gt; c.insertChildLast(t)
-&gt;&gt;&gt; print c
-Container
-&gt;&gt;&gt; print t
+&gt;&gt;&gt; root.insertChildLast(p)
+&gt;&gt;&gt; print p
 Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 1, in ?
+  File "&lt;console&gt;", line 1, in &lt;module&gt;
 Boost.Python.ArgumentError: Python argument types in
     ShareableObject.__str__(NTriangulation)
 did not match C++ signature:
     __str__(regina::ShareableObject {lvalue})
-&gt;&gt;&gt; t = c.getLastTreeChild()
-&gt;&gt;&gt; print t
+...
+</programlisting>
+   <para>
+    The error is easily fixed: just re-fetch the packet from its new
+    owner (the packet tree):
+   </para>
+   <programlisting>
+...
+&lt;&lt;&lt; p = root.getLastTreeChild()
+&lt;&lt;&lt; print p
 Triangulation with 0 tetrahedra.
-&gt;&gt;&gt;
+</programlisting>
+   <para>
+    This is a general pattern: whenever &python; loses ownership of an
+    object, the corresponding variable will become invalid, and you will
+    have to re-fetch it if you want to keep working with it.
+    In practice this only happens with the tree insertion routines
+    <function>NPacket.insertChildFirst()</function>,
+    <function>NPacket.insertChildLast()</function> and
+    <function>NPacket.insertChildAfter()</function>, as well as one or
+    two other routines
+    (such as <function>NGroupPresentation.addRelation()</function>).
+   </para>
+   <para>
+    The example above generated a
+    <exceptionname>Boost.Python.ArgumentError</exceptionname>.
+    Some systems will generate a <exceptionname>TypeError</exceptionname>
+    instead, as illustrated below.
+   </para>
+   <programlisting>
+&gt;&gt;&gt; p = regina.NTriangulation()
+&gt;&gt;&gt; print p
+Triangulation with 0 tetrahedra.
+&gt;&gt;&gt; root.insertChildLast(p)
+&gt;&gt;&gt; print p
+
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in ?
+TypeError: bad argument type for built-in operation
 </programlisting>
   <tip>
    <para>
-    Although it does not help with the example above (inserting a brand new
-    packet into the tree), the routine
-    <function>NPacket.reparent()</function> makes it easy to avoid ownership
-    problems when moving a packet from one place in a tree to another.
-   </para>
-   <para>
-    The troublesome way of doing this is to call
+    If you are moving a packet around in the tree, do not call
     <function>makeOrphan()</function> followed by an insertion routine
-    such as <function>insertChildFirst()</function>, which causes the
-    problems described above.  The following example tries to move the
-    packet <varname>child</varname> from the old parent
-    <varname>p1</varname> to the new parent <varname>p2</varname>:
+    like <function>insertChildFirst()</function>.  This will
+    trigger this ownership issue, since <function>makeOrphan()</function>
+    passes ownership of the packet to &python; and then
+    <function>insertChildFirst()</function> takes it away again.
+    Instead use the single routine <function>NPacket.reparent()</function>,
+    which avoids this problem since &python; will never own the packet at all.
    </para>
-<programlisting>
-&gt;&gt;&gt; ...
-&gt;&gt;&gt; child = p1.getFirstTreeChild()
-&gt;&gt;&gt; child.makeOrphan()
-&gt;&gt;&gt; p2.insertChildLast(child)
-Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-Boost.Python.ArgumentError: ...
-</programlisting>
-   <para>
-    A better way of doing this is to use a single call to
-    <function>reparent()</function>, which works flawlessly:
-   </para>
-<programlisting>
-&gt;&gt;&gt; ...
-&gt;&gt;&gt; child = p1.getFirstTreeChild()
-&gt;&gt;&gt; child.reparent(p2)
-&gt;&gt;&gt; print child
-Triangulation with 2 tetrahedra.
-&gt;&gt;&gt; print p2.getLastTreeChild()
-Triangulation with 2 tetrahedra.
-&gt;&gt;&gt;
-</programlisting>
   </tip>
-  </sect2>
-
-  <sect2 id="python-i18n">
-   <title>International Characters</title>
-   <para>
-    &regina; uses &utf8; consistently for
-    international characters.  If you ever
-    pass a string into one of &regina;'s functions, you must ensure that it
-    is encoded in &utf8;; conversely, when a string is returned from a
-    function you should assume it is encoded in &utf8;.
-   </para>
-   <para>
-    This is important for &python; users to be aware of, since &python;
-    strings do not use &utf8; by default.  It is hoped that future
-    versions of &regina; can make conversions between &python; strings
-    and &utf8; strings more transparent.
-   </para>
-   <para>
-    As a single exception, file <emphasis>names</emphasis> should be in
-    whatever encoding the operating system expects; these will be passed
-    through to low-level &ccpp; file I/O routines without any changes or
-    re-encoding.
-   </para>
-   <para>
-    Users who only ever deal with plain &ascii; text do not need to
-    worry about text encodings at all, since plain &ascii; is a subset
-    of &utf8;.
-   </para>
   </sect2>
  </sect1>
 
