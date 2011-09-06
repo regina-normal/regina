@@ -447,7 +447,7 @@ static FuncResult attempt_isometry(
 	 */
 	if (first != manifold0->num_tetrahedra
 	 || last  != manifold0->num_tetrahedra - 1)
-		uFatalError("attempt_isometry", "isometry");
+		uFatalError("attempt_isometry", "isometry.c");
 
 	/*
 	 *	Free the queue, and report success.
@@ -791,7 +791,7 @@ static void make_isometry_array(
 		 *	A quick error check.
 		 */
 		if (an_isometry != NULL || i != isometry_list->num_isometries)
-			uFatalError("make_isometry_array", "isometry");
+			uFatalError("make_isometry_array", "isometry.c");
 	}
 }
 

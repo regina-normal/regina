@@ -337,7 +337,7 @@ static FuncResult algorithm_one(
 				/*
 				 *	We should never arrive here.
 				 */
-				uFatalError("algorithm_one", "chern_simons");
+				uFatalError("algorithm_one", "chern_simons.c");
 		}
 	}
 
@@ -933,7 +933,7 @@ static Complex log_w_minus_k_with_history(
 				break;
 
 			default:
-				uFatalError("log_w_minus_k_with_history", "chern_simons");
+				uFatalError("log_w_minus_k_with_history", "chern_simons.c");
 		}
 
 	/*

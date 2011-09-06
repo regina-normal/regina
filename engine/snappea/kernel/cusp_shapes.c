@@ -445,11 +445,19 @@ static PositionedTet find_start(
 	/*
 	 *	The program should never get to this point.
 	 */
-	uFatalError("find_start", "cusp_shapes");
+	uFatalError("find_start", "cusp_shapes.c");
 
 	/*
-	 *	The C++ compiler would like a return value, even though
+	 *	The compiler would like a return value, even though
 	 *	we never return from the uFatalError() call.
+	 *	The Metrowerks compiler would, in addition, like
+	 *	the data to be initialized before use.
 	 */
+	ptet.tet			= NULL;
+	ptet.near_face		= 0;
+	ptet.left_face		= 0;
+	ptet.right_face		= 0;
+	ptet.bottom_face	= 0;
+	ptet.orientation	= unknown_orientation;
 	return ptet;
 }

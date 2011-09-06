@@ -11,9 +11,6 @@
 #include "SnapPea.h"
 #include "positioned_tet.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /************************************************************************/
 /*																		*/
@@ -566,7 +563,7 @@ extern FuncResult compute_cusped_isometries(
 /*																		*/
 /************************************************************************/
 
-extern MoebiusTransformation	Moebius_identity;
+extern CONST MoebiusTransformation	Moebius_identity;
 
 extern void		Moebius_copy(	MoebiusTransformation	*dest,
 								MoebiusTransformation	*source);
@@ -828,6 +825,11 @@ extern void		sl2c_product(CONST SL2CMatrix a, CONST SL2CMatrix b, SL2CMatrix pro
 extern void		sl2c_adjoint(CONST SL2CMatrix a, SL2CMatrix adjoint);
 extern void		sl2c_normalize(SL2CMatrix a);
 extern Boolean	sl2c_matrix_is_real(CONST SL2CMatrix a);
+extern void		sl2c_minus(CONST SL2CMatrix a, CONST SL2CMatrix b, SL2CMatrix difference);
+extern double	sl2c_norm_squared(CONST SL2CMatrix a);
+extern void		sl2c_conjugate(CONST SL2CMatrix a, CONST SL2CMatrix b, SL2CMatrix baB);
+extern Boolean	sl2c_same_matrix(CONST SL2CMatrix a, CONST SL2CMatrix b, CONST double aPrecisionSquared);
+extern Complex	sl2c_trace(CONST SL2CMatrix m);
 
 
 /************************************************************************/
@@ -1110,9 +1112,5 @@ extern double birectangular_tetrahedron_volume(
  *	Computes the volume of a birectangular tetrahedron using Vinberg's
  *	article.  Please see volume.c for a citation to Vinberg's article.
  */
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
 
 #endif

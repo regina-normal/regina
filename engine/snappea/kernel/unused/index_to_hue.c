@@ -3,7 +3,7 @@
  *
  *	This file provides the function
  *
- *		double	index_to_hue(int index);
+ *		double	index_to_hue(unsigned int index);
  *
  *	which maps the nonnegative integers to a set of easily distinguishable
  *	hues.  The rule for computing the hue is to write the index in binary,
@@ -24,9 +24,8 @@
 
 #include "kernel.h"
 
-
 double index_to_hue(
-	int	index)
+	unsigned int	index)
 {
 	/*
 	 *	To maximize speed and avoid unnecessary roundoff error,
@@ -36,6 +35,7 @@ double index_to_hue(
 
 	unsigned int	num,
 					den;
+	double			result;
 
 	num = 0;
 	den = 1;
@@ -51,12 +51,37 @@ double index_to_hue(
 		index >>= 1;
 	}
 
-	return ( (double)num / (double)den );
+	result = (double)num / (double)den;
+
+	return result;
+}
+
+
+double index_to_prettier_hue(
+	unsigned int	aHueIndex)
+{
+	/*
+	 *	index_to_hue() returns some unpleasant colors, including a sickly green.
+	 *	So instead of using it directly, start with the multiples of 1/6,
+	 *	to get pleasing primary and secondary colors, then use index_to_hue
+	 *	to interpolate the gaps between them.
+	 */
+
+	static const double	theBaseHue[6] = {	
+											1.0 / 6.0,		/*	yellow	*/
+											0.0 / 6.0,		/*	red		*/
+											4.0 / 6.0,		/*	blue	*/
+											2.0 / 6.0,		/*	green	*/
+											3.0 / 6.0,		/*	cyan	*/
+											5.0 / 6.0		/*	magenta	*/
+											};
+
+	return theBaseHue[aHueIndex % 6] + (1.0/6.0)*index_to_hue(aHueIndex / 6);
 }
 
 
 double horoball_hue(
-	int	index)
+	unsigned int	index)
 {
 	/*
 	 *	The index_to_hue() colors don't look so nice for horoballs,
@@ -68,7 +93,7 @@ double horoball_hue(
 	 *	is in the eye of the beholder.
 	 */
 
-	const static int	base_hue[6] = {	0,		/*	red		*/
+	static const int	base_hue[6] = {	0,		/*	red		*/
 										3,		/*	cyan	*/
 										2,		/*	green	*/
 										4,		/*	blue	*/

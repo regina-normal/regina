@@ -198,31 +198,13 @@ const FaceIndex vt_side[4][3] = {{3, 1, 2},
  *	There are 24 possible Permutations of the set {3, 2, 1, 0}.  The table
  *	permutation_by_index[] list them all.  E.g. permutation_by_index[2] = 0xD2
  *	= 3102, which is the permutation taking 3210 to 3102.
+ *
+ *	2007/10/12  Changed to lexicographic ordering to accommodate decode_CHW.c.
+ *	This would have broken tersest_triangulation.c, which is no longer used.
  */
 const Permutation permutation_by_index[24] = {
-			0xE4, 0xE1, 0xD2, 0xD8, 0xC9, 0xC6,
-			0x93, 0x9C, 0x8D, 0x87, 0xB4, 0xB1,
-			0x4E, 0x4B, 0x78, 0x72, 0x63, 0x6C,
-			0x39, 0x36, 0x27, 0x2D, 0x1E, 0x1B};
+			0x1B, 0x1E, 0x27, 0x2D, 0x36, 0x39,
+			0x4B, 0x4E, 0x63, 0x6C, 0x72, 0x78,
+			0x87, 0x8D, 0x93, 0x9C, 0xB1, 0xB4,
+			0xC6, 0xC9, 0xD2, 0xD8, 0xE1, 0xE4};
 
-/*
- *	index_by_permutation[] is the inverse of permutation_by_index[].
- *	That is, for 0 <= i < 24,  index_by_permutation[permutation_by_index[i]] = i.
- */
-const char index_by_permutation[256] = {
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 23, -1, -1, 22, -1,
-	-1, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1, 21, -1, -1,
-	-1, -1, -1, -1, -1, -1, 19, -1, -1, 18, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13, -1, -1, 12, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, 16, -1, -1, -1, -1, -1, -1, -1, -1, 17, -1, -1, -1,
-	-1, -1, 15, -1, -1, -1, -1, -1, 14, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1,  9, -1, -1, -1, -1, -1,  8, -1, -1,
-	-1, -1, -1,  6, -1, -1, -1, -1, -1, -1, -1, -1,  7, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, 11, -1, -1, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1,  5, -1, -1,  4, -1, -1, -1, -1, -1, -1,
-	-1, -1,  2, -1, -1, -1, -1, -1,  3, -1, -1, -1, -1, -1, -1, -1,
-	-1,  1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};

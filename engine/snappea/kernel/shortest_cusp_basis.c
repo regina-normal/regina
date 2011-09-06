@@ -228,7 +228,7 @@ void shortest_cusp_basis(
 	cusp_modulus = complex_div(v,u);
 
 	if (cusp_modulus.imag < 0)
-		uFatalError("cusp_modulus", "cusp_modulus");
+		uFatalError("cusp_modulus", "cusp_modulus.c");
 
 	if (cusp_modulus.real < -0.5 + EPSILON)
 	{
@@ -336,7 +336,7 @@ void install_shortest_bases(
 
 	if (change_peripheral_curves(manifold, change_matrices) != func_OK)
 
-		uFatalError("install_shortest_bases", "shortest_cusp_basis");
+		uFatalError("install_shortest_bases", "shortest_cusp_basis.c");
 
 	/*
 	 *	Free the array used to store the change of basis matrices.

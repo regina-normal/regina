@@ -146,11 +146,12 @@
  *	doing several dozen Dehn fillings on each of thousands of cusped
  *	census manifolds, I got the
  *
- *		uFatalError("verify_mt_action", "dual_curves");
+ *		uFatalError("verify_mt_action", "dual_curves.c");
  *
  *	which indicated the previous value of BIG_MODULUS (namely 1e10)
- *	was not big enough.  The offending (revealing?) example
- *	is v2395(-1,1).  The value of fz and w are
+ *	was not big enough ["too big"?  2002/11/05].
+ *	The offending (revealing?) example is v2395(-1,1).
+ *	The values of fz and w are
  *
  *		fz = 1.2656500338200879e+8 + i 1.89154960743708773e+9
  *		w  = 1.2656500287902592e+8 + i 1.89154960735500588e+9
@@ -169,7 +170,7 @@
 
 #define BIG_MODULUS		1e10
 #define BIG_MODULUS1	 1e5
-#define FRACTIONAL_DIFF	 1e4
+#define FRACTIONAL_DIFF	 1e-4	/*	2002/11/05 corrected to 1e-4; had been 1e4	*/
 
 /*
  *	MoebiusTransformations which translate a distance less
@@ -201,7 +202,7 @@
 static void					initialize_flags(Triangulation *manifold);
 static void					consider_its_neighbor(Tetrahedron *tet, FaceIndex face, int size, Complex corners[2][4], Orientation orientation, Tetrahedron *tet0, FaceIndex face0, int max_size, Triangulation *manifold, DualOneSkeletonCurve **curve_tree);
 static void					compute_corners(Complex corners[4], Complex nbr_corners[4], FaceIndex face, FaceIndex entry_face, Permutation gluing, Orientation nbr_orientation, ComplexWithLog cwl[3]);
-static void					compute_Moebius_transformation(Tetrahedron *tet, Orientation orientation, Complex corners[4], MoebiusTransformation *mt);
+static void					compute_Moebius_transformation(Orientation orientation, Complex corners[4], MoebiusTransformation *mt);
 static void					verify_mt_action(MoebiusTransformation *mt, Complex z, Complex w);
 static void					add_curve_to_tree(Triangulation *manifold, DualOneSkeletonCurve **curve_tree, MatrixParity parity, Complex cl[2], int size);
 static DualOneSkeletonCurve	*package_up_the_curve(Triangulation *manifold, MatrixParity parity, Complex cl[2], int size);
@@ -404,7 +405,7 @@ static void consider_its_neighbor(
 			 */
 			for (i = 0; i < 2; i++)	/* i = complete, filled */
 				compute_Moebius_transformation(
-							nbr, nbr_orientation, nbr_corners[i], &mt[i]);
+							nbr_orientation, nbr_corners[i], &mt[i]);
 
 			/*
 			 *	The computation of the MoebiusTransformation used
@@ -541,7 +542,6 @@ static void compute_corners(
 
 
 static void compute_Moebius_transformation(
-	Tetrahedron				*tet,
 	Orientation				orientation,
 	Complex					corners[4],
 	MoebiusTransformation	*mt)
@@ -747,7 +747,7 @@ static void verify_mt_action(
 		 || complex_modulus(complex_div(complex_minus(fz, w), fz)) > FRACTIONAL_DIFF
 		)
 	)
-		uFatalError("verify_mt_action", "dual_curves");
+		uFatalError("verify_mt_action", "dual_curves.c");
 }
 
 
@@ -938,7 +938,7 @@ static void convert_tree_to_pointer_array(
 	 *	A quick error check.
 	 */
 	if (count != *num_curves)
-		uFatalError("convert_tree_to_pointer_array", "dual_curves");
+		uFatalError("convert_tree_to_pointer_array", "dual_curves.c");
 }
 
 
@@ -1114,7 +1114,7 @@ void free_dual_curves(
 		if (the_curves == NULL)
 			return;
 		else
-			uFatalError("free_dual_curves", "dual_curves");
+			uFatalError("free_dual_curves", "dual_curves.c");
 	}
 
 	/*

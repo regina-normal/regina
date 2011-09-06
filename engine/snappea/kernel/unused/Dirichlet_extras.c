@@ -182,7 +182,7 @@ static void face_classes(
 			face->mate->f_class	= face->f_class;
 
 			face->f_class->index	= count++;
-			face->f_class->hue		= index_to_hue(face->f_class->index);
+			face->f_class->hue		= index_to_prettier_hue(face->f_class->index);
 
 			face->f_class->num_elements = (face->mate == face) ? 1 : 2;
 
@@ -315,7 +315,7 @@ static void match_incident_edges(
 				i,
 				j,
 				offset,
-				best_offset;
+				best_offset	= 0;
 	double		min_error,
 				error,
 				diff;
@@ -333,7 +333,7 @@ static void match_incident_edges(
 	 */
 
 	if (face->num_sides != face->mate->num_sides)
-		uFatalError("match_incident_edges", "Dirichlet_extras");
+		uFatalError("match_incident_edges", "Dirichlet_extras.c");
 
 	/*
 	 *	Allocate space for the coordinates of this face's vertices,
@@ -367,7 +367,7 @@ static void match_incident_edges(
 	} while (edge != face->some_edge);
 
 	if (count != face->num_sides)
-		uFatalError("match_incident_edges", "Dirichlet_extras");
+		uFatalError("match_incident_edges", "Dirichlet_extras.c");
 
 	/*
 	 *	If face->group_element is orientation-preserving, we'll traverse
@@ -421,7 +421,7 @@ static void match_incident_edges(
 	} while (edge != face->mate->some_edge);
 
 	if (count != face->mate->num_sides)
-		uFatalError("match_incident_edges", "Dirichlet_extras");
+		uFatalError("match_incident_edges", "Dirichlet_extras.c");
 
 	/*
 	 *	face_vertices[] will coincide with mate_vertices[] as sets, but
@@ -1001,7 +1001,7 @@ static void subdivide_edges_where_necessary(
 				break;
 
 			default:
-				uFatalError("subdivide_edges_where_necessary", "Dirichlet_extras");
+				uFatalError("subdivide_edges_where_necessary", "Dirichlet_extras.c");
 		}
 
 	if (changes_made == TRUE)
@@ -1070,7 +1070,7 @@ static void subdivide_faces_where_necessary(
 			trace = o31_trace(*face->group_element);
 
 			if (fabs(fmod(fabs(trace) + 0.5, 1.0) - 0.5) > TRACE_ERROR_EPSILON)
-				uFatalError("subdivide_faces_where_necessary", "Dirichlet_extras");
+				uFatalError("subdivide_faces_where_necessary", "Dirichlet_extras.c");
 
 			switch ((int) floor(trace + 0.5))
 			{
@@ -1092,7 +1092,7 @@ static void subdivide_faces_where_necessary(
 					break;
 
 				default:
-					uFatalError("subdivide_faces_where_necessary", "Dirichlet_extras");
+					uFatalError("subdivide_faces_where_necessary", "Dirichlet_extras.c");
 			}
 		}
 
@@ -1126,7 +1126,7 @@ static void cone_face_to_center(
 	 */
 	old_num_sides = face->num_sides;
 	if (old_num_sides % 2 != 0)
-		uFatalError("cone_face_to_center", "Dirichlet_extras");
+		uFatalError("cone_face_to_center", "Dirichlet_extras.c");
 
 	/*
 	 *	In this case there is no pre-existing function in
@@ -1172,7 +1172,7 @@ static void cone_face_to_center(
 		} while (edge != face->some_edge);
 
 		if (count != old_num_sides)
-			uFatalError("cone_face_to_center", "Dirichlet_extras");
+			uFatalError("cone_face_to_center", "Dirichlet_extras.c");
 	}
 
 	/*
@@ -1352,14 +1352,14 @@ static void bisect_face(
 	} while (edge != face->some_edge);
 
 	if (count != 2)
-		uFatalError("bisect_face", "Dirichlet_extras");
+		uFatalError("bisect_face", "Dirichlet_extras.c");
 
 	/*
 	 *	Note how many sides the face has before we make the cut.
 	 */
 	old_num_sides = face->num_sides;
 	if (old_num_sides % 2 != 0)
-		uFatalError("bisect_face", "Dirichlet_extras");
+		uFatalError("bisect_face", "Dirichlet_extras.c");
 
 	/*
 	 *	Now we can make the call to cut_face_if_necessary().
@@ -1751,7 +1751,7 @@ static FuncResult vertex_distances(
 	  + polyhedron->num_ideal_vertex_classes
 	 != polyhedron->num_vertex_classes)
 
-		uFatalError("vertex_distances", "Dirichlet_extras");
+		uFatalError("vertex_distances", "Dirichlet_extras.c");
 
 	return func_OK;
 }
@@ -2070,7 +2070,7 @@ static void compute_edge_distance(
 	 *	v[1]-coordinate of p[1] exceeds that of p[0].
 	 */
 	if (p0_coord >= p1_coord)
-		uFatalError("compute_edge_distance", "Dirichlet_extras");
+		uFatalError("compute_edge_distance", "Dirichlet_extras.c");
 
 	if (u_coord < p0_coord)
 	{
@@ -2637,7 +2637,7 @@ static void compute_spine_radius(
 					*region[2];
 	double			max_value;
 	WEEdge			*edge,
-					*max_edge;
+					*max_edge		= NULL;
 	Boolean			union_is_3_ball;
 
 	/*
@@ -2692,7 +2692,7 @@ static void compute_spine_radius(
 			}
 
 		if (max_value == 0.0)
-			uFatalError("compute_spine_radius", "Dirichlet_extras");
+			uFatalError("compute_spine_radius", "Dirichlet_extras.c");
 
 		/*
 		 *	Note the vertex classes at max_edge's endpoints.

@@ -371,7 +371,7 @@ static Boolean incident_to_filled_cusp(
 			 *	field in the Tetrahedron data structure.
 			 */
 			if (tet->extra != NULL)
-				uFatalError("incident_to_filled_cusp", "close_cusps");
+				uFatalError("incident_to_filled_cusp", "close_cusps.c");
 
 			/*
 			 *	Attach the locally defined struct extra.
@@ -520,7 +520,7 @@ static Boolean cancel_triangles(
 	 *	Do a quick error check.
 	 */
 	if (nbr_f[1] != EVALUATE(tet->gluing[f[0]], f[1]))
-		uFatalError("cancel_triangles", "close_cusps");
+		uFatalError("cancel_triangles", "close_cusps.c");
 
 	/*
 	 *	Note the EdgeIndices of the "vertical" edges farthest from
@@ -545,7 +545,7 @@ static Boolean cancel_triangles(
 	 *	to be sure.
 	 */
 	if (tet == nbr_tet)
-		uFatalError("cancel_triangles", "close_cusps");
+		uFatalError("cancel_triangles", "close_cusps.c");
 
 	/*
 	 *	The following line isn't really necessary, but it serves to avoid
@@ -751,7 +751,7 @@ static Boolean two_to_two(
 	nbr_f[1]	= nbr_tet->extra->ideal_vertex_index;
 
 	if (nbr_f[1] != EVALUATE(tet->gluing[f[0]], f[1]))
-		uFatalError("two_to_two", "close_cusps");
+		uFatalError("two_to_two", "close_cusps.c");
 
 	f[2]		= remaining_face[f[1]][f[0]];
 	f[3]		= remaining_face[f[0]][f[1]];
@@ -801,7 +801,7 @@ static Boolean two_to_two(
 	 *		standard form.
 	 */
 	if (tet == nbr_tet)
-		uFatalError("two_to_two", "close_cusps");
+		uFatalError("two_to_two", "close_cusps.c");
 
 	/*
 	 *	[This comment applies on if we were called from
@@ -1292,7 +1292,7 @@ static void apply_two_to_two_to_eliminate(
 	}
 
 	if (f == 4)	/* didn't find the right f */
-		uFatalError("apply_two_to_two_to_eliminate", "close_cusps");
+		uFatalError("apply_two_to_two_to_eliminate", "close_cusps.c");
 
 	(void) two_to_two(manifold, tet, f, FALSE);
 }
@@ -1419,7 +1419,7 @@ static void fold_one_cusp(
 	}
 
 	if (f[0][1] == 4)
-		uFatalError("fold_one_cusp", "close_cusps");
+		uFatalError("fold_one_cusp", "close_cusps.c");
 
 	f[0][2] = remaining_face[f[0][0]][f[0][1]];
 	f[0][3] = remaining_face[f[0][1]][f[0][0]];

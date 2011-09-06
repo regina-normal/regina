@@ -33,7 +33,7 @@ long int gcd(
 	if (a == 0)
 	{
 		if (b == 0)
-			uFatalError("gcd", "gcd");
+			uFatalError("gcd", "gcd.c");
 		else
 			return b;
 	}
@@ -81,7 +81,7 @@ long int euclidean_algorithm(
 	 */
 
 	if (m == 0 && n == 0)
-		uFatalError("euclidean_algorithm", "gcd");
+		uFatalError("euclidean_algorithm", "gcd.c");
 
 	/*
 	 *	Initially we have
@@ -167,7 +167,7 @@ long int Zq_inverse(
 	 */
 
 	if (p <= 0 || p >= q)
-		uFatalError("Zq_inverse", "gcd");
+		uFatalError("Zq_inverse", "gcd.c");
 
 	/*
 	 *	Find a and b such that ap + bq = gcd(p,q) = 1.
@@ -180,7 +180,7 @@ long int Zq_inverse(
 	 */
 
 	if (g != 1)
-		uFatalError("Zq_inverse", "gcd");
+		uFatalError("Zq_inverse", "gcd.c");
 
 	/*
 	 *		ap + bq = 1

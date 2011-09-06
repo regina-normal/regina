@@ -113,7 +113,7 @@ void allocate_cross_sections(
 		 *	are already allocated.
 		 */
 		if (tet->cross_section != NULL)
-			uFatalError("allocate_cross_sections", "cusp_cross_sections");
+			uFatalError("allocate_cross_sections", "cusp_cross_sections.c");
 
 		/*
 		 *	Allocate a VertexCrossSections structure.
@@ -137,7 +137,7 @@ void free_cross_sections(
 		 *	really are there.
 		 */
 		if (tet->cross_section == NULL)
-			uFatalError("free_cross_sections", "cusp_cross_sections");
+			uFatalError("free_cross_sections", "cusp_cross_sections.c");
 
 		/*
 		 *	Free the VertexCrossSections structure, and set the pointer
@@ -193,9 +193,9 @@ static void cross_section(
 	Cusp			*cusp)
 {
 	double			cusp_area;
-	Tetrahedron		*tet0,
+	Tetrahedron		*tet0		= NULL,
 					*nbr_tet;
-	VertexIndex		v0,
+	VertexIndex		v0			= 0,
 					nbr_v;
 	FaceIndex		f,
 					nbr_f;
@@ -365,7 +365,7 @@ static void find_starting_point(
 	/*
 	 *	We should never get to this point.
 	 */
-	uFatalError("find_starting_point", "cusp_cross_sections");
+	uFatalError("find_starting_point", "cusp_cross_sections.c");
 }
 
 

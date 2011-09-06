@@ -102,6 +102,8 @@ Version 4.90  [ 10 September, 2011 ] - First prerelease for version 5.0.
     OVERALL:
         - The graphical user interface has been ported from KDE3 to KDE4.
         - The build system has been ported from autotools to cmake.
+        - The built-in portions of the SnapPea kernel have been re-synced
+          with the September 2009 version of the kernel.
     DOCUMENTATION:
         - The users' handbook has undergone a thorough overhaul.
         - The data file format has been split out of the users' handbook

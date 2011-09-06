@@ -82,7 +82,7 @@ double NSnapPeaTriangulation::volume(int& precision) const {
 
 void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
     if (snappeaData)
-        save_triangulation(snappeaData, const_cast<char*>(filename));
+        save_triangulation(snappeaData, filename);
 }
 
 void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
