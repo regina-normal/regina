@@ -2,9 +2,15 @@
  <title>Importing and Exporting Data</title>
 
  <para>
-  By default, &regina; reads and writes data files using compressed
-  &xml; (these are the usual <filename>.rga</filename> data files).
-  However, &regina; is also able to read from and write to a variety
+  By default, &regina; reads and writes
+  <filename>.rga</filename> data files in its own compressed
+  &xml; format (if you need the specifications
+  for this &xml; format, try
+   <menuchoice>
+    <guimenu>Help</guimenu>
+    <guisubmenu>File Format Reference</guisubmenu>
+   </menuchoice>).
+  However, &regina; can also read from and write to a variety
   of alternative file formats, as described in the following sections.
  </para>
 
@@ -20,6 +26,13 @@
     <guisubmenu>Import</guisubmenu>
    </menuchoice>
    menu.  Each item in this menu represents a different file format.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="menu-import.png"/>
+    </imageobject>
+   </inlinemediaobject>
   </para>
   <note><para>
    You must already have a working data file open before you can perform
@@ -47,6 +60,13 @@
      current packet tree.  The imported data will appear as a new packet
      (or perhaps as a new subtree).  In particular, you will be asked the
      following.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="import-snappea.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <glosslist>
      <glossentry>
@@ -77,7 +97,7 @@
   </para>
 
   <sect2 id="import-regina">
-   <title>&regina; Data File</title>
+   <title>&regina; Data Files</title>
 
    <para>
     The contents of a native &regina; data file can be imported.  In
@@ -93,7 +113,7 @@
   </sect2>
 
   <sect2 id="import-snappea">
-   <title>&snappea; Triangulation</title>
+   <title>&snappea; Triangulations</title>
 
    <para>
     A triangulation obtained from &snappea; can be imported.
@@ -139,7 +159,7 @@
   </sect2>
 
   <sect2 id="import-orb">
-   <title>&orbcasson; Triangulation</title>
+   <title>&orbcasson; Triangulations</title>
 
    <para>
     A triangulation in &orbcasson; format can be imported.
@@ -163,7 +183,7 @@
   </sect2>
 
   <sect2 id="import-isosiglist">
-   <title>Isomorphism Signature List</title>
+   <title>Isomorphism Signature Lists</title>
 
    <para>
     TODO.
@@ -202,7 +222,7 @@
   </sect2>
 
   <sect2 id="import-dehydrationlist">
-   <title>Dehydrated Triangulation List</title>
+   <title>Dehydrated Triangulation Lists</title>
 
    <para>
     A list of dehydrated triangulation strings can be imported.
@@ -238,7 +258,7 @@
   </sect2>
 
   <sect2 id="import-pdf">
-   <title>&pdf; Document</title>
+   <title>&pdf; Documents</title>
 
    <para>
     Any &pdf; document can be imported directly into the packet tree.
@@ -262,7 +282,7 @@
   </sect2>
 
   <sect2 id="import-pyscript">
-   <title>&python; Script</title>
+   <title>&python; Scripts</title>
 
    <para>
     An arbitrary &python; script can be imported, in which case it will
@@ -348,6 +368,13 @@
    menu, with each item in this menu representing a different file format.
   </para>
   <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="menu-export.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
    To export a single packet or a subtree, first select the appropriate file
    format from the
    <menuchoice>
@@ -360,6 +387,13 @@
    <listitem>
     <para>
      You will be asked which packet to export.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="export-snappea.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <para>
      Whether you are exporting a single packet or an entire subtree
@@ -387,7 +421,7 @@
   </para>
 
   <sect2 id="export-rga">
-   <title>&regina; Data File</title>
+   <title>&regina; Data Files</title>
 
    <para>
     This is &regina;'s native file format, in which data is saved as
@@ -400,10 +434,8 @@
     The packet that is selected for export will become the root of the
     new packet tree.  All of its descendants will be exported also.
    </para>
-  </sect2>
 
-  <sect2 id="export-rga-plain">
-   <title>&regina; Data File (Uncompressed)</title>
+   <para>TODO: &regina; Data Files (Uncompressed)</para>
 
    <para>
     This export is identical to the
@@ -435,7 +467,7 @@
   </sect2>
 
   <sect2 id="export-snappea">
-   <title>&snappea; Triangulation</title>
+   <title>&snappea; Triangulations</title>
 
    <para>
     This allows a single triangulation to be exported to &snappea;'s
@@ -456,7 +488,7 @@
   </sect2>
 
   <sect2 id="export-cpp">
-   <title>&cpp; Source</title>
+   <title>&cpp; Source Code</title>
 
    <para>
     This allows a single triangulation to be exported as &cpp; source
@@ -490,7 +522,7 @@
   </sect2>
 
   <sect2 id="export-csvsurfacelist">
-   <title>&csv; Surface List</title>
+   <title>Spreadsheet-Readable (&csv;) Surface Lists</title>
 
    <para>
     This allows a normal surface list to be exported as a plain-text
@@ -521,7 +553,7 @@
   </sect2>
 
   <sect2 id="export-pdf">
-   <title>&pdf; Document</title>
+   <title>&pdf; Documents</title>
 
    <para>
     This allows a single &pdf; packet to be exported as an ordinary
@@ -530,7 +562,7 @@
   </sect2>
 
   <sect2 id="export-pyscript">
-   <title>&python; Script</title>
+   <title>&python; Scripts</title>
 
    <para>
     This allows a single script packet to be exported as a regular &python;

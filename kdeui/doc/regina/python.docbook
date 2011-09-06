@@ -18,27 +18,54 @@
    <para>
     Scripting is available by several means.
     <itemizedlist>
-     <listitem><para>
-      You can run the command-line program
-      <link linkend="man-regina-python"><command>regina-python</command></link>
-      without using the graphical user interface at all.
-      This uses the standard &python; command-line interpreter and is
-      quite fast.
-      Since it is purely text based, it also supports the redirection of
-      input and output.
-     </para></listitem>
-     <listitem><para>
-      You can bring up a graphical &python; console through the
-      <menuchoice>
-       <guimenu>Tools</guimenu>
-       <guimenuitem>Python Console</guimenuitem>
-      </menuchoice>
-      menu item or the corresponding toolbar button.
-      The top-level packet of the current file (if any) will be assigned
-      to the special variable <varname>root</varname>.
-      The currently selected packet (if any) will be assigned to the
-      special variable <varname>selected</varname>.
-     </para></listitem>
+     <listitem>
+      <para>
+       You can run the command-line program
+       <link linkend="man-regina-python"><command>regina-python</command></link>
+       without using the graphical user interface at all.
+       This uses the standard &python; command-line interpreter and is
+       quite fast.
+       Since it is purely text based, it also supports the redirection of
+       input and output.
+      </para>
+      <para>
+       <inlinemediaobject>
+        <imageobject>
+         <imagedata fileref="regina-python.png"/>
+        </imageobject>
+       </inlinemediaobject>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       You can bring up a graphical &python; console through the
+       <menuchoice>
+        <guimenu>Tools</guimenu>
+        <guimenuitem>Python Console</guimenuitem>
+       </menuchoice>
+       menu item or the corresponding toolbar button.
+      </para>
+      <para>
+       <inlinemediaobject>
+        <imageobject>
+         <imagedata fileref="menu-python.png"/>
+        </imageobject>
+       </inlinemediaobject>
+      </para>
+      <para>
+       The top-level packet of the current file (if any) will be assigned
+       to the special variable <varname>root</varname>.
+       The currently selected packet (if any) will be assigned to the
+       special variable <varname>selected</varname>.
+      </para>
+      <para>
+       <inlinemediaobject>
+        <imageobject>
+         <imagedata fileref="python-console.png"/>
+        </imageobject>
+       </inlinemediaobject>
+      </para>
+     </listitem>
      <listitem>
       <para>
        You can create a new <link linkend="packet-script">script
@@ -50,7 +77,7 @@
       <para>
        <inlinemediaobject>
         <imageobject>
-         <imagedata fileref="menu-newangles.png"/>
+         <imagedata fileref="menu-newscript.png"/>
         </imageobject>
        </inlinemediaobject>
       </para>
@@ -61,9 +88,23 @@
        it compiles.
       </para>
       <para>
+       <inlinemediaobject>
+        <imageobject>
+         <imagedata fileref="script-edit.png"/>
+        </imageobject>
+       </inlinemediaobject>
+      </para>
+      <para>
        Each time a script is run, a new graphical &python; console is opened.
        The script is run within this console and the console is then
        made available to the user for further interaction.
+      </para>
+      <para>
+       <inlinemediaobject>
+        <imageobject>
+         <imagedata fileref="script-run.png"/>
+        </imageobject>
+       </inlinemediaobject>
       </para>
      </listitem>
     </itemizedlist>
