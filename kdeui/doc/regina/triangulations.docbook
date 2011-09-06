@@ -368,7 +368,7 @@
 
    <para>
     You can import triangulations into &regina; from other
-    programs, such as &snappeaurl; or &orburl;.  This is done through the
+    programs, such as &snappeapylink; or &orburl;.  This is done through the
     <menuchoice>
      <guimenu>File</guimenu>
      <guisubmenu>Import</guisubmenu>
@@ -1792,7 +1792,7 @@
    <para>
     &snappea; is an excellent piece of software written by Jeffrey Weeks
     with a strong focus on hyperbolic 3-manifolds; for more information,
-    see the &snappeaurl; website.
+    see the &snappywebsite;.
     Portions of the &snappea; kernel are built into &regina;, which
     allows &regina; to compute information about geometries on
     triangulations.  The results are presented in the

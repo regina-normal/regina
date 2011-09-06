@@ -4,28 +4,34 @@
  <para>
   By default, &regina; reads and writes
   <filename>.rga</filename> data files in its own compressed
-  &xml; format (if you need the specifications
-  for this &xml; format, try
-   <menuchoice>
-    <guimenu>Help</guimenu>
-    <guisubmenu>File Format Reference</guisubmenu>
-   </menuchoice>).
-  However, &regina; can also read from and write to a variety
-  of alternative file formats, as described in the following sections.
+  &xml; file format.
+  However, &regina; can also import data from and export data to several
+  other file formats, which allows you to pass data between &regina; and
+  other applications.
+  This chapter outlines the available import and export formats.
+ </para>
+ <para>
+  If you are writing filters for some other program and you need a full
+  specification for &regina;'s own &xml; file format, select
+  <menuchoice>
+   <guimenu>Help</guimenu>
+   <guisubmenu>File Format Reference</guisubmenu>
+  </menuchoice> from the menu.
  </para>
 
  <sect1 id="foreign-import">
   <title>Importing</title>
 
   <para>
-   An <firstterm>import</firstterm> means that data is read from a
-   foreign file format and inserted into the current working packet
-   tree.  All imports are done through the
+   An <firstterm>import</firstterm> involves reading data from some
+   foreign file format and inserting it into your working packet tree
+   (effectively merging it into whatever file you already have open).
+   All imports are done through the
    <menuchoice>
     <guimenu>File</guimenu>
     <guisubmenu>Import</guisubmenu>
    </menuchoice>
-   menu.  Each item in this menu represents a different file format.
+   menu.
   </para>
   <para>
    <inlinemediaobject>
@@ -34,81 +40,74 @@
     </imageobject>
    </inlinemediaobject>
   </para>
-  <note><para>
-   You must already have a working data file open before you can perform
-   an import.  This is because the imported data must be inserted into
-   an existing packet tree.
-  </para></note>
   <para>
-   To import data from a foreign file format, you must choose the
-   corresponding menu item in the
+   The
    <menuchoice>
     <guimenu>File</guimenu>
     <guisubmenu>Import</guisubmenu>
    </menuchoice>
-   menu.  The following steps will then occur.
+   menu will <emphasis>only appear once you have a file open</emphasis>.
+   If you have just started up &regina;, you will first need to create a
+   new file by selecting
+   <menuchoice>
+    <guimenu>File</guimenu>
+    <guimenuitem>New Topology Data</guimenuitem>
+   </menuchoice>
+   (or pressing the corresponding toolbar button).
   </para>
-  <itemizedlist>
-   <listitem>
-    <para>
-     You will be asked to select a specific data file to import.
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     You will be asked how this new data should be inserted into the
-     current packet tree.  The imported data will appear as a new packet
-     (or perhaps as a new subtree).  In particular, you will be asked the
-     following.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="import-snappea.png"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-    <glosslist>
-     <glossentry>
-      <glossterm><guilabel>Import beneath:</guilabel></glossterm>
-      <glossdef>
-       <para>
-        You must select a parent packet in the current working packet
-        tree.  The imported data will be inserted beneath this parent
-        packet.
-       </para>
-      </glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>Label:</guilabel></glossterm>
-      <glossdef>
-       <para>
-        You must choose a label for the new packet containing the
-        imported data.  The import dialog may offer a reasonable suggestion
-        based on the contents of the imported data file.
-       </para>
-      </glossdef>
-     </glossentry>
-    </glosslist>
-   </listitem>
-  </itemizedlist>
   <para>
-   &regina; is able to import data from files of the following types:
+   When you select an action from the
+   <menuchoice>
+    <guimenu>File</guimenu>
+    <guisubmenu>Import</guisubmenu>
+   </menuchoice>
+   menu, you will first be asked to select a file.
+   Once you have chosen the file to import, a second window will appear
+   asking for additional details:
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="import-snappea.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   <glosslist>
+    <glossentry>
+     <glossterm><guilabel>Import beneath:</guilabel></glossterm>
+     <glossdef><para>
+      Here you select where in the packet tree the imported data will appear.
+      The import will be added as a new packet, immediately beneath
+      whatever &ldquo;parent&rdquo; packet you choose here.
+     </para></glossdef>
+    </glossentry>
+    <glossentry id="import-label">
+     <glossterm><guilabel>Label:</guilabel></glossterm>
+     <glossdef><para>
+      This will be the label (i.e., the name) of the new packet containing
+      the imported data.
+      No two packets in the same data file may have the same label.
+     </para></glossdef>
+    </glossentry>
+   </glosslist>
+  </para>
+  <para>
+   &regina; can import data from the following file formats:
   </para>
 
   <sect2 id="import-regina">
    <title>&regina; Data Files</title>
 
    <para>
-    The contents of a native &regina; data file can be imported.  In
-    this case, the packet tree from the imported file will be
-    inserted into the packet tree of the current working file.
+    You can import another &regina; data file.
+    This effectively lets you insert the contents of one file inside another.
    </para>
    <para>
-    Importing a &regina; data file is therefore a convenient way of
-    merging two data files into one.  See also the
+    This is a convenient way of merging two data files into one.
+    You can also merge data files from the command-line using the
     <link linkend="man-regconcat"><command>regconcat</command></link>
-    utility for a way of doing this from the command-line.
+    utility.
    </para>
   </sect2>
 
@@ -116,14 +115,17 @@
    <title>&snappea; Triangulations</title>
 
    <para>
-    A triangulation obtained from &snappea; can be imported.
-    &snappeaurl; is the excellent software by Jeffrey Weeks for studying
-    hyperbolic 3-manifolds, and is also discussed in the section on
-    <link linkend="tri-snappea">&snappea; calculations</link>.
+    You can import a triangulation from &snappea;.
+    &snappea; is the excellent software written by Jeffrey Weeks
+    for studying hyperbolic 3-manifolds;
+    for more information on &snappea; and its successor &snappy;,
+    see the &snappywebsite;.
+    Note that you can also perform some &snappea; calculations
+    <link linkend="tri-snappea">directly within &regina;</link>.
    </para>
    <para>
-    The file should be a plain text file in &snappea;'s triangulation
-    format; an example is shown below.
+    The file that you import should be a plain text file in
+    &snappea;'s triangulation format; an example is shown below.
     Any international characters should be encoded in &utf8;.
    </para>
    <programlisting>
@@ -162,14 +164,15 @@
    <title>&orbcasson; Triangulations</title>
 
    <para>
-    A triangulation in &orbcasson; format can be imported.
+    You can import a triangulation from &orbcasson; format.
     &orburl; is a variant of &snappea; for calculating hyperbolic
     structures on 3-orbifolds and 3-manifolds, written by Damien Heard.
    </para>
    <para>
-    The file should be a plain text file in &orbcasson; format, which
+    The file that you import
+    should be a plain text file in &orbcasson; format, which
     describes a triangulation in terms of its 1-skeleton.  The beginning
-    of such a file is illustrated below.
+    of an example file is illustrated below.
     Any international characters should be encoded in &utf8;.
    </para>
    <programlisting>
@@ -186,38 +189,51 @@
    <title>Isomorphism Signature Lists</title>
 
    <para>
-    TODO.
+    You can import a list of isomorphism signatures from a text file.
+    This is a space-efficient, plain-text method of storing a list
+    of 3-manifold triangulations.
    </para>
    <para>
-    A list of dehydrated triangulation strings can be imported.
-    A <firstterm>dehydration string</firstterm> is a set of letters such as
-    <literal>dadbcccaqhx</literal> containing enough information to
-    recreate the triangulation.  Dehydration strings appear in
-    census papers such as the hyperbolic cusped census of
-    Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
-    in which the dehydration format is explicitly described.
+    An <firstterm>isomorphism signature</firstterm> is a
+    compact sequence of letters, digits and/or punctuation that identifies a
+    triangulation uniquely up to combinatorial isomorphism.
+    See the <link linkend="tri-composition-isosig">composition viewer</link>
+    for a more detailed discussion on isomorphism signatures, or
+    <xref linkend="bib-burton-simps3"/> for examples of where they
+    can be used.
    </para>
    <para>
     The list should be stored in a plain text file with one triangulation
     per line.  Each line may contain an arbitrary amount of data, but the
-    first word of each line should be the dehydrated triangulation
-    string.  A sample file is shown below.
+    first word of each line should be the isomorphism signature.
+    Note that isomorphism signatures are <emphasis>case sensitive</emphasis>
+    (i.e., upper-case and lower-case matter).  An example file is shown below.
    </para>
    <programlisting>
-    dafbcccaadl   N3,1   Z/3 + Z
-    dadcbccdjkd   N3,2   Z
-    dadbcccbbcv   N3,3   Z
-    dadbcccccdm   N3,4   Z
-    dadbcccaqhx   N3,5   Z/2 + Z/2 + Z
+    dLQbcbchxjn   L(11,3)
+    dLQbcbchxjj   L(10,3)
+    dLQbcbcahrs   L(5,2)
+    dLQbcbcahks   S3
+    dLQbcbchhjw   L(9,2)
    </programlisting>
    <para>
-    When importing a dehydrated triangulation list, each individual
-    triangulation will be rehydrated and inserted beneath a common
-    container packet, which will then be inserted into the current
-    packet tree.  If you just wish to rehydrate a single triangulation
-    string (not many), it may be simpler to use the
-    <link linkend="tri-new-dehydration">New Triangulation</link> dialog
-    instead.
+    The import will appear in your packet tree as a new
+    <link linkend="packet-container">container</link>,
+    which will contain a new triangulation for each isomorphism signature
+    in the list.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="import-isosig.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If you just wish to reconstruct a triangulation from a single
+    isomorphism signature (not from many signatures), you can do this
+    more easily by creating a
+    <link linkend="tri-new-isosig">new triangulation</link>.
    </para>
   </sect2>
 
@@ -225,19 +241,23 @@
    <title>Dehydrated Triangulation Lists</title>
 
    <para>
-    A list of dehydrated triangulation strings can be imported.
-    A <firstterm>dehydration string</firstterm> is a set of letters such as
-    <literal>dadbcccaqhx</literal> containing enough information to
-    recreate the triangulation.  Dehydration strings appear in
-    census papers such as the hyperbolic cusped census of
-    Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
+    You can import a list of dehydration strings from a text file.
+    Like <link linkend="import-isosiglist">isomorphism signatures</link>,
+    dehydration strings allow you to encode a list of triangulations in
+    a space-efficient, plain-text manner.
+   </para>
+   <para>
+    Dehydration strings are
+    <link linkend="tri-composition-dehydration">less powerful</link>
+    than isomorphism signatures.  They feature in hyperbolic census papers
+    such as <xref linkend="bib-cuspedcensus"/>,
     in which the dehydration format is explicitly described.
    </para>
    <para>
     The list should be stored in a plain text file with one triangulation
     per line.  Each line may contain an arbitrary amount of data, but the
-    first word of each line should be the dehydrated triangulation
-    string.  A sample file is shown below.
+    first word of each line should be the dehydration
+    string.  An example file is shown below.
    </para>
    <programlisting>
     dafbcccaadl   N3,1   Z/3 + Z
@@ -247,13 +267,17 @@
     dadbcccaqhx   N3,5   Z/2 + Z/2 + Z
    </programlisting>
    <para>
-    When importing a dehydrated triangulation list, each individual
-    triangulation will be rehydrated and inserted beneath a common
-    container packet, which will then be inserted into the current
-    packet tree.  If you just wish to rehydrate a single triangulation
-    string (not many), it may be simpler to use the
-    <link linkend="tri-new-dehydration">New Triangulation</link> dialog
-    instead.
+    As with isomorphism signatures,
+    the import will appear in your packet tree as a new
+    <link linkend="packet-container">container</link>,
+    which will contain a new triangulation for each dehydration string
+    in the list.
+   </para>
+   <para>
+    If you just wish to reconstruct a triangulation from a single
+    dehydration string (not from many strings), you can do this
+    more easily by creating a
+    <link linkend="tri-new-dehydration">new triangulation</link>.
    </para>
   </sect2>
 
@@ -261,23 +285,20 @@
    <title>&pdf; Documents</title>
 
    <para>
-    Any &pdf; document can be imported directly into the packet tree.
-    This allows users to document their work with formulae, diagrams and
+    You can import a &pdf; document, which will appear in your data file
+    as a <link linkend="packet-pdf">&pdf; packet</link>.
+    This you to document your work with formulae, diagrams and
     anything else that can appear on the printed page.
    </para>
    <para>
-    Because all &pdf; packets must be created externally (such as in
-    &latex;, or some other typesetting system or word processor), the
+    This is the only way of creating a &pdf; packet within &regina;.
+    If you select
     <menuchoice>
      <guimenu>Packet Tree</guimenu>
      <guimenuitem>New PDF Document</guimenuitem>
     </menuchoice>
-    menu item brings up exactly the same import dialog as
-    <menuchoice>
-     <guimenu>File</guimenu>
-     <guisubmenu>Import</guisubmenu>
-     <guimenuitem>PDF Document</guimenuitem>
-    </menuchoice>.
+    from the menu, &regina; will go through exactly the same import
+    process as described here.
    </para>
   </sect2>
 
@@ -285,18 +306,23 @@
    <title>&python; Scripts</title>
 
    <para>
-    An arbitrary &python; script can be imported, in which case it will
-    be inserted into the working packet tree as a new script packet.
+    You can import a &python; script, which will appear in your data
+    file as a <link linkend="python-script">script packet</link>.
    </para>
    <para>
-    Recall that a script packet may have associated variables that
-    reference other packets in the packet tree.  If the
-    imported &python; file begins with a specially formatted comment block,
-    it can direct &regina; to include certain variables in the new script
-    packet (and also suggest a default label for the new script packet).
+    Script packets can include pre-set <emphasis>variables</emphasis>
+    that reference other packets in your data file.
+    If the imported file begins with a specially
+    formatted comment block, &regina; will recognise this and set
+    variables in your script packet accordingly.
+    This comment block will be written automatically when you
+    <link linkend="export-pyscript">export a script packet</link>
+    to a &python; file.
+    The special comment block is used only for setting variables, and will
+    not appear in the code for your new script packet.
    </para>
    <para>
-    An example of such a comment block is shown below.
+    An example of such a comment block appears below.
    </para>
    <programlisting>
     ### Regina Script: Homology Summary
@@ -316,32 +342,23 @@
    </programlisting>
    <para>
     The comment block must appear at the very beginning
-    of the file, with each line beginning with three hashes
-    (<literal>###</literal>).  A suggested packet label is indicated
-    with a line of the form
-    <literal>###&nbsp;Regina&nbsp;Script:&nbsp;<replaceable>label</replaceable></literal>.
-    Each variable is listed in a line of the form
-    <literal>###&nbsp;Variable&nbsp;<replaceable>name</replaceable>:&nbsp;<replaceable>value</replaceable></literal>,
-    where <replaceable>name</replaceable> is the name of the script
-    variable and <replaceable>value</replaceable> is the label of the
-    packet that it should represent.
+    of the file, and each line must begin with three hashes
+    (<literal>###</literal>).  A line of the form
+    &ldquo;<literal>###&nbsp;Regina&nbsp;Script:&nbsp;<replaceable>label</replaceable></literal>&rdquo;
+    suggests to &regina; a <link linkend="import-label">default label</link>
+    for your new packet.
+    Each line of the form
+    &ldquo;<literal>###&nbsp;Variable&nbsp;<replaceable>name</replaceable>:&nbsp;<replaceable>value</replaceable></literal>&rdquo;
+    tells &regina; to add the variable <replaceable>name</replaceable>
+    to the new script packet, and to make it refer to the packet
+    in your data file named <replaceable>value</replaceable>.
    </para>
-   <para>
-    Note that this comment block will not appear in the code section of
-    the new script packet.  That is, &regina; will read in the suggested
-    packet label, make the requested variable assignments and then throw
-    the entire comment block away.
-   </para>
-   <note><para>
-    When <link linkend="export-pyscript">exporting a script
-    packet</link> to a &python; file, a comment block such as this will
-    be automatically added.
-   </para></note>
    <para>
     If the script contains any international characters, you must
-    specify the text encoding used (such as &utf8; or &latin1;).
-    When you are selecting the file to an import, a drop-down list of
-    encodings should appear in the dialog, as illustrated below.
+    specify the text encoding (such as &utf8; or &latin1;) when
+    you choose the file to import.
+    A drop-down list of encodings should appear in the file dialog,
+    as illustrated below.
    </para>
    <para>
     <inlinemediaobject>

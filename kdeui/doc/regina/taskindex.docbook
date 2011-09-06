@@ -794,6 +794,14 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>merging data files</primaryie>
+  <secondaryie><link linkend="man-regconcat">from the
+   command-line</link></secondaryie>
+  <secondaryie><link linkend="import-regina">in the graphical user
+   interface</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="packet-move">moving packets in the
    packet tree</link></primaryie>
  </indexentry>

@@ -13,104 +13,6 @@
    through the point-and-click interface.
   </para>
 
-  <sect2 id="python-invoking">
-   <title>Invoking Scripting</title>
-   <para>
-    Scripting is available by several means.
-    <itemizedlist>
-     <listitem>
-      <para>
-       You can run the command-line program
-       <link linkend="man-regina-python"><command>regina-python</command></link>
-       without using the graphical user interface at all.
-       This uses the standard &python; command-line interpreter and is
-       quite fast.
-       Since it is purely text based, it also supports the redirection of
-       input and output.
-      </para>
-      <para>
-       <inlinemediaobject>
-        <imageobject>
-         <imagedata fileref="regina-python.png"/>
-        </imageobject>
-       </inlinemediaobject>
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       You can bring up a graphical &python; console through the
-       <menuchoice>
-        <guimenu>Tools</guimenu>
-        <guimenuitem>Python Console</guimenuitem>
-       </menuchoice>
-       menu item or the corresponding toolbar button.
-      </para>
-      <para>
-       <inlinemediaobject>
-        <imageobject>
-         <imagedata fileref="menu-python.png"/>
-        </imageobject>
-       </inlinemediaobject>
-      </para>
-      <para>
-       The top-level packet of the current file (if any) will be assigned
-       to the special variable <varname>root</varname>.
-       The currently selected packet (if any) will be assigned to the
-       special variable <varname>selected</varname>.
-      </para>
-      <para>
-       <inlinemediaobject>
-        <imageobject>
-         <imagedata fileref="python-console.png"/>
-        </imageobject>
-       </inlinemediaobject>
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       You can create a new <link linkend="packet-script">script
-       packet</link>.  Script packets have the advantage that they
-       can work seamlessly with multiple packets in the
-       same file through the use of script variables.
-       Furthermore, script packets are saved with the data file for later reuse.
-      </para>
-      <para>
-       <inlinemediaobject>
-        <imageobject>
-         <imagedata fileref="menu-newscript.png"/>
-        </imageobject>
-       </inlinemediaobject>
-      </para>
-      <para>
-       The editor for script packets includes a table of variables that will be
-       set each time the script is run.  Buttons and menu options are
-       available for running the script or for simply testing whether
-       it compiles.
-      </para>
-      <para>
-       <inlinemediaobject>
-        <imageobject>
-         <imagedata fileref="script-edit.png"/>
-        </imageobject>
-       </inlinemediaobject>
-      </para>
-      <para>
-       Each time a script is run, a new graphical &python; console is opened.
-       The script is run within this console and the console is then
-       made available to the user for further interaction.
-      </para>
-      <para>
-       <inlinemediaobject>
-        <imageobject>
-         <imagedata fileref="script-run.png"/>
-        </imageobject>
-       </inlinemediaobject>
-      </para>
-     </listitem>
-    </itemizedlist>
-   </para>
-  </sect2>
-
   <sect2 id="python-python">
    <title>Using &python;</title>
    <para>
@@ -168,6 +70,107 @@
     <filename>/usr/share/regina/engine-docs/</filename>
     or <filename>/usr/local/share/regina/engine-docs/</filename>, although this
     may differ with your distribution or installation.
+   </para>
+  </sect2>
+ </sect1>
+
+ <sect1 id="python-invoking">
+  <title>Starting a &python; Session</title>
+  <para>
+   There are several ways of starting a &python; session to work with
+   &regina;.
+  </para>
+
+  <sect2>
+   <title>Command-Line Sessions</title>
+   <para>
+    You can run the command-line program
+    <link linkend="man-regina-python"><command>regina-python</command></link>
+    without using the graphical user interface at all.
+    This uses the standard &python; command-line interpreter and is
+    quite fast.
+    Since it is purely text based, it also supports the redirection of
+    input and output.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="regina-python.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+  <sect2>
+   <title>Graphical &python; Consoles</title>
+   <para>
+    You can bring up a graphical &python; console through the
+    <menuchoice>
+     <guimenu>Tools</guimenu>
+     <guimenuitem>Python Console</guimenuitem>
+    </menuchoice>
+    menu item or the corresponding toolbar button.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menu-python.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The top-level packet of the current file (if any) will be assigned
+    to the special variable <varname>root</varname>.
+    The currently selected packet (if any) will be assigned to the
+    special variable <varname>selected</varname>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="python-console.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+  <sect2 id="python-script">
+   <title>Script Packets</title>
+   <para>
+    You can create a new <link linkend="packet-script">script
+    packet</link>.  Script packets have the advantage that they
+    can work seamlessly with multiple packets in the
+    same file through the use of script variables.
+    Furthermore, script packets are saved with the data file for later reuse.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menu-newscript.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The editor for script packets includes a table of variables that will be
+    set each time the script is run.  Buttons and menu options are
+    available for running the script or for simply testing whether
+    it compiles.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="script-edit.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Each time a script is run, a new graphical &python; console is opened.
+    The script is run within this console and the console is then
+    made available to the user for further interaction.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="script-run.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
  </sect1>
