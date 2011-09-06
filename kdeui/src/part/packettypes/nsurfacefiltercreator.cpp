@@ -74,7 +74,7 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
     layout->addWidget(pic, 1, 0, Qt::AlignRight);
 
     QRadioButton* comb = new QRadioButton(
-        i18n("Combination (and/or) filter"), ui);
+        i18n("Combination (AND/OR) filter"), ui);
     layout->addWidget(comb, 1, 1, Qt::AlignLeft);
 
     msg = i18n("Create a filter that combines other filters using boolean "

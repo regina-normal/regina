@@ -115,21 +115,22 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
 
     optCompact = new KComboBox(ui);
     optCompact->insertItem(optCompact->count(),i18n("Compact only"));
-    optCompact->insertItem(optCompact->count(),i18n("Non-compact only"));
+    optCompact->insertItem(optCompact->count(),i18n("Spun only"));
     optCompact->setWhatsThis(i18n("<qt>Choose whether the filter should "
         "only display compact surfaces or whether it should only display "
-        "non-compact surfaces.<p>"
+        "spun (non-compact) surfaces.<p>"
         "A <i>compact</i> surface is one with finitely many normal discs.  "
-        "Spun normal surfaces, which can appear in quad space and have "
-        "infinitely many discs, are examples of non-compact surfaces."));
+        "<i>Spun</i> normal surfaces can appear in quad space or "
+        "quad-oct space, and have infinitely many triangles "
+        "&ldquo;spinning&rdquo; out towards the vertices."));
     layout->addWidget(optCompact, 2, 2);
 
     optBdry = new KComboBox(ui);
     optBdry->insertItem(optBdry->count(),i18n("With real boundary only"));
-    optBdry->insertItem(optBdry->count(),i18n("Without real boundary only"));
+    optBdry->insertItem(optBdry->count(),i18n("No real boundary only"));
     optBdry->setWhatsThis(i18n("<qt>Choose whether the filter should "
         "only display surfaces with real boundary or whether it should "
-        "only display surfaces without real boundary.<p>"
+        "only display surfaces with no real boundary.<p>"
         "A real boundary occurs when a normal surface meets the boundary "
         "of the enclosing 3-manifold triangulation."));
     layout->addWidget(optBdry, 3, 2);
