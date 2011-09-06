@@ -71,6 +71,8 @@
   <secondaryie><link linkend="angles">definition</link></secondaryie>
   <secondaryie><link linkend="angles-creation">enumerating vertex
    angle structures</link></secondaryie>
+  <secondaryie><link linkend="angles-tautonly">enumerating taut
+   structures</link></secondaryie>
   <secondaryie><link linkend="angles-viewstructurecoords">individual
    angles</link></secondaryie>
   <secondaryie><link linkend="angles-propstrict">strict,
@@ -1233,8 +1235,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="angles-proptaut">taut angle
-   structures</link></primaryie>
+  <primaryie>taut angle structures</primaryie>
+  <secondaryie><link linkend="angles-proptaut">detecting</link></secondaryie>
+  <secondaryie><link linkend="angles-tautonly">enumerating</link></secondaryie>
  </indexentry>
 
  <indexentry>

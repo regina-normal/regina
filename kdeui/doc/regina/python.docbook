@@ -48,6 +48,13 @@
        Furthermore, script packets are saved with the data file for later reuse.
       </para>
       <para>
+       <inlinemediaobject>
+        <imageobject>
+         <imagedata fileref="menu-newangles.png"/>
+        </imageobject>
+       </inlinemediaobject>
+      </para>
+      <para>
        The editor for script packets includes a table of variables that will be
        set each time the script is run.  Buttons and menu options are
        available for running the script or for simply testing whether
