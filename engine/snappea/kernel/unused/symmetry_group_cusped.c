@@ -134,7 +134,7 @@ FuncResult compute_cusped_symmetry_group(
 	 */
 	if (*symmetry_group_of_manifold	!= NULL
 	 || *symmetry_group_of_link		!= NULL)
-		uFatalError("compute_cusped_symmetry_group", "symmetry_group");
+		uFatalError("compute_cusped_symmetry_group", "symmetry_group.c");
 
 	/*
 	 *	Symmetries are just Isometries from a manifold to itself.
@@ -208,7 +208,7 @@ static void symmetry_list_to_group(
 	 *	Make sure the group isn't empty.
 	 */
 	if (the_group->order == 0)
-		uFatalError("symmetry_list_to_group", "symmetry_group");
+		uFatalError("symmetry_list_to_group", "symmetry_group.c");
 
 	/*
 	 *	Make sure the identity is element 0.
@@ -338,7 +338,7 @@ static int find_index_of_identity(
 	/*
 	 *	The identity was not found on the list.  Uh oh.
 	 */
-	uFatalError("find_index_of_identity", "symmetry_group");
+	uFatalError("find_index_of_identity", "symmetry_group.c");
 
 	/*
 	 *	The C++ compiler would like a return value, even though
@@ -460,7 +460,7 @@ static int find_index(
 	/*
 	 *	the_symmetry was not found on the_symmetry_list.
 	 */
-	uFatalError("find_index", "symmetry_group");
+	uFatalError("find_index", "symmetry_group.c");
 
 	/*
 	 *	The C++ compiler would like a return value, even though
@@ -549,7 +549,7 @@ void compute_inverses(
 				break;
 			}
 		if (j == the_group->order)	/* no inverse was found */
-			uFatalError("compute_inverses", "symmetry_group");
+			uFatalError("compute_inverses", "symmetry_group.c");
 	}
 
 	/*
@@ -557,7 +557,7 @@ void compute_inverses(
 	 */
 	for (i = 0; i < the_group->order; i++)
 		if (the_group->inverse[the_group->inverse[i]] != i)
-			uFatalError("compute_inverses", "symmetry_group");
+			uFatalError("compute_inverses", "symmetry_group.c");
 }
 
 
@@ -1461,7 +1461,7 @@ static void primary_part_generators(
 			*regular_order,
 			running_product,
 			max_order,
-			new_generator,
+			new_generator	= 0,
 			power_of_new_generator;
 
 	/*
@@ -1555,7 +1555,7 @@ static void primary_part_generators(
 		 */
 
 		if (max_order < 2)
-			uFatalError("primary_part_generators", "symmetry_group");
+			uFatalError("primary_part_generators", "symmetry_group.c");
 
 		/*
 		 *	Record the new generator.

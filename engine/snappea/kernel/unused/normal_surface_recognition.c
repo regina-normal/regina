@@ -124,7 +124,7 @@ void recognize_embedded_surface(
 	 *	The present version of the software assumes all cusps are complete.
 	 */
 	if (all_cusps_are_complete(manifold) == FALSE)
-		uFatalError("recognize_embedded_surface", "normal_surface_recognition");
+		uFatalError("recognize_embedded_surface", "normal_surface_recognition.c");
 	
 	/*
 	 *	Compute the connectedness, orientability, two-sidedness and
@@ -138,7 +138,7 @@ void recognize_embedded_surface(
 	 */
 	if (manifold->orientability == oriented_manifold
 	 && *orientable != *two_sided)
-		uFatalError("recognize_embedded_surface", "normal_surface_recognition");
+		uFatalError("recognize_embedded_surface", "normal_surface_recognition.c");
 
 	/*
 	 *	An embedded sphere must be 2-sided.
@@ -146,14 +146,14 @@ void recognize_embedded_surface(
 	if (*connected == TRUE
 	 && *Euler_characteristic == 2
 	 && *two_sided == FALSE)
-		uFatalError("recognize_embedded_surface", "normal_surface_recognition");
+		uFatalError("recognize_embedded_surface", "normal_surface_recognition.c");
 
 	/*
 	 *	Orientable surfaces have even Euler characteristic.
 	 */
 	if (*orientable == TRUE
 	 && (*Euler_characteristic)%2 != 0)
-		uFatalError("recognize_embedded_surface", "normal_surface_recognition");
+		uFatalError("recognize_embedded_surface", "normal_surface_recognition.c");
 }
 
 
@@ -167,12 +167,12 @@ static void connected_orientable_twosided(
 	Tetrahedron				*tet,
 							*nbr;
 	Permutation				gluing;
-	VertexIndex				v,
+	VertexIndex				v		= 0,
 							nbr_v;
 	FaceIndex				f,
 							nbr_f;
 	int						i,
-							index,
+							index	= 0,
 							nbr_index;
 	ListNode				*list,
 							*node,
@@ -242,7 +242,7 @@ static void connected_orientable_twosided(
 			break;
 		}
 	if (list == NULL)
-		uFatalError("connected_orientable_twosided", "normal_surface_recognition");
+		uFatalError("connected_orientable_twosided", "normal_surface_recognition.c");
 
 	/*
 	 *	Tentatively assume the surface is orientable and two-sided.
@@ -313,7 +313,7 @@ static void connected_orientable_twosided(
 					index	= node->index;
 					break;
 
-				default:  uFatalError("connected_orientable_twosided", "normal_surface_recognition");
+				default:  uFatalError("connected_orientable_twosided", "normal_surface_recognition.c");
 			}
 			
 			/*
@@ -331,7 +331,7 @@ static void connected_orientable_twosided(
 			positive_normal			= data->positive_normal;
 			positive_orientation	= data->positive_orientation;
 			if (data->visited != TRUE)
-				uFatalError("connected_orientable_twosided", "normal_surface_recognition");
+				uFatalError("connected_orientable_twosided", "normal_surface_recognition.c");
 
 			if (node->type == embedded_square
 			 && edge_between_vertices[v][f] != tet->parallel_edge)
@@ -370,7 +370,7 @@ static void connected_orientable_twosided(
 			{
 				if (edge3_between_vertices[nbr_f][nbr_v] != nbr->parallel_edge
 				 || index >= nbr->num_triangles[nbr_v] + nbr->num_squares)
-					uFatalError("connected_orientable_twosided", "normal_surface_recognition");
+					uFatalError("connected_orientable_twosided", "normal_surface_recognition.c");
 
 				nbr_type	= embedded_square;
 				nbr_index	= index - nbr->num_triangles[nbr_v];

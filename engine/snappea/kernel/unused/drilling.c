@@ -331,7 +331,7 @@ static void attach_extra(
 		 *	field in the Tetrahedron data structure.
 		 */
 		if (tet->extra != NULL)
-			uFatalError("attach_extra", "drilling");
+			uFatalError("attach_extra", "drilling.c");
 
 		/*
 		 *	Attach the locally defined struct extra.
@@ -910,7 +910,7 @@ static void copy_old_peripheral_curves(
 		for (i = 0; i < 2; i++)
 			for (j = 0; j < 2; j++)
 				if (in_hand[i][j] != 0)
-					uFatalError("copy_old_peripheral_curves", "drilling");
+					uFatalError("copy_old_peripheral_curves", "drilling.c");
 	}
 }
 
@@ -984,7 +984,7 @@ static void create_new_peripheral_curves(
 	/*
 	 *	We should have returned from within the above loop.
 	 */
-	uFatalError("create_new_peripheral_curves", "drilling");
+	uFatalError("create_new_peripheral_curves", "drilling.c");
 }
 
 
@@ -1094,7 +1094,7 @@ static void create_new_meridian(
 
 	if ( ! same_positioned_tet(&ma.ptet, &ma0.ptet)
 	 || ma.current_position != ma0.current_position)
-	 	uFatalError("create_new_meridian", "drilling");
+	 	uFatalError("create_new_meridian", "drilling.c");
 }
 
 

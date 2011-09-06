@@ -30,13 +30,13 @@ double safe_acos(double x)
 	if (x > 1.0)
 	{
 		if (x > 1.0 + ERROR_EPSILON)
-			uFatalError("safe_acos", "transcendentals");
+			uFatalError("safe_acos", "transcendentals.c");
 		x = 1.0;
 	}
 	if (x < -1.0)
 	{
 		if (x < -(1.0 + ERROR_EPSILON))
-			uFatalError("safe_acos", "transcendentals");
+			uFatalError("safe_acos", "transcendentals.c");
 		x = -1.0;
 	}
 
@@ -49,13 +49,13 @@ double safe_asin(double x)
 	if (x > 1.0)
 	{
 		if (x > 1.0 + ERROR_EPSILON)
-			uFatalError("safe_asin", "transcendentals");
+			uFatalError("safe_asin", "transcendentals.c");
 		x = 1.0;
 	}
 	if (x < -1.0)
 	{
 		if (x < -(1.0 + ERROR_EPSILON))
-			uFatalError("safe_asin", "transcendentals");
+			uFatalError("safe_asin", "transcendentals.c");
 		x = -1.0;
 	}
 
@@ -68,7 +68,7 @@ double safe_sqrt(double x)
 	if (x < 0.0)
 	{
 		if (x < -ERROR_EPSILON)
-			uFatalError("safe_sqrt", "transcendentals");
+			uFatalError("safe_sqrt", "transcendentals.c");
 		x = 0.0;
 	}
 
@@ -89,7 +89,7 @@ double arccosh(
 	if (x < 1.0)
 	{
 		if (x < 1.0 - ERROR_EPSILON)
-			uFatalError("arccosh", "transcendentals");
+			uFatalError("arccosh", "transcendentals.c");
 		x = 1.0;
 	}
 

@@ -104,6 +104,7 @@ static void	eliminate_trivial_generators(Triangulation *manifold);
 static void kill_the_incident_generator(Triangulation *manifold, EdgeClass *edge);
 static void	merge_equivalent_generators(Triangulation *manifold);
 static void merge_incident_generators(Triangulation *manifold, EdgeClass *edge);
+static void eliminate_empty_relations(Triangulation *manifold);
 
 
 void choose_generators(
@@ -137,7 +138,7 @@ void choose_generators(
 	 *	The number_of_generators should be one plus the number of tetrahedra.
 	 */
 	if (manifold->num_generators != manifold->num_tetrahedra + 1)
-		uFatalError("choose_generators", "choose_generators");
+		uFatalError("choose_generators", "choose_generators.c");
 
 	/*
 	 *	At this point we have a valid set of generators, but it's
@@ -148,7 +149,8 @@ void choose_generators(
 	 */
 	count_incident_generators(manifold);
 
-	/*	Now look for EdgeClasses in the Triangulation (2-cells in the
+	/*
+	 *	Now look for EdgeClasses in the Triangulation (2-cells in the
 	 *	dual complex) which show that a single generator is homotopically
 	 *	trivial, and eliminate the trivial generator.  Topologically, this
 	 *	corresponds to folding together two adjacent triangular faces
@@ -169,6 +171,37 @@ void choose_generators(
 	 *	incident (and distinct) generators.
 	 */
 	merge_equivalent_generators(manifold);
+
+	/*
+	 *	2008/6/12  JRW
+	 *
+	 *	Eliminate relations with zero generators.
+	 *
+	 *	How can such relations arise?
+	 *
+	 *	Under normal operation, eliminate_trivial_generators() finds an active generator
+	 *	whose dual 2-cell is incident to an EdgeClass whose other incident 2-cells are
+	 *	all dual to inactive generators (i.e. they lie in the interior
+	 *	of the fundamental domain).  The EdgeClass's relation (of length 1) cancels
+	 *	the generator and all is well.  One may visualize this operation as follows.
+	 *	Imagine we're in the manifold itself, viewing the triangulation.
+	 *	Color each 2-cell that's dual to active generator a translucent blue color,
+	 *	while letting the remaining 2-cells be transparent.  In these terms,
+	 *	eliminate_trivial_generators() find a blue 2-cell F having an edge E
+	 *	that's incident to no other blue 2-cells.  The cancellation operation
+	 *	corresponds to removing the blue color from the edge E and also from
+	 *	the interior of the 2-cell F (but *not* from the two other edges
+	 *	incident to F).
+	 *
+	 *	The exceptional case arises when some blue 2-cell F has two edges E and E'
+	 *	of (blue-)valence 1.  (The two edges are necessarily distinct,
+	 *	because otherwise the valence would be at least 2.)  Removing the blue color
+	 *	from the edge E and the interior of the 2-cell F leaves
+	 *	an isolated blue edge E'.  In other words, E' is a blue edge of valence 0.
+	 *	Its (empty!) relation contributes nothing to the fundamental group,
+	 *	and may be eliminated.
+	 */
+	eliminate_empty_relations(manifold);
 }
 
 
@@ -339,7 +372,7 @@ static void visit_tetrahedra(
 	 */
 	if (	queue_first != manifold->num_tetrahedra
 		 || queue_last  != manifold->num_tetrahedra - 1)
-		uFatalError("visit_tetrahedra", "choose_generators");
+		uFatalError("visit_tetrahedra", "choose_generators.c");
 }
 
 
@@ -758,7 +791,7 @@ static void kill_the_incident_generator(
 		 */
 
 		if (same_positioned_tet(&ptet, &ptet0))
-			uFatalError("kill_the_incident_generator", "choose_generators");
+			uFatalError("kill_the_incident_generator", "choose_generators.c");
 	}
 
 
@@ -820,7 +853,7 @@ static void kill_the_incident_generator(
 				if (tet->generator_index[face] == manifold->num_generators)
 				{
 					if (tet->generator_status[face] == not_a_generator)
-						uFatalError("kill_the_incident_generator", "choose_generators");
+						uFatalError("kill_the_incident_generator", "choose_generators.c");
 
 					nbr_tet		= tet->neighbor[face];
 					gluing		= tet->gluing[face];
@@ -840,7 +873,7 @@ static void kill_the_incident_generator(
 		 *	The program should return from within the above double loop.
 		 */
 
-		uFatalError("kill_the_incident_generator", "choose_generators");
+		uFatalError("kill_the_incident_generator", "choose_generators.c");
 	}
 
 	else	/* dead_index == manifold->num_generators, so nothing else to do */
@@ -868,11 +901,11 @@ static void merge_incident_generators(
 {
 	PositionedTet	ptet,
 					ptet0;
-	Tetrahedron		*tetA,
-					*tetB,
+	Tetrahedron		*tetA	= NULL,
+					*tetB	= NULL,
 					*tet;
-	FaceIndex		faceA,
-					faceB,
+	FaceIndex		faceA	= 0,
+					faceB	= 0,
 					face;
 	int				indexA,
 					indexB;
@@ -927,7 +960,7 @@ static void merge_incident_generators(
 		 */
 
 		if (same_positioned_tet(&ptet, &ptet0))
-			uFatalError("kill_the_incident_generator", "choose_generators");
+			uFatalError("kill_the_incident_generator", "choose_generators.c");
 	}
 
 
@@ -989,7 +1022,7 @@ static void merge_incident_generators(
 					else if (tet->generator_status[face] == inbound_generator)
 						tet->generator_status[face] = outbound_generator;
 					else
-						uFatalError("merge_incident_generators", "choose_generators");
+						uFatalError("merge_incident_generators", "choose_generators.c");
 				}
 				tet->generator_index[face] = indexB;
 			}
@@ -1003,4 +1036,17 @@ static void merge_incident_generators(
 	 */
 
 	edge->active_relation = FALSE;
+}
+
+
+static void eliminate_empty_relations(Triangulation *manifold)
+{
+	EdgeClass	*edge;
+
+	for (	edge = manifold->edge_list_begin.next;
+			edge != &manifold->edge_list_end;
+			edge = edge->next)
+
+		if (edge->num_incident_generators == 0)
+			edge->active_relation = FALSE;
 }

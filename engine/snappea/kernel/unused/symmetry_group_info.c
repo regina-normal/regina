@@ -391,7 +391,7 @@ SymmetryGroup *get_symmetry_group_factor(
 {
 	if (factor_number != 0
 	 && factor_number != 1)
-		uFatalError("get_symmetry_group_factor", "symmetry_group");
+		uFatalError("get_symmetry_group_factor", "symmetry_group.c");
 
 	if (symmetry_group->is_direct_product == TRUE)
 		return symmetry_group->factor[factor_number];
@@ -439,7 +439,7 @@ static Boolean is_inverting_matrix(
 {
 	int	i,
 		j;
-	const static MatrixInt22	inverting_matrix = {{-1, 0}, {0, -1}};
+	static const MatrixInt22	inverting_matrix = {{-1, 0}, {0, -1}};
 
 	for (i = 0; i < 2; i++)
 		for (j = 0; j < 2; j++)
@@ -921,7 +921,7 @@ static void assign_generators(
 			}
 		}
 		if (max_power < 2)
-			uFatalError("assign_generators", "symmetry_group_info");
+			uFatalError("assign_generators", "symmetry_group_info.c");
 
 		/*
 		 *	Assign a new generator to max_element.
@@ -1706,7 +1706,7 @@ static Boolean substitute_word_to_simplify(
 		insert_word(helper, target, powers);
 
 		if (target->size >= old_size)
-			uFatalError("substitute_word_to_simplify", "symmetry_group_info");
+			uFatalError("substitute_word_to_simplify", "symmetry_group_info.c");
 
 		return TRUE;
 	}
@@ -1919,7 +1919,7 @@ int sg_get_num_factors(
 	int			num_factors;
 	
 	if (which_relation < 0 || which_relation >= group->itsNumRelations)
-		uFatalError("sg_get_relation", "symmetry_group_info");
+		uFatalError("sg_get_relation", "symmetry_group_info.c");
 	
 	relation = group->itsRelations;
 	while (--which_relation >= 0)
@@ -1953,13 +1953,13 @@ void sg_get_factor(
 	Factor		*factor;
 	
 	if (which_relation < 0 || which_relation >= group->itsNumRelations)
-		uFatalError("sg_get_relation", "symmetry_group_info");
+		uFatalError("sg_get_relation", "symmetry_group_info.c");
 	
 	relation = group->itsRelations;
 	while (--which_relation >= 0)
 		relation = relation->next;
 	if (relation->itsFactors == NULL)
-		uFatalError("sg_get_relation", "symmetry_group_info");
+		uFatalError("sg_get_relation", "symmetry_group_info.c");
 
 	factor = relation->itsFactors;
 	while (--which_factor >= 0)

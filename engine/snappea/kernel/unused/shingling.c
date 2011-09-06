@@ -923,7 +923,7 @@ static Shingling *convert_shingle_list_to_shingling(
 	for (i = 0; i < shingling->num_shingles; i++)
 	{
 		if (*shingle_list == NULL)
-			uFatalError("convert_shingle_list_to_shingling", "shingling");
+			uFatalError("convert_shingle_list_to_shingling", "shingling.c");
 
 		shingling->shingles[i] = (*shingle_list)->shingle;
 
@@ -932,7 +932,7 @@ static Shingling *convert_shingle_list_to_shingling(
 		my_free(dead_shingle_node);
 	}
 	if (*shingle_list != NULL)
-		uFatalError("convert_shingle_list_to_shingling", "shingling");
+		uFatalError("convert_shingle_list_to_shingling", "shingling.c");
 
 	return shingling;
 }

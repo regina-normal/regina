@@ -239,20 +239,20 @@
 typedef int	ArrayInt4[4];
 
 
-static void		create_equations(Triangulation *manifold, int ***equations, int *num_equations, int *num_variables);
-static void		simplify_equations(int **equations, int num_equations, int num_variables);
-static void		find_defining_rows(int **equations, int num_equations, int num_variables, int **defining_row);
-static int		count_independent_variables(int *defining_row, int num_variables);
-static void		solve_equations(int **equations, int num_equations, int num_variables, int *defining_row, int index, int *solution);
-static Boolean	solution_is_nonnegative(int num_variables, int *solution);
-static void		create_squares(Triangulation *manifold, int *solution);
-static void		create_triangles(Triangulation *manifold, int *solution);
-static int		count_surface_edges(Tetrahedron *tet, FaceIndex f, VertexIndex v);
-static void		copy_normal_surface(Triangulation *manifold, NormalSurface *surface);
-static Boolean	contains_positive_Euler_characteristic(NormalSurface *normal_surface_list);
-static void		remove_zero_Euler_characteristic(NormalSurface **normal_surface_list, int *num_surfaces);
-static void		transfer_list_to_array(NormalSurface **temporary_linked_list, NormalSurfaceList *permanent_surface_list);
-static void		free_equations(int **equations, int num_equations);
+static void			create_equations(Triangulation *manifold, int ***equations, int *num_equations, int *num_variables);
+static void			simplify_equations(int **equations, int num_equations, int num_variables);
+static void			find_defining_rows(int **equations, int num_equations, int num_variables, int **defining_row);
+static unsigned int	count_independent_variables(int *defining_row, unsigned int num_variables);
+static void			solve_equations(int **equations, int num_variables, int *defining_row, int index, int *solution);
+static Boolean		solution_is_nonnegative(int num_variables, int *solution);
+static void			create_squares(Triangulation *manifold, int *solution);
+static void			create_triangles(Triangulation *manifold);
+static int			count_surface_edges(Tetrahedron *tet, FaceIndex f, VertexIndex v);
+static void			copy_normal_surface(Triangulation *manifold, NormalSurface *surface);
+static Boolean		contains_positive_Euler_characteristic(NormalSurface *normal_surface_list);
+static void			remove_zero_Euler_characteristic(NormalSurface **normal_surface_list, int *num_surfaces);
+static void			transfer_list_to_array(NormalSurface **temporary_linked_list, NormalSurfaceList *permanent_surface_list);
+static void			free_equations(int **equations, int num_equations);
 
 
 FuncResult find_normal_surfaces(
@@ -263,10 +263,10 @@ FuncResult find_normal_surfaces(
 					num_equations,
 					num_variables,
 					*defining_row,
-					num_independent_variables,
 					loop_stopper,
 					index,
 					*solution;
+	unsigned int	num_independent_variables;
 	NormalSurface	*normal_surface_list,
 					*new_entry;
 	Boolean			connected,
@@ -353,7 +353,7 @@ FuncResult find_normal_surfaces(
 	 *	but we should check just to be safe.
 	 */
 	if (num_independent_variables >= 8 * sizeof(int))
-		uFatalError("find_normal_surfaces", "normal_surface_construction");
+		uFatalError("find_normal_surfaces", "normal_surface_construction.c");
 
 	/*
 	 *	Allocate space for a solution.
@@ -373,7 +373,6 @@ FuncResult find_normal_surfaces(
 		 *	and all other independent variables are zero.
 		 */
 		solve_equations(equations,
-						num_equations,
 						num_variables,
 						defining_row,
 						index,
@@ -398,7 +397,7 @@ FuncResult find_normal_surfaces(
 			 *	(The fact that the squares satisfy the equations
 			 *	implies that such a set of triangles exists.)
 			 */
-			create_triangles((*surface_list)->triangulation, solution);
+			create_triangles((*surface_list)->triangulation);
 			
 			/*
 			 *	What have we got?
@@ -514,7 +513,7 @@ static void create_equations(
 		 *	The tetrahedra have already been numbered.
 		 */
 		if (tet->index != i)
-			uFatalError("create_equations", "normal_surface_construction");
+			uFatalError("create_equations", "normal_surface_construction.c");
 		
 		z = tet->shape[filled]->cwl[ultimate];
 		
@@ -583,7 +582,7 @@ static void create_equations(
 				break;
 			
 			default:
-				uFatalError("create_equations", "normal_surface_construction");
+				uFatalError("create_equations", "normal_surface_construction.c");
 		}
 
 		/*
@@ -779,12 +778,12 @@ static void find_defining_rows(
 }
 
 
-static int count_independent_variables(
-	int	*defining_row,
-	int	num_variables)
+static unsigned int count_independent_variables(
+	int				*defining_row,
+	unsigned int	num_variables)
 {
-	int	c,
-		count;
+	unsigned int	c,
+					count;
 	
 	count = 0;
 	
@@ -798,7 +797,7 @@ static int count_independent_variables(
 
 static void solve_equations(
 	int	**equations,
-	int	num_equations,
+/*	int	num_equations,	*/
 	int	num_variables,
 	int	*defining_row,
 	int	index,
@@ -917,8 +916,7 @@ static void create_squares(
 
 
 static void create_triangles(
-	Triangulation	*manifold,
-	int				*solution)
+	Triangulation	*manifold)
 {
 	/*
 	 *	The documentation at the top of this file proves that once
@@ -1115,7 +1113,7 @@ static void transfer_list_to_array(
 	}
 
 	if (count != permanent_surface_list->num_normal_surfaces)
-		uFatalError("transfer_list_to_array", "normal_surface_construction");
+		uFatalError("transfer_list_to_array", "normal_surface_construction.c");
 }
 
 

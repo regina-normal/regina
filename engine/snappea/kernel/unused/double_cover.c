@@ -30,7 +30,7 @@ Triangulation *double_cover(
 	 *	Make sure the manifold is nonorientable.
 	 */
 	if (manifold->orientability != nonorientable_manifold)
-		uFatalError("double_cover", "double_cover");
+		uFatalError("double_cover", "double_cover.c");
 
 	/*
 	 *	Number the manifold's Tetrahedra for easy reference.
@@ -89,7 +89,7 @@ Triangulation *double_cover(
 	 */
 	orient(the_cover);
 	if (the_cover->orientability != oriented_manifold)
-		uFatalError("double_cover", "double_cover");
+		uFatalError("double_cover", "double_cover.c");
 
 	/*
 	 *	orient() moves all peripheral curves to the right_handed sheets
@@ -176,7 +176,7 @@ static void set_neighbors_and_gluings(
 		 old_tet = old_tet->next, i++)
 	{
 		if (old_tet->index != i)
-			uFatalError("set_neighbors_and_gluings", "double_cover");
+			uFatalError("set_neighbors_and_gluings", "double_cover.c");
 
 		for (j = 0; j < 2; j++)
 

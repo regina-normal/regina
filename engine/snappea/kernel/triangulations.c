@@ -349,7 +349,7 @@ static void check_neighbors_and_gluings(
 				sprintf(scratch, "inconsistent neighbor data, tet %d face %d to tet %d face %d",
 						tet->index, f, nbr->index, nbr_f);
 				uAcknowledge(scratch);
-				uFatalError("check_neighbors_and_gluings", "triangulations");
+				uFatalError("check_neighbors_and_gluings", "triangulations.c");
 			}
 
 			if (nbr->gluing[nbr_f] != inverse_permutation[this_gluing])
@@ -357,7 +357,7 @@ static void check_neighbors_and_gluings(
 				sprintf(scratch, "inconsistent gluing data, tet %d face %d to tet %d face %d",
 						tet->index, f, nbr->index, nbr_f);
 				uAcknowledge(scratch);
-				uFatalError("check_neighbors_and_gluings", "triangulations");
+				uFatalError("check_neighbors_and_gluings", "triangulations.c");
 			}
 		}
 }

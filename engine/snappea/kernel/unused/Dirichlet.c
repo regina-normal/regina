@@ -451,7 +451,7 @@ void free_Dirichlet_domain(
 	WEFaceClass		*dead_face_class;
 
 	if (polyhedron == NULL)
-		uFatalError("free_Dirichlet_domain", "Dirichlet");
+		uFatalError("free_Dirichlet_domain", "Dirichlet.c");
 
 	while (polyhedron->vertex_list_begin.next != &polyhedron->vertex_list_end)
 	{
@@ -531,9 +531,9 @@ static void simplify_generators(
 
 	MatrixPair	*aA,
 				*bB,
-				*best_aA;
-	O31Matrix	*best_aA_factor,
-				*best_bB_factor;
+				*best_aA			= NULL;
+	O31Matrix	*best_aA_factor		= NULL,
+				*best_bB_factor		= NULL;
 	double		max_improvement,
 				improvement;
 	int			i,
@@ -615,9 +615,9 @@ static void simplify_generators(
 						{
 							max_improvement = improvement;
 							best_aA = aA;
-//	Cater to a DEC compiler error that chokes on &(array)[i]
-//							best_aA_factor = &aA->m[i];
-//							best_bB_factor = &bB->m[j];
+/*	Cater to a DEC compiler error that chokes on &(array)[i]	*/
+/*							best_aA_factor = &aA->m[i];			*/
+/*							best_bB_factor = &bB->m[j];			*/
 							best_aA_factor = aA->m + i;
 							best_bB_factor = bB->m + j;
 						}
@@ -740,7 +740,7 @@ void change_basepoint(
 				generators, num_generators, displacement, vertex_epsilon,
 				interactivity, maximize_injectivity_radius);
 		else
-			uFatalError("change_basepoint", "Dirichlet");
+			uFatalError("change_basepoint", "Dirichlet.c");
 	}
 }
 
@@ -766,5 +766,5 @@ static void generators_from_polyhedron(
 		o31_copy((*generators)[i], *face->group_element);
 
 	if (i != *num_generators)
-		uFatalError("generators_from_polyhedron", "Dirichlet");
+		uFatalError("generators_from_polyhedron", "Dirichlet.c");
 }

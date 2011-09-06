@@ -75,7 +75,7 @@ static double Lobachevsky(double theta)
 					theta_over_pi_squared;
 	const double	*lobcoefptr;
 
-	const static double lobcoef[30] = {
+	static const double lobcoef[30] = {
 		5.4831135561607547882413838888201e-1,
 		1.0823232337111381915160036965412e-1,
 		4.8444907713545197129262758561472e-2,
@@ -267,7 +267,7 @@ double birectangular_tetrahedron_volume(
 				- cos(beta) * cos(beta);
 
 	if (big_delta >= 0.0)
-		uFatalError("birectangular_tetrahedron_volume", "volume");
+		uFatalError("birectangular_tetrahedron_volume", "volume.c");
 
 	delta = atan(	safe_sqrt( - big_delta) /
 					(cos(alpha) * cos(gamma)) );

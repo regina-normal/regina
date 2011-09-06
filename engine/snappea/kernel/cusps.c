@@ -100,7 +100,7 @@ void error_check_for_create_cusps(
 	 || manifold->num_nonor_cusps	!= 0
 	 || manifold->cusp_list_begin.next != &manifold->cusp_list_end)
 
-		uFatalError("error_check_for_create_cusps", "cusps");
+		uFatalError("error_check_for_create_cusps", "cusps.c");
 
 
 	for (tet = manifold->tet_list_begin.next;
@@ -111,7 +111,7 @@ void error_check_for_create_cusps(
 
 			if (tet->cusp[v] != NULL)
 
-				uFatalError("error_check_for_create_cusps", "cusps");
+				uFatalError("error_check_for_create_cusps", "cusps.c");
 }
 
 
@@ -298,7 +298,7 @@ void count_cusps(
 				break;
 
 			default:
-				uFatalError("count_cusps", "cusps");
+				uFatalError("count_cusps", "cusps.c");
 		}
 	}
 }
@@ -333,7 +333,7 @@ Boolean mark_fake_cusps(
 				break;
 			
 			default:
-				uFatalError("mark_fake_cusps", "cusps");
+				uFatalError("mark_fake_cusps", "cusps.c");
 		}
 	
 	return (fake_cusp_count < 0);
@@ -417,7 +417,7 @@ static void compute_cusp_Euler_characteristics(
 		 cusp = cusp->next)
 	{
 		if (cusp->euler_characteristic % 2 != 0)
-			uFatalError("compute_cusp_Euler_characteristics", "cusps");
+			uFatalError("compute_cusp_Euler_characteristics", "cusps.c");
 		cusp->euler_characteristic /= 2;
 	}
 }

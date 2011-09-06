@@ -209,7 +209,7 @@ double gl4R_determinant(
 	int			r,
 				c,
 				cc,
-				pivot_row,
+				pivot_row	= 0,
 				row_swaps;
 	double		max_abs,
 				this_abs,
@@ -260,7 +260,7 @@ double gl4R_determinant(
 			 *	The determinant of an O(3,1) matrix should always
 			 *	be plus or minus one, never zero.
 			 */
-			/*	uFatalError("gl4R_determinant", "o31_matrices");	*/
+			/*	uFatalError("gl4R_determinant", "o31_matrices.c");	*/
 			return 0.0;	/*	JRW  94/11/30  (see explanation above)	*/
 
 		/*
@@ -312,7 +312,7 @@ double gl4R_determinant(
 commented out by JRW  94/11/30 (see explanation above)
 
 	if (fabs(fabs(det) - 1.0) > 0.01)
-		uFatalError("gl4R_determinant", "o31_matrices");
+		uFatalError("gl4R_determinant", "o31_matrices.c");
 */
 
 	return det;

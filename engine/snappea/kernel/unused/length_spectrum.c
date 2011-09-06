@@ -13,6 +13,19 @@
  *
  *		void free_length_spectrum(MultiLength *spectrum);
  *
+ *		Added 2007/11/12:
+ *		FuncResult ortholengths(Triangulation	*manifold,			//	input
+ *								double			tiling_radius,		//	input
+ *								Complex			*shortest_geodesic,	//	output
+ *								double			*tube_radius,		//	output
+ *								unsigned int	*num_ortholengths,	//	output
+ *								Complex			**ortholengths,		//	output
+ *								Complex			**basings);			//	output
+ *		void free_ortholengths(	Complex			**ortholengths,
+ *								Complex			**basings);
+ *		[ortholengths() doesn't test its tiling_radius and so doesn't provide
+ *		a rigorous guarantee of anything, but in practice it works.]
+ *
  *	length_spectrum() takes the following inputs:
  *
  *		*polyhedron		The manifold whose length spectrum we're seeking is
@@ -415,6 +428,16 @@ static void			compress_geodesic_list(Tile **geodesic_list, int *num_good_geodesi
 static Boolean		is_manifold_orientable(WEPolyhedron *polyhedron);
 static void			copy_lengths(Tile **geodesic_list, int num_good_geodesics, MultiLength **spectrum, int *num_lengths, Boolean multiplicities, Boolean manifold_is_orientable);
 static void			free_tiling(Tile *root);
+
+static void			copy_tiling_tree_to_array(Tile *tree, MoebiusTransformation *array, unsigned int *count);
+static void			find_shortest_geodesic(unsigned int num_matrices, MoebiusTransformation *matrices, Complex *lengths, SL2CMatrix f0, SL2CMatrix l0, Complex *shortest_length);
+static void			compute_line_matrix(SL2CMatrix matrix, SL2CMatrix line_matrix);
+static void			compute_conjugates(SL2CMatrix f0, SL2CMatrix l0, unsigned int num_matrices, MoebiusTransformation *matrices, unsigned int *num_conjugates, SL2CMatrix *f_conjugates, SL2CMatrix *l_conjugates);
+static Boolean		matrix_on_list(SL2CMatrix m0, SL2CMatrix *list, unsigned int size_of_list);
+static void			compute_ortholengths(SL2CMatrix f0, SL2CMatrix l0, unsigned int num_conjugates, SL2CMatrix *f_conjugates, SL2CMatrix *l_conjugates, Complex *ortholengths, SL2CMatrix *ortholines);
+static void			find_shortest_ortholength(int num_conjugates, Complex *ortholengths, SL2CMatrix *ortholines, Complex *shortest_ortholength, SL2CMatrix shortest_ortholine);
+static void			compute_basings(SL2CMatrix l0, SL2CMatrix shortest_ortholine, unsigned int num_conjugates, SL2CMatrix *ortholines, Complex *basings);
+static void			sort_ortholengths(unsigned int num_ortholengths, Complex *ortholengths, Complex *basings);
 
 
 void length_spectrum(
@@ -853,7 +876,7 @@ static int count_translates(
 	int		num_translates;
 
 	/*
-	 *	Implement the recursive freeing algorithm using our own stack
+	 *	Implement the tree traversal using our own stack
 	 *	rather than the system stack, to avoid the possibility of a
 	 *	stack/heap collision.
 	 */
@@ -1130,7 +1153,7 @@ static double distance_to_origin(
 			/*
 			 *	The error is large.  Something went wrong.
 			 */
-			uFatalError("distance_to_origin", "length_spectrum");
+			uFatalError("distance_to_origin", "length_spectrum.c");
 	}
 
 	/*
@@ -1401,7 +1424,7 @@ static void make_conjugator_list(
 	 *	Do a quick error check.
 	 */
 	if (*num_conjugators != num_translates)
-		uFatalError("make_conjugator_list", "length_spectrum");
+		uFatalError("make_conjugator_list", "length_spectrum.c");
 
 	/*
 	 *	Sort the list by order of increasing basepoint translation
@@ -1888,4 +1911,574 @@ static void free_tiling(
 		 */
 		my_free(subtree);
 	}
+}
+
+
+/********************************
+ *
+ *	Ortholength code follows
+ *
+ ********************************/
+
+#define DEFAULT_VERTEX_EPSILON			1e-6
+#define SHORTEST_GEODESIC_EPSILON		1e-6
+#define SAME_MATRIX_EPSILON				1e-4
+#define SHORTEST_ORTHOLENGTH_EPSILON	1e-6
+
+
+void ortholengths(
+	Triangulation	*manifold,
+	double			tiling_radius,
+	Complex			*shortest_geodesic,
+	double			*tube_radius,
+	unsigned int	*num_ortholengths,
+	Complex			**ortholengths,
+	Complex			**basings)
+{
+	WEPolyhedron			*theDirichletDomain		= NULL;
+	Tile					*theTiling				= NULL;
+	MoebiusTransformation	*theMatrixList			= NULL;
+	unsigned int			theNumTranslates		= 0,
+							theCount				= 0,
+							i;
+	Complex					*theLengths				= NULL;
+	SL2CMatrix				f0,
+							l0;
+	SL2CMatrix				*f_conjugates			= NULL,
+							*l_conjugates			= NULL;
+	SL2CMatrix				*theOrtholines			= NULL;
+	Complex					theShortestOrtholength	= {0.0, 0.0};
+	SL2CMatrix				theShortestOrtholine;
+
+	//	In case of errors.
+	*shortest_geodesic	= (Complex){0.0, 0.0};
+	*tube_radius		= 0.0;
+	*num_ortholengths	= 0;
+	*ortholengths		= NULL;
+	*basings			= NULL;
+
+	//	The ortholength algorithm works only for oriented manifolds.
+	if (get_orientability(manifold) != oriented_manifold)
+		return;
+
+	//	Start with a Dirichlet domain.
+	theDirichletDomain = Dirichlet(	manifold,
+									DEFAULT_VERTEX_EPSILON,
+									TRUE,
+									Dirichlet_keep_going,
+									TRUE);
+	if (theDirichletDomain == NULL)
+		goto CleanUpOrtholengths;
+	
+	//	Tile out to the requested radius.
+	tile(theDirichletDomain, tiling_radius, &theTiling);
+
+	//	How many translates did we find?
+	theNumTranslates = count_translates(theTiling);
+	
+	//	Copy the tiling tree of O(3,1) matrices to a linear array of MoebiusTransformations.
+	theMatrixList = NEW_ARRAY(theNumTranslates, MoebiusTransformation);
+	theCount = 0;
+	copy_tiling_tree_to_array(theTiling, theMatrixList, &theCount);
+	if (theCount != theNumTranslates)
+		uFatalError("ortholengths", "ortholengths.c");
+
+	//	Given the covering transformations, we now want to
+	//
+	//	(1)	find the shortest geodesic,
+	//
+	//	(2)	find the distances ("ortholengths") from the shortest
+	//		geodesic to each of its nearby conjugates, and
+	//
+	//	(3)	find the basing lengths between the ortholengths.
+	//
+	//	The mathematics behind the computations is treated in
+	//	Werner Fenchel's "Elementary Geometry in Hyperbolic Space",
+	//	available online via Google Books at
+	//
+	//		http://books.google.com/books?id=4wy4sDeLVtsC
+	//
+	//	In particular we use his technique of representing lines by
+	//	half-turn matrices (cf. pp. 61-72).
+
+	//	Compute the length of the geodesic associated with
+	//	each matrix.  length[i] will contain the complex length
+	//	of the geodesic associated with matrix[i].
+	theLengths = NEW_ARRAY(theNumTranslates, Complex);
+	for (i = 0; i < theNumTranslates; i++)
+		theLengths[i] = complex_length_mt(&theMatrixList[i]);
+
+	//	Let f0 be the matrix corresponding to the shortest geodesic.
+	//	In case of a tie (which is quite likely given that there'll
+	//	be lots of conjugates of the shortest geodesic) choose the
+	//	geodesic which passes closest to the origin.
+	//	Let l0 (that's "el zero", not "ten" or "i zero") be the line
+	//	matrix corresponding to f0.
+	find_shortest_geodesic(theNumTranslates, theMatrixList, theLengths, f0, l0, shortest_geodesic);
+
+	//	The number of conjugates (after eliminating duplications) will probably
+	//	be less than theNumTranslates, but it certainly can't be more.  
+	//	So we allocate enough space for the f_conjugates and l_conjugates arrays
+	//	to hold theNumTranslates entries.
+	f_conjugates = NEW_ARRAY(theNumTranslates, SL2CMatrix);
+	l_conjugates = NEW_ARRAY(theNumTranslates, SL2CMatrix);
+
+	//	Compute all conjugates of f0 and l0 (excluding the trivial one) and weed out duplications.
+	compute_conjugates(f0, l0, theNumTranslates, theMatrixList, num_ortholengths, f_conjugates, l_conjugates);
+
+	//	Allocate space for the ortholengths and ortholines.
+	*ortholengths	= NEW_ARRAY(*num_ortholengths, Complex);
+	theOrtholines	= NEW_ARRAY(*num_ortholengths, SL2CMatrix);
+	
+	//	Find the ortholength from f0 to each of its conjugates.
+	//	While we're at it, we also compute the "ortholines", that is,
+	//	the line matrices (half-turn matrices, as in Fenchel) corresponding
+	//	to the ortholengths.  However, we don't compute the "orthoisometries"
+	//	(the screw motions) although presumably this could be done my mapping
+	//	one set of four points-at-infinity to another set of four points-at-infinity.
+	//	If we ever do compute the orthoisometries, use the Meyerhoff-Gabai convention
+	//	that ortholines are directed inward from the conjugate to the original geodesic.
+	compute_ortholengths(	f0, l0,
+							*num_ortholengths,
+							f_conjugates, l_conjugates,
+							*ortholengths, theOrtholines);
+
+	//	Find a shortest ortholength.  There will be many such shortest ortholengths
+	//	(typically they're all conjugates of one another), so choose the one closest to the origin.
+	find_shortest_ortholength(*num_ortholengths, *ortholengths, theOrtholines,
+							&theShortestOrtholength, theShortestOrtholine);
+	*tube_radius = 0.5 * theShortestOrtholength.real;
+
+	//	Allocate space for the basing distances.
+	*basings = NEW_ARRAY(*num_ortholengths, Complex);
+
+	//	Compute the basing distances.
+	compute_basings(l0, theShortestOrtholine, *num_ortholengths, theOrtholines, *basings);
+	
+	//	Sort the ortholengths according to the real part of the basing distance.
+	sort_ortholengths(*num_ortholengths, *ortholengths, *basings);
+
+CleanUpOrtholengths:
+
+	if (theOrtholines != NULL)
+		my_free(theOrtholines);
+
+	if (l_conjugates != NULL)
+		my_free(l_conjugates);
+
+	if (f_conjugates != NULL)
+		my_free(f_conjugates);
+
+	if (theLengths != NULL)
+		my_free(theLengths);
+
+	if (theMatrixList != NULL)
+		my_free(theMatrixList);
+
+	if (theTiling != NULL)
+		free_tiling(theTiling);
+	
+	if (theDirichletDomain != NULL)
+		free_Dirichlet_domain(theDirichletDomain);
+}
+
+
+void free_ortholengths(
+	Complex	**ortholengths,
+	Complex	**basings)
+{
+	if (*ortholengths != NULL)
+	{
+		my_free(*ortholengths);
+		*ortholengths = NULL;
+	}
+
+	if (*basings != NULL)
+	{
+		my_free(*basings);
+		*basings = NULL;
+	}
+}
+
+
+static void copy_tiling_tree_to_array(
+	Tile					*tree,
+	MoebiusTransformation	*array,
+	unsigned int			*count)
+{
+	Tile	*subtree_stack,
+			*subtree;
+
+	/*
+	 *	Implement the tree traversal using our own stack
+	 *	rather than the system stack, to avoid the possibility of a
+	 *	stack/heap collision.
+	 */
+
+	/*
+	 *	Initialize the stack to contain the whole tree.
+	 */
+	subtree_stack = tree;
+	if (tree != NULL)
+		tree->next_subtree = NULL;
+
+	/*
+	 *	Process the subtrees on the stack one at a time.
+	 */
+	while (subtree_stack != NULL)
+	{
+		/*
+		 *	Pull a subtree off the stack.
+		 */
+		subtree					= subtree_stack;
+		subtree_stack			= subtree_stack->next_subtree;
+		subtree->next_subtree	= NULL;
+
+		/*
+		 *	If the subtree's root has nonempty left and/or right subtrees,
+		 *	add them to the stack.
+		 */
+		if (subtree->left_child != NULL)
+		{
+			subtree->left_child->next_subtree = subtree_stack;
+			subtree_stack = subtree->left_child;
+		}
+		if (subtree->right_child != NULL)
+		{
+			subtree->right_child->next_subtree = subtree_stack;
+			subtree_stack = subtree->right_child;
+		}
+
+		/*
+		 *	Transfer the subtree's root node's O(3,1) matrix to the array of MoebiusTransformations.
+		 */
+		O31_to_Moebius(subtree->g, &array[(*count)++]);
+	}
+}
+
+
+static void find_shortest_geodesic(
+	unsigned int			num_matrices,
+	MoebiusTransformation	*matrices,
+	Complex					*lengths,
+	SL2CMatrix				f0,
+	SL2CMatrix				l0,
+	Complex					*shortest_length)
+{
+	//	Find the shortest geodesic represented on the list of matrices.
+	//	In the event of a tie (which is quite likely given that there'll
+	//	be lots of conjugates of the shortest geodesic), choose the
+	//	geodesic that passes closest to the origin (the origin is (0,0,1)
+	//	in the upper half space model).  The distance from the origin
+	//	to a geodesic may be computed by converting the corresponding matrix
+	//	to a line matrix, and then taking the norm of the line matrix 
+	//	to see how far it moves the origin.
+
+	unsigned int	i;
+	double			min_length;
+	SL2CMatrix		line_matrix	= {{{0.0, 0.0}, {0.0, 0.0}}, {{0.0, 0.0}, {0.0, 0.0}}};
+
+	min_length = INFINITY;
+
+	for (i = 0; i < num_matrices; i++)
+	{
+		//	Skip the identity and any parabolics that may be present.
+		if (lengths[i].real < SHORTEST_GEODESIC_EPSILON)
+			continue;
+
+		if (lengths[i].real < min_length + SHORTEST_GEODESIC_EPSILON)
+		{
+			//	Find a line matrix corresponding to matrices[i].
+			compute_line_matrix(matrices[i].matrix, line_matrix);
+			
+			//	Is this a tie?
+			//	If so, compare the distances of the geodesics from the basepoint.
+			//	If the new geodesic is farther away than the old minimum length geodesic,
+			//	ignore the new one and keep the old.
+			if (lengths[i].real > min_length - SHORTEST_GEODESIC_EPSILON)
+				if (sl2c_norm_squared(line_matrix) > sl2c_norm_squared(l0) - SHORTEST_GEODESIC_EPSILON)
+					continue;
+
+			//	Record the new minimum length geodesic.
+			min_length = lengths[i].real;
+			sl2c_copy(f0, matrices[i].matrix);
+			sl2c_copy(l0, line_matrix);
+			*shortest_length = lengths[i];
+		}
+	}
+}
+
+
+static void compute_line_matrix(
+	SL2CMatrix	matrix,
+	SL2CMatrix	line_matrix)
+{
+	SL2CMatrix	matrix_adjugate;
+
+	//	Compute a line matrix without worrying about its orientation.
+	//	Use the formula l = f - f~, as explained on pp. 61-62 of Fenchel.
+	sl2c_invert(matrix, matrix_adjugate);
+	sl2c_minus(matrix, matrix_adjugate, line_matrix);
+	sl2c_normalize(line_matrix);
+
+	return;
+}
+
+
+static void compute_conjugates(
+	SL2CMatrix				f0,
+	SL2CMatrix				l0,
+	unsigned int			num_matrices,
+	MoebiusTransformation	*matrices,
+	unsigned int			*num_conjugates,
+	SL2CMatrix				*f_conjugates,	//	pre-allocated array
+	SL2CMatrix				*l_conjugates)	//	pre-allocated array
+{
+	unsigned int	i;
+	SL2CMatrix		f,
+					l;
+
+	//	Use each matrix on the "matrices" array to compute a conjugate of f0 and l0.
+	//	Add nontrivial conjugates to the arrays f_conjugates and l_conjugates iff they aren't already there.
+
+	*num_conjugates = 0;
+
+	for (i = 0; i < num_matrices; i++)
+	{
+
+		//	Let
+		//		f = matrices[i] * f0 * matrices[i]^-1
+		//		l = matrices[i] * l0 * matrices[i]^-1
+		sl2c_conjugate(f0, matrices[i].matrix, f);
+		sl2c_conjugate(l0, matrices[i].matrix, l);
+		
+		//	Ignore trivial conjugates.
+		//
+		//	Technical note:  Because f0 has minimal length, it must be primitive,
+		//	i.e. not a power of some other covering transformation.
+		//	The only covering transformations that take f0 to ±f0
+		//	are its own powers ±f0^n, so the conjugacy (±(f0^n)) f0 (±(f0^-n))
+		//	give the original f0 and not -f0, even though both are equivalent in PSL2C.
+		if ( sl2c_same_matrix(f, f0, SAME_MATRIX_EPSILON*SAME_MATRIX_EPSILON) )
+			continue;
+		
+		//	Ignore conjugates that are already on the list.
+		//
+		//	Technical note:  Say two conjugacies give the same matrix up to sign,
+		//	g f0 g^-1 = ± h f0 h^-1.  This implies f0 = ± (g^-1 h) f0 (h^-1 g).
+		//	Reasoning similar to that in the preceding paragraph implies
+		//	that the ± sign must indeed be + .  So if f already appears on
+		//	the f_conjugates list, it must appear as +f and not -f, even though
+		//	both are equivalent in PSL2C.
+		if ( matrix_on_list(f, f_conjugates, *num_conjugates) )
+			continue;
+
+		//	The matrix f passed the two preceding tests,
+		//	so add it to the f_conjugates list,
+		//	and add l to the l_conjugates list as well.
+		sl2c_copy(f_conjugates[*num_conjugates], f);
+		sl2c_copy(l_conjugates[*num_conjugates], l);
+		(*num_conjugates)++;
+	}
+}
+
+
+static Boolean matrix_on_list(
+	SL2CMatrix		m0,
+	SL2CMatrix		*list,
+	unsigned int	size_of_list)
+{
+	unsigned int	i;
+
+	for (i = 0; i < size_of_list; i++)
+		if (sl2c_same_matrix(m0, list[i], SAME_MATRIX_EPSILON*SAME_MATRIX_EPSILON) == TRUE)
+			return TRUE;
+
+	return FALSE;
+}
+
+
+static void compute_ortholengths(
+	SL2CMatrix		f0,
+	SL2CMatrix		l0,
+	unsigned int	num_conjugates,
+	SL2CMatrix		*f_conjugates,
+	SL2CMatrix		*l_conjugates,
+	Complex			*ortholengths,	//	pre-allocated array
+	SL2CMatrix		*ortholines)	//	pre-allocated array
+{
+	unsigned int	i,
+					j,
+					k;
+	SL2CMatrix		temp1,
+					temp2,
+					ml,
+					nml;
+	Complex			exp_mu;
+
+	static const Complex	minus_one_half	= {-0.5, 0.0},
+							i_over_two		= { 0.0, 0.5};
+
+	//	Compute the ortholength and ortholine from f0 to each conjugate.
+	for (i = 0; i < num_conjugates; i++)
+	{
+		//	The ortholine determined by two translation matrices
+		//	f and g is gf - fg  (see Fenchel, p. 62).  The sign
+		//	of the matrix may or may not be correct.
+		sl2c_product(f0, f_conjugates[i], temp1);
+		sl2c_product(f_conjugates[i], f0, temp2);
+		sl2c_minus(temp1, temp2, ortholines[i]);
+		sl2c_normalize(ortholines[i]);
+
+		//	Now flip to page 68 of Fenchel.  We use the formulas
+		//
+		//		cosh(mu) = (-1/2) tr(ml)
+		//		sinh(mu) =  (i/2) tr(nml)
+		//
+		//	where	m is l0,
+		//			l is l_conjugates[i],
+		//			n is ortholines[i].
+		//
+		//	If we were lucky enough to get the sign right on (*ortholines)[i], 
+		//	then we may compute
+		//
+		//		exp(mu) = cosh(mu) + sinh(mu)
+		//				= (-1/2) tr(ml) + (i/2) tr(nml).
+		//
+		//	If we got the sign wrong on ortholines[i],
+		//	then we'll wind up computing
+		//
+		//		cosh(mu) - sinh(mu) = exp(-mu).
+		//
+		//	So . . . our plan is to barge ahead with the
+		//	computation of (-1/2) tr(ml) + (i/2) tr(nml).
+		//	If we find Re(mu) is negative, this tells us that
+		//	we need to change the signs of n and mu.
+
+		sl2c_product(l0, l_conjugates[i], ml);
+		sl2c_product(ortholines[i], ml, nml);
+
+		exp_mu = complex_plus(	complex_mult(minus_one_half, sl2c_trace(ml)),
+								complex_mult(i_over_two,     sl2c_trace(nml)) );
+
+		ortholengths[i] = complex_log(exp_mu, 0.0);
+
+		if (ortholengths[i].real < 0.0)
+		{
+			ortholengths[i] = complex_negate(ortholengths[i]);
+
+			for (j = 0; j < 2; j++)
+				for (k = 0; k < 2; k++)
+					ortholines[i][j][k] = complex_negate(ortholines[i][j][k]);
+		}
+	}
+}
+
+
+static void find_shortest_ortholength(
+	int			num_conjugates,
+	Complex		*ortholengths,
+	SL2CMatrix	*ortholines,
+	Complex		*shortest_ortholength,
+	SL2CMatrix	shortest_ortholine)
+{
+	unsigned int	i;
+	double			min_length;
+
+	min_length = INFINITY;
+
+	for (i = 0; i < num_conjugates; i++)
+	{
+		if (ortholengths[i].real < min_length + SHORTEST_ORTHOLENGTH_EPSILON)
+		{
+			//	Is this a tie?
+			//	If so, compare the distances of the ortholines from the basepoint.
+			//	If the new ortholine is farther away than the old shortest ortholine,
+			//	ignore the new one and keep the old.
+			if (ortholengths[i].real > min_length - SHORTEST_ORTHOLENGTH_EPSILON)
+				if (sl2c_norm_squared(ortholines[i]) > sl2c_norm_squared(shortest_ortholine) - SHORTEST_ORTHOLENGTH_EPSILON)
+					continue;
+
+			//	Record the new shortest ortholine.
+			min_length = ortholengths[i].real;
+			*shortest_ortholength = ortholengths[i];
+			sl2c_copy(shortest_ortholine, ortholines[i]);
+		}
+	}
+}
+
+
+static void compute_basings(
+	SL2CMatrix		l0,
+	SL2CMatrix		shortest_ortholine,
+	unsigned int	num_conjugates,
+	SL2CMatrix		*ortholines,
+	Complex			*basings)
+{
+	unsigned int	i;
+	SL2CMatrix		ml,
+					nml;
+	Complex			exp_mu;
+
+	static const Complex	minus_one_half	= {-0.5, 0.0},
+							i_over_two		= { 0.0, 0.5};
+
+	//	Compute the complex distance from the shortest ortholine
+	//	to each of the other ortholines.
+
+	for (i = 0; i < num_conjugates; i++)
+	{
+		//	We use the formulas from page 68 of Fenchel:
+		//
+		//		cosh(mu) = (-1/2) tr(ml)
+		//		sinh(mu) =  (i/2) tr(nml)
+		//
+		//	where	m is ortholines[i],
+		//			l is shortest_ortholine,
+		//			n is l0.
+		//
+		//	The signs of these line matrices are all correct,
+		//	so we may compute
+		//
+		//		exp(mu) = cosh(mu) + sinh(mu)
+		//				= (-1/2) tr(ml) + (i/2) tr(nml).
+
+		sl2c_product(ortholines[i], shortest_ortholine, ml);
+		sl2c_product(l0, ml, nml);
+
+		exp_mu = complex_plus(	complex_mult(minus_one_half, sl2c_trace(ml)),
+								complex_mult(i_over_two,     sl2c_trace(nml)) );
+
+		basings[i] = complex_log(exp_mu, 0.0);
+	}
+}
+
+
+static void sort_ortholengths(
+	unsigned int	num_ortholengths,
+	Complex			*ortholengths,
+	Complex			*basings)
+{
+	unsigned int	i,
+					j;
+	Complex			temp;
+
+	//	Sort the arrays according to the real part of the basing distance.
+	//
+	//	NOTE:  FOR EASE OF PROGRAMMING I'M USING AN O(N^2) SORTING ALGORITHM.
+	//	IF IT TURNS OUT TO BE TOO SLOW, IT CAN BE REPLACED WITH A MUCH FASTER
+	//	O(N LOG N) SORTING ALGORITHM LIKE QUICKSORT.
+
+	for (i = 0; i < num_ortholengths; i++)
+		for (j = i + 1; j < num_ortholengths; j++)
+			if (basings[i].real > basings[j].real)
+			{
+				temp		= basings[i];
+				basings[i]	= basings[j];
+				basings[j]	= temp;
+
+				temp			= ortholengths[i];
+				ortholengths[i]	= ortholengths[j];
+				ortholengths[j]	= temp;
+			}
 }

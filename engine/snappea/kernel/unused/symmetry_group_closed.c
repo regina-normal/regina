@@ -77,7 +77,7 @@ FuncResult compute_closed_symmetry_group(
 	 */
 	if (*symmetry_group				!= NULL
 	 || *symmetric_triangulation	!= NULL)
-		uFatalError("compute_closed_symmetry_group", "symmetry_group");
+		uFatalError("compute_closed_symmetry_group", "symmetry_group.c");
 
 	/*
 	 *	compute_symmetry_group() should have passed us a 1-cusp
@@ -87,7 +87,7 @@ FuncResult compute_closed_symmetry_group(
 	 || all_cusps_are_filled(manifold) == FALSE
 	 || all_Dehn_coefficients_are_relatively_prime_integers(manifold) == FALSE)
 	{
-		uFatalError("compute_closed_symmetry_group", "symmetry_group_closed");
+		uFatalError("compute_closed_symmetry_group", "symmetry_group_closed.c");
 	}
 
 	/*
@@ -163,8 +163,8 @@ static WEPolyhedron *compute_polyhedron(
 	int				i;
 	WEPolyhedron	*polyhedron;
 
-	const static int	num_precisions = 5;
-	const static double	precision[5] = {1e-8, 1e-6, 1e-10, 1e-4, 1e-12};
+	static const int	num_precisions = 5;
+	static const double	precision[5] = {1e-8, 1e-6, 1e-10, 1e-4, 1e-12};
 
 	for (i = 0; i < num_precisions; i++)
 	{
@@ -326,8 +326,8 @@ static void compute_length_spectrum(
 
 	double	cutoff_length;
 
-	const static double	max_tiling_radius = 5.0;  /* changed from 4.0 to 5.0 JRW 98/4/30  */
-	const static int	enough_lengths = 3;
+	static const double	max_tiling_radius = 5.0;  /* changed from 4.0 to 5.0 JRW 98/4/30  */
+	static const int	enough_lengths = 3;
 
 	/*
 	 *	Initially we have no length spectrum.
@@ -391,7 +391,7 @@ static FuncResult merge_length_spectrum(
 	 *	that num_lengths is nonzero.
 	 */
 	if (num_lengths <= 0)
-		uFatalError("merge_length_spectrum", "symmetry_group_closed");
+		uFatalError("merge_length_spectrum", "symmetry_group_closed.c");
 
 	/*
 	 *	The merged_spectrum will require at most as many entries
@@ -429,7 +429,7 @@ static FuncResult merge_length_spectrum(
 		 *	of -pi.  (It always converts to +pi.)
 		 */
 		if (spectrum[i].length.imag < -PI + PI_TORSION_EPSILON)
-			uFatalError("merge_length_spectrum", "symmetry_group_closed");
+			uFatalError("merge_length_spectrum", "symmetry_group_closed.c");
 
 		/*
 		 *	Treat torsion pi as a special case.
@@ -505,7 +505,7 @@ static FuncResult merge_length_spectrum(
 	}
 
 	if (*num_merged_lengths > num_lengths)
-		uFatalError("merge_length_spectrum", "symmetry_group_closed");
+		uFatalError("merge_length_spectrum", "symmetry_group_closed.c");
 
 	return func_OK;
 }
@@ -663,7 +663,7 @@ static void try_to_drill_curves(
 		 *	of -pi.  (It always converts to +pi.)
 		 */
 		if (core_length.imag < -PI + PI_TORSION_EPSILON)
-			uFatalError("try_to_drill_curves", "symmetry_group_closed");
+			uFatalError("try_to_drill_curves", "symmetry_group_closed.c");
 
 		if (core_length.imag > ZERO_TORSION_EPSILON)
 			remaining_curves.pos_multiplicity--;
@@ -770,7 +770,7 @@ static void try_to_drill_curves(
 		if (new_upper_bound < *upper_bound)
 			*upper_bound = new_upper_bound;
 		if (*upper_bound != *lower_bound)
-			uFatalError("try_to_drill_curves", "symmetry_group_closed");
+			uFatalError("try_to_drill_curves", "symmetry_group_closed.c");
 	}
 
 	free_symmetry_group(manifold_sym_grp);
@@ -890,7 +890,7 @@ static FuncResult fill_first_cusp(
 	Boolean			fill_cusp[2] = {TRUE, FALSE};
 
 	if (get_num_cusps(*manifold) != 2)
-		uFatalError("fill_first_cusp", "symmetry_group_closed");
+		uFatalError("fill_first_cusp", "symmetry_group_closed.c");
 
 	new_manifold = fill_cusps(*manifold, fill_cusp, get_triangulation_name(*manifold), FALSE);
 	if (new_manifold == NULL)
@@ -1014,7 +1014,7 @@ static FuncResult compute_symmetry_group_without_polyhedron(
 	 */
 
 	if (*symmetry_group == NULL)
-		uFatalError("compute_symmetry_group_without_polyhedron", "symmetry_group_closed");
+		uFatalError("compute_symmetry_group_without_polyhedron", "symmetry_group_closed.c");
 
 	/*
 	 *	Initialize a (possible trivial) lower_bound on the order

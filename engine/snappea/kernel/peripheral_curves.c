@@ -327,7 +327,7 @@ static void				simplify_perimeter(PerimeterPiece **perimeter_anchor);
 static void				find_meridian_and_longitude(PerimeterPiece *perimeter_anchor, CuspTopology *cusp_topology);
 static void				advance_to_next_side(PerimeterPiece **pp);
 static GluingPattern	determine_gluing_pattern(PerimeterPiece *side[6], int num_sides);
-static void				do_torus(PerimeterPiece *side[6], int num_sides);
+static void				do_torus(PerimeterPiece *side[6]);
 static void				do_standard_Klein_bottle(PerimeterPiece *side[6], int num_sides);
 static void				do_P2P2_Klein_bottle(PerimeterPiece *side[6], int num_sides);
 static void				trace_curve(PerimeterPiece *start, PeripheralCurve trace_which_curve, TraceDirection trace_direction, Boolean use_opposite_orientation);
@@ -423,7 +423,7 @@ static void attach_extra(
 		 *	field in the Tetrahedron data structure.
 		 */
 		if (tet->extra != NULL)
-			uFatalError("attach_extra", "peripheral_curves");
+			uFatalError("attach_extra", "peripheral_curves.c");
 
 		/*
 		 *	Attach the locally defined struct extra.
@@ -508,8 +508,8 @@ static void do_one_cusp(
 	Triangulation	*manifold,
 	Cusp			*cusp)
 {
-	Tetrahedron		*base_tet;
-	VertexIndex		base_vertex;
+	Tetrahedron		*base_tet		= NULL;
+	VertexIndex		base_vertex		= 0;
 	PerimeterPiece	*perimeter_anchor;
 
 	pick_base_tet(manifold, cusp, &base_tet, &base_vertex);
@@ -546,7 +546,7 @@ static void pick_base_tet(
 	 *	If pick_base_tet() didn't find any vertex belonging
 	 *	to the specified cusp, we're in big trouble.
 	 */
-	uFatalError("pick_base_tet", "peripheral_curves");
+	uFatalError("pick_base_tet", "peripheral_curves.c");
 }
 
 
@@ -896,7 +896,7 @@ static void find_meridian_and_longitude(
 	{
 		case abAB:
 		case abcABC:
-			do_torus(side, num_sides);
+			do_torus(side);
 			*cusp_topology = torus_cusp;
 			break;
 
@@ -1036,8 +1036,8 @@ static GluingPattern determine_gluing_pattern(
 
 
 static void do_torus(
-	PerimeterPiece	*side[6],
-	int				num_sides)
+	PerimeterPiece	*side[6]
+/*	int				num_sides */)
 {
 	/*
 	 *	The following calls to trace_curve() will always produce
