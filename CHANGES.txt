@@ -290,6 +290,10 @@ Version 4.90  [ 10 September, 2011 ] - First prerelease for version 5.0.
               "% Triangulation" marker (thanks to Matthias Goerner).
         Routine torsionAutInverse():
             - New routine for inverting automorphisms, thanks to Ryan Budney.
+        Routines writeCSVStandard(), writeCSVEdgeWeight():
+            - Changed the text that is written to the "boundary" field,
+              to be consistent with changes to the user interface.
+              Possible values are now "spun", "real" or "none".
         File surfaces/flavourregistry.h:
             - The final "pre_test" argument (which is never used) has been
               removed.  As a result, REGISTER_FLAVOUR now takes five arguments,
