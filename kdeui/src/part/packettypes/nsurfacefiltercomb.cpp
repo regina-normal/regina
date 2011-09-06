@@ -71,13 +71,13 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
 
     QBoxLayout* typeOptionLayout = new QVBoxLayout();
     typeLayout->addLayout(typeOptionLayout);
-    typeAnd = new QRadioButton(i18n("AND"), ui);
+    typeAnd = new QRadioButton(i18n("AND (passes all)"), ui);
     typeAnd->setEnabled(readWrite);
     typeAnd->setWhatsThis(i18n("Combine the children of this filter "
         "using boolean AND.  A surface will pass this filter only when "
         "it passes every one of the child filters."));
     typeOptionLayout->addWidget(typeAnd);
-    typeOr = new QRadioButton(i18n("OR"), ui);
+    typeOr = new QRadioButton(i18n("OR (passes any)"), ui);
     typeOr->setEnabled(readWrite);
     typeOr->setWhatsThis(i18n("Combine the children of this filter "
         "using boolean OR.  A surface will pass this filter only when "
@@ -132,12 +132,13 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
 
     layout->addStretch(1);
 
+    /*
     label = new QLabel(i18n("Filters can be applied to a normal surface list\n"
         "from within the surface list viewer."), ui);
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
-
     layout->addStretch(1);
+    */
 
     // Final tidying up.
     // Connect to one of the radio buttons, not the button group, so that
