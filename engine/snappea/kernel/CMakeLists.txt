@@ -10,4 +10,4 @@ ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES SnapPea.h canonize.h covers.h dual_one_skeleton_curve.h isometry.h kernel.h kernel_prototypes.h kernel_typedefs.h link_projection.h positioned_tet.h symmetry_group.h tables.h terse_triangulation.h tersest_triangulation.h triangulation.h triangulation_io.h unix_file_io.h winged_edge.h DESTINATION ${INCLUDEDIR}/snappea/kernel)
+INSTALL(FILES SnapPea.h canonize.h covers.h dual_one_skeleton_curve.h isometry.h kernel.h kernel_prototypes.h kernel_typedefs.h link_projection.h positioned_tet.h symmetry_group.h tables.h terse_triangulation.h triangulation.h triangulation_io.h unix_file_io.h winged_edge.h DESTINATION ${INCLUDEDIR}/snappea/kernel)
