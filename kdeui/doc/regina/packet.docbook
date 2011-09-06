@@ -276,6 +276,8 @@
     A <firstterm>surface filter</firstterm> can be applied to
     a long list of normal surfaces to extract only some
     smaller set of surfaces that you might be interested in.
+    You can learn more about surface filters in the
+    <link linkend="surfaces-filtering">chapter on normal surfaces</link>.
     &regina; offers two types of surface filter:
    </para>
 
