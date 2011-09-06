@@ -26,6 +26,5 @@ extern const Permutation	inverse_permutation[256];
 extern const signed char	parity[256];
 extern const FaceIndex		vt_side[4][3];
 extern const Permutation	permutation_by_index[24];
-extern const char			index_by_permutation[256];
 
 #endif

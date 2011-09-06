@@ -262,7 +262,7 @@ RepresentationList *find_representations(
 							**Sn,
 							*representation_by_index,
 							**candidateSn,
-							*candidateZn;
+							*candidateZn	= NULL;
 	GroupPresentation		*simplified_group;
 	RepresentationIntoSn	*new_representation;
 
@@ -270,7 +270,7 @@ RepresentationList *find_representations(
 	 *	Begin with a quick error check.
 	 */
 	if (manifold == NULL)
-		uFatalError("find_representations", "representations");
+		uFatalError("find_representations", "representations.c");
 
 	/*
 	 *	Make sure the manifold has a set of generators.
@@ -1056,7 +1056,7 @@ static Boolean candidateSn_is_conjugacy_minimal(
 		j,
 		k,
 		*scratch,
-		comparison;
+		comparison	= 0;
 
 	/*
 	 *	Allocate scratch space to compute the conjugate.
@@ -1786,7 +1786,7 @@ static void compute_covering_type(
 		 *	so we should have assigned exactly n value to f().
 		 */
 		if (count != n)
-			uFatalError("compute_covering_type", "representations");
+			uFatalError("compute_covering_type", "representations.c");
 
 		/*
 		 *	The last time through the above loop we assigned no new

@@ -55,7 +55,7 @@ Boolean is_canonical_triangulation(
 			 *	canonical cell decomposition after all.
 			 */
 			if (sum_of_tilts > CONCAVITY_EPSILON)
-				uFatalError("is_canonical_triangulation", "canonize_result");
+				uFatalError("is_canonical_triangulation", "canonize_result.c");
 
 			/*
 			 *	If the sum of the tilts is zero, then the canonical cell

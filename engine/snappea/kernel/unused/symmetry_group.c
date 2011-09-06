@@ -110,7 +110,7 @@ FuncResult compute_symmetry_group(
 	if (*symmetry_group_of_manifold	!= NULL
 	 || *symmetry_group_of_link		!= NULL
 	 || *symmetric_triangulation	!= NULL)
-		uFatalError("compute_symmetry_group", "symmetry_group");
+		uFatalError("compute_symmetry_group", "symmetry_group.c");
 
 	/*
 	 *	If the space isn't a manifold, return func_bad_input.

@@ -25,7 +25,6 @@
 Triangulation *construct_cover(
 	Triangulation			*base_manifold,
 	RepresentationIntoSn	*representation,
-	int						num_generators,
 	int						n)
 {
 	Triangulation	*covering_manifold;
@@ -65,7 +64,7 @@ Triangulation *construct_cover(
 	 *	Fill in some of the global information.
 	 */
 	if (base_manifold->name == NULL)
-		uFatalError("construct_cover", "cover");
+		uFatalError("construct_cover", "cover.c");
 	covering_manifold->name						= NEW_ARRAY(strlen(base_manifold->name) + strlen(NAME_SUFFIX) + 1, char);
 	strcpy(covering_manifold->name, base_manifold->name);
 	strcat(covering_manifold->name, NAME_SUFFIX);
@@ -103,7 +102,7 @@ Triangulation *construct_cover(
 			base_tetrahedron = base_tetrahedron->next, count++)
 	{
 		if (base_tetrahedron->index != count)
-			uFatalError("construct_cover", "cover");
+			uFatalError("construct_cover", "cover.c");
 
 		lifts = covering_tetrahedra[base_tetrahedron->index];
 
@@ -137,7 +136,7 @@ Triangulation *construct_cover(
 					break;
 
 				default:
-					uFatalError("construct_cover", "cover");
+					uFatalError("construct_cover", "cover.c");
 			}
 		}
 
@@ -262,7 +261,7 @@ Triangulation *construct_cover(
 			base_tetrahedron = base_tetrahedron->next, count++)
 	{
 		if (base_tetrahedron->index != count)
-			uFatalError("construct_cover", "cover");
+			uFatalError("construct_cover", "cover.c");
 
 		lifts = covering_tetrahedra[base_tetrahedron->index];
 
@@ -387,7 +386,7 @@ Triangulation *construct_cover(
 				if (lifts[index]->cusp[v] == covering_cusp)
 					break;
 			if (index == n)
-				uFatalError("construct_cover", "cover");
+				uFatalError("construct_cover", "cover.c");
 
 			/*
 			 *	How many times must we apply the primitive Dehn permutation
@@ -409,7 +408,7 @@ Triangulation *construct_cover(
 			 *	the singularity in the covering_manifold.
 			 */
 			if (base_singularity % count != 0)
-				uFatalError("construct_cover", "cover");
+				uFatalError("construct_cover", "cover.c");
 			covering_singularity = base_singularity / count;
 
 			/*

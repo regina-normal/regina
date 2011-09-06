@@ -133,7 +133,7 @@ static Boolean better_terse(
 	int	i;
 	
 	if (challenger->num_tetrahedra != defender->num_tetrahedra)
-		uFatalError("better_terse", "terse_triangulation");	
+		uFatalError("better_terse", "terse_triangulation.c");	
 	
 	for (i = 0; i < 2*challenger->num_tetrahedra; i++)
 	{
@@ -214,7 +214,7 @@ TerseTriangulation *tri_to_terse_with_base(
 	 *	so I won't both making modifications until the need arises.)
 	 */
 	if (all_cusps_are_complete(manifold) == FALSE)
-		uFatalError("tri_to_terse", "terse_triangulation");
+		uFatalError("tri_to_terse", "terse_triangulation.c");
 
 	/*
 	 *	Attach an Extra field to each old Tetrahedron to keep
@@ -302,7 +302,7 @@ TerseTriangulation *tri_to_terse_with_base(
 
 		tet = tet_list[tet_index];
 		if (tet == NULL || tet->extra->in_use == FALSE)
-			uFatalError("tri_to_terse", "terse_triangulation");
+			uFatalError("tri_to_terse", "terse_triangulation.c");
 
 		/*
 		 *	Consider each face, in order.
@@ -440,7 +440,7 @@ TerseTriangulation *tri_to_terse_with_base(
 	 || count_which_gluing  != manifold->num_tetrahedra + 1
 	 || tet_count != manifold->num_tetrahedra)
 
-	 	uFatalError("tri_to_terse", "terse_triangulation");
+	 	uFatalError("tri_to_terse", "terse_triangulation.c");
 
 	return tt;
 }
@@ -460,7 +460,7 @@ static void attach_extra(
 		 *	field in the Tetrahedron data structure.
 		 */
 		if (tet->extra != NULL)
-			uFatalError("attach_extra", "terse_triangulation");
+			uFatalError("attach_extra", "terse_triangulation.c");
 
 		/*
 		 *	Attach the locally defined struct extra.
@@ -751,7 +751,7 @@ static Triangulation *bare_bones_triangulation(
 	 || count_which_gluing  != manifold->num_tetrahedra + 1
 	 || tet_count != manifold->num_tetrahedra)
 
-	 	uFatalError("terse_to_tri", "terse_triangulation");
+	 	uFatalError("terse_to_tri", "terse_triangulation.c");
 
 	return manifold;
 }

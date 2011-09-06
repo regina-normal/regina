@@ -92,7 +92,7 @@
 #include "kernel.h"
 
 
-const static ComplexWithLog regular_shape =	{
+static const ComplexWithLog regular_shape =	{
 												{0.5, ROOT_3_OVER_2},
 												{0.0, PI_OVER_3}
 											};
@@ -391,15 +391,15 @@ static void copy_cusp_shapes(
 SolutionType do_Dehn_filling(
 	Triangulation *manifold)
 {
-	Complex	**complex_equations,
+	Complex	**complex_equations		= NULL,
 			*delta;
-	double	**real_equations,
+	double	**real_equations		= NULL,
 			distance_to_solution,
 			distance_ratio;
 	int		num_rows,
 			num_columns,
 			iterations,
-			result;
+			result					= 0;
 	Boolean	convergence_is_quadratic,
 			solution_was_found,
 			iteration_limit_exceeded;
@@ -611,7 +611,7 @@ static void verify_coefficients(
 			(cusp->m == 0.0 && cusp->l == 0.0) || (cusp->topology == Klein_cusp && cusp->l != 0.0)
 		   )
 
-			uFatalError("verify_coefficients", "hyperbolic_structure");
+			uFatalError("verify_coefficients", "hyperbolic_structure.c");
 }
 
 
@@ -1191,7 +1191,7 @@ void polish_hyperbolic_structures(
 	ChernSimonsInfo	chern_simons_info;
 
 	if (manifold->solution_type[complete] == not_attempted)
-		uFatalError("polish_hyperbolic_structures", "polish_hyperbolic_structures");
+		uFatalError("polish_hyperbolic_structures", "polish_hyperbolic_structures.c");
 
 	save_chern_simons(manifold, &chern_simons_info);
 	allocate_arrays(manifold, &save_shapes, &save_cusp_info);

@@ -18,13 +18,19 @@
  *	SnapPea 3.0 is funded by the U.S. National Science Foundation
  *	and the MacArthur Foundation.  SnapPea and its source code may
  *	be used freely for all noncommercial purposes.  Please direct
- *	questions, problems and suggestions to Jeff Weeks (weeks@northnet.org).
+ *	questions, problems and suggestions to Jeff Weeks
+ *	(www.geometrygames.org/contact.html).
  *
  *	Copyright 1999 by Jeff Weeks.  All rights reserved.
  */
 
 #ifndef _SnapPea_
 #define _SnapPea_
+
+//	BUFFER_LENGTH() measures the number of items in an array,
+//	not the number of bytes, and automatically adjusts to changes
+//	in the number of elements or the size of each element.
+#define BUFFER_LENGTH(a)	( sizeof(a) / sizeof((a)[0]) )
 
 /*
  *	Note:  values of the SolutionType enum are stored as integers in
@@ -60,9 +66,7 @@ typedef struct
 			imag;
 } Complex;
 
-#ifndef THINK_C
 typedef unsigned char	Boolean;
-#endif
 
 /*
  *	The values of MatrixParity should not be changed.
@@ -420,14 +424,6 @@ typedef struct NormalSurfaceList			NormalSurfaceList;
 #include "winged_edge.h"
 
 /*
- *	tersest_triangulation.h describes the most compressed form
- *	for a Triangulation.  The UI must have the actual definition
- *	(not just an opaque typedef) because to read one from the
- *	middle of a file it needs to know how long they are.
- */
-#include "tersest_triangulation.h"
-
-/*
  *	link_projection.h describes the format in which the UI passes
  *	link projections to the kernel.
  */
@@ -456,6 +452,10 @@ typedef struct NormalSurfaceList			NormalSurfaceList;
 /*	complains anyhow.  So for now let's use the following	*/
 /*	CONST macro, to allow the const declarations to be		*/
 /*	reactivated if desired.									*/
+/*															*/
+/*	Note:  In Win32, windef.h also defines CONST = const,	*/
+/*	so clear its definition before making our own.			*/
+#undef  CONST
 #define CONST
 /* #define CONST const */
 
@@ -604,6 +604,23 @@ extern void free_abelian_group(AbelianGroup *g);
  *	Frees the storage used to hold the AbelianGroup *g.
  */
 
+
+/************************************************************************/
+/*																		*/
+/*						ambiguous_cusp_bases.c							*/
+/*																		*/
+/************************************************************************/
+
+extern void resolve_ambiguous_bases(
+	Triangulation	*aTriangulation,
+	char			*aDehydratedDescription);
+/*
+ *	For census manifolds with square or hexagonal cusps,
+ *	chooses a well-defined (meridian, longitude) pair
+ *	based on the homology of the manifold as a whole.
+ *	For non-census manifolds, posts a warning and leaves
+ *	the existing (meridian, longitude) unchanged.
+ */
 
 /************************************************************************/
 /*																		*/
@@ -805,7 +822,6 @@ extern void core_geodesic(	Triangulation	*manifold,
 
 Triangulation *construct_cover(	Triangulation			*base_manifold,
 								RepresentationIntoSn	*representation,
-								int						num_generators,
 								int						n);
 /*
  *	Constructs the n-sheeted cover of the given base_manifold defined
@@ -1042,6 +1058,20 @@ extern void free_cusp_neighborhood_segment_list(
 							CuspNbhdSegmentList	*segment_list);
 /*
  *	Frees a CuspNbhdSegmentList when the UI's done with it.
+ */
+
+
+/************************************************************************/
+/*																		*/
+/*								decode_CHW.c							*/
+/*																		*/
+/************************************************************************/
+
+extern Triangulation *CHW_to_tri(	char	*anEncoding,
+									Boolean	aChernSimonsIsPresent,
+									double	aChernSimonsValue);
+/*
+ *	Decode a CHW-encoded triangulation.  Please see decode_CHW.c for details.
  */
 
 
@@ -1473,7 +1503,7 @@ extern SolutionType remove_Dehn_fillings(Triangulation *manifold);
 /*																		*/
 /************************************************************************/
 
-extern double index_to_hue(int index);
+extern double index_to_hue(unsigned int index);
 /*
  *	Maps the nonnegative integers to a set of easily distinguishable hues.
  *
@@ -1481,7 +1511,13 @@ extern double index_to_hue(int index);
  *	hue		0		1/2		1/4		3/4		1/8		5/8		3/8   . . .
  */
 
-extern double horoball_hue(int index);
+extern double index_to_prettier_hue(unsigned int aHueIndex);
+/*
+ *	Similar to horoball_hue() but with a slightly different formula.
+ *	(Note to self:  Think about these different options at some point.)
+ */
+
+extern double horoball_hue(unsigned int index);
 /*
  *	Provides hand chosen hues for indices 0-5, and uses index_to_hue()
  *	to interpolate thereafter.  The hope is for nicer looking horoball
@@ -1501,7 +1537,7 @@ extern char *get_triangulation_name(Triangulation *manifold);
  *	The pointer points to the actual name, not a copy.
  */
 
-extern void set_triangulation_name(Triangulation *manifold, char *new_name);
+extern void set_triangulation_name(Triangulation *manifold, const char *new_name);
 /*
  *	Sets the Triangulation's name to new_name.
  */
@@ -1638,15 +1674,15 @@ extern void get_holonomy(	Triangulation	*manifold,
 extern void get_tet_shape(	Triangulation	*manifold,
 							int				which_tet,
 							Boolean			fixed_alignment,
-							double			*shape_rect_real,
-							double			*shape_rect_imag,
-							double			*shape_log_real,
-							double			*shape_log_imag,
-							int				*precision_rect_real,
-							int				*precision_rect_imag,
-							int				*precision_log_real,
-							int				*precision_log_imag,
-							Boolean			*is_geometric);
+							double			*shape_rect_real,		//	OK to pass NULL
+							double			*shape_rect_imag,		//	OK to pass NULL
+							double			*shape_log_real,		//	OK to pass NULL
+							double			*shape_log_imag,		//	OK to pass NULL
+							int				*precision_rect_real,	//	OK to pass NULL
+							int				*precision_rect_imag,	//	OK to pass NULL
+							int				*precision_log_real,	//	OK to pass NULL
+							int				*precision_log_imag,	//	OK to pass NULL
+							Boolean			*is_geometric);			//	OK to pass NULL
 /*
  *	Provides information about the shape of the Tetrahedron in
  *	position which_tet in the linked list (which_tet takes a value
@@ -1783,6 +1819,24 @@ extern void length_spectrum(	WEPolyhedron	*polyhedron,
 extern void free_length_spectrum(MultiLength *spectrum);
 /*
  *	Deallocates the memory used to store the length spectrum.
+ */
+
+/*
+ *		Added 2007/11/12:
+ */
+	void ortholengths(	Triangulation	*manifold,			//	input
+						double			tiling_radius,		//	input
+						Complex			*shortest_geodesic,	//	output
+						double			*tube_radius,		//	output
+						unsigned int	*num_ortholengths,	//	output
+						Complex			**ortholengths,		//	output
+						Complex			**basings);			//	output
+
+	void free_ortholengths(	Complex			**ortholengths,
+							Complex			**basings);
+/*
+ *	ortholengths() doesn't test its tiling_radius and so doesn't provide
+ *	a rigorous guarantee of anything, but in practice it works.
  */
 
 
@@ -2014,23 +2068,6 @@ extern Triangulation *triangulate_punctured_torus_bundle(
  *	is at least two for an orientable bundle, or at least one for a
  *	nonorientable bundle), triangulates the complement and returns
  *	a pointer to it.  Otherwise returns NULL.
- */
-
-
-/************************************************************************/
-/*																		*/
-/*							rehydrate_census.c							*/
-/*																		*/
-/************************************************************************/
-
-extern void rehydrate_census_manifold(
-								TersestTriangulation	tersest,
-								int						which_census,
-								int						which_manifold,
-								Triangulation			**manifold);
-/*
- *	Rehydrates a census manifold from a tersest description, resolving
- *	any ambiguities in the choice of peripheral curves for the cusps.
  */
 
 
@@ -2356,38 +2393,6 @@ extern Triangulation *terse_to_tri(TerseTriangulation *tt);
 extern void free_terse_triangulation(TerseTriangulation *tt);
 /*
  *	Releases the memory used to store a TerseTriangulation.
- */
-
-
-/************************************************************************/
-/*																		*/
-/*						tersest_triangulation.c							*/
-/*																		*/
-/************************************************************************/
-
-extern void terse_to_tersest(	TerseTriangulation		*terse,
-								TersestTriangulation	tersest);
-/*
- *	Converts a TerseTriangulation to a TersestTriangulation.
- */
-
-extern void tersest_to_terse(	TersestTriangulation	tersest,
-								TerseTriangulation		**terse);
-/*
- *	Converts a TersestTriangulation to a TerseTriangulation.
- *	Allocates space for the result.
- */
-
-extern void tri_to_tersest(		Triangulation			*manifold,
-								TersestTriangulation	tersest);
-/*
- *	Composes tri_to_terse() and terse_to_tersest().
- */
-
-extern void tersest_to_tri(		TersestTriangulation	tersest,
-								Triangulation			**manifold);
-/*
- *	Composes tersest_to_terse() and terse_to_tri().
  */
 
 

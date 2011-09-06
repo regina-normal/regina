@@ -41,7 +41,7 @@
  *	the "far" side of the slicing plane are discarded, a new face is
  *	introduced, and we know for sure that the surface of the polyhedron
  *	is still a combinatorial ball.  If the slicing plane does not divide
- *	the surface of the polyhedron into two combinatorial disk (as could
+ *	the surface of the polyhedron into two combinatorial disks (as could
  *	happen when the vertices are so close together that roundoff error
  *	introduces inconsistent combinatorial relations), the program gives up
  *	and returns NULL.
@@ -415,7 +415,7 @@ static void make_cube(
 	WEEdge		*initial_edges[12];
 	WEFace		*initial_faces[6];
 
-	const static int evdata[12][2] =
+	static const int evdata[12][2] =
 		{
 			{0, 4},
 			{2, 6},
@@ -430,7 +430,7 @@ static void make_cube(
 			{2, 3},
 			{6, 7}
 		};
-	const static int eedata[12][2][2] =
+	static const int eedata[12][2][2] =
 		{
 			{{ 8,  4}, { 9,  6}},
 			{{ 4, 10}, { 6, 11}},
@@ -445,7 +445,7 @@ static void make_cube(
 			{{ 1,  4}, { 3,  5}},
 			{{ 6,  1}, { 7,  3}}
 		};
-	const static int efdata[12][2] =
+	static const int efdata[12][2] =
 		{
 			{2, 4},
 			{4, 3},
@@ -460,7 +460,7 @@ static void make_cube(
 			{3, 0},
 			{1, 3}
 		};
-	const static int fdata[6] = {4, 6, 0, 1, 0, 2};
+	static const int fdata[6] = {4, 6, 0, 1, 0, 2};
 
 
 	/*
@@ -652,7 +652,7 @@ static FuncResult intersect_with_halfspaces(
 		 *	guard against errors, let's check that this really is the case.
 		 */
 		if (o31_equal(matrix_pair->m[0], matrix_pair->m[1], MATRIX_EPSILON) == FALSE)
-			uFatalError("intersect_with_halfspaces", "Dirichlet_construction");
+			uFatalError("intersect_with_halfspaces", "Dirichlet_construction.c");
 
 		/*
 		 *	For documentation on these operations,
@@ -1004,7 +1004,7 @@ static Boolean positive_vertices_exist(
 	}
 
 	if (negative_vertices_exist == FALSE)
-		uFatalError("positive_vertices_exist", "Dirichlet_construction");
+		uFatalError("positive_vertices_exist", "Dirichlet_construction.c");
 
 	return positive_vertices_exist;
 }
@@ -1122,7 +1122,7 @@ void split_edge(
 	if (left_neighbor->v[tail] == new_edge->v[tail])
 		left_neighbor->e[tail][right] = new_edge;
 	else
-		uFatalError("split_edge", "Dirichlet_construction");
+		uFatalError("split_edge", "Dirichlet_construction.c");
 
 	right_neighbor = new_edge->e[tail][right];
 	if (right_neighbor->v[tip] == new_edge->v[tail])
@@ -1131,7 +1131,7 @@ void split_edge(
 	if (right_neighbor->v[tail] == new_edge->v[tail])
 		right_neighbor->e[tail][left] = new_edge;
 	else
-		uFatalError("split_edge", "Dirichlet_construction");
+		uFatalError("split_edge", "Dirichlet_construction.c");
 
 	/*
 	 *	Set the fields for the new vertex.
@@ -1653,7 +1653,7 @@ static FuncResult check_topology_of_cut(
 	 */
 
 	if (starting_edge == NULL)
-		uFatalError("check_topology_of_cut", "Dirichlet_construction");
+		uFatalError("check_topology_of_cut", "Dirichlet_construction.c");
 
 	/*
 	 *	Traverse the cut locus, beginning at the starting_edge.
@@ -1873,7 +1873,7 @@ static void install_new_face(
 				if (left_edge->v[tail] == tip_vertex)
 					left_edge->e[tail][left] = right_edge;
 				else
-					uFatalError("install_new_face", "Dirichlet_construction");
+					uFatalError("install_new_face", "Dirichlet_construction.c");
 
 				/*
 				 *	Let the right_edge see the left_edge.
@@ -1884,7 +1884,7 @@ static void install_new_face(
 				if (right_edge->v[tail] == tip_vertex)
 					right_edge->e[tail][right] = left_edge;
 				else
-					uFatalError("install_new_face", "Dirichlet_construction");
+					uFatalError("install_new_face", "Dirichlet_construction.c");
 			}
 
 			/*
@@ -2617,7 +2617,7 @@ static FuncResult pare_mated_face(
 		 *	First an error check.
 		 */
 		if (edge->f[left] == edge->f[right])
-			uFatalError("pare_mated_face", "Dirichlet_construction");
+			uFatalError("pare_mated_face", "Dirichlet_construction.c");
 
 		/*
 		 *	Find the element alpha defined above.
@@ -2999,7 +2999,7 @@ static void count_cells(
 	 */
 
 	if (polyhedron->num_vertices - polyhedron->num_edges + polyhedron->num_faces != 2)
-		uFatalError("count_cells", "Dirichlet_construction");
+		uFatalError("count_cells", "Dirichlet_construction.c");
 }
 
 
@@ -3024,7 +3024,7 @@ static void sort_faces(
 	 *	the polyhedron have at least four faces.
 	 */
 	if (polyhedron->num_faces < 4)
-		uFatalError("sort_faces", "Dirichlet_construction");
+		uFatalError("sort_faces", "Dirichlet_construction.c");
 
 	/*
 	 *	Allocate an array to hold the addresses of the WEFaces.
@@ -3047,7 +3047,7 @@ static void sort_faces(
 	 *	the right number of elements.
 	 */
 	if (i != polyhedron->num_faces)
-		uFatalError("sort_faces", "Dirichlet_construction");
+		uFatalError("sort_faces", "Dirichlet_construction.c");
 
 	/*
 	 *	Sort the array of pointers.
