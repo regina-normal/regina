@@ -53,7 +53,7 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
 void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     QString docDir =
         QFile::decodeName(regina::NGlobalDirs::engineDocs().c_str());
-    QString index = docDir + "/modules.html";
+    QString index = docDir + "/index.html";
 
     if (QFileInfo(index).exists()) {
         // If we're on a mac, just use the default Mac browser.
@@ -68,7 +68,7 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
                 "<qt>The Python reference could "
                 "not be opened from within KDE.  "
                 "Please try pointing your web browser to "
-                "<tt>%1/modules.html</tt>.</qt>").arg(docDir));
+                "<tt>%1/index.html</tt>.</qt>").arg(docDir));
 #endif
     } else
         KMessageBox::sorry(topLevelWindow, i18n(

@@ -42,6 +42,8 @@
  *  entities in the C++ calculation engine, as well as how these can
  *  be accessed through Python.
  *
+ *  To start, try visiting the <a href="modules.html">Modules</a> page.
+ *
  *  <h3>Citation</h3>
  *
  *  If you find Regina useful in your research, please consider citing it as
