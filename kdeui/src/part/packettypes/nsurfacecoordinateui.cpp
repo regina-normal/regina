@@ -631,8 +631,11 @@ void NSurfaceCoordinateUI::refreshLocal() {
 
     // Tidy up.
     updateActionStates();
-    if (coordsChanged)
+    if (coordsChanged) {
+        currentlyResizing = true;
         table->header()->resizeSections(QHeaderView::ResizeToContents);
+        currentlyResizing = false;
+    }
 }
 
 void NSurfaceCoordinateUI::refresh() {

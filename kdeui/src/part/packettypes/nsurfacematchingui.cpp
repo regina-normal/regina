@@ -148,8 +148,11 @@ void NSurfaceMatchingUI::refresh() {
     model->rebuild();
 
     // Resize if we haven't done this before.
-    if (! everRefreshed)
+    if (! everRefreshed) {
+        currentlyAutoResizing = true;
         table->header()->resizeSections(QHeaderView::ResizeToContents);
+        currentlyAutoResizing = false;
+    }
 
     // Tidy up.
     setDirty(false);
