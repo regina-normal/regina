@@ -16,6 +16,8 @@ Have a play with the packets in this file to see what Regina can do.
 
 If you ever want to know what some element of the user interface means (such as a button or a text box), just press Shift-F1 and click on the thing that you want to know more about.  You can try this now with the tree on the left, or the buttons in the toolbar above.  If you ever forget the Shift-F1 shortcut, you can find it in the menu under Help -&gt; What's This?
 
+For more detailed help, try the Regina Handbook (in the Help menu, or just press F1).  The handbook includes lots of screenshots and talks you through how to do many different things.
+
 Any questions?  Just mail us at regina-user@lists.sourceforge.net (or if you prefer, mail the authors directly; see Help -&gt; About for our email addresses).
 
 Enjoy!
