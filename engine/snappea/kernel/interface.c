@@ -367,15 +367,15 @@ void get_tet_shape(
 	Triangulation	*manifold,
 	int				which_tet,
 	Boolean			fixed_alignment,
-	double			*shape_rect_real,		//	may be NULL
-	double			*shape_rect_imag,		//	may be NULL
-	double			*shape_log_real,		//	may be NULL
-	double			*shape_log_imag,		//	may be NULL
-	int				*precision_rect_real,	//	may be NULL
-	int				*precision_rect_imag,	//	may be NULL
-	int				*precision_log_real,	//	may be NULL
-	int				*precision_log_imag,	//	may be NULL
-	Boolean			*is_geometric)			//	may be NULL
+	double			*shape_rect_real,		/*	may be NULL */
+	double			*shape_rect_imag,		/*	may be NULL */
+	double			*shape_log_real,		/*	may be NULL */
+	double			*shape_log_imag,		/*	may be NULL */
+	int				*precision_rect_real,	/*	may be NULL */
+	int				*precision_rect_imag,	/*	may be NULL */
+	int				*precision_log_real,	/*	may be NULL */
+	int				*precision_log_imag,	/*	may be NULL */
+	Boolean			*is_geometric)			/*	may be NULL */
 {
 	int				count,
 					the_coordinate_system;
