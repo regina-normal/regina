@@ -65,12 +65,14 @@ class NTriangulation;
  * calculation engine and the SnapPea kernel.  Regina code should not
  * interact with the SnapPea kernel other than through this class.
  *
- * Portions of the SnapPea kernel have been built into Regina as of
- * version 4.2 (July 2005).  SnapPea is copyright (c) 1991-2005 by Jeff Weeks,
- * and is distributed under the terms of the GNU General Public License.
+ * SnapPea was written by Jeff Weeks, and is now maintained by both
+ * Jeff Weeks and Nathan Dunfield at http://www.math.uic.edu/t3m/.
+ * The SnapPeaKernel is distributed under the terms of the GNU General
+ * Public License, version 2 or any later version, as published by the
+ * Free Software Foundation.
  *
- * See http://www.geometrygames.org/SnapPea/ for further information on
- * SnapPea.
+ * See http://www.math.uic.edu/t3m/SnapPy/ for further information on
+ * SnapPea and its successor SnapPy.
  *
  * \testpart
  */
