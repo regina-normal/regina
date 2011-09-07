@@ -222,6 +222,25 @@ ELSE(DISABLE_KDEUI)
     # makefiles use SharedMimeInfo macros.
     ADD_SUBDIRECTORY(kdeui)
     MESSAGE(STATUS "KDE user interface enabled")
+
+    # Check that the install prefix is sane (i.e., the same as KDE's).
+    get_filename_component(REGINA_KDEBIN "${KDE4_KDECONFIG_EXECUTABLE}" PATH)
+    get_filename_component(REGINA_KDEPREFIX "${REGINA_KDEBIN}" PATH)
+    IF (NOT CMAKE_INSTALL_PREFIX STREQUAL REGINA_KDEPREFIX)
+      MESSAGE("")
+      MESSAGE("KDE seems to use the installed prefix: ${REGINA_KDEPREFIX}")
+      MESSAGE("Your installation prefix is: ${CMAKE_INSTALL_PREFIX}\n")
+      MESSAGE("Regina needs to be installed with the same prefix as KDE.")
+      MESSAGE("Try passing: -DCMAKE_INSTALL_PREFIX=${REGINA_KDEPREFIX}")
+      MESSAGE("If you really want a different prefix, pass: -DIGNORE_PREFIX=1"\n)
+      IF (IGNORE_PREFIX)
+        MESSAGE(WARNING
+          "You passed IGNORE_PREFIX=1: continuing anyway as requested.")
+      ELSE (IGNORE_PREFIX)
+        MESSAGE(FATAL_ERROR
+          "Stopping the build so you can resolve the prefix issue (see above).")
+      ENDIF (IGNORE_PREFIX)
+    ENDIF (NOT CMAKE_INSTALL_PREFIX STREQUAL REGINA_KDEPREFIX)
   ENDIF(KDE4_FOUND)
 ENDIF(DISABLE_KDEUI)
 MACRO_LOG_FEATURE(KDE4_FOUND
