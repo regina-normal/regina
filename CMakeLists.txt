@@ -1,6 +1,11 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 PROJECT (regina)
-SET (PACKAGE_NAME regina)
+
+# Let the user override the package name.
+IF(NOT PACKAGE_NAME)
+  SET (PACKAGE_NAME regina)
+ENDIF(NOT PACKAGE_NAME)
+
 SET (PACKAGE_PRETTY_NAME Regina)
 # Look here for Find___.cmake modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
