@@ -102,7 +102,7 @@ struct WEVertex
 	 *		must always contain the polyhedron's initial position,
 	 *		not its rotated position.
 	 */
-//UNUSED IN OPENGL INTERFACE
+/*UNUSED IN OPENGL INTERFACE*/
 	O31Vector		xx;
 
 	/*
@@ -169,9 +169,10 @@ struct WEVertex
 
 struct WEEdge
 {
-//	2007-12-10  If I had this to do over, I'd use "half-edges" instead
-//	of whole edges.  Half-edges may always be oriented counterclockwise,
-//	which would simply the code.
+/*	2007-12-10  If I had this to do over, I'd use "half-edges" instead
+ *	of whole edges.  Half-edges may always be oriented counterclockwise,
+ *	which would simply the code.
+ */
 
 	/*
 	 *	v[tail] and v[tip] are the vertices incident to the
@@ -351,7 +352,7 @@ struct WEFace
 	 *	The visible field is used while displaying the WEPolyhedron to
 	 *	keep track of whether the face is visible to the user.
 	 *	(This field is likely to be irrelevant in a 3D graphics environment
-	 //	like OpenGL.)
+	 * 	like OpenGL.)
 	 */
 	Boolean			visible;
 

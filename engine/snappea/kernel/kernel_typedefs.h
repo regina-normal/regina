@@ -465,7 +465,7 @@ typedef struct extra Extra;
 #ifdef __cplusplus
 
 #define CDECL	_cdecl
-//#define CDECL	cdecl
+/*#define CDECL	cdecl*/
 
 #else
 
