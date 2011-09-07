@@ -169,7 +169,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     // Read the current preferences from the main window.
     generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
     generalPrefs->cbAutoFileExtension->setChecked(prefSet.autoFileExtension);
-    generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
+    // generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
     generalPrefs->cbTipOfDay->setChecked(
@@ -287,7 +287,7 @@ void ReginaPreferences::slotApply() {
 
     prefSet.autoDock = generalPrefs->cbAutoDock->isChecked();
     prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
-    prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
+    // prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
     KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
     prefSet.handbookInKHelpCenter = generalPrefs->cbHandbookInKHelpCenter->
         isChecked();
@@ -626,11 +626,13 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
         "the main window instead of opening them in new windows."));
     layout->addWidget(cbAutoDock);
 
+    /*
     cbDisplayTagsInTree = new QCheckBox(i18n("Display tags in packet tree"));
     cbDisplayTagsInTree->setEnabled(false);
     cbDisplayTagsInTree->setWhatsThis(i18n("Show full details of any "
         "packet tags directly within the packet tree."));
     layout->addWidget(cbDisplayTagsInTree);
+    */
 
     // Set up the tree jump size.
     QBoxLayout* box = new QHBoxLayout();
