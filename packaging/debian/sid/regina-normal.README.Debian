@@ -28,4 +28,4 @@ regina-normal-dev.
 Components of Regina that are designed to run on clusters can be found
 in the separate package regina-normal-mpi.
 
- -- Ben Burton <bab@debian.org>, Wed, 10 Dec 2008 21:34:16 +1100
+ -- Ben Burton <bab@debian.org>, Wed, 07 Sep 2011 10:30:10 +1000
