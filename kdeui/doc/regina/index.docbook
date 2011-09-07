@@ -67,6 +67,7 @@
    (Groups, Algorithms and Programming)</application>">
   <!ENTITY gaplongurl "<ulink
    url='http://www.gap-system.org/'>&gaplong;</ulink>">
+  <!ENTITY gnome "<productname><acronym>GNOME</acronym></productname>">
   <!ENTITY gnu "<acronym>GNU</acronym>">
   <!ENTITY graphviz "<application>Graphviz</application>">
   <!ENTITY graphvizurl "<ulink url='http://www.graphviz.org/'>&graphviz;</ulink>">

@@ -14,7 +14,7 @@
   <title>General Options</title>
 
   <para>
-   The following options are available on the general options page.
+   You can change the following general options:
   </para>
 
   <para>
@@ -27,43 +27,74 @@
 
   <glosslist>
    <glossentry>
-    <glossterm>Automatic file extension</glossterm>
+    <glossterm><guilabel>Automatic file extension</guilabel></glossterm>
     <glossdef><para>
-     This option can be toggled on or off; it represents whether a
-     filename is modified before a &regina; data file is saved.
-     When on, if the user does not specify a filename extension then the
-     default extension of <filename>.rga</filename> will be appended.
+     This affects what happens when you save your data but do not supply
+     a filename extension.
+     If checked, &regina; will add the default extension
+     <filename>.rga</filename>.
+     If unchecked, &regina; will leave the filename exactly as you typed it.
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Automatic packet docking</glossterm>
+    <glossterm><guilabel>Automatic packet docking</guilabel></glossterm>
     <glossdef><para>
-     This option can be toggled on or off.  When off, any new packet
-     viewers (created when you <link linkend="packet-view">view or edit
-     a packet</link>) will be opened in
-     separate floating windows.  When on, new packet viewers will be
-     docked into the right-hand side of the
-     <link linkend="shot-packettree">main &regina; window</link>
-     if possible.
+     This affects what happens each time you
+     <link linkend="packet-view">open a packet for viewing</link>.
+     If checked, &regina; will open the new packet in the right-hand
+     part of the main &regina; window.
+     If unchecked, &regina; will open the new packet in a separate
+     floating window.
+     See <link linkend="packet-move">floating packets in
+     separate windows</link> for further discussion.
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Display icon</glossterm>
+    <glossterm><guilabel>Packet tree jump size</guilabel></glossterm>
     <glossdef><para>
-     This option can be toggled on or off; it represents whether the
-     large &regina; icon will be displayed beneath the packet tree in
-     the main window.
+     Specifies how many steps a packet moves through the tree when
+     you select
+     <menuchoice>
+      <guimenu>Packet Tree</guimenu>
+      <guimenuitem>Move</guimenuitem>
+      <guimenuitem>Jump Up</guimenuitem>
+     </menuchoice>
+     or
+     <menuchoice>
+      <guimenu>Packet Tree</guimenu>
+      <guimenuitem>Move</guimenuitem>
+      <guimenuitem>Jump Down</guimenuitem>
+     </menuchoice>.
+     See <link linkend="packet-move">moving packets around</link> for
+     further discussion.
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Packet tree jump size</glossterm>
+    <glossterm><guilabel>Show tip of the day</guilabel></glossterm>
     <glossdef><para>
-     This specifies how many steps a packet moves within the tree when
-     the <guimenuitem>Jump Up</guimenuitem> or
-     <guimenuitem>Jump Down</guimenuitem> menu items are selected
-     (or the corresponding toolbar buttons pressed).
-     See the notes on <link linkend="packet-move">moving packets around</link>
-     for details.
+     If checked, &regina; will offer occasional tips and hints on
+     startup.  Some tips describe how to use &regina;, and some outline
+     advanced features that you might not be aware of.
+    </para><para>
+     You can view these tips at any time by selecting
+     <menuchoice>
+      <guimenu>Help</guimenu>
+      <guimenuitem>Tip of the Day</guimenuitem>
+     </menuchoice>
+     from the menu.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm><guilabel>Open handbook in &khelpcenter;</guilabel></glossterm>
+    <glossdef><para>
+     This affects how &regina; opens the users' handbook (which you are
+     reading now).
+     If checked, &regina; will open the handbook in the
+     &khelpcenter; (which is probably installed if you use a &kde;
+     desktop, but which might not be installed if you use &gnome; or
+     &macosx;).
+     If unchecked, &regina; will open the handbook in your default web
+     browser.
     </para></glossdef>
    </glossentry>
   </glosslist>
@@ -73,7 +104,8 @@
   <title>Triangulation Options</title>
 
   <para>
-   The following options are available on the triangulation page.
+   You can change the following options for how &regina; works with
+   triangulations:
   </para>
 
   <para>
@@ -86,32 +118,31 @@
 
   <glosslist>
    <glossentry>
-    <glossterm>Default top-level tab</glossterm>
+    <glossterm><guilabel>Default top-level tab</guilabel></glossterm>
     <glossdef><para>
-     This specifies which of the many tabs in the triangulation viewer
-     will be made visible when a new triangulation viewer is first opened.
+     Specifies which tab in the
+     <link linkend="tri-analysis">triangulation viewer</link>
+     will be initially visible when you open a triangulation for viewing.
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Default skeleton tab</glossterm>
+    <glossterm><guilabel>Default skeleton tab</guilabel></glossterm>
     <glossdef><para>
-     Within the triangulation viewer, the <guilabel>Skeleton</guilabel>
-     tab contains several smaller tabs of its own.  This option specifies which
-     of these smaller tabs will be made visible when the
-     <guilabel>Skeleton</guilabel> tab is first selected.
+     Specifies which sub-tab will be initially visible
+     when you switch to the <guilabel>Skeleton</guilabel> tab in the
+     <link linkend="tri-skeleton">triangulation viewer</link>.
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Default algebra tab</glossterm>
+    <glossterm><guilabel>Default algebra tab</guilabel></glossterm>
     <glossdef><para>
-     Likewise, within the triangulation viewer, the <guilabel>Algebra</guilabel>
-     tab contains many smaller tabs of its own.  This option specifies which
-     of these smaller tabs will be made visible when the
-     <guilabel>Algebra</guilabel> tab is first selected.
+     Specifies which sub-tab will be initially visible
+     when you switch to the <guilabel>Algebra</guilabel> tab in the
+     <link linkend="tri-algebra">triangulation viewer</link>.
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Surface calculation threshold</glossterm>
+    <glossterm><guilabel>Surface calculation threshold</guilabel></glossterm>
     <glossdef>
      <para>
       This determines how many tetrahedra a triangulation must have
@@ -130,10 +161,10 @@
     </glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>&gap; executable</glossterm>
+    <glossterm><guilabel>&gap; executable</guilabel></glossterm>
     <glossdef>
      <para>
-      This tells &regina; where to find &gaplongurl;.  &gap; is not
+      Tells &regina; where to find &gaplongurl;.  &gap; is not
       required by &regina;, but if it is installed then it can help
       simplify group presentations.  See the
       <link linkend="tri-algebra-fundgroup">fundamental group</link>
@@ -150,10 +181,10 @@
     </glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>&graphviz; executable</glossterm>
+    <glossterm><guilabel>&graphviz; executable</guilabel></glossterm>
     <glossdef>
      <para>
-      This tells &regina; where to find &graphvizurl;.  As with &gap;,
+      Tells &regina; where to find &graphvizurl;.  As with &gap;,
       &graphviz; is not required by &regina;, but if it is not installed
       then &regina; cannot display face pairing graphs.
       See the <link linkend="tri-skeleton-facegraph">face pairing graph</link>
@@ -205,7 +236,7 @@
 
   <glosslist>
    <glossentry>
-    <glossterm>Default coordinate system</glossterm>
+    <glossterm><guilabel>Default coordinate system</guilabel></glossterm>
     <glossdef><para>
      This specifies which coordinate system will be offered as the
      default selection when a new normal surface list is created.
@@ -215,7 +246,8 @@
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Warn before generating non-embedded surfaces</glossterm>
+    <glossterm><guilabel>Warn before generating non-embedded
+    surfaces</guilabel></glossterm>
     <glossdef><para>
      If this option is checked, &regina; will ask for confirmation
      whenever you try to enumerate a list of normal surfaces without
@@ -228,14 +260,14 @@
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Default top-level tab</glossterm>
+    <glossterm><guilabel>Default top-level tab</guilabel></glossterm>
     <glossdef><para>
      This specifies which of the many available tabs will be made visible
      when a new normal surface list viewer is first opened.
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Default compatibility matrix</glossterm>
+    <glossterm><guilabel>Default compatibility matrix</guilabel></glossterm>
     <glossdef><para>
      This specifies which matrix will be displayed first when the user
      opens the <guilabel>Compatibility</guilabel> tab for a normal
@@ -245,7 +277,7 @@
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Compatibility matrix threshold</glossterm>
+    <glossterm><guilabel>Compatibility matrix threshold</guilabel></glossterm>
     <glossdef><para>
      Compatibility matrices will not be generated automatically for
      lists that contain a very large number of normal surfaces.
@@ -311,7 +343,7 @@
 
   <glosslist>
    <glossentry>
-    <glossterm>Use embedded viewer if possible</glossterm>
+    <glossterm><guilabel>Use embedded viewer if possible</guilabel></glossterm>
     <glossdef><para>
      If this box is checked, &regina; will search for an embedded
      viewer that it can use.  If it cannot find anything suitable,
@@ -320,7 +352,7 @@
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>External &pdf; viewer</glossterm>
+    <glossterm><guilabel>External &pdf; viewer</guilabel></glossterm>
     <glossdef>
      <para>
       If we are using an external viewer, this option specifies the command
@@ -348,7 +380,8 @@
     </glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Automatically close external viewers</glossterm>
+    <glossterm><guilabel>Automatically close external
+     viewers</guilabel></glossterm>
     <glossdef>
      <para>
       Because external viewers run as standalone applications, they do not
@@ -425,7 +458,7 @@
 
   <glosslist>
    <glossentry>
-    <glossterm>Auto-indent</glossterm>
+    <glossterm><guilabel>Auto-indent</guilabel></glossterm>
     <glossdef><para>
      If this option is set, each new command line will be automatically
      indented to match the previous line.  The indent is inserted into the
@@ -434,7 +467,7 @@
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Spaces per tab</glossterm>
+    <glossterm><guilabel>Spaces per tab</guilabel></glossterm>
     <glossdef><para>
      Each command line is indented using spaces only, not tabs.  This option
      controls the number of spaces that are inserted into a command line
@@ -511,7 +544,7 @@
 
   <glosslist>
    <glossentry>
-    <glossterm>Diagnostic messages</glossterm>
+    <glossterm><guilabel>Diagnostic messages</guilabel></glossterm>
     <glossdef>
      <para>
       This specifies whether the &snappea; kernel should write
@@ -539,7 +572,7 @@
     </glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Allow closed triangulations</glossterm>
+    <glossterm><guilabel>Allow closed triangulations</guilabel></glossterm>
     <glossdef>
      <para>
       This specifies whether &regina; is allowed to pass closed
