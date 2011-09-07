@@ -4,7 +4,7 @@
  <sect1 id="licenses">
   <title>License Details</title>
   <para>
-   &regina; &ndash; A Normal Surface Theory Calculator
+   &regina; &ndash; Software for 3-manifold topology and normal surface theory
   </para>
   <para>
    &copyrightnotice;
@@ -14,9 +14,8 @@
   <title>Citation</title>
    <para>
     If you find &regina; useful in your research, please consider
-    citing it as you would any other paper that you use.  See the
-    section on <link linkend="citing">citing &regina;</link> for a
-    suggested form of reference.
+    citing it as you would any other paper that you use.
+    <link linkend="citing">See here</link> for a suggested form of reference.
    </para>
   </sect2>
 
@@ -25,7 +24,7 @@
    <para>
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at
+    the Free Software Foundation; either version&nbsp;2 of the License, or (at
     your option) any later version.
    </para>
    <para>
@@ -43,30 +42,53 @@
   </sect2>
 
   <sect2 id="licenses-snappea">
-   <title>SnapPea Kernel</title>
+   <title>&snappea; Kernel</title>
    <para>
-    Since version &snappeaintro;, &regina; includes portions of the
-    &snappea; kernel which it uses for certain geometric calculations.
-    &snappea; is copyright &copy; 1991&ndash;2005 by Jeff Weeks, who has
-    graciously given permission for it to be distributed under the
-    terms of the &gnu; General Public License as described above.
+    &regina; includes portions of the &snappea; kernel, which it uses for some
+    geometric calculations.
+    &snappea; was written by Jeff Weeks, and is now maintained by both
+    Jeff Weeks and Nathan Dunfield.
+    The SnapPeaKernel is distributed under the terms of the &gnu; General
+    Public License, version&nbsp;2 or any later version, as published by the
+    Free Software Foundation.
    </para>
   </sect2>
 
   <sect2 id="licenses-orb">
    <title>Orb Kernel</title>
    <para>
-    Since version &orbintro;, &regina; includes snippets of code from
-    &orb; for use in importing and exporting files in Orb / Casson format.
-    &orb; is based on &snappea; (see above) with additional code written by
-    Damian Heard, who has also given permission for his code to be
-    distributed under the terms of the &gnu; General Public License.
+    &regina; includes snippets of code from &orb;, for use in importing and
+    exporting files in Orb / Casson format.  &orb; is based on &snappea;
+    (see above) with additional code written by Damian Heard, who has also
+    given permission for his code to be distributed under the terms of the
+    &gnu; General Public License.
+   </para>
+  </sect2>
+
+  <sect2 id="licenses-python">
+   <title>Python Icons</title>
+   <para>
+    The python icons are based on applications-python.svg as shipped with
+    the humanity-icon-theme package in Ubuntu&nbsp;11.04.  The contents of this
+    Ubuntu package are licensed under the
+    &gnu; General Public License version&nbsp;2.
+   </para>
+  </sect2>
+
+  <sect2 id="licenses-oxygen">
+   <title>Oxygen Icons</title>
+   <para>
+    The packet-view icons have been modified from the Oxygen icon set for
+    &kde4;.
+    The Oxygen icons are dual-licensed under the Creative Common
+    Attribution-ShareAlike&nbsp;3.0 License or the GNU Library General Public
+    License.
    </para>
   </sect2>
  </sect1>
 
  <sect1 id="acknowledgements">
-  <title>Acknowledgements</title>
+  <title>Authors and Acknowledgements</title>
   <para>
    The primary developers of &regina; are:
    <itemizedlist>
