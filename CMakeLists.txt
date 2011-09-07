@@ -5,6 +5,22 @@ SET (PACKAGE_PRETTY_NAME Regina)
 # Look here for Find___.cmake modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
+# Give packagers a way of insisting that every optional component is found.
+# Set PACKAGING_MODE=1 to make every component compulsory.
+# Set PACKAGING_MODE=1 and PACKAGING_NO_MPI=1 to make every component
+# compulsory except for the MPI utilities.
+IF(PACKAGING_MODE)
+  SET(REGINA_MANDATORY TRUE)
+  IF(PACKAGING_NO_MPI)
+    SET(REGINA_MANDATORY_MPI FALSE)
+  ELSE(PACKAGING_NO_MPI)
+    SET(REGINA_MANDATORY_MPI TRUE)
+  ENDIF(PACKAGING_NO_MPI)
+ELSE(PACKAGING_MODE)
+  SET(REGINA_MANDATORY FALSE)
+  SET(REGINA_MANDATORY_MPI FALSE)
+ENDIF(PACKAGING_MODE)
+
 # For pretty logging of optional features at the end of the cmake run:
 INCLUDE(MacroLogFeature)
 
@@ -122,13 +138,15 @@ FIND_PACKAGE(MPI)
 MACRO_LOG_FEATURE(MPI_FOUND
   "MPI"
   "Build command-line tools for high-performance computing"
-  "http://www.open-mpi.org/")
+  "http://www.open-mpi.org/"
+  REGINA_MANDATORY_MPI)
 
 FIND_PACKAGE(Doxygen)
 MACRO_LOG_FEATURE(DOXYGEN_FOUND
   "Doxygen"
   "Generate C++/Python API docs"
-  "http://www.doxygen.org/")
+  "http://www.doxygen.org/"
+  REGINA_MANDATORY)
 
 # Test suite
 ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
@@ -165,7 +183,8 @@ ENDIF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
 MACRO_LOG_FEATURE(BOOST_PYTHON_FOUND
   "Boost.Python"
   "Build Python bindings for Regina"
-  "http://www.boost.org/")
+  "http://www.boost.org/"
+  REGINA_MANDATORY)
 
 # TODO: Make this option show up in cmake -i.
 IF(DISABLE_KDEUI)
@@ -220,7 +239,8 @@ ENDIF (CPPUNIT_INCLUDE_DIR AND CPPUNIT_LIBRARY)
 MACRO_LOG_FEATURE(CPPUNIT_FOUND
   "CppUnit"
   "Build the full test suite for Regina"
-  "http://sourceforge.net/projects/cppunit/")
+  "http://sourceforge.net/projects/cppunit/"
+  REGINA_MANDATORY)
 
 # Miscellaneous subdirectories
 ADD_SUBDIRECTORY(docs)
