@@ -7,36 +7,20 @@
     link="#0000EE" vlink="#551A8B" alink="#FF0000">
 
 <center>
-
-<img src="title.jpg" vspace=10
-  alt="Regina - A Normal Surface Theory Calculator">
+<img src="title.png" vspace=10
+  alt="Regina: Software for 3-manifold topology and normal surface theory">
+</center>
 <p>
-<table class="title" cellspacing=0 width="100%">
-<tbody>
-<tr><td align="center" colspan=2>
-  <h3>Regina<br>
-  A normal surface theory calculator<br>
-  Copyright &copy; 1999-2009, Ben Burton</h3>
-</td></tr>
-<tr><td align="left" valign="middle">
-  <a name="contents">
-  <i>Last updated: 28 September 2009</i><br>
-  <i>Current version: 4.6</i>
-  </a>
-</td>
-<td align="right">
 <a href="http://sourceforge.net/projects/regina/"><img
   src="http://sourceforge.net/sflogo.php?group_id=19698&type=1"
   alt="SourceForge" align="right" hspace=5 border=0></a>
-</td></tr>
-</tbody>
-</table>
-
+Last updated: <i>10 September 2011</i><br>
+Current version: <i>4.90</i>
 <p>
-
+<center>
 <table class="contentswrapper" cellspacing=0>
 <tbody>
-<tr><th>Contents</th><th>Extracts from the users' handbook</th></tr>
+<tr><th><a name="contents">Contents</a></th><th>Extracts from the users' handbook</th></tr>
 <tr><td valign="top" rowspan=3>
     <table class="contents" cellspacing=0><tbody>
     <tr><td><a href="#news">News</a></td></tr>
@@ -45,7 +29,7 @@
     <tr><td><a href="#download">Download</a></td></tr>
     <tr><td><a href="#docs">Documentation</a></td></tr>
     <tr><td><a href="#announce">Announcement mailing list</a></td></tr>
-    <tr><td><a href="#license">License and acknowledgements</a></td></tr>
+    <tr><td><a href="#license">Authors and license</a></td></tr>
     <tr><td><a href="#contact">Contact / Comments / Suggestions</a></td></tr>
     </tbody></table>
 </td>
@@ -74,31 +58,25 @@
 
 <h2><a name="news">News</a></h2>
 
-<i>28 September 2009:</i>
-Supporting data is now available for the proof that the
-<a href="http://arxiv.org/abs/0909.4625/">Weber-Seifert dodecahedral
-space is non-Haken</a>.  See the
-<a href="data.html#weber-seifert">data page</a> for details.
+<i>10 September 2011:</i>
+<b>Version 4.90 is out</b>, and it's been a long time coming!
+The user interface has been ported from KDE&nbsp;3 to KDE&nbsp;4:
+this means you can finally install Regina on newer GNU/Linux distributions,
+and MacOS&nbsp;X users will find a much more native look-and-feel.
+There are also lots of changes under the hood to make things faster,
+cleaner and safer: see the <a href="docs/history.html">release notes</a> for
+a full list of new features, optimisations and updates.
 <p>
-<i>15 July 2009:</i>
-Packages are now available for Fedora&nbsp;11, which was released last month.
-<p>
-<i>16 May 2009:</i>
-Version 4.6 is out!  There are some big changes here:
-summary and compatibility tabs for normal surfaces, quadrilateral-octagon
-coordinates, stronger triangulation simplification, cutting along surfaces,
-<i>much</i> faster enumeration of surfaces in standard coordinates, and more.
-See the <a href="docs/history.html">release notes</a> for a full list of
-new features, optimisations and fixes.
+The user interface has undergone a massive renovation in this release,
+and so we would be grateful if you could <a href="#contact">please
+contact us</a> with reports on anything that doesn't work (or,
+hopefully, reports that everything does!).
 <p>
 As usual, packages are available in the <a href="#download">download section</a>
 for GNU/Linux and MacOS&nbsp;X.
 <p>
-Special thanks must go to the University of Victoria (BC, Canada) and
-Ryan Budney for their hospitality and support, without which the list above
-would certainly be smaller.  Thanks also to the University of Melbourne,
-RMIT University and the Australian Research Council for their
-continuing support.
+Special thanks must go to William Pettersson, whose assistance has been
+invaluable for the porting effort in this release.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
@@ -178,23 +156,23 @@ download site</a>.
     </tr>
 <tr><td rowspan=4 class="altfirst">Fedora</td>
     <td class="alt">11</td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.fc11.i586.rpm">Download</a></td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.fc11.x86_64.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.fc11.i586.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.fc11.x86_64.rpm">Download</a></td>
     </tr>
 <tr>
     <td class="alt">10</td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.fc10.i386.rpm">Download</a></td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.fc10.x86_64.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.fc10.i386.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.fc10.x86_64.rpm">Download</a></td>
     </tr>
 <tr>
     <td class="alt">9</td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.fc9.i386.rpm">Download</a></td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.fc9.x86_64.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.fc9.i386.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.fc9.x86_64.rpm">Download</a></td>
     </tr>
 <tr>
     <td class="alt">8</td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.fc8.i386.rpm">Download</a></td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.fc8.x86_64.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.fc8.i386.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.fc8.x86_64.rpm">Download</a></td>
     </tr>
 <tr><td rowspan=2 class="first">Fink / MacOS&nbsp;X</td>
     <td>10.4 (stable)</td>
@@ -208,28 +186,28 @@ download site</a>.
     </tr>
 <tr><td rowspan=3 class="altfirst">Mandriva</td>
     <td class="alt">2009.1</td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.mdv2009.1.i586.rpm">Download</a></td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.mdv2009.1.x86_64.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.mdv2009.1.i586.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.mdv2009.1.x86_64.rpm">Download</a></td>
     </tr>
 <tr>
     <td class="alt">2009.0</td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.mdv2009.0.i586.rpm">Download</a></td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.mdv2009.0.x86_64.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.mdv2009.0.i586.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.mdv2009.0.x86_64.rpm">Download</a></td>
     </tr>
 <tr>
     <td class="alt">2008.1</td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.mdv2008.1.i586.rpm">Download</a></td>
-    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.mdv2008.1.x86_64.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.mdv2008.1.i586.rpm">Download</a></td>
+    <td class="alt" align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.mdv2008.1.x86_64.rpm">Download</a></td>
     </tr>
 <tr><td rowspan=2 class="first">SuSE</td>
     <td>11.1</td>
-    <td align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.suse11.1.i586.rpm">Download</a></td>
-    <td align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.suse11.1.x86_64.rpm">Download</a></td>
+    <td align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.suse11.1.i586.rpm">Download</a></td>
+    <td align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.suse11.1.x86_64.rpm">Download</a></td>
     </tr>
 <tr>
     <td>11.0</td>
-    <td align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.suse11.0.i586.rpm">Download</a></td>
-    <td align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.6-1.suse11.0.x86_64.rpm">Download</a></td>
+    <td align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.suse11.0.i586.rpm">Download</a></td>
+    <td align="center"><a href="http://prdownloads.sourceforge.net/regina/regina-normal-4.90-1.suse11.0.x86_64.rpm">Download</a></td>
     </tr>
 <tr><td rowspan=3 class="altfirst">Ubuntu</td>
     <td class="alt">9.04 (jaunty)</td>
@@ -262,7 +240,7 @@ to write to either myself or the users' mailing list
 <a href="mailto:regina-user@lists.sourceforge.net"><i>regina-user@lists.sourceforge.net</i></a>
 for assistance.
 <p>
-<b>Packaging help requested:</b> Is the download page missing your
+Is the download page missing your
 distribution (e.g., Slackware, Gentoo) or your hardware
 (e.g., Sparc, PowerPC)?  If so, and if you're willing to help out with
 packaging, please <a href="packaging.html">visit this page</a>!  It may
@@ -281,7 +259,7 @@ present, although this is provided with most KDE installations.
 <p>
 Alternatively, the handbook can be <a href="docs/index.html">viewed
 here online</a> with any web browser.  It can also be
-<a href="http://prdownloads.sourceforge.net/regina/regina-handbook-4.6.zip">downloaded
+<a href="http://prdownloads.sourceforge.net/regina/regina-handbook-4.90.zip">downloaded
 separately</a> in HTML format.
 
 <h4>API Documentation</h4>
@@ -319,20 +297,35 @@ discussons; see the <a href="#contact">contact section below</a>.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
-<h2><a name="license">License and Acknowledgements</a></h2>
+<h2><a name="license">Authors and License</a></h2>
 
-Regina &ndash; A normal surface theory calculator<br>
-Copyright (c) 1999&ndash;2009, Ben Burton
+The primary developers of Regina are:
+<ul>
+  <li><a href="http://www.maths.uq.edu.au/~bab/">Benjamin Burton</a></li>
+  <li><a href="http://rybu.org/">Ryan Budney</a></li>
+  <li>William Pettersson</li>
+</ul>
+<p>
+Many others have been of assistance with this project, be it through
+time, knowledge, testing or code.  Please see the
+<a href="docs/credits.html">full list of acknowledgements</a>
+in the users' handbook.
 
 <h4>Citation</h4>
 
 If you find Regina useful in your research, please consider citing it as
-you would any other paper that you use. See the
-<a href="docs/citing.html">help page on citing Regina</a>
-for a suggested form of reference.
+you would any other paper that you use.  A suggested form of reference is:
+
+<blockquote>
+  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,<br>
+  <i>Regina: Software for 3-manifold topology and normal surface theory</i>,<br>
+  http://regina.sourceforge.net/, 1999&ndash;2011.
+</blockquote>
 
 <h4>Copying &amp; modification</h4>
 
+Regina is copyright &copy; 1999&ndash;2011, The Regina development team.
+<p>
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
 Free Software Foundation; either version 2 of the License, or (at your
@@ -347,28 +340,16 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
 
-<h4>SnapPea Kernel</h4>
+<h4>Detailed License</h4>
 
-Since version 4.2 (July 2005), Regina includes portions of the
-SnapPea kernel which it uses for certain geometric calculations.
-SnapPea is copyright (c) 1991&ndash;2005 by Jeff Weeks, who has
-graciously given permission for it to be distributed under the terms of
-the GNU General Public License as described above.
-
-<h4>Orb Kernel</h4>
-
-Since version 4.3.1 (May 2006), Regina includes snippets of code from
-Orb for use in importing and exporting files in Orb / Casson format.
-Orb is based on SnapPea (see above) with additional code written by
-Damian Heard, who has also given permission for his code to be
-distributed under the terms of the GNU General Public License.
-
-<h4>Acknowledgements</h4>
-
-Many people have been of assistance with this project, be it through
-time, knowledge, testing or code.  Please see the
-<a href="docs/acknowledgements.html">full list of acknowledgements</a>
-in the users' handbook.
+Regina includes portions of external software for specialised tasks
+(such as code from SnapPea for some geometric calculations, and code from Orb
+for Orb/Casson imports).
+<p>
+For complete license details, including the complete GNU General Public
+License and information on external software that Regina uses,
+see the 
+<a href="docs/license.html">full license</a> in the users' handbook.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 

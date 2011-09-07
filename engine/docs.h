@@ -34,19 +34,35 @@
  *
  *  <center><b>
  *  Regina<br>
- *  A Normal Surface Theory Calculator<br>
- *  Copyright &copy; 1999-2011, Ben Burton
+ *  Software for 3-manifold topology and normal surface theory<br>
+ *  Copyright &copy; 1999-2011, The Regina development team
  *  </b></center>
  *
  *  This documentation describes the functions, classes and related
- *  entities in the C++ calculation engine, as well as the mirroring of
- *  these in Python.
+ *  entities in the C++ calculation engine, as well as how these can
+ *  be accessed through Python.
  *
  *  <h3>Citation</h3>
  *
  *  If you find Regina useful in your research, please consider citing it as
- *  you would any other paper that you use.  The introductory chapter of the
- *  Regina handbook includes a suggested form of reference.
+ *  you would any other paper that you use.  A suggested form of reference is:
+ *
+ *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
+ *  "Regina: Software for 3-manifold topology and normal surface theory",
+ *  http://regina.sourceforge.net/, 1999-2011.
+ *
+ *  <h3>Authors</h3>
+ *
+ *  The primary developers of Regina are:
+ *  <ul>
+ *    <li>Benjamin Burton &lt;bab@debian.org&gt;</li>
+ *    <li>Ryan Budney &lt;rybu@uvic.ca&gt;</li>
+ *    <li>William Pettersson</li>
+ *  </ul>
+ *  <p>
+ *  Many others have been of assistance with this project, be it through
+ *  time, knowledge, testing or code.  Please see the full list of
+ *  acknowledgements in the users' handbook.
  *
  *  <h3>Copying and Modification</h3>
  *
@@ -67,25 +83,20 @@
  *
  *  <h3>SnapPea Kernel</h3>
  *
- *  Since version 4.2 (July 2005), Regina includes portions of the
- *  SnapPea kernel which it uses for certain geometric calculations.
- *  SnapPea is copyright &copy; 1991-2005 by Jeff Weeks, who has graciously
- *  given permission for it to be distributed under the terms of the
- *  GNU General Public License as described above.
+ *  Regina includes portions of the SnapPea kernel, which it uses for
+ *  some geometric calculations.  SnapPea was written by Jeff Weeks,
+ *  and is now maintained by both Jeff Weeks and Nathan Dunfield.
+ *  The SnapPeaKernel is distributed under the terms of the GNU General
+ *  Public License, version 2 or any later version, as published by the
+ *  Free Software Foundation.
  *
  *  <h3>Orb Kernel</h3>
  *
- *  Since version 4.3.1 (May 2006), Regina includes snippets of code from
- *  Orb for use in importing and exporting files in Orb / Casson format.
- *  Orb is based on SnapPea (see above) with additional code written by
- *  Damian Heard, who has also given permission for his code to be
- *  distributed under the terms of the GNU General Public License.
- *
- *  <h3>Acknowledgements</h3>
- *
- *  Many people have been of assistance with this project, be it through
- *  time, knowledge, testing or code.  Please see the full list of
- *  acknowledgements in the final chapter of the Regina handbook.
+ *  Regina includes snippets of code from Orb, for use in importing and
+ *  exporting files in Orb / Casson format.  Orb is based on SnapPea
+ *  (see above) with additional code written by Damian Heard, who has also
+ *  given permission for his code to be distributed under the terms of the
+ *  GNU General Public License.
  */
 
 /*! \page i18n Encodings for international strings
