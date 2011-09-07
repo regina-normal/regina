@@ -3,15 +3,14 @@ Section: math
 Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
 Homepage: http://regina.sourceforge.net/
-Build-Depends: automake1.9, debhelper (>= 5.0.0), doxygen, kdelibs4-dev (>= 4:3.5.1-3), libboost-python-dev (>= 1.34.1-10), libcppunit-dev (>= 1.10.2-4), libgmp3-dev (>= 4.1.4-10), libmpich1.0-dev (>= 1.2.7-1~), libpopt-dev, libxml2-dev, python-dev (>= 2.5.2-1~), python-support (>= 0.6), zlib1g-dev
-Standards-Version: 3.8.1.0
+Build-Depends: automake1.9, debhelper (>= 5.0.0), doxygen, kdelibs4-dev (>= 4:3.5.1-3), libboost-python-dev (>= 1.39.0), libcppunit-dev (>= 1.10.2-4), libgmp3-dev (>= 4.1.4-10), mpi-default-dev, libpopt-dev, libxml2-dev, python-dev (>= 2.5.2-1~), python-support (>= 0.6), zlib1g-dev
+Standards-Version: 3.9.1.0
 
 Package: regina-normal
 Architecture: any
 Section: math
-Depends: ${shlibs:Depends}, ${perl:Depends}, ${python:Depends}
-Recommends: khelpcenter4, xpdf | okular
-Suggests: gap, graphviz, konqueror, regina-normal-doc, regina-normal-dev, regina-normal-mpi, snappea
+Depends: ${shlibs:Depends}, ${perl:Depends}, ${python:Depends}, ${misc:Depends}
+Suggests: gap, graphviz, regina-normal-doc, regina-normal-dev, regina-normal-mpi, snappea
 Description: 3-manifold topology software with normal surface support
  Regina is a suite of mathematical software for 3-manifold topologists.
  It focuses upon the study of 3-manifold triangulations and includes
@@ -33,7 +32,7 @@ Description: 3-manifold topology software with normal surface support
 Package: regina-normal-dev
 Architecture: any
 Section: libdevel
-Depends: regina-normal (= ${binary:Version}), libgmp3-dev, libxml2-dev, zlib1g-dev
+Depends: regina-normal (= ${binary:Version}), libgmp3-dev, libxml2-dev, zlib1g-dev, ${misc:Depends}
 Suggests: regina-normal-doc
 Description: development files for Regina, the 3-manifold topology software
  Regina is a suite of mathematical software for 3-manifold topologists.
@@ -49,18 +48,17 @@ Description: development files for Regina, the 3-manifold topology software
 Package: regina-normal-mpi
 Architecture: any
 Section: math
-Depends: ${shlibs:Depends}, ${perl:Depends}
-Recommends: mpich-bin
+Depends: ${shlibs:Depends}, ${perl:Depends}, ${misc:Depends}
+Recommends: mpi-default-bin
 Replaces: regina-normal (<= 4.3.1-6)
 Description: MPI utilities for Regina, the 3-manifold topology software
  Regina is a suite of mathematical software for 3-manifold topologists.
  This package contains the components of Regina that are designed to
  run large parallel computations on a cluster using MPI.
  .
- These components have been built against the MPICH implementation of
- MPI.  This means that they must be run under the MPICH runtime environment
- (and not LAM).  The MPICH runtime environment can be found in the
- package mpich-bin.
+ These components have been built against the default implementation of
+ MPI in debian.  This means that they must be run under the default runtime
+ environment, which can be found in the package mpi-default-bin.
  .
  The standard components of Regina, including the graphical user interface
  and users' handbook, can be found in the separate package regina-normal.
@@ -71,7 +69,7 @@ Description: MPI utilities for Regina, the 3-manifold topology software
 Package: regina-normal-doc
 Architecture: all
 Section: doc
-Recommends: konqueror
+Depends: ${misc:Depends}
 Suggests: regina-normal, regina-normal-dev
 Description: API docs for Regina, the 3-manifold topology software
  Regina is a suite of mathematical software for 3-manifold topologists.
