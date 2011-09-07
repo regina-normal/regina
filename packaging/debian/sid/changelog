@@ -1,12 +1,50 @@
 regina-normal (4.90-1) unstable; urgency=low
 
-  * New upstream release.
+  * New upstream release!
   * The user interface has been ported from KDE3 to KDE4 (closes: #556318).
     Re-enabled the GUI as a result.
   * The build system has been ported from autotools to cmake.
   * The new upstream release builds fine on amd64 (closes: #624882).
 
  -- Ben Burton <bab@debian.org>  Sat, 10 Sep 2011 07:17:25 +1000
+
+regina-normal (4.6-4) unstable; urgency=low
+
+  * Add #include <cstddef> to fix ptrdiff_t build failure.
+  * Lower precision of snappea volume tests to fix i386 build failure.
+
+ -- Ben Burton <bab@debian.org>  Sun, 01 May 2011 18:47:01 +1000
+
+regina-normal (4.6-3) unstable; urgency=low
+
+  * Removed MPICXX=/usr/bin/mpicxx, which fails under lam (the default MPI
+    implementation on some platforms).  Just use the default MPICXX instead.
+  * Removed all libtool .la files.
+  * Bumped standards-version to 3.9.1.0 (no other changes required).
+
+ -- Ben Burton <bab@debian.org>  Fri, 04 Mar 2011 10:34:51 +1000
+
+regina-normal (4.6-2) unstable; urgency=low
+
+  * Preparation for the removal of KDE3.  The GUI (regina-kde) has been
+    removed completely, and will be restored when the port to KDE4 is
+    complete (closes: #604322, #615578).
+  * Build MPI utilities against mpi-default-dev, not MPICH (closes: #571451).
+  * Ack the NMU below (4.6-1.1).  The libboost-python-dev build-depends
+    has been upgraded to >= 1.39.0 accordingly.
+  * Added dependency on ${misc:Depends} for each binary package.
+  * Thanks to Lisandro Damián Nicanor Pérez Meyer for assistance.
+
+ -- Ben Burton <bab@debian.org>  Thu, 03 Mar 2011 08:26:05 +1000
+
+regina-normal (4.6-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Disable calling debian/mtcheck from debian/rules, boost no longer
+    distinguishes between single-threaded and multi-threaded variants, so
+    this check only generates FTBFSes (Closes: #545621).
+
+ -- Cyril Brulebois <kibi@debian.org>  Sun, 06 Dec 2009 21:32:30 +0100
 
 regina-normal (4.6-1) unstable; urgency=low
 

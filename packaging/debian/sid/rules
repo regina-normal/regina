@@ -21,7 +21,7 @@ endif
 # configmpi = --disable-mpi .
 #
 NO_MPI = 0
-configmpi = MPICXX=/usr/bin/mpicxx.mpich
+configmpi =
 
 # Find the default python version so we can pass it to ./configure.  This 
 # keeps things sane when multiple python*-dev packages are installed.
@@ -102,10 +102,6 @@ install: build
 
 	# Main install.
 	$(MAKE) install DESTDIR=`pwd`/$(tmp)
-
-	# Make sure we've got the multithreaded boost.python, not the
-	# single-threaded boost.python.
-	sh debian/mtcheck
 
 ifneq ($(NO_MPI),1)
 	# Make sure MPI support was enabled.
