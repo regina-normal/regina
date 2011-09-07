@@ -5,16 +5,20 @@
 
 tmp = debian/tmp
 
+DEB_KDE_LINK_WITH_AS_NEEDED = yes
+
+include /usr/share/pkg-kde-tools/makefiles/1/variables.mk
+
 INSTALL_DIR = install -p -d -o root -g root -m 755
 INSTALL_FILE = install -p -o root -g root -m 644
 
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
 endif
-ifeq ($(shell dpkg-architecture -qDEB_BUILD_ARCH),arm)
-	CFLAGS += -O0
-	CXXFLAGS += -O0
-endif
+# ifeq ($(shell dpkg-architecture -qDEB_BUILD_ARCH),arm)
+# 	CFLAGS += -O0
+# 	CXXFLAGS += -O0
+# endif
 
 # The MPI code currently builds on all architectures.  If it should fail
 # on some architecture, that architecture should set NO_MPI = 1 and
@@ -27,112 +31,69 @@ configmpi =
 # keeps things sane when multiple python*-dev packages are installed.
 pyver = $(subst python,,$(shell /usr/bin/pyversions --default))
 
--include debian/debiandirs
+build_dir = builds/debbuild
 
-debian/debiandirs: admin/debianrules
-	perl -w admin/debianrules echodirs > debian/debiandirs
-
-configure: configure-stamp
-configure-stamp:
+${build_dir}:
 	dh_testdir
 
-	# Update to debian's patched scripts.
-	# admin/ac_gen
-	# aclocal
-	# autoheader
-	# autoconf
-	# automake
-	# perl -w admin/am_edit
+	mkdir -p ${build_dir}
+	cd ${build_dir} && \
+		cmake $(CURDIR) $(config_mpi) \
+		-DPACKAGE_NAME=regina-normal -DPACKAGING_MODE=1 \
+		$(DEB_CMAKE_KDE4_FLAGS) \
+		$(DEB_CMAKE_CUSTOM_FLAGS) \
+		-DPYTHON_EXECUTABLE=/usr/bin/python${pyver} \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_MODULE_PATH="/usr/share/apps/cmake/modules"
 
-	# Patch regina-python to explicitly use the same python version that
-	# we are building against.
-	sed 's|`which python`|"/usr/bin/python$(pyver)"|' \
-		< python/regina-python.in > python/regina-python.in.new
-	mv -f python/regina-python.in.new python/regina-python.in
+configure: ${build_dir}
 
-	# Back to the standard configure.
-	chmod a+x configure
-	CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
-	  ./configure --disable-maintainer-mode PKGNAME=regina-normal \
-	  --with-python-version=$(pyver) \
-	  --includedir=/usr/include $(configkde) $(configmpi) \
-	  --includedir=/usr/include
+build: build-stamp
 
-	# Stop for a sanity check to see if the right bits and pieces are
-	# going to be built (i.e., if all the required dependencies were
-	# found).  It's a long build, and we'd rather know now than later.
-	#
-	# If any of these grep tests fails, it means that either something is
-	# missing from the build-depends, or else one of the build dependencies
-	# has recently changed in a way that makes it incompatible with the
-	# current packaging.
-	grep '^REGINA_BUILD_DOCSENGINE=.engine.$$' config.log > /dev/null
-	grep '^REGINA_BUILD_ENGINE=.engine.$$' config.log > /dev/null
-	grep '^REGINA_BUILD_KDEUI=.kdeui.$$' config.log > /dev/null
-	grep '^REGINA_BUILD_MPI=.mpi.$$' config.log > /dev/null
-	grep '^REGINA_BUILD_PYTHON=.python.$$' config.log > /dev/null
-	grep '^REGINA_BUILD_TESTSUITE=.testsuite.$$' config.log > /dev/null
-	grep '^REGINA_BUILD_UTILS=.utils.$$' config.log > /dev/null
-
-	# All good!
-	touch configure-stamp
-
-build: configure-stamp build-stamp
-build-stamp:
+build-stamp: ${build_dir}
 	dh_testdir
-	$(MAKE)
+
+	$(MAKE) -C ${build_dir} VERBOSE=1
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
-	$(MAKE) check
+	$(MAKE) -C ${build_dir} test ARGS=-V
 endif
+
 	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
-	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -f build-stamp configure-stamp
-	rm -f debian/debiandirs
+
+	[ ! -d ${build_dir} ] || rm -rf ${build_dir}
+
 	dh_clean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs
 
 	# Main install.
-	$(MAKE) install DESTDIR=`pwd`/$(tmp)
-
-ifneq ($(NO_MPI),1)
-	# Make sure MPI support was enabled.
-	if ! test -e $(tmp)/usr/bin/tricensus-mpi; then \
-	  echo "ERROR: MPI utilities were not built and installed."; \
-	  echo "       Check your configure options."; \
-	  /bin/false; \
-	fi
-endif
+	$(MAKE) -C ${build_dir} install DESTDIR=$(CURDIR)/$(tmp)
 
 	# Split into separate binary packages.
-	dh_install --sourcedir=debian/tmp --list-missing
+	dh_install --sourcedir=$(tmp) --list-missing
 
 	# Ensure sample data files are stored as compressed XML.
 	for i in debian/regina-normal/usr/share/doc/regina-normal/examples/*.rga; do \
-	  utils/regconvert -x $$i $$i; \
+	  ${build_dir}/utils/regconvert -x $$i $$i; \
 	done
 
-	# Install linda and lintian overrides.
-	for pkg in `dh_listpackages`; do \
-	  if test -e debian/$$pkg.override; then \
-	    $(INSTALL_DIR) debian/$$pkg/usr/share/lintian/overrides; \
-	    $(INSTALL_FILE) debian/$$pkg.override \
-	      debian/$$pkg/usr/share/lintian/overrides/$$pkg; \
-	  fi; \
-	  if test -e debian/$$pkg.linda; then \
-	    $(INSTALL_DIR) debian/$$pkg/usr/share/linda/overrides; \
-	    $(INSTALL_FILE) debian/$$pkg.linda \
-	      debian/$$pkg/usr/share/linda/overrides/$$pkg; \
-	  fi; \
-	done
+	# Install lintian overrides.
+	# for pkg in `dh_listpackages`; do \
+	#   if test -e debian/$$pkg.override; then \
+	#     $(INSTALL_DIR) debian/$$pkg/usr/share/lintian/overrides; \
+	#     $(INSTALL_FILE) debian/$$pkg.override \
+	#       debian/$$pkg/usr/share/lintian/overrides/$$pkg; \
+	#   fi; \
+	# done
 
 # Build architecture-independent files here.
 binary-indep: build install
