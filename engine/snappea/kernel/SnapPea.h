@@ -27,9 +27,10 @@
 #ifndef _SnapPea_
 #define _SnapPea_
 
-//	BUFFER_LENGTH() measures the number of items in an array,
-//	not the number of bytes, and automatically adjusts to changes
-//	in the number of elements or the size of each element.
+/*	BUFFER_LENGTH() measures the number of items in an array,
+ *	not the number of bytes, and automatically adjusts to changes
+ *	in the number of elements or the size of each element.
+ */
 #define BUFFER_LENGTH(a)	( sizeof(a) / sizeof((a)[0]) )
 
 /*
@@ -1674,15 +1675,15 @@ extern void get_holonomy(	Triangulation	*manifold,
 extern void get_tet_shape(	Triangulation	*manifold,
 							int				which_tet,
 							Boolean			fixed_alignment,
-							double			*shape_rect_real,		//	OK to pass NULL
-							double			*shape_rect_imag,		//	OK to pass NULL
-							double			*shape_log_real,		//	OK to pass NULL
-							double			*shape_log_imag,		//	OK to pass NULL
-							int				*precision_rect_real,	//	OK to pass NULL
-							int				*precision_rect_imag,	//	OK to pass NULL
-							int				*precision_log_real,	//	OK to pass NULL
-							int				*precision_log_imag,	//	OK to pass NULL
-							Boolean			*is_geometric);			//	OK to pass NULL
+							double			*shape_rect_real,		/*	OK to pass NULL */
+							double			*shape_rect_imag,		/*	OK to pass NULL */
+							double			*shape_log_real,		/*	OK to pass NULL */
+							double			*shape_log_imag,		/*	OK to pass NULL */
+							int				*precision_rect_real,	/*	OK to pass NULL */
+							int				*precision_rect_imag,	/*	OK to pass NULL */
+							int				*precision_log_real,	/*	OK to pass NULL */
+							int				*precision_log_imag,	/*	OK to pass NULL */
+							Boolean			*is_geometric);			/*  OK to pass NULL */
 /*
  *	Provides information about the shape of the Tetrahedron in
  *	position which_tet in the linked list (which_tet takes a value
@@ -1824,13 +1825,13 @@ extern void free_length_spectrum(MultiLength *spectrum);
 /*
  *		Added 2007/11/12:
  */
-	void ortholengths(	Triangulation	*manifold,			//	input
-						double			tiling_radius,		//	input
-						Complex			*shortest_geodesic,	//	output
-						double			*tube_radius,		//	output
-						unsigned int	*num_ortholengths,	//	output
-						Complex			**ortholengths,		//	output
-						Complex			**basings);			//	output
+	void ortholengths(	Triangulation	*manifold,			/*	input */
+						double			tiling_radius,		/*	input */
+						Complex			*shortest_geodesic,	/*	output */
+						double			*tube_radius,		/*	output */
+						unsigned int	*num_ortholengths,	/*	output */
+						Complex			**ortholengths,		/*	output */
+						Complex			**basings);			/*	output */
 
 	void free_ortholengths(	Complex			**ortholengths,
 							Complex			**basings);
