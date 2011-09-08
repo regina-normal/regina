@@ -8,9 +8,9 @@
 
 KDE_OPTIONS=noautodist
 
-internaldatadir = $(pkgdatadir)/data
+internaldatadir = $(pkgdatadir)/internal/data
 
-internaldata_DATA = README.txt \
+internaldata_DATA = \
 	snappea-census-sec5.dat \
 	snappea-census-sec6o.dat \
 	snappea-census-sec6n.dat \
@@ -18,6 +18,7 @@ internaldata_DATA = README.txt \
 	snappea-census-sec7n.dat
 
 EXTRA_DIST = $(internaldata_DATA) \
+    README.txt \
 	create-snappea-census-data.py \
 	verify-snappea-census-data.py
 

@@ -51,7 +51,7 @@ std::string NGlobalDirs::engineDocs() {
 }
 
 std::string NGlobalDirs::data() {
-    return home() + "/data";
+    return home() + "/internal/data";
 }
 
 } // namespace regina
