@@ -1,5 +1,5 @@
 # Known to work for:
-# - Mandriva 2009.0 (i586, x86_64)
+# - Mandriva 2010.1 (i586, x86_64)
 # - Mandriva 2009.1 (i586, x86_64)
 
 Name: regina-normal
@@ -14,13 +14,8 @@ URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
-%if 0%{?mdvver} <= 200900
-Requires: kdebase-progs
-Requires: kdegraphics-kpdf
-%else
 Requires: kdebase3-progs
 Requires: kdegraphics3-kpdf
-%endif
 Requires: python
 Conflicts: regina
 
@@ -31,11 +26,7 @@ BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
 BuildRequires: gmp-devel
-%if 0%{?mdvver} <= 200900
-BuildRequires: kdelibs-devel
-%else
 BuildRequires: kdelibs3-devel
-%endif
 BuildRequires: libstdc++-devel
 BuildRequires: libxml2-devel
 BuildRequires: qt3-devel >= 3.2

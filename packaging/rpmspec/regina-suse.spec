@@ -1,6 +1,5 @@
 # Known to work for:
-# - SuSE 11.1 (i586, x86_64)
-# - SuSE 11.0 (i586, x86_64)
+# - SuSE 11.4 (i586, x86_64)
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
@@ -21,13 +20,7 @@ Requires: python
 Requires: susehelp
 Conflicts: regina
 
-%if 0%{?suse_version} == 1100
-# The boost.python originally shipped with SuSE 11.0 is broken (bug #401964).
-# Insist on a patched boost from the updates repository.
-BuildRequires: boost-devel >= 1.34.1-42.2
-%else
 BuildRequires: boost-devel
-%endif
 BuildRequires: cppunit
 BuildRequires: cppunit-devel
 BuildRequires: doxygen
