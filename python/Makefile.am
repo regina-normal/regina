@@ -55,6 +55,9 @@ regina_la_LIBADD = @LIB_ENGINE@ @BOOST_PYTHON_LIBS@ \
 
 noinst_HEADERS = globalarray.h
 
+scriptsdir = $(pkgdatadir)/scripts
+scripts_DATA = README.txt runscript.py
+
 EXTRA_DIST = README.txt TODO.txt regina-python.in
 
 install-exec-local :

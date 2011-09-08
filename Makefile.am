@@ -19,8 +19,7 @@ SUBDIRS = \
   docs \
   examples \
   icons \
-  pylib \
-  scripts
+  pylib
 
 EXTRA_DIST = CHANGES.txt HIGHLIGHTS.txt \
   AUTHORS.txt INSTALL.txt LICENSE.txt README.txt \
