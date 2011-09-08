@@ -1,34 +1,34 @@
-Regina Census and Sample File Directory
----------------------------------------
+Regina Census and Examples Directory
+------------------------------------
 
-This directory contains a number of censuses of triangulations of
-different types.  Each census data file includes a text packet
-containing a full description of the census including its origin.
+This directory contains several different censuses of triangulations.
+Each census file begins with a text packet explaining what the census is
+and where the data came from.  You can access these censuses directly
+through Regina's main menu:
 
-Also within this directory is a number of sample files that illustrate how
-Regina can be used.  A good starting point is sample-misc.rga, which can
-be opened directly from within the main user interface.
+  File -> Open Example -> ... (choose which census you want)
 
-Most of these census and sample data files can be accessed easily through
-the "File -> Open Example" menu when running Regina.
+There are also example files here that illustrate how you can use Regina.
+For beginners: try sample-misc.rga, or from Regina's main menu select:
 
-The subdirectory sigs/ contains a series of plain text files representing
-a census of splitting surface signatures.  See sigs/README.txt for further
-details.
+  File -> Open Example -> Introductory Examples
 
-Files within this directory are of the following types.
+If you are interested in Python scripting, look at the various *.session
+files (described below).
+
+The types of files in this directory are:
 
 *.rga:
-    These are topology data files.  They can be opened directly from within
-    the main user interface.
+    Data files that you can open within Regina.
 
 *.session:
-    These are complete transcripts of sample python sessions, including
-    both user input and program output.  You can start a python session
-    from the command line by running "regina-python".
+    Transcripts of example Python sessions, showing both the user input and
+    the corresponding Python output.  You can start a python session from
+	the command line by running "regina-python".
 
 *.py:
-    These are the same sample python sessions as above but only the user
-    input has been included.  These scripts may be fed directly into Regina
-    using a command of the form "regina-python foo.py"
+    The input for the example Python sessions described above.  You can
+	feed this input directly into Regina by running:
+
+    regina-python file.py   (where file.py is your chosen input file)
 
