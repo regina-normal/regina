@@ -1,13 +1,10 @@
 Regina Packaging Directory
 --------------------------
 
-This directory subtree contains helper files for packaging Regina for
-various GNU/Linux distributions and related systems.
+This directory tree contains helper files for packaging Regina for
+different GNU/Linux distributions and other systems.
 
 Only the package maintainer(s) for Regina should need to use these files.
-
-Move into the parent directory and type "make help" for details on
-building Regina for yourself.
 
 
 Subdirectories include:
@@ -15,17 +12,17 @@ Subdirectories include:
 Packaging and Uploads
 ---------------------
 
-- debian/ contains packaging directories for debian-based distributions,
+- debian/ contains packaging for debian-based distributions,
   such as Debian and Ubuntu.
 
-- rpmspec/ contains packaging spec files for RPM-based distributions, such
+- rpmspec/ contains packaging for RPM-based distributions, such
   as Fedora, Mandriva and SuSE.
 
-- finkinfo/ contains packaging info files for Fink on MacOS X.
+- finkinfo/ contains packaging for MacOSX/Fink.
 
 - readmes/ contains README files that are uploaded to the Regina download
   site (such as package installation instructions for debian, ubuntu and
-  fink).  Many are text versions of web pages in regina/www/install/.
+  fink).  Many are text versions of the web pages in regina/www/install/.
 
 Installation of GNU/Linux Distributions
 ---------------------------------------
@@ -43,4 +40,4 @@ Installation of GNU/Linux Distributions
 If you are interested in helping package Regina for one or more
 distributions, please contact the author at the address below.
 
- -- Ben Burton <bab@debian.org>, Wed, 26 Mar 2008 06:45:23 +1100
+ -- Ben Burton <bab@debian.org>, Thu,  8 Sep 2011 14:15:23 +1000

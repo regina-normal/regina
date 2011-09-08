@@ -1,12 +1,11 @@
 Regina Documentation Directory
 ------------------------------
 
-This directory tree is used for the generation of man pages and
-calculation engine documentation for Regina.
+This directory tree is used to generate man pages and API documentation.
 
-The man pages are extracted from the Regina handbook, which is now located
-in ../kdeui/doc/en/ in a manner consistent with KDE applications.
+The man pages are extracted from the Regina handbook, which is located
+in ../kdeui/doc/regina/.
 
-The calculation engine documentation is generated from the extensive
-comments in the source code itself.
+The API documentation is generated via doxygen from the extensive
+comments throughout the source code.
 
