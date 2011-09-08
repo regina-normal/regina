@@ -62,6 +62,7 @@
   <!ENTITY debian "<productname>Debian</productname>">
   <!ENTITY evince "<application>Evince</application>">
   <!ENTITY fedora "<productname>Fedora Core</productname>">
+  <!ENTITY fink "<productname>Fink</productname>">
   <!ENTITY gap "<application><acronym>GAP</acronym></application>">
   <!ENTITY gaplong "<application><acronym>GAP</acronym>
    (Groups, Algorithms and Programming)</application>">
@@ -87,6 +88,7 @@
   <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
   <!ENTITY macosx "<productname>MacOS&nbsp;X</productname>">
+  <!ENTITY mandriva "<productname>Mandriva</productname>">
   <!ENTITY mobius "M&ouml;bius">
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">
@@ -104,6 +106,7 @@
   <!ENTITY rhel "<productname>Red Hat Enterprise</productname>">
   <!ENTITY rhfedora "<productname>Red Hat</productname> /
    <productname>Fedora</productname>">
+  <!ENTITY rpm "<acronym>RPM</acronym>">
   <!ENTITY SFSLong "Seifert Fibred Space">
   <!ENTITY sfslong "Seifert fibred space">
   <!ENTITY snappea "<application>SnapPea</application>">
@@ -113,6 +116,7 @@
   <!ENTITY snappy "<application>SnapPy</application>">
   <!ENTITY sourceforge "<productname>SourceForge</productname>">
   <!ENTITY sss "S<superscript>3</superscript>">
+  <!ENTITY suse "<productname>SUSE</productname>">
   <!ENTITY sysreq
    "<ulink url='http://regina.sourceforge.net/source.html'>system
    requirements page</ulink>">
