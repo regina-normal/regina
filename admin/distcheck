@@ -127,7 +127,7 @@ fi
 # Make a list of files in the subversion source tree.
 echo "Analysing subversion source tree..."
 
-if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
+if ! find "$svntree" -type f | sed -e 's%^[^/]*/%%' | \
     grep -v "$grep_builddirs" | \
     grep -v '^\.$' | \
     grep -v '^\.\.$' | \

@@ -279,3 +279,29 @@ CONFIGURE_FILE (
 
 MACRO_DISPLAY_FEATURE_LOG()
 
+# CPack configuration to allow the developers to build a source tarball:
+set(CPACK_PACKAGE_VERSION_MAJOR ${PACKAGE_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PACKAGE_VERSION_MINOR})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
+  "Regina: Software for 3-manifold topology and normal surface theory")
+set(CPACK_PACKAGE_VENDOR "The Regina development team")
+set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.txt)
+set(CPACK_GENERATOR TGZ)
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "regina-${PACKAGE_VERSION}")
+set(CPACK_SOURCE_GENERATOR TGZ)
+# The following regexes match anywhere:
+set(CPACK_SOURCE_IGNORE_FILES
+  "~$"
+  "^${PROJECT_BINARY_DIR}/"
+  "^${PROJECT_SOURCE_DIR}/engine/snappea/kernel/unused/"
+  "^${PROJECT_SOURCE_DIR}/icons/povray/"
+  "^${PROJECT_SOURCE_DIR}/icons/src/"
+  "^${PROJECT_SOURCE_DIR}/packaging/"
+  "^${PROJECT_SOURCE_DIR}/utils/local/"
+  "^${PROJECT_SOURCE_DIR}/utils/snappea/"
+  "^${PROJECT_SOURCE_DIR}/www/"
+  "^${PROJECT_SOURCE_DIR}.*/\\\\.svn/"
+  "\\\\.DS_Store$"
+)
+include(CPack)
+
