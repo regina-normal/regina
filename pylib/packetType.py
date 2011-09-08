@@ -12,8 +12,9 @@
 #     a given packet is of a particular type.
 #
 #     To automatically load these routines into every new Regina python
-#     session, add this file as a new library in Regina's python settings.
-#     Alternatively, you can add it directly as a new line to ~/.regina-libs .
+#     session, add this file to your list of active python libraries
+#     under Regina's python settings.  Alternatively, you can add this
+#     file directly as a new line to ~/.regina-libs .
 #
 #     Each routine is documented using standard python docstrings, which
 #     means you can access this documentation from within python at runtime:
