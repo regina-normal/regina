@@ -1,12 +1,12 @@
 <chapter id="options">
  <title>Configuration</title>
  <para>
-  You can configure &regina; by selecting
+  You can configure &regina; by choosing
   <menuchoice>
    <guimenu>Settings</guimenu>
    <guisubmenu>Configure Regina</guisubmenu>
   </menuchoice>
-  under &linux;, or
+  from the menu under &linux;, or
   <menuchoice>
    <guimenu>regina-kde</guimenu>
    <guisubmenu>Preferences</guisubmenu>
@@ -21,7 +21,8 @@
   </inlinemediaobject>
  </para>
  <para>
-  There are several panels of options; each is described here in turn.
+  There are several panels of options; each is described in its own
+  section below.
  </para>
 
  <sect1 id="options-general">
@@ -39,16 +40,18 @@
    </inlinemediaobject>
   </para>
   <para>
-   The options here are:
+   The settings here are:
   </para>
   <glosslist>
    <glossentry>
     <glossterm><guilabel>Automatic file extension</guilabel></glossterm>
     <glossdef><para>
-     This affects what happens when you save your data but do not supply
+     This affects what happens if you save your data but do not supply
      a filename extension.
      If checked, &regina; will add the default extension
-     <filename>.rga</filename>.
+     <filename>.rga</filename> (so the filename
+     <filename>manifolds</filename> will become
+     <filename>manifolds.rga</filename>).
      If unchecked, &regina; will leave the filename exactly as you typed it.
     </para></glossdef>
    </glossentry>
@@ -57,12 +60,13 @@
     <glossdef><para>
      This affects what happens each time you
      <link linkend="packet-view">open a packet for viewing</link>.
-     If checked, &regina; will open the new packet in the right-hand
-     part of the main &regina; window.
-     If unchecked, &regina; will open the new packet in a separate
-     floating window.
-     See <link linkend="packet-move">floating packets in
-     separate windows</link> for further discussion.
+     If checked, &regina; will open the packet inside the main window, as
+     <link linkend="packet-view">illustrated here</link>.
+     If unchecked, &regina; will open the packet in a separate
+     floating window, as
+     <link linkend="packet-float">illustrated here</link>.
+     See <link linkend="packet-float">floating packets</link>
+     for further details.
     </para></glossdef>
    </glossentry>
    <glossentry>
@@ -82,14 +86,14 @@
       <guimenuitem>Jump Down</guimenuitem>
      </menuchoice>.
      See <link linkend="packet-move">moving packets around</link> for
-     further discussion.
+     further details.
     </para></glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Show tip of the day</guilabel></glossterm>
     <glossdef><para>
      If checked, &regina; will offer occasional tips and hints on
-     startup.  Some tips describe how to use &regina;, and some outline
+     startup.  These include tips on how to use &regina;, or
      advanced features that you might not be aware of.
     </para><para>
      You can view these tips at any time by selecting
@@ -106,9 +110,8 @@
      This affects how &regina; opens the users' handbook (which you are
      reading now).
      If checked, &regina; will open the handbook in the
-     &khelpcenter; (which is probably installed if you use a &kde;
-     desktop, but which might not be installed if you use &gnome; or
-     &macosx;).
+     &khelpcenter; (which is probably installed if you run a &kde;
+     desktop, but probably not installed if you run &gnome; or &macosx;).
      If unchecked, &regina; will open the handbook in your default web
      browser.
     </para></glossdef>
@@ -131,7 +134,7 @@
    </inlinemediaobject>
   </para>
   <para>
-   The options here are:
+   The settings here are:
   </para>
   <glosslist>
    <glossentry>
@@ -139,41 +142,44 @@
     <glossdef><para>
      Specifies which tab in the
      <link linkend="tri-analysis">triangulation viewer</link>
-     will be initially visible when you open a triangulation for viewing.
+     will first appear when you open a triangulation for viewing.
     </para></glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Default skeleton tab</guilabel></glossterm>
     <glossdef><para>
-     Specifies which sub-tab will be initially visible
-     when you switch to the <guilabel>Skeleton</guilabel> tab in the
-     <link linkend="tri-skeleton">triangulation viewer</link>.
+     Specifies which sub-tab will first appear
+     when you switch to the
+     <link linkend="tri-skeleton">triangulation skeleton tab</link>.
     </para></glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Default algebra tab</guilabel></glossterm>
     <glossdef><para>
-     Specifies which sub-tab will be initially visible
-     when you switch to the <guilabel>Algebra</guilabel> tab in the
-     <link linkend="tri-algebra">triangulation viewer</link>.
+     Specifies which sub-tab will first appear
+     when you switch to the
+     <link linkend="tri-algebra">triangulation algebra tab</link>.
     </para></glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Surface calculation threshold</guilabel></glossterm>
     <glossdef>
      <para>
-      This determines how many tetrahedra a triangulation must have
-      before properties relating to its normal
-      surfaces are not automatically calculated.  See the
-      <link linkend="tri-surfaceproperties">normal surface properties
-      documentation</link> for details.
+      Determines when the information on the
+      <link linkend="tri-surfaceproperties">triangulation
+      surfaces tab</link> is computed.
+      If the number of tetrahedra is at most the given value, then
+      &regina; will compute surface-related information automatically.
+      If the number of tetrahedra is larger, then &regina; will not
+      compute this information until you manually press the
+      <guibutton>Calculate</guibutton> button.
      </para>
      <para>
-      Note that 3-sphere and 3-ball recognition (two of the properties
-      affected by this option) will use a slighly lower threshold than is
-      set here.  This is because both involve the
-      analysis of almost normal surfaces, which are significantly slower
-      than ordinary normal surfaces to work with.
+      Note that 3-sphere and 3-ball recognition might use a slighly lower
+      threshold than the one you set here.  This is because they rely on
+      <emphasis>almost normal</emphasis> surfaces,
+      which in the worst-case scenario are
+      much slower to work with than normal surfaces.
      </para>
     </glossdef>
    </glossentry>
@@ -183,16 +189,14 @@
      <para>
       Tells &regina; where to find &gaplongurl;.  &gap; is not
       required by &regina;, but if it is installed then it can help
-      simplify group presentations.  See the
-      <link linkend="tri-algebra-fundgroup">fundamental group</link>
-      documentation for details.
+      <link linkend="tri-algebra-fundgroup">simplify group presentations</link>.
      </para>
      <para>
-      This option should be the name of the command that is used to
-      start &gap; (the default is <command>gap</command>).  If &gap; is
-      on your default search path, you may simply provide the command
-      (such as <filename>gap</filename>);
-      otherwise you will need to provide a full path to the executable
+      This setting should be the name of the command that starts
+      &gap; (the default is simply &ldquo;<command>gap</command>&rdquo;).
+      &regina; will look for this command on the default search path.
+      If you have installed &gap; somewhere unusual then you will need to
+      provide the full path to the executable
       (such as <filename>/usr/local/bin/gap</filename>).
      </para>
     </glossdef>
@@ -201,35 +205,32 @@
     <glossterm><guilabel>&graphviz; executable</guilabel></glossterm>
     <glossdef>
      <para>
-      Tells &regina; where to find &graphvizurl;.  As with &gap;,
-      &graphviz; is not required by &regina;, but if it is not installed
-      then &regina; cannot display face pairing graphs.
-      See the <link linkend="tri-skeleton-facegraph">face pairing graph</link>
-      documentation for details.
+      Tells &regina; where to find &graphvizurl;.  &graphviz; is
+      not required by &regina;, but is needed if you wish to
+      <link linkend="tri-skeleton-facegraph">view face pairing graphs</link>.
      </para>
      <para>
-      This option should be the name of the particular &graphviz;
-      command that is used for drawing undirected graphs.  Note that
-      this is generally <emphasis>not</emphasis> called graphviz &mdash;
-      &graphviz; is a suite of applications, providing several different
-      executables for drawing graphs in several different ways.  The
-      recommended executable (and also the default for this
-      configuration option) is <command>neato</command>.
+      This setting should be the name of the command that &graphviz;
+      uses to draw undirected graphs.  The default
+      is &ldquo;<command>neato</command>&rdquo;,
+      but you may use one of &graphviz;' other drawing commands if you prefer
+      (but note that the command is <emphasis>not</emphasis> called
+      &ldquo;<command>graphviz</command>&rdquo;).
      </para>
      <para>
-      If the &graphviz; executable is on your default search path, you may
-      simply provide the command (such as <filename>neato</filename>);
-      otherwise you will need to provide a full path to the executable
+      Again, &regina; will look for this command on the default search path.
+      If you have installed &graphviz; somewhere unusual then you will need to
+      provide the full path to the executable
       (such as <filename>/usr/local/bin/neato</filename>).
      </para>
      <para><tip><para>
-      Although &regina; was designed for the newer &graphviz;
-      versions&nbsp;2.x, it can also work with older &graphviz;&nbsp;1.x
-      installations.  If you are using &graphviz;&nbsp;1.x then
-      you will need to set your &graphviz; executable to <command>dot</command>,
-      since older versions of <command>neato</command> cannot display
-      multiple edges.  &regina; will check your version of &graphviz;
-      and warn you if you seem to be using the wrong executable.
+      &regina; works best with &graphviz; version &ge;&nbsp;2.0.
+      If you have an ancient version (&graphviz;&nbsp;1.x) then
+      you will need to set your &graphviz; command to <command>dot</command>,
+      not <command>neato</command>.
+      This is because ancient versions of <command>neato</command> could
+      not display multiple edges.  &regina; will check the version and
+      warn you if you seem to be using the wrong command.
      </para></tip></para>
     </glossdef>
    </glossentry>
@@ -251,61 +252,56 @@
    </inlinemediaobject>
   </para>
   <para>
-   The options here are:
+   The settings here are:
   </para>
   <glosslist>
    <glossentry>
     <glossterm><guilabel>Default coordinate system</guilabel></glossterm>
     <glossdef><para>
-     This specifies which coordinate system will be offered as the
-     default selection when a new normal surface list is created.
-     See the
-     <link linkend="surfaces-creation">normal surfaces documentation</link>
-     for details.
+     Specifies which coordinate system will be the default when you
+     <link linkend="surfaces-creation">enumerate normal surfaces</link>.
     </para></glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Warn before generating non-embedded
     surfaces</guilabel></glossterm>
     <glossdef><para>
-     If this option is checked, &regina; will ask for confirmation
-     whenever you try to enumerate a list of normal surfaces without
-     checking the <guilabel>Embedded surfaces only</guilabel> box.
-     This is because immersed and/or singular surfaces can be extremely
-     slow to enumerate, and there might be a great number of them.
-     See the documentation on
-     <link linkend="surfaces-embeddedonly">creating normal surface lists</link>
-     for further details.
+     If checked, &regina; will ask for confirmation whenever you try to
+     <link linkend="surfaces-creation">enumerate normal surfaces</link>
+     <emphasis>without</emphasis> selecting
+     <link linkend="surfaces-embeddedonly">embedded surfaces only</link>.
+     &regina; asks for confirmation because non-embedded surfaces are
+     typically much slower to generate, far more numerous, and &regina;
+     only offers very basic support for them.
     </para></glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Default top-level tab</guilabel></glossterm>
     <glossdef><para>
-     This specifies which of the many available tabs will be made visible
-     when a new normal surface list viewer is first opened.
+     Specifies which tab in the
+     <link linkend="tri-analysis">surface list viewer</link>
+     will first appear when you open a normal surface list for viewing.
     </para></glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Default compatibility matrix</guilabel></glossterm>
     <glossdef><para>
-     This specifies which matrix will be displayed first when the user
-     opens the <guilabel>Compatibility</guilabel> tab for a normal
-     surface list.  See the documentation on
-     <link linkend="surfaces-compat">compatibility matrices</link>
-     for details.
+     Specifies which matrix (local or global)
+     will first appear when you switch to the
+     <link linkend="surfaces-compat">surface compatibility tab</link>.
     </para></glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Compatibility matrix threshold</guilabel></glossterm>
     <glossdef><para>
-     Compatibility matrices will not be generated automatically for
-     lists that contain a very large number of normal surfaces.
-     Here you can specify this limit on the number of surfaces.
-     Note that for larger lists you can still generate the matrices
-     manually by pressing the <guilabel>Calculate</guilabel> button,
-     as described in the
-     <link linkend="surfaces-compat">compatibility matrix
-     documentation</link>.
+     Determines when the
+     <link linkend="surfaces-compat">surface compatibility matrices</link>
+     will be computed.
+     If the number of normal surfaces is at most the given value, then
+     &regina; will compute compatibility matrices automatically.
+     If the number of surfaces is larger, then &regina; will not
+     compute these matrices until you manually press the
+     <guibutton>Calculate</guibutton> button.
     </para></glossdef>
    </glossentry>
   </glosslist>
@@ -316,9 +312,40 @@
 
   <para>
    The <guilabel>&pdf;</guilabel> options panel controls how
-   &regina; deals with &pdf; packets.
+   &regina; handles &pdf; packets.
   </para>
-
+  <para>
+   There are two ways of viewing &pdf; packets in &regina;.
+   The first is to use &kde;'s <firstterm>embedded viewer</firstterm>,
+   which will display the &pdf; directly within &regina;'s main window
+   (as illustrated below).
+   This requires you to have &okular; installed (the &pdf;
+   viewer that ships with &kde;).
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="embedpdf.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   The second way is to use an <emphasis>external &pdf; viewer</emphasis>:
+   this can be any program that displays &pdf; files, such as
+   &xpdf; under &linux;, or &previewapp; under &macosx; (which is
+   illustrated below).
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="pdf.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   The <guilabel>&pdf;</guilabel> options panel lets you choose between
+   these two methods and fine-tune them:
+  </para>
   <para>
    <inlinemediaobject>
     <imageobject>
@@ -326,67 +353,36 @@
     </imageobject>
    </inlinemediaobject>
   </para>
-
   <para>
-   &regina; does not contain any explicit code for displaying
-   &pdf; documents, and so it must rely on other programs for this task.
-   There are two ways in which this can be done:
-   <itemizedlist>
-    <listitem><para>
-     Some programs are able to embed viewers directly within &regina;'s
-     main window, complete with toolbars and menu items, as illustrated
-     below; these are called <firstterm>embedded viewers</firstterm>.
-     Examples of programs that offer embedded viewers include
-     &kpdf; and &kghostview;.
-    </para>
-     <screenshot>
-      <mediaobject>
-       <imageobject>
-        <imagedata fileref="pdf.png"/>
-       </imageobject>
-      </mediaobject>
-     </screenshot>
-    </listitem>
-    <listitem><para>
-     Other programs must be treated as standalone applications that
-     operate completely independently of &regina;; these are called
-     <firstterm>external viewers</firstterm>.  Examples of external
-     viewers include &xpdf; under &linux;, or &previewapp; under
-     &macosx;.
-    </para></listitem>
-   </itemizedlist>
-  </para>
-  <para>
-   The options here are:
+   The settings here are:
   </para>
   <glosslist>
    <glossentry>
     <glossterm><guilabel>Use embedded viewer if possible</guilabel></glossterm>
     <glossdef><para>
-     If this box is checked, &regina; will search for an embedded
-     viewer that it can use.  If it cannot find anything suitable,
-     &regina; will fall back to an external viewer (in which case it
-     will honour the external viewer settings below).
+     If checked, &regina; will search for an embedded
+     viewer that it can use (but if it cannot find one, it will fall back to
+     an external viewer instead).
+     If unchecked, &regina; will always use an external viewer.
     </para></glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>External &pdf; viewer</guilabel></glossterm>
     <glossdef>
      <para>
-      If we are using an external viewer, this option specifies the command
-      to start the external application.
-      If the viewer is on your default search path, you may
-      simply provide the command (such as <command>xpdf</command>);
-      otherwise you will need to provide a full path to the executable
-      (such as <command>/usr/bin/xpdf</command>).
-      Examples for this option
-      might include <command>xpdf</command>, <command>evince</command>,
-      or <command>/usr/bin/open</command> for &macosx; users.
+      Specifies the command that starts your external &pdf; viewer,
+      such as &ldquo;<command>evince</command>&rdquo; or
+      &ldquo;<command>xpdf</command>&rdquo;
+      under &linux;, or &ldquo;<command>open</command>&rdquo; under &macosx;.
+      &regina; will look for this command on the default search path.
+      If your viewer is installed somewhere unusual then you will need to
+      provide the full path to the executable
+      (such as <filename>/usr/local/bin/xpdf</filename>).
      </para>
      <para>
       You may include additional command-line arguments here
       (so, for instance, &macosx; users might enter
-      <command>/usr/bin/open&nbsp;-a&nbsp;Preview</command>).
+      &ldquo;<command>/usr/bin/open&nbsp;-a&nbsp;Preview</command>&rdquo;).
       &regina; will automatically add the &pdf; filename to the end of
       this command, and the entire command will be passed to a shell for
       execution.
@@ -402,24 +398,17 @@
      viewers</guilabel></glossterm>
     <glossdef>
      <para>
-      Because external viewers run as standalone applications, they do not
-      need to be closed when &regina; is finished with them (or even
-      when &regina; exits completely).
-      This option configures whether or not &regina; goes out of its
-      way to close external viewers automatically.
+      If checked, &regina; will automatically close the external viewer
+      when you close a &pdf; packet within &regina;,
+      and will automatically close and reopen the external viewer whenever
+      you <link linkend="packet-view">refresh the packet</link> within &regina;.
+      If unchecked, &regina; will simply leave the external viewer
+      running (even if you exit &regina; completely).
      </para>
      <para>
-      If this option is checked, &regina; will automatically close an
-      external viewer whenever &regina;'s corresponding packet
-      viewer is closed.  Likewise, &regina; will automatically close and
-      reopen the external viewer whenever &regina;'s corresponding packet
-      viewer is refreshed.
-     </para>
-     <para>
-      If this option is not checked, &regina; will never close any
-      external viewers automatically; this task will be left up to the
-      user.  Be careful, since this might leave you with a lot of
-      viewers open after a relatively short time.
+      For some viewers and/or some operating systems (such as
+      &previewapp; under &macosx;), &regina; is unable to close the external
+      viewer even if you ask it to.
      </para>
     </glossdef>
    </glossentry>
@@ -445,23 +434,37 @@
 
   <para>
    The <link linkend="tri-censuslookup">census lookup facility</link>
-   searches for the current triangulation within all available censuses.
-   The census options page allows this list of available censuses to be
-   configured.
+   searches for a selected triangulation within a list prepackaged censuses.
+   These settings allows you to add or remove censuses from this list.
   </para>
   <para>
-   Census data files can be added or removed and
-   currently active data files can be temporarily disabled.
-   Each census should be a single &regina; data file.  The census lookup
-   will search through all triangulations in each of the currently
-   active files.
+   You can add your own census files here or remove &regina;'s original
+   files from the list.  Any files you add must be &regina; data files,
+   but beyond this they do not need to be in any special format.
+   When you perform a census lookup,
+   &regina; will simply search through every triangulation in all of the
+   files listed here.
   </para>
   <para>
-   By pressing the <guibutton>Defaults</guibutton> button, the list will
-   be filled with a number of prepackaged censuses that are shipped with
-   &regina;.  The <link linkend="tri-censuslookup">census lookup
-   documentation</link> describes these prepackaged censuses in further
-   detail.
+   Instead of removing files, you may simply wish to
+   <emphasis>deactivate</emphasis> them.  This means they will
+   <emphasis>not be searched</emphasis>, but they will remain here in
+   the list so that you can easily activate them again.
+   Active files are marked with a tick, and deactivated files are
+   marked with a no-entry sign.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="census-deactivate.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   If you press the <guibutton>Defaults</guibutton> button, &regina;
+   will refill the list with its own prepackaged
+   censuses (as described in the
+   <link linkend="tri-censuslookup">census lookup</link> notes).
   </para>
  </sect1>
 
@@ -481,7 +484,7 @@
    </inlinemediaobject>
   </para>
   <para>
-   The intial options here are:
+   The intial settings here are:
   </para>
   <glosslist>
    <glossentry>
@@ -559,7 +562,7 @@
    in the triangulation viewer for details.
   </para>
   <para>
-   The options here are:
+   The settings here are:
   </para>
   <glosslist>
    <glossentry>
