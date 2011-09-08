@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRISETCMP" "1" "02 September 2011" "" "The Regina Handbook"
+.TH "TRISETCMP" "1" "09 September 2011" "" "The Regina Handbook"
 
 .SH NAME
 trisetcmp \- Compare triangulations between two Regina data files
@@ -13,15 +13,17 @@ trisetcmp \- Compare triangulations between two Regina data files
 
 .SH "DESCRIPTION"
 .PP
-This utility compares all triangulations in the first file against
-all triangulations in the second file.  Specifically, it looks to
-see which triangulations from \fIfile1\fR are
-isomorphic to which triangulations from
-\fIfile2\fR\&.
+Compares all triangulations in the first file against
+all triangulations in the second file, looking for pairs of
+triangulations that are combinatorially isomorphic.
 .PP
-The two given files must be \fBRegina\fR data files.
+The two given files must be Regina data files.
 A full list of matches (or a full list of non-matches if
 \fB-n\fR is passed) is written to standard output.
+A match occurs when some triangulation from
+\fIfile1\fR is combinatorially isomorphic to
+some triangulation from \fIfile2\fR (i.e.,
+identical up to a relabelling of tetrahedra and their vertices).
 .PP
 This utility can also do subcomplex testing instead of full
 isomorphism testing.  See the option \fB-s\fR for
@@ -39,10 +41,8 @@ Output non-matches only.  All triangulations from
 \fIfile1\fR with no isomorphic match in
 \fIfile2\fR will be listed, and vice versa.
 
-The behaviour of this option is slightly different when
-\fB-s\fR is passed; in particular, non-matches are
-only tested in one direction only (there is no vice versa as indicated
-above).
+If \fB-s\fR is passed then non-matches are
+tested in one direction only, not both; see below for details.
 .TP
 \fB-s\fR
 Instead of testing triangulations for isomorphism, test whether
@@ -60,10 +60,10 @@ subcomplex of any triangulation from \fIfile2\fR\&.
 .SH "INTERNATIONALISATION"
 .PP
 If any packets contain international characters,
-\fBRegina\fR will attempt to convert these to your local character
+Regina will attempt to convert these to your local character
 encoding as it writes them to the output.
 .PP
-You can tell \fBRegina\fR what character encoding to use by setting
+You can tell Regina what character encoding to use by setting
 standard locale-related environment variables, such as
 \fBLANG\fR, \fBLC_CTYPE\fR or
 \fBLC_ALL\fR\&.
@@ -75,10 +75,10 @@ and if \fBLANG\fR is set to
 en_AU.UTF-8 then output will be written in the
 universal character set UTF-8\&.
 .PP
-Typically these environment variables will have been set for you when
-you installed your GNU/Linux system, and \fBRegina\fR should just use the
+Typically these environment variables will already be set for you when
+you install your GNU/Linux system, and Regina will just use the
 right character set out of the box.  See your GNU/Linux system reference
-for further information on support for different locales.
+for further information on supporting different locales.
 .SH "SEE ALSO"
 .PP
 regina-kde\&.
@@ -86,4 +86,4 @@ regina-kde\&.
 .PP
 This utility was written by Benjamin Burton <bab@debian.org>\&.
 Many people have been involved in the development
-of \fBRegina\fR; see the users' handbook for a full list of credits.
+of Regina; see the users' handbook for a full list of credits.

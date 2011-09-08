@@ -21,9 +21,9 @@
   universal character set <literal>UTF-8</literal>.
  </para>
  <para>
-  Typically these environment variables will have been set for you when
-  you installed your &linux; system, and &regina; should just use the
+  Typically these environment variables will already be set for you when
+  you install your &linux; system, and &regina; will just use the
   right character set out of the box.  See your &linux; system reference
-  for further information on support for different locales.
+  for further information on supporting different locales.
  </para>
 </refsect1>

@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGFILEDUMP" "1" "02 September 2011" "" "The Regina Handbook"
+.TH "REGFILEDUMP" "1" "09 September 2011" "" "The Regina Handbook"
 
 .SH NAME
 regfiledump \- Dump the contents of a Regina data file
@@ -13,17 +13,17 @@ regfiledump \- Dump the contents of a Regina data file
 
 .SH "DESCRIPTION"
 .PP
-This utility dumps the contents of the given \fBRegina\fR data file to
+This utility dumps the contents of the given Regina data file to
 standard output in a human-readable format.
 .PP
 If a list of packet labels is given on the command-line, only those
-packets listed will be output.  Otherwise all packets in the given
+packets will be output.  Otherwise all packets in the given
 file will be output.
 .SH "OPTIONS"
 .TP
 \fB-f (default)\fR
-Output full packet details.  Output for each packet will cover
-several lines, beginning with basic packet details (such as label
+Output full packet details.  The output for each packet will cover
+several lines, beginning with basic details (such as the packet label
 and type) followed by the packet's long description.
 .TP
 \fB-l\fR
@@ -34,14 +34,15 @@ Don't output any packets at all; this option forces a packet
 count (see option \fB-c\fR).
 .TP
 \fB-c\fR
-Finish output with a count of all packets in the given file.
+Finish the output with a total count of all packets in the
+file.
 .SH "INTERNATIONALISATION"
 .PP
 If any packets contain international characters,
-\fBRegina\fR will attempt to convert these to your local character
+Regina will attempt to convert these to your local character
 encoding as it writes them to the output.
 .PP
-You can tell \fBRegina\fR what character encoding to use by setting
+You can tell Regina what character encoding to use by setting
 standard locale-related environment variables, such as
 \fBLANG\fR, \fBLC_CTYPE\fR or
 \fBLC_ALL\fR\&.
@@ -53,10 +54,10 @@ and if \fBLANG\fR is set to
 en_AU.UTF-8 then output will be written in the
 universal character set UTF-8\&.
 .PP
-Typically these environment variables will have been set for you when
-you installed your GNU/Linux system, and \fBRegina\fR should just use the
+Typically these environment variables will already be set for you when
+you install your GNU/Linux system, and Regina will just use the
 right character set out of the box.  See your GNU/Linux system reference
-for further information on support for different locales.
+for further information on supporting different locales.
 .SH "SEE ALSO"
 .PP
 regina-kde\&.
@@ -64,4 +65,4 @@ regina-kde\&.
 .PP
 This utility was written by Benjamin Burton <bab@debian.org>\&.
 Many people have been involved in the development
-of \fBRegina\fR; see the users' handbook for a full list of credits.
+of Regina; see the users' handbook for a full list of credits.

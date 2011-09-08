@@ -33,6 +33,12 @@
    "<link linkend='python-docs'>calculation engine documentation</link>">
   <!ENTITY regenginedocsurlbase
    "<ulink url='http://regina.sourceforge.net/engine-docs/'>regina.sourceforge.net</ulink>">
+  <!ENTITY regmanapiurl
+   "<ulink url='http://regina.sourceforge.net/engine-docs/'>regina.sourceforge.net</ulink>">
+  <!ENTITY regmanhandbookurl
+   "<ulink url='http://regina.sourceforge.net/docs/'>regina.sourceforge.net</ulink>">
+  <!ENTITY regmanburtonthesisurl
+   "<ulink url='http://www.maths.uq.edu.au/~bab/papers/'>www.maths.uq.edu.au</ulink>">
   <!ENTITY regina-libs "<filename>~/.regina-libs</filename>">
   <!ENTITY manpageack "Many people have been involved in the development
    of &regina;; see the <link linkend='acknowledgements'>acknowledgements
@@ -89,6 +95,10 @@
   <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
   <!ENTITY macosx "<productname>MacOS&nbsp;X</productname>">
   <!ENTITY mandriva "<productname>Mandriva</productname>">
+  <!ENTITY menuapidocs "<menuchoice><guimenu>Help</guimenu><guimenuitem>&python;
+   &api; Reference</guimenuitem></menuchoice>">
+  <!ENTITY menuhandbook "<menuchoice><guimenu>Help</guimenu><guimenuitem>Regina
+   Handbook</guimenuitem></menuchoice>">
   <!ENTITY mobius "M&ouml;bius">
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">

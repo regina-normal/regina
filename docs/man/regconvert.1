@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGCONVERT" "1" "02 September 2011" "" "The Regina Handbook"
+.TH "REGCONVERT" "1" "09 September 2011" "" "The Regina Handbook"
 
 .SH NAME
 regconvert \- Convert between different Regina file formats
@@ -13,27 +13,27 @@ regconvert \- Convert between different Regina file formats
 
 .SH "DESCRIPTION"
 .PP
-Between \fBRegina\fR versions 2.4 and 3.0, the data files changed from
+Between Regina versions 2.4 and 3.0, the data files changed from
 using an impenetrable and undocumented binary format to using
 (optionally compressed) XML\&.
 .PP
-This utility simply converts back and forth between these different
+This utility converts back and forth between these different
 file formats.
 .PP
-Argument \fIold-file\fR should be the file to
-read and convert; argument \fInew-file\fR should
+The argument \fIold-file\fR should be the file to
+read and convert; the argument \fInew-file\fR should
 be the name of the new converted file to write.  These two filenames
 may be the same, in which case the old file will be replaced with the new.
 .PP
-If argument \fInew-file\fR is missing, the new
-file will be written to standard output; this forces output to be
+If the argument \fInew-file\fR is missing then the
+new file will be written to standard output, which forces the output to be
 uncompressed XML (see option \fB-u\fR).
 .sp
 .RS
 .B "Warning:"
 When writing an old-style binary file, some information might be
-lost.  Specifically, only information that is understood by the
-\fBRegina\fR\~2.4 calculation engine will be written.
+lost.  Old-style binary files can only store information that was
+understood by the old version Regina\~2.4.
 .RE
 .SH "OPTIONS"
 .TP
@@ -53,4 +53,4 @@ regina-kde\&.
 .PP
 This utility was written by Benjamin Burton <bab@debian.org>\&.
 Many people have been involved in the development
-of \fBRegina\fR; see the users' handbook for a full list of credits.
+of Regina; see the users' handbook for a full list of credits.

@@ -17,5 +17,4 @@ tabs :
 	cd $(srcdir); ./replacetabs ../kdeui/doc/en/*.docbook
 	cd $(srcdir); ./replacetabs ../pylib/*.py
 	cd $(srcdir); ./replacetabs ../scripts/*.py
-	cd $(srcdir); ./replacetabs ../utils/tricensus-manager
 

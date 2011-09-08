@@ -3,10 +3,10 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGINA-PYTHON" "1" "02 September 2011" "" "The Regina Handbook"
+.TH "REGINA-PYTHON" "1" "09 September 2011" "" "The Regina Handbook"
 
 .SH NAME
-regina-python \- Regina command-line Python interface
+regina-python \- Regina's command-line Python interface
 .SH SYNOPSIS
 
 \fBregina-python\fR [ \fB-q, --quiet\fR | \fB-v, --verbose\fR ] [ \fB-n, --nolibs\fR ]
@@ -16,38 +16,39 @@ regina-python \- Regina command-line Python interface
 
 .SH "DESCRIPTION"
 .PP
-\fBRegina\fR is a topological calculator with a bent towards normal surface
-theory. It allows 3-manifolds to be created and manipulated and their
-properties of interest to be determined.
+Regina is a software package for studying 3-manifold triangulations
+and normal surfaces.  Other key features include
+angle structures, census enumeration, combinatorial
+recognition of triangulations, and high-level tasks such as
+3-sphere recognition and connected sum decomposition.
+Regina comes with a full graphical user interface, and also offers
+Python bindings and a low-level C++ programming interface.
 .PP
-This command starts an interactive \fBPython\fR session for
-\fBRegina\fR\&.  This will be a command-line \fBPython\fR session, with direct
+This command starts an interactive Python session for
+Regina.  This will be a command-line Python session, with direct
 text input/output and no graphical user interface.
-All of the objects, clases and methods from the \fBRegina\fR calculation
-engine will be made available to the user in the module
+All of the objects, clases and methods from Regina's mathematical
+engine will be made available through the module
 \fIregina\fR, which will be imported on startup.
 .PP
-Before the session begins, a number of libraries may be loaded.
-Libraries are simply files containing \fBPython\fR code to be run at the
-beginning of each \fBPython\fR session.  The list of libraries to load
-will be read from the text file \fI~/.regina-libs\fR, which should contain one
+If you have frequently-used code, you can store it in a
+\fIuser library\fR\&.
+At the beginning of each Python session, Regina will automatically
+run all of the code in all of your user libraries.
+The list of user libraries will be read from the text file
+\fI~/.regina-libs\fR, which should contain one
 library filename per line.  Blank lines and lines beginning with a
-hash (#) will be ignored.  Note that the list of currently active
-libraries can also be configured through the \fBKDE\fR user interface
-on the \fBPython\fR options page.
+hash (#) will be ignored.  You can also configure this list of
+libraries through the graphical user interface: see the
+Python options page.
 .PP
-Instead of starting an interactive \fBPython\fR session, a python script
-can be passed (with arguments if desired).  In this case the script
-will be run, again with the \fIregina\fR module
-imported and libraries loaded beforehand.  Once the script has
-finished the user will be returned to the command-line, i.e., there
-will be no subsequent \fBPython\fR interaction (this behaviour can be
-changed by passing \fB--interactive\fR).
-.PP
-Note that \fBregina-python\fR may be run directly out
-of its source tree without being properly installed.  Default locations
-for various \fBRegina\fR components will be transparently modified to
-look inside the source tree.
+Instead of starting an interactive Python session, you can pass a
+Python script (with arguments if desired).  In this case Regina
+will run the script (after first importing the
+\fIregina\fR module and loading any user libraries).
+If you pass \fB--interactive\fR, Regina will leave you
+at a Python prompt once the script finishes;
+otherwise it will exit Python and return you to the command line.
 .SH "OPTIONS"
 .TP
 \fB-q\fR
@@ -71,16 +72,15 @@ This is equivalent to setting the environment variable
 \fB-n\fR
 .TP
 \fB--nolibs\fR
-Do not load any user libraries.  This refers to the libraries
-specified in \fI~/.regina-libs\fR and/or configured through the \fBKDE\fR user
-interface, as described in the overview above.
+Do not load any user libraries when the session starts.
+User libraries are discussed in the overview above.
 .TP
 \fB-i\fR
 .TP
 \fB--interactive\fR
-Run the script in interactive mode.  The given script will be
-executed, and then the user will be left in the \fBPython\fR
-interpreter to run their own additonal commands.
+Run the script in interactive mode.  After executing the
+given script, Regina will leave you in the Python interpreter
+to run your own additional commands.
 
 This option is only available when a script is passed.
 If no script is passed, \fBregina-python\fR will
@@ -88,12 +88,12 @@ always start in interactive mode.
 .SH "ENVIRONMENT VARIABLES"
 .PP
 The following environment variables influence the behaviour of
-this program.  Each of these variables can also be set in the local
+this program.  Each variable can also be set in the local
 configuration file \fI~/.regina-python\fR using a line
 of the form
 \fIoption\fR=\fIvalue\fR\&.
-Environment variables will take precedence over values read from
-this configuration file.
+Environment variables will take precedence over values in
+the configuration file.
 .TP
 \fB\fIREGINA_VERBOSITY\fB\fR
 Specifies how much output should be generated.
@@ -113,23 +113,24 @@ equivalent to passing the option \fB--verbose\fR\&.
 .RE
 .TP
 \fB\fIREGINA_PYTHON\fB\fR
-The command used to start the \fBPython\fR interpreter.  If the command
-\fBpython\fR can be found on the path then this option
-defaults to the full path of that command
-(such as \fB/usr/bin/python\fR).
+The command used to start the Python interpreter.
+By default, Regina tries to run the same version of Python
+that it was built against.
 
-Note that this must be the same version of \fBPython\fR that \fBRegina\fR
-was compiled against.  Otherwise the
-\fIregina\fR module will be unable to be loaded.
+In general you should use the same version of Python that Regina
+was built against; otherwise Python might not be able to load the
+\fIregina\fR module.
+
+In normal situations you should never need to set this option yourself.
 .TP
 \fB\fIREGINA_HOME\fB\fR
-The directory in which \fBRegina\fR data files are installed.  This
-should be the directory containing the \fIscripts/\fR
-subdirectory, the \fIicons/\fR subdirectory and so on.
+The directory in which Regina's data files are installed.  This
+should be the directory containing the \fIinternal/\fR
+subdirectory, the \fIexamples/\fR subdirectory and so on.
 
-If \fBRegina\fR is being run directly out of the source tree, this
-defaults to the top-level source directory.  If \fBRegina\fR is being
-run from a proper installation, this defaults to the corresponding
+If you are running Regina directly out of the source tree, this
+defaults to the top-level source directory.  If you are running
+Regina from a proper installation, this defaults to the corresponding
 installation directory.
 
 In normal situations you should never need to set this option yourself.
@@ -137,24 +138,21 @@ In normal situations you should never need to set this option yourself.
 .RS
 .B "Warning:"
 When running from a proper installation,
-the default \fIREGINA_HOME\fR is actually
-hard-wired into the startup script (it is derived at
-compile-time from the options passed to
-\fB\&./configure\fR).
-This means that if \fBRegina\fR is installed into one directory using
-\fBmake install\fR and then moved to another directory
-by hand, the default \fIREGINA_HOME\fR will be
-incorrect.
+the default \fIREGINA_HOME\fR is
+hard-wired into the startup script (it is set at compile time).
+If you install Regina into one directory but then move it by
+hand into another, the default \fIREGINA_HOME\fR
+will be incorrect.
 .RE
 .TP
 \fB\fIREGINA_PYLIBDIR\fB\fR
-The directory containing the \fBPython\fR module
+The directory containing the Python module
 \fIregina.so\fR\&.
 
-If \fBRegina\fR is being run directly out of the source tree, this
-defaults to a directory within this source tree.  If \fBRegina\fR is being
-run from a proper installation, this defaults to the corresponding
-installation directory.
+If you are running Regina directly out of the source tree, this
+defaults to a directory within this source tree.  If you are
+running Regina from a proper installation, this defaults to the
+corresponding installation directory.
 
 In normal situations you should never need to set this option yourself.
 .sp
@@ -164,22 +162,21 @@ Like \fIREGINA_HOME\fR,
 when running from a proper installation
 the default \fIREGINA_PYLIBDIR\fR is
 hard-wired into the startup script.
-This means that if \fBRegina\fR is installed into one directory using
-\fBmake install\fR and then moved to another directory
-by hand, the default \fIREGINA_PYLIBDIR\fR will be
-incorrect.
+If you install Regina into one directory but then move it by
+hand into another, the default \fIREGINA_PYLIBDIR\fR
+will be incorrect.
 .RE
 .SH "SEE ALSO"
 .PP
 regina-kde\&.
 .PP
-The calculation engine documentation should also be
-installed, describing in detail all of the \fBRegina\fR
-objects, classes and methods that are available.  This is generally
-installed in \fI/usr/share/regina/engine-docs/\fR
-or \fI/usr/local/share/regina/engine-docs/\fR, though your
-distribution may differ.
+Regina comes with thorough API documentation,
+which describes in detail all of the objects, classes and methods that
+Regina makes available to Python.
+You can access this documentation via
+Help->Python API Reference in the graphical user interface, or read it online
+at \fBhttp://regina.sourceforge.net/engine-docs/\fR\&.
 .SH "AUTHOR"
 .PP
 Many people have been involved in the development
-of \fBRegina\fR; see the users' handbook for a full list of credits.
+of Regina; see the users' handbook for a full list of credits.

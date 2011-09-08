@@ -3,14 +3,12 @@
 
  <para>
   This reference chapter documents the command-line options for
-  the two main applications provided with &regina;,
+  &regina;'s two main applications:
   <command>regina-kde</command> and <command>regina-python</command>.
  </para>
  <para>
-  Several other specialised command-line utilities are provided
-  with &regina;.  For documentation on these,
-  see the later reference chapter on <link linkend="utils">specialised
-  utilities</link>.
+  &regina; also ship with several other specialised command-line utilities,
+  which are documented in the <link linkend="utils">following chapter</link>.
  </para>
 
  <!-- KDE Startup Script -->
@@ -23,7 +21,7 @@
 
   <refnamediv>
    <refname>regina-kde</refname>
-   <refpurpose>&regina; &kde; user interface</refpurpose>
+   <refpurpose>&regina;'s graphical user interface</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -38,8 +36,8 @@
    <title>Description</title>
    &regabstract;
    <para>
-    This command starts the full graphical user interface, and is the usual
-    way of starting &regina;.  Any files specified on the command-line
+    This starts the full graphical user interface, and is the usual
+    way of starting &regina;.  Any files passed on the command-line
     will be opened on startup.
    </para>
   </refsect1>
@@ -59,14 +57,10 @@
     <link linkend="man-regina-python">regina-python</link>.
    </para>
    <para>
-    Full user documentation is available through the &khelpcenter;.
-    You can also enter the &url; <userinput>help:/regina/</userinput>
-    directly into &konqueror; or you can run
-    <userinput>khelpcenter help:/regina/</userinput> from the command-line.
-   </para>
-   <para>
-    If the &khelpcenter; is not installed then you can read the
-    documentation in &html; format directly from the &regwebsite;.
+    &regina; comes with a rich users' handbook, which you can access via
+    &menuhandbook;
+    in the menu.  You can also read the users' handbook online
+    at &regmanhandbookurl;.
    </para>
   </refsect1>
 
@@ -88,7 +82,7 @@
 
   <refnamediv>
    <refname>regina-python</refname>
-   <refpurpose>&regina; command-line &python; interface</refpurpose>
+   <refpurpose>&regina;'s command-line &python; interface</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -120,34 +114,30 @@
     This command starts an interactive &python; session for
     &regina;.  This will be a command-line &python; session, with direct
     text input/output and no graphical user interface.
-    All of the objects, clases and methods from the &regina; calculation
-    engine will be made available to the user in the module
+    All of the objects, clases and methods from &regina;'s mathematical
+    engine will be made available through the module
     <parameter>regina</parameter>, which will be imported on startup.
    </para>
    <para>
-    Before the session begins, a number of libraries may be loaded.
-    Libraries are simply files containing &python; code to be run at the
-    beginning of each &python; session.  The list of libraries to load
-    will be read from the text file &regina-libs;, which should contain one
+    If you have frequently-used code, you can store it in a
+    <firstterm>user library</firstterm>.
+    At the beginning of each &python; session, &regina; will automatically
+    run all of the code in all of your user libraries.
+    The list of user libraries will be read from the text file
+    &regina-libs;, which should contain one
     library filename per line.  Blank lines and lines beginning with a
-    hash (#) will be ignored.  Note that the list of currently active
-    libraries can also be configured through the &kde; user interface
-    on the &python; options page.
+    hash (#) will be ignored.  You can also configure this list of
+    libraries through the graphical user interface: see the
+    &python; options page.
    </para>
    <para>
-    Instead of starting an interactive &python; session, a python script
-    can be passed (with arguments if desired).  In this case the script
-    will be run, again with the <parameter>regina</parameter> module
-    imported and libraries loaded beforehand.  Once the script has
-    finished the user will be returned to the command-line, i.e., there
-    will be no subsequent &python; interaction (this behaviour can be
-    changed by passing <option>--interactive</option>).
-   </para>
-   <para>
-    Note that <command>regina-python</command> may be run directly out
-    of its source tree without being properly installed.  Default locations
-    for various &regina; components will be transparently modified to
-    look inside the source tree.
+    Instead of starting an interactive &python; session, you can pass a
+    &python; script (with arguments if desired).  In this case &regina;
+    will run the script (after first importing the
+    <parameter>regina</parameter> module and loading any user libraries).
+    If you pass <option>--interactive</option>, &regina; will leave you
+    at a &python; prompt once the script finishes;
+    otherwise it will exit &python; and return you to the command line.
    </para>
   </refsect1>
 
@@ -187,9 +177,8 @@
      <term><option>--nolibs</option></term>
      <listitem>
       <para>
-       Do not load any user libraries.  This refers to the libraries
-       specified in &regina-libs; and/or configured through the &kde; user
-       interface, as described in the overview above.
+       Do not load any user libraries when the session starts.
+       User libraries are discussed in the overview above.
       </para>
      </listitem>
     </varlistentry>
@@ -198,9 +187,9 @@
      <term><option>--interactive</option></term>
      <listitem>
       <para>
-       Run the script in interactive mode.  The given script will be
-       executed, and then the user will be left in the &python;
-       interpreter to run their own additonal commands.
+       Run the script in interactive mode.  After executing the
+       given script, &regina; will leave you in the &python; interpreter
+       to run your own additional commands.
       </para>
       <para>
        This option is only available when a script is passed.
@@ -216,12 +205,12 @@
    <title>Environment Variables</title>
    <para>
     The following environment variables influence the behaviour of
-    this program.  Each of these variables can also be set in the local
+    this program.  Each variable can also be set in the local
     configuration file <filename>~/.regina-python</filename> using a line
     of the form
     <replaceable>option</replaceable>=<replaceable>value</replaceable>.
-    Environment variables will take precedence over values read from
-    this configuration file.
+    Environment variables will take precedence over values in
+    the configuration file.
    </para>
    <variablelist>
     <varlistentry>
@@ -259,15 +248,17 @@
      <term><parameter>REGINA_PYTHON</parameter></term>
      <listitem>
       <para>
-       The command used to start the &python; interpreter.  If the command
-       <command>python</command> can be found on the path then this option
-       defaults to the full path of that command
-       (such as <command>/usr/bin/python</command>).
+       The command used to start the &python; interpreter.
+       By default, &regina; tries to run the same version of &python;
+       that it was built against.
       </para>
       <para>
-       Note that this must be the same version of &python; that &regina;
-       was compiled against.  Otherwise the
-       <parameter>regina</parameter> module will be unable to be loaded.
+       In general you should use the same version of &python; that &regina;
+       was built against; otherwise &python; might not be able to load the
+       <parameter>regina</parameter> module.
+      </para>
+      <para>
+       In normal situations you should never need to set this option yourself.
       </para>
      </listitem>
     </varlistentry>
@@ -275,14 +266,14 @@
      <term><parameter>REGINA_HOME</parameter></term>
      <listitem>
       <para>
-       The directory in which &regina; data files are installed.  This
-       should be the directory containing the <filename>scripts/</filename>
-       subdirectory, the <filename>icons/</filename> subdirectory and so on.
+       The directory in which &regina;'s data files are installed.  This
+       should be the directory containing the <filename>internal/</filename>
+       subdirectory, the <filename>examples/</filename> subdirectory and so on.
       </para>
       <para>
-       If &regina; is being run directly out of the source tree, this
-       defaults to the top-level source directory.  If &regina; is being
-       run from a proper installation, this defaults to the corresponding
+       If you are running &regina; directly out of the source tree, this
+       defaults to the top-level source directory.  If you are running
+       &regina; from a proper installation, this defaults to the corresponding
        installation directory.
       </para>
       <para>
@@ -291,14 +282,11 @@
       <warning>
        <para>
         When running from a proper installation,
-        the default <parameter>REGINA_HOME</parameter> is actually
-        hard-wired into the startup script (it is derived at
-        compile-time from the options passed to
-        <userinput>./configure</userinput>).
-        This means that if &regina; is installed into one directory using
-        <userinput>make install</userinput> and then moved to another directory
-        by hand, the default <parameter>REGINA_HOME</parameter> will be
-        incorrect.
+        the default <parameter>REGINA_HOME</parameter> is
+        hard-wired into the startup script (it is set at compile time).
+        If you install &regina; into one directory but then move it by
+        hand into another, the default <parameter>REGINA_HOME</parameter>
+        will be incorrect.
        </para>
       </warning>
      </listitem>
@@ -311,10 +299,10 @@
        <filename>regina.so</filename>.
       </para>
       <para>
-       If &regina; is being run directly out of the source tree, this
-       defaults to a directory within this source tree.  If &regina; is being
-       run from a proper installation, this defaults to the corresponding
-       installation directory.
+       If you are running &regina; directly out of the source tree, this
+       defaults to a directory within this source tree.  If you are
+       running &regina; from a proper installation, this defaults to the
+       corresponding installation directory.
       </para>
       <para>
        In normal situations you should never need to set this option yourself.
@@ -325,10 +313,9 @@
         when running from a proper installation
         the default <parameter>REGINA_PYLIBDIR</parameter> is
         hard-wired into the startup script.
-        This means that if &regina; is installed into one directory using
-        <userinput>make install</userinput> and then moved to another directory
-        by hand, the default <parameter>REGINA_PYLIBDIR</parameter> will be
-        incorrect.
+        If you install &regina; into one directory but then move it by
+        hand into another, the default <parameter>REGINA_PYLIBDIR</parameter>
+        will be incorrect.
        </para>
       </warning>
      </listitem>
@@ -342,12 +329,12 @@
     <link linkend="man-regina-kde">regina-kde</link>.
    </para>
    <para>
-    The calculation engine documentation should also be
-    installed, describing in detail all of the &regina;
-    objects, classes and methods that are available.  This is generally
-    installed in <filename>/usr/share/regina/engine-docs/</filename>
-    or <filename>/usr/local/share/regina/engine-docs/</filename>, though your
-    distribution may differ.
+    &regina; comes with thorough &api; documentation,
+    which describes in detail all of the objects, classes and methods that
+    &regina; makes available to &python;.
+    You can access this documentation via
+    &menuapidocs; in the graphical user interface, or read it online
+    at &regmanapiurl;.
    </para>
   </refsect1>
 

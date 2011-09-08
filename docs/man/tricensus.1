@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRICENSUS" "1" "02 September 2011" "" "The Regina Handbook"
+.TH "TRICENSUS" "1" "09 September 2011" "" "The Regina Handbook"
 
 .SH NAME
 tricensus \- Form a census of 3-manifold triangulations
@@ -32,13 +32,12 @@ As the census progresses, the state of progress will be written (slowly)
 to standard output.  Once the census is complete, the census itself will
 be saved to the given file.
 .PP
-Note that options \fB--genpairs\fR and
-\fB--usepairs\fR may be used to split a census into smaller
-pieces to be run simultaneously on different machines.  See also the
-\fBtricensus-manager\fR
-and
-\fBtricensus-mpi\fR
-utilities, which can help coordinate these simultaneous processes.
+You can use the options \fB--genpairs\fR and
+\fB--usepairs\fR to split a census into smaller
+pieces.  See also
+\fBtricensus-mpi\fR,
+which allows you to coordinate these pieces using MPI on a
+high-performance cluster.
 .sp
 .RS
 .B "Warning:"
@@ -124,13 +123,13 @@ triangulation that is minimal, prime, P2-irreducible and
 disc-irreducible will certainly be included in the census.
 .TP
 \fB-s, --sigs=\fR
-Instead of writing a full \fBRegina\fR data file, just output a list
+Instead of writing a full Regina data file, just output a list
 of isomorphism signatures.
 
 The output file will be a plain text file.  Each line will be a
 short string of letters, digits and punctuation that uniquely
 encodes a 3-manifold triangulation (up to combinatorial isomorphism).
-The full output file can be imported from within \fBRegina\fR by
+The full output file can be imported from within Regina by
 selecting
 FileImportIsomorphism Signature List\&.
 
@@ -140,7 +139,7 @@ More importantly, the memory footprint of
 \fBtricensus\fR itself will also be much smaller:
 triangulations can be written to the output file and forgotten
 immediately, instead of being kept in memory to construct a final
-\fBRegina\fR data file.
+Regina data file.
 .TP
 \fB-p, --genpairs\fR
 Only generate face pairings, not triangulations.
@@ -156,11 +155,10 @@ total census runtime, and effectively divides the census into
 multiple pieces.  By using this option, one can quickly generate
 a complete list of possible face pairings and then feed subsets of
 this list to different machines to work on simultaneously in order
-to produce an overall census of triangulations.  See the
-\fBtricensus-manager\fR
-and
+to produce an overall census of triangulations.  The
 \fBtricensus-mpi\fR
-utilities for assistance in coordinating these simultaneous processes.
+utility can help coordinate these simultaneous processes on a
+high-performance cluster.
 
 The list of all face pairings will be written to the given output
 file in text format (although in the special case of face pairing
@@ -194,12 +192,11 @@ They should be listed in the format produced by option
 
 This option is used to run only a subset of a particular census.  See
 option \fB--genpairs\fR for further details on how to split
-a census into subsets to run simultaneously on different machines.
-See also the
-\fBtricensus-manager\fR
+a census into subsets that can run simultaneously on different machines,
 and
 \fBtricensus-mpi\fR
-utilities, which can help coordinate these simultaneous processes.
+which can help coordinate these simultaneous processes using
+MPI on a high-performance cluster.
 
 Note that tetrahedron or boundary options may not be supplied with
 this option; they should instead be supplied when option
@@ -276,11 +273,10 @@ written to \fIresults.rga\fR\&.
 .SH "SEE ALSO"
 .PP
 sigcensus,
-tricensus-manager,
 tricensus-mpi,
 regina-kde\&.
 .SH "AUTHOR"
 .PP
 This utility was written by Benjamin Burton <bab@debian.org>\&.
 Many people have been involved in the development
-of \fBRegina\fR; see the users' handbook for a full list of credits.
+of Regina; see the users' handbook for a full list of credits.

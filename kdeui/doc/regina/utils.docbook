@@ -4,9 +4,9 @@
  <para>
   The main applications <command>regina-kde</command> and
   <command>regina-python</command> are documented in the
-  <link linkend="manpages">previous reference chapter</link>.
-  This reference chapter documents the remaining specialised command-line
-  utilities that are provided with &regina;.
+  <link linkend="manpages">previous chapter</link>.
+  This chapter documents the more specialised command-line
+  utilities that &regina; provides.
  </para>
 
  <!-- File Concatenator -->
@@ -35,8 +35,8 @@
    <para>
     This utility combines several individual &regina; data files into
     a single larger data file.  The new file will have a container as its
-    top-level packet, beneath which will be placed the packet trees from
-    each of the supplied input files.
+    top-level packet, and beneath this container will be the packet trees
+    from each of the input files that you supply.
    </para>
    <para>
     If an output file is specified through option <option>-o</option>,
@@ -111,24 +111,24 @@
     (optionally compressed) &xml;.
    </para>
    <para>
-    This utility simply converts back and forth between these different
+    This utility converts back and forth between these different
     file formats.
    </para>
    <para>
-    Argument <replaceable>old-file</replaceable> should be the file to
-    read and convert; argument <replaceable>new-file</replaceable> should
+    The argument <replaceable>old-file</replaceable> should be the file to
+    read and convert; the argument <replaceable>new-file</replaceable> should
     be the name of the new converted file to write.  These two filenames
     may be the same, in which case the old file will be replaced with the new.
    </para>
    <para>
-    If argument <replaceable>new-file</replaceable> is missing, the new
-    file will be written to standard output; this forces output to be
+    If the argument <replaceable>new-file</replaceable> is missing then the
+    new file will be written to standard output, which forces the output to be
     uncompressed &xml; (see option <option>-u</option>).
    </para>
    <warning><para>
     When writing an old-style binary file, some information might be
-    lost.  Specifically, only information that is understood by the
-    &regina;&nbsp;2.4 calculation engine will be written.
+    lost.  Old-style binary files can only store information that was
+    understood by the old version &regina;&nbsp;2.4.
    </para></warning>
   </refsect1>
 
@@ -208,7 +208,7 @@
    </para>
    <para>
     If a list of packet labels is given on the command-line, only those
-    packets listed will be output.  Otherwise all packets in the given
+    packets will be output.  Otherwise all packets in the given
     file will be output.
    </para>
   </refsect1>
@@ -220,8 +220,8 @@
      <term><option>-f</option> (default)</term>
      <listitem>
       <para>
-       Output full packet details.  Output for each packet will cover
-       several lines, beginning with basic packet details (such as label
+       Output full packet details.  The output for each packet will cover
+       several lines, beginning with basic details (such as the packet label
        and type) followed by the packet's long description.
       </para>
      </listitem>
@@ -246,7 +246,8 @@
     <varlistentry>
      <term><option>-c</option></term>
      <listitem>
-      <para>Finish output with a count of all packets in the given file.</para>
+      <para>Finish the output with a total count of all packets in the
+       file.</para>
      </listitem>
     </varlistentry>
    </variablelist>
@@ -298,12 +299,12 @@
     (optionally compressed) &xml;.
    </para>
    <para>
-    This utility simply determines which of these formats a given
+    This utility determines which of these formats a given
     &regina; data file is in.
    </para>
    <para>
-    Multiple files may be given on the command-line; the details of each
-    file format will be written to standard output.
+    You may pass multiple files on the command line; the format of each
+    file will be written to standard output.
    </para>
   </refsect1>
 
@@ -348,8 +349,8 @@
    <title>Description</title>
    <para>
     Forms a census of all splitting surface signatures of the given
-    order (the <firstterm>order</firstterm> is the number of quads in
-    the resulting splitting surface).
+    order.  The <firstterm>order</firstterm> is the number of
+    quadrilaterals in the resulting splitting surface.
    </para>
    <para>
     The signatures will be written to standard output, one per
@@ -376,18 +377,20 @@
      </listitem>
     </itemizedlist>
    </para>
-   <warning><para>
-    Currently upper-case symbols in signatures are not supported; this
+   <para>
+    Upper-case symbols in signatures are not yet supported; this
     program will only output signatures whose symbols are all lower-case.
-    Hopefully this deficiency will be removed in future versions.
-   </para></warning>
+   </para>
+   <para>
+    For more information on splitting surface signatures, see
+    Burton's PhD thesis at &regmanburtonthesisurl;.
+   </para>
   </refsect1>
 
   <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-tricensus">tricensus</link>,
-    <link linkend="man-tricensus-manager">tricensus-manager</link>,
     <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
     <link linkend="man-regina-kde">regina-kde</link>.
    </para>
@@ -473,14 +476,12 @@
     be saved to the given file.
    </para>
    <para>
-    Note that options <option>--genpairs</option> and
-    <option>--usepairs</option> may be used to split a census into smaller
-    pieces to be run simultaneously on different machines.  See also the
-    <link
-     linkend="man-tricensus-manager"><command>tricensus-manager</command></link>
-    and
-    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
-    utilities, which can help coordinate these simultaneous processes.
+    You can use the options <option>--genpairs</option> and
+    <option>--usepairs</option> to split a census into smaller
+    pieces.  See also
+    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>,
+    which allows you to coordinate these pieces using &mpi; on a
+    high-performance cluster.
    </para>
    <warning>
     <para>
@@ -681,11 +682,10 @@
        multiple pieces.  By using this option, one can quickly generate
        a complete list of possible face pairings and then feed subsets of
        this list to different machines to work on simultaneously in order
-       to produce an overall census of triangulations.  See the
-       <link linkend="man-tricensus-manager"><command>tricensus-manager</command></link>
-       and
+       to produce an overall census of triangulations.  The
        <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
-       utilities for assistance in coordinating these simultaneous processes.
+       utility can help coordinate these simultaneous processes on a
+       high-performance cluster.
       </para>
       <para>
        The list of all face pairings will be written to the given output
@@ -730,12 +730,11 @@
       <para>
        This option is used to run only a subset of a particular census.  See
        option <option>--genpairs</option> for further details on how to split
-       a census into subsets to run simultaneously on different machines.
-       See also the
-       <link linkend="man-tricensus-manager"><command>tricensus-manager</command></link>
+       a census into subsets that can run simultaneously on different machines,
        and
        <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
-       utilities, which can help coordinate these simultaneous processes.
+       which can help coordinate these simultaneous processes using
+       &mpi; on a high-performance cluster.
       </para>
       <para>
        Note that tetrahedron or boundary options may not be supplied with
@@ -831,302 +830,6 @@
    <title>See Also</title>
    <para>
     <link linkend="man-sigcensus">sigcensus</link>,
-    <link linkend="man-tricensus-manager">tricensus-manager</link>,
-    <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
-    <link linkend="man-regina-kde">regina-kde</link>.
-   </para>
-  </refsect1>
-
-  <refsect1>
-   <title>Author</title>
-   <para>
-    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
-    &manpageack;
-   </para>
-  </refsect1>
- </refentry>
-
- <!-- Triangulation Census Manager (Shared Directory) -->
-
- <refentry id="man-tricensus-manager">
-  <refmeta>
-   <refentrytitle>tricensus-manager</refentrytitle>
-   <manvolnum>1</manvolnum>
-  </refmeta>
-
-  <refnamediv>
-   <refname>tricensus-manager</refname>
-   <refpurpose>Distribute a triangulation census amongst several machines</refpurpose>
-  </refnamediv>
-
-  <refsynopsisdiv>
-   <cmdsynopsis>
-    <command>tricensus-manager</command>
-    <group>
-     <arg><option>-o, --orientable</option></arg>
-     <arg><option>-n, --nonorientable</option></arg>
-    </group>
-    <group>
-     <arg><option>-f, --finite</option></arg>
-     <arg><option>-d, --ideal</option></arg>
-    </group>
-    <group>
-     <arg><option>-m, --minimal</option></arg>
-     <arg><option>-M, --minprime</option></arg>
-     <arg><option>-N, --minprimep2</option></arg>
-    </group>
-    <arg choice="req"><replaceable>pairs-file-prefix</replaceable></arg>
-   </cmdsynopsis>
-  </refsynopsisdiv>
-
-  <refsect1>
-   <title>Description</title>
-   <para>
-    Allows multiple processes, possibly running on different machines,
-    to collaborate in forming a census of 3-manifold triangulations.
-    Coordination is done through a simple locking of files in a shared
-    directory, and each separate process must be started manually.
-   </para>
-   <note><para>
-    This program makes no use of any formal cluster-like infrastructure.
-    For an &mpi;-enabled program better suited to running on a cluster, see the
-    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
-    utility instead.
-   </para></note>
-   <para>
-    Census generation must take place in a single directory.  The
-    different processes are coordinated by locking files in this
-    directory, and progress reports and final results are stored in this
-    directory also.  If the census is to be distributed amongst different
-    machines (not just different processors), this directory must be on a
-    filesystem to which they all have access.
-   </para>
-   <para>
-    In preparing a census to be distributed amongst several processes or
-    machines, it should first be split into several smaller pieces.
-    Running <link linkend="man-tricensus"><command>tricensus</command></link>
-    with option <option>--genpairs</option> (which is quite fast) will create
-    a list of face pairings, each of which must be analysed in order to
-    complete the census.  The census is split into pieces by subdividing
-    this list of face pairings.
-   </para>
-   <note><para>
-    Whereas <command>tricensus-manager</command>
-    uses many small face pairings files (with individual processes
-    claiming individual files to work on),
-    the alternative <command>tricensus-mpi</command> uses a single large face
-    pairings file (with &mpi; handling the distribution of pairings to
-    individual processes).
-   </para></note>
-   <para>
-    A common file prefix (such as <filename>6-or</filename>) should be
-    selected.  Each subset of face pairings should be stored (one face
-    pairing per line) in a file whose name begins with this prefix and
-    ends with <filename>.pairs</filename>.  For instance, if
-    <command>tricensus</command> with option <option>--genpairs</option>
-    produced 10 face pairings, these might be split into five files, each
-    with two lines representing two of these face pairings, named
-    <filename>6-or-0.pairs</filename>, <filename>6-or-1.pairs</filename>,
-    <filename>6-or-2.pairs</filename>, <filename>6-or-3.pairs</filename> and
-    <filename>6-or-4.pairs</filename> respectively.
-   </para>
-   <warning>
-    <para>
-     Each face pairing that is processed <emphasis>must</emphasis> be
-     in canonical form, i.e., must be a minimal representative of its
-     isomorphism class.  Note that the face pairings generated by
-     <link linkend="man-tricensus"><command>tricensus</command></link>
-     with option <option>--genpairs</option> all satisfy this condition.
-    </para>
-   </warning>
-   <para>
-    The <command>tricensus-manager</command> utility works as follows.
-    It runs through all files beginning with the given prefix and ending
-    in <filename>.pairs</filename>, and assumes each of these contains a
-    subset of face pairings to process.  If a pairings file has already been
-    taken by another process (i.e., if a corresponding time file such as
-    <filename>6-or-3.time</filename> exists), it will be skipped.
-    Otherwise the pairings file will be claimed by this process and the
-    following actions will be taken.
-   </para>
-   <itemizedlist>
-    <listitem>
-     <para>
-      This process will write its own time file (such as
-      <filename>6-or-3.time</filename>) indicating which machine and
-      which <command>tricensus-manager</command> process has claimed
-      this particular subset of face pairings.
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      Command <command>tricensus</command> will be run with this subset
-      of face pairings to analyse (using option <option>--usepairs</option>).
-      Any other options given on the <command>tricensus-manager</command>
-      command-line will be passed directly through to
-      <command>tricensus</command> (these might include orientability or
-      minimality options, for instance).  The time at which this
-      subcensus began will be noted in the time file.
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      All output from the running subcensus will be redirected to a
-      corresponding progress file (such as
-      <filename>6-or-3.progress</filename>).  In particular, this allows
-      the user at any given time to see which face pairings from this
-      particular subset have been processed.
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      When this particular subcensus is complete, the results will be
-      saved in a corresponding topology data file (such as
-      <filename>6-or-3.rga</filename>).  The time at which the subcensus
-      finished will be noted in the time file.
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      At this point <command>tricensus-manager</command> will move on
-      and look for another subset of face pairings to process.
-     </para>
-    </listitem>
-   </itemizedlist>
-   <para>
-    Each <command>tricensus-manager</command> process will have at most
-    one child <command>tricensus</command> process running at any given
-    time.  Thus, for instance, if you have nine machines (all with
-    access to the common census directory) and you wish to have two
-    census calculations running simultaneously on each of these
-    machines, you should start <command>tricensus-manager</command>
-    a total of 18 times, twice on each machine, each with an identical
-    command-line.  These 18 simultaneous processes will then effectively
-    divide up the overall census between them.
-   </para>
-   <para>
-    Note that the number of face pairings files does not need to equal
-    the number of processors.  In fact, it is generally good to have a
-    very large number of small face pairings files (rather than a few
-    larger face pairings files).  Different files may take significantly
-    different times to process, and so by using many smaller files the
-    workload can be distributed more evenly between the various processors.
-   </para>
-   <tip><para>
-    Once the census is complete, the
-    <link linkend="man-regconcat"><command>regconcat</command></link>
-    command may be used to combine the many small topology data files
-    into one larger file for easier handling.
-   </para></tip>
-  </refsect1>
-
-  <refsect1>
-   <title>Options</title>
-   <para>
-    Any census options that are passed to
-    <command>tricensus-manager</command> will be passed directly through to
-    <command>tricensus</command>.  See the
-    <link linkend="man-tricensus"><command>tricensus</command> reference</link>
-    for details.
-   </para>
-   <para>
-    Note that some <command>tricensus</command> options are not
-    available here (e.g., tetrahedra and boundary options), since these must
-    be supplied earlier on when generating the initial list of face pairings
-    through <userinput>tricensus --genpairs</userinput>.
-   </para>
-   <para>
-    The option <option>--usepairs</option> need not be given to
-    <command>tricensus-manager</command>; this will be automatically
-    supplied to each child <command>tricensus</command> process.
-   </para>
-   <para>
-    Topology data output filenames must not be given to
-    <command>tricensus-manager</command> since these differ for each
-    subcensus.  Topology data filenames will be automatically
-    derived and supplied to each child <command>tricensus</command> process.
-   </para>
-  </refsect1>
-
-  <refsect1>
-   <title>Examples</title>
-   <para>
-    Suppose we wish to form a census of all 5-tetrahedron closed
-    non-orientable triangulations, where the census is optimised for
-    prime minimal P2-irreducible triangulations (and in particular, some
-    triangulations that are not prime, minimal and P2-irreducible may be
-    left out).
-   </para>
-   <para>
-    We begin by using <command>tricensus</command> to generate a full
-    list of face pairings.
-   </para>
-
-<screen>
-    <prompt>example$</prompt> <userinput>tricensus --genpairs -t 5 -i &gt; 5.pairs</userinput>
-    Total face pairings: 28
-    <prompt>example$</prompt>
-</screen>
-
-   <para>
-    We now split the large face pairings file into several smaller
-    files, each containing 4 of the 28 pairings.  The
-    <command>split</command> command is useful for this task.  Don't
-    forget that these files <emphasis>must</emphasis> be renamed
-    so that they end in the extension <filename>.pairs</filename>.
-   </para>
-
-<screen>
-    <prompt>example$</prompt> <userinput>split -l 4 5.pairs 5-nor</userinput>
-    <prompt>example$</prompt> <userinput>ls</userinput>
-    5-noraa  5-norab  5-norac  5-norad  5-norae  5-noraf  5-norag  5.pairs
-    <prompt>example$</prompt> <userinput>prename 's/$/.pairs/' 5-nor*</userinput>
-    <prompt>example$</prompt> <userinput>ls</userinput>
-    5-noraa.pairs  5-norac.pairs  5-norae.pairs  5-norag.pairs
-    5-norab.pairs  5-norad.pairs  5-noraf.pairs  5.pairs
-    <prompt>example$</prompt>
-</screen>
-
-   <para>
-    Finally, on each individual machine that will join in the
-    computation, we use <command>tricensus-manager</command> to start a
-    new process.  The remaining census options are passed here.
-   </para>
-
-<screen>
-    <prompt>node_1$</prompt> <userinput>tricensus-manager -nfN 5-nor</userinput>
-    Trying 5-noraa.pairs ... taken and processing ...
-</screen>
-
-<screen>
-    <prompt>node_2$</prompt> <userinput>tricensus-manager -nfN 5-nor</userinput>
-    Trying 5-noraa.pairs ... skipped.
-    Trying 5-norab.pairs ... taken and processing ...
-</screen>
-
-<screen>
-    <prompt>node_3$</prompt> <userinput>tricensus-manager -nfN 5-nor</userinput>
-    Trying 5-noraa.pairs ... skipped.
-    Trying 5-norab.pairs ... skipped.
-    Trying 5-norac.pairs ... taken and processing ...
-</screen>
-
-   <para>
-    Note that we pass a prefix of <filename>5-nor</filename> to avoid
-    catching the master file <filename>5.pairs</filename>.  It is
-    possibly safer simply to move <filename>5.pairs</filename> out of
-    the way (or rename it so it does not have the
-    <filename>.pairs</filename> extension and therefore will not be
-    picked up).
-   </para>
-  </refsect1>
-
-  <refsect1>
-   <title>See Also</title>
-   <para>
-    <link linkend="man-regconcat">regconcat</link>,
-    <link linkend="man-sigcensus">sigcensus</link>,
-    <link linkend="man-tricensus">tricensus</link>,
     <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
     <link linkend="man-regina-kde">regina-kde</link>.
    </para>
@@ -1181,21 +884,15 @@
   <refsect1>
    <title>Description</title>
    <para>
-    Allows multiple processes, possibly running on different machines, to
+    Allows multiple processes, possibly running on a cluster of
+    different machines, to
     collaborate in forming a census of 3-manifold triangulations.
     Coordination is done through &mpi; (the Message Passing Interface),
     and the entire census is run as a single &mpi; job.
+    This program is well suited for high-performance clusters.
    </para>
-   <note><para>
-    This program is well suited for running on a formal cluster-like
-    infrastructure.  For a more ad-hoc census manager that does not
-    rely on such infrastructure, see the
-    <link
-     linkend="man-tricensus-manager"><command>tricensus-manager</command></link>
-    utility instead.
-   </para></note>
    <para>
-    In preparing a census to be distributed amongst several processes or
+    To prepare a census for distribution amongst several processes or
     machines, the census must be split into smaller pieces.
     Running <link linkend="man-tricensus"><command>tricensus</command></link>
     with option <option>--genpairs</option> (which is very fast) will create
@@ -1208,28 +905,20 @@
     <replaceable>pairs-file</replaceable>.
     This file must contain one face pairing per line, and each of these
     face pairings must be in canonical form (i.e., must be a
-    minimal representative of its isomorphism class).  Note that the face
+    minimal representative of its isomorphism class).  The face
     pairings generated by
     <link linkend="man-tricensus"><userinput>tricensus
     --genpairs</userinput></link> are guaranteed to satisfy these conditions.
    </para>
-   <note><para>
-    Whereas <command>tricensus-mpi</command> uses a single large face
-    pairings file (with &mpi; handling the distribution of pairings to
-    individual processes),
-    the alternative <command>tricensus-manager</command>
-    uses many small face pairings files (with individual processes
-    claiming individual files to work on).
-   </para></note>
    <para>
-    This <command>tricensus-mpi</command> utility has two modes of
+    The <command>tricensus-mpi</command> utility has two modes of
     operation: default mode, and subsearch mode.  These are explained
     separately under <link linkend="man-tricensus-mpi-modes">modes
     of operation</link> below.
    </para>
    <para>
     In both modes, one &mpi; process acts as the controller and the remaining
-    processes each act as slaves.  The controller reads the list of face
+    processes all act as slaves.  The controller reads the list of face
     pairings from <replaceable>pairs-file</replaceable>, constructs a
     series of tasks based on these, and farms these tasks
     out to the slaves for processing.  Each slave processes one task
@@ -1243,11 +932,14 @@
     <filename><replaceable>output-file-prefix</replaceable>_<replaceable>p</replaceable>.rga</filename>
     in default mode or
     <filename><replaceable>output-file-prefix</replaceable>_<replaceable>p</replaceable>-<replaceable>s</replaceable>.rga</filename>
-    in subsearch mode, where <replaceable>p</replaceable> is the number
+    in subsearch mode.
+    Here <replaceable>output-file-prefix</replaceable> is passed on the
+    command line, <replaceable>p</replaceable> is the number
     of the face pairing being processed, and <replaceable>s</replaceable>
     is the number of the subsearch within that face pairing
     (both face pairings and subsearches are numbered from 1 upwards).
-    If no triangulations were found then the slave will write no output file.
+    If no triangulations were found then the slave will not write
+    any output file at all.
    </para>
    <para>
     The controller and slave
@@ -1267,20 +959,14 @@
     <filename><replaceable>output-file-prefix</replaceable>.log</filename>.
     The utility
     <link linkend="man-tricensus-mpi-status"><command>tricensus-mpi-status</command></link>
-    is able to parse this log and produce a shorter human-readable summary.
+    can parse this log and produce a shorter human-readable summary.
    </para>
-   <tip><para>
-    Once the census is complete, the
-    <link linkend="man-regconcat"><command>regconcat</command></link>
-    command may be used to combine the many small output files
-    into one large topology data file for easier handling.
-   </para></tip>
-   <warning><para>
+   <important><para>
     It is <emphasis>highly recommended</emphasis>
     that you use the <option>--sigs</option> option.  This will keep
     output files small, and will significantly reduce the memory footprint
     of <command>tricensus-mpi</command> itself.
-   </para></warning>
+   </para></important>
   </refsect1>
 
   <refsect1 id="man-tricensus-mpi-modes">
@@ -1294,9 +980,8 @@
    <itemizedlist>
     <listitem><para>
      In <emphasis>default mode</emphasis>, the controller simply
-     reads the list of face pairings and gives each
-     to a slave for processing, one after another.  In other words,
-     each slave task is the entire subcensus for a single face pairing.
+     reads the list of face pairings and gives each pairing
+     to a slave for processing, one after another.
     </para></listitem>
     <listitem><para>
      In <emphasis>subsearch mode</emphasis>, more work is pushed to
@@ -1326,21 +1011,20 @@
    </para>
    <itemizedlist>
     <listitem><para>
-     In default mode the slave tasks are
-     quite long.  If all slaves finish together this is quite efficient,
-     but if the finish times are staggered then the census may become
-     very inefficient towards the end (with some slaves sitting idle for
-     a long time as they wait for the remaining slaves to finish).
+     In default mode the slave tasks are quite long.
+     This means the parallelisation can become very poor towards the
+     end of the census, with some slaves sitting idle for
+     a long time as they wait for the remaining slaves to finish.
     </para></listitem>
     <listitem><para>
      As we move to subsearch mode with increasing depth, the slave
-     tasks become shorter and the slaves finish times will be closer
-     together (thus avoiding the inefficiency of several slaves sitting
-     idle as described above).  Moreover, with a more refined subsearch,
+     tasks become shorter and the slaves' finish times will be closer
+     together (thus avoiding the idle slave inefficiency described above).
+     Moreover, with a more refined subsearch,
      the progress information stored in the log will be more detailed,
      giving a better idea of how long the census has to go.  On the
      other hand, more work is pushed to the single-process controller
-     (risking a bottleneck if the depth is too great, with slaves
+     (risking a bottleneck if the depth is too great, with slaves now
      sitting idle as they wait for new tasks).  In addition the &mpi; overhead
      is greater, and the number of output files can become extremely large.
     </para></listitem>
@@ -1358,20 +1042,19 @@
    <title>Options</title>
    <para>
     The census options accepted by <command>tricensus-mpi</command>
-    have identical behaviour to those same options when passed to
-    <command>tricensus</command>.  See the
+    are identical to the options for <command>tricensus</command>
+    See the
     <link linkend="man-tricensus"><command>tricensus</command> reference</link>
-    for further details.
+    for details.
    </para>
    <para>
-    Note that some <command>tricensus</command> options are not
+    Some options from <command>tricensus</command> are not
     available here (e.g., tetrahedra and boundary options), since these must
-    be supplied earlier on when generating the initial list of face pairings
-    through <userinput>tricensus --genpairs</userinput>.
+    be supplied earlier on when generating the initial list of face pairings.
    </para>
    <para>
-    The remaining options specific to <command>tricensus-mpi</command>
-    are as follows.
+    There are new options specific to <command>tricensus-mpi</command>,
+    which are as follows.
    </para>
    <variablelist>
     <varlistentry>
@@ -1390,7 +1073,7 @@
       <para>
        See the <link linkend="man-tricensus-mpi-modes">modes of
        operation</link> section above for further information, as well
-       for hints on choosing a good value for <replaceable>levels</replaceable>.
+       as hints on choosing a good value for <replaceable>levels</replaceable>.
       </para>
      </listitem>
     </varlistentry>
@@ -1407,8 +1090,8 @@
        The behaviour of the controller remains unchanged.
       </para>
       <para>
-       The result will be an empty census.  The value of a dry run is
-       in the log file, which will show precisely how face pairings
+       The result will be an empty census.  The benefit of a dry run is
+       the log file it produces, which will show precisely how face pairings
        would be divided into subsearches in a real census run.
        In particular, the log file will show how
        many subsearches each face pairing produces (the utility
@@ -1417,7 +1100,7 @@
       </para>
       <para>
        At small subsearch depths, a dry run should be extremely fast.
-       As the given depth increases however, the dry run will become
+       As the depth increases however, the dry run will become
        slower due to the extra work given to the controller.
       </para>
       <para>
@@ -1435,10 +1118,9 @@
    <title>Examples</title>
    <para>
     Suppose we wish to form a census of all 6-tetrahedron closed
-    non-orientable triangulations, where the census is optimised for
-    prime minimal P2-irreducible triangulations (and in particular, some
-    triangulations that are not prime, minimal and P2-irreducible may be
-    left out).
+    non-orientable triangulations, optimised for
+    prime minimal P2-irreducible triangulations (so some
+    non-prime, non-minimal or non-P2-irreducible triangulations may be omitted).
    </para>
    <para>
     We begin by using <command>tricensus</command> to generate a full
@@ -1456,9 +1138,8 @@
     census.  A wrapper program such as <command>mpirun</command>
     or <command>mpiexec</command> can generally
     be used to start the &mpi; processes, though this depends on your
-    specific &mpi; implementation.  The command for running a distributed
-    census on 10 processors for the &mpich; implementation of &mpi; is as
-    follows.
+    specific &mpi; implementation.  The following command runs a distributed
+    census on 10 processors using the &mpich; implementation of &mpi;.
    </para>
 
 <screen>
@@ -1467,8 +1148,8 @@
 </screen>
 
     <para>
-     The current state of processing can be watched in the controller log
-     <filename>6-nor.log</filename> with the help of
+     The current state of processing is kept in the controller log
+     <filename>6-nor.log</filename>.  You can watch this log with the help of
      <link linkend="man-tricensus-mpi-status"><command>tricensus-mpi-status</command></link>.
     </para>
 
@@ -1498,7 +1179,6 @@
     <link linkend="man-regconcat">regconcat</link>,
     <link linkend="man-sigcensus">sigcensus</link>,
     <link linkend="man-tricensus">tricensus</link>,
-    <link linkend="man-tricensus-manager">tricensus-manager</link>,
     <link linkend="man-tricensus-mpi-status">tricensus-mpi-status</link>,
     <link linkend="man-regina-kde">regina-kde</link>.
    </para>
@@ -1539,21 +1219,21 @@
     This utility reads a log file produced by a
     <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
     job, and writes a human-readable summary to standard output.
-    It can be used for both jobs that have finished and jobs that are
+    It can be used for either jobs that have finished or jobs that are
     still running, and it can happily read logs that have been
     compressed using &gzip; or &bzip2;.
    </para>
    <para>
-    The logs produced by <command>tricensus-mpi</command> are quite
+    The logs produced by <command>tricensus-mpi</command> are very
     detailed, including timestamps, details of which slaves have taken
     which tasks, and how many triangulations each task has produced.
-    This utility distills this information into an easy-to-read
+    This utility distills this detailed log into an easy-to-read
     summary, with one line for each face pairing.
    </para>
    <para>
-    Output will only be given for face pairings that have been
-    examined so far (including face pairings whose processing is still
-    underway), and will include:
+    Output will only appear for face pairings that have been
+    examined so far (which includes face pairings still being processed).
+    This output will include:
    </para>
    <itemizedlist>
     <listitem><para>whether processing for each face pairing has
@@ -1632,16 +1312,18 @@
   <refsect1>
    <title>Description</title>
    <para>
-    This utility compares all triangulations in the first file against
-    all triangulations in the second file.  Specifically, it looks to
-    see which triangulations from <replaceable>file1</replaceable> are
-    isomorphic to which triangulations from
-    <replaceable>file2</replaceable>.
+    Compares all triangulations in the first file against
+    all triangulations in the second file, looking for pairs of
+    triangulations that are combinatorially isomorphic.
    </para>
    <para>
     The two given files must be &regina; data files.
     A full list of matches (or a full list of non-matches if
     <option>-n</option> is passed) is written to standard output.
+    A match occurs when some triangulation from
+    <replaceable>file1</replaceable> is combinatorially isomorphic to
+    some triangulation from <replaceable>file2</replaceable> (i.e.,
+    identical up to a relabelling of tetrahedra and their vertices).
    </para>
    <para>
     This utility can also do subcomplex testing instead of full
@@ -1673,10 +1355,8 @@
        <replaceable>file2</replaceable> will be listed, and vice versa.
       </para>
       <para>
-       The behaviour of this option is slightly different when
-       <option>-s</option> is passed; in particular, non-matches are
-       only tested in one direction only (there is no vice versa as indicated
-       above).
+       If <option>-s</option> is passed then non-matches are
+       tested in one direction only, not both; see below for details.
       </para>
      </listitem>
     </varlistentry>
