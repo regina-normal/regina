@@ -1,10 +1,5 @@
 # Known to work for:
-# - Fedora 11 (i386, x86_64)
-# - Fedora 10 (i386, x86_64)
-# - Fedora 9 (i386, x86_64)
-# - Fedora 8 (i386, x86_64)
-# - Fedora 7 (i386, x86_64)
-# - Fedora 6 (i386)
+# - Fedora 15 (i386, x86_64)
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
@@ -18,50 +13,25 @@ URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
-%if 0%{?fedora} >= 9
-Requires: kdelibs3
-Requires: kdebase3
-%else
 Requires: kdelibs
-Requires: kdebase
-%endif
+Requires: kdebase-runtime
 Requires: python
 Conflicts: regina
 
-# Generic build-depends:
 BuildRequires: boost-devel
+BuildRequires: cmake
 BuildRequires: cppunit-devel
 BuildRequires: doxygen
 BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
 BuildRequires: gmp-devel
-BuildRequires: libselinux-devel
+BuildRequires: kdelibs-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libxml2-devel
+BuildRequires: popt-devel
 BuildRequires: python-devel
 BuildRequires: zlib-devel
-
-# Fedora-version-specific build-depends:
-%if 0%{?fedora} >= 8
-BuildRequires: popt-devel
-%else
-BuildRequires: popt
-%endif
-
-%if 0%{?fedora} >= 9
-BuildRequires: kdelibs3-devel >= 3.2
-BuildRequires: qt3-devel >= 3.2
-%else
-BuildRequires: kdelibs-devel >= 3.2
-BuildRequires: qt-devel >= 3.2
-%endif
-
-%if 0%{?fedora} <= 6
-BuildRequires: libaio-devel
-%endif
-
-Prereq: /sbin/ldconfig
 
 %description
 Regina is a suite of mathematical software for 3-manifold topologists.
@@ -76,41 +46,21 @@ Python scripting giving full access to the calculation engine.
 %setup -n regina-%{version}
 
 %build
-unset QTDIR || : ; . /etc/profile.d/qt.sh
-FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
-export CFLAGS="$FLAGS"
-export CXXFLAGS="$FLAGS"
-./configure \
-%if "%{_lib}" != "lib"
-  --enable-libsuffix="%(A=%{_lib}; echo ${A/lib/})" \
-%endif
-  --disable-mpi --disable-debug --mandir=%{_mandir}
+mkdir -p %{_target_platform}
+pushd %{_target_platform}
+%{cmake_kde4} .. -DPACKAGING_MODE=1 -DPACKAGING_NO_MPI=1
+popd
 
-# Stop for a sanity check to see if the right bits are going to be built.
-grep '^REGINA_BUILD_DOCSENGINE=.engine.$' config.log > /dev/null
-grep '^REGINA_BUILD_ENGINE=.engine.$' config.log > /dev/null
-grep '^REGINA_BUILD_KDEUI=.kdeui.$' config.log > /dev/null
-grep '^REGINA_BUILD_MPI=..$' config.log > /dev/null
-grep '^REGINA_BUILD_PYTHON=.python.$' config.log > /dev/null
-grep '^REGINA_BUILD_TESTSUITE=.testsuite.$' config.log > /dev/null
-grep '^REGINA_BUILD_UTILS=.utils.$' config.log > /dev/null
-
-# On with the show.
-make
-make check
+make %{?_smp_mflags} -C %{_target_platform}
+make %{?_smp_mflags} -C %{_target_platform} test ARGS=-V
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install-strip DESTDIR=$RPM_BUILD_ROOT
+make install/fast DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
 
-# Delete unnecessary static libraries.
-rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.a
-rm -f $RPM_BUILD_ROOT%{_libdir}/regina/python/regina.a
-rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/libreginapart.a
-
-# Delete library files that can cause unnecessary dependencies.
-rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.so
+desktop-file-install --vendor="" \
+  --dir $RPM_BUILD_ROOT%{_datadir}/applications/kde4 \
+  $RPM_BUILD_ROOT%{_datadir}/applications/kde4/*
 
 %post -p /sbin/ldconfig
 
@@ -121,29 +71,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS.txt
 %doc CHANGES.txt
 %doc HIGHLIGHTS.txt
 %doc LICENSE.txt
 %docdir %{_docdir}/HTML/en/regina
 %docdir %{_datadir}/regina/engine-docs
 %{_bindir}/*
-%{_includedir}/regina
-%{_libdir}/libregina*
-# Make sure we don't ship unwanted static libs by accident.
-%{_libdir}/kde3/libreginapart.la
-%{_libdir}/kde3/libreginapart.so
-%{_libdir}/regina/python/regina.la
+%{_datadir}/regina/
+%{_includedir}/regina/
+%{_libdir}/libregina-engine.so
+%{_libdir}/libregina-engine.so.%{version}
 %{_libdir}/regina/python/regina.so
-%{_docdir}/HTML/en/regina
-%{_datadir}/applications/kde/*
-%{_datadir}/apps/regina
-%{_datadir}/apps/reginapart
-%{_datadir}/icons/*/*/*/*
-%{_datadir}/man/*/*
-%{_datadir}/mimelnk/*/*
-%{_datadir}/regina
-%{_datadir}/services/*
+%{_kde4_docdir}/HTML/en/regina
+%{_kde4_docdir}/HTML/en/regina-xml
+%{_kde4_appsdir}/regina/
+%{_kde4_datadir}/applications/kde4/regina.desktop
+%{_mandir}/*/*
+%{_kde4_datadir}/mime/packages/regina.xml
+%{_kde4_iconsdir}/*/*/*
 
 %changelog
 * Sat Sep 10 2011 Ben Burton <bab@debian.org> 4.90
