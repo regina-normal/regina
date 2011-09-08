@@ -407,6 +407,8 @@ Version 4.90  [ 10 September, 2011 ] - First prerelease for version 5.0.
             - Now finishes with a running total of all triangulations found.
             - Compressed logs (using gzip or bzip2) are now supported.
               Requires the perl module IO::Uncompress::AnyUncompress.
+        tricensus-manager:
+            - Removed.  Use tricensus-mpi instead.
     TEST SUITE:
         - Some slower but more detailed tests are now optional, and are
           disabled by default.  To switch these tests on, set the
