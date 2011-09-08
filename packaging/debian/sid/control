@@ -73,7 +73,7 @@ Description: MPI utilities for Regina, the 3-manifold topology software
 Package: regina-normal-doc
 Architecture: all
 Section: doc
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, kdelibs5-data
 Recommends: iceweasel | www-browser
 Suggests: regina-normal, regina-normal-dev
 Breaks: regina-normal (< 4.6-2)
