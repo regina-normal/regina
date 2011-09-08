@@ -2,16 +2,16 @@ MPI-Enabled Utilities in Regina
 -------------------------------
 
 This package provides the components of Regina that are designed to run
-large computations on clusters.  For the standard components of Regina,
-such as the graphical user interface and the users' handbook, see the
-main package "regina-normal".
+large computations on high-performance clusters.  If you want Regina's
+graphical user interface or its standard command-line tools, see the main
+package regina-normal.
 
-The utilities in this package make use of MPI (the Message Passing Interface).
-In particular, they have been built against the default implementation of
-MPI in debian.  This means that they must be run under the default runtime
-environment, which can be found in the package mpi-default-bin.
+The utilities in this package make use of MPI (the Message Passing Interface),
+and have been built against the default implementation of MPI in debian.
+This means that you must run them under the default MPI runtime environment,
+which can be found in the package mpi-default-bin.
 
-If you have no need for MPI, Regina also ships with non-MPI alternatives
-to the above utilities in the main package "regina-normal".
+If you have no need for MPI, Regina includes "plain" non-MPI alternatives
+to these utilities in the package regina-normal.
 
- -- Ben Burton <bab@debian.org>, Thu, 03 Mar 2011 08:36:52 +1000
+ -- Ben Burton <bab@debian.org>, Fri,  9 Sep 2011 06:33:29 +1000

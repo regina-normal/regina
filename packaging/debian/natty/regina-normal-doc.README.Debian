@@ -1,11 +1,15 @@
-Regina Calculation Engine API Documentation
--------------------------------------------
+Regina Documentation
+--------------------
 
-This package provides full API documentation for the Regina calculation
-engine.  This can be used when using Python scripting with Regina, or
-when building the C++ calculation engine into your own projects.
+This package provides a rich users' handbook for Regina, and also full
+API documentation for the C++ shared library and Python bindings.
 
-Note that the users' handbook and sample data files are now provided in
-the package regina-normal, not this package.
+For the users' handbook, see:
 
- -- Ben Burton <bab@debian.org>, Sun,  3 Jul 2005 18:35:25 +1000
+  /usr/share/doc/regina-normal-doc/handbook/index.html
+
+For the API documentation, see:
+
+  /usr/share/doc/regina-normal-doc/engine-docs/index.html
+
+ -- Ben Burton <bab@debian.org>, Fri,  9 Sep 2011 06:11:01 +1000

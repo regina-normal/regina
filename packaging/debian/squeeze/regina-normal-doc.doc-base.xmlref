@@ -1,0 +1,11 @@
+Document: regina-xmlref
+Title: Regina XML File Format
+Author: Ben Burton <bab@debian.org>
+Abstract: Regina is a suite of mathematical software for 3-manifold
+ topologists.  This manual details the precise XML file format that
+ Regina uses for its data files.
+Section: Science/Mathematics
+
+Format: HTML
+Index: /usr/share/doc/regina-normal-doc/xmlref/index.html
+Files: /usr/share/doc/regina-normal-doc/xmlref/*.html

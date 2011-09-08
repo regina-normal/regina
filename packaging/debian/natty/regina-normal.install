@@ -6,7 +6,6 @@ usr/bin/trisetcmp
 usr/lib/libregina-engine.so.4.90
 usr/lib/regina-normal/python/regina.so
 usr/share/applications
-usr/share/doc/kde/HTML
 usr/share/icons
 usr/share/kde4/apps/regina
 usr/share/man/man1/reg*

@@ -15,17 +15,6 @@ INSTALL_FILE = install -p -o root -g root -m 644
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
 endif
-# ifeq ($(shell dpkg-architecture -qDEB_BUILD_ARCH),arm)
-# 	CFLAGS += -O0
-# 	CXXFLAGS += -O0
-# endif
-
-# The MPI code currently builds on all architectures.  If it should fail
-# on some architecture, that architecture should set NO_MPI = 1 and
-# configmpi = --disable-mpi .
-#
-NO_MPI = 0
-configmpi =
 
 # Find the default python version so we can pass it to ./configure.  This 
 # keeps things sane when multiple python*-dev packages are installed.
@@ -38,7 +27,7 @@ ${build_dir}:
 
 	mkdir -p ${build_dir}
 	cd ${build_dir} && \
-		cmake $(CURDIR) $(config_mpi) \
+		cmake $(CURDIR) \
 		-DPACKAGE_NAME=regina-normal -DPACKAGING_MODE=1 \
 		$(DEB_CMAKE_KDE4_FLAGS) \
 		$(DEB_CMAKE_CUSTOM_FLAGS) \
@@ -81,19 +70,14 @@ install: build
 	# Split into separate binary packages.
 	dh_install --sourcedir=$(tmp) --list-missing
 
-	# Ensure sample data files are stored as compressed XML.
-	for i in debian/regina-normal/usr/share/doc/regina-normal/examples/*.rga; do \
-	  ${build_dir}/utils/regconvert -x $$i $$i; \
-	done
-
 	# Install lintian overrides.
-	# for pkg in `dh_listpackages`; do \
-	#   if test -e debian/$$pkg.override; then \
-	#     $(INSTALL_DIR) debian/$$pkg/usr/share/lintian/overrides; \
-	#     $(INSTALL_FILE) debian/$$pkg.override \
-	#       debian/$$pkg/usr/share/lintian/overrides/$$pkg; \
-	#   fi; \
-	# done
+	for pkg in `dh_listpackages`; do \
+	  if test -e debian/$$pkg.override; then \
+	    $(INSTALL_DIR) debian/$$pkg/usr/share/lintian/overrides; \
+	    $(INSTALL_FILE) debian/$$pkg.override \
+	      debian/$$pkg/usr/share/lintian/overrides/$$pkg; \
+	  fi; \
+	done
 
 # Build architecture-independent files here.
 binary-indep: build install

@@ -5,6 +5,11 @@ regina-normal (4.90-1) unstable; urgency=low
     Re-enabled the GUI as a result.
   * The build system has been ported from autotools to cmake.
   * The new upstream release builds fine on amd64 (closes: #624882).
+  * Moved the users' handbook into regina-normal-doc.
+  * Upgraded several suggests/recommends.  Upgraded regina-normal-mpi to
+    depend on mpi-default-bin, and regina-normal to depend on both graphviz
+    and regina-normal-doc (which the GUI expends to be present).  Upgraded
+    regina-normal to recommend gap.
   * Bumped standards-version to 3.9.2.0 (no changes required).
 
  -- Ben Burton <bab@debian.org>  Sat, 10 Sep 2011 07:17:25 +1000
