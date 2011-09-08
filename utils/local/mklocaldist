@@ -10,9 +10,7 @@
 #
 # Creates a tarball of source files within regina/utils/local/, so that
 # these files can be dropped into a standard Regina source tree on another
-# machine (without requiring a subversion checkout).  Note that, once
-# unpacked, recreate_makefile will need to be used before the local
-# utilities can be built.
+# machine (without requiring a subversion checkout).
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -44,10 +42,9 @@ today=`date +'%Y%m%d'`
 
 echo "Collecting sources ..."
 srclist=`find local -name .svn -prune -o '(' \
-  -name Makefile.am -o -name Makefile.in -o \
-  -name "*.cpp" -o -name "*.h" -o -name "*.txt" \
+  -name Makefile -o -name "*.cpp" -o -name "*.h" -o -name "*.txt" \
   ')' -print`
-extralist='local/mklocaldist local/recreate_makefile'
+extralist='local/mklocaldist'
 
 tarball="regina-local-$today.tar.gz"
 echo "Creating tarball $tarball ..."
