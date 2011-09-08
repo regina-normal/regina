@@ -72,18 +72,17 @@ checking host system type... i686-pc-linux-gnu
   <qandadiv><title>Running &regina;</title>
    <qandaentry id="troubleqn-prefix">
     <question><para>
-     &regina; refuses to open any topology data files, claiming that an
-     appropriate topology data component could not be found.
+     &regina; is missing some icons.  For example, I do not see any
+     icons in the packet tree.
     </para></question>
     <answer>
      <para>
-      It is critical that &regina; be installed in the same location as
-      all other &kde; applications on your system.  For instance, if
-      &kde; is installed beneath <filename>/opt/kde3</filename> then
-      &regina; must be installed there also.
-      Errors such as this occur when &regina; has not been installed
-      in the same location as &kde;, and thus &kde; cannot find one or
-      more of its components.
+      &regina; needs to be installed in the same location as &kde;.
+      For instance, if &kde; is installed beneath
+      <filename>/opt/kde4</filename> then &regina; must be installed there
+      also.
+      If you install &regina; in the wrong location then &kde; will have
+      trouble loading some of its helper files (like the tree icons).
      </para>
      <para>
       The location in which &regina; is installed is controlled at
@@ -151,13 +150,13 @@ checking host system type... i686-pc-linux-gnu
       it will be marked with a small padlock in the packet tree.  This is
       illustrated below for the figure eight knot complement.
      </para>
-     <screenshot>
-      <mediaobject>
+     <para>
+      <inlinemediaobject>
        <imageobject>
         <imagedata fileref="padlock.png"/>
        </imageobject>
-      </mediaobject>
-     </screenshot>
+      </inlinemediaobject>
+     </para>
     </answer>
    </qandaentry>
 
@@ -188,14 +187,6 @@ checking host system type... i686-pc-linux-gnu
          (some distributions call this <literal>kdebase3</literal>,
          <literal>kdebase-progs</literal> or
          <literal>kdebase-unified</literal>).
-        </para>
-        <para>
-         Note that you will need the &kde3; version of the &khelpcenter;.
-         If your &linux; distribution has moved to &kde4; and no longer
-         supports &kde3; (such as recent &ubuntu; releases), you might not
-         be able to fix this problem at all.  In this case, your best
-         solution is to download the handbook in &html; format or read it
-         online, as described above.
         </para>
        </listitem>
        <listitem><para>
