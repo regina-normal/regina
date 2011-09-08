@@ -484,61 +484,66 @@
    </inlinemediaobject>
   </para>
   <para>
-   The intial settings here are:
+   The settings here are:
   </para>
   <glosslist>
    <glossentry>
     <glossterm><guilabel>Auto-indent</guilabel></glossterm>
     <glossdef><para>
-     If this option is set, each new command line will be automatically
-     indented to match the previous line.  The indent is inserted into the
-     command area and can of course be changed by backspacing or adding
-     additional spaces.
+     If checked, &regina; will automatically indent each new command in
+     a &python; console with spaces to match the previous line.
+     You can of course add more spaces or remove them using backspace
+     before you type your command.
     </para></glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Spaces per tab</guilabel></glossterm>
     <glossdef><para>
-     Each command line is indented using spaces only, not tabs.  This option
-     controls the number of spaces that are inserted into a command line
-     when the <keycap>Tab</keycap> key is pressed.
+     Controls the number of spaces that are inserted into the command
+     box when you press <keycap>Tab</keycap>.
     </para></glossdef>
    </glossentry>
+   <glossentry id="python-libraries">
+    <glossterm><guilabel>&python; libraries</guilabel></glossterm>
+    <glossdef>
+     <para>
+      <firstterm>&python; libraries</firstterm> are files containing
+      code that is run automatically at the beginning of every
+      <link linkend="python-starting">&python; session</link>
+      (each time you open a graphical console, run a script packet,
+      or start <command>regina-python</command> from the command line).
+      A typical &python; library defines one or more useful functions.
+     </para>
+     <para>
+      You can save your own frequently-used code in a file, and then add
+      this file to the list of &python; libraries here in the &python;
+      options panel.
+     </para>
+     <para>
+      When you no longer wish to use a library, you can remove it from
+      the list or you can just <emphasis>deactivate</emphasis> it.
+      Deactivating means the code will
+      <emphasis>not be run automatically</emphasis>, but the file will remain
+      here in the list so that you can easily activate it again.
+      Active libraries are marked with a tick, and deactivated libraries are
+      marked with a no-entry sign (as seen in the illustration above).
+     </para>
+     <para>
+      &regina; ships with some example &python; libraries.
+      These are usually installed in
+      <filename>/usr/share/regina/pylib/</filename>, though this may
+      differ with your &linux; distribution.
+     </para>
+     <para><tip><para>
+      The list of &python; libraries is stored in the file
+      &regina-libs;.  This is a plain text file, with each library filename
+      written on a separate line.  &regina; will ignore
+      any blank lines or lines beginning with a hash (#).
+      You are welcome to edit this file directly if you prefer.
+     </para></tip></para>
+    </glossdef>
+   </glossentry>
   </glosslist>
-
-  <sect2 id="python-libraries">
-   <title>&python; Libraries</title>
-   <para>
-    In addition, the &python; options page allows the configuration of
-    <firstterm>&python; libraries</firstterm>.  These are files containing
-    &python; code that is run at the beginning of every &python;
-    session, including every time a &python; console is opened,
-    every time a script packet is run and every time the program
-    <link linkend="man-regina-python"><command>regina-python</command></link>
-    is started.
-    See the <link linkend="python">&python; scripting
-    overview</link> for general information regarding &python; sessions.
-   </para>
-   <para>
-    The list of currently active libraries is stored in the file
-    &regina-libs;, which should be a plain text file
-    containing one library filename per line.  Blank lines and lines
-    beginning with a hash (#) are ignored.
-   </para>
-   <para>
-    The &python; options page offers a convenient way of managing
-    the &regina-libs; file.  Libraries can be added and removed through
-    this page and currently active libraries can be temporarily disabled.
-   </para>
-   <tip><para>
-    A set of prepackaged &python; libraries that might be of use is
-    provided with the &regina; distribution.  These libraries are
-    generally installed in
-    <filename>/usr/share/regina/pylib</filename> or
-    <filename>/usr/local/share/regina/pylib</filename>, though this may differ
-    with your distribution.
-   </para></tip>
-  </sect2>
  </sect1>
 
  <sect1 id="options-snappea">
@@ -547,6 +552,9 @@
   <para>
    The <guilabel>&snappea;</guilabel> options panel controls how &regina;
    interacts with the &snappea; kernel.
+   &regina; includes part of the &snappea; kernel for certain geometric
+   computations in the
+   <link linkend="tri-snappea">triangulation &snappea; tab</link>.
   </para>
   <para>
    <inlinemediaobject>
@@ -556,12 +564,6 @@
    </inlinemediaobject>
   </para>
   <para>
-   &regina; includes part of the &snappea; kernel for certain geometric
-   computations; see the
-   the <link linkend="tri-snappea"><guilabel>&snappea;</guilabel> tab</link>
-   in the triangulation viewer for details.
-  </para>
-  <para>
    The settings here are:
   </para>
   <glosslist>
@@ -569,27 +571,18 @@
     <glossterm><guilabel>Diagnostic messages</guilabel></glossterm>
     <glossdef>
      <para>
-      This specifies whether the &snappea; kernel should write
-      diagnostic messages to the console.
+      Specifies whether the &snappea; kernel should write
+      diagnostic messages to the terminal.
      </para>
      <para>
       The &snappea; kernel sometimes sends out messages indicating what
-      it is doing (for instance, a frequently seen message is
-      "<emphasis>Computing hyperbolic structure .&nbsp;.&nbsp;.</emphasis>").
-      If this option is enabled, all such messages will be written to
-      the console.  If this option is disabled, these messages will
-      be suppressed.
-     </para>
-     <para>
-      When this option is enabled, if you start &regina; from the
-      command line then you will see diagnostic messages appear on the
-      same console from which you started &regina;.  If you start &regina;
-      from a menu (such as the &kde; menu), you will not see these
-      messages at all.
-     </para>
-     <para>
-      If you do not know what this is all about, you can safely leave
-      this option switched off.
+      it is doing (such as
+      &ldquo;<emphasis>Computing hyperbolic structure
+      .&nbsp;.&nbsp;.</emphasis>&rdquo;).
+      If this option is checked, all such messages will be written to
+      the terminal from which you started &regina;.
+      If this is unchecked (or if you started &regina; some other way,
+      such as from a menu or taskbar), these messages will be suppressed.
      </para>
     </glossdef>
    </glossentry>
@@ -597,34 +590,28 @@
     <glossterm><guilabel>Allow closed triangulations</guilabel></glossterm>
     <glossdef>
      <para>
-      This specifies whether &regina; is allowed to pass closed
+      Specifies whether &regina; is allowed to pass closed
       triangulations to the &snappea; kernel.
      </para>
      <para>
-      This is disabled by default, since &snappea; is primarily designed
-      for working with ideal triangulations only.  However, if you need
-      the results and you know what you are doing, you can enable this option.
+      This is disabled by default, since &snappea; is mainly designed
+      to work with ideal triangulations only.  However, if you
+      know what you are doing then you can enable this option.
      </para>
      <para>
-      Note that enabling this option does not mean that
+      Enabling this option does not mean that
       <emphasis>all</emphasis> closed triangulations will be passed to
-      the &snappea; kernel.  There are still other constraints
-      that must be satisfied &mdash; in particular, the triangulation must
-      have only one vertex.
+      the &snappea; kernel.  There are other constraints that must be
+      satisfied&mdash;for instance, &regina; will not send &snappea;
+      a closed triangulation with more than one vertex.
      </para>
-     <para><warning>
-      <para>
-       Enabling this option may occasionally cause the &snappea; kernel
-       to raise a fatal error!  As a result &regina; may crash and
-       you may lose any unsaved work.
-      </para>
-      <para>
-       Again this is because &snappea; is primarily designed for working
-       with ideal triangulations only.  Please be sure that you know
-       what you are doing (and you are willing to save regularly) before
-       enabling this option.
-      </para>
-     </warning></para>
+     <para><caution><para>
+      Enabling this option might cause the &snappea; kernel to crash,
+      which means you may lose unsaved work.
+      This is because you are asking &snappea; to do something that it
+      was not originally designed for.  Please be sure that you know
+      what you are doing, and please save regularly!
+     </para></caution></para>
     </glossdef>
    </glossentry>
   </glosslist>
