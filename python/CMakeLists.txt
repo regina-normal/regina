@@ -40,18 +40,8 @@ CONFIGURE_FILE (
   @ONLY
 )
 
-# Copy certain directories into the build tree for in-tree running 
-# of regina-python
-SET(DIRECTORIES scripts icons)
-FOREACH(D ${DIRECTORIES})
-  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/${D}
-    ${CMAKE_BINARY_DIR}/${D}
-    )
-ENDFOREACH(D)
-
 INSTALL(TARGETS regina LIBRARY DESTINATION ${PKGLIBDIR}/python)
 INSTALL(PROGRAMS ${PROJECT_BINARY_DIR}/python/regina-python DESTINATION bin)
 
-INSTALL(FILES runscript.py DESTINATION ${PKGDATADIR}/scripts)
+INSTALL(FILES runscript.py DESTINATION ${PKGDATADIR}/internal/scripts)
 
