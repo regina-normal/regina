@@ -1,22 +1,36 @@
 <chapter id="options">
  <title>Configuration</title>
  <para>
-  &regina; can be configured through the
-   <menuchoice>
-    <guimenu>Settings</guimenu>
-    <guisubmenu>Configure Regina</guisubmenu>
-   </menuchoice>
-  menu item.  Several configuration pages are available, each of which
-  is described here.
+  You can configure &regina; by selecting
+  <menuchoice>
+   <guimenu>Settings</guimenu>
+   <guisubmenu>Configure Regina</guisubmenu>
+  </menuchoice>
+  under &linux;, or
+  <menuchoice>
+   <guimenu>regina-kde</guimenu>
+   <guisubmenu>Preferences</guisubmenu>
+  </menuchoice>
+  on &macosx;.
+ </para>
+ <para>
+  <inlinemediaobject>
+   <imageobject>
+    <imagedata fileref="menu-options.png"/>
+   </imageobject>
+  </inlinemediaobject>
+ </para>
+ <para>
+  There are several panels of options; each is described here in turn.
  </para>
 
  <sect1 id="options-general">
   <title>General Options</title>
 
   <para>
-   You can change the following general options:
+   The <guilabel>General</guilabel> options panel controls the overall
+   behaviour of &regina;.
   </para>
-
   <para>
    <inlinemediaobject>
     <imageobject>
@@ -24,7 +38,9 @@
     </imageobject>
    </inlinemediaobject>
   </para>
-
+  <para>
+   The options here are:
+  </para>
   <glosslist>
    <glossentry>
     <glossterm><guilabel>Automatic file extension</guilabel></glossterm>
@@ -104,10 +120,9 @@
   <title>Triangulation Options</title>
 
   <para>
-   You can change the following options for how &regina; works with
-   triangulations:
+   The <guilabel>Triangulation</guilabel> options panel controls how
+   &regina; works with 3-manifold triangulations.
   </para>
-
   <para>
    <inlinemediaobject>
     <imageobject>
@@ -115,7 +130,9 @@
     </imageobject>
    </inlinemediaobject>
   </para>
-
+  <para>
+   The options here are:
+  </para>
   <glosslist>
    <glossentry>
     <glossterm><guilabel>Default top-level tab</guilabel></glossterm>
@@ -223,9 +240,9 @@
   <title>Normal Surface Options</title>
 
   <para>
-   The following options are available on the normal surfaces page.
+   The <guilabel>Surfaces</guilabel> options panel controls how
+   &regina; works with lists of normal surfaces.
   </para>
-
   <para>
    <inlinemediaobject>
     <imageobject>
@@ -233,7 +250,9 @@
     </imageobject>
    </inlinemediaobject>
   </para>
-
+  <para>
+   The options here are:
+  </para>
   <glosslist>
    <glossentry>
     <glossterm><guilabel>Default coordinate system</guilabel></glossterm>
@@ -296,6 +315,11 @@
   <title>&pdf; Options</title>
 
   <para>
+   The <guilabel>&pdf;</guilabel> options panel controls how
+   &regina; deals with &pdf; packets.
+  </para>
+
+  <para>
    <inlinemediaobject>
     <imageobject>
      <imagedata fileref="options-pdf.png"/>
@@ -303,10 +327,6 @@
    </inlinemediaobject>
   </para>
 
-  <para>
-   This page allows the user to configure how &regina; deals with &pdf;
-   packets.
-  </para>
   <para>
    &regina; does not contain any explicit code for displaying
    &pdf; documents, and so it must rely on other programs for this task.
@@ -337,10 +357,8 @@
    </itemizedlist>
   </para>
   <para>
-   The following options are available to configure how &regina;
-   displays &pdf; documents:
+   The options here are:
   </para>
-
   <glosslist>
    <glossentry>
     <glossterm><guilabel>Use embedded viewer if possible</guilabel></glossterm>
@@ -412,6 +430,12 @@
   <title>Census Options</title>
 
   <para>
+   The <guilabel>Census</guilabel> options panel lets you configure which
+   files are searched by the
+   <link linkend="tri-censuslookup">census lookup facility</link>.
+  </para>
+
+  <para>
    <inlinemediaobject>
     <imageobject>
      <imagedata fileref="options-census.png"/>
@@ -445,8 +469,9 @@
   <title>&python; Options</title>
 
   <para>
-   The following options are available for fine-tuning the behaviour of
-   &python; consoles.
+   The <guilabel>&python;</guilabel> options panel controls the behaviour
+   of &python; consoles, and allows you to manage your active
+   <link linkend="python-libraries">&python; libraries</link>.
   </para>
   <para>
    <inlinemediaobject>
@@ -455,7 +480,9 @@
     </imageobject>
    </inlinemediaobject>
   </para>
-
+  <para>
+   The intial options here are:
+  </para>
   <glosslist>
    <glossentry>
     <glossterm><guilabel>Auto-indent</guilabel></glossterm>
@@ -478,7 +505,6 @@
 
   <sect2 id="python-libraries">
    <title>&python; Libraries</title>
-
    <para>
     In addition, the &python; options page allows the configuration of
     <firstterm>&python; libraries</firstterm>.  These are files containing
@@ -501,14 +527,6 @@
     the &regina-libs; file.  Libraries can be added and removed through
     this page and currently active libraries can be temporarily disabled.
    </para>
-   <!-- TODO: Put this in once it's reimplemented.
-   <para>
-    Each library also has a <guibutton>Compile</guibutton> button beside
-    it.  Pressing this button will test whether or not the library
-    actually compiles under &python;.  The library code will only be
-    compiled; it will not be run.
-   </para>
-   -->
    <tip><para>
     A set of prepackaged &python; libraries that might be of use is
     provided with the &regina; distribution.  These libraries are
@@ -524,16 +542,9 @@
   <title>&snappea; Options</title>
 
   <para>
-   Since version &snappeaintro;, part of the &snappea; kernel has
-   been included in &regina; for performing certain geometric
-   computations.  The results of these computations can be found in
-   the <link linkend="tri-snappea"><guilabel>&snappea;</guilabel> tab</link>
-   in the triangulation viewer.
+   The <guilabel>&snappea;</guilabel> options panel controls how &regina;
+   interacts with the &snappea; kernel.
   </para>
-  <para>
-   The following options affect how the &snappea; kernel is used by &regina;.
-  </para>
-
   <para>
    <inlinemediaobject>
     <imageobject>
@@ -541,7 +552,15 @@
     </imageobject>
    </inlinemediaobject>
   </para>
-
+  <para>
+   &regina; includes part of the &snappea; kernel for certain geometric
+   computations; see the
+   the <link linkend="tri-snappea"><guilabel>&snappea;</guilabel> tab</link>
+   in the triangulation viewer for details.
+  </para>
+  <para>
+   The options here are:
+  </para>
   <glosslist>
    <glossentry>
     <glossterm><guilabel>Diagnostic messages</guilabel></glossterm>
