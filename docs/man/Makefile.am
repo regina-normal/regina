@@ -15,7 +15,6 @@ man_MANS = \
   regfiletype.1 \
   sigcensus.1 \
   tricensus.1 \
-  tricensus-manager.1 \
   tricensus-mpi.1 \
   tricensus-mpi-status.1 \
   trisetcmp.1 \

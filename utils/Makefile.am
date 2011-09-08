@@ -13,7 +13,6 @@ SUBDIRS = @REGINA_BUILD_MPI@
 INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@ @UTILS_LIBS@
 
-bin_SCRIPTS = tricensus-manager
 bin_PROGRAMS = regconcat regconvert regfiledump regfiletype sigcensus tricensus trisetcmp
 
 regconcat_SOURCES = regconcat.cpp
@@ -30,5 +29,5 @@ tricensus_SOURCES = tricensus.cpp
 
 trisetcmp_SOURCES = trisetcmp.cpp
 
-EXTRA_DIST = README.txt tricensus-manager
+EXTRA_DIST = README.txt
 
