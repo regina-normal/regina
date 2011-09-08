@@ -8,8 +8,6 @@
 
 KDE_OPTIONS=noautodist
 
-SUBDIRS = sigs
-
 examplesdir = $(pkgdatadir)/examples
 
 examples_DATA = README.txt \
