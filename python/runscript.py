@@ -1,5 +1,10 @@
 #!/bin/false
 #
+# ----------------------------------------------------------------------
+# FOR INTERNAL USE ONLY:  You should not run this program directly.
+# Use regina-python instead to run python scripts from the command line.
+# ----------------------------------------------------------------------
+#
 # Regina - A Normal Surface Theory Calculator
 # Python Environment Initialisation
 #
@@ -16,9 +21,6 @@
 #   - Running a selected script with the provided command-line arguments,
 #       or,
 #     printing a startup banner for working in interactive mode.
-#
-# This script is for internal use only and should NOT be run directly.
-# Instead the wrapper script regina-python should be used.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
