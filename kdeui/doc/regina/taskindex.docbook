@@ -253,7 +253,7 @@
   <primaryie>compiling</primaryie>
   <secondaryie><link linkend="compiling">compiling &regina; into other
    code</link></secondaryie>
-  <secondaryie><link linkend="trouble-compiling">fixing compile errors
+  <secondaryie><link linkend="trouble-compile">fixing compile errors
    when building &regina;</link></secondaryie>
  </indexentry>
 

@@ -1,8 +1,8 @@
 <chapter id="troubleshooting">
  <title>Troubleshooting and <acronym>FAQ</acronym></title>
 
- <sect1 id="trouble-compiling"><title>Compiling &regina;</title>
-  <qandaset>
+ <qandaset>
+  <qandadiv id="trouble-compile"><title>Compiling &regina;</title>
    <qandaentry id="trouble-devpkgs">
     <question><para>
      The <userinput>./configure</userinput> script complains that it
@@ -67,11 +67,9 @@ checking host system type... i686-pc-linux-gnu
      </para>
     </answer>
    </qandaentry>
-  </qandaset>
- </sect1>
+  </qandadiv>
 
- <sect1 id="trouble-running"><title>Running &regina;</title>
-  <qandaset>
+  <qandadiv><title>Running &regina;</title>
    <qandaentry id="troubleqn-prefix">
     <question><para>
      &regina; refuses to open any topology data files, claiming that an
@@ -268,13 +266,17 @@ checking host system type... i686-pc-linux-gnu
       in the &pdf; settings you can provide a full path to your
       favourite &pdf; viewer application.
      </para>
+     <para>
+      If you are having trouble getting &pdf; support working out of the
+      box, please do send an email or
+      <link linkend="services">file a bug</link> so the problem can be
+      fixed in future releases.
+     </para>
     </answer>
    </qandaentry>
-  </qandaset>
- </sect1>
+  </qandadiv>
 
- <sect1 id="trouble-python"><title>&python; Scripting</title>
-  <qandaset>
+  <qandadiv><title>&python; Scripting</title>
    <qandaentry id="trouble-python-disabled">
     <question><para>
      &regina; tells me that &python; scripting has been disabled.
@@ -405,11 +407,9 @@ checking host system type... i686-pc-linux-gnu
      </para>
     </answer>
    </qandaentry>
-  </qandaset>
- </sect1>
+  </qandadiv>
 
- <sect1 id="trouble-misc"><title>Miscellaneous</title>
-  <qandaset>
+  <qandadiv><title>Miscellaneous</title>
    <qandaentry id="trouble-testsuite">
     <question><para>
      What is the test suite, and how do I run it?
@@ -506,7 +506,7 @@ make[1]: Leaving directory `/home/bab/source/regina'
      </para>
     </answer>
    </qandaentry>
-  </qandaset>
- </sect1>
+  </qandadiv>
+ </qandaset>
 </chapter>
 
