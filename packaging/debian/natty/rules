@@ -37,7 +37,9 @@ ${build_dir}:
 
 configure: ${build_dir}
 
-build: build-stamp
+build: build-arch build-indep
+build-arch: build-stamp
+build-indep: build-stamp
 
 build-stamp: ${build_dir}
 	dh_testdir

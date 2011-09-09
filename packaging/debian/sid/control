@@ -76,8 +76,8 @@ Section: doc
 Depends: ${misc:Depends}, kdelibs5-data
 Recommends: iceweasel | www-browser
 Suggests: regina-normal, regina-normal-dev
-Breaks: regina-normal (< 4.6-2)
-Replaces: regina-normal (< 4.6-2)
+Breaks: regina-normal (<< 4.6-2)
+Replaces: regina-normal (<< 4.6-2)
 Description: documentation for Regina, the 3-manifold topology software
  Regina is a suite of mathematical software for 3-manifold topologists.
  This package provides a rich users' handbook, complete API documentation
