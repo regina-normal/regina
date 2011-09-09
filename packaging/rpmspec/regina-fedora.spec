@@ -74,7 +74,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc CHANGES.txt
 %doc HIGHLIGHTS.txt
 %doc LICENSE.txt
-%docdir %{_docdir}/HTML/en/regina
+%docdir %{_kde4_docdir}/HTML/en/regina
+%docdir %{_kde4_docdir}/HTML/en/regina-xml
 %docdir %{_datadir}/regina/engine-docs
 %{_bindir}/*
 %{_datadir}/regina/
@@ -82,8 +83,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libregina-engine.so
 %{_libdir}/libregina-engine.so.%{version}
 %{_libdir}/regina/python/regina.so
-%{_kde4_docdir}/HTML/en/regina
-%{_kde4_docdir}/HTML/en/regina-xml
+%{_kde4_docdir}/HTML/en/regina/
+%{_kde4_docdir}/HTML/en/regina-xml/
 %{_kde4_appsdir}/regina/
 %{_kde4_datadir}/applications/kde4/regina.desktop
 %{_mandir}/*/*
