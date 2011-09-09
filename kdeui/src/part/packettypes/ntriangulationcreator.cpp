@@ -262,7 +262,14 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea->setLayout(hLayout);
     expln = i18n("<qt>The isomorphism signature "
         "from which the new triangulation will be created.  An example "
-        "isomorphism signature is <i>bkaagj</i>.</qt>");
+        "isomorphism signature is <i>bkaagj</i>.<p>"
+        "Isomorphism signatures identify triangulations uniquely "
+        "up to combinatorial isomorphism.  For more information, "
+        "see <i>The Pachner graph and the simplification of 3-sphere "
+        "triangulations</i>, B.&nbsp;Burton, published in "
+        "<i>SCG '11: Proceedings of the Twenty-Seventh Annual Symposium "
+        "on Computational Geometry</i>, ACM, 2011, "
+        "pp.&nbsp;153&ndash;162.</qt>");
     label = new QLabel(i18n("Isomorphism signature:"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
