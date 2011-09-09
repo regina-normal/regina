@@ -60,13 +60,24 @@ make %{?_smp_mflags} -C %{_target_platform} test ARGS=-V
 rm -rf $RPM_BUILD_ROOT
 make install/fast DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
 
-desktop-file-install \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications/kde4 \
-  $RPM_BUILD_ROOT%{_datadir}/applications/kde4/*
+desktop-file-validate \
+  $RPM_BUILD_ROOT%{_kde4_datadir}/applications/kde4/regina.desktop ||:
 
-%post -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+touch --no-create %{_kde4_iconsdir}/hicolor &> /dev/null ||:
 
-%postun -p /sbin/ldconfig
+%posttrans
+update-desktop-database -q &> /dev/null
+gtk-update-icon-cache %{_kde4_iconsdir}/hicolor &> /dev/null ||:
+
+%postun
+/sbin/ldconfig
+if [ $1 -eq 0 ]; then
+  update-desktop-database -q &> /dev/null ||:
+  touch --no-create %{_kde4_iconsdir}/hicolor &> /dev/null ||:
+  gtk-update-icon-cache %{_kde4_iconsdir}/hicolor &> /dev/null ||:
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
