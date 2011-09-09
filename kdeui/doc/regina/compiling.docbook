@@ -103,7 +103,7 @@
   </para>
 <screen>
     <prompt>example$</prompt> <userinput>regina-engine-config --cflags</userinput>
-    -I/usr/include -I/usr/include/libxml2
+    -I/usr/include/regina-normal -I/usr/include -I/usr/include/libxml2
     <prompt>example$</prompt>
 </screen>
   <para>
@@ -113,7 +113,7 @@
   </para>
 <screen>
     <prompt>example$</prompt> <userinput>regina-engine-config --libs</userinput>
-    -L/usr/lib -lregina-engine -lgmp -lm -lz
+    -L/usr/lib -lregina-engine /usr/lib/libxml2.so /usr/lib/libgmp.so /usr/lib/libz.so -lpthread
     <prompt>example$</prompt>
 </screen>
   <para>
