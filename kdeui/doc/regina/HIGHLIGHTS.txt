@@ -1,14 +1,49 @@
 
 Regina - A Normal Surface Theory Calculator
 
-    This file describes general highlights of the changes between
-    releases.
+    This file describes key highlights of the changes between releases.
 
-    For specific details of these changes as well as changes to the API
-    for the calculation engine, see CHANGES.txt in the same directory
-    as this file.
+    For a full list of changes, including all changes to the C++/Python API,
+    see the file CHANGES.txt.
 
 Version 4.90  [ 10 September, 2011 ] - First prerelease for version 5.0.
+
+    Installation:
+        - Regina has been ported to KDE4, which means you can finally
+          install it on a modern GNU/Linux distribution.
+        - The experience on MacOSX is much cleaner and more natural
+          than it ever was before.  You no longer need X11; instead
+          Regina acts almost like a native Mac app (though you still
+          need Fink; we're a long way yet from a drag-and-drop install).
+    User Interface:
+        - The user interface has had a complete overhaul, and there have
+          been many small-but-important improvements to usability.
+        - The Regina Handbook has also had a complete overhaul.  It is
+          more readable and streamlined, and full of screenshots to walk
+          you through what Regina can do.
+    Features:
+        - Regina now supports isomorphism signatures, which are short
+          sequences of letters, digits and punctuation that identify a
+          triangulation uniquely up to combinatorial isomorphism.
+        - You can enumerate all taut angle structures, which is much
+          faster than enumerating all vertex angle structures.
+        - You can test normal surfaces for incompressibility (through
+          C++/Python only).  See arXiv:0909.4625 for the algorithms.
+        - You can now give tetrahedra consistent orientations in a
+          triangulation.  Just press the big Orient button above the
+          triangulation viewer.  Thanks to Matthias Goerner.
+    Optimisations:
+        - A lot has changed under the hood for this release: the code is
+          generally cleaner and more streamlined throughout.
+        - Normal surface enumeration is significantly faster again,
+          due to the use of a new trie-like data structure.
+    C++ / Python Changes:
+        - Yet more code is deprecated in preparation for Regina 5.0.
+          See http://regina.sourceforge.net/deprecation.html
+          for a guide to updating your scripts and programs.
+        - You no longer need to call NTriangulation::gluingsHaveChanged().
+        - When building triangulations, you should now add tetrahedra using
+          NTriangulation::newTetrahedron(), not create tetrahedra yourself.
 
 Version 4.6  [ 16 May, 2009 ]
 
