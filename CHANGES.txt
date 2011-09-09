@@ -1,11 +1,11 @@
 
 Regina - A Normal Surface Theory Calculator
 
-    This file contains specific details of most changes, including
-    changes to the API for the calculation engine.
+    This file gives a detailed list of changes between releases,
+    including all changes to the C++/Python API.
 
-    For a human-readable summary of the changes between releases, see
-    HIGHLIGHTS.txt in the same directory as this file.
+    For just the key highlights, see the (far more readable) file
+    HIGHLIGHTS.txt.
 
 Version 5.0  [ (under development) ]
 
@@ -103,9 +103,10 @@ Version 4.90  [ 10 September, 2011 ] - First prerelease for version 5.0.
         - The graphical user interface has been ported from KDE3 to KDE4.
         - The build system has been ported from autotools to cmake.
         - The built-in portions of the SnapPea kernel have been re-synced
-          with the September 2009 version of the kernel.
+          with the September 2009 version of SnapPea.
     DOCUMENTATION:
-        - The users' handbook has undergone a thorough overhaul.
+        - The users' handbook has undergone a thorough overhaul.  It is
+          cleaner, more streamlined, and now full of screenshots.
         - The data file format has been split out of the users' handbook
           and placed in its own separate reference manual.
     ENGINE:
@@ -391,14 +392,13 @@ Version 4.90  [ 10 September, 2011 ] - First prerelease for version 5.0.
               removed.  As a result, REGISTER_FLAVOUR now takes five arguments,
               not six.
     USER INTERFACE:
-        - Ported from KDE3 to KDE4.. finally!
-        - A number of usability updates designed to help new users
-          better find their way around the software.
+        - Ported from KDE3 to KDE4.  Finally!
+        - The user interface has had a thorough overhaul, and includes
+          many usability updates to help new users find their way around.
+          Overall, the behaviour is generally cleaner and more sensible.
+          A full list of changes is omitted for reasons of space and sanity.
         - There is now an option to enable or disable diagnostic
           messages from the SnapPea kernel.
-        - Warn users if they try to save without committing their changes first.
-        - Only display counts that are relevant in the normal surface summary
-          pane (e.g., no spun normal surface count for a closed triangulation).
     UTILITIES:
         tricensus, tricensus-mpi:
             - New option -s to output lists of isomorphism signatures instead
@@ -408,7 +408,7 @@ Version 4.90  [ 10 September, 2011 ] - First prerelease for version 5.0.
             - Compressed logs (using gzip or bzip2) are now supported.
               Requires the perl module IO::Uncompress::AnyUncompress.
         tricensus-manager:
-            - Removed.  Use tricensus-mpi instead.
+            - Removed, since tricensus-mpi is a much better alternative.
     TEST SUITE:
         - Some slower but more detailed tests are now optional, and are
           disabled by default.  To switch these tests on, set the
