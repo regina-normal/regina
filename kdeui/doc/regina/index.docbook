@@ -44,6 +44,14 @@
    of &regina;; see the <link linkend='acknowledgements'>acknowledgements
    page</link> for a full list of credits.">
 
+  <!-- Menu items are formatted differently between index.docbook and
+       manonly.docbook. -->
+  <!ENTITY menuapidocs "<menuchoice><guimenu>Help</guimenu><guimenuitem>&python;
+   &api; Reference</guimenuitem></menuchoice>">
+  <!ENTITY menuhandbook "<menuchoice><guimenu>Help</guimenu><guimenuitem>Regina
+   Handbook</guimenuitem></menuchoice>">
+  <!ENTITY menuimportsigs "<menuchoice><guimenu>File</guimenu><guisubmenu>Import</guisubmenu><guimenuitem>Isomorphism Signature List</guimenuitem></menuchoice>">
+
   <!ENTITY a1 "<replaceable>a<subscript>1</subscript></replaceable>">
   <!ENTITY a2 "<replaceable>a<subscript>2</subscript></replaceable>">
   <!ENTITY a3 "<replaceable>a<subscript>3</subscript></replaceable>">
@@ -95,10 +103,6 @@
   <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
   <!ENTITY macosx "<productname>MacOS&nbsp;X</productname>">
   <!ENTITY mandriva "<productname>Mandriva</productname>">
-  <!ENTITY menuapidocs "<menuchoice><guimenu>Help</guimenu><guimenuitem>&python;
-   &api; Reference</guimenuitem></menuchoice>">
-  <!ENTITY menuhandbook "<menuchoice><guimenu>Help</guimenu><guimenuitem>Regina
-   Handbook</guimenuitem></menuchoice>">
   <!ENTITY mobius "M&ouml;bius">
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">

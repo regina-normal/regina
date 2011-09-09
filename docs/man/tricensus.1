@@ -16,43 +16,42 @@ tricensus \- Form a census of 3-manifold triangulations
 
 .SH "DESCRIPTION"
 .PP
-Forms a census of all 3-manifold triangulations satisfying a
-particular set of conditions.
+Forms a census of all 3-manifold triangulations that satisfy
+some set of conditions.
 .PP
-The only condition that must be provided is the number of tetrahedra
-used to build the triangulations.  Additional constraints may be
-specified on the command-line as described below.
+These conditions are specified using various command-line arguments.
+The only condition that you \fBmust\fR provide is
+the number of
+tetrahedra, but there are many other options available.
 .PP
 Each triangulation will be output precisely once up to combinatorial
-isomorphism.  Invalid triangulations (triangulations with edges
-identified to themselves in reverse or boundary vertices whose links
-are not discs) will not be output at all.
+isomorphism.  Invalid triangulations (i.e., triangulations with edges
+identified to themselves in reverse, or vertices whose links
+have boundary but are not discs) will not be output at all.
 .PP
 As the census progresses, the state of progress will be written (slowly)
-to standard output.  Once the census is complete, the census itself will
-be saved to the given file.
+to standard output.  Once the census is complete, the full census will
+be saved to the given output file.
 .PP
 You can use the options \fB--genpairs\fR and
 \fB--usepairs\fR to split a census into smaller
 pieces.  See also
 \fBtricensus-mpi\fR,
-which allows you to coordinate these pieces using MPI on a
-high-performance cluster.
+a more powerful tool that allows you to distribute a census
+across a high-performance computing cluster.
 .sp
 .RS
-.B "Warning:"
+.B "Caution:"
 .PP
-A census with even a relatively small number of tetrahedra can
-take an incredibly long time to run and chew up massive amounts of
+A census with even a small number of tetrahedra can
+take an incredibly long time to run, and can chew up massive amounts of
 memory.  It is recommended that you try very small censuses to begin
-with (such as 3 or 4 tetrahedra) and work upwards to establish the
-limits relative to your machine.
+with (such as 3 or 4 tetrahedra), and work upwards to establish the
+limits of your machine.
 .PP
 For very large census runs, it is \fBhighly recommended\fR
 that you use the \fB--sigs\fR option, which will keep
-the output file small and significantly reduce the memory footprint
-of \fBtricensus\fR itself.  See the
-\fB--sigs\fR documentation below for details.
+the output file small and significantly reduce the memory footprint.
 .RE
 .SH "OPTIONS"
 .TP
@@ -82,45 +81,43 @@ ideal vertices).
 .TP
 \fB-d, --ideal\fR
 Only produce triangulations with at least one ideal vertex.
+There might or might not be internal vertices (whose links are
+spheres) as well.
 .TP
 \fB-m, --minimal\fR
 Do not include triangulations that are obviously non-minimal.
 
-A series of short tests will be run on each triangulation produced;
-if a triangulation is found to be non-minimal it will not be placed
-in the census.
-
-Note that these tests are not capable of deciding that a
-triangulation \fBis\fR minimal; at best the results
-will be inconclusive (in which case the triangulation will be placed
-in the census anyway).
+This option uses a series of fast tests that try to eliminate
+non-minimal triangulations, but that are not always conclusive.
+If Regina cannot quickly tell whether a triangulation is
+non-minimal, it will place the triangulation in the census regardless.
 .TP
 \fB-M, --minprime\fR
 Do not include triangulations that are obviously non-minimal,
 non-prime and/or disc-reducible.
 
-This option can significantly speed up the census and vastly
+This can significantly speed up the census and vastly
 reduce the final number of triangulations produced.
 
-A triangulation satisfying any of the above conditions might be
-left out of the census, although not all such triangulations will
-be ignored.  What \fBis\fR guaranteed is that any
-triangulation that is minimal, prime and disc-irreducible will
-certainly be included in the census.
+As above, this option uses a series of fast tests that are not
+always conclusive.
+If Regina cannot quickly tell whether a triangulation is
+non-minimal, non-prime or disc-reducible, it will place the
+triangulation in the census regardless.
 .TP
 \fB-N, --minprimep2\fR
 Do not include triangulations that are obviously non-minimal,
 non-prime, P2-reducible and/or disc-reducible.
 
-As with the \fB--minprime\fR option,
-this option can significantly speed up the census and vastly
-reduce the final number of triangulations produced.
+This can significantly speed up the census and vastly
+reduce the final number of triangulations produced,
+even more so than \fB--minprime\fR\&.
 
-A triangulation satisfying any of the above conditions might be
-left out of the census, although not all such triangulations will
-be ignored.  What \fBis\fR guaranteed is that any
-triangulation that is minimal, prime, P2-irreducible and
-disc-irreducible will certainly be included in the census.
+As above, this option uses a series of fast tests that are not
+always conclusive.
+If Regina cannot quickly tell whether a triangulation is
+non-minimal, non-prime, P2-reducible or disc-reducible, it will place
+the triangulation in the census regardless.
 .TP
 \fB-s, --sigs=\fR
 Instead of writing a full Regina data file, just output a list
@@ -128,15 +125,14 @@ of isomorphism signatures.
 
 The output file will be a plain text file.  Each line will be a
 short string of letters, digits and punctuation that uniquely
-encodes a 3-manifold triangulation (up to combinatorial isomorphism).
-The full output file can be imported from within Regina by
-selecting
-FileImportIsomorphism Signature List\&.
+encodes a 3-manifold triangulation up to combinatorial isomorphism.
+You can import this text file from within Regina by selecting
+File->Import->Isomorphism Signature List from the menu.
 
 This option is highly recommended for large census enumerations.
 First, the output file will be considerably smaller.
 More importantly, the memory footprint of
-\fBtricensus\fR itself will also be much smaller:
+\fBtricensus\fR will also be much smaller:
 triangulations can be written to the output file and forgotten
 immediately, instead of being kept in memory to construct a final
 Regina data file.
@@ -145,63 +141,62 @@ Regina data file.
 Only generate face pairings, not triangulations.
 
 The outermost layer of the census code involves pairing off the
-faces of the individual tetrahedra without actually determining
-the corresponding gluing permutations.  For each face pairing
-produced, all possible sets of gluing permutations are then generated
-and corresponding triangulations created.
+faces of individual tetrahedra without determining
+the corresponding gluing permutations.  For each face pairing that is
+produced, Regina will try many different sets of gluing permutations
+and generated the corresponding triangulations.
 
 Face pairing generation consumes a very small fraction of the
 total census runtime, and effectively divides the census into
-multiple pieces.  By using this option, one can quickly generate
-a complete list of possible face pairings and then feed subsets of
-this list to different machines to work on simultaneously in order
-to produce an overall census of triangulations.  The
+multiple pieces.  This option allows you to quickly generate
+a complete list of possible face pairings, so that you can feed subsets
+of this list to different machines to work on simultaneously.  You
+can coordinate this manually, or you can use
 \fBtricensus-mpi\fR
-utility can help coordinate these simultaneous processes on a
-high-performance cluster.
+to coordinate it for you on a high-performance cluster.
 
 The list of all face pairings will be written to the given output
-file in text format (although in the special case of face pairing
-generation you may omit the output file from the command-line, in
-which case the pairings will be written to standard output).
-This program can then be run with option \fB--usepairs\fR
-to generate the actual triangulations corresponding to different
-subsets of these face pairings.
+file in text format (though you may omit the output file from the
+command line, in which case the face pairings will be written to
+standard output).
+If you are coordinating your sub-censuses manually, you can use
+the option \fB--usepairs\fR to generate triangulations
+from a subset of these face pairings.
 
-Note that orientability, finiteness or minimality options may not be
-supplied with this option; they should instead be supplied when option
-\fB--usepairs\fR is used to process each subset of face
-pairings.
+Options for orientability, finiteness or minimality cannot be
+used with \fB--genpairs\fR; instead you should use them
+later with \fB--usepairs\fR, or pass them to
+\fBtricensus-mpi\fR\&.
 
-Note also that when this option is used no progress reporting will
-take place (although the face pairings should be generated
-sufficiently quickly that the output file itself can be used to
-track the state of progress).
+This option does not come with progress reporting, though
+typically it runs fast enough that this does not matter.
+You can always track the state of progress by counting lines in
+the output file.
 .TP
 \fB-P, --usepairs\fR
 Use only the given subset of face pairings to build the triangulations.
 
-Each face pairing that is processed \fBmust\fR be
+Each face pairing that is processed must be
 in canonical form, i.e., must be a minimal representative of its
-isomorphism class.  Note that the face pairings generated by option
-\fB--genpairs\fR all satisfy this condition.
+isomorphism class.  All face pairings generated using
+\fB--genpairs\fR are guaranteed to satisfy this condition.
 
 Face pairings should be supplied on standard input, one per line.
-They should be listed in the format produced by option
+They should be listed in the format produced by the option
 \fB--genpairs\fR\&.
 
-This option is used to run only a subset of a particular census.  See
-option \fB--genpairs\fR for further details on how to split
+This option effectively lets you run a subset of a larger census.
+See \fB--genpairs\fR for further details on how to split
 a census into subsets that can run simultaneously on different machines,
-and
+or
 \fBtricensus-mpi\fR
-which can help coordinate these simultaneous processes using
-MPI on a high-performance cluster.
+which can coordinate this process using MPI on a
+high-performance cluster.
 
-Note that tetrahedron or boundary options may not be supplied with
-this option; they should instead be supplied when option
-\fB--genpairs\fR is used to split the full census into
-pieces.
+Options for tetrahedra or boundary faces cannot be used with
+\fB--usepairs\fR; instead you should pass them earlier
+along with \fB--genpairs\fR when you split the original
+census into pieces.
 .SH "EXAMPLES"
 .PP
 The following command forms a census of all 3-tetrahedron closed
@@ -224,7 +219,7 @@ The following command forms a census of 4-tetrahedron closed
 orientable triangulations, where the census creation is optimised
 for prime minimal triangulations.  Although all prime minimal
 triangulations will be included, there may be some non-prime or
-non-minimal triangulations that are left out.
+non-minimal triangulations in the census also.
 
 .nf
     example$ \fBtricensus -t 4 -oifM results.rga\fR
@@ -238,7 +233,7 @@ non-minimal triangulations that are left out.
 .fi
 .PP
 The following command generates all face pairings for a
-5-tetrahedron census where triangulations must have precisely two
+5-tetrahedron census in which all triangulations have precisely two
 boundary faces.  The face pairings will be written to
 \fIpairings.txt\fR, whereupon they can be broken up
 and distributed for processing at a later date.
@@ -252,10 +247,10 @@ and distributed for processing at a later date.
 The face pairings generated in the previous example can then be fleshed
 out into a full census of all 3-manifold triangulations with five
 tetrahedra, precisely two boundary faces and no ideal vertices as
-follows.  Note that the number of tetrahedra and boundary faces were
-already specified in the previous command and do not need to be
-supplied again.  The face pairings will be read from
-\fIpairings.txt\fR and the final census will be
+follows.  The number of tetrahedra and boundary faces were
+already specified in the previous command, and cannot be
+supplied here.  The face pairings will be read from
+\fIpairings.txt\fR, and the final census will be
 written to \fIresults.rga\fR\&.
 
 .nf

@@ -641,12 +641,7 @@
        short string of letters, digits and punctuation that uniquely
        encodes a 3-manifold triangulation up to combinatorial isomorphism.
        You can import this text file from within &regina; by selecting
-       <menuchoice>
-        <guimenu>File</guimenu>
-        <guisubmenu>Import</guisubmenu>
-        <guimenuitem>Isomorphism Signature List</guimenuitem>
-       </menuchoice>.
-       from the menu.
+       &menuimportsigs; from the menu.
       </para>
       <para>
        This option is highly recommended for large census enumerations.
