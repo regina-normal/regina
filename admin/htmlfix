@@ -31,6 +31,7 @@
 set -e
 
 for i in "$@"; do
-  sed -i -e 's/..\/common\/kde_logo.png/regina_logo.png/g' "$i"
+  sed -i -e 's/..\/common\/kde_logo.png/regina_logo.png/g' \
+  	-e 's/\.\.\/common\//common\//g' "$i"
 done
 
