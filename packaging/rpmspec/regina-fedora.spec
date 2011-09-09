@@ -22,6 +22,7 @@ Conflicts: regina
 BuildRequires: boost-devel
 BuildRequires: cmake
 BuildRequires: cppunit-devel
+BuildRequires: desktop-file-utils
 BuildRequires: doxygen
 BuildRequires: gcc
 BuildRequires: gcc-c++
@@ -59,7 +60,7 @@ make %{?_smp_mflags} -C %{_target_platform} test ARGS=-V
 rm -rf $RPM_BUILD_ROOT
 make install/fast DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
 
-desktop-file-install --vendor="" \
+desktop-file-install \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications/kde4 \
   $RPM_BUILD_ROOT%{_datadir}/applications/kde4/*
 
