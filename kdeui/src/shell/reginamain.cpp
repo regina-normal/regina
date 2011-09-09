@@ -114,6 +114,15 @@ ReginaMain::ReginaMain(bool showAdvice) : KParts::MainWindow(),
             "File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
             "Introductory Examples</qt>"));
         advice->setAlignment(Qt::AlignCenter);
+        advice->setWhatsThis(i18n("<qt>If you select "
+            "<i>File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
+            "Introductory Examples</i> from the menu, "
+            "Regina will open a sample data file that you can "
+            "play around with.<p>"
+            "You can also read the Regina Handbook, which walks "
+            "you through what Regina can do.  Just press F1, or select "
+            "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
+            "menu.</qt>"));
         setCentralWidget(advice);
     }
 }

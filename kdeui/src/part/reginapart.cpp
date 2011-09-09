@@ -509,16 +509,18 @@ void ReginaPart::updateTreeEditActions() {
 
 void ReginaPart::setupWidgets(QWidget* parentWidget) {
     QSplitter* splitter = new QSplitter(parentWidget);
+    splitter->setWhatsThis(i18n(
+        "<qt>Each piece of information stored in a data file "
+        "is a <i>packet</i>: this include triangulations, normal surface "
+        "lists, text items and so on.<p>"
+        "Packets within a data file are arranged in a tree-like structure, "
+        "which you should see on the left-hand side of the window.  "
+        "If you click on a packet in the tree, it will open up in the "
+        "right-hand side of the window where you can edit it or view "
+        "detailed information.</qt>"));
 
     // Set up the packet tree viewer.
     treeView = new PacketTreeView(this, splitter);
-    treeView->setWhatsThis( i18n("<qt>You are looking at the packet tree "
-        "for this topology data file.<p>"
-        "Each piece of information stored in a data file "
-        "is a packet: this include triangulations, normal surface "
-        "lists, text items and so on.  "
-        "Packets within a data file are arranged in a tree structure, "
-        "so that each packet may contain one or more child packets.</qt>"));
     treeView->setSizePolicy(QSizePolicy(
         QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
     // Leave the stretch factors at the default of zero.
