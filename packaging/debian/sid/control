@@ -3,7 +3,7 @@ Section: math
 Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
 Homepage: http://regina.sourceforge.net/
-Build-Depends: debhelper (>= 7), cmake, doxygen, kdelibs5-dev, libboost-python-dev (>= 1.39.0), libcppunit-dev (>= 1.10.2-4), libgmp3-dev (>= 4.1.4-10), mpi-default-dev, libpopt-dev, libxml2-dev, pkg-kde-tools, python-dev (>= 2.5.2-1~), python-support (>= 0.6), zlib1g-dev
+Build-Depends: debhelper (>= 7), cmake, doxygen, kdelibs5-dev, libboost-python-dev (>= 1.39.0), libcppunit-dev (>= 1.10.2-4), libgmp-dev (>= 4.1.4-10), mpi-default-dev, libpopt-dev, libxml2-dev, pkg-kde-tools, python-dev (>= 2.5.2-1~), python-support (>= 0.6), zlib1g-dev
 Standards-Version: 3.9.2.0
 
 Package: regina-normal
@@ -30,7 +30,7 @@ Description: software for 3-manifold topology and normal surfaces
 Package: regina-normal-dev
 Architecture: any
 Section: libdevel
-Depends: regina-normal (= ${binary:Version}), libgmp3-dev, libxml2-dev, zlib1g-dev, ${misc:Depends}
+Depends: regina-normal (= ${binary:Version}), libgmp-dev, libxml2-dev, zlib1g-dev, ${misc:Depends}
 Suggests: regina-normal-doc
 Description: development files for Regina, the 3-manifold topology software
  Regina is a suite of mathematical software for 3-manifold topologists.
