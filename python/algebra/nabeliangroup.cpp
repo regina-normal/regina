@@ -33,6 +33,8 @@
 
 using namespace boost::python;
 using regina::NAbelianGroup;
+using regina::NLargeInteger;
+using regina::NMatrixInt;
 
 namespace {
     void (NAbelianGroup::*addTorsionElement_large)(
@@ -40,7 +42,7 @@ namespace {
         &NAbelianGroup::addTorsionElement;
     void (NAbelianGroup::*addTorsionElement_long)(unsigned long,
         unsigned) = &NAbelianGroup::addTorsionElement;
-    void (NAbelianGroup::*addGroup_matrix)(const regina::NMatrixInt&) =
+    void (NAbelianGroup::*addGroup_matrix)(const NMatrixInt&) =
         &NAbelianGroup::addGroup;
     void (NAbelianGroup::*addGroup_group)(const NAbelianGroup&) =
         &NAbelianGroup::addGroup;
@@ -90,6 +92,8 @@ void addNAbelianGroup() {
     class_<NAbelianGroup, bases<regina::ShareableObject>,
             std::auto_ptr<NAbelianGroup>, boost::noncopyable>("NAbelianGroup")
         .def(init<const NAbelianGroup&>())
+        .def(init<const NMatrixInt&, const NMatrixInt&>())
+        .def(init<const NMatrixInt&, const NMatrixInt&, const NLargeInteger&>())
         .def("addRank", &NAbelianGroup::addRank, OL_addRank())
         .def("addTorsionElement", addTorsionElement_large,
             OL_addTorsionElement())

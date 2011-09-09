@@ -409,6 +409,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
          *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
+         *
          * @param SNFRep a vector of size the number of generators of
          * the group, i.e., it must be valid in the SNF coordinates.  If not,
          * an empty vector is returned.
@@ -427,6 +430,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
          *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
+         *
          * @param SNFRep specifies which standard basis vector from SNF
          * coordinates; this must be between 0 and
          * minNumberOfGenerators()-1 inclusive.
@@ -444,6 +450,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
          *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
+         *
          * @param ccelt a vector whose length is M.columns(),
          * where \a M is one of the matrices that defines the chain
          * complex (see the class notes for details).
@@ -460,6 +469,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
          *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
+         *
          * @param ccindx the index of the standard basis vector in chain
          * complex coordinates.
          * @return the resulting projection, in the chain complex
@@ -471,6 +483,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          * Given a vector, determines if it represents a cycle in the chain
          * complex.
          *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
+         *
          * @param input an input vector in chain complex coordinates.
          * @return \c true if and only if the given vector represents a cycle.
          */
@@ -480,6 +495,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          * Computes the differential of the given vector in the chain
          * complex whose kernel is the cycles.  In other words, this
          * routine returns <tt>M*CCrep</tt>.
+         *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
          *
          * @param CCrep a vector whose length is M.columns(),
          * where \a M is one of the matrices that defines the chain
@@ -492,6 +510,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
         /**
          * Given a vector, determines if it represents a boundary in the chain
          * complex.
+         *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
          *
          * @param input a vector whose length is M.columns(),
          * where \a M is one of the matrices that defines the chain
@@ -514,6 +535,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          *
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
+         *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
          *
          * @return a length zero vector if the input is not a boundary;
          * otherwise a vector \a v such that <tt>Nv=input</tt>.
@@ -618,6 +642,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          *
          * \warning The return value may change from version to version
          * of Regina, as it depends on the choice of Smith normal form.
+         *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
          *
          * @param i between 0 and minNumCycleGens()-1.
          * @return the corresponding generator in chain complex coordinates.
@@ -1128,6 +1155,9 @@ class REGINA_API NHomMarkedAbelianGroup : public ShareableObject {
          * the original chain complexes' coordinates. This involves
          * multiplication by the defining matrix.
          *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
+         *
          * @param input an input vector in the domain chain complex's
          * coordinates, of length getDomain().getM().columns().
          * @return the image of this vector in the range chain complex's
@@ -1145,6 +1175,9 @@ class REGINA_API NHomMarkedAbelianGroup : public ShareableObject {
          * \warning Smith normal form coordinates are sensitive to the
          * implementation of the Smith Normal Form, i.e., they are not
          * canonical.
+         *
+         * \ifacespython Not available yet.  This routine will be made
+         * accessible to Python in a future release.
          *
          * @param input an input vector in the domain SNF coordinates,
          * of length getDomain().minNumberOfGenerators().
