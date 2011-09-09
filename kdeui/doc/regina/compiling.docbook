@@ -64,7 +64,8 @@
      <listitem><para>
       Look for a package named
       <literal>zlib1g-dev</literal>,
-      <literal>zlib1-devel</literal> or <literal>zlib-devel</literal>.
+      <literal>zlib1-devel</literal> or
+      <literal>zlib-devel</literal>.
      </para></listitem>
     </varlistentry>
     <varlistentry>
@@ -72,9 +73,10 @@
       (<firstterm>libgmp</firstterm>)</term>
      <listitem><para>
       Look for a package named
-      <literal>libgmp3-dev</literal>,
-      <literal>libgmp3-devel</literal>,
-      <literal>gmp-devel</literal> or <literal>gmp</literal>.
+      <literal>libgmp-dev</literal>,
+      <literal>lib64gmp-devel</literal>,
+      <literal>libgmp-devel</literal> or
+      <literal>gmp-devel</literal>.
      </para></listitem>
     </varlistentry>
     <varlistentry>
@@ -82,7 +84,9 @@
       (<firstterm>libxml2</firstterm>)</term>
      <listitem><para>
       Look for a package named
-      <literal>libxml2-dev</literal> or <literal>libxml2-devel</literal>.
+      <literal>libxml2-dev</literal>,
+      <literal>lib64xml2-devel</literal> or
+      <literal>libxml2-devel</literal>.
      </para></listitem>
     </varlistentry>
    </variablelist>
