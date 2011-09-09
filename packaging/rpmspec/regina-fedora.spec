@@ -13,6 +13,7 @@ URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
+Requires: graphviz
 Requires: kdelibs
 Requires: kdebase-runtime
 Requires: python
