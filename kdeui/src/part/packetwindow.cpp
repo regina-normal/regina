@@ -52,10 +52,16 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     
     // Set up our actions.
-    newPane->registerEditOperations(
-        KStandardAction::cut(0, 0, actionCollection()),
-        KStandardAction::copy(0, 0, actionCollection()),
-        KStandardAction::paste(0, 0, actionCollection()));
+    KAction* actCut = KStandardAction::cut(0, 0, actionCollection());
+    KAction* actCopy = KStandardAction::copy(0, 0, actionCollection());
+    KAction* actPaste = KStandardAction::paste(0, 0, actionCollection());
+
+    actCut->setWhatsThis(i18n("Cut out the current selection and store it "
+        "in the clipboard."));
+    actCopy->setWhatsThis(i18n("Copy the current selection to the clipboard."));
+    actPaste->setWhatsThis(i18n("Paste the contents of the clipboard."));
+
+    newPane->registerEditOperations(actCut, actCopy, actPaste);
 
     createGUI("packetwindow.rc");
 

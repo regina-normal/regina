@@ -417,7 +417,8 @@ void ReginaMain::setupActions() {
         "the standard type of data file used by Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(newTopology()));
     
-    KStandardAction::open(this, SLOT(fileOpen()), actionCollection());
+    act = KStandardAction::open(this, SLOT(fileOpen()), actionCollection());
+    act->setWhatsThis(i18n("Open a topology data file."));
     fileOpenRecent = KStandardAction::openRecent(this, 
         SLOT(openUrl(const KUrl&)), actionCollection());
 
@@ -427,8 +428,11 @@ void ReginaMain::setupActions() {
         this, SLOT(openExample(const KUrl&)));
     actionCollection()->addAction("file_open_example", fileOpenExample);
 
-    KStandardAction::close(this, SLOT(close()), actionCollection());
-    KStandardAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
+    act = KStandardAction::close(this, SLOT(close()), actionCollection());
+    act->setWhatsThis(i18n("Close this topology data file."));
+    act = KStandardAction::quit(kapp, SLOT(closeAllWindows()),
+        actionCollection());
+    act->setWhatsThis(i18n("Close all files and quit Regina."));
 
     // Toolbar and status bar:
     //showToolbar = KStandardAction::showToolbar(this,
@@ -449,8 +453,10 @@ void ReginaMain::setupActions() {
         actionCollection());
     KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
         actionCollection());
-    KStandardAction::preferences(this, SLOT(optionsPreferences()),
+    act = KStandardAction::preferences(this, SLOT(optionsPreferences()),
         actionCollection());
+    act->setWhatsThis(i18n("Configure Regina.  Here you can set "
+        "your own preferences for how Regina behaves."));
 
     // Tools:
     actPython = actionCollection()->addAction("python_console");
@@ -463,7 +469,10 @@ void ReginaMain::setupActions() {
     connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
 
     // Help:
-    KStandardAction::aboutApp(this, SLOT(helpAboutApp()), actionCollection());
+    act = KStandardAction::aboutApp(this, SLOT(helpAboutApp()),
+        actionCollection());
+    act->setWhatsThis(i18n("Display information about Regina, such as "
+        "the authors, license and website."));
 
     act = actionCollection()->addAction("help_handbook_custom");
     act->setText(i18n("Regina &Handbook"));
@@ -494,7 +503,9 @@ void ReginaMain::setupActions() {
         "uses to store its data files."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpXMLRef()));
 
-    KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()), actionCollection());
+    act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
+        actionCollection());
+    act->setWhatsThis(i18n("View tips and hints on how to use Regina."));
     
     act = actionCollection()->addAction("help_trouble");
     act->setText(i18n("Tr&oubleshooting"));

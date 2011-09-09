@@ -40,14 +40,21 @@ void ReginaPart::setupActions() {
 
     // File actions:
     actSave = KStandardAction::save(this, SLOT(fileSave()), actionCollection());
-    KStandardAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
+    actSave->setWhatsThis(i18n("Save the current data file."));
+    act = KStandardAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
+    act->setWhatsThis(i18n(
+        "Save the current data file, but give it a different name."));
 
     // Edit actions:
     actCut = KStandardAction::cut(actionCollection());
+    actCut->setWhatsThis(i18n("Cut out the current selection and store it "
+        "in the clipboard."));
     actCut->setEnabled(false);
     actCopy = KStandardAction::copy(actionCollection());
+    actCopy->setWhatsThis(i18n("Copy the current selection to the clipboard."));
     actCopy->setEnabled(false);
     actPaste = KStandardAction::paste(actionCollection());
+    actPaste->setWhatsThis(i18n("Paste the contents of the clipboard."));
     actPaste->setEnabled(false);
 
     // Basic packet actions:
