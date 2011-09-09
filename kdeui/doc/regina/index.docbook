@@ -71,7 +71,7 @@
   <!ENTITY csv "<acronym>CSV</acronym>">
   <!ENTITY debian "<productname>Debian</productname>">
   <!ENTITY evince "<application>Evince</application>">
-  <!ENTITY fedora "<productname>Fedora Core</productname>">
+  <!ENTITY fedora "<productname>Fedora</productname>">
   <!ENTITY fink "<productname>Fink</productname>">
   <!ENTITY gap "<application><acronym>GAP</acronym></application>">
   <!ENTITY gaplong "<application><acronym>GAP</acronym>
