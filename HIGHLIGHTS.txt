@@ -6,7 +6,7 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 4.90  [ 10 September, 2011 ] - First prerelease for version 5.0.
+Version 4.90  [ 12 September, 2011 ] - First prerelease for version 5.0.
 
     Installation:
         - Regina has been ported to KDE4, which means you can finally

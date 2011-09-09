@@ -90,7 +90,7 @@ rm -rf %{buildroot}
 %{_kde_iconsdir}/*/*/*
 
 %changelog
-* Sat Sep 10 2011 Ben Burton <bab@debian.org> 4.90
+* Mon Sep 12 2011 Ben Burton <bab@debian.org> 4.90
 - New upstream release.
 - Ported from KDE3 to KDE4, and from autotools to cmake.
 
