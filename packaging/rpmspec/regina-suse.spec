@@ -13,12 +13,14 @@ URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
+Requires: graphviz
 Requires: kdebase4-runtime
 Requires: okular
 Requires: python
 Conflicts: regina
 
 BuildRequires: boost-devel
+BuildRequires: cmake
 BuildRequires: doxygen
 BuildRequires: gcc
 BuildRequires: gcc-c++
