@@ -2,7 +2,7 @@
  <title>Troubleshooting and <acronym>FAQ</acronym></title>
 
  <qandaset>
-  <qandadiv><title>Running &regina;</title>
+  <qandadiv id="trouble-running"><title>Running &regina;</title>
    <qandaentry id="trouble-packet-uneditable">
     <question><para>
      I cannot edit a triangulation.  I can view it but I can't change anything.
@@ -117,7 +117,7 @@
    </qandaentry>
   </qandadiv>
 
-  <qandadiv><title>&python; Scripting</title>
+  <qandadiv id="trouble-python"><title>&python; Scripting</title>
    <qandaentry id="trouble-python-disabled">
     <question><para>
      &regina; tells me that &python; scripting has been disabled.
@@ -225,7 +225,29 @@
    </qandaentry>
   </qandadiv>
 
-  <qandadiv><title>&regina; on &macosx;</title>
+  <qandadiv id="trouble-macosx"><title>&regina; on &macosx;</title>
+   <qandaentry>
+    <question><para>
+     Can I put &regina; on my dock?
+    </para></question>
+    <answer>
+     <para>
+      Yes you can.  Open
+      <filename>/sw/opt/kde4/mac/bin/</filename> in the
+      <application>Finder</application>.  You should see
+      <command>regina-kde</command> (complete with the brown tetrahedron
+      icon), and you can drag it straight onto your dock.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="macdock.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+    </answer>
+   </qandaentry>
+
    <qandaentry>
     <question>
      <para>
@@ -312,28 +334,6 @@ kbuildsycoca4(1476)/kdecore (kdelibs) getBundle: getBundle( "/sw/opt/kde4/mac/li
     </answer>
    </qandaentry>
 
-   <qandaentry>
-    <question><para>
-     Can I put &regina; on my dock?
-    </para></question>
-    <answer>
-     <para>
-      Sure!  Open
-      <filename>/sw/opt/kde4/mac/bin/</filename> in the
-      <application>Finder</application>.  You should see
-      <command>regina-kde</command> (complete with the brown tetrahedron
-      icon), and you can drag it straight onto your dock.
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="macdock.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-    </answer>
-   </qandaentry>
-
    <qandaentry id="trouble-mac-pdf">
     <question><para>
      I cannot view &pdf; packets.  I just see a big empty grey box.
@@ -367,7 +367,7 @@ kbuildsycoca4(1476)/kdecore (kdelibs) getBundle: getBundle( "/sw/opt/kde4/mac/li
    </qandaentry>
   </qandadiv>
 
-  <qandadiv><title>Miscellaneous</title>
+  <qandadiv id="trouble-misc"><title>Miscellaneous</title>
    <qandaentry id="trouble-compile">
     <question><para>
      I am having trouble compiling &regina;.
