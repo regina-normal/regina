@@ -42,7 +42,15 @@
  *  entities in the C++ calculation engine, as well as how these can
  *  be accessed through Python.
  *
- *  To start, try visiting the <a href="modules.html">Modules</a> page.
+ *  This API documentation is written in terms of C++.
+ *  However, Python programmers can use exactly the same functions,
+ *  classes, methods and so on.  If the Python version of a function
+ *  differs from the C++ version, you will see a bold <b>Python:</b> note
+ *  telling you how it differs.
+ *
+ *  To start: visit the <a href="modules.html">Modules</a> page and take
+ *  a look around, or browse through the classes regina::NTriangulation and
+ *  regina::NNormalSurfaceList.
  *
  *  <h3>Citation</h3>
  *
