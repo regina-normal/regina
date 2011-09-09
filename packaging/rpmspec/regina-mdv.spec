@@ -33,6 +33,7 @@ BuildRequires: libxml2-devel
 BuildRequires: qt4-devel
 BuildRequires: popt-devel
 BuildRequires: python-devel
+BuildRequires: shared-mime-info
 BuildRequires: zlib1-devel
 
 Prereq: /sbin/ldconfig
