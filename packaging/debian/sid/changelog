@@ -2,7 +2,7 @@ regina-normal (4.90-2) unstable; urgency=low
 
   * Added missing build-depends on shared-mime-info.
 
- -- Ben Burton <bab@debian.org>  Sat, 10 Sep 2011 10:58:58 +1000
+ -- Ben Burton <bab@debian.org>  Sat, 10 Sep 2011 08:58:58 +1000
 
 regina-normal (4.90-1) unstable; urgency=low
 
