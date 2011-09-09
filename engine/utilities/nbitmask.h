@@ -79,6 +79,8 @@ namespace regina {
  * operations (such as subset testing, bit counting and so on).  Be
  * careful!
  *
+ * \testpart
+ *
  * \ifacespython Not present.
  */
 class REGINA_API NBitmask {
@@ -455,6 +457,8 @@ REGINA_API std::ostream& operator << (std::ostream& out, const NBitmask& mask);
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
+ * \testpart
+ *
  * \ifacespython Not present.
  */
 template <typename T>
@@ -819,6 +823,8 @@ std::ostream& operator << (std::ostream& out, const NBitmask1<T>& mask) {
  * see NBitmask.
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
+ *
+ * \testpart
  *
  * \ifacespython Not present.
  */

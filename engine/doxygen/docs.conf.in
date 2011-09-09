@@ -48,8 +48,8 @@ ALIASES = \
     "tidyurgent=<i><b>Tidy (urgent):</b></i>" \
     "tidy=<i>Tidy:</i>" \
     "tidylong=<i>Tidy (long-term):</i>" \
-    "testfull=\test Very thoroughly tested in the test suite." \
-    "testpart=\test Tested in the test suite, though not exhaustively."
+    "testfull=\test Exhaustively tested in the test suite." \
+    "testpart=\test Included in the test suite."
 
 # Warning and progress related options:
 
