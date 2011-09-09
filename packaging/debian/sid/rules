@@ -116,8 +116,6 @@ binary-arch: build install
 	dh_link -a
 	dh_strip -a
 	dh_compress -a -X.bz2 -X.css -X.docbook -X.rga
-	for i in `find debian/regina-normal/usr/share/doc/kde -name "*.gz"`; do \
-	  gunzip $$i; done
 	dh_fixperms -a
 	dh_makeshlibs -a
 	# Only run the python scripts on regina-normal.
