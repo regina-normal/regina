@@ -25,10 +25,6 @@
     </para>">
   <!ENTITY regwebsite
    "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
-  <!ENTITY regdownloadsite
-   "<ulink
-     url='http://sourceforge.net/project/showfiles.php?group_id=19698'>&regina;
-     download site</ulink>">
   <!ENTITY regenginedocs
    "<link linkend='python-docs'>calculation engine documentation</link>">
   <!ENTITY regenginedocsurlbase

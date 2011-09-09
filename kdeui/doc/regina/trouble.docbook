@@ -2,153 +2,29 @@
  <title>Troubleshooting and <acronym>FAQ</acronym></title>
 
  <qandaset>
-  <qandadiv id="trouble-compile"><title>Compiling &regina;</title>
-   <qandaentry id="trouble-devpkgs">
-    <question><para>
-     The <userinput>./configure</userinput> script complains that it
-     cannot find <literal>libgmp</literal>, <literal>libxml2</literal>,
-     <literal>libjpeg</literal> or some other library.
-    </para></question>
-    <answer>
-     <para>
-      An error such as this means that you are probably missing the
-      development files for a library that you need.  If the warning
-      is regarding <literal>libfoo</literal>, look
-      for a package such as <literal>foo-devel</literal>,
-      <literal>libfoo-devel</literal>, <literal>foo-dev</literal> or
-      some similar variation that you can install.  These development
-      packages contain headers and other files that the compiler needs
-      in order to link against the corresponding library.
-     </para>
-     <para>
-      For the three examples above, &debian; users would need to install
-      the packages <literal>libgmp3-dev</literal>,
-      <literal>libxml2-dev</literal> and <literal>libjpeg62-dev</literal>.
-      &rhfedora; users would need to install the packages
-      <literal>gmp-devel</literal>, <literal>libxml2-devel</literal>
-      and <literal>libjpeg-devel</literal>.
-     </para>
-     <para>
-      If you know you have the appropriate library development files
-      installed and you are still seeing this error, it might be that
-      the <userinput>./configure</userinput> script simply cannot find them.
-      In particular, if the library has been installed in a non-standard
-      location, you might need to explicitly pass its location to the
-      <userinput>./configure</userinput> script.  As an example, if a
-      library is installed beneath <filename>/usr/local</filename>
-      with headers in <filename>/usr/local/include</filename> and
-      the library itself in <filename>/usr/local/lib</filename>, you
-      can pass the following options:
-     </para>
-<screen>
-<prompt>example:~/source/regina&gt;</prompt> <userinput>./configure
-    --with-extra-includes=/usr/local/include
-    --with-extra-libs=/usr/local/lib</userinput>
-checking build system type... i686-pc-linux-gnu
-checking host system type... i686-pc-linux-gnu
-...
-</screen>
-     <para>
-      Note that some libraries come with their own custom
-      <userinput>./configure</userinput> options.  For instance, the
-      location of the &qt; installation is specified using the option
-      <option>--with-qt-dir</option>, and the location of the
-      <filename>libxml2</filename> installation is specified using the
-      option <option>--with-xml-prefix</option>.  Run
-      <userinput>./configure --help</userinput> for details of all
-      available options.
-     </para>
-     <para>
-      Finally, please visit the online page for
-      <ulink url="http://regina.sourceforge.net/buildtips.html">building
-      &regina; on different distributions</ulink>, which may be able to
-      give <userinput>./configure</userinput> options tailored for your
-      specific type of machine.
-     </para>
-    </answer>
-   </qandaentry>
-  </qandadiv>
-
   <qandadiv><title>Running &regina;</title>
-   <qandaentry id="troubleqn-prefix">
-    <question><para>
-     &regina; is missing some icons.  For example, I do not see any
-     icons in the packet tree.
-    </para></question>
-    <answer>
-     <para>
-      &regina; needs to be installed in the same location as &kde;.
-      For instance, if &kde; is installed beneath
-      <filename>/opt/kde4</filename> then &regina; must be installed there
-      also.
-      If you install &regina; in the wrong location then &kde; will have
-      trouble loading some of its helper files (like the tree icons).
-     </para>
-     <para>
-      The location in which &regina; is installed is controlled at
-      compile-time by passing a <option>--prefix</option> option to the
-      <userinput>./configure</userinput> script.  The
-      <userinput>./configure</userinput> script will generally guess the
-      correct location itself, so in most cases you
-      should not be passing your own <option>--prefix</option> at all.
-     </para>
-     <para>
-      However, if you are seeing this problem, working out the correct
-      <option>--prefix</option> and then rebuilding and reinstalling
-      &regina; will almost certainly fix it.
-     </para>
-     <para>
-      To find which prefix you <emphasis>should</emphasis> be using,
-      search for the <userinput>kde-config</userinput> program on your
-      system.  Running <userinput>kde-config --prefix</userinput> will
-      report the prefix that was used for your &kde; installation.  You
-      must then pass this same prefix to <userinput>./configure</userinput>.
-     </para>
-     <para>
-      For instance, if <userinput>kde-config --prefix</userinput>
-      reports <computeroutput>/usr</computeroutput> then you should
-      start your &regina; build with
-      <userinput>./configure --prefix=/usr</userinput> as illustrated
-      below.
-     </para>
-<screen>
-<prompt>example:~/source/regina&gt;</prompt> <userinput>kde-config --prefix</userinput>
-/usr
-<prompt>example:~/source/regina&gt;</prompt> <userinput>./configure --prefix=/usr</userinput>
-checking build system type... i686-pc-linux-gnu
-checking host system type... i686-pc-linux-gnu
-...
-</screen>
-    </answer>
-   </qandaentry>
-
    <qandaentry id="trouble-packet-uneditable">
     <question><para>
-     I cannot edit a particular packet.  I can view it but I can't change
-     anything.
+     I cannot edit a triangulation.  I can view it but I can't change anything.
     </para></question>
     <answer>
      <para>
-      If a packet has children that need their parent
-      to remain constant, it will
-      become uneditable.  An example is a triangulation that has a normal
-      surface list as a child.  The normal surface list stores coordinates
-      based upon the triangulation that created it, so the triangulation
-      must remain constant or else the coordinates will become invalid.
+      If a triangulation has any normal surface lists or angle structure
+      lists beneath it, that triangulation must not change.
+      This is because normal surfaces and angle structures store their
+      coordinates relative to the triangulation, and any changes to the
+      triangulation will invalidate these coordinates.
      </para>
      <para>
-      In such a situation you can try <link linkend="packet-clone">cloning
-      the packet</link> without its subtree (<menuchoice>
-       <guimenu>Packet Tree</guimenu>
-       <guimenuitem>Clone Packet</guimenuitem>
-      </menuchoice>).  The clone will have no children to worry about
-      and so should be editable.  Alternatively you could delete the child
-      packet that is refusing to allow its parent to change.
+      If you wish to modify the triangulation,
+      <link linkend="packet-clone">try cloning it</link>
+      (not the subtree, just the triangulation itself).
+      Then you can edit the clone instead.
      </para>
      <para>
-      Note that if a packet cannot be edited because of its children,
-      it will be marked with a small padlock in the packet tree.  This is
-      illustrated below for the figure eight knot complement.
+      Triangulations that cannot be edited will be marked with a
+      small padlock in the packet tree, as seen with the
+      figure eight knot complement below.
      </para>
      <para>
       <inlinemediaobject>
@@ -169,67 +45,31 @@ checking host system type... i686-pc-linux-gnu
     <answer>
      <para>
       First, remember that if all else fails you can download
-      the handbook in &html; format directly from the &regdownloadsite;,
-      or you can simply
+      the handbook directly from the &regwebsite;
+      (follow the documentation links).  You can even
       <ulink url="http://regina.sourceforge.net/docs/">read it online</ulink>.
      </para>
      <para>
-      There are two common causes for this problem:
-      (i)&nbsp;the &khelpcenter; is not installed, or
-      (ii)&nbsp;the &regina; handbook is installed in the wrong location.
-      <itemizedlist>
-       <listitem>
-        <para>
-         If you get an error such as &quot;Could not launch the &kde; Help
-         Center&quot; or &quot;Could not find khelpcenter executable&quot;,
-         you probably do not have the &khelpcenter; installed.  Search your
-         &linux; distribution for the <literal>kdebase</literal> package
-         (some distributions call this <literal>kdebase3</literal>,
-         <literal>kdebase-progs</literal> or
-         <literal>kdebase-unified</literal>).
-        </para>
-       </listitem>
-       <listitem><para>
-        If you get an error such as &quot;There is no documentation available
-        for /regina/index.html&quot;, you probably have the &regina;
-        handbook installed in the wrong location.
-        <itemizedlist>
-         <listitem><para>
-          If you installed &regina; from a ready-made package, please contact
-          the package maintainer &mdash; the package has been built incorrectly
-          and needs to be fixed.  If you are not sure who the maintainer is,
-          please mail &reguserlist; with your problem.
-         </para></listitem>
-         <listitem>
-          <para>
-           If you built &regina; yourself from sources, you need to pass an
-           extra argument to the <userinput>./configure</userinput> script.
-           Try to find which directory on your system contains the &kde;
-           user manuals; typically this is something like
-           <filename>/usr/share/doc/kde</filename> or
-           <filename>/usr/share/doc/kde/HTML</filename>.  This directory
-           should have an <filename>en/</filename> subdirectory, and beneath
-           that a subdirectory for each application (such as
-           <filename>en/kicker</filename>, <filename>en/kate</filename> and
-           so on).
-          </para>
-          <para>
-           Once you have found this directory, pass it as a
-           <option>kde_htmldir</option> argument to the
-           <userinput>./configure</userinput> script (note that this
-           option does not begin with <literal>--</literal>).  An example
-           for a &debian; system is given below.
-          </para>
-<screen>
-<prompt>example:~/source/regina&gt;</prompt> <userinput>./configure kde_htmldir=/usr/share/doc/kde/HTML</userinput>
-checking build system type... i686-pc-linux-gnu
-checking host system type... i686-pc-linux-gnu
-...
-</screen>
-         </listitem>
-        </itemizedlist>
-       </para></listitem>
-      </itemizedlist>
+      Otherwise: visit
+      &regina;'s <link linkend="options-general">general options</link>
+      and uncheck the box marked
+      &ldquo;<guilabel>Open handbook in &khelpcenter;</guilabel>&rdquo;.
+      &regina; should now try to open the &regina; handbook in your
+      favourite web browser.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="trouble-help.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      If you have done this and the web browser starts but it cannot find
+      <filename>index.html</filename>, you might have the handbook
+      installed in the wrong location.  Please
+      <link linkend="services">mail us for assistance</link>, so we can
+      try to make it work out of the box for you in a future release.
      </para>
     </answer>
    </qandaentry>
@@ -241,27 +81,37 @@ checking host system type... i686-pc-linux-gnu
     </para></question>
     <answer>
      <para>
-      The short answer is that you should install &kpdf;, which is part of
-      the official &kdegraphics; module shipped with &kde;&nbsp;3.x.
-      &kpdf; provides both embedded and external &pdf; viewers, and
-      &regina; knows how to use them.
+      If you use &macosx;, see <link linkend="trouble-mac-pdf">this
+      question</link>.
      </para>
      <para>
-      The long answer is that you can edit &regina;'s
-      <link linkend="options-pdf">&pdf; settings</link> to display
-      &pdf; packets using whatever program you choose.  &regina; will try
-      its best to find a &pdf; viewer on its own if possible
-      (in particular, it knows about &kpdf;, &okular;, &xpdf; and &evince;,
-      as well as &previewapp; under &macosx;).  However, if your
-      installation is unusual then &regina; might need a little help;
-      in the &pdf; settings you can provide a full path to your
-      favourite &pdf; viewer application.
+      If you use &linux;, the easiest solution is to
+      visit &regina;'s <link linkend="options-pdf">&pdf; options</link>,
+      switch off the <emphasis>embedded</emphasis> &pdf; viewer,
+      and set the <emphasis>external</emphasis> &pdf; viewer to
+      your favourite application (such as &xpdf; or &evince;).
+      &regina; can usually find a suitable viewer automatically,
+      but if your installation is unusual then you may need to provide
+      &regina; with the full path to your &pdf; viewer
+      (such as <filename>/usr/local/bin/xpdf</filename>).
      </para>
      <para>
-      If you are having trouble getting &pdf; support working out of the
-      box, please do send an email or
-      <link linkend="services">file a bug</link> so the problem can be
-      fixed in future releases.
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="trouble-pdf.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      If you wish to use the embedded &pdf; viewer, you will need to
+      have &okular; installed.  &okular; should be shipped with your
+      &linux; distrubition; it may be offered as its own package, or it
+      may be part of the &kdegraphics; bundle.
+     </para>
+     <para>
+      If you are still having trouble getting &pdf; support working,
+      please <link linkend="services">let us know</link> so we can
+      fix the problem in a future release.
      </para>
     </answer>
    </qandaentry>
@@ -274,69 +124,46 @@ checking host system type... i686-pc-linux-gnu
     </para></question>
     <answer>
      <para>
-      This means that &regina; was not built with &python; support
-      enabled.  You will need to rebuild &regina; from sources &ndash;
-      instructions for doing this are provided in the file
-      <filename>README.txt</filename> in the &regina; source
-      distribution.
+      This means that whoever built your version of &regina; did
+      not include &python; support in the build.
      </para>
      <para>
-      When running <userinput>./configure</userinput> (the first step of
-      building &regina;), watch the output carefully.  It will tell you
-      whether it plans to build the &python; interface, and if not it
-      should give you a clear reason why.
+      The best solution is to download a ready-made package from the
+      <ulink url="http://regina.sourceforge.net/#download">&regina;
+      website</ulink>.  All of the ready-made packages should have
+      &python; support built in.
      </para>
-<screen>
-<prompt>example:~/source/regina&gt;</prompt> <userinput>./configure</userinput>
-...
-... (lots of tests)
-...
-configure: WARNING: A working boost.python installation is
-unavailable; the Python interface will not be built.
-...
-... (more tests)
-...
-checking whether to build the calculation engine library... yes
-checking whether to build the KDE user interface... yes
-checking whether to build the Python interface... no
-checking whether to build command-line utilities... yes
-checking whether to build MPI-enabled utilities... yes
-checking whether to build the test suite... yes
-checking whether to build calculation engine docs... yes
-configure: creating ./config.status
-config.status: creating Makefile
-config.status: creating admin/Makefile
-...
-... (lots more Makefiles)
-...
-<prompt>example:~/source/regina&gt;</prompt>
-</screen>
      <para>
-      The most common cause for &python; support being disabled
-      is that no usable &boost-python; installation could be found at
-      compile time (as illustrated above).  Make sure you have
-      &boost-python; installed as described on the &sysreq;.
-      If your &boost-python; is installed in a
-      non-standard location you may need to pass this location to the
-      <userinput>./configure</userinput> script using options
-      <option>--with-extra-includes</option> and
-      <option>--with-extra-libs</option>.
+      If you need to build &regina; yourself from source, make sure you have the
+      <ulink url="http://regina.sourceforge.net/source.html#sysreq"><application>&boost-python;</application>
+      development files</ulink> installed.
+      If not, &regina; will warn you about this when you run
+      <command>cmake</command>:
      </para>
 <screen>
-<prompt>example:~/source/regina&gt;</prompt> <userinput>./configure
-    --with-extra-includes=/usr/local/include
-    --with-extra-libs=/usr/local/lib</userinput>
-checking build system type... i686-pc-linux-gnu
-checking host system type... i686-pc-linux-gnu
+<prompt>example:~/source/regina/build&gt;</prompt> <userinput>cmake ..</userinput>
+-- The C compiler identification is GNU
+-- The CXX compiler identification is GNU
 ...
+... (lots of output)
+...
+-----------------------------------------------------------------------------
+-- The following OPTIONAL packages could NOT be located on your system.
+-- Consider installing them to enable more features from this software.
+-----------------------------------------------------------------------------
+   * Boost.Python  &lt;http://www.boost.org/&gt;
+     Build Python bindings for Regina
+
+-----------------------------------------------------------------------------
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/bab/source/regina/build
+<prompt>example:~/source/regina/build&gt;</prompt>
 </screen>
      <para>
-      Note that &boost-python; also requires the standard &python; headers to
-      be installed; again see the &sysreq; for details.
-     </para>
-     <para>
-      If none of these suggestions help, please mail &reguserlist; for
-      assistance, including your <filename>config.log</filename>
+      If you are stuck, please mail &reguserlist; for assistance,
+      including your <filename>CMakeCache.txt</filename>
       if possible to help diagnose the problem.
      </para>
     </answer>
@@ -352,16 +179,15 @@ checking host system type... i686-pc-linux-gnu
     <answer>
      <para>
       You may have run into an unusual &boost-python; issue regarding
-      ownership semantics.  If you have been rearranging the packet tree
-      using <function>NPacket.insertChildFirst()</function>,
+      ownership semantics.  If you have been using tree insertion routines
+      such as <function>NPacket.insertChildFirst()</function>,
       <function>NPacket.insertChildLast()</function> or
-      <function>NPacket.insertChildAfter()</function> then this is
+      <function>NPacket.insertChildAfter()</function>, this is
       particularly likely.
      </para>
      <para>
-      See the <link linkend="python-ownership">&python; caveats</link>
-      documentation for a description of this problem and how to
-      work around it.
+      See the <link linkend="python-ownership">&python; scripting notes</link>
+      for a full discussion of this problem and how to work around it.
      </para>
     </answer>
    </qandaentry>
@@ -378,98 +204,260 @@ checking host system type... i686-pc-linux-gnu
       You may have run into the same unusual ownership issue with
       &boost-python; discussed in the
       <link linkend="trouble-python-typeerror">previous question</link>.
-      Again, if you have been rearranging the packet tree
-      using <function>NPacket.insertChildFirst()</function>,
+      Again, if you have been using tree insertion routines such as
+      <function>NPacket.insertChildFirst()</function>,
       <function>NPacket.insertChildLast()</function> or
-      <function>NPacket.insertChildAfter()</function> then this is
+      <function>NPacket.insertChildAfter()</function>, this is
       particularly likely.
      </para>
      <para>
-      See the <link linkend="python-ownership">&python; caveats</link>
-      documentation for a description of this problem and how to
-      work around it.
+      See the <link linkend="python-ownership">&python; scripting notes</link>
+      for a full discussion of this problem and how to work around it.
      </para>
      <para>
-      On the other hand, it may just be that you are calling the
-      function incorrectly.  You might wish to check the
-      <link linkend="python-docs">calculation engine documentation</link>,
-      which describes all of the available function calls and what
+      On the other hand, you may just be calling a function incorrectly.
+      You might wish to check the
+      <link linkend="python-docs">&api; documentation</link>,
+      which describes all of &regina;'s functions and what
       arguments they should take.
      </para>
     </answer>
    </qandaentry>
   </qandadiv>
 
+  <qandadiv><title>&regina; on &macosx;</title>
+   <qandaentry>
+    <question>
+     <para>
+      Whenever I open or save a file, I get strange errors like
+      &ldquo;Could not find mime type ...&rdquo;.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="errmime1.png"/>
+       </imageobject>
+      </inlinemediaobject>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="errmime2.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+    </question>
+    <answer>
+     <para>
+      These errors are irritating but harmless.  Unfortunately they happen
+      from time to time with all &kde; applications on &macosx;, not just
+      &regina;.  They are easy to get rid of: just run
+      <userinput>/sw/opt/kde4/mac/bin/kbuildsycoca4</userinput> from the
+      command prompt.
+     </para>
+<screen>
+<prompt>example:~&gt;</prompt> <userinput>/sw/opt/kde4/mac/bin/kbuildsycoca4</userinput>
+kbuildsycoca4(1476)/kdecore (kdelibs) getBundle: getBundle( "/sw/opt/kde4/mac/lib/kde4/libexec/drkonqi" ,  false ) called
+...
+... (lots of output)
+...
+<prompt>example:~&gt;</prompt>
+</screen>
+     <para>
+      This should make the mime type errors stop (at least for now).
+      Hopefully this will be fixed permanently in later releases of
+      &kde4; on &macosx;.
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry>
+    <question>
+     <para>
+      The file open/save dialog is ugly, and I cannot read any of the file
+      or directory names.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="kfiledlg-bad.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+    </question>
+    <answer>
+     <para>
+      Again this seems to be an issue across the board with &kde; on
+      &macosx;.  This is easily fixed: change your file dialog from
+      <guilabel>Short View</guilabel> to
+      <guilabel>Detailed View</guilabel> (in fact anything other than
+      <guilabel>Short View</guilabel> will do).
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="kfiledlg-fix.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      The result should be a clear and readable file dialog, and
+      &kde; will remember your new view type from now on.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="kfiledlg-good.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry>
+    <question><para>
+     Can I put &regina; on my dock?
+    </para></question>
+    <answer>
+     <para>
+      Sure!  Open
+      <filename>/sw/opt/kde4/mac/bin/</filename> in the
+      <application>Finder</application>.  You should see
+      <command>regina-kde</command> (complete with the brown tetrahedron
+      icon), and you can drag it straight onto your dock.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="macdock.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry id="trouble-mac-pdf">
+    <question><para>
+     I cannot view &pdf; packets.  I just see a big empty grey box.
+    </para></question>
+    <answer>
+     <para>
+      At the time of writing,
+      &kde;'s &pdf; viewer (&okular;) does not work on &macosx;,
+      which means the embedded &pdf; viewer will not work in &regina;.
+     </para>
+     <para>
+      Visit &regina;'s <link linkend="options-pdf">&pdf; settings</link>
+      and make sure the embedded viewer is switched off.
+      This will make &regina; use an external &pdf; viewer instead
+      (which is what you want).
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="mac-pdf.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      As for <emphasis>which</emphasis> external viewer: you can leave
+      this empty, and &regina; will know what to do.  Alternatively
+      you can suggest <command>/usr/bin/open</command>, which will tell
+      &regina; to use whatever &pdf; viewer is your default under &macosx;.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+
   <qandadiv><title>Miscellaneous</title>
+   <qandaentry id="trouble-compile">
+    <question><para>
+     I am having trouble compiling &regina;.
+    </para></question>
+    <answer>
+     <para>
+      If you can, it is best to install &regina; from a ready-made
+      package.  See the
+      <ulink url="http://regina.sourceforge.net/#download">&regina;
+      website</ulink> for a list of &linux; distributions
+      that have packages available.
+     </para>
+     <para>
+      If you do need to build &regina; yourself, the website offers
+      help on
+      <ulink url="http://regina.sourceforge.net/source.html">building
+      &regina; from source</ulink>.  There is also a page on
+      <ulink url="http://regina.sourceforge.net/buildtips.html">building
+      &regina; on different distributions</ulink>, which suggests
+      <command>cmake</command> options tailored to your specific
+      type of machine.
+     </para>
+    </answer>
+   </qandaentry>
+
    <qandaentry id="trouble-testsuite">
     <question><para>
      What is the test suite, and how do I run it?
     </para></question>
     <answer>
      <para>
-      Sometimes, building an application on significantly different
-      hardware or against different versions of helper libraries can lead
-      to unforseen bugs that do not appear on the developer's machine(s).
-      To help guard against such problems, &regina; ships with a test
-      suite.  The test suite uses &regina; to perform a variety of
-      different computations that isolate different portions of
-      &regina;'s mathematical code, and it verifies that &regina; gets
+      Sometimes building an application on different
+      hardware or against different versions of libraries can produce
+      unforseen bugs that do not appear on the developer's machine(s).
+      To help guard against such problems, &regina; ships with a rich test
+      suite.  The test suite asks &regina; to perform
+      different calculations that isolate different portions of its
+      mathematical code, and it verifies that &regina; gets all
       the answers correct.
      </para>
      <para>
-      The test suite comes with the &regina; source distribution, and it
-      assumes that you are building &regina; yourself.  Note that the
-      test suite requires <application>CppUnit</application> to be
-      installed, as described on the &sysreq; on the &regina; website.
+      You can only run the test suite if you are
+      <ulink url="http://regina.sourceforge.net/source.html">building
+      &regina; from source</ulink> yourself.
+      If you download a ready-made package, the person who built the
+      package should have already verified that &regina; passes the
+      test suite (as all of the packages on the &regina; website do).
      </para>
      <para>
-      To build and run the test suite, simply move into the main source
-      directory and type <userinput>make check</userinput>.  After the
-      test suite has been compiled, you should see the individual tests
-      being run as illustrated below.
+      You will also need
+      <ulink url="http://regina.sourceforge.net/source.html#sysreq"><application>CppUnit</application> installed</ulink>.
+      Otherwise the test suite will run but only with the simpler &python;
+      tests, not the rich and detailed &cpp; calculation engine tests.
+     </para>
+     <para>
+      To run the test suite, move into your main build
+      directory and type <userinput>make test ARGS=-V</userinput>.
+      You should see the individual tests being run, as illustrated below.
      </para>
 <screen>
-<prompt>example:~/source/regina&gt;</prompt> <userinput>make check</userinput>
-Making check in engine
-make[1]: Entering directory `/home/bab/source/regina/engine'
+<prompt>example:~/source/regina/build&gt;</prompt> <userinput>make test ARGS=-V</userinput>
+Running tests...
 ...
-... (compiling the test suite)
+... (some initial output)
 ...
-make[3]: Entering directory `/home/bab/source/regina/testsuite'
-Regina calculation engine test suite
+1: ---------------------------------------
+1: Test suite for Regina's python bindings
+1: ---------------------------------------
+1: 
+1: Running euler.test ... ok
+1: Running file.test ... ok
+...
+... (more output)
+...
+2: Regina calculation engine test suite
+2: 
+2: NBitmaskTest::sizes... ok.
+2: NBitmaskTest::firstLastBit... ok.
+2: NBitmaskTest::truncate... ok.
+...
+... (lots and lots of output)
+...
+100% tests passed, 0 tests failed out of 2
 
-NIndexedArrayTest.basicChecks... ok.
-NIndexedArrayTest.constructors... ok.
-NIndexedArrayTest.swap... ok.
-NIndexedArrayTest.inserts... ok.
-NIndexedArrayTest.erasures... ok.
-...
-... (running lots more tests)
-...
-NAngleStructureListTest.loopC2... ok.
-NCensusTest.rawCounts... ok.
-NCensusTest.rawCountsPrimeMinimalOr... ok.
-NCensusTest.rawCountsPrimeMinimalNor... ok.
-NFacePairingTest.rawCounts... ok.
-
-
-OK (54 tests)
-
-
-PASS: regtestsuite
-==================
-All 1 tests passed
-==================
-make[3]: Leaving directory `/home/bab/source/regina/testsuite'
-...
-... (more output from make)
-...
-make[1]: Leaving directory `/home/bab/source/regina'
-<prompt>example:~/source/regina&gt;</prompt>
+Total Test time (real) =  19.48 sec
+<prompt>example:~/source/regina/build&gt;</prompt>
 </screen>
      <para>
-      We see from the output above that the test suite ran as expected
-      and that all tests were passed.
+      We see from the output above that &regina; passed all of its tests
+      (and hopefully this is what you will see too).
      </para>
     </answer>
    </qandaentry>
@@ -492,8 +480,8 @@ make[1]: Leaving directory `/home/bab/source/regina'
      <para>
       This program is permanently in development.  There is a very
       long &todo; list, and chances are your problem is on it.  And
-      then again chances are it's not.  So please let us know so we
-      are sure to know what needs to be fixed/improved.
+      then again chances are it's not.  So please, let us know what you
+      think can be fixed or improved.
      </para>
     </answer>
    </qandaentry>
