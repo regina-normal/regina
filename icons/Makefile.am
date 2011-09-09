@@ -12,13 +12,7 @@ SUBDIRS = povray
 
 iconsdir = $(pkgdatadir)/icons
 
-icons_DATA = README.txt \
-  regina-lo.xpm \
-  regina.gif regina.png regina.xpm \
-  reginalarge.jpg \
-  reginatiny-lo.xpm \
-  reginatiny.gif reginatiny.png reginatiny.xpm \
-  reginatrans.png
+icons_DATA = README.txt regina.png regina.xpm title.png reginatiny.png
 
 EXTRA_DIST = $(icons_DATA)
 
