@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Copyright © 2009 Stefano Zacchiroli <zack@upsilon.cc>
 # Modified by Ben Burton to make this specific to signing Regina's
@@ -15,7 +16,7 @@ if [ -z "$1" ] ; then
 fi
 suite="$1"
 host=people.debian.org
-path="/home/bab/public_html/debian/$suite/Release"
+path="/home/bab/public_html/regina/$suite/Release"
 base=$(dirname "$path")
 
 tmp=`mktemp`
@@ -25,7 +26,7 @@ trap "rm -f $tmp $sig" EXIT
 echo "I: retrieving file to sign from remote host ..."
 scp "$host:$path" $tmp
 echo "I: signing ..."
-gpg --detach-sign --batch -o $sig $tmp
+gpg --detach-sign -o $sig $tmp
 echo "I: sending back signature ..."
 scp $sig "$host":"$path.gpg"
 echo "I: remote signing done."
