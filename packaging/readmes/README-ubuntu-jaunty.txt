@@ -33,12 +33,11 @@ available for the i386 and amd64 architectures.  To install them:
    At this point your package manager should download and install Regina
    along with any necessary dependencies.
 
-Regina is split into several packages for Ubuntu.  To start with you
-will probably just want the "regina-normal" package.  If you are doing
-Python scripting and/or compiling Regina's mathematical core into your
-own code, you may want the "regina-normal-dev" and "regina-normal-doc"
-packages also.  The "regina-normal-mpi" package is available for users
-running long census calculations on clusters.
+If you are a C++ programmer and you wish to build Regina into your own
+projects, you will also want the package "regina-normal-dev".
+
+If you want the MPI-enabled utilities for use on high-performance clusters,
+you will want the package "regina-normal-mpi".
 
 You might have noticed that Jaunty Jackalope already offers Regina as part
 of its universe section.  However, this is the older version 4.5.1 (which
@@ -47,4 +46,4 @@ Regina you should follow the steps outlined above.
 
 ------------------------------------
 
-Ben Burton <bab@debian.org>, Sat, 16 May 2009 14:36:16 +1000
+Ben Burton <bab@debian.org>, Sun, 11 Sep 2011 09:08:56 +1000

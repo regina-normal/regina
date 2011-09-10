@@ -1,25 +1,20 @@
 Regina for Debian:  Sid (Unstable)
 ----------------------------------
 
-Debian packages for Regina are not distributed from the SourceForge site.
-
-Instead, users of Sid (the Debian unstable release) may obtain packages
-from the usual Debian servers.  Debian Sid always ships with the latest
-version of Regina, which means that you can install Regina just like you
-would any other package:
+If you run Sid (the Debian unstable release), you can install Regina from
+the usual Debian servers like any other package:
 
   example$ aptitude install regina-normal
 
-Regina is split into several packages for Debian.  To start with you
-will probably just want the "regina-normal" package.  If you are doing
-Python scripting and/or compiling Regina's mathematical core into your
-own code, you may want the "regina-normal-dev" and "regina-normal-doc"
-packages also.  The "regina-normal-mpi" package is available for users
-running long census calculations on clusters.
+Sid always ships with the latest version of Regina (though it may take a
+day or two for new versions to appear on your Debian mirror).
 
-Please note that new versions of Regina might not appear on the Debian
-servers until a few days after their release.
+If you are a C++ programmer and you wish to build Regina into your own
+projects, you will also want the package "regina-normal-dev".
+
+If you want the MPI-enabled utilities for use on high-performance clusters,
+you will want the package "regina-normal-mpi".
 
 ------------------------------------
 
-Ben Burton <bab@debian.org>, Sat, 16 May 2009 14:36:16 +1000
+Ben Burton <bab@debian.org>, Sun, 11 Sep 2011 09:08:56 +1000
