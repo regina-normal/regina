@@ -1,68 +1,89 @@
 Regina for MacOS X:  Fink Packages
 ----------------------------------
 
-Regina now builds and runs under MacOS X, thanks to the Fink project
-(http://www.finkproject.org/).
+The good news: Regina runs on MacOS X, and the user experience is *much*
+cleaner and more natural than the old (pre-2011) versions.  See the
+screenshots on regina.sourceforge.net, all of which were taken on my Mac.
 
-To run Regina, you will need:
+The bad news: You still need Fink.  Regina is written for GNU/Linux, and
+Fink makes the many compile-time and run-time dependencies available for
+Mac users.  We are still a long way from a drag-and-drop Mac application.
 
-1. A working source-based Fink installation:
+To install Regina, you will need:
 
-   Fink can be used as a binary distribution (download pre-built
-   packages only) or as a source distribution (automatically build each
-   package from sources on your machine).  To run Regina you will need
-   the source distribution, since the binary packages for Fink are too
-   old and do not include all of the required software.
+1. MacOS X Leopard (10.5) or Snow Leopard (10.6):
 
-   You will also need the Apple XCode/Developer Tools (this allows you
-   to build Fink packages) and the Apple X11 distribution including both
-   the X11User and X11SDK packages (this allows you to build packages
-   with graphical user interfaces).
+   Fink has not yet been fully ported to Lion (10.7), which means you
+   cannot install the software that you need to build and run Regina.
+   The Fink people are working on it, and hopefully Regina will be
+   available on Lion soon.
 
-   The Fink Quick Start page at http://www.finkproject.org/download/
-   explains how you can get all of this up and running.
+2. The Apple XCode/Developer Tools
 
-   Regina is known to work on MacOS 10.4 (Tiger) with both the Fink stable
-   and unstable branches.  It builds happily on MacOS 10.5 (Leopard) with
-   the Fink unstable branch, but the author has not been able to test it
-   personally.
+   This gives you a C++ compiler and several libraries that you will need.
+   You should find the Developer Tools on your MacOS X install discs, but
+   you can also download them from Apple for free.
 
-2. The Fink info file for Regina:
+3. A source-based Fink install, including the "unstable" tree:
 
-   The info file is a short text file that tells Fink how to build and
-   install Regina.  You can download it from one of the following two
-   locations, depending on whether you use the Fink stable or unstable branch:
+   You need to install Fink as a source distribution, not a binary
+   distribution (since the source distribution is much more up-to-date).
 
-     http://regina.sourceforge.net/install/fink/stable/regina-normal.info
-     http://regina.sourceforge.net/install/fink/unstable/regina-normal.info
+   See: http://www.finkproject.org/download/srcdist.php
+
+   You also need to enable the "unstable" tree.  Run "fink configure",
+   and when it asks you about the "unstable" tree, say yes.
+
+4. The Fink info file for Regina:
+
+   This tells Fink how to build and install Regina.  Download it from:
+
+     http://regina.sourceforge.net/install/fink/regina-normal.info
 
    Copy it into /sw/fink/dists/local/main/finkinfo/ so that Fink can find it:
 
      example$ sudo cp regina-normal.info /sw/fink/dists/local/main/finkinfo
 
-   Users of the Fink unstable branch can skip this step, since Regina is
-   now included in the Fink distribution.  Please note though that new
-   versions of Regina might not appear in the Fink archive until several
-   months after their release.
 
-You can now build and install Regina as you would any other Fink package:
+To build and install Regina:
 
-  example$ fink install regina-normal
+5. Make sure that Fink can see the new version of Regina:
 
-Be prepared to wait, since Fink might need to download and build
-additional components such as the Boost and KDE libraries.
+     example$ fink list regina-normal
+     Information about 10252 packages read in 1 seconds.
+          regina-normal    4.90-0.1     Computational 3-manifold ...
+          regina-normal-d  4.4-3        Development files for ...
+          regina-normal4.  4.3.1-2      Shared libraries for ...
+          ... (lots more output)
 
-If you wish to build Regina into your own C++ projects, you will also
-need the Regina development package:
+   You will see older versions of Regina as well (these are coming from Fink),
+   but the "regina-normal" package at the top of the list should show the
+   new version (4.90-0.1).  If you only see old versions, check that you
+   copied regina-normal.info to the correct location in step 4 above.
 
-  example$ fink install regina-normal-dev
+6. Build and install Regina as you would any other Fink package:
 
-MacOS X support is relatively new for Regina, so please do mail me at
-bab@debian.org if you run into difficulties.  It is hoped that future
-releases of Regina can be offered as standalone pre-build Mac
-applications (the sort that you simply drag onto the hard drive), but we
-shall see how that goes.
+   example$ fink install regina-normal
+
+7. Be patient!
+
+   Fink will download and build all of the components that Regina needs,
+   including the substantial Qt and KDE libraries and all of *their*
+   prerequisites.  This may take several hours, and you might want to
+   leave the build running overnight.
+
+8. For C++ programmers:
+
+   If you are a C++ programmer and you wish to build Regina into your own
+   projects, you will also want the Regina development package:
+
+     example$ fink install regina-normal-dev
+
+That's all!  It takes a while, but again the end product looks and feels
+much better than Regina ever did on the Mac before.
+
+Please mail me at bab@debian.org if you run into difficulties.
 
 ------------------------------------
 
-Ben Burton <bab@debian.org>, Sat, 16 May 2009 14:36:16 +1000
+Ben Burton <bab@debian.org>, Sun, 11 Sep 2011 08:21:55 +1000
