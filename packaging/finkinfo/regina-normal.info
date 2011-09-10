@@ -113,9 +113,6 @@ To get started, run the graphical user interface (regina-kde) and take a
 look at the Regina Handbook (Help->Regina Handbook from the menu), or open
 one of the sample data files and have a play (File->Open Examples).
 .
-If you are using Python scripting, you will find full API documentation in
-%p/opt/kde4/%type_pkg[kde]/share/regina-normal/engine-docs/.
-.
 If you wish to use Regina's C++ mathematical engine in your own code,
 install the package regina-normal%v-dev.
 <<
@@ -180,14 +177,15 @@ regina-normal.
 	DescUsage: <<
 Regina's mathematical engine is provided in the C++ shared library
 %p/opt/kde4/%type_pkg[kde]/lib/libregina-engine.dylib, and the C++
-%headers are in %p/opt/kde4/%type_pkg[kde]/include/regina-normal/ .
-Run %p/bin/regina-engine-config to see the necessary compiler and
-linker flags.
+headers are in %p/opt/kde4/%type_pkg[kde]/include/regina-normal/ .
+Run %p/opt/kde4/%type_pkg[kde]/bin/regina-engine-config to see the
+necessary compiler and linker flags.
 .
-Complete API documentation for this library can be found in the package
-regina-normal.  Look in the directory
+Complete API documentation can be found in the package regina-normal.
+Look in the directory
 %p/opt/kde4/%type_pkg[kde]/share/regina-normal/engine-docs/, or run the
-graphical user interface and select Help->Python API Reference from the menu.
+graphical user interface and select Help->Python API Reference from the menu
+(which describes the C++ API as well).
 	<<
 <<
 <<
