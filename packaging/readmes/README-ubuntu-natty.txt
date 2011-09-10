@@ -1,11 +1,8 @@
-Regina for Ubuntu:  Jaunty (Ubuntu 9.04)
+Regina for Ubuntu:  Natty (Ubuntu 11.04)
 ----------------------------------------
 
-Ubuntu packages for Regina are not distributed from the SourceForge site.
-
-Instead, users of Jaunty Jackalope (the Ubuntu 9.04 release) may obtain
-packages from the repository on people.debian.org.  These packages are
-available for the i386 and amd64 architectures.  To install them:
+If you use Natty Narwhal (the Ubuntu 11.04 release), you can obtain
+packages from the official Regina repository on people.debian.org.
 
 1. Add Regina's location to your list of repositories.
 
@@ -14,7 +11,7 @@ available for the i386 and amd64 architectures.  To install them:
    click on the tab for third-party software and add a new repository.
    Synaptic will ask you for an APT line, which is:
 
-     deb http://people.debian.org/~bab/regina/ jaunty main
+     deb http://people.debian.org/~bab/regina natty/
 
    You should also enable the Community Maintained Universe in your
    list of repositories if this has not been done before.
@@ -39,9 +36,9 @@ projects, you will also want the package "regina-normal-dev".
 If you want the MPI-enabled utilities for use on high-performance clusters,
 you will want the package "regina-normal-mpi".
 
-You might have noticed that Jaunty Jackalope already offers Regina as part
+You might have noticed that Natty Narwhal already offers Regina as part
 of its universe section.  However, this is the older version 4.5.1 (which
-was current when Jaunty Jackalope was released).  For a newer version of
+was current when Natty Narwhal was released).  For a newer version of
 Regina you should follow the steps outlined above.
 
 ------------------------------------

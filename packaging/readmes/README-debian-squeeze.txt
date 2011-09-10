@@ -1,18 +1,17 @@
-Regina for Debian:  Lenny (Debian 5.0)
---------------------------------------
+Regina for Debian:  Squeeze (Debian 6.0)
+----------------------------------------
 
 Debian packages for Regina are not distributed from the SourceForge site.
 
-Instead, users of Lenny (the Debian 5.0 release) may obtain packages
-from the repository on people.debian.org.  These packages are available
-for the i386 and amd64 architectures.  To install them:
+If you use Squeeze (the Debian 6.0 release), you can obtain packages
+from the official Regina repository on people.debian.org.
 
 1. Add Regina's location to your list of repositories.
 
    This only needs to be done once (the first time you install Regina).
    Open the file /etc/apt/sources.list and add the following line:
 
-     deb http://people.debian.org/~bab/regina/ lenny main
+     deb http://people.debian.org/~bab/regina squeeze/
 
 2. Update the list of available packages.
 
@@ -38,9 +37,9 @@ projects, you will also want the package "regina-normal-dev".
 If you want the MPI-enabled utilities for use on high-performance clusters,
 you will want the package "regina-normal-mpi".
 
-You might have noticed that Lenny already ships with Regina as part of its
+You might have noticed that Squeeze already ships with Regina as part of its
 CD/DVD set.  However, this is the older version 4.5 (which was current
-when Lenny was frozen).  For a newer version of Regina you should follow
+when Squeeze was frozen).  For a newer version of Regina you should follow
 the steps outlined above.
 
 ------------------------------------
