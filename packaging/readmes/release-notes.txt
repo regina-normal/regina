@@ -1,10 +1,10 @@
-Regina - A Normal Surface Theory Calculator
+Regina:  Software for 3-manifold topology and normal surface theory
+-------------------------------------------------------------------
 
-Information on these packages, including the operating systems that they
-support and the components of Regina that they provide, can be found on
-the Regina website.
+All information about these packages is on the Regina website:
 
-Please visit http://regina.sourceforge.net/ and scroll to the Download
-section for details.
+http://regina.sourceforge.net/
 
-Ben Burton (bab@debian.org)
+To install Regina, visit http://regina.sourceforge.net/ and scroll to
+the Download section, where you can find the right package for your
+machine.
