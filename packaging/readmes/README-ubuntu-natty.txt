@@ -25,6 +25,7 @@ for screenshots of each step.
 
       When you import this key file, it should show up in the list of
       trusted software providers as "Ben Burton <bab@debian.org>".
+	  After the import, you can delete regina-key.txt if you like.
 
    c) Under "Ubuntu Software", enable the Community-Maintained Open Source
       Software (universe) if this has not been done before.

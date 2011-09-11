@@ -5,11 +5,20 @@ If you use Squeeze (the Debian 6.0 release), you can obtain packages
 from the official Regina repository on people.debian.org:
 
 1. Add Regina's location to your list of repositories.
-
    This only needs to be done once (the first time you install Regina).
-   Open the file /etc/apt/sources.list and add the following line:
+
+   a) Open the file /etc/apt/sources.list and add the following line:
 
      deb http://people.debian.org/~bab/regina squeeze/
+
+   b) If you want to add this repository as a trusted source, download the
+      signing key from http://people.debian.org/~bab/regina-key.txt .
+      At a command prompt, type:
+
+        sudo apt-key add ~/Downloads/regina-key.txt
+
+      Here you should replace ~/Downloads/regina-key.txt with location of
+      the key file.  You can now delete regina-key.txt if you like.
 
 2. Update the list of available packages.  At a command prompt, type:
 
