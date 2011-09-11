@@ -4,36 +4,35 @@ Regina for Ubuntu:  Natty (Ubuntu 11.04)
 If you use Natty Narwhal (the Ubuntu 11.04 release), you can obtain
 packages from the official Regina repository on people.debian.org.
 
+This means that Ubuntu will automatically fetch dependencies for you, and
+your package manager will know when new versions of Regina are released.
+
 See http://regina.sourceforge.net/www/install/ubuntu-natty.html
 for screenshots of each step.
 
-1. Add Regina's location to your list of repositories.
-   This only needs to be done once (the first time you install Regina).
+1. Add Regina's location to your list of repositories.  To do this,
+   open the Ubuntu Software Centre and select Edit->Software Sources.
 
-   Open the Ubuntu Software Centre and select Edit->Software Sources.
-
-   a) Under "Other Software", click the "Add..." button.  Ubuntu will
-      ask you for an APT line, which is:
-
-        deb http://people.debian.org/~bab/regina natty/
-
-   b) Under "Authentication", import Regina's signing key.  These keys
-      help keep your machine secure, and Ubuntu may refuse to install
-      Regina without one.  You can download the key from:
+   a) Under "Authentication", import Regina's cryptographic signing key.
+      This helps keep your machine secure, and Ubuntu may refuse to install
+      Regina without it.  You can download the key from:
 
         http://people.debian.org/~bab/regina-key.txt
 
       When you import this key file, it should show up in the list of
       trusted software providers as "Ben Burton <bab@debian.org>".
-	  After the import, you can delete regina-key.txt if you like.
+      After the import, you can delete regina-key.txt if you like.
+
+   b) Under "Other Software", click the "Add..." button.  When Ubuntu
+      asks you for an APT line, type:
+
+        deb http://people.debian.org/~bab/regina natty/
 
    c) Under "Ubuntu Software", enable the Community-Maintained Open Source
       Software (universe) if this has not been done before.
 
-2. Install Regina like you would any other package.
-
-   In the Ubuntu Software Centre, just search for the package
-   "regina-normal" and press Install.
+2. Install Regina like you would any other package.  Just search for the
+   package "regina-normal" in the Ubuntu Software Centre, and press Install.
 
 If you are a C++ programmer and you wish to build Regina into your own
 projects, you should also install the package "regina-normal-dev".

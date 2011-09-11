@@ -13,23 +13,22 @@ To install Regina, you will need:
 
 1. MacOS X Leopard (10.5) or Snow Leopard (10.6):
 
-   Fink has not yet been fully ported to Lion (10.7), which means you
-   cannot install the software that you need to build and run Regina.
-   The Fink people are working on it, and hopefully Regina will be
-   available on Lion soon.
+   Fink has not yet been fully ported to Lion (10.7), which means neither
+   has Regina.  The Fink people are working on it, and hopefully Regina
+   will be available on Lion soon.
 
-2. The Apple XCode/Developer Tools
+2. The Apple XCode/Developer Tools:
 
-   This gives you a C++ compiler and several libraries that you will need.
-   You should find the Developer Tools on your MacOS X install discs, but
-   you can also download them from Apple for free.
+   This gives you a C++ compiler and other tools.  You should find the
+   Developer Tools on your MacOS X install discs, but you can also
+   download them from Apple for free.
 
 3. A source-based Fink install, including the "unstable" tree:
 
    You need to install Fink as a source distribution, not a binary
-   distribution (since the source distribution is much more up-to-date).
+   distribution.  To install Fink, see:
 
-   See: http://www.finkproject.org/download/srcdist.php
+     http://www.finkproject.org/download/srcdist.php
 
    You also need to enable the "unstable" tree.  Run "fink configure",
    and when it asks you about the "unstable" tree, say yes.
@@ -45,7 +44,7 @@ To install Regina, you will need:
      example$ sudo cp regina-normal.info /sw/fink/dists/local/main/finkinfo
 
 
-To build and install Regina:
+Now you can build and install Regina:
 
 5. Make sure that Fink can see the new version of Regina:
 

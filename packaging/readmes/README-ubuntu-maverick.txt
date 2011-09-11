@@ -4,6 +4,9 @@ Regina for Ubuntu:  Maverick (Ubuntu 10.10)
 If you use Maverick Meerkat (the Ubuntu 10.10 release), you can obtain
 packages from the official Regina repository on people.debian.org.
 
+This means that Ubuntu will automatically fetch dependencies for you, and
+your package manager will know when new versions of Regina are released.
+
 1. Add Regina's location to your list of repositories.
 
    This only needs to be done once (the first time you install Regina).

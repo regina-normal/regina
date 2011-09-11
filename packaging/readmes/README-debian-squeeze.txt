@@ -2,36 +2,36 @@ Regina for Debian:  Squeeze (Debian 6.0)
 ----------------------------------------
 
 If you use Squeeze (the Debian 6.0 release), you can obtain packages
-from the official Regina repository on people.debian.org:
+from the official Regina repository on people.debian.org.
 
-1. Add Regina's location to your list of repositories.
-   This only needs to be done once (the first time you install Regina).
+This means that Debian will automatically fetch dependencies for you, and
+your package manager will know when new versions of Regina are released.
 
-   a) Open the file /etc/apt/sources.list and add the following line:
-
-     deb http://people.debian.org/~bab/regina squeeze/
-
-   b) Add this repository as a trusted source.  This helps keep your
-      machine secure, and avoids messages like "these packages are untrusted"
-      or "these packages cannot be authenticated".  To do this, download
-      Regina's signing key:
+1. Make Regina's repository a trusted source.  This helps keep your machine
+   secure, and avoids messages like "these packages cannot be authenticated".
+   To do this, download Regina's cryptographic signing key:
       
         http://people.debian.org/~bab/regina-key.txt
 
-      Then, at a command prompt type:
+   Then, at a command prompt type:
 
         sudo apt-key add ~/Downloads/regina-key.txt
 
-      Here you should replace ~/Downloads/regina-key.txt with location of
-      the key file.  You can now delete regina-key.txt if you like.
+   Here you should replace ~/Downloads/regina-key.txt with location of
+   the key file.  You can now delete regina-key.txt if you like.
 
-2. Update the list of available packages.  At a command prompt, type:
+2. Add Regina's location to your list of repositories.  To do this, open
+   /etc/apt/sources.list and add the following line:
 
-     aptitude update
+     deb http://people.debian.org/~bab/regina squeeze/
 
-3. Install or upgrade Regina like you would any other package.  Type:
+3. Update the list of available packages.  At a command prompt, type:
 
-     aptitude install regina-normal
+     sudo aptitude update
+
+4. Install or upgrade Regina like you would any other package.  Type:
+
+     sudo aptitude install regina-normal
 
 If you are a C++ programmer and you wish to build Regina into your own
 projects, you should also install the package "regina-normal-dev".
