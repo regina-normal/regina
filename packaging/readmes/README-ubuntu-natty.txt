@@ -17,8 +17,8 @@ for screenshots of each step.
 
         deb http://people.debian.org/~bab/regina natty/
 
-   b) Under "Authentication", import Regina's signing key.  Keys help
-      Ubuntu keep your machine secure, and it may refuse to install
+   b) Under "Authentication", import Regina's signing key.  These keys
+      help keep your machine secure, and Ubuntu may refuse to install
       Regina without one.  You can download the key from:
 
         http://people.debian.org/~bab/regina-key.txt

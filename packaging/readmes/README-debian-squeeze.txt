@@ -11,9 +11,14 @@ from the official Regina repository on people.debian.org:
 
      deb http://people.debian.org/~bab/regina squeeze/
 
-   b) If you want to add this repository as a trusted source, download the
-      signing key from http://people.debian.org/~bab/regina-key.txt .
-      At a command prompt, type:
+   b) Add this repository as a trusted source.  This helps keep your
+      machine secure, and avoids messages like "these packages are untrusted"
+      or "these packages cannot be authenticated".  To do this, download
+      Regina's signing key:
+      
+        http://people.debian.org/~bab/regina-key.txt
+
+      Then, at a command prompt type:
 
         sudo apt-key add ~/Downloads/regina-key.txt
 
