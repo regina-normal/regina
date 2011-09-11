@@ -79,8 +79,12 @@ To build and install Regina:
 
      example$ fink install regina-normal-dev
 
-That's all!  It takes a while, but again the end product looks and feels
-much better than Regina ever did on the Mac before.
+
+To run Regina, open the Finder and browse to /sw/opt/kde4/mac/bin/regina-kde
+on your hard drive.  You can drag this app onto your dock if you like.
+
+That's all!  It takes a while to install, but again the end product looks
+and feels much better than Regina ever did on the Mac before.
 
 Please mail me at bab@debian.org if you run into difficulties.
 
