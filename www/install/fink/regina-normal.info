@@ -14,6 +14,11 @@ Source-MD5: 9ec3408dc970d78b02d66561031d0b93
 SourceRename: %n-%v.tar.gz
 SourceDirectory: regina-%v
 
+PatchScript: <<
+    # Make graphviz support work out of the box.
+	sed -i -e 's,neato,%p/bin/neato,' kdeui/src/shell/reginamain.cpp
+<<
+
 DescPackaging: <<
 Although the upstream application is called regina, this package is called
 regina-normal to avoid confusion with regina the REXX interpreter.
