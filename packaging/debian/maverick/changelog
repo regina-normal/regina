@@ -1,4 +1,4 @@
-regina-normal (4.90-1ubuntu1~maverick1) unstable; urgency=low
+regina-normal (4.90-1ubuntu1~maverick1) maverick; urgency=low
 
   * New upstream release, backported to ubuntu maverick.
   * The user interface has been ported from KDE3 to KDE4 (closes: #556318).

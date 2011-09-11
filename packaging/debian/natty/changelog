@@ -1,4 +1,4 @@
-regina-normal (4.90-1ubuntu1~natty1) unstable; urgency=low
+regina-normal (4.90-1ubuntu1~natty1) natty; urgency=low
 
   * New upstream release, backported to ubuntu natty.
   * The user interface has been ported from KDE3 to KDE4 (closes: #556318).
