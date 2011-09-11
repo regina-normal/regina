@@ -2,7 +2,7 @@
 # - Mandriva 2011 (i586, x86_64)
 
 Name: regina-normal
-Summary: 3-manifold topology software with normal surface support
+Summary: Software for 3-manifold topology and normal surfaces
 Version: 4.90
 Release: 1.%{_vendor}
 License: GPL
@@ -40,12 +40,13 @@ Prereq: /sbin/ldconfig
 
 %description
 Regina is a suite of mathematical software for 3-manifold topologists.
-It focuses upon the study of 3-manifold triangulations and includes
-support for normal surfaces and angle structures.
+It focuses on the study of 3-manifold triangulations and normal surfaces.
 
-Highlights of Regina include triangulation analysis and simplification,
-census creation and normal surface enumeration.  It offers embedded
-Python scripting giving full access to the calculation engine.
+Other highlights of Regina include angle structures, census enumeration,
+combinatorial recognition of triangulations, and high-level tasks such
+as 3-sphere recognition and connected sum decomposition.  Regina comes
+with a full graphical user interface, and also offers Python bindings
+and a low-level C++ programming interface.
 
 %prep
 %setup -n regina-%{version}
@@ -73,21 +74,21 @@ rm -rf %{buildroot}
 %doc CHANGES.txt
 %doc HIGHLIGHTS.txt
 %doc LICENSE.txt
+%docdir %{_datadir}/regina/engine-docs
 %docdir %{_kde4_docdir}/HTML/en/regina
 %docdir %{_kde4_docdir}/HTML/en/regina-xml
-%docdir %{_datadir}/regina/engine-docs
 %{_bindir}/*
 %{_datadir}/regina/
 %{_includedir}/regina/
 %{_libdir}/libregina-engine.so
 %{_libdir}/libregina-engine.so.%{version}
 %{_libdir}/regina/python/regina.so
-%{_kde_docdir}/HTML/en/regina/
-%{_kde_docdir}/HTML/en/regina-xml/
+%{_mandir}/*/*
 %{_kde_appsdir}/regina/
 %{_kde_datadir}/applications/kde4/regina.desktop
-%{_mandir}/*/*
 %{_kde_datadir}/mime/packages/regina.xml
+%{_kde_docdir}/HTML/en/regina/
+%{_kde_docdir}/HTML/en/regina-xml/
 %{_kde_iconsdir}/*/*/*
 
 %changelog
