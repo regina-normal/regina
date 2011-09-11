@@ -62,9 +62,19 @@ rm -rf %{buildroot}
 
 %post
 /sbin/ldconfig
+# TODO: Any of these still necessary?
+# %{update_menus}
+# %{update_desktop_database}
+# %update_kde3_icon_cache crystalsvg
+# %update_kde3_icon_cache hicolor
 
 %postun
 /sbin/ldconfig
+# TODO: Any of these still necessary?
+# %{clean_menus}
+# %{update_desktop_database}
+# %clean_kde3_icon_cache crystalsvg
+# %clean_kde3_icon_cache hicolor
 
 %clean
 rm -rf %{buildroot}
