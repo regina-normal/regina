@@ -15,6 +15,7 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: graphviz
 Requires: kdebase4-runtime
+Requires: kdelibs4-core
 Requires: okular
 Requires: python
 Conflicts: regina
@@ -62,19 +63,17 @@ rm -rf %{buildroot}
 
 %post
 /sbin/ldconfig
-# TODO: Any of these still necessary?
-# %{update_menus}
-# %{update_desktop_database}
-# %update_kde3_icon_cache crystalsvg
-# %update_kde3_icon_cache hicolor
+%update_menus
+%update_desktop_database
+%update_mime_database
+%update_icon_cache hicolor
 
 %postun
 /sbin/ldconfig
-# TODO: Any of these still necessary?
-# %{clean_menus}
-# %{update_desktop_database}
-# %clean_kde3_icon_cache crystalsvg
-# %clean_kde3_icon_cache hicolor
+%clean_menus
+%clean_desktop_database
+%clean_mime_database
+%update_icon_cache hicolor
 
 %clean
 rm -rf %{buildroot}
