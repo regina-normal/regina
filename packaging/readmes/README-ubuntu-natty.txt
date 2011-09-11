@@ -4,42 +4,45 @@ Regina for Ubuntu:  Natty (Ubuntu 11.04)
 If you use Natty Narwhal (the Ubuntu 11.04 release), you can obtain
 packages from the official Regina repository on people.debian.org.
 
+See http://regina.sourceforge.net/www/install/ubuntu-natty.html
+for screenshots of each step.
+
 1. Add Regina's location to your list of repositories.
-
    This only needs to be done once (the first time you install Regina).
-   Open the Synaptic package manager, select Settings->Repositories,
-   click on the tab for third-party software and add a new repository.
-   Synaptic will ask you for an APT line, which is:
 
-     deb http://people.debian.org/~bab/regina natty/
+   Open the Ubuntu Software Centre and select Edit->Software Sources.
 
-   You should also enable the Community Maintained Universe in your
-   list of repositories if this has not been done before.
+   a) Under "Other Software", click the "Add..." button.  Ubuntu will
+      ask you for an APT line, which is:
 
-2. Update the list of available packages.
+        deb http://people.debian.org/~bab/regina natty/
 
-   This lets your package manager know that a new version of Regina is
-   available.  Synaptic users can do this by pressing the Reload button.
+   b) Under "Authentication", import Regina's signing key.  Keys help
+      Ubuntu keep your machine secure, and it may refuse to install
+      Regina without one.  You can download the key from:
 
-3. Install or upgrade Regina like you would any other package.
+        http://people.debian.org/~bab/regina-key.txt
 
-   The main package to install is called "regina-normal" (though there
-   are others; see below).  Synaptic users will find this package in the
-   Mathematics (universe) section.
+      When you import this key file, it should show up in the list of
+      trusted software providers as "Ben Burton <bab@debian.org>".
 
-   At this point your package manager should download and install Regina
-   along with any necessary dependencies.
+   c) Under "Ubuntu Software", enable the Community-Maintained Open Source
+      Software (universe) if this has not been done before.
+
+2. Install Regina like you would any other package.
+
+   In the Ubuntu Software Centre, just search for the package
+   "regina-normal" and press Install.
 
 If you are a C++ programmer and you wish to build Regina into your own
-projects, you will also want the package "regina-normal-dev".
+projects, you should also install the package "regina-normal-dev".
 
 If you want the MPI-enabled utilities for use on high-performance clusters,
-you will want the package "regina-normal-mpi".
+you should install the package "regina-normal-mpi".
 
-You might have noticed that Natty Narwhal already offers Regina as part
-of its universe section.  However, this is the older version 4.5.1 (which
-was current when Natty Narwhal was released).  For a newer version of
-Regina you should follow the steps outlined above.
+You might notice that Natty Narwhal already offers Regina as part of its
+universe section.  However, this is the older version 4.6.  For the latest
+version of Regina, you should follow the steps outlined above.
 
 ------------------------------------
 

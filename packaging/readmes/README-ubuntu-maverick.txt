@@ -1,7 +1,7 @@
-Regina for Ubuntu:  Maverick (Ubuntu 11.04)
-----------------------------------------
+Regina for Ubuntu:  Maverick (Ubuntu 10.10)
+-------------------------------------------
 
-If you use Maverick Meerkat (the Ubuntu 11.04 release), you can obtain
+If you use Maverick Meerkat (the Ubuntu 10.10 release), you can obtain
 packages from the official Regina repository on people.debian.org.
 
 1. Add Regina's location to your list of repositories.
@@ -36,10 +36,9 @@ projects, you will also want the package "regina-normal-dev".
 If you want the MPI-enabled utilities for use on high-performance clusters,
 you will want the package "regina-normal-mpi".
 
-You might have noticed that Maverick Meerkat already offers Regina as part
-of its universe section.  However, this is the older version 4.5.1 (which
-was current when Maverick Meerkat was released).  For a newer version of
-Regina you should follow the steps outlined above.
+You might notice that Maverick Meerkat already offers Regina as part of its
+universe section.  However, this is the older version 4.6.  For the latest
+version of Regina, you should follow the steps outlined above.
 
 ------------------------------------
 

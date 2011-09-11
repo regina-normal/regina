@@ -1,10 +1,8 @@
 Regina for Debian:  Squeeze (Debian 6.0)
 ----------------------------------------
 
-Debian packages for Regina are not distributed from the SourceForge site.
-
 If you use Squeeze (the Debian 6.0 release), you can obtain packages
-from the official Regina repository on people.debian.org.
+from the official Regina repository on people.debian.org:
 
 1. Add Regina's location to your list of repositories.
 
@@ -13,34 +11,23 @@ from the official Regina repository on people.debian.org.
 
      deb http://people.debian.org/~bab/regina squeeze/
 
-2. Update the list of available packages.
+2. Update the list of available packages.  At a command prompt, type:
 
-   This lets your package manager know that a new version of Regina is
-   available.  How you do this depends on which package manager you use;
-   an example for aptitude users is given below.
+     aptitude update
 
-     example$ aptitude update
+3. Install or upgrade Regina like you would any other package.  Type:
 
-3. Install or upgrade Regina like you would any other package.
-
-   Again how you do this depends on which package manager you use.
-   Aptitude users might run the following command:
-
-     example$ aptitude install regina-normal
-
-   At this point your package manager should download and install Regina
-   along with any necessary dependencies.
+     aptitude install regina-normal
 
 If you are a C++ programmer and you wish to build Regina into your own
-projects, you will also want the package "regina-normal-dev".
+projects, you should also install the package "regina-normal-dev".
 
 If you want the MPI-enabled utilities for use on high-performance clusters,
-you will want the package "regina-normal-mpi".
+you should install the package "regina-normal-mpi".
 
-You might have noticed that Squeeze already ships with Regina as part of its
-CD/DVD set.  However, this is the older version 4.5 (which was current
-when Squeeze was frozen).  For a newer version of Regina you should follow
-the steps outlined above.
+You might notice that Squeeze already ships with Regina as part of its
+CD/DVD set.  However, this is the older version 4.6.  For the latest
+version of Regina, you should follow the steps outlined above.
 
 ------------------------------------
 
