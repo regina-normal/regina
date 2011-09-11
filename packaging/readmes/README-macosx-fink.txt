@@ -88,6 +88,10 @@ and feels much better than Regina ever did on the Mac before.
 
 Please mail me at bab@debian.org if you run into difficulties.
 
+For simple fixes for some Mac-related issues that you might encounter, see:
+
+  http://regina.sourceforge.net/docs/troubleshooting.html#trouble-macosx
+
 ------------------------------------
 
 Ben Burton <bab@debian.org>, Sun, 11 Sep 2011 08:21:55 +1000
