@@ -1,10 +1,10 @@
 # Known to work for:
-# - SuSE 11.1 (i586, x86_64)
-# - SuSE 11.0 (i586, x86_64)
+# - SuSE 11.4 (i586, x86_64)
+# - SuSE 11.3 (i586, x86_64)
 
 Name: regina-normal
-Summary: 3-manifold topology software with normal surface support
-Version: 4.6
+Summary: Software for 3-manifold topology and normal surfaces
+Version: 4.90
 Release: 1.%{_vendor}
 License: GPL
 # I wish there were a more sane group (like Applications/Mathematics).
@@ -14,136 +14,126 @@ URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
-Requires: kdelibs3
-Requires: kdebase3
-Requires: kdegraphics3-pdf
+%kde4_runtime_requires
+Requires: graphviz
+Requires: okular
 Requires: python
-Requires: susehelp
 Conflicts: regina
 
-%if 0%{?suse_version} == 1100
-# The boost.python originally shipped with SuSE 11.0 is broken (bug #401964).
-# Insist on a patched boost from the updates repository.
-BuildRequires: boost-devel >= 1.34.1-42.2
-%else
 BuildRequires: boost-devel
-%endif
-BuildRequires: cppunit
-BuildRequires: cppunit-devel
+BuildRequires: cmake
 BuildRequires: doxygen
 BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
-BuildRequires: gmp
 BuildRequires: gmp-devel
-BuildRequires: kdelibs3-devel >= 3.2
-BuildRequires: libjpeg-devel
+BuildRequires: libcppunit-devel
+BuildRequires: libkde4-devel
+BuildRequires: libqt4-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libxml2-devel
-BuildRequires: popt
 BuildRequires: popt-devel
 BuildRequires: python-devel
-BuildRequires: qt3-devel >= 3.2
+BuildRequires: shared-mime-info
 BuildRequires: zlib-devel
 
 Prereq: /sbin/ldconfig
 
-%define _prefix /opt/kde3
-%define _kdedocdir /opt/kde3/share/doc
-%define _includedir /usr/include
-%define _mandir /usr/share/man
-
 %description
 Regina is a suite of mathematical software for 3-manifold topologists.
-It focuses upon the study of 3-manifold triangulations and includes
-support for normal surfaces and angle structures.
+It focuses on the study of 3-manifold triangulations and normal surfaces.
 
-Highlights of Regina include triangulation analysis and simplification,
-census creation and normal surface enumeration.  It offers embedded
-Python scripting giving full access to the calculation engine.
+Other highlights of Regina include angle structures, census enumeration,
+combinatorial recognition of triangulations, and high-level tasks such
+as 3-sphere recognition and connected sum decomposition.  Regina comes
+with a full graphical user interface, and also offers Python bindings
+and a low-level C++ programming interface.
 
 %prep
 %setup -n regina-%{version}
 
 %build
-FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
-export CFLAGS="$FLAGS"
-export CXXFLAGS="$FLAGS"
-./configure \
-%if "%{_lib}" != "lib"
-  --enable-libsuffix="%(A=%{_lib}; echo ${A/lib/})" \
-%endif
-%if 0%{?suse_version} <= 1100
-  --with-python-version=2.5 \
-%endif
-  --disable-mpi --disable-debug --includedir=%{_includedir} --mandir=%{_mandir}
-
-# Stop for a sanity check to see if the right bits are going to be built.
-grep '^REGINA_BUILD_DOCSENGINE=.engine.$' config.log > /dev/null
-grep '^REGINA_BUILD_ENGINE=.engine.$' config.log > /dev/null
-grep '^REGINA_BUILD_KDEUI=.kdeui.$' config.log > /dev/null
-grep '^REGINA_BUILD_MPI=..$' config.log > /dev/null
-grep '^REGINA_BUILD_PYTHON=.python.$' config.log > /dev/null
-grep '^REGINA_BUILD_TESTSUITE=.testsuite.$' config.log > /dev/null
-grep '^REGINA_BUILD_UTILS=.utils.$' config.log > /dev/null
-
-# On with the show.
-make
-make check
+%cmake_kde4 -d build -- -DPACKAGING_MODE=1 -DPACKAGING_NO_MPI=1
+%make_jobs
+LD_LIBRARY_PATH=`pwd`/engine:"$LD_LIBRARY_PATH" make %{?_smp_mflags} VERBOSE=1 test ARGS=-V
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install-strip DESTDIR=$RPM_BUILD_ROOT
+pushd build
+%makeinstall
+popd
 
-# Make a symlink to the Regina data directory where
-# people might actually be able to find it.
-ln -s /opt/kde3/share/regina $RPM_BUILD_ROOT/usr/share/regina
+%kde_post_install
 
-# Delete unnecessary static libraries.
-rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.a
-rm -f $RPM_BUILD_ROOT%{_libdir}/regina/python/regina.a
-rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/libreginapart.a
+%post
+/sbin/ldconfig
 
-# Delete library files that can cause unnecessary dependencies.
-rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/libregina-kdecommon.so
+%if 0%{?suse_version} <= 1130
+  %{_bindir}/update-desktop-database --quiet "%{_datadir}/applications" || true
+%else
+  %desktop_database_post
+%endif
 
-%post -p /sbin/ldconfig
+# Hand-roll our own update-mime-database so we can pipe output to /dev/null.
+%{_bindir}/update-mime-database "%{_datadir}/mime" &> /dev/null || true
 
-%postun -p /sbin/ldconfig
+%if 0%{?suse_version} <= 1130
+  if test -x %{_bindir}/gtk-update-icon-cache; then
+    %{_bindir}/gtk-update-icon-cache --quiet --force "%{_datadir}/icons/hicolor" || true
+  fi
+%else
+  %icon_theme_cache_post
+%endif
+
+%postun
+/sbin/ldconfig
+
+%if 0%{?suse_version} <= 1130
+  %{_bindir}/update-desktop-database --quiet "%{_datadir}/applications" || true
+%else
+  %desktop_database_postun
+%endif
+
+# Hand-roll our own update-mime-database so we can pipe output to /dev/null.
+%{_bindir}/update-mime-database "%{_datadir}/mime" &> /dev/null || true
+
+%if 0%{?suse_version} <= 1130
+  if test -x %{_bindir}/gtk-update-icon-cache; then
+    %{_bindir}/gtk-update-icon-cache --quiet --force "%{_datadir}/icons/hicolor" || true
+  fi
+%else
+  %icon_theme_cache_postun
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS.txt
 %doc CHANGES.txt
 %doc HIGHLIGHTS.txt
 %doc LICENSE.txt
-%docdir %{_kdedocdir}/HTML/en/regina
 %docdir %{_datadir}/regina/engine-docs
+%docdir %{_kde4_docdir}/HTML/en/regina
+%docdir %{_kde4_docdir}/HTML/en/regina-xml
 %{_bindir}/*
-%{_includedir}/regina
-%{_libdir}/libregina*
-# Make sure we don't ship unwanted static libs by accident.
-%{_libdir}/kde3/libreginapart.la
-%{_libdir}/kde3/libreginapart.so
-%{_libdir}/regina/python/regina.la
+%{_datadir}/applications/kde4/regina.desktop
+%{_datadir}/mime/packages/regina.xml
+%{_datadir}/regina/
+%{_includedir}/regina/
+%{_libdir}/libregina-engine.so
+%{_libdir}/libregina-engine.so.%{version}
 %{_libdir}/regina/python/regina.so
-%{_kdedocdir}/HTML/en/regina
-%{_datadir}/applications/kde/*
-%{_datadir}/apps/regina
-%{_datadir}/apps/reginapart
-%{_datadir}/icons/*/*/*/*
 %{_mandir}/*/*
-%{_datadir}/mimelnk/*/*
-%{_datadir}/regina
-%{_datadir}/services/*
-# Don't forget the symlink.
-/usr/share/regina
+%{_kde4_appsdir}/regina/
+%{_kde4_docdir}/HTML/en/regina/
+%{_kde4_docdir}/HTML/en/regina-xml/
+%{_kde4_iconsdir}/*/*/*
 
 %changelog
+* Mon Sep 12 2011 Ben Burton <bab@debian.org> 4.90
+- New upstream release.
+- Ported from KDE3 to KDE4, and from autotools to cmake.
+
 * Sat May 16 2009 Ben Burton <bab@debian.org> 4.6
 - New upstream release.
 

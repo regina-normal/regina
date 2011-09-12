@@ -1,6 +1,6 @@
 # Known to work for:
-# - Fedora 15 (i386, x86_64)
-# - Fedora 14 (i386, x86_64)
+# - Mandriva 2011 (i586, x86_64)
+# - Mandriva 2010.2 (i586, x86_64)
 
 Name: regina-normal
 Summary: Software for 3-manifold topology and normal surfaces
@@ -8,34 +8,37 @@ Version: 4.90
 Release: 1.%{_vendor}
 License: GPL
 # I wish there were a more sane group (like Applications/Mathematics).
-Group: Applications/Engineering
+Group: Sciences/Mathematics
 Source: http://prdownloads.sourceforge.net/regina/regina-%{version}.tar.gz
 URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: graphviz
-Requires: kdelibs
-Requires: kdebase-runtime
+Requires: kdebase4-runtime
+Requires: kdelibs4-core
+Requires: okular
 Requires: python
 Conflicts: regina
 
 BuildRequires: boost-devel
 BuildRequires: cmake
 BuildRequires: cppunit-devel
-BuildRequires: desktop-file-utils
 BuildRequires: doxygen
 BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
 BuildRequires: gmp-devel
-BuildRequires: kdelibs-devel
+BuildRequires: kdelibs4-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libxml2-devel
+BuildRequires: qt4-devel
 BuildRequires: popt-devel
 BuildRequires: python-devel
 BuildRequires: shared-mime-info
-BuildRequires: zlib-devel
+BuildRequires: zlib1-devel
+
+Prereq: /sbin/ldconfig
 
 %description
 Regina is a suite of mathematical software for 3-manifold topologists.
@@ -51,41 +54,30 @@ and a low-level C++ programming interface.
 %setup -n regina-%{version}
 
 %build
-mkdir -p %{_target_platform}
-pushd %{_target_platform}
-%{cmake_kde4} .. -DPACKAGING_MODE=1 -DPACKAGING_NO_MPI=1
-popd
-
-make %{?_smp_mflags} -C %{_target_platform}
-make %{?_smp_mflags} -C %{_target_platform} test ARGS=-V
+%cmake_kde4 -DPACKAGING_MODE=1 -DPACKAGING_NO_MPI=1
+%make
+LD_LIBRARY_PATH=`pwd`/engine:"$LD_LIBRARY_PATH" %make test ARGS=-V
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install/fast DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
-
-desktop-file-validate \
-  $RPM_BUILD_ROOT%{_kde4_datadir}/applications/kde4/regina.desktop ||:
+rm -rf %{buildroot}
+%makeinstall_std -C build
 
 %post
 /sbin/ldconfig
-/usr/bin/update-desktop-database &> /dev/null ||:
-/usr/bin/update-mime-database %{_datadir}/mime &> /dev/null ||:
-/bin/touch --no-create %{_kde4_iconsdir}/hicolor &> /dev/null ||:
-
-%posttrans
-/usr/bin/gtk-update-icon-cache %{_kde4_iconsdir}/hicolor &> /dev/null ||:
+%update_menus
+%update_desktop_database
+%update_mime_database
+%update_icon_cache hicolor
 
 %postun
 /sbin/ldconfig
-/usr/bin/update-desktop-database &> /dev/null ||:
-/usr/bin/update-mime-database %{_datadir}/mime &> /dev/null ||:
-if [ $1 -eq 0 ]; then
-  /bin/touch --no-create %{_kde4_iconsdir}/hicolor &> /dev/null ||:
-  /usr/bin/gtk-update-icon-cache %{_kde4_iconsdir}/hicolor &> /dev/null ||:
-fi
+%clean_menus
+%clean_desktop_database
+%clean_mime_database
+%update_icon_cache hicolor
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
@@ -102,38 +94,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libregina-engine.so.%{version}
 %{_libdir}/regina/python/regina.so
 %{_mandir}/*/*
-%{_kde4_appsdir}/regina/
-%{_kde4_datadir}/applications/kde4/regina.desktop
-%{_kde4_datadir}/mime/packages/regina.xml
-%{_kde4_docdir}/HTML/en/regina/
-%{_kde4_docdir}/HTML/en/regina-xml/
-%{_kde4_iconsdir}/*/*/*
+%{_kde_appsdir}/regina/
+%{_kde_datadir}/applications/kde4/regina.desktop
+%{_kde_datadir}/mime/packages/regina.xml
+%{_kde_docdir}/HTML/en/regina/
+%{_kde_docdir}/HTML/en/regina-xml/
+%{_kde_iconsdir}/*/*/*
 
 %changelog
 * Mon Sep 12 2011 Ben Burton <bab@debian.org> 4.90
 - New upstream release.
 - Ported from KDE3 to KDE4, and from autotools to cmake.
 
-* Wed Jul 15 2009 Ben Burton <bab@debian.org> 4.6
-- Built for Fedora 11, which was released last month.
-
 * Sat May 16 2009 Ben Burton <bab@debian.org> 4.6
 - New upstream release.
 
-* Wed Dec 10 2008 Ben Burton <bab@debian.org> 4.5.1
-- Built for Fedora 10, which was released last month.
-
 * Tue Oct 28 2008 Ben Burton <bab@debian.org> 4.5.1
 - New upstream release.
-- It will help to have KPDF installed, which provides an embedded viewer
-  for Regina's new PDF packets.  However, the regina-normal packages for
-  Fedora do not list KPDF as a dependency.  This is because:
-  + Fedora <= 8 only ships KPDF as part of the monolithic kdegraphics
-    package, which is very large.
-  + Fedora >= 9 does not ship KPDF at all, but instead focuses on its KDE 4
-    successor.
-  Regina can find other ways of viewing PDF packets; see Regina's PDF settings
-  for details.
+- Now requires kdegraphics-kpdf, which provides an embedded viewer for
+  Regina's new PDF packets.
 
 * Sat May 17 2008 Ben Burton <bab@debian.org> 4.5
 - New upstream release.
@@ -141,7 +120,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Nov 25 2007 Ben Burton <bab@debian.org> 4.4
 - New upstream release.
 - Removed MPI-enabled utilities from packages, since this causes hassles
-  for ordinary desktop users who need to hunt down LAM dependencies.
+  for ordinary desktop users who need to hunt down MPICH dependencies.
 
 * Fri May 5 2006 Ben Burton <bab@debian.org> 4.3.1
 - New upstream release.
@@ -154,11 +133,14 @@ rm -rf $RPM_BUILD_ROOT
 
 * Thu Jul 7 2005 Ben Burton <bab@debian.org> 4.2
 - New upstream release.
+- Reenabled Python scripting for Mandrake >= 10.1.
 - Note that regina-normal now includes MPI support.  These packages are
-  built against the LAM implementation of MPI.
+  built against the MPICH implementation of MPI.
 
 * Sun Jul 25 2004 Ben Burton <bab@debian.org> 4.1.3
 - New upstream release.
 
-* Fri Jun 11 2004 Ben Burton <bab@debian.org> 4.1.2
-- Initial packaging using Fedora Core 2.
+* Fri Jun 25 2004 Ben Burton <bab@debian.org> 4.1.2
+- Initial packaging using Mandrake 10.0 Official.
+- Python scripting is initially disabled because of bugs in Mandrake 10.0's
+  boost.python packaging (see Mandrake bug #9648).

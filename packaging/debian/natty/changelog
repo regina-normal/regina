@@ -1,12 +1,6 @@
-regina-normal (4.90-2) unstable; urgency=low
+regina-normal (4.90-1ubuntu1~natty1) natty; urgency=low
 
-  * Added missing build-depends on shared-mime-info.
-
- -- Ben Burton <bab@debian.org>  Sat, 10 Sep 2011 08:58:58 +1000
-
-regina-normal (4.90-1) unstable; urgency=low
-
-  * New upstream release!
+  * New upstream release, backported to ubuntu natty.
   * The user interface has been ported from KDE3 to KDE4 (closes: #556318).
     Re-enabled the GUI as a result.
   * The build system has been ported from autotools to cmake.
