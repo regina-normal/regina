@@ -28,6 +28,7 @@ Current version: <i>4.90</i>
     <tr><td><a href="#screenshots">Screenshots</a></td></tr>
     <tr><td><a href="#download">Download</a></td></tr>
     <tr><td><a href="#docs">Documentation</a></td></tr>
+    <tr><td><a href="#new">What's new in version 4.90?</a></td></tr>
     <tr><td><a href="#announce">Announcement mailing list</a></td></tr>
     <tr><td><a href="#license">Authors and license</a></td></tr>
     <tr><td><a href="#contact">Contact / Comments / Suggestions</a></td></tr>
@@ -36,8 +37,6 @@ Current version: <i>4.90</i>
 <td valign="top">
     <table class="contents" cellspacing=0><tbody>
     <tr><td><a href="docs/featureset.html">What does Regina do?</a></td></tr>
-    <tr><td><a href="docs/history.html#HISTORY-HIGHLIGHTS">What's
-        new?</a></td></tr>
     <tr><td><a href="docs/troubleshooting.html">Troubleshooting</a></td></tr>
     <tr><td><a href="docs/genealogy.html">Genealogy</a></td></tr>
     <tr><td><a href="docs/who.html">Who is Regina?</a></td></tr>
@@ -67,7 +66,7 @@ Regina is now built upon KDE&nbsp;4.
 This means you can finally install Regina on newer GNU/Linux distributions,
 and MacOS&nbsp;X users will find a much more native look-and-feel.
 There are many other changes in this release (two years' worth!),
-and you can <a href="docs/history.html">read the highlights here</a>.
+and you can <a href="#new">read the highlights here</a>.
 <p>
 The user interface has undergone a massive renovation,
 so please <a href="#contact">please contact us</a> regarding anything that
@@ -246,6 +245,59 @@ You can read the API documentation by selecting
 <i>Help</i>&nbsp;&rarr;&nbsp;<i>Python API Reference</i>
 from the menu.
 You can also <a href="engine-docs/index.html">read it here online</a>.
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h2><a name="new">What's new in version 4.90?</a></h2>
+
+<h4>Installation</h4>
+<ul>
+<li>Regina has been ported to KDE4, which means you can finally
+    install it on a modern GNU/Linux distribution.
+<li>The experience on MacOSX is much cleaner and more natural
+    than it ever was before.  You no longer need X11; instead
+    Regina acts almost like a native Mac app (though you still
+    need Fink; we're a long way yet from a drag-and-drop install).
+</ul>
+<h4>User Interface</h4>
+<ul>
+<li>The user interface has had a complete overhaul, and there have
+    been many small-but-important improvements to usability.
+<li>The <a href="docs/">Regina Handbook</a> has also had a complete overhaul.
+    It is more readable and streamlined, and full of screenshots to walk
+    you through what Regina can do.
+</ul>
+<h4>Features</h4>
+<ul>
+<li>Regina now supports isomorphism signatures, which are short
+    sequences of letters, digits and punctuation that identify a
+    triangulation uniquely up to combinatorial isomorphism.
+<li>You can enumerate all taut angle structures, which is much
+    faster than enumerating all vertex angle structures.
+<li>You can test normal surfaces for incompressibility (through
+    C++/Python only).  See
+	<a href="http://arxiv.org/abs/0909.4625">arXiv:0909.4625</a>
+	for the algorithms.
+<li>You can now give tetrahedra consistent orientations in a
+    triangulation.  Just press the big Orient button above the
+    triangulation viewer.  Thanks to Matthias Goerner.
+</ul>
+<h4>Optimisations</h4>
+<ul>
+<li>A lot has changed under the hood for this release: the code is
+    generally cleaner and more streamlined throughout.
+<li>Normal surface enumeration is significantly faster again,
+    due to the use of a new trie-like data structure.
+</ul>
+<h4>C++ / Python Changes</h4>
+<ul>
+<li>Yet more code is deprecated in preparation for Regina 5.0.
+    See the <a href="deprecation.html">deprecation guide</a>
+    for updating your scripts and programs.
+<li>You no longer need to call <tt>NTriangulation::gluingsHaveChanged()</tt>.
+<li>When building triangulations, you should now add tetrahedra using
+    <tt>NTriangulation::newTetrahedron()</tt>, not create tetrahedra yourself.
+</ul>
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
