@@ -1,7 +1,7 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="regina.css">
-    <title>Regina - A Normal Surface Theory Calculator</title>
+    <title>Regina - Software for 3-manifold topology and normal surface theory</title>
 </head>
 <body bgcolor="#FFFFFF" text="#000000"
     link="#0000EE" vlink="#551A8B" alink="#FF0000">
@@ -60,31 +60,35 @@ Current version: <i>4.90</i>
 
 <i>12 September 2011:</i>
 <b>Version 4.90 is out</b>, and it's been a long time coming!
-The user interface has been ported from KDE&nbsp;3 to KDE&nbsp;4:
-this means you can finally install Regina on newer GNU/Linux distributions,
-and MacOS&nbsp;X users will find a much more native look-and-feel.
-There are also lots of changes under the hood to make things faster,
-cleaner and safer: see the <a href="docs/history.html">release notes</a> for
-a full list of new features, optimisations and updates.
+If you were at the HyamFest, this is the version you saw in the software
+demonstration.
 <p>
-The user interface has undergone a massive renovation in this release,
-and so we would be grateful if you could <a href="#contact">please
-contact us</a> with reports on anything that doesn't work (or,
-hopefully, reports that everything does!).
+Regina is now built upon KDE&nbsp;4.
+This means you can finally install Regina on newer GNU/Linux distributions,
+and MacOS&nbsp;X users will find a much more native look-and-feel.
+There are many other changes in this release (two years' worth!),
+and you can <a href="docs/history.html">read the highlights here</a>.
+<p>
+The user interface has undergone a massive renovation,
+so please <a href="#contact">please contact us</a> regarding anything that
+doesn't work (or, hopefully, to let us know that everything does!).
 <p>
 As usual, packages are available in the <a href="#download">download section</a>
 for GNU/Linux and MacOS&nbsp;X.
-<p>
-Special thanks must go to William Pettersson, whose assistance has been
-invaluable for the porting effort in this release.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
 <h2><a name="whatis">What is Regina?</a></h2>
 
 Regina is a suite of mathematical software for 3-manifold topologists.
-It focuses upon the study of 3-manifold triangulations and includes
-support for normal surfaces and angle structures.
+It focuses on the study of 3-manifold triangulations and normal
+surfaces.
+<p>
+Other highlights of Regina include angle structures, census enumeration,
+combinatorial recognition of triangulations, and high-level tasks such
+as 3-sphere recognition and connected sum decomposition.  Regina comes
+with a full graphical user interface, and also offers Python bindings
+and a low-level C++ programming interface.
 <p>
 See the users' handbook for a <a href="docs/featureset.html">full list
 of features</a>.
@@ -93,29 +97,27 @@ of features</a>.
 
 <h2><a name="screenshots">Screenshots</a></h2>
 
-A few screenshots are available.
-Click on an image to see a full scale version.
+All of the screenshots below were taken with Regina&nbsp;4.90 running on
+MacOS&nbsp;X.  Click on each thumbnail for a full-sized version.
 <p>
 <table border=0>
 <tr>
-    <td align=center><a href="shots/misc.jpg"><img src="shots/misc-mini.jpg"
+    <td align=center><a href="shots/tri.png"><img src="shots/tri-mini.png"
         vspace=5 align=middle border=0
         alt="Screenshot thumbnail"></a></td>
-    <td>Normal surfaces, angle structures, structural analysis and algebraic
-        properties (taken from version 3.97)</td>
+    <td>Studying 3-manifold triangulations</td>
 </tr>
 <tr>
-    <td align=center><a href="shots/skeleton.jpg"><img src="shots/skeleton-mini.jpg"
+    <td align=center><a href="shots/surfaces.png"><img src="shots/surfaces-mini.png"
         vspace=5 align=middle border=0
         alt="Screenshot thumbnail"></a></td>
-    <td>Skeletal information and other triangulation properties
-        (taken from version 3.95)</td>
+    <td>Normal surfaces and angle structures</td>
 </tr>
 <tr>
-    <td align=center><a href="shots/scripting.jpg"><img src="shots/scripting-mini.jpg"
+    <td align=center><a href="shots/scripting.png"><img src="shots/scripting-mini.png"
         vspace=5 align=middle border=0
         alt="Screenshot thumbnail"></a></td>
-    <td>In-built Python scripting (taken from version 3.97)</td>
+    <td>In-built Python scripting</td>
 </tr>
 </table>
 <p>
@@ -123,21 +125,16 @@ Click on an image to see a full scale version.
 
 <h2><a name="download">Download</a></h2>
 
-Prebuilt packages for Regina are available for several GNU/Linux
-distributions, as listed in the table below.  Please click on the
-relevant <i>Download</i> link for your system.
+You can install ready-made packages for many GNU/Linux distributions.
+All of these packages are named <b>regina-normal</b> (to avoid conflicting
+with the <a href="http://regina-rexx.sourceforge.net/">other Regina</a>).
+Please click on the <i>Download</i> link for your system in the table below.
 <p>
-To keep the installation simple for regular users, most packages
-<b>do not include the MPI utilities</b>.
-If you use these utilities, mail me and hopefully I
-can build an MPI-enabled package for you.
+To keep the installation simple, most packages do not include the MPI
+(high-performance computing) utilities.  If you need these,
+<a href="mailto:bab@debian.org">let Ben know</a>
+and he can build you an MPI-enabled package.
 <p>
-All of the packages are named <tt>regina-normal</tt> to avoid conflicting
-with the <a href="http://regina-rexx.sourceforge.net/">other Regina</a>.
-All of the downloads can also be found on the
-<a href="http://sourceforge.net/project/showfiles.php?group_id=19698">Regina
-download site</a>.
-
 <blockquote><table cellspacing=0 border=0 align=center class="data">
 <tr><th class="first">Distribution</th>
     <th>Version</th>
@@ -226,74 +223,63 @@ download site</a>.
     </tr>
 </table></blockquote>
 <p>
-For other platforms or distributions, Regina is available in source form
-only.  These sources are available from the
-<a href="http://sourceforge.net/project/showfiles.php?group_id=19698">Regina
-download site</a>.  Please see the <a href="source.html">separate page on
-building Regina</a> for further information on how to build Regina and
+If your system is not in this table, you will need to build Regina from
+source.
+You can <a href="http://prdownloads.sourceforge.net/regina/regina-4.90.tar.gz">download the source code here</a>.
+Please see the <a href="source.html">separate page on building Regina</a>
+for instructions on how to build Regina and
 what libraries and tools you will need to have installed.
 <p>
-If you are having trouble either compiling or running Regina, you may
-check the <a href="docs/troubleshooting.html">troubleshooting page</a> to
-see if your problem is discussed there.  You are of course also welcome
-to write to either myself or the users' mailing list
-<a href="mailto:regina-user@lists.sourceforge.net"><i>regina-user@lists.sourceforge.net</i></a>
-for assistance.
-<p>
-Is the download page missing your
-distribution (e.g., Slackware, Gentoo) or your hardware
-(e.g., Sparc, PowerPC)?  If so, and if you're willing to help out with
-packaging, please <a href="packaging.html">visit this page</a>!  It may
-be as easy as rebuilding an RPM on your machine.
+If you run into any problems when you run Regina, you can check the
+<a href="docs/troubleshooting.html">troubleshooting page</a> to
+see if your problem is discussed there.  You also most welcome
+to <a href="#contact">contact us</a> for help.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
 <h2><a name="docs">Documentation</a></h2>
 
+Regina comes with rich documentation for both users and developers.
+
 <h4>Users' Handbook</h4>
 
-The Regina Handbook is installed with Regina and can be viewed
-by selecting <i>Help</i>-&gt;<i>Regina Handbook</i>.
-Note that this requires the KDE Help Centre to be
-present, although this is provided with most KDE installations.
+The Regina Handbook is full of screenshots, and walks you through the
+different things that Regina can do.
+The handbook was completely refurbished for Regina&nbsp;4.90, so you
+might want to take a fresh look.
 <p>
-Alternatively, the handbook can be <a href="docs/index.html">viewed
-here online</a> with any web browser.  It can also be
-<a href="http://prdownloads.sourceforge.net/regina/regina-handbook-4.90.zip">downloaded
-separately</a> in HTML format.
+You can read the handbook from within Regina by selecting
+<i>Help</i>&nbsp;&rarr;&nbsp;<i>Regina Handbook</i>
+from the menu.
+You can also <a href="docs/index.html">read it here online</a>,
+or <a href="http://prdownloads.sourceforge.net/regina/regina-handbook-4.90.zip">download it separately</a>
+in HTML format.
 
-<h4>API Documentation</h4>
+<h4>Python/C++ API Documentation</h4>
 
-There is also extensive API documentation available for the calculation
-engine.  This is useful for Python scripting or for building the Regina
-calculation engine into your own projects (the calculation engine is
-provided as a shared library).
+If you are doing Python scripting or C++ programming with Regina,
+there is extensive API documentation for Regina's mathematical
+engine.  This describes the various objects, classes and functions that
+Regina makes available to you.
 <p>
-If you downloaded Regina as a ready-made package, the API documentation
-should already be installed (though on some distributions you need
-the separate package <tt>regina-normal-doc</tt>).  You can access it
-by selecting <i>Help</i>-&gt;<i>Python Reference</i>.
-<p>
-If you are building Regina from sources, the API documentation will be
-installed as long as you have Doxygen on your system (see the
-<a href="source.html#sysreq">system requirements</a> for details).
-<p>
-Alternatively, the API documentation can be
-<a href="engine-docs/index.html">viewed here online</a> with any
-web browser.
+You can read the API documentation by selecting
+<i>Help</i>&nbsp;&rarr;&nbsp;<i>Python API Reference</i>
+from the menu.
+You can also <a href="engine-docs/index.html">read it here online</a>.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
 <h2><a name="announce">Announcement Mailing List</a></h2>
 
-A mailing list (<i>regina-announce@lists.sourceforge.net</i>) has been
-created for important announcements such as new releases of Regina.
-This list has extremely low traffic.  You can
+You are welcome to subscribe to the announcement list
+<b>regina-announce@lists.sourceforge.net</b>.
+This is a moderated list with extremely low traffic, and is only used for
+major announcements such as new releases of Regina.  You can
 <a href="http://lists.sourceforge.net/lists/listinfo/regina-announce">subscribe
 or unsubscribe here</a>.
 <p>
-Other mailing lists have been created for user support and development
-discussons; see the <a href="#contact">contact section below</a>.
+There are other mailing lists for user support and development;
+<a href="docs/services.html">click here for details</a>.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
@@ -346,7 +332,7 @@ Regina includes portions of external software for specialised tasks
 (such as code from SnapPea for some geometric calculations, and code from Orb
 for Orb/Casson imports).
 <p>
-For complete license details, including the complete GNU General Public
+For complete license details, including the full GNU General Public
 License and information on external software that Regina uses,
 see the 
 <a href="docs/license.html">full license</a> in the users' handbook.
@@ -356,27 +342,22 @@ see the
 <h2><a name="contact">Contact / Comments / Suggestions</a></h2>
 
 If you have any suggestions, problems, bugs, wishes, frustrations or
-otherwise miscellaneous comments, I would <i>really</i> love to hear
-them.  This program is permanently under development and I would like to
-hear what people want out of it.
+otherwise miscellaneous comments, we would <i>really</i> love to hear
+them.  This program is permanently under development and we would like to
+know what people want out of it.
 <p>
-Alternatively, if you have written additions yourself and think they
-could be useful in the general release, I would love to hear about them.
-The more the merrier!  It's probably worth mailing me first though in
-case I or someone else have already written said addition and it's
-currently being debugged and two days away from release.
+If you have written your own extensions that you think could be
+worth putting in the main release, please do write and let us know.
 <p>
-Incidentally, even if you have no comments to make, I'd like to hear
-from anyone using the program - even if it's just to say hi -
-mainly because I'm interested to see
-who's using it and how it's being used.
+Even if you have no comments to make, it's always nice to hear
+from people using Regina, even if it's just to say hi.
+We're always interested to hear how this software is being used.
 <p>
-The best way to contact me is by email at
-<a href="mailto:bab@debian.org">bab@debian.org</a>.
-But even better, you could use the SourceForge services which include a
-<a href="docs/services.html">bug tracking system and mailing lists</a>;
-this way you can ensure your problems and/or discussions are publicly
-archived to help others with similar issues.
+You can contact us by email: the best address is
+<b>regina-user@lists.sourceforge.net</b>, which will reach all of the
+developers.  Of course you are also welcome to send us personal emails:
+our websites are linked to our names in the
+<a href="#license">author list above</a>.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
