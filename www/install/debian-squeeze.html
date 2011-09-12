@@ -1,0 +1,84 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../regina.css">
+    <title>Regina for Debian:  Squeeze (Debian 6.0)</title>
+</head>
+<body bgcolor="#FFFFFF" text="#000000"
+    link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<h1><a name="contents">Regina for Debian:  Squeeze (Debian 6.0)</a></h1>
+
+<p>
+If you use Squeeze (the Debian 6.0 release), you can obtain packages
+from the official Regina repository on people.debian.org.
+</p>
+<p>
+This means that Debian will automatically fetch dependencies for you, and
+your package manager will know when new versions of Regina are released.
+</p>
+<ol>
+<li><p>
+Make Regina's repository a trusted source.  This helps keep your machine
+secure, and avoids messages like &ldquo;these packages cannot be
+authenticated&rdquo;.
+To do this,
+<a href="http://people.debian.org/~bab/regina-key.txt">download
+ Regina's cryptographic signing key here</a>.
+Then, at a command prompt type:
+</p>
+<div class="example"><p>
+<tt>sudo apt-key add ~/Downloads/regina-key.txt</tt>
+</p></div>
+<p>
+Here you should replace <tt>~/Downloads/regina-key.txt</tt> with location of
+the file you just downloaded.  You can now delete regina-key.txt if you like.
+</p>
+</li>
+<li><p>
+Add Regina's location to your list of repositories.  To do this, open
+<tt>/etc/apt/sources.list</tt> and add the following line:
+</p>
+<div class="example"><p>
+<tt>deb http://people.debian.org/~bab/regina squeeze/</tt>
+</p></div>
+</li>
+<li>
+<p>
+Update the list of available packages.  At a command prompt, type:
+</p>
+<div class="example"><p>
+<tt>sudo aptitude update</tt>
+</p></div>
+</li>
+<li>
+<p>
+Install or upgrade Regina like you would any other package.  Type:
+</p>
+<div class="example"><p>
+<tt>sudo aptitude install regina-normal</tt>
+</p></div>
+<p>
+</ol>
+<p>
+If you are a C++ programmer and you wish to build Regina into your own
+projects, you should also install the package <tt>regina-normal-dev</tt>.
+</p>
+<p>
+If you want the MPI-enabled utilities for use on high-performance clusters,
+you should install the package <tt>regina-normal-mpi</tt>.
+</p>
+<p>
+You might notice that Squeeze already ships with Regina as part of its
+CD/DVD set.  However, this is the older version 4.6.  For the latest
+version of Regina, you should follow the steps outlined above.
+</p>
+
+<p class="return">
+<a href="../index.html#download"><img src="../return.jpg"
+    alt="Back to main page ..."
+    border="0" width="32" height="32" align="middle"></a>
+<a href="../index.html#download">Back to main page ...</a></p>
+
+</body>
+</html>
+

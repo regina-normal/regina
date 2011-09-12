@@ -10,87 +10,80 @@
 
 <div class="announce"><p>
 <b>Tip:</b> See the page on
-<a href="buildtips.html">building Regina on different distributions</a>,
+<a href="buildtips.html">building Regina on different systems</a>,
 which offers advice tailored for your particular type of machine.
 </div>
 <p>
-Building Regina from its sources can be either trivially simple or quite
-painstaking depending upon your system configuration.  With each new
-release, the scripts that automatically detect your system configuration
-become more sophisticated, hopefully making Regina simple to build on more
-and more systems.
+Regina's build scripts should detect most aspects of your
+system configuration, and give you useful error messages if something
+looks out of place.
+If Regina does not build out of the box for you, please
+<a href="mailto:regina-devel@lists.sourceforge.net">mail us</a>
+(including your <tt>CMakeCache.txt</tt> if possible) so that we can update
+the scripts to work with systems like yours in the next release.
 <p>
-If Regina does not build directly out of the box for you, please
-<a href="mailto:regina-devel@lists.sourceforge.net">drop me an email</a>
-(including your <tt>config.log</tt> if possible) so that the automatic
-detection scripts can be made to work with your system and others like
-yours for the next release.
-<p>
-Basically the steps are as follows.
+In summary, to build Regina:
 <ul>
     <li>Make sure you have installed all the necessary tools and
     libraries as listed in the <a href="#sysreq">system
     requirements</a> table below.</li>
     <li>Download the source archive
-    <tt><b>regina-4.6.tar.gz</b></tt> from the
-    <a href="http://prdownloads.sourceforge.net/regina/regina-4.6.tar.gz">Regina
+    <tt><b>regina-4.90.tar.gz</b></tt> from the
+    <a href="http://prdownloads.sourceforge.net/regina/regina-4.90.tar.gz">Regina
     download site</a>.</li>
-    <li>Unpack this source archive; it will expand into a directory
-    <tt><b>regina-4.6/</b></tt> on your machine.</li>
-    <li>From within this directory run <tt><b>./configure</b></tt>.  This will
-    run the automatic detection scripts that search for the necessary tools
-    and libraries on your system and work out how they can be used to
-    build Regina.<br>
-    <b>Please visit <a href="buildtips.html">this page</a> for additional
-    configure arguments that you might need for your particular machine.</b>
+    <li>Unpack this source archive, which will expand into a directory
+    <tt><b>regina-4.90/</b></tt> on your machine.
+    <div class="example"><p>
+    <tt>example:~$ <b>tar -zxf regina-4.90.tar.gz</b></tt>
+    </p></div></li>
+	<li>Create a build subdirectory, such as
+    <tt><b>regina-4.90/build/</b></tt>.
+    <div class="example"><p>
+    <tt>example:~$ <b>cd regina-4.90</b></tt><br>
+    <tt>example:~/regina-4.90$ <b>mkdir build</b></tt>
+    </p></div></li>
+    <li>Move into the build directory, and then run
+	&ldquo;<tt><b>cmake ..</b></tt>&rdquo;.  This will
+    search for the necessary tools and libraries on your system,
+	and configure your build accordingly.
+    <div class="example"><p>
+    <tt>example:~/regina-4.90$ <b>cd build</b></tt><br>
+    <tt>example:~/regina-4.90/build$ <b>cmake ..</b></tt>
+    </p></div>
+	You will <b>almost certainly need to pass additional arguments to
+	cmake</b>.
+    Please visit <a href="buildtips.html">this page</a> for details.
     </li>
-    <li>If the configure succeeds, run <tt><b>make</b></tt> to build Regina.
+    <li>If cmake succeeds, run <tt><b>make</b></tt> to build Regina.
     Then, as root, run <tt><b>make install</b></tt> to install Regina on your
-    system.</li>
+    system.
+    <div class="example"><p>
+    <tt>example:~/regina-4.90/build$ <b>make</b></tt><br>
+    <tt>example:~/regina-4.90/build$ <b>sudo make install</b></tt>
+    </p></div>
 </ul>
-That's all there is to it.  A full set of instructions is included in the
-file <tt><b>README.txt</b></tt> which is bundled with the archive.
-Please do read it; it's short and it contains some important information.
-<p>
-If you are having trouble compiling or running Regina, you may
-check the <a href="docs/troubleshooting.html">troubleshooting
-page</a> to see if your problem is discussed there.  Of course you
-are also welcome to mail either myself or the users' mailing list
+That's all there is to it.
+If you are having trouble building or running Regina, please check out
+the <a href="docs/troubleshooting.html">troubleshooting page</a>
+and/or mail us at
 <a href="mailto:regina-user@lists.sourceforge.net"><i>regina-user@lists.sourceforge.net</i></a> for assistance.
 
 <h2><a name="sysreq">System Requirements</a></h2>
 
-The tools and libraries that you will need installed before you can build
-Regina are listed in the table below.  All of these tools and libraries
-should be available for most GNU/Linux distributions.
+The following table lists the tools and
+libraries that you will need to build Regina.
 <p>
 <b>It is highly recommended that you download ready-made packages of these
-tools and libraries for your GNU/Linux distribution</b>, since this is the
-best way to provide standard installations in standard locations that
-Regina can easily find and use.  Where you will find such packages
-depends upon your distribution.  For instance, Debian packages can all
-be found on the <a href="http://packages.debian.org/">usual Debian
-servers</a>, Fedora Core packages can be found on the
-<a href="http://download.fedora.redhat.com/pub/fedora/linux/releases/10/Everything/i386/os/Packages/">Fedora
-download servers</a> and so on.
+tools and libraries</b>.  This is the best way to provide standard
+installations in standard locations that
+Regina can easily find and use.  All of these tools and libraries are
+included in almost every major GNU/Linux distribution.
 <p>
-The following table lists each requirement along with its Debian package
+The following table lists each requirement, along with its Debian package
 name and some commonly-used RPM package names (these tend to vary
-between different RPM-based distributions).  It also lists the website
-from which each piece of software can be obtained directly if no ready-made
-packages are available, though this should be avoided where possible.
+between different RPM-based distributions).
 <p>
-Please note that if you get an error at build time saying that Regina cannot
-link with <tt>-lfoo</tt> for some library <tt>foo</tt>, you probably
-just need to install another library development package on your system.  For
-instance, Fedora users who get the error
-"<tt>/usr/bin/ld: cannot find -lselinux</tt>"
-need to install the additional package <i>libselinux-devel</i>, and
-users who get the error "<tt>/usr/bin/ld: cannot find -ljpeg</tt>"
-need to install the package <i>libjpeg-devel</i>.
-
-<p align=center>
-<table cellspacing=0 border=0 align=center class="data">
+<table cellspacing=0 border=0 class="data">
 <tr><th colspan=2 class="first">Legend</th></tr>
 <tr>
     <td class="reqfirst">Required</td>
@@ -100,76 +93,59 @@ need to install the package <i>libjpeg-devel</i>.
 <p>
 <table cellspacing=0 border=0 class="data">
 <tr><th class="first">Component</th><th>Required For</th>
-    <th>Version</th><th>Package Names / Website</th></tr>
+    <th>Version</th><th>Package Names</th></tr>
+<tr><td class="reqfirst">CMake</td>
+    <td class="req">Build infrastructure</td>
+    <td>&ge; 2.8</td>
+    <td>cmake (DEB)<br>cmake (RPM)
+    </td></tr>
 <tr><td class="reqfirst">GNU multiprecision arithmetic library <em>(libgmp)</em></td>
     <td class="req">Calculation engine</td>
-    <td>&gt;= 3</td>
-    <td>libgmp3-dev (DEB)<br>gmp-devel (RPM)<br>
-    <a href="ftp://ftp.gnu.org/gnu/gmp/">ftp://ftp.gnu.org/gnu/gmp/</a>
+    <td>&ge; 3</td>
+    <td>libgmp-dev / libgmp3-dev (DEB)<br>gmp-devel (RPM)
     </td></tr>
 <tr><td class="reqfirst">GNOME XML library <em>(libxml2)</em></td>
     <td class="req">Calculation engine</td>
-    <td>&gt;= 2.0.0</td>
-    <td>libxml2-dev (DEB)<br>libxml2-devel (RPM)<br>
-    <a href="ftp://ftp.gnome.org/pub/gnome/sources/libxml2/">ftp://ftp.gnome.org/.../libxml2/</a>
+    <td>&ge; 2.0.0</td>
+    <td>libxml2-dev (DEB)<br>libxml2-devel (RPM)
     </td></tr>
 <tr><td class="reqfirst">Popt command-line parsing library <em>(libpopt)</em></td>
     <td class="req">Command-line utilities</td>
-    <td>&gt;= 1.3</td>
-    <td>libpopt-dev (DEB)<br>popt / popt-devel (RPM)<br>
-    <a href="http://rpm5.org/files/popt/">http://rpm5.org/files/popt/</a>
+    <td>&ge; 1.3</td>
+    <td>libpopt-dev (DEB)<br>popt-devel (RPM)
     </td></tr>
-<tr><td class="reqfirst">KDE&nbsp;3 and Qt&nbsp;3 libraries</td>
+<tr><td class="reqfirst">KDE&nbsp;4 and Qt&nbsp;4 libraries</td>
     <td class="req">Graphical user interface</td>
-    <td>KDE &gt;= 3.2 with Qt &gt;= 3.2</td>
-    <td>kdelibs4-dev &amp; libqt3-mt-dev (DEB)<br>
-    kdelibs-devel / kdelibs3-devel &amp;<br>
-    qt-devel / qt3-devel (RPM)<br>
-    <a href="http://www.kde.org/">http://www.kde.org/</a>
+    <td>&nbsp;</td>
+    <td>kdelibs5-dev &amp; libqt4-dev (DEB)<br>
+    kdelibs-devel / kdelibs4-devel / libkde4-devel &amp;<br>
+    qt-devel / qt4-devel / libqt4-devel (RPM)
     </td></tr>
-<tr><td class="optfirst">Python libraries</td>
+<tr><td class="optfirst">Python development libraries</td>
     <td class="opt">Python scripting</td>
-    <td>&gt;= 2.2</td>
-    <td>python-dev (DEB)<br>python-devel (RPM)<br>
-    <a href="http://www.python.org/">http://www.python.org/</a><br>
-    <em>(note that some RPM-based systems also require libselinux-devel)</em>
+    <td>&ge; 2.2</td>
+    <td>python-dev (DEB)<br>python-devel (RPM)
     </td></tr>
 <tr><td class="optfirst">Boost.Python libraries <em>(libboost_python)</em></td>
     <td class="opt">Python scripting</td>
-    <td>&gt;= 1.31.0</td>
-    <td>libboost-python-dev (DEB)<br>boost-devel (RPM)<br>
-    <a href="http://www.boost.org/">http://www.boost.org/</a>
-    </td></tr>
-<tr><td class="optfirst">Perl</td>
-    <td class="opt">Python scripting</td>
-    <td>&gt;= 5</td>
-    <td>perl (DEB)<br>perl (RPM)<br>
-    <a href="http://www.perl.com/pub/a/language/info/software.html">http://www.perl.com/.../software.html</a>
+    <td>&ge; 1.32</td>
+    <td>libboost-python-dev (DEB)<br>boost-devel (RPM)
     </td></tr>
 <tr><td class="optfirst">Doxygen</td>
-    <td class="opt">Calculation engine API docs</td>
-    <td>&gt;= 1.2.2</td>
-    <td>doxygen (DEB)<br>doxygen (RPM)<br>
-    <a href="http://www.stack.nl/~dimitri/doxygen/">http://www.stack.nl/~dimitri/doxygen/</a>
+    <td class="opt">C++/Python API docs</td>
+    <td>&ge; 1.2.2</td>
+    <td>doxygen (DEB)<br>doxygen (RPM)
     </td></tr>
-<tr><td class="optfirst" rowspan=2>MPI development environment
-    (e.g., MPICH or Open MPI)</td>
-    <td class="opt" rowspan=2>MPI-enabled utilities</td>
-    <td rowspan=2>&nbsp;</td>
-    <td>libmpich1.0-dev &amp; mpich-bin (DEB)<br>
-    (mpich-devel / libmpich1-devel) &amp; mpich (RPM)<br>
-    <a href="http://www.mcs.anl.gov/mpi/mpich/">http://www.mcs.anl.gov/mpi/mpich/</a>
-    (MPICH)
-    </td></tr>
-<tr><td>libopenmpi-dev &amp; openmpi-bin (DEB)<br>
-    (openmpi-devel / libopenmpi-devel) &amp; (openmpi) (RPM)<br>
-    <a href="http://www.open-mpi.org/">http://www.open-mpi.org/</a> (Open MPI)
+<tr><td class="optfirst">MPI development environment (e.g., Open MPI)</td>
+    <td class="opt">MPI-enabled utilities</td>
+    <td>&nbsp;</td>
+    <td>mpi-default-dev &amp; mpi-default-bin (DEB)<br>
+    (openmpi-devel / libopenmpi-devel) &amp; openmpi (RPM)
     </td></tr>
 <tr><td class="optfirst">CppUnit</td>
     <td class="opt">Test suite</td>
-    <td>&gt;= 1.8.0</td>
-    <td>cppunit (DEB)<br>cppunit-devel (RPM)<br>
-    <a href="http://sourceforge.net/projects/cppunit/">http://sourceforge.net/projects/cppunit/</a>
+    <td>&ge; 1.8.0</td>
+    <td>libcppunit-dev (DEB)<br>cppunit-devel / libcppunit-devel (RPM)
     </td></tr>
 </table>
 

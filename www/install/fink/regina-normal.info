@@ -1,0 +1,196 @@
+Info4: <<
+Package: regina-normal
+Version: 4.90
+Revision: 0.1
+Type: kde (mac)
+License: GPL
+Maintainer: Ben Burton <bab@debian.org>
+HomePage: http://regina.sourceforge.net/
+
+Description: Computational 3-manifold topology software
+
+Source: mirror:sourceforge:regina/regina-%v.tar.gz
+Source-MD5: 9ec3408dc970d78b02d66561031d0b93
+SourceRename: %n-%v.tar.gz
+SourceDirectory: regina-%v
+
+PatchScript: <<
+    # Make graphviz support work out of the box.
+	sed -i -e 's,neato,%p/bin/neato,' kdeui/src/shell/reginamain.cpp
+<<
+
+DescPackaging: <<
+Although the upstream application is called regina, this package is called
+regina-normal to avoid confusion with regina the REXX interpreter.
+.
+The API for the shared library libregina-engine changes significantly with
+each release, and so the upstream version number is part of the soname.
+This means that the names of the -shlibs and -dev splitoffs change with
+each upstream release also.
+<<
+
+GCC: 4.0
+BuildDepends: <<
+	automoc-%type_pkg[kde],
+	boost1.41.cmake,
+	cmake,
+	cppunit1.10.2,
+	dbus-dev,
+	doxygen,
+	fink (>= 0.28.0-1),
+	gmp5,
+	libiconv-dev,
+	libxml2,
+	kde4-buildenv,
+	kdelibs4-%type_pkg[kde]-dev,
+	popt,
+	qt4-base-%type_pkg[kde],
+	sed,
+	shared-mime-info
+<<
+Depends: <<
+	%n%v-shlibs (= %v-%r),
+	boost1.41.cmake-shlibs,
+	gmp5-shlibs,
+	graphviz,
+	kdebase4-runtime-%type_pkg[kde],
+	kdelibs4-%type_pkg[kde]-shlibs,
+	popt-shlibs,
+	qt4-base-mac-qtcore-shlibs,
+	qt4-base-mac-qtgui-shlibs
+<<
+Suggests: regina-normal%v-dev
+
+CompileScript: <<
+#!/bin/sh -ev
+
+	export KDE4_PREFIX="%p" KDE4_TYPE="%type_pkg[kde]"
+	. %p/sbin/kde4-buildenv.sh
+
+	mkdir -p build
+	pushd build
+	cmake $KDE4_CMAKE_ARGS \
+	  -DPACKAGE_NAME=regina-normal \
+	  -DPYTHON_EXECUTABLE=/usr/bin/python \
+	  -DPACKAGING_MODE=1 -DPACKAGING_NO_MPI=1 ..
+	popd
+<<
+
+InstallScript: <<
+#!/bin/sh -ev
+	pushd build
+	make
+	make test ARGS=-V
+	make install/fast DESTDIR="%d"
+	popd
+<<
+
+DocFiles: CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
+
+PostInstScript: %p/opt/kde4/%type_pkg[kde]/bin/kde4-postinst.sh || :
+
+DescDetail: <<
+Regina is a suite of mathematical software for 3-manifold topologists.
+It focuses on the study of 3-manifold triangulations and normal surfaces.
+.
+Other highlights of Regina include angle structures, census enumeration,
+combinatorial recognition of triangulations, and high-level tasks such
+as 3-sphere recognition and connected sum decomposition.  Regina comes
+with a full graphical user interface, and also offers Python bindings
+and a low-level C++ programming interface.
+.
+This package includes the graphical user interface and the command-line
+Python interface, as well as the users' reference manual and the
+Python reference (i.e., the API documentation for the Regina
+calculation engine).
+<<
+DescUsage: <<
+The main graphical user interface is shipped in the KDE app bundle
+%p/opt/kde4/%type_pkg[kde]/bin/regina-kde .  If you like you can drag
+this onto your dock.
+.
+Regina also installs several command-line utilities in
+%p/opt/kde4/%type_pkg[kde]/bin, so you might like to put this directory
+on your default search path.  To start a command-line Python session, run
+%p/opt/kde4/%type_pkg[kde]/bin/regina-python.
+.
+To get started, run the graphical user interface (regina-kde) and take a
+look at the Regina Handbook (Help->Regina Handbook from the menu), or open
+one of the sample data files and have a play (File->Open Examples).
+.
+If you wish to use Regina's C++ mathematical engine in your own code,
+install the package regina-normal%v-dev.
+<<
+
+SplitOff: <<
+	Package: regina-normal4.90-shlibs
+	Description: Shared libraries for 3-manifold topology software
+	Depends: <<
+		gmp5-shlibs,
+		libiconv,
+		libxml2-shlibs
+	<<
+	Files: <<
+		opt/kde4/%type_pkg[kde]/lib/libregina-engine.%v.dylib
+	<<
+	DocFiles: CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
+	Shlibs: <<
+		%p/opt/kde4/%type_pkg[kde]/lib/libregina-engine.%v.dylib 4.90.0 %n (>= 4.90-0.1)
+	<<
+	DescDetail: <<
+Regina is a suite of mathematical software for 3-manifold topologists.
+This package provides Regina's mathematical engine as a C++ shared
+library.  Full API documentation for this library is included in the
+package regina-normal, and development files (such as headers) are in
+the package regina-normal%v-dev.
+.
+Regina focuses on the study of 3-manifold triangulations and normal
+surfaces.  Other highlights include angle structures, census enumeration,
+combinatorial recognition of triangulations, and high-level tasks such as
+3-sphere recognition and connected sum decomposition.
+.
+For Regina's standard graphical user interface, install the package
+regina-normal.
+	<<
+<<
+
+SplitOff2: <<
+	Package: regina-normal4.90-dev
+	Description: Development files for 3-manifold topology software
+	BuildDependsOnly: True
+	Conflicts: regina-normal-dev, regina-normal4.5-dev, regina-normal4.5.1-dev, regina-normal-4.6-dev
+	Replaces: regina-normal-dev, regina-normal4.5-dev, regina-normal4.5.1-dev, regina-normal-4.6-dev
+	Depends: %N (= %v-%r)
+	Files: <<
+		opt/kde4/%type_pkg[kde]/include
+		opt/kde4/%type_pkg[kde]/lib/libregina-engine.dylib
+	<<
+	DocFiles: CHANGES.txt HIGHLIGHTS.txt LICENSE.txt
+	DescDetail: <<
+Regina is a suite of mathematical software for 3-manifold topologists.
+This package provides development files for compiling Regina's mathematical
+engine into other projects.
+.
+Regina focuses on the study of 3-manifold triangulations and normal
+surfaces.  Other highlights include angle structures, census enumeration,
+combinatorial recognition of triangulations, and high-level tasks such as
+3-sphere recognition and connected sum decomposition.
+.
+For Regina's standard graphical user interface, install the package
+regina-normal.
+	<<
+	DescUsage: <<
+Regina's mathematical engine is provided in the C++ shared library
+%p/opt/kde4/%type_pkg[kde]/lib/libregina-engine.dylib, and the C++
+headers are in %p/opt/kde4/%type_pkg[kde]/include/regina-normal/ .
+Run %p/opt/kde4/%type_pkg[kde]/bin/regina-engine-config to see the
+necessary compiler and linker flags.
+.
+Complete API documentation can be found in the package regina-normal.
+Look in the directory
+%p/opt/kde4/%type_pkg[kde]/share/regina-normal/engine-docs/, or run the
+graphical user interface and select Help->Python API Reference from the menu
+(which describes the C++ API as well).
+	<<
+<<
+<<
