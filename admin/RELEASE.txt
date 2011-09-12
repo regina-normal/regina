@@ -12,7 +12,8 @@ Program version:
     packaging/debian/*/changelog (version, date)
     packaging/finkinfo/*.info.* (version, revision)
     packaging/rpmspec/*.spec (version, changelog)
-    www/index.html (last updated, current version, news, filenames)
+    www/index.html (last updated, current version, contents, news,
+                    filenames, what's new)
     www/source.html (unpacking instructions: filename, directory)
 
 License details:
@@ -49,7 +50,7 @@ Don't forget:
     update \test... notes in API docs
     python bindings for new routines
     rebuild manpages
-    website, including updated news and deprecation guide
+    website, including updated news, what's new and deprecation guide
     debian packages (include cvs.diff)
     fedora/mandriva/suse packages
     update tips for building on different platforms
