@@ -13,9 +13,8 @@ URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
-# TODO: %kde4_runtime_requires
+%kde4_runtime_requires
 Requires: graphviz
-Requires: kdebase4-runtime
 Requires: okular
 Requires: python
 Conflicts: regina
@@ -54,8 +53,7 @@ and a low-level C++ programming interface.
 
 %build
 %cmake_kde4 -d build -- -DPACKAGING_MODE=1 -DPACKAGING_NO_MPI=1
-# TODO: %make_jobs
-make %{?_smp_mflags} VERBOSE=1
+%make_jobs
 LD_LIBRARY_PATH=`pwd`/engine:"$LD_LIBRARY_PATH" make %{?_smp_mflags} VERBOSE=1 test ARGS=-V
 
 %install
