@@ -67,18 +67,20 @@ desktop-file-validate \
 
 %post
 /sbin/ldconfig
-touch --no-create %{_kde4_iconsdir}/hicolor &> /dev/null ||:
+/usr/bin/update-desktop-database &> /dev/null ||:
+/usr/bin/update-mime-database %{_datadir}/mime &> /dev/null ||:
+/bin/touch --no-create %{_kde4_iconsdir}/hicolor &> /dev/null ||:
 
 %posttrans
-update-desktop-database -q &> /dev/null
-gtk-update-icon-cache %{_kde4_iconsdir}/hicolor &> /dev/null ||:
+/usr/bin/gtk-update-icon-cache %{_kde4_iconsdir}/hicolor &> /dev/null ||:
 
 %postun
 /sbin/ldconfig
+/usr/bin/update-desktop-database &> /dev/null ||:
+/usr/bin/update-mime-database %{_datadir}/mime &> /dev/null ||:
 if [ $1 -eq 0 ]; then
-  update-desktop-database -q &> /dev/null ||:
-  touch --no-create %{_kde4_iconsdir}/hicolor &> /dev/null ||:
-  gtk-update-icon-cache %{_kde4_iconsdir}/hicolor &> /dev/null ||:
+  /bin/touch --no-create %{_kde4_iconsdir}/hicolor &> /dev/null ||:
+  /usr/bin/gtk-update-icon-cache %{_kde4_iconsdir}/hicolor &> /dev/null ||:
 fi
 
 %clean
