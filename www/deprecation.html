@@ -26,9 +26,9 @@ scripts or C++ programs will no longer work.
 <p><h4><span class="question">When will this change happen?</span></h4></p>
 <p>
 There is still a lot to do before Regina&nbsp;5.0 &mdash; realistically,
-this release <b>will not happen until 2010</b> at the earliest.
-There will be point releases before then (such as 4.6.1 which is
-expected in late 2009), but no code will be removed until Regina&nbsp;5.0.
+this release <b>will not happen until 2012</b> at the earliest.
+There may be releases before then (4.91, 4.92 and so on),
+but no code will be removed until Regina&nbsp;5.0.
 </p>
 <p><h4><span class="question">How do I fix my code?</span></h4></p>
 <p>
@@ -96,6 +96,18 @@ are noted in the comments column.
     <td>&nbsp;</td>
 </tr>
 <tr>
+    <td class="first"><tt>NFastRay</tt></td>
+    <td><tt>NRay</tt></td>
+    <td>The class <tt>NRay</tt> and <tt>NFastRay</tt> have been merged;
+    see the API docs for details.</td>
+</tr>
+<tr>
+    <td class="first"><tt>NFastVector</tt></td>
+    <td><tt>NVector</tt></td>
+    <td>The class <tt>NVector</tt> and <tt>NFastVector</tt> have been merged;
+    see the API docs for details.</td>
+</tr>
+<tr>
     <td class="first"><tt>NFile</tt></td>
     <td>&mdash;</td>
     <td>The <tt>NFile</tt> class exists purely to support the old binary file
@@ -126,6 +138,11 @@ are noted in the comments column.
         <tt>NPerm4::S4</tt> array.</td>
 </tr>
 <tr>
+    <td class="first"><tt>NPacket::ChangeEventBlock</tt></td>
+    <td><tt>NPacket::ChangeEventSpan</tt></td>
+    <td>&nbsp;</td>
+</tr>
+<tr>
     <td class="first"><tt>NPerm</tt></td>
     <td><tt>NPerm4</tt></td>
     <td>&nbsp;</td>
@@ -142,6 +159,24 @@ are noted in the comments column.
     <td>&mdash;</td>
     <td>See the comments above for the <tt>NFile</tt> class.</td>
 </tr>
+<tr>
+    <td class="first"><tt>NVectorDense</tt></td>
+    <td><tt>NVector</tt></td>
+    <td>The new <tt>NVector</tt> uses dense storage, just like the old
+    <tt>NVectorDense</tt>.</td>
+</tr>
+<tr>
+    <td class="first"><tt>NVectorMatrix</tt></td>
+    <td><tt>NVector</tt></td>
+    <td>Only dense storage is offered now, as in the old class
+    <tt>NVectorDense</tt>.</td>
+</tr>
+<tr>
+    <td class="first"><tt>NVectorUnit</tt></td>
+    <td><tt>NVector</tt></td>
+    <td>Only dense storage is offered now, as in the old class
+    <tt>NVectorDense</tt>.</td>
+</tr>
 <tr><td class="altfirst" colspan=4><i>Member Routines</i></td></tr>
 <tr>
     <td class="first"><tt>...::readFromFile(NFile&amp;, ...)</tt></td>
@@ -154,14 +189,47 @@ are noted in the comments column.
     <td>See the comments above for the <tt>NFile</tt> class.</td>
 </tr>
 <tr>
+    <td class="first"><tt>NAngleStructureList::allowsStrict()</tt></td>
+    <td><tt>NAngleStructureList::spansStrict()</tt></td>
+    <td>&nbsp;</td>
+</tr>
+<tr>
+    <td class="first"><tt>NAngleStructureList::allowsTaut()</tt></td>
+    <td><tt>NAngleStructureList::spansTaut()</tt></td>
+    <td>&nbsp;</td>
+</tr>
+<tr>
+    <td class="first"><tt>NAngleStructureVector::clone()</tt></td>
+    <td><tt>NAngleStructureVector copy constructor</tt></td>
+    <td>&nbsp;</td>
+</tr>
+<tr>
+    <td class="first"><tt>NDoubleDescription::enumerateExtremalRays()</tt></td>
+    <td>Same function but different arguments</td>
+    <td>The <tt>base</tt> argument is gone, and a new template argument
+    has taken its place.  See the API docs for details.</td>
+</tr>
+<tr>
     <td class="first"><tt>NExampleTriangulation::seifertWeber()</tt></td>
     <td><tt>NExampleTriangulation::weberSeifert()</tt></td>
     <td>&nbsp;</td>
 </tr>
 <tr>
+    <td class="first"><tt>NHomMarkedAbelianGroup::...</tt></td>
+    <td>&nbsp;</td>
+    <td>Several routines have been deprecated, and several others added
+    in their place.  See the API docs for details.</td>
+</tr>
+<tr>
     <td class="first"><tt>NLayeredLoop::getIndex()</tt></td>
     <td><tt>NLayeredLoop::getLength()</tt></td>
     <td>&nbsp;</td>
+</tr>
+<tr>
+    <td class="first"><tt>NMarkedAbelianGroup::...</tt></td>
+    <td>&nbsp;</td>
+    <td>Several routines have been deprecated, and several others added
+    in their place.  See the API docs for details.</td>
 </tr>
 <tr>
     <td class="first"><tt>NPacket::readPacket()</tt></td>
@@ -193,6 +261,18 @@ are noted in the comments column.
     <td class="first"><tt>NSurfaceFilter::writeProperties()</tt></td>
     <td>&mdash;</td>
     <td>See the comments above for the <tt>NFile</tt> class.</td>
+</tr>
+<tr>
+    <td class="first"><tt>NTetrahedron constructors</tt></td>
+    <td><tt>NTriangulation::newTetrahedron()</tt></td>
+    <td>Tetrahedra must always belong to a triangulation.  You should no
+    longer create tetrahedra independently.</td>
+</tr>
+<tr>
+    <td class="first"><tt>NTriangulation::addTetrahedron()</tt></td>
+    <td><tt>NTriangulation::newTetrahedron()</tt></td>
+    <td>Tetrahedra must always belong to a triangulation.  You should no
+    longer create tetrahedra independently.</td>
 </tr>
 <tr>
     <td class="first"><tt>NTriangulation::getAdjacentFace()</tt></td>
@@ -252,6 +332,11 @@ are noted in the comments column.
     <td><tt>NTriangulation::vertexIndex()</tt></td>
     <td>The new routine is faster, but has an extra precondition that
         the given vertex must belong to the triangulation.</td>
+</tr>
+<tr>
+    <td class="first"><tt>NTriangulation::gluingsHaveChanged()</tt></td>
+    <td>&mdash;</td>
+    <td>This is now handled automatically.</td>
 </tr>
 <tr><td class="altfirst" colspan=4><i>Global Routines</i></td></tr>
 <tr>
