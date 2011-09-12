@@ -1,5 +1,6 @@
 # Known to work for:
 # - Mandriva 2011 (i586, x86_64)
+# - Mandriva 2010.2 (i586, x86_64)
 
 Name: regina-normal
 Summary: Software for 3-manifold topology and normal surfaces
