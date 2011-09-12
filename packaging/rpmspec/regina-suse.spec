@@ -63,9 +63,19 @@ popd
 
 %kde_post_install
 
-%post -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+%desktop_database_post
+# Hand-roll our own update-mime-database so we can pipe output to /dev/null.
+%{_bindir}/update-mime-database "%{_datadir}/mime" &> /dev/null || true
+%icon_theme_cache_post
 
-%postun -p /sbin/ldconfig
+%postun
+/sbin/ldconfig
+%desktop_database_postun
+# Hand-roll our own update-mime-database so we can pipe output to /dev/null.
+%{_bindir}/update-mime-database "%{_datadir}/mime" &> /dev/null || true
+%icon_theme_cache_postun
 
 %clean
 rm -rf $RPM_BUILD_ROOT
