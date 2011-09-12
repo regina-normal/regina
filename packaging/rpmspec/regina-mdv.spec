@@ -55,7 +55,7 @@ and a low-level C++ programming interface.
 %build
 %cmake_kde4 -DPACKAGING_MODE=1 -DPACKAGING_NO_MPI=1
 %make
-# TODO: %make check
+LD_LIBRARY_PATH=`pwd`/engine:"$LD_LIBRARY_PATH" %make test ARGS=-V
 
 %install
 rm -rf %{buildroot}
