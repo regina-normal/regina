@@ -11,7 +11,7 @@ See http://regina.sourceforge.net/www/install/ubuntu-lucid.html
 for screenshots of each step.
 
 1. Add Regina's location to your list of repositories.  To do this,
-   open the Synaptic Package Manager and select Settings->Repositories.
+   open the Ubuntu Software Centre and select Edit->Software Sources.
 
    a) Under "Authentication", import Regina's cryptographic signing key.
       This helps keep your machine secure, and Ubuntu may refuse to install
@@ -31,11 +31,8 @@ for screenshots of each step.
    c) Under "Ubuntu Software", enable the Community-Maintained Open Source
       Software (universe) if this has not been done before.
 
-2. Update the list of available packages.  To do this, press the large
-   Reload button in the Synaptic Package Manager.
-
-3. Install Regina like you would any other package.  Search for the package
-   "regina-normal", mark it for installation, and press Apply.
+2. Install Regina like you would any other package.  Just search for the
+   package "regina-normal" in the Ubuntu Software Centre, and press Install.
 
 If you are a C++ programmer and you wish to build Regina into your own
 projects, you should also install the package "regina-normal-dev".

@@ -7,37 +7,38 @@ packages from the official Regina repository on people.debian.org.
 This means that Ubuntu will automatically fetch dependencies for you, and
 your package manager will know when new versions of Regina are released.
 
-1. Add Regina's location to your list of repositories.
+See http://regina.sourceforge.net/www/install/ubuntu-maverick.html
+for screenshots of each step.
 
-   This only needs to be done once (the first time you install Regina).
-   Open the Synaptic package manager, select Settings->Repositories,
-   click on the tab for third-party software and add a new repository.
-   Synaptic will ask you for an APT line, which is:
+1. Add Regina's location to your list of repositories.  To do this,
+   open the Ubuntu Software Centre and select Edit->Software Sources.
 
-     deb http://people.debian.org/~bab/regina natty/
+   a) Under "Authentication", import Regina's cryptographic signing key.
+      This helps keep your machine secure, and Ubuntu may refuse to install
+      Regina without it.  You can download the key from:
 
-   You should also enable the Community Maintained Universe in your
-   list of repositories if this has not been done before.
+        http://people.debian.org/~bab/regina-key.txt
 
-2. Update the list of available packages.
+      When you import this key file, it should show up in the list of
+      trusted software providers as "Ben Burton <bab@debian.org>".
+      After the import, you can delete regina-key.txt if you like.
 
-   This lets your package manager know that a new version of Regina is
-   available.  Synaptic users can do this by pressing the Reload button.
+   b) Under "Other Software", click the "Add..." button.  When Ubuntu
+      asks you for an APT line, type:
 
-3. Install or upgrade Regina like you would any other package.
+        deb http://people.debian.org/~bab/regina maverick/
 
-   The main package to install is called "regina-normal" (though there
-   are others; see below).  Synaptic users will find this package in the
-   Mathematics (universe) section.
+   c) Under "Ubuntu Software", enable the Community-Maintained Open Source
+      Software (universe) if this has not been done before.
 
-   At this point your package manager should download and install Regina
-   along with any necessary dependencies.
+2. Install Regina like you would any other package.  Just search for the
+   package "regina-normal" in the Ubuntu Software Centre, and press Install.
 
 If you are a C++ programmer and you wish to build Regina into your own
-projects, you will also want the package "regina-normal-dev".
+projects, you should also install the package "regina-normal-dev".
 
 If you want the MPI-enabled utilities for use on high-performance clusters,
-you will want the package "regina-normal-mpi".
+you should install the package "regina-normal-mpi".
 
 You might notice that Maverick Meerkat already offers Regina as part of its
 universe section.  However, this is the older version 4.6.  For the latest
