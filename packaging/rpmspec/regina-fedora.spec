@@ -1,5 +1,6 @@
 # Known to work for:
 # - Fedora 15 (i386, x86_64)
+# - Fedora 14 (i386, x86_64)
 
 Name: regina-normal
 Summary: Software for 3-manifold topology and normal surfaces
