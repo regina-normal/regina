@@ -1,5 +1,6 @@
 # Known to work for:
 # - SuSE 11.4 (i586, x86_64)
+# - SuSE 11.3 (i586, x86_64)
 
 Name: regina-normal
 Summary: Software for 3-manifold topology and normal surfaces
@@ -65,17 +66,43 @@ popd
 
 %post
 /sbin/ldconfig
-%desktop_database_post
+
+%if 0%{?suse_version} <= 1130
+  %{_bindir}/update-desktop-database --quiet "%{_datadir}/applications" || true
+%else
+  %desktop_database_post
+%endif
+
 # Hand-roll our own update-mime-database so we can pipe output to /dev/null.
 %{_bindir}/update-mime-database "%{_datadir}/mime" &> /dev/null || true
-%icon_theme_cache_post
+
+%if 0%{?suse_version} <= 1130
+  if test -x %{_bindir}/gtk-update-icon-cache; then
+    %{_bindir}/gtk-update-icon-cache --quiet --force "%{_datadir}/icons/hicolor" || true
+  fi
+%else
+  %icon_theme_cache_post
+%endif
 
 %postun
 /sbin/ldconfig
-%desktop_database_postun
+
+%if 0%{?suse_version} <= 1130
+  %{_bindir}/update-desktop-database --quiet "%{_datadir}/applications" || true
+%else
+  %desktop_database_postun
+%endif
+
 # Hand-roll our own update-mime-database so we can pipe output to /dev/null.
 %{_bindir}/update-mime-database "%{_datadir}/mime" &> /dev/null || true
-%icon_theme_cache_postun
+
+%if 0%{?suse_version} <= 1130
+  if test -x %{_bindir}/gtk-update-icon-cache; then
+    %{_bindir}/gtk-update-icon-cache --quiet --force "%{_datadir}/icons/hicolor" || true
+  fi
+%else
+  %icon_theme_cache_postun
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
