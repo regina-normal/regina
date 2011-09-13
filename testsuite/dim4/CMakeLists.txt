@@ -1,11 +1,11 @@
-# census
+# dim4
 
 # Files to compile
-SET ( FILES dim4census dim4facetpairing ncensus nfacepairing )
+SET ( FILES dim4triangulation )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
-  SET ( SOURCES ${SOURCES} census/${SOURCE_FILE})
+  SET ( SOURCES ${SOURCES} dim4/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 

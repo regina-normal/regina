@@ -1,7 +1,7 @@
 # maths 
 
 # Files to compile
-SET ( FILES matrixops nlargeinteger nmatrixint nmatrix2 nperm3 nperm4 nprimes nrational numbertheory pymaths)
+SET ( FILES matrixops nlargeinteger nmatrixint nmatrix2 nperm3 nperm4 nperm5 nprimes nrational numbertheory permconv pymaths)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
