@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "surfaces/ndisctype.h"
 #include <boost/python.hpp>
+#include "surfaces/ndisctype.h"
 
 using namespace boost::python;
 using regina::NDiscType;

@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "triangulation/ntetface.h"
 #include <boost/python.hpp>
+#include "triangulation/ntetface.h"
 
 using namespace boost::python;
 using regina::NTetFace;

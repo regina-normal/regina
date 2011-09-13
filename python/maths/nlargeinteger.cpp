@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "maths/nlargeinteger.h"
 #include <boost/python.hpp>
+#include "maths/nlargeinteger.h"
 
 using namespace boost::python;
 using regina::NLargeInteger;

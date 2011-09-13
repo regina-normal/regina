@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "manifold/nhandlebody.h"
 #include <boost/python.hpp>
+#include "manifold/nhandlebody.h"
 
 using namespace boost::python;
 using regina::NHandlebody;

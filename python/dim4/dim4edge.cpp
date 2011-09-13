@@ -26,13 +26,13 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "dim4/dim4boundarycomponent.h"
 #include "dim4/dim4component.h"
 #include "dim4/dim4edge.h"
 #include "dim4/dim4pentachoron.h"
 #include "dim4/dim4vertex.h"
 #include "../globalarray.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::Dim4Edge;

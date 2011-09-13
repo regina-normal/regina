@@ -26,11 +26,11 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "maths/nmatrix2.h"
 #include "subcomplex/nsatannulus.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NPerm4;

@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "maths/nmatrixint.h"
 #include <boost/python.hpp>
+#include "maths/nmatrixint.h"
 #include <boost/python/detail/api_placeholder.hpp> // For len().
 
 using namespace boost::python;

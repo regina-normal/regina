@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "dim4/dim4pentfacet.h"
 #include <boost/python.hpp>
+#include "dim4/dim4pentfacet.h"
 
 using namespace boost::python;
 using regina::Dim4PentFacet;

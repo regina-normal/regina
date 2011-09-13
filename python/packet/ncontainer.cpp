@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "packet/ncontainer.h"
 #include <boost/python.hpp>
+#include "packet/ncontainer.h"
 
 using namespace boost::python;
 using regina::NContainer;

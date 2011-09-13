@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "utilities/osutils.h"
 #include <boost/python.hpp>
+#include "utilities/osutils.h"
 
 using namespace boost::python;
 

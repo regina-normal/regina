@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "maths/permconv.h"
 #include <boost/python.hpp>
+#include "maths/permconv.h"
 
 using namespace boost::python;
 

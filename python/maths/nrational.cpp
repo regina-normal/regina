@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "maths/nrational.h"
 #include <boost/python.hpp>
+#include "maths/nrational.h"
 
 using namespace boost::python;
 using regina::NLargeInteger;

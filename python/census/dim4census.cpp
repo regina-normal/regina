@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "census/dim4census.h"
 #include "dim4/dim4triangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::Dim4Census;

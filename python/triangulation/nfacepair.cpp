@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "triangulation/nfacepair.h"
 #include <boost/python.hpp>
+#include "triangulation/nfacepair.h"
 
 using namespace boost::python;
 using regina::NFacePair;

@@ -26,12 +26,12 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NVertex;

@@ -26,10 +26,10 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/nsatblocktypes.h"
 #include "triangulation/ntriangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NSatAnnulus;

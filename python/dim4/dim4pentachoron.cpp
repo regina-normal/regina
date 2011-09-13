@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "dim4/dim4component.h"
 #include "dim4/dim4edge.h"
 #include "dim4/dim4face.h"
@@ -33,7 +34,6 @@
 #include "dim4/dim4tetrahedron.h"
 #include "dim4/dim4triangulation.h"
 #include "dim4/dim4vertex.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::Dim4Pentachoron;

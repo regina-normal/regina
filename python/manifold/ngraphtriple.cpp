@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "manifold/ngraphtriple.h"
 #include "manifold/nsfs.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NGraphTriple;

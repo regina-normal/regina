@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "utilities/i18nutils.h"
 #include <boost/python.hpp>
+#include "utilities/i18nutils.h"
 
 using namespace boost::python;
 

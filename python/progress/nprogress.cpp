@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "progress/nprogress.h"
 #include <boost/python.hpp>
+#include "progress/nprogress.h"
 
 using namespace boost::python;
 using regina::NProgress;

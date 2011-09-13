@@ -29,10 +29,9 @@
 // We need to see Python.h first to avoid a "portability fix" in pyport.h
 // that breaks boost.python on MacOSX.
 #include "Python.h"
-
+#include <boost/python.hpp>
 #include "maths/nperm3.h"
 #include "../globalarray.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NPerm3;

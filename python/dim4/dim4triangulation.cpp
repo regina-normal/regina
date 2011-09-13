@@ -26,10 +26,10 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "algebra/ngrouppresentation.h"
 #include "dim4/dim4isomorphism.h"
 #include "dim4/dim4triangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::Dim4Triangulation;

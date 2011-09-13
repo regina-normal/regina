@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "manifold/nsimplesurfacebundle.h"
 #include <boost/python.hpp>
+#include "manifold/nsimplesurfacebundle.h"
 
 using namespace boost::python;
 using regina::NSimpleSurfaceBundle;
