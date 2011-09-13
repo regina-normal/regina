@@ -33,6 +33,7 @@
 // UI includes:
 #include "packetmanager.h"
 #include "reginapart.h"
+#include "packettypes/dim4triui.h"
 #include "packettypes/nanglestructureui.h"
 #include "packettypes/ncontainerui.h"
 #include "packettypes/nnormalsurfaceui.h"
@@ -134,6 +135,9 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NTriangulation::packetType)
         return new NTriangulationUI(dynamic_cast<NTriangulation*>(packet),
             enclosingPane);
+    if (packet->getPacketType() == Dim4Triangulation::packetType)
+        return new Dim4TriangulationUI(dynamic_cast<Dim4Triangulation*>(packet),
+            enclosingPane);
     return new DefaultPacketUI(packet, enclosingPane);
 }
 
@@ -162,6 +166,8 @@ QString PacketManager::iconName(NPacket* packet) {
         return "packet_text";
     if (packet->getPacketType() == NTriangulation::packetType)
         return "packet_triangulation";
+    if (packet->getPacketType() == Dim4Triangulation::packetType)
+        return "packet_dim4tri";
 
     return QString();
 }

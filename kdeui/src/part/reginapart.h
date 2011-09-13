@@ -257,12 +257,14 @@ class ReginaPart : public KParts::ReadWritePart {
         void newScript();
         void newText();
         void newTriangulation();
+        void newDim4Triangulation();
 
         /**
          * Packet import routines.
          */
         void importDehydration();
         void importIsoSig3();
+        void importIsoSig4();
         void importPDF();
         void importPython();
         void importRegina();

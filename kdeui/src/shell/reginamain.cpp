@@ -553,9 +553,17 @@ void ReginaMain::addRecentFile() {
 }
 
 void ReginaMain::readOptions(KSharedConfigPtr config) {
-    
     // Read in new preferences.
-    KConfigGroup* configGroup = new KConfigGroup(config,"Display");
+    KConfigGroup* configGroup = new KConfigGroup(config, "Dim4");
+    QString str = configGroup->readEntry("InitialTab");
+    if (str == "Dim4Skeleton")
+        globalPrefs.dim4InitialTab = ReginaPrefSet::Dim4Skeleton;
+    else if (str == "Dim4Algebra")
+        globalPrefs.dim4InitialTab = ReginaPrefSet::Dim4Algebra;
+    else
+        globalPrefs.dim4InitialTab = ReginaPrefSet::Dim4Gluings; /* default */
+
+    configGroup = new KConfigGroup(config,"Display");
     globalPrefs.autoDock = configGroup->readEntry("PacketDocking", true);
     globalPrefs.displayTagsInTree = configGroup->readEntry("DisplayTagsInTree",
         false);
@@ -630,7 +638,7 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
     globalPrefs.surfacesCreationCoords = configGroup->readEntry(
         "CreationCoordinates", regina::NNormalSurfaceList::STANDARD);
 
-    QString str = configGroup->readEntry("InitialCompat");
+    str = configGroup->readEntry("InitialCompat");
     if (str == "Global")
         globalPrefs.surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
     else
@@ -699,10 +707,19 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
 
 void ReginaMain::saveOptions() {
     KSharedConfigPtr config = KGlobal::config();
-
-    KConfigGroup* configGroup = new KConfigGroup(config,"Display");
-
     // Save the current set of preferences.
+
+    KConfigGroup* configGroup = new KConfigGroup(config, "Dim4");
+    switch (globalPrefs.dim4InitialTab) {
+        case ReginaPrefSet::Dim4Skeleton:
+            config->writeEntry("InitialTab", "Dim4Skeleton"); break;
+        case ReginaPrefSet::Dim4Algebra:
+            config->writeEntry("InitialTab", "Dim4Algebra"); break;
+        default:
+            config->writeEntry("InitialTab", "Dim4Gluings"); break;
+    }
+
+    configGroup = new KConfigGroup(config,"Display");
     configGroup->writeEntry("PacketDocking", globalPrefs.autoDock);
     configGroup->writeEntry("DisplayTagsInTree", globalPrefs.displayTagsInTree);
     configGroup->sync();
