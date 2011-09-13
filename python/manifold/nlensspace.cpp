@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "manifold/nlensspace.h"
 #include <boost/python.hpp>
+#include "manifold/nlensspace.h"
 
 using namespace boost::python;
 using regina::NLensSpace;
