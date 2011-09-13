@@ -212,7 +212,7 @@ void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
     else if (nFacets <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
             subspace, constraints, progress, initialRows);
-#ifdef HAVE_LONG_LONG
+#ifdef LONG_LONG_FOUND
     else if (nFacets <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
             subspace, constraints, progress, initialRows);

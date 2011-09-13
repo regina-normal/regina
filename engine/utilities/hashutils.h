@@ -57,7 +57,7 @@
  *  is deprecated, since these classes are not part of the C++ standard.
  *  This material is scheduled to be removed from Regina in version 5.0.
  */
-#if __NO_NAMESPACE_ALIASES
+#ifdef __NO_NAMESPACE_ALIASES
     #define stdhash __HASH_NAMESPACE
 #else
     namespace stdhash = __HASH_NAMESPACE;
