@@ -85,7 +85,7 @@ Dim4TriangulationUI::~Dim4TriangulationUI() {
     delete editIface;
 }
 
-const QPtrList<KAction>& Dim4TriangulationUI::getPacketTypeActions() {
+const QLinkedList<KAction*>& Dim4TriangulationUI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 

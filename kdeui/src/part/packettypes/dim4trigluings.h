@@ -35,15 +35,108 @@
 
 #include "../packettabui.h"
 #include "reginaprefset.h"
+#include "maths/nperm5.h"
+
+#include <QAbstractItemModel>
 
 class KAction;
 class KActionCollection;
 class KToolBar;
-class QTable;
+class QTableView;
 
 namespace regina {
     class NPacket;
     class Dim4Triangulation;
+};
+
+class Dim4GluingsModel : public QAbstractItemModel {
+    protected:
+        /**
+         * Details of the working (non-committed) triangulation
+         */
+        int nPent;
+        QString* name;
+        int* adjPent;
+        regina::NPerm5* adjPerm;
+
+        /**
+         * Internal status
+         */
+        bool isReadWrite_;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        Dim4GluingsModel(bool readWrite);
+        ~Dim4GluingsModel();
+
+        /**
+         * Read-write state.
+         */
+        bool isReadWrite() const;
+        void setReadWrite(bool readWrite);
+
+        /**
+         * Loading and saving local data from/to the packet.
+         */
+        void refreshData(regina::Dim4Triangulation* tri);
+        void commitData(regina::Dim4Triangulation* tri);
+
+        /**
+         * Overrides for describing and editing data in the model.
+         */
+        QModelIndex index(int row, int column,
+                const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+        Qt::ItemFlags flags(const QModelIndex& index) const;
+        bool setData(const QModelIndex& index, const QVariant& value, int role);
+
+        /**
+         * Gluing edit actions.
+         */
+        void addPent();
+        void removePent(int first, int last);
+
+    private:
+        /**
+         * Determine whether the given destination pentachoron and facet
+         * string are valid.  If so, a null string is returned; if not,
+         * an appropriate error message is returned.
+         *
+         * If the given permutation pointer is not null, the resulting
+         * gluing permutation will be returned in this variable.
+         */
+        QString isFacetStringValid(unsigned long srcPent, int srcFacet,
+            unsigned long destPent, const QString& destFacet,
+            regina::NPerm5* gluing);
+
+        /**
+         * Return a short string describing the destination of a
+         * facet gluing.  This routine handles both boundary and
+         * non-boundary facets.
+         */
+        static QString destString(int srcFacet, int destPent,
+            const regina::NPerm5& gluing);
+
+        /**
+         * Convert a facet string (e.g., "1304") to a facet permutation.
+         *
+         * The given facet string must be valid; otherwise the results
+         * could be unpredictable (and indeed a crash could result).
+         */
+        static regina::NPerm5 facetStringToPerm(int srcFacet,
+            const QString& str);
+
+        /**
+         * Display the given error to the user.
+         */
+        void showError(const QString& message);
 };
 
 /**
@@ -62,7 +155,8 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
          * Internal components
          */
         QWidget* ui;
-        QTable* facetTable;
+        QTableView* facetTable;
+        Dim4GluingsModel* model;
 
         /**
          * Gluing actions
@@ -71,13 +165,8 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
         KAction* actRemovePent;
         KAction* actSimplify;
         KActionCollection* triActions;
-        QPtrList<KAction> triActionList;
-        QPtrList<KAction> enableWhenWritable;
-
-        /**
-         * Preferences
-         */
-        ReginaPrefSet::TriEditMode editMode;
+        QLinkedList<KAction*> triActionList;
+        QLinkedList<KAction*> enableWhenWritable;
 
     public:
         /**
@@ -107,7 +196,7 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        const QPtrList<KAction>& getPacketTypeActions();
+        const QLinkedList<KAction*>& getPacketTypeActions();
         void commit();
         void refresh();
         void setReadWrite(bool readWrite);
@@ -132,11 +221,36 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Notify us of the fact that an edit has been made.
          */
-        void notifyGluingsChanged();
+        void notifyDataChanged();
 };
 
+inline Dim4GluingsModel::~Dim4GluingsModel() {
+    delete[] name;
+    delete[] adjPent;
+    delete[] adjPerm;
+}
+
+inline bool Dim4GluingsModel::isReadWrite() const {
+    return isReadWrite_;
+}
+
+inline void Dim4GluingsModel::setReadWrite(bool readWrite) {
+    if (isReadWrite_ != readWrite) {
+        // Edit flags will all change.
+        // A full model reset is probably too severe, but.. *shrug*
+        beginResetModel();
+        isReadWrite_ = readWrite;
+        endResetModel();
+    }
+}
+
+inline QModelIndex Dim4GluingsModel::parent(const QModelIndex& index) const {
+    // All items are top-level.
+    return QModelIndex();
+}
+
 inline void Dim4TriGluingsUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    editMode = newPrefs.triEditMode;
+    // No preferences affect us here... for now.
 }
 
 #endif

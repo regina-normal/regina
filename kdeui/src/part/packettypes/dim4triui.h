@@ -61,6 +61,8 @@ class Dim4TriangulationUI : public PacketTabbedUI {
         Dim4TriSkeletonUI* skeleton;
         Dim4TriAlgebraUI* algebra;
 
+        PacketEditIface* editIface;
+
     public:
         /**
          * Constructor and destructor.
